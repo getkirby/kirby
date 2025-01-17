@@ -21,6 +21,8 @@
 	"copy": "Kopyala",
 	"copy.all": "Tümünü kopyala",
 	"copy.success": "{count} kopyalandı!",
+	"copy.success.multiple": "{count} kopyalandı!",
+	"copy.url": "Copy URL",
 	"create": "Oluştur",
 	"custom": "Özel",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Geçersiz önbellek türü \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "\"{name}\" e-posta adresi bulunamadı",
 
 	"error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Dosya adı boş bırakılamaz",
 	"error.file.notFound": "\"{filename}\" dosyası bulunamadı",
 	"error.file.orientation": "Resmin oryantasyonu \"{orientation}\" olmalıdır",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "{type} dosya yükleme izni yok",
 	"error.file.type.invalid": "Geçersiz dosya türü: {type}",
 	"error.file.undefined": "Dosya bulunamad\u0131",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "Sayfa kendi içine taşınamaz",
 	"error.page.move.directory": "Sayfa dizini taşınamaz",
 	"error.page.move.duplicate": "\"{slug}\" URL ekine sahip bir alt sayfa zaten mevcut",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "Taşınan sayfa bulunamadı",
 	"error.page.move.permission": "\"{slug}\" öğesini taşımanıza izin verilmiyor",
 	"error.page.move.template": "\"{template}\" şablonu \"{parent}\" alt sayfası olarak kabul edilmiyor",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Başlık",
 	"field.blocks.heading.text": "Metin",
 	"field.blocks.heading.placeholder": "Başlık …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternatif metin",
 	"field.blocks.image.caption": "Altyazı",
 	"field.blocks.image.crop": "Kırp",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Henüz dosya seçilmedi",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Düzeni değiştir",
 	"field.layout.delete": "Düzeni sil",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Henüz bilgi yok",
 
 	"field.pages.empty": "Henüz sayfa seçilmedi",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
 	"field.structure.delete.confirm.all": "Tüm girdileri gerçekten silmek istiyor musunuz?",
 	"field.structure.empty": "Hen\u00fcz bir girdi yok",
 
 	"field.users.empty": "Henüz kullanıcı seçilmedi",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "Henüz alan yok",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Henüz dosya yok",
 
 	"filter": "Filtre",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Gizle",
 	"hour": "Saat",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Sitenizi yayına almaya hazır mısınız?",
 	"license.status.missing.info": "Geçerli lisans yok",
 	"license.status.missing.label": "Lütfen lisansınızı etkinleştirin",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Lisanslarınızı yönetin",
 	"license.purchased": "Satın alındı",
 	"license.success": "Kirby'yi desteklediğiniz için teşekkürler",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Kaydedilmemiş değişiklikler",
 	"lock.unsaved.empty": "Daha fazla kaydedilmemiş değişiklik yok",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "{email} tarafından yapılan kaydedilmemiş değişiklikler",
 	"lock.unlock": "Kilidi Aç",
 	"lock.unlock.submit": "Kaydedilmemiş değişikliklerin kilidini <strong>{email}</strong> ile açın ve üzerine yazın",
@@ -578,6 +606,10 @@
 	"plugins": "Eklentiler",
 	"prev": "Önceki",
 	"preview": "Önizle",
+
+	"publish": "Publish",
+	"published": "Yayınlandı",
+
 	"remove": "Kaldır",
 	"rename": "Yeniden Adlandır",
 	"renew": "Yenileme",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Hiçkimse",
 
 	"save": "Kaydet",
+	"saved": "Saved",
 	"search": "Arama",
+	"searching": "Searching",
 	"search.min": "Aramak için {min} karakter girin",
 	"search.all": "Tüm {count} sonuçlarını göster",
 	"search.results.none": "Sonuç yok",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Bilgileri kopyala",
 	"system.info.copied": "Sistem bilgisi kopyalandı",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
 	"system.issues.eol.kirby": "Yüklü Kirby sürümünüz kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
 	"system.issues.eol.plugin": "{ plugin } eklentisinin yüklü sürümü kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
@@ -646,6 +681,12 @@
 	"tel": "Telefon",
 	"tel.placeholder": "+49123456789",
 	"template": "\u015eablon",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Başlık",
 	"today": "Bugün",
 
@@ -715,10 +756,13 @@
 	"users": "Kullanıcılar",
 
 	"version": "Versiyon",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Mevcut sürüm",
 	"version.latest": "En son sürüm",
 	"versionInformation": "Sürüm bilgisi",
 
+	"view": "View",
 	"view.account": "Hesap Bilgilerin",
 	"view.installation": "Kurulum",
 	"view.languages": "Diller",

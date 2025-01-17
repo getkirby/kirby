@@ -16,7 +16,7 @@
 					text: role,
 					title: `${$t('role')}: ${role}`,
 					disabled: !canChangeRole,
-					click: () => $dialog(model.link + '/changeRole')
+					click: () => $dialog(api + '/changeRole')
 				},
 				{
 					icon: 'translate',

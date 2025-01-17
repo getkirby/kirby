@@ -33,10 +33,7 @@ class Site extends Model
 		return ViewButtons::view($this)->defaults(
 			'preview',
 			'languages'
-		)->bind([
-			'model' => $this->model(),
-			'site'  => $this->model()
-		])->render();
+		)->render();
 	}
 
 	/**

@@ -5,7 +5,6 @@ namespace Kirby\Form;
 use Closure;
 use Kirby\Cms\HasSiblings;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
 
@@ -31,7 +30,9 @@ class Field extends Component
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\When;
-	use Mixin\Value;
+	use Mixin\Value {
+		isEmptyValue as protected isEmptyValueFromMixin;
+	}
 
 	/**
 	 * Parent collection with all fields of the current form
@@ -298,6 +299,21 @@ class Field extends Component
 	public function isDisabled(): bool
 	{
 		return $this->disabled === true;
+	}
+
+	/**
+	 * Checks if the given value is considered empty
+	 */
+	public function isEmptyValue(mixed $value = null): bool
+	{
+		if (
+			isset($this->options['isEmpty']) === true &&
+			$this->options['isEmpty'] instanceof Closure
+		) {
+			return $this->options['isEmpty']->call($this, $value);
+		}
+
+		return $this->isEmptyValueFromMixin($value);
 	}
 
 	/**

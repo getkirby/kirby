@@ -427,6 +427,12 @@ class Version
 	{
 		$localPrefix = $this->model->kirby()->url('base') . '/';
 
+		// normalize homepage URLs to have a trailing slash
+		// to make the following logic work with those as well
+		if ($url . '/' === $localPrefix) {
+			$url .= '/';
+		}
+
 		if (Str::startsWith($url, $localPrefix) === false) {
 			return null;
 		}

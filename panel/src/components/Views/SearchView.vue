@@ -157,8 +157,8 @@ export default {
 }
 
 .k-search-view-input {
+	--input-color-back: var(--color-border);
 	--input-color-border: transparent;
-	--input-color-back: var(--color-gray-300);
 	--input-height: var(--height-md);
 	width: 40cqw;
 }

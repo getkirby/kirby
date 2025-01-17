@@ -1,7 +1,7 @@
 <template>
 	<p
 		:class="['k-url-field-preview', $options.class, $attrs.class]"
-		:data-link="link"
+		:data-link="Boolean(link)"
 		:style="$attrs.style"
 	>
 		{{ column.before }}
@@ -39,7 +39,7 @@ export default {
 .k-url-field-preview {
 	padding-inline: var(--table-cell-padding);
 }
-.k-url-field-preview[data-link] {
+.k-url-field-preview[data-link="true"] {
 	color: var(--link-color);
 }
 .k-url-field-preview a {

@@ -21,6 +21,8 @@
 	"copy": "Копирай",
 	"copy.all": "Copy all",
 	"copy.success": "{count} copied!",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Създай",
 	"custom": "Custom",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "Email шаблонът \"{name}\" не може да бъде открит",
 
 	"error.field.converter.invalid": "Невалиден конвертор \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Името на файла е задължително",
 	"error.file.notFound": "Файлът \"{filename}\" не може да бъде намерен",
 	"error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Не е позволен ъплоуда на файлове от тип {type}",
 	"error.file.type.invalid": "Invalid file type: {type}",
 	"error.file.undefined": "\u0424\u0430\u0439\u043b\u044a\u0442 \u043d\u0435 \u043c\u043e\u0436\u0435 \u0434\u0430 \u0431\u044a\u0434\u0435 \u043d\u0430\u043c\u0435\u0440\u0435\u043d",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "The page cannot be moved into itself",
 	"error.page.move.directory": "The page directory cannot be moved",
 	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "The moved page could not be found",
 	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
 	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Heading",
 	"field.blocks.heading.text": "Text",
 	"field.blocks.heading.placeholder": "Heading …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternative text",
 	"field.blocks.image.caption": "Caption",
 	"field.blocks.image.crop": "Crop",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Все още не са избрани файлове",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Change layout",
 	"field.layout.delete": "Delete layout",
@@ -345,12 +359,14 @@
 	"field.object.empty": "No information yet",
 
 	"field.pages.empty": "Все още не са избрани страници",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Сигурни ли сте, че искате да изтриете това вписване?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Все още няма статии",
 
 	"field.users.empty": "Все още не са избрани потребители",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Няма файлове",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Hide",
 	"hour": "Hour",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Ready to launch your site?",
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Thank you for supporting Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Unsaved changes",
 	"lock.unsaved.empty": "There are no more unsaved changes",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Unlock",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "Previous",
 	"preview": "Preview",
+
+	"publish": "Publish",
+	"published": "Published",
+
 	"remove": "Премахни",
 	"rename": "Преименувай",
 	"renew": "Renew",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Nobody",
 
 	"save": "\u0417\u0430\u043f\u0438\u0448\u0438",
+	"saved": "Saved",
 	"search": "Търси",
+	"searching": "Searching",
 	"search.min": "Enter {min} characters to search",
 	"search.all": "Show all {count} results",
 	"search.results.none": "No results",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -646,6 +681,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "Образец",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Заглавие",
 	"today": "Днес",
 
@@ -715,10 +756,13 @@
 	"users": "Потребители",
 
 	"version": "\u0412\u0435\u0440\u0441\u0438\u044f \u043d\u0430 Kirby",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
+	"view": "View",
 	"view.account": "\u0412\u0430\u0448\u0438\u044f \u0430\u043a\u0430\u0443\u043d\u0442",
 	"view.installation": "\u0418\u043d\u0441\u0442\u0430\u043b\u0430\u0446\u0438\u044f",
 	"view.languages": "Езици",

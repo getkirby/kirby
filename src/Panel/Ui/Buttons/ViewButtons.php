@@ -3,8 +3,9 @@
 namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Language;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Model;
-use Kirby\Toolkit\A;
 
 /**
  * Collects view buttons for a specific view
@@ -21,9 +22,12 @@ class ViewButtons
 {
 	public function __construct(
 		public readonly string $view,
-		public array|null $buttons = null,
+		public readonly ModelWithContent|Language|null $model = null,
+		public array|false|null $buttons = null,
 		public array $data = []
 	) {
+		// if no specific buttons are passed,
+		// use default buttons for this view from config
 		$this->buttons ??= App::instance()->option(
 			'panel.viewButtons.' . $view
 		);
@@ -57,32 +61,43 @@ class ViewButtons
 	 */
 	public function render(): array
 	{
-		$buttons = A::map(
-			$this->buttons ?? [],
-			fn ($button) =>
-				ViewButton::factory(
-					$button,
-					$this->view,
-					$this->data
-				)?->render()
-		);
+		// hides all buttons when `buttons: false` set
+		if ($this->buttons === false) {
+			return [];
+		}
 
-		return array_values(array_filter($buttons));
+		$buttons = [];
+
+		foreach ($this->buttons ?? [] as $name => $button) {
+			$buttons[] = ViewButton::factory(
+				button: $button,
+				name: $name,
+				view: $this->view,
+				model: $this->model,
+				data: $this->data
+			)?->render();
+		}
+
+		return array_filter($buttons);
 	}
 
 	/**
 	 * Creates new instance for a view
 	 * with special support for model views
 	 */
-	public static function view(string|Model $view): static
-	{
+	public static function view(
+		string|Model $view,
+		ModelWithContent|Language|null $model = null
+	): static {
 		if ($view instanceof Model) {
-			$blueprint = $view->model()->blueprint()->buttons();
-			$view      = $view->model()::CLASS_ALIAS;
+			$model     = $view->model();
+			$blueprint = $model->blueprint()->buttons();
+			$view      = $model::CLASS_ALIAS;
 		}
 
 		return new static(
 			view: $view,
+			model: $model ?? null,
 			buttons: $blueprint ?? null
 		);
 	}

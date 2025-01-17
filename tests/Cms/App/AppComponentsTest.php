@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\Field;
+use Kirby\Content\MemoryStorage;
+use Kirby\Content\PlainTextStorage;
 use Kirby\Email\Email;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
@@ -344,6 +346,37 @@ class AppComponentsTest extends TestCase
 		// with direct output
 		$this->expectOutputString('test');
 		$app->snippet('variable', ['message' => 'test'], false);
+	}
+
+	public function testStorage()
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$this->assertInstanceOf(PlainTextStorage::class, $this->app->storage($this->app->page('test')));
+	}
+
+	public function testStorageWithModifiedComponent()
+	{
+		$this->app = $this->app->clone([
+			'components' => [
+				'storage' => function (App $app, ModelWithContent $model) {
+					return new MemoryStorage($model);
+				}
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$this->assertInstanceOf(MemoryStorage::class, $this->app->storage($this->app->page('test')));
 	}
 
 	public function testTemplate()

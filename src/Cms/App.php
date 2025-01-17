@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Generator;
 use Kirby\Api\Api;
+use Kirby\Content\Storage;
 use Kirby\Data\Data;
 use Kirby\Email\Email as BaseEmail;
 use Kirby\Exception\ErrorPageException;
@@ -1332,14 +1333,6 @@ class App
 	}
 
 	/**
-	 * Returns all user roles
-	 */
-	public function roles(): Roles
-	{
-		return $this->roles ??= Roles::load($this->root('roles'));
-	}
-
-	/**
 	 * Returns a system root
 	 */
 	public function root(string $type = 'index'): string|null
@@ -1615,6 +1608,14 @@ class App
 
 		echo $snippet;
 		return null;
+	}
+
+	/**
+	 * Returns the default storage instance for a given Model
+	 */
+	public function storage(ModelWithContent $model): Storage
+	{
+		return $this->component('storage')($this, $model);
 	}
 
 	/**

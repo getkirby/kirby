@@ -1,5 +1,5 @@
 <template>
-	<nav class="k-toolbar" :data-theme="theme">
+	<nav v-if="buttons.length" class="k-toolbar" :data-theme="theme">
 		<template v-for="(button, index) in buttons">
 			<hr v-if="button === '|'" :key="index" />
 
@@ -83,9 +83,12 @@ export default {
 	--toolbar-size: var(--height);
 	--toolbar-text: light-dark(var(--color-black), var(--color-white));
 	--toolbar-back: light-dark(var(--color-white), var(--color-gray-850));
-	--toolbar-hover: hsla(0, 0%, var(--color-l-min), 0.4);
-	--toolbar-border: hsla(0, 100%, var(--color-l-min), 0.1);
+	--toolbar-hover: light-dark(var(--color-gray-200), var(--color-gray-750));
+	--toolbar-border: var(--panel-color-back);
 	--toolbar-current: var(--color-focus);
+}
+:where(.k-textarea-input, .k-writer-input):not(:focus-within) {
+	--toolbar-text: light-dark(var(--color-gray-300), var(--color-gray-700));
 }
 
 .k-toolbar {
@@ -98,13 +101,6 @@ export default {
 	color: var(--toolbar-text);
 	background: var(--toolbar-back);
 	border-radius: var(--rounded);
-}
-
-.k-toolbar[data-theme="dark"] {
-	--toolbar-text: var(--color-white);
-	--toolbar-back: var(--color-black);
-	--toolbar-hover: hsla(0, 0%, var(--color-l-max), 0.2);
-	--toolbar-border: var(--color-gray-800);
 }
 
 .k-toolbar > hr {
@@ -134,10 +130,6 @@ export default {
 	border-end-end-radius: var(--rounded);
 }
 
-:where(.k-textarea-input, .k-writer-input):not(:focus-within) {
-	--toolbar-text: var(--color-gray-400);
-	--toolbar-border: var(--panel-color-back);
-}
 /** TODO: .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */
 :where(.k-textarea-input, .k-writer-input):focus-within
 	.k-toolbar:not([data-inline="true"]) {

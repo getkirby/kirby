@@ -20,7 +20,9 @@
 	"coordinates": "Coordinates",
 	"copy": "Αντιγραφή",
 	"copy.all": "Copy all",
-	"copy.success": "{count} copied!",
+	"copy.success": "Copied",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Δημιουργία",
 	"custom": "Custom",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "Δεν είναι δυνατή η εύρεση της προεπιλογής διεύθινσης ηλεκτρονικού ταχυδρομείου \"{name}\"",
 
 	"error.field.converter.invalid": "Μη έγκυρος μετατροπέας \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Το όνομα αρχείου δεν μπορεί να είναι άδειο",
 	"error.file.notFound": "Δεν είναι δυνατό να βρεθεί το αρχείο \"{filename}\"",
 	"error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Δεν επιτρέπεται η μεταφόρτωση αρχείων {type}",
 	"error.file.type.invalid": "Invalid file type: {type}",
 	"error.file.undefined": "Δεν ήταν δυνατή η εύρεση του αρχείου",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "The page cannot be moved into itself",
 	"error.page.move.directory": "The page directory cannot be moved",
 	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "The moved page could not be found",
 	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
 	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Heading",
 	"field.blocks.heading.text": "Text",
 	"field.blocks.heading.placeholder": "Heading …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternative text",
 	"field.blocks.image.caption": "Caption",
 	"field.blocks.image.crop": "Crop",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Δεν έχουν επιλεγεί αρχεία ακόμα",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Change layout",
 	"field.layout.delete": "Delete layout",
@@ -345,12 +359,14 @@
 	"field.object.empty": "No information yet",
 
 	"field.pages.empty": "Δεν έχουν επιλεγεί ακόμη σελίδες",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "\u0395\u03af\u03c3\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03bf\u03c2 \u03cc\u03c4\u03b9 \u03b8\u03ad\u03bb\u03b5\u03c4\u03b5 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03ae\u03bd \u03c4\u03b7\u03bd \u03ba\u03b1\u03c4\u03b1\u03c7\u03ce\u03c1\u03b9\u03c3\u03b7;",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "\u0394\u03b5\u03bd \u03c5\u03c0\u03ac\u03c1\u03c7\u03bf\u03c5\u03bd \u03b1\u03ba\u03cc\u03bc\u03b7 \u03ba\u03b1\u03c4\u03b1\u03c7\u03c9\u03c1\u03af\u03c3\u03b5\u03b9\u03c2.",
 
 	"field.users.empty": "Δεν έχουν επιλεγεί ακόμη χρήστες",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Δεν υπάρχουν ακόμα αρχεία",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Hide",
 	"hour": "Ώρα",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Ready to launch your site?",
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Σας ευχαριστούμε για την υποστήριξη του Kirby",
@@ -455,7 +480,10 @@
 	"loading": "Φόρτωση",
 
 	"lock.unsaved": "Unsaved changes",
-	"lock.unsaved.empty": "There are no more unsaved changes",
+	"lock.unsaved.empty": "There are no unsaved changes",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Unlock",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "Προηγούμενο",
 	"preview": "Preview",
+
+	"publish": "Publish",
+	"published": "Δημοσιευμένο",
+
 	"remove": "Αφαίρεση",
 	"rename": "Μετονομασία",
 	"renew": "Renew",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Nobody",
 
 	"save": "\u0391\u03c0\u03bf\u03b8\u03ae\u03ba\u03b5\u03c5\u03c3\u03b7",
+	"saved": "Saved",
 	"search": "Αναζήτηση",
+	"searching": "Searching",
 	"search.min": "Enter {min} characters to search",
 	"search.all": "Show all {count} results",
 	"search.results.none": "No results",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -646,6 +681,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "\u03a0\u03c1\u03cc\u03c4\u03c5\u03c0\u03bf",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Τίτλος",
 	"today": "Σήμερα",
 
@@ -715,10 +756,13 @@
 	"users": "Χρήστες",
 
 	"version": "\u0388\u03ba\u03b4\u03bf\u03c3\u03b7 Kirby",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
+	"view": "View",
 	"view.account": "\u039f \u03bb\u03bf\u03b3\u03b1\u03c1\u03b9\u03b1\u03c3\u03bc\u03cc\u03c2 \u03c3\u03b1\u03c2",
 	"view.installation": "\u0395\u03b3\u03ba\u03b1\u03c4\u03ac\u03c3\u03c4\u03b1\u03c3\u03b7",
 	"view.languages": "Γλώσσες",

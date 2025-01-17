@@ -21,6 +21,8 @@
 	"copy": "Copiar",
 	"copy.all": "Copy all",
 	"copy.success": "{count} copied!",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Crear",
 	"custom": "Custom",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "No es pot trobar la configuració de correu electrònic \"{name}\"",
 
 	"error.field.converter.invalid": "Convertidor no vàlid \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "El nom del fitxer no pot estar buit",
 	"error.file.notFound": "L'arxiu \"{filename}\" no s'ha trobat",
 	"error.file.orientation": "L’orientació de la imatge ha de ser \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "No tens permís per penjar fitxers {type}",
 	"error.file.type.invalid": "Invalid file type: {type}",
 	"error.file.undefined": "L'arxiu no s'ha trobat",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "The page cannot be moved into itself",
 	"error.page.move.directory": "The page directory cannot be moved",
 	"error.page.move.duplicate": "A sub page with the URL appendix \"{slug}\" already exists",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "The moved page could not be found",
 	"error.page.move.permission": "You are not allowed to move \"{slug}\"",
 	"error.page.move.template": "The \"{template}\" template is not accepted as a subpage of \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Heading",
 	"field.blocks.heading.text": "Text",
 	"field.blocks.heading.placeholder": "Heading …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Alternative text",
 	"field.blocks.image.caption": "Caption",
 	"field.blocks.image.crop": "Crop",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Encara no hi ha cap fitxer seleccionat",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Change layout",
 	"field.layout.delete": "Delete layout",
@@ -345,12 +359,14 @@
 	"field.object.empty": "No information yet",
 
 	"field.pages.empty": "Encara no s'ha seleccionat cap pàgina",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Segur que voleu eliminar aquesta fila?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Encara no hi ha entrades.",
 
 	"field.users.empty": "Encara no s'ha seleccionat cap usuari",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Encara no hi ha fitxers",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Hide",
 	"hour": "Hora",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Ready to launch your site?",
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Gràcies per donar suport a Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Canvis no guardats",
 	"lock.unsaved.empty": "Ja no hi ha canvis no guardats",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Desbloquejar",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "Anterior",
 	"preview": "Preview",
+
+	"publish": "Publish",
+	"published": "Publicat",
+
 	"remove": "Eliminar",
 	"rename": "Canviar el nom",
 	"renew": "Renew",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Ningú",
 
 	"save": "Desar",
+	"saved": "Saved",
 	"search": "Cercar",
+	"searching": "Searching",
 	"search.min": "Introduïu {min} caràcters per cercar",
 	"search.all": "Show all {count} results",
 	"search.results.none": "Sense resultats",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -646,6 +681,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "Plantilla",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Títol",
 	"today": "Avui",
 
@@ -715,10 +756,13 @@
 	"users": "Usuaris",
 
 	"version": "Versi\u00f3 de Kirby",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
+	"view": "View",
 	"view.account": "La teva compta",
 	"view.installation": "Instal·lació",
 	"view.languages": "Idiomes",

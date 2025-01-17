@@ -61,7 +61,7 @@ export default (panel) => {
 				this.emit("discard", {}, env);
 			} catch (error) {
 				// handle locked states
-				if (error.key.startsWith("error.content.lock")) {
+				if (error.key?.startsWith("error.content.lock")) {
 					return this.lockDialog(error.details);
 				}
 
@@ -187,7 +187,7 @@ export default (panel) => {
 			try {
 				await this.request("publish", values, env);
 
-				// close the retry dialog if it is still open
+				// close the dialog if it is still open
 				this.dialog?.close();
 
 				// update the props for the current view
@@ -198,11 +198,11 @@ export default (panel) => {
 				this.emit("publish", { values }, env);
 			} catch (error) {
 				// handle locked states
-				if (error.key.startsWith("error.content.lock")) {
+				if (error.key?.startsWith("error.content.lock")) {
 					return this.lockDialog(error.details);
 				}
 
-				this.retry("publish", error, [values, env]);
+				throw error;
 			} finally {
 				this.isProcessing = false;
 			}
@@ -225,50 +225,7 @@ export default (panel) => {
 				options.silent = true;
 			}
 
-			return await panel.api.post(api + "/changes/" + method, values, options);
-		},
-
-		/**
-		 * Opens a dialog with the error message
-		 * to retry the given method.
-		 */
-		retry(method, error, ...args) {
-			// log the error to the console to make it
-			// easier to debug the issue
-			console.error(error);
-
-			// set the dialog instance
-			this.dialog = panel.dialog;
-
-			// show a dialog to the user to try again
-			this.dialog.open({
-				component: "k-text-dialog",
-				props: {
-					text: panel.t(`form.${method}.error`),
-					cancelButton: panel.t("close"),
-					submitButton: {
-						icon: "refresh",
-						text: panel.t("retry")
-					}
-				},
-				on: {
-					close: () => {
-						this.dialog = null;
-					},
-					submit: async () => {
-						this.dialog.isLoading = true;
-
-						// try again with the latest state in the props
-						await this[method](...args);
-
-						// make sure the dialog is closed if the request was successful
-						this.dialog?.close();
-
-						// give a more reassuring longer success notification
-						panel.notification.success(panel.t(`form.${method}.success`));
-					}
-				}
-			});
+			return panel.api.post(api + "/changes/" + method, values, options);
 		},
 
 		/**
@@ -287,7 +244,7 @@ export default (panel) => {
 
 				this.isProcessing = false;
 
-				// close the retry dialog if it is still open
+				// close the dialog if it is still open
 				this.dialog?.close();
 
 				// update the lock timestamp
@@ -309,11 +266,11 @@ export default (panel) => {
 				this.isProcessing = false;
 
 				// handle locked states
-				if (error.key.startsWith("error.content.lock")) {
+				if (error.key?.startsWith("error.content.lock")) {
 					return this.lockDialog(error.details);
 				}
 
-				this.retry("save", error, [values, env]);
+				throw error;
 			}
 		},
 

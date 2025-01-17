@@ -25,17 +25,18 @@ class LanguagesDropdown extends ViewButton
 	protected App $kirby;
 
 	public function __construct(
-		protected ModelWithContent $model
+		ModelWithContent $model
 	) {
 		$this->kirby = $model->kirby();
 
 		parent::__construct(
 			component: 'k-languages-dropdown',
+			model: $model,
 			class: 'k-languages-dropdown',
 			icon: 'translate',
 			// Fiber dropdown endpoint to load options
 			// only when dropdown is opened
-			options: $this->model->panel()->url(true) . '/languages',
+			options: $model->panel()->url(true) . '/languages',
 			responsive: 'text',
 			text: Str::upper($this->kirby->language()?->code())
 		);
@@ -111,7 +112,8 @@ class LanguagesDropdown extends ViewButton
 
 	public function render(): array|null
 	{
-		if ($this->kirby->multilang() === false) {
+		// hides the language selector when there are less than 2 languages
+		if ($this->kirby->languages()->count() < 2) {
 			return null;
 		}
 

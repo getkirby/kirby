@@ -122,16 +122,24 @@ class UserPermissionsTest extends TestCase
 
 	public function testChangeSingleRole()
 	{
-		new App([
+		$app = new App([
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'roles' => [
 				['name' => 'admin']
+			],
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
 			]
 		]);
 
-		$user  = new User(['email' => 'test@getkirby.com']);
+		$app->impersonate('kirby');
+
+		$user  = $app->user('test@getkirby.com');
 		$perms = $user->permissions();
 
 		$this->assertFalse($perms->can('changeRole'));
