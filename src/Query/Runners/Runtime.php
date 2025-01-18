@@ -6,6 +6,8 @@ use Closure;
 use Exception;
 
 /**
+ * Helper class to execute closures and member access
+ *
  * @package   Kirby Query
  * @author    Roman Steiner <>
  * @link      https://getkirby.com

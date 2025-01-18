@@ -8,11 +8,7 @@ use Kirby\Query\AST\ClosureNode;
 use Kirby\Query\Runners\Runtime;
 
 /**
- * Visitor that generates code representations from query structures.
- *
- * The `CodeGen` class traverses query nodes and generates
- * corresponding PHP code. It extends the base `Visitor` class,
- * but adds implementations specific to code generation.
+ * Generates PHP code representation for query AST
  *
  * @package   Kirby Query
  * @author    Roman Steiner <>
@@ -34,17 +30,6 @@ class CodeGen extends Visitor
 	 * @var array<string,string>
 	 */
 	public array $mappings = [];
-
-	/**
-	 * CodeGen constructor.
-	 *
-	 * @param array<string,Closure> $validGlobalFunctions An array of valid global function closures.
-	 */
-	public function __construct(
-		public array $validGlobalFunctions = [],
-		public array $directAccessFor = []
-	) {
-	}
 
 	/**
 	 * Converts list of arguments to string representation
@@ -69,20 +54,20 @@ class CodeGen extends Visitor
 	{
 		$this->uses[Runtime::class] = true;
 
-		$args = array_map($this::phpName(...), $node->arguments);
+		$args = array_map(static::phpName(...), $node->arguments);
 		$args = join(', ', $args);
 
-		$newDirectAccessFor = [
-			...$this->directAccessFor,
+		$context = [
+			...$this->context,
 			...array_fill_keys($node->arguments, true)
 		];
 
-		$nestedVisitor = new static($this->validGlobalFunctions, $newDirectAccessFor);
-		$code = $node->body->resolve($nestedVisitor);
+		$visitor = new static($this->functions, $context);
+		$code    = $node->body->resolve($visitor);
 
 		// promote the nested visitor's uses and mappings to the current visitor
-		$this->uses     += $nestedVisitor->uses;
-		$this->mappings += $nestedVisitor->mappings;
+		$this->uses     += $visitor->uses;
+		$this->mappings += $visitor->mappings;
 
 		return "fn($args) => $code";
 	}
@@ -100,7 +85,7 @@ class CodeGen extends Visitor
 	 */
 	public function function(string $name, $arguments): string
 	{
-		if (isset($this->validGlobalFunctions[$name]) === false) {
+		if (isset($this->functions[$name]) === false) {
 			throw new Exception("Invalid global function $name");
 		}
 
@@ -176,7 +161,7 @@ class CodeGen extends Visitor
 	{
 		$key = static::phpName($name);
 
-		if (isset($this->directAccessFor[$name]) === true) {
+		if (isset($this->context[$name]) === true) {
 			return $key;
 		}
 

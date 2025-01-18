@@ -8,7 +8,16 @@ use Kirby\Query\AST\ClosureNode;
 abstract class Visitor
 {
 	public Closure|null $interceptor = null;
-	public array $validGlobalFunctions;
+
+	/**
+	 * @param array<string,Closure> $functions valid global function closures
+	 * @param array<string,mixed> $context data bindings for the query
+	 */
+	public function __construct(
+		public array $functions = [],
+		public array $context = []
+	) {
+	}
 
 	abstract public function argumentList(array $arguments);
 	abstract public function arrayList(array $elements);

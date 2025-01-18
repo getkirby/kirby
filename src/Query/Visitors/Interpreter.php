@@ -8,7 +8,7 @@ use Kirby\Query\AST\ClosureNode;
 use Kirby\Query\Runners\Runtime;
 
 /**
- * Visitor that interprets and directly executes a query AST
+ * Interprets and directly executes a query AST
  *
  * @package   Kirby Query
  * @author    Roman Steiner <>
@@ -19,16 +19,6 @@ use Kirby\Query\Runners\Runtime;
  */
 class Interpreter extends Visitor
 {
-	/**
-	 * @param array<string,Closure> $validGlobalFunctions An array of valid global function closures.
-	 * @param array<string,mixed> $context The data bindings for the query.
-	 */
-	public function __construct(
-		public array $validGlobalFunctions = [],
-		public array $context = []
-	) {
-	}
-
 	/**
 	 * Executes list of arguments
 	 */
@@ -53,9 +43,6 @@ class Interpreter extends Visitor
 		$self = $this;
 
 		return function (...$params) use ($self, $node) {
-			$context   = $self->context;
-			$functions = $self->validGlobalFunctions;
-
 			// [key1, key2] + [value1, value2] =>
 			// [key1 => value1, key2 => value2]
 			$arguments = array_combine(
@@ -63,7 +50,10 @@ class Interpreter extends Visitor
 				$params
 			);
 
-			$self = new static($functions, [...$context, ...$arguments]);
+			$self = new static(
+				$self->functions,
+				[...$self->context, ...$arguments]
+			);
 
 			if ($self->interceptor !== null) {
 				$self->setInterceptor($self->interceptor);
@@ -86,7 +76,7 @@ class Interpreter extends Visitor
 	 */
 	public function function(string $name, $arguments): mixed
 	{
-		$function = $this->validGlobalFunctions[$name] ?? null;
+		$function = $this->functions[$name] ?? null;
 
 		if ($function === null) {
 			throw new Exception("Invalid global function $name");
@@ -156,7 +146,7 @@ class Interpreter extends Visitor
 			return $context;
 		}
 
-		if ($function = $this->validGlobalFunctions[$name] ?? null) {
+		if ($function = $this->functions[$name] ?? null) {
 			return $function();
 		}
 
