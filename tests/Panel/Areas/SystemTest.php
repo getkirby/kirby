@@ -205,7 +205,7 @@ class SystemTest extends AreaTestCase
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/private',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			],
@@ -239,7 +239,7 @@ class SystemTest extends AreaTestCase
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/unknown',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			]
@@ -299,7 +299,7 @@ class SystemTest extends AreaTestCase
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/private',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			],
@@ -333,7 +333,7 @@ class SystemTest extends AreaTestCase
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/unknown',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			]
