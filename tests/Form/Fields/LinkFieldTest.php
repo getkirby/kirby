@@ -2,6 +2,7 @@
 
 namespace Form\Fields;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Fields\TestCase;
 
 class LinkFieldTest extends TestCase
@@ -28,5 +29,15 @@ class LinkFieldTest extends TestCase
 			'tel',
 			'anchor'
 		], $field->options());
+	}
+
+	public function testOptionsInvalid()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid options: foo, bar');
+
+		$this->field('link', [
+			'options' => ['page', 'foo', 'bar']
+		]);
 	}
 }

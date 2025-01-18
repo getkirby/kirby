@@ -93,6 +93,7 @@
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
 	"error.field.converter.invalid": "Invalid converter \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "The name must not be empty",
