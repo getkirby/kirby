@@ -1,14 +1,14 @@
 <?php
 
-namespace Kirby\Toolkit\Query\Runners;
+namespace Kirby\Query\Runners;
 
 use ArrayAccess;
 use Closure;
 use Exception;
-use Kirby\Toolkit\Query\Parser;
-use Kirby\Toolkit\Query\Runner;
-use Kirby\Toolkit\Query\Runners\Visitors\CodeGen;
-use Kirby\Toolkit\Query\Tokenizer;
+use Kirby\Query\Parser;
+use Kirby\Query\Runner;
+use Kirby\Query\Runners\Visitors\CodeGen;
+use Kirby\Query\Tokenizer;
 
 class Transpiled extends Runner
 {

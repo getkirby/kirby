@@ -16,6 +16,8 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @deprecated 6.0.0 Will be removed in Kirby 7
  */
 class Segment
 {

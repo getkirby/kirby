@@ -11,9 +11,9 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Image\QrCode;
+use Kirby\Query\Runners\Interpreted;
+use Kirby\Query\Runners\Transpiled;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Query\Runners\Interpreted;
-use Kirby\Toolkit\Query\Runners\Transpiled;
 
 /**
  * The Query class can be used to query arrays and objects,

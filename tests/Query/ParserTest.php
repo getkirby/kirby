@@ -1,12 +1,12 @@
 <?php
 
-namespace Kirby\Toolkit\Query;
+namespace Kirby\Query;
 
 use Kirby\TestCase;
-use Kirby\Toolkit\Query\AST\ArgumentListNode;
-use Kirby\Toolkit\Query\AST\LiteralNode;
-use Kirby\Toolkit\Query\AST\MemberAccessNode;
-use Kirby\Toolkit\Query\AST\VariableNode;
+use Kirby\Query\AST\ArgumentListNode;
+use Kirby\Query\AST\LiteralNode;
+use Kirby\Query\AST\MemberAccessNode;
+use Kirby\Query\AST\VariableNode;
 
 class ParserTest extends TestCase
 {

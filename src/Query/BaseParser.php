@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Toolkit\Query;
+namespace Kirby\Query;
 
 use Exception;
 use Iterator;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Toolkit\Query\AST;
+namespace Kirby\Query\AST;
 
 abstract class IdentifierNode extends Node
 {

@@ -4,8 +4,8 @@ namespace Kirby\Toolkit\Query;
 
 use ArrayAccess;
 use Kirby\TestCase;
-use Kirby\Toolkit\Query\Runners\Interpreted;
-use Kirby\Toolkit\Query\Runners\Transpiled;
+use Kirby\Query\Runners\Interpreted;
+use Kirby\Query\Runners\Transpiled;
 
 class RunnerTest extends TestCase
 {

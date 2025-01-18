@@ -1,8 +1,8 @@
 <?php
 
-namespace Kirby\Toolkit\Query\AST;
+namespace Kirby\Query\AST;
 
-use Kirby\Toolkit\Query\Visitor;
+use Kirby\Query\Visitor;
 
 class Node
 {

@@ -1,20 +1,20 @@
 <?php
 
-namespace Kirby\Toolkit\Query\Runners\Visitors;
+namespace Kirby\Query\Runners\Visitors;
 
 use Closure;
 use Exception;
-use Kirby\Toolkit\Query\AST\ArgumentListNode;
-use Kirby\Toolkit\Query\AST\ArrayListNode;
-use Kirby\Toolkit\Query\AST\ClosureNode;
-use Kirby\Toolkit\Query\AST\CoalesceNode;
-use Kirby\Toolkit\Query\AST\GlobalFunctionNode;
-use Kirby\Toolkit\Query\AST\LiteralNode;
-use Kirby\Toolkit\Query\AST\MemberAccessNode;
-use Kirby\Toolkit\Query\AST\TernaryNode;
-use Kirby\Toolkit\Query\AST\VariableNode;
-use Kirby\Toolkit\Query\Runtime;
-use Kirby\Toolkit\Query\Visitor;
+use Kirby\Query\AST\ArgumentListNode;
+use Kirby\Query\AST\ArrayListNode;
+use Kirby\Query\AST\ClosureNode;
+use Kirby\Query\AST\CoalesceNode;
+use Kirby\Query\AST\GlobalFunctionNode;
+use Kirby\Query\AST\LiteralNode;
+use Kirby\Query\AST\MemberAccessNode;
+use Kirby\Query\AST\TernaryNode;
+use Kirby\Query\AST\VariableNode;
+use Kirby\Query\Runtime;
+use Kirby\Query\Visitor;
 
 /**
  * Visitor that generates code representations from query structures.
