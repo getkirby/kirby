@@ -29,7 +29,7 @@ use Kirby\Toolkit\I18n;
  *
  * @package   Kirby Query
  * @author    Bastian Allgeier <bastian@getkirby.com>,
- * 			  Nico Hoffmann <nico@getkirby.com>
+ *            Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT

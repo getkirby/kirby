@@ -3,6 +3,7 @@
 namespace Kirby\Query\Parsers;
 
 use Exception;
+use Iterator;
 use Kirby\Query\AST\ArgumentListNode;
 use Kirby\Query\AST\ArrayListNode;
 use Kirby\Query\AST\ClosureNode;
@@ -16,23 +17,69 @@ use Kirby\Query\AST\VariableNode;
 
 /**
  * @package   Kirby Query
- * @author    Roman Steiner <>
+ * @author    Roman Steiner <>,
+ *            Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
-class Parser extends BaseParser
+class Parser
 {
-	private function argumentList(): Node
-	{
-		$list = $this->listUntil(TokenType::T_CLOSE_PAREN);
-		return new ArgumentListNode($list);
+	protected Token $current;
+	protected Token|null $previous = null;
+
+	/**
+	 * @var Iterator<Token>
+	 */
+	protected Iterator $tokens;
+
+	public function __construct(string|Iterator $query) {
+		if (is_string($query) === true) {
+			$tokenizer = new Tokenizer($query);
+			$query     = $tokenizer->tokens();
+		}
+
+		$this->tokens = $query;
+		$first        = $this->tokens->current();
+
+		if ($first === null) {
+			throw new Exception('No tokens found');
+		}
+
+		$this->current = $first;
 	}
 
+	/**
+	 * Move to the next token
+	 */
+	protected function advance(): Token|null
+	{
+		if ($this->isAtEnd() === false) {
+			$this->previous = $this->current;
+			$this->tokens->next();
+			$this->current = $this->tokens->current();
+		}
+
+		return $this->previous;
+	}
+
+	/**
+	 * Parses a list of arguments
+	 */
+	private function argumentList(): ArgumentListNode
+	{
+		return new ArgumentListNode(
+			arguments: $this->consumeList(TokenType::T_CLOSE_PAREN)
+		);
+	}
+
+	/**
+	 * Checks for and parses several atomic expressions
+	 */
 	private function atomic(): Node
 	{
-		// primitives
+		// primitives/scalars
 		if ($token = $this->matchAny([
 			TokenType::T_TRUE,
 			TokenType::T_FALSE,
@@ -41,28 +88,31 @@ class Parser extends BaseParser
 			TokenType::T_INTEGER,
 			TokenType::T_FLOAT,
 		])) {
-			return new LiteralNode($token->literal);
+			return new LiteralNode(value: $token->literal);
 		}
 
-		// array literals
+		// arrays
 		if ($token = $this->match(TokenType::T_OPEN_BRACKET)) {
-			$array = $this->listUntil(TokenType::T_CLOSE_BRACKET);
-			return new ArrayListNode($array);
+			return new ArrayListNode(
+				elements: $this->consumeList(TokenType::T_CLOSE_BRACKET)
+			);
 		}
 
 		// global functions and variables
 		if ($token = $this->match(TokenType::T_IDENTIFIER)) {
 			if ($this->match(TokenType::T_OPEN_PAREN)) {
-				$arguments = $this->argumentList();
-				return new GlobalFunctionNode($token->lexeme, $arguments);
+				return new GlobalFunctionNode(
+					name: $token->lexeme,
+					arguments: $this->argumentList()
+				);
 			}
 
-			return new VariableNode($token->lexeme);
+			return new VariableNode(name: $token->lexeme);
 		}
 
 		// grouping and closure argument lists
 		if ($token = $this->match(TokenType::T_OPEN_PAREN)) {
-			$list = $this->listUntil(TokenType::T_CLOSE_PAREN);
+			$list = $this->consumeList(TokenType::T_CLOSE_PAREN);
 
 			if ($this->match(TokenType::T_ARROW)) {
 				$expression = $this->expression();
@@ -78,7 +128,11 @@ class Parser extends BaseParser
 				}
 
 				$arguments = array_map(fn ($element) => $element->name, $list);
-				return new ClosureNode($arguments, $expression);
+
+				return new ClosureNode(
+					arguments: $arguments,
+					body: $expression
+				);
 			}
 
 			if (count($list) > 1) {
@@ -92,24 +146,55 @@ class Parser extends BaseParser
 		throw new Exception('Expect expression');
 	}
 
-	private function coalesce(): Node
+	/**
+	 * Whether the current token is of a specific type
+	 */
+	protected function check(TokenType $type): bool
 	{
-		$left = $this->ternary();
-
-		while ($this->match(TokenType::T_COALESCE)) {
-			$right = $this->ternary();
-			$left  = new CoalesceNode($left, $right);
+		if ($this->isAtEnd() === true) {
+			return false;
 		}
 
-		return $left;
+		return $this->current->is($type);
 	}
 
-	private function expression(): Node
+	/**
+	 * Checks for and parses a coalesce expression
+	 */
+	private function coalesce(): Node
 	{
-		return $this->coalesce();
+		$node = $this->ternary();
+
+		while ($this->match(TokenType::T_COALESCE)) {
+			$node = new CoalesceNode(
+				left: $node,
+				right: $this->ternary()
+			);
+		}
+
+		return $node;
 	}
 
-	private function listUntil(TokenType $until): array
+	/**
+	 * Collect the next token of a type
+	 *
+	 * @throws Exception when next token is not of specified type
+	 */
+	protected function consume(
+		TokenType $type,
+		string $error
+	): Token {
+		if ($this->check($type) === true) {
+			return $this->advance();
+		}
+
+		throw new Exception($error);
+	}
+
+	/**
+	 * Collect all list element until closing token
+	 */
+	private function consumeList(TokenType $until): array
 	{
 		$elements = [];
 
@@ -119,7 +204,7 @@ class Parser extends BaseParser
 		) {
 			$elements[] = $this->expression();
 
-			if ($this->match(TokenType::T_COMMA) == false) {
+			if ($this->match(TokenType::T_COMMA) === false) {
 				break;
 			}
 		}
@@ -130,40 +215,96 @@ class Parser extends BaseParser
 		return $elements;
 	}
 
+	/**
+	 * Returns the current token
+	 */
+	public function current(): Token
+	{
+		return $this->current;
+	}
+
+	/**
+	 * Convert a full query expression into a node
+	 */
+	private function expression(): Node
+	{
+		// top-level expression check is for coalescing
+		return $this->coalesce();
+	}
+
+	/**
+	 * Whether the parser has reached the end of the query
+	 */
+	protected function isAtEnd(): bool
+	{
+		return $this->current->is(TokenType::T_EOF);
+	}
+
+	/**
+	 * Move to next token if of specific type
+	 */
+	protected function match(TokenType $type): Token|false
+	{
+		if ($this->check($type) === true) {
+			return $this->advance();
+		}
+
+		return false;
+	}
+
+	/**
+	 * Move to next token if of any specific type
+	 */
+	protected function matchAny(array $types): Token|false
+	{
+		foreach ($types as $type) {
+			if ($this->check($type) === true) {
+				return $this->advance();
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks for and parses a member access expression
+	 */
 	private function memberAccess(): Node
 	{
-		$left = $this->atomic();
+		$object = $this->atomic();
 
-		while ($tok = $this->matchAny([
+		while ($token = $this->matchAny([
 			TokenType::T_DOT,
 			TokenType::T_NULLSAFE
 		])) {
-			if ($right = $this->match(TokenType::T_IDENTIFIER)) {
-				$right = $right->lexeme;
-			} elseif ($right = $this->match(TokenType::T_INTEGER)) {
-				$right = $right->literal;
+			if ($member = $this->match(TokenType::T_IDENTIFIER)) {
+				$member = $member->lexeme;
+			} elseif ($member = $this->match(TokenType::T_INTEGER)) {
+				$member = $member->literal;
 			} else {
 				throw new Exception('Expect property name after "."');
 			}
 
-			$arguments = match ($this->match(TokenType::T_OPEN_PAREN)) {
-				false   => null,
-				default => $this->argumentList(),
-			};
-
-			$left = new MemberAccessNode(
-				$left,
-				$right,
-				$arguments,
-				$tok->type === TokenType::T_NULLSAFE
+			$object = new MemberAccessNode(
+				object: $object,
+				member: $member,
+				arguments: match ($this->match(TokenType::T_OPEN_PAREN)) {
+					false   => null,
+					default => $this->argumentList(),
+				},
+				nullSafe: $token->is(TokenType::T_NULLSAFE)
 			);
 		}
 
-		return $left;
+		return $object;
 	}
 
+	/**
+	 * Parses the tokenized query into AST node tree
+	 */
 	public function parse(): Node
 	{
+		// start parsing chain
 		$expression = $this->expression();
 
 		// ensure that we consumed all tokens
@@ -174,33 +315,35 @@ class Parser extends BaseParser
 		return $expression;
 	}
 
+	/**
+	 * Checks for and parses a ternary expression
+	 * (full `a ? b : c` or elvis shorthand `a ?: c`)
+	 */
 	private function ternary(): Node
 	{
-		$left = $this->memberAccess();
+		$condition = $this->memberAccess();
 
-		if ($tok = $this->matchAny([
+		if ($token = $this->matchAny([
 			TokenType::T_QUESTION_MARK,
 			TokenType::T_TERNARY_DEFAULT
 		])) {
-			if ($tok->type === TokenType::T_TERNARY_DEFAULT) {
-				$trueIsDefault = true;
-				$trueBranch    = null;
+			if ($token->is(TokenType::T_TERNARY_DEFAULT)) {
+				$elvis = true;
+				$true  = null;
 			} else {
-				$trueIsDefault = false;
-				$trueBranch    = $this->expression();
+				$elvis = false;
+				$true  = $this->expression();
 				$this->consume(TokenType::T_COLON, 'Expect ":" after true branch');
 			}
 
-			$falseBranch = $this->expression();
-
 			return new TernaryNode(
-				$left,
-				$trueBranch,
-				$falseBranch,
-				$trueIsDefault
+				condition: $condition,
+				true: $true,
+				false: $this->expression(),
+				elvis: $elvis
 			);
 		}
 
-		return $left;
+		return $condition;
 	}
 }

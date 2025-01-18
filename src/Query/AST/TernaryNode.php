@@ -20,8 +20,8 @@ class TernaryNode extends Node
 {
 	public function __construct(
 		public Node $condition,
-		public Node|null $trueBranch,
-		public Node $falseBranch,
+		public Node $false,
+		public Node|null $true = null,
 		public bool $elvis = false,
 	) {
 	}
@@ -29,8 +29,8 @@ class TernaryNode extends Node
 	public function resolve(Visitor $visitor): mixed
 	{
 		$condition = $this->condition->resolve($visitor);
-		$true      = $this->trueBranch->resolve($visitor);
-		$false     = $this->falseBranch->resolve($visitor);
+		$true      = $this->true->resolve($visitor);
+		$false     = $this->false->resolve($visitor);
 		return $visitor->ternary($condition, $true, $false, $this->elvis);
 	}
 }

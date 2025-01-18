@@ -5,6 +5,15 @@ namespace Kirby\Query\Visitors;
 use Closure;
 use Kirby\Query\AST\ClosureNode;
 
+/**
+ * @package   Kirby Query
+ * @author    Roman Steiner <>,
+ *            Nico Hoffmann <nico@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     6.0.0
+ */
 abstract class Visitor
 {
 	public Closure|null $interceptor = null;
