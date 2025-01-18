@@ -34,6 +34,36 @@ class LicenseStatusTest extends TestCase
 	}
 
 	/**
+	 * @covers ::dialog
+	 */
+	public function testDialog(): void
+	{
+		$status = new LicenseStatus(
+			value: 'missing',
+			icon: 'alert',
+			label: 'Enter license',
+			dialog: $dialog = 'my/dialog'
+		);
+
+		$this->assertSame($dialog, $status->dialog());
+	}
+
+	/**
+	 * @covers ::drawer
+	 */
+	public function testDrawer(): void
+	{
+		$status = new LicenseStatus(
+			value: 'missing',
+			icon: 'alert',
+			label: 'Enter license',
+			drawer: $drawer = 'my/drawer'
+		);
+
+		$this->assertSame($drawer, $status->drawer());
+	}
+
+	/**
 	 * @covers ::from
 	 */
 	public function testFromInstance(): void
@@ -113,6 +143,21 @@ class LicenseStatusTest extends TestCase
 	}
 
 	/**
+	 * @covers ::link
+	 */
+	public function testLink(): void
+	{
+		$status = new LicenseStatus(
+			value: 'missing',
+			icon: 'alert',
+			label: 'Buy license',
+			link: $url = 'https://getkirby.com/buy'
+		);
+
+		$this->assertSame($url, $status->link());
+	}
+
+	/**
 	 * @covers ::theme
 	 */
 	public function testTheme(): void
@@ -139,10 +184,13 @@ class LicenseStatusTest extends TestCase
 		);
 
 		$this->assertSame([
-			'icon'  => 'check',
-			'label' => 'Valid license',
-			'theme' => null,
-			'value' => 'active'
+			'dialog' => null,
+			'drawer' => null,
+			'icon'   => 'check',
+			'label'  => 'Valid license',
+			'link'   => null,
+			'theme'  => null,
+			'value'  => 'active'
 		], $status->toArray());
 	}
 

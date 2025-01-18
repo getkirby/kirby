@@ -49,7 +49,7 @@ class SystemTest extends AreaTestCase
 			'dialog' => null,
 			'drawer' => null,
 			'icon'   => 'question',
-			'label'  => 'Unknown license',
+			'label'  => 'Unknown',
 			'link'	 => null,
 			'theme'  => 'passive',
 			'value'  => 'unknown',
