@@ -44,20 +44,20 @@ class Tokenizer
 	REGEX;
 
 	public function __construct(
-		private readonly string $source,
+		private readonly string $query,
 	) {
-		$this->length = mb_strlen($source);
+		$this->length = mb_strlen($query);
 	}
 
 	/**
-	 * Matches a regex pattern at the current position in the source string.
+	 * Matches a regex pattern at the current position in the query string.
 	 * The matched lexeme will be stored in the $lexeme variable.
 	 *
-	 * @param int $offset Current position in the source string
+	 * @param int $offset Current position in the query string
 	 * @param string $regex Regex pattern without delimiters/flags
 	 */
 	public static function match(
-		string $source,
+		string $query,
 		int $offset,
 		string $regex,
 		bool $caseInsensitive = false
@@ -69,7 +69,7 @@ class Tokenizer
 			$regex .= 'i';
 		}
 
-		preg_match($regex, $source, $matches, 0, $offset);
+		preg_match($regex, $query, $matches, 0, $offset);
 
 		if (empty($matches[0]) === true) {
 			return null;
@@ -86,9 +86,9 @@ class Tokenizer
 	 *
 	 * @throws Exception If an unexpected character is encountered
 	 */
-	public static function token(string $source, int $current): Token
+	public static function token(string $query, int $current): Token
 	{
-		$char = $source[$current];
+		$char = $query[$current];
 
 		// single character tokens:
 		$token = match ($char) {
@@ -108,22 +108,22 @@ class Tokenizer
 
 		// two character tokens:
 		// ??
-		if ($lex = static::match($source, $current, '\?\?')) {
+		if ($lex = static::match($query, $current, '\?\?')) {
 			return new Token(TokenType::T_COALESCE, $lex);
 		}
 
 		// ?.
-		if ($lex = static::match($source, $current, '\?\s*\.')) {
+		if ($lex = static::match($query, $current, '\?\s*\.')) {
 			return new Token(TokenType::T_NULLSAFE, $lex);
 		}
 
 		// ?:
-		if ($lex = static::match($source, $current, '\?\s*:')) {
+		if ($lex = static::match($query, $current, '\?\s*:')) {
 			return new Token(TokenType::T_TERNARY_DEFAULT, $lex);
 		}
 
 		// =>
-		if ($lex = static::match($source, $current, '=>')) {
+		if ($lex = static::match($query, $current, '=>')) {
 			return new Token(TokenType::T_ARROW, $lex);
 		}
 
@@ -135,27 +135,27 @@ class Tokenizer
 
 		// multi character tokens:
 		// whitespace
-		if ($lex = static::match($source, $current, '\s+')) {
+		if ($lex = static::match($query, $current, '\s+')) {
 			return new Token(TokenType::T_WHITESPACE, $lex);
 		}
 
 		// true
-		if ($lex = static::match($source, $current, 'true', true)) {
+		if ($lex = static::match($query, $current, 'true', true)) {
 			return new Token(TokenType::T_TRUE, $lex, true);
 		}
 
 		// false
-		if ($lex = static::match($source, $current, 'false', true)) {
+		if ($lex = static::match($query, $current, 'false', true)) {
 			return new Token(TokenType::T_FALSE, $lex, false);
 		}
 
 		// null
-		if ($lex = static::match($source, $current, 'null', true)) {
+		if ($lex = static::match($query, $current, 'null', true)) {
 			return new Token(TokenType::T_NULL, $lex, null);
 		}
 
 		// "string"
-		if ($lex = static::match($source, $current, static::DOUBLEQUOTE_STRING_REGEX)) {
+		if ($lex = static::match($query, $current, static::DOUBLEQUOTE_STRING_REGEX)) {
 			return new Token(
 				TokenType::T_STRING,
 				$lex,
@@ -164,7 +164,7 @@ class Tokenizer
 		}
 
 		// 'string'
-		if ($lex = static::match($source, $current, static::SINGLEQUOTE_STRING_REGEX)) {
+		if ($lex = static::match($query, $current, static::SINGLEQUOTE_STRING_REGEX)) {
 			return  new Token(
 				TokenType::T_STRING,
 				$lex,
@@ -173,26 +173,26 @@ class Tokenizer
 		}
 
 		// float
-		if ($lex = static::match($source, $current, '-?\d+\.\d+\b')) {
+		if ($lex = static::match($query, $current, '-?\d+\.\d+\b')) {
 			return new Token(TokenType::T_FLOAT, $lex, (float)$lex);
 		}
 
 		// int
-		if ($lex = static::match($source, $current, '-?\d+\b')) {
+		if ($lex = static::match($query, $current, '-?\d+\b')) {
 			return new Token(TokenType::T_INTEGER, $lex, (int)$lex);
 		}
 
 		// identifier
-		if ($lex = static::match($source, $current, static::IDENTIFIER_REGEX)) {
+		if ($lex = static::match($query, $current, static::IDENTIFIER_REGEX)) {
 			return new Token(TokenType::T_IDENTIFIER, $lex);
 		}
 
 		// unknown token
-		throw new Exception('Unexpected character: ' . $source[$current]);
+		throw new Exception('Unexpected character: ' . $query[$current]);
 	}
 
 	/**
-	 * Tokenizes the source string and returns a generator of tokens.
+	 * Tokenizes the query string and returns a generator of tokens.
 	 * @return Generator<Token>
 	 */
 	public function tokens(): Generator
@@ -200,7 +200,7 @@ class Tokenizer
 		$current = 0;
 
 		while ($current < $this->length) {
-			$token = static::token($this->source, $current);
+			$token = static::token($this->query, $current);
 
 			// don't yield whitespace tokens (ignore them)
 			if ($token->type !== TokenType::T_WHITESPACE) {
