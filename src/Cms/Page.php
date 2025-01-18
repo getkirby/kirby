@@ -522,12 +522,7 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		static $accessible   = [];
-		$role                = $this->kirby()->role()?->id() ?? '__none__';
-		$template            = $this->intendedTemplate()->name();
-		$accessible[$role] ??= [];
-
-		return $accessible[$role][$template] ??= $this->permissions()->can('access');
+		return PagePermissions::canFromCache($this, 'access');
 	}
 
 	/**
@@ -694,12 +689,7 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		static $listable   = [];
-		$role              = $this->kirby()->role()?->id() ?? '__none__';
-		$template          = $this->intendedTemplate()->name();
-		$listable[$role] ??= [];
-
-		return $listable[$role][$template] ??= $this->permissions()->can('list');
+		return PagePermissions::canFromCache($this, 'list');
 	}
 
 	/**

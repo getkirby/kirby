@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
 
 /**
@@ -17,6 +18,8 @@ abstract class ModelPermissions
 {
 	protected const CATEGORY = 'model';
 	protected array $options;
+
+	protected static array $cache = [];
 
 	public function __construct(protected ModelWithContent|Language $model)
 	{
@@ -38,6 +41,17 @@ abstract class ModelPermissions
 	public function __debugInfo(): array
 	{
 		return $this->toArray();
+	}
+
+	/**
+	 * Can be overridden by specific child classes
+	 * to return a model-specific value used to
+	 * cache a once determined permission in memory
+	 * @codeCoverageIgnore
+	 */
+	protected static function cacheKey(ModelWithContent|Language $model): string
+	{
+		return '';
 	}
 
 	/**
@@ -103,6 +117,30 @@ abstract class ModelPermissions
 
 		$permissions = $user->role()->permissions();
 		return $permissions->for(static::category($this->model), $action, $default);
+	}
+
+	/**
+	 * Quickly determines a permission for the current user role
+	 * and model blueprint unless dynamic checking is required
+	 */
+	public static function canFromCache(
+		ModelWithContent|Language $model,
+		string $action,
+		bool $default = false
+	): bool {
+		$role     = $model->kirby()->role()?->id() ?? '__none__';
+		$category = static::category($model);
+		$cacheKey = $category . '.' . $action . '/' . static::cacheKey($model) . '/' . $role;
+
+		if (isset(static::$cache[$cacheKey]) === true) {
+			return static::$cache[$cacheKey];
+		}
+
+		if (method_exists(static::class, 'can' . $action) === true) {
+			throw new LogicException('Cannot use permission cache for dynamically-determined permission');
+		}
+
+		return static::$cache[$cacheKey] = $model->permissions()->can($action, $role, $default);
 	}
 
 	/**
