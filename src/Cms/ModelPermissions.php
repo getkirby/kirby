@@ -15,7 +15,7 @@ use Kirby\Toolkit\A;
  */
 abstract class ModelPermissions
 {
-	protected string $category;
+	protected const CATEGORY = 'model';
 	protected array $options;
 	protected Permissions $permissions;
 	protected User $user;
@@ -105,7 +105,7 @@ abstract class ModelPermissions
 			}
 		}
 
-		return $this->permissions->for($this->category, $action, $default);
+		return $this->permissions->for(static::CATEGORY, $action, $default);
 	}
 
 	/**

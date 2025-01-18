@@ -13,7 +13,7 @@ namespace Kirby\Cms;
  */
 class PagePermissions extends ModelPermissions
 {
-	protected string $category = 'pages';
+	protected const CATEGORY = 'pages';
 
 	protected function canChangeSlug(): bool
 	{
