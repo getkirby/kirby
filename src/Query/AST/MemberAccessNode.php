@@ -2,7 +2,11 @@
 
 namespace Kirby\Query\AST;
 
+use Kirby\Query\Visitors\Visitor;
+
 /**
+ * Represents the access (e.g. method call) on a node
+ *
  * @package   Kirby Query
  * @author    Roman Steiner <>
  * @link      https://getkirby.com
@@ -21,14 +25,28 @@ class MemberAccessNode extends IdentifierNode
 	}
 
 	/**
-	 * Returns the member name and replaces escaped dots with real dots if it's a string
+	 * Returns the member name and replaces escaped dots
+	 * with real dots if it's a string
 	 */
 	public function member(): string|int
 	{
-		if (is_string($this->member)) {
+		if (is_string($this->member) === true) {
 			return self::unescape($this->member);
 		}
-		return $this->member;
 
+		return $this->member;
+	}
+
+	public function resolve(Visitor $visitor): mixed
+	{
+		$object    = $this->object->resolve($visitor);
+		$arguments = $this->arguments?->resolve($visitor);
+
+		return $visitor->memberAccess(
+			$object,
+			$arguments,
+			$this->member,
+			$this->nullSafe
+		);
 	}
 }

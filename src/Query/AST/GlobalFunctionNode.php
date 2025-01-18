@@ -2,6 +2,8 @@
 
 namespace Kirby\Query\AST;
 
+use Kirby\Query\Visitors\Visitor;
+
 /**
  * @package   Kirby Query
  * @author    Roman Steiner <>
@@ -24,5 +26,12 @@ class GlobalFunctionNode extends IdentifierNode
 	public function name(): string
 	{
 		return str_replace('\.', '.', $this->name);
+	}
+
+	public function resolve(Visitor $visitor): mixed
+	{
+		$name      = $this->name();
+		$arguments = $this->arguments->resolve($visitor);
+		return $visitor->function($name, $arguments);
 	}
 }

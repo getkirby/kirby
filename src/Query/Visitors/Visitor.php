@@ -3,47 +3,22 @@
 namespace Kirby\Query\Visitors;
 
 use Closure;
-use Exception;
-use Kirby\Query\AST\ArgumentListNode;
-use Kirby\Query\AST\ArrayListNode;
 use Kirby\Query\AST\ClosureNode;
-use Kirby\Query\AST\CoalesceNode;
-use Kirby\Query\AST\GlobalFunctionNode;
-use Kirby\Query\AST\LiteralNode;
-use Kirby\Query\AST\MemberAccessNode;
-use Kirby\Query\AST\Node;
-use Kirby\Query\AST\TernaryNode;
-use Kirby\Query\AST\VariableNode;
-use ReflectionClass;
 
 abstract class Visitor
 {
-	protected Closure|null $interceptor = null;
+	public Closure|null $interceptor = null;
+	public array $validGlobalFunctions;
 
-	public function visitNode(Node $node): mixed
-	{
-		$shortName = (new ReflectionClass($node))->getShortName();
-
-		// remove the "Node" suffix
-		$shortName = substr($shortName, 0, -4);
-		$method    = 'visit' . $shortName;
-
-		if (method_exists($this, $method)) {
-			return $this->$method($node);
-		}
-
-		throw new Exception('No visitor method for ' . $node::class);
-	}
-
-	abstract public function visitArgumentList(ArgumentListNode $node): mixed;
-	abstract public function visitArrayList(ArrayListNode $node): mixed;
-	abstract public function visitCoalesce(CoalesceNode $node): mixed;
-	abstract public function visitLiteral(LiteralNode $node): mixed;
-	abstract public function visitMemberAccess(MemberAccessNode $node): mixed;
-	abstract public function visitTernary(TernaryNode $node): mixed;
-	abstract public function visitVariable(VariableNode $node): mixed;
-	abstract public function visitGlobalFunction(GlobalFunctionNode $node): mixed;
-	abstract public function visitClosure(ClosureNode $node): mixed;
+	abstract public function argumentList(array $arguments);
+	abstract public function arrayList(array $elements);
+	abstract public function closure(ClosureNode $node);
+	abstract public function coalescence(mixed $left, mixed $right);
+	abstract public function function(string $name, $arguments);
+	abstract public function literal(mixed $value);
+	abstract public function memberAccess(mixed $object, array|string|null $arguments, string|int $member, bool $nullSafe);
+	abstract public function ternary(mixed $condition, mixed $true, mixed $false, bool $elvis);
+	abstract public function variable(string $name);
 
 	/**
 	 * Sets and activates an interceptor closure

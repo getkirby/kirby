@@ -38,7 +38,7 @@ class Interpreted extends Runner
 				$interpreter->setInterceptor($self->interceptor);
 			}
 
-			return $node->accept($interpreter);
+			return $node->resolve($interpreter);
 		};
 	}
 

@@ -54,7 +54,7 @@ class Transpiled extends Runner
 		$node    = $parser->parse();
 		$codeGen = new CodeGen($this->allowedFunctions);
 
-		$functionBody = $node->accept($codeGen);
+		$functionBody = $node->resolve($codeGen);
 
 		$mappings = array_map(
 			fn ($k, $v) => "$k = $v;",

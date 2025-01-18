@@ -4,15 +4,7 @@ namespace Kirby\Query\Visitors;
 
 use Closure;
 use Exception;
-use Kirby\Query\AST\ArgumentListNode;
-use Kirby\Query\AST\ArrayListNode;
 use Kirby\Query\AST\ClosureNode;
-use Kirby\Query\AST\CoalesceNode;
-use Kirby\Query\AST\GlobalFunctionNode;
-use Kirby\Query\AST\LiteralNode;
-use Kirby\Query\AST\MemberAccessNode;
-use Kirby\Query\AST\TernaryNode;
-use Kirby\Query\AST\VariableNode;
 use Kirby\Query\Runners\Runtime;
 
 /**
@@ -43,18 +35,6 @@ class CodeGen extends Visitor
 	 */
 	public array $mappings = [];
 
-
-	/**
-	 * Variable names in Query Language are different from PHP variable names,
-	 * they can start with a number and may contain escaped dots.
-	 *
-	 * This method returns a sanitized PHP variable name.
-	 */
-	private static function phpName(string $name): string
-	{
-		return '$_' . crc32($name);
-	}
-
 	/**
 	 * CodeGen constructor.
 	 *
@@ -66,124 +46,30 @@ class CodeGen extends Visitor
 	) {
 	}
 
-	private function intercept(string $value): string
+	/**
+	 * Converts list of arguments to string representation
+	 */
+	public function argumentList(array $arguments): string
 	{
-		return "(\$intercept($value))";
-	}
-
-	public function visitArgumentList(ArgumentListNode $node): string
-	{
-		$arguments = array_map(
-			fn ($argument) => $argument->accept($this),
-			$node->arguments
-		);
-
 		return join(', ', $arguments);
 	}
 
-	public function visitArrayList(ArrayListNode $node): string
+	/**
+	 * Converts array to string representation
+	 */
+	public function arrayList(array $elements): string
 	{
-		$elements = array_map(
-			fn ($element) => $element->accept($this),
-			$node->elements
-		);
-
 		return '[' . join(', ', $elements) . ']';
 	}
 
-	public function visitCoalesce(CoalesceNode $node): string
-	{
-		$left  = $node->left->accept($this);
-		$right = $node->right->accept($this);
-		return "($left ?? $right)";
-	}
-
-	public function visitLiteral(LiteralNode $node): string
-	{
-		return var_export($node->value, true);
-	}
-
-	public function visitMemberAccess(MemberAccessNode $node): string
-	{
-		$object = $node->object->accept($this);
-		$member = $node->member;
-
-		$this->uses[Runtime::class] = true;
-		$memberStr = var_export($member, true);
-		$nullSafe  = $node->nullSafe ? 'true' : 'false';
-
-		$object = $this->intercept($object);
-
-		if ($node->arguments) {
-			$arguments = $node->arguments->accept($this);
-			$member    = var_export($member, true);
-
-			return "Runtime::access($object, $memberStr, $nullSafe, $arguments)";
-		}
-
-		return "Runtime::access($object, $memberStr, $nullSafe)";
-	}
-
-	public function visitTernary(TernaryNode $node): string
-	{
-		$left        = $node->condition->accept($this);
-		$falseBranch = $node->falseBranch->accept($this);
-
-		if ($node->trueBranchIsDefault === true) {
-			return "($left ?: $falseBranch)";
-		}
-
-		$trueBranch = $node->trueBranch->accept($this);
-		return "($left ? $trueBranch : $falseBranch)";
-
-	}
-
-	public function visitVariable(VariableNode $node): string
-	{
-		$name    = $node->name();
-		$namestr = var_export($name, true);
-		$key     = static::phpName($name);
-
-		if (isset($this->directAccessFor[$name])) {
-			return $key;
-		}
-
-		if (isset($this->mappings[$key]) === false) {
-			$this->mappings[$key] = <<<PHP
-				match(true) {
-					isset(\$context[$namestr]) && \$context[$namestr] instanceof Closure => \$context[$namestr](),
-					isset(\$context[$namestr]) => \$context[$namestr],
-					isset(\$functions[$namestr]) => \$functions[$namestr](),
-					default => null
-				}
-				PHP;
-		}
-
-		return $key;
-	}
-
 	/**
-	 * Generates code like `$functions['function']($arguments)` from a global function node.
+	 * Converts closure node to string representation
 	 */
-	public function visitGlobalFunction(GlobalFunctionNode $node): string
-	{
-		$name = $node->name();
-
-		if (isset($this->validGlobalFunctions[$name]) === false) {
-			throw new Exception("Invalid global function $name, valid functions are: " . join(', ', array_keys($this->validGlobalFunctions)));
-		}
-
-		$arguments = $node->arguments->accept($this);
-		$name      = var_export($name, true);
-
-		return  "\$functions[$name]($arguments)";
-	}
-
-	public function visitClosure(ClosureNode $node): mixed
+	public function closure(ClosureNode $node): string
 	{
 		$this->uses[Runtime::class] = true;
 
-		$args = array_map(static::phpName(...), $node->arguments);
+		$args = array_map($this::phpName(...), $node->arguments);
 		$args = join(', ', $args);
 
 		$newDirectAccessFor = [
@@ -192,12 +78,120 @@ class CodeGen extends Visitor
 		];
 
 		$nestedVisitor = new static($this->validGlobalFunctions, $newDirectAccessFor);
-		$code = $node->body->accept($nestedVisitor);
+		$code = $node->body->resolve($nestedVisitor);
 
 		// promote the nested visitor's uses and mappings to the current visitor
 		$this->uses     += $nestedVisitor->uses;
 		$this->mappings += $nestedVisitor->mappings;
 
 		return "fn($args) => $code";
+	}
+
+	/**
+	 * Converts coalescence operator to string representation
+	 */
+	public function coalescence(mixed $left, mixed $right): string
+	{
+		return "($left ?? $right)";
+	}
+
+	/**
+	 * Creates string representation for (global) function
+	 */
+	public function function(string $name, $arguments): string
+	{
+		if (isset($this->validGlobalFunctions[$name]) === false) {
+			throw new Exception("Invalid global function $name");
+		}
+
+		$name = var_export($name, true);
+		return "\$functions[$name]($arguments)";
+	}
+
+	public function intercept(string $value): string
+	{
+		return "(\$intercept($value))";
+	}
+
+	/**
+	 * Converts literals to string representation
+	 */
+	public function literal(mixed $value): string
+	{
+		return var_export($value, true);
+	}
+
+	/**
+	 * Creates string representation for member access
+	 */
+	public function memberAccess(
+		mixed $object,
+		array|string|null $arguments,
+		string|int $member,
+		bool $nullSafe
+	): string {
+		$this->uses[Runtime::class] = true;
+
+		$params = array_filter([
+			$this->intercept($object),
+			var_export($member, true),
+			$nullSafe ? 'true' : 'false',
+			$arguments
+		]);
+
+		return 'Runtime::access(' . implode(', ', $params) . ')';
+	}
+
+	/**
+	 * Variable names in Query Language are different from PHP variable names,
+	 * they can start with a number and may contain escaped dots.
+	 *
+	 * This method returns a sanitized PHP variable name.
+	 */
+	public static function phpName(string $name): string
+	{
+		return '$_' . crc32($name);
+	}
+
+	/**
+	 * Converts ternary operator to string representation
+	 */
+	public function ternary(
+		mixed $condition,
+		mixed $true,
+		mixed $false,
+		bool $elvis
+	): string {
+		if ($elvis === true) {
+			return "($condition ?: $false)";
+		}
+
+		return "($condition ? $true : $false)";
+	}
+
+	/**
+	 * Creates string representation for variable
+	 */
+	public function variable(string $name): string
+	{
+		$key = static::phpName($name);
+
+		if (isset($this->directAccessFor[$name]) === true) {
+			return $key;
+		}
+
+		if (isset($this->mappings[$key]) === false) {
+			$name                    = var_export($name, true);
+			$this->mappings[$key] = <<<PHP
+				match(true) {
+					isset(\$context[$name]) && \$context[$name] instanceof Closure => \$context[$name](),
+					isset(\$context[$name]) => \$context[$name],
+					isset(\$functions[$name]) => \$functions[$name](),
+					default => null
+				}
+				PHP;
+		}
+
+		return $key;
 	}
 }

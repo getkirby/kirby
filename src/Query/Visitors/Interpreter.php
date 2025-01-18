@@ -4,15 +4,7 @@ namespace Kirby\Query\Visitors;
 
 use Closure;
 use Exception;
-use Kirby\Query\AST\ArgumentListNode;
-use Kirby\Query\AST\ArrayListNode;
 use Kirby\Query\AST\ClosureNode;
-use Kirby\Query\AST\CoalesceNode;
-use Kirby\Query\AST\GlobalFunctionNode;
-use Kirby\Query\AST\LiteralNode;
-use Kirby\Query\AST\MemberAccessNode;
-use Kirby\Query\AST\TernaryNode;
-use Kirby\Query\AST\VariableNode;
 use Kirby\Query\Runners\Runtime;
 
 /**
@@ -37,104 +29,26 @@ class Interpreter extends Visitor
 	) {
 	}
 
-	public function visitArgumentList(ArgumentListNode $node): array
+	/**
+	 * Executes list of arguments
+	 */
+	public function argumentList(array $arguments): array
 	{
-		return array_map(
-			fn ($argument) => $argument->accept($this),
-			$node->arguments
-		);
+		return $arguments;
 	}
 
-	public function visitArrayList(ArrayListNode $node): mixed
+	/**
+	 * Executes array
+	 */
+	public function arrayList(array $elements): array
 	{
-		return array_map(
-			fn ($element) => $element->accept($this),
-			$node->elements
-		);
+		return $elements;
 	}
 
-	public function visitCoalesce(CoalesceNode $node): mixed
-	{
-		return $node->left->accept($this) ?? $node->right->accept($this);
-	}
-
-	public function visitLiteral(LiteralNode $node): mixed
-	{
-		$val = $node->value;
-
-		return $val;
-	}
-
-	public function visitMemberAccess(MemberAccessNode $node): mixed
-	{
-		$left = $node->object->accept($this);
-
-		if ($this->interceptor !== null) {
-			$left = ($this->interceptor)($left);
-		}
-
-		$item = null;
-
-		if ($node->arguments !== null) {
-			$item = Runtime::access(
-				$left,
-				$node->member,
-				$node->nullSafe,
-				...$node->arguments->accept($this)
-			);
-		} else {
-			$item = Runtime::access($left, $node->member, $node->nullSafe);
-		}
-
-		return $item;
-	}
-
-	public function visitTernary(TernaryNode $node): mixed
-	{
-		if ($node->trueBranchIsDefault === true) {
-			return
-				$node->condition->accept($this) ?:
-				$node->trueBranch->accept($this);
-		}
-
-		return
-			$node->condition->accept($this) ?
-			$node->trueBranch->accept($this) :
-			$node->falseBranch->accept($this);
-	}
-
-	public function visitVariable(VariableNode $node): mixed
-	{
-		// what looks like a variable might actually be a global function
-		// but if there is a variable with the same name,
-		// the variable takes precedence
-
-		$name = $node->name();
-
-		$item = match (true) {
-			isset($this->context[$name]) => $this->context[$name] instanceof Closure ? $this->context[$name]() : $this->context[$name],
-			isset($this->validGlobalFunctions[$name]) => $this->validGlobalFunctions[$name](),
-			default => null,
-		};
-
-		return $item;
-	}
-
-	public function visitGlobalFunction(GlobalFunctionNode $node): mixed
-	{
-		$name = $node->name();
-
-		if (isset($this->validGlobalFunctions[$name]) === false) {
-			throw new Exception("Invalid global function $name");
-		}
-
-		$function = $this->validGlobalFunctions[$name];
-		$result   = $function(...$node->arguments->accept($this));
-
-		return $result;
-	}
-
-	public function visitClosure(ClosureNode $node): mixed
+	/**
+	 * Converts node into closure
+	 */
+	public function closure(ClosureNode $node): Closure
 	{
 		$self = $this;
 
@@ -149,13 +63,103 @@ class Interpreter extends Visitor
 				$params
 			);
 
-			$visitor = new static($functions, [...$context, ...$arguments]);
+			$self = new static($functions, [...$context, ...$arguments]);
 
 			if ($self->interceptor !== null) {
-				$visitor->setInterceptor($self->interceptor);
+				$self->setInterceptor($self->interceptor);
 			}
 
-			return $node->body->accept($visitor);
+			return $node->body->resolve($self);
 		};
+	}
+
+	/**
+	 * Executes coalescence operator
+	 */
+	public function coalescence(mixed $left, mixed $right): mixed
+	{
+		return $left ?? $right;
+	}
+
+	/**
+	 * Executes global function
+	 */
+	public function function(string $name, $arguments): mixed
+	{
+		$function = $this->validGlobalFunctions[$name] ?? null;
+
+		if ($function === null) {
+			throw new Exception("Invalid global function $name");
+		}
+
+		return $function(...$arguments);
+	}
+
+	/**
+	 * Executes literals
+	 */
+	public function literal(mixed $value): mixed
+	{
+		return $value;
+	}
+
+	/**
+	 * Executes member access
+	 */
+	public function memberAccess(
+		mixed $object,
+		array|string|null $arguments,
+		string|int $member,
+		bool $nullSafe
+	): mixed {
+		if ($this->interceptor !== null) {
+			$object = ($this->interceptor)($object);
+		}
+
+		return Runtime::access(
+			$object,
+			$member,
+			$nullSafe,
+			...$arguments ?? []
+		);
+	}
+
+	/**
+	 * Executes ternary operator
+	 */
+	public function ternary(
+		mixed $condition,
+		mixed $true,
+		mixed $false,
+		bool $elvis
+	): mixed {
+		if ($elvis === true) {
+			return $condition ?: $false;
+		}
+
+		return $condition ? $true : $false;
+	}
+
+	/**
+	 * Get variable from context or global function
+	 */
+	public function variable(string $name): mixed
+	{
+		// what looks like a variable might actually be a global function
+		// but if there is a variable with the same name,
+		// the variable takes precedence
+		if ($context = $this->context[$name] ?? null) {
+			if ($context instanceof Closure) {
+				return $context();
+			}
+
+			return $context;
+		}
+
+		if ($function = $this->validGlobalFunctions[$name] ?? null) {
+			return $function();
+		}
+
+		return null;
 	}
 }

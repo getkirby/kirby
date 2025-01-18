@@ -2,7 +2,13 @@
 
 namespace Kirby\Query\AST;
 
+use Kirby\Query\Visitors\Visitor;
+
 /**
+ * Represents a ternary condition
+ * with a value for when the condition is true
+ * and another value for when the condition is false
+ *
  * @package   Kirby Query
  * @author    Roman Steiner <>
  * @link      https://getkirby.com
@@ -16,7 +22,15 @@ class TernaryNode extends Node
 		public Node $condition,
 		public Node|null $trueBranch,
 		public Node $falseBranch,
-		public bool $trueBranchIsDefault = false,
+		public bool $elvis = false,
 	) {
+	}
+
+	public function resolve(Visitor $visitor): mixed
+	{
+		$condition = $this->condition->resolve($visitor);
+		$true      = $this->trueBranch->resolve($visitor);
+		$false     = $this->falseBranch->resolve($visitor);
+		return $visitor->ternary($condition, $true, $false, $this->elvis);
 	}
 }
