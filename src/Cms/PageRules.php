@@ -40,7 +40,7 @@ class PageRules
 	 */
 	public static function changeSlug(Page $page, string $slug): void
 	{
-		if ($page->permissions()->changeSlug() !== true) {
+		if ($page->permissions()->can('changeSlug') !== true) {
 			throw new PermissionException(
 				key: 'page.changeSlug.permission',
 				data: ['slug' => $page->slug()]
@@ -99,7 +99,7 @@ class PageRules
 	 */
 	public static function changeStatusToDraft(Page $page): void
 	{
-		if ($page->permissions()->changeStatus() !== true) {
+		if ($page->permissions()->can('changeStatus') !== true) {
 			throw new PermissionException(
 				key: 'page.changeStatus.permission',
 				data: ['slug' => $page->slug()]
@@ -160,7 +160,7 @@ class PageRules
 	 */
 	public static function changeTemplate(Page $page, string $template): void
 	{
-		if ($page->permissions()->changeTemplate() !== true) {
+		if ($page->permissions()->can('changeTemplate') !== true) {
 			throw new PermissionException(
 				key: 'page.changeTemplate.permission',
 				data: ['slug' => $page->slug()]
@@ -188,7 +188,7 @@ class PageRules
 	 */
 	public static function changeTitle(Page $page, string $title): void
 	{
-		if ($page->permissions()->changeTitle() !== true) {
+		if ($page->permissions()->can('changeTitle') !== true) {
 			throw new PermissionException(
 				key: 'page.changeTitle.permission',
 				data: ['slug' => $page->slug()]
@@ -207,7 +207,7 @@ class PageRules
 	 */
 	public static function create(Page $page): void
 	{
-		if ($page->permissions()->create() !== true) {
+		if ($page->permissions()->can('create') !== true) {
 			throw new PermissionException(
 				key: 'page.create.permission',
 				data: ['slug' => $page->slug()]
@@ -251,7 +251,7 @@ class PageRules
 	 */
 	public static function delete(Page $page, bool $force = false): void
 	{
-		if ($page->permissions()->delete() !== true) {
+		if ($page->permissions()->can('delete') !== true) {
 			throw new PermissionException(
 				key: 'page.delete.permission',
 				data: ['slug' => $page->slug()]
@@ -273,7 +273,7 @@ class PageRules
 		string $slug,
 		array $options = []
 	): void {
-		if ($page->permissions()->duplicate() !== true) {
+		if ($page->permissions()->can('duplicate') !== true) {
 			throw new PermissionException(
 				key: 'page.duplicate.permission',
 				data: ['slug' => $page->slug()]
@@ -294,7 +294,7 @@ class PageRules
 			return;
 		}
 
-		if ($page->permissions()->move() !== true) {
+		if ($page->permissions()->can('move') !== true) {
 			throw new PermissionException(
 				key: 'page.move.permission',
 				data: ['slug' => $page->slug()]
@@ -373,7 +373,7 @@ class PageRules
 	 */
 	public static function publish(Page $page): void
 	{
-		if ($page->permissions()->changeStatus() !== true) {
+		if ($page->permissions()->can('changeStatus') !== true) {
 			throw new PermissionException(
 				key: 'page.changeStatus.permission',
 				data: [
@@ -397,7 +397,7 @@ class PageRules
 	 */
 	public static function update(Page $page, array $content = []): void
 	{
-		if ($page->permissions()->update() !== true) {
+		if ($page->permissions()->can('update') !== true) {
 			throw new PermissionException(
 				key: 'page.update.permission',
 				data: ['slug' => $page->slug()]
