@@ -29,7 +29,10 @@ class TestCase extends BaseTestCase
 
 			'closure access to parent context' => [
 				'thing.call(() => result).field', // query
-				['result' => ['field' => 42], 'thing' => ['call' => fn ($callback) => $callback()]], // context
+				[
+					'result' => ['field' => 42],
+					'thing'  => ['call' => fn ($callback) => $callback()]
+				], // context
 				42 // result
 			],
 
@@ -37,14 +40,14 @@ class TestCase extends BaseTestCase
 				'foo(42).bar', // query
 				[], // context
 				84, // result
-				['foo' => fn ($a) => ['bar' => $a * 2]] // globalFunctions
+				['foo' => fn ($a) => ['bar' => $a * 2]] // functions
 			],
 
 			'global function result when function looks like variable - i' => [
 				'foo.bar', // query
 				[], // context
 				42, // result
-				['foo' => fn () => ['bar' => 42]] // globalFunctions
+				['foo' => fn () => ['bar' => 42]] // functions
 			],
 		];
 	}
@@ -61,7 +64,11 @@ class TestCase extends BaseTestCase
 
 			'nested field' => [
 				'user.name.first', // query
-				['user' => $user = ['name' => $name = ['first' => 'Homer']]], // context
+				[
+					'user' => $user = [
+						'name' => $name = ['first' => 'Homer']
+					]
+				], // context
 				[$user, $name] // intercept
 			],
 
@@ -88,26 +95,26 @@ class TestCase extends BaseTestCase
 			})(),
 
 			'function result for explicit global function' => (function () {
-				$functionResult = ['bar' => 'baz'];
-				$globalFunctions = ['foo' => fn () => $functionResult];
+				$result = ['bar' => 'baz'];
+				$functions = ['foo' => fn () => $result];
 
 				return [
 					'foo("arg").bar', // query
 					[], // context
-					[$functionResult], // intercept
-					$globalFunctions // globalFunctions
+					[$result], // intercept
+					$functions // functions
 				];
 			})(),
 
 			'global function result when function looks like variable - a' => (function () {
-				$functionResult = ['bar' => 'baz'];
-				$globalFunctions = ['foo' => fn () => $functionResult];
+				$result    = ['bar' => 'baz'];
+				$functions = ['foo' => fn () => $result];
 
 				return [
 					'foo.bar', // query
 					[], // context
-					[$functionResult], // intercept
-					$globalFunctions // globalFunctions
+					[$result], // intercept
+					$functions // functions
 				];
 			})()
 		];

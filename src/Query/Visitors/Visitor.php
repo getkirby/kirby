@@ -41,6 +41,8 @@ abstract class Visitor
 	/**
 	 * Sets and activates an interceptor closure
 	 * that is called for each resolved value.
+	 *
+	 * @todo can't this be moved to the constructor?
 	 */
 	public function setInterceptor(Closure $interceptor): void
 	{

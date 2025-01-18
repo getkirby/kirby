@@ -9,7 +9,12 @@ use Kirby\Query\Runners\Transpiled;
  */
 class TranspiledTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Toolkit.Query.RunnerTest';
+	public const TMP = KIRBY_TMP_DIR . '/Query.TranspiledTest';
+
+	public function setUp(): void
+	{
+		$this->setUpTmp();
+	}
 
 	/**
 	 * @dataProvider interceptProvider
@@ -18,24 +23,26 @@ class TranspiledTest extends TestCase
 		string $query,
 		array $context,
 		array $intercept,
-		array $globalFunctions = []
+		array $functions = []
 	): void {
-		$actuallyItercepted = [];
-
-		$interceptorSpy = function ($value) use (&$actuallyItercepted) {
-			$actuallyItercepted[] = $value;
+		$intercepted = [];
+		$interceptor = function ($value) use (&$intercepted) {
+			$intercepted[] = $value;
 			return $value;
 		};
 
-		Transpiled::$cacheFolder = static::TMP;
-
 		$runner = new Transpiled(
-			allowedFunctions: $globalFunctions,
-			interceptor: $interceptorSpy
+			functions: $functions,
+			interceptor: $interceptor,
+			root: static::TMP
 		);
 		$runner->run($query, $context);
 
-		$this->assertSame($intercept, $actuallyItercepted, 'Generated PHP Code:' . PHP_EOL . file_get_contents(Transpiled::getCacheFile($query)));
+		$this->assertSame(
+			$intercept,
+			$intercepted,
+			'Generated PHP Code:' . PHP_EOL . file_get_contents($runner->file($query))
+		);
 	}
 
 	/**
@@ -44,18 +51,17 @@ class TranspiledTest extends TestCase
 	public function testResult(
 		string $query,
 		array $context,
-		mixed $result,
-		array $globalFunctions = []
+		mixed $expected,
+		array $functions = []
 	): void {
-		Transpiled::$cacheFolder = static::TMP;
+		$runner = new Transpiled(functions: $functions, root: static::TMP);
+		$result = $runner->run($query, $context);
+		$code   = file_get_contents($runner->file($query));
 
-		$runner = new Transpiled(
-			allowedFunctions: $globalFunctions,
+		$this->assertSame(
+			$expected,
+			$result,
+			'Generated PHP Code:' . PHP_EOL . $code
 		);
-
-		$actualResult = $runner->run($query, $context);
-		$code = file_get_contents(Transpiled::getCacheFile($query));
-
-		$this->assertSame($result, $actualResult, 'Generated PHP Code:' . PHP_EOL . $code);
 	}
 }

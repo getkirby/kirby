@@ -8,7 +8,8 @@ use Exception;
 
 /**
  * @package   Kirby Query
- * @author    Roman Steiner <>
+ * @author    Roman Steiner <>,
+ *            Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
@@ -17,10 +18,10 @@ use Exception;
 abstract class Runner
 {
 	/**
-	 * @param array $allowedFunctions Allowed global function closures
+	 * @param array $functions Allowed global function closures
 	 */
 	public function __construct(
-		public array $allowedFunctions = [],
+		public array $functions = [],
 		protected Closure|null $interceptor = null,
 		protected ArrayAccess|array &$cache = [],
 	) {
@@ -29,9 +30,9 @@ abstract class Runner
 	/**
 	 * Executes a query within a given data context
 	 *
-	 * @param array $context Optional context variables to be passed to the query executor
+	 * @param array $context Optional variables to be passed to the query
 	 *
-	 * @throws Exception If the query is not valid or the executor is not callable.
+	 * @throws Exception when query is invalid or executor not callable
 	 */
 	abstract public function run(string $query, array $context = []): mixed;
 }

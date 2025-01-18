@@ -4,7 +4,6 @@ namespace Kirby\Query\Runners;
 
 use Closure;
 use Kirby\Query\Parsers\Parser;
-use Kirby\Query\Parsers\Tokenizer;
 use Kirby\Query\Visitors\Interpreter;
 
 /**
@@ -28,23 +27,29 @@ class Interpreted extends Runner
 
 		// parse query and generate closure
 		$parser = new Parser($query);
-		$node   = $parser->parse();
+		$ast    = $parser->parse();
 		$self   = $this;
 
-		return $this->cache[$query] = function (array $binding) use ($node, $self) {
-			$interpreter = new Interpreter($self->allowedFunctions, $binding);
+		return $this->cache[$query] = function (array $binding) use ($self, $ast) {
+			$visitor = new Interpreter($self->functions, $binding);
 
 			if ($self->interceptor !== null) {
-				$interpreter->setInterceptor($self->interceptor);
+				$visitor->setInterceptor($self->interceptor);
 			}
 
-			return $node->resolve($interpreter);
+			return $ast->resolve($visitor);
 		};
 	}
 
+	/**
+	 * Executes a query within a given data context
+	 *
+	 * @param array $context Optional variables to be passed to the query
+	 *
+	 * @throws Exception when query is invalid or executor not callable
+	 */
 	public function run(string $query, array $context = []): mixed
 	{
-		$resolver = $this->resolver($query);
-		return $resolver($context);
+		return $this->resolver($query)($context);
 	}
 }

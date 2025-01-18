@@ -10,7 +10,7 @@ use Kirby\Query\Runners\Interpreted;
  */
 class InterpretedTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Toolkit.Query.RunnerTest';
+	public const TMP = KIRBY_TMP_DIR . '/Query.InterpretedTest';
 
 	/**
 	 * @dataProvider interceptProvider
@@ -19,23 +19,22 @@ class InterpretedTest extends TestCase
 		string $query,
 		array $context,
 		array $intercept,
-		array $globalFunctions = []
+		array $functions = []
 	): void {
-		$actuallyIntercepted = [];
-
-		$interceptorSpy = function ($value) use (&$actuallyIntercepted) {
-			$actuallyIntercepted[] = $value;
+		$intercepted = [];
+		$interceptor = function ($value) use (&$intercepted) {
+			$intercepted[] = $value;
 			return $value;
 		};
 
 		$runner = new Interpreted(
-			allowedFunctions: $globalFunctions,
-			interceptor: $interceptorSpy
+			functions: $functions,
+			interceptor: $interceptor
 		);
 
 		$runner->run($query, $context);
 
-		$this->assertSame($intercept, $actuallyIntercepted);
+		$this->assertSame($intercept, $intercepted);
 	}
 
 	/**
@@ -44,16 +43,13 @@ class InterpretedTest extends TestCase
 	public function testResult(
 		string $query,
 		array $context,
-		mixed $result,
-		array $globalFunctions = []
+		mixed $expected,
+		array $functions = []
 	): void {
-		$runner = new Interpreted(
-			allowedFunctions: $globalFunctions,
-		);
+		$runner = new Interpreted(functions: $functions);
+		$result = $runner->run($query, $context);
 
-		$actualResult = $runner->run($query, $context);
-
-		$this->assertSame($result, $actualResult);
+		$this->assertSame($expected, $result);
 	}
 
 	/**
@@ -67,21 +63,21 @@ class InterpretedTest extends TestCase
 		$cacheSpy = $this->createStub(ArrayAccess::class);
 
 		$cacheSpy
-			->expects($this->exactly(2))
+			->expects($this->exactly(3))
 			->method('offsetExists')
 			->willReturnCallback(function ($key) use (&$cache) {
 				return isset($cache[$key]);
 			});
 
 		$cacheSpy
-			->expects($this->exactly(1))
+			->expects($this->exactly(2))
 			->method('offsetGet')
 			->willReturnCallback(function ($key) use (&$cache) {
 				return $cache[$key] ?? null;
 			});
 
 		$cacheSpy
-			->expects($this->exactly(1))
+			->expects($this->exactly(2))
 			->method('offsetSet')
 			->willReturnCallback(function ($key, $val) use (&$cache) {
 				$cache[$key] = $val;
@@ -91,7 +87,14 @@ class InterpretedTest extends TestCase
 		$runner2 = new Interpreted(cache: $cacheSpy);
 
 		// it should still give different results for different contexts
-		$this->assertSame(42, $runner1->run('foo.bar', ['foo' => ['bar' => 42]]));
-		$this->assertSame(84, $runner2->run('foo.bar', ['foo' => ['bar' => 84]]));
+		$result = $runner1->run('foo.bar', ['foo' => ['bar' => 42]]);
+		$this->assertSame(42, $result);
+
+		$result = $runner2->run('foo.bar', ['foo' => ['bar' => 84]]);
+		$this->assertSame(84, $result);
+
+		$runner3 = new Interpreted(cache: $cacheSpy);
+		$result = $runner3->run('foo.bar', ['foo' => ['bar' => 97]]);
+		$this->assertSame(97, $result);
 	}
 }
