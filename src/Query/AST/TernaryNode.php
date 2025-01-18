@@ -21,16 +21,15 @@ class TernaryNode extends Node
 	public function __construct(
 		public Node $condition,
 		public Node $false,
-		public Node|null $true = null,
-		public bool $elvis = false,
+		public Node|null $true = null
 	) {
 	}
 
 	public function resolve(Visitor $visitor): mixed
 	{
 		$condition = $this->condition->resolve($visitor);
-		$true      = $this->true->resolve($visitor);
+		$true      = $this->true?->resolve($visitor);
 		$false     = $this->false->resolve($visitor);
-		return $visitor->ternary($condition, $true, $false, $this->elvis);
+		return $visitor->ternary($condition, $true, $false);
 	}
 }

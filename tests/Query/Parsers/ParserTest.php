@@ -194,8 +194,7 @@ class ParserTest extends TestCase
 			$ast,
 			new TernaryNode(
 				condition: new LiteralNode('foo'),
-				false: new LiteralNode('bar'),
-				elvis: true
+				false: new LiteralNode('bar')
 			)
 		);
 	}

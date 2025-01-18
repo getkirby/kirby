@@ -121,10 +121,9 @@ class Interpreter extends Visitor
 	public function ternary(
 		mixed $condition,
 		mixed $true,
-		mixed $false,
-		bool $elvis
+		mixed $false
 	): mixed {
-		if ($elvis === true) {
+		if ($true === null) {
 			return $condition ?: $false;
 		}
 

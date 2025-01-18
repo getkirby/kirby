@@ -327,20 +327,15 @@ class Parser
 			TokenType::T_QUESTION_MARK,
 			TokenType::T_TERNARY_DEFAULT
 		])) {
-			if ($token->is(TokenType::T_TERNARY_DEFAULT)) {
-				$elvis = true;
-				$true  = null;
-			} else {
-				$elvis = false;
-				$true  = $this->expression();
+			if ($token->is(TokenType::T_TERNARY_DEFAULT) === false) {
+				$true = $this->expression();
 				$this->consume(TokenType::T_COLON, 'Expect ":" after true branch');
 			}
 
 			return new TernaryNode(
 				condition: $condition,
-				true: $true,
-				false: $this->expression(),
-				elvis: $elvis
+				true: $true ?? null,
+				false: $this->expression()
 			);
 		}
 

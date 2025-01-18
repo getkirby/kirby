@@ -144,10 +144,9 @@ class CodeGen extends Visitor
 	public function ternary(
 		mixed $condition,
 		mixed $true,
-		mixed $false,
-		bool $elvis
+		mixed $false
 	): string {
-		if ($elvis === true) {
+		if ($true === null) {
 			return "($condition ?: $false)";
 		}
 

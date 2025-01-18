@@ -35,7 +35,7 @@ abstract class Visitor
 	abstract public function function(string $name, $arguments);
 	abstract public function literal(mixed $value);
 	abstract public function memberAccess(mixed $object, array|string|null $arguments, string|int $member, bool $nullSafe);
-	abstract public function ternary(mixed $condition, mixed $true, mixed $false, bool $elvis);
+	abstract public function ternary(mixed $condition, mixed $true, mixed $false);
 	abstract public function variable(string $name);
 
 	/**
