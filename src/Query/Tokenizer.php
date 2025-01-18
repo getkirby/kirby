@@ -5,7 +5,6 @@ namespace Kirby\Query;
 use Exception;
 use Generator;
 
-
 /**
  * Tokenizer
  *
@@ -54,24 +53,23 @@ class Tokenizer
 	 * Matches a regex pattern at the current position in the source string.
 	 * The matched lexeme will be stored in the $lexeme variable.
 	 *
-	 * @param int $current Current position in the source string (used as offset for the regex)
+	 * @param int $offset Current position in the source string
 	 * @param string $regex Regex pattern without delimiters/flags
-	 * @param string $lexeme Matched lexeme will be stored in this variable
 	 */
-	protected static function match(
+	public static function match(
 		string $source,
-		int $current,
+		int $offset,
 		string $regex,
-		bool $caseIgnore = false
+		bool $caseInsensitive = false
 	): string|null {
 		// add delimiters and flags to the regex
 		$regex = '/\G' . $regex . '/u';
 
-		if ($caseIgnore === true) {
+		if ($caseInsensitive === true) {
 			$regex .= 'i';
 		}
 
-		preg_match($regex, $source, $matches, 0, $current);
+		preg_match($regex, $source, $matches, 0, $offset);
 
 		if (empty($matches[0]) === true) {
 			return null;
@@ -88,13 +86,12 @@ class Tokenizer
 	 *
 	 * @throws Exception If an unexpected character is encountered
 	 */
-	protected static function token(string $source, int $current): Token
+	public static function token(string $source, int $current): Token
 	{
-		$lex  = '';
 		$char = $source[$current];
 
 		// single character tokens:
-		$token = match($char) {
+		$token = match ($char) {
 			'.'     => new Token(TokenType::T_DOT, '.'),
 			'('     => new Token(TokenType::T_OPEN_PAREN, '('),
 			')'     => new Token(TokenType::T_CLOSE_PAREN, ')'),
@@ -175,12 +172,15 @@ class Tokenizer
 			);
 		}
 
-		// int
-		if ($lex = static::match($source, $current, '\d+\b')) {
-			return new Token(TokenType::T_INTEGER, $lex, (int)$lex);
+		// float
+		if ($lex = static::match($source, $current, '-?\d+\.\d+\b')) {
+			return new Token(TokenType::T_FLOAT, $lex, (float)$lex);
 		}
 
-		// TODO: float?
+		// int
+		if ($lex = static::match($source, $current, '-?\d+\b')) {
+			return new Token(TokenType::T_INTEGER, $lex, (int)$lex);
+		}
 
 		// identifier
 		if ($lex = static::match($source, $current, static::IDENTIFIER_REGEX)) {
