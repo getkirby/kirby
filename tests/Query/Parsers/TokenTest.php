@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Query;
+namespace Kirby\Query\Parsers;
 
 use Kirby\TestCase;
 

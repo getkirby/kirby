@@ -2,29 +2,25 @@
 
 namespace Kirby\Query\Runners;
 
-use ArrayAccess;
 use Closure;
 use Exception;
-use Kirby\Query\Parser;
-use Kirby\Query\Runner;
-use Kirby\Query\Runners\Visitors\CodeGen;
-use Kirby\Query\Tokenizer;
+use Kirby\Query\Parsers\Parser;
+use Kirby\Query\Parsers\Tokenizer;
+use Kirby\Query\Visitors\CodeGen;
 
+/**
+ * Runner that caches the AST as a PHP file
+ *
+ * @package   Kirby Query
+ * @author    Roman Steiner <>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     6.0.0
+ */
 class Transpiled extends Runner
 {
 	public static string $cacheFolder = '/tmp/query_cache';
-
-	/**
-	 * Runner constructor.
-	 *
-	 * @param array $allowedFunctions An array of allowed global function closures.
-	 */
-	public function __construct(
-		public array $allowedFunctions = [],
-		public Closure|null $interceptor = null,
-		private ArrayAccess|array &$cache = [],
-	) {
-	}
 
 	public static function getCacheFile(string $query): string
 	{
@@ -39,25 +35,24 @@ class Transpiled extends Runner
 	 * @param string $query The query string to be executed.
 	 * @return Closure The executor closure for the given query.
 	 */
-	protected function getResolver(string $query): Closure
+	protected function resolver(string $query): Closure
 	{
 		// load closure from process memory
-		if (isset($this->cache[$query])) {
+		if (isset($this->cache[$query]) === true) {
 			return $this->cache[$query];
 		}
 
 		// load closure from file-cache / opcache
 		$filename = self::getCacheFile($query);
 
-		if (file_exists($filename)) {
+		if (file_exists($filename) === true) {
 			return $this->cache[$query] = include $filename;
 		}
 
-		// on cache miss, parse query and generate closure
-		$tokenizer = new Tokenizer($query);
-		$parser    = new Parser($tokenizer);
-		$node      = $parser->parse();
-		$codeGen   = new CodeGen($this->allowedFunctions);
+		// parse query and generate closure
+		$parser  = new Parser($query);
+		$node    = $parser->parse();
+		$codeGen = new CodeGen($this->allowedFunctions);
 
 		$functionBody = $node->accept($codeGen);
 
@@ -98,7 +93,7 @@ class Transpiled extends Runner
 	 */
 	public function run(string $query, array $context = []): mixed
 	{
-		$function = $this->getResolver($query);
+		$function = $this->resolver($query);
 
 		if (is_callable($function) === false) {
 			throw new Exception('Query is not valid');

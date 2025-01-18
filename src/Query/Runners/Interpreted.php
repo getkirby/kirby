@@ -2,36 +2,36 @@
 
 namespace Kirby\Query\Runners;
 
-use ArrayAccess;
 use Closure;
-use Kirby\Query\Parser;
-use Kirby\Query\Runner;
-use Kirby\Query\Runners\Visitors\Interpreter;
-use Kirby\Query\Tokenizer;
+use Kirby\Query\Parsers\Parser;
+use Kirby\Query\Parsers\Tokenizer;
+use Kirby\Query\Visitors\Interpreter;
 
+/**
+ * Runner that caches the AST in memory
+ *
+ * @package   Kirby Query
+ * @author    Roman Steiner <>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     6.0.0
+ */
 class Interpreted extends Runner
 {
-	public function __construct(
-		public array $allowedFunctions = [],
-		protected Closure|null $interceptor = null,
-		private ArrayAccess|array &$resolverCache = [],
-	) {
-	}
-
-	protected function getResolver(string $query): Closure
+	protected function resolver(string $query): Closure
 	{
 		// load closure from cache
-		if (isset($this->resolverCache[$query])) {
-			return $this->resolverCache[$query];
+		if (isset($this->cache[$query]) === true) {
+			return $this->cache[$query];
 		}
 
-		// on cache miss, parse query and generate closure
-		$tokenizer = new Tokenizer($query);
-		$parser    = new Parser($tokenizer);
-		$node      = $parser->parse();
-		$self      = $this;
+		// parse query and generate closure
+		$parser = new Parser($query);
+		$node   = $parser->parse();
+		$self   = $this;
 
-		return $this->resolverCache[$query] = function (array $binding) use ($node, $self) {
+		return $this->cache[$query] = function (array $binding) use ($node, $self) {
 			$interpreter = new Interpreter($self->allowedFunctions, $binding);
 
 			if ($self->interceptor !== null) {
@@ -44,7 +44,7 @@ class Interpreted extends Runner
 
 	public function run(string $query, array $context = []): mixed
 	{
-		$resolver = $this->getResolver($query);
+		$resolver = $this->resolver($query);
 		return $resolver($context);
 	}
 }

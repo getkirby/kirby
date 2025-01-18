@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Query;
+namespace Kirby\Query\Parsers;
 
 /**
  * Represents a single token of a particular type

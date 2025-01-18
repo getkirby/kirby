@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Query;
+namespace Kirby\Query\Parsers;
 
 use Kirby\TestCase;
 use Kirby\Query\AST\ArgumentListNode;
@@ -8,12 +8,16 @@ use Kirby\Query\AST\LiteralNode;
 use Kirby\Query\AST\MemberAccessNode;
 use Kirby\Query\AST\VariableNode;
 
+/**
+ * @coversDefaultClass \Kirby\Query\Parsers\Parser
+ */
 class ParserTest extends TestCase
 {
 	public function testMemberAccess()
 	{
-		$tokenizer = new Tokenizer('user.name');
-		$ast = (new Parser($tokenizer))->parse();
+		$parser = new Parser('user.name');
+		$ast    = $parser->parse();
+
 		$this->assertEquals(
 			$ast,
 			new MemberAccessNode(
@@ -23,10 +27,11 @@ class ParserTest extends TestCase
 		);
 	}
 
-	public function testSquentialMemberAccess()
+	public function testSequentialMemberAccess()
 	{
-		$tokenizer = new Tokenizer('user.name("arg").age');
-		$ast = (new Parser($tokenizer))->parse();
+		$parser = new Parser('user.name("arg").age');
+		$ast    = $parser->parse();
+
 		$this->assertEquals(
 			$ast,
 			new MemberAccessNode(

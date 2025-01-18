@@ -1,45 +1,49 @@
 <?php
 
-namespace Kirby\Query;
+namespace Kirby\Query\Parsers;
 
 use Exception;
 use Iterator;
 
+/**
+ * @package   Kirby Query
+ * @author    Roman Steiner <>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     6.0.0
+ */
 abstract class BaseParser
 {
-	protected Token|null $previous;
 	protected Token $current;
+	protected Token|null $previous;
 
 	/**
 	 * @var Iterator<Token>
 	 */
 	protected Iterator $tokens;
 
-
-	public function __construct(
-		Tokenizer|Iterator $source,
-	) {
-		if ($source instanceof Tokenizer) {
-			$source = $source->tokens();
-		}
-
-		$this->tokens = $source;
+	public function __construct(string $query) {
+		$tokenizer    = new Tokenizer($query);
+		$this->tokens = $tokenizer->tokens();
 		$first        = $this->tokens->current();
 
 		if ($first === null) {
-			throw new Exception('No tokens found.');
+			throw new Exception('No tokens found');
 		}
 
 		$this->current = $first;
 	}
 
-	protected function consume(TokenType $type, string $message): Token
-	{
+	protected function consume(
+		TokenType $type,
+		string $error
+	): Token {
 		if ($this->check($type) === true) {
 			return $this->advance();
 		}
 
-		throw new Exception($message);
+		throw new Exception($error);
 	}
 
 	protected function check(TokenType $type): bool

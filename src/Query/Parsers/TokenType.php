@@ -1,7 +1,15 @@
 <?php
 
-namespace Kirby\Query;
+namespace Kirby\Query\Parsers;
 
+/**
+ * @package   Kirby Query
+ * @author    Roman Steiner <>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     6.0.0
+ */
 enum TokenType
 {
 	case T_IDENTIFIER;

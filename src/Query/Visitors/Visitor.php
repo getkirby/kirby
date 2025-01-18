@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Query;
+namespace Kirby\Query\Visitors;
 
 use Closure;
 use Exception;

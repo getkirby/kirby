@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Query\Runners\Visitors;
+namespace Kirby\Query\Visitors;
 
 use Closure;
 use Exception;
@@ -13,11 +13,17 @@ use Kirby\Query\AST\LiteralNode;
 use Kirby\Query\AST\MemberAccessNode;
 use Kirby\Query\AST\TernaryNode;
 use Kirby\Query\AST\VariableNode;
-use Kirby\Query\Runtime;
-use Kirby\Query\Visitor;
+use Kirby\Query\Runners\Runtime;
 
 /**
- * Visitor that interprets and directly executes a query AST.
+ * Visitor that interprets and directly executes a query AST
+ *
+ * @package   Kirby Query
+ * @author    Roman Steiner <>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     6.0.0
  */
 class Interpreter extends Visitor
 {
@@ -100,7 +106,8 @@ class Interpreter extends Visitor
 	public function visitVariable(VariableNode $node): mixed
 	{
 		// what looks like a variable might actually be a global function
-		// but if there is a variable with the same name, the variable takes precedence
+		// but if there is a variable with the same name,
+		// the variable takes precedence
 
 		$name = $node->name();
 
@@ -122,8 +129,7 @@ class Interpreter extends Visitor
 		}
 
 		$function = $this->validGlobalFunctions[$name];
-
-		$result = $function(...$node->arguments->accept($this));
+		$result   = $function(...$node->arguments->accept($this));
 
 		return $result;
 	}
@@ -136,7 +142,8 @@ class Interpreter extends Visitor
 			$context   = $self->context;
 			$functions = $self->validGlobalFunctions;
 
-			// [key1, key2] + [value1, value2] => [key1 => value1, key2 => value2]
+			// [key1, key2] + [value1, value2] =>
+			// [key1 => value1, key2 => value2]
 			$arguments = array_combine(
 				$node->arguments,
 				$params

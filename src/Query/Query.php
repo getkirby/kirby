@@ -41,7 +41,7 @@ class Query
 	 */
 	public static array $entries = [];
 
-	private static array $resolverCache = [];
+	private static array $cache = [];
 
 	/**
 	 * Creates a new Query object
@@ -71,6 +71,42 @@ class Query
 		return $result;
 	}
 
+	/**
+	 * Returns the query result if anything
+	 * can be found, otherwise returns null
+	 *
+	 * @throws \Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
+	 */
+	public function resolve(array|object $data = []): mixed
+	{
+		if (empty($this->query) === true) {
+			return $data;
+		}
+
+		$mode = App::instance()->option('query.runner', 'interpreted');
+
+		if ($mode === 'legacy') {
+			return $this->resolve_legacy($data);
+		}
+
+		$class = match ($mode) {
+			'transpiled'  => Transpiled::class,
+			'interpreted' => Interpreted::class,
+			default       => throw new Exception('Invalid query runner "' . $mode . '"')
+		};
+
+		$runner = new $class(
+			static::$entries,
+			$this->intercept(...),
+			static::$cache
+		);
+
+		return $runner->run($this->query, (array)$data);
+	}
+
+	/**
+	 * @deprecated 6.0.0
+	 */
 	private function resolve_legacy(array|object $data = []): mixed
 	{
 		// merge data with default entries
@@ -95,34 +131,6 @@ class Query
 		// loop through all segments to resolve query
 		return Expression::factory($this->query, $this)->resolve($data);
 
-	}
-
-	/**
-	 * Returns the query result if anything
-	 * can be found, otherwise returns null
-	 *
-	 * @throws \Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
-	 */
-	public function resolve(array|object $data = []): mixed
-	{
-		if (empty($this->query) === true) {
-			return $data;
-		}
-
-		$mode = App::instance()->option('query.runner', 'interpreted');
-
-		if ($mode === 'legacy') {
-			return $this->resolve_legacy($data);
-		}
-
-		$runnerClass = match($mode) {
-			'transpiled' => Transpiled::class,
-			'interpreted' => Interpreted::class,
-			default => throw new Exception('Invalid query runner')
-		};
-
-		$runner = new $runnerClass(static::$entries, $this->intercept(...), static::$resolverCache);
-		return $runner->run($this->query, (array)$data);
 	}
 }
 

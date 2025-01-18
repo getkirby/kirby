@@ -1,12 +1,12 @@
 <?php
 
-namespace Kirby\Query;
+namespace Kirby\Query\Parsers;
 
 use Exception;
 use Generator;
 
 /**
- * Tokenizer
+ * Parses a query string into its individual tokens
  *
  * @package   Kirby Query
  * @author    Roman Steiner <>,

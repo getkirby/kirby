@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Query\Runners\Visitors;
+namespace Kirby\Query\Visitors;
 
 use Closure;
 use Exception;
@@ -13,19 +13,27 @@ use Kirby\Query\AST\LiteralNode;
 use Kirby\Query\AST\MemberAccessNode;
 use Kirby\Query\AST\TernaryNode;
 use Kirby\Query\AST\VariableNode;
-use Kirby\Query\Runtime;
-use Kirby\Query\Visitor;
+use Kirby\Query\Runners\Runtime;
 
 /**
  * Visitor that generates code representations from query structures.
  *
- * The `CodeGen` class traverses query nodes and generates corresponding PHP code.
- * It extends the base `Visitor` class, providing implementations specific to code generation.
+ * The `CodeGen` class traverses query nodes and generates
+ * corresponding PHP code. It extends the base `Visitor` class,
+ * but adds implementations specific to code generation.
+ *
+ * @package   Kirby Query
+ * @author    Roman Steiner <>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     6.0.0
  */
 class CodeGen extends Visitor
 {
 	/**
-	 * If we need something from a namespace, we'll add the namespace here into the array key
+	 * If we need something from a namespace,
+	 * we'll add the namespace here into the array key
 	 * @var array<string,true>
 	 */
 	public array $uses = [];
