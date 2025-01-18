@@ -1,10 +1,9 @@
 <template>
-	<div class="k-text-field-preview">
-		<k-link v-if="value.link" :href="value.link" target="_blank">
-			{{ value.name }}
-		</k-link>
-		<span v-else>{{ value.name }}</span>
-	</div>
+	<k-url-field-preview
+		v-if="value.link"
+		:value="{ href: value.link, text: value.name }"
+	/>
+	<k-text-field-preview v-else :value="value.name" />
 </template>
 
 <script>
