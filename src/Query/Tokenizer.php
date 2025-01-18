@@ -5,16 +5,33 @@ namespace Kirby\Query;
 use Exception;
 use Generator;
 
+
+/**
+ * Tokenizer
+ *
+ * @package   Kirby Query
+ * @author    Roman Steiner <>,
+ * 			  Nico Hoffmann <nico@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     6.0.0
+ */
 class Tokenizer
 {
 	private int $length = 0;
 
 	/**
-	 * The more complex regexes are written here in nowdoc format so we don't need to double or triple escape backslashes (that becomes ridiculous rather fast).
+	 * The more complex regexes are written here in nowdoc format
+	 * so we don't need to double or triple escape backslashes
+	 * (that becomes ridiculous rather fast).
+	 *
+	 * Identifiers can contain letters, numbers, underscores and escaped dots.
+	 * They can't start with a number.
+	 *
+	 * To match an array key like "foo.bar" we write the query as `foo\.bar`,
+	 * to match an array key like "foo\.bar" we write the query as `foo\\.bar`
 	 */
-
-	// Identifiers can contain letters, numbers, underscores and escaped dots. They can't start with a number.
-	// to match an array key like "foo.bar" we write the query as `foo\.bar`, to match an array key like "foo\.bar" we write the query as `foo\\.bar`
 	private const IDENTIFIER_REGEX = <<<'REGEX'
 	(?:[\p{L}\p{N}_]|\\\.|\\\\)*
 	REGEX;
@@ -34,15 +51,156 @@ class Tokenizer
 	}
 
 	/**
+	 * Matches a regex pattern at the current position in the source string.
+	 * The matched lexeme will be stored in the $lexeme variable.
+	 *
+	 * @param int $current Current position in the source string (used as offset for the regex)
+	 * @param string $regex Regex pattern without delimiters/flags
+	 * @param string $lexeme Matched lexeme will be stored in this variable
+	 */
+	protected static function match(
+		string $source,
+		int $current,
+		string $regex,
+		bool $caseIgnore = false
+	): string|null {
+		// add delimiters and flags to the regex
+		$regex = '/\G' . $regex . '/u';
+
+		if ($caseIgnore === true) {
+			$regex .= 'i';
+		}
+
+		preg_match($regex, $source, $matches, 0, $current);
+
+		if (empty($matches[0]) === true) {
+			return null;
+		}
+
+		return $matches[0];
+	}
+
+	/**
+	 * Scans the source string for a next token
+	 * starting from the given position
+	 *
+	 * @param int $current The current position in the source string
+	 *
+	 * @throws Exception If an unexpected character is encountered
+	 */
+	protected static function token(string $source, int $current): Token
+	{
+		$lex  = '';
+		$char = $source[$current];
+
+		// single character tokens:
+		$token = match($char) {
+			'.'     => new Token(TokenType::T_DOT, '.'),
+			'('     => new Token(TokenType::T_OPEN_PAREN, '('),
+			')'     => new Token(TokenType::T_CLOSE_PAREN, ')'),
+			'['     => new Token(TokenType::T_OPEN_BRACKET, '['),
+			']'     => new Token(TokenType::T_CLOSE_BRACKET, ']'),
+			','     => new Token(TokenType::T_COMMA, ','),
+			':'     => new Token(TokenType::T_COLON, ':'),
+			default => null
+		};
+
+		if ($token !== null) {
+			return $token;
+		}
+
+		// two character tokens:
+		// ??
+		if ($lex = static::match($source, $current, '\?\?')) {
+			return new Token(TokenType::T_COALESCE, $lex);
+		}
+
+		// ?.
+		if ($lex = static::match($source, $current, '\?\s*\.')) {
+			return new Token(TokenType::T_NULLSAFE, $lex);
+		}
+
+		// ?:
+		if ($lex = static::match($source, $current, '\?\s*:')) {
+			return new Token(TokenType::T_TERNARY_DEFAULT, $lex);
+		}
+
+		// =>
+		if ($lex = static::match($source, $current, '=>')) {
+			return new Token(TokenType::T_ARROW, $lex);
+		}
+
+		// make sure this check comes after the two above
+		// that check for '?' in the beginning
+		if ($char === '?') {
+			return new Token(TokenType::T_QUESTION_MARK, '?');
+		}
+
+		// multi character tokens:
+		// whitespace
+		if ($lex = static::match($source, $current, '\s+')) {
+			return new Token(TokenType::T_WHITESPACE, $lex);
+		}
+
+		// true
+		if ($lex = static::match($source, $current, 'true', true)) {
+			return new Token(TokenType::T_TRUE, $lex, true);
+		}
+
+		// false
+		if ($lex = static::match($source, $current, 'false', true)) {
+			return new Token(TokenType::T_FALSE, $lex, false);
+		}
+
+		// null
+		if ($lex = static::match($source, $current, 'null', true)) {
+			return new Token(TokenType::T_NULL, $lex, null);
+		}
+
+		// "string"
+		if ($lex = static::match($source, $current, static::DOUBLEQUOTE_STRING_REGEX)) {
+			return new Token(
+				TokenType::T_STRING,
+				$lex,
+				stripcslashes(substr($lex, 1, -1))
+			);
+		}
+
+		// 'string'
+		if ($lex = static::match($source, $current, static::SINGLEQUOTE_STRING_REGEX)) {
+			return  new Token(
+				TokenType::T_STRING,
+				$lex,
+				stripcslashes(substr($lex, 1, -1))
+			);
+		}
+
+		// int
+		if ($lex = static::match($source, $current, '\d+\b')) {
+			return new Token(TokenType::T_INTEGER, $lex, (int)$lex);
+		}
+
+		// TODO: float?
+
+		// identifier
+		if ($lex = static::match($source, $current, static::IDENTIFIER_REGEX)) {
+			return new Token(TokenType::T_IDENTIFIER, $lex);
+		}
+
+		// unknown token
+		throw new Exception('Unexpected character: ' . $source[$current]);
+	}
+
+	/**
 	 * Tokenizes the source string and returns a generator of tokens.
 	 * @return Generator<Token>
 	 */
-	public function tokenize(): Generator
+	public function tokens(): Generator
 	{
 		$current = 0;
 
 		while ($current < $this->length) {
-			$token = static::scanToken($this->source, $current);
+			$token = static::token($this->source, $current);
 
 			// don't yield whitespace tokens (ignore them)
 			if ($token->type !== TokenType::T_WHITESPACE) {
@@ -53,100 +211,5 @@ class Tokenizer
 		}
 
 		yield new Token(TokenType::T_EOF, '', null);
-	}
-
-	/**
-	 * Scans the source string for a token starting at the given position.
-	 * @param string $source The source string
-	 * @param int $current The current position in the source string
-	 *
-	 * @return Token The scanned token
-	 * @throws Exception If an unexpected character is encountered
-	 */
-	protected static function scanToken(string $source, int $current): Token
-	{
-		$lex  = '';
-		$char = $source[$current];
-
-		return match(true) {
-			// single character tokens
-			$char === '.' => new Token(TokenType::T_DOT, '.'),
-			$char === '(' => new Token(TokenType::T_OPEN_PAREN, '('),
-			$char === ')' => new Token(TokenType::T_CLOSE_PAREN, ')'),
-			$char === '[' => new Token(TokenType::T_OPEN_BRACKET, '['),
-			$char === ']' => new Token(TokenType::T_CLOSE_BRACKET, ']'),
-			$char === ',' => new Token(TokenType::T_COMMA, ','),
-			$char === ':' => new Token(TokenType::T_COLON, ':'),
-
-			// two character tokens
-			static::match($source, $current, '\?\?', $lex)
-				=> new Token(TokenType::T_COALESCE, $lex),
-			static::match($source, $current, '\?\s*\.', $lex)
-				=> new Token(TokenType::T_NULLSAFE, $lex),
-			static::match($source, $current, '\?\s*:', $lex)
-				=> new Token(TokenType::T_TERNARY_DEFAULT, $lex),
-			static::match($source, $current, '=>', $lex)
-				=> new Token(TokenType::T_ARROW, $lex),
-
-			// make sure this check comes after the two above
-			// that check for '?' in the beginning
-			$char === '?' => new Token(TokenType::T_QUESTION_MARK, '?'),
-
-			// multi character tokens
-			static::match($source, $current, '\s+', $lex)
-				=> new Token(TokenType::T_WHITESPACE, $lex),
-			static::match($source, $current, 'true', $lex, true)
-				=> new Token(TokenType::T_TRUE, $lex, true),
-			static::match($source, $current, 'false', $lex, true)
-				=> new Token(TokenType::T_FALSE, $lex, false),
-			static::match($source, $current, 'null', $lex, true)
-				=> new Token(TokenType::T_NULL, $lex, null),
-			static::match($source, $current, static::DOUBLEQUOTE_STRING_REGEX, $lex)
-				=> new Token(TokenType::T_STRING, $lex, stripcslashes(substr($lex, 1, -1))),
-			static::match($source, $current, static::SINGLEQUOTE_STRING_REGEX, $lex)
-				=> new Token(TokenType::T_STRING, $lex, stripcslashes(substr($lex, 1, -1))),
-			static::match($source, $current, '\d+\b', $lex)
-				=> new Token(TokenType::T_INTEGER, $lex, (int)$lex),
-			static::match($source, $current, static::IDENTIFIER_REGEX, $lex)
-				=> new Token(TokenType::T_IDENTIFIER, $lex),
-
-			// unknown token
-			default => throw new Exception("Unexpected character: {$source[$current]}"),
-		};
-	}
-
-	/**
-	 * Matches a regex pattern at the current position in the source string.
-	 * The matched lexeme will be stored in the $lexeme variable.
-	 *
-	 * @param string $source The source string
-	 * @param int $current The current position in the source string (used as offset for the regex)
-	 * @param string $regex The regex pattern to match (without delimiters / flags)
-	 * @param string $lexeme The matched lexeme will be stored in this variable
-	 * @param bool $caseIgnore Whether to ignore case while matching
-	 * @return bool Whether the regex pattern was matched
-	 */
-	protected static function match(
-		string $source,
-		int $current,
-		string $regex,
-		string &$lexeme,
-		bool $caseIgnore = false
-	): bool {
-		$regex = '/\G' . $regex . '/u';
-
-		if ($caseIgnore) {
-			$regex .= 'i';
-		}
-
-		$matches = [];
-		preg_match($regex, $source, $matches, 0, $current);
-
-		if (empty($matches[0])) {
-			return false;
-		}
-
-		$lexeme = $matches[0];
-		return true;
 	}
 }

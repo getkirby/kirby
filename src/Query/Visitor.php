@@ -46,7 +46,8 @@ abstract class Visitor
 	abstract public function visitClosure(ClosureNode $node): mixed;
 
 	/**
-	 * Sets and activates an interceptor closure that is called for each resolved value.
+	 * Sets and activates an interceptor closure
+	 * that is called for each resolved value.
 	 */
 	public function setInterceptor(Closure $interceptor): void
 	{

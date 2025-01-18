@@ -9,6 +9,7 @@ use stdClass;
 
 /**
  * @coversDefaultClass \Kirby\Query\Segments
+ * @deprecated 6.0.0 Will be removed in Kirby 7
  */
 class SegmentsTest extends TestCase
 {

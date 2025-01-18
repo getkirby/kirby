@@ -20,7 +20,7 @@ abstract class BaseParser
 		Tokenizer|Iterator $source,
 	) {
 		if ($source instanceof Tokenizer) {
-			$source = $source->tokenize();
+			$source = $source->tokens();
 		}
 
 		$this->tokens = $source;
