@@ -4,7 +4,8 @@ namespace Kirby\Query\Runners;
 
 use Exception;
 
-class FooObj {
+class FooObj
+{
 	public string $bax = 'qox';
 
 	public function print(string $string = 'bar'): string
@@ -46,7 +47,7 @@ class RuntimeTest extends TestCase
 	 */
 	public function testAccessWithObject(): void
 	{
-		$obj    = new FooObj;
+		$obj    = new FooObj();
 		$result = Runtime::access($obj, 'print');
 		$this->assertSame('bar', $result);
 

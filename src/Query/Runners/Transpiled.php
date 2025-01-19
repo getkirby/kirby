@@ -4,7 +4,6 @@ namespace Kirby\Query\Runners;
 
 use ArrayAccess;
 use Closure;
-use Exception;
 use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Query\AST\Node;
@@ -138,7 +137,7 @@ class Transpiled extends Runner
 	 *
 	 * @param array $context Optional variables to be passed to the query
 	 *
-	 * @throws Exception when query is invalid or executor not callable
+	 * @throws \Exception when query is invalid or executor not callable
 	 */
 	public function run(string $query, array $context = []): mixed
 	{

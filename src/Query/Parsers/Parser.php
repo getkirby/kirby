@@ -34,7 +34,8 @@ class Parser
 	 */
 	protected Iterator $tokens;
 
-	public function __construct(string|Iterator $query) {
+	public function __construct(string|Iterator $query)
+	{
 		if (is_string($query) === true) {
 			$tokenizer = new Tokenizer($query);
 			$query     = $tokenizer->tokens();
@@ -121,7 +122,7 @@ class Parser
 				 * Assert that all elements are VariableNodes
 				 * @var VariableNode[] $list
 				 */
-				foreach($list as $element) {
+				foreach ($list as $element) {
 					if ($element instanceof VariableNode === false) {
 						throw new Exception('Expecting only variables in closure argument list.');
 					}
@@ -178,7 +179,7 @@ class Parser
 	/**
 	 * Collect the next token of a type
 	 *
-	 * @throws Exception when next token is not of specified type
+	 * @throws \Exception when next token is not of specified type
 	 */
 	protected function consume(
 		TokenType $type,

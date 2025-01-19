@@ -2,7 +2,6 @@
 
 namespace Kirby\Query\Parsers;
 
-use Kirby\TestCase;
 use Kirby\Query\AST\ArgumentListNode;
 use Kirby\Query\AST\ArrayListNode;
 use Kirby\Query\AST\ClosureNode;
@@ -12,6 +11,7 @@ use Kirby\Query\AST\LiteralNode;
 use Kirby\Query\AST\MemberAccessNode;
 use Kirby\Query\AST\TernaryNode;
 use Kirby\Query\AST\VariableNode;
+use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Query\Parsers\Parser

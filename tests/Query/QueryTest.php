@@ -130,7 +130,7 @@ class QueryTest extends TestCase
 		$query = new class ('foo.getObj.name') extends Query {
 			public function intercept($result): mixed
 			{
-				if(is_object($result) === true) {
+				if (is_object($result) === true) {
 					$result = clone $result;
 					$result->name .= ' simpson';
 				}

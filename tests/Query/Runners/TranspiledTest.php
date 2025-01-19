@@ -3,7 +3,6 @@
 namespace Kirby\Query\Runners;
 
 use Kirby\Query\Parsers\Parser;
-use Kirby\Query\Runners\Transpiled;
 use Kirby\Query\Visitors\Transpiler;
 use Kirby\Toolkit\Str;
 

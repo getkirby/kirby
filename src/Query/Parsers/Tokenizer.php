@@ -84,7 +84,7 @@ class Tokenizer
 	 *
 	 * @param int $current The current position in the source string
 	 *
-	 * @throws Exception If an unexpected character is encountered
+	 * @throws \Exception If an unexpected character is encountered
 	 */
 	public static function token(string $query, int $current): Token
 	{

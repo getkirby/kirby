@@ -3,7 +3,6 @@
 namespace Kirby\Query\Runners;
 
 use ArrayAccess;
-use Kirby\Query\Runners\Interpreted;
 
 /**
  * @coversDefaultClass \Kirby\Query\Runners\Interpreted

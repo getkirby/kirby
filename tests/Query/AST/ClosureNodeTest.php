@@ -2,8 +2,8 @@
 
 namespace Kirby\Query\AST;
 
-use Kirby\Query\Visitors\Transpiler;
 use Kirby\Query\Visitors\Interpreter;
+use Kirby\Query\Visitors\Transpiler;
 use Kirby\TestCase;
 
 /**
@@ -33,7 +33,7 @@ class ClosureNodeTest extends TestCase
 		$visitor = new Transpiler();
 		$this->assertSame(
 			'fn($_3904355907, $_1908338681) => ($_3904355907 ?? $_1908338681)',
-			 $node->resolve($visitor)
+			$node->resolve($visitor)
 		);
 	}
 }

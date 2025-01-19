@@ -2,11 +2,12 @@
 
 namespace Kirby\Query\AST;
 
-use Kirby\Query\Visitors\Transpiler;
 use Kirby\Query\Visitors\Interpreter;
+use Kirby\Query\Visitors\Transpiler;
 use Kirby\TestCase;
 
-class UserMock {
+class UserMock
+{
 	public function name(): string
 	{
 		return 'foo';
@@ -42,7 +43,7 @@ class MemberAccessNodeTest extends TestCase
 			'name'
 		);
 
-		$context = ['user' => new UserMock];
+		$context = ['user' => new UserMock()];
 
 		// Interpreter
 		$visitor = new Interpreter(context: $context);
