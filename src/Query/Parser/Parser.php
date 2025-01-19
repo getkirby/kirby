@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Query\Parsers;
+namespace Kirby\Query\Parser;
 
 use Exception;
 use Iterator;

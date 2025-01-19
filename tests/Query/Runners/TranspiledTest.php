@@ -2,7 +2,7 @@
 
 namespace Kirby\Query\Runners;
 
-use Kirby\Query\Parsers\Parser;
+use Kirby\Query\Parser\Parser;
 use Kirby\Query\Visitors\Transpiler;
 use Kirby\Toolkit\Str;
 

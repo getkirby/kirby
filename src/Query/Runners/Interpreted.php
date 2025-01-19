@@ -3,7 +3,7 @@
 namespace Kirby\Query\Runners;
 
 use Closure;
-use Kirby\Query\Parsers\Parser;
+use Kirby\Query\Parser\Parser;
 use Kirby\Query\Query;
 use Kirby\Query\Visitors\Interpreter;
 

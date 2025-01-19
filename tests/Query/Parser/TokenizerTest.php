@@ -1,11 +1,11 @@
 <?php
 
-namespace Kirby\Query\Parsers;
+namespace Kirby\Query\Parser;
 
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Query\Tokenizer
+ * @coversDefaultClass \Kirby\Query\Parser\Tokenizer
  */
 class TokenizerTest extends TestCase
 {

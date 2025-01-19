@@ -7,7 +7,7 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Query\AST\Node;
-use Kirby\Query\Parsers\Parser;
+use Kirby\Query\Parser\Parser;
 use Kirby\Query\Query;
 use Kirby\Query\Visitors\Transpiler;
 

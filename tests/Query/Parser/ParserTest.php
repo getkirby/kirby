@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Query\Parsers;
+namespace Kirby\Query\Parser;
 
 use Kirby\Query\AST\ArgumentListNode;
 use Kirby\Query\AST\ArrayListNode;
@@ -14,7 +14,7 @@ use Kirby\Query\AST\VariableNode;
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Query\Parsers\Parser
+ * @coversDefaultClass \Kirby\Query\Parser\Parser
  */
 class ParserTest extends TestCase
 {
