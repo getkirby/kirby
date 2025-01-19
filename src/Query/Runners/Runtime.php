@@ -69,6 +69,9 @@ class Runtime
 		array $context = [],
 		array $functions = []
 	): mixed {
+		// what looks like a variable might actually be a global function
+		// but if there is a variable with the same name,
+		// the variable takes precedence
 		if ($result = $context[$name] ?? null) {
 			if ($result instanceof Closure) {
 				return $result();

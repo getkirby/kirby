@@ -132,21 +132,6 @@ class Interpreter extends Visitor
 	 */
 	public function variable(string $name): mixed
 	{
-		// what looks like a variable might actually be a global function
-		// but if there is a variable with the same name,
-		// the variable takes precedence
-		if ($context = $this->context[$name] ?? null) {
-			if ($context instanceof Closure) {
-				return $context();
-			}
-
-			return $context;
-		}
-
-		if ($function = $this->functions[$name] ?? null) {
-			return $function();
-		}
-
-		return null;
+		return Runtime::get($name, $this->context, $this->functions);
 	}
 }
