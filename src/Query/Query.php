@@ -12,6 +12,7 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Image\QrCode;
 use Kirby\Query\Runners\Interpreted;
+use Kirby\Query\Runners\Runner;
 use Kirby\Query\Runners\Transpiled;
 use Kirby\Toolkit\I18n;
 
@@ -75,23 +76,23 @@ class Query
 			return $data;
 		}
 
+		// TODO: remove in v7
+		// @codeCoverageIgnoreStart
 		$mode = App::instance()->option('query.runner', 'interpreted');
 
 		if ($mode === 'legacy') {
 			return $this->resolve_legacy($data);
 		}
+		// @codeCoverageIgnoreEnd
 
-		$runner = match ($mode) {
-			'interpreted' => Interpreted::class,
-			'transpiled'  => Transpiled::class,
-			default       => throw new Exception("Invalid query runner $mode")
-		};
+		$runner = $this->runner();
 
-		return $runner::for($this)->run($this->query, (array)$data);
+		return $runner->run($this->query, (array)$data);
 	}
 
 	/**
 	 * @deprecated 6.0.0
+	 * @codeCoverageIgnore
 	 */
 	private function resolve_legacy(array|object $data = []): mixed
 	{
@@ -116,7 +117,21 @@ class Query
 
 		// loop through all segments to resolve query
 		return Expression::factory($this->query, $this)->resolve($data);
+	}
 
+	/**
+	 * Returns the right runner based on the config setting
+	 */
+	public function runner(): Runner
+	{
+		$mode   = App::instance()->option('query.runner', 'interpreted');
+		$runner = match ($mode) {
+			'interpreted' => Interpreted::class,
+			'transpiled'  => Transpiled::class,
+			default       => throw new Exception("Invalid query runner: $mode")
+		};
+
+		return $runner::for($this);
 	}
 }
 

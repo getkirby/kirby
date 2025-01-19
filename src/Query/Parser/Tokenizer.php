@@ -188,7 +188,7 @@ class Tokenizer
 		}
 
 		// unknown token
-		throw new Exception('Unexpected character: ' . $query[$current]);
+		throw new Exception('Invalid character in query: ' . $query[$current]);
 	}
 
 	/**

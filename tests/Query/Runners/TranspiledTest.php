@@ -40,6 +40,7 @@ class TranspiledTest extends TestCase
 
 	/**
 	 * @dataProvider interceptProvider
+	 * @coversNothing
 	 */
 	public function testIntercept(
 		string $query,
@@ -108,6 +109,7 @@ class TranspiledTest extends TestCase
 
 	/**
 	 * @dataProvider resultProvider
+	 * @covers ::run
 	 */
 	public function testResult(
 		string $query,

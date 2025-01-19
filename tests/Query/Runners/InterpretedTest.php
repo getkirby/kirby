@@ -13,6 +13,7 @@ class InterpretedTest extends TestCase
 
 	/**
 	 * @dataProvider interceptProvider
+	 * @coversNothing
 	 */
 	public function testIntercept(
 		string $query,
@@ -38,6 +39,7 @@ class InterpretedTest extends TestCase
 
 	/**
 	 * @dataProvider resultProvider
+	 * @covers ::run
 	 */
 	public function testResult(
 		string $query,
@@ -54,6 +56,8 @@ class InterpretedTest extends TestCase
 	/**
 	 * Runners should keep a cache of parsed queries
 	 * to avoid parsing the same query multiple times
+	 *
+	 * @covers ::resolver
 	 */
 	public function testParsesOnlyOnce()
 	{

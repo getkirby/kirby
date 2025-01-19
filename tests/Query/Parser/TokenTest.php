@@ -33,4 +33,18 @@ class TokenTest extends TestCase
 		$this->assertSame($lexeme, $token->lexeme);
 		$this->assertNull($token->literal);
 	}
+
+	/**
+	 * @covers ::is
+	 */
+	public function testis(): void
+	{
+		$token = new Token(
+			type: TokenType::T_FLOAT,
+			lexeme: '4.3',
+		);
+
+		$this->assertTrue($token->is(TokenType::T_FLOAT));
+		$this->assertFalse($token->is(TokenType::T_INTEGER));
+	}
 }

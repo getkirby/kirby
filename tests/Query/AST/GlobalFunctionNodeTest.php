@@ -13,6 +13,18 @@ use Kirby\TestCase;
 class GlobalFunctionNodeTest extends TestCase
 {
 	/**
+	 * @covers ::name
+	 */
+	public function testName(): void
+	{
+		$node = new GlobalFunctionNode('a', new ArgumentListNode());
+		$this->assertSame('a', $node->name());
+
+		$node = new GlobalFunctionNode('a\.b', new ArgumentListNode());
+		$this->assertSame('a.b', $node->name());
+	}
+
+	/**
 	 * @covers ::resolve
 	 */
 	public function testResolve(): void

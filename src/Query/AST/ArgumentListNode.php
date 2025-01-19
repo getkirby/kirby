@@ -18,7 +18,7 @@ use Kirby\Query\Visitors\Visitor;
 class ArgumentListNode extends Node
 {
 	public function __construct(
-		public array $arguments,
+		public array $arguments = []
 	) {
 	}
 

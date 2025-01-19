@@ -4,16 +4,6 @@ namespace Kirby\Query\Runners;
 
 use Exception;
 
-class FooObj
-{
-	public string $bax = 'qox';
-
-	public function print(string $string = 'bar'): string
-	{
-		return $string;
-	}
-}
-
 /**
  * @coversDefaultClass \Kirby\Query\Runners\Runtime
  */
@@ -47,7 +37,15 @@ class RuntimeTest extends TestCase
 	 */
 	public function testAccessWithObject(): void
 	{
-		$obj    = new FooObj();
+		$obj = new class {
+			public string $bax = 'qox';
+
+			public function print(string $string = 'bar'): string
+			{
+				return $string;
+			}
+		};
+
 		$result = Runtime::access($obj, 'print');
 		$this->assertSame('bar', $result);
 

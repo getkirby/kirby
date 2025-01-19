@@ -31,6 +31,20 @@ class MemberAccessNodeTest extends TestCase
 		);
 
 		$this->assertSame('name', $node->member());
+
+		$node = new MemberAccessNode(
+			new VariableNode('user'),
+			'my\.name'
+		);
+
+		$this->assertSame('my.name', $node->member());
+
+		$node = new MemberAccessNode(
+			new VariableNode('user'),
+			1
+		);
+
+		$this->assertSame(1, $node->member());
 	}
 
 	/**

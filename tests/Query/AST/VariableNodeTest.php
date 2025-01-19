@@ -15,10 +15,13 @@ class VariableNodeTest extends TestCase
 	/**
 	 * @covers ::name
 	 */
-	public function testRName(): void
+	public function testName(): void
 	{
 		$node = new VariableNode('a');
 		$this->assertSame('a', $node->name());
+
+		$node = new VariableNode('a\.b');
+		$this->assertSame('a.b', $node->name());
 	}
 
 	/**

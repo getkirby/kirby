@@ -2,6 +2,7 @@
 
 namespace Kirby\Query\Parser;
 
+use Exception;
 use Kirby\TestCase;
 
 /**
@@ -25,36 +26,38 @@ class TokenizerTest extends TestCase
 
 	public static function stringProvider(): string
 	{
-		return 'site?.([\'number\' => 3], null) ? (true ?: 4.1) : ("fox" ?? false)';
+		return 'site.method?.([\'number\' => 3], null) ? (true ?: 4.1) : ("fox" ?? false)';
 	}
 
 	public static function tokenProvider(): array
 	{
 		return [
 			[0, TokenType::T_IDENTIFIER, 'site'],
-			[4, TokenType::T_NULLSAFE, '?.'],
-			[6, TokenType::T_OPEN_PAREN, '('],
-			[7, TokenType::T_OPEN_BRACKET, '['],
-			[8, TokenType::T_STRING, '\'number\'', 'number'],
-			[16, TokenType::T_WHITESPACE, ' '],
-			[17, TokenType::T_ARROW, '=>'],
-			[20, TokenType::T_INTEGER, '3', 3],
-			[21, TokenType::T_CLOSE_BRACKET, ']'],
-			[22, TokenType::T_COMMA, ','],
-			[24, TokenType::T_NULL, 'null', null],
-			[28, TokenType::T_CLOSE_PAREN, ')'],
-			[30, TokenType::T_QUESTION_MARK, '?'],
-			[32, TokenType::T_OPEN_PAREN, '('],
-			[33, TokenType::T_TRUE, 'true', true],
-			[38, TokenType::T_TERNARY_DEFAULT, '?:'],
-			[41, TokenType::T_FLOAT, '4.1', 4.1],
-			[44, TokenType::T_CLOSE_PAREN, ')'],
-			[46, TokenType::T_COLON, ':'],
-			[48, TokenType::T_OPEN_PAREN, '('],
-			[49, TokenType::T_STRING, '"fox"', 'fox'],
-			[55, TokenType::T_COALESCE, '??'],
-			[58, TokenType::T_FALSE, 'false', false],
-			[63, TokenType::T_CLOSE_PAREN, ')']
+			[4, TokenType::T_DOT, '.'],
+			[5, TokenType::T_IDENTIFIER, 'method'],
+			[11, TokenType::T_NULLSAFE, '?.'],
+			[13, TokenType::T_OPEN_PAREN, '('],
+			[14, TokenType::T_OPEN_BRACKET, '['],
+			[15, TokenType::T_STRING, '\'number\'', 'number'],
+			[23, TokenType::T_WHITESPACE, ' '],
+			[24, TokenType::T_ARROW, '=>'],
+			[27, TokenType::T_INTEGER, '3', 3],
+			[28, TokenType::T_CLOSE_BRACKET, ']'],
+			[29, TokenType::T_COMMA, ','],
+			[31, TokenType::T_NULL, 'null', null],
+			[35, TokenType::T_CLOSE_PAREN, ')'],
+			[37, TokenType::T_QUESTION_MARK, '?'],
+			[39, TokenType::T_OPEN_PAREN, '('],
+			[40, TokenType::T_TRUE, 'true', true],
+			[45, TokenType::T_TERNARY_DEFAULT, '?:'],
+			[48, TokenType::T_FLOAT, '4.1', 4.1],
+			[51, TokenType::T_CLOSE_PAREN, ')'],
+			[53, TokenType::T_COLON, ':'],
+			[55, TokenType::T_OPEN_PAREN, '('],
+			[56, TokenType::T_STRING, '"fox"', 'fox'],
+			[62, TokenType::T_COALESCE, '??'],
+			[65, TokenType::T_FALSE, 'false', false],
+			[70, TokenType::T_CLOSE_PAREN, ')']
 		];
 	}
 
@@ -73,6 +76,15 @@ class TokenizerTest extends TestCase
 		$this->assertSame($type, $token->type);
 		$this->assertSame($lexeme, $token->lexeme);
 		$this->assertSame($literal, $token->literal);
+	}
+
+	/**
+	 * @covers ::token
+	 */
+	public function testTokenInvalidCharacter(): void {
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid character in query: %');
+		Tokenizer::token('a ?? %', 5);
 	}
 
 	/**

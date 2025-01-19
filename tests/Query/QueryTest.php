@@ -3,6 +3,10 @@
 namespace Kirby\Query;
 
 use Closure;
+use Exception;
+use Kirby\Cms\App;
+use Kirby\Query\Runners\Interpreted;
+use Kirby\Query\Runners\Transpiled;
 use Kirby\TestCase;
 
 /**
@@ -10,11 +14,16 @@ use Kirby\TestCase;
  */
 class QueryTest extends TestCase
 {
+	protected function tearDown(): void
+	{
+		App::destroy();
+	}
+
 	/**
 	 * @covers ::__construct
 	 * @covers ::factory
 	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$query = Query::factory(' user.me ');
 		$this->assertSame('user.me', $query->query);
@@ -23,7 +32,7 @@ class QueryTest extends TestCase
 	/**
 	 * @covers ::intercept
 	 */
-	public function testIntercept()
+	public function testIntercept(): void
 	{
 		$query = new Query('kirby');
 		$this->assertSame('foo', $query->intercept('foo'));
@@ -32,7 +41,7 @@ class QueryTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testResolve()
+	public function testResolve(): void
 	{
 		$query = new Query("user.self.likes(['(', ')']).self.drink");
 		$data  = ['user' => new TestUser()];
@@ -42,7 +51,7 @@ class QueryTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testResolveWithEmptyQuery()
+	public function testResolveWithEmptyQuery(): void
 	{
 		$query = new Query('');
 		$data = ['foo' => 'bar'];
@@ -52,7 +61,7 @@ class QueryTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testResolveWithComparisonExpresion()
+	public function testResolveWithComparisonExpresion(): void
 	{
 		$query = new Query('user.nothing ?? (user.nothing ?? user.isYello(false)) ? user.says("error") : (user.nothing ?? user.says("success"))');
 		$data  = ['user' => new TestUser()];
@@ -62,7 +71,7 @@ class QueryTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testResolveWithExactArrayMatch()
+	public function testResolveWithExactArrayMatch(): void
 	{
 		$query = new Query('user');
 		$this->assertSame('homer', $query->resolve(['user' => 'homer']));
@@ -90,7 +99,7 @@ class QueryTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testResolveWithClosureArgument()
+	public function testResolveWithClosureArgument(): void
 	{
 		$query = new Query('foo.bar(() => foo.homer)');
 		$data  = [
@@ -110,7 +119,7 @@ class QueryTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testResolveWithClosureWithArgument()
+	public function testResolveWithClosureWithArgument(): void
 	{
 		$query = new Query('(foo) => foo.homer');
 		$data  = [];
@@ -125,7 +134,7 @@ class QueryTest extends TestCase
 	/**
 	 * @covers ::intercept
 	 */
-	public function testResolveWithInterceptor()
+	public function testResolveWithInterceptor(): void
 	{
 		$query = new class ('foo.getObj.name') extends Query {
 			public function intercept($result): mixed
@@ -147,5 +156,51 @@ class QueryTest extends TestCase
 
 		$bar = $query->resolve($data);
 		$this->assertSame('homer simpson', $bar);
+	}
+
+	/**
+	 * @covers ::runner
+	 */
+	public function testRunner(): void
+	{
+		$query = new Query('');
+		$this->assertInstanceOf(Interpreted::class, $query->runner());
+	}
+
+	/**
+	 * @covers ::runner
+	 */
+	public function testRunnerWithConfig(): void
+	{
+		$app = new App([
+			'options' => [
+				'query' => [
+					'runner' => 'transpiled'
+				]
+			]
+		]);
+
+		$query = new Query('');
+		$this->assertInstanceOf(Transpiled::class, $query->runner());
+	}
+
+	/**
+	 * @covers ::runner
+	 */
+	public function testRunnerWithInvalidConfig(): void
+	{
+		$app = new App([
+			'options' => [
+				'query' => [
+					'runner' => 'foo'
+				]
+			]
+		]);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid query runner: foo');
+
+		$query = new Query('');
+		$query->runner();
 	}
 }

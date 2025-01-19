@@ -14,6 +14,8 @@ use Kirby\Query\Visitors\Visitor;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
+ *
+ * @codeCoverageIgnore
  */
 abstract class Node
 {

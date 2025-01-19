@@ -16,6 +16,10 @@ use Kirby\Query\AST\TernaryNode;
 use Kirby\Query\AST\VariableNode;
 
 /**
+ * Parses query string by first splitting it into tokens
+ * and then matching and consuming tokens to create
+ * an abstract syntax tree (AST) of matching nodes
+ *
  * @package   Kirby Query
  * @author    Roman Steiner <>,
  *            Nico Hoffmann <nico@getkirby.com>
@@ -41,14 +45,8 @@ class Parser
 			$query     = $tokenizer->tokens();
 		}
 
-		$this->tokens = $query;
-		$first        = $this->tokens->current();
-
-		if ($first === null) {
-			throw new Exception('No tokens found');
-		}
-
-		$this->current = $first;
+		$this->tokens  = $query;
+		$this->current = $this->tokens->current();
 	}
 
 	/**
@@ -66,6 +64,20 @@ class Parser
 	}
 
 	/**
+	 * Parses an array
+	 */
+	private function array(): ArrayListNode|null
+	{
+		if ($this->consume(TokenType::T_OPEN_BRACKET)) {
+			return new ArrayListNode(
+				elements: $this->consumeList(TokenType::T_CLOSE_BRACKET)
+			);
+		}
+
+		return null;
+	}
+
+	/**
 	 * Parses a list of arguments
 	 */
 	private function argumentList(): ArgumentListNode
@@ -80,83 +92,16 @@ class Parser
 	 */
 	private function atomic(): Node
 	{
-		// primitives/scalars
-		if ($token = $this->matchAny([
-			TokenType::T_TRUE,
-			TokenType::T_FALSE,
-			TokenType::T_NULL,
-			TokenType::T_STRING,
-			TokenType::T_INTEGER,
-			TokenType::T_FLOAT,
-		])) {
-			return new LiteralNode(value: $token->literal);
+		$token   = $this->scalar();
+		$token ??= $this->array();
+		$token ??= $this->identifier();
+		$token ??= $this->grouping();
+
+		if ($token === null) {
+			throw new Exception('Expect expression'); // @codeCoverageIgnore
 		}
 
-		// arrays
-		if ($token = $this->match(TokenType::T_OPEN_BRACKET)) {
-			return new ArrayListNode(
-				elements: $this->consumeList(TokenType::T_CLOSE_BRACKET)
-			);
-		}
-
-		// global functions and variables
-		if ($token = $this->match(TokenType::T_IDENTIFIER)) {
-			if ($this->match(TokenType::T_OPEN_PAREN)) {
-				return new GlobalFunctionNode(
-					name: $token->lexeme,
-					arguments: $this->argumentList()
-				);
-			}
-
-			return new VariableNode(name: $token->lexeme);
-		}
-
-		// grouping and closure argument lists
-		if ($token = $this->match(TokenType::T_OPEN_PAREN)) {
-			$list = $this->consumeList(TokenType::T_CLOSE_PAREN);
-
-			if ($this->match(TokenType::T_ARROW)) {
-				$expression = $this->expression();
-
-				/**
-				 * Assert that all elements are VariableNodes
-				 * @var VariableNode[] $list
-				 */
-				foreach ($list as $element) {
-					if ($element instanceof VariableNode === false) {
-						throw new Exception('Expecting only variables in closure argument list.');
-					}
-				}
-
-				$arguments = array_map(fn ($element) => $element->name, $list);
-
-				return new ClosureNode(
-					arguments: $arguments,
-					body: $expression
-				);
-			}
-
-			if (count($list) > 1) {
-				throw new Exception('Expecting \"=>\" after closure argument list.');
-			}
-
-			// this is just a grouping
-			return $list[0];
-		}
-
-		throw new Exception('Expect expression');
-	}
-
-	/**
-	 * Whether the current token is of a specific type
-	 */
-	protected function check(TokenType $type): bool
-	{
-		if ($this->isAtEnd() === true) {
-			return false;
-		}
-
-		return $this->current->is($type);
+		return $token;
 	}
 
 	/**
@@ -166,7 +111,7 @@ class Parser
 	{
 		$node = $this->ternary();
 
-		while ($this->match(TokenType::T_COALESCE)) {
+		while ($this->consume(TokenType::T_COALESCE)) {
 			$node = new CoalesceNode(
 				left: $node,
 				right: $this->ternary()
@@ -183,13 +128,31 @@ class Parser
 	 */
 	protected function consume(
 		TokenType $type,
-		string $error
-	): Token {
-		if ($this->check($type) === true) {
+		string|false $error = false
+	): Token|false {
+		if ($this->is($type) === true) {
 			return $this->advance();
 		}
 
-		throw new Exception($error);
+		if (is_string($error) === true) {
+			throw new Exception($error);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Move to next token if of any specific type
+	 */
+	protected function consumeAny(array $types): Token|false
+	{
+		foreach ($types as $type) {
+			if ($this->is($type) === true) {
+				return $this->advance();
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -201,11 +164,11 @@ class Parser
 
 		while (
 			$this->isAtEnd() === false &&
-			$this->check($until) === false
+			$this->is($until) === false
 		) {
 			$elements[] = $this->expression();
 
-			if ($this->match(TokenType::T_COMMA) === false) {
+			if ($this->consume(TokenType::T_COMMA) === false) {
 				break;
 			}
 		}
@@ -234,37 +197,82 @@ class Parser
 	}
 
 	/**
+	 * Parses a grouping (e.g. closure)
+	 */
+	private function grouping(): ClosureNode|Node|null
+	{
+		if ($this->consume(TokenType::T_OPEN_PAREN)) {
+			$list = $this->consumeList(TokenType::T_CLOSE_PAREN);
+
+			if ($this->consume(TokenType::T_ARROW)) {
+				$expression = $this->expression();
+
+				/**
+				 * Assert that all elements are VariableNodes
+				 * @var VariableNode[] $list
+				 */
+				foreach ($list as $element) {
+					if ($element instanceof VariableNode === false) {
+						throw new Exception('Expecting only variables in closure argument list');
+					}
+				}
+
+				$arguments = array_map(fn ($element) => $element->name, $list);
+
+				return new ClosureNode(
+					arguments: $arguments,
+					body: $expression
+				);
+			}
+
+			if (count($list) > 1) {
+				throw new Exception('Expecting "=>" after closure argument list');
+			}
+
+			// this is just a grouping
+			return $list[0];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Parses an identifier (global functions or variables)
+	 */
+	private function identifier(): GlobalFunctionNode|VariableNode|null
+	{
+		if ($token = $this->consume(TokenType::T_IDENTIFIER)) {
+			if ($this->consume(TokenType::T_OPEN_PAREN)) {
+				return new GlobalFunctionNode(
+					name: $token->lexeme,
+					arguments: $this->argumentList()
+				);
+			}
+
+			return new VariableNode(name: $token->lexeme);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Whether the current token is of a specific type
+	 */
+	protected function is(TokenType $type): bool
+	{
+		if ($this->isAtEnd() === true) {
+			return false;
+		}
+
+		return $this->current->is($type);
+	}
+
+	/**
 	 * Whether the parser has reached the end of the query
 	 */
 	protected function isAtEnd(): bool
 	{
 		return $this->current->is(TokenType::T_EOF);
-	}
-
-	/**
-	 * Move to next token if of specific type
-	 */
-	protected function match(TokenType $type): Token|false
-	{
-		if ($this->check($type) === true) {
-			return $this->advance();
-		}
-
-		return false;
-	}
-
-	/**
-	 * Move to next token if of any specific type
-	 */
-	protected function matchAny(array $types): Token|false
-	{
-		foreach ($types as $type) {
-			if ($this->check($type) === true) {
-				return $this->advance();
-			}
-		}
-
-		return false;
 	}
 
 	/**
@@ -274,13 +282,13 @@ class Parser
 	{
 		$object = $this->atomic();
 
-		while ($token = $this->matchAny([
+		while ($token = $this->consumeAny([
 			TokenType::T_DOT,
 			TokenType::T_NULLSAFE
 		])) {
-			if ($member = $this->match(TokenType::T_IDENTIFIER)) {
+			if ($member = $this->consume(TokenType::T_IDENTIFIER)) {
 				$member = $member->lexeme;
-			} elseif ($member = $this->match(TokenType::T_INTEGER)) {
+			} elseif ($member = $this->consume(TokenType::T_INTEGER)) {
 				$member = $member->literal;
 			} else {
 				throw new Exception('Expect property name after "."');
@@ -289,7 +297,7 @@ class Parser
 			$object = new MemberAccessNode(
 				object: $object,
 				member: $member,
-				arguments: match ($this->match(TokenType::T_OPEN_PAREN)) {
+				arguments: match ($this->consume(TokenType::T_OPEN_PAREN)) {
 					false   => null,
 					default => $this->argumentList(),
 				},
@@ -310,10 +318,26 @@ class Parser
 
 		// ensure that we consumed all tokens
 		if ($this->isAtEnd() === false) {
-			$this->consume(TokenType::T_EOF, 'Expect end of expression');
+			$this->consume(TokenType::T_EOF, 'Expect end of expression'); // @codeCoverageIgnore
 		}
 
 		return $expression;
+	}
+
+	private function scalar(): LiteralNode|null
+	{
+		if ($token = $this->consumeAny([
+			TokenType::T_TRUE,
+			TokenType::T_FALSE,
+			TokenType::T_NULL,
+			TokenType::T_STRING,
+			TokenType::T_INTEGER,
+			TokenType::T_FLOAT,
+		])) {
+			return new LiteralNode(value: $token->literal);
+		}
+
+		return null;
 	}
 
 	/**
@@ -324,7 +348,7 @@ class Parser
 	{
 		$condition = $this->memberAccess();
 
-		if ($token = $this->matchAny([
+		if ($token = $this->consumeAny([
 			TokenType::T_QUESTION_MARK,
 			TokenType::T_TERNARY_DEFAULT
 		])) {
