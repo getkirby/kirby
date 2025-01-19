@@ -9,6 +9,7 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Query\Parsers\Parser;
+use Kirby\Query\Query;
 use Kirby\Query\Visitors\Transpiler;
 
 /**
@@ -24,20 +25,33 @@ use Kirby\Query\Visitors\Transpiler;
  */
 class Transpiled extends Runner
 {
-	public string $root;
-
 	public function __construct(
+		protected string $root,
 		public array $functions = [],
 		protected Closure|null $interceptor = null,
 		protected ArrayAccess|array &$cache = [],
-		string|null $root = null
 	) {
-		$this->root = $root ?? App::instance()->root('cache') . '/.queries';
 	}
 
+	/**
+	 * Returns the file path for the cache file
+	 */
 	public function file(string $query): string
 	{
 		return $this->root . '/' . crc32($query) . '.php';
+	}
+
+	/**
+	 * Creates a runner for the Query
+	 */
+	public static function for(Query $query): static
+	{
+		return new static(
+			root:        App::instance()->root('cache') . '/.queries',
+			functions:   $query::$entries,
+			interceptor: $query->intercept(...),
+			cache:       $query::$cache
+		);
 	}
 
 	/**

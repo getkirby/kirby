@@ -5,6 +5,7 @@ namespace Kirby\Query\Runners;
 use ArrayAccess;
 use Closure;
 use Exception;
+use Kirby\Query\Query;
 
 /**
  * @package   Kirby Query
@@ -26,6 +27,11 @@ abstract class Runner
 		protected ArrayAccess|array &$cache = [],
 	) {
 	}
+
+	/**
+	 * Creates a runner for the Query
+	 */
+	abstract public static function for(Query $query): static;
 
 	/**
 	 * Executes a query within a given data context

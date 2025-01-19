@@ -4,6 +4,7 @@ namespace Kirby\Query\Runners;
 
 use Closure;
 use Kirby\Query\Parsers\Parser;
+use Kirby\Query\Query;
 use Kirby\Query\Visitors\Interpreter;
 
 /**
@@ -18,6 +19,18 @@ use Kirby\Query\Visitors\Interpreter;
  */
 class Interpreted extends Runner
 {
+	/**
+	 * Creates a runner for the Query
+	 */
+	public static function for(Query $query): static
+	{
+		return new static(
+			functions: $query::$entries,
+			interceptor: $query->intercept(...),
+			cache: $query::$cache
+		);
+	}
+
 	protected function resolver(string $query): Closure
 	{
 		// load closure from cache

@@ -17,7 +17,7 @@ use Kirby\Toolkit\I18n;
 
 /**
  * The Query class can be used to run expressions on arrays and objects,
- * including their methods with a very simple string-based syntax.
+ * including their methods with a very simple string-based syntax
  *
  * @package   Kirby Query
  * @author    Bastian Allgeier <bastian@getkirby.com>,
@@ -28,7 +28,7 @@ use Kirby\Toolkit\I18n;
  */
 class Query
 {
-	private static array $cache = [];
+	public static array $cache = [];
 
 	/**
 	 * Default data entries
@@ -81,19 +81,13 @@ class Query
 			return $this->resolve_legacy($data);
 		}
 
-		$class = match ($mode) {
+		$runner = match ($mode) {
 			'interpreted' => Interpreted::class,
 			'transpiled'  => Transpiled::class,
-			default       => throw new Exception('Invalid query runner "' . $mode . '"')
+			default       => throw new Exception("Invalid query runner $mode")
 		};
 
-		$runner = new $class(
-			static::$entries,
-			$this->intercept(...),
-			static::$cache
-		);
-
-		return $runner->run($this->query, (array)$data);
+		return $runner::for($this)->run($this->query, (array)$data);
 	}
 
 	/**
