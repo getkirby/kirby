@@ -2,7 +2,7 @@
 
 namespace Kirby\Query\AST;
 
-use Kirby\Query\Visitors\CodeGen;
+use Kirby\Query\Visitors\Transpiler;
 use Kirby\Query\Visitors\Interpreter;
 use Kirby\TestCase;
 
@@ -31,8 +31,8 @@ class GlobalFunctionNodeTest extends TestCase
 		$visitor = new Interpreter(functions: $functions);
 		$this->assertSame(10, $node->resolve($visitor));
 
-		// CodeGen
-		$visitor = new CodeGen(functions: $functions);
+		// Transpiler
+		$visitor = new Transpiler(functions: $functions);
 		$this->assertSame('$functions[\'foo\'](3, 7)', $node->resolve($visitor));
 	}
 }

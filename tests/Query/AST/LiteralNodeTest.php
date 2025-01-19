@@ -2,7 +2,7 @@
 
 namespace Kirby\Query\AST;
 
-use Kirby\Query\Visitors\CodeGen;
+use Kirby\Query\Visitors\Transpiler;
 use Kirby\Query\Visitors\Interpreter;
 use Kirby\TestCase;
 
@@ -23,8 +23,8 @@ class LiteralNodeTest extends TestCase
 		$visitor = new Interpreter();
 		$this->assertSame('a', $node->resolve($visitor));
 
-		// CodeGen
-		$visitor = new CodeGen();
+		// Transpiler
+		$visitor = new Transpiler();
 		$this->assertSame('\'a\'', $node->resolve($visitor));
 	}
 }

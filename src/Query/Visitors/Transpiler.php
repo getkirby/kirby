@@ -17,7 +17,7 @@ use Kirby\Query\Runners\Runtime;
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
-class CodeGen extends Visitor
+class Transpiler extends Visitor
 {
 	/**
 	 * If we need something from a namespace,

@@ -2,7 +2,7 @@
 
 namespace Kirby\Query\AST;
 
-use Kirby\Query\Visitors\CodeGen;
+use Kirby\Query\Visitors\Transpiler;
 use Kirby\Query\Visitors\Interpreter;
 use Kirby\TestCase;
 
@@ -48,8 +48,8 @@ class MemberAccessNodeTest extends TestCase
 		$visitor = new Interpreter(context: $context);
 		$this->assertSame('foo', $node->resolve($visitor));
 
-		// CodeGen
-		$visitor = new CodeGen(context: $context);
+		// Transpiler
+		$visitor = new Transpiler(context: $context);
 		$this->assertSame('Runtime::access(($intercept($_2375276105)), \'name\', false)', $node->resolve($visitor));
 	}
 }

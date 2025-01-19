@@ -2,7 +2,7 @@
 
 namespace Kirby\Query\AST;
 
-use Kirby\Query\Visitors\CodeGen;
+use Kirby\Query\Visitors\Transpiler;
 use Kirby\Query\Visitors\Interpreter;
 use Kirby\TestCase;
 
@@ -29,8 +29,8 @@ class ClosureNodeTest extends TestCase
 		$visitor = new Interpreter();
 		$this->assertEquals(fn ($a, $b) => $a ?? $b, $node->resolve($visitor));
 
-		// CodeGen
-		$visitor = new CodeGen();
+		// Transpiler
+		$visitor = new Transpiler();
 		$this->assertSame(
 			'fn($_3904355907, $_1908338681) => ($_3904355907 ?? $_1908338681)',
 			 $node->resolve($visitor)

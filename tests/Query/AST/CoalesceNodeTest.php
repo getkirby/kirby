@@ -2,7 +2,7 @@
 
 namespace Kirby\Query\AST;
 
-use Kirby\Query\Visitors\CodeGen;
+use Kirby\Query\Visitors\Transpiler;
 use Kirby\Query\Visitors\Interpreter;
 use Kirby\TestCase;
 
@@ -26,8 +26,8 @@ class CoalesceNodeTest extends TestCase
 		$visitor = new Interpreter();
 		$this->assertSame('foo', $node->resolve($visitor));
 
-		// CodeGen
-		$visitor = new CodeGen();
+		// Transpiler
+		$visitor = new Transpiler();
 		$this->assertSame('(NULL ?? \'foo\')', $node->resolve($visitor));
 	}
 }

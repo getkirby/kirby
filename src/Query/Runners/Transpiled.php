@@ -9,7 +9,7 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Query\Parsers\Parser;
-use Kirby\Query\Visitors\CodeGen;
+use Kirby\Query\Visitors\Transpiler;
 
 /**
  * Runner that caches the AST as a PHP file
@@ -65,7 +65,7 @@ class Transpiled extends Runner
 		$ast     = $parser->parse();
 
 		// resolve AST to string representations
-		$visitor = new CodeGen($this->functions);
+		$visitor = new Transpiler($this->functions);
 		$body    = $ast->resolve($visitor);
 
 		// create string representation for mappings
