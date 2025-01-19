@@ -74,7 +74,7 @@ class Interpreter extends Visitor
 	/**
 	 * Executes global function
 	 */
-	public function function(string $name, $arguments): mixed
+	public function function(string $name, array $arguments = []): mixed
 	{
 		$function = $this->functions[$name] ?? null;
 
@@ -99,7 +99,7 @@ class Interpreter extends Visitor
 	public function memberAccess(
 		mixed $object,
 		string|int $member,
-		array|string|null $arguments = null,
+		array|null $arguments = null,
 		bool $nullSafe = false
 	): mixed {
 		if ($this->interceptor !== null) {

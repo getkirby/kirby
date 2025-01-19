@@ -3,7 +3,6 @@
 namespace Kirby\Query\Visitors;
 
 use Closure;
-use Kirby\Query\AST\ClosureNode;
 
 /**
  * @package   Kirby Query
@@ -13,6 +12,21 @@ use Kirby\Query\AST\ClosureNode;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
+ *
+ * Every visitor class must implement the following methods.
+ * As PHP won't allow increasing the typing specificity, we
+ * aren't actually adding them here in the abstract class, so that
+ * the actual visitor classes can work with much more specific type hints.
+ *
+ * @method mixed argumentList(array $arguments)
+ * @method mixed arrayList(array $elements)
+ * @method mixed closure($ClosureNode $node))
+ * @method mixed coalescence($left, $right)
+ * @method mixed function($name, $arguments)
+ * @method mixed literal($value)
+ * @method mixed memberAccess($object, string|int $member, $arguments, bool $nullSafe = false)
+ * @method mixed ternary($condition, $true, $false)
+ * @method mixed variable(string $name)
  */
 abstract class Visitor
 {
@@ -26,14 +40,4 @@ abstract class Visitor
 		protected Closure|null $interceptor = null
 	) {
 	}
-
-	abstract public function argumentList(array $arguments);
-	abstract public function arrayList(array $elements);
-	abstract public function closure(ClosureNode $node);
-	abstract public function coalescence(mixed $left, mixed $right);
-	abstract public function function(string $name, $arguments);
-	abstract public function literal(mixed $value);
-	abstract public function memberAccess(mixed $object, string|int $member, array|string|null $arguments = null, bool $nullSafe = false);
-	abstract public function ternary(mixed $condition, mixed $true, mixed $false);
-	abstract public function variable(string $name);
 }

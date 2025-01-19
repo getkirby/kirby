@@ -75,7 +75,7 @@ class Transpiler extends Visitor
 	/**
 	 * Converts coalescence operator to string representation
 	 */
-	public function coalescence(mixed $left, mixed $right): string
+	public function coalescence(string $left, string $right): string
 	{
 		return "($left ?? $right)";
 	}
@@ -83,8 +83,10 @@ class Transpiler extends Visitor
 	/**
 	 * Creates string representation for (global) function
 	 */
-	public function function(string $name, $arguments): string
-	{
+	public function function(
+		string $name,
+		string|null $arguments = null
+	): string {
 		if (isset($this->functions[$name]) === false) {
 			throw new Exception("Invalid global function: $name");
 		}
@@ -110,9 +112,9 @@ class Transpiler extends Visitor
 	 * Creates string representation for member access
 	 */
 	public function memberAccess(
-		mixed $object,
+		string $object,
 		string|int $member,
-		array|string|null $arguments = null,
+		string|null $arguments = null,
 		bool $nullSafe = false
 	): string {
 		$this->uses[Runtime::class] = true;
@@ -142,9 +144,9 @@ class Transpiler extends Visitor
 	 * Converts ternary operator to string representation
 	 */
 	public function ternary(
-		mixed $condition,
-		mixed $true,
-		mixed $false
+		string $condition,
+		string|null $true,
+		string $false
 	): string {
 		if ($true === null) {
 			return "($condition ?: $false)";

@@ -71,7 +71,7 @@ class InterpreterTest extends TestCase
 		$visitor = new Interpreter(
 			functions: ['foo' => fn () => 'bar']
 		);
-		$this->assertSame('bar', $visitor->function('foo', []));
+		$this->assertSame('bar', $visitor->function('foo'));
 	}
 
 	/**

@@ -58,8 +58,8 @@ class TranspilerTest extends TestCase
 	public function testCoalescence(): void
 	{
 		$visitor = new Transpiler();
-		$this->assertSame('(3 ?? 4)', $visitor->coalescence(3, 4));
-		$this->assertSame('( ?? 4)', $visitor->coalescence(null, 4));
+		$this->assertSame('(3 ?? 4)', $visitor->coalescence('3', '4'));
+		$this->assertSame('(NULL ?? 4)', $visitor->coalescence('NULL', '4'));
 	}
 
 	/**
@@ -70,7 +70,7 @@ class TranspilerTest extends TestCase
 		$visitor = new Transpiler(
 			functions: ['foo' => fn () => 'bar']
 		);
-		$this->assertSame('$functions[\'foo\']()', $visitor->function('foo', null));
+		$this->assertSame('$functions[\'foo\']()', $visitor->function('foo'));
 	}
 
 	/**
@@ -83,7 +83,7 @@ class TranspilerTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid global function: fox');
 
-		$visitor->function('fox', null);
+		$visitor->function('fox');
 	}
 
 	/**
@@ -102,6 +102,8 @@ class TranspilerTest extends TestCase
 	{
 		$visitor = new Transpiler();
 		$this->assertSame('3', $visitor->literal(3));
+		$this->assertSame('\'string\'', $visitor->literal('string'));
+		$this->assertSame('false', $visitor->literal(false));
 		$this->assertSame('NULL', $visitor->literal(null));
 	}
 
@@ -128,17 +130,15 @@ class TranspilerTest extends TestCase
 
 	/**
 	 * @covers ::ternary
-	 *
-	 * TODO: is that right that false/null are missing here
 	 */
 	public function testTernary(): void
 	{
 		$visitor = new Transpiler();
-		$this->assertSame('(1 ? 2 : 3)', $visitor->ternary(true, 2, 3));
-		$this->assertSame('( ? 2 : 3)', $visitor->ternary(false, 2, 3));
+		$this->assertSame('(true ? 2 : 3)', $visitor->ternary('true', '2', '3'));
+		$this->assertSame('(false ? 2 : 3)', $visitor->ternary('false', '2', '3'));
 
-		$this->assertSame('(truthy ?: 3)', $visitor->ternary('truthy', null, 3));
-		$this->assertSame('( ?: 3)', $visitor->ternary(null, null, 3));
+		$this->assertSame('("truthy" ?: 3)', $visitor->ternary('"truthy"', null, '3'));
+		$this->assertSame('(NULL ?: 3)', $visitor->ternary('NULL', null, 3));
 	}
 
 	/**
