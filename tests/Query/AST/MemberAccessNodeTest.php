@@ -6,14 +6,6 @@ use Kirby\Query\Visitors\Interpreter;
 use Kirby\Query\Visitors\Transpiler;
 use Kirby\TestCase;
 
-class UserMock
-{
-	public function name(): string
-	{
-		return 'foo';
-	}
-}
-
 /**
  * @coversDefaultClass \Kirby\Query\AST\MemberAccessNode
  * @covers ::__construct
@@ -57,7 +49,12 @@ class MemberAccessNodeTest extends TestCase
 			'name'
 		);
 
-		$context = ['user' => new UserMock()];
+		$context = ['user' => new class {
+			public function name(): string
+			{
+				return 'foo';
+			}
+		}];
 
 		// Interpreter
 		$visitor = new Interpreter(context: $context);

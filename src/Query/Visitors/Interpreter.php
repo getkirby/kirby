@@ -51,6 +51,8 @@ class Interpreter extends Visitor
 				$params
 			);
 
+			// create new nested visitor with combined
+			// data context for resolving the closure body
 			$visitor = new static(
 				functions: $self->functions,
 				context: [...$self->context, ...$arguments],
@@ -77,7 +79,7 @@ class Interpreter extends Visitor
 		$function = $this->functions[$name] ?? null;
 
 		if ($function === null) {
-			throw new Exception("Invalid global function $name");
+			throw new Exception("Invalid global function: $name");
 		}
 
 		return $function(...$arguments);
@@ -96,9 +98,9 @@ class Interpreter extends Visitor
 	 */
 	public function memberAccess(
 		mixed $object,
-		array|string|null $arguments,
 		string|int $member,
-		bool $nullSafe
+		array|string|null $arguments = null,
+		bool $nullSafe = false
 	): mixed {
 		if ($this->interceptor !== null) {
 			$object = ($this->interceptor)($object);

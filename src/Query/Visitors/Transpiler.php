@@ -86,7 +86,7 @@ class Transpiler extends Visitor
 	public function function(string $name, $arguments): string
 	{
 		if (isset($this->functions[$name]) === false) {
-			throw new Exception("Invalid global function $name");
+			throw new Exception("Invalid global function: $name");
 		}
 
 		$name = var_export($name, true);
@@ -111,9 +111,9 @@ class Transpiler extends Visitor
 	 */
 	public function memberAccess(
 		mixed $object,
-		array|string|null $arguments,
 		string|int $member,
-		bool $nullSafe
+		array|string|null $arguments = null,
+		bool $nullSafe = false
 	): string {
 		$this->uses[Runtime::class] = true;
 

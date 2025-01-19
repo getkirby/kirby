@@ -9,8 +9,6 @@ use ArrayAccess;
  */
 class InterpretedTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Query.InterpretedTest';
-
 	/**
 	 * @dataProvider interceptProvider
 	 * @coversNothing

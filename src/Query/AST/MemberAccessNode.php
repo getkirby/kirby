@@ -45,8 +45,8 @@ class MemberAccessNode extends IdentifierNode
 
 		return $visitor->memberAccess(
 			$object,
-			$arguments,
 			$this->member,
+			$arguments,
 			$this->nullSafe
 		);
 	}
