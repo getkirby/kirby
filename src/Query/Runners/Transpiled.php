@@ -6,8 +6,8 @@ use ArrayAccess;
 use Closure;
 use Exception;
 use Kirby\Cms\App;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Query\AST\Node;
 use Kirby\Query\Parsers\Parser;
 use Kirby\Query\Query;
 use Kirby\Query\Visitors\Transpiler;
@@ -29,8 +29,21 @@ class Transpiled extends Runner
 		protected string $root,
 		public array $functions = [],
 		protected Closure|null $interceptor = null,
-		protected ArrayAccess|array &$cache = [],
+		protected ArrayAccess|array &$cache = []
 	) {
+	}
+
+	/**
+	 * Create string for comments to include query
+	 */
+	public function comments(string $query): string
+	{
+		$comments = array_map(
+			fn ($line) => "// $line",
+			explode("\n", $query)
+		);
+
+		return join("\n", $comments);
 	}
 
 	/**
@@ -55,6 +68,37 @@ class Transpiled extends Runner
 	}
 
 	/**
+	 * Create string representation for mappings
+	 */
+	public function mappings(Transpiler $visitor): string
+	{
+		$mappings = array_map(
+			fn ($key, $value) => "$key = $value;",
+			array_keys($visitor->mappings),
+			$visitor->mappings
+		);
+
+		return join("\n", $mappings) . "\n";
+	}
+
+	/**
+	 * Returns the query transpiled as PHP code string
+	 */
+	public function representation(
+		Transpiler $visitor,
+		string $query,
+		Node $ast
+	): string {
+		$body     = $ast->resolve($visitor);
+		$uses     = $this->uses($visitor);
+		$comments = $this->comments($query);
+		$mappings = $this->mappings($visitor);
+		$closure  = "return function(array \$context, array \$functions, Closure \$intercept) {\n$mappings\nreturn $body;\n};";
+
+		return "<?php\n$uses\n$comments\n$closure";
+	}
+
+	/**
 	 * Retrieves the executor closure for a given query.
 	 *
 	 * If the closure is not already cached in the filesystem,
@@ -75,40 +119,15 @@ class Transpiled extends Runner
 		}
 
 		// parse query and generate closure
-		$parser  = new Parser($query);
-		$ast     = $parser->parse();
+		$parser = new Parser($query);
+		$ast    = $parser->parse();
 
-		// resolve AST to string representations
+		// resolve AST to code representations
 		$visitor = new Transpiler($this->functions);
-		$body    = $ast->resolve($visitor);
-
-		// create string representation for mappings
-		$mappings = array_map(
-			fn ($key, $value) => "$key = $value;",
-			array_keys($visitor->mappings),
-			$visitor->mappings
-		);
-		$mappings = join("\n", $mappings) . "\n";
-
-		// add query as comments
-		$comment = array_map(fn ($line) => "// $line", explode("\n", $query));
-		$comment = join("\n", $comment);
-
-		// add PHP use references as string representations
-		$uses = array_map(
-			fn ($class) => "use $class;",
-			array_keys($visitor->uses)
-		);
-		$uses = join("\n", $uses) . "\n";
-
-		// closure string representation
-		$closure = "return function(array \$context, array \$functions, Closure \$intercept) {\n$mappings\nreturn $body;\n};";
-
-		// wrap in PHP file structure
-		$function = "<?php\n$uses\n$comment\n$closure";
+		$code     = $this->representation($visitor, $query, $ast);
 
 		// cache in file
-		F::write($file, $function);
+		F::write($file, $code);
 
 		// load from file to create memory entry
 		return $this->cache[$query] = include $file;
@@ -128,5 +147,18 @@ class Transpiled extends Runner
 			$this->functions,
 			$this->interceptor ?? fn ($obj) => $obj
 		);
+	}
+
+	/**
+	 * Create PHP use references as string representations
+	 */
+	public function uses(Transpiler $visitor): string
+	{
+		$uses = array_map(
+			fn ($class) => "use $class;",
+			array_keys($visitor->uses)
+		);
+
+		return join("\n", $uses) . "\n";
 	}
 }
