@@ -44,11 +44,11 @@ class Interpreted extends Runner
 		$self   = $this;
 
 		return $this->cache[$query] = function (array $binding) use ($self, $ast) {
-			$visitor = new Interpreter($self->functions, $binding);
-
-			if ($self->interceptor !== null) {
-				$visitor->setInterceptor($self->interceptor);
-			}
+			$visitor = new Interpreter(
+				functions: $self->functions,
+				context: $binding,
+				interceptor: $self->interceptor
+			);
 
 			return $ast->resolve($visitor);
 		};

@@ -51,16 +51,13 @@ class Interpreter extends Visitor
 				$params
 			);
 
-			$self = new static(
-				$self->functions,
-				[...$self->context, ...$arguments]
+			$visitor = new static(
+				functions: $self->functions,
+				context: [...$self->context, ...$arguments],
+				interceptor: $self->interceptor
 			);
 
-			if ($self->interceptor !== null) {
-				$self->setInterceptor($self->interceptor);
-			}
-
-			return $node->body->resolve($self);
+			return $node->body->resolve($visitor);
 		};
 	}
 

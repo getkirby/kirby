@@ -16,15 +16,14 @@ use Kirby\Query\AST\ClosureNode;
  */
 abstract class Visitor
 {
-	public Closure|null $interceptor = null;
-
 	/**
 	 * @param array<string,Closure> $functions valid global function closures
 	 * @param array<string,mixed> $context data bindings for the query
 	 */
 	public function __construct(
 		public array $functions = [],
-		public array $context = []
+		public array $context = [],
+		protected Closure|null $interceptor = null
 	) {
 	}
 
@@ -37,15 +36,4 @@ abstract class Visitor
 	abstract public function memberAccess(mixed $object, array|string|null $arguments, string|int $member, bool $nullSafe);
 	abstract public function ternary(mixed $condition, mixed $true, mixed $false);
 	abstract public function variable(string $name);
-
-	/**
-	 * Sets and activates an interceptor closure
-	 * that is called for each resolved value.
-	 *
-	 * @todo can't this be moved to the constructor?
-	 */
-	public function setInterceptor(Closure $interceptor): void
-	{
-		$this->interceptor = $interceptor;
-	}
 }
