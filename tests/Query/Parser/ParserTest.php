@@ -62,7 +62,7 @@ class ParserTest extends TestCase
 			$ast,
 			new MemberAccessNode(
 				object: new VariableNode('site'),
-				member: 'method',
+				member: new LiteralNode('method'),
 				arguments: new ArgumentListNode([
 					new VariableNode('a'),
 					new VariableNode('b'),
@@ -343,7 +343,7 @@ class ParserTest extends TestCase
 			$ast,
 			new MemberAccessNode(
 				new VariableNode('user'),
-				'name'
+				new LiteralNode('name')
 			)
 		);
 	}
@@ -360,7 +360,47 @@ class ParserTest extends TestCase
 			$ast,
 			new MemberAccessNode(
 				new VariableNode('user'),
-				1
+				new LiteralNode(1)
+			)
+		);
+	}
+
+	/**
+	 * @covers ::memberAccess
+	 */
+	public function testMemberAccessSubscriptString(): void
+	{
+		$parser = new Parser('user["This.is the key"](2)');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			$ast,
+			new MemberAccessNode(
+				new VariableNode('user'),
+				new LiteralNode('This.is the key'),
+				arguments: new ArgumentListNode([
+					new LiteralNode(2)
+				])
+			)
+		);
+	}
+
+	/**
+	 * @covers ::memberAccess
+	 */
+	public function testMemberAccessSubscriptExpression(): void
+	{
+		$parser = new Parser('user[page.id]');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			$ast,
+			new MemberAccessNode(
+				new VariableNode('user'),
+				new MemberAccessNode(
+					new VariableNode('page'),
+					new LiteralNode('id')
+				)
 			)
 		);
 	}
@@ -378,10 +418,10 @@ class ParserTest extends TestCase
 			new MemberAccessNode(
 				new MemberAccessNode(
 					new VariableNode('user'),
-					'name',
+					new LiteralNode('name'),
 					new ArgumentListNode([new LiteralNode('arg')])
 				),
-				'age'
+				new LiteralNode('age')
 			)
 		);
 	}
@@ -411,7 +451,7 @@ class ParserTest extends TestCase
 			new TernaryNode(
 				condition: new MemberAccessNode(
 					object: new VariableNode('site'),
-					member: 'method',
+					member: new LiteralNode('method'),
 					arguments: new ArgumentListNode([
 						new LiteralNode(5)
 					])

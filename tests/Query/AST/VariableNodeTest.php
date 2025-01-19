@@ -13,18 +13,6 @@ use Kirby\TestCase;
 class VariableNodeTest extends TestCase
 {
 	/**
-	 * @covers ::name
-	 */
-	public function testName(): void
-	{
-		$node = new VariableNode('a');
-		$this->assertSame('a', $node->name());
-
-		$node = new VariableNode('a\.b');
-		$this->assertSame('a.b', $node->name());
-	}
-
-	/**
 	 * @covers ::resolve
 	 */
 	public function testResolve(): void

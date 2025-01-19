@@ -113,7 +113,7 @@ class Transpiler extends Visitor
 	 */
 	public function memberAccess(
 		string $object,
-		string|int $member,
+		string $member,
 		string|null $arguments = null,
 		bool $nullSafe = false
 	): string {
@@ -121,7 +121,7 @@ class Transpiler extends Visitor
 
 		$params = array_filter([
 			$this->intercept($object),
-			var_export($member, true),
+			$member,
 			$nullSafe ? 'true' : 'false',
 			$arguments
 		]);

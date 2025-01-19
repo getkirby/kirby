@@ -284,12 +284,27 @@ class Parser
 
 		while ($token = $this->consumeAny([
 			TokenType::T_DOT,
-			TokenType::T_NULLSAFE
+			TokenType::T_NULLSAFE,
+			TokenType::T_OPEN_BRACKET
 		])) {
-			if ($member = $this->consume(TokenType::T_IDENTIFIER)) {
-				$member = $member->lexeme;
+			if ($token->is(TokenType::T_OPEN_BRACKET) === true) {
+				// for subscript notation, parse the inside as
+				// a literal string or a full expression
+				if ($member = $this->consume(TokenType::T_STRING)) {
+					$member = new LiteralNode($member->literal);
+				} else {
+					$member = $this->expression();
+				}
+
+				// ensure consuming the closing bracket
+				$this->consume(
+					TokenType::T_CLOSE_BRACKET,
+					'Expect subscript closing bracket'
+				);
+			} elseif ($member = $this->consume(TokenType::T_IDENTIFIER)) {
+				$member = new LiteralNode($member->lexeme);
 			} elseif ($member = $this->consume(TokenType::T_INTEGER)) {
-				$member = $member->literal;
+				$member = new LiteralNode($member->literal);
 			} else {
 				throw new Exception('Expect property name after "."');
 			}
@@ -354,7 +369,10 @@ class Parser
 		])) {
 			if ($token->is(TokenType::T_TERNARY_DEFAULT) === false) {
 				$true = $this->expression();
-				$this->consume(TokenType::T_COLON, 'Expect ":" after true branch');
+				$this->consume(
+					TokenType::T_COLON,
+					'Expect ":" after true branch'
+				);
 			}
 
 			return new TernaryNode(

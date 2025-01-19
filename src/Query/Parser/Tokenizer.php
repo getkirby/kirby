@@ -25,14 +25,13 @@ class Tokenizer
 	 * so we don't need to double or triple escape backslashes
 	 * (that becomes ridiculous rather fast).
 	 *
-	 * Identifiers can contain letters, numbers, underscores and escaped dots.
+	 * Identifiers can contain letters, numbers and underscores.
 	 * They can't start with a number.
-	 *
-	 * To match an array key like "foo.bar" we write the query as `foo\.bar`,
-	 * to match an array key like "foo\.bar" we write the query as `foo\\.bar`
+	 * For more complex identifier strings, subscript member access
+	 * should be used. With `this` to access the global context.
 	 */
 	private const IDENTIFIER_REGEX = <<<'REGEX'
-	(?:[\p{L}\p{N}_]|\\\.|\\\\)*
+	(?:[\p{L}\p{N}_])*
 	REGEX;
 
 	private const SINGLEQUOTE_STRING_REGEX = <<<'REGEX'

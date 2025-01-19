@@ -76,24 +76,11 @@ class QueryTest extends TestCase
 		$query = new Query('user');
 		$this->assertSame('homer', $query->resolve(['user' => 'homer']));
 
-		$query = new Query('user\.username');
+		$query = new Query('this["user.username"]');
 		$this->assertSame('homer', $query->resolve(['user.username' => 'homer']));
 
-		$query = new Query('user\.callback');
-		$this->assertSame('homer', $query->resolve(['user.callback' => fn () => 'homer']));
-
-		// in the query, the first slash escapes the second, the third escapes the dot
-		$query = <<<'TXT'
-		user\\\.username
-		TXT;
-
-		// this is actually the array key
-		$key = <<<'TXT'
-		user\.username
-		TXT;
-
-		$query = new Query($query);
-		$this->assertSame('homer', $query->resolve([$key => 'homer']));
+		$query = new Query('this["user callback"]');
+		$this->assertSame('homer', $query->resolve(['user callback' => fn () => 'homer']));
 	}
 
 	/**

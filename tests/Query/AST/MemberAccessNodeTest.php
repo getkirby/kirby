@@ -13,40 +13,13 @@ use Kirby\TestCase;
 class MemberAccessNodeTest extends TestCase
 {
 	/**
-	 * @covers ::member
-	 */
-	public function testMember(): void
-	{
-		$node = new MemberAccessNode(
-			new VariableNode('user'),
-			'name'
-		);
-
-		$this->assertSame('name', $node->member());
-
-		$node = new MemberAccessNode(
-			new VariableNode('user'),
-			'my\.name'
-		);
-
-		$this->assertSame('my.name', $node->member());
-
-		$node = new MemberAccessNode(
-			new VariableNode('user'),
-			1
-		);
-
-		$this->assertSame(1, $node->member());
-	}
-
-	/**
 	 * @covers ::resolve
 	 */
 	public function testResolve(): void
 	{
 		$node = new MemberAccessNode(
 			new VariableNode('user'),
-			'name'
+			new LiteralNode('name')
 		);
 
 		$context = ['user' => new class () {

@@ -13,7 +13,7 @@ use Kirby\Query\Visitors\Visitor;
  * @license   https://opensource.org/licenses/MIT
  * @since     6.0.0
  */
-class GlobalFunctionNode extends IdentifierNode
+class GlobalFunctionNode extends Node
 {
 	public function __construct(
 		public string $name,
@@ -21,18 +21,9 @@ class GlobalFunctionNode extends IdentifierNode
 	) {
 	}
 
-	/**
-	 * Replace escaped dots with real dots
-	 */
-	public function name(): string
-	{
-		return str_replace('\.', '.', $this->name);
-	}
-
 	public function resolve(Visitor $visitor): mixed
 	{
-		$name      = $this->name();
 		$arguments = $this->arguments->resolve($visitor);
-		return $visitor->function($name, $arguments);
+		return $visitor->function($this->name, $arguments);
 	}
 }

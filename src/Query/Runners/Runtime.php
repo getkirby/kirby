@@ -84,6 +84,11 @@ class Runtime
 			return $function();
 		}
 
+		// alias to access the global context
+		if ($name === 'this') {
+			return $context;
+		}
+
 		return null;
 	}
 }

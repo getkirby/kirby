@@ -21,6 +21,21 @@ class TestCase extends BaseTestCase
 				'Homer' // result
 			],
 
+			'subscript notation with string as key' => [
+				'this["my.key"]["another key"]', // query
+				['my.key' => ['another key' => 'yes']], // context
+				'yes' // result
+			],
+
+			'subscript notation with expression as key' => [
+				'this["my.key"][page.id]', // query
+				[
+					'my.key' => ['another key' => 'yes'],
+					'page'   => ['id' => 'another key']
+				], // context
+				'yes' // result
+			],
+
 			'method result' => [
 				'user.get("arg").thing', // query
 				['user' => ['get' => fn ($a) => ['thing' => $a]]], // context

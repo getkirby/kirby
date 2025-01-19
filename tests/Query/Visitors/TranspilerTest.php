@@ -116,7 +116,7 @@ class TranspilerTest extends TestCase
 
 		$this->assertSame(
 			'Runtime::access(($intercept($_user)), \'foo\', false)',
-			$visitor->memberAccess('$_user', 'foo')
+			$visitor->memberAccess('$_user', '\'foo\'')
 		);
 	}
 
