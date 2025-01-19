@@ -147,7 +147,7 @@ class TranspilerTest extends TestCase
 	public function testVariable(): void
 	{
 		$visitor = new Transpiler(
-			context: ['foo' =>'bar'],
+			context: ['foo' => 'bar'],
 			functions: ['foz' => fn () => 'baz']
 		);
 

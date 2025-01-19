@@ -37,7 +37,7 @@ class ParserTest extends TestCase
 	{
 		$parser  = new Parser('user.name');
 		$class   = new ReflectionClass($parser);
-        $advance = $class->getMethod('advance');
+		$advance = $class->getMethod('advance');
 
 		$this->assertSame(TokenType::T_IDENTIFIER, $parser->current()->type);
 		$advance->invoke($parser);
@@ -125,7 +125,7 @@ class ParserTest extends TestCase
 	{
 		$parser  = new Parser('user.name');
 		$class   = new ReflectionClass($parser);
-        $consume = $class->getMethod('consume');
+		$consume = $class->getMethod('consume');
 		$token   = $consume->invokeArgs($parser, [TokenType::T_IDENTIFIER]);
 		$this->assertSame('user', $token->lexeme);
 	}
@@ -137,7 +137,7 @@ class ParserTest extends TestCase
 	{
 		$parser  = new Parser('user.name');
 		$class   = new ReflectionClass($parser);
-        $consume = $class->getMethod('consume');
+		$consume = $class->getMethod('consume');
 		$this->assertFalse($consume->invokeArgs($parser, [TokenType::T_TRUE]));
 	}
 
@@ -148,7 +148,7 @@ class ParserTest extends TestCase
 	{
 		$parser  = new Parser('user.name');
 		$class   = new ReflectionClass($parser);
-        $consume = $class->getMethod('consumeAny');
+		$consume = $class->getMethod('consumeAny');
 		$token   = $consume->invokeArgs($parser, [[TokenType::T_IDENTIFIER, TokenType::T_DOT]]);
 		$this->assertSame('user', $token->lexeme);
 	}
@@ -160,7 +160,7 @@ class ParserTest extends TestCase
 	{
 		$parser  = new Parser('user.name');
 		$class   = new ReflectionClass($parser);
-        $consume = $class->getMethod('consumeAny');
+		$consume = $class->getMethod('consumeAny');
 		$this->assertFalse($consume->invokeArgs($parser, [[TokenType::T_TRUE, TokenType::T_FALSE]]));
 	}
 
@@ -171,7 +171,7 @@ class ParserTest extends TestCase
 	{
 		$parser  = new Parser('user.name');
 		$class   = new ReflectionClass($parser);
-        $consume = $class->getMethod('consume');
+		$consume = $class->getMethod('consume');
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('foo');
@@ -185,7 +185,7 @@ class ParserTest extends TestCase
 	{
 		$parser  = new Parser('1, 2)');
 		$class   = new ReflectionClass($parser);
-        $consume = $class->getMethod('consumeList');
+		$consume = $class->getMethod('consumeList');
 		$list    = $consume->invokeArgs($parser, [TokenType::T_CLOSE_PAREN]);
 		$this->assertEquals([new LiteralNode(1), new LiteralNode(2)], $list);
 	}
@@ -297,7 +297,7 @@ class ParserTest extends TestCase
 	{
 		$parser = new Parser('user.name');
 		$class  = new ReflectionClass($parser);
-        $is     = $class->getMethod('is');
+		$is     = $class->getMethod('is');
 
 		$this->assertTrue($is->invokeArgs($parser, [TokenType::T_IDENTIFIER]));
 
@@ -316,7 +316,7 @@ class ParserTest extends TestCase
 	{
 		$parser  = new Parser('user.name');
 		$class   = new ReflectionClass($parser);
-        $isAtEnd = $class->getMethod('isAtEnd');
+		$isAtEnd = $class->getMethod('isAtEnd');
 
 		$this->assertFalse($isAtEnd->invoke($parser));
 

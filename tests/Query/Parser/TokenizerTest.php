@@ -81,7 +81,8 @@ class TokenizerTest extends TestCase
 	/**
 	 * @covers ::token
 	 */
-	public function testTokenInvalidCharacter(): void {
+	public function testTokenInvalidCharacter(): void
+	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid character in query: %');
 		Tokenizer::token('a ?? %', 5);

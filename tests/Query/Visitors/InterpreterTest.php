@@ -103,7 +103,7 @@ class InterpreterTest extends TestCase
 	public function testMemberAccess(): void
 	{
 		$visitor = new Interpreter();
-		$obj     = new class {
+		$obj     = new class () {
 			public function foo(): string
 			{
 				return 'bar';
@@ -118,14 +118,14 @@ class InterpreterTest extends TestCase
 	 */
 	public function testMemberAccessWithInterceptor(): void
 	{
-		$visitor = new Interpreter(interceptor: fn ($obj) => new class {
+		$visitor = new Interpreter(interceptor: fn ($obj) => new class () {
 			public function foo(): string
 			{
 				return 'baz';
 			}
 		});
 
-		$obj = new class {
+		$obj = new class () {
 			public function foo(): string
 			{
 				return 'bar';
@@ -155,7 +155,7 @@ class InterpreterTest extends TestCase
 	{
 		$visitor = new Interpreter(
 			context: [
-				'foo' =>'bar',
+				'foo' => 'bar',
 				'fox' => fn () => 'bax'
 			],
 			functions: [

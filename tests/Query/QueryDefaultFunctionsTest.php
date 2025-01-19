@@ -8,9 +8,6 @@ use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
 use Kirby\Toolkit\I18n;
 
-/**
- * @coversNothing
- */
 class QueryDefaultFunctionsTest extends \Kirby\TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';

@@ -2,12 +2,16 @@
 
 namespace Kirby\Query\Runners;
 
+use ArrayAccess;
+use Kirby\Filesystem\Dir;
 use Kirby\Query\Parser\Parser;
+use Kirby\Query\Query;
 use Kirby\Query\Visitors\Transpiler;
 use Kirby\Toolkit\Str;
 
 /**
  * @coversDefaultClass \Kirby\Query\Runners\Transpiled
+ * @covers ::__construct
  */
 class TranspiledTest extends TestCase
 {
@@ -16,6 +20,11 @@ class TranspiledTest extends TestCase
 	public function setUp(): void
 	{
 		$this->setUpTmp();
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove(static::TMP);
 	}
 
 	/**
@@ -36,6 +45,17 @@ class TranspiledTest extends TestCase
 		$runner  = new Transpiled(root: static::TMP);
 		$file    = $runner->file('user.add(5.0)');
 		$this->assertSame(static::TMP . '/197771331.php', $file);
+	}
+
+	/**
+	 * @covers ::for
+	 */
+	public function testFor(): void
+	{
+		$query  = new Query('');
+		$runner = Transpiled::for($query);
+
+		$this->assertInstanceOf(Transpiled::class, $runner);
 	}
 
 	/**
@@ -108,10 +128,72 @@ class TranspiledTest extends TestCase
 	}
 
 	/**
+	 * @covers ::resolver
+	 */
+	public function testResolverMemoryCache()
+	{
+		$cache = [];
+
+		$cacheSpy = $this->createStub(ArrayAccess::class);
+
+		$cacheSpy
+			->expects($this->exactly(3))
+			->method('offsetExists')
+			->willReturnCallback(function ($key) use (&$cache) {
+				return isset($cache[$key]);
+			});
+
+		$cacheSpy
+			->expects($this->exactly(2))
+			->method('offsetGet')
+			->willReturnCallback(function ($key) use (&$cache) {
+				return $cache[$key] ?? null;
+			});
+
+		$cacheSpy
+			->expects($this->exactly(2))
+			->method('offsetSet')
+			->willReturnCallback(function ($key, $val) use (&$cache) {
+				$cache[$key] = $val;
+			});
+
+		$runner1 = new Transpiled(root: static::TMP, cache: $cacheSpy);
+		$runner2 = new Transpiled(root: static::TMP, cache: $cacheSpy);
+
+		// it should still give different results for different contexts
+		$result = $runner1->run('foo.bar', ['foo' => ['bar' => 42]]);
+		$this->assertSame(42, $result);
+
+		$result = $runner2->run('foo.bar', ['foo' => ['bar' => 84]]);
+		$this->assertSame(84, $result);
+
+		$runner3 = new Transpiled(root: static::TMP, cache: $cacheSpy);
+		$result = $runner3->run('foo.bar', ['foo' => ['bar' => 97]]);
+		$this->assertSame(97, $result);
+	}
+
+	/**
+	 * @covers ::resolver
+	 */
+	public function testResolverFileCache()
+	{
+		$runner1 = new Transpiled(root: static::TMP);
+		$runner2 = new Transpiled(root: static::TMP);
+		$file    = $runner1->file($query = 'user');
+
+		$this->assertFileDoesNotExist($file);
+
+		$runner1->run($query);
+		$this->assertFileExists($file);
+
+		$runner2->run($query);
+	}
+
+	/**
 	 * @dataProvider resultProvider
 	 * @covers ::run
 	 */
-	public function testResult(
+	public function testRun(
 		string $query,
 		array $context,
 		mixed $expected,

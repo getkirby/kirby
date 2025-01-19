@@ -49,7 +49,7 @@ class MemberAccessNodeTest extends TestCase
 			'name'
 		);
 
-		$context = ['user' => new class {
+		$context = ['user' => new class () {
 			public function name(): string
 			{
 				return 'foo';

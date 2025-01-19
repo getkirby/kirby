@@ -3,12 +3,25 @@
 namespace Kirby\Query\Runners;
 
 use ArrayAccess;
+use Kirby\Query\Query;
 
 /**
  * @coversDefaultClass \Kirby\Query\Runners\Interpreted
+ * @covers ::__construct
  */
 class InterpretedTest extends TestCase
 {
+	/**
+	 * @covers ::for
+	 */
+	public function testFor(): void
+	{
+		$query  = new Query('');
+		$runner = Interpreted::for($query);
+
+		$this->assertInstanceOf(Interpreted::class, $runner);
+	}
+
 	/**
 	 * @dataProvider interceptProvider
 	 * @coversNothing
@@ -36,28 +49,12 @@ class InterpretedTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider resultProvider
-	 * @covers ::run
-	 */
-	public function testResult(
-		string $query,
-		array $context,
-		mixed $expected,
-		array $functions = []
-	): void {
-		$runner = new Interpreted(functions: $functions);
-		$result = $runner->run($query, $context);
-
-		$this->assertSame($expected, $result);
-	}
-
-	/**
 	 * Runners should keep a cache of parsed queries
 	 * to avoid parsing the same query multiple times
 	 *
 	 * @covers ::resolver
 	 */
-	public function testParsesOnlyOnce()
+	public function testResolverMemoryCache()
 	{
 		$cache = [];
 
@@ -98,4 +95,21 @@ class InterpretedTest extends TestCase
 		$result = $runner3->run('foo.bar', ['foo' => ['bar' => 97]]);
 		$this->assertSame(97, $result);
 	}
+
+	/**
+	 * @dataProvider resultProvider
+	 * @covers ::run
+	 */
+	public function testRun(
+		string $query,
+		array $context,
+		mixed $expected,
+		array $functions = []
+	): void {
+		$runner = new Interpreted(functions: $functions);
+		$result = $runner->run($query, $context);
+
+		$this->assertSame($expected, $result);
+	}
+
 }

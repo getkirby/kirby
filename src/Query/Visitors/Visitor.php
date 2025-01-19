@@ -33,7 +33,7 @@ abstract class Visitor
 	abstract public function coalescence(mixed $left, mixed $right);
 	abstract public function function(string $name, $arguments);
 	abstract public function literal(mixed $value);
-	abstract public function memberAccess(mixed $object,  string|int $member,array|string|null $arguments = null, bool $nullSafe = false);
+	abstract public function memberAccess(mixed $object, string|int $member, array|string|null $arguments = null, bool $nullSafe = false);
 	abstract public function ternary(mixed $condition, mixed $true, mixed $false);
 	abstract public function variable(string $name);
 }
