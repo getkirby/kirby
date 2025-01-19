@@ -92,24 +92,19 @@ class TranspiledTest extends TestCase
 		$visitor->mappings['$_foo'] = 'bar';
 		$runner         = new Transpiled(root: static::TMP);
 		$representation = $runner->representation($visitor, $query, $parser->parse());
-		$this->assertSame(<<<EOT
-<?php
-use Kirby\Toolkit\Str;
-use Kirby\Query\Runners\Runtime;
+		$this->assertSame(<<<PHP
+			<?php
+			use Kirby\Toolkit\Str;
+			use Kirby\Query\Runners\Runtime;
 
-// $query
-return function(array \$context, array \$functions, Closure \$intercept) {
-\$_foo = bar;
-\$_2375276105 = match(true) {
-	isset(\$context['user']) && \$context['user'] instanceof Closure => \$context['user'](),
-	isset(\$context['user']) => \$context['user'],
-	isset(\$functions['user']) => \$functions['user'](),
-	default => null
-};
+			// $query
+			return function(array \$context, array \$functions, Closure \$intercept) {
+			\$_foo = bar;
+			\$_2375276105 = Runtime::get('user', \$context, \$functions);
 
-return Runtime::access((\$intercept(\$_2375276105)), 'add', false, 5.0);
-};
-EOT, $representation);
+			return Runtime::access((\$intercept(\$_2375276105)), 'add', false, 5.0);
+			};
+			PHP, $representation);
 	}
 
 	/**

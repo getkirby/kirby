@@ -165,15 +165,9 @@ class Transpiler extends Visitor
 		}
 
 		if (isset($this->mappings[$key]) === false) {
-			$name                    = var_export($name, true);
-			$this->mappings[$key] = <<<PHP
-				match(true) {
-					isset(\$context[$name]) && \$context[$name] instanceof Closure => \$context[$name](),
-					isset(\$context[$name]) => \$context[$name],
-					isset(\$functions[$name]) => \$functions[$name](),
-					default => null
-				}
-				PHP;
+			$name = var_export($name, true);
+			$this->uses[Runtime::class] = true;
+			$this->mappings[$key] = "Runtime::get($name, \$context, \$functions)";
 		}
 
 		return $key;

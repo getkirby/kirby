@@ -6,7 +6,8 @@ use Closure;
 use Exception;
 
 /**
- * Helper class to execute closures and member access
+ * Helper class to execute logic during runtime.
+ * This helps to keep the PHP code representation small
  *
  * @package   Kirby Query
  * @author    Roman Steiner <>
@@ -17,13 +18,16 @@ use Exception;
  */
 class Runtime
 {
+	/**
+	 * Access the key on the object/array during runtime
+	 */
 	public static function access(
 		array|object|null $object,
 		string|int $key,
 		bool $nullSafe = false,
 		...$arguments
 	): mixed {
-		if ($nullSafe === true && $object === null) {
+		if ($object === null && $nullSafe === true) {
 			return null;
 		}
 
@@ -42,9 +46,7 @@ class Runtime
 		}
 
 		if (is_object($object) === true) {
-			if (is_int($key) === true) {
-				$key = (string)$key;
-			}
+			$key = (string)$key;
 
 			if (
 				method_exists($object, $key) === true ||
@@ -57,5 +59,28 @@ class Runtime
 		}
 
 		throw new Exception("Cannot access \"$key\" on " . gettype($object));
+	}
+
+	/**
+	 * Resolves a mapping from global context or functions during runtime
+	 */
+	public static function get(
+		string $name,
+		array $context = [],
+		array $functions = []
+	): mixed {
+		if ($result = $context[$name] ?? null) {
+			if ($result instanceof Closure) {
+				return $result();
+			}
+
+			return $result;
+		}
+
+		if ($function = $functions[$name] ?? null) {
+			return $function();
+		}
+
+		return null;
 	}
 }
