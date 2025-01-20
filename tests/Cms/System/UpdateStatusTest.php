@@ -412,7 +412,7 @@ class UpdateStatusTest extends TestCase
 					'messages' => [],
 					'status' => 'unreleased',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null,
 					'vulnerabilities' => [],
 					'exceptionMessages' => []
@@ -675,7 +675,7 @@ class UpdateStatusTest extends TestCase
 						'label' => 'Unreleased version',
 						'latestVersion' => '88888.8.8',
 						'pluginName' => 'getkirby/test',
-						'theme' => 'notice',
+						'theme' => 'passive',
 						'url' => null
 					],
 					'vulnerabilities' => [],
@@ -841,7 +841,7 @@ class UpdateStatusTest extends TestCase
 						'label' => 'Could not check for updates',
 						'latestVersion' => '88888.8.8',
 						'pluginName' => 'getkirby/test',
-						'theme' => 'notice',
+						'theme' => 'passive',
 						'url' => 'https://getkirby.com/releases/88888.8.8',
 					],
 					'vulnerabilities' => null,
@@ -863,7 +863,7 @@ class UpdateStatusTest extends TestCase
 						'label' => 'Could not check for updates',
 						'latestVersion' => '88888.8.8',
 						'pluginName' => 'getkirby/test',
-						'theme' => 'notice',
+						'theme' => 'passive',
 						'url' => 'https://getkirby.com/releases/88888.8.8',
 					],
 					'vulnerabilities' => null,
@@ -1235,7 +1235,7 @@ class UpdateStatusTest extends TestCase
 					'messages' => null,
 					'status' => 'error',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null,
 					'vulnerabilities' => null,
 					'exceptionMessages' => [
@@ -1257,7 +1257,7 @@ class UpdateStatusTest extends TestCase
 					'messages' => [],
 					'status' => 'error',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null,
 					'vulnerabilities' => [],
 					'exceptionMessages' => [
@@ -1317,7 +1317,7 @@ class UpdateStatusTest extends TestCase
 					'messages' => [],
 					'status' => 'error',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => 'https://getkirby.com/releases/77777.7.7',
 					'vulnerabilities' => [],
 					'exceptionMessages' => [
@@ -1458,7 +1458,7 @@ class UpdateStatusTest extends TestCase
 					'messages' => [],
 					'status' => 'error',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => 'https://getkirby.com/releases/77777.7.7',
 					'vulnerabilities' => [],
 					'exceptionMessages' => [
@@ -1485,7 +1485,7 @@ class UpdateStatusTest extends TestCase
 					],
 					'status' => 'error',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => 'https://getkirby.com/releases/77777.4.3',
 					'vulnerabilities' => [
 						[

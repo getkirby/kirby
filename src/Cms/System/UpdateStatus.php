@@ -102,15 +102,15 @@ class UpdateStatus
 	/**
 	 * Returns the Panel icon for the status value
 	 *
-	 * @return string 'check'|'alert'|'info'
+	 * @return string 'check'|'alert'|'info'|'question'
 	 */
 	public function icon(): string
 	{
 		return match ($this->status()) {
-			'up-to-date', 'not-vulnerable' => 'check',
+			'up-to-date', 'not-vulnerable'        => 'check',
 			'security-update', 'security-upgrade' => 'alert',
-			'update', 'upgrade' => 'info',
-			default => 'question'
+			'update', 'upgrade'                   => 'info',
+			default                               => 'question'
 		};
 	}
 
@@ -252,10 +252,10 @@ class UpdateStatus
 	public function theme(): string
 	{
 		return match ($this->status()) {
-			'up-to-date', 'not-vulnerable' => 'positive',
+			'up-to-date', 'not-vulnerable'        => 'positive',
 			'security-update', 'security-upgrade' => 'negative',
-			'update', 'upgrade' => 'info',
-			default => 'notice'
+			'update', 'upgrade'                   => 'info',
+			default                               => 'passive'
 		};
 	}
 
