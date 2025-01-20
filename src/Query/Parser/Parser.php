@@ -288,15 +288,10 @@ class Parser
 			TokenType::T_OPEN_BRACKET
 		])) {
 			if ($token->is(TokenType::T_OPEN_BRACKET) === true) {
-				// for subscript notation, parse the inside as
-				// a literal string or a full expression
-				if ($member = $this->consume(TokenType::T_STRING)) {
-					$member = new LiteralNode($member->literal);
-				} else {
-					$member = $this->expression();
-				}
+				// for subscript notation, parse the inside as expression
+				$member = $this->expression();
 
-				// ensure consuming the closing bracket
+				// and ensure consuming the closing bracket
 				$this->consume(
 					TokenType::T_CLOSE_BRACKET,
 					'Expect subscript closing bracket'
