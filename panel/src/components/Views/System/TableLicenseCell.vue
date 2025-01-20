@@ -1,17 +1,9 @@
 <template>
-	<div class="k-table-license-cell">
-		<k-button
-			:element="value.link ? 'k-link' : 'span'"
-			:icon="value.status.icon"
-			:link="value.link"
-			:theme="value.status.theme"
-			:title="value.status.label"
-			size="xs"
-			target="_blank"
-		>
-			{{ value.name }}
-		</k-button>
-	</div>
+	<k-url-field-preview
+		v-if="value.link"
+		:value="{ href: value.link, text: value.name }"
+	/>
+	<k-text-field-preview v-else :value="value.name" />
 </template>
 
 <script>
@@ -25,9 +17,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-table-license-cell {
-	padding: 0 var(--spacing-1);
-}
-</style>

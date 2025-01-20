@@ -137,10 +137,13 @@ class LicenseTest extends TestCase
 			'link'   => null,
 			'name'   => 'Custom license',
 			'status' => [
-				'icon'  => 'question',
-				'label' => 'Unknown license',
-				'theme' => 'passive',
-				'value' => 'unknown',
+				'dialog' => null,
+				'drawer' => null,
+				'icon'   => 'question',
+				'label'  => 'Unknown',
+				'link'   => null,
+				'theme'  => 'passive',
+				'value'  => 'unknown',
 			]
 		], $license->toArray());
 	}

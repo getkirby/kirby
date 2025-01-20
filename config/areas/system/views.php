@@ -63,6 +63,7 @@ return [
 						'text' => $plugin->name() ?? '–',
 						'href' => $plugin->link(),
 					],
+					'status'  => $plugin->license()->status()->toArray(),
 					'version' => $version,
 				];
 			});
