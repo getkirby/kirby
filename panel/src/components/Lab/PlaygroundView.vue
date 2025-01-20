@@ -1,8 +1,5 @@
 <template>
-	<k-panel-inside
-		:data-has-tabs="tabs.length > 1"
-		class="k-lab-playground-view"
-	>
+	<k-panel-inside class="k-lab-playground-view">
 		<k-header class="k-lab-playground-header">
 			{{ title }}
 
@@ -106,7 +103,7 @@ export default {
 </script>
 
 <style>
-.k-lab-playground-view[data-has-tabs="true"] .k-lab-playground-header {
+.k-lab-playground-view:has(> .k-tabs) .k-lab-playground-header {
 	margin-bottom: 0;
 }
 

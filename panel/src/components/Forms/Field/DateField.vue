@@ -242,7 +242,6 @@ export default {
 }
 
 @container (min-width: 20rem) {
-	/** TODO: .k-date-field-body:has(.k-time-input) */
 	.k-date-field-body[data-has-time="true"] {
 		grid-template-columns: 1fr minmax(6rem, 9rem);
 	}

@@ -98,7 +98,6 @@ export default {
 .k-user-view .k-user-profile {
 	margin-bottom: var(--spacing-12);
 }
-/** .k-user-view:has(.k-tabs) .k-user-profile */
 .k-user-view[data-has-tabs="true"] .k-user-profile {
 	margin-bottom: 0;
 }

@@ -58,7 +58,6 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-page-view:has(.k-tabs) .k-page-view-header */
 .k-page-view[data-has-tabs="true"] .k-page-view-header {
 	margin-bottom: 0;
 }

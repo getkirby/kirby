@@ -1,8 +1,5 @@
 <template>
-	<header
-		class="k-header"
-		:data-has-buttons="Boolean($slots.buttons || $slots.left || $slots.right)"
-	>
+	<header class="k-header">
 		<h1 class="k-header-title">
 			<!--
 				Edit button has been clicked
@@ -128,13 +125,12 @@ export default {
 	margin-bottom: var(--header-padding-block);
 }
 
-/** TODO: .k-header:has(.k-header-buttons) */
-.k-header[data-has-buttons="true"] {
+.k-header:has(.k-header-buttons) {
 	position: sticky;
 	top: var(--scroll-top);
 	z-index: var(--z-toolbar);
 }
-:root:has(.k-header[data-has-buttons="true"]) {
+:root:has(.k-header:has(.k-header-buttons)) {
 	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
 }
 </style>

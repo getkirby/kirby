@@ -39,7 +39,6 @@
 		<div
 			v-if="buttons?.length || options || $slots.options"
 			class="k-item-options"
-			:data-only-option="!buttons?.length || (!options && !$slots.options)"
 		>
 			<!-- Buttons -->
 			<k-button
@@ -156,12 +155,6 @@ export default {
 .k-item:has(a:focus) {
 	outline: 2px solid var(--color-focus);
 }
-/** TODO: remove when firefox supports :has() */
-@supports not selector(:has(*)) {
-	.k-item:focus-within {
-		outline: 2px solid var(--color-focus);
-	}
-}
 
 .k-item .k-icon-frame {
 	--back: var(--color-gray-300);
@@ -190,8 +183,7 @@ export default {
 	align-items: center;
 	justify-content: space-between;
 }
-/** TODO: .k-item-options:has(> :first-child:last-child) */
-.k-item-options[data-only-option="true"] {
+.k-item-options:has(> :first-child:last-child) {
 	justify-content: flex-end;
 }
 .k-item-options .k-button {
@@ -219,7 +211,6 @@ export default {
 	align-items: center;
 	grid-template-columns: 1fr auto;
 }
-/** TODO: .k-item[data-layout="list"]:has(.k-item-image) */
 .k-item[data-layout="list"][data-has-image="true"] {
 	grid-template-columns: var(--item-height) 1fr auto;
 }
@@ -279,7 +270,6 @@ export default {
 	grid-template-columns: 1fr;
 	grid-template-rows: 1fr var(--height-md);
 }
-/** TODO: .k-item[data-layout="cardlets"]:has(.k-item-image) */
 .k-item[data-layout="cardlets"][data-has-image="true"] {
 	grid-template-areas:
 		"image content"

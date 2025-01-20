@@ -90,7 +90,6 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-layout-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
 .k-layout-field > footer {
 	display: flex;
 	justify-content: center;

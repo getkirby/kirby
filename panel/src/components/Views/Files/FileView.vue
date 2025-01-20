@@ -90,7 +90,6 @@ export default {
 	border-bottom: 0;
 }
 
-/** TODO: .k-file-view:has(.k-tabs) .k-file-preview  */
 .k-file-view[data-has-tabs="true"] .k-file-preview {
 	margin-bottom: 0;
 }

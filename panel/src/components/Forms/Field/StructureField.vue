@@ -559,7 +559,6 @@ export default {
 .k-structure-field:not([data-disabled="true"]) td.k-table-column {
 	cursor: pointer;
 }
-/** .k-structure-field .k-table:has(+ footer) */
 .k-structure-field .k-table + footer {
 	display: flex;
 	justify-content: center;
