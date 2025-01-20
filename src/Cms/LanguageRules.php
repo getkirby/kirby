@@ -37,7 +37,7 @@ class LanguageRules
 			);
 		}
 
-		if ($language->permissions()->create() !== true) {
+		if ($language->permissions()->can('create') !== true) {
 			throw new PermissionException(
 				key: 'language.create.permission'
 			);
@@ -52,7 +52,7 @@ class LanguageRules
 	 */
 	public static function delete(Language $language): void
 	{
-		if ($language->permissions()->delete() !== true) {
+		if ($language->permissions()->can('delete') !== true) {
 			throw new PermissionException(
 				key: 'language.delete.permission'
 			);
@@ -83,7 +83,7 @@ class LanguageRules
 			);
 		}
 
-		if ($newLanguage->permissions()->update() !== true) {
+		if ($newLanguage->permissions()->can('update') !== true) {
 			throw new PermissionException(
 				key: 'language.update.permission'
 			);

@@ -13,7 +13,7 @@ return [
 	'computed' => [
 		'form' => function () {
 			$fields   = $this->fields;
-			$disabled = $this->model->permissions()->update() === false;
+			$disabled = $this->model->permissions()->cannot('update');
 			$lang     = $this->model->kirby()->languageCode();
 			$content  = $this->model->content($lang)->toArray();
 
