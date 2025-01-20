@@ -32,8 +32,9 @@ class RolesTest extends TestCase
 
 		$this->assertInstanceOf(Roles::class, $roles);
 
-		// should contain the editor role from fixtures and the default admin role
-		$this->assertCount(2, $roles);
+		// should contain the base and editor role from fixtures
+		// and the default admin role
+		$this->assertCount(3, $roles);
 		$this->assertSame('admin', $roles->first()->name());
 		$this->assertSame('editor', $roles->last()->name());
 	}

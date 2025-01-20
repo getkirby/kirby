@@ -198,7 +198,9 @@ export default {
 			}
 
 			const page =
-				this.pagination.page ?? localStorage.getItem(this.paginationId) ?? 1;
+				this.pagination.page ??
+				sessionStorage.getItem(this.paginationId) ??
+				null;
 
 			try {
 				const response = await this.$api.get(
@@ -223,7 +225,7 @@ export default {
 		onDrop() {},
 		onSort() {},
 		onPaginate(pagination) {
-			localStorage.setItem(this.paginationId, pagination.page);
+			sessionStorage.setItem(this.paginationId, pagination.page);
 			this.pagination = pagination;
 			this.reload();
 		},

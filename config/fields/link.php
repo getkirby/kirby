@@ -16,14 +16,29 @@ return [
 		 * @values 'anchor', 'url, 'page, 'file', 'email', 'tel', 'custom'
 		 */
 		'options' => function (array|null $options = null): array {
-			return $options ?? [
-				'url',
-				'page',
-				'file',
-				'email',
-				'tel',
-				'anchor'
-			];
+			// default options
+			if ($options === null) {
+				return [
+					'url',
+					'page',
+					'file',
+					'email',
+					'tel',
+					'anchor'
+				];
+			}
+
+			// validate options
+			$available = array_keys($this->availableTypes());
+
+			if ($unavailable = array_diff($options, $available)) {
+				throw new InvalidArgumentException([
+					'key'  => 'field.link.options',
+					'data' => ['options' => implode(', ', $unavailable)]
+				]);
+			}
+
+			return $options;
 		},
 		'value' => function (string|null $value = null) {
 			return $value ?? '';
