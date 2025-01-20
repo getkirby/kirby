@@ -13,7 +13,7 @@ namespace Kirby\Cms;
  */
 class FilePermissions extends ModelPermissions
 {
-	protected string $category = 'files';
+	protected const CATEGORY = 'files';
 
 	protected function canChangeTemplate(): bool
 	{
