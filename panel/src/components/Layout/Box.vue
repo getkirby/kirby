@@ -107,6 +107,8 @@ export default {
 	--box-color-back: var(--theme-color-back);
 	--box-color-text: var(--theme-color-text-highlight);
 	--box-color-icon: var(--theme-color-700);
+	--link-color: var(--box-color-text);
+	--link-color-hover: var(--box-color-text);
 	min-height: var(--box-height);
 	line-height: 1.25;
 	padding: 0.375rem var(--box-padding-inline);
