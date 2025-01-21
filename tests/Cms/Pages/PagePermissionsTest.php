@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
+use ReflectionProperty;
 
 /**
  * @coversDefaultClass \Kirby\Cms\PagePermissions
@@ -22,16 +23,25 @@ class PagePermissionsTest extends TestCase
 		]);
 	}
 
+	public function tearDown(): void
+	{
+		$prop = new ReflectionProperty(PagePermissions::class, 'cache');
+		$prop->setValue(null, []);
+	}
+
 	public static function actionProvider(): array
 	{
 		return [
+			['access'],
 			['changeSlug'],
 			['changeStatus'],
-			// ['changeTemplate'], Returns false because of only one blueprint
+			// ['changeTemplate'], Tested separately because of the needed blueprints
 			['changeTitle'],
 			['create'],
 			['delete'],
 			['duplicate'],
+			['list'],
+			['move'],
 			['preview'],
 			['sort'],
 			['update'],

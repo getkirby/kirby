@@ -25,10 +25,14 @@ class FilePermissionsTest extends TestCase
 	public static function actionProvider(): array
 	{
 		return [
+			['access'],
 			['changeName'],
+			// ['changeTemplate'], Tested separately because of the needed blueprints
 			['create'],
 			['delete'],
+			['list'],
 			['replace'],
+			['sort'],
 			['update']
 		];
 	}
