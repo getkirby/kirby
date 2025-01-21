@@ -178,7 +178,7 @@ export default {
 				help: this.options.help,
 				items: this.items,
 				pagination: this.pagination,
-				selectable: !this.isProcessing && this.isSelecting,
+				selecting: !this.isProcessing && this.isSelecting,
 				sortable: !this.isProcessing && this.options.sortable,
 				size: this.options.size
 			};

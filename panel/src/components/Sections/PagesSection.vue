@@ -11,7 +11,8 @@ export default {
 			return this.data.map((page) => {
 				const sortable =
 					page.permissions.sort && this.options.sortable && !this.isSelecting;
-				const deletable = this.data.length > this.options.min;
+				const deletable =
+					page.permissions.delete && this.data.length > this.options.min;
 
 				const flag = {
 					...this.$helper.page.status(
@@ -41,7 +42,7 @@ export default {
 							sort: sortable
 						}
 					}),
-					selectable: this.isSelecting,
+					selectable: this.isSelecting && deletable,
 					sortable
 				};
 			});

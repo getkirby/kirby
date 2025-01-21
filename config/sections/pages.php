@@ -184,10 +184,11 @@ return [
 					'link'        => $panel->url(true),
 					'parent'      => $page->parentId(),
 					'permissions' => [
-						'sort'         => $permissions->can('sort'),
+						'delete'       => $permissions->can('delete'),
 						'changeSlug'   => $permissions->can('changeSlug'),
 						'changeStatus' => $permissions->can('changeStatus'),
 						'changeTitle'  => $permissions->can('changeTitle'),
+						'sort'         => $permissions->can('sort'),
 					],
 					'status'      => $page->status(),
 					'template'    => $page->intendedTemplate()->name(),

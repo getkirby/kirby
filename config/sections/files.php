@@ -129,7 +129,8 @@ return [
 					'mime'      => $file->mime(),
 					'parent'    => $file->parent()->panel()->path(),
 					'permissions' => [
-						'sort' => $permissions->can('sort'),
+						'delete' => $permissions->can('delete'),
+						'sort'   => $permissions->can('sort'),
 					],
 					'template'  => $file->template(),
 					'text'      => $file->toSafeString($this->text),
