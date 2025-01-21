@@ -11,11 +11,11 @@
 				:rows="rows"
 			></k-table>
 		</k-lab-example>
-		<k-lab-example label="Selectable">
+		<k-lab-example label="Selecting">
 			<k-table
 				:columns="columns"
 				:options="options"
-				:selectable="true"
+				:selecting="true"
 				:rows="rows"
 			></k-table>
 		</k-lab-example>
@@ -64,7 +64,8 @@ export default {
 				},
 				{
 					title: "Title 3",
-					date: "2020-01-03"
+					date: "2020-01-03",
+					selectable: false
 				}
 			];
 		}
