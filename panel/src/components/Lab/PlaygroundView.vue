@@ -9,9 +9,16 @@
 		</k-header>
 		<k-tabs :tab="tab" :tabs="tabs" />
 
-		<component :is="component" v-if="component" v-bind="props" />
-		<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-		<component :is="'style'" v-if="styles" v-html="styles" />
+		<template v-if="compiler === false">
+			<k-box theme="info">
+				The Vue template compiler must be enabled to show lab examples
+			</k-box>
+		</template>
+		<template v-else>
+			<component :is="component" v-if="component" v-bind="props" />
+			<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
+			<component :is="'style'" v-if="styles" v-html="styles" />
+		</template>
 	</k-panel-inside>
 </template>
 
@@ -37,6 +44,7 @@ Vue.component("k-lab-table-cell", TableCell);
 export default {
 	props: {
 		buttons: Array,
+		compiler: Boolean,
 		docs: String,
 		examples: [Object, Array],
 		file: String,

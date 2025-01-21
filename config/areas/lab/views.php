@@ -130,6 +130,7 @@ return [
 			$example  = $category->example($id, $tab);
 			$props    = $example->props();
 			$vue      = $example->vue();
+			$compiler = option('panel.vue.compiler', false);
 
 			if ($docs = $props['docs'] ?? null) {
 				if (
@@ -184,6 +185,7 @@ return [
 				],
 				'props' => [
 					'buttons'  => $buttons,
+					'compiler' => $compiler,
 					'docs'     => $docs?->name(),
 					'examples' => $vue['examples'],
 					'file'     => $example->module(),
