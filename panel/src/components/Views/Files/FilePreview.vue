@@ -51,4 +51,9 @@ export default {
 	margin-bottom: var(--spacing-12);
 	overflow: hidden;
 }
+
+/** Remove the bottom margin from the preview box if it is followed by tabs */
+.k-file-preview:has(+ .k-tabs) {
+	margin-bottom: 0;
+}
 </style>

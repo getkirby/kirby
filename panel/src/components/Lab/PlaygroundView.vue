@@ -103,10 +103,6 @@ export default {
 </script>
 
 <style>
-.k-lab-playground-view:has(> .k-tabs) .k-lab-playground-header {
-	margin-bottom: 0;
-}
-
 .k-lab-examples h2 {
 	margin-bottom: var(--spacing-6);
 }

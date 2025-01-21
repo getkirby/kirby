@@ -39,9 +39,6 @@ export default {
 </script>
 
 <style>
-.k-lab-index-view .k-header {
-	margin-bottom: 0;
-}
 .k-lab-index-view .k-panel-main > .k-box {
 	margin-bottom: var(--spacing-8);
 }

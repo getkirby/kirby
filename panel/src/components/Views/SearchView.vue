@@ -147,10 +147,6 @@ export default {
 </script>
 
 <style>
-.k-search-view .k-header {
-	margin-bottom: 0;
-}
-
 /* if not tabs are displayed, add space */
 .k-header + .k-search-view-results {
 	margin-top: var(--spacing-12);
