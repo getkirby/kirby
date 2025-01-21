@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use Kirby\TestCase;
 
 /**
@@ -268,6 +269,49 @@ class PagePermissionsTest extends TestCase
 		$perms = $page->permissions();
 
 		$this->assertFalse($perms->can($action));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
+	 */
+	public function testCanFromCache()
+	{
+		$this->app->impersonate('bastian');
+
+		$page = new Page([
+			'slug'      => 'test',
+			'num'       => 1,
+			'template'  => 'some-template',
+			'blueprint' => [
+				'name' => 'some-template',
+				'options' => [
+					'access' => false,
+					'list'   => false
+				]
+			]
+		]);
+
+		$this->assertFalse(PagePermissions::canFromCache($page, 'access'));
+		$this->assertFalse(PagePermissions::canFromCache($page, 'access'));
+		$this->assertFalse(PagePermissions::canFromCache($page, 'list'));
+		$this->assertFalse(PagePermissions::canFromCache($page, 'list'));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
+	 */
+	public function testCanFromCacheDynamic()
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
+
+		$page = new Page([
+			'slug'     => 'test',
+			'num'      => 1,
+			'template' => 'some-template',
+		]);
+
+		PagePermissions::canFromCache($page, 'changeTemplate');
 	}
 
 	/**
