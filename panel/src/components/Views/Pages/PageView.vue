@@ -1,6 +1,5 @@
 <template>
 	<k-panel-inside
-		:data-has-tabs="hasTabs"
 		:data-id="id"
 		:data-locked="isLocked"
 		:data-template="blueprint"
