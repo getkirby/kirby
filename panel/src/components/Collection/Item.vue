@@ -119,7 +119,10 @@ export default {
 		/**
 		 * If `false`, the select checkbox will be disabled
 		 */
-		selectable: Boolean,
+		selectable: {
+			type: Boolean,
+			default: true
+		},
 		/**
 		 * If `true`, the sort handle will be shown on hover
 		 */
