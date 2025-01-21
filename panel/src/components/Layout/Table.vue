@@ -4,7 +4,11 @@
 		:class="['k-table', $attrs.class]"
 		:style="$attrs.style"
 	>
-		<table :data-disabled="disabled" :data-indexed="hasIndexColumn">
+		<table
+			:data-disabled="disabled"
+			:data-indexed="hasIndexColumn"
+			:data-selecting="selecting"
+		>
 			<!-- Header row -->
 			<thead>
 				<tr>
@@ -74,6 +78,7 @@
 						:class="{
 							'k-table-sortable-row': rowIsSortable(row)
 						}"
+						:data-selecting="selecting"
 						:data-selectable="rowIsSelectable(row)"
 						:data-sortable="rowIsSortable(row)"
 					>
@@ -83,30 +88,20 @@
 							data-mobile="true"
 							class="k-table-index-column"
 						>
-							<template v-if="rowIsSelectable(row)">
-								<label class="k-table-index-checkbox">
-									<input
-										type="checkbox"
-										@change="$emit('select', row, rowIndex)"
-									/>
-								</label>
-							</template>
-							<template v-else>
-								<slot
-									name="index"
-									v-bind="{
-										row,
-										rowIndex
-									}"
-								>
-									<div class="k-table-index" v-text="index + rowIndex" />
-								</slot>
+							<slot
+								name="index"
+								v-bind="{
+									row,
+									rowIndex
+								}"
+							>
+								<div class="k-table-index" v-text="index + rowIndex" />
+							</slot>
 
-								<k-sort-handle
-									v-if="rowIsSortable(row)"
-									class="k-table-sort-handle"
-								/>
-							</template>
+							<k-sort-handle
+								v-if="rowIsSortable(row)"
+								class="k-table-sort-handle"
+							/>
 						</td>
 
 						<!-- Cell -->
@@ -144,13 +139,25 @@
 							data-mobile="true"
 							class="k-table-options-column"
 						>
-							<slot name="options" v-bind="{ row, rowIndex }">
-								<k-options-dropdown
-									:options="row.options ?? options"
-									:text="(row.options ?? options).length > 1"
-									@option="onOption($event, row, rowIndex)"
-								/>
-							</slot>
+							<template v-if="selecting">
+								<label class="k-table-select-checkbox">
+									<input
+										:disabled="row.selectable === false"
+										type="checkbox"
+										@change="$emit('select', row, rowIndex)"
+									/>
+								</label>
+							</template>
+
+							<template v-else>
+								<slot name="options" v-bind="{ row, rowIndex }">
+									<k-options-dropdown
+										:options="row.options ?? options"
+										:text="(row.options ?? options).length > 1"
+										@option="onOption($event, row, rowIndex)"
+									/>
+								</slot>
+							</template>
 						</td>
 					</tr>
 				</template>
@@ -221,9 +228,9 @@ export default {
 		 */
 		pagination: [Object, Boolean],
 		/**
-		 * Whether table is sortable
+		 * Whether the table is in select mode
 		 */
-		selectable: Boolean,
+		selecting: Boolean,
 		/**
 		 * Whether table is sortable
 		 */
@@ -277,7 +284,7 @@ export default {
 		 * @returns {bool}
 		 */
 		hasIndexColumn() {
-			return this.sortable || this.selectable || this.index !== false;
+			return this.sortable || this.index !== false;
 		},
 		/**
 		 * Whether to show options column
@@ -285,6 +292,7 @@ export default {
 		 */
 		hasOptions() {
 			return (
+				this.selecting ||
 				this.$scopedSlots.options ||
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
@@ -365,12 +373,12 @@ export default {
 			this.$emit("sort", this.values);
 		},
 		rowIsSelectable(row) {
-			return this.selectable === true && row.selectable !== false;
+			return this.selecting === true && row.selectable !== false;
 		},
 		rowIsSortable(row) {
 			return (
 				this.sortable === true &&
-				this.selectable === false &&
+				this.selecting === false &&
 				row.sortable !== false
 			);
 		},
@@ -530,11 +538,6 @@ export default {
 .k-table .k-table-index-column:has(.k-table-index-checkbox) {
 	padding: 0;
 }
-.k-table .k-table-index-checkbox {
-	height: 100%;
-	display: grid;
-	place-items: center;
-}
 
 /* Table Index with sort handle */
 .k-table tr[data-sortable="true"] .k-table-index-column .k-sort-handle {
@@ -549,9 +552,15 @@ export default {
 }
 
 /* Selectable rows */
-.k-table tr[data-selectable="true"]:has(.k-table-index-column input:checked) {
+.k-table
+	tr[data-selectable="true"]:has(.k-table-select-checkbox input:checked) {
 	--table-color-back: light-dark(var(--color-blue-250), var(--color-blue-800));
 	--table-color-hover: var(--table-color-back);
+}
+.k-table .k-table-select-checkbox {
+	height: 100%;
+	display: grid;
+	place-items: center;
 }
 
 /* Table Options */

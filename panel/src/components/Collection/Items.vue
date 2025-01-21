@@ -40,7 +40,8 @@
 					:image="imageOptions(item)"
 					:layout="layout"
 					:link="link ? item.link : false"
-					:selectable="selectable && item.selectable"
+					:selecting="selecting"
+					:selectable="item.selectable"
 					:sortable="sortable && item.sortable"
 					:theme="theme"
 					:width="item.column"
@@ -98,10 +99,9 @@ export const props = {
 			default: true
 		},
 		/**
-		 * Whether items are generally selectable.
-		 * Each item can disable this individually.
+		 * Whether items are in selecting mode
 		 */
-		selectable: Boolean,
+		selecting: Boolean,
 		/**
 		 * Whether items are generally sortable.
 		 * Each item can disable this individually.
@@ -148,7 +148,7 @@ export default {
 				columns: this.columns,
 				fields: this.fields,
 				rows: this.items,
-				selectable: this.selectable,
+				selecting: this.selecting,
 				sortable: this.sortable
 			};
 		}

@@ -4,6 +4,7 @@
 		:class="['k-item', `k-${layout}-item`, $attrs.class]"
 		:data-has-image="hasFigure"
 		:data-layout="layout"
+		:data-selecting="selecting"
 		:data-selectable="selectable"
 		:data-theme="theme"
 		:style="$attrs.style"
@@ -27,7 +28,7 @@
 		<div class="k-item-content">
 			<h3 class="k-item-title" :title="title(text)">
 				<k-link
-					v-if="link !== false && selectable !== true"
+					v-if="link !== false && selecting !== true"
 					:target="target"
 					:to="link"
 				>
@@ -42,7 +43,7 @@
 		</div>
 
 		<div
-			v-if="buttons?.length || options || $slots.options || selectable"
+			v-if="buttons?.length || options || $slots.options || selecting"
 			class="k-item-options"
 		>
 			<!-- Buttons -->
@@ -52,10 +53,11 @@
 				v-bind="button"
 			/>
 
-			<label v-if="selectable" class="k-item-options-checkbox" @click.stop>
+			<label v-if="selecting" class="k-item-options-checkbox" @click.stop>
 				<input
 					ref="selector"
 					type="checkbox"
+					:disabled="!selectable"
 					@change="$emit('select', $event)"
 				/>
 			</label>
@@ -113,6 +115,10 @@ export default {
 		/**
 		 * If `true`, the item will be selectable via a checkbox
 		 */
+		selecting: Boolean,
+		/**
+		 * If `false`, the select checkbox will be disabled
+		 */
 		selectable: Boolean,
 		/**
 		 * If `true`, the sort handle will be shown on hover
@@ -140,7 +146,7 @@ export default {
 	},
 	methods: {
 		onClick(event) {
-			if (this.selectable) {
+			if (this.selecting && this.selectable) {
 				return this.$refs.selector.click();
 			}
 
