@@ -13,7 +13,6 @@ import postcssLightDarkFunction from "@csstools/postcss-light-dark-function";
  */
 function createAliases() {
 	return {
-		vue$: "vue/dist/vue.runtime.min.js",
 		"@": path.resolve(__dirname, "src")
 	};
 }
@@ -62,6 +61,10 @@ function createPlugins(mode) {
 				targets: [
 					{
 						src: "node_modules/vue/dist/vue.runtime.min.js",
+						dest: "js"
+					},
+					{
+						src: "node_modules/vue/dist/vue.min.js",
 						dest: "js"
 					}
 				]
