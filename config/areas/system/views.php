@@ -86,6 +86,14 @@ return [
 				];
 			}
 
+			if ($kirby->option('panel.vue.compiler', false) === true) {
+				$security[] = [
+					'id'   => 'compiler',
+					'text' => 'The Vue compiler is enabled',
+					'link' => 'https://getkirby.com/security/vue-compiler'
+				];
+			}
+
 			return [
 				'component' => 'k-system-view',
 				'props'     => [
