@@ -15,9 +15,10 @@ tests/ export-ignore
 
 # panel
 panel/.env.example export-ignore
-panel/.eslintrc.js export-ignore
+panel/.prettierignore export-ignore
 panel/.prettierrc.json export-ignore
 panel/dist/ui export-ignore
+panel/eslint.config.mjs export-ignore
 panel/jsconfig.json export-ignore
 panel/lab export-ignore
 panel/package-lock.json export-ignore
