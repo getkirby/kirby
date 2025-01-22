@@ -20,6 +20,26 @@ class ViewButtonTest extends AreaTestCase
 	}
 
 	/**
+	 * @covers ::__construct
+	 */
+	public function testAttrs()
+	{
+		$button = new ViewButton(
+			text: 'Attrs',
+			foo: 'bar'
+		);
+
+		$this->assertSame([
+			'foo'        => 'bar',
+			'responsive' => true,
+			'size'       => 'sm',
+			'text'       => 'Attrs',
+			'type'       => 'button',
+			'variant'    => 'filled'
+		], array_filter($button->props()));
+	}
+
+	/**
 	 * @covers ::factory
 	 */
 	public function testFactoryFromClosure()

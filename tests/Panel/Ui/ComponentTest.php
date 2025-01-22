@@ -16,6 +16,26 @@ class UiComponent extends Component
 class ComponentTest extends TestCase
 {
 	/**
+	 * @covers ::__contruct
+	 */
+	public function testAttrs()
+	{
+		$props = [
+			'component' => 'k-text',
+			'class'     => 'k-test',
+			'foo'       => 'bar'
+		];
+
+		$component = new UiComponent(...$props);
+
+		$this->assertSame([
+			'class' => 'k-test',
+			'style' => null,
+			'foo'   => 'bar',
+		], $component->props());
+	}
+
+	/**
 	 * @covers ::__call
 	 */
 	public function testGetterSetter()
