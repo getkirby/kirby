@@ -69,7 +69,11 @@ class ViewButtonTest extends AreaTestCase
 		// simulate a logged in user
 		$app->impersonate('test@getkirby.com');
 
-		$button = ViewButton::factory('test');
+		$button = ViewButton::factory(name: 'test');
+		$this->assertInstanceOf(ViewButton::class, $button);
+		$this->assertSame('result', $button->component);
+
+		$button = ViewButton::factory(button: 'test');
 		$this->assertInstanceOf(ViewButton::class, $button);
 		$this->assertSame('result', $button->component);
 
@@ -226,9 +230,6 @@ class ViewButtonTest extends AreaTestCase
 			]
 		);
 
-		$this->assertSame('k-test-view-button', $result['component']);
-
-		$result = ViewButton::resolve(['component' => 'k-test-view-button']);
 		$this->assertSame('k-test-view-button', $result['component']);
 	}
 }
