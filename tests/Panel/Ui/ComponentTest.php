@@ -16,7 +16,7 @@ class UiComponent extends Component
 class ComponentTest extends TestCase
 {
 	/**
-	 * @covers ::__contruct
+	 * @covers ::__construct
 	 */
 	public function testAttrs()
 	{
