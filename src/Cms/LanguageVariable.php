@@ -102,7 +102,7 @@ class LanguageVariable
 	/**
 	 * Sets a new value for the language variable
 	 */
-	public function update(string|null $value = null): static
+	public function update(string|array|null $value = null): static
 	{
 		$translations             = $this->language->translations();
 		$translations[$this->key] = $value ?? '';
@@ -115,7 +115,7 @@ class LanguageVariable
 	/**
 	 * Returns the value if the variable has been translated.
 	 */
-	public function value(): string|null
+	public function value(): string|array|null
 	{
 		return $this->language->translations()[$this->key] ?? null;
 	}

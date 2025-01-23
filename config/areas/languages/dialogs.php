@@ -240,24 +240,55 @@ return [
 
 			$fields = $translationDialogFields;
 			$fields['key']['disabled'] = true;
-			$fields['value']['autofocus'] = true;
+
+			$value = ['key' => $variable->key()];
+
+			// if language variable is array,
+			// set text fields as per array size
+			// otherwise it will show only one textarea
+			if (is_array($variable->value()) === true) {
+				unset($fields['value']);
+
+				foreach ($variable->value() as $index => $val) {
+					$fields['value_' . $index] = [
+						'autofocus' => $index === 0,
+						'counter'   => false,
+						'label'     => I18n::translate('language.variable.value') . ' ' . ($index + 1),
+						'type'      => 'text',
+					];
+					$value['value_' . $index]  = $val;
+				}
+			} else {
+				$fields['value']['autofocus'] = true;
+				$value['value'] = $variable->value();
+			}
 
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => $fields,
 					'size'   => 'large',
-					'value'  => [
-						'key'   => $variable->key(),
-						'value' => $variable->value()
-					]
+					'value'  => $value
 				],
 			];
 		},
 		'submit' => function (string $languageCode, string $translationKey) {
-			Find::language($languageCode)->variable($translationKey, true)->update(
-				App::instance()->request()->get('value', '')
-			);
+			$kirby    = App::instance();
+			$variable = Find::language($languageCode)->variable($translationKey, true);
+
+			// if the language variable is array
+			// it reads the text field values as many as the number of arrays
+			if (is_array($variable->value()) === true) {
+				$value = array_map(
+					fn ($val, $index) => $kirby->request()->get('value_' . $index, ''),
+					$variable->value(),
+					array_keys($variable->value())
+				);
+			} else {
+				$value = $kirby->request()->get('value', '');
+			}
+
+			$variable->update($value);
 
 			return true;
 		}
