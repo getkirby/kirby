@@ -1,8 +1,9 @@
 <template>
 	<component
-		v-bind="attrs"
+		:is="element ?? (link ? 'k-link' : 'button')"
 		:aria-disabled="disabled"
 		:data-theme="theme"
+		:to="link"
 		class="k-tag"
 		type="button"
 		@keydown.delete.prevent="remove"
@@ -92,17 +93,6 @@ export default {
 	},
 	emits: ["remove"],
 	computed: {
-		attrs() {
-			const attrs = {
-				is: this.element ?? (this.link ? "k-link" : "button")
-			};
-
-			if (this.link) {
-				attrs.to = this.link;
-			}
-
-			return attrs;
-		},
 		isRemovable() {
 			return this.removable && !this.disabled;
 		}
