@@ -7,12 +7,12 @@
 					:value="[
 						{
 							image: { icon: 'user', back: 'black', color: 'white' },
-							text: 'marge@getkirby.com',
+							email: 'marge@getkirby.com',
 							link: '/'
 						},
 						{
 							image: { icon: 'user', back: 'black', color: 'white' },
-							text: 'maggie@getkirby.com',
+							email: 'maggie@getkirby.com',
 							link: '/'
 						}
 					]"
@@ -28,7 +28,7 @@
 					:value="
 						Array(20).fill({
 							image: { icon: 'user', back: 'black', color: 'white' },
-							text: 'marge@getkirby.com',
+							email: 'marge@getkirby.com',
 							link: '/'
 						})
 					"

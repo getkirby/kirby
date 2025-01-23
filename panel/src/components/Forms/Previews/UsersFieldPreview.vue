@@ -5,10 +5,10 @@ export default {
 	extends: TagsFieldPreview,
 	class: "k-users-field-preview",
 	computed: {
-		bubble() {
+		tags() {
 			return this.value.map((user) => {
 				return {
-					text: user.username,
+					text: user.username ?? user.email,
 					link: user.link,
 					image: user.image
 				};
