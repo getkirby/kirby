@@ -1,6 +1,6 @@
 <template>
 	<component
-		:is="element"
+		v-bind="attrs"
 		:aria-disabled="disabled"
 		:data-theme="theme"
 		class="k-tag"
@@ -74,10 +74,7 @@ export default {
 		/**
 		 * HTML element to use
 		 */
-		element: {
-			type: String,
-			default: "button"
-		},
+		element: String,
 		/**
 		 * See `k-image-frame` or `k-icon-frame` for available options
 		 */
@@ -85,12 +82,27 @@ export default {
 			type: Object
 		},
 		/**
+		 * Sets a link on the tag. Link can be absolute or relative.
+		 */
+		link: String,
+		/**
 		 * Text to display in the bubble
 		 */
 		text: String
 	},
 	emits: ["remove"],
 	computed: {
+		attrs() {
+			const attrs = {
+				is: this.element ?? (this.link ? "k-link" : "button")
+			};
+
+			if (this.link) {
+				attrs.to = this.link;
+			}
+
+			return attrs;
+		},
 		isRemovable() {
 			return this.removable && !this.disabled;
 		}
