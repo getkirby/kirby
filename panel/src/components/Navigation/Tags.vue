@@ -237,7 +237,7 @@ export default {
 				// can't be matched with any defined option
 				// to avoid XSS when displaying via `v-html`
 				text: this.$helper.string.escapeHTML(tag.text ?? tag.value),
-				value: tag.value
+				...tag
 			};
 		}
 	}
