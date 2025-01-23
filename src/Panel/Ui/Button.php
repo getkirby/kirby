@@ -35,7 +35,9 @@ class Button extends Component
 		public string|array|null $title = null,
 		public string $type = 'button',
 		public string|null $variant = null,
+		...$attrs
 	) {
+		$this->attrs = $attrs;
 	}
 
 	public function props(): array

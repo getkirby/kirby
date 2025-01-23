@@ -46,7 +46,9 @@ class ViewButton extends Button
 		public string|array|null $title = null,
 		public string $type = 'button',
 		public string|null $variant = 'filled',
+		...$attrs
 	) {
+		$this->attrs = $attrs;
 	}
 
 	/**
