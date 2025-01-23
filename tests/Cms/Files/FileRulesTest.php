@@ -62,7 +62,7 @@ class FileRulesTest extends TestCase
 	public function testChangeNameWithoutPermissions()
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('changeName')->willReturn(false);
+		$permissions->method('can')->with('changeName')->willReturn(false);
 
 		$file = $this->createMock(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -93,7 +93,7 @@ class FileRulesTest extends TestCase
 	public function testChangeSortWithoutPermissions()
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('sort')->willReturn(false);
+		$permissions->method('can')->with('sort')->willReturn(false);
 
 		$file = $this->createMock(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -180,7 +180,7 @@ class FileRulesTest extends TestCase
 	public function testChangeTemplateWithoutPermissions()
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('changeTemplate')->willReturn(false);
+		$permissions->method('can')->with('changeTemplate')->willReturn(false);
 
 		$file = $this->createMock(File::class);
 		$file->method('id')->willReturn('test');
@@ -195,7 +195,7 @@ class FileRulesTest extends TestCase
 	public function testChangeTemplateTooFewTemplates()
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('changeTemplate')->willReturn(true);
+		$permissions->method('can')->with('changeTemplate')->willReturn(true);
 
 		$file = $this->createMock(File::class);
 		$file->method('blueprints')->willReturn([[]]);
@@ -211,7 +211,7 @@ class FileRulesTest extends TestCase
 	public function testChangeTemplateWithInvalidTemplateName()
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('changeTemplate')->willReturn(true);
+		$permissions->method('can')->with('changeTemplate')->willReturn(true);
 
 		$file = $this->createMock(File::class);
 		$file->method('blueprints')->willReturn([
@@ -370,7 +370,7 @@ class FileRulesTest extends TestCase
 		$blueprint = $this->createMock(FileBlueprint::class);
 
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('create')->willReturn(true);
+		$permissions->method('can')->with('create')->willReturn(true);
 
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
@@ -393,7 +393,7 @@ class FileRulesTest extends TestCase
 	public function testCreateWithoutPermissions()
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('create')->willReturn(false);
+		$permissions->method('can')->with('create')->willReturn(false);
 
 		$file = $this->createMock(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -410,7 +410,7 @@ class FileRulesTest extends TestCase
 	public function testDeleteWithoutPermissions()
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('delete')->willReturn(false);
+		$permissions->method('can')->with('delete')->willReturn(false);
 
 		$file = $this->createMock(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -424,7 +424,7 @@ class FileRulesTest extends TestCase
 	public function testReplaceWithoutPermissions()
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('replace')->willReturn(false);
+		$permissions->method('can')->with('replace')->willReturn(false);
 
 		$file = $this->createMock(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -440,7 +440,7 @@ class FileRulesTest extends TestCase
 	public function testReplaceInvalidMimeExtension()
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('replace')->willReturn(true);
+		$permissions->method('can')->with('replace')->willReturn(true);
 
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
@@ -466,7 +466,7 @@ class FileRulesTest extends TestCase
 		$blueprint = $this->createMock(FileBlueprint::class);
 
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('replace')->willReturn(true);
+		$permissions->method('can')->with('replace')->willReturn(true);
 
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
@@ -490,7 +490,7 @@ class FileRulesTest extends TestCase
 	public function testUpdateWithoutPermissions()
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('__call')->with('update')->willReturn(false);
+		$permissions->method('can')->with('update')->willReturn(false);
 
 		$file = $this->createMock(File::class);
 		$file->method('permissions')->willReturn($permissions);

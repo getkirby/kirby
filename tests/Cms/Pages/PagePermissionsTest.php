@@ -2,7 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use Kirby\TestCase;
+use ReflectionProperty;
 
 /**
  * @coversDefaultClass \Kirby\Cms\PagePermissions
@@ -21,16 +23,25 @@ class PagePermissionsTest extends TestCase
 		]);
 	}
 
+	public function tearDown(): void
+	{
+		$prop = new ReflectionProperty(PagePermissions::class, 'cache');
+		$prop->setValue(null, []);
+	}
+
 	public static function actionProvider(): array
 	{
 		return [
+			['access'],
 			['changeSlug'],
 			['changeStatus'],
-			// ['changeTemplate'], Returns false because of only one blueprint
+			// ['changeTemplate'], Tested separately because of the needed blueprints
 			['changeTitle'],
 			['create'],
 			['delete'],
 			['duplicate'],
+			['list'],
+			['move'],
 			['preview'],
 			['sort'],
 			['update'],
@@ -268,6 +279,49 @@ class PagePermissionsTest extends TestCase
 		$perms = $page->permissions();
 
 		$this->assertFalse($perms->can($action));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
+	 */
+	public function testCanFromCache()
+	{
+		$this->app->impersonate('bastian');
+
+		$page = new Page([
+			'slug'      => 'test',
+			'num'       => 1,
+			'template'  => 'some-template',
+			'blueprint' => [
+				'name' => 'some-template',
+				'options' => [
+					'access' => false,
+					'list'   => false
+				]
+			]
+		]);
+
+		$this->assertFalse(PagePermissions::canFromCache($page, 'access'));
+		$this->assertFalse(PagePermissions::canFromCache($page, 'access'));
+		$this->assertFalse(PagePermissions::canFromCache($page, 'list'));
+		$this->assertFalse(PagePermissions::canFromCache($page, 'list'));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
+	 */
+	public function testCanFromCacheDynamic()
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
+
+		$page = new Page([
+			'slug'     => 'test',
+			'num'      => 1,
+			'template' => 'some-template',
+		]);
+
+		PagePermissions::canFromCache($page, 'changeTemplate');
 	}
 
 	/**

@@ -50,15 +50,10 @@
 }
 
 :where(
-		textarea,
-		select,
-		input:not(
-				[type="checkbox"],
-				[type="radio"],
-				[type="reset"],
-				[type="submit"]
-			)
-	) {
+	textarea,
+	select,
+	input:not([type="checkbox"], [type="radio"], [type="reset"], [type="submit"])
+) {
 	width: 100%;
 	font-variant-numeric: tabular-nums;
 }
@@ -103,9 +98,9 @@
 	opacity: 1;
 }
 
-/* TODO: :where(label:has(> input:disabled), label:has(+ input:disabled)) {
+:where(label:has(> input:disabled), label:has(+ input:disabled)) {
 	cursor: not-allowed;
-} */
+}
 
 :where(a) {
 	color: currentColor;

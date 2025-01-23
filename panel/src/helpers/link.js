@@ -209,7 +209,9 @@ export function types(keys = []) {
 	const active = {};
 
 	for (const type of keys) {
-		active[type] = types[type];
+		if (types[type]) {
+			active[type] = types[type];
+		}
 	}
 
 	return active;

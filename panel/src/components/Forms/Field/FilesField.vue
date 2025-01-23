@@ -59,6 +59,7 @@ export default {
 							[this.name]: this.selected
 						});
 
+						this.onInput();
 						this.$events.emit("file.upload");
 						this.$events.emit("model.update");
 					}

@@ -94,7 +94,7 @@ class PageRulesTest extends TestCase
 	public function testChangeSlugWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('changeSlug')->willReturn(false);
+		$permissions->method('can')->with('changeSlug')->willReturn(false);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');
@@ -198,7 +198,7 @@ class PageRulesTest extends TestCase
 	public function testChangeStatusWithoutPermission($status, $args = [])
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('changeStatus')->willReturn(false);
+		$permissions->method('can')->with('changeStatus')->willReturn(false);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');
@@ -217,7 +217,7 @@ class PageRulesTest extends TestCase
 	public function testChangeStatusToListedWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('changeStatus')->willReturn(false);
+		$permissions->method('can')->with('changeStatus')->willReturn(false);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');
@@ -325,7 +325,7 @@ class PageRulesTest extends TestCase
 	public function testChangeTemplateWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('changeTemplate')->willReturn(false);
+		$permissions->method('can')->with('changeTemplate')->willReturn(false);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');
@@ -343,7 +343,7 @@ class PageRulesTest extends TestCase
 	public function testChangeTemplateTooFewTemplates()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('changeTemplate')->willReturn(true);
+		$permissions->method('can')->with('changeTemplate')->willReturn(true);
 
 		$page = $this->createMock(Page::class);
 		$page->method('blueprints')->willReturn([[]]);
@@ -362,7 +362,7 @@ class PageRulesTest extends TestCase
 	public function testChangeTemplateWithInvalidTemplateName()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('changeTemplate')->willReturn(true);
+		$permissions->method('can')->with('changeTemplate')->willReturn(true);
 
 		$page = $this->createMock(Page::class);
 		$page->method('blueprints')->willReturn([
@@ -399,7 +399,7 @@ class PageRulesTest extends TestCase
 	public function testChangeTitleWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('changeTitle')->willReturn(false);
+		$permissions->method('can')->with('changeTitle')->willReturn(false);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');
@@ -417,7 +417,7 @@ class PageRulesTest extends TestCase
 	public function testCreateWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('create')->willReturn(false);
+		$permissions->method('can')->with('create')->willReturn(false);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');
@@ -435,7 +435,7 @@ class PageRulesTest extends TestCase
 	public function testCreateInvalidSlug()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('create')->willReturn(true);
+		$permissions->method('can')->with('create')->willReturn(true);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('');
@@ -487,7 +487,7 @@ class PageRulesTest extends TestCase
 		]);
 
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('create')->willReturn(true);
+		$permissions->method('can')->with('create')->willReturn(true);
 
 		$page = $this->createMock(Page::class);
 		$page->method('kirby')->willReturn($app);
@@ -518,7 +518,7 @@ class PageRulesTest extends TestCase
 	public function testDeleteWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('delete')->willReturn(false);
+		$permissions->method('can')->with('delete')->willReturn(false);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');
@@ -669,7 +669,7 @@ class PageRulesTest extends TestCase
 	public function testDuplicateWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('duplicate')->willReturn(false);
+		$permissions->method('can')->with('duplicate')->willReturn(false);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');
@@ -704,7 +704,7 @@ class PageRulesTest extends TestCase
 	public function testUpdateWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('update')->willReturn(false);
+		$permissions->method('can')->with('update')->willReturn(false);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');
@@ -833,7 +833,7 @@ class PageRulesTest extends TestCase
 	public function testMoveWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('move')->willReturn(false);
+		$permissions->method('can')->with('move')->willReturn(false);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');

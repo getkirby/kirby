@@ -167,6 +167,7 @@ export default (panel) => {
 
 			panel.view.props.content = {
 				...panel.view.props.originals,
+				...panel.view.props.content,
 				...values
 			};
 

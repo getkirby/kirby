@@ -78,7 +78,7 @@ class ViewButtons
 			)?->render();
 		}
 
-		return array_filter($buttons);
+		return array_values(array_filter($buttons));
 	}
 
 	/**

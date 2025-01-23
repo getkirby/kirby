@@ -101,6 +101,7 @@
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
 	"error.field.converter.invalid": "Invalid converter \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "The name must not be empty",
@@ -468,7 +469,7 @@
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Thank you for supporting Kirby",

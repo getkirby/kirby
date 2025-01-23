@@ -410,19 +410,17 @@ return [
 
 			if ($hasFiles === true) {
 				$fields['files'] = [
-					'label'    => I18n::translate('page.duplicate.files'),
-					'type'     => 'toggle',
-					'required' => true,
-					'width'    => $toggleWidth
+					'label' => I18n::translate('page.duplicate.files'),
+					'type'  => 'toggle',
+					'width' => $toggleWidth
 				];
 			}
 
 			if ($hasChildren === true) {
 				$fields['children'] = [
-					'label'    => I18n::translate('page.duplicate.pages'),
-					'type'     => 'toggle',
-					'required' => true,
-					'width'    => $toggleWidth
+					'label' => I18n::translate('page.duplicate.pages'),
+					'type'  => 'toggle',
+					'width' => $toggleWidth
 				];
 			}
 

@@ -25,7 +25,7 @@ class SiteRules
 	 */
 	public static function changeTitle(Site $site, string $title): void
 	{
-		if ($site->permissions()->changeTitle() !== true) {
+		if ($site->permissions()->can('changeTitle') !== true) {
 			throw new PermissionException(
 				key: 'site.changeTitle.permission'
 			);
@@ -45,7 +45,7 @@ class SiteRules
 	 */
 	public static function update(Site $site, array $content = []): void
 	{
-		if ($site->permissions()->update() !== true) {
+		if ($site->permissions()->can('update') !== true) {
 			throw new PermissionException(
 				key: 'site.update.permission'
 			);

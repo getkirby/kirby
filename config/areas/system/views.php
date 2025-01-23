@@ -36,7 +36,7 @@ return [
 				],
 				[
 					'label' => I18n::translate('server'),
-					'value' => $system->serverSoftware() ?? '?',
+					'value' => $system->serverSoftwareShort() ?? '?',
 					'icon'  => 'server'
 				]
 			];
@@ -63,6 +63,7 @@ return [
 						'text' => $plugin->name() ?? '–',
 						'href' => $plugin->link(),
 					],
+					'status'  => $plugin->license()->status()->toArray(),
 					'version' => $version,
 				];
 			});

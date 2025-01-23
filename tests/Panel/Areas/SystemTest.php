@@ -37,14 +37,22 @@ class SystemTest extends AreaTestCase
 	public function unknownLicense(): array
 	{
 		return [
-			'link' => null,
-			'name' => '-',
-			'status' => [
-				'icon'  => 'question',
-				'label' => 'Unknown license',
-				'theme' => 'passive',
-				'value' => 'unknown',
-			]
+			'link'   => null,
+			'name'   => '-',
+			'status' => $this->unknownLicenseStatus()
+		];
+	}
+
+	public function unknownLicenseStatus(): array
+	{
+		return [
+			'dialog' => null,
+			'drawer' => null,
+			'icon'   => 'question',
+			'label'  => 'Unknown',
+			'link'	 => null,
+			'theme'  => 'passive',
+			'value'  => 'unknown',
 		];
 	}
 
@@ -199,13 +207,14 @@ class SystemTest extends AreaTestCase
 					'text' => 'getkirby/private',
 					'href' => null
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '?',
 					'icon' => 'question',
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/private',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			],
@@ -216,6 +225,7 @@ class SystemTest extends AreaTestCase
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '1.0.0',
 					'icon' => 'info',
@@ -233,13 +243,14 @@ class SystemTest extends AreaTestCase
 					'text' => 'getkirby/unknown',
 					'href' => null
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '1.0.0',
 					'icon' => 'question',
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/unknown',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			]
@@ -293,13 +304,14 @@ class SystemTest extends AreaTestCase
 					'text' => 'getkirby/private',
 					'href' => null
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '?',
 					'icon' => 'question',
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/private',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			],
@@ -310,6 +322,7 @@ class SystemTest extends AreaTestCase
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '1.0.0',
 					'icon' => 'info',
@@ -327,13 +340,14 @@ class SystemTest extends AreaTestCase
 					'text' => 'getkirby/unknown',
 					'href' => null
 				],
+				'status' => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '1.0.0',
 					'icon' => 'question',
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/unknown',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			]
@@ -411,6 +425,7 @@ class SystemTest extends AreaTestCase
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => '1.0.0'
 			]
 		], $props['plugins']);

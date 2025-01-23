@@ -22,7 +22,7 @@
 	"copy.all": "Копировать все",
 	"copy.success": "{count} скопировано",
 	"copy.success.multiple": "{count} скопировано",
-	"copy.url": "Copy URL",
+	"copy.url": "Скопировать ссылку",
 	"create": "Создать",
 	"custom": "Другое",
 
@@ -308,8 +308,8 @@
 	"field.blocks.heading.text": "Текст",
 	"field.blocks.heading.placeholder": "Заголовок …",
 	"field.blocks.figure.back.plain": "Plain",
-	"field.blocks.figure.back.pattern.light": "Pattern (light)",
-	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
+	"field.blocks.figure.back.pattern.light": "Паттерн (светлый)",
+	"field.blocks.figure.back.pattern.dark": "Паттерн (темный)",
 	"field.blocks.image.alt": "Альтернативный текст",
 	"field.blocks.image.caption": "Подпись",
 	"field.blocks.image.crop": "Обрезать",
@@ -385,10 +385,10 @@
 
 	"filter": "Фильтр",
 
-	"form.discard": "Discard changes",
+	"form.discard": " Отменить изменения",
 	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
 	"form.locked": "This content is disabled for you as it is currently edited by another user",
-	"form.unsaved": "The current changes have not yet been saved",
+	"form.unsaved": "Текущие изменения не сохранены",
 	"form.preview": "Preview changes",
 	"form.preview.draft": "Preview draft",
 
@@ -467,8 +467,8 @@
 	"license.status.missing.bubble": "Готовы запустить Ваш сайт?",
 	"license.status.missing.info": "Нет действительной лицензии",
 	"license.status.missing.label": "Пожалуйста, активируйте Вашу лицензию",
-	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.info": "Статус лицензии неизвестен",
+	"license.status.unknown.label": "Неизвестная лицензия",
 	"license.manage": "Управление лицензиями",
 	"license.purchased": "Приобретено",
 	"license.success": "Спасибо за поддержку Kirby",
@@ -481,9 +481,9 @@
 
 	"lock.unsaved": "Несохраненные изменения",
 	"lock.unsaved.empty": "Несохраненных изменений нет",
-	"lock.unsaved.files": "Unsaved files",
-	"lock.unsaved.pages": "Unsaved pages",
-	"lock.unsaved.users": "Unsaved accounts",
+	"lock.unsaved.files": "Несохраненные файлы",
+	"lock.unsaved.pages": "Несохраненные страницы",
+	"lock.unsaved.users": "Несохраненные аккаунты",
 	"lock.isLocked": "Несохраненные изменения {email}",
 	"lock.unlock": "Разблокировать",
 	"lock.unlock.submit": "Разблокируйте и перезапишите несохраненные изменения <strong>{email}</strong>",
@@ -607,7 +607,7 @@
 	"prev": "Предыдущий",
 	"preview": "Предпросмотр",
 
-	"publish": "Publish",
+	"publish": "Опубликовать",
 	"published": "Опубликовано",
 
 	"remove": "Удалить",
@@ -629,9 +629,9 @@
 	"role.nobody.title": "Никто",
 
 	"save": "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c",
-	"saved": "Saved",
+	"saved": "Сохранено",
 	"search": "Поиск",
-	"searching": "Searching",
+	"searching": "Поиск",
 	"search.min": "Введите хотя бы {min} символов для поиска",
 	"search.all": "Показать все результаты ({count})",
 	"search.results.none": "Нет результатов",
@@ -682,10 +682,10 @@
 	"tel.placeholder": "+79123456789",
 	"template": "\u0428\u0430\u0431\u043b\u043e\u043d",
 
-	"theme": "Theme",
-	"theme.light": "Lights on",
-	"theme.dark": "Lights off",
-	"theme.automatic": "Match system default",
+	"theme": "Тема",
+	"theme.light": "Светлая тема",
+	"theme.dark": "Темная тема",
+	"theme.automatic": "Как в системе",
 
 	"title": "Название",
 	"today": "Сегодня",
@@ -757,7 +757,7 @@
 
 	"version": "Версия",
 	"version.changes": "Changed version",
-	"version.compare": "Compare versions",
+	"version.compare": "Сравнить версии",
 	"version.current": "Текущая версия",
 	"version.latest": "Последняя версия",
 	"versionInformation": "Информация о версии",

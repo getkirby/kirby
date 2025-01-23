@@ -74,7 +74,6 @@ class UserPermissionsTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'roles' => [
-				['name' => 'admin'],
 				[
 					'name' => 'editor',
 					'permissions' => [
@@ -88,36 +87,41 @@ class UserPermissionsTest extends TestCase
 							'update'         => false
 						],
 						'users' => [
-							'changeEmail'    => false,
-							'changeLanguage' => false,
-							'changeName'     => false,
-							'changePassword' => false,
-							'changeRole'     => false,
-							'create'         => false,
-							'delete'         => false,
-							'update'         => false
+							'changeEmail'    => true,
+							'changeLanguage' => true,
+							'changeName'     => true,
+							'changePassword' => true,
+							'changeRole'     => true,
+							'create'         => true,
+							'delete'         => true,
+							'update'         => true
 						]
 					]
 				]
 			],
-			'user'  => 'editor@getkirby.com',
+			'user'  => 'editor1@getkirby.com',
 			'users' => [
 				[
-					'email' => 'admin@getkirby.com',
-					'role'  => 'admin'
+					'email' => 'editor1@getkirby.com',
+					'role'  => 'editor'
 				],
 				[
-					'email' => 'editor@getkirby.com',
+					'email' => 'editor2@getkirby.com',
 					'role'  => 'editor'
 				]
 			],
 		]);
 
-		$user  = $app->user();
-		$perms = $user->permissions();
+		// `user` permissions are disabled
+		$user1  = $app->user();
+		$perms1 = $user1->permissions();
+		$this->assertSame('editor', $user1->role()->name());
+		$this->assertFalse($perms1->can($action));
 
-		$this->assertSame('editor', $user->role()->name());
-		$this->assertFalse($perms->can($action));
+		// `users` permissions are enabled
+		$user2  = $app->user('editor2@getkirby.com');
+		$perms2 = $user2->permissions();
+		$this->assertTrue($perms2->can($action));
 	}
 
 	public function testChangeSingleRole()

@@ -211,11 +211,22 @@ class PluginTest extends TestCase
 		$plugin = new Plugin(
 			name: 'getkirby/test-plugin',
 			info: [
-				'license' => 'MIT'
+				'license' => 'MIT',
+				'authors' => [
+					[
+						'name'  => 'A',
+						'email' => 'a@getkirby.com'
+					],
+					[
+						'name'  => 'B',
+						'email' => 'b@getkirby.com'
+					]
+				]
 			]
 		);
 
 		$this->assertSame('MIT', $plugin->info()['license']);
+		$this->assertSame('A, B', $plugin->authorsNames());
 	}
 
 	/**
@@ -473,10 +484,13 @@ class PluginTest extends TestCase
 				'link'   => null,
 				'name'   => 'MIT',
 				'status' => [
-					'icon'  => 'check',
-					'label' => 'Valid license',
-					'theme' => 'positive',
-					'value' => 'active',
+					'dialog' => null,
+					'drawer' => null,
+					'icon'   => 'check',
+					'label'  => 'Valid license',
+					'link'   => null,
+					'theme'  => 'positive',
+					'value'  => 'active',
 				]
 			],
 			'link'        => 'https://getkirby.com',

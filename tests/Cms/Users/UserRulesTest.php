@@ -96,7 +96,7 @@ class UserRulesTest extends TestCase
 	public function testChangeWithoutPermission($key, $value, $message)
 	{
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('__call')->with('change' . $key)->willReturn(false);
+		$permissions->method('can')->with('change' . $key)->willReturn(false);
 
 		$user = $this->createMock(User::class);
 		$user->method('permissions')->willReturn($permissions);
@@ -134,7 +134,7 @@ class UserRulesTest extends TestCase
 		$kirby->impersonate('admin@domain.com');
 
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('__call')->with('changeRole')->willReturn(false);
+		$permissions->method('can')->with('changeRole')->willReturn(false);
 
 		$user = $this->createMock(User::class);
 		$user->method('kirby')->willReturn($kirby);
@@ -372,7 +372,7 @@ class UserRulesTest extends TestCase
 		$app->impersonate('editor@getkirby.com');
 
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('__call')->with('create')->willReturn(false);
+		$permissions->method('can')->with('create')->willReturn(false);
 
 		$user = $this->createMock(User::class);
 		$user->method('kirby')->willReturn($app);
@@ -401,7 +401,7 @@ class UserRulesTest extends TestCase
 		$app->impersonate('editor@getkirby.com');
 
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('__call')->with('create')->willReturn(true);
+		$permissions->method('can')->with('create')->willReturn(true);
 
 		$user = $this->createMock(User::class);
 		$user->method('kirby')->willReturn($app);
@@ -481,7 +481,7 @@ class UserRulesTest extends TestCase
 	public function testDeletePermissions()
 	{
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('__call')->with('delete')->willReturn(false);
+		$permissions->method('can')->with('delete')->willReturn(false);
 
 		$user = $this->createMock(User::class);
 		$user->method('permissions')->willReturn($permissions);

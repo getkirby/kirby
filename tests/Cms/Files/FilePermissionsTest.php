@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use Kirby\TestCase;
 
 /**
@@ -14,6 +15,9 @@ class FilePermissionsTest extends TestCase
 		$this->app = new App([
 			'roots' => [
 				'index' => '/dev/null'
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
 			]
 		]);
 	}
@@ -21,10 +25,14 @@ class FilePermissionsTest extends TestCase
 	public static function actionProvider(): array
 	{
 		return [
+			['access'],
 			['changeName'],
+			// ['changeTemplate'], Tested separately because of the needed blueprints
 			['create'],
 			['delete'],
+			['list'],
 			['replace'],
+			['sort'],
 			['update']
 		];
 	}
@@ -58,6 +66,51 @@ class FilePermissionsTest extends TestCase
 		$perms = $file->permissions();
 
 		$this->assertFalse($perms->can($action));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
+	 */
+	public function testCanFromCache()
+	{
+		$this->app->impersonate('bastian');
+
+		$page = new Page(['slug' => 'test']);
+		$file = new File([
+			'filename'  => 'test.jpg',
+			'parent'    => $page,
+			'template'  => 'some-template',
+			'blueprint' => [
+				'name' => 'files/some-template',
+				'options' => [
+					'access' => false,
+					'list'   => false
+				]
+			]
+		]);
+
+		$this->assertFalse(FilePermissions::canFromCache($file, 'access'));
+		$this->assertFalse(FilePermissions::canFromCache($file, 'access'));
+		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
+		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
+	 */
+	public function testCanFromCacheDynamic()
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
+
+		$page = new Page(['slug' => 'test']);
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'template' => 'some-template',
+		]);
+
+		FilePermissions::canFromCache($file, 'changeTemplate');
 	}
 
 	/**
