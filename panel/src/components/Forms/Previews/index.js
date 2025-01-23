@@ -44,10 +44,10 @@ export default {
 		app.component("k-list-field-preview", HtmlFieldPreview);
 		app.component("k-writer-field-preview", HtmlFieldPreview);
 
-		app.component("k-checkboxes-field-preview", BubblesFieldPreview);
-		app.component("k-multiselect-field-preview", BubblesFieldPreview);
-		app.component("k-radio-field-preview", BubblesFieldPreview);
-		app.component("k-select-field-preview", BubblesFieldPreview);
-		app.component("k-toggles-field-preview", BubblesFieldPreview);
+		app.component("k-checkboxes-field-preview", TagsFieldPreview);
+		app.component("k-multiselect-field-preview", TagsFieldPreview);
+		app.component("k-radio-field-preview", TagFieldPreview);
+		app.component("k-select-field-preview", TagFieldPreview);
+		app.component("k-toggles-field-preview", TagsFieldPreview);
 	}
 };
