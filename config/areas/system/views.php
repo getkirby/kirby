@@ -73,7 +73,7 @@ return [
 			if ($isLocal === true) {
 				$security[] = [
 					'id'    => 'local',
-					'icon'  =>'info',
+					'icon'  => 'info',
 					'theme' => 'info',
 					'text'  => I18n::translate('system.issues.local')
 				];
