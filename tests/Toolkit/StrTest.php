@@ -1453,7 +1453,8 @@ class StrTest extends TestCase
 					'default'       => null,
 					'unique'        => null,
 				],
-				'`another` varchar(255) NOT NULL'
+				'`another` varchar(255) NOT NULL  ',
+				['fallback'  => '']
 			]
 		];
 	}
