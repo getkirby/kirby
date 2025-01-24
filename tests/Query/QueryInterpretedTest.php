@@ -12,8 +12,19 @@ use Kirby\TestCase;
 /**
  * @coversDefaultClass \Kirby\Query\Query
  */
-class QueryTest extends TestCase
+class QueryInterpretedTest extends TestCase
 {
+	protected function setUp(): void
+	{
+		new App([
+			'options' => [
+				'query' => [
+					'runner' => 'interpreted'
+				]
+			]
+		]);
+	}
+
 	protected function tearDown(): void
 	{
 		App::destroy();

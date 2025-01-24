@@ -15,7 +15,7 @@ use Kirby\Toolkit\A;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @deprecated 6.0.0 Will be removed in Kirby 7
+ * @todo Deprecate in v6
  */
 class Expression
 {

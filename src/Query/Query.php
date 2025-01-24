@@ -76,9 +76,10 @@ class Query
 			return $data;
 		}
 
+		// TODO: switch to 'interpreted' as default in v6
 		// TODO: remove in v7
 		// @codeCoverageIgnoreStart
-		$mode = App::instance()->option('query.runner', 'interpreted');
+		$mode = App::instance()->option('query.runner', 'legacy');
 
 		if ($mode === 'legacy') {
 			return $this->resolve_legacy($data);

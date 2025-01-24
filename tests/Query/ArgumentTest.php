@@ -7,7 +7,7 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Query\Argument
- * @deprecated 6.0.0 Will be removed in Kirby 7
+ * @todo Deprecate in v6
  */
 class ArgumentTest extends TestCase
 {
