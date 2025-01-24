@@ -308,6 +308,11 @@ export default {
 		onChange() {},
 		onDrop() {},
 		onPaginate(pagination) {
+			// reset batch mode
+			this.isSelecting = false;
+			this.selected = [];
+
+			// update pagination page
 			sessionStorage.setItem(this.paginationId, pagination.page);
 			this.pagination = pagination;
 			this.reload();
