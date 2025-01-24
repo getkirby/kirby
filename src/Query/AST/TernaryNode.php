@@ -10,7 +10,7 @@ use Kirby\Query\Visitors\Visitor;
  * and another value for when the condition is false
  *
  * @package   Kirby Query
- * @author    Roman Steiner <>
+ * @author    Roman Steiner <roman@toastlab.ch>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT

@@ -11,7 +11,7 @@ use Kirby\Query\Visitors\Interpreter;
  * Runner that caches the AST in memory
  *
  * @package   Kirby Query
- * @author    Roman Steiner <>
+ * @author    Roman Steiner <roman@toastlab.ch>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT

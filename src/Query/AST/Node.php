@@ -8,7 +8,7 @@ use Kirby\Query\Visitors\Visitor;
  * Basic query node representation
  *
  * @package   Kirby Query
- * @author    Roman Steiner <>,
+ * @author    Roman Steiner <roman@toastlab.ch>,
  *            Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier

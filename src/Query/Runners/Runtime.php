@@ -10,7 +10,7 @@ use Exception;
  * This helps to keep the PHP code representation small
  *
  * @package   Kirby Query
- * @author    Roman Steiner <>
+ * @author    Roman Steiner <roman@toastlab.ch>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT

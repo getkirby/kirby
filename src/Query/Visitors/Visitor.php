@@ -6,7 +6,7 @@ use Closure;
 
 /**
  * @package   Kirby Query
- * @author    Roman Steiner <>,
+ * @author    Roman Steiner <roman@toastlab.ch>,
  *            Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
