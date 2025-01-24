@@ -1444,12 +1444,12 @@ class StrTest extends TestCase
 			[
 				'{{ name }} varchar({{ size }}) {{ null }} {{ default }} {{ unique }}',
 				[
-					'name'          => "`another`",
-					'unsigned'      => "UNSIGNED",
+					'name'          => '`another`',
+					'unsigned'      => 'UNSIGNED',
 					'size'          => 255,
 					'precision'     => 14,
 					'decimalPlaces' => 4,
-					'null'          => "NOT NULL",
+					'null'          => 'NOT NULL',
 					'default'       => null,
 					'unique'        => null,
 				],
