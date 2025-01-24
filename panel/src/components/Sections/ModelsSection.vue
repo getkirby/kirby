@@ -241,9 +241,11 @@ export default {
 		}
 	},
 	created() {
+		this.$events.on("model.update", this.reload);
 		this.$events.on("selecting", this.stopSelectingCollision);
 	},
 	destroyed() {
+		this.$events.on("model.update", this.reload);
 		this.$events.off("selecting", this.stopSelectingCollision);
 	},
 	mounted() {
@@ -269,9 +271,9 @@ export default {
 				this.$panel.notification.error(error);
 			} finally {
 				this.$panel.events.emit("model.update");
+				this.selected = [];
 				this.isSelecting = false;
 				this.isProcessing = false;
-				this.selected = [];
 			}
 		},
 		async load(reload) {
