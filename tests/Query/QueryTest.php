@@ -61,7 +61,7 @@ class QueryTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testResolveWithComparisonExpresion(): void
+	public function testResolveWithComparisonExpression(): void
 	{
 		$query = new Query('user.nothing ?? (user.nothing ?? user.isYello(false)) ? user.says("error") : (user.nothing ?? user.says("success"))');
 		$data  = ['user' => new TestUser()];
@@ -74,13 +74,30 @@ class QueryTest extends TestCase
 	public function testResolveWithExactArrayMatch(): void
 	{
 		$query = new Query('user');
-		$this->assertSame('homer', $query->resolve(['user' => 'homer']));
+		$data  = ['user' => 'homer'];
+		$this->assertSame('homer', $query->resolve($data));
 
+		$query = new Query('user.username');
+		$data  = ['user.username' => 'homer'];
+		$this->assertSame('homer', $query->resolve($data));
+
+		$query = new Query('user callback');
+		$data  = ['user callback' => fn () => 'homer'];
+		$this->assertSame('homer', $query->resolve($data));
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveWithGlobalThisKeyword(): void
+	{
 		$query = new Query('this["user.username"]');
-		$this->assertSame('homer', $query->resolve(['user.username' => 'homer']));
+		$data  = ['user.username' => 'homer'];
+		$this->assertSame('homer', $query->resolve($data));
 
 		$query = new Query('this["user callback"]');
-		$this->assertSame('homer', $query->resolve(['user callback' => fn () => 'homer']));
+		$data  = ['user callback' => fn () => 'homer'];
+		$this->assertSame('homer', $query->resolve($data));
 	}
 
 	/**

@@ -1439,6 +1439,21 @@ class StrTest extends TestCase
 					'dangerous' => '*deleting all of the content or something*'
 				],
 				'{{ dangerous }},{ dangerous },{< dangerous >}',
+			],
+			// SQL query template replacements
+			[
+				'{{ name }} varchar({{ size }}) {{ null }} {{ default }} {{ unique }}',
+				[
+					'name'          => "`another`",
+					'unsigned'      => "UNSIGNED",
+					'size'          => 255,
+					'precision'     => 14,
+					'decimalPlaces' => 4,
+					'null'          => "NOT NULL",
+					'default'       => null,
+					'unique'        => null,
+				],
+				'`another` varchar(255) NOT NULL'
 			]
 		];
 	}

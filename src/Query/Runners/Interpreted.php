@@ -61,8 +61,15 @@ class Interpreted extends Runner
 	 *
 	 * @throws \Exception when query is invalid or executor not callable
 	 */
-	public function run(string $query, array $context = []): mixed
-	{
-		return $this->resolver($query)($context);
+public function run(string $query, array $context = []): mixed
+{
+	// try resolving query directly from data context or functions
+	$entry = Runtime::get($query, $context, $this->functions, false);
+
+	if ($entry !== false) {
+		return $entry;
 	}
+
+	return $this->resolver($query)($context);
+}
 }

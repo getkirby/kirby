@@ -141,6 +141,13 @@ class Transpiled extends Runner
 	 */
 	public function run(string $query, array $context = []): mixed
 	{
+		// try resolving query directly from data context or functions
+		$entry = Runtime::get($query, $context, $this->functions, false);
+
+		if ($entry !== false) {
+			return $entry;
+		}
+
 		return $this->resolver($query)(
 			$context,
 			$this->functions,

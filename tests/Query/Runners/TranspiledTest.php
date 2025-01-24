@@ -211,6 +211,38 @@ class TranspiledTest extends TestCase
 	}
 
 	/**
+	 * @covers ::run
+	 */
+	public function testRunDirectContextEntry(): void
+	{
+		$runner = new Transpiled(root: static::TMP);
+		$result = $runner->run('null', ['null' => 'foo']);
+		$this->assertSame('foo', $result);
+
+		$runner = new Transpiled(root: static::TMP);
+		$result = $runner->run('null', ['null' => fn () => 'foo']);
+		$this->assertSame('foo', $result);
+
+		$runner = new Transpiled(root: static::TMP);
+		$result = $runner->run('null', ['null' => null]);
+		$this->assertNull($result);
+
+		$runner = new Transpiled(
+			root: static::TMP,
+			functions: ['null' => fn () => 'foo']
+		);
+		$result = $runner->run('null');
+		$this->assertSame('foo', $result);
+
+		$runner = new Transpiled(
+			root: static::TMP,
+			functions: ['null' => fn () => null]
+		);
+		$result = $runner->run('null');
+		$this->assertNull($result);
+	}
+
+	/**
 	 * @covers ::uses
 	 */
 	public function testUses(): void

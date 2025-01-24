@@ -112,4 +112,29 @@ class InterpretedTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
+	/**
+	 * @covers ::run
+	 */
+	public function testRunDirectContextEntry(): void
+	{
+		$runner = new Interpreted();
+		$result = $runner->run('null', ['null' => 'foo']);
+		$this->assertSame('foo', $result);
+
+		$runner = new Interpreted();
+		$result = $runner->run('null', ['null' => fn () => 'foo']);
+		$this->assertSame('foo', $result);
+
+		$runner = new Interpreted();
+		$result = $runner->run('null', ['null' => null]);
+		$this->assertNull($result);
+
+		$runner = new Interpreted(functions: ['null' => fn () => 'foo']);
+		$result = $runner->run('null');
+		$this->assertSame('foo', $result);
+
+		$runner = new Interpreted(functions: ['null' => fn () => null]);
+		$result = $runner->run('null');
+		$this->assertNull($result);
+	}
 }

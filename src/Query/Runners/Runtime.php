@@ -67,21 +67,22 @@ class Runtime
 	public static function get(
 		string $name,
 		array $context = [],
-		array $functions = []
+		array $functions = [],
+		false|null $fallback = null
 	): mixed {
 		// what looks like a variable might actually be a global function
 		// but if there is a variable with the same name,
 		// the variable takes precedence
-		if ($result = $context[$name] ?? null) {
-			if ($result instanceof Closure) {
-				return $result();
+		if (isset($context[$name]) === true) {
+			if ($context[$name] instanceof Closure) {
+				return $context[$name]();
 			}
 
-			return $result;
+			return $context[$name];
 		}
 
-		if ($function = $functions[$name] ?? null) {
-			return $function();
+		if (isset($functions[$name]) === true) {
+			return $functions[$name]();
 		}
 
 		// alias to access the global context
@@ -89,6 +90,6 @@ class Runtime
 			return $context;
 		}
 
-		return null;
+		return $fallback;
 	}
 }
