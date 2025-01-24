@@ -7,7 +7,7 @@
 				{ value: 'light', text: 'Light', icon: 'sun' }
 			]"
 			:value="theme"
-			@input="theme = $event"
+			@input="(theme = $event)"
 		/>
 
 		<k-lab-example label="Slot">
@@ -59,6 +59,34 @@
 				text="Foo"
 			/>
 			<k-tag
+				:disabled="true"
+				:image="{ src: 'https://picsum.photos/100/100/', crop: true }"
+				:removable="true"
+				:theme="theme"
+				text="Foo"
+			/>
+		</k-lab-example>
+		<k-lab-example :flex="true" label="Image & Link">
+			<k-tag
+				link="https://getkirby.com"
+				:image="{ src: 'https://picsum.photos/100/100/', crop: true }"
+				:theme="theme"
+			/>
+			<k-tag
+				link="https://getkirby.com"
+				:image="{ src: 'https://picsum.photos/100/100/', crop: true }"
+				:theme="theme"
+				text="Foo"
+			/>
+			<k-tag
+				link="https://getkirby.com"
+				:image="{ src: 'https://picsum.photos/100/100/', crop: true }"
+				:removable="true"
+				:theme="theme"
+				text="Foo"
+			/>
+			<k-tag
+				link="https://getkirby.com"
 				:disabled="true"
 				:image="{ src: 'https://picsum.photos/100/100/', crop: true }"
 				:removable="true"
