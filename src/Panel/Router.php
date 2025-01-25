@@ -131,7 +131,7 @@ class Router
 			'dropdown' => Dropdown::response($result, $options),
 			'request'  => Request::response($result, $options),
 			'search'   => Search::response($result, $options),
-			default    => (new View())->response($result, $options)
+			default    => View::response($result, $options)
 		};
 	}
 

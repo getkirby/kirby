@@ -83,8 +83,7 @@ class ViewTest extends TestCase
 		(new Assets())->link();
 
 		// get panel response
-		$view     = new View();
-		$response = $view->response([
+		$response = View::response([
 			'test' => 'Test'
 		]);
 
@@ -109,8 +108,7 @@ class ViewTest extends TestCase
 		]);
 
 		// get panel response
-		$view     = new View();
-		$response = $view->response([
+		$response = View::response([
 			'test' => 'Test'
 		]);
 
@@ -132,9 +130,8 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$view     = new View();
 		$redirect = new Redirect('https://getkirby.com');
-		$response = $view->response($redirect);
+		$response = View::response($redirect);
 
 		$this->assertInstanceOf(Response::class, $response);
 
@@ -156,9 +153,8 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$view      = new View();
 		$exception = new NotFoundException(message: 'Test');
-		$response  = $view->response($exception);
+		$response  = View::response($exception);
 		$json      = json_decode($response->body(), true);
 
 		$this->assertSame(404, $response->code());
@@ -180,9 +176,8 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$view      = new View();
 		$exception = new \Exception('Test');
-		$response  = $view->response($exception);
+		$response  = View::response($exception);
 		$json      = json_decode($response->body(), true);
 
 		$this->assertSame(500, $response->code());
@@ -204,8 +199,7 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$view     = new View();
-		$response = $view->response(1234);
+		$response = View::response(1234);
 		$json     = json_decode($response->body(), true);
 
 		$this->assertSame(500, $response->code());
