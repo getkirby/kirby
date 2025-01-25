@@ -3,10 +3,9 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Url as CmsUrl;
+use Kirby\Cms\Url;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
-use Kirby\Http\Url;
 use Kirby\Panel\Router;
 use Kirby\Toolkit\Str;
 
@@ -230,7 +229,7 @@ class Panel
 			}
 
 			// create an absolute URL
-			$url = CmsUrl::to($path, $options);
+			$url = Url::to($path, $options);
 		}
 
 		return $url;
