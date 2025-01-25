@@ -26,19 +26,27 @@ use Throwable;
  */
 class View
 {
+	protected App $kirby;
+
+	public function __construct(
+		protected array $options = []
+	) {
+		$this->kirby = App::instance();
+	}
+
 	/**
 	 * Filters the data array based on headers or
 	 * query parameters. Requests can return only
 	 * certain data fields that way or globals can
 	 * be injected on demand.
 	 */
-	public static function apply(array $data): array
+	public function apply(array $data): array
 	{
-		$request = App::instance()->request();
+		$request = $this->kirby->request();
 		$only    = $request->header('X-Fiber-Only') ?? $request->get('_only');
 
 		if (empty($only) === false) {
-			return static::applyOnly($data, $only);
+			return $this->applyOnly($data, $only);
 		}
 
 		$globals =
@@ -46,36 +54,37 @@ class View
 			$request->get('_globals');
 
 		if (empty($globals) === false) {
-			return static::applyGlobals($data, $globals);
+			return $this->applyGlobals($data, $globals);
 		}
 
 		return A::apply($data);
 	}
 
 	/**
-	 * Checks if globals should be included in a JSON Fiber request. They are normally
-	 * only loaded with the full document request, but sometimes need to be updated.
+	 * Checks if globals should be included in a JSON Fiber request.
+	 * They are normally only loaded with the full document request,
+	 * but sometimes need to be updated.
 	 *
-	 * A global request can be activated with the `X-Fiber-Globals` header or the
-	 * `_globals` query parameter.
+	 * A global request can be activated with the `X-Fiber-Globals` header
+	 * or the `_globals` query parameter.
 	 */
-	public static function applyGlobals(
+	public function applyGlobals(
 		array $data,
 		string|null $globals = null
 	): array {
 		// split globals string into an array of fields
-		$globalKeys = Str::split($globals, ',');
+		$keys = Str::split($globals, ',');
 
 		// add requested globals
-		if ($globalKeys === []) {
+		if ($keys === []) {
 			return $data;
 		}
 
 		$globals = static::globals();
 
-		foreach ($globalKeys as $globalKey) {
-			if (isset($globals[$globalKey]) === true) {
-				$data[$globalKey] = $globals[$globalKey];
+		foreach ($keys as $key) {
+			if (isset($globals[$key]) === true) {
+				$data[$key] = $globals[$key];
 			}
 		}
 
@@ -91,15 +100,15 @@ class View
 	 * Such requests can fetch shared data or globals.
 	 * Globals will be loaded on demand.
 	 */
-	public static function applyOnly(
+	public function applyOnly(
 		array $data,
 		string|null $only = null
 	): array {
 		// split include string into an array of fields
-		$onlyKeys = Str::split($only, ',');
+		$keys = Str::split($only, ',');
 
 		// if a full request is made, return all data
-		if ($onlyKeys === []) {
+		if ($keys === []) {
 			return $data;
 		}
 
@@ -117,8 +126,8 @@ class View
 		$data = A::apply($data);
 
 		// build a new array with all requested data
-		foreach ($onlyKeys as $onlyKey) {
-			$result[$onlyKey] = A::get($data, $onlyKey);
+		foreach ($keys as $key) {
+			$result[$key] = A::get($data, $key);
 		}
 
 		// Nest dotted keys in array but ignore $translation
@@ -131,27 +140,25 @@ class View
 	 * full document request unless the `X-Fiber-Only` header or
 	 * the `_only` query parameter is set.
 	 */
-	public static function data(array $view = [], array $options = []): array
+	public function data(array $view = []): array
 	{
-		$kirby = App::instance();
-
 		// multi-lang setup check
-		$multilang = $kirby->panel()->multilang();
+		$multilang = $this->kirby->panel()->multilang();
 
 		// get the authenticated user
-		$user = $kirby->user();
+		$user = $this->kirby->user();
 
 		// user permissions
 		$permissions = $user?->role()->permissions()->toArray() ?? [];
 
 		// current content language
-		$language = $kirby->language();
+		$language = $this->kirby->language();
 
 		// shared data for all requests
 		return [
-			'$direction' => function () use ($kirby, $multilang, $language, $user) {
+			'$direction' => function () use ($multilang, $language, $user) {
 				if ($multilang === true && $language && $user) {
-					$default = $kirby->defaultLanguage();
+					$default = $this->kirby->defaultLanguage();
 
 					if (
 						$language->direction() !== $default->direction() &&
@@ -169,23 +176,23 @@ class View
 			},
 			'$languages' => fn (): array => match ($multilang) {
 				false => [],
-				true  => $kirby->languages()->values(
+				true  => $this->kirby->languages()->values(
 					fn ($language) => $language->toArray()
 				)
 			},
-			'$menu'       => function () use ($options, $permissions) {
+			'$menu'       => function () use ($permissions) {
 				$menu = new Menu(
-					$options['areas'] ?? [],
+					$this->options['areas'] ?? [],
 					$permissions,
-					$options['area']['id'] ?? null
+					$this->options['area']['id'] ?? null
 				);
 				return $menu->entries();
 			},
 			'$permissions' => $permissions,
-			'$license'     => $kirby->system()->license()->status()->value(),
+			'$license'     => $this->kirby->system()->license()->status()->value(),
 			'$multilang'   => $multilang,
 			'$searches'    => static::searches($options['areas'] ?? [], $permissions),
-			'$url'         => $kirby->request()->url()->toString(),
+			'$url'         => $this->kirby->request()->url()->toString(),
 			'$user'        => fn () => match ($user) {
 				null    => null,
 				default =>  [
@@ -196,21 +203,21 @@ class View
 					'username' => $user->username(),
 				]
 			},
-			'$view' => function () use ($kirby, $options, $view) {
+			'$view' => function () use ($view) {
 				$defaults = [
 					'breadcrumb' => [],
 					'code'       => 200,
-					'path'       => Str::after($kirby->path(), '/'),
+					'path'       => Str::after($this->kirby->path(), '/'),
 					'props'      => [],
-					'query'      => $kirby->request()->query()->toArray(),
-					'referrer'   => $kirby->panel()->referrer(),
-					'search'     => $kirby->option('panel.search.type', 'pages'),
+					'query'      => $this->kirby->request()->query()->toArray(),
+					'referrer'   => $this->kirby->panel()->referrer(),
+					'search'     => $this->kirby->option('panel.search.type', 'pages'),
 					'timestamp'  => (int)(microtime(true) * 1000),
 				];
 
 				$view = array_replace_recursive(
 					$defaults,
-					$options['area'] ?? [],
+					$this->options['area'] ?? [],
 					$view
 				);
 
@@ -314,7 +321,7 @@ class View
 	 * JSON response or full HTML document based
 	 * on the request header or query params
 	 */
-	public static function response($data, array $options = []): Response
+	public function response($data): Response
 	{
 		// handle redirects
 		if ($data instanceof Redirect) {
@@ -335,13 +342,13 @@ class View
 		}
 
 		// get all data for the request
-		$fiber = static::data($data, $options);
+		$fiber = $this->data($data, $this->options);
 
 		// if requested, send $fiber data as JSON
-		if (App::instance()->panel()->isFiberRequest() === true) {
+		if ($this->kirby->panel()->isFiberRequest() === true) {
 			// filter data, if only or globals headers or
 			// query parameters are set
-			$fiber = static::apply($fiber);
+			$fiber = $this->apply($fiber);
 
 			return Panel::json($fiber, $fiber['$view']['code'] ?? 200);
 		}
@@ -353,8 +360,7 @@ class View
 		$fiber = array_merge_recursive(A::apply($globals), A::apply($fiber));
 
 		// render the full HTML document
-		$doc = new Document();
-		return $doc->render($fiber);
+		return (new Document())->render($fiber);
 	}
 
 	public static function searches(array $areas, array $permissions): array
