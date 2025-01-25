@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Router;
 use Kirby\Http\Uri;
+use Kirby\Panel\Router as PanelRouter;
 use Kirby\Panel\Ui\Menu;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -95,7 +96,8 @@ class Home
 	public static function hasAccess(User $user, string $path): bool
 	{
 		$areas  = Panel::areas();
-		$routes = Panel::routes($areas);
+		$router = new PanelRouter($areas);
+		$routes = $router->routes();
 
 		// Remove fallback routes. Otherwise a route
 		// would be found even if the view does
