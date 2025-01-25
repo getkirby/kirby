@@ -5,7 +5,6 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Filesystem\Dir;
-use Kirby\Http\Response;
 use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -485,9 +484,9 @@ class FiberTest extends TestCase
 		$this->app = $this->app->clone([
 			'users' => [
 				[
-					'email' => 'test@getkirby.com',
+					'email'    => 'test@getkirby.com',
 					'language' => 'de',
-					'role' => 'admin'
+					'role'     => 'admin'
 				]
 			]
 		]);
@@ -504,6 +503,25 @@ class FiberTest extends TestCase
 	 */
 	public function testSearches()
 	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name' => 'editor',
+					'permissions' => [
+						'access' => [
+							'a' => true,
+							'b' => false
+						]
+					]
+				],
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
 		$areas  = [
 			'a' => [
 				'searches' => [
@@ -522,15 +540,8 @@ class FiberTest extends TestCase
 			]
 		];
 
-		$permissions = [
-			'access' => [
-				'a' => true,
-				'b' => false
-			]
-		];
-
-		$fiber    = new Fiber();
-		$searches = $fiber->searches($areas, $permissions);
+		$fiber    = new Fiber(options: ['areas' => $areas]);
+		$searches = $fiber->searches();
 
 		$this->assertArrayHasKey('foo', $searches);
 		$this->assertArrayNotHasKey('bar', $searches);

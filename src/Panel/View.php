@@ -23,9 +23,7 @@ class View
 {
 	protected App $kirby;
 
-	public function __construct(
-		protected array $options = []
-	) {
+	public function __construct() {
 		$this->kirby = App::instance();
 	}
 
@@ -53,7 +51,7 @@ class View
 	 * JSON response or full HTML document based
 	 * on the request header or query params
 	 */
-	public function response($data): Response
+	public function response($data, array $options = []): Response
 	{
 		// handle redirects
 		if ($data instanceof Redirect) {
@@ -73,7 +71,10 @@ class View
 			$data = static::error('Invalid Panel response', 500);
 		}
 
-		$fiber = new Fiber($data, $this->options);
+		$fiber = new Fiber(
+			view:    $data,
+			options: $options
+		);
 
 		// if requested, send $fiber data as JSON
 		if ($this->kirby->panel()->isFiberRequest() === true) {
