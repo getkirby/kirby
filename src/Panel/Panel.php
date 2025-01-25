@@ -79,9 +79,9 @@ class Panel
 	 * Checks for a Fiber request
 	 * via get parameters or headers
 	 */
-	public function isFiberRequest(): bool
+	public static function isFiberRequest(): bool
 	{
-		$request = $this->kirby->request();
+		$request = App::instance()->request();
 
 		if ($request->method() === 'GET') {
 			return

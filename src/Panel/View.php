@@ -21,12 +21,6 @@ use Throwable;
  */
 class View
 {
-	protected App $kirby;
-
-	public function __construct() {
-		$this->kirby = App::instance();
-	}
-
 	/**
 	 * Renders the error view with provided message
 	 */
@@ -51,7 +45,7 @@ class View
 	 * JSON response or full HTML document based
 	 * on the request header or query params
 	 */
-	public function response($data, array $options = []): Response
+	public static function response($data, array $options = []): Response
 	{
 		// handle redirects
 		if ($data instanceof Redirect) {
@@ -77,7 +71,7 @@ class View
 		);
 
 		// if requested, send $fiber data as JSON
-		if ($this->kirby->panel()->isFiberRequest() === true) {
+		if (Panel::isFiberRequest() === true) {
 			$fiber = $fiber->toArray(includeGlobals: false);
 			return Panel::json($fiber, $fiber['$view']['code'] ?? 200);
 		}
