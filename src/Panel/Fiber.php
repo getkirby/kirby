@@ -4,12 +4,17 @@ namespace Kirby\Panel;
 
 use Kirby\Api\Upload;
 use Kirby\Cms\App;
+use Kirby\Cms\Language;
+use Kirby\Cms\User;
 use Kirby\Panel\Ui\Menu;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 
 /**
+ * Bundles all the Fiber data to be sent to the Panel
+ * in as much of a lazy manner than possible
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -20,12 +25,20 @@ use Kirby\Toolkit\Str;
 class Fiber
 {
 	protected App $kirby;
+	protected bool $multilang;
+	protected Language|null $language;
+	protected array $permissions;
+	protected User|null $user;
 
 	public function __construct(
 		protected array $view = [],
 		protected array $options = []
 	) {
-		$this->kirby = App::instance();
+		$this->kirby       = App::instance();
+		$this->multilang   = $this->kirby->panel()->multilang();
+		$this->language    = $this->kirby->language();
+		$this->user        = $this->kirby->user();
+		$this->permissions = $this->user?->role()->permissions()->toArray() ?? [];
 	}
 
 	/**
@@ -128,6 +141,19 @@ class Fiber
 		return A::nest($result, ['$translation']);
 	}
 
+	public function config(): array
+	{
+		return [
+			'api'         => [
+				'methodOverwrite' => $this->kirby->option('api.methodOverwrite', true)
+			],
+			'debug'       => $this->kirby->option('debug', false),
+			'kirbytext'   => $this->kirby->option('panel.kirbytext', true),
+			'translation' => $this->kirby->option('panel.language', 'en'),
+			'upload'      => Upload::chunkSize(),
+		];
+	}
+
 	/**
 	 * Creates the shared data array for the individual views
 	 * The full shared data is always sent on every JSON and
@@ -136,100 +162,38 @@ class Fiber
 	 */
 	public function data(): array
 	{
-		// multi-lang setup check
-		$multilang = $this->kirby->panel()->multilang();
-
-		// get the authenticated user
-		$user = $this->kirby->user();
-
-		// user permissions
-		$permissions = $user?->role()->permissions()->toArray() ?? [];
-
-		// current content language
-		$language = $this->kirby->language();
-
 		// shared data for all requests
 		return [
-			'$direction' => function () use ($multilang, $language, $user) {
-				if ($multilang === true && $language && $user) {
-					$default = $this->kirby->defaultLanguage();
-
-					if (
-						$language->direction() !== $default->direction() &&
-						$language->code() !== $user->language()
-					) {
-						return $language->direction();
-					}
-				}
-			},
-			'$dialog'   => null,
-			'$drawer'   => null,
-			'$language' => fn () => match ($multilang) {
-				false => null,
-				true  => $language?->toArray()
-			},
-			'$languages' => fn (): array => match ($multilang) {
-				false => [],
-				true  => $this->kirby->languages()->values(
-					fn ($language) => $language->toArray()
-				)
-			},
-			'$menu'       => function () use ($permissions) {
-				$menu = new Menu(
-					$this->options['areas'] ?? [],
-					$permissions,
-					$this->options['area']['id'] ?? null
-				);
-				return $menu->entries();
-			},
-			'$permissions' => $permissions,
+			'$direction'   => $this->direction(...),
+			'$dialog'      => null,
+			'$drawer'      => null,
+			'$language'    => $this->language(...),
+			'$languages'   => $this->languages(...),
+			'$menu'        => $this->menu(...),
+			'$permissions' => $this->permissions,
 			'$license'     => $this->kirby->system()->license()->status()->value(),
-			'$multilang'   => $multilang,
-			'$searches'    => static::searches($options['areas'] ?? [], $permissions),
+			'$multilang'   => $this->multilang,
+			'$searches'    => $this->searches(...),
 			'$url'         => $this->kirby->request()->url()->toString(),
-			'$user'        => fn () => match ($user) {
-				null    => null,
-				default =>  [
-					'email'    => $user->email(),
-					'id'       => $user->id(),
-					'language' => $user->language(),
-					'role'     => $user->role()->id(),
-					'username' => $user->username(),
-				]
-			},
-			'$view' => function () {
-				$defaults = [
-					'breadcrumb' => [],
-					'code'       => 200,
-					'path'       => Str::after($this->kirby->path(), '/'),
-					'props'      => [],
-					'query'      => $this->kirby->request()->query()->toArray(),
-					'referrer'   => $this->kirby->panel()->referrer(),
-					'search'     => $this->kirby->option('panel.search.type', 'pages'),
-					'timestamp'  => (int)(microtime(true) * 1000),
-				];
-
-				$view = array_replace_recursive(
-					$defaults,
-					$this->options['area'] ?? [],
-					$this->view
-				);
-
-				// make sure that views and dialogs are gone
-				unset(
-					$view['buttons'],
-					$view['dialogs'],
-					$view['drawers'],
-					$view['dropdowns'],
-					$view['requests'],
-					$view['searches'],
-					$view['views']
-				);
-
-				// resolve all callbacks in the view array
-				return A::apply($view);
-			}
+			'$user'        => $this->user(...),
+			'$view'        => $this->view(...)
 		];
+	}
+
+	public function direction(): string|null
+	{
+		if ($this->multilang === true && $this->language && $this->user) {
+			$default = $this->kirby->defaultLanguage();
+
+			if (
+				$this->language->direction() !== $default->direction() &&
+				$this->language->code() !== $this->user->language()
+			) {
+				return $this->language->direction();
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -243,60 +207,50 @@ class Fiber
 	public function globals(): array
 	{
 		return [
-			'$config' => fn () => [
-				'api'         => [
-					'methodOverwrite' => $this->kirby->option('api.methodOverwrite', true)
-				],
-				'debug'       => $this->kirby->option('debug', false),
-				'kirbytext'   => $this->kirby->option('panel.kirbytext', true),
-				'translation' => $this->kirby->option('panel.language', 'en'),
-				'upload'      => Upload::chunkSize(),
-			],
-			'$system' => function () {
-				$locales = [];
-
-				foreach ($this->kirby->translations() as $translation) {
-					$locales[$translation->code()] = $translation->locale();
-				}
-
-				return [
-					'ascii'   => Str::$ascii,
-					'csrf'    => $this->kirby->auth()->csrfFromSession(),
-					'isLocal' => $this->kirby->system()->isLocal(),
-					'locales' => $locales,
-					'slugs'   => Str::$language,
-					'title'   => $this->kirby->site()->title()->or('Kirby Panel')->toString()
-				];
-			},
-			'$translation' => function () {
-				$translation = match ($user = $this->kirby->user()) {
-					null    => $this->kirby->translation($this->kirby->panelLanguage()),
-					default => $this->kirby->translation($user->language())
-				};
-
-				return [
-					'code'      => $translation->code(),
-					'data'      => $translation->dataWithFallback(),
-					'direction' => $translation->direction(),
-					'name'      => $translation->name(),
-					'weekday'   => Date::firstWeekday($translation->locale())
-				];
-			},
-			'$urls' => fn () => [
-				'api'  => $this->kirby->url('api'),
-				'site' => $this->kirby->url('index')
-			]
+			'$config'      => $this->config(...),
+			'$system'      => $this->system(...),
+			'$translation' => $this->translation(...),
+			'$urls'        => $this->urls(...)
 		];
 	}
 
-	public function searches(array $areas, array $permissions): array
+	public function language(): array|null {
+		if ($this->multilang === false) {
+			return null;
+		}
+
+		return $this->language?->toArray();
+	}
+
+	public function languages(): array
+	{
+		if ($this->multilang === false) {
+			return [];
+		}
+
+		return $this->kirby->languages()->values(
+			fn ($language) => $language->toArray()
+		);
+	}
+
+	public function menu(): array
+	{
+		$menu = new Menu(
+			$this->options['areas'] ?? [],
+			$this->permissions,
+			$this->options['area']['id'] ?? null
+		);
+		return $menu->entries();
+	}
+
+	public function searches(): array
 	{
 		$searches = [];
 
-		foreach ($areas as $areaId => $area) {
+		foreach ($this->options['areas'] ?? [] as $id => $area) {
 			// by default, all areas are accessible unless
 			// the permissions are explicitly set to false
-			if (($permissions['access'][$areaId] ?? true) !== false) {
+			if (($this->permissions['access'][$id] ?? true) !== false) {
 				foreach ($area['searches'] ?? [] as $id => $params) {
 					$searches[$id] = [
 						'icon'  => $params['icon'] ?? 'search',
@@ -307,6 +261,24 @@ class Fiber
 			}
 		}
 		return $searches;
+	}
+
+	public function system(): array
+	{
+		$locales = [];
+
+		foreach ($this->kirby->translations() as $translation) {
+			$locales[$translation->code()] = $translation->locale();
+		}
+
+		return [
+			'ascii'   => Str::$ascii,
+			'csrf'    => $this->kirby->auth()->csrfFromSession(),
+			'isLocal' => $this->kirby->system()->isLocal(),
+			'locales' => $locales,
+			'slugs'   => Str::$language,
+			'title'   => $this->kirby->site()->title()->or('Kirby Panel')->toString()
+		];
 	}
 
 	public function toArray(bool $includeGlobals = true): array
@@ -326,5 +298,80 @@ class Fiber
 
 		// resolve and merge globals and shared data
 		return array_merge_recursive(A::apply($globals), A::apply($data));
+	}
+
+	public function translation(): array
+	{
+		$language = match ($user = $this->kirby->user()) {
+			null    => $this->kirby->panelLanguage(),
+			default => $user->language()
+		};
+
+		$translation = $this->kirby->translation($language);
+
+		return [
+			'code'      => $translation->code(),
+			'data'      => $translation->dataWithFallback(),
+			'direction' => $translation->direction(),
+			'name'      => $translation->name(),
+			'weekday'   => Date::firstWeekday($translation->locale())
+		];
+	}
+
+	public function urls(): array
+	{
+		return [
+			'api'  => $this->kirby->url('api'),
+			'site' => $this->kirby->url('index')
+		];
+	}
+
+	public function user(): array|null
+	{
+		if ($this->user) {
+			return [
+				'email'    => $this->user->email(),
+				'id'       => $this->user->id(),
+				'language' => $this->user->language(),
+				'role'     => $this->user->role()->id(),
+				'username' => $this->user->username(),
+			];
+		}
+
+		return null;
+	}
+
+	public function view(): array
+	{
+		$defaults = [
+			'breadcrumb' => [],
+			'code'       => 200,
+			'path'       => Str::after($this->kirby->path(), '/'),
+			'props'      => [],
+			'query'      => $this->kirby->request()->query()->toArray(),
+			'referrer'   => $this->kirby->panel()->referrer(),
+			'search'     => $this->kirby->option('panel.search.type', 'pages'),
+			'timestamp'  => (int)(microtime(true) * 1000),
+		];
+
+		$view = array_replace_recursive(
+			$defaults,
+			$this->options['area'] ?? [],
+			$this->view
+		);
+
+		// make sure that views and dialogs are gone
+		unset(
+			$view['buttons'],
+			$view['dialogs'],
+			$view['drawers'],
+			$view['dropdowns'],
+			$view['requests'],
+			$view['searches'],
+			$view['views']
+		);
+
+		// resolve all callbacks in the view array
+		return A::apply($view);
 	}
 }
