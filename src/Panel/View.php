@@ -351,7 +351,8 @@ class View
 		$fiber = array_merge_recursive(A::apply($globals), A::apply($fiber));
 
 		// render the full HTML document
-		return Document::response($fiber);
+		$doc = new Document();
+		return $doc->render($fiber);
 	}
 
 	public static function searches(array $areas, array $permissions): array
