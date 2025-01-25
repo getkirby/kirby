@@ -3,8 +3,8 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
+use Kirby\Http\Response;
 use Kirby\TestCase;
 
 /**
@@ -32,11 +32,79 @@ class RouterTest extends TestCase
 	}
 
 	/**
+	 * @covers ::response
+	 */
+	public function testResponse()
+	{
+		$response = new Response('Test');
+		$router   = new Router();
+
+		// response objects should not be modified
+		$this->assertSame($response, $router->response($response));
+	}
+
+	/**
+	 * @covers ::response
+	 */
+	public function testResponseFromNullOrFalse()
+	{
+		// fake json request for easier assertions
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_json' => true,
+				]
+			]
+		]);
+
+		// null is interpreted as 404
+		$router   = new Router();
+		$response = $router->response(null);
+		$json     = json_decode($response->body(), true);
+
+		$this->assertSame(404, $response->code());
+		$this->assertSame('k-error-view', $json['$view']['component']);
+		$this->assertSame('The data could not be found', $json['$view']['props']['error']);
+
+		// false is interpreted as 404
+		$response = $router->response(false);
+		$json     = json_decode($response->body(), true);
+
+		$this->assertSame(404, $response->code());
+		$this->assertSame('k-error-view', $json['$view']['component']);
+		$this->assertSame('The data could not be found', $json['$view']['props']['error']);
+	}
+
+	/**
+	 * @covers ::response
+	 */
+	public function testResponseFromString()
+	{
+		// fake json request for easier assertions
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_json' => true,
+				]
+			]
+		]);
+
+		// strings are interpreted as errors
+		$router   = new Router();
+		$response = $router->response('Test');
+		$json     = json_decode($response->body(), true);
+
+		$this->assertSame(500, $response->code());
+		$this->assertSame('k-error-view', $json['$view']['component']);
+		$this->assertSame('Test', $json['$view']['props']['error']);
+	}
+
+	/**
 	 * @covers ::routes
 	 */
 	public function testRoutes()
 	{
-		$router = new Router([]);
+		$router = new Router();
 		$routes = $router->routes();
 
 		$this->assertSame('browser', $routes[0]['pattern']);
