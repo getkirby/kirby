@@ -17,9 +17,10 @@
 				v-for="(item, itemIndex) in tags"
 				:key="item.id ?? item.value ?? item.text"
 				:disabled="disabled"
-				:element="elementTag"
+				:element="element"
 				:html="html"
 				:image="item.image"
+				:link="item.link"
 				:removable="removable && !disabled"
 				:theme="theme"
 				name="tag"
@@ -48,16 +49,12 @@ export const props = {
 	inheritAttrs: false,
 	props: {
 		/**
-		 * HTML element to use for the tags list
+		 * HTML element to use for each tag
 		 */
 		element: {
 			type: String,
 			default: "div"
 		},
-		/**
-		 * HTML element to use for each tag
-		 */
-		elementTag: String,
 		/**
 		 * You can set the layout to `"list"` to extend the width of each tag
 		 * to 100% and show them in a list. This is handy in narrow columns
@@ -238,7 +235,7 @@ export default {
 				// can't be matched with any defined option
 				// to avoid XSS when displaying via `v-html`
 				text: this.$helper.string.escapeHTML(tag.text ?? tag.value),
-				value: tag.value
+				...tag
 			};
 		}
 	}

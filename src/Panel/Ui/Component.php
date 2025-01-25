@@ -20,12 +20,15 @@ use Kirby\Toolkit\Str;
 abstract class Component
 {
 	protected string $key;
+	public array $attrs = [];
 
 	public function __construct(
 		public string $component,
 		public string|null $class = null,
-		public string|null $style = null
+		public string|null $style = null,
+		...$attrs
 	) {
+		$this->attrs = $attrs;
 	}
 
 	/**
@@ -70,6 +73,7 @@ abstract class Component
 		return [
 			'class' => $this->class,
 			'style' => $this->style,
+			...$this->attrs
 		];
 	}
 

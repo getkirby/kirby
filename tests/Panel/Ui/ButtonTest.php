@@ -11,6 +11,24 @@ use Kirby\TestCase;
 class ButtonTest extends TestCase
 {
 	/**
+	 * @covers ::__construct
+	 */
+	public function testAttrs()
+	{
+		$button = new Button(
+			text: 'Attrs',
+			foo: 'bar'
+		);
+
+		$this->assertSame([
+			'foo'        => 'bar',
+			'responsive' => true,
+			'text'       => 'Attrs',
+			'type'       => 'button',
+		], array_filter($button->props()));
+	}
+
+	/**
 	 * @covers ::props
 	 */
 	public function testProps()

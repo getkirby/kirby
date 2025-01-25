@@ -1,8 +1,9 @@
 <template>
 	<component
-		:is="element"
+		:is="element ?? (link ? 'k-link' : 'button')"
 		:aria-disabled="disabled"
 		:data-theme="theme"
+		:to="link"
 		class="k-tag"
 		type="button"
 		@keydown.delete.prevent="remove"
@@ -74,16 +75,17 @@ export default {
 		/**
 		 * HTML element to use
 		 */
-		element: {
-			type: String,
-			default: "button"
-		},
+		element: String,
 		/**
 		 * See `k-image-frame` or `k-icon-frame` for available options
 		 */
 		image: {
 			type: Object
 		},
+		/**
+		 * Sets a link on the tag. Link can be absolute or relative.
+		 */
+		link: String,
 		/**
 		 * Text to display in the bubble
 		 */

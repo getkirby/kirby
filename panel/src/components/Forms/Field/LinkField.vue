@@ -334,7 +334,7 @@ export default {
 	container-type: inline-size;
 	overflow: auto;
 }
-.k-link-field .k-bubbles-field-preview {
+.k-link-field .k-tags-field-preview {
 	--tag-rounded: var(--rounded-sm);
 	--tag-size: var(--height-sm);
 	padding-inline: 0;

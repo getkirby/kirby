@@ -46,7 +46,9 @@ class ViewButton extends Button
 		public string|array|null $title = null,
 		public string $type = 'button',
 		public string|null $variant = 'filled',
+		...$attrs
 	) {
+		$this->attrs = $attrs;
 	}
 
 	/**
@@ -55,19 +57,31 @@ class ViewButton extends Button
 	 * and resolving to proper instance
 	 */
 	public static function factory(
-		string|array|Closure $button,
+		string|array|Closure|true $button = true,
 		string|int|null $name = null,
 		string|null $view = null,
 		ModelWithContent|Language|null $model = null,
 		array $data = []
 	): static|null {
-		// referenced by name
-		if (is_string($button) === true) {
-			$button = static::find($button, $view);
+		// transform `- name` notation to `name: true`
+		if (
+			is_string($name) === false &&
+			is_string($button) === true
+		) {
+			$name   = $button;
+			$button = true;
 		}
 
-		// turn closure into actual button (object or array)
-		$button = static::resolve($button, $model, $data);
+		// if referenced by name (`name: true`),
+		// try to get button definition from areas or config
+		if ($button === true) {
+			$button = static::find($name, $view);
+		}
+
+		// resolve Closure to button object or array
+		if ($button instanceof Closure) {
+			$button = static::resolve($button, $model, $data);
+		}
 
 		if (
 			$button === null ||
@@ -76,12 +90,12 @@ class ViewButton extends Button
 			return $button;
 		}
 
-		// flatten definition array into list of arguments for this class
+		// flatten array into list of arguments for this class
 		$button = static::normalize($button);
 
 		// if button definition has a name, use it for the component name
 		if (is_string($name) === true) {
-			// If this specific component does not exist,
+			// if this specific component does not exist,
 			// `k-view-buttons` will fall back to `k-view-button` again
 			$button['component'] ??= 'k-' . $name . '-view-button';
 		}
@@ -165,33 +179,29 @@ class ViewButton extends Button
 	 * @internal
 	 */
 	public static function resolve(
-		Closure|array $button,
+		Closure $button,
 		ModelWithContent|Language|null $model = null,
 		array $data = []
 	): static|array|null {
-		if ($button instanceof Closure) {
-			$kirby      = App::instance();
-			$controller = new Controller($button);
+		$kirby      = App::instance();
+		$controller = new Controller($button);
 
-			if (
-				$model instanceof ModelWithContent ||
-				$model instanceof Language
-			) {
-				$data = [
-					'model'             => $model,
-					$model::CLASS_ALIAS => $model,
-					...$data
-				];
-			}
-
-			$button = $controller->call(data: [
-				'kirby' => $kirby,
-				'site'  => $kirby->site(),
-				'user'  => $kirby->user(),
+		if (
+			$model instanceof ModelWithContent ||
+			$model instanceof Language
+		) {
+			$data = [
+				'model'             => $model,
+				$model::CLASS_ALIAS => $model,
 				...$data
-			]);
+			];
 		}
 
-		return $button;
+		return $controller->call(data: [
+			'kirby' => $kirby,
+			'site'  => $kirby->site(),
+			'user'  => $kirby->user(),
+			...$data
+		]);
 	}
 }
