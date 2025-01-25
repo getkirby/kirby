@@ -70,11 +70,11 @@ class Fiber
 			'language'    => $this->language(...),
 			'languages'   => $this->languages(...),
 			'menu'        => $this->menu(...),
-			'permissions' => $this->permissions,
+			'permissions' => $this->permissions(...),
 			'license'     => $this->license(...),
-			'multilang'   => $this->multilang,
+			'multilang'   => $this->multilang(...),
 			'searches'    => $this->searches(...),
-			'url'         => $this->kirby->request()->url()->toString(),
+			'url'         => $this->url(...),
 			'user'        => $this->user(...),
 			'view'        => $this->view(...)
 		];
@@ -227,6 +227,19 @@ class Fiber
 		return $menu->entries();
 	}
 
+	public function multilang(): bool
+	{
+		return $this->multilang;
+	}
+
+	/**
+	 * Returns the permissions array for the current user
+	 */
+	public function permissions(): array
+	{
+		return $this->permissions;
+	}
+
 	public function searches(): array
 	{
 		$searches = [];
@@ -311,6 +324,11 @@ class Fiber
 			'api'  => $this->kirby->url('api'),
 			'site' => $this->kirby->url('index')
 		];
+	}
+
+	public function url(): string
+	{
+		return $this->kirby->request()->url()->toString();
 	}
 
 	public function user(): array|null
