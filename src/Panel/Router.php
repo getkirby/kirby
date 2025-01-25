@@ -4,6 +4,8 @@ namespace Kirby\Panel;
 
 use Closure;
 use Kirby\Cms\App;
+use Kirby\Exception\Exception;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Http\Router as BaseRouter;
 use Kirby\Toolkit\Tpl;
@@ -22,7 +24,7 @@ class Router
 	protected App $kirby;
 
 	public function __construct(
-		public array $areas
+		public array $areas = []
 	) {
 		$this->kirby = App::instance();
 	}
@@ -64,7 +66,7 @@ class Router
 					$result = $e;
 				}
 
-				$response = Panel::response($result, [
+				$response = $this->response($result, [
 					'area'  => $area,
 					'areas' => $this->areas,
 					'path'  => $path,
@@ -78,6 +80,39 @@ class Router
 				);
 			}
 		);
+	}
+
+	/**
+	 * Creates a Response object from the result of
+	 * a Panel route call
+	 */
+	public function response($result, array $options = []): Response
+	{
+		// pass responses directly down to the Kirby router
+		if ($result instanceof Response) {
+			return $result;
+		}
+
+		// interpret missing/empty results as not found
+		if ($result === null || $result === false) {
+			$result = new NotFoundException(
+				message: 'The data could not be found'
+			);
+
+		// interpret strings as errors
+		} elseif (is_string($result) === true) {
+			$result = new Exception($result);
+		}
+
+		// handle different response types (view, dialog, ...)
+		return match ($options['type'] ?? null) {
+			'dialog'   => Dialog::response($result, $options),
+			'drawer'   => Drawer::response($result, $options),
+			'dropdown' => Dropdown::response($result, $options),
+			'request'  => Request::response($result, $options),
+			'search'   => Search::response($result, $options),
+			default    => View::response($result, $options)
+		};
 	}
 
 	/**
