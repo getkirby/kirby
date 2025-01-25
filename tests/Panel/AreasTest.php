@@ -3,7 +3,6 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 

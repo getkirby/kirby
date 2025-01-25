@@ -3,7 +3,6 @@
 use Kirby\Cms\App;
 use Kirby\Cms\LanguageRoutes;
 use Kirby\Cms\Media;
-use Kirby\Panel\Panel;
 use Kirby\Panel\Plugins;
 use Kirby\Plugin\Assets;
 use Kirby\Toolkit\Str;
@@ -125,8 +124,8 @@ return function (App $kirby) {
 			'pattern' => $panel . '/(:all?)',
 			'method'  => 'ALL',
 			'env'     => 'panel',
-			'action'  => function (string|null $path = null) {
-				return App::instance()->panel()->router($path);
+			'action'  => function (string|null $path = null) use ($kirby) {
+				return $kirby->panel()->router($path);
 			}
 		],
 		// permalinks for page/file UUIDs

@@ -6,7 +6,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\Url;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
-use Kirby\Panel\Router;
 use Kirby\Toolkit\Str;
 
 /**

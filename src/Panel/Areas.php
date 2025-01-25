@@ -17,7 +17,8 @@ class Areas
 {
 	protected App $kirby;
 
-	public function __construct() {
+	public function __construct()
+	{
 		$this->kirby = App::instance();
 	}
 

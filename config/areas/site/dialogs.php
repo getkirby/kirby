@@ -8,7 +8,6 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Field;
-use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Dialogs\ChangesDialog;
 use Kirby\Panel\Ui\Dialogs\PageCreateDialog;
 use Kirby\Toolkit\Escape;

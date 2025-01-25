@@ -7,7 +7,6 @@ use Kirby\Cms\Blueprint;
 use Kirby\Cms\User;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
-use Kirby\Panel\Panel;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
