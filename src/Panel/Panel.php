@@ -25,6 +25,7 @@ use Kirby\Toolkit\Str;
 class Panel
 {
 	protected Areas $areas;
+	protected Home $home;
 
 	public function __construct(
 		protected App $kirby
@@ -32,7 +33,8 @@ class Panel
 	}
 
 	/**
-	 * Collect all registered areas
+	 * All registered Panel areas
+	 * @since 5.0.0
 	 */
 	public function areas(): Areas
 	{
@@ -75,6 +77,11 @@ class Panel
 		return Access::has($user, $area);
 	}
 
+	public function home(): Home
+	{
+		return $this->home ??= new Home($this);
+	}
+
 	/**
 	 * Checks for a Fiber request
 	 * via get parameters or headers
@@ -90,6 +97,15 @@ class Panel
 		}
 
 		return false;
+	}
+
+	/**
+	 * Checks if the given URL is a Panel Url
+	 */
+	public static function isPanelUrl(string $url): bool
+	{
+		$panel = App::instance()->url('panel');
+		return Str::startsWith($url, $panel);
 	}
 
 	/**
@@ -112,6 +128,16 @@ class Panel
 	public function multilang(): bool
 	{
 		return $this->kirby->option('languages') || $this->kirby->multilang();
+	}
+
+	/**
+	 * Returns the path after /panel/ which can then
+	 * be used in the router or to find a matching view
+	 */
+	public static function path(string $url): string|null
+	{
+		$after = Str::after($url, App::instance()->url('panel'));
+		return trim($after, '/');
 	}
 
 	/**

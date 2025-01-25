@@ -181,7 +181,7 @@ class Router
 				'installation',
 				'login',
 			],
-			'action' => fn () => Panel::go(Home::url()),
+			'action' => fn () => Panel::go($kirby->panel()->home()->url()),
 			'auth' => false
 		];
 
