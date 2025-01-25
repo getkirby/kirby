@@ -65,10 +65,8 @@ class View
 			$data = static::error('Invalid Panel response', 500);
 		}
 
-		$fiber = new Fiber(
-			view:    $data,
-			options: $options
-		);
+		// gather all Fiber data
+		$fiber = new Fiber(view: $data, options: $options);
 
 		// if requested, send $fiber data as JSON
 		if (Panel::isFiberRequest() === true) {
@@ -76,10 +74,9 @@ class View
 			return Panel::json($fiber, $fiber['$view']['code'] ?? 200);
 		}
 
-		// get all data for the request
-		$fiber = $fiber->toArray(includeGlobals: true);
-
 		// render the full HTML document
-		return (new Document())->render($fiber);
+		return (new Document())->render(
+			fiber: $fiber->toArray(includeGlobals: true)
+		);
 	}
 }

@@ -144,8 +144,7 @@ class Panel
 		// set the language in multi-lang installations
 		$this->setLanguage();
 
-		$router = new Router(areas: $this->areas()->toArray());
-		return $router->call($path);
+		return (new Router($this))->execute($path);
 	}
 
 	/**

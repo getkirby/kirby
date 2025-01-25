@@ -96,9 +96,9 @@ class Home
 	 */
 	public static function hasAccess(User $user, string $path): bool
 	{
-		$areas  = $user->kirby()->panel()->areas()->toArray();
-		$router = new PanelRouter($areas);
-		$routes = $router->routes();
+		$routes = PanelRouter::routes(
+			areas: $user->kirby()->panel()->areas()->toArray()
+		);
 
 		// Remove fallback routes. Otherwise a route
 		// would be found even if the view does
