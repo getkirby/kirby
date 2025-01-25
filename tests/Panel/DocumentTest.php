@@ -9,6 +9,7 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Document
+ * @covers ::__construct
  */
 class DocumentTest extends TestCase
 {

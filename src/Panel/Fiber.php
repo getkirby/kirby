@@ -122,11 +122,6 @@ class Fiber
 			// split include string into an array of fields
 			$keys = Str::split($filter, ',');
 
-			// if a full request is made, return all data
-			if ($keys === []) {
-				return $data;
-			}
-
 			// take care of potentially requested globals
 			$globals     = $this->globals();
 			$keysEntries = A::map($keys, fn ($key) => Str::split($key, '.')[0]);
@@ -157,10 +152,6 @@ class Fiber
 			$keys = Str::split($filterGlobals, ',');
 
 			// add requested globals
-			if ($keys === []) {
-				return $data;
-			}
-
 			$globals = $this->globals();
 
 			foreach ($keys as $key) {
@@ -319,17 +310,17 @@ class Fiber
 		];
 	}
 
+	public function url(): string
+	{
+		return $this->kirby->request()->url()->toString();
+	}
+
 	public function urls(): array
 	{
 		return [
 			'api'  => $this->kirby->url('api'),
 			'site' => $this->kirby->url('index')
 		];
-	}
-
-	public function url(): string
-	{
-		return $this->kirby->request()->url()->toString();
 	}
 
 	public function user(): array|null

@@ -11,6 +11,7 @@ use Kirby\Toolkit\Str;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Fiber
+ * @covers ::__construct
  */
 class FiberTest extends TestCase
 {
@@ -33,6 +34,23 @@ class FiberTest extends TestCase
 		$this->app->session()->destroy();
 
 		Dir::remove(static::TMP);
+	}
+
+	/**
+	 * @covers ::config
+	 */
+	public function testConfig(): void
+	{
+		// without custom data
+		$fiber = new Fiber();
+		$config  = $fiber->config();
+		$config = A::apply($config);
+
+		$this->assertArrayHasKey('api', $config);
+		$this->assertArrayHasKey('debug', $config);
+		$this->assertArrayHasKey('kirbytext', $config);
+		$this->assertArrayHasKey('translation', $config);
+		$this->assertArrayHasKey('upload', $config);
 	}
 
 	/**
@@ -176,7 +194,7 @@ class FiberTest extends TestCase
 	/**
 	 * @covers ::filter
 	 */
-	public function testFilterOnlyrequestWithGlobal(): void
+	public function testFilterOnlyRequestWithGlobal(): void
 	{
 		// simulate a simple partial request
 		$this->app = $this->app->clone([
@@ -481,6 +499,83 @@ class FiberTest extends TestCase
 	}
 
 	/**
+	 * @covers ::system
+	 */
+	public function testSystem(): void
+	{
+		// without custom data
+		$fiber   = new Fiber();
+		$system  = $fiber->system();
+		$system = A::apply($system);
+
+		$this->assertArrayHasKey('ascii', $system);
+		$this->assertArrayHasKey('csrf', $system);
+		$this->assertArrayHasKey('isLocal', $system);
+		$this->assertArrayHasKey('locales', $system);
+		$this->assertArrayHasKey('slugs', $system);
+		$this->assertArrayHasKey('title', $system);
+	}
+
+	/**
+	 * @covers ::toArray
+	 */
+	public function testToArray(): void
+	{
+		$fiber = new Fiber();
+		$array = $fiber->toArray(globals: false);
+		$this->assertArrayHasKey('user', $array);
+		$this->assertArrayNotHasKey('config', $array);
+
+		$array = $fiber->toArray(globals: true);
+		$this->assertArrayHasKey('user', $array);
+		$this->assertArrayHasKey('config', $array);
+	}
+
+	/**
+	 * @covers ::translation
+	 */
+	public function testTranslation(): void
+	{
+		$fiber       = new Fiber();
+		$translation = $fiber->translation();
+		$translation = A::apply($translation);
+
+		$this->assertSame('en', $translation['code']);
+		$this->assertArrayHasKey('data', $translation);
+		$this->assertSame('ltr', $translation['direction']);
+		$this->assertSame('English', $translation['name']);
+		$this->assertSame(0, $translation['weekday']);
+	}
+
+	/**
+	 * @covers ::translation
+	 */
+	public function testTranslationWithUserLanguage(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'email'    => 'test@getkirby.com',
+					'language' => 'de',
+					'role'     => 'admin'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$fiber       = new Fiber();
+		$translation = $fiber->translation();
+		$translation = A::apply($translation);
+
+		$this->assertSame('de', $translation['code']);
+		$this->assertArrayHasKey('data', $translation);
+		$this->assertSame('ltr', $translation['direction']);
+		$this->assertSame('Deutsch', $translation['name']);
+		$this->assertSame(1, $translation['weekday']);
+	}
+
+	/**
 	 * @covers ::url
 	 */
 	public function testUrl(): void
@@ -500,6 +595,17 @@ class FiberTest extends TestCase
 		$fiber = new Fiber();
 		$url   = $fiber->url();
 		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $url);
+	}
+
+	/**
+	 * @covers ::urls
+	 */
+	public function testUrls(): void
+	{
+		$fiber = new Fiber();
+		$urls  = $fiber->urls();
+		$this->assertArrayHasKey('api', $urls);
+		$this->assertArrayHasKey('site', $urls);
 	}
 
 	/**

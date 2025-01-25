@@ -9,6 +9,7 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Router
+ * @covers ::__construct
  */
 class RouterTest extends TestCase
 {
@@ -168,6 +169,43 @@ class RouterTest extends TestCase
 
 		$this->assertSame('The load handler is missing', $routes[0]['action']());
 		$this->assertSame('The submit handler is missing', $routes[1]['action']());
+	}
+
+	/**
+	 * @covers ::routesForDrawers
+	 */
+	public function testRoutesForDrawers(): void
+	{
+		$area = [
+			'drawers' => [
+				'test' => [
+					'load'   => $load   = function () {
+					},
+					'submit' => $submit = function () {
+					},
+				]
+			]
+		];
+
+		$routes = Router::routesForDrawers('test', $area);
+
+		$expected = [
+			[
+				'pattern' => 'drawers/test',
+				'type'    => 'drawer',
+				'area'    => 'test',
+				'action'  => $load,
+			],
+			[
+				'pattern' => 'drawers/test',
+				'type'    => 'drawer',
+				'area'    => 'test',
+				'method'  => 'POST',
+				'action'  => $submit,
+			]
+		];
+
+		$this->assertSame($expected, $routes);
 	}
 
 	/**

@@ -8,6 +8,7 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Areas
+ * @covers ::__construct
  */
 class AreasTest extends TestCase
 {
