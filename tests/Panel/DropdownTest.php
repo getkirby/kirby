@@ -195,7 +195,7 @@ class DropdownTest extends TestCase
 			]
 		];
 
-		$routes = Panel::routesForDropdowns('test', $area);
+		$routes = Router::routesForDropdowns('test', $area);
 
 		$expected = [
 			[
@@ -226,7 +226,7 @@ class DropdownTest extends TestCase
 			]
 		];
 
-		$routes = Panel::routesForDropdowns('test', $area);
+		$routes = Router::routesForDropdowns('test', $area);
 
 		$expected = [
 			[
