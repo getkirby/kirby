@@ -12,6 +12,7 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Home
+ * @covers ::__construct
  */
 class HomeTest extends TestCase
 {

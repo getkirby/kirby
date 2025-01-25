@@ -9,6 +9,7 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Panel
+ * @covers ::__construct
  */
 class PanelTest extends TestCase
 {

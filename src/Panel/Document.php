@@ -30,6 +30,9 @@ class Document
 		$this->kirby = App::instance();
 	}
 
+	/**
+	 * Panel assets
+	 */
 	public function assets(): Assets
 	{
 		return $this->assets ??= new Assets();
@@ -67,7 +70,7 @@ class Document
 	}
 
 	/**
-	 * Renders the panel document
+	 * Renders the Panel document
 	 */
 	public function render(array $fiber): Response
 	{
