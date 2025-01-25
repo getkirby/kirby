@@ -50,119 +50,11 @@ class PanelTest extends TestCase
 	}
 
 	/**
-	 * @covers ::area
-	 */
-	public function testArea(): void
-	{
-		// defaults
-		$result = Panel::area('test', []);
-		$expected = [
-			'id' => 'test',
-			'label' => 'test',
-			'breadcrumb' => [],
-			'breadcrumbLabel' => 'test',
-			'title' => 'test',
-			'menu' => false,
-			'link' => 'test',
-			'search' => null
-		];
-
-		$this->assertSame($expected, $result);
-	}
-
-	/**
 	 * @covers ::areas
 	 */
 	public function testAreas(): void
 	{
-		// unauthenticated / uninstalled
-		$areas = Panel::areas();
-
-		$this->assertArrayHasKey('installation', $areas);
-		$this->assertCount(1, $areas);
-
-		// create the first admin
-		$this->app = $this->app->clone([
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin'
-				]
-			]
-		]);
-
-		// unauthenticated / installed
-		$areas = Panel::areas();
-
-		$this->assertArrayHasKey('login', $areas);
-		$this->assertArrayHasKey('logout', $areas);
-		$this->assertCount(2, $areas);
-
-		// simulate a logged in user
-		$this->app->impersonate('test@getkirby.com');
-
-		// authenticated
-		$areas = Panel::areas();
-
-		$this->assertArrayHasKey('search', $areas);
-		$this->assertArrayHasKey('site', $areas);
-		$this->assertArrayHasKey('system', $areas);
-		$this->assertArrayHasKey('users', $areas);
-		$this->assertArrayHasKey('account', $areas);
-		$this->assertArrayHasKey('logout', $areas);
-		$this->assertArrayHasKey('lab', $areas);
-		$this->assertCount(7, $areas);
-
-		// authenticated with plugins
-		$app = $this->app->clone([
-			'areas' => [
-				'todos' => fn () => []
-			]
-		]);
-
-		$app->impersonate('test@getkirby.com');
-
-		$areas = Panel::areas();
-
-		$this->assertArrayHasKey('todos', $areas);
-		$this->assertCount(8, $areas);
-	}
-
-	/**
-	 * @covers ::buttons
-	 */
-	public function testButtons(): void
-	{
-		$this->app = $this->app->clone([
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin'
-				]
-			]
-		]);
-
-		$this->app->impersonate('test@getkirby.com');
-		$core = Panel::buttons();
-
-		// add custom buttons
-		$this->app = $this->app->clone([
-			'areas' => [
-				'test' => fn () => [
-					'buttons' => [
-						'a' => ['component' => 'test-a'],
-						'b' => ['component' => 'test-b']
-					]
-				]
-			]
-		]);
-
-		$this->app->impersonate('test@getkirby.com');
-		$withCustoms = Panel::buttons();
-
-		$this->assertSame(2, count($withCustoms) - count($core));
-		$this->assertSame(['component' => 'test-b'], array_pop($withCustoms));
-		$this->assertSame(['component' => 'test-a'], array_pop($withCustoms));
+		$this->assertInstanceOf(Areas::class, $this->app->panel()->areas());
 	}
 
 	/**
@@ -220,7 +112,7 @@ class PanelTest extends TestCase
 	public function testIsFiberRequest(): void
 	{
 		// standard request
-		$result = Panel::isFiberRequest($this->app->request());
+		$result = $this->app->panel()->isFiberRequest();
 		$this->assertFalse($result);
 
 		// fiber request via get
@@ -232,7 +124,7 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$result = Panel::isFiberRequest($this->app->request());
+		$result = $this->app->panel()->isFiberRequest();
 		$this->assertTrue($result);
 
 		// fiber request via header
@@ -244,7 +136,7 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$result = Panel::isFiberRequest($this->app->request());
+		$result = $this->app->panel()->isFiberRequest();
 		$this->assertTrue($result);
 
 		// other request than GET
@@ -254,7 +146,7 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$result = Panel::isFiberRequest($this->app->request());
+		$result = $this->app->panel()->isFiberRequest();
 		$this->assertFalse($result);
 	}
 
@@ -281,7 +173,7 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$this->assertTrue(Panel::multilang());
+		$this->assertTrue($this->app->panel()->multilang());
 	}
 
 	/**
@@ -301,7 +193,7 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$this->assertTrue(Panel::multilang());
+		$this->assertTrue($this->app->panel()->multilang());
 	}
 
 	/**
@@ -309,7 +201,7 @@ class PanelTest extends TestCase
 	 */
 	public function testMultilangDisabled()
 	{
-		$this->assertFalse(Panel::multilang());
+		$this->assertFalse($this->app->panel()->multilang());
 	}
 
 	/**
@@ -323,7 +215,7 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$result = Panel::router('/');
+		$result = $app->panel()->router('/');
 
 		$this->assertNull($result);
 	}
@@ -351,7 +243,8 @@ class PanelTest extends TestCase
 		]);
 
 		// set for the first time
-		$language = Panel::setLanguage();
+		$panel    = $this->app->panel();
+		$language = $panel->setLanguage();
 
 		$this->assertSame('en', $language);
 		$this->assertSame('en', $this->app->language()->code());
@@ -388,7 +281,8 @@ class PanelTest extends TestCase
 		]);
 
 		// set for the first time
-		$language = Panel::setLanguage();
+		$panel    = $this->app->panel();
+		$language = $panel->setLanguage();
 
 		$this->assertSame('de', $language);
 		$this->assertSame('de', $this->app->language()->code());
@@ -420,7 +314,8 @@ class PanelTest extends TestCase
 		]);
 
 		// set for the first time
-		$language = Panel::setLanguage();
+		$panel    = $this->app->panel();
+		$language = $panel->setLanguage();
 
 		$this->assertSame('de', $language);
 		$this->assertSame('de', $this->app->language()->code());
@@ -453,7 +348,8 @@ class PanelTest extends TestCase
 		]);
 
 		// set for the first time
-		$language = Panel::setLanguage();
+		$panel    = $this->app->panel();
+		$language = $panel->setLanguage();
 
 		$this->assertSame('de', $language);
 		$this->assertSame('de', $this->app->session()->get('panel.language'));
@@ -465,7 +361,8 @@ class PanelTest extends TestCase
 	 */
 	public function testSetLanguageInSingleLanguageSite(): void
 	{
-		$language = Panel::setLanguage();
+		$panel    = $this->app->panel();
+		$language = $panel->setLanguage();
 
 		$this->assertNull($language);
 		$this->assertNull($this->app->language());
@@ -476,7 +373,8 @@ class PanelTest extends TestCase
 	 */
 	public function testSetTranslation(): void
 	{
-		$translation = Panel::setTranslation($this->app);
+		$panel       = $this->app->panel();
+		$translation = $panel->setTranslation();
 
 		$this->assertSame('en', $translation);
 		$this->assertSame('en', $this->app->translation()->code());
@@ -496,7 +394,8 @@ class PanelTest extends TestCase
 
 		$this->app->impersonate('test@getkirby.com');
 
-		$translation = Panel::setTranslation($this->app);
+		$panel       = $this->app->panel();
+		$translation = $panel->setTranslation();
 
 		$this->assertSame('de', $translation);
 		$this->assertSame('de', $this->app->translation()->code());

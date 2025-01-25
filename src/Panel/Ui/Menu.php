@@ -4,7 +4,7 @@ namespace Kirby\Panel\Ui;
 
 use Closure;
 use Kirby\Cms\App;
-use Kirby\Panel\Panel;
+use Kirby\Panel\Areas;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -74,7 +74,7 @@ class Menu
 			// merge area definition (e.g. from config)
 			// with global area definition
 			if (is_array($area) === true) {
-				$area = Panel::area($id, [
+				$area = Areas::area($id, [
 					...$this->areas[$id] ?? [],
 					'menu' => true,
 					...$area

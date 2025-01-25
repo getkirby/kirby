@@ -126,7 +126,7 @@ return function (App $kirby) {
 			'method'  => 'ALL',
 			'env'     => 'panel',
 			'action'  => function (string|null $path = null) {
-				return Panel::router($path);
+				return App::instance()->panel()->router($path);
 			}
 		],
 		// permalinks for page/file UUIDs
