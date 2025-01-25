@@ -18,7 +18,7 @@ use Throwable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
- * @since     6.0.0
+ * @since     5.0.0
  */
 class Router
 {

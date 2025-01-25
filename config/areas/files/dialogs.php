@@ -2,7 +2,6 @@
 
 use Kirby\Cms\Find;
 use Kirby\Panel\Field;
-use Kirby\Panel\Panel;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 

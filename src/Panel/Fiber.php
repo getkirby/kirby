@@ -193,7 +193,8 @@ class Fiber
 		];
 	}
 
-	public function language(): array|null {
+	public function language(): array|null
+	{
 		if ($this->multilang === false) {
 			return null;
 		}
