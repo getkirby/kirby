@@ -135,8 +135,8 @@ class View
 	{
 		$kirby = App::instance();
 
-		// multilang setup check
-		$multilang = Panel::multilang();
+		// multi-lang setup check
+		$multilang = $kirby->panel()->multilang();
 
 		// get the authenticated user
 		$user = $kirby->user();
@@ -338,7 +338,7 @@ class View
 		$fiber = static::data($data, $options);
 
 		// if requested, send $fiber data as JSON
-		if (Panel::isFiberRequest() === true) {
+		if (App::instance()->panel()->isFiberRequest() === true) {
 			// filter data, if only or globals headers or
 			// query parameters are set
 			$fiber = static::apply($fiber);

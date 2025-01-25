@@ -6,7 +6,6 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Button;
 use Kirby\Toolkit\Controller;
 
@@ -112,7 +111,7 @@ class ViewButton extends Button
 		string|null $view = null
 	): array|Closure {
 		// collect all buttons from areas
-		$buttons = Panel::buttons();
+		$buttons = App::instance()->panel()->areas()->buttons();
 
 		// try to find by full name (view-prefixed)
 		if ($view && $button = $buttons[$view . '.' . $name] ?? null) {

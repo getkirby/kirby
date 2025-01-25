@@ -44,14 +44,15 @@ class Home
 	public static function alternative(User $user): string
 	{
 		$permissions = $user->role()->permissions();
+		$kirby       = $user->kirby();
 
 		// no access to the panel? The only good alternative is the main url
 		if ($permissions->for('access', 'panel') === false) {
-			return App::instance()->site()->url();
+			return $kirby->site()->url();
 		}
 
 		// needed to create a proper menu
-		$areas = Panel::areas();
+		$areas = $kirby->panel()->areas()->toArray();
 		$menu  = new Menu($areas, $permissions->toArray());
 		$menu  = $menu->entries();
 
@@ -95,7 +96,7 @@ class Home
 	 */
 	public static function hasAccess(User $user, string $path): bool
 	{
-		$areas  = Panel::areas();
+		$areas  = $user->kirby()->panel()->areas()->toArray();
 		$router = new PanelRouter($areas);
 		$routes = $router->routes();
 

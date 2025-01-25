@@ -208,7 +208,7 @@ abstract class AreaTestCase extends TestCase
 		string|null $path = null,
 		bool $toJson = false
 	): Response|array|null {
-		$response = Panel::router($path);
+		$response = $this->app->panel()->router($path);
 
 		if ($toJson === true) {
 			return json_decode($response->body(), true);

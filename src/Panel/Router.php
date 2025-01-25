@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Closure;
+use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
@@ -31,6 +32,9 @@ class Router
 
 	public function call(string|null $path = null): Response|null
 	{
+		// run garbage collection
+		$this->garbage();
+
 		// create a micro-router for the Panel
 		return BaseRouter::execute(
 			path: $path,
@@ -80,6 +84,22 @@ class Router
 				);
 			}
 		);
+	}
+
+	/**
+	 * Garbage collection which runs with a probability
+	 * of 10% on each Panel request
+	 *
+	 * @since 5.0.0
+	 * @codeCoverageIgnore
+	 */
+	protected function garbage(): void
+	{
+		// run garbage collection with a chance of 10%;
+		if (mt_rand(1, 10000) <= 0.1 * 10000) {
+			// clean up leftover upload chunks
+			Upload::cleanTmpDir();
+		}
 	}
 
 	/**
