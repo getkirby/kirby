@@ -6,10 +6,8 @@ use Closure;
 use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
-use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
-use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
 use Kirby\Http\Uri;
@@ -117,46 +115,14 @@ class Panel
 
 	/**
 	 * Check for access permissions
+	 * @deprecated 5.0.0 Use `Panel\Access:has(throws: true)` instead
+	 * @codeCoverageIgnore
 	 */
 	public static function firewall(
 		User|null $user = null,
 		string|null $areaId = null
 	): bool {
-		// a user has to be logged in
-		if ($user === null) {
-			throw new PermissionException(
-				key: 'access.panel'
-			);
-		}
-
-		// get all access permissions for the user role
-		$permissions = $user->role()->permissions()->toArray()['access'];
-
-		// check for general panel access
-		if (($permissions['panel'] ?? true) !== true) {
-			throw new PermissionException(
-				key: 'access.panel'
-			);
-		}
-
-		// don't check if the area is not defined
-		if (empty($areaId) === true) {
-			return true;
-		}
-
-		// undefined area permissions means access
-		if (isset($permissions[$areaId]) === false) {
-			return true;
-		}
-
-		// no access
-		if ($permissions[$areaId] !== true) {
-			throw new PermissionException(
-				key: 'access.view'
-			);
-		}
-
-		return true;
+		return Access::has($user, $areaId, throws: true);
 	}
 
 	/**
@@ -189,17 +155,14 @@ class Panel
 	/**
 	 * Check if the given user has access to the panel
 	 * or to a given area
+	 *  @deprecated 5.0.0 Use `Panel\Access:has(throws: false)` instead
+	 * @codeCoverageIgnore
 	 */
 	public static function hasAccess(
 		User|null $user = null,
 		string|null $area = null
 	): bool {
-		try {
-			static::firewall($user, $area);
-			return true;
-		} catch (Throwable) {
-			return false;
-		}
+		return Access::has($user, $area);
 	}
 
 	/**
@@ -334,7 +297,7 @@ class Panel
 
 				// check for access before executing area routes
 				if ($auth !== false) {
-					static::firewall($kirby->user(), $areaId);
+					Access::has($kirby->user(), $areaId, throws: true);
 				}
 
 				$result = $route->action()->call($route, ...$route->arguments());
