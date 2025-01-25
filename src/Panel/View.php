@@ -6,6 +6,7 @@ use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
+use Kirby\Panel\Ui\Menu;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;

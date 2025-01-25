@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\App;
 use Kirby\Cms\User;

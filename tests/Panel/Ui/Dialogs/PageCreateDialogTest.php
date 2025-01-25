@@ -1,12 +1,12 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Areas\AreaTestCase;
 
 /**
- * @coversDefaultClass \Kirby\Panel\PageCreateDialog
+ * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\PageCreateDialog
  */
 class PageCreateDialogTest extends AreaTestCase
 {

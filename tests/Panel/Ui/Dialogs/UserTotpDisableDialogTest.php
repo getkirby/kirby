@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
@@ -10,7 +10,7 @@ use Kirby\TestCase;
 use Kirby\Toolkit\Totp;
 
 /**
- * @coversDefaultClass \Kirby\Panel\UserTotpDisableDialog
+ * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\UserTotpDisableDialog
  */
 class UserTotpDisableDialogTest extends TestCase
 {

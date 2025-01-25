@@ -1,13 +1,13 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Ui;
 
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Panel\Menu
+ * @coversDefaultClass \Kirby\Panel\Ui\Menu
  * @covers ::__construct
  */
 class MenuTest extends TestCase
