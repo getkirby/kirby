@@ -1,9 +1,10 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Ui;
 
 use Closure;
 use Kirby\Cms\App;
+use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 
 /**
