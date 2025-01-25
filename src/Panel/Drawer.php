@@ -15,5 +15,5 @@ namespace Kirby\Panel;
  */
 class Drawer extends Dialog
 {
-	protected static string $key = '$drawer';
+	protected static string $key = 'drawer';
 }

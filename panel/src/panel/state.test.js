@@ -7,8 +7,8 @@ import State from "./state.js";
 
 describe.concurrent("state", () => {
 	it("should set & get a key", async () => {
-		const state = State("$test");
-		expect(state.key()).toStrictEqual("$test");
+		const state = State("test");
+		expect(state.key()).toStrictEqual("test");
 	});
 
 	it("should set & get defaults", async () => {
@@ -16,7 +16,7 @@ describe.concurrent("state", () => {
 			message: null
 		};
 
-		const state = State("$test", defaults);
+		const state = State("test", defaults);
 
 		expect(state.defaults()).toStrictEqual(defaults);
 		expect(state.state()).toStrictEqual(defaults);
@@ -29,7 +29,7 @@ describe.concurrent("state", () => {
 			isOpen: false
 		};
 
-		const state = State("$test", defaults);
+		const state = State("test", defaults);
 
 		state.set({ message: "Hello" });
 
@@ -43,7 +43,7 @@ describe.concurrent("state", () => {
 			message: null
 		};
 
-		const state = State("$test", defaults);
+		const state = State("test", defaults);
 
 		state.set({ message: "Hello" });
 		state.reset();
@@ -52,13 +52,13 @@ describe.concurrent("state", () => {
 	});
 
 	it("should validate state", async () => {
-		const state = State("$test");
+		const state = State("test");
 
 		// invalid state
 		try {
 			state.validateState("foo");
 		} catch (error) {
-			expect(error.message).toStrictEqual("Invalid $test state");
+			expect(error.message).toStrictEqual("Invalid test state");
 		}
 
 		// valid state

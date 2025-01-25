@@ -36,217 +36,6 @@ class FiberTest extends TestCase
 	}
 
 	/**
-	 * @covers ::apply
-	 */
-	public function testApply()
-	{
-		$data = [
-			'a' => 'A',
-			'b' => 'B'
-		];
-
-		// default (no special request)
-		$fiber   = new Fiber();
-		$result = $fiber->apply($data);
-
-		$this->assertSame($data, $result);
-	}
-
-	/**
-	 * @covers ::apply
-	 * @covers ::applyGlobals
-	 */
-	public function testApplyGlobals(): void
-	{
-		// not included
-		$fiber = new Fiber();
-		$data  = $fiber->apply([]);
-		$this->assertArrayNotHasKey('$translation', $data);
-
-		// via query
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_globals' => '$translation'
-				]
-			]
-		]);
-
-		$fiber = new Fiber();
-		$data  = $fiber->apply([]);
-		$this->assertArrayHasKey('$translation', $data);
-
-		// via header
-		$this->app = $this->app->clone([
-			'request' => [
-				'headers' => [
-					'X-Fiber-Globals' => '$translation'
-				]
-			]
-		]);
-
-		$fiber = new Fiber();
-		$data  = $fiber->apply([]);
-		$this->assertArrayHasKey('$translation', $data);
-
-		// empty globals
-		$fiber = new Fiber();
-		$data  = $fiber->applyGlobals(['foo' => 'bar'], '');
-		$this->assertSame($data, $data);
-	}
-
-	/**
-	 * @covers ::apply
-	 * @covers ::applyOnly
-	 */
-	public function testApplyOnly(): void
-	{
-		// via get
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_only' => 'a',
-				]
-			]
-		]);
-
-		$data = [
-			'a' => 'A',
-			'b' => 'B'
-		];
-
-		$fiber  = new Fiber();
-		$result = $fiber->apply($data);
-
-		$this->assertSame(['a' => 'A'], $result);
-
-		// via headers
-		$this->app = $this->app->clone([
-			'request' => [
-				'headers' => [
-					'X-Fiber-Only' => 'a',
-				]
-			]
-		]);
-
-		$data = [
-			'a' => 'A',
-			'b' => 'B'
-		];
-
-		$fiber  = new Fiber();
-		$result = $fiber->apply($data);
-
-		$this->assertSame(['a' => 'A'], $result);
-
-		// empty only
-		$fiber = new Fiber();
-		$data  = $fiber->applyOnly(['foo' => 'bar'], '');
-		$this->assertSame($data, $data);
-	}
-
-	/**
-	 * @covers ::apply
-	 * @covers ::applyOnly
-	 */
-	public function testApplyOnlyWithGlobal(): void
-	{
-		// simulate a simple partial request
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_only' => 'a,$urls',
-				]
-			]
-		]);
-
-		$data = [
-			'a' => 'A',
-			'b' => 'B'
-		];
-
-		$fiber  = new Fiber();
-		$result = $fiber->apply($data);
-
-		$expected = [
-			'a' => 'A',
-			'$urls' => [
-				'api' => '/api',
-				'site' => '/'
-			]
-		];
-
-		$this->assertSame($expected, $result);
-	}
-
-	/**
-	 * @covers ::apply
-	 * @covers ::applyOnly
-	 */
-	public function testApplyOnlyWithNestedData(): void
-	{
-		// simulate a simple partial request
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_only' => 'b.c',
-				]
-			]
-		]);
-
-		$data = [
-			'a' => 'A',
-			'b' => [
-				'c' => 'C'
-			]
-		];
-
-		$fiber  = new Fiber();
-		$result = $fiber->apply($data);
-
-		$expected = [
-			'b' => [
-				'c' => 'C'
-			]
-		];
-
-		$this->assertSame($expected, $result);
-	}
-
-	/**
-	 * @covers ::apply
-	 * @covers ::applyOnly
-	 */
-	public function testApplyOnlyWithNestedGlobal(): void
-	{
-		// simulate a simple partial request
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_only' => 'a,$urls.site',
-				]
-			]
-		]);
-
-		$data = [
-			'a' => 'A',
-			'b' => 'B'
-		];
-
-		$fiber  = new Fiber();
-		$result = $fiber->apply($data);
-
-		$expected = [
-			'a' => 'A',
-			'$urls' => [
-				'site' => '/'
-			]
-		];
-
-		$this->assertSame($expected, $result);
-	}
-
-	/**
 	 * @covers ::data
 	 */
 	public function testData(): void
@@ -255,19 +44,20 @@ class FiberTest extends TestCase
 		$fiber = new Fiber();
 		$data  = $fiber->data();
 
-		$this->assertInstanceOf('Closure', $data['$menu']);
-		$this->assertInstanceOf('Closure', $data['$direction']);
-		$this->assertInstanceOf('Closure', $data['$language']);
-		$this->assertInstanceOf('Closure', $data['$languages']);
-		$this->assertSame([], $data['$permissions']);
-		$this->assertSame('missing', $data['$license']);
-		$this->assertFalse($data['$multilang']);
-		$this->assertSame('/', $data['$url']);
-		$this->assertInstanceOf('Closure', $data['$user']);
-		$this->assertInstanceOf('Closure', $data['$view']);
+		$this->assertInstanceOf('Closure', $data['menu']);
+		$this->assertInstanceOf('Closure', $data['direction']);
+		$this->assertInstanceOf('Closure', $data['language']);
+		$this->assertInstanceOf('Closure', $data['languages']);
+		$this->assertSame([], $data['permissions']);
+		$this->assertInstanceOf('Closure', $data['license']);
+		$this->assertSame('missing', $data['license']());
+		$this->assertFalse($data['multilang']);
+		$this->assertSame('/', $data['url']);
+		$this->assertInstanceOf('Closure', $data['user']);
+		$this->assertInstanceOf('Closure', $data['view']);
 
 		// default view settings
-		$view = A::apply($data)['$view'];
+		$view = A::apply($data)['view'];
 
 		$this->assertSame([], $view['breadcrumb']);
 		$this->assertSame(200, $view['code']);
@@ -299,7 +89,7 @@ class FiberTest extends TestCase
 		$fiber = new Fiber();
 		$data  = $fiber->data();
 
-		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $data['$url']);
+		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $data['url']);
 	}
 
 	/**
@@ -315,7 +105,7 @@ class FiberTest extends TestCase
 		$data = $fiber->data();
 		$data = A::apply($data);
 
-		$this->assertSame($props, $data['$view']['props']);
+		$this->assertSame($props, $data['view']['props']);
 	}
 
 	/**
@@ -340,7 +130,7 @@ class FiberTest extends TestCase
 		// resolve lazy data
 		$data = A::apply($data);
 
-		$this->assertTrue($data['$multilang']);
+		$this->assertTrue($data['multilang']);
 
 		$expected = [
 			[
@@ -363,9 +153,9 @@ class FiberTest extends TestCase
 			]
 		];
 
-		$this->assertSame($expected, $data['$languages']);
-		$this->assertSame($expected[0], $data['$language']);
-		$this->assertNull($data['$direction']);
+		$this->assertSame($expected, $data['languages']);
+		$this->assertSame($expected[0], $data['language']);
+		$this->assertNull($data['direction']);
 	}
 
 	/**
@@ -398,7 +188,7 @@ class FiberTest extends TestCase
 		$data = A::apply($data);
 
 
-		$this->assertSame('rtl', $data['$direction']);
+		$this->assertSame('rtl', $data['direction']);
 	}
 
 	/**
@@ -425,8 +215,203 @@ class FiberTest extends TestCase
 			'username' => 'kirby@getkirby.com'
 		];
 
-		$this->assertSame($expected, $data['$user']);
-		$this->assertSame($this->app->user()->role()->permissions()->toArray(), $data['$permissions']);
+		$this->assertSame($expected, $data['user']);
+		$this->assertSame($this->app->user()->role()->permissions()->toArray(), $data['permissions']);
+	}
+
+		/**
+	 * @covers ::filter
+	 */
+	public function testFilter()
+	{
+		$data = [
+			'a' => 'A',
+			'b' => 'B'
+		];
+
+		// default (no special request)
+		$result = (new Fiber())->filter($data);
+
+		$this->assertSame($data, $result);
+	}
+
+	/**
+	 * @covers ::filter
+	 */
+	public function testFilterOnlyRequest(): void
+	{
+		// empty only
+		$data   = ['foo' => 'bar'];
+		$result = (new Fiber())->filter($data);
+		$this->assertSame($data, $result);
+
+		// via get
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_only' => 'a',
+				]
+			]
+		]);
+
+		$data = [
+			'a' => 'A',
+			'b' => 'B'
+		];
+
+		$result = (new Fiber())->filter($data);
+		$this->assertSame(['a' => 'A'], $result);
+
+		// via headers
+		$this->app = $this->app->clone([
+			'request' => [
+				'headers' => [
+					'X-Fiber-Only' => 'a',
+				]
+			]
+		]);
+
+		$data = [
+			'a' => 'A',
+			'b' => 'B'
+		];
+
+		$result = (new Fiber())->filter($data);
+		$this->assertSame(['a' => 'A'], $result);
+	}
+
+	/**
+	 * @covers ::filter
+	 */
+	public function testFilterOnlyrequestWithGlobal(): void
+	{
+		// simulate a simple partial request
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_only' => 'a,urls',
+				]
+			]
+		]);
+
+		$data = [
+			'a' => 'A',
+			'b' => 'B'
+		];
+
+		$result = (new Fiber())->filter($data);
+
+		$expected = [
+			'a' => 'A',
+			'urls' => [
+				'api' => '/api',
+				'site' => '/'
+			]
+		];
+
+		$this->assertSame($expected, $result);
+	}
+
+	/**
+	 * @covers ::filter
+	 */
+	public function testFilterOnlyRequestWithNestedData(): void
+	{
+		// simulate a simple partial request
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_only' => 'b.c',
+				]
+			]
+		]);
+
+		$data = [
+			'a' => 'A',
+			'b' => [
+				'c' => 'C'
+			]
+		];
+
+		$result = (new Fiber())->filter($data);
+
+		$expected = [
+			'b' => [
+				'c' => 'C'
+			]
+		];
+
+		$this->assertSame($expected, $result);
+	}
+
+	/**
+	 * @covers ::filter
+	 */
+	public function testFilterOnlyRequestWithNestedGlobal(): void
+	{
+		// simulate a simple partial request
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_only' => 'a,urls.site',
+				]
+			]
+		]);
+
+		$data = [
+			'a' => 'A',
+			'b' => 'B'
+		];
+
+		$result = (new Fiber())->filter($data);
+
+		$expected = [
+			'a' => 'A',
+			'urls' => [
+				'site' => '/'
+			]
+		];
+
+		$this->assertSame($expected, $result);
+	}
+
+	/**
+	 * @covers ::filter
+	 */
+	public function testFilterGlobalsRequest(): void
+	{
+		// not included
+		$data = (new Fiber())->filter([]);
+		$this->assertArrayNotHasKey('translation', $data);
+
+		// empty globals
+		$data = ['foo' => 'bar'];
+		$result = (new Fiber())->filter($data);
+		$this->assertSame($data, $result);
+
+		// via query
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_globals' => 'translation'
+				]
+			]
+		]);
+
+		$data = (new Fiber())->filter([]);
+		$this->assertArrayHasKey('translation', $data);
+
+		// via header
+		$this->app = $this->app->clone([
+			'request' => [
+				'headers' => [
+					'X-Fiber-Globals' => 'translation'
+				]
+			]
+		]);
+
+		$data = (new Fiber())->filter([]);
+		$this->assertArrayHasKey('translation', $data);
 	}
 
 	/**
@@ -438,18 +423,18 @@ class FiberTest extends TestCase
 		$fiber   = new Fiber();
 		$globals = $fiber->globals();
 
-		$this->assertInstanceOf('Closure', $globals['$config']);
-		$this->assertInstanceOf('Closure', $globals['$system']);
-		$this->assertInstanceOf('Closure', $globals['$system']);
-		$this->assertInstanceOf('Closure', $globals['$translation']);
-		$this->assertInstanceOf('Closure', $globals['$urls']);
+		$this->assertInstanceOf('Closure', $globals['config']);
+		$this->assertInstanceOf('Closure', $globals['system']);
+		$this->assertInstanceOf('Closure', $globals['system']);
+		$this->assertInstanceOf('Closure', $globals['translation']);
+		$this->assertInstanceOf('Closure', $globals['urls']);
 
 		// defaults after apply
 		$globals     = A::apply($globals);
-		$config      = $globals['$config'];
-		$system      = $globals['$system'];
-		$translation = $globals['$translation'];
-		$urls        = $globals['$urls'];
+		$config      = $globals['config'];
+		$system      = $globals['system'];
+		$translation = $globals['translation'];
+		$urls        = $globals['urls'];
 
 		// $config
 		$this->assertFalse($config['debug']);
@@ -495,7 +480,7 @@ class FiberTest extends TestCase
 		$fiber   = new Fiber();
 		$globals = $fiber->globals();
 		$globals = A::apply($globals);
-		$this->assertSame('de', $globals['$translation']['code']);
+		$this->assertSame('de', $globals['translation']['code']);
 	}
 
 	/**

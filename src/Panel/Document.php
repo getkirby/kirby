@@ -88,7 +88,7 @@ class Document
 		return new Response(
 			body: $this->body($fiber),
 			type: 'text/html',
-			code: $fiber['$view']['code'] ?? 200,
+			code: $fiber['view']['code'] ?? 200,
 			headers: [
 				'Content-Security-Policy' => $this->cors()
 			]

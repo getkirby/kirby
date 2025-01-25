@@ -158,8 +158,8 @@ class ViewTest extends TestCase
 		$json      = json_decode($response->body(), true);
 
 		$this->assertSame(404, $response->code());
-		$this->assertSame('k-error-view', $json['$view']['component']);
-		$this->assertSame('Test', $json['$view']['props']['error']);
+		$this->assertSame('k-error-view', $json['view']['component']);
+		$this->assertSame('Test', $json['view']['props']['error']);
 	}
 
 	/**
@@ -181,8 +181,8 @@ class ViewTest extends TestCase
 		$json      = json_decode($response->body(), true);
 
 		$this->assertSame(500, $response->code());
-		$this->assertSame('k-error-view', $json['$view']['component']);
-		$this->assertSame('Test', $json['$view']['props']['error']);
+		$this->assertSame('k-error-view', $json['view']['component']);
+		$this->assertSame('Test', $json['view']['props']['error']);
 	}
 
 	/**
@@ -203,7 +203,7 @@ class ViewTest extends TestCase
 		$json     = json_decode($response->body(), true);
 
 		$this->assertSame(500, $response->code());
-		$this->assertSame('k-error-view', $json['$view']['component']);
-		$this->assertSame('Invalid Panel response', $json['$view']['props']['error']);
+		$this->assertSame('k-error-view', $json['view']['component']);
+		$this->assertSame('Invalid Panel response', $json['view']['props']['error']);
 	}
 }

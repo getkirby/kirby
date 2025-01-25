@@ -91,7 +91,7 @@ describe.concurrent("panel/feature.js", () => {
 	});
 
 	it("should set state with event listeners", async () => {
-		const feature = Feature(Panel(), "$test", defaults());
+		const feature = Feature(Panel(), "test", defaults());
 
 		const listeners = {
 			submit: () => {}
@@ -126,7 +126,7 @@ describe.concurrent("panel/feature.js", () => {
 	});
 
 	it.skip("should open with state", async () => {
-		const feature = Feature(Panel(), "$test", defaults());
+		const feature = Feature(Panel(), "test", defaults());
 
 		const state = {
 			component: "k-test-component",
@@ -143,7 +143,7 @@ describe.concurrent("panel/feature.js", () => {
 	});
 
 	it("should open with submitter", async () => {
-		const feature = Feature(Panel(), "$test", defaults());
+		const feature = Feature(Panel(), "test", defaults());
 		const submitter = () => {};
 
 		await feature.open("/some/path", submitter);
@@ -152,7 +152,7 @@ describe.concurrent("panel/feature.js", () => {
 	});
 
 	it("should return the full URL", async () => {
-		const feature = Feature(Panel(), "$test", defaults());
+		const feature = Feature(Panel(), "test", defaults());
 
 		// would only work with a full panel object
 		feature.set({

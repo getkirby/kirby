@@ -12,7 +12,7 @@ import { isObject } from "@/helpers/object";
  * @since 4.0.0
  *
  * @param {Object} panel The panel singleton
- * @param {String} key Sets the $key for the state used by backend responses
+ * @param {String} key Sets the key for the state used by backend responses
  * @param {Object} defaults Sets the default state
  */
 export default (key, defaults = {}) => {

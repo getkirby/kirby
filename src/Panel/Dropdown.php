@@ -19,7 +19,7 @@ use Kirby\Http\Response;
  */
 class Dropdown extends Json
 {
-	protected static string $key = '$dropdown';
+	protected static string $key = 'dropdown';
 
 	/**
 	 * Renders dropdowns
@@ -55,13 +55,12 @@ class Dropdown extends Json
 
 		// create the full pattern with dialogs prefix
 		$pattern = trim($prefix . '/' . ($options['pattern'] ?? $id), '/');
-		$type    = str_replace('$', '', static::$key);
 
 		return [
 			// load event
 			[
 				'pattern' => $pattern,
-				'type'    => $type,
+				'type'    => static::$key,
 				'area'    => $areaId,
 				'method'  => 'GET|POST',
 				'action'  => $options['options'] ?? $options['action']

@@ -24,7 +24,7 @@ class LanguagesTest extends AreaTestCase
 		$props = $view['props'];
 
 		$response = $this->response('languages', true);
-		$this->assertTrue($response['$multilang']);
+		$this->assertTrue($response['multilang']);
 
 		$this->assertSame('languages', $view['id']);
 		$this->assertSame('Languages', $view['title']);
@@ -39,7 +39,7 @@ class LanguagesTest extends AreaTestCase
 		$this->login();
 
 		$response = $this->response('languages', true);
-		$view     = $response['$view'];
+		$view     = $response['view'];
 		$props    = $view['props'];
 
 		$languages = [
@@ -59,7 +59,7 @@ class LanguagesTest extends AreaTestCase
 			]
 		];
 
-		$this->assertTrue($response['$multilang']);
+		$this->assertTrue($response['multilang']);
 		$this->assertSame($languages, $props['languages']);
 	}
 }

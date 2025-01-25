@@ -70,13 +70,13 @@ class View
 
 		// if requested, send $fiber data as JSON
 		if (Panel::isFiberRequest() === true) {
-			$fiber = $fiber->toArray(includeGlobals: false);
-			return Panel::json($fiber, $fiber['$view']['code'] ?? 200);
+			$fiber = $fiber->toArray(globals: false);
+			return Panel::json($fiber, $fiber['view']['code'] ?? 200);
 		}
 
 		// render the full HTML document
 		return (new Document())->render(
-			fiber: $fiber->toArray(includeGlobals: true)
+			fiber: $fiber->toArray(globals: true)
 		);
 	}
 }

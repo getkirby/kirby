@@ -22,7 +22,7 @@ use Throwable;
  */
 abstract class Json
 {
-	protected static string $key = '$response';
+	protected static string $key = 'response';
 
 	/**
 	 * Renders the error response with the provided message

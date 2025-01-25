@@ -18,7 +18,7 @@ use Kirby\Http\Response;
  */
 class Dialog extends Json
 {
-	protected static string $key = '$dialog';
+	protected static string $key = 'dialog';
 
 	/**
 	 * Renders dialogs
@@ -48,12 +48,11 @@ class Dialog extends Json
 
 		// create the full pattern with dialogs prefix
 		$pattern = trim($prefix . '/' . ($options['pattern'] ?? $id), '/');
-		$type    = str_replace('$', '', static::$key);
 
 		// load event
 		$routes[] = [
 			'pattern' => $pattern,
-			'type'    => $type,
+			'type'    => static::$key,
 			'area'    => $areaId,
 			'action'  => $options['load'] ?? fn () => 'The load handler is missing'
 		];
@@ -61,7 +60,7 @@ class Dialog extends Json
 		// submit event
 		$routes[] = [
 			'pattern' => $pattern,
-			'type'    => $type,
+			'type'    => static::$key,
 			'area'    => $areaId,
 			'method'  => 'POST',
 			'action'  => $options['submit'] ?? fn () => 'The submit handler is missing'
