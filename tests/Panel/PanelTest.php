@@ -151,6 +151,16 @@ class PanelTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isPanelUrl
+	 */
+	public function testIsPanelUrl()
+	{
+		$this->assertTrue(Panel::isPanelUrl('/panel'));
+		$this->assertTrue(Panel::isPanelUrl('/panel/pages/test'));
+		$this->assertFalse(Panel::isPanelUrl('test'));
+	}
+
+	/**
 	 * @covers ::json
 	 */
 	public function testJson(): void
@@ -202,6 +212,16 @@ class PanelTest extends TestCase
 	public function testMultilangDisabled()
 	{
 		$this->assertFalse($this->app->panel()->multilang());
+	}
+
+	/**
+	 * @covers ::path
+	 */
+	public function testPath()
+	{
+		$this->assertSame('site', Panel::path('/panel/site'));
+		$this->assertSame('pages/test', Panel::path('/panel/pages/test'));
+		$this->assertSame('', Panel::path('/test/page'));
 	}
 
 	/**
