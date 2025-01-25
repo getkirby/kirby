@@ -37,7 +37,8 @@ class RouterTest extends TestCase
 	public function testResponse()
 	{
 		$response = new Response('Test');
-		$router   = new Router();
+		$panel    = $this->app->panel();
+		$router   = new Router($panel);
 
 		// response objects should not be modified
 		$this->assertSame($response, $router->response($response));
@@ -58,7 +59,8 @@ class RouterTest extends TestCase
 		]);
 
 		// null is interpreted as 404
-		$router   = new Router();
+		$panel    = $this->app->panel();
+		$router   = new Router($panel);
 		$response = $router->response(null);
 		$json     = json_decode($response->body(), true);
 
@@ -90,7 +92,8 @@ class RouterTest extends TestCase
 		]);
 
 		// strings are interpreted as errors
-		$router   = new Router();
+		$panel    = $this->app->panel();
+		$router   = new Router($panel);
 		$response = $router->response('Test');
 		$json     = json_decode($response->body(), true);
 
@@ -104,8 +107,7 @@ class RouterTest extends TestCase
 	 */
 	public function testRoutes()
 	{
-		$router = new Router();
-		$routes = $router->routes();
+		$routes = Router::routes([]);
 
 		$this->assertSame('browser', $routes[0]['pattern']);
 		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);

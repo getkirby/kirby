@@ -25,27 +25,30 @@ class Router
 	protected App $kirby;
 
 	public function __construct(
-		public array $areas = []
+		protected Panel $panel
 	) {
 		$this->kirby = App::instance();
 	}
 
-	public function call(string|null $path = null): Response|null
+	public function execute(string|null $path = null): Response|null
 	{
 		// run garbage collection
 		$this->garbage();
+
+		// collect areas
+		$areas  = $this->panel->areas()->toArray();
 
 		// create a micro-router for the Panel
 		return BaseRouter::execute(
 			path: $path,
 			method: $method = $this->kirby->request()->method(),
-			routes: $this->routes(),
-			callback: function ($route) use ($method, $path) {
+			routes: static::routes($areas),
+			callback: function ($route) use ($areas, $method, $path) {
 				// route needs authentication?
 				$auth   = $route->attributes()['auth'] ?? true;
 				$areaId = $route->attributes()['area'] ?? null;
 				$type   = $route->attributes()['type'] ?? 'view';
-				$area   = $this->areas[$areaId] ?? null;
+				$area   = $areas[$areaId] ?? null;
 
 				// call the route action to check the result
 				try {
@@ -72,7 +75,7 @@ class Router
 
 				$response = $this->response($result, [
 					'area'  => $area,
-					'areas' => $this->areas,
+					'areas' => $areas,
 					'path'  => $path,
 					'type'  => $type
 				]);
@@ -139,7 +142,7 @@ class Router
 	 * Extract the routes from the given array
 	 * of active areas.
 	 */
-	public function routes(): array
+	public static function routes(array $areas): array
 	{
 		$kirby = App::instance();
 
@@ -156,15 +159,15 @@ class Router
 		];
 
 		// register all routes from areas
-		foreach ($this->areas as $areaId => $area) {
+		foreach ($areas as $id => $area) {
 			$routes = [
 				...$routes,
-				...static::routesForViews($areaId, $area),
-				...static::routesForSearches($areaId, $area),
-				...static::routesForDialogs($areaId, $area),
-				...static::routesForDrawers($areaId, $area),
-				...static::routesForDropdowns($areaId, $area),
-				...static::routesForRequests($areaId, $area),
+				...static::routesForViews($id, $area),
+				...static::routesForSearches($id, $area),
+				...static::routesForDialogs($id, $area),
+				...static::routesForDrawers($id, $area),
+				...static::routesForDropdowns($id, $area),
+				...static::routesForRequests($id, $area),
 			];
 		}
 
