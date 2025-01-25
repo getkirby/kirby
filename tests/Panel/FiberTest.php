@@ -44,17 +44,16 @@ class FiberTest extends TestCase
 		$fiber = new Fiber();
 		$data  = $fiber->data();
 
-		$this->assertInstanceOf('Closure', $data['menu']);
-		$this->assertInstanceOf('Closure', $data['direction']);
-		$this->assertInstanceOf('Closure', $data['language']);
-		$this->assertInstanceOf('Closure', $data['languages']);
-		$this->assertSame([], $data['permissions']);
-		$this->assertInstanceOf('Closure', $data['license']);
-		$this->assertSame('missing', $data['license']());
-		$this->assertFalse($data['multilang']);
-		$this->assertSame('/', $data['url']);
-		$this->assertInstanceOf('Closure', $data['user']);
-		$this->assertInstanceOf('Closure', $data['view']);
+		$this->assertArrayHasKey('direction', $data);
+		$this->assertArrayHasKey('language', $data);
+		$this->assertArrayHasKey('languages', $data);
+		$this->assertArrayHasKey('license', $data);
+		$this->assertArrayHasKey('menu', $data);
+		$this->assertArrayHasKey('multilang', $data);
+		$this->assertArrayHasKey('permissions', $data);
+		$this->assertArrayHasKey('url', $data);
+		$this->assertArrayHasKey('user', $data);
+		$this->assertArrayHasKey('view', $data);
 
 		// default view settings
 		$view = A::apply($data)['view'];
@@ -68,28 +67,6 @@ class FiberTest extends TestCase
 
 		$this->assertArrayNotHasKey('views', $view);
 		$this->assertArrayNotHasKey('dialogs', $view);
-	}
-
-	/**
-	 * @covers ::data
-	 */
-	public function testDataWithCustomRequestUrl(): void
-	{
-		$this->app = $this->app->clone([
-			'cli' => false,
-			'options' => [
-				'url' => 'https://localhost.com:8888'
-			],
-			'server' => [
-				'REQUEST_URI' => '/foo/bar/?foo=bar'
-			]
-		]);
-
-		// without custom data
-		$fiber = new Fiber();
-		$data  = $fiber->data();
-
-		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $data['url']);
 	}
 
 	/**
@@ -109,59 +86,9 @@ class FiberTest extends TestCase
 	}
 
 	/**
-	 * @covers ::data
+	 * @covers ::direction
 	 */
-	public function testDataWithLanguages(): void
-	{
-		$this->app = $this->app->clone([
-			'languages' => [
-				['code' => 'en', 'name' => 'English', 'default' => true],
-				['code' => 'de', 'name' => 'Deutsch']
-			],
-			'options' => [
-				'languages' => true
-			]
-		]);
-
-		// without custom data
-		$fiber = new Fiber();
-		$data  = $fiber->data();
-
-		// resolve lazy data
-		$data = A::apply($data);
-
-		$this->assertTrue($data['multilang']);
-
-		$expected = [
-			[
-				'code'      => 'en',
-				'default'   => true,
-				'direction' => 'ltr',
-				'locale'    => [LC_ALL => 'en'],
-				'name'      => 'English',
-				'rules'     => Language::loadRules('en'),
-				'url'       => '/en'
-			],
-			[
-				'code'      => 'de',
-				'default'   => false,
-				'direction' => 'ltr',
-				'locale'    => [LC_ALL => 'de'],
-				'name'      => 'Deutsch',
-				'rules'     => Language::loadRules('de'),
-				'url'       => '/de'
-			]
-		];
-
-		$this->assertSame($expected, $data['languages']);
-		$this->assertSame($expected[0], $data['language']);
-		$this->assertNull($data['direction']);
-	}
-
-	/**
-	 * @covers ::data
-	 */
-	public function testDataWithDirection(): void
+	public function testDirection(): void
 	{
 		$this->app = $this->app->clone([
 			'languages' => [
@@ -182,44 +109,10 @@ class FiberTest extends TestCase
 
 		// without custom data
 		$fiber = new Fiber();
-		$data  = $fiber->data();
-
-		// resolve lazy data
-		$data = A::apply($data);
-
-
-		$this->assertSame('rtl', $data['direction']);
+		$this->assertSame('rtl', $fiber->direction());
 	}
 
 	/**
-	 * @covers ::data
-	 */
-	public function testDataWithAuthenticatedUser(): void
-	{
-		// authenticate pseudo user
-		$this->app->impersonate('kirby');
-
-		// without custom data
-		$fiber = new Fiber();
-		$data  = $fiber->data();
-
-		// resolve lazy data
-		$data = A::apply($data);
-
-		// user
-		$expected = [
-			'email'    => 'kirby@getkirby.com',
-			'id'       => 'kirby',
-			'language' => 'en',
-			'role'     => 'admin',
-			'username' => 'kirby@getkirby.com'
-		];
-
-		$this->assertSame($expected, $data['user']);
-		$this->assertSame($this->app->user()->role()->permissions()->toArray(), $data['permissions']);
-	}
-
-		/**
 	 * @covers ::filter
 	 */
 	public function testFilter()
@@ -484,6 +377,60 @@ class FiberTest extends TestCase
 	}
 
 	/**
+	 * @covers ::direction
+	 * @covers ::language
+	 * @covers ::languages
+	 * @covers ::multilang
+	 */
+	public function testLanguages(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch']
+			],
+			'options' => [
+				'languages' => true
+			]
+		]);
+
+		$fiber = new Fiber();
+
+		// multilang
+		$multilang = $fiber->multilang();
+		$this->assertTrue($multilang);
+
+		// languages
+		$languages = $fiber->languages();
+		$language  = $fiber->language();
+		$direction = $fiber->direction();
+		$expected = [
+			[
+				'code'      => 'en',
+				'default'   => true,
+				'direction' => 'ltr',
+				'locale'    => [LC_ALL => 'en'],
+				'name'      => 'English',
+				'rules'     => Language::loadRules('en'),
+				'url'       => '/en'
+			],
+			[
+				'code'      => 'de',
+				'default'   => false,
+				'direction' => 'ltr',
+				'locale'    => [LC_ALL => 'de'],
+				'name'      => 'Deutsch',
+				'rules'     => Language::loadRules('de'),
+				'url'       => '/de'
+			]
+		];
+
+		$this->assertSame($expected, $languages);
+		$this->assertSame($expected[0], $language);
+		$this->assertNull($direction);
+	}
+
+	/**
 	 * @covers ::searches
 	 */
 	public function testSearches()
@@ -531,5 +478,63 @@ class FiberTest extends TestCase
 		$this->assertArrayHasKey('foo', $searches);
 		$this->assertArrayNotHasKey('bar', $searches);
 		$this->assertArrayHasKey('test', $searches);
+	}
+
+	/**
+	 * @covers ::url
+	 */
+	public function testUrl(): void
+	{
+		// custom request url
+		$this->app = $this->app->clone([
+			'cli' => false,
+			'options' => [
+				'url' => 'https://localhost.com:8888'
+			],
+			'server' => [
+				'REQUEST_URI' => '/foo/bar/?foo=bar'
+			]
+		]);
+
+		// without custom data
+		$fiber = new Fiber();
+		$url   = $fiber->url();
+		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $url);
+	}
+
+	/**
+	 * @covers ::permissions
+	 * @covers ::user
+	 */
+	public function testUserAuthenticated(): void
+	{
+		// authenticate pseudo user
+		$this->app->impersonate('kirby');
+
+		$fiber = new Fiber();
+
+		// user
+		$user = $fiber->user();
+		$user = A::apply($user);
+
+		$expected = [
+			'email'    => 'kirby@getkirby.com',
+			'id'       => 'kirby',
+			'language' => 'en',
+			'role'     => 'admin',
+			'username' => 'kirby@getkirby.com'
+		];
+
+		$this->assertSame($expected, $user);
+
+
+		// permissions;
+		$permissions = $fiber->permissions();
+		$permissions = A::apply($permissions);
+
+		$this->assertSame(
+			$this->app->user()->role()->permissions()->toArray(),
+			$permissions
+		);
 	}
 }
