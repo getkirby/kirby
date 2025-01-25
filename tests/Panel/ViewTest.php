@@ -54,7 +54,8 @@ class ViewTest extends TestCase
 		];
 
 		// default (no special request)
-		$result = View::apply($data);
+		$view   = new View();
+		$result = $view->apply($data);
 
 		$this->assertSame($data, $result);
 	}
@@ -66,7 +67,8 @@ class ViewTest extends TestCase
 	public function testApplyGlobals(): void
 	{
 		// not included
-		$data = View::apply([]);
+		$view = new View();
+		$data = $view->apply([]);
 		$this->assertArrayNotHasKey('$translation', $data);
 
 		// via query
@@ -78,7 +80,8 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$data = View::apply([]);
+		$view = new View();
+		$data = $view->apply([]);
 		$this->assertArrayHasKey('$translation', $data);
 
 		// via header
@@ -90,12 +93,14 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$data = View::apply([]);
+		$view = new View();
+		$data = $view->apply([]);
 		$this->assertArrayHasKey('$translation', $data);
 
 		// empty globals
-		$data = ['foo' => 'bar'];
-		$this->assertSame($data, View::applyGlobals($data, ''));
+		$view = new View();
+		$data = $view->applyGlobals(['foo' => 'bar'], '');
+		$this->assertSame($data, $data);
 	}
 
 	/**
@@ -118,7 +123,8 @@ class ViewTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = View::apply($data);
+		$view   = new View();
+		$result = $view->apply($data);
 
 		$this->assertSame(['a' => 'A'], $result);
 
@@ -136,13 +142,15 @@ class ViewTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = View::apply($data);
+		$view   = new View();
+		$result = $view->apply($data);
 
 		$this->assertSame(['a' => 'A'], $result);
 
 		// empty only
-		$data = ['foo' => 'bar'];
-		$this->assertSame($data, View::applyOnly($data, ''));
+		$view = new View();
+		$data = $view->applyOnly(['foo' => 'bar'], '');
+		$this->assertSame($data, $data);
 	}
 
 	/**
@@ -165,7 +173,8 @@ class ViewTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = View::apply($data);
+		$view   = new View();
+		$result = $view->apply($data);
 
 		$expected = [
 			'a' => 'A',
@@ -200,7 +209,8 @@ class ViewTest extends TestCase
 			]
 		];
 
-		$result = View::apply($data);
+		$view   = new View();
+		$result = $view->apply($data);
 
 		$expected = [
 			'b' => [
@@ -231,7 +241,8 @@ class ViewTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = View::apply($data);
+		$view   = new View();
+		$result = $view->apply($data);
 
 		$expected = [
 			'a' => 'A',
@@ -249,7 +260,8 @@ class ViewTest extends TestCase
 	public function testData(): void
 	{
 		// without custom data
-		$data = View::data();
+		$view = new View();
+		$data = $view->data();
 
 		$this->assertInstanceOf('Closure', $data['$menu']);
 		$this->assertInstanceOf('Closure', $data['$direction']);
@@ -292,7 +304,8 @@ class ViewTest extends TestCase
 		]);
 
 		// without custom data
-		$data = View::data();
+		$view = new View();
+		$data = $view->data();
 
 		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $data['$url']);
 	}
@@ -302,7 +315,8 @@ class ViewTest extends TestCase
 	 */
 	public function testDataWithCustomProps(): void
 	{
-		$data = View::data([
+		$view = new View();
+		$data = $view->data([
 			'props' => $props = [
 				'foo' => 'bar'
 			]
@@ -329,7 +343,8 @@ class ViewTest extends TestCase
 		]);
 
 		// without custom data
-		$data = View::data();
+		$view = new View();
+		$data = $view->data();
 
 		// resolve lazy data
 		$data = A::apply($data);
@@ -385,7 +400,8 @@ class ViewTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		// without custom data
-		$data = View::data();
+		$view = new View();
+		$data = $view->data();
 
 		// resolve lazy data
 		$data = A::apply($data);
@@ -403,7 +419,8 @@ class ViewTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		// without custom data
-		$data = View::data();
+		$view = new View();
+		$data = $view->data();
 
 		// resolve lazy data
 		$data = A::apply($data);
@@ -540,7 +557,8 @@ class ViewTest extends TestCase
 		(new Assets())->link();
 
 		// get panel response
-		$response = View::response([
+		$view     = new View();
+		$response = $view->response([
 			'test' => 'Test'
 		]);
 
@@ -565,7 +583,8 @@ class ViewTest extends TestCase
 		]);
 
 		// get panel response
-		$response = View::response([
+		$view     = new View();
+		$response = $view->response([
 			'test' => 'Test'
 		]);
 
@@ -587,8 +606,9 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$redirect = new \Kirby\Panel\Redirect('https://getkirby.com');
-		$response = View::response($redirect);
+		$view     = new View();
+		$redirect = new Redirect('https://getkirby.com');
+		$response = $view->response($redirect);
 
 		$this->assertInstanceOf(Response::class, $response);
 
@@ -610,8 +630,9 @@ class ViewTest extends TestCase
 			]
 		]);
 
+		$view      = new View();
 		$exception = new NotFoundException(message: 'Test');
-		$response  = View::response($exception);
+		$response  = $view->response($exception);
 		$json      = json_decode($response->body(), true);
 
 		$this->assertSame(404, $response->code());
@@ -633,8 +654,9 @@ class ViewTest extends TestCase
 			]
 		]);
 
+		$view      = new View();
 		$exception = new \Exception('Test');
-		$response  = View::response($exception);
+		$response  = $view->response($exception);
 		$json      = json_decode($response->body(), true);
 
 		$this->assertSame(500, $response->code());
@@ -656,7 +678,8 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$response = View::response(1234);
+		$view     = new View();
+		$response = $view->response(1234);
 		$json     = json_decode($response->body(), true);
 
 		$this->assertSame(500, $response->code());
