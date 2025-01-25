@@ -23,6 +23,9 @@ class DocumentTest extends TestCase
 		]);
 
 		Dir::make(static::TMP);
+
+		// create Panel dist files first to avoid redirect
+		(new Assets())->link();
 	}
 
 	public function tearDown(): void
@@ -39,17 +42,92 @@ class DocumentTest extends TestCase
 		unset($_SERVER['SERVER_SOFTWARE']);
 	}
 
+	/**
+	 * @covers ::assets
+	 */
+	public function testAssets(): void
+	{
+		$document = new Document();
+		$this->assertInstanceOf(Assets::class, $document->assets());
+	}
 
 	/**
-	 * @covers ::response
+	 * @covers ::body
 	 */
-	public function testResponse(): void
+	public function testBody(): void
 	{
-		// create panel dist files first to avoid redirect
-		(new Assets())->link();
+		$document = new Document();
+		$body     = $document->body(['foo' => 'bar']);
+		$this->assertStringContainsString('window.fiber = {"foo":"bar"}', $body);
+	}
+
+	/**
+	 * @covers ::cors
+	 */
+	public function testCorsSelf(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'frameAncestors' => true
+				]
+			]
+		]);
+
+		$document = new Document();
+		$this->assertSame("frame-ancestors 'self'", $document->cors());
+	}
+
+	/**
+	 * @covers ::cors
+	 */
+	public function testCorsArray(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'frameAncestors' => ['*.example.com', 'https://example.com']
+				]
+			]
+		]);
+
+		$document = new Document();
+		$this->assertSame(
+			"frame-ancestors 'self' *.example.com https://example.com",
+			$document->cors()
+		);
+	}
+
+	/**
+	 * @covers ::cors
+	 */
+	public function testCorsString(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'frameAncestors' => '*.example.com https://example.com'
+				]
+			]
+		]);
+
+		$document = new Document();
+
+		$this->assertSame(
+			'frame-ancestors *.example.com https://example.com',
+			$document->cors()
+		);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRender(): void
+	{
+		$document = new Document();
 
 		// get panel response
-		$response = Document::response([
+		$response = $document->render([
 			'test' => 'Test'
 		]);
 
@@ -62,99 +140,11 @@ class DocumentTest extends TestCase
 	}
 
 	/**
-	 * @covers ::response
+	 * @covers ::url
 	 */
-	public function testResponseFrameAncestorsSelf(): void
+	public function testUrl(): void
 	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'panel' => [
-					'frameAncestors' => true
-				]
-			]
-		]);
-
-		$assets = new Assets();
-
-		// create panel dist files first to avoid redirect
-		$assets->link();
-
-		// get panel response
-		$response = Document::response([
-			'test' => 'Test'
-		]);
-
-		$this->assertInstanceOf(Response::class, $response);
-		$this->assertSame(200, $response->code());
-		$this->assertSame('text/html', $response->type());
-		$this->assertSame('UTF-8', $response->charset());
-		$this->assertSame("frame-ancestors 'self'", $response->header('Content-Security-Policy'));
-		$this->assertNotNull($response->body());
-	}
-
-	/**
-	 * @covers ::response
-	 */
-	public function testResponseFrameAncestorsArray(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'panel' => [
-					'frameAncestors' => ['*.example.com', 'https://example.com']
-				]
-			]
-		]);
-
-		// create panel dist files first to avoid redirect
-		$assets = new Assets();
-		$assets->link();
-
-		// get panel response
-		$response = Document::response([
-			'test' => 'Test'
-		]);
-
-		$this->assertInstanceOf(Response::class, $response);
-		$this->assertSame(200, $response->code());
-		$this->assertSame('text/html', $response->type());
-		$this->assertSame('UTF-8', $response->charset());
-		$this->assertSame(
-			"frame-ancestors 'self' *.example.com https://example.com",
-			$response->header('Content-Security-Policy')
-		);
-		$this->assertNotNull($response->body());
-	}
-
-	/**
-	 * @covers ::response
-	 */
-	public function testResponseFrameAncestorsString(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'panel' => [
-					'frameAncestors' => '*.example.com https://example.com'
-				]
-			]
-		]);
-
-		// create panel dist files first to avoid redirect
-		$assets = new Assets();
-		$assets->link();
-
-		// get panel response
-		$response = Document::response([
-			'test' => 'Test'
-		]);
-
-		$this->assertInstanceOf(Response::class, $response);
-		$this->assertSame(200, $response->code());
-		$this->assertSame('text/html', $response->type());
-		$this->assertSame('UTF-8', $response->charset());
-		$this->assertSame(
-			'frame-ancestors *.example.com https://example.com',
-			$response->header('Content-Security-Policy')
-		);
-		$this->assertNotNull($response->body());
+		$document = new Document();
+		$this->assertSame('/panel/', $document->url());
 	}
 }

@@ -22,51 +22,84 @@ use Throwable;
  */
 class Document
 {
+	protected Assets $assets;
+	protected App $kirby;
+
+	public function __construct()
+	{
+		$this->kirby = App::instance();
+	}
+
+	public function assets(): Assets
+	{
+		return $this->assets ??= new Assets();
+	}
+
+	/**
+	 * Load the main Panel view template
+	 */
+	public function body(array $fiber): string
+	{
+		$template = $this->kirby->root('kirby') . '/views/panel.php';
+
+		return Tpl::load($template, [
+			'assets'   => $this->assets()->external(),
+			'icons'    => $this->assets()->icons(),
+			'nonce'    => $this->kirby->nonce(),
+			'fiber'    => $fiber,
+			'panelUrl' => $this->url(),
+		]);
+	}
+
+	/**
+	 * Returns Content-Security-Policy header
+	 */
+	public function cors(): string
+	{
+		$ancestors = $this->kirby->option('panel.frameAncestors');
+
+		return 'frame-ancestors ' . match (true) {
+			$ancestors === true   => "'self'",
+			is_array($ancestors)  => "'self' " . implode(' ', $ancestors),
+			is_string($ancestors) => $ancestors,
+			default               => "'none'"
+		};
+	}
+
 	/**
 	 * Renders the panel document
 	 */
-	public static function response(array $fiber): Response
+	public function render(array $fiber): Response
 	{
-		$kirby  = App::instance();
-		$assets = new Assets();
-
 		// Full HTML response
 		// @codeCoverageIgnoreStart
 		try {
-			if ($assets->link() === true) {
+			if ($this->assets()->link() === true) {
 				usleep(1);
-				Response::go($kirby->url('base') . '/' . $kirby->path());
+				Response::go(
+					$this->kirby->url('base') . '/' . $this->kirby->path()
+				);
 			}
 		} catch (Throwable $e) {
 			die('The Panel assets cannot be installed properly. ' . $e->getMessage());
 		}
 		// @codeCoverageIgnoreEnd
 
-		// get the uri object for the panel url
-		$uri = new Uri($kirby->url('panel'));
+		return new Response(
+			body: $this->body($fiber),
+			type: 'text/html',
+			code: $fiber['$view']['code'] ?? 200,
+			headers: [
+				'Content-Security-Policy' => $this->cors()
+			]
+		);
+	}
 
-		// proper response code
-		$code = $fiber['$view']['code'] ?? 200;
+	public function url(): string
+	{
+		// get the uri object for the Panel url
+		$uri = new Uri($this->kirby->url('panel'));
 
-		// load the main Panel view template
-		$body = Tpl::load($kirby->root('kirby') . '/views/panel.php', [
-			'assets'   => $assets->external(),
-			'icons'    => $assets->icons(),
-			'nonce'    => $kirby->nonce(),
-			'fiber'    => $fiber,
-			'panelUrl' => $uri->path()->toString(true) . '/',
-		]);
-
-		$frameAncestors = $kirby->option('panel.frameAncestors');
-		$frameAncestors = match (true) {
-			$frameAncestors === true   => "'self'",
-			is_array($frameAncestors)  => "'self' " . implode(' ', $frameAncestors),
-			is_string($frameAncestors) => $frameAncestors,
-			default                    => "'none'"
-		};
-
-		return new Response($body, 'text/html', $code, [
-			'Content-Security-Policy' => 'frame-ancestors ' . $frameAncestors
-		]);
+		return $uri->path()->toString(true) . '/';
 	}
 }
