@@ -18,7 +18,7 @@ use Kirby\Http\Response;
  */
 class Search extends Json
 {
-	protected static string $key = '$search';
+	protected static string $key = 'search';
 
 	public static function response($data, array $options = []): Response
 	{

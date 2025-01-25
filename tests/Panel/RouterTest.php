@@ -65,16 +65,16 @@ class RouterTest extends TestCase
 		$json     = json_decode($response->body(), true);
 
 		$this->assertSame(404, $response->code());
-		$this->assertSame('k-error-view', $json['$view']['component']);
-		$this->assertSame('The data could not be found', $json['$view']['props']['error']);
+		$this->assertSame('k-error-view', $json['view']['component']);
+		$this->assertSame('The data could not be found', $json['view']['props']['error']);
 
 		// false is interpreted as 404
 		$response = $router->response(false);
 		$json     = json_decode($response->body(), true);
 
 		$this->assertSame(404, $response->code());
-		$this->assertSame('k-error-view', $json['$view']['component']);
-		$this->assertSame('The data could not be found', $json['$view']['props']['error']);
+		$this->assertSame('k-error-view', $json['view']['component']);
+		$this->assertSame('The data could not be found', $json['view']['props']['error']);
 	}
 
 	/**
@@ -98,8 +98,8 @@ class RouterTest extends TestCase
 		$json     = json_decode($response->body(), true);
 
 		$this->assertSame(500, $response->code());
-		$this->assertSame('k-error-view', $json['$view']['component']);
-		$this->assertSame('Test', $json['$view']['props']['error']);
+		$this->assertSame('k-error-view', $json['view']['component']);
+		$this->assertSame('Test', $json['view']['props']['error']);
 	}
 
 	/**

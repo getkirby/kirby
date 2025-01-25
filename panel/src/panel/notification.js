@@ -78,7 +78,7 @@ export default (panel = {}) => {
 				// get the broken element in the response json that
 				// has an error message. This can be deprecated later
 				// when the server always sends back a simple error
-				// response without nesting it in $dropdown, $dialog, etc.
+				// response without nesting it in dropdown, dialog, etc.
 				const broken = Object.values(error.response.json).find(
 					(element) => typeof element?.error === "string"
 				);

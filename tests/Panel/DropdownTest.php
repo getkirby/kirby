@@ -68,7 +68,7 @@ class DropdownTest extends TestCase
 		]);
 
 		$expected = [
-			'$dropdown' => [
+			'dropdown' => [
 				'options'  => ['Test'],
 				'code'     => 200,
 				'path'     => null,
@@ -89,7 +89,7 @@ class DropdownTest extends TestCase
 	{
 		$response = Dropdown::response(1234);
 		$expected = [
-			'$dropdown' => [
+			'dropdown' => [
 				'code'     => 500,
 				'error'    => 'Invalid response',
 				'path'     => null,
@@ -109,7 +109,7 @@ class DropdownTest extends TestCase
 		$exception = new Exception('Test');
 		$response  = Dropdown::response($exception);
 		$expected  = [
-			'$dropdown' => [
+			'dropdown' => [
 				'code'     => 500,
 				'error'    => 'Test',
 				'path'     => null,
@@ -129,7 +129,7 @@ class DropdownTest extends TestCase
 		$exception = new NotFoundException(message: 'Test');
 		$response  = Dropdown::response($exception);
 		$expected  = [
-			'$dropdown' => [
+			'dropdown' => [
 				'code'     => 404,
 				'error'    => 'Test',
 				'path'     => null,

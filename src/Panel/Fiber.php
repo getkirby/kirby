@@ -41,106 +41,6 @@ class Fiber
 		$this->permissions = $this->user?->role()->permissions()->toArray() ?? [];
 	}
 
-	/**
-	 * Filters the data array based on headers or
-	 * query parameters. Requests can return only
-	 * certain data fields that way or globals can
-	 * be injected on demand.
-	 */
-	public function apply(array $data): array
-	{
-		$request = $this->kirby->request();
-		$only    = $request->header('X-Fiber-Only') ?? $request->get('_only');
-
-		if (empty($only) === false) {
-			return $this->applyOnly($data, $only);
-		}
-
-		$globals =
-			$request->header('X-Fiber-Globals') ??
-			$request->get('_globals');
-
-		if (empty($globals) === false) {
-			return $this->applyGlobals($data, $globals);
-		}
-
-		return A::apply($data);
-	}
-
-	/**
-	 * Checks if globals should be included in a JSON Fiber request.
-	 * They are normally only loaded with the full document request,
-	 * but sometimes need to be updated.
-	 *
-	 * A global request can be activated with the `X-Fiber-Globals` header
-	 * or the `_globals` query parameter.
-	 */
-	public function applyGlobals(
-		array $data,
-		string|null $globals = null
-	): array {
-		// split globals string into an array of fields
-		$keys = Str::split($globals, ',');
-
-		// add requested globals
-		if ($keys === []) {
-			return $data;
-		}
-
-		$globals = static::globals();
-
-		foreach ($keys as $key) {
-			if (isset($globals[$key]) === true) {
-				$data[$key] = $globals[$key];
-			}
-		}
-
-		// merge with shared data
-		return A::apply($data);
-	}
-
-	/**
-	 * Checks if the request should only return a limited
-	 * set of data. This can be activated with the `X-Fiber-Only`
-	 * header or the `_only` query parameter in a request.
-	 *
-	 * Such requests can fetch shared data or globals.
-	 * Globals will be loaded on demand.
-	 */
-	public function applyOnly(
-		array $data,
-		string|null $only = null
-	): array {
-		// split include string into an array of fields
-		$keys = Str::split($only, ',');
-
-		// if a full request is made, return all data
-		if ($keys === []) {
-			return $data;
-		}
-
-		// otherwise filter data based on
-		// dot notation, e.g. `$props.tab.columns`
-		$result = [];
-
-		// check if globals are requested and need to be merged
-		if (Str::contains($only, '$')) {
-			$data = array_merge_recursive(static::globals(), $data);
-		}
-
-		// make sure the data is already resolved to make
-		// nested data fetching work
-		$data = A::apply($data);
-
-		// build a new array with all requested data
-		foreach ($keys as $key) {
-			$result[$key] = A::get($data, $key);
-		}
-
-		// Nest dotted keys in array but ignore $translation
-		return A::nest($result, ['$translation']);
-	}
-
 	public function config(): array
 	{
 		return [
@@ -164,19 +64,19 @@ class Fiber
 	{
 		// shared data for all requests
 		return [
-			'$direction'   => $this->direction(...),
-			'$dialog'      => null,
-			'$drawer'      => null,
-			'$language'    => $this->language(...),
-			'$languages'   => $this->languages(...),
-			'$menu'        => $this->menu(...),
-			'$permissions' => $this->permissions,
-			'$license'     => $this->kirby->system()->license()->status()->value(),
-			'$multilang'   => $this->multilang,
-			'$searches'    => $this->searches(...),
-			'$url'         => $this->kirby->request()->url()->toString(),
-			'$user'        => $this->user(...),
-			'$view'        => $this->view(...)
+			'direction'   => $this->direction(...),
+			'dialog'      => null,
+			'drawer'      => null,
+			'language'    => $this->language(...),
+			'languages'   => $this->languages(...),
+			'menu'        => $this->menu(...),
+			'permissions' => $this->permissions,
+			'license'     => $this->license(...),
+			'multilang'   => $this->multilang,
+			'searches'    => $this->searches(...),
+			'url'         => $this->kirby->request()->url()->toString(),
+			'user'        => $this->user(...),
+			'view'        => $this->view(...)
 		];
 	}
 
@@ -197,6 +97,85 @@ class Fiber
 	}
 
 	/**
+	 * Filters the data array based on headers or  query parameters.
+	 *
+	 * This way, JSON requests can tailor the returned data to
+	 * only include certain data fields.
+	 *
+	 * This can be activated with the `X-Fiber-Only` header or
+	 * the `_only` query parameter in a request.
+	 *
+	 * Globals are normally only loaded with the full document request.
+	 * In addition, they can be requested via the `X-Fiber-Globals` header
+	 * or the `_globals` query parameter.
+	 */
+	public function filter(array $data): array
+	{
+		$result = [];
+
+		// requested data ids
+		$request  = $this->kirby->request();
+		$filter   = $request->header('X-Fiber-Only');
+		$filter ??= $request->get('_only');
+
+		if (empty($filter) === false) {
+			// split include string into an array of fields
+			$keys = Str::split($filter, ',');
+
+			// if a full request is made, return all data
+			if ($keys === []) {
+				return $data;
+			}
+
+			// take care of potentially requested globals
+			$globals     = $this->globals();
+			$keysEntries = A::map($keys, fn ($key) => Str::split($key, '.')[0]);
+
+			// check if the keys from `_only` include any global id as entry
+			if (array_intersect($keysEntries, array_keys($globals)) !== []) {
+				$data = array_merge_recursive($globals, $data);
+			}
+
+			// make sure the data is already resolved to make
+			// nested data fetching work
+			$data = A::apply($data);
+
+			// build a new array with all requested data
+			foreach ($keys as $key) {
+				$result[$key] = A::get($data, $key);
+			}
+
+			// Nest dotted keys in array but ignore $translation
+			return A::nest($result, ['translation']);
+		}
+
+		$filterGlobals   = $request->header('X-Fiber-Globals');
+		$filterGlobals ??= $request->get('_globals');
+
+		if (empty($filterGlobals) === false) {
+			// split globals string into an array of fields
+			$keys = Str::split($filterGlobals, ',');
+
+			// add requested globals
+			if ($keys === []) {
+				return $data;
+			}
+
+			$globals = $this->globals();
+
+			foreach ($keys as $key) {
+				if (isset($globals[$key]) === true) {
+					$data[$key] = $globals[$key];
+				}
+			}
+
+			return A::apply($data);
+		}
+
+		return A::apply($data);
+	}
+
+	/**
 	 * Creates global data for the Panel.
 	 * This will be injected in the full Panel
 	 * view via the script tag. Global data
@@ -207,10 +186,10 @@ class Fiber
 	public function globals(): array
 	{
 		return [
-			'$config'      => $this->config(...),
-			'$system'      => $this->system(...),
-			'$translation' => $this->translation(...),
-			'$urls'        => $this->urls(...)
+			'config'      => $this->config(...),
+			'system'      => $this->system(...),
+			'translation' => $this->translation(...),
+			'urls'        => $this->urls(...)
 		];
 	}
 
@@ -231,6 +210,11 @@ class Fiber
 		return $this->kirby->languages()->values(
 			fn ($language) => $language->toArray()
 		);
+	}
+
+	public function license(): string
+	{
+		return $this->kirby->system()->license()->status()->value();
 	}
 
 	public function menu(): array
@@ -281,23 +265,26 @@ class Fiber
 		];
 	}
 
-	public function toArray(bool $includeGlobals = true): array
+	public function toArray(bool $globals = true): array
 	{
 		// get all data for the request
 		$data = $this->data();
 
 		// if requested, send only non-global data
-		if ($includeGlobals === false) {
+		if ($globals === false) {
 			// filter data, if only globals headers or
-			// query parameters are set
-			return $this->apply($data);
+			// query parameters are requested
+			return $this->filter($data);
 		}
 
 		// load globals for the full document response
 		$globals = $this->globals();
 
 		// resolve and merge globals and shared data
-		return array_merge_recursive(A::apply($globals), A::apply($data));
+		return array_merge_recursive(
+			A::apply($globals),
+			A::apply($data)
+		);
 	}
 
 	public function translation(): array
