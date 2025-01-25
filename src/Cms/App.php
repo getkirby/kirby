@@ -21,6 +21,7 @@ use Kirby\Http\Route;
 use Kirby\Http\Router;
 use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
+use Kirby\Panel\Panel;
 use Kirby\Session\AutoSession;
 use Kirby\Session\Session;
 use Kirby\Template\Snippet;
@@ -74,6 +75,7 @@ class App
 	protected bool|null $multilang = null;
 	protected string|null $nonce = null;
 	protected array $options;
+	protected Panel $panel;
 	protected string|null $path = null;
 	protected Request|null $request = null;
 	protected Responder|null $response = null;
@@ -1185,6 +1187,15 @@ class App
 		}
 
 		return null;
+	}
+
+	/**
+	 * Returns the main Panel object
+	 * @since 5.0.0
+	 */
+	public function panel(): Panel
+	{
+		return $this->panel ??= new Panel($this);
 	}
 
 	/**

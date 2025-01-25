@@ -29,6 +29,11 @@ use Kirby\Toolkit\Str;
  */
 class Panel
 {
+	public function __construct(
+		protected App $kirby
+	) {
+	}
+
 	/**
 	 * Normalize a panel area
 	 */
@@ -206,10 +211,9 @@ class Panel
 	/**
 	 * Returns the referrer path if present
 	 */
-	public static function referrer(): string
+	public function referrer(): string
 	{
-		$request = App::instance()->request();
-
+		$request  = $this->kirby->request();
 		$referrer = $request->header('X-Fiber-Referrer')
 				 ?? $request->get('_referrer')
 				 ?? '';

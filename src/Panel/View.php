@@ -202,8 +202,8 @@ class View
 					'code'       => 200,
 					'path'       => Str::after($kirby->path(), '/'),
 					'props'      => [],
-					'query'      => App::instance()->request()->query()->toArray(),
-					'referrer'   => Panel::referrer(),
+					'query'      => $kirby->request()->query()->toArray(),
+					'referrer'   => $kirby->panel()->referrer(),
 					'search'     => $kirby->option('panel.search.type', 'pages'),
 					'timestamp'  => (int)(microtime(true) * 1000),
 				];
