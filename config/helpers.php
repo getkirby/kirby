@@ -7,6 +7,8 @@ use Kirby\Cms\Html;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
+use Kirby\Cms\Plugin;
+use Kirby\Cms\PluginAssets;
 use Kirby\Cms\Response;
 use Kirby\Cms\Site;
 use Kirby\Cms\Url;
@@ -89,7 +91,7 @@ if (Helpers::hasOverride('css') === false) { // @codeCoverageIgnore
 	 * @param string|array|null $options Pass an array of attributes for the link tag or a media attribute string
 	 */
 	function css(
-		string|array $url,
+		string|array|Plugin|PluginAssets $url,
 		string|array|null $options = null
 	): string|null {
 		return Html::css($url, $options);
@@ -260,7 +262,7 @@ if (Helpers::hasOverride('js') === false) { // @codeCoverageIgnore
 	 * Creates a script tag to load a javascript file
 	 */
 	function js(
-		string|array $url,
+		string|array|Plugin|PluginAssets $url,
 		string|array|bool|null $options = null
 	): string|null {
 		return Html::js($url, $options);
