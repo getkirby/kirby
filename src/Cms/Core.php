@@ -251,6 +251,7 @@ class Core
 			'color'       => $this->root . '/fields/color.php',
 			'date'        => $this->root . '/fields/date.php',
 			'email'       => $this->root . '/fields/email.php',
+			'entries'     => $this->root . '/fields/entries.php',
 			'files'       => $this->root . '/fields/files.php',
 			'gap'         => $this->root . '/fields/gap.php',
 			'headline'    => $this->root . '/fields/headline.php',
