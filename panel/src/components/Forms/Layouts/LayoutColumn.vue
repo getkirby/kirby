@@ -88,7 +88,7 @@ export default {
 	> .k-block-container:last-of-type {
 	flex-grow: 1;
 }
-.k-layout-column > .k-blocks > .k-blocks-list > .k-blocks-empty.k-box {
+.k-layout-column > .k-blocks > .k-blocks-list + .k-blocks-empty.k-box {
 	--box-color-back: transparent;
 	position: absolute;
 	inset: 0;
@@ -97,7 +97,7 @@ export default {
 	transition: opacity 0.3s;
 	border: 0;
 }
-.k-layout-column > .k-blocks > .k-blocks-list > .k-blocks-empty:hover {
+.k-layout-column > .k-blocks > .k-blocks-list + .k-blocks-empty:hover {
 	opacity: 1;
 }
 </style>
