@@ -154,6 +154,14 @@ export default {
 				}
 			};
 		}
+	},
+	methods: {
+		update(content) {
+			this.content = {
+				...this.content,
+				...content
+			};
+		}
 	}
 };
 </script>
