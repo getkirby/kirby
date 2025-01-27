@@ -10,13 +10,13 @@
 			ref="dropdown"
 			:options="$dropdown(options)"
 			align-x="end"
-			@action="$emit('action', $event)"
 		>
 			<template #item="{ item: language, index }">
 				<k-button
 					:key="'item-' + index"
 					v-bind="language"
 					class="k-dropdown-item k-languages-dropdown-item"
+					@click="change(language)"
 				>
 					{{ language.text }}
 
@@ -72,6 +72,15 @@ export default {
 			}
 
 			return null;
+		}
+	},
+	methods: {
+		change(language) {
+			this.$reload({
+				query: {
+					language: language.code
+				}
+			});
 		}
 	}
 };

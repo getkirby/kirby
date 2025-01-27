@@ -48,7 +48,6 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertSame([
 			'text'    => 'Deutsch',
 			'code'    => 'de',
-			'link'    => '/pages/test?language=de',
 			'current' => false,
 			'default' => false,
 			'changes' => false,
@@ -81,7 +80,6 @@ class LanguagesDropdownTest extends AreaTestCase
 			[
 				'text'    => 'English',
 				'code'    => 'en',
-				'link'    => '/pages/test?language=en',
 				'current' => true,
 				'default' => true,
 				'changes' => false,
@@ -91,7 +89,6 @@ class LanguagesDropdownTest extends AreaTestCase
 			[
 				'text'    => 'Deutsch',
 				'code'    => 'de',
-				'link'    => '/pages/test?language=de',
 				'current' => false,
 				'default' => false,
 				'changes' => false,
