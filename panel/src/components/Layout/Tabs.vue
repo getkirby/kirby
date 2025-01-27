@@ -175,7 +175,7 @@ export default {
 	height: 2px;
 	inset-inline: var(--button-padding);
 	bottom: -2px;
-	background: currentColor;
+	background: var(--color-text);
 }
 
 .k-tabs-button .k-button-badge {

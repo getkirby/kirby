@@ -61,10 +61,8 @@ export default {
 	align-items: center;
 	font-size: var(--text-xs);
 	margin-block: 0;
-	bottom: -2px;
 }
 .k-drawer-tabs .k-tabs-button[aria-current="true"]::after {
-	background: var(--color-black);
 	z-index: 1;
 }
 </style>
