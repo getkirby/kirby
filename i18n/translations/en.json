@@ -98,6 +98,8 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
 	"error.field.converter.invalid": "Invalid converter \"{converter}\"",
@@ -348,6 +350,8 @@
 	"field.blocks.video.preload": "Preload",
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
+
+	"field.entries.empty": "No entries yet",
 
 	"field.files.empty": "No files selected yet",
 	"field.files.empty.single": "No file selected yet",

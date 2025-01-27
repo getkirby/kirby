@@ -7,7 +7,7 @@
 	>
 		<!-- Empty State -->
 		<k-empty v-if="entries.length === 0" icon="list-bullet" @click="add()">
-			{{ empty ?? $t("field.structure.empty") }}
+			{{ empty ?? $t("field.entries.empty") }}
 		</k-empty>
 
 		<!-- Entries -->
