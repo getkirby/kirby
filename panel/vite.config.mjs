@@ -21,12 +21,14 @@ function createAliases() {
  */
 function createServer() {
 	const proxy = {
-		target: process.env.SERVER ?? "http://sandbox.test",
+		target: process.env.SERVER ?? "https://sandbox.test",
 		changeOrigin: true,
 		secure: false
 	};
 
 	return {
+		allowedHosts: [proxy.target.substring(8)],
+		cors: { origin: proxy.target },
 		proxy: {
 			"/api": proxy,
 			"/env": proxy,
@@ -104,7 +106,7 @@ export default defineConfig(({ command, mode }) => {
 	// Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
 	process.env = {
 		...process.env,
-		...loadEnv(mode, process.cwd(), '')
+		...loadEnv(mode, process.cwd(), "")
 	};
 
 	return {
