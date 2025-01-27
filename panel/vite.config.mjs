@@ -22,6 +22,8 @@ function createAliases() {
  */
 function createServer(proxy) {
 	return {
+		allowedHosts: [proxy.target.substring(8)],
+		cors: { origin: proxy.target },
 		proxy: {
 			"/api": proxy,
 			"/env": proxy,
