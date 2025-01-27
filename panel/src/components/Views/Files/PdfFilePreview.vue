@@ -56,6 +56,7 @@ export default {
 
 .k-pdf-file-preview[data-supported="true"] .k-pdf-file-preview-object {
 	aspect-ratio: 1/1;
+	border-bottom: 1px solid var(--color-gray-850);
 }
 
 @container (min-width: 36rem) {
@@ -70,6 +71,8 @@ export default {
 	}
 	.k-pdf-file-preview[data-supported="true"] .k-pdf-file-preview-object {
 		aspect-ratio: 5/3;
+		border-bottom: 0;
+		border-right: 1px solid var(--color-gray-850);
 	}
 }
 </style>
