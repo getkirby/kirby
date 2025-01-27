@@ -265,7 +265,7 @@ class CoreTest extends TestCase
 	public function testFilePreviews()
 	{
 		$previews = $this->core->filePreviews();
-		$this->assertCount(3, $previews);
+		$this->assertCount(4, $previews);
 	}
 
 	/**

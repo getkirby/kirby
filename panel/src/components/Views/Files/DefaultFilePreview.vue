@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style>
-.k-default-file-preview .k-file-preview-frame > .k-icon {
+.k-default-file-preview .k-file-preview-frame .k-item-icon {
 	--icon-size: 3rem;
 }
 
