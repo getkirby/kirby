@@ -16,6 +16,14 @@
 				@update="update"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Lots of tabs">
+			<k-block
+				:content="content"
+				:fieldset="fieldsetWithLotsOfTabs"
+				type="fields"
+				@update="update"
+			/>
+		</k-lab-example>
 		<k-lab-example label="Selected">
 			<k-block
 				:content="content"
@@ -90,6 +98,50 @@ export default {
 				}
 			};
 		},
+		fieldsetWithLotsOfTabs() {
+			return {
+				...this.fieldset,
+				name: "This is a quite long name that might wrap",
+				label: "This is a quite long label that might wrap",
+				tabs: {
+					content: {
+						name: "content",
+						label: "Content",
+						fields: {}
+					},
+					settings: {
+						name: "settings",
+						label: "Settings",
+						fields: {}
+					},
+					seo: {
+						name: "seo",
+						label: "SEO",
+						fields: {}
+					},
+					validation: {
+						name: "validation",
+						label: "Validation",
+						fields: {}
+					},
+					help: {
+						name: "help",
+						label: "Help",
+						fields: {}
+					},
+					theme: {
+						name: "theme",
+						label: "Theme",
+						fields: {}
+					},
+					misc: {
+						name: "misc",
+						label: "Misc",
+						fields: {}
+					}
+				}
+			};
+		},
 		settingsTab() {
 			return {
 				name: "settings",
@@ -100,6 +152,14 @@ export default {
 						type: "toggle"
 					}
 				}
+			};
+		}
+	},
+	methods: {
+		update(content) {
+			this.content = {
+				...this.content,
+				...content
 			};
 		}
 	}

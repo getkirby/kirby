@@ -1,21 +1,21 @@
 <template>
 	<nav v-if="tabs.length > 1" class="k-tabs">
-		<div v-for="btn in buttons" :key="btn.name" class="k-tabs-tab">
-			<k-button
-				ref="visible"
-				v-bind="btn"
-				variant="dimmed"
-				class="k-tab-button"
-			>
-				{{ btn.text }}
-			</k-button>
-		</div>
+		<k-button
+			v-for="btn in buttons"
+			:key="btn.name"
+			ref="visible"
+			v-bind="btn"
+			variant="dimmed"
+			class="k-tabs-button"
+		>
+			{{ btn.text }}
+		</k-button>
 
 		<template v-if="invisible.length">
 			<k-button
 				:current="!!invisible.find((button) => tab === button.name)"
 				:title="$t('more')"
-				class="k-tab-button k-tabs-dropdown-button"
+				class="k-tabs-button k-tabs-dropdown-button"
 				icon="dots"
 				variant="dimmed"
 				@click.stop="$refs.more.toggle()"
@@ -163,25 +163,22 @@ export default {
 	margin-inline: calc(var(--button-padding) * -1);
 }
 
-.k-tabs-tab {
+.k-tabs-button.k-button {
 	position: relative;
-}
-
-.k-tab-button.k-button {
 	margin-block: 2px;
 	overflow-x: visible;
 }
 
-.k-tab-button[aria-current="true"]::after {
+.k-tabs-button[aria-current="true"]::after {
 	position: absolute;
 	content: "";
 	height: 2px;
 	inset-inline: var(--button-padding);
 	bottom: -2px;
-	background: currentColor;
+	background: var(--color-text);
 }
 
-.k-tab-button .k-button-badge {
+.k-tabs-button .k-button-badge {
 	top: 3px;
 	inset-inline-end: calc(var(--button-padding) / 4);
 }
