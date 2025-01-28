@@ -242,7 +242,7 @@ export default {
 		this.$events.on("selecting", this.stopSelectingCollision);
 	},
 	destroyed() {
-		this.$events.on("model.update", this.reload);
+		this.$events.off("model.update", this.reload);
 		this.$events.off("selecting", this.stopSelectingCollision);
 	},
 	mounted() {
