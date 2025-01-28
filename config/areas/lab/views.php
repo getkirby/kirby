@@ -130,7 +130,7 @@ return [
 			$example  = $category->example($id, $tab);
 			$props    = $example->props();
 			$vue      = $example->vue();
-			$compiler = option('panel.vue.compiler', false);
+			$compiler = option('panel.vue.compiler', true);
 
 			if ($docs = $props['docs'] ?? null) {
 				if (

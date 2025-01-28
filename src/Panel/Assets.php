@@ -333,7 +333,7 @@ class Assets
 	 */
 	public function vue(bool $production = true): string
 	{
-		$script = option('panel.vue.compiler', false) === true ? 'vue' : 'vue.runtime';
+		$script = option('panel.vue.compiler', true) === true ? 'vue' : 'vue.runtime';
 
 		if ($production === false) {
 			return $this->url . '/node_modules/vue/dist/' . $script . '.js';

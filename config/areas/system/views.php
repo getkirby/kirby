@@ -86,7 +86,7 @@ return [
 				];
 			}
 
-			if ($kirby->option('panel.vue.compiler', false) === true) {
+			if ($kirby->option('panel.vue.compiler', true) === true) {
 				$security[] = [
 					'id'   => 'compiler',
 					'text' => 'The Vue compiler is enabled',
