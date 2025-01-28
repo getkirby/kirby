@@ -268,7 +268,6 @@ export default {
 				this.$panel.notification.error(error);
 			} finally {
 				this.$panel.events.emit("model.update");
-				this.stopSelecting();
 				this.isProcessing = false;
 			}
 		},
@@ -306,9 +305,6 @@ export default {
 		onChange() {},
 		onDrop() {},
 		onPaginate(pagination) {
-			// reset batch mode
-			this.stopSelecting();
-
 			// update pagination page
 			sessionStorage.setItem(this.paginationId, pagination.page);
 			this.pagination = pagination;
@@ -346,6 +342,8 @@ export default {
 			}
 		},
 		async reload() {
+			// reset batch mode
+			this.stopSelecting();
 			await this.load(true);
 		},
 		async search() {
