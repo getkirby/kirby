@@ -51,6 +51,7 @@
 										@click="duplicate(index)"
 									/>
 									<k-button
+										v-if="!disabled"
 										:title="$t('remove')"
 										icon="remove"
 										size="xs"
