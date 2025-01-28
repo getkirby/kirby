@@ -12,71 +12,68 @@
 
 		<!-- Entries -->
 		<template v-else>
-			<div class="k-entries-field-inputs">
-				<k-input-validator
-					v-bind="{ min, max, required }"
-					:value="JSON.stringify(entries)"
+			<k-input-validator
+				v-bind="{ min, max, required }"
+				:value="JSON.stringify(entries)"
+			>
+				<k-draggable
+					v-bind="dragOptions"
+					class="k-entries-field-items"
+					@sort="save"
 				>
-					<k-draggable
-						v-bind="dragOptions"
-						class="k-entries-list"
-						@sort="save"
+					<div
+						v-for="(entry, index) in entries"
+						:key="entry.id"
+						class="k-entries-field-item"
 					>
-						<k-input
-							v-for="(entry, index) in entries"
-							v-bind="field"
-							:key="index"
-							:ref="'entry-' + index"
-							:value="entries[index]"
-							@input="onInput(index, $event)"
+						<div class="k-entries-field-item-sort-handle">
+							<k-button
+								v-if="isSortable"
+								:title="$t('sort.drag')"
+								icon="sort"
+								class="k-sort-handle"
+								size="sm"
+							/>
+						</div>
+						<div class="k-entries-field-item-input">
+							<k-input
+								v-bind="field"
+								:ref="'entry-' + entry.id"
+								:value="entry.value"
+								@input="onInput(index, $event)"
+							/>
+						</div>
+						<k-button-group
+							class="k-entries-field-item-options"
+							layout="collapsed"
 						>
-							<template #after>
-								<k-button-group layout="collapsed">
-									<k-button
-										v-if="more"
-										:title="$t('add')"
-										icon="add"
-										size="xs"
-										variant="filled"
-										tabindex="-1"
-										@click="add(index + 1)"
-									/>
-									<k-button
-										v-if="more"
-										:title="$t('duplicate')"
-										icon="copy"
-										size="xs"
-										variant="filled"
-										tabindex="-1"
-										@click="duplicate(index)"
-									/>
-									<k-button
-										v-if="!disabled"
-										:title="$t('remove')"
-										icon="remove"
-										size="xs"
-										variant="filled"
-										tabindex="-1"
-										@click="remove(index)"
-									/>
-									<k-button
-										v-if="isSortable"
-										:title="$t('sort.drag')"
-										icon="sort"
-										class="k-sort-handle k-sort-button"
-										aria-hidden="true"
-										size="xs"
-										variant="filled"
-										tabindex="-1"
-									/>
-								</k-button-group>
-							</template>
-						</k-input>
-					</k-draggable>
-				</k-input-validator>
-			</div>
+							<k-button
+								v-if="more"
+								:title="$t('add')"
+								icon="add"
+								size="sm"
+								@click="add(index + 1)"
+							/>
+							<k-button
+								v-if="more"
+								:title="$t('duplicate')"
+								icon="copy"
+								size="sm"
+								@click="duplicate(index)"
+							/>
+							<k-button
+								v-if="!disabled"
+								:title="$t('remove')"
+								icon="trash"
+								size="sm"
+								@click="remove(index)"
+							/>
+						</k-button-group>
+					</div>
+				</k-draggable>
+			</k-input-validator>
 		</template>
-		<footer v-if="more">
+		<footer v-if="more" class="k-entries-field-footer">
 			<k-button
 				:title="$t('add')"
 				icon="add"
@@ -105,8 +102,7 @@ export default {
 		 */
 		field: {
 			type: Object,
-			default: () => {
-			}
+			default: () => {}
 		},
 		/**
 		 * Upper limit of entries allowed
@@ -131,7 +127,7 @@ export default {
 	emits: ["input", "sort"],
 	data() {
 		return {
-			entries: this.value
+			entries: []
 		};
 	},
 	computed: {
@@ -180,12 +176,25 @@ export default {
 			}
 
 			return true;
+		},
+		values() {
+			return this.entries.map((entry) => entry.value);
 		}
 	},
 	watch: {
 		value: {
-			handler(value) {
-				this.entries = value;
+			handler(entries) {
+				// no need to add ids again if the values are the same
+				if (entries === this.values) {
+					return;
+				}
+
+				this.entries = entries.map((value) => {
+					return {
+						id: this.$helper.uuid(),
+						value
+					};
+				});
 			},
 			immediate: true
 		}
@@ -196,28 +205,42 @@ export default {
 				return;
 			}
 
+			const entry = {
+				id: this.$helper.uuid(),
+				value: ""
+			};
+
 			if (index !== null) {
-				this.entries.splice(index, 0, "");
+				this.entries.splice(index, 0, entry);
 			} else {
-				this.entries.push("");
+				this.entries.push(entry);
 			}
 
 			this.save();
 		},
 		duplicate(index) {
-			if (this.more === false || this.disabled === true) {
+			if (
+				this.more === false ||
+				this.disabled === true ||
+				this.entries[index] === undefined
+			) {
 				return;
 			}
 
-			this.entries.splice(index + 1, 0, this.entries[index] ?? "");
+			const duplicate = {
+				...this.entries[index],
+				id: this.$helper.uuid()
+			};
+
+			this.entries.splice(index + 1, 0, duplicate);
 			this.save();
 		},
 		onInput(index, value) {
-			this.entries[index] = value;
+			this.entries[index].value = value;
 			this.save();
 		},
 		save() {
-			this.$emit("input", this.entries);
+			this.$emit("input", this.values);
 		},
 		remove(index) {
 			if (this.disabled === true) {
@@ -232,13 +255,48 @@ export default {
 </script>
 
 <style>
-.k-entries-field .k-entries-list {
+.k-entries-field-items {
 	display: flex;
 	flex-direction: column;
-	gap: var(--spacing-2);
+	gap: 2px;
 }
-
-.k-entries-field footer {
+.k-entries-field-item {
+	height: var(--input-height);
+	--input-color-border: transparent;
+	display: flex;
+	align-items: center;
+	background: var(--color-gray-100);
+	border-radius: var(--rounded);
+	box-shadow: var(--shadow);
+}
+.k-entries-field-item-sort-handle {
+	display: grid;
+	place-items: center;
+}
+.k-entries-field-item-sort-handle .k-button {
+	--button-height: var(--input-height);
+	--button-width: var(--input-height);
+}
+.k-entries-field-item-input {
+	flex-grow: 1;
+	border-left: 1px solid var(--panel-color-back);
+	border-right: 1px solid var(--panel-color-back);
+}
+.k-entries-field-item-options .k-button {
+	--button-height: 100%;
+	--button-width: var(--input-height);
+}
+.k-entries-field-item-options .k-button:not(:last-child) {
+	border-right: 1px solid var(--panel-color-back);
+}
+.k-entries-field-item.k-sortable-ghost {
+	outline: var(--outline);
+	cursor: grabbing;
+}
+.k-entries-field-item.k-sortable-fallback {
+	opacity: 0 !important;
+}
+.k-entries-field-footer {
 	display: flex;
 	justify-content: center;
 	margin-top: var(--spacing-3);
