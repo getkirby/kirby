@@ -59,6 +59,7 @@
 								size="sm"
 								@click="add(index + 1)"
 							/>
+							<hr />
 							<k-button
 								v-if="more"
 								:title="$t('duplicate')"
@@ -66,6 +67,7 @@
 								size="sm"
 								@click="duplicate(index)"
 							/>
+							<hr />
 							<k-button
 								v-if="!disabled"
 								:title="$t('remove')"
@@ -342,7 +344,7 @@ export default {
 	--input-color-border: transparent;
 	display: flex;
 	align-items: center;
-	background: var(--color-gray-100);
+	background: light-dark(var(--color-gray-100), var(--color-gray-850));
 	border-radius: var(--rounded);
 	box-shadow: var(--shadow);
 }
@@ -363,8 +365,10 @@ export default {
 	--button-height: 100%;
 	--button-width: var(--input-height);
 }
-.k-entries-field-item-options .k-button:not(:last-child) {
-	border-right: 1px solid var(--panel-color-back);
+.k-entries-field-item-options hr {
+	height: var(--input-height);
+	width: 1px;
+	background: var(--panel-color-back);
 }
 .k-entries-field-item.k-sortable-ghost {
 	outline: var(--outline);
