@@ -211,6 +211,13 @@ export default {
 			return [
 				{
 					disabled: this.entries.length === 0 || this.disabled,
+					icon: "template",
+					text: this.$t("copy.all"),
+					click: this.copyAll
+				},
+				"-",
+				{
+					disabled: this.entries.length === 0 || this.disabled,
 					icon: "trash",
 					text: this.$t("delete.all"),
 					click: this.removeAll
@@ -262,6 +269,12 @@ export default {
 			this.$nextTick(() => {
 				this.focus(index);
 			});
+		},
+		copyAll() {
+			const copy = this.values.map((value) => "- " + value).join("\n");
+
+			this.$helper.clipboard.write(copy);
+			this.$panel.notification.success(this.$t("copy.success"));
 		},
 		duplicate(index) {
 			if (
