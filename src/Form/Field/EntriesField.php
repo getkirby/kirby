@@ -91,12 +91,12 @@ class EntriesField extends FieldClass
 	public function supports(): array
 	{
 		return [
-			"email",
-			"number",
-			"slug",
-			"tel",
-			"text",
-			"url"
+			'email',
+			'number',
+			'slug',
+			'tel',
+			'text',
+			'url'
 		];
 	}
 
