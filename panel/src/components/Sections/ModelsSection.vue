@@ -105,7 +105,9 @@ export default {
 						this.$panel.dialog.open({
 							component: "k-remove-dialog",
 							props: {
-								text: this.confirmDeleteSelectedMessage
+								text: this.$t(`${this.type}.delete.confirm.selected`, {
+									count: this.selected.length
+								})
 							},
 							on: {
 								submit: () => {
@@ -182,11 +184,6 @@ export default {
 				sortable: !this.isProcessing && this.options.sortable,
 				size: this.options.size
 			};
-		},
-		confirmDeleteSelectedMessage() {
-			return this.$t(`${this.type}.delete.confirm.selected`, {
-				count: this.selected.length
-			});
 		},
 		emptyProps() {
 			return {
