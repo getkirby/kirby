@@ -86,6 +86,19 @@
 				@click="add()"
 			/>
 		</footer>
+
+		<template v-if="!disabled" #options>
+			<k-button-group layout="collapsed">
+				<k-button
+					:text="$t('delete.all')"
+					:disabled="entries.length === 0 || disabled"
+					icon="trash"
+					size="xs"
+					variant="filled"
+					@click="removeAll()"
+				/>
+			</k-button-group>
+		</template>
 	</k-field>
 </template>
 
@@ -263,6 +276,21 @@ export default {
 			this.entries.splice(index, 1);
 			this.save();
 			this.focus(index - 1);
+		},
+		removeAll() {
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.entries.delete.confirm.all")
+				},
+				on: {
+					submit: () => {
+						this.entries = [];
+						this.save();
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		save() {
 			this.$emit("input", this.values);

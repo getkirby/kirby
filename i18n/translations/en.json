@@ -352,6 +352,7 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.entries.empty": "No entries yet",
 
 	"field.files.empty": "No files selected yet",
