@@ -88,6 +88,16 @@ class EntriesField extends FieldClass
 		$this->field = $attrs;
 	}
 
+	protected function setSortable(bool|null $sortable = true): void
+	{
+		$this->sortable = $sortable;
+	}
+
+	public function sortable(): bool
+	{
+		return $this->sortable;
+	}
+
 	public function supports(): array
 	{
 		return [
@@ -98,16 +108,6 @@ class EntriesField extends FieldClass
 			'text',
 			'url'
 		];
-	}
-
-	protected function setSortable(bool|null $sortable = true): void
-	{
-		$this->sortable = $sortable;
-	}
-
-	public function sortable(): bool
-	{
-		return $this->sortable;
 	}
 
 	public function toFormValue(bool $default = false): mixed

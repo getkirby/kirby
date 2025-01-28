@@ -255,6 +255,15 @@ export default {
 			this.entries[index].value = value;
 			this.save();
 		},
+		remove(index) {
+			if (this.disabled === true) {
+				return;
+			}
+
+			this.entries.splice(index, 1);
+			this.save();
+			this.focus(index - 1);
+		},
 		save() {
 			this.$emit("input", this.values);
 		},
@@ -284,15 +293,6 @@ export default {
 			}
 
 			this.sort(index, -1);
-		},
-		remove(index) {
-			if (this.disabled === true) {
-				return;
-			}
-
-			this.entries.splice(index, 1);
-			this.save();
-			this.focus(index - 1);
 		}
 	}
 };
