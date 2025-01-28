@@ -2,13 +2,14 @@
 
 namespace Kirby\Form\Field;
 
-use InvalidArgumentException;
 use Kirby\Data\Data;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\FieldClass;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Toolkit\Str;
 
 /**
  * Main class file of the entries field
@@ -144,7 +145,30 @@ class EntriesField extends FieldClass
 	{
 		return [
 			'min',
-			'max'
+			'max',
+			'entries' => function ($values) {
+				if (empty($values) === true) {
+					return true;
+				}
+
+				foreach ($values as $index => $value) {
+					$form = $this->form([$value]);
+
+					foreach ($form->fields() as $field) {
+						$errors = $field->errors();
+
+						if ($errors !== []) {
+							throw new InvalidArgumentException(
+								key: 'entries.validation',
+								data: [
+									'field' => $this->label() ?? Str::ucfirst($this->name()),
+									'index' => $index + 1
+								]
+							);
+						}
+					}
+				}
+			}
 		];
 	}
 }

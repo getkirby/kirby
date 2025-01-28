@@ -99,6 +99,7 @@
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
 	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "There's an error on the \"{field}\" field in row {index}",
 
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
