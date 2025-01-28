@@ -398,6 +398,14 @@ export default {
 	--button-height: 100%;
 	--button-width: var(--input-height);
 }
+
+@container (max-width: 30rem) {
+	.k-entries-field-item-options > .k-button:not(:last-of-type),
+	.k-entries-field-item-options > hr {
+		display: none;
+	}
+}
+
 .k-entries-field-item-options hr {
 	height: var(--input-height);
 	width: 1px;
