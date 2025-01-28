@@ -268,8 +268,7 @@ export default {
 				this.$panel.notification.error(error);
 			} finally {
 				this.$panel.events.emit("model.update");
-				this.selected = [];
-				this.isSelecting = false;
+				this.stopSelecting();
 				this.isProcessing = false;
 			}
 		},
@@ -308,8 +307,7 @@ export default {
 		onDrop() {},
 		onPaginate(pagination) {
 			// reset batch mode
-			this.isSelecting = false;
-			this.selected = [];
+			this.stopSelecting();
 
 			// update pagination page
 			sessionStorage.setItem(this.paginationId, pagination.page);
