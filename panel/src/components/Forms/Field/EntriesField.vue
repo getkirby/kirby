@@ -39,10 +39,11 @@
 							/>
 						</div>
 						<div class="k-entries-field-item-input">
-							<k-input
-								v-bind="field"
+							<component
+								:is="`k-${field.type}-field`"
 								:ref="'entry-' + index + '-input'"
 								:value="entry.value"
+								v-bind="field"
 								@input="onInput(index, $event)"
 								@keydown.enter.native.prevent="add(index + 1)"
 							/>
