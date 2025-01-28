@@ -265,7 +265,7 @@ export default {
 			});
 		},
 		focus(index, on = "input") {
-			this.$refs["entry-" + index + "-" + on]?.[0]?.focus();
+			this.$refs["entry-" + index + "-" + on]?.[0]?.focus?.();
 		},
 		onInput(index, value) {
 			this.entries[index].value = value;
