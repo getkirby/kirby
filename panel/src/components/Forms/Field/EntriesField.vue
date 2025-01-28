@@ -93,13 +93,23 @@
 		<template v-if="!disabled" #options>
 			<k-button-group layout="collapsed">
 				<k-button
-					:text="$t('delete.all')"
-					:disabled="entries.length === 0 || disabled"
-					icon="trash"
-					size="xs"
+					:autofocus="autofocus"
+					:disabled="!more"
+					:responsive="true"
+					:text="$t('add')"
+					icon="add"
 					variant="filled"
-					@click="removeAll()"
+					size="xs"
+					class="input-focus"
+					@click="add()"
 				/>
+				<k-button
+					icon="dots"
+					variant="filled"
+					size="xs"
+					@click="$refs.options.toggle()"
+				/>
+				<k-dropdown-content ref="options" :options="options" align-x="end" />
 			</k-button-group>
 		</template>
 	</k-field>
@@ -196,6 +206,16 @@ export default {
 			}
 
 			return true;
+		},
+		options() {
+			return [
+				{
+					disabled: this.entries.length === 0 || this.disabled,
+					icon: "trash",
+					text: this.$t("delete.all"),
+					click: this.removeAll
+				}
+			];
 		},
 		values() {
 			return this.entries.map((entry) => entry.value);
