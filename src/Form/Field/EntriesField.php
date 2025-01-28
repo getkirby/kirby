@@ -45,6 +45,11 @@ class EntriesField extends FieldClass
 		return $this->field;
 	}
 
+	public function fieldProps(): array
+	{
+		return $this->form()->fields()->first()->toArray();
+	}
+
 	public function fill(mixed $value = null): void
 	{
 		parent::fill(Data::decode($value, 'yaml'));
@@ -63,7 +68,7 @@ class EntriesField extends FieldClass
 	{
 		return [
 				'empty'    => $this->empty(),
-				'field'    => $this->field(),
+				'field'    => $this->fieldProps(),
 				'max'      => $this->max(),
 				'min'      => $this->min(),
 				'sortable' => $this->sortable(),
@@ -103,6 +108,7 @@ class EntriesField extends FieldClass
 		return [
 			'email',
 			'number',
+			'select',
 			'slug',
 			'tel',
 			'text',
