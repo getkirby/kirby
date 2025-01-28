@@ -29,18 +29,22 @@
 						<div class="k-entries-field-item-sort-handle">
 							<k-button
 								v-if="isSortable"
+								:ref="'entry-' + index + '-sort-handle'"
 								:title="$t('sort.drag')"
 								icon="sort"
 								class="k-sort-handle"
 								size="sm"
+								@keydown.up.native="sortUp(index)"
+								@keydown.down.native="sortDown(index)"
 							/>
 						</div>
 						<div class="k-entries-field-item-input">
 							<k-input
 								v-bind="field"
-								:ref="'entry-' + entry.id"
+								:ref="'entry-' + index + '-input'"
 								:value="entry.value"
 								@input="onInput(index, $event)"
+								@keydown.enter.native.prevent="add(index + 1)"
 							/>
 						</div>
 						<k-button-group
@@ -214,9 +218,14 @@ export default {
 				this.entries.splice(index, 0, entry);
 			} else {
 				this.entries.push(entry);
+				index = this.entries.length - 1;
 			}
 
 			this.save();
+
+			this.$nextTick(() => {
+				this.focus(index);
+			});
 		},
 		duplicate(index) {
 			if (
@@ -234,6 +243,13 @@ export default {
 
 			this.entries.splice(index + 1, 0, duplicate);
 			this.save();
+
+			this.$nextTick(() => {
+				this.focus(index + 1);
+			});
+		},
+		focus(index, on = "input") {
+			this.$refs["entry-" + index + "-" + on]?.[0]?.focus();
 		},
 		onInput(index, value) {
 			this.entries[index].value = value;
@@ -242,6 +258,33 @@ export default {
 		save() {
 			this.$emit("input", this.values);
 		},
+		sort(index, direction) {
+			if (this.isSortable === false) {
+				return;
+			}
+
+			const entry = this.entries[index];
+			this.entries.splice(index, 1);
+			this.entries.splice(index + direction, 0, entry);
+			this.save();
+			this.$nextTick(() => {
+				this.focus(index + direction, "sort-handle");
+			});
+		},
+		sortDown(index) {
+			if (index >= this.entries.length - 1) {
+				return;
+			}
+
+			this.sort(index, 1);
+		},
+		sortUp(index) {
+			if (index <= 0) {
+				return;
+			}
+
+			this.sort(index, -1);
+		},
 		remove(index) {
 			if (this.disabled === true) {
 				return;
@@ -249,12 +292,17 @@ export default {
 
 			this.entries.splice(index, 1);
 			this.save();
+			this.focus(index - 1);
 		}
 	}
 };
 </script>
 
 <style>
+.k-entries-field k-input-validator {
+	display: block;
+	border-radius: var(--rounded);
+}
 .k-entries-field-items {
 	display: flex;
 	flex-direction: column;
