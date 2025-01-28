@@ -91,21 +91,12 @@ class EntriesField extends FieldClass
 	public function supports(): array
 	{
 		return [
-			"color",
-			"date",
-			"list",
-			"multiselect",
+			"email",
 			"number",
-			"range",
-			"select",
 			"slug",
-			"tags",
 			"tel",
 			"text",
-			"textarea",
-			"time",
-			"url",
-			"writer",
+			"url"
 		];
 	}
 
