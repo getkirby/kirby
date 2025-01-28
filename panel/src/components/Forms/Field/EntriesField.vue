@@ -344,7 +344,7 @@ export default {
 	--input-color-border: transparent;
 	display: flex;
 	align-items: center;
-	background: light-dark(var(--color-gray-100), var(--color-gray-850));
+	background: var(--input-color-back);
 	border-radius: var(--rounded);
 	box-shadow: var(--shadow);
 }
