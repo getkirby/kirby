@@ -1407,7 +1407,7 @@ class App
 	public function sessionHandler(): AutoSession
 	{
 		return $this->sessionHandler ??= new AutoSession(
-			$this->root('sessions'),
+			($this->component('sessions'))($this),
 			$this->option('session', [])
 		);
 	}
