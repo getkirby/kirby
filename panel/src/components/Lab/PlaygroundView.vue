@@ -9,11 +9,9 @@
 		</k-header>
 		<k-tabs :tab="tab" :tabs="tabs" />
 
-		<template v-if="compiler === false">
-			<k-box theme="info">
-				The Vue template compiler must be enabled to show lab examples
-			</k-box>
-		</template>
+		<k-box v-if="compiler === false" theme="info">
+			The Vue template compiler must be enabled to show lab examples
+		</k-box>
 		<template v-else>
 			<component :is="component" v-if="component" v-bind="props" />
 			<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
