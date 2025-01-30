@@ -12,6 +12,7 @@ return [
 			$system       = $kirby->system();
 			$updateStatus = $system->updateStatus();
 			$license      = $system->license();
+			$debugMode    = $kirby->option('debug', false);
 
 			$environment = [
 				[
@@ -70,7 +71,7 @@ return [
 
 			$security = $updateStatus?->messages() ?? [];
 
-			if ($kirby->option('debug', false) === true) {
+			if ($debugMode === true) {
 				$security[] = [
 					'id'   => 'debug',
 					'text' => I18n::translate('system.issues.debug'),
@@ -86,7 +87,7 @@ return [
 				];
 			}
 
-			if ($kirby->option('panel.vue.compiler', true) === true) {
+			if ($debugMode === true && $kirby->option('panel.vue.compiler', true) === true) {
 				$security[] = [
 					'id'   => 'compiler',
 					'text' => 'The Vue compiler is enabled',
@@ -100,7 +101,7 @@ return [
 					'buttons'     => fn () =>
 						ViewButtons::view('system')->render(),
 					'environment' => $environment,
-					'exceptions'  => $kirby->option('debug') === true ? $exceptions : [],
+					'exceptions'  => $debugMode === true ? $exceptions : [],
 					'info'        => $system->info(),
 					'plugins'     => $plugins,
 					'security'    => $security,
