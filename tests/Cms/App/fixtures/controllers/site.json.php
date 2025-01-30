@@ -1,5 +1,5 @@
 <?php
 
 return function () {
-	return ['test' => 'html'];
+	return ['site' => 'json'];
 };

@@ -1326,8 +1326,8 @@ class AppTest extends TestCase
 		]);
 
 		$this->assertSame([
-			'title' => 'Site',
-			'foo'   => 'bar'
+			'site' => 'html',
+			'test' => 'html'
 		], $app->controller('test'));
 	}
 
@@ -1342,17 +1342,20 @@ class AppTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'controllers' => [
-				'test' => fn () => ['foo' => 'bar']
+				'test' => fn () => ['homer' => 'simpson']
 
 			]
 		]);
 
 		Page::factory([
-			'slug' => 'test',
+			'slug'     => 'test',
 			'template' => 'test'
 		]);
 
-		$this->assertSame(['foo' => 'bar'], $app->controller('test'));
+		$this->assertSame(
+			['homer' => 'simpson'],
+			$app->controller('test')
+		);
 	}
 
 	/**
@@ -1369,22 +1372,21 @@ class AppTest extends TestCase
 		]);
 
 		Page::factory([
-			'slug' => 'test',
+			'slug'     => 'test',
 			'template' => 'another'
 		]);
 
-		ob_start();
-		$app->controller('another.json', [], 'json');
-		$response = ob_get_clean();
-
-		$this->assertSame('{"foo":"bar"}', $response);
+		$this->assertSame([
+			'site'    => 'json',
+			'another' => 'json'
+		], $app->controller('another', contentType: 'json'));
 	}
 
 	/**
 	 * @covers ::controller
 	 * @covers ::controllerLookup
 	 */
-	public function testControllerHtmlRepresentation()
+	public function testControllerHtmlForMissingRepresentation()
 	{
 		$app = new App([
 			'roots' => [
@@ -1399,16 +1401,16 @@ class AppTest extends TestCase
 		]);
 
 		$this->assertSame([
-			'title' => 'Site',
-			'foo'   => 'bar'
-		], $app->controller('test', [], 'json'));
+			'site' => 'json',
+			'test' => 'html'
+		], $app->controller('test', contentType: 'json'));
 	}
 
 	/**
 	 * @covers ::controller
 	 * @covers ::controllerLookup
 	 */
-	public function testControllerFallbackRepresentation()
+	public function testControllerMissing()
 	{
 		$app = new App([
 			'roots' => [
@@ -1422,7 +1424,34 @@ class AppTest extends TestCase
 			'template' => 'none'
 		]);
 
-		$this->assertSame(['title' => 'Site'], $app->controller('none', [], 'json'));
+		$this->assertSame(
+			['site' => 'html'],
+			$app->controller('none')
+		);
+	}
+
+	/**
+	 * @covers ::controller
+	 * @covers ::controllerLookup
+	 */
+	public function testControllerMissingRepresentation()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+				'controllers' => static::FIXTURES . '/controllers'
+			]
+		]);
+
+		Page::factory([
+			'slug'     => 'test',
+			'template' => 'none'
+		]);
+
+		$this->assertSame(
+			['site' => 'json'],
+			$app->controller('none', contentType: 'json')
+		);
 	}
 
 	/**
