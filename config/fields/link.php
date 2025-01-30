@@ -16,14 +16,29 @@ return [
 		 * @values 'anchor', 'url, 'page, 'file', 'email', 'tel', 'custom'
 		 */
 		'options' => function (array|null $options = null): array {
-			return $options ?? [
-				'url',
-				'page',
-				'file',
-				'email',
-				'tel',
-				'anchor'
-			];
+			// default options
+			if ($options === null) {
+				return [
+					'url',
+					'page',
+					'file',
+					'email',
+					'tel',
+					'anchor'
+				];
+			}
+
+			// validate options
+			$available = array_keys($this->availableTypes());
+
+			if ($unavailable = array_diff($options, $available)) {
+				throw new InvalidArgumentException([
+					'key'  => 'field.link.options',
+					'data' => ['options' => implode(', ', $unavailable)]
+				]);
+			}
+
+			return $options;
 		},
 		'value' => function (string|null $value = null) {
 			return $value ?? '';
@@ -31,9 +46,11 @@ return [
 	],
 	'methods' => [
 		'activeTypes' => function () {
-			return array_filter($this->availableTypes(), function (string $type) {
-				return in_array($type, $this->props['options']) === true;
-			}, ARRAY_FILTER_USE_KEY);
+			return array_filter(
+				$this->availableTypes(),
+				fn (string $type) => in_array($type, $this->props['options']),
+				ARRAY_FILTER_USE_KEY
+			);
 		},
 		'availableTypes' => function () {
 			return [

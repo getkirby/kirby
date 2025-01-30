@@ -214,7 +214,7 @@ class BlocksField extends FieldClass
 				'action'  => function (
 					string $fieldsetType,
 					string $fieldName,
-					string $path = null
+					string|null $path = null
 				) use ($field) {
 					$fields = $field->fields($fieldsetType);
 					$field  = $field->form($fields)->field($fieldName);
@@ -276,7 +276,7 @@ class BlocksField extends FieldClass
 		);
 	}
 
-	protected function setGroup(string $group = null): void
+	protected function setGroup(string|null $group = null): void
 	{
 		$this->group = $group;
 	}

@@ -21,6 +21,8 @@
 	"copy": "Afrita",
 	"copy.all": "Afrita allt",
 	"copy.success": "Afritaði {count}!",
+	"copy.success.multiple": "Afritaði {count}!",
+	"copy.url": "Afrita slóð",
 	"create": "Stofna",
 	"custom": "Sérstillt",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Ógyld skyndiminnisgerð \"{type}\"",
 
+	"error.content.lock.delete": "Þessi útgáfa er læst og henni verður ekki eytt",
+	"error.content.lock.move": "Þessi útgáfa er læst og hún verður ekki færð",
+	"error.content.lock.publish": "Þessi útgáfa er núþegar útgefin",
+	"error.content.lock.replace": "Þessi útfáfa er læst og það verður ekki skipt út",
+	"error.content.lock.update": "Þessi útgáfa er læst og hún verður ekki uppfærð",
+
 	"error.email.preset.notFound": "Netfangstillingarnar: \"{name}\" fundust ekki",
 
 	"error.field.converter.invalid": "Ógildur umbreytari \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Skrárnafnið má ekki skilja eftir tómt",
 	"error.file.notFound": "Skráin \"{filename}\" fannst ekki",
 	"error.file.orientation": "Snið myndarinnar þarf að vera \"{orientation}\"",
+	"error.file.sort.permission": "Þú mátt ekkert breyta röðuninni á  \"{filename}\"",
 	"error.file.type.forbidden": "Þú mátt ekkert hlaða inn {type} skrám",
 	"error.file.type.invalid": "Ógild skrártegund: {type}",
 	"error.file.undefined": "Skráin fannst ekki",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "Það er ekki hægt að færa síðuna á sjálfa sig.",
 	"error.page.move.directory": "Ekki er reyndist unnt að færa möppu síðunnar.",
 	"error.page.move.duplicate": "Undirsíða með slóðinni og forskeytinu \"{slug}\" er núþegar til",
+	"error.page.move.noSections": "Síðan \"{parent}\" getur ekki átt undirsíður þar sem tilskylin svið til umsýslu á undirsíðum vantar",
 	"error.page.move.notFound": "Síðan sem færð var finnst því miður ekki",
 	"error.page.move.permission": "Þú mátt ekkert færa \"{slug}\"",
 	"error.page.move.template": "Sniðmátið \"{template}\" er ekki gillt sem undirsíða af \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Fyrirsögn",
 	"field.blocks.heading.text": "Texti/Prósi",
 	"field.blocks.heading.placeholder": "Fyrirsögn …",
+	"field.blocks.figure.back.plain": "Látlaust",
+	"field.blocks.figure.back.pattern.light": "Mynstur (ljóst)",
+	"field.blocks.figure.back.pattern.dark": "Mynstur (dökkt)",
 	"field.blocks.image.alt": "ALT texti",
 	"field.blocks.image.caption": "Myndartexti",
 	"field.blocks.image.crop": "Kroppa",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Engar skrár valdar ennþá",
+	"field.files.empty.single": "Engin skrá valin enn",
 
 	"field.layout.change": "Breyta uppsetningu ramma",
 	"field.layout.delete": "Eyða ramma",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Engar upplýsingar enn",
 
 	"field.pages.empty": "Engar síður valdar ennþá",
+	"field.pages.empty.single": "Engin síða valin enn",
 
 	"field.structure.delete.confirm": "Viltu virkilega eyða þessari röð?",
 	"field.structure.delete.confirm.all": "Ætlar þú virkilega að eyða öllum færslum?",
 	"field.structure.empty": "Engar færslur enn",
 
 	"field.users.empty": "Engir notendur valdir enn",
+	"field.users.empty.single": "Enginn notandi valinn enn",
 
 	"fields.empty": "Hér eru engin svið enn",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Engar skrár enn",
 
 	"filter": "Sigta",
+
+	"form.discard": "Hunsa breytingar",
+	"form.discard.confirm": "Ætlarðu virkilega að <strong>hunsa alla breytingar</strong>?",
+	"form.locked": "Efnið er þér ekki aðgengilegt þar sem annar notandi er nú þegar að vinna í því",
+	"form.unsaved": "Þessar breytingar hafa ekki verið vistaðar",
+	"form.preview": "Skoða breytingar",
+	"form.preview.draft": "Skoða uppkast",
 
 	"hide": "Fela",
 	"hour": "Klukkustund",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Er allt tilbúið til að gefa vefinn út?",
 	"license.status.missing.info": "Ekkert gilt skráningarleyfi",
 	"license.status.missing.label": "Vinsamlegast virkjaðu leyfið þitt",
+	"license.status.unknown.info": "Staða leyfis fyrir hugbúnaðinn er óþekkt",
+	"license.status.unknown.label": "Óþekkt leyfi",
 	"license.manage": "Sýslaðu með leyfin þín",
 	"license.purchased": "Verslað",
 	"license.success": "Þakka þér fyrir að velja Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Óvistað breytingar",
 	"lock.unsaved.empty": "Það eru öngvar óvistaðar breytingar",
+	"lock.unsaved.files": "Óvistaðar skrár",
+	"lock.unsaved.pages": "Óvistaðar síður",
+	"lock.unsaved.users": "Óvistaðir notendareikningar",
 	"lock.isLocked": "Óvistaðar breytingar framkvæmdar af {email}",
 	"lock.unlock": "Aflæsa",
 	"lock.unlock.submit": "Aflæsa og yfirskrifa óvistaðar breytingar framkvæmdar af <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Viðbætur",
 	"prev": "Fyrri",
 	"preview": "Forskoða",
+
+	"publish": "Útgefa",
+	"published": "Útgefnar og listaðar",
+
 	"remove": "Fjarlægja",
 	"rename": "Endurnefna",
 	"renew": "Endurnýja",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Enginn",
 
 	"save": "Vista",
+	"saved": "Vistað",
 	"search": "Leita",
+	"searching": "Leita ..",
 	"search.min": "Lágmark {min} stafir til að leita",
 	"search.all": "Sýna allar {count} niðurstöður.",
 	"search.results.none": "Engar niðurstöður",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Vefþjónn þinn styður ekkert PATCH beiðnir",
 	"system.issues.content": "Efnismappan virðist vera berskjölduð",
 	"system.issues.eol.kirby": "Uppsett Kirby eintak þitt hefur runnið sitt skeið á enda og mun ekki verða uppfært framar",
 	"system.issues.eol.plugin": "Uppsett eintak þitt  af viðbótinni  { plugin } hefur runnið sitt skeið á enda og mun ekki verða uppfærð framar",
@@ -646,6 +681,12 @@
 	"tel": "Sími",
 	"tel.placeholder": "+3548561234",
 	"template": "Sniðmát",
+
+	"theme": "Þema",
+	"theme.light": "Ljósin kveikt",
+	"theme.dark": "Ljósin slökkt",
+	"theme.automatic": "Nota kerfisstillingu",
+
 	"title": "Titill",
 	"today": "Núna",
 
@@ -715,10 +756,13 @@
 	"users": "Notendur",
 
 	"version": "Útgáfa",
+	"version.changes": "Breytt útgáfa",
+	"version.compare": "Bera saman útgáfur",
 	"version.current": "Núverandi útgáfa",
 	"version.latest": "Nýjasta útgáfa",
 	"versionInformation": "Útgáfuupplýsingar",
 
+	"view": "Sýn",
 	"view.account": "Þínar stillingar",
 	"view.installation": "Uppsetning",
 	"view.languages": "Tungumál",

@@ -145,7 +145,7 @@ class ContentTranslation
 	 *
 	 * @return $this
 	 */
-	public function update(array $data = null, bool $overwrite = false): static
+	public function update(array|null $data = null, bool $overwrite = false): static
 	{
 		$data = array_change_key_case((array)$data);
 

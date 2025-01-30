@@ -35,7 +35,7 @@ return [
 				],
 				[
 					'label' => I18n::translate('server'),
-					'value' => $system->serverSoftware() ?? '?',
+					'value' => $system->serverSoftwareShort() ?? '?',
 					'icon'  => 'server'
 				]
 			];

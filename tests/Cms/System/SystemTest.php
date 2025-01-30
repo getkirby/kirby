@@ -665,6 +665,30 @@ class SystemTest extends TestCase
 	}
 
 	/**
+	 * @covers ::serverSoftwareShort
+	 */
+	public function testServerSoftwareShort()
+	{
+		$app = $this->app->clone([
+			'server' => [
+				'SERVER_SOFTWARE' => $software = 'nginx/1.25.4'
+			]
+		]);
+
+		$system = new System($app);
+		$this->assertSame($software, $system->serverSoftwareShort());
+
+		$app = $this->app->clone([
+			'server' => [
+				'SERVER_SOFTWARE' => $software = 'Apache/2.4.7 (Ubuntu)'
+			]
+		]);
+
+		$system = new System($app);
+		$this->assertSame('Apache/2.4.7', $system->serverSoftwareShort());
+	}
+
+	/**
 	 * @covers ::accounts
 	 * @covers ::content
 	 * @covers ::curl

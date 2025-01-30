@@ -7,6 +7,7 @@ fields:
     type: radio
     columns: 2
     default: "kirby"
+    required: true
     options:
       kirby: "{{ t('field.blocks.image.location.internal') }}"
       web: "{{ t('field.blocks.image.location.external') }}"

@@ -330,15 +330,15 @@ class View
 		if ($data instanceof Redirect) {
 			return Response::redirect($data->location(), $data->code());
 
-		// handle Kirby exceptions
+			// handle Kirby exceptions
 		} elseif ($data instanceof Exception) {
 			$data = static::error($data->getMessage(), $data->getHttpCode());
 
-		// handle regular exceptions
+			// handle regular exceptions
 		} elseif ($data instanceof Throwable) {
 			$data = static::error($data->getMessage(), 500);
 
-		// only expect arrays from here on
+			// only expect arrays from here on
 		} elseif (is_array($data) === false) {
 			$data = static::error('Invalid Panel response', 500);
 		}

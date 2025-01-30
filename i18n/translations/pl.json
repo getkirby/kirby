@@ -21,6 +21,8 @@
 	"copy": "Kopiuj",
 	"copy.all": "Skopiuj wszystko",
 	"copy.success": "{count} skopiowanych!",
+	"copy.success.multiple": "{count} skopiowanych!",
+	"copy.url": "Copy URL",
 	"create": "Utwórz",
 	"custom": "Niestandardowe",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Nieprawidłowy typ pamięci podręcznej „{type}”",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "Nie udało się załadować wzorca wiadomości e-mail \"{name}\"",
 
 	"error.field.converter.invalid": "Nieprawidłowy konwerter \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Nazwa pliku nie może być pusta",
 	"error.file.notFound": "Nie można znaleźć pliku \"{filename}\"",
 	"error.file.orientation": "Orientacja obrazka musi być \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Nie możesz przesyłać plików {type}",
 	"error.file.type.invalid": "Nieprawidłowy typ pliku: {type}",
 	"error.file.undefined": "Nie można znaleźć pliku",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "Strony nie można przenieść do siebie samej",
 	"error.page.move.directory": "Nie można przenieść katalogu strony",
 	"error.page.move.duplicate": "Istnieje już podstrona z końcówką URL \"{slug}\"",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "Przeniesiona strona nie została odnaleziona",
 	"error.page.move.permission": "Nie masz uprawnień, by przenieść \"{slug}\"",
 	"error.page.move.template": "Szablon \"{template}\" nie jest akceptowany jako podstrona \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Nagłówek",
 	"field.blocks.heading.text": "Tekst",
 	"field.blocks.heading.placeholder": "Nagłówek …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Tekst alternatywny",
 	"field.blocks.image.caption": "Podpis",
 	"field.blocks.image.crop": "Przytnij",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Nie wybrano jeszcze żadnych plików",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Zmień układ",
 	"field.layout.delete": "Usuń układ",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Brak informacji",
 
 	"field.pages.empty": "Nie wybrano jeszcze żadnych stron",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Czy na pewno chcesz usunąć ten wiersz?",
 	"field.structure.delete.confirm.all": "Czy na pewno chcesz usunąć wszystkie wpisy?",
 	"field.structure.empty": "Nie ma jeszcze \u017cadnych wpis\u00f3w.",
 
 	"field.users.empty": "Nie wybrano jeszcze żadnych użytkowników",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "Nie ma jeszcze żadnych pól",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Nie ma jeszcze żadnych plików",
 
 	"filter": "Filtr",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Ukryj",
 	"hour": "Godzina",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Gotowy/-a do uruchomienia strony?",
 	"license.status.missing.info": "Brak ważnej licencji",
 	"license.status.missing.label": "Aktywuj swoją licencję",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Zarządzaj swoimi licencjami",
 	"license.purchased": "Zakupiona",
 	"license.success": "Dziękujemy za wspieranie Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Niezapisane zmiany",
 	"lock.unsaved.empty": "Nie ma już żadnych niezapisanych zmian",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Niezapisane zmiany autorstwa {email}",
 	"lock.unlock": "Odblokuj",
 	"lock.unlock.submit": "Odblokuj i nadpisz niezapisane zmiany autorstwa <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Wtyczki",
 	"prev": "Poprzednie",
 	"preview": "Podgląd",
+
+	"publish": "Publish",
+	"published": "Opublikowane",
+
 	"remove": "Usuń",
 	"rename": "Zmień nazwę",
 	"renew": "Odnów",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Nikt",
 
 	"save": "Zapisz",
+	"saved": "Saved",
 	"search": "Szukaj",
+	"searching": "Searching",
 	"search.min": "Aby wyszukać, wprowadź co najmniej {min} znaków",
 	"search.all": "Pokaż wszystkie {count} wyniki/-ów",
 	"search.results.none": "Brak wyników",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Zdaje się, że folder „content” jest wystawiony na publiczny dostęp",
 	"system.issues.eol.kirby": "Twoja zainstalowana wersja Kirby osiągnęła koniec okresu wsparcia i nie będzie otrzymywać dalszych aktualizacji zabezpieczeń",
 	"system.issues.eol.plugin": "Twoja zainstalowana wersja wtyczki { plugin } osiągnęła koniec okresu wsparcia i nie będzie otrzymywać dalszych aktualizacji zabezpieczeń",
@@ -646,6 +681,12 @@
 	"tel": "Telefon",
 	"tel.placeholder": "+48123456789",
 	"template": "Szablon",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Tytuł",
 	"today": "Dzisiaj",
 
@@ -715,10 +756,13 @@
 	"users": "Użytkownicy",
 
 	"version": "Wersja",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Obecna wersja",
 	"version.latest": "Ostatnia wersja",
 	"versionInformation": "Informacje o wersji",
 
+	"view": "View",
 	"view.account": "Twoje konto",
 	"view.installation": "Instalacja",
 	"view.languages": "Języki",

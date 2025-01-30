@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "4.5.0",
+	"version": "4.6.0",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -24,7 +24,7 @@
 		"source": "https://github.com/getkirby/kirby"
 	},
 	"require": {
-		"php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+		"php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
 		"ext-SimpleXML": "*",
 		"ext-ctype": "*",
 		"ext-curl": "*",
@@ -37,16 +37,16 @@
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
 		"christian-riesen/base32": "1.6.0",
-		"claviska/simpleimage": "4.2.0",
+		"claviska/simpleimage": "4.2.1",
 		"composer/semver": "3.4.3",
-		"filp/whoops": "2.16.0",
+		"filp/whoops": "2.17.0",
 		"getkirby/composer-installer": "^1.2.1",
-		"laminas/laminas-escaper": "2.14.0",
+		"laminas/laminas-escaper": "2.15.0",
 		"michelf/php-smartypants": "1.8.1",
-		"phpmailer/phpmailer": "6.9.2",
+		"phpmailer/phpmailer": "6.9.3",
 		"symfony/polyfill-intl-idn": "1.31.0",
 		"symfony/polyfill-mbstring": "1.31.0",
-		"symfony/yaml": "6.4.13"
+		"symfony/yaml": "6.4.18"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"

@@ -99,7 +99,7 @@ trait AppPlugins
 	 */
 	public function extend(
 		array $extensions,
-		Plugin $plugin = null
+		Plugin|null $plugin = null
 	): array {
 		foreach ($this->extensions as $type => $registered) {
 			if (isset($extensions[$type]) === true) {
@@ -382,7 +382,7 @@ trait AppPlugins
 	 */
 	protected function extendOptions(
 		array $options,
-		Plugin $plugin = null
+		Plugin|null $plugin = null
 	): array {
 		if ($plugin !== null) {
 			$options = [$plugin->prefix() => $options];
@@ -428,7 +428,7 @@ trait AppPlugins
 	 */
 	protected function extendPermissions(
 		array $permissions,
-		Plugin $plugin = null
+		Plugin|null $plugin = null
 	): array {
 		if ($plugin !== null) {
 			$permissions = [$plugin->prefix() => $permissions];
@@ -583,7 +583,7 @@ trait AppPlugins
 	 *
 	 * @internal
 	 */
-	public function extensions(string $type = null): array
+	public function extensions(string|null $type = null): array
 	{
 		if ($type === null) {
 			return $this->extensions;
@@ -713,7 +713,7 @@ trait AppPlugins
 	 */
 	public static function plugin(
 		string $name,
-		array $extends = null,
+		array|null $extends = null,
 		array $info = [],
 		string|null $root = null,
 		string|null $version = null
@@ -747,7 +747,7 @@ trait AppPlugins
 	 * @internal
 	 * @param array|null $plugins Can be used to overwrite the plugins registry
 	 */
-	public function plugins(array $plugins = null): array
+	public function plugins(array|null $plugins = null): array
 	{
 		// overwrite the existing plugins registry
 		if ($plugins !== null) {

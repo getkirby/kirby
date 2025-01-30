@@ -263,7 +263,7 @@ class Str
 	 * Returns everything between two strings from the first occurrence of a given string
 	 */
 	public static function between(
-		string $string = null,
+		string|null $string,
 		string $start,
 		string $end
 	): string {
@@ -275,7 +275,7 @@ class Str
 	 *
 	 * @param string $value The string to convert
 	 */
-	public static function camel(string $value = null): string
+	public static function camel(string|null $value = null): string
 	{
 		return lcfirst(static::studly($value));
 	}
@@ -286,7 +286,7 @@ class Str
 	 *
 	 * @param string $value The string to convert
 	 */
-	public static function camelToKebab(string $value = null): string
+	public static function camelToKebab(string|null $value = null): string
 	{
 		return static::lower(preg_replace('!([a-z0-9])([A-Z])!', '$1-$2', $value));
 	}
@@ -295,7 +295,7 @@ class Str
 	 * Checks if a str contains another string
 	 */
 	public static function contains(
-		string $string = null,
+		string|null $string,
 		string $needle,
 		bool $caseInsensitive = false
 	): bool {
@@ -316,7 +316,7 @@ class Str
 	 */
 	public static function date(
 		int|null $time = null,
-		string|IntlDateFormatter $format = null,
+		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): string|int|false {
 		if (is_null($format) === true) {
@@ -365,7 +365,7 @@ class Str
 	public static function convert(
 		string $string,
 		string $targetEncoding,
-		string $sourceEncoding = null
+		string|null $sourceEncoding = null
 	): string {
 		// detect the source encoding if not passed as third argument
 		$sourceEncoding ??= static::encoding($string);
@@ -414,7 +414,7 @@ class Str
 	 * Checks if a string ends with the passed needle
 	 */
 	public static function endsWith(
-		string $string = null,
+		string|null $string,
 		string $needle,
 		bool $caseInsensitive = false
 	): bool {
@@ -574,7 +574,7 @@ class Str
 	/**
 	 * Convert a string to kebab case.
 	 */
-	public static function kebab(string $value = null): string
+	public static function kebab(string|null $value = null): string
 	{
 		return static::snake($value, '-');
 	}
@@ -582,7 +582,7 @@ class Str
 	/**
 	 * Convert a kebab case string to camel case.
 	 */
-	public static function kebabToCamel(string $value = null): string
+	public static function kebabToCamel(string|null $value = null): string
 	{
 		return ucfirst(preg_replace_callback(
 			'/-(.)/',
@@ -594,7 +594,7 @@ class Str
 	/**
 	 * A UTF-8 safe version of strlen()
 	 */
-	public static function length(string $string = null): int
+	public static function length(string|null $string = null): int
 	{
 		return mb_strlen($string ?? '', 'UTF-8');
 	}
@@ -602,7 +602,7 @@ class Str
 	/**
 	 * A UTF-8 safe version of strtolower()
 	 */
-	public static function lower(string $string = null): string
+	public static function lower(string|null $string = null): string
 	{
 		return mb_strtolower($string ?? '', 'UTF-8');
 	}
@@ -707,7 +707,7 @@ class Str
 	 * @throws \Kirby\Exception\InvalidArgumentException for empty $needle
 	 */
 	public static function position(
-		string $string = null,
+		string|null $string,
 		string $needle,
 		bool $caseInsensitive = false
 	): int|false {
@@ -739,7 +739,7 @@ class Str
 	 * @param string $type Pool type (type of allowed characters)
 	 */
 	public static function random(
-		int $length = null,
+		int|null $length = null,
 		string $type = 'alphaNum'
 	): string|false {
 		$length ??= random_int(5, 10);
@@ -967,7 +967,7 @@ class Str
 	 * @return string The filled-in and partially escaped string
 	 */
 	public static function safeTemplate(
-		string $string = null,
+		string|null $string = null,
 		array $data = [],
 		array $options = []
 	): string {
@@ -1024,7 +1024,7 @@ class Str
 	 * @return string The shortened string
 	 */
 	public static function short(
-		string $string = null,
+		string|null $string = null,
 		int $length = 0,
 		string $appendix = '…'
 	): string {
@@ -1129,9 +1129,9 @@ class Str
 	 * @return string The safe string
 	 */
 	public static function slug(
-		string $string = null,
-		string $separator = null,
-		string $allowed = null,
+		string|null $string = null,
+		string|null $separator = null,
+		string|null $allowed = null,
 		int|false $maxlength = 128
 	): string {
 		$separator ??= static::$defaults['slug']['separator'];
@@ -1176,7 +1176,7 @@ class Str
 	 * Convert a string to snake case.
 	 */
 	public static function snake(
-		string $value = null,
+		string|null $value = null,
 		string $delimiter = '_'
 	): string {
 		if (ctype_lower($value) === false) {
@@ -1230,7 +1230,7 @@ class Str
 	 * Checks if a string starts with the passed needle
 	 */
 	public static function startsWith(
-		string $string = null,
+		string|null $string,
 		string $needle,
 		bool $caseInsensitive = false
 	): bool {
@@ -1247,7 +1247,7 @@ class Str
 	 *
 	 * @param string $value The string to convert
 	 */
-	public static function studly(string $value = null): string
+	public static function studly(string|null $value = null): string
 	{
 		$value = str_replace(['-', '_'], ' ', $value);
 		$value = ucwords($value);
@@ -1258,9 +1258,9 @@ class Str
 	 * A UTF-8 safe version of substr()
 	 */
 	public static function substr(
-		string $string = null,
+		string|null $string = null,
 		int $start = 0,
-		int $length = null
+		int|null $length = null
 	): string {
 		return mb_substr($string ?? '', $start, $length, 'UTF-8');
 	}
@@ -1287,7 +1287,7 @@ class Str
 	 * @return string The filled-in string
 	 */
 	public static function template(
-		string $string = null,
+		string|null $string = null,
 		array $data = [],
 		array $options = []
 	): string {
@@ -1384,7 +1384,7 @@ class Str
 	/**
 	 * A UTF-8 safe version of ucfirst()
 	 */
-	public static function ucfirst(string $string = null): string
+	public static function ucfirst(string|null $string = null): string
 	{
 		$first = static::substr($string, 0, 1);
 		$rest  = static::substr($string, 1);
@@ -1394,7 +1394,7 @@ class Str
 	/**
 	 * A UTF-8 safe version of ucwords()
 	 */
-	public static function ucwords(string $string = null): string
+	public static function ucwords(string|null $string = null): string
 	{
 		return mb_convert_case($string ?? '', MB_CASE_TITLE, 'UTF-8');
 	}
@@ -1409,7 +1409,7 @@ class Str
 	 *
 	 * </code>
 	 */
-	public static function unhtml(string $string = null): string
+	public static function unhtml(string|null $string = null): string
 	{
 		return Html::decode($string);
 	}
@@ -1434,7 +1434,7 @@ class Str
 	/**
 	 * A UTF-8 safe version of strotoupper()
 	 */
-	public static function upper(string $string = null): string
+	public static function upper(string|null $string = null): string
 	{
 		return mb_strtoupper($string ?? '', 'UTF-8');
 	}
@@ -1472,7 +1472,7 @@ class Str
 	 * typographical widows at the end of a paragraph –
 	 * that's a single word in the last line
 	 */
-	public static function widont(string $string = null): string
+	public static function widont(string|null $string = null): string
 	{
 		// make sure $string is string
 		$string ??= '';
@@ -1504,7 +1504,7 @@ class Str
 	public static function wrap(
 		string $string,
 		string $before,
-		string $after = null
+		string|null $after = null
 	): string {
 		return $before . $string . ($after ?? $before);
 	}

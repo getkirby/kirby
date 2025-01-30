@@ -45,7 +45,7 @@ return [
 		/**
 		 * Set the default rows for the structure
 		 */
-		'default' => function (array $default = null) {
+		'default' => function (array|null $default = null) {
 			return $default;
 		},
 
@@ -58,38 +58,38 @@ return [
 		/**
 		 * The number of entries that will be displayed on a single page. Afterwards pagination kicks in.
 		 */
-		'limit' => function (int $limit = null) {
+		'limit' => function (int|null $limit = null) {
 			return $limit;
 		},
 		/**
 		 * Maximum allowed entries in the structure. Afterwards the "Add" button will be switched off.
 		 */
-		'max' => function (int $max = null) {
+		'max' => function (int|null $max = null) {
 			return $max;
 		},
 		/**
 		 * Minimum required entries in the structure
 		 */
-		'min' => function (int $min = null) {
+		'min' => function (int|null $min = null) {
 			return $min;
 		},
 		/**
 		 * Toggles adding to the top or bottom of the list
 		 */
-		'prepend' => function (bool $prepend = null) {
+		'prepend' => function (bool|null $prepend = null) {
 			return $prepend;
 		},
 		/**
 		 * Toggles drag & drop sorting
 		 */
-		'sortable' => function (bool $sortable = null) {
+		'sortable' => function (bool|null $sortable = null) {
 			return $sortable;
 		},
 		/**
 		 * Sorts the entries by the given field and order (i.e. `title desc`)
 		 * Drag & drop is disabled in this case
 		 */
-		'sortBy' => function (string $sort = null) {
+		'sortBy' => function (string|null $sort = null) {
 			return $sort;
 		}
 	],

@@ -22,10 +22,10 @@ class LayoutMixinTest extends TestCase
 		Section::$types['test'] = Section::$types['pages'] = [
 			'mixins' => ['layout'],
 			'props'  => $props = [
-				'info' => function (string $info = null) {
+				'info' => function (string|null $info = null) {
 					return $info;
 				},
-				'text' => function (string $text = null) {
+				'text' => function (string|null $text = null) {
 					return $text;
 				}
 			]

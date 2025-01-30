@@ -12,9 +12,9 @@ return [
 			return $limit;
 		},
 		/**
-		 * Sets the default page for the pagination. This will overwrite default pagination.
+		 * Sets the default page for the pagination.
 		 */
-		'page' => function (int $page = null) {
+		'page' => function (int|null $page = null) {
 			return App::instance()->request()->get('page', $page);
 		},
 	],

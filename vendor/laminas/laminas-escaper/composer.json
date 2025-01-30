@@ -34,12 +34,12 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "infection/infection": "^0.27.9",
-        "laminas/laminas-coding-standard": "~3.0.0",
+        "infection/infection": "^0.27.11",
+        "laminas/laminas-coding-standard": "~3.0.1",
         "maglnet/composer-require-checker": "^3.8.0",
-        "phpunit/phpunit": "^9.6.16",
+        "phpunit/phpunit": "^9.6.22",
         "psalm/plugin-phpunit": "^0.19.0",
-        "vimeo/psalm": "^5.21.1"
+        "vimeo/psalm": "^5.26.1"
     },
     "autoload": {
         "psr-4": {

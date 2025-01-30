@@ -235,7 +235,7 @@ class Panel
 		if ($result === null || $result === false) {
 			$result = new NotFoundException('The data could not be found');
 
-		// interpret strings as errors
+			// interpret strings as errors
 		} elseif (is_string($result) === true) {
 			$result = new Exception($result);
 		}
