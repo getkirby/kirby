@@ -239,11 +239,11 @@ export default {
 	},
 	created() {
 		this.$events.on("model.update", this.reload);
-		this.$events.on("selecting", this.stopSelectingCollision);
+		this.$events.on("section.selecting", this.stopSelectingCollision);
 	},
 	destroyed() {
 		this.$events.off("model.update", this.reload);
-		this.$events.off("selecting", this.stopSelectingCollision);
+		this.$events.off("section.selecting", this.stopSelectingCollision);
 	},
 	mounted() {
 		this.search = debounce(this.search, 200);
@@ -330,7 +330,7 @@ export default {
 		startSelecting() {
 			this.isSelecting = true;
 			this.selected = [];
-			this.$events.emit("selecting", this.name);
+			this.$events.emit("section.selecting", this.name);
 		},
 		stopSelecting() {
 			this.isSelecting = false;
