@@ -104,11 +104,6 @@ class SystemTest extends AreaTestCase
 				'text'  => 'This is a very important announcement!',
 				'kirby' => '*',
 				'php'   => '*'
-			],
-			[
-				'id'   => 'compiler',
-				'text' => 'The Vue compiler is enabled',
-				'link' => 'https://getkirby.com/security/vue-compiler'
 			]
 		], $props['security']);
 		$this->assertSame([
@@ -146,7 +141,7 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'id'   => 'compiler',
-				'text' => 'The Vue compiler is enabled',
+				'text' => 'The Vue template compiler is enabled',
 				'link' => 'https://getkirby.com/security/vue-compiler'
 			]
 		], $props['security']);
@@ -175,11 +170,6 @@ class SystemTest extends AreaTestCase
 				'id'   => 'https',
 				'text' => 'We recommend HTTPS for all your sites',
 				'link' => 'https://getkirby.com/security/https'
-			],
-			[
-				'id'   => 'compiler',
-				'text' => 'The Vue compiler is enabled',
-				'link' => 'https://getkirby.com/security/vue-compiler'
 			]
 		], $props['security']);
 	}
@@ -432,13 +422,7 @@ class SystemTest extends AreaTestCase
 			],
 		], $props['environment']);
 
-		$this->assertSame([
-			[
-				'id'   => 'compiler',
-				'text' => 'The Vue compiler is enabled',
-				'link' => 'https://getkirby.com/security/vue-compiler'
-			]
-		], $props['security']);
+		$this->assertSame([], $props['security']);
 
 		$this->assertSame([
 			[

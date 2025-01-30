@@ -90,7 +90,7 @@ return [
 			if ($debugMode === true && $kirby->option('panel.vue.compiler', true) === true) {
 				$security[] = [
 					'id'   => 'compiler',
-					'text' => 'The Vue compiler is enabled',
+					'text' => I18n::translate('system.issues.vue.compiler'),
 					'link' => 'https://getkirby.com/security/vue-compiler'
 				];
 			}
