@@ -21,6 +21,8 @@
 	"copy": "Salin",
 	"copy.all": "Salin semua",
 	"copy.success": "{count} disalin!",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Buat",
 	"custom": "Kustom",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Tipe tembolok tidak valid \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
 	"error.email.preset.notFound": "Surel \"{name}\" tidak dapat ditemukan",
 
 	"error.field.converter.invalid": "Konverter \"{converter}\" tidak valid",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Nama berkas harus diisi",
 	"error.file.notFound": "Berkas \"{filename}\" tidak dapat ditemukan",
 	"error.file.orientation": "Orientasi gambar harus \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "Anda tidak diizinkan mengunggah berkas dengan tipe {type}",
 	"error.file.type.invalid": "Tipe berkas tidak valid: {type}",
 	"error.file.undefined": "Berkas tidak dapat ditemukan",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "Halaman tidak dapat dipindahkan ke dirinya sendiri",
 	"error.page.move.directory": "Direktori halaman tidak dapat dipindahkan",
 	"error.page.move.duplicate": "Suatu sub halaman dengan akhiran URL \"{slug}\" sudah ada",
+	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
 	"error.page.move.notFound": "Halaman yang dipindahkan tidak dapat ditemukan",
 	"error.page.move.permission": "Anda tidak diizinkan memindahkan \"{slug}\"",
 	"error.page.move.template": "Templat \"{template}\" tidak dapat diterima sebagai sub halaman dari \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Penajukan",
 	"field.blocks.heading.text": "Teks",
 	"field.blocks.heading.placeholder": "Penajukan …",
+	"field.blocks.figure.back.plain": "Plain",
+	"field.blocks.figure.back.pattern.light": "Pattern (light)",
+	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
 	"field.blocks.image.alt": "Teks alternatif",
 	"field.blocks.image.caption": "Keterangan",
 	"field.blocks.image.crop": "Pangkas",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Belum ada berkas yang dipilih",
+	"field.files.empty.single": "No file selected yet",
 
 	"field.layout.change": "Change layout",
 	"field.layout.delete": "Hapus tata letak",
@@ -345,12 +359,14 @@
 	"field.object.empty": "No information yet",
 
 	"field.pages.empty": "Belum ada halaman yang dipilih",
+	"field.pages.empty.single": "No page selected yet",
 
 	"field.structure.delete.confirm": "Anda yakin menghapus baris ini?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Belum ada entri",
 
 	"field.users.empty": "Belum ada pengguna yang dipilih",
+	"field.users.empty.single": "No user selected yet",
 
 	"fields.empty": "No fields yet",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Belum ada berkas",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Sembunyikan",
 	"hour": "Jam",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Ready to launch your site?",
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown license",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Terima kasih atas dukungan untuk Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Perubahan belum tersimpan",
 	"lock.unsaved.empty": "Tidak ada lagi perubahan belum tersimpan",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Buka kunci",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "Sebelumnya",
 	"preview": "Pratinjau",
+
+	"publish": "Publish",
+	"published": "Dipublikasikan",
+
 	"remove": "Hapus",
 	"rename": "Ubah nama",
 	"renew": "Renew",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Tidak siapapun",
 
 	"save": "Simpan",
+	"saved": "Saved",
 	"search": "Cari",
+	"searching": "Searching",
 	"search.min": "Masukkan {min} karakter untuk mencari",
 	"search.all": "Show all {count} results",
 	"search.results.none": "Tidak ada hasil",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
+	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Folder konten nampaknya terekspos",
 	"system.issues.eol.kirby": "Versi instalasi Kirby Anda sudah mencapai akhir dan tidak akan lagi mendapat pembaruan keamanan",
 	"system.issues.eol.plugin": "Versi instalasi plugin { plugin } Anda sudah mencapai akhir dan tidak akan lagi mendapatkan pembaruan keamanan",
@@ -646,6 +681,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "Templat",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Judul",
 	"today": "Hari ini",
 
@@ -715,10 +756,13 @@
 	"users": "Pengguna",
 
 	"version": "Versi",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
+	"view": "View",
 	"view.account": "Akun Anda",
 	"view.installation": "Pemasangan",
 	"view.languages": "Bahasa",

@@ -21,6 +21,8 @@
 	"copy": "Copiar",
 	"copy.all": "Copiar todos",
 	"copy.success": "{count} copiados!",
+	"copy.success.multiple": "{count} copiados!",
+	"copy.url": "Copiar URL",
 	"create": "Criar",
 	"custom": "Personalizado",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Tipo de cache \"{type}\" inválido",
 
+	"error.content.lock.delete": "A versão está bloqueada e não pode ser eliminada",
+	"error.content.lock.move": "A versão está bloqueada e não pode ser movida",
+	"error.content.lock.publish": "Esta versão já se encontra publicada",
+	"error.content.lock.replace": "A versão está bloqueada e não pode ser substituída",
+	"error.content.lock.update": "A versão está bloqueada e não pode ser atualizada",
+
 	"error.email.preset.notFound": "A predefinição de email \"{name}\" não foi encontrada",
 
 	"error.field.converter.invalid": "Conversor \"{converter}\" inválido",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "O nome do ficheiro não pode ficar em branco",
 	"error.file.notFound": "Não foi possível encontrar o ficheiro \"{filename}\"",
 	"error.file.orientation": "A orientação da imagem deve ser \"{orientation}\"",
+	"error.file.sort.permission": "Não tem permissão para alterar a ordem de \"{filename}\"",
 	"error.file.type.forbidden": "Não tem permissões para enviar ficheiros {type}",
 	"error.file.type.invalid": "Tipo de ficheiro inválido: {type}",
 	"error.file.undefined": "Não foi possível encontrar o ficheiro",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "A página não pode ser movida para dentro dela mesma",
 	"error.page.move.directory": "A pasta da página não pode ser movida",
 	"error.page.move.duplicate": "Já existe uma subpágina com o URL \"{slug}\"",
+	"error.page.move.noSections": "A página \"{parent}\" não pode ser pai de nenhuma página porque não tem secções de páginas na sua blueprint",
 	"error.page.move.notFound": "A página movida não foi encontrada",
 	"error.page.move.permission": "Não tem permissões para mover \"{slug}\"",
 	"error.page.move.template": "O template \"{template}\" não é aceite como subpágina de \"{parent}\"",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Título ",
 	"field.blocks.heading.text": "Texto",
 	"field.blocks.heading.placeholder": "Título …",
+	"field.blocks.figure.back.plain": "Simples",
+	"field.blocks.figure.back.pattern.light": "Padrão (claro)",
+	"field.blocks.figure.back.pattern.dark": "Padrão (escuro)",
 	"field.blocks.image.alt": "Texto alternativo",
 	"field.blocks.image.caption": "Legenda",
 	"field.blocks.image.crop": "Cortar",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Nenhum ficheiro selecionado ainda",
+	"field.files.empty.single": "Nenhum ficheiro selecionado ainda",
 
 	"field.layout.change": "Alterar layout",
 	"field.layout.delete": "Eliminar layout",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Nenhuma informação ainda",
 
 	"field.pages.empty": "Nenhuma página selecionada ainda",
+	"field.pages.empty.single": "Nenhuma página selecionada ainda",
 
 	"field.structure.delete.confirm": "Tem a certeza que pretende eliminar esta linha?",
 	"field.structure.delete.confirm.all": "Tem a certeza que pretende eliminar todos os registos?",
 	"field.structure.empty": "Nenhum registo ainda",
 
 	"field.users.empty": "Nenhum utilizador selecionado ainda",
+	"field.users.empty.single": "Nenhum utilizador selecionado ainda",
 
 	"fields.empty": "Nenhum campo ainda",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Nenhum ficheiro ainda",
 
 	"filter": "Filtro",
+
+	"form.discard": "Reverter alterações",
+	"form.discard.confirm": "Tem a certeza que pretende reverter <strong>todas as suas alterações</strong>?",
+	"form.locked": "Este conteúdo está desativado para si porque encontra-se a ser editado por outro utilizador",
+	"form.unsaved": "As alterações atuais ainda não foram guardadas",
+	"form.preview": "Pré-visualizar alterações",
+	"form.preview.draft": "Pré-visualizar rascunho",
 
 	"hide": "Ocultar",
 	"hour": "Hora",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Pronto para lançar o seu site?",
 	"license.status.missing.info": "Sem licença válida",
 	"license.status.missing.label": "Por favor, ative a sua licença",
+	"license.status.unknown.info": "O estado da licença é desconhecido",
+	"license.status.unknown.label": "Licença desconhecida",
 	"license.manage": "Gerir as suas licenças",
 	"license.purchased": "Comprada",
 	"license.success": "Obrigado por apoiar o Kirby",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Alterações não guardadas",
 	"lock.unsaved.empty": "Não existem mais alterações não guardadas",
+	"lock.unsaved.files": "Ficheiros não guardados",
+	"lock.unsaved.pages": "Páginas não guardadas",
+	"lock.unsaved.users": "Contas não guardadas",
 	"lock.isLocked": "Alterações não guardadas de {email}",
 	"lock.unlock": "Desbloquear",
 	"lock.unlock.submit": "Desbloqueie e substitua alterações não guardadas de <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "Anterior",
 	"preview": "Pré-visualizar",
+
+	"publish": "Publicar",
+	"published": "Publicadas",
+
 	"remove": "Remover",
 	"rename": "Alterar nome",
 	"renew": "Renovar",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Ninguém",
 
 	"save": "Guardar",
+	"saved": "Guardado",
 	"search": "Pesquisar",
+	"searching": "À procura",
 	"search.min": "Insira {min} caracteres para pesquisar",
 	"search.all": "Mostrar todos os {count} resultados",
 	"search.results.none": "Sem resultados",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Copiar informação",
 	"system.info.copied": "Informação de sistema copiada",
+	"system.issues.api.methods": "O servidor não suporta pedidos PATCH",
 	"system.issues.content": "A pasta content parece não estar protegida",
 	"system.issues.eol.kirby": "A versão instalada do Kirby chegou ao fim da sua vida útil e não irá receber mais atualizações de segurança",
 	"system.issues.eol.plugin": "A versão instalada do plugin { plugin } chegou ao fim da sua vida útil e não irá receber mais atualizações de segurança",
@@ -646,6 +681,12 @@
 	"tel": "Telefone",
 	"tel.placeholder": "+351912345678",
 	"template": "Template",
+
+	"theme": "Tema",
+	"theme.light": "Luzes ligadas",
+	"theme.dark": "Luzes desligadas",
+	"theme.automatic": "Ajustar ao tema do sistema",
+
 	"title": "Título",
 	"today": "Hoje",
 
@@ -715,10 +756,13 @@
 	"users": "Utilizadores",
 
 	"version": "Versão",
+	"version.changes": "Versão alterada",
+	"version.compare": "Comparar versões",
 	"version.current": "Versão atual",
 	"version.latest": "Versão mais recente",
 	"versionInformation": "Informação da versão",
 
+	"view": "Visualizar",
 	"view.account": "A sua conta",
 	"view.installation": "Instala\u00e7\u00e3o",
 	"view.languages": "Idiomas",

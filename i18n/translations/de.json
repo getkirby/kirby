@@ -20,7 +20,9 @@
 	"coordinates": "Koordinaten",
 	"copy": "Kopieren",
 	"copy.all": "Alle kopieren",
-	"copy.success": "{count} kopiert!",
+	"copy.success": "Kopiert",
+	"copy.success.multiple": "{count} kopiert!",
+	"copy.url": "URL kopieren",
 	"create": "Erstellen",
 	"custom": "Benutzerdefiniert",
 
@@ -90,6 +92,12 @@
 
 	"error.cache.type.invalid": "Ungültiger Cachetyp: \"{type}\"",
 
+	"error.content.lock.delete": "Die Version ist blockiert und kann daher nicht gelöscht werden.",
+	"error.content.lock.move": "Die Ursprungsversion ist blockiert und kann daher nicht gelöscht werden",
+	"error.content.lock.publish": "Die Version wurde bereits veröffentlicht",
+	"error.content.lock.replace": "Die Version ist blockiert und kann daher nicht ersetzt werden",
+	"error.content.lock.update": "Die Version ist blockiert und kann daher nicht geändert werden",
+
 	"error.email.preset.notFound": "Die E-Mailvorlage \"{name}\" wurde nicht gefunden",
 
 	"error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
@@ -118,6 +126,7 @@
 	"error.file.name.missing": "Bitte gib einen Dateinamen an",
 	"error.file.notFound": "Die Datei \"{filename}\" konnte nicht gefunden werden",
 	"error.file.orientation": "Das Bildformat ist ungültig. Erwartetes Format: \"{orientation}\"",
+	"error.file.sort.permission": "Du darfst die Sortierung für \"{filename}\" nicht ändern.",
 	"error.file.type.forbidden": "Du kannst keinen {type}-Dateien hochladen",
 	"error.file.type.invalid": "Ungültiger Dateityp: {mime}",
 	"error.file.undefined": "Die Datei konnte nicht gefunden werden",
@@ -168,6 +177,7 @@
 	"error.page.move.ancestor": "Die Seite kann nicht in sich selbst verschoben werden",
 	"error.page.move.directory": "Der Ordner der Seite kann nicht verschoben werden",
 	"error.page.move.duplicate": "Eine Seite mit dem URL-Kürzel \"{slug}\" besteht bereits",
+	"error.page.move.noSections": "Die Seite \"{parent}\" kann nicht ausgewählt werden, weil sie keine Unterseiten haben kann. ",
 	"error.page.move.notFound": "Die verschobene Seite kann nicht gefunden werden",
 	"error.page.move.permission": "Du kannst die Seite \"{slug}\" nicht verschieben",
 	"error.page.move.template": "Die Vorlage \"{template}\" wird nicht als Unterseite von \"{parent}\" akzeptiert",
@@ -297,6 +307,9 @@
 	"field.blocks.heading.name": "Überschrift",
 	"field.blocks.heading.text": "Text",
 	"field.blocks.heading.placeholder": "Überschrift …",
+	"field.blocks.figure.back.plain": "Ohne",
+	"field.blocks.figure.back.pattern.light": "Muster (hell)",
+	"field.blocks.figure.back.pattern.dark": "Muster (dunkel)",
 	"field.blocks.image.alt": "Alternativer Text",
 	"field.blocks.image.caption": "Bildunterschrift",
 	"field.blocks.image.crop": "Beschneiden",
@@ -334,6 +347,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.files.empty": "Keine Dateien ausgewählt",
+	"field.files.empty.single": "Keine Dateien ausgewählt",
 
 	"field.layout.change": "Layout ändern",
 	"field.layout.delete": "Layout löschen",
@@ -345,12 +359,14 @@
 	"field.object.empty": "Noch keine Information",
 
 	"field.pages.empty": "Keine Seiten ausgewählt",
+	"field.pages.empty.single": "Keine Seiten ausgewählt",
 
 	"field.structure.delete.confirm": "Willst du diesen Eintrag wirklich l\u00f6schen?",
 	"field.structure.delete.confirm.all": "Möchtest du wirklich alle Einträge löschen?",
 	"field.structure.empty": "Es bestehen keine Eintr\u00e4ge.",
 
 	"field.users.empty": "Keine Accounts ausgewählt",
+	"field.users.empty.single": "Keine Accounts ausgewählt",
 
 	"fields.empty": "Keine Felder",
 
@@ -368,6 +384,13 @@
 	"files.empty": "Keine Dateien",
 
 	"filter": "Filter",
+
+	"form.discard": "Änderungen verwerfen",
+	"form.discard.confirm": "Willst du wirklich <strong>alle ungespeicherten Änderungen verwerfen</strong>? ",
+	"form.locked": "Dieser Inhalt ist gesperrt, weil er aktuell von einem anderen Account bearbeitet wird",
+	"form.unsaved": "Die aktuellen Änderungen wurden noch nicht gespeichert",
+	"form.preview": "Änderungsvorschau",
+	"form.preview.draft": "Entwurfsvorschau",
 
 	"hide": "Verbergen",
 	"hour": "Stunde",
@@ -444,6 +467,8 @@
 	"license.status.missing.bubble": "Bereit, deine Seite zu veröffentlichen?",
 	"license.status.missing.info": "Keine gültige Lizenz",
 	"license.status.missing.label": "Bitte aktiviere deine Lizenz",
+	"license.status.unknown.info": "Der Lizenzstatus ist unbekannt",
+	"license.status.unknown.label": "Unbekannte Lizenz",
 	"license.manage": "Verwalte deine Lizenzen",
 	"license.purchased": "Gekauft",
 	"license.success": "Vielen Dank für deine Unterstützung",
@@ -456,6 +481,9 @@
 
 	"lock.unsaved": "Ungespeicherte Änderungen",
 	"lock.unsaved.empty": "Keine ungespeicherten Änderungen",
+	"lock.unsaved.files": "Geänderte Dateien",
+	"lock.unsaved.pages": "Geänderte Seiten",
+	"lock.unsaved.users": "Geänderte Accounts",
 	"lock.isLocked": "Ungespeicherte Änderungen von {email}",
 	"lock.unlock": "Entsperren",
 	"lock.unlock.submit": "Entsperre und überschreibe ungespeicherte Änderungen von <strong>{email}</strong>",
@@ -578,6 +606,10 @@
 	"plugins": "Plugins",
 	"prev": "Vorheriger Eintrag",
 	"preview": "Vorschau",
+
+	"publish": "Veröffentlichen",
+	"published": "Veröffentlicht",
+
 	"remove": "Entfernen",
 	"rename": "Umbenennen",
 	"renew": "Erneuern",
@@ -597,7 +629,9 @@
 	"role.nobody.title": "Niemand",
 
 	"save": "Speichern",
+	"saved": "Gespeichert",
 	"search": "Suchen",
+	"searching": "Suchen",
 	"search.min": "Gib mindestens {min}  Zeichen ein, um zu suchen",
 	"search.all": "Zeige alle {count} Ergebnisse",
 	"search.results.none": "Keine Ergebnisse",
@@ -622,6 +656,7 @@
 
 	"system.info.copy": "Info kopieren",
 	"system.info.copied": "System Info wurde kopiert",
+	"system.issues.api.methods": "Dein Server unterstützt keine PATCH Requests",
 	"system.issues.content": "Der content Ordner scheint öffentlich zugänglich zu sein",
 	"system.issues.eol.kirby": "Deine Kirby Installation ist veraltet und erhält keine weiteren Sicherheitsupdates",
 	"system.issues.eol.plugin": "Deine Version des { plugin } Plugins ist veraltet und erhält keine weiteren Sicherheitsupdates",
@@ -646,6 +681,12 @@
 	"tel": "Telefon",
 	"tel.placeholder": "+49123456789",
 	"template": "Vorlage",
+
+	"theme": "Thema",
+	"theme.light": "Licht an",
+	"theme.dark": "Licht aus",
+	"theme.automatic": "Systemeinstellung übernehmen",
+
 	"title": "Titel",
 	"today": "Heute",
 
@@ -715,10 +756,13 @@
 	"users": "Accounts",
 
 	"version": "Version",
+	"version.changes": "Geänderte Version",
+	"version.compare": "Versionen vergleichen",
 	"version.current": "Aktuelle Version",
 	"version.latest": "Neueste Version",
 	"versionInformation": "Informationen zur Version",
 
+	"view": "Ansicht",
 	"view.account": "Dein Account",
 	"view.installation": "Installation",
 	"view.languages": "Sprachen",
