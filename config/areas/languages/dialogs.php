@@ -244,7 +244,9 @@ return [
 
 			// shows info text when variable is an array
 			// TODO: 5.0: use entries field instead showing info text
-			if (is_array($variable->value()) === true) {
+			$isVariableArray = is_array($variable->value()) === true;
+
+			if ($isVariableArray === true) {
 				$fields['value'] = [
 					'label' => I18n::translate('info'),
 					'type'  => 'info',
@@ -254,10 +256,12 @@ return [
 
 			return [
 				'component' => 'k-form-dialog',
-				'props' => [
-					'fields' => $fields,
-					'size'   => 'large',
-					'value'  => [
+				'props'     => [
+					'cancelButton' => $isVariableArray === false,
+					'fields'       => $fields,
+					'size'         => 'large',
+					'submitButton' => $isVariableArray === false,
+					'value'        => [
 						'key'   => $variable->key(),
 						'value' => $variable->value()
 					]
