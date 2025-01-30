@@ -299,6 +299,7 @@ return array(
     'Kirby\\Panel\\Ui\\FilePreviews\\AudioFilePreview' => $baseDir . '/src/Panel/Ui/FilePreviews/AudioFilePreview.php',
     'Kirby\\Panel\\Ui\\FilePreviews\\DefaultFilePreview' => $baseDir . '/src/Panel/Ui/FilePreviews/DefaultFilePreview.php',
     'Kirby\\Panel\\Ui\\FilePreviews\\ImageFilePreview' => $baseDir . '/src/Panel/Ui/FilePreviews/ImageFilePreview.php',
+    'Kirby\\Panel\\Ui\\FilePreviews\\PdfFilePreview' => $baseDir . '/src/Panel/Ui/FilePreviews/PdfFilePreview.php',
     'Kirby\\Panel\\Ui\\FilePreviews\\VideoFilePreview' => $baseDir . '/src/Panel/Ui/FilePreviews/VideoFilePreview.php',
     'Kirby\\Panel\\User' => $baseDir . '/src/Panel/User.php',
     'Kirby\\Panel\\UserTotpDisableDialog' => $baseDir . '/src/Panel/UserTotpDisableDialog.php',

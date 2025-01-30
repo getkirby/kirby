@@ -420,6 +420,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Panel\\Ui\\FilePreviews\\AudioFilePreview' => __DIR__ . '/../..' . '/src/Panel/Ui/FilePreviews/AudioFilePreview.php',
         'Kirby\\Panel\\Ui\\FilePreviews\\DefaultFilePreview' => __DIR__ . '/../..' . '/src/Panel/Ui/FilePreviews/DefaultFilePreview.php',
         'Kirby\\Panel\\Ui\\FilePreviews\\ImageFilePreview' => __DIR__ . '/../..' . '/src/Panel/Ui/FilePreviews/ImageFilePreview.php',
+        'Kirby\\Panel\\Ui\\FilePreviews\\PdfFilePreview' => __DIR__ . '/../..' . '/src/Panel/Ui/FilePreviews/PdfFilePreview.php',
         'Kirby\\Panel\\Ui\\FilePreviews\\VideoFilePreview' => __DIR__ . '/../..' . '/src/Panel/Ui/FilePreviews/VideoFilePreview.php',
         'Kirby\\Panel\\User' => __DIR__ . '/../..' . '/src/Panel/User.php',
         'Kirby\\Panel\\UserTotpDisableDialog' => __DIR__ . '/../..' . '/src/Panel/UserTotpDisableDialog.php',
