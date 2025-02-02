@@ -41,7 +41,7 @@ class FieldDialog
 		string $field,
 		string|null $path = null
 	): static {
-		$file = Find::file($model, $filename);
+		$file  = Find::file($model, $filename);
 		$field = Form::for($file)->field($field);
 		return new static($field, $path);
 	}

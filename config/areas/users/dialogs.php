@@ -42,28 +42,28 @@ return [
 		'handler' => UserDeleteDialog::for(...)
 	],
 	'user.fields' => [
+		...$fields['model'],
 		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
-		...$fields['model']
 	],
 	'user.file.changeName' => [
+		...$files['changeName'],
 		'pattern' => '(users/.*?)/files/(:any)/changeName',
-		...$files['changeName']
 	],
 	'user.file.changeSort' => [
+		...$files['changeSort'],
 		'pattern' => '(users/.*?)/files/(:any)/changeSort',
-		...$files['changeSort']
 	],
 	'user.file.changeTemplate' => [
+		...$files['changeTemplate'],
 		'pattern' => '(users/.*?)/files/(:any)/changeTemplate',
-		...$files['changeTemplate']
 	],
 	'user.file.delete' => [
+		...$files['delete'],
 		'pattern' => '(users/.*?)/files/(:any)/delete',
-		...$files['delete']
 	],
 	'user.file.fields' => [
+		...$fields['file'],
 		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
-		...$fields['file']
 	],
 	'user.totp.disable' => [
 		'pattern' => 'users/(:any)/totp/disable',

@@ -46,19 +46,8 @@ class UserTotpEnableDialogTest extends TestCase
 	public function testConstruct(): void
 	{
 		$dialog = new UserTotpEnableDialog();
-
 		$this->assertSame($this->app->user(), $dialog->user);
 		$this->assertSame('test@getkirby.com', $dialog->user->email());
-	}
-
-	public function testLoad(): void
-	{
-		$dialog = new UserTotpEnableDialog();
-		$state  = $dialog->load();
-
-		$this->assertSame('k-totp-dialog', $state['component']);
-		$this->assertIsString($state['props']['value']['secret']);
-		$this->assertIsString($state['props']['qr']);
 	}
 
 	public function testQr(): void
@@ -70,6 +59,20 @@ class UserTotpEnableDialogTest extends TestCase
 		$this->assertStringContainsString('otpauth://totp/:test%40getkirby.com?secret=', $qr->data);
 	}
 
+	public function testRender(): void
+	{
+		$dialog = new UserTotpEnableDialog();
+		$state  = $dialog->render();
+
+		$this->assertSame('k-totp-dialog', $state['component']);
+		$this->assertIsString($state['props']['value']['secret']);
+		$this->assertIsString($state['props']['qr']);
+	}
+
+	/**
+	 * @covers ::submit
+	 * @covers ::totp
+	 */
 	public function testSubmit(): void
 	{
 		$totp            = new Totp();

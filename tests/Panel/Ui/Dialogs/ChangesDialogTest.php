@@ -101,22 +101,6 @@ class ChangesDialogTest extends AreaTestCase
 		$this->assertSame('/pages/test', $items[0]['link']);
 	}
 
-	public function testLoad(): void
-	{
-		$dialog = new ChangesDialog();
-
-		$expected = [
-			'component' => 'k-changes-dialog',
-			'props' => [
-				'files' => [],
-				'pages' => [],
-				'users' => [],
-			]
-		];
-
-		$this->assertSame($expected, $dialog->load());
-	}
-
 	public function testPages(): void
 	{
 		$this->setUpModels();
@@ -138,6 +122,24 @@ class ChangesDialogTest extends AreaTestCase
 		$this->assertSame([], $dialog->pages());
 	}
 
+	/**
+	 * @covers ::render
+	 */
+	public function testRender(): void
+	{
+		$dialog = new ChangesDialog();
+		$result = $dialog->render();
+		$this->assertSame('k-changes-dialog', $result['component']);
+		$this->assertSame([
+			'files' => [],
+			'pages' => [],
+			'users' => [],
+		], $result['props']);
+	}
+
+	/**
+	 * @covers ::users
+	 */
 	public function testUsers(): void
 	{
 		$this->setUpModels();

@@ -21,13 +21,17 @@ class Drawer extends Component
 
 	public function __construct(
 		string $component = 'k-drawer',
+		string|null $class = null,
 		public bool $disabled = false,
 		public string|null $icon = null,
 		public array|null $options = null,
+		string|null $style = null,
 		public string|null $title = null,
 	) {
 		parent::__construct(
-			component: $component
+			component: $component,
+			class:     $class,
+			style:     $style
 		);
 
 		$this->kirby   = App::instance();

@@ -49,32 +49,28 @@ class UserTotpDisableDialogTest extends TestCase
 		$_GET = [];
 	}
 
-	public function testConstruct(): void
+	public function testFor(): void
 	{
-		$dialog = new UserTotpDisableDialog();
-		$this->assertSame($this->app->user(), $dialog->user);
-		$this->assertSame('test@getkirby.com', $dialog->user->email());
-
-		$dialog = new UserTotpDisableDialog('homer');
+		$dialog = UserTotpDisableDialog::for('homer');
 		$this->assertSame('homer@simpson.com', $dialog->user->email());
 	}
 
-	public function testLoad(): void
+	public function testRender(): void
 	{
 		// current admin user for themselves
-		$dialog = new UserTotpDisableDialog();
-		$state  = $dialog->load();
+		$dialog = UserTotpDisableDialog::for('test');
+		$state  = $dialog->render();
 		$this->assertSame('k-form-dialog', $state['component']);
 
 		// current admin user for another user
-		$dialog = new UserTotpDisableDialog('homer');
-		$state  = $dialog->load();
+		$dialog = UserTotpDisableDialog::for('homer');
+		$state  = $dialog->render();
 		$this->assertSame('k-remove-dialog', $state['component']);
 
 		// non-admin admin user for themselves
 		$this->app->clone(['user' => 'homer']);
-		$dialog = new UserTotpDisableDialog();
-		$state  = $dialog->load();
+		$dialog = UserTotpDisableDialog::for('homer');
+		$state  = $dialog->render();
 		$this->assertSame('k-form-dialog', $state['component']);
 	}
 
@@ -90,7 +86,7 @@ class UserTotpDisableDialogTest extends TestCase
 		$_GET['password'] = $password;
 		$this->assertSame($secret, $user->secret('totp'));
 
-		$dialog = new UserTotpDisableDialog();
+		$dialog = new UserTotpDisableDialog($user);
 		$state  = $dialog->submit();
 		$this->assertNull($user->secret('totp'));
 		$this->assertIsString($state['message']);
@@ -107,7 +103,7 @@ class UserTotpDisableDialogTest extends TestCase
 
 		$_GET['password'] = 'nonono123';
 
-		$dialog = new UserTotpDisableDialog();
+		$dialog = new UserTotpDisableDialog($user);
 		$dialog->submit();
 	}
 
@@ -116,7 +112,7 @@ class UserTotpDisableDialogTest extends TestCase
 		$this->expectException(PermissionException::class);
 
 		$this->app->clone(['user' => 'homer']);
-		$dialog = new UserTotpDisableDialog('test');
+		$dialog = UserTotpDisableDialog::for('test');
 		$dialog->submit();
 	}
 }
