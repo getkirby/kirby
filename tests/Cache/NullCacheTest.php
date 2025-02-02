@@ -20,6 +20,18 @@ class NullCacheTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isEmpty
+	 */
+	public function testIsEmpty()
+	{
+		$cache = new NullCache();
+
+		$this->assertTrue($cache->isEmpty());
+		$this->assertTrue($cache->set('foo', 'A basic value'));
+		$this->assertTrue($cache->isEmpty());
+	}
+
+	/**
 	 * @covers ::set
 	 * @covers ::retrieve
 	 * @covers ::remove

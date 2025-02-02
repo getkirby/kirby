@@ -14,29 +14,37 @@ class PermalinksTest extends TestCase
 					[
 						'slug'    => 'a',
 						'content' => ['uuid' => 'my-id']
+					],
+					[
+						'slug'    => 'b',
+						'content' => ['uuid' => 'my-other-id']
 					]
 				]
 			]
 		]);
 
-		// not cached, should fail (redirect to error)
-		$response = $app->call('/@/page/my-id');
-		$this->assertFalse($response);
-
-		// cached, should redirect to page A
-		$app->page('a')->uuid()->populate();
-		$response = $app->call('/@/page/my-id')->send();
-		$this->assertSame(302, $response->code());
-		$this->assertSame('https://getkirby.com/a', $response->header('Location'));
-
-		// check if ->url() populates cache
+		$this->assertTrue(Uuids::cache()->isEmpty());
 		$uuid = $app->page('a')->uuid();
-		$uuid->clear();
+
+		// not cached, but cache is empty => using index to find it
+		$this->assertFalse($uuid->isCached());
 		$response = $app->call('/@/page/my-id');
-		$this->assertFalse($response);
-		$uuid->url();
-		$response = $app->call('/@/page/my-id')->send();
 		$this->assertSame(302, $response->code());
 		$this->assertSame('https://getkirby.com/a', $response->header('Location'));
+
+		// now cached, redirect from cache
+		$this->assertTrue($uuid->isCached());
+		$response = $app->call('/@/page/my-id');
+		$this->assertSame(302, $response->code());
+		$this->assertSame('https://getkirby.com/a', $response->header('Location'));
+
+		// not cached but cache isn't empty => fail to prevent attacks
+		$uuid->clear();
+		$app->page('b')->uuid()->populate();
+		$this->assertFalse($uuid->isCached());
+		$this->assertFalse(Uuids::cache()->isEmpty());
+
+		$response = $app->call('/@/page/my-id');
+		$this->assertSame(false, $response);
 	}
 }
