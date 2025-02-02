@@ -37,19 +37,16 @@ class AreasTest extends TestCase
 	public function testArea(): void
 	{
 		// defaults
-		$result = Areas::area('test', []);
-		$expected = [
-			'id' => 'test',
-			'label' => 'test',
-			'breadcrumb' => [],
-			'breadcrumbLabel' => 'test',
-			'title' => 'test',
-			'menu' => false,
-			'link' => 'test',
-			'search' => null
-		];
+		$area = Areas::area('test', []);
 
-		$this->assertSame($expected, $result);
+		$this->assertSame('test', $area->id());
+		$this->assertSame('test', $area->label());
+		$this->assertSame([], $area->breadcrumb());
+		$this->assertSame('test', $area->breadcrumbLabel());
+		$this->assertSame('test', $area->title());
+		$this->assertFalse($area->menu());
+		$this->assertSame('test', $area->link());
+		$this->assertNull($area->search());
 	}
 
 	/**

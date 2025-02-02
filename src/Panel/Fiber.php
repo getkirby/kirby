@@ -32,7 +32,8 @@ class Fiber
 
 	public function __construct(
 		protected array $view = [],
-		protected array $options = []
+		protected Area|null $area = null,
+		protected array $areas = [],
 	) {
 		$this->kirby       = App::instance();
 		$this->multilang   = $this->kirby->panel()->multilang();
@@ -212,11 +213,12 @@ class Fiber
 	public function menu(): array
 	{
 		$menu = new Menu(
-			$this->options['areas'] ?? [],
+			$this->areas,
 			$this->permissions,
-			$this->options['area']['id'] ?? null
+			$this->area?->id()
 		);
-		return $menu->entries();
+
+		return $menu->items();
 	}
 
 	public function multilang(): bool
@@ -236,11 +238,11 @@ class Fiber
 	{
 		$searches = [];
 
-		foreach ($this->options['areas'] ?? [] as $id => $area) {
+		foreach ($this->areas as $area) {
 			// by default, all areas are accessible unless
 			// the permissions are explicitly set to false
-			if (($this->permissions['access'][$id] ?? true) !== false) {
-				foreach ($area['searches'] ?? [] as $id => $params) {
+			if ($area->isAccessible($this->permissions) !== false) {
+				foreach ($area->searches() ?? [] as $id => $params) {
 					$searches[$id] = [
 						'icon'  => $params['icon'] ?? 'search',
 						'label' => $params['label'] ?? Str::ucfirst($id),
@@ -353,19 +355,8 @@ class Fiber
 
 		$view = array_replace_recursive(
 			$defaults,
-			$this->options['area'] ?? [],
+			$this->area?->toView() ?? [],
 			$this->view
-		);
-
-		// make sure that views and dialogs are gone
-		unset(
-			$view['buttons'],
-			$view['dialogs'],
-			$view['drawers'],
-			$view['dropdowns'],
-			$view['requests'],
-			$view['searches'],
-			$view['views']
 		);
 
 		// resolve all callbacks in the view array

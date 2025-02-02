@@ -181,8 +181,9 @@ class DropdownTest extends TestCase
 	 */
 	public function testRoutesForDropdownsWithOptions(): void
 	{
-		$area = [
-			'dropdowns' => [
+		$routes = Router::routesForDropdowns(new Area(
+			id: 'test',
+			dropdowns: [
 				'test' => [
 					'pattern' => 'test',
 					'options' => $action = fn () => [
@@ -193,9 +194,7 @@ class DropdownTest extends TestCase
 					]
 				]
 			]
-		];
-
-		$routes = Router::routesForDropdowns('test', $area);
+		));
 
 		$expected = [
 			[
@@ -215,8 +214,9 @@ class DropdownTest extends TestCase
 	 */
 	public function testRoutesForDropdownsWithShortcut(): void
 	{
-		$area = [
-			'dropdowns' => [
+		$routes = Router::routesForDropdowns(new Area(
+			id: 'test',
+			dropdowns: [
 				'test' => $action = fn () => [
 					[
 						'text' => 'Test',
@@ -224,9 +224,7 @@ class DropdownTest extends TestCase
 					]
 				]
 			]
-		];
-
-		$routes = Router::routesForDropdowns('test', $area);
+		));
 
 		$expected = [
 			[
