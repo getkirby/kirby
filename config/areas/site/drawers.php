@@ -3,31 +3,21 @@
 $fields = require __DIR__ . '/../fields/drawers.php';
 
 return [
-	// page field drawers
 	'page.fields' => [
 		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit']
+		...$fields['model']
 	],
-
-	// page file field drawers
 	'page.file.fields' => [
 		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit'],
+		...$fields['file']
 	],
 
-	// site field drawers
 	'site.fields' => [
 		'pattern' => '(site)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit'],
+		...$fields['model']
 	],
-
-	// site file field drawers
 	'site.file.fields' => [
 		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit'],
+		...$fields['file']
 	],
 ];

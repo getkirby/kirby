@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Closure;
 use Kirby\Http\Response;
 
 /**
@@ -49,6 +50,12 @@ class Dialog extends Json
 		// create the full pattern with dialogs prefix
 		$pattern = trim($prefix . '/' . ($options['pattern'] ?? $id), '/');
 		$type    = str_replace('$', '', static::$key);
+
+		// create load/submit events from class handler
+		if ($handler = $options['handler'] ?? null) {
+			$options['load']   ??= fn (...$args) => $handler(...$args)->render();
+			$options['submit'] ??= fn (...$args) => $handler(...$args)->submit();
+		}
 
 		// load event
 		$routes[] = [

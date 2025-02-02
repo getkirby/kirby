@@ -3,17 +3,12 @@
 $drawers = require __DIR__ . '/../users/drawers.php';
 
 return [
-	// account fields drawers
 	'account.fields' => [
 		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $drawers['user.fields']['load'],
-		'submit'  => $drawers['user.fields']['submit']
+		...$drawers['user.fields']
 	],
-
-	// account file fields drawers
 	'account.file.fields' => [
 		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $drawers['user.file.fields']['load'],
-		'submit'  => $drawers['user.file.fields']['submit']
+		...$drawers['user.file.fields']
 	],
 ];
