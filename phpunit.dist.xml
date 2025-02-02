@@ -32,14 +32,26 @@
 			<directory suffix=".php">./config/templates</directory>
 			<file>./config/api/routes/changes.php</file>
 			<file>./config/areas/account/buttons.php</file>
+			<file>./config/areas/account/dialogs.php</file>
+			<file>./config/areas/account/drawers.php</file>
+			<file>./config/areas/fields/dialogs.php</file>
+			<file>./config/areas/fields/drawers.php</file>
 			<file>./config/areas/files/buttons.php</file>
+			<file>./config/areas/files/dialogs.php</file>
+			<file>./config/areas/files/requests.php</file>
+			<file>./config/areas/lab/drawers.php</file>
 			<file>./config/areas/languages/buttons.php</file>
+			<file>./config/areas/languages/dialogs.php</file>
 			<file>./config/areas/site/buttons.php</file>
+			<file>./config/areas/site/dialogs.php</file>
+			<file>./config/areas/site/drawers.php</file>
+			<file>./config/areas/site/requests.php</file>
+			<file>./config/areas/system/dialogs.php</file>
 			<file>./config/areas/users/buttons.php</file>
+			<file>./config/areas/users/dialogs.php</file>
+			<file>./config/areas/users/drawers.php</file>
 			<file>./config/aliases.php</file>
 			<file>./config/setup.php</file>
-			<file>./config/areas/files/requests.php</file>
-			<file>./config/areas/site/requests.php</file>
 		</exclude>
 	</source>
 
