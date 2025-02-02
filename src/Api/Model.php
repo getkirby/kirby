@@ -63,7 +63,9 @@ class Model
 				null    => 'null',
 				default => $this->data::class,
 			};
-			throw new Exception(sprintf('Invalid model type "%s" expected: "%s"', $class, $schema['type']));
+			throw new Exception(
+				message: sprintf('Invalid model type "%s" expected: "%s"', $class, $schema['type'])
+			);
 		}
 	}
 
@@ -218,7 +220,9 @@ class Model
 
 			// try to fall back to the default view at least
 			if (isset($this->views[$name]) === false) {
-				throw new Exception(sprintf('The view "%s" does not exist', $name));
+				throw new Exception(
+					message: sprintf('The view "%s" does not exist', $name)
+				);
 			}
 		}
 
