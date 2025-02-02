@@ -1,18 +1,23 @@
 <?php
 
 $fields = require __DIR__ . '/../fields/drawers.php';
+$sections = require __DIR__ . '/../sections/drawers.php';
 
 return [
-	// user field drawers
 	'user.fields' => [
 		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit']
+		...$fields['model']
 	],
-	// user file fields drawers
+	'user.sections' => [
+		'pattern' => '(users/.*?)/sections/(:any)/(:all?)',
+		...$sections['model']
+	],
 	'user.file.fields' => [
 		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit']
+		...$fields['file']
+	],
+	'user.file.sections' => [
+		'pattern' => '(users/.*?)/files/(:any)/sections/(:any)/(:all?)',
+		...$sections['file']
 	],
 ];
