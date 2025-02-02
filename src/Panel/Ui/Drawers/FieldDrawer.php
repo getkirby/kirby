@@ -29,8 +29,7 @@ class FieldDrawer
 		string $model,
 		string $field,
 		string|null $path = null
-	): static
-	{
+	): static {
 		$model = Find::parent($model);
 		$field = Form::for($model)->field($field);
 		return new static($field, $path);
@@ -41,8 +40,7 @@ class FieldDrawer
 		string $filename,
 		string $field,
 		string|null $path = null
-	): static
-	{
+	): static {
 		$file = Find::file($model, $filename);
 		$field = Form::for($file)->field($field);
 		return new static($field, $path);

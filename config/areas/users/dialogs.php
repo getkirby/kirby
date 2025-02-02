@@ -19,7 +19,7 @@ return [
 	],
 	'user.changeEmail' => [
 		'pattern' => 'users/(:any)/changeEmail',
-		'handler' =>UserChangeEmailDialog::for(...)
+		'handler' => UserChangeEmailDialog::for(...)
 	],
 	'user.changeLanguage' => [
 		'pattern' => 'users/(:any)/changeLanguage',

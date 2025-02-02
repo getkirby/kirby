@@ -16,7 +16,8 @@ use Kirby\Toolkit\I18n;
  */
 class UserCreateDialog extends FormDialog
 {
-	public function __construct() {
+	public function __construct()
+	{
 		$roles = $this->kirby->roles()->canBeCreated();
 
 		// get default value for role

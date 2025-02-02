@@ -15,7 +15,8 @@ use Kirby\Toolkit\I18n;
  */
 class SystemLicenseDialog extends Dialog
 {
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct(
 			component: 'k-license-dialog',
 			cancelButton: $this->isRenewable(),
@@ -39,11 +40,11 @@ class SystemLicenseDialog extends Dialog
 		$obfuscated = $this->kirby->user()->isAdmin() === false;
 
 		return [
-				'code'  => $license->code($obfuscated),
-				'icon'  => $status->icon(),
-				'info'  => $status->info($license->renewal('Y-m-d', 'date')),
-				'theme' => $status->theme(),
-				'type'  => $license->label(),
+			'code'  => $license->code($obfuscated),
+			'icon'  => $status->icon(),
+			'info'  => $status->info($license->renewal('Y-m-d', 'date')),
+			'theme' => $status->theme(),
+			'type'  => $license->label(),
 		];
 	}
 

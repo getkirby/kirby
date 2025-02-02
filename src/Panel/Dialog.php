@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel;
 
-use Closure;
 use Kirby\Http\Response;
 
 /**

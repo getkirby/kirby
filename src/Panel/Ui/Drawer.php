@@ -26,7 +26,7 @@ class Drawer extends Component
 		public array|null $options = null,
 		public string|null $title = null,
 	) {
-		parent::__construct (
+		parent::__construct(
 			component: $component
 		);
 
