@@ -266,7 +266,7 @@ return [
 	/**
 	 * Add your own session store
 	 */
-	'sessions' => function (App $kirby): string|SessionStore {
+	'session::store' => function (App $kirby): string|SessionStore {
 		return $kirby->root('sessions');
 	},
 
