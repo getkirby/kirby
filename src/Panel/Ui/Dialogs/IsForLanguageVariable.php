@@ -3,6 +3,8 @@
 namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\Find;
+use Kirby\Cms\Language;
+use Kirby\Cms\LanguageVariable;
 
 /**
  * @package   Kirby Panel
@@ -15,8 +17,13 @@ use Kirby\Cms\Find;
  */
 trait IsForLanguageVariable
 {
-	public static function for(string $code, string|null $key = null): static
-	{
+	/**
+	 * @psalm-return ($key is null ? \Kirby\Cms\Language : \Kirby\Cms\LanguageVariable)
+	 */
+	public static function for(
+		string $code,
+		string|null $key = null
+	): Language|LanguageVariable {
 		$language = Find::language($code);
 
 		if ($key === null) {
