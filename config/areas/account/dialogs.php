@@ -6,59 +6,59 @@ $dialogs = require __DIR__ . '/../users/dialogs.php';
 
 return [
 	'account.changeEmail' => [
+		...$dialogs['user.changeEmail'],
 		'pattern' => '(account)/changeEmail',
-		...$dialogs['user.changeEmail']
 	],
 	'account.changeLanguage' => [
+		...$dialogs['user.changeLanguage'],
 		'pattern' => '(account)/changeLanguage',
-		...$dialogs['user.changeLanguage']
 	],
 	'account.changeName' => [
+		...$dialogs['user.changeName'],
 		'pattern' => '(account)/changeName',
-		...$dialogs['user.changeName']
 	],
 	'account.changePassword' => [
+		...$dialogs['user.changePassword'],
 		'pattern' => '(account)/changePassword',
-		...$dialogs['user.changePassword']
 	],
 	'account.changeRole' => [
+		...$dialogs['user.changeRole'],
 		'pattern' => '(account)/changeRole',
-		...$dialogs['user.changeRole']
 	],
 	'account.delete' => [
+		...$dialogs['user.delete'],
 		'pattern' => '(account)/delete',
-		...$dialogs['user.delete']
 	],
 	'account.fields' => [
+		...$dialogs['user.fields'],
 		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
-		...$dialogs['user.fields']
 	],
 	'account.file.changeName' => [
+		...$dialogs['user.file.changeName'],
 		'pattern' => '(account)/files/(:any)/changeName',
-		...$dialogs['user.file.changeName']
 	],
 	'account.file.changeSort' => [
+		...$dialogs['user.file.changeSort'],
 		'pattern' => '(account)/files/(:any)/changeSort',
-		...$dialogs['user.file.changeSort']
 	],
 	'account.file.changeTemplate' => [
+		...$dialogs['user.file.changeTemplate'],
 		'pattern' => '(account)/files/(:any)/changeTemplate',
-		...$dialogs['user.file.changeTemplate']
 	],
 	'account.file.delete' => [
+		...$dialogs['user.file.delete'],
 		'pattern' => '(account)/files/(:any)/delete',
-		...$dialogs['user.file.delete']
 	],
 	'account.file.fields' => [
+		...$dialogs['user.file.fields'],
 		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
-		...$dialogs['user.file.fields']
 	],
 	'account.totp.enable' => [
 		'pattern' => '(account)/totp/enable',
 		'handler' => fn () => new UserTotpEnableDialog()
 	],
 	'account.totp.disable' => [
+		...$dialogs['user.totp.disable'],
 		'pattern' => '(account)/totp/disable',
-		...$dialogs['user.totp.disable']
 	],
 ];

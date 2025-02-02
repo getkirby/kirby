@@ -22,11 +22,15 @@ class Dialog extends Component
 	public function __construct(
 		string $component = 'k-dialog',
 		public string|array|false|null $cancelButton = null,
+		string|null $class = null,
 		public string|null $size = null,
+		string|null $style = null,
 		public string|array|false|null $submitButton = null,
 	) {
 		parent::__construct(
-			component: $component
+			component: $component,
+			class:     $class,
+			style:     $style
 		);
 
 		$this->kirby   = App::instance();

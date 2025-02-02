@@ -76,56 +76,56 @@ return [
 		'handler' => PageMoveDialog::for(...)
 	],
 	'page.fields' => [
+		...$fields['model'],
 		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
-		...$fields['model']
 	],
 	'page.file.changeName' => [
+		...$files['changeName'],
 		'pattern' => '(pages/.*?)/files/(:any)/changeName',
-		...$files['changeName']
 	],
 	'page.file.changeSort' => [
+		...$files['changeSort'],
 		'pattern' => '(pages/.*?)/files/(:any)/changeSort',
-		...$files['changeSort']
 	],
 	'page.file.changeTemplate' => [
+		...$files['changeTemplate'],
 		'pattern' => '(pages/.*?)/files/(:any)/changeTemplate',
-		...$files['changeTemplate']
 	],
 	'page.file.delete' => [
+		...$files['delete'],
 		'pattern' => '(pages/.*?)/files/(:any)/delete',
-		...$files['delete']
 	],
 	'page.file.fields' => [
+		...$fields['file'],
 		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
-		...$fields['file']
 	],
 	'site.changeTitle' => [
 		'pattern' => 'site/changeTitle',
 		'handler' => fn () => new SiteChangeTitleDialog()
 	],
 	'site.fields' => [
+		...$fields['model'],
 		'pattern' => '(site)/fields/(:any)/(:all?)',
-		...$fields['model']
 	],
 	'site.file.changeName' => [
+		...$files['changeName'],
 		'pattern' => '(site)/files/(:any)/changeName',
-		...$files['changeName']
 	],
 	'site.file.changeSort' => [
+		...$files['changeSort'],
 		'pattern' => '(site)/files/(:any)/changeSort',
-		...$files['changeSort']
 	],
 	'site.file.changeTemplate' => [
+		...$files['changeTemplate'],
 		'pattern' => '(site)/files/(:any)/changeTemplate',
-		...$files['changeTemplate']
 	],
 	'site.file.delete' => [
+		...$files['delete'],
 		'pattern' => '(site)/files/(:any)/delete',
-		...$files['delete']
 	],
 	'site.file.fields' => [
+		...$fields['file'],
 		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
-		...$fields['file']
 	],
 	'changes' => [
 		'pattern' => 'changes',

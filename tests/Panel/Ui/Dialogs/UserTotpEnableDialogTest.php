@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
@@ -10,11 +10,12 @@ use Kirby\TestCase;
 use Kirby\Toolkit\Totp;
 
 /**
- * @coversDefaultClass \Kirby\Panel\UserTotpEnableDialog
+ * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\UserTotpEnableDialog
+ * @covers ::__construct
  */
 class UserTotpEnableDialogTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.UserTotpEnableDialog';
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Ui.Dialogs.UserTotpEnableDialog';
 
 	protected function setUp(): void
 	{
@@ -50,24 +51,8 @@ class UserTotpEnableDialogTest extends TestCase
 	public function testConstruct(): void
 	{
 		$dialog = new UserTotpEnableDialog();
-
 		$this->assertSame($this->app->user(), $dialog->user);
 		$this->assertSame('test@getkirby.com', $dialog->user->email());
-	}
-
-	/**
-	 * @covers ::load
-	 * @covers ::secret
-	 * @covers ::totp
-	 */
-	public function testLoad(): void
-	{
-		$dialog = new UserTotpEnableDialog();
-		$state  = $dialog->load();
-
-		$this->assertSame('k-totp-dialog', $state['component']);
-		$this->assertIsString($state['props']['value']['secret']);
-		$this->assertIsString($state['props']['qr']);
 	}
 
 	/**
@@ -81,6 +66,21 @@ class UserTotpEnableDialogTest extends TestCase
 
 		$this->assertInstanceOf(QrCode::class, $qr);
 		$this->assertStringContainsString('otpauth://totp/:test%40getkirby.com?secret=', $qr->data);
+	}
+
+	/**
+	 * @covers ::render
+	 * @covers ::secret
+	 * @covers ::totp
+	 */
+	public function testRender(): void
+	{
+		$dialog = new UserTotpEnableDialog();
+		$state  = $dialog->render();
+
+		$this->assertSame('k-totp-dialog', $state['component']);
+		$this->assertIsString($state['props']['value']['secret']);
+		$this->assertIsString($state['props']['qr']);
 	}
 
 	/**
