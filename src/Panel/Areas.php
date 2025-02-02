@@ -15,28 +15,21 @@ use Kirby\Toolkit\A;
  */
 class Areas
 {
+	protected array $areas;
 	protected App $kirby;
 
 	public function __construct()
 	{
 		$this->kirby = App::instance();
+		$this->areas = $this->load();
 	}
 
 	/**
 	 * Normalize a panel area
 	 */
-	public static function area(string $id, array $area): array
+	public static function area(string $id, array $area): Area
 	{
-		$area['id']                = $id;
-		$area['label']           ??= $id;
-		$area['breadcrumb']      ??= [];
-		$area['breadcrumbLabel'] ??= $area['label'];
-		$area['title']             = $area['label'];
-		$area['menu']            ??= false;
-		$area['link']            ??= $id;
-		$area['search']          ??= null;
-
-		return $area;
+		return new Area($id, ...$area);
 	}
 
 	/**
@@ -46,13 +39,13 @@ class Areas
 	{
 		return array_merge(...array_values(
 			A::map(
-				$this->toArray(),
-				fn ($area) => $area['buttons'] ?? []
+				$this->areas,
+				fn (Area $area) => $area->buttons()
 			)
 		));
 	}
 
-	public function toArray(): array
+	public function load(): array
 	{
 		$system = $this->kirby->system();
 		$user   = $this->kirby->user();
@@ -74,9 +67,9 @@ class Areas
 		// not yet authenticated
 		if (!$user) {
 			return [
-				'logout' => Areas::area('logout', $areas['logout']),
+				'logout' => static::area('logout', $areas['logout']),
 				// login area last because it defines a fallback route
-				'login'  => Areas::area('login', $areas['login']),
+				'login'  => static::area('login', $areas['login']),
 			];
 		}
 
@@ -96,5 +89,10 @@ class Areas
 		}
 
 		return $result;
+	}
+
+	public function toArray(): array
+	{
+		return $this->areas;
 	}
 }

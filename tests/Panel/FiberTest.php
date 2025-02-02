@@ -473,24 +473,27 @@ class FiberTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 
 		$areas  = [
-			'a' => [
-				'searches' => [
+			new Area(
+				id: 'a',
+				searches: [
 					'foo' => [],
 				]
-			],
-			'b' => [
-				'searches' => [
+			),
+			new Area(
+				id: 'b',
+				searches: [
 					'bar' => [],
 				]
-			],
-			'c' => [
-				'searches' => [
+			),
+			new Area(
+				id: 'c',
+				searches: [
 					'test' => [],
 				]
-			]
+			)
 		];
 
-		$fiber    = new Fiber(options: ['areas' => $areas]);
+		$fiber    = new Fiber(areas: $areas);
 		$searches = $fiber->searches();
 
 		$this->assertArrayHasKey('foo', $searches);

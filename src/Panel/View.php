@@ -66,7 +66,11 @@ class View
 		}
 
 		// gather all Fiber data
-		$fiber = new Fiber(view: $data, options: $options);
+		$fiber = new Fiber(
+			area: $options['area'] ?? null,
+			areas: $options['areas'] ?? [],
+			view: $data,
+		);
 
 		// if requested, send $fiber data as JSON
 		if (Panel::isFiberRequest() === true) {

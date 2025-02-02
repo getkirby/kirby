@@ -36,7 +36,7 @@ class Router
 		$this->garbage();
 
 		// collect areas
-		$areas  = $this->panel->areas()->toArray();
+		$areas = $this->panel->areas()->toArray();
 
 		// create a micro-router for the Panel
 		return BaseRouter::execute(
@@ -159,15 +159,15 @@ class Router
 		];
 
 		// register all routes from areas
-		foreach ($areas as $id => $area) {
+		foreach ($areas as $area) {
 			$routes = [
 				...$routes,
-				...static::routesForViews($id, $area),
-				...static::routesForSearches($id, $area),
-				...static::routesForDialogs($id, $area),
-				...static::routesForDrawers($id, $area),
-				...static::routesForDropdowns($id, $area),
-				...static::routesForRequests($id, $area),
+				...static::routesForViews($area),
+				...static::routesForSearches($area),
+				...static::routesForDialogs($area),
+				...static::routesForDrawers($area),
+				...static::routesForDropdowns($area),
+				...static::routesForRequests($area),
 			];
 		}
 
@@ -197,9 +197,10 @@ class Router
 	/**
 	 * Extract all routes from an area
 	 */
-	public static function routesForDialogs(string $areaId, array $area): array
+	public static function routesForDialogs(Area $area): array
 	{
-		$dialogs = $area['dialogs'] ?? [];
+		$areaId  = $area->id();
+		$dialogs = $area->dialogs();
 		$routes  = [];
 
 		foreach ($dialogs as $dialogId => $dialog) {
@@ -220,9 +221,10 @@ class Router
 	/**
 	 * Extract all routes from an area
 	 */
-	public static function routesForDrawers(string $areaId, array $area): array
+	public static function routesForDrawers(Area $area): array
 	{
-		$drawers = $area['drawers'] ?? [];
+		$areaId  = $area->id();
+		$drawers = $area->drawers();
 		$routes  = [];
 
 		foreach ($drawers as $drawerId => $drawer) {
@@ -243,9 +245,10 @@ class Router
 	/**
 	 * Extract all routes for dropdowns
 	 */
-	public static function routesForDropdowns(string $areaId, array $area): array
+	public static function routesForDropdowns(Area $area): array
 	{
-		$dropdowns = $area['dropdowns'] ?? [];
+		$areaId    = $area->id();
+		$dropdowns = $area->dropdowns();
 		$routes    = [];
 
 		foreach ($dropdowns as $dropdownId => $dropdown) {
@@ -266,9 +269,10 @@ class Router
 	/**
 	 * Extract all routes from an area
 	 */
-	public static function routesForRequests(string $areaId, array $area): array
+	public static function routesForRequests(Area $area): array
 	{
-		$routes = $area['requests'] ?? [];
+		$areaId = $area->id();
+		$routes = $area->requests();
 
 		foreach ($routes as $key => $route) {
 			$routes[$key]['area'] = $areaId;
@@ -281,9 +285,10 @@ class Router
 	/**
 	 * Extract all routes for searches
 	 */
-	public static function routesForSearches(string $areaId, array $area): array
+	public static function routesForSearches(Area $area): array
 	{
-		$searches = $area['searches'] ?? [];
+		$areaId   = $area->id();
+		$searches = $area->searches();
 		$routes   = [];
 
 		foreach ($searches as $name => $params) {
@@ -313,9 +318,10 @@ class Router
 	/**
 	 * Extract all views from an area
 	 */
-	public static function routesForViews(string $areaId, array $area): array
+	public static function routesForViews(Area $area): array
 	{
-		$views  = $area['views'] ?? [];
+		$areaId = $area->id();
+		$views  = $area->views();
 		$routes = [];
 
 		foreach ($views as $view) {
