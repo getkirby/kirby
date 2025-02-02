@@ -70,7 +70,6 @@ class UserTotpEnableDialogTest extends TestCase
 
 	/**
 	 * @covers ::render
-	 * @covers ::secret
 	 * @covers ::totp
 	 */
 	public function testRender(): void
