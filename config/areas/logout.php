@@ -5,7 +5,7 @@ use Kirby\Toolkit\I18n;
 
 return function ($kirby) {
 	return [
-		'icon'  => 'user',
+		'icon'  => 'logout',
 		'label' => I18n::translate('logout'),
 		'views' => [
 			'logout' => [
