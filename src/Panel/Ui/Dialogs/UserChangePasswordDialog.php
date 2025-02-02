@@ -41,7 +41,6 @@ class UserChangePasswordDialog extends FormDialog
 				])
 			],
 			submitButton: I18n::translate('change'),
-
 		);
 	}
 

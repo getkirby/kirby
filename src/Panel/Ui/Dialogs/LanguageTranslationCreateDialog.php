@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
-use Kirby\Cms\Find;
 use Kirby\Cms\Language;
 use Kirby\Cms\LanguageVariable;
 use Kirby\Toolkit\I18n;

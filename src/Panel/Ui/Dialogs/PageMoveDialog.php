@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\Page;
 use Kirby\Panel\Ui\Dialog;

@@ -17,7 +17,8 @@ use Kirby\Toolkit\I18n;
  */
 class SiteChangeTitleDialog extends FormDialog
 {
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct(
 			fields: [
 				'title' => Field::title([

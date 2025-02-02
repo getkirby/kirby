@@ -1,12 +1,12 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Panel\PageCreateDialog;
 use Kirby\Panel\Ui\Dialogs\ChangesDialog;
 use Kirby\Panel\Ui\Dialogs\PageChangeSortDialog;
 use Kirby\Panel\Ui\Dialogs\PageChangeStatusDialog;
 use Kirby\Panel\Ui\Dialogs\PageChangeTemplateDialog;
 use Kirby\Panel\Ui\Dialogs\PageChangeTitleDialog;
-use Kirby\Panel\PageCreateDialog;
 use Kirby\Panel\Ui\Dialogs\PageDeleteDialog;
 use Kirby\Panel\Ui\Dialogs\PageDuplicateDialog;
 use Kirby\Panel\Ui\Dialogs\PageMoveDialog;
@@ -126,10 +126,6 @@ return [
 	'site.file.fields' => [
 		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
 		...$fields['file']
-	],
-	'site.file.fields' => [
-		'pattern' => '(site)/files/(:any)/sections/(:any)/(:all?)',
-		...$sections['file']
 	],
 	'changes' => [
 		'pattern' => 'changes',

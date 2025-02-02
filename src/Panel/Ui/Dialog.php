@@ -25,7 +25,7 @@ class Dialog extends Component
 		public string|null $size = null,
 		public string|array|false|null $submitButton = null,
 	) {
-		parent::__construct (
+		parent::__construct(
 			component: $component
 		);
 
