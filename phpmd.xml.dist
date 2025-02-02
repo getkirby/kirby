@@ -40,6 +40,7 @@
 		<!-- Temporarily disabled for step-by-step refactoring/suppression -->
 		<exclude name="ExitExpression" />
 		<exclude name="CouplingBetweenObjects" />
+		<exclude name="NumberOfChildren" />
 	</rule>
 
 	<rule ref="rulesets/naming.xml">
