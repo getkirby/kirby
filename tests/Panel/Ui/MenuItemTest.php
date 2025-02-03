@@ -22,15 +22,18 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertSame('edit', $menuItem->icon());
-		$this->assertSame('Test', $menuItem->text());
-		$this->assertFalse($menuItem->current());
-		$this->assertNull($menuItem->dialog());
-		$this->assertFalse($menuItem->disabled());
-		$this->assertNull($menuItem->drawer());
-		$this->assertSame('site', $menuItem->link());
+		$this->assertSame('edit', $menuItem->icon);
+		$this->assertSame('Test', $menuItem->text);
+		$this->assertFalse($menuItem->current);
+		$this->assertNull($menuItem->dialog);
+		$this->assertFalse($menuItem->disabled);
+		$this->assertNull($menuItem->drawer);
+		$this->assertSame('site', $menuItem->link);
 	}
 
+	/**
+	 * @covers ::__construct
+	 */
 	public function testConstructWithMissingLink()
 	{
 		$this->expectException(Exception::class);
@@ -42,22 +45,6 @@ class MenuItemTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::__call
-	 */
-	public function testCall()
-	{
-		$menuItem = new MenuItem(
-			icon: 'edit',
-			link: 'test',
-			text: 'Test',
-		);
-
-		$this->assertSame('edit', $menuItem->icon());
-		$this->assertSame('test', $menuItem->link());
-		$this->assertSame('Test', $menuItem->text());
-	}
-
 	public function testCurrent()
 	{
 		$menuItem = new MenuItem(
@@ -66,7 +53,7 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertFalse($menuItem->current());
+		$this->assertFalse($menuItem->current);
 
 		$menuItem = new MenuItem(
 			current: true,
@@ -75,7 +62,7 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertTrue($menuItem->current());
+		$this->assertTrue($menuItem->current);
 	}
 
 	public function testDialog()
@@ -86,7 +73,7 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertSame('test', $menuItem->dialog());
+		$this->assertSame('test', $menuItem->dialog);
 	}
 
 	public function testDisabled()
@@ -97,7 +84,7 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertFalse($menuItem->disabled());
+		$this->assertFalse($menuItem->disabled);
 
 		$menuItem = new MenuItem(
 			disabled: true,
@@ -106,7 +93,7 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertTrue($menuItem->disabled());
+		$this->assertTrue($menuItem->disabled);
 	}
 
 	public function testDrawer()
@@ -117,7 +104,7 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertSame('test', $menuItem->drawer());
+		$this->assertSame('test', $menuItem->drawer);
 	}
 
 	/**
@@ -146,7 +133,7 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertSame('test', $menuItem->dialog());
+		$this->assertSame('test', $menuItem->dialog);
 		$this->assertNull($menuItem->link());
 	}
 
@@ -162,7 +149,7 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertSame('test', $menuItem->drawer());
+		$this->assertSame('test', $menuItem->drawer);
 		$this->assertNull($menuItem->link());
 	}
 
@@ -177,19 +164,19 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertFalse($menuItem->disabled());
+		$this->assertFalse($menuItem->disabled);
 
 		$menuItem->merge([
 			'disabled' => true
 		]);
 
-		$this->assertTrue($menuItem->disabled());
+		$this->assertTrue($menuItem->disabled);
 	}
 
 	/**
-	 * @covers ::text
+	 * @covers ::props
 	 */
-	public function testText()
+	public function testPropsText()
 	{
 		$menuItem = new MenuItem(
 			icon: 'edit',
@@ -197,13 +184,13 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$this->assertSame('Test', $menuItem->text());
+		$this->assertSame('Test', $menuItem->props()['text']);
 	}
 
 	/**
-	 * @covers ::text
+	 * @covers ::props
 	 */
-	public function testTextWithTranslationKey()
+	public function testPropsTextWithTranslationKey()
 	{
 		I18n::$translations = [
 			'en' => [
@@ -217,13 +204,13 @@ class MenuItemTest extends TestCase
 			text: 'logout',
 		);
 
-		$this->assertSame('Logout', $menuItem->text());
+		$this->assertSame('Logout', $menuItem->props()['text']);
 	}
 
 	/**
-	 * @covers ::text
+	 * @covers ::props
 	 */
-	public function testTextWithTranslationArray()
+	public function testPropsTextWithTranslationArray()
 	{
 		$menuItem = new MenuItem(
 			icon: 'edit',
@@ -234,13 +221,13 @@ class MenuItemTest extends TestCase
 			],
 		);
 
-		$this->assertSame('Logout', $menuItem->text());
+		$this->assertSame('Logout', $menuItem->props()['text']);
 	}
 
 	/**
-	 * @covers ::toArray
+	 * @covers ::render
 	 */
-	public function testToArray()
+	public function testRender()
 	{
 		$menuItem = new MenuItem(
 			icon: 'edit',
@@ -248,12 +235,14 @@ class MenuItemTest extends TestCase
 			text: 'Test',
 		);
 
-		$expected = [
-			'icon' => 'edit',
-			'link' => 'site',
-			'text' => 'Test'
-		];
-
-		$this->assertSame($expected, $menuItem->toArray());
+		$result = $menuItem->render();
+		$this->assertSame('k-button', $result['component']);
+		$this->assertSame([
+			'icon'       => 'edit',
+			'link'       => 'site',
+			'responsive' => true,
+			'text'       => 'Test',
+			'type'       => 'button'
+		], $result['props']);
 	}
 }

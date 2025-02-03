@@ -213,12 +213,12 @@ class Fiber
 	public function menu(): array
 	{
 		$menu = new Menu(
-			$this->areas,
-			$this->permissions,
-			$this->area?->id()
+			areas:       $this->areas,
+			permissions: $this->permissions,
+			current:     $this->area?->id()
 		);
 
-		return $menu->items();
+		return $menu->render();
 	}
 
 	public function multilang(): bool
