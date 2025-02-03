@@ -1,5 +1,5 @@
 <template>
-	<k-lab-examples>
+	<k-lab-examples class="k-card-items-example">
 		<k-lab-example label="Card Item">
 			<k-item layout="cards" text="This is a nice item" />
 		</k-lab-example>
@@ -73,6 +73,25 @@
 				width="1/2"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Selecting">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:selecting="true"
+				layout="cards"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting & no selectable">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:selecting="true"
+				:selectable="false"
+				layout="cards"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
 		<k-lab-example label="Theme: disabled">
 			<k-item
 				:image="{ src: 'https://picsum.photos/800/600' }"
@@ -100,3 +119,9 @@
 		</k-lab-example>
 	</k-lab-examples>
 </template>
+
+<style>
+.k-card-items-example .k-item {
+	max-width: 30rem;
+}
+</style>

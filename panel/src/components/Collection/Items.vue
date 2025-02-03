@@ -6,6 +6,7 @@
 		:class="$attrs.class"
 		:style="$attrs.style"
 		@change="$emit('change', $event)"
+		@select="onSelect"
 		@sort="$emit('sort', $event)"
 		@option="onOption"
 	>
@@ -39,6 +40,8 @@
 					:image="imageOptions(item)"
 					:layout="layout"
 					:link="link ? item.link : false"
+					:selecting="selecting"
+					:selectable="item.selectable"
 					:sortable="sortable && item.sortable"
 					:theme="theme"
 					:width="item.column"
@@ -46,6 +49,7 @@
 					@drag="onDragStart($event, item.dragText)"
 					@mouseover.native="$emit('hover', $event, item, itemIndex)"
 					@option="onOption($event, item, itemIndex)"
+					@select="onSelect(item, itemIndex)"
 				>
 					<template #options>
 						<slot name="options" v-bind="{ item, index: itemIndex }" />
@@ -95,6 +99,10 @@ export const props = {
 			default: true
 		},
 		/**
+		 * Whether items are in selecting mode
+		 */
+		selecting: Boolean,
+		/**
 		 * Whether items are generally sortable.
 		 * Each item can disable this individually.
 		 */
@@ -140,6 +148,7 @@ export default {
 				columns: this.columns,
 				fields: this.fields,
 				rows: this.items,
+				selecting: this.selecting,
 				sortable: this.sortable
 			};
 		}
@@ -150,6 +159,9 @@ export default {
 		},
 		onOption(option, item, itemIndex) {
 			this.$emit("option", option, item, itemIndex);
+		},
+		onSelect(event, item, itemIndex) {
+			this.$emit("select", event, item, itemIndex);
 		},
 		imageOptions(item) {
 			let globalOptions = this.image;

@@ -4,9 +4,11 @@
 		:class="['k-item', `k-${layout}-item`, $attrs.class]"
 		:data-has-image="hasFigure"
 		:data-layout="layout"
+		:data-selecting="selecting"
+		:data-selectable="selectable"
 		:data-theme="theme"
 		:style="$attrs.style"
-		@click="$emit('click', $event)"
+		@click="onClick"
 		@dragstart="$emit('drag', $event)"
 	>
 		<!-- Image -->
@@ -25,7 +27,11 @@
 		<!-- Content -->
 		<div class="k-item-content">
 			<h3 class="k-item-title" :title="title(text)">
-				<k-link v-if="link !== false" :target="target" :to="link">
+				<k-link
+					v-if="link !== false && selecting !== true"
+					:target="target"
+					:to="link"
+				>
 					<!-- eslint-disable-next-line vue/no-v-html -->
 					<span v-html="text ?? '–'" />
 				</k-link>
@@ -37,7 +43,7 @@
 		</div>
 
 		<div
-			v-if="buttons?.length || options || $slots.options"
+			v-if="buttons?.length || options || $slots.options || selecting"
 			class="k-item-options"
 		>
 			<!-- Buttons -->
@@ -47,8 +53,17 @@
 				v-bind="button"
 			/>
 
+			<label v-if="selecting" class="k-item-options-checkbox" @click.stop>
+				<input
+					ref="selector"
+					type="checkbox"
+					:disabled="!selectable"
+					@change="$emit('select', $event)"
+				/>
+			</label>
+
 			<!-- Options -->
-			<slot name="options">
+			<slot v-else name="options">
 				<k-options-dropdown
 					v-if="options"
 					:options="options"
@@ -98,6 +113,17 @@ export default {
 			type: [Array, Function, String]
 		},
 		/**
+		 * If `true`, the item will be selectable via a checkbox
+		 */
+		selecting: Boolean,
+		/**
+		 * If `false`, the select checkbox will be disabled
+		 */
+		selectable: {
+			type: Boolean,
+			default: true
+		},
+		/**
 		 * If `true`, the sort handle will be shown on hover
 		 */
 		sortable: Boolean,
@@ -122,6 +148,13 @@ export default {
 		}
 	},
 	methods: {
+		onClick(event) {
+			if (this.selecting && this.selectable) {
+				return this.$refs.selector.click();
+			}
+
+			this.$emit("click", event);
+		},
 		onOption(event) {
 			this.$emit("action", event);
 			this.$emit("option", event);
@@ -142,12 +175,13 @@ export default {
 	--item-color-back: light-dark(var(--color-white), var(--color-gray-850));
 	--item-height: auto;
 	--item-height-cardlet: calc(var(--height-md) * 3);
+	--item-shadow: var(--shadow-sm);
 }
 
 .k-item {
 	position: relative;
 	background: var(--item-color-back);
-	box-shadow: var(--shadow);
+	box-shadow: var(--item-shadow);
 	border-radius: var(--rounded);
 	min-height: var(--item-height);
 	container-type: inline-size;
@@ -319,5 +353,22 @@ export default {
 	box-shadow: none;
 	outline: 1px solid var(--color-border);
 	outline-offset: -1px;
+}
+
+/** Selectable state */
+.k-item[data-selectable="true"] {
+	cursor: pointer;
+}
+.k-item-options-checkbox {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--item-button-height);
+	width: var(--item-button-height);
+	flex-shrink: 0;
+}
+.k-item[data-selectable="true"]:has(.k-item-options-checkbox input:checked) {
+	--item-color-back: light-dark(var(--color-blue-250), var(--color-blue-800));
+	--item-shadow: 0 1px 3px 0 rgba(0 0 0 / 0.25), 0 1px 2px 0 rgba(0 0 0 / 0.05);
 }
 </style>

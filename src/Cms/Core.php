@@ -408,6 +408,7 @@ class Core
 	public function sectionMixins(): array
 	{
 		return [
+			'batch'      => $this->root . '/sections/mixins/batch.php',
 			'details'    => $this->root . '/sections/mixins/details.php',
 			'empty'      => $this->root . '/sections/mixins/empty.php',
 			'headline'   => $this->root . '/sections/mixins/headline.php',
