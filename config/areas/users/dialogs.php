@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\UserRules;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
@@ -180,31 +181,58 @@ return [
 	'user.changePassword' => [
 		'pattern' => 'users/(:any)/changePassword',
 		'load' => function (string $id) {
-			$user = Find::user($id);
+			$user   = Find::user($id);
+			$fields = [
+				'password' => Field::password([
+					'label' => I18n::translate('user.changePassword.new'),
+				]),
+				'passwordConfirmation' => Field::password([
+					'label' => I18n::translate('user.changePassword.new.confirm'),
+				])
+			];
+
+			if ($user->is($user->kirby()->user()) === true) {
+				$fields = [
+					'currentPassword' => Field::password([
+						'label' => I18n::translate('user.changePassword.current'),
+					]),
+					...$fields
+				];
+			}
 
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
-					'fields' => [
-						'password' => Field::password([
-							'label' => I18n::translate('user.changePassword.new'),
-						]),
-						'passwordConfirmation' => Field::password([
-							'label' => I18n::translate('user.changePassword.new.confirm'),
-						])
-					],
+					'fields'       => $fields,
 					'submitButton' => I18n::translate('change'),
 				]
 			];
 		},
 		'submit' => function (string $id) {
-			$request = App::instance()->request();
+			$kirby   = App::instance();
+			$request = $kirby->request();
 
 			$user                 = Find::user($id);
 			$password             = $request->get('password');
 			$passwordConfirmation = $request->get('passwordConfirmation');
 
-			// validate the password
+			// validate the current password,
+			// if current user is changing their own password
+			if ($user->is($kirby->user()) === true) {
+				$currentPassword = $request->get('currentPassword');
+
+				// catching and re-throwing exception to avoid automatic
+				// sign-out of current user from the Panel
+				try {
+					$user->validatePassword($currentPassword);
+				} catch (Exception) {
+					throw new InvalidArgumentException([
+						'key' => 'user.password.wrong'
+					]);
+				}
+			}
+
+			// validate the new password
 			UserRules::validPassword($user, $password ?? '');
 
 			// compare passwords

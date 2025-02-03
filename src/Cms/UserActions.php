@@ -96,6 +96,9 @@ trait UserActions
 
 	/**
 	 * Changes the user password
+	 *
+	 * If this method is used with user input, it is recommended to also
+	 * confirm the current password by the user via `::validatePassword()`
 	 */
 	public function changePassword(
 		#[SensitiveParameter]
