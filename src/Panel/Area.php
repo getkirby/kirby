@@ -150,11 +150,11 @@ class Area
 		// create a new menu item instance for the area
 		$item = new MenuItem(
 			current: $this->isCurrent($current),
-			icon: $this->icon() ?? $this->id(),
-			text: $this->label(),
-			dialog: $this->dialog(),
-			drawer: $this->drawer(),
-			link: $this->link(),
+			icon:    $this->icon() ?? $this->id(),
+			text:    $this->label(),
+			dialog:  $this->dialog(),
+			drawer:  $this->drawer(),
+			link:    $this->link(),
 		);
 
 		// add the custom menu settings

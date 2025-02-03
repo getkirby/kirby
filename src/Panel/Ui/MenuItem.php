@@ -3,27 +3,35 @@
 namespace Kirby\Panel\Ui;
 
 use Kirby\Exception\Exception;
-use Kirby\Toolkit\I18n;
 
-class MenuItem
+class MenuItem extends Button
 {
 	public function __construct(
-		protected string $icon,
-		protected array|string $text,
-		protected bool $current = false,
-		protected string|null $dialog = null,
-		protected bool $disabled = false,
-		protected string|null $drawer = null,
-		protected string|null $link = null,
+		string $icon,
+		array|string $text,
+		bool $current = false,
+		string|null $dialog = null,
+		bool $disabled = false,
+		string|null $drawer = null,
+		string|null $link = null,
 	) {
-		if ($this->dialog === null && $this->drawer === null && $this->link === null) {
+		if (
+			$dialog === null &&
+			$drawer === null &&
+			$link === null
+		) {
 			throw new Exception('You must define a dialog, drawer or link for the menu item');
 		}
-	}
 
-	public function __call(string $name, array $args = [])
-	{
-		return $this->{$name};
+		parent::__construct(
+			current:  $current,
+			dialog:   $dialog,
+			disabled: $disabled,
+			drawer:   $drawer,
+			icon:     $icon,
+			link:     $link,
+			text:     $text
+		);
 	}
 
 	public function link(): string|null
@@ -47,27 +55,11 @@ class MenuItem
 		return $this;
 	}
 
-	/**
-	 * Returns the translated button text
-	 */
-	public function text(): string
+	public function props(): array
 	{
-		return I18n::translate($this->text, $this->text);
-	}
-
-	/**
-	 * Returns all props for the menu button
-	 */
-	public function toArray(): array
-	{
-		return array_filter([
-			'current'  => $this->current(),
-			'dialog'   => $this->dialog(),
-			'disabled' => $this->disabled(),
-			'drawer'   => $this->drawer(),
-			'icon'     => $this->icon(),
-			'link'     => $this->link(),
-			'text'     => $this->text(),
-		]);
+		return [
+			...parent::props(),
+			'link' => $this->link()
+		];
 	}
 }

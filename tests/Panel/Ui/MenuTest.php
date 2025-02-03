@@ -199,12 +199,12 @@ class MenuTest extends TestCase
 
 		$items = $menu->items();
 
-		$this->assertSame('site', $items[0]['link']);
-		$this->assertTrue($items[0]['current']);
+		$this->assertSame('site', $items[0]['props']['link']);
+		$this->assertTrue($items[0]['props']['current']);
 		$this->assertSame('-', $items[1]);
-		$this->assertSame('changes', $items[2]['dialog']);
-		$this->assertSame('account', $items[3]['link']);
-		$this->assertSame('logout', $items[4]['link']);
+		$this->assertSame('changes', $items[2]['props']['dialog']);
+		$this->assertSame('account', $items[3]['props']['link']);
+		$this->assertSame('logout', $items[4]['props']['link']);
 	}
 
 	/**
@@ -213,28 +213,34 @@ class MenuTest extends TestCase
 	public function testOptions()
 	{
 		$changes = [
-			'dialog' => 'changes',
-			'icon'   => 'edit-line',
-			'text'   => 'Changes'
+			'dialog'     => 'changes',
+			'icon'       => 'edit-line',
+			'responsive' => true,
+			'text'       => 'Changes',
+			'type'       => 'button'
 		];
 
 		$account = [
-			'icon' => 'account',
-			'link' => 'account',
-			'text' => 'Your account'
+			'icon'       => 'account',
+			'link'       => 'account',
+			'responsive' => true,
+			'text'       => 'Your account',
+			'type'       => 'button'
 		];
 
 		$logout = [
-			'icon' => 'logout',
-			'link' => 'logout',
-			'text' => 'Log out'
+			'icon'       => 'logout',
+			'link'       => 'logout',
+			'responsive' => true,
+			'text'       => 'Log out',
+			'type'       => 'button'
 		];
 
 		$menu = new Menu();
 
 		$options = $menu->options();
-		$this->assertSame($changes, $options[0]);
-		$this->assertSame($account, $options[1]);
-		$this->assertSame($logout, $options[2]);
+		$this->assertSame($changes, $options[0]['props']);
+		$this->assertSame($account, $options[1]['props']);
+		$this->assertSame($logout, $options[2]['props']);
 	}
 }
