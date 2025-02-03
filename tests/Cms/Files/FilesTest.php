@@ -201,7 +201,7 @@ class FilesTest extends TestCase
 				'c.jpg',
 			]);
 		} catch (Exception $e) {
-			$this->assertSame('Not all files could be deleted', $e->getMessage());
+			$this->assertSame('Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.', $e->getMessage());
 		}
 
 		$this->assertCount(1, $files);

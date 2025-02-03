@@ -109,7 +109,7 @@
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
 
-	"error.file.delete.multiple": "Not all files could be deleted",
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "A file with the name \"{filename}\" already exists",
 	"error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
 	"error.file.extension.invalid": "Invalid extension: {extension}",
@@ -172,7 +172,7 @@
 	"error.page.delete": "The page \"{slug}\" cannot be deleted",
 	"error.page.delete.confirm": "Please enter the page title to confirm",
 	"error.page.delete.hasChildren": "The page has subpages and cannot be deleted",
-	"error.page.delete.multiple": "Not all pages could be deleted",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "You are not allowed to delete \"{slug}\"",
 	"error.page.draft.duplicate": "A page draft with the URL appendix \"{slug}\" already exists",
 	"error.page.duplicate": "A page with the URL appendix \"{slug}\" already exists",

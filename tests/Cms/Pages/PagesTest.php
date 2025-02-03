@@ -278,7 +278,7 @@ class PagesTest extends TestCase
 				'c',
 			]);
 		} catch (Exception $e) {
-			$this->assertSame('Not all pages could be deleted', $e->getMessage());
+			$this->assertSame('Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.', $e->getMessage());
 		}
 
 		$this->assertCount(1, $pages);
