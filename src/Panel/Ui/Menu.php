@@ -32,7 +32,7 @@ class Menu
 	}
 
 	/**
-	 * Undocumented function
+	 * Helper to fetch an area instance and merge the given props
 	 */
 	public function area(string $id, array $props = []): Area|null
 	{
