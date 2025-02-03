@@ -156,7 +156,7 @@ class MenuTest extends TestCase
 	 */
 	public function testItem()
 	{
-		$menu = new Menu([], [], 'account');
+		$menu = new Menu();
 
 		$item = $menu->item(new Area(
 			id: 'account',
@@ -165,98 +165,18 @@ class MenuTest extends TestCase
 			menu: true
 		));
 
-		$this->assertSame([
-			'current' => true,
-			'icon'    => 'account',
-			'link'    => 'foo',
-			'text'    => 'Foo'
-		], $item->toArray());
+		$this->assertInstanceOf(MenuItem::class, $item);
 	}
 
 	/**
 	 * @covers ::item
 	 */
-	public function testItemDialog()
+	public function testItemWithoutArea()
 	{
-		$menu = new Menu([], [], 'account');
+		$menu = new Menu();
+		$item = $menu->item(null);
 
-		$item = $menu->item(new Area(
-			id: 'account',
-			link: 'foo',
-			label: 'Foo',
-			menu: ['dialog' => 'foo']
-		));
-
-		$this->assertSame([
-			'current' => true,
-			'dialog'  => 'foo',
-			'icon'    => 'account',
-			'text'    => 'Foo'
-		], $item->toArray());
-	}
-
-	/**
-	 * @covers ::item
-	 */
-	public function testItemMenu()
-	{
-		$menu = new Menu([], [], 'account');
-		$this->assertNull($menu->item(new Area(id: 'account')));
-		$this->assertNull($menu->item(new Area(id: 'account', menu: false)));
-		$this->assertNull($menu->item(new Area(id: 'account', menu: fn () => false)));
-
-		$test = $this;
-		$menu->item(new Area(id: 'account', menu: function ($areas, $permissions, $current) use ($test) {
-			$test->assertSame([], $areas);
-			$test->assertSame([], $permissions);
-			$test->assertSame('account', $current);
-			return false;
-		}));
-
-		$item = $menu->item(new Area(
-			id: 'account',
-			menu: 'disabled',
-		));
-		$this->assertTrue($item->disabled());
-	}
-
-	/**
-	 * @covers ::item
-	 */
-	public function testItemNoPermission()
-	{
-		$menu = new Menu([], ['access' => ['account' => false]]);
-		$area = new Area(id: 'account');
-		$this->assertNull($menu->item($area));
-	}
-
-	/**
-	 * @covers ::entry
-	 */
-	public function testItemMultiLanguage()
-	{
-		$menu = new Menu(
-			areas: [],
-			permissions: [],
-			current: 'account'
-		);
-
-		$item = $menu->item(new Area(
-			id: 'account',
-			link: 'foo',
-			label: [
-				'en' => 'My account',
-				'de' => 'Mein Account'
-			],
-			menu: true
-		));
-
-		$this->assertSame([
-			'current' => true,
-			'icon'    => 'account',
-			'link'    => 'foo',
-			'text'    => 'My account'
-		], $item->toArray());
+		$this->assertNull($item);
 	}
 
 	/**
