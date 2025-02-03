@@ -27,84 +27,55 @@ class Area
 		protected array $drawers = [],
 		protected array $dropdowns = [],
 		protected string|null $icon = null,
-		protected array|string|null $label = null,
+		protected Closure|array|string|null $label = null,
 		protected string|null $link = null,
 		protected Closure|array|bool|string $menu = false,
 		protected string|null $search = null,
 		protected array $searches = [],
 		protected array $requests = [],
-		protected array|string|null $title = null,
+		protected Closure|array|string|null $title = null,
 		protected array $views = [],
 	) {
 	}
 
-	public function breadcrumb(): array
+	public function __call(string $name, array $args = [])
 	{
-		return $this->breadcrumb;
+		return $this->{$name};
 	}
 
+	/**
+	 * A custom breadcrumb label that will be used for the
+	 * breadcrumb instead of the default label
+	 */
 	public function breadcrumbLabel(): string
 	{
-		$label = $this->breadcrumbLabel ?? $this->label();
+		return $this->i18n($this->breadcrumbLabel ?? $this->label());
+	}
 
-		if ($label instanceof Closure) {
-			$label = $label();
+	/**
+	 * Translator for breadcrumbLabel, label & title
+	 */
+	protected function i18n(Closure|array|string|null $value): string|null
+	{
+		if ($value instanceof Closure) {
+			$value = $value();
 		}
 
-		return I18n::translate($label, $label);
+		return I18n::translate($value, $value);
 	}
 
-	public function buttons(): array
-	{
-		return $this->buttons;
-	}
-
-	public function current(): null
-	{
-		return $this->current;
-	}
-
-	public function dialog(): string|null
-	{
-		return $this->dialog;
-	}
-
-	public function dialogs(): array
-	{
-		return $this->dialogs;
-	}
-
-	public function drawer(): string|null
-	{
-		return $this->drawer;
-	}
-
-	public function drawers(): array
-	{
-		return $this->drawers;
-	}
-
-	public function dropdowns(): array
-	{
-		return $this->dropdowns;
-	}
-
-	public function icon(): string|null
-	{
-		return $this->icon;
-	}
-
-	public function id(): string
-	{
-		return $this->id;
-	}
-
+	/**
+	 * Checks for access permissions for this area
+	 */
 	public function isAccessible(array $permissions): bool
 	{
 		return ($permissions['access'][$this->id] ?? true) === true;
 	}
 
-	public function isCurrent(string|null $current): bool
+	/**
+	 * Checks if the area is currently active
+	 */
+	public function isCurrent(string|null $current = null): bool
 	{
 		if ($this->current === null) {
 			return $this->id === $current;
@@ -117,17 +88,26 @@ class Area
 		return $this->current;
 	}
 
+	/**
+	 * The label is used for the menu item and the breadcrumb
+	 * unless a custom breadcrumb label is defined
+	 */
 	public function label(): string
 	{
-		$label = $this->label ?? $this->id;
-		return I18n::translate($label, $label);
+		return $this->i18n($this->label ?? $this->id);
 	}
 
+	/**
+	 * Link for the menu item
+	 */
 	public function link(): string
 	{
 		return $this->link ?? $this->id;
 	}
 
+	/**
+	 * Set or overwrite additional props via array
+	 */
 	public function merge(array $props): static
 	{
 		foreach ($props as $key => $value) {
@@ -137,15 +117,15 @@ class Area
 		return $this;
 	}
 
-	public function menu(): Closure|array|bool|string
-	{
-		return $this->menu;
-	}
-
+	/**
+	 * Evaluate the menu settings to determine
+	 * how the menu item for the area should be rendered
+	 * and if it should be rendered at all
+	 */
 	public function menuSettings(
-		array $areas,
-		array $permissions,
-		string|null $current
+		array $areas = [],
+		array $permissions = [],
+		string|null $current = null
 	): array|false {
 		// areas without access permissions get skipped entirely
 		if ($this->isAccessible($permissions) === false) {
@@ -173,27 +153,20 @@ class Area
 		};
 	}
 
-	public function requests(): array
-	{
-		return $this->requests;
-	}
-
-	public function search(): string|null
-	{
-		return $this->search;
-	}
-
-	public function searches(): array
-	{
-		return $this->searches;
-	}
-
+	/**
+	 * The title is used for the browser title. It will fall back
+	 * to the label if no custom title is defined.
+	 */
 	public function title(): string
 	{
-		$title = $this->title ?? $this->label();
-		return I18n::translate($title, $title);
+		return $this->i18n($this->title ?? $this->label());
 	}
 
+	/**
+	 * Returns parameters that will be added to the
+	 * view response (one level above the props) to
+	 * render the view component properly
+	 */
 	public function toView(): array
 	{
 		return [
@@ -206,10 +179,5 @@ class Area
 			'search'          => $this->search(),
 			'title'           => $this->title(),
 		];
-	}
-
-	public function views(): array
-	{
-		return $this->views;
 	}
 }
