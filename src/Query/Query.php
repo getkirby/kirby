@@ -3,6 +3,7 @@
 namespace Kirby\Query;
 
 use Closure;
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
@@ -10,29 +11,26 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Image\QrCode;
+use Kirby\Query\Runners\Interpreted;
+use Kirby\Query\Runners\Runner;
+use Kirby\Query\Runners\Transpiled;
 use Kirby\Toolkit\I18n;
 
 /**
- * The Query class can be used to query arrays and objects,
- * including their methods with a very simple string-based syntax.
- *
- * Namespace structure - what handles what:
- * - Query			Main interface, direct entries
- * - Expression		Simple comparisons (`a ? b :c`)
- * - Segments		Chain of method calls (`site.find('notes').url`)
- * - Segment		Single method call (`find('notes')`)
- * - Arguments		Method call parameters (`'template', '!=', 'note'`)
- * - Argument		Single parameter, resolving into actual types
+ * The Query class can be used to run expressions on arrays and objects,
+ * including their methods with a very simple string-based syntax
  *
  * @package   Kirby Query
  * @author    Bastian Allgeier <bastian@getkirby.com>,
- * 			  Nico Hoffmann <nico@getkirby.com>
+ *            Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Query
 {
+	public static array $cache = [];
+
 	/**
 	 * Default data entries
 	 */
@@ -78,6 +76,27 @@ class Query
 			return $data;
 		}
 
+		// TODO: switch to 'interpreted' as default in v6
+		// TODO: remove in v7
+		// @codeCoverageIgnoreStart
+		$mode = App::instance()->option('query.runner', 'legacy');
+
+		if ($mode === 'legacy') {
+			return $this->resolveLegacy($data);
+		}
+		// @codeCoverageIgnoreEnd
+
+		$runner = $this->runner();
+
+		return $runner->run($this->query, (array)$data);
+	}
+
+	/**
+	 * @deprecated 6.0.0
+	 * @codeCoverageIgnore
+	 */
+	private function resolveLegacy(array|object $data = []): mixed
+	{
 		// merge data with default entries
 		if (is_array($data) === true) {
 			$data = [...static::$entries, ...$data];
@@ -99,6 +118,21 @@ class Query
 
 		// loop through all segments to resolve query
 		return Expression::factory($this->query, $this)->resolve($data);
+	}
+
+	/**
+	 * Returns the right runner based on the config setting
+	 */
+	public function runner(): Runner
+	{
+		$mode   = App::instance()->option('query.runner', 'interpreted');
+		$runner = match ($mode) {
+			'interpreted' => Interpreted::class,
+			'transpiled'  => Transpiled::class,
+			default       => throw new Exception("Invalid query runner: $mode")
+		};
+
+		return $runner::for($this);
 	}
 }
 

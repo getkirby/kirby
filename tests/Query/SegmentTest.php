@@ -36,6 +36,7 @@ class MyGetObj
 
 /**
  * @coversDefaultClass \Kirby\Query\Segment
+ * @todo Deprecate in v6
  */
 class SegmentTest extends TestCase
 {
