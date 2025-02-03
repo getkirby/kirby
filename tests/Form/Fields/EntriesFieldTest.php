@@ -2,12 +2,7 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Cms\App;
-use Kirby\Cms\Fieldsets;
-use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
-use Kirby\Form\Fields;
 
 /**
  * @coversDefaultClass \Kirby\Form\Field\EntriesField
