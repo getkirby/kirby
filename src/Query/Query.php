@@ -82,7 +82,7 @@ class Query
 		$mode = App::instance()->option('query.runner', 'legacy');
 
 		if ($mode === 'legacy') {
-			return $this->resolve_legacy($data);
+			return $this->resolveLegacy($data);
 		}
 		// @codeCoverageIgnoreEnd
 
@@ -95,7 +95,7 @@ class Query
 	 * @deprecated 6.0.0
 	 * @codeCoverageIgnore
 	 */
-	private function resolve_legacy(array|object $data = []): mixed
+	private function resolveLegacy(array|object $data = []): mixed
 	{
 		// merge data with default entries
 		if (is_array($data) === true) {
