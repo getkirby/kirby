@@ -45,7 +45,6 @@
 								:value="entry.value"
 								v-bind="field"
 								@input="onInput(index, $event)"
-								@keydown.delete.native="backspace(index)"
 								@keydown.enter.native.prevent="add(index + 1)"
 							/>
 						</div>
@@ -271,11 +270,6 @@ export default {
 				this.focus(index);
 			});
 		},
-		backspace(index) {
-			if (this.entries[index]?.value.length === 0) {
-				this.remove(index);
-			}
-		},
 		copyAll() {
 			const copy = this.values.map((value) => "- " + value).join("\n");
 
@@ -317,10 +311,7 @@ export default {
 
 			this.entries.splice(index, 1);
 			this.save();
-			setTimeout(
-				() => this.focus(index === 0 ? 0 : index - 1),
-				10
-			);
+			this.focus(index - 1);
 		},
 		removeAll() {
 			this.$panel.dialog.open({
