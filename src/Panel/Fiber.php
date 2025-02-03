@@ -242,7 +242,7 @@ class Fiber
 			// by default, all areas are accessible unless
 			// the permissions are explicitly set to false
 			if ($area->isAccessible($this->permissions) !== false) {
-				foreach ($area->searches() ?? [] as $id => $params) {
+				foreach ($area->searches() as $id => $params) {
 					$searches[$id] = [
 						'icon'  => $params['icon'] ?? 'search',
 						'label' => $params['label'] ?? Str::ucfirst($id),
