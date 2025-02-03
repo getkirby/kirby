@@ -584,7 +584,7 @@ class File extends ModelWithContent
 	 */
 	public function template(): string|null
 	{
-		return $this->template ??= $this->content()->get('template')->value();
+		return $this->template ??= $this->content('default')->get('template')->value();
 	}
 
 	/**

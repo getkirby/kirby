@@ -367,6 +367,9 @@ class FileActionsTest extends TestCase
 		$modified = $file->changeTemplate('b');
 
 		$this->assertSame('b', $modified->template());
+		$this->assertSame('b', $modified->content('default')->get('template')->value());
+		$this->assertSame('b', $modified->content('en')->get('template')->value());
+		$this->assertNull($modified->content('de')->get('template')->value());
 		$this->assertNull($modified->caption()->value());
 		$this->assertSame('This is the text', $modified->text()->value());
 		$this->assertSame(2, $calls);
