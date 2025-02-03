@@ -74,14 +74,7 @@ return [
 			];
 		},
 		'submit' => function () {
-			$kirby   = App::instance();
-			$license = $kirby->system()->license();
-			$file    = $license->root();
-
-			if (F::exists($file) === true) {
-				return F::remove($file);
-			}
-
+			App::instance()->system()->license()->delete();
 			return true;
 		}
 	],

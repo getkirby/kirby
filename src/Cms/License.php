@@ -102,6 +102,14 @@ class License
 	}
 
 	/**
+	 * Deletes the license file if it exists.
+	 */
+	public function delete(): bool
+	{
+		return F::remove($this->root());
+	}
+
+	/**
 	 * Returns the activation domain if available
 	 */
 	public function domain(): string|null
