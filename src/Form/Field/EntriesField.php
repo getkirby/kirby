@@ -67,12 +67,13 @@ class EntriesField extends FieldClass
 	public function props(): array
 	{
 		return [
-				'empty'    => $this->empty(),
-				'field'    => $this->fieldProps(),
-				'max'      => $this->max(),
-				'min'      => $this->min(),
-				'sortable' => $this->sortable(),
-			] + parent::props();
+			...parent::props(),
+			'empty'    => $this->empty(),
+			'field'    => $this->fieldProps(),
+			'max'      => $this->max(),
+			'min'      => $this->min(),
+			'sortable' => $this->sortable(),
+		];
 	}
 
 	protected function setField(array|string|null $attrs = null): void
