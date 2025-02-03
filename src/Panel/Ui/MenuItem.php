@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Ui;
 
+use Kirby\Exception\Exception;
 use Kirby\Toolkit\I18n;
 
 class MenuItem
@@ -15,36 +16,19 @@ class MenuItem
 		protected string|null $drawer = null,
 		protected string|null $link = null,
 	) {
+		if ($this->dialog === null && $this->drawer === null && $this->link === null) {
+			throw new Exception('You must define a dialog, drawer or link for the menu item');
+		}
 	}
 
-	public function current(): bool
+	public function __call(string $name, array $args = [])
 	{
-		return $this->current;
-	}
-
-	public function dialog(): string|null
-	{
-		return $this->dialog;
-	}
-
-	public function disabled(): bool
-	{
-		return $this->disabled;
-	}
-
-	public function drawer(): string|null
-	{
-		return $this->drawer;
-	}
-
-	public function icon(): string
-	{
-		return $this->icon;
+		return $this->{$name};
 	}
 
 	public function link(): string|null
 	{
-		if ($this->dialog || $this->drawer) {
+		if ($this->dialog !== null || $this->drawer !== null) {
 			return null;
 		}
 
