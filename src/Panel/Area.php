@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Closure;
+use Kirby\Panel\Ui\MenuItem;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -122,14 +123,14 @@ class Area
 	 * how the menu item for the area should be rendered
 	 * and if it should be rendered at all
 	 */
-	public function menuSettings(
+	public function menuItem(
 		array $areas = [],
 		array $permissions = [],
 		string|null $current = null
-	): array|false {
+	): MenuItem|null {
 		// areas without access permissions get skipped entirely
 		if ($this->isAccessible($permissions) === false) {
-			return false;
+			return null;
 		}
 
 		$menu = $this->menu;
@@ -143,14 +144,27 @@ class Area
 		// false will remove the area/entry entirely
 		// just like with disabled permissions
 		if ($menu === false) {
-			return false;
+			return null;
 		}
 
-		return match ($menu) {
+		// create a new menu item instance for the area
+		$item = new MenuItem(
+			current: $this->isCurrent($current),
+			icon: $this->icon() ?? $this->id(),
+			text: $this->label(),
+			dialog: $this->dialog(),
+			drawer: $this->drawer(),
+			link: $this->link(),
+		);
+
+		// add the custom menu settings
+		$item->merge(match ($menu) {
 			'disabled' => ['disabled' => true],
 			true       => [],
 			default    => $menu
-		};
+		});
+
+		return $item;
 	}
 
 	/**

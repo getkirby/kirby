@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Panel\Ui\MenuItem;
 use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
 
@@ -296,30 +297,35 @@ class AreaTest extends TestCase
 	}
 
 	/**
-	 * @covers ::menuSettings
+	 * @covers ::menuItem
 	 */
-	public function testMenuSettings()
+	public function testMenuItem()
 	{
 		$area = new Area(id: 'test');
 
-		$this->assertFalse($area->menuSettings());
+		$this->assertNull($area->menuItem());
 	}
 
 	/**
-	 * @covers ::menuSettings
+	 * @covers ::menuItem
 	 */
-	public function testMenuSettingsWithEnabledMenu()
+	public function testMenuItemWithEnabledMenu()
 	{
 		$area = new Area(
 			id: 'test',
 			menu: true,
 		);
 
-		$this->assertSame([], $area->menuSettings());
+		$menuItem = $area->menuItem();
+
+		$this->assertInstanceOf(MenuItem::class, $menuItem);
+		$this->assertSame('test', $menuItem->icon());
+		$this->assertSame('test', $menuItem->text());
+		$this->assertSame('test', $menuItem->link());
 	}
 
 	/**
-	 * @covers ::menuSettings
+	 * @covers ::menuItem
 	 */
 	public function testMenuSettingsWithDisabledAccess()
 	{
@@ -328,7 +334,7 @@ class AreaTest extends TestCase
 			menu: true,
 		);
 
-		$this->assertFalse($area->menuSettings(
+		$this->assertNull($area->menuItem(
 			permissions: [
 				'access' => [
 					'test' => false
@@ -338,9 +344,9 @@ class AreaTest extends TestCase
 	}
 
 	/**
-	 * @covers ::menuSettings
+	 * @covers ::menuItem
 	 */
-	public function testMenuSettingsWithClosureDefinition()
+	public function testMenuItemWithClosureDefinition()
 	{
 		$menu = [
 			'icon' => 'edit'
@@ -367,39 +373,41 @@ class AreaTest extends TestCase
 			}
 		);
 
-		$this->assertSame($menu, $area->menuSettings(
+		$menuItem = $area->menuItem(
 			areas: $passedAreas,
 			permissions: $passedPermissions,
 			current: 'test'
-		));
+		);
+
+		$this->assertSame('edit', $menuItem->icon());
 	}
 
 	/**
-	 * @covers ::menuSettings
+	 * @covers ::menuItem
 	 */
-	public function testMenuSettingsWithArrayDefinition()
+	public function testMenuItemWithArrayDefinition()
 	{
 		$area = new Area(
 			id: 'test',
-			menu: $menu = [
+			menu: [
 				'icon' => 'edit'
 			]
 		);
 
-		$this->assertSame($menu, $area->menuSettings());
+		$this->assertSame('edit', $area->menuItem()->icon());
 	}
 
 	/**
-	 * @covers ::menuSettings
+	 * @covers ::menuItem
 	 */
-	public function testMenuSettingsWithDisabledFlag()
+	public function testMenuItemWithDisabledFlag()
 	{
 		$area = new Area(
 			id: 'test',
 			menu: 'disabled'
 		);
 
-		$this->assertSame(['disabled' => true], $area->menuSettings());
+		$this->assertTrue($area->menuItem()->disabled());
 	}
 
 	/**
