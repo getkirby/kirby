@@ -58,6 +58,68 @@ class MenuItemTest extends TestCase
 		$this->assertSame('Test', $menuItem->text());
 	}
 
+	public function testCurrent()
+	{
+		$menuItem = new MenuItem(
+			icon: 'edit',
+			link: 'test',
+			text: 'Test',
+		);
+
+		$this->assertFalse($menuItem->current());
+
+		$menuItem = new MenuItem(
+			current: true,
+			icon: 'edit',
+			link: 'test',
+			text: 'Test',
+		);
+
+		$this->assertTrue($menuItem->current());
+	}
+
+	public function testDialog()
+	{
+		$menuItem = new MenuItem(
+			icon: 'edit',
+			dialog: 'test',
+			text: 'Test',
+		);
+
+		$this->assertSame('test', $menuItem->dialog());
+	}
+
+	public function testDisabled()
+	{
+		$menuItem = new MenuItem(
+			icon: 'edit',
+			link: 'test',
+			text: 'Test',
+		);
+
+		$this->assertFalse($menuItem->disabled());
+
+		$menuItem = new MenuItem(
+			disabled: true,
+			icon: 'edit',
+			link: 'test',
+			text: 'Test',
+		);
+
+		$this->assertTrue($menuItem->disabled());
+	}
+
+	public function testDrawer()
+	{
+		$menuItem = new MenuItem(
+			icon: 'edit',
+			drawer: 'test',
+			text: 'Test',
+		);
+
+		$this->assertSame('test', $menuItem->drawer());
+	}
+
 	/**
 	 * @covers ::link
 	 */
