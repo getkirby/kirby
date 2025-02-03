@@ -137,7 +137,7 @@ class Area
 		return $this;
 	}
 
-	public function menu():	Closure|array|bool|string
+	public function menu(): Closure|array|bool|string
 	{
 		return $this->menu;
 	}

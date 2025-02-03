@@ -5,7 +5,6 @@ namespace Kirby\Panel\Ui;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Panel\Area;
-use Kirby\Toolkit\I18n;
 
 /**
  * The Menu class takes care of gathering
