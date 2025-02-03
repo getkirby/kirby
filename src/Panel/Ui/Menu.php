@@ -121,26 +121,11 @@ class Menu
 			return null;
 		}
 
-		$menuSettings = $area->menuSettings(
+		return $area->menuItem(
 			areas: $this->areas,
 			permissions: $this->permissions,
 			current: $this->current
 		);
-
-		if ($menuSettings === false) {
-			return null;
-		}
-
-		$item = new MenuItem(
-			current: $area->isCurrent($this->current),
-			icon: $area->icon() ?? $area->id(),
-			text: $area->label(),
-			dialog: $area->dialog(),
-			drawer: $area->drawer(),
-			link: $area->link(),
-		);
-
-		return $item->merge($menuSettings);
 	}
 
 	/**
