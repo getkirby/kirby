@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Panel\Area;
+use Kirby\Toolkit\A;
 
 /**
  * The Menu class takes care of gathering
@@ -17,18 +18,23 @@ use Kirby\Panel\Area;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Menu
+class Menu extends Component
 {
 	protected array $areas = [];
 
 	public function __construct(
 		array $areas = [],
 		protected array $permissions = [],
-		protected string|null $current = null
+		protected string|null $current = null,
+		protected Closure|array|null $config = null
 	) {
 		foreach ($areas as $area) {
 			$this->areas[$area->id()] = $area;
 		}
+
+		parent::__construct(
+			component: 'k-panel-menu'
+		);
 	}
 
 	/**
@@ -51,6 +57,12 @@ class Menu
 			// [0 => '-']
 			if ($area === '-') {
 				$areas[] = '-';
+				continue;
+			}
+
+			// [$areaId => Ui() ]
+			if ($area instanceof Component) {
+				$areas[] = $area;
 				continue;
 			}
 
@@ -91,21 +103,21 @@ class Menu
 	public function config(): array
 	{
 		// get from config option which areas should be listed in the menu
-		$kirby = App::instance();
-		$items = $kirby->option('panel.menu');
+		$items = $this->config;
 
 		// lazy-load items
 		if ($items instanceof Closure) {
+			$kirby = App::instance();
 			$items = $items($kirby);
 		}
 
 		// if no config is defined…
 		if ($items === null) {
 			// ensure that some defaults are on top in the right order
-			$defaults    = ['site', 'languages', 'users', 'system'];
+			$default    = ['site', 'languages', 'users', 'system'];
 			// add all other areas after that
-			$additionals = array_diff(array_keys($this->areas), $defaults);
-			$items       = [...$defaults, ...$additionals];
+			$additional = array_diff(array_keys($this->areas), $default);
+			$items      = [...$default, ...$additional];
 		}
 
 		return $items;
@@ -122,9 +134,9 @@ class Menu
 		}
 
 		return $area->menuItem(
-			areas: $this->areas,
+			areas:       $this->areas,
 			permissions: $this->permissions,
-			current: $this->current
+			current:     $this->current
 		);
 	}
 
@@ -133,19 +145,28 @@ class Menu
 	 */
 	public function items(): array
 	{
-		$items = [];
+		$items = A::map(
+			$this->areas(),
+			function (Area|Component|string $area) {
+				if ($area === '-') {
+					return '-';
+				}
 
-		foreach ($this->areas() as $area) {
-			if ($area === '-') {
-				$items[] = '-';
-			} elseif ($item = $this->item($area)) {
-				$items[] = $item->toArray();
+				if ($area instanceof Component) {
+					return $area->render();
+				}
+
+				if ($item = $this->item($area)) {
+					return $item->render();
+				}
 			}
-		}
+		);
 
-		$items[] = '-';
-
-		return array_filter([...$items, ...$this->options()]);
+		return array_filter([
+			...$items,
+			'-',
+			...$this->options()
+		]);
 	}
 
 	/**
@@ -155,9 +176,9 @@ class Menu
 	public function options(): array
 	{
 		$changes = new MenuItem(
-			icon: 'edit-line',
+			icon:   'edit-line',
 			dialog: 'changes',
-			text: 'changes'
+			text:   'changes'
 		);
 
 		$account = new MenuItem(
@@ -175,9 +196,17 @@ class Menu
 		);
 
 		return [
-			$changes->toArray(),
-			$account->toArray(),
-			$logout->toArray(),
+			$changes->render(),
+			$account->render(),
+			$logout->render(),
+		];
+	}
+
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'items' => $this->items()
 		];
 	}
 }
