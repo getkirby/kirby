@@ -12,6 +12,7 @@ return [
 			$updateStatus = $system->updateStatus();
 			$license      = $system->license();
 			$debugMode    = $kirby->option('debug', false);
+			$compiler     = $kirby->option('panel.vue.compiler', null);
 
 			$environment = [
 				[
@@ -81,7 +82,7 @@ return [
 				];
 			}
 
-			if ($kirby->option('panel.vue.compiler', null) === true) {
+			if ($compiler === null || $compiler === true) {
 				$security[] = [
 					'id'   => 'compiler',
 					'text' => I18n::translate('system.issues.vue.compiler'),
