@@ -181,29 +181,22 @@ return [
 	'user.changePassword' => [
 		'pattern' => 'users/(:any)/changePassword',
 		'load' => function (string $id) {
-			$user   = Find::user($id);
-			$fields = [
-				'password' => Field::password([
-					'label' => I18n::translate('user.changePassword.new'),
-				]),
-				'passwordConfirmation' => Field::password([
-					'label' => I18n::translate('user.changePassword.new.confirm'),
-				])
-			];
-
-			if ($user->is($user->kirby()->user()) === true) {
-				$fields = [
-					'currentPassword' => Field::password([
-						'label' => I18n::translate('user.changePassword.current'),
-					]),
-					...$fields
-				];
-			}
+			Find::user($id);
 
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
-					'fields'       => $fields,
+					'fields'       => [
+						'currentPassword' => Field::password([
+							'label' => I18n::translate('user.changePassword.current'),
+						]),
+						'password' => Field::password([
+							'label' => I18n::translate('user.changePassword.new'),
+						]),
+						'passwordConfirmation' => Field::password([
+							'label' => I18n::translate('user.changePassword.new.confirm'),
+						])
+					],
 					'submitButton' => I18n::translate('change'),
 				]
 			];
@@ -213,23 +206,19 @@ return [
 			$request = $kirby->request();
 
 			$user                 = Find::user($id);
+			$currentPassword      = $request->get('currentPassword');
 			$password             = $request->get('password');
 			$passwordConfirmation = $request->get('passwordConfirmation');
 
-			// validate the current password,
-			// if current user is changing their own password
-			if ($user->is($kirby->user()) === true) {
-				$currentPassword = $request->get('currentPassword');
-
+			// validate the current password of the acting user
+			try {
+				$kirby->user()->validatePassword($currentPassword);
+			} catch (Exception) {
 				// catching and re-throwing exception to avoid automatic
 				// sign-out of current user from the Panel
-				try {
-					$user->validatePassword($currentPassword);
-				} catch (Exception) {
-					throw new InvalidArgumentException([
-						'key' => 'user.password.wrong'
-					]);
-				}
+				throw new InvalidArgumentException([
+					'key' => 'user.password.wrong'
+				]);
 			}
 
 			// validate the new password
