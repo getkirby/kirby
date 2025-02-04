@@ -116,13 +116,28 @@ class SystemTest extends AreaTestCase
 				'id'   => 'debug',
 				'text' => 'Debugging must be turned off in production',
 				'link' => 'https://getkirby.com/security/debug'
-			],
-			[
-				'id'   => 'compiler',
-				'text' => 'The Vue template compiler is enabled',
-				'link' => 'https://getkirby.com/security/vue-compiler'
 			]
 		], $props['security']);
+	}
+
+	public function testViewWithEnabledTemplateCompiler(): void
+	{
+		$this->app([
+			'options' => [
+				'panel.vue.compiler' => true
+			]
+		]);
+
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertSame([
+			'id'   => 'compiler',
+			'text' => 'The Vue template compiler is enabled',
+			'link' => 'https://getkirby.com/security/vue-compiler',
+		], $props['security'][1]);
 	}
 
 	public function testViewHttps(): void

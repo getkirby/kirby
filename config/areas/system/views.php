@@ -81,7 +81,7 @@ return [
 				];
 			}
 
-			if ($debugMode === true && $kirby->option('panel.vue.compiler', true) === true) {
+			if ($kirby->option('panel.vue.compiler', null) === true) {
 				$security[] = [
 					'id'   => 'compiler',
 					'text' => I18n::translate('system.issues.vue.compiler'),
