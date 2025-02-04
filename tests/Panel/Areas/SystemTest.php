@@ -100,8 +100,7 @@ class SystemTest extends AreaTestCase
 				'text'  => 'This is a very important announcement!',
 				'kirby' => '*',
 				'php'   => '*'
-			],
-			$this->compilerWarning()
+			]
 		], $props['security']);
 		$this->assertSame([
 			'content' => 'https://example.com/content/site.txt',
@@ -131,8 +130,7 @@ class SystemTest extends AreaTestCase
 				'id'   => 'debug',
 				'text' => 'Debugging must be turned off in production',
 				'link' => 'https://getkirby.com/security/debug'
-			],
-			$this->compilerWarning()
+			]
 		], $props['security']);
 	}
 
@@ -172,7 +170,6 @@ class SystemTest extends AreaTestCase
 				'text' => 'We recommend HTTPS for all your sites',
 				'link' => 'https://getkirby.com/security/https'
 			],
-			$this->compilerWarning()
 		], $props['security']);
 	}
 
@@ -418,9 +415,7 @@ class SystemTest extends AreaTestCase
 			],
 		], $props['environment']);
 
-		$this->assertSame([
-			$this->compilerWarning()
-		], $props['security']);
+		$this->assertSame([], $props['security']);
 
 		$this->assertSame([
 			[
