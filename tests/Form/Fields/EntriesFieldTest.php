@@ -61,7 +61,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame('text', $fieldProps['type']);
 		$this->assertSame('1/1', $fieldProps['width']);
 	}
-	
+
 	public function testField()
 	{
 		$field = $this->field('entries');
