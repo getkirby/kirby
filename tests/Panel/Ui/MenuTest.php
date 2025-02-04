@@ -60,78 +60,203 @@ class MenuTest extends TestCase
 	/**
 	 * @covers ::areas
 	 */
-	public function testAreasDefaultOrder()
-	{
-		$menu = new Menu(areas: [
-			new Area(id: 'foo'),
-			new Area(id: 'site'),
-		]);
-
-		$areas = $menu->areas();
-
-		$this->assertSame('site', $areas[0]->id());
-		$this->assertSame('foo', $areas[1]->id());
-	}
-
-	/**
-	 * @covers ::areas
-	 */
-	public function testAreasConfigOption()
+	public function testAreasFromMenuOptionWithDivider()
 	{
 		$this->app->clone([
 			'options' => [
 				'panel' => [
 					'menu' => [
-						'site',
-						'-',
-						'todos' => [
-							'label' => 'todos',
-							'link'  => 'todos'
-						],
-						'gone',
-						'users' => [
-							'label' => 'Buddies'
+						'-'
+					]
+				]
+			]
+		]);
+
+		$menu  = new Menu();
+		$areas = $menu->areas();
+
+		$this->assertCount(1, $areas);
+		$this->assertSame('-', $areas[0]);
+	}
+
+	/**
+	 * @covers ::areas
+	 */
+	public function testAreasFromMenuOptionWithUiComponent()
+	{
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'menu' => [
+						$menuItem = new MenuItem(
+							icon: 'test',
+							text: 'test',
+							link: 'test'
+						)
+					]
+				]
+			]
+		]);
+
+		$menu  = new Menu();
+		$areas = $menu->areas();
+
+		$this->assertCount(1, $areas);
+		$this->assertSame($menuItem, $areas[0]);
+	}
+
+	/**
+	 * @covers ::areas
+	 */
+	public function testAreasFromMenuOptionWithId()
+	{
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'menu' => [
+						'site'
+					]
+				]
+			]
+		]);
+
+		$menu = new Menu(areas: [
+			$area = new Area(id: 'site')
+		]);
+
+		$areas = $menu->areas();
+
+		$this->assertCount(1, $areas);
+		$this->assertSame($area, $areas[0]);
+	}
+
+	/**
+	 * @covers ::areas
+	 */
+	public function testAreasFromMenuOptionWithIdKey()
+	{
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'menu' => [
+						'site' => true
+					]
+				]
+			]
+		]);
+
+		$menu = new Menu(areas: [
+			$area = new Area(id: 'site')
+		]);
+
+		$areas = $menu->areas();
+
+		$this->assertCount(1, $areas);
+		$this->assertSame($area, $areas[0]);
+	}
+
+	/**
+	 * @covers ::areas
+	 */
+	public function testAreasFromMenuOptionWithInvalidId()
+	{
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'menu' => [
+						'does-not-exist'
+					]
+				]
+			]
+		]);
+
+		$menu  = new Menu();
+		$areas = $menu->areas();
+
+		$this->assertCount(0, $areas);
+	}
+
+	/**
+	 * @covers ::areas
+	 */
+	public function testAreasFromMenuOptionWithArray()
+	{
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'menu' => [
+						'site' => [
+							'icon' => 'edit'
 						]
 					]
 				]
 			]
 		]);
 
-		$menu  = new Menu(
-			areas: [
-				new Area(
-					id: 'license',
-					label: 'Register',
-					icon: 'key'
-				),
-				new Area(
-					id: 'site',
-					label: 'Site',
-					icon: 'home'
-				),
-				new Area(
-					id: 'users',
-					label: 'Users',
-					icon: 'users'
-				),
-			]
-		);
+		$menu = new Menu(areas: [
+			$area = new Area(id: 'site')
+		]);
+
+		// the area does not have the edit icon by default
+		$this->assertNotSame('edit', $area->icon());
+
+		// once the areas are loaded, the edit icon
+		// should have been injected
 		$areas = $menu->areas();
 
-		$this->assertSame('site', $areas[0]->id());
-		$this->assertSame('home', $areas[0]->icon());
-		$this->assertSame('-', $areas[1]);
-		$this->assertSame('todos', $areas[2]->id());
-		$this->assertTrue($areas[2]->menu());
-		$this->assertSame('users', $areas[3]->id());
-		$this->assertSame('users', $areas[3]->icon());
-		$this->assertSame('Buddies', $areas[3]->label());
+		$this->assertCount(1, $areas);
+		$this->assertSame($area, $areas[0]);
+		$this->assertSame('edit', $areas[0]->icon());
 	}
 
 	/**
 	 * @covers ::areas
 	 */
-	public function testAreasConfigOptionClosure()
+	public function testAreasFromMenuOptionWithNewArea()
+	{
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'menu' => [
+						'todos' => [
+							'label' => 'Todos',
+							'link'  => 'todos'
+						]
+					]
+				]
+			]
+		]);
+
+		$menu  = new Menu();
+		$areas = $menu->areas();
+
+		$this->assertCount(1, $areas);
+		$this->assertSame('todos', $areas[0]->id());
+		$this->assertSame('Todos', $areas[0]->label());
+		$this->assertSame('todos', $areas[0]->link());
+	}
+
+	/**
+	 * @covers ::config
+	 */
+	public function testConfig()
+	{
+		$menu = new Menu();
+
+		$expected = [
+			'site',
+			'languages',
+			'users',
+			'system'
+		];
+
+		$this->assertSame($expected, $menu->config());
+	}
+
+	/**
+	 * @covers ::config
+	 */
+	public function testConfigWithClosureAndNullAsReturnValue()
 	{
 		$test = $this;
 
@@ -140,15 +265,63 @@ class MenuTest extends TestCase
 				'panel' => [
 					'menu' => function ($kirby) use ($test) {
 						$test->assertInstanceOf(App::class, $kirby);
+						return null;
+					}
+				]
+			]
+		]);
+
+		$menu = new Menu();
+
+		$expected = [
+			'site',
+			'languages',
+			'users',
+			'system'
+		];
+
+		$this->assertSame($expected, $menu->config());
+	}
+
+	/**
+	 * @covers ::config
+	 */
+	public function testConfigWithClosureAndEmptyArrayAsReturnValue()
+	{
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'menu' => function () {
 						return [];
 					}
 				]
 			]
 		]);
 
-		$menu  = new Menu();
-		$areas = $menu->areas();
-		$this->assertCount(0, $areas);
+		$menu = new Menu();
+
+		$this->assertSame([], $menu->config());
+	}
+
+	/**
+	 * @covers ::config
+	 */
+	public function testConfigWithDefaultOrder()
+	{
+		$menu = new Menu(areas: [
+			new Area(id: 'foo'),
+			new Area(id: 'site'),
+		]);
+
+		$expected = [
+			'site',
+			'languages',
+			'users',
+			'system',
+			'foo'
+		];
+
+		$this->assertSame($expected, $menu->config());
 	}
 
 	/**
