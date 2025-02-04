@@ -22,7 +22,7 @@ use Throwable;
  */
 abstract class Json
 {
-	protected static string $key = '$response';
+	protected static string $key = 'response';
 
 	/**
 	 * Renders the error response with the provided message
@@ -40,13 +40,14 @@ abstract class Json
 	 */
 	public static function response($data, array $options = []): Response
 	{
-		$data = static::responseData($data);
+		$data  = static::responseData($data);
+		$kirby = App::instance();
 
 		// always inject the response code
 		$data['code']   ??= 200;
 		$data['path']     = $options['path'] ?? null;
-		$data['query']    = App::instance()->request()->query()->toArray();
-		$data['referrer'] = Panel::referrer();
+		$data['query']    = $kirby->request()->query()->toArray();
+		$data['referrer'] = $kirby->panel()->referrer();
 
 		return Panel::json([static::$key => $data], $data['code']);
 	}

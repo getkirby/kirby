@@ -29,8 +29,8 @@ class JsonTest extends TestCase
 		$body     = json_decode($response->body(), true);
 
 		$this->assertSame(200, $response->code());
-		$this->assertSame(200, $body['$response']['code']);
-		$this->assertSame('https://getkirby.com', $body['$response']['redirect']);
+		$this->assertSame(200, $body['response']['code']);
+		$this->assertSame('https://getkirby.com', $body['response']['redirect']);
 	}
 
 	/**

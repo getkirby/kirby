@@ -2,9 +2,9 @@
 	<nav
 		class="k-panel-menu"
 		:aria-label="$t('menu')"
-		:data-hover="$panel.menu.hover"
-		@mouseenter="$panel.menu.hover = true"
-		@mouseleave="$panel.menu.hover = false"
+		:data-hover="hover"
+		@mouseenter="$emit('hover', true)"
+		@mouseleave="$emit('hover', false)"
 	>
 		<div class="k-panel-menu-body">
 			<!-- Search button -->
@@ -13,7 +13,7 @@
 				:text="$t('search')"
 				icon="search"
 				class="k-panel-menu-search k-panel-menu-button"
-				@click="$panel.search()"
+				@click="$emit('search')"
 			/>
 
 			<!-- Menus -->
@@ -23,13 +23,14 @@
 				:data-second-last="menuIndex === menus.length - 2"
 				class="k-panel-menu-buttons"
 			>
-				<k-button
-					v-for="entry in menu"
-					:key="entry.id"
-					v-bind="entry"
-					:title="entry.title ?? entry.text"
-					class="k-panel-menu-button"
-				/>
+				<template v-for="entry in menu">
+					<component
+						:is="entry.component"
+						:key="entry.key"
+						v-bind="entry.props"
+						class="k-panel-menu-button"
+					/>
+				</template>
 			</menu>
 
 			<menu v-if="activationButton">
@@ -40,17 +41,17 @@
 					theme="love"
 					variant="filled"
 				/>
-				<k-activation :status="$panel.license" />
+				<k-activation :status="license" />
 			</menu>
 		</div>
 
 		<!-- Collapse/expand toggle -->
 		<k-button
-			:icon="$panel.menu.isOpen ? 'angle-left' : 'angle-right'"
-			:title="$panel.menu.isOpen ? $t('collapse') : $t('expand')"
+			:icon="isOpen ? 'angle-left' : 'angle-right'"
+			:title="isOpen ? $t('collapse') : $t('expand')"
 			size="xs"
 			class="k-panel-menu-toggle"
-			@click="$panel.menu.toggle()"
+			@click="$emit('toggle')"
 		/>
 	</nav>
 </template>
@@ -61,6 +62,20 @@
  * @internal
  */
 export default {
+	props: {
+		hover: Boolean,
+		isOpen: Boolean,
+		items: {
+			type: Array,
+			default: () => []
+		},
+		license: String,
+		searches: {
+			type: Object,
+			default: () => ({})
+		}
+	},
+	emits: ["search", "toggle"],
 	data() {
 		return {
 			over: false
@@ -68,14 +83,14 @@ export default {
 	},
 	computed: {
 		activationButton() {
-			if (this.$panel.license === "missing") {
+			if (this.license === "missing") {
 				return {
 					click: () => this.$dialog("registration"),
 					text: this.$t("activate")
 				};
 			}
 
-			if (this.$panel.license === "legacy") {
+			if (this.license === "legacy") {
 				return {
 					click: () => this.$dialog("license"),
 					text: this.$t("renew")
@@ -85,10 +100,10 @@ export default {
 			return false;
 		},
 		hasSearch() {
-			return this.$helper.object.length(this.$panel.searches) > 0;
+			return this.$helper.object.length(this.searches) > 0;
 		},
 		menus() {
-			return this.$helper.array.split(this.$panel.menu.entries, "-");
+			return this.$helper.array.split(this.items, "-");
 		}
 	}
 };

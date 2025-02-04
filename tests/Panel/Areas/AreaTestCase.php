@@ -6,7 +6,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
-use Kirby\Panel\Panel;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
@@ -102,12 +101,12 @@ abstract class AreaTestCase extends TestCase
 
 	protected function dialog(string $path): array
 	{
-		return $this->response('dialogs/' . $path, true)['$dialog'];
+		return $this->response('dialogs/' . $path, true)['dialog'];
 	}
 
 	protected function dropdown(string $path): array
 	{
-		return $this->response('dropdowns/' . $path, true)['$dropdown'];
+		return $this->response('dropdowns/' . $path, true)['dropdown'];
 	}
 
 	protected function enableMultilang(): void
@@ -206,7 +205,7 @@ abstract class AreaTestCase extends TestCase
 		string|null $path = null,
 		bool $toJson = false
 	): Response|array|null {
-		$response = Panel::router($path);
+		$response = $this->app->panel()->router($path);
 
 		if ($toJson === true) {
 			return json_decode($response->body(), true);
@@ -217,7 +216,7 @@ abstract class AreaTestCase extends TestCase
 
 	protected function search(string $path): array
 	{
-		return $this->response('search/' . $path, true)['$search'];
+		return $this->response('search/' . $path, true)['search'];
 	}
 
 	protected function submit(array $data): void
@@ -235,6 +234,6 @@ abstract class AreaTestCase extends TestCase
 
 	protected function view(string|null $path = null): array
 	{
-		return $this->response($path, true)['$view'];
+		return $this->response($path, true)['view'];
 	}
 }
