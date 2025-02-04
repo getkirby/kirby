@@ -139,13 +139,18 @@ export default {
 		MOVE(state, [from, to]) {
 			// move state
 			const model = structuredClone(state.models[from]);
-			del(state.models, from);
 			set(state.models, to, model);
 
 			// move local storage
 			const storage = localStorage.getItem("kirby$content$" + from);
-			localStorage.removeItem("kirby$content$" + from);
 			localStorage.setItem("kirby$content$" + to, storage);
+
+			// change the context
+			state.current = to;
+
+			// delete the old state
+			localStorage.removeItem("kirby$content$" + from);
+			del(state.models, from);
 		},
 		REMOVE(state, id) {
 			del(state.models, id);
