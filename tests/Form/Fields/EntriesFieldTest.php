@@ -20,6 +20,48 @@ class EntriesFieldTest extends TestCase
 		$this->assertNull($field->value());
 	}
 
+	public function testProps()
+	{
+		$field = $this->field('entries');
+		$props = $field->props();
+
+		$this->assertIsArray($props);
+		$this->assertNull($props['empty']);
+		$this->assertNull($props['max']);
+		$this->assertNull($props['min']);
+		$this->assertNull($props['after']);
+		$this->assertFalse($props['autofocus']);
+		$this->assertNull($props['before']);
+		$this->assertNull($props['default']);
+		$this->assertFalse($props['disabled']);
+		$this->assertNull($props['help']);
+		$this->assertNull($props['icon']);
+		$this->assertSame('Entries', $props['label']);
+		$this->assertSame('entries', $props['name']);
+		$this->assertNull($props['placeholder']);
+		$this->assertFalse($props['required']);
+		$this->assertTrue($props['saveable']);
+		$this->assertTrue($props['sortable']);
+		$this->assertTrue($props['translate']);
+		$this->assertSame('entries', $props['type']);
+		$this->assertSame('1/1', $props['width']);
+
+		$fieldProps = $props['field'];
+		$this->assertIsArray($fieldProps);
+		$this->assertFalse($fieldProps['autofocus']);
+		$this->assertTrue($fieldProps['counter']);
+		$this->assertFalse($fieldProps['disabled']);
+		$this->assertSame('sans-serif', $fieldProps['font']);
+		$this->assertFalse($fieldProps['hidden']);
+		$this->assertSame('0', $fieldProps['name']);
+		$this->assertFalse($fieldProps['required']);
+		$this->assertTrue($fieldProps['saveable']);
+		$this->assertFalse($fieldProps['spellcheck']);
+		$this->assertTrue($fieldProps['translate']);
+		$this->assertSame('text', $fieldProps['type']);
+		$this->assertSame('1/1', $fieldProps['width']);
+	}
+	
 	public function testField()
 	{
 		$field = $this->field('entries');
