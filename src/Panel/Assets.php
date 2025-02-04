@@ -214,7 +214,7 @@ class Assets
 		$js = [
 			'vue' => [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/vue.min.js'
+				'src'   => $this->vue(),
 			],
 			'vendor' => [
 				'nonce' => $this->nonce,
@@ -252,7 +252,7 @@ class Assets
 			//  development version of Vue
 			$js['vendor']['src'] = null;
 			$js['index']['src']  = $this->url . '/src/index.js';
-			$js['vue']['src']    = $this->url . '/node_modules/vue/dist/vue.js';
+			$js['vue']['src']    = $this->vue(production: false);
 
 			// add vite dev client
 			$js['vite'] = [
@@ -320,5 +320,20 @@ class Assets
 			'params' => null,
 			'query'  => null
 		])->toString(), '/');
+	}
+
+	/**
+	 * Get the correct Vue script URL depending on dev mode
+	 * and the enabled/disabled template compiler
+	 */
+	public function vue(bool $production = true): string
+	{
+		$script = $this->kirby->option('panel.vue.compiler', true) === true ? 'vue' : 'vue.runtime';
+
+		if ($production === false) {
+			return $this->url . '/node_modules/vue/dist/' . $script . '.js';
+		}
+
+		return $this->url . '/js/' . $script . '.min.js';
 	}
 }

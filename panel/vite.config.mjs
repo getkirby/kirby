@@ -65,6 +65,10 @@ function createPlugins(mode) {
 			viteStaticCopy({
 				targets: [
 					{
+						src: "node_modules/vue/dist/vue.runtime.min.js",
+						dest: "js"
+					},
+					{
 						src: "node_modules/vue/dist/vue.min.js",
 						dest: "js"
 					}
