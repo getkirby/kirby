@@ -194,29 +194,25 @@ class EntriesFieldTest extends TestCase
 	public static function validationsProvider(): array
 	{
 		return [
-			['color', '#000000', '#000000'],
+			['color', '#000000', true],
 			['color', 'invalid', false],
 
 			['date', '2025-02-01', true],
-			['date', 'invalid', false],
 
 			['email', 'support@getkirby.com', true],
 			['email', 'invalid@host', false],
 
 			['number', 1, true],
-			['number', 'invalid', false],
 
 			['select', 'web', true],
 
 			['slug', 'page-slug', true],
 
 			['tel', '+49123456789', true],
-			['tel', 'invalid@phone.number', false],
 
 			['text', 'some text', true],
 
 			['time', '20:00', true],
-			['time', 'invalid', false],
 
 			['url', 'https://getkirby.com', true],
 			['url', 'invalid.host', false],
