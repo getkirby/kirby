@@ -34,6 +34,24 @@ class SystemTest extends AreaTestCase
 		$this->install();
 	}
 
+	protected function compilerWarning(): array
+	{
+		return [
+			'id'   => 'compiler',
+			'text' => 'The Vue template compiler is enabled',
+			'link' => 'https://getkirby.com/security/vue-compiler',
+		];
+	}
+
+	protected function customWarning(): array
+	{
+		return [
+			'text'  => 'This is a very important announcement!',
+			'kirby' => '*',
+			'php'   => '*'
+		];
+	}
+
 	public function testViewWithoutAuthentication(): void
 	{
 		$this->assertRedirect('system', 'login');
@@ -82,7 +100,8 @@ class SystemTest extends AreaTestCase
 				'text'  => 'This is a very important announcement!',
 				'kirby' => '*',
 				'php'   => '*'
-			]
+			],
+			$this->compilerWarning()
 		], $props['security']);
 		$this->assertSame([
 			'content' => 'https://example.com/content/site.txt',
@@ -107,16 +126,13 @@ class SystemTest extends AreaTestCase
 
 		$this->assertSame([], $props['exceptions']);
 		$this->assertSame([
-			[
-				'text'  => 'This is a very important announcement!',
-				'kirby' => '*',
-				'php'   => '*'
-			],
+			$this->customWarning(),
 			[
 				'id'   => 'debug',
 				'text' => 'Debugging must be turned off in production',
 				'link' => 'https://getkirby.com/security/debug'
-			]
+			],
+			$this->compilerWarning()
 		], $props['security']);
 	}
 
@@ -133,11 +149,7 @@ class SystemTest extends AreaTestCase
 		$view  = $this->view('system');
 		$props = $view['props'];
 
-		$this->assertSame([
-			'id'   => 'compiler',
-			'text' => 'The Vue template compiler is enabled',
-			'link' => 'https://getkirby.com/security/vue-compiler',
-		], $props['security'][1]);
+		$this->assertSame($this->compilerWarning(), $props['security'][1]);
 	}
 
 	public function testViewHttps(): void
@@ -154,16 +166,13 @@ class SystemTest extends AreaTestCase
 		$props = $view['props'];
 
 		$this->assertSame([
-			[
-				'text'  => 'This is a very important announcement!',
-				'kirby' => '*',
-				'php'   => '*'
-			],
+			$this->customWarning(),
 			[
 				'id'   => 'https',
 				'text' => 'We recommend HTTPS for all your sites',
 				'link' => 'https://getkirby.com/security/https'
-			]
+			],
+			$this->compilerWarning()
 		], $props['security']);
 	}
 
@@ -409,7 +418,9 @@ class SystemTest extends AreaTestCase
 			],
 		], $props['environment']);
 
-		$this->assertSame([], $props['security']);
+		$this->assertSame([
+			$this->compilerWarning()
+		], $props['security']);
 
 		$this->assertSame([
 			[
