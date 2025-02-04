@@ -459,6 +459,7 @@
 	"license.code": "Code",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Please enter your license code",
+	"license.remove.text": "Are you sure you want to remove the license file? Your license will remain registered to this site, so that you can activate the site with this license again, if needed.",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.demo.info": "This is a demo installation",

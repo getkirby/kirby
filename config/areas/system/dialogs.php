@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
+use Kirby\Filesystem\F;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
 
@@ -55,6 +56,26 @@ return [
 
 			throw new LogicException(message: 'The upgrade failed');
 			// @codeCoverageIgnoreEnd
+		}
+	],
+	'license/remove' => [
+		'load' => function () {
+			return [
+				'component' => 'k-remove-dialog',
+				'props' => [
+					'text' => I18n::translate('license.remove.text'),
+					'size' => 'medium',
+					'submitButton' => [
+						'icon'  => 'trash',
+						'text'  => I18n::translate('remove'),
+						'theme' => 'negative',
+					],
+				]
+			];
+		},
+		'submit' => function () {
+			App::instance()->system()->license()->delete();
+			return true;
 		}
 	],
 	// license registration
