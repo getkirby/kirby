@@ -59,6 +59,12 @@ class Menu extends Component
 				continue;
 			}
 
+			// [$areaId => Ui() ]
+			if ($area instanceof Component) {
+				$areas[] = $area;
+				continue;
+			}
+
 			// [0 => $areaId]
 			if (is_numeric($id) === true) {
 				$areas[] = $this->area($area);
@@ -68,12 +74,6 @@ class Menu extends Component
 			// [$areaId => true]
 			if ($area === true) {
 				$areas[] = $this->area($id);
-				continue;
-			}
-
-			// [$areaId => Ui() ]
-			if ($area instanceof Component) {
-				$areas[] = $area;
 				continue;
 			}
 
