@@ -29,6 +29,9 @@ import debounce from "@/helpers/debounce.js";
 export default {
 	mixins: [SectionMixin],
 	inheritAttrs: false,
+	props: {
+		lock: [Object, Boolean]
+	},
 	data() {
 		return {
 			fields: {},
