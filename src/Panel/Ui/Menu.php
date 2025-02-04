@@ -25,7 +25,8 @@ class Menu extends Component
 	public function __construct(
 		array $areas = [],
 		protected array $permissions = [],
-		protected string|null $current = null
+		protected string|null $current = null,
+		protected Closure|array|null $config = null
 	) {
 		foreach ($areas as $area) {
 			$this->areas[$area->id()] = $area;
@@ -102,11 +103,11 @@ class Menu extends Component
 	public function config(): array
 	{
 		// get from config option which areas should be listed in the menu
-		$kirby = App::instance();
-		$items = $kirby->option('panel.menu');
+		$items = $this->config;
 
 		// lazy-load items
 		if ($items instanceof Closure) {
+			$kirby = App::instance();
 			$items = $items($kirby);
 		}
 

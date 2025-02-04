@@ -215,7 +215,8 @@ class Fiber
 		$menu = new Menu(
 			areas:       $this->areas,
 			permissions: $this->permissions,
-			current:     $this->area?->id()
+			current:     $this->area?->id(),
+			config: 	 $this->kirby->option('panel.menu', null)
 		);
 
 		return $menu->render();
