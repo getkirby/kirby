@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui;
 
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
+use Kirby\Panel\Area;
 use Kirby\TestCase;
 
 /**
@@ -44,280 +45,326 @@ class MenuTest extends TestCase
 	 */
 	public function testAreas()
 	{
-		$menu  = new Menu(
-			[
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site'
-				]
-			]
-		);
+		$menu = new Menu(areas: [
+			new Area(
+				id: 'site',
+			)
+		]);
+
 		$areas = $menu->areas();
-		$this->assertSame('site', $areas[0]['id']);
+
+		$this->assertCount(1, $areas);
+		$this->assertSame('site', $areas[0]->id());
 	}
 
 	/**
 	 * @covers ::areas
 	 */
-	public function testAreasDefaultOrder()
-	{
-		$menu  = new Menu(
-			[
-				'foo' => [
-					'label' => 'Bar',
-					'link'  => 'heart'
-				],
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site'
-				]
-			]
-		);
-		$areas = $menu->areas();
-		$this->assertSame(['site', 'foo'], array_column($areas, 'id'));
-	}
-
-	/**
-	 * @covers ::areas
-	 */
-	public function testAreasConfigOption()
-	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => [
-						'site',
-						'-',
-						'todos' => [
-							'label' => 'todos',
-							'link'  => 'todos'
-						],
-						'gone',
-						'users' => [
-							'label' => 'Buddies'
-						]
-					]
-				]
-			]
-		]);
-
-		$menu  = new Menu(
-			[
-				'license' => [
-					'label' => 'Register',
-					'link'  => 'key'
-				],
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site'
-				],
-				'users' => [
-					'icon'  => 'users',
-					'label' => 'Users',
-					'link'  => 'users'
-				]
-			]
-		);
-		$areas = $menu->areas();
-		$this->assertSame('site', $areas[0]['id']);
-		$this->assertSame('home', $areas[0]['icon']);
-		$this->assertSame('-', $areas[1]);
-		$this->assertSame('todos', $areas[2]['id']);
-		$this->assertTrue($areas[2]['menu']);
-		$this->assertSame('users', $areas[3]['id']);
-		$this->assertSame('users', $areas[3]['icon']);
-		$this->assertSame('Buddies', $areas[3]['label']);
-	}
-
-	/**
-	 * @covers ::areas
-	 */
-	public function testAreasConfigOptionClosure()
-	{
-		$test = $this;
-
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => function ($kirby) use ($test) {
-						$test->assertInstanceOf(App::class, $kirby);
-						return [];
-					}
-				]
-			]
-		]);
-
-		$menu  = new Menu();
-		$areas = $menu->areas();
-		$this->assertCount(0, $areas);
-	}
-
-	/**
-	 * @covers ::entry
-	 */
-	public function testEntry()
-	{
-		$menu = new Menu([], [], 'account');
-		$this->assertTrue($menu->hasPermission('account'));
-
-		$entry = $menu->entry([
-			'id'    => 'account',
-			'link'  => 'foo',
-			'label' => 'Foo',
-			'menu'  => true
-		]);
-		$this->assertSame([
-			'current' => true,
-			'link'    => 'foo',
-			'text'    => 'Foo'
-		], $entry);
-	}
-
-	/**
-	 * @covers ::entry
-	 */
-	public function testEntryDialog()
-	{
-		$menu = new Menu([], [], 'account');
-
-		$entry = $menu->entry([
-			'id'    => 'account',
-			'link'  => 'foo',
-			'label' => 'Foo',
-			'menu'  => ['dialog' => 'foo']
-		]);
-
-		$this->assertSame([
-			'current' => true,
-			'dialog'  => 'foo',
-			'text'    => 'Foo'
-		], $entry);
-	}
-
-	/**
-	 * @covers ::entry
-	 */
-	public function testEntryMenu()
-	{
-		$menu = new Menu([], [], 'account');
-		$this->assertFalse($menu->entry(['id' => 'account']));
-		$this->assertFalse($menu->entry(['id' => 'account', 'menu' => false]));
-		$this->assertFalse($menu->entry(['id' => 'account', 'menu' => fn () => false]));
-
-		$test = $this;
-		$menu->entry(['id' => 'account', 'menu' => function ($areas, $permissions, $current) use ($test) {
-			$test->assertSame([], $areas);
-			$test->assertSame([], $permissions);
-			$test->assertSame('account', $current);
-			return false;
-		}]);
-
-		$entry = $menu->entry([
-			'id' => 'account',
-			'link'  => 'foo',
-			'label' => 'Foo',
-			'menu'  => 'disabled'
-		]);
-		$this->assertTrue($entry['disabled']);
-	}
-
-	/**
-	 * @covers ::entry
-	 */
-	public function testEntryNoPermission()
-	{
-		$menu = new Menu([], ['access' => ['account' => false]]);
-		$this->assertFalse($menu->entry(['id' => 'account']));
-	}
-
-	/**
-	 * @covers ::entry
-	 */
-	public function testEntryMultiLanguage()
-	{
-		$menu = new Menu([], [], 'account');
-
-		$entry = $menu->entry([
-			'id'    => 'account',
-			'link'  => 'foo',
-			'label' => [
-				'en' => 'My account',
-				'de' => 'Mein Account'
-			],
-			'menu'  => true
-		]);
-		$this->assertSame([
-			'current' => true,
-			'link'    => 'foo',
-			'text'    => 'My account'
-		], $entry);
-	}
-
-	/**
-	 * @covers ::entries
-	 */
-	public function testEntries()
+	public function testAreasFromMenuOptionWithDivider()
 	{
 		$menu = new Menu(
-			[
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site'
-				]
-			],
-			[],
-			'site'
+			config: [
+				'-'
+			]
 		);
 
-		$entries = $menu->entries();
-		$this->assertSame('site', $entries[0]['link']);
-		$this->assertTrue($entries[0]['current']);
-		$this->assertSame('-', $entries[1]);
-		$this->assertSame('changes', $entries[2]['dialog']);
-		$this->assertSame('account', $entries[3]['link']);
-		$this->assertSame('logout', $entries[4]['link']);
+		$areas = $menu->areas();
+
+		$this->assertCount(1, $areas);
+		$this->assertSame('-', $areas[0]);
 	}
 
 	/**
-	 * @covers ::hasPermission
+	 * @covers ::areas
 	 */
-	public function testHasPermission()
+	public function testAreasFromMenuOptionWithUiComponent()
 	{
-		$menu = new Menu([], []);
-		$this->assertTrue($menu->hasPermission('account'));
+		$menu = new Menu(
+			config: [
+				$menuItem = new MenuItem(
+					icon: 'test',
+					text: 'test',
+					link: 'test'
+				)
+			]
+		);
 
-		$menu = new Menu([], ['access' => ['account' => true]]);
-		$this->assertTrue($menu->hasPermission('account'));
+		$areas = $menu->areas();
 
-		$menu = new Menu([], ['access' => ['account' => false]]);
-		$this->assertFalse($menu->hasPermission('account'));
+		$this->assertCount(1, $areas);
+		$this->assertSame($menuItem, $areas[0]);
 	}
 
 	/**
-	 * @covers ::isCurrent
+	 * @covers ::areas
 	 */
-	public function testIsCurrent()
+	public function testAreasFromMenuOptionWithId()
 	{
-		$menu = new Menu([], [], 'account');
+		$menu = new Menu(
+			areas: [
+				$area = new Area(id: 'site')
+			],
+			config: [
+				'site'
+			]
+		);
 
-		$this->assertTrue($menu->isCurrent('account'));
-		$this->assertTrue($menu->isCurrent('foo', true));
-		$this->assertTrue($menu->isCurrent('foo', fn () => true));
-		$this->assertFalse($menu->isCurrent('site'));
-		$this->assertFalse($menu->isCurrent('foo', false));
-		$this->assertFalse($menu->isCurrent('foo', fn () => false));
+		$areas = $menu->areas();
 
+		$this->assertCount(1, $areas);
+		$this->assertSame($area, $areas[0]);
+	}
+
+	/**
+	 * @covers ::areas
+	 */
+	public function testAreasFromMenuOptionWithIdKey()
+	{
+		$menu = new Menu(
+			areas: [
+				$area = new Area(id: 'site')
+			],
+			config: [
+				'site' => true
+			]
+		);
+
+		$areas = $menu->areas();
+
+		$this->assertCount(1, $areas);
+		$this->assertSame($area, $areas[0]);
+	}
+
+	/**
+	 * @covers ::areas
+	 */
+	public function testAreasFromMenuOptionWithInvalidId()
+	{
+		$menu = new Menu(
+			config: [
+				'does-not-exist'
+			]
+		);
+
+		$this->assertCount(0, $menu->areas());
+	}
+
+	/**
+	 * @covers ::areas
+	 */
+	public function testAreasFromMenuOptionWithArray()
+	{
+		$menu = new Menu(
+			areas: [
+				$area = new Area(id: 'site')
+			],
+			config: [
+				'site' => [
+					'icon' => 'edit'
+				]
+			]
+		);
+
+		// the area does not have the edit icon by default
+		$this->assertNotSame('edit', $area->icon());
+
+		// once the areas are loaded, the edit icon
+		// should have been injected
+		$areas = $menu->areas();
+
+		$this->assertCount(1, $areas);
+		$this->assertSame($area, $areas[0]);
+		$this->assertSame('edit', $areas[0]->icon());
+	}
+
+	/**
+	 * @covers ::areas
+	 */
+	public function testAreasFromMenuOptionWithNewArea()
+	{
+		$menu = new Menu(
+			config: [
+				'todos' => [
+					'label' => 'Todos',
+					'link'  => 'todos'
+				]
+			]
+		);
+
+		$areas = $menu->areas();
+
+		$this->assertCount(1, $areas);
+		$this->assertSame('todos', $areas[0]->id());
+		$this->assertSame('Todos', $areas[0]->label());
+		$this->assertSame('todos', $areas[0]->link());
+	}
+
+	/**
+	 * @covers ::config
+	 */
+	public function testConfig()
+	{
+		$menu = new Menu();
+
+		$expected = [
+			'site',
+			'languages',
+			'users',
+			'system'
+		];
+
+		$this->assertSame($expected, $menu->config());
+	}
+
+	/**
+	 * @covers ::config
+	 */
+	public function testConfigWithClosureAndNullAsReturnValue()
+	{
 		$test = $this;
-		$menu->isCurrent('foo', function (string $current) use ($test) {
-			$test->assertSame('account', $current);
-			return true;
-		});
+		$menu = new Menu(
+			config: function ($kirby) use ($test) {
+				$test->assertInstanceOf(App::class, $kirby);
+				return null;
+			}
+		);
+
+		$expected = [
+			'site',
+			'languages',
+			'users',
+			'system'
+		];
+
+		$this->assertSame($expected, $menu->config());
 	}
 
+	/**
+	 * @covers ::config
+	 */
+	public function testConfigWithClosureAndEmptyArrayAsReturnValue()
+	{
+		$menu = new Menu(
+			config: function () {
+				return [];
+			}
+		);
+
+		$this->assertSame([], $menu->config());
+	}
+
+	/**
+	 * @covers ::config
+	 */
+	public function testConfigWithDefaultOrder()
+	{
+		$menu = new Menu(areas: [
+			new Area(id: 'foo'),
+			new Area(id: 'site'),
+		]);
+
+		$expected = [
+			'site',
+			'languages',
+			'users',
+			'system',
+			'foo'
+		];
+
+		$this->assertSame($expected, $menu->config());
+	}
+
+	/**
+	 * @covers ::item
+	 */
+	public function testItem()
+	{
+		$menu = new Menu();
+
+		$item = $menu->item(new Area(
+			id: 'account',
+			link: 'foo',
+			label: 'Foo',
+			menu: true
+		));
+
+		$this->assertInstanceOf(MenuItem::class, $item);
+	}
+
+	/**
+	 * @covers ::item
+	 */
+	public function testItemWithoutArea()
+	{
+		$menu = new Menu();
+		$item = $menu->item(null);
+
+		$this->assertNull($item);
+	}
+
+	/**
+	 * @covers ::items
+	 */
+	public function testItemsWithDivider()
+	{
+		$menu = new Menu(
+			areas: [
+				'site'   => new Area(id: 'site', menu: true),
+				'system' => new Area(id: 'system', menu: true),
+			],
+			config: [
+				'site',
+				'-',
+				'system',
+			],
+			permissions: [
+				'access' => [
+					'site'   => true,
+					'system' => true
+				]
+			]
+		);
+
+		$items = $menu->items();
+
+		$this->assertSame('site', $items[0]['props']['link']);
+		$this->assertSame('-', $items[1]);
+		$this->assertSame('system', $items[2]['props']['link']);
+	}
+
+	/**
+	 * @covers ::items
+	 */
+	public function testItemsWithComponent()
+	{
+		$menu = new Menu(
+			areas: [
+				'site'   => new Area(id: 'site', menu: true),
+				'system' => new Area(id: 'system', menu: true),
+			],
+			config: [
+				'site',
+				'test' => new MenuItem(
+					icon: 'test',
+					text: 'test',
+					link: 'test'
+				),
+				'system',
+			],
+			permissions: [
+				'access' => [
+					'site'   => true,
+					'system' => true
+				]
+			]
+		);
+
+		$items = $menu->items();
+
+		$this->assertSame('site', $items[0]['props']['link']);
+		$this->assertSame('test', $items[1]['props']['link']);
+		$this->assertSame('system', $items[2]['props']['link']);
+	}
 
 	/**
 	 * @covers ::options
@@ -325,29 +372,34 @@ class MenuTest extends TestCase
 	public function testOptions()
 	{
 		$changes = [
-			'icon'     => 'edit-line',
-			'dialog'   => 'changes',
-			'text'     => 'Changes'
+			'dialog'     => 'changes',
+			'icon'       => 'edit-line',
+			'responsive' => true,
+			'text'       => 'Changes',
+			'type'       => 'button'
 		];
 
 		$account = [
-			'current'  => false,
-			'icon'     => 'account',
-			'link'     => 'account',
-			'disabled' => false,
-			'text'     => 'Your account'
+			'icon'       => 'account',
+			'link'       => 'account',
+			'responsive' => true,
+			'text'       => 'Your account',
+			'type'       => 'button'
 		];
 
 		$logout = [
-			'icon' => 'logout',
-			'link' => 'logout',
-			'text' => 'Log out'
+			'icon'       => 'logout',
+			'link'       => 'logout',
+			'responsive' => true,
+			'text'       => 'Log out',
+			'type'       => 'button'
 		];
 
-		$menu    = new Menu();
+		$menu = new Menu();
+
 		$options = $menu->options();
-		$this->assertSame($changes, $options[0]);
-		$this->assertSame($account, $options[1]);
-		$this->assertSame($logout, $options[2]);
+		$this->assertSame($changes, $options[0]['props']);
+		$this->assertSame($account, $options[1]['props']);
+		$this->assertSame($logout, $options[2]['props']);
 	}
 }

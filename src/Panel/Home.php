@@ -61,8 +61,8 @@ class Home
 
 		// needed to create a proper menu
 		$areas = $this->kirby->panel()->areas()->toArray();
-		$menu  = new Menu($areas, $permissions->toArray());
-		$menu  = $menu->entries();
+		$menu  = new Menu(areas: $areas, permissions: $permissions->toArray());
+		$menu  = $menu->items();
 
 		// go through the menu and search for the first
 		// available view we can go to
@@ -73,22 +73,22 @@ class Home
 			}
 
 			// skip disabled items
-			if (($menuItem['disabled'] ?? false) === true) {
+			if (($menuItem['props']['disabled'] ?? false) === true) {
 				continue;
 			}
 
 			// skip buttons that don't open a link
 			// (but e.g. a dialog)
-			if (isset($menuItem['link']) === false) {
+			if (isset($menuItem['props']['link']) === false) {
 				continue;
 			}
 
 			// skip the logout button
-			if ($menuItem['link'] === 'logout') {
+			if ($menuItem['props']['link'] === 'logout') {
 				continue;
 			}
 
-			return Panel::url($menuItem['link']);
+			return Panel::url($menuItem['props']['link']);
 		}
 
 		throw new NotFoundException(

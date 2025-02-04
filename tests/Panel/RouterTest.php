@@ -122,8 +122,9 @@ class RouterTest extends TestCase
 	 */
 	public function testRoutesForDialogs(): void
 	{
-		$area = [
-			'dialogs' => [
+		$routes = Router::routesForDialogs(new Area(
+			id: 'test',
+			dialogs: [
 				'test' => [
 					'load'   => $load   = function () {
 					},
@@ -131,9 +132,7 @@ class RouterTest extends TestCase
 					},
 				]
 			]
-		];
-
-		$routes = Router::routesForDialogs('test', $area);
+		));
 
 		$expected = [
 			[
@@ -159,13 +158,12 @@ class RouterTest extends TestCase
 	 */
 	public function testRoutesForDialogsWithoutHandlers(): void
 	{
-		$area = [
-			'dialogs' => [
+		$routes = Router::routesForDialogs(new Area(
+			id: 'test',
+			dialogs: [
 				'test' => []
 			]
-		];
-
-		$routes = Router::routesForDialogs('test', $area);
+		));
 
 		$this->assertSame('The load handler is missing', $routes[0]['action']());
 		$this->assertSame('The submit handler is missing', $routes[1]['action']());
@@ -176,8 +174,9 @@ class RouterTest extends TestCase
 	 */
 	public function testRoutesForDrawers(): void
 	{
-		$area = [
-			'drawers' => [
+		$routes = Router::routesForDrawers(new Area(
+			id: 'test',
+			drawers: [
 				'test' => [
 					'load'   => $load   = function () {
 					},
@@ -185,9 +184,7 @@ class RouterTest extends TestCase
 					},
 				]
 			]
-		];
-
-		$routes = Router::routesForDrawers('test', $area);
+		));
 
 		$expected = [
 			[
@@ -213,8 +210,9 @@ class RouterTest extends TestCase
 	 */
 	public function testRoutesForDropdowns(): void
 	{
-		$area = [
-			'dropdowns' => [
+		$routes = Router::routesForDropdowns(new Area(
+			id: 'test',
+			dropdowns: [
 				'test' => [
 					'pattern' => 'test',
 					'action'  => $action = fn () => [
@@ -225,9 +223,7 @@ class RouterTest extends TestCase
 					]
 				]
 			]
-		];
-
-		$routes = Router::routesForDropdowns('test', $area);
+		));
 
 		$expected = [
 			[
@@ -247,8 +243,9 @@ class RouterTest extends TestCase
 	 */
 	public function testRoutesForDropdownsWithOptions(): void
 	{
-		$area = [
-			'dropdowns' => [
+		$routes = Router::routesForDropdowns(new Area(
+			id: 'test',
+			dropdowns: [
 				'test' => [
 					'pattern' => 'test',
 					'options' => $action = fn () => [
@@ -259,9 +256,7 @@ class RouterTest extends TestCase
 					]
 				]
 			]
-		];
-
-		$routes = Router::routesForDropdowns('test', $area);
+		));
 
 		$expected = [
 			[
@@ -281,8 +276,9 @@ class RouterTest extends TestCase
 	 */
 	public function testRoutesForDropdownsWithShortcut(): void
 	{
-		$area = [
-			'dropdowns' => [
+		$routes = Router::routesForDropdowns(new Area(
+			id: 'test',
+			dropdowns: [
 				'test' => $action = fn () => [
 					[
 						'text' => 'Test',
@@ -290,9 +286,7 @@ class RouterTest extends TestCase
 					]
 				]
 			]
-		];
-
-		$routes = Router::routesForDropdowns('test', $area);
+		));
 
 		$expected = [
 			[
@@ -312,17 +306,16 @@ class RouterTest extends TestCase
 	 */
 	public function testRoutesForViews(): void
 	{
-		$area = [
-			'views' => [
+		$routes = Router::routesForViews(new Area(
+			id: 'test',
+			views: [
 				[
 					'pattern' => 'test',
 					'action'  => $callback = function () {
 					}
 				]
 			]
-		];
-
-		$routes = Router::routesForViews('test', $area);
+		));
 
 		$expected = [
 			[
