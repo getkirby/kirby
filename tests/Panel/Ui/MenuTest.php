@@ -62,17 +62,12 @@ class MenuTest extends TestCase
 	 */
 	public function testAreasFromMenuOptionWithDivider()
 	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => [
-						'-'
-					]
-				]
+		$menu = new Menu(
+			config: [
+				'-'
 			]
-		]);
+		);
 
-		$menu  = new Menu();
 		$areas = $menu->areas();
 
 		$this->assertCount(1, $areas);
@@ -84,21 +79,16 @@ class MenuTest extends TestCase
 	 */
 	public function testAreasFromMenuOptionWithUiComponent()
 	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => [
-						$menuItem = new MenuItem(
-							icon: 'test',
-							text: 'test',
-							link: 'test'
-						)
-					]
-				]
+		$menu = new Menu(
+			config: [
+				$menuItem = new MenuItem(
+					icon: 'test',
+					text: 'test',
+					link: 'test'
+				)
 			]
-		]);
+		);
 
-		$menu  = new Menu();
 		$areas = $menu->areas();
 
 		$this->assertCount(1, $areas);
@@ -110,19 +100,14 @@ class MenuTest extends TestCase
 	 */
 	public function testAreasFromMenuOptionWithId()
 	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => [
-						'site'
-					]
-				]
+		$menu = new Menu(
+			areas: [
+				$area = new Area(id: 'site')
+			],
+			config: [
+				'site'
 			]
-		]);
-
-		$menu = new Menu(areas: [
-			$area = new Area(id: 'site')
-		]);
+		);
 
 		$areas = $menu->areas();
 
@@ -135,19 +120,14 @@ class MenuTest extends TestCase
 	 */
 	public function testAreasFromMenuOptionWithIdKey()
 	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => [
-						'site' => true
-					]
-				]
+		$menu = new Menu(
+			areas: [
+				$area = new Area(id: 'site')
+			],
+			config: [
+				'site' => true
 			]
-		]);
-
-		$menu = new Menu(areas: [
-			$area = new Area(id: 'site')
-		]);
+		);
 
 		$areas = $menu->areas();
 
@@ -160,20 +140,13 @@ class MenuTest extends TestCase
 	 */
 	public function testAreasFromMenuOptionWithInvalidId()
 	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => [
-						'does-not-exist'
-					]
-				]
+		$menu = new Menu(
+			config: [
+				'does-not-exist'
 			]
-		]);
+		);
 
-		$menu  = new Menu();
-		$areas = $menu->areas();
-
-		$this->assertCount(0, $areas);
+		$this->assertCount(0, $menu->areas());
 	}
 
 	/**
@@ -181,21 +154,16 @@ class MenuTest extends TestCase
 	 */
 	public function testAreasFromMenuOptionWithArray()
 	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => [
-						'site' => [
-							'icon' => 'edit'
-						]
-					]
+		$menu = new Menu(
+			areas: [
+				$area = new Area(id: 'site')
+			],
+			config: [
+				'site' => [
+					'icon' => 'edit'
 				]
 			]
-		]);
-
-		$menu = new Menu(areas: [
-			$area = new Area(id: 'site')
-		]);
+		);
 
 		// the area does not have the edit icon by default
 		$this->assertNotSame('edit', $area->icon());
@@ -214,20 +182,15 @@ class MenuTest extends TestCase
 	 */
 	public function testAreasFromMenuOptionWithNewArea()
 	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => [
-						'todos' => [
-							'label' => 'Todos',
-							'link'  => 'todos'
-						]
-					]
+		$menu = new Menu(
+			config: [
+				'todos' => [
+					'label' => 'Todos',
+					'link'  => 'todos'
 				]
 			]
-		]);
+		);
 
-		$menu  = new Menu();
 		$areas = $menu->areas();
 
 		$this->assertCount(1, $areas);
@@ -259,19 +222,12 @@ class MenuTest extends TestCase
 	public function testConfigWithClosureAndNullAsReturnValue()
 	{
 		$test = $this;
-
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => function ($kirby) use ($test) {
-						$test->assertInstanceOf(App::class, $kirby);
-						return null;
-					}
-				]
-			]
-		]);
-
-		$menu = new Menu();
+		$menu = new Menu(
+			config: function ($kirby) use ($test) {
+				$test->assertInstanceOf(App::class, $kirby);
+				return null;
+			}
+		);
 
 		$expected = [
 			'site',
@@ -288,17 +244,11 @@ class MenuTest extends TestCase
 	 */
 	public function testConfigWithClosureAndEmptyArrayAsReturnValue()
 	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => function () {
-						return [];
-					}
-				]
-			]
-		]);
-
-		$menu = new Menu();
+		$menu = new Menu(
+			config: function () {
+				return [];
+			}
+		);
 
 		$this->assertSame([], $menu->config());
 	}
@@ -355,29 +305,65 @@ class MenuTest extends TestCase
 	/**
 	 * @covers ::items
 	 */
-	public function testItems()
+	public function testItemsWithDivider()
 	{
 		$menu = new Menu(
 			areas: [
-				new Area(
-					id: 'site',
-					label: 'Site',
-					icon: 'home',
-					menu: true,
-					link: 'site'
-				)
+				'site'   => new Area(id: 'site', menu: true),
+				'system' => new Area(id: 'system', menu: true),
 			],
-			current: 'site'
+			config: [
+				'site',
+				'-',
+				'system',
+			],
+			permissions: [
+				'access' => [
+					'site'   => true,
+					'system' => true
+				]
+			]
 		);
 
 		$items = $menu->items();
 
 		$this->assertSame('site', $items[0]['props']['link']);
-		$this->assertTrue($items[0]['props']['current']);
 		$this->assertSame('-', $items[1]);
-		$this->assertSame('changes', $items[2]['props']['dialog']);
-		$this->assertSame('account', $items[3]['props']['link']);
-		$this->assertSame('logout', $items[4]['props']['link']);
+		$this->assertSame('system', $items[2]['props']['link']);
+	}
+
+	/**
+	 * @covers ::items
+	 */
+	public function testItemsWithComponent()
+	{
+		$menu = new Menu(
+			areas: [
+				'site'   => new Area(id: 'site', menu: true),
+				'system' => new Area(id: 'system', menu: true),
+			],
+			config: [
+				'site',
+				'test' => new MenuItem(
+					icon: 'test',
+					text: 'test',
+					link: 'test'
+				),
+				'system',
+			],
+			permissions: [
+				'access' => [
+					'site'   => true,
+					'system' => true
+				]
+			]
+		);
+
+		$items = $menu->items();
+
+		$this->assertSame('site', $items[0]['props']['link']);
+		$this->assertSame('test', $items[1]['props']['link']);
+		$this->assertSame('system', $items[2]['props']['link']);
 	}
 
 	/**
