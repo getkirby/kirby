@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -213,7 +214,7 @@ class Language
 	 */
 	public function delete(): bool
 	{
-		$kirby = App::instance();
+		$kirby = $this->kirby();
 		$user  = $kirby->user();
 		$code  = $this->code();
 
@@ -382,7 +383,20 @@ class Language
 		$path = $this->path();
 
 		if (empty($path) === true) {
-			return '(:all)';
+			$pattern = '(:all)';
+
+			// match anything except paths that begin with the prefix
+			// of any other language
+			$languages = $this->kirby()->languages()->not($this)->values(
+				fn ($language) => $language->path()
+			);
+
+			if (count($languages) > 0) {
+				$pattern = '^(?!(?:' . A::join($languages, '|') . ')\/)' . $pattern;
+			}
+
+
+			return $pattern;
 		}
 
 		return $path . '/(:all?)';
