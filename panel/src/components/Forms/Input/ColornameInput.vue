@@ -9,7 +9,7 @@
 		@input="$emit('input', $event)"
 		@paste.native="onPaste"
 		@keydown.native.meta.s.stop.prevent="onSave"
-		@keydown.native.enter="onSave"
+		@keydown.native.enter.exact="onSave"
 	/>
 </template>
 
