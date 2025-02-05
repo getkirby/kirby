@@ -11,6 +11,8 @@ return [
 			$system       = $kirby->system();
 			$updateStatus = $system->updateStatus();
 			$license      = $system->license();
+			$isDebug      = $kirby->option('debug', false) === true;
+			$isLocal      = $system->isLocal();
 
 			$environment = [
 				[
@@ -45,10 +47,14 @@ return [
 			$plugins = $system->plugins()->values(function ($plugin) use (&$exceptions) {
 				$authors      = $plugin->authorsNames();
 				$updateStatus = $plugin->updateStatus();
-				$version      = $updateStatus?->toArray() ?? $plugin->version() ?? '–';
+				$version      = $updateStatus?->toArray();
+				$version    ??= $plugin->version() ?? '–';
 
 				if ($updateStatus !== null) {
-					$exceptions = array_merge($exceptions, $updateStatus->exceptionMessages());
+					$exceptions = [
+						...$exceptions,
+						...$updateStatus->exceptionMessages()
+					];
 				}
 
 				return [
@@ -64,15 +70,29 @@ return [
 
 			$security = $updateStatus?->messages() ?? [];
 
-			if ($kirby->option('debug', false) === true) {
+			if ($isLocal === true) {
 				$security[] = [
-					'id'   => 'debug',
-					'text' => I18n::translate('system.issues.debug'),
-					'link' => 'https://getkirby.com/security/debug'
+					'id'    => 'local',
+					'icon'  => 'info',
+					'theme' => 'info',
+					'text'  => I18n::translate('system.issues.local')
 				];
 			}
 
-			if ($kirby->environment()->https() !== true) {
+			if ($isDebug === true) {
+				$security[] = [
+					'id'    => 'debug',
+					'icon'  => $isLocal ? 'info' : 'alert',
+					'theme' => $isLocal ? 'info' : 'negative',
+					'text'  => I18n::translate('system.issues.debug'),
+					'link'  => 'https://getkirby.com/security/debug'
+				];
+			}
+
+			if (
+				$isLocal === false &&
+				$kirby->environment()->https() !== true
+			) {
 				$security[] = [
 					'id'   => 'https',
 					'text' => I18n::translate('system.issues.https'),
@@ -80,20 +100,25 @@ return [
 				];
 			}
 
+			// sensitive URLs
+			if ($isLocal === false) {
+				$sensitive = [
+					'content' => $system->exposedFileUrl('content'),
+					'git'     => $system->exposedFileUrl('git'),
+					'kirby'   => $system->exposedFileUrl('kirby'),
+					'site'    => $system->exposedFileUrl('site')
+				];
+			}
+
 			return [
 				'component' => 'k-system-view',
 				'props'     => [
 					'environment' => $environment,
-					'exceptions'  => $kirby->option('debug') === true ? $exceptions : [],
+					'exceptions'  => $isDebug ? $exceptions : [],
 					'info'        => $system->info(),
 					'plugins'     => $plugins,
 					'security'    => $security,
-					'urls'        => [
-						'content' => $system->exposedFileUrl('content'),
-						'git'     => $system->exposedFileUrl('git'),
-						'kirby'   => $system->exposedFileUrl('kirby'),
-						'site'    => $system->exposedFileUrl('site')
-					]
+					'urls'        => $sensitive ?? null
 				]
 			];
 		}

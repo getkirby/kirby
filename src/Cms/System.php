@@ -82,7 +82,7 @@ class System
 			case 'git':
 				return $url . '/config';
 			case 'kirby':
-				return $url . '/composer.json';
+				return $url . '/LICENSE.md';
 			case 'site':
 				$root  = $this->app->root('site');
 				$files = glob($root . '/blueprints/*.yml');
