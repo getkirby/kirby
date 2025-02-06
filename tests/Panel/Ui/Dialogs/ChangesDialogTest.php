@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\Pages;
 use Kirby\Content\Changes;
@@ -9,7 +9,7 @@ use Kirby\Panel\Areas\AreaTestCase;
 use Kirby\Uuid\Uuids;
 
 /**
- * @coversDefaultClass \Kirby\Panel\ChangesDialog
+ * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\ChangesDialog
  * @covers ::__construct
  */
 class ChangesDialogTest extends AreaTestCase
@@ -109,25 +109,6 @@ class ChangesDialogTest extends AreaTestCase
 	}
 
 	/**
-	 * @covers ::load
-	 */
-	public function testLoad(): void
-	{
-		$dialog = new ChangesDialog();
-
-		$expected = [
-			'component' => 'k-changes-dialog',
-			'props' => [
-				'files' => [],
-				'pages' => [],
-				'users' => [],
-			]
-		];
-
-		$this->assertSame($expected, $dialog->load());
-	}
-
-	/**
 	 * @covers ::pages
 	 */
 	public function testPages(): void
@@ -152,6 +133,21 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$dialog = new ChangesDialog();
 		$this->assertSame([], $dialog->pages());
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRender(): void
+	{
+		$dialog = new ChangesDialog();
+		$result = $dialog->render();
+		$this->assertSame('k-changes-dialog', $result['component']);
+		$this->assertSame([
+			'files' => [],
+			'pages' => [],
+			'users' => [],
+		], $result['props']);
 	}
 
 	/**
