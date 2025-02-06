@@ -46,7 +46,7 @@
 								:value="entry.value"
 								v-bind="field"
 								@input="onInput(index, $event)"
-								@keydown.enter.shift.native.prevent="add(index + 1)"
+								@keydown.enter.native.prevent="add(index + 1)"
 							/>
 						</div>
 						<k-button-group

@@ -17,7 +17,7 @@
 		@input="onInput($event.target.value)"
 		@keydown.down.stop.prevent="onArrowDown"
 		@keydown.up.stop.prevent="onArrowUp"
-		@keydown.enter.exact.stop.prevent="onEnter"
+		@keydown.enter.stop.prevent="onEnter"
 		@keydown.meta.s.stop.prevent="onEnter"
 		@keydown.ctrl.s.stop.prevent="onEnter"
 		@keydown.tab="onTab"
