@@ -287,7 +287,7 @@ class Response
 		}
 
 		// send the content type header
-		header('Content-Type:' . $this->type() . '; charset=' . $this->charset());
+		header('Content-Type: ' . $this->type() . '; charset=' . $this->charset());
 
 		// print the response body
 		return $this->body();
