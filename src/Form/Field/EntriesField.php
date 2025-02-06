@@ -52,7 +52,11 @@ class EntriesField extends FieldClass
 
 	public function fill(mixed $value = null): void
 	{
-		parent::fill(Data::decode($value, 'yaml'));
+		if ($value !== null) {
+			$value = Data::decode($value, 'yaml');
+		}
+
+		parent::fill($value);
 	}
 
 	public function form(array $values = []): Form
@@ -136,7 +140,7 @@ class EntriesField extends FieldClass
 		$value = parent::toStoredValue($default);
 
 		if ($value === null) {
-			return null;
+			return '';
 		}
 
 		return Data::encode($value, 'yaml');
