@@ -13,7 +13,10 @@
 		@focusout="$emit('blur', $event)"
 	>
 		<slot name="header">
-			<header class="k-field-header">
+			<header
+				v-if="label || $slots.label || $slots.options || $slots.counter"
+				class="k-field-header"
+			>
 				<slot name="label">
 					<k-label
 						:input="input"

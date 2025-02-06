@@ -3,6 +3,7 @@ import CheckboxesField from "./CheckboxesField.vue";
 import ColorField from "./ColorField.vue";
 import DateField from "./DateField.vue";
 import EmailField from "./EmailField.vue";
+import EntriesField from "./EntriesField.vue";
 import FilesField from "./FilesField.vue";
 import GapField from "./GapField.vue";
 import HeadlineField from "./HeadlineField.vue";
@@ -39,6 +40,7 @@ export default {
 		app.component("k-color-field", ColorField);
 		app.component("k-date-field", DateField);
 		app.component("k-email-field", EmailField);
+		app.component("k-entries-field", EntriesField);
 		app.component("k-files-field", FilesField);
 		app.component("k-gap-field", GapField);
 		app.component("k-headline-field", HeadlineField);
