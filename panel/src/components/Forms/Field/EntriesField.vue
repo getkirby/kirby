@@ -18,7 +18,7 @@
 					variant="filled"
 					size="xs"
 					class="input-focus"
-					@click="add"
+					@click="add()"
 				/>
 				<k-button
 					icon="dots"
@@ -31,7 +31,7 @@
 		</template>
 
 		<!-- Empty State -->
-		<k-empty v-if="entries.length === 0" icon="list-bullet" @click="add">
+		<k-empty v-if="entries.length === 0" icon="list-bullet" @click="add()">
 			{{ empty ?? $t("field.entries.empty") }}
 		</k-empty>
 
