@@ -43,7 +43,7 @@
 					:selecting="selecting"
 					:selectable="item.selectable"
 					:sortable="sortable && item.sortable"
-					:theme="theme"
+					:theme="item.theme ?? theme"
 					:width="item.column"
 					@click="$emit('item', item, itemIndex)"
 					@drag="onDragStart($event, item.dragText)"

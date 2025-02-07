@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Panel\Lab\Category;
 use Kirby\Panel\Lab\Docs;
 
@@ -130,6 +131,7 @@ return [
 			$example  = $category->example($id, $tab);
 			$props    = $example->props();
 			$vue      = $example->vue();
+			$compiler = App::instance()->option('panel.vue.compiler', true);
 
 			if ($docs = $props['docs'] ?? null) {
 				if (
@@ -184,6 +186,7 @@ return [
 				],
 				'props' => [
 					'buttons'  => $buttons,
+					'compiler' => $compiler,
 					'docs'     => $docs?->name(),
 					'examples' => $vue['examples'],
 					'file'     => $example->module(),
