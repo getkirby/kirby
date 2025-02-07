@@ -9,6 +9,7 @@ use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -52,10 +53,7 @@ class EntriesField extends FieldClass
 
 	public function fill(mixed $value = null): void
 	{
-		if ($value !== null) {
-			$value = Data::decode($value, 'yaml');
-		}
-
+		$value = Data::decode($value ?? '', 'yaml');
 		parent::fill($value);
 	}
 
@@ -126,11 +124,11 @@ class EntriesField extends FieldClass
 
 	public function toFormValue(bool $default = false): mixed
 	{
-		$value = parent::toFormValue($default);
-
-		if ($value === null) {
-			return null;
-		}
+		$value = parent::toFormValue($default) ?? [];
+		$value = A::map(
+			$value,
+			fn ($value) => $this->form([$value])->fields()->first()->toFormValue()
+		);
 
 		return Data::decode($value, 'yaml');
 	}
@@ -138,10 +136,10 @@ class EntriesField extends FieldClass
 	public function toStoredValue(bool $default = false): mixed
 	{
 		$value = parent::toStoredValue($default);
-
-		if ($value === null) {
-			return '';
-		}
+		$value = A::map(
+			$value,
+			fn ($value) => $this->form([$value])->fields()->first()->toStoredValue()
+		);
 
 		return Data::encode($value, 'yaml');
 	}
