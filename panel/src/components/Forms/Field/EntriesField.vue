@@ -132,7 +132,7 @@ export default {
 		 */
 		field: {
 			type: Object,
-			default: () => {}
+			default: () => ({})
 		},
 		/**
 		 * Upper limit of entries allowed
@@ -236,12 +236,10 @@ export default {
 					return;
 				}
 
-				this.entries = entries.map((value) => {
-					return {
-						id: this.$helper.uuid(),
-						value
-					};
-				});
+				this.entries = entries.map((value) => ({
+					id: this.$helper.uuid(),
+					value
+				}));
 			},
 			immediate: true
 		}
@@ -257,18 +255,13 @@ export default {
 				value: value ?? ""
 			};
 
-			if (index !== null) {
-				this.entries.splice(index, 0, entry);
-			} else {
-				this.entries.push(entry);
-				index = this.entries.length - 1;
-			}
+			index ??=  this.entries.length - 1;
+			this.entries.splice(index, 0, entry);
 
 			this.save();
 
-			this.$nextTick(() => {
-				this.focus(index);
-			});
+			await this.$nextTick();
+			this.focus(index);
 		},
 		copyAll() {
 			const copy = this.values.map((value) => "- " + value).join("\n");
@@ -314,7 +307,9 @@ export default {
 				.filter(entry => entry.trim().length > 0)
 				.map(entry => entry.startsWith("- ") ? entry.slice(2) : entry);
 
-			entries.forEach(entry => this.add(null, entry));
+			for (const entry of entries) { 
+				this.add(null, entry);
+			}
 		},
 		remove(index) {
 			if (this.disabled === true) {
