@@ -123,14 +123,28 @@ class EntriesField extends FieldClass
 
 	public function toFormValue(bool $default = false): mixed
 	{
-		$value = parent::toFormValue($default);
-		return Data::decode($value ?? '', 'yaml');
+		$value = [];
+		foreach (parent::toFormValue($default) ?? [] as $val) {
+			$value[] = $this->form([$val])
+							->fields()
+							->first()
+							->toFormValue();
+		}
+
+		return Data::decode($value, 'yaml');
 	}
 
 	public function toStoredValue(bool $default = false): mixed
 	{
-		$value = parent::toStoredValue($default);
-		return Data::encode($value ?? '', 'yaml');
+		$value = [];
+		foreach ($this->toFormValue($default) as $val) {
+			$value[] = $this->form([$val])
+							->fields()
+							->first()
+							->toStoredValue();
+		}
+
+		return Data::encode($value, 'yaml');
 	}
 
 	public function validations(): array
