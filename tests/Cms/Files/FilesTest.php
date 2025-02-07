@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Uuid\Uuids;
@@ -115,6 +116,99 @@ class FilesTest extends TestCase
 		$site  = new Site();
 		$files = new Files();
 		$files->add($site);
+	}
+
+	/**
+	 * @covers ::delete
+	 */
+	public function testDelete()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'b.jpg'],
+					['filename' => 'a.jpg']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$files = $app->site()->files();
+
+		$this->assertCount(2, $files);
+
+		$a = $files->get('a.jpg')->root();
+		$b = $files->get('b.jpg')->root();
+
+		// pretend the files exist
+		F::write($a, '');
+		F::write($b, '');
+
+		$this->assertFileExists($a);
+		$this->assertFileExists($b);
+
+		$files->delete([
+			'a.jpg',
+			'b.jpg',
+		]);
+
+		$this->assertCount(0, $files);
+
+		$this->assertFileDoesNotExist($a);
+		$this->assertFileDoesNotExist($b);
+	}
+
+	/**
+	 * @covers ::delete
+	 */
+	public function testDeleteWithInvalidIds()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'b.jpg'],
+					['filename' => 'a.jpg']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$files = $app->site()->files();
+
+		$this->assertCount(2, $files);
+
+		$a = $files->get('a.jpg')->root();
+		$b = $files->get('b.jpg')->root();
+
+		// pretend the files exist
+		F::write($a, '');
+		F::write($b, '');
+
+		$this->assertFileExists($a);
+		$this->assertFileExists($b);
+
+		try {
+			$files->delete([
+				'a.jpg',
+				'c.jpg',
+			]);
+		} catch (Exception $e) {
+			$this->assertSame('Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.', $e->getMessage());
+		}
+
+		$this->assertCount(1, $files);
+		$this->assertSame('b.jpg', $files->first()->filename());
+
+		$this->assertFileDoesNotExist($a);
+		$this->assertFileExists($b);
 	}
 
 	/**

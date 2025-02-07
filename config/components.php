@@ -18,6 +18,7 @@ use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
+use Kirby\Session\SessionStore;
 use Kirby\Template\Snippet;
 use Kirby\Template\Template;
 use Kirby\Text\Markdown;
@@ -263,6 +264,13 @@ return [
 			fn ($item) => $scores[$item->id()]['score'],
 			'desc'
 		);
+	},
+
+	/**
+	 * Add your own session store
+	 */
+	'session::store' => function (App $kirby): string|SessionStore {
+		return $kirby->root('sessions');
 	},
 
 	/**

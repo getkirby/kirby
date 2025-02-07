@@ -1,14 +1,10 @@
 <template>
-	<nav v-if="hasTabs" class="k-drawer-tabs">
-		<k-button
-			v-for="tabButton in tabs"
-			:key="tabButton.name"
-			:current="tab === tabButton.name"
-			:text="tabButton.label"
-			class="k-drawer-tab"
-			@click="$emit('open', tabButton.name)"
-		/>
-	</nav>
+	<k-tabs
+		v-if="hasTabs"
+		class="k-drawer-tabs"
+		:tab="tab"
+		:tabs="tabsWithClickHandler"
+	/>
 </template>
 
 <script>
@@ -34,32 +30,39 @@ export default {
 	computed: {
 		hasTabs() {
 			return this.$helper.object.length(this.tabs) > 1;
+		},
+		tabsWithClickHandler() {
+			let tabs = this.tabs;
+
+			if (Array.isArray(tabs) === false) {
+				tabs = Object.values(tabs);
+			}
+
+			return tabs.map((tab) => ({
+				...tab,
+				click: () => this.$emit("open", tab.name)
+			}));
 		}
 	}
 };
 </script>
 
 <style>
-.k-drawer-tabs {
-	display: flex;
-	align-items: center;
-	line-height: 1;
+.k-drawer-tabs.k-tabs {
+	flex-grow: 1;
+	gap: 0;
+	margin: 0;
+	justify-content: end;
 }
-.k-drawer-tab.k-button {
+.k-drawer-tabs .k-tabs-button {
 	--button-height: calc(var(--drawer-header-height) - var(--spacing-1));
 	--button-padding: var(--spacing-3);
 	display: flex;
 	align-items: center;
 	font-size: var(--text-xs);
-	overflow-x: visible;
+	margin-block: 0;
 }
-.k-drawer-tab.k-button[aria-current="true"]::after {
-	position: absolute;
-	bottom: -2px;
-	inset-inline: var(--button-padding);
-	content: "";
-	background: var(--color-black);
-	height: 2px;
+.k-drawer-tabs .k-tabs-button[aria-current="true"]::after {
 	z-index: 1;
 }
 </style>

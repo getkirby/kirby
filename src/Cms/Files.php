@@ -2,9 +2,12 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Uuid\HasUuids;
+use Throwable;
 
 /**
  * The `$files` object extends the general
@@ -91,6 +94,41 @@ class Files extends Collection
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Deletes the files with the given IDs
+	 * if they exist in the collection
+	 *
+	 * @throws \Kirby\Exception\Exception If not all files could be deleted
+	 */
+	public function delete(array $ids): void
+	{
+		$exceptions = [];
+
+		// delete all pages and collect errors
+		foreach ($ids as $id) {
+			try {
+				$model = $this->get($id);
+
+				if ($model instanceof File === false) {
+					throw new NotFoundException(
+						key: 'file.undefined'
+					);
+				}
+
+				$model->delete();
+			} catch (Throwable $e) {
+				$exceptions[$id] = $e;
+			}
+		}
+
+		if ($exceptions !== []) {
+			throw new Exception(
+				key: 'file.delete.multiple',
+				details: $exceptions
+			);
+		}
 	}
 
 	/**

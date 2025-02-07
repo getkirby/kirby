@@ -464,27 +464,24 @@ class App
 		$data = [];
 
 		// always use the site controller as defaults, if available
-		if ($controller = $this->controllerLookup('site')) {
-			$data = (array)$controller->call($this, $arguments);
+		$site   = $this->controllerLookup('site', $contentType);
+		$site ??= $this->controllerLookup('site');
+
+		if ($site !== null) {
+			$data = (array)$site->call($this, $arguments);
 		}
 
 		// try to find a specific representation controller
-		if ($controller = $this->controllerLookup($name, $contentType)) {
+		$controller   = $this->controllerLookup($name, $contentType);
+		// no luck for a specific representation controller?
+		// let's try the html controller instead
+		$controller ??= $this->controllerLookup($name);
+
+		if ($controller !== null) {
 			return [
 				...$data,
 				...(array)$controller->call($this, $arguments)
 			];
-		}
-
-		if ($contentType !== 'html') {
-			// no luck for a specific representation controller?
-			// let's try the html controller instead
-			if ($controller = $this->controllerLookup($name)) {
-				return [
-					...$data,
-					...(array)$controller->call($this, $arguments)
-				];
-			}
 		}
 
 		return $data;
@@ -1244,8 +1241,10 @@ class App
 	 * @internal
 	 * @throws \Kirby\Exception\NotFoundException if the home page cannot be found
 	 */
-	public function resolve(string|null $path = null, string|null $language = null): mixed
-	{
+	public function resolve(
+		string|null $path = null,
+		string|null $language = null
+	): mixed {
 		// set the current translation
 		$this->setCurrentTranslation($language);
 
@@ -1295,6 +1294,12 @@ class App
 		// only try to return a representation
 		// when the page has been found
 		if ($page) {
+			// if extension is the default content type,
+			// redirect to page URL without extension
+			if ($extension === 'html') {
+				return Response::redirect($page->url(), 301);
+			}
+
 			try {
 				$response = $this->response();
 				$output   = $page->render([], $extension);
@@ -1431,7 +1436,7 @@ class App
 	public function sessionHandler(): AutoSession
 	{
 		return $this->sessionHandler ??= new AutoSession(
-			$this->root('sessions'),
+			($this->component('session::store'))($this),
 			$this->option('session', [])
 		);
 	}

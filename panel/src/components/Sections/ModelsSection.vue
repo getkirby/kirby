@@ -39,6 +39,7 @@
 					v-on="canAdd ? { empty: onAdd } : {}"
 					@action="onAction"
 					@change="onChange"
+					@select="onSelect"
 					@sort="onSort"
 					@paginate="onPaginate"
 				/>
@@ -49,15 +50,13 @@
 
 <script>
 import debounce from "@/helpers/debounce";
+import section from "@/mixins/section";
 
 export default {
+	mixins: [section],
 	inheritAttrs: false,
 	props: {
-		blueprint: String,
-		column: String,
-		parent: String,
-		name: String,
-		timestamp: Number
+		column: String
 	},
 	data() {
 		return {
@@ -65,7 +64,9 @@ export default {
 			error: null,
 			isLoading: false,
 			isProcessing: false,
+			isSelecting: false,
 			options: {
+				batch: false,
 				columns: {},
 				empty: null,
 				headline: null,
@@ -81,7 +82,8 @@ export default {
 				page: null
 			},
 			searchterm: null,
-			searching: false
+			searching: false,
+			selected: []
 		};
 	},
 	computed: {
@@ -91,11 +93,55 @@ export default {
 		buttons() {
 			let buttons = [];
 
+			if (this.isSelecting) {
+				buttons.push({
+					disabled: this.selected.length === 0,
+					icon: "trash",
+					text: this.$t("delete") + ` (${this.selected.length})`,
+					theme: "negative",
+					click: () => {
+						this.$panel.dialog.open({
+							component: "k-remove-dialog",
+							props: {
+								text: this.$t(`${this.type}.delete.confirm.selected`, {
+									count: this.selected.length
+								})
+							},
+							on: {
+								submit: () => {
+									this.$panel.dialog.close();
+									this.deleteSelected();
+								}
+							}
+						});
+					},
+					responsive: true
+				});
+
+				buttons.push({
+					icon: "cancel",
+					text: this.$t("cancel"),
+					click: this.onSelectToggle,
+					responsive: true
+				});
+
+				return buttons;
+			}
+
 			if (this.canSearch) {
 				buttons.push({
 					icon: "filter",
 					text: this.$t("filter"),
 					click: this.onSearchToggle,
+					responsive: true
+				});
+			}
+
+			if (this.canSelect) {
+				buttons.push({
+					icon: "checklist",
+					click: this.onSelectToggle,
+					title: this.$t("select"),
 					responsive: true
 				});
 			}
@@ -120,6 +166,9 @@ export default {
 		canSearch() {
 			return this.options.search;
 		},
+		canSelect() {
+			return this.options.batch && this.items.length > 0;
+		},
 		collection() {
 			return {
 				columns: this.options.columns,
@@ -129,6 +178,7 @@ export default {
 				help: this.options.help,
 				items: this.items,
 				pagination: this.pagination,
+				selecting: !this.isProcessing && this.isSelecting,
 				sortable: !this.isProcessing && this.options.sortable,
 				size: this.options.size
 			};
@@ -185,11 +235,40 @@ export default {
 			this.reload();
 		}
 	},
+	created() {
+		this.$events.on("model.update", this.reload);
+		this.$events.on("section.selecting", this.stopSelectingCollision);
+	},
+	destroyed() {
+		this.$events.off("model.update", this.reload);
+		this.$events.off("section.selecting", this.stopSelectingCollision);
+	},
 	mounted() {
 		this.search = debounce(this.search, 200);
 		this.load();
 	},
 	methods: {
+		async deleteSelected() {
+			if (this.selected.length === 0) {
+				return;
+			}
+
+			this.isProcessing = true;
+
+			try {
+				await this.$api.delete(
+					this.parent + "/sections/" + this.name + "/delete",
+					{
+						ids: this.selected.map((item) => item.id)
+					}
+				);
+			} catch (error) {
+				this.$panel.notification.error(error);
+			} finally {
+				this.$panel.events.emit("model.update");
+				this.isProcessing = false;
+			}
+		},
 		async load(reload) {
 			this.isProcessing = true;
 
@@ -223,8 +302,8 @@ export default {
 		onAdd() {},
 		onChange() {},
 		onDrop() {},
-		onSort() {},
 		onPaginate(pagination) {
+			// update pagination page
 			sessionStorage.setItem(this.paginationId, pagination.page);
 			this.pagination = pagination;
 			this.reload();
@@ -233,7 +312,36 @@ export default {
 			this.searching = !this.searching;
 			this.searchterm = null;
 		},
+		onSelect(item) {
+			if (this.selected.includes(item)) {
+				this.selected = this.selected.filter(
+					(selected) => selected.id !== item.id
+				);
+			} else {
+				this.selected.push(item);
+			}
+		},
+		onSelectToggle() {
+			this.isSelecting ? this.stopSelecting() : this.startSelecting();
+		},
+		onSort() {},
+		startSelecting() {
+			this.isSelecting = true;
+			this.selected = [];
+			this.$events.emit("section.selecting", this.name);
+		},
+		stopSelecting() {
+			this.isSelecting = false;
+			this.selected = [];
+		},
+		stopSelectingCollision(name) {
+			if (name !== this.name) {
+				this.stopSelecting();
+			}
+		},
 		async reload() {
+			// reset batch mode
+			this.stopSelecting();
 			await this.load(true);
 		},
 		async search() {

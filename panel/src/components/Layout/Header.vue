@@ -135,7 +135,7 @@ export default {
 	top: var(--scroll-top);
 	z-index: var(--z-toolbar);
 }
-:root:has(.k-header:has(.k-header-buttons)) {
+:root:has(.k-header .k-header-buttons) {
 	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
 }
 </style>

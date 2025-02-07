@@ -13,6 +13,7 @@ use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Panel\Ui\FilePreviews\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreviews\ImageFilePreview;
+use Kirby\Panel\Ui\FilePreviews\PdfFilePreview;
 use Kirby\Panel\Ui\FilePreviews\VideoFilePreview;
 
 /**
@@ -289,7 +290,8 @@ class Core
 		return [
 			AudioFilePreview::class,
 			ImageFilePreview::class,
-			VideoFilePreview::class
+			PdfFilePreview::class,
+			VideoFilePreview::class,
 		];
 	}
 
@@ -406,6 +408,7 @@ class Core
 	public function sectionMixins(): array
 	{
 		return [
+			'batch'      => $this->root . '/sections/mixins/batch.php',
 			'details'    => $this->root . '/sections/mixins/details.php',
 			'empty'      => $this->root . '/sections/mixins/empty.php',
 			'headline'   => $this->root . '/sections/mixins/headline.php',

@@ -67,7 +67,6 @@ class LanguagesDropdown extends ViewButton
 		return [
 			'text'    => $language->name(),
 			'code'    => $language->code(),
-			'link'    => $this->model->panel()->url(true) . '?language=' . $language->code(),
 			'current' => $language->code() === $this->kirby->language()?->code(),
 			'default' => $language->isDefault(),
 			'changes' => $changes->exists($language),
