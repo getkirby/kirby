@@ -12,6 +12,7 @@ return [
 			$updateStatus = $system->updateStatus();
 			$license      = $system->license();
 			$debugMode    = $kirby->option('debug', false);
+			$isLocal      = $system->isLocal();
 
 			$environment = [
 				[
@@ -67,9 +68,11 @@ return [
 
 			if ($debugMode === true) {
 				$security[] = [
-					'id'   => 'debug',
-					'text' => I18n::translate('system.issues.debug'),
-					'link' => 'https://getkirby.com/security/debug'
+					'id'    => 'debug',
+					'icon'  => $isLocal ? 'info' : 'alert',
+					'text'  => I18n::translate('system.issues.debug'),
+					'theme' => $isLocal ? 'info' : 'negative',
+					'link'  => 'https://getkirby.com/security/debug'
 				];
 			}
 
@@ -83,9 +86,10 @@ return [
 
 			if ($kirby->option('panel.vue.compiler', null) === null) {
 				$security[] = [
-					'id'   => 'vue-compiler',
-					'text' => I18n::translate('system.issues.vue.compiler'),
-					'link' => 'https://getkirby.com/security/vue-compiler'
+					'id'    => 'vue-compiler',
+					'link'  => 'https://getkirby.com/security/vue-compiler',
+					'text'  => I18n::translate('system.issues.vue.compiler'),
+					'theme' => 'notice'
 				];
 			}
 

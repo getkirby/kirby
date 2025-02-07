@@ -13,11 +13,11 @@
 		<k-items
 			:items="
 				issues.map((issue) => ({
-					// give each message an image prop unless it already has one
+					theme: 'negative',
 					image: {
-						back: 'var(--color-red-200)',
+						back: 'var(--theme-color-200)',
 						icon: issue.icon ?? 'alert',
-						color: 'var(--color-red)'
+						color: 'var(--theme-color-icon)'
 					},
 					target: '_blank',
 					...issue
