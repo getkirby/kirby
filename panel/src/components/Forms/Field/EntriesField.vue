@@ -245,7 +245,7 @@ export default {
 		}
 	},
 	methods: {
-		add(index = null, value = null) {
+		async add(index = null, value = null) {
 			if (this.more === false || this.disabled === true) {
 				return;
 			}
@@ -255,7 +255,7 @@ export default {
 				value: value ?? ""
 			};
 
-			index ??=  this.entries.length - 1;
+			index ??= this.entries.length - 1;
 			this.entries.splice(index, 0, entry);
 
 			this.save();
@@ -269,7 +269,7 @@ export default {
 			this.$helper.clipboard.write(copy);
 			this.$panel.notification.success(this.$t("copy.success"));
 		},
-		duplicate(index) {
+		async duplicate(index) {
 			if (
 				this.more === false ||
 				this.disabled === true ||
@@ -286,9 +286,8 @@ export default {
 			this.entries.splice(index + 1, 0, duplicate);
 			this.save();
 
-			this.$nextTick(() => {
-				this.focus(index + 1);
-			});
+			await this.$nextTick();
+			this.focus(index + 1);
 		},
 		focus(index, on = "input") {
 			this.$refs["entry-" + index + "-" + on]?.[0]?.focus?.();
@@ -307,7 +306,7 @@ export default {
 				.filter(entry => entry.trim().length > 0)
 				.map(entry => entry.startsWith("- ") ? entry.slice(2) : entry);
 
-			for (const entry of entries) { 
+			for (const entry of entries) {
 				this.add(null, entry);
 			}
 		},
@@ -338,7 +337,7 @@ export default {
 		save() {
 			this.$emit("input", this.values);
 		},
-		sort(index, direction) {
+		async sort(index, direction) {
 			if (this.isSortable === false) {
 				return;
 			}
@@ -347,9 +346,8 @@ export default {
 			this.entries.splice(index, 1);
 			this.entries.splice(index + direction, 0, entry);
 			this.save();
-			this.$nextTick(() => {
-				this.focus(index + direction, "sort-handle");
-			});
+			await this.$nextTick();
+			this.focus(index + direction, "sort-handle");
 		},
 		sortDown(index) {
 			if (index >= this.entries.length - 1) {
@@ -374,11 +372,13 @@ export default {
 	display: block;
 	border-radius: var(--rounded);
 }
+
 .k-entries-field-items {
 	display: flex;
 	flex-direction: column;
 	gap: 2px;
 }
+
 .k-entries-field-item {
 	height: var(--input-height);
 	--input-color-border: transparent;
@@ -388,19 +388,23 @@ export default {
 	border-radius: var(--rounded);
 	box-shadow: var(--shadow);
 }
+
 .k-entries-field-item-sort-handle {
 	display: grid;
 	place-items: center;
 }
+
 .k-entries-field-item-sort-handle .k-button {
 	--button-height: var(--input-height);
 	--button-width: var(--input-height);
 }
+
 .k-entries-field-item-input {
 	flex-grow: 1;
 	border-left: 1px solid var(--panel-color-back);
 	border-right: 1px solid var(--panel-color-back);
 }
+
 .k-entries-field-item-options .k-button {
 	--button-height: 100%;
 	--button-width: var(--input-height);
@@ -418,13 +422,16 @@ export default {
 	width: 1px;
 	background: var(--panel-color-back);
 }
+
 .k-entries-field-item.k-sortable-ghost {
 	outline: var(--outline);
 	cursor: grabbing;
 }
+
 .k-entries-field-item.k-sortable-fallback {
 	opacity: 0 !important;
 }
+
 .k-entries-field-footer {
 	display: flex;
 	justify-content: center;
