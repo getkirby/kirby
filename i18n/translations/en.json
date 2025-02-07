@@ -98,6 +98,10 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
 	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
 	"error.entries.validation": "There's an error on the \"{field}\" field in row {index}",
 

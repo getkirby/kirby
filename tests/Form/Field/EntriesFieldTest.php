@@ -138,7 +138,7 @@ class EntriesFieldTest extends TestCase
 
 		$this->assertSame(1, $field->max());
 		$this->assertFalse($field->isValid());
-		$this->assertSame($field->errors()['max'], 'Please enter a value equal to or lower than 1');
+		$this->assertSame($field->errors()['entries'], 'You must not add more than one entry');
 	}
 
 	public function testMin()
@@ -152,7 +152,7 @@ class EntriesFieldTest extends TestCase
 
 		$this->assertSame(3, $field->min());
 		$this->assertFalse($field->isValid());
-		$this->assertSame($field->errors()['min'], 'Please enter a value equal to or greater than 3');
+		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
 	}
 
 	public function testRequiredValid()
