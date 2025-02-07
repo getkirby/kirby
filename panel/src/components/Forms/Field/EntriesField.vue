@@ -246,6 +246,8 @@ export default {
 				return;
 			}
 
+			value ??= this.$helper.field.form({ field: this.field })?.field;
+
 			const entry = {
 				id: this.$helper.uuid(),
 				value: value ?? ""
