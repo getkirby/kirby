@@ -255,7 +255,7 @@ export default {
 				value: value ?? ""
 			};
 
-			index ??= this.entries.length - 1;
+			index ??= this.entries.length;
 			this.entries.splice(index, 0, entry);
 
 			this.save();
