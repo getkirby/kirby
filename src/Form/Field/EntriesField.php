@@ -125,10 +125,11 @@ class EntriesField extends FieldClass
 	{
 		$value = [];
 		foreach (parent::toFormValue($default) ?? [] as $val) {
-			$value[] = $this->form([$val])
-							->fields()
-							->first()
-							->toFormValue();
+			$value[] = $this
+				->form([$val])
+				->fields()
+				->first()
+				->toFormValue();
 		}
 
 		return Data::decode($value, 'yaml');
@@ -138,10 +139,11 @@ class EntriesField extends FieldClass
 	{
 		$value = [];
 		foreach ($this->toFormValue($default) as $val) {
-			$value[] = $this->form([$val])
-							->fields()
-							->first()
-							->toStoredValue();
+			$value[] = $this
+				->form([$val])
+				->fields()
+				->first()
+				->toStoredValue();
 		}
 
 		return Data::encode($value, 'yaml');
