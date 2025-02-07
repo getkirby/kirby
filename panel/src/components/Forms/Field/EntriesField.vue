@@ -64,6 +64,7 @@
 					<component
 						:is="`k-${field.type}-field`"
 						:ref="'entry-' + index + '-input'"
+						:disabled="disabled"
 						:value="entry.value"
 						v-bind="field"
 						class="k-entries-field-item-input"
