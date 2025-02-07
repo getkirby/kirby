@@ -555,4 +555,56 @@ class AssetsTest extends TestCase
 		$link = $assets->link();
 		$this->assertFalse($link);
 	}
+
+	public function testVue()
+	{
+		$assets = new Assets();
+		$vue    = $assets->vue();
+
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.min.js', $vue);
+	}
+
+	public function testVueInDevMode()
+	{
+		$assets = new Assets();
+		$vue    = $assets->vue(production: false);
+
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/node_modules/vue/dist/vue.js', $vue);
+	}
+
+	public function testVueWithDisabledTemplateCompiler()
+	{
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'vue' => [
+						'compiler' => false
+					]
+				]
+			]
+		]);
+
+		$assets = new Assets();
+		$vue    = $assets->vue();
+
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.runtime.min.js', $vue);
+	}
+
+	public function testVueWithDisabledTemplateCompilerInDevMode()
+	{
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'vue' => [
+						'compiler' => false
+					]
+				]
+			]
+		]);
+
+		$assets = new Assets();
+		$vue    = $assets->vue(production: false);
+
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/node_modules/vue/dist/vue.runtime.js', $vue);
+	}
 }
