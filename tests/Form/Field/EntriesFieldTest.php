@@ -145,9 +145,21 @@ class EntriesFieldTest extends TestCase
 	{
 		$field = $this->field('entries', [
 			'min'   => 3,
+			'value' => '[]'
+		]);
+
+		$this->assertSame(3, $field->min());
+		$this->assertFalse($field->isValid());
+		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
+	}
+
+	public function testMinValue()
+	{
+		$field = $this->field('entries', [
+			'min'   => 3,
 			'value' => [
 				'https://getkirby.com'
-			],
+			]
 		]);
 
 		$this->assertSame(3, $field->min());
