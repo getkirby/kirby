@@ -1,7 +1,7 @@
 # Kirby License Agreement
 
-Published: November 28, 2023  
-Source: https://getkirby.com/license/2023-11-28
+Published: November 12, 2024  
+Source: https://getkirby.com/license/2024-11-12
 
 ## About this Agreement
 
@@ -16,7 +16,8 @@ If you do not agree to this Agreement, please do not download, install or use Ki
 This section summarizes the most important conditions of this Agreement to give you a quick overview:
 
 - With your purchase you obtain a license. A license allows you to use Kirby according to this Agreement.
-- Each project (defined by its URL) needs its own license. You need to purchase the right license for your project and/or client. You can find our license variants on <https://getkirby.com/buy>. In some explicitly listed cases, you can use Kirby without having to purchase a license.
+- Each project (defined by its URL) needs its own license. You need to purchase the right license for your project and/or client. You can find our license variants on <https://getkirby.com/buy>.
+- In some explicitly listed cases, you can use Kirby without having to purchase a license. In these cases, this Agreement grants you the license directly. There are also cases where you can request a free or discounted license from us.
 - Each license includes any Kirby version that gets released within three years from the date when you first activated your license. We also provide free security updates for older versions that may protect your project beyond three years.
 - After those three years, you can continue to use Kirby for your project with any of these versions as long as you want.
 - To use any newer version released after this time, you will need to upgrade your license.
@@ -30,22 +31,22 @@ For the full license details, please read the Agreement in full. Only the follow
 
 Before we get started with the conditions of the Agreement, let's define the terms that will be used throughout it:
 
-- When we refer to **"You"**, we mean the licensee. Before purchasing Kirby, that's the individual or company that has downloaded and/or installed Kirby for a Development Installation, Private Installation or Extension Demo. When used for a Public Site, the licensee is the individual or company that has purchased the Kirby license. If you work on a client project and have purchased the Kirby license for your client, you (and _not_ the client) are the licensee.
+- When we refer to **"You"**, we mean the licensee. Before purchasing Kirby, that's the individual or company that has downloaded and/or installed Kirby for a Development Installation or Private Installation. When used for a Public Site, the licensee is the individual or company that has purchased the Kirby license or received a free license from Us on request. If you work on a client project and have purchased the Kirby license for your client, you (and _not_ the client) are the licensee.
 - When we refer to **"We"**/**"Us"**/**"Our"**, we mean the licensor, the Content Folder GmbH & Co. KG. You can find Our company and contact information on Our [contact page](https://getkirby.com/contact).
 - **"Client"** is the individual or company on whose behalf You create or work on a Website. This only applies if the client is not the licensee.
 - A **"Website"** is a single Kirby project that is defined by its domain name and root directory (e.g. `https://sub.example.com` or `https://example.com/example/`). Each (sub)domain and root directory is a separate Website, even if the projects are related in any way. Exception: If You use the cross-domain multi-language feature with the same `content` folder, these domains count as the same Website.
   You may use Kirby as a headless backend or as a static site generator. In these cases the Website is defined by the domain and root directory of the user- or visitor-facing frontend(s).
 - A **"Development Installation"** is a Website that is installed purely for the purposes of development and client preview. It must only be accessible by a restricted number of users (like on a personal computer, on a server in a network with restricted access or when protecting a staging website with a password that only a restricted number of users know).
 - A **"Private Installation"** is a Website that is installed purely for personal use. It must only be accessible by You and Your family.
-- An **"Extension Demo"** is a Website with the single purpose to showcase a free or commercial Kirby theme or Kirby plugin, as long as that Website only contains demo content. If the showcased extension is a Kirby theme, the demo content must be exactly as shipped with the theme. Demos for Kirby plugins may _not_ contain any additional content that is not needed to showcase the plugin in use.
-- A **"Public Site"** is a Website that is _neither_ a Development Installation, a Private Installation nor an Extension Demo.
+- A **"Public Site"** is a Website that is _neither_ a Development Installation nor a Private Installation.
 - A **"Minor Release"** is a stable Kirby release which adds smaller new features, minor functionality enhancements or bug fixes. This class of release is identified by the change of the revision to the right of the first decimal point, e.g. 4.1 to 4.2, 4.X.1 to 4.X.2.
 - A **"Major Release"** is a stable Kirby release which incorporates major new features or enhancements that increase or change the core functionality of Kirby to a larger extent. It may also deprecate existing parts of the Source Code or change them in a breaking way. This class of release is identified by the change of the revision to the left of the first decimal point, e.g. 4.X to 5.0.
 - A **"Major Generation"** is defined as all releases that share the revision to the left of the first decimal point, e.g. 4.0.0, 4.0.X, 4.X.0 and 4.X.X.
 - The **"Source Code"** is defined as the contents of all files that are provided with Kirby and that make Kirby work. This includes (but is not limited to) all PHP, JavaScript, JSON, HTML and CSS files as well as all related image and other media files.
+- The **"MIT-licensed Source Code Parts"** are defined as the parts of the Source Code for which a file header or code comment inside the same source file explicitly states the applicability of the MIT license.
 - The **"Activation Date"** determines the included updates. It is defined like this:
-	- For a newly purchased license, it is the date when the license was first activated for use with a Public Site.
-	- When You upgrade an already activated license, it is the date on which the upgrade was performed in Our license hub. If the license is still within the Included Updates Period, the Activation Date of the upgrade license will be set to the end of the Included Updates Period of the existing license.
+	- For a newly purchased or granted license, it is the date when the license was first activated for use with a Public Site.
+	- When You upgrade an already activated license, it is the date on which the upgrade was performed in Our [license hub](https://hub.getkirby.com). If the license is still within the Included Updates Period, the Activation Date of the upgrade license will be set to the end of the Included Updates Period of the existing license.
 	- When You upgrade a license that had _not_ been activated before, the upgrade license adopts the unactivated state of the existing license. The Activation Date is set on first activation for use with a Public Site.
 - The **"Included Updates Period"** is the time span of three (3) years after the Activation Date.
 - Licensees (You), Clients and Websites are **"Qualified"** if they satisfy the purchase requirements from the ["Order Process" section](#order-process) of this Agreement.
@@ -54,7 +55,7 @@ Every time you see one of these capitalized terms in the following text, it has 
 
 ## Usage for a Public Site
 
-Installing Kirby on or using it for a Public Site requires a [paid license](https://getkirby.com/buy). Once a paid license is needed, the license must be immediately activated to the Public Site’s domain name and root directory via our license hub or the activation feature in the Kirby Panel.
+Installing Kirby on or using it for a Public Site requires a [paid license](https://getkirby.com/buy). Once a paid license is needed, the license must be immediately activated to the Public Site’s domain name and root directory via our [license hub](https://hub.getkirby.com) or the activation feature in the Kirby Panel.
 
 As Kirby is software and software is intangible, We don't sell it as such. Instead, this Agreement grants a license for each purchase to install and use a single instance of Kirby on a **specific Website**. Additional Kirby licenses must be purchased in order to install and use Kirby on **additional Websites**.
 
@@ -96,7 +97,7 @@ Kirby can be used **for free in the following cases**.
 
 We believe that it should be possible to test and evaluate software before having to purchase a license. Also, We understand that a web project first needs to be built in a protected environment before it can be published.
 
-Therefore, installing and using Kirby on a personal computer (like a desktop PC, notebook or tablet) or server for a Development Installation is **free** for as long as You need.
+Therefore, installing and using Kirby on a personal computer (like a desktop PC, notebook or tablet) or server for a Development Installation is **free** for as long as You need. If You have already purchased a license, You do *not* need to activate it to the development domain(s) of the project.
 
 > [!NOTE]
 > The usage of Kirby in production (with the intention to handle production data or content) is _never_ considered a Development Installation, even in internal apps or systems.
@@ -121,14 +122,20 @@ You may also install and use Kirby for **free** in Private Installations as long
 > - Websites that are accessible by the public, even for personal/non-commercial purposes
 > - Use of Kirby as a local CMS for a static or headless site without a license for the frontend domain(s)
 
-### Usage for an Extension Demo
+### Free Licenses on Request
 
-Extension Demos are not real Websites. We want to encourage you to build and showcase your themes and plugins.
+We provide free or discounted licenses for specific purposes:
 
-Therefore, You may **operate Extension Demos without purchasing a license**.
+- students,
+- selected educational projects, social and environmental organizations, charities and non-profits with insufficient funding and
+- demo sites showcasing a Kirby extension (plugin or theme).
 
-> [!NOTE]
-> Please note that this does _not_ apply to store fronts or other types of sites used to promote free or commercial themes or plugins. If such a site is built with Kirby as well, it is a Public Site and needs a **[paid license](#usage-for-a-public-site)**.
+Unlike licenses for Development Installations or Private Installations, these free or discounted licenses are not granted by this Agreement directly. You need to request them from Us via email to <support@getkirby.com>. Any discounts or free licenses are at Our sole discretion.
+
+Should We grant a free or discounted license under the terms of this section, You will receive a license code for use with a Public Site. The [section "Usage for a Public Site"](#usage-for-a-public-site) as well as all other terms of this Agreement apply with the following modifications:
+
+- We will only transfer or reassign free or discounted licenses if the new licensee or project qualifies for the free or discounted license at Our sole discretion.
+- You may upgrade free or discounted licenses to future Major Generations like paid licenses. We will grant free or discounted upgrades under the terms of this section.
 
 ## Restrictions
 
@@ -145,7 +152,7 @@ You may make **copies of Kirby** in any machine readable form solely for the **f
 - when working on code contributions to Kirby or
 - as a backup.
 
-You may _not_ reproduce Kirby or its Source Code, in whole or in part, for **any other purpose**.
+You may _not_ reproduce Kirby or its Source Code, in whole or in part, for **any other purpose**, except if granted below.
 
 ### Modification of the Source Code
 
@@ -153,7 +160,8 @@ You may **alter, modify or extend the Source Code** for Your own use or with the
 
 However You may _not_:
 
-- **alter or circumvent the licensing features**, including (but not limited to) the license validation and payment prompts or
+- **alter or circumvent the licensing features**, including (but not limited to) the license validation and payment prompts,
+- **remove or alter any proprietary notices** on Kirby or
 - **resell, redistribute or transfer** the modified or derivative version.
 
 > [!NOTE]
@@ -170,6 +178,7 @@ The following cases are exempted from this restriction:
 - You may make Kirby available to customers via a Software-as-a-Service (SaaS) offering, provided You ensure that each Website has a valid Kirby license purchased either by You or Your customer. If multiple customers share a Website, each customer needs at least one license. Your offering _must not_ appear to be provided or officially endorsed by Us.
 - You may make a Kirby installation available to employees or partners of You or Your Website client. You may also disclose and distribute Kirby’s Source Code to Your client together with the source code of the Website You created for them.
 - You may disclose the Source Code to individuals or companies that are involved in the development or operation of Your Website (e.g. agencies, design or development freelancers, hosting providers or administrators).
+- You may disclose, distribute and make available extracted parts of the Source Code according to the conditions of the following section "Extraction of Source Code parts".
 
 > [!NOTE]
 > E.g. the following cases are explicitly **_not_ allowed**:
@@ -177,7 +186,37 @@ The following cases are exempted from this restriction:
 > - Selling, licensing or distributing a new product based on Kirby that modifies or hides Kirby’s identity as a Content Management System (CMS)
 > - Forking Kirby and selling the modified version ([see above](#modification-of-the-source-code))
 > - Buying licenses in bulk and reselling them in your own shop
-> - Bundling or including Kirby’s Source Code in the publication and/or distribution of a Website’s source code or a (free or paid) theme or plugin (please use Git submodules or Composer or provide a link to Our repository or website instead)
+> - Bundling or including Kirby’s full Source Code in the publication and/or distribution of a Website’s source code or a (free or paid) theme or plugin (please use Git submodules or Composer or provide a link to Our repository or website instead)
+
+### Extraction of Source Code parts
+
+We provide the Source Code as a complete unit for use according to this Agreement.
+
+Reuse of code parts in other programs or projects is _only_ permitted in the cases stated in the following sections. You may _not_ extract the Source Code or parts of the Source Code in any other way or for any other purpose.
+
+#### Extraction of MIT-licensed Source Code Parts
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of MIT-licensed Source Code Parts, to deal in the MIT-licensed Source Code Parts without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the MIT-licensed Source Code Parts, and to permit persons to whom the MIT-licensed Source Code Parts is furnished to do so, subject to the following conditions:
+
+The copyright notice to Bastian Allgeier and this permission notice shall be included in all copies or substantial portions of the MIT-licensed Source Code Parts.
+
+THE MIT-LICENSED SOURCE CODE PARTS ARE PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE MIT-LICENSED SOURCE CODE PARTS OR THE USE OR OTHER DEALINGS IN THE MIT-LICENSED SOURCE CODE PARTS.
+
+#### Extraction for Extensions
+
+You may extract, use, disclose and distribute copies or adapted copies of individual parts of the Source Code (such as component templates), including those not licensed under the terms of the MIT license but excluding those covered by third-party licenses, if both of the following conditions are met:
+
+- You use the code parts in or disclose/distribute them as part of an extension (plugin or theme) that You solely intend to be used with Kirby.
+- Every copied or adapted code part carries a clear note that references these conditions as well as Our copyright and this Agreement. You may use the following example as a template:
+  ```
+  /**
+   * The following code was copied or adapted from the source code of
+   * Kirby CMS and may not be used outside of licensed Kirby projects.
+   *
+   * @copyright Bastian Allgeier
+   * @license https://getkirby.com/license
+   */
+  ```
 
 ### Disallowed Uses
 
@@ -198,13 +237,6 @@ The following uses of Kirby are _not_ covered by this Agreement and will result 
     - peaceful assembly and association (including worker associations),
     - a safe environment or action to curtail the use of fossil fuels or to prevent climate change or
     - democratic processes.
-
-### Other Restrictions
-
-You may also _not_:
-
-- **extract parts of the Source Code** for use in other programs or projects (unless the code file in question is explicitly licensed under the terms of the MIT license) or
-- **remove or alter any proprietary notices** on Kirby.
 
 ## Technical Support
 
