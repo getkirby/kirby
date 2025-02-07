@@ -5,10 +5,16 @@ namespace Kirby\Panel;
 use Closure;
 use Kirby\Api\Upload;
 use Kirby\Cms\App;
-use Kirby\Exception\Exception;
-use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Http\Router as BaseRouter;
+use Kirby\Panel\Response\DialogResponse;
+use Kirby\Panel\Response\DrawerResponse;
+use Kirby\Panel\Response\DropdownResponse;
+use Kirby\Panel\Response\JsonResponse;
+use Kirby\Panel\Response\RequestResponse;
+use Kirby\Panel\Response\SearchResponse;
+use Kirby\Panel\Response\ViewResponse;
+use Kirby\Panel\Response\ViewDocumentResponse;
 use Kirby\Toolkit\Tpl;
 use Throwable;
 
@@ -73,12 +79,13 @@ class Router
 					$result = $e;
 				}
 
-				$response = $this->response($result, [
-					'area'  => $area,
-					'areas' => $areas,
-					'path'  => $path,
-					'type'  => $type
-				]);
+				$response = $this->response(
+					data: $result,
+					area: $area,
+					areas: $areas,
+					path: $path,
+					type: $type
+				);
 
 				return $this->kirby->apply(
 					'panel.route:after',
@@ -109,33 +116,38 @@ class Router
 	 * Creates a Response object from the result of
 	 * a Panel route call
 	 */
-	public function response($result, array $options = []): Response
-	{
-		// pass responses directly down to the Kirby router
-		if ($result instanceof Response) {
-			return $result;
-		}
-
-		// interpret missing/empty results as not found
-		if ($result === null || $result === false) {
-			$result = new NotFoundException(
-				message: 'The data could not be found'
-			);
-
-		// interpret strings as errors
-		} elseif (is_string($result) === true) {
-			$result = new Exception($result);
-		}
+	public function response(
+		mixed $data,
+		Area|null $area = null,
+		array $areas = [],
+		string|null $path = null,
+		string $type = 'view',
+	): Response {
 
 		// handle different response types (view, dialog, ...)
-		return match ($options['type'] ?? null) {
-			'dialog'   => Dialog::response($result, $options),
-			'drawer'   => Drawer::response($result, $options),
-			'dropdown' => Dropdown::response($result, $options),
-			'request'  => Request::response($result, $options),
-			'search'   => Search::response($result, $options),
-			default    => View::response($result, $options)
+		$response = match ($type) {
+			'dialog'   => DialogResponse::from($data),
+			'drawer'   => DrawerResponse::from($data),
+			'dropdown' => DropdownResponse::from($data),
+			'request'  => RequestResponse::from($data),
+			'search'   => SearchResponse::from($data),
+			default    => $this->view($data),
 		};
+
+		// pass HTTP responses through directly
+		if ($response instanceof JsonResponse === false) {
+			return $response;
+		}
+
+		$response->context(
+			area: $area,
+			areas: $areas,
+			path: $path,
+			query: $this->kirby->request()->query()->toArray(),
+			referrer: $this->panel->referrer()
+		);
+
+		return $response;
 	}
 
 	/**
@@ -162,14 +174,11 @@ class Router
 		foreach ($areas as $area) {
 			$routes = [
 				...$routes,
-				...static::routesForViews($area),
-				...static::routesForSearches($area),
-				...static::routesForDialogs($area),
-				...static::routesForDrawers($area),
-				...static::routesForDropdowns($area),
-				...static::routesForRequests($area),
+				...$area->routes(),
 			];
 		}
+
+		dump($routes);
 
 		// if the Panel is already installed and/or the
 		// user is authenticated, those areas won't be
@@ -197,78 +206,6 @@ class Router
 	/**
 	 * Extract all routes from an area
 	 */
-	public static function routesForDialogs(Area $area): array
-	{
-		$areaId  = $area->id();
-		$dialogs = $area->dialogs();
-		$routes  = [];
-
-		foreach ($dialogs as $dialogId => $dialog) {
-			$routes = [
-				...$routes,
-				...Dialog::routes(
-					id: $dialogId,
-					areaId: $areaId,
-					prefix: 'dialogs',
-					options: $dialog
-				)
-			];
-		}
-
-		return $routes;
-	}
-
-	/**
-	 * Extract all routes from an area
-	 */
-	public static function routesForDrawers(Area $area): array
-	{
-		$areaId  = $area->id();
-		$drawers = $area->drawers();
-		$routes  = [];
-
-		foreach ($drawers as $drawerId => $drawer) {
-			$routes = [
-				...$routes,
-				...Drawer::routes(
-					id: $drawerId,
-					areaId: $areaId,
-					prefix: 'drawers',
-					options: $drawer
-				)
-			];
-		}
-
-		return $routes;
-	}
-
-	/**
-	 * Extract all routes for dropdowns
-	 */
-	public static function routesForDropdowns(Area $area): array
-	{
-		$areaId    = $area->id();
-		$dropdowns = $area->dropdowns();
-		$routes    = [];
-
-		foreach ($dropdowns as $dropdownId => $dropdown) {
-			$routes = [
-				...$routes,
-				...Dropdown::routes(
-					id: $dropdownId,
-					areaId: $areaId,
-					prefix: 'dropdowns',
-					options: $dropdown
-				)
-			];
-		}
-
-		return $routes;
-	}
-
-	/**
-	 * Extract all routes from an area
-	 */
 	public static function routesForRequests(Area $area): array
 	{
 		$areaId = $area->id();
@@ -282,65 +219,14 @@ class Router
 		return $routes;
 	}
 
-	/**
-	 * Extract all routes for searches
-	 */
-	public static function routesForSearches(Area $area): array
+	public function view(mixed $data): ViewResponse|ViewDocumentResponse|Response
 	{
-		$areaId   = $area->id();
-		$searches = $area->searches();
-		$routes   = [];
-
-		foreach ($searches as $name => $params) {
-			// create the full routing pattern
-			$pattern = 'search/' . $name;
-
-			// load event
-			$routes[] = [
-				'pattern' => $pattern,
-				'type'    => 'search',
-				'area'    => $areaId,
-				'action'  => function () use ($params) {
-					$kirby   = App::instance();
-					$request = $kirby->request();
-					$query   = $request->get('query');
-					$limit   = (int)$request->get('limit', $kirby->option('panel.search.limit', 10));
-					$page    = (int)$request->get('page', 1);
-
-					return $params['query']($query, $limit, $page);
-				}
-			];
+		// if requested, send $fiber data as JSON
+		if (Panel::isFiberRequest() === true) {
+			return ViewResponse::from($data);
 		}
 
-		return $routes;
-	}
-
-	/**
-	 * Extract all views from an area
-	 */
-	public static function routesForViews(Area $area): array
-	{
-		$areaId = $area->id();
-		$views  = $area->views();
-		$routes = [];
-
-		foreach ($views as $view) {
-			$view['area'] = $areaId;
-			$view['type'] = 'view';
-
-			$when = $view['when'] ?? null;
-			unset($view['when']);
-
-			// enable the route by default, but if there is a
-			// when condition closure, it must return `true`
-			if (
-				$when instanceof Closure === false ||
-				$when($view, $area) === true
-			) {
-				$routes[] = $view;
-			}
-		}
-
-		return $routes;
+		// send a full HTML document otherwise
+		return ViewDocumentResponse::from($data);
 	}
 }

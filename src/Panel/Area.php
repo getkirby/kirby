@@ -3,6 +3,12 @@
 namespace Kirby\Panel;
 
 use Closure;
+use Kirby\Panel\Routes\DialogRoutes;
+use Kirby\Panel\Routes\DrawerRoutes;
+use Kirby\Panel\Routes\DropdownRoutes;
+use Kirby\Panel\Routes\RequestRoutes;
+use Kirby\Panel\Routes\SearchRoutes;
+use Kirby\Panel\Routes\ViewRoutes;
 use Kirby\Panel\Ui\MenuItem;
 use Kirby\Toolkit\I18n;
 
@@ -166,6 +172,29 @@ class Area
 
 		return $item;
 	}
+
+	/**
+	 * Extract all routes for searches
+	 */
+	public function routes(): array
+	{
+		$viewRoutes     = new ViewRoutes($this, $this->views());
+		$searchRoutes   = new SearchRoutes($this, $this->searches());
+		$dialogRoutes   = new DialogRoutes($this, $this->dialogs());
+		$drawerRoutes   = new DrawerRoutes($this, $this->drawers());
+		$dropdownRoutes = new DropdownRoutes($this, $this->dropdowns());
+		$requestRoutes  = new RequestRoutes($this, $this->requests());
+
+		return [
+			...$viewRoutes->toArray(),
+			...$searchRoutes->toArray(),
+			...$dialogRoutes->toArray(),
+			...$drawerRoutes->toArray(),
+			...$dropdownRoutes->toArray(),
+			...$requestRoutes->toArray(),
+		];
+	}
+
 
 	/**
 	 * The title is used for the browser title. It will fall back
