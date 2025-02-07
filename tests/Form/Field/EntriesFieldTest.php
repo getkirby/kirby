@@ -128,6 +128,32 @@ class EntriesFieldTest extends TestCase
 	public function testMax()
 	{
 		$field = $this->field('entries', [
+			'max'   => 3,
+			'value' => [],
+		]);
+
+		$this->assertSame(3, $field->max());
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMaxValid()
+	{
+		$field = $this->field('entries', [
+			'max'   => 3,
+			'value' => [
+				'https://getkirby.com',
+				'https://forum.getkirby.com',
+				'https://plugins.getkirby.com',
+			],
+		]);
+
+		$this->assertSame(3, $field->max());
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMaxInvalid()
+	{
+		$field = $this->field('entries', [
 			'max'   => 1,
 			'value' => [
 				'https://getkirby.com',
@@ -153,7 +179,21 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
 	}
 
-	public function testMinValue()
+	public function testMinValid()
+	{
+		$field = $this->field('entries', [
+			'min'   => 2,
+			'value' => [
+				'https://getkirby.com',
+				'https://forum.getkirby.com'
+			]
+		]);
+
+		$this->assertSame(2, $field->min());
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMinInvalid()
 	{
 		$field = $this->field('entries', [
 			'min'   => 3,
