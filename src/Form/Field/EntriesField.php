@@ -52,10 +52,7 @@ class EntriesField extends FieldClass
 
 	public function fill(mixed $value = null): void
 	{
-		if ($value !== null) {
-			$value = Data::decode($value, 'yaml');
-		}
-
+		$value = Data::decode($value ?? '', 'yaml');
 		parent::fill($value);
 	}
 
@@ -127,23 +124,13 @@ class EntriesField extends FieldClass
 	public function toFormValue(bool $default = false): mixed
 	{
 		$value = parent::toFormValue($default);
-
-		if ($value === null) {
-			return null;
-		}
-
-		return Data::decode($value, 'yaml');
+		return Data::decode($value ?? '', 'yaml');
 	}
 
 	public function toStoredValue(bool $default = false): mixed
 	{
 		$value = parent::toStoredValue($default);
-
-		if ($value === null) {
-			return '';
-		}
-
-		return Data::encode($value, 'yaml');
+		return Data::encode($value ?? '', 'yaml');
 	}
 
 	public function validations(): array

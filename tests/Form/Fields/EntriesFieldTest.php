@@ -12,13 +12,13 @@ class EntriesFieldTest extends TestCase
 {
 	public function testDefaultProps()
 	{
-		$field = $this->field('entries', []);
+		$field = $this->field('entries');
 
 		$this->assertSame('entries', $field->type());
 		$this->assertSame('entries', $field->name());
 		$this->assertNull($field->max());
 		$this->assertTrue($field->sortable());
-		$this->assertNull($field->value());
+		$this->assertSame([], $field->value());
 	}
 
 	public function testProps()
