@@ -30,18 +30,18 @@
 			</k-button-group>
 		</template>
 
-		<!-- Empty State -->
-		<k-empty v-if="entries.length === 0" icon="list-bullet" @click="add()">
-			{{ empty ?? $t("field.entries.empty") }}
-		</k-empty>
-
-		<!-- Entries -->
 		<k-input-validator
-			v-else
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(entries)"
 		>
+			<!-- Empty State -->
+			<k-empty v-if="entries.length === 0" icon="list-bullet" @click="add()">
+				{{ empty ?? $t("field.entries.empty") }}
+			</k-empty>
+
+			<!-- Entries -->
 			<k-draggable
+				v-else
 				v-bind="dragOptions"
 				class="k-entries-field-items"
 				@sort="save"
