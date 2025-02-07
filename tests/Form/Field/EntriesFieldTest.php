@@ -175,6 +175,7 @@ class EntriesFieldTest extends TestCase
 		]);
 
 		$this->assertSame(3, $field->min());
+		$this->assertTrue($field->isRequired());
 		$this->assertFalse($field->isValid());
 		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
 	}
@@ -190,6 +191,7 @@ class EntriesFieldTest extends TestCase
 		]);
 
 		$this->assertSame(2, $field->min());
+		$this->assertTrue($field->isRequired());
 		$this->assertTrue($field->isValid());
 	}
 
@@ -203,6 +205,7 @@ class EntriesFieldTest extends TestCase
 		]);
 
 		$this->assertSame(3, $field->min());
+		$this->assertTrue($field->isRequired());
 		$this->assertFalse($field->isValid());
 		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
 	}
@@ -217,6 +220,7 @@ class EntriesFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->isValid());
+		$this->assertSame(1, $field->min());
 	}
 
 	public function testRequiredInvalid()
@@ -226,6 +230,7 @@ class EntriesFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
+		$this->assertSame(1, $field->min());
 	}
 
 	public static function supportsProvider(): array
