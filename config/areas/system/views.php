@@ -81,9 +81,9 @@ return [
 				];
 			}
 
-			if ($kirby->option('panel.vue.compiler', null) === true) {
+			if ($kirby->option('panel.vue.compiler', null) === null) {
 				$security[] = [
-					'id'   => 'compiler',
+					'id'   => 'vue-compiler',
 					'text' => I18n::translate('system.issues.vue.compiler'),
 					'link' => 'https://getkirby.com/security/vue-compiler'
 				];
