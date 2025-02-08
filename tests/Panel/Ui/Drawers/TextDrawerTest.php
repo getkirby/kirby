@@ -27,10 +27,7 @@ class TextDrawerTest extends TestCase
 
 	public function testRender(): void
 	{
-		$drawer = new TextDrawer(
-			text: 'A little text'
-		);
-
+		$drawer = new TextDrawer();
 		$result = $drawer->render();
 		$this->assertSame('k-text-drawer', $result['component']);
 	}

@@ -5,12 +5,12 @@ namespace Kirby\Panel\Ui\Dialogs;
 use Kirby\Panel\Ui\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(TextDialog::class)]
-class TextDialogTest extends TestCase
+#[CoversClass(RemoveDialog::class)]
+class RemoveDialogTest extends TestCase
 {
 	public function testProps(): void
 	{
-		$dialog = new TextDialog(
+		$dialog = new RemoveDialog(
 			text: 'A little text'
 		);
 
@@ -19,15 +19,18 @@ class TextDialogTest extends TestCase
 			'style'        => null,
 			'cancelButton' => null,
 			'size'         => 'medium',
-			'submitButton' => null,
+			'submitButton' => [
+				'icon'  => 'trash',
+				'theme' => 'negative'
+			],
 			'text'         => 'A little text',
 		], $dialog->props());
 	}
 
 	public function testRender(): void
 	{
-		$dialog = new TextDialog();
+		$dialog = new RemoveDialog();
 		$result = $dialog->render();
-		$this->assertSame('k-text-dialog', $result['component']);
+		$this->assertSame('k-remove-dialog', $result['component']);
 	}
 }
