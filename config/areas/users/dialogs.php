@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Panel\Ui\Dialogs\FieldDialog;
 use Kirby\Panel\Ui\Dialogs\UserChangeEmailDialog;
 use Kirby\Panel\Ui\Dialogs\UserChangeLanguageDialog;
 use Kirby\Panel\Ui\Dialogs\UserChangeNameDialog;
@@ -9,7 +10,6 @@ use Kirby\Panel\Ui\Dialogs\UserCreateDialog;
 use Kirby\Panel\Ui\Dialogs\UserDeleteDialog;
 use Kirby\Panel\Ui\Dialogs\UserTotpDisableDialog;
 
-$fields = require __DIR__ . '/../fields/dialogs.php';
 $files = require __DIR__ . '/../files/dialogs.php';
 
 return [
@@ -42,8 +42,8 @@ return [
 		'handler' => UserDeleteDialog::for(...)
 	],
 	'user.fields' => [
-		...$fields['model'],
 		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
+		'handler' => FieldDialog::forModel(...)
 	],
 	'user.file.changeName' => [
 		...$files['changeName'],
@@ -62,8 +62,8 @@ return [
 		'pattern' => '(users/.*?)/files/(:any)/delete',
 	],
 	'user.file.fields' => [
-		...$fields['file'],
 		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'handler' => FieldDialog::forFile(...)
 	],
 	'user.totp.disable' => [
 		'pattern' => 'users/(:any)/totp/disable',

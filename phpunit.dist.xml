@@ -34,8 +34,6 @@
 			<file>./config/areas/account/buttons.php</file>
 			<file>./config/areas/account/dialogs.php</file>
 			<file>./config/areas/account/drawers.php</file>
-			<file>./config/areas/fields/dialogs.php</file>
-			<file>./config/areas/fields/drawers.php</file>
 			<file>./config/areas/files/buttons.php</file>
 			<file>./config/areas/files/dialogs.php</file>
 			<file>./config/areas/files/requests.php</file>

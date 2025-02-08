@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Panel\PageCreateDialog;
 use Kirby\Panel\Ui\Dialogs\ChangesDialog;
+use Kirby\Panel\Ui\Dialogs\FieldDialog;
 use Kirby\Panel\Ui\Dialogs\PageChangeSortDialog;
 use Kirby\Panel\Ui\Dialogs\PageChangeStatusDialog;
 use Kirby\Panel\Ui\Dialogs\PageChangeTemplateDialog;
@@ -12,7 +13,6 @@ use Kirby\Panel\Ui\Dialogs\PageDuplicateDialog;
 use Kirby\Panel\Ui\Dialogs\PageMoveDialog;
 use Kirby\Panel\Ui\Dialogs\SiteChangeTitleDialog;
 
-$fields = require __DIR__ . '/../fields/dialogs.php';
 $files = require __DIR__ . '/../files/dialogs.php';
 
 return [
@@ -76,8 +76,8 @@ return [
 		'handler' => PageMoveDialog::for(...)
 	],
 	'page.fields' => [
-		...$fields['model'],
 		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
+		'handler' => FieldDialog::forModel(...)
 	],
 	'page.file.changeName' => [
 		...$files['changeName'],
@@ -96,16 +96,16 @@ return [
 		'pattern' => '(pages/.*?)/files/(:any)/delete',
 	],
 	'page.file.fields' => [
-		...$fields['file'],
 		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'handler' => FieldDialog::forFile(...)
 	],
 	'site.changeTitle' => [
 		'pattern' => 'site/changeTitle',
 		'handler' => fn () => new SiteChangeTitleDialog()
 	],
 	'site.fields' => [
-		...$fields['model'],
 		'pattern' => '(site)/fields/(:any)/(:all?)',
+		'handler' => FieldDialog::forModel(...)
 	],
 	'site.file.changeName' => [
 		...$files['changeName'],
@@ -124,8 +124,8 @@ return [
 		'pattern' => '(site)/files/(:any)/delete',
 	],
 	'site.file.fields' => [
-		...$fields['file'],
 		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
+		'handler' => FieldDialog::forFile(...)
 	],
 	'changes' => [
 		'pattern' => 'changes',

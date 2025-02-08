@@ -2,8 +2,6 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Http\Response;
-
 /**
  * The Drawer response class handles Fiber
  * requests to render the JSON object for
