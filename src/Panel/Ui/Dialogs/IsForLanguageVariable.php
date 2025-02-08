@@ -15,6 +15,9 @@ use Kirby\Cms\Find;
  */
 trait IsForLanguageVariable
 {
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 */
 	public static function for(
 		string $code,
 		string|null $key = null
