@@ -7,6 +7,8 @@ use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
 
 /**
+ * Dialog to activate/register the site with a license
+ *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com

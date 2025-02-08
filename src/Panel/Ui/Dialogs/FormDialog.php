@@ -5,6 +5,8 @@ namespace Kirby\Panel\Ui\Dialogs;
 use Kirby\Panel\Ui\Dialog;
 
 /**
+ * Dialog that contains a set of fields
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -25,9 +27,9 @@ class FormDialog extends Dialog
 		public array $value = []
 	) {
 		parent::__construct(
-			component:    $component,
+			component: $component,
 			cancelButton: $cancelButton,
-			size:         $size,
+			size: $size,
 			submitButton: $submitButton
 		);
 	}

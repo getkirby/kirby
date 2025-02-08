@@ -7,6 +7,8 @@ use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
 
 /**
+ * Dialog to change the language of a user
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

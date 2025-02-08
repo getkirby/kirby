@@ -5,6 +5,8 @@ namespace Kirby\Panel\Ui\Dialogs;
 use Kirby\Toolkit\I18n;
 
 /**
+ * Dialog to create a new language
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -19,10 +21,10 @@ class LanguageCreateDialog extends FormDialog
 		string|array|false|null $submitButton = null
 	) {
 		parent::__construct(
-			component:    'k-language-dialog',
-			fields:       $this->fields(),
+			component: 'k-language-dialog',
+			fields: $this->fields(),
 			submitButton: $submitButton ?? I18n::translate('language.create'),
-			value:        $this->value()
+			value: $this->value()
 		);
 	}
 

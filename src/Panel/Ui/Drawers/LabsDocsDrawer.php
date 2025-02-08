@@ -8,6 +8,8 @@ use Kirby\Panel\Ui\Drawer;
 use Kirby\Panel\Ui\Renderable;
 
 /**
+ * Drawer to show a component's docs in the Panel Lab
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -42,9 +44,9 @@ class LabsDocsDrawer extends Renderable
 		$doc    = Doc::factory($this->component);
 		$drawer = new Drawer(
 			component: 'k-lab-docs-drawer',
-			icon:      'book',
-			title:     $this->component,
-			docs:      $doc->toArray()
+			icon: 'book',
+			title: $this->component,
+			docs: $doc->toArray()
 		);
 
 		return $drawer->render();

@@ -10,6 +10,8 @@ use Kirby\Panel\Ui\Renderable;
 use Kirby\Toolkit\I18n;
 
 /**
+ * Dialog to change the status of a page
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

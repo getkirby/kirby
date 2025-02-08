@@ -5,6 +5,8 @@ namespace Kirby\Panel\Ui\Dialogs;
 use Kirby\Panel\Ui\Dialog;
 
 /**
+ * Dialog that displays some text
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -23,9 +25,9 @@ class TextDialog extends Dialog
 		public string|null $text = null
 	) {
 		parent::__construct(
-			component:    $component,
+			component: $component,
 			cancelButton: $cancelButton,
-			size:         $size,
+			size: $size,
 			submitButton: $submitButton
 		);
 	}

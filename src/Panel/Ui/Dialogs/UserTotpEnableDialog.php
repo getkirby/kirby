@@ -11,13 +11,14 @@ use Kirby\Toolkit\Totp;
 
 /**
  * Manages the Panel dialog to enable TOTP auth for the current user
- * @since 4.0.0
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
+ * @internal
  */
 class UserTotpEnableDialog extends Dialog
 {

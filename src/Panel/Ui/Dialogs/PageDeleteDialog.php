@@ -10,6 +10,8 @@ use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
 /**
+ * Dialog to delete a page
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

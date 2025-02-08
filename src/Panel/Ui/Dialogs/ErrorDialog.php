@@ -5,6 +5,9 @@ namespace Kirby\Panel\Ui\Dialogs;
 use Kirby\Panel\Ui\Dialog;
 
 /**
+ * Dialog to display an error message
+ * and related details
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -22,9 +25,9 @@ class ErrorDialog extends Dialog
 		string|null $size = 'medium'
 	) {
 		parent::__construct(
-			component:    $component,
+			component: $component,
 			cancelButton: false,
-			size:         $size,
+			size: $size,
 			submitButton: false
 		);
 	}

@@ -7,6 +7,8 @@ use Kirby\Cms\LanguageVariable;
 use Kirby\Toolkit\I18n;
 
 /**
+ * Dialog to create a new language variable
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -26,11 +28,11 @@ class LanguageTranslationCreateDialog extends FormDialog
 		public string|null $text = null,
 	) {
 		parent::__construct(
-			fields:       $this->fields(),
+			fields: $this->fields(),
 			cancelButton: $cancelButton,
-			size:         'large',
+			size: 'large',
 			submitButton: $submitButton,
-			value:        $this->value(),
+			value: $this->value(),
 		);
 	}
 

@@ -3,6 +3,8 @@
 namespace Kirby\Panel\Ui\Dialogs;
 
 /**
+ * Dialog that removes something
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -21,9 +23,9 @@ class RemoveDialog extends TextDialog
 		public string|null $text = null
 	) {
 		parent::__construct(
-			component:    $component,
+			component: $component,
 			cancelButton: $cancelButton,
-			size:         $size,
+			size: $size,
 			submitButton: $submitButton ?? [
 				'icon'  => 'trash',
 				'theme' => 'negative'

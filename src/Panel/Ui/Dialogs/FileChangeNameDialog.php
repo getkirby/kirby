@@ -7,6 +7,8 @@ use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 
 /**
+ * Dialog to change the name of a file
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

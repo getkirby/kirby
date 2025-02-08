@@ -11,6 +11,8 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 /**
+ * Dialog to change the title and/or slug of a page
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

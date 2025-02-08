@@ -5,6 +5,9 @@ namespace Kirby\Panel\Ui\Dialogs;
 use Kirby\Cms\Find;
 
 /**
+ * Trait for statically initializing dialogs
+ * that are based on a \Kirby\Cms\Page object
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

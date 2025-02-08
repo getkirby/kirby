@@ -11,6 +11,9 @@ use Kirby\Panel\Drawer;
 use Kirby\Panel\Ui\Renderable;
 
 /**
+ * Handles the rendering/submitting for
+ * drawers defined for a specific field
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

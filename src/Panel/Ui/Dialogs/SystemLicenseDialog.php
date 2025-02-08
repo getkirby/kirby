@@ -9,6 +9,8 @@ use Kirby\Panel\Ui\Dialog;
 use Kirby\Toolkit\I18n;
 
 /**
+ * Dialog to display (and potentially renew) the license
+ *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com

@@ -5,6 +5,8 @@ namespace Kirby\Panel\Ui\Drawers;
 use Kirby\Panel\Ui\Drawer;
 
 /**
+ * Drawer that displays some text
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -26,12 +28,12 @@ class TextDrawer extends Drawer
 	) {
 		parent::__construct(
 			component: 'k-text-drawer',
-			class:     $class,
-			disabled:  $disabled,
-			icon:      $icon,
-			options:   $options,
-			style:     $style,
-			title:     $title,
+			class: $class,
+			disabled: $disabled,
+			icon: $icon,
+			options: $options,
+			style: $style,
+			title: $title,
 		);
 	}
 

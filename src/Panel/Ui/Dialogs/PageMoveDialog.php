@@ -8,6 +8,8 @@ use Kirby\Panel\Ui\Dialog;
 use Kirby\Uuid\Uuids;
 
 /**
+ * Dialog to move a page
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
