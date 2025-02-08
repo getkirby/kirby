@@ -6,7 +6,6 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Url;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
-use Kirby\Uuid\Uuids;
 
 /**
  * @package   Kirby Panel
@@ -75,22 +74,6 @@ class PageDuplicateDialog extends FormDialog
 		return $fields;
 	}
 
-	public function props(): array
-	{
-		$parent = $this->page->parentModel();
-
-		return [
-			...parent::props(),
-			'value' => [
-				'move'   => $this->page->panel()->url(true),
-				'parent' => match (Uuids::enabled()) {
-					false   => $parent->id() ?? '/',
-					default => $parent->uuid()->toString() ?? 'site://'
-				}
-			]
-		];
-	}
-
 	public function slug(): string
 	{
 		$appendix = $this->slugAppendix();
@@ -98,12 +81,12 @@ class PageDuplicateDialog extends FormDialog
 		return $this->page->slug() . '-' . $appendix . $counter;
 	}
 
-	public function slugAppendix(): string
+	protected function slugAppendix(): string
 	{
 		return Url::slug(I18n::translate('page.duplicate.appendix'));
 	}
 
-	public function slugCounter(): int|null
+	protected function slugCounter(): int|null
 	{
 		$siblings  = $this->page->parentModel()->childrenAndDrafts()->pluck('uid');
 
@@ -127,10 +110,15 @@ class PageDuplicateDialog extends FormDialog
 
 	public function submit(): array
 	{
-		$page = $this->page->duplicate($this->request->get('slug'), [
-			'children' => (bool)$this->request->get('children'),
-			'files'    => (bool)$this->request->get('files'),
-			'title'    => (string)$this->request->get('title'),
+		$title    = (string)$this->request->get('title');
+		$slug     = $this->request->get('slug');
+		$children = (bool)$this->request->get('children');
+		$files    = (bool)$this->request->get('files');
+
+		$page = $this->page->duplicate($slug, [
+			'children' => $children,
+			'files'    => $files,
+			'title'    => $title,
 		]);
 
 		return [

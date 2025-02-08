@@ -2,22 +2,19 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
-use Kirby\Cms\App;
-use Kirby\Panel\Ui\Dialog;
+use Kirby\Panel\Ui\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\FileChangeTemplateDialog
- * @covers ::__construct
- */
+#[CoversClass(FileChangeTemplateDialog::class)]
 class FileChangeTemplateDialogTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Ui.Dialogs.FileChangeTemplateDialog';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
-		$this->app = new App([
+		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
 					'sections' => [
@@ -38,9 +35,6 @@ class FileChangeTemplateDialogTest extends TestCase
 					'title' => 'hero'
 				],
 			],
-			'roots' => [
-				'index' => static::TMP
-			],
 			'site' => [
 				'children' => [
 					[
@@ -58,44 +52,47 @@ class FileChangeTemplateDialogTest extends TestCase
 				]
 			]
 		]);
-
-		$this->app->impersonate('kirby');
 	}
 
-	/**
-	 * @covers ::for
-	 */
-	public function testFor()
+	public function testFor(): void
 	{
 		$dialog = FileChangeTemplateDialog::for('pages/test', 'test.jpg');
-		$this->assertInstanceOf(Dialog::class, $dialog);
+		$this->assertInstanceOf(FileChangeTemplateDialog::class, $dialog);
+		$this->assertSame($this->app->page('test')->file(), $dialog->file());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testProps(): void
+	{
+		$dialog = FileChangeTemplateDialog::for('pages/test', 'test.jpg');
+		$props  = $dialog->props();
+		$this->assertArrayHasKey('template', $props['fields']);
+		$this->assertSame('Change', $props['submitButton']['text']);
+		$this->assertSame('cover', $props['value']['template']);
+	}
+
+	public function testRender(): void
 	{
 		$dialog = FileChangeTemplateDialog::for('pages/test', 'test.jpg');
 		$result = $dialog->render();
 		$this->assertSame('k-form-dialog', $result['component']);
-		$this->assertArrayHasKey('template', $result['props']['fields']);
-		$this->assertSame('cover', $result['props']['value']['template']);
 	}
 
-	/**
-	 * @covers ::submit
-	 */
-	public function testSubmit()
+	public function testSubmit(): void
 	{
-		$_GET['template'] = 'hero';
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'template' => 'hero'
+				]
+			]
+		]);
 
 		$page   = $this->app->page('test');
 		$dialog = FileChangeTemplateDialog::for('pages/test', 'test.jpg');
-		$this->assertSame('cover', $page->file()->template());
+		$this->assertSame('cover', $dialog->file()->template());
 
 		$result = $dialog->submit();
-		$this->assertSame('hero', $page->file()->template());
+		$this->assertSame('hero', $dialog->file()->template());
 		$this->assertSame('file.changeTemplate', $result['event']);
 	}
 }

@@ -63,8 +63,8 @@ class LanguageUpdateDialog extends LanguageCreateDialog
 
 	public function submit(): array
 	{
-		$data = $this->request->get(['direction', 'locale', 'name']);
-		$this->language->update($data);
+		$data           = $this->request->get(['direction', 'locale', 'name']);
+		$this->language = $this->language->update($data);
 
 		return [
 			'event' => 'language.update'

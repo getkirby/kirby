@@ -4,9 +4,11 @@ namespace Kirby\Panel\Ui\Drawers;
 
 use Kirby\Cms\Find;
 use Kirby\Form\Field;
+use Kirby\Form\FieldClass;
 use Kirby\Form\Form;
 use Kirby\Http\Router;
 use Kirby\Panel\Drawer;
+use Kirby\Panel\Ui\Renderable;
 
 /**
  * @package   Kirby Panel
@@ -17,12 +19,23 @@ use Kirby\Panel\Drawer;
  * @since     5.0.0
  * @internal
  */
-class FieldDrawer
+class FieldDrawer extends Renderable
 {
 	public function __construct(
-		public Field $field,
+		public Field|FieldClass $field,
 		public string|null $path = null
 	) {
+	}
+
+	public static function forFile(
+		string $model,
+		string $filename,
+		string $field,
+		string|null $path = null
+	): static {
+		$file  = Find::file($model, $filename);
+		$field = Form::for($file)->field($field);
+		return new static($field, $path);
 	}
 
 	public static function forModel(
@@ -32,17 +45,6 @@ class FieldDrawer
 	): static {
 		$model = Find::parent($model);
 		$field = Form::for($model)->field($field);
-		return new static($field, $path);
-	}
-
-	public static function forFile(
-		string $model,
-		string $filename,
-		string $field,
-		string|null $path = null
-	): static {
-		$file = Find::file($model, $filename);
-		$field = Form::for($file)->field($field);
 		return new static($field, $path);
 	}
 
@@ -59,8 +61,8 @@ class FieldDrawer
 			$routes = [
 				...$routes,
 				...Drawer::routes(
-					id: $drawerId,
-					areaId: 'site',
+					id:      $drawerId,
+					areaId:  'site',
 					options: $drawer
 				)
 			];

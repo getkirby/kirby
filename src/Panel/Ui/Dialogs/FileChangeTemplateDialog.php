@@ -47,8 +47,8 @@ class FileChangeTemplateDialog extends FormDialog
 
 	public function submit(): array
 	{
-		$template = $this->request->get('template');
-		$this->file->changeTemplate($template);
+		$template   = $this->request->get('template');
+		$this->file = $this->file->changeTemplate($template);
 
 		return [
 			'event' => 'file.changeTemplate',

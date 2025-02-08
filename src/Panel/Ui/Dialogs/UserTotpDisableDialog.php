@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use Kirby\Panel\Ui\Renderable;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
@@ -19,7 +20,7 @@ use Kirby\Toolkit\I18n;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class UserTotpDisableDialog
+class UserTotpDisableDialog extends Renderable
 {
 	use IsForUser;
 

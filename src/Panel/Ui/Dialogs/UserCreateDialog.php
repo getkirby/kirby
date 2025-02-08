@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
+use Kirby\Cms\App;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
 
@@ -18,6 +19,9 @@ class UserCreateDialog extends FormDialog
 {
 	public function __construct()
 	{
+		$this->kirby   = App::instance();
+		$this->request = $this->kirby->request();
+
 		$roles = $this->kirby->roles()->canBeCreated();
 
 		// get default value for role

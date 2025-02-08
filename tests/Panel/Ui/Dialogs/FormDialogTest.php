@@ -2,18 +2,13 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
-use Kirby\TestCase;
+use Kirby\Panel\Ui\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\FormDialog
- * @covers ::__construct
- */
+#[CoversClass(FormDialog::class)]
 class FormDialogTest extends TestCase
 {
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$dialog = new FormDialog(
 			fields: $fields = [
@@ -38,10 +33,7 @@ class FormDialogTest extends TestCase
 		], $dialog->props());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		$dialog = new FormDialog();
 		$result = $dialog->render();

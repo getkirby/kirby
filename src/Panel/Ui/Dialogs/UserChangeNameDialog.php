@@ -37,8 +37,8 @@ class UserChangeNameDialog extends FormDialog
 
 	public function submit(): array
 	{
-		$name = $this->request->get('name');
-		$this->user->changeName($name);
+		$name       = $this->request->get('name');
+		$this->user = $this->user->changeName($name);
 
 		return [
 			'event' => 'user.changeName'

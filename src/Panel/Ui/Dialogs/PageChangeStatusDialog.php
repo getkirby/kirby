@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Cms\PageBlueprint;
 use Kirby\Panel\Field;
+use Kirby\Panel\Ui\Renderable;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -17,7 +18,7 @@ use Kirby\Toolkit\I18n;
  * @since     5.0.0
  * @internal
  */
-class PageChangeStatusDialog
+class PageChangeStatusDialog extends Renderable
 {
 	use IsForPage;
 
@@ -98,9 +99,8 @@ class PageChangeStatusDialog
 
 	public function submit(): array
 	{
-		$request = App::instance()->request();
-
-		$this->page->changeStatus(
+		$request    = App::instance()->request();
+		$this->page = $this->page->changeStatus(
 			$request->get('status'),
 			$request->get('position')
 		);

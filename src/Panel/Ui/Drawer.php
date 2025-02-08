@@ -27,12 +27,14 @@ class Drawer extends Component
 		public array|null $options = null,
 		string|null $style = null,
 		public string|null $title = null,
+		...$attrs
 	) {
-		parent::__construct(
-			component: $component,
-			class:     $class,
-			style:     $style
-		);
+		parent::__construct(...[
+			...$attrs,
+			'component' => $component,
+			'class'     => $class,
+			'style'     => $style
+		]);
 
 		$this->kirby   = App::instance();
 		$this->request = $this->kirby->request();

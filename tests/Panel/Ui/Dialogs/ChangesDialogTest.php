@@ -4,30 +4,20 @@ namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\Pages;
 use Kirby\Content\Changes;
-use Kirby\Panel\Areas\AreaTestCase;
+use Kirby\Panel\Ui\TestCase;
 use Kirby\Uuid\Uuids;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ChangesDialog::class)]
-class ChangesDialogTest extends AreaTestCase
+class ChangesDialogTest extends TestCase
 {
 	protected Changes $changes;
 
 	public function setUp(): void
 	{
 		parent::setUp();
-		$this->install();
-		$this->login();
 
-		$this->changes = new Changes();
-	}
-
-	public function setUpModels(): void
-	{
 		$this->app = $this->app->clone([
-			'roots' => [
-				'index' => static::TMP
-			],
 			'site' => [
 				'children' => [
 					[
@@ -45,17 +35,12 @@ class ChangesDialogTest extends AreaTestCase
 						]
 					]
 				]
-			],
-			'users' => [
-				[
-					'id' => 'test',
-				]
 			]
 		]);
 
-		$this->app->impersonate('kirby');
-
 		Uuids::populate();
+
+		$this->changes = new Changes();
 	}
 
 	public function testFiles(): void
@@ -86,7 +71,6 @@ class ChangesDialogTest extends AreaTestCase
 
 	public function testItems(): void
 	{
-		$this->setUpModels();
 		$page = $this->app->page('page://test');
 		$page->version('latest')->save([]);
 		$page->version('changes')->save([]);
@@ -122,9 +106,15 @@ class ChangesDialogTest extends AreaTestCase
 		$this->assertSame([], $dialog->pages());
 	}
 
-	/**
-	 * @covers ::render
-	 */
+	public function testProps(): void
+	{
+		$dialog = new ChangesDialog();
+		$props  = $dialog->props();
+		$this->assertArrayHasKey('files', $props);
+		$this->assertArrayHasKey('pages', $props);
+		$this->assertArrayHasKey('users', $props);
+	}
+
 	public function testRender(): void
 	{
 		$dialog = new ChangesDialog();
@@ -137,9 +127,6 @@ class ChangesDialogTest extends AreaTestCase
 		], $result['props']);
 	}
 
-	/**
-	 * @covers ::users
-	 */
 	public function testUsers(): void
 	{
 		$this->setUpModels();
@@ -152,7 +139,7 @@ class ChangesDialogTest extends AreaTestCase
 
 		$this->assertCount(1, $users);
 		$this->assertSame('test@getkirby.com', $users[0]['text']);
-		$this->assertSame('/users/test', $users[0]['link']);
+		$this->assertSame('/account', $users[0]['link']);
 	}
 
 	public function testUsersWithoutChanges(): void

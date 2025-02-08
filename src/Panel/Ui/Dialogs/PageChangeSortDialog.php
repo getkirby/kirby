@@ -43,9 +43,10 @@ class PageChangeSortDialog extends FormDialog
 
 	public function submit(): array
 	{
-		$this->page->changeStatus(
+		$position   = $this->request->get('position');
+		$this->page = $this->page->changeStatus(
 			'listed',
-			$this->request->get('position')
+			$position
 		);
 
 		return [

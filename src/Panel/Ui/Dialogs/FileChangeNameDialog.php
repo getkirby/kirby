@@ -43,10 +43,10 @@ class FileChangeNameDialog extends FormDialog
 
 	public function submit(): array
 	{
-		$name     = $this->request->get('name');
-		$renamed  = $this->file->changeName($name);
-		$oldUrl   = $this->file->panel()->url(true);
-		$newUrl   = $renamed->panel()->url(true);
+		$name       = $this->request->get('name');
+		$oldUrl     = $this->file->panel()->url(true);
+		$this->file = $this->file->changeName($name);
+		$newUrl     = $this->file->panel()->url(true);
 
 		$response = [
 			'event' => 'file.changeName'

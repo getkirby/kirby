@@ -17,7 +17,6 @@ class SystemActivateDialog extends FormDialog
 {
 	public function __construct()
 	{
-
 		parent::__construct(
 			fields: $this->fields(),
 			submitButton: [
@@ -56,9 +55,11 @@ class SystemActivateDialog extends FormDialog
 		];
 	}
 
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function submit(): array
 	{
-		// @codeCoverageIgnoreStart
 		$this->kirby->system()->register(
 			$this->request->get('license'),
 			$this->request->get('email')
@@ -68,6 +69,5 @@ class SystemActivateDialog extends FormDialog
 			'event'   => 'system.register',
 			'message' => I18n::translate('license.success')
 		];
-		// @codeCoverageIgnoreEnd
 	}
 }

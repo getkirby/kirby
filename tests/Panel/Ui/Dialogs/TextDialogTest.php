@@ -2,18 +2,13 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
-use Kirby\TestCase;
+use Kirby\Panel\Ui\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\TextDialog
- * @covers ::__construct
- */
+#[CoversClass(TextDialog::class)]
 class TextDialogTest extends TestCase
 {
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$dialog = new TextDialog(
 			text: 'A little text'
@@ -29,10 +24,7 @@ class TextDialogTest extends TestCase
 		], $dialog->props());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		$dialog = new TextDialog(
 			text: 'A little text'

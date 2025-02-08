@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\Find;
 use Kirby\Form\Field;
+use Kirby\Form\FieldClass;
 use Kirby\Form\Form;
 use Kirby\Http\Router;
 use Kirby\Panel\Dialog;
@@ -20,7 +21,7 @@ use Kirby\Panel\Dialog;
 class FieldDialog
 {
 	public function __construct(
-		public Field $field,
+		public Field|FieldClass $field,
 		public string|null $path = null
 	) {
 	}

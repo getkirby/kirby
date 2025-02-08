@@ -72,7 +72,7 @@ class UserChangePasswordDialog extends FormDialog
 		}
 
 		// change password if everything's fine
-		$this->user->changePassword($password);
+		$this->user = $this->user->changePassword($password);
 
 		return [
 			'event' => 'user.changePassword'

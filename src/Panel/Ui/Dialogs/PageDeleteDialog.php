@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui\Dialogs;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Panel;
+use Kirby\Panel\Ui\Renderable;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
@@ -17,7 +18,7 @@ use Kirby\Toolkit\I18n;
  * @since     5.0.0
  * @internal
  */
-class PageDeleteDialog
+class PageDeleteDialog extends Renderable
 {
 	use IsForPage;
 
@@ -32,29 +33,29 @@ class PageDeleteDialog
 			'title' => Escape::html($this->page->title()->value())
 		]);
 
-		if ($this->page->childrenAndDrafts()->count() > 0) {
-			$dialog = new FormDialog(
-				fields: [
-					'info' => [
-						'type'  => 'info',
-						'theme' => 'negative',
-						'text'  => I18n::translate('page.delete.confirm.subpages')
-					],
-					'confirm' => [
-						'label'   => I18n::translate('page.delete.confirm.title'),
-						'type'    => 'text',
-						'counter' => false
-					]
-				],
-				submitButton: [
-					'text' => I18n::translate('delete'),
-					'theme' => 'negative'
-				],
-				text: $text
-			);
-		} else {
-			$dialog = new RemoveDialog(text: $text);
+		if ($this->page->childrenAndDrafts()->count() === 0) {
+			return (new RemoveDialog(text: $text))->render();
 		}
+
+		$dialog = new FormDialog(
+			fields: [
+				'info' => [
+					'type'  => 'info',
+					'theme' => 'negative',
+					'text'  => I18n::translate('page.delete.confirm.subpages')
+				],
+				'confirm' => [
+					'label'   => I18n::translate('page.delete.confirm.title'),
+					'type'    => 'text',
+					'counter' => false
+				]
+			],
+			submitButton: [
+				'text'  => I18n::translate('delete'),
+				'theme' => 'negative'
+			],
+			text: $text
+		);
 
 		return $dialog->render();
 	}
@@ -74,18 +75,18 @@ class PageDeleteDialog
 
 		$url      = $this->page->panel()->url(true);
 		$referrer = Panel::referrer();
-
 		$this->page->delete(true);
+
+		$response = [
+			'event' => 'page.delete'
+		];
 
 		// redirect to the parent model URL
 		// if the dialog has been opened in the page view
 		if ($url === $referrer) {
-			$redirect = $this->page->parentModel()->panel()->url(true);
+			$response['redirect'] = $this->page->parentModel()->panel()->url(true);
 		}
 
-		return [
-			'event'    => 'page.delete',
-			'redirect' => $redirect ?? false
-		];
+		return $response;
 	}
 }

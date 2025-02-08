@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
+use Kirby\Cms\App;
+use Kirby\Cms\License;
 use Kirby\Exception\LogicException;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Toolkit\I18n;
@@ -15,8 +17,13 @@ use Kirby\Toolkit\I18n;
  */
 class SystemLicenseDialog extends Dialog
 {
-	public function __construct()
-	{
+	protected License $license;
+
+	public function __construct(
+		License|null $license = null
+	) {
+		$this->license = $license ?? App::instance()->system()->license();
+
 		parent::__construct(
 			component: 'k-license-dialog',
 			cancelButton: $this->isRenewable(),
@@ -30,21 +37,20 @@ class SystemLicenseDialog extends Dialog
 
 	public function isRenewable(): bool
 	{
-		return $this->kirby->system()->license()->status()->renewable();
+		return $this->license->status()->renewable();
 	}
 
 	public function license(): array
 	{
-		$license    = $this->kirby->system()->license();
-		$status     = $license->status();
+		$status     = $this->license->status();
 		$obfuscated = $this->kirby->user()->isAdmin() === false;
 
 		return [
-			'code'  => $license->code($obfuscated),
+			'code'  => $this->license->code($obfuscated),
 			'icon'  => $status->icon(),
-			'info'  => $status->info($license->renewal('Y-m-d', 'date')),
+			'info'  => $status->info($this->license->renewal('Y-m-d', 'date')),
 			'theme' => $status->theme(),
-			'type'  => $license->label(),
+			'type'  => $this->license->label(),
 		];
 	}
 
@@ -56,9 +62,11 @@ class SystemLicenseDialog extends Dialog
 		];
 	}
 
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function submit(): array
 	{
-		// @codeCoverageIgnoreStart
 		$response = $this->kirby->system()->license()->upgrade();
 
 		// the upgrade is still needed
@@ -77,6 +85,5 @@ class SystemLicenseDialog extends Dialog
 		}
 
 		throw new LogicException(message: 'The upgrade failed');
-		// @codeCoverageIgnoreEnd
 	}
 }

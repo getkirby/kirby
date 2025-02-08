@@ -3,16 +3,11 @@
 namespace Kirby\Panel\Ui;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Dialog
- * @covers ::__construct
- */
+#[CoversClass(Dialog::class)]
 class DialogTest extends TestCase
 {
-	/**
-	 * @covers ::props
-	 */
 	public function testProps()
 	{
 		$dialog = new Dialog(
@@ -30,9 +25,6 @@ class DialogTest extends TestCase
 		], $dialog->props());
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRender()
 	{
 		$dialog = new Dialog(

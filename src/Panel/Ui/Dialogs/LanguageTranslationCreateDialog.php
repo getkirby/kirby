@@ -17,12 +17,12 @@ use Kirby\Toolkit\I18n;
  */
 class LanguageTranslationCreateDialog extends FormDialog
 {
-	use IsForLanguageVariable;
+	use IsForLanguage;
 
 	public function __construct(
 		public Language $language,
-		string|array|false|null $cancelButton = null,
-		string|array|false|null $submitButton = null,
+		string|array|bool|null $cancelButton = null,
+		string|array|bool|null $submitButton = null,
 		public string|null $text = null,
 	) {
 		parent::__construct(

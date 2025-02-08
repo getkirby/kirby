@@ -2,18 +2,13 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
-use Kirby\TestCase;
+use Kirby\Panel\Ui\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\ErrorDialog
- * @covers ::__construct
- */
+#[CoversClass(ErrorDialog::class)]
 class ErrorDialogTest extends TestCase
 {
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$dialog = new ErrorDialog(
 			message: 'A little error',
@@ -31,10 +26,7 @@ class ErrorDialogTest extends TestCase
 		], $dialog->props());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		$dialog = new ErrorDialog(
 			message: 'A little error',

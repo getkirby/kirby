@@ -35,8 +35,8 @@ class UserChangeLanguageDialog extends FormDialog
 
 	public function submit(): array
 	{
-		$language = $this->request->get('translation');
-		$this->user->changeLanguage($language);
+		$language   = $this->request->get('translation');
+		$this->user = $this->user->changeLanguage($language);
 
 		return [
 			'event'  => 'user.changeLanguage',

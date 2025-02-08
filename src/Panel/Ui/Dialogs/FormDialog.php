@@ -17,10 +17,10 @@ class FormDialog extends Dialog
 {
 	public function __construct(
 		string|null $component = 'k-form-dialog',
-		string|array|false|null $cancelButton = null,
+		string|array|bool|null $cancelButton = null,
 		public array $fields = [],
 		string|null $size = 'medium',
-		string|array|false|null $submitButton = null,
+		string|array|bool|null $submitButton = null,
 		public string|null $text = null,
 		public array $value = []
 	) {

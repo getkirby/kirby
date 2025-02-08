@@ -3,16 +3,11 @@
 namespace Kirby\Panel\Ui;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Drawer
- * @covers ::__construct
- */
+#[CoversClass(Drawer::class)]
 class DrawerTest extends TestCase
 {
-	/**
-	 * @covers ::props
-	 */
 	public function testProps()
 	{
 		$drawer = new Drawer(
@@ -30,9 +25,6 @@ class DrawerTest extends TestCase
 		], $drawer->props());
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRender()
 	{
 		$drawer = new Drawer(

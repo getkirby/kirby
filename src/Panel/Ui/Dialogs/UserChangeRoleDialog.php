@@ -41,12 +41,12 @@ class UserChangeRoleDialog extends FormDialog
 
 	public function submit(): array
 	{
-		$role = $this->request->get('role');
-		$user = $this->user->changeRole($role);
+		$role       = $this->request->get('role');
+		$this->user = $this->user->changeRole($role);
 
 		return [
 			'event' => 'user.changeRole',
-			'user'  => $user->toArray()
+			'user'  => $this->user->toArray()
 		];
 	}
 }

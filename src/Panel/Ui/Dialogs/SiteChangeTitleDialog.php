@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Site;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
 
@@ -17,6 +18,8 @@ use Kirby\Toolkit\I18n;
  */
 class SiteChangeTitleDialog extends FormDialog
 {
+	protected Site $site;
+
 	public function __construct()
 	{
 		parent::__construct(
@@ -28,15 +31,17 @@ class SiteChangeTitleDialog extends FormDialog
 			],
 			submitButton: I18n::translate('rename'),
 			value: [
-				'name' => App::instance()->site()->title()->value(),
+				'title' => App::instance()->site()->title()->value(),
 			]
 		);
+
+		$this->site = $this->kirby->site();
 	}
 
 	public function submit(): array
 	{
-		$title = $this->request->get('title');
-		$this->kirby->site()->changeTitle($title);
+		$title      = $this->request->get('title');
+		$this->site = $this->site->changeTitle($title);
 
 		return [
 			'event' => 'site.changeTitle',

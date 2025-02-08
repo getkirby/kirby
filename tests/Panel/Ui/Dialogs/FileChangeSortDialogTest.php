@@ -2,22 +2,20 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
-use Kirby\Panel\Ui\Dialog;
+use Kirby\Panel\Ui\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\FileChangeSortDialog
- * @covers ::__construct
- */
+#[CoversClass(FileChangeSortDialog::class)]
 class FileChangeSortDialogTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Ui.Dialogs.FileChangeSortDialog';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
-		$this->setUpSingleLanguage(
-			site: [
+		$this->app = $this->app->clone([
+			'site' => [
 				'children' => [
 					[
 						'slug' => 'test',
@@ -29,53 +27,61 @@ class FileChangeSortDialogTest extends TestCase
 								]
 							],
 							[
-								'filename' => 'b.jpg',
-								'content'  => [
-									'sort' => 2
-								]
+								'filename' => 'b.jpg'
 							],
 							[
 								'filename' => 'c.jpg',
 								'content'  => [
-									'sort' => 3
+									'sort' => 2
 								]
 							]
 						]
 					]
 				]
 			]
-		);
-
-		$this->app->impersonate('kirby');
+		]);
 	}
 
-	/**
-	 * @covers ::for
-	 */
-	public function testFor()
+	public function testFor(): void
 	{
 		$dialog = FileChangeSortDialog::for('pages/test', 'a.jpg');
-		$this->assertInstanceOf(Dialog::class, $dialog);
+		$this->assertInstanceOf(FileChangeSortDialog::class, $dialog);
+		$this->assertSame($this->app->page('test')->file(), $dialog->file());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testProps(): void
+	{
+		$dialog = FileChangeSortDialog::for('pages/test', 'a.jpg');
+		$props   = $dialog->props();
+		$this->assertArrayHasKey('position', $props['fields']);
+		$this->assertSame('Change', $props['submitButton']);
+		$this->assertSame(1, $props['value']['position']);
+	}
+
+	public function testPropsForFileWithoutSortContentField(): void
+	{
+		$dialog = FileChangeSortDialog::for('pages/test', 'b.jpg');
+		$props   = $dialog->props();
+		$this->assertArrayHasKey('position', $props['fields']);
+		$this->assertSame(3, $props['value']['position']);
+	}
+
+	public function testRender(): void
 	{
 		$dialog = FileChangeSortDialog::for('pages/test', 'a.jpg');
 		$result = $dialog->render();
 		$this->assertSame('k-form-dialog', $result['component']);
-		$this->assertArrayHasKey('position', $result['props']['fields']);
-		$this->assertSame(1, $result['props']['value']['position']);
 	}
 
-	/**
-	 * @covers ::submit
-	 */
-	public function testSubmit()
+	public function testSubmit(): void
 	{
-		$_GET['position'] = 3;
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'position' => 3
+				]
+			]
+		]);
 
 		$page   = $this->app->page('test');
 		$dialog = FileChangeSortDialog::for('pages/test', 'a.jpg');

@@ -55,8 +55,8 @@ class PageChangeTemplateDialog extends FormDialog
 
 	public function submit(): array
 	{
-		$template = $this->request->get('template');
-		$this->page->changeTemplate($template);
+		$template   = $this->request->get('template');
+		$this->page = $this->page->changeTemplate($template);
 
 		return [
 			'event' => 'page.changeTemplate',

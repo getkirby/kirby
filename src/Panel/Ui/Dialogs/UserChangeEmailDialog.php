@@ -39,8 +39,8 @@ class UserChangeEmailDialog extends FormDialog
 
 	public function submit(): array
 	{
-		$email = $this->request->get('email');
-		$this->user->changeEmail($email);
+		$email      = $this->request->get('email');
+		$this->user = $this->user->changeEmail($email);
 
 		return [
 			'event' => 'user.changeEmail'

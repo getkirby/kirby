@@ -72,7 +72,7 @@ class LanguageTranslationUpdateDialog extends LanguageTranslationCreateDialog
 			true    => $this->request->get('entries', []),
 			default => $this->request->get('value', '')
 		};
-		$this->variable->update($value);
+		$this->variable = $this->variable->update($value);
 
 		return true;
 	}

@@ -54,11 +54,11 @@ class PageMoveDialog extends Dialog
 			default               => Find::page($parent)
 		};
 
-		$page = $this->page->move($parent);
+		$this->page = $this->page->move($parent);
 
 		return [
 			'event'    => 'page.move',
-			'redirect' => $page->panel()->url(true)
+			'redirect' => $this->page->panel()->url(true)
 		];
 	}
 }

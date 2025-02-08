@@ -37,22 +37,24 @@ class UserDeleteDialog extends RemoveDialog
 		$referrer = Panel::referrer();
 		$url      = $this->user->panel()->url(true);
 
-		$this->user->delete();
+		$response = [
+			'event' => 'user.delete'
+		];
 
 		// redirect to the users view
 		// if the dialog has been opened in the user view
 		if ($referrer === $url) {
-			$redirect = '/users';
+			$response['redirect'] = '/users';
 		}
 
 		// logout the user if they deleted themselves
-		if ($this->user->isLoggedIn()) {
-			$redirect = '/logout';
+		// (this check needs to happen before the actual deletion)
+		if ($this->user->isLoggedIn() === true) {
+			$response['redirect'] = '/logout';
 		}
 
-		return [
-			'event'    => 'user.delete',
-			'redirect' => $redirect ?? false
-		];
+		$this->user->delete();
+
+		return $response;
 	}
 }
