@@ -61,4 +61,14 @@ class LanguageVariableTest extends TestCase
 		$variable = new LanguageVariable($language, 'foo');
 		$this->assertSame('foo', $variable->key());
 	}
+
+	/**
+	 * @covers ::language
+	 */
+	public function testLanguage()
+	{
+		$language = new Language(['code' => 'test']);
+		$variable = new LanguageVariable($language, 'foo');
+		$this->assertSame($language, $variable->language());
+	}
 }

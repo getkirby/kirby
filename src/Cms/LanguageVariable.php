@@ -108,6 +108,15 @@ class LanguageVariable
 	}
 
 	/**
+	 * Returns the parent language
+	 * @since 5.0.0
+	 */
+	public function language(): Language
+	{
+		return $this->language;
+	}
+
+	/**
 	 * Sets a new value for the language variable
 	 */
 	public function update(string|null $value = null): static
@@ -123,7 +132,7 @@ class LanguageVariable
 	/**
 	 * Returns the value if the variable has been translated.
 	 */
-	public function value(): string|null
+	public function value(): string|array|null
 	{
 		return $this->language->translations()[$this->key] ?? null;
 	}

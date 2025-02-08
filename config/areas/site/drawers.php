@@ -1,33 +1,23 @@
 <?php
 
-$fields = require __DIR__ . '/../fields/drawers.php';
+use Kirby\Panel\Ui\Drawers\FieldDrawer;
 
 return [
-	// page field drawers
 	'page.fields' => [
 		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit']
+		'handler' => FieldDrawer::forModel(...)
 	],
-
-	// page file field drawers
 	'page.file.fields' => [
 		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit'],
+		'handler' => FieldDrawer::forFile(...)
 	],
 
-	// site field drawers
 	'site.fields' => [
 		'pattern' => '(site)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit'],
+		'handler' => FieldDrawer::forModel(...)
 	],
-
-	// site file field drawers
 	'site.file.fields' => [
 		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit'],
+		'handler' => FieldDrawer::forFile(...)
 	],
 ];

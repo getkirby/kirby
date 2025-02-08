@@ -298,18 +298,16 @@ trait UserActions
 	public function delete(): bool
 	{
 		return $this->commit('delete', ['user' => $this], function ($user) {
-			if ($user->exists() === false) {
-				return true;
-			}
+			if ($user->exists() === true) {
+				// delete all public assets for this user
+				Dir::remove($user->mediaRoot());
 
-			// delete all public assets for this user
-			Dir::remove($user->mediaRoot());
-
-			// delete the user directory
-			if (Dir::remove($user->root()) !== true) {
-				throw new LogicException(
-					message: 'The user directory for "' . $user->email() . '" could not be deleted'
-				);
+				// delete the user directory
+				if (Dir::remove($user->root()) !== true) {
+					throw new LogicException(
+						message: 'The user directory for "' . $user->email() . '" could not be deleted'
+					);
+				}
 			}
 
 			// remove the user from users collection

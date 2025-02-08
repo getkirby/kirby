@@ -5,10 +5,8 @@ use Kirby\Panel\Ui\Buttons\PreviewButton;
 use Kirby\Panel\Ui\Buttons\SettingsButton;
 
 return [
-	'file.preview' => function (File $file) {
-		return new PreviewButton(link: $file->previewUrl());
-	},
-	'file.settings' => function (File $file) {
-		return new SettingsButton(model: $file);
-	}
+	'file.preview' =>
+		fn (File $file) => new PreviewButton(link: $file->previewUrl()),
+	'file.settings' =>
+		fn (File $file) => new SettingsButton(model: $file)
 ];
