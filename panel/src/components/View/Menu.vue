@@ -2,7 +2,7 @@
 	<nav
 		class="k-panel-menu"
 		:aria-label="$t('menu')"
-		:data-hover="hover"
+		:data-hover="isHovered"
 		@mouseenter="$emit('hover', true)"
 		@mouseleave="$emit('hover', false)"
 	>
@@ -63,7 +63,7 @@
  */
 export default {
 	props: {
-		hover: Boolean,
+		isHovered: Boolean,
 		isOpen: Boolean,
 		items: {
 			type: Array,
@@ -76,11 +76,6 @@ export default {
 		}
 	},
 	emits: ["search", "toggle"],
-	data() {
-		return {
-			over: false
-		};
-	},
 	computed: {
 		activationButton() {
 			if (this.license === "missing") {

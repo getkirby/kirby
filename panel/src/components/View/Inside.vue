@@ -2,11 +2,11 @@
 	<k-panel class="k-panel-inside">
 		<k-panel-menu
 			v-bind="$panel.menu.props"
-			:hover="$panel.menu.hover"
+			:is-hovered="$panel.menu.isHovered"
 			:is-open="$panel.menu.isOpen"
 			:license="$panel.license"
 			:searches="$panel.searches"
-			@hover="$panel.menu.hover = $event"
+			@hover="$panel.menu.isHovered = $event"
 			@search="$panel.search()"
 			@toggle="$panel.menu.toggle()"
 		/>

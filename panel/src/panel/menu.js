@@ -4,7 +4,7 @@ import State from "./state.js";
 export const defaults = () => {
 	return {
 		props: {},
-		hover: false,
+		isHovered: false,
 		isOpen: false
 	};
 };
