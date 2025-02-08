@@ -50,7 +50,7 @@ class LanguageTranslationUpdateDialogTest extends TestCase
 		$dialog   = new LanguageTranslationUpdateDialog($variable);
 		$fields   = $dialog->fields();
 
-		$this->assertSame('info', $fields['value']['type']);
+		$this->assertSame('textarea', $fields['value']['type']);
 	}
 
 	public function testFor(): void
@@ -90,8 +90,9 @@ class LanguageTranslationUpdateDialogTest extends TestCase
 		$this->assertTrue($props['cancelButton']);
 		$this->assertTrue($props['submitButton']);
 		$this->assertSame([
-			'key'   => 'normal',
-			'value' => 'test'
+			'key'      => 'normal',
+			'value'    => 'test',
+			'multiple' => false
 		], $props['value']);
 	}
 

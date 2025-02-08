@@ -94,4 +94,9 @@ return [
 	'kirby\toolkit\file'           => 'Kirby\Filesystem\File',
 	'kirby\toolkit\mime'           => 'Kirby\Filesystem\Mime',
 	'kirby\toolkit\query'          => 'Kirby\Query\Query',
+
+	'kirby\panel\changesdialog' => 'Kirby\Panel\Ui\Dialogs\ChangesDialog',
+	'kirby\panel\usertotpdisabledialog' => 'Kirby\Panel\Ui\Dialogs\UserTotpDisabledDialog',
+	'kirby\panel\usertotpenabledialog' => 'Kirby\Panel\Ui\Dialogs\UserTotpEnabledDialog',
+
 ];

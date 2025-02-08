@@ -40,7 +40,7 @@ class LanguageTranslationUpdateDialog extends LanguageTranslationCreateDialog
 	public function fields(): array
 	{
 		$fields = parent::fields();
-		
+
 		// the key field cannot be changed
 		// the multiple field is hidden
 		$fields['key']['disabled']  = true;

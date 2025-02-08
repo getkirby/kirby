@@ -4,7 +4,6 @@ namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\Dir;
 use Kirby\Panel\Ui\TestCase;
 use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\Attributes\CoversClass;

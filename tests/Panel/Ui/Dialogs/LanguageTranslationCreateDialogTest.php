@@ -58,7 +58,7 @@ class LanguageTranslationCreateDialogTest extends TestCase
 		$dialog = new LanguageTranslationCreateDialog($this->language);
 		$props  = $dialog->props();
 		$this->assertSame('large', $props['size']);
-		$this->assertCount(2, $props['fields']);
+		$this->assertCount(4, $props['fields']);
 		$this->assertSame([], $props['value']);
 	}
 
