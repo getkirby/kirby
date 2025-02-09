@@ -10,7 +10,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 
 /**
- * @coversDefaultClass Kirby\Plugin\Plugin
+ * @coversDefaultClass \Kirby\Plugin\Plugin
  * @covers ::__construct
  */
 class PluginTest extends TestCase

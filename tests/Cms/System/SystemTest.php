@@ -9,7 +9,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
 /**
- * @coversDefaultClass Kirby\Cms\System
+ * @coversDefaultClass \Kirby\Cms\System
  */
 class SystemTest extends TestCase
 {

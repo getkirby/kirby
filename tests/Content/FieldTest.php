@@ -8,7 +8,7 @@ use stdClass;
 use TypeError;
 
 /**
- * @coversDefaultClass Kirby\Content\Field
+ * @coversDefaultClass \Kirby\Content\Field
  */
 class FieldTest extends TestCase
 {

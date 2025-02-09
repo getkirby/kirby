@@ -11,7 +11,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 
 /**
- * @coversDefaultClass Kirby\Content\Version
+ * @coversDefaultClass \Kirby\Content\Version
  * @covers ::__construct
  */
 class VersionTest extends TestCase

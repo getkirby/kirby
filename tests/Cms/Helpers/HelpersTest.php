@@ -7,7 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Obj;
 
 /**
- * @coversDefaultClass Kirby\Cms\Helpers
+ * @coversDefaultClass \Kirby\Cms\Helpers
  */
 class HelpersTest extends HelpersTestCase
 {

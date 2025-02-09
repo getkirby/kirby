@@ -24,7 +24,7 @@ class LockedVersion extends Version
 }
 
 /**
- * @coversDefaultClass Kirby\Content\VersionRules
+ * @coversDefaultClass \Kirby\Content\VersionRules
  */
 class VersionRulesTest extends TestCase
 {

@@ -5,7 +5,7 @@ namespace Kirby\Template;
 use Kirby\Cms\App;
 
 /**
- * @coversDefaultClass Kirby\Template\Template
+ * @coversDefaultClass \Kirby\Template\Template
  */
 class TemplateTest extends TestCase
 {

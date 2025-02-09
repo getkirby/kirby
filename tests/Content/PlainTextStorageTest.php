@@ -10,7 +10,7 @@ use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
 
 /**
- * @coversDefaultClass Kirby\Content\PlainTextStorage
+ * @coversDefaultClass \Kirby\Content\PlainTextStorage
  * @covers ::__construct
  */
 class PlainTextStorageTest extends TestCase
