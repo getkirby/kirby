@@ -12,7 +12,7 @@ return [
 			$system       = $kirby->system();
 			$updateStatus = $system->updateStatus();
 			$license      = $system->license();
-			$debugMode    = $kirby->option('debug', false);
+			$debugMode    = $kirby->option('debug', false) === true;
 			$isLocal      = $system->isLocal();
 
 			$environment = [
@@ -72,17 +72,29 @@ return [
 
 			$security = $updateStatus?->messages() ?? [];
 
+			if ($isLocal === true) {
+				$security[] = [
+					'id'    => 'local',
+					'icon'  => 'info',
+					'theme' => 'info',
+					'text'  => I18n::translate('system.issues.local')
+				];
+			}
+
 			if ($debugMode === true) {
 				$security[] = [
 					'id'    => 'debug',
 					'icon'  => $isLocal ? 'info' : 'alert',
-					'text'  => I18n::translate('system.issues.debug'),
 					'theme' => $isLocal ? 'info' : 'negative',
+					'text'  => I18n::translate('system.issues.debug'),
 					'link'  => 'https://getkirby.com/security/debug'
 				];
 			}
 
-			if ($kirby->environment()->https() !== true) {
+			if (
+				$isLocal === false &&
+				$kirby->environment()->https() !== true
+			) {
 				$security[] = [
 					'id'   => 'https',
 					'text' => I18n::translate('system.issues.https'),
@@ -99,22 +111,27 @@ return [
 				];
 			}
 
+			// sensitive URLs
+			if ($isLocal === false) {
+				$sensitive = [
+					'content' => $system->exposedFileUrl('content'),
+					'git'     => $system->exposedFileUrl('git'),
+					'kirby'   => $system->exposedFileUrl('kirby'),
+					'site'    => $system->exposedFileUrl('site')
+				];
+			}
+
 			return [
 				'component' => 'k-system-view',
 				'props'     => [
 					'buttons'     => fn () =>
 						ViewButtons::view('system')->render(),
 					'environment' => $environment,
-					'exceptions'  => $debugMode === true ? $exceptions : [],
+					'exceptions'  => $debugMode ? $exceptions : [],
 					'info'        => $system->info(),
 					'plugins'     => $plugins,
 					'security'    => $security,
-					'urls'        => [
-						'content' => $system->exposedFileUrl('content'),
-						'git'     => $system->exposedFileUrl('git'),
-						'kirby'   => $system->exposedFileUrl('kirby'),
-						'site'    => $system->exposedFileUrl('site')
-					]
+					'urls'        => $sensitive ?? null
 				]
 			];
 		}

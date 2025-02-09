@@ -222,7 +222,7 @@ class SystemTest extends TestCase
 		Dir::make(static::TMP . '/kirby');
 
 		$this->assertSame('/kirby', $system->folderUrl('kirby'));
-		$this->assertSame('/kirby/composer.json', $system->exposedFileUrl('kirby'));
+		$this->assertSame('/kirby/LICENSE.md', $system->exposedFileUrl('kirby'));
 	}
 
 	/**
