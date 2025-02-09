@@ -194,6 +194,7 @@ export default {
 	background: var(--color-backdrop);
 	display: var(--menu-display-backdrop);
 	pointer-events: none;
+	z-index: var(--z-drawer);
 }
 
 /* The toggle button builds a full-height strip on the side of the menu */
