@@ -3,15 +3,11 @@
 namespace Kirby\Http;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Http\Path
- */
+#[CoversClass(Path::class)]
 class PathTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructWithArray()
 	{
 		$path = new Path(['docs', 'reference']);
@@ -21,9 +17,6 @@ class PathTest extends TestCase
 		$this->assertSame('reference', $path->last());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructWithString()
 	{
 		$path = new Path('/docs/reference');
@@ -33,10 +26,6 @@ class PathTest extends TestCase
 		$this->assertSame('reference', $path->last());
 	}
 
-	/**
-	 * @covers ::__toString
-	 * @covers ::toString
-	 */
 	public function testToString()
 	{
 		$path = new Path('/docs/reference');
@@ -45,20 +34,12 @@ class PathTest extends TestCase
 		$this->assertSame('docs/reference', (string)$path);
 	}
 
-	/**
-	 * @covers ::__toString
-	 * @covers ::toString
-	 */
 	public function testToStringWithLeadingSlash()
 	{
 		$path = new Path('/docs/reference');
 		$this->assertSame('/docs/reference', $path->toString(true));
 	}
 
-	/**
-	 * @covers ::__toString
-	 * @covers ::toString
-	 */
 	public function testToStringWithLeadingAndTrailingSlash()
 	{
 		$path = new Path('/docs/reference');

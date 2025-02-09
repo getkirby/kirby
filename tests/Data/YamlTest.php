@@ -4,18 +4,12 @@ namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\Yaml
- */
+#[CoversClass(Yaml::class)]
+#[CoversClass(YamlSpyc::class)]
 class YamlTest extends TestCase
 {
-	/**
-	 * @covers ::encode
-	 * @covers ::decode
-	 * @covers \Kirby\Data\YamlSpyc::encode
-	 * @covers \Kirby\Data\YamlSpyc::decode
-	 */
 	public function testEncodeDecode()
 	{
 		$array = [
@@ -39,10 +33,6 @@ class YamlTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Yaml::decode(['this is' => 'an array']));
 	}
 
-	/**
-	 * @covers ::decode
-	 * @covers \Kirby\Data\YamlSpyc::decode
-	 */
 	public function testDecodeInvalid1()
 	{
 		// pass invalid object
@@ -51,10 +41,6 @@ class YamlTest extends TestCase
 		Yaml::decode(new \stdClass());
 	}
 
-	/**
-	 * @covers ::decode
-	 * @covers \Kirby\Data\YamlSpyc::decode
-	 */
 	public function testDecodeInvalid2()
 	{
 		// pass invalid int
@@ -63,10 +49,6 @@ class YamlTest extends TestCase
 		Yaml::decode(1);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers \Kirby\Data\YamlSpyc::encode
-	 */
 	public function testEncodeFloat()
 	{
 		$data = Yaml::encode([
@@ -76,10 +58,6 @@ class YamlTest extends TestCase
 		$this->assertSame('number: 3.2' . PHP_EOL, $data);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers \Kirby\Data\YamlSpyc::encode
-	 */
 	public function testEncodeFloatWithNonUSLocale()
 	{
 		$locale = setlocale(LC_ALL, 0);
@@ -95,10 +73,6 @@ class YamlTest extends TestCase
 		setlocale(LC_ALL, $locale);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers \Kirby\Data\YamlSpyc::encode
-	 */
 	public function testEncodeNodeTypes()
 	{
 		$data = Yaml::encode(['test' => '']);

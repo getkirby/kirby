@@ -9,6 +9,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FileRulesTest extends TestCase
 {
@@ -523,10 +524,8 @@ class FileRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider extensionProvider
-	 */
-	public function testValidExtension($extension, $expected, $message = null)
+	#[DataProvider('extensionProvider')]
+	public function testValidExtension(string $extension, bool $expected, string|null $message = null)
 	{
 		$file = $this->createMock(File::class);
 		$file->method('filename')->willReturn('test');
@@ -582,10 +581,8 @@ class FileRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
-	public function testValidFile($filename, $extension, $mime, $expected, $message = null)
+	#[DataProvider('fileProvider')]
+	public function testValidFile(string $filename, string $extension, string $mime, bool $expected, string|null $message = null)
 	{
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
@@ -636,10 +633,8 @@ class FileRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider filenameProvider
-	 */
-	public function testValidFilename($filename, $expected, $message = null)
+	#[DataProvider('filenameProvider')]
+	public function testValidFilename(string $filename, bool $expected, string|null $message = null)
 	{
 		$file = $this->createMock(File::class);
 		$file->method('filename')->willReturn($filename);
@@ -666,10 +661,8 @@ class FileRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider mimeProvider
-	 */
-	public function testValidMime($mime, $expected, $message = null)
+	#[DataProvider('mimeProvider')]
+	public function testValidMime(string $mime, bool $expected, string|null $message = null)
 	{
 		$file = $this->createMock(File::class);
 		$file->method('filename')->willReturn('test');

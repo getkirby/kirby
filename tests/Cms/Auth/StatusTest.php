@@ -5,11 +5,9 @@ namespace Kirby\Cms\Auth;
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth\Status
- * @covers ::__construct
- */
+#[CoversClass(Status::class)]
 class StatusTest extends TestCase
 {
 	public function setUp(): void
@@ -27,9 +25,6 @@ class StatusTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::__toString
-	 */
 	public function testToString()
 	{
 		$status = new Status([
@@ -40,9 +35,6 @@ class StatusTest extends TestCase
 		$this->assertSame('active', (string)$status);
 	}
 
-	/**
-	 * @covers ::challenge
-	 */
 	public function testChallenge()
 	{
 		// no challenge when not in pending status
@@ -82,9 +74,6 @@ class StatusTest extends TestCase
 		$this->assertNull($status->challenge(false));
 	}
 
-	/**
-	 * @covers ::email
-	 */
 	public function testEmail()
 	{
 		$status = new Status([
@@ -101,9 +90,6 @@ class StatusTest extends TestCase
 		$this->assertSame('homer@simpsons.com', $status->email());
 	}
 
-	/**
-	 * @covers ::status
-	 */
 	public function testStatus()
 	{
 		$status = new Status([
@@ -138,9 +124,6 @@ class StatusTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray()
 	{
 		$status = new Status([
@@ -158,9 +141,6 @@ class StatusTest extends TestCase
 		], $status->toArray());
 	}
 
-	/**
-	 * @covers ::user
-	 */
 	public function testUser()
 	{
 		// only return active users

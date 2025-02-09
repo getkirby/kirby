@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class RadioFieldTest extends TestCase
 {
 	public function testDefaultProps()
@@ -26,10 +28,8 @@ class RadioFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider valueInputProvider
-	 */
-	public function testValue($input, $expected)
+	#[DataProvider('valueInputProvider')]
+	public function testValue(string $input, string $expected)
 	{
 		$field = $this->field('radio', [
 			'options' => [

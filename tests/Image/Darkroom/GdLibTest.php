@@ -5,6 +5,7 @@ namespace Kirby\Image\Darkroom;
 use claviska\SimpleImage;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionMethod;
 
 class SimpleImageMock extends SimpleImage
@@ -19,9 +20,7 @@ class SimpleImageMock extends SimpleImage
 }
 
 
-/**
- * @coversDefaultClass \Kirby\Image\Darkroom\GdLib
- */
+#[CoversClass(GdLib::class)]
 class GdLibTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/../fixtures/image';
@@ -59,9 +58,6 @@ class GdLibTest extends TestCase
 		], $gd->process($file));
 	}
 
-	/**
-	 * @covers ::mime
-	 */
 	public function testProcessWithFormat()
 	{
 		$gd = new GdLib(['format' => 'webp']);
@@ -69,9 +65,6 @@ class GdLibTest extends TestCase
 		$this->assertSame('webp', $gd->process($file)['format']);
 	}
 
-	/**
-	 * @covers ::sharpen
-	 */
 	public function testSharpen()
 	{
 		$gd = new GdLib();
@@ -88,9 +81,6 @@ class GdLibTest extends TestCase
 		$this->assertSame(50, $result->sharpen);
 	}
 
-	/**
-	 * @covers ::sharpen
-	 */
 	public function testSharpenWithoutValue()
 	{
 		$gd = new GdLib();

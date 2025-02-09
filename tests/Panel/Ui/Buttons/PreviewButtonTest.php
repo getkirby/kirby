@@ -3,15 +3,11 @@
 namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\PreviewButton
- */
+#[CoversClass(PreviewButton::class)]
 class PreviewButtonTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
 	public function testButton()
 	{
 		$button = new PreviewButton(link: 'https://getkirby.com');

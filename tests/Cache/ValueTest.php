@@ -3,16 +3,11 @@
 namespace Kirby\Cache;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cache\Value
- */
+#[CoversClass(Value::class)]
 class ValueTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::created
-	 */
 	public function testCreated()
 	{
 		$value = new Value('foo');
@@ -22,9 +17,6 @@ class ValueTest extends TestCase
 		$this->assertSame(1000, $value->created());
 	}
 
-	/**
-	 * @covers ::expires
-	 */
 	public function testExpires()
 	{
 		$value = new Value('foo');
@@ -46,10 +38,6 @@ class ValueTest extends TestCase
 		$this->assertSame(1234567890, $value->expires());
 	}
 
-	/**
-	 * @covers ::fromArray
-	 * @covers ::toArray
-	 */
 	public function testArrayConversion()
 	{
 		$data = [
@@ -106,9 +94,6 @@ class ValueTest extends TestCase
 		], $value->toArray());
 	}
 
-	/**
-	 * @covers ::fromArray
-	 */
 	public function testFromArrayInvalid()
 	{
 		$this->expectException(\TypeError::class);
@@ -121,10 +106,6 @@ class ValueTest extends TestCase
 		$value = Value::fromArray($data);
 	}
 
-	/**
-	 * @covers ::fromJson
-	 * @covers ::toJson
-	 */
 	public function testJsonConversion()
 	{
 		$data = json_encode([
@@ -179,9 +160,6 @@ class ValueTest extends TestCase
 		$this->assertNull(Value::fromJson($data));
 	}
 
-	/**
-	 * @covers ::value
-	 */
 	public function testValue()
 	{
 		$value = new Value('foo');

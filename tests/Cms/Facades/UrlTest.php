@@ -3,10 +3,9 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Url
- */
+#[CoversClass(Url::class)]
 class UrlTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Url';
@@ -28,9 +27,6 @@ class UrlTest extends TestCase
 		$this->assertSame('https://getkirby.com', Url::home());
 	}
 
-	/**
-	 * @covers ::slug
-	 */
 	public function testSlug()
 	{
 		// default length

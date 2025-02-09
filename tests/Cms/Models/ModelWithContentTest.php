@@ -10,6 +10,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @coversDefaultClass \Kirby\Cms\ModelWithContent
@@ -259,9 +260,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Original Title', $page->content()->title()->value());
 	}
 
-	/**
-	 * @dataProvider modelsProvider
-	 */
+	#[DataProvider('modelsProvider')]
 	public function testBlueprints(ModelWithContent $model)
 	{
 		$model = new BlueprintsModelWithContent($model);

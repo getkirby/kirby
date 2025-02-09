@@ -4,10 +4,10 @@ namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
 use Kirby\Toolkit\Dom;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Parsley\Schema\Blocks
- */
+#[CoversClass(Blocks::class)]
 class BlocksTest extends TestCase
 {
 	public function setUp(): void
@@ -104,9 +104,6 @@ class BlocksTest extends TestCase
 		return $this->assertSame($expected, $this->schema->blockquote($element));
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallback()
 	{
 		$expected = [
@@ -119,9 +116,6 @@ class BlocksTest extends TestCase
 		return $this->assertSame($expected, $this->schema->fallback('Test'));
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallbackForDomElement()
 	{
 		$dom = new Dom('<p><b>Bold</b> <i>Italic</i></p>');
@@ -143,9 +137,6 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $fallback);
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallbackForDomElementWithParagraphs()
 	{
 		$dom = new Dom('<div><p>A</p><p>B</p></div>');
@@ -167,17 +158,11 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $fallback);
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallbackForEmptyContent()
 	{
 		return $this->assertNull($this->schema->fallback(''));
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallbackForInvalidContent()
 	{
 		return $this->assertNull($this->schema->fallback(''));
@@ -210,10 +195,8 @@ class BlocksTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider headingLevelProvider
-	 */
-	public function testHeadingLevel($level)
+	#[DataProvider('headingLevelProvider')]
+	public function testHeadingLevel(string $level)
 	{
 		$html = <<<HTML
 			<$level>
@@ -588,9 +571,6 @@ class BlocksTest extends TestCase
 		return $this->assertSame($expected, $this->schema->pre($element));
 	}
 
-	/**
-	 * @covers ::skip
-	 */
 	public function testSkip()
 	{
 		return $this->assertSame([

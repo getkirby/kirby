@@ -3,10 +3,10 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \Kirby\Sane\Xml
- */
+#[CoversClass(Xml::class)]
 class XmlTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Xml';
@@ -18,9 +18,7 @@ class XmlTest extends TestCase
 		Xml::$allowedDomains = true;
 	}
 
-	/**
-	 * @dataProvider allowedProvider
-	 */
+	#[DataProvider('allowedProvider')]
 	public function testAllowed(string $file)
 	{
 		$fixture = $this->fixture($file);
@@ -48,9 +46,7 @@ class XmlTest extends TestCase
 		$this->assertStringEqualsFile($fixture, $sanitized);
 	}
 
-	/**
-	 * @dataProvider invalidProvider
-	 */
+	#[DataProvider('invalidProvider')]
 	public function testInvalid(string $file)
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -201,7 +197,6 @@ class XmlTest extends TestCase
 	{
 		$fixture   = $this->fixture('disallowed/namespace-xhtml-1.xml');
 		$sanitized = $this->fixture('sanitized/namespace-xhtml-1.xml');
-
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
 		$this->expectException(InvalidArgumentException::class);

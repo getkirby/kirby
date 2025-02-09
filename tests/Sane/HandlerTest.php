@@ -4,20 +4,15 @@ namespace Kirby\Sane;
 
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Sane\Handler
- */
+#[CoversClass(Handler::class)]
 class HandlerTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Handler';
 
 	protected static string $type = 'sane';
 
-	/**
-	 * @covers ::sanitizeFile
-	 * @covers ::readFile
-	 */
 	public function testSanitizeFile()
 	{
 		$expected = $this->fixture('doctype-valid.svg');
@@ -42,10 +37,6 @@ class HandlerTest extends TestCase
 		$this->assertFileEquals($expected, $tmp);
 	}
 
-	/**
-	 * @covers ::sanitizeFile
-	 * @covers ::readFile
-	 */
 	public function testSanitizeFileMissing()
 	{
 		$file = $this->fixture('does-not-exist.svg');
@@ -56,10 +47,6 @@ class HandlerTest extends TestCase
 		CustomHandler::sanitizeFile($file);
 	}
 
-	/**
-	 * @covers ::validateFile
-	 * @covers ::readFile
-	 */
 	public function testValidateFile()
 	{
 		$this->assertNull(
@@ -67,10 +54,6 @@ class HandlerTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::validateFile
-	 * @covers ::readFile
-	 */
 	public function testValidateFileError()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -79,10 +62,6 @@ class HandlerTest extends TestCase
 		CustomHandler::validateFile($this->fixture('external-source-1.svg'));
 	}
 
-	/**
-	 * @covers ::validateFile
-	 * @covers ::readFile
-	 */
 	public function testValidateFileErrorExternalFile()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -91,10 +70,6 @@ class HandlerTest extends TestCase
 		CustomHandler::validateFile($this->fixture('xlink-subfolder.svg'));
 	}
 
-	/**
-	 * @covers ::validateFile
-	 * @covers ::readFile
-	 */
 	public function testValidateFileMissing()
 	{
 		$file = $this->fixture('does-not-exist.svg');

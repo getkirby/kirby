@@ -3,18 +3,12 @@
 namespace Kirby\Template;
 
 use Kirby\Exception\LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionProperty;
 
-/**
- * @coversDefaultClass \Kirby\Template\Slot
- */
+#[CoversClass(Slot::class)]
 class SlotTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::isOpen
-	 * @covers ::name
-	 */
 	public function testConstruct()
 	{
 		$slot = new Slot('test');
@@ -26,10 +20,6 @@ class SlotTest extends TestCase
 		$this->assertSame('', $slot->__toString());
 	}
 
-	/**
-	 * @covers ::begin
-	 * @covers ::end
-	 */
 	public function testHelpers()
 	{
 		$this->assertNull(Snippet::$current);
@@ -54,10 +44,6 @@ class SlotTest extends TestCase
 		$this->assertCount(1, $slotsProp->getValue($snippet));
 	}
 
-	/**
-	 * @covers ::open
-	 * @covers ::close
-	 */
 	public function testOpenClose()
 	{
 		// all output must be captured
@@ -77,9 +63,6 @@ class SlotTest extends TestCase
 		$this->assertSame($content, $slot->content);
 	}
 
-	/**
-	 * @covers ::close
-	 */
 	public function testCloseWhenNotOpen()
 	{
 		$slot = new Slot('test');
@@ -90,10 +73,6 @@ class SlotTest extends TestCase
 		$slot->close();
 	}
 
-	/**
-	 * @covers ::render
-	 * @covers ::__toString
-	 */
 	public function testRender()
 	{
 		// all output must be captured

@@ -3,12 +3,11 @@
 namespace Kirby\Exception;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
 class DuplicateExceptionTest extends TestCase
 {
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testDefaults()
 	{
 		$exception = new DuplicateException();

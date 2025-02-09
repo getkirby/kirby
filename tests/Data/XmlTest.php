@@ -5,16 +5,11 @@ namespace Kirby\Data;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\Xml
- */
+#[CoversClass(Xml::class)]
 class XmlTest extends TestCase
 {
-	/**
-	 * @covers ::encode
-	 * @covers ::decode
-	 */
 	public function testEncodeDecode()
 	{
 		$array = [
@@ -46,9 +41,6 @@ class XmlTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Xml::decode(['this is' => 'an array']));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeInvalid1()
 	{
 		// pass invalid object
@@ -57,9 +49,6 @@ class XmlTest extends TestCase
 		Xml::decode(new \stdClass());
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeInvalid2()
 	{
 		// pass invalid int
@@ -68,18 +57,12 @@ class XmlTest extends TestCase
 		Xml::decode(1);
 	}
 
-	/**
-	 * @covers ::encode
-	 */
 	public function testEncodeScalar()
 	{
 		$expected = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<data>test</data>';
 		$this->assertSame($expected, Xml::encode('test'));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeCorrupted()
 	{
 		$this->expectException(Exception::class);

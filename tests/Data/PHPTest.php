@@ -6,19 +6,14 @@ use Exception;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\PHP
- */
+#[CoversClass(PHP::class)]
 class PHPTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/php';
 	public const TMP      = KIRBY_TMP_DIR . '/Data.PHP';
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeArray
-	 */
 	public function testEncode()
 	{
 		$input    = static::FIXTURES . '/input.php';
@@ -32,9 +27,6 @@ class PHPTest extends TestCase
 		$this->assertSame('123', PHP::encode(123));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecode()
 	{
 		$this->expectException(BadMethodCallException::class);
@@ -44,9 +36,6 @@ class PHPTest extends TestCase
 		$result = PHP::decode($input);
 	}
 
-	/**
-	 * @covers ::read
-	 */
 	public function testRead()
 	{
 		$input  = static::FIXTURES . '/input.php';
@@ -55,9 +44,6 @@ class PHPTest extends TestCase
 		$this->assertSame($result, include $input);
 	}
 
-	/**
-	 * @covers ::read
-	 */
 	public function testReadFileMissing()
 	{
 		$file = static::TMP . '/does-not-exist.php';
@@ -68,9 +54,6 @@ class PHPTest extends TestCase
 		PHP::read($file);
 	}
 
-	/**
-	 * @covers ::write
-	 */
 	public function testWrite()
 	{
 		$input = include static::FIXTURES . '/input.php';

@@ -3,10 +3,9 @@
 namespace Kirby\Cache;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cache\MemCached
- */
+#[CoversClass(MemCached::class)]
 class MemCachedTest extends TestCase
 {
 	public function setUp(): void
@@ -30,9 +29,6 @@ class MemCachedTest extends TestCase
 		$connection->flush();
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
 	public function testEnabled()
 	{
 		$cache = new MemCached();
@@ -40,11 +36,6 @@ class MemCachedTest extends TestCase
 		$this->assertTrue($cache->enabled());
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
 	public function testOperations()
 	{
 		$cache = new MemCached([]);
@@ -64,11 +55,6 @@ class MemCachedTest extends TestCase
 		$this->assertFalse($cache->remove('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
 	public function testOperationsWithPrefix()
 	{
 		$cache1 = new MemCached([
@@ -98,9 +84,6 @@ class MemCachedTest extends TestCase
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructServer()
 	{
 		$cache = new MemCached([
@@ -120,9 +103,6 @@ class MemCachedTest extends TestCase
 		$this->assertFalse($cache->remove('foo'));
 	}
 
-	/**
-	 * @covers ::flush
-	 */
 	public function testFlush()
 	{
 		$cache = new MemCached([]);

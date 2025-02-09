@@ -8,10 +8,9 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Assets
- */
+#[CoversClass(Assets::class)]
 class AssetsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Assets';
@@ -74,9 +73,6 @@ class AssetsTest extends TestCase
 		F::write($app->roots()->panel() . '/.vite-running', '');
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCss(): void
 	{
 		// default asset setup
@@ -89,9 +85,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('/media/plugins/index.css?0', $css['plugins']);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssInDevMode(): void
 	{
 		$this->setDevMode();
@@ -103,10 +96,6 @@ class AssetsTest extends TestCase
 		$this->assertSame(['plugins' => '/media/plugins/index.css?0'], $css);
 	}
 
-	/**
-	 * @covers ::css
-	 * @covers ::custom
-	 */
 	public function testCssWithCustomFile(): void
 	{
 		F::write(static::TMP . '/panel.css', '');
@@ -141,9 +130,6 @@ class AssetsTest extends TestCase
 		$this->assertSame($url, $assets['custom-2']);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithCustomFileMissing(): void
 	{
 		$this->app->clone([
@@ -158,9 +144,6 @@ class AssetsTest extends TestCase
 		$this->assertEmpty($assets->custom('panel.css'));
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithCustomUrl(): void
 	{
 		$this->setCustomUrl();
@@ -174,10 +157,6 @@ class AssetsTest extends TestCase
 		$this->assertSame(['plugins' => '/media/plugins/index.css?0'], $css);
 	}
 
-	/**
-	 * @covers ::external
-	 * @covers ::custom
-	 */
 	public function testExternalWithCustomCssJs(): void
 	{
 		// custom panel css and js
@@ -201,9 +180,6 @@ class AssetsTest extends TestCase
 		$this->assertTrue(Str::contains($external['js']['custom-0']['src'], 'assets/panel.js'));
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFavicons(): void
 	{
 		// default asset setup
@@ -219,9 +195,6 @@ class AssetsTest extends TestCase
 		$this->assertSame($base . '/favicon-dark.png', $favicons[4]['href']);
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFaviconsInDevMode(): void
 	{
 		$this->setDevMode();
@@ -237,9 +210,6 @@ class AssetsTest extends TestCase
 		$this->assertSame($base . '/favicon-dark.png', $favicons[4]['href']);
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFaviconsWithCustomArraySetup(): void
 	{
 		// array
@@ -271,9 +241,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('/assets/my-favicon.png', $favicons[1]['href']);
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFaviconsWithCustomStringSetup(): void
 	{
 		// array
@@ -295,9 +262,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('/assets/favicon.ico', $favicons[0]['href']);
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFaviconsWithCustomInvalidSetup(): void
 	{
 		// array
@@ -317,9 +281,6 @@ class AssetsTest extends TestCase
 		$assets->favicons();
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFaviconsWithCustomUrl(): void
 	{
 		$this->setCustomUrl();
@@ -335,9 +296,6 @@ class AssetsTest extends TestCase
 		$this->assertSame($base . '/favicon.svg', $favicons[2]['href']);
 	}
 
-	/**
-	 * @covers ::icons
-	 */
 	public function testIcons(): void
 	{
 		$assets = new Assets();
@@ -347,9 +305,6 @@ class AssetsTest extends TestCase
 		$this->assertTrue(str_contains($icons, '<svg'));
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJs(): void
 	{
 		// default asset setup
@@ -373,9 +328,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('module', $js['index']['type']);
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsInDevMode(): void
 	{
 		$this->setDevMode();
@@ -393,9 +345,6 @@ class AssetsTest extends TestCase
 		], array_map(fn ($js) => $js['src'], $js));
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsWithCustomFile(): void
 	{
 		F::write(static::TMP . '/panel.js', '');
@@ -431,9 +380,6 @@ class AssetsTest extends TestCase
 		$this->assertSame($url, $assets['custom-2']);
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsWithCustomFileMissing(): void
 	{
 		$this->app->clone([
@@ -448,9 +394,6 @@ class AssetsTest extends TestCase
 		$this->assertEmpty($assets->custom('panel.js'));
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsWithCustomUrl(): void
 	{
 		$this->setCustomUrl();
@@ -470,9 +413,6 @@ class AssetsTest extends TestCase
 		], array_map(fn ($js) => $js['src'], $js));
 	}
 
-	/**
-	 * @covers ::link
-	 */
 	public function testLink(): void
 	{
 		$assets = new Assets();

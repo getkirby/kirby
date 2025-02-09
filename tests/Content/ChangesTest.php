@@ -6,10 +6,9 @@ use Kirby\Cache\Cache;
 use Kirby\Cms\App;
 use Kirby\TestCase;
 use Kirby\Uuid\Uuids;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\Changes
- */
+#[CoversClass(Changes::class)]
 class ChangesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.Changes';
@@ -57,9 +56,6 @@ class ChangesTest extends TestCase
 		parent::tearDownTmp();
 	}
 
-	/**
-	 * @covers ::cache
-	 */
 	public function testCache()
 	{
 		$cache = $this->app->cache('changes');
@@ -67,10 +63,6 @@ class ChangesTest extends TestCase
 		$this->assertInstanceOf(Cache::class, $cache);
 	}
 
-	/**
-	 * @covers ::files
-	 * @covers ::ensure
-	 */
 	public function testFiles()
 	{
 		$this->app->cache('changes')->set('files', $cache = [
@@ -92,9 +84,6 @@ class ChangesTest extends TestCase
 		$this->assertSame('test/test.jpg', $changes->files()->first()->id());
 	}
 
-	/**
-	 * @covers ::cacheKey
-	 */
 	public function testCacheKey()
 	{
 		$changes = new Changes();
@@ -108,10 +97,6 @@ class ChangesTest extends TestCase
 		$this->assertSame('users', $changes->cacheKey($user));
 	}
 
-	/**
-	 * @covers ::cacheExists
-	 * @covers ::generateCache
-	 */
 	public function testGenerateCache()
 	{
 		$changes = new Changes();
@@ -143,10 +128,6 @@ class ChangesTest extends TestCase
 		$this->assertSame(['user://test'], $changes->read('users'));
 	}
 
-	/**
-	 * @covers ::pages
-	 * @covers ::ensure
-	 */
 	public function testPages()
 	{
 		$this->app->cache('changes')->set('pages', $cache = [
@@ -168,9 +149,6 @@ class ChangesTest extends TestCase
 		$this->assertSame('test', $changes->pages()->first()->id());
 	}
 
-	/**
-	 * @covers ::read
-	 */
 	public function testRead()
 	{
 		$this->app->cache('changes')->set('files', [
@@ -192,9 +170,6 @@ class ChangesTest extends TestCase
 		$this->assertSame(['user://test'], $changes->read('users'));
 	}
 
-	/**
-	 * @covers ::track
-	 */
 	public function testTrack()
 	{
 		$changes = new Changes();
@@ -216,9 +191,6 @@ class ChangesTest extends TestCase
 		$this->assertSame('user://test', $users[0]);
 	}
 
-	/**
-	 * @covers ::track
-	 */
 	public function testTrackDisabledUuids()
 	{
 		$this->app = $this->app->clone([
@@ -248,9 +220,6 @@ class ChangesTest extends TestCase
 		$this->assertSame('test', $users[0]);
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdate()
 	{
 		$changes = new Changes();
@@ -280,9 +249,6 @@ class ChangesTest extends TestCase
 		$this->assertCount(0, $changes->read('users'));
 	}
 
-	/**
-	 * @covers ::untrack
-	 */
 	public function testUntrack()
 	{
 		$changes = new Changes();
@@ -304,9 +270,6 @@ class ChangesTest extends TestCase
 		$this->assertCount(0, $changes->read('users'));
 	}
 
-	/**
-	 * @covers ::untrack
-	 */
 	public function testUntrackDisabledUuids()
 	{
 		$this->app = $this->app->clone([
@@ -336,10 +299,6 @@ class ChangesTest extends TestCase
 		$this->assertCount(0, $changes->read('users'));
 	}
 
-	/**
-	 * @covers ::users
-	 * @covers ::ensure
-	 */
 	public function testUsers()
 	{
 		$this->app->cache('changes')->set('users', $cache = [

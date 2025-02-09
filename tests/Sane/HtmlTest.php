@@ -3,20 +3,20 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
- * @covers \Kirby\Sane\Html
  * @todo Add more tests from DOMPurify and the other test classes
  */
+#[CoversClass(Html::class)]
 class HtmlTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Html';
 
 	protected static string $type = 'html';
 
-	/**
-	 * @dataProvider allowedProvider
-	 */
+	#[DataProvider('allowedProvider')]
 	public function testAllowed(string $file)
 	{
 		$fixture = $this->fixture($file);

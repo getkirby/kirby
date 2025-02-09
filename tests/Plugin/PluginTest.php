@@ -8,11 +8,9 @@ use Kirby\Cms\System\UpdateStatus;
 use Kirby\Cms\TestCase;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Plugin\Plugin
- * @covers ::__construct
- */
+#[CoversClass(Plugin::class)]
 class PluginTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -56,9 +54,6 @@ class PluginTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::__call
-	 */
 	public function test__call()
 	{
 		$plugin = new Plugin(
@@ -69,9 +64,6 @@ class PluginTest extends TestCase
 		$this->assertSame('https://getkirby.com', $plugin->homepage());
 	}
 
-	/**
-	 * @covers ::asset
-	 */
 	public function testAsset()
 	{
 		$root   = static::FIXTURES . '/plugin-assets';
@@ -89,9 +81,6 @@ class PluginTest extends TestCase
 		$this->assertSame($b, $plugin->asset('d.css')->root());
 	}
 
-	/**
-	 * @covers ::assets
-	 */
 	public function testAssets()
 	{
 		$root = static::FIXTURES . '/plugin-assets';
@@ -111,9 +100,6 @@ class PluginTest extends TestCase
 		$this->assertSame($root . '/a.css', $plugin->asset('c.css')->root());
 	}
 
-	/**
-	 * @covers ::authors
-	 */
 	public function testAuthors()
 	{
 		$plugin = new Plugin(
@@ -135,9 +121,6 @@ class PluginTest extends TestCase
 		$this->assertSame($authors, $plugin->authors());
 	}
 
-	/**
-	 * @covers ::authorsNames
-	 */
 	public function testAuthorsNames()
 	{
 		$plugin = new Plugin(
@@ -148,9 +131,6 @@ class PluginTest extends TestCase
 		$this->assertSame('A, B', $plugin->authorsNames());
 	}
 
-	/**
-	 * @covers ::extends
-	 */
 	public function testExtends()
 	{
 		$plugin = new Plugin(
@@ -165,18 +145,12 @@ class PluginTest extends TestCase
 		$this->assertSame($extends, $plugin->extends());
 	}
 
-	/**
-	 * @covers ::id
-	 */
 	public function testId()
 	{
 		$plugin = new Plugin($id = 'abc-1234/DEF-56789');
 		$this->assertSame($id, $plugin->id());
 	}
 
-	/**
-	 * @covers ::info
-	 */
 	public function testInfo()
 	{
 		$plugin = new Plugin(
@@ -203,9 +177,6 @@ class PluginTest extends TestCase
 		$this->assertSame($authors, $plugin->info()['authors']);
 	}
 
-	/**
-	 * @covers ::info
-	 */
 	public function testInfoFromProps()
 	{
 		$plugin = new Plugin(
@@ -229,9 +200,6 @@ class PluginTest extends TestCase
 		$this->assertSame('A, B', $plugin->authorsNames());
 	}
 
-	/**
-	 * @covers ::info
-	 */
 	public function testInfoFromPropAndManifest()
 	{
 		$plugin = new Plugin(
@@ -248,9 +216,6 @@ class PluginTest extends TestCase
 		$this->assertSame('5.3.0', $plugin->version());
 	}
 
-	/**
-	 * @covers ::info
-	 */
 	public function testInfoWhenEmpty()
 	{
 		$plugin = new Plugin(
@@ -274,9 +239,6 @@ class PluginTest extends TestCase
 		$this->assertSame('mit', $plugin->license()->name());
 	}
 
-	/**
-	 * @covers ::link
-	 */
 	public function testLinkFromHomepage()
 	{
 		$plugin = new Plugin(
@@ -289,9 +251,6 @@ class PluginTest extends TestCase
 		$this->assertSame('https://getkirby.com', $plugin->link());
 	}
 
-	/**
-	 * @covers ::link
-	 */
 	public function testLinkFromInvalidHomepage()
 	{
 		$plugin = new Plugin(
@@ -304,9 +263,6 @@ class PluginTest extends TestCase
 		$this->assertNull($plugin->link());
 	}
 
-	/**
-	 * @covers ::link
-	 */
 	public function testLinkFromSupportDocs()
 	{
 		$plugin = new Plugin(
@@ -321,9 +277,6 @@ class PluginTest extends TestCase
 		$this->assertSame('https://getkirby.com', $plugin->link());
 	}
 
-	/**
-	 * @covers ::link
-	 */
 	public function testLinkFromSupportSource()
 	{
 		$plugin = new Plugin(
@@ -338,18 +291,12 @@ class PluginTest extends TestCase
 		$this->assertSame('https://getkirby.com', $plugin->link());
 	}
 
-	/**
-	 * @covers ::link
-	 */
 	public function testLinkWhenEmpty()
 	{
 		$plugin = new Plugin('getkirby/test-plugin');
 		$this->assertNull($plugin->link());
 	}
 
-	/**
-	 * @covers ::mediaRoot
-	 */
 	public function testMediaRoot()
 	{
 		$this->app->clone([
@@ -363,9 +310,6 @@ class PluginTest extends TestCase
 		$this->assertSame($media . '/plugins/getkirby/test-plugin', $plugin->mediaRoot());
 	}
 
-	/**
-	 * @covers ::mediaUrl
-	 */
 	public function testMediaUrl()
 	{
 		$this->app->clone([
@@ -379,9 +323,6 @@ class PluginTest extends TestCase
 		$this->assertSame('/media/plugins/getkirby/test-plugin', $plugin->mediaUrl());
 	}
 
-	/**
-	 * @covers ::manifest
-	 */
 	public function testManifest()
 	{
 		$plugin = new Plugin(
@@ -392,29 +333,18 @@ class PluginTest extends TestCase
 		$this->assertSame(__DIR__ . '/composer.json', $plugin->manifest());
 	}
 
-	/**
-	 * @covers ::name
-	 * @covers ::validateName
-	 */
 	public function testName()
 	{
 		$plugin = new Plugin($name = 'abc-1234/DEF-56789');
 		$this->assertSame($name, $plugin->name());
 	}
 
-	/**
-	 * @covers ::name
-	 * @covers ::validateName
-	 */
 	public function testNameWithInvalidInput()
 	{
 		$this->expectException(InvalidArgumentException::class);
 		new Plugin('äöü/!!!');
 	}
 
-	/**
-	 * @covers ::option
-	 */
 	public function testOption()
 	{
 		App::plugin(
@@ -432,27 +362,18 @@ class PluginTest extends TestCase
 		$this->assertSame('bar', $app->option('developer.plugin.foo'));
 	}
 
-	/**
-	 * @covers ::prefix
-	 */
 	public function testPrefix()
 	{
 		$plugin = new Plugin('getkirby/test-plugin');
 		$this->assertSame('getkirby.test-plugin', $plugin->prefix());
 	}
 
-	/**
-	 * @covers ::root
-	 */
 	public function testRoot()
 	{
 		$plugin = new Plugin('getkirby/test-plugin');
 		$this->assertSame(__DIR__, $plugin->root());
 	}
 
-	/**
-	 * @covers ::root
-	 */
 	public function testRootWithCustomSetup()
 	{
 		$plugin = new Plugin(
@@ -463,9 +384,6 @@ class PluginTest extends TestCase
 		$this->assertSame($custom, $plugin->root());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray()
 	{
 		$plugin = new Plugin(
@@ -501,9 +419,6 @@ class PluginTest extends TestCase
 		$this->assertSame($expected, $plugin->toArray());
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatus()
 	{
 		$plugin = new Plugin(
@@ -524,9 +439,6 @@ class PluginTest extends TestCase
 		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusWithPrefix()
 	{
 		$plugin = new Plugin(
@@ -547,9 +459,6 @@ class PluginTest extends TestCase
 		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusWithoutVersion()
 	{
 		$plugin = new Plugin(
@@ -572,9 +481,6 @@ class PluginTest extends TestCase
 		$this->assertSame([], $updateStatus->exceptionMessages());
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusUnknownPlugin()
 	{
 		$plugin = new Plugin(
@@ -600,9 +506,6 @@ class PluginTest extends TestCase
 		], $updateStatus->exceptionMessages());
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusDisabled1()
 	{
 		$this->app->clone([
@@ -622,9 +525,6 @@ class PluginTest extends TestCase
 		$this->assertNull($updateStatus);
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusDisabled2()
 	{
 		$this->app->clone([
@@ -650,9 +550,6 @@ class PluginTest extends TestCase
 		$this->assertNull($updateStatus);
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusDisabled3()
 	{
 		$this->app->clone([
@@ -671,9 +568,6 @@ class PluginTest extends TestCase
 		$this->assertNull($updateStatus);
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusDisabled4()
 	{
 		// the plugin update check does not support the
@@ -696,9 +590,6 @@ class PluginTest extends TestCase
 		$this->assertNull($updateStatus);
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusNoCustomConfig()
 	{
 		$this->app->clone([
@@ -729,9 +620,6 @@ class PluginTest extends TestCase
 		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusCustomData()
 	{
 		$plugin = new Plugin(
@@ -768,9 +656,6 @@ class PluginTest extends TestCase
 		$this->assertSame('https://other-domain.com/releases/87654', $updateStatus->url());
 	}
 
-	/**
-	 * @covers ::version
-	 */
 	public function testVersion()
 	{
 		$plugin = new Plugin(
@@ -781,9 +666,6 @@ class PluginTest extends TestCase
 		$this->assertSame('1.0.0', $plugin->version());
 	}
 
-	/**
-	 * @covers ::version
-	 */
 	public function testVersionFromArgument()
 	{
 		$plugin = new Plugin(
@@ -795,9 +677,6 @@ class PluginTest extends TestCase
 		$this->assertSame('1.2.0', $plugin->version());
 	}
 
-	/**
-	 * @covers ::version
-	 */
 	public function testVersionFromInfo()
 	{
 		$plugin = new Plugin(
@@ -811,9 +690,6 @@ class PluginTest extends TestCase
 		$this->assertSame('1.1.0', $plugin->version());
 	}
 
-	/**
-	 * @covers ::version
-	 */
 	public function testVersionMissing()
 	{
 		$plugin = new Plugin(
@@ -824,9 +700,6 @@ class PluginTest extends TestCase
 		$this->assertNull($plugin->version());
 	}
 
-	/**
-	 * @covers ::version
-	 */
 	public function testVersionPrefixed()
 	{
 		$plugin = new Plugin(
@@ -837,9 +710,6 @@ class PluginTest extends TestCase
 		$this->assertSame('1.0.0', $plugin->version());
 	}
 
-	/**
-	 * @covers ::version
-	 */
 	public function testVersionInvalid()
 	{
 		$plugin = new Plugin(
@@ -850,9 +720,6 @@ class PluginTest extends TestCase
 		$this->assertNull($plugin->version());
 	}
 
-	/**
-	 * @covers ::version
-	 */
 	public function testVersionComposer()
 	{
 		$plugin = new Plugin(
@@ -863,9 +730,6 @@ class PluginTest extends TestCase
 		$this->assertSame('5.2.3', $plugin->version());
 	}
 
-	/**
-	 * @covers ::version
-	 */
 	public function testVersionComposerNoVersionSet()
 	{
 		$plugin = new Plugin(
@@ -876,9 +740,6 @@ class PluginTest extends TestCase
 		$this->assertNull($plugin->version());
 	}
 
-	/**
-	 * @covers ::version
-	 */
 	public function testVersionComposerOverride()
 	{
 		$plugin = new Plugin(

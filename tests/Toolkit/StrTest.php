@@ -8,11 +8,10 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Query\TestUser as QueryTestUser;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Str
- */
+#[CoversClass(Str::class)]
 class StrTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
@@ -25,9 +24,6 @@ class StrTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::accepted
-	 */
 	public function testAccepted()
 	{
 		$this->assertSame([
@@ -36,9 +32,6 @@ class StrTest extends TestCase
 		], Str::accepted('image/jpeg,  image/png;q=0.7'));
 	}
 
-	/**
-	 * @covers ::ascii
-	 */
 	public function testAscii()
 	{
 		$this->assertSame('aouss', Str::ascii('äöüß'));
@@ -47,9 +40,6 @@ class StrTest extends TestCase
 		$this->assertSame('Nashata istorija', Str::ascii('Нашата история'));
 	}
 
-	/**
-	 * @covers ::after
-	 */
 	public function testAfter()
 	{
 		$string = 'Hellö Wörld';
@@ -68,9 +58,6 @@ class StrTest extends TestCase
 		$this->assertSame('', Str::after('string', '.'), 'string with non-existing character should return false');
 	}
 
-	/**
-	 * @covers ::after
-	 */
 	public function testAfterWithEmptyNeedle()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -78,9 +65,6 @@ class StrTest extends TestCase
 		Str::after('test', '');
 	}
 
-	/**
-	 * @covers ::afterStart
-	 */
 	public function testAfterStart()
 	{
 		$string = 'Hellö Wörld';
@@ -100,9 +84,6 @@ class StrTest extends TestCase
 		$this->assertSame('Hellö Wörld', Str::afterStart($string, '', true));
 	}
 
-	/**
-	 * @covers ::before
-	 */
 	public function testBefore()
 	{
 		$string = 'Hellö Wörld';
@@ -118,9 +99,6 @@ class StrTest extends TestCase
 		$this->assertSame('', Str::before($string, 'x', true));
 	}
 
-	/**
-	 * @covers ::before
-	 */
 	public function testBeforeWithEmptyNeedle()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -128,9 +106,6 @@ class StrTest extends TestCase
 		Str::before('test', '');
 	}
 
-	/**
-	 * @covers ::beforeEnd
-	 */
 	public function testBeforeEnd()
 	{
 		$string = 'Hellö Wörld';
@@ -150,9 +125,6 @@ class StrTest extends TestCase
 		$this->assertSame('Hellö Wörld', Str::beforeEnd($string, '', true));
 	}
 
-	/**
-	 * @covers ::between
-	 */
 	public function testBetween()
 	{
 		$this->assertSame('trin', Str::between('string', 's', 'g'), 'string between s and g should be trin');
@@ -160,9 +132,6 @@ class StrTest extends TestCase
 		$this->assertSame('', Str::between('string', '.', 'g'), 'function with non-existing character should return false');
 	}
 
-	/**
-	 * @covers ::camel
-	 */
 	public function testCamel()
 	{
 		$string = 'foo_bar';
@@ -181,9 +150,6 @@ class StrTest extends TestCase
 		$this->assertSame('fòôBàř', Str::camel($string));
 	}
 
-	/**
-	 * @covers ::camelToKebab
-	 */
 	public function testCamelToKebab()
 	{
 		$string = 'foobar';
@@ -199,9 +165,6 @@ class StrTest extends TestCase
 		$this->assertSame('foo-bar-with-string', Str::camelToKebab($string));
 	}
 
-	/**
-	 * @covers ::contains
-	 */
 	public function testContains()
 	{
 		$string = 'Hellö Wörld';
@@ -222,9 +185,6 @@ class StrTest extends TestCase
 		$this->assertTrue(Str::contains($string, ''));
 	}
 
-	/**
-	 * @covers ::date
-	 */
 	public function testDate()
 	{
 		$time = mktime(1, 1, 1, 1, 29, 2020);
@@ -269,9 +229,6 @@ class StrTest extends TestCase
 		$this->assertSame('29.01.2020', Str::date($time, '%d.%m.%Y', 'strftime'));
 	}
 
-	/**
-	 * @covers ::convert
-	 */
 	public function testConvert()
 	{
 		$source = 'ÖÄÜ';
@@ -287,26 +244,17 @@ class StrTest extends TestCase
 		$this->assertSame('ISO-8859-1', Str::encoding($result));
 	}
 
-	/**
-	 * @covers ::encode
-	 */
 	public function testEncode()
 	{
 		$email = 'test@getkirby.com';
 		$this->assertSame($email, Html::decode(Str::encode($email)));
 	}
 
-	/**
-	 * @covers ::encoding
-	 */
 	public function testEncoding()
 	{
 		$this->assertSame('UTF-8', Str::encoding('ÖÄÜ'));
 	}
 
-	/**
-	 * @covers ::endsWith
-	 */
 	public function testEndsWith()
 	{
 		$string = 'Hellö Wörld';
@@ -326,9 +274,6 @@ class StrTest extends TestCase
 		$this->assertTrue(Str::endsWith($string, 'WÖRLD', true));
 	}
 
-	/**
-	 * @covers ::excerpt
-	 */
 	public function testExcerpt()
 	{
 		$string   = 'This is a long text<br>with some html';
@@ -338,9 +283,6 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::excerpt
-	 */
 	public function testExcerptWithoutChars()
 	{
 		$string   = 'This is a long text<br>with some html';
@@ -350,9 +292,6 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::excerpt
-	 */
 	public function testExcerptWithZeroLength()
 	{
 		$string = 'This is a long text with some html';
@@ -361,9 +300,6 @@ class StrTest extends TestCase
 		$this->assertSame($string, $result);
 	}
 
-	/**
-	 * @covers ::excerpt
-	 */
 	public function testExcerptWithoutStripping()
 	{
 		$string   = 'This is a long text<br>with some html';
@@ -373,9 +309,6 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::excerpt
-	 */
 	public function testExcerptWithDifferentRep()
 	{
 		$string   = 'This is a long text<br>with some html';
@@ -385,9 +318,6 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::excerpt
-	 */
 	public function testExcerptWithSpaces()
 	{
 		$string   = 'This is a long text   <br>with some html';
@@ -397,9 +327,6 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::excerpt
-	 */
 	public function testExcerptWithoutSpaces()
 	{
 		$string   = 'ThisIsALongTextWithSomeHtml';
@@ -409,9 +336,6 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::excerpt
-	 */
 	public function testExcerptWithLineBreaks()
 	{
 		$string   = 'This is a long text ' . PHP_EOL . ' with some html';
@@ -421,9 +345,6 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::excerpt
-	 */
 	public function testExcerptWithUnicodeChars()
 	{
 		$string   = 'Hellö Wörld text<br>with söme htmäl';
@@ -433,9 +354,6 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::excerpt
-	 */
 	public function testExcerptWithTagFollowedByInterpunctuation()
 	{
 		$string   = 'Why not <a href="https://getkirby.com/">Get Kirby</a>?';
@@ -445,9 +363,6 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::float
-	 */
 	public function testFloat()
 	{
 		$this->assertSame('0', Str::float(false));
@@ -474,9 +389,6 @@ class StrTest extends TestCase
 		$this->assertSame('0.00000001', Str::float(0.00000001));
 	}
 
-	/**
-	 * @covers ::from
-	 */
 	public function testFrom()
 	{
 		$string = 'Hellö Wörld';
@@ -492,9 +404,6 @@ class StrTest extends TestCase
 		$this->assertSame('', Str::from($string, 'x'));
 	}
 
-	/**
-	 * @covers ::from
-	 */
 	public function testFromWithEmptyNeedle()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -502,9 +411,6 @@ class StrTest extends TestCase
 		Str::from('test', '');
 	}
 
-	/**
-	 * @covers ::increment
-	 */
 	public function testIncrement()
 	{
 		$string = 'Pöst';
@@ -547,9 +453,6 @@ class StrTest extends TestCase
 		$this->assertSame('Pöst-16', Str::increment($string, '-', 10));
 	}
 
-	/**
-	 * @covers ::kebab
-	 */
 	public function testKebab()
 	{
 		$string = 'KingCobra';
@@ -559,9 +462,6 @@ class StrTest extends TestCase
 		$this->assertSame('king-cobra', Str::kebab($string));
 	}
 
-	/**
-	 * @covers ::length
-	 */
 	public function testLength()
 	{
 		$this->assertSame(0, Str::length(''));
@@ -570,18 +470,12 @@ class StrTest extends TestCase
 		$this->assertSame(6, Str::length('Aœ?_ßö'));
 	}
 
-	/**
-	 * @covers ::lower
-	 */
 	public function testLower()
 	{
 		$this->assertSame('öäü', Str::lower('ÖÄÜ'));
 		$this->assertSame('öäü', Str::lower('Öäü'));
 	}
 
-	/**
-	 * @covers ::ltrim
-	 */
 	public function testLtrim()
 	{
 		$this->assertSame('test', Str::ltrim(' test'));
@@ -589,27 +483,18 @@ class StrTest extends TestCase
 		$this->assertSame('jpg', Str::ltrim('test.jpg', 'test.'));
 	}
 
-	/**
-	 * @covers ::match
-	 */
 	public function testMatch()
 	{
 		$this->assertSame(['test', 'es'], Str::match('test', '/t(es)t/'));
 		$this->assertNull(Str::match('one two three', '/(four)/'));
 	}
 
-	/**
-	 * @covers ::matches
-	 */
 	public function testMatches()
 	{
 		$this->assertTrue(Str::matches('test', '/t(es)t/'));
 		$this->assertFalse(Str::matches('one two three', '/(four)/'));
 	}
 
-	/**
-	 * @covers ::matchAll
-	 */
 	public function testMatchAll()
 	{
 		$longText = <<<TEXT
@@ -626,9 +511,6 @@ class StrTest extends TestCase
 		$this->assertNull(Str::matchAll('one two three', '/(four)/'));
 	}
 
-	/**
-	 * @covers ::pool
-	 */
 	public function testPool()
 	{
 		// alpha
@@ -690,9 +572,6 @@ class StrTest extends TestCase
 		$this->assertIsArray(Str::pool('alpha'));
 	}
 
-	/**
-	 * @covers ::position
-	 */
 	public function testPosition()
 	{
 		$string = 'Hellö Wörld';
@@ -710,9 +589,6 @@ class StrTest extends TestCase
 		$this->assertTrue(Str::position($string, 'Ö', true) === 4);
 	}
 
-	/**
-	 * @covers ::position
-	 */
 	public function testPositionWithEmptyNeedle()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -720,18 +596,12 @@ class StrTest extends TestCase
 		Str::position('test', '');
 	}
 
-	/**
-	 * @covers ::query
-	 */
 	public function testQuery()
 	{
 		$result = Str::query('data.1', ['data' => ['foo', 'bar']]);
 		$this->assertSame('bar', $result);
 	}
 
-	/**
-	 * @covers ::random
-	 */
 	public function testRandom()
 	{
 		// choose a high length for a high probability of occurrence of a character of any type
@@ -752,9 +622,6 @@ class StrTest extends TestCase
 		$this->assertFalse(Str::random($length, 'something invalid'));
 	}
 
-	/**
-	 * @covers ::replace
-	 */
 	public function testReplace()
 	{
 		// simple strings with limits
@@ -811,9 +678,6 @@ class StrTest extends TestCase
 		$this->assertSame('apearpearle pear', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], [1, 3]));
 	}
 
-	/**
-	 * @covers ::replace
-	 */
 	public function testReplaceInvalid1()
 	{
 		$this->expectException(Exception::class);
@@ -821,18 +685,12 @@ class StrTest extends TestCase
 		Str::replace('some string', 'string', ['array'], 1);
 	}
 
-	/**
-	 * @covers ::replace
-	 */
 	public function testReplaceInvalid2()
 	{
 		$this->expectException(TypeError::class);
 		Str::replace('some string', 'string', 'other string', 'some invalid string as limit');
 	}
 
-	/**
-	 * @covers ::replace
-	 */
 	public function testReplaceInvalid3()
 	{
 		$this->expectException(Exception::class);
@@ -840,9 +698,6 @@ class StrTest extends TestCase
 		Str::replace('some string', ['some', 'string'], 'other string', [1, 'string']);
 	}
 
-	/**
-	 * @covers ::replacements
-	 */
 	public function testReplacements()
 	{
 		// simple example
@@ -884,9 +739,6 @@ class StrTest extends TestCase
 		], Str::replacements(['a', 'b'], ['c', 'd'], [2]));
 	}
 
-	/**
-	 * @covers ::replacements
-	 */
 	public function testReplacementsInvalid()
 	{
 		$this->expectException(Exception::class);
@@ -894,9 +746,6 @@ class StrTest extends TestCase
 		Str::replacements('string', ['array'], 1);
 	}
 
-	/**
-	 * @covers ::replaceReplacements
-	 */
 	public function testReplaceReplacements()
 	{
 		$this->assertSame(
@@ -934,9 +783,6 @@ class StrTest extends TestCase
 		// edge cases are tested in the Str::replace() unit test
 	}
 
-	/**
-	 * @covers ::replaceReplacements
-	 */
 	public function testReplaceReplacementsInvalid()
 	{
 		$this->expectException(Exception::class);
@@ -950,9 +796,6 @@ class StrTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::rtrim
-	 */
 	public function testRtrim()
 	{
 		$this->assertSame('test', Str::rtrim('test '));
@@ -960,9 +803,6 @@ class StrTest extends TestCase
 		$this->assertSame('test', Str::rtrim('test.jpg', '.jpg'));
 	}
 
-	/**
-	 * @covers ::safeTemplate
-	 */
 	public function testSafeTemplate()
 	{
 		$original = 'This is a {{ test }} with {< html >} and {{ normal }} text.';
@@ -1046,9 +886,6 @@ class StrTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::short
-	 */
 	public function testShort()
 	{
 		$string = 'Super Äwesøme String';
@@ -1078,9 +915,6 @@ class StrTest extends TestCase
 		$this->assertSame('12345…', Str::short(123456, 5));
 	}
 
-	/**
-	 * @covers ::similarity
-	 */
 	public function testSimilarity()
 	{
 		$this->assertSame([
@@ -1150,9 +984,6 @@ class StrTest extends TestCase
 		], Str::similarity('Kirby', 'KIRBY', true));
 	}
 
-	/**
-	 * @covers ::slug
-	 */
 	public function testSlug()
 	{
 		// Double dashes
@@ -1204,9 +1035,6 @@ class StrTest extends TestCase
 		Str::$language = [];
 	}
 
-	/**
-	 * @covers ::slug
-	 */
 	public function testSlugMaxLength()
 	{
 		// default
@@ -1228,9 +1056,6 @@ class StrTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::snake
-	 */
 	public function testSnake()
 	{
 		$string = 'KingCobra';
@@ -1240,9 +1065,6 @@ class StrTest extends TestCase
 		$this->assertSame('king_cobra', Str::snake($string));
 	}
 
-	/**
-	 * @covers ::split
-	 */
 	public function testSplit()
 	{
 		// default separator
@@ -1271,9 +1093,6 @@ class StrTest extends TestCase
 		$this->assertSame($string, Str::split($string));
 	}
 
-	/**
-	 * @covers ::startsWith
-	 */
 	public function testStartsWith()
 	{
 		$string = 'Hellö Wörld';
@@ -1293,9 +1112,6 @@ class StrTest extends TestCase
 		$this->assertTrue(Str::startsWith($string, 'hellö', true));
 	}
 
-	/**
-	 * @covers ::studly
-	 */
 	public function testStudly()
 	{
 		$string = 'foo_bar';
@@ -1314,9 +1130,6 @@ class StrTest extends TestCase
 		$this->assertSame('FòôBàř', Str::studly($string));
 	}
 
-	/**
-	 * @covers ::substr
-	 */
 	public function testSubstr()
 	{
 		$string = 'äöü';
@@ -1329,9 +1142,6 @@ class StrTest extends TestCase
 		$this->assertSame('ü', Str::substr($string, -1));
 	}
 
-	/**
-	 * @covers ::template
-	 */
 	public function testTemplate()
 	{
 		// query with a string
@@ -1417,9 +1227,6 @@ class StrTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::toBytes
-	 */
 	public function testToBytes()
 	{
 		$this->assertSame(0, Str::toBytes(''));
@@ -1437,9 +1244,6 @@ class StrTest extends TestCase
 		$this->assertSame(2 * 1024 * 1024 * 1024, Str::toBytes('2g'));
 	}
 
-	/**
-	 * @covers ::toType
-	 */
 	public function testToType()
 	{
 		// string to string
@@ -1476,9 +1280,6 @@ class StrTest extends TestCase
 		$this->assertSame(1, Str::toType('1', 1));
 	}
 
-	/**
-	 * @covers ::trim
-	 */
 	public function testTrim()
 	{
 		$this->assertSame('test', Str::trim(' test '));
@@ -1486,9 +1287,6 @@ class StrTest extends TestCase
 		$this->assertSame('test', Str::trim('.test.', '.'));
 	}
 
-	/**
-	 * @covers ::ucfirst
-	 */
 	public function testUcfirst()
 	{
 		$this->assertSame('Hello world', Str::ucfirst('hello world'));
@@ -1498,9 +1296,6 @@ class StrTest extends TestCase
 		$this->assertSame('Hello WORLD', Str::ucfirst('hello WORLD'));
 	}
 
-	/**
-	 * @covers ::ucwords
-	 */
 	public function testUcwords()
 	{
 		$this->assertSame('Hello World', Str::ucwords('hello world'));
@@ -1508,18 +1303,12 @@ class StrTest extends TestCase
 		$this->assertSame('Hello World', Str::ucwords('HELLO WORLD'));
 	}
 
-	/**
-	 * @covers ::unhtml
-	 */
 	public function testUnhtml()
 	{
 		$string = 'some <em>crazy</em> stuff';
 		$this->assertSame('some crazy stuff', Str::unhtml($string));
 	}
 
-	/**
-	 * @covers ::until
-	 */
 	public function testUntil()
 	{
 		$string = 'Hellö Wörld';
@@ -1535,9 +1324,6 @@ class StrTest extends TestCase
 		$this->assertSame('', Str::until($string, 'x'));
 	}
 
-	/**
-	 * @covers ::until
-	 */
 	public function testUntilWithEmptyNeedle()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -1545,18 +1331,12 @@ class StrTest extends TestCase
 		Str::until('test', '');
 	}
 
-	/**
-	 * @covers ::upper
-	 */
 	public function testUpper()
 	{
 		$this->assertSame('ÖÄÜ', Str::upper('öäü'));
 		$this->assertSame('ÖÄÜ', Str::upper('Öäü'));
 	}
 
-	/**
-	 * @covers ::widont
-	 */
 	public function testWidont()
 	{
 		$this->assertSame('Test', Str::widont('Test'));
@@ -1571,9 +1351,6 @@ class StrTest extends TestCase
 		$this->assertSame('Omelette du&nbsp;fromage&nbsp;?', Str::widont('Omelette du fromage ?'));
 	}
 
-	/**
-	 * @covers ::wrap
-	 */
 	public function testWrap()
 	{
 		$string = 'Pöst title';

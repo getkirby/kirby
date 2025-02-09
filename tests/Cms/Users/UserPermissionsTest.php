@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UserPermissionsTest extends TestCase
 {
@@ -20,10 +21,8 @@ class UserPermissionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider actionProvider
-	 */
-	public function testWithAdmin($action)
+	#[DataProvider('actionProvider')]
+	public function testWithAdmin(string $action)
 	{
 		$kirby = new App([
 			'roots' => [
@@ -43,10 +42,8 @@ class UserPermissionsTest extends TestCase
 		$this->assertTrue($perms->can($action));
 	}
 
-	/**
-	 * @dataProvider actionProvider
-	 */
-	public function testWithNobody($action)
+	#[DataProvider('actionProvider')]
+	public function testWithNobody(string $action)
 	{
 		new App([
 			'roots' => [
@@ -64,10 +61,8 @@ class UserPermissionsTest extends TestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	/**
-	 * @dataProvider actionProvider
-	 */
-	public function testWithNoAdmin($action)
+	#[DataProvider('actionProvider')]
+	public function testWithNoAdmin(string $action)
 	{
 		$app = new App([
 			'roots' => [

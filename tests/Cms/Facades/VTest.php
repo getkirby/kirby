@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\V;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class VTest extends TestCase
 {
@@ -53,10 +54,8 @@ class VTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider messageInput
-	 */
-	public function testMessage($validator, $args, $expected)
+	#[DataProvider('messageInput')]
+	public function testMessage(string $validator, array $args, string $expected)
 	{
 		$this->assertSame($expected, V::message($validator, ...$args));
 	}

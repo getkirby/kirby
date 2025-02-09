@@ -7,6 +7,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UserRulesTest extends TestCase
 {
@@ -42,10 +43,8 @@ class UserRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider validDataProvider
-	 */
-	public function testChangeValid($key, $value)
+	#[DataProvider('validDataProvider')]
+	public function testChangeValid(string $key, string $value)
 	{
 		$kirby = $this->appWithAdmin();
 		$user  = $kirby->user('user@domain.com');
@@ -66,10 +65,8 @@ class UserRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider invalidDataProvider
-	 */
-	public function testChangeInvalid($key, $value, $message)
+	#[DataProvider('invalidDataProvider')]
+	public function testChangeInvalid(string $key, string $value, string $message)
 	{
 		$kirby = $this->appWithAdmin();
 		$user  = $kirby->user('user@domain.com');
@@ -90,10 +87,8 @@ class UserRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider missingPermissionProvider
-	 */
-	public function testChangeWithoutPermission($key, $value, $message)
+	#[DataProvider('missingPermissionProvider')]
+	public function testChangeWithoutPermission(string $key, string $value, string $message)
 	{
 		$permissions = $this->createMock(UserPermissions::class);
 		$permissions->method('can')->with('change' . $key)->willReturn(false);
@@ -504,9 +499,7 @@ class UserRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider validIdProvider
-	 */
+	#[DataProvider('validIdProvider')]
 	public function testValidId(string $id)
 	{
 		$user = new User(['email' => 'test@getkirby.com']);

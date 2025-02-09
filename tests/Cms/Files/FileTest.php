@@ -5,14 +5,13 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Panel\File as Panel;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class FileTestModel extends File
 {
 }
 
-/**
- * @coversDefaultClass \Kirby\Cms\File
- */
+#[CoversClass(File::class)]
 class FileTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.File';
@@ -304,9 +303,6 @@ class FileTest extends TestCase
 		$this->assertSame($this->defaults()['filename'], $this->file()->filename());
 	}
 
-	/**
-	 * @covers ::contentFileData
-	 */
 	public function testContentFileData()
 	{
 		$file = $this->file();
@@ -705,9 +701,6 @@ class FileTest extends TestCase
 		$this->assertInstanceOf(Panel::class, $file->panel());
 	}
 
-	/**
-	 * @covers ::permalink
-	 */
 	public function testPermalink()
 	{
 		$page = new Page([

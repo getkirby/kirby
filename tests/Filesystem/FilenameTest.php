@@ -3,15 +3,12 @@
 namespace Kirby\Filesystem;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Filesystem\Filename
- */
+#[CoversClass(Filename::class)]
 class FilenameTest extends TestCase
 {
-	/**
-	 * @covers ::attributesToArray
-	 */
 	public function testAttributesToArray()
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
@@ -78,20 +75,14 @@ class FilenameTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::attributesToString
-	 * @dataProvider attributesToStringProvider
-	 */
-	public function testAttributesToString($expected, $options)
+	#[DataProvider('attributesToStringProvider')]
+	public function testAttributesToString(string $expected, array $options)
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', $options);
 
 		$this->assertSame($expected, $name->attributesToString('-'));
 	}
 
-	/**
-	 * @covers ::attributesToString
-	 */
 	public function testAttributesToStringWithoutAttrs()
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', []);
@@ -109,11 +100,8 @@ class FilenameTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::blur
-	 * @dataProvider blurOptionProvider
-	 */
-	public function testBlur($value, $expected)
+	#[DataProvider('blurOptionProvider')]
+	public function testBlur(bool|int|float|string $value, bool|int $expected)
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
 			'blur' => $value
@@ -137,11 +125,8 @@ class FilenameTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::crop
-	 * @dataProvider cropAnchorProvider
-	 */
-	public function testCrop($anchor, $expected)
+	#[DataProvider('cropAnchorProvider')]
+	public function testCrop(string $anchor, string $expected)
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
 			'crop' => $anchor
@@ -150,18 +135,12 @@ class FilenameTest extends TestCase
 		$this->assertSame($expected, $name->crop());
 	}
 
-	/**
-	 * @covers ::crop
-	 */
 	public function testCropEmpty()
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
 		$this->assertFalse($name->crop());
 	}
 
-	/**
-	 * @covers ::crop
-	 */
 	public function testCropDisabled()
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
@@ -171,9 +150,6 @@ class FilenameTest extends TestCase
 		$this->assertFalse($name->crop());
 	}
 
-	/**
-	 * @covers ::crop
-	 */
 	public function testCropCustom()
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
@@ -183,9 +159,6 @@ class FilenameTest extends TestCase
 		$this->assertSame('something', $name->crop());
 	}
 
-	/**
-	 * @covers ::dimensions
-	 */
 	public function testDimensions()
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', $dimensions = [
@@ -196,9 +169,6 @@ class FilenameTest extends TestCase
 		$this->assertSame($dimensions, $name->dimensions());
 	}
 
-	/**
-	 * @covers ::dimensions
-	 */
 	public function testDimensionsEmpty()
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
@@ -206,9 +176,6 @@ class FilenameTest extends TestCase
 		$this->assertSame([], $name->dimensions());
 	}
 
-	/**
-	 * @covers ::dimensions
-	 */
 	public function testDimensionsWithoutWidth()
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
@@ -221,9 +188,6 @@ class FilenameTest extends TestCase
 		], $name->dimensions());
 	}
 
-	/**
-	 * @covers ::dimensions
-	 */
 	public function testDimensionsWithoutHeight()
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
@@ -236,27 +200,18 @@ class FilenameTest extends TestCase
 		], $name->dimensions());
 	}
 
-	/**
-	 * @covers ::extension
-	 */
 	public function testExtension()
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
 		$this->assertSame('jpg', $name->extension());
 	}
 
-	/**
-	 * @covers ::extension
-	 */
 	public function testExtensionUppercase()
 	{
 		$name = new Filename('/test/some-file.JPG', '{{ name }}.{{ extension }}');
 		$this->assertSame('jpg', $name->extension());
 	}
 
-	/**
-	 * @covers ::extension
-	 */
 	public function testExtensionJpeg()
 	{
 		$name = new Filename('/test/some-file.jpeg', '{{ name }}.{{ extension }}');
@@ -275,11 +230,8 @@ class FilenameTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::grayscale
-	 * @dataProvider grayscaleOptionProvider
-	 */
-	public function testGrayscale($prop, $value, $expected)
+	#[DataProvider('grayscaleOptionProvider')]
+	public function testGrayscale(string $prop, bool $value, bool $expected)
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
 			$prop => $value
@@ -288,30 +240,18 @@ class FilenameTest extends TestCase
 		$this->assertSame($expected, $name->grayscale());
 	}
 
-	/**
-	 * @covers ::name
-	 * @covers ::sanitizeName
-	 */
 	public function testName()
 	{
 		$name = new Filename('/var/www/some-file.jpg', '{{ name }}.{{ extension }}');
 		$this->assertSame('some-file', $name->name());
 	}
 
-	/**
-	 * @covers ::name
-	 * @covers ::sanitizeName
-	 */
 	public function testNameSanitization()
 	{
 		$name = new Filename('/var/www/söme file.jpg', '{{ name }}.{{ extension }}');
 		$this->assertSame('some-file', $name->name());
 	}
 
-	/**
-	 * @covers ::name
-	 * @covers ::sanitizeName
-	 */
 	public function testNameSanitizationWithLanguageRules()
 	{
 		$name = new Filename(
@@ -334,11 +274,8 @@ class FilenameTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::quality
-	 * @dataProvider qualityOptionProvider
-	 */
-	public function testQuality($value, $expected)
+	#[DataProvider('qualityOptionProvider')]
+	public function testQuality(bool|int|float|string $value, bool|int $expected)
 	{
 		$name = new Filename('/test/some-file.jpg', 'some-file.jpg', [
 			'quality' => $value
@@ -347,12 +284,8 @@ class FilenameTest extends TestCase
 		$this->assertSame($expected, $name->quality());
 	}
 
-	/**
-	 * @covers ::toString
-	 * @covers ::__toString
-	 * @dataProvider attributesToStringProvider
-	 */
-	public function testToString($expected, $attributes)
+	#[DataProvider('attributesToStringProvider')]
+	public function testToString(string $expected, array $attributes)
 	{
 		$name = new Filename('/test/some-file.jpg', '{{ name }}{{ attributes }}.{{ extension }}', $attributes);
 
@@ -361,7 +294,6 @@ class FilenameTest extends TestCase
 	}
 
 	/**
-	 * @covers ::toString
 	 * @ocvers ::__toString
 	 */
 	public function testToStringWithFalsyAttributes()
@@ -381,7 +313,6 @@ class FilenameTest extends TestCase
 	}
 
 	/**
-	 * @covers ::toString
 	 * @ocvers ::__toString
 	 */
 	public function testToStringWithoutAttributes()

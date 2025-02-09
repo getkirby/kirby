@@ -6,11 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\Lock
- * @covers ::__construct
- */
+#[CoversClass(Lock::class)]
 class LockTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.LockTest';
@@ -71,9 +69,6 @@ class LockTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForWithAuthenticatedUser()
 	{
 		$this->app->impersonate('admin');
@@ -87,9 +82,6 @@ class LockTest extends TestCase
 		$this->assertSame($this->app->user('admin'), $lock->user());
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForWithDifferentUser()
 	{
 		// create the version with the admin user
@@ -108,9 +100,6 @@ class LockTest extends TestCase
 		$this->assertSame($this->app->user('admin'), $lock->user());
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForWithoutUser()
 	{
 		// create the version with the admin user
@@ -122,9 +111,6 @@ class LockTest extends TestCase
 		$this->assertNull($lock->user());
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForWithLanguageWildcard()
 	{
 		$this->app = $this->app->clone([
@@ -156,9 +142,6 @@ class LockTest extends TestCase
 		$this->assertSame('admin', $lock->user()->id());
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForWithLegacyLock()
 	{
 		$page = $this->app->page('test');
@@ -178,9 +161,6 @@ class LockTest extends TestCase
 		$this->assertTrue($lock->isLocked());
 	}
 
-	/**
-	 * @covers ::isActive
-	 */
 	public function testIsActive()
 	{
 		// just modified
@@ -191,9 +171,6 @@ class LockTest extends TestCase
 		$this->assertTrue($lock->isActive());
 	}
 
-	/**
-	 * @covers ::isActive
-	 */
 	public function testIsActiveWithOldModificationTimestamp()
 	{
 		// create a lock that has not been modified for 20 minutes
@@ -204,9 +181,6 @@ class LockTest extends TestCase
 		$this->assertFalse($lock->isActive());
 	}
 
-	/**
-	 * @covers ::isActive
-	 */
 	public function testIsActiveWithoutModificationTimestamp()
 	{
 		// a lock without modification time should also be inactive
@@ -214,17 +188,11 @@ class LockTest extends TestCase
 		$this->assertFalse($lock->isActive());
 	}
 
-	/**
-	 * @covers ::isEnabled
-	 */
 	public function testIsEnabled()
 	{
 		$this->assertTrue(Lock::isEnabled());
 	}
 
-	/**
-	 * @covers ::isEnabled
-	 */
 	public function testIsEnabledWhenDisabled()
 	{
 		$this->app = $this->app->clone([
@@ -238,9 +206,6 @@ class LockTest extends TestCase
 		$this->assertFalse(Lock::isEnabled());
 	}
 
-	/**
-	 * @covers ::isLegacy
-	 */
 	public function testIsLegacy()
 	{
 		$lock = new Lock();
@@ -250,18 +215,12 @@ class LockTest extends TestCase
 		$this->assertTrue($lock->isLegacy());
 	}
 
-	/**
-	 * @covers ::isLocked
-	 */
 	public function testIsLocked()
 	{
 		$lock = new Lock();
 		$this->assertFalse($lock->isLocked());
 	}
 
-	/**
-	 * @covers ::isLocked
-	 */
 	public function testIsLockedWithCurrentUser()
 	{
 		$this->app->impersonate('admin');
@@ -274,9 +233,6 @@ class LockTest extends TestCase
 		$this->assertFalse($lock->isLocked());
 	}
 
-	/**
-	 * @covers ::isLocked
-	 */
 	public function testIsLockedWithDifferentUser()
 	{
 		$this->app->impersonate('admin');
@@ -289,9 +245,6 @@ class LockTest extends TestCase
 		$this->assertTrue($lock->isLocked());
 	}
 
-	/**
-	 * @covers ::isLocked
-	 */
 	public function testIsLockedWhenDisabled()
 	{
 		$this->app = $this->app->clone([
@@ -312,9 +265,6 @@ class LockTest extends TestCase
 		$this->assertFalse($lock->isLocked());
 	}
 
-	/**
-	 * @covers ::isLocked
-	 */
 	public function testIsLockedWithDifferentUserAndOldTimestamp()
 	{
 		$this->app->impersonate('admin');
@@ -327,9 +277,6 @@ class LockTest extends TestCase
 		$this->assertFalse($lock->isLocked());
 	}
 
-	/**
-	 * @covers ::legacy
-	 */
 	public function testLegacy()
 	{
 		$page = $this->app->page('test');
@@ -353,9 +300,6 @@ class LockTest extends TestCase
 		$this->assertSame($time, $lock->modified());
 	}
 
-	/**
-	 * @covers ::legacy
-	 */
 	public function testLegacyWithoutLockInfo()
 	{
 		$page = $this->app->page('test');
@@ -367,9 +311,6 @@ class LockTest extends TestCase
 		$this->assertNull($lock);
 	}
 
-	/**
-	 * @covers ::legacy
-	 */
 	public function testLegacyWithOutdatedFile()
 	{
 		$page = $this->app->page('test');
@@ -390,9 +331,6 @@ class LockTest extends TestCase
 		$this->assertFalse($lock->isLocked());
 	}
 
-	/**
-	 * @covers ::legacy
-	 */
 	public function testLegacyWithUnlockedFile()
 	{
 		$page = $this->app->page('test');
@@ -412,9 +350,6 @@ class LockTest extends TestCase
 		$this->assertNull($lock);
 	}
 
-	/**
-	 * @covers ::legacyFile
-	 */
 	public function testLegacyFile()
 	{
 		$page = $this->app->page('test');
@@ -423,9 +358,6 @@ class LockTest extends TestCase
 		$this->assertSame($expected, Lock::legacyFile($page));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
 	public function testModified()
 	{
 		$lock = new Lock(
@@ -436,9 +368,6 @@ class LockTest extends TestCase
 		$this->assertSame(date('c', $modified), $lock->modified('c'));
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray()
 	{
 		$lock = new Lock(
@@ -460,9 +389,6 @@ class LockTest extends TestCase
 		], $lock->toArray());
 	}
 
-	/**
-	 * @covers ::user
-	 */
 	public function testUser()
 	{
 		$lock = new Lock(
@@ -472,9 +398,6 @@ class LockTest extends TestCase
 		$this->assertSame($user, $lock->user());
 	}
 
-	/**
-	 * @covers ::user
-	 */
 	public function testUserWithoutUser()
 	{
 		$lock = new Lock();

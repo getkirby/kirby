@@ -9,10 +9,10 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Uri;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Home
- */
+#[CoversClass(Home::class)]
 class HomeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Home';
@@ -45,9 +45,6 @@ class HomeTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::alternative
-	 */
 	public function testAlternative()
 	{
 		$this->app = $this->app->clone([
@@ -61,9 +58,6 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/site', Home::alternative($user));
 	}
 
-	/**
-	 * @covers ::alternative
-	 */
 	public function testAlternativeWithLimitedAccess()
 	{
 		$this->app = $this->app->clone([
@@ -92,9 +86,6 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/users', Home::alternative($user));
 	}
 
-	/**
-	 * @covers ::alternative
-	 */
 	public function testAlternativeWithOnlyAccessToAccounts()
 	{
 		$this->app = $this->app->clone([
@@ -125,9 +116,6 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/account', Home::alternative($user));
 	}
 
-	/**
-	 * @covers ::alternative
-	 */
 	public function testAlternativeWithoutPanelAccess()
 	{
 		$this->app = $this->app->clone([
@@ -151,9 +139,6 @@ class HomeTest extends TestCase
 		$this->assertSame('/', Home::alternative($user));
 	}
 
-	/**
-	 * @covers ::alternative
-	 */
 	public function testAlternativeWithoutViewAccess()
 	{
 		$this->app = $this->app->clone([
@@ -184,9 +169,6 @@ class HomeTest extends TestCase
 		Home::alternative($user);
 	}
 
-	/**
-	 * @covers ::hasAccess
-	 */
 	public function testHasAccess()
 	{
 		$this->app = $this->app->clone([
@@ -218,9 +200,6 @@ class HomeTest extends TestCase
 		$this->assertTrue(Home::hasAccess($user, 'browser'));
 	}
 
-	/**
-	 * @covers ::hasAccess
-	 */
 	public function testHasAccessWithLimitedAccess()
 	{
 		$this->app = $this->app->clone([
@@ -252,9 +231,6 @@ class HomeTest extends TestCase
 		$this->assertTrue(Home::hasAccess($user, 'account'));
 	}
 
-	/**
-	 * @covers ::hasValidDomain
-	 */
 	public function testHasValidDomain()
 	{
 		$uri = Uri::current();
@@ -267,9 +243,6 @@ class HomeTest extends TestCase
 		$this->assertFalse(Home::hasValidDomain($uri));
 	}
 
-	/**
-	 * @covers ::isPanelUrl
-	 */
 	public function testIsPanelUrl()
 	{
 		$this->assertTrue(Home::isPanelUrl('/panel'));
@@ -277,9 +250,6 @@ class HomeTest extends TestCase
 		$this->assertFalse(Home::isPanelUrl('test'));
 	}
 
-	/**
-	 * @covers ::panelPath
-	 */
 	public function testPanelPath()
 	{
 		$this->assertSame('site', Home::panelPath('/panel/site'));
@@ -287,26 +257,17 @@ class HomeTest extends TestCase
 		$this->assertSame('', Home::panelPath('/test/page'));
 	}
 
-	/**
-	 * @covers ::remembered
-	 */
 	public function testRemembered()
 	{
 		$this->assertNull(Home::remembered());
 	}
 
-	/**
-	 * @covers ::remembered
-	 */
 	public function testRememberedFromSession()
 	{
 		$this->app->session()->set('panel.path', 'users');
 		$this->assertSame('/panel/users', Home::remembered());
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrl()
 	{
 		$this->app = $this->app->clone([
@@ -339,10 +300,8 @@ class HomeTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider customHomeProvider
-	 */
-	public function testUrlWithCustomHome($url, $expected, $index = '/')
+	#[DataProvider('customHomeProvider')]
+	public function testUrlWithCustomHome(string $url, string $expected, string $index = '/')
 	{
 		$this->app = $this->app->clone([
 			'urls' => [
@@ -369,9 +328,6 @@ class HomeTest extends TestCase
 		$this->assertSame($expected, Home::url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrlWithInvalidCustomHome()
 	{
 		$this->app = $this->app->clone([
@@ -402,9 +358,6 @@ class HomeTest extends TestCase
 		Home::url();
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrlWithRememberedPath()
 	{
 		$this->app = $this->app->clone([
@@ -419,9 +372,6 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/users', Home::url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrlWithInvalidRememberedPath()
 	{
 		$this->app = $this->app->clone([
@@ -436,9 +386,6 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/site', Home::url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrlWithMissingSiteAccess()
 	{
 		$this->app = $this->app->clone([
@@ -461,9 +408,6 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/users', Home::url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrlWithAccountAccessOnly()
 	{
 		$this->app = $this->app->clone([
@@ -489,9 +433,6 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/account', Home::url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrlWithoutUser()
 	{
 		$this->assertSame('/panel/login', Home::url());

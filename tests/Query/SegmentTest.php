@@ -6,6 +6,8 @@ use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class MyObj
@@ -34,9 +36,7 @@ class MyGetObj
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Query\Segment
- */
+#[CoversClass(Segment::class)]
 class SegmentTest extends TestCase
 {
 	public static function scalarProvider(): array
@@ -51,11 +51,8 @@ class SegmentTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::error
-	 * @dataProvider scalarProvider
-	 */
-	public function testErrorWithScalars($scalar, $label)
+	#[DataProvider('scalarProvider')]
+	public function testErrorWithScalars(string|int|float|bool|null $scalar, string $label)
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to method "foo" on ' . $label);
@@ -63,9 +60,6 @@ class SegmentTest extends TestCase
 		Segment::error($scalar, 'foo', 'method');
 	}
 
-	/**
-	 * @covers ::error
-	 */
 	public function testErrorWithObject()
 	{
 		$this->expectException(BadMethodCallException::class);
@@ -74,10 +68,6 @@ class SegmentTest extends TestCase
 		Segment::error(new stdClass(), 'foo', 'method');
 	}
 
-	/**
-	 * @covers ::factory
-	 * @covers ::__construct
-	 */
 	public function testFactory()
 	{
 		$segment = Segment::factory('foo');
@@ -93,9 +83,6 @@ class SegmentTest extends TestCase
 		$this->assertCount(2, $segment->arguments);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolveFirst()
 	{
 		// without parameters
@@ -107,10 +94,6 @@ class SegmentTest extends TestCase
 		$this->assertSame('2bar', $segment->resolve(null, ['foo' => fn (int $a, string $b) => $a . $b]));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveObject
-	 */
 	public function testResolveFirstWithDataObject()
 	{
 		$obj      = new stdClass();
@@ -120,10 +103,6 @@ class SegmentTest extends TestCase
 	}
 
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveArray
-	 */
 	public function testResolveArray()
 	{
 		$segment = Segment::factory('foo', 1);
@@ -131,10 +110,6 @@ class SegmentTest extends TestCase
 		$this->assertSame($expected, $segment->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveArray
-	 */
 	public function testResolveArrayClosure()
 	{
 		$segment = Segment::factory('foo', 0);
@@ -142,10 +117,6 @@ class SegmentTest extends TestCase
 		$this->assertSame('bar', $segment->resolve(null, $data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveArray
-	 */
 	public function testResolveArrayInvalidKey()
 	{
 		$this->expectException(BadMethodCallException::class);
@@ -155,10 +126,6 @@ class SegmentTest extends TestCase
 		$segment->resolve(['bar' => 2]);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveArray
-	 */
 	public function testResolveArrayArgOnNonClosure()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -168,20 +135,12 @@ class SegmentTest extends TestCase
 		$segment->resolve(['foo' => 'bar']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveArray
-	 */
 	public function testResolveArrayFromGlobalEntry()
 	{
 		$segment = Segment::factory('kirby');
 		$this->assertSame(App::instance(), $segment->resolve(null, []));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveObject
-	 */
 	public function testResolveObject()
 	{
 		$obj     = new MyObj();
@@ -201,10 +160,6 @@ class SegmentTest extends TestCase
 		$this->assertSame('simpson', $segment->resolve($obj));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveObject
-	 */
 	public function testResolveObjectInvalid()
 	{
 		$this->expectException(BadMethodCallException::class);
@@ -214,10 +169,6 @@ class SegmentTest extends TestCase
 		$segment->resolve('bar');
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveObject
-	 */
 	public function testResolveObjectInvalidMethod()
 	{
 		$this->expectException(BadMethodCallException::class);
@@ -228,10 +179,6 @@ class SegmentTest extends TestCase
 		$segment->resolve($obj);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveObject
-	 */
 	public function testResolveObjectMethodWithoutArgs()
 	{
 		$this->expectException(BadMethodCallException::class);
@@ -242,9 +189,6 @@ class SegmentTest extends TestCase
 		$segment->resolve($obj);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolveWithArrayNullValueError()
 	{
 		$this->expectException(BadMethodCallException::class);

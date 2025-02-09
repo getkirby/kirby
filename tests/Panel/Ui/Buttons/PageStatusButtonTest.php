@@ -5,15 +5,11 @@ namespace Kirby\Panel\Ui\Buttons;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\PageStatusButton
- */
+#[CoversClass(PageStatusButton::class)]
 class PageStatusButtonTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
 	public function testButtonDraftDisabled()
 	{
 
@@ -31,9 +27,6 @@ class PageStatusButtonTest extends TestCase
 		$this->assertSame('negative-icon', $button->theme);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testButtonUnlisted()
 	{
 		App::instance()->impersonate('kirby');

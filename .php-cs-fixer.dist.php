@@ -59,6 +59,7 @@ return $config
 		'phpdoc_param_order' => true,
 		'phpdoc_scalar' => true,
 		'phpdoc_trim' => true,
+		'php_unit_attributes' => true,
 		'php_unit_fqcn_annotation' => true,
 		'single_line_comment_style' => true,
 		'single_quote' => true,

@@ -10,10 +10,9 @@ use Kirby\Http\Response;
 use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\View
- */
+#[CoversClass(View::class)]
 class ViewTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.View';
@@ -43,9 +42,6 @@ class ViewTest extends TestCase
 		unset($_SERVER['SERVER_SOFTWARE']);
 	}
 
-	/**
-	 * @covers ::apply
-	 */
 	public function testApply()
 	{
 		$data = [
@@ -59,10 +55,6 @@ class ViewTest extends TestCase
 		$this->assertSame($data, $result);
 	}
 
-	/**
-	 * @covers ::apply
-	 * @covers ::applyGlobals
-	 */
 	public function testApplyGlobals(): void
 	{
 		// not included
@@ -98,10 +90,6 @@ class ViewTest extends TestCase
 		$this->assertSame($data, View::applyGlobals($data, ''));
 	}
 
-	/**
-	 * @covers ::apply
-	 * @covers ::applyOnly
-	 */
 	public function testApplyOnly(): void
 	{
 		// via get
@@ -145,10 +133,6 @@ class ViewTest extends TestCase
 		$this->assertSame($data, View::applyOnly($data, ''));
 	}
 
-	/**
-	 * @covers ::apply
-	 * @covers ::applyOnly
-	 */
 	public function testApplyOnlyWithGlobal(): void
 	{
 		// simulate a simple partial request
@@ -178,10 +162,6 @@ class ViewTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::apply
-	 * @covers ::applyOnly
-	 */
 	public function testApplyOnlyWithNestedData(): void
 	{
 		// simulate a simple partial request
@@ -211,10 +191,6 @@ class ViewTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::apply
-	 * @covers ::applyOnly
-	 */
 	public function testApplyOnlyWithNestedGlobal(): void
 	{
 		// simulate a simple partial request
@@ -243,9 +219,6 @@ class ViewTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::data
-	 */
 	public function testData(): void
 	{
 		// without custom data
@@ -276,9 +249,6 @@ class ViewTest extends TestCase
 		$this->assertArrayNotHasKey('dialogs', $view);
 	}
 
-	/**
-	 * @covers ::data
-	 */
 	public function testDataWithCustomRequestUrl(): void
 	{
 		$this->app = $this->app->clone([
@@ -297,9 +267,6 @@ class ViewTest extends TestCase
 		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $data['$url']);
 	}
 
-	/**
-	 * @covers ::data
-	 */
 	public function testDataWithCustomProps(): void
 	{
 		$data = View::data([
@@ -313,9 +280,6 @@ class ViewTest extends TestCase
 		$this->assertSame($props, $data['$view']['props']);
 	}
 
-	/**
-	 * @covers ::data
-	 */
 	public function testDataWithLanguages(): void
 	{
 		$this->app = $this->app->clone([
@@ -362,9 +326,6 @@ class ViewTest extends TestCase
 		$this->assertNull($data['$direction']);
 	}
 
-	/**
-	 * @covers ::data
-	 */
 	public function testDataWithDirection(): void
 	{
 		$this->app = $this->app->clone([
@@ -394,9 +355,6 @@ class ViewTest extends TestCase
 		$this->assertSame('rtl', $data['$direction']);
 	}
 
-	/**
-	 * @covers ::data
-	 */
 	public function testDataWithAuthenticatedUser(): void
 	{
 		// authenticate pseudo user
@@ -421,9 +379,6 @@ class ViewTest extends TestCase
 		$this->assertSame($this->app->user()->role()->permissions()->toArray(), $data['$permissions']);
 	}
 
-	/**
-	 * @covers ::error
-	 */
 	public function testError(): void
 	{
 		// without user
@@ -455,18 +410,12 @@ class ViewTest extends TestCase
 		$this->assertSame('outside', $error['props']['layout']);
 	}
 
-	/**
-	 * @covers ::error
-	 */
 	public function testErrorWithCustomCode(): void
 	{
 		$error = View::error('Test', 403);
 		$this->assertSame(403, $error['code']);
 	}
 
-	/**
-	 * @covers ::globals
-	 */
 	public function testGlobals(): void
 	{
 		// defaults
@@ -510,9 +459,6 @@ class ViewTest extends TestCase
 		$this->assertSame('/', $urls['site']);
 	}
 
-	/**
-	 * @covers ::globals
-	 */
 	public function testGlobalsWithUser(): void
 	{
 		$this->app = $this->app->clone([
@@ -531,9 +477,6 @@ class ViewTest extends TestCase
 		$this->assertSame('de', $globals['$translation']['code']);
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseAsHTML(): void
 	{
 		// create panel dist files first to avoid redirect
@@ -551,9 +494,6 @@ class ViewTest extends TestCase
 		$this->assertNotNull($response->body());
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseAsJSON(): void
 	{
 		$this->app = $this->app->clone([
@@ -573,9 +513,6 @@ class ViewTest extends TestCase
 		$this->assertSame('true', $response->header('X-Fiber'));
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromRedirect()
 	{
 		// fake json request for easier assertions
@@ -596,9 +533,6 @@ class ViewTest extends TestCase
 		$this->assertSame('https://getkirby.com', $response->header('Location'));
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromKirbyException()
 	{
 		// fake json request for easier assertions
@@ -619,9 +553,6 @@ class ViewTest extends TestCase
 		$this->assertSame('Test', $json['$view']['props']['error']);
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromException()
 	{
 		// fake json request for easier assertions
@@ -642,9 +573,6 @@ class ViewTest extends TestCase
 		$this->assertSame('Test', $json['$view']['props']['error']);
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromUnsupportedResult()
 	{
 		// fake json request for easier assertions
@@ -664,9 +592,6 @@ class ViewTest extends TestCase
 		$this->assertSame('Invalid Panel response', $json['$view']['props']['error']);
 	}
 
-	/**
-	 * @covers ::searches
-	 */
 	public function testSearches()
 	{
 		$areas  = [

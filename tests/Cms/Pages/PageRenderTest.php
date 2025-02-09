@@ -8,10 +8,10 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Page
- */
+#[CoversClass(Page::class)]
 class PageRenderTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/PageRenderTest';
@@ -146,11 +146,8 @@ class PageRenderTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::isCacheable
-	 * @dataProvider requestMethodProvider
-	 */
-	public function testIsCacheableRequestMethod($method, $expected)
+	#[DataProvider('requestMethodProvider')]
+	public function testIsCacheableRequestMethod(string $method, bool $expected)
 	{
 		$app = $this->app->clone([
 			'request' => [
@@ -163,11 +160,8 @@ class PageRenderTest extends TestCase
 		$this->assertFalse($app->page('default')->isCacheable(VersionId::changes()));
 	}
 
-	/**
-	 * @covers ::isCacheable
-	 * @dataProvider requestMethodProvider
-	 */
-	public function testIsCacheableRequestData($method)
+	#[DataProvider('requestMethodProvider')]
+	public function testIsCacheableRequestData(string $method)
 	{
 		$app = $this->app->clone([
 			'request' => [
@@ -179,9 +173,6 @@ class PageRenderTest extends TestCase
 		$this->assertFalse($app->page('default')->isCacheable());
 	}
 
-	/**
-	 * @covers ::isCacheable
-	 */
 	public function testIsCacheableRequestParams()
 	{
 		$app = $this->app->clone([
@@ -193,9 +184,6 @@ class PageRenderTest extends TestCase
 		$this->assertFalse($app->page('default')->isCacheable());
 	}
 
-	/**
-	 * @covers ::isCacheable
-	 */
 	public function testIsCacheableIgnoreId()
 	{
 		$app = $this->app->clone([
@@ -216,9 +204,6 @@ class PageRenderTest extends TestCase
 		$this->assertFalse($app->page('data')->isCacheable(VersionId::changes()));
 	}
 
-	/**
-	 * @covers ::isCacheable
-	 */
 	public function testIsCacheableIgnoreCallback()
 	{
 		$app = $this->app->clone([
@@ -237,9 +222,6 @@ class PageRenderTest extends TestCase
 		$this->assertFalse($app->page('data')->isCacheable(VersionId::changes()));
 	}
 
-	/**
-	 * @covers ::isCacheable
-	 */
 	public function testIsCacheableDisabledCache()
 	{
 		// deactivate on top level
@@ -263,10 +245,6 @@ class PageRenderTest extends TestCase
 		$this->assertFalse($app->page('default')->isCacheable());
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderCache()
 	{
 		$cache = $this->app->cache('pages');
@@ -286,10 +264,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame($html1, $html2);
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderCacheCustomExpiry()
 	{
 		$cache = $this->app->cache('pages');
@@ -305,10 +279,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame((int)$time, $value->expires());
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderCacheMetadata()
 	{
 		$cache = $this->app->cache('pages');
@@ -336,10 +306,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame('text/plain', $this->app->response()->type());
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderCacheDisabled()
 	{
 		$cache = $this->app->cache('pages');
@@ -367,11 +333,7 @@ class PageRenderTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 * @dataProvider dynamicProvider
-	 */
+	#[DataProvider('dynamicProvider')]
 	public function testRenderCacheDynamicNonActive(string $slug, array $dynamicElements)
 	{
 		$cache = $this->app->cache('pages');
@@ -399,11 +361,7 @@ class PageRenderTest extends TestCase
 		$this->assertSame($html1, $html2);
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 * @dataProvider dynamicProvider
-	 */
+	#[DataProvider('dynamicProvider')]
 	public function testRenderCacheDynamicActiveOnFirstRender(string $slug, array $dynamicElements)
 	{
 		$_COOKIE['foo'] = $_COOKIE['kirby_session'] = 'bar';
@@ -431,11 +389,7 @@ class PageRenderTest extends TestCase
 		$this->assertNotSame($html1, $html2);
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 * @dataProvider dynamicProvider
-	 */
+	#[DataProvider('dynamicProvider')]
 	public function testRenderCacheDynamicActiveOnSecondRender(string $slug, array $dynamicElements)
 	{
 		$cache = $this->app->cache('pages');
@@ -467,10 +421,6 @@ class PageRenderTest extends TestCase
 		$this->assertNotSame($html1, $html2);
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderCacheDataInitial()
 	{
 		$cache = $this->app->cache('pages');
@@ -484,10 +434,6 @@ class PageRenderTest extends TestCase
 		$this->assertNull($cache->retrieve('data.latest.html'));
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderCacheDataPreCached()
 	{
 		$cache = $this->app->cache('pages');
@@ -513,10 +459,6 @@ class PageRenderTest extends TestCase
 		$this->assertNull($value->expires());
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderRepresentationDefault()
 	{
 		$page = $this->app->page('representation');
@@ -524,10 +466,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame('<html>Some HTML: representation</html>', $page->render());
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderRepresentationOverride()
 	{
 		$page = $this->app->page('representation');
@@ -536,10 +474,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame('{"some json": "representation"}', $page->render(contentType: 'json'));
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderRepresentationMissing()
 	{
 		$this->expectException(NotFoundException::class);
@@ -549,10 +483,6 @@ class PageRenderTest extends TestCase
 		$page->render(contentType: 'txt');
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderTemplateMissing()
 	{
 		$this->expectException(NotFoundException::class);
@@ -562,10 +492,6 @@ class PageRenderTest extends TestCase
 		$page->render();
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderController()
 	{
 		$page = $this->app->page('controller');
@@ -574,10 +500,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame('Data says TEST: controller and custom!', $page->render(['test' => 'override', 'test2' => 'custom']));
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderHookBefore()
 	{
 		$app = $this->app->clone([
@@ -593,10 +515,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame('Bar Title : Test', $page->render());
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderHookAfter()
 	{
 		$app = $this->app->clone([
@@ -611,10 +529,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame('foo - Foo Title', $page->render());
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderVersionDetectedFromRequest()
 	{
 		$page = $this->app->page('version');
@@ -635,10 +549,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame("Version: changes\nContent: Changes Title", $page->render());
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderVersionDetectedFromRequestDraft()
 	{
 		$page = $this->app->page('version-draft');
@@ -661,10 +571,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame("Version: changes\nContent: Changes Title", $page->render());
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderVersionDetectedRecursive()
 	{
 		$versionPage = $this->app->page('version');
@@ -689,10 +595,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame("<recursive>\nVersion: latest\nContent: Latest Title\n</recursive>", $page->render(versionId: 'latest'));
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderVersionManual()
 	{
 		$page = $this->app->page('version');
@@ -707,10 +609,6 @@ class PageRenderTest extends TestCase
 		$this->assertNull(VersionId::$render);
 	}
 
-	/**
-	 * @covers ::cacheId
-	 * @covers ::render
-	 */
 	public function testRenderVersionException()
 	{
 		$page = $this->app->page('version-exception');
@@ -725,9 +623,6 @@ class PageRenderTest extends TestCase
 		$this->assertNull(VersionId::$render);
 	}
 
-	/**
-	 * @covers ::renderVersionFromRequest
-	 */
 	public function testRenderVersionFromRequestAuthenticated()
 	{
 		$page = $this->app->page('default');
@@ -755,9 +650,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame('changes', $page->renderVersionFromRequest()->value());
 	}
 
-	/**
-	 * @covers ::renderVersionFromRequest
-	 */
 	public function testRenderVersionFromRequestAuthenticatedDraft()
 	{
 		$page = $this->app->page('version-draft');
@@ -785,9 +677,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame('changes', $page->renderVersionFromRequest()->value());
 	}
 
-	/**
-	 * @covers ::renderVersionFromRequest
-	 */
 	public function testRenderVersionFromRequestMismatch()
 	{
 		$page = $this->app->page('default');
@@ -815,9 +704,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
 	}
 
-	/**
-	 * @covers ::renderVersionFromRequest
-	 */
 	public function testRenderVersionFromRequestInvalidId()
 	{
 		$page       = $this->app->page('default');
@@ -838,9 +724,6 @@ class PageRenderTest extends TestCase
 		$this->assertNull($draftChild->renderVersionFromRequest());
 	}
 
-	/**
-	 * @covers ::renderVersionFromRequest
-	 */
 	public function testRenderVersionFromRequestMissingId()
 	{
 		$page = $this->app->page('default');
@@ -856,9 +739,6 @@ class PageRenderTest extends TestCase
 		$this->assertSame('latest', $page->renderVersionFromRequest()->value());
 	}
 
-	/**
-	 * @covers ::renderVersionFromRequest
-	 */
 	public function testRenderVersionFromRequestMissingToken()
 	{
 		$page       = $this->app->page('default');
@@ -891,9 +771,6 @@ class PageRenderTest extends TestCase
 		$this->assertNull($draftChild->renderVersionFromRequest());
 	}
 
-	/**
-	 * @covers ::renderVersionFromRequest
-	 */
 	public function testRenderVersionFromRequestInvalidToken()
 	{
 		$page       = $this->app->page('default');

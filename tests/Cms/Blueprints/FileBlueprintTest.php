@@ -2,12 +2,13 @@
 
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\File;
+use Kirby\Cms\FileBlueprint;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Cms\FileBlueprint
- */
+#[CoversClass(FileBlueprint::class)]
 class FileBlueprintTest extends TestCase
 {
 	public static function acceptAttributeProvider()
@@ -61,11 +62,8 @@ class FileBlueprintTest extends TestCase
 		unset(Blueprint::$loaded['files/acceptAttribute']);
 	}
 
-	/**
-	 * @covers ::acceptAttribute
-	 * @dataProvider acceptAttributeProvider
-	 */
-	public function testAcceptAttribute($accept, $expected, $notExpected)
+	#[DataProvider('acceptAttributeProvider')]
+	public function testAcceptAttribute(string|array $accept, array $expected, array $notExpected)
 	{
 		Blueprint::$loaded['files/acceptAttribute'] = [
 			'accept' => $accept

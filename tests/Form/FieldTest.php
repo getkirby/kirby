@@ -6,10 +6,10 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Form\Field
- */
+#[CoversClass(Field::class)]
 class FieldTest extends TestCase
 {
 	protected array $originalMixins;
@@ -35,9 +35,6 @@ class FieldTest extends TestCase
 		Field::$mixins = $this->originalMixins;
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -88,10 +85,6 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->after);
 	}
 
-	/**
-	 * @covers ::api
-	 * @covers ::routes
-	 */
 	public function testApi()
 	{
 		// no defined as default
@@ -247,9 +240,6 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->data(true));
 	}
 
-	/**
-	 * @covers ::dialogs
-	 */
 	public function testDialogs()
 	{
 		// no defined as default
@@ -290,9 +280,6 @@ class FieldTest extends TestCase
 		$this->assertSame($routes, $field->dialogs());
 	}
 
-	/**
-	 * @covers ::drawers
-	 */
 	public function testDrawers()
 	{
 		// no defined as default
@@ -332,9 +319,6 @@ class FieldTest extends TestCase
 		$this->assertSame($routes, $field->drawers());
 	}
 
-	/**
-	 * @covers ::errors
-	 */
 	public function testErrors()
 	{
 		Field::$types = [
@@ -363,9 +347,6 @@ class FieldTest extends TestCase
 		$this->assertSame($expected, $field->errors());
 	}
 
-	/**
-	 * @covers ::fill
-	 */
 	public function testFill()
 	{
 		Field::$types = [
@@ -477,9 +458,6 @@ class FieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::isDisabled
-	 */
 	public function testDisabled()
 	{
 		Field::$types = [
@@ -508,12 +486,8 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->isDisabled());
 	}
 
-	/**
-	 * @covers ::isEmpty
-	 * @covers ::isEmptyValue
-	 * @dataProvider emptyValuesProvider
-	 */
-	public function testIsEmpty($value, $expected)
+	#[DataProvider('emptyValuesProvider')]
+	public function testIsEmpty(string|int|array|null $value, bool $expected)
 	{
 		Field::$types = [
 			'test' => []
@@ -530,9 +504,6 @@ class FieldTest extends TestCase
 		$this->assertSame($expected, $field->isEmptyValue($value));
 	}
 
-	/**
-	 * @covers ::isEmptyValue
-	 */
 	public function testIsEmptyValueFromOption()
 	{
 		Field::$types = [
@@ -553,9 +524,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->isEmptyValue('empty'));
 	}
 
-	/**
-	 * @covers ::isHidden
-	 */
 	public function testIsHidden()
 	{
 		// default
@@ -585,10 +553,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->isHidden());
 	}
 
-	/**
-	 * @covers ::isInvalid
-	 * @covers ::isValid
-	 */
 	public function testIsInvalidOrValid()
 	{
 		Field::$types = [
@@ -615,9 +579,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->isInvalid());
 	}
 
-	/**
-	 * @covers ::isRequired
-	 */
 	public function testIsRequired()
 	{
 		Field::$types = [
@@ -640,10 +601,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->isRequired());
 	}
 
-	/**
-	 * @covers ::isSaveable
-	 * @covers ::save
-	 */
 	public function testIsSaveable()
 	{
 		Field::$types = [
@@ -672,9 +629,6 @@ class FieldTest extends TestCase
 		$this->assertFalse($b->save());
 	}
 
-	/**
-	 * @covers ::kirby
-	 */
 	public function testKirby()
 	{
 		Field::$types = [
@@ -770,9 +724,6 @@ class FieldTest extends TestCase
 		$this->assertSame(5, $field->min());
 	}
 
-	/**
-	 * @covers ::model
-	 */
 	public function testModel()
 	{
 		Field::$types = [
@@ -808,10 +759,6 @@ class FieldTest extends TestCase
 		$this->assertSame('mytest', $field->name());
 	}
 
-	/**
-	 * @covers ::needsValue
-	 * @covers ::errors
-	 */
 	public function testNeedsValue()
 	{
 		$page = new Page(['slug' => 'test']);
@@ -954,11 +901,6 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->placeholder);
 	}
 
-	/**
-	 * @covers ::next
-	 * @covers ::prev
-	 * @covers ::siblingsCollection
-	 */
 	public function testPrevNext()
 	{
 		Field::$types = [
@@ -984,10 +926,6 @@ class FieldTest extends TestCase
 		$this->assertSame('a', $siblings->last()->prev()->name());
 	}
 
-	/**
-	 * @covers ::siblings
-	 * @covers ::formFields
-	 */
 	public function testSiblings()
 	{
 		Field::$types = [
@@ -1032,9 +970,6 @@ class FieldTest extends TestCase
 		$this->assertSame('b', $field->formFields()->last()->name());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray()
 	{
 		Field::$types = [
@@ -1060,10 +995,6 @@ class FieldTest extends TestCase
 		$this->assertArrayNotHasKey('model', $array);
 	}
 
-	/**
-	 * @covers ::toFormValue
-	 * @covers ::value
-	 */
 	public function testToFormValue()
 	{
 		Field::$types['test'] = [];
@@ -1093,10 +1024,6 @@ class FieldTest extends TestCase
 		$this->assertNull($field->value());
 	}
 
-	/**
-	 * @covers ::toStoredValue
-	 * @covers ::data
-	 */
 	public function testToStoredValue()
 	{
 		Field::$types = [
@@ -1119,10 +1046,6 @@ class FieldTest extends TestCase
 		$this->assertSame('a, b, c', $field->data());
 	}
 
-	/**
-	 * @covers ::toStoredValue
-	 * @covers ::data
-	 */
 	public function testToStoredValueWhenUnsaveable()
 	{
 		Field::$types = [
@@ -1142,11 +1065,6 @@ class FieldTest extends TestCase
 		$this->assertNull($field->data());
 	}
 
-	/**
-	 * @covers ::validate
-	 * @covers ::validations
-	 * @covers ::errors
-	 */
 	public function testValidate()
 	{
 		Field::$types = [
@@ -1197,11 +1115,6 @@ class FieldTest extends TestCase
 		$this->assertSame($expected, $field->errors());
 	}
 
-	/**
-	 * @covers ::validate
-	 * @covers ::validations
-	 * @covers ::isValid
-	 */
 	public function testValidateByAttr()
 	{
 		Field::$types = [
@@ -1257,12 +1170,6 @@ class FieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	/**
-	 * @covers ::validate
-	 * @covers ::validations
-	 * @covers ::errors
-	 * @covers ::isValid
-	 */
 	public function testValidateWithCustomValidator()
 	{
 		Field::$types = [

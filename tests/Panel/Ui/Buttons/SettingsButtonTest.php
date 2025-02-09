@@ -4,15 +4,11 @@ namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\SettingsButton
- */
+#[CoversClass(SettingsButton::class)]
 class SettingsButtonTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
 	public function testButton()
 	{
 		$page   = new Page(['slug' => 'test']);

@@ -3,12 +3,11 @@
 namespace Kirby\Exception;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
+#[CoversNothing]
 class LogicExceptionTest extends TestCase
 {
-	/**
-	 * @coversNothing
-	 */
 	public function testDefaults()
 	{
 		$exception = new LogicException();

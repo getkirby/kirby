@@ -214,10 +214,8 @@ class EmailTest extends TestCase
 		], $email->toArray()['to']);
 	}
 
-	/**
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
+	#[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+	#[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
 	public function testUserData()
 	{
 		$app = new App([

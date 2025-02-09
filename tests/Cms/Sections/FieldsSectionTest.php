@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FieldsSectionTest extends TestCase
 {
@@ -39,10 +40,8 @@ class FieldsSectionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider modelProvider
-	 */
-	public function testSkipTitle($model, $skip)
+	#[DataProvider('modelProvider')]
+	public function testSkipTitle(\Kirby\Cms\Page|\Kirby\Cms\Site|\Kirby\Cms\File|\Kirby\Cms\User $model, bool $skip)
 	{
 		$fields = [
 			'text' => [

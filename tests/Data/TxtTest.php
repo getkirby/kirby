@@ -4,20 +4,13 @@ namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\Txt
- */
+#[CoversClass(Txt::class)]
 class TxtTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 * @covers ::decode
-	 */
 	public function testEncodeDecode()
 	{
 		$array = [
@@ -41,12 +34,6 @@ class TxtTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Txt::decode(['this is' => 'an array']));
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 * @covers ::decode
-	 */
 	public function testEncodeDecodeMixedCase()
 	{
 		$array = [
@@ -69,11 +56,6 @@ class TxtTest extends TestCase
 		], $result);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
 	public function testEncodeMissingValues()
 	{
 		$array = [
@@ -90,11 +72,6 @@ class TxtTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
 	public function testEncodeMultiline()
 	{
 		$array = [
@@ -109,11 +86,6 @@ class TxtTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
 	public function testEncodeDecodeDivider()
 	{
 		$array = [
@@ -131,11 +103,6 @@ class TxtTest extends TestCase
 		$this->assertSame($array, Txt::decode($data));
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
 	public function testEncodeArray()
 	{
 		$array = [
@@ -148,11 +115,6 @@ class TxtTest extends TestCase
 		$this->assertSame(file_get_contents(static::FIXTURES . '/test.txt'), $data);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
 	public function testEncodeFloat()
 	{
 		$data = Txt::encode([
@@ -162,11 +124,6 @@ class TxtTest extends TestCase
 		$this->assertSame('Number: 3.2', $data);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
 	public function testEncodeFloatWithLocaleSetting()
 	{
 		$currentLocale = setlocale(LC_ALL, 0);
@@ -181,9 +138,6 @@ class TxtTest extends TestCase
 		setlocale(LC_ALL, $currentLocale);
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeFile()
 	{
 		$array = [
@@ -195,9 +149,6 @@ class TxtTest extends TestCase
 		$this->assertSame($array, $data);
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeBom1()
 	{
 		$string = "\xEF\xBB\xBFTitle: title field with BOM \xEF\xBB\xBF\n----\nText: text field";
@@ -209,9 +160,6 @@ class TxtTest extends TestCase
 		$this->assertSame($array, Txt::decode($string));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeBom2()
 	{
 		$string = "\xEF\xBB\xBFTitle: title field with BOM\n--\xEF\xBB\xBF--\nand more text\n----\nText: text field";
@@ -223,9 +171,6 @@ class TxtTest extends TestCase
 		$this->assertSame($array, Txt::decode($string));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeInvalid1()
 	{
 		// pass invalid object
@@ -234,9 +179,6 @@ class TxtTest extends TestCase
 		Txt::decode(new \stdClass());
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeInvalid2()
 	{
 		// pass invalid int

@@ -5,10 +5,9 @@ namespace Kirby\Form;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Cms\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Form\Fields
- */
+#[CoversClass(Fields::class)]
 class FieldsTest extends TestCase
 {
 	protected App $app;
@@ -24,9 +23,6 @@ class FieldsTest extends TestCase
 		$this->model = new Page(['slug' => 'test']);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstruct()
 	{
 		$fields = new Fields([
@@ -44,9 +40,6 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructWithModel()
 	{
 		$fields = new Fields([
@@ -64,9 +57,6 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	/**
-	 * @covers ::defaults
-	 */
 	public function testDefaults()
 	{
 		$fields = new Fields([
@@ -83,9 +73,6 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->defaults());
 	}
 
-	/**
-	 * @covers ::errors
-	 */
 	public function testErrors()
 	{
 		$fields = new Fields([
@@ -131,9 +118,6 @@ class FieldsTest extends TestCase
 		], $fields->errors());
 	}
 
-	/**
-	 * @covers ::errors
-	 */
 	public function testErrorsWithoutErrors()
 	{
 		$fields = new Fields([
@@ -148,9 +132,6 @@ class FieldsTest extends TestCase
 		$this->assertSame([], $fields->errors());
 	}
 
-	/**
-	 * @covers ::fill
-	 */
 	public function testFill()
 	{
 		$fields = new Fields([
@@ -177,10 +158,6 @@ class FieldsTest extends TestCase
 		$this->assertSame($input, $fields->toArray(fn ($field) => $field->value()));
 	}
 
-	/**
-	 * @covers ::findByKey
-	 * @covers ::findByKeyRecursive
-	 */
 	public function testFind()
 	{
 		Field::$types['test'] = [
@@ -209,10 +186,6 @@ class FieldsTest extends TestCase
 		$this->assertNull($fields->find('mother+missing-child'));
 	}
 
-	/**
-	 * @covers ::findByKey
-	 * @covers ::findByKeyRecursive
-	 */
 	public function testFindWhenFieldHasNoForm()
 	{
 		$fields = new Fields([
@@ -224,9 +197,6 @@ class FieldsTest extends TestCase
 		$this->assertNull($fields->find('mother+child'));
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray()
 	{
 		$fields = new Fields([
@@ -241,9 +211,6 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->toArray(fn ($field) => $field->name()));
 	}
 
-	/**
-	 * @covers ::toFormValues
-	 */
 	public function testToFormValues()
 	{
 		$fields = new Fields([
@@ -260,9 +227,6 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
 	}
 
-	/**
-	 * @covers ::toStoredValues
-	 */
 	public function testToStoredValues()
 	{
 		Field::$types['test'] = [

@@ -4,15 +4,11 @@ namespace Kirby\Option;
 
 use Kirby\Cms\Page;
 use Kirby\Field\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Option\Options
- */
+#[CoversClass(Options::class)]
 class OptionsTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstruct()
 	{
 		$options = new Options([
@@ -27,9 +23,6 @@ class OptionsTest extends TestCase
 		$this->assertSame('b', $options->last()->text->translations['en']);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactory()
 	{
 		$options = Options::factory(['a', 'b']);
@@ -41,9 +34,6 @@ class OptionsTest extends TestCase
 		$this->assertSame('b', $options->last()->text->translations['en']);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactoryWithAssocArray()
 	{
 		$options = Options::factory([
@@ -58,9 +48,6 @@ class OptionsTest extends TestCase
 		$this->assertSame('Option B', $options->last()->text->translations['en']);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactoryWithOptionArray()
 	{
 		$options = Options::factory([
@@ -75,9 +62,6 @@ class OptionsTest extends TestCase
 		$this->assertSame('Option B', $options->last()->text->translations['en']);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactoryWithTranslatedOptions()
 	{
 		$options = Options::factory([
@@ -94,9 +78,6 @@ class OptionsTest extends TestCase
 		$this->assertSame('Variante B', $options->last()->text->translations['de']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRender()
 	{
 		$model = new Page(['slug' => 'test']);

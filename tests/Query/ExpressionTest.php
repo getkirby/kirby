@@ -4,16 +4,12 @@ namespace Kirby\Query;
 
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Query\Expression
- */
+#[CoversClass(Expression::class)]
 class ExpressionTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::factory
-	 */
 	public function testFactory()
 	{
 		$expression = Expression::factory('a ? b : c');
@@ -25,9 +21,6 @@ class ExpressionTest extends TestCase
 		$this->assertInstanceOf(Argument::class, $expression->parts[4]);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactoryWithoutComparison()
 	{
 		$expression = Expression::factory('foo.bar(true).url');
@@ -72,10 +65,7 @@ class ExpressionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::parse
-	 * @dataProvider parseProvider
-	 */
+	#[DataProvider('parseProvider')]
 	public function testParse(string $expression, array $result)
 	{
 		$parts = Expression::parse($expression);
@@ -96,19 +86,13 @@ class ExpressionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @dataProvider resolveProvider
-	 */
+	#[DataProvider('resolveProvider')]
 	public function testResolve(string $input, mixed $result)
 	{
 		$expression = Expression::factory($input);
 		$this->assertSame($result, $expression->resolve());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolveWithObject()
 	{
 		$expression = Expression::factory('user.isYello(true) ? user.says("me") : "you"');
@@ -116,9 +100,6 @@ class ExpressionTest extends TestCase
 		$this->assertSame('me', $expression->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolveIncompleteTernary()
 	{
 		$expression = Expression::factory('"a" ? "b"');

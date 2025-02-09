@@ -6,15 +6,11 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Panel\Ui\FilePreview;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\FilePreviews\PdfFilePreview
- */
+#[CoversClass(PdfFilePreview::class)]
 class PdfFilePreviewTest extends TestCase
 {
-	/**
-	 * @covers ::accepts
-	 */
 	public function testAccepts()
 	{
 		$page = new Page(['slug' => 'test']);
@@ -26,9 +22,6 @@ class PdfFilePreviewTest extends TestCase
 		$this->assertFalse(PdfFilePreview::accepts($file));
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testFactory()
 	{
 		$page    = new Page(['slug' => 'test']);

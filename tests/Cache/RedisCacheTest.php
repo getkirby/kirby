@@ -3,10 +3,9 @@
 namespace Kirby\Cache;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cache\RedisCache
- */
+#[CoversClass(RedisCache::class)]
 class RedisCacheTest extends TestCase
 {
 	public function setUp(): void
@@ -30,10 +29,6 @@ class RedisCacheTest extends TestCase
 		$connection->flush();
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::enabled
-	 */
 	public function testConstructServer()
 	{
 		// invalid port
@@ -49,9 +44,6 @@ class RedisCacheTest extends TestCase
 		$this->assertFalse($cache->enabled());
 	}
 
-	/**
-	 * @covers ::databaseNum
-	 */
 	public function testDatabase()
 	{
 		$cache = new RedisCache([
@@ -65,19 +57,12 @@ class RedisCacheTest extends TestCase
 		$this->assertSame('A basic value', $cache->retrieve('a')->value());
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
 	public function testEnabled()
 	{
 		$cache = new RedisCache();
 		$this->assertTrue($cache->enabled());
 	}
 
-	/**
-	 * @covers ::exists
-	 * @covers ::flush
-	 */
 	public function testFlush()
 	{
 		$cache = new RedisCache();
@@ -96,13 +81,6 @@ class RedisCacheTest extends TestCase
 		$this->assertFalse($cache->exists('c'));
 	}
 
-	/**
-	 * @covers ::exists
-	 * @covers ::key
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
 	public function testOperations()
 	{
 		$cache = new RedisCache();
@@ -122,14 +100,6 @@ class RedisCacheTest extends TestCase
 		$this->assertFalse($cache->remove('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::exists
-	 * @covers ::key
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
 	public function testOperationsWithPrefix()
 	{
 		$cache1 = new RedisCache([

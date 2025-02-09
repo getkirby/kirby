@@ -4,13 +4,12 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionMethod;
 use Whoops\Handler\CallbackHandler;
 use Whoops\Handler\PlainTextHandler;
 
-/**
- * @coversDefaultClass \Kirby\Cms\AppErrors
- */
+#[CoversClass(AppErrors::class)]
 class AppErrorsTest extends TestCase
 {
 	protected App|null $originalApp;
@@ -48,9 +47,6 @@ class AppErrorsTest extends TestCase
 		App::$enableWhoops = false;
 	}
 
-	/**
-	 * @covers ::getAdditionalWhoopsHandler
-	 */
 	public function testExceptionHook()
 	{
 		$result = null;
@@ -80,9 +76,6 @@ class AppErrorsTest extends TestCase
 		$this->assertStringContainsString('Exception: Some error message in', ErrorLog::$log);
 	}
 
-	/**
-	 * @covers ::getAdditionalWhoopsHandler
-	 */
 	public function testExceptionHookDisableLogging()
 	{
 		$result = null;
@@ -113,10 +106,6 @@ class AppErrorsTest extends TestCase
 		$this->assertSame('', ErrorLog::$log);
 	}
 
-	/**
-	 * @covers ::handleCliErrors
-	 * @covers ::getAdditionalWhoopsHandler
-	 */
 	public function testHandleCliErrors()
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
@@ -135,10 +124,6 @@ class AppErrorsTest extends TestCase
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 	}
 
-	/**
-	 * @covers ::handleErrors
-	 * @covers ::getAdditionalWhoopsHandler
-	 */
 	public function testHandleErrors1()
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
@@ -160,10 +145,6 @@ class AppErrorsTest extends TestCase
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 	}
 
-	/**
-	 * @covers ::handleErrors
-	 * @covers ::getAdditionalWhoopsHandler
-	 */
 	public function testHandleErrors2()
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
@@ -188,10 +169,6 @@ class AppErrorsTest extends TestCase
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 	}
 
-	/**
-	 * @covers ::handleErrors
-	 * @covers ::getAdditionalWhoopsHandler
-	 */
 	public function testHandleErrors3()
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
@@ -221,9 +198,6 @@ class AppErrorsTest extends TestCase
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 	}
 
-	/**
-	 * @covers ::handleErrors
-	 */
 	public function testHandleErrorsGlobalSetting()
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
@@ -254,10 +228,6 @@ class AppErrorsTest extends TestCase
 		$this->assertCount(2, $handlers);
 	}
 
-	/**
-	 * @covers ::handleHtmlErrors
-	 * @covers ::getAdditionalWhoopsHandler
-	 */
 	public function testHandleHtmlErrors()
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
@@ -332,10 +302,6 @@ class AppErrorsTest extends TestCase
 		$this->assertCount(0, $handlers);
 	}
 
-	/**
-	 * @covers ::handleJsonErrors
-	 * @covers ::getAdditionalWhoopsHandler
-	 */
 	public function testHandleJsonErrors()
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
@@ -412,11 +378,6 @@ class AppErrorsTest extends TestCase
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 	}
 
-	/**
-	 * @covers ::setWhoopsHandler
-	 * @covers ::unsetWhoopsHandler
-	 * @covers ::getAdditionalWhoopsHandler
-	 */
 	public function testSetUnsetWhoopsHandler()
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
@@ -450,9 +411,6 @@ class AppErrorsTest extends TestCase
 		$this->assertCount(0, $handlers);
 	}
 
-	/**
-	 * @covers ::whoops
-	 */
 	public function testWhoops()
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');

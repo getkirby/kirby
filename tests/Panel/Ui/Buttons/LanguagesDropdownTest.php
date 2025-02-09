@@ -5,16 +5,11 @@ namespace Kirby\Panel\Ui\Buttons;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Panel\Areas\AreaTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\LanguagesDropdown
- * @covers ::__construct
- */
+#[CoversClass(LanguagesDropdown::class)]
 class LanguagesDropdownTest extends AreaTestCase
 {
-	/**
-	 * @covers ::hasChanges
-	 */
 	public function testHasChanges()
 	{
 		$this->install();
@@ -37,9 +32,6 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertTrue($button->hasChanges());
 	}
 
-	/**
-	 * @covers ::option
-	 */
 	public function testOption()
 	{
 		$page     = new Page(['slug' => 'test']);
@@ -55,10 +47,6 @@ class LanguagesDropdownTest extends AreaTestCase
 		], $button->option($language));
 	}
 
-	/**
-	 * @covers ::options
-	 * @
-	 */
 	public function testOptionsSingleLang()
 	{
 		$page   = new Page(['slug' => 'test']);
@@ -66,9 +54,6 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertSame([], $button->options());
 	}
 
-	/**
-	 * @covers ::options
-	 */
 	public function testOptionsMultiLang()
 	{
 		$this->enableMultilang();
@@ -97,9 +82,6 @@ class LanguagesDropdownTest extends AreaTestCase
 		], $button->options());
 	}
 
-	/**
-	 * @covers ::props
-	 */
 	public function testProps()
 	{
 		$page   = new Page(['slug' => 'test']);
@@ -108,9 +90,6 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertFalse($props['hasChanges']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderDefault()
 	{
 		$page   = new Page(['slug' => 'test']);
@@ -118,9 +97,6 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertNull($button->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderSingleLang()
 	{
 		$this->enableMultilang();
@@ -139,10 +115,6 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertNull($button->render());
 	}
 
-	/**
-	 * @covers ::props
-	 * @covers ::render
-	 */
 	public function testRenderMultiLang()
 	{
 		$this->enableMultilang();

@@ -4,10 +4,11 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Cms\FilePermissions
- */
+#[CoversClass(FilePermissions::class)]
+#[CoversClass(ModelPermissions::class)]
 class FilePermissionsTest extends TestCase
 {
 	public function setUp(): void
@@ -37,11 +38,8 @@ class FilePermissionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithAdmin($action)
+	#[DataProvider('actionProvider')]
+	public function testWithAdmin(string $action)
 	{
 		$this->app->impersonate('kirby');
 
@@ -55,11 +53,8 @@ class FilePermissionsTest extends TestCase
 		$this->assertTrue($perms->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithNobody($action)
+	#[DataProvider('actionProvider')]
+	public function testWithNobody(string $action)
 	{
 		$page  = new Page(['slug' => 'test']);
 		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
@@ -68,9 +63,6 @@ class FilePermissionsTest extends TestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
-	 */
 	public function testCanFromCache()
 	{
 		$this->app->impersonate('bastian');
@@ -95,9 +87,6 @@ class FilePermissionsTest extends TestCase
 		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
-	 */
 	public function testCanFromCacheDynamic()
 	{
 		$this->expectException(LogicException::class);
@@ -113,9 +102,6 @@ class FilePermissionsTest extends TestCase
 		FilePermissions::canFromCache($file, 'changeTemplate');
 	}
 
-	/**
-	 * @covers ::canChangeTemplate
-	 */
 	public function testCannotChangeTemplate()
 	{
 		$this->app->impersonate('kirby');
@@ -126,9 +112,6 @@ class FilePermissionsTest extends TestCase
 		$this->assertFalse($file->permissions()->can('changeTemplate'));
 	}
 
-	/**
-	 * @covers ::canChangeTemplate
-	 */
 	public function testCanChangeTemplate()
 	{
 		$this->app = new App([

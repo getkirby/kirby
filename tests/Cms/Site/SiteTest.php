@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
 use Kirby\Panel\Site as Panel;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SiteTest extends TestCase
 {
@@ -198,12 +199,10 @@ class SiteTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider previewUrlProvider
-	 */
+	#[DataProvider('previewUrlProvider')]
 	public function testCustomPreviewUrl(
-		$input,
-		$expected,
+		string|bool|null $input,
+		string|null $expected,
 		bool $authenticated = true
 	): void {
 		$app = new App([

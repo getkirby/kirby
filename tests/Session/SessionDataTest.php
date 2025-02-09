@@ -4,10 +4,9 @@ namespace Kirby\Session;
 
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Session\SessionData
- */
+#[CoversClass(SessionData::class)]
 class SessionDataTest extends TestCase
 {
 	protected Session $session;
@@ -27,9 +26,6 @@ class SessionDataTest extends TestCase
 		unset($this->session, $this->sessionData);
 	}
 
-	/**
-	 * @covers ::set
-	 */
 	public function testSet()
 	{
 		// string as key
@@ -60,9 +56,6 @@ class SessionDataTest extends TestCase
 		$this->assertSame('someValue2', $this->sessionData->get('someKey2'));
 	}
 
-	/**
-	 * @covers ::increment
-	 */
 	public function testIncrement()
 	{
 		$this->session->ensuredToken = false;
@@ -88,9 +81,6 @@ class SessionDataTest extends TestCase
 		$this->assertSame(155, $this->sessionData->get('someInt'));
 	}
 
-	/**
-	 * @covers ::increment
-	 */
 	public function testIncrementNonIntValue()
 	{
 		$this->expectException(LogicException::class);
@@ -99,9 +89,6 @@ class SessionDataTest extends TestCase
 		$this->sessionData->increment('someString', 10);
 	}
 
-	/**
-	 * @covers ::decrement
-	 */
 	public function testDecrement()
 	{
 		$this->session->ensuredToken = false;
@@ -127,9 +114,6 @@ class SessionDataTest extends TestCase
 		$this->assertSame(85, $this->sessionData->get('someInt'));
 	}
 
-	/**
-	 * @covers ::decrement
-	 */
 	public function testDecrementNonIntValue()
 	{
 		$this->expectException(LogicException::class);
@@ -138,9 +122,6 @@ class SessionDataTest extends TestCase
 		$this->sessionData->decrement('someString', 10);
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGet()
 	{
 		// string as key
@@ -156,9 +137,6 @@ class SessionDataTest extends TestCase
 		], $this->sessionData->get());
 	}
 
-	/**
-	 * @covers ::pull
-	 */
 	public function testPull()
 	{
 		$this->session->ensuredToken = false;
@@ -172,9 +150,6 @@ class SessionDataTest extends TestCase
 		$this->assertSame('someDefault', $this->sessionData->pull('someOtherString', 'someDefault'));
 	}
 
-	/**
-	 * @covers ::remove
-	 */
 	public function testRemove()
 	{
 		// string as key
@@ -194,9 +169,6 @@ class SessionDataTest extends TestCase
 		$this->assertSame([], $this->sessionData->get());
 	}
 
-	/**
-	 * @covers ::clear
-	 */
 	public function testClear()
 	{
 		$this->session->ensuredToken = false;
@@ -207,9 +179,6 @@ class SessionDataTest extends TestCase
 		$this->assertSame([], $this->sessionData->get());
 	}
 
-	/**
-	 * @covers ::reload
-	 */
 	public function testReload()
 	{
 		$newData = ['someOtherString' => 'someOtherValue'];

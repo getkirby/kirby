@@ -2,17 +2,11 @@
 
 namespace Kirby\Template;
 
-/**
- * @coversDefaultClass \Kirby\Template\Slots
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Slots::class)]
 class SlotsTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::__get
-	 * @covers ::__call
-	 * @covers ::count
-	 */
 	public function testSlots()
 	{
 		$header = new Slot('header');

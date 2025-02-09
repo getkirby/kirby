@@ -3,19 +3,17 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \Kirby\Sane\Svg
- */
+#[CoversClass(Svg::class)]
 class SvgTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Svg';
 
 	protected static string $type = 'svg';
 
-	/**
-	 * @dataProvider allowedProvider
-	 */
+	#[DataProvider('allowedProvider')]
 	public function testAllowed(string $file)
 	{
 		$fixture = $this->fixture($file);
@@ -50,9 +48,7 @@ class SvgTest extends TestCase
 		$this->assertSame($cleaned, Svg::sanitize($fixture));
 	}
 
-	/**
-	 * @dataProvider invalidProvider
-	 */
+	#[DataProvider('invalidProvider')]
 	public function testInvalid(string $file)
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -130,6 +126,7 @@ class SvgTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The namespace "https://malicious.com/script.php" is not allowed (around line 1)');
+
 		Svg::validateFile($fixture);
 	}
 
@@ -142,6 +139,7 @@ class SvgTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The namespace "https://malicious.com/script.php" is not allowed (around line 1)');
+
 		Svg::validateFile($fixture);
 	}
 

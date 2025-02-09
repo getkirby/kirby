@@ -5,10 +5,10 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Http\Environment
- */
+#[CoversClass(Environment::class)]
 class EnvironmentTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/EnvironmentTest';
@@ -133,9 +133,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('getkirby.com', $env->host());
 	}
 
-	/**
-	 * @covers ::baseUri
-	 */
 	public function testBaseUri()
 	{
 		// nothing given
@@ -143,9 +140,6 @@ class EnvironmentTest extends TestCase
 		$this->assertInstanceOf(Uri::class, $env->baseUri());
 	}
 
-	/**
-	 * @covers ::baseUrl
-	 */
 	public function testBaseUrl()
 	{
 		// nothing given
@@ -201,9 +195,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('https://getkirby.com:8888', $env->baseUrl());
 	}
 
-	/**
-	 * @covers ::cli
-	 */
 	public function testCli()
 	{
 		// enabled
@@ -223,9 +214,6 @@ class EnvironmentTest extends TestCase
 		$this->assertFalse($env->cli());
 	}
 
-	/**
-	 * @covers ::detect
-	 */
 	public function testDetect()
 	{
 		// empty server info
@@ -357,14 +345,8 @@ class EnvironmentTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::detectForwarded
-	 * @covers ::detectForwardedHost
-	 * @covers ::detectForwardedHttps
-	 * @covers ::detectForwardedPort
-	 * @dataProvider detectForwardedProvider
-	 */
-	public function testDetectForwarded($info, $expected)
+	#[DataProvider('detectForwardedProvider')]
+	public function testDetectForwarded(array $info, string $expected)
 	{
 		$env = new Environment(['allowed' => '*'], $info);
 
@@ -396,9 +378,6 @@ class EnvironmentTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGet()
 	{
 		$env = new Environment(null, $info = [
@@ -419,10 +398,7 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('lower case stuff', $env->get('argv'));
 	}
 
-	/**
-	 * @covers ::getGlobally
-	 * @backupGlobals enabled
-	 */
+	#[\PHPUnit\Framework\Attributes\BackupGlobals(true)]
 	public function testGetGlobally()
 	{
 		$_SERVER = [
@@ -463,9 +439,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('lower case stuff (app)', Environment::getGlobally('argv'));
 	}
 
-	/**
-	 * @covers ::host
-	 */
 	public function testHost()
 	{
 		// via server name
@@ -483,9 +456,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('127.0.0.1', $env->host());
 	}
 
-	/**
-	 * @covers ::host
-	 */
 	public function testHostAllowedSingle()
 	{
 		$env = new Environment(['allowed' => 'https://getkirby.com']);
@@ -493,9 +463,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('getkirby.com', $env->host());
 	}
 
-	/**
-	 * @covers ::host
-	 */
 	public function testHostAllowedMultiple()
 	{
 		$options = [
@@ -534,9 +501,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('test.getkirby.com', $env->host());
 	}
 
-	/**
-	 * @covers ::host
-	 */
 	public function testHostForbidden()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -555,9 +519,6 @@ class EnvironmentTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::host
-	 */
 	public function testHostIgnoreInsecure()
 	{
 		// not possible via insecure header
@@ -581,9 +542,6 @@ class EnvironmentTest extends TestCase
 		$this->assertNull($env->host());
 	}
 
-	/**
-	 * @covers ::host
-	 */
 	public function testHostInsecure()
 	{
 		// insecure host header
@@ -629,12 +587,8 @@ class EnvironmentTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::https
-	 * @covers ::detectHttps
-	 * @dataProvider httpsProvider
-	 */
-	public function testHttps($value, $expected)
+	#[DataProvider('httpsProvider')]
+	public function testHttps(string|int|bool|null $value, bool $expected)
 	{
 		// via server config
 		$env = new Environment(null, [
@@ -644,9 +598,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame($expected, $env->https());
 	}
 
-	/**
-	 * @covers ::https
-	 */
 	public function testHttpsAllowedSingle()
 	{
 		$env = new Environment(['allowed' => 'http://getkirby.com']);
@@ -656,9 +607,6 @@ class EnvironmentTest extends TestCase
 		$this->assertTrue($env->https());
 	}
 
-	/**
-	 * @covers ::https
-	 */
 	public function testHttpsAllowedMultiple()
 	{
 		$options = [
@@ -737,9 +685,6 @@ class EnvironmentTest extends TestCase
 		$this->assertTrue($env->https());
 	}
 
-	/**
-	 * @covers ::https
-	 */
 	public function testHttpsForbidden()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -771,12 +716,8 @@ class EnvironmentTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::https
-	 * @covers ::detectHttpsProtocol
-	 * @dataProvider httpsFromProtocolProvider
-	 */
-	public function testHttpsFromProtocol($value, $expected)
+	#[DataProvider('httpsFromProtocolProvider')]
+	public function testHttpsFromProtocol(string|null $value, bool $expected)
 	{
 		$env = new Environment(['allowed' => '*'], [
 			'HTTP_FORWARDED' => 'host=getkirby.com;proto="' . $value . '"',
@@ -792,9 +733,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame($expected, $env->https());
 	}
 
-	/**
-	 * @covers ::https
-	 */
 	public function testHttpsIgnoreInsecure()
 	{
 		$env = new Environment(null, [
@@ -810,9 +748,6 @@ class EnvironmentTest extends TestCase
 		$this->assertFalse($env->https());
 	}
 
-	/**
-	 * @covers ::https
-	 */
 	public function testHttpsInsecure()
 	{
 		// insecure forwarded https header
@@ -846,9 +781,6 @@ class EnvironmentTest extends TestCase
 		$this->assertNull($env->host());
 	}
 
-	/**
-	 * @covers ::info
-	 */
 	public function testInfo()
 	{
 		// no info
@@ -884,10 +816,6 @@ class EnvironmentTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::address
-	 * @covers ::ip
-	 */
 	public function testIp()
 	{
 		// no ip
@@ -905,9 +833,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('127.0.0.1', $env->ip());
 	}
 
-	/**
-	 * @covers ::isBehindProxy
-	 */
 	public function testIsBehindProxy()
 	{
 		// no value given
@@ -1016,11 +941,8 @@ class EnvironmentTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::isLocal
-	 * @dataProvider isLocalWithIpProvider
-	 */
-	public function testIsLocalWithIp($address, $forwardedFor, $clientIp, bool $expected)
+	#[DataProvider('isLocalWithIpProvider')]
+	public function testIsLocalWithIp(string|null $address, string|null $forwardedFor, string|bool|null $clientIp, bool $expected)
 	{
 		$env = new Environment(null, [
 			'REMOTE_ADDR' => $address,
@@ -1051,11 +973,8 @@ class EnvironmentTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::isLocal
-	 * @dataProvider isLocalWithServerNameProvider
-	 */
-	public function testIsLocalWithServerName($name, $expected)
+	#[DataProvider('isLocalWithServerNameProvider')]
+	public function testIsLocalWithServerName(string $name, bool $expected)
 	{
 		$env = new Environment(null, [
 			'SERVER_NAME' => $name
@@ -1105,9 +1024,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('test cli option', $env->options(static::FIXTURES)['test']);
 	}
 
-	/**
-	 * @covers ::path
-	 */
 	public function testPath()
 	{
 		// the path in cli requests is always empty
@@ -1131,10 +1047,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('subfolder', $env->path());
 	}
 
-	/**
-	 * @covers ::port
-	 * @covers ::detectPort
-	 */
 	public function testPort()
 	{
 		// no port given
@@ -1200,9 +1112,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame(443, $env->port());
 	}
 
-	/**
-	 * @covers ::port
-	 */
 	public function testPortAllowedSingle()
 	{
 		$env = new Environment(['allowed' => 'http://getkirby.com']);
@@ -1212,9 +1121,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame(9999, $env->port());
 	}
 
-	/**
-	 * @covers ::port
-	 */
 	public function testPortAllowedMultiple()
 	{
 		$options = [
@@ -1276,9 +1182,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame(9999, $env->port());
 	}
 
-	/**
-	 * @covers ::port
-	 */
 	public function testPortForbidden()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -1297,9 +1200,6 @@ class EnvironmentTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::port
-	 */
 	public function testPortIgnoreInsecure()
 	{
 		$env = new Environment(null, [
@@ -1315,9 +1215,6 @@ class EnvironmentTest extends TestCase
 		$this->assertNull($env->port());
 	}
 
-	/**
-	 * @covers ::port
-	 */
 	public function testPortInsecure()
 	{
 		$env = new Environment(['allowed' => '*'], [
@@ -1421,11 +1318,8 @@ class EnvironmentTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::requestUri
-	 * @dataProvider requestUriProvider
-	 */
-	public function testRequestUri($value, $expected)
+	#[DataProvider('requestUriProvider')]
+	public function testRequestUri(string|null $value, array $expected)
 	{
 		$env = new Environment(null, [
 			'REQUEST_URI' => $value,
@@ -1509,22 +1403,12 @@ class EnvironmentTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::sanitize
-	 * @covers ::sanitizeHost
-	 * @covers ::sanitizePort
-	 * @dataProvider sanitizeProvider
-	 */
-	public function testSanitize($key, $value, $expected)
+	#[DataProvider('sanitizeProvider')]
+	public function testSanitize(string $key, string|int $value, string|int|null $expected)
 	{
 		$this->assertSame($expected, Environment::sanitize($key, $value));
 	}
 
-	/**
-	 * @covers ::sanitize
-	 * @covers ::sanitizeHost
-	 * @covers ::sanitizePort
-	 */
 	public function testSanitizeAll()
 	{
 		$input    = [];
@@ -1572,12 +1456,8 @@ class EnvironmentTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::scriptPath
-	 * @covers ::sanitizeScriptPath
-	 * @dataProvider scriptPathProvider
-	 */
-	public function testScriptPath($value, $expected)
+	#[DataProvider('scriptPathProvider')]
+	public function testScriptPath(string|null $value, string $expected)
 	{
 		$env = new Environment(['cli' => false], [
 			'SCRIPT_NAME' => $value
@@ -1586,9 +1466,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame($expected, $env->scriptPath());
 	}
 
-	/**
-	 * @covers ::scriptPath
-	 */
 	public function testScriptPathOnCli()
 	{
 		$env = new Environment(['cli' => true]);
@@ -1596,9 +1473,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('', $env->scriptPath());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray()
 	{
 		$env = new Environment([

@@ -5,10 +5,9 @@ namespace Kirby\Cms;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Obj;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Helpers
- */
+#[CoversClass(Helpers::class)]
 class HelpersTest extends HelpersTestCase
 {
 	protected array $deprecations = [];
@@ -27,9 +26,6 @@ class HelpersTest extends HelpersTestCase
 		Helpers::$deprecations = $this->deprecations;
 	}
 
-	/**
-	 * @covers ::deprecated
-	 */
 	public function testDeprecated()
 	{
 		$this->assertError(
@@ -39,9 +35,6 @@ class HelpersTest extends HelpersTestCase
 		);
 	}
 
-	/**
-	 * @covers ::deprecated
-	 */
 	public function testDeprecatedKeyUndefined()
 	{
 		$this->assertError(
@@ -51,9 +44,6 @@ class HelpersTest extends HelpersTestCase
 		);
 	}
 
-	/**
-	 * @covers ::deprecated
-	 */
 	public function testDeprecatedActivated()
 	{
 		$this->assertError(
@@ -66,9 +56,6 @@ class HelpersTest extends HelpersTestCase
 		);
 	}
 
-	/**
-	 * @covers ::deprecated
-	 */
 	public function testDeprecatedKeyDeactivated()
 	{
 		$result = $this->assertError(
@@ -83,9 +70,6 @@ class HelpersTest extends HelpersTestCase
 		$this->assertFalse($result);
 	}
 
-	/**
-	 * @covers ::dump
-	 */
 	public function testDumpOnCli()
 	{
 		$this->app = $this->app->clone([
@@ -99,9 +83,6 @@ class HelpersTest extends HelpersTestCase
 		Helpers::dump('test', true);
 	}
 
-	/**
-	 * @covers ::dump
-	 */
 	public function testDumpOnServer()
 	{
 		$this->app = $this->app->clone([
@@ -115,9 +96,6 @@ class HelpersTest extends HelpersTestCase
 		Helpers::dump('test2', true);
 	}
 
-	/**
-	 * @covers ::handleErrors
-	 */
 	public function testHandleErrorsNoWarning()
 	{
 		$this->assertSame('return', Helpers::handleErrors(
@@ -126,9 +104,6 @@ class HelpersTest extends HelpersTestCase
 		));
 	}
 
-	/**
-	 * @covers ::handleErrors
-	 */
 	public function testHandleErrorsException()
 	{
 		$this->expectException(Exception::class);
@@ -144,9 +119,6 @@ class HelpersTest extends HelpersTestCase
 		);
 	}
 
-	/**
-	 * @covers ::handleErrors
-	 */
 	public function testHandleErrorsWarningCaught1()
 	{
 		$this->activeErrorHandlers++;
@@ -170,9 +142,6 @@ class HelpersTest extends HelpersTestCase
 		$this->assertFalse($called);
 	}
 
-	/**
-	 * @covers ::handleErrors
-	 */
 	public function testHandleErrorsWarningCaught2()
 	{
 		$this->activeErrorHandlers++;
@@ -200,9 +169,6 @@ class HelpersTest extends HelpersTestCase
 		$this->assertTrue($called);
 	}
 
-	/**
-	 * @covers ::handleErrors
-	 */
 	public function testHandleErrorsWarningCaughtCallbackValue()
 	{
 		$this->assertSame('handled', Helpers::handleErrors(
@@ -212,9 +178,6 @@ class HelpersTest extends HelpersTestCase
 		));
 	}
 
-	/**
-	 * @covers ::handleErrors
-	 */
 	public function testHandleErrorsWarningNotCaught()
 	{
 		$this->assertError(
@@ -236,9 +199,6 @@ class HelpersTest extends HelpersTestCase
 		);
 	}
 
-	/**
-	 * @covers ::size
-	 */
 	public function testSize()
 	{
 		// number

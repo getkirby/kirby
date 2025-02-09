@@ -11,10 +11,9 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Api\Upload
- */
+#[CoversClass(Upload::class)]
 class UploadTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Api.Upload';
@@ -59,9 +58,6 @@ class UploadTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::chunkId
-	 */
 	public function testChunkId()
 	{
 		$this->assertSame('abcd', Upload::chunkId('abcd'));
@@ -70,9 +66,6 @@ class UploadTest extends TestCase
 		$this->assertSame('abcd', Upload::chunkId('a-b/../cd.'));
 	}
 
-	/**
-	 * @covers ::chunkId
-	 */
 	public function testChunkIdInvalid()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -80,9 +73,6 @@ class UploadTest extends TestCase
 		Upload::chunkId('a-b-');
 	}
 
-	/**
-	 * @covers ::chunkSize
-	 */
 	public function testChunkSize()
 	{
 		ini_set('upload_max_filesize', '10M');
@@ -104,9 +94,6 @@ class UploadTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::cleanTmpDir
-	 */
 	public function testCleanTmpDir()
 	{
 		$dir = static::TMP . '/site/cache/.uploads';
@@ -133,9 +120,6 @@ class UploadTest extends TestCase
 		$this->assertFileDoesNotExist($b);
 	}
 
-	/**
-	 * @covers ::error
-	 */
 	public function testError()
 	{
 		$this->expectException(Exception::class);
@@ -143,9 +127,6 @@ class UploadTest extends TestCase
 		Upload::error(UPLOAD_ERR_NO_FILE);
 	}
 
-	/**
-	 * @covers ::error
-	 */
 	public function testErrorUnknown()
 	{
 		$this->expectException(Exception::class);
@@ -153,9 +134,6 @@ class UploadTest extends TestCase
 		Upload::error(999);
 	}
 
-	/**
-	 * @covers ::filename
-	 */
 	public function testFilename()
 	{
 		$this->assertSame('foo.md', Upload::filename(['name' => 'foo.md']));
@@ -165,9 +143,6 @@ class UploadTest extends TestCase
 		]));
 	}
 
-	/**
-	 * @covers ::process
-	 */
 	public function testProcessSingle()
 	{
 		$upload = $this->upload([
@@ -202,9 +177,6 @@ class UploadTest extends TestCase
 		], $data);
 	}
 
-	/**
-	 * @covers ::process
-	 */
 	public function testProcessMultiple()
 	{
 		$upload = $this->upload([
@@ -245,9 +217,6 @@ class UploadTest extends TestCase
 		], $data);
 	}
 
-	/**
-	 * @covers ::process
-	 */
 	public function testProcessError()
 	{
 		$upload = $this->upload([
@@ -274,9 +243,6 @@ class UploadTest extends TestCase
 		], $data);
 	}
 
-	/**
-	 * @covers ::process
-	 */
 	public function testProcessException()
 	{
 		$upload = $this->upload([
@@ -309,9 +275,6 @@ class UploadTest extends TestCase
 		$this->assertFalse(F::exists($tmp));
 	}
 
-	/**
-	 * @covers ::process
-	 */
 	public function testProcessWithChunk()
 	{
 		$source = static::TMP . '/test.md';
@@ -346,9 +309,6 @@ class UploadTest extends TestCase
 		$this->assertFileExists($dir . '/abcd-test.md');
 	}
 
-	/**
-	 * @covers ::processChunk
-	 */
 	public function testProcessChunkFirstChunkFullLength()
 	{
 		$source = static::TMP . '/test.md';
@@ -372,9 +332,6 @@ class UploadTest extends TestCase
 		$this->assertFileDoesNotExist('abcd-' . $file);
 	}
 
-	/**
-	 * @covers ::processChunk
-	 */
 	public function testProcessChunkFirstChunkPartialLength()
 	{
 		$source = static::TMP . '/test.md';
@@ -395,9 +352,6 @@ class UploadTest extends TestCase
 		$this->assertFileExists($dir . '/abcd-test.md');
 	}
 
-	/**
-	 * @covers ::processChunk
-	 */
 	public function testProcessChunkIdRemoveUnallowedCharacters()
 	{
 		$source = static::TMP . '/test.md';
@@ -418,9 +372,6 @@ class UploadTest extends TestCase
 		$this->assertFileExists($dir . '/abcd-test.md');
 	}
 
-	/**
-	 * @covers ::processChunk
-	 */
 	public function testProcessChunkFilenameNoDirectoryTraversal()
 	{
 		$source = static::TMP . '/test.md';
@@ -441,9 +392,6 @@ class UploadTest extends TestCase
 		$this->assertFileExists($dir . '/abcd-test.md');
 	}
 
-	/**
-	 * @covers ::processChunk
-	 */
 	public function testProcessChunkSuccesfulAll()
 	{
 		$source = static::TMP . '/test.md';
@@ -479,9 +427,6 @@ class UploadTest extends TestCase
 		$this->assertSame('abcdef', F::read($file));
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponse()
 	{
 		// nothing
@@ -516,9 +461,6 @@ class UploadTest extends TestCase
 	}
 
 
-	/**
-	 * @covers ::validateChunk
-	 */
 	public function testValidateChunkDuplicate()
 	{
 		$source = static::TMP . '/test.md';
@@ -539,9 +481,6 @@ class UploadTest extends TestCase
 		$upload->processChunk($source, basename($source));
 	}
 
-	/**
-	 * @covers ::validateChunk
-	 */
 	public function testValidateChunkSubsequentInvalidOffset()
 	{
 		$source = static::TMP . '/a.md';
@@ -573,9 +512,6 @@ class UploadTest extends TestCase
 		$upload->processChunk($source, basename($source));
 	}
 
-	/**
-	 * @covers ::validateChunk
-	 */
 	public function testValidateChunkSubsequentNoFirst()
 	{
 		$source = static::TMP . '/a.md';
@@ -595,9 +531,6 @@ class UploadTest extends TestCase
 		$upload->processChunk($source, basename($source));
 	}
 
-	/**
-	 * @covers ::validateChunk
-	 */
 	public function testValidateChunkInvalidExtension()
 	{
 		$source = static::TMP . '/a.php';
@@ -616,9 +549,6 @@ class UploadTest extends TestCase
 		$upload->processChunk($source, basename($source));
 	}
 
-	/**
-	 * @covers ::validateChunk
-	 */
 	public function testValidateChunkTooLargeTotal()
 	{
 		$source = static::TMP . '/a.md';
@@ -648,9 +578,6 @@ class UploadTest extends TestCase
 		$upload->processChunk($source, basename($source));
 	}
 
-	/**
-	 * @covers ::validateChunk
-	 */
 	public function testValidateChunkTooLargeCurrentChunk()
 	{
 		$dir    = static::TMP . '/site/cache/.uploads';
@@ -684,9 +611,6 @@ class UploadTest extends TestCase
 		$upload->processChunk($source, basename($source));
 	}
 
-	/**
-	 * @covers ::validateFiles
-	 */
 	public function testValidateFilesEmpty()
 	{
 		ini_set('upload_max_filesize', '10M');

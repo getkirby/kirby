@@ -6,6 +6,8 @@ use Kirby\Filesystem\F;
 use Kirby\Parsley\Schema\Blocks;
 use Kirby\TestCase;
 use Kirby\Toolkit\Dom;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class TestableParsley extends Parsley
 {
@@ -16,9 +18,7 @@ class TestableParsley extends Parsley
 }
 
 
-/**
- * @coversDefaultClass \Kirby\Parsley\Parsley
- */
+#[CoversClass(Parsley::class)]
 class ParsleyTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -28,12 +28,6 @@ class ParsleyTest extends TestCase
 		return new TestableParsley($html, new Blocks());
 	}
 
-	/**
-	 * @covers ::blocks
-	 * @covers ::endInlineBlock
-	 * @covers ::fallback
-	 * @covers ::mergeOrAppend
-	 */
 	public function testBlocks()
 	{
 		$examples = glob(static::FIXTURES . '/*.html');
@@ -59,11 +53,8 @@ class ParsleyTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider containsBlockProvider
-	 * @covers ::containsBlock
-	 */
-	public function testContainsBlock($html, $query, $expected)
+	#[DataProvider('containsBlockProvider')]
+	public function testContainsBlock(string $html, string $query, bool $expected)
 	{
 		$dom     = new Dom($html);
 		$element = $dom->query($query)[0];
@@ -71,9 +62,6 @@ class ParsleyTest extends TestCase
 		$this->assertSame($expected, $this->parser()->containsBlock($element));
 	}
 
-	/**
-	 * @covers ::containsBlock
-	 */
 	public function testContainsBlockWithText()
 	{
 		$dom     = new Dom('Test');
@@ -90,19 +78,13 @@ class ParsleyTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallbackWithEmptyInput()
 	{
 		$this->assertNull($this->parser()->fallback(''));
 	}
 
-	/**
-	 * @dataProvider isBlockProvider
-	 * @covers ::isBlock
-	 */
-	public function testIsBlock($html, $query, $expected)
+	#[DataProvider('isBlockProvider')]
+	public function testIsBlock(string $html, string $query, bool $expected)
 	{
 		$dom     = new Dom($html);
 		$element = $dom->query($query)[0];
@@ -120,11 +102,8 @@ class ParsleyTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider isInlineProvider
-	 * @covers ::isInline
-	 */
-	public function testIsInline($html, $query, $expected)
+	#[DataProvider('isInlineProvider')]
+	public function testIsInline(string $html, string $query, bool $expected)
 	{
 		$dom     = new Dom($html);
 		$element = $dom->query($query)[0];
@@ -132,9 +111,6 @@ class ParsleyTest extends TestCase
 		$this->assertSame($expected, $this->parser()->isInline($element));
 	}
 
-	/**
-	 * @covers ::isInline
-	 */
 	public function testIsInlineWithComment()
 	{
 		$dom     = new Dom('<p><!-- test --></p>');
@@ -143,9 +119,6 @@ class ParsleyTest extends TestCase
 		$this->assertFalse($this->parser()->isInline($comment));
 	}
 
-	/**
-	 * @covers ::mergeOrAppend
-	 */
 	public function testMergeOrAppendExpectMerge()
 	{
 		$parser = $this->parser();
@@ -174,9 +147,6 @@ class ParsleyTest extends TestCase
 		$this->assertSame($expected, $parser->blocks());
 	}
 
-	/**
-	 * @covers ::mergeOrAppend
-	 */
 	public function testMergeOrAppendExpectAppend()
 	{
 		$parser = $this->parser();
@@ -211,9 +181,6 @@ class ParsleyTest extends TestCase
 		$this->assertSame($expected, $parser->blocks());
 	}
 
-	/**
-	 * @covers ::mergeOrAppend
-	 */
 	public function testMergeOrAppendWithoutBlocks()
 	{
 		$parser = $this->parser();
@@ -237,9 +204,6 @@ class ParsleyTest extends TestCase
 		$this->assertSame($expected, $parser->blocks());
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
 	public function testParseNodeWithBlock()
 	{
 		$dom = new Dom('<p>Test</p>');
@@ -249,9 +213,6 @@ class ParsleyTest extends TestCase
 		$this->assertTrue($this->parser()->parseNode($p));
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
 	public function testParseNodeWithComment()
 	{
 		$dom = new \DOMDocument();
@@ -263,9 +224,6 @@ class ParsleyTest extends TestCase
 		$this->assertFalse($this->parser()->parseNode($comment));
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
 	public function testParseNodeWithDoctype()
 	{
 		$dom = new \DOMDocument();
@@ -274,9 +232,6 @@ class ParsleyTest extends TestCase
 		$this->assertFalse($this->parser()->parseNode($dom->doctype));
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
 	public function testParseNodeWithSkippableElement()
 	{
 		$dom    = new Dom('<script src="/test.js"></script>');
@@ -286,9 +241,6 @@ class ParsleyTest extends TestCase
 		$this->assertFalse($this->parser()->parseNode($script));
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
 	public function testParseNodeWithText()
 	{
 		$dom = new Dom('Test');

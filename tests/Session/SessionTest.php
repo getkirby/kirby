@@ -11,12 +11,11 @@ use Kirby\TestCase;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\SymmetricCrypto;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 use TypeError;
 
-/**
- * @coversDefaultClass \Kirby\Session\Session
- */
+#[CoversClass(Session::class)]
 class SessionTest extends TestCase
 {
 	protected SessionStore $store;
@@ -35,9 +34,6 @@ class SessionTest extends TestCase
 		unset($this->sessions, $this->store);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructInvalidToken()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -45,14 +41,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, 123, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::token
-	 * @covers ::startTime
-	 * @covers ::data
-	 * @covers ::destroy
-	 * @covers ::ensureToken
-	 */
 	public function testCreate()
 	{
 		$reflector = new ReflectionClass(Session::class);
@@ -118,9 +106,6 @@ class SessionTest extends TestCase
 		$this->assertTrue(isset($this->store->sessions[$token[0] . '.' . $token[1]]));
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testCreateInvalidExpiry()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -131,9 +116,6 @@ class SessionTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testCreateInvalidDuration()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -144,9 +126,6 @@ class SessionTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testCreateInvalidTimeout()
 	{
 		$this->expectException(TypeError::class);
@@ -156,9 +135,6 @@ class SessionTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testCreateInvalidRenewable()
 	{
 		$this->expectException(TypeError::class);
@@ -168,9 +144,6 @@ class SessionTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::mode
-	 */
 	public function testMode()
 	{
 		$session = new Session($this->sessions, null, [
@@ -182,10 +155,6 @@ class SessionTest extends TestCase
 		$this->assertSame('cookie', $session->mode());
 	}
 
-	/**
-	 * @covers ::mode
-	 * @covers ::data
-	 */
 	public function testModeStartedSession()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -199,13 +168,6 @@ class SessionTest extends TestCase
 		$session->mode('cookie');
 	}
 
-	/**
-	 * @covers ::expiryTime
-	 * @covers ::token
-	 * @covers ::commit
-	 * @covers ::regenerateToken
-	 * @covers ::regenerateTokenIfNotNew
-	 */
 	public function testExpiryTime()
 	{
 		$session = new Session($this->sessions, null, [
@@ -231,9 +193,6 @@ class SessionTest extends TestCase
 		$this->assertNotSame($originalToken, $session->token());
 	}
 
-	/**
-	 * @covers ::expiryTime
-	 */
 	public function testExpiryTimeInvalidType()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -245,9 +204,6 @@ class SessionTest extends TestCase
 		$session->expiryTime(false);
 	}
 
-	/**
-	 * @covers ::expiryTime
-	 */
 	public function testExpiryTimeInvalidString()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -259,9 +215,6 @@ class SessionTest extends TestCase
 		$session->expiryTime('some gibberish that is definitely no valid time');
 	}
 
-	/**
-	 * @covers ::expiryTime
-	 */
 	public function testExpiryTimeInvalidTime1()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -273,9 +226,6 @@ class SessionTest extends TestCase
 		$session->expiryTime(time() - 1);
 	}
 
-	/**
-	 * @covers ::expiryTime
-	 */
 	public function testExpiryTimeInvalidTime2()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -287,13 +237,6 @@ class SessionTest extends TestCase
 		$session->expiryTime(time());
 	}
 
-	/**
-	 * @covers ::duration
-	 * @covers ::token
-	 * @covers ::commit
-	 * @covers ::regenerateToken
-	 * @covers ::regenerateTokenIfNotNew
-	 */
 	public function testDuration()
 	{
 		$session = new Session($this->sessions, null, [
@@ -314,9 +257,6 @@ class SessionTest extends TestCase
 		$this->assertNotSame($originalToken, $session->token());
 	}
 
-	/**
-	 * @covers ::duration
-	 */
 	public function testDurationInvalidTime1()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -328,9 +268,6 @@ class SessionTest extends TestCase
 		$session->duration(-1);
 	}
 
-	/**
-	 * @covers ::duration
-	 */
 	public function testDurationInvalidTime2()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -342,11 +279,6 @@ class SessionTest extends TestCase
 		$session->duration(0);
 	}
 
-	/**
-	 * @covers ::timeout
-	 * @covers ::commit
-	 * @covers ::regenerateToken
-	 */
 	public function testTimeout()
 	{
 		$reflector = new ReflectionClass(Session::class);
@@ -371,9 +303,6 @@ class SessionTest extends TestCase
 		$this->assertWriteMode(true, $session);
 	}
 
-	/**
-	 * @covers ::timeout
-	 */
 	public function testTimeoutInvalidType()
 	{
 		$this->expectException(TypeError::class);
@@ -384,9 +313,6 @@ class SessionTest extends TestCase
 		$session->timeout('after an hour');
 	}
 
-	/**
-	 * @covers ::timeout
-	 */
 	public function testTimeoutInvalidTimeout1()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -397,9 +323,6 @@ class SessionTest extends TestCase
 		$session->timeout(-10);
 	}
 
-	/**
-	 * @covers ::timeout
-	 */
 	public function testTimeoutInvalidTimeout2()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -410,14 +333,6 @@ class SessionTest extends TestCase
 		$session->timeout(0);
 	}
 
-	/**
-	 * @covers ::renewable
-	 * @covers ::token
-	 * @covers ::commit
-	 * @covers ::regenerateToken
-	 * @covers ::autoRenew
-	 * @covers ::needsRenewal
-	 */
 	public function testRenewable()
 	{
 		$session = new Session($this->sessions, null, [
@@ -459,10 +374,6 @@ class SessionTest extends TestCase
 		$this->assertSame($newToken, $session->token());
 	}
 
-	/**
-	 * @covers ::__call
-	 * @covers ::data
-	 */
 	public function testDataMethods()
 	{
 		$session = new Session($this->sessions, null, []);
@@ -499,9 +410,6 @@ class SessionTest extends TestCase
 		$this->assertSame([], $session->get());
 	}
 
-	/**
-	 * @covers ::__call
-	 */
 	public function testInvalidMethod()
 	{
 		$this->expectException(BadMethodCallException::class);
@@ -510,11 +418,6 @@ class SessionTest extends TestCase
 		$session->someGibberish();
 	}
 
-	/**
-	 * @covers ::commit
-	 * @covers ::data
-	 * @covers ::commit
-	 */
 	public function testCommit()
 	{
 		$token = '9999999999.valid.' . $this->store->validKey;
@@ -587,12 +490,6 @@ class SessionTest extends TestCase
 		], $this->store->sessions['9999999999.valid']);
 	}
 
-	/**
-	 * @covers ::destroy
-	 * @covers ::data
-	 * @covers ::commit
-	 * @covers ::regenerateToken
-	 */
 	public function testDestroy()
 	{
 		$token = '9999999999.valid2.' . $this->store->validKey;
@@ -622,13 +519,6 @@ class SessionTest extends TestCase
 		$this->assertFalse(isset($this->store->sessions['9999999999.valid']));
 	}
 
-	/**
-	 * @covers ::renew
-	 * @covers ::token
-	 * @covers ::commit
-	 * @covers ::regenerateToken
-	 * @covers ::regenerateTokenIfNotNew
-	 */
 	public function testRenew()
 	{
 		$session = new Session($this->sessions, null, [
@@ -667,9 +557,6 @@ class SessionTest extends TestCase
 		$this->assertSame($expected, $actual);
 	}
 
-	/**
-	 * @covers ::renew
-	 */
 	public function testRenewNotRenewable()
 	{
 		$this->expectException(LogicException::class);
@@ -681,11 +568,6 @@ class SessionTest extends TestCase
 		$session->renew();
 	}
 
-	/**
-	 * @covers ::regenerateToken
-	 * @covers ::token
-	 * @covers ::startTime
-	 */
 	public function testRegenerateToken()
 	{
 		$sessionsReflector = new ReflectionClass(Sessions::class);
@@ -733,10 +615,6 @@ class SessionTest extends TestCase
 		$this->assertSame($session, $cache->getValue($this->sessions)[$newToken]);
 	}
 
-	/**
-	 * @covers ::regenerateToken
-	 * @covers ::needsRetransmission
-	 */
 	public function testRegenerateTokenHeaderMode()
 	{
 		$sessionsReflector = new ReflectionClass(Sessions::class);
@@ -758,10 +636,6 @@ class SessionTest extends TestCase
 		$this->assertSame($session, $cache->getValue($this->sessions)[$newToken]);
 	}
 
-	/**
-	 * @covers ::__destruct
-	 * @covers ::data
-	 */
 	public function testDestruct()
 	{
 		$token = '9999999999.valid.' . $this->store->validKey;
@@ -776,10 +650,6 @@ class SessionTest extends TestCase
 		$this->assertSame(1, $this->store->sessions['9999999999.valid']['data']['someId']);
 	}
 
-	/**
-	 * @covers ::prepareForWriting
-	 * @covers ::data
-	 */
 	public function testPrepareForWriting()
 	{
 		$token = '9999999999.valid.' . $this->store->validKey;
@@ -802,10 +672,6 @@ class SessionTest extends TestCase
 		$this->assertSame(124, $session->data()->get('someId'));
 	}
 
-	/**
-	 * @covers ::prepareForWriting
-	 * @covers ::data
-	 */
 	public function testPrepareForWritingReadonly()
 	{
 		$this->expectException(LogicException::class);
@@ -817,10 +683,6 @@ class SessionTest extends TestCase
 		$session->data()->set('someId', 1);
 	}
 
-	/**
-	 * @covers ::parseToken
-	 * @covers ::token
-	 */
 	public function testParseToken()
 	{
 		$reflector = new ReflectionClass(Session::class);
@@ -843,9 +705,6 @@ class SessionTest extends TestCase
 		$this->assertNull($tokenKey->getValue($session));
 	}
 
-	/**
-	 * @covers ::parseToken
-	 */
 	public function testParseTokenInvalidToken1()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -854,9 +713,6 @@ class SessionTest extends TestCase
 		$session = new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::parseToken
-	 */
 	public function testParseTokenInvalidToken2()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -865,10 +721,6 @@ class SessionTest extends TestCase
 		$session = new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::parseToken
-	 * @covers ::token
-	 */
 	public function testParseTokenInvalidToken3()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -883,9 +735,6 @@ class SessionTest extends TestCase
 		$parseToken->invoke($session, '1234567890.thisIsMyAwesomeId.' . $this->store->validKey, true);
 	}
 
-	/**
-	 * @covers ::timeToTimestamp
-	 */
 	public function testTimeToTimestamp()
 	{
 		$reflector = new ReflectionClass(Session::class);
@@ -899,9 +748,6 @@ class SessionTest extends TestCase
 		$this->assertSame(strtotime('tomorrow', 1357924680), $timeToTimestamp->invoke(null, 'tomorrow', 1357924680));
 	}
 
-	/**
-	 * @covers ::timeToTimestamp
-	 */
 	public function testTimeToTimestampInvalidParam()
 	{
 		$this->expectException(TypeError::class);
@@ -913,9 +759,6 @@ class SessionTest extends TestCase
 		$timeToTimestamp->invoke(null, ['tomorrow']);
 	}
 
-	/**
-	 * @covers ::timeToTimestamp
-	 */
 	public function testTimeToTimestampInvalidTimeString()
 	{
 		$this->expectException(TypeError::class);
@@ -927,15 +770,6 @@ class SessionTest extends TestCase
 		$timeToTimestamp->invoke(null, ['some gibberish that is definitely no valid time']);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::token
-	 * @covers ::startTime
-	 * @covers ::data
-	 * @covers ::autoRenew
-	 * @covers ::needsRenewal
-	 */
 	public function testInit()
 	{
 		$token = '9999999999.valid.' . $this->store->validKey;
@@ -950,12 +784,6 @@ class SessionTest extends TestCase
 		$this->assertSame('valid', $session->data()->get('id'));
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::data
-	 * @covers ::commit
-	 */
 	public function testInitSerializedObject()
 	{
 		$token = '9999999999.valid.' . $this->store->validKey;
@@ -981,10 +809,6 @@ class SessionTest extends TestCase
 		$this->assertFalse($obj === $session->data()->get('obj'));
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitNonExisting()
 	{
 		$this->expectException(NotFoundException::class);
@@ -994,10 +818,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitWrongKey()
 	{
 		$this->expectException(LogicException::class);
@@ -1007,10 +827,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitMissingKey()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -1020,10 +836,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitInvalidSerialization()
 	{
 		$this->expectException(LogicException::class);
@@ -1033,10 +845,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitInvalidStructure()
 	{
 		$this->expectException(LogicException::class);
@@ -1046,10 +854,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitExpired()
 	{
 		$this->expectException(LogicException::class);
@@ -1059,10 +863,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitNotStarted()
 	{
 		$this->expectException(LogicException::class);
@@ -1072,13 +872,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::token
-	 * @covers ::startTime
-	 * @covers ::data
-	 */
 	public function testInitMoved()
 	{
 		// moved session: data should be identical to the actual one
@@ -1094,13 +887,6 @@ class SessionTest extends TestCase
 		$this->assertSame('valid', $session->data()->get('id'));
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::token
-	 * @covers ::startTime
-	 * @covers ::data
-	 */
 	public function testInitMovedRenewal()
 	{
 		// moved session: data should be identical to the actual one
@@ -1119,10 +905,6 @@ class SessionTest extends TestCase
 		$this->assertWriteMode(false, $session);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitMovedManualRenewal()
 	{
 		$this->expectException(LogicException::class);
@@ -1134,12 +916,6 @@ class SessionTest extends TestCase
 		$session->renew();
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::startTime
-	 * @covers ::data
-	 */
 	public function testInitMovedRenewalWithKey()
 	{
 		if (SymmetricCrypto::isAvailable() !== true) {
@@ -1161,13 +937,6 @@ class SessionTest extends TestCase
 		$this->assertWriteMode(true, $session);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::token
-	 * @covers ::startTime
-	 * @covers ::data
-	 */
 	public function testInitTimeoutActivity()
 	{
 		// moved session: data should be identical to the actual one
@@ -1186,12 +955,6 @@ class SessionTest extends TestCase
 		$this->assertWriteMode(false, $session);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::startTime
-	 * @covers ::data
-	 */
 	public function testInitTimeoutActivityWithKey()
 	{
 		if (SymmetricCrypto::isAvailable() !== true) {
@@ -1213,10 +976,6 @@ class SessionTest extends TestCase
 		$this->assertWriteMode(true, $session);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitMovedExpired()
 	{
 		$this->expectException(LogicException::class);
@@ -1226,10 +985,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitMovedInvalid()
 	{
 		$this->expectException(NotFoundException::class);
@@ -1239,10 +994,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitMovedWrongKey()
 	{
 		$this->expectException(LogicException::class);
@@ -1252,10 +1003,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 */
 	public function testInitExpiredTimeout()
 	{
 		$this->expectException(LogicException::class);
@@ -1265,13 +1012,6 @@ class SessionTest extends TestCase
 		new Session($this->sessions, $token, []);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::token
-	 * @covers ::startTime
-	 * @covers ::data
-	 */
 	public function testInitAutoActivity1()
 	{
 		$token = '9999999999.timeoutActivity1.' . $this->store->validKey;
@@ -1291,13 +1031,6 @@ class SessionTest extends TestCase
 		$this->assertSame($session->data()->get('expectedActivity'), $activityProperty->getValue($session));
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::token
-	 * @covers ::startTime
-	 * @covers ::data
-	 */
 	public function testInitAutoActivity2()
 	{
 		$token = '9999999999.timeoutActivity2.' . $this->store->validKey;
@@ -1319,13 +1052,6 @@ class SessionTest extends TestCase
 		$this->assertLessThan($session->data()->get('expectedActivity') + 5, $newActivity);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::token
-	 * @covers ::startTime
-	 * @covers ::data
-	 */
 	public function testInitAutoRenew()
 	{
 		$token = '.renewal.' . $this->store->validKey;
@@ -1343,13 +1069,6 @@ class SessionTest extends TestCase
 		$this->assertSame('renewal', $session->data()->get('id'));
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::init
-	 * @covers ::token
-	 * @covers ::startTime
-	 * @covers ::data
-	 */
 	public function testInitNonRenewable()
 	{
 		$token = '2000000000.nonRenewable.' . $this->store->validKey;

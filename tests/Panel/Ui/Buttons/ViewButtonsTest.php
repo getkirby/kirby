@@ -4,10 +4,9 @@ namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\Page;
 use Kirby\Panel\Areas\AreaTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\ViewButtons
- */
+#[CoversClass(ViewButtons::class)]
 class ViewButtonsTest extends AreaTestCase
 {
 	public function setUp(): void
@@ -31,9 +30,6 @@ class ViewButtonsTest extends AreaTestCase
 		]);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstruct()
 	{
 		// no buttons
@@ -49,9 +45,6 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertCount(4, $buttons->buttons);
 	}
 
-	/**
-	 * @covers ::bind
-	 */
 	public function testBind()
 	{
 		$buttons = new ViewButtons('foo');
@@ -65,9 +58,6 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertSame(['foo' => 'bar', 'homer' => 'simpson'], $buttons->data);
 	}
 
-	/**
-	 * @covers ::defaults
-	 */
 	public function testDefaults()
 	{
 		$buttons = new ViewButtons('foo');
@@ -77,9 +67,6 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertCount(2, $buttons->buttons);
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRender()
 	{
 		$buttons = new ViewButtons('test', buttons: ['a', 'b']);
@@ -90,9 +77,6 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertSame('k-b-view-button', $result[1]['component']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderFromConfig()
 	{
 		$buttons = new ViewButtons('test');
@@ -104,18 +88,12 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertSame('result-c', $result[2]['component']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderNoButtons()
 	{
 		$buttons = new ViewButtons('test', buttons: false);
 		$this->assertSame([], $buttons->render());
 	}
 
-	/**
-	 * @covers ::view
-	 */
 	public function testView()
 	{
 		// view name

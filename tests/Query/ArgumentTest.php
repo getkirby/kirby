@@ -4,16 +4,11 @@ namespace Kirby\Query;
 
 use Closure;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\Argument
- */
+#[CoversClass(Argument::class)]
 class ArgumentTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::factory
-	 */
 	public function testFactory()
 	{
 		// strings
@@ -63,9 +58,6 @@ class ArgumentTest extends TestCase
 		$this->assertSame('foo', $argument->value);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolve()
 	{
 		// strings
@@ -81,10 +73,6 @@ class ArgumentTest extends TestCase
 		$this->assertSame('bar', $argument);
 	}
 
-	/**
-	 * @covers ::factory
-	 * @covers ::resolve
-	 */
 	public function testWithClosure()
 	{
 		$argument = Argument::factory('() => site.children');

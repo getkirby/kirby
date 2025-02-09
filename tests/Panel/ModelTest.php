@@ -9,6 +9,7 @@ use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class CustomPanelModel extends Model
 {
@@ -41,9 +42,7 @@ class ModelSiteWithImageMethod extends ModelSite
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Panel\Model
- */
+#[CoversClass(Model::class)]
 class ModelTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Model';
@@ -70,10 +69,6 @@ class ModelTest extends TestCase
 		return new CustomPanelModel($site);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::content
-	 */
 	public function testContent()
 	{
 		$panel = $this->panel([
@@ -85,10 +80,6 @@ class ModelTest extends TestCase
 		$this->assertSame($content, $panel->content());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::content
-	 */
 	public function testContentWithChanges()
 	{
 		$panel = new CustomPanelModel(
@@ -110,9 +101,6 @@ class ModelTest extends TestCase
 		], $panel->content());
 	}
 
-	/**
-	 * @covers ::dragTextFromCallback
-	 */
 	public function testDragTextFromCallbackMarkdown()
 	{
 		$app = $this->app->clone([
@@ -153,9 +141,6 @@ class ModelTest extends TestCase
 		$this->assertSame('![](test/test.heic)', $panel->dragTextFromCallback('markdown', $file, $file->filename()));
 	}
 
-	/**
-	 * @covers ::dragTextFromCallback
-	 */
 	public function testDragTextFromCallbackKirbytext()
 	{
 		$app = $this->app->clone([
@@ -196,9 +181,6 @@ class ModelTest extends TestCase
 		$this->assertSame('(image: test/test.heic)', $panel->dragTextFromCallback('kirbytext', $file, $file->filename()));
 	}
 
-	/**
-	 * @covers ::dragTextType
-	 */
 	public function testDragTextType()
 	{
 		$panel = $this->panel();
@@ -239,12 +221,6 @@ class ModelTest extends TestCase
 		$this->assertSame($expected, $option);
 	}
 
-	/**
-	 * @covers ::image
-	 * @covers ::imageDefaults
-	 * @covers ::imageSource
-	 * @covers ::imageSrcset
-	 */
 	public function testImage()
 	{
 		$panel = $this->panel([
@@ -311,9 +287,6 @@ class ModelTest extends TestCase
 		$this->assertStringContainsString('test-76x76-crop.jpg 2x', $image['srcset']);
 	}
 
-	/**
-	 * @covers ::image
-	 */
 	public function testImageWithNonResizableAsset()
 	{
 		$site  = new ModelSiteWithImageMethod([]);
@@ -323,9 +296,6 @@ class ModelTest extends TestCase
 		$this->assertSame('/tmp/test.svg', $image['src']);
 	}
 
-	/**
-	 * @covers ::image
-	 */
 	public function testImageWithBlueprint()
 	{
 		$app  = $this->app->clone([
@@ -358,9 +328,6 @@ class ModelTest extends TestCase
 		$this->assertArrayNotHasKey('url', $image);
 	}
 
-	/**
-	 * @covers ::image
-	 */
 	public function testImageWithBlueprintFalse()
 	{
 		$app  = $this->app->clone([
@@ -390,9 +357,6 @@ class ModelTest extends TestCase
 		$this->assertNull($image);
 	}
 
-	/**
-	 * @covers ::image
-	 */
 	public function testImageWithBlueprintString()
 	{
 		$app  = $this->app->clone([
@@ -419,9 +383,6 @@ class ModelTest extends TestCase
 		$this->assertStringEndsWith('test.jpg', $image['url']);
 	}
 
-	/**
-	 * @covers ::image
-	 */
 	public function testImageWithQuery()
 	{
 		$site  = new ModelSiteWithImageMethod();
@@ -430,27 +391,18 @@ class ModelTest extends TestCase
 		$this->assertSame('blue', $image['back']);
 	}
 
-	/**
-	 * @covers ::imagePlaceholder
-	 */
 	public function testImagePlaceholder()
 	{
 		$this->assertIsString(Model::imagePlaceholder());
 		$this->assertStringStartsWith('data:image/gif;base64,', Model::imagePlaceholder());
 	}
 
-	/**
-	 * @covers ::model
-	 */
 	public function testModel()
 	{
 		$panel  = $this->panel();
 		$this->assertInstanceOf(ModelSite::class, $panel->model());
 	}
 
-	/**
-	 * @covers ::props
-	 */
 	public function testProps()
 	{
 		$site = [
@@ -489,9 +441,6 @@ class ModelTest extends TestCase
 		$this->assertSame('main', $props['tab']['name']);
 	}
 
-	/**
-	 * @covers ::toLink
-	 */
 	public function testToLink()
 	{
 		$panel = $this->panel([
@@ -510,9 +459,6 @@ class ModelTest extends TestCase
 		$this->assertSame($author, $toLink['title']);
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrl()
 	{
 		$this->assertSame('/panel/custom', $this->panel()->url());

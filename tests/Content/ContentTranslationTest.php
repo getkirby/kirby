@@ -5,18 +5,11 @@ namespace Kirby\Content;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\ContentTranslation
- */
+#[CoversClass(ContentTranslation::class)]
 class ContentTranslationTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::code
-	 * @covers ::id
-	 * @covers ::parent
-	 */
 	public function testParentAndCode()
 	{
 		$page = new Page([
@@ -33,11 +26,6 @@ class ContentTranslationTest extends TestCase
 		$this->assertSame('de', $translation->id());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::content
-	 * @covers ::slug
-	 */
 	public function testContentAndSlug()
 	{
 		$page = new Page([
@@ -57,9 +45,6 @@ class ContentTranslationTest extends TestCase
 		$this->assertSame($content, $translation->content());
 	}
 
-	/**
-	 * @covers ::content
-	 */
 	public function testContentMerged()
 	{
 		$app = new App([
@@ -103,9 +88,6 @@ class ContentTranslationTest extends TestCase
 		], $translation->content());
 	}
 
-	/**
-	 * @covers ::contentFile
-	 */
 	public function testContentFile()
 	{
 		$app = new App([
@@ -136,9 +118,6 @@ class ContentTranslationTest extends TestCase
 		$this->assertSame('/content/test/project.de.txt', $translation->contentFile());
 	}
 
-	/**
-	 * @covers ::exists
-	 */
 	public function testExists()
 	{
 		$page = new Page(['slug' => 'test']);
@@ -160,9 +139,6 @@ class ContentTranslationTest extends TestCase
 		$this->assertTrue($translation->exists());
 	}
 
-	/**
-	 * @covers ::isDefault
-	 */
 	public function testIsDefault()
 	{
 		$app = new App([
@@ -197,9 +173,6 @@ class ContentTranslationTest extends TestCase
 		$this->assertFalse($translation->isDefault());
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdate()
 	{
 		$page = new Page([
@@ -234,10 +207,6 @@ class ContentTranslationTest extends TestCase
 		], $translation->content());
 	}
 
-	/**
-	 * @covers ::__debugInfo
-	 * @covers ::toArray
-	 */
 	public function testToArrayAndDebugInfo()
 	{
 		$page = new Page(['slug' => 'test']);

@@ -4,17 +4,14 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\App;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Uuid\PageUuid
- */
+#[CoversClass(PageUuid::class)]
 class PageUuidTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.PageUuid';
 
-	/**
-	 * @covers ::findByCache
-	 */
 	public function testFindByCache()
 	{
 		$page = $this->app->page('page-a');
@@ -32,9 +29,6 @@ class PageUuidTest extends TestCase
 		$this->assertIsPage($page, $uuid->model(true));
 	}
 
-	/**
-	 * @covers ::findByIndex
-	 */
 	public function testFindByIndex()
 	{
 		$page = $this->app->page('page-a');
@@ -49,18 +43,12 @@ class PageUuidTest extends TestCase
 		$this->assertNull($uuid->model());
 	}
 
-	/**
-	 * @covers ::id
-	 */
 	public function testId()
 	{
 		$uuid = new PageUuid('page://just-a-file');
 		$this->assertSame('just-a-file', $uuid->id());
 	}
 
-	/**
-	 * @covers ::id
-	 */
 	public function testIdGenerate()
 	{
 		$page = $this->app->page('page-b');
@@ -70,9 +58,6 @@ class PageUuidTest extends TestCase
 		$this->assertSame($uuid->id(), $page->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::id
-	 */
 	public function testIdGenerateExistingButEmpty()
 	{
 		$page = $this->app->page('page-b');
@@ -83,9 +68,6 @@ class PageUuidTest extends TestCase
 		$this->assertSame($uuid->id(), $page->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::index
-	 */
 	public function testIndex()
 	{
 		$index = PageUuid::index();
@@ -94,18 +76,12 @@ class PageUuidTest extends TestCase
 		$this->assertSame(3, iterator_count($index));
 	}
 
-	/**
-	 * @covers ::retrieveId
-	 */
 	public function testRetrieveId()
 	{
 		$page = $this->app->page('page-a');
 		$this->assertSame('my-page', ModelUuid::retrieveId($page));
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrl()
 	{
 		$page = $this->app->page('page-a');
@@ -121,11 +97,7 @@ class PageUuidTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider multilangProvider
-	 * @covers ::id
-	 * @covers ::url
-	 */
+	#[DataProvider('multilangProvider')]
 	public function testMultilang(string $language, string $title)
 	{
 		$app = new App([

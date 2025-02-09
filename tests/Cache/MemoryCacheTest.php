@@ -3,15 +3,11 @@
 namespace Kirby\Cache;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cache\MemoryCache
- */
+#[CoversClass(MemoryCache::class)]
 class MemoryCacheTest extends TestCase
 {
-	/**
-	 * @covers ::enabled
-	 */
 	public function testEnabled()
 	{
 		$cache = new MemoryCache();
@@ -19,11 +15,6 @@ class MemoryCacheTest extends TestCase
 		$this->assertTrue($cache->enabled());
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
 	public function testOperations()
 	{
 		$cache = new MemoryCache();
@@ -43,11 +34,6 @@ class MemoryCacheTest extends TestCase
 		$this->assertFalse($cache->remove('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
 	public function testOperationsWithMultipleInstances()
 	{
 		$cache1 = new MemoryCache();
@@ -73,9 +59,6 @@ class MemoryCacheTest extends TestCase
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
 	}
 
-	/**
-	 * @covers ::flush
-	 */
 	public function testFlush()
 	{
 		$cache = new MemoryCache();
@@ -93,9 +76,6 @@ class MemoryCacheTest extends TestCase
 		$this->assertFalse($cache->exists('c'));
 	}
 
-	/**
-	 * @covers ::flush
-	 */
 	public function testFlushWithMultipleInstances()
 	{
 		$cache1 = new MemoryCache();
@@ -117,9 +97,6 @@ class MemoryCacheTest extends TestCase
 		$this->assertTrue($cache2->exists('b'));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
 	public function testModified()
 	{
 		$cache = new MemoryCache();

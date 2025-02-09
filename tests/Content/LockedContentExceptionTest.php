@@ -3,10 +3,9 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\LockedContentException
- */
+#[CoversClass(LockedContentException::class)]
 class LockedContentExceptionTest extends TestCase
 {
 	public function testException()

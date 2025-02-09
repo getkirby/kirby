@@ -4,15 +4,11 @@ namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\App;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\LanguageCreateButton
- */
+#[CoversClass(LanguageCreateButton::class)]
 class LanguageCreateButtonTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
 	public function testButton()
 	{
 		$button = new LanguageCreateButton();
@@ -21,9 +17,6 @@ class LanguageCreateButtonTest extends TestCase
 		$this->assertSame('Add a new language', $button->text);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testDisabled()
 	{
 		$app = new App([

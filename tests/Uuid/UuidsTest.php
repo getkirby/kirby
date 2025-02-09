@@ -6,17 +6,13 @@ use Kirby\Cache\Cache;
 use Kirby\Cache\MemoryCache;
 use Kirby\Cache\NullCache;
 use Kirby\Exception\LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Uuid\Uuids
- */
+#[CoversClass(Uuids::class)]
 class UuidsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.Uuids';
 
-	/**
-	 * @covers ::cache
-	 */
 	public function testCache()
 	{
 		$this->assertInstanceOf(Cache::class, Uuids::cache());
@@ -40,9 +36,6 @@ class UuidsTest extends TestCase
 		$this->assertInstanceOf(NullCache::class, Uuids::cache());
 	}
 
-	/**
-	 * @covers ::each
-	 */
 	public function testEach()
 	{
 		$models = 0;
@@ -52,9 +45,6 @@ class UuidsTest extends TestCase
 		$this->assertSame(7, $models);
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
 	public function testEnabled()
 	{
 		$this->assertTrue(Uuids::enabled());
@@ -62,9 +52,6 @@ class UuidsTest extends TestCase
 		$this->assertFalse(Uuids::enabled());
 	}
 
-	/**
-	 * @covers ::generate
-	 */
 	public function testGenerate()
 	{
 		$page = $this->app->page('page-b');
@@ -80,9 +67,6 @@ class UuidsTest extends TestCase
 		$this->assertNotNull($file->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::generate
-	 */
 	public function testGenerateIfDisabled()
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
@@ -93,9 +77,6 @@ class UuidsTest extends TestCase
 		Uuids::generate();
 	}
 
-	/**
-	 * @covers ::populate
-	 */
 	public function testPopulate()
 	{
 		$page     = $this->app->page('page-a');
@@ -199,9 +180,6 @@ class UuidsTest extends TestCase
 		Uuids::cache()->flush();
 	}
 
-	/**
-	 * @covers ::populate
-	 */
 	public function testPopulateIfDisabled()
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);

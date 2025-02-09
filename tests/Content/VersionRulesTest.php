@@ -6,6 +6,7 @@ use Kirby\Cms\Language;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class ExistingVersion extends Version
 {
@@ -23,16 +24,11 @@ class LockedVersion extends Version
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Content\VersionRules
- */
+#[CoversClass(VersionRules::class)]
 class VersionRulesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.VersionRules';
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateWhenTheVersionAlreadyExists()
 	{
 		$this->setUpSingleLanguage();
@@ -48,9 +44,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::create($version, [], Language::ensure());
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateWhenLatestVersionDoesNotExist()
 	{
 		$this->setUpSingleLanguage();
@@ -69,9 +62,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::create($version, [], Language::ensure());
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDeleteWhenTheVersionIsLocked()
 	{
 		$this->setUpSingleLanguage();
@@ -87,9 +77,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::delete($version, Language::ensure());
 	}
 
-	/**
-	 * @covers ::ensure
-	 */
 	public function testEnsureMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -105,9 +92,6 @@ class VersionRulesTest extends TestCase
 		$this->assertNull(VersionRules::ensure($version, Language::ensure('de')));
 	}
 
-	/**
-	 * @covers ::ensure
-	 */
 	public function testEnsureSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -122,9 +106,6 @@ class VersionRulesTest extends TestCase
 		$this->assertNull(VersionRules::ensure($version, Language::ensure()));
 	}
 
-	/**
-	 * @covers ::ensure
-	 */
 	public function testEnsureWhenMissingMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -140,9 +121,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::ensure($version, Language::ensure('de'));
 	}
 
-	/**
-	 * @covers ::ensure
-	 */
 	public function testEnsureWhenMissingSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -158,9 +136,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::ensure($version, Language::ensure());
 	}
 
-	/**
-	 * @covers ::ensure
-	 */
 	public function testEnsureWithInvalidLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -176,9 +151,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::ensure($version, Language::ensure('fr'));
 	}
 
-	/**
-	 * @covers ::move
-	 */
 	public function testMoveWhenTheSourceVersionIsLocked()
 	{
 		$this->setUpSingleLanguage();
@@ -202,9 +174,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::move($source, Language::ensure(), $target, Language::ensure());
 	}
 
-	/**
-	 * @covers ::move
-	 */
 	public function testMoveWhenTheTargetVersionIsLocked()
 	{
 		$this->setUpSingleLanguage();
@@ -229,9 +198,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::move($source, Language::ensure(), $target, Language::ensure());
 	}
 
-	/**
-	 * @covers ::publish
-	 */
 	public function testPublishTheLatestVersion()
 	{
 		$this->setUpSingleLanguage();
@@ -247,9 +213,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::publish($version, Language::ensure());
 	}
 
-	/**
-	 * @covers ::publish
-	 */
 	public function testPublishWhenTheVersionIsLocked()
 	{
 		$this->setUpSingleLanguage();
@@ -267,9 +230,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::publish($version, Language::ensure());
 	}
 
-	/**
-	 * @covers ::read
-	 */
 	public function testReadWhenMissing()
 	{
 		$this->setUpSingleLanguage();
@@ -289,9 +249,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::read($version, Language::ensure());
 	}
 
-	/**
-	 * @covers ::replace
-	 */
 	public function testReplaceWhenTheVersionIsLocked()
 	{
 		$this->setUpSingleLanguage();
@@ -309,9 +266,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::replace($version, [], Language::ensure());
 	}
 
-	/**
-	 * @covers ::touch
-	 */
 	public function testTouchWhenMissing()
 	{
 		$this->setUpSingleLanguage();
@@ -331,9 +285,6 @@ class VersionRulesTest extends TestCase
 		VersionRules::touch($version, Language::ensure());
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdateWhenTheVersionIsLocked()
 	{
 		$this->setUpSingleLanguage();

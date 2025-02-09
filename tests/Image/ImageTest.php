@@ -7,10 +7,9 @@ use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Image\Image
- */
+#[CoversClass(Image::class)]
 class ImageTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -23,9 +22,6 @@ class ImageTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::dimensions
-	 */
 	public function testDimensions()
 	{
 		// jpg
@@ -56,9 +52,6 @@ class ImageTest extends TestCase
 		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
 	}
 
-	/**
-	 * @covers ::exif
-	 */
 	public function testExif()
 	{
 		$file = $this->_image();
@@ -67,18 +60,12 @@ class ImageTest extends TestCase
 		$this->assertInstanceOf(Exif::class, $file->exif());
 	}
 
-	/**
-	 * @covers ::height
-	 */
 	public function testHeight()
 	{
 		$file = $this->_image();
 		$this->assertSame(500, $file->height());
 	}
 
-	/**
-	 * @covers ::html
-	 */
 	public function testHtml()
 	{
 		$file = $this->_image();
@@ -99,9 +86,6 @@ class ImageTest extends TestCase
 		$this->assertSame('<img alt="Test text" src="https://foo.bar/cat.jpg">', $image->html());
 	}
 
-	/**
-	 * @covers ::html
-	 */
 	public function testHtmlWithoutUrl()
 	{
 		$this->expectException(LogicException::class);
@@ -110,9 +94,6 @@ class ImageTest extends TestCase
 		$file->html();
 	}
 
-	/**
-	 * @covers ::imagesize
-	 */
 	public function testImagesize()
 	{
 		$file = $this->_image();
@@ -120,36 +101,24 @@ class ImageTest extends TestCase
 		$this->assertSame(500, $file->imagesize()[0]);
 	}
 
-	/**
-	 * @covers ::isPortrait
-	 */
 	public function testIsPortrait()
 	{
 		$file = $this->_image();
 		$this->assertFalse($file->isPortrait());
 	}
 
-	/**
-	 * @covers ::isLandscape
-	 */
 	public function testIsLandscape()
 	{
 		$file = $this->_image();
 		$this->assertFalse($file->isLandscape());
 	}
 
-	/**
-	 * @covers ::isSquare
-	 */
 	public function testIsSquare()
 	{
 		$file = $this->_image();
 		$this->assertTrue($file->isSquare());
 	}
 
-	/**
-	 * @covers ::isResizable
-	 */
 	public function testIsResizable()
 	{
 		$file = $this->_image();
@@ -159,9 +128,6 @@ class ImageTest extends TestCase
 		$this->assertFalse($file->isResizable());
 	}
 
-	/**
-	 * @covers ::isViewable
-	 */
 	public function testIsViewable()
 	{
 		$file = $this->_image();
@@ -171,9 +137,6 @@ class ImageTest extends TestCase
 		$this->assertFalse($file->isResizable());
 	}
 
-	/**
-	 * @covers ::match
-	 */
 	public function testMatch()
 	{
 		$rules = [
@@ -192,9 +155,6 @@ class ImageTest extends TestCase
 		$this->assertTrue($this->_image()->match($rules));
 	}
 
-	/**
-	 * @covers ::match
-	 */
 	public function testMatchOrientationException()
 	{
 		// Make sure i18n files are loaded
@@ -206,27 +166,18 @@ class ImageTest extends TestCase
 		$this->_image()->match(['orientation' => 'portrait']);
 	}
 
-	/**
-	 * @covers ::orientation
-	 */
 	public function testOrientation()
 	{
 		$file = $this->_image();
 		$this->assertSame('square', $file->orientation());
 	}
 
-	/**
-	 * @covers ::ratio
-	 */
 	public function testRatio()
 	{
 		$image  = $this->_image();
 		$this->assertSame(1.0, $image->ratio());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray()
 	{
 		$file = $this->_image();
@@ -235,9 +186,6 @@ class ImageTest extends TestCase
 		$this->assertIsArray($file->toArray()['dimensions']);
 	}
 
-	/**
-	 * @covers ::__toString
-	 */
 	public function testToString()
 	{
 		$file = $this->_image();
@@ -246,9 +194,6 @@ class ImageTest extends TestCase
 		$this->assertSame($expected, (string)$file);
 	}
 
-	/**
-	 * @covers ::width
-	 */
 	public function testWidth()
 	{
 		$file = $this->_image();

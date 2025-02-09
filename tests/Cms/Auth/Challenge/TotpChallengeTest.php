@@ -6,10 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\Totp;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth\TotpChallenge
- */
+#[CoversClass(TotpChallenge::class)]
 class TotpChallengeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth.TotpChallenge';
@@ -36,9 +35,6 @@ class TotpChallengeTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::isAvailable
-	 */
 	public function testIsAvailable()
 	{
 		$user = $this->app->user('homer@simpsons.com');
@@ -47,18 +43,12 @@ class TotpChallengeTest extends TestCase
 		$this->assertTrue(TotpChallenge::isAvailable($user, 'login'));
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreate()
 	{
 		$user = $this->app->user('homer@simpsons.com');
 		$this->assertNull(TotpChallenge::create($user, []));
 	}
 
-	/**
-	 * @covers ::verify
-	 */
 	public function testVerify()
 	{
 		$user = $this->app->user('homer@simpsons.com');

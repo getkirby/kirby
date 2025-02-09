@@ -3,15 +3,11 @@
 namespace Kirby\Cache;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cache\NullCache
- */
+#[CoversClass(NullCache::class)]
 class NullCacheTest extends TestCase
 {
-	/**
-	 * @covers ::enabled
-	 */
 	public function testEnabled()
 	{
 		$cache = new NullCache();
@@ -19,11 +15,6 @@ class NullCacheTest extends TestCase
 		$this->assertFalse($cache->enabled());
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
 	public function testOperations()
 	{
 		$cache = new NullCache();
@@ -34,9 +25,6 @@ class NullCacheTest extends TestCase
 		$this->assertTrue($cache->remove('foo'));
 	}
 
-	/**
-	 * @covers ::flush
-	 */
 	public function testFlush()
 	{
 		$cache = new NullCache();

@@ -8,6 +8,7 @@ use Kirby\Content\VersionId;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 
 class PageActionsTest extends TestCase
@@ -124,10 +125,8 @@ class PageActionsTest extends TestCase
 		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
 
-	/**
-	 * @dataProvider slugProvider
-	 */
-	public function testChangeSlug($input, $expected, $draft)
+	#[DataProvider('slugProvider')]
+	public function testChangeSlug(string $input, string $expected, bool $draft)
 	{
 		$site = $this->app->site();
 
@@ -170,10 +169,8 @@ class PageActionsTest extends TestCase
 		$this->assertSame($newRoot, $modified->root());
 	}
 
-	/**
-	 * @dataProvider slugProvider
-	 */
-	public function testChangeSlugMultiLang($input, $expected, $draft)
+	#[DataProvider('slugProvider')]
+	public function testChangeSlugMultiLang(string $input, string $expected, bool $draft)
 	{
 		$app = $this->app->clone([
 			'languages' => [
@@ -669,10 +666,8 @@ class PageActionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider languageProvider
-	 */
-	public function testUpdateMultilang($languageCode)
+	#[DataProvider('languageProvider')]
+	public function testUpdateMultilang(string|null $languageCode)
 	{
 		$app = $this->app->clone([
 			'languages' => [

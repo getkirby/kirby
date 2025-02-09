@@ -8,10 +8,11 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Text\KirbyTags
- */
+#[CoversClass(KirbyTags::class)]
 class KirbyTagsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -47,9 +48,6 @@ class KirbyTagsTest extends TestCase
 		return $tests;
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParse()
 	{
 		KirbyTag::$types = [
@@ -64,9 +62,6 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('test', KirbyTags::parse('(tEsT: foo)'));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseWithValue()
 	{
 		KirbyTag::$types = [
@@ -80,9 +75,6 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('foo', KirbyTags::parse('(TEST: foo)'));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseWithAttribute()
 	{
 		KirbyTag::$types = [
@@ -97,9 +89,6 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('foo|bar', KirbyTags::parse('(TEST: foo a: bar)'));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseWithException()
 	{
 		KirbyTag::$types = [
@@ -123,9 +112,6 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)'));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseWithExceptionDebug1()
 	{
 		$this->expectException(Exception::class);
@@ -140,9 +126,6 @@ class KirbyTagsTest extends TestCase
 		KirbyTags::parse('(test: foo)', [], ['debug' => true]);
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseWithExceptionDebug2()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -157,9 +140,6 @@ class KirbyTagsTest extends TestCase
 		KirbyTags::parse('(invalidargument: foo)', [], ['debug' => true]);
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseWithExceptionDebug3()
 	{
 		KirbyTag::$types = [
@@ -173,9 +153,6 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)', [], ['debug' => true]));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseWithBrackets()
 	{
 		KirbyTag::$types = [
@@ -203,10 +180,7 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('(test: foo (bar)', KirbyTags::parse('(test: foo (bar)'));
 	}
 
-	/**
-	 * @covers ::parse
-	 * @dataProvider dataProvider
-	 */
+	#[DataProvider('dataProvider')]
 	public function testWithMarkdown($kirbytext, $expected)
 	{
 		$kirby = $this->app->clone([
@@ -220,10 +194,7 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame($expected, $kirby->kirbytext($kirbytext));
 	}
 
-	/**
-	 * @covers ::parse
-	 * @dataProvider dataProvider
-	 */
+	#[DataProvider('dataProvider')]
 	public function testWithMarkdownExtra($kirbytext, $expected)
 	{
 		$kirby = $this->app->clone([
@@ -237,9 +208,7 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame($expected, $kirby->kirbytext($kirbytext));
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testHooks()
 	{
 		$app = $this->app->clone([
@@ -281,11 +250,9 @@ class KirbyTagsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @coversNothing
-	 * @dataProvider globalOptionsProvider
-	 */
-	public function testGlobalOptions($kirbytext, $expected)
+	#[CoversNothing]
+	#[DataProvider('globalOptionsProvider')]
+	public function testGlobalOptions(string $kirbytext, string $expected)
 	{
 		$kirby = $this->app->clone([
 			'options' => [

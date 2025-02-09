@@ -4,10 +4,9 @@ namespace Kirby\Panel\Controller;
 
 use Kirby\Cms\App;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Controller\Search
- */
+#[CoversClass(Search::class)]
 class SearchTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Search';
@@ -61,9 +60,6 @@ class SearchTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::files
-	 */
 	public function testFiles(): void
 	{
 		$result = Search::files('fish');
@@ -87,9 +83,6 @@ class SearchTest extends TestCase
 		$this->assertCount(0, $result['results']);
 	}
 
-	/**
-	 * @covers ::files
-	 */
 	public function testFilesNotListable(): void
 	{
 		$this->app = new App([
@@ -147,9 +140,6 @@ class SearchTest extends TestCase
 		], array_column($result['results'], 'text'));
 	}
 
-	/**
-	 * @covers ::files
-	 */
 	public function testFilesPaginated(): void
 	{
 		$result = Search::files('fish', limit: 1);
@@ -169,9 +159,6 @@ class SearchTest extends TestCase
 		$this->assertSame(5, $result['pagination']['total']);
 	}
 
-	/**
-	 * @covers ::pages
-	 */
 	public function testPages(): void
 	{
 		$result = Search::pages('beautiful');
@@ -193,9 +180,6 @@ class SearchTest extends TestCase
 		$this->assertCount(0, $result['results']);
 	}
 
-	/**
-	 * @covers ::pages
-	 */
 	public function testPagesNotListable(): void
 	{
 		$this->app = new App([
@@ -256,9 +240,6 @@ class SearchTest extends TestCase
 		], array_column($result['results'], 'text'));
 	}
 
-	/**
-	 * @covers ::pages
-	 */
 	public function testPagesPaginated(): void
 	{
 		$result = Search::pages('beautiful', limit: 1);
@@ -278,9 +259,6 @@ class SearchTest extends TestCase
 		$this->assertSame(3, $result['pagination']['total']);
 	}
 
-	/**
-	 * @covers ::users
-	 */
 	public function testUsers(): void
 	{
 		$result = Search::users('simpson');
@@ -301,9 +279,6 @@ class SearchTest extends TestCase
 		$this->assertCount(0, $result['results']);
 	}
 
-	/**
-	 * @covers ::users
-	 */
 	public function testUsersPaginated(): void
 	{
 		$result = Search::users('simpson', limit: 1);

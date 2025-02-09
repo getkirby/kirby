@@ -3,10 +3,9 @@
 namespace Kirby\Cms;
 
 use Closure;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Loader
- */
+#[CoversClass(Loader::class)]
 class LoaderTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -19,9 +18,6 @@ class LoaderTest extends TestCase
 		$this->loader = new Loader($this->app);
 	}
 
-	/**
-	 * @covers ::area
-	 */
 	public function testArea()
 	{
 		$area = $this->loader->area('site');
@@ -29,10 +25,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Site', $area['label']);
 	}
 
-	/**
-	 * @covers ::area
-	 * @covers ::areas
-	 */
 	public function testAreaPlugin()
 	{
 		$this->app = $this->app->clone([
@@ -48,10 +40,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Todos', $area['label']);
 	}
 
-	/**
-	 * @covers ::area
-	 * @covers ::areas
-	 */
 	public function testAreaCorePlugin()
 	{
 		$this->app = $this->app->clone([
@@ -67,9 +55,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Seite', $area['label']);
 	}
 
-	/**
-	 * @covers ::areas
-	 */
 	public function testAreaDropdownPlugin()
 	{
 		$this->app = $this->app->clone([
@@ -89,9 +74,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('foo', $dropdown['options']());
 	}
 
-	/**
-	 * @covers ::areas
-	 */
 	public function testAreas()
 	{
 		$areas = $this->loader->areas();
@@ -104,9 +86,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Users', $areas['users']['label']);
 	}
 
-	/**
-	 * @covers ::component
-	 */
 	public function testComponent()
 	{
 		$component = $this->loader->component('url');
@@ -114,9 +93,6 @@ class LoaderTest extends TestCase
 		$this->assertInstanceOf('Closure', $component);
 	}
 
-	/**
-	 * @covers ::components
-	 */
 	public function testComponents()
 	{
 		$components = $this->loader->components();
@@ -124,9 +100,6 @@ class LoaderTest extends TestCase
 		$this->assertArrayHasKey('url', $components);
 	}
 
-	/**
-	 * @covers ::extension
-	 */
 	public function testExtension()
 	{
 		$extension = $this->loader->extension('tags', 'video');
@@ -135,9 +108,6 @@ class LoaderTest extends TestCase
 		$this->assertInstanceOf('Closure', $extension['html']);
 	}
 
-	/**
-	 * @covers ::extensions
-	 */
 	public function testExtensions()
 	{
 		$extensions = $this->loader->extensions('tags');
@@ -146,9 +116,6 @@ class LoaderTest extends TestCase
 		$this->assertArrayHasKey('video', $extensions);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolveArray()
 	{
 		$resolved = $this->loader->resolve([
@@ -158,9 +125,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Test', $resolved['test']);
 	}
 
-	/**
-	 * @covers ::resolveArea
-	 */
 	public function testResolveArea()
 	{
 		$resolved = $this->loader->resolveArea([
@@ -176,9 +140,6 @@ class LoaderTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolveClosure()
 	{
 		$resolved = $this->loader->resolve(fn () => [
@@ -188,9 +149,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Test', $resolved['test']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolvePHPFile()
 	{
 		$resolved = $this->loader->resolve(static::FIXTURES . '/resolve.php');
@@ -198,9 +156,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Test', $resolved['test']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolveYamlFile()
 	{
 		$resolved = $this->loader->resolve(static::FIXTURES . '/resolve.yml');
@@ -208,9 +163,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Test', $resolved['test']);
 	}
 
-	/**
-	 * @covers ::resolveAll
-	 */
 	public function testResolveAll()
 	{
 		$resolved = $this->loader->resolveAll([
@@ -220,9 +172,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Test', $resolved['test']['test']);
 	}
 
-	/**
-	 * @covers ::section
-	 */
 	public function testSection()
 	{
 		$section = $this->loader->section('pages');
@@ -232,9 +181,6 @@ class LoaderTest extends TestCase
 		$this->assertArrayHasKey('methods', $section);
 	}
 
-	/**
-	 * @covers ::sections
-	 */
 	public function testSections()
 	{
 		$sections = $this->loader->sections();
@@ -243,9 +189,6 @@ class LoaderTest extends TestCase
 		$this->assertArrayHasKey('info', $sections);
 	}
 
-	/**
-	 * @covers ::withPlugins
-	 */
 	public function testWithPlugins()
 	{
 		$loader = new Loader($this->app);

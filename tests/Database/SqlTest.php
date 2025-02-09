@@ -5,10 +5,9 @@ namespace Kirby\Database;
 use Kirby\Database\Sql\Sqlite;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Database\Sql
- */
+#[CoversClass(Sql::class)]
 class SqlTest extends TestCase
 {
 	protected Sql $sql;
@@ -25,9 +24,6 @@ class SqlTest extends TestCase
 		$this->sql = new MockSql($this->database);
 	}
 
-	/**
-	 * @covers ::bindingName
-	 */
 	public function testBindingName()
 	{
 		$result = $this->sql->bindingName('test_binding1');
@@ -40,9 +36,6 @@ class SqlTest extends TestCase
 		$this->assertMatchesRegularExpression('/^:invalid_[a-zA-Z0-9]{8}$/', $result);
 	}
 
-	/**
-	 * @covers ::columnDefault
-	 */
 	public function testColumnDefault()
 	{
 		$this->assertSame([
@@ -55,9 +48,6 @@ class SqlTest extends TestCase
 		$this->assertSame('amazing default', A::first($result['bindings']));
 	}
 
-	/**
-	 * @covers ::columnName
-	 */
 	public function testColumnName()
 	{
 		// test with the SQLite class because of its more
@@ -71,9 +61,6 @@ class SqlTest extends TestCase
 		$this->assertNull($sql->columnName('test', 'invalid.id', true));
 	}
 
-	/**
-	 * @covers ::combineIdentifier
-	 */
 	public function testCombineIdentifier()
 	{
 		$this->assertSame('`test`.`id`', $this->sql->combineIdentifier('test', 'id'));
@@ -82,9 +69,6 @@ class SqlTest extends TestCase
 		$this->assertSame('`test`.`id`', $this->sql->combineIdentifier('test', 'id', true));
 	}
 
-	/**
-	 * @covers ::createColumn
-	 */
 	public function testCreateColumn()
 	{
 		// basic example
@@ -202,9 +186,6 @@ class SqlTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::createColumn
-	 */
 	public function testCreateColumnNoType()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -213,9 +194,6 @@ class SqlTest extends TestCase
 		$this->sql->createColumn('test', []);
 	}
 
-	/**
-	 * @covers ::createColumn
-	 */
 	public function testCreateColumnInvalidType()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -423,9 +401,6 @@ class SqlTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::quoteIdentifier
-	 */
 	public function testQuoteIdentifier()
 	{
 		$this->assertSame('*', $this->sql->quoteIdentifier('*'));
@@ -435,9 +410,6 @@ class SqlTest extends TestCase
 		$this->assertSame("`another'test`", $this->sql->quoteIdentifier("another'test"));
 	}
 
-	/**
-	 * @covers ::splitIdentifier
-	 */
 	public function testSplitIdentifier()
 	{
 		$result = $this->sql->splitIdentifier('table', 'table.column');
@@ -474,9 +446,6 @@ class SqlTest extends TestCase
 		$this->assertSame(['table.name', 'column.name'], $result);
 	}
 
-	/**
-	 * @covers ::splitIdentifier
-	 */
 	public function testSplitIdentifierInvalid()
 	{
 		$this->expectException(InvalidArgumentException::class);

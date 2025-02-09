@@ -9,6 +9,7 @@ use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class UserForceLocked extends ModelUser
 {
@@ -21,9 +22,8 @@ class UserForceLocked extends ModelUser
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Panel\User
- */
+#[CoversClass(User::class)]
+#[CoversClass(Model::class)]
 class UserTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.User';
@@ -53,9 +53,6 @@ class UserTest extends TestCase
 		return new User($user);
 	}
 
-	/**
-	 * @covers ::breadcrumb
-	 */
 	public function testBreadcrumb(): void
 	{
 		$model = new ModelUser([
@@ -67,9 +64,6 @@ class UserTest extends TestCase
 		$this->assertStringStartsWith('/users/', $breadcrumb[0]['link']);
 	}
 
-	/**
-	 * @covers ::buttons
-	 */
 	public function testButtons()
 	{
 		$this->assertSame([
@@ -79,9 +73,6 @@ class UserTest extends TestCase
 		], array_column($this->panel()->buttons(), 'component'));
 	}
 
-	/**
-	 * @covers ::dropdown
-	 */
 	public function testDropdownTotp(): void
 	{
 		$this->app = new App([
@@ -110,9 +101,6 @@ class UserTest extends TestCase
 		$this->assertSame('/account/totp/disable', $dropdown[7]['dialog']);
 	}
 
-	/**
-	 * @covers ::dropdownOption
-	 */
 	public function testDropdownOption(): void
 	{
 		$model = new ModelUser([
@@ -126,9 +114,6 @@ class UserTest extends TestCase
 		$this->assertSame('/users/test', $option['link']);
 	}
 
-	/**
-	 * @covers ::home
-	 */
 	public function testHome()
 	{
 		$user = new ModelUser([
@@ -139,9 +124,6 @@ class UserTest extends TestCase
 		$this->assertSame('/panel/site', $panel->home());
 	}
 
-	/**
-	 * @covers ::home
-	 */
 	public function testHomeWithCustomPath()
 	{
 		$this->app = new App([
@@ -165,9 +147,6 @@ class UserTest extends TestCase
 		$this->assertSame('/blog', $panel->home());
 	}
 
-	/**
-	 * @covers ::home
-	 */
 	public function testHomeWithCustomPathQuery()
 	{
 		$this->app = new App([
@@ -196,10 +175,6 @@ class UserTest extends TestCase
 		$this->assertSame('/panel/pages/test', $panel->home());
 	}
 
-	/**
-	 * @covers ::imageDefaults
-	 * @covers ::imageSource
-	 */
 	public function testImage()
 	{
 		$user = new ModelUser([
@@ -211,9 +186,6 @@ class UserTest extends TestCase
 		$this->assertFalse(isset($image['url']));
 	}
 
-	/**
-	 * @covers ::imageSource
-	 */
 	public function testImageStringQuery()
 	{
 		$user = new ModelUser([
@@ -225,12 +197,6 @@ class UserTest extends TestCase
 		$this->assertNotEmpty($image);
 	}
 
-	/**
-	 * @covers ::imageSource
-	 * @covers \Kirby\Panel\Model::image
-	 * @covers \Kirby\Panel\Model::imageSource
-	 * @covers \Kirby\Panel\Model::imageSrcset
-	 */
 	public function testImageCover()
 	{
 		$app = $this->app->clone([
@@ -278,9 +244,6 @@ class UserTest extends TestCase
 		], $panel->image(['cover' => true]));
 	}
 
-	/**
-	 * @covers \Kirby\Panel\Model::options
-	 */
 	public function testOptions()
 	{
 		$user = new ModelUser([
@@ -304,9 +267,6 @@ class UserTest extends TestCase
 		$this->assertSame($expected, $panel->options());
 	}
 
-	/**
-	 * @covers \Kirby\Panel\Model::options
-	 */
 	public function testOptionsWithLockedUser()
 	{
 		$user = new UserForceLocked([
@@ -345,9 +305,6 @@ class UserTest extends TestCase
 		$this->assertSame($expected, $panel->options(['changeEmail']));
 	}
 
-	/**
-	 * @covers ::path
-	 */
 	public function testPath()
 	{
 		$user = new ModelUser([
@@ -358,10 +315,6 @@ class UserTest extends TestCase
 		$this->assertTrue(Str::startsWith($panel->path(), 'users/'));
 	}
 
-	/**
-	 * @covers ::pickerData
-	 * @covers \Kirby\Panel\Model::pickerData
-	 */
 	public function testPickerDataDefault()
 	{
 		$user = new ModelUser([
@@ -376,9 +329,6 @@ class UserTest extends TestCase
 		$this->assertSame('test@getkirby.com', $data['text']);
 	}
 
-	/**
-	 * @covers ::props
-	 */
 	public function testProps()
 	{
 		$user = new ModelUser([
@@ -410,9 +360,6 @@ class UserTest extends TestCase
 		$this->assertNull($props['prev']());
 	}
 
-	/**
-	 * @covers ::props
-	 */
 	public function testPropsPrevNext()
 	{
 		$app = $this->app->clone([
@@ -436,9 +383,6 @@ class UserTest extends TestCase
 		$this->assertNull($props['next']());
 	}
 
-	/**
-	 * @covers ::translation
-	 */
 	public function testTranslation()
 	{
 		// existing
@@ -464,9 +408,6 @@ class UserTest extends TestCase
 		$this->assertNull($translations->get('translation.name'));
 	}
 
-	/**
-	 * @covers ::prevNext
-	 */
 	public function testPrevNext()
 	{
 		$app = $this->app->clone([
@@ -490,10 +431,6 @@ class UserTest extends TestCase
 		$this->assertNull($prevNext['next']());
 	}
 
-	/**
-	 * @covers ::prevNext
-	 * @covers ::toPrevNextLink
-	 */
 	public function testPrevNextWithTab()
 	{
 		$app = $this->app->clone([
@@ -513,9 +450,6 @@ class UserTest extends TestCase
 		$_GET = [];
 	}
 
-	/**
-	 * @covers ::view
-	 */
 	public function testView()
 	{
 		$user = new ModelUser([

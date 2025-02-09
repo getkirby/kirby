@@ -4,15 +4,11 @@ namespace Kirby\Parsley;
 
 use Kirby\TestCase;
 use Kirby\Toolkit\Dom;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Parsley\Element
- */
+#[CoversClass(Element::class)]
 class ElementTest extends TestCase
 {
-	/**
-	 * @covers ::attr
-	 */
 	public function testAttr()
 	{
 		$dom     = new Dom('<p class="test">test</p>');
@@ -22,9 +18,6 @@ class ElementTest extends TestCase
 		$this->assertSame('test', $element->attr('class'));
 	}
 
-	/**
-	 * @covers ::children
-	 */
 	public function testChildren()
 	{
 		$dom     = new Dom('<p class="test"><span>A</span><span>B</span></p>');
@@ -36,9 +29,6 @@ class ElementTest extends TestCase
 		$this->assertCount(2, $children);
 	}
 
-	/**
-	 * @covers ::classList
-	 */
 	public function testClassList()
 	{
 		$dom     = new Dom('<p class="a b">test</p>');
@@ -48,9 +38,6 @@ class ElementTest extends TestCase
 		$this->assertSame(['a', 'b'], $element->classList());
 	}
 
-	/**
-	 * @covers ::className
-	 */
 	public function testClassName()
 	{
 		$dom     = new Dom('<p class="a b">test</p>');
@@ -60,9 +47,6 @@ class ElementTest extends TestCase
 		$this->assertSame('a b', $element->className());
 	}
 
-	/**
-	 * @covers ::element
-	 */
 	public function testElement()
 	{
 		$dom     = new Dom('test');
@@ -72,9 +56,6 @@ class ElementTest extends TestCase
 		$this->assertSame($body, $element->element());
 	}
 
-	/**
-	 * @covers ::filter
-	 */
 	public function testFilter()
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
@@ -86,9 +67,6 @@ class ElementTest extends TestCase
 		$this->assertSame('Bold', $children[0]->innerText());
 	}
 
-	/**
-	 * @covers ::find
-	 */
 	public function testFind()
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
@@ -99,9 +77,6 @@ class ElementTest extends TestCase
 		$this->assertSame('Bold', $child->innerText());
 	}
 
-	/**
-	 * @covers ::find
-	 */
 	public function testFindWithoutResult()
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
@@ -111,9 +86,6 @@ class ElementTest extends TestCase
 		$this->assertNull($element->find('//a'));
 	}
 
-	/**
-	 * @covers ::innerHtml
-	 */
 	public function testInnerHtml()
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
@@ -123,9 +95,6 @@ class ElementTest extends TestCase
 		$this->assertSame('ItalicBold', $element->innerHtml());
 	}
 
-	/**
-	 * @covers ::innerHtml
-	 */
 	public function testInnerHtmlWithMarks()
 	{
 		$marks = [
@@ -150,9 +119,6 @@ class ElementTest extends TestCase
 		$this->assertSame('<i>Italic</i><b>Bold</b>', $element->innerHtml());
 	}
 
-	/**
-	 * @covers ::innerText
-	 */
 	public function testInnerText()
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
@@ -162,9 +128,6 @@ class ElementTest extends TestCase
 		$this->assertSame('ItalicBold', $element->innerText());
 	}
 
-	/**
-	 * @covers ::outerHtml
-	 */
 	public function testOuterHtml()
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
@@ -174,9 +137,6 @@ class ElementTest extends TestCase
 		$this->assertSame('<p><i>Italic</i><b>Bold</b></p>', $element->outerHtml());
 	}
 
-	/**
-	 * @covers ::query
-	 */
 	public function testQuery()
 	{
 		$dom = new Dom('<p><i>Italic</i><b>Bold</b></p>');
@@ -186,9 +146,6 @@ class ElementTest extends TestCase
 		$this->assertSame('b', $dom->query('//p/b')[0]->tagName);
 	}
 
-	/**
-	 * @covers ::remove
-	 */
 	public function testRemove()
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
@@ -199,9 +156,6 @@ class ElementTest extends TestCase
 		$this->assertNull($dom->query('//p/i')[0]);
 	}
 
-	/**
-	 * @covers ::tagName
-	 */
 	public function testTagName()
 	{
 		$dom     = new Dom('<p>Test</p>');

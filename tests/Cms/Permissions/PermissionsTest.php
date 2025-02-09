@@ -3,10 +3,10 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Permissions
- */
+#[CoversClass(Permissions::class)]
 class PermissionsTest extends TestCase
 {
 	public function tearDown(): void
@@ -68,12 +68,8 @@ class PermissionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::for
-	 * @dataProvider actionsProvider
-	 */
-	public function testActions(string $category, $action)
+	#[DataProvider('actionsProvider')]
+	public function testActions(string $category, string $action)
 	{
 		// default
 		$p = new Permissions();
@@ -151,9 +147,6 @@ class PermissionsTest extends TestCase
 		new Permissions();
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForDefault()
 	{
 		// exists
