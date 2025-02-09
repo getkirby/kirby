@@ -178,8 +178,6 @@ class Router
 			];
 		}
 
-		dump($routes);
-
 		// if the Panel is already installed and/or the
 		// user is authenticated, those areas won't be
 		// included, which is why we add redirect routes
