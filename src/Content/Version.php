@@ -2,7 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
@@ -63,6 +62,7 @@ class Version
 		return new Content(
 			parent: $this->model,
 			data:   $fields,
+			normalize: false
 		);
 	}
 
@@ -124,6 +124,9 @@ class Version
 			(new Changes())->track($this->model);
 		}
 
+		// make sure that an older version does not exist in the cache
+		VersionCache::remove($this, $language);
+
 		$this->model->storage()->create(
 			versionId: $this->id,
 			language: $language,
@@ -142,6 +145,9 @@ class Version
 		VersionRules::delete($this, $language);
 
 		$this->model->storage()->delete($this->id, $language);
+
+		// Remove the version from the cache
+		VersionCache::remove($this, $language);
 
 		// untrack the changes if the version does no longer exist
 		// in any of the available languages
@@ -312,6 +318,10 @@ class Version
 			toVersion: $toVersion,
 			toLanguage: $toLanguage
 		);
+
+		// remove both versions from the cache
+		VersionCache::remove($fromVersion, $fromLanguage);
+		VersionCache::remove($toVersion, $toLanguage);
 
 		$this->model->storage()->move(
 			fromVersionId: $fromVersion->id(),
@@ -496,8 +506,17 @@ class Version
 			// make sure that the version exists
 			VersionRules::read($this, $language);
 
-			$fields = $this->model->storage()->read($this->id, $language);
-			$fields = $this->prepareFieldsAfterRead($fields, $language);
+			$fields = VersionCache::get($this, $language);
+
+			if ($fields === null) {
+				$fields = $this->model->storage()->read($this->id, $language);
+				$fields = $this->prepareFieldsAfterRead($fields, $language);
+
+				if ($fields !== null) {
+					VersionCache::set($this, $language, $fields);
+				}
+			}
+
 			return $fields;
 		} catch (NotFoundException) {
 			return null;
@@ -519,6 +538,10 @@ class Version
 
 		// check if replacing is allowed
 		VersionRules::replace($this, $fields, $language);
+
+		// remove the version from the cache to read
+		// a fresh version next time
+		VersionCache::remove($this, $language);
 
 		$this->model->storage()->update(
 			versionId: $this->id,
@@ -584,6 +607,10 @@ class Version
 			...$this->read($language),
 			...$fields
 		];
+
+		// remove the version from the cache to read
+		// a fresh version next time
+		VersionCache::remove($this, $language);
 
 		$this->model->storage()->update(
 			versionId: $this->id,
