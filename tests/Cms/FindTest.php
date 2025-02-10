@@ -5,10 +5,9 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Find
- */
+#[CoversClass(Find::class)]
 class FindTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Find';
@@ -24,9 +23,6 @@ class FindTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFileForPage(): void
 	{
 		$app = $this->app->clone([
@@ -55,9 +51,6 @@ class FindTest extends TestCase
 		$this->assertSame('aa.jpg', Find::file('pages/a+aa', 'aa.jpg')->filename());
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFileForSite(): void
 	{
 		$app = $this->app->clone([
@@ -72,9 +65,6 @@ class FindTest extends TestCase
 		$this->assertSame('test.jpg', Find::file('site', 'test.jpg')->filename());
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFileForUser(): void
 	{
 		$app = $this->app->clone([
@@ -92,9 +82,6 @@ class FindTest extends TestCase
 		$this->assertSame('test.jpg', Find::file('users/test@getkirby.com', 'test.jpg')->filename());
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFileNotFound()
 	{
 		$this->expectException(NotFoundException::class);
@@ -103,9 +90,6 @@ class FindTest extends TestCase
 		Find::file('site', 'nope.jpg');
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFileNotReadable()
 	{
 		$app = $this->app->clone([
@@ -125,9 +109,6 @@ class FindTest extends TestCase
 		Find::file('site', 'protected.jpg');
 	}
 
-	/**
-	 * @covers ::language
-	 */
 	public function testLanguage()
 	{
 		$app = $this->app->clone([
@@ -150,9 +131,6 @@ class FindTest extends TestCase
 		$this->assertSame('de', Find::language('de')->code());
 	}
 
-	/**
-	 * @covers ::language
-	 */
 	public function testLanguageNotFound()
 	{
 		$this->app->impersonate('kirby');
@@ -163,9 +141,6 @@ class FindTest extends TestCase
 		Find::language('en');
 	}
 
-	/**
-	 * @covers ::page
-	 */
 	public function testPage()
 	{
 		$app = $this->app->clone([
@@ -199,9 +174,6 @@ class FindTest extends TestCase
 		$this->assertSame($b, Find::page('page://my-uuid'));
 	}
 
-	/**
-	 * @covers ::page
-	 */
 	public function testPageNotReadable()
 	{
 		$app = $this->app->clone([
@@ -228,9 +200,6 @@ class FindTest extends TestCase
 		Find::page('a');
 	}
 
-	/**
-	 * @covers ::page
-	 */
 	public function testPageNotFound()
 	{
 		$this->expectException(NotFoundException::class);
@@ -239,9 +208,6 @@ class FindTest extends TestCase
 		Find::page('does-not-exist');
 	}
 
-	/**
-	 * @covers ::parent
-	 */
 	public function testParent()
 	{
 		$app = $this->app->clone([
@@ -302,9 +268,6 @@ class FindTest extends TestCase
 		$this->assertIsFile(Find::parent('users/test@getkirby.com/files/userfile.jpg'));
 	}
 
-	/**
-	 * @covers ::parent
-	 */
 	public function testParentWithInvalidModelType()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -312,9 +275,6 @@ class FindTest extends TestCase
 		$this->assertNull(Find::parent('something/something'));
 	}
 
-	/**
-	 * @covers ::parent
-	 */
 	public function testParentNotFound()
 	{
 		$this->expectException(NotFoundException::class);
@@ -322,9 +282,6 @@ class FindTest extends TestCase
 		$this->assertNull(Find::parent('pages/does-not-exist'));
 	}
 
-	/**
-	 * @covers ::parent
-	 */
 	public function testParentUndefined()
 	{
 		$this->expectException(NotFoundException::class);
@@ -332,9 +289,6 @@ class FindTest extends TestCase
 		$this->assertNull(Find::parent('users/does-not-exist'));
 	}
 
-	/**
-	 * @covers ::user
-	 */
 	public function testUser()
 	{
 		$app = $this->app->clone([
@@ -350,9 +304,6 @@ class FindTest extends TestCase
 		$this->assertSame('test@getkirby.com', Find::user('test@getkirby.com')->email());
 	}
 
-	/**
-	 * @covers ::user
-	 */
 	public function testUserWithAuthentication()
 	{
 		$app = $this->app->clone([
@@ -372,9 +323,6 @@ class FindTest extends TestCase
 		$this->assertSame('test@getkirby.com', Find::user()->email());
 	}
 
-	/**
-	 * @covers ::user
-	 */
 	public function testUserWithoutAllowedImpersonation()
 	{
 		$app = $this->app->clone([
@@ -393,9 +341,6 @@ class FindTest extends TestCase
 		Find::user()->email();
 	}
 
-	/**
-	 * @covers ::user
-	 */
 	public function testUserForAccountArea()
 	{
 		$app = $this->app->clone([
@@ -416,9 +361,6 @@ class FindTest extends TestCase
 		$this->assertSame('test@getkirby.com', Find::user('account')->email());
 	}
 
-	/**
-	 * @covers ::user
-	 */
 	public function testUserNotFound()
 	{
 		$this->expectException(NotFoundException::class);

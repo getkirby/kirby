@@ -6,10 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\Content
- */
+#[CoversClass(Content::class)]
 class ContentTest extends TestCase
 {
 	protected Content $content;
@@ -26,9 +25,6 @@ class ContentTest extends TestCase
 		], $this->parent);
 	}
 
-	/**
-	 * @covers ::__call
-	 */
 	public function testCall()
 	{
 		$this->assertSame('a', $this->content->a()->key());
@@ -39,9 +35,6 @@ class ContentTest extends TestCase
 		$this->assertSame('MIXED', $this->content->mIXEd()->value());
 	}
 
-	/**
-	 * @covers ::convertTo
-	 */
 	public function testConvertTo()
 	{
 		$app = new App([
@@ -109,12 +102,6 @@ class ContentTest extends TestCase
 		$this->assertSame('keep this', $new['removed']);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::__debugInfo
-	 * @covers ::data
-	 * @covers ::toArray
-	 */
 	public function testData()
 	{
 		$expected = [
@@ -128,9 +115,6 @@ class ContentTest extends TestCase
 		$this->assertSame($expected, $this->content->toArray());
 	}
 
-	/**
-	 * @covers ::fields
-	 */
 	public function testFields()
 	{
 		$fields = $this->content->fields();
@@ -141,9 +125,6 @@ class ContentTest extends TestCase
 		$this->assertSame('MIXED', $fields['mixed']->value());
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGet()
 	{
 		$field = $this->content->get('mixed');
@@ -170,9 +151,6 @@ class ContentTest extends TestCase
 		$this->assertSame('MIXED', $fields['mixed']->value());
 	}
 
-	/**
-	 * @covers ::has
-	 */
 	public function testHas()
 	{
 		$this->assertTrue($this->content->has('a'));
@@ -185,17 +163,11 @@ class ContentTest extends TestCase
 		$this->assertFalse($this->content->has('C'));
 	}
 
-	/**
-	 * @covers ::keys
-	 */
 	public function testKeys()
 	{
 		$this->assertSame(['a', 'b', 'mixed'], $this->content->keys());
 	}
 
-	/**
-	 * @covers ::not
-	 */
 	public function testNot()
 	{
 		$content1 = $this->content->not('a');
@@ -228,17 +200,11 @@ class ContentTest extends TestCase
 		$this->assertSame('B', $content5->get('b')->value());
 	}
 
-	/**
-	 * @covers ::parent
-	 */
 	public function testParent()
 	{
 		$this->assertSame($this->parent, $this->content->parent());
 	}
 
-	/**
-	 * @covers ::setParent
-	 */
 	public function testSetParent()
 	{
 		$page = new Page(['slug' => 'another-test']);
@@ -247,9 +213,6 @@ class ContentTest extends TestCase
 		$this->assertIsPage($page, $this->content->parent());
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdate()
 	{
 		$this->content->update([

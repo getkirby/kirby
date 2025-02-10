@@ -7,11 +7,10 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Session\AutoSession;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Throwable;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth
- */
+#[CoversClass(Auth::class)]
 class AuthTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth';
@@ -65,12 +64,6 @@ class AuthTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::currentUserFromImpersonation
-	 * @covers ::impersonate
-	 * @covers ::status
-	 * @covers ::user
-	 */
 	public function testImpersonate()
 	{
 		$this->assertNull($this->auth->user());
@@ -141,9 +134,6 @@ class AuthTest extends TestCase
 		$this->assertNull($this->auth->user(null, false));
 	}
 
-	/**
-	 * @covers ::impersonate
-	 */
 	public function testImpersonateInvalidUser()
 	{
 		$this->expectException(NotFoundException::class);
@@ -152,9 +142,6 @@ class AuthTest extends TestCase
 		$this->auth->impersonate('lisa@simpsons.com');
 	}
 
-	/**
-	 * @covers ::login
-	 */
 	public function testLogin()
 	{
 		// set the status cache
@@ -171,9 +158,6 @@ class AuthTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
 	}
 
-	/**
-	 * @covers ::login
-	 */
 	public function testLoginLong()
 	{
 		// set the status cache
@@ -190,9 +174,6 @@ class AuthTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
 	}
 
-	/**
-	 * @covers ::login
-	 */
 	public function testLoginInvalidUser()
 	{
 		$this->expectException(PermissionException::class);
@@ -201,9 +182,6 @@ class AuthTest extends TestCase
 		$this->auth->login('lisa@simpsons.com', 'springfield123');
 	}
 
-	/**
-	 * @covers ::login
-	 */
 	public function testLoginInvalidPassword()
 	{
 		$this->expectException(PermissionException::class);
@@ -212,9 +190,6 @@ class AuthTest extends TestCase
 		$this->auth->login('marge@simpsons.com', 'springfield456');
 	}
 
-	/**
-	 * @covers ::login
-	 */
 	public function testLoginKirby()
 	{
 		$this->expectException(PermissionException::class);
@@ -226,9 +201,6 @@ class AuthTest extends TestCase
 		$this->auth->login('kirby@getkirby.com', 'somewhere-in-japan');
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testTypeBasic1()
 	{
 		$app = $this->app->clone([
@@ -247,9 +219,6 @@ class AuthTest extends TestCase
 		$this->assertTrue($app->response()->usesAuth());
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testTypeBasic2()
 	{
 		// non-existing basic auth should
@@ -262,9 +231,6 @@ class AuthTest extends TestCase
 		$this->assertTrue($this->app->response()->usesAuth());
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testTypeBasic3()
 	{
 		// non-existing basic auth without
@@ -275,9 +241,6 @@ class AuthTest extends TestCase
 		$this->assertTrue($this->app->response()->usesAuth());
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testTypeBasic4()
 	{
 		$app = $this->app->clone([
@@ -298,9 +261,6 @@ class AuthTest extends TestCase
 		$this->assertFalse($app->response()->usesAuth());
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testTypeImpersonate()
 	{
 		$app = $this->app->clone([
@@ -316,9 +276,6 @@ class AuthTest extends TestCase
 		$this->assertSame('impersonate', $app->auth()->type());
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testTypeSession()
 	{
 		$app = $this->app->clone([
@@ -332,10 +289,6 @@ class AuthTest extends TestCase
 		$this->assertSame('session', $app->auth()->type());
 	}
 
-	/**
-	 * @covers ::status
-	 * @covers ::user
-	 */
 	public function testUserSession()
 	{
 		$session = $this->app->session();
@@ -364,10 +317,6 @@ class AuthTest extends TestCase
 		], $this->auth->status()->toArray());
 	}
 
-	/**
-	 * @covers ::status
-	 * @covers ::user
-	 */
 	public function testUserSessionManualSession()
 	{
 		$session = (new AutoSession($this->app->root('sessions')))->createManually();
@@ -383,9 +332,6 @@ class AuthTest extends TestCase
 		], $this->auth->status()->toArray());
 	}
 
-	/**
-	 * @covers ::currentUserFromSession
-	 */
 	public function testUserSessionOldTimestamp()
 	{
 		$session = $this->app->session();
@@ -403,9 +349,6 @@ class AuthTest extends TestCase
 		$this->assertSame([], $session->data()->get());
 	}
 
-	/**
-	 * @covers ::currentUserFromSession
-	 */
 	public function testUserSessionNoTimestamp()
 	{
 		$session = $this->app->session();
@@ -422,10 +365,6 @@ class AuthTest extends TestCase
 		$this->assertSame([], $session->data()->get());
 	}
 
-	/**
-	 * @covers ::status
-	 * @covers ::user
-	 */
 	public function testUserBasicAuth()
 	{
 		$this->app->clone([
@@ -444,9 +383,6 @@ class AuthTest extends TestCase
 		], $this->auth->status()->toArray());
 	}
 
-	/**
-	 * @covers ::user
-	 */
 	public function testUserBasicAuthInvalid1()
 	{
 		$this->expectException(PermissionException::class);
@@ -461,9 +397,6 @@ class AuthTest extends TestCase
 		$this->auth->user();
 	}
 
-	/**
-	 * @covers ::user
-	 */
 	public function testUserBasicAuthInvalid2()
 	{
 		$this->expectException(PermissionException::class);

@@ -5,15 +5,11 @@ namespace Kirby\Panel\Ui\Buttons;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\LanguageSettingsButton
- */
+#[CoversClass(LanguageSettingsButton::class)]
 class LanguageSettingsButtonTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
 	public function testButton()
 	{
 		$language = new Language(['code' => 'en']);
@@ -22,9 +18,6 @@ class LanguageSettingsButtonTest extends TestCase
 		$this->assertSame('languages/en/update', $button->dialog);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testDisabled()
 	{
 		$app = new App([

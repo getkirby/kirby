@@ -3,42 +3,29 @@
 namespace Kirby\Parsley;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Parsley\Schema
- */
+#[CoversClass(Schema::class)]
 class SchemaTest extends TestCase
 {
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallback()
 	{
 		$schema = new Schema();
 		return $this->assertNull($schema->fallback('test'));
 	}
 
-	/**
-	 * @covers ::marks
-	 */
 	public function testMarks()
 	{
 		$schema = new Schema();
 		return $this->assertSame([], $schema->marks());
 	}
 
-	/**
-	 * @covers ::nodes
-	 */
 	public function testNodes()
 	{
 		$schema = new Schema();
 		return $this->assertSame([], $schema->nodes());
 	}
 
-	/**
-	 * @covers ::skip
-	 */
 	public function testSkip()
 	{
 		$schema = new Schema();

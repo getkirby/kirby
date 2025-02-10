@@ -6,17 +6,13 @@ use Kirby\Cms\Page;
 use Kirby\Option\Options;
 use Kirby\Option\OptionsApi;
 use Kirby\Option\OptionsQuery;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Field\FieldOptions
- */
+#[CoversClass(FieldOptions::class)]
 class FieldOptionsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/../Option/fixtures';
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactory()
 	{
 		$options = FieldOptions::factory([
@@ -52,9 +48,6 @@ class FieldOptionsTest extends TestCase
 		$this->assertSame($query, $options->options->query);
 	}
 
-	/**
-	 * @covers ::polyfill
-	 */
 	public function testPolyfill()
 	{
 		$props = FieldOptions::polyfill(['options' => 'site.children']);
@@ -79,10 +72,6 @@ class FieldOptionsTest extends TestCase
 		$this->assertSame(['options' => ['type' => 'array', 'options' => $options]], $props);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::render
-	 */
 	public function testResolveRender()
 	{
 		$model = new Page(['slug' => 'test']);

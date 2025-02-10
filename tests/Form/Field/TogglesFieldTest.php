@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class TogglesFieldTest extends TestCase
 {
 	public function testDefaultProps()
@@ -73,10 +75,8 @@ class TogglesFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider valueInputProvider
-	 */
-	public function testValue($input, $expected)
+	#[DataProvider('valueInputProvider')]
+	public function testValue(string $input, string $expected)
 	{
 		$field = $this->field('toggles', [
 			'options' => [

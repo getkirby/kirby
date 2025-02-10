@@ -3,16 +3,11 @@
 namespace Kirby\Content;
 
 use Kirby\Exception\NotFoundException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\Translations
- * @covers ::__construct
- */
+#[CoversClass(Translations::class)]
 class TranslationsTest extends TestCase
 {
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateMultiLanguage()
 	{
 		$this->setUpMultiLanguage();
@@ -41,9 +36,6 @@ class TranslationsTest extends TestCase
 		$this->assertSame('de', $translations->last()->language()->code());
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateSingleLanguage()
 	{
 		$this->setUpSingleLanguage();
@@ -73,9 +65,6 @@ class TranslationsTest extends TestCase
 		$this->assertTrue($translations->first()->language()->isSingle());
 	}
 
-	/**
-	 * @covers ::findByKey
-	 */
 	public function testFindByKeyMultiLanguage()
 	{
 		$this->setUpMultiLanguage();
@@ -91,9 +80,6 @@ class TranslationsTest extends TestCase
 		$this->assertSame('de', $translations->findByKey('de')->language()->code());
 	}
 
-	/**
-	 * @covers ::findByKey
-	 */
 	public function testFindByKeySingleLanguage()
 	{
 		$this->setUpSingleLanguage();
@@ -108,9 +94,6 @@ class TranslationsTest extends TestCase
 		$this->assertSame('en', $translations->findByKey('current')->language()->code());
 	}
 
-	/**
-	 * @covers ::findByKey
-	 */
 	public function testFindByKeyWithInvalidLanguage()
 	{
 		$this->setUpMultiLanguage();
@@ -126,9 +109,6 @@ class TranslationsTest extends TestCase
 		$translations->findByKey('fr');
 	}
 
-	/**
-	 * @covers ::load
-	 */
 	public function testLoadMultiLanguage()
 	{
 		$this->setUpMultiLanguage();
@@ -143,9 +123,6 @@ class TranslationsTest extends TestCase
 		$this->assertSame('de', $translations->last()->language()->code());
 	}
 
-	/**
-	 * @covers ::load
-	 */
 	public function testLoadSingleLanguage()
 	{
 		$this->setUpSingleLanguage();

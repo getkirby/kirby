@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PageSortTest extends TestCase
 {
@@ -521,10 +522,8 @@ class PageSortTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider sortProvider
-	 */
-	public function testSort($id, $position, $expected)
+	#[DataProvider('sortProvider')]
+	public function testSort(string $id, int $position, string $expected)
 	{
 		$site = new Site([
 			'children' => [

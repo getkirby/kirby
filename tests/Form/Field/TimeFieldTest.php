@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class TimeFieldTest extends TestCase
 {
 	public function testDefaultProps()
@@ -160,10 +162,8 @@ class TimeFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider valueProvider
-	 */
-	public function testValue($input, $expected, $step = 1)
+	#[DataProvider('valueProvider')]
+	public function testValue(string|null $input, string $expected, int|array $step = 1)
 	{
 		$field = $this->field('time', [
 			'default' => $input,

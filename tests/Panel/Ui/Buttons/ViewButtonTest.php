@@ -5,11 +5,9 @@ namespace Kirby\Panel\Ui\Buttons;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Panel\Areas\AreaTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\ViewButton
- * @covers ::__construct
- */
+#[CoversClass(ViewButton::class)]
 class ViewButtonTest extends AreaTestCase
 {
 	public function setUp(): void
@@ -19,9 +17,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->login();
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testAttrs()
 	{
 		$button = new ViewButton(
@@ -39,9 +34,6 @@ class ViewButtonTest extends AreaTestCase
 		], array_filter($button->props()));
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactoryFromClosure()
 	{
 		$button = ViewButton::factory(
@@ -56,9 +48,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame('k-foo-view-button', $button->component);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactoryFromDefinition()
 	{
 		$button = ViewButton::factory(
@@ -70,9 +59,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame('k-test-view-button', $button->component);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactoryFromStringName()
 	{
 		$app = $this->app->clone([
@@ -102,9 +88,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertNull($button);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactoryWithNameArg()
 	{
 		$button = ViewButton::factory(
@@ -117,9 +100,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame('k-foo-view-button', $button->component);
 	}
 
-	/**
-	 * @covers ::find
-	 */
 	public function testFind(): void
 	{
 		$app = $this->app->clone([
@@ -149,9 +129,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame(['component' => 'k-foo-view-button'], $result);
 	}
 
-	/**
-	 * @covers ::normalize
-	 */
 	public function testNormalize(): void
 	{
 		$result = ViewButton::normalize([
@@ -174,9 +151,6 @@ class ViewButtonTest extends AreaTestCase
 		], $result);
 	}
 
-	/**
-	 * @covers ::props
-	 */
 	public function testProps()
 	{
 		$component = new ViewButton(
@@ -211,9 +185,6 @@ class ViewButtonTest extends AreaTestCase
 		], $component->props());
 	}
 
-	/**
-	 * @covers ::props
-	 */
 	public function testPropsWithQueries()
 	{
 		$model     = new Page(['slug' => 'test']);
@@ -228,9 +199,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame('https://getkirby.com/test', $props['link']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolve(): void
 	{
 		$test   = $this;

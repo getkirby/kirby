@@ -4,11 +4,11 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\License
- */
+#[CoversClass(License::class)]
 class LicenseTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/LicenseTest';
@@ -36,9 +36,6 @@ class LicenseTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::activation
-	 */
 	public function testActivation()
 	{
 		$license = new License(
@@ -50,9 +47,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('1/12/2023 00:00', $license->activation('d/M/yyyy HH:mm', 'intl'));
 	}
 
-	/**
-	 * @covers ::code
-	 */
 	public function testCode()
 	{
 		$license = new License(
@@ -63,10 +57,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('K-ENT-1234XXXXXXXXXXXXXXXXXXXXXX', $license->code(true));
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::content
-	 */
 	public function testContent()
 	{
 		$license = new License(
@@ -84,9 +74,6 @@ class LicenseTest extends TestCase
 		], $license->content());
 	}
 
-	/**
-	 * @covers ::date
-	 */
 	public function testDate()
 	{
 		$license = new License(
@@ -98,9 +85,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('1/12/2023 00:00', $license->date('d/M/yyyy HH:mm', 'intl'));
 	}
 
-	/**
-	 * @covers ::domain
-	 */
 	public function testDomain()
 	{
 		$license = new License(
@@ -110,9 +94,6 @@ class LicenseTest extends TestCase
 		$this->assertSame($domain, $license->domain());
 	}
 
-	/**
-	 * @covers ::email
-	 */
 	public function testEmail()
 	{
 		$license = new License(
@@ -122,9 +103,6 @@ class LicenseTest extends TestCase
 		$this->assertSame($email, $license->email());
 	}
 
-	/**
-	 * @covers ::hasValidEmailAddress
-	 */
 	public function testHasValidEmailAddress()
 	{
 		$license = new License(
@@ -140,17 +118,11 @@ class LicenseTest extends TestCase
 		$this->assertFalse($license->hasValidEmailAddress());
 	}
 
-	/**
-	 * @covers ::hub
-	 */
 	public function testHub()
 	{
 		$this->assertSame('https://hub.getkirby.com', License::hub());
 	}
 
-	/**
-	 * @covers ::isComplete
-	 */
 	public function testIsComplete()
 	{
 		// incomplete
@@ -170,9 +142,6 @@ class LicenseTest extends TestCase
 		$this->assertTrue($license->isComplete());
 	}
 
-	/**
-	 * @covers ::isInactive
-	 */
 	public function testIsInactive()
 	{
 		MockTime::$time = strtotime('now');
@@ -194,9 +163,6 @@ class LicenseTest extends TestCase
 		MockTime::reset();
 	}
 
-	/**
-	 * @covers ::isLegacy
-	 */
 	public function testIsLegacy()
 	{
 		// legacy license type
@@ -230,9 +196,6 @@ class LicenseTest extends TestCase
 		$this->assertFalse($license->isLegacy());
 	}
 
-	/**
-	 * @covers ::isOnCorrectDomain
-	 */
 	public function testIsOnCorrectDomain()
 	{
 		$this->app = new App([
@@ -262,19 +225,12 @@ class LicenseTest extends TestCase
 		$this->assertTrue($license->isOnCorrectDomain());
 	}
 
-	/**
-	 * @covers ::label
-	 */
 	public function testLabel()
 	{
 		$license = new License();
 		$this->assertSame('Unregistered', $license->label());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::normalizeEmail
-	 */
 	public function testNormalize()
 	{
 		$code = $this->code(LicenseType::Enterprise);
@@ -288,10 +244,7 @@ class LicenseTest extends TestCase
 		$this->assertSame('mail@getkirby.com', $license->email());
 	}
 
-	/**
-	 * @covers ::normalizeDomain
-	 * @dataProvider providerForLicenseUrls
-	 */
+	#[DataProvider('providerForLicenseUrls')]
 	public function testNormalizeDomain(string $domain, string $expected)
 	{
 		$reflector = new ReflectionClass(License::class);
@@ -303,9 +256,6 @@ class LicenseTest extends TestCase
 		$this->assertSame($expected, $normalize->invoke($license, $domain));
 	}
 
-	/**
-	 * @covers ::order
-	 */
 	public function testOrder()
 	{
 		$license = new License(
@@ -315,9 +265,6 @@ class LicenseTest extends TestCase
 		$this->assertSame($order, $license->order());
 	}
 
-	/**
-	 * @covers ::polyfill
-	 */
 	public function testPolyfill()
 	{
 		$this->assertSame([
@@ -334,9 +281,6 @@ class LicenseTest extends TestCase
 		]));
 	}
 
-	/**
-	 * @covers ::read
-	 */
 	public function testRead()
 	{
 		// existing license
@@ -361,9 +305,6 @@ class LicenseTest extends TestCase
 		$this->assertNull($license->code());
 	}
 
-	/**
-	 * @covers ::register
-	 */
 	public function testRegisterWithInvalidDomain()
 	{
 		$license = new License(
@@ -377,9 +318,6 @@ class LicenseTest extends TestCase
 		$license->register();
 	}
 
-	/**
-	 * @covers ::register
-	 */
 	public function testRegisterWithInvalidEmail()
 	{
 		$license = new License(
@@ -393,9 +331,6 @@ class LicenseTest extends TestCase
 		$license->register();
 	}
 
-	/**
-	 * @covers ::register
-	 */
 	public function testRegisterWithInvalidLicenseKey()
 	{
 		$license = new License();
@@ -406,9 +341,6 @@ class LicenseTest extends TestCase
 		$license->register();
 	}
 
-	/**
-	 * @covers ::renewal
-	 */
 	public function testRenewal()
 	{
 		// activated
@@ -425,9 +357,6 @@ class LicenseTest extends TestCase
 		$this->assertNull($license->renewal('Y-m-d'));
 	}
 
-	/**
-	 * @covers ::save
-	 */
 	public function testSaveWhenNotActivatable()
 	{
 		$license = new License();
@@ -438,9 +367,6 @@ class LicenseTest extends TestCase
 		$license->save();
 	}
 
-	/**
-	 * @covers ::signature
-	 */
 	public function testSignature()
 	{
 		$license = new License(
@@ -450,18 +376,12 @@ class LicenseTest extends TestCase
 		$this->assertSame('secret', $license->signature());
 	}
 
-	/**
-	 * @covers ::status
-	 */
 	public function testStatus()
 	{
 		$license = new License();
 		$this->assertSame(LicenseStatus::Missing, $license->status());
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testTypeKirby3()
 	{
 		$license = new License(
@@ -471,9 +391,6 @@ class LicenseTest extends TestCase
 		$this->assertSame(LicenseType::Legacy, $license->type());
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testTypeKirbyBasic()
 	{
 		$license = new License(
@@ -483,9 +400,6 @@ class LicenseTest extends TestCase
 		$this->assertSame(LicenseType::Basic, $license->type());
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testTypeKirbyEnterprise()
 	{
 		$license = new License(
@@ -495,9 +409,6 @@ class LicenseTest extends TestCase
 		$this->assertSame(LicenseType::Enterprise, $license->type());
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testTypeUnregistered()
 	{
 		$license = new License();

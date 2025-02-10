@@ -6,10 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Plugin\Assets
- */
+#[CoversClass(Assets::class)]
 class AssetsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
@@ -41,9 +40,6 @@ class AssetsTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::clean
-	 */
 	public function testClean()
 	{
 		// create orphans
@@ -65,10 +61,6 @@ class AssetsTest extends TestCase
 		$this->assertFileDoesNotExist($b);
 	}
 
-	/**
-	 * @covers ::css
-	 * @covers ::js
-	 */
 	public function testCss()
 	{
 		// assets defined in plugin config
@@ -88,9 +80,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('test.js', $assets->js()->first()->path());
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactory()
 	{
 		// assets defined in plugin config
@@ -149,9 +138,6 @@ class AssetsTest extends TestCase
 		$this->assertSame(static::FIXTURES . '/assets/test.css', $assets->get('test.css')->root());
 	}
 
-	/**
-	 * @covers ::plugin
-	 */
 	public function testPlugin()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
@@ -162,9 +148,6 @@ class AssetsTest extends TestCase
 		$this->assertSame($plugin, $assets->plugin());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolve()
 	{
 		touch(static::TMP . '/site/plugins/b/foo/bar.css', 1337000000);

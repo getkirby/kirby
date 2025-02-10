@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RouterTest extends TestCase
 {
@@ -304,10 +305,8 @@ class RouterTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider customRouteProvider
-	 */
-	public function testCustomRoute($pattern, $path)
+	#[DataProvider('customRouteProvider')]
+	public function testCustomRoute(string $pattern, string $path)
 	{
 		$app = $this->app->clone([
 			'routes' => [
@@ -428,10 +427,8 @@ class RouterTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider multiDomainProvider
-	 */
-	public function testMultiLangHomeWithDifferentDomains($domain, $language)
+	#[DataProvider('multiDomainProvider')]
+	public function testMultiLangHomeWithDifferentDomains(string $domain, string $language)
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -469,10 +466,8 @@ class RouterTest extends TestCase
 		$this->assertSame($language, I18n::locale());
 	}
 
-	/**
-	 * @dataProvider multiDomainProvider
-	 */
-	public function testMultiLangHomeWithDifferentDomainsAndPath($domain, $language)
+	#[DataProvider('multiDomainProvider')]
+	public function testMultiLangHomeWithDifferentDomainsAndPath(string $domain, string $language)
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -523,10 +518,8 @@ class RouterTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider acceptedLanguageProvider
-	 */
-	public function testMultiLangHomeRouteWithoutLanguageCodeAndLanguageDetection($accept, $redirect)
+	#[DataProvider('acceptedLanguageProvider')]
+	public function testMultiLangHomeRouteWithoutLanguageCodeAndLanguageDetection(string $accept, string $redirect)
 	{
 		$app = $this->app->clone([
 			'site' => [

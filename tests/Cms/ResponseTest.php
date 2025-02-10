@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Response
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Response::class)]
 class ResponseTest extends TestCase
 {
 	public function setUp(): void
@@ -16,9 +16,6 @@ class ResponseTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::redirect
-	 */
 	public function testRedirect()
 	{
 		$response = Response::redirect();
@@ -27,9 +24,6 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Location' => 'https://getkirby.test'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
-	/**
-	 * @covers ::redirect
-	 */
 	public function testRedirectWithLocation()
 	{
 		$response = Response::redirect('https://getkirby.com');
@@ -38,9 +32,6 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Location' => 'https://getkirby.com'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
-	/**
-	 * @covers ::redirect
-	 */
 	public function testRedirectWithInternationalLocation()
 	{
 		$response = Response::redirect('https://täst.de');
@@ -49,9 +40,6 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Location' => 'https://xn--tst-qla.de'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
-	/**
-	 * @covers ::redirect
-	 */
 	public function testRedirectWithResponseCodeAndUri()
 	{
 		$response = Response::redirect('/uri', 301);

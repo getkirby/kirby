@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class TextFieldTest extends TestCase
 {
@@ -35,10 +36,8 @@ class TextFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider converterDataProvider
-	 */
-	public function testConverter($converter, $input, $expected)
+	#[DataProvider('converterDataProvider')]
+	public function testConverter(string $converter, string|null $input, string $expected)
 	{
 		$field = $this->field('text', [
 			'converter' => $converter,

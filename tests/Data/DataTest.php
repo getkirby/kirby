@@ -6,17 +6,14 @@ use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Data\Data
- */
+#[CoversClass(Data::class)]
 class DataTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Data.Data';
 
-	/**
-	 * @covers ::handler
-	 */
 	public function testDefaultHandlers()
 	{
 		$this->assertInstanceOf(Json::class, Data::handler('json'));
@@ -36,27 +33,18 @@ class DataTest extends TestCase
 		$this->assertInstanceOf(Json::class, Data::handler('JsOn'));
 	}
 
-	/**
-	 * @covers ::handler
-	 */
 	public function testCustomHandler()
 	{
 		Data::$handlers['test'] = CustomHandler::class;
 		$this->assertInstanceOf(CustomHandler::class, Data::handler('test'));
 	}
 
-	/**
-	 * @covers ::handler
-	 */
 	public function testCustomAlias()
 	{
 		Data::$aliases['plaintext'] = 'txt';
 		$this->assertInstanceOf(Txt::class, Data::handler('plaintext'));
 	}
 
-	/**
-	 * @covers ::handler
-	 */
 	public function testMissingHandler()
 	{
 		$this->expectException(Exception::class);
@@ -65,9 +53,6 @@ class DataTest extends TestCase
 		Data::handler('foo');
 	}
 
-	/**
-	 * @covers ::handler
-	 */
 	public function testInvalidHandler()
 	{
 		Data::$handlers['invalid'] = CustomInvalidHandler::class;
@@ -78,11 +63,7 @@ class DataTest extends TestCase
 		Data::handler('invalid');
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::decode
-	 * @dataProvider handlerProvider
-	 */
+	#[DataProvider('handlerProvider')]
 	public function testEncodeDecode($handler)
 	{
 		$data = [
@@ -96,10 +77,7 @@ class DataTest extends TestCase
 		$this->assertSame($data, $decoded);
 	}
 
-	/**
-	 * @covers ::decode
-	 * @dataProvider handlerProvider
-	 */
+	#[DataProvider('handlerProvider')]
 	public function testDecodeInvalid1($handler)
 	{
 		// decode invalid integer value
@@ -108,10 +86,7 @@ class DataTest extends TestCase
 		Data::decode(1, $handler);
 	}
 
-	/**
-	 * @covers ::decode
-	 * @dataProvider handlerProvider
-	 */
+	#[DataProvider('handlerProvider')]
 	public function testDecodeInvalid2($handler)
 	{
 		// decode invalid object value
@@ -120,10 +95,7 @@ class DataTest extends TestCase
 		Data::decode(new \stdClass(), $handler);
 	}
 
-	/**
-	 * @covers ::decode
-	 * @dataProvider handlerProvider
-	 */
+	#[DataProvider('handlerProvider')]
 	public function testDecodeInvalid3($handler)
 	{
 		// decode invalid boolean value
@@ -132,10 +104,7 @@ class DataTest extends TestCase
 		Data::decode(true, $handler);
 	}
 
-	/**
-	 * @covers ::decode
-	 * @dataProvider handlerProvider
-	 */
+	#[DataProvider('handlerProvider')]
 	public function testDecodeInvalidNoExceptions($handler)
 	{
 		$data = Data::decode(1, $handler, fail: false);
@@ -154,10 +123,6 @@ class DataTest extends TestCase
 		return array_map(fn ($handler) => [$handler], $handlers);
 	}
 
-	/**
-	 * @covers ::read
-	 * @covers ::write
-	 */
 	public function testReadWrite()
 	{
 		$data = [
@@ -184,10 +149,6 @@ class DataTest extends TestCase
 		$this->assertSame($data, $result);
 	}
 
-	/**
-	 * @covers ::read
-	 * @covers ::handler
-	 */
 	public function testReadInvalid()
 	{
 		$this->expectException(Exception::class);
@@ -196,19 +157,12 @@ class DataTest extends TestCase
 		Data::read(static::TMP . '/data.foo');
 	}
 
-	/**
-	 * @covers ::read
-	 */
 	public function testReadInvalidNoException()
 	{
 		$data = Data::read(static::TMP . '/data.foo', fail: false);
 		$this->assertSame([], $data);
 	}
 
-	/**
-	 * @covers ::write
-	 * @covers ::handler
-	 */
 	public function testWriteInvalid()
 	{
 		$this->expectException(Exception::class);

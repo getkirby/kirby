@@ -4,11 +4,10 @@ namespace Kirby\Cache;
 
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionMethod;
 
-/**
- * @coversDefaultClass \Kirby\Cache\FileCache
- */
+#[CoversClass(FileCache::class)]
 class FileCacheTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cache.FileCache';
@@ -18,10 +17,6 @@ class FileCacheTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::root
-	 */
 	public function testConstruct()
 	{
 		$cache = new FileCache([
@@ -32,10 +27,6 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryExists($root);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::root
-	 */
 	public function testConstructWithPrefix()
 	{
 		$cache = new FileCache([
@@ -47,9 +38,6 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryExists($root . '/test');
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
 	public function testEnabled()
 	{
 		$cache = new FileCache([
@@ -59,9 +47,6 @@ class FileCacheTest extends TestCase
 		$this->assertTrue($cache->enabled());
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
 	public function testEnabledNotWritable()
 	{
 		$cache = new FileCache([
@@ -73,9 +58,6 @@ class FileCacheTest extends TestCase
 		$this->assertFalse($cache->enabled());
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFile()
 	{
 		$method = new ReflectionMethod(FileCache::class, 'file');
@@ -208,12 +190,6 @@ class FileCacheTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::created
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
 	public function testOperations()
 	{
 		$cache = new FileCache([
@@ -243,12 +219,6 @@ class FileCacheTest extends TestCase
 		$this->assertFalse($cache->remove('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::created
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
 	public function testOperationsWithExtension()
 	{
 		$cache = new FileCache([
@@ -277,12 +247,6 @@ class FileCacheTest extends TestCase
 		$this->assertNull($cache->retrieve('foo'));
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::created
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
 	public function testOperationsWithPrefix()
 	{
 		$cache1 = new FileCache([
@@ -323,9 +287,6 @@ class FileCacheTest extends TestCase
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
 	}
 
-	/**
-	 * @covers ::flush
-	 */
 	public function testFlush()
 	{
 		$cache = new FileCache([
@@ -348,9 +309,6 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryDoesNotExist($root . '/d');
 	}
 
-	/**
-	 * @covers ::flush
-	 */
 	public function testFlushWithPrefix()
 	{
 		$cache1 = new FileCache([
@@ -384,9 +342,6 @@ class FileCacheTest extends TestCase
 		$this->assertFileExists($root . '/test2/c/a');
 	}
 
-	/**
-	 * @covers ::removeEmptyDirectories
-	 */
 	public function testRemoveEmptyDirectories()
 	{
 		$cache = new FileCache([
@@ -408,9 +363,6 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryExists($root);
 	}
 
-	/**
-	 * @covers ::removeEmptyDirectories
-	 */
 	public function testRemoveEmptyDirectoriesWithNotEmptyDirs()
 	{
 		$cache = new FileCache([

@@ -3,15 +3,11 @@
 namespace Kirby\Text;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Text\SmartyPants
- */
+#[CoversClass(SmartyPants::class)]
 class SmartyPantsTest extends TestCase
 {
-	/**
-	 * @covers ::parse
-	 */
 	public function testParse()
 	{
 		$parser   = new SmartyPants();
@@ -21,9 +17,6 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseEmpty()
 	{
 		$parser = new SmartyPants();
@@ -32,9 +25,6 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame('', $parser->parse(''));
 	}
 
-	/**
-	 * @covers ::defaults
-	 */
 	public function testDefaults()
 	{
 		$expected = [
@@ -71,9 +61,6 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame($expected, $parser->defaults());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testDoubleQuotesOption()
 	{
 		$parser = new SmartyPants([
@@ -85,9 +72,6 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame('<test>', $result);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testSingleQuotesOption()
 	{
 		$parser = new SmartyPants([
@@ -99,9 +83,6 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame('<test>', $result);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testEmDashOption()
 	{
 		$parser = new SmartyPants([
@@ -112,9 +93,6 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame('emdash', $result);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testEllipsisOption()
 	{
 		$parser = new SmartyPants([

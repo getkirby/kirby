@@ -7,11 +7,12 @@ use Kirby\Data\Json;
 use Kirby\Filesystem\Dir;
 use Kirby\Plugin\Plugin;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
-/**
- * @coversDefaultClass \Kirby\Cms\System\UpdateStatus
- */
+#[CoversClass(UpdateStatus::class)]
+#[CoversClass(UpdateStatus::class)]
 class UpdateStatusTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/UpdateStatusTest';
@@ -36,9 +37,6 @@ class UpdateStatusTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
 	public function testLoadData()
 	{
 		$app = $this->app('88888.8.5');
@@ -80,9 +78,6 @@ class UpdateStatusTest extends TestCase
 		], $app->cache('updates')->get('security'));
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
 	public function testLoadDataCacheKirby()
 	{
 		$app = $this->app('88888.8.5');
@@ -152,9 +147,6 @@ class UpdateStatusTest extends TestCase
 		], $app->cache('updates')->get('security'));
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
 	public function testLoadDataCachePlugin()
 	{
 		$app = $this->app('88888.8.5');
@@ -227,9 +219,6 @@ class UpdateStatusTest extends TestCase
 		], $app->cache('updates')->get('plugins/getkirby/public'));
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
 	public function testLoadDataCacheInvalid()
 	{
 		$app = $this->app('88888.8.5');
@@ -272,9 +261,6 @@ class UpdateStatusTest extends TestCase
 		], $app->cache('updates')->get('security'));
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
 	public function testLoadDataCacheDisabled()
 	{
 		$app = $this->app('88888.8.5')->clone([
@@ -292,9 +278,6 @@ class UpdateStatusTest extends TestCase
 		], $updateStatus->exceptionMessages());
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
 	public function testLoadDataNotFound()
 	{
 		$app    = $this->app('88888.8.8');
@@ -326,9 +309,6 @@ class UpdateStatusTest extends TestCase
 		], $updateStatus->exceptionMessages());
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
 	public function testLoadDataNotJson()
 	{
 		$app    = $this->app('88888.8.8');
@@ -357,10 +337,7 @@ class UpdateStatusTest extends TestCase
 		], $updateStatus->exceptionMessages());
 	}
 
-	/**
-	 * @covers \Kirby\Cms\System\UpdateStatus
-	 * @dataProvider logicProvider
-	 */
+	#[DataProvider('logicProvider')]
 	public function testLogic(
 		string $packageType,
 		array $packageData,
@@ -1656,9 +1633,6 @@ class UpdateStatusTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::messages
-	 */
 	public function testMessagesCache()
 	{
 		$updateStatus = new UpdateStatus($this->app('77777.6.0'), false, static::data('basic'));

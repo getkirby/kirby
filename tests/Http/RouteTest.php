@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RouteTest extends TestCase
 {
@@ -114,10 +115,8 @@ class RouteTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider patternProvider
-	 */
-	public function testParse($pattern, $input, $match)
+	#[DataProvider('patternProvider')]
+	public function testParse(string $pattern, string $input, bool $match)
 	{
 		$route = $this->_route();
 

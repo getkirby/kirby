@@ -6,10 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 use Kirby\Email\Email;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth\EmailChallenge
- */
+#[CoversClass(EmailChallenge::class)]
 class EmailChallengeTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/../fixtures';
@@ -57,18 +56,12 @@ class EmailChallengeTest extends TestCase
 		unset($_SERVER['SERVER_NAME']);
 	}
 
-	/**
-	 * @covers ::isAvailable
-	 */
 	public function testIsAvailable()
 	{
 		$user = $this->app->user('homer@simpsons.com');
 		$this->assertTrue(EmailChallenge::isAvailable($user, 'login'));
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateLogin()
 	{
 		$user = $this->app->user('homer@simpsons.com');
@@ -95,9 +88,6 @@ class EmailChallengeTest extends TestCase
 		$this->assertNotSame($code1, $code2);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreatePathUrl()
 	{
 		$app = $this->app->clone([
@@ -126,9 +116,6 @@ class EmailChallengeTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreate2FA()
 	{
 		$user = $this->app->user('homer@simpsons.com');
@@ -155,9 +142,6 @@ class EmailChallengeTest extends TestCase
 		$this->assertNotSame($code1, $code2);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateReset()
 	{
 		$user = $this->app->user('marge@simpsons.com');
@@ -184,9 +168,6 @@ class EmailChallengeTest extends TestCase
 		$this->assertNotSame($code1, $code2);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateResetUserLanguage()
 	{
 		$user = $this->app->user('bart@simpsons.com');
@@ -213,9 +194,6 @@ class EmailChallengeTest extends TestCase
 		$this->assertNotSame($code1, $code2);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateCustom()
 	{
 		$this->app = $this->app->clone([
@@ -247,9 +225,6 @@ class EmailChallengeTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateCustomHtml()
 	{
 		$this->app = $this->app->clone([

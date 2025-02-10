@@ -4,10 +4,9 @@ namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
 use Kirby\Toolkit\Dom;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Parsley\Schema\Plain
- */
+#[CoversClass(Plain::class)]
 class PlainTest extends TestCase
 {
 	public function setUp(): void
@@ -15,9 +14,6 @@ class PlainTest extends TestCase
 		$this->schema = new Plain();
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallback()
 	{
 		$expected = [
@@ -30,17 +26,11 @@ class PlainTest extends TestCase
 		return $this->assertSame($expected, $this->schema->fallback('Test'));
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallbackForEmptyContent()
 	{
 		return $this->assertNull($this->schema->fallback(''));
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallbackForDomElement()
 	{
 		$dom      = new Dom('<p>Test</p>');
@@ -58,33 +48,21 @@ class PlainTest extends TestCase
 		$this->assertSame($expected, $fallback);
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
 	public function testFallbackForInvalidContent()
 	{
 		$this->assertNull($this->schema->fallback(''));
 	}
 
-	/**
-	 * @covers ::marks
-	 */
 	public function testMarks()
 	{
 		return $this->assertSame([], $this->schema->marks());
 	}
 
-	/**
-	 * @covers ::nodes
-	 */
 	public function testNodes()
 	{
 		return $this->assertSame([], $this->schema->nodes());
 	}
 
-	/**
-	 * @covers ::skip
-	 */
 	public function testSkip()
 	{
 		return $this->assertSame([

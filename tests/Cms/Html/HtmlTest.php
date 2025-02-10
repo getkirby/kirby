@@ -4,10 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Plugin\Plugin;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Html
- */
+#[CoversClass(Html::class)]
 class HtmlTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -27,9 +26,6 @@ class HtmlTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCss()
 	{
 		$result   = Html::css('assets/css/index.css');
@@ -38,9 +34,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithMediaOption()
 	{
 		$result   = Html::css('assets/css/index.css', 'print');
@@ -49,9 +42,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithAttrs()
 	{
 		$result   = Html::css('assets/css/index.css', ['integrity' => 'nope']);
@@ -60,9 +50,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithValidRelAttr()
 	{
 		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet', 'title' => 'High contrast']);
@@ -71,9 +58,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithInvalidRelAttr()
 	{
 		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate', 'title' => 'High contrast']);
@@ -82,9 +66,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithRelAttrButNoTitle()
 	{
 		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet']);
@@ -93,9 +74,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithArray()
 	{
 		$result = Html::css([
@@ -109,9 +87,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithPluginAssets()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
@@ -125,9 +100,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJs()
 	{
 		$result   = Html::js('assets/js/index.js');
@@ -136,9 +108,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsWithAsyncOption()
 	{
 		$result   = Html::js('assets/js/index.js', true);
@@ -147,9 +116,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsWithAttrs()
 	{
 		$result   = Html::js('assets/js/index.js', ['integrity' => 'nope']);
@@ -158,9 +124,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsWithArray()
 	{
 		$result = Html::js([
@@ -174,9 +137,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsWithPluginAssets()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
@@ -190,43 +150,28 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::svg
-	 */
 	public function testSvg()
 	{
 		$result = Html::svg('test.svg');
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 
-	/**
-	 * @covers ::svg
-	 */
 	public function testSvgWithAbsolutePath()
 	{
 		$result = Html::svg(static::TMP . '/test.svg');
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 
-	/**
-	 * @covers ::svg
-	 */
 	public function testSvgWithInvalidFileType()
 	{
 		$this->assertFalse(Html::svg(123));
 	}
 
-	/**
-	 * @covers ::svg
-	 */
 	public function testSvgWithMissingFile()
 	{
 		$this->assertFalse(Html::svg('somefile.svg'));
 	}
 
-	/**
-	 * @covers ::svg
-	 */
 	public function testSvgWithFileObject()
 	{
 		$file = $this->getMockBuilder(File::class)

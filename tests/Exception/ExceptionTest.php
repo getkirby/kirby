@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class WillFail
 {
@@ -15,9 +16,7 @@ class WillFail
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Exception\Exception
- */
+#[CoversClass(Exception::class)]
 class ExceptionTest extends TestCase
 {
 	public function tearDown(): void
@@ -25,14 +24,6 @@ class ExceptionTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::getKey
-	 * @covers ::getHttpCode
-	 * @covers ::getData
-	 * @covers ::getDetails
-	 * @covers ::isTranslated
-	 */
 	public function testException()
 	{
 		$exception = new Exception([
@@ -54,14 +45,6 @@ class ExceptionTest extends TestCase
 		$this->assertFalse($exception->isTranslated());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::getKey
-	 * @covers ::getHttpCode
-	 * @covers ::getData
-	 * @covers ::getDetails
-	 * @covers ::isTranslated
-	 */
 	public function testExceptionWithNamedArguments()
 	{
 		$exception = new Exception(
@@ -83,9 +66,6 @@ class ExceptionTest extends TestCase
 		$this->assertFalse($exception->isTranslated());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testDefaults()
 	{
 		$exception = new Exception();
@@ -98,9 +78,6 @@ class ExceptionTest extends TestCase
 		$this->assertSame([], $exception->getDetails());
 	}
 
-	/**
-	 * @covers ::getDetails
-	 */
 	public function testGetDetails()
 	{
 		$exception = new Exception(
@@ -115,9 +92,6 @@ class ExceptionTest extends TestCase
 		$this->assertSame($details, $exception->getDetails());
 	}
 
-	/**
-	 * @covers ::getDetails
-	 */
 	public function testGetDetailsWithExceptions()
 	{
 		$exception = new Exception(
@@ -136,9 +110,6 @@ class ExceptionTest extends TestCase
 		$this->assertSame($expected, $exception->getDetails());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testJustMessage()
 	{
 		$exception = new Exception('Another error occurred');
@@ -150,9 +121,6 @@ class ExceptionTest extends TestCase
 		$this->assertSame([], $exception->getData());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testJustMessageWithNamedArgument()
 	{
 		$exception = new Exception(message: 'Another error occurred');
@@ -164,9 +132,6 @@ class ExceptionTest extends TestCase
 		$this->assertSame([], $exception->getData());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testPrevious()
 	{
 		$previous  = new Exception(message: 'Previous');
@@ -176,9 +141,6 @@ class ExceptionTest extends TestCase
 		$this->assertSame($previous, $exception->getPrevious());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testPreviousWithNamedArgument()
 	{
 		$previous  = new Exception(message: 'Previous');
@@ -188,9 +150,6 @@ class ExceptionTest extends TestCase
 		$this->assertSame($previous, $exception->getPrevious());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testPHPUnitTesting()
 	{
 		$this->expectException(Exception::class);
@@ -200,9 +159,6 @@ class ExceptionTest extends TestCase
 		$class->fail();
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testTranslation()
 	{
 		I18n::$locale = 'test';
@@ -269,9 +225,6 @@ class ExceptionTest extends TestCase
 		$this->assertFalse($exception->isTranslated());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testTranslationWithNamedArguments()
 	{
 		I18n::$locale = 'test';
@@ -338,9 +291,6 @@ class ExceptionTest extends TestCase
 		$this->assertFalse($exception->isTranslated());
 	}
 
-	/**
-	 * @covers ::getFileRelative
-	 */
 	public function testGetFileRelative()
 	{
 		$exception = new Exception();
@@ -363,9 +313,6 @@ class ExceptionTest extends TestCase
 		$this->assertSame(F::filename(__FILE__), $exception->getFileRelative());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray()
 	{
 		$exception = new Exception();

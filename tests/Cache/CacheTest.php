@@ -3,26 +3,18 @@
 namespace Kirby\Cache;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionMethod;
 
-/**
- * @coversDefaultClass \Kirby\Cache\Cache
- */
+#[CoversClass(Cache::class)]
 class CacheTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::options
-	 */
 	public function testConstruct()
 	{
 		$cache = new TestCache(['some' => 'options']);
 		$this->assertSame(['some' => 'options'], $cache->options());
 	}
 
-	/**
-	 * @covers ::key
-	 */
 	public function testKey()
 	{
 		$method = new ReflectionMethod(Cache::class, 'key');
@@ -37,9 +29,6 @@ class CacheTest extends TestCase
 		$this->assertSame('test/foo', $method->invoke($cache, 'foo'));
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGet()
 	{
 		$cache = new TestCache();
@@ -67,9 +56,6 @@ class CacheTest extends TestCase
 		$this->assertFalse(isset($cache->store['expired']));
 	}
 
-	/**
-	 * @covers ::getOrSet
-	 */
 	public function testGetOrSet()
 	{
 		$cache = new TestCache();
@@ -87,9 +73,6 @@ class CacheTest extends TestCase
 		$this->assertSame(1, $count);
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
 	public function testEnabled()
 	{
 		$cache = new TestCache();
@@ -97,9 +80,6 @@ class CacheTest extends TestCase
 		$this->assertTrue($cache->enabled());
 	}
 
-	/**
-	 * @covers ::expiration
-	 */
 	public function testExpiration()
 	{
 		$method = new ReflectionMethod(Cache::class, 'expiration');
@@ -111,9 +91,6 @@ class CacheTest extends TestCase
 		$this->assertSame(time() + 600, $method->invoke($cache, 10));
 	}
 
-	/**
-	 * @covers ::expires
-	 */
 	public function testExpires()
 	{
 		$cache = new TestCache();
@@ -127,9 +104,6 @@ class CacheTest extends TestCase
 		$this->assertFalse($cache->expires('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::expired
-	 */
 	public function testExpired()
 	{
 		$cache = new TestCache();
@@ -146,10 +120,6 @@ class CacheTest extends TestCase
 		$this->assertTrue($cache->expired('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::created
-	 * @covers ::modified
-	 */
 	public function testCreated()
 	{
 		$cache = new TestCache();
@@ -162,9 +132,6 @@ class CacheTest extends TestCase
 		$this->assertFalse($cache->modified('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::exists
-	 */
 	public function testExists()
 	{
 		$cache = new TestCache();

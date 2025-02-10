@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class TestUuid extends Uuid
 {
@@ -16,16 +17,11 @@ class TestUuid extends Uuid
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Uuid\Uuid
- */
+#[CoversClass(Uuid::class)]
 class UuidTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.Uuid';
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructUuidString()
 	{
 		$uuid = new TestUuid($uri = 'page://my-page-uuid');
@@ -35,9 +31,6 @@ class UuidTest extends TestCase
 		$this->assertNull($uuid->context);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructModel()
 	{
 		$app      = $this->app;
@@ -53,9 +46,6 @@ class UuidTest extends TestCase
 		$this->assertSame($siblings, $uuid->context);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructModelStringNoMatch()
 	{
 		$app  = $this->app;
@@ -75,9 +65,6 @@ class UuidTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructConfigDisabled()
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
@@ -86,11 +73,6 @@ class UuidTest extends TestCase
 		new TestUuid('page://my-page-uuid');
 	}
 
-	/**
-	 * @covers ::clear
-	 * @covers ::isCached
-	 * @covers ::populate
-	 */
 	public function testCache()
 	{
 		$page    = $this->app->page('page-a');
@@ -121,9 +103,6 @@ class UuidTest extends TestCase
 		$this->assertFalse($subpage->isCached());
 	}
 
-	/**
-	 * @covers ::clear
-	 */
 	public function testClearNotGenerate()
 	{
 		$page = $this->app->page('page-b');
@@ -134,9 +113,6 @@ class UuidTest extends TestCase
 		$this->assertNull($page->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::context
-	 */
 	public function testContext()
 	{
 		$uuid = $this->app->page('page-a')->uuid();
@@ -151,9 +127,6 @@ class UuidTest extends TestCase
 		$this->assertSame(2, iterator_count($uuid->context()));
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForUuidString()
 	{
 		$this->assertInstanceOf(PageUuid::class, Uuid::for('page://my-id'));
@@ -165,9 +138,6 @@ class UuidTest extends TestCase
 		// $this->assertInstanceOf(StructureUuid::class, Uuid::for('struct://my-id'));
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForUuidStringInvalid()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -175,18 +145,12 @@ class UuidTest extends TestCase
 		Uuid::for('foo://my-id');
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForPermalinkString()
 	{
 		$this->assertInstanceOf(PageUuid::class, Uuid::for('/@/page/my-id'));
 		$this->assertInstanceOf(FileUuid::class, Uuid::for('/@/file/my-id'));
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForPermalinkStringInvalid()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -194,9 +158,6 @@ class UuidTest extends TestCase
 		Uuid::for('/@/foo/my-id');
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForStringInvalid()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -204,9 +165,6 @@ class UuidTest extends TestCase
 		Uuid::for('foo˜bar');
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForObject()
 	{
 		$site   = $this->app->site();
@@ -225,18 +183,12 @@ class UuidTest extends TestCase
 		// $this->assertInstanceOf(StructureUuid::class, Uuid::for($struct));
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testForConfigDisabled()
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 		$this->assertNull(Uuid::for('page://my-page-uuid'));
 	}
 
-	/**
-	 * @covers ::generate
-	 */
 	public function testGenerate()
 	{
 		// default length
@@ -280,9 +232,6 @@ class UuidTest extends TestCase
 		Uuid::$generator = null;
 	}
 
-	/**
-	 * @covers ::id
-	 */
 	public function testId()
 	{
 		$uuid = new TestUuid('page://my-uuid-id');
@@ -293,18 +242,12 @@ class UuidTest extends TestCase
 	}
 
 
-	/**
-	 * @covers ::index
-	 */
 	public function testIndex()
 	{
 		$this->assertInstanceOf(Generator::class, Uuid::index());
 		$this->assertSame(0, iterator_count(Uuid::index()));
 	}
 
-	/**
-	 * @covers ::indexes
-	 */
 	public function testIndexes()
 	{
 		$uuid = new TestUuid('page://my-uuid');
@@ -319,9 +262,6 @@ class UuidTest extends TestCase
 		$this->assertSame(2, iterator_count($uuid->indexes()));
 	}
 
-	/**
-	 * @covers ::is
-	 */
 	public function testIs()
 	{
 		$this->assertTrue(Uuid::is('site://'));
@@ -357,9 +297,6 @@ class UuidTest extends TestCase
 		$this->assertFalse(Uuid::is('not a page://something'));
 	}
 
-	/**
-	 * @covers ::isCached
-	 */
 	public function testIsCachedNotGenerate()
 	{
 		$page = $this->app->page('page-b');
@@ -370,9 +307,6 @@ class UuidTest extends TestCase
 		$this->assertNull($page->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::is
-	 */
 	public function testIsConfigDisabled()
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
@@ -383,18 +317,12 @@ class UuidTest extends TestCase
 		$this->assertFalse(Uuid::is('file://something/else'));
 	}
 
-	/**
-	 * @covers ::key
-	 */
 	public function testKey()
 	{
 		$uuid = $this->app->page('page-a')->uuid();
 		$this->assertSame('page/my/-page', $uuid->key());
 	}
 
-	/**
-	 * @covers ::key
-	 */
 	public function testKeyGenerate()
 	{
 		$page = $this->app->page('page-b');
@@ -404,9 +332,6 @@ class UuidTest extends TestCase
 		$this->assertSame($key, $uuid->key());
 	}
 
-	/**
-	 * @covers ::model
-	 */
 	public function testModel()
 	{
 		// for Uuid that was constructed from model
@@ -431,9 +356,6 @@ class UuidTest extends TestCase
 		$this->assertTrue($uuid->isCached());
 	}
 
-	/**
-	 * @covers ::model
-	 */
 	public function testModelNotFound()
 	{
 		$this->assertNull(Uuid::for('page://something')->model());
@@ -441,9 +363,6 @@ class UuidTest extends TestCase
 		$this->assertNull(Uuid::for('file://something')->model());
 	}
 
-	/**
-	 * @covers ::model
-	 */
 	public function testModelNotFoundIndexLookupDisabled()
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => ['index' => false]]]]);
@@ -452,9 +371,6 @@ class UuidTest extends TestCase
 		Uuid::for('page://something')->model();
 	}
 
-	/**
-	 * @covers ::isCached
-	 */
 	public function testPopulateGenerate()
 	{
 		$page = $this->app->page('page-b');
@@ -464,20 +380,12 @@ class UuidTest extends TestCase
 		$this->assertNotNull($page->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::retrieveId
-	 */
 	public function testRetrieveId()
 	{
 		$page = $this->app->page('page-a');
 		$this->assertSame('page-a', Uuid::retrieveId($page));
 	}
 
-	/**
-	 * @covers ::id
-	 * @covers ::toString
-	 * @covers ::__toString
-	 */
 	public function testToString()
 	{
 		// with ID already stored in content
@@ -492,19 +400,12 @@ class UuidTest extends TestCase
 		$this->assertSame(Str::after($id, '://'), $this->app->page('page-b')->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::value
-	 */
 	public function testValue()
 	{
 		$page = $this->app->page($dir = 'page-a/subpage-a');
 		$this->assertSame($dir, $page->uuid()->value());
 	}
 
-	/**
-	 * @covers ::model
-	 * @covers ::populate
-	 */
 	public function testCacheInvalidModelId()
 	{
 		$page = $this->app->page('page-a');

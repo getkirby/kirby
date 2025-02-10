@@ -5,15 +5,15 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Panel\Page as Panel;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 class PageTestModel extends Page
 {
 }
 
-/**
- * @coversDefaultClass \Kirby\Cms\Page
- */
+#[CoversClass(Page::class)]
 class PageTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -221,9 +221,6 @@ class PageTest extends TestCase
 		new Page(['slug' => []]);
 	}
 
-	/**
-	 * @covers ::isDraft
-	 */
 	public function testIsDraft()
 	{
 		$page = new Page([
@@ -248,9 +245,6 @@ class PageTest extends TestCase
 		$this->assertTrue($page->isDraft());
 	}
 
-	/**
-	 * @covers ::isListed
-	 */
 	public function testIsListed()
 	{
 		$page = new Page([
@@ -275,9 +269,6 @@ class PageTest extends TestCase
 		$this->assertFalse($page->isListed());
 	}
 
-	/**
-	 * @covers ::isUnlisted
-	 */
 	public function testIsUnlisted()
 	{
 		$page = new Page([
@@ -622,13 +613,11 @@ class PageTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider previewUrlProvider
-	 */
+	#[DataProvider('previewUrlProvider')]
 	public function testCustomPreviewUrl(
-		$input,
-		$expected,
-		$expectedUri,
+		bool|string|null $input,
+		string|null $expected,
+		string|null $expectedUri,
 		bool $draft,
 		bool $authenticated = true
 	): void {
@@ -948,9 +937,6 @@ class PageTest extends TestCase
 		Page::$models = [];
 	}
 
-	/**
-	 * @covers ::permalink
-	 */
 	public function testPermalink()
 	{
 		$page = Page::factory([

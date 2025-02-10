@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class NumberFieldTest extends TestCase
 {
 	public function testDefaultProps()
@@ -36,10 +38,8 @@ class NumberFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider valueProvider
-	 */
-	public function testValue($input, $expected)
+	#[DataProvider('valueProvider')]
+	public function testValue(string|bool|int|float|null $input, string|float $expected)
 	{
 		$field = $this->field('number', [
 			'value'   => $input,

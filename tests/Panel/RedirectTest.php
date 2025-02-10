@@ -3,15 +3,11 @@
 namespace Kirby\Panel;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Redirect
- */
+#[CoversClass(Redirect::class)]
 class RedirectTest extends TestCase
 {
-	/**
-	 * @covers ::code
-	 */
 	public function testCode()
 	{
 		// default
@@ -27,9 +23,6 @@ class RedirectTest extends TestCase
 		$this->assertSame(302, $redirect->code());
 	}
 
-	/**
-	 * @covers ::location
-	 */
 	public function testLocation()
 	{
 		$redirect = new Redirect('https://getkirby.com');

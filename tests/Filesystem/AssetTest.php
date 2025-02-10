@@ -5,10 +5,9 @@ namespace Kirby\Filesystem;
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Filesystem\Asset
- */
+#[CoversClass(Asset::class)]
 class AssetTest extends TestCase
 {
 	public function setUp(): void
@@ -31,13 +30,6 @@ class AssetTest extends TestCase
 		return new Asset($file);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::root
-	 * @covers ::id
-	 * @covers ::url
-	 * @covers ::path
-	 */
 	public function testConstruct()
 	{
 		$asset = $this->_asset($file = 'images/logo.svg');
@@ -61,9 +53,6 @@ class AssetTest extends TestCase
 		$this->assertSame('images', $asset->path());
 	}
 
-	/**
-	 * @covers ::__call
-	 */
 	public function testCall()
 	{
 		$asset = $this->_asset($file = 'images/logo.svg');
@@ -83,12 +72,6 @@ class AssetTest extends TestCase
 		$asset->foo();
 	}
 
-	/**
-	 * @covers ::mediaHash
-	 * @covers ::mediaPath
-	 * @covers ::mediaRoot
-	 * @covers ::mediaUrl
-	 */
 	public function testMedia()
 	{
 		$asset = $this->_asset();

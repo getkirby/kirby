@@ -9,6 +9,7 @@ use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RequestTest extends TestCase
 {
@@ -178,10 +179,8 @@ class RequestTest extends TestCase
 		$this->assertTrue($app->response()->usesAuth());
 	}
 
-	/**
-	 * @dataProvider hasAuthProvider
-	 */
-	public function testHasAuth($option, $header, $expected)
+	#[DataProvider('hasAuthProvider')]
+	public function testHasAuth(string|null $option, string|null $header, bool $expected)
 	{
 		new App([
 			'server' => [

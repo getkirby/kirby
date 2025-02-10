@@ -5,10 +5,9 @@ namespace Kirby\Cms;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Pages
- */
+#[CoversClass(Pages::class)]
 class PagesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Pages';
@@ -195,9 +194,6 @@ class PagesTest extends TestCase
 		$this->assertSame($expected, $pages->children()->keys());
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDelete()
 	{
 		$app = new App([
@@ -239,9 +235,6 @@ class PagesTest extends TestCase
 		$this->assertDirectoryDoesNotExist($b);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDeleteWithInvalidIds()
 	{
 		$app = new App([

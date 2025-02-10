@@ -6,6 +6,8 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Field\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
 class MyPage extends Page
 {
@@ -33,14 +35,9 @@ class MyPage extends Page
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Option\OptionsQuery
- */
+#[CoversClass(OptionsQuery::class)]
 class OptionsQueryTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstruct()
 	{
 		$options = new OptionsQuery($query = 'site.children', '{{ page.slug }}');
@@ -49,9 +46,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertNull($options->value);
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testDefaults()
 	{
 		$options = new OptionsQuery($query = 'site.children');
@@ -60,9 +55,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertNull($options->value);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactory()
 	{
 		$options = OptionsQuery::factory([
@@ -78,9 +70,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame($query, $options->query);
 	}
 
-	/**
-	 * @covers ::polyfill
-	 */
 	public function testPolyfill()
 	{
 		$query = 'site.children';
@@ -93,10 +82,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame(['query' => 'site.children'], OptionsQuery::polyfill($query));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
 	public function testResolveForArray()
 	{
 		$model   = new MyPage(['slug' => 'a']);
@@ -135,10 +120,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('tag3', $options[2]['text']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
 	public function testResolveForStructure()
 	{
 		$model = new Page([
@@ -171,10 +152,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
 	public function testResolveForBlock()
 	{
 		$model = new Page([
@@ -199,10 +176,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
 	public function testResolveForPages()
 	{
 		$app = new App([
@@ -228,10 +201,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('c', $options[2]['text']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
 	public function testResolveForFile()
 	{
 		$app = new App([
@@ -253,10 +222,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('b.pdf', $options[1]['text']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
 	public function testResolveForUser()
 	{
 		$app = new App([
@@ -275,10 +240,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('homer', $options[0]['text']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
 	public function testResolveForOptions()
 	{
 		$model   = new MyPage(['slug' => 'a']);
@@ -291,9 +252,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolveInvalid()
 	{
 		$app = new App([
@@ -310,9 +268,6 @@ class OptionsQueryTest extends TestCase
 		$options = (new OptionsQuery('site.foo'))->render($app->site());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolveHtmlEscape()
 	{
 		$model   = new MyPage(['slug' => 'a']);

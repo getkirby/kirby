@@ -10,11 +10,11 @@ use Kirby\Filesystem\F;
 use Kirby\Http\Route;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionMethod;
 
-/**
- * @coversDefaultClass \Kirby\Cms\App
- */
+#[CoversClass(App::class)]
 class AppTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -33,9 +33,6 @@ class AppTest extends TestCase
 		$_SERVER = $this->_SERVER;
 	}
 
-	/**
-	 * @covers ::apply
-	 */
 	public function testApply()
 	{
 		$self = $this;
@@ -109,9 +106,6 @@ class AppTest extends TestCase
 		$this->assertSame(2, $app->apply('does-not-exist', ['value' => 2], 'value'));
 	}
 
-	/**
-	 * @covers ::apply
-	 */
 	public function testApplyWildcard()
 	{
 		$self = $this;
@@ -151,9 +145,6 @@ class AppTest extends TestCase
 		$this->assertSame(143, $app->apply('test.event:after', ['value' => 2], 'value'));
 	}
 
-	/**
-	 * @covers ::clone
-	 */
 	public function testClone()
 	{
 		$app = new App();
@@ -177,9 +168,6 @@ class AppTest extends TestCase
 		$this->assertSame('testtest', $clone->data['test']);
 	}
 
-	/**
-	 * @covers ::collection
-	 */
 	public function testCollection()
 	{
 		$app = new App([
@@ -202,9 +190,6 @@ class AppTest extends TestCase
 		$this->assertSame('test', $collection->first()->slug());
 	}
 
-	/**
-	 * @covers ::collection
-	 */
 	public function testCollectionWithOptions()
 	{
 		$test = $this;
@@ -260,9 +245,6 @@ class AppTest extends TestCase
 		$app->collection('overwrites', ['kirby' => 'foo']);
 	}
 
-	/**
-	 * @covers ::contentToken
-	 */
 	public function testContentToken()
 	{
 		$model = new class () {
@@ -307,9 +289,6 @@ class AppTest extends TestCase
 		$this->assertSame(hash_hmac('sha1', 'test', ' salt'), $app->contentToken(null, 'test'));
 	}
 
-	/**
-	 * @covers ::csrf
-	 */
 	public function testCsrf()
 	{
 		$app = new App([
@@ -406,9 +385,6 @@ class AppTest extends TestCase
 		$this->assertInstanceOf(PHPMailer::class, $email);
 	}
 
-	/**
-	 * @covers ::environment
-	 */
 	public function testEnvironment()
 	{
 		$app = new App([
@@ -423,9 +399,6 @@ class AppTest extends TestCase
 		$this->assertSame($info, $app->environment()->info());
 	}
 
-	/**
-	 * @covers ::environment
-	 */
 	public function testEnvironmentBeforeInitialization()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -439,9 +412,6 @@ class AppTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::image
-	 */
 	public function testImage()
 	{
 		$app = new App([
@@ -481,9 +451,6 @@ class AppTest extends TestCase
 		$this->assertNull($image);
 	}
 
-	/**
-	 * @covers ::models
-	 */
 	public function testModels()
 	{
 		$app = new App([
@@ -528,9 +495,6 @@ class AppTest extends TestCase
 		$this->assertSame('test@getkirby.com', $models->current()->email());
 	}
 
-	/**
-	 * @covers ::nonce
-	 */
 	public function testNonce()
 	{
 		$app = new App([
@@ -968,9 +932,6 @@ class AppTest extends TestCase
 		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFindFileByUUID()
 	{
 		$app = new App([
@@ -1035,9 +996,6 @@ class AppTest extends TestCase
 		$this->assertSame($expected, $app->blueprints('files'));
 	}
 
-	/**
-	 * @covers ::trigger
-	 */
 	public function testTrigger()
 	{
 		$self  = $this;
@@ -1147,9 +1105,6 @@ class AppTest extends TestCase
 		$this->assertSame(10, $count);
 	}
 
-	/**
-	 * @covers ::trigger
-	 */
 	public function testTriggerWildcard()
 	{
 		$self  = $this;
@@ -1204,10 +1159,8 @@ class AppTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider urlProvider
-	 */
-	public function testUrl($url, $expected)
+	#[DataProvider('urlProvider')]
+	public function testUrl(string $url, string $expected)
 	{
 		$app = new App([
 			'roots' => [
@@ -1307,10 +1260,6 @@ class AppTest extends TestCase
 		$this->assertSame('ss', Str::$language['ß']);
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
 	public function testController()
 	{
 		$app = new App([
@@ -1331,10 +1280,6 @@ class AppTest extends TestCase
 		], $app->controller('test'));
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
 	public function testControllerCallback()
 	{
 		$app = new App([
@@ -1358,10 +1303,6 @@ class AppTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
 	public function testControllerRepresentation()
 	{
 		$app = new App([
@@ -1382,10 +1323,6 @@ class AppTest extends TestCase
 		], $app->controller('another', contentType: 'json'));
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
 	public function testControllerHtmlForMissingRepresentation()
 	{
 		$app = new App([
@@ -1406,10 +1343,6 @@ class AppTest extends TestCase
 		], $app->controller('test', contentType: 'json'));
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
 	public function testControllerMissing()
 	{
 		$app = new App([
@@ -1430,10 +1363,6 @@ class AppTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
 	public function testControllerMissingRepresentation()
 	{
 		$app = new App([
@@ -1454,9 +1383,6 @@ class AppTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::path
-	 */
 	public function testPath()
 	{
 		$app = new App();
@@ -1494,9 +1420,6 @@ class AppTest extends TestCase
 		$this->assertSame('foo/bar', $app->path());
 	}
 
-	/**
-	 * @covers ::page
-	 */
 	public function testPageWithUUID()
 	{
 		$app = new App([
@@ -1517,9 +1440,6 @@ class AppTest extends TestCase
 		$this->assertIsPage($page, $app->page('page://my-page'));
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRender()
 	{
 		$app = new App([

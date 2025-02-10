@@ -6,6 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Panel\Model;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PagesSectionTest extends TestCase
 {
@@ -174,10 +175,8 @@ class PagesSectionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider statusProvider
-	 */
-	public function testStatus($input, $expected)
+	#[DataProvider('statusProvider')]
+	public function testStatus(string|null $input, string $expected)
 	{
 		$section = new Section('pages', [
 			'name'   => 'test',
@@ -209,10 +208,8 @@ class PagesSectionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider addableStatusProvider
-	 */
-	public function testAddWhenStatusIs($input, $expected)
+	#[DataProvider('addableStatusProvider')]
+	public function testAddWhenStatusIs(string $input, bool $expected)
 	{
 		$section = new Section('pages', [
 			'name'   => 'test',
@@ -241,10 +238,8 @@ class PagesSectionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider addableStatusCreateProvider
-	 */
-	public function testAddWhenStatusCreatedMatchesStatusShown($create, $shown, $expected)
+	#[DataProvider('addableStatusCreateProvider')]
+	public function testAddWhenStatusCreatedMatchesStatusShown(string $create, string $shown, bool $expected)
 	{
 		$this->app->clone([
 			'blueprints' => [
@@ -463,10 +458,8 @@ class PagesSectionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider sortableStatusProvider
-	 */
-	public function testSortableStatus($input, $expected)
+	#[DataProvider('sortableStatusProvider')]
+	public function testSortableStatus(string $input, bool $expected)
 	{
 		$section = new Section('pages', [
 			'name'     => 'test',

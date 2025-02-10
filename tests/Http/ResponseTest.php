@@ -5,10 +5,9 @@ namespace Kirby\Http;
 use Exception;
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Http\Response
- */
+#[CoversClass(Response::class)]
 class ResponseTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -93,9 +92,6 @@ class ResponseTest extends TestCase
 		Response::download('does/not/exist.txt');
 	}
 
-	/**
-	 * @covers ::guardAgainstOutput
-	 */
 	public function testGuardAgainstOutput()
 	{
 		$result = Response::guardAgainstOutput(
@@ -107,9 +103,6 @@ class ResponseTest extends TestCase
 		$this->assertSame('12-34', $result);
 	}
 
-	/**
-	 * @covers ::guardAgainstOutput
-	 */
 	public function testGuardAgainstOutputWithSubsequentOutput()
 	{
 		HeadersSent::$value = true;
@@ -123,9 +116,6 @@ class ResponseTest extends TestCase
 		$this->assertSame('12-34', $result);
 	}
 
-	/**
-	 * @covers ::guardAgainstOutput
-	 */
 	public function testGuardAgainstOutputWithFirstOutput()
 	{
 		$this->expectException(LogicException::class);
@@ -322,10 +312,8 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Location' => '/'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
-	/**
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
+	#[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+	#[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
 	public function testSend()
 	{
 		$response = new Response([
@@ -348,10 +336,8 @@ class ResponseTest extends TestCase
 		$this->assertSame($code, 200);
 	}
 
-	/**
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
+	#[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+	#[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
 	public function testToString()
 	{
 		$response = new Response([

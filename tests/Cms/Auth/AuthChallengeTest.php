@@ -10,11 +10,10 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Throwable;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth
- */
+#[CoversClass(Auth::class)]
 class AuthChallengeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthChallenge';
@@ -80,12 +79,6 @@ class AuthChallengeTest extends TestCase
 		$this->failedEmail = null;
 	}
 
-	/**
-	 * @covers ::checkRateLimit
-	 * @covers ::createChallenge
-	 * @covers ::fail
-	 * @covers ::status
-	 */
 	public function testCreateChallenge()
 	{
 		$this->app = $this->app->clone([
@@ -178,10 +171,6 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $this->failedEmail);
 	}
 
-	/**
-	 * @covers ::createChallenge
-	 * @covers ::fail
-	 */
 	public function testCreateChallengeDebugError()
 	{
 		$auth = $this->app->auth();
@@ -191,10 +180,6 @@ class AuthChallengeTest extends TestCase
 		$auth->createChallenge('error@getkirby.com');
 	}
 
-	/**
-	 * @covers ::createChallenge
-	 * @covers ::fail
-	 */
 	public function testCreateChallengeDebugNotFound()
 	{
 		$this->expectException(NotFoundException::class);
@@ -203,11 +188,6 @@ class AuthChallengeTest extends TestCase
 		$this->auth->createChallenge('invalid@example.com');
 	}
 
-	/**
-	 * @covers ::checkRateLimit
-	 * @covers ::createChallenge
-	 * @covers ::fail
-	 */
 	public function testCreateChallengeDebugRateLimit()
 	{
 		$auth = $this->app->auth();
@@ -221,11 +201,6 @@ class AuthChallengeTest extends TestCase
 		$auth->createChallenge('marge@simpsons.com');
 	}
 
-	/**
-	 * @covers ::createChallenge
-	 * @covers ::fail
-	 * @covers ::status
-	 */
 	public function testCreateChallengeCustomTimeout()
 	{
 		$this->app = $this->app->clone([
@@ -261,10 +236,6 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame(MockTime::$time + 10, $session->get('kirby.challenge.timeout'));
 	}
 
-	/**
-	 * @covers ::createChallenge
-	 * @covers ::status
-	 */
 	public function testCreateChallengeLong()
 	{
 		$session = $this->app->session();
@@ -280,10 +251,6 @@ class AuthChallengeTest extends TestCase
 		$this->assertFalse($session->timeout());
 	}
 
-	/**
-	 * @covers ::createChallenge
-	 * @covers ::status
-	 */
 	public function testCreateChallengeWithPunycodeEmail()
 	{
 		$session = $this->app->session();
@@ -298,9 +265,6 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame('test@exämple.com', $session->get('kirby.challenge.email'));
 	}
 
-	/**
-	 * @covers ::enabledChallenges
-	 */
 	public function testEnabledChallenges()
 	{
 		// default
@@ -334,10 +298,6 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame(['totp', 'sms'], $app->auth()->enabledChallenges());
 	}
 
-	/**
-	 * @covers ::login2fa
-	 * @covers ::status
-	 */
 	public function testLogin2fa()
 	{
 		$session = $this->app->session();
@@ -358,10 +318,6 @@ class AuthChallengeTest extends TestCase
 		$this->assertNull($this->failedEmail);
 	}
 
-	/**
-	 * @covers ::login2fa
-	 * @covers ::status
-	 */
 	public function testLogin2faLong()
 	{
 		$session = $this->app->session();
@@ -382,10 +338,6 @@ class AuthChallengeTest extends TestCase
 		$this->assertNull($this->failedEmail);
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::login2fa
-	 */
 	public function testLogin2faInvalidUser()
 	{
 		$session = $this->app->session();
@@ -395,10 +347,6 @@ class AuthChallengeTest extends TestCase
 		$this->auth->login2fa('invalid@example.com', 'springfield123');
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::login2fa
-	 */
 	public function testLogin2faInvalidPassword()
 	{
 		$session = $this->app->session();
@@ -408,9 +356,6 @@ class AuthChallengeTest extends TestCase
 		$this->auth->login2fa('marge@simpsons.com', 'springfield456');
 	}
 
-	/**
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallenge()
 	{
 		$session = $this->app->session();
@@ -427,10 +372,6 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame(['kirby.userId' => 'marge'], $session->data()->get());
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallengeNoChallenge1()
 	{
 		try {
@@ -444,10 +385,6 @@ class AuthChallengeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallengeNoChallenge2()
 	{
 		try {
@@ -462,10 +399,6 @@ class AuthChallengeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallengeNoChallengeNoDebug1()
 	{
 		$this->app = $this->app->clone([
@@ -488,10 +421,6 @@ class AuthChallengeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallengeNoChallengeNoDebug2()
 	{
 		$this->app = $this->app->clone([
@@ -515,10 +444,6 @@ class AuthChallengeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallengeInvalidEmail()
 	{
 		$this->expectException(NotFoundException::class);
@@ -529,11 +454,6 @@ class AuthChallengeTest extends TestCase
 		$this->auth->verifyChallenge('123456');
 	}
 
-	/**
-	 * @covers ::checkRateLimit
-	 * @covers ::fail
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallengeRateLimited()
 	{
 		$this->expectException(PermissionException::class);
@@ -551,10 +471,6 @@ class AuthChallengeTest extends TestCase
 		$this->auth->verifyChallenge('123456');
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallengeTimeLimited()
 	{
 		$session = $this->app->session();
@@ -580,10 +496,6 @@ class AuthChallengeTest extends TestCase
 		$this->assertNull($session->get('kirby.challenge.timeout'));
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallengeTimeLimitedNoDebug()
 	{
 		$this->app = $this->app->clone([
@@ -617,10 +529,6 @@ class AuthChallengeTest extends TestCase
 		$this->assertNull($session->get('kirby.challenge.timeout'));
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallengeInvalidCode()
 	{
 		$this->expectException(PermissionException::class);
@@ -636,10 +544,6 @@ class AuthChallengeTest extends TestCase
 		$this->auth->verifyChallenge('654321');
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::verifyChallenge
-	 */
 	public function testVerifyChallengeInvalidChallenge()
 	{
 		$this->expectException(LogicException::class);

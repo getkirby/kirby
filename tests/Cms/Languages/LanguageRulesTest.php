@@ -7,10 +7,9 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\LanguageRules
- */
+#[CoversClass(LanguageRules::class)]
 class LanguageRulesTest extends TestCase
 {
 	public function setUp(): void
@@ -36,9 +35,6 @@ class LanguageRulesTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreate()
 	{
 		$this->app->impersonate('admin@getkirby.com');
@@ -53,9 +49,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::create($language);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateWithInvalidCode()
 	{
 		$language = new Language([
@@ -68,9 +61,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::create($language);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateWithInvalidName()
 	{
 		$language = new Language([
@@ -84,9 +74,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::create($language);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateWhenExists()
 	{
 		$language = $this->createMock(Language::class);
@@ -100,9 +87,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::create($language);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateWithoutCurrentUser()
 	{
 		$language = new Language([
@@ -116,9 +100,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::create($language);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateWithoutPermissions()
 	{
 		$this->app->impersonate('test@getkirby.com');
@@ -134,9 +115,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::create($language);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDelete()
 	{
 		$this->app->impersonate('admin@getkirby.com');
@@ -151,9 +129,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::delete($language);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDeleteWhenNotDeletable()
 	{
 		$language = $this->createMock(Language::class);
@@ -165,9 +140,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::delete($language);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDeleteWithoutCurrentUser()
 	{
 		$language = new Language([
@@ -181,9 +153,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::delete($language);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDeleteWithoutPermissions()
 	{
 		$this->app->impersonate('test@getkirby.com');
@@ -199,9 +168,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::delete($language);
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdate()
 	{
 		$this->app->impersonate('admin@getkirby.com');
@@ -216,9 +182,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::update($language);
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdateWithoutCode()
 	{
 		$language = $this->createMock(Language::class);
@@ -231,9 +194,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::update($language);
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdateWithoutName()
 	{
 		$language = $this->createMock(Language::class);
@@ -246,9 +206,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::update($language);
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdateWithoutCurrentUser()
 	{
 		$language = new Language([
@@ -262,9 +219,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::update($language);
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdateWithoutPermissions()
 	{
 		$this->app->impersonate('test@getkirby.com');
@@ -280,9 +234,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::update($language);
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdateDemoteDefault()
 	{
 		$this->app = $this->app->clone([

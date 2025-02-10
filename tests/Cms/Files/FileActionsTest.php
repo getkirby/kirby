@@ -8,6 +8,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Image\Image;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 
 class FileActionsTest extends TestCase
@@ -97,9 +98,7 @@ class FileActionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
+	#[DataProvider('fileProvider')]
 	public function testChangeName(File $file)
 	{
 		// create an empty dummy file
@@ -130,9 +129,7 @@ class FileActionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider fileProviderMultiLang
-	 */
+	#[DataProvider('fileProviderMultiLang')]
 	public function testChangeNameMultiLang(File $file)
 	{
 		$app = static::appWithLanguages();
@@ -721,10 +718,8 @@ class FileActionsTest extends TestCase
 		$this->assertNotSame($oldUuid, $newUuid);
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testCreate($parent)
+	#[DataProvider('parentProvider')]
+	public function testCreate(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$source = static::TMP . '/source.md';
 
@@ -746,10 +741,8 @@ class FileActionsTest extends TestCase
 		$this->assertIsString($result->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testCreateDuplicate($parent)
+	#[DataProvider('parentProvider')]
+	public function testCreateDuplicate(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$source = static::TMP . '/source.md';
 
@@ -773,10 +766,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame($uuid, $duplicate->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testCreateMove($parent)
+	#[DataProvider('parentProvider')]
+	public function testCreateMove(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$source = static::TMP . '/source.md';
 
@@ -798,10 +789,8 @@ class FileActionsTest extends TestCase
 		$this->assertIsString($result->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testCreateWithDefaults($parent)
+	#[DataProvider('parentProvider')]
+	public function testCreateWithDefaults(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$source = static::TMP . '/source.md';
 
@@ -831,10 +820,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame('B', $result->b()->value());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testCreateWithDefaultsAndContent($parent)
+	#[DataProvider('parentProvider')]
+	public function testCreateWithDefaultsAndContent(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$source = static::TMP . '/source.md';
 
@@ -867,10 +854,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame('B', $result->b()->value());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testCreateImage($parent)
+	#[DataProvider('parentProvider')]
+	public function testCreateImage(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$source = static::FIXTURES . '/test.jpg';
 
@@ -885,10 +870,8 @@ class FileActionsTest extends TestCase
 		$this->assertInstanceOf(Image::class, $result->asset());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testCreateImageAndManipulate($parent)
+	#[DataProvider('parentProvider')]
+	public function testCreateImageAndManipulate(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$source = static::FIXTURES . '/test.jpg';
 		$result = File::create([
@@ -913,10 +896,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame('test.webp', $result->filename());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testCreateManipulateNonImage($parent)
+	#[DataProvider('parentProvider')]
+	public function testCreateManipulateNonImage(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$source = static::FIXTURES . '/test.pdf';
 
@@ -937,10 +918,8 @@ class FileActionsTest extends TestCase
 		$this->assertFileEquals($source, $result->root());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testCreateHooks($parent)
+	#[DataProvider('parentProvider')]
+	public function testCreateHooks(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$phpunit = $this;
 		$before  = false;
@@ -974,9 +953,7 @@ class FileActionsTest extends TestCase
 		$this->assertTrue($after);
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
+	#[DataProvider('fileProvider')]
 	public function testDelete(File $file)
 	{
 		// create an empty dummy file
@@ -995,10 +972,8 @@ class FileActionsTest extends TestCase
 		$this->assertFileDoesNotExist($file->version(VersionId::latest())->contentFile('default'));
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
-	public function testPublish($file)
+	#[DataProvider('fileProvider')]
+	public function testPublish(\Kirby\Cms\File|null $file)
 	{
 		// create an empty dummy file
 		F::write($file->root(), '');
@@ -1010,10 +985,8 @@ class FileActionsTest extends TestCase
 		$this->assertFileExists($file->mediaRoot());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testReplace($parent)
+	#[DataProvider('parentProvider')]
+	public function testReplace(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$original    = static::TMP . '/original.md';
 		$replacement = static::TMP . '/replacement.md';
@@ -1040,10 +1013,8 @@ class FileActionsTest extends TestCase
 		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testReplaceMove($parent)
+	#[DataProvider('parentProvider')]
+	public function testReplaceMove(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$original    = static::TMP . '/original.md';
 		$replacement = static::TMP . '/replacement.md';
@@ -1070,10 +1041,8 @@ class FileActionsTest extends TestCase
 		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testReplaceImage($parent)
+	#[DataProvider('parentProvider')]
+	public function testReplaceImage(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$original    = static::FIXTURES . '/test.jpg';
 		$replacement = static::FIXTURES . '/cat.jpg';
@@ -1093,10 +1062,8 @@ class FileActionsTest extends TestCase
 		$this->assertInstanceOf(Image::class, $replacedFile->asset());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testReplaceManipulateNonImage($parent)
+	#[DataProvider('parentProvider')]
+	public function testReplaceManipulateNonImage(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$original    = static::FIXTURES . '/test.pdf';
 		$replacement = static::FIXTURES . '/doc.pdf';
@@ -1122,10 +1089,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame('pdf', $replacedFile->extension());
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
-	public function testSave($file)
+	#[DataProvider('fileProvider')]
+	public function testSave(\Kirby\Cms\File|null $file)
 	{
 		// create an empty dummy file
 		F::write($file->root(), '');
@@ -1138,10 +1103,8 @@ class FileActionsTest extends TestCase
 		$this->assertFileExists($file->version(VersionId::latest())->contentFile('default'));
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
-	public function testUnpublish($file)
+	#[DataProvider('fileProvider')]
+	public function testUnpublish(\Kirby\Cms\File|null $file)
 	{
 		// create an empty dummy file
 		F::write($file->root(), '');
@@ -1153,10 +1116,8 @@ class FileActionsTest extends TestCase
 		$this->assertFileDoesNotExist($file->mediaRoot());
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
-	public function testUpdate($file)
+	#[DataProvider('fileProvider')]
+	public function testUpdate(\Kirby\Cms\File|null $file)
 	{
 		$file = $file->update([
 			'caption' => $caption = 'test',
@@ -1167,10 +1128,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame($template, $file->template());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testManipulate($parent)
+	#[DataProvider('parentProvider')]
+	public function testManipulate(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$originalFile = File::create([
 			'filename' => 'test.jpg',
@@ -1191,10 +1150,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame(100, $replacedFile->height());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testManipulateNonImage($parent)
+	#[DataProvider('parentProvider')]
+	public function testManipulateNonImage(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$originalFile = File::create([
 			'filename' => 'test.mp4',
@@ -1211,10 +1168,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame($originalFile, $replacedFile);
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testManipulateValidFormat($parent)
+	#[DataProvider('parentProvider')]
+	public function testManipulateValidFormat(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$originalFile = File::create([
 			'filename' => 'test.jpg',
@@ -1236,10 +1191,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame(100, $replacedFile->height());
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testManipulateInvalidValidFormat($parent)
+	#[DataProvider('parentProvider')]
+	public function testManipulateInvalidValidFormat(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$originalFile = File::create([
 			'filename' => 'test.mp4',
@@ -1332,10 +1285,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testDeleteHooks($parent)
+	#[DataProvider('parentProvider')]
+	public function testDeleteHooks(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$calls = 0;
 		$phpunit = $this;
@@ -1370,10 +1321,8 @@ class FileActionsTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
-	/**
-	 * @dataProvider parentProvider
-	 */
-	public function testReplaceHooks($parent)
+	#[DataProvider('parentProvider')]
+	public function testReplaceHooks(\Kirby\Cms\Site|\Kirby\Cms\Page $parent)
 	{
 		$calls = 0;
 		$phpunit = $this;

@@ -6,15 +6,15 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 class UserTestModel extends User
 {
 }
 
-/**
- * @coversDefaultClass \Kirby\Cms\User
- */
+#[CoversClass(User::class)]
 class UserTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.User';
@@ -72,9 +72,6 @@ class UserTest extends TestCase
 		new User(['email' => []]);
 	}
 
-	/**
-	 * @covers ::isAdmin
-	 */
 	public function testIsAdmin()
 	{
 		$user = new User([
@@ -92,9 +89,6 @@ class UserTest extends TestCase
 		$this->assertFalse($user->isAdmin());
 	}
 
-	/**
-	 * @covers ::isKirby
-	 */
 	public function testIsKirby()
 	{
 		$user = new User([
@@ -119,9 +113,6 @@ class UserTest extends TestCase
 		$this->assertFalse($user->isKirby());
 	}
 
-	/**
-	 * @covers ::isLoggedIn
-	 */
 	public function testIsLoggedIn()
 	{
 		$app = new App([
@@ -151,9 +142,6 @@ class UserTest extends TestCase
 		$this->assertTrue($b->isLoggedIn());
 	}
 
-	/**
-	 * @covers ::isNobody
-	 */
 	public function testIsNobody()
 	{
 		$user = new User([
@@ -341,9 +329,6 @@ class UserTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::roles
-	 */
 	public function testRoles(): void
 	{
 		$app = new App([
@@ -400,9 +385,6 @@ class UserTest extends TestCase
 		$this->assertSame(['admin'], $roles);
 	}
 
-	/**
-	 * @covers ::roles
-	 */
 	public function testRolesWithPermissions(): void
 	{
 		$app = new App([
@@ -453,9 +435,6 @@ class UserTest extends TestCase
 		$this->assertSame(['guest'], $roles);
 	}
 
-	/**
-	 * @covers ::roles
-	 */
 	public function testRolesWithOptions(): void
 	{
 		$app = new App([
@@ -565,10 +544,8 @@ class UserTest extends TestCase
 		$user->secret('totp');
 	}
 
-	/**
-	 * @dataProvider passwordProvider
-	 */
-	public function testValidatePassword($input, $valid)
+	#[DataProvider('passwordProvider')]
+	public function testValidatePassword(string|null $input, bool $valid)
 	{
 		$user = new User([
 			'email'    => 'test@getkirby.com',

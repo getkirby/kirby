@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class UrlsTest extends TestCase
 {
 	public static function defaultUrlProvider(): array
@@ -13,10 +15,8 @@ class UrlsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider defaultUrlProvider
-	 */
-	public function testDefaulUrl($url, $method)
+	#[DataProvider('defaultUrlProvider')]
+	public function testDefaulUrl(string $url, string $method)
 	{
 		$app  = new App([
 			'roots' => [
@@ -37,10 +37,8 @@ class UrlsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider customBaseUrlProvider
-	 */
-	public function testWithCustomBaseUrl($url, $method)
+	#[DataProvider('customBaseUrlProvider')]
+	public function testWithCustomBaseUrl(string $url, string $method)
 	{
 		$app = new App([
 			'roots' => [
@@ -63,10 +61,8 @@ class UrlsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider customUrlProvider
-	 */
-	public function testWithCustomUrl($url, $method)
+	#[DataProvider('customUrlProvider')]
+	public function testWithCustomUrl(string $url, string $method)
 	{
 		$app = new App([
 			'roots' => [

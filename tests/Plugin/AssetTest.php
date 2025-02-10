@@ -4,10 +4,9 @@ namespace Kirby\Plugin;
 
 use Kirby\Cms\TestCase;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Plugin\Asset
- */
+#[CoversClass(Asset::class)]
 class AssetTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
@@ -28,9 +27,6 @@ class AssetTest extends TestCase
 		touch(static::TMP . '/test-plugin/assets/test.css', 1337000000);
 	}
 
-	/**
-	 * @covers ::extension
-	 */
 	public function testExtension()
 	{
 		$asset = new Asset(
@@ -42,9 +38,6 @@ class AssetTest extends TestCase
 		$this->assertSame('css', $asset->extension());
 	}
 
-	/**
-	 * @covers ::filename
-	 */
 	public function testFilename()
 	{
 		$asset = new Asset(
@@ -56,13 +49,6 @@ class AssetTest extends TestCase
 		$this->assertSame('test.css', $asset->filename());
 	}
 
-	/**
-	 * @covers ::mediaHash
-	 * @covers ::mediaRoot
-	 * @covers ::mediaUrl
-	 * @covers ::url
-	 * @covers ::__toString
-	 */
 	public function testMedia()
 	{
 		$asset = new Asset(
@@ -78,9 +64,6 @@ class AssetTest extends TestCase
 		$this->assertSame($url, (string)$asset);
 	}
 
-	/**
-	 * @covers ::modified
-	 */
 	public function testModified()
 	{
 		$asset = new Asset(
@@ -92,12 +75,6 @@ class AssetTest extends TestCase
 		$this->assertSame(1337000000, $asset->modified());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::path
-	 * @covers ::plugin
-	 * @covers ::root
-	 */
 	public function testPathRoot()
 	{
 		$asset = new Asset(
@@ -111,9 +88,6 @@ class AssetTest extends TestCase
 		$this->assertSame($root, $asset->root());
 	}
 
-	/**
-	 * @covers ::publish
-	 */
 	public function testPublish()
 	{
 		$asset = new Asset(

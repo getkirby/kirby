@@ -4,10 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Language
- */
+#[CoversClass(Language::class)]
 class LanguageConversionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageConversion';

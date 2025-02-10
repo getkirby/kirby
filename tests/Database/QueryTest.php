@@ -6,10 +6,9 @@ use InvalidArgumentException;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Pagination;
 use PDOException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Database\Database
- */
+#[CoversClass(Database::class)]
 class QueryTest extends TestCase
 {
 	public function setUp(): void

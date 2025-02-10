@@ -5,6 +5,7 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 class UriTest extends TestCase
@@ -410,9 +411,7 @@ class UriTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider buildProvider
-	 */
+	#[DataProvider('buildProvider')]
 	public function testToString(string $url, array $props, string $expected)
 	{
 		$url = new Uri($url, $props);

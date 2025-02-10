@@ -4,6 +4,7 @@ namespace Kirby\Http;
 
 use Kirby\Cms\App;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UrlTest extends TestCase
 {
@@ -206,10 +207,8 @@ class UrlTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider scriptNameProvider
-	 */
-	public function testIndex($host, $scriptName, $expected)
+	#[DataProvider('scriptNameProvider')]
+	public function testIndex(string|null $host, string $scriptName, string $expected)
 	{
 		new App([
 			'cli' => false,

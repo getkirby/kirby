@@ -5,10 +5,9 @@ namespace Kirby\Database;
 use Kirby\Exception\InvalidArgumentException;
 use PDO;
 use PDOException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Database\Database
- */
+#[CoversClass(Database::class)]
 class DatabaseTest extends TestCase
 {
 	public function setUp(): void
@@ -80,18 +79,12 @@ class DatabaseTest extends TestCase
 		], array_values(Database::instances()));
 	}
 
-	/**
-	 * @covers ::affected
-	 */
 	public function testAffected()
 	{
 		$this->database->table('users')->delete();
 		$this->assertSame(3, $this->database->affected());
 	}
 
-	/**
-	 * @covers ::lastId
-	 */
 	public function testLastId()
 	{
 		$id = $this->database->table('users')->insert([
@@ -106,18 +99,12 @@ class DatabaseTest extends TestCase
 		$this->assertSame($id, $this->database->lastId());
 	}
 
-	/**
-	 * @covers ::lastResult
-	 */
 	public function testLastResult()
 	{
 		$result = $this->database->table('users')->select('*')->all();
 		$this->assertSame($result, $this->database->lastResult());
 	}
 
-	/**
-	 * @covers ::lastError
-	 */
 	public function testLastError()
 	{
 		$this->assertNull($this->database->lastError());

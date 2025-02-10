@@ -5,7 +5,9 @@ namespace Kirby\Api\Controller;
 use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Changes::class)]
 class ChangesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Api.Controller.Changes';

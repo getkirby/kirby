@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
 class UserBlueprintTest extends TestCase
 {
@@ -44,9 +45,7 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->options());
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testTitleI18n()
 	{
 		$app = new App([
@@ -91,9 +90,7 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame('Editor role', $user->role()->title());
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testTitleI18nWithFallbackLanguage()
 	{
 		$app = new App([
@@ -129,9 +126,7 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame('Editor role', $user->role()->title());
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testTitleI18nArray()
 	{
 		$app = new App([

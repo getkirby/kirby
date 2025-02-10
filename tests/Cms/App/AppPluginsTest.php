@@ -12,6 +12,7 @@ use Kirby\Image\Image;
 use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class DummyAuthChallenge extends Challenge
 {
@@ -51,9 +52,7 @@ class DummyFilePreview
 {
 }
 
-/**
- * @coversDefaultClass \Kirby\Cms\AppPlugins
- */
+#[CoversClass(AppPlugins::class)]
 class AppPluginsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -403,9 +402,6 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('shaw', $field->peter());
 	}
 
-	/**
-	 * @covers ::extendFilePreviews
-	 */
 	public function testFilePreviews()
 	{
 		$app = new App([
@@ -991,9 +987,6 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
 	}
 
-	/**
-	 * @covers ::extendAreas
-	 */
 	public function testAreas()
 	{
 		$kirby = new App([
@@ -1012,9 +1005,6 @@ class AppPluginsTest extends TestCase
 		$this->assertInstanceOf('Closure', $areas['todos'][0]);
 	}
 
-	/**
-	 * @covers ::extendFileTypes
-	 */
 	public function testFileTypes()
 	{
 		$kirby = new App([

@@ -5,16 +5,11 @@ namespace Kirby\Data;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\Json
- */
+#[CoversClass(Json::class)]
 class JsonTest extends TestCase
 {
-	/**
-	 * @covers ::encode
-	 * @covers ::decode
-	 */
 	public function testEncodeDecode()
 	{
 		$array = [
@@ -35,9 +30,6 @@ class JsonTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Json::decode(['this is' => 'an array']));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeInvalid1()
 	{
 		// pass invalid object
@@ -46,9 +38,6 @@ class JsonTest extends TestCase
 		Json::decode(new \stdClass());
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeInvalid2()
 	{
 		// pass invalid int
@@ -57,9 +46,6 @@ class JsonTest extends TestCase
 		Json::decode(1);
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeCorrupted1()
 	{
 		$this->expectException(Exception::class);
@@ -68,9 +54,6 @@ class JsonTest extends TestCase
 		Json::decode('some gibberish');
 	}
 
-	/**
-	 * @covers ::decode
-	 */
 	public function testDecodeCorrupted2()
 	{
 		$this->expectException(Exception::class);
@@ -79,9 +62,6 @@ class JsonTest extends TestCase
 		Json::decode('true');
 	}
 
-	/**
-	 * @covers ::encode
-	 */
 	public function testEncodePretty()
 	{
 		$array = [
@@ -100,9 +80,6 @@ class JsonTest extends TestCase
 }', $data);
 	}
 
-	/**
-	 * @covers ::encode
-	 */
 	public function testEncodeUnicode()
 	{
 		$string  = 'здравей';

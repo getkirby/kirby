@@ -3,22 +3,13 @@
 namespace Kirby\Template;
 
 use Kirby\Cms\App;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Template\Template
- */
+#[CoversClass(Template::class)]
 class TemplateTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::name
-	 * @covers ::type
-	 * @covers ::defaultType
-	 * @covers ::extension
-	 * @covers ::__toString
-	 */
 	public function testTemplate()
 	{
 		$template = new Template('Test', 'foo', 'bar');
@@ -30,9 +21,6 @@ class TemplateTest extends TestCase
 		$this->assertSame('php', $template->extension());
 	}
 
-	/**
-	 * @covers ::exists
-	 */
 	public function testExists()
 	{
 		new App([
@@ -54,9 +42,6 @@ class TemplateTest extends TestCase
 		$this->assertFalse($template->exists());
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFile()
 	{
 		App::plugin('test/c', [
@@ -84,9 +69,6 @@ class TemplateTest extends TestCase
 		$this->assertSame('plugin.php', $template->file());
 	}
 
-	/**
-	 * @covers ::hasDefaultType
-	 */
 	public function testHasDefaultType()
 	{
 		$template = new Template('test');
@@ -99,10 +81,6 @@ class TemplateTest extends TestCase
 		$this->assertFalse($template->hasDefaultType());
 	}
 
-	/**
-	 * @covers ::store
-	 * @covers ::root
-	 */
 	public function testRoot()
 	{
 		new App([
@@ -116,9 +94,6 @@ class TemplateTest extends TestCase
 		$this->assertSame($root, $template->root());
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRender()
 	{
 		new App([
@@ -131,9 +106,6 @@ class TemplateTest extends TestCase
 		$this->assertSame('Test', $template->render(['slot' => 'Test']));
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderOpenLayoutSnippet()
 	{
 		new App([
@@ -147,9 +119,6 @@ class TemplateTest extends TestCase
 		$this->assertSame("<h1>Layout</h1>\nMy content\n<footer>with other stuff</footer>\n", $template->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderOpenParentSnippet1()
 	{
 		$app = new App([
@@ -167,9 +136,6 @@ class TemplateTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderOpenParentSnippet2()
 	{
 		$app = new App([
@@ -190,9 +156,6 @@ class TemplateTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderOpenParentSnippet3()
 	{
 		$app = new App([

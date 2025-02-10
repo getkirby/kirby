@@ -3,10 +3,9 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \Kirby\Sane\DomHandler
- */
+#[CoversClass(DomHandler::class)]
 class DomHandlerTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.DomHandler';

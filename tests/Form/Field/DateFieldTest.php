@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class DateFieldTest extends TestCase
 {
 	public function testDefaultProps()
@@ -167,10 +169,8 @@ class DateFieldTest extends TestCase
 		$this->assertSame($now, $field->default());
 	}
 
-	/**
-	 * @dataProvider valueProvider
-	 */
-	public function testValue($input, $expected, $step = null)
+	#[DataProvider('valueProvider')]
+	public function testValue(string $input, string $expected, int|null $step = null)
 	{
 		$field = $this->field('date', [
 			'value' => $input,

@@ -3,19 +3,17 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \Kirby\Sane\Svgz
- */
+#[CoversClass(Svgz::class)]
 class SvgzTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Svgz';
 
 	protected static string $type = 'svgz';
 
-	/**
-	 * @dataProvider allowedProvider
-	 */
+	#[DataProvider('allowedProvider')]
 	public function testAllowed(string $file)
 	{
 		$fixture = $this->fixture($file);
@@ -35,9 +33,7 @@ class SvgzTest extends TestCase
 		return static::fixtureList('allowed', 'svgz');
 	}
 
-	/**
-	 * @dataProvider invalidProvider
-	 */
+	#[DataProvider('invalidProvider')]
 	public function testInvalid(string $file)
 	{
 		$this->expectException(InvalidArgumentException::class);

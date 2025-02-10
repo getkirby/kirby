@@ -2,12 +2,12 @@
 
 namespace Kirby\Http\Request\Auth;
 
+use Kirby\Http\Request\Auth;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \Kirby\Http\Request\Auth
- * @covers \Kirby\Http\Request\Auth\BearerAuth
- */
+#[CoversClass(Auth::class)]
+#[CoversClass(BearerAuth::class)]
 class BearerAuthTest extends TestCase
 {
 	public function testInstance()

@@ -3,15 +3,11 @@
 namespace Kirby\Query;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\Arguments
- */
+#[CoversClass(Arguments::class)]
 class ArgumentsTest extends TestCase
 {
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactory()
 	{
 		$arguments = Arguments::factory('1, 2, 3');
@@ -30,9 +26,6 @@ class ArgumentsTest extends TestCase
 		$this->assertCount(3, $arguments);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolve()
 	{
 		$arguments = Arguments::factory('1, 2.3, 3');

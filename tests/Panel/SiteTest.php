@@ -7,10 +7,10 @@ use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Site
- */
+#[CoversClass(Site::class)]
+#[CoversClass(Model::class)]
 class SiteTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Site';
@@ -37,9 +37,6 @@ class SiteTest extends TestCase
 		return new Site($site);
 	}
 
-	/**
-	 * @covers ::buttons
-	 */
 	public function testButtons()
 	{
 		$this->assertSame([
@@ -48,9 +45,6 @@ class SiteTest extends TestCase
 		], array_column($this->panel()->buttons(), 'component'));
 	}
 
-	/**
-	 * @covers ::dropdownOption
-	 */
 	public function testDropdownOption(): void
 	{
 		$model = $this->panel([
@@ -66,9 +60,6 @@ class SiteTest extends TestCase
 		$this->assertSame('/site', $option['link']);
 	}
 
-	/**
-	 * @covers ::imageSource
-	 */
 	public function testImage()
 	{
 		$panel = $this->panel([
@@ -82,12 +73,6 @@ class SiteTest extends TestCase
 		$this->assertTrue(Str::endsWith($image['url'], '/test.jpg'));
 	}
 
-	/**
-	 * @covers ::imageSource
-	 * @covers \Kirby\Panel\Model::image
-	 * @covers \Kirby\Panel\Model::imageSource
-	 * @covers \Kirby\Panel\Model::imageSrcset
-	 */
 	public function testImageCover()
 	{
 		$app = $this->app->clone([
@@ -127,17 +112,11 @@ class SiteTest extends TestCase
 		], $panel->image(['cover' => true]));
 	}
 
-	/**
-	 * @covers ::path
-	 */
 	public function testPath()
 	{
 		$this->assertSame('site', $this->panel()->path());
 	}
 
-	/**
-	 * @covers ::props
-	 */
 	public function testProps()
 	{
 		$props = $this->panel()->props();
@@ -155,9 +134,6 @@ class SiteTest extends TestCase
 		$this->assertArrayHasKey('tabs', $props);
 	}
 
-	/**
-	 * @covers ::view
-	 */
 	public function testView()
 	{
 		$view = $this->panel()->view();

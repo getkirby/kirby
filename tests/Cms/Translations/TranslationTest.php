@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Translation
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Translation::class)]
 class TranslationTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';

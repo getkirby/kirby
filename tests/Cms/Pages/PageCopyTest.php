@@ -4,10 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\PageCopy
- */
+#[CoversClass(PageCopy::class)]
 class PageCopyTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageCopy';
@@ -31,9 +30,6 @@ class PageCopyTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::children
-	 */
 	public function testChildren(): void
 	{
 		$app = $this->app->clone([
@@ -59,11 +55,6 @@ class PageCopyTest extends TestCase
 		$this->assertCount(0, $copy->children());
 	}
 
-	/**
-	 * @covers ::convertUuids
-	 * @covers ::convertChildrenUuids
-	 * @covers ::convertFileUuids
-	 */
 	public function testConvertUuids(): void
 	{
 		$app = $this->app->clone([
@@ -158,9 +149,6 @@ class PageCopyTest extends TestCase
 		$this->assertSame([], array_keys($copy->uuids));
 	}
 
-	/**
-	 * @covers ::convertChildrenUuids
-	 */
 	public function testConvertUuidsClearChildren(): void
 	{
 		$app = $this->app->clone([
@@ -216,9 +204,6 @@ class PageCopyTest extends TestCase
 		$this->assertSame('', $copy->uuids['page://ab']);
 	}
 
-	/**
-	 * @covers ::convertFileUuids
-	 */
 	public function testConvertUuidsClearFiles(): void
 	{
 		$app = $this->app->clone([
@@ -260,9 +245,6 @@ class PageCopyTest extends TestCase
 		$this->assertSame('', $copy->uuids['file://file-b']);
 	}
 
-	/**
-	 * @covers ::files
-	 */
 	public function testFiles(): void
 	{
 		$app = $this->app->clone([
@@ -288,9 +270,6 @@ class PageCopyTest extends TestCase
 		$this->assertCount(0, $copy->files());
 	}
 
-	/**
-	 * @covers ::languages
-	 */
 	public function testLanguages(): void
 	{
 		$app = $this->app->clone([
@@ -320,9 +299,6 @@ class PageCopyTest extends TestCase
 		$this->assertCount(2, $copy->languages());
 	}
 
-	/**
-	 * @covers ::process
-	 */
 	public function testProcess(): void
 	{
 		$app = $this->app->clone([
@@ -355,9 +331,6 @@ class PageCopyTest extends TestCase
 		$this->assertNotSame('file://file-aa', $normalized->find('test-a')->file()->uuid()->toString());
 	}
 
-	/**
-	 * @covers ::removeSlug
-	 */
 	public function testRemoveSlug(): void
 	{
 		$app = $this->app->clone([
@@ -401,9 +374,6 @@ class PageCopyTest extends TestCase
 		$this->assertSame('test', $app->page('test')->slug('de'));
 	}
 
-	/**
-	 * @covers ::replaceUuids
-	 */
 	public function testReplaceUuids(): void
 	{
 		$app = $this->app->clone([

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SiteTranslationsTest extends TestCase
 {
@@ -95,9 +96,7 @@ class SiteTranslationsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider visitProvider
-	 */
+	#[DataProvider('visitProvider')]
 	public function testVisit($languageCode, $siteTitle, $pageTitle)
 	{
 		$app = $this->app()->clone([

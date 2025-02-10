@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\FilePreviews\DefaultFilePreview;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class DummyFilePreview extends FilePreview
 {
@@ -27,10 +28,7 @@ class InvalidFilePreview
 {
 }
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\FilePreview
- * @covers ::__construct
- */
+#[CoversClass(FilePreview::class)]
 class FilePreviewTest extends TestCase
 {
 	public function setUp(): void
@@ -45,9 +43,6 @@ class FilePreviewTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	/**
-	 * @covers ::details
-	 */
 	public function testDetails()
 	{
 		$page    = new Page(['slug' => 'test']);
@@ -76,9 +71,6 @@ class FilePreviewTest extends TestCase
 		], $details);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactory()
 	{
 		$page = new Page(['slug' => 'test']);
@@ -88,9 +80,6 @@ class FilePreviewTest extends TestCase
 		$this->assertInstanceOf(DefaultFilePreview::class, $preview);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactoryWithCustomHandler()
 	{
 		new App([
@@ -113,9 +102,6 @@ class FilePreviewTest extends TestCase
 		$this->assertInstanceOf(DummyFilePreview::class, $preview);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
 	public function testFactoryWithCustomHandlerInvalid()
 	{
 		new App([
@@ -137,9 +123,6 @@ class FilePreviewTest extends TestCase
 		FilePreview::factory($file);
 	}
 
-	/**
-	 * @covers ::image
-	 */
 	public function testImage()
 	{
 		$page    = new Page(['slug' => 'test']);
@@ -152,9 +135,6 @@ class FilePreviewTest extends TestCase
 		$this->assertIsString($image['src']);
 	}
 
-	/**
-	 * @covers ::props
-	 */
 	public function testProps()
 	{
 		$page    = new Page(['slug' => 'test']);
@@ -167,9 +147,6 @@ class FilePreviewTest extends TestCase
 		$this->assertIsString($props['url']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRender()
 	{
 		$page    = new Page(['slug' => 'test']);

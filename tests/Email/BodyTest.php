@@ -2,9 +2,9 @@
 
 namespace Kirby\Email;
 
-/**
- * @coversDefaultClass \Kirby\Email\Body
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Body::class)]
 class BodyTest extends TestCase
 {
 	public function testConstruct()

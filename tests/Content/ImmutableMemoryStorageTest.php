@@ -4,11 +4,9 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Language;
 use Kirby\Exception\LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\ImmutableMemoryStorage
- * @covers ::__construct
- */
+#[CoversClass(ImmutableMemoryStorage::class)]
 class ImmutableMemoryStorageTest extends TestCase
 {
 	protected $storage;
@@ -21,10 +19,6 @@ class ImmutableMemoryStorageTest extends TestCase
 		$this->storage = new ImmutableMemoryStorage($this->model);
 	}
 
-	/**
-	 * @covers ::delete
-	 * @covers ::preventMutation
-	 */
 	public function testDelete()
 	{
 		$this->expectException(LogicException::class);
@@ -33,10 +27,6 @@ class ImmutableMemoryStorageTest extends TestCase
 		$this->storage->delete(VersionId::latest(), Language::ensure());
 	}
 
-	/**
-	 * @covers ::move
-	 * @covers ::preventMutation
-	 */
 	public function testMove()
 	{
 		$this->expectException(LogicException::class);
@@ -49,10 +39,6 @@ class ImmutableMemoryStorageTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::touch
-	 * @covers ::preventMutation
-	 */
 	public function testTouch()
 	{
 		$this->expectException(LogicException::class);
@@ -61,10 +47,6 @@ class ImmutableMemoryStorageTest extends TestCase
 		$this->storage->touch(VersionId::latest(), Language::ensure());
 	}
 
-	/**
-	 * @covers ::update
-	 * @covers ::preventMutation
-	 */
 	public function testUpdate()
 	{
 		$this->storage->create(VersionId::latest(), Language::ensure(), []);

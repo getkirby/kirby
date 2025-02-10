@@ -7,10 +7,9 @@ use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Dialog
- */
+#[CoversClass(Dialog::class)]
 class DialogTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Dialog';
@@ -40,9 +39,6 @@ class DialogTest extends TestCase
 		unset($_SERVER['SERVER_SOFTWARE']);
 	}
 
-	/**
-	 * @covers ::error
-	 */
 	public function testError(): void
 	{
 		// default
@@ -58,9 +54,6 @@ class DialogTest extends TestCase
 		$this->assertSame('Test', $error['error']);
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponse(): void
 	{
 		$response = Dialog::response([
@@ -82,9 +75,6 @@ class DialogTest extends TestCase
 		$this->assertSame($expected, json_decode($response->body(), true));
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromTrue(): void
 	{
 		$response = Dialog::response(true);
@@ -100,9 +90,6 @@ class DialogTest extends TestCase
 		$this->assertSame($expected, json_decode($response->body(), true));
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromInvalidData(): void
 	{
 		$response = Dialog::response(1234);
@@ -119,9 +106,6 @@ class DialogTest extends TestCase
 		$this->assertSame($expected, json_decode($response->body(), true));
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromException(): void
 	{
 		$exception = new Exception('Test');
@@ -139,9 +123,6 @@ class DialogTest extends TestCase
 		$this->assertSame($expected, json_decode($response->body(), true));
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromKirbyException(): void
 	{
 		$exception = new NotFoundException(message: 'Test');
@@ -159,9 +140,6 @@ class DialogTest extends TestCase
 		$this->assertSame($expected, json_decode($response->body(), true));
 	}
 
-	/**
-	 * @covers ::routes
-	 */
 	public function testRoutes(): void
 	{
 		$area = [
@@ -197,9 +175,6 @@ class DialogTest extends TestCase
 		$this->assertSame($expected, $routes);
 	}
 
-	/**
-	 * @covers ::routes
-	 */
 	public function testRoutesWithoutHandlers(): void
 	{
 		$area = [

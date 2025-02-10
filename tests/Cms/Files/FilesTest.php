@@ -6,10 +6,9 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Uuid\Uuids;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Files
- */
+#[CoversClass(Files::class)]
 class FilesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Files';
@@ -118,9 +117,6 @@ class FilesTest extends TestCase
 		$files->add($site);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDelete()
 	{
 		$app = new App([
@@ -162,9 +158,6 @@ class FilesTest extends TestCase
 		$this->assertFileDoesNotExist($b);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDeleteWithInvalidIds()
 	{
 		$app = new App([
@@ -211,10 +204,6 @@ class FilesTest extends TestCase
 		$this->assertFileExists($b);
 	}
 
-	/**
-	 * @covers ::findByKey
-	 * @covers ::findByUuid
-	 */
 	public function testFindByUuid()
 	{
 		$app = $this->app->clone([
@@ -242,10 +231,6 @@ class FilesTest extends TestCase
 		Uuids::cache()->flush();
 	}
 
-	/**
-	 * @covers ::niceSize
-	 * @covers ::size
-	 */
 	public function testSize()
 	{
 		$app = new App([
@@ -272,9 +257,6 @@ class FilesTest extends TestCase
 		$this->assertSame('6 B', $files->niceSize());
 	}
 
-	/**
-	 * @covers ::sorted
-	 */
 	public function testSortedByFilename()
 	{
 		$app = new App([
@@ -295,9 +277,6 @@ class FilesTest extends TestCase
 		$this->assertSame('b.jpg', $files->last()->filename());
 	}
 
-	/**
-	 * @covers ::sorted
-	 */
 	public function testSortedBySort()
 	{
 		$app = new App([

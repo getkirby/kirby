@@ -7,10 +7,10 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Cms\System
- */
+#[CoversClass(System::class)]
 class SystemTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/SystemTest';
@@ -135,10 +135,6 @@ class SystemTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::exposedFileUrl
-	 * @covers ::folderUrl
-	 */
 	public function testFolderUrlForContentFolder()
 	{
 		$system = new System($this->app->clone([
@@ -159,10 +155,6 @@ class SystemTest extends TestCase
 		$this->assertSame('/content/site.txt', $system->exposedFileUrl('content'));
 	}
 
-	/**
-	 * @covers ::exposedFileUrl
-	 * @covers ::folderUrl
-	 */
 	public function testFolderUrlForGitFolder()
 	{
 		$system = new System($this->app->clone([
@@ -182,10 +174,6 @@ class SystemTest extends TestCase
 		$this->assertSame('/.git/config', $system->exposedFileUrl('git'));
 	}
 
-	/**
-	 * @covers ::exposedFileUrl
-	 * @covers ::folderUrl
-	 */
 	public function testFolderUrlForInsignificantFolder()
 	{
 		$system = new System($this->app->clone([
@@ -201,10 +189,6 @@ class SystemTest extends TestCase
 		$this->assertNull($system->exposedFileUrl('media'));
 	}
 
-	/**
-	 * @covers ::exposedFileUrl
-	 * @covers ::folderUrl
-	 */
 	public function testFolderUrlForKirbyFolder()
 	{
 		$system = new System($this->app->clone([
@@ -225,10 +209,6 @@ class SystemTest extends TestCase
 		$this->assertSame('/kirby/LICENSE.md', $system->exposedFileUrl('kirby'));
 	}
 
-	/**
-	 * @covers ::exposedFileUrl
-	 * @covers ::folderUrl
-	 */
 	public function testFolderUrlForSiteFolder()
 	{
 		$system = new System($this->app->clone([
@@ -264,10 +244,6 @@ class SystemTest extends TestCase
 		$this->assertSame('/site/snippets/header.php', $system->exposedFileUrl('site'));
 	}
 
-	/**
-	 * @covers ::exposedFileUrl
-	 * @covers ::folderUrl
-	 */
 	public function testFolderUrlForUnknownFolder()
 	{
 		$system = new System($this->app->clone([
@@ -280,11 +256,8 @@ class SystemTest extends TestCase
 		$this->assertNull($system->exposedFileUrl('unknown'));
 	}
 
-	/**
-	 * @covers ::indexUrl
-	 * @dataProvider providerForIndexUrls
-	 */
-	public function testIndexUrl($indexUrl, $expected)
+	#[DataProvider('providerForIndexUrls')]
+	public function testIndexUrl(string $indexUrl, string $expected)
 	{
 		$system = new System($this->app->clone([
 			'options' => [
@@ -295,10 +268,10 @@ class SystemTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider providerForRoots
 	 * @throws \Kirby\Exception\PermissionException
 	 */
-	public function testInitPermission($root)
+	#[DataProvider('providerForRoots')]
+	public function testInitPermission(string $root)
 	{
 		$this->subTmp = static::TMP . '/' . ucfirst($root) . 'Test';
 
@@ -322,9 +295,6 @@ class SystemTest extends TestCase
 		new System($app);
 	}
 
-	/**
-	 * @covers ::info
-	 */
 	public function testInfo()
 	{
 		$app = $this->app->clone([
@@ -342,9 +312,6 @@ class SystemTest extends TestCase
 		$this->assertSame(['en', 'de'], $info['languages']);
 	}
 
-	/**
-	 * @covers ::is2FA
-	 */
 	public function testIs2FA()
 	{
 		$app = $this->app->clone([
@@ -368,9 +335,6 @@ class SystemTest extends TestCase
 		$this->assertTrue($system->is2FA());
 	}
 
-	/**
-	 * @covers ::is2FAwithTOTP
-	 */
 	public function testIs2FAWithTOTP()
 	{
 		$app = $this->app->clone([
@@ -405,9 +369,6 @@ class SystemTest extends TestCase
 		$this->assertFalse($system->is2FAWithTOTP());
 	}
 
-	/**
-	 * @covers ::isInstallable
-	 */
 	public function testIsInstallableOnLocalhost()
 	{
 		$app = $this->app->clone([
@@ -421,9 +382,6 @@ class SystemTest extends TestCase
 		$this->assertTrue($system->isInstallable());
 	}
 
-	/**
-	 * @covers ::isInstallable
-	 */
 	public function testIsInstallableOnPublicServer()
 	{
 		$app = $this->app->clone([
@@ -437,9 +395,6 @@ class SystemTest extends TestCase
 		$this->assertFalse($system->isInstallable());
 	}
 
-	/**
-	 * @covers ::isInstallable
-	 */
 	public function testIsInstallableOnPublicServerWithOverride()
 	{
 		$app = $this->app->clone([
@@ -458,9 +413,6 @@ class SystemTest extends TestCase
 		$this->assertTrue($system->isInstallable());
 	}
 
-	/**
-	 * @covers ::isInstalled
-	 */
 	public function testIsInstalled()
 	{
 		$system = new System($this->app);
@@ -474,9 +426,6 @@ class SystemTest extends TestCase
 		$this->assertTrue($system->isInstalled());
 	}
 
-	/**
-	 * @covers ::isLocal
-	 */
 	public function testIsLocal()
 	{
 		// yep
@@ -502,9 +451,6 @@ class SystemTest extends TestCase
 		$this->assertFalse($system->isLocal());
 	}
 
-	/**
-	 * @covers ::isOk
-	 */
 	public function testIsOk()
 	{
 		$app = $this->app->clone([
@@ -519,9 +465,6 @@ class SystemTest extends TestCase
 		$this->assertTrue($system->isOk());
 	}
 
-	/**
-	 * @covers ::isOk
-	 */
 	public function testIsOkContentMissingPermissions()
 	{
 		// reset permissions in `tearDown()`
@@ -534,28 +477,19 @@ class SystemTest extends TestCase
 		$this->assertFalse($system->isOk());
 	}
 
-	/**
-	 * @covers ::license
-	 */
 	public function testLicense()
 	{
 		$system = new System($this->app);
 		$this->assertInstanceOf(License::class, $system->license());
 	}
 
-	/**
-	 * @covers ::loginMethods
-	 */
 	public function testLoginMethods()
 	{
 		$this->assertSame(['password' => []], $this->app->system()->loginMethods());
 	}
 
-	/**
-	 * @covers ::loginMethods
-	 * @dataProvider providerForLoginMethods
-	 */
-	public function testLoginMethodsCustom($option, $expected)
+	#[DataProvider('providerForLoginMethods')]
+	public function testLoginMethodsCustom(string|array $option, array $expected)
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -565,9 +499,6 @@ class SystemTest extends TestCase
 		$this->assertSame($expected, $app->system()->loginMethods());
 	}
 
-	/**
-	 * @covers ::loginMethods
-	 */
 	public function testLoginMethodsDebug1()
 	{
 		$app = $this->app->clone([
@@ -582,9 +513,6 @@ class SystemTest extends TestCase
 		$app->system()->loginMethods();
 	}
 
-	/**
-	 * @covers ::loginMethods
-	 */
 	public function testLoginMethodsDebug2()
 	{
 		$app = $this->app->clone([
@@ -602,9 +530,6 @@ class SystemTest extends TestCase
 		$app->system()->loginMethods();
 	}
 
-	/**
-	 * @covers ::loginMethods
-	 */
 	public function testLoginMethodsDebug3()
 	{
 		$app = $this->app->clone([
@@ -622,18 +547,12 @@ class SystemTest extends TestCase
 		$app->system()->loginMethods();
 	}
 
-	/**
-	 * @covers ::plugins
-	 */
 	public function testPlugins()
 	{
 		$system = new System($this->app);
 		$this->assertInstanceOf(Collection::class, $system->plugins());
 	}
 
-	/**
-	 * @covers ::serverSoftware
-	 */
 	public function testServerSoftware()
 	{
 		$app = $this->app->clone([
@@ -646,9 +565,6 @@ class SystemTest extends TestCase
 		$this->assertSame($software, $system->serverSoftware());
 	}
 
-	/**
-	 * @covers ::serverSoftware
-	 */
 	public function testServerSoftwareInvalid()
 	{
 		$app = $this->app->clone([
@@ -661,9 +577,6 @@ class SystemTest extends TestCase
 		$this->assertSame('–', $system->serverSoftware());
 	}
 
-	/**
-	 * @covers ::serverSoftwareShort
-	 */
 	public function testServerSoftwareShort()
 	{
 		$app = $this->app->clone([
@@ -685,18 +598,6 @@ class SystemTest extends TestCase
 		$this->assertSame('Apache/2.4.7', $system->serverSoftwareShort());
 	}
 
-	/**
-	 * @covers ::accounts
-	 * @covers ::content
-	 * @covers ::curl
-	 * @covers ::sessions
-	 * @covers ::mbstring
-	 * @covers ::media
-	 * @covers ::php
-	 * @covers ::status
-	 * @covers ::toArray
-	 * @covers ::__debugInfo
-	 */
 	public function testStatus()
 	{
 		$system = new System($this->app);
@@ -715,10 +616,6 @@ class SystemTest extends TestCase
 		$this->assertSame($expected, $system->__debugInfo());
 	}
 
-	/**
-	 * @covers ::content
-	 * @covers ::status
-	 */
 	public function testStatusContentMissingPermissions()
 	{
 		// reset permissions in `tearDown()`
@@ -742,9 +639,6 @@ class SystemTest extends TestCase
 		$this->assertSame($expected, $system->__debugInfo());
 	}
 
-	/**
-	 * @covers ::title
-	 */
 	public function testTitle()
 	{
 		$app = $this->app->clone([
@@ -768,9 +662,6 @@ class SystemTest extends TestCase
 		$this->assertSame($expected, $app->system()->title());
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatus()
 	{
 		$system       = new System($this->app);
@@ -787,9 +678,6 @@ class SystemTest extends TestCase
 		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusDisabled1()
 	{
 		$app = $this->app->clone([
@@ -806,9 +694,6 @@ class SystemTest extends TestCase
 		$this->assertNull($updateStatus);
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusDisabled2()
 	{
 		$app = $this->app->clone([
@@ -823,9 +708,6 @@ class SystemTest extends TestCase
 		$this->assertNull($updateStatus);
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusSecurity1()
 	{
 		$app = $this->app->clone([
@@ -850,9 +732,6 @@ class SystemTest extends TestCase
 		$this->assertNull($updateStatus->targetVersion());
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusSecurity2()
 	{
 		$app = $this->app->clone([
@@ -875,9 +754,6 @@ class SystemTest extends TestCase
 		$this->assertNull($updateStatus->targetVersion());
 	}
 
-	/**
-	 * @covers ::updateStatus
-	 */
 	public function testUpdateStatusCustomData()
 	{
 		$system       = new System($this->app);

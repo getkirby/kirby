@@ -3,17 +3,13 @@
 namespace Kirby\Text;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Text\Markdown
- */
+#[CoversClass(Markdown::class)]
 class MarkdownTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	/**
-	 * @covers ::defaults
-	 */
 	public function testDefaults()
 	{
 		$markdown = new Markdown();
@@ -25,9 +21,6 @@ class MarkdownTest extends TestCase
 		], $markdown->defaults());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testWithOptions()
 	{
 		$markdown = new Markdown([
@@ -38,9 +31,6 @@ class MarkdownTest extends TestCase
 		$this->assertInstanceOf(Markdown::class, $markdown);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testSafeModeDisabled()
 	{
 		$markdown = new Markdown([
@@ -50,9 +40,6 @@ class MarkdownTest extends TestCase
 		$this->assertSame('<div>Custom HTML</div>', $markdown->parse('<div>Custom HTML</div>'));
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testSafeModeEnabled()
 	{
 		$markdown = new Markdown([
@@ -62,9 +49,6 @@ class MarkdownTest extends TestCase
 		$this->assertSame('<p>&lt;div&gt;Custom HTML&lt;/div&gt;</p>', $markdown->parse('<div>Custom HTML</div>'));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParse()
 	{
 		$markdown = new Markdown();
@@ -73,9 +57,6 @@ class MarkdownTest extends TestCase
 		$this->assertSame($html, $markdown->parse($md));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseInline()
 	{
 		$markdown = new Markdown();
@@ -84,9 +65,6 @@ class MarkdownTest extends TestCase
 		$this->assertSame($html, $markdown->parse($md, true));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseWithExtra()
 	{
 		$markdown = new Markdown(['extra' => true]);
@@ -95,9 +73,6 @@ class MarkdownTest extends TestCase
 		$this->assertSame($html, $markdown->parse($md));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseWithoutBreaks()
 	{
 		$markdown = new Markdown(['breaks' => false]);

@@ -5,10 +5,9 @@ namespace Kirby\Database\Sql;
 use Kirby\Database\Database;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Database\Sql\Sqlite
- */
+#[CoversClass(Sqlite::class)]
 class SqliteTest extends TestCase
 {
 	public function setUp(): void
@@ -23,18 +22,12 @@ class SqliteTest extends TestCase
 		$this->sql = new Sqlite($this->database);
 	}
 
-	/**
-	 * @covers ::columns
-	 */
 	public function testColumns()
 	{
 		$result = $this->sql->columns('test');
 		$this->assertSame('PRAGMA table_info("test")', $result['query']);
 	}
 
-	/**
-	 * @covers ::columns
-	 */
 	public function testColumnsInvalidTable()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -43,9 +36,6 @@ class SqliteTest extends TestCase
 		$this->sql->columns('does-not-exist');
 	}
 
-	/**
-	 * @covers ::combineIdentifier
-	 */
 	public function testCombineIdentifier()
 	{
 		$this->assertSame('"test"."id"', $this->sql->combineIdentifier('test', 'id'));
@@ -56,9 +46,6 @@ class SqliteTest extends TestCase
 		$this->assertSame('"id"', $this->sql->combineIdentifier('test', 'id', true));
 	}
 
-	/**
-	 * @covers ::createTable
-	 */
 	public function testCreateTable()
 	{
 		// basic example
@@ -138,9 +125,6 @@ class SqliteTest extends TestCase
 		$this->assertSame([], $table['bindings']);
 	}
 
-	/**
-	 * @covers ::quoteIdentifier
-	 */
 	public function testQuoteIdentifier()
 	{
 		$this->assertSame('*', $this->sql->quoteIdentifier('*'));
@@ -150,9 +134,6 @@ class SqliteTest extends TestCase
 		$this->assertSame('"another\'test"', $this->sql->quoteIdentifier("another'test"));
 	}
 
-	/**
-	 * @covers ::tables
-	 */
 	public function testTables()
 	{
 		$result = $this->sql->tables();
@@ -160,9 +141,6 @@ class SqliteTest extends TestCase
 		$this->assertSame([], $result['bindings']);
 	}
 
-	/**
-	 * @covers ::tables
-	 */
 	public function testValidateTable()
 	{
 		$this->assertTrue($this->database->validateTable('test'));

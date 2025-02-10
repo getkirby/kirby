@@ -3,20 +3,11 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Event
- */
+#[CoversClass(Event::class)]
 class EventTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::action
-	 * @covers ::arguments
-	 * @covers ::name
-	 * @covers ::state
-	 * @covers ::type
-	 */
 	public function testConstruct()
 	{
 		$args = ['arg1' => 'Arg1', 'arg2' => 123];
@@ -70,10 +61,6 @@ class EventTest extends TestCase
 		$this->assertSame($args, $event->arguments());
 	}
 
-	/**
-	 * @covers ::__call
-	 * @covers ::argument
-	 */
 	public function testArgument()
 	{
 		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
@@ -87,9 +74,6 @@ class EventTest extends TestCase
 		$this->assertNull($event->arg3());
 	}
 
-	/**
-	 * @covers ::call
-	 */
 	public function testCall()
 	{
 		$self     = $this;
@@ -120,9 +104,6 @@ class EventTest extends TestCase
 		$this->assertSame('another value', $result);
 	}
 
-	/**
-	 * @covers ::nameWildcards
-	 */
 	public function testNameWildcards()
 	{
 		// event with full name
@@ -192,11 +173,6 @@ class EventTest extends TestCase
 		$this->assertSame([], $event->nameWildcards());
 	}
 
-	/**
-	 * @covers ::__toString
-	 * @covers ::toArray
-	 * @covers ::toString
-	 */
 	public function testExport()
 	{
 		$name       = 'page.create:after';
@@ -210,9 +186,6 @@ class EventTest extends TestCase
 		$this->assertSame(compact('name', 'arguments'), $event->__debugInfo());
 	}
 
-	/**
-	 * @covers ::updateArgument
-	 */
 	public function testUpdateArgument()
 	{
 		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
@@ -226,9 +199,6 @@ class EventTest extends TestCase
 		$this->assertSame(456, $event->arg2());
 	}
 
-	/**
-	 * @covers ::updateArgument
-	 */
 	public function testUpdateArgumentDoesNotExist()
 	{
 		$this->expectException(InvalidArgumentException::class);

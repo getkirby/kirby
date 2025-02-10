@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HasFileTraitUser
 {
@@ -129,10 +130,8 @@ class HasFilesTest extends TestCase
 		$this->assertSame('mother/child/file.jpg', $file->id());
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
-	public function testTypes($filename, $type, $expected)
+	#[DataProvider('fileProvider')]
+	public function testTypes(string $filename, string $type, bool $expected)
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -149,10 +148,8 @@ class HasFilesTest extends TestCase
 		}
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
-	public function testHas($filename, $type, $expected)
+	#[DataProvider('fileProvider')]
+	public function testHas(string $filename, string $type, bool $expected)
 	{
 		$page = new Page([
 			'slug' => 'test'

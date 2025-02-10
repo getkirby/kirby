@@ -6,10 +6,9 @@ use GdImage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Image\QrCode
- */
+#[CoversClass(QrCode::class)]
 class QrCodeTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/qr';
@@ -116,18 +115,12 @@ class QrCodeTest extends TestCase
 		$this->assertStringContainsString('<rect width="100%" height="100%" fill="#00ff00"/>', $svg);
 	}
 
-	/**
-	 * @covers ::__toString
-	 */
 	public function testToString()
 	{
 		$qr = new QrCode('https://getkirby.com');
 		$this->assertSame($qr->toSvg(), (string)$qr);
 	}
 
-	/**
-	 * @covers ::write
-	 */
 	public function testWrite()
 	{
 		Dir::make(static::TMP);
@@ -171,9 +164,6 @@ class QrCodeTest extends TestCase
 		$this->assertSame($expectedJpeg, $actualJpeg);
 	}
 
-	/**
-	 * @covers ::write
-	 */
 	public function testWriteInvalidFormat()
 	{
 		$this->expectException(InvalidArgumentException::class);

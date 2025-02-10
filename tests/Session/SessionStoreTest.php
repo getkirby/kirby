@@ -3,16 +3,12 @@
 namespace Kirby\Session;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 
-/**
- * @coversDefaultClass \Kirby\Session\SessionStore
- */
+#[CoversClass(SessionStore::class)]
 class SessionStoreTest extends TestCase
 {
-	/**
-	 * @covers ::generateId
-	 */
 	public function testGenerateId()
 	{
 		// get a reference to the protected method

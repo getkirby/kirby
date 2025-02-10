@@ -4,10 +4,10 @@ namespace Kirby\Form\Field;
 
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Form\Field\EntriesField
- */
+#[CoversClass(EntriesField::class)]
 class EntriesFieldTest extends TestCase
 {
 	public function testDefaultProps()
@@ -215,10 +215,8 @@ class EntriesFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider supportsProvider
-	 */
-	public function testSupportedFields($type, $expected)
+	#[DataProvider('supportsProvider')]
+	public function testSupportedFields(string $type, bool $expected)
 	{
 		if ($expected === false) {
 			$this->expectException(InvalidArgumentException::class);
@@ -262,10 +260,8 @@ class EntriesFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider validationsProvider
-	 */
-	public function testValidations($type, $value, $expected)
+	#[DataProvider('validationsProvider')]
+	public function testValidations(string $type, string|int $value, bool $expected)
 	{
 		$field = $this->field('entries', [
 			'value'    => [

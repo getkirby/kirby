@@ -5,11 +5,10 @@ namespace Kirby\Session;
 use Kirby\Cms\App;
 use Kirby\Http\Cookie;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 
-/**
- * @coversDefaultClass \Kirby\Session\AutoSession
- */
+#[CoversClass(AutoSession::class)]
 class AutoSessionTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/store';
@@ -29,9 +28,6 @@ class AutoSessionTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testSessionsOptions()
 	{
 		$autoSessionReflector = new ReflectionClass(AutoSession::class);
@@ -68,9 +64,6 @@ class AutoSessionTest extends TestCase
 		$this->assertFalse($this->store->collectedGarbage);
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGet()
 	{
 		Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
@@ -229,9 +222,6 @@ class AutoSessionTest extends TestCase
 		$session->commit();
 	}
 
-	/**
-	 * @covers ::createManually
-	 */
 	public function testCreateManually()
 	{
 		$autoSession = new AutoSession($this->store);
@@ -242,9 +232,6 @@ class AutoSessionTest extends TestCase
 		$this->assertSame('manual', $session->mode());
 	}
 
-	/**
-	 * @covers ::getManually
-	 */
 	public function testGetManually()
 	{
 		$autoSession = new AutoSession($this->store);
@@ -254,9 +241,6 @@ class AutoSessionTest extends TestCase
 		$this->assertSame('9999999999.valid.' . $this->store->validKey, $session->token());
 	}
 
-	/**
-	 * @covers ::collectGarbage
-	 */
 	public function testCollectGarbage()
 	{
 		$this->store->collectedGarbage = false;

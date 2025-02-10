@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AppLanguagesTest extends TestCase
 {
@@ -63,11 +64,9 @@ class AppLanguagesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider detectedLanguageProvider
-	 * @backupGlobals enabled
-	 */
-	public function testDetectedLanguage($accept, $expected)
+	#[\PHPUnit\Framework\Attributes\BackupGlobals(true)]
+	#[DataProvider('detectedLanguageProvider')]
+	public function testDetectedLanguage(string $accept, string $expected)
 	{
 		// set the accepted visitor language
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;

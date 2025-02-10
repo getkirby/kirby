@@ -5,10 +5,9 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\LanguageVariable
- */
+#[CoversClass(LanguageVariable::class)]
 class LanguageVariableTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageVariable';
@@ -29,9 +28,6 @@ class LanguageVariableTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateEmptyKey()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -40,9 +36,6 @@ class LanguageVariableTest extends TestCase
 		LanguageVariable::create('');
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateInvalidKey()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -51,10 +44,6 @@ class LanguageVariableTest extends TestCase
 		LanguageVariable::create('0');
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::key
-	 */
 	public function testKey()
 	{
 		$language = new Language(['code' => 'test']);

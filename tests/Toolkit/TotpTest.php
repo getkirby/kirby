@@ -4,10 +4,9 @@ namespace Kirby\Toolkit;
 
 use Base32\Base32;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Totp
- */
+#[CoversClass(Totp::class)]
 class TotpTest extends TestCase
 {
 	public function tearDown(): void
@@ -15,9 +14,6 @@ class TotpTest extends TestCase
 		MockTime::$time = 1337000000;
 	}
 
-	/**
-	 * @covers ::generate
-	 */
 	public function testGenerate()
 	{
 		// test cases taken from the appendix of RFC6238:
@@ -45,10 +41,6 @@ class TotpTest extends TestCase
 		$this->assertSame('353130', $totp->generate());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::secret
-	 */
 	public function testSecret()
 	{
 		// randomly generated secret
@@ -68,9 +60,6 @@ class TotpTest extends TestCase
 		$this->assertSame($secret, $totp4->secret());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testSecretInvalid1()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -79,9 +68,6 @@ class TotpTest extends TestCase
 		new Totp('');
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testSecretInvalid2()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -90,9 +76,6 @@ class TotpTest extends TestCase
 		new Totp('TOOSHORT');
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testSecretInvalid3()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -101,9 +84,6 @@ class TotpTest extends TestCase
 		new Totp('ABcDEfGHiJKlMNoPQRStuVWXYZ012345'); // invalid Base32 digits
 	}
 
-	/**
-	 * @covers ::uri
-	 */
 	public function testUri()
 	{
 		$totp = new Totp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
@@ -115,9 +95,6 @@ class TotpTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::verify
-	 */
 	public function testVerify()
 	{
 		MockTime::$time = 1111111111;

@@ -2,9 +2,10 @@
 
 namespace Kirby\Uuid;
 
-/**
- * @coversDefaultClass \Kirby\Uuid\Uri
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+
+#[CoversClass(Uri::class)]
 class UriTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.Uri';
@@ -36,29 +37,20 @@ class UriTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::domain
-	 * @dataProvider provider
-	 */
+	#[DataProvider('provider')]
 	public function testDomain(string $input, string $scheme, string|null $domain)
 	{
 		$uri = new Uri($input);
 		$this->assertSame($domain, $uri->domain());
 	}
 
-	/**
-	 * @covers ::host
-	 * @dataProvider provider
-	 */
+	#[DataProvider('provider')]
 	public function testHost(string $input, string $scheme, string|null $domain, string|null $path)
 	{
 		$uri = new Uri($input);
 		$this->assertSame($domain ?? '', $uri->host());
 	}
 
-	/**
-	 * @covers ::host
-	 */
 	public function testHostSet()
 	{
 		$uri = new Uri('page://my-id');
@@ -68,31 +60,21 @@ class UriTest extends TestCase
 		$this->assertSame('page://my-other-id', $uri->toString());
 	}
 
-	/**
-	 * @dataProvider provider
-	 */
+	#[DataProvider('provider')]
 	public function testPath(string $input, string $scheme, string|null $domain, string|null $path)
 	{
 		$uri = new Uri($input);
 		$this->assertSame($path ?? '', $uri->path()->toString());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::base
-	 * @covers ::toString
-	 * @dataProvider provider
-	 */
+	#[DataProvider('provider')]
 	public function testToString(string $input)
 	{
 		$uri = new Uri($input);
 		$this->assertSame($input, $uri->toString());
 	}
 
-	/**
-	 * @covers ::type
-	 * @dataProvider provider
-	 */
+	#[DataProvider('provider')]
 	public function testType(string $input, string $scheme)
 	{
 		$uri = new Uri($input);

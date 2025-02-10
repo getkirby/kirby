@@ -3,11 +3,11 @@
 namespace Kirby\Database;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use ReflectionProperty;
 
-/**
- * @coversDefaultClass \Kirby\Database\Db
- */
+#[CoversClass(Db::class)]
 class DbTest extends TestCase
 {
 	public function setUp(): void
@@ -59,9 +59,6 @@ class DbTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::connect
-	 */
 	public function testConnect()
 	{
 		$db = Db::connect();
@@ -88,17 +85,11 @@ class DbTest extends TestCase
 		$this->assertSame($db, Db::connect());
 	}
 
-	/**
-	 * @covers ::connection
-	 */
 	public function testConnection()
 	{
 		$this->assertInstanceOf(Database::class, Db::connection());
 	}
 
-	/**
-	 * @covers ::table
-	 */
 	public function testTable()
 	{
 		$tableProp = new ReflectionProperty(Query::class, 'table');
@@ -109,18 +100,12 @@ class DbTest extends TestCase
 		$this->assertSame('users', $tableProp->getValue($query));
 	}
 
-	/**
-	 * @covers ::query
-	 */
 	public function testQuery()
 	{
 		$result = Db::query('SELECT * FROM users WHERE username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
 		$this->assertSame('paul', $result[0]['username']);
 	}
 
-	/**
-	 * @covers ::execute
-	 */
 	public function testExecute()
 	{
 		$result = Db::query('SELECT * FROM users WHERE username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
@@ -133,9 +118,6 @@ class DbTest extends TestCase
 		$this->assertEmpty($result);
 	}
 
-	/**
-	 * @covers ::__callStatic
-	 */
 	public function testCallStatic()
 	{
 		Db::connect([
@@ -152,9 +134,6 @@ class DbTest extends TestCase
 		$this->assertSame('myprefix_', Db::prefix());
 	}
 
-	/**
-	 * @covers ::__callStatic
-	 */
 	public function testCallStaticInvalid()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -163,9 +142,7 @@ class DbTest extends TestCase
 		Db::thisIsInvalid();
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testSelect()
 	{
 		$result = Db::select('users');
@@ -184,9 +161,7 @@ class DbTest extends TestCase
 		$this->assertSame('george', $result->first()->username());
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testFirst()
 	{
 		$result = Db::first('users');
@@ -205,9 +180,7 @@ class DbTest extends TestCase
 		$this->assertSame('john', $result->username());
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testColumn()
 	{
 		$result = Db::column('users', 'username');
@@ -223,9 +196,7 @@ class DbTest extends TestCase
 		$this->assertSame(['john'], $result->toArray());
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testInsert()
 	{
 		$result = Db::insert('users', [
@@ -241,9 +212,7 @@ class DbTest extends TestCase
 		$this->assertSame('0', Db::row('users', '*', ['username' => 'ringo'])->active());
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testUpdate()
 	{
 		$result = Db::update('users', ['email' => 'john@gmail.com'], ['username' => 'john']);
@@ -257,9 +226,7 @@ class DbTest extends TestCase
 		$this->assertSame('1', Db::row('users', '*', ['username' => 'paul'])->active());
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testDelete()
 	{
 		$result = Db::delete('users', ['username' => 'john']);
@@ -268,41 +235,31 @@ class DbTest extends TestCase
 		$this->assertSame(2, Db::count('users'));
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testCount()
 	{
 		$this->assertSame(3, Db::count('users'));
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testMin()
 	{
 		$this->assertSame(1.0, Db::min('users', 'id'));
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testMax()
 	{
 		$this->assertSame(3.0, Db::max('users', 'id'));
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testAvg()
 	{
 		$this->assertSame(2.0, Db::avg('users', 'id'));
 	}
 
-	/**
-	 * @coversNothing
-	 */
+	#[CoversNothing]
 	public function testSum()
 	{
 		$this->assertSame(6.0, Db::sum('users', 'id'));

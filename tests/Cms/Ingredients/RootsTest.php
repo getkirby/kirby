@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class RootsTest extends TestCase
 {
 	protected string|null $indexRoot;
@@ -55,9 +57,7 @@ class RootsTest extends TestCase
 		return static::rootProvider(realpath(__DIR__ . '/../../../../'));
 	}
 
-	/**
-	 * @dataProvider defaultRootProvider
-	 */
+	#[DataProvider('defaultRootProvider')]
 	public function testDefaultRoot($root, $method)
 	{
 		// fake the default behavior for this test
@@ -73,9 +73,7 @@ class RootsTest extends TestCase
 		return static::rootProvider('/var/www/getkirby.com');
 	}
 
-	/**
-	 * @dataProvider customIndexRootProvider
-	 */
+	#[DataProvider('customIndexRootProvider')]
 	public function testCustomIndexRoot($root, $method)
 	{
 		$app = new App([
@@ -103,10 +101,8 @@ class RootsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider customRootProvider
-	 */
-	public function testCustomRoot($root, $method)
+	#[DataProvider('customRootProvider')]
+	public function testCustomRoot(string $root, string $method)
 	{
 		// public directory setup
 		$base   = '/var/www/getkirby.com';
