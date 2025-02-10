@@ -10,8 +10,8 @@
 		<template v-if="!disabled" #options>
 			<k-button-group layout="collapsed">
 				<k-button
+					v-if="more"
 					:autofocus="autofocus"
-					:disabled="!more"
 					:responsive="true"
 					:text="$t('add')"
 					icon="add"
@@ -30,18 +30,18 @@
 			</k-button-group>
 		</template>
 
-		<!-- Empty State -->
-		<k-empty v-if="entries.length === 0" icon="list-bullet" @click="add()">
-			{{ empty ?? $t("field.entries.empty") }}
-		</k-empty>
-
-		<!-- Entries -->
 		<k-input-validator
-			v-else
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(entries)"
 		>
+			<!-- Empty State -->
+			<k-empty v-if="entries.length === 0" icon="list-bullet" @click="add()">
+				{{ empty ?? $t("field.entries.empty") }}
+			</k-empty>
+
+			<!-- Entries -->
 			<k-draggable
+				v-else
 				v-bind="dragOptions"
 				class="k-entries-field-items"
 				@sort="save"
@@ -64,6 +64,7 @@
 					<component
 						:is="`k-${field.type}-field`"
 						:ref="'entry-' + index + '-input'"
+						:disabled="disabled"
 						:value="entry.value"
 						v-bind="field"
 						class="k-entries-field-item-input"
@@ -246,6 +247,8 @@ export default {
 				return;
 			}
 
+			value ??= this.$helper.field.form({ field: this.field })?.field;
+
 			const entry = {
 				id: this.$helper.uuid(),
 				value: value ?? ""
@@ -371,13 +374,15 @@ export default {
 }
 
 .k-entries-field-item {
-	--input-color-border: transparent;
-
 	height: var(--input-height);
 	display: flex;
 	align-items: center;
 	background: var(--input-color-back);
 	border-radius: var(--rounded);
+}
+
+.k-entries-field:not([data-disabled="true"]) .k-entries-field-item {
+	--input-color-border: transparent;
 	box-shadow: var(--shadow);
 }
 

@@ -239,10 +239,12 @@ class FilesSectionTest extends TestCase
 			'slug'  => 'test',
 			'files' => [
 				[
-					'filename' => 'a.jpg'
+					'filename' => 'a.jpg',
+					'content'  => ['uuid' => 'test-a']
 				],
 				[
-					'filename' => 'b.jpg'
+					'filename' => 'b.jpg',
+					'content'  => ['uuid' => 'test-b']
 				]
 			]
 		]);
@@ -254,7 +256,7 @@ class FilesSectionTest extends TestCase
 		]);
 
 		$data = $section->data();
-		$this->assertSame('(image: a.jpg)', $data[0]['dragText']);
+		$this->assertSame('(image: file://test-a)', $data[0]['dragText']);
 	}
 
 	public function testDragTextWithDifferentParent()

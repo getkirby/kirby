@@ -375,7 +375,7 @@ class App
 	 * automatically injected
 	 *
 	 * @return \Kirby\Toolkit\Collection|null
-	 * @todo 5.0 Add return type declaration
+	 * @todo 6.0 Add return type declaration
 	 */
 	public function collection(string $name, array $options = [])
 	{

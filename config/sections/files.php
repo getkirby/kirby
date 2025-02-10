@@ -107,16 +107,16 @@ return [
 		'data' => function () {
 			$data = [];
 
-			// the drag text needs to be absolute when the files come from
-			// a different parent model
-			$dragTextAbsolute = $this->model->is($this->parent) === false;
-
 			foreach ($this->modelsPaginated() as $file) {
 				$panel       = $file->panel();
 				$permissions = $file->permissions();
 
 				$item = [
-					'dragText'  => $panel->dragText('auto', $dragTextAbsolute),
+					'dragText'  => $panel->dragText(
+						// the drag text needs to be absolute
+						// when the files come from a different parent model
+						absolute: $this->model->is($this->parent) === false
+					),
 					'extension' => $file->extension(),
 					'filename'  => $file->filename(),
 					'id'        => $file->id(),

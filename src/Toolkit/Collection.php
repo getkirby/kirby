@@ -31,7 +31,7 @@ class Collection extends Iterator implements Stringable
 	 * Whether the collection keys should be
 	 * treated as case-sensitive
 	 *
-	 * @todo 5.0 Check if case-sensitive can become the
+	 * @todo 6.0 Check if case-sensitive can become the
 	 * default mode, see https://github.com/getkirby/kirby/pull/5635
 	 */
 	protected bool $caseSensitive = false;

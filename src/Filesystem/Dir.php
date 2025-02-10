@@ -140,8 +140,8 @@ class Dir
 	/**
 	 * Read the directory and all subdirectories
 	 *
-	 * @todo Remove support for `$ignore = null` in a major release
-	 * @param array|false|null $ignore Array of absolut file paths;
+	 * @todo Remove support for `$ignore = null` in v6
+	 * @param array|false|null $ignore Array of absolute file paths;
 	 *                                 `false` to disable `Dir::$ignore` list
 	 *                                 (passing null is deprecated)
 	 */

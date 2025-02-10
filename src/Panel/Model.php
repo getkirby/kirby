@@ -82,7 +82,7 @@ abstract class Model
 	 *
 	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
 	 */
-	public function dragTextType(string|null $type = null): string
+	public function dragTextType(string|null $type = 'auto'): string
 	{
 		$type ??= 'auto';
 
