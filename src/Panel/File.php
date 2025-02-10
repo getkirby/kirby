@@ -89,26 +89,23 @@ class File extends Model
 	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
 	 */
 	public function dragText(
-		string|null $type = null,
+		string|null $type = 'auto',
 		bool $absolute = false
 	): string {
 		$type = $this->dragTextType($type);
-		$url  = $this->model->filename();
 		$file = $this->model->type();
+		$url  = match ($type) {
+			'markdown' => $this->model->permalink(),
+			default    => $this->model->uuid()
+		};
 
-		// By default only the filename is added as relative URL.
-		// If an absolute URL is required, either use the permalink
-		// for markdown notation or the UUID for Kirbytext (since
-		// Kirbytags support can resolve UUIDs directly)
-		if ($absolute === true) {
-			$url = match ($type) {
-				'markdown' => $this->model->permalink(),
-				default    => $this->model->uuid()
-			};
+		// if UUIDs are disabled, fall back to the filename
+		// as relative link or the full absolute URL
+		$url ??= match ($absolute) {
+			false   => $this->model->filename(),
+			default => $this->model->url()
+		};
 
-			// if UUIDs are disabled, fall back to URL
-			$url ??= $this->model->url();
-		}
 
 		if ($callback = $this->dragTextFromCallback($type, $url)) {
 			return $callback;
@@ -383,7 +380,7 @@ class File extends Model
 
 		return [
 			...parent::pickerData($params),
-			'dragText' => $this->dragText('auto', $absolute ?? false),
+			'dragText' => $this->dragText('auto', absolute: $absolute ?? false),
 			'filename' => $name,
 			'id'	   => $id,
 			'type'     => $this->model->type(),
