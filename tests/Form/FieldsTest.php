@@ -20,7 +20,7 @@ class FieldsTest extends TestCase
 			'roots' => [
 				'index' => '/dev/null'
 			]
-		]);;
+		]);
 		$this->model = new Page(['slug' => 'test']);
 	}
 
