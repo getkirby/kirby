@@ -256,7 +256,6 @@ class PageCreateDialog
 	 */
 	public function model(): Page
 	{
-		// TODO: use actual in-memory page in v5
 		return $this->model ??= Page::factory([
 			'slug'     => '__new__',
 			'template' => $this->template,

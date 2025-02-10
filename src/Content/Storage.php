@@ -30,7 +30,6 @@ abstract class Storage
 
 	/**
 	 * Returns generator for all existing version-language combinations
-	 * @todo 5.0.0 Consider more descriptive name and maybe move to a different class
 	 *
 	 * @return Generator<\Kirby\Content\VersionId, \Kirby\Cms\Language>
 	 */

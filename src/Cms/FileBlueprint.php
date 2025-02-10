@@ -60,7 +60,7 @@ class FileBlueprint extends Blueprint
 	 * file upload or `*` if all MIME types are allowed
 	 *
 	 * @deprecated 4.2.0 Use `acceptAttribute` instead
-	 * @todo 5.0.0 Remove method
+	 * @todo 6.0.0 Remove method
 	 */
 	public function acceptMime(): string
 	{
