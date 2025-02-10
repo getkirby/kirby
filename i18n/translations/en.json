@@ -98,6 +98,9 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "There's an error on the \"{field}\" field in row {index}",
+
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
 	"error.field.converter.invalid": "Invalid converter \"{converter}\"",
@@ -109,6 +112,7 @@
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "A file with the name \"{filename}\" already exists",
 	"error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
 	"error.file.extension.invalid": "Invalid extension: {extension}",
@@ -171,6 +175,7 @@
 	"error.page.delete": "The page \"{slug}\" cannot be deleted",
 	"error.page.delete.confirm": "Please enter the page title to confirm",
 	"error.page.delete.hasChildren": "The page has subpages and cannot be deleted",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "You are not allowed to delete \"{slug}\"",
 	"error.page.draft.duplicate": "A page draft with the URL appendix \"{slug}\" already exists",
 	"error.page.duplicate": "A page with the URL appendix \"{slug}\" already exists",
@@ -347,6 +352,9 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.entries.empty": "No entries yet",
+
 	"field.files.empty": "No files selected yet",
 	"field.files.empty.single": "No file selected yet",
 
@@ -382,6 +390,7 @@
 	"file.sort": "Change position",
 
 	"files": "Files",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "No files yet",
 
 	"filter": "Filter",
@@ -591,6 +600,7 @@
 	"page.status.unlisted.description": "The page is only accessible via URL",
 
 	"pages": "Pages",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "No pages yet",
 	"pages.status.draft": "Drafts",
 	"pages.status.listed": "Published",
@@ -666,7 +676,9 @@
 	"system.issues.git": "The .git folder seems to be exposed",
 	"system.issues.https": "We recommend HTTPS for all your sites",
 	"system.issues.kirby": "The kirby folder seems to be exposed",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "The site folder seems to be exposed",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
 	"system.updateStatus": "Update status",
@@ -746,6 +758,7 @@
 	"user.changeLanguage": "Change language",
 	"user.changeName": "Rename this user",
 	"user.changePassword": "Change password",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "New password",
 	"user.changePassword.new.confirm": "Confirm the new password…",
 	"user.changeRole": "Change role",

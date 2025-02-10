@@ -54,18 +54,12 @@
 					@split="split(block, index, $event)"
 					@update="update(block, $event)"
 				/>
-
-				<!-- No blocks -->
-				<template v-if="blocks.length === 0" #footer>
-					<k-empty
-						class="k-blocks-empty"
-						icon="box"
-						@click="choose(blocks.length)"
-					>
-						{{ empty ?? $t("field.blocks.empty") }}
-					</k-empty>
-				</template>
 			</k-draggable>
+
+			<!-- No blocks -->
+			<k-empty class="k-blocks-empty" icon="box" @click="choose(blocks.length)">
+				{{ empty ?? $t("field.blocks.empty") }}
+			</k-empty>
 		</template>
 
 		<!-- No fieldsets -->
@@ -727,7 +721,7 @@ export default {
 .k-blocks {
 	border-radius: var(--rounded);
 }
-.k-blocks:not([data-empty="true"], [data-disabled="true"]) {
+.k-blocks:not(:has(> .k-blocks-list:empty), [data-disabled="true"]) {
 	background: var(--block-color-back);
 	box-shadow: var(--shadow);
 }
@@ -748,8 +742,12 @@ export default {
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
 }
-.k-blocks-list > .k-blocks-empty {
+
+.k-blocks > .k-blocks-empty {
 	display: flex;
 	align-items: center;
+}
+.k-blocks > .k-blocks-list:not(:empty) + .k-blocks-empty {
+	display: none;
 }
 </style>

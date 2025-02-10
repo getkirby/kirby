@@ -7,7 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Content\VersionId
+ * @coversDefaultClass \Kirby\Content\VersionId
  */
 class VersionIdTest extends TestCase
 {

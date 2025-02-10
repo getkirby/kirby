@@ -242,12 +242,26 @@ return [
 			$fields['key']['disabled'] = true;
 			$fields['value']['autofocus'] = true;
 
+			// shows info text when variable is an array
+			// TODO: 5.0: use entries field instead showing info text
+			$isVariableArray = is_array($variable->value()) === true;
+
+			if ($isVariableArray === true) {
+				$fields['value'] = [
+					'label' => I18n::translate('info'),
+					'type'  => 'info',
+					'text'  => 'You are using an array variable for this key. Please modify it in the language file in /site/languages',
+				];
+			}
+
 			return [
 				'component' => 'k-form-dialog',
-				'props' => [
-					'fields' => $fields,
-					'size'   => 'large',
-					'value'  => [
+				'props'     => [
+					'cancelButton' => $isVariableArray === false,
+					'fields'       => $fields,
+					'size'         => 'large',
+					'submitButton' => $isVariableArray === false,
+					'value'        => [
 						'key'   => $variable->key(),
 						'value' => $variable->value()
 					]

@@ -4,6 +4,7 @@ namespace Kirby\Panel\Areas;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
+use Kirby\Cms\User;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Panel\Panel;
@@ -129,9 +130,10 @@ abstract class AreaTestCase extends TestCase
 		$this->app([
 			'users' => [
 				[
-					'id'    => 'test',
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin',
+					'id'       => 'test',
+					'email'    => 'test@getkirby.com',
+					'role'     => 'admin',
+					'password' => User::hashPassword('12345678')
 				]
 			]
 		]);

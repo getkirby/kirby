@@ -211,7 +211,7 @@ class Lock
 		return [
 			'isLegacy' => $this->isLegacy(),
 			'isLocked' => $this->isLocked(),
-			'modified' => $this->modified('c'),
+			'modified' => $this->modified('c', 'date'),
 			'user'     => [
 				'id'    => $this->user?->id(),
 				'email' => $this->user?->email()

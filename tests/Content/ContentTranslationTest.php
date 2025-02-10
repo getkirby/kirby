@@ -7,7 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Content\ContentTranslation
+ * @coversDefaultClass \Kirby\Content\ContentTranslation
  */
 class ContentTranslationTest extends TestCase
 {

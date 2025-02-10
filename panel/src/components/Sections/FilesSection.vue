@@ -22,21 +22,29 @@ export default {
 			};
 		},
 		items() {
-			return this.data.map((file) => ({
-				...file,
-				column: this.column,
-				data: {
-					"data-id": file.id,
-					"data-template": file.template
-				},
-				options: this.$dropdown(file.link, {
-					query: {
-						view: "list",
-						delete: this.data.length > this.options.min
-					}
-				}),
-				sortable: file.permissions.sort && this.options.sortable
-			}));
+			return this.data.map((file) => {
+				const sortable =
+					file.permissions.sort && this.options.sortable && !this.isSelecting;
+				const deletable =
+					file.permissions.delete && this.data.length > this.options.min;
+
+				return {
+					...file,
+					column: this.column,
+					data: {
+						"data-id": file.id,
+						"data-template": file.template
+					},
+					options: this.$dropdown(file.link, {
+						query: {
+							view: "list",
+							delete: deletable
+						}
+					}),
+					selectable: this.isSelecting && deletable,
+					sortable: sortable
+				};
+			});
 		},
 		type() {
 			return "files";
@@ -55,11 +63,9 @@ export default {
 		}
 	},
 	mounted() {
-		this.$events.on("model.update", this.reload);
 		this.$events.on("file.sort", this.reload);
 	},
 	unmounted() {
-		this.$events.off("model.update", this.reload);
 		this.$events.off("file.sort", this.reload);
 	},
 	methods: {

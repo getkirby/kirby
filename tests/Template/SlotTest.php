@@ -6,7 +6,7 @@ use Kirby\Exception\LogicException;
 use ReflectionProperty;
 
 /**
- * @coversDefaultClass Kirby\Template\Slot
+ * @coversDefaultClass \Kirby\Template\Slot
  */
 class SlotTest extends TestCase
 {

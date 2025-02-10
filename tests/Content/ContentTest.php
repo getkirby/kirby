@@ -8,7 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Content\Content
+ * @coversDefaultClass \Kirby\Content\Content
  */
 class ContentTest extends TestCase
 {

@@ -219,19 +219,9 @@ class Assets
 	 */
 	public function importMaps(): array
 	{
-		$map = [
-			'vue' => match (true) {
-				// during dev mode, load the dev version of Vue
-				$this->isDev       => $this->url . '/node_modules/vue/dist/vue.esm-browser.js',
-				// when any plugin is in dev mode, also load the dev version
-				// of Vue  but from the dist folder, not node_modules
-				$this->isPluginDev => $this->url . '/js/vue.esm-browser.js',
-				// otherwise use the production version of Vue
-				default            => $this->url . '/js/vue.esm-browser.prod.js'
-			}
-		];
-
-		return array_filter($map);
+		return array_filter([
+			'vue' => $this->vue()
+		]);
 	}
 
 	/**
@@ -340,5 +330,29 @@ class Assets
 			'params' => null,
 			'query'  => null
 		])->toString(), '/');
+	}
+
+	/**
+	 * Get the correct Vue script URL depending on dev mode
+	 * and the enabled/disabled template compiler
+	 */
+	public function vue(): string
+	{
+		// during dev mode, load the dev version of Vue
+		if ($this->isDev === true) {
+			return $this->url . '/node_modules/vue/dist/vue.esm-browser.js';
+		}
+
+		// when any plugin is in dev mode, also load the dev version
+		// of Vue  but from the dist folder, not node_modules
+		if ($this->isPluginDev === true) {
+			return $this->url . '/js/vue.esm-browser.js';
+		}
+
+		if ($this->kirby->option('panel.vue.compiler', true) === true) {
+			return $this->url . '/js/vue.esm-browser.prod.js';
+		}
+
+		return $this->url . '/js/vue.runtime.esm-browser.prod.js';
 	}
 }

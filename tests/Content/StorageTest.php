@@ -9,7 +9,7 @@ use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
 
 /**
- * @coversDefaultClass Kirby\Content\Storage
+ * @coversDefaultClass \Kirby\Content\Storage
  * @covers ::__construct
  */
 class StorageTest extends TestCase

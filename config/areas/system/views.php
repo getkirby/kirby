@@ -12,6 +12,8 @@ return [
 			$system       = $kirby->system();
 			$updateStatus = $system->updateStatus();
 			$license      = $system->license();
+			$debugMode    = $kirby->option('debug', false) === true;
+			$isLocal      = $system->isLocal();
 
 			$environment = [
 				[
@@ -70,19 +72,52 @@ return [
 
 			$security = $updateStatus?->messages() ?? [];
 
-			if ($kirby->option('debug', false) === true) {
+			if ($isLocal === true) {
 				$security[] = [
-					'id'   => 'debug',
-					'text' => I18n::translate('system.issues.debug'),
-					'link' => 'https://getkirby.com/security/debug'
+					'id'    => 'local',
+					'icon'  => 'info',
+					'theme' => 'info',
+					'text'  => I18n::translate('system.issues.local')
 				];
 			}
 
-			if ($kirby->environment()->https() !== true) {
+			if ($debugMode === true) {
+				$security[] = [
+					'id'    => 'debug',
+					'icon'  => $isLocal ? 'info' : 'alert',
+					'theme' => $isLocal ? 'info' : 'negative',
+					'text'  => I18n::translate('system.issues.debug'),
+					'link'  => 'https://getkirby.com/security/debug'
+				];
+			}
+
+			if (
+				$isLocal === false &&
+				$kirby->environment()->https() !== true
+			) {
 				$security[] = [
 					'id'   => 'https',
 					'text' => I18n::translate('system.issues.https'),
 					'link' => 'https://getkirby.com/security/https'
+				];
+			}
+
+			if ($kirby->option('panel.vue.compiler', null) === null) {
+				$security[] = [
+					'id'    => 'vue-compiler',
+					'link'  => 'https://getkirby.com/security/vue-compiler',
+					'text'  => I18n::translate('system.issues.vue.compiler'),
+					'theme' => 'notice'
+				];
+			}
+
+			// sensitive URLs
+			if ($isLocal === false) {
+				$sensitive = [
+					'content' => $system->exposedFileUrl('content'),
+					'git'     => $system->exposedFileUrl('git'),
+					'kirby'   => $system->exposedFileUrl('kirby'),
+					'site'    => $system->exposedFileUrl('site')
 				];
 			}
 
@@ -92,16 +127,11 @@ return [
 					'buttons'     => fn () =>
 						ViewButtons::view('system')->render(),
 					'environment' => $environment,
-					'exceptions'  => $kirby->option('debug') === true ? $exceptions : [],
+					'exceptions'  => $debugMode ? $exceptions : [],
 					'info'        => $system->info(),
 					'plugins'     => $plugins,
 					'security'    => $security,
-					'urls'        => [
-						'content' => $system->exposedFileUrl('content'),
-						'git'     => $system->exposedFileUrl('git'),
-						'kirby'   => $system->exposedFileUrl('kirby'),
-						'site'    => $system->exposedFileUrl('site')
-					]
+					'urls'        => $sensitive ?? null
 				]
 			];
 		}

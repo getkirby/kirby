@@ -1,3 +1,5 @@
 <?php
 
-echo json_encode(['foo' => 'bar']);
+return function () {
+	return ['another' => 'json'];
+};

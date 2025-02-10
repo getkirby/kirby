@@ -5,7 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\Language;
 
 /**
- * @coversDefaultClass Kirby\Content\MemoryStorage
+ * @coversDefaultClass \Kirby\Content\MemoryStorage
  * @covers ::__construct
  * @covers ::cacheId
  */

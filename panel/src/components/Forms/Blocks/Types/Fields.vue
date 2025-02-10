@@ -86,6 +86,7 @@ export default {
 
 .k-block-type-fields-header {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 }
 .k-block-type-fields-header .k-block-title {
@@ -103,5 +104,8 @@ export default {
 .k-block-container-type-fields[data-hidden="true"]
 	:where(.k-drawer-tabs, .k-block-type-fields-form) {
 	display: none;
+}
+.k-block-type-fields-header .k-drawer-tabs.k-tabs .k-tabs-button {
+	bottom: -2px;
 }
 </style>

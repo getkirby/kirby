@@ -3,7 +3,7 @@
         'name' => 'getkirby/cms',
         'pretty_version' => '5.0.0-beta.2',
         'version' => '5.0.0.0-beta2',
-        'reference' => NULL,
+        'reference' => null,
         'type' => 'kirby-cms',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -49,7 +49,7 @@
         'getkirby/cms' => array(
             'pretty_version' => '5.0.0-beta.2',
             'version' => '5.0.0.0-beta2',
-            'reference' => NULL,
+            'reference' => null,
             'type' => 'kirby-cms',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

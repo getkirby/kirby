@@ -15,6 +15,7 @@
 				items,
 				layout,
 				link,
+				selecting,
 				size,
 				sortable,
 				theme
@@ -22,6 +23,7 @@
 			@change="$emit('change', $event)"
 			@item="$emit('item', $event)"
 			@option="onOption"
+			@select="onSelect"
 			@sort="$emit('sort', $event)"
 		>
 			<template #options="{ item, index }">
@@ -130,6 +132,9 @@ export default {
 		onOption(...args) {
 			this.$emit("action", ...args);
 			this.$emit("option", ...args);
+		},
+		onSelect(...args) {
+			this.$emit("select", ...args);
 		}
 	}
 };

@@ -4,7 +4,11 @@
 		:class="['k-table', $attrs.class]"
 		:style="$attrs.style"
 	>
-		<table :data-disabled="disabled" :data-indexed="hasIndexColumn">
+		<table
+			:data-disabled="disabled"
+			:data-indexed="hasIndexColumn"
+			:data-selecting="selecting"
+		>
 			<!-- Header row -->
 			<thead>
 				<tr>
@@ -72,8 +76,11 @@
 						v-for="(row, rowIndex) in values"
 						:key="row.id ?? row._id ?? row.value ?? JSON.stringify(row)"
 						:class="{
-							'k-table-sortable-row': sortable && row.sortable !== false
+							'k-table-sortable-row': rowIsSortable(row)
 						}"
+						:data-selecting="selecting"
+						:data-selectable="rowIsSelectable(row)"
+						:data-sortable="rowIsSortable(row)"
 					>
 						<!-- Index & drag handle -->
 						<td
@@ -92,7 +99,7 @@
 							</slot>
 
 							<k-sort-handle
-								v-if="sortable && row.sortable !== false"
+								v-if="rowIsSortable(row)"
 								class="k-table-sort-handle"
 							/>
 						</td>
@@ -132,13 +139,25 @@
 							data-mobile="true"
 							class="k-table-options-column"
 						>
-							<slot name="options" v-bind="{ row, rowIndex }">
-								<k-options-dropdown
-									:options="row.options ?? options"
-									:text="(row.options ?? options).length > 1"
-									@option="onOption($event, row, rowIndex)"
-								/>
-							</slot>
+							<template v-if="selecting">
+								<label class="k-table-select-checkbox">
+									<input
+										:disabled="row.selectable === false"
+										type="checkbox"
+										@change="$emit('select', row, rowIndex)"
+									/>
+								</label>
+							</template>
+
+							<template v-else>
+								<slot name="options" v-bind="{ row, rowIndex }">
+									<k-options-dropdown
+										:options="row.options ?? options"
+										:text="(row.options ?? options).length > 1"
+										@option="onOption($event, row, rowIndex)"
+									/>
+								</slot>
+							</template>
 						</td>
 					</tr>
 				</template>
@@ -209,6 +228,10 @@ export default {
 		 */
 		pagination: [Object, Boolean],
 		/**
+		 * Whether the table is in select mode
+		 */
+		selecting: Boolean,
+		/**
 		 * Whether table is sortable
 		 */
 		sortable: Boolean
@@ -269,6 +292,7 @@ export default {
 		 */
 		hasOptions() {
 			return (
+				this.selecting ||
 				this.$slots.options ||
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
@@ -348,6 +372,16 @@ export default {
 			this.$emit("input", this.values);
 			this.$emit("sort", this.values);
 		},
+		rowIsSelectable(row) {
+			return this.selecting === true && row.selectable !== false;
+		},
+		rowIsSortable(row) {
+			return (
+				this.sortable === true &&
+				this.selecting === false &&
+				row.sortable !== false
+			);
+		},
 		/**
 		 * Returns width styling based on column fraction
 		 * @param {string} fraction
@@ -371,7 +405,7 @@ export default {
 :root {
 	--table-cell-padding: var(--spacing-3);
 	--table-color-back: light-dark(var(--color-white), var(--color-gray-850));
-	--table-color-border: var(--panel-color-back);
+	--table-color-border: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.375));
 	--table-color-hover: light-dark(var(--color-gray-100), rgba(0, 0, 0, 0.1));
 	--table-color-th-back: light-dark(
 		var(--color-gray-100),
@@ -457,6 +491,9 @@ export default {
 }
 
 /* Table Body */
+.k-table tbody tr td {
+	background: var(--table-color-back);
+}
 .k-table tbody tr:hover td {
 	background: var(--table-color-hover);
 }
@@ -498,17 +535,32 @@ export default {
 	color: var(--color-text-dimmed);
 	line-height: 1.1em;
 }
+.k-table .k-table-index-column:has(.k-table-index-checkbox) {
+	padding: 0;
+}
 
 /* Table Index with sort handle */
-.k-table .k-table-index-column .k-sort-handle {
+.k-table tr[data-sortable="true"] .k-table-index-column .k-sort-handle {
 	--button-width: 100%;
 	display: none;
 }
-.k-table tr.k-table-sortable-row:hover .k-table-index-column .k-table-index {
+.k-table tr[data-sortable="true"]:hover .k-table-index-column .k-table-index {
 	display: none;
 }
-.k-table tr.k-table-sortable-row:hover .k-table-index-column .k-sort-handle {
+.k-table tr[data-sortable="true"]:hover .k-table-index-column .k-sort-handle {
 	display: flex;
+}
+
+/* Selectable rows */
+.k-table
+	tr[data-selectable="true"]:has(.k-table-select-checkbox input:checked) {
+	--table-color-back: light-dark(var(--color-blue-250), var(--color-blue-800));
+	--table-color-hover: var(--table-color-back);
+}
+.k-table .k-table-select-checkbox {
+	height: 100%;
+	display: grid;
+	place-items: center;
 }
 
 /* Table Options */

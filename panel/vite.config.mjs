@@ -23,6 +23,8 @@ function createAliases(proxy) {
  */
 function createServer(proxy) {
 	return {
+		allowedHosts: [proxy.target.substring(8)],
+		cors: { origin: proxy.target },
 		proxy: {
 			"/api": proxy,
 			"/env": proxy,
@@ -74,6 +76,10 @@ function createPlugins(mode) {
 					},
 					{
 						src: "node_modules/vue/dist/vue.esm-browser.prod.js",
+						dest: "js"
+					},
+					{
+						src: "node_modules/vue/dist/vue.runtime.esm-browser.prod.js",
 						dest: "js"
 					}
 				]
