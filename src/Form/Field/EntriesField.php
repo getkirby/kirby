@@ -147,15 +147,29 @@ class EntriesField extends FieldClass
 	public function validations(): array
 	{
 		return [
-			'min',
-			'max',
-			'entries' => function ($values) {
-				if (empty($values) === true) {
-					return true;
+			'entries' => function ($value) {
+				if ($this->min && count($value) < $this->min) {
+					throw new InvalidArgumentException(
+						key: match ($this->min) {
+							1       => 'entries.min.singular',
+							default => 'entries.min.plural'
+						},
+						data: ['min' => $this->min]
+					);
 				}
 
-				foreach ($values as $index => $value) {
-					$form = $this->form([$value]);
+				if ($this->max && count($value) > $this->max) {
+					throw new InvalidArgumentException(
+						key: match ($this->max) {
+							1       => 'entries.max.singular',
+							default => 'entries.max.plural'
+						},
+						data: ['max' => $this->max]
+					);
+				}
+
+				foreach ($value as $index => $val) {
+					$form = $this->form([$val]);
 
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();

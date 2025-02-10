@@ -128,6 +128,32 @@ class EntriesFieldTest extends TestCase
 	public function testMax()
 	{
 		$field = $this->field('entries', [
+			'max'   => 3,
+			'value' => [],
+		]);
+
+		$this->assertSame(3, $field->max());
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMaxValid()
+	{
+		$field = $this->field('entries', [
+			'max'   => 3,
+			'value' => [
+				'https://getkirby.com',
+				'https://forum.getkirby.com',
+				'https://plugins.getkirby.com',
+			],
+		]);
+
+		$this->assertSame(3, $field->max());
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMaxInvalid()
+	{
+		$field = $this->field('entries', [
 			'max'   => 1,
 			'value' => [
 				'https://getkirby.com',
@@ -138,21 +164,50 @@ class EntriesFieldTest extends TestCase
 
 		$this->assertSame(1, $field->max());
 		$this->assertFalse($field->isValid());
-		$this->assertSame($field->errors()['max'], 'Please enter a value equal to or lower than 1');
+		$this->assertSame($field->errors()['entries'], 'You must not add more than one entry');
 	}
 
 	public function testMin()
 	{
 		$field = $this->field('entries', [
 			'min'   => 3,
-			'value' => [
-				'https://getkirby.com'
-			],
+			'value' => '[]'
 		]);
 
 		$this->assertSame(3, $field->min());
+		$this->assertTrue($field->isRequired());
 		$this->assertFalse($field->isValid());
-		$this->assertSame($field->errors()['min'], 'Please enter a value equal to or greater than 3');
+		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
+	}
+
+	public function testMinValid()
+	{
+		$field = $this->field('entries', [
+			'min'   => 2,
+			'value' => [
+				'https://getkirby.com',
+				'https://forum.getkirby.com'
+			]
+		]);
+
+		$this->assertSame(2, $field->min());
+		$this->assertTrue($field->isRequired());
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMinInvalid()
+	{
+		$field = $this->field('entries', [
+			'min'   => 3,
+			'value' => [
+				'https://getkirby.com'
+			]
+		]);
+
+		$this->assertSame(3, $field->min());
+		$this->assertTrue($field->isRequired());
+		$this->assertFalse($field->isValid());
+		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
 	}
 
 	public function testRequiredValid()
@@ -165,6 +220,7 @@ class EntriesFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->isValid());
+		$this->assertSame(1, $field->min());
 	}
 
 	public function testRequiredInvalid()
@@ -174,6 +230,7 @@ class EntriesFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
+		$this->assertSame(1, $field->min());
 	}
 
 	public static function supportsProvider(): array
