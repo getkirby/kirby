@@ -16,7 +16,11 @@ class FieldsTest extends TestCase
 
 	public function setUp(): void
 	{
-		$this->app   = App::instance();
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);;
 		$this->model = new Page(['slug' => 'test']);
 	}
 
