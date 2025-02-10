@@ -11,6 +11,7 @@ use Kirby\Toolkit\Str;
 
 /**
  * @coversDefaultClass \Kirby\Panel\Assets
+ * @covers ::__construct
  */
 class AssetsTest extends TestCase
 {

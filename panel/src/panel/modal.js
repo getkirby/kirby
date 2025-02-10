@@ -177,10 +177,10 @@ export default (panel, key, defaults) => {
 			}
 
 			// get details from the response object.
-			// I.e. { $dialog: { ... } }
+			// i.e. { dialog: { ... } }
 			// pass it forward to the success handler
 			// to react on elements in the response
-			return this.success(response["$" + this.key()] ?? {});
+			return this.success(response[this.key()] ?? {});
 		},
 
 		/**
