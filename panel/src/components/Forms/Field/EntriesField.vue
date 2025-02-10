@@ -10,8 +10,8 @@
 		<template v-if="!disabled" #options>
 			<k-button-group layout="collapsed">
 				<k-button
+					v-if="more"
 					:autofocus="autofocus"
-					:disabled="!more"
 					:responsive="true"
 					:text="$t('add')"
 					icon="add"
