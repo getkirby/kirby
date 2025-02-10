@@ -55,7 +55,7 @@ if (Helpers::hasOverride('collection') === false) { // @codeCoverageIgnore
 	 * Returns the result of a collection by name
 	 *
 	 * @return \Kirby\Toolkit\Collection|null
-	 * @todo 5.0 Add return type declaration
+	 * @todo 6.0 Add return type declaration
 	 */
 	function collection(string $name, array $options = [])
 	{

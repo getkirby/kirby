@@ -513,11 +513,11 @@ class Page extends ModelWithContent
 
 	/**
 	 * Checks if the page is accessible to the current user
-	 * This permission depends on the `read` option until v5
+	 * This permission depends on the `read` option until v6
 	 */
 	public function isAccessible(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v5
+		// TODO: remove this check when `read` option deprecated in v6
 		if ($this->isReadable() === false) {
 			return false;
 		}
@@ -675,11 +675,11 @@ class Page extends ModelWithContent
 
 	/**
 	 * Check if the page can be listable by the current user
-	 * This permission depends on the `read` option until v5
+	 * This permission depends on the `read` option until v6
 	 */
 	public function isListable(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v5
+		// TODO: remove this check when `read` option deprecated in v6
 		if ($this->isReadable() === false) {
 			return false;
 		}
@@ -738,7 +738,7 @@ class Page extends ModelWithContent
 
 	/**
 	 * Check if the page can be read by the current user
-	 * @todo Deprecate `read` option in v5 and make the necessary changes for `access` and `list` options.
+	 * @todo Deprecate `read` option in v6 and make the necessary changes for `access` and `list` options.
 	 */
 	public function isReadable(): bool
 	{
