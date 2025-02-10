@@ -374,13 +374,15 @@ export default {
 }
 
 .k-entries-field-item {
-	--input-color-border: transparent;
-
 	height: var(--input-height);
 	display: flex;
 	align-items: center;
 	background: var(--input-color-back);
 	border-radius: var(--rounded);
+}
+
+.k-entries-field:not([data-disabled="true"]) .k-entries-field-item {
+	--input-color-border: transparent;
 	box-shadow: var(--shadow);
 }
 
