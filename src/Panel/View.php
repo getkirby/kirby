@@ -262,7 +262,7 @@ class View
 		return [
 			'$config' => fn () => [
 				'api'         => [
-					'methodOverwrite' => $kirby->option('api.methodOverwrite', true)
+					'methodOverride' => $kirby->option('api.methodOverride', true)
 				],
 				'debug'       => $kirby->option('debug', false),
 				'kirbytext'   => $kirby->option('panel.kirbytext', true),
