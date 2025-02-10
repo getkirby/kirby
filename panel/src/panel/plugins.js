@@ -151,8 +151,8 @@ export const resolveComponentMixins = (component) => {
 				// component inherits from a parent component:
 				// make sure to only include the mixin if the parent component
 				// hasn't already included it (to avoid duplicate mixins)
-				if (options.extends) {
-					const inherited = new options.extends().$options.mixins ?? [];
+				if (component.extends) {
+					const inherited = new component.extends().$options.mixins ?? [];
 
 					if (inherited.includes(mixins[mixin]) === true) {
 						return;
