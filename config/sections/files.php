@@ -112,7 +112,11 @@ return [
 				$permissions = $file->permissions();
 
 				$item = [
-					'dragText'  => $panel->dragText('auto'),
+					'dragText'  => $panel->dragText(
+						// the drag text needs to be absolute
+						// when the files come from a different parent model
+						absolute: $this->model->is($this->parent) === false
+					),
 					'extension' => $file->extension(),
 					'filename'  => $file->filename(),
 					'id'        => $file->id(),

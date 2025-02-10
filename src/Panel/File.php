@@ -89,7 +89,8 @@ class File extends Model
 	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
 	 */
 	public function dragText(
-		string|null $type = null
+		string|null $type = 'auto',
+		bool $absolute = false
 	): string {
 		$type = $this->dragTextType($type);
 		$file = $this->model->type();
@@ -98,8 +99,13 @@ class File extends Model
 			default    => $this->model->uuid()
 		};
 
-		// if UUIDs are disabled, fall back to URL
-		$url ??= $this->model->url();
+		// if UUIDs are disabled, fall back to the filename
+		// as relative link or the full absolute URL
+		$url ??= match ($absolute) {
+			false   => $this->model->filename(),
+			default => $this->model->url()
+		};
+
 
 		if ($callback = $this->dragTextFromCallback($type, $url)) {
 			return $callback;
@@ -374,7 +380,7 @@ class File extends Model
 
 		return [
 			...parent::pickerData($params),
-			'dragText' => $this->dragText('auto'),
+			'dragText' => $this->dragText('auto', absolute: $absolute ?? false),
 			'filename' => $name,
 			'id'	   => $id,
 			'type'     => $this->model->type(),

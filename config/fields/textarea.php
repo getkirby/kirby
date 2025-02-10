@@ -103,9 +103,11 @@ return [
 					$field   = $this->field();
 					$uploads = $field->uploads();
 
-					return $this->field()->upload($this, $uploads, fn ($file) => [
+					return $this->field()->upload($this, $uploads, fn ($file, $parent) => [
 						'filename' => $file->filename(),
-						'dragText' => $file->panel()->dragText('auto'),
+						'dragText' => $file->panel()->dragText(
+							absolute: $field->model()->is($parent) === false
+						),
 					]);
 				}
 			]
