@@ -135,7 +135,10 @@ trait FileActions
 				$template = null;
 			}
 
-			$file = $file->update(['template' => $template]);
+			$file = $file->update(
+				['template' => $template],
+				'default'
+			);
 
 			// resize the file if configured by new blueprint
 			$create = $file->blueprint()->create();
