@@ -291,13 +291,23 @@ export default {
 		focus(index, on = "input") {
 			this.$refs["entry-" + index + "-" + on]?.[0]?.focus?.();
 		},
+		isInputEvent() {
+			const focused = document.querySelector(":focus");
+			return focused?.matches("input");
+		},
 		onInput(index, value) {
 			this.entries[index].value = value;
 			this.save();
 		},
-		onPaste(input) {
+		onPaste(event) {
+			// never paste entries when the focus is in an input element
+			if (this.isInputEvent(event) === true) {
+				return false;
+			}
+
+			let input = event;
 			if (input instanceof ClipboardEvent) {
-				input = this.$helper.clipboard.read(input, true);
+				input = this.$helper.clipboard.read(event, true);
 			}
 
 			const entries = input
