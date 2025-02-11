@@ -7,6 +7,8 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Form;
+use Kirby\Image\Darkroom;
+use Kirby\Image\StripExif;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
 
@@ -266,6 +268,21 @@ trait FileActions
 
 		// inject the content
 		$file = $file->clone(['content' => $form->strings(true)]);
+
+		// strip EXIF data if configured
+		$stripExif = $file->blueprint()->stripExif();
+
+		if ($stripExif === true) {
+			// create a new darkroom instance
+			$darkroom = Darkroom::factory(
+				App::instance()->option('thumbs.driver', 'gd')
+			);
+
+			// only strip EXIF data if the driver supports it
+			if ($darkroom instanceof StripExif) {
+				$darkroom::stripExif($upload->root());
+			}
+		}
 
 		// if the format is different from the original,
 		// we need to already rename it so that the correct file rules

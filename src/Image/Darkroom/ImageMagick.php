@@ -3,9 +3,11 @@
 namespace Kirby\Image\Darkroom;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
+use Kirby\Image\StripExif;
 
 /**
  * ImageMagick
@@ -16,7 +18,7 @@ use Kirby\Image\Focus;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class ImageMagick extends Darkroom
+class ImageMagick extends Darkroom implements StripExif
 {
 	/**
 	 * Activates imagemagick's auto-orient feature unless
@@ -242,5 +244,59 @@ class ImageMagick extends Darkroom
 		}
 
 		return '';
+	}
+
+	public static function stripExif(string $file): void
+	{
+		// get the path to the imagemagick convert binary
+		$bin = App::instance()->option('thumbs.bin', 'convert');
+
+		// check if the file has an ICC profile
+		$command = 'identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null';
+		exec($command, $output);
+		$hasProfile = empty($output) === false;
+
+		// keep the ICC profile if it exists
+		if ($hasProfile) {
+			// keep the ICC profile
+			$profile = $file . '.icc';
+			$command = [
+				$bin,
+				escapeshellarg($file),
+				$profile,
+				'2>/dev/null'
+			];
+			exec(implode(' ', $command), $output, $return);
+
+			// strip all metadata with applying the ICC profile
+			$command = [
+				$bin,
+				escapeshellarg($file),
+				'-strip -profile',
+				$profile,
+				escapeshellarg($file),
+				'2>/dev/null'
+			];
+			exec(implode(' ', $command), $output, $return);
+
+			F::remove($profile);
+		} else {
+			// strip all metadata
+			$command = [
+				$bin,
+				escapeshellarg($file),
+				'-strip',
+				escapeshellarg($file),
+				'2>/dev/null'
+			];
+			exec(implode(' ', $command), $output, $return);
+		}
+
+		// log broken command
+		if ($return !== 0) {
+			throw new Exception(
+				'The imagemagick convert command could not be executed: ' . implode(' ', $command)
+			);
+		}
 	}
 }
