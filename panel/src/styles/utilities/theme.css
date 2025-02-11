@@ -127,7 +127,8 @@
 	--theme-color-s: var(--color-gray-s);
 	--theme-color-boost: 10%;
 	--theme-color-icon: var(--color-gray-600);
-	--theme-color-text: var(--color-black);
+	--theme-color-text: var(--color-text);
+	--theme-color-text-highlight: var(--theme-color-text);
 }
 
 [data-theme^="white"],
