@@ -125,15 +125,16 @@
 [data-theme^="passive"] {
 	--theme-color-h: var(--color-gray-h);
 	--theme-color-s: var(--color-gray-s);
+	--theme-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
 	--theme-color-boost: 10%;
 	--theme-color-icon: var(--color-gray-600);
-	--theme-color-text: var(--color-black);
+	--theme-color-text: var(--color-text);
+	--theme-color-text-highlight: var(--theme-color-text);
 }
 
 [data-theme^="white"],
 [data-theme^="text"] {
 	--theme-color-back: light-dark(var(--color-white), var(--color-gray-850));
-	--theme-color-icon: var(--color-gray-800);
 	--theme-color-text: var(--color-text);
 	--theme-color-text-highlight: var(--theme-color-text);
 	--color-h: var(--color-text);
