@@ -32,18 +32,6 @@ return [
 		}
 	],
 	[
-		'pattern' => 'system/method-test',
-		'method'  => 'PATCH',
-		'action'  => function () {
-			return [
-				'status' => match ($this->kirby()->request()->method()) {
-					'PATCH' => 'ok',
-					default => 'fail'
-				}
-			];
-		}
-	],
-	[
 		'pattern' => 'system/register',
 		'method'  => 'POST',
 		'action'  => function () {

@@ -23,7 +23,7 @@ export default (panel) => {
 	const api = {
 		csrf: panel.system.csrf,
 		endpoint: rtrim(panel.urls.api, "/"),
-		methodOverwrite: panel.config.api?.methodOverwrite ?? false,
+		methodOverride: panel.config.api?.methodOverride ?? false,
 		ping: null,
 		requests: [],
 		running: 0
