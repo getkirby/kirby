@@ -204,6 +204,7 @@ return array(
     'Kirby\\Form\\Field' => $baseDir . '/src/Form/Field.php',
     'Kirby\\Form\\FieldClass' => $baseDir . '/src/Form/FieldClass.php',
     'Kirby\\Form\\Field\\BlocksField' => $baseDir . '/src/Form/Field/BlocksField.php',
+    'Kirby\\Form\\Field\\EntriesField' => $baseDir . '/src/Form/Field/EntriesField.php',
     'Kirby\\Form\\Field\\LayoutField' => $baseDir . '/src/Form/Field/LayoutField.php',
     'Kirby\\Form\\Fields' => $baseDir . '/src/Form/Fields.php',
     'Kirby\\Form\\Form' => $baseDir . '/src/Form/Form.php',

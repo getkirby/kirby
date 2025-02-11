@@ -325,6 +325,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Form\\Field' => __DIR__ . '/../..' . '/src/Form/Field.php',
         'Kirby\\Form\\FieldClass' => __DIR__ . '/../..' . '/src/Form/FieldClass.php',
         'Kirby\\Form\\Field\\BlocksField' => __DIR__ . '/../..' . '/src/Form/Field/BlocksField.php',
+        'Kirby\\Form\\Field\\EntriesField' => __DIR__ . '/../..' . '/src/Form/Field/EntriesField.php',
         'Kirby\\Form\\Field\\LayoutField' => __DIR__ . '/../..' . '/src/Form/Field/LayoutField.php',
         'Kirby\\Form\\Fields' => __DIR__ . '/../..' . '/src/Form/Fields.php',
         'Kirby\\Form\\Form' => __DIR__ . '/../..' . '/src/Form/Form.php',
