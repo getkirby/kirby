@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\MemoryStorage;
+use Kirby\Content\VersionCache;
 use Kirby\Content\VersionId;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
@@ -118,6 +119,10 @@ trait PageActions
 						message: 'The page directory cannot be moved'
 					);
 				}
+
+				// hard reset for the version cache
+				// to avoid broken/overlapping page references
+				VersionCache::$cache = [];
 
 				// remove from the siblings
 				static::updateParentCollections($oldPage, 'remove');
