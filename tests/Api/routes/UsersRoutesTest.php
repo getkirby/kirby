@@ -1,15 +1,18 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
+use Kirby\Cms\App;
+use Kirby\Cms\Blueprint;
+use Kirby\Cms\Section;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
 use Kirby\TestCase;
 
-class AccountRoutesTest extends TestCase
+class UsersRoutesTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.AccountRoutes';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.UsersRoutes';
 
 	public function setUp(): void
 	{
@@ -32,39 +35,39 @@ class AccountRoutesTest extends TestCase
 			],
 			'users' => [
 				[
-					'email' => 'test@getkirby.com',
+					'name'  => 'Bastian',
+					'email' => 'admin@getkirby.com',
 					'role'  => 'admin'
 				],
 				[
+					'name'  => 'Sonja',
 					'email' => 'editor@getkirby.com',
 					'role'  => 'admin'
 				]
 			]
 		]);
 
-		$this->app->impersonate('test@getkirby.com');
-		Dir::make(static::TMP);
+		$this->app->impersonate('kirby');
 	}
 
 	public function tearDown(): void
 	{
-		$this->app->session()->destroy();
+		App::destroy();
 		Field::$types = [];
 		Section::$types = [];
 		Dir::remove(static::TMP);
-		App::destroy();
 	}
 
 	public function testAvatar()
 	{
 		// create an avatar for the user
-		$this->app->user()->createFile([
+		$this->app->user('admin@getkirby.com')->createFile([
 			'filename' => 'profile.jpg',
 			'source'   => static::FIXTURES . '/avatar.jpg',
 			'template' => 'avatar',
 		]);
 
-		$response = $this->app->api()->call('account/avatar');
+		$response = $this->app->api()->call('users/admin@getkirby.com/avatar');
 
 		$this->assertSame('profile.jpg', $response['data']['filename']);
 	}
@@ -72,13 +75,13 @@ class AccountRoutesTest extends TestCase
 	public function testAvatarDelete()
 	{
 		// create an avatar for the user
-		$this->app->user()->createFile([
+		$this->app->user('admin@getkirby.com')->createFile([
 			'filename' => 'profile.jpg',
 			'source'   => static::FIXTURES . '/avatar.jpg',
 			'template' => 'avatar',
 		]);
 
-		$response = $this->app->api()->call('account/avatar', 'DELETE');
+		$response = $this->app->api()->call('users/admin@getkirby.com/avatar', 'DELETE');
 
 		$this->assertTrue($response);
 	}
@@ -94,9 +97,9 @@ class AccountRoutesTest extends TestCase
 			]
 		]);
 
-		$app->impersonate('test@getkirby.com');
+		$app->impersonate('kirby');
 
-		$response = $app->api()->call('account/blueprint');
+		$response = $app->api()->call('users/admin@getkirby.com/blueprint');
 
 		$this->assertSame(200, $response['code']);
 		$this->assertSame('Test', $response['data']['title']);
@@ -128,18 +131,35 @@ class AccountRoutesTest extends TestCase
 			]
 		]);
 
-		$app->impersonate('test@getkirby.com');
+		$app->impersonate('kirby');
 
-		$response = $app->api()->call('account/blueprints');
+		$response = $app->api()->call('users/admin@getkirby.com/blueprints');
 
 		$this->assertCount(2, $response);
 		$this->assertSame('Foo', $response[0]['title']);
 		$this->assertSame('Bar', $response[1]['title']);
 	}
 
+	public function testCreate()
+	{
+		$app = $this->app;
+
+		$response = $app->api()->call('users', 'POST', [
+			'body' => [
+				'email' => 'test@getkirby.com',
+				'role'  => 'admin'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertSame('model', $response['type']);
+		$this->assertSame('admin', $response['data']['role']['name']);
+		$this->assertSame('test@getkirby.com', $response['data']['username']);
+	}
+
 	public function testChangeEmail()
 	{
-		$response = $this->app->api()->call('account/email', 'PATCH', [
+		$response = $this->app->api()->call('users/admin@getkirby.com/email', 'PATCH', [
 			'body' => [
 				'email' => 'admin@getkirby.de'
 			]
@@ -151,7 +171,7 @@ class AccountRoutesTest extends TestCase
 
 	public function testChangeLanguage()
 	{
-		$response = $this->app->api()->call('account/language', 'PATCH', [
+		$response = $this->app->api()->call('users/admin@getkirby.com/language', 'PATCH', [
 			'body' => [
 				'language' => 'de'
 			]
@@ -163,7 +183,7 @@ class AccountRoutesTest extends TestCase
 
 	public function testChangeName()
 	{
-		$response = $this->app->api()->call('account/name', 'PATCH', [
+		$response = $this->app->api()->call('users/admin@getkirby.com/name', 'PATCH', [
 			'body' => [
 				'name' => 'Test user'
 			]
@@ -175,7 +195,9 @@ class AccountRoutesTest extends TestCase
 
 	public function testChangePassword()
 	{
-		$response = $this->app->api()->call('account/password', 'PATCH', [
+		$app = $this->app;
+
+		$response = $app->api()->call('users/admin@getkirby.com/password', 'PATCH', [
 			'body' => [
 				'password' => 'super-secure-new-password'
 			]
@@ -186,7 +208,7 @@ class AccountRoutesTest extends TestCase
 
 	public function testChangeRole()
 	{
-		$response = $this->app->api()->call('account/role', 'PATCH', [
+		$response = $this->app->api()->call('users/editor@getkirby.com/role', 'PATCH', [
 			'body' => [
 				'role' => 'editor'
 			]
@@ -198,7 +220,7 @@ class AccountRoutesTest extends TestCase
 
 	public function testDelete()
 	{
-		$response = $this->app->api()->call('account', 'DELETE');
+		$response = $this->app->api()->call('users/admin@getkirby.com', 'DELETE');
 		$this->assertTrue($response);
 	}
 
@@ -230,13 +252,13 @@ class AccountRoutesTest extends TestCase
 			]
 		]);
 
-		$app->impersonate('test@getkirby.com');
+		$app->impersonate('kirby');
 
-		$response = $app->api()->call('account/fields/test');
+		$response = $app->api()->call('users/admin@getkirby.com/fields/test');
 
 		$this->assertSame('Test home route', $response);
 
-		$response = $app->api()->call('account/fields/test/nested');
+		$response = $app->api()->call('users/admin@getkirby.com/fields/test/nested');
 
 		$this->assertSame('Test nested route', $response);
 	}
@@ -247,7 +269,6 @@ class AccountRoutesTest extends TestCase
 			'users' => [
 				[
 					'email' => 'test@getkirby.com',
-					'role'  => 'admin',
 					'files' => [
 						[
 							'filename' => 'a.jpg',
@@ -257,9 +278,9 @@ class AccountRoutesTest extends TestCase
 			]
 		]);
 
-		$app->impersonate('test@getkirby.com');
+		$app->impersonate('kirby');
 
-		$response = $app->api()->call('account/files/a.jpg');
+		$response = $app->api()->call('users/test@getkirby.com/files/a.jpg');
 
 		$this->assertSame('a.jpg', $response['data']['filename']);
 	}
@@ -270,7 +291,6 @@ class AccountRoutesTest extends TestCase
 			'users' => [
 				[
 					'email' => 'test@getkirby.com',
-					'role'  => 'admin',
 					'files' => [
 						[
 							'filename' => 'c.jpg',
@@ -286,9 +306,9 @@ class AccountRoutesTest extends TestCase
 			]
 		]);
 
-		$app->impersonate('test@getkirby.com');
+		$app->impersonate('kirby');
 
-		$response = $app->api()->call('account/files');
+		$response = $app->api()->call('users/test@getkirby.com/files');
 
 		$this->assertCount(3, $response['data']);
 		$this->assertSame('a.jpg', $response['data'][0]['filename']);
@@ -302,7 +322,6 @@ class AccountRoutesTest extends TestCase
 			'users' => [
 				[
 					'email' => 'test@getkirby.com',
-					'role'  => 'admin',
 					'files' => [
 						[
 							'filename' => 'a.jpg',
@@ -321,9 +340,9 @@ class AccountRoutesTest extends TestCase
 			]
 		]);
 
-		$app->impersonate('test@getkirby.com');
+		$app->impersonate('kirby');
 
-		$response = $app->api()->call('account/files');
+		$response = $app->api()->call('users/test@getkirby.com/files');
 
 		$this->assertSame('b.jpg', $response['data'][0]['filename']);
 		$this->assertSame('a.jpg', $response['data'][1]['filename']);
@@ -333,20 +352,64 @@ class AccountRoutesTest extends TestCase
 	{
 		$app = $this->app;
 
-		$response = $app->api()->call('account');
+		$response = $app->api()->call('users/admin@getkirby.com');
 
-		$this->assertSame('test@getkirby.com', $response['data']['email']);
+		$this->assertSame('admin@getkirby.com', $response['data']['email']);
 	}
 
 	public function testRoles()
 	{
-		$response = $this->app->api()->call('account/roles');
+		$this->app->impersonate('kirby');
+
+		$response = $this->app->api()->call('users/admin@getkirby.com/roles');
 
 		$this->assertSame(200, $response['code']);
 
 		$this->assertCount(2, $response['data']);
 		$this->assertSame('admin', $response['data'][0]['name']);
 		$this->assertSame('editor', $response['data'][1]['name']);
+	}
+
+	public function testSearchName()
+	{
+		$app = $this->app;
+
+		$response = $app->api()->call('users/search', 'GET', [
+			'query' => [
+				'q' => 'Bastian'
+			]
+		]);
+
+		$this->assertCount(1, $response['data']);
+		$this->assertSame('admin@getkirby.com', $response['data'][0]['email']);
+	}
+
+	public function testSearchWithGetRequest()
+	{
+		$app = $this->app;
+
+		$response = $app->api()->call('users/search', 'GET', [
+			'query' => [
+				'q' => 'editor'
+			]
+		]);
+
+		$this->assertCount(1, $response['data']);
+		$this->assertSame('editor@getkirby.com', $response['data'][0]['email']);
+	}
+
+	public function testSearchWithPostRequest()
+	{
+		$app = $this->app;
+
+		$response = $app->api()->call('users/search', 'POST', [
+			'body' => [
+				'search' => 'editor'
+			]
+		]);
+
+		$this->assertCount(1, $response['data']);
+		$this->assertSame('editor@getkirby.com', $response['data'][0]['email']);
 	}
 
 	public function testSections()
@@ -370,9 +433,9 @@ class AccountRoutesTest extends TestCase
 			]
 		]);
 
-		$app->impersonate('test@getkirby.com');
+		$app->impersonate('kirby');
 
-		$response = $app->api()->call('account/sections/test');
+		$response = $app->api()->call('users/admin@getkirby.com/sections/test');
 		$expected = [
 			'status' => 'ok',
 			'code'   => 200,
@@ -386,7 +449,7 @@ class AccountRoutesTest extends TestCase
 
 	public function testUpdate()
 	{
-		$response = $this->app->api()->call('account', 'PATCH', [
+		$response = $this->app->api()->call('users/admin@getkirby.com', 'PATCH', [
 			'body' => [
 				'name' => 'Test User'
 			]
@@ -394,5 +457,13 @@ class AccountRoutesTest extends TestCase
 
 		$this->assertSame('ok', $response['status']);
 		$this->assertSame('Test User', $response['data']['content']['name']);
+	}
+
+	public function testUsers()
+	{
+		$response = $this->app->api()->call('users');
+
+		$this->assertSame('admin@getkirby.com', $response['data'][0]['email']);
+		$this->assertSame('editor@getkirby.com', $response['data'][1]['email']);
 	}
 }
