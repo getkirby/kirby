@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "Chyba v poli \"{field}\" na řádku {index}",
+
 	"error.email.preset.notFound": "Nelze nalézt emailové přednastavení \"{name}\"",
 
 	"error.field.converter.invalid": "Neplatný konvertor \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Pole \"{ name }\": Typ pole \"{ type }\" neexistuje",
 
 	"error.file.changeName.empty": "Toto jméno nesmí být prázdné",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Šablonu souboru \"{id}\" nelze změnit na \"{template}\" (platné: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Nemáte dovoleno změnit šablonu souboru \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Soubor s názvem \"{filename}\" již existuje",
 	"error.file.extension.forbidden": "Přípona souboru \"{extension}\" není povolena",
 	"error.file.extension.invalid": "Neplatná přípona souboru: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Stránku \"{slug}\" nelze vymazat",
 	"error.page.delete.confirm": "Pro potvrzení prosím zadejte titulek stránky",
 	"error.page.delete.hasChildren": "Stránka má podstránky, nemůže být vymazána",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Nemáte dovoleno odstranit \"{slug}\"",
 	"error.page.draft.duplicate": "Koncept stránky, který obsahuje v adrese URL \"{slug}\" již existuje ",
 	"error.page.duplicate": "Stránka, která v adrese URL obsahuje \"{slug}\" již existuje",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "URL adresa videa",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Opravdu chcete smazat všechny záznamy?",
+	"field.entries.empty": "Zatím nejsou žádné záznamy.",
+
 	"field.files.empty": "Nebyly zatím vybrány žádné soubory",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Změnit pozici",
 
 	"files": "Soubory",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Zatím žádné soubory",
 
 	"filter": "Filtr",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "Žádlná platná licence",
 	"license.status.missing.label": "Prosím aktivute svoji licenci",
 	"license.status.unknown.info": "Status licence je neznámý",
-	"license.status.unknown.label": "Neznámá licence",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Spravovat licence",
 	"license.purchased": "Zakoupeno",
 	"license.success": "Děkujeme Vám za podporu Kirby",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Tato stránka je dostupná pouze přes URL.",
 
 	"pages": "Stránky",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Zatím žádné stránky",
 	"pages.status.draft": "Koncepty",
 	"pages.status.listed": "Zveřejněno",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Kopírovat informace",
 	"system.info.copied": "Systémové informace zkopírovány",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Složka content je zřejmě přístupná zvenčí",
 	"system.issues.eol.kirby": "Instalovaná verze Kirby dosáhla konce životnosti a nebude již dále dostávat bezpečnostní aktualizace",
 	"system.issues.eol.plugin": "Instalovaná verze doplňku { plugin } dosáhla konce životnosti a nebude již dále dostávat bezpečnostní aktualizace",
@@ -665,7 +679,9 @@
 	"system.issues.git": "Složka .git je zřejmě přístupná zvenčí",
 	"system.issues.https": "Pro všechny stránky doporučujeme používat protokol HTTPS",
 	"system.issues.kirby": "Složka kirby je zřejmě přístupná zvenčí",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "Složka site je zřejmě přístupná zvenčí",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Vaše instalace může být ovlivněna následující zranitelností (stupeň vážnosti - { severity }): { description }",
 	"system.issues.vulnerability.plugin": "Vaše instalace může být ovlivněna následující zranitelností v doplňku { plugin } (stupeň vážnosti - { severity }): { description }",
 	"system.updateStatus": "Status aktualizací",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Změnit jazyk",
 	"user.changeName": "Přejmenovat tohoto uživatele",
 	"user.changePassword": "Změnit heslo",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nové heslo",
 	"user.changePassword.new.confirm": "Potvrdit nové heslo...",
 	"user.changeRole": "Změnit roli",

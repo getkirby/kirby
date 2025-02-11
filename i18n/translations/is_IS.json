@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "Þessi útfáfa er læst og það verður ekki skipt út",
 	"error.content.lock.update": "Þessi útgáfa er læst og hún verður ekki uppfærð",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "Það er villa í \"{field}\" sviðinu í röð {index}",
+
 	"error.email.preset.notFound": "Netfangstillingarnar: \"{name}\" fundust ekki",
 
 	"error.field.converter.invalid": "Ógildur umbreytari \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Sviðið \"{ name }\": Sviðgerðin er \"{type}\" er alls ekki til.",
 
 	"error.file.changeName.empty": "Nafn skal fylla út",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Sniðmátinu fyrir skránna \"{id}\" er ekki hægt að breyta í  \"{template}\" (gild: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Þú mátt ekkert breyta sniðmátinu fyrir skránna \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Skrá með nafninu \"{filename}\" er nú þegar til",
 	"error.file.extension.forbidden": "Skrárendingin \"{extension}\" er ekki leyfð",
 	"error.file.extension.invalid": "Óleyfilegt skrársnið hér: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Síðunni \"{slug}\" er ekki hægt að eyða",
 	"error.page.delete.confirm": "Ritaðu titil síðunnar til að staðfesta",
 	"error.page.delete.hasChildren": "Síðan hefur undirsíður og er því ekki hægt að eyða",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Þú mátt ekkert eyða \"{slug}\"",
 	"error.page.draft.duplicate": "Uppkast með slóðinni \"{slug}\" er þegar til",
 	"error.page.duplicate": "Síða með slóðinni \"{slug}\" er þegar til",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Vefslóð",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Ætlar þú virkilega að eyða öllum færslum?",
+	"field.entries.empty": "Engar færslur enn",
+
 	"field.files.empty": "Engar skrár valdar ennþá",
 	"field.files.empty.single": "Engin skrá valin enn",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Breyta röðun",
 
 	"files": "Skrár",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Engar skrár enn",
 
 	"filter": "Sigta",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "Ekkert gilt skráningarleyfi",
 	"license.status.missing.label": "Vinsamlegast virkjaðu leyfið þitt",
 	"license.status.unknown.info": "Staða leyfis fyrir hugbúnaðinn er óþekkt",
-	"license.status.unknown.label": "Óþekkt leyfi",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Sýslaðu með leyfin þín",
 	"license.purchased": "Verslað",
 	"license.success": "Þakka þér fyrir að velja Kirby",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Síðan er útgefin en þó ólistuð.",
 
 	"pages": "Síður",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Engar síður enn",
 	"pages.status.draft": "Uppköst",
 	"pages.status.listed": "Útgefnar og listaðar",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Vefþjónn þinn styður ekkert PATCH beiðnir",
 	"system.issues.content": "Efnismappan virðist vera berskjölduð",
 	"system.issues.eol.kirby": "Uppsett Kirby eintak þitt hefur runnið sitt skeið á enda og mun ekki verða uppfært framar",
 	"system.issues.eol.plugin": "Uppsett eintak þitt  af viðbótinni  { plugin } hefur runnið sitt skeið á enda og mun ekki verða uppfærð framar",
@@ -665,7 +679,9 @@
 	"system.issues.git": ".git mappan virðist vera berskjölduð",
 	"system.issues.https": "Við mælum harðlega með því að þú notir HTTPS fyrir öll þín vefsvæði",
 	"system.issues.kirby": "Kirby mappan virðist vera  berskjölduð",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "Mappa vefsvæðisins virðist vera berskjölduð",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Uppsetningin þín gæti verið berskjölduð gagnvart eftirfarandi veikleika: ({ severity } veikleikinn): { description }",
 	"system.issues.vulnerability.plugin": "Uppsetningin þín gæti verið berskjölduð gagnvart eftirfarandi veikleika í viðbótinni { plugin }: ({ severity } veikleikinn): { description }",
 	"system.updateStatus": "Uppfærslustaða",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Breyta tungumáli",
 	"user.changeName": "Endurnefna þennan notanda",
 	"user.changePassword": "Breyta lykilorð",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nýtt lykilorð",
 	"user.changePassword.new.confirm": "Staðfestu nýtt lykilorð…",
 	"user.changeRole": "Breyta hlutverki",

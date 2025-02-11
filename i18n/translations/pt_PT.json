@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "A versão está bloqueada e não pode ser substituída",
 	"error.content.lock.update": "A versão está bloqueada e não pode ser atualizada",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "Existe um erro no campo \"{field}\" na linha {index}",
+
 	"error.email.preset.notFound": "A predefinição de email \"{name}\" não foi encontrada",
 
 	"error.field.converter.invalid": "Conversor \"{converter}\" inválido",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Campo \"{name}\": O tipo de campo \"{type}\" não existe",
 
 	"error.file.changeName.empty": "O nome não pode ficar em branco",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "O template para o ficheiro \"{id}\" não pode ser alterado para \"{template}\" (válido: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Não tem permissão para alterar o template do ficheiro \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Um ficheiro com o nome \"{filename}\" já existe",
 	"error.file.extension.forbidden": "A extensão \"{extension}\" não é permitida",
 	"error.file.extension.invalid": "Extensão inválida: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "A página \"{slug}\" não pode ser eliminada",
 	"error.page.delete.confirm": "Por favor, insira o título da página para confirmar",
 	"error.page.delete.hasChildren": "A página tem subpáginas e não pode ser eliminada",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Não tem permissões para eliminar \"{slug}\"",
 	"error.page.draft.duplicate": "Uma página de rascunho com o URL \"{slug}\" já existe",
 	"error.page.duplicate": "Uma página com o URL \"{slug}\" já existe",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "URL-Vídeo",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Tem a certeza que pretende eliminar todos os registos?",
+	"field.entries.empty": "Nenhum registo ainda",
+
 	"field.files.empty": "Nenhum ficheiro selecionado ainda",
 	"field.files.empty.single": "Nenhum ficheiro selecionado ainda",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Alterar posição",
 
 	"files": "Ficheiros",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Nenhum ficheiro ainda",
 
 	"filter": "Filtro",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "Sem licença válida",
 	"license.status.missing.label": "Por favor, ative a sua licença",
 	"license.status.unknown.info": "O estado da licença é desconhecido",
-	"license.status.unknown.label": "Licença desconhecida",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Gerir as suas licenças",
 	"license.purchased": "Comprada",
 	"license.success": "Obrigado por apoiar o Kirby",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Esta página é acessível apenas através de URL",
 
 	"pages": "Páginas",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Nenhuma página ainda",
 	"pages.status.draft": "Rascunhos",
 	"pages.status.listed": "Publicadas",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Copiar informação",
 	"system.info.copied": "Informação de sistema copiada",
-	"system.issues.api.methods": "O servidor não suporta pedidos PATCH",
 	"system.issues.content": "A pasta content parece não estar protegida",
 	"system.issues.eol.kirby": "A versão instalada do Kirby chegou ao fim da sua vida útil e não irá receber mais atualizações de segurança",
 	"system.issues.eol.plugin": "A versão instalada do plugin { plugin } chegou ao fim da sua vida útil e não irá receber mais atualizações de segurança",
@@ -665,7 +679,9 @@
 	"system.issues.git": "A pasta .git parece não estar protegida",
 	"system.issues.https": "Nós recomendamos HTTPS para todos os seus sites",
 	"system.issues.kirby": "A pasta kirby parece não estar protegida",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "A pasta site parece não estar protegida",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "A sua instalação poderá ser afetada pela seguinte vulnerabilidade ({ severity } gravidade): { description }",
 	"system.issues.vulnerability.plugin": "A sua instalação poderá ser afetada pela seguinte vulnerabilidade no plugin { plugin } ({ severity } gravidade): { description }",
 	"system.updateStatus": "Atualizar estado",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Alterar idioma",
 	"user.changeName": "Alterar o nome deste utilizador",
 	"user.changePassword": "Alterar palavra-passe",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nova palavra-passe",
 	"user.changePassword.new.confirm": "Confirme a nova palavra-passe…",
 	"user.changeRole": "Alterar função",

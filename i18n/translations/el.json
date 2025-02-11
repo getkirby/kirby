@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "There's an error on the \"{field}\" field in row {index}",
+
 	"error.email.preset.notFound": "Δεν είναι δυνατή η εύρεση της προεπιλογής διεύθινσης ηλεκτρονικού ταχυδρομείου \"{name}\"",
 
 	"error.field.converter.invalid": "Μη έγκυρος μετατροπέας \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "The name must not be empty",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Ένα αρχείο με το όνομα \"{filename}\" υπάρχει ήδη",
 	"error.file.extension.forbidden": "\u039c\u03b7 \u03b1\u03c0\u03bf\u03b4\u03b5\u03ba\u03c4\u03ae \u03b5\u03c0\u03ad\u03ba\u03c4\u03b1\u03c3\u03b7 \u03b1\u03c1\u03c7\u03b5\u03af\u03bf\u03c5",
 	"error.file.extension.invalid": "Invalid extension: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Δεν είναι δυνατή η διαγραφή της σελίδας \"{slug}\"",
 	"error.page.delete.confirm": "Παρακαλώ εισάγετε τον τίτλο της σελίδας για επιβεβαίωση",
 	"error.page.delete.hasChildren": "Δεν είναι δυνατή η διαγραφή της σελίδας καθώς περιέχει υποσελίδες",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Δεν επιτρέπεται η διαγραφή της σελίδας \"{slug}\"",
 	"error.page.draft.duplicate": "Υπάρχει ήδη ένα προσχέδιο σελίδας με την διεύθυνση URL \"{slug}\"",
 	"error.page.duplicate": "Υπάρχει ήδη μια σελίδα με την διεύθυνση URL \"{slug}\"",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.entries.empty": "Δεν υπάρχουν ακόμη καταχωρίσεις.",
+
 	"field.files.empty": "Δεν έχουν επιλεγεί αρχεία ακόμα",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Change position",
 
 	"files": "Αρχεία",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Δεν υπάρχουν ακόμα αρχεία",
 
 	"filter": "Filter",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Σας ευχαριστούμε για την υποστήριξη του Kirby",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Η σελίδα είναι προσβάσιμη μόνο μέσω της διεύθυνσης URL",
 
 	"pages": "Σελίδες",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Δεν υπάρχουν ακόμα σελίδες",
 	"pages.status.draft": "Προσχέδια",
 	"pages.status.listed": "Δημοσιευμένο",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -665,7 +679,9 @@
 	"system.issues.git": "The .git folder seems to be exposed",
 	"system.issues.https": "We recommend HTTPS for all your sites",
 	"system.issues.kirby": "The kirby folder seems to be exposed",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "The site folder seems to be exposed",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
 	"system.updateStatus": "Update status",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Αλλαγή γλώσσας",
 	"user.changeName": "Μετονομασία χρήστη",
 	"user.changePassword": "Αλλαγή κωδικού πρόσβασης",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Νέος Κωδικός Πρόσβασης",
 	"user.changePassword.new.confirm": "Επαληθεύση κωδικού πρόσβασης",
 	"user.changeRole": "Αλλαγή ρόλου",

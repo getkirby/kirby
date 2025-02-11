@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "{index} satırındaki \"{field}\" alanında bir hata var",
+
 	"error.email.preset.notFound": "\"{name}\" e-posta adresi bulunamadı",
 
 	"error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "\"{ name }\" alanı: \"{ type }\" alan türü mevcut değil",
 
 	"error.file.changeName.empty": "İsim boş olmamalıdır",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "\"{id}\" dosyası için şablon \"{template}\" olarak değiştirilemez (geçerli: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "\"{id}\" dosyası için şablonu değiştirmenize izin verilmiyor",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "\"{filename}\" isimli bir dosya zaten var",
 	"error.file.extension.forbidden": "\"{extension}\" dosya uzantısına izin verilmiyor",
 	"error.file.extension.invalid": "Geçersiz uzantı: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "\"{slug}\" sayfası silinemedi",
 	"error.page.delete.confirm": "Onaylamak için sayfa başlığını girin",
 	"error.page.delete.hasChildren": "Sayfada alt sayfalar var ve silinemiyor",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "\"{slug}\" öğesini silmenize izin verilmiyor",
 	"error.page.draft.duplicate": "\"{slug}\" adres eki olan bir sayfa taslağı zaten mevcut",
 	"error.page.duplicate": "\"{slug}\" adres eki içeren bir sayfa zaten mevcut",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Tüm girdileri gerçekten silmek istiyor musunuz?",
+	"field.entries.empty": "Henüz bir girdi yok",
+
 	"field.files.empty": "Henüz dosya seçilmedi",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Pozisyon değiştir",
 
 	"files": "Dosyalar",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Henüz dosya yok",
 
 	"filter": "Filtre",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "Geçerli lisans yok",
 	"license.status.missing.label": "Lütfen lisansınızı etkinleştirin",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Lisanslarınızı yönetin",
 	"license.purchased": "Satın alındı",
 	"license.success": "Kirby'yi desteklediğiniz için teşekkürler",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Bu sayfa sadece bağlantı adresi ile erişilebilir",
 
 	"pages": "Sayfalar",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Henüz sayfa yok",
 	"pages.status.draft": "Taslaklar",
 	"pages.status.listed": "Yayınlandı",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Bilgileri kopyala",
 	"system.info.copied": "Sistem bilgisi kopyalandı",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
 	"system.issues.eol.kirby": "Yüklü Kirby sürümünüz kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
 	"system.issues.eol.plugin": "{ plugin } eklentisinin yüklü sürümü kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
@@ -665,7 +679,9 @@
 	"system.issues.git": ".git klasörü açığa çıkmış görünüyor",
 	"system.issues.https": "Tüm siteleriniz için HTTPS'yi öneriyoruz",
 	"system.issues.kirby": "Kirby klasörü açığa çıkmış görünüyor",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "Site klasörü açığa çıkmış görünüyor",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Kurulumunuz aşağıdaki güvenlik açığından ({ severity } önem derecesi) etkilenebilir: { description }",
 	"system.issues.vulnerability.plugin": "Kurulumunuz, { plugin } eklentisindeki ({ severity } önem derecesi) aşağıdaki güvenlik açığından etkilenebilir: { description }",
 	"system.updateStatus": "Güncelleme durumu",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Dili değiştir",
 	"user.changeName": "Kullanıcıyı yeniden adlandır",
 	"user.changePassword": "Şifre değiştir",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Yeni Şifre",
 	"user.changePassword.new.confirm": "Şifreyi onaylayın...",
 	"user.changeRole": "Rolü değiştir",
