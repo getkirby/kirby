@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "Die Version ist blockiert und kann daher nicht ersetzt werden",
 	"error.content.lock.update": "Die Version ist blockiert und kann daher nicht geändert werden",
 
+	"error.entries.max.plural": "Bitte füge nicht mehr als {max} Einträge hinzu",
+	"error.entries.max.singular": "Bitte füge nicht mehr als einen Eintrag hinzu",
+	"error.entries.min.plural": "Bitte füge mindestens {min} Einträge hinzu",
+	"error.entries.min.singular": "Bitte füge mindestens einen Eintrag hinzu",
+	"error.entries.supports": "Der Feldtyp \"{type}\" wird im Entries Feld nicht unterstützt.",
+	"error.entries.validation": "Fehler im Feld \"{field}\" in Zeile {index}",
+
 	"error.email.preset.notFound": "Die E-Mailvorlage \"{name}\" wurde nicht gefunden",
 
 	"error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
+	"error.field.link.options": "Ungültige Optionen: {options}",
 	"error.field.type.missing": "Feld \"{ name }\": Der Feldtyp \"{ type }\" existiert nicht",
 
 	"error.file.changeName.empty": "Bitte gib einen Namen an",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Die Vorlage für die Datei \"{id}\" kann nicht zu \"{template}\" geändert werden (gültig: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Du kannst die Vorlage für die Datei \"{id}\" nicht ändern",
 
+	"error.file.delete.multiple": "Es konnten nicht alle Dateien gelöscht werden. Versuche verbleibende Dateien einzeln zu löschen, um die Ursachen festzustellen.",
 	"error.file.duplicate": "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
 	"error.file.extension.forbidden": "Verbotene Dateiendung \"{extension}\"",
 	"error.file.extension.invalid": "Verbotene Dateiendung \"{extension}\"",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Die Seite \"{slug}\" kann nicht gelöscht werden",
 	"error.page.delete.confirm": "Bitte gib zur Bestätigung den Seitentitel ein",
 	"error.page.delete.hasChildren": "Die Seite hat Unterseiten und kann nicht gelöscht werden",
+	"error.page.delete.multiple": "Es konnten nicht alle Seiten gelöscht werden. Versuche verbleibende Seiten einzeln zu löschen, um die Ursachen festzustellen.",
 	"error.page.delete.permission": "Du kannst die Seite \"{slug}\" nicht löschen",
 	"error.page.draft.duplicate": "Ein Entwurf mit dem URL-Kürzel \"{slug}\" besteht bereits",
 	"error.page.duplicate": "Eine Seite mit dem URL-Kürzel \"{slug}\" besteht bereits",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Möchtest du wirklich alle Einträge löschen?",
+	"field.entries.empty": "Es bestehen keine Einträge.",
+
 	"field.files.empty": "Keine Dateien ausgewählt",
 	"field.files.empty.single": "Keine Dateien ausgewählt",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Position ändern",
 
 	"files": "Dateien",
+	"files.delete.confirm.selected": "Willst du wirklich die ausgewählten Dateien löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
 	"files.empty": "Keine Dateien",
 
 	"filter": "Filter",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "Keine gültige Lizenz",
 	"license.status.missing.label": "Bitte aktiviere deine Lizenz",
 	"license.status.unknown.info": "Der Lizenzstatus ist unbekannt",
-	"license.status.unknown.label": "Unbekannte Lizenz",
+	"license.status.unknown.label": "Unbekannt",
 	"license.manage": "Verwalte deine Lizenzen",
 	"license.purchased": "Gekauft",
 	"license.success": "Vielen Dank für deine Unterstützung",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Die Seite kann nur über die URL aufgerufen werden",
 
 	"pages": "Seiten",
+	"pages.delete.confirm.selected": "Willst du wirklich die ausgewählten Seiten löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
 	"pages.empty": "Keine Seiten",
 	"pages.status.draft": "Entwürfe",
 	"pages.status.listed": "Veröffentlicht",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Info kopieren",
 	"system.info.copied": "System Info wurde kopiert",
-	"system.issues.api.methods": "Dein Server unterstützt keine PATCH Requests",
 	"system.issues.content": "Der content Ordner scheint öffentlich zugänglich zu sein",
 	"system.issues.eol.kirby": "Deine Kirby Installation ist veraltet und erhält keine weiteren Sicherheitsupdates",
 	"system.issues.eol.plugin": "Deine Version des { plugin } Plugins ist veraltet und erhält keine weiteren Sicherheitsupdates",
@@ -665,7 +679,9 @@
 	"system.issues.git": "Der .git Ordner scheint öffentlich zugänglich zu sein",
 	"system.issues.https": "Wir empfehlen HTTPS für alle deine Seiten",
 	"system.issues.kirby": "Der kirby Ordner scheint öffentlich zugänglich zu sein",
+	"system.issues.local": "Die Seite läuft lokal mit abgeschwächten Sicherheitschecks",
 	"system.issues.site": "Der site Ordner scheint öffentlich zugänglich zu sein",
+	"system.issues.vue.compiler": "Der Vue Template Compiler ist aktiviert",
 	"system.issues.vulnerability.kirby": "Deine Installation könnte von folgender Sicherheitslücke betroffen sein ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Deine Installation könnte von folgender Sicherheitslücke im { plugin } Plugin betroffen sein ({ severity } severity): { description }",
 	"system.updateStatus": "Update Status",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Sprache ändern",
 	"user.changeName": "Account umbenennen",
 	"user.changePassword": "Passwort ändern",
+	"user.changePassword.current": "Dein aktuelles Passwort",
 	"user.changePassword.new": "Neues Passwort",
 	"user.changePassword.new.confirm": "Wiederhole das Passwort …",
 	"user.changeRole": "Rolle ändern",

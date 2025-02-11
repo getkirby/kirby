@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "Ada kesalahan pada bidang \"{field}\" di baris {index}",
+
 	"error.email.preset.notFound": "Surel \"{name}\" tidak dapat ditemukan",
 
 	"error.field.converter.invalid": "Konverter \"{converter}\" tidak valid",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Bidang \"{ name }\": Tipe bidang \"{ type }\" tidak ada",
 
 	"error.file.changeName.empty": "Nama harus diisi",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Templat untuk berkas \"{id}\" tidak dapat diubah menjadi \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Anda tidak diizinkan mengubah templat untuk berkas \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Berkas dengan nama \"{filename}\" sudah ada",
 	"error.file.extension.forbidden": "Ekstensi \"{extension}\" tidak diizinkan",
 	"error.file.extension.invalid": "Ekstensi tidak valid: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Halaman \"{slug}\" tidak dapat dihapus",
 	"error.page.delete.confirm": "Masukkan judul halaman untuk mengonfirmasi",
 	"error.page.delete.hasChildren": "Halaman ini memiliki sub-halaman dan tidak dapat dihapus",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Anda tidak diizinkan menghapus \"{slug}\"",
 	"error.page.draft.duplicate": "Draf halaman dengan akhiran URL \"{slug}\" sudah ada",
 	"error.page.duplicate": "Halaman dengan akhiran URL \"{slug}\" sudah ada",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "URL Video",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.entries.empty": "Belum ada entri",
+
 	"field.files.empty": "Belum ada berkas yang dipilih",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Ubah posisi",
 
 	"files": "Berkas",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Belum ada berkas",
 
 	"filter": "Filter",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Terima kasih atas dukungan untuk Kirby",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Halaman hanya dapat diakses via URL",
 
 	"pages": "Halaman",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Belum ada halaman",
 	"pages.status.draft": "Draf",
 	"pages.status.listed": "Dipublikasikan",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Folder konten nampaknya terekspos",
 	"system.issues.eol.kirby": "Versi instalasi Kirby Anda sudah mencapai akhir dan tidak akan lagi mendapat pembaruan keamanan",
 	"system.issues.eol.plugin": "Versi instalasi plugin { plugin } Anda sudah mencapai akhir dan tidak akan lagi mendapatkan pembaruan keamanan",
@@ -665,7 +679,9 @@
 	"system.issues.git": "The .git folder seems to be exposed",
 	"system.issues.https": "We recommend HTTPS for all your sites",
 	"system.issues.kirby": "The kirby folder seems to be exposed",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "The site folder seems to be exposed",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Instalasi Anda mungkin terpengaruh oleh celah keamanan berikut ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Instalasi Anda mungkin terpengaruh oleh celah keamanan di dalam plugin { plugin } ({ severity } severity): { description }",
 	"system.updateStatus": "Update status",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Ubah bahasa",
 	"user.changeName": "Ubah nama pengguna ini",
 	"user.changePassword": "Ubah sandi",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Sandi baru",
 	"user.changePassword.new.confirm": "Konfirmasi sandi baru…",
 	"user.changeRole": "Ubah peran",
