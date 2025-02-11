@@ -4,7 +4,6 @@
 		:class="['k-entries-field', $attrs.class]"
 		:style="$attrs.style"
 		@click.native.stop
-		@paste.native="onPaste"
 	>
 		<!-- Options -->
 		<template v-if="!disabled" #options>
@@ -291,33 +290,9 @@ export default {
 		focus(index, on = "input") {
 			this.$refs["entry-" + index + "-" + on]?.[0]?.focus?.();
 		},
-		isInputEvent() {
-			const focused = document.querySelector(":focus");
-			return focused?.matches("input");
-		},
 		onInput(index, value) {
 			this.entries[index].value = value;
 			this.save();
-		},
-		onPaste(event) {
-			// never paste entries when the focus is in an input element
-			if (this.isInputEvent(event) === true) {
-				return false;
-			}
-
-			let input = event;
-			if (input instanceof ClipboardEvent) {
-				input = this.$helper.clipboard.read(event, true);
-			}
-
-			const entries = input
-				.split(/\r?\n/)
-				.filter((entry) => entry.trim().length > 0)
-				.map((entry) => (entry.startsWith("- ") ? entry.slice(2) : entry));
-
-			for (const entry of entries) {
-				this.add(null, entry);
-			}
 		},
 		remove(index) {
 			if (this.disabled === true) {
