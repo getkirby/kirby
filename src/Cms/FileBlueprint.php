@@ -252,8 +252,8 @@ class FileBlueprint extends Blueprint
 		return $accept;
 	}
 
-	public function stripExif(): bool
+	public function strip(): bool
 	{
-		return $this->props['stripExif'] ?? false;
+		return $this->props['strip'] ?? false;
 	}
 }

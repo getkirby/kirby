@@ -3,7 +3,8 @@
 namespace Kirby\Image;
 
 /**
- * Interface for stripping exif data from images
+ * Interface for stripping metadata
+ * with keeping ICC profiles and orientation
  * @since 4.7.0
  *
  * @package   Kirby Image
@@ -12,7 +13,7 @@ namespace Kirby\Image;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-interface StripExif
+interface Strippable
 {
-	public static function stripExif(string $file): void;
+	public static function strip(string $file): void;
 }

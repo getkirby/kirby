@@ -7,7 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
-use Kirby\Image\StripExif;
+use Kirby\Image\Strippable;
 
 /**
  * ImageMagick
@@ -18,7 +18,7 @@ use Kirby\Image\StripExif;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class ImageMagick extends Darkroom implements StripExif
+class ImageMagick extends Darkroom implements Strippable
 {
 	/**
 	 * Activates imagemagick's auto-orient feature unless
@@ -133,7 +133,7 @@ class ImageMagick extends Darkroom implements StripExif
 		$command = [];
 
 		$command[] = $this->convert($file, $options);
-		$command[] = $this->strip($file, $options);
+		$command[] = $this->stripImage($file, $options);
 		$command[] = $this->interlace($file, $options);
 		$command[] = $this->coalesce($file, $options);
 		$command[] = $this->grayscale($file, $options);
@@ -233,7 +233,7 @@ class ImageMagick extends Darkroom implements StripExif
 	/**
 	 * Removes all metadata from the image
 	 */
-	protected function strip(string $file, array $options): string
+	protected function stripImage(string $file, array $options): string
 	{
 		if (F::extension($file) === 'png') {
 			// ImageMagick does not support keeping ICC profiles while
@@ -246,56 +246,34 @@ class ImageMagick extends Darkroom implements StripExif
 		return '';
 	}
 
-	public static function stripExif(string $file): void
+	/**
+	 * Strips all metadata from the image
+	 * except for the ICC profile and orientation
+	 */
+	public static function strip(string $file): void
 	{
 		// get the path to the imagemagick convert binary
 		$bin = App::instance()->option('thumbs.bin', 'convert');
 
-		// check if the file has an ICC profile
-		$command = 'identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null';
-		exec($command, $output);
-		$hasProfile = empty($output) === false;
+		// keep the ICC profile and orientation
+		// then strip all other metadata
+		$command = [
+			$bin,
+			escapeshellarg($file),
+			'-auto-orient',
+			'-set profile "icc" "%[icc_profile]"',
+			'-strip',
+			escapeshellarg($file),
+			'2>/dev/null'
+		];
 
-		// keep the ICC profile if it exists
-		if ($hasProfile) {
-			// keep the ICC profile
-			$profile = $file . '.icc';
-			$command = [
-				$bin,
-				escapeshellarg($file),
-				$profile,
-				'2>/dev/null'
-			];
-			exec(implode(' ', $command), $output, $return);
-
-			// strip all metadata with applying the ICC profile
-			$command = [
-				$bin,
-				escapeshellarg($file),
-				'-strip -profile',
-				$profile,
-				escapeshellarg($file),
-				'2>/dev/null'
-			];
-			exec(implode(' ', $command), $output, $return);
-
-			F::remove($profile);
-		} else {
-			// strip all metadata
-			$command = [
-				$bin,
-				escapeshellarg($file),
-				'-strip',
-				escapeshellarg($file),
-				'2>/dev/null'
-			];
-			exec(implode(' ', $command), $output, $return);
-		}
+		$command = implode(' ', $command);
+		exec($command, $output, $return);
 
 		// log broken command
 		if ($return !== 0) {
 			throw new Exception(
-				'The imagemagick convert command could not be executed: ' . implode(' ', $command)
+				'The imagemagick convert command could not be executed: ' . $command
 			);
 		}
 	}
