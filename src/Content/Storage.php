@@ -92,18 +92,6 @@ abstract class Storage
 	abstract public function delete(VersionId $versionId, Language $language): void;
 
 	/**
-	 * Deletes all versions when deleting a language
-	 * @internal
-	 * @todo Move to `Language` class
-	 */
-	public function deleteLanguage(Language $language): void
-	{
-		foreach (VersionId::all() as $versionId) {
-			$this->delete($versionId, $language);
-		}
-	}
-
-	/**
 	 * Checks if a version exists
 	 */
 	abstract public function exists(VersionId $versionId, Language $language): bool;
@@ -177,22 +165,6 @@ abstract class Storage
 	}
 
 	/**
-	 * Adapts all versions when converting languages
-	 * @internal
-	 * @todo Move to `Language` class
-	 */
-	public function moveLanguage(
-		Language $fromLanguage,
-		Language $toLanguage
-	): void {
-		foreach (VersionId::all() as $versionId) {
-			if ($this->exists($versionId, $fromLanguage) === true) {
-				$this->move($versionId, $fromLanguage, toLanguage: $toLanguage);
-			}
-		}
-	}
-
-	/**
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
@@ -227,20 +199,6 @@ abstract class Storage
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
 	abstract public function touch(VersionId $versionId, Language $language): void;
-
-	/**
-	 * Touches all versions of a language
-	 * @internal
-	 * @todo Move to `Language` class
-	 */
-	public function touchLanguage(Language $language): void
-	{
-		foreach (VersionId::all() as $versionId) {
-			if ($this->exists($versionId, $language) === true) {
-				$this->touch($versionId, $language);
-			}
-		}
-	}
 
 	/**
 	 * Updates the content fields of an existing version

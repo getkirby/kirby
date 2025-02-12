@@ -5,8 +5,6 @@ namespace Kirby\Content;
 use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
-use Kirby\Data\Data;
-use Kirby\Filesystem\Dir;
 
 /**
  * @coversDefaultClass \Kirby\Content\Storage
@@ -240,54 +238,6 @@ class StorageTest extends TestCase
 	}
 
 	/**
-	 * @covers ::deleteLanguage
-	 */
-	public function testDeleteLanguageMultiLanguage()
-	{
-		$this->setUpMultiLanguage();
-
-		$handler = new TestStorage(model: $this->model);
-
-		// create two versions for the German language
-		$handler->create(VersionId::latest(), $this->app->language('de'), []);
-		$handler->create(VersionId::changes(), $this->app->language('de'), []);
-
-		$this->assertTrue($handler->exists(VersionId::latest(), $this->app->language('de')));
-		$this->assertTrue($handler->exists(VersionId::changes(), $this->app->language('de')));
-
-		$handler->deleteLanguage($this->app->language('de'));
-
-		$this->assertFalse($handler->exists(VersionId::latest(), $this->app->language('de')));
-		$this->assertFalse($handler->exists(VersionId::changes(), $this->app->language('de')));
-	}
-
-	/**
-	 * @covers ::deleteLanguage
-	 */
-	public function testDeleteLanguageSingleLanguage()
-	{
-		$this->setUpSingleLanguage();
-
-		// Use the plain text handler, as the abstract class and the test handler do not
-		// implement the necessary methods to test this.
-		$handler = new TestStorage(model: $this->model);
-
-		$language = Language::single();
-
-		// create two versions
-		$handler->create(VersionId::latest(), $language, []);
-		$handler->create(VersionId::changes(), $language, []);
-
-		$this->assertTrue($handler->exists(VersionId::latest(), $language));
-		$this->assertTrue($handler->exists(VersionId::changes(), $language));
-
-		$handler->deleteLanguage($language);
-
-		$this->assertFalse($handler->exists(VersionId::latest(), $language));
-		$this->assertFalse($handler->exists(VersionId::changes(), $language));
-	}
-
-	/**
 	 * @covers ::from
 	 */
 	public function testFrom()
@@ -447,65 +397,6 @@ class StorageTest extends TestCase
 	}
 
 	/**
-	 * @covers ::moveLanguage
-	 */
-	public function testMoveSingleLanguageToMultiLanguage()
-	{
-		$this->setUpMultiLanguage();
-
-		// Use the plain text handler, as it offers the most
-		// realistic, testable results for this test
-		$handler = new PlainTextStorage(model: $this->model);
-
-		Data::write($fileLatest = $this->model->root() . '/article.txt', []);
-		Data::write($fileChanges   = $this->model->root() . '/_changes/article.txt', []);
-
-		$this->assertFileExists($fileLatest);
-		$this->assertFileExists($fileChanges);
-
-		$handler->moveLanguage(
-			Language::single(),
-			$this->app->language('en')
-		);
-
-		$this->assertFileDoesNotExist($fileLatest);
-		$this->assertFileDoesNotExist($fileChanges);
-
-		$this->assertFileExists($this->model->root() . '/article.en.txt');
-		$this->assertFileExists($this->model->root() . '/_changes/article.en.txt');
-	}
-
-	/**
-	 * @covers ::moveLanguage
-	 */
-	public function testMoveMultiLanguageToSingleLanguage()
-	{
-		$this->setUpMultiLanguage();
-
-		// Use the plain text handler, as it offers the most
-		// realistic, testable results for this test
-		$handler = new PlainTextStorage(model: $this->model);
-
-
-		Data::write($fileLatest = $this->model->root() . '/article.en.txt', []);
-		Data::write($fileChanges   = $this->model->root() . '/_changes/article.en.txt', []);
-
-		$this->assertFileExists($fileLatest);
-		$this->assertFileExists($fileChanges);
-
-		$handler->moveLanguage(
-			$this->app->language('en'),
-			Language::single(),
-		);
-
-		$this->assertFileDoesNotExist($fileLatest);
-		$this->assertFileDoesNotExist($fileChanges);
-
-		$this->assertFileExists($this->model->root() . '/article.txt');
-		$this->assertFileExists($this->model->root() . '/_changes/article.txt');
-	}
-
-	/**
 	 * @covers ::replaceStrings
 	 */
 	public function testReplaceStrings()
@@ -534,35 +425,4 @@ class StorageTest extends TestCase
 
 		$this->assertSame($expected, $handler->read($versionId, $language));
 	}
-
-	/**
-	 * @covers ::touchLanguage
-	 */
-	public function testTouchLanguageMultiLanguage()
-	{
-		$this->setUpMultiLanguage();
-
-		// Use the plain text handler, as the abstract class and the test handler do not
-		// implement the necessary methods to test this.
-		$handler = new PlainTextStorage(model: $this->model);
-
-		Dir::make($this->model->root());
-		Dir::make($this->model->root() . '/_changes');
-
-		touch($fileLatest = $this->model->root() . '/article.de.txt', 123456);
-		touch($fileChanges   = $this->model->root() . '/_changes/article.de.txt', 123456);
-
-		$this->assertSame(123456, filemtime($fileLatest));
-		$this->assertSame(123456, filemtime($fileChanges));
-
-		$minTime = time();
-
-		$handler->touchLanguage($this->app->language('de'));
-
-		clearstatcache();
-
-		$this->assertGreaterThanOrEqual($minTime, filemtime($fileChanges));
-		$this->assertGreaterThanOrEqual($minTime, filemtime($fileLatest));
-	}
-
 }

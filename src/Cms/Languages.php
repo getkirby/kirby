@@ -2,7 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\VersionId;
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
 
 /**
@@ -112,5 +114,70 @@ class Languages extends Collection
 		}
 
 		return new static($languages);
+	}
+
+	/**
+	 * Converts a single language installation to a multi language installation
+	 * by moving all content versions of the default language
+	 * @internal
+	 */
+	public static function migrateToMultiLang(Language $defaultLanguage): void
+	{
+		$kirby          = App::instance();
+		$languages      = $kirby->languages();
+		$singleLanguage = Language::single();
+
+		if ($languages->count() > 0) {
+			throw new Exception('There are already multiple languages');
+		}
+
+		if ($defaultLanguage->isDefault() === false) {
+			throw new Exception('The given language is not the default language');
+		}
+
+		foreach ($kirby->models() as $model) {
+			foreach (VersionId::all() as $versionId) {
+				$version = $model->version($versionId);
+
+				if ($version->exists($singleLanguage) === true) {
+					$version->move(
+						fromLanguage: $singleLanguage,
+						toLanguage: $defaultLanguage,
+					);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Removes all content versions of a language from all models
+	 * @internal
+	 */
+	public static function migrateToSingleLang(Language $lastLanguage): void
+	{
+		$kirby          = App::instance();
+		$languages      = $kirby->languages();
+		$singleLanguage = Language::single();
+
+		if ($languages->count() === 0) {
+			throw new Exception('There are no languages defined');
+		}
+
+		if ($lastLanguage->isLast() === false) {
+			throw new Exception('The language is not the last one');
+		}
+
+		foreach ($kirby->models() as $model) {
+			foreach (VersionId::all() as $versionId) {
+				$version = $model->version($versionId);
+
+				if ($version->exists($singleLanguage) === true) {
+					$version->move(
+						fromLanguage: $lastLanguage,
+						toLanguage: $singleLanguage,
+					);
+				}
+			}
+		}
 	}
 }

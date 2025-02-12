@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\VersionId;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -188,12 +189,7 @@ class Language implements Stringable
 
 		// convert content storage to multilang
 		if ($languages->count() === 0) {
-			foreach ($kirby->models() as $model) {
-				$model->storage()->moveLanguage(
-					Language::single(),
-					$language
-				);
-			}
+			Languages::migrateToMultilang($language);
 		}
 
 		// update the main languages collection in the app instance
@@ -242,11 +238,13 @@ class Language implements Stringable
 		}
 
 		// if needed, convert content storage to single lang
-		foreach ($kirby->models() as $model) {
-			if ($language->isLast() === true) {
-				$model->storage()->moveLanguage($this, Language::single());
-			} else {
-				$model->storage()->deleteLanguage($this);
+		if ($language->isLast() === true) {
+			Languages::migrateToSingleLang($language);
+		} else {
+			foreach ($kirby->models() as $model) {
+				foreach (VersionId::all() as $versionId) {
+					$model->version($versionId)->delete($language);
+				}
 			}
 		}
 
@@ -612,7 +610,13 @@ class Language implements Stringable
 			$kirby->languages(false)->set($previous->code(), $previous);
 
 			foreach ($kirby->models() as $model) {
-				$model->storage()->touchLanguage($this);
+				foreach (VersionId::all() as $versionId) {
+					$version = $model->version($versionId);
+
+					if ($version->exists($language) === true) {
+						$version->touch($language);
+					}
+				}
 			}
 		}
 
