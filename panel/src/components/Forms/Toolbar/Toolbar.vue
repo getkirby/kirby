@@ -9,7 +9,7 @@
 				:current="button.current"
 				:disabled="button.disabled"
 				:icon="button.icon"
-				:title="button.label"
+				:title="button.label ?? button.title"
 				:class="['k-toolbar-button', button.class]"
 				tabindex="0"
 				@keydown.native="button.key?.($event)"
