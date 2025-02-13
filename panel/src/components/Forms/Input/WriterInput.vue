@@ -207,6 +207,10 @@ export default {
 						return;
 					}
 
+					if (payload.transaction.meta.preventUpdate === true) {
+						return;
+					}
+
 					// compare documents to avoid minor HTML differences
 					// to cause unwanted updates
 					const jsonNew = JSON.stringify(this.editor.getJSON());
