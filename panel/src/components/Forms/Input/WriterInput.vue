@@ -201,16 +201,6 @@ export default {
 						return;
 					}
 
-					// if no steps are recorded, this is a selection change
-					// and we don't need to update the content
-					if (payload.transaction.steps.length === 0) {
-						return;
-					}
-
-					if (payload.transaction.meta.preventUpdate === true) {
-						return;
-					}
-
 					// compare documents to avoid minor HTML differences
 					// to cause unwanted updates
 					const jsonNew = JSON.stringify(this.editor.getJSON());
