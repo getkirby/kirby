@@ -2,11 +2,11 @@
 
 namespace Kirby\Form;
 
-use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Form\Field\ExceptionField;
 use Kirby\TestCase;
 
 /**
@@ -321,47 +321,7 @@ class FormTest extends TestCase
 			]
 		]);
 
-		$field = $form->fields()->first();
-
-		$this->assertSame('info', $field->type());
-		$this->assertSame('negative', $field->theme());
-		$this->assertSame('Error in "test" field.', $field->label());
-		$this->assertSame('<p>Field "test": The field type "does-not-exist" does not exist</p>', $field->text());
-	}
-
-	/**
-	 * @covers ::exceptionField
-	 */
-	public function testExceptionFieldInDebugMode()
-	{
-		$exception = new Exception('This is an error');
-
-		// debug mode off
-		$props = [
-			'name'  => 'test',
-			'model' => $this->app->site()
-		];
-
-		$field = Form::exceptionField($exception, $props)->toArray();
-		$this->assertSame('info', $field['type']);
-		$this->assertSame('Error in "test" field.', $field['label']);
-		$this->assertSame('<p>This is an error</p>', $field['text']);
-		$this->assertSame('negative', $field['theme']);
-
-		// debug mode on
-		$this->app->clone(['options' => ['debug' => true]]);
-
-		$props = [
-			'name'  => 'test',
-			'model' => $this->app->site()
-		];
-
-		$field = Form::exceptionField($exception, $props)->toArray();
-		$this->assertSame('info', $field['type']);
-		$this->assertSame('Error in "test" field.', $field['label']);
-		$this->assertStringContainsString('<p>This is an error in file:', $field['text']);
-		$this->assertStringContainsString('tests/Form/FormTest.php line:', $field['text']);
-		$this->assertSame('negative', $field['theme']);
+		$this->assertInstanceOf(ExceptionField::class, $form->fields()->first());
 	}
 
 	/**
