@@ -396,7 +396,7 @@ export default class Editor extends Emitter {
 		// give extensions access to our view
 		this.extensions.view = this.view;
 
-		this.setContent(this.options.content, true);
+		this.setContent(this.options.content);
 	}
 
 	insertText(text, selected = false) {
