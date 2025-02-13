@@ -54,6 +54,8 @@ export default {
 }
 .k-page-move-parent {
 	--tree-color-back: var(--input-color-back);
+	--tree-branch-color-back: var(--input-color-back);
+	--tree-branch-hover-color-back: var(--panel-color-back);
 	padding: var(--spacing-3);
 	background: var(--tree-color-back);
 	border-radius: var(--rounded);
