@@ -83,7 +83,10 @@ class Form
 			try {
 				$field = Field::factory($props['type'], $props, $this->fields);
 			} catch (Throwable $e) {
-				$field = static::exceptionField($e, $props);
+				$field = new ExceptionField(
+					name: $props['name'],
+					exception: $e
+				);
 			}
 
 			if ($field->isSaveable() === true) {
@@ -143,19 +146,6 @@ class Form
 	public function errors(): array
 	{
 		return $this->fields->errors();
-	}
-
-	/**
-	 * Shows the error with the field
-	 */
-	public static function exceptionField(
-		Throwable $exception,
-		array $props = []
-	): FieldClass {
-		return new ExceptionField(
-			exception: $exception,
-			name: $props['name']
-		);
 	}
 
 	/**
