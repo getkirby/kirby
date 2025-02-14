@@ -5,10 +5,9 @@ namespace Kirby\Form\Field;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Form\Field\ExceptionField
- */
+#[CoversClass(ExceptionField::class)]
 class ExceptionFieldTest extends TestCase
 {
 	public function setUp(): void
@@ -16,19 +15,12 @@ class ExceptionFieldTest extends TestCase
 		$this->app = new App();
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::label
-	 */
 	public function testLabel(): void
 	{
 		$field = new ExceptionField('test', new Exception());
 		$this->assertSame('Error in "test" field.', $field->label());
 	}
 
-	/**
-	 * @covers ::props
-	 */
 	public function testProps(): void
 	{
 		$field = new ExceptionField('test', new Exception('Something went wrong'));
@@ -43,18 +35,12 @@ class ExceptionFieldTest extends TestCase
 		], $props);
 	}
 
-	/**
-	 * @covers ::text
-	 */
 	public function testTextWithoutDebug(): void
 	{
 		$field = new ExceptionField('test', new Exception('Something went wrong'));
 		$this->assertSame('Something went wrong', $field->text());
 	}
 
-	/**
-	 * @covers ::text
-	 */
 	public function testTextWithDebug(): void
 	{
 		$this->app = $this->app->clone([
@@ -70,27 +56,18 @@ class ExceptionFieldTest extends TestCase
 		$this->assertSame($expected, $field->text());
 	}
 
-	/**
-	 * @covers ::text
-	 */
 	public function testTextStripsHtml(): void
 	{
 		$field = new ExceptionField('test', new Exception('<p>Something went wrong</p>'));
 		$this->assertSame('Something went wrong', $field->text());
 	}
 
-	/**
-	 * @covers ::theme
-	 */
 	public function testTheme(): void
 	{
 		$field = new ExceptionField('test', new Exception());
 		$this->assertSame('negative', $field->theme());
 	}
 
-	/**
-	 * @covers ::type
-	 */
 	public function testType(): void
 	{
 		$field = new ExceptionField('test', new Exception());
