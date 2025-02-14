@@ -29,8 +29,10 @@
 						v-bind="section"
 						:column="column.width"
 						:content="content"
+						:fields="fields"
 						:lock="lock"
 						:name="section.name"
+						:props="section"
 						:parent="parent"
 						:timestamp="$panel.view.timestamp"
 						:class="'k-section-name-' + section.name"
@@ -59,6 +61,7 @@ export default {
 		blueprint: String,
 		content: Object,
 		empty: String,
+		fields: Object,
 		lock: [Boolean, Object],
 		parent: String,
 		tab: Object

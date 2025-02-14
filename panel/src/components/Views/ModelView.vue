@@ -10,6 +10,7 @@ export default {
 		blueprint: String,
 		buttons: Array,
 		content: Object,
+		fields: Object,
 		id: String,
 		link: String,
 		lock: {

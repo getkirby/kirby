@@ -42,6 +42,7 @@
 		<k-sections
 			:blueprint="blueprint"
 			:content="content"
+			:fields="fields"
 			:empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
 			:lock="lock"
 			:parent="api"

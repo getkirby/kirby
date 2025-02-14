@@ -277,7 +277,7 @@ class Field extends Component
 		$this->applyProp('value', $this->options['props']['value'] ?? $value);
 
 		// reevaluate the computed props
-		$this->applyComputed($this->options['computed']);
+		$this->applyComputed($this->options['computed'] ?? []);
 
 		// reset the errors cache
 		$this->errors = null;
@@ -381,6 +381,14 @@ class Field extends Component
 	}
 
 	/**
+	 * Submits a new value for the field
+	 */
+	public function submit(mixed $value = null): static
+	{
+		return $this->fill($value);
+	}
+
+	/**
 	 * Converts the field to a plain array
 	 */
 	public function toArray(): array
@@ -405,12 +413,14 @@ class Field extends Component
 	 */
 	public function toStoredValue(bool $default = false): mixed
 	{
-		$value = $this->value($default);
+		$value = $this->toFormValue($default);
 		$store = $this->options['save'] ?? true;
 
 		if ($store === false) {
 			return null;
 		}
+
+		dump($this);
 
 		if ($store instanceof Closure) {
 			return $store->call($this, $value);

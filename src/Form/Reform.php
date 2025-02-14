@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
@@ -32,11 +33,21 @@ class Reform
 	public function __construct(
 		protected ModelWithContent $model,
 		array $fields,		
+		Language|null $language = null
 	) {
 		$this->fields = new Fields(
 			fields: $fields, 
 			model: $model,
+			language: $language
 		);
+	}
+
+	/**
+	 * Returns an array with the default value of each field
+	 */
+	public function defaults(): array
+	{
+		return $this->fields->defaults();
 	}
 
 	/**
@@ -64,12 +75,18 @@ class Reform
 		return $this;
 	}
 
+	/**
+	 * Creates a new Reform instance for the 
+	 * given model and language
+	 */
 	public static function for(
-		ModelWithContent $model
+		ModelWithContent $model,
+		Language|null $language = null
 	): static {
 		return new static(
 			model: $model,
 			fields: $model->blueprint()->fields(),
+			language: $language
 		);
 	}
 
@@ -90,6 +107,23 @@ class Reform
 	}
 
 	/**
+	 * Returns the language of the form
+	 */
+	public function language(): Language
+	{
+		return $this->fields->language();
+	}
+
+	/**
+	 * Fills the form with the given input but only if the field is not disabled
+	 */
+	public function submit(array $input): static
+	{
+		$this->fields->submit($input);
+		return $this;
+	}
+
+	/**
 	 * Converts the form to a plain array
 	 */
 	public function toArray(): array
@@ -104,16 +138,16 @@ class Reform
 	/**
 	 * Returns an array with the form value of each field
 	 */
-	public function toFormValues(bool $defaults = false): array
+	public function toFormValues(): array
 	{
-		return $this->fields->toFormValues($defaults);
+		return $this->fields->toFormValues();
 	}
 
 	/**
 	 * Returns an array with the stored value of each field
 	 */
-	public function toStoredValues(bool $defaults = false): array
+	public function toStoredValues(): array
 	{
-		return $this->fields->toStoredValues($defaults);
+		return $this->fields->toStoredValues();
 	}
 }

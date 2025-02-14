@@ -9,7 +9,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Form;
+use Kirby\Form\Reform;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Str;
 
@@ -218,12 +218,8 @@ class Version
 		$language = Language::ensure($language);
 
 		// read fields low-level from storage
-		$a = $this->read($language) ?? [];
-		$b = $version->read($language) ?? [];
-
-		// apply same preparation as for content
-		$a = $this->prepareFieldsForContent($a, $language);
-		$b = $this->prepareFieldsForContent($b, $language);
+		$a = $this->content($language)->toArray();
+		$b = $version->content($language)->toArray();
 
 		// remove additional fields that should not be
 		// considered in the comparison
@@ -232,21 +228,13 @@ class Version
 			$b['uuid']
 		);
 
-		$a = Form::for(
+		$form = Reform::for(
 			model: $this->model,
-			props: [
-				'language' => $language->code(),
-				'values'   => $a,
-			]
-		)->values();
+			language: $language,
+		);
 
-		$b = Form::for(
-			model: $this->model,
-			props: [
-				'language' => $language->code(),
-				'values'   => $b
-			]
-		)->values();
+		$a = [...$a, ...$form->fill($a)->toFormValues()];
+		$b = [...$b, ...$form->fill($b)->toFormValues()];
 
 		ksort($a);
 		ksort($b);

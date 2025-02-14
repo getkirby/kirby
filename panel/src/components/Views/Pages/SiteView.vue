@@ -32,6 +32,7 @@
 			:blueprint="blueprint"
 			:content="content"
 			:empty="$t('site.blueprint')"
+			:fields="fields"
 			:lock="lock"
 			:tab="tab"
 			parent="site"

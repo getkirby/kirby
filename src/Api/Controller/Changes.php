@@ -6,7 +6,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Content\Lock;
 use Kirby\Content\VersionId;
 use Kirby\Filesystem\F;
-use Kirby\Form\Form;
+use Kirby\Form\Reform;
 
 /**
  * The Changes controller takes care of the request logic
@@ -90,13 +90,8 @@ class Changes
 	 */
 	public static function save(ModelWithContent $model, array $input): array
 	{
-		// we need to run the input through the form
-		// class to get a set of storable field values
-		// that we can send to the content storage handler
-		$form = Form::for($model, [
-			'ignoreDisabled' => true,
-			'input'          => $input,
-		]);
+		$form = Reform::for(model: $model);
+		$form->submit($input);
 
 		$changes = $model->version(VersionId::changes());
 		$latest  = $model->version(VersionId::latest());
@@ -110,7 +105,7 @@ class Changes
 		$changes->save(
 			fields: [
 				...$latest->read(),
-				...$form->strings(),
+				...$form->toStoredValues(),
 			],
 			language: 'current'
 		);

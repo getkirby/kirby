@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Cms\Language;
+
 /**
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -45,6 +47,38 @@ trait Value
 	public function isEmptyValue(mixed $value = null): bool
 	{
 		return in_array($value, [null, '', []], true);
+	}
+
+	/**
+	 * Checks if the field is fillable
+	 */
+	public function isFillable(): bool
+	{
+		return $this->isSaveable() === true;
+	}
+
+	/**
+	 * Checks if the field is submittable
+	 */
+	public function isSubmittable(Language $language): bool
+	{
+		if ($this->isSaveable() === false) {
+			return false;
+		}
+
+		if ($this->isDisabled() === true) {
+			return false;
+		}
+
+		if ($this->isTranslatable($language) === false) {
+			return false;
+		}
+
+		if ($this->isActive() === false) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

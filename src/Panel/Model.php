@@ -7,6 +7,7 @@ use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Form\Form;
+use Kirby\Form\Reform;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
 
@@ -22,6 +23,8 @@ use Kirby\Toolkit\A;
  */
 abstract class Model
 {
+	protected Reform $form;
+
 	public function __construct(
 		protected ModelWithContent $model
 	) {
@@ -384,14 +387,26 @@ abstract class Model
 		$tabs      = $blueprint->tabs();
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
 
+		$form = new Reform(
+			model: $this->model,
+			fields: $blueprint->fields(),
+		);
+
+		$latest  = $this->model->version('latest')->content()->toArray();
+		$changes = $this->model->version('changes')->content()->toArray();
+
+		$originals = $form->fill($latest)->toFormValues();
+		$content   = $form->fill($changes)->toFormValues();
+
 		$props = [
 			'api'         => $link,
 			'buttons'     => fn () => $this->buttons(),
-			'content'     => (object)$this->content(),
+			'content'     => (object)$content,
+			'fields'      => (object)$form->fields()->toArray(),	
 			'id'          => $this->model->id(),
 			'link'        => $link,
 			'lock'        => $this->model->lock()->toArray(),
-			'originals'   => (object)$this->originals(),
+			'originals'   => (object)$originals,
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,
 			'uuid'        => fn () => $this->model->uuid()?->toString()

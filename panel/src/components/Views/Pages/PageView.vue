@@ -36,6 +36,7 @@
 			:blueprint="blueprint"
 			:content="content"
 			:empty="$t('page.blueprint', { blueprint: $esc(blueprint) })"
+			:fields="fields"
 			:lock="lock"
 			:parent="api"
 			:tab="tab"

@@ -1,19 +1,7 @@
 <template>
-	<k-section
-		v-if="!isLoading"
-		:class="['k-fields-section', $attrs.class]"
-		:headline="issue ? $t('error') : null"
-		:style="$attrs.style"
-	>
-		<k-box
-			v-if="issue"
-			:text="issue.message"
-			:html="false"
-			icon="alert"
-			theme="negative"
-		/>
+	<k-section :class="['k-fields-section', $attrs.class]" :style="$attrs.style">
 		<k-form
-			:fields="fields"
+			:fields="fieldset"
 			:validate="true"
 			:value="content"
 			:disabled="lock && lock.state === 'lock'"
@@ -30,45 +18,35 @@ export default {
 	mixins: [SectionMixin],
 	inheritAttrs: false,
 	props: {
-		content: Object
+		content: Object,
+		fields: Object,
+		props: Object
 	},
 	emits: ["input", "submit"],
-	data() {
-		return {
-			fields: {},
-			isLoading: true,
-			issue: null
-		};
-	},
-	watch: {
-		// Reload values and field definitions
-		// when the view has changed in the backend
-		timestamp() {
-			this.fetch();
-		}
-	},
-	mounted() {
-		this.fetch();
-	},
-	methods: {
-		async fetch() {
-			try {
-				const response = await this.load();
-				this.fields = response.fields;
+	computed: {
+		fieldset() {
+			const fields = {};
+			const fieldNames = Object.keys(this.props.fields).map((name) =>
+				name.toLowerCase()
+			);
 
-				for (const name in this.fields) {
-					this.fields[name].section = this.name;
-					this.fields[name].endpoints = {
-						field: this.parent + "/fields/" + name,
+			for (const fieldName of fieldNames) {
+				if (!this.fields[fieldName]) {
+					continue;
+				}
+
+				fields[fieldName] = {
+					...this.fields[fieldName],
+					section: this.name,
+					endpoints: {
+						field: this.parent + "/fields/" + fieldName,
 						section: this.parent + "/sections/" + this.name,
 						model: this.parent
-					};
-				}
-			} catch (error) {
-				this.issue = error;
-			} finally {
-				this.isLoading = false;
+					}
+				};
 			}
+
+			return fields;
 		}
 	}
 };
