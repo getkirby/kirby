@@ -15,6 +15,11 @@ class ExceptionField extends FieldClass
 		$this->name = $name;
 	}
 
+	public function isSaveable(): bool
+	{
+		return true;
+	}
+
 	public function label(): string
 	{
 		return 'Error in "' . $this->name() . '" field.';
