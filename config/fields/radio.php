@@ -17,6 +17,12 @@ return [
 		'columns' => function (int $columns = 1) {
 			return $columns;
 		},
+		/**
+		 * A radio button can be deactivated on click. If reset is `false` deactivating a radio button is no longer possible.
+		 */
+		'reset' => function (bool $reset = true) {
+			return $reset;
+		}
 	],
 	'computed' => [
 		'default' => function () {
