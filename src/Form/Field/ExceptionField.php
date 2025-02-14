@@ -17,7 +17,7 @@ class ExceptionField extends FieldClass
 
 	public function isSaveable(): bool
 	{
-		return true;
+		return false;
 	}
 
 	public function label(): string
