@@ -11,8 +11,6 @@ namespace Kirby\Form\Mixin;
  */
 trait When
 {
-	protected array|null $when = null;
-
 	/**
 	 * Checks if the field is currently active
 	 * or hidden because of a `when` condition

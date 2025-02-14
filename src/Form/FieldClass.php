@@ -42,7 +42,9 @@ abstract class FieldClass
 	protected string|null $placeholder;
 	protected bool $required;
 	protected Fields $siblings;
+	protected array|string|null $validate = null;
 	protected mixed $value = null;
+	protected array|null $when = null;
 	protected string|null $width;
 
 	public function __construct(
