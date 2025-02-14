@@ -164,6 +164,12 @@ class Field extends Component
 				'width' => function (string $width = '1/1') {
 					return $width;
 				},
+				/**	
+				 * Custom validation rules for the field
+				 */
+				'validate' => function (string|array|null $validate = null) {
+					return $validate;
+				},
 				'value' => function ($value = null) {
 					return $value;
 				}
