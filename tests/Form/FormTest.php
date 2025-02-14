@@ -308,7 +308,7 @@ class FormTest extends TestCase
 	}
 
 	/**
-	 * @covers ::exceptionField
+	 * @covers ::__construct
 	 */
 	public function testExceptionField()
 	{
