@@ -51,7 +51,7 @@ trait Validation
 	/**
 	 * Runs the validations defined for the field
 	 */
-	protected function validate(): array
+	public function validate(): array
 	{
 		$validations = $this->validations();
 		$value       = $this->value();
@@ -82,11 +82,13 @@ trait Validation
 			}
 		}
 
+		$validate = $this->validate;
+
 		if (
-			empty($this->validate) === false &&
+			empty($validate) === false &&
 			($this->isEmpty() === false || $this->isRequired() === true)
 		) {
-			$rules = A::wrap($this->validate);
+			$rules = A::wrap($validate);
 
 			$errors = [
 				...$errors,
