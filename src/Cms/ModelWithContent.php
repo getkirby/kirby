@@ -189,7 +189,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$new = $this->clone(['template' => $blueprint]);
 
 		// get version (only handling latest version)
-		$version = $new->version(VersionId::latest());
+		$version = $this->version(VersionId::latest());
 
 		// for multilang, we go through all translations and
 		// covnert the content for each of them, remove the content file

@@ -268,19 +268,6 @@ class PageActionsTest extends TestCase
 					]
 				]
 			],
-			'site' => [
-				'drafts' => [
-					[
-						'slug'     => 'test',
-						'template' => 'video',
-						'content'  => [
-							'title'   => 'Test',
-							'caption' => 'Caption',
-							'text'    => 'Text'
-						]
-					]
-				]
-			],
 			'hooks' => [
 				'page.changeTemplate:before' => function (Page $page, $template) use ($phpunit, &$calls) {
 					$phpunit->assertSame('video', $page->intendedTemplate()->name());
@@ -297,14 +284,24 @@ class PageActionsTest extends TestCase
 
 		$app->impersonate('kirby');
 
+		$page = $app->site()->createChild([
+			'slug'     => 'test',
+			'template' => 'video',
+			'content'  => [
+				'title'   => 'Test',
+				'caption' => 'Caption',
+				'text'    => 'Text'
+			]
+		]);
+
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
-
-		$page = $drafts->find('test');
 
 		$this->assertSame('video', $page->intendedTemplate()->name());
 		$this->assertSame('Caption', $page->caption()->value());
 		$this->assertSame('Text', $page->text()->value());
+		$this->assertFileExists($page->root() . '/video.txt');
+		$this->assertFileDoesNotExist($page->root() . '/article.txt');
 
 		$modified = $page->changeTemplate('article');
 
@@ -312,6 +309,8 @@ class PageActionsTest extends TestCase
 		$this->assertNull($modified->caption()->value());
 		$this->assertSame('Text', $modified->text()->value());
 		$this->assertSame(2, $calls);
+		$this->assertFileExists($modified->root() . '/article.txt');
+		$this->assertFileDoesNotExist($modified->root() . '/video.txt');
 
 		$this->assertSame($modified, $drafts->find('test'));
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
