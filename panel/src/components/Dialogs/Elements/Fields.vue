@@ -2,7 +2,7 @@
 	<k-fieldset
 		v-if="hasFields"
 		:fields="fields"
-		:value="value"
+		:value="formValue"
 		class="k-dialog-fields"
 		@input="$emit('input', $event)"
 		@submit="$emit('submit', $event)"
@@ -45,6 +45,12 @@ export default {
 	mixins: [props],
 	emits: ["input", "submit"],
 	computed: {
+		formValue() {
+			return {
+				...this.$helper.field.form(this.fields),
+				...this.value
+			};
+		},
 		hasFields() {
 			return this.$helper.object.length(this.fields) > 0;
 		}
