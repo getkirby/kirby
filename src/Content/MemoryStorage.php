@@ -35,7 +35,7 @@ class MemoryStorage extends Storage
 	 */
 	protected function cacheId(VersionId $versionId, Language $language): string
 	{
-		return $versionId->value() . '/' . $language->code() . '/' . $this->model->id();
+		return $versionId->value() . '/' . $language->code() . '/' . $this->model->id() . '/' . spl_object_hash($this->model);
 	}
 
 	/**
