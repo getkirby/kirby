@@ -40,17 +40,7 @@ class NewPage extends Page
 
 	public function moveToStorage(Storage $toStorage): static
 	{
-		$currentStorage = $this->storage();
-
-		// copy all versions to the given storage instance
-		foreach ($currentStorage->all() as $versionId => $language) {
-			$currentStorage->copy(
-				fromVersionId: $versionId,
-				fromLanguage: $language,
-				toStorage: $toStorage
-			);
-		}
-
+		$this->storage()->copyAll(to: $toStorage);
 		$this->storage = $toStorage;
 		return $this;
 	}
