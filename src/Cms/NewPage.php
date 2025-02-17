@@ -6,6 +6,7 @@ use Kirby\Content\ContentTranslation;
 use Kirby\Content\MemoryStorage;
 use Kirby\Content\Storage;
 use Kirby\Content\Translation;
+use Kirby\Content\Translations;
 use Kirby\Content\VersionId;
 
 class NewPage extends Page
@@ -17,7 +18,7 @@ class NewPage extends Page
 
 		// Move the clone to a new instance of the same storage class
 		// The storage classes might need to rely on the model instance
-		// and thus we need to make sure that the cloned object is 
+		// and thus we need to make sure that the cloned object is
 		// passed on to the new storage instance
 		$clone->moveToStorage(new $class($clone));
 
@@ -65,19 +66,11 @@ class NewPage extends Page
 
 		$this->moveToStorage(new MemoryStorage($this));
 
-		foreach ($translations as $props) {
-			// skip invalid translations without a language code
-			if (isset($props['code']) === false) {
-				continue;
-			}
-
-			// skip invalid translations without a matching language object
-			if (!$language = Language::ensure($props['code'])) {
-				continue;
-			}
-
-			$this->version()->save($props['content'] ?? [], $language);
-		}
+		Translations::create(
+			model: $this,
+			version: $this->version(),
+			translations: $translations
+		);
 
 		return $this;
 	}
@@ -128,15 +121,11 @@ class NewPage extends Page
 		);
 	}
 
-	public function translations(): Collection
+	public function translations(): Translations
 	{
-		$translations = new Collection();
-
-		foreach (Languages::ensure() as $language) {
-			$translation = $this->translation($language->code());
-			$translations->data[$translation->code()] = $translation;
-		}
-
-		return $translations;
+		return Translations::load(
+			model: $this,
+			version: $this->version()
+		);
 	}
 }
