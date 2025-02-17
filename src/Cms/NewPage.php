@@ -15,7 +15,10 @@ class NewPage extends Page
 		$clone = new static(array_replace_recursive($this->propertyData, $props));
 		$class = get_class($this->storage());
 
-		// move the clone to a new instance of the same storage class
+		// Move the clone to a new instance of the same storage class
+		// The storage classes might need to rely on the model instance
+		// and thus we need to make sure that the cloned object is 
+		// passed on to the new storage instance
 		$clone->moveToStorage(new $class($clone));
 
 		return $clone;
@@ -39,7 +42,7 @@ class NewPage extends Page
 	{
 		$currentStorage = $this->storage();
 
-		// copy all versions to the memory storage
+		// copy all versions to the given storage instance
 		foreach ($currentStorage->all() as $versionId => $language) {
 			$currentStorage->copy(
 				fromVersionId: $versionId,
