@@ -398,6 +398,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function readContent(string|null $languageCode = null): array
 	{
+		Helpers::deprecated('$model->readContent() is deprecated. Use $model->version()->read() instead.');
+
 		return $this->version()->read($languageCode ?? 'default') ?? [];
 	}
 
@@ -435,8 +437,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		// merge the new data with the existing content
 		$clone->content()->update($data, $overwrite);
 
-		// send the full content array to the writer
-		$clone->writeContent($clone->content()->toArray());
+		// save the full content array
+		$clone->version()->save($clone->content()->toArray(), 'default', true);
 
 		return $clone;
 	}
@@ -485,8 +487,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			$translation->update($content, true);
 		}
 
-		// send the full translation array to the writer
-		$clone->writeContent($translation->content(), $languageCode);
+		// save the full translation array
+		$clone->version()->save($translation->content(), $languageCode);
 
 		// reset the content object
 		$clone->content = null;
@@ -715,9 +717,12 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Low level data writer method
 	 * to store the given data on disk or anywhere else
 	 * @internal
+	 * @deprecated 5.0.0 Use `->version()->save()` instead
 	 */
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
+		Helpers::deprecated('$model->writeContent() is deprecated. Use $model->version()->save() instead.');
+
 		$this->version()->save($data, $languageCode ?? 'default', true);
 		return true;
 	}
