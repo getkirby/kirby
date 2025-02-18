@@ -7,7 +7,7 @@ use Kirby\Exception\DuplicateException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
-class UncreatablePage extends Page
+class NewUncreatablePage extends Page
 {
 	public static function create(array $props): static
 	{
@@ -182,7 +182,7 @@ class NewPageCreateTest extends NewPageTestCase
 
 	public function testCreateChildCustomModel()
 	{
-		Page::$models['uncreatable-page'] = UncreatablePage::class;
+		Page::$models['uncreatable-page'] = NewUncreatablePage::class;
 
 		$mother = Page::create([
 			'slug' => 'mother'
@@ -198,6 +198,5 @@ class NewPageCreateTest extends NewPageTestCase
 
 		$this->assertTrue($mother->drafts()->isEmpty());
 	}
-
 
 }
