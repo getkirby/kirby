@@ -12,7 +12,7 @@ class NewPageUrlTest extends NewPageTestCase
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageUrlTest';
 
 	public function testHomeUrlInMultiLanguageMode()
-	{	
+	{
 		$this->setUpMultiLanguage();
 
 		$page = new Page([
@@ -20,9 +20,9 @@ class NewPageUrlTest extends NewPageTestCase
 			'translations' => [
 				[
 					'code' => 'de',
-					// Should not have an effect on the 
+					// Should not have an effect on the
 					// base url. Only used for child urls.
-					'slug' => 'zuhause' 
+					'slug' => 'zuhause'
 				]
 			]
 		]);
@@ -37,7 +37,7 @@ class NewPageUrlTest extends NewPageTestCase
 	}
 
 	public function testHomeUrlInSingleLanguageMode()
-	{	
+	{
 		$page = new Page([
 			'slug' => 'home'
 		]);
@@ -46,7 +46,7 @@ class NewPageUrlTest extends NewPageTestCase
 	}
 
 	public function testHomeChildUrlInMultiLanguageMode()
-	{	
+	{
 		$this->setUpMultiLanguage();
 
 		$page = new Page([
@@ -80,7 +80,7 @@ class NewPageUrlTest extends NewPageTestCase
 	}
 
 	public function testHomeChildUrlInSingleLanguageMode()
-	{	
+	{
 		$page = new Page([
 			'slug'     => 'home',
 			'children' => [
