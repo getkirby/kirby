@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Cms\NewPage as Page;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Page::class)]
 class NewPageUpdateTest extends NewPageTestCase
@@ -34,9 +35,7 @@ class NewPageUpdateTest extends NewPageTestCase
 		];
 	}
 
-	/**
-	 * @dataProvider languageProvider
-	 */
+	#[DataProvider('languageProvider')]
 	public function testUpdateInMultiLanguageMode($languageCode)
 	{
 		$this->setupMultiLanguage();
