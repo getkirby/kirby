@@ -41,6 +41,58 @@ class NewPageTest extends NewPageTestCase
 		$this->assertInstanceOf(PanelPage::class, $page->panel());
 	}
 
+	public function testToArray()
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$expected = [
+			'content'      => [],
+			'translations' => [
+				'en' => [
+					'code'    => 'en',
+					'content' => [],
+					'exists'  => false,
+					'slug'    => null
+				]
+			],
+			'children'  => [],
+			'files'     => [],
+			'id'        => 'test',
+			'mediaUrl'  => '/media/pages/test',
+			'mediaRoot' => static::TMP . '/media/pages/test',
+			'num'       => null,
+			'parent'    => null,
+			'slug'      => 'test',
+			'template'  => $page->template(),
+			'uid'       => 'test',
+			'uri'       => 'test',
+			'url'       => '/test',
+		];
+
+		$this->assertSame($expected, $page->toArray());
+	}
+
+	public function testQuery()
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->assertSame('test', $page->query('page.slug'));
+		$this->assertSame('test', $page->query('model.slug'));
+	}
+
+	public function testToString()
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->assertSame('test', $page->toString('{{ page.slug }}'));
+	}
+
 	public function testUidInMultiLanguageMode()
 	{
 		$this->setUpMultiLanguage();
@@ -66,7 +118,10 @@ class NewPageTest extends NewPageTestCase
 
 	public function testUidInSingleLanguageMode()
 	{
-		$page = new Page(['slug' => 'test']);
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
 		$this->assertSame('test', $page->uid());
 	}
 
