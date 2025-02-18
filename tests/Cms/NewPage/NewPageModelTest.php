@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Cms\NewPage as Page;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-class PageTestModel extends Page
+class NewPageTestModel extends Page
 {
 	public function test(): string
 	{
@@ -33,7 +33,7 @@ class NewPageModelTest extends NewPageTestCase
 	public function testModel()
 	{
 		Page::$models = [
-			'test' => PageTestModel::class
+			'test' => NewPageTestModel::class
 		];
 
 		$page = Page::factory([
@@ -41,14 +41,14 @@ class NewPageModelTest extends NewPageTestCase
 			'model' => 'test'
 		]);
 
-		$this->assertInstanceOf(PageTestModel::class, $page);
+		$this->assertInstanceOf(NewPageTestModel::class, $page);
 		$this->assertSame('test', $page->test());
 	}
 
 	public function testModelWithDefaultFallback()
 	{
 		Page::$models = [
-			'default' => PageTestModel::class
+			'default' => NewPageTestModel::class
 		];
 
 		$page = Page::factory([
@@ -56,7 +56,7 @@ class NewPageModelTest extends NewPageTestCase
 			'model' => 'test'
 		]);
 
-		$this->assertInstanceOf(PageTestModel::class, $page);
+		$this->assertInstanceOf(NewPageTestModel::class, $page);
 		$this->assertSame('test', $page->test());
 	}
 
