@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
+
 class NewPageTestCase extends TestCase
 {
 	public function cleanUp(): void
@@ -11,6 +14,11 @@ class NewPageTestCase extends TestCase
 
 		// discard all cached blueprints
 		Blueprint::$loaded = [];
+
+		I18n::$locale       = null;
+		I18n::$fallback     = 'en';
+		I18n::$translations = [];
+		Str::$language      = [];
 	}
 
 	public function setUp(): void
