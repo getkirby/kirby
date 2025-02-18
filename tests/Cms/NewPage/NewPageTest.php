@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Cms\NewPage as Page;
 use Kirby\Panel\Page as PanelPage;
 use PHPUnit\Framework\Attributes\CoversClass;
+use TypeError;
 
 #[CoversClass(Page::class)]
 class NewPageTest extends NewPageTestCase
@@ -73,6 +74,27 @@ class NewPageTest extends NewPageTestCase
 
 		$this->assertSame('test', $page->query('page.slug'));
 		$this->assertSame('test', $page->query('model.slug'));
+	}
+
+	public function testSite()
+	{
+		$site = new Site();
+		$page = new Page([
+			'slug'   => 'test',
+			'site' => $site
+		]);
+
+		$this->assertIsSite($site, $page->site());
+	}
+
+	public function testSiteWithInvalidValue()
+	{
+		$this->expectException(TypeError::class);
+
+		new Page([
+			'slug' => 'test',
+			'site' => 'mysite'
+		]);
 	}
 
 	public function testToArray()
