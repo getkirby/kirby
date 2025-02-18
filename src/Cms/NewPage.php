@@ -28,7 +28,7 @@ class NewPage extends Page
 	public function content(string|null $languageCode = null): Content
 	{
 		// get the targeted language
-		$language  = Language::ensure($languageCode ?? 'default');
+		$language  = Language::ensure($languageCode ?? 'current');
 		$versionId = VersionId::$render ?? VersionId::latest();
 		$version   = $this->version($versionId);
 
