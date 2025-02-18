@@ -367,7 +367,7 @@ trait PageActions
 			'delete'    => ['status' => $result, 'page' => $old],
 			default     => ['newPage' => $result, 'oldPage' => $old]
 		};
-		
+
 
 		// run `after` hook and apply return to action result
 		// (first argument, usually the new model) if anything returned
