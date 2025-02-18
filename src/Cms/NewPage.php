@@ -43,14 +43,18 @@ class NewPage extends Page
 
 	public static function create(array $props): Page
 	{
-		$content = $props['content'] ?? [];
+		$content  = $props['content'] ?? [];
+		$template = $props['template'] ?? 'default';
+		$model    = $props['model'] ?? $template;
 
 		// create the instance with a limited set of props
 		$page = static::factory($props = [
 			...$props,
 			'content'      => null,
 			'isDraft'      => $props['isDraft'] ?? $props['draft'] ?? true,
+			'model'        => $model,
 			'slug'         => Url::slug($props['slug'] ?? $content['title'] ?? null),
+			'template'     => $template,
 			'translations' => null,
 		]);
 

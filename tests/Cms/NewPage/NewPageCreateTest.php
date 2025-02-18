@@ -99,6 +99,39 @@ class NewPageCreateTest extends NewPageTestCase
 		$this->assertSame('B', $page->b()->value());
 	}
 
+	public function testCreateHooks()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.create:before' => function (Page $page, $input) use ($phpunit, &$calls) {
+					$phpunit->assertIsPage($page);
+					$phpunit->assertSame('test', $input['slug']);
+					$phpunit->assertSame('default', $input['model']);
+					$phpunit->assertSame('default', $input['template']);
+					$phpunit->assertTrue($input['isDraft']);
+					$phpunit->assertArrayHasKey('uuid', $input['content']);
+					$calls++;
+				},
+				'page.create:after' => function (Page $page) use ($phpunit, &$calls) {
+					$phpunit->assertIsPage($page);
+					$phpunit->assertSame('test', $page->slug());
+					$calls++;
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		Page::create([
+			'slug' => 'test',
+		]);
+
+		$this->assertSame(2, $calls);
+	}
+
 	public function testCreateListedPage()
 	{
 		$site = $this->app->site();

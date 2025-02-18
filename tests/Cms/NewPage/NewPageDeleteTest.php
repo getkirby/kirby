@@ -111,4 +111,5 @@ class NewPageDeleteTest extends NewPageTestCase
 
 		$this->assertCount(0, $site->children());
 	}
+
 }
