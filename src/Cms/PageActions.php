@@ -70,9 +70,6 @@ trait PageActions
 				}
 			}
 
-			// overwrite the child in the parent page
-			static::updateParentCollections($newPage, 'set');
-
 			return $newPage;
 		});
 	}
@@ -128,9 +125,6 @@ trait PageActions
 				Dir::remove($oldPage->mediaRoot());
 			}
 
-			// overwrite the new page in the parent collection
-			static::updateParentCollections($newPage, 'set');
-
 			return $newPage;
 		});
 	}
@@ -166,12 +160,7 @@ trait PageActions
 				$slug = null;
 			}
 
-			$newPage = $page->save(['slug' => $slug], $languageCode);
-
-			// overwrite the updated page in the parent collection
-			static::updateParentCollections($newPage, 'set');
-
-			return $newPage;
+			return $page->save(['slug' => $slug], $languageCode);
 		});
 	}
 
@@ -292,12 +281,7 @@ trait PageActions
 
 		return $this->commit('changeTemplate', ['page' => $this, 'template' => $template], function ($oldPage, $template) {
 			// convert for new template/blueprint
-			$page = $oldPage->convertTo($template);
-
-			// update the parent collection
-			static::updateParentCollections($page, 'set');
-
-			return $page;
+			return $oldPage->convertTo($template);
 		});
 	}
 
@@ -322,12 +306,7 @@ trait PageActions
 		$arguments = ['page' => $this, 'title' => $title, 'languageCode' => $languageCode];
 
 		return $this->commit('changeTitle', $arguments, function ($page, $title, $languageCode) {
-			$page = $page->save(['title' => $title], $languageCode);
-
-			// flush the parent cache to get children and drafts right
-			static::updateParentCollections($page, 'set');
-
-			return $page;
+			return $page->save(['title' => $title], $languageCode);
 		});
 	}
 
@@ -370,6 +349,17 @@ trait PageActions
 		// run the main action closure
 		$result = $callback(...array_values($arguments));
 
+		// determine the object that needs to be updated in the parent collection
+		$update = $result instanceof Page ? $result : $old;
+
+		// flush the parent cache to get children and drafts right
+		static::updateParentCollections($update, match ($action) {
+			'create'    => 'append',
+			'duplicate' => 'append',
+			'delete'    => 'remove',
+			default     => 'set'
+		});
+
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create'    => ['page' => $result],
@@ -377,6 +367,7 @@ trait PageActions
 			'delete'    => ['status' => $result, 'page' => $old],
 			default     => ['newPage' => $result, 'oldPage' => $old]
 		};
+		
 
 		// run `after` hook and apply return to action result
 		// (first argument, usually the new model) if anything returned
@@ -504,12 +495,7 @@ trait PageActions
 			],
 			function ($page, $props) use ($languageCode) {
 				// write the content file
-				$page = $page->save($page->content()->toArray(), $languageCode);
-
-				// flush the parent cache to get children and drafts right
-				static::updateParentCollections($page, 'append');
-
-				return $page;
+				return $page->save($page->content()->toArray(), $languageCode);
 			}
 		);
 
@@ -633,8 +619,6 @@ trait PageActions
 					}
 				}
 			}
-
-			static::updateParentCollections($page, 'remove');
 
 			if ($page->isDraft() === false) {
 				$page->resortSiblingsAfterUnlisting();
@@ -946,9 +930,6 @@ trait PageActions
 		) {
 			$page = $page->changeNum($page->createNum());
 		}
-
-		// overwrite the updated page in the parent collection
-		static::updateParentCollections($page, 'set');
 
 		return $page;
 	}
