@@ -3,12 +3,30 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\NewPage as Page;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
 class NewPageFilesTest extends NewPageTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageFilesTest';
+
+	public function testCreateFile()
+	{
+		F::write($source = static::TMP . '/source.md', '');
+
+		$page = Page::create([
+			'slug' => 'test'
+		]);
+
+		$file = $page->createFile([
+			'filename' => 'test.md',
+			'source'   => $source
+		]);
+
+		$this->assertSame('test.md', $file->filename());
+		$this->assertSame('test/test.md', $file->id());
+	}
 
 	public function testFiles()
 	{
