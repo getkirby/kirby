@@ -30,6 +30,48 @@ class NewPageContentTest extends NewPageTestCase
 		]);
 	}
 
+	public function testSetContentWithChaoticFieldNames()
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'fields' => [
+					'lowercase' => [
+						'type' => 'text',
+					],
+					'UPPERCASE' => [
+						'type' => 'text',
+					],
+					'camelCase' => [
+						'type' => 'text',
+					],
+					'under_scored' => [
+						'type' => 'text',
+					],
+					'with-dashes' => [
+						'type' => 'text',
+					]
+				]
+			],
+			'content' => [
+				'lowercase'    => 'lowercase',
+				'UPPERCASE'    => 'UPPERCASE',
+				'camelCase'    => 'camelCase',
+				'under_scored'  => 'under_scored',
+				'with-dashes'  => 'with-dashes',
+			]
+		]);
+
+		$this->assertSame([
+			'title'        => null,
+			'lowercase'    => 'lowercase',
+			'uppercase'    => 'UPPERCASE',
+			'camelcase'    => 'camelCase',
+			'under_scored' => 'under_scored',
+			'with-dashes'  => 'with-dashes',
+		], $page->content()->toArray());
+	}
+
 	public function testSetContentInSingleLanguageMode(): void
 	{
 		$page = new Page([
