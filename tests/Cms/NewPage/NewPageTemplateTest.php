@@ -23,6 +23,17 @@ class NewPageTemplateTest extends NewPageTestCase
 		$this->assertSame('test', $page->intendedTemplate()->name());
 	}
 
+	public function testIntendedTemplateWithWrongCase()
+	{
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'TEST'
+		]);
+
+		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
+		$this->assertSame('test', $page->intendedTemplate()->name());
+	}
+
 	public function testIntendedTemplateWithoutValue()
 	{
 		$page = new Page([
