@@ -193,4 +193,74 @@ class NewPageTranslationsTest extends NewPageTestCase
 
 		$this->assertSame($content, $translations->find('en')->content());
 	}
+
+	public function testUntranslatedFields()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug'         => 'test',
+			'translations' => [	
+				[
+					'code'    => 'en',
+					'content' => [
+						'title' => 'Title EN'						
+					]
+				],
+				[
+					'code'    => 'de',
+					'content' => []
+				]
+			]
+		]);
+
+		$this->assertSame('Title EN', $page->title()->value());
+		$this->assertSame('Title EN', $page->title('en')->value());
+		$this->assertSame('Title EN', $page->title('de')->value());
+	}
+
+	public function testUntranslatableFields()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'fields' => [
+					'a' => [
+						'type' => 'text'
+					],
+					'b' => [
+						'type' => 'text',
+						'translate' => false
+					],
+				]
+			],
+			'translations' => [		
+				[
+					'code' => 'en',
+					'content' => [
+						'a' => 'A (EN)',
+						'b' => 'B (EN)'
+					]
+				],
+				[
+					'code' => 'de',
+					'content' => [
+						'a' => 'A (DE)',
+						'b' => 'B (DE)'
+					]
+				]
+			]
+		]);
+
+		$contentEN = $page->content('en');
+		$contentDE = $page->content('de');
+
+		$this->assertSame('A (EN)', $contentEN->a()->value());
+		$this->assertSame('B (EN)', $contentEN->b()->value());
+
+		$this->assertSame('A (DE)', $contentDE->a()->value());
+		$this->assertSame('B (EN)', $contentDE->b()->value(), 'The untranslated field should have the value of the default language');
+	}
 }
