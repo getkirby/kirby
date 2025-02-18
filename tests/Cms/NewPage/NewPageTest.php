@@ -32,6 +32,30 @@ class NewPageTest extends NewPageTestCase
 		$this->assertSame(3, $child->depth());
 	}
 
+	public function testId()
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->assertSame('test', $page->id());
+	}
+
+	public function testIdForNestedPage()
+	{
+		$mother = new Page([
+			'slug' => 'mother'
+		]);
+
+		$child = new Page([
+			'slug' => 'child',
+			'parent' => $mother
+		]);
+
+		$this->assertSame('mother', $mother->id());
+		$this->assertSame('mother/child', $child->id());
+	}
+
 	public function testPanel()
 	{
 		$page = new Page([
