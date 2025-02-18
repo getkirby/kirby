@@ -7,7 +7,7 @@ use Kirby\Content\MemoryStorage;
 use Kirby\Data\Data;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(NewPage::class)]
+#[CoversClass(Page::class)]
 class NewPageSlugTest extends NewPageTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSlugTest';

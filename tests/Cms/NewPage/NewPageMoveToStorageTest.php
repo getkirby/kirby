@@ -7,7 +7,7 @@ use Kirby\Content\MemoryStorage;
 use Kirby\Content\PlainTextStorage;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(NewPage::class)]
+#[CoversClass(Page::class)]
 class NewPageMoveToStorageTest extends NewPageTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageMoveToStorageTest';

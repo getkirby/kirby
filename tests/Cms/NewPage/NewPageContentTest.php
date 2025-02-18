@@ -3,13 +3,32 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\NewPage as Page;
+use Kirby\Content\Content;
 use Kirby\Content\MemoryStorage;
 use PHPUnit\Framework\Attributes\CoversClass;
+use TypeError;
 
-#[CoversClass(NewPage::class)]
+#[CoversClass(Page::class)]
 class NewPageContentTest extends NewPageTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageContentTest';
+
+	public function testContent()
+	{
+		$page = new Page(['slug' => 'test']);
+		$this->assertInstanceOf(Content::class, $page->content());
+		$this->assertSame([], $page->content()->toArray());
+	}
+
+	public function testSetContentWithInvalidValue()
+	{
+		$this->expectException(TypeError::class);
+
+		new Page([
+			'slug'    => 'test',
+			'content' => 'content'
+		]);
+	}
 
 	public function testSetContentInSingleLanguageMode(): void
 	{
