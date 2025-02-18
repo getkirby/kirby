@@ -3,8 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\NewPage as Page;
-use Kirby\Content\MemoryStorage;
-use Kirby\Data\Data;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
@@ -23,7 +21,7 @@ class NewPageSlugTest extends NewPageTestCase
 		$this->setUpMultiLanguage();
 
 		$page = new Page([
-			'slug' => 'test', 
+			'slug' => 'test',
 			'translations' => [
 				[
 					'code' => 'de',
@@ -42,7 +40,7 @@ class NewPageSlugTest extends NewPageTestCase
 		$this->setUpMultiLanguage();
 
 		$page = new Page([
-			'slug' => 'test', 
+			'slug' => 'test',
 			'translations' => [
 				[
 					'code' => 'en',

@@ -200,11 +200,11 @@ class NewPageTranslationsTest extends NewPageTestCase
 
 		$page = new Page([
 			'slug'         => 'test',
-			'translations' => [	
+			'translations' => [
 				[
 					'code'    => 'en',
 					'content' => [
-						'title' => 'Title EN'						
+						'title' => 'Title EN'
 					]
 				],
 				[
@@ -236,7 +236,7 @@ class NewPageTranslationsTest extends NewPageTestCase
 					],
 				]
 			],
-			'translations' => [		
+			'translations' => [
 				[
 					'code' => 'en',
 					'content' => [
