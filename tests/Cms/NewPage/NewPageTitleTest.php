@@ -1,0 +1,63 @@
+<?php
+
+namespace Kirby\Cms;
+
+use Kirby\Cms\NewPage as Page;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Page::class)]
+class NewPageTitleTest extends NewPageTestCase
+{
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageTitleTest';
+
+	public function testTitleFromSlug()
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$this->assertSame('test', $page->title()->value());
+	}
+
+	public function testTitleInSingleLanguageMode()
+	{
+		$page = new Page([
+			'slug'    => 'test',
+			'content' => [
+				'title' => 'Test Title'
+			]
+		]);
+
+		$this->assertSame('Test Title', $page->title()->value());
+	}
+
+	public function testTitleInMultiLanguageMode()
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug' => 'test',
+			'translations' => [
+				[
+					'code' => 'en',
+					'content' => [
+						'title' => 'Test Title EN'
+					]
+				],
+				[
+					'code' => 'de',
+					'content' => [
+						'title' => 'Test Title DE'
+					]
+				]
+			]
+		]);
+
+		$this->assertSame('Test Title EN', $page->title()->value());
+
+		// Switch to German
+		$this->app->setCurrentLanguage('de');
+
+		$this->assertSame('Test Title DE', $page->title()->value());
+	}
+}
