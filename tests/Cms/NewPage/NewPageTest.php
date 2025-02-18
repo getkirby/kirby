@@ -92,6 +92,16 @@ class NewPageTest extends NewPageTestCase
 		$this->assertInstanceOf(PanelPage::class, $page->panel());
 	}
 
+	public function testPermalink()
+	{
+		$page = new Page([
+			'slug'    => 'test',
+			'content' => ['uuid' => 'my-page-uuid']
+		]);
+
+		$this->assertSame('//@/page/my-page-uuid', $page->permalink());
+	}
+
 	public function testQuery()
 	{
 		$page = new Page([
