@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\NewPage as Page;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
@@ -53,5 +54,13 @@ class NewPageSlugTest extends NewPageTestCase
 		// We might want to change this in the future.
 		$this->assertSame('test', $page->slug());
 		$this->assertSame('test', $page->slug('en'));
+	}
+
+	public function testSlugWithoutValue()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page slug is required');
+
+		$page = new Page(['slug' => null]);
 	}
 }
