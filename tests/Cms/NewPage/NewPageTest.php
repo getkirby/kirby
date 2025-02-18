@@ -12,6 +12,32 @@ class NewPageTest extends NewPageTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageTest';
 
+	public function testApiUrl()
+	{
+		$this->app = $this->app->clone([
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'mother',
+						'children' => [
+							[
+								'slug' => 'child'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $this->app->page('mother/child');
+
+		$this->assertSame('https://getkirby.com/api/pages/mother+child', $page->apiUrl());
+		$this->assertSame('pages/mother+child', $page->apiUrl(true));
+	}
+
 	public function testDepth()
 	{
 		$grandma = new Page([
