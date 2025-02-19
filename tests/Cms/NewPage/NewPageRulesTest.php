@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\NewPage as Page;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\NewPage as Page;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
