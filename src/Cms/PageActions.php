@@ -326,10 +326,6 @@ trait PageActions
 	): mixed {
 		$kirby = $this->kirby();
 
-		// store copy of the model to be passed
-		// to the `after` hook for comparison
-		$old = $this->hardcopy();
-
 		// check page rules
 		$this->rules()->$action(...array_values($arguments));
 
@@ -350,7 +346,7 @@ trait PageActions
 		$result = $callback(...array_values($arguments));
 
 		// determine the object that needs to be updated in the parent collection
-		$update = $result instanceof Page ? $result : $old;
+		$update = $result instanceof Page ? $result : $this;
 
 		// flush the parent cache to get children and drafts right
 		static::updateParentCollections($update, match ($action) {
@@ -362,12 +358,12 @@ trait PageActions
 
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
-			'create'    => ['page' => $result],
-			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $old],
-			'delete'    => ['status' => $result, 'page' => $old],
-			default     => ['newPage' => $result, 'oldPage' => $old]
+			'changeTitle' => ['newPage' => $result, 'oldPage' => $this],
+			'create'      => ['page' => $result],
+			'duplicate'   => ['duplicatePage' => $result, 'originalPage' => $this],
+			'delete'      => ['status' => $result, 'page' => $this],
+			default       => ['newPage' => $result, 'oldPage' => $this]
 		};
-
 
 		// run `after` hook and apply return to action result
 		// (first argument, usually the new model) if anything returned
