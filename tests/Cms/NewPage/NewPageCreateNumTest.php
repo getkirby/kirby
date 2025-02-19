@@ -12,17 +12,6 @@ class NewPageCreateNumTest extends NewPageTestCase
 
 	public function testCreateDateBasedNum()
 	{
-		// without date
-		$page = new Page([
-			'slug' => 'test',
-			'blueprint' => [
-				'num' => 'date'
-			]
-		]);
-
-		$this->assertSame((int)date('Ymd'), $page->createNum());
-
-		// with date field
 		$page = new Page([
 			'slug' => 'test',
 			'blueprint' => [
@@ -34,6 +23,18 @@ class NewPageCreateNumTest extends NewPageTestCase
 		]);
 
 		$this->assertSame(20121212, $page->createNum());
+	}
+
+	public function testCreateDateBasedNumWithoutDate()
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'num' => 'date'
+			]
+		]);
+
+		$this->assertSame((int)date('Ymd'), $page->createNum());
 	}
 
 	public function testCreateDateBasedNumInMultiLanguageMode()
@@ -71,23 +72,6 @@ class NewPageCreateNumTest extends NewPageTestCase
 
 	public function testCreateDateBasedNumWithDateHandler()
 	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'date.handler' => 'strftime'
-			]
-		]);
-
-		// without date
-		$page = new Page([
-			'slug' => 'test',
-			'blueprint' => [
-				'num' => 'date'
-			]
-		]);
-
-		$this->assertSame((int)date('Ymd'), $page->createNum());
-
-		// with date field
 		$page = new Page([
 			'slug' => 'test',
 			'blueprint' => [
@@ -101,71 +85,106 @@ class NewPageCreateNumTest extends NewPageTestCase
 		$this->assertSame(20121212, $page->createNum());
 	}
 
-	public function testCreateDefaultNum()
+	public function testCreateDateBasedNumWithDateHandlerWithoutDate()
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'one-child',
-						'children' => [
-							[
-								'slug' => 'child-a'
-							]
-						]
-					],
-					[
-						'slug'     => 'three-children',
-						'children' => [
-							[
-								'slug' => 'child-a',
-								'num'  => 1
-							],
-							[
-								'slug' => 'child-b',
-								'num'  => 2
-							],
-							[
-								'slug' => 'child-c'
-							]
-						],
-						'drafts' => [
-							[
-								'slug' => 'draft'
-							]
-						]
-					]
-				]
+		$this->app = $this->app->clone([
+			'options' => [
+				'date.handler' => 'strftime'
 			]
 		]);
 
-		// no siblings
-		$page = $app->page('one-child/child-a');
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'num' => 'date'
+			]
+		]);
+
+		$this->assertSame((int)date('Ymd'), $page->createNum());
+	}
+
+	public function testCreateDefaultNumForDraftWithSiblings()
+	{
+		$pageA = Page::create([
+			'slug'   => 'child-a',
+			'num'    => 1,
+			'draft'  => false
+		]);
+
+		$pageB = Page::create([
+			'slug'   => 'child-b',
+			'num'    => 2,
+			'draft'  => false
+		]);
+
+		$pageC = Page::create([
+			'slug'   => 'child-c',
+			'draft'  => true,
+		]);
+
+		// no given position
+		$this->assertSame(3, $pageC->createNum());
+
+		// valid given position
+		$this->assertSame(2, $pageC->createNum(2));
+
+		// position too low
+		$this->assertSame(1, $pageC->createNum(-1));
+
+		// position too high
+		$this->assertSame(3, $pageC->createNum(4));
+	}
+
+	public function testCreateDefaultNumForDraftWithoutSiblings()
+	{
+		$page = Page::create([
+			'slug'  => 'test',
+			'draft' => true
+		]);
+
 		$this->assertSame(1, $page->createNum());
+	}
 
-		// two listed siblings / no position
-		$page = $app->page('three-children/child-c');
-		$this->assertSame(3, $page->createNum());
+	public function testCreateDefaultNumForPageWithSiblings()
+	{
+		$pageA = Page::create([
+			'slug'   => 'child-a',
+			'num'    => 1,
+			'draft'  => false
+		]);
 
-		// one listed sibling / valid position
-		$page = $app->page('three-children/child-a');
-		$this->assertSame(2, $page->createNum(2));
+		$pageB = Page::create([
+			'slug'   => 'child-b',
+			'num'    => 2,
+			'draft'  => false
+		]);
 
-		// one listed sibling / position too low
-		$page = $app->page('three-children/child-a');
-		$this->assertSame(1, $page->createNum(-1));
+		$pageC = Page::create([
+			'slug'   => 'child-c',
+			'draft'  => false,
+		]);
 
-		// one listed sibling / position too high
-		$page = $app->page('three-children/child-a');
-		$this->assertSame(2, $page->createNum(3));
+		// no given position
+		$this->assertSame(3, $pageC->createNum());
 
-		// draft / no position
-		$page = $app->page('three-children/draft');
-		$this->assertSame(3, $page->createNum());
+		// valid given position
+		$this->assertSame(2, $pageC->createNum(2));
 
-		// draft / given position
-		$page = $app->page('three-children/draft');
-		$this->assertSame(1, $page->createNum(1));
+		// position too low
+		$this->assertSame(1, $pageC->createNum(-1));
+
+		// position too high
+		$this->assertSame(3, $pageC->createNum(4));
+	}
+
+	public function testCreateDefaultNumForPageWithoutSiblings()
+	{
+		$page = Page::create([
+			'slug'  => 'test',
+			'draft' => false
+		]);
+
+		$this->assertSame(1, $page->createNum());
 	}
 
 	public function testCreateQueryBasedNum()
