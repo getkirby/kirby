@@ -99,6 +99,58 @@ class NewPageCreateTest extends NewPageTestCase
 		$this->assertSame('B', $page->b()->value());
 	}
 
+	public function testCreateChild()
+	{
+		Dir::make($this->app->root('content'));
+
+		$mother = Page::create([
+			'slug' => 'mother'
+		]);
+
+		$child = $mother->createChild([
+			'slug'     => 'child',
+			'template' => 'the-template'
+		]);
+
+		$this->assertTrue($child->exists());
+		$this->assertSame('the-template', $child->intendedTemplate()->name());
+		$this->assertSame('child', $child->slug());
+		$this->assertSame('mother/child', $child->id());
+		$this->assertTrue($mother->drafts()->has($child->id()));
+	}
+
+	public function testCreateChildWithCustomModel()
+	{
+		Page::$models['uncreatable-page'] = NewUncreatablePage::class;
+
+		$mother = Page::create([
+			'slug' => 'mother'
+		]);
+
+		try {
+			$mother->createChild([
+				'slug'     => 'child',
+				'template' => 'uncreatable-page'
+			]);
+		} catch (TypeError) {
+		}
+
+		$this->assertTrue($mother->drafts()->isEmpty());
+	}
+
+	public function testCreateDuplicate()
+	{
+		$this->expectException(DuplicateException::class);
+
+		$page = Page::create([
+			'slug' => 'new-page',
+		]);
+
+		$page = Page::create([
+			'slug' => 'new-page',
+		]);
+	}
+
 	public function testCreateHooks()
 	{
 		$calls = 0;
@@ -178,58 +230,6 @@ class NewPageCreateTest extends NewPageTestCase
 		$this->assertFalse($page->isListed());
 		$this->assertTrue($page->parentModel()->children()->has($page));
 		$this->assertTrue($site->children()->has($page));
-	}
-
-	public function testCreateDuplicate()
-	{
-		$this->expectException(DuplicateException::class);
-
-		$page = Page::create([
-			'slug' => 'new-page',
-		]);
-
-		$page = Page::create([
-			'slug' => 'new-page',
-		]);
-	}
-
-	public function testCreateChild()
-	{
-		Dir::make($this->app->root('content'));
-
-		$mother = Page::create([
-			'slug' => 'mother'
-		]);
-
-		$child = $mother->createChild([
-			'slug'     => 'child',
-			'template' => 'the-template'
-		]);
-
-		$this->assertTrue($child->exists());
-		$this->assertSame('the-template', $child->intendedTemplate()->name());
-		$this->assertSame('child', $child->slug());
-		$this->assertSame('mother/child', $child->id());
-		$this->assertTrue($mother->drafts()->has($child->id()));
-	}
-
-	public function testCreateChildCustomModel()
-	{
-		Page::$models['uncreatable-page'] = NewUncreatablePage::class;
-
-		$mother = Page::create([
-			'slug' => 'mother'
-		]);
-
-		try {
-			$mother->createChild([
-				'slug'     => 'child',
-				'template' => 'uncreatable-page'
-			]);
-		} catch (TypeError) {
-		}
-
-		$this->assertTrue($mother->drafts()->isEmpty());
 	}
 
 }
