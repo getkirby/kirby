@@ -73,5 +73,4 @@ class NewPageModifiedTest extends NewModelTestCase
 		$this->assertSame($modifiedEnContent, $page->modified(null, null, 'en'));
 		$this->assertSame($modifiedDeContent, $page->modified(null, null, 'de'));
 	}
-
 }

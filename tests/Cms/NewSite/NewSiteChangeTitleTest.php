@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Cms\NewSite as Site;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(NewSite::class)]
+#[CoversClass(Site::class)]
 class NewSiteChangeTitleTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteChangeTitleTest';
@@ -89,8 +89,8 @@ class NewSiteChangeTitleTest extends NewModelTestCase
 		$this->app = $this->app->clone([
 			'languages' => [
 				[
-					'code' => 'en',
-					'name' => 'English',
+					'code'    => 'en',
+					'name'    => 'English',
 					'default' => true
 				],
 				[

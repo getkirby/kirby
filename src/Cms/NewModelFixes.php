@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Content\ContentTranslation;
+use Kirby\Content\Content;
 use Kirby\Content\MemoryStorage;
 use Kirby\Content\Storage;
 use Kirby\Content\Translation;
@@ -13,7 +13,8 @@ trait NewModelFixes
 {
 	public function clone(array $props = []): static
 	{
-		$clone = new static(array_replace_recursive($this->propertyData, $props));
+		$props = array_replace_recursive($this->propertyData, $props);
+		$clone = new static($props);
 		$class = get_class($this->storage());
 
 		// Move the clone to a new instance of the same storage class
@@ -94,7 +95,11 @@ trait NewModelFixes
 		$this->moveToStorage(new MemoryStorage($this));
 
 		// update the clone
-		$clone->version()->save($data ?? [], $languageCode ?? 'default', $overwrite);
+		$clone->version()->save(
+			$data ?? [],
+			$languageCode ?? 'default',
+			$overwrite
+		);
 
 		return $clone;
 	}
@@ -150,7 +155,7 @@ trait NewModelFixes
 	 */
 	public function translation(
 		string|null $languageCode = null
-	): ContentTranslation|null {
+	): Translation|null {
 		$language = Language::ensure($languageCode ?? 'current');
 
 		return new Translation(

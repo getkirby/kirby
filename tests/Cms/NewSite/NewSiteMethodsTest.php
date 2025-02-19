@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Cms\NewSite as Site;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(NewSite::class)]
+#[CoversClass(Site::class)]
 class NewSiteMethodsTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteMethodsTest';
