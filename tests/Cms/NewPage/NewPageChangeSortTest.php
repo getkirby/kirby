@@ -6,9 +6,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Page::class)]
-class NewPageSortTest extends NewPageTestCase
+class NewPageChangeSortTest extends NewPageTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSortTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeSortTest';
 
 	public function site()
 	{
@@ -27,7 +27,7 @@ class NewPageSortTest extends NewPageTestCase
 	/**
 	 * @dataProvider sortProvider
 	 */
-	public function testSort($id, $position, $expected)
+	public function testChangeSort($id, $position, $expected)
 	{
 		$site = new Site([
 			'children' => [
@@ -56,7 +56,7 @@ class NewPageSortTest extends NewPageTestCase
 		$this->assertSame($expected, implode(',', $site->children()->keys()));
 	}
 
-	public function testSortDateBased()
+	public function testChangeSortDateBased()
 	{
 		$site = new Site([
 			'children' => [
@@ -133,5 +133,4 @@ class NewPageSortTest extends NewPageTestCase
 		$this->assertDirectoryExists(static::TMP . '/content/2_c');
 		$this->assertDirectoryExists(static::TMP . '/content/1_d');
 	}
-
 }
