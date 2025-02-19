@@ -172,10 +172,6 @@ trait UserActions
 
 		$kirby = $this->kirby();
 
-		// store copy of the model to be passed
-		// to the `after` hook for comparison
-		$old = $this->hardcopy();
-
 		// check user rules
 		$this->rules()->$action(...array_values($arguments));
 
@@ -198,8 +194,8 @@ trait UserActions
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create' => ['user' => $result],
-			'delete' => ['status' => $result, 'user' => $old],
-			default  => ['newUser' => $result, 'oldUser' => $old]
+			'delete' => ['status' => $result, 'user' => $this],
+			default  => ['newUser' => $result, 'oldUser' => $this]
 		};
 
 		// run `after` hook and apply return to action result
@@ -227,13 +223,13 @@ trait UserActions
 		}
 
 		if (isset($props['password']) === true) {
-			$data['password'] = User::hashPassword($props['password']);
+			$data['password'] = static::hashPassword($props['password']);
 		}
 
 		$props['role'] ??= 'default';
 		$props['role']   = $props['model'] = strtolower($props['role']);
 
-		$user = User::factory($data);
+		$user = static::factory($data);
 
 		// create a form for the user
 		$form = Form::for($user, [
