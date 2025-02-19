@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(PageRules::class)]
-class NewPageRulesTest extends NewPageTestCase
+class NewPageRulesTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageRulesTest';
 

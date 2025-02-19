@@ -9,7 +9,7 @@ use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
-class NewPageDuplicateTest extends NewPageTestCase
+class NewPageDuplicateTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageDuplicateTest';
 

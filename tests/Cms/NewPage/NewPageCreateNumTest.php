@@ -6,7 +6,7 @@ use Kirby\Cms\NewPage as Page;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
-class NewPageCreateNumTest extends NewPageTestCase
+class NewPageCreateNumTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageCreateNumTest';
 

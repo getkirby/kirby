@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
 #[CoversClass(Page::class)]
-class NewPageParentTest extends NewPageTestCase
+class NewPageParentTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageParentTest';
 

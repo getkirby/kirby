@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(PageCopy::class)]
-class NewPageCopyTest extends NewPageTestCase
+class NewPageCopyTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageCopyTest';
 

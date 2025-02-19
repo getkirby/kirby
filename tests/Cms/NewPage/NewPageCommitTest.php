@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 
 #[CoversClass(Page::class)]
-class NewPageCommitTest extends NewPageTestCase
+class NewPageCommitTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageCommitTest';
 

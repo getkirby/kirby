@@ -7,7 +7,7 @@ use Kirby\Data\Data;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
-class NewPageSaveTest extends NewPageTestCase
+class NewPageSaveTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSaveTest';
 

@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
 #[CoversClass(Page::class)]
-class NewPagePermissionsTest extends NewPageTestCase
+class NewPagePermissionsTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPagePermissionsTest';
 

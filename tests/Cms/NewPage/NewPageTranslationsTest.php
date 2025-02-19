@@ -8,7 +8,7 @@ use Kirby\Data\Data;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
-class NewPageTranslationsTest extends NewPageTestCase
+class NewPageTranslationsTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageTranslationsTest';
 
