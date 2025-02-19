@@ -11,21 +11,13 @@ class NewPageCopyTest extends NewPageTestCase
 
 	public function testChildren(): void
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'children' => [
-							['slug' => 'test-a'],
-							['slug' => 'test-b']
-						]
-					]
-				]
+		$page = Page::create([
+			'slug'     => 'test',
+			'children' => [
+				['slug' => 'test-a'],
+				['slug' => 'test-b']
 			]
 		]);
-
-		$page = $app->page('test');
 
 		$copy = new PageCopy($page, withChildren: true);
 		$this->assertCount(2, $copy->children());
@@ -226,21 +218,13 @@ class NewPageCopyTest extends NewPageTestCase
 
 	public function testFiles(): void
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'files' => [
-							['filename' => 'test-a.jpg'],
-							['filename' => 'test-b.jpg'],
-						]
-					]
-				]
+		$page = Page::create([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'test-a.jpg'],
+				['filename' => 'test-b.jpg'],
 			]
 		]);
-
-		$page = $app->page('test');
 
 		$copy = new PageCopy($page, withFiles: true);
 		$this->assertCount(2, $copy->files());
@@ -249,33 +233,27 @@ class NewPageCopyTest extends NewPageTestCase
 		$this->assertCount(0, $copy->files());
 	}
 
-	public function testLanguages(): void
+	public function testLanguagesInMultiLanguageMode(): void
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				]
-			]
+		$this->setupMultiLanguage();
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug' => 'test',
 		]);
 
-		$page = $app->page('test');
+		$copy = new PageCopy($page);
+		$this->assertCount(2, $copy->languages());
+	}
+
+	public function testLanguagesInSingleLanguageMode(): void
+	{
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
 		$copy = new PageCopy($page);
 		$this->assertSame([null], $copy->languages());
-
-		$app = $app->clone([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'default' => true,
-				],
-				[
-					'code'    => 'de',
-				],
-			]
-		]);
-
-		$this->assertCount(2, $copy->languages());
 	}
 
 	public function testProcess(): void
