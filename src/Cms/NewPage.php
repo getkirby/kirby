@@ -41,6 +41,42 @@ class NewPage extends Page
 		return $this->version()->content($language);
 	}
 
+	/**
+	 * Converts model to new blueprint
+	 * incl. its content for all translations
+	 */
+	protected function convertTo(string $blueprint): static
+	{
+		// first close object with new blueprint as template
+		$new = $this->clone(['template' => $blueprint]);
+
+		// get versions
+		$latest  = $this->version(VersionId::latest());
+		$changes = $this->version(VersionId::changes());
+
+		foreach (Languages::ensure() as $language) {
+			// delete changes
+			$changes->delete($language);
+
+			// skip non-existing versions
+			if ($latest->exists($language) === false) {
+				continue;
+			}
+
+			// convert the content to the new blueprint
+			$content = $latest->content($language)->convertTo($blueprint);
+
+			// delete the old text file
+			$latest->delete($language);
+
+			// save to re-create the content file
+			// with the converted/updated content
+			$new->version()->save($content, $language);
+		}
+
+		return $new;
+	}
+
 	public static function create(array $props): Page
 	{
 		$content  = $props['content'] ?? [];
