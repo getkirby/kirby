@@ -795,6 +795,7 @@ class Page extends ModelWithContent
 	 */
 	public static function model(string $name, array $props = []): static
 	{
+		$name    = strtolower($name);
 		$class   = static::$models[$name] ?? null;
 		$class ??= static::$models['default'] ?? null;
 

@@ -79,23 +79,6 @@ class NewPage extends Page
 		return $page;
 	}
 
-	public static function model(string $name, array $props = []): static
-	{
-		$name    = strtolower($name);
-		$class   = static::$models[$name] ?? null;
-		$class ??= static::$models['default'] ?? null;
-
-		if ($class !== null) {
-			$object = new $class($props);
-
-			if ($object instanceof self) {
-				return $object;
-			}
-		}
-
-		return new static($props);
-	}
-
 	protected function setTemplate(string|null $template = null): static
 	{
 		if ($template !== null) {
