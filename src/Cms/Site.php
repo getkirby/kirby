@@ -188,7 +188,9 @@ class Site extends ModelWithContent
 		array $data,
 		string|null $languageCode = null
 	): array {
-		return A::prepend($data, ['title' => $data['title'] ?? null]);
+		return A::prepend($data, [
+			'title' => $data['title'] ?? null
+		]);
 	}
 
 	/**

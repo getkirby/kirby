@@ -39,6 +39,31 @@ class NewSiteSearchTest extends NewModelTestCase
 		$this->assertCount(0, $result);
 	}
 
+	public function testSearchMinlength(): void
+	{
+		$site = new Site([
+			'children' => [
+				['slug' => 'home'],
+				['slug' => 'foo'],
+				['slug' => 'bar'],
+				['slug' => 'foo-a'],
+				['slug' => 'bar-b'],
+			]
+		]);
+
+		$collection = $site->search('foo', [
+			'minlength' => 5
+		]);
+
+		$this->assertCount(0, $collection);
+
+		$collection = $site->search('foo', [
+			'minlength' => 1
+		]);
+
+		$this->assertCount(2, $collection);
+	}
+
 	public function testSearchWords(): void
 	{
 		$site = new Site([
@@ -71,5 +96,45 @@ class NewSiteSearchTest extends NewModelTestCase
 
 		$result = $site->search('mount', ['words' => false]);
 		$this->assertCount(4, $result);
+	}
+
+	public function testSearchStopWords(): void
+	{
+		$site = new Site([
+			'children' => [
+				['slug' => 'home'],
+				['slug' => 'foo'],
+				['slug' => 'bar'],
+				['slug' => 'baz'],
+				['slug' => 'foo-bar'],
+				['slug' => 'foo-baz'],
+			]
+		]);
+
+		$collection = $site->search('foo bar', [
+			'stopwords' => ['bar']
+		]);
+
+		$this->assertCount(3, $collection);
+	}
+
+	public function testSearchStopWordsNoResults(): void
+	{
+		$site = new Site([
+			'children' => [
+				['slug' => 'home'],
+				['slug' => 'foo'],
+				['slug' => 'bar'],
+				['slug' => 'baz'],
+				['slug' => 'foo-bar'],
+				['slug' => 'foo-baz'],
+			]
+		]);
+
+		$collection = $site->search('new foo', [
+			'stopwords' => ['foo']
+		]);
+
+		$this->assertCount(0, $collection);
 	}
 }
