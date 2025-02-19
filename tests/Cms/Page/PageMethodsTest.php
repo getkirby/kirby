@@ -12,9 +12,6 @@ class PageMethodsTest extends TestCase
 			'pageMethods' => [
 				'test' => fn () => 'page method'
 			],
-			'pagesMethods' => [
-				'test' => fn () => 'pages method'
-			],
 			'site' => [
 				'children' => [
 					[
@@ -34,11 +31,5 @@ class PageMethodsTest extends TestCase
 	{
 		$page = $this->app->page('test');
 		$this->assertSame('page method', $page->test());
-	}
-
-	public function testPagesMethod()
-	{
-		$pages = $this->app->site()->children();
-		$this->assertSame('pages method', $pages->test());
 	}
 }
