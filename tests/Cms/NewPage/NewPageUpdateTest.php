@@ -59,6 +59,61 @@ class NewPageUpdateTest extends NewPageTestCase
 		$this->assertCorrectlyUpdatedPage($modified, $page, $drafts, $childrenAndDrafts);
 	}
 
+	public function testUpdateInMultiLanguageModeWithMergedContent()
+	{
+		$this->setupMultiLanguage();
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug' => 'test'
+		]);
+
+		$drafts            = $this->app->site()->drafts();
+		$childrenAndDrafts = $this->app->site()->childrenAndDrafts();
+
+		// add some content in both languages
+		$page = $page->update([
+			'a' => 'A (en)',
+			'b' => 'B (en)'
+		], 'en');
+
+		$page = $page->update([
+			'a' => 'A (de)',
+			'b' => 'B (de)'
+		], 'de');
+
+		$this->assertSame('A (en)', $page->content('en')->a()->value());
+		$this->assertSame('B (en)', $page->content('en')->b()->value());
+		$this->assertSame('A (de)', $page->content('de')->a()->value());
+		$this->assertSame('B (de)', $page->content('de')->b()->value());
+
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
+
+		// update a single field in the primary language
+		$page = $page->update([
+			'b' => 'B modified (en)'
+		], 'en');
+
+		$this->assertSame('A (en)', $page->content('en')->a()->value());
+		$this->assertSame('B modified (en)', $page->content('en')->b()->value());
+
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
+
+		// update a single field in the secondary language
+		$page = $page->update([
+			'b' => 'B modified (de)'
+		], 'de');
+
+		$this->assertSame('A (de)', $page->content('de')->a()->value());
+		$this->assertSame('B modified (de)', $page->content('de')->b()->value());
+
+		$this->assertIsPage($page, $drafts->find('test'));
+		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
+	}
+
 	public function testUpdateInSingleLanguageMode()
 	{
 		$page = Page::create([
