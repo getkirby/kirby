@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\NewPage as Page;
+use Kirby\Content\VersionId;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
@@ -15,7 +16,7 @@ class NewPageChangeTemplateTest extends NewPageTestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/video' => [
 					'title'  => 'Video',
@@ -71,37 +72,27 @@ class NewPageChangeTemplateTest extends NewPageTestCase
 					'code' => 'fr',
 					'name' => 'Français',
 				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'template' => 'video',
-						'translations' => [
-							[
-								'code' => 'en',
-								'content' => [
-									'title'   => 'Test',
-									'caption' => 'Caption',
-									'text'    => 'Text'
-								]
-							],
-							[
-								'code' => 'de',
-								'content' => [
-									'title'   => 'Prüfen',
-									'caption' => 'Untertitel',
-									'text'    => 'Täxt'
-								]
-							],
-						]
-					]
-				]
-			],
+			]
 		]);
 
-		$app->impersonate('kirby');
-		$page = $app->page('test');
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'video',
+		]);
+
+		$page = $page->update([
+			'title'   => 'Test',
+			'caption' => 'Caption',
+			'text'    => 'Text'
+		], 'en');
+
+		$page = $page->update([
+			'title'   => 'Prüfen',
+			'caption' => 'Untertitel',
+			'text'    => 'Täxt'
+		], 'de');
 
 		$this->assertSame('video', $page->intendedTemplate()->name());
 		$this->assertSame('Caption', $page->caption()->value());
@@ -109,10 +100,9 @@ class NewPageChangeTemplateTest extends NewPageTestCase
 		$this->assertSame('Untertitel', $page->content('de')->get('caption')->value());
 		$this->assertSame('Täxt', $page->content('de')->get('text')->value());
 
-		$drafts = $app->site()->drafts();
-		$childrenAndDrafts = $app->site()->childrenAndDrafts();
-
-		$modified = $page->changeTemplate('article');
+		$drafts            = $this->app->site()->drafts();
+		$childrenAndDrafts = $this->app->site()->childrenAndDrafts();
+		$modified          = $page->changeTemplate('article');
 
 		$this->assertSame('article', $modified->intendedTemplate()->name());
 		$this->assertSame(2, $calls);
@@ -131,7 +121,7 @@ class NewPageChangeTemplateTest extends NewPageTestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/video' => [
 					'title'  => 'Video',
@@ -175,9 +165,9 @@ class NewPageChangeTemplateTest extends NewPageTestCase
 			]
 		]);
 
-		$app->impersonate('kirby');
+		$this->app->impersonate('kirby');
 
-		$page = $app->site()->createChild([
+		$page = Page::create([
 			'slug'     => 'test',
 			'template' => 'video',
 			'content'  => [
@@ -187,8 +177,8 @@ class NewPageChangeTemplateTest extends NewPageTestCase
 			]
 		]);
 
-		$drafts = $app->site()->drafts();
-		$childrenAndDrafts = $app->site()->childrenAndDrafts();
+		$drafts            = $this->app->site()->drafts();
+		$childrenAndDrafts = $this->app->site()->childrenAndDrafts();
 
 		$this->assertSame('video', $page->intendedTemplate()->name());
 		$this->assertSame('Caption', $page->caption()->value());

@@ -13,7 +13,7 @@ class NewPageChangeTitleTest extends NewPageTestCase
 	public function testChangeTitle()
 	{
 		$page = Page::create([
-			'slug' => 'test'
+			'slug' => 'test',
 		]);
 
 		$this->assertSame('test', $page->title()->value());
