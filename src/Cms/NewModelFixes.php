@@ -145,6 +145,9 @@ trait NewModelFixes
 		return $this;
 	}
 
+    /**
+     * @todo Change return type to Translation once the refactoring is done
+     */
 	public function translation(
 		string|null $languageCode = null
 	): ContentTranslation|null {
