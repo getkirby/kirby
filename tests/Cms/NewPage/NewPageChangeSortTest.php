@@ -24,80 +24,77 @@ class NewPageChangeSortTest extends NewPageTestCase
 		];
 	}
 
-	/**
-	 * @dataProvider sortProvider
-	 */
+	#[DataProvider('sortProvider')]
 	public function testChangeSort($id, $position, $expected)
 	{
-		$site = new Site([
-			'children' => [
-				[
-					'slug' => 'a',
-					'num'  => 1,
-				],
-				[
-					'slug' => 'b',
-					'num'  => 2,
-				],
-				[
-					'slug' => 'c',
-					'num'  => 3,
-				],
-				[
-					'slug' => 'd',
-					'num'  => 4,
-				]
-			]
+		Page::create([
+			'slug' => 'a',
+			'num'  => 1,
 		]);
 
-		$page = $site->find($id);
-		$page = $page->changeSort($position);
+		Page::create([
+			'slug' => 'b',
+			'num'  => 2,
+		]);
+
+		Page::create([
+			'slug' => 'c',
+			'num'  => 3,
+		]);
+
+		Page::create([
+			'slug' => 'd',
+			'num'  => 4,
+		]);
+
+		$site = $this->site();
+		$site->find($id)->changeSort($position);
 
 		$this->assertSame($expected, implode(',', $site->children()->keys()));
 	}
 
 	public function testChangeSortDateBased()
 	{
-		$site = new Site([
-			'children' => [
-				[
-					'slug' => 'a',
-					'num'  => 1,
-				],
-				[
-					'slug' => 'b',
-					'num'  => 2,
-				],
-				[
-					'slug' => 'c',
-					'num'  => 20180104,
-					'blueprint' => [
-						'title' => 'DateBased',
-						'name'  => 'datebased',
-						'num'   => 'date'
-					],
-					'content' => [
-						'date' => '2018-01-04'
-					]
-				],
-				[
-					'slug' => 'd',
-					'num'  => 4,
-				],
-				[
-					'slug' => 'e',
-					'num'  => 0,
-					'blueprint' => [
-						'title' => 'ZeroBased',
-						'name'  => 'zerobased',
-						'num'   => 'zero'
-					],
-				],
+		Page::create([
+			'slug' => 'a',
+			'num'  => 1,
+		]);
+
+		Page::create([
+			'slug' => 'b',
+			'num'  => 2,
+		]);
+
+		Page::create([
+			'slug' => 'c',
+			'num'  => 20180104,
+			'blueprint' => [
+				'title' => 'DateBased',
+				'name'  => 'datebased',
+				'num'   => 'date'
+			],
+			'content' => [
+				'date' => '2018-01-04'
 			]
 		]);
 
-		$page = $site->find('b');
-		$page = $page->changeSort(3);
+		Page::create([
+			'slug' => 'd',
+			'num'  => 4,
+		]);
+
+		Page::create([
+			'slug' => 'e',
+			'num'  => 0,
+			'blueprint' => [
+				'title' => 'ZeroBased',
+				'name'  => 'zerobased',
+				'num'   => 'zero'
+			],
+		]);
+
+		$site = $this->site();
+		$site->find('b')->changeSort(3);
 
 		$this->assertSame(1, $site->find('a')->num());
 		$this->assertSame(2, $site->find('d')->num());
