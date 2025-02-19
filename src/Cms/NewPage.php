@@ -79,11 +79,6 @@ class NewPage extends Page
 		return $page;
 	}
 
-	public static function factory($props): static
-	{
-		return static::model($props['model'] ?? $props['template'] ?? 'default', $props);
-	}
-
 	public static function model(string $name, array $props = []): static
 	{
 		$name    = strtolower($name);

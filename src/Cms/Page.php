@@ -415,7 +415,7 @@ class Page extends ModelWithContent
 	 */
 	public static function factory($props): static
 	{
-		return static::model($props['model'] ?? 'default', $props);
+		return static::model($props['model'] ?? $props['template'] ?? 'default', $props);
 	}
 
 	/**
