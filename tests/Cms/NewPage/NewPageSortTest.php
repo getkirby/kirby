@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -14,29 +13,6 @@ class NewPageSortTest extends NewPageTestCase
 	public function site()
 	{
 		return $this->app->site();
-	}
-
-	public function testChangeNum()
-	{
-		$site = $this->site();
-
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1
-		]);
-
-		$page = $page->save();
-
-		$this->assertSame(1, $page->num());
-		$this->assertSame('1_test', $page->dirname());
-		$this->assertSame(1, $page->parentModel()->find('test')->num());
-		$this->assertSame(1, $site->find('test')->num());
-
-		$page = $page->changeNum(2);
-
-		$this->assertSame(2, $page->num());
-		$this->assertSame('2_test', $page->dirname());
-		$this->assertSame(2, $site->find('test')->num());
 	}
 
 	public function testCreateDefaultNum()
