@@ -34,7 +34,7 @@ class NewPageChangeTitleTest extends NewPageTestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'hooks' => [
 				'page.changeTitle:before' => function (Page $page, $title, $languageCode) use ($phpunit, &$calls) {
 					$phpunit->assertSame('test', $page->title()->value());
@@ -50,10 +50,10 @@ class NewPageChangeTitleTest extends NewPageTestCase
 			]
 		]);
 
-		$app->impersonate('kirby');
+		$this->app->impersonate('kirby');
 
-		$page = new Page([
-			'slug' => 'test'
+		$page = Page::create([
+			'slug' => 'test',
 		]);
 
 		$page->changeTitle('New Title');
@@ -81,7 +81,7 @@ class NewPageChangeTitleTest extends NewPageTestCase
 
 		$this->app->impersonate('kirby');
 
-		$page = new Page([
+		$page = Page::create([
 			'slug' => 'test'
 		]);
 
@@ -111,7 +111,7 @@ class NewPageChangeTitleTest extends NewPageTestCase
 		$this->app->impersonate('kirby');
 		$this->app->setCurrentLanguage('de');
 
-		$page = new Page([
+		$page = Page::create([
 			'slug' => 'test'
 		]);
 
