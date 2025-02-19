@@ -3,12 +3,112 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\NewPage as Page;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
 class NewPageChangeStatusTest extends NewPageTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeStatusTest';
+
+	public function testChangeStatusFromDraftToListed()
+	{
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
+		$this->assertTrue($page->isDraft());
+
+		$listed = $page->changeStatus('listed');
+
+		$this->assertSame('listed', $listed->status());
+		$this->assertSame(1, $listed->num());
+		$this->assertFalse($listed->parentModel()->drafts()->has($listed));
+		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
+	}
+
+	public function testChangeStatusFromDraftToUnlisted()
+	{
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
+		$this->assertTrue($page->isDraft());
+
+		$unlisted = $page->changeStatus('unlisted');
+
+		$this->assertSame('unlisted', $unlisted->status());
+		$this->assertNull($unlisted->num());
+		$this->assertFalse($unlisted->parentModel()->drafts()->has($unlisted));
+		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
+	}
+
+	public function testChangeStatusFromListedToDraft()
+	{
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
+		$page = $page->changeStatus('listed');
+
+		$this->assertSame('listed', $page->status());
+		$this->assertSame(1, $page->num());
+		$this->assertFalse($page->isDraft());
+
+		$draft = $page->changeStatus('draft');
+
+		$this->assertTrue($draft->isDraft());
+		$this->assertSame('draft', $draft->status());
+		$this->assertNull($draft->num());
+		$this->assertTrue($draft->parentModel()->drafts()->has($draft));
+		$this->assertFalse($draft->parentModel()->children()->listed()->has($draft));
+	}
+
+	public function testChangeStatusFromListedToUnlisted()
+	{
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
+		$listed = $page->changeStatus('listed');
+		$this->assertTrue($listed->isListed());
+		$this->assertSame(1, $listed->num());
+
+		$this->assertFalse($listed->parentModel()->children()->unlisted()->has($listed));
+		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
+
+		$unlisted = $listed->changeStatus('unlisted');
+
+		$this->assertTrue($unlisted->isUnlisted());
+		$this->assertNull($unlisted->num());
+
+		$this->assertFalse($unlisted->parentModel()->children()->listed()->has($unlisted));
+		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
+	}
+
+	public function testChangeStatusFromUnlistedToListed()
+	{
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
+		// change to unlisted
+		$unlisted = $page->changeStatus('unlisted');
+
+		$this->assertTrue($unlisted->isUnlisted());
+		$this->assertNull($unlisted->num());
+
+		$this->assertFalse($unlisted->parentModel()->children()->listed()->has($unlisted));
+		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
+
+		// change to listed
+		$listed = $unlisted->changeStatus('listed');
+		$this->assertTrue($listed->isListed());
+		$this->assertSame(1, $listed->num());
+
+		$this->assertFalse($listed->parentModel()->children()->unlisted()->has($listed));
+		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
+	}
 
 	public function testChangeStatusToDraftHooks()
 	{
@@ -46,6 +146,31 @@ class NewPageChangeStatusTest extends NewPageTestCase
 		$this->assertSame($newPage, $drafts->find('test'));
 		$this->assertNull($children->find('test'));
 		$this->assertSame($newPage, $childrenAndDrafts->find('test'));
+	}
+
+	public function testChangeStatusToInvalidStatus()
+	{
+		$page = Page::create([
+			'slug' => 'test',
+			'blueprint' => [
+				'title'  => 'Test',
+				'name'   => 'test',
+				'status' => [
+					'draft'  => 'Draft',
+					'listed' => 'Published'
+				]
+			]
+		]);
+
+		$this->assertSame('draft', $page->status());
+
+		$draft = $page->changeStatus('listed');
+		$this->assertSame('listed', $draft->status());
+
+		$this->expectException(InvalidArgumentException::class);
+
+		$unlisted = $page->changeStatus('unlisted');
+		$this->assertSame('unlisted', $unlisted->status());
 	}
 
 	public function testChangeStatusToListedHooks()
