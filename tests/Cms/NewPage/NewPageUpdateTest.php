@@ -189,4 +189,30 @@ class NewPageUpdateTest extends NewPageTestCase
 		$this->assertSame(2, $calls);
 	}
 
+	public function testUpdateWithDateBasedNumbering()
+	{
+		$page = Page::create([
+			'slug' => 'test',
+			'blueprint' => [
+				'title' => 'Test',
+				'name'  => 'test',
+				'num'   => 'date'
+			],
+			'content' => [
+				'date' => '2012-12-12'
+			]
+		]);
+
+		// publish the new page
+		$page = $page->changeStatus('listed');
+
+		$this->assertSame(20121212, $page->num());
+
+		$modified = $page->update([
+			'date' => '2016-11-21'
+		]);
+
+		$this->assertSame(20161121, $modified->num());
+	}
+
 }

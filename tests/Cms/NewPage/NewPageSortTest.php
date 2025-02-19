@@ -134,30 +134,4 @@ class NewPageSortTest extends NewPageTestCase
 		$this->assertDirectoryExists(static::TMP . '/content/1_d');
 	}
 
-	public function testUpdateWithDateBasedNumbering()
-	{
-		$page = Page::create([
-			'slug' => 'test',
-			'blueprint' => [
-				'title' => 'Test',
-				'name'  => 'test',
-				'num'   => 'date'
-			],
-			'content' => [
-				'date' => '2012-12-12'
-			]
-		]);
-
-		// publish the new page
-		$page = $page->changeStatus('listed');
-
-		$this->assertSame(20121212, $page->num());
-
-		$modified = $page->update([
-			'date' => '2016-11-21'
-		]);
-
-		$this->assertSame(20161121, $modified->num());
-	}
-
 }
