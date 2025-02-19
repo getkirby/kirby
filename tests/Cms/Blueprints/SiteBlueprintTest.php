@@ -3,7 +3,9 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(SiteBlueprint::class)]
 class SiteBlueprintTest extends TestCase
 {
 	public function testOptions()
