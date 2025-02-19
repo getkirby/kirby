@@ -78,13 +78,4 @@ class NewPage extends Page
 
 		return $page;
 	}
-
-	protected function setTemplate(string|null $template = null): static
-	{
-		if ($template !== null) {
-			$this->intendedTemplate = $this->kirby()->template(strtolower($template));
-		}
-
-		return $this;
-	}
 }

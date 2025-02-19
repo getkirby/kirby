@@ -1122,7 +1122,7 @@ class Page extends ModelWithContent
 	protected function setTemplate(string|null $template = null): static
 	{
 		if ($template !== null) {
-			$this->intendedTemplate = $this->kirby()->template($template);
+			$this->intendedTemplate = $this->kirby()->template(strtolower($template));
 		}
 
 		return $this;
