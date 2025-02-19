@@ -222,4 +222,37 @@ class NewPageDuplicateTest extends NewPageTestCase
 
 		$this->assertNotSame($origFile->uuid()->id(), $copyFile->uuid()->id());
 	}
+
+	public function testDuplicateHooks()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.duplicate:before' => function (Page $originalPage, $input, $options) use ($phpunit, &$calls) {
+					$phpunit->assertSame('test', $originalPage->slug());
+					$phpunit->assertSame('test-copy', $input);
+					$phpunit->assertSame([], $options);
+					$calls++;
+				},
+				'page.duplicate:after' => function (Page $duplicatePage, Page $originalPage) use ($phpunit, &$calls) {
+					$phpunit->assertSame('test-copy', $duplicatePage->slug());
+					$phpunit->assertSame('test', $originalPage->slug());
+					$calls++;
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug' => 'test'
+		]);
+
+		$page->duplicate();
+
+		$this->assertSame(2, $calls);
+	}
+
 }
