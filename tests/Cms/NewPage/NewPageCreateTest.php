@@ -232,4 +232,150 @@ class NewPageCreateTest extends NewPageTestCase
 		$this->assertTrue($site->children()->has($page));
 	}
 
+	public function testCreateWhenDefaultLanguageIsActive()
+	{
+		$this->setupMultiLanguage();
+
+		$this->app->impersonate('kirby');
+
+		$value = [
+			'title'    => 'Test page',
+			'headline' => 'A headline',
+			'text'     => 'Any text'
+		];
+
+		Page::create([
+			'slug'      => 'test',
+			'content'   => $value,
+			'blueprint' => [
+				'title'  => 'Default',
+				'fields' => [
+					'headline' => ['type' => 'text'],
+					'text'     => ['type' => 'textarea']
+				]
+			],
+		]);
+
+		$page = $this->app->page('test');
+
+		$value['uuid'] = $page->content()->get('uuid')->value();
+
+		$this->assertSame($value, $page->content('en')->toArray());
+		$this->assertSame($value, $page->content('de')->toArray());
+	}
+
+	public function testCreateWhenSecondaryLanguageIsActive()
+	{
+		$this->setupMultiLanguage();
+
+		$this->app->impersonate('kirby');
+		$this->app->setCurrentLanguage('de');
+
+		$this->assertSame('de', $this->app->language()->code());
+
+		$value = [
+			'title'    => 'Test page',
+			'headline' => 'A headline',
+			'text'     => 'Any text'
+		];
+
+		Page::create([
+			'slug'      => 'test',
+			'content'   => $value,
+			'blueprint' => [
+				'title'  => 'Default',
+				'fields' => [
+					'headline' => ['type' => 'text'],
+					'text'     => ['type' => 'textarea']
+				]
+			]
+		]);
+
+		$page = $this->app->page('test');
+
+		$value['uuid'] = $page->content()->get('uuid')->value();
+
+		$this->assertSame($value, $page->content('en')->toArray());
+		$this->assertSame($value, $page->content('de')->toArray());
+	}
+
+	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasUntranslatableFields()
+	{
+		$this->setupMultiLanguage();
+
+		$this->app->impersonate('kirby');
+		$this->app->setCurrentLanguage('de');
+
+		$this->assertSame('de', $this->app->language()->code());
+
+		$value = [
+			'title'    => 'Test page',
+			'headline' => 'A headline',
+			'text'     => 'Any text'
+		];
+
+		Page::create([
+			'slug'      => 'test',
+			'content'   => $value,
+			'blueprint' => [
+				'title'  => 'Default',
+				'fields' => [
+					'headline' => [
+						'type'      => 'text',
+						'translate' => false
+					],
+					'text' => ['type' => 'textarea']
+				]
+			]
+		]);
+
+		$page = $this->app->page('test');
+
+		$value['uuid'] = $page->content()->get('uuid')->value();
+
+		$this->assertSame($value, $page->content('en')->toArray());
+		$this->assertSame($value, $page->content('de')->toArray());
+	}
+
+	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasDefaultValues()
+	{
+		$this->setupMultiLanguage();
+
+		$this->app->impersonate('kirby');
+		$this->app->setCurrentLanguage('de');
+
+		$this->assertSame('de', $this->app->language()->code());
+
+		Page::create([
+			'slug'       => 'test',
+			'content'    => ['title' => 'Test page'],
+			'blueprint'  => [
+				'title'  => 'test',
+				'fields' => [
+					'headline' => [
+						'type'      => 'text',
+						'translate' => false,
+						'default'   => 'A headline'
+					],
+					'text'     => [
+						'type'    => 'textarea',
+						'default' => 'Any text'
+					]
+				]
+			]
+		]);
+
+		$page = $this->app->page('test');
+
+		$expected = [
+			'title'    => 'Test page',
+			'headline' => 'A headline',
+			'text'     => 'Any text',
+			'uuid'     =>  $page->content()->get('uuid')->value(),
+		];
+
+		$this->assertSame($expected, $page->content('en')->toArray());
+		$this->assertSame($expected, $page->content('de')->toArray());
+	}
+
 }
