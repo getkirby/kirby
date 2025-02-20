@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-/**
- * @coversDefaultClass \Kirby\Cms\FileBlueprint
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(FileBlueprint::class)]
 class FileBlueprintTest extends TestCase
 {
 	public function tearDown(): void

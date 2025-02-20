@@ -2,11 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\UserBlueprint
- */
+#[CoversClass(UserBlueprint::class)]
 class UserBlueprintTest extends TestCase
 {
 	public function tearDown(): void
