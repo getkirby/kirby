@@ -292,6 +292,7 @@ export default (panel) => {
 		 * Updates the form values of the current view with a delay
 		 */
 		updateLazy(values = {}, env = {}) {
+			this.isProcessing = true;
 			this.saveLazy(this.merge(values, env), env);
 		}
 	});
