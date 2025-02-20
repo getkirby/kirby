@@ -8,6 +8,9 @@ use Kirby\Cms\NewPage as Page;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class HasFileTraitUser
 {
 	use HasFiles;
@@ -107,9 +110,7 @@ class NewHasFilesTest extends NewModelTestCase
 		$this->assertSame('mother/child/file.jpg', $file->id());
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
+	#[DataProvider('fileProvider')]
 	public function testTypes($filename, $type, $expected)
 	{
 		$page = new Page([
@@ -127,9 +128,7 @@ class NewHasFilesTest extends NewModelTestCase
 		}
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
+	#[DataProvider('fileProvider')]
 	public function testHas($filename, $type, $expected)
 	{
 		$page = new Page([
