@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Cms\NewPage as Page;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(FileSiblings::class)]
+#[CoversClass(File::class)]
 class NewFileSiblingsTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewFileSiblings';
