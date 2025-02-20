@@ -3,9 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\MemoryStorage;
-use Kirby\Form\Form;
-use Kirby\Uuid\Uuid;
-use Kirby\Uuid\Uuids;
+use Kirby\Content\Translations;
 
 class NewPage extends Page
 {
@@ -13,45 +11,33 @@ class NewPage extends Page
 
 	public static function create(array $props): Page
 	{
-		$content  = $props['content'] ?? [];
-		$template = $props['template'] ?? 'default';
-		$model    = $props['model'] ?? $template;
+		$props = self::normalizeProps($props);
 
-		// create the instance with a limited set of props
-		$page = static::factory($props = [
+		// create the instance without content or translations
+		// to avoid that the page is created in memory storage
+		$page = static::factory([
 			...$props,
 			'content'      => null,
-			'isDraft'      => $props['isDraft'] ?? $props['draft'] ?? true,
-			'model'        => $model,
-			'slug'         => Url::slug($props['slug'] ?? $content['title'] ?? null),
-			'template'     => $template,
-			'translations' => null,
+			'translations' => null
 		]);
 
-		// create the form to get the generate the defaults
-		$form = Form::for($page, [
-			'language' => Language::ensure('default')->code(),
-		]);
-
-		// merge the content back with the defaults
+		// merge the content with the defaults
 		$props['content'] = [
-			...$form->strings(true),
-			...$content,
+			...$page->createDefaultContent(),
+			...$props['content'],
 		];
 
-		// add a uuid if not already set
-		if (Uuids::enabled() === true) {
-			$props['content']['uuid'] ??= Uuid::generate();
-		}
-
 		// keep the initial storage class
-		$storage = get_class($page->storage());
+		$storage = $page->storage()::class;
 
-		// keep the page in memory until it will be saved
+		// make sure that the temporary page is stored in memory
 		$page->changeStorage(MemoryStorage::class);
 
-		// inject the content to make this page object usable in the hook
-		$page = $page->save($props['content'], 'default');
+		// inject the content
+		$page->setContent($props['content']);
+
+		// inject the translations
+		$page->setTranslations($props['translations'] ?? null);
 
 		// run the hooks and creation action
 		$page = $page->commit(
@@ -60,10 +46,9 @@ class NewPage extends Page
 				'page'  => $page,
 				'input' => $props
 			],
-			function ($page, $props) use ($storage) {
+			function ($page) use ($storage) {
 				// move to final storage
-				$page->changeStorage($storage);
-				return $page;
+				return $page->changeStorage($storage);
 			}
 		);
 
@@ -73,5 +58,20 @@ class NewPage extends Page
 		}
 
 		return $page;
+	}
+
+	protected static function normalizeProps(array $props): array
+	{
+		$content  = $props['content']  ?? [];
+		$template = $props['template'] ?? 'default';
+
+		return [
+			...$props,
+			'content'  => $content,
+			'isDraft'  => $props['isDraft'] ?? $props['draft'] ?? true,
+			'model'    => $props['model']   ?? $template,
+			'slug'     => Url::slug($props['slug'] ?? $content['title'] ?? null),
+			'template' => $template,
+		];
 	}
 }

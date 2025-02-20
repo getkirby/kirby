@@ -12,53 +12,39 @@ class NewUser extends User
 	/**
 	 * Creates a new User from the given props and returns a new User object
 	 */
-	public static function create(array|null $props = null): User
+	public static function create(array $props): User
 	{
-		$input = $props ?? [];
+		$input = $props;
+		$props = self::normalizeProps($props);
 
-		if (isset($props['email']) === true) {
-			$props['email'] = Idn::decodeEmail($props['email']);
-		}
-
-		if (isset($props['password']) === true) {
-			$props['password'] = static::hashPassword($props['password']);
-		}
-
-		$content = $props['content'] ?? [];
-		$role    = $props['role'] ?? 'default';
-		$model   = $props['model'] ?? $role;
-
-		// create the instance without content or translation
-		$user = static::factory($props = [
+		// create the instance without content or translations
+		// to avoid that the user is created in memory storage
+		$user = static::factory([
 			...$props,
 			'content'      => null,
-			'model'        => $model,
-			'role'         => $role,
 			'translations' => null
 		]);
 
-		// create a form for the user
-		$form = Form::for($user, [
-			'language' => Language::ensure('default')->code(),
-		]);
-
-		// merge the content back with the defaults
+		// merge the content with the defaults
 		$props['content'] = [
-			...$form->strings(true),
-			...$content,
+			...$user->createDefaultContent(),
+			...$props['content'],
 		];
 
 		// keep the initial storage class
-		$storage = get_class($user->storage());
+		$storage = $user->storage()::class;
 
-		// keep the user in memory until it will be saved
+		// make sure that the temporary user is stored in memory
 		$user->changeStorage(MemoryStorage::class);
 
-		// inject the content to make this user object usable in the hook
-		$user = $user->save($props['content'], 'default');
+		// inject the content
+		$user->setContent($props['content']);
+
+		// inject the translations
+		$user->setTranslations($props['translations'] ?? null);
 
 		// run the hook
-		return $user->commit('create', ['user' => $user, 'input' => $input], function ($user, $props) use ($storage) {
+		return $user->commit('create', ['user' => $user, 'input' => $input], function ($user) use ($storage) {
 			$user->writeCredentials([
 				'email'    => $user->email(),
 				'language' => $user->language(),
@@ -74,4 +60,24 @@ class NewUser extends User
 		});
 	}
 
+	protected static function normalizeProps(array $props): array
+	{
+		$content = $props['content'] ?? [];
+		$role    = $props['role']    ?? 'default';
+
+		if (isset($props['email']) === true) {
+			$props['email'] = Idn::decodeEmail($props['email']);
+		}
+
+		if (isset($props['password']) === true) {
+			$props['password'] = static::hashPassword($props['password']);
+		}
+
+		return [
+			...$props,
+			'content' => $content,
+			'model'   => $props['model'] ?? $role,
+			'role'    => $role
+		];
+	}
 }
