@@ -35,7 +35,12 @@ trait NewModelFixes
 		// The storage classes might need to rely on the model instance
 		// and thus we need to make sure that the cloned object is
 		// passed on to the new storage instance
-		$storage = $this->storage()::class;
+		$storage = match (true) {
+			isset($props['content']),
+			isset($props['translations']) => $clone->storage()::class,
+			default                       => $this->storage()::class
+		};
+
 		$clone->changeStorage($storage);
 
 		return $clone;
