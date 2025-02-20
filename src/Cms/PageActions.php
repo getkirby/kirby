@@ -459,7 +459,7 @@ trait PageActions
 		}
 
 		// create a temporary page object
-		$page = Page::factory($props);
+		$page = static::factory($props);
 
 		// always create pages in the default language
 		$languageCode = match ($page->kirby()->multilang()) {
@@ -514,7 +514,7 @@ trait PageActions
 			'site'   => $this->site(),
 		];
 
-		$modelClass = Page::$models[$props['template'] ?? null] ?? Page::class;
+		$modelClass = static::$models[$props['template'] ?? null] ?? static::class;
 		return $modelClass::create($props);
 	}
 
