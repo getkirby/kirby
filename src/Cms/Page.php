@@ -34,6 +34,7 @@ class Page extends ModelWithContent
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
+	use HasModels;
 	/**
 	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
 	 */
@@ -48,11 +49,6 @@ class Page extends ModelWithContent
 	 * @todo Remove when support for PHP 8.2 is dropped
 	 */
 	public static array $methods = [];
-
-	/**
-	 * Registry with all Page models
-	 */
-	public static array $models = [];
 
 	/**
 	 * The PageBlueprint object
@@ -788,27 +784,6 @@ class Page extends ModelWithContent
 	public function mediaUrl(): string
 	{
 		return $this->kirby()->url('media') . '/pages/' . $this->id();
-	}
-
-	/**
-	 * Creates a page model if it has been registered
-	 * @internal
-	 */
-	public static function model(string $name, array $props = []): static
-	{
-		$name    = strtolower($name);
-		$class   = static::$models[$name] ?? null;
-		$class ??= static::$models['default'] ?? null;
-
-		if ($class !== null) {
-			$object = new $class($props);
-
-			if ($object instanceof self) {
-				return $object;
-			}
-		}
-
-		return new static($props);
 	}
 
 	/**
