@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\NewFile as File;
+use Kirby\Cms\NewPage as Page;
 use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
