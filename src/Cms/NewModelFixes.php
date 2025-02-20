@@ -107,6 +107,9 @@ trait NewModelFixes
 		return $clone;
 	}
 
+	/**
+	 * @deprecated 5.0.0 Use $model->save() instead
+	 */
 	protected function saveContent(
 		array|null $data = null,
 		bool $overwrite = false
@@ -115,6 +118,9 @@ trait NewModelFixes
 		return $this->save($data, 'default', $overwrite);
 	}
 
+	/**
+	 * @deprecated 5.0.0 Use $model->save() instead
+	 */
 	protected function saveTranslation(
 		array|null $data = null,
 		string|null $languageCode = null,
