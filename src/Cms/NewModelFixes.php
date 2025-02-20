@@ -67,31 +67,31 @@ trait NewModelFixes
 	 */
 	protected function convertTo(string $blueprint): static
 	{
-		// first close object with new blueprint as template
+		// first clone object with new blueprint as template
 		$new = $this->clone(['template' => $blueprint]);
 
-		// get versions
-		$latest  = $this->version(VersionId::latest());
-		$changes = $this->version(VersionId::changes());
+		// loop through all versions
+		foreach (['latest', 'changes'] as $versionId) {
+			// get version
+			$version = $this->version($versionId);
 
-		foreach (Languages::ensure() as $language) {
-			// delete changes
-			$changes->delete($language);
+			// for all languages
+			foreach (Languages::ensure() as $language) {
+				// skip non-existing versions
+				if ($version->exists($language) === false) {
+					continue;
+				}
 
-			// skip non-existing versions
-			if ($latest->exists($language) === false) {
-				continue;
+				// convert the content to the new blueprint
+				$content = $version->content($language)->convertTo($blueprint);
+
+				// save to re-create the content file
+				// with the converted/updated content
+				$new->version($versionId)->save($content, $language);
+
+				// delete the old text file
+				$version->delete($language);
 			}
-
-			// convert the content to the new blueprint
-			$content = $latest->content($language)->convertTo($blueprint);
-
-			// delete the old text file
-			$latest->delete($language);
-
-			// save to re-create the content file
-			// with the converted/updated content
-			$new->version()->save($content, $language);
 		}
 
 		return $new;
