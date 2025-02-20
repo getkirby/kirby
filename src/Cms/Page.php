@@ -143,10 +143,11 @@ class Page extends ModelWithContent
 		$this->parent  = $props['parent'] ?? null;
 		$this->root    = $props['root'] ?? null;
 
-		// The blueprint must be set before the content
-		// or translations are set. Otherwise, the version
-		// classes will not be able to use the fields from
-		// the blueprint for updates
+		// Set blueprint before setting content
+		// or translations in the parent constructor.
+		// Otherwise, the blueprint definition cannot be
+		// used when creating the right field values
+		// for the content.
 		$this->setBlueprint($props['blueprint'] ?? null);
 
 		parent::__construct($props);

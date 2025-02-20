@@ -349,12 +349,7 @@ trait PageActions
 		$update = $result instanceof Page ? $result : $this;
 
 		// flush the parent cache to get children and drafts right
-		static::updateParentCollections($update, match ($action) {
-			'create'    => 'append',
-			'duplicate' => 'append',
-			'delete'    => 'remove',
-			default     => 'set'
-		});
+		static::updateParentCollections($update, $action);
 
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
@@ -932,15 +927,24 @@ trait PageActions
 	/**
 	 * Updates parent collections with the new page object
 	 * after a page action
-	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @param string $method Method to call on the parent collections
 	 */
 	protected static function updateParentCollections(
-		$page,
-		string $method,
-		$parentModel = null
+		Page $page,
+		string|false $method,
+		Page|Site|null $parentModel = null
 	): void {
+		// normalize the method
+		$method = match ($method) {
+			'append', 'create' => 'append',
+			'remove', 'delete' => 'remove',
+			false, 'duplicate' => false, // ::copy is already taking care of this
+			default => 'set'
+		};
+
+		if ($method === false) {
+			return;
+		}
+
 		$parentModel ??= $page->parentModel();
 
 		// method arguments depending on the called method

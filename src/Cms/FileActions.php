@@ -187,6 +187,12 @@ trait FileActions
 		// run the main action closure
 		$result = $callback(...array_values($arguments));
 
+		// determine the object that needs to be updated in the parent collection
+		$update = $result instanceof File ? $result : $this;
+
+		// update the files collection
+		static::updateParentCollection($update, $action);
+
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create' => ['file' => $result],
@@ -320,9 +326,6 @@ trait FileActions
 				$file->kirby()->defaultLanguage()?->code()
 			);
 
-			// add the file to the list of siblings
-			$file->siblings()->append($file->id(), $file);
-
 			// return a fresh clone
 			return $file->clone();
 		});
@@ -343,9 +346,6 @@ trait FileActions
 			}
 
 			F::remove($file->root());
-
-			// remove the file from the sibling collection
-			$file->parent()->files()->remove($file);
 
 			return true;
 		});
@@ -439,10 +439,28 @@ trait FileActions
 	): static {
 		$file = parent::save($data, $languageCode, $overwrite);
 
-		// update model in siblings collection
-		$file->parent()->files()->set($file->id(), $file);
-
+		static::updateParentCollection($file, 'set');
 		return $file;
+	}
+
+	/**
+	 * Updates the parent files collection after a file action
+	 */
+	protected static function updateParentCollection(
+		File $file,
+		string $method = 'set'
+	): void {
+		$method = match ($method) {
+			'append', 'create' => 'append',
+			'remove', 'delete' => 'remove',
+			default => 'set'
+		};
+
+		// method arguments depending on the called method
+		$args = $method === 'remove' ? [$file] : [$file->id(), $file];
+
+		// update the files collection
+		$file->parent()->files()->$method(...$args);
 	}
 
 	/**
