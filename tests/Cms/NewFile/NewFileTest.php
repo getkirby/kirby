@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\NewFile as File;
+use Kirby\Cms\NewPage as Page;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Panel\File as PanelFile;
 use PHPUnit\Framework\Attributes\CoversClass;
