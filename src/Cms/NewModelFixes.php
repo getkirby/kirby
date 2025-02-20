@@ -11,17 +11,32 @@ use Kirby\Content\VersionId;
 
 trait NewModelFixes
 {
+	/**
+	 * Move the model to a new storage instance/type
+	 * @since 5.0.0
+	 */
+	public function changeStorage(Storage|string $toStorage): static
+	{
+		if (is_string($toStorage) === true) {
+			$toStorage = new $toStorage($this);
+		}
+
+		$this->storage()->copyAll(to: $toStorage);
+		$this->storage = $toStorage;
+		return $this;
+	}
+
 	public function clone(array $props = []): static
 	{
 		$props = array_replace_recursive($this->propertyData, $props);
 		$clone = new static($props);
-		$class = get_class($this->storage());
 
 		// Move the clone to a new instance of the same storage class
 		// The storage classes might need to rely on the model instance
 		// and thus we need to make sure that the cloned object is
 		// passed on to the new storage instance
-		$clone->moveToStorage(new $class($clone));
+		$storage = $this->storage()::class;
+		$clone->changeStorage($storage);
 
 		return $clone;
 	}
@@ -76,13 +91,6 @@ trait NewModelFixes
 		return $new;
 	}
 
-	public function moveToStorage(Storage $toStorage): static
-	{
-		$this->storage()->copyAll(to: $toStorage);
-		$this->storage = $toStorage;
-		return $this;
-	}
-
 	/**
 	 * @psalm-suppress MethodSignatureMismatch
 	 */
@@ -95,7 +103,7 @@ trait NewModelFixes
 		$clone = $this->clone();
 
 		// move the old model into memory
-		$this->moveToStorage(new MemoryStorage($this));
+		$this->changeStorage(MemoryStorage::class);
 
 		// update the clone
 		$clone->version()->save(
@@ -136,7 +144,7 @@ trait NewModelFixes
 			return $this;
 		}
 
-		$this->moveToStorage(new MemoryStorage($this));
+		$this->changeStorage(MemoryStorage::class);
 		$this->version()->save($content, 'default');
 
 		return $this;
@@ -148,7 +156,7 @@ trait NewModelFixes
 			return $this;
 		}
 
-		$this->moveToStorage(new MemoryStorage($this));
+		$this->changeStorage(MemoryStorage::class);
 
 		Translations::create(
 			model: $this,

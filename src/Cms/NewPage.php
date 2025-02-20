@@ -48,7 +48,7 @@ class NewPage extends Page
 		$storage = get_class($page->storage());
 
 		// keep the page in memory until it will be saved
-		$page->moveToStorage(new MemoryStorage($page));
+		$page->changeStorage(MemoryStorage::class);
 
 		// inject the content to make this page object usable in the hook
 		$page = $page->save($props['content'], 'default');
@@ -62,7 +62,7 @@ class NewPage extends Page
 			],
 			function ($page, $props) use ($storage) {
 				// move to final storage
-				$page->moveToStorage(new $storage($page));
+				$page->changeStorage($storage);
 
 				// flush the parent cache to get children and drafts right
 				static::updateParentCollections($page, 'append');
