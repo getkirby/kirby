@@ -12,9 +12,6 @@ class FileMethodsTest extends TestCase
 			'fileMethods' => [
 				'test' => fn () => 'file method'
 			],
-			'filesMethods' => [
-				'test' => fn () => 'files method'
-			],
 			'site' => [
 				'children' => [
 					[
@@ -34,11 +31,5 @@ class FileMethodsTest extends TestCase
 	{
 		$file = $this->app->file('test/test.jpg');
 		$this->assertSame('file method', $file->test());
-	}
-
-	public function testFilesMethod()
-	{
-		$files = $this->app->page('test')->files();
-		$this->assertSame('files method', $files->test());
 	}
 }
