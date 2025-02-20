@@ -11,7 +11,7 @@ class NewSiteModifiedTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteModifiedTest';
 
-	public function testModifiedInMultilangInstallation():void
+	public function testModifiedInMultilangInstallation(): void
 	{
 		$this->setUpMultiLanguage();
 
