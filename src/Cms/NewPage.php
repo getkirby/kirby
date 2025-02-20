@@ -63,10 +63,6 @@ class NewPage extends Page
 			function ($page, $props) use ($storage) {
 				// move to final storage
 				$page->changeStorage($storage);
-
-				// flush the parent cache to get children and drafts right
-				static::updateParentCollections($page, 'append');
-
 				return $page;
 			}
 		);
