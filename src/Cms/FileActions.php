@@ -448,12 +448,8 @@ trait FileActions
 	 */
 	protected static function updateParentCollection(
 		File $file,
-		string|false $method = 'set'
+		string $method = 'set'
 	): void {
-		if ($method === false) {
-			return;
-		}
-
 		$method = match ($method) {
 			'append', 'create' => 'append',
 			'remove', 'delete' => 'remove',
