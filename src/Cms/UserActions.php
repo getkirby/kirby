@@ -205,7 +205,7 @@ trait UserActions
 	/**
 	 * Creates a new User from the given props and returns a new User object
 	 */
-	public static function create(array|null $props = null): User
+	public static function create(array $props): User
 	{
 		$data = $props;
 
