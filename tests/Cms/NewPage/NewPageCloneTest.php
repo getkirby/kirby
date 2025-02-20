@@ -23,7 +23,7 @@ class NewPageCloneTest extends NewModelTestCase
 		$this->assertSame($original->slug(), $clone->slug());
 		$this->assertSame($original->content()->toArray(), $clone->content()->toArray());
 		$this->assertNotSame($original->storage(), $clone->storage());
-		$this->assertInstanceOf(get_class($original->storage()), $clone->storage());
+		$this->assertInstanceOf($original->storage()::class, $clone->storage());
 	}
 
 	public function testCloneWithVirtualContent(): void
