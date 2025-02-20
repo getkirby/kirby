@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\UserBlueprint
+ */
 class UserBlueprintTest extends TestCase
 {
 	public function tearDown(): void
