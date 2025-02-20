@@ -326,10 +326,6 @@ trait PageActions
 	): mixed {
 		$kirby = $this->kirby();
 
-		// store copy of the model to be passed
-		// to the `after` hook for comparison
-		$old = $this->hardcopy();
-
 		// check page rules
 		$this->rules()->$action(...array_values($arguments));
 
@@ -358,9 +354,9 @@ trait PageActions
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create'    => ['page' => $result],
-			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $old],
-			'delete'    => ['status' => $result, 'page' => $old],
-			default     => ['newPage' => $result, 'oldPage' => $old]
+			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $this],
+			'delete'    => ['status' => $result, 'page' => $this],
+			default     => ['newPage' => $result, 'oldPage' => $this]
 		};
 
 		// run `after` hook and apply return to action result
