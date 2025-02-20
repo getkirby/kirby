@@ -171,6 +171,17 @@ class NewUserCreateTest extends NewModelTestCase
 		$this->assertSame('b', $user->b()->value());
 	}
 
+	public function testCreateWithPassword(): void
+	{
+		$user = User::create([
+			'email'    => 'new@domain.com',
+			'password' => 'topsecret2018',
+		]);
+
+		$this->assertNotSame($user->password(), 'topsecret2018', 'The password should be hashed');
+	}
+
+
 	public function testCreateHooks(): void
 	{
 		$calls = 0;
