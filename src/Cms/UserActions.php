@@ -157,10 +157,6 @@ trait UserActions
 
 		$kirby = $this->kirby();
 
-		// store copy of the model to be passed
-		// to the `after` hook for comparison
-		$old = $this->hardcopy();
-
 		// check user rules
 		$this->rules()->$action(...array_values($arguments));
 
@@ -189,8 +185,8 @@ trait UserActions
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create' => ['user' => $result],
-			'delete' => ['status' => $result, 'user' => $old],
-			default  => ['newUser' => $result, 'oldUser' => $old]
+			'delete' => ['status' => $result, 'user' => $this],
+			default  => ['newUser' => $result, 'oldUser' => $this]
 		};
 
 		// run `after` hook and apply return to action result

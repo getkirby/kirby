@@ -31,10 +31,6 @@ trait SiteActions
 	): mixed {
 		$kirby = $this->kirby();
 
-		// store copy of the model to be passed
-		// to the `after` hook for comparison
-		$old = $this->hardcopy();
-
 		// check site rules
 		$this->rules()->$action(...array_values($arguments));
 
@@ -58,7 +54,7 @@ trait SiteActions
 		// (first argument, usually the new model) if anything returned
 		$result = $kirby->apply(
 			'site.' . $action . ':after',
-			['newSite' => $result, 'oldSite' => $old],
+			['newSite' => $result, 'oldSite' => $this],
 			'newSite'
 		);
 

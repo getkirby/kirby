@@ -164,10 +164,6 @@ trait FileActions
 	): mixed {
 		$kirby = $this->kirby();
 
-		// store copy of the model to be passed
-		// to the `after` hook for comparison
-		$old = $this->hardcopy();
-
 		// check file rules
 		$this->rules()->$action(...array_values($arguments));
 
@@ -196,8 +192,8 @@ trait FileActions
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create' => ['file' => $result],
-			'delete' => ['status' => $result, 'file' => $old],
-			default  => ['newFile' => $result, 'oldFile' => $old]
+			'delete' => ['status' => $result, 'file' => $this],
+			default  => ['newFile' => $result, 'oldFile' => $this]
 		};
 
 		// run `after` hook and apply return to action result

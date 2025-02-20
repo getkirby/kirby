@@ -2,11 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Cms\PageBlueprint
- */
+#[CoversClass(PageBlueprint::class)]
 class PageBlueprintTest extends TestCase
 {
 	public function tearDown(): void
@@ -135,9 +134,7 @@ class PageBlueprintTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider numProvider
-	 */
+	#[DataProvider('numProvider')]
 	public function testNum($input, $expected)
 	{
 		$blueprint = new PageBlueprint([
@@ -357,9 +354,6 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->status());
 	}
 
-	/**
-	 * @covers ::extend
-	 */
 	public function testExtendNum()
 	{
 		new App([
@@ -381,9 +375,6 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame('date', $blueprint->num());
 	}
 
-	/**
-	 * @coversNothing
-	 */
 	public function testTitleI18n()
 	{
 		$app = new App([
@@ -429,9 +420,6 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame('Simple Page', $page->blueprint()->title());
 	}
 
-	/**
-	 * @coversNothing
-	 */
 	public function testTitleI18nWithFallbackLanguage()
 	{
 		$app = new App([
@@ -469,9 +457,6 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame('Thanks to fallback', $page->blueprint()->title());
 	}
 
-	/**
-	 * @coversNothing
-	 */
 	public function testTitleI18nArray()
 	{
 		$app = new App([

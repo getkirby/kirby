@@ -2,9 +2,10 @@
 
 namespace Kirby\Cms;
 
-/**
- * @coversDefaultClass \Kirby\Cms\FileBlueprint
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+
+#[CoversClass(FileBlueprint::class)]
 class FileBlueprintTest extends TestCase
 {
 	public function tearDown(): void
@@ -58,10 +59,7 @@ class FileBlueprintTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::acceptAttribute
-	 * @dataProvider acceptAttributeProvider
-	 */
+	#[DataProvider('acceptAttributeProvider')]
 	public function testAcceptAttribute($accept, $expected, $notExpected)
 	{
 		Blueprint::$loaded['files/acceptAttribute'] = [

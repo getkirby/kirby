@@ -326,10 +326,6 @@ trait PageActions
 	): mixed {
 		$kirby = $this->kirby();
 
-		// store copy of the model to be passed
-		// to the `after` hook for comparison
-		$old = $this->hardcopy();
-
 		// check page rules
 		$this->rules()->$action(...array_values($arguments));
 
@@ -358,9 +354,9 @@ trait PageActions
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create'    => ['page' => $result],
-			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $old],
-			'delete'    => ['status' => $result, 'page' => $old],
-			default     => ['newPage' => $result, 'oldPage' => $old]
+			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $this],
+			'delete'    => ['status' => $result, 'page' => $this],
+			default     => ['newPage' => $result, 'oldPage' => $this]
 		};
 
 		// run `after` hook and apply return to action result
@@ -459,7 +455,7 @@ trait PageActions
 		}
 
 		// create a temporary page object
-		$page = Page::factory($props);
+		$page = static::factory($props);
 
 		// always create pages in the default language
 		$languageCode = match ($page->kirby()->multilang()) {
@@ -514,7 +510,7 @@ trait PageActions
 			'site'   => $this->site(),
 		];
 
-		$modelClass = Page::$models[$props['template'] ?? null] ?? Page::class;
+		$modelClass = static::$models[$props['template'] ?? null] ?? static::class;
 		return $modelClass::create($props);
 	}
 
@@ -534,8 +530,7 @@ trait PageActions
 				// the $format needs to produce only digits,
 				// so it can be converted to integer below
 				$format = $mode === 'date' ? 'Ymd' : 'YmdHi';
-				$lang   = $this->kirby()->defaultLanguage() ?? null;
-				$field  = $this->content($lang)->get('date');
+				$field  = $this->content('default')->get('date');
 				$date   = $field->isEmpty() ? 'now' : $field;
 				return (int)date($format, strtotime($date));
 			case 'default':
@@ -568,7 +563,7 @@ trait PageActions
 
 				$template = Str::template($mode, [
 					'kirby' => $app,
-					'page'  => $app->page($this->id()),
+					'page'  => $this,
 					'site'  => $app->site(),
 				], ['fallback' => '']);
 
