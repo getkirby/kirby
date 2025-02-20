@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\SiteBlueprint
+ */
 class SiteBlueprintTest extends TestCase
 {
 	public function testOptions()
