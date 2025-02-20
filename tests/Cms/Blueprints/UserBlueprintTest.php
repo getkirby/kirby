@@ -2,11 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\UserBlueprint
- */
+#[CoversClass(UserBlueprint::class)]
 class UserBlueprintTest extends TestCase
 {
 	public function tearDown(): void
@@ -47,9 +45,6 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->options());
 	}
 
-	/**
-	 * @coversNothing
-	 */
 	public function testTitleI18n()
 	{
 		$app = new App([
@@ -94,9 +89,6 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame('Editor role', $user->role()->title());
 	}
 
-	/**
-	 * @coversNothing
-	 */
 	public function testTitleI18nWithFallbackLanguage()
 	{
 		$app = new App([
@@ -132,9 +124,6 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame('Editor role', $user->role()->title());
 	}
 
-	/**
-	 * @coversNothing
-	 */
 	public function testTitleI18nArray()
 	{
 		$app = new App([

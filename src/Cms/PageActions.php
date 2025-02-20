@@ -353,11 +353,10 @@ trait PageActions
 
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
-			'changeTitle' => ['newPage' => $result, 'oldPage' => $this],
-			'create'      => ['page' => $result],
-			'duplicate'   => ['duplicatePage' => $result, 'originalPage' => $this],
-			'delete'      => ['status' => $result, 'page' => $this],
-			default       => ['newPage' => $result, 'oldPage' => $this]
+			'create'    => ['page' => $result],
+			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $this],
+			'delete'    => ['status' => $result, 'page' => $this],
+			default     => ['newPage' => $result, 'oldPage' => $this]
 		};
 
 		// run `after` hook and apply return to action result

@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
-
 class PageMethodsTest extends TestCase
 {
 	public function setUp(): void
