@@ -11,7 +11,7 @@ use Kirby\Filesystem\File as BaseFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class HasFileTraitUser
+class NewHasFileTraitUser
 {
 	use HasFiles;
 
@@ -117,7 +117,7 @@ class NewHasFilesTest extends NewModelTestCase
 			'slug' => 'test'
 		]);
 
-		$parent = new HasFileTraitUser([
+		$parent = new NewHasFileTraitUser([
 			new File(['filename' => $filename, 'parent' => $page])
 		]);
 
@@ -135,7 +135,7 @@ class NewHasFilesTest extends NewModelTestCase
 			'slug' => 'test'
 		]);
 
-		$parent = new HasFileTraitUser([
+		$parent = new NewHasFileTraitUser([
 			new File(['filename' => $filename, 'parent' => $page])
 		]);
 
@@ -149,12 +149,12 @@ class NewHasFilesTest extends NewModelTestCase
 		]);
 
 		// no files
-		$parent = new HasFileTraitUser([]);
+		$parent = new NewHasFileTraitUser([]);
 
 		$this->assertFalse($parent->hasFiles());
 
 		// files
-		$parent = new HasFileTraitUser([
+		$parent = new NewHasFileTraitUser([
 			new File(['filename' => 'test.jpg', 'parent' => $page])
 		]);
 
@@ -167,7 +167,7 @@ class NewHasFilesTest extends NewModelTestCase
 			'slug' => 'test'
 		]);
 
-		$parent = new HasFileTraitUser([
+		$parent = new NewHasFileTraitUser([
 			new File([
 				'filename' => 'test.jpg',
 				'content'  => ['uuid' => 'file-test'],
