@@ -5,11 +5,13 @@ namespace Kirby\Cms;
 use Kirby\Cms\NewFile as File;
 use Kirby\Cms\NewPage as Page;
 use Kirby\Exception\LogicException;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
 class NewFileChangeTemplateTest extends NewModelTestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewFileChangeTemplate';
 
 	public function testChangeTemplate(): void
@@ -328,5 +330,127 @@ class NewFileChangeTemplateTest extends NewModelTestCase
 		$this->expectExceptionMessage('The template for the file "test/test.pdf" cannot be changed to "for-default-b" (valid: "for-default-c, for-default-d")');
 
 		$file->changeTemplate('for-default-b');
+	}
+
+	public function testChangeTemplateManipulate()
+	{
+		$testImage = static::FIXTURES . '/test.jpg';
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'manipulate-a'
+						],
+						[
+							'type' => 'files',
+							'template' => 'manipulate-b'
+						]
+					]
+				],
+				'files/manipulate-a' => [
+					'title'  => 'Manipulate A',
+				],
+				'files/manipulate-b' => [
+					'title'  => 'Manipulate B',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp'
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'test-default',
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => 'manipulate-a']
+		]);
+
+		F::copy($testImage, $page->root() . '/test.jpg');
+		F::write($page->root() . '/test.jpg.txt', 'Template: manipulate-a');
+
+		$file = $page->file('test.jpg');
+		$this->assertSame('jpg', $file->extension());
+		$this->assertSame(128, $file->width());
+		$this->assertSame(128, $file->height());
+
+		$file = $file->changeTemplate('manipulate-b');
+		$this->assertSame('webp', $file->extension());
+		$this->assertSame(100, $file->width());
+		$this->assertSame(100, $file->height());
+	}
+
+	public function testChangeTemplateManipulateNonImage()
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'manipulate-a'
+						],
+						[
+							'type' => 'files',
+							'template' => 'manipulate-b'
+						]
+					]
+				],
+				'files/manipulate-a' => [
+					'title'  => 'Manipulate A',
+				],
+				'files/manipulate-b' => [
+					'title'  => 'Manipulate B',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp'
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-default',
+						'files' => [
+							[
+								'filename' => 'test.pdf',
+								'content'  => ['template' => 'manipulate-a']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'test-default',
+		]);
+
+		$file = new File([
+			'filename' => 'test.pdf',
+			'parent'   => $page,
+			'content'  => ['template' => 'manipulate-a']
+		]);
+
+		$newFile = $file->changeTemplate('manipulate-b');
+
+		$this->assertSame('pdf', $file->extension());
+		$this->assertSame('pdf', $newFile->extension());
 	}
 }
