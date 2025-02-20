@@ -353,12 +353,7 @@ trait PageActions
 		$update = $result instanceof Page ? $result : $this;
 
 		// flush the parent cache to get children and drafts right
-		static::updateParentCollections($update, match ($action) {
-			'create'    => 'append',
-			'delete'    => 'remove',
-			'duplicate' => false, // ::copy is already taking care of this
-			default     => 'set'
-		});
+		static::updateParentCollections($update, $action);
 
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
@@ -942,6 +937,14 @@ trait PageActions
 		string|false $method,
 		Page|Site|null $parentModel = null
 	): void {
+		// normalize the method
+		$method = match ($method) {
+			'append', 'create' => 'append',
+			'remove', 'delete' => 'remove',
+			false, 'duplicate' => false, // ::copy is already taking care of this
+			default => 'set'
+		};
+
 		if ($method === false) {
 			return;
 		}
