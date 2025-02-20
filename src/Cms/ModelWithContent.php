@@ -395,11 +395,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Read the content from the content file
 	 * @internal
+	 * @deprecated 5.0.0 Use `->version()->read()` instead
 	 */
 	public function readContent(string|null $languageCode = null): array
 	{
-		Helpers::deprecated('$model->readContent() is deprecated. Use $model->version()->read() instead.');
-
+		Helpers::deprecated('$model->readContent() is deprecated. Use $model->version()->read() instead.'); // @codeCoverageIgnore
 		return $this->version()->read($languageCode ?? 'default') ?? [];
 	}
 
@@ -721,8 +721,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function writeContent(array $data, string|null $languageCode = null): bool
 	{
-		Helpers::deprecated('$model->writeContent() is deprecated. Use $model->version()->save() instead.');
-
+		Helpers::deprecated('$model->writeContent() is deprecated. Use $model->version()->save() instead.'); // @codeCoverageIgnore
 		$this->version()->save($data, $languageCode ?? 'default', true);
 		return true;
 	}
