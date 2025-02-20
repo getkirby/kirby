@@ -49,7 +49,7 @@ class NewUser extends User
 		];
 
 		// keep the initial storage class
-		$storage = get_class($user->storage());
+		$storage = $user->storage()::class;
 
 		// keep the user in memory until it will be saved
 		$user->changeStorage(MemoryStorage::class);

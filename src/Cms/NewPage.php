@@ -45,7 +45,7 @@ class NewPage extends Page
 		}
 
 		// keep the initial storage class
-		$storage = get_class($page->storage());
+		$storage = $page->storage()::class;
 
 		// keep the page in memory until it will be saved
 		$page->changeStorage(MemoryStorage::class);
