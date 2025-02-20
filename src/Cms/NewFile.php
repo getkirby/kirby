@@ -3,6 +3,9 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\MemoryStorage;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Filesystem\F;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
 
@@ -25,7 +28,7 @@ class NewFile extends File
 
 		// merge the content with the defaults
 		$props['content'] = [
-			...$page->createDefaultContent(),
+			...$file->createDefaultContent(),
 			...$props['content'],
 		];
 
