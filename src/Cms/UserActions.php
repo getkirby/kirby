@@ -38,9 +38,6 @@ trait UserActions
 			$user = $user->clone(['email' => $email]);
 			$user->updateCredentials(['email' => $email]);
 
-			// update the users collection
-			$user->kirby()->users()->set($user->id(), $user);
-
 			return $user;
 		});
 	}
@@ -53,9 +50,6 @@ trait UserActions
 		return $this->commit('changeLanguage', ['user' => $this, 'language' => $language], function ($user, $language) {
 			$user = $user->clone(['language' => $language]);
 			$user->updateCredentials(['language' => $language]);
-
-			// update the users collection
-			$user->kirby()->users()->set($user->id(), $user);
 
 			return $user;
 		});
@@ -71,9 +65,6 @@ trait UserActions
 		return $this->commit('changeName', ['user' => $this, 'name' => $name], function ($user, $name) {
 			$user = $user->clone(['name' => $name]);
 			$user->updateCredentials(['name' => $name]);
-
-			// update the users collection
-			$user->kirby()->users()->set($user->id(), $user);
 
 			return $user;
 		});
@@ -96,9 +87,6 @@ trait UserActions
 
 			$user->writePassword($password);
 
-			// update the users collection
-			$user->kirby()->users()->set($user->id(), $user);
-
 			// keep the user logged in to the current browser
 			// if they changed their own password
 			// (regenerate the session token, update the login timestamp)
@@ -118,9 +106,6 @@ trait UserActions
 		return $this->commit('changeRole', ['user' => $this, 'role' => $role], function ($user, $role) {
 			$user = $user->clone(['role' => $role]);
 			$user->updateCredentials(['role' => $role]);
-
-			// update the users collection
-			$user->kirby()->users()->set($user->id(), $user);
 
 			return $user;
 		});
@@ -195,6 +180,12 @@ trait UserActions
 		// run closure
 		$result = $callback(...array_values($arguments));
 
+		// determine the object that needs to be updated in the parent collection
+		$update = $result instanceof User ? $result : $this;
+
+		// update the users collection
+		static::updateParentCollections($update, $action);
+
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create' => ['user' => $result],
@@ -260,9 +251,6 @@ trait UserActions
 				false => null
 			};
 
-			// add the user to users collection
-			$user->kirby()->users()->add($user);
-
 			// write the user data
 			return $user->save($user->content()->toArray(), $languageCode);
 		});
@@ -311,9 +299,6 @@ trait UserActions
 					message: 'The user directory for "' . $user->email() . '" could not be deleted'
 				);
 			}
-
-			// remove the user from users collection
-			$user->kirby()->users()->remove($user);
 
 			return true;
 		});
@@ -383,10 +368,8 @@ trait UserActions
 		// set auth user data only if the current user is this user
 		if ($user->isLoggedIn() === true) {
 			$this->kirby()->auth()->setUser($user);
+			static::updateParentCollection($user, 'set');
 		}
-
-		// update the users collection
-		$user->kirby()->users()->set($user->id(), $user);
 
 		return $user;
 	}
@@ -406,6 +389,30 @@ trait UserActions
 			...$this->credentials(),
 			...$credentials
 		]);
+	}
+
+	/**
+	 * Updates users collection after a user action
+	 */
+	protected static function updateParentCollection(
+		User $user,
+		string|false $method = 'set'
+	): void {
+		if ($method === false) {
+			return;
+		}
+
+		$method = match ($method) {
+			'append', 'create' => 'append',
+			'remove', 'delete' => 'remove',
+			default => 'set'
+		};
+
+		// method arguments depending on the called method
+		$args = $method === 'remove' ? [$user] : [$user->id(), $user];
+
+		// update the users collection
+		$user->kirby()->users()->$method(...$args);
 	}
 
 	/**
