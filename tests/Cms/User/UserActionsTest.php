@@ -350,6 +350,16 @@ class UserActionsTest extends TestCase
 		$this->assertSame('b', $user->b()->value());
 	}
 
+	public function testCreateWithPassword()
+	{
+		$user = User::create([
+			'email'    => 'new@domain.com',
+			'password' => 'topsecret2018',
+		]);
+
+		$this->assertNotSame($user->password(), 'topsecret2018', 'The password should be hashed');
+	}
+
 	public function testDelete()
 	{
 		$user = $this->app->user('editor@domain.com');
