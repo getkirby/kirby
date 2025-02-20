@@ -36,7 +36,7 @@ class NewFile extends File
 		// and added to content right away
 		if (
 			Uuids::enabled() === true &&
-			empty($content['uuid']) === true
+			empty($props['content']['uuid']) === true
 		) {
 			// sets the current uuid if it is the exact same file
 			if ($file->exists() === true) {
@@ -51,7 +51,7 @@ class NewFile extends File
 				}
 			}
 
-			$content['uuid'] = Uuid::generate();
+			$props['content']['uuid'] = Uuid::generate();
 		}
 
 		// keep the initial storage class
@@ -110,6 +110,7 @@ class NewFile extends File
 		$template = $props['template'] ?? 'default';
 
 		// prefer the filename from the props
+		$filename   = $props['filename'] ?? null;
 		$filename ??= basename($props['source']);
 		$filename   = F::safeName($props['filename']);
 
