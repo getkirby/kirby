@@ -9,7 +9,7 @@ use TypeError;
 #[CoversClass(Page::class)]
 class NewPageUrlAndUriTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageUrlTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageUrl';
 
 	public function testHomeUrlAndUriInMultiLanguageMode(): void
 	{

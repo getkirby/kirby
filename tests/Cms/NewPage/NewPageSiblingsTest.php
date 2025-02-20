@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageSiblingsTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSiblingsTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSiblings';
 
 	public function site(array|null $children = null): Site
 	{

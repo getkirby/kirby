@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class NewUserRulesTest extends NewModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserRulesTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserRules';
 
 	public function setUp(): void
 	{

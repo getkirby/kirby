@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageStatusTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageStatusTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageStatus';
 
 	public function testIsDraft(): void
 	{

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Site::class)]
 class NewSiteUrlTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteUrlTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteUrl';
 
 	public function testUrlInMultiLanguageMode(): void
 	{

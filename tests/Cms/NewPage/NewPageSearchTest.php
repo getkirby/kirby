@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageSearchTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSearchTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSearch';
 
 	public function testSearch(): void
 	{

@@ -10,7 +10,7 @@ use TypeError;
 #[CoversClass(Page::class)]
 class NewPageSlugTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSlugTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSlug';
 
 	public function testSlugInSingleLanguageMode(): void
 	{

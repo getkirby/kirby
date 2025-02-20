@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(User::class)]
 class NewUserLanguageTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserLanguageTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserLanguage';
 
 	public function testLanguage(): void
 	{

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(User::class)]
 class NewUserDeleteTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserDeleteTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserDelete';
 
 	public function setUp(): void
 	{

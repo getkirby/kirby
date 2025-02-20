@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Page::class)]
 class NewPageChangeSlugTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeSlugTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeSlug';
 
 	public static function slugProvider(): array
 	{

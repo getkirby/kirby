@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageTranslationsTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageTranslationsTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageTranslations';
 
 	public function testSetContentInMultiLanguageMode(): void
 	{

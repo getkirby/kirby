@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageUnpublishTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageUnpublishTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageUnpublish';
 
 	public function testUnpublish(): void
 	{

@@ -12,7 +12,7 @@ class NewUserTestModel extends User
 #[CoversClass(User::class)]
 class NewUserModelTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserModelTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserModel';
 
 	public function testUserModel(): void
 	{

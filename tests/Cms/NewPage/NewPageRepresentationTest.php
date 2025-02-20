@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageRepresentationTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageRepresentationTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageRepresentation';
 
 	public function testRepresentationWithExistingTemplate(): void
 	{

@@ -9,7 +9,7 @@ use ReflectionClass;
 #[CoversClass(Site::class)]
 class NewSiteCommitTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteCommitTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteCommit';
 
 	public function testCommit(): void
 	{

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageCreateNumTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageCreateNumTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageCreateNum';
 
 	public function testCreateDateBasedNum(): void
 	{

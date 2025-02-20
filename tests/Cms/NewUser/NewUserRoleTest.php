@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(User::class)]
 class NewUserRoleTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserRoleTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserRole';
 
 	public function testIsAdmin(): void
 	{

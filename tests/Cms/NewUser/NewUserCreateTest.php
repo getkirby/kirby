@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(User::class)]
 class NewUserCreateTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserCreateTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserCreate';
 
 	public function setUp(): void
 	{

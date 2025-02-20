@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Site::class)]
 class NewSiteRulesTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteRulesTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteRules';
 
 	public function testChangeTitleWithoutPermissions(): void
 	{

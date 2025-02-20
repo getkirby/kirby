@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(PageRules::class)]
 class NewPageRulesTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageRulesTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageRules';
 
 	public function testChangeNum(): void
 	{

@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(User::class)]
 class NewUserPermissionsTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserPermissionsTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserPermissions';
 
 	public static function actionProvider(): array
 	{

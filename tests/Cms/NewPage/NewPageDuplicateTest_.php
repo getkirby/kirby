@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageDuplicateTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageDuplicateTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageDuplicate';
 
 	public function testDuplicate(): void
 	{

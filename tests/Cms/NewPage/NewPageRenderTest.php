@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class NewPageRenderTest extends NewModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/PageRenderTest';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.NewPageRenderTest';
+	public const TMP      = KIRBY_TMP_DIR . '/Cms.NewPageRender';
 
 	public function setUp(): void
 	{

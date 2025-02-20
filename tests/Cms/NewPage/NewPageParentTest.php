@@ -9,7 +9,7 @@ use TypeError;
 #[CoversClass(Page::class)]
 class NewPageParentTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageParentTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageParent';
 
 	public function testParent(): void
 	{

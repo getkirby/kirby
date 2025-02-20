@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageChangeStorageTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeStorageTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeStorage';
 
 	public function testChangeStorage(): void
 	{

@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageDeleteTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageDeleteTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageDelete';
 
 	public function setUp(): void
 	{

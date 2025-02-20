@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Site::class)]
 class NewSiteVisitTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteVisitTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteVisit';
 
 	public function testVisitWithPageObject(): void
 	{

@@ -10,7 +10,7 @@ use TypeError;
 #[CoversClass(User::class)]
 class NewUserNameAndEmailTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserNameAndEmailTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserNameAndEmail';
 
 	public function testEmail(): void
 	{

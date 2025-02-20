@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class NewPageFilesTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageFilesTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageFiles';
 
 	public function testCreateFile(): void
 	{

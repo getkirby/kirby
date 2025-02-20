@@ -19,7 +19,7 @@ class NewUncreatablePage extends Page
 #[CoversClass(Page::class)]
 class NewPageCreateTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageCreateTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageCreate';
 
 	public function setUp(): void
 	{

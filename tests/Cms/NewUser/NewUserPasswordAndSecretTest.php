@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(User::class)]
 class NewUserPasswordAndSecretTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserPasswordAndSecretTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserPasswordAndSecret';
 
 	public function testPasswordTimestamp(): void
 	{

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Site::class)]
 class NewSiteBreadcrumbTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteBreadcrumbTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewSiteBreadcrumb';
 
 	public function testBreadcrumb(): void
 	{

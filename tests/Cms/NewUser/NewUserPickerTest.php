@@ -2,13 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cms\NewUser as User;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(User::class)]
+#[CoversClass(UserPicker::class)]
 class NewUserPickerTest extends NewModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserPickerTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserPicker';
 
 	public function setUp(): void
 	{
