@@ -13,7 +13,7 @@ class NewPageDuplicateTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageDuplicateTest';
 
-	public function testDuplicate()
+	public function testDuplicate(): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -39,7 +39,7 @@ class NewPageDuplicateTest extends NewModelTestCase
 		$this->assertNotSame($oldUuid, $newUuid);
 	}
 
-	public function testDuplicateInMultiLanguageMode()
+	public function testDuplicateInMultiLanguageMode(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -70,7 +70,7 @@ class NewPageDuplicateTest extends NewModelTestCase
 		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
 
-	public function testDuplicateMultiLangSlug()
+	public function testDuplicateMultiLangSlug(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -98,7 +98,7 @@ class NewPageDuplicateTest extends NewModelTestCase
 		$this->assertSame('test-copy', $copy->slug('de'));
 	}
 
-	public function testDuplicateFiles()
+	public function testDuplicateFiles(): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -119,7 +119,7 @@ class NewPageDuplicateTest extends NewModelTestCase
 		$this->assertNotSame($origFile->uuid()->id(), $copyFile->uuid()->id());
 	}
 
-	public function testDuplicateFilesMultiLang()
+	public function testDuplicateFilesMultiLang(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -147,7 +147,7 @@ class NewPageDuplicateTest extends NewModelTestCase
 		$this->assertSame($copy->files()->find('foo.jpg')->uuid()->id(), $copyFile->uuid()->id());
 	}
 
-	public function testDuplicateChildren()
+	public function testDuplicateChildren(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -162,7 +162,7 @@ class NewPageDuplicateTest extends NewModelTestCase
 		$this->assertNotSame($this->app->page('test/foo')->uuid()->id(), $this->app->page('test-copy/foo')->uuid()->id());
 	}
 
-	public function testDuplicateChildrenMultiLang()
+	public function testDuplicateChildrenMultiLang(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -190,7 +190,7 @@ class NewPageDuplicateTest extends NewModelTestCase
 		$this->assertNotSame($this->app->page('test/foo')->uuid()->id(), $this->app->page('test-copy/foo')->uuid()->id());
 	}
 
-	public function testDuplicateChildrenFiles()
+	public function testDuplicateChildrenFiles(): void
 	{
 		$app = $this->app->clone();
 		$app->impersonate('kirby');
@@ -223,7 +223,7 @@ class NewPageDuplicateTest extends NewModelTestCase
 		$this->assertNotSame($origFile->uuid()->id(), $copyFile->uuid()->id());
 	}
 
-	public function testDuplicateHooks()
+	public function testDuplicateHooks(): void
 	{
 		$calls = 0;
 		$phpunit = $this;

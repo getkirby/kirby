@@ -11,7 +11,7 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageUrlTest';
 
-	public function testHomeUrlAndUriInMultiLanguageMode()
+	public function testHomeUrlAndUriInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -42,7 +42,7 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 		$this->assertSame('zuhause', $page->uri());
 	}
 
-	public function testHomeUrlAndUriInSingleLanguageMode()
+	public function testHomeUrlAndUriInSingleLanguageMode(): void
 	{
 		$page = new Page([
 			'slug' => 'home'
@@ -94,7 +94,7 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 		$this->assertSame('zuhause/kind', $child->uri());
 	}
 
-	public function testHomeChildUrlAndUriInSingleLanguageMode()
+	public function testHomeChildUrlAndUriInSingleLanguageMode(): void
 	{
 		$page = new Page([
 			'slug'     => 'home',
@@ -111,7 +111,7 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 		$this->assertSame('home/child', $child->uri());
 	}
 
-	public function testSetUrl()
+	public function testSetUrl(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -122,7 +122,7 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 		$this->assertSame('test', $page->uri());
 	}
 
-	public function testSetUrlWithInvalidValue()
+	public function testSetUrlWithInvalidValue(): void
 	{
 		$this->expectException(TypeError::class);
 
@@ -132,7 +132,7 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 		]);
 	}
 
-	public function testUrlAndUriInMultiLanguageMode()
+	public function testUrlAndUriInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -152,7 +152,7 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 		$this->assertSame('test', $page->uri());
 	}
 
-	public function testUrlAndUriWithNestedPagesInMultiLanguageMode()
+	public function testUrlAndUriWithNestedPagesInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -179,7 +179,7 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 		$this->assertSame('grandma/mother/child', $child->uri());
 	}
 
-	public function testUrlWithOptionsInMultiLanguageMode()
+	public function testUrlWithOptionsInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -200,7 +200,7 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 		]));
 	}
 
-	public function testUrlAndUriWithTranslatedSlugInMultiLanguageMode()
+	public function testUrlAndUriWithTranslatedSlugInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -267,14 +267,14 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 		$this->assertSame('oma/mutter/kind', $child->uri());
 	}
 
-	public function testUrlAndUriInSingleLanguageMode()
+	public function testUrlAndUriInSingleLanguageMode(): void
 	{
 		$page = new Page(['slug' => 'test']);
 		$this->assertSame('/test', $page->url());
 		$this->assertSame('test', $page->uri());
 	}
 
-	public function testUrlAndUriWithNestedPagesInSingleLanguageMode()
+	public function testUrlAndUriWithNestedPagesInSingleLanguageMode(): void
 	{
 		$grandma = new Page(['slug' => 'grandma']);
 		$mother  = new Page(['slug' => 'mother', 'parent' => $grandma]);
@@ -289,7 +289,7 @@ class NewPageUrlAndUriTest extends NewModelTestCase
 		$this->assertSame('grandma/mother/child', $child->uri());
 	}
 
-	public function testUrlWithOptionsInSingleLanguageMode()
+	public function testUrlWithOptionsInSingleLanguageMode(): void
 	{
 		$page = new Page([
 			'slug' => 'test',

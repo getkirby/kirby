@@ -20,7 +20,7 @@ class NewFileSiblingsTest extends NewModelTestCase
 		];
 	}
 
-	protected function files()
+	protected function files(): Files
 	{
 		return (new Page([
 			'slug'  => 'test',
@@ -28,7 +28,7 @@ class NewFileSiblingsTest extends NewModelTestCase
 		]))->files();
 	}
 
-	public function testHasNext()
+	public function testHasNext(): void
 	{
 		$collection = $this->files();
 
@@ -36,7 +36,7 @@ class NewFileSiblingsTest extends NewModelTestCase
 		$this->assertFalse($collection->last()->hasNext());
 	}
 
-	public function testHasPrev()
+	public function testHasPrev(): void
 	{
 		$collection = $this->files();
 
@@ -44,7 +44,7 @@ class NewFileSiblingsTest extends NewModelTestCase
 		$this->assertFalse($collection->first()->hasPrev());
 	}
 
-	public function testIndexOf()
+	public function testIndexOf(): void
 	{
 		$collection = $this->files();
 
@@ -53,7 +53,7 @@ class NewFileSiblingsTest extends NewModelTestCase
 		$this->assertSame(3, $collection->last()->indexOf());
 	}
 
-	public function testIsFirst()
+	public function testIsFirst(): void
 	{
 		$collection = $this->files();
 
@@ -61,7 +61,7 @@ class NewFileSiblingsTest extends NewModelTestCase
 		$this->assertFalse($collection->last()->isFirst());
 	}
 
-	public function testIsLast()
+	public function testIsLast(): void
 	{
 		$collection = $this->files();
 
@@ -69,7 +69,7 @@ class NewFileSiblingsTest extends NewModelTestCase
 		$this->assertFalse($collection->first()->isLast());
 	}
 
-	public function testIsNth()
+	public function testIsNth(): void
 	{
 		$collection = $this->files();
 
@@ -78,14 +78,14 @@ class NewFileSiblingsTest extends NewModelTestCase
 		$this->assertTrue($collection->last()->isNth($collection->count() - 1));
 	}
 
-	public function testNext()
+	public function testNext(): void
 	{
 		$collection = $this->files();
 
 		$this->assertSame($collection->first()->next(), $collection->nth(1));
 	}
 
-	public function testNextAll()
+	public function testNextAll(): void
 	{
 		$collection = $this->files();
 		$first      = $collection->first();
@@ -96,14 +96,14 @@ class NewFileSiblingsTest extends NewModelTestCase
 		$this->assertSame($first->nextAll()->last(), $collection->nth(3));
 	}
 
-	public function testPrev()
+	public function testPrev(): void
 	{
 		$collection = $this->files();
 
 		$this->assertSame($collection->last()->prev(), $collection->nth(2));
 	}
 
-	public function testPrevAll()
+	public function testPrevAll(): void
 	{
 		$collection = $this->files();
 		$last       = $collection->last();
@@ -114,7 +114,7 @@ class NewFileSiblingsTest extends NewModelTestCase
 		$this->assertSame($last->prevAll()->last(), $collection->nth(2));
 	}
 
-	public function testSiblings()
+	public function testSiblings(): void
 	{
 		$files    = $this->files();
 		$file     = $files->nth(1);
@@ -124,7 +124,7 @@ class NewFileSiblingsTest extends NewModelTestCase
 		$this->assertEquals($siblings, $file->siblings(false)); // cannot use strict assertion (cloned object)
 	}
 
-	public function testTemplateSiblings()
+	public function testTemplateSiblings(): void
 	{
 		$page = new Page([
 			'slug'  => 'test',

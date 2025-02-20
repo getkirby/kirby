@@ -36,7 +36,7 @@ class NewPageUpdateTest extends NewModelTestCase
 	}
 
 	#[DataProvider('languageProvider')]
-	public function testUpdateInMultiLanguageMode($languageCode)
+	public function testUpdateInMultiLanguageMode($languageCode): void
 	{
 		$this->setupMultiLanguage();
 
@@ -59,7 +59,7 @@ class NewPageUpdateTest extends NewModelTestCase
 		$this->assertCorrectlyUpdatedPage($modified, $page, $drafts, $childrenAndDrafts);
 	}
 
-	public function testUpdateInMultiLanguageModeWithMergedContent()
+	public function testUpdateInMultiLanguageModeWithMergedContent(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -114,7 +114,7 @@ class NewPageUpdateTest extends NewModelTestCase
 		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
 
-	public function testUpdateInSingleLanguageMode()
+	public function testUpdateInSingleLanguageMode(): void
 	{
 		$page = Page::create([
 			'slug' => 'test'
@@ -129,7 +129,7 @@ class NewPageUpdateTest extends NewModelTestCase
 		$this->assertCorrectlyUpdatedPage($modified, $page, $drafts, $childrenAndDrafts);
 	}
 
-	public function testUpdateHooks()
+	public function testUpdateHooks(): void
 	{
 		$phpunit = $this;
 		$calls = 0;
@@ -189,7 +189,7 @@ class NewPageUpdateTest extends NewModelTestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function testUpdateWithDateBasedNumbering()
+	public function testUpdateWithDateBasedNumbering(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',

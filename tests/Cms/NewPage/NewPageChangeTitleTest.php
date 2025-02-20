@@ -10,7 +10,7 @@ class NewPageChangeTitleTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeTitleTest';
 
-	public function testChangeTitle()
+	public function testChangeTitle(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -29,7 +29,7 @@ class NewPageChangeTitleTest extends NewModelTestCase
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
 	}
 
-	public function testChangeTitleHooks()
+	public function testChangeTitleHooks(): void
 	{
 		$calls = 0;
 		$phpunit = $this;
@@ -61,7 +61,7 @@ class NewPageChangeTitleTest extends NewModelTestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function testChangeTitleBeforeHookDefaultLanguage()
+	public function testChangeTitleBeforeHookDefaultLanguage(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -90,7 +90,7 @@ class NewPageChangeTitleTest extends NewModelTestCase
 		$this->assertSame(1, $calls);
 	}
 
-	public function testChangeTitleBeforeHookSecondaryLanguage()
+	public function testChangeTitleBeforeHookSecondaryLanguage(): void
 	{
 		$this->setupMultiLanguage();
 

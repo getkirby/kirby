@@ -45,14 +45,14 @@ class NewFilePickerTest extends NewModelTestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$picker = new FilePicker();
 
 		$this->assertCount(3, $picker->items());
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$picker = new FilePicker([
 			'query' => 'site.files.offset(1)'
@@ -61,7 +61,7 @@ class NewFilePickerTest extends NewModelTestCase
 		$this->assertCount(2, $picker->items());
 	}
 
-	public function testQuerySite()
+	public function testQuerySite(): void
 	{
 		$picker = new FilePicker([
 			'query' => 'site'
@@ -70,7 +70,7 @@ class NewFilePickerTest extends NewModelTestCase
 		$this->assertCount(3, $picker->items());
 	}
 
-	public function testQueryPage()
+	public function testQueryPage(): void
 	{
 		$picker = new FilePicker([
 			'query' => 'kirby.page("test")'
@@ -79,7 +79,7 @@ class NewFilePickerTest extends NewModelTestCase
 		$this->assertCount(2, $picker->items());
 	}
 
-	public function testQueryUser()
+	public function testQueryUser(): void
 	{
 		$picker = new FilePicker([
 			'query' => 'kirby.user("test")'
@@ -88,7 +88,7 @@ class NewFilePickerTest extends NewModelTestCase
 		$this->assertCount(1, $picker->items());
 	}
 
-	public function testQueryFile()
+	public function testQueryFile(): void
 	{
 		$picker = new FilePicker([
 			'model' => $this->app->site()->files()->first()
@@ -97,7 +97,7 @@ class NewFilePickerTest extends NewModelTestCase
 		$this->assertCount(3, $picker->items());
 	}
 
-	public function testQueryInvalid()
+	public function testQueryInvalid(): void
 	{
 		$picker = new FilePicker([
 			'query' => 'site.pages'

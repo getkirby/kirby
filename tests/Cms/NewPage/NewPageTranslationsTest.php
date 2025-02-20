@@ -194,7 +194,7 @@ class NewPageTranslationsTest extends NewModelTestCase
 		$this->assertSame($content, $translations->find('en')->content());
 	}
 
-	public function testUntranslatedFields()
+	public function testUntranslatedFields(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -219,7 +219,7 @@ class NewPageTranslationsTest extends NewModelTestCase
 		$this->assertSame('Title EN', $page->title('de')->value());
 	}
 
-	public function testUntranslatableFields()
+	public function testUntranslatableFields(): void
 	{
 		$this->setUpMultiLanguage();
 

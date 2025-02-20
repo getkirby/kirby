@@ -10,7 +10,7 @@ class NewPageFindTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageFindTest';
 
-	public function testFindInMultiLanguageMode()
+	public function testFindInMultiLanguageMode(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -63,7 +63,7 @@ class NewPageFindTest extends NewModelTestCase
 		$this->assertSame('grandma/mother/child', $this->app->page('oma/mutter/kind')->id());
 	}
 
-	public function testFindInSingleLanguageMode()
+	public function testFindInSingleLanguageMode(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [

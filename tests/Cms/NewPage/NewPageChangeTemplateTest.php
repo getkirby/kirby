@@ -11,7 +11,7 @@ class NewPageChangeTemplateTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeTemplateTest';
 
-	public function testChangeTemplateInMultiLanguageMode()
+	public function testChangeTemplateInMultiLanguageMode(): void
 	{
 		$calls = 0;
 		$phpunit = $this;
@@ -116,7 +116,7 @@ class NewPageChangeTemplateTest extends NewModelTestCase
 		$this->assertSame('Täxt', $modified->content('de')->get('text')->value());
 	}
 
-	public function testChangeTemplateInSingleLanguageMode()
+	public function testChangeTemplateInSingleLanguageMode(): void
 	{
 		$calls = 0;
 		$phpunit = $this;

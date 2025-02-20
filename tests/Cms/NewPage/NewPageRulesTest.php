@@ -15,7 +15,7 @@ class NewPageRulesTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageRulesTest';
 
-	public function testChangeNum()
+	public function testChangeNum(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -27,7 +27,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeNum($page);
 	}
 
-	public function testInvalidChangeNum()
+	public function testInvalidChangeNum(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.num.invalid');
@@ -39,7 +39,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeNum($page, -1);
 	}
 
-	public function testChangeSlug()
+	public function testChangeSlug(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -63,7 +63,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeSlug($page, 'test-b');
 	}
 
-	public function testChangeSlugWithoutPermissions()
+	public function testChangeSlugWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('changeSlug')->willReturn(false);
@@ -78,7 +78,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeSlug($page, 'test');
 	}
 
-	public function testChangeSlugWithHomepage()
+	public function testChangeSlugWithHomepage(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.changeSlug.permission');
@@ -96,7 +96,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeSlug($this->app->page('home'), 'test-a');
 	}
 
-	public function testChangeSlugWithErrorPage()
+	public function testChangeSlugWithErrorPage(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.changeSlug.permission');
@@ -114,7 +114,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeSlug($this->app->page('error'), 'test-a');
 	}
 
-	public function testChangeSlugReservedPath()
+	public function testChangeSlugReservedPath(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.changeSlug.reserved');
@@ -142,8 +142,10 @@ class NewPageRulesTest extends NewModelTestCase
 	}
 
 	#[DataProvider('statusActionProvider')]
-	public function testChangeStatusWithoutPermission($status, $args = [])
-	{
+	public function testChangeStatusWithoutPermission(
+		string $status,
+		array $args = []
+	): void {
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('changeStatus')->willReturn(false);
 
@@ -157,7 +159,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::{'changeStatusTo' . $status}($page, ...$args);
 	}
 
-	public function testChangeStatusToListedWithoutPermissions()
+	public function testChangeStatusToListedWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('changeStatus')->willReturn(false);
@@ -172,7 +174,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeStatusToDraft($page);
 	}
 
-	public function testChangeStatusInvalid()
+	public function testChangeStatusInvalid(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.changeStatus.toDraft.invalid');
@@ -191,8 +193,10 @@ class NewPageRulesTest extends NewModelTestCase
 	}
 
 	#[DataProvider('statusActionProvider')]
-	public function testChangeStatus($status, $args = [])
-	{
+	public function testChangeStatus(
+		string $status,
+		array $args = []
+	): void {
 		$this->app = $this->app->clone([
 			'site' => [
 				'children' => [
@@ -212,7 +216,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeStatus($page, $status, ...$args);
 	}
 
-	public function testChangeTemplate()
+	public function testChangeTemplate(): void
 	{
 		$this->app = $this->app->clone([
 			'templates' => [
@@ -246,7 +250,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeTemplate($page, 'b');
 	}
 
-	public function testChangeTemplateWithoutPermissions()
+	public function testChangeTemplateWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('changeTemplate')->willReturn(false);
@@ -261,7 +265,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeTemplate($page, 'test');
 	}
 
-	public function testChangeTemplateTooFewTemplates()
+	public function testChangeTemplateTooFewTemplates(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('changeTemplate')->willReturn(true);
@@ -277,7 +281,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeTemplate($page, 'c');
 	}
 
-	public function testChangeTemplateWithInvalidTemplateName()
+	public function testChangeTemplateWithInvalidTemplateName(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('changeTemplate')->willReturn(true);
@@ -295,7 +299,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeTemplate($page, 'c');
 	}
 
-	public function testChangeTitleWithEmptyValue()
+	public function testChangeTitleWithEmptyValue(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -307,7 +311,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeTitle($page, '');
 	}
 
-	public function testChangeTitleWithoutPermissions()
+	public function testChangeTitleWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('changeTitle')->willReturn(false);
@@ -322,7 +326,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::changeTitle($page, 'test');
 	}
 
-	public function testCreateWithoutPermissions()
+	public function testCreateWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('create')->willReturn(false);
@@ -337,7 +341,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::create($page);
 	}
 
-	public function testCreateInvalidSlug()
+	public function testCreateInvalidSlug(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('create')->willReturn(true);
@@ -352,7 +356,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::create($page);
 	}
 
-	public function testCreateDuplicateException()
+	public function testCreateDuplicateException(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -374,7 +378,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::create($page);
 	}
 
-	public function testCreateSlugReservedPath()
+	public function testCreateSlugReservedPath(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.changeSlug.reserved');
@@ -398,7 +402,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::create($page);
 	}
 
-	public function testDelete()
+	public function testDelete(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -409,7 +413,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::delete($page);
 	}
 
-	public function testDeleteWithoutPermissions()
+	public function testDeleteWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('delete')->willReturn(false);
@@ -424,7 +428,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::delete($page);
 	}
 
-	public function testDeleteNotExists()
+	public function testDeleteNotExists(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -435,7 +439,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::delete($page);
 	}
 
-	public function testDeleteHomepage()
+	public function testDeleteHomepage(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.delete.permission');
@@ -453,7 +457,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::delete($this->app->page('home'));
 	}
 
-	public function testDeleteErrorPage()
+	public function testDeleteErrorPage(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.delete.permission');
@@ -471,7 +475,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::delete($this->app->page('error'));
 	}
 
-	public function testDeleteWithChildren()
+	public function testDeleteWithChildren(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.page.delete.hasChildren');
@@ -487,7 +491,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::delete($page);
 	}
 
-	public function testDeleteWithChildrenForce()
+	public function testDeleteWithChildrenForce(): void
 	{
 		$page = new Page([
 			'slug'  => 'test',
@@ -502,7 +506,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::delete($page, true);
 	}
 
-	public function testDuplicate()
+	public function testDuplicate(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -513,7 +517,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::duplicate($page, 'test-copy');
 	}
 
-	public function testDuplicateInvalid()
+	public function testDuplicateInvalid(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -525,7 +529,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::duplicate($page, '');
 	}
 
-	public function testDuplicateWithoutPermissions()
+	public function testDuplicateWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('duplicate')->willReturn(false);
@@ -540,7 +544,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::duplicate($page, 'something');
 	}
 
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		$page = new Page([
 			'slug'  => 'test',
@@ -553,7 +557,7 @@ class NewPageRulesTest extends NewModelTestCase
 		]);
 	}
 
-	public function testUpdateWithoutPermissions()
+	public function testUpdateWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('update')->willReturn(false);
@@ -568,7 +572,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::update($page, []);
 	}
 
-	public function testValidateSlugMaxlength()
+	public function testValidateSlugMaxlength(): void
 	{
 		$this->app = $this->app->clone([
 			'user' => 'test@getkirby.com',
@@ -626,7 +630,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::create($page);
 	}
 
-	public function testMove()
+	public function testMove(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -668,7 +672,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::move($child, $parentB);
 	}
 
-	public function testMoveWithoutPermissions()
+	public function testMoveWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
 		$permissions->method('can')->with('move')->willReturn(false);
@@ -683,7 +687,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::move($page, new Page(['slug' => 'test']));
 	}
 
-	public function testMoveWithDuplicate()
+	public function testMoveWithDuplicate(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -719,7 +723,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::move($child, $parentB);
 	}
 
-	public function testMoveWithInvalidTemplate()
+	public function testMoveWithInvalidTemplate(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -769,7 +773,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::move($child, $parentB);
 	}
 
-	public function testMoveWithParentWithNoPagesSections()
+	public function testMoveWithParentWithNoPagesSections(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -813,7 +817,7 @@ class NewPageRulesTest extends NewModelTestCase
 		PageRules::move($child, $parentB);
 	}
 
-	public function testMoveWithParentWithNoTemplateRestrictions()
+	public function testMoveWithParentWithNoTemplateRestrictions(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [

@@ -10,7 +10,7 @@ class NewPageStatesTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageStatesTest';
 
-	public function family()
+	public function family(): Site
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -35,7 +35,7 @@ class NewPageStatesTest extends NewModelTestCase
 		return $this->app->site();
 	}
 
-	public function testIsActive()
+	public function testIsActive(): void
 	{
 		$family  = $this->family();
 		$mother = $family->find('grandma/mother');
@@ -55,7 +55,7 @@ class NewPageStatesTest extends NewModelTestCase
 		$this->assertTrue($child->isActive());
 	}
 
-	public function testIsAncestorOf()
+	public function testIsAncestorOf(): void
 	{
 		$family  = $this->family();
 		$grandma = $family->find('grandma');
@@ -66,7 +66,7 @@ class NewPageStatesTest extends NewModelTestCase
 		$this->assertTrue($grandma->isAncestorOf($child));
 	}
 
-	public function testIsChildOf()
+	public function testIsChildOf(): void
 	{
 		$family  = $this->family();
 		$grandma = $family->find('grandma');
@@ -82,7 +82,7 @@ class NewPageStatesTest extends NewModelTestCase
 		$this->assertFalse($child->isChildOf(null));
 	}
 
-	public function testIsDescendantOf()
+	public function testIsDescendantOf(): void
 	{
 		$family  = $this->family();
 		$grandma = $family->find('grandma');
@@ -96,7 +96,7 @@ class NewPageStatesTest extends NewModelTestCase
 		$this->assertFalse($child->isDescendantOf('does/not/exist'));
 	}
 
-	public function testIsDescendantOfActive()
+	public function testIsDescendantOfActive(): void
 	{
 		$family  = $this->family();
 		$grandma = $family->find('grandma');
@@ -110,7 +110,7 @@ class NewPageStatesTest extends NewModelTestCase
 		$this->assertTrue($child->isDescendantOfActive());
 	}
 
-	public function testIsOpen()
+	public function testIsOpen(): void
 	{
 		$family  = $this->family();
 		$mother = $family->find('grandma/mother');

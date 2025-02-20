@@ -18,12 +18,12 @@ class NewPageDeleteTest extends NewModelTestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function site()
+	public function site(): Site
 	{
 		return $this->app->site();
 	}
 
-	public function testDeleteDraft()
+	public function testDeleteDraft(): void
 	{
 		$page = Page::create([
 			'slug' => 'test'
@@ -38,7 +38,7 @@ class NewPageDeleteTest extends NewModelTestCase
 		$this->assertFalse($page->parentModel()->drafts()->has($page));
 	}
 
-	public function testDeleteHooks()
+	public function testDeleteHooks(): void
 	{
 		$calls = 0;
 		$phpunit  = $this;
@@ -71,7 +71,7 @@ class NewPageDeleteTest extends NewModelTestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function testDeletePage()
+	public function testDeletePage(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -87,7 +87,7 @@ class NewPageDeleteTest extends NewModelTestCase
 		$this->assertFalse($page->parentModel()->children()->has($page));
 	}
 
-	public function testDeleteMultipleSortedPages()
+	public function testDeleteMultipleSortedPages(): void
 	{
 		$range = range(1, 10);
 		$site  = $this->site();

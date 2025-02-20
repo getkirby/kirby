@@ -10,7 +10,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageCreateNumTest';
 
-	public function testCreateDateBasedNum()
+	public function testCreateDateBasedNum(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -25,7 +25,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame(20121212, $page->createNum());
 	}
 
-	public function testCreateDateBasedNumWithoutDate()
+	public function testCreateDateBasedNumWithoutDate(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -37,7 +37,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame((int)date('Ymd'), $page->createNum());
 	}
 
-	public function testCreateDateBasedNumInMultiLanguageMode()
+	public function testCreateDateBasedNumInMultiLanguageMode(): void
 	{
 		$this->setupMultiLanguage();
 		$this->app->impersonate('kirby');
@@ -70,7 +70,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame(20190101, $page->createNum(), 'The num should always be created in the default language');
 	}
 
-	public function testCreateDateBasedNumWithDateHandler()
+	public function testCreateDateBasedNumWithDateHandler(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -85,7 +85,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame(20121212, $page->createNum());
 	}
 
-	public function testCreateDateBasedNumWithDateHandlerWithoutDate()
+	public function testCreateDateBasedNumWithDateHandlerWithoutDate(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -103,7 +103,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame((int)date('Ymd'), $page->createNum());
 	}
 
-	public function testCreateDefaultNumForDraftWithSiblings()
+	public function testCreateDefaultNumForDraftWithSiblings(): void
 	{
 		$pageA = Page::create([
 			'slug'   => 'child-a',
@@ -135,7 +135,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame(3, $pageC->createNum(4));
 	}
 
-	public function testCreateDefaultNumForDraftWithoutSiblings()
+	public function testCreateDefaultNumForDraftWithoutSiblings(): void
 	{
 		$page = Page::create([
 			'slug'  => 'test',
@@ -145,7 +145,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame(1, $page->createNum());
 	}
 
-	public function testCreateDefaultNumForPageWithSiblings()
+	public function testCreateDefaultNumForPageWithSiblings(): void
 	{
 		$pageA = Page::create([
 			'slug'   => 'child-a',
@@ -177,7 +177,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame(3, $pageC->createNum(4));
 	}
 
-	public function testCreateDefaultNumForPageWithoutSiblings()
+	public function testCreateDefaultNumForPageWithoutSiblings(): void
 	{
 		$page = Page::create([
 			'slug'  => 'test',
@@ -187,7 +187,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame(1, $page->createNum());
 	}
 
-	public function testCreateQueryBasedNum()
+	public function testCreateQueryBasedNum(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -202,7 +202,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame(2016, $page->createNum());
 	}
 
-	public function testCreateQueryBasedNumWithoutResult()
+	public function testCreateQueryBasedNumWithoutResult(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -214,7 +214,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame(0, $page->createNum());
 	}
 
-	public function testCreateQueryBasedNumInMultiLanguageMode()
+	public function testCreateQueryBasedNumInMultiLanguageMode(): void
 	{
 		$this->setupMultiLanguage();
 		$this->app->impersonate('kirby');
@@ -243,7 +243,7 @@ class NewPageCreateNumTest extends NewModelTestCase
 		$this->assertSame(2016, $page->createNum());
 	}
 
-	public function testCreateZeroBasedNum()
+	public function testCreateZeroBasedNum(): void
 	{
 		$page = new Page([
 			'slug' => 'test',

@@ -10,7 +10,7 @@ class NewPageUnpublishTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageUnpublishTest';
 
-	public function testUnpublish()
+	public function testUnpublish(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',

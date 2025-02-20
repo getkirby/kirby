@@ -11,7 +11,7 @@ class NewPageNumTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageNumTest';
 
-	public function testNum()
+	public function testNum(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -21,7 +21,7 @@ class NewPageNumTest extends NewModelTestCase
 		$this->assertSame(1, $page->num());
 	}
 
-	public function testNumWithInvalidValue()
+	public function testNumWithInvalidValue(): void
 	{
 		$this->expectException(TypeError::class);
 
@@ -31,7 +31,7 @@ class NewPageNumTest extends NewModelTestCase
 		]);
 	}
 
-	public function testNumWithEmptyValue()
+	public function testNumWithEmptyValue(): void
 	{
 		$page = new Page([
 			'slug' => 'test',

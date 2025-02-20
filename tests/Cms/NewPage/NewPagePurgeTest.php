@@ -10,7 +10,7 @@ class NewPagePurgeTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPagePurgeTest';
 
-	public function testPurge()
+	public function testPurge(): void
 	{
 		$page = new Page([
 			'slug' => 'test'

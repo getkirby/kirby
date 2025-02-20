@@ -10,7 +10,7 @@ class NewPageBlueprintsTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageBlueprintsTest';
 
-	public function testBlueprints()
+	public function testBlueprints(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -85,7 +85,7 @@ class NewPageBlueprintsTest extends NewModelTestCase
 		$this->assertSame(['A'], array_column($page->blueprints(), 'title'));
 	}
 
-	public function testBlueprintsInSection()
+	public function testBlueprintsInSection(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [

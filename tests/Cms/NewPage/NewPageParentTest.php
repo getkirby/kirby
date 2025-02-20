@@ -11,7 +11,7 @@ class NewPageParentTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageParentTest';
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$mother = new Page([
 			'slug' => 'mother',
@@ -26,7 +26,7 @@ class NewPageParentTest extends NewModelTestCase
 		$this->assertSame($mother, $child->parent());
 	}
 
-	public function testParentId()
+	public function testParentId(): void
 	{
 		$mother = new Page([
 			'slug' => 'mother',
@@ -41,7 +41,7 @@ class NewPageParentTest extends NewModelTestCase
 		$this->assertSame('mother', $child->parentId());
 	}
 
-	public function testParentPrevNext()
+	public function testParentPrevNext(): void
 	{
 		$root = new Page([
 			'slug' => 'root',
@@ -70,7 +70,7 @@ class NewPageParentTest extends NewModelTestCase
 		$this->assertNull($child->parent()->prev());
 	}
 
-	public function testParentWithInvalidValue()
+	public function testParentWithInvalidValue(): void
 	{
 		$this->expectException(TypeError::class);
 

@@ -11,7 +11,7 @@ class NewPageChangeSortTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeSortTest';
 
-	public function site()
+	public function site(): Site
 	{
 		return $this->app->site();
 	}
@@ -26,8 +26,11 @@ class NewPageChangeSortTest extends NewModelTestCase
 	}
 
 	#[DataProvider('sortProvider')]
-	public function testChangeSort($id, $position, $expected)
-	{
+	public function testChangeSort(
+		string $id,
+		int $position,
+		string $expected
+	): void {
 		Page::create([
 			'slug' => 'a',
 			'num'  => 1,
@@ -54,7 +57,7 @@ class NewPageChangeSortTest extends NewModelTestCase
 		$this->assertSame($expected, implode(',', $site->children()->keys()));
 	}
 
-	public function testChangeSortDateBased()
+	public function testChangeSortDateBased(): void
 	{
 		Page::create([
 			'slug' => 'a',
@@ -105,7 +108,7 @@ class NewPageChangeSortTest extends NewModelTestCase
 		$this->assertSame(0, $site->find('e')->num());
 	}
 
-	public function testMassSorting()
+	public function testMassSorting(): void
 	{
 		foreach ($chars = range('a', 'd') as $slug) {
 			$page = Page::create([
@@ -118,13 +121,19 @@ class NewPageChangeSortTest extends NewModelTestCase
 			$this->assertNull($page->num());
 		}
 
-		$this->assertSame($chars, $this->site()->children()->keys());
+		$this->assertSame(
+			$chars,
+			$this->site()->children()->keys()
+		);
 
 		foreach ($this->site()->children()->flip()->values() as $index => $page) {
 			$page = $page->changeSort($index + 1);
 		}
 
-		$this->assertSame(array_reverse($chars), $this->site()->children()->keys());
+		$this->assertSame(
+			array_reverse($chars),
+			$this->site()->children()->keys()
+		);
 
 		$this->assertDirectoryExists(static::TMP . '/content/4_a');
 		$this->assertDirectoryExists(static::TMP . '/content/3_b');

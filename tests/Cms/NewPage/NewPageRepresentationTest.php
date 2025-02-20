@@ -12,7 +12,7 @@ class NewPageRepresentationTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageRepresentationTest';
 
-	public function testRepresentationWithExistingTemplate()
+	public function testRepresentationWithExistingTemplate(): void
 	{
 		$this->app = $this->app->clone([
 			'templates' => [
@@ -32,7 +32,7 @@ class NewPageRepresentationTest extends NewModelTestCase
 		$this->assertSame('json', $representation->type());
 	}
 
-	public function testRepresentationWithFallbackToDefaultRepresentation()
+	public function testRepresentationWithFallbackToDefaultRepresentation(): void
 	{
 		$this->app = $this->app->clone([
 			'templates' => [
@@ -52,7 +52,7 @@ class NewPageRepresentationTest extends NewModelTestCase
 		$this->assertSame('json', $representation->type());
 	}
 
-	public function testRepresentationWithMultipleTypes()
+	public function testRepresentationWithMultipleTypes(): void
 	{
 		$this->app = $this->app->clone([
 			'templates' => [
@@ -78,7 +78,7 @@ class NewPageRepresentationTest extends NewModelTestCase
 		$this->assertSame('json', $representation->type());
 	}
 
-	public function testRepresentationWithMissingRepresentation()
+	public function testRepresentationWithMissingRepresentation(): void
 	{
 		$page = new Page([
 			'slug' => 'test',

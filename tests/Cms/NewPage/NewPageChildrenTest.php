@@ -10,7 +10,7 @@ class NewPageChildrenTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChildrenTest';
 
-	public function testChildren()
+	public function testChildren(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -20,7 +20,7 @@ class NewPageChildrenTest extends NewModelTestCase
 		$this->assertCount(0, $page->children());
 	}
 
-	public function testGrandChildren()
+	public function testGrandChildren(): void
 	{
 		$page = new Page([
 			'slug' => 'grandma',
@@ -38,7 +38,7 @@ class NewPageChildrenTest extends NewModelTestCase
 		$this->assertSame('child', $page->grandChildren()->first()->slug());
 	}
 
-	public function testHasChildren()
+	public function testHasChildren(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -51,7 +51,7 @@ class NewPageChildrenTest extends NewModelTestCase
 		$this->assertTrue($page->hasChildren());
 	}
 
-	public function testHasDrafts()
+	public function testHasDrafts(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -65,7 +65,7 @@ class NewPageChildrenTest extends NewModelTestCase
 	}
 
 
-	public function testHasListedChildren()
+	public function testHasListedChildren(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -80,7 +80,7 @@ class NewPageChildrenTest extends NewModelTestCase
 		$this->assertTrue($page->hasListedChildren());
 	}
 
-	public function testHasNoChildren()
+	public function testHasNoChildren(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -90,7 +90,7 @@ class NewPageChildrenTest extends NewModelTestCase
 		$this->assertFalse($page->hasChildren());
 	}
 
-	public function testHasNoDrafts()
+	public function testHasNoDrafts(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -99,7 +99,7 @@ class NewPageChildrenTest extends NewModelTestCase
 		$this->assertFalse($page->hasDrafts());
 	}
 
-	public function testHasNoListedChildren()
+	public function testHasNoListedChildren(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -111,7 +111,7 @@ class NewPageChildrenTest extends NewModelTestCase
 		$this->assertFalse($page->hasListedChildren());
 	}
 
-	public function testHasNoUnlistedChildren()
+	public function testHasNoUnlistedChildren(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -126,7 +126,7 @@ class NewPageChildrenTest extends NewModelTestCase
 		$this->assertFalse($page->hasUnlistedChildren());
 	}
 
-	public function testHasUnlistedChildren()
+	public function testHasUnlistedChildren(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',

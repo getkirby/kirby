@@ -12,7 +12,7 @@ class NewPageControllerTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageControllerTest';
 
-	public function testControllerForACustomTemplate()
+	public function testControllerForACustomTemplate(): void
 	{
 		F::write(static::TMP . '/template.php', 'Test Template');
 
@@ -46,7 +46,7 @@ class NewPageControllerTest extends NewModelTestCase
 		$this->assertSame('New Test Title', $data['title']);
 	}
 
-	public function testControllerForTheDefaultTemplate()
+	public function testControllerForTheDefaultTemplate(): void
 	{
 		$this->app = $this->app->clone([
 			'controllers' => [
@@ -70,7 +70,7 @@ class NewPageControllerTest extends NewModelTestCase
 		$this->assertSame('New Test Title', $data['title']);
 	}
 
-	public function testControllerForTheSite()
+	public function testControllerForTheSite(): void
 	{
 		$this->app = $this->app->clone([
 			'controllers' => [
@@ -100,7 +100,7 @@ class NewPageControllerTest extends NewModelTestCase
 		$this->assertSame('New Subtitle for: test', $data['subtitle']);
 	}
 
-	public function testControllerWithInvalidPageObject()
+	public function testControllerWithInvalidPageObject(): void
 	{
 		$this->app = $this->app->clone([
 			'controllers' => [

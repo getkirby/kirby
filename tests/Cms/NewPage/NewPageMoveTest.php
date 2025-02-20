@@ -10,7 +10,7 @@ class NewPageMoveTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageMoveTest';
 
-	public function testMove()
+	public function testMove(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [

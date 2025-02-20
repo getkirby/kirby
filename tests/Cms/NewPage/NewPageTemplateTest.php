@@ -12,7 +12,7 @@ class NewPageTemplateTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageTemplateTest';
 
-	public function testIntendedTemplate()
+	public function testIntendedTemplate(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -23,7 +23,7 @@ class NewPageTemplateTest extends NewModelTestCase
 		$this->assertSame('test', $page->intendedTemplate()->name());
 	}
 
-	public function testIntendedTemplateWithWrongCase()
+	public function testIntendedTemplateWithWrongCase(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -34,7 +34,7 @@ class NewPageTemplateTest extends NewModelTestCase
 		$this->assertSame('test', $page->intendedTemplate()->name());
 	}
 
-	public function testIntendedTemplateWithoutValue()
+	public function testIntendedTemplateWithoutValue(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -44,7 +44,7 @@ class NewPageTemplateTest extends NewModelTestCase
 		$this->assertSame('default', $page->intendedTemplate()->name());
 	}
 
-	public function testInvalidTemplateValue()
+	public function testInvalidTemplateValue(): void
 	{
 		$this->expectException(TypeError::class);
 
@@ -54,11 +54,12 @@ class NewPageTemplateTest extends NewModelTestCase
 		]);
 	}
 
-	public function testTemplateWithExistingTemplate()
+	public function testTemplateWithExistingTemplate(): void
 	{
 		$this->app = $this->app->clone([
 			'templates' => [
-				// the file only needs to exist, it doesn't need to be a valid template
+				// the file only needs to exist,
+				// it doesn't need to be a valid template
 				'test' => __FILE__
 			]
 		]);
@@ -72,7 +73,7 @@ class NewPageTemplateTest extends NewModelTestCase
 		$this->assertSame('test', $page->template()->name());
 	}
 
-	public function testTemplateWithNonExistingTemplate()
+	public function testTemplateWithNonExistingTemplate(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -83,7 +84,7 @@ class NewPageTemplateTest extends NewModelTestCase
 		$this->assertSame('default', $page->template()->name());
 	}
 
-	public function testTemplateWithoutValue()
+	public function testTemplateWithoutValue(): void
 	{
 		$page = new Page([
 			'slug' => 'test',

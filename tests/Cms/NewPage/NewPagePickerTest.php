@@ -37,7 +37,7 @@ class NewPagePickerTest extends NewModelTestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$picker = new PagePicker();
 
@@ -46,7 +46,7 @@ class NewPagePickerTest extends NewModelTestCase
 		$this->assertSame('grandmother', $picker->items()->first()->id());
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$picker = new PagePicker([
 			'parent' => 'grandmother'
@@ -57,7 +57,7 @@ class NewPagePickerTest extends NewModelTestCase
 		$this->assertSame('grandmother', $picker->model()->id());
 	}
 
-	public function testParentStart()
+	public function testParentStart(): void
 	{
 		$picker = new PagePicker([
 			'parent' => 'grandmother/mother'
@@ -66,7 +66,7 @@ class NewPagePickerTest extends NewModelTestCase
 		$this->assertSame($picker->start(), $this->app->site());
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$picker = new PagePicker([
 			'query' => 'site.find("grandmother/mother").children'
@@ -77,7 +77,7 @@ class NewPagePickerTest extends NewModelTestCase
 		$this->assertSame('grandmother/mother/child-c', $picker->items()->last()->id());
 	}
 
-	public function testQueryAndParent()
+	public function testQueryAndParent(): void
 	{
 		$picker = new PagePicker([
 			'query'  => 'site.find("grandmother").children',
@@ -89,7 +89,7 @@ class NewPagePickerTest extends NewModelTestCase
 		$this->assertSame('grandmother/mother/child-c', $picker->items()->last()->id());
 	}
 
-	public function testQueryStart()
+	public function testQueryStart(): void
 	{
 		$picker = new PagePicker([
 			'query'  => 'site.find("grandmother").children',

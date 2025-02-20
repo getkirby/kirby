@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Cms\NewPage as Page;
 use Kirby\Exception\DuplicateException;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
@@ -34,7 +35,7 @@ class NewPageCreateTest extends NewModelTestCase
 		Page::$models = [];
 	}
 
-	public function testCreateDraft()
+	public function testCreateDraft(): void
 	{
 		$site = $this->app->site();
 		$page = Page::create([
@@ -48,7 +49,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertTrue($site->drafts()->has($page));
 	}
 
-	public function testCreateDraftWithDefaults()
+	public function testCreateDraftWithDefaults(): void
 	{
 		$site = $this->app->site();
 		$page = Page::create([
@@ -72,7 +73,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertSame('B', $page->b()->value());
 	}
 
-	public function testCreateDraftWithDefaultsAndContent()
+	public function testCreateDraftWithDefaultsAndContent(): void
 	{
 		$site = $this->app->site();
 		$page = Page::create([
@@ -99,7 +100,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertSame('B', $page->b()->value());
 	}
 
-	public function testCreateChild()
+	public function testCreateChild(): void
 	{
 		Dir::make($this->app->root('content'));
 
@@ -119,7 +120,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertTrue($mother->drafts()->has($child->id()));
 	}
 
-	public function testCreateChildWithCustomModel()
+	public function testCreateChildWithCustomModel(): void
 	{
 		Page::$models['uncreatable-page'] = NewUncreatablePage::class;
 
@@ -138,7 +139,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertTrue($mother->drafts()->isEmpty());
 	}
 
-	public function testCreateDuplicate()
+	public function testCreateDuplicate(): void
 	{
 		$this->expectException(DuplicateException::class);
 
@@ -151,7 +152,7 @@ class NewPageCreateTest extends NewModelTestCase
 		]);
 	}
 
-	public function testCreateHooks()
+	public function testCreateHooks(): void
 	{
 		$calls = 0;
 		$phpunit = $this;
@@ -184,7 +185,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function testCreateListedPage()
+	public function testCreateListedPage(): void
 	{
 		$site = $this->app->site();
 		$page = Page::create([
@@ -199,7 +200,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertTrue($site->children()->has($page));
 	}
 
-	public function testCreateUnlistedPageDraftProp()
+	public function testCreateUnlistedPageDraftProp(): void
 	{
 		$site = $this->app->site();
 		$page = Page::create([
@@ -215,7 +216,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertTrue($site->children()->has($page));
 	}
 
-	public function testCreateUnlistedPageIsDraftProp()
+	public function testCreateUnlistedPageIsDraftProp(): void
 	{
 		$site = $this->app->site();
 		$page = Page::create([
@@ -232,7 +233,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertTrue($site->children()->has($page));
 	}
 
-	public function testCreateWhenDefaultLanguageIsActive()
+	public function testCreateWhenDefaultLanguageIsActive(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -264,7 +265,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertSame($value, $page->content('de')->toArray());
 	}
 
-	public function testCreateWhenSecondaryLanguageIsActive()
+	public function testCreateWhenSecondaryLanguageIsActive(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -299,7 +300,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertSame($value, $page->content('de')->toArray());
 	}
 
-	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasUntranslatableFields()
+	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasUntranslatableFields(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -337,7 +338,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertSame($value, $page->content('de')->toArray());
 	}
 
-	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasDefaultValues()
+	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasDefaultValues(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -378,7 +379,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertSame($expected, $page->content('de')->toArray());
 	}
 
-	public function testCreateWithTranslations()
+	public function testCreateWithTranslations(): void
 	{
 		$this->setupMultiLanguage();
 
@@ -408,7 +409,7 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertSame('Title DE', $page->content('de')->title()->value());
 	}
 
-	public function testCreateWithTranslationsAndContent()
+	public function testCreateWithTranslationsAndContent(): void
 	{
 		$this->setupMultiLanguage();
 

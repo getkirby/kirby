@@ -10,7 +10,7 @@ class NewPagePublishTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPagePublishTest';
 
-	public function testPublish()
+	public function testPublish(): void
 	{
 		// main page
 		$page = Page::create([
@@ -45,7 +45,7 @@ class NewPagePublishTest extends NewModelTestCase
 		$this->assertTrue($page->children()->has($published->id()));
 	}
 
-	public function testPublishAlreadyPublished()
+	public function testPublishAlreadyPublished(): void
 	{
 		$page = Page::create([
 			'slug' => 'test'

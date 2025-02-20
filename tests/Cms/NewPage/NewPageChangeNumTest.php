@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Cms\NewPage as Page;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -10,7 +11,7 @@ class NewPageChangeNumTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeNumTest';
 
-	public function testChangeNum()
+	public function testChangeNum(): void
 	{
 		$site = $this->app->site();
 
@@ -31,7 +32,7 @@ class NewPageChangeNumTest extends NewModelTestCase
 		$this->assertSame(2, $site->find('test')->num());
 	}
 
-	public function testChangeNumHooks()
+	public function testChangeNumHooks(): void
 	{
 		$phpunit = $this;
 
@@ -66,7 +67,7 @@ class NewPageChangeNumTest extends NewModelTestCase
 		$this->assertIsPage($updatedPage, $childrenAndDrafts->find('test'));
 	}
 
-	public function testChangeNumWhenNumStaysTheSame()
+	public function testChangeNumWhenNumStaysTheSame(): void
 	{
 		$this->app = $this->app->clone([
 			'hooks' => [

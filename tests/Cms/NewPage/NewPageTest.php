@@ -12,7 +12,7 @@ class NewPageTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageTest';
 
-	public function testApiUrl()
+	public function testApiUrl(): void
 	{
 		$this->app = $this->app->clone([
 			'urls' => [
@@ -38,7 +38,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertSame('pages/mother+child', $page->apiUrl(true));
 	}
 
-	public function testDepth()
+	public function testDepth(): void
 	{
 		$grandma = new Page([
 			'slug' => 'grandma',
@@ -59,7 +59,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertSame(3, $child->depth());
 	}
 
-	public function testId()
+	public function testId(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -68,7 +68,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertSame('test', $page->id());
 	}
 
-	public function testIdForNestedPage()
+	public function testIdForNestedPage(): void
 	{
 		$mother = new Page([
 			'slug' => 'mother'
@@ -83,7 +83,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertSame('mother/child', $child->id());
 	}
 
-	public function testPanel()
+	public function testPanel(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -92,7 +92,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertInstanceOf(PanelPage::class, $page->panel());
 	}
 
-	public function testPermalink()
+	public function testPermalink(): void
 	{
 		$page = new Page([
 			'slug'    => 'test',
@@ -102,7 +102,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertSame('//@/page/my-page-uuid', $page->permalink());
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -112,7 +112,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertSame('test', $page->query('model.slug'));
 	}
 
-	public function testSite()
+	public function testSite(): void
 	{
 		$site = new Site();
 		$page = new Page([
@@ -123,7 +123,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertIsSite($site, $page->site());
 	}
 
-	public function testSiteWithInvalidValue()
+	public function testSiteWithInvalidValue(): void
 	{
 		$this->expectException(TypeError::class);
 
@@ -133,7 +133,7 @@ class NewPageTest extends NewModelTestCase
 		]);
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -166,7 +166,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertSame($expected, $page->toArray());
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -175,7 +175,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertSame('test', $page->toString('{{ page.slug }}'));
 	}
 
-	public function testUidInMultiLanguageMode()
+	public function testUidInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -198,7 +198,7 @@ class NewPageTest extends NewModelTestCase
 		$this->assertSame('test', $page->uid(), 'The uid should be the same in all languages');
 	}
 
-	public function testUidInSingleLanguageMode()
+	public function testUidInSingleLanguageMode(): void
 	{
 		$page = new Page([
 			'slug' => 'test'

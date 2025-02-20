@@ -13,14 +13,14 @@ class NewPageContentTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageContentTest';
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$page = new Page(['slug' => 'test']);
 		$this->assertInstanceOf(Content::class, $page->content());
 		$this->assertSame([], $page->content()->toArray());
 	}
 
-	public function testSetContentWithInvalidValue()
+	public function testSetContentWithInvalidValue(): void
 	{
 		$this->expectException(TypeError::class);
 
@@ -30,7 +30,7 @@ class NewPageContentTest extends NewModelTestCase
 		]);
 	}
 
-	public function testSetContentWithChaoticFieldNames()
+	public function testSetContentWithChaoticFieldNames(): void
 	{
 		$page = new Page([
 			'slug' => 'test',

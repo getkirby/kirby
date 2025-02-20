@@ -12,13 +12,13 @@ class NewPageSlugTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSlugTest';
 
-	public function testSlugInSingleLanguageMode()
+	public function testSlugInSingleLanguageMode(): void
 	{
 		$page = new Page(['slug' => 'test']);
 		$this->assertSame('test', $page->slug());
 	}
 
-	public function testSlugInMultiLanguageMode()
+	public function testSlugInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -37,7 +37,7 @@ class NewPageSlugTest extends NewModelTestCase
 		$this->assertSame('test-de', $page->slug('de'));
 	}
 
-	public function testSlugInMultiLanguageModeWithSlugFieldInDefaultTranslation()
+	public function testSlugInMultiLanguageModeWithSlugFieldInDefaultTranslation(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -57,13 +57,13 @@ class NewPageSlugTest extends NewModelTestCase
 		$this->assertSame('test', $page->slug('en'));
 	}
 
-	public function testSlugWithInvalidValue()
+	public function testSlugWithInvalidValue(): void
 	{
 		$this->expectException(TypeError::class);
 		new Page(['slug' => []]);
 	}
 
-	public function testSlugWithoutValue()
+	public function testSlugWithoutValue(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The page slug is required');

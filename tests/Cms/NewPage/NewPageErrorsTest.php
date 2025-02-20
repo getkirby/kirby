@@ -10,13 +10,13 @@ class NewPageErrorsTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageErrorsTest';
 
-	public function testErrors()
+	public function testErrors(): void
 	{
 		$page = new Page(['slug' => 'test']);
 		$this->assertSame([], $page->errors());
 	}
 
-	public function testErrorsWithInfoSection()
+	public function testErrorsWithInfoSection(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -35,7 +35,7 @@ class NewPageErrorsTest extends NewModelTestCase
 		$this->assertSame([], $page->errors());
 	}
 
-	public function testErrorsWithRequiredField()
+	public function testErrorsWithRequiredField(): void
 	{
 		$page = new Page([
 			'slug' => 'test',

@@ -29,7 +29,7 @@ class NewPagePreviewUrlTest extends NewModelTestCase
 		];
 	}
 
-	public function testPreviewUrl()
+	public function testPreviewUrl(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -97,7 +97,7 @@ class NewPagePreviewUrlTest extends NewModelTestCase
 		$this->assertSame($expected, $page->previewUrl());
 	}
 
-	public function testPreviewUrlUnauthenticated()
+	public function testPreviewUrlUnauthenticated(): void
 	{
 		// log out
 		$this->app->impersonate();

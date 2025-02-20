@@ -40,7 +40,7 @@ class NewFilePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithAdmin($action)
+	public function testWithAdmin(string $action): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -55,7 +55,7 @@ class NewFilePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithNobody($action)
+	public function testWithNobody(string $action): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
@@ -64,7 +64,7 @@ class NewFilePermissionsTest extends NewModelTestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	public function testCanFromCache()
+	public function testCanFromCache(): void
 	{
 		$this->app->impersonate('admin');
 
@@ -88,7 +88,7 @@ class NewFilePermissionsTest extends NewModelTestCase
 		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
 	}
 
-	public function testCanFromCacheDynamic()
+	public function testCanFromCacheDynamic(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
@@ -103,7 +103,7 @@ class NewFilePermissionsTest extends NewModelTestCase
 		FilePermissions::canFromCache($file, 'changeTemplate');
 	}
 
-	public function testCannotChangeTemplate()
+	public function testCannotChangeTemplate(): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -113,12 +113,9 @@ class NewFilePermissionsTest extends NewModelTestCase
 		$this->assertFalse($file->permissions()->can('changeTemplate'));
 	}
 
-	public function testCanChangeTemplate()
+	public function testCanChangeTemplate(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
 					'sections' => [
@@ -143,8 +140,8 @@ class NewFilePermissionsTest extends NewModelTestCase
 
 		$this->app->impersonate('kirby');
 
-		$page  = new Page(['slug' => 'test', 'template' => 'test']);
-		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$page = new Page(['slug' => 'test', 'template' => 'test']);
+		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
 
 		$this->assertTrue($file->permissions()->can('changeTemplate'));
 	}

@@ -55,7 +55,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithAdmin($action)
+	public function testWithAdmin(string $action): void
 	{
 		$this->app->impersonate('admin');
 
@@ -68,7 +68,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithAdminButDisabledOption($action)
+	public function testWithAdminButDisabledOption(string $action): void
 	{
 		$this->app->impersonate('admin');
 
@@ -87,7 +87,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithEditorAndPositiveWildcard($action)
+	public function testWithEditorAndPositiveWildcard(string $action): void
 	{
 		$this->app->impersonate('editor');
 
@@ -108,7 +108,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithEditorAndPositivePermission($action)
+	public function testWithEditorAndPositivePermission(string $action): void
 	{
 		$this->app->impersonate('editor');
 
@@ -130,7 +130,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithEditorAndNegativeWildcard($action)
+	public function testWithEditorAndNegativeWildcard(string $action): void
 	{
 		$this->app->impersonate('editor');
 
@@ -151,7 +151,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithEditorAndNegativePermission($action)
+	public function testWithEditorAndNegativePermission(string $action): void
 	{
 		$this->app->impersonate('editor');
 
@@ -173,8 +173,9 @@ class NewPagePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithAdminAndNegativeOptionForOtherRole($action)
-	{
+	public function testWithAdminAndNegativeOptionForOtherRole(
+		string $action
+	): void {
 		$this->app->impersonate('admin');
 
 		$page = new Page([
@@ -194,8 +195,9 @@ class NewPagePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithAdminAndNegativeOptionForOtherRoleAndNegativeFallback($action)
-	{
+	public function testWithAdminAndNegativeOptionForOtherRoleAndNegativeFallback(
+		string $action
+	): void {
 		$this->app->impersonate('admin');
 
 		$page = new Page([
@@ -216,7 +218,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 	}
 
 	#[DataProvider('actionProvider')]
-	public function testWithNobody($action)
+	public function testWithNobody(string $action): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$perms = $page->permissions();
@@ -224,7 +226,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	public function testCanFromCache()
+	public function testCanFromCache(): void
 	{
 		$this->app->impersonate('admin');
 
@@ -247,7 +249,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		$this->assertFalse(PagePermissions::canFromCache($page, 'list'));
 	}
 
-	public function testCanFromCacheDynamic()
+	public function testCanFromCacheDynamic(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
@@ -261,7 +263,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		PagePermissions::canFromCache($page, 'changeTemplate');
 	}
 
-	public function testCannotChangeTemplate()
+	public function testCannotChangeTemplate(): void
 	{
 		$this->app->impersonate('admin');
 
@@ -272,7 +274,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		$this->assertFalse($page->permissions()->can('changeTemplate'));
 	}
 
-	public function testCanChangeTemplate()
+	public function testCanChangeTemplate(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -302,7 +304,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		$this->assertTrue($page->permissions()->can('changeTemplate'));
 	}
 
-	public function testCanChangeTemplateHomeError()
+	public function testCanChangeTemplateHomeError(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -349,7 +351,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		$this->assertFalse($error->permissions()->can('changeTemplate'));
 	}
 
-	public function testCanSortListedPages()
+	public function testCanSortListedPages(): void
 	{
 		$this->app->impersonate('admin');
 
@@ -361,7 +363,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		$this->assertTrue($page->permissions()->can('sort'));
 	}
 
-	public function testCanNotFoundDefault()
+	public function testCanNotFoundDefault(): void
 	{
 		$this->app->impersonate('admin');
 
@@ -374,7 +376,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		$this->assertTrue($page->permissions()->can('foo', true));
 	}
 
-	public function testCannotSortUnlistedPages()
+	public function testCannotSortUnlistedPages(): void
 	{
 		$this->app->impersonate('admin');
 
@@ -385,7 +387,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		$this->assertFalse($page->permissions()->can('sort'));
 	}
 
-	public function testCannotSortErrorPage()
+	public function testCannotSortErrorPage(): void
 	{
 		$this->app->impersonate('admin');
 
@@ -403,7 +405,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		$this->assertFalse($page->permissions()->can('sort'));
 	}
 
-	public function testCannotSortPagesWithSortMode()
+	public function testCannotSortPagesWithSortMode(): void
 	{
 		$this->app->impersonate('admin');
 
@@ -441,7 +443,7 @@ class NewPagePermissionsTest extends NewModelTestCase
 		$this->assertFalse($page->permissions()->can('sort'));
 	}
 
-	public function testCannotNotFoundDefault()
+	public function testCannotNotFoundDefault(): void
 	{
 		$this->app->impersonate('admin');
 

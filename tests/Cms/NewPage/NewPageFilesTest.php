@@ -11,7 +11,7 @@ class NewPageFilesTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageFilesTest';
 
-	public function testCreateFile()
+	public function testCreateFile(): void
 	{
 		F::write($source = static::TMP . '/source.md', '');
 
@@ -28,14 +28,14 @@ class NewPageFilesTest extends NewModelTestCase
 		$this->assertSame('test/test.md', $file->id());
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$page = new Page(['slug' => 'test']);
 		$this->assertInstanceOf(Files::class, $page->files());
 		$this->assertCount(0, $page->files());
 	}
 
-	public function testFilesWithValues()
+	public function testFilesWithValues(): void
 	{
 		$page = new Page([
 			'slug'  => 'test',
@@ -48,7 +48,7 @@ class NewPageFilesTest extends NewModelTestCase
 		$this->assertCount(1, $page->files());
 	}
 
-	public function testImages()
+	public function testImages(): void
 	{
 		$page = new Page([
 			'slug'  => 'test',

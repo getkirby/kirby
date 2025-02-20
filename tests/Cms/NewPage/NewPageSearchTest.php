@@ -10,7 +10,7 @@ class NewPageSearchTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageSearchTest';
 
-	public function testSearch()
+	public function testSearch(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -46,7 +46,7 @@ class NewPageSearchTest extends NewModelTestCase
 		$this->assertCount(0, $result);
 	}
 
-	public function testSearchWords()
+	public function testSearchWords(): void
 	{
 		$page = new Page([
 			'slug' => 'test',

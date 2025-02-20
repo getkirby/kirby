@@ -25,7 +25,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		]);
 	}
 
-	public function testThumb()
+	public function testThumb(): void
 	{
 		$input = [
 			'width'  => 300,
@@ -54,7 +54,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->thumb($input);
 	}
 
-	public function testThumbWithAssetObject()
+	public function testThumbWithAssetObject(): void
 	{
 		$app = $this->app->clone();
 		$asset = new Asset('');
@@ -65,7 +65,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$this->assertInstanceOf(Asset::class, $result);
 	}
 
-	public function testThumbWithDefaultPreset()
+	public function testThumbWithDefaultPreset(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -92,7 +92,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->thumb('default');
 	}
 
-	public function testThumbWithCustomPreset()
+	public function testThumbWithCustomPreset(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -118,7 +118,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->thumb('test');
 	}
 
-	public function testThumbWithInvalidReturnValue()
+	public function testThumbWithInvalidReturnValue(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -133,7 +133,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->thumb(['width' => 100]);
 	}
 
-	public function testThumbWithFormatOption()
+	public function testThumbWithFormatOption(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -151,7 +151,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->thumb(['width' => 100]);
 	}
 
-	public function testThumbWithFocusFromContent()
+	public function testThumbWithFocusFromContent(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -174,13 +174,13 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->thumb(['width' => 100, 'crop' => true]);
 	}
 
-	public function testThumbWithNoOptions()
+	public function testThumbWithNoOptions(): void
 	{
 		$file = $this->app->file('test.jpg');
 		$this->assertIsFile($file, $file->thumb([]));
 	}
 
-	public function testBlur()
+	public function testBlur(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -195,7 +195,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->blur(5);
 	}
 
-	public function testBw()
+	public function testBw(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -275,7 +275,7 @@ class NewFileModificationsTest extends NewModelTestCase
 	/**
 	 * @dataProvider cropOptionsProvider
 	 */
-	public function testCrop($args, $expected)
+	public function testCrop($args, $expected): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -290,7 +290,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->crop(...$args);
 	}
 
-	public function testQuality()
+	public function testQuality(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -305,7 +305,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->quality(10);
 	}
 
-	public function testResize()
+	public function testResize(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -324,7 +324,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->resize(100, 200, 10);
 	}
 
-	public function testSharpen()
+	public function testSharpen(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -339,7 +339,7 @@ class NewFileModificationsTest extends NewModelTestCase
 		$file->sharpen();
 	}
 
-	public function testSharpenWithCustomValue()
+	public function testSharpenWithCustomValue(): void
 	{
 		$app = $this->app->clone([
 			'components' => [

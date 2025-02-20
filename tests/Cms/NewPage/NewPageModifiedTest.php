@@ -11,7 +11,7 @@ class NewPageModifiedTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageModifiedTest';
 
-	public function testModifiedInMultiLanguageMode()
+	public function testModifiedInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -34,7 +34,7 @@ class NewPageModifiedTest extends NewModelTestCase
 		$this->assertSame($modified, $page->modified());
 	}
 
-	public function testModifiedInSingleLanguageMode()
+	public function testModifiedInSingleLanguageMode(): void
 	{
 		// create a page
 		F::write($file = static::TMP . '/content/test/test.txt', 'test');
@@ -56,7 +56,7 @@ class NewPageModifiedTest extends NewModelTestCase
 		$this->assertSame(@strftime($format, $modified), $page->modified($format, 'strftime'));
 	}
 
-	public function testModifiedInMultiLanguageModeSpecifyingLanguage()
+	public function testModifiedInMultiLanguageModeSpecifyingLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 

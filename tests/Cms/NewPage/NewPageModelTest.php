@@ -30,7 +30,7 @@ class NewPageModelTest extends NewModelTestCase
 		Page::$models = [];
 	}
 
-	public function testModel()
+	public function testModel(): void
 	{
 		Page::$models = [
 			'test' => NewPageTestModel::class
@@ -45,7 +45,7 @@ class NewPageModelTest extends NewModelTestCase
 		$this->assertSame('test', $page->test());
 	}
 
-	public function testModelWithDefaultFallback()
+	public function testModelWithDefaultFallback(): void
 	{
 		Page::$models = [
 			'default' => NewPageTestModel::class
@@ -60,7 +60,7 @@ class NewPageModelTest extends NewModelTestCase
 		$this->assertSame('test', $page->test());
 	}
 
-	public function testModelWithMissingClass()
+	public function testModelWithMissingClass(): void
 	{
 		$page = Page::factory([
 			'slug'  => 'test',

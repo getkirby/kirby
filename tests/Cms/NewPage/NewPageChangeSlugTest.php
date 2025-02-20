@@ -24,8 +24,11 @@ class NewPageChangeSlugTest extends NewModelTestCase
 	}
 
 	#[DataProvider('slugProvider')]
-	public function testChangeSlugInMultiLanguageMode($input, $expected, $draft)
-	{
+	public function testChangeSlugInMultiLanguageMode(
+		string $input,
+		string $expected,
+		bool $draft
+	): void {
 		$this->setupMultiLanguage();
 
 		$this->app->impersonate('kirby');
@@ -73,8 +76,11 @@ class NewPageChangeSlugTest extends NewModelTestCase
 	}
 
 	#[DataProvider('slugProvider')]
-	public function testChangeSlugInSingleLanguageMode($input, $expected, $draft)
-	{
+	public function testChangeSlugInSingleLanguageMode(
+		string $input,
+		string $expected,
+		bool $draft
+	): void {
 		$site = $this->app->site();
 
 		// pre-populate caches
@@ -116,7 +122,7 @@ class NewPageChangeSlugTest extends NewModelTestCase
 		$this->assertSame($newRoot, $modified->root());
 	}
 
-	public function testChangeSlugHooks()
+	public function testChangeSlugHooks(): void
 	{
 		$calls = 0;
 		$phpunit = $this;

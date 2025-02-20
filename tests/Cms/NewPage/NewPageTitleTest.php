@@ -10,7 +10,7 @@ class NewPageTitleTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageTitleTest';
 
-	public function testTitleFromSlug()
+	public function testTitleFromSlug(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -19,7 +19,7 @@ class NewPageTitleTest extends NewModelTestCase
 		$this->assertSame('test', $page->title()->value());
 	}
 
-	public function testTitleInSingleLanguageMode()
+	public function testTitleInSingleLanguageMode(): void
 	{
 		$page = new Page([
 			'slug'    => 'test',
@@ -31,7 +31,7 @@ class NewPageTitleTest extends NewModelTestCase
 		$this->assertSame('Test Title', $page->title()->value());
 	}
 
-	public function testTitleInMultiLanguageMode()
+	public function testTitleInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
 

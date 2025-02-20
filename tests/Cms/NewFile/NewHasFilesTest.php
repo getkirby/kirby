@@ -4,10 +4,8 @@ namespace Kirby\Cms;
 
 use Kirby\Cms\NewFile as File;
 use Kirby\Cms\NewPage as Page;
-
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
-
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -47,7 +45,7 @@ class NewHasFilesTest extends NewModelTestCase
 		];
 	}
 
-	public function testCreateFile()
+	public function testCreateFile(): void
 	{
 		$source = static::TMP . '/source.md';
 
@@ -69,7 +67,7 @@ class NewHasFilesTest extends NewModelTestCase
 		$this->assertIsString($result->content()->get('uuid')->value());
 	}
 
-	public function testCreateFileMove()
+	public function testCreateFileMove(): void
 	{
 		$source = static::TMP . '/source.md';
 
@@ -92,7 +90,7 @@ class NewHasFilesTest extends NewModelTestCase
 		$this->assertIsString($result->content()->get('uuid')->value());
 	}
 
-	public function testFileWithSlash()
+	public function testFileWithSlash(): void
 	{
 		$page = new Page([
 			'slug' => 'mother',
@@ -111,8 +109,11 @@ class NewHasFilesTest extends NewModelTestCase
 	}
 
 	#[DataProvider('fileProvider')]
-	public function testTypes($filename, $type, $expected)
-	{
+	public function testTypes(
+		string $filename,
+		string $type,
+		bool $expected
+	): void {
 		$page = new Page([
 			'slug' => 'test'
 		]);
@@ -129,8 +130,11 @@ class NewHasFilesTest extends NewModelTestCase
 	}
 
 	#[DataProvider('fileProvider')]
-	public function testHas($filename, $type, $expected)
-	{
+	public function testHas(
+		string $filename,
+		string $type,
+		bool $expected
+	): void {
 		$page = new Page([
 			'slug' => 'test'
 		]);
@@ -142,7 +146,7 @@ class NewHasFilesTest extends NewModelTestCase
 		$this->assertSame($expected, $parent->{'has' . $type}());
 	}
 
-	public function testHasFiles()
+	public function testHasFiles(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -161,7 +165,7 @@ class NewHasFilesTest extends NewModelTestCase
 		$this->assertTrue($parent->hasFiles());
 	}
 
-	public function testFileWithUUID()
+	public function testFileWithUUID(): void
 	{
 		$page = new Page([
 			'slug' => 'test'

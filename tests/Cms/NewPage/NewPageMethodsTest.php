@@ -22,7 +22,7 @@ class NewPageMethodsTest extends NewModelTestCase
 		Page::$methods = [];
 	}
 
-	public function testPageMethod()
+	public function testPageMethod(): void
 	{
 		Page::$methods = [
 			'test' => fn () => 'page method for: ' . $this->slug()

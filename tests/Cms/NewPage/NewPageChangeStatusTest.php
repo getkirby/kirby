@@ -11,7 +11,7 @@ class NewPageChangeStatusTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageChangeStatusTest';
 
-	public function testChangeStatusFromDraftToListed()
+	public function testChangeStatusFromDraftToListed(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -27,7 +27,7 @@ class NewPageChangeStatusTest extends NewModelTestCase
 		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
 	}
 
-	public function testChangeStatusFromDraftToUnlisted()
+	public function testChangeStatusFromDraftToUnlisted(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -43,7 +43,7 @@ class NewPageChangeStatusTest extends NewModelTestCase
 		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
 	}
 
-	public function testChangeStatusFromListedToDraft()
+	public function testChangeStatusFromListedToDraft(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -64,7 +64,7 @@ class NewPageChangeStatusTest extends NewModelTestCase
 		$this->assertFalse($draft->parentModel()->children()->listed()->has($draft));
 	}
 
-	public function testChangeStatusFromListedToUnlisted()
+	public function testChangeStatusFromListedToUnlisted(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -86,7 +86,7 @@ class NewPageChangeStatusTest extends NewModelTestCase
 		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
 	}
 
-	public function testChangeStatusFromUnlistedToListed()
+	public function testChangeStatusFromUnlistedToListed(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -110,7 +110,7 @@ class NewPageChangeStatusTest extends NewModelTestCase
 		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
 	}
 
-	public function testChangeStatusToDraftHooks()
+	public function testChangeStatusToDraftHooks(): void
 	{
 		$phpunit = $this;
 
@@ -148,7 +148,7 @@ class NewPageChangeStatusTest extends NewModelTestCase
 		$this->assertSame($newPage, $childrenAndDrafts->find('test'));
 	}
 
-	public function testChangeStatusToInvalidStatus()
+	public function testChangeStatusToInvalidStatus(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -173,7 +173,7 @@ class NewPageChangeStatusTest extends NewModelTestCase
 		$this->assertSame('unlisted', $unlisted->status());
 	}
 
-	public function testChangeStatusToListedHooks()
+	public function testChangeStatusToListedHooks(): void
 	{
 		$phpunit = $this;
 		$before  = 0;
@@ -216,7 +216,7 @@ class NewPageChangeStatusTest extends NewModelTestCase
 		$this->assertSame($newPageA, $childrenAndDrafts->find('test-a'));
 	}
 
-	public function testChangeStatusToUnlistedHooks()
+	public function testChangeStatusToUnlistedHooks(): void
 	{
 		$phpunit = $this;
 

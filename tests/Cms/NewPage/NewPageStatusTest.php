@@ -10,7 +10,7 @@ class NewPageStatusTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewPageStatusTest';
 
-	public function testIsDraft()
+	public function testIsDraft(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -33,7 +33,7 @@ class NewPageStatusTest extends NewModelTestCase
 		$this->assertTrue($page->isDraft());
 	}
 
-	public function testIsListed()
+	public function testIsListed(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -49,7 +49,7 @@ class NewPageStatusTest extends NewModelTestCase
 		$this->assertTrue($page->isListed());
 	}
 
-	public function testIsListedInDraftMode()
+	public function testIsListedInDraftMode(): void
 	{
 		$page = new Page([
 			'slug'    => 'test',
@@ -60,7 +60,7 @@ class NewPageStatusTest extends NewModelTestCase
 		$this->assertFalse($page->isListed(), 'Drafts can never be listed');
 	}
 
-	public function testIsUnlisted()
+	public function testIsUnlisted(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -76,7 +76,7 @@ class NewPageStatusTest extends NewModelTestCase
 		$this->assertFalse($page->isUnlisted());
 	}
 
-	public function testIsUnlistedInDraftMode()
+	public function testIsUnlistedInDraftMode(): void
 	{
 		$page = new Page([
 			'slug'    => 'test',
