@@ -181,7 +181,6 @@ class NewUserCreateTest extends NewModelTestCase
 		$this->assertNotSame($user->password(), 'topsecret2018', 'The password should be hashed');
 	}
 
-
 	public function testCreateHooks(): void
 	{
 		$calls = 0;
@@ -212,4 +211,78 @@ class NewUserCreateTest extends NewModelTestCase
 
 		$this->assertSame(2, $calls);
 	}
+
+	public function testCreateWithTranslations()
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				]
+			]
+		]);
+
+		User::create([
+			'email' => 'test@getkirby.com',
+			'translations' => [
+				[
+					'code' => 'en',
+					'content' => [
+						'title' => 'Title EN',
+					]
+				],
+				[
+					'code' => 'de',
+					'content' => [
+						'title' => 'Title DE',
+					]
+				],
+			],
+		]);
+
+		$user = $this->app->user('test@getkirby.com');
+
+		$this->assertSame('Title EN', $user->content('en')->title()->value());
+		$this->assertSame('Title DE', $user->content('de')->title()->value());
+	}
+
+	public function testCreateWithTranslationsAndContent()
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				]
+			]
+		]);
+
+		User::create([
+			'email' => 'test@getkirby.com',
+			'content' => [
+				'title' => 'Title EN',
+			],
+			'translations' => [
+				[
+					'code' => 'de',
+					'content' => [
+						'title' => 'Title DE',
+					]
+				],
+			],
+		]);
+
+		$user = $this->app->user('test@getkirby.com');
+
+		$this->assertSame('Title EN', $user->content('en')->title()->value());
+		$this->assertSame('Title DE', $user->content('de')->title()->value());
+	}
+
 }

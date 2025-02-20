@@ -378,4 +378,60 @@ class NewPageCreateTest extends NewModelTestCase
 		$this->assertSame($expected, $page->content('de')->toArray());
 	}
 
+	public function testCreateWithTranslations()
+	{
+		$this->setupMultiLanguage();
+
+		$this->app->impersonate('kirby');
+
+		Page::create([
+			'slug' => 'test',
+			'translations' => [
+				[
+					'code' => 'en',
+					'content' => [
+						'title' => 'Title EN',
+					]
+				],
+				[
+					'code' => 'de',
+					'content' => [
+						'title' => 'Title DE',
+					]
+				],
+			],
+		]);
+
+		$page = $this->app->page('test');
+
+		$this->assertSame('Title EN', $page->content('en')->title()->value());
+		$this->assertSame('Title DE', $page->content('de')->title()->value());
+	}
+
+	public function testCreateWithTranslationsAndContent()
+	{
+		$this->setupMultiLanguage();
+
+		$this->app->impersonate('kirby');
+
+		Page::create([
+			'slug' => 'test',
+			'content' => [
+				'title' => 'Title EN',
+			],
+			'translations' => [
+				[
+					'code' => 'de',
+					'content' => [
+						'title' => 'Title DE',
+					]
+				],
+			],
+		]);
+
+		$page = $this->app->page('test');
+
+		$this->assertSame('Title EN', $page->content('en')->title()->value());
+		$this->assertSame('Title DE', $page->content('de')->title()->value());
+	}
 }
