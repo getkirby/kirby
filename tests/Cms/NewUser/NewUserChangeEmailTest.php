@@ -12,7 +12,7 @@ class NewUserChangeEmailTest extends NewModelTestCase
 
 	public function testChangeEmail(): void
 	{
-		$user = new User(['email' =>'editor@domain.com']);
+		$user = new User(['email' => 'editor@domain.com']);
 		$user = $user->changeEmail('another@domain.com');
 
 		$this->assertSame('another@domain.com', $user->email());
@@ -24,7 +24,7 @@ class NewUserChangeEmailTest extends NewModelTestCase
 
 	public function testChangeEmailWithUnicode(): void
 	{
-		$user = new User(['email' =>'editor@domain.com']);
+		$user = new User(['email' => 'editor@domain.com']);
 
 		// with Unicode email
 		$user = $user->changeEmail('test@exämple.com');
@@ -48,7 +48,7 @@ class NewUserChangeEmailTest extends NewModelTestCase
 
 	public function testChangeEmailWithUppercase(): void
 	{
-		$user = new User(['email' =>'editor@domain.com']);
+		$user = new User(['email' => 'editor@domain.com']);
 		$user = $user->changeEmail('ANOTHER@domain.com');
 
 		$this->assertSame('another@domain.com', $user->email());

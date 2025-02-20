@@ -83,6 +83,9 @@ trait NewModelFixes
 		return $this;
 	}
 
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 */
 	public function save(
 		array|null $data = null,
 		string|null $languageCode = null,

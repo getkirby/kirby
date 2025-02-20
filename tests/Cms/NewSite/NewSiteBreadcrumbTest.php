@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\NewSite as Site;
-use Kirby\Panel\Site as Panel;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Site::class)]
