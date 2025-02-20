@@ -184,7 +184,7 @@ trait UserActions
 		$update = $result instanceof User ? $result : $this;
 
 		// update the users collection
-		static::updateParentCollections($update, $action);
+		static::updateParentCollection($update, $action);
 
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
