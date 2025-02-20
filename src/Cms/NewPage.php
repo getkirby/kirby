@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 use Kirby\Content\MemoryStorage;
 use Kirby\Content\Translations;
+use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 
 class NewPage extends Page
 {
@@ -26,6 +28,12 @@ class NewPage extends Page
 			...$page->createDefaultContent(),
 			...$props['content'],
 		];
+
+		// make sure that a UUID gets generated
+		// and added to content right away
+		if (Uuids::enabled() === true) {
+			$props['content']['uuid'] ??= Uuid::generate();
+		}
 
 		// keep the initial storage class
 		$storage = $page->storage()::class;

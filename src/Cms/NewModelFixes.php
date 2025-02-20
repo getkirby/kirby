@@ -9,8 +9,6 @@ use Kirby\Content\Translation;
 use Kirby\Content\Translations;
 use Kirby\Content\VersionId;
 use Kirby\Form\Form;
-use Kirby\Uuid\Uuid;
-use Kirby\Uuid\Uuids;
 
 trait NewModelFixes
 {
@@ -106,13 +104,7 @@ trait NewModelFixes
 			'language' => Language::ensure('default')->code(),
 		]);
 
-		$content = $form->strings(true);
-
-		if (Uuids::enabled() === true) {
-			$content['uuid'] ??= Uuid::generate();
-		}
-
-		return $content;
+		return $form->strings(true);
 	}
 
 	/**
