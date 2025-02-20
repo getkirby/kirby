@@ -534,8 +534,7 @@ trait PageActions
 				// the $format needs to produce only digits,
 				// so it can be converted to integer below
 				$format = $mode === 'date' ? 'Ymd' : 'YmdHi';
-				$lang   = $this->kirby()->defaultLanguage() ?? null;
-				$field  = $this->content($lang)->get('date');
+				$field  = $this->content('default')->get('date');
 				$date   = $field->isEmpty() ? 'now' : $field;
 				return (int)date($format, strtotime($date));
 			case 'default':
@@ -568,7 +567,7 @@ trait PageActions
 
 				$template = Str::template($mode, [
 					'kirby' => $app,
-					'page'  => $app->page($this->id()),
+					'page'  => $this,
 					'site'  => $app->site(),
 				], ['fallback' => '']);
 
