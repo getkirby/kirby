@@ -1,0 +1,3 @@
+<svg viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
+  <a xlink:href="javascript:alert(1)"><text x="10" y="25">Click me</text></a>
+</svg>
