@@ -11,7 +11,7 @@ class NewFileUrlTest extends NewModelTestCase
 
 	public function testPermalink(): void
 	{
-		$page = new Page(['slug' => 'test' ]);
+		$page = new Page(['slug' => 'test']);
 		$file = new File([
 			'filename' => 'test.pdf',
 			'content'  => ['uuid' => 'my-file-uuid'],
@@ -25,7 +25,7 @@ class NewFileUrlTest extends NewModelTestCase
 	{
 		$file = new File([
 			'filename' => 'test.pdf',
-			'url'      => $url ='http://getkirby.com/test.pdf',
+			'url'      => $url = 'http://getkirby.com/test.pdf',
 			'parent'   => $this->app->site()
 		]);
 

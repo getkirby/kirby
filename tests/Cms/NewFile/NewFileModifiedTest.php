@@ -16,7 +16,7 @@ class NewFileModifiedTest extends NewModelTestCase
 		F::write($file = static::TMP . '/content/test/test.js', 'test');
 		$modified = filemtime($file);
 
-		$page = new Page([ 'slug' => 'test']);
+		$page = new Page(['slug' => 'test']);
 		$file = new File([
 			'filename' => 'test.js',
 			'parent'   => $page
@@ -43,7 +43,7 @@ class NewFileModifiedTest extends NewModelTestCase
 		F::write($content = static::TMP . '/content/test/test.js.txt', 'test');
 		touch($file, $modifiedContent = \time() + 5);
 
-		$page = new Page([ 'slug' => 'test']);
+		$page = new Page(['slug' => 'test']);
 		$file = new File([
 			'filename' => 'test.js',
 			'parent'   => $page
@@ -68,7 +68,7 @@ class NewFileModifiedTest extends NewModelTestCase
 		F::write($file = static::TMP . '/content/test/test.js.de.txt', 'test');
 		touch($file, $modifiedDeContent = \time() + 5);
 
-		$page = new Page([ 'slug' => 'test']);
+		$page = new Page(['slug' => 'test']);
 		$file = new File([
 			'filename' => 'test.js',
 			'parent'   => $page
