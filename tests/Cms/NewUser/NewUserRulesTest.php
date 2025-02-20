@@ -11,7 +11,7 @@ use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-#[CoversClass(User::class)]
+#[CoversClass(UserRules::class)]
 class NewUserRulesTest extends NewModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';

@@ -6,7 +6,7 @@ use Kirby\Cms\NewUser as User;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-#[CoversClass(User::class)]
+#[CoversClass(UserPermissions::class)]
 class NewUserPermissionsTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.NewUserPermissions';
