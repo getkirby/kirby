@@ -33,10 +33,9 @@ class NewFile extends File
 				$template = null;
 			}
 
-			// Use the version class to update the template
-			// If we use the $file->update() method directly, the Form class
-			// will still use the old blueprint and might write invalid data
-			// to the content file. We also don't want to trigger update hooks.
+			// Use the version class to update the template field.
+			// If we use the $file->update() method directly, we create yet 
+			// anothere clone and we trigger the update hooks.
 			$file->version()->save(
 				['template' => $template],
 				'default'
