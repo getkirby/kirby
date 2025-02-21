@@ -13,6 +13,29 @@ class NewFile extends File
 {
 	use NewModelFixes;
 
+	/**
+	 * Copy the file to the given page
+	 * @internal
+	 */
+	public function copy(Page $page): static
+	{
+		F::copy($this->root(), $page->root() . '/' . $this->filename());
+
+		$copy = new static([
+			'parent'   => $page,
+			'filename' => $this->filename(),
+		]);
+
+		$this->storage()->copyAll(to: $copy->storage());
+
+		// overwrite with new UUID (remove old, add new)
+		if (Uuids::enabled() === true) {
+			$copy = $copy->save(['uuid' => Uuid::generate()]);
+		}
+
+		return $copy;
+	}
+
 	public static function create(array $props, bool $move = false): File
 	{
 		$props = static::normalizeProps($props);
