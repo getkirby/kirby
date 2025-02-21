@@ -13,6 +13,73 @@ class NewFile extends File
 {
 	use NewModelFixes;
 
+	public function changeTemplate(string|null $template): static
+	{
+		if ($template === $this->template()) {
+			return $this;
+		}
+
+		$arguments = [
+			'file'     => $this,
+			'template' => $template ?? 'default'
+		];
+
+		return $this->commit('changeTemplate', $arguments, function ($oldFile, $template) {
+			// convert to new template/blueprint incl. content
+			$file = $oldFile->convertTo($template);
+
+			// update template, prefer unset over writing `default`
+			if ($template === 'default') {
+				$template = null;
+			}
+
+			// Use the version class to update the template
+			// If we use the $file->update() method directly, the Form class
+			// will still use the old blueprint and might write invalid data
+			// to the content file. We also don't want to trigger update hooks.
+			$file->version()->save(
+				['template' => $template],
+				'default'
+			);
+
+			// resize the file if configured by new blueprint
+			$create = $file->blueprint()->create();
+			$file   = $file->manipulate($create);
+
+			return $file;
+		});
+	}
+
+	/**
+	 * Store the template in addition to the
+	 * other content.
+	 * @internal
+	 */
+	public function contentFileData(
+		array $data,
+		string|null $languageCode = null
+	): array {
+		$language = Language::ensure($languageCode);
+
+		// only keep the template and sort fields in the
+		// default language
+		if ($language->isDefault() === false) {
+			unset($data['template'], $data['sort']);
+			return $data;
+		}
+
+		// only add the template in, if the $data array
+		// doesn't explicitly unsets it
+		if (
+			array_key_exists('template', $data) === false &&
+			$template = $this->template()
+		) {
+			$data['template'] = $template;
+		}
+
+		return $data;
+	}
+
 	/**
 	 * Copy the file to the given page
 	 * @internal
