@@ -50,6 +50,7 @@ class Version
 		// in the future, to provide multi-language support with truly
 		// individual versions of pages and no longer enforce the fallback.
 		if ($language->isDefault() === false) {
+			// merge the fields with the default language
 			$fields = [
 				...$this->read('default') ?? [],
 				...$fields
@@ -372,7 +373,10 @@ class Version
 	 */
 	protected function prepareFieldsAfterRead(array $fields, Language $language): array
 	{
-		return $this->convertFieldNamesToLowerCase($fields);
+		$fields = $this->convertFieldNamesToLowerCase($fields);
+
+		// ignore all fields with null values
+		return array_filter($fields, fn ($field) => $field !== null);
 	}
 
 	/**

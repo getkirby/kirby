@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\NewFile as File;
+use Kirby\Data\Data;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -23,7 +24,13 @@ class NewFileChangeNameTest extends NewModelTestCase
 		F::write($root, '');
 		// ...and an empty content file for it
 		$content = $file->version('latest')->contentFile('default');
-		F::write($content, '');
+
+		// We need to create a file with fields here
+		// otherwise, our plain text storage handler will
+		// remove the file on save
+		Data::write($content, [
+			'alt' => 'Test'
+		]);
 
 		$this->assertFileExists($root);
 		$this->assertFileExists($content);
@@ -54,8 +61,17 @@ class NewFileChangeNameTest extends NewModelTestCase
 		// ...and empty content files for it
 		$contentEn = $file->version('latest')->contentFile('en');
 		$contentDe = $file->version('latest')->contentFile('de');
-		F::write($contentEn, '');
-		F::write($contentDe, '');
+
+		// We need to create files with fields here
+		// otherwise, our plain text storage handler will
+		// remove the file on save
+		Data::write($contentEn, [
+			'alt' => 'Test EN'
+		]);
+
+		Data::write($contentDe, [
+			'alt' => 'Test DE'
+		]);
 
 		$this->assertFileExists($file->root());
 		$this->assertFileExists($contentEn);

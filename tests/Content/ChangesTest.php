@@ -83,9 +83,16 @@ class ChangesTest extends TestCase
 		$this->assertCount(0, $changes->files());
 		$this->assertSame([], $this->app->cache('changes')->get('files'));
 
-		// in cache and changes exist in reality
-		$this->app->file('test/test.jpg')->version(VersionId::latest())->save([]);
-		$this->app->file('test/test.jpg')->version(VersionId::changes())->save([]);
+		// in cache and changes exist in reality. We need to save
+		// at least a single field here. Otherwise, the content file
+		// is not going to be created and the changes will not be detected.
+		$this->app->file('test/test.jpg')->version(VersionId::latest())->save([
+			'alt' => 'Test'
+		]);
+
+		$this->app->file('test/test.jpg')->version(VersionId::changes())->save([
+			'alt' => 'Test'
+		]);
 
 		$this->assertSame($cache, $this->app->cache('changes')->get('files'));
 		$this->assertCount(1, $changes->files());

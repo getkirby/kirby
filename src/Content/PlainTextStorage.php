@@ -269,6 +269,14 @@ class PlainTextStorage extends Storage
 	 */
 	protected function write(VersionId $versionId, Language $language, array $fields): void
 	{
+		// Content for files is only stored when there are any fields.
+		// Otherwise, the storage handler will take care here of cleaning up
+		// unnecessary content files.
+		if ($this->model instanceof File && $fields === []) {
+			$this->delete($versionId, $language);
+			return;
+		}
+
 		$success = Data::write($this->contentFile($versionId, $language), $fields);
 
 		// @codeCoverageIgnoreStart

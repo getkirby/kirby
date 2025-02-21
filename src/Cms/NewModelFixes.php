@@ -67,8 +67,14 @@ trait NewModelFixes
 	 */
 	protected function convertTo(string $blueprint): static
 	{
-		// first clone object with new blueprint as template
+		// keep a copy of the old model in memory
+		$old = $this->clone()->changeStorage(MemoryStorage::class);
+
+		// first clone the object with the new blueprint as template
 		$new = $this->clone(['template' => $blueprint]);
+
+		// make sure to use the same storage class as the original model
+		$new->changeStorage($this->storage()::class);
 
 		// loop through all versions
 		foreach (['latest', 'changes'] as $versionId) {
@@ -82,17 +88,26 @@ trait NewModelFixes
 					continue;
 				}
 
-				// convert the content to the new blueprint
+				// Convert the content to the new blueprint
 				$content = $version->content($language)->convertTo($blueprint);
 
-				// save to re-create the content file
+				// Delete the old versions. This will also remove the
+				// content files from the storage if this is a plain text
+				// storage instance.
+				$this->version($versionId)->delete($language);
+
+				// Save to re-create the content file
 				// with the converted/updated content
 				$new->version($versionId)->save($content, $language);
-
-				// delete the old text file
-				$version->delete($language);
 			}
 		}
+
+		$this->storage = new MemoryStorage($this);
+
+		// move the old storage entries over to the
+		// new in-memory instance for this object to keep it
+		// alive for hooks or other purposes
+		$old->storage()->copyAll(to: $this->storage);
 
 		return $new;
 	}
