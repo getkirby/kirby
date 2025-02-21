@@ -70,7 +70,7 @@ trait NewModelFixes
 		// keep a copy of the old model in memory
 		$old = $this->clone()->changeStorage(MemoryStorage::class);
 
-		// first clone object with new blueprint as template
+		// first clone the object with the new blueprint as template
 		$new = $this->clone(['template' => $blueprint]);
 
 		// make sure to use the same storage class as the original model
@@ -93,7 +93,7 @@ trait NewModelFixes
 
 				// Delete the old versions. This will also remove the
 				// content files from the storage if this is a plain text
-				// storage instace.
+				// storage instance.
 				$this->version($versionId)->delete($language);
 
 				// Save to re-create the content file
