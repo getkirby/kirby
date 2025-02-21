@@ -26,7 +26,14 @@ class NewFileSaveTest extends NewModelTestCase
 		$this->assertFileExists($file->root());
 		$this->assertFileDoesNotExist($file->version('latest')->contentFile('default'));
 
-		$file = $file->clone(['content' => ['caption' => 'save']])->save();
+		// old test: with our new memory storage architecture, clone won't work
+		// here because the file is not stored in the storage once we use the content
+		// setter to inject the content. This is correct, but the test fails because of that.
+
+		// $file = $file->clone(['content' => ['caption' => 'save']])->save();
+
+		// new test: use save directly to save the content
+		$file = $file->save(['caption' => 'save']);
 
 		$this->assertFileExists($file->version('latest')->contentFile('default'));
 	}
