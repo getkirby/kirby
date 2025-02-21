@@ -13,6 +13,9 @@ class NewFile extends File
 {
 	use NewModelFixes;
 
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 */
 	public function changeTemplate(string|null $template): static
 	{
 		if ($template === $this->template()) {
@@ -34,7 +37,7 @@ class NewFile extends File
 			}
 
 			// Use the version class to update the template field.
-			// If we use the $file->update() method directly, we create yet 
+			// If we use the $file->update() method directly, we create yet
 			// anothere clone and we trigger the update hooks.
 			$file->version()->save(
 				['template' => $template],
@@ -104,7 +107,10 @@ class NewFile extends File
 		return $copy;
 	}
 
-	public static function create(array $props, bool $move = false): File
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 */
+	public static function create(array $props, bool $move = false): static
 	{
 		$props = static::normalizeProps($props);
 
