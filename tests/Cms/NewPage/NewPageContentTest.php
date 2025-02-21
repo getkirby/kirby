@@ -63,7 +63,6 @@ class NewPageContentTest extends NewModelTestCase
 		]);
 
 		$this->assertSame([
-			'title'        => null,
 			'lowercase'    => 'lowercase',
 			'uppercase'    => 'UPPERCASE',
 			'camelcase'    => 'camelCase',
