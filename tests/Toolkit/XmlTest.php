@@ -3,19 +3,16 @@
 namespace Kirby\Toolkit;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Xml
- */
+#[CoversClass(Xml::class)]
 class XmlTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/xml';
 
-	/**
-	 * @covers       ::attr
-	 * @dataProvider attrProvider
-	 */
-	public function testAttr($input, $value, $expected)
+	#[DataProvider('attrProvider')]
+	public function testAttr(array $input, bool|null $value, string $expected)
 	{
 		$this->assertSame($expected, Xml::attr($input, $value));
 	}
@@ -36,9 +33,6 @@ class XmlTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::attr
-	 */
 	public function testAttrArrayValue()
 	{
 		$result = Xml::attr('a', ['a', 'b']);
@@ -57,11 +51,6 @@ class XmlTest extends TestCase
 		$this->assertSame('a="&"', $result);
 	}
 
-	/**
-	 * @covers ::parse
-	 * @covers ::simplify
-	 * @covers ::create
-	 */
 	public function testParseSimplifyCreate()
 	{
 		$this->assertSame('<name>Homer</name>', Xml::create('Homer', 'name', false));
@@ -130,6 +119,7 @@ class XmlTest extends TestCase
 				]
 			]
 		];
+
 		$this->assertSame($data, Xml::parse(file_get_contents(static::FIXTURES . '/simpsons.xml')));
 		$this->assertStringEqualsFile(static::FIXTURES . '/simpsons.xml', Xml::create($data, 'invalid'));
 		$this->assertStringEqualsFile(static::FIXTURES . '/simpsons_4spaces.xml', Xml::create($data, 'invalid', true, '    '));
@@ -140,9 +130,6 @@ class XmlTest extends TestCase
 		$this->assertNull(Xml::parse('<this>is invalid</that>'));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseEntities()
 	{
 		$xml   = '<!DOCTYPE d [<!ENTITY e "bar">]><x>this is a file: foo &e; (with entities)</x>';
@@ -154,18 +141,12 @@ class XmlTest extends TestCase
 		], $array);
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseRecursiveEntities()
 	{
 		$xml = file_get_contents(static::FIXTURES . '/billion-laughs.xml');
 		$this->assertNull(Xml::parse($xml));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParseXXE()
 	{
 		$xml   = '<!DOCTYPE d [<!ENTITY e SYSTEM "' . __FILE__ . '">]><x>this is a file: &e; with an XXE vulnerability</x>';
@@ -177,10 +158,6 @@ class XmlTest extends TestCase
 		], $array);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::decode
-	 */
 	public function testEncodeDecode()
 	{
 		$expected = 'S&#252;per &#214;nenc&#339;ded &#223;tring';
@@ -195,17 +172,11 @@ class XmlTest extends TestCase
 		$this->assertSame('', Xml::encode(null));
 	}
 
-	/**
-	 * @covers ::entities
-	 */
 	public function testEntities()
 	{
 		$this->assertSame(Xml::$entities, Xml::entities());
 	}
 
-	/**
-	 * @covers ::tag
-	 */
 	public function testTag()
 	{
 		$tag = Xml::tag('name', 'content');
@@ -233,11 +204,8 @@ class XmlTest extends TestCase
 		$this->assertSame('  <name foo="bar">' . PHP_EOL . '   Test' . PHP_EOL . '   Test2' . PHP_EOL . '  </name>', $tag);
 	}
 
-	/**
-	 * @covers       ::value
-	 * @dataProvider valueProvider
-	 */
-	public function testValue($input, $expected)
+	#[DataProvider('valueProvider')]
+	public function testValue(bool|int|string|null $input, string|null $expected)
 	{
 		$this->assertSame($expected, Xml::value($input));
 	}
