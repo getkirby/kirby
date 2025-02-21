@@ -533,6 +533,61 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, Data::read($this->model->root() . '/article.txt'));
 	}
 
+	public function testUpdateForFileWithMetaData()
+	{
+		$this->setUpSingleLanguage();
+
+		$file = new File([
+			'parent'   => $this->app->site(),
+			'filename' => 'image.jpg'
+		]);
+
+		$storage = new PlainTextStorage($file);
+
+		$storage->update(VersionId::latest(), Language::single(), $content = [
+			'alt' => 'Test'
+		]);
+
+		$this->assertSame($content, Data::read($file->parent()->root() . '/image.jpg.txt'));
+	}
+
+	public function testUpdateForFileWithoutMetaData()
+	{
+		$this->setUpSingleLanguage();
+
+		$file = new File([
+			'parent'   => $this->app->site(),
+			'filename' => 'image.jpg'
+		]);
+
+		$storage = new PlainTextStorage($file);
+		$storage->update(VersionId::latest(), Language::single(), []);
+
+		$this->assertFileDoesNotExist($file->parent()->root() . '/image.jpg.txt');
+	}
+
+	public function testUpdateForFileWithRemovedMetaFile()
+	{
+		$this->setUpSingleLanguage();
+
+		$file = new File([
+			'parent'   => $this->app->site(),
+			'filename' => 'image.jpg'
+		]);
+
+		$storage = new PlainTextStorage($file);
+
+		$storage->update(VersionId::latest(), Language::single(), [
+			'alt' => 'Test'
+		]);
+
+		$this->assertFileExists($file->parent()->root() . '/image.jpg.txt');
+
+		$storage->update(VersionId::latest(), Language::single(), []);
+
+		$this->assertFileDoesNotExist($file->parent()->root() . '/image.jpg.txt');
+	}
+
 	/**
 	 * @covers ::contentFile
 	 * @dataProvider contentFileProviderMultiLang
