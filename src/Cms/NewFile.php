@@ -16,6 +16,8 @@ class NewFile extends File
 	/**
 	 * Copy the file to the given page
 	 * @internal
+	 *
+	 * @psalm-suppress MethodSignatureMismatch
 	 */
 	public function copy(Page $page): static
 	{

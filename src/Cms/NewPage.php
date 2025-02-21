@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\MemoryStorage;
-use Kirby\Content\Translations;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
 
