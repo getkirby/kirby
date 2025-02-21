@@ -18,31 +18,31 @@ class DateTest extends TestCase
 		App::destroy();
 	}
 
-	public function test__constructWithString()
+	public function test__constructWithString(): void
 	{
 		$date = new Date('2021-12-12');
 		$this->assertSame('2021-12-12', $date->format('Y-m-d'));
 	}
 
-	public function test__constructWithInt()
+	public function test__constructWithInt(): void
 	{
 		$date = new Date(strtotime('2021-12-12'));
 		$this->assertSame('2021-12-12', $date->format('Y-m-d'));
 	}
 
-	public function test__constructWithDate()
+	public function test__constructWithDate(): void
 	{
 		$date = new Date(new Date('2021-12-12'));
 		$this->assertSame('2021-12-12', $date->format('Y-m-d'));
 	}
 
-	public function test__toString()
+	public function test__toString(): void
 	{
 		$date = new Date('2021-12-12 12:12:12');
 		$this->assertSame('2021-12-12 12:12:12+00:00', (string)$date);
 	}
 
-	public function testCeil()
+	public function testCeil(): void
 	{
 		$date = new Date('2021-12-12 12:12:12');
 
@@ -69,7 +69,7 @@ class DateTest extends TestCase
 		$date->ceil('foo');
 	}
 
-	public function testCompare()
+	public function testCompare(): void
 	{
 		$date = new Date('2021-12-12');
 		$diff = $date->compare('2021-12-10');
@@ -79,7 +79,7 @@ class DateTest extends TestCase
 		$this->assertSame(2, $diff->days);
 	}
 
-	public function testDay()
+	public function testDay(): void
 	{
 		$date = new Date('2021-12-12');
 		$this->assertSame(12, $date->day());
@@ -87,7 +87,7 @@ class DateTest extends TestCase
 		$this->assertSame('2021-12-13', $date->format('Y-m-d'));
 	}
 
-	public function testFirstWeekday()
+	public function testFirstWeekday(): void
 	{
 		$this->assertSame(1, Date::firstWeekday('de_DE'));
 		$this->assertSame(0, Date::firstWeekday('en_US'));
@@ -107,7 +107,7 @@ class DateTest extends TestCase
 		$this->assertSame(4, Date::firstWeekday('en_US'));
 	}
 
-	public function testFloor()
+	public function testFloor(): void
 	{
 		$date = new Date('2021-12-12 12:12:12');
 
@@ -134,7 +134,7 @@ class DateTest extends TestCase
 		$date->floor('foo');
 	}
 
-	public function testHour()
+	public function testHour(): void
 	{
 		$date = new Date('12:12');
 		$this->assertSame(12, $date->hour());
@@ -142,7 +142,7 @@ class DateTest extends TestCase
 		$this->assertSame('13:12', $date->format('H:i'));
 	}
 
-	public function testFormatWithHandler()
+	public function testFormatWithHandler(): void
 	{
 		$date = new Date('2020-01-29 01:01');
 
@@ -187,28 +187,28 @@ class DateTest extends TestCase
 		$this->assertSame('29.01.2020', $date->formatWithHandler('%d.%m.%Y', 'strftime'));
 	}
 
-	public function testIs()
+	public function testIs(): void
 	{
 		$date = new Date('2021-12-12');
 		$this->assertTrue($date->is('2021-12-12'));
 		$this->assertFalse($date->is('2021-12-13'));
 	}
 
-	public function testIsAfter()
+	public function testIsAfter(): void
 	{
 		$date = new Date('2021-12-12');
 		$this->assertTrue($date->isAfter('2021-12-11'));
 		$this->assertFalse($date->isAfter('2021-12-13'));
 	}
 
-	public function testIsBefore()
+	public function testIsBefore(): void
 	{
 		$date = new Date('2021-12-12');
 		$this->assertFalse($date->isBefore('2021-12-11'));
 		$this->assertTrue($date->isBefore('2021-12-13'));
 	}
 
-	public function testIsBetween()
+	public function testIsBetween(): void
 	{
 		$date = new Date('2021-12-12');
 		$this->assertTrue($date->isBetween('2021-12-12', '2021-12-12'));
@@ -216,21 +216,21 @@ class DateTest extends TestCase
 		$this->assertFalse($date->isBetween('2021-12-13', '2021-12-14'));
 	}
 
-	public function testIsMax()
+	public function testIsMax(): void
 	{
 		$date = new Date('2021-12-12');
 		$this->assertTrue($date->isMax('2021-12-12'));
 		$this->assertFalse($date->isMax('2021-12-11'));
 	}
 
-	public function testIsMin()
+	public function testIsMin(): void
 	{
 		$date = new Date('2021-12-12');
 		$this->assertTrue($date->isMin('2021-12-12'));
 		$this->assertFalse($date->isMin('2021-12-13'));
 	}
 
-	public function testMicrosecond()
+	public function testMicrosecond(): void
 	{
 		$date = new Date('2021-12-12');
 		$date->modify('+500 ms');
@@ -238,7 +238,7 @@ class DateTest extends TestCase
 		$this->assertSame(500000, $date->microsecond());
 	}
 
-	public function testMillisecond()
+	public function testMillisecond(): void
 	{
 		$date = new Date('2021-12-12');
 		$date->modify('+500 ms');
@@ -246,7 +246,7 @@ class DateTest extends TestCase
 		$this->assertSame(500, $date->millisecond());
 	}
 
-	public function testMinute()
+	public function testMinute(): void
 	{
 		$date = new Date('12:12');
 		$this->assertSame(12, $date->minute());
@@ -254,7 +254,7 @@ class DateTest extends TestCase
 		$this->assertSame('12:13', $date->format('H:i'));
 	}
 
-	public function testMonth()
+	public function testMonth(): void
 	{
 		$date = new Date('2021-12-12');
 		$this->assertSame(12, $date->month());
@@ -262,7 +262,7 @@ class DateTest extends TestCase
 		$this->assertSame('2021-11-12', $date->format('Y-m-d'));
 	}
 
-	public function testNearest()
+	public function testNearest(): void
 	{
 		$date = new Date('2021-12-12');
 		$a    = new Date('2021-12-11');
@@ -272,7 +272,7 @@ class DateTest extends TestCase
 		$this->assertSame($a, $date->nearest($a, $b, $c));
 	}
 
-	public function testNow()
+	public function testNow(): void
 	{
 		$date = Date::now();
 
@@ -280,7 +280,7 @@ class DateTest extends TestCase
 		$this->assertInstanceOf(Date::class, $date);
 	}
 
-	public function testOptional()
+	public function testOptional(): void
 	{
 		$this->assertNull(Date::optional(null));
 		$this->assertNull(Date::optional(''));
@@ -349,7 +349,7 @@ class DateTest extends TestCase
 	}
 
 	#[DataProvider('roundUnsupportedSizeProvider')]
-	public function testRoundUnsupportedSize(string $unit, int $size)
+	public function testRoundUnsupportedSize(string $unit, int $size): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid rounding size for ' . $unit);
@@ -370,7 +370,7 @@ class DateTest extends TestCase
 		];
 	}
 
-	public function testRoundUnsupportedUnit()
+	public function testRoundUnsupportedUnit(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid rounding unit');
@@ -379,13 +379,13 @@ class DateTest extends TestCase
 		$date->round('foo', 1);
 	}
 
-	public function testRoundedTimestamp()
+	public function testRoundedTimestamp(): void
 	{
 		$result = Date::roundedTimestamp('2021-12-12 12:12:12');
 		$this->assertSame('2021-12-12 12:12:12', date('Y-m-d H:i:s', $result));
 	}
 
-	public function testRoundedTimestampWithStep()
+	public function testRoundedTimestampWithStep(): void
 	{
 		$result = Date::roundedTimestamp('2021-12-12 12:12:12', [
 			'unit' => 'minute',
@@ -395,13 +395,13 @@ class DateTest extends TestCase
 		$this->assertSame('2021-12-12 12:10:00', date('Y-m-d H:i:s', $result));
 	}
 
-	public function testRoundedTimestampWithInvalidDate()
+	public function testRoundedTimestampWithInvalidDate(): void
 	{
 		$result = Date::roundedTimestamp('invalid date');
 		$this->assertNull($result);
 	}
 
-	public function testSecond()
+	public function testSecond(): void
 	{
 		$date = new Date('12:12:12');
 		$this->assertSame(12, $date->second());
@@ -409,7 +409,7 @@ class DateTest extends TestCase
 		$this->assertSame('12:12:13', $date->format('H:i:s'));
 	}
 
-	public function testSet()
+	public function testSet(): void
 	{
 		$date = new Date('2021-12-12');
 
@@ -427,7 +427,7 @@ class DateTest extends TestCase
 		$this->assertSame('2021-12-13', $date->format('Y-m-d'));
 	}
 
-	public function testStepConfig()
+	public function testStepConfig(): void
 	{
 		$config = Date::stepConfig();
 
@@ -437,7 +437,7 @@ class DateTest extends TestCase
 		], $config);
 	}
 
-	public function testStepConfigWithArray()
+	public function testStepConfigWithArray(): void
 	{
 		$config = Date::stepConfig([
 			'size' => 5,
@@ -450,7 +450,7 @@ class DateTest extends TestCase
 		], $config);
 	}
 
-	public function testStepConfigWithInt()
+	public function testStepConfigWithInt(): void
 	{
 		$config = Date::stepConfig(5);
 
@@ -460,7 +460,7 @@ class DateTest extends TestCase
 		], $config);
 	}
 
-	public function testStepConfigWithInvalidInput()
+	public function testStepConfigWithInvalidInput(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid input');
@@ -468,7 +468,7 @@ class DateTest extends TestCase
 		Date::stepConfig(new Date());
 	}
 
-	public function testStepConfigWithString()
+	public function testStepConfigWithString(): void
 	{
 		$config = Date::stepConfig('Minute');
 
@@ -478,7 +478,7 @@ class DateTest extends TestCase
 		], $config);
 	}
 
-	public function testStepConfigWithCustomDefault()
+	public function testStepConfigWithCustomDefault(): void
 	{
 		$config = Date::stepConfig(null, $default = [
 			'size' => 5,
@@ -488,13 +488,13 @@ class DateTest extends TestCase
 		$this->assertSame($default, $config);
 	}
 
-	public function testTime()
+	public function testTime(): void
 	{
 		$date = new Date('2021-12-12 12:12:12');
 		$this->assertSame('12:12:12', $date->time());
 	}
 
-	public function testTimestamp()
+	public function testTimestamp(): void
 	{
 		$date = new Date('2021-12-12');
 		$timestamp = strtotime('2021-12-12');
@@ -502,20 +502,20 @@ class DateTest extends TestCase
 		$this->assertSame($timestamp, $date->timestamp());
 	}
 
-	public function testTimezone()
+	public function testTimezone(): void
 	{
 		$date = new Date();
 		$this->assertInstanceOf('DateTimeZone', $date->timezone());
 	}
 
-	public function testToday()
+	public function testToday(): void
 	{
 		$date = Date::today();
 		$timestamp = strtotime('today');
 		$this->assertSame($timestamp, $date->timestamp());
 	}
 
-	public function testToStringModeDate()
+	public function testToStringModeDate(): void
 	{
 		// with timezone
 		$date = new Date('2021-12-12');
@@ -525,7 +525,7 @@ class DateTest extends TestCase
 		$this->assertSame('2021-12-12', $date->toString('date', false));
 	}
 
-	public function testToStringModeDatetime()
+	public function testToStringModeDatetime(): void
 	{
 		// with timezone
 		$date = new Date('2021-12-12 12:12:12');
@@ -536,7 +536,7 @@ class DateTest extends TestCase
 		$this->assertSame('2021-12-12 12:12:12', $date->toString('datetime', false));
 	}
 
-	public function testToStringModeTime()
+	public function testToStringModeTime(): void
 	{
 		// with timezone
 		$date = new Date('12:12:12');
@@ -546,7 +546,7 @@ class DateTest extends TestCase
 		$this->assertSame('12:12:12', $date->toString('time', false));
 	}
 
-	public function testToStringWithInvalidMode()
+	public function testToStringWithInvalidMode(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid mode');
@@ -555,7 +555,7 @@ class DateTest extends TestCase
 		$date->toString('foo');
 	}
 
-	public function testYear()
+	public function testYear(): void
 	{
 		$date = new Date('2021-12-12');
 		$this->assertSame(2021, $date->year());

@@ -21,7 +21,7 @@ class CanBeCounted implements \Countable
 
 class HasCount
 {
-	public function count()
+	public function count(): int
 	{
 		return 7;
 	}
@@ -35,13 +35,13 @@ class VTest extends TestCase
 		App::destroy();
 	}
 
-	public function testValidators()
+	public function testValidators(): void
 	{
 		$this->assertNotEmpty(V::$validators);
 		$this->assertNotEmpty(V::validators());
 	}
 
-	public function testCustomValidator()
+	public function testCustomValidator(): void
 	{
 		V::$validators['me'] = function ($name): bool {
 			return V::in($name, ['I', 'me', 'myself']);
@@ -53,7 +53,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::me('you'));
 	}
 
-	public function testCallInvalidMethod()
+	public function testCallInvalidMethod(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The validator does not exist: fool');
@@ -61,7 +61,7 @@ class VTest extends TestCase
 		V::fool('me');
 	}
 
-	public function testAccepted()
+	public function testAccepted(): void
 	{
 		$this->assertTrue(V::accepted(true));
 		$this->assertTrue(V::accepted('true'));
@@ -80,19 +80,19 @@ class VTest extends TestCase
 		$this->assertFalse(V::accepted('off'));
 	}
 
-	public function testCallback()
+	public function testCallback(): void
 	{
 		$this->assertTrue(V::callback('foo', fn ($value) => $value === 'foo'));
 		$this->assertFalse(V::callback('bar', fn ($value) => $value === 'foo'));
 	}
 
-	public function testContains()
+	public function testContains(): void
 	{
 		$this->assertTrue(V::contains('word', 'or'));
 		$this->assertFalse(V::contains('word', 'test'));
 	}
 
-	public function testDenied()
+	public function testDenied(): void
 	{
 		$this->assertTrue(V::denied(false));
 		$this->assertTrue(V::denied('false'));
@@ -111,7 +111,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::denied(null));
 	}
 
-	public function testAlpha()
+	public function testAlpha(): void
 	{
 		$this->assertTrue(V::alpha('foo'));
 		$this->assertTrue(V::alpha('abcdefghijklmnopqrstuvwxyz'));
@@ -128,7 +128,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::alpha('uñi-code', true));
 	}
 
-	public function testAlphanum()
+	public function testAlphanum(): void
 	{
 		$this->assertTrue(V::alphanum('foo'));
 		$this->assertTrue(V::alphanum('abcdefghijklmnopqrstuvwxyz'));
@@ -147,7 +147,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::alphanum('uñicode-1234', true));
 	}
 
-	public function testBetween()
+	public function testBetween(): void
 	{
 		$this->assertTrue(V::between(4, 3, 5));
 		$this->assertTrue(V::between('kirby', 4, 6));
@@ -156,7 +156,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::between('kirby', 2, 4));
 	}
 
-	public function testDate()
+	public function testDate(): void
 	{
 		$this->assertTrue(V::date('2017-12-24'));
 		$this->assertTrue(V::date('29.01.1989'));
@@ -167,7 +167,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::date('January 32, 1989'));
 	}
 
-	public function testDifferent()
+	public function testDifferent(): void
 	{
 		$this->assertTrue(V::different('foo', 'bar'));
 		$this->assertTrue(V::different('bar', 'foo'));
@@ -187,13 +187,13 @@ class VTest extends TestCase
 		$this->assertTrue(V::different('true', true, true));
 	}
 
-	public function testEndsWith()
+	public function testEndsWith(): void
 	{
 		$this->assertTrue(V::endsWith('test', 'st'));
 		$this->assertFalse(V::endsWith('test', 'te'));
 	}
 
-	public function testSame()
+	public function testSame(): void
 	{
 		$this->assertTrue(V::same('foo', 'foo'));
 		$this->assertTrue(V::same('bar', 'bar'));
@@ -213,7 +213,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::same('true', true, true));
 	}
 
-	public function testEmail()
+	public function testEmail(): void
 	{
 		$this->assertTrue(V::email('bastian@getkirby.com'));
 		$this->assertTrue(V::email('bastian-v3@getkirby.com'));
@@ -227,7 +227,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::email('@getkirby.com'));
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$this->assertTrue(V::empty(''));
 		$this->assertTrue(V::empty(null));
@@ -242,7 +242,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::empty(new Collection(['a'])));
 	}
 
-	public function testDateComparison()
+	public function testDateComparison(): void
 	{
 		$this->assertTrue(V::date('2345-01-01', '==', '01.01.2345'));
 		$this->assertFalse(V::date('2345-01-02', '==', '01.01.2345'));
@@ -272,7 +272,7 @@ class VTest extends TestCase
 		V::date('2345-01-01', '<>', '2345-01-01');
 	}
 
-	public function testFilename()
+	public function testFilename(): void
 	{
 		$this->assertTrue(V::filename('size.txt'));
 		$this->assertTrue(V::filename('si.ze.md'));
@@ -281,7 +281,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::filename('../'));
 	}
 
-	public function testIn()
+	public function testIn(): void
 	{
 		$this->assertTrue(V::in('bastian', ['bastian', 'nico', 'sonja']));
 
@@ -289,7 +289,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::in('bastian', []));
 	}
 
-	public function testInvalid()
+	public function testInvalid(): void
 	{
 		$data = [
 			'username' => 123,
@@ -329,7 +329,7 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testInvalidSimple()
+	public function testInvalidSimple(): void
 	{
 		$data   = ['homer', null];
 		$rules  = [['alpha'], ['required']];
@@ -337,7 +337,7 @@ class VTest extends TestCase
 		$this->assertSame(1, $result[1]);
 	}
 
-	public function testInvalidRequired()
+	public function testInvalidRequired(): void
 	{
 		$rules    = ['email' => ['required']];
 		$messages = ['email' => ''];
@@ -367,7 +367,7 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testInvalidOptions()
+	public function testInvalidOptions(): void
 	{
 		$rules = [
 			'username' => ['min' => 6]
@@ -397,7 +397,7 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testInvalidWithMultipleMessages()
+	public function testInvalidWithMultipleMessages(): void
 	{
 		$data     = ['username' => ''];
 		$rules    = ['username' => ['required', 'alpha', 'min' => 4]];
@@ -436,13 +436,13 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testNotEmpty()
+	public function testNotEmpty(): void
 	{
 		$this->assertFalse(V::notEmpty(''));
 		$this->assertTrue(V::notEmpty(0));
 	}
 
-	public function testNotIn()
+	public function testNotIn(): void
 	{
 		$this->assertFalse(V::notIn('bastian', ['bastian', 'nico', 'sonja']));
 
@@ -450,7 +450,7 @@ class VTest extends TestCase
 		$this->assertTrue(V::notIn('bastian', []));
 	}
 
-	public function testInteger()
+	public function testInteger(): void
 	{
 		$this->assertTrue(V::integer(5));
 		$this->assertTrue(V::integer(0));
@@ -465,7 +465,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::integer(null, true));
 	}
 
-	public function testIp()
+	public function testIp(): void
 	{
 		$this->assertTrue(V::ip('192.168.255.1'));
 		$this->assertTrue(V::ip('8.8.8.8'));
@@ -476,7 +476,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::ip('192.168.255.24.23'));
 	}
 
-	public function testJson()
+	public function testJson(): void
 	{
 		$this->assertTrue(V::json('{"foo": "bar"}'));
 		$this->assertTrue(V::json('{}'));
@@ -489,13 +489,13 @@ class VTest extends TestCase
 		$this->assertFalse(V::json(''));
 	}
 
-	public function testLess()
+	public function testLess(): void
 	{
 		$this->assertTrue(V::less(1, 2));
 		$this->assertFalse(V::less(2, 1));
 	}
 
-	public function testMaxLength()
+	public function testMaxLength(): void
 	{
 		$this->assertTrue(V::maxLength('Kirby', 10));
 		$this->assertTrue(V::maxLength('Kirby', 5));
@@ -504,7 +504,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::maxLength('Kirby', 3));
 	}
 
-	public function testMinLength()
+	public function testMinLength(): void
 	{
 		$this->assertTrue(V::minLength('Kirby', 2));
 		$this->assertTrue(V::minLength('Kirby', 5));
@@ -513,7 +513,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::minLength(' Kirby ', 6));
 	}
 
-	public function testMaxWords()
+	public function testMaxWords(): void
 	{
 		$this->assertTrue(V::maxWords('This is Kirby', 10));
 		$this->assertTrue(V::maxWords('This is Kirby', 3));
@@ -522,7 +522,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::maxWords('This is Kirby', 2));
 	}
 
-	public function testMinWords()
+	public function testMinWords(): void
 	{
 		$this->assertTrue(V::minWords('This is Kirby', 2));
 		$this->assertTrue(V::minWords('This is Kirby', 3));
@@ -531,19 +531,19 @@ class VTest extends TestCase
 		$this->assertFalse(V::minWords('This is Kirby ', 4));
 	}
 
-	public function testMore()
+	public function testMore(): void
 	{
 		$this->assertTrue(V::more(1, 0));
 		$this->assertFalse(V::more(0, 1));
 	}
 
-	public function testNotContains()
+	public function testNotContains(): void
 	{
 		$this->assertFalse(V::notContains('word', 'or'));
 		$this->assertTrue(V::notContains('word', 'test'));
 	}
 
-	public function testNum()
+	public function testNum(): void
 	{
 		$this->assertTrue(V::num(2));
 		$this->assertTrue(V::num(3.5));
@@ -554,7 +554,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::num(false));
 	}
 
-	public function testRequired()
+	public function testRequired(): void
 	{
 		// required
 		$this->assertTrue(V::required(2));
@@ -564,7 +564,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::required(''));
 	}
 
-	public function testRequiredWithReferenceArray()
+	public function testRequiredWithReferenceArray(): void
 	{
 		$this->assertTrue(V::required('a', ['a' => 2]));
 		$this->assertTrue(V::required('a', ['a' => 'foo']));
@@ -575,7 +575,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::required('a', ['a' => []]));
 	}
 
-	public function testSize()
+	public function testSize(): void
 	{
 		$this->assertTrue(V::size('foo', 3));
 		$this->assertTrue(V::size(' foo ', 3));
@@ -614,7 +614,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::size($field->foo(), 6, '>'));
 	}
 
-	public function testSizeInvalid()
+	public function testSizeInvalid(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('$value is of type without size');
@@ -622,7 +622,7 @@ class VTest extends TestCase
 		V::size(false, 5);
 	}
 
-	public function testSizeInvalidObject()
+	public function testSizeInvalidObject(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('$value is an uncountable object');
@@ -630,7 +630,7 @@ class VTest extends TestCase
 		V::size(new stdClass(), 5);
 	}
 
-	public function testTel()
+	public function testTel(): void
 	{
 		$this->assertTrue(V::tel('+123456789'));
 		$this->assertTrue(V::tel('00123456789'));
@@ -638,13 +638,13 @@ class VTest extends TestCase
 		$this->assertFalse(V::tel('+1234-56789'));
 	}
 
-	public function testTime()
+	public function testTime(): void
 	{
 		$this->assertTrue(V::time('12:12:12'));
 		$this->assertFalse(V::time('24:24:24'));
 	}
 
-	public function testUuid()
+	public function testUuid(): void
 	{
 		$this->assertTrue(V::uuid('site://'));
 		$this->assertTrue(V::uuid('page://something'));
@@ -673,7 +673,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::uuid('not a page://something'));
 	}
 
-	public function testUrl()
+	public function testUrl(): void
 	{
 		// based on https://mathiasbynens.be/demo/url-regex
 		$this->assertTrue(V::url('http://www.getkirby.com'));
@@ -825,8 +825,12 @@ class VTest extends TestCase
 	}
 
 	#[DataProvider('inputProvider')]
-	public function testInput(array $input, array $rules, bool $result, string|null $message = null)
-	{
+	public function testInput(
+		array $input,
+		array $rules,
+		bool $result,
+		string|null $message = null
+	): void {
 		// load the translation strings
 		new App();
 
@@ -838,7 +842,7 @@ class VTest extends TestCase
 		$this->assertTrue(V::input($input, $rules));
 	}
 
-	public function testValue()
+	public function testValue(): void
 	{
 		$result = V::value('test@getkirby.com', [
 			'email',
@@ -849,7 +853,7 @@ class VTest extends TestCase
 		$this->assertTrue($result);
 	}
 
-	public function testValueFails()
+	public function testValueFails(): void
 	{
 		// load the translation strings
 		new App();

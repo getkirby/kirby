@@ -41,20 +41,20 @@ class CollectionTest extends TestCase
 		$this->assertSame($this->sampleData, $this->collection->toArray());
 	}
 
-	public function test__debuginfo()
+	public function test__debuginfo(): void
 	{
 		$collection = new Collection(['a' => 'A', 'b' => 'B']);
 		$this->assertSame(['a', 'b'], $collection->__debugInfo());
 	}
 
-	public function test__toString()
+	public function test__toString(): void
 	{
 		$collection = new Collection(['a' => 'A', 'b' => 'B']);
 		$this->assertSame('a<br />b', $collection->__toString());
 		$this->assertSame('a<br />b', (string)$collection);
 	}
 
-	public function testAppend()
+	public function testAppend(): void
 	{
 		// simple
 		$collection = new Collection();
@@ -84,7 +84,7 @@ class CollectionTest extends TestCase
 		$this->assertSame(['A', 'B', 'C'], $collection->values());
 	}
 
-	public function testCaseSensitive()
+	public function testCaseSensitive(): void
 	{
 		$normalCollection = new Collection([
 			'lowercase' => 'test1',
@@ -128,13 +128,13 @@ class CollectionTest extends TestCase
 		$this->assertNull($sensitiveCollection->get('another'));
 	}
 
-	public function testCount()
+	public function testCount(): void
 	{
 		$this->assertSame(3, $this->collection->count());
 		$this->assertCount(3, $this->collection);
 	}
 
-	public function testData()
+	public function testData(): void
 	{
 		$collection = new Collection($data = ['a' => 'A', 'b' => 'B']);
 		$this->assertSame($data, $collection->data());
@@ -143,7 +143,7 @@ class CollectionTest extends TestCase
 		$this->assertSame($data, $collection->data());
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$collection = new Collection($data = ['a' => 'A', 'b' => 'B']);
 		$this->assertSame($data, $collection->data());
@@ -152,7 +152,7 @@ class CollectionTest extends TestCase
 		$this->assertSame([], $collection->data());
 	}
 
-	public function testFilter()
+	public function testFilter(): void
 	{
 		$filtered = $this->collection->filter(
 			fn ($element) => $element === 'My second element'
@@ -164,19 +164,19 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
-	public function testFirst()
+	public function testFirst(): void
 	{
 		$this->assertSame('My first element', $this->collection->first());
 	}
 
-	public function testFlip()
+	public function testFlip(): void
 	{
 		$this->assertSame(array_reverse($this->sampleData, true), $this->collection->flip()->toArray());
 		$this->assertSame($this->sampleData, $this->collection->flip()->flip()->toArray());
 		$this->assertIsUntouched();
 	}
 
-	public function testGetAttributeFromArray()
+	public function testGetAttributeFromArray(): void
 	{
 		$collection = new Collection([
 			'a' => [
@@ -197,7 +197,7 @@ class CollectionTest extends TestCase
 		$this->assertSame(['simpson', 'female'], $collection->getAttribute($collection->last(), 'tags', true));
 	}
 
-	public function testGetAttributeFromObject()
+	public function testGetAttributeFromObject(): void
 	{
 		$collection = new Collection([
 			'a' => new Obj([
@@ -212,7 +212,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('Marge', $collection->getAttribute($collection->last(), 'username'));
 	}
 
-	public function testGetters()
+	public function testGetters(): void
 	{
 		$this->assertSame('My first element', $this->collection->first);
 		$this->assertSame('My second element', $this->collection->second);
@@ -229,7 +229,7 @@ class CollectionTest extends TestCase
 		$this->assertNull($this->collection->get('fourth'));
 	}
 
-	public function testGettersCaseSensitive()
+	public function testGettersCaseSensitive(): void
 	{
 		$collection = new Collection($this->sampleData, true);
 
@@ -237,7 +237,7 @@ class CollectionTest extends TestCase
 		$this->assertNull($collection->get('FIRst'));
 	}
 
-	public function testGroup()
+	public function testGroup(): void
 	{
 		$collection = new Collection();
 
@@ -269,7 +269,7 @@ class CollectionTest extends TestCase
 		$this->assertCount(1, $groups->client());
 	}
 
-	public function testGroupWithInvalidKey()
+	public function testGroupWithInvalidKey(): void
 	{
 		$collection = new Collection(['a' => 'A']);
 
@@ -279,7 +279,7 @@ class CollectionTest extends TestCase
 		$collection->group(fn ($item) => false);
 	}
 
-	public function testGroupArray()
+	public function testGroupArray(): void
 	{
 		$collection = new Collection(['a' => 'A']);
 
@@ -289,7 +289,7 @@ class CollectionTest extends TestCase
 		$collection->group(fn ($item) => ['a' => 'b']);
 	}
 
-	public function testGroupObject()
+	public function testGroupObject(): void
 	{
 		$collection = new Collection(['a' => 'A']);
 
@@ -299,7 +299,7 @@ class CollectionTest extends TestCase
 		$collection->group(fn ($item) => new Obj(['a' => 'b']));
 	}
 
-	public function testGroupStringObject()
+	public function testGroupStringObject(): void
 	{
 		$collection = new Collection();
 
@@ -326,7 +326,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('peter', $firstAdmin['username']);
 	}
 
-	public function testGroupBy()
+	public function testGroupBy(): void
 	{
 		$collection = new Collection();
 
@@ -354,7 +354,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('peter', $firstAdmin['username']);
 	}
 
-	public function testGroupByWithInvalidKey()
+	public function testGroupByWithInvalidKey(): void
 	{
 		$collection = new Collection(['a' => 'A']);
 
@@ -364,7 +364,7 @@ class CollectionTest extends TestCase
 		$collection->group(1);
 	}
 
-	public function testIndexOf()
+	public function testIndexOf(): void
 	{
 		$this->assertSame(1, $this->collection->indexOf('My second element'));
 	}
@@ -414,7 +414,7 @@ class CollectionTest extends TestCase
 		$this->assertSame($d, $result->first());
 	}
 
-	public function testIntersects()
+	public function testIntersects(): void
 	{
 		$collection1 = new Collection([
 			'a' => $a = new StringObject('a'),
@@ -446,7 +446,7 @@ class CollectionTest extends TestCase
 		$this->assertTrue($collection3->intersects($collection2));
 	}
 
-	public function testIsEmpty()
+	public function testIsEmpty(): void
 	{
 		$collection = new Collection([
 			['name'  => 'Bastian'],
@@ -457,7 +457,7 @@ class CollectionTest extends TestCase
 		$this->assertFalse($collection->isEmpty());
 	}
 
-	public function testIsEven()
+	public function testIsEven(): void
 	{
 		$collection = new Collection(['a' => 'a']);
 		$this->assertFalse($collection->isEven());
@@ -466,7 +466,7 @@ class CollectionTest extends TestCase
 		$this->assertTrue($collection->isEven());
 	}
 
-	public function testIsNotEmpty()
+	public function testIsNotEmpty(): void
 	{
 		$collection = new Collection([]);
 
@@ -474,7 +474,7 @@ class CollectionTest extends TestCase
 		$this->assertFalse($collection->isNotEmpty());
 	}
 
-	public function testIsOdd()
+	public function testIsOdd(): void
 	{
 		$collection = new Collection(['a' => 'a']);
 		$this->assertTrue($collection->isOdd());
@@ -483,42 +483,42 @@ class CollectionTest extends TestCase
 		$this->assertFalse($collection->isOdd());
 	}
 
-	public function testIsset()
+	public function testIsset(): void
 	{
 		$this->assertTrue(isset($this->collection->first));
 		$this->assertFalse(isset($this->collection->super));
 	}
 
-	public function testKeyOf()
+	public function testKeyOf(): void
 	{
 		$this->assertSame('second', $this->collection->keyOf('My second element'));
 	}
 
-	public function testKeys()
+	public function testKeys(): void
 	{
 		$this->assertSame(['first', 'second', 'third'], $this->collection->keys());
 	}
 
-	public function testLast()
+	public function testLast(): void
 	{
 		$this->assertSame('My third element', $this->collection->last());
 	}
 
-	public function testMap()
+	public function testMap(): void
 	{
 		$collection = new Collection(['a' => 1, 'b' => 2]);
 		$collection->map(fn ($item) => $item * 2);
 		$this->assertSame(['a' => 2, 'b' => 4], $collection->data());
 	}
 
-	public function testNextAndPrev()
+	public function testNextAndPrev(): void
 	{
 		$this->assertSame('My second element', $this->collection->next());
 		$this->assertSame('My third element', $this->collection->next());
 		$this->assertSame('My second element', $this->collection->prev());
 	}
 
-	public function testNotAndWithout()
+	public function testNotAndWithout(): void
 	{
 		// remove elements
 		$this->assertSame('My second element', $this->collection->not('first')->first());
@@ -533,7 +533,7 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
-	public function testNth()
+	public function testNth(): void
 	{
 		$this->assertSame('My first element', $this->collection->nth(0));
 		$this->assertSame('My second element', $this->collection->nth(1));
@@ -541,7 +541,7 @@ class CollectionTest extends TestCase
 		$this->assertNull($this->collection->nth(3));
 	}
 
-	public function testOffsetAndLimit()
+	public function testOffsetAndLimit(): void
 	{
 		$this->assertSame(array_slice($this->sampleData, 1), $this->collection->offset(1)->toArray());
 		$this->assertSame(array_slice($this->sampleData, 0, 1), $this->collection->limit(1)->toArray());
@@ -549,7 +549,7 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
-	public function testPrepend()
+	public function testPrepend(): void
 	{
 		// simple
 		$collection = new Collection(['b', 'c']);
@@ -573,7 +573,7 @@ class CollectionTest extends TestCase
 		$this->assertSame(['A', 'B', 'C'], $collection->values());
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$collection = new Collection([
 			'one'   => 'eins',
@@ -592,7 +592,7 @@ class CollectionTest extends TestCase
 		])->toArray());
 	}
 
-	public function testQueryPaginate()
+	public function testQueryPaginate(): void
 	{
 		$collection = new Collection([
 			'one'   => 'eins',
@@ -612,7 +612,7 @@ class CollectionTest extends TestCase
 		])->toArray());
 	}
 
-	public function testQueryFilter()
+	public function testQueryFilter(): void
 	{
 		$collection = new Collection([
 			[
@@ -641,7 +641,7 @@ class CollectionTest extends TestCase
 		])->toArray());
 	}
 
-	public function testQuerySortBy()
+	public function testQuerySortBy(): void
 	{
 		$collection = new Collection([
 			[
@@ -662,7 +662,7 @@ class CollectionTest extends TestCase
 		])->first()['name']);
 	}
 
-	public function testQuerySortByComma()
+	public function testQuerySortByComma(): void
 	{
 		$collection = new Collection([
 			'one'   => ['key' => 'erei', 'value' => 'arsz'],
@@ -681,7 +681,7 @@ class CollectionTest extends TestCase
 		], array_keys($results));
 	}
 
-	public function testRandom()
+	public function testRandom(): void
 	{
 		$collection = new Collection([
 			'one' => 'eins',
@@ -708,7 +708,7 @@ class CollectionTest extends TestCase
 		}
 	}
 
-	public function testRemoveMultiple()
+	public function testRemoveMultiple(): void
 	{
 		$collection = new Collection();
 
@@ -725,7 +725,7 @@ class CollectionTest extends TestCase
 		$this->assertCount(0, $collection);
 	}
 
-	public function testSetters()
+	public function testSetters(): void
 	{
 		$this->collection->fourth = 'My fourth element';
 		$this->collection->fifth  = 'My fifth element';
@@ -740,13 +740,13 @@ class CollectionTest extends TestCase
 		$this->assertSame('My fifth element', $this->collection->get('fifth'));
 	}
 
-	public function testShuffle()
+	public function testShuffle(): void
 	{
 		$this->assertInstanceOf(Collection::class, $this->collection->shuffle());
 		$this->assertIsUntouched();
 	}
 
-	public function testSlice()
+	public function testSlice(): void
 	{
 		$this->assertSame(array_slice($this->sampleData, 1), $this->collection->slice(1)->toArray());
 		$this->assertCount(2, $this->collection->slice(1));
@@ -755,7 +755,7 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		// associative
 		$collection = new Collection($input = ['a' => 'value A', 'b' => 'value B']);
@@ -770,7 +770,7 @@ class CollectionTest extends TestCase
 		$this->assertSame(['a' => 2, 'b' => 4], $collection->toArray(fn ($item) => $item * 2));
 	}
 
-	public function testToJson()
+	public function testToJson(): void
 	{
 		// associative
 		$collection = new Collection(['a' => 'value A', 'b' => 'value B']);
@@ -781,7 +781,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('["a","b","c"]', $collection->toJson());
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		// associative
 		$collection = new Collection(['a' => 'value A', 'b' => 'value B']);
@@ -792,7 +792,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('0<br />1<br />2', $collection->toString());
 	}
 
-	public function testValues()
+	public function testValues(): void
 	{
 		$this->assertSame([
 			'My first element',
@@ -801,7 +801,7 @@ class CollectionTest extends TestCase
 		], $this->collection->values());
 	}
 
-	public function testValuesMap()
+	public function testValuesMap(): void
 	{
 		$values = $this->collection->values(
 			fn ($item) => Str::after($item, 'My ')
@@ -814,7 +814,7 @@ class CollectionTest extends TestCase
 		], $values);
 	}
 
-	public function testWhen()
+	public function testWhen(): void
 	{
 		$collection = new Collection([
 			[

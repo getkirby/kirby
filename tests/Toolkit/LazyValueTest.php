@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LazyValue::class)]
 class LazyValueTest extends TestCase
 {
-	public function testValue()
+	public function testValue(): void
 	{
 		$expected = 'test';
 		$value    = new LazyValue(fn () => $expected);
@@ -19,7 +19,7 @@ class LazyValueTest extends TestCase
 		$this->assertSame($expected, $value->resolve());
 	}
 
-	public function testUnwrap()
+	public function testUnwrap(): void
 	{
 		$value = LazyValue::unwrap($expected = 'a');
 		$this->assertSame($expected, $value);

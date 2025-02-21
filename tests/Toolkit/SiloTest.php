@@ -13,13 +13,13 @@ class SiloTest extends TestCase
 		Silo::$data = [];
 	}
 
-	public function testSetAndGet()
+	public function testSetAndGet(): void
 	{
 		Silo::set('foo', 'bar');
 		$this->assertSame('bar', Silo::get('foo'));
 	}
 
-	public function testSetArray()
+	public function testSetArray(): void
 	{
 		Silo::set([
 			'a' => 'A',
@@ -29,7 +29,7 @@ class SiloTest extends TestCase
 		$this->assertSame(['a' => 'A', 'b' => 'B'], Silo::get());
 	}
 
-	public function testGetArray()
+	public function testGetArray(): void
 	{
 		Silo::set('a', 'A');
 		Silo::set('b', 'B');
@@ -37,7 +37,7 @@ class SiloTest extends TestCase
 		$this->assertSame(['a' => 'A', 'b' => 'B'], Silo::get());
 	}
 
-	public function testRemoveByKey()
+	public function testRemoveByKey(): void
 	{
 		Silo::set('a', 'A');
 		$this->assertSame('A', Silo::get('a'));
@@ -45,7 +45,7 @@ class SiloTest extends TestCase
 		$this->assertNull(Silo::get('a'));
 	}
 
-	public function testRemoveAll()
+	public function testRemoveAll(): void
 	{
 		Silo::set('a', 'A');
 		Silo::set('b', 'B');

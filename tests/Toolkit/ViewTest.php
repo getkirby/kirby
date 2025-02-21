@@ -11,12 +11,12 @@ class ViewTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/view';
 
-	protected function view(array $data = [])
+	protected function view(array $data = []): View
 	{
 		return new View(static::FIXTURES . '/view.php', $data);
 	}
 
-	public function testData()
+	public function testData(): void
 	{
 		$view = $this->view();
 		$this->assertSame([], $view->data());
@@ -25,7 +25,7 @@ class ViewTest extends TestCase
 		$this->assertSame(['test'], $view->data());
 	}
 
-	public function testExists()
+	public function testExists(): void
 	{
 		$view = $this->view();
 		$this->assertTrue($view->exists());
@@ -34,19 +34,19 @@ class ViewTest extends TestCase
 		$this->assertFalse($view->exists());
 	}
 
-	public function testFile()
+	public function testFile(): void
 	{
 		$view = $this->view();
 		$this->assertSame(static::FIXTURES . '/view.php', $view->file());
 	}
 
-	public function testRender()
+	public function testRender(): void
 	{
 		$view = $this->view(['name' => 'Homer']);
 		$this->assertSame('Hello Homer', $view->render());
 	}
 
-	public function testRenderWithMissingFile()
+	public function testRenderWithMissingFile(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The view does not exist: invalid-file.php');
@@ -55,7 +55,7 @@ class ViewTest extends TestCase
 		$view->render();
 	}
 
-	public function testRenderWithException()
+	public function testRenderWithException(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('View exception');
@@ -64,7 +64,7 @@ class ViewTest extends TestCase
 		$view->render();
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		$view = $this->view(['name' => 'Tester']);
 		$this->assertSame('Hello Tester', $view->toString());
