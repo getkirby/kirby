@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\VersionId;
+use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -104,8 +105,16 @@ class FileActionsTest extends TestCase
 	{
 		// create an empty dummy file
 		F::write($file->root(), '');
+
 		// ...and an empty content file for it
-		F::write($file->version(VersionId::latest())->contentFile('default'), '');
+		$content = $file->version('latest')->contentFile('default');
+
+		// We need to create a file with fields here
+		// otherwise, our plain text storage handler will
+		// remove the file on save
+		Data::write($content, [
+			'alt' => 'Test'
+		]);
 
 		$this->assertFileExists($file->root());
 		$this->assertFileExists($file->version(VersionId::latest())->contentFile('default'));
@@ -140,9 +149,21 @@ class FileActionsTest extends TestCase
 
 		// create an empty dummy file
 		F::write($file->root(), '');
+
 		// ...and empty content files for it
-		F::write($file->version(VersionId::latest())->contentFile('en'), '');
-		F::write($file->version(VersionId::latest())->contentFile('de'), '');
+		$contentEn = $file->version('latest')->contentFile('en');
+		$contentDe = $file->version('latest')->contentFile('de');
+
+		// We need to create files with fields here
+		// otherwise, our plain text storage handler will
+		// remove the file on save
+		Data::write($contentEn, [
+			'alt' => 'Test EN'
+		]);
+
+		Data::write($contentDe, [
+			'alt' => 'Test DE'
+		]);
 
 		$this->assertFileExists($file->root());
 		$this->assertFileExists($file->version(VersionId::latest())->contentFile('en'));
