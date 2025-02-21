@@ -83,6 +83,38 @@ class VersionTest extends TestCase
 
 	/**
 	 * @covers ::content
+	 */
+	public function testContentWithNullValues(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$version->save($contentEN = [
+			'title'    => 'Title EN',
+			'subtitle' => 'Subtitle EN'
+		], 'en');
+
+		$version->save($contentDE = [
+			'title'    => null,
+			'subtitle' => 'Subtitle DE'
+		], 'de');
+
+		$expectedContentEN = $contentEN;
+		$expectedContentDE = [
+			'title'    => $contentEN['title'],
+			'subtitle' => $contentDE['subtitle']
+		];
+
+		$this->assertSame($expectedContentEN, $version->content('en')->toArray());
+		$this->assertSame($expectedContentDE, $version->content('de')->toArray());
+	}
+
+	/**
+	 * @covers ::content
 	 * @covers ::prepareFieldsForContent
 	 */
 	public function testContentPrepareFields(): void
@@ -1071,6 +1103,51 @@ class VersionTest extends TestCase
 		$this->expectExceptionMessage('Invalid language: fr');
 
 		$version->read('fr');
+	}
+
+	public function testReadWithNullValuesMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$version->save($contentEN = [
+			'title'    => 'Title EN',
+			'subtitle' => 'Subtitle EN'
+		], 'en');
+
+		$version->save([
+			'title'    => null,
+			'subtitle' => 'Subtitle DE'
+		], 'de');
+
+
+		$this->assertSame($contentEN, $version->read('en'));
+		$this->assertSame(['subtitle' => 'Subtitle DE'], $version->read('de'));
+	}
+
+	public function testReadWithNullValuesSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$version->save([
+			'title' => null,
+			'subtitle' => 'Test'
+		]);
+
+		$expected = [
+			'subtitle' => 'Test'
+		];
+
+		$this->assertSame($expected, $version->read());
 	}
 
 	/**
