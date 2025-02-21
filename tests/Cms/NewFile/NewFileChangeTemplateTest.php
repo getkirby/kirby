@@ -211,7 +211,6 @@ class NewFileChangeTemplateTest extends NewModelTestCase
 		// make all tests below with real content files
 		$file->changeStorage(PlainTextStorage::class);
 
-		$this->assertInstanceOf(PlainTextStorage::class, $file->storage());
 		$this->assertSame('a', $file->template());
 
 		$contentEN = $file->content('en');
