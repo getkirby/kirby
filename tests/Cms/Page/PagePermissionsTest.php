@@ -2,24 +2,30 @@
 
 namespace Kirby\Cms;
 
+
 use Kirby\Exception\LogicException;
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
-/**
- * @coversDefaultClass \Kirby\Cms\PagePermissions
- */
-class PagePermissionsTest extends TestCase
+#[CoversClass(Page::class)]
+class PagePermissionsTest extends NewModelTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PagePermissions';
+
 	public function setUp(): void
 	{
+		parent::setUp();
+
 		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
 			],
 			'users' => [
-				['id' => 'bastian', 'role' => 'admin']
-			]
+				['id' => 'admin', 'role' => 'admin'],
+				['id' => 'editor', 'role' => 'editor']
+			],
 		]);
 	}
 
@@ -48,13 +54,10 @@ class PagePermissionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithAdmin($action)
+	#[DataProvider('actionProvider')]
+	public function testWithAdmin(string $action): void
 	{
-		$this->app->impersonate('bastian');
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -64,13 +67,10 @@ class PagePermissionsTest extends TestCase
 		$this->assertTrue($page->permissions()->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithAdminButDisabledOption($action)
+	#[DataProvider('actionProvider')]
+	public function testWithAdminButDisabledOption(string $action): void
 	{
-		$this->app->impersonate('bastian');
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -86,22 +86,10 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse($page->permissions()->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithEditorAndPositiveWildcard($action)
+	#[DataProvider('actionProvider')]
+	public function testWithEditorAndPositiveWildcard(string $action): void
 	{
-		$app = $this->app->clone([
-			'roles' => [
-				['name' => 'editor']
-			],
-			'users' => [
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			]
-		]);
-
-		$app->impersonate('editor@getkirby.com');
+		$this->app->impersonate('editor');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -119,22 +107,10 @@ class PagePermissionsTest extends TestCase
 		$this->assertTrue($page->permissions()->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithEditorAndPositivePermission($action)
+	#[DataProvider('actionProvider')]
+	public function testWithEditorAndPositivePermission(string $action): void
 	{
-		$app = $this->app->clone([
-			'roles' => [
-				['name' => 'editor']
-			],
-			'users' => [
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			]
-		]);
-
-		$app->impersonate('editor@getkirby.com');
+		$this->app->impersonate('editor');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -153,22 +129,10 @@ class PagePermissionsTest extends TestCase
 		$this->assertTrue($page->permissions()->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithEditorAndNegativeWildcard($action)
+	#[DataProvider('actionProvider')]
+	public function testWithEditorAndNegativeWildcard(string $action): void
 	{
-		$app = $this->app->clone([
-			'roles' => [
-				['name' => 'editor']
-			],
-			'users' => [
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			]
-		]);
-
-		$app->impersonate('editor@getkirby.com');
+		$this->app->impersonate('editor');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -186,22 +150,10 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse($page->permissions()->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithEditorAndNegativePermission($action)
+	#[DataProvider('actionProvider')]
+	public function testWithEditorAndNegativePermission(string $action): void
 	{
-		$app = $this->app->clone([
-			'roles' => [
-				['name' => 'editor']
-			],
-			'users' => [
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			]
-		]);
-
-		$app->impersonate('editor@getkirby.com');
+		$this->app->impersonate('editor');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -220,13 +172,11 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse($page->permissions()->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithAdminAndNegativeOptionForOtherRole($action)
-	{
-		$this->app->impersonate('bastian');
+	#[DataProvider('actionProvider')]
+	public function testWithAdminAndNegativeOptionForOtherRole(
+		string $action
+	): void {
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -244,13 +194,11 @@ class PagePermissionsTest extends TestCase
 		$this->assertTrue($page->permissions()->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithAdminAndNegativeOptionForOtherRoleAndNegativeFallback($action)
-	{
-		$this->app->impersonate('bastian');
+	#[DataProvider('actionProvider')]
+	public function testWithAdminAndNegativeOptionForOtherRoleAndNegativeFallback(
+		string $action
+	): void {
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -269,11 +217,8 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse($page->permissions()->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithNobody($action)
+	#[DataProvider('actionProvider')]
+	public function testWithNobody(string $action): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$perms = $page->permissions();
@@ -281,12 +226,9 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
-	 */
-	public function testCanFromCache()
+	public function testCanFromCache(): void
 	{
-		$this->app->impersonate('bastian');
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug'      => 'test',
@@ -307,10 +249,7 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse(PagePermissions::canFromCache($page, 'list'));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
-	 */
-	public function testCanFromCacheDynamic()
+	public function testCanFromCacheDynamic(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
@@ -324,12 +263,9 @@ class PagePermissionsTest extends TestCase
 		PagePermissions::canFromCache($page, 'changeTemplate');
 	}
 
-	/**
-	 * @covers ::canChangeTemplate
-	 */
-	public function testCannotChangeTemplate()
+	public function testCannotChangeTemplate(): void
 	{
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -338,15 +274,9 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse($page->permissions()->can('changeTemplate'));
 	}
 
-	/**
-	 * @covers ::canChangeTemplate
-	 */
-	public function testCanChangeTemplate()
+	public function testCanChangeTemplate(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/a' => [
 					'title' => 'A'
@@ -357,7 +287,7 @@ class PagePermissionsTest extends TestCase
 			]
 		]);
 
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -374,15 +304,9 @@ class PagePermissionsTest extends TestCase
 		$this->assertTrue($page->permissions()->can('changeTemplate'));
 	}
 
-	/**
-	 * @covers ::canChangeTemplate
-	 */
-	public function testCanChangeTemplateHomeError()
+	public function testCanChangeTemplateHomeError(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$this->app = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -419,7 +343,7 @@ class PagePermissionsTest extends TestCase
 			]
 		]);
 
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('admin');
 		$home  = $this->app->site()->find('home');
 		$error = $this->app->site()->find('error');
 
@@ -427,12 +351,9 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse($error->permissions()->can('changeTemplate'));
 	}
 
-	/**
-	 * @covers ::canSort
-	 */
-	public function testCanSortListedPages()
+	public function testCanSortListedPages(): void
 	{
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -442,12 +363,9 @@ class PagePermissionsTest extends TestCase
 		$this->assertTrue($page->permissions()->can('sort'));
 	}
 
-	/**
-	 * @covers ::can
-	 */
-	public function testCanNotFoundDefault()
+	public function testCanNotFoundDefault(): void
 	{
-		$this->app->impersonate('bastian');
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -458,12 +376,9 @@ class PagePermissionsTest extends TestCase
 		$this->assertTrue($page->permissions()->can('foo', true));
 	}
 
-	/**
-	 * @covers ::canSort
-	 */
-	public function testCannotSortUnlistedPages()
+	public function testCannotSortUnlistedPages(): void
 	{
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test'
@@ -472,12 +387,9 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse($page->permissions()->can('sort'));
 	}
 
-	/**
-	 * @covers ::canSort
-	 */
-	public function testCannotSortErrorPage()
+	public function testCannotSortErrorPage(): void
 	{
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('admin');
 
 		$site = new Site([
 			'children' => [
@@ -493,12 +405,9 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse($page->permissions()->can('sort'));
 	}
 
-	/**
-	 * @covers ::canSort
-	 */
-	public function testCannotSortPagesWithSortMode()
+	public function testCannotSortPagesWithSortMode(): void
 	{
-		$this->app->impersonate('kirby');
+		$this->app->impersonate('admin');
 
 		// sort mode: zero
 		$page = new Page([
@@ -534,12 +443,9 @@ class PagePermissionsTest extends TestCase
 		$this->assertFalse($page->permissions()->can('sort'));
 	}
 
-	/**
-	 * @covers ::cannot
-	 */
-	public function testCannotNotFoundDefault()
+	public function testCannotNotFoundDefault(): void
 	{
-		$this->app->impersonate('bastian');
+		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test',

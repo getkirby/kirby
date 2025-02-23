@@ -2,21 +2,17 @@
 
 namespace Kirby\Cms;
 
-class FileVersionTest extends TestCase
+
+
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(FileVersion::class)]
+class FileVersionTest extends NewModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileVersion';
 
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-		]);
-	}
-
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -46,7 +42,7 @@ class FileVersionTest extends TestCase
 		$this->assertSame($original->kirby(), $version->kirby());
 	}
 
-	public function testExists()
+	public function testExists(): void
 	{
 		$page = new Page([
 			'root' => static::FIXTURES,
@@ -76,7 +72,7 @@ class FileVersionTest extends TestCase
 		$this->assertTrue($version->exists());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -99,7 +95,7 @@ class FileVersionTest extends TestCase
 		$this->assertSame(1192, $version->toArray()['size']);
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		$page = new Page([
 			'slug' => 'test'

@@ -2,38 +2,64 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\F;
 
-class UserAuthTest extends TestCase
+use Kirby\Exception\PermissionException;
+use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(User::class)]
+class UserAuthTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserAuth';
 
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index'    => '/dev/null',
-				'accounts' => static::TMP . '/accounts',
-				'sessions' => static::TMP . '/sessions'
-			],
+		parent::setUp();
+
+		$this->app = $this->app->clone([
 			'users' => [
 				[
 					'email' => 'test@getkirby.com',
 					'id'    => 'testuser',
 					'role'  => 'admin'
 				]
-			]
+			],
 		]);
 	}
 
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
-		Dir::remove(static::TMP);
-		App::destroy();
+		parent::tearDown();
 	}
 
-	public function testGlobalUserState()
+	public function testIsLoggedIn(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'a@getkirby.com'],
+				['email' => 'b@getkirby.com']
+			],
+		]);
+
+		$a = $this->app->user('a@getkirby.com');
+		$b = $this->app->user('b@getkirby.com');
+
+		$this->assertFalse($a->isLoggedIn());
+		$this->assertFalse($b->isLoggedIn());
+
+		$this->app->impersonate('a@getkirby.com');
+
+		$this->assertTrue($a->isLoggedIn());
+		$this->assertFalse($b->isLoggedIn());
+
+		$this->app->impersonate('b@getkirby.com');
+
+		$this->assertFalse($a->isLoggedIn());
+		$this->assertTrue($b->isLoggedIn());
+	}
+
+	public function testLoginLogout(): void
 	{
 		$user = $this->app->user('test@getkirby.com');
 
@@ -44,12 +70,12 @@ class UserAuthTest extends TestCase
 		$this->assertNull($this->app->user());
 	}
 
-	public function testLoginLogoutHooks()
+	public function testLoginLogoutHooks(): void
 	{
-		$phpunit = $this;
-
 		$calls         = 0;
+		$phpunit       = $this;
 		$logoutSession = false;
+
 		$this->app = $this->app->clone([
 			'hooks' => [
 				'user.login:before' => function ($user, $session) use ($phpunit, &$calls) {
@@ -100,7 +126,14 @@ class UserAuthTest extends TestCase
 		$this->assertSame((1 + 2 + 4 + 8) * 2, $calls);
 	}
 
-	public function testSessionData()
+	public function testLoginPasswordlessKirby(): void
+	{
+		$user = new User(['id' => 'kirby']);
+		$this->expectException(PermissionException::class);
+		$user->loginPasswordless();
+	}
+
+	public function testSessionData(): void
 	{
 		$user    = $this->app->user('test@getkirby.com');
 		$session = $this->app->session();
@@ -112,9 +145,9 @@ class UserAuthTest extends TestCase
 		$this->assertSame([], $session->data()->get());
 	}
 
-	public function testSessionDataWithPassword()
+	public function testSessionDataWithPassword(): void
 	{
-		F::write(static::TMP . '/accounts/testuser/.htpasswd', 'a very secure hash');
+		F::write(static::TMP . '/site/accounts/testuser/.htpasswd', 'a very secure hash');
 
 		$user    = $this->app->user('test@getkirby.com');
 		$session = $this->app->session();

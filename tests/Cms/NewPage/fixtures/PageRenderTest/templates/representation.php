@@ -1,1 +1,0 @@
-<html>Some HTML: <?= $page->title() ?></html>

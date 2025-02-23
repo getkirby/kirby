@@ -1,1 +1,0 @@
-{"some json": "<?= $page->title() ?>"}

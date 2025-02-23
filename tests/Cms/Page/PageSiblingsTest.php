@@ -2,20 +2,15 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
 
-class PageSiblingsTest extends TestCase
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Page::class)]
+class PageSiblingsTest extends NewModelTestCase
 {
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-	}
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageSiblings';
 
-	protected function site($children = null)
+	public function site(array|null $children = null): Site
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -35,13 +30,13 @@ class PageSiblingsTest extends TestCase
 		];
 	}
 
-	public function testDefaultSiblings()
+	public function testDefaultSiblings(): void
 	{
 		$page = new Page(['slug' => 'test']);
 		$this->assertInstanceOf(Pages::class, $page->siblings());
 	}
 
-	public function testHasNext()
+	public function testHasNext(): void
 	{
 		$children = $this->site()->children();
 
@@ -49,7 +44,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertFalse($children->last()->hasNext());
 	}
 
-	public function testHasNextCustomCollection()
+	public function testHasNextCustomCollection(): void
 	{
 		$children = $this->site()->children();
 		$page = $children->first();
@@ -58,7 +53,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertFalse($page->hasNext($children->flip()));
 	}
 
-	public function testHasNextListed()
+	public function testHasNextListed(): void
 	{
 		$site = $this->site([
 			['slug' => 'unlisted-a'],
@@ -73,7 +68,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertFalse($collection->last()->hasNextListed());
 	}
 
-	public function testHasNextUnlisted()
+	public function testHasNextUnlisted(): void
 	{
 		$site = $this->site([
 			['slug' => 'listed-a', 'num' => 1],
@@ -88,7 +83,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertFalse($collection->last()->hasNextUnlisted());
 	}
 
-	public function testHasPrev()
+	public function testHasPrev(): void
 	{
 		$collection = $this->site()->children();
 
@@ -96,7 +91,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertFalse($collection->first()->hasPrev());
 	}
 
-	public function testHasPrevCustomCollection()
+	public function testHasPrevCustomCollection(): void
 	{
 		$children = $this->site()->children();
 		$page = $children->last();
@@ -105,7 +100,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertFalse($page->hasPrev($children->flip()));
 	}
 
-	public function testHasPrevListed()
+	public function testHasPrevListed(): void
 	{
 		$site = $this->site([
 			['slug' => 'listed-a', 'num' => 1],
@@ -120,7 +115,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertTrue($collection->last()->hasPrevListed());
 	}
 
-	public function testHasPrevUnlisted()
+	public function testHasPrevUnlisted(): void
 	{
 		$site = $this->site([
 			['slug' => 'unlisted-a'],
@@ -135,7 +130,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertTrue($collection->last()->hasPrevUnlisted());
 	}
 
-	public function testIndexOf()
+	public function testIndexOf(): void
 	{
 		$collection = $this->site()->children();
 
@@ -144,7 +139,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertSame(2, $collection->last()->indexOf());
 	}
 
-	public function testIndexOfCustomCollection()
+	public function testIndexOfCustomCollection(): void
 	{
 		$collection = $this->site()->children();
 		$page = $collection->first();
@@ -153,7 +148,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertSame(2, $page->indexOf($collection->flip()));
 	}
 
-	public function testIsFirst()
+	public function testIsFirst(): void
 	{
 		$collection = $this->site()->children();
 
@@ -161,7 +156,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertFalse($collection->last()->isFirst());
 	}
 
-	public function testIsLast()
+	public function testIsLast(): void
 	{
 		$collection = $this->site()->children();
 
@@ -169,7 +164,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertFalse($collection->first()->isLast());
 	}
 
-	public function testIsNth()
+	public function testIsNth(): void
 	{
 		$collection = $this->site()->children();
 
@@ -178,14 +173,14 @@ class PageSiblingsTest extends TestCase
 		$this->assertTrue($collection->last()->isNth($collection->count() - 1));
 	}
 
-	public function testNext()
+	public function testNext(): void
 	{
 		$collection = $this->site()->children();
 
 		$this->assertSame($collection->first()->next(), $collection->nth(1));
 	}
 
-	public function testNextAll()
+	public function testNextAll(): void
 	{
 		$collection = $this->site()->children();
 		$first      = $collection->first();
@@ -196,7 +191,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertSame($first->nextAll()->last(), $collection->nth(2));
 	}
 
-	public function testNextListed()
+	public function testNextListed(): void
 	{
 		$collection = $this->site([
 			['slug' => 'unlisted-a'],
@@ -208,7 +203,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertSame('listed-a', $collection->first()->nextListed()->slug());
 	}
 
-	public function testNextUnlisted()
+	public function testNextUnlisted(): void
 	{
 		$collection = $this->site([
 			['slug' => 'listed-a', 'num' => 1],
@@ -220,14 +215,14 @@ class PageSiblingsTest extends TestCase
 		$this->assertSame('unlisted-a', $collection->first()->nextUnlisted()->slug());
 	}
 
-	public function testPrev()
+	public function testPrev(): void
 	{
 		$collection = $this->site()->children();
 
 		$this->assertSame($collection->last()->prev(), $collection->nth(1));
 	}
 
-	public function testPrevAll()
+	public function testPrevAll(): void
 	{
 		$collection = $this->site()->children();
 		$last       = $collection->last();
@@ -238,7 +233,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertSame($last->prevAll()->last(), $collection->nth(1));
 	}
 
-	public function testPrevListed()
+	public function testPrevListed(): void
 	{
 		$collection = $this->site([
 			['slug' => 'listed-a', 'num' => 1],
@@ -250,7 +245,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertSame('listed-b', $collection->last()->prevListed()->slug());
 	}
 
-	public function testPrevUnlisted()
+	public function testPrevUnlisted(): void
 	{
 		$collection = $this->site([
 			['slug' => 'unlisted-a'],
@@ -262,7 +257,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertSame('unlisted-b', $collection->last()->prevUnlisted()->slug());
 	}
 
-	public function testSiblings()
+	public function testSiblings(): void
 	{
 		$site     = $this->site();
 		$page     = $site->children()->nth(1);
@@ -273,7 +268,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertEquals($siblings, $page->siblings(false)); // cannot use strict assertion (cloned object)
 	}
 
-	public function testDraftSiblings()
+	public function testDraftSiblings(): void
 	{
 		$parent = new Page([
 			'slug' => 'parent',
@@ -294,7 +289,7 @@ class PageSiblingsTest extends TestCase
 		$this->assertSame($drafts, $draft->siblings());
 	}
 
-	public function testTemplateSiblings()
+	public function testTemplateSiblings(): void
 	{
 		$site = $this->site([
 			[

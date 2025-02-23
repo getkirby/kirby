@@ -2,69 +2,27 @@
 
 namespace Kirby\Cms;
 
-class UserMethodsTest extends TestCase
+
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(User::class)]
+class UserMethodsTest extends NewModelTestCase
 {
-	public function setUp(): void
+	public const TMP = KIRBY_TMP_DIR . '/Cms.UserMethods';
+
+	public function testUserMethods(): void
 	{
-		// make sure field methods are loaded
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-	}
-
-	public function testId()
-	{
-		$user = new User([
-			'id'    => 'test',
-			'email' => 'user@domain.com'
-		]);
-		$this->assertSame('test', $user->id());
-	}
-
-	public function testLanguage()
-	{
-		$user = new User([
-			'email'    => 'user@domain.com',
-			'language' => 'en',
-		]);
-
-		$this->assertSame('en', $user->language());
-	}
-
-	public function testDefaultLanguage()
-	{
-		$user = new User([
-			'email' => 'user@domain.com',
-		]);
-
-		$this->assertSame('en', $user->language());
-	}
-
-	public function testRole()
-	{
-		$kirby = new App([
-			'roles' => [
-				['name' => 'editor', 'title' => 'Editor']
-			]
-		]);
+		User::$methods = [
+			'test' => fn () => 'homer'
+		];
 
 		$user = new User([
-			'email' => 'user@domain.com',
-			'role'  => 'editor',
-			'kirby' => $kirby
+			'email' => 'test@getkirby.com',
+			'name'  => 'Test User'
 		]);
 
-		$this->assertSame('editor', $user->role()->name());
-	}
+		$this->assertSame('homer', $user->test());
 
-	public function testDefaultRole()
-	{
-		$user = new User([
-			'email' => 'user@domain.com',
-		]);
-
-		$this->assertSame('nobody', $user->role()->name());
+		User::$methods = [];
 	}
 }

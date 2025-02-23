@@ -2,37 +2,24 @@
 
 namespace Kirby\Cms;
 
+
+
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class FileRulesTest extends TestCase
+#[CoversClass(FileRules::class)]
+class FileRulesTest extends NewModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileRules';
 
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove(static::TMP);
-	}
-
-	public function testChangeName()
+	public function testChangeName(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -48,7 +35,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeName($file, 'c');
 	}
 
-	public function testChangeNameWithEmptyInput()
+	public function testChangeNameWithEmptyInput(): void
 	{
 		$parent = new Page(['slug' => 'test']);
 		$file = new File(['filename' => 'test.jpg', 'parent' => $parent]);
@@ -59,7 +46,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeName($file, '');
 	}
 
-	public function testChangeNameWithoutPermissions()
+	public function testChangeNameWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
 		$permissions->method('can')->with('changeName')->willReturn(false);
@@ -74,7 +61,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeName($file, 'test');
 	}
 
-	public function testChangeSort()
+	public function testChangeSort(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -90,7 +77,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeSort($file, 1);
 	}
 
-	public function testChangeSortWithoutPermissions()
+	public function testChangeSortWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
 		$permissions->method('can')->with('sort')->willReturn(false);
@@ -105,7 +92,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeSort($file, 1);
 	}
 
-	public function testChangeToSameNameWithDifferentException()
+	public function testChangeToSameNameWithDifferentException(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -121,7 +108,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeName($file, 'b');
 	}
 
-	public function testChangeNameToExistingFile()
+	public function testChangeNameToExistingFile(): void
 	{
 		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A file with the name "b.jpg" already exists');
@@ -138,7 +125,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeName($file, 'b');
 	}
 
-	public function testChangeTemplate()
+	public function testChangeTemplate(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -177,7 +164,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeTemplate($file, 'b');
 	}
 
-	public function testChangeTemplateWithoutPermissions()
+	public function testChangeTemplateWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
 		$permissions->method('can')->with('changeTemplate')->willReturn(false);
@@ -192,7 +179,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeTemplate($file, 'test');
 	}
 
-	public function testChangeTemplateTooFewTemplates()
+	public function testChangeTemplateTooFewTemplates(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
 		$permissions->method('can')->with('changeTemplate')->willReturn(true);
@@ -208,7 +195,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeTemplate($file, 'c');
 	}
 
-	public function testChangeTemplateWithInvalidTemplateName()
+	public function testChangeTemplateWithInvalidTemplateName(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
 		$permissions->method('can')->with('changeTemplate')->willReturn(true);
@@ -226,7 +213,7 @@ class FileRulesTest extends TestCase
 		FileRules::changeTemplate($file, 'c');
 	}
 
-	public function testCreateExistingFile()
+	public function testCreateExistingFile(): void
 	{
 		$file = $this->createMock(File::class);
 		$file->method('filename')->willReturn('test.jpg');
@@ -242,14 +229,11 @@ class FileRulesTest extends TestCase
 		FileRules::create($file, $upload);
 	}
 
-	public function testCreateSameFile()
+	public function testCreateSameFile(): void
 	{
 		$testImage = static::FIXTURES . '/test.jpg';
 
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			],
+		$this->app = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -262,7 +246,7 @@ class FileRulesTest extends TestCase
 			]
 		]);
 
-		$page = $app->page('test');
+		$page = $this->app->page('test');
 
 		// create real file with content and move into page root
 		F::copy($testImage, $page->root() . '/test.jpg');
@@ -283,14 +267,11 @@ class FileRulesTest extends TestCase
 		FileRules::create($newFile, $upload);
 	}
 
-	public function testCreateSameFileWithDifferentTemplate()
+	public function testCreateSameFileWithDifferentTemplate(): void
 	{
 		$testImage = static::FIXTURES . '/test.jpg';
 
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			],
+		$this->app = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -303,7 +284,7 @@ class FileRulesTest extends TestCase
 			]
 		]);
 
-		$page = $app->page('test');
+		$page = $this->app->page('test');
 
 		// create real file with content and move into page root
 		F::copy($testImage, $page->root() . '/test.jpg');
@@ -324,14 +305,11 @@ class FileRulesTest extends TestCase
 		FileRules::create($newFile, $upload);
 	}
 
-	public function testCreateDifferentFileWithSameFilename()
+	public function testCreateDifferentFileWithSameFilename(): void
 	{
 		$testImage = static::FIXTURES . '/test.jpg';
 
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			],
+		$this->app = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -344,7 +322,7 @@ class FileRulesTest extends TestCase
 			]
 		]);
 
-		$page = $app->page('test');
+		$page = $this->app->page('test');
 
 		// create real file with content and move into page root
 		F::copy($testImage, $page->root() . '/test.jpg');
@@ -365,7 +343,7 @@ class FileRulesTest extends TestCase
 		FileRules::create($newFile, $upload);
 	}
 
-	public function testCreateHarmfulContents()
+	public function testCreateHarmfulContents(): void
 	{
 		$blueprint = $this->createMock(FileBlueprint::class);
 
@@ -390,7 +368,7 @@ class FileRulesTest extends TestCase
 		FileRules::create($file, $upload);
 	}
 
-	public function testCreateWithoutPermissions()
+	public function testCreateWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
 		$permissions->method('can')->with('create')->willReturn(false);
@@ -407,7 +385,7 @@ class FileRulesTest extends TestCase
 		FileRules::create($file, $upload);
 	}
 
-	public function testDeleteWithoutPermissions()
+	public function testDeleteWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
 		$permissions->method('can')->with('delete')->willReturn(false);
@@ -421,7 +399,7 @@ class FileRulesTest extends TestCase
 		FileRules::delete($file);
 	}
 
-	public function testReplaceWithoutPermissions()
+	public function testReplaceWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
 		$permissions->method('can')->with('replace')->willReturn(false);
@@ -437,7 +415,7 @@ class FileRulesTest extends TestCase
 		FileRules::replace($file, $upload);
 	}
 
-	public function testReplaceInvalidMimeExtension()
+	public function testReplaceInvalidMimeExtension(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
 		$permissions->method('can')->with('replace')->willReturn(true);
@@ -461,7 +439,7 @@ class FileRulesTest extends TestCase
 		FileRules::replace($file, $upload);
 	}
 
-	public function testReplaceHarmfulContents()
+	public function testReplaceHarmfulContents(): void
 	{
 		$blueprint = $this->createMock(FileBlueprint::class);
 
@@ -487,7 +465,7 @@ class FileRulesTest extends TestCase
 		FileRules::replace($file, $upload);
 	}
 
-	public function testUpdateWithoutPermissions()
+	public function testUpdateWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
 		$permissions->method('can')->with('update')->willReturn(false);
@@ -523,11 +501,12 @@ class FileRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider extensionProvider
-	 */
-	public function testValidExtension($extension, $expected, $message = null)
-	{
+	#[DataProvider('extensionProvider')]
+	public function testValidExtension(
+		string $extension,
+		bool $expected,
+		string|null $message = null
+	): void {
 		$file = $this->createMock(File::class);
 		$file->method('filename')->willReturn('test');
 
@@ -582,11 +561,14 @@ class FileRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
-	public function testValidFile($filename, $extension, $mime, $expected, $message = null)
-	{
+	#[DataProvider('fileProvider')]
+	public function testValidFile(
+		string $filename,
+		string $extension,
+		string $mime,
+		bool $expected,
+		string|null $message = null
+	): void {
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
 			->onlyMethods(['filename'])
@@ -606,7 +588,7 @@ class FileRulesTest extends TestCase
 		FileRules::validFile($file);
 	}
 
-	public function testValidFileSkipMime()
+	public function testValidFileSkipMime(): void
 	{
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
@@ -636,11 +618,12 @@ class FileRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider filenameProvider
-	 */
-	public function testValidFilename($filename, $expected, $message = null)
-	{
+	#[DataProvider('filenameProvider')]
+	public function testValidFilename(
+		string $filename,
+		bool $expected,
+		string|null $message = null
+	): void {
 		$file = $this->createMock(File::class);
 		$file->method('filename')->willReturn($filename);
 
@@ -666,11 +649,12 @@ class FileRulesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider mimeProvider
-	 */
-	public function testValidMime($mime, $expected, $message = null)
-	{
+	#[DataProvider('mimeProvider')]
+	public function testValidMime(
+		string $mime,
+		bool $expected,
+		string|null $message = null
+	): void {
 		$file = $this->createMock(File::class);
 		$file->method('filename')->willReturn('test');
 

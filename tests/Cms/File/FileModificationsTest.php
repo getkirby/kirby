@@ -5,16 +5,18 @@ namespace Kirby\Cms;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class FileModificationsTest extends TestCase
+#[CoversClass(FileModifications::class)]
+class FileModificationsTest extends NewModelTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.FileModifications';
+
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		parent::setUp();
+
+		$this->app = $this->app->clone([
 			'site' => [
 				'files' => [
 					['filename' => 'test.jpg']
@@ -23,7 +25,7 @@ class FileModificationsTest extends TestCase
 		]);
 	}
 
-	public function testThumb()
+	public function testThumb(): void
 	{
 		$input = [
 			'width'  => 300,
@@ -52,7 +54,7 @@ class FileModificationsTest extends TestCase
 		$file->thumb($input);
 	}
 
-	public function testThumbWithAssetObject()
+	public function testThumbWithAssetObject(): void
 	{
 		$app = $this->app->clone();
 		$asset = new Asset('');
@@ -63,7 +65,7 @@ class FileModificationsTest extends TestCase
 		$this->assertInstanceOf(Asset::class, $result);
 	}
 
-	public function testThumbWithDefaultPreset()
+	public function testThumbWithDefaultPreset(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -90,7 +92,7 @@ class FileModificationsTest extends TestCase
 		$file->thumb('default');
 	}
 
-	public function testThumbWithCustomPreset()
+	public function testThumbWithCustomPreset(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -116,7 +118,7 @@ class FileModificationsTest extends TestCase
 		$file->thumb('test');
 	}
 
-	public function testThumbWithInvalidReturnValue()
+	public function testThumbWithInvalidReturnValue(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -131,7 +133,7 @@ class FileModificationsTest extends TestCase
 		$file->thumb(['width' => 100]);
 	}
 
-	public function testThumbWithFormatOption()
+	public function testThumbWithFormatOption(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -149,7 +151,7 @@ class FileModificationsTest extends TestCase
 		$file->thumb(['width' => 100]);
 	}
 
-	public function testThumbWithFocusFromContent()
+	public function testThumbWithFocusFromContent(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -172,13 +174,13 @@ class FileModificationsTest extends TestCase
 		$file->thumb(['width' => 100, 'crop' => true]);
 	}
 
-	public function testThumbWithNoOptions()
+	public function testThumbWithNoOptions(): void
 	{
 		$file = $this->app->file('test.jpg');
 		$this->assertIsFile($file, $file->thumb([]));
 	}
 
-	public function testBlur()
+	public function testBlur(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -193,7 +195,7 @@ class FileModificationsTest extends TestCase
 		$file->blur(5);
 	}
 
-	public function testBw()
+	public function testBw(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -273,7 +275,7 @@ class FileModificationsTest extends TestCase
 	/**
 	 * @dataProvider cropOptionsProvider
 	 */
-	public function testCrop($args, $expected)
+	public function testCrop($args, $expected): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -288,7 +290,7 @@ class FileModificationsTest extends TestCase
 		$file->crop(...$args);
 	}
 
-	public function testQuality()
+	public function testQuality(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -303,7 +305,7 @@ class FileModificationsTest extends TestCase
 		$file->quality(10);
 	}
 
-	public function testResize()
+	public function testResize(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -322,7 +324,7 @@ class FileModificationsTest extends TestCase
 		$file->resize(100, 200, 10);
 	}
 
-	public function testSharpen()
+	public function testSharpen(): void
 	{
 		$app = $this->app->clone([
 			'components' => [
@@ -337,7 +339,7 @@ class FileModificationsTest extends TestCase
 		$file->sharpen();
 	}
 
-	public function testSharpenWithCustomValue()
+	public function testSharpenWithCustomValue(): void
 	{
 		$app = $this->app->clone([
 			'components' => [

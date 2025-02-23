@@ -1,1 +1,0 @@
-Data says <?= $test ?> and <?= $test2 ?? 'default' ?>!

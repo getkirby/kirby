@@ -2,16 +2,19 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
 
-class PagePickerTest extends TestCase
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Page::class)]
+class PagePickerTest extends NewModelTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PagePicker';
+
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		parent::setUp();
+
+		$this->app = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -34,7 +37,7 @@ class PagePickerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$picker = new PagePicker();
 
@@ -43,7 +46,7 @@ class PagePickerTest extends TestCase
 		$this->assertSame('grandmother', $picker->items()->first()->id());
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$picker = new PagePicker([
 			'parent' => 'grandmother'
@@ -54,7 +57,7 @@ class PagePickerTest extends TestCase
 		$this->assertSame('grandmother', $picker->model()->id());
 	}
 
-	public function testParentStart()
+	public function testParentStart(): void
 	{
 		$picker = new PagePicker([
 			'parent' => 'grandmother/mother'
@@ -63,7 +66,7 @@ class PagePickerTest extends TestCase
 		$this->assertSame($picker->start(), $this->app->site());
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$picker = new PagePicker([
 			'query' => 'site.find("grandmother/mother").children'
@@ -74,7 +77,7 @@ class PagePickerTest extends TestCase
 		$this->assertSame('grandmother/mother/child-c', $picker->items()->last()->id());
 	}
 
-	public function testQueryAndParent()
+	public function testQueryAndParent(): void
 	{
 		$picker = new PagePicker([
 			'query'  => 'site.find("grandmother").children',
@@ -86,7 +89,7 @@ class PagePickerTest extends TestCase
 		$this->assertSame('grandmother/mother/child-c', $picker->items()->last()->id());
 	}
 
-	public function testQueryStart()
+	public function testQueryStart(): void
 	{
 		$picker = new PagePicker([
 			'query'  => 'site.find("grandmother").children',

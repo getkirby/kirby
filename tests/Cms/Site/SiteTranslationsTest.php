@@ -2,149 +2,74 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
 
-class SiteTranslationsTest extends TestCase
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Site::class)]
+class SiteTranslationsTest extends NewModelTestCase
 {
-	public function app($language = null)
+	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteTranslations';
+
+	public function setUp(): void
 	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'languages' => [
+		parent::setUp();
+		$this->setUpMultiLanguage();
+	}
+
+	public function testContentInEnglish(): void
+	{
+		$site = new Site([
+			'translations' => [
 				[
-					'code'    => 'en',
-					'name'    => 'English',
-					'default' => true
+					'code' => 'en',
+					'content' => [
+						'title'        => 'Site',
+						'untranslated' => 'Untranslated'
+					]
 				],
 				[
-					'code'    => 'de',
-					'name'    => 'Deutsch'
-				]
-			],
-			'site' => [
-				'translations' => [
-					[
-						'code' => 'en',
-						'content' => [
-							'title' => 'Site',
-							'untranslated' => 'Untranslated'
-						]
-					],
-					[
-						'code' => 'de',
-						'content' => [
-							'title' => 'Seite',
-						]
-					],
-				]
+					'code' => 'de',
+					'content' => [
+						'title' => 'Seite',
+					]
+				],
 			]
 		]);
-
-		if ($language !== null) {
-			$app->setCurrentLanguage($language);
-			$app->setCurrentTranslation($language);
-		}
-
-		return $app;
-	}
-
-	public function site()
-	{
-		return $this->app()->site();
-	}
-
-	public function testUrl()
-	{
-		$site = $this->site();
-
-		$this->assertSame('/en', $site->url());
-		$this->assertSame('/de', $site->url('de'));
-
-		// non-existing language
-		$this->assertSame('/', $site->url('fr'));
-	}
-
-	public function testContentInEnglish()
-	{
-		$site = $this->site();
 		$this->assertSame('Site', $site->title()->value());
 		$this->assertSame('Untranslated', $site->untranslated()->value());
 	}
 
-	public function testContentInDeutsch()
+	public function testContentInDeutsch(): void
 	{
-		$site = $this->app('de')->site();
+		$site = new Site([
+			'translations' => [
+				[
+					'code' => 'en',
+					'content' => [
+						'title'        => 'Site',
+						'untranslated' => 'Untranslated'
+					]
+				],
+				[
+					'code' => 'de',
+					'content' => [
+						'title' => 'Seite',
+					]
+				],
+			]
+		]);
+
+		$this->app->setCurrentLanguage('de');
+		$this->app->setCurrentTranslation('de');
+
 		$this->assertSame('Seite', $site->title()->value());
 		$this->assertSame('Untranslated', $site->untranslated()->value());
 	}
 
-	public function testTranslations()
+	public function testTranslations(): void
 	{
-		$site = $this->site();
+		$site = new Site();
 		$this->assertCount(2, $site->translations());
 		$this->assertSame(['en', 'de'], $site->translations()->keys());
-	}
-
-	public static function visitProvider(): array
-	{
-		return [
-			['en', 'Site', 'English Test'],
-			['de', 'Seite', 'Deutsch Test']
-		];
-	}
-
-	/**
-	 * @dataProvider visitProvider
-	 */
-	public function testVisit($languageCode, $siteTitle, $pageTitle)
-	{
-		$app = $this->app()->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'translations' => [
-							[
-								'code' => 'en',
-								'content' => [
-									'title' => 'English Test'
-								],
-							],
-							[
-								'code' => 'de',
-								'content' => [
-									'title' => 'Deutsch Test'
-								],
-							]
-						]
-					]
-				],
-				'translations' => [
-					[
-						'code' => 'en',
-						'content' => [
-							'title' => 'Site',
-							'untranslated' => 'Untranslated'
-						]
-					],
-					[
-						'code' => 'de',
-						'content' => [
-							'title' => 'Seite',
-						]
-					],
-				]
-			]
-		]);
-
-		$site = $app->site();
-		$page = $site->visit('test', $languageCode);
-
-		$this->assertSame($languageCode, $app->language()->code());
-		$this->assertSame('test', $page->slug());
-		$this->assertSame($siteTitle, $site->title()->value());
-		$this->assertSame($pageTitle, $page->title()->value());
 	}
 }

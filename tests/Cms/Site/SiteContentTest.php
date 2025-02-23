@@ -2,32 +2,33 @@
 
 namespace Kirby\Cms;
 
+
 use Kirby\Content\Content;
+use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
-class SiteContentTest extends TestCase
+#[CoversClass(Site::class)]
+class SiteContentTest extends NewModelTestCase
 {
-	public function testDefaultContent()
-	{
-		$site = new Site();
-		$this->assertInstanceOf(Content::class, $site->content());
-	}
+	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteContent';
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$content = [
-			'text' => 'lorem ipsum'
+			'title' => 'Maegazine',
+			'text'  => 'lorem ipsum'
 		];
 
 		$site = new Site([
 			'content' => $content
 		]);
 
+		$this->assertInstanceOf(Content::class, $site->content());
 		$this->assertSame($content, $site->content()->toArray());
 		$this->assertSame('lorem ipsum', $site->text()->value());
 	}
 
-	public function testInvalidContent()
+	public function testInvalidContent(): void
 	{
 		$this->expectException(TypeError::class);
 		new Site(['content' => 'content']);

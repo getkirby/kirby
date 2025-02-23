@@ -2,25 +2,17 @@
 
 namespace Kirby\Cms;
 
-class PageStatesTest extends TestCase
+
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Page::class)]
+class PageStatesTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageStates';
 
-	/**
-	 * Deregister any plugins for the page
-	 */
-	public function setUp(): void
+	public function family(): Site
 	{
-		new App([
-			'roots' => [
-				'index' => static::TMP
-			]
-		]);
-	}
-
-	public function family()
-	{
-		$app = new App([
+		$this->app = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -40,37 +32,30 @@ class PageStatesTest extends TestCase
 			]
 		]);
 
-		return $app->site();
+		return $this->app->site();
 	}
 
-	public function testIs()
+	public function testIsActive(): void
 	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'site' => [
-				'children' => [
-					['slug' => 'a'],
-					['slug' => 'b'],
-				]
-			]
-		]);
+		$family  = $this->family();
+		$mother = $family->find('grandma/mother');
+		$child  = $family->find('grandma/mother/child');
 
-		$a = $app->page('a');
-		$b = $app->page('b');
-		$site = $app->site();
+		$this->assertFalse($mother->isActive());
+		$this->assertFalse($child->isActive());
 
-		$this->assertTrue($a->is($a));
-		$this->assertTrue($a->is('a'));
+		$family->visit('grandma/mother');
 
-		$this->assertFalse($a->is($b));
-		$this->assertFalse($a->is('b'));
-		$this->assertFalse($a->is($site));
-		$this->assertFalse($a->is('does/not/exist'));
+		$this->assertTrue($mother->isActive());
+		$this->assertFalse($child->isActive());
+
+		$family->visit('grandma/mother/child');
+
+		$this->assertFalse($mother->isActive());
+		$this->assertTrue($child->isActive());
 	}
 
-	public function testIsAncestorOf()
+	public function testIsAncestorOf(): void
 	{
 		$family  = $this->family();
 		$grandma = $family->find('grandma');
@@ -81,7 +66,7 @@ class PageStatesTest extends TestCase
 		$this->assertTrue($grandma->isAncestorOf($child));
 	}
 
-	public function testIsChildOf()
+	public function testIsChildOf(): void
 	{
 		$family  = $this->family();
 		$grandma = $family->find('grandma');
@@ -97,7 +82,7 @@ class PageStatesTest extends TestCase
 		$this->assertFalse($child->isChildOf(null));
 	}
 
-	public function testIsDescendantOf()
+	public function testIsDescendantOf(): void
 	{
 		$family  = $this->family();
 		$grandma = $family->find('grandma');
@@ -111,7 +96,7 @@ class PageStatesTest extends TestCase
 		$this->assertFalse($child->isDescendantOf('does/not/exist'));
 	}
 
-	public function testIsDescendantOfActive()
+	public function testIsDescendantOfActive(): void
 	{
 		$family  = $this->family();
 		$grandma = $family->find('grandma');
@@ -125,143 +110,24 @@ class PageStatesTest extends TestCase
 		$this->assertTrue($child->isDescendantOfActive());
 	}
 
-	public function testIsListed()
+	public function testIsOpen(): void
 	{
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1
-		]);
-
-		$this->assertTrue($page->isListed());
-
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$this->assertFalse($page->isListed());
-	}
-
-	public function testIsUnlisted()
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$this->assertTrue($page->isUnlisted());
-
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1
-		]);
-
-		$this->assertFalse($page->isUnlisted());
-	}
-
-	public function testIsDraft()
-	{
-		$page = new Page([
-			'slug'    => 'test',
-			'isDraft' => true
-		]);
-
-		$this->assertTrue($page->isDraft());
-
-		$page = new Page([
-			'slug'    => 'test',
-		]);
-
-		$this->assertFalse($page->isDraft());
-	}
-
-	public function testIsPublished()
-	{
-		$page = new Page([
-			'slug'    => 'test',
-			'isDraft' => true
-		]);
-
-		$this->assertFalse($page->isPublished());
-
-		$page = new Page([
-			'slug'    => 'test',
-		]);
-
-		$this->assertTrue($page->isPublished());
-	}
-
-	public function testIsActive()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'mother',
-						'children' => [
-							[
-								'slug' => 'child'
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$site   = $app->site();
-		$mother = $app->page('mother');
-		$child  = $app->page('mother/child');
-
-		$this->assertFalse($mother->isActive());
-		$this->assertFalse($child->isActive());
-
-		$site->visit('mother');
-
-		$this->assertTrue($mother->isActive());
-		$this->assertFalse($child->isActive());
-
-		$site->visit('mother/child');
-
-		$this->assertFalse($mother->isActive());
-		$this->assertTrue($child->isActive());
-	}
-
-	public function testIsOpen()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'mother',
-						'children' => [
-							[
-								'slug' => 'child'
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$site   = $app->site();
-		$mother = $app->page('mother');
-		$child  = $app->page('mother/child');
+		$family  = $this->family();
+		$mother = $family->find('grandma/mother');
+		$child  = $family->find('grandma/mother/child');
 
 		$this->assertFalse($mother->isOpen());
 		$this->assertFalse($child->isOpen());
 
-		$site->visit('mother');
+		$family->visit('grandma/mother');
 
 		$this->assertTrue($mother->isOpen());
 		$this->assertFalse($child->isOpen());
 
-		$site->visit('mother/child');
+		$family->visit('grandma/mother/child');
 
 		$this->assertTrue($mother->isOpen());
 		$this->assertTrue($child->isOpen());
 	}
+
 }

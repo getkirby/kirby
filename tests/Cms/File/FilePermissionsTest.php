@@ -2,22 +2,24 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\LogicException;
-use Kirby\TestCase;
 
-/**
- * @coversDefaultClass \Kirby\Cms\FilePermissions
- */
-class FilePermissionsTest extends TestCase
+
+use Kirby\Exception\LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+
+#[CoversClass(FilePermissions::class)]
+class FilePermissionsTest extends NewModelTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePermissions';
+
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		parent::setUp();
+
+		$this->app = $this->app->clone([
 			'users' => [
-				['id' => 'bastian', 'role' => 'admin']
+				['id' => 'admin', 'role' => 'admin']
 			]
 		]);
 	}
@@ -37,11 +39,8 @@ class FilePermissionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithAdmin($action)
+	#[DataProvider('actionProvider')]
+	public function testWithAdmin(string $action): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -55,11 +54,8 @@ class FilePermissionsTest extends TestCase
 		$this->assertTrue($perms->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithNobody($action)
+	#[DataProvider('actionProvider')]
+	public function testWithNobody(string $action): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
@@ -68,12 +64,9 @@ class FilePermissionsTest extends TestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
-	 */
-	public function testCanFromCache()
+	public function testCanFromCache(): void
 	{
-		$this->app->impersonate('bastian');
+		$this->app->impersonate('admin');
 
 		$page = new Page(['slug' => 'test']);
 		$file = new File([
@@ -95,10 +88,7 @@ class FilePermissionsTest extends TestCase
 		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
-	 */
-	public function testCanFromCacheDynamic()
+	public function testCanFromCacheDynamic(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
@@ -113,10 +103,7 @@ class FilePermissionsTest extends TestCase
 		FilePermissions::canFromCache($file, 'changeTemplate');
 	}
 
-	/**
-	 * @covers ::canChangeTemplate
-	 */
-	public function testCannotChangeTemplate()
+	public function testCannotChangeTemplate(): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -126,15 +113,9 @@ class FilePermissionsTest extends TestCase
 		$this->assertFalse($file->permissions()->can('changeTemplate'));
 	}
 
-	/**
-	 * @covers ::canChangeTemplate
-	 */
-	public function testCanChangeTemplate()
+	public function testCanChangeTemplate(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
 					'sections' => [
@@ -159,8 +140,8 @@ class FilePermissionsTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$page  = new Page(['slug' => 'test', 'template' => 'test']);
-		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$page = new Page(['slug' => 'test', 'template' => 'test']);
+		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
 
 		$this->assertTrue($file->permissions()->can('changeTemplate'));
 	}
