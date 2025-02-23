@@ -179,9 +179,11 @@ class NewFile extends File
 
 			// overwrite the original
 			if (F::$method($upload->root(), $file->root(), true) !== true) {
+				// @codeCoverageIgnoreStart
 				throw new LogicException(
 					message: 'The file could not be created'
 				);
+				// @codeCoverageIgnoreEnd
 			}
 
 			// resize the file on upload if configured

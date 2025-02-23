@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Cms\NewFile as File;
 use Kirby\Cms\NewPage as Page;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Image\Image;
@@ -61,6 +62,16 @@ class NewFileCreateTest extends NewModelTestCase
 		]);
 
 		$this->assertSame($uuid, $duplicate->content()->get('uuid')->value());
+	}
+
+	public function testCreateWithoutRequiredProps(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please provide the "source" and "parent" props for the File');
+
+		File::create([
+			'filename' => 'test.md'
+		]);
 	}
 
 	public function testCreateMove(): void
