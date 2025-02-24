@@ -4,6 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\Exception;
 use Kirby\Form\Form;
 
 /**
@@ -231,21 +232,12 @@ class Content
 	 * Updates the content and returns
 	 * a cloned object
 	 *
-	 * @return $this
+	 * @deprecated 5.0.0 Use $model->version()->update() instead.
 	 */
 	public function update(
 		array|null $content = null,
 		bool $overwrite = false
 	): static {
-		$content    = array_change_key_case((array)$content, CASE_LOWER);
-		$this->data = match($overwrite) {
-			true  => $content,
-			false => [...$this->data, ...$content]
-		};
-
-		// clear cache of Field objects
-		$this->fields = [];
-
-		return $this;
+		throw new Exception('`$content->update()` has been deprecated. Please use `$model->version()->update()` instead');
 	}
 }
