@@ -108,7 +108,7 @@ export default {
 			}
 
 			if (!focus) {
-				focus = null;
+				focus = "";
 			} else if (this.$helper.object.isObject(focus) === true) {
 				focus = `${focus.x.toFixed(1)}% ${focus.y.toFixed(1)}%`;
 			}
