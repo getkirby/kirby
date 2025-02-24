@@ -76,7 +76,7 @@ class FileUuidTest extends TestCase
 	public function testIdGenerateExistingButEmpty()
 	{
 		$file = $this->app->file('page-b/foo.pdf');
-		$file->content()->update(['uuid' => '']);
+		$file->version()->save(['uuid' => '']);
 
 		$uuid = $file->uuid();
 		$this->assertSame(16, strlen($uuid->id()));

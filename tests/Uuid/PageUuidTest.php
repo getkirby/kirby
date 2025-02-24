@@ -76,7 +76,7 @@ class PageUuidTest extends TestCase
 	public function testIdGenerateExistingButEmpty()
 	{
 		$page = $this->app->page('page-b');
-		$page->content()->update(['uuid' => '']);
+		$page->version()->save(['uuid' => '']);
 
 		$uuid = $page->uuid();
 		$this->assertSame(16, strlen($uuid->id()));
