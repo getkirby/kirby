@@ -184,7 +184,6 @@ class User extends ModelWithContent
 		unset(
 			$data['email'],
 			$data['language'],
-			$data['name'],
 			$data['password'],
 			$data['role']
 		);
