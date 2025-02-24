@@ -473,7 +473,7 @@ class Version
 		VersionRules::publish($this, $language);
 
 		// update the latest version
-		$this->model->update(
+		$this->model = $this->model->update(
 			input: $this->read($language),
 			languageCode: $language->code(),
 			validate: true
