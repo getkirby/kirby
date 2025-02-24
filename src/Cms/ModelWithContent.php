@@ -45,11 +45,9 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public array|null $blueprints = null;
 
-	public Content|null $content;
 	public static App $kirby;
 	protected Site|null $site;
 	protected Storage $storage;
-	public Collection|null $translations = null;
 
 	/**
 	 * Store values used to initilaize object
@@ -369,10 +367,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function purge(): static
 	{
-		$this->blueprints   = null;
-		$this->content      = null;
-		$this->translations = null;
-
+		$this->blueprints = null;
 		return $this;
 	}
 
