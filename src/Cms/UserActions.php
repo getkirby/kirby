@@ -10,7 +10,6 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use Kirby\Form\Form;
 use Kirby\Http\Idn;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;

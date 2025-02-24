@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class UserTestModel extends User
@@ -17,7 +16,7 @@ class UserModelTest extends NewModelTestCase
 	public function testUserModel(): void
 	{
 		User::$models = [
-			'dummy' =>UserTestModel::class
+			'dummy' => UserTestModel::class
 		];
 
 		$user = User::factory([

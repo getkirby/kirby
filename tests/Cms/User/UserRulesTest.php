@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;

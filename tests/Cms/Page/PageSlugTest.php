@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;

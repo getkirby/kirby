@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 

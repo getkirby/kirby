@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;

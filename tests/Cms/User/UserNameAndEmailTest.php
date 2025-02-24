@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Content\Field;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;

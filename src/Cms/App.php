@@ -141,8 +141,8 @@ class App
 		$this->extensionsFromFolders();
 
 		// configurable properties
-		// must be set after the extensions are loaded. 
-		// the default storage instance must be defined 
+		// must be set after the extensions are loaded.
+		// the default storage instance must be defined
 		// and the App::$instance singleton needs to be set.
 		$this->setLanguages($props['languages'] ?? null);
 		$this->setRoles($props['roles'] ?? null);

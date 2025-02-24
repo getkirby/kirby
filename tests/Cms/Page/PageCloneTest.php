@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Data\Data;
 use PHPUnit\Framework\Attributes\CoversClass;
 

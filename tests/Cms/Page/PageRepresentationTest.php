@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Exception\NotFoundException;
 use Kirby\Template\Template;
 use PHPUnit\Framework\Attributes\CoversClass;

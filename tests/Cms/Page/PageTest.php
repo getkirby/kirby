@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Panel\Page as PanelPage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;

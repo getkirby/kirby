@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-
-
 use Kirby\Content\PlainTextStorage;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;

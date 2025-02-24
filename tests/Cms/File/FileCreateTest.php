@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-
-
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;

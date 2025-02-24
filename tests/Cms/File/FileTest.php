@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-
-
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Panel\File as PanelFile;
 use PHPUnit\Framework\Attributes\CoversClass;

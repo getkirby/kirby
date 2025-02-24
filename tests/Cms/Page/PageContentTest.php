@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Content\Content;
 use Kirby\Content\MemoryStorage;
 use PHPUnit\Framework\Attributes\CoversClass;

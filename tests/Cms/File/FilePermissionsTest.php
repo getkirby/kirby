@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-
-
 use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;

@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Content\Translation;
 use Kirby\Content\VersionId;
 use Kirby\Filesystem\F;

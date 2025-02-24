@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Panel\Site as Panel;
 use PHPUnit\Framework\Attributes\CoversClass;
 

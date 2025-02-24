@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Content\VersionId;
 use PHPUnit\Framework\Attributes\CoversClass;
 
