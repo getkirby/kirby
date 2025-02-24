@@ -373,19 +373,19 @@ class PageCopyTest extends NewModelTestCase
 
 		$copy = new PageCopy($page, $original, withChildren: true);
 		$copy->convertUuids(null);
-		$this->assertSame($content, $page->text()->value());
+		$this->assertSame($content, $copy->copy->text()->value());
 
 		// UUIDs disabled
 		$app = $app->clone(['options' => ['content' => ['uuid' => false]]]);
 		$copy->replaceUuids();
 		$page->purge();
-		$this->assertSame($content, $page->text()->value());
+		$this->assertSame($content, $copy->copy->text()->value());
 
 		// UUIDs enabled
 		$app = $app->clone(['options' => ['content' => ['uuid' => true]]]);
 		$copy->replaceUuids();
 		$page->purge();
-		$this->assertNotSame($content, $page->text()->value());
-		$this->assertStringContainsString('This is a text of  seeing whether', $page->text()->value());
+		$this->assertNotSame($content, $copy->copy->text()->value());
+		$this->assertStringContainsString('This is a text of  seeing whether', $copy->copy->text()->value());
 	}
 }
