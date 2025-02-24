@@ -50,6 +50,11 @@ trait SiteActions
 		// run the main action closure
 		$result = $callback(...array_values($arguments));
 
+		// update the site instance in the App object
+		if ($result instanceof Site) {
+			$kirby->setSite($result);
+		}
+
 		// run `after` hook and apply return to action result
 		// (first argument, usually the new model) if anything returned
 		$result = $kirby->apply(

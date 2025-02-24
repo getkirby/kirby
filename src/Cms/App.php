@@ -1534,7 +1534,7 @@ class App
 	 *
 	 * @return $this
 	 */
-	protected function setSite(Site|array|null $site = null): static
+	public function setSite(Site|array|null $site = null): static
 	{
 		if (is_array($site) === true) {
 			$site = new Site($site);
