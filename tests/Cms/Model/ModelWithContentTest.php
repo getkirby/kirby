@@ -167,12 +167,12 @@ class ModelWithContentTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => static::TMP
 			],
 			'site' => [
 				'children' => [
 					[
-						'slug'  => 'foo',
+						'slug' => 'foo',
 					]
 				],
 			]
@@ -182,7 +182,9 @@ class ModelWithContentTest extends TestCase
 
 		// update the content of the current language
 		$this->assertNull($page->content()->get('title')->value());
-		$page->content()->update(['title' => 'Test']);
+
+		$page->version()->save(['title' => 'Test']);
+
 		$this->assertSame('Test', $page->content()->get('title')->value());
 	}
 
@@ -190,7 +192,7 @@ class ModelWithContentTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => static::TMP
 			],
 			'options' => [
 				'languages' => true
@@ -217,7 +219,9 @@ class ModelWithContentTest extends TestCase
 
 		// update the content of the current language
 		$this->assertNull($page->content()->get('title')->value());
-		$page->content()->update(['title' => 'Test']);
+
+		$page->version()->save(['title' => 'Test']);
+
 		$this->assertSame('Test', $page->content()->get('title')->value());
 	}
 
