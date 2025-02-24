@@ -125,6 +125,12 @@ class App
 		// options can be taken into account
 		$this->bakeUrls($props['urls'] ?? []);
 
+		// configurable properties
+		$this->setLanguages($props['languages'] ?? null);
+		$this->setRoles($props['roles'] ?? null);
+		$this->setUser($props['user'] ?? null);
+		$this->setUsers($props['users'] ?? null);
+
 		// set the singleton
 		if (static::$instance === null || $setInstance === true) {
 			static::$instance = ModelWithContent::$kirby = $this;
@@ -140,15 +146,10 @@ class App
 		$this->extensionsFromOptions();
 		$this->extensionsFromFolders();
 
-		// configurable properties
 		// must be set after the extensions are loaded.
 		// the default storage instance must be defined
-		// and the App::$instance singleton needs to be set.
-		$this->setLanguages($props['languages'] ?? null);
-		$this->setRoles($props['roles'] ?? null);
+		// and the App::$instance singleton needs to be set
 		$this->setSite($props['site'] ?? null);
-		$this->setUser($props['user'] ?? null);
-		$this->setUsers($props['users'] ?? null);
 
 		// trigger hook for use in plugins
 		$this->trigger('system.loadPlugins:after');
