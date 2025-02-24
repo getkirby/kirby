@@ -212,12 +212,20 @@ abstract class Storage
 		$fields = $this->read($versionId, $language);
 		$fields = A::map(
 			$fields,
-			fn ($field) => str_replace(
-				array_keys($map),
-				array_values($map),
-				$field
-			)
+			function ($value) use ($map) {
+				// skip fields with null values
+				if ($value === null) {
+					return null;
+				}
+
+				return str_replace(
+					array_keys($map),
+					array_values($map),
+					$value
+				);
+			}
 		);
+
 		$this->update($versionId, $language, $fields);
 	}
 
