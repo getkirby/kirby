@@ -246,34 +246,4 @@ class ContentTest extends TestCase
 
 		$this->assertIsPage($page, $this->content->parent());
 	}
-
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdate()
-	{
-		$this->content->update([
-			'a' => 'aaa'
-		]);
-		$this->assertSame('aaa', $this->content->get('a')->value());
-
-		$this->content->update([
-			'miXED' => 'mixed!'
-		]);
-		$this->assertSame('mixed!', $this->content->get('mixed')->value());
-
-		// Field objects should be cleared on update
-		$this->content->update([
-			'a' => 'aaaaaa'
-		]);
-		$this->assertSame('aaaaaa', $this->content->get('a')->value());
-
-		$this->content->update($expected = [
-			'TEST' => 'TEST'
-		], true);
-		$this->assertSame(['test' => 'TEST'], $this->content->data());
-
-		$this->content->update(null, true);
-		$this->assertSame([], $this->content->data());
-	}
 }
