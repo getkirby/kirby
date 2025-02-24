@@ -18,7 +18,7 @@ use Kirby\Exception\Exception;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Translation extends ContentTranslation
+class Translation
 {
 	/**
 	 * Creates a new translation object

@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 
-use Kirby\Content\ContentTranslation;
+use Kirby\Content\Translation;
 use Kirby\Content\VersionId;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -49,10 +49,11 @@ class PageDuplicateTest extends NewModelTestCase
 			'slug' => 'test',
 		]);
 
-		new ContentTranslation([
-			'parent' => $page,
-			'code'   => 'en',
-		]);
+		new Translation(
+			model: $page,
+			version: $page->version(),
+			language: $this->app->language('en')
+		);
 
 		$versionId = VersionId::latest();
 
@@ -174,10 +175,11 @@ class PageDuplicateTest extends NewModelTestCase
 
 		$page->createChild(['slug' => 'foo', 'template' => 'default']);
 
-		new ContentTranslation([
-			'parent' => $page,
-			'code'   => 'en'
-		]);
+		new Translation(
+			model: $page,
+			version: $page->version(),
+			language: $this->app->language('en')
+		);
 
 		$versionId = VersionId::latest();
 
