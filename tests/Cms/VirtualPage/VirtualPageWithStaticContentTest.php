@@ -9,14 +9,14 @@ class VirtualPageWithStaticContent extends Page
 {
 	public function __construct()
 	{
-		parent::__construct(['slug' => 'test']);
+		parent::__construct([
+			'slug' => 'test',
+			'content' => [
+				'title' => 'Title'
+			]
+		]);
 
 		$this->changeStorage(ImmutableMemoryStorage::class);
-
-		// add some static content
-		$this->version()->save([
-			'title' => 'Title'
-		]);
 	}
 }
 
