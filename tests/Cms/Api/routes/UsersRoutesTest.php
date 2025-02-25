@@ -448,12 +448,12 @@ class UsersRoutesTest extends TestCase
 	{
 		$response = $this->app->api()->call('users/admin@getkirby.com', 'PATCH', [
 			'body' => [
-				'name' => 'Test User'
+				'position' => 'Admin'
 			]
 		]);
 
 		$this->assertSame('ok', $response['status']);
-		$this->assertSame('Test User', $response['data']['content']['name']);
+		$this->assertSame('Admin', $response['data']['content']['position']);
 	}
 
 	public function testUsers()
