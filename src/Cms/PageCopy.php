@@ -71,7 +71,7 @@ class PageCopy
 	{
 		// re-generate UUIDs and track changes
 		if ($this->withChildren === true) {
-			foreach ($this->copy->children() as $child) {
+			foreach ($this->copy->childrenAndDrafts() as $child) {
 				// always adapt files of subpages as they are
 				// currently always copied; adapt children recursively
 				$child = new PageCopy(
