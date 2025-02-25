@@ -197,4 +197,35 @@ class PageChangeTemplateTest extends NewModelTestCase
 		$this->assertSame($modified, $drafts->find('test'));
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
 	}
+
+	public function testChangeTemplateWithChanges(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/video' => [
+					'options' => [
+						'template' => [
+							'article'
+						]
+					]
+				],
+				'pages/article' => []
+			],
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'video',
+		]);
+
+		$page->version('latest')->save(['title' => 'Title (latest)']);
+		$page->version('changes')->save(['title' => 'Title (changed)']);
+
+		$modified = $page->changeTemplate('article');
+
+		$this->assertSame('Title (latest)', $modified->version('latest')->content()->title()->value());
+		$this->assertSame('Title (changed)', $modified->version('changes')->content()->title()->value());
+	}
 }
