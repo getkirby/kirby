@@ -227,7 +227,7 @@ class PageCopy
 		}
 
 		if ($this->withChildren === true) {
-			foreach ($this->copy->children() as $child) {
+			foreach ($this->copy->childrenAndDrafts() as $child) {
 				$child = new PageCopy($child, withFiles: true, withChildren: true, uuids: $this->uuids);
 				$child->replaceUuids();
 			}
