@@ -535,6 +535,9 @@ class StorageTest extends TestCase
 		$this->assertSame($expected, $handler->read($versionId, $language));
 	}
 
+	/**
+	 * @covers ::replaceStrings
+	 */
 	public function testReplaceStringsWithNullValues()
 	{
 		$this->setUpSingleLanguage();
