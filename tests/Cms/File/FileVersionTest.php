@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FileVersion::class)]
-class FileVersionTest extends NewModelTestCase
+class FileVersionTest extends ModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileVersion';

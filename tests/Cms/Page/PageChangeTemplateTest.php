@@ -6,7 +6,7 @@ use Kirby\Content\VersionId;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
-class PageChangeTemplateTest extends NewModelTestCase
+class PageChangeTemplateTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChangeTemplate';
 

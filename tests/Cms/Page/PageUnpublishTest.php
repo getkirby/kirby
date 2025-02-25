@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
-class PageUnpublishTest extends NewModelTestCase
+class PageUnpublishTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageUnpublish';
 

@@ -6,7 +6,7 @@ use Kirby\Panel\Site as Panel;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Site::class)]
-class SiteTest extends NewModelTestCase
+class SiteTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Site';
 

@@ -6,7 +6,7 @@ use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(User::class)]
-class UserChangeTotpTest extends NewModelTestCase
+class UserChangeTotpTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserChangeTotp';
 

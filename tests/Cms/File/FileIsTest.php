@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
-class FileIsTest extends NewModelTestCase
+class FileIsTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileIs';
 

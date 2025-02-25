@@ -6,7 +6,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Site::class)]
-class SitePreviewUrlTest extends NewModelTestCase
+class SitePreviewUrlTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.SitePreviewUrl';
 

@@ -6,7 +6,7 @@ use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
-class FileMediaTest extends NewModelTestCase
+class FileMediaTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileMedia';
 

@@ -6,7 +6,7 @@ use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
-class FileSaveTest extends NewModelTestCase
+class FileSaveTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileSave';
 

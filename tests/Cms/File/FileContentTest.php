@@ -6,7 +6,7 @@ use Kirby\Content\Content;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
-class FileContentTest extends NewModelTestCase
+class FileContentTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileContent';
 

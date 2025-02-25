@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(FilePermissions::class)]
-class FilePermissionsTest extends NewModelTestCase
+class FilePermissionsTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePermissions';
 

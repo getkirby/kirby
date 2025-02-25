@@ -6,7 +6,7 @@ use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
-class PageDeleteTest extends NewModelTestCase
+class PageDeleteTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageDelete';
 

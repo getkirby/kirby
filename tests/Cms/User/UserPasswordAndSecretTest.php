@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(User::class)]
-class UserPasswordAndSecretTest extends NewModelTestCase
+class UserPasswordAndSecretTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserPasswordAndSecret';
 

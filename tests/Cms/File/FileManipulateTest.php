@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
-class FileManipulateTest extends NewModelTestCase
+class FileManipulateTest extends ModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileManipulate';

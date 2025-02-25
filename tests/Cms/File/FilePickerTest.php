@@ -6,7 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FilePicker::class)]
-class FilePickerTest extends NewModelTestCase
+class FilePickerTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePicker';
 

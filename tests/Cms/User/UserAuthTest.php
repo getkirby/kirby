@@ -7,7 +7,7 @@ use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(User::class)]
-class UserAuthTest extends NewModelTestCase
+class UserAuthTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserAuth';
 

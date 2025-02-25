@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
 #[CoversClass(Site::class)]
-class SiteContentTest extends NewModelTestCase
+class SiteContentTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteContent';
 

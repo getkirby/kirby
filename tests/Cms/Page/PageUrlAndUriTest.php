@@ -6,7 +6,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
 #[CoversClass(Page::class)]
-class PageUrlAndUriTest extends NewModelTestCase
+class PageUrlAndUriTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageUrl';
 

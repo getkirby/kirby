@@ -21,7 +21,7 @@ class VirtualPageWithStaticContent extends Page
 }
 
 #[CoversClass(Page::class)]
-class VirtualPageWithStaticContentTest extends NewModelTestCase
+class VirtualPageWithStaticContentTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.VirtualPageWithStaticContent';
 

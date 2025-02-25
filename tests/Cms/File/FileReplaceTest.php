@@ -8,7 +8,7 @@ use Kirby\Image\Image;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
-class FileReplaceTest extends NewModelTestCase
+class FileReplaceTest extends ModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileReplace';

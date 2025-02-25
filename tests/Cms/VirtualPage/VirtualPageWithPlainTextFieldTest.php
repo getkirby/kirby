@@ -23,7 +23,7 @@ class VirtualPageWithPlainTextField extends Page
 }
 
 #[CoversClass(Page::class)]
-class VirtualPageWithPlainTextFieldTest extends NewModelTestCase
+class VirtualPageWithPlainTextFieldTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.VirtualPageWithPlainTextField';
 

@@ -13,7 +13,7 @@ class PageTestModel extends Page
 }
 
 #[CoversClass(Page::class)]
-class PageModelTest extends NewModelTestCase
+class PageModelTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageModel';
 

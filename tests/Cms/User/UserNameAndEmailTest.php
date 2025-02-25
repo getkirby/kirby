@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
 #[CoversClass(User::class)]
-class UserNameAndEmailTest extends NewModelTestCase
+class UserNameAndEmailTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserNameAndEmail';
 

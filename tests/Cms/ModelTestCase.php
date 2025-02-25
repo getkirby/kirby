@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
-class NewModelTestCase extends TestCase
+class ModelTestCase extends TestCase
 {
 	public function cleanUp(): void
 	{

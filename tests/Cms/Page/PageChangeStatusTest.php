@@ -6,7 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
-class PageChangeStatusTest extends NewModelTestCase
+class PageChangeStatusTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChangeStatus';
 

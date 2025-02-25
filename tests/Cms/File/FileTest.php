@@ -7,7 +7,7 @@ use Kirby\Panel\File as PanelFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
-class FileTest extends NewModelTestCase
+class FileTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.File';
 

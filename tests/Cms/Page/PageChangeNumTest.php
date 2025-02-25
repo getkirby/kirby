@@ -7,7 +7,7 @@ use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
-class PageChangeNumTest extends NewModelTestCase
+class PageChangeNumTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChangeNum';
 

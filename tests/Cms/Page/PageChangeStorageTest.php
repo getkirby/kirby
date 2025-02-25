@@ -7,7 +7,7 @@ use Kirby\Content\PlainTextStorage;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
-class PageChangeStorageTest extends NewModelTestCase
+class PageChangeStorageTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChangeStorage';
 

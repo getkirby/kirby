@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(UserRules::class)]
-class UserRulesTest extends NewModelTestCase
+class UserRulesTest extends ModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserRules';
