@@ -92,6 +92,11 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 			]
 		]);
 	}
+
+	public function blueprintsCache(): array|null
+	{
+		return $this->blueprints;
+	}
 }
 
 class ModelWithContentTest extends TestCase
@@ -269,7 +274,8 @@ class ModelWithContentTest extends TestCase
 	public function testBlueprints(ModelWithContent $model)
 	{
 		$model = new BlueprintsModelWithContent($model);
-		$this->assertSame([
+
+		$expected = [
 			[
 				'name' => 'foo',
 				'title' => 'Foo'
@@ -286,7 +292,9 @@ class ModelWithContentTest extends TestCase
 				'name' => 'default',
 				'title' => 'Page'
 			]
-		], $model->blueprints());
+		];
+
+		$this->assertSame($expected, $model->blueprints());
 
 		$this->assertSame([
 			[
@@ -322,6 +330,44 @@ class ModelWithContentTest extends TestCase
 		$this->assertFalse($lock->isLocked());
 		$this->assertNull($lock->modified());
 		$this->assertNull($lock->user());
+	}
+
+	/**
+	 * @dataProvider modelsProvider
+	 */
+	public function testPurge(ModelWithContent $model)
+	{
+		$model = new BlueprintsModelWithContent($model);
+
+		$this->assertNull($model->blueprintsCache());
+
+		$expected = [
+			[
+				'name' => 'foo',
+				'title' => 'Foo'
+			],
+			[
+				'name' => 'bar',
+				'title' => 'Bar'
+			],
+			[
+				'name' => 'home',
+				'title' => 'Home'
+			],
+			[
+				'name' => 'default',
+				'title' => 'Page'
+			]
+		];
+
+		// fill the cache
+		$model->blueprints();
+
+		$this->assertSame($expected, $model->blueprintsCache());
+
+		$model->purge();
+
+		$this->assertNull($model->blueprintsCache());
 	}
 
 	public function testSite()
