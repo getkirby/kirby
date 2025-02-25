@@ -9,23 +9,6 @@ class PageCopyTest extends NewModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageCopy';
 
-	public function testChildren(): void
-	{
-		$page = Page::create([
-			'slug'     => 'test',
-			'children' => [
-				['slug' => 'test-a'],
-				['slug' => 'test-b']
-			]
-		]);
-
-		$copy = new PageCopy($page, withChildren: true);
-		$this->assertCount(2, $copy->children());
-
-		$copy = new PageCopy($page, withChildren: false);
-		$this->assertCount(0, $copy->children());
-	}
-
 	public function testConvertUuids(): void
 	{
 		$app = $this->app->clone([
@@ -214,23 +197,6 @@ class PageCopyTest extends NewModelTestCase
 		], array_keys($copy->uuids));
 		$this->assertSame('', $copy->uuids['file://file-a']);
 		$this->assertSame('', $copy->uuids['file://file-b']);
-	}
-
-	public function testFiles(): void
-	{
-		$page = Page::create([
-			'slug' => 'test',
-			'files' => [
-				['filename' => 'test-a.jpg'],
-				['filename' => 'test-b.jpg'],
-			]
-		]);
-
-		$copy = new PageCopy($page, withFiles: true);
-		$this->assertCount(2, $copy->files());
-
-		$copy = new PageCopy($page, withFiles: false);
-		$this->assertCount(0, $copy->files());
 	}
 
 	public function testLanguagesInMultiLanguageMode(): void

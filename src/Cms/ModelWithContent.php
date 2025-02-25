@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\Content;
+use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\Lock;
 use Kirby\Content\MemoryStorage;
 use Kirby\Content\Storage;
@@ -429,7 +430,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$clone = $this->clone();
 
 		// move the old model into memory
-		$this->changeStorage(MemoryStorage::class);
+		$this->changeStorage(ImmutableMemoryStorage::class);
 
 		// update the clone
 		$clone->version()->save(
