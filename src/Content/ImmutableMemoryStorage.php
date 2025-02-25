@@ -16,7 +16,7 @@ class ImmutableMemoryStorage extends MemoryStorage
 {
 	public function delete(VersionId $versionId, Language $language): void
 	{
-		$this->preventMutation();
+		$this->preventMutation('deleted');
 	}
 
 	public function move(
@@ -26,7 +26,7 @@ class ImmutableMemoryStorage extends MemoryStorage
 		Language|null $toLanguage = null,
 		Storage|null $toStorage = null
 	): void {
-		$this->preventMutation();
+		$this->preventMutation('moved');
 	}
 
 	/**
@@ -34,20 +34,20 @@ class ImmutableMemoryStorage extends MemoryStorage
 	 *
 	 * @throws \Kirby\Exception\LogicException
 	 */
-	protected function preventMutation(): void
+	protected function preventMutation(string $mutation): void
 	{
 		throw new LogicException(
-			message: 'Storage for the ' . $this->model::CLASS_ALIAS . ' is immutable and cannot be deleted. Make sure to use the last alteration of the object.'
+			message: 'Storage for the ' . $this->model::CLASS_ALIAS . ' is immutable and cannot be ' . $mutation . '. Make sure to use the last alteration of the object.'
 		);
 	}
 
 	public function touch(VersionId $versionId, Language $language): void
 	{
-		$this->preventMutation();
+		$this->preventMutation('touched');
 	}
 
 	public function update(VersionId $versionId, Language $language, array $fields): void
 	{
-		$this->preventMutation();
+		$this->preventMutation('updated');
 	}
 }
