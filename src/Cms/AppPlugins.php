@@ -871,6 +871,7 @@ trait AppPlugins
 		string|null $root = null,
 		string|null $version = null,
 		Closure|string|array|null $license = null,
+		bool|array $autoloader = false
 	): Plugin|null {
 		if ($extends === null) {
 			return static::$plugins[$name] ?? null;
@@ -883,7 +884,8 @@ trait AppPlugins
 			license: $license,
 			// TODO: Remove fallback to $extends in v7
 			root:    $root ?? $extends['root'] ?? dirname(debug_backtrace()[0]['file']),
-			version: $version
+			version: $version,
+			autoloader: $autoloader
 		);
 
 		$name = $plugin->name();
@@ -923,6 +925,11 @@ trait AppPlugins
 		// mark plugins as loaded to stop doing it twice
 		$this->pluginsAreLoaded = true;
 		return static::$plugins;
+	}
+
+	public function allowedExtensionsKeys(): array
+	{
+		return array_keys($this->extensions);
 	}
 
 	/**
