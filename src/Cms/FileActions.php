@@ -25,13 +25,6 @@ trait FileActions
 		File $file,
 		string|null $extension = null
 	): File {
-		if (
-			$extension === null ||
-			$extension === $file->extension()
-		) {
-			return $file;
-		}
-
 		return $file->changeName($file->name(), false, $extension);
 	}
 
