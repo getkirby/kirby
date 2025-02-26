@@ -37,7 +37,7 @@ class PageMoveTest extends ModelTestCase
 		]);
 
 		$child = Page::create([
-			'parent'   => $parentB,
+			'parent'   => $parentA,
 			'slug'     => 'child',
 			'template' => 'child'
 		]);
@@ -45,5 +45,39 @@ class PageMoveTest extends ModelTestCase
 		$moved = $child->move($parentB);
 
 		$this->assertTrue($moved->parent()->is($parentB));
+	}
+
+	public function testMoveWhenTheParentIsTheSame(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'sections' => [
+						'subpages' => [
+							'type'     => 'pages',
+							'template' => 'child'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$parent = Page::create([
+			'slug'     => 'parent',
+			'template' => 'parent'
+		]);
+
+		$child = Page::create([
+			'parent'   => $parent,
+			'slug'     => 'child',
+			'template' => 'child'
+		]);
+
+		$moved = $child->move($parent);
+
+		$this->assertSame($child, $moved);
+		$this->assertSame($child->parent(), $moved->parent());
 	}
 }
