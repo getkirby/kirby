@@ -109,6 +109,10 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function changeStorage(Storage|string $toStorage): static
 	{
 		if (is_string($toStorage) === true) {
+			if (is_subclass_of($toStorage, Storage::class) === false) {
+				throw new InvalidArgumentException('Invalid storage class');
+			}
+
 			$toStorage = new $toStorage($this);
 		}
 

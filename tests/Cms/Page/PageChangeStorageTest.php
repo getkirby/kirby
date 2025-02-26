@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Content\MemoryStorage;
 use Kirby\Content\PlainTextStorage;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
@@ -25,6 +26,18 @@ class PageChangeStorageTest extends ModelTestCase
 
 		$this->assertInstanceOf(MemoryStorage::class, $page->storage());
 		$this->assertSame($contentBeforeMove, $page->content()->toArray());
+	}
+
+	public function testChangeStorageWithInvalidClassName(): void
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid storage class');
+
+		$page->changeStorage(PageRules::class);
 	}
 
 	public function testChangeStorageWithObject(): void
