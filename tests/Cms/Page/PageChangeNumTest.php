@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\LogicException;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -30,6 +31,19 @@ class PageChangeNumTest extends ModelTestCase
 		$this->assertSame(2, $page->num());
 		$this->assertSame('2_test', $page->dirname());
 		$this->assertSame(2, $site->find('test')->num());
+	}
+
+	public function testChangeNumForDraft(): void
+	{
+		$page = Page::create([
+			'slug'  => 'test',
+			'draft' => true
+		]);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Drafts cannot change their sorting number');
+
+		$page->changeNum(2);
 	}
 
 	public function testChangeNumHooks(): void
