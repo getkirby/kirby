@@ -32,9 +32,11 @@ class TranslationTest extends TestCase
 			language: Language::ensure('de')
 		);
 
+		$this->assertSame('en', $translationEN->code());
 		$this->assertSame('en', $translationEN->language()->code());
 		$this->assertSame('en', $translationEN->id());
 
+		$this->assertSame('de', $translationDE->code());
 		$this->assertSame('de', $translationDE->language()->code());
 		$this->assertSame('de', $translationDE->id());
 	}
