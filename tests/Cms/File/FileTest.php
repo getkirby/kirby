@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Panel\File as PanelFile;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -67,6 +68,28 @@ class FileTest extends ModelTestCase
 			'https://getkirby.com/projects/project-a/cover.jpg',
 			$file->asset()->url()
 		);
+	}
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructWithoutFilename()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The filename and parent are required');
+
+		new File([]);
+	}
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructWithoutParent()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The filename and parent are required');
+
+		new File(['filename' => 'test.jpg']);
 	}
 
 	public function testFilename(): void

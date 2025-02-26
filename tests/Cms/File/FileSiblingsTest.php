@@ -27,6 +27,15 @@ class FileSiblingsTest extends ModelTestCase
 		]))->files();
 	}
 
+	public function testFiles(): void
+	{
+		$files    = $this->files();
+		$file     = $files->nth(1);
+		$siblings = $files->not($file);
+
+		$this->assertSame($files, $file->files());
+	}
+
 	public function testHasNext(): void
 	{
 		$collection = $this->files();

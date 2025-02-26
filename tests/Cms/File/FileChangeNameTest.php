@@ -119,4 +119,16 @@ class FileChangeNameTest extends ModelTestCase
 
 		$this->assertSame(2, $calls);
 	}
+
+	public function testChangeNameWithoutChanges(): void
+	{
+		$file = new File([
+			'filename' => 'test.pdf',
+			'parent'   => $this->app->site()
+		]);
+
+		$result = $file->changeName('test');
+
+		$this->assertSame($file, $result);
+	}
 }
