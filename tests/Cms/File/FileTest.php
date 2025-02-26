@@ -70,9 +70,6 @@ class FileTest extends ModelTestCase
 		);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructWithoutFilename()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -81,9 +78,6 @@ class FileTest extends ModelTestCase
 		new File([]);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructWithoutParent()
 	{
 		$this->expectException(InvalidArgumentException::class);
