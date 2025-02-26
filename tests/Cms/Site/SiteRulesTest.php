@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(Site::class)]
+#[CoversClass(SiteRules::class)]
 class SiteRulesTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteRules';
