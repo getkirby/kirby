@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 
@@ -72,4 +73,20 @@ class UserCommitTest extends ModelTestCase
 		// altered result from last after hook
 		$this->assertSame('d', $result->name()->value());
 	}
+
+	public function testCommitForTheKirbyUser(): void
+	{
+		$user = $this->app->impersonate('kirby');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The Kirby user cannot be changed');
+
+		$class = new ReflectionClass($user);
+		$class->getMethod('commit')->invokeArgs($user, [
+			'changeName',
+			['user' => $user, 'name' => 'target'],
+			function () {}
+		]);
+	}
+
 }
