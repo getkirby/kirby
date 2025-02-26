@@ -214,4 +214,20 @@ class PageUpdateTest extends ModelTestCase
 		$this->assertSame(20161121, $modified->num());
 	}
 
+	public function testUpdateWithNullValue(): void
+	{
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
+		$updated = $page->update(['test' => 'Test']);
+
+		$this->assertSame('Test', $updated->test()->value());
+
+		// remove the test field
+		$updated = $updated->update(['test' => null]);
+
+		$this->assertNull($updated->test()->value());
+	}
+
 }
