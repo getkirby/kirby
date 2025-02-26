@@ -26,6 +26,17 @@ class PageChangeStatusTest extends ModelTestCase
 		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
 	}
 
+	public function testChangeStatusFromDraftToDraft(): void
+	{
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
+		$draft = $page->changeStatus('draft');
+
+		$this->assertSame($draft, $page);
+	}
+
 	public function testChangeStatusFromDraftToUnlisted(): void
 	{
 		$page = Page::create([
@@ -61,6 +72,19 @@ class PageChangeStatusTest extends ModelTestCase
 		$this->assertNull($draft->num());
 		$this->assertTrue($draft->parentModel()->drafts()->has($draft));
 		$this->assertFalse($draft->parentModel()->children()->listed()->has($draft));
+	}
+
+	public function testChangeStatusFromListedToListed(): void
+	{
+		$page = Page::create([
+			'slug'  => 'test',
+			'num'   => 1,
+			'draft' => false
+		]);
+
+		$listed = $page->changeStatus('listed');
+
+		$this->assertSame($listed, $page);
 	}
 
 	public function testChangeStatusFromListedToUnlisted(): void
@@ -107,6 +131,18 @@ class PageChangeStatusTest extends ModelTestCase
 
 		$this->assertFalse($listed->parentModel()->children()->unlisted()->has($listed));
 		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
+	}
+
+	public function testChangeStatusFromUnlistedToUnlisted(): void
+	{
+		$page = Page::create([
+			'slug'  => 'test',
+			'draft' => false
+		]);
+
+		$unlisted = $page->changeStatus('unlisted');
+
+		$this->assertSame($unlisted, $page);
 	}
 
 	public function testChangeStatusToDraftHooks(): void

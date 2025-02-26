@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\VersionId;
+use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
@@ -196,6 +197,30 @@ class PageChangeTemplateTest extends ModelTestCase
 
 		$this->assertSame($modified, $drafts->find('test'));
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
+	}
+
+	public function testChangeTemplateOfTheErrorPage(): void
+	{
+		$page = Page::create([
+			'slug' => 'error',
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change the template for "error"');
+
+		$page->changeTemplate('article');
+	}
+
+	public function testChangeTemplateToTheSameTemplate(): void
+	{
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test',
+		]);
+
+		$modified = $page->changeTemplate('test');
+
+		$this->assertSame($page, $modified);
 	}
 
 	public function testChangeTemplateWithChanges(): void

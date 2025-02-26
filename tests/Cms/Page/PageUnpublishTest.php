@@ -74,4 +74,15 @@ class PageUnpublishTest extends ModelTestCase
 		$this->assertCount(4, $clone->drafts());
 	}
 
+	public function testUnpublishWithDraft(): void
+	{
+		$page = Page::create([
+			'slug' => 'test',
+			'draft' => true
+		]);
+
+		$unpublished = $page->unpublish();
+
+		$this->assertSame($page, $unpublished);
+	}
 }
