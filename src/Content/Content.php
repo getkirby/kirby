@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Blueprint;
+use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\Exception;
 use Kirby\Form\Form;
@@ -101,6 +102,7 @@ class Content
 			'fields' => $old->fields(),
 			'model'  => $this->parent
 		]);
+
 		$newForm = new Form([
 			'fields' => $new->fields(),
 			'model'  => $this->parent
@@ -121,6 +123,12 @@ class Content
 			} else {
 				$data[$name] = $newField->default();
 			}
+		}
+
+		// if the parent is a file, overwrite the template
+		// with the new template name
+		if ($this->parent instanceof File) {
+			$data['template'] = $to;
 		}
 
 		// preserve existing fields
