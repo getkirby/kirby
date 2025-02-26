@@ -555,7 +555,9 @@ class Autoloader
         $cache_folder = pathinfo($this->cache_file, PATHINFO_DIRNAME);
         try {
             Dir::remove($cache_folder);
-        } catch (\Throwable $th) {};
+        } catch (\Throwable $th) {
+            ;
+        };
 
         Data::write($this->cache_file, [
             'classes'       => $this->classes,
