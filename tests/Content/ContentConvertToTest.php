@@ -2,39 +2,20 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\App;
-use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\Page;
-use Kirby\TestCase;
+use PHPUnit\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\Content
- */
+#[CoversClass(Content::class)]
 class ContentConvertToTest extends TestCase
 {
-	protected Content $content;
-	protected ModelWithContent $parent;
-
 	public function setUp(): void
 	{
-		$this->parent  = new Page(['slug' => 'test']);
-		$this->content = new Content([
-			'a' => 'A',
-			'B' => 'B',
-			'MiXeD' => 'mixed',
-			'mIXeD' => 'MIXED'
-		], $this->parent);
+		parent::setUp();
+		$this->setUpSingleLanguage();
 	}
 
-	/**
-	 * @covers ::convertTo
-	 */
 	public function testConvertToForPage()
 	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$app = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -96,15 +77,9 @@ class ContentConvertToTest extends TestCase
 		$this->assertSame('keep this', $new['removed']);
 	}
 
-	/**
-	 * @covers ::convertTo
-	 */
 	public function testConvertToForFile()
 	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$app = $this->app->clone([
 			'site' => [
 				'files' => [
 					[
