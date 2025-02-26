@@ -130,19 +130,6 @@ trait FileActions
 			// convert to new template/blueprint incl. content
 			$file = $oldFile->convertTo($template);
 
-			// update template, prefer unset over writing `default`
-			if ($template === 'default') {
-				$template = null;
-			}
-
-			// Use the version class to update the template field.
-			// If we use the $file->update() method directly, we create yet
-			// anothere clone and we trigger the update hooks.
-			$file->version()->save(
-				['template' => $template],
-				'default'
-			);
-
 			// resize the file if configured by new blueprint
 			$create = $file->blueprint()->create();
 			$file   = $file->manipulate($create);
