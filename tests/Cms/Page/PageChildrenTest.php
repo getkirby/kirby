@@ -2,16 +2,24 @@
 
 namespace Kirby\Cms;
 
-class PageChildrenTest extends TestCase
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Page::class)]
+class PageChildrenTest extends ModelTestCase
 {
-	public function testDefaultChildren()
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChildren';
+
+	public function testChildren(): void
 	{
-		$page = new Page(['slug' => 'test']);
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
 		$this->assertInstanceOf(Pages::class, $page->children());
 		$this->assertCount(0, $page->children());
 	}
 
-	public function testGrandChildren()
+	public function testGrandChildren(): void
 	{
 		$page = new Page([
 			'slug' => 'grandma',
@@ -29,7 +37,7 @@ class PageChildrenTest extends TestCase
 		$this->assertSame('child', $page->grandChildren()->first()->slug());
 	}
 
-	public function testHasChildren()
+	public function testHasChildren(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -42,65 +50,7 @@ class PageChildrenTest extends TestCase
 		$this->assertTrue($page->hasChildren());
 	}
 
-	public function testHasNoChildren()
-	{
-		$page = new Page([
-			'slug'     => 'test',
-			'children' => []
-		]);
-
-		$this->assertFalse($page->hasChildren());
-	}
-
-	public function testHasListedChildren()
-	{
-		$page = new Page([
-			'slug'     => 'test',
-			'children' => [
-				['slug' => 'a', 'num' => 1]
-			]
-		]);
-
-		$this->assertTrue($page->hasListedChildren());
-	}
-
-	public function testHasNoListedChildren()
-	{
-		$page = new Page([
-			'slug'     => 'test',
-			'children' => [
-				['slug' => 'a']
-			]
-		]);
-
-		$this->assertFalse($page->hasListedChildren());
-	}
-
-	public function testHasUnlistedChildren()
-	{
-		$page = new Page([
-			'slug'     => 'test',
-			'children' => [
-				['slug' => 'a']
-			]
-		]);
-
-		$this->assertTrue($page->hasUnlistedChildren());
-	}
-
-	public function testHasNoUnlistedChildren()
-	{
-		$page = new Page([
-			'slug'     => 'test',
-			'children' => [
-				['slug' => 'a', 'num' => 1]
-			]
-		]);
-
-		$this->assertFalse($page->hasUnlistedChildren());
-	}
-
-	public function testHasDrafts()
+	public function testHasDrafts(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -113,7 +63,33 @@ class PageChildrenTest extends TestCase
 		$this->assertTrue($page->hasDrafts());
 	}
 
-	public function testHasNoDrafts()
+
+	public function testHasListedChildren(): void
+	{
+		$page = new Page([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'a',
+					'num'  => 1
+				]
+			]
+		]);
+
+		$this->assertTrue($page->hasListedChildren());
+	}
+
+	public function testHasNoChildren(): void
+	{
+		$page = new Page([
+			'slug'     => 'test',
+			'children' => []
+		]);
+
+		$this->assertFalse($page->hasChildren());
+	}
+
+	public function testHasNoDrafts(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -122,84 +98,42 @@ class PageChildrenTest extends TestCase
 		$this->assertFalse($page->hasDrafts());
 	}
 
-	public function testSearch()
+	public function testHasNoListedChildren(): void
 	{
 		$page = new Page([
-			'slug' => 'test',
+			'slug'     => 'test',
 			'children' => [
-				[
-					'slug'    => 'mtb',
-					'content' => [
-						'title' => 'Mountainbike'
-					]
-				],
-				[
-					'slug'    => 'mountains',
-					'content' => [
-						'title' => 'Mountains'
-					]
-				],
-				[
-					'slug'    => 'lakes',
-					'content' => [
-						'title' => 'Lakes'
-					]
-				]
+				['slug' => 'a']
 			]
 		]);
 
-		$result = $page->search('mountain');
-		$this->assertCount(2, $result);
-
-		$result = $page->search('mountain', 'title|text');
-		$this->assertCount(2, $result);
-
-		$result = $page->search('mountain', 'text');
-		$this->assertCount(0, $result);
+		$this->assertFalse($page->hasListedChildren());
 	}
 
-	public function testSearchWords()
+	public function testHasNoUnlistedChildren(): void
 	{
 		$page = new Page([
-			'slug' => 'test',
+			'slug'     => 'test',
 			'children' => [
 				[
-					'slug'    => 'mtb',
-					'content' => [
-						'title' => 'Mountainbike'
-					]
-				],
-				[
-					'slug'    => 'mountain',
-					'content' => [
-						'title' => 'Mountain'
-					]
-				],
-				[
-					'slug'    => 'everest-mountain',
-					'content' => [
-						'title' => 'Everest Mountain'
-					]
-				],
-				[
-					'slug'    => 'mount',
-					'content' => [
-						'title' => 'Mount'
-					]
-				],
-				[
-					'slug'    => 'lakes',
-					'content' => [
-						'title' => 'Lakes'
-					]
+					'slug' => 'a',
+					'num'  => 1
 				]
 			]
 		]);
 
-		$result = $page->search('mountain', ['words' => true]);
-		$this->assertCount(2, $result);
+		$this->assertFalse($page->hasUnlistedChildren());
+	}
 
-		$result = $page->search('mount', ['words' => false]);
-		$this->assertCount(4, $result);
+	public function testHasUnlistedChildren(): void
+	{
+		$page = new Page([
+			'slug'     => 'test',
+			'children' => [
+				['slug' => 'a']
+			]
+		]);
+
+		$this->assertTrue($page->hasUnlistedChildren());
 	}
 }

@@ -2,107 +2,51 @@
 
 namespace Kirby\Cms;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
-class SiteChildrenTest extends TestCase
+#[CoversClass(Site::class)]
+class SiteChildrenTest extends ModelTestCase
 {
-	public function testDefaultChildren()
+	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteChildren';
+
+	public function testChildren(): void
+	{
+		$site = new Site([
+			'children' => [
+				[
+					'slug' => 'foo',
+					'template' => 'article'
+				]
+			]
+		]);
+		$this->assertInstanceOf(Pages::class, $site->children());
+		$this->assertCount(1, $site->children());
+		$this->assertSame('foo', $site->children()->first()->slug());
+	}
+
+	public function testChildrenDefault(): void
 	{
 		$site = new Site();
 		$this->assertInstanceOf(Pages::class, $site->children());
+		$this->assertCount(0, $site->children());
 	}
 
-	public function testInvalidChildren()
+	public function testChildrenInvalid(): void
 	{
 		$this->expectException(TypeError::class);
 		new Site(['children' => 'children']);
 	}
 
-	public function testPages()
+	public function testCreateChild(): void
 	{
-		$site = new Site([
-			'children' => []
+		$site = new Site();
+		$page = $site->createChild([
+			'slug'     => 'test',
+			'template' => 'test',
 		]);
 
-		$this->assertInstanceOf(Pages::class, $site->children());
-	}
-
-	public function testSearch()
-	{
-		$site = new Site([
-			'children' => [
-				[
-					'slug'    => 'mtb',
-					'content' => [
-						'title' => 'Mountainbike'
-					]
-				],
-				[
-					'slug'    => 'mountains',
-					'content' => [
-						'title' => 'Mountains'
-					]
-				],
-				[
-					'slug'    => 'lakes',
-					'content' => [
-						'title' => 'Lakes'
-					]
-				]
-			]
-		]);
-
-		$result = $site->search('mountain');
-		$this->assertCount(2, $result);
-
-		$result = $site->search('mountain', 'title|text');
-		$this->assertCount(2, $result);
-
-		$result = $site->search('mountain', 'text');
-		$this->assertCount(0, $result);
-	}
-
-	public function testSearchWords()
-	{
-		$site = new Site([
-			'children' => [
-				[
-					'slug'    => 'mtb',
-					'content' => [
-						'title' => 'Mountainbike'
-					]
-				],
-				[
-					'slug'    => 'mountain',
-					'content' => [
-						'title' => 'Mountain'
-					]
-				],
-				[
-					'slug'    => 'everest-mountain',
-					'content' => [
-						'title' => 'Everest Mountain'
-					]
-				],
-				[
-					'slug'    => 'mount',
-					'content' => [
-						'title' => 'Mount'
-					]
-				],
-				[
-					'slug'    => 'lakes',
-					'content' => [
-						'title' => 'Lakes'
-					]
-				]
-			]
-		]);
-
-		$result = $site->search('mountain', ['words' => true]);
-		$this->assertCount(2, $result);
-
-		$result = $site->search('mount', ['words' => false]);
-		$this->assertCount(4, $result);
+		$this->assertSame('test', $page->slug());
+		$this->assertSame('test', $page->intendedTemplate()->name());
 	}
 }

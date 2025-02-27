@@ -2,10 +2,14 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class SitePermissionsTest extends TestCase
+#[CoversClass(Site::class)]
+class SitePermissionsTest extends ModelTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.SitePermissions';
+
 	public static function actionProvider(): array
 	{
 		return [
@@ -14,39 +18,25 @@ class SitePermissionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider actionProvider
-	 */
-	public function testWithAdmin($action)
+	#[DataProvider('actionProvider')]
+	public function testWithAdmin(string $action): void
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
+		$this->app->impersonate('kirby');
 
-		$kirby->impersonate('kirby');
+		$site        = new Site();
+		$permissions = $site->permissions();
 
-		$site  = new Site();
-		$perms = $site->permissions();
-
-		$this->assertTrue($perms->can($action));
+		$this->assertTrue($permissions->can($action));
 	}
 
-	/**
-	 * @dataProvider actionProvider
-	 */
-	public function testWithNobody($action)
+	#[DataProvider('actionProvider')]
+	public function testWithNobody(string $action): void
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
+		$this->app->impersonate('nobody');
 
-		$site  = new Site();
-		$perms = $site->permissions();
+		$site        = new Site();
+		$permissions = $site->permissions();
 
-		$this->assertFalse($perms->can($action));
+		$this->assertFalse($permissions->can($action));
 	}
 }

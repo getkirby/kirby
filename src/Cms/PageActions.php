@@ -3,13 +3,13 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\MemoryStorage;
 use Kirby\Content\VersionId;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
-use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -441,40 +441,39 @@ trait PageActions
 	 */
 	public static function create(array $props): Page
 	{
-		// clean up the slug
-		$props['slug']      = Url::slug($props['slug'] ?? $props['content']['title'] ?? null);
-		$props['template']  = $props['model'] = strtolower($props['template'] ?? 'default');
-		$props['isDraft'] ??= $props['draft'] ?? true;
+		$props = self::normalizeProps($props);
 
-		// make sure that a UUID gets generated and
-		// added to content right away
-		$props['content'] ??= [];
+		// create the instance without content or translations
+		// to avoid that the page is created in memory storage
+		$page = static::factory([
+			...$props,
+			'content'      => null,
+			'translations' => null
+		]);
 
+		// merge the content with the defaults
+		$props['content'] = [
+			...$page->createDefaultContent(),
+			...$props['content'],
+		];
+
+		// make sure that a UUID gets generated
+		// and added to content right away
 		if (Uuids::enabled() === true) {
 			$props['content']['uuid'] ??= Uuid::generate();
 		}
 
-		// create a temporary page object
-		$page = static::factory($props);
+		// keep the initial storage class
+		$storage = $page->storage()::class;
 
-		// always create pages in the default language
-		$languageCode = match ($page->kirby()->multilang()) {
-			true  => $page->kirby()->defaultLanguage()->code(),
-			false => null
-		};
-
-		// create a form for the page
-		// use always default language to fill form with default values
-		$form = Form::for(
-			$page,
-			[
-				'language' => $languageCode,
-				'values'   => $props['content']
-			]
-		);
+		// make sure that the temporary page is stored in memory
+		$page->changeStorage(MemoryStorage::class);
 
 		// inject the content
-		$page = $page->clone(['content' => $form->strings(true)]);
+		$page->setContent($props['content']);
+
+		// inject the translations
+		$page->setTranslations($props['translations'] ?? null);
 
 		// run the hooks and creation action
 		$page = $page->commit(
@@ -483,9 +482,9 @@ trait PageActions
 				'page'  => $page,
 				'input' => $props
 			],
-			function ($page, $props) use ($languageCode) {
-				// write the content file
-				return $page->save($page->content()->toArray(), $languageCode);
+			function ($page) use ($storage) {
+				// move to final storage
+				return $page->changeStorage($storage);
 			}
 		);
 
@@ -695,6 +694,21 @@ trait PageActions
 
 			return $newPage;
 		});
+	}
+
+	protected static function normalizeProps(array $props): array
+	{
+		$content  = $props['content']  ?? [];
+		$template = $props['template'] ?? 'default';
+
+		return [
+			...$props,
+			'content'  => $content,
+			'isDraft'  => $props['isDraft'] ?? $props['draft'] ?? true,
+			'model'    => $props['model']   ?? $template,
+			'slug'     => Url::slug($props['slug'] ?? $content['title'] ?? null),
+			'template' => $template,
+		];
 	}
 
 	/**

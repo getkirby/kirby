@@ -3,13 +3,13 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\MemoryStorage;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use Kirby\Form\Form;
 use Kirby\Http\Idn;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -205,33 +205,39 @@ trait UserActions
 	/**
 	 * Creates a new User from the given props and returns a new User object
 	 */
-	public static function create(array|null $props = null): User
+	public static function create(array $props): User
 	{
-		$data = $props;
+		$input = $props;
+		$props = self::normalizeProps($props);
 
-		if (isset($props['email']) === true) {
-			$data['email'] = Idn::decodeEmail($props['email']);
-		}
-
-		if (isset($props['password']) === true) {
-			$data['password'] = static::hashPassword($props['password']);
-		}
-
-		$props['role'] ??= 'default';
-		$props['role']   = $props['model'] = strtolower($props['role']);
-
-		$user = static::factory($data);
-
-		// create a form for the user
-		$form = Form::for($user, [
-			'values' => $props['content'] ?? []
+		// create the instance without content or translations
+		// to avoid that the user is created in memory storage
+		$user = static::factory([
+			...$props,
+			'content'      => null,
+			'translations' => null
 		]);
 
+		// merge the content with the defaults
+		$props['content'] = [
+			...$user->createDefaultContent(),
+			...$props['content'],
+		];
+
+		// keep the initial storage class
+		$storage = $user->storage()::class;
+
+		// make sure that the temporary user is stored in memory
+		$user->changeStorage(MemoryStorage::class);
+
 		// inject the content
-		$user = $user->clone(['content' => $form->strings(true)]);
+		$user->setContent($props['content']);
+
+		// inject the translations
+		$user->setTranslations($props['translations'] ?? null);
 
 		// run the hook
-		return $user->commit('create', ['user' => $user, 'input' => $props], function ($user, $props) {
+		return $user->commit('create', ['user' => $user, 'input' => $input], function ($user) use ($storage) {
 			$user->writeCredentials([
 				'email'    => $user->email(),
 				'language' => $user->language(),
@@ -240,15 +246,10 @@ trait UserActions
 			]);
 
 			$user->writePassword($user->password());
-
-			// always create users in the default language
-			$languageCode = match ($user->kirby()->multilang()) {
-				true  => $user->kirby()->defaultLanguage()->code(),
-				false => null
-			};
+			$user->changeStorage($storage);
 
 			// write the user data
-			return $user->save($user->content()->toArray(), $languageCode);
+			return $user;
 		});
 	}
 
@@ -298,6 +299,27 @@ trait UserActions
 
 			return true;
 		});
+	}
+
+	protected static function normalizeProps(array $props): array
+	{
+		$content = $props['content'] ?? [];
+		$role    = $props['role']    ?? 'default';
+
+		if (isset($props['email']) === true) {
+			$props['email'] = Idn::decodeEmail($props['email']);
+		}
+
+		if (isset($props['password']) === true) {
+			$props['password'] = static::hashPassword($props['password']);
+		}
+
+		return [
+			...$props,
+			'content' => $content,
+			'model'   => $props['model'] ?? $role,
+			'role'    => $role
+		];
 	}
 
 	/**

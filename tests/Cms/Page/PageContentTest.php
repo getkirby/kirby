@@ -2,55 +2,109 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\Content;
+use Kirby\Content\MemoryStorage;
+use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
-class PageContentTest extends TestCase
+#[CoversClass(Page::class)]
+class PageContentTest extends ModelTestCase
 {
-	public function testDefaultContent()
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageContent';
+
+	public function testContent(): void
 	{
-		$page = new Page(['slug' =>  'test']);
+		$page = new Page(['slug' => 'test']);
 		$this->assertInstanceOf(Content::class, $page->content());
+		$this->assertSame([], $page->content()->toArray());
 	}
 
-	public function testContent()
-	{
-		$page = new Page([
-			'slug'    => 'test',
-			'content' => $content = ['text' => 'lorem ipsum']
-		]);
-
-		$this->assertSame($content, $page->content()->toArray());
-		$this->assertSame('lorem ipsum', $page->text()->value());
-	}
-
-	public function testInvalidContent()
+	public function testSetContentWithInvalidValue(): void
 	{
 		$this->expectException(TypeError::class);
+
 		new Page([
 			'slug'    => 'test',
 			'content' => 'content'
 		]);
 	}
 
-	public function testEmptyTitle()
+	public function testSetContentWithChaoticFieldNames(): void
 	{
 		$page = new Page([
-			'slug'    => 'test',
-			'content' => []
-		]);
-
-		$this->assertSame($page->slug(), $page->title()->value());
-	}
-
-	public function testTitle()
-	{
-		$page = new Page([
-			'slug'    => 'test',
+			'slug' => 'test',
+			'blueprint' => [
+				'fields' => [
+					'lowercase' => [
+						'type' => 'text',
+					],
+					'UPPERCASE' => [
+						'type' => 'text',
+					],
+					'camelCase' => [
+						'type' => 'text',
+					],
+					'under_scored' => [
+						'type' => 'text',
+					],
+					'with-dashes' => [
+						'type' => 'text',
+					]
+				]
+			],
 			'content' => [
-				'title' => 'Custom Title'
+				'lowercase'    => 'lowercase',
+				'UPPERCASE'    => 'UPPERCASE',
+				'camelCase'    => 'camelCase',
+				'under_scored'  => 'under_scored',
+				'with-dashes'  => 'with-dashes',
 			]
 		]);
 
-		$this->assertSame('Custom Title', $page->title()->value());
+		$this->assertSame([
+			'lowercase'    => 'lowercase',
+			'uppercase'    => 'UPPERCASE',
+			'camelcase'    => 'camelCase',
+			'under_scored' => 'under_scored',
+			'with-dashes'  => 'with-dashes',
+		], $page->content()->toArray());
+	}
+
+	public function testSetContentInSingleLanguageMode(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'content' => $content = [
+				'title'    => 'Title 1',
+				'subtitle' => 'Subtitle 1'
+			]
+		]);
+
+		$this->assertInstanceOf(MemoryStorage::class, $page->storage());
+
+		$this->assertSame($content, $page->content()->toArray());
+
+		$this->assertFileDoesNotExist(static::TMP . '/content/test/default.txt');
+	}
+
+	public function testSetContentInMultiLanguageMode(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug' => 'test',
+			'content' => $content = [
+				'title'    => 'Title 1',
+				'subtitle' => 'Subtitle 1'
+			]
+		]);
+
+		$this->assertInstanceOf(MemoryStorage::class, $page->storage());
+
+		$this->assertSame($content, $page->content()->toArray());
+		$this->assertSame($content, $page->content('en')->toArray());
+		$this->assertSame($content, $page->content('de')->toArray());
+
+		$this->assertFileDoesNotExist(static::TMP . '/content/test/default.en.txt');
 	}
 }

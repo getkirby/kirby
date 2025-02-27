@@ -2,43 +2,26 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class FileMethodsTest extends TestCase
+#[CoversClass(File::class)]
+class FileMethodsTest extends ModelTestCase
 {
-	public function setUp(): void
+	public const TMP = KIRBY_TMP_DIR . '/Cms.FileMethods';
+
+	public function testFileMethod(): void
 	{
-		$this->app = new App([
+		$this->app = $this->app->clone([
 			'fileMethods' => [
-				'test' => fn () => 'file method'
-			],
-			'filesMethods' => [
-				'test' => fn () => 'files method'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'test',
-						'files' => [
-							[
-								'filename' => 'test.jpg'
-							]
-						]
-					]
-				]
+				'test' => fn () => 'file method for: ' . $this->filename()
 			]
 		]);
-	}
 
-	public function testFileMethod()
-	{
-		$file = $this->app->file('test/test.jpg');
-		$this->assertSame('file method', $file->test());
-	}
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->app->site()
+		]);
 
-	public function testFilesMethod()
-	{
-		$files = $this->app->page('test')->files();
-		$this->assertSame('files method', $files->test());
+		$this->assertSame('file method for: test.jpg', $file->test());
 	}
 }

@@ -75,7 +75,6 @@ return [
 	// Any of these might be removed at any point in the future
 	'kirby\cms\asset'              => 'Kirby\Filesystem\Asset',
 	'kirby\cms\content'            => 'Kirby\Content\Content',
-	'kirby\cms\contenttranslation' => 'Kirby\Content\ContentTranslation',
 	'kirby\cms\dir'                => 'Kirby\Filesystem\Dir',
 	'kirby\cms\filename'           => 'Kirby\Filesystem\Filename',
 	'kirby\cms\filefoundation'     => 'Kirby\Filesystem\IsFile',

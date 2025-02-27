@@ -3,16 +3,18 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class FilePickerTest extends TestCase
+#[CoversClass(FilePicker::class)]
+class FilePickerTest extends ModelTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePicker';
+
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		parent::setUp();
+
+		$this->app = $this->app->clone([
 			'site' => [
 				'files' => [
 					['filename' => 'a.jpg'],
@@ -43,14 +45,14 @@ class FilePickerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$picker = new FilePicker();
 
 		$this->assertCount(3, $picker->items());
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$picker = new FilePicker([
 			'query' => 'site.files.offset(1)'
@@ -59,7 +61,7 @@ class FilePickerTest extends TestCase
 		$this->assertCount(2, $picker->items());
 	}
 
-	public function testQuerySite()
+	public function testQuerySite(): void
 	{
 		$picker = new FilePicker([
 			'query' => 'site'
@@ -68,7 +70,7 @@ class FilePickerTest extends TestCase
 		$this->assertCount(3, $picker->items());
 	}
 
-	public function testQueryPage()
+	public function testQueryPage(): void
 	{
 		$picker = new FilePicker([
 			'query' => 'kirby.page("test")'
@@ -77,7 +79,7 @@ class FilePickerTest extends TestCase
 		$this->assertCount(2, $picker->items());
 	}
 
-	public function testQueryUser()
+	public function testQueryUser(): void
 	{
 		$picker = new FilePicker([
 			'query' => 'kirby.user("test")'
@@ -86,7 +88,7 @@ class FilePickerTest extends TestCase
 		$this->assertCount(1, $picker->items());
 	}
 
-	public function testQueryFile()
+	public function testQueryFile(): void
 	{
 		$picker = new FilePicker([
 			'model' => $this->app->site()->files()->first()
@@ -95,7 +97,7 @@ class FilePickerTest extends TestCase
 		$this->assertCount(3, $picker->items());
 	}
 
-	public function testQueryInvalid()
+	public function testQueryInvalid(): void
 	{
 		$picker = new FilePicker([
 			'query' => 'site.pages'

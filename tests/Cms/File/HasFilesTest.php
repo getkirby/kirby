@@ -2,11 +2,12 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class HasFileTraitUser
+class NewHasFileTraitUser
 {
 	use HasFiles;
 
@@ -21,33 +22,10 @@ class HasFileTraitUser
 	}
 }
 
-class HasFilesTest extends TestCase
+#[CoversClass(HasFiles::class)]
+class NewHasFilesTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.HasFiles';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'users' => [
-				[
-					'email' => 'admin@domain.com',
-					'role'  => 'admin'
-				]
-			],
-			'user' => 'admin@domain.com'
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove(static::TMP);
-		App::destroy();
-	}
+	public const TMP = KIRBY_TMP_DIR . '/Cms.NewHasFiles';
 
 	public static function fileProvider(): array
 	{
@@ -65,7 +43,7 @@ class HasFilesTest extends TestCase
 		];
 	}
 
-	public function testCreateFile()
+	public function testCreateFile(): void
 	{
 		$source = static::TMP . '/source.md';
 
@@ -73,7 +51,6 @@ class HasFilesTest extends TestCase
 		F::write($source, '# Test');
 
 		$parent = $this->app->site();
-
 		$result = $parent->createFile([
 			'filename' => 'test.md',
 			'source'   => $source
@@ -88,7 +65,7 @@ class HasFilesTest extends TestCase
 		$this->assertIsString($result->content()->get('uuid')->value());
 	}
 
-	public function testCreateFileMove()
+	public function testCreateFileMove(): void
 	{
 		$source = static::TMP . '/source.md';
 
@@ -111,7 +88,7 @@ class HasFilesTest extends TestCase
 		$this->assertIsString($result->content()->get('uuid')->value());
 	}
 
-	public function testFileWithSlash()
+	public function testFileWithSlash(): void
 	{
 		$page = new Page([
 			'slug' => 'mother',
@@ -129,16 +106,17 @@ class HasFilesTest extends TestCase
 		$this->assertSame('mother/child/file.jpg', $file->id());
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
-	public function testTypes($filename, $type, $expected)
-	{
+	#[DataProvider('fileProvider')]
+	public function testTypes(
+		string $filename,
+		string $type,
+		bool $expected
+	): void {
 		$page = new Page([
 			'slug' => 'test'
 		]);
 
-		$parent = new HasFileTraitUser([
+		$parent = new NewHasFileTraitUser([
 			new File(['filename' => $filename, 'parent' => $page])
 		]);
 
@@ -149,48 +127,49 @@ class HasFilesTest extends TestCase
 		}
 	}
 
-	/**
-	 * @dataProvider fileProvider
-	 */
-	public function testHas($filename, $type, $expected)
-	{
+	#[DataProvider('fileProvider')]
+	public function testHas(
+		string $filename,
+		string $type,
+		bool $expected
+	): void {
 		$page = new Page([
 			'slug' => 'test'
 		]);
 
-		$parent = new HasFileTraitUser([
+		$parent = new NewHasFileTraitUser([
 			new File(['filename' => $filename, 'parent' => $page])
 		]);
 
 		$this->assertSame($expected, $parent->{'has' . $type}());
 	}
 
-	public function testHasFiles()
+	public function testHasFiles(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
 		]);
 
 		// no files
-		$parent = new HasFileTraitUser([]);
+		$parent = new NewHasFileTraitUser([]);
 
 		$this->assertFalse($parent->hasFiles());
 
 		// files
-		$parent = new HasFileTraitUser([
+		$parent = new NewHasFileTraitUser([
 			new File(['filename' => 'test.jpg', 'parent' => $page])
 		]);
 
 		$this->assertTrue($parent->hasFiles());
 	}
 
-	public function testFileWithUUID()
+	public function testFileWithUUID(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
 		]);
 
-		$parent = new HasFileTraitUser([
+		$parent = new NewHasFileTraitUser([
 			new File([
 				'filename' => 'test.jpg',
 				'content'  => ['uuid' => 'file-test'],

@@ -2,38 +2,27 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class PageDeleteTest extends TestCase
+#[CoversClass(Page::class)]
+class PageDeleteTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageDelete';
 
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-		]);
+		parent::setUp();
 
 		$this->app->impersonate('kirby');
-
-		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
-	{
-		Dir::remove(static::TMP);
-	}
-
-	public function site()
+	public function site(): Site
 	{
 		return $this->app->site();
 	}
 
-	public function testDeleteDraft()
+	public function testDeleteDraft(): void
 	{
 		$page = Page::create([
 			'slug' => 'test'
@@ -48,7 +37,40 @@ class PageDeleteTest extends TestCase
 		$this->assertFalse($page->parentModel()->drafts()->has($page));
 	}
 
-	public function testDeletePage()
+	public function testDeleteHooks(): void
+	{
+		$calls = 0;
+		$phpunit  = $this;
+
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.delete:before' => function ($page, $force) use ($phpunit, &$calls) {
+					$phpunit->assertIsPage($page);
+					$phpunit->assertFalse($force);
+					$phpunit->assertFileExists($page->root());
+					$calls++;
+				},
+				'page.delete:after' => function ($status, $page) use ($phpunit, &$calls) {
+					$phpunit->assertTrue($status);
+					$phpunit->assertIsPage($page);
+					$phpunit->assertFileDoesNotExist($page->root());
+					$calls++;
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug' => 'test'
+		]);
+
+		$page->delete();
+
+		$this->assertSame(2, $calls);
+	}
+
+	public function testDeletePage(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',
@@ -64,7 +86,7 @@ class PageDeleteTest extends TestCase
 		$this->assertFalse($page->parentModel()->children()->has($page));
 	}
 
-	public function testDeleteMultipleSortedPages()
+	public function testDeleteMultipleSortedPages(): void
 	{
 		$range = range(1, 10);
 		$site  = $this->site();
@@ -88,4 +110,5 @@ class PageDeleteTest extends TestCase
 
 		$this->assertCount(0, $site->children());
 	}
+
 }

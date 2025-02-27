@@ -128,7 +128,6 @@ class App
 		// configurable properties
 		$this->setLanguages($props['languages'] ?? null);
 		$this->setRoles($props['roles'] ?? null);
-		$this->setSite($props['site'] ?? null);
 		$this->setUser($props['user'] ?? null);
 		$this->setUsers($props['users'] ?? null);
 
@@ -146,6 +145,11 @@ class App
 		$this->extensionsFromPlugins();
 		$this->extensionsFromOptions();
 		$this->extensionsFromFolders();
+
+		// must be set after the extensions are loaded.
+		// the default storage instance must be defined
+		// and the App::$instance singleton needs to be set
+		$this->setSite($props['site'] ?? null);
 
 		// trigger hook for use in plugins
 		$this->trigger('system.loadPlugins:after');
@@ -1531,7 +1535,7 @@ class App
 	 *
 	 * @return $this
 	 */
-	protected function setSite(Site|array|null $site = null): static
+	public function setSite(Site|array|null $site = null): static
 	{
 		if (is_array($site) === true) {
 			$site = new Site($site);

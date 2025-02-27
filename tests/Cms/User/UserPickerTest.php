@@ -2,16 +2,18 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class UserPickerTest extends TestCase
+#[CoversClass(UserPicker::class)]
+class UserPickerTest extends ModelTestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.UserPicker';
+
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		parent::setUp();
+
+		$this->app = $this->app->clone([
 			'users' => [
 				['email' => 'a@getkirby.com'],
 				['email' => 'b@getkirby.com'],
@@ -22,14 +24,14 @@ class UserPickerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$picker = new UserPicker();
 
 		$this->assertCount(3, $picker->items());
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$picker = new UserPicker([
 			'query' => 'kirby.users.offset(1)'

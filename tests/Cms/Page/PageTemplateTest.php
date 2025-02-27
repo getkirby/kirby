@@ -2,110 +2,94 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\NotFoundException;
 use Kirby\Template\Template;
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use TypeError;
 
-class PageTemplateTest extends TestCase
+#[CoversClass(Page::class)]
+class PageTemplateTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/PageTemplateTest';
+	public const TMP = KIRBY_TMP_DIR . '/Cms.PageTemplate';
 
-	public function setUp(): void
+	public function testIntendedTemplate(): void
 	{
-		$this->app = new App([
-			'templates' => [
-				'default'               => static::FIXTURES . '/template.php',
-				'default.json'          => static::FIXTURES . '/template.php',
-				'default.xml'           => static::FIXTURES . '/template.php',
-				'template'              => static::FIXTURES . '/template.php',
-				'template.json'         => static::FIXTURES . '/template.php',
-				'another-template.json' => static::FIXTURES . '/template.php'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'with-template',
-						'template' => 'template'
-					],
-					[
-						'slug' => 'without-template',
-						'template' => 'does-not-exist'
-					],
-					[
-						'slug' => 'with-another-template',
-						'template' => 'another-template'
-					]
-				]
-			]
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'test'
+		]);
+
+		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
+		$this->assertSame('test', $page->intendedTemplate()->name());
+	}
+
+	public function testIntendedTemplateWithWrongCase(): void
+	{
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'TEST'
+		]);
+
+		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
+		$this->assertSame('test', $page->intendedTemplate()->name());
+	}
+
+	public function testIntendedTemplateWithoutValue(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
+		$this->assertSame('default', $page->intendedTemplate()->name());
+	}
+
+	public function testInvalidTemplateValue(): void
+	{
+		$this->expectException(TypeError::class);
+
+		new Page([
+			'slug'     => 'test',
+			'template' => []
 		]);
 	}
 
-	public function testIntendedTemplate()
+	public function testTemplateWithExistingTemplate(): void
 	{
-		$page = $this->app->page('with-template');
-		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
-		$this->assertSame('template', $page->intendedTemplate()->name());
+		$this->app = $this->app->clone([
+			'templates' => [
+				// the file only needs to exist,
+				// it doesn't need to be a valid template
+				'test' => __FILE__
+			]
+		]);
 
-		$page = $this->app->page('without-template');
-		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
-		$this->assertSame('does-not-exist', $page->intendedTemplate()->name());
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'test'
+		]);
 
-		$page = $this->app->page('with-another-template');
-		$this->assertInstanceOf(Template::class, $page->intendedTemplate());
-		$this->assertSame('another-template', $page->intendedTemplate()->name());
+		$this->assertInstanceOf(Template::class, $page->template());
+		$this->assertSame('test', $page->template()->name());
 	}
 
-	public function testTemplate()
+	public function testTemplateWithNonExistingTemplate(): void
 	{
-		$page = $this->app->page('with-template');
-		$this->assertInstanceOf(Template::class, $page->template());
-		$this->assertSame('template', $page->template()->name());
-		$this->assertSame('html', $page->template()->type());
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'test'
+		]);
 
-		$page = $this->app->page('without-template');
-		$this->assertInstanceOf(Template::class, $page->template());
-		$this->assertSame('default', $page->template()->name());
-		$this->assertSame('html', $page->template()->type());
-
-		$page = $this->app->page('with-another-template');
 		$this->assertInstanceOf(Template::class, $page->template());
 		$this->assertSame('default', $page->template()->name());
-		$this->assertSame('html', $page->template()->type());
 	}
 
-	public function testRepresentation()
+	public function testTemplateWithoutValue(): void
 	{
-		$page = $this->app->page('with-template');
-		$representation = $page->representation('json');
-		$this->assertInstanceOf(Template::class, $representation);
-		$this->assertSame('template', $representation->name());
-		$this->assertSame('json', $representation->type());
+		$page = new Page([
+			'slug' => 'test',
+		]);
 
-		$page = $this->app->page('without-template');
-		$representation = $page->representation('json');
-		$this->assertInstanceOf(Template::class, $representation);
-		$this->assertSame('default', $representation->name());
-		$this->assertSame('json', $representation->type());
-
-		$page = $this->app->page('without-template');
-		$representation = $page->representation('xml');
-		$this->assertInstanceOf(Template::class, $representation);
-		$this->assertSame('default', $representation->name());
-		$this->assertSame('xml', $representation->type());
-
-		$page = $this->app->page('with-another-template');
-		$representation = $page->representation('xml');
-		$this->assertInstanceOf(Template::class, $representation);
-		$this->assertSame('default', $representation->name());
-		$this->assertSame('xml', $representation->type());
-	}
-
-	public function testRepresentationError()
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The content representation cannot be found');
-
-		$page = $this->app->page('with-template');
-		$page->representation('xml');
+		$this->assertInstanceOf(Template::class, $page->template());
+		$this->assertSame('default', $page->template()->name());
 	}
 }

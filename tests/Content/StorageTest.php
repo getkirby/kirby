@@ -536,6 +536,30 @@ class StorageTest extends TestCase
 	}
 
 	/**
+	 * @covers ::replaceStrings
+	 */
+	public function testReplaceStringsWithNullValues()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler = new TestStorage(model: $this->model);
+
+		$handler->create(VersionId::latest(), Language::single(), [
+			'foo' => null,
+			'bar' => 'two steps'
+		]);
+
+		$handler->replaceStrings(VersionId::latest(), Language::single(), [
+			'step' => 'jump'
+		]);
+
+		$this->assertSame([
+			'foo' => null,
+			'bar' => 'two jumps'
+		], $handler->read(VersionId::latest(), Language::single()));
+	}
+
+	/**
 	 * @covers ::touchLanguage
 	 */
 	public function testTouchLanguageMultiLanguage()

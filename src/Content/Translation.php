@@ -18,7 +18,7 @@ use Kirby\Exception\Exception;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Translation extends ContentTranslation
+class Translation
 {
 	/**
 	 * Creates a new translation object
@@ -165,8 +165,8 @@ class Translation extends ContentTranslation
 	{
 		return [
 			'code'    => $this->language->code(),
-			'content' => $this->version->content($this->language)->toArray(),
-			'exists'  => $this->version->exists($this->language),
+			'content' => $this->content(),
+			'exists'  => $this->exists(),
 			'slug'    => $this->slug(),
 		];
 	}

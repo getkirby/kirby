@@ -241,13 +241,25 @@ class File extends ModelWithContent
 		array $data,
 		string|null $languageCode = null
 	): array {
+		$language = Language::ensure($languageCode);
+
 		// only add the template in, if the $data array
-		// doesn't explicitly unsets it
-		if (
-			array_key_exists('template', $data) === false &&
-			$template = $this->template()
-		) {
+		// doesn't explicitly unset it and it was already
+		// set in the content before
+		if (array_key_exists('template', $data) === false && $template = $this->template()) {
 			$data['template'] = $template;
+		}
+
+		// don't store the template field for the default template
+		if (($data['template'] ?? null) === 'default') {
+			unset($data['template']);
+		}
+
+		// only keep the template and sort fields in the
+		// default language
+		if ($language->isDefault() === false) {
+			unset($data['template'], $data['sort']);
+			return $data;
 		}
 
 		return $data;

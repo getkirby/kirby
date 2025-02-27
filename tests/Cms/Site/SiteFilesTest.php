@@ -2,28 +2,51 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
-class SiteFilesTest extends TestCase
+#[CoversClass(Site::class)]
+class SiteFilesTest extends ModelTestCase
 {
-	public function testDefaultFiles()
+	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteFiles';
+
+	public function testCreateFile(): void
 	{
+		F::write($source = static::TMP . '/source.md', '');
+
 		$site = new Site();
-		$this->assertInstanceOf(Files::class, $site->files());
+		$file = $site->createFile([
+			'filename' => 'test.md',
+			'source'   => $source
+		]);
+
+		$this->assertSame('test.md', $file->filename());
 	}
 
-	public function testInvalidFiles()
-	{
-		$this->expectException(TypeError::class);
-		new Site(['files' => 'files']);
-	}
-
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$site  = new Site([
-			'files' => []
+			'files' => [
+				['filename' => 'test.md']
+			]
 		]);
 
 		$this->assertInstanceOf(Files::class, $site->files());
+		$this->assertCount(1, $site->files());
+		$this->assertSame('test.md', $site->files()->first()->filename());
+	}
+
+	public function testFilesDefault(): void
+	{
+		$site = new Site();
+		$this->assertInstanceOf(Files::class, $site->files());
+		$this->assertCount(0, $site->files());
+	}
+
+	public function testFilesInvalid(): void
+	{
+		$this->expectException(TypeError::class);
+		new Site(['files' => 'files']);
 	}
 }

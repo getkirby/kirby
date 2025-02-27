@@ -2,28 +2,39 @@
 
 namespace Kirby\Cms;
 
-class PageFilesTest extends TestCase
+use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Page::class)]
+class PageFilesTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageFiles';
 
-	public function setUp(): void
+	public function testCreateFile(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			]
+		F::write($source = static::TMP . '/source.md', '');
+
+		$page = Page::create([
+			'slug' => 'test'
 		]);
+
+		$file = $page->createFile([
+			'filename' => 'test.md',
+			'source'   => $source
+		]);
+
+		$this->assertSame('test.md', $file->filename());
+		$this->assertSame('test/test.md', $file->id());
 	}
 
-	public function testDefaultFiles()
+	public function testFiles(): void
 	{
 		$page = new Page(['slug' => 'test']);
 		$this->assertInstanceOf(Files::class, $page->files());
-
 		$this->assertCount(0, $page->files());
 	}
 
-	public function testFiles()
+	public function testFilesWithValues(): void
 	{
 		$page = new Page([
 			'slug'  => 'test',
@@ -36,7 +47,7 @@ class PageFilesTest extends TestCase
 		$this->assertCount(1, $page->files());
 	}
 
-	public function testImages()
+	public function testImages(): void
 	{
 		$page = new Page([
 			'slug'  => 'test',

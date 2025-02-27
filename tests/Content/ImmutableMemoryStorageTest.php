@@ -40,7 +40,7 @@ class ImmutableMemoryStorageTest extends TestCase
 	public function testMove()
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		$this->expectExceptionMessage('Storage for the page is immutable and cannot be moved. Make sure to use the last alteration of the object.');
 
 		$this->storage->move(
 			fromVersionId: VersionId::latest(),
@@ -56,7 +56,7 @@ class ImmutableMemoryStorageTest extends TestCase
 	public function testTouch()
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		$this->expectExceptionMessage('Storage for the page is immutable and cannot be touched. Make sure to use the last alteration of the object.');
 
 		$this->storage->touch(VersionId::latest(), Language::ensure());
 	}
@@ -70,7 +70,7 @@ class ImmutableMemoryStorageTest extends TestCase
 		$this->storage->create(VersionId::latest(), Language::ensure(), []);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		$this->expectExceptionMessage('Storage for the page is immutable and cannot be updated. Make sure to use the last alteration of the object.');
 
 		$this->storage->update(VersionId::latest(), Language::ensure(), []);
 	}

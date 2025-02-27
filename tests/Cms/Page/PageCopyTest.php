@@ -2,68 +2,13 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\PageCopy
- */
-class PageCopyTest extends TestCase
+#[CoversClass(PageCopy::class)]
+class PageCopyTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageCopy';
 
-	public function setUp(): void
-	{
-		Dir::make(static::TMP);
-
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-		]);
-
-		$this->app->impersonate('kirby');
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove(static::TMP);
-		App::destroy();
-	}
-
-	/**
-	 * @covers ::children
-	 */
-	public function testChildren(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'children' => [
-							['slug' => 'test-a'],
-							['slug' => 'test-b']
-						]
-					]
-				]
-			]
-		]);
-
-		$page = $app->page('test');
-
-		$copy = new PageCopy($page, withChildren: true);
-		$this->assertCount(2, $copy->children());
-
-		$copy = new PageCopy($page, withChildren: false);
-		$this->assertCount(0, $copy->children());
-	}
-
-	/**
-	 * @covers ::convertUuids
-	 * @covers ::convertChildrenUuids
-	 * @covers ::convertFileUuids
-	 */
 	public function testConvertUuids(): void
 	{
 		$app = $this->app->clone([
@@ -158,9 +103,6 @@ class PageCopyTest extends TestCase
 		$this->assertSame([], array_keys($copy->uuids));
 	}
 
-	/**
-	 * @covers ::convertChildrenUuids
-	 */
 	public function testConvertUuidsClearChildren(): void
 	{
 		$app = $this->app->clone([
@@ -216,9 +158,6 @@ class PageCopyTest extends TestCase
 		$this->assertSame('', $copy->uuids['page://ab']);
 	}
 
-	/**
-	 * @covers ::convertFileUuids
-	 */
 	public function testConvertUuidsClearFiles(): void
 	{
 		$app = $this->app->clone([
@@ -260,69 +199,29 @@ class PageCopyTest extends TestCase
 		$this->assertSame('', $copy->uuids['file://file-b']);
 	}
 
-	/**
-	 * @covers ::files
-	 */
-	public function testFiles(): void
+	public function testLanguagesInMultiLanguageMode(): void
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'files' => [
-							['filename' => 'test-a.jpg'],
-							['filename' => 'test-b.jpg'],
-						]
-					]
-				]
-			]
+		$this->setupMultiLanguage();
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug' => 'test',
 		]);
 
-		$page = $app->page('test');
-
-		$copy = new PageCopy($page, withFiles: true);
-		$this->assertCount(2, $copy->files());
-
-		$copy = new PageCopy($page, withFiles: false);
-		$this->assertCount(0, $copy->files());
-	}
-
-	/**
-	 * @covers ::languages
-	 */
-	public function testLanguages(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				]
-			]
-		]);
-
-		$page = $app->page('test');
 		$copy = new PageCopy($page);
-		$this->assertSame([null], $copy->languages());
-
-		$app = $app->clone([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'default' => true,
-				],
-				[
-					'code'    => 'de',
-				],
-			]
-		]);
-
 		$this->assertCount(2, $copy->languages());
 	}
 
-	/**
-	 * @covers ::process
-	 */
+	public function testLanguagesInSingleLanguageMode(): void
+	{
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
+		$copy = new PageCopy($page);
+		$this->assertSame([null], $copy->languages());
+	}
+
 	public function testProcess(): void
 	{
 		$app = $this->app->clone([
@@ -355,9 +254,6 @@ class PageCopyTest extends TestCase
 		$this->assertNotSame('file://file-aa', $normalized->find('test-a')->file()->uuid()->toString());
 	}
 
-	/**
-	 * @covers ::removeSlug
-	 */
 	public function testRemoveSlug(): void
 	{
 		$app = $this->app->clone([
@@ -401,9 +297,6 @@ class PageCopyTest extends TestCase
 		$this->assertSame('test', $app->page('test')->slug('de'));
 	}
 
-	/**
-	 * @covers ::replaceUuids
-	 */
 	public function testReplaceUuids(): void
 	{
 		$app = $this->app->clone([
@@ -446,19 +339,19 @@ class PageCopyTest extends TestCase
 
 		$copy = new PageCopy($page, $original, withChildren: true);
 		$copy->convertUuids(null);
-		$this->assertSame($content, $page->text()->value());
+		$this->assertSame($content, $copy->copy->text()->value());
 
 		// UUIDs disabled
 		$app = $app->clone(['options' => ['content' => ['uuid' => false]]]);
 		$copy->replaceUuids();
 		$page->purge();
-		$this->assertSame($content, $page->text()->value());
+		$this->assertSame($content, $copy->copy->text()->value());
 
 		// UUIDs enabled
 		$app = $app->clone(['options' => ['content' => ['uuid' => true]]]);
 		$copy->replaceUuids();
 		$page->purge();
-		$this->assertNotSame($content, $page->text()->value());
-		$this->assertStringContainsString('This is a text of  seeing whether', $page->text()->value());
+		$this->assertNotSame($content, $copy->copy->text()->value());
+		$this->assertStringContainsString('This is a text of  seeing whether', $copy->copy->text()->value());
 	}
 }
