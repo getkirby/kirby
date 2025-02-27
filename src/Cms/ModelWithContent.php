@@ -105,6 +105,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Copies the model to a new storage instance/type
 	 * @since 5.0.0
+	 * @internal
 	 */
 	public function changeStorage(Storage|string $toStorage): static
 	{
