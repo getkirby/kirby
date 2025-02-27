@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\MemoryStorage;
 use Kirby\Content\VersionCache;
 use Kirby\Content\VersionId;
@@ -331,6 +332,9 @@ trait PageActions
 	): mixed {
 		$kirby = $this->kirby();
 
+		$old = $this->clone();
+		$old->changeStorage(ImmutableMemoryStorage::class);
+
 		// check page rules
 		$this->rules()->$action(...array_values($arguments));
 
@@ -359,9 +363,9 @@ trait PageActions
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create'    => ['page' => $result],
-			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $this],
-			'delete'    => ['status' => $result, 'page' => $this],
-			default     => ['newPage' => $result, 'oldPage' => $this]
+			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $old],
+			'delete'    => ['status' => $result, 'page' => $old],
+			default     => ['newPage' => $result, 'oldPage' => $old]
 		};
 
 		// run `after` hook and apply return to action result

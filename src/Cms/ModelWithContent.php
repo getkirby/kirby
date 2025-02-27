@@ -431,20 +431,14 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		string|null $languageCode = null,
 		bool $overwrite = false
 	): static {
-		// create a clone to avoid modifying the original
-		$clone = $this->clone();
-
-		// move the old model into memory
-		$this->changeStorage(ImmutableMemoryStorage::class);
-
 		// update the clone
-		$clone->version()->save(
+		$this->version()->save(
 			$data ?? [],
 			$languageCode ?? 'default',
 			$overwrite
 		);
 
-		return $clone;
+		return $this;
 	}
 
 	/**

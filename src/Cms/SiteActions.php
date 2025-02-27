@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\ImmutableMemoryStorage;
 
 /**
  * SiteActions
@@ -30,6 +31,9 @@ trait SiteActions
 		Closure $callback
 	): mixed {
 		$kirby = $this->kirby();
+
+		$old = $this->clone();
+		$old->changeStorage(ImmutableMemoryStorage::class);
 
 		// check site rules
 		$this->rules()->$action(...array_values($arguments));
@@ -59,7 +63,7 @@ trait SiteActions
 		// (first argument, usually the new model) if anything returned
 		$result = $kirby->apply(
 			'site.' . $action . ':after',
-			['newSite' => $result, 'oldSite' => $this],
+			['newSite' => $result, 'oldSite' => $old],
 			'newSite'
 		);
 

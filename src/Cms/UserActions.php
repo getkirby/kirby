@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\MemoryStorage;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
@@ -157,6 +158,9 @@ trait UserActions
 
 		$kirby = $this->kirby();
 
+		$old = $this->clone();
+		$old->changeStorage(ImmutableMemoryStorage::class);
+
 		// check user rules
 		$this->rules()->$action(...array_values($arguments));
 
@@ -185,8 +189,8 @@ trait UserActions
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create' => ['user' => $result],
-			'delete' => ['status' => $result, 'user' => $this],
-			default  => ['newUser' => $result, 'oldUser' => $this]
+			'delete' => ['status' => $result, 'user' => $old],
+			default  => ['newUser' => $result, 'oldUser' => $old]
 		};
 
 		// run `after` hook and apply return to action result

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\MemoryStorage;
 use Kirby\Content\VersionCache;
 use Kirby\Exception\InvalidArgumentException;
@@ -152,6 +153,9 @@ trait FileActions
 	): mixed {
 		$kirby = $this->kirby();
 
+		$old = $this->clone();
+		$old->changeStorage(ImmutableMemoryStorage::class);
+
 		// check file rules
 		$this->rules()->$action(...array_values($arguments));
 
@@ -180,8 +184,8 @@ trait FileActions
 		// determine arguments for `after` hook depending on the action
 		$argumentsAfter = match ($action) {
 			'create' => ['file' => $result],
-			'delete' => ['status' => $result, 'file' => $this],
-			default  => ['newFile' => $result, 'oldFile' => $this]
+			'delete' => ['status' => $result, 'file' => $old],
+			default  => ['newFile' => $result, 'oldFile' => $old]
 		};
 
 		// run `after` hook and apply return to action result
