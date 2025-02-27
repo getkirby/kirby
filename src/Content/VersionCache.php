@@ -2,7 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\File;
 use Kirby\Cms\Language;
 
 /**
@@ -32,14 +31,7 @@ class VersionCache
 	 */
 	public static function key(Version $version, Language $language): string
 	{
-		$model = $version->model();
-
-		if ($model instanceof File) {
-			$parent = $model->parent();
-			return $parent::CLASS_ALIAS . '://' . ltrim($parent->id() . '/' . $model->filename(), '/') . '?version=' . $version->id() . '&language=' . $language;
-		}
-
-		return $model::CLASS_ALIAS . '://' . $model->id() . '?version=' . $version->id() . '&language=' . $language;
+		return spl_object_hash($version->model()) . ':' . $version->id() . ':' . $language->code();
 	}
 
 	/**
