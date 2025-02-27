@@ -5,7 +5,6 @@ namespace Kirby\Content;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
-use Kirby\Cms\Site;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;

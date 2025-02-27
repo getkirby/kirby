@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Generator;
 use Kirby\Content\Storage;
+use Kirby\Content\VersionCache;
 use Kirby\Data\Data;
 use Kirby\Email\Email as BaseEmail;
 use Kirby\Exception\ErrorPageException;
@@ -97,6 +98,9 @@ class App
 	public function __construct(array $props = [], bool $setInstance = true)
 	{
 		$this->core = new Core($this);
+
+		// start with a fresh version cache
+		VersionCache::$cache = [];
 
 		// register all roots to be able to load stuff afterwards
 		$this->bakeRoots($props['roots'] ?? []);
