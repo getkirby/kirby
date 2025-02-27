@@ -2,7 +2,7 @@
 
 namespace Kirby\Content;
 
-use PHPUnit\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Content::class)]
 class ContentConvertToTest extends TestCase

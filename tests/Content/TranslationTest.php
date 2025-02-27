@@ -5,7 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\Language;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
-use PHPUnit\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Translation::class)]
 class TranslationTest extends TestCase

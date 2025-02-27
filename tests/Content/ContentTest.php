@@ -4,7 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
-use PHPUnit\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Content::class)]
 class ContentTest extends TestCase
