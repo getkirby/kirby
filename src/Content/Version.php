@@ -124,14 +124,14 @@ class Version
 			(new Changes())->track($this->model);
 		}
 
-		// make sure that an older version does not exist in the cache
-		VersionCache::remove($this, $language);
-
 		$this->model->storage()->create(
 			versionId: $this->id,
 			language: $language,
 			fields: $this->prepareFieldsBeforeWrite($fields, $language)
 		);
+
+		// make sure that an older version does not exist in the cache
+		VersionCache::remove($this, $language);
 	}
 
 	/**
@@ -146,14 +146,14 @@ class Version
 
 		$this->model->storage()->delete($this->id, $language);
 
-		// Remove the version from the cache
-		VersionCache::remove($this, $language);
-
 		// untrack the changes if the version does no longer exist
 		// in any of the available languages
 		if ($this->id->is(VersionId::changes()) === true && $this->exists('*') === false) {
 			(new Changes())->untrack($this->model);
 		}
+
+		// Remove the version from the cache
+		VersionCache::remove($this, $language);
 	}
 
 	/**
@@ -319,10 +319,6 @@ class Version
 			toLanguage: $toLanguage
 		);
 
-		// remove both versions from the cache
-		VersionCache::remove($fromVersion, $fromLanguage);
-		VersionCache::remove($toVersion, $toLanguage);
-
 		$this->model->storage()->move(
 			fromVersionId: $fromVersion->id(),
 			fromLanguage: $fromLanguage,
@@ -330,6 +326,10 @@ class Version
 			toLanguage: $toLanguage,
 			toStorage: $toStorage
 		);
+
+		// remove both versions from the cache
+		VersionCache::remove($fromVersion, $fromLanguage);
+		VersionCache::remove($toVersion, $toLanguage);
 	}
 
 	/**
@@ -539,15 +539,15 @@ class Version
 		// check if replacing is allowed
 		VersionRules::replace($this, $fields, $language);
 
-		// remove the version from the cache to read
-		// a fresh version next time
-		VersionCache::remove($this, $language);
-
 		$this->model->storage()->update(
 			versionId: $this->id,
 			language: $language,
 			fields: $this->prepareFieldsBeforeWrite($fields, $language)
 		);
+
+		// remove the version from the cache to read
+		// a fresh version next time
+		VersionCache::remove($this, $language);
 	}
 
 	/**
@@ -608,15 +608,15 @@ class Version
 			...$fields
 		];
 
-		// remove the version from the cache to read
-		// a fresh version next time
-		VersionCache::remove($this, $language);
-
 		$this->model->storage()->update(
 			versionId: $this->id,
 			language: $language,
 			fields: $this->prepareFieldsBeforeWrite($fields, $language)
 		);
+
+		// remove the version from the cache to read
+		// a fresh version next time
+		VersionCache::remove($this, $language);
 	}
 
 	/**
