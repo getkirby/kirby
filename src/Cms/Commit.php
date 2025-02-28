@@ -46,7 +46,7 @@ class Commit
 
 	/**
 	 * Returns the appropriate arguments for the `after` hook
-	 * for the given model action. It's a wrapper around the 
+	 * for the given model action. It's a wrapper around the
 	 * more specific `afterHookArgumentsFor*Actions` methods.
 	 */
 	public function afterHookArguments(mixed $state): array
@@ -162,7 +162,7 @@ class Commit
 	}
 
 	/**
-	 * Handles the full call of the given action, 
+	 * Handles the full call of the given action,
 	 * runs the `before` and `after` hooks and updates
 	 * the state of the given model.
 	 */
@@ -187,7 +187,7 @@ class Commit
 
 	/**
 	 * Runs the given hook and modifies the first argument
-	 * of the given arguments array. It returns an array with 
+	 * of the given arguments array. It returns an array with
 	 * `arguments` and `result` keys.
 	 */
 	public function hook(string $hook, array $arguments): array
