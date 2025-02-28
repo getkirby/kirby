@@ -125,7 +125,10 @@ trait PageActions
 				VersionCache::$cache = [];
 
 				// remove from the siblings
-				static::updateParentCollections($oldPage, 'remove');
+				State::updatePage(
+					method: 'remove',
+					current: $oldPage,
+				);
 
 				Dir::remove($oldPage->mediaRoot());
 			}
@@ -329,52 +332,12 @@ trait PageActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$kirby = $this->kirby();
-
-		// check page rules
-		$this->rules()->$action(...array_values($arguments));
-
-		// run `before` hook and pass all arguments;
-		// the very first argument (which should be the model)
-		// is modified by the return value from the hook (if any returned)
-		$appliedTo = array_key_first($arguments);
-		$arguments[$appliedTo] = $kirby->apply(
-			'page.' . $action . ':before',
-			$arguments,
-			$appliedTo
+		$commit = new Commit(
+			model: $this,
+			action: $action
 		);
 
-		// check page rules again, after the hook got applied
-		$this->rules()->$action(...array_values($arguments));
-
-		// run the main action closure
-		$result = $callback(...array_values($arguments));
-
-		// determine the object that needs to be updated in the parent collection
-		$update = $result instanceof Page ? $result : $this;
-
-		// flush the parent cache to get children and drafts right
-		static::updateParentCollections($update, $action);
-
-		// determine arguments for `after` hook depending on the action
-		$argumentsAfter = match ($action) {
-			'create'    => ['page' => $result],
-			'duplicate' => ['duplicatePage' => $result, 'originalPage' => $this],
-			'delete'    => ['status' => $result, 'page' => $this],
-			default     => ['newPage' => $result, 'oldPage' => $this]
-		};
-
-		// run `after` hook and apply return to action result
-		// (first argument, usually the new model) if anything returned
-		$result = $kirby->apply(
-			'page.' . $action . ':after',
-			$argumentsAfter,
-			array_key_first($argumentsAfter)
-		);
-
-		$kirby->cache('pages')->flush();
-
-		return $result;
+		return $commit->call($arguments, $callback);
 	}
 
 	/**
@@ -436,7 +399,11 @@ trait PageActions
 		);
 
 		// add copy to siblings
-		static::updateParentCollections($copy, 'append', $parentModel);
+		State::updatePage(
+			method: 'append',
+			current: $copy,
+			parent: $parentModel
+		);
 
 		return $copy;
 	}
@@ -866,8 +833,11 @@ trait PageActions
 	): static {
 		$page = parent::save($data, $languageCode, $overwrite);
 
-		// overwrite the updated page in the parent collection
-		static::updateParentCollections($page, 'set');
+		State::updatePage(
+			method: 'set',
+			current: $this,
+			next: $page
+		);
 
 		return $page;
 	}
@@ -945,38 +915,19 @@ trait PageActions
 	/**
 	 * Updates parent collections with the new page object
 	 * after a page action
+	 *
+	 * @deprecated 5.0.0 Use State::updatePage instead
 	 */
 	protected static function updateParentCollections(
 		Page $page,
 		string|false $method,
 		Page|Site|null $parentModel = null
 	): void {
-		// normalize the method
-		$method = match ($method) {
-			'append', 'create' => 'append',
-			'remove', 'delete' => 'remove',
-			false, 'duplicate' => false, // ::copy is already taking care of this
-			default => 'set'
-		};
-
-		if ($method === false) {
-			return;
-		}
-
-		$parentModel ??= $page->parentModel();
-
-		// method arguments depending on the called method
-		$args = $method === 'remove' ? [$page] : [$page->id(), $page];
-
-		if ($page->isDraft() === true) {
-			$parentModel->drafts()->$method(...$args);
-		} else {
-			$parentModel->children()->$method(...$args);
-		}
-
-		// update the childrenAndDrafts() cache if it is initialized
-		if ($parentModel->childrenAndDrafts !== null) {
-			$parentModel->childrenAndDrafts()->$method(...$args);
-		}
+		State::updatePage(
+			method: $method,
+			current: $page,
+			next: $page,
+			parent: $parentModel
+		);
 	}
 }
