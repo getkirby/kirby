@@ -17,7 +17,7 @@ trait PageSiblings
 	 * Checks if there's a next listed
 	 * page in the siblings collection
 	 */
-	public function hasNextListed(Collection|null $collection = null): bool
+	public function hasNextListed(Pages|null $collection = null): bool
 	{
 		return $this->nextListed($collection) !== null;
 	}
@@ -26,7 +26,7 @@ trait PageSiblings
 	 * Checks if there's a next unlisted
 	 * page in the siblings collection
 	 */
-	public function hasNextUnlisted(Collection|null $collection = null): bool
+	public function hasNextUnlisted(Pages|null $collection = null): bool
 	{
 		return $this->nextUnlisted($collection) !== null;
 	}
@@ -35,7 +35,7 @@ trait PageSiblings
 	 * Checks if there's a previous listed
 	 * page in the siblings collection
 	 */
-	public function hasPrevListed(Collection|null $collection = null): bool
+	public function hasPrevListed(Pages|null $collection = null): bool
 	{
 		return $this->prevListed($collection) !== null;
 	}
@@ -44,7 +44,7 @@ trait PageSiblings
 	 * Checks if there's a previous unlisted
 	 * page in the siblings collection
 	 */
-	public function hasPrevUnlisted(Collection|null $collection = null): bool
+	public function hasPrevUnlisted(Pages|null $collection = null): bool
 	{
 		return $this->prevUnlisted($collection) !== null;
 	}
@@ -52,7 +52,7 @@ trait PageSiblings
 	/**
 	 * Returns the next listed page if it exists
 	 */
-	public function nextListed(Collection|null $collection = null): Page|null
+	public function nextListed(Pages|null $collection = null): Page|null
 	{
 		return $this->nextAll($collection)->listed()->first();
 	}
@@ -60,7 +60,7 @@ trait PageSiblings
 	/**
 	 * Returns the next unlisted page if it exists
 	 */
-	public function nextUnlisted(Collection|null $collection = null): Page|null
+	public function nextUnlisted(Pages|null $collection = null): Page|null
 	{
 		return $this->nextAll($collection)->unlisted()->first();
 	}
@@ -68,7 +68,7 @@ trait PageSiblings
 	/**
 	 * Returns the previous listed page
 	 */
-	public function prevListed(Collection|null $collection = null): Page|null
+	public function prevListed(Pages|null $collection = null): Page|null
 	{
 		return $this->prevAll($collection)->listed()->last();
 	}
@@ -76,7 +76,7 @@ trait PageSiblings
 	/**
 	 * Returns the previous unlisted page
 	 */
-	public function prevUnlisted(Collection|null $collection = null): Page|null
+	public function prevUnlisted(Pages|null $collection = null): Page|null
 	{
 		return $this->prevAll($collection)->unlisted()->last();
 	}
