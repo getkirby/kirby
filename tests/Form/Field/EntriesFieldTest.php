@@ -103,6 +103,18 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($props, $field->field());
 	}
 
+	public function testFieldLabel()
+	{
+		$field = $this->field('entries', [
+			'field' => [
+				'type'  => 'text',
+				'label' => 'Test'
+			]
+		]);
+
+		$this->assertArrayNotHasKey('label', $field->field());
+	}
+
 	public function testDefaultValue()
 	{
 		$field = $this->field('entries', [

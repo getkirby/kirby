@@ -64,9 +64,9 @@
 						:is="`k-${field.type}-field`"
 						:ref="'entry-' + index + '-input'"
 						:disabled="disabled"
-						:label="false"
 						:value="entry.value"
 						v-bind="field"
+						:label="false"
 						class="k-entries-field-item-input"
 						@input="onInput(index, $event)"
 					/>

@@ -93,6 +93,9 @@ class EntriesField extends FieldClass
 			);
 		}
 
+		// remove the label from the entry field
+		unset($attrs['label']);
+
 		$this->field = $attrs;
 	}
 
