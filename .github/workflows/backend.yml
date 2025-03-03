@@ -91,7 +91,7 @@ jobs:
           key: php-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # pin@v4
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v4
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
@@ -113,7 +113,7 @@ jobs:
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # pin@v4
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v4
         with:
           path: ~/.cache/psalm
           key: backend-analysis-${{ matrix.php }}
@@ -191,7 +191,7 @@ jobs:
           key: php-analysis-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # pin@v4
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v4
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
@@ -268,7 +268,7 @@ jobs:
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # pin@v4
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v4
         with:
           path: ~/.php-cs-fixer
           key: coding-style
