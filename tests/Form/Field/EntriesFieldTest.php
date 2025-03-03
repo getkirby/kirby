@@ -115,6 +115,18 @@ class EntriesFieldTest extends TestCase
 		$this->assertArrayNotHasKey('label', $field->field());
 	}
 
+	public function testFieldCounter()
+	{
+		$field = $this->field('entries', [
+			'field' => [
+				'type'    => 'text',
+				'counter' => true
+			]
+		]);
+
+		$this->assertArrayNotHasKey('counter', $field->field());
+	}
+
 	public function testDefaultValue()
 	{
 		$field = $this->field('entries', [

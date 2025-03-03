@@ -93,8 +93,8 @@ class EntriesField extends FieldClass
 			);
 		}
 
-		// remove the label from the entry field
-		unset($attrs['label']);
+		// remove the unsupported props from the entry field
+		unset($attrs['counter'], $attrs['label']);
 
 		$this->field = $attrs;
 	}
