@@ -112,7 +112,7 @@ class Environment
 
 	/**
 	 * Returns the server's IP address
-	 * @see ::ip
+	 * @see self::ip()
 	 */
 	public function address(): string|null
 	{
