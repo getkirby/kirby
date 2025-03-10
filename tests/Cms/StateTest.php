@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use PHPUnit\Framework\Attributes\CoversDefaultClass;
+
 #[CoversDefaultClass(State::class)]
 class StateTest extends TestCase
 {
