@@ -66,6 +66,8 @@
 						:disabled="disabled"
 						:value="entry.value"
 						v-bind="field"
+						:counter="false"
+						:label="false"
 						class="k-entries-field-item-input"
 						@input="onInput(index, $event)"
 					/>
