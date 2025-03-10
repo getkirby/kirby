@@ -31,7 +31,7 @@ class State
 	 * Returns the appropriate state modification method
 	 * for the given action.
 	 */
-	public static function normalizeMethod(string $method): string|false
+	public static function normalizeMethod(string|false $method): string|false
 	{
 		// normalize the method
 		return match ($method) {
