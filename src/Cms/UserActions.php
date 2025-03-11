@@ -255,6 +255,12 @@ trait UserActions
 			// up the directory if it's empty.
 			$user->version('latest')->delete('*');
 
+			// delete the user directory to get rid
+			// of the .htpasswd and index.php files.
+			// we need to solve this at a later point with
+			// something like a credential storage
+			Dir::remove($user->root());
+
 			return true;
 		});
 	}
