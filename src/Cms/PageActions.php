@@ -561,24 +561,13 @@ trait PageActions
 				$child->delete(true);
 			}
 
-			// actually remove the page from disc
-			if ($page->exists() === true) {
-				// delete all public media files
-				Dir::remove($page->mediaRoot());
+			// delete all changes first
+			$page->version('changes')->delete('*');
 
-				// delete the content folder for this page
-				Dir::remove($page->root());
-
-				// if the page is a draft and the _drafts folder
-				// is now empty. clean it up.
-				if ($page->isDraft() === true) {
-					$draftsDir = dirname($page->root());
-
-					if (Dir::isEmpty($draftsDir) === true) {
-						Dir::remove($draftsDir);
-					}
-				}
-			}
+			// delete all latest versions as last step.
+			// the plain text storage handler will then clean
+			// up the directory if it's empty.
+			$page->version('latest')->delete('*');
 
 			if ($page->isDraft() === false) {
 				$page->resortSiblingsAfterUnlisting();

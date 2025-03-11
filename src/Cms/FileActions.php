@@ -285,13 +285,16 @@ trait FileActions
 	public function delete(): bool
 	{
 		return $this->commit('delete', ['file' => $this], function ($file) {
-			// remove all public versions, lock and clear UUID cache
+			// remove all public versions and clear the UUID cache
 			$file->unpublish();
 
-			foreach ($file->storage()->all() as $version => $lang) {
-				$file->storage()->delete($version, $lang);
-			}
+			// delete all changes first
+			$file->version('changes')->delete('*');
 
+			// delete all latest versions as last step.
+			$file->version('latest')->delete('*');
+
+			// delete the file from disk
 			F::remove($file->root());
 
 			return true;

@@ -144,9 +144,18 @@ class PlainTextStorage extends Storage
 		}
 		// @codeCoverageIgnoreEnd
 
-		// clean up empty _changes directories
-		if ($versionId->is(VersionId::changes()) === true) {
-			$this->deleteEmptyDirectory(dirname($contentFile));
+		$contentDirectory = $this->contentDirectory($versionId);
+
+		// clean up empty content directories (_changes or the page/user directory)
+		$this->deleteEmptyDirectory($contentDirectory);
+
+		// delete empty _drafts directories for pages
+		if (
+			$versionId->is(VersionId::latest()) === true &&
+			$this->model instanceof Page &&
+			$this->model->isDraft() === true
+		) {
+			$this->deleteEmptyDirectory(dirname($contentDirectory));
 		}
 	}
 
