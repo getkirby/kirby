@@ -38,7 +38,6 @@ class ModelStateTest extends TestCase
 		$this->assertEquals('set', ModelState::normalizeMethod('changeSlug'));
 
 		$this->assertEquals(false, ModelState::normalizeMethod('duplicate'));
-		$this->assertEquals(false, ModelState::normalizeMethod(false));
 	}
 
 	public function testUpdateFile()
@@ -75,7 +74,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($next, $parent->file('test.jpg'));
 	}
 
-	public function testUpdateFileWithFalseAsMethod()
+	public function testUpdateFileWithDuplicateAsMethod()
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -101,7 +100,7 @@ class ModelStateTest extends TestCase
 		]);
 
 		ModelState::updateFile(
-			method: false,
+			method: 'duplicate',
 			current: $current,
 			next: $next
 		);
@@ -141,7 +140,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($next, $this->app->page('test'));
 	}
 
-	public function testUpdatePageWithFalseAsMethod()
+	public function testUpdatePageWithDuplicateAsMethod()
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -165,7 +164,7 @@ class ModelStateTest extends TestCase
 		]);
 
 		ModelState::updatePage(
-			method: false,
+			method: 'duplicate',
 			current: $current,
 			next: $next
 		);
@@ -198,7 +197,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($this->app->site(), $next);
 	}
 
-	public function testUpdateSiteWithFalseAsMethod()
+	public function testUpdateSiteWithDuplicateAsMethod()
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -216,7 +215,7 @@ class ModelStateTest extends TestCase
 		]);
 
 		ModelState::updateSite(
-			method: false,
+			method: 'duplicate',
 			current: $current,
 			next: $next
 		);
@@ -249,7 +248,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($this->app->user('admin'), $next);
 	}
 
-	public function testUpdateUserWithFalseAsMethod()
+	public function testUpdateUserWithDuplicateAsMethod()
 	{
 		$this->app = $this->app->clone([
 			'users' => [
@@ -267,7 +266,7 @@ class ModelStateTest extends TestCase
 		]);
 
 		ModelState::updateUser(
-			method: false,
+			method: 'duplicate',
 			current: $current,
 			next: $next
 		);

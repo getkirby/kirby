@@ -31,7 +31,7 @@ class ModelState
 	 * Returns the appropriate state modification method
 	 * for the given action.
 	 */
-	public static function normalizeMethod(string|false $method): string|false
+	public static function normalizeMethod(string $method): string|false
 	{
 		// normalize the method
 		return match ($method) {
@@ -41,9 +41,8 @@ class ModelState
 			'remove',
 			'delete'
 				=> 'remove',
-			'duplicate', // The models need to take care of this
-			false
-				=> false,
+			'duplicate'
+				=> false, // The models need to take care of this
 			default
 			=> 'set'
 		};
@@ -53,7 +52,7 @@ class ModelState
 	 * Updates the state of the given model.
 	 */
 	public static function update(
-		string|false $method,
+		string $method,
 		ModelWithContent $current,
 		ModelWithContent|bool|null $next = null,
 		ModelWithContent|Site|null $parent = null
@@ -70,7 +69,7 @@ class ModelState
 	 * Updates the state of the given file.
 	 */
 	public static function updateFile(
-		string|false $method,
+		string $method,
 		File $current,
 		File|bool|null $next = null
 	): void {
@@ -92,7 +91,7 @@ class ModelState
 	 * Updates the state of the given page.
 	 */
 	public static function updatePage(
-		string|false $method,
+		string $method,
 		Page $current,
 		Page|bool|null $next = null,
 		Page|Site|null $parent = null
@@ -123,10 +122,12 @@ class ModelState
 	 * Updates the state of the given site.
 	 */
 	public static function updateSite(
-		string|false $method,
+		string $method,
 		Site $current,
 		Site|null $next = null
 	): void {
+		$method = self::normalizeMethod($method);
+
 		if ($method === false) {
 			return;
 		}
@@ -138,7 +139,7 @@ class ModelState
 	 * Updates the state of the given user.
 	 */
 	public static function updateUser(
-		string|false $method,
+		string $method,
 		User $current,
 		User|bool|null $next = null
 	): void {
