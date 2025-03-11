@@ -237,9 +237,9 @@ class Content
 	}
 
 	/**
-	 * Removed in 5.0.0. We only keep it to simplify debugging, 
+	 * Removed in 5.0.0. We only keep it to simplify debugging,
 	 * when this method is still in use in the wild.
-	 * 
+	 *
 	 * Use $model->version()->update() instead.
 	 */
 	public function update(
