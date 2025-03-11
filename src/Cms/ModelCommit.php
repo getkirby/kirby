@@ -233,7 +233,7 @@ class ModelCommit
 			$this->model instanceof Page => PageRules::class,
 			$this->model instanceof Site => SiteRules::class,
 			$this->model instanceof User => UserRules::class,
-			default => throw new Exception('Invalid model class')
+			default => throw new Exception('Invalid model class') // @codeCoverageIgnore
 		};
 
 		if (method_exists($rules, $this->action) === true) {
