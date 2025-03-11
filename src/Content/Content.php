@@ -246,6 +246,6 @@ class Content
 		array|null $content = null,
 		bool $overwrite = false
 	): static {
-		throw new Exception('This is no longer functional. Please use `$model->version()->update()` instead');
+		throw new Exception('`$content->update()` is no longer functional. Please use `$model->version()->update()` instead');
 	}
 }
