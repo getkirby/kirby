@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ModelCommit::class)]
@@ -540,5 +541,20 @@ class ModelCommitTest extends TestCase
 		$this->assertSame('Modified Subtitle', $state['result']->subtitle()->value());
 		$this->assertSame('Modified Title', $this->app->page('test')->title()->value());
 		$this->assertSame('Modified Subtitle', $this->app->page('test')->subtitle()->value());
+	}
+
+	public function testValidate(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'create'
+		);
+
+		$this->expectException(PermissionException::class);
+
+		$commit->validate(arguments: [
+			'page' => $page
+		]);
 	}
 }
