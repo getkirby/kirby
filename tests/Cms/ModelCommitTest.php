@@ -440,6 +440,109 @@ class ModelCommitTest extends TestCase
 		$this->assertSame(1, $calls);
 	}
 
+	public function testHookWithModifiedModel()
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'test',
+						'content' => [
+							'title' => 'Original'
+						]
+					]
+				]
+			],
+			'hooks' => [
+				'page.test:after' => function (Page $page) {
+					return $page->update([
+						'title' => 'Modified'
+					]);
+				}
+			]
+		]);
+
+		// needed to make the update call in the hook work
+		$this->app->impersonate('kirby');
+
+		// get the page from the app state
+		$page = $this->app->page('test');
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
+		);
+
+		$state = $commit->hook(
+			hook: 'after',
+			arguments: [
+				'page' => $page
+			]
+		);
+
+		$this->assertSame('Original', $page->title()->value(), 'The original model should not be modified');
+		$this->assertSame('Modified', $state['result']->title()->value(), 'The result should be the modified model');
+		$this->assertSame('Modified', $this->app->page('test')->title()->value(), 'The app state should be updated as well');
+	}
+
+	public function testHookWithMultipleHandlers()
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'test',
+						'content' => [
+							'title' => 'Original'
+						]
+					]
+				]
+			],
+			'hooks' => [
+				'page.test:after' => [
+					function (Page $page) {
+						return $page->update([
+							'title' => 'Modified Title'
+						]);
+					},
+					function (Page $page) {
+						return $page->update([
+							'subtitle' => 'Modified Subtitle'
+						]);
+					}
+				]
+			]
+		]);
+
+		// needed to make the update call in the hook work
+		$this->app->impersonate('kirby');
+
+		// get the page from the app state
+		$page = $this->app->page('test');
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
+		);
+
+		$state = $commit->hook(
+			hook: 'after',
+			arguments: [
+				'page' => $page
+			]
+		);
+
+		// the original model should not be modified
+		$this->assertSame('Original', $page->title()->value());
+		$this->assertSame(null, $page->subtitle()->value());
+
+		// the result and the app state should be have the updated title and subtitle
+		$this->assertSame('Modified Title', $state['result']->title()->value());
+		$this->assertSame('Modified Subtitle', $state['result']->subtitle()->value());
+		$this->assertSame('Modified Title', $this->app->page('test')->title()->value());
+		$this->assertSame('Modified Subtitle', $this->app->page('test')->subtitle()->value());
+	}
+
 	#[DataProvider('modelProvider')]
 	public function testRules(ModelWithContent $model, string $rulesClass)
 	{
