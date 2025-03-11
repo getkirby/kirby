@@ -36,7 +36,8 @@ class ModelCommit
 	public function after(mixed $state): mixed
 	{
 		// run the `after` hook
-		$hook = $this->hook('after', $this->afterHookArguments($state));
+		$arguments = $this->afterHookArguments($state);
+		$hook      = $this->hook('after', $arguments);
 
 		// flush the page cache after any model action
 		$this->kirby->cache('pages')->flush();
@@ -57,7 +58,7 @@ class ModelCommit
 			$this->model instanceof Page =>
 				$this->afterHookArgumentsForPageActions($this->model, $this->action, $state),
 			$this->model instanceof Site =>
-				$this->afterHookArgumentsForSiteActions($this->model, $this->action, $state),
+				$this->afterHookArgumentsForSiteActions($this->model, $state),
 			$this->model instanceof User =>
 				$this->afterHookArgumentsForUserActions($this->model, $this->action, $state),
 			default =>
@@ -69,8 +70,11 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given page action.
 	 */
-	protected function afterHookArgumentsForPageActions(Page $model, string $action, mixed $state): array
-	{
+	protected function afterHookArgumentsForPageActions(
+		Page $model,
+		string $action,
+		mixed $state
+	): array {
 		return match ($action) {
 			'create' => [
 				'page' => $state
@@ -94,8 +98,11 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given file action.
 	 */
-	protected function afterHookArgumentsForFileActions(File $model, string $action, mixed $state): array
-	{
+	protected function afterHookArgumentsForFileActions(
+		File $model,
+		string $action,
+		mixed $state
+	): array {
 		return match ($action) {
 			'create' => [
 				'file' => $state
@@ -115,8 +122,10 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given site action.
 	 */
-	protected function afterHookArgumentsForSiteActions(Site $model, string $action, mixed $state): array
-	{
+	protected function afterHookArgumentsForSiteActions(
+		Site $model,
+		mixed $state
+	): array {
 		return [
 			'newSite' => $state,
 			'oldSite' => $model
@@ -127,8 +136,11 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given user action.
 	 */
-	protected function afterHookArgumentsForUserActions(User $model, string $action, mixed $state): array
-	{
+	protected function afterHookArgumentsForUserActions(
+		User $model,
+		string $action,
+		mixed $state
+	): array {
 		return match ($action) {
 			'create' =>	[
 				'user' => $state

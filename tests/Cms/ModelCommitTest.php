@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use PHPUnit\Framework\Attributes\CoversDefaultClass;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversDefaultClass(ModelCommit::class)]
 class ModelCommitTest extends TestCase
