@@ -241,6 +241,8 @@ class Content
 	 * when this method is still in use in the wild.
 	 *
 	 * Use $model->version()->update() instead.
+	 *
+	 * @todo Remove in 7.0.0
 	 */
 	public function update(
 		array|null $content = null,
