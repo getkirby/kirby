@@ -8,6 +8,20 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversDefaultClass(ModelCommit::class)]
 class ModelCommitTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.ModelCommit';
+
+	public function setUp(): void
+	{
+		parent::setUp();
+		$this->setUpTmp();
+	}
+
+	public function tearDown(): void
+	{
+		parent::tearDown();
+		$this->tearDownTmp();
+	}
+
 	public static function modelProvider(): array
 	{
 		return [
@@ -62,6 +76,35 @@ class ModelCommitTest extends TestCase
 
 		$this->assertSame($newPage, $result);
 		$this->assertSame(1, $calls);
+	}
+
+	public function testAfterFlushesCache()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'cache' => [
+					'pages' => true
+				]
+			]
+		]);
+
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		// set a dummy cache entry
+		$this->app->cache('pages')->set('test', 'test');
+
+		$this->assertSame('test', $this->app->cache('pages')->get('test'), 'Make sure that the cache is actually set');
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'delete'
+		);
+
+		$commit->after($page);
+
+		$this->assertSame(null, $this->app->cache('pages')->get('test'));
 	}
 
 	public function testAfterHookArgumentsForPageCreate()
