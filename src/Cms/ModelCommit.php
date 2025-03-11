@@ -69,7 +69,7 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given page action.
 	 */
-	public function afterHookArgumentsForPageActions(Page $page, string $action, mixed $state): array
+	protected function afterHookArgumentsForPageActions(Page $model, string $action, mixed $state): array
 	{
 		return match ($action) {
 			'create' => [
@@ -77,15 +77,15 @@ class ModelCommit
 			],
 			'duplicate' => [
 				'duplicatePage' => $state,
-				'originalPage'  => $page
+				'originalPage'  => $model
 			],
 			'delete' => [
 				'status' => $state,
-				'page'   => $page
+				'page'   => $model
 			],
 			default => [
 				'newPage' => $state,
-				'oldPage' => $page
+				'oldPage' => $model
 			]
 		};
 	}
@@ -94,7 +94,7 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given file action.
 	 */
-	public function afterHookArgumentsForFileActions(File $file, string $action, mixed $state): array
+	protected function afterHookArgumentsForFileActions(File $model, string $action, mixed $state): array
 	{
 		return match ($action) {
 			'create' => [
@@ -102,11 +102,11 @@ class ModelCommit
 			],
 			'delete' => [
 				'status' => $state,
-				'file'   => $file
+				'file'   => $model
 			],
 			default  => [
 				'newFile' => $state,
-				'oldFile' => $file
+				'oldFile' => $model
 			]
 		};
 	}
@@ -115,11 +115,11 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given site action.
 	 */
-	public function afterHookArgumentsForSiteActions(Site $site, string $action, mixed $state): array
+	protected function afterHookArgumentsForSiteActions(Site $model, string $action, mixed $state): array
 	{
 		return [
 			'newSite' => $state,
-			'oldSite' => $site
+			'oldSite' => $model
 		];
 	}
 
@@ -127,7 +127,7 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given user action.
 	 */
-	public function afterHookArgumentsForUserActions(User $user, string $action, mixed $state): array
+	protected function afterHookArgumentsForUserActions(User $model, string $action, mixed $state): array
 	{
 		return match ($action) {
 			'create' =>	[
@@ -135,11 +135,11 @@ class ModelCommit
 			],
 			'delete' => [
 				'status' => $state,
-				'user'   => $user
+				'user'   => $model
 			],
 			default  => [
 				'newUser' => $state,
-				'oldUser' => $user
+				'oldUser' => $model
 			]
 		};
 	}
@@ -226,9 +226,14 @@ class ModelCommit
 
 	/**
 	 * Checks the model rules for the given action
+	 * if there's a matching rule method.
 	 */
 	public function validate(array $arguments): void
 	{
-		$this->rules()->{$this->action}(...array_values($arguments));
+		$rules = $this->rules();
+
+		if (method_exists($rules, $this->action) === true) {
+			$rules->{$this->action}(...array_values($arguments));
+		}
 	}
 }
