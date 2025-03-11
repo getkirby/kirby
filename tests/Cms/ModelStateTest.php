@@ -7,25 +7,6 @@ use PHPUnit\Framework\Attributes\CoversDefaultClass;
 #[CoversDefaultClass(ModelState::class)]
 class ModelStateTest extends TestCase
 {
-	public function testArgs()
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$this->assertEquals([$page->id(), $page], ModelState::args($page, 'changeSlug'));
-		$this->assertEquals([$page->id(), $page], ModelState::args($page, 'changeTitle'));
-	}
-
-	public function testArgsForRemoveAction()
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$this->assertEquals([$page], ModelState::args($page, 'remove'));
-	}
-
 	public function testUpdateFile()
 	{
 		$this->app = $this->app->clone([

@@ -17,17 +17,6 @@ namespace Kirby\Cms;
 class ModelState
 {
 	/**
-	 * Returns the appropriate method arguments
-	 * for the given method. Removing models needs a
-	 * different set of arguments.
-	 */
-	public static function args(ModelWithContent $next, string $method): array
-	{
-		// method arguments depending on the called method
-		return $method === 'remove' ? [$next] : [$next->id(), $next];
-	}
-
-	/**
 	 * Updates the state of the given model.
 	 */
 	public static function update(
@@ -41,7 +30,7 @@ class ModelState
 			'append', 'create' => 'append',
 			'remove', 'delete' => 'remove',
 			'duplicate'        => false, // The models need to take care of this
-			default            => 'set'
+			default            => 'update'
 		};
 
 		if ($method === false) {
@@ -66,11 +55,8 @@ class ModelState
 	): void {
 		$next = $next instanceof File ? $next : $current;
 
-		// method arguments depending on the called method
-		$args = static::args($next, $method);
-
 		// update the files collection
-		$next->parent()->files()->$method(...$args);
+		$next->parent()->files()->$method($next);
 	}
 
 	/**
@@ -85,17 +71,14 @@ class ModelState
 		$next     = $next instanceof Page ? $next : $current;
 		$parent ??= $next->parentModel();
 
-		// method arguments depending on the called method
-		$args = static::args($next, $method);
-
 		if ($next->isDraft() === true) {
-			$parent->drafts()->$method(...$args);
+			$parent->drafts()->$method($next);
 		} else {
-			$parent->children()->$method(...$args);
+			$parent->children()->$method($next);
 		}
 
 		// update the childrenAndDrafts() cache
-		$parent->childrenAndDrafts()->$method(...$args);
+		$parent->childrenAndDrafts()->$method($next);
 	}
 
 	/**
@@ -118,10 +101,7 @@ class ModelState
 	): void {
 		$next = $next instanceof User ? $next : $current;
 
-		// method arguments depending on the called method
-		$args = static::args($next, $method);
-
 		// update the users collection
-		App::instance()->users()->$method(...$args);
+		App::instance()->users()->$method($next);
 	}
 }
