@@ -6,9 +6,7 @@ use Closure;
 use Kirby\Content\MemoryStorage;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Idn;
 use Kirby\Toolkit\A;
@@ -244,19 +242,18 @@ trait UserActions
 	public function delete(): bool
 	{
 		return $this->commit('delete', ['user' => $this], function ($user) {
-			if ($user->exists() === false) {
-				return true;
+			// delete all files individually
+			foreach ($user->files() as $file) {
+				$file->delete();
 			}
 
-			// delete all public assets for this user
-			Dir::remove($user->mediaRoot());
+			// delete all changes first
+			$user->version('changes')->delete('*');
 
-			// delete the user directory
-			if (Dir::remove($user->root()) !== true) {
-				throw new LogicException(
-					message: 'The user directory for "' . $user->email() . '" could not be deleted'
-				);
-			}
+			// delete all latest versions as last step.
+			// the plain text storage handler will then clean
+			// up the directory if it's empty.
+			$user->version('latest')->delete('*');
 
 			return true;
 		});
