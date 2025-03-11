@@ -139,6 +139,14 @@ class Version
 	 */
 	public function delete(Language|string $language = 'default'): void
 	{
+		if ($language === '*') {
+			foreach (Languages::ensure() as $language) {
+				$this->delete($language);
+			}
+
+			return;
+		}
+
 		$language = Language::ensure($language);
 
 		// check if deleting is allowed
