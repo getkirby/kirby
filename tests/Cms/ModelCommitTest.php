@@ -2,10 +2,10 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\Attributes\CoversDefaultClass;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Kirby\Exception\PermissionException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversDefaultClass(ModelCommit::class)]
+#[CoversClass(ModelCommit::class)]
 class ModelCommitTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.ModelCommit';
@@ -543,16 +543,18 @@ class ModelCommitTest extends TestCase
 		$this->assertSame('Modified Subtitle', $this->app->page('test')->subtitle()->value());
 	}
 
-	#[DataProvider('modelProvider')]
-	public function testRules(ModelWithContent $model, string $rulesClass)
+	public function testValidate(): void
 	{
+		$page   = new Page(['slug' => 'test']);
 		$commit = new ModelCommit(
-			model: $model,
+			model: $page,
 			action: 'create'
 		);
 
-		$rules = $commit->rules();
+		$this->expectException(PermissionException::class);
 
-		$this->assertInstanceOf($rulesClass, $rules);
+		$commit->validate(arguments: [
+			'page' => $page
+		]);
 	}
 }

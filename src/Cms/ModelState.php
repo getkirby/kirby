@@ -17,38 +17,6 @@ namespace Kirby\Cms;
 class ModelState
 {
 	/**
-	 * Returns the appropriate method arguments
-	 * for the given method. Removing models needs a
-	 * different set of arguments.
-	 */
-	public static function args(ModelWithContent $next, string $method): array
-	{
-		// method arguments depending on the called method
-		return $method === 'remove' ? [$next] : [$next->id(), $next];
-	}
-
-	/**
-	 * Returns the appropriate state modification method
-	 * for the given action.
-	 */
-	public static function normalizeMethod(string $method): string|false
-	{
-		// normalize the method
-		return match ($method) {
-			'append',
-			'create'
-				=> 'append',
-			'remove',
-			'delete'
-				=> 'remove',
-			'duplicate'
-				=> false, // The models need to take care of this
-			default
-			=> 'set'
-		};
-	}
-
-	/**
 	 * Updates the state of the given model.
 	 */
 	public static function update(
@@ -57,10 +25,22 @@ class ModelState
 		ModelWithContent|bool|null $next = null,
 		ModelWithContent|Site|null $parent = null
 	): void {
+		// normalize the method
+		$method = match ($method) {
+			'append', 'create' => 'append',
+			'remove', 'delete' => 'remove',
+			'duplicate'        => false, // The models need to take care of this
+			default            => 'update'
+		};
+
+		if ($method === false) {
+			return;
+		}
+
 		match (true) {
 			$current instanceof File => static::updateFile($method, $current, $next),
 			$current instanceof Page => static::updatePage($method, $current, $next, $parent),
-			$current instanceof Site => static::updateSite($method, $current, $next),
+			$current instanceof Site => static::updateSite($current, $next),
 			$current instanceof User => static::updateUser($method, $current, $next),
 		};
 	}
@@ -68,92 +48,60 @@ class ModelState
 	/**
 	 * Updates the state of the given file.
 	 */
-	public static function updateFile(
+	protected static function updateFile(
 		string $method,
 		File $current,
 		File|bool|null $next = null
 	): void {
-		$method = self::normalizeMethod($method);
-		$next   = $next instanceof File ? $next : $current;
-
-		if ($method === false) {
-			return;
-		}
-
-		// method arguments depending on the called method
-		$args = static::args($next, $method);
+		$next = $next instanceof File ? $next : $current;
 
 		// update the files collection
-		$next->parent()->files()->$method(...$args);
+		$next->parent()->files()->$method($next);
 	}
 
 	/**
 	 * Updates the state of the given page.
 	 */
-	public static function updatePage(
+	protected static function updatePage(
 		string $method,
 		Page $current,
 		Page|bool|null $next = null,
 		Page|Site|null $parent = null
 	): void {
-		$method = self::normalizeMethod($method);
-		$next   = $next instanceof Page ? $next : $current;
-
-		if ($method === false) {
-			return;
-		}
-
+		$next     = $next instanceof Page ? $next : $current;
 		$parent ??= $next->parentModel();
 
-		// method arguments depending on the called method
-		$args = static::args($next, $method);
-
 		if ($next->isDraft() === true) {
-			$parent->drafts()->$method(...$args);
+			$parent->drafts()->$method($next);
 		} else {
-			$parent->children()->$method(...$args);
+			$parent->children()->$method($next);
 		}
 
 		// update the childrenAndDrafts() cache
-		$parent->childrenAndDrafts()->$method(...$args);
+		$parent->childrenAndDrafts()->$method($next);
 	}
 
 	/**
 	 * Updates the state of the given site.
 	 */
-	public static function updateSite(
-		string $method,
+	protected static function updateSite(
 		Site $current,
 		Site|null $next = null
 	): void {
-		$method = self::normalizeMethod($method);
-
-		if ($method === false) {
-			return;
-		}
-
 		App::instance()->setSite($next ?? $current);
 	}
 
 	/**
 	 * Updates the state of the given user.
 	 */
-	public static function updateUser(
+	protected static function updateUser(
 		string $method,
 		User $current,
 		User|bool|null $next = null
 	): void {
-		$method = self::normalizeMethod($method);
-		$next   = $next instanceof User ? $next : $current;
-
-		if ($method === false) {
-			return;
-		}
-
-		// method arguments depending on the called method
-		$args = static::args($next, $method);
+		$next = $next instanceof User ? $next : $current;
 
 		// update the users collection
-		App::instance()->users()->$method(...$args);
+		App::instance()->users()->$method($next);
 	}
 }

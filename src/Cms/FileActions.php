@@ -411,7 +411,7 @@ trait FileActions
 	): static {
 		$file = parent::save($data, $languageCode, $overwrite);
 
-		ModelState::updateFile(
+		ModelState::update(
 			method: 'set',
 			current: $this,
 			next: $file

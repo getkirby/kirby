@@ -348,7 +348,7 @@ trait UserActions
 		if ($user->isLoggedIn() === true) {
 			$this->kirby()->auth()->setUser($user);
 
-			ModelState::updateUser(
+			ModelState::update(
 				method: 'set',
 				current: $user,
 			);

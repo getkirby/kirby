@@ -36,7 +36,8 @@ class ModelCommit
 	public function after(mixed $state): mixed
 	{
 		// run the `after` hook
-		$hook = $this->hook('after', $this->afterHookArguments($state));
+		$arguments = $this->afterHookArguments($state);
+		$hook      = $this->hook('after', $arguments);
 
 		// flush the page cache after any model action
 		$this->kirby->cache('pages')->flush();
@@ -57,7 +58,7 @@ class ModelCommit
 			$this->model instanceof Page =>
 				$this->afterHookArgumentsForPageActions($this->model, $this->action, $state),
 			$this->model instanceof Site =>
-				$this->afterHookArgumentsForSiteActions($this->model, $this->action, $state),
+				$this->afterHookArgumentsForSiteActions($this->model, $state),
 			$this->model instanceof User =>
 				$this->afterHookArgumentsForUserActions($this->model, $this->action, $state),
 			default =>
@@ -69,8 +70,11 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given page action.
 	 */
-	protected function afterHookArgumentsForPageActions(Page $model, string $action, mixed $state): array
-	{
+	protected function afterHookArgumentsForPageActions(
+		Page $model,
+		string $action,
+		mixed $state
+	): array {
 		return match ($action) {
 			'create' => [
 				'page' => $state
@@ -94,8 +98,11 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given file action.
 	 */
-	protected function afterHookArgumentsForFileActions(File $model, string $action, mixed $state): array
-	{
+	protected function afterHookArgumentsForFileActions(
+		File $model,
+		string $action,
+		mixed $state
+	): array {
 		return match ($action) {
 			'create' => [
 				'file' => $state
@@ -115,8 +122,10 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given site action.
 	 */
-	protected function afterHookArgumentsForSiteActions(Site $model, string $action, mixed $state): array
-	{
+	protected function afterHookArgumentsForSiteActions(
+		Site $model,
+		mixed $state
+	): array {
 		return [
 			'newSite' => $state,
 			'oldSite' => $model
@@ -127,8 +136,11 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given user action.
 	 */
-	protected function afterHookArgumentsForUserActions(User $model, string $action, mixed $state): array
-	{
+	protected function afterHookArgumentsForUserActions(
+		User $model,
+		string $action,
+		mixed $state
+	): array {
 		return match ($action) {
 			'create' =>	[
 				'user' => $state
@@ -211,29 +223,21 @@ class ModelCommit
 	}
 
 	/**
-	 * Returns the appropriate rules class for the given model.
-	 */
-	public function rules(): FileRules|PageRules|SiteRules|UserRules
-	{
-		return match (true) {
-			$this->model instanceof File => new FileRules(),
-			$this->model instanceof Page => new PageRules(),
-			$this->model instanceof Site => new SiteRules(),
-			$this->model instanceof User => new UserRules(),
-			default => throw new Exception('Invalid model class')
-		};
-	}
-
-	/**
 	 * Checks the model rules for the given action
 	 * if there's a matching rule method.
 	 */
 	public function validate(array $arguments): void
 	{
-		$rules = $this->rules();
+		$rules = match (true) {
+			$this->model instanceof File => FileRules::class,
+			$this->model instanceof Page => PageRules::class,
+			$this->model instanceof Site => SiteRules::class,
+			$this->model instanceof User => UserRules::class,
+			default => throw new Exception('Invalid model class') // @codeCoverageIgnore
+		};
 
 		if (method_exists($rules, $this->action) === true) {
-			$rules->{$this->action}(...array_values($arguments));
+			$rules::{$this->action}(...array_values($arguments));
 		}
 	}
 }

@@ -9,10 +9,10 @@ use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
 
-use PHPUnit\Framework\Attributes\CoversDefaultClass;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-#[CoversDefaultClass(PlainTextStorage::class)]
+#[CoversClass(PlainTextStorage::class)]
 class PlainTextStorageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.PlainTextStorage';
