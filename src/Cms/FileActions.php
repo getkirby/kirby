@@ -150,51 +150,12 @@ trait FileActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$kirby = $this->kirby();
-
-		// check file rules
-		$this->rules()->$action(...array_values($arguments));
-
-		// run `before` hook and pass all arguments;
-		// the very first argument (which should be the model)
-		// is modified by the return value from the hook (if any returned)
-		$appliedTo = array_key_first($arguments);
-		$arguments[$appliedTo] = $kirby->apply(
-			'file.' . $action . ':before',
-			$arguments,
-			$appliedTo
+		$commit = new ModelCommit(
+			model: $this,
+			action: $action
 		);
 
-		// check file rules again, after the hook got applied
-		$this->rules()->$action(...array_values($arguments));
-
-		// run the main action closure
-		$result = $callback(...array_values($arguments));
-
-		// determine the object that needs to be updated in the parent collection
-		$update = $result instanceof File ? $result : $this;
-
-		// update the files collection
-		static::updateParentCollection($update, $action);
-
-		// determine arguments for `after` hook depending on the action
-		$argumentsAfter = match ($action) {
-			'create' => ['file' => $result],
-			'delete' => ['status' => $result, 'file' => $this],
-			default  => ['newFile' => $result, 'oldFile' => $this]
-		};
-
-		// run `after` hook and apply return to action result
-		// (first argument, usually the new model) if anything returned
-		$result = $kirby->apply(
-			'file.' . $action . ':after',
-			$argumentsAfter,
-			array_key_first($argumentsAfter)
-		);
-
-		$kirby->cache('pages')->flush();
-
-		return $result;
+		return $commit->call($arguments, $callback);
 	}
 
 	/**
@@ -450,28 +411,13 @@ trait FileActions
 	): static {
 		$file = parent::save($data, $languageCode, $overwrite);
 
-		static::updateParentCollection($file, 'set');
+		ModelState::update(
+			method: 'set',
+			current: $this,
+			next: $file
+		);
+
 		return $file;
-	}
-
-	/**
-	 * Updates the parent files collection after a file action
-	 */
-	protected static function updateParentCollection(
-		File $file,
-		string $method = 'set'
-	): void {
-		$method = match ($method) {
-			'append', 'create' => 'append',
-			'remove', 'delete' => 'remove',
-			default => 'set'
-		};
-
-		// method arguments depending on the called method
-		$args = $method === 'remove' ? [$file] : [$file->id(), $file];
-
-		// update the files collection
-		$file->parent()->files()->$method(...$args);
 	}
 
 	/**

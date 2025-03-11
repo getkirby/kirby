@@ -155,51 +155,12 @@ trait UserActions
 			);
 		}
 
-		$kirby = $this->kirby();
-
-		// check user rules
-		$this->rules()->$action(...array_values($arguments));
-
-		// run `before` hook and pass all arguments;
-		// the very first argument (which should be the model)
-		// is modified by the return value from the hook (if any returned)
-		$appliedTo = array_key_first($arguments);
-		$arguments[$appliedTo] = $kirby->apply(
-			'user.' . $action . ':before',
-			$arguments,
-			$appliedTo
+		$commit = new ModelCommit(
+			model: $this,
+			action: $action
 		);
 
-		// check user rules again, after the hook got applied
-		$this->rules()->$action(...array_values($arguments));
-
-		// run closure
-		$result = $callback(...array_values($arguments));
-
-		// determine the object that needs to be updated in the parent collection
-		$update = $result instanceof User ? $result : $this;
-
-		// update the users collection
-		static::updateParentCollection($update, $action);
-
-		// determine arguments for `after` hook depending on the action
-		$argumentsAfter = match ($action) {
-			'create' => ['user' => $result],
-			'delete' => ['status' => $result, 'user' => $this],
-			default  => ['newUser' => $result, 'oldUser' => $this]
-		};
-
-		// run `after` hook and apply return to action result
-		// (first argument, usually the new model) if anything returned
-		$result = $kirby->apply(
-			'user.' . $action . ':after',
-			$argumentsAfter,
-			array_key_first($argumentsAfter)
-		);
-
-		$kirby->cache('pages')->flush();
-
-		return $result;
+		return $commit->call($arguments, $callback);
 	}
 
 	/**
@@ -386,7 +347,11 @@ trait UserActions
 		// set auth user data only if the current user is this user
 		if ($user->isLoggedIn() === true) {
 			$this->kirby()->auth()->setUser($user);
-			static::updateParentCollection($user, 'set');
+
+			ModelState::update(
+				method: 'set',
+				current: $user,
+			);
 		}
 
 		return $user;
@@ -407,26 +372,6 @@ trait UserActions
 			...$this->credentials(),
 			...$credentials
 		]);
-	}
-
-	/**
-	 * Updates users collection after a user action
-	 */
-	protected static function updateParentCollection(
-		User $user,
-		string $method = 'set'
-	): void {
-		$method = match ($method) {
-			'append', 'create' => 'append',
-			'remove', 'delete' => 'remove',
-			default => 'set'
-		};
-
-		// method arguments depending on the called method
-		$args = $method === 'remove' ? [$user] : [$user->id(), $user];
-
-		// update the users collection
-		$user->kirby()->users()->$method(...$args);
 	}
 
 	/**
