@@ -30,14 +30,54 @@ class ModelCommitTest extends TestCase
 		];
 	}
 
+	public function testAfter()
+	{
+		$phpunit = $this;
+		$calls   = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.test:after' => function (Page $newPage, Page $oldPage) use ($phpunit, &$calls) {
+					$phpunit->assertSame('test-modified', $newPage->slug());
+					$phpunit->assertSame('test', $oldPage->slug());
+					$calls++;
+				}
+			]
+		]);
+
+		$oldPage = new Page([
+			'slug' => 'test',
+		]);
+
+		$newPage = new Page([
+			'slug' => 'test-modified',
+		]);
+
+		$commit = new ModelCommit(
+			model: $oldPage,
+			action: 'test'
+		);
+
+		$result = $commit->after($newPage);
+
+		$this->assertSame($newPage, $result);
+		$this->assertSame(1, $calls);
+	}
+
 	public function testAfterHookArgumentsForPageCreate()
 	{
 		$page = new Page([
 			'slug' => 'test',
 		]);
 
-		$commit = new ModelCommit($page, 'create');
-		$args   = $commit->afterHookArgumentsForPageActions($page, 'create', $page);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'create'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $page
+		);
 
 		$this->assertSame([
 			'page' => $page
@@ -54,8 +94,14 @@ class ModelCommitTest extends TestCase
 			'slug' => 'test-copy',
 		]);
 
-		$commit = new ModelCommit($page, 'duplicate');
-		$args   = $commit->afterHookArgumentsForPageActions($page, 'duplicate', $copy);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'duplicate'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $copy
+		);
 
 		$this->assertSame([
 			'duplicatePage' => $copy,
@@ -69,8 +115,14 @@ class ModelCommitTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$commit = new ModelCommit($page, 'delete');
-		$args   = $commit->afterHookArgumentsForPageActions($page, 'delete', true);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'delete'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: true
+		);
 
 		$this->assertSame([
 			'status' => true,
@@ -88,8 +140,14 @@ class ModelCommitTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$commit = new ModelCommit($oldPage, 'update');
-		$args   = $commit->afterHookArgumentsForPageActions($oldPage, 'update', $newPage);
+		$commit = new ModelCommit(
+			model: $oldPage,
+			action: 'update'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $newPage
+		);
 
 		$this->assertSame([
 			'newPage' => $newPage,
@@ -104,8 +162,14 @@ class ModelCommitTest extends TestCase
 			'filename' => 'test.txt',
 		]);
 
-		$commit = new ModelCommit($file, 'create');
-		$args   = $commit->afterHookArgumentsForFileActions($file, 'create', $file);
+		$commit = new ModelCommit(
+			model: $file,
+			action: 'create'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $file
+		);
 
 		$this->assertSame([
 			'file' => $file
@@ -119,8 +183,14 @@ class ModelCommitTest extends TestCase
 			'filename' => 'test.txt',
 		]);
 
-		$commit = new ModelCommit($file, 'delete');
-		$args   = $commit->afterHookArgumentsForFileActions($file, 'delete', true);
+		$commit = new ModelCommit(
+			model: $file,
+			action: 'delete'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: true
+		);
 
 		$this->assertSame([
 			'status' => true,
@@ -140,8 +210,14 @@ class ModelCommitTest extends TestCase
 			'filename' => 'test.txt',
 		]);
 
-		$commit = new ModelCommit($oldFile, 'update');
-		$args   = $commit->afterHookArgumentsForFileActions($oldFile, 'update', $newFile);
+		$commit = new ModelCommit(
+			model: $oldFile,
+			action: 'update'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $newFile
+		);
 
 		$this->assertSame([
 			'newFile' => $newFile,
@@ -159,8 +235,14 @@ class ModelCommitTest extends TestCase
 			'name' => 'Test'
 		]);
 
-		$commit = new ModelCommit($oldSite, 'update');
-		$args   = $commit->afterHookArgumentsForSiteActions($oldSite, 'update', $newSite);
+		$commit = new ModelCommit(
+			model: $oldSite,
+			action: 'update'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $newSite
+		);
 
 		$this->assertSame([
 			'newSite' => $newSite,
@@ -174,8 +256,14 @@ class ModelCommitTest extends TestCase
 			'email' => 'test@test.com'
 		]);
 
-		$commit = new ModelCommit($user, 'create');
-		$args   = $commit->afterHookArgumentsForUserActions($user, 'create', $user);
+		$commit = new ModelCommit(
+			model: $user,
+			action: 'create'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $user
+		);
 
 		$this->assertSame([
 			'user' => $user
@@ -188,8 +276,14 @@ class ModelCommitTest extends TestCase
 			'email' => 'test@test.com'
 		]);
 
-		$commit = new ModelCommit($user, 'delete');
-		$args   = $commit->afterHookArgumentsForUserActions($user, 'delete', true);
+		$commit = new ModelCommit(
+			model: $user,
+			action: 'delete'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: true
+		);
 
 		$this->assertSame([
 			'status' => true,
@@ -207,8 +301,14 @@ class ModelCommitTest extends TestCase
 			'email' => 'test@test.com'
 		]);
 
-		$commit = new ModelCommit($oldUser, 'update');
-		$args   = $commit->afterHookArgumentsForUserActions($oldUser, 'update', $newUser);
+		$commit = new ModelCommit(
+			model: $oldUser,
+			action: 'update'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $newUser
+		);
 
 		$this->assertSame([
 			'newUser' => $newUser,
@@ -216,16 +316,52 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testHook()
+	public function testBefore()
 	{
 		$phpunit = $this;
+		$calls   = 0;
 
 		$this->app = $this->app->clone([
 			'hooks' => [
-				'page.test:before' => function ($a, $b) use ($phpunit) {
+				'page.test:before' => function (Page $page) use ($phpunit, &$calls) {
+					$phpunit->assertSame('test', $page->slug());
+					$calls++;
+				}
+			]
+		]);
+
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
+		);
+
+		$result = $commit->before(arguments: [
+			'page' => $page
+		]);
+
+		$this->assertSame([
+			'page' => $page
+		], $result);
+
+		$this->assertSame(1, $calls);
+	}
+
+	public function testHook()
+	{
+		$phpunit = $this;
+		$calls   = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.test:before' => function ($a, $b) use ($phpunit, &$calls) {
 					$phpunit->assertSame('Argument A', $a);
 					$phpunit->assertSame('Argument B', $b);
 
+					$calls++;
 					return $a . ' modified';
 				}
 			]
@@ -235,13 +371,20 @@ class ModelCommitTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$commit = new ModelCommit($page, 'test');
-		$input  = [
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
+		);
+
+		$arguments = [
 			'a' => 'Argument A',
 			'b' => 'Argument B'
 		];
 
-		$result = $commit->hook('before', $input);
+		$result = $commit->hook(
+			hook: 'before',
+			arguments: $arguments
+		);
 
 		$this->assertSame([
 			'arguments' => [
@@ -250,13 +393,19 @@ class ModelCommitTest extends TestCase
 			],
 			'result'  => 'Argument A modified',
 		], $result);
+
+		$this->assertSame(1, $calls);
 	}
 
 	#[DataProvider('modelProvider')]
 	public function testRules(ModelWithContent $model, string $rulesClass)
 	{
-		$commit = new ModelCommit($model, 'create');
-		$rules  = $commit->rules();
+		$commit = new ModelCommit(
+			model: $model,
+			action: 'create'
+		);
+
+		$rules = $commit->rules();
 
 		$this->assertInstanceOf($rulesClass, $rules);
 	}
