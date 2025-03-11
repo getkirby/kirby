@@ -542,17 +542,4 @@ class ModelCommitTest extends TestCase
 		$this->assertSame('Modified Title', $this->app->page('test')->title()->value());
 		$this->assertSame('Modified Subtitle', $this->app->page('test')->subtitle()->value());
 	}
-
-	#[DataProvider('modelProvider')]
-	public function testRules(ModelWithContent $model, string $rulesClass)
-	{
-		$commit = new ModelCommit(
-			model: $model,
-			action: 'create'
-		);
-
-		$rules = $commit->rules();
-
-		$this->assertInstanceOf($rulesClass, $rules);
-	}
 }

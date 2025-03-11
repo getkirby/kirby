@@ -211,29 +211,21 @@ class ModelCommit
 	}
 
 	/**
-	 * Returns the appropriate rules class for the given model.
-	 */
-	public function rules(): FileRules|PageRules|SiteRules|UserRules
-	{
-		return match (true) {
-			$this->model instanceof File => new FileRules(),
-			$this->model instanceof Page => new PageRules(),
-			$this->model instanceof Site => new SiteRules(),
-			$this->model instanceof User => new UserRules(),
-			default => throw new Exception('Invalid model class')
-		};
-	}
-
-	/**
 	 * Checks the model rules for the given action
 	 * if there's a matching rule method.
 	 */
 	public function validate(array $arguments): void
 	{
-		$rules = $this->rules();
+		$rules = match (true) {
+			$this->model instanceof File => FileRules::class,
+			$this->model instanceof Page => PageRules::class,
+			$this->model instanceof Site => SiteRules::class,
+			$this->model instanceof User => UserRules::class,
+			default => throw new Exception('Invalid model class')
+		};
 
 		if (method_exists($rules, $this->action) === true) {
-			$rules->{$this->action}(...array_values($arguments));
+			$rules::{$this->action}(...array_values($arguments));
 		}
 	}
 }
