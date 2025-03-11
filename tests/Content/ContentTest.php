@@ -198,7 +198,7 @@ class ContentTest extends TestCase
 		]);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('`$content->update()` has been deprecated. Please use `$model->version()->update()` instead');
+		$this->expectExceptionMessage('`$content->update()` is no longer functional. Please use `$model->version()->update()` instead');
 
 		$content->update();
 	}

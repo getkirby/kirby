@@ -239,6 +239,13 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		return $new;
 	}
 
+	/**
+	 * Creates default content for the model, by using our
+	 * Form class to generate the defaults, based on the
+	 * model's blueprint setup.
+	 *
+	 * @since 5.0.0
+	 */
 	public function createDefaultContent(): array
 	{
 		// create the form to get the generate the defaults

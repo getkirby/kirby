@@ -237,15 +237,17 @@ class Content
 	}
 
 	/**
-	 * Updates the content and returns
-	 * a cloned object
+	 * Removed in 5.0.0. We only keep it to simplify debugging,
+	 * when this method is still in use in the wild.
 	 *
-	 * @deprecated 5.0.0 Use $model->version()->update() instead.
+	 * Use $model->version()->update() instead.
+	 *
+	 * @todo Remove in 7.0.0
 	 */
 	public function update(
 		array|null $content = null,
 		bool $overwrite = false
 	): static {
-		throw new Exception('`$content->update()` has been deprecated. Please use `$model->version()->update()` instead');
+		throw new Exception('`$content->update()` is no longer functional. Please use `$model->version()->update()` instead');
 	}
 }

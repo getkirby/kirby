@@ -21,7 +21,7 @@ class Translations extends Collection
 	/**
 	 * Creates a new Translations collection from
 	 * an array of translations properties. This is
-	 * used in LabPage::setTranslations to properly
+	 * used in ModelWithContent::setTranslations to properly
 	 * normalize an array definition.
 	 *
 	 * @todo Needs to be refactored as soon as Version::create becomes static
