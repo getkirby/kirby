@@ -12,6 +12,7 @@ use Kirby\Content\Translation;
 use Kirby\Content\Translations;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
+use Kirby\Content\Versions;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Panel\Model;
@@ -679,6 +680,15 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			model: $this,
 			id: VersionId::from($versionId ?? VersionId::latest())
 		);
+	}
+
+	/**
+	 * Returns a versions collection
+	 * @since 5.0.0
+	 */
+	public function Versions(): Versions
+	{
+		return Versions::load($this);
 	}
 
 	/**

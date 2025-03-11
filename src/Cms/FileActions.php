@@ -288,11 +288,10 @@ trait FileActions
 			// remove all public versions and clear the UUID cache
 			$file->unpublish();
 
-			// delete all changes first
-			$file->version('changes')->delete('*');
-
-			// delete all latest versions as last step.
-			$file->version('latest')->delete('*');
+			// delete all versions
+			foreach ($file->versions() as $version) {
+				$version->delete('*');
+			}
 
 			// delete the file from disk
 			F::remove($file->root());

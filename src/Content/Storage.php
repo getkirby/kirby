@@ -36,9 +36,9 @@ abstract class Storage
 	public function all(): Generator
 	{
 		foreach (Languages::ensure() as $language) {
-			foreach (VersionId::all() as $versionId) {
-				if ($this->exists($versionId, $language) === true) {
-					yield $versionId => $language;
+			foreach ($this->model->versions() as $version) {
+				if ($this->exists($version->id(), $language) === true) {
+					yield $version->id() => $language;
 				}
 			}
 		}
@@ -98,8 +98,8 @@ abstract class Storage
 	 */
 	public function deleteLanguage(Language $language): void
 	{
-		foreach (VersionId::all() as $versionId) {
-			$this->delete($versionId, $language);
+		foreach ($this->model->versions() as $version) {
+			$this->delete($version->id(), $language);
 		}
 	}
 
@@ -185,9 +185,13 @@ abstract class Storage
 		Language $fromLanguage,
 		Language $toLanguage
 	): void {
-		foreach (VersionId::all() as $versionId) {
-			if ($this->exists($versionId, $fromLanguage) === true) {
-				$this->move($versionId, $fromLanguage, toLanguage: $toLanguage);
+		foreach ($this->model->versions() as $version) {
+			if ($this->exists($version->id(), $fromLanguage) === true) {
+				$this->move(
+					$version->id(),
+					$fromLanguage,
+					toLanguage: $toLanguage
+				);
 			}
 		}
 	}
@@ -243,9 +247,9 @@ abstract class Storage
 	 */
 	public function touchLanguage(Language $language): void
 	{
-		foreach (VersionId::all() as $versionId) {
-			if ($this->exists($versionId, $language) === true) {
-				$this->touch($versionId, $language);
+		foreach ($this->model->versions() as $version) {
+			if ($this->exists($version->id(), $language) === true) {
+				$this->touch($version->id(), $language);
 			}
 		}
 	}

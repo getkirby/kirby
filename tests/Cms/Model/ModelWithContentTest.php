@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Content\Lock;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
+use Kirby\Content\Versions;
 use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
@@ -582,5 +583,14 @@ class ModelWithContentTest extends TestCase
 		$model = new Page(['slug' => 'foo']);
 		$this->assertInstanceOf(Version::class, $model->version());
 		$this->assertSame('latest', $model->version()->id()->value());
+	}
+
+	public function testVersions(): void
+	{
+		$model    = new Page(['slug' => 'test']);
+		$versions = $model->versions();
+
+		$this->assertInstanceOf(Versions::class, $versions);
+		$this->assertCount(2, $versions);
 	}
 }

@@ -561,13 +561,12 @@ trait PageActions
 				$child->delete(true);
 			}
 
-			// delete all changes first
-			$page->version('changes')->delete('*');
-
-			// delete all latest versions as last step.
+			// delete all versions,
 			// the plain text storage handler will then clean
-			// up the directory if it's empty.
-			$page->version('latest')->delete('*');
+			// up the directory if it's empty
+			foreach ($page->versions() as $version) {
+				$version->delete('*');
+			}
 
 			if ($page->isDraft() === false) {
 				$page->resortSiblingsAfterUnlisting();
