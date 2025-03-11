@@ -372,6 +372,29 @@ class VersionTest extends TestCase
 	/**
 	 * @covers ::delete
 	 */
+	public function testDeleteMultiLanguageWithWildcard(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->createContentMultiLanguage();
+
+		$this->assertContentFileExists('en');
+		$this->assertContentFileExists('de');
+
+		$version->delete('*');
+
+		$this->assertContentFileDoesNotExist('en');
+		$this->assertContentFileDoesNotExist('de');
+	}
+
+	/**
+	 * @covers ::delete
+	 */
 	public function testDeleteSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -388,6 +411,27 @@ class VersionTest extends TestCase
 		$this->assertContentFileExists();
 
 		$version->delete();
+
+		$this->assertContentFileDoesNotExist();
+	}
+
+	/**
+	 * @covers ::delete
+	 */
+	public function testDeleteSingleLanguageWithWildcard(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->createContentSingleLanguage();
+
+		$this->assertContentFileExists();
+
+		$version->delete('*');
 
 		$this->assertContentFileDoesNotExist();
 	}

@@ -100,9 +100,6 @@ class PlainTextStorageTest extends TestCase
 		$this->storage->delete($versionId, $language);
 
 		$this->assertContentFileDoesNotExist($language, $versionId);
-
-		// The page directory should not be deleted
-		$this->assertDirectoryExists($this->model->root());
 	}
 
 	public function testDeleteChangesMultiLang()
@@ -145,6 +142,43 @@ class PlainTextStorageTest extends TestCase
 		$this->assertDirectoryExists($this->model->root());
 	}
 
+	public function testDeleteLatestMultiLangAndCleanUp()
+	{
+		$this->setUpMultiLanguage();
+
+		Dir::make($this->model->root());
+		touch($this->model->root() . '/article.en.txt');
+		touch($this->model->root() . '/article.de.txt');
+
+		$this->storage->delete(VersionId::latest(), $this->app->language('en'));
+		$this->assertFileDoesNotExist($this->model->root() . '/article.en.txt');
+		$this->assertDirectoryExists($this->model->root());
+
+		$this->storage->delete(VersionId::latest(), $this->app->language('de'));
+		$this->assertDirectoryDoesNotExist($this->model->root());
+	}
+
+	public function testDeleteDraftMultiLangAndCleanUp()
+	{
+		$this->setUpMultiLanguage([
+			'children' => [
+				[
+					'slug'     => 'a-page',
+					'template' => 'article',
+					'draft'    => true
+				]
+			]
+		]);
+
+		Dir::make($this->model->root());
+		touch($this->model->root() . '/article.en.txt');
+
+		$this->model->storage()->delete(VersionId::latest(), $this->app->language('en'));
+
+		$this->assertDirectoryDoesNotExist($this->model->root());
+		$this->assertDirectoryDoesNotExist(dirname($this->model->root()));
+	}
+
 	public function testDeleteLatestSingleLang()
 	{
 		$this->setUpSingleLanguage();
@@ -156,6 +190,39 @@ class PlainTextStorageTest extends TestCase
 		$this->storage->delete(VersionId::latest(), Language::single());
 		$this->assertFileDoesNotExist($this->model->root() . '/article.txt');
 		$this->assertDirectoryExists($this->model->root());
+	}
+
+	public function testDeleteLatestSingleLangAndCleanUp()
+	{
+		$this->setUpSingleLanguage();
+
+		Dir::make($this->model->root());
+		touch($this->model->root() . '/article.txt');
+
+		$this->storage->delete(VersionId::latest(), Language::single());
+		$this->assertDirectoryDoesNotExist($this->model->root());
+	}
+
+	public function testDeleteDraftSingleLangAndCleanUp()
+	{
+		$this->setUpSingleLanguage([
+			'children' => [
+				[
+					'slug'     => 'a-page',
+					'template' => 'article',
+					'draft'    => true
+				]
+			]
+		]);
+
+		Dir::make($this->model->root());
+
+		touch($this->model->root() . '/article.txt');
+
+		$this->model->storage()->delete(VersionId::latest(), Language::single());
+
+		$this->assertDirectoryDoesNotExist($this->model->root());
+		$this->assertDirectoryDoesNotExist(dirname($this->model->root()));
 	}
 
 	public function testExistsNoneExistingMultiLanguage()
