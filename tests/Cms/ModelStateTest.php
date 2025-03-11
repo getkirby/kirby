@@ -4,8 +4,8 @@ namespace Kirby\Cms;
 
 use PHPUnit\Framework\Attributes\CoversDefaultClass;
 
-#[CoversDefaultClass(State::class)]
-class StateTest extends TestCase
+#[CoversDefaultClass(ModelState::class)]
+class ModelStateTest extends TestCase
 {
 	public function testArgs()
 	{
@@ -13,8 +13,8 @@ class StateTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$this->assertEquals([$page->id(), $page], State::args($page, 'changeSlug'));
-		$this->assertEquals([$page->id(), $page], State::args($page, 'changeTitle'));
+		$this->assertEquals([$page->id(), $page], ModelState::args($page, 'changeSlug'));
+		$this->assertEquals([$page->id(), $page], ModelState::args($page, 'changeTitle'));
 	}
 
 	public function testArgsForRemoveAction()
@@ -23,22 +23,22 @@ class StateTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$this->assertEquals([$page], State::args($page, 'remove'));
+		$this->assertEquals([$page], ModelState::args($page, 'remove'));
 	}
 
 	public function testNormalizeMethod()
 	{
-		$this->assertEquals('append', State::normalizeMethod('append'));
-		$this->assertEquals('append', State::normalizeMethod('create'));
+		$this->assertEquals('append', ModelState::normalizeMethod('append'));
+		$this->assertEquals('append', ModelState::normalizeMethod('create'));
 
-		$this->assertEquals('remove', State::normalizeMethod('remove'));
-		$this->assertEquals('remove', State::normalizeMethod('delete'));
+		$this->assertEquals('remove', ModelState::normalizeMethod('remove'));
+		$this->assertEquals('remove', ModelState::normalizeMethod('delete'));
 
-		$this->assertEquals('set', State::normalizeMethod('changeTitle'));
-		$this->assertEquals('set', State::normalizeMethod('changeSlug'));
+		$this->assertEquals('set', ModelState::normalizeMethod('changeTitle'));
+		$this->assertEquals('set', ModelState::normalizeMethod('changeSlug'));
 
-		$this->assertEquals(false, State::normalizeMethod('duplicate'));
-		$this->assertEquals(false, State::normalizeMethod(false));
+		$this->assertEquals(false, ModelState::normalizeMethod('duplicate'));
+		$this->assertEquals(false, ModelState::normalizeMethod(false));
 	}
 
 	public function testUpdateFile()
@@ -66,7 +66,7 @@ class StateTest extends TestCase
 			]
 		]);
 
-		State::updateFile(
+		ModelState::updateFile(
 			method: 'update',
 			current: $current,
 			next: $next
@@ -100,7 +100,7 @@ class StateTest extends TestCase
 			]
 		]);
 
-		State::updateFile(
+		ModelState::updateFile(
 			method: false,
 			current: $current,
 			next: $next
@@ -132,7 +132,7 @@ class StateTest extends TestCase
 			]
 		]);
 
-		State::updatePage(
+		ModelState::updatePage(
 			method: 'changeTitle',
 			current: $current,
 			next: $next
@@ -164,7 +164,7 @@ class StateTest extends TestCase
 			]
 		]);
 
-		State::updatePage(
+		ModelState::updatePage(
 			method: false,
 			current: $current,
 			next: $next
@@ -189,7 +189,7 @@ class StateTest extends TestCase
 			]
 		]);
 
-		State::updateSite(
+		ModelState::updateSite(
 			method: 'changeTitle',
 			current: $this->app->site(),
 			next: $next
@@ -215,7 +215,7 @@ class StateTest extends TestCase
 			]
 		]);
 
-		State::updateSite(
+		ModelState::updateSite(
 			method: false,
 			current: $current,
 			next: $next
@@ -240,7 +240,7 @@ class StateTest extends TestCase
 			'email' => 'next@example.com'
 		]);
 
-		State::updateUser(
+		ModelState::updateUser(
 			method: 'changeEmail',
 			current: $this->app->user('admin'),
 			next: $next
@@ -266,7 +266,7 @@ class StateTest extends TestCase
 			'email' => 'next@example.com'
 		]);
 
-		State::updateUser(
+		ModelState::updateUser(
 			method: false,
 			current: $current,
 			next: $next

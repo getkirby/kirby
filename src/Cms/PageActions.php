@@ -125,7 +125,7 @@ trait PageActions
 				VersionCache::$cache = [];
 
 				// remove from the siblings
-				State::updatePage(
+				ModelState::updatePage(
 					method: 'remove',
 					current: $oldPage,
 				);
@@ -332,7 +332,7 @@ trait PageActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$commit = new Commit(
+		$commit = new ModelCommit(
 			model: $this,
 			action: $action
 		);
@@ -399,7 +399,7 @@ trait PageActions
 		);
 
 		// add copy to siblings
-		State::updatePage(
+		ModelState::updatePage(
 			method: 'append',
 			current: $copy,
 			parent: $parentModel
@@ -833,7 +833,7 @@ trait PageActions
 	): static {
 		$page = parent::save($data, $languageCode, $overwrite);
 
-		State::updatePage(
+		ModelState::updatePage(
 			method: 'set',
 			current: $this,
 			next: $page
@@ -916,14 +916,14 @@ trait PageActions
 	 * Updates parent collections with the new page object
 	 * after a page action
 	 *
-	 * @deprecated 5.0.0 Use State::updatePage instead
+	 * @deprecated 5.0.0 Use ModelState::updatePage instead
 	 */
 	protected static function updateParentCollections(
 		Page $page,
 		string|false $method,
 		Page|Site|null $parentModel = null
 	): void {
-		State::updatePage(
+		ModelState::updatePage(
 			method: $method,
 			current: $page,
 			next: $page,

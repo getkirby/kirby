@@ -6,7 +6,7 @@ use Closure;
 use Kirby\Exception\Exception;
 
 /**
- * The Commit class is used to commit a given model action
+ * The ModelCommit class is used to commit a given model action
  * in the model action classes. It takes care of running
  * the `before` and `after` hooks and updating the state
  * of the given model.
@@ -17,7 +17,7 @@ use Kirby\Exception\Exception;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Commit
+class ModelCommit
 {
 	protected App $kirby;
 	protected string $prefix;
@@ -175,7 +175,7 @@ class Commit
 		$state = $callback(...array_values($arguments));
 
 		// update the state for the after hook
-		State::update(
+		ModelState::update(
 			method: $this->action,
 			current: $this->model,
 			next: $state

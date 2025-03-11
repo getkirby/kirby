@@ -5,8 +5,8 @@ namespace Kirby\Cms;
 use PHPUnit\Framework\Attributes\CoversDefaultClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-#[CoversDefaultClass(Commit::class)]
-class CommitTest extends TestCase
+#[CoversDefaultClass(ModelCommit::class)]
+class ModelCommitTest extends TestCase
 {
 	public static function modelProvider(): array
 	{
@@ -36,7 +36,7 @@ class CommitTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$commit = new Commit($page, 'create');
+		$commit = new ModelCommit($page, 'create');
 		$args   = $commit->afterHookArgumentsForPageActions($page, 'create', $page);
 
 		$this->assertSame([
@@ -54,7 +54,7 @@ class CommitTest extends TestCase
 			'slug' => 'test-copy',
 		]);
 
-		$commit = new Commit($page, 'duplicate');
+		$commit = new ModelCommit($page, 'duplicate');
 		$args   = $commit->afterHookArgumentsForPageActions($page, 'duplicate', $copy);
 
 		$this->assertSame([
@@ -69,7 +69,7 @@ class CommitTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$commit = new Commit($page, 'delete');
+		$commit = new ModelCommit($page, 'delete');
 		$args   = $commit->afterHookArgumentsForPageActions($page, 'delete', true);
 
 		$this->assertSame([
@@ -88,7 +88,7 @@ class CommitTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$commit = new Commit($oldPage, 'update');
+		$commit = new ModelCommit($oldPage, 'update');
 		$args   = $commit->afterHookArgumentsForPageActions($oldPage, 'update', $newPage);
 
 		$this->assertSame([
@@ -104,7 +104,7 @@ class CommitTest extends TestCase
 			'filename' => 'test.txt',
 		]);
 
-		$commit = new Commit($file, 'create');
+		$commit = new ModelCommit($file, 'create');
 		$args   = $commit->afterHookArgumentsForFileActions($file, 'create', $file);
 
 		$this->assertSame([
@@ -119,7 +119,7 @@ class CommitTest extends TestCase
 			'filename' => 'test.txt',
 		]);
 
-		$commit = new Commit($file, 'delete');
+		$commit = new ModelCommit($file, 'delete');
 		$args   = $commit->afterHookArgumentsForFileActions($file, 'delete', true);
 
 		$this->assertSame([
@@ -140,7 +140,7 @@ class CommitTest extends TestCase
 			'filename' => 'test.txt',
 		]);
 
-		$commit = new Commit($oldFile, 'update');
+		$commit = new ModelCommit($oldFile, 'update');
 		$args   = $commit->afterHookArgumentsForFileActions($oldFile, 'update', $newFile);
 
 		$this->assertSame([
@@ -159,7 +159,7 @@ class CommitTest extends TestCase
 			'name' => 'Test'
 		]);
 
-		$commit = new Commit($oldSite, 'update');
+		$commit = new ModelCommit($oldSite, 'update');
 		$args   = $commit->afterHookArgumentsForSiteActions($oldSite, 'update', $newSite);
 
 		$this->assertSame([
@@ -174,7 +174,7 @@ class CommitTest extends TestCase
 			'email' => 'test@test.com'
 		]);
 
-		$commit = new Commit($user, 'create');
+		$commit = new ModelCommit($user, 'create');
 		$args   = $commit->afterHookArgumentsForUserActions($user, 'create', $user);
 
 		$this->assertSame([
@@ -188,7 +188,7 @@ class CommitTest extends TestCase
 			'email' => 'test@test.com'
 		]);
 
-		$commit = new Commit($user, 'delete');
+		$commit = new ModelCommit($user, 'delete');
 		$args   = $commit->afterHookArgumentsForUserActions($user, 'delete', true);
 
 		$this->assertSame([
@@ -207,7 +207,7 @@ class CommitTest extends TestCase
 			'email' => 'test@test.com'
 		]);
 
-		$commit = new Commit($oldUser, 'update');
+		$commit = new ModelCommit($oldUser, 'update');
 		$args   = $commit->afterHookArgumentsForUserActions($oldUser, 'update', $newUser);
 
 		$this->assertSame([
@@ -235,7 +235,7 @@ class CommitTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$commit = new Commit($page, 'test');
+		$commit = new ModelCommit($page, 'test');
 		$input  = [
 			'a' => 'Argument A',
 			'b' => 'Argument B'
@@ -255,7 +255,7 @@ class CommitTest extends TestCase
 	#[DataProvider('modelProvider')]
 	public function testRules(ModelWithContent $model, string $rulesClass)
 	{
-		$commit = new Commit($model, 'create');
+		$commit = new ModelCommit($model, 'create');
 		$rules  = $commit->rules();
 
 		$this->assertInstanceOf($rulesClass, $rules);

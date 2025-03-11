@@ -29,7 +29,7 @@ trait SiteActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$commit = new Commit(
+		$commit = new ModelCommit(
 			model: $this,
 			action: $action
 		);

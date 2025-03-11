@@ -150,7 +150,7 @@ trait FileActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$commit = new Commit(
+		$commit = new ModelCommit(
 			model: $this,
 			action: $action
 		);
@@ -411,7 +411,7 @@ trait FileActions
 	): static {
 		$file = parent::save($data, $languageCode, $overwrite);
 
-		State::updateFile(
+		ModelState::updateFile(
 			method: 'set',
 			current: $this,
 			next: $file

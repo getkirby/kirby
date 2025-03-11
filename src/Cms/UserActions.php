@@ -155,7 +155,7 @@ trait UserActions
 			);
 		}
 
-		$commit = new Commit(
+		$commit = new ModelCommit(
 			model: $this,
 			action: $action
 		);
@@ -348,7 +348,7 @@ trait UserActions
 		if ($user->isLoggedIn() === true) {
 			$this->kirby()->auth()->setUser($user);
 
-			State::updateUser(
+			ModelState::updateUser(
 				method: 'set',
 				current: $user,
 			);
