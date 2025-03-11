@@ -236,7 +236,18 @@ class App
 		$event = $originalEvent ?? new Event($name, $args);
 
 		if ($functions = $this->extension('hooks', $name)) {
+			static $level = 0;
+			static $applied = [];
+			$level++;
+
 			foreach ($functions as $function) {
+				if (in_array($function, $applied[$name] ?? []) === true) {
+					continue;
+				}
+
+				// mark the hook as applied, to avoid endless loops
+				$applied[$name][] = $function;
+
 				// bind the App object to the hook
 				$newValue = $event->call($this, $function);
 
@@ -244,6 +255,12 @@ class App
 				if ($newValue !== null) {
 					$event->updateArgument($modify, $newValue);
 				}
+			}
+
+			$level--;
+
+			if ($level === 0) {
+				$applied = [];
 			}
 		}
 
