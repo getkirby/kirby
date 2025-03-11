@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\Attributes\CoversDefaultClass;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversDefaultClass(ModelState::class)]
+#[CoversClass(ModelState::class)]
 class ModelStateTest extends TestCase
 {
 	public function testUpdateFile()

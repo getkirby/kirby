@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\Attributes\CoversDefaultClass;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversDefaultClass(ModelCommit::class)]
+#[CoversClass(ModelCommit::class)]
 class ModelCommitTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.ModelCommit';
