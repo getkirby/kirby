@@ -26,20 +26,6 @@ class ModelStateTest extends TestCase
 		$this->assertEquals([$page], ModelState::args($page, 'remove'));
 	}
 
-	public function testNormalizeMethod()
-	{
-		$this->assertEquals('append', ModelState::normalizeMethod('append'));
-		$this->assertEquals('append', ModelState::normalizeMethod('create'));
-
-		$this->assertEquals('remove', ModelState::normalizeMethod('remove'));
-		$this->assertEquals('remove', ModelState::normalizeMethod('delete'));
-
-		$this->assertEquals('set', ModelState::normalizeMethod('changeTitle'));
-		$this->assertEquals('set', ModelState::normalizeMethod('changeSlug'));
-
-		$this->assertEquals(false, ModelState::normalizeMethod('duplicate'));
-	}
-
 	public function testUpdateFile()
 	{
 		$this->app = $this->app->clone([
@@ -65,7 +51,7 @@ class ModelStateTest extends TestCase
 			]
 		]);
 
-		ModelState::updateFile(
+		ModelState::update(
 			method: 'update',
 			current: $current,
 			next: $next
@@ -99,7 +85,7 @@ class ModelStateTest extends TestCase
 			]
 		]);
 
-		ModelState::updateFile(
+		ModelState::update(
 			method: 'duplicate',
 			current: $current,
 			next: $next
@@ -131,7 +117,7 @@ class ModelStateTest extends TestCase
 			]
 		]);
 
-		ModelState::updatePage(
+		ModelState::update(
 			method: 'changeTitle',
 			current: $current,
 			next: $next
@@ -163,7 +149,7 @@ class ModelStateTest extends TestCase
 			]
 		]);
 
-		ModelState::updatePage(
+		ModelState::update(
 			method: 'duplicate',
 			current: $current,
 			next: $next
@@ -188,7 +174,7 @@ class ModelStateTest extends TestCase
 			]
 		]);
 
-		ModelState::updateSite(
+		ModelState::update(
 			method: 'changeTitle',
 			current: $this->app->site(),
 			next: $next
@@ -214,7 +200,7 @@ class ModelStateTest extends TestCase
 			]
 		]);
 
-		ModelState::updateSite(
+		ModelState::update(
 			method: 'duplicate',
 			current: $current,
 			next: $next
@@ -239,7 +225,7 @@ class ModelStateTest extends TestCase
 			'email' => 'next@example.com'
 		]);
 
-		ModelState::updateUser(
+		ModelState::update(
 			method: 'changeEmail',
 			current: $this->app->user('admin'),
 			next: $next
@@ -265,7 +251,7 @@ class ModelStateTest extends TestCase
 			'email' => 'next@example.com'
 		]);
 
-		ModelState::updateUser(
+		ModelState::update(
 			method: 'duplicate',
 			current: $current,
 			next: $next
