@@ -809,26 +809,6 @@ trait PageActions
 	}
 
 	/**
-	 * Stores the content on disk
-	 * @internal
-	 */
-	public function save(
-		array|null $data = null,
-		string|null $languageCode = null,
-		bool $overwrite = false
-	): static {
-		$page = parent::save($data, $languageCode, $overwrite);
-
-		ModelState::update(
-			method: 'set',
-			current: $this,
-			next: $page
-		);
-
-		return $page;
-	}
-
-	/**
 	 * Convert a page from listed or
 	 * unlisted to draft.
 	 * @internal

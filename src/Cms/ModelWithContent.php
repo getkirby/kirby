@@ -452,6 +452,12 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			$overwrite
 		);
 
+		ModelState::update(
+			method: 'set',
+			current: $this,
+			next: $clone
+		);
+
 		return $clone;
 	}
 
