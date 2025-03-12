@@ -322,6 +322,75 @@ class PlainTextStorageTest extends TestCase
 		$this->assertFileExists($this->model->root() . '/_changes/article.txt');
 	}
 
+	public function testMoveToTheSameStorageLocation()
+	{
+		$this->setUpSingleLanguage();
+
+		$content   = ['title' => 'Test'];
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+
+		// create some content to move
+		$this->storage->create($versionId, $language, $content);
+
+		$this->assertFileExists($this->model->root() . '/article.txt', 'The source file should exist now');
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language));
+
+		$this->storage->move(
+			$versionId,
+			$language,
+			$versionId,
+			$language
+		);
+
+		$this->assertFileExists($this->model->root() . '/article.txt', 'The source file should still exist');
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language), 'The content should still be the same');
+	}
+
+	public function testMoveToTheSameStorageLocationWithAnotherStorageInstance()
+	{
+		$this->setUpSingleLanguage();
+
+		$content   = ['title' => 'Test'];
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+		$storage   = new PlainTextStorage($this->model);
+
+		// create some content to move
+		$this->storage->create($versionId, $language, $content);
+
+		$this->assertFileExists($this->model->root() . '/article.txt', 'The source file should exist now');
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language));
+
+		$this->storage->move(
+			$versionId,
+			$language,
+			$versionId,
+			$language,
+			$storage
+		);
+
+		$this->assertFileExists($this->model->root() . '/article.txt', 'The source file should still exist at the same location');
+
+		// The old storage entry still points to the same file.
+		// This is different to the memory handler for example, where
+		// entries are always stored with unique cache keys for each
+		// handler instance. We can't do the same on the file system.
+		// A database handler would also still point to the same row
+		// in this case.
+		$this->assertTrue($this->storage->exists($versionId, $language), 'The old storage entry still exists, since the location did not change');
+		$this->assertSame($content, $this->storage->read($versionId, $language), 'The old entry also still points to the same content');
+
+		$this->assertTrue($storage->exists($versionId, $language));
+		$this->assertSame($content, $storage->read($versionId, $language));
+	}
+
 	public function testReadChangesMultiLang()
 	{
 		$this->setUpMultiLanguage();
