@@ -398,7 +398,7 @@ class StorageTest extends TestCase
 	/**
 	 * @covers ::move
 	 */
-	public function testMovetoAnotherStorage()
+	public function testMoveToAnotherStorage()
 	{
 		$this->setUpSingleLanguage();
 
