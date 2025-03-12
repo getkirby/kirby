@@ -28,6 +28,12 @@ class Versions extends Collection
 
 	/**
 	 * Loads all available versions for a given model
+	 *
+	 * Versions need to be loaded in the order `changes`, `latest`
+	 * to ensure that models are deleted correctly. The `latest`
+	 * version always needs to be deleted last, otherwise the
+	 * PlainTextStorage handler will not be able to clean up
+	 * content directories.
 	 */
 	public static function load(
 		ModelWithContent $model
