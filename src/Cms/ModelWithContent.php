@@ -104,11 +104,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
-	 * Copies the model to a new storage instance/type
+	 * Moves or copies the model to a new storage instance/type
 	 * @since 5.0.0
 	 * @internal
 	 */
-	public function changeStorage(Storage|string $toStorage): static
+	public function changeStorage(Storage|string $toStorage, bool $copy = false): static
 	{
 		if (is_string($toStorage) === true) {
 			if (is_subclass_of($toStorage, Storage::class) === false) {
@@ -118,7 +118,9 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			$toStorage = new $toStorage($this);
 		}
 
-		$this->storage()->copyAll(to: $toStorage);
+		$method = $copy ? 'copyAll' : 'moveAll';
+
+		$this->storage()->$method(to: $toStorage);
 		$this->storage = $toStorage;
 		return $this;
 	}
@@ -443,7 +445,10 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$clone = $this->clone();
 
 		// move the old model into memory
-		$this->changeStorage(ImmutableMemoryStorage::class);
+		$this->changeStorage(
+			toStorage: ImmutableMemoryStorage::class,
+			copy: true
+		);
 
 		// update the clone
 		$clone->version()->save(
