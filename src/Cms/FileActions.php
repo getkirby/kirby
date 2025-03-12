@@ -401,26 +401,6 @@ trait FileActions
 	}
 
 	/**
-	 * Stores the content on disk
-	 * @internal
-	 */
-	public function save(
-		array|null $data = null,
-		string|null $languageCode = null,
-		bool $overwrite = false
-	): static {
-		$file = parent::save($data, $languageCode, $overwrite);
-
-		ModelState::update(
-			method: 'set',
-			current: $this,
-			next: $file
-		);
-
-		return $file;
-	}
-
-	/**
 	 * Remove all public versions of this file
 	 *
 	 * @return $this
