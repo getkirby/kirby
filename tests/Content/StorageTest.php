@@ -168,7 +168,7 @@ class StorageTest extends TestCase
 		$this->assertTrue($handler->exists(VersionId::changes(), Language::single()));
 	}
 
-	public function testCopytoAnotherStorage()
+	public function testCopyToAnotherStorage()
 	{
 		$this->setUpSingleLanguage();
 
@@ -188,6 +188,34 @@ class StorageTest extends TestCase
 
 		$this->assertTrue($handler1->exists(VersionId::latest(), Language::single()));
 		$this->assertTrue($handler2->exists(VersionId::latest(), Language::single()));
+	}
+
+	public function testCopyToTheSameStorageLocation()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler = new TestStorage(model: $this->model);
+
+		$content   = ['title' => 'Test'];
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+
+		// create some content to copy
+		$handler->create($versionId, $language, $content);
+
+		$this->assertTrue($handler->exists($versionId, $language));
+		$this->assertSame($content, $handler->read($versionId, $language));
+
+		$handler->copy(
+			$versionId,
+			$language,
+			$versionId,
+			$language,
+			$handler
+		);
+
+		$this->assertTrue($handler->exists($versionId, $language));
+		$this->assertSame($content, $handler->read($versionId, $language), 'The content should still be the same');
 	}
 
 	public function testCopyAll()
