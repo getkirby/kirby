@@ -289,9 +289,7 @@ trait FileActions
 			$file->unpublish();
 
 			// delete all versions
-			foreach ($file->versions() as $version) {
-				$version->delete('*');
-			}
+			$file->versions()->delete();
 
 			// delete the file from disk
 			F::remove($file->root());

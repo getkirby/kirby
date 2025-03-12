@@ -686,7 +686,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Returns a versions collection
 	 * @since 5.0.0
 	 */
-	public function Versions(): Versions
+	public function versions(): Versions
 	{
 		return Versions::load($this);
 	}

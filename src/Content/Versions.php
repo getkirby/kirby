@@ -17,6 +17,16 @@ use Kirby\Cms\ModelWithContent;
 class Versions extends Collection
 {
 	/**
+	 * Deletes all versions in the collection
+	 */
+	public function delete(): void
+	{
+		foreach ($this->data as $version) {
+			$version->delete('*');
+		}
+	}
+
+	/**
 	 * Loads all available versions for a given model
 	 */
 	public static function load(

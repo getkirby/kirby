@@ -251,9 +251,7 @@ trait UserActions
 			// delete all versions,
 			// the plain text storage handler will then clean
 			// up the directory if it's empty
-			foreach ($user->versions() as $version) {
-				$version->delete('*');
-			}
+			$user->versions()->delete();
 
 			// delete the user directory to get rid
 			// of the .htpasswd and index.php files.

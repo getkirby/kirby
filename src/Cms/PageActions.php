@@ -564,9 +564,7 @@ trait PageActions
 			// delete all versions,
 			// the plain text storage handler will then clean
 			// up the directory if it's empty
-			foreach ($page->versions() as $version) {
-				$version->delete('*');
-			}
+			$page->versions()->delete();
 
 			if ($page->isDraft() === false) {
 				$page->resortSiblingsAfterUnlisting();
