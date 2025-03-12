@@ -331,6 +331,64 @@ class StorageTest extends TestCase
 		$this->assertSame($changesDE, $handlerB->read($versionChanges, $de));
 	}
 
+	public function testIsSameStorageLocation()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler = new TestStorage(model: $this->model);
+
+		$this->assertTrue($handler->isSameStorageLocation(
+			VersionId::latest(),
+			Language::single(),
+			VersionId::latest(),
+			Language::single()
+		));
+	}
+
+	public function testIsSameStorageLocationWithDifferentVersionIds()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler = new TestStorage(model: $this->model);
+
+		$this->assertFalse($handler->isSameStorageLocation(
+			VersionId::latest(),
+			Language::single(),
+			VersionId::changes(),
+			Language::single()
+		));
+	}
+
+	public function testIsSameStorageLocationWithDifferentLanguages()
+	{
+		$this->setUpMultiLanguage();
+
+		$handler = new TestStorage(model: $this->model);
+
+		$this->assertFalse($handler->isSameStorageLocation(
+			VersionId::latest(),
+			Language::ensure('en'),
+			VersionId::latest(),
+			Language::ensure('de')
+		));
+	}
+
+	public function testIsSameStorageLocationWithDifferentStorageInstances()
+	{
+		$this->setUpSingleLanguage();
+
+		$handler1 = new TestStorage(model: $this->model);
+		$handler2 = new TestStorage(model: $this->model);
+
+		$this->assertFalse($handler1->isSameStorageLocation(
+			VersionId::latest(),
+			Language::single(),
+			VersionId::latest(),
+			Language::single(),
+			$handler2
+		));
+	}
+
 	/**
 	 * @covers ::model
 	 */
