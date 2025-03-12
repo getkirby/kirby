@@ -7,6 +7,7 @@ use Kirby\Content\MemoryStorage;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\PermissionException;
+use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Idn;
 use Kirby\Toolkit\A;
@@ -247,13 +248,10 @@ trait UserActions
 				$file->delete();
 			}
 
-			// delete all changes first
-			$user->version('changes')->delete('*');
-
-			// delete all latest versions as last step.
+			// delete all versions,
 			// the plain text storage handler will then clean
-			// up the directory if it's empty.
-			$user->version('latest')->delete('*');
+			// up the directory if it's empty
+			$user->versions()->delete();
 
 			// delete the user directory to get rid
 			// of the .htpasswd and index.php files.

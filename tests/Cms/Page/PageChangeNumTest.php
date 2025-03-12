@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Exception\LogicException;
-
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]

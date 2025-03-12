@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Cache\Value;
-
 use Kirby\Content\VersionId;
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
