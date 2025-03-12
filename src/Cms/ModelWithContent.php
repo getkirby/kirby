@@ -198,7 +198,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	protected function convertTo(string $blueprint): static
 	{
 		// keep a copy of the old model in memory
-		$old = $this->clone()->changeStorage(MemoryStorage::class);
+		$old = $this->clone()->changeStorage(MemoryStorage::class, copy: true);
 
 		// first clone the object with the new blueprint as template
 		$new = $this->clone(['template' => $blueprint]);
