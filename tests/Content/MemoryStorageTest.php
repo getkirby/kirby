@@ -313,6 +313,66 @@ class MemoryStorageTest extends TestCase
 	}
 
 	/**
+	 * @covers ::move
+	 */
+	public function testMoveToTheSameStorageLocation()
+	{
+		$this->setUpSingleLanguage();
+
+		$content   = ['title' => 'Test'];
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+
+		// create some content to move
+		$this->storage->create($versionId, $language, $content);
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language));
+
+		$this->storage->move(
+			$versionId,
+			$language,
+			$versionId,
+			$language
+		);
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language), 'The content should still be the same');
+	}
+
+	/**
+	 * @covers ::move
+	 */
+	public function testMoveToTheSameStorageLocationWithAnotherStorageInstance()
+	{
+		$this->setUpSingleLanguage();
+
+		$content   = ['title' => 'Test'];
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+		$storage   = new MemoryStorage($this->model);
+
+		// create some content to move
+		$this->storage->create($versionId, $language, $content);
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language));
+
+		$this->storage->move(
+			$versionId,
+			$language,
+			$versionId,
+			$language,
+			$storage
+		);
+
+		$this->assertFalse($this->storage->exists($versionId, $language), 'The old storage entry should be gone now');
+
+		$this->assertTrue($storage->exists($versionId, $language));
+		$this->assertSame($content, $storage->read($versionId, $language));
+	}
+
+	/**
 	 * @covers ::touch
 	 */
 	public function testTouchMultiLang()
