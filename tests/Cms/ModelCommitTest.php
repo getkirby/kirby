@@ -485,6 +485,55 @@ class ModelCommitTest extends TestCase
 		$this->assertSame('Modified', $this->app->page('test')->title()->value(), 'The app state should be updated as well');
 	}
 
+	public function testHookWithModifiedModelLegacyMethod()
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'test',
+						'content' => [
+							'title' => 'Original'
+						]
+					]
+				]
+			],
+			'hooks' => [
+				'page.test:after' => function (Page $page) {
+					// This is the legacy method to modify
+					// the model directly. It should not
+					// be used anymore and the model should be
+					// returned instead
+					$page->update([
+						'title' => 'Modified'
+					]);
+				}
+			]
+		]);
+
+		// needed to make the update call in the hook work
+		$this->app->impersonate('kirby');
+
+		// get the page from the app state
+		$page = $this->app->page('test');
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
+		);
+
+		$state = $commit->hook(
+			hook: 'after',
+			arguments: [
+				'page' => $page
+			]
+		);
+
+		$this->assertSame('Original', $page->title()->value(), 'The original model should not be modified');
+		$this->assertSame('Modified', $state['result']->title()->value(), 'The result should be the modified model');
+		$this->assertSame('Modified', $this->app->page('test')->title()->value(), 'The app state should be updated as well');
+	}
+
 	public function testHookWithMultipleHandlers()
 	{
 		$this->app = $this->app->clone([
