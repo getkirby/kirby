@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Exception\Exception;
 
 /**
@@ -210,20 +209,12 @@ class ModelCommit
 		$appliedTo = array_key_first($arguments);
 
 		// run the hook and modify the first argument
-		$arguments[$appliedTo] = $state = $this->kirby->apply(
+		$arguments[$appliedTo] = $this->kirby->apply(
 			// e.g. page.create:before
 			$this->prefix . '.' . $this->action . ':' . $hook,
 			$arguments,
 			$appliedTo
 		);
-
-		if (
-			$state instanceof ModelWithContent &&
-			$state->storage() instanceof ImmutableMemoryStorage &&
-			$state->storage()->modelClone() !== null
-		) {
-			$arguments[$appliedTo] = $state->storage()->modelClone();
-		}
 
 		return [
 			'arguments' => $arguments,

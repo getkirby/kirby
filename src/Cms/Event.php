@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Controller;
 use Stringable;
@@ -249,6 +250,31 @@ class Event implements Stringable
 			throw new InvalidArgumentException(
 				message: 'The argument ' . $name . ' does not exist'
 			);
+		}
+
+		// no new value has been supplied by the apply hook
+		if ($value === null) {
+
+			// To support legacy model modification
+			// in hooks without return values, we need to
+			// check the state of the updated argument.
+			// If the argument is an instance of ModelWithContent
+			// and the storage is an instance of ImmutableMemoryStorage,
+			// we can replace the argument with its clone to achieve
+			// the same effect as if the hook returned the modified model.
+			$state = $this->arguments[$name];
+
+			if (
+				$state instanceof ModelWithContent &&
+				$state->storage() instanceof ImmutableMemoryStorage &&
+				$state->storage()->modelClone() !== null
+			) {
+				$this->arguments[$name] = $state->storage()->modelClone();
+			}
+
+			// Otherwise, there's no need to update the argument
+			// if no new value is provided
+			return;
 		}
 
 		$this->arguments[$name] = $value;

@@ -252,9 +252,7 @@ class App
 				$newValue = $event->call($this, $function);
 
 				// update value if one was returned
-				if ($newValue !== null) {
-					$event->updateArgument($modify, $newValue);
-				}
+				$event->updateArgument($modify, $newValue);
 			}
 
 			$level--;
