@@ -218,7 +218,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			toStorage: new ImmutableMemoryStorage(
 				model: $this,
 				modelClone: $new
-			), 
+			),
 			copy: true
 		);
 

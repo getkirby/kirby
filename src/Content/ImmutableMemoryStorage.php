@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\LogicException;
+
 /**
  * @package   Kirby Content
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -21,16 +22,30 @@ class ImmutableMemoryStorage extends MemoryStorage
 		parent::__construct($model);
 	}
 
+	/**
+	 * Immutable storage entries cannot be deleted
+	 *
+	 * @throws \Kirby\Exception\LogicException
+	 */
 	public function delete(VersionId $versionId, Language $language): void
 	{
 		$this->preventMutation('deleted');
 	}
 
+	/**
+	 * Returns the clone of the model if the
+	 * reference is given
+	 */
 	public function modelClone(): ModelWithContent|null
 	{
 		return $this->modelClone;
 	}
 
+	/**
+	 * Immutable storage entries cannot be moved
+	 *
+	 * @throws \Kirby\Exception\LogicException
+	 */
 	public function move(
 		VersionId $fromVersionId,
 		Language $fromLanguage,
@@ -53,11 +68,21 @@ class ImmutableMemoryStorage extends MemoryStorage
 		);
 	}
 
+	/**
+	 * Immutable storage entries cannot be touched
+	 *
+	 * @throws \Kirby\Exception\LogicException
+	 */
 	public function touch(VersionId $versionId, Language $language): void
 	{
 		$this->preventMutation('touched');
 	}
 
+	/**
+	 * Immutable storage entries cannot be updated
+	 *
+	 * @throws \Kirby\Exception\LogicException
+	 */
 	public function update(VersionId $versionId, Language $language, array $fields): void
 	{
 		$this->preventMutation('updated');
