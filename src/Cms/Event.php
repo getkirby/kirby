@@ -267,9 +267,9 @@ class Event implements Stringable
 			if (
 				$state instanceof ModelWithContent &&
 				$state->storage() instanceof ImmutableMemoryStorage &&
-				$state->storage()->modelClone() !== null
+				$state->storage()->nextModel() !== null
 			) {
-				$this->arguments[$name] = $state->storage()->modelClone();
+				$this->arguments[$name] = $state->storage()->nextModel();
 			}
 
 			// Otherwise, there's no need to update the argument
