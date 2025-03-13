@@ -17,7 +17,7 @@ class ImmutableMemoryStorage extends MemoryStorage
 {
 	public function __construct(
 		protected ModelWithContent $model,
-		protected ModelWithContent|null $modelClone = null
+		protected ModelWithContent|null $nextModel = null
 	) {
 		parent::__construct($model);
 	}
@@ -33,15 +33,6 @@ class ImmutableMemoryStorage extends MemoryStorage
 	}
 
 	/**
-	 * Returns the clone of the model if the
-	 * reference is given
-	 */
-	public function modelClone(): ModelWithContent|null
-	{
-		return $this->modelClone;
-	}
-
-	/**
 	 * Immutable storage entries cannot be moved
 	 *
 	 * @throws \Kirby\Exception\LogicException
@@ -54,6 +45,15 @@ class ImmutableMemoryStorage extends MemoryStorage
 		Storage|null $toStorage = null
 	): void {
 		$this->preventMutation('moved');
+	}
+
+	/**
+	 * Returns the next state of the model if the
+	 * reference is given
+	 */
+	public function nextModel(): ModelWithContent|null
+	{
+		return $this->nextModel;
 	}
 
 	/**

@@ -217,7 +217,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$this->changeStorage(
 			toStorage: new ImmutableMemoryStorage(
 				model: $this,
-				modelClone: $new
+				nextModel: $new
 			),
 			copy: true
 		);
@@ -457,7 +457,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		$this->changeStorage(
 			toStorage: new ImmutableMemoryStorage(
 				model: $this,
-				modelClone: $clone
+				nextModel: $clone
 			),
 			copy: true
 		);

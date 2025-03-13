@@ -28,29 +28,6 @@ class ImmutableMemoryStorageTest extends TestCase
 		$this->storage->delete(VersionId::latest(), Language::ensure());
 	}
 
-	public function testModelClone()
-	{
-		$model      = new Page(['slug' => 'test']);
-		$modelClone = $model->clone();
-
-		$storage = new ImmutableMemoryStorage(
-			model: $model,
-			modelClone: $modelClone
-		);
-
-		$this->assertSame($modelClone, $storage->modelClone());
-	}
-
-	public function testModelCloneWithoutClone()
-	{
-		$model   = new Page(['slug' => 'test']);
-		$storage = new ImmutableMemoryStorage(
-			model: $model,
-		);
-
-		$this->assertNull($storage->modelClone());
-	}
-
 	public function testMove()
 	{
 		$this->expectException(LogicException::class);
@@ -61,6 +38,29 @@ class ImmutableMemoryStorageTest extends TestCase
 			fromLanguage: Language::ensure(),
 			toVersionId: VersionId::changes()
 		);
+	}
+
+	public function testNextModel()
+	{
+		$model      = new Page(['slug' => 'test']);
+		$nextModel = $model->clone();
+
+		$storage = new ImmutableMemoryStorage(
+			model: $model,
+			nextModel: $nextModel
+		);
+
+		$this->assertSame($nextModel, $storage->nextModel());
+	}
+
+	public function testNextModelWithoutClone()
+	{
+		$model   = new Page(['slug' => 'test']);
+		$storage = new ImmutableMemoryStorage(
+			model: $model,
+		);
+
+		$this->assertNull($storage->nextModel());
 	}
 
 	public function testTouch()
