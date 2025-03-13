@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Language;
+use Kirby\Cms\Page;
 use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -25,6 +26,29 @@ class ImmutableMemoryStorageTest extends TestCase
 		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
 
 		$this->storage->delete(VersionId::latest(), Language::ensure());
+	}
+
+	public function testModelClone()
+	{
+		$model      = new Page(['slug' => 'test']);
+		$modelClone = $model->clone();
+
+		$storage = new ImmutableMemoryStorage(
+			model: $model,
+			modelClone: $modelClone
+		);
+
+		$this->assertSame($modelClone, $storage->modelClone());
+	}
+
+	public function testModelCloneWithoutClone()
+	{
+		$model   = new Page(['slug' => 'test']);
+		$storage = new ImmutableMemoryStorage(
+			model: $model,
+		);
+
+		$this->assertNull($storage->modelClone());
 	}
 
 	public function testMove()

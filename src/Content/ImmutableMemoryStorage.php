@@ -3,8 +3,8 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Language;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\LogicException;
-
 /**
  * @package   Kirby Content
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -14,9 +14,21 @@ use Kirby\Exception\LogicException;
  */
 class ImmutableMemoryStorage extends MemoryStorage
 {
+	public function __construct(
+		protected ModelWithContent $model,
+		protected ModelWithContent|null $modelClone = null
+	) {
+		parent::__construct($model);
+	}
+
 	public function delete(VersionId $versionId, Language $language): void
 	{
 		$this->preventMutation('deleted');
+	}
+
+	public function modelClone(): ModelWithContent|null
+	{
+		return $this->modelClone;
 	}
 
 	public function move(

@@ -214,7 +214,13 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		// Copy this instance into immutable storage.
 		// Moving the content would prematurely delete the old content storage entries.
 		// But we need to keep them until the new content is written.
-		$this->changeStorage(ImmutableMemoryStorage::class, copy: true);
+		$this->changeStorage(
+			toStorage: new ImmutableMemoryStorage(
+				model: $this,
+				modelClone: $new
+			), 
+			copy: true
+		);
 
 		// Get all languages to loop through
 		$languages = Languages::ensure();
@@ -449,7 +455,10 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 		// move the old model into memory
 		$this->changeStorage(
-			toStorage: ImmutableMemoryStorage::class,
+			toStorage: new ImmutableMemoryStorage(
+				model: $this,
+				modelClone: $clone
+			),
 			copy: true
 		);
 
