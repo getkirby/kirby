@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversDefaultClass;
 
 #[CoversDefaultClass(App::class)]
@@ -45,6 +46,20 @@ class AppApplyTest extends TestCase
 		$this->app->apply('test', [], 'value', $customEvent);
 
 		$this->assertSame(20, $customEvent->argument('value'), 'The custom event value should have been modified');
+	}
+
+	public function testApplyWithInvalidModifyArgument()
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test' => fn () => null
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The argument unused does not exist');
+
+		$this->app->apply('test', ['foo' => 'bar'], 'unused');
 	}
 
 	public function testApplyWithMultipleParameters()
@@ -175,21 +190,6 @@ class AppApplyTest extends TestCase
 
 		$this->assertSame(11, $this->app->apply('test.event:after', ['value' => 1], 'value'));
 		$this->assertSame(4, $calls);
-	}
-
-	public function testApplyWithoutArguments()
-	{
-		$self = $this;
-
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'test' => function (Event $event) use ($self) {
-					$self->assertCount(0, $event->arguments());
-				}
-			]
-		]);
-
-		$this->assertNull($this->app->apply('test', [], 'unused'));
 	}
 
 	public function testApplyWithoutHandler()
