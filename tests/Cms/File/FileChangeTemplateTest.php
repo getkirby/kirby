@@ -300,7 +300,7 @@ class FileChangeTemplateTest extends ModelTestCase
 		$this->assertSame('for-default-b', $back->template());
 		$this->assertSame('for-default-b', $back->content()->get('template')->value());
 
-		$modified = $file->changeTemplate(null);
+		$modified = $back->changeTemplate(null);
 		$this->assertSame('default', $modified->template());
 		$this->assertNull($modified->content()->get('template')->value());
 	}
