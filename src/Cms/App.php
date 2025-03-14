@@ -251,7 +251,8 @@ class App
 				// bind the App object to the hook
 				$newValue = $event->call($this, $function);
 
-				// update value if one was returned
+				// update value if one was returned or the
+				// provided object was cloned in the hook
 				$event->updateArgument($modify, $newValue);
 			}
 
