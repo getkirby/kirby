@@ -59,6 +59,17 @@ abstract class Storage
 		$toLanguage  ??= $fromLanguage;
 		$toStorage   ??= $this;
 
+		// don't copy content to the same version-language-storage combination
+		if ($this->isSameStorageLocation(
+			fromVersionId: $fromVersionId,
+			fromLanguage: $fromLanguage,
+			toVersionId: $toVersionId,
+			toLanguage: $toLanguage,
+			toStorage: $toStorage
+		)) {
+			return;
+		}
+
 		// read the existing fields
 		$content = $this->read($fromVersionId, $fromLanguage);
 
@@ -126,6 +137,32 @@ abstract class Storage
 	}
 
 	/**
+	 * Compare two version-language-storage combinations
+	 */
+	public function isSameStorageLocation(
+		VersionId $fromVersionId,
+		Language $fromLanguage,
+		VersionId|null $toVersionId = null,
+		Language|null $toLanguage = null,
+		Storage|null $toStorage = null
+	) {
+		// fallbacks to allow keeping the method call lean
+		$toVersionId ??= $fromVersionId;
+		$toLanguage  ??= $fromLanguage;
+		$toStorage   ??= $this;
+
+		if (
+			$fromVersionId->is($toVersionId) &&
+			$fromLanguage->is($toLanguage) &&
+			$this === $toStorage
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the related model
 	 */
 	public function model(): ModelWithContent
@@ -152,6 +189,17 @@ abstract class Storage
 		$toVersionId ??= $fromVersionId;
 		$toLanguage  ??= $fromLanguage;
 		$toStorage   ??= $this;
+
+		// don't move content to the same version-language-storage combination
+		if ($this->isSameStorageLocation(
+			fromVersionId: $fromVersionId,
+			fromLanguage: $fromLanguage,
+			toVersionId: $toVersionId,
+			toLanguage: $toLanguage,
+			toStorage: $toStorage
+		)) {
+			return;
+		}
 
 		// copy content to new version
 		$this->copy(

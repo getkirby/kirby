@@ -306,6 +306,16 @@ class Language implements Stringable
 	}
 
 	/**
+	 * Checks if the language is the same
+	 * as the given language or language code
+	 * @since 5.0.0
+	 */
+	public function is(self|string $language): bool
+	{
+		return $this->code() === static::ensure($language)->code();
+	}
+
+	/**
 	 * Checks if this is the default language
 	 * for the site.
 	 */

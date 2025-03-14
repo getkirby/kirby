@@ -217,6 +217,33 @@ class PlainTextStorage extends Storage
 	}
 
 	/**
+	 * Compare two version-language-storage combinations
+	 */
+	public function isSameStorageLocation(
+		VersionId $fromVersionId,
+		Language $fromLanguage,
+		VersionId|null $toVersionId = null,
+		Language|null $toLanguage = null,
+		Storage|null $toStorage = null
+	) {
+		// fallbacks to allow keeping the method call lean
+		$toVersionId ??= $fromVersionId;
+		$toLanguage  ??= $fromLanguage;
+		$toStorage   ??= $this;
+
+		// no need to compare content files if the new
+		// storage type is different
+		if ($toStorage instanceof self === false) {
+			return false;
+		}
+
+		$contentFileA = $this->contentFile($fromVersionId, $fromLanguage);
+		$contentFileB = $toStorage->contentFile($toVersionId, $toLanguage);
+
+		return $contentFileA === $contentFileB;
+	}
+
+	/**
 	 * Returns the modification timestamp of a version
 	 * if it exists
 	 */
