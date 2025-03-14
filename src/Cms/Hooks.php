@@ -3,6 +3,10 @@
 namespace Kirby\Cms;
 
 /**
+ * The Hooks class outsources the logic of
+ * `App::apply()` and `App::trigger()` methods
+ * and makes them easier and more predictable to test.
+ *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com

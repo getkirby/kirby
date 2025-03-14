@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Hooks::class)]
 class HooksTest extends TestCase
 {
 	public function testApply()
