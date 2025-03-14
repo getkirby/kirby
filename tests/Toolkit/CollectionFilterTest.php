@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class MockCollectionEntry
 {
 	public function __construct(
@@ -651,10 +653,8 @@ class CollectionFilterTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider filterDataProvider
-	 */
-	public function testFilter($attributes, $operator, $test, $expected, $split)
+	#[DataProvider('filterDataProvider')]
+	public function testFilter(array $attributes, string $operator, string|bool|int|float|array $test, array $expected, bool|string $split)
 	{
 		$data = [];
 

@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class StringObject
 {
@@ -17,9 +18,7 @@ class StringObject
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Collection
- */
+#[CoversClass(Collection::class)]
 class CollectionTest extends TestCase
 {
 	protected Collection $collection;
@@ -42,18 +41,12 @@ class CollectionTest extends TestCase
 		$this->assertSame($this->sampleData, $this->collection->toArray());
 	}
 
-	/**
-	 * @covers ::__debuginfo
-	 */
 	public function test__debuginfo()
 	{
 		$collection = new Collection(['a' => 'A', 'b' => 'B']);
 		$this->assertSame(['a', 'b'], $collection->__debugInfo());
 	}
 
-	/**
-	 * @covers ::__toString
-	 */
 	public function test__toString()
 	{
 		$collection = new Collection(['a' => 'A', 'b' => 'B']);
@@ -61,9 +54,6 @@ class CollectionTest extends TestCase
 		$this->assertSame('a<br />b', (string)$collection);
 	}
 
-	/**
-	 * @covers ::append
-	 */
 	public function testAppend()
 	{
 		// simple
@@ -94,11 +84,6 @@ class CollectionTest extends TestCase
 		$this->assertSame(['A', 'B', 'C'], $collection->values());
 	}
 
-	/**
-	 * @covers ::get
-	 * @covers ::set
-	 * @covers ::remove
-	 */
 	public function testCaseSensitive()
 	{
 		$normalCollection = new Collection([
@@ -143,18 +128,12 @@ class CollectionTest extends TestCase
 		$this->assertNull($sensitiveCollection->get('another'));
 	}
 
-	/**
-	 * @covers ::count
-	 */
 	public function testCount()
 	{
 		$this->assertSame(3, $this->collection->count());
 		$this->assertCount(3, $this->collection);
 	}
 
-	/**
-	 * @covers ::data
-	 */
 	public function testData()
 	{
 		$collection = new Collection($data = ['a' => 'A', 'b' => 'B']);
@@ -164,9 +143,6 @@ class CollectionTest extends TestCase
 		$this->assertSame($data, $collection->data());
 	}
 
-	/**
-	 * @covers ::empty
-	 */
 	public function testEmpty()
 	{
 		$collection = new Collection($data = ['a' => 'A', 'b' => 'B']);
@@ -176,9 +152,6 @@ class CollectionTest extends TestCase
 		$this->assertSame([], $collection->data());
 	}
 
-	/**
-	 * @covers ::filter
-	 */
 	public function testFilter()
 	{
 		$filtered = $this->collection->filter(
@@ -191,17 +164,11 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
-	/**
-	 * @covers ::first
-	 */
 	public function testFirst()
 	{
 		$this->assertSame('My first element', $this->collection->first());
 	}
 
-	/**
-	 * @covers ::flip
-	 */
 	public function testFlip()
 	{
 		$this->assertSame(array_reverse($this->sampleData, true), $this->collection->flip()->toArray());
@@ -209,9 +176,6 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
-	/**
-	 * @covers ::getAttribute
-	 */
 	public function testGetAttributeFromArray()
 	{
 		$collection = new Collection([
@@ -233,9 +197,6 @@ class CollectionTest extends TestCase
 		$this->assertSame(['simpson', 'female'], $collection->getAttribute($collection->last(), 'tags', true));
 	}
 
-	/**
-	 * @covers ::getAttribute
-	 */
 	public function testGetAttributeFromObject()
 	{
 		$collection = new Collection([
@@ -251,11 +212,6 @@ class CollectionTest extends TestCase
 		$this->assertSame('Marge', $collection->getAttribute($collection->last(), 'username'));
 	}
 
-	/**
-	 * @covers ::__get
-	 * @covers ::__call
-	 * @covers ::get
-	 */
 	public function testGetters()
 	{
 		$this->assertSame('My first element', $this->collection->first);
@@ -273,11 +229,6 @@ class CollectionTest extends TestCase
 		$this->assertNull($this->collection->get('fourth'));
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::__get
-	 * @covers ::get
-	 */
 	public function testGettersCaseSensitive()
 	{
 		$collection = new Collection($this->sampleData, true);
@@ -286,10 +237,6 @@ class CollectionTest extends TestCase
 		$this->assertNull($collection->get('FIRst'));
 	}
 
-	/**
-	 * @covers ::group
-	 * @covers ::groupBy
-	 */
 	public function testGroup()
 	{
 		$collection = new Collection();
@@ -322,9 +269,6 @@ class CollectionTest extends TestCase
 		$this->assertCount(1, $groups->client());
 	}
 
-	/**
-	 * @covers ::group
-	 */
 	public function testGroupWithInvalidKey()
 	{
 		$collection = new Collection(['a' => 'A']);
@@ -335,9 +279,6 @@ class CollectionTest extends TestCase
 		$collection->group(fn ($item) => false);
 	}
 
-	/**
-	 * @covers ::group
-	 */
 	public function testGroupArray()
 	{
 		$collection = new Collection(['a' => 'A']);
@@ -348,9 +289,6 @@ class CollectionTest extends TestCase
 		$collection->group(fn ($item) => ['a' => 'b']);
 	}
 
-	/**
-	 * @covers ::group
-	 */
 	public function testGroupObject()
 	{
 		$collection = new Collection(['a' => 'A']);
@@ -361,9 +299,6 @@ class CollectionTest extends TestCase
 		$collection->group(fn ($item) => new Obj(['a' => 'b']));
 	}
 
-	/**
-	 * @covers ::group
-	 */
 	public function testGroupStringObject()
 	{
 		$collection = new Collection();
@@ -391,9 +326,6 @@ class CollectionTest extends TestCase
 		$this->assertSame('peter', $firstAdmin['username']);
 	}
 
-	/**
-	 * @covers ::group
-	 */
 	public function testGroupBy()
 	{
 		$collection = new Collection();
@@ -422,9 +354,6 @@ class CollectionTest extends TestCase
 		$this->assertSame('peter', $firstAdmin['username']);
 	}
 
-	/**
-	 * @covers ::group
-	 */
 	public function testGroupByWithInvalidKey()
 	{
 		$collection = new Collection(['a' => 'A']);
@@ -435,17 +364,11 @@ class CollectionTest extends TestCase
 		$collection->group(1);
 	}
 
-	/**
-	 * @covers ::indexOf
-	 */
 	public function testIndexOf()
 	{
 		$this->assertSame(1, $this->collection->indexOf('My second element'));
 	}
 
-	/**
-	 * @covers ::intersection
-	 */
 	public function testIntersection()
 	{
 		$collection1 = new Collection([
@@ -491,9 +414,6 @@ class CollectionTest extends TestCase
 		$this->assertSame($d, $result->first());
 	}
 
-	/**
-	 * @covers ::intersects
-	 */
 	public function testIntersects()
 	{
 		$collection1 = new Collection([
@@ -526,9 +446,6 @@ class CollectionTest extends TestCase
 		$this->assertTrue($collection3->intersects($collection2));
 	}
 
-	/**
-	 * @covers ::isEmpty
-	 */
 	public function testIsEmpty()
 	{
 		$collection = new Collection([
@@ -540,9 +457,6 @@ class CollectionTest extends TestCase
 		$this->assertFalse($collection->isEmpty());
 	}
 
-	/**
-	 * @covers ::isEven
-	 */
 	public function testIsEven()
 	{
 		$collection = new Collection(['a' => 'a']);
@@ -552,9 +466,6 @@ class CollectionTest extends TestCase
 		$this->assertTrue($collection->isEven());
 	}
 
-	/**
-	 * @covers ::isNotEmpty
-	 */
 	public function testIsNotEmpty()
 	{
 		$collection = new Collection([]);
@@ -563,9 +474,6 @@ class CollectionTest extends TestCase
 		$this->assertFalse($collection->isNotEmpty());
 	}
 
-	/**
-	 * @covers ::isOdd
-	 */
 	public function testIsOdd()
 	{
 		$collection = new Collection(['a' => 'a']);
@@ -575,42 +483,27 @@ class CollectionTest extends TestCase
 		$this->assertFalse($collection->isOdd());
 	}
 
-	/**
-	 * @covers ::__get
-	 */
 	public function testIsset()
 	{
 		$this->assertTrue(isset($this->collection->first));
 		$this->assertFalse(isset($this->collection->super));
 	}
 
-	/**
-	 * @covers ::keyOf
-	 */
 	public function testKeyOf()
 	{
 		$this->assertSame('second', $this->collection->keyOf('My second element'));
 	}
 
-	/**
-	 * @covers ::keys
-	 */
 	public function testKeys()
 	{
 		$this->assertSame(['first', 'second', 'third'], $this->collection->keys());
 	}
 
-	/**
-	 * @covers ::last
-	 */
 	public function testLast()
 	{
 		$this->assertSame('My third element', $this->collection->last());
 	}
 
-	/**
-	 * @covers ::map
-	 */
 	public function testMap()
 	{
 		$collection = new Collection(['a' => 1, 'b' => 2]);
@@ -618,10 +511,6 @@ class CollectionTest extends TestCase
 		$this->assertSame(['a' => 2, 'b' => 4], $collection->data());
 	}
 
-	/**
-	 * @covers ::next
-	 * @covers ::prev
-	 */
 	public function testNextAndPrev()
 	{
 		$this->assertSame('My second element', $this->collection->next());
@@ -629,10 +518,6 @@ class CollectionTest extends TestCase
 		$this->assertSame('My second element', $this->collection->prev());
 	}
 
-	/**
-	 * @covers ::not
-	 * @covers ::without
-	 */
 	public function testNotAndWithout()
 	{
 		// remove elements
@@ -648,9 +533,6 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
-	/**
-	 * @covers ::nth
-	 */
 	public function testNth()
 	{
 		$this->assertSame('My first element', $this->collection->nth(0));
@@ -659,10 +541,6 @@ class CollectionTest extends TestCase
 		$this->assertNull($this->collection->nth(3));
 	}
 
-	/**
-	 * @covers ::offset
-	 * @covers ::limit
-	 */
 	public function testOffsetAndLimit()
 	{
 		$this->assertSame(array_slice($this->sampleData, 1), $this->collection->offset(1)->toArray());
@@ -671,9 +549,6 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
-	/**
-	 * @covers ::prepend
-	 */
 	public function testPrepend()
 	{
 		// simple
@@ -698,9 +573,6 @@ class CollectionTest extends TestCase
 		$this->assertSame(['A', 'B', 'C'], $collection->values());
 	}
 
-	/**
-	 * @covers ::query
-	 */
 	public function testQuery()
 	{
 		$collection = new Collection([
@@ -720,9 +592,6 @@ class CollectionTest extends TestCase
 		])->toArray());
 	}
 
-	/**
-	 * @covers ::paginate
-	 */
 	public function testQueryPaginate()
 	{
 		$collection = new Collection([
@@ -743,9 +612,6 @@ class CollectionTest extends TestCase
 		])->toArray());
 	}
 
-	/**
-	 * @covers ::query
-	 */
 	public function testQueryFilter()
 	{
 		$collection = new Collection([
@@ -775,9 +641,6 @@ class CollectionTest extends TestCase
 		])->toArray());
 	}
 
-	/**
-	 * @covers ::query
-	 */
 	public function testQuerySortBy()
 	{
 		$collection = new Collection([
@@ -799,9 +662,6 @@ class CollectionTest extends TestCase
 		])->first()['name']);
 	}
 
-	/**
-	 * @covers ::query
-	 */
 	public function testQuerySortByComma()
 	{
 		$collection = new Collection([
@@ -821,9 +681,6 @@ class CollectionTest extends TestCase
 		], array_keys($results));
 	}
 
-	/**
-	 * @covers ::random
-	 */
 	public function testRandom()
 	{
 		$collection = new Collection([
@@ -851,9 +708,6 @@ class CollectionTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::__unset
-	 */
 	public function testRemoveMultiple()
 	{
 		$collection = new Collection();
@@ -871,9 +725,6 @@ class CollectionTest extends TestCase
 		$this->assertCount(0, $collection);
 	}
 
-	/**
-	 * @covers ::__set
-	 */
 	public function testSetters()
 	{
 		$this->collection->fourth = 'My fourth element';
@@ -889,18 +740,12 @@ class CollectionTest extends TestCase
 		$this->assertSame('My fifth element', $this->collection->get('fifth'));
 	}
 
-	/**
-	 * @covers ::shuffle
-	 */
 	public function testShuffle()
 	{
 		$this->assertInstanceOf(Collection::class, $this->collection->shuffle());
 		$this->assertIsUntouched();
 	}
 
-	/**
-	 * @covers ::slice
-	 */
 	public function testSlice()
 	{
 		$this->assertSame(array_slice($this->sampleData, 1), $this->collection->slice(1)->toArray());
@@ -910,9 +755,6 @@ class CollectionTest extends TestCase
 		$this->assertIsUntouched();
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray()
 	{
 		// associative
@@ -928,9 +770,6 @@ class CollectionTest extends TestCase
 		$this->assertSame(['a' => 2, 'b' => 4], $collection->toArray(fn ($item) => $item * 2));
 	}
 
-	/**
-	 * @covers ::toJson
-	 */
 	public function testToJson()
 	{
 		// associative
@@ -942,9 +781,6 @@ class CollectionTest extends TestCase
 		$this->assertSame('["a","b","c"]', $collection->toJson());
 	}
 
-	/**
-	 * @covers ::toString
-	 */
 	public function testToString()
 	{
 		// associative
@@ -956,9 +792,6 @@ class CollectionTest extends TestCase
 		$this->assertSame('0<br />1<br />2', $collection->toString());
 	}
 
-	/**
-	 * @covers ::values
-	 */
 	public function testValues()
 	{
 		$this->assertSame([
@@ -968,9 +801,6 @@ class CollectionTest extends TestCase
 		], $this->collection->values());
 	}
 
-	/**
-	 * @covers ::values
-	 */
 	public function testValuesMap()
 	{
 		$values = $this->collection->values(
@@ -984,9 +814,6 @@ class CollectionTest extends TestCase
 		], $values);
 	}
 
-	/**
-	 * @covers ::when
-	 */
 	public function testWhen()
 	{
 		$collection = new Collection([
