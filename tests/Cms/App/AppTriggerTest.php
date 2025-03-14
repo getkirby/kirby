@@ -26,13 +26,12 @@ class AppTriggerTest extends TestCase
 	public function testTriggerEventWithCustomEventObject()
 	{
 		$self        = $this;
-		$customEvent = new Event('custom', ['value' => 10]);
+		$customEvent = new Event('test', ['value' => 10]);
 
 		$this->app = $this->app->clone([
 			'hooks' => [
 				'test' => function (Event $event) use ($self, $customEvent) {
 					$self->assertSame($event, $customEvent);
-					$self->assertSame('custom', $event->name());
 					$self->assertSame(['value' => 10], $event->arguments());
 				}
 			]

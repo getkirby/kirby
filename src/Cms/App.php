@@ -70,6 +70,7 @@ class App
 	protected Core $core;
 	protected Language|null $defaultLanguage = null;
 	protected Environment|null $environment = null;
+	protected Hooks $hooks;
 	protected Language|null $language = null;
 	protected Languages|null $languages = null;
 	protected bool|null $multilang = null;
@@ -150,6 +151,11 @@ class App
 		$this->extensionsFromOptions();
 		$this->extensionsFromFolders();
 
+		$this->hooks = new Hooks(
+			bind: $this,
+			hooks: $this->extensions('hooks')
+		);
+
 		// must be set after the extensions are loaded.
 		// the default storage instance must be defined
 		// and the App::$instance singleton needs to be set
@@ -224,61 +230,19 @@ class App
 	 * @param string $name Full event name
 	 * @param array $args Associative array of named event arguments
 	 * @param string $modify Key in $args that is modified by the hooks
-	 * @param \Kirby\Cms\Event|null $originalEvent Event object (internal use)
+	 * @param \Kirby\Cms\Event|null $event Event object (internal use)
 	 * @return mixed Resulting value as modified by the hooks
 	 */
 	public function apply(
 		string $name,
 		array $args,
 		string $modify,
-		Event|null $originalEvent = null
+		Event|null $event = null
 	): mixed {
-		$event = $originalEvent ?? new Event($name, $args);
-
-		if ($functions = $this->extension('hooks', $name)) {
-			static $level = 0;
-			static $applied = [];
-			$level++;
-
-			foreach ($functions as $function) {
-				if (in_array($function, $applied[$name] ?? []) === true) {
-					continue;
-				}
-
-				// mark the hook as applied, to avoid endless loops
-				$applied[$name][] = $function;
-
-				// bind the App object to the hook
-				$newValue = $event->call($this, $function);
-
-				// update value if one was returned or the
-				// provided object was cloned in the hook
-				$event->updateArgument($modify, $newValue);
-			}
-
-			$level--;
-
-			if ($level === 0) {
-				$applied = [];
-			}
-		}
-
-		// apply wildcard hooks if available
-		$nameWildcards = $event->nameWildcards();
-		if ($originalEvent === null && $nameWildcards !== []) {
-			foreach ($nameWildcards as $nameWildcard) {
-				// the $event object is passed by reference
-				// and will be modified down the chain
-				$this->apply(
-					$nameWildcard,
-					$event->arguments(),
-					$modify,
-					$event
-				);
-			}
-		}
-
-		return $event->argument($modify);
+		return $this->hooks->apply(
+			event: $event ?? new Event($name, $args),
+			modify: $modify,
+		);
 	}
 
 	/**
@@ -1686,41 +1650,11 @@ class App
 	public function trigger(
 		string $name,
 		array $args = [],
-		Event|null $originalEvent = null
+		Event|null $event = null
 	): void {
-		$event = $originalEvent ?? new Event($name, $args);
-
-		if ($functions = $this->extension('hooks', $name)) {
-			static $level = 0;
-			static $triggered = [];
-			$level++;
-
-			foreach ($functions as $index => $function) {
-				if (in_array($function, $triggered[$name] ?? []) === true) {
-					continue;
-				}
-
-				// mark the hook as triggered, to avoid endless loops
-				$triggered[$name][] = $function;
-
-				// bind the App object to the hook
-				$event->call($this, $function);
-			}
-
-			$level--;
-
-			if ($level === 0) {
-				$triggered = [];
-			}
-		}
-
-		// trigger wildcard hooks if available
-		$nameWildcards = $event->nameWildcards();
-		if ($originalEvent === null && $nameWildcards !== []) {
-			foreach ($nameWildcards as $nameWildcard) {
-				$this->trigger($nameWildcard, $args, $event);
-			}
-		}
+		$this->hooks->trigger(
+			event: $event ?? new Event($name, $args)
+		);
 	}
 
 	/**
