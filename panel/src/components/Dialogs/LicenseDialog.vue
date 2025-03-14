@@ -10,6 +10,15 @@
 			<h2 class="k-headline">
 				{{ $t("license") }}
 			</h2>
+
+			<k-button
+				:text="$t('remove')"
+				icon="trash"
+				size="xs"
+				variant="filled"
+				theme="negative"
+				dialog="license/remove"
+			/>
 		</k-bar>
 
 		<div class="k-table">
