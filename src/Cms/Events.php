@@ -42,12 +42,15 @@ class Events
 		array $args = [],
 		string|null $modify = null
 	): mixed {
+		// modify the first argument by default
 		$modify ??= array_key_first($args);
 
 		return $this->process(
 			$name,
 			$args,
+			// update $modify value after each hook callback
 			fn ($event, $result) => $event->updateArgument($modify, $result),
+			// return the modified value
 			fn ($event) => $event->argument($modify)
 		);
 	}
@@ -57,9 +60,11 @@ class Events
 	 */
 	public function hooks(Event $event): array
 	{
+		// get all hooks for the event name
 		$name  = $event->name();
 		$hooks = $this->hooks[$name] ?? [];
 
+		// get all hooks for the event name wildcards
 		foreach ($event->nameWildcards() as $wildcard) {
 			$hooks = [
 				...$hooks,
@@ -81,12 +86,14 @@ class Events
 		Closure|null $afterEach = null,
 		Closure|null $return = null
 	) {
+		// create the event object and get all hook callbacks for this event
 		$event = new Event($name, $args);
 		$hooks = $this->hooks($event);
 
 		$this->level++;
 
 		foreach ($hooks as $hook) {
+			// skip hooks that have already been processed
 			if (in_array($hook, $this->processed[$name] ?? []) === true) {
 				continue;
 			}
@@ -94,17 +101,18 @@ class Events
 			// mark the hook as processed, to avoid endless loops
 			$this->processed[$name][] = $hook;
 
-			// bind the Kirby instance to the hook
+			// bind the Kirby instance to the hook and run it
 			$result = $event->call($this->bind, $hook);
 
 			// run the afterEach callback
 			if ($afterEach !== null) {
-				$result = $afterEach($event, $result);
+				$afterEach($event, $result);
 			}
 		}
 
 		$this->level--;
 
+		// reset the protection after the last nesting level has been closed
 		if ($this->level === 0) {
 			$this->processed = [];
 		}
