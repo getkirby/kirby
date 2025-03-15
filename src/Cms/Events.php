@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+
 /**
  * The Hooks class outsources the logic of
  * `App::apply()` and `App::trigger()` methods
@@ -39,38 +41,14 @@ class Events
 		array $args = [],
 		string|null $modify = null
 	): mixed {
-		$event     = new Event($name, $args);
-		$hooks    = $this->hooks($event);
-		$modify ??= array_key_first($event->arguments());
+		$modify ??= array_key_first($args);
 
-		if ($hooks === []) {
-			return $event->argument($modify);
-		}
-
-		$this->level++;
-
-		foreach ($hooks as $hook) {
-			if (in_array($hook, $this->processed[$name] ?? []) === true) {
-				continue;
-			}
-
-			// mark the hook as processed, to avoid endless loops
-			$this->processed[$name][] = $hook;
-
-			// bind the Kirby instance to the hook
-			$newValue = $event->call($this->bind, $hook);
-
-			// update value if one was returned
-			$event->updateArgument($modify, $newValue);
-		}
-
-		$this->level--;
-
-		if ($this->level === 0) {
-			$this->processed = [];
-		}
-
-		return $event->argument($modify);
+		return $this->process(
+			$name,
+			$args,
+			fn ($event, $result) => $event->updateArgument($modify, $result),
+			fn ($event)          => $event->argument($modify)
+		);
 	}
 
 	/**
@@ -92,18 +70,18 @@ class Events
 	}
 
 	/**
-	 * Runs the hook without modifying the arguments
+	 * Runs the hook
+	 *
+	 * @return ($return is null ? void : mixed)
 	 */
-	public function trigger(
+	protected function process(
 		string $name,
-		array $args = []
-	): void {
+		array $args,
+		Closure|null $afterEach = null,
+		Closure|null $return = null
+	) {
 		$event = new Event($name, $args);
 		$hooks = $this->hooks($event);
-
-		if ($hooks === []) {
-			return;
-		}
 
 		$this->level++;
 
@@ -116,7 +94,12 @@ class Events
 			$this->processed[$name][] = $hook;
 
 			// bind the Kirby instance to the hook
-			$event->call($this->bind, $hook);
+			$result = $event->call($this->bind, $hook);
+
+			// run the afterEach callback
+			if ($afterEach !== null) {
+				$result = $afterEach($event, $result);
+			}
 		}
 
 		$this->level--;
@@ -124,5 +107,20 @@ class Events
 		if ($this->level === 0) {
 			$this->processed = [];
 		}
+
+		// run the return callback
+		if ($return !== null) {
+			return $return($event);
+		}
+	}
+
+	/**
+	 * Runs the hook without modifying the arguments
+	 */
+	public function trigger(
+		string $name,
+		array $args = []
+	): void {
+		$this->process($name, $args);
 	}
 }
