@@ -225,14 +225,14 @@ class App
 	 * Applies a hook to the given value
 	 *
 	 * @param string $name Full event name
-	 * @param array $args Associative array of named event arguments
-	 * @param string $modify Key in $args that is modified by the hooks
+	 * @param array $args Associative array of named arguments
+	 * @param string|null $modify Key in $args that is modified by the hooks (default: first argument)
 	 * @return mixed Resulting value as modified by the hooks
 	 */
 	public function apply(
 		string $name,
 		array $args,
-		string $modify
+		string|null $modify = null
 	): mixed {
 		return $this->events->apply($name, $args, $modify);
 	}
@@ -861,9 +861,9 @@ class App
 
 		$options = $this->options;
 
-		$text = $this->apply('kirbytags:before', compact('text', 'data', 'options'), 'text');
+		$text = $this->apply('kirbytags:before', compact('text', 'data', 'options'));
 		$text = KirbyTags::parse($text, $data, $options);
-		$text = $this->apply('kirbytags:after', compact('text', 'data', 'options'), 'text');
+		$text = $this->apply('kirbytags:after', compact('text', 'data', 'options'));
 
 		return $text;
 	}
@@ -875,7 +875,7 @@ class App
 	 */
 	public function kirbytext(string|null $text = null, array $options = []): string
 	{
-		$text = $this->apply('kirbytext:before', compact('text'), 'text');
+		$text = $this->apply('kirbytext:before', compact('text'));
 		$text = $this->kirbytags($text, $options);
 		$text = $this->markdown($text, $options['markdown'] ?? []);
 
@@ -883,7 +883,7 @@ class App
 			$text = $this->smartypants($text);
 		}
 
-		$text = $this->apply('kirbytext:after', compact('text'), 'text');
+		$text = $this->apply('kirbytext:after', compact('text'));
 
 		return $text;
 	}
@@ -1636,7 +1636,7 @@ class App
 	 * Trigger a hook by name
 	 *
 	 * @param string $name Full event name
-	 * @param array $args Associative array of named event arguments
+	 * @param array $args Associative array of named arguments
 	 */
 	public function trigger(
 		string $name,

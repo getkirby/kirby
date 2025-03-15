@@ -230,8 +230,7 @@ class Language implements Stringable
 		// apply before hook
 		$language = $kirby->apply(
 			'language.delete:before',
-			['language' => $this],
-			'language'
+			['language' => $this]
 		);
 
 		// re-validate the language rules after before hook was applied
@@ -601,8 +600,7 @@ class Language implements Stringable
 			[
 				'language' => $this,
 				'input'    => $props
-			],
-			'language'
+			]
 		);
 
 		// updated language object
@@ -638,8 +636,7 @@ class Language implements Stringable
 				'newLanguage' => $language,
 				'oldLanguage' => $this,
 				'input'       => $props
-			],
-			'newLanguage'
+			]
 		);
 
 		return $language;
