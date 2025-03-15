@@ -62,6 +62,130 @@ class EventTest extends TestCase
 		$this->assertSame($args, $event->arguments());
 	}
 
+	public function testApply(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test' => [
+					fn (string $message) => 'message: ' . $message
+				]
+			]
+		]);
+
+		$event  = new Event('test', ['message' => 'hello'], $this->app);
+		$result = $event->apply();
+
+		$this->assertSame('message: hello', $result);
+	}
+
+	public function testApplyNesting(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'a' => [
+					fn (string $message) => 'a: ' . $this->apply('b', ['message' => $message])
+				],
+				'b' => [
+					fn (string $message) => 'b: ' . $message
+				]
+			]
+		]);
+
+		$event  = new Event('a', ['message' => 'hello'], $this->app);
+		$result = $event->apply();
+
+		$this->assertSame('a: b: hello', $result);
+	}
+
+	public function testApplyWithLoopProtection(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test' => [
+					fn (string $message) => 'message: ' . $this->apply('test', ['message' => $message])
+				]
+			]
+		]);
+
+		$event  = new Event('test', ['message' => 'hello'], $this->app);
+		$result = $event->apply();
+
+		$this->assertSame('message: hello', $result);
+	}
+
+	public function testApplyWithWildcard(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test.*' => [
+					fn (string $message) => 'message: ' . $message
+				]
+			]
+		]);
+
+		$event = new Event('test.a', ['message' => 'hello'], $this->app);
+		$a     = $event->apply();
+		$this->assertSame('message: hello', $a);
+
+		$event = new Event('test.b', ['message' => 'hello'], $this->app);
+		$b     = $event->apply();
+		$this->assertSame('message: hello', $b);
+	}
+
+	public function testApplyWithoutHooks(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => []
+		]);
+
+		$event  = new Event('test', ['message' => 'hello'], $this->app);
+		$result = $event->apply();
+
+		$this->assertSame('hello', $result);
+	}
+
+	public function testApplyWithoutModifier(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test' => [
+					fn ($a, $b) => 'message: ' . $a . ' ' . $b
+				]
+			]
+		]);
+
+		$name = 'test';
+		$args = ['a' => 'hello', 'b' => 'world'];
+
+		$event  = new Event($name, $args, $this->app);
+		$result = $event->apply();
+
+		$this->assertSame('message: hello world', $result);
+		$this->assertSame('message: hello world', $event->argument('a'), 'The first argument should have been modified by default');
+	}
+
+	public function testApplyWithModifier(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test' => [
+					fn ($a, $b) => 'message: ' . $a . ' ' . $b
+				]
+			]
+		]);
+
+		$name = 'test';
+		$args = ['a' => 'hello', 'b' => 'world'];
+
+		// the custom event is needed to test the modified argument
+		$event  = new Event($name, $args, $this->app);
+		$result = $event->apply('b');
+
+		$this->assertSame('message: hello world', $result);
+		$this->assertSame('message: hello world', $event->argument('b'), 'The given argument should have been modified');
+	}
+
+
 	public function testArgument()
 	{
 		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
@@ -185,6 +309,118 @@ class EventTest extends TestCase
 
 		$this->assertSame(compact('name', 'arguments'), $event->toArray());
 		$this->assertSame(compact('name', 'arguments'), $event->__debugInfo());
+	}
+
+	public function testTrigger(): void
+	{
+		$count = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test' => [
+					function () use (&$count) {
+						$count++;
+					}
+				]
+			]
+		]);
+
+		$event = new Event('test', [], $this->app);
+		$event->trigger();
+
+		$this->assertSame(1, $count);
+	}
+
+	public function testTriggerNesting(): void
+	{
+		$message = '';
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'a' => [
+					function () use (&$message) {
+						$message .= 'a';
+						$this->trigger('b');
+					}
+				],
+				'b' => [
+					function () use (&$message) {
+						$message .= 'b';
+					}
+				]
+			]
+		]);
+
+		$event = new Event('a', [], $this->app);
+		$event->trigger();
+
+		$this->assertSame('ab', $message);
+	}
+
+	public function testTriggerWithLoopProtection(): void
+	{
+		$count = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test' => [
+					function () use (&$count) {
+						$count++;
+						$this->trigger('test');
+					}
+				]
+			]
+		]);
+
+		$event = new Event('test', [], $this->app);
+		$event->trigger();
+
+		$this->assertSame(1, $count);
+	}
+
+	public function testTriggerWithWildcard(): void
+	{
+		$count = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test.*' => [
+					function () use (&$count) {
+						$count++;
+					}
+				]
+			]
+		]);
+
+		$event = new Event('test.a', [], $this->app);
+		$event->trigger();
+		$event = new Event('test.b', [], $this->app);
+		$event->trigger();
+
+		$this->assertSame(2, $count);
+	}
+
+	public function testTriggerWithMultipleHandlers()
+	{
+		$count = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test' => [
+					function () use (&$count) {
+						$count++;
+					},
+					function () use (&$count) {
+						$count++;
+					}
+				]
+			]
+		]);
+
+		$event = new Event('test', [], $this->app);
+		$event->trigger();
+
+		$this->assertSame(2, $count);
 	}
 
 	public function testUpdateArgument()
