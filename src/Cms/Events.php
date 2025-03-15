@@ -79,19 +79,13 @@ class Events
 	public function hooks(Event $event): array
 	{
 		$name  = $event->name();
-		$hooks = [];
-
-		if (isset($this->hooks[$name]) === true) {
-			$hooks = $this->hooks[$name];
-		}
+		$hooks = $this->hooks[$name] ??[];
 
 		foreach ($event->nameWildcards() as $wildcard) {
-			if (isset($this->hooks[$wildcard]) === true) {
-				$hooks = [
-					...$hooks,
-					...$this->hooks[$wildcard]
-				];
-			}
+			$hooks = [
+				...$hooks,
+				...$this->hooks[$wildcard] ?? []
+			];
 		}
 
 		return $hooks;
