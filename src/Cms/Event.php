@@ -112,11 +112,8 @@ class Event implements Stringable
 		$modify ??= array_key_first($this->arguments());
 
 		return $this->process(
-			each: fn (Closure $hook) => $this->updateArgument(
-				name:  $modify,
-				value: $this->call($this->bind, $hook)
-			),
-			final: fn () => $this->argument($modify)
+			each:   fn ($result) => $this->updateArgument($modify, $result),
+			return: fn () => $this->argument($modify)
 		);
 	}
 
@@ -241,14 +238,12 @@ class Event implements Stringable
 	 * ensuring that the same hook is not called twice
 	 * @since 5.0.0
 	 *
-	 * @param \Closure $each Will be called for each hook
-	 * @param \Closure|null $final Will be called after all hooks have been processed
+	 * @return ($return is null ? void : mixed)
 	 */
 	protected function process(
-		Closure $each,
-		Closure|null $final = null
-	): mixed {
-		$final ??= function () {};
+		Closure|null $each = null,
+		Closure|null $return = null
+	) {
 		static::$level++;
 
 		foreach ($this->hooks() as $hook) {
@@ -261,7 +256,11 @@ class Event implements Stringable
 			static::$processed[$this->name][] = $hook;
 
 			// run the callback for each hook
-			$each->call($this, $hook);
+			$result = $this->call($this->bind, $hook);
+
+			if ($each) {
+				$each->call($this, $result);
+			}
 		}
 
 		static::$level--;
@@ -272,7 +271,9 @@ class Event implements Stringable
 		}
 
 		// run the callback after all hooks have been processed
-		return $final->call($this);
+		if ($return) {
+			return $return->call($this);
+		}
 	}
 
 	/**
@@ -320,9 +321,7 @@ class Event implements Stringable
 	 */
 	public function trigger(): void
 	{
-		$this->process(function (Closure $hook) {
-			$this->call($this->bind, $hook);
-		});
+		$this->process();
 	}
 
 	/**
