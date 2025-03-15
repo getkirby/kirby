@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\Attributes\CoversDefaultClass;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversDefaultClass(App::class)]
+#[CoversClass(App::class)]
 class AppTriggerTest extends TestCase
 {
 	public function testTriggerEvent()
@@ -21,23 +21,6 @@ class AppTriggerTest extends TestCase
 		]);
 
 		$this->app->trigger('test', ['value' => 10]);
-	}
-
-	public function testTriggerEventWithCustomEventObject()
-	{
-		$self        = $this;
-		$customEvent = new Event('test', ['value' => 10]);
-
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'test' => function (Event $event) use ($self, $customEvent) {
-					$self->assertSame($event, $customEvent);
-					$self->assertSame(['value' => 10], $event->arguments());
-				}
-			]
-		]);
-
-		$this->app->trigger('test', [], $customEvent);
 	}
 
 	public function testTriggerWithMultipleParameters()

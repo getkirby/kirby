@@ -3,12 +3,12 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\Attributes\CoversDefaultClass;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversDefaultClass(App::class)]
+#[CoversClass(App::class)]
 class AppApplyTest extends TestCase
 {
-	public function testApplyEvent()
+	public function testApplyEvent(): void
 	{
 		$self = $this;
 
@@ -21,33 +21,10 @@ class AppApplyTest extends TestCase
 			]
 		]);
 
-		$this->app->apply('test', ['value' => 10], 'value');
+		$this->app->apply('test', ['value' => 10]);
 	}
 
-	public function testApplyEventWithCustomEventObject()
-	{
-		$self        = $this;
-		$customEvent = new Event('test', ['value' => 10]);
-
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'test' => function (Event $event) use ($self, $customEvent) {
-					$self->assertSame($event, $customEvent);
-					$self->assertSame(['value' => 10], $event->arguments());
-
-					// should modify the value of the custom event
-					// after the hook has been applied
-					return 20;
-				}
-			]
-		]);
-
-		$this->app->apply('test', [], 'value', $customEvent);
-
-		$this->assertSame(20, $customEvent->argument('value'), 'The custom event value should have been modified');
-	}
-
-	public function testApplyWithInvalidModifyArgument()
+	public function testApplyWithInvalidModifyArgument(): void
 	{
 		$this->app = $this->app->clone([
 			'hooks' => [
@@ -61,7 +38,7 @@ class AppApplyTest extends TestCase
 		$this->app->apply('test', ['foo' => 'bar'], 'unused');
 	}
 
-	public function testApplyWithMultipleParameters()
+	public function testApplyWithMultipleParameters(): void
 	{
 		$self = $this;
 
@@ -77,10 +54,10 @@ class AppApplyTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(15, $this->app->apply('test', ['a' => 5, 'b' => 6, 'c' => 4], 'a'));
+		$this->assertSame(15, $this->app->apply('test', ['a' => 5, 'b' => 6, 'c' => 4]));
 	}
 
-	public function testApplyWithNestedApplyCall()
+	public function testApplyWithNestedApplyCall(): void
 	{
 		$calls = 0;
 
@@ -88,7 +65,7 @@ class AppApplyTest extends TestCase
 			'hooks' => [
 				'a' => function (string $value) use (&$calls) {
 					$calls++;
-					return $this->apply('b', ['value' => $value . 'a'], 'value');
+					return $this->apply('b', ['value' => $value . 'a']);
 				},
 				'b' => function (string $value) use (&$calls) {
 					$calls++;
@@ -97,11 +74,11 @@ class AppApplyTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('testab', $this->app->apply('a', ['value' => 'test'], 'value'));
+		$this->assertSame('testab', $this->app->apply('a', ['value' => 'test']));
 		$this->assertSame(2, $calls);
 	}
 
-	public function testApplyWithNestedRecursiveApplyCall()
+	public function testApplyWithNestedRecursiveApplyCall(): void
 	{
 		$calls = 0;
 
@@ -112,16 +89,16 @@ class AppApplyTest extends TestCase
 
 					// should add one more `test` but don't apply another
 					// hook call to avoid infinite loops
-					return $this->apply('test', ['value' => $value . 'test'], 'value');
+					return $this->apply('test', ['value' => $value . 'test']);
 				}
 			]
 		]);
 
-		$this->assertSame('testtest', $this->app->apply('test', ['value' => 'test'], 'value'));
+		$this->assertSame('testtest', $this->app->apply('test', ['value' => 'test']));
 		$this->assertSame(1, $calls);
 	}
 
-	public function testApplyWithNullAsReturnValue()
+	public function testApplyWithNullAsReturnValue(): void
 	{
 		$this->app = $this->app->clone([
 			'hooks' => [
@@ -131,10 +108,10 @@ class AppApplyTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(10, $this->app->apply('test', ['value' => 10], 'value'));
+		$this->assertSame(10, $this->app->apply('test', ['value' => 10]));
 	}
 
-	public function testApplyWithSingleParameter()
+	public function testApplyWithSingleParameter(): void
 	{
 		$self = $this;
 
@@ -148,10 +125,10 @@ class AppApplyTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(10, $this->app->apply('test', ['value' => 5], 'value'));
+		$this->assertSame(10, $this->app->apply('test', ['value' => 5]));
 	}
 
-	public function testApplyWithWildcard()
+	public function testApplyWithWildcard(): void
 	{
 		$self = $this;
 		$calls = 0;
@@ -187,16 +164,16 @@ class AppApplyTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(11, $this->app->apply('test.event:after', ['value' => 1], 'value'));
+		$this->assertSame(11, $this->app->apply('test.event:after', ['value' => 1]));
 		$this->assertSame(4, $calls);
 	}
 
-	public function testApplyWithoutHandler()
+	public function testApplyWithoutHandler(): void
 	{
-		$this->assertSame(10, $this->app->apply('does-not-exist', ['value' => 10], 'value'));
+		$this->assertSame(10, $this->app->apply('does-not-exist', ['value' => 10]));
 	}
 
-	public function testApplyWithoutReturnValue()
+	public function testApplyWithoutReturnValue(): void
 	{
 		$this->app = $this->app->clone([
 			'hooks' => [
@@ -206,6 +183,6 @@ class AppApplyTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(10, $this->app->apply('test', ['value' => 10], 'value'));
+		$this->assertSame(10, $this->app->apply('test', ['value' => 10]));
 	}
 }
