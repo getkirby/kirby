@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 
 /**
- * The Hooks class outsources the logic of
+ * The `Events` class outsources the logic of
  * `App::apply()` and `App::trigger()` methods
  * and makes them easier and more predictable to test.
  *
