@@ -614,6 +614,24 @@ class PlainTextStorageTest extends TestCase
 		$this->assertFileDoesNotExist($file->parent()->root() . '/image.jpg.txt');
 	}
 
+	public function testUpdateForFileWithoutMetaDataAndFilteredNullValues()
+	{
+		$this->setUpSingleLanguage();
+
+		$file = new File([
+			'parent'   => $this->app->site(),
+			'filename' => 'image.jpg'
+		]);
+
+		$storage = new PlainTextStorage($file);
+		$storage->update(VersionId::latest(), Language::single(), [
+			'a' => null,
+			'b' => null
+		]);
+
+		$this->assertFileDoesNotExist($file->parent()->root() . '/image.jpg.txt');
+	}
+
 	public function testUpdateForFileWithRemovedMetaFile()
 	{
 		$this->setUpSingleLanguage();

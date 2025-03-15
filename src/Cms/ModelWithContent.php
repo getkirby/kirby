@@ -197,47 +197,50 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	protected function convertTo(string $blueprint): static
 	{
-		// keep a copy of the old model in memory
-		$old = $this->clone()->changeStorage(MemoryStorage::class, copy: true);
+		// Keep a copy of the old model with the original storage handler.
+		// This will be used to delete the old versions.
+		$old = $this->clone();
 
-		// first clone the object with the new blueprint as template
+		// Clone the object with the new blueprint as template
 		$new = $this->clone(['template' => $blueprint]);
 
-		// make sure to use the same storage class as the original model
+		// Make sure to use the same storage class as the original model.
+		// This is needed if the model has been constructed with `content` or
+		// `translations` props. In this case, the storage would be set to
+		// `MemoryStorage` in the clone method again, even if it might have been
+		// changed before.
 		$new->changeStorage($this->storage()::class);
 
-		// loop through all versions
-		foreach (['latest', 'changes'] as $versionId) {
-			// get version
-			$version = $this->version($versionId);
+		// Copy this instance into immutable storage.
+		// Moving the content would prematurely delete the old content storage entries.
+		// But we need to keep them until the new content is written.
+		$this->changeStorage(ImmutableMemoryStorage::class, copy: true);
 
-			// for all languages
-			foreach (Languages::ensure() as $language) {
-				// skip non-existing versions
-				if ($version->exists($language) === false) {
+		// Get all languages to loop through
+		$languages = Languages::ensure();
+
+		// Loop through all versions
+		foreach ($old->versions() as $oldVersion) {
+			// Loop through all languages
+			foreach ($languages as $language) {
+				// Skip non-existing versions
+				if ($oldVersion->exists($language) === false) {
 					continue;
 				}
 
 				// Convert the content to the new blueprint
-				$content = $version->content($language)->convertTo($blueprint);
+				$content = $oldVersion->content($language)->convertTo($blueprint);
+
+				// Save to re-create the new version
+				// with the converted/updated content
+				$new->version($oldVersion->id())->save($content, $language);
 
 				// Delete the old versions. This will also remove the
 				// content files from the storage if this is a plain text
 				// storage instance.
-				$this->version($versionId)->delete($language);
-
-				// Save to re-create the content file
-				// with the converted/updated content
-				$new->version($versionId)->save($content, $language);
+				$oldVersion->delete($language);
 			}
 		}
-
-		$this->storage = new MemoryStorage($this);
-
-		// move the old storage entries over to the
-		// new in-memory instance for this object to keep it
-		// alive for hooks or other purposes
-		$old->storage()->copyAll(to: $this->storage);
 
 		return $new;
 	}

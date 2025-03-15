@@ -305,6 +305,9 @@ class PlainTextStorage extends Storage
 	 */
 	protected function write(VersionId $versionId, Language $language, array $fields): void
 	{
+		// only store non-null value fields
+		$fields = array_filter($fields, fn ($field) => $field !== null);
+
 		// Content for files is only stored when there are any fields.
 		// Otherwise, the storage handler will take care here of cleaning up
 		// unnecessary content files.
