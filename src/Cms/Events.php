@@ -47,17 +47,17 @@ class Events
 			$name,
 			$args,
 			fn ($event, $result) => $event->updateArgument($modify, $result),
-			fn ($event)          => $event->argument($modify)
+			fn ($event) => $event->argument($modify)
 		);
 	}
 
 	/**
-	 * Returns a list of all matching handlers
+	 * Returns all matching hook handlers for the given event
 	 */
 	public function hooks(Event $event): array
 	{
 		$name  = $event->name();
-		$hooks = $this->hooks[$name] ??[];
+		$hooks = $this->hooks[$name] ?? [];
 
 		foreach ($event->nameWildcards() as $wildcard) {
 			$hooks = [
