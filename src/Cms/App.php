@@ -70,7 +70,7 @@ class App
 	protected Core $core;
 	protected Language|null $defaultLanguage = null;
 	protected Environment|null $environment = null;
-	protected Hooks $hooks;
+	protected Events $events;
 	protected Language|null $language = null;
 	protected Languages|null $languages = null;
 	protected bool|null $multilang = null;
@@ -151,10 +151,7 @@ class App
 		$this->extensionsFromOptions();
 		$this->extensionsFromFolders();
 
-		$this->hooks = new Hooks(
-			bind: $this,
-			hooks: $this->extensions('hooks')
-		);
+		$this->events = new Events(bind: $this);
 
 		// must be set after the extensions are loaded.
 		// the default storage instance must be defined
@@ -230,19 +227,14 @@ class App
 	 * @param string $name Full event name
 	 * @param array $args Associative array of named event arguments
 	 * @param string $modify Key in $args that is modified by the hooks
-	 * @param \Kirby\Cms\Event|null $event Event object (internal use)
 	 * @return mixed Resulting value as modified by the hooks
 	 */
 	public function apply(
 		string $name,
 		array $args,
-		string $modify,
-		Event|null $event = null
+		string $modify
 	): mixed {
-		return $this->hooks->apply(
-			event: $event ?? new Event($name, $args),
-			modify: $modify,
-		);
+		return $this->events->apply($name, $args, $modify);
 	}
 
 	/**
@@ -1645,16 +1637,12 @@ class App
 	 *
 	 * @param string $name Full event name
 	 * @param array $args Associative array of named event arguments
-	 * @param \Kirby\Cms\Event|null $originalEvent Event object (internal use)
 	 */
 	public function trigger(
 		string $name,
-		array $args = [],
-		Event|null $event = null
+		array $args = []
 	): void {
-		$this->hooks->trigger(
-			event: $event ?? new Event($name, $args)
-		);
+		$this->events->trigger($name, $args);
 	}
 
 	/**

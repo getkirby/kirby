@@ -14,19 +14,19 @@ namespace Kirby\Cms;
  * @license   https://getkirby.com/license
  * @internal
  */
-class Hooks
+class Events
 {
-	protected array $applied = [];
-	protected int $appliedLevel = 0;
-	protected array $triggered = [];
-	protected int $triggeredLevel = 0;
 	protected App|self $bind;
+	protected array $hooks;
+	protected array $processed = [];
+	protected int $level = 0;
 
 	public function __construct(
-		protected array $hooks,
+		array|null $hooks = null,
 		App|null $bind = null
 	) {
-		$this->bind = $bind ?? $this;
+		$this->bind  = $bind ?? $this;
+		$this->hooks = $hooks ?? $bind?->extensions('hooks') ?? [];
 	}
 
 	/**
@@ -35,10 +35,11 @@ class Hooks
 	 * first argument is modified.
 	 */
 	public function apply(
-		Event $event,
-		string|null $modify = null,
+		string $name,
+		array $args = [],
+		string|null $modify = null
 	): mixed {
-		$name     = $event->name();
+		$event     = new Event($name, $args);
 		$hooks    = $this->hooks($event);
 		$modify ??= array_key_first($event->arguments());
 
@@ -46,15 +47,15 @@ class Hooks
 			return $event->argument($modify);
 		}
 
-		$this->appliedLevel++;
+		$this->level++;
 
 		foreach ($hooks as $hook) {
-			if (in_array($hook, $this->applied[$name] ?? []) === true) {
+			if (in_array($hook, $this->processed[$name] ?? []) === true) {
 				continue;
 			}
 
-			// mark the hook as applied, to avoid endless loops
-			$this->applied[$name][] = $hook;
+			// mark the hook as processed, to avoid endless loops
+			$this->processed[$name][] = $hook;
 
 			// bind the Kirby instance to the hook
 			$newValue = $event->call($this->bind, $hook);
@@ -63,10 +64,10 @@ class Hooks
 			$event->updateArgument($modify, $newValue);
 		}
 
-		$this->appliedLevel--;
+		$this->level--;
 
-		if ($this->appliedLevel === 0) {
-			$this->applied = [];
+		if ($this->level === 0) {
+			$this->processed = [];
 		}
 
 		return $event->argument($modify);
@@ -100,33 +101,34 @@ class Hooks
 	 * Runs the hook without modifying the arguments
 	 */
 	public function trigger(
-		Event $event
+		string $name,
+		array $args = []
 	): void {
-		$name  = $event->name();
+		$event = new Event($name, $args);
 		$hooks = $this->hooks($event);
 
 		if ($hooks === []) {
 			return;
 		}
 
-		$this->triggeredLevel++;
+		$this->level++;
 
-		foreach ($hooks as $index => $hook) {
-			if (in_array($hook, $this->triggered[$name] ?? []) === true) {
+		foreach ($hooks as $hook) {
+			if (in_array($hook, $this->processed[$name] ?? []) === true) {
 				continue;
 			}
 
-			// mark the hook as triggered, to avoid endless loops
-			$this->triggered[$name][] = $hook;
+			// mark the hook as processed, to avoid endless loops
+			$this->processed[$name][] = $hook;
 
 			// bind the Kirby instance to the hook
 			$event->call($this->bind, $hook);
 		}
 
-		$this->triggeredLevel--;
+		$this->level--;
 
-		if ($this->triggeredLevel === 0) {
-			$this->triggered = [];
+		if ($this->level === 0) {
+			$this->processed = [];
 		}
 	}
 }

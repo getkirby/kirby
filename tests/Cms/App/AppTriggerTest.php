@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-use PHPUnit\Framework\Attributes\CoversDefaultClass;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversDefaultClass(App::class)]
+#[CoversClass(App::class)]
 class AppTriggerTest extends TestCase
 {
 	public function testTriggerEvent()

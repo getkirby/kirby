@@ -3,9 +3,9 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use PHPUnit\Framework\Attributes\CoversDefaultClass;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversDefaultClass(App::class)]
+#[CoversClass(App::class)]
 class AppApplyTest extends TestCase
 {
 	public function testApplyEvent()
