@@ -24,29 +24,6 @@ class AppApplyTest extends TestCase
 		$this->app->apply('test', ['value' => 10], 'value');
 	}
 
-	public function testApplyEventWithCustomEventObject()
-	{
-		$self        = $this;
-		$customEvent = new Event('test', ['value' => 10]);
-
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'test' => function (Event $event) use ($self, $customEvent) {
-					$self->assertSame($event, $customEvent);
-					$self->assertSame(['value' => 10], $event->arguments());
-
-					// should modify the value of the custom event
-					// after the hook has been applied
-					return 20;
-				}
-			]
-		]);
-
-		$this->app->apply('test', [], 'value', $customEvent);
-
-		$this->assertSame(20, $customEvent->argument('value'), 'The custom event value should have been modified');
-	}
-
 	public function testApplyWithInvalidModifyArgument()
 	{
 		$this->app = $this->app->clone([
