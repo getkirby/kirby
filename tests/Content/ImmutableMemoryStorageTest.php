@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Language;
+use Kirby\Cms\Page;
 use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -37,6 +38,29 @@ class ImmutableMemoryStorageTest extends TestCase
 			fromLanguage: Language::ensure(),
 			toVersionId: VersionId::changes()
 		);
+	}
+
+	public function testNextModel()
+	{
+		$model      = new Page(['slug' => 'test']);
+		$nextModel = $model->clone();
+
+		$storage = new ImmutableMemoryStorage(
+			model: $model,
+			nextModel: $nextModel
+		);
+
+		$this->assertSame($nextModel, $storage->nextModel());
+	}
+
+	public function testNextModelWithoutClone()
+	{
+		$model   = new Page(['slug' => 'test']);
+		$storage = new ImmutableMemoryStorage(
+			model: $model,
+		);
+
+		$this->assertNull($storage->nextModel());
 	}
 
 	public function testTouch()
