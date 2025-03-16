@@ -413,9 +413,11 @@ class ApiTest extends TestCase
 			'users' => [
 				[
 					'email' => 'current@getkirby.com',
+					'role'  => 'admin'
 				],
 				[
 					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
 				]
 			],
 		]);
@@ -431,9 +433,82 @@ class ApiTest extends TestCase
 		$this->api->user('nope@getkirby.com');
 	}
 
+	public function testUserNotAccessible()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin' => [
+					'name'    => 'admin',
+					'options' => ['access' => ['*' => false, 'admin' => true]]
+				],
+				'users/editor' => [
+					'name' => 'editor',
+				],
+			],
+			'users' => [
+				[
+					'email' => 'current@getkirby.com',
+					'role'  => 'editor'
+				],
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		$app->impersonate('current@getkirby.com');
+		$api = $app->api();
+
+		$this->assertSame('current@getkirby.com', $api->user()->email());
+		$this->assertSame('editor@getkirby.com', $api->user('editor@getkirby.com')->email());
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
+		$this->api->user('admin@getkirby.com');
+	}
+
 	public function testUsers()
 	{
-		$this->assertSame($this->app->users(), $this->api->users());
+		$this->assertSame($this->app->users()->pluck('email'), $this->api->users()->pluck('email'));
+	}
+
+	public function testUsersNotAccessible()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin' => [
+					'name'    => 'admin',
+					'options' => ['access' => ['*' => false, 'admin' => true]]
+				],
+				'users/editor' => [
+					'name' => 'editor',
+				],
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				],
+			]
+		]);
+
+		$app->impersonate('admin@getkirby.com');
+		$this->assertSame(2, $app->users()->count());
+		$this->assertSame(2, $app->api()->users()->count());
+
+		$app->impersonate('editor@getkirby.com');
+		$this->assertSame(2, $app->users()->count());
+		$this->assertSame(1, $app->api()->users()->count());
+		$this->assertSame('editor', $app->api()->users()->first()->role()->name());
 	}
 
 	public function testFileGetRoute()
@@ -713,5 +788,34 @@ class ApiTest extends TestCase
 
 		$page = $app->page('test');
 		$app->api()->sectionApi($page, 'nonexists');
+	}
+
+	public function testSite()
+	{
+		$this->assertSame($this->app->site(), $this->api->site());
+	}
+
+	public function testSiteNotAccessible()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'site' => [
+					'options' => ['access' => ['*' => false, 'admin' => true]]
+				],
+				'users/human-resources' => [
+					'name' => 'human-resources',
+				],
+			],
+			'users' => [
+				[
+					'email' => 'human-resources@getkirby.com',
+					'role'  => 'human-resources'
+				],
+			]
+		]);
+
+		$app->impersonate('human-resources@getkirby.com');
+
+		$this->assertNull($app->api()->site());
 	}
 }
