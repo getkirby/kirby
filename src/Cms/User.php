@@ -280,6 +280,15 @@ class User extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the user is accessible to the current user
+	 * @since 5.1.0
+	 */
+	public function isAccessible(): bool
+	{
+		return UserPermissions::canFromCache($this, 'access');
+	}
+
+	/**
 	 * Checks if this user has the admin role
 	 */
 	public function isAdmin(): bool
@@ -294,6 +303,20 @@ class User extends ModelWithContent
 	public function isKirby(): bool
 	{
 		return $this->isAdmin() && $this->id() === 'kirby';
+	}
+
+	/**
+	 * Checks if the user is listable by the current user
+	 * @since 5.1.0
+	 */
+	public function isListable(): bool
+	{
+		// not accessible also means not listable
+		if ($this->isAccessible() === false) {
+			return false;
+		}
+
+		return UserPermissions::canFromCache($this, 'list');
 	}
 
 	/**

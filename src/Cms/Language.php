@@ -315,6 +315,15 @@ class Language implements Stringable
 	}
 
 	/**
+	 * Checks if the language is accessible to the current user
+	 * @since 5.1.0
+	 */
+	public function isAccessible(): bool
+	{
+		return LanguagePermissions::canFromCache($this, 'access');
+	}
+
+	/**
 	 * Checks if this is the default language
 	 * for the site.
 	 */
@@ -347,6 +356,20 @@ class Language implements Stringable
 	public function isLast(): bool
 	{
 		return App::instance()->languages()->count() === 1;
+	}
+
+	/**
+	 * Checks if the language is listable by the current user
+	 * @since 5.1.0
+	 */
+	public function isListable(): bool
+	{
+		// not accessible also means not listable
+		if ($this->isAccessible() === false) {
+			return false;
+		}
+
+		return LanguagePermissions::canFromCache($this, 'list');
 	}
 
 	/**

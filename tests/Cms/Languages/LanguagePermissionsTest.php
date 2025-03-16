@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use Kirby\TestCase;
 
 /**
@@ -110,6 +111,70 @@ class LanguagePermissionsTest extends TestCase
 
 		$this->assertSame('editor', $app->role()->name());
 		$this->assertFalse($perms->can($action));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
+	 */
+	public function testCanFromCache()
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code' => 'en'
+				]
+			],
+			'roles' => [
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'languages' => [
+							'access' => false,
+							'list'   => false
+						],
+					]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'editor'],
+			]
+		]);
+
+		$app->impersonate('bastian');
+
+		$language = $app->language('en');
+
+		$this->assertFalse(LanguagePermissions::canFromCache($language, 'access'));
+		$this->assertFalse(LanguagePermissions::canFromCache($language, 'access'));
+		$this->assertFalse(LanguagePermissions::canFromCache($language, 'list'));
+		$this->assertFalse(LanguagePermissions::canFromCache($language, 'list'));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
+	 */
+	public function testCanFromCacheDynamic()
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
+
+		$app = new App([
+			'languages' => [
+				[
+					'code' => 'en'
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+		]);
+
+		$language = $app->language('en');
+
+		LanguagePermissions::canFromCache($language, 'delete');
 	}
 
 	/**

@@ -275,6 +275,15 @@ class Site extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the site is accessible to the current user
+	 * @since 5.1.0
+	 */
+	public function isAccessible(): bool
+	{
+		return SitePermissions::canFromCache($this, 'access');
+	}
+
+	/**
 	 * Returns the root to the media folder for the site
 	 * @internal
 	 */

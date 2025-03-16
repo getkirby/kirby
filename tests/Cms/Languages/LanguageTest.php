@@ -427,6 +427,47 @@ class LanguageTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isAccessible
+	 */
+	public function testIsAccessible()
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code' => 'en'
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'languages' => [
+							'access' => false
+						],
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		$language = $app->language('en');
+
+		$app->impersonate('editor@getkirby.com');
+		$this->assertFalse($language->isAccessible());
+
+		$app->impersonate('kirby');
+		$this->assertTrue($language->isAccessible());
+	}
+
+	/**
 	 * @covers ::isDefault
 	 */
 	public function testIsDefault()
@@ -457,6 +498,62 @@ class LanguageTest extends TestCase
 			'default' => 'foo'
 		]);
 		$this->assertFalse($language->isDefault());
+	}
+
+	/**
+	 * @covers ::isListable
+	 */
+	public function testIsListable()
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code' => 'en'
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				[
+					'name' => 'editor-access',
+					'permissions' => [
+						'languages' => [
+							'access' => false
+						],
+					]
+				],
+				[
+					'name' => 'editor-list',
+					'permissions' => [
+						'languages' => [
+							'list' => false
+						],
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor-access@getkirby.com',
+					'role'  => 'editor-access'
+				],
+				[
+					'email' => 'editor-list@getkirby.com',
+					'role'  => 'editor-list'
+				]
+			],
+		]);
+
+		$language = $app->language('en');
+
+		$app->impersonate('editor-access@getkirby.com');
+		$this->assertFalse($language->isListable());
+
+		$app->impersonate('editor-list@getkirby.com');
+		$this->assertFalse($language->isListable());
+
+		$app->impersonate('kirby');
+		$this->assertTrue($language->isListable());
 	}
 
 	/**
