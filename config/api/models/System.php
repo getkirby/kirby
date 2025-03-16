@@ -30,7 +30,7 @@ return [
 		'requirements' => fn (System $system) => $system->toArray(),
 		'site'         => fn (System $system) => $system->title(),
 		'slugs'        => fn () => Str::$language,
-		'title'        => fn () => $this->site()->title()->value(),
+		'title'        => fn () => $this->kirby()->site()->title()->value(),
 		'translation' => function () {
 			$code = $this->user()?->language() ??
 					$this->kirby()->panelLanguage();
