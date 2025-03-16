@@ -274,7 +274,17 @@ class Site extends ModelWithContent
 	}
 
 	/**
-	 * Returns the absolute path to the media folder for the page
+	 * Checks if the site is accessible to the current user
+	 * @since 5.1.0
+	 */
+	public function isAccessible(): bool
+	{
+		return SitePermissions::canFromCache($this, 'access');
+	}
+
+	/**
+	 * Returns the root to the media folder for the site
+	 * @internal
 	 */
 	public function mediaDir(): string
 	{

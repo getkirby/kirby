@@ -13,6 +13,7 @@ class SitePermissionsTest extends ModelTestCase
 	public static function actionProvider(): array
 	{
 		return [
+			['access'],
 			['changeTitle'],
 			['update'],
 		];
@@ -38,5 +39,38 @@ class SitePermissionsTest extends ModelTestCase
 		$permissions = $site->permissions();
 
 		$this->assertFalse($permissions->can($action));
+	}
+
+	/**
+	 * @covers \Kirby\Cms\ModelPermissions::canFromCache
+	 */
+	public function testCanFromCache()
+	{
+		$app = new App([
+			'roles' => [
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'site' => [
+							'access' => false
+						],
+					]
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'editor'],
+
+			]
+		]);
+
+		$app->impersonate('bastian');
+
+		$site = $app->site();
+
+		$this->assertFalse(SitePermissions::canFromCache($site, 'access'));
+		$this->assertFalse(SitePermissions::canFromCache($site, 'access'));
 	}
 }
