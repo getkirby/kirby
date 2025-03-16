@@ -131,10 +131,14 @@ return [
 		'action'  => function () {
 			$files = $this
 				->site()
-				->index(true)
+				?->index(true)
 				->filter('isListable', true)
 				->files()
 				->filter('isListable', true);
+
+			if ($files === null) {
+				return null;
+			}
 
 			if ($this->requestMethod() === 'GET') {
 				return $files->search($this->requestQuery('q'));

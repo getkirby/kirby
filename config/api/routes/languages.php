@@ -8,35 +8,35 @@ return [
 		'pattern' => 'languages',
 		'method'  => 'GET',
 		'action'  => function () {
-			return $this->kirby()->languages();
+			return $this->languages();
 		}
 	],
 	[
 		'pattern' => 'languages',
 		'method'  => 'POST',
 		'action'  => function () {
-			return $this->kirby()->languages()->create($this->requestBody());
+			return $this->languages()->create($this->requestBody());
 		}
 	],
 	[
 		'pattern' => 'languages/(:any)',
 		'method'  => 'GET',
 		'action'  => function (string $code) {
-			return $this->kirby()->languages()->find($code);
+			return $this->languages()->find($code);
 		}
 	],
 	[
 		'pattern' => 'languages/(:any)',
 		'method'  => 'PATCH',
 		'action'  => function (string $code) {
-			return $this->kirby()->languages()->find($code)?->update($this->requestBody());
+			return $this->languages()->find($code)?->update($this->requestBody());
 		}
 	],
 	[
 		'pattern' => 'languages/(:any)',
 		'method'  => 'DELETE',
 		'action'  => function (string $code) {
-			return $this->kirby()->languages()->find($code)?->delete();
+			return $this->languages()->find($code)?->delete();
 		}
 	]
 ];
