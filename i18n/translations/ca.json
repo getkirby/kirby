@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "There's an error on the \"{field}\" field in row {index}",
+
 	"error.email.preset.notFound": "No es pot trobar la configuració de correu electrònic \"{name}\"",
 
 	"error.field.converter.invalid": "Convertidor no vàlid \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "El nom no pot estar buit",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Ja existeix un fitxer amb el nom \"{filename}\"",
 	"error.file.extension.forbidden": "L'extensió de l'arxiu \"{extension}\" no està permesa",
 	"error.file.extension.invalid": "Invalid extension: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "La pàgina \"{slug}\" no es pot esborrar",
 	"error.page.delete.confirm": "Si us plau, introdueix el títol de la pàgina per confirmar",
 	"error.page.delete.hasChildren": "La pàgina té subpàgines i no es pot esborrar",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "No tens permís per esborrar \"{slug}\"",
 	"error.page.draft.duplicate": "Ja existeix un esborrany de pàgina amb l'apèndix d'URL \"{slug}\"",
 	"error.page.duplicate": "Ja existeix una pàgina amb l'apèndix d'URL \"{slug}\"",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.entries.empty": "Encara no hi ha entrades.",
+
 	"field.files.empty": "Encara no hi ha cap fitxer seleccionat",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Change position",
 
 	"files": "Arxius",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Encara no hi ha fitxers",
 
 	"filter": "Filter",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Gràcies per donar suport a Kirby",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "La pàgina només es pot accedir a través de l'URL",
 
 	"pages": "Pàgines",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Encara no hi ha pàgines",
 	"pages.status.draft": "Esborranys",
 	"pages.status.listed": "Publicat",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -665,7 +679,9 @@
 	"system.issues.git": "The .git folder seems to be exposed",
 	"system.issues.https": "We recommend HTTPS for all your sites",
 	"system.issues.kirby": "The kirby folder seems to be exposed",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "The site folder seems to be exposed",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
 	"system.updateStatus": "Update status",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Canviar idioma",
 	"user.changeName": "Canviar el nom d'aquest usuari",
 	"user.changePassword": "Canviar contrasenya",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nova contrasenya",
 	"user.changePassword.new.confirm": "Confirma la nova contrasenya ...",
 	"user.changeRole": "Canviar el rol",

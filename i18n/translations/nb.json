@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "Det er en feilmelding på felt \"{field}\" i rad {index}",
+
 	"error.email.preset.notFound": "E-postinnstillingen \"{name}\" ble ikke funnet",
 
 	"error.field.converter.invalid": "Ugyldig omformer \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Felt \"{ name }\": Felttypen \"{ type }\" finnes ikke",
 
 	"error.file.changeName.empty": "Navnet kan ikke være tomt",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Malen for filen \"{id}\" Kan ikke endres til \"{template}\" (gyldig: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Du har ikke rettigheter til å endre malen for filen \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "En fil med navnet \"{filename}\" eksisterer allerede",
 	"error.file.extension.forbidden": "Ugyldig filtype",
 	"error.file.extension.invalid": "Ugyldig utvidelse: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Siden \"{slug}\" kan ikke slettes",
 	"error.page.delete.confirm": "Vennligst skriv inn sidens tittel for å bekrefte",
 	"error.page.delete.hasChildren": "Siden har undersider og kan derfor ikke slettes",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Du har ikke  til å slette \"{slug}\"",
 	"error.page.draft.duplicate": "Et sideutkast med URL-tillegget \"{slug}\" eksisterer allerede",
 	"error.page.duplicate": "En side med URL-tillegget \"{slug}\" eksisterer allerede",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Vil du virkelig slette alle oppføringer?",
+	"field.entries.empty": "Ingen oppføringer enda",
+
 	"field.files.empty": "Ingen filer har blitt valgt",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Endre plassering",
 
 	"files": "Filer",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Ingen filer ennå",
 
 	"filter": "Filter",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "Ingen gyldig lisens",
 	"license.status.missing.label": "Vennligst skriv inn din lisenskode",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Håndter dine lisenser",
 	"license.purchased": "Kjøpt",
 	"license.success": "Takk for at du støtter Kirby",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Siden er ikke er oppført og er kun tilgjengelig via URL",
 
 	"pages": "Sider",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Ingen sider ennå",
 	"pages.status.draft": "Utkast",
 	"pages.status.listed": "Publisert",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "content-mappen ser ut til å være eksponert",
 	"system.issues.eol.kirby": "Din installerte Kirby versjon har nådd sitt end-of-life, og vil ikke lenger motta sikkerhetsoppdateringer",
 	"system.issues.eol.plugin": "Din installerte plugin { plugin } har nådd sitt end-of-life og vil ikke lenger motta sikkerhetsoppdateringer",
@@ -665,7 +679,9 @@
 	"system.issues.git": ".git mappen ser ut til å være eksponert",
 	"system.issues.https": "Vi anbefaler HTTPS for alle dine sider",
 	"system.issues.kirby": "kirby-mappen ser ut til å være eksponert",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "site-mappen ser ut til å være eksponert",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Din installasjon er muligens påvirket av følgende sikkerhetshull ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Din installasjon er muligens påvirket av følgende sikkerhetshull i pluginen { plugin } ({ severity } severity): { description }",
 	"system.updateStatus": "Oppdater status",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Endre språk",
 	"user.changeName": "Angi nytt navn for denne brukeren",
 	"user.changePassword": "Bytt passord",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nytt passord",
 	"user.changePassword.new.confirm": "Bekreft nytt passord…",
 	"user.changeRole": "Bytt rolle",
