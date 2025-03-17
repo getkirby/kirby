@@ -529,6 +529,14 @@ class FieldClassTest extends TestCase
 		$this->assertSame('b', $field->siblings()->last()->name());
 	}
 
+	public function testSubmit(): void
+	{
+		$field = new TestField();
+		$this->assertNull($field->value());
+		$field->submit('Test value');
+		$this->assertSame('Test value', $field->value());
+	}
+
 	public function testToStoredValue()
 	{
 		$field = new TestField();

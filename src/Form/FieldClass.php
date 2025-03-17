@@ -348,6 +348,18 @@ abstract class FieldClass
 	}
 
 	/**
+	 * Submits a new value for the field
+	 * @since 5.0.0
+	 */
+	public function submit(mixed $value = null): static
+	{
+		$this->value  = $value;
+		$this->errors = null;
+
+		return $this;
+	}
+
+	/**
 	 * Converts the field to a plain array
 	 */
 	public function toArray(): array

@@ -381,6 +381,15 @@ class Field extends Component
 	}
 
 	/**
+	 * Submits a new value for the field
+	 * @since 5.0.0
+	 */
+	public function submit(mixed $value = null): static
+	{
+		return $this->fill($value);
+	}
+
+	/**
 	 * Converts the field to a plain array
 	 */
 	public function toArray(): array
@@ -401,7 +410,8 @@ class Field extends Component
 	}
 
 	/**
-	 * Returns the value of the field in a format to be stored by our storage classes
+	 * Returns the value of the field in a format
+	 * to be stored by our storage classes
 	 */
 	public function toStoredValue(bool $default = false): mixed
 	{
