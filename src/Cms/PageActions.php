@@ -53,9 +53,10 @@ trait PageActions
 
 		return $this->commit('changeNum', ['page' => $this, 'num' => $num], function ($oldPage, $num) {
 			$newPage = $oldPage->clone([
-				'num'     => $num,
-				'dirname' => null,
-				'root'    => null
+				'num'      => $num,
+				'dirname'  => null,
+				'root'     => null,
+				'template' => $oldPage->intendedTemplate()->name(),
 			]);
 
 			// actually move the page on disk
