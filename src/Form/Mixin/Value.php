@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Cms\Language;
+
 /**
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -45,6 +47,42 @@ trait Value
 	public function isEmptyValue(mixed $value = null): bool
 	{
 		return in_array($value, [null, '', []], true);
+	}
+
+	/**
+	 * Checks if the field is fillable. "Fillable" means that
+	 * the field can receive a value for its initial state
+	 * when the field is being rendered in the panel.
+	 */
+	public function isFillable(): bool
+	{
+		return $this->isSaveable() === true;
+	}
+
+	/**
+	 * A field might be saveable, but can still not be submitted
+	 * because it is disabled, not translatable into the given
+	 * language or not active due to a `when` rule.
+	 */
+	public function isSubmittable(Language $language): bool
+	{
+		if ($this->isSaveable() === false) {
+			return false;
+		}
+
+		if ($this->isDisabled() === true) {
+			return false;
+		}
+
+		if ($this->isTranslatable($language) === false) {
+			return false;
+		}
+
+		if ($this->isActive() === false) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
