@@ -283,7 +283,7 @@ class Field extends Component
 		$this->applyProp('value', $this->options['props']['value'] ?? $value);
 
 		// reevaluate the computed props
-		$this->applyComputed($this->options['computed']);
+		$this->applyComputed($this->options['computed'] ?? []);
 
 		// reset the errors cache
 		$this->errors = null;
