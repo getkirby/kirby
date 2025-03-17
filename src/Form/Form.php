@@ -285,6 +285,7 @@ class Form
 
 	/**
 	 * Returns an array with the form value of each field
+	 * (e.g. used as data for Panel Vue components)
 	 */
 	public function toFormValues(bool $defaults = false): array
 	{
@@ -293,6 +294,7 @@ class Form
 
 	/**
 	 * Returns an array with the stored value of each field
+	 * (e.g. used for saving to content storage)
 	 */
 	public function toStoredValues(bool $defaults = false): array
 	{
