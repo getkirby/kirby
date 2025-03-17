@@ -61,7 +61,7 @@ export default {
 
 						// the `$panel.content.update()` event sends
 						// the updated form value object to the server
-						this.$panel.content.update();
+						await this.$panel.content.update();
 
 						this.$events.emit("file.upload");
 						this.$events.emit("model.update");
