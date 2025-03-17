@@ -51,10 +51,12 @@ class EntriesField extends FieldClass
 		return $this->form()->fields()->first()->toArray();
 	}
 
-	public function fill(mixed $value = null): void
+	public function fill(mixed $value = null): static
 	{
 		$value = Data::decode($value ?? '', 'yaml');
 		parent::fill($value);
+
+		return $this;
 	}
 
 	public function form(array $values = []): Form
