@@ -105,9 +105,10 @@ trait PageActions
 		$arguments = ['page' => $this, 'slug' => $slug, 'languageCode' => null];
 		return $this->commit('changeSlug', $arguments, function ($oldPage, $slug) {
 			$newPage = $oldPage->clone([
-				'slug'    => $slug,
-				'dirname' => null,
-				'root'    => null
+				'slug'     => $slug,
+				'dirname'  => null,
+				'root'     => null,
+				'template' => $oldPage->intendedTemplate()->name(),
 			]);
 
 			// clear UUID cache recursively (for children and files as well)
@@ -682,8 +683,9 @@ trait PageActions
 		}
 
 		$page = $this->clone([
-			'isDraft' => false,
-			'root'    => null
+			'isDraft'  => false,
+			'root'     => null,
+			'template' => $this->intendedTemplate()->name(),
 		]);
 
 		// actually do it on disk
@@ -824,10 +826,11 @@ trait PageActions
 		}
 
 		$page = $this->clone([
-			'isDraft' => true,
-			'num'     => null,
-			'dirname' => null,
-			'root'    => null
+			'isDraft'  => true,
+			'num'      => null,
+			'dirname'  => null,
+			'root'     => null,
+			'template' => $this->intendedTemplate()->name(),
 		]);
 
 		// actually do it on disk
