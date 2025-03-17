@@ -109,7 +109,7 @@ trait Value
 
 	/**
 	 * Returns the value of the field in a format to be used in forms
-	 * @alias for `::value()`
+	 * (e.g. used as data for Panel Vue components)
 	 */
 	public function toFormValue(bool $default = false): mixed
 	{
@@ -125,7 +125,8 @@ trait Value
 	}
 
 	/**
-	 * Returns the value of the field in a format to be stored by our storage classes
+	 * Returns the value of the field in a format
+	 * to be stored by our storage classes
 	 */
 	public function toStoredValue(bool $default = false): mixed
 	{
@@ -136,7 +137,8 @@ trait Value
 	 * Returns the value of the field if saveable
 	 * otherwise it returns null
 	 *
-	 * @alias for `::toFormValue()` might get deprecated or reused later
+	 * @see `self::toFormValue()`
+	 * @todo might get deprecated or reused later
 	 */
 	public function value(bool $default = false): mixed
 	{
