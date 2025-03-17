@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
@@ -21,6 +22,8 @@ use Kirby\Toolkit\Str;
  */
 class Fields extends Collection
 {
+	protected Language $language;
+
 	/**
 	 * Cache for the errors array
 	 *
@@ -30,11 +33,14 @@ class Fields extends Collection
 
 	public function __construct(
 		array $fields = [],
-		protected ModelWithContent|null $model = null
+		protected ModelWithContent|null $model = null,
+		Language|null $language = null
 	) {
 		foreach ($fields as $name => $field) {
 			$this->__set($name, $field);
 		}
+
+		$this->language = $language ?? Language::ensure('current');
 	}
 
 	/**
@@ -98,7 +104,16 @@ class Fields extends Collection
 	public function fill(array $input): static
 	{
 		foreach ($input as $name => $value) {
-			$this->get($name)?->fill($value);
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-fillable fields
+			if ($field->isFillable() === false) {
+				continue;
+			}
+
+			$field->fill($value);
 		}
 
 		// reset the errors cache
@@ -160,6 +175,45 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Returns the language of the fields
+	 * @since 5.0.0
+	 */
+	public function language(): Language
+	{
+		return $this->language;
+	}
+
+	/**
+	 * Sets the value for each field with a matching key in the input array
+	 * but only if the field is not disabled
+	 * @since 5.0.0
+	 */
+	public function submit(array $input): static
+	{
+		$language = $this->language();
+
+		foreach ($input as $name => $value) {
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-submittable fields
+			if ($field->isSubmittable($language) === false) {
+				continue;
+			}
+
+			// submit the value to the field
+			// the field class might override this method
+			// to handle submitted values differently
+			$field->submit($value);
+		}
+
+		// reset the errors cache
+		$this->errors = null;
+		return $this;
+	}
+
+	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
@@ -184,6 +238,22 @@ class Fields extends Collection
 	 */
 	public function toStoredValues(bool $defaults = false): array
 	{
-		return $this->toArray(fn ($field) => $field->toStoredValue($defaults));
+		$store    = [];
+		$language = $this->language();
+
+		foreach ($this->data as $name => $field) {
+			// don't add non-saveable fields to the store
+			if ($field->isSaveable() === false) {
+				continue;
+			}
+
+			if ($field->isTranslatable($language) === true) {
+				$value = $field->toStoredValue($defaults);
+			}
+
+			$store[$name] = $value ??null;
+		}
+
+		return $store;
 	}
 }

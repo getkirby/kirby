@@ -2,39 +2,30 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\App;
+use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Cms\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Form\Fields
- */
+#[CoversClass(Fields::class)]
 class FieldsTest extends TestCase
 {
-	protected App $app;
 	protected Page $model;
 
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
+		parent::setUp();
 		$this->model = new Page(['slug' => 'test']);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$fields = new Fields([
 			'a' => [
-				'type'  => 'text',
+				'type' => 'text',
 			],
 			'b' => [
-				'type'  => 'text',
+				'type' => 'text',
 			],
 		], $this->model);
 
@@ -44,17 +35,14 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructWithModel()
+	public function testConstructWithModel(): void
 	{
 		$fields = new Fields([
 			'a' => [
-				'type'  => 'text',
+				'type' => 'text',
 			],
 			'b' => [
-				'type'  => 'text',
+				'type' => 'text',
 			],
 		], $this->model);
 
@@ -64,10 +52,7 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	/**
-	 * @covers ::defaults
-	 */
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -80,13 +65,13 @@ class FieldsTest extends TestCase
 			],
 		], $this->model);
 
-		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->defaults());
+		$this->assertSame(
+			['a' => 'a', 'b' => 'b'],
+			$fields->defaults()
+		);
 	}
 
-	/**
-	 * @covers ::errors
-	 */
-	public function testErrors()
+	public function testErrors(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -131,28 +116,26 @@ class FieldsTest extends TestCase
 		], $fields->errors());
 	}
 
-	/**
-	 * @covers ::errors
-	 */
-	public function testErrorsWithoutErrors()
+	public function testErrorsWithoutErrors(): void
 	{
 		$fields = new Fields([
 			'a' => [
-				'type'  => 'text',
+				'type' => 'text',
 			],
 			'b' => [
-				'type'  => 'text',
+				'type' => 'text',
 			],
 		], $this->model);
 
 		$this->assertSame([], $fields->errors());
 	}
 
-	/**
-	 * @covers ::fill
-	 */
-	public function testFill()
+	public function testFill(): void
 	{
+		Field::$types['foo'] = [
+			'save' => false
+		];
+
 		$fields = new Fields([
 			'a' => [
 				'type'  => 'text',
@@ -162,45 +145,50 @@ class FieldsTest extends TestCase
 				'type'  => 'text',
 				'value' => 'B'
 			],
+			'c' => [
+				'type'  => 'foo',
+				'value' => 'C'
+			],
 		], $this->model);
 
 		$this->assertSame([
 			'a' => 'A',
-			'b' => 'B'
-		], $fields->toArray(fn ($field) => $field->value()));
+			'b' => 'B',
+			'c' => null
+		], $fields->toFormValues());
 
-		$fields->fill($input = [
+		$fields->fill([
 			'a' => 'A updated',
-			'b' => 'B updated'
+			'b' => 'B updated',
+			'c' => 'C updated',
+			'd' => 'D new'
 		]);
 
-		$this->assertSame($input, $fields->toArray(fn ($field) => $field->value()));
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => 'B updated',
+			'c' => null
+		], $fields->toFormValues());
 	}
 
-	/**
-	 * @covers ::findByKey
-	 * @covers ::findByKeyRecursive
-	 */
-	public function testFind()
+	public function testFind(): void
 	{
 		Field::$types['test'] = [
 			'methods' => [
-				'form' => function () {
-					return new Form([
-						'fields' => [
-							'child' => [
-								'type'  => 'text',
-							],
+				'form' => fn () => new Form([
+					'fields' => [
+						'child' => [
+							'type'  => 'text',
 						],
-						'model' => $this->model
-					]);
-				}
+					],
+					'model' => $this->model
+				])
 			]
 		];
 
 		$fields = new Fields([
 			'mother' => [
-				'type'  => 'test',
+				'type' => 'test',
 			],
 		], $this->model);
 
@@ -209,42 +197,96 @@ class FieldsTest extends TestCase
 		$this->assertNull($fields->find('mother+missing-child'));
 	}
 
-	/**
-	 * @covers ::findByKey
-	 * @covers ::findByKeyRecursive
-	 */
-	public function testFindWhenFieldHasNoForm()
+	public function testFindWhenFieldHasNoForm(): void
 	{
 		$fields = new Fields([
 			'mother' => [
-				'type'  => 'text',
+				'type' => 'text',
 			],
 		], $this->model);
 
 		$this->assertNull($fields->find('mother+child'));
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
-	public function testToArray()
+	public function testLanguage(): void
 	{
+		// no language passed = current language
+		$fields = new Fields();
+		$this->assertSame('en', $fields->language()->code());
+		$this->assertTrue($fields->language()->isDefault());
+
+		// language passed
+		$language = new Language(['code' => 'de']);
+		$fields = new Fields([], language: $language);
+		$this->assertSame('de', $fields->language()->code());
+		$this->assertFalse($fields->language()->isDefault());
+	}
+
+	public function testSubmit(): void
+	{
+		Field::$types['foo'] = [
+			'save' => false
+		];
+
 		$fields = new Fields([
 			'a' => [
 				'type'  => 'text',
+				'value' => 'A'
 			],
 			'b' => [
 				'type'  => 'text',
+				'value' => 'B'
+			],
+			'c' => [
+				'type'  => 'foo',
+				'value' => 'C'
+			],
+			'd' => [
+				'type'     => 'text',
+				'value'    => 'D',
+				'disabled' => true
 			],
 		], $this->model);
 
-		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->toArray(fn ($field) => $field->name()));
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B',
+			'd' => 'D'
+		], $fields->toStoredValues());
+
+		$fields->submit([
+			'a' => 'A updated',
+			'b' => 'B updated',
+			'c' => 'C updated',
+			'd' => 'D updated',
+			'e' => 'E new'
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => 'B updated',
+			'd' => 'D'
+		], $fields->toStoredValues());
 	}
 
-	/**
-	 * @covers ::toFormValues
-	 */
-	public function testToFormValues()
+	public function testToArray(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type' => 'text',
+			],
+			'b' => [
+				'type' => 'text',
+			],
+		], $this->model);
+
+		$this->assertSame(
+			['a' => 'a', 'b' => 'b'],
+			$fields->toArray(fn ($field) => $field->name())
+		);
+	}
+
+	public function testToFormValues(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -257,18 +299,16 @@ class FieldsTest extends TestCase
 			],
 		], $this->model);
 
-		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
+		$this->assertSame(
+			['a' => 'Value a', 'b' => 'Value b'],
+			$fields->toFormValues()
+		);
 	}
 
-	/**
-	 * @covers ::toStoredValues
-	 */
-	public function testToStoredValues()
+	public function testToStoredValues(): void
 	{
 		Field::$types['test'] = [
-			'save' => function ($value) {
-				return $value . ' stored';
-			}
+			'save' => fn ($value) => $value . ' stored'
 		];
 
 		$fields = new Fields([
@@ -282,7 +322,13 @@ class FieldsTest extends TestCase
 			],
 		], $this->model);
 
-		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
-		$this->assertSame(['a' => 'Value a stored', 'b' => 'Value b stored'], $fields->toStoredValues());
+		$this->assertSame(
+			['a' => 'Value a', 'b' => 'Value b'],
+			$fields->toFormValues()
+		);
+		$this->assertSame(
+			['a' => 'Value a stored', 'b' => 'Value b stored'],
+			$fields->toStoredValues()
+		);
 	}
 }
