@@ -888,6 +888,10 @@ class Page extends ModelWithContent
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
+		if ($this->permissions()->can('preview') !== true) {
+			return null;
+		}
+
 		return $this->version($versionId)->url();
 	}
 

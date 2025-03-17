@@ -96,6 +96,40 @@ class PagePreviewUrlTest extends ModelTestCase
 		$this->assertSame($expected, $page->previewUrl());
 	}
 
+	public function testPreviewUrlMissingPermission(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'          => 'editor',
+					'name'        => 'editor',
+					'permissions' => [
+						'pages' => [
+							'preview' => false
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->assertNull($page->previewUrl());
+		$this->assertNull($page->previewUrl('latest'));
+		$this->assertNull($page->previewUrl('changes'));
+	}
+
 	public function testPreviewUrlUnauthenticated(): void
 	{
 		// log out

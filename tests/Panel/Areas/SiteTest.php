@@ -159,6 +159,13 @@ class SiteTest extends AreaTestCase
 	{
 		$this->login();
 
+		$site = $this->app->site();
+
+		$site->createChild([
+			'slug'    => 'home',
+			'isDraft' => false
+		]);
+
 		$view  = $this->view('site');
 		$props = $view['props'];
 

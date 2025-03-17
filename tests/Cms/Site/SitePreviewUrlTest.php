@@ -64,9 +64,69 @@ class SitePreviewUrlTest extends ModelTestCase
 			'blueprint' => [
 				'name'    => 'site',
 				'options' => $options
+			],
+			'children' => [
+				['slug' => 'home']
 			]
 		]);
 
 		$this->assertSame($expected, $site->previewUrl());
+	}
+
+	public function testPreviewUrlMissingHomePage(): void
+	{
+		$site = new Site();
+
+		$this->assertNull($site->previewUrl());
+	}
+
+	public function testPreviewUrlMissingPermission(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'          => 'editor',
+					'name'        => 'editor',
+					'permissions' => [
+						'pages' => [
+							'preview' => false
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$site = new Site([
+			'children' => [
+				['slug' => 'home']
+			]
+		]);
+
+		$this->assertNull($site->previewUrl());
+		$this->assertNull($site->previewUrl('latest'));
+		$this->assertNull($site->previewUrl('changes'));
+	}
+
+	public function testPreviewUrlUnauthenticated(): void
+	{
+		// log out
+		$this->app->impersonate();
+
+		$site = new Site([
+			'children' => [
+				['slug' => 'home']
+			]
+		]);
+
+		$this->assertNull($site->previewUrl());
 	}
 }

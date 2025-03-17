@@ -362,6 +362,11 @@ class Site extends ModelWithContent
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
+		// the site previews the home page and thus needs to check permissions for it
+		if ($this->homePage()?->permissions()->can('preview') !== true) {
+			return null;
+		}
+
 		return $this->version($versionId)->url();
 	}
 
