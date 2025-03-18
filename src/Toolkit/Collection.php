@@ -1077,8 +1077,8 @@ class Collection extends Iterator implements Stringable
 	 * @see self::sort()
 	 *
 	 * @param string|callable $field Field name or value callback to sort by
-	 * @param string $direction asc or desc
-	 * @param int $method The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
+	 * @param string|null $direction asc or desc
+	 * @param int|null $method The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
 	 * @return $this|static
 	 */
 	public function sortBy(...$args): static
