@@ -23,7 +23,7 @@ use Stringable;
  * It also provides methods to cache these connections
  * for faster lookup.
  *
- * ```
+ * ```php
  * // get UUID string
  * $model->uuid()->toString();
  *

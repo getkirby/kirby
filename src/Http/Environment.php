@@ -638,13 +638,13 @@ class Environment
 	/**
 	 * Gets a value from the server environment array
 	 *
-	 * <code>
-	 * $server->get('document_root');
+	 * ```php
 	 * // sample output: /var/www/kirby
+	 * $server->get('document_root');
 	 *
-	 * $server->get();
 	 * // returns the whole server array
-	 * </code>
+	 * $server->get();
+	 * ```
 	 *
 	 * @param string|false|null $key The key to look for. Pass `false` or `null`
 	 *                               to return the entire server array.
