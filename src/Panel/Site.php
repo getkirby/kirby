@@ -91,10 +91,14 @@ class Site extends Model
 
 		return [
 			...$props,
-			'blueprint'  => 'site',
-			'id'         => '/',
-			'model'      => $model,
-			'title'      => $model['title'],
+			'blueprint'   => 'site',
+			'id'          => '/',
+			'model'       => $model,
+			'title'       => $model['title'],
+			'permissions' => [
+				...$props['permissions'],
+				'preview' => $this->model->homePage()?->permissions()->can('preview') === true,
+			],
 		];
 	}
 
