@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "Er is een fout opgetreden in veld \"{field}\" in rij {index}",
+
 	"error.email.preset.notFound": "De e-mailvoorinstelling \"{name}\" kan niet worden gevonden",
 
 	"error.field.converter.invalid": "Ongeldige converter \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Veld \"{ name }\": Het veldtype \"{ type }\" bestaat niet",
 
 	"error.file.changeName.empty": "De naam mag niet leeg zijn",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Het template voor het bestand \"{id}\" kan niet worden gewijzigd in \"{template}\" (geldig: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Je hebt geen rechten om het template te wijzigen voor bestand \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Er bestaat al een bestand met de naam \"{filename}\"",
 	"error.file.extension.forbidden": "Bestandsextensie \"{extension}\" is niet toegestaan",
 	"error.file.extension.invalid": "Ongeldige extensie: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "De pagina \"{slug}\" kan niet worden verwijderd",
 	"error.page.delete.confirm": "Voer de paginatitel in om te bevestigen",
 	"error.page.delete.hasChildren": "Deze pagina heeft subpagina's en kan niet worden verwijderd",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Je hebt geen rechten om \"{slug}\" te verwijderen",
 	"error.page.draft.duplicate": "Er bestaat al een conceptpagina met de URL-appendix \"{slug}\"",
 	"error.page.duplicate": "Er bestaat al een pagina met de URL-appendix \"{slug}\"",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Video link",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Weet je zeker dat je alle items wil verwijderen?",
+	"field.entries.empty": "Nog geen items",
+
 	"field.files.empty": "Nog geen bestanden geselecteerd",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Verander positie",
 
 	"files": "Bestanden",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Nog geen bestanden",
 
 	"filter": "Filter",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "Geen geldige licentie",
 	"license.status.missing.label": "Activeer je licentie",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Beheer je licenties",
 	"license.purchased": "Gekocht",
 	"license.success": "Bedankt dat je Kirby ondersteunt",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Deze pagina is alleen bereikbaar via URL",
 
 	"pages": "Pagina’s",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Nog geen pagina's",
 	"pages.status.draft": "Concepten",
 	"pages.status.listed": "Gepubliceerd",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Kopieer informatie",
 	"system.info.copied": "Systeem informatie gekopieerd",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "De content map lijkt zichtbaar te zijn",
 	"system.issues.eol.kirby": "De geïnstalleerde Kirby versie is niet meer actueel en zal geen verdere beveiligingsupdates meer ontvangen.",
 	"system.issues.eol.plugin": "De geïnstalleerde versie van plugin { plugin } is niet meer actueel en zal geen verdere beveiligingsupdates meer ontvangen.",
@@ -665,7 +679,9 @@
 	"system.issues.git": "De .git map lijkt zichtbaar te zijn",
 	"system.issues.https": "We raden HTTPS aan voor al je sites",
 	"system.issues.kirby": "De kirby map lijkt zichtbaar te zijn",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "De site map lijkt zichtbaar te zijn",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "De installatie is mogelijk getroffen door de volgende kwetsbaarheid ({ severity } ernst): { description }",
 	"system.issues.vulnerability.plugin": "De installatie is mogelijk getroffen door de volgende kwetsbaarheid in plugin { plugin } ({ severity } ernst): { description }",
 	"system.updateStatus": "Update status",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Taal veranderen",
 	"user.changeName": "Gebruiker hernoemen",
 	"user.changePassword": "Wachtwoord wijzigen",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nieuw wachtwoord",
 	"user.changePassword.new.confirm": "Bevestig het nieuwe wachtwoord...",
 	"user.changeRole": "Verander rol",

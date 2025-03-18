@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "There's an error on the \"{field}\" field in row {index}",
+
 	"error.email.preset.notFound": "Nimellä \"{name}\" ja kyseisellä verkkotunnuksella ei löydy sähköpostiosoitetta",
 
 	"error.field.converter.invalid": "Muunnin \"{converter}\" ei kelpaa",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "Nimi ei voi olla tyhjä",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Tiedosto nimeltä \"{filename}\" on jo olemassa",
 	"error.file.extension.forbidden": "Tiedostopääte \"{extension}\" ei ole sallittu",
 	"error.file.extension.invalid": "Pääte {extension} ei kelpaa",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Sivua \"{slug}\" ei voi poistaa",
 	"error.page.delete.confirm": "Anna vahvistuksena sivun nimi",
 	"error.page.delete.hasChildren": "Sivu sisältää alasivuja eikä sitä voida poistaa",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Sinulla ei ole oikeutta poistaa sivua \"{slug}\"",
 	"error.page.draft.duplicate": "Sivuluonnos URL-liitteellä \"{slug}\" on jo olemassa",
 	"error.page.duplicate": "Sivu URL-liitteellä \"{slug}\" on jo olemassa",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Videon URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.entries.empty": "Rivejä ei ole vielä lisätty",
+
 	"field.files.empty": "Tiedostoja ei ole vielä valittu",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Muuta järjestyspaikkaa",
 
 	"files": "Tiedostot",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Tiedostoja ei ole vielä lisätty",
 
 	"filter": "Filter",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Hallinnoi lisenssejäsi",
 	"license.purchased": "Purchased",
 	"license.success": "Kiitos kun tuet Kirbyä",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Sivulle pääsee vain URL:n kautta",
 
 	"pages": "Sivut",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Sivuja ei ole vielä lisätty",
 	"pages.status.draft": "Luonnokset",
 	"pages.status.listed": "Julkaistut",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Content-kansio näyttäisi olevan julkinen",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -665,7 +679,9 @@
 	"system.issues.git": ".git-kansio näyttäisi olevan julkinen",
 	"system.issues.https": "Suosittelemme HTTPS:n käyttöä kaikilla sivustoillasi",
 	"system.issues.kirby": "Kirby-kansio näyttäisi olevan julkinen",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "Site-kansio näyttäisi olevan julkinen",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Asennuksesi voi olla altis seuraaville haavoittuvuuksille ({ severity } vakavuus): { description }",
 	"system.issues.vulnerability.plugin": "Asennuksesi käyttämä liitännäinen { plugin } voi olla altis haavoittuvuudelle ({ severity } vakavuus): { description }",
 	"system.updateStatus": "Päivitysten tilanne",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Vaihda kieli",
 	"user.changeName": "Nimeä uudelleen",
 	"user.changePassword": "Vaihda salasana",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Uusi salasana",
 	"user.changePassword.new.confirm": "Vahvista uusi salasana...",
 	"user.changeRole": "Muuta käyttäjätasoa",

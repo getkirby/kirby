@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "Ошибка в поле \"{field}\" в строке {index}",
+
 	"error.email.preset.notFound": "Email-шаблон \"{name}\" не найден",
 
 	"error.field.converter.invalid": "Неверный конвертер \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Поле \"{ name }\": тип поля \"{ type }\" не существует",
 
 	"error.file.changeName.empty": "Название не может быть пустым",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Шаблон для файла \"{id}\" не может быть изменен на \"{template}\" (допускается: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "У вас нет права изменять шаблон для файла \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Файл с названием \"{filename}\" уже есть",
 	"error.file.extension.forbidden": "Расширение файла \"{extension}\" неразрешено",
 	"error.file.extension.invalid": "Неверное разрешение:  {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Невозможно удалить страницу \"{slug}\"",
 	"error.page.delete.confirm": "Впишите название страницы чтобы подтвердить",
 	"error.page.delete.hasChildren": "У страницы есть внутренние страницы, поэтому ее невозможно удалить",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "У вас нет права удалить \"{slug}\"",
 	"error.page.draft.duplicate": "Черновик страницы с URL \"{slug}\" уже есть",
 	"error.page.duplicate": "Страница с URL \"{slug}\" уже есть",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Ссылка на видео",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Вы действительно хотите удалить все значения?",
+	"field.entries.empty": "Записей нет",
+
 	"field.files.empty": "Файлы не выбраны",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Изменить позицию",
 
 	"files": "Файлы",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Еще нет файлов",
 
 	"filter": "Фильтр",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "Нет действительной лицензии",
 	"license.status.missing.label": "Пожалуйста, активируйте Вашу лицензию",
 	"license.status.unknown.info": "Статус лицензии неизвестен",
-	"license.status.unknown.label": "Неизвестная лицензия",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Управление лицензиями",
 	"license.purchased": "Приобретено",
 	"license.success": "Спасибо за поддержку Kirby",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Страница доступна только по URL",
 
 	"pages": "Страницы",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Страниц нет",
 	"pages.status.draft": "Черновики",
 	"pages.status.listed": "Опубликовано",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Похоже, к папке content есть несанкционированный доступ",
 	"system.issues.eol.kirby": "Срок службы установленной вами версии Kirby истек, и она больше не будет получать обновления для системы безопасности",
 	"system.issues.eol.plugin": "Срок службы установленной вами версии плагина { plugin } истек, и он не будет получать дальнейших обновлений для системы безопасности",
@@ -665,7 +679,9 @@
 	"system.issues.git": "Похоже, к папке .git есть несанкционированный доступ",
 	"system.issues.https": "Рекомендуется использовать HTTPS на всех сайтах",
 	"system.issues.kirby": "Похоже, к папке kirby есть несанкционированный доступ",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "Похоже, к папке site есть несанкционированный доступ",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Обнаружена уязвимость уровня \"{ severity }\": { description }",
 	"system.issues.vulnerability.plugin": "В плагине { plugin } обнаружена уязвимость уровня \"{ severity }\": { description }",
 	"system.updateStatus": "Обновить статус",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Изменить язык",
 	"user.changeName": "Переименовать пользователя",
 	"user.changePassword": "Изменить пароль",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Новый пароль",
 	"user.changePassword.new.confirm": "Подтвердить новый пароль…",
 	"user.changeRole": "Изменить роль",
