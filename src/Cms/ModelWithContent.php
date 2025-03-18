@@ -512,7 +512,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			return $this;
 		}
 
-		$this->changeStorage(MemoryStorage::class);
+		$this->changeStorage(MemoryStorage::class, copy: true);
 		$this->version()->save($content, 'default');
 
 		return $this;
@@ -529,7 +529,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			return $this;
 		}
 
-		$this->changeStorage(MemoryStorage::class);
+		$this->changeStorage(MemoryStorage::class, copy: true);
 
 		Translations::create(
 			model: $this,
