@@ -441,6 +441,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Parsley\\Schema\\Plain' => __DIR__ . '/../..' . '/src/Parsley/Schema/Plain.php',
         'Kirby\\Plugin\\Asset' => __DIR__ . '/../..' . '/src/Plugin/Asset.php',
         'Kirby\\Plugin\\Assets' => __DIR__ . '/../..' . '/src/Plugin/Assets.php',
+        'Kirby\\Plugin\\Autoloader' => __DIR__ . '/../..' . '/src/Plugin/Autoloader.php',
         'Kirby\\Plugin\\License' => __DIR__ . '/../..' . '/src/Plugin/License.php',
         'Kirby\\Plugin\\LicenseStatus' => __DIR__ . '/../..' . '/src/Plugin/LicenseStatus.php',
         'Kirby\\Plugin\\Plugin' => __DIR__ . '/../..' . '/src/Plugin/Plugin.php',
