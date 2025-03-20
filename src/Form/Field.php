@@ -259,7 +259,13 @@ class Field extends Component
 
 		if (is_string($field) && class_exists($field) === true) {
 			$attrs['siblings'] = $siblings;
+
+			if (method_exists($field, 'factory') === true) {
+				return $field::factory($attrs);
+			}
+
 			return new $field($attrs);
+
 		}
 
 		return new static($type, $attrs, $siblings);

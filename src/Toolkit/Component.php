@@ -7,6 +7,7 @@ use ArgumentCountError;
 use Closure;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use TypeError;
 
@@ -211,13 +212,15 @@ class Component
 	 */
 	public static function load(string $type): array
 	{
-		$definition = static::$types[$type];
+		$definition =
+			static::$types[$type] ??
+			static::$types['__legacy-' . $type];
 
 		// load definitions from string
 		if (is_string($definition) === true) {
 			if (is_file($definition) !== true) {
-				throw new Exception(
-					'Component definition ' . $definition . ' does not exist'
+				throw new NotFoundException(
+					message: 'Component definition ' . $definition . ' does not exist'
 				);
 			}
 
