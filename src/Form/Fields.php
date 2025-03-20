@@ -251,7 +251,7 @@ class Fields extends Collection
 				$value = $field->toStoredValue($defaults);
 			}
 
-			$store[$name] = $value ??null;
+			$store[$name] = $value ?? null;
 		}
 
 		return $store;
