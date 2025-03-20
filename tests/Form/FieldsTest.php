@@ -190,6 +190,24 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testFillWithClosureValues(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'value' => 'A'
+			],
+		], $this->model);
+
+		$fields->fill([
+			'a' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated'
+		], $fields->toFormValues());
+	}
+
 	public function testFind(): void
 	{
 		Field::$types['test'] = [
@@ -305,6 +323,24 @@ class FieldsTest extends TestCase
 			'b' => 'B updated',
 			'd' => 'D'
 		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithClosureValues(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'value' => 'A'
+			],
+		], $this->model);
+
+		$fields->submit([
+			'a' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated'
+		], $fields->toFormValues());
 	}
 
 	public function testToArray(): void
