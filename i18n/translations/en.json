@@ -449,7 +449,10 @@
 	"language.variables.empty": "No translations yet",
 
 	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.entries": "Entries",
+	"language.variable.entries.help": "This strings will be used for translations count. Each entry corresponds to a different case counter. For example: 0, 1, 2 and more",
 	"language.variable.key": "Key",
+	"language.variable.multiple": "Multiple",
 	"language.variable.notFound": "The variable could not be found",
 	"language.variable.value": "Value",
 
