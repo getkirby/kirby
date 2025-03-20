@@ -270,6 +270,12 @@ class Field extends Component
 	 */
 	public function fill(mixed $value): static
 	{
+		// remember the current state to restore it afterwards
+		$attrs   = $this->attrs;
+		$methods = $this->methods;
+		$options = $this->options;
+		$type    = $this->type;
+
 		// overwrite the attribute value
 		$this->value = $this->attrs['value'] = $value;
 
@@ -277,10 +283,16 @@ class Field extends Component
 		$this->applyProp('value', $this->options['props']['value'] ?? $value);
 
 		// reevaluate the computed props
-		$this->applyComputed($this->options['computed']);
+		$this->applyComputed($this->options['computed'] ?? []);
 
 		// reset the errors cache
 		$this->errors = null;
+
+		// restore the original state
+		$this->attrs   = $attrs;
+		$this->methods = $methods;
+		$this->options = $options;
+		$this->type    = $type;
 
 		return $this;
 	}
@@ -381,6 +393,15 @@ class Field extends Component
 	}
 
 	/**
+	 * Submits a new value for the field
+	 * @since 5.0.0
+	 */
+	public function submit(mixed $value = null): static
+	{
+		return $this->fill($value);
+	}
+
+	/**
 	 * Converts the field to a plain array
 	 */
 	public function toArray(): array
@@ -401,7 +422,8 @@ class Field extends Component
 	}
 
 	/**
-	 * Returns the value of the field in a format to be stored by our storage classes
+	 * Returns the value of the field in a format
+	 * to be stored by our storage classes
 	 */
 	public function toStoredValue(bool $default = false): mixed
 	{

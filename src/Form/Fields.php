@@ -3,7 +3,9 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Form\Field\UnknownField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
@@ -21,6 +23,8 @@ use Kirby\Toolkit\Str;
  */
 class Fields extends Collection
 {
+	protected Language $language;
+
 	/**
 	 * Cache for the errors array
 	 *
@@ -30,11 +34,14 @@ class Fields extends Collection
 
 	public function __construct(
 		array $fields = [],
-		protected ModelWithContent|null $model = null
+		protected ModelWithContent|null $model = null,
+		Language|null $language = null
 	) {
 		foreach ($fields as $name => $field) {
 			$this->__set($name, $field);
 		}
+
+		$this->language = $language ?? Language::ensure('current');
 	}
 
 	/**
@@ -57,6 +64,26 @@ class Fields extends Collection
 
 		// reset the errors cache if new fields are added
 		$this->errors = null;
+	}
+
+	/**
+	 * Goes through the given input and appends hidden fields
+	 * for each key that is not already present in the collection.
+	 * This is useful for forms that are used to update models
+	 * with additional fields that are not part of the original
+	 * blueprint.
+	 *
+	 * @since 5.0.0
+	 */
+	public function appendUnknownFields(array $input): static
+	{
+		foreach ($input as $name => $value) {
+			if ($this->get($name) === null) {
+				$this->data[$name] = new UnknownField(name: $name);
+			}
+		}
+
+		return $this;
 	}
 
 	/**
@@ -98,7 +125,21 @@ class Fields extends Collection
 	public function fill(array $input): static
 	{
 		foreach ($input as $name => $value) {
-			$this->get($name)?->fill($value);
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-fillable fields
+			if ($field->isFillable() === false) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->value());
+			}
+
+			$field->fill($value);
 		}
 
 		// reset the errors cache
@@ -160,6 +201,63 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Returns the language of the fields
+	 * @since 5.0.0
+	 */
+	public function language(): Language
+	{
+		return $this->language;
+	}
+
+	/**
+	 * Removes all unknown fields from the collection.
+	 * This is useful if you want to be strict about
+	 * the submitted or filled in values.
+	 *
+	 * @since 5.0.0
+	 */
+	public function removeUnknownFields(): static
+	{
+		$this->data = array_filter($this->data, fn ($field) => $field instanceof UnknownField === false);
+		return $this;
+	}
+
+	/**
+	 * Sets the value for each field with a matching key in the input array
+	 * but only if the field is not disabled
+	 * @since 5.0.0
+	 */
+	public function submit(array $input): static
+	{
+		$language = $this->language();
+
+		foreach ($input as $name => $value) {
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-submittable fields
+			if ($field->isSubmittable($language) === false) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->value());
+			}
+
+			// submit the value to the field
+			// the field class might override this method
+			// to handle submitted values differently
+			$field->submit($value);
+		}
+
+		// reset the errors cache
+		$this->errors = null;
+		return $this;
+	}
+
+	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
@@ -171,6 +269,7 @@ class Fields extends Collection
 
 	/**
 	 * Returns an array with the form value of each field
+	 * (e.g. used as data for Panel Vue components)
 	 */
 	public function toFormValues(bool $defaults = false): array
 	{
@@ -179,9 +278,26 @@ class Fields extends Collection
 
 	/**
 	 * Returns an array with the stored value of each field
+	 * (e.g. used for saving to content storage)
 	 */
 	public function toStoredValues(bool $defaults = false): array
 	{
-		return $this->toArray(fn ($field) => $field->toStoredValue($defaults));
+		$store    = [];
+		$language = $this->language();
+
+		foreach ($this->data as $name => $field) {
+			// don't add non-saveable fields to the store
+			if ($field->isSaveable() === false) {
+				continue;
+			}
+
+			if ($field->isTranslatable($language) === true) {
+				$value = $field->toStoredValue($defaults);
+			}
+
+			$store[$name] = $value ?? null;
+		}
+
+		return $store;
 	}
 }

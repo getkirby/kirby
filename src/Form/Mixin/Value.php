@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Cms\Language;
+
 /**
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -48,6 +50,42 @@ trait Value
 	}
 
 	/**
+	 * Checks if the field is fillable. "Fillable" means that
+	 * the field can receive a value for its initial state
+	 * when the field is being rendered in the panel.
+	 */
+	public function isFillable(): bool
+	{
+		return $this->isSaveable() === true;
+	}
+
+	/**
+	 * A field might be saveable, but can still not be submitted
+	 * because it is disabled, not translatable into the given
+	 * language or not active due to a `when` rule.
+	 */
+	public function isSubmittable(Language $language): bool
+	{
+		if ($this->isSaveable() === false) {
+			return false;
+		}
+
+		if ($this->isDisabled() === true) {
+			return false;
+		}
+
+		if ($this->isTranslatable($language) === false) {
+			return false;
+		}
+
+		if ($this->isActive() === false) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Checks if the field needs a value before being saved;
 	 * this is the case if all of the following requirements are met:
 	 * - The field is saveable
@@ -71,7 +109,7 @@ trait Value
 
 	/**
 	 * Returns the value of the field in a format to be used in forms
-	 * @alias for `::value()`
+	 * (e.g. used as data for Panel Vue components)
 	 */
 	public function toFormValue(bool $default = false): mixed
 	{
@@ -87,7 +125,8 @@ trait Value
 	}
 
 	/**
-	 * Returns the value of the field in a format to be stored by our storage classes
+	 * Returns the value of the field in a format
+	 * to be stored by our storage classes
 	 */
 	public function toStoredValue(bool $default = false): mixed
 	{
@@ -98,7 +137,8 @@ trait Value
 	 * Returns the value of the field if saveable
 	 * otherwise it returns null
 	 *
-	 * @alias for `::toFormValue()` might get deprecated or reused later
+	 * @see `self::toFormValue()`
+	 * @todo might get deprecated or reused later
 	 */
 	public function value(bool $default = false): mixed
 	{
