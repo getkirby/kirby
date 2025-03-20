@@ -134,6 +134,11 @@ class Fields extends Collection
 				continue;
 			}
 
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->value());
+			}
+
 			$field->fill($value);
 		}
 
@@ -234,6 +239,11 @@ class Fields extends Collection
 			// don't change the value of non-submittable fields
 			if ($field->isSubmittable($language) === false) {
 				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->value());
 			}
 
 			// submit the value to the field
