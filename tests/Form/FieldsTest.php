@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Cms\TestCase;
+use Kirby\Form\Field\UnknownField;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Fields::class)]
@@ -16,6 +17,24 @@ class FieldsTest extends TestCase
 	{
 		parent::setUp();
 		$this->model = new Page(['slug' => 'test']);
+	}
+
+	public function testAppendUnknownFields(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type' => 'text',
+			],
+		], $this->model);
+
+		$fields->appendUnknownFields([
+			'a' => 'A',
+			'b' => 'B',
+		]);
+
+		$this->assertCount(2, $fields);
+		$this->assertInstanceOf(Field::class, $fields->get('a'));
+		$this->assertInstanceOf(UnknownField::class, $fields->get('b'));
 	}
 
 	public function testConstruct(): void
@@ -220,6 +239,25 @@ class FieldsTest extends TestCase
 		$fields = new Fields([], language: $language);
 		$this->assertSame('de', $fields->language()->code());
 		$this->assertFalse($fields->language()->isDefault());
+	}
+
+	public function testRemoveUnknownFields(): void
+	{
+		$fields = new Fields([
+			'a' => new Field('text', ['name' => 'a']),
+			'b' => new UnknownField(name: 'b'),
+		], $this->model);
+
+		$this->assertCount(2, $fields);
+
+		$this->assertInstanceOf(Field::class, $fields->get('a'));
+		$this->assertInstanceOf(UnknownField::class, $fields->get('b'));
+
+		$fields->removeUnknownFields();
+
+		$this->assertCount(1, $fields);
+		$this->assertInstanceOf(Field::class, $fields->get('a'));
+		$this->assertNull($fields->get('b'));
 	}
 
 	public function testSubmit(): void

@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Closure;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Form\Field\UnknownField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
@@ -63,6 +64,26 @@ class Fields extends Collection
 
 		// reset the errors cache if new fields are added
 		$this->errors = null;
+	}
+
+	/**
+	 * Goes through the given input and appends hidden fields
+	 * for each key that is not already present in the collection.
+	 * This is useful for forms that are used to update models
+	 * with additional fields that are not part of the original
+	 * blueprint.
+	 *
+	 * @since 5.0.0
+	 */
+	public function appendUnknownFields(array $input): static
+	{
+		foreach ($input as $name => $value) {
+			if ($this->get($name) === null) {
+				$this->data[$name] = new UnknownField(name: $name);
+			}
+		}
+
+		return $this;
 	}
 
 	/**
@@ -181,6 +202,19 @@ class Fields extends Collection
 	public function language(): Language
 	{
 		return $this->language;
+	}
+
+	/**
+	 * Removes all unknown fields from the collection.
+	 * This is useful if you want to be strict about
+	 * the submitted or filled in values.
+	 *
+	 * @since 5.0.0
+	 */
+	public function removeUnknownFields(): static
+	{
+		$this->data = array_filter($this->data, fn ($field) => $field instanceof UnknownField === false);
+		return $this;
 	}
 
 	/**
