@@ -121,27 +121,27 @@ class Field implements Stringable
 	 * templates without the risk of XSS attacks
 	 *
 	 * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
-	 * @return $this
 	 */
 	public function escape(string $context = 'html'): static
 	{
-		$this->value = Str::esc($this->value ?? '', $context);
-		return $this;
+		return $this->value(fn ($value) => Str::esc($value ?? '', $context));
 	}
 
 	/**
 	 * Creates an excerpt of the field value without html
 	 * or any other formatting.
-	 * @return $this
 	 */
 	public function excerpt(
 		int $chars = 0,
 		bool $strip = true,
 		string $rep = ' …'
 	): static {
-		$value       = $this->kirbytext()->value();
-		$this->value = Str::excerpt($value, $chars, $strip, $rep);
-		return $this;
+		return $this->value(Str::excerpt(
+			string: $this->kirbytext()->value(),
+			chars:  $chars,
+			strip:  $strip,
+			rep:    $rep
+		));
 	}
 
 	/**
@@ -154,12 +154,10 @@ class Field implements Stringable
 
 	/**
 	 * Converts the field content to valid HTML
-	 * @return $this
 	 */
 	public function html(): static
 	{
-		$this->value = Html::encode($this->value);
-		return $this;
+		return $this->value(fn ($value) => Html::encode($value));
 	}
 
 	/**
@@ -167,7 +165,6 @@ class Field implements Stringable
 	 * it can be safely placed inside of other inline elements
 	 * without the risk of breaking the HTML structure.
 	 * @since 3.3.0
-	 * @return $this
 	 */
 	public function inline(): static
 	{
@@ -176,8 +173,9 @@ class Field implements Stringable
 		// Obsolete elements, script tags, image maps and form elements have
 		// been excluded for safety reasons and as they are most likely not
 		// needed in most cases.
-		$this->value = strip_tags($this->value ?? '', Html::$inlineList);
-		return $this;
+		return $this->value(
+			fn ($value) => strip_tags($value ?? '', Html::$inlineList)
+		);
 	}
 
 	/**
@@ -249,44 +247,45 @@ class Field implements Stringable
 
 	/**
 	 * Parses all KirbyTags without also parsing Markdown
-	 * @return $this
 	 */
 	public function kirbytags(): static
 	{
-		$this->value = $this->kirby()->kirbytags(
-			text: $this->value,
-			data: [
-				'parent' => $this->parent(),
-				'field'  => $this
-			]
-		);
-
-		return $this;
+		return $this->value(function ($value) {
+			// Do not refactor as arrow function;
+			// it needs to access the cloned field object as $this
+			return $this->kirby()->kirbytags(
+				text: $value,
+				data: [
+					'parent' => $this->parent(),
+					'field'  => $this
+				]
+			);
+		});
 	}
 
 	/**
 	 * Converts the field content from Markdown/Kirbytext to valid HTML
-	 * @return $this
 	 */
 	public function kirbytext(array $options = []): static
 	{
-		$this->value = $this->kirby()->kirbytext(
-			text:    $this->value,
-			options: [
-				...$options,
-				'parent' => $this->parent(),
-				'field'  => $this
-			]
-		);
-
-		return $this;
+		return $this->value(function ($value) use ($options) {
+			// Do not refactor as arrow function;
+			// it needs to access the cloned field object as $this
+			return $this->kirby()->kirbytext(
+				text:    $value,
+				options: [
+					...$options,
+					'parent' => $this->parent(),
+					'field'  => $this
+				]
+			);
+		});
 	}
 
 	/**
 	 * Converts the field content from inline Markdown/Kirbytext
 	 * to valid HTML
 	 * @since 3.1.0
-	 * @return $this
 	 */
 	public function kirbytextInline(array $options = []): static
 	{
@@ -305,25 +304,20 @@ class Field implements Stringable
 
 	/**
 	 * Converts the field content to lowercase
-	 * @return $this
 	 */
 	public function lower(): static
 	{
-		$this->value = Str::lower($this->value);
-		return $this;
+		return $this->value(fn ($value) => Str::lower($value));
 	}
 
 	/**
 	 * Converts markdown to valid HTML
-	 * @return $this
 	 */
 	public function markdown(array $options = []): static
 	{
-		$this->value = $this->kirby()->markdown(
-			text:    $this->value,
-			options: $options
+		return $this->value(
+			fn ($value) => $this->kirby()->markdown($value, $options)
 		);
-		return $this;
 	}
 
 	/**
@@ -337,12 +331,10 @@ class Field implements Stringable
 	/**
 	 * Converts all line breaks in the field content to `<br>` tags.
 	 * @since 3.3.0
-	 * @return $this
 	 */
 	public function nl2br(): static
 	{
-		$this->value = nl2br($this->value ?? '', false);
-		return $this;
+		return $this->value(fn ($value) => nl2br($value ?? '', false));
 	}
 
 	/**
@@ -360,9 +352,7 @@ class Field implements Stringable
 			return $fallback;
 		}
 
-		$field = clone $this;
-		$field->value = $fallback;
-		return $field;
+		return $this->value($fallback);
 	}
 
 	/**
@@ -381,13 +371,13 @@ class Field implements Stringable
 	 * This method is still experimental! You can use
 	 * it to solve potential problems with permalinks
 	 * already, but it might change in the future.
-	 *
-	 * @return $this
 	 */
 	public function permalinksToUrls(): static
 	{
-		if ($this->isNotEmpty() === true) {
-			$dom        = new Dom($this->value);
+		$field = clone $this;
+
+		if ($field->isNotEmpty() === true) {
+			$dom        = new Dom($field->value);
 			$attributes = ['href', 'src'];
 			$elements   = $dom->query('//*[' . implode(' | ', A::map($attributes, fn ($attribute) => '@' . $attribute)) . ']');
 
@@ -405,10 +395,10 @@ class Field implements Stringable
 				}
 			}
 
-			$this->value = $dom->toString();
+			$field->value = $dom->toString();
 		}
 
-		return $this;
+		return $field;
 	}
 
 	/**
@@ -432,7 +422,6 @@ class Field implements Stringable
 	 * It parses any queries found in the field value.
 	 *
 	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced (`null` to keep the original token)
-	 * @return $this
 	 */
 	public function replace(
 		array $data = [],
@@ -441,20 +430,23 @@ class Field implements Stringable
 		if ($parent = $this->parent()) {
 			// Never pass `null` as the $template
 			// to avoid the fallback to the model ID
-			$this->value = $parent->toString(
-				$this->value ?? '',
+			return $this->value(fn ($value) => $parent->toString(
+				$value ?? '',
 				$data,
 				$fallback
-			);
-		} else {
-			$this->value = Str::template($this->value, array_replace([
-				'kirby' => $app = $this->kirby(),
-				'site'  => $app->site(),
-				'page'  => $app->page()
-			], $data), ['fallback' => $fallback]);
+			));
 		}
 
-		return $this;
+		return $this->value(fn ($value) => Str::template(
+			$value,
+			[
+				'kirby' => $app = $this->kirby(),
+				'site'  => $app->site(),
+				'page'  => $app->page(),
+				...$data
+			],
+			['fallback' => $fallback]
+		));
 	}
 
 	/**
@@ -463,34 +455,30 @@ class Field implements Stringable
 	 *
 	 * @param int $length The number of characters in the string
 	 * @param string $appendix An optional replacement for the missing rest
-	 * @return $this
 	 */
 	public function short(
 		int $length,
 		string $appendix = '…'
 	): static {
-		$this->value = Str::short($this->value, $length, $appendix);
-		return $this;
+		return $this->value(
+			fn ($value) => Str::short($value, $length, $appendix)
+		);
 	}
 
 	/**
 	 * Converts the field content to a slug
-	 * @return $this
 	 */
 	public function slug(): static
 	{
-		$this->value = Str::slug($this->value);
-		return $this;
+		return $this->value(fn ($value) => Str::slug($value));
 	}
 
 	/**
 	 * Applies SmartyPants to the field
-	 * @return $this
 	 */
 	public function smartypants(): static
 	{
-		$this->value = $this->kirby()->smartypants($this->value);
-		return $this;
+		return $this->value(fn ($value) => $this->kirby()->smartypants($value));
 	}
 
 	/**
@@ -752,9 +740,7 @@ class Field implements Stringable
 				$message .= ' on parent "' . $parent->id() . '"';
 			}
 
-			throw new InvalidArgumentException(
-				message: $message
-			);
+			throw new InvalidArgumentException(message: $message);
 		}
 	}
 
@@ -801,12 +787,10 @@ class Field implements Stringable
 
 	/**
 	 * Converts the field content to uppercase
-	 * @return $this
 	 */
 	public function upper(): static
 	{
-		$this->value = Str::upper($this->value);
-		return $this;
+		return $this->value(fn ($value) => Str::upper($value));
 	}
 
 	/**
@@ -820,11 +804,12 @@ class Field implements Stringable
 			return $this->value;
 		}
 
+		$clone = clone $this;
+
 		if ($value instanceof Closure) {
-			$value = $value->call($this, $this->value);
+			$value = $value->call($clone, $clone->value);
 		}
 
-		$clone = clone $this;
 		$clone->value = (string)$value;
 
 		return $clone;
@@ -833,12 +818,10 @@ class Field implements Stringable
 	/**
 	 * Avoids typographical widows in strings by replacing
 	 * the last space with `&nbsp;`
-	 * @return $this
 	 */
 	public function widont(): static
 	{
-		$this->value = Str::widont($this->value);
-		return $this;
+		return $this->value(fn ($value) => Str::widont($value));
 	}
 
 	/**
@@ -846,17 +829,16 @@ class Field implements Stringable
 	 */
 	public function words(): int
 	{
-		return str_word_count(strip_tags($this->value ?? ''));
+		$text = strip_tags($this->value ?? '');
+		return str_word_count($text);
 	}
 
 	/**
 	 * Converts the field content to valid XML
-	 * @return $this
 	 */
 	public function xml(): static
 	{
-		$this->value = Xml::encode($this->value);
-		return $this;
+		return $this->value(fn ($value) => Xml::encode($value));
 	}
 
 	/**
