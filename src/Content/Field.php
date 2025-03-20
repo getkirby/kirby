@@ -516,9 +516,7 @@ class Field implements Stringable
 				$message .= ' on parent "' . $parent->title() . '"';
 			}
 
-			throw new InvalidArgumentException(
-				message: $message
-			);
+			throw new InvalidArgumentException(message: $message);
 		}
 	}
 
@@ -560,11 +558,10 @@ class Field implements Stringable
 			return null;
 		}
 
-		if (empty($this->value) === false) {
-			$time = $this->toTimestamp();
-		} else {
-			$time = strtotime($fallback);
-		}
+		$time = match (empty($this->value)) {
+			false => $this->toTimestamp(),
+			true  => strtotime($fallback),
+		};
 
 		return Str::date($time, $format);
 	}
@@ -577,9 +574,12 @@ class Field implements Stringable
 	public function toEntries(): Collection
 	{
 		$entries = new Collection(parent: $this->parent());
+
 		foreach ($this->yaml() as $index => $entry) {
-			$entries->append(new Field($this->parent(), $index, $entry));
+			$field = new Field($this->parent(), $index, $entry);
+			$entries->append($field);
 		}
+
 		return $entries;
 	}
 
@@ -729,10 +729,11 @@ class Field implements Stringable
 	public function toStructure(): Structure
 	{
 		try {
-			return Structure::factory(
-				Data::decode($this->value, 'yaml'),
-				['parent' => $this->parent(), 'field' => $this]
-			);
+			$items = Data::decode($this->value, 'yaml');
+			return Structure::factory($items, [
+				'parent' => $this->parent(),
+				'field'  => $this
+			]);
 		} catch (Throwable) {
 			$message = 'Invalid structure data for "' . $this->key() . '" field';
 
