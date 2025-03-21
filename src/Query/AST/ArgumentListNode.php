@@ -23,11 +23,14 @@ class ArgumentListNode extends Node
 
 	public function resolve(Visitor $visitor): array|string
 	{
+		// Resolve each argument
 		$arguments = array_map(
 			fn ($argument) => $argument->resolve($visitor),
 			$this->arguments
 		);
 
+		// Keep as array or convert to string
+		// depending on the visitor type
 		return $visitor->argumentList($arguments);
 	}
 }

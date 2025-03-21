@@ -69,7 +69,7 @@ class Runtime
 		array $functions = [],
 		false|null $fallback = null
 	): mixed {
-		// what looks like a variable might actually be a global function
+		// What looks like a variable might actually be a global function
 		// but if there is a variable with the same name,
 		// the variable takes precedence
 		if (isset($context[$name]) === true) {
@@ -84,7 +84,7 @@ class Runtime
 			return $functions[$name]();
 		}
 
-		// alias to access the global context
+		// Alias to access the global context
 		if ($name === 'this') {
 			return $context;
 		}

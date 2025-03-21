@@ -104,30 +104,30 @@ class Transpiled extends Runner
 	 */
 	protected function resolver(string $query): Closure
 	{
-		// load closure from memory
+		// Load closure from memory
 		if (isset($this->cache[$query]) === true) {
 			return $this->cache[$query];
 		}
 
-		// load closure from file
+		// Load closure from file
 		$file = $this->file($query);
 
 		if (file_exists($file) === true) {
 			return $this->cache[$query] = include $file;
 		}
 
-		// parse query and generate closure
+		// Parse query and generate closure
 		$parser = new Parser($query);
 		$ast    = $parser->parse();
 
-		// resolve AST to code representations
+		// Resolve AST to code representations
 		$visitor = new Transpiler($this->functions);
-		$code     = $this->representation($visitor, $query, $ast);
+		$code    = $this->representation($visitor, $query, $ast);
 
-		// cache in file
+		// Cache in file
 		F::write($file, $code);
 
-		// load from file to create memory entry
+		// Load from file to create memory entry
 		return $this->cache[$query] = include $file;
 	}
 
@@ -140,7 +140,7 @@ class Transpiled extends Runner
 	 */
 	public function run(string $query, array $context = []): mixed
 	{
-		// try resolving query directly from data context or functions
+		// Try resolving query directly from data context or functions
 		$entry = Runtime::get($query, $context, $this->functions, false);
 
 		if ($entry !== false) {

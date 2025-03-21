@@ -22,7 +22,9 @@ class GlobalFunctionNode extends Node
 
 	public function resolve(Visitor $visitor): mixed
 	{
-		$arguments = $this->arguments->resolve($visitor);
-		return $visitor->function($this->name, $arguments);
+		return $visitor->function(
+			name:      $this->name,
+			arguments: $this->arguments->resolve($visitor)
+		);
 	}
 }

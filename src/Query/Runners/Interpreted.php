@@ -24,9 +24,9 @@ class Interpreted extends Runner
 	public static function for(Query $query): static
 	{
 		return new static(
-			functions: $query::$entries,
+			functions:   $query::$entries,
 			interceptor: $query->intercept(...),
-			cache: $query::$cache
+			cache:       $query::$cache
 		);
 	}
 
@@ -44,8 +44,8 @@ class Interpreted extends Runner
 
 		return $this->cache[$query] = function (array $binding) use ($self, $ast) {
 			$visitor = new Interpreter(
-				functions: $self->functions,
-				context: $binding,
+				functions:   $self->functions,
+				context:     $binding,
 				interceptor: $self->interceptor
 			);
 

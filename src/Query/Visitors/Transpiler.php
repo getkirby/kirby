@@ -64,7 +64,7 @@ class Transpiler extends Visitor
 		$visitor = new static($this->functions, $context);
 		$code    = $node->body->resolve($visitor);
 
-		// promote the nested visitor's uses and mappings to the current visitor
+		// Promote the nested visitor's uses and mappings to the current visitor
 		$this->uses     += $visitor->uses;
 		$this->mappings += $visitor->mappings;
 

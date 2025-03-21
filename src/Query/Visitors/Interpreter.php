@@ -50,11 +50,11 @@ class Interpreter extends Visitor
 				$params
 			);
 
-			// create new nested visitor with combined
+			// Create new nested visitor with combined
 			// data context for resolving the closure body
 			$visitor = new static(
-				functions: $self->functions,
-				context: [...$self->context, ...$arguments],
+				functions:   $self->functions,
+				context:     [...$self->context, ...$arguments],
 				interceptor: $self->interceptor
 			);
 

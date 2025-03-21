@@ -56,7 +56,7 @@ class Parser
 		if ($this->isAtEnd() === false) {
 			$this->previous = $this->current;
 			$this->tokens->next();
-			$this->current = $this->tokens->current();
+			$this->current  = $this->tokens->current();
 		}
 
 		return $this->previous;
@@ -191,7 +191,7 @@ class Parser
 	 */
 	private function expression(): Node
 	{
-		// top-level expression check is for coalescing
+		// Top-level expression check is for coalescing
 		return $this->coalesce();
 	}
 
@@ -287,10 +287,10 @@ class Parser
 			TokenType::T_OPEN_BRACKET
 		])) {
 			if ($token->is(TokenType::T_OPEN_BRACKET) === true) {
-				// for subscript notation, parse the inside as expression
+				// For subscript notation, parse the inside as expression…
 				$member = $this->expression();
 
-				// and ensure consuming the closing bracket
+				// …and ensure consuming the closing bracket
 				$this->consume(
 					TokenType::T_CLOSE_BRACKET,
 					'Expect subscript closing bracket'
@@ -322,10 +322,10 @@ class Parser
 	 */
 	public function parse(): Node
 	{
-		// start parsing chain
+		// Start parsing chain
 		$expression = $this->expression();
 
-		// ensure that we consumed all tokens
+		// Ensure that we consumed all tokens
 		if ($this->isAtEnd() === false) {
 			$this->consume(TokenType::T_EOF, 'Expect end of expression'); // @codeCoverageIgnore
 		}
@@ -364,8 +364,8 @@ class Parser
 			if ($token->is(TokenType::T_TERNARY_DEFAULT) === false) {
 				$true = $this->expression();
 				$this->consume(
-					TokenType::T_COLON,
-					'Expect ":" after true branch'
+					type:  TokenType::T_COLON,
+					error: 'Expect ":" after true branch'
 				);
 			}
 

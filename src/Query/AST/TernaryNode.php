@@ -26,9 +26,10 @@ class TernaryNode extends Node
 
 	public function resolve(Visitor $visitor): mixed
 	{
-		$condition = $this->condition->resolve($visitor);
-		$true      = $this->true?->resolve($visitor);
-		$false     = $this->false->resolve($visitor);
-		return $visitor->ternary($condition, $true, $false);
+		return $visitor->ternary(
+			condition: $this->condition->resolve($visitor),
+			true:      $this->true?->resolve($visitor),
+			false:     $this->false->resolve($visitor)
+		);
 	}
 }

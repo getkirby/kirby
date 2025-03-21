@@ -60,7 +60,7 @@ class Tokenizer
 		string $regex,
 		bool $caseInsensitive = false
 	): string|null {
-		// add delimiters and flags to the regex
+		// Add delimiters and flags to the regex
 		$regex = '/\G' . $regex . '/u';
 
 		if ($caseInsensitive === true) {
@@ -88,7 +88,7 @@ class Tokenizer
 	{
 		$char = $query[$current];
 
-		// single character tokens:
+		// Single character tokens:
 		$token = match ($char) {
 			'.'     => new Token(TokenType::T_DOT, '.'),
 			'('     => new Token(TokenType::T_OPEN_PAREN, '('),
@@ -104,7 +104,7 @@ class Tokenizer
 			return $token;
 		}
 
-		// two character tokens:
+		// Two character tokens:
 		// ??
 		if ($lex = static::match($query, $current, '\?\?')) {
 			return new Token(TokenType::T_COALESCE, $lex);
@@ -125,14 +125,14 @@ class Tokenizer
 			return new Token(TokenType::T_ARROW, $lex);
 		}
 
-		// make sure this check comes after the two above
+		// Make sure this check comes after the two above
 		// that check for '?' in the beginning
 		if ($char === '?') {
 			return new Token(TokenType::T_QUESTION_MARK, '?');
 		}
 
-		// multi character tokens:
-		// whitespace
+		// Multi character tokens:
+		// Whitespace
 		if ($lex = static::match($query, $current, '\s+')) {
 			return new Token(TokenType::T_WHITESPACE, $lex);
 		}
@@ -180,12 +180,12 @@ class Tokenizer
 			return new Token(TokenType::T_INTEGER, $lex, (int)$lex);
 		}
 
-		// identifier
+		// Identifier
 		if ($lex = static::match($query, $current, static::IDENTIFIER_REGEX)) {
 			return new Token(TokenType::T_IDENTIFIER, $lex);
 		}
 
-		// unknown token
+		// Unknown token
 		throw new Exception('Invalid character in query: ' . $query[$current]);
 	}
 
@@ -200,7 +200,7 @@ class Tokenizer
 		while ($current < $this->length) {
 			$token = static::token($this->query, $current);
 
-			// don't yield whitespace tokens (ignore them)
+			// Don't yield whitespace tokens (ignore them)
 			if ($token->type !== TokenType::T_WHITESPACE) {
 				yield $token;
 			}

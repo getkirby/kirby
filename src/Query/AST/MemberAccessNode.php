@@ -26,15 +26,11 @@ class MemberAccessNode extends Node
 
 	public function resolve(Visitor $visitor): mixed
 	{
-		$object    = $this->object->resolve($visitor);
-		$arguments = $this->arguments?->resolve($visitor);
-		$member    = $this->member->resolve($visitor);
-
 		return $visitor->memberAccess(
-			$object,
-			$member,
-			$arguments,
-			$this->nullSafe
+			object:    $this->object->resolve($visitor),
+			member:    $this->member->resolve($visitor),
+			arguments: $this->arguments?->resolve($visitor),
+			nullSafe:  $this->nullSafe
 		);
 	}
 }
