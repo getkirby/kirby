@@ -7,34 +7,24 @@ use Kirby\Query\AST\ClosureNode;
 use Kirby\Query\AST\CoalesceNode;
 use Kirby\Query\AST\VariableNode;
 use Kirby\Query\Visitors\Transpiler;
+use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\Visitors\Transpiler
- * @covers ::__construct
- */
+#[CoversClass(Transpiler::class)]
 class TranspilerTest extends TestCase
 {
-	/**
-	 * @covers ::argumentList
-	 */
 	public function testArgumentList(): void
 	{
 		$visitor = new Transpiler();
 		$this->assertSame('1, 2, 3', $visitor->argumentList([1, 2, 3]));
 	}
 
-	/**
-	 * @covers ::arrayList
-	 */
 	public function testArrayList(): void
 	{
 		$visitor = new Transpiler();
 		$this->assertSame('[1, 2, 3]', $visitor->arrayList([1, 2, 3]));
 	}
 
-	/**
-	 * @covers ::closure
-	 */
 	public function testClosure(): void
 	{
 		$visitor = new Transpiler();
@@ -52,9 +42,6 @@ class TranspilerTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::coalescence
-	 */
 	public function testCoalescence(): void
 	{
 		$visitor = new Transpiler();
@@ -62,9 +49,6 @@ class TranspilerTest extends TestCase
 		$this->assertSame('(NULL ?? 4)', $visitor->coalescence('NULL', '4'));
 	}
 
-	/**
-	 * @covers ::function
-	 */
 	public function testFunction(): void
 	{
 		$visitor = new Transpiler(
@@ -73,9 +57,6 @@ class TranspilerTest extends TestCase
 		$this->assertSame('$functions[\'foo\']()', $visitor->function('foo'));
 	}
 
-	/**
-	 * @covers ::function
-	 */
 	public function testFunctionInvalid(): void
 	{
 		$visitor = new Transpiler();
@@ -86,18 +67,12 @@ class TranspilerTest extends TestCase
 		$visitor->function('fox');
 	}
 
-	/**
-	 * @covers ::intercept
-	 */
 	public function testIntercept(): void
 	{
 		$visitor = new Transpiler();
 		$this->assertSame('($intercept(hello))', $visitor->intercept('hello'));
 	}
 
-	/**
-	 * @covers ::literal
-	 */
 	public function testLiteral(): void
 	{
 		$visitor = new Transpiler();
@@ -107,9 +82,6 @@ class TranspilerTest extends TestCase
 		$this->assertSame('NULL', $visitor->literal(null));
 	}
 
-	/**
-	 * @covers ::memberAccess
-	 */
 	public function testMemberAccess(): void
 	{
 		$visitor = new Transpiler();
@@ -120,17 +92,11 @@ class TranspilerTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::phpName
-	 */
 	public function testPhpName(): void
 	{
 		$this->assertSame('$_907060870', Transpiler::phpName('hello'));
 	}
 
-	/**
-	 * @covers ::ternary
-	 */
 	public function testTernary(): void
 	{
 		$visitor = new Transpiler();
@@ -141,9 +107,6 @@ class TranspilerTest extends TestCase
 		$this->assertSame('(NULL ?: 3)', $visitor->ternary('NULL', null, 3));
 	}
 
-	/**
-	 * @covers ::variable
-	 */
 	public function testVariable(): void
 	{
 		$visitor = new Transpiler(

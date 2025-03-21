@@ -5,16 +5,11 @@ namespace Kirby\Query\AST;
 use Kirby\Query\Visitors\Interpreter;
 use Kirby\Query\Visitors\Transpiler;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\AST\ClosureNode
- * @covers ::__construct
- */
+#[CoversClass(ClosureNode::class)]
 class ClosureNodeTest extends TestCase
 {
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolve(): void
 	{
 		$node = new ClosureNode(

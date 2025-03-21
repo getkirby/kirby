@@ -4,16 +4,13 @@ namespace Kirby\Query\Runners;
 
 use ArrayAccess;
 use Kirby\Query\Query;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Query\Runners\Interpreted
- * @covers ::__construct
- */
+#[CoversClass(Interpreted::class)]
 class InterpretedTest extends TestCase
 {
-	/**
-	 * @covers ::for
-	 */
 	public function testFor(): void
 	{
 		$query  = new Query('');
@@ -22,10 +19,8 @@ class InterpretedTest extends TestCase
 		$this->assertInstanceOf(Interpreted::class, $runner);
 	}
 
-	/**
-	 * @dataProvider interceptProvider
-	 * @coversNothing
-	 */
+	#[DataProvider('interceptProvider')]
+	#[CoversNothing]
 	public function testIntercept(
 		string $query,
 		array $context,
@@ -51,8 +46,6 @@ class InterpretedTest extends TestCase
 	/**
 	 * Runners should keep a cache of parsed queries
 	 * to avoid parsing the same query multiple times
-	 *
-	 * @covers ::resolver
 	 */
 	public function testResolverMemoryCache()
 	{
@@ -96,10 +89,7 @@ class InterpretedTest extends TestCase
 		$this->assertSame(97, $result);
 	}
 
-	/**
-	 * @dataProvider resultProvider
-	 * @covers ::run
-	 */
+	#[DataProvider('resultProvider')]
 	public function testRun(
 		string $query,
 		array $context,
@@ -112,9 +102,6 @@ class InterpretedTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::run
-	 */
 	public function testRunDirectContextEntry(): void
 	{
 		$runner = new Interpreted();

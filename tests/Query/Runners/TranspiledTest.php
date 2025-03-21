@@ -8,11 +8,11 @@ use Kirby\Query\Parser\Parser;
 use Kirby\Query\Query;
 use Kirby\Query\Visitors\Transpiler;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Query\Runners\Transpiled
- * @covers ::__construct
- */
+#[CoversClass(Transpiled::class)]
 class TranspiledTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Query.TranspiledTest';
@@ -27,9 +27,6 @@ class TranspiledTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::comments
-	 */
 	public function testComments(): void
 	{
 		$runner  = new Transpiled(root: static::TMP);
@@ -37,9 +34,6 @@ class TranspiledTest extends TestCase
 		$this->assertSame('// user.add(5.0)', $comments);
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFile(): void
 	{
 		$runner  = new Transpiled(root: static::TMP);
@@ -47,9 +41,6 @@ class TranspiledTest extends TestCase
 		$this->assertSame(static::TMP . '/197771331.php', $file);
 	}
 
-	/**
-	 * @covers ::for
-	 */
 	public function testFor(): void
 	{
 		$query  = new Query('');
@@ -58,10 +49,8 @@ class TranspiledTest extends TestCase
 		$this->assertInstanceOf(Transpiled::class, $runner);
 	}
 
-	/**
-	 * @dataProvider interceptProvider
-	 * @coversNothing
-	 */
+	#[DataProvider('interceptProvider')]
+	#[CoversNothing]
 	public function testIntercept(
 		string $query,
 		array $context,
@@ -88,9 +77,6 @@ class TranspiledTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::mappings
-	 */
 	public function testMappings(): void
 	{
 		$visitor  = new Transpiler();
@@ -100,9 +86,6 @@ class TranspiledTest extends TestCase
 		$this->assertSame("\$_foo = bar;\n", $mappings);
 	}
 
-	/**
-	 * @covers ::representation
-	 */
 	public function testRepresentation(): void
 	{
 		$query          = 'user.add(5.0)';
@@ -127,9 +110,6 @@ class TranspiledTest extends TestCase
 			PHP, $representation);
 	}
 
-	/**
-	 * @covers ::resolver
-	 */
 	public function testResolverMemoryCache()
 	{
 		$cache = [];
@@ -172,9 +152,6 @@ class TranspiledTest extends TestCase
 		$this->assertSame(97, $result);
 	}
 
-	/**
-	 * @covers ::resolver
-	 */
 	public function testResolverFileCache()
 	{
 		$runner1 = new Transpiled(root: static::TMP);
@@ -189,10 +166,7 @@ class TranspiledTest extends TestCase
 		$runner2->run($query);
 	}
 
-	/**
-	 * @dataProvider resultProvider
-	 * @covers ::run
-	 */
+	#[DataProvider('resultProvider')]
 	public function testRun(
 		string $query,
 		array $context,
@@ -210,9 +184,6 @@ class TranspiledTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::run
-	 */
 	public function testRunDirectContextEntry(): void
 	{
 		$runner = new Transpiled(root: static::TMP);
@@ -242,9 +213,6 @@ class TranspiledTest extends TestCase
 		$this->assertNull($result);
 	}
 
-	/**
-	 * @covers ::uses
-	 */
 	public function testUses(): void
 	{
 		$visitor = new Transpiler();

@@ -3,15 +3,11 @@
 namespace Kirby\Query\Parser;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\Parser\Token
- */
+#[CoversClass(Token::class)]
 class TokenTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
 	public function testToken(): void
 	{
 		$token = new Token(
@@ -34,10 +30,7 @@ class TokenTest extends TestCase
 		$this->assertNull($token->literal);
 	}
 
-	/**
-	 * @covers ::is
-	 */
-	public function testis(): void
+	public function testIs(): void
 	{
 		$token = new Token(
 			type: TokenType::T_FLOAT,

@@ -4,15 +4,12 @@ namespace Kirby\Query\Parser;
 
 use Exception;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Query\Parser\Tokenizer
- */
+#[CoversClass(Tokenizer::class)]
 class TokenizerTest extends TestCase
 {
-	/**
-	 * @covers ::match
-	 */
 	public function testMatch(): void
 	{
 		$string = 'Find ?? a TRUE';
@@ -61,10 +58,7 @@ class TokenizerTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::token
-	 * @dataProvider tokenProvider
-	 */
+	#[DataProvider('tokenProvider')]
 	public function testToken(
 		int $offset,
 		TokenType $type,
@@ -78,9 +72,6 @@ class TokenizerTest extends TestCase
 		$this->assertSame($literal, $token->literal);
 	}
 
-	/**
-	 * @covers ::token
-	 */
 	public function testTokenInvalidCharacter(): void
 	{
 		$this->expectException(Exception::class);
@@ -88,10 +79,6 @@ class TokenizerTest extends TestCase
 		Tokenizer::token('a ?? %', 5);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::tokens
-	 */
 	public function testTokens()
 	{
 		$string    = static::stringProvider();

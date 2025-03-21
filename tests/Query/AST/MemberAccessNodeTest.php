@@ -5,16 +5,11 @@ namespace Kirby\Query\AST;
 use Kirby\Query\Visitors\Interpreter;
 use Kirby\Query\Visitors\Transpiler;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\AST\MemberAccessNode
- * @covers ::__construct
- */
+#[CoversClass(MemberAccessNode::class)]
 class MemberAccessNodeTest extends TestCase
 {
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolve(): void
 	{
 		$node = new MemberAccessNode(
@@ -35,6 +30,9 @@ class MemberAccessNodeTest extends TestCase
 
 		// Transpiler
 		$visitor = new Transpiler(context: $context);
-		$this->assertSame('Runtime::access(($intercept($_2375276105)), \'name\', false)', $node->resolve($visitor));
+		$this->assertSame(
+			'Runtime::access(($intercept($_2375276105)), \'name\', false)',
+			$node->resolve($visitor)
+		);
 	}
 }

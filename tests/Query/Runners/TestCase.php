@@ -6,7 +6,7 @@ use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	public static function resultProvider()
+	public static function resultProvider(): array
 	{
 		return [
 			'field' => [
@@ -68,7 +68,7 @@ class TestCase extends BaseTestCase
 	}
 
 
-	public static function interceptProvider()
+	public static function interceptProvider(): array
 	{
 		return [
 			'field' => [

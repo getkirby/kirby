@@ -3,15 +3,11 @@
 namespace Kirby\Query\Runners;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\Runners\Runtime
- */
+#[CoversClass(Runtime::class)]
 class RuntimeTest extends TestCase
 {
-	/**
-	 * @covers ::access
-	 */
 	public function testAccessWithArray(): void
 	{
 		$array  = [
@@ -32,9 +28,6 @@ class RuntimeTest extends TestCase
 		$this->assertNull($result);
 	}
 
-	/**
-	 * @covers ::access
-	 */
 	public function testAccessWithObject(): void
 	{
 		$obj = new class () {
@@ -59,18 +52,12 @@ class RuntimeTest extends TestCase
 		$this->assertNull($result);
 	}
 
-	/**
-	 * @covers ::access
-	 */
 	public function testAccessWithNullSafe(): void
 	{
 		$result = Runtime::access(null, 'bar', true);
 		$this->assertNull($result);
 	}
 
-	/**
-	 * @covers ::access
-	 */
 	public function testAccessWithoutNullSafe(): void
 	{
 		$this->expectException(Exception::class);
@@ -78,9 +65,6 @@ class RuntimeTest extends TestCase
 		Runtime::access(null, 'bar', false);
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGet(): void
 	{
 		$context   = ['foo' => 'bar', 'qox' => fn () => 'bax'];

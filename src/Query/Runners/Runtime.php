@@ -12,9 +12,8 @@ use Exception;
  * @package   Kirby Query
  * @author    Roman Steiner <roman@toastlab.ch>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
- * @since     6.0.0
+ * @since     5.1.0
  */
 class Runtime
 {

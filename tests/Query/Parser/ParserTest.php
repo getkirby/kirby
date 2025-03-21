@@ -13,26 +13,18 @@ use Kirby\Query\AST\MemberAccessNode;
 use Kirby\Query\AST\TernaryNode;
 use Kirby\Query\AST\VariableNode;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\Parser\Parser
- */
+#[CoversClass(Parser::class)]
 class ParserTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructor(): void
 	{
 		$parser = new Parser('user.name');
 		$this->assertSame('user', $parser->current()->lexeme);
 	}
 
-	/**
-	 * @covers ::advance
-	 * @covers ::current
-	 */
 	public function testAdvance(): void
 	{
 		$parser  = new Parser('user.name');
@@ -50,9 +42,6 @@ class ParserTest extends TestCase
 		$this->assertSame(TokenType::T_EOF, $parser->current()->type);
 	}
 
-	/**
-	 * @covers ::argumentList
-	 */
 	public function testArgumentList(): void
 	{
 		$parser = new Parser('site.method(a, b, c)');
@@ -72,10 +61,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::array
-	 * @covers ::atomic
-	 */
 	public function testArray(): void
 	{
 		$parser = new Parser('[1, 2, 3]');
@@ -100,10 +85,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::coalesce
-	 * @covers ::expression
-	 */
 	public function testCoalesce(): void
 	{
 		$parser = new Parser('a ?? b');
@@ -118,9 +99,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::consume
-	 */
 	public function testConsume(): void
 	{
 		$parser  = new Parser('user.name');
@@ -130,9 +108,6 @@ class ParserTest extends TestCase
 		$this->assertSame('user', $token->lexeme);
 	}
 
-	/**
-	 * @covers ::consume
-	 */
 	public function testConsumeInvalidType(): void
 	{
 		$parser  = new Parser('user.name');
@@ -141,9 +116,6 @@ class ParserTest extends TestCase
 		$this->assertFalse($consume->invokeArgs($parser, [TokenType::T_TRUE]));
 	}
 
-	/**
-	 * @covers ::consumeAny
-	 */
 	public function testConsumeAny(): void
 	{
 		$parser  = new Parser('user.name');
@@ -153,9 +125,6 @@ class ParserTest extends TestCase
 		$this->assertSame('user', $token->lexeme);
 	}
 
-	/**
-	 * @covers ::consumeAny
-	 */
 	public function testConsumeInvalidTypeInvalidType(): void
 	{
 		$parser  = new Parser('user.name');
@@ -164,9 +133,6 @@ class ParserTest extends TestCase
 		$this->assertFalse($consume->invokeArgs($parser, [[TokenType::T_TRUE, TokenType::T_FALSE]]));
 	}
 
-	/**
-	 * @covers ::consume
-	 */
 	public function testConsumeInvalidTypeCustomError(): void
 	{
 		$parser  = new Parser('user.name');
@@ -178,9 +144,6 @@ class ParserTest extends TestCase
 		$consume->invokeArgs($parser, [TokenType::T_TRUE, 'foo']);
 	}
 
-	/**
-	 * @covers ::consumeList
-	 */
 	public function testConsumeList(): void
 	{
 		$parser  = new Parser('1, 2)');
@@ -190,10 +153,6 @@ class ParserTest extends TestCase
 		$this->assertEquals([new LiteralNode(1), new LiteralNode(2)], $list);
 	}
 
-	/**
-	 * @covers ::atomic
-	 * @covers ::grouping
-	 */
 	public function testGrouping(): void
 	{
 		// groupings
@@ -223,9 +182,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::grouping
-	 */
 	public function testGroupingClosureInvalidArgument(): void
 	{
 		$this->expectException(Exception::class);
@@ -235,9 +191,6 @@ class ParserTest extends TestCase
 		$parser->parse();
 	}
 
-	/**
-	 * @covers ::grouping
-	 */
 	public function testGroupingClosureInvalidNotation(): void
 	{
 		$this->expectException(Exception::class);
@@ -247,11 +200,6 @@ class ParserTest extends TestCase
 		$parser->parse();
 	}
 
-
-	/**
-	 * @covers ::atomic
-	 * @covers ::identifier
-	 */
 	public function testIdentifier(): void
 	{
 		// global functions
@@ -290,9 +238,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::is
-	 */
 	public function testIs(): void
 	{
 		$parser = new Parser('user.name');
@@ -309,9 +254,6 @@ class ParserTest extends TestCase
 		$this->assertFalse($is->invokeArgs($parser, [TokenType::T_IDENTIFIER]));
 	}
 
-	/**
-	 * @covers ::isAtEnd
-	 */
 	public function testIsAtEnd(): void
 	{
 		$parser  = new Parser('user.name');
@@ -331,9 +273,6 @@ class ParserTest extends TestCase
 		$this->assertTrue($isAtEnd->invoke($parser));
 	}
 
-	/**
-	 * @covers ::memberAccess
-	 */
 	public function testMemberAccess(): void
 	{
 		$parser = new Parser('user.name');
@@ -348,9 +287,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::memberAccess
-	 */
 	public function testMemberAccessIntegerIndex(): void
 	{
 		$parser = new Parser('user.1');
@@ -365,9 +301,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::memberAccess
-	 */
 	public function testMemberAccessSubscriptString(): void
 	{
 		$parser = new Parser('user["This.is the key"](2)');
@@ -385,9 +318,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::memberAccess
-	 */
 	public function testMemberAccessSubscriptExpression(): void
 	{
 		$parser = new Parser('user[page.id]');
@@ -405,9 +335,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::memberAccess
-	 */
 	public function testMemberAccessSequential(): void
 	{
 		$parser = new Parser('user.name("arg").age');
@@ -426,9 +353,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::memberAccess
-	 */
 	public function testMemberAccessInvalid(): void
 	{
 		$parser = new Parser('user.true');
@@ -438,9 +362,6 @@ class ParserTest extends TestCase
 		$parser->parse();
 	}
 
-	/**
-	 * @covers ::parse
-	 */
 	public function testParse(): void
 	{
 		$parser = new Parser('site.method(5) ?: ("fox" ?? false)');
@@ -464,10 +385,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::atomic
-	 * @covers ::scalar
-	 */
 	public function testScalar(): void
 	{
 		$parser = new Parser('true');
@@ -496,11 +413,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::atomic
-	 * @covers ::coalesce
-	 * @covers ::ternary
-	 */
 	public function testTernary(): void
 	{
 		$parser = new Parser('true ? 2 : 5.0');

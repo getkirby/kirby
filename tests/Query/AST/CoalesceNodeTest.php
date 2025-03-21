@@ -5,16 +5,11 @@ namespace Kirby\Query\AST;
 use Kirby\Query\Visitors\Interpreter;
 use Kirby\Query\Visitors\Transpiler;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\AST\CoalesceNode
- * @covers ::__construct
- */
+#[CoversClass(CoalesceNode::class)]
 class CoalesceNodeTest extends TestCase
 {
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolve(): void
 	{
 		$node = new CoalesceNode(

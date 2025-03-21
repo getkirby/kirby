@@ -7,34 +7,24 @@ use Kirby\Query\AST\ClosureNode;
 use Kirby\Query\AST\CoalesceNode;
 use Kirby\Query\AST\VariableNode;
 use Kirby\Query\Visitors\Interpreter;
+use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\Visitors\Interpreter
- * @covers ::__construct
- */
+#[CoversClass(Interpreter::class)]
 class InterpreterTest extends TestCase
 {
-	/**
-	 * @covers ::argumentList
-	 */
 	public function testArgumentList(): void
 	{
 		$visitor = new Interpreter();
 		$this->assertSame([1, 2, 3], $visitor->argumentList([1, 2, 3]));
 	}
 
-	/**
-	 * @covers ::arrayList
-	 */
 	public function testArrayList(): void
 	{
 		$visitor = new Interpreter();
 		$this->assertSame([1, 2, 3], $visitor->arrayList([1, 2, 3]));
 	}
 
-	/**
-	 * @covers ::closure
-	 */
 	public function testClosure(): void
 	{
 		$visitor = new Interpreter();
@@ -53,9 +43,6 @@ class InterpreterTest extends TestCase
 		$this->assertSame(3, $closure(3, 4));
 	}
 
-	/**
-	 * @covers ::coalescence
-	 */
 	public function testCoalescence(): void
 	{
 		$visitor = new Interpreter();
@@ -63,9 +50,6 @@ class InterpreterTest extends TestCase
 		$this->assertSame(4, $visitor->coalescence(null, 4));
 	}
 
-	/**
-	 * @covers ::function
-	 */
 	public function testFunction(): void
 	{
 		$visitor = new Interpreter(
@@ -74,9 +58,6 @@ class InterpreterTest extends TestCase
 		$this->assertSame('bar', $visitor->function('foo'));
 	}
 
-	/**
-	 * @covers ::function
-	 */
 	public function testFunctionInvalid(): void
 	{
 		$visitor = new Interpreter();
@@ -87,9 +68,6 @@ class InterpreterTest extends TestCase
 		$visitor->function('fox', []);
 	}
 
-	/**
-	 * @covers ::literal
-	 */
 	public function testLiteral(): void
 	{
 		$visitor = new Interpreter();
@@ -97,9 +75,6 @@ class InterpreterTest extends TestCase
 		$this->assertSame(null, $visitor->literal(null));
 	}
 
-	/**
-	 * @covers ::memberAccess
-	 */
 	public function testMemberAccess(): void
 	{
 		$visitor = new Interpreter();
@@ -113,9 +88,6 @@ class InterpreterTest extends TestCase
 		$this->assertSame('bar', $visitor->memberAccess($obj, 'foo'));
 	}
 
-	/**
-	 * @covers ::memberAccess
-	 */
 	public function testMemberAccessWithInterceptor(): void
 	{
 		$visitor = new Interpreter(interceptor: fn ($obj) => new class () {
@@ -135,9 +107,6 @@ class InterpreterTest extends TestCase
 		$this->assertSame('baz', $visitor->memberAccess($obj, 'foo'));
 	}
 
-	/**
-	 * @covers ::ternary
-	 */
 	public function testTernary(): void
 	{
 		$visitor = new Interpreter();
@@ -148,9 +117,6 @@ class InterpreterTest extends TestCase
 		$this->assertSame(3, $visitor->ternary(null, null, 3));
 	}
 
-	/**
-	 * @covers ::variable
-	 */
 	public function testVariable(): void
 	{
 		$visitor = new Interpreter(

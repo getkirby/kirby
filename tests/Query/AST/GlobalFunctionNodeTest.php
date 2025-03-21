@@ -5,16 +5,11 @@ namespace Kirby\Query\AST;
 use Kirby\Query\Visitors\Interpreter;
 use Kirby\Query\Visitors\Transpiler;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Query\AST\GlobalFunctionNode
- * @covers ::__construct
- */
+#[CoversClass(GlobalFunctionNode::class)]
 class GlobalFunctionNodeTest extends TestCase
 {
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolve(): void
 	{
 		$node = new GlobalFunctionNode(
@@ -33,6 +28,9 @@ class GlobalFunctionNodeTest extends TestCase
 
 		// Transpiler
 		$visitor = new Transpiler(functions: $functions);
-		$this->assertSame('$functions[\'foo\'](3, 7)', $node->resolve($visitor));
+		$this->assertSame(
+			'$functions[\'foo\'](3, 7)',
+			$node->resolve($visitor)
+		);
 	}
 }
