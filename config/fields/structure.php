@@ -101,7 +101,7 @@ return [
 			return $this->rows($this->value);
 		},
 		'fields' => function () {
-			if (empty($this->fields) === true) {
+			if (empty($fields = $this->fields) === true) {
 				return [];
 			}
 

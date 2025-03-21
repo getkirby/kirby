@@ -72,27 +72,11 @@ class Component
 			);
 		}
 
-		$this->options = $options = static::setup($type);
-		$this->methods = $methods = $options['methods'] ?? [];
+		$this->options = static::setup($type);
+		$this->methods = $this->options['methods'] ?? [];
 
-		foreach ($attrs as $attrName => $attrValue) {
-			$this->$attrName = $attrValue;
-		}
-
-		if (isset($options['props']) === true) {
-			$this->applyProps($options['props']);
-		}
-
-		if (isset($options['computed']) === true) {
-			$this->applyComputed($options['computed']);
-		}
-
-		// Reset main properties to avoid them being overwritten
-		// when applying props and computes
-		$this->attrs   = $attrs;
-		$this->methods = $methods;
-		$this->options = $options;
-		$this->type    = $type;
+		$this->applyProps($this->options['props'] ?? []);
+		$this->applyComputed($this->options['computed'] ?? []);
 	}
 
 	/**
@@ -112,6 +96,10 @@ class Component
 			return $this->methods[$name]->call($this, ...$arguments);
 		}
 
+		if (array_key_exists($name, $this->attrs) === true) {
+			return $this->attrs[$name];
+		}
+
 		return $this->$name;
 	}
 
@@ -128,9 +116,19 @@ class Component
 	 * Fallback for missing properties to return
 	 * null instead of an error
 	 */
-	public function __get(string $attr)
+	public function __get(string $name)
 	{
-		return null;
+		if (array_key_exists($name, $this->computed) === true) {
+			return $this->computed[$name];
+		}
+
+		if (array_key_exists($name, $this->props) === true) {
+			return $this->props[$name];
+		}
+
+		if (array_key_exists($name, $this->attrs) === true) {
+			return $this->attrs[$name];
+		}
 	}
 
 	/**
@@ -151,8 +149,7 @@ class Component
 	{
 		// unset prop
 		if ($value === null) {
-			unset($this->props[$name], $this->$name);
-
+			unset($this->props[$name]);
 			return;
 		}
 
@@ -160,7 +157,7 @@ class Component
 		if ($value instanceof Closure) {
 			if (isset($this->attrs[$name]) === true) {
 				try {
-					$this->$name = $this->props[$name] = $value->call(
+					$this->props[$name] = $value->call(
 						$this,
 						$this->attrs[$name]
 					);
@@ -171,7 +168,7 @@ class Component
 			}
 
 			try {
-				$this->$name = $this->props[$name] = $value->call($this);
+				$this->props[$name] = $value->call($this);
 				return;
 			} catch (ArgumentCountError) {
 				throw new ArgumentCountError('Please provide a value for "' . $name . '"');
@@ -179,7 +176,7 @@ class Component
 		}
 
 		// simple prop assignment by value
-		$this->$name = $this->props[$name] = $value;
+		$this->props[$name] = $value;
 	}
 
 	/**
@@ -201,7 +198,7 @@ class Component
 	{
 		foreach ($computed as $name => $function) {
 			if ($function instanceof Closure) {
-				$this->$name = $this->computed[$name] = $function->call($this);
+				$this->computed[$name] = $function->call($this);
 			}
 		}
 	}

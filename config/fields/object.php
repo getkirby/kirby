@@ -39,14 +39,14 @@ return [
 	],
 	'computed' => [
 		'default' => function () {
-			if (empty($this->default) === true) {
+			if (empty($default = $this->default) === true) {
 				return '';
 			}
 
-			return $this->form($this->default)->values();
+			return $this->form($default)->values();
 		},
 		'fields' => function () {
-			if (empty($this->fields) === true) {
+			if (empty($fields = $this->fields) === true) {
 				return [];
 			}
 
