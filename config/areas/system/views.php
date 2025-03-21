@@ -131,7 +131,7 @@ return [
 					'info'        => $system->info(),
 					'plugins'     => $plugins,
 					'security'    => $security,
-					'urls'        => $sensitive ?? null
+					'urls'        => $sensitive ?? []
 				]
 			];
 		}

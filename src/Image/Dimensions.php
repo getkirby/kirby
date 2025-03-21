@@ -70,8 +70,7 @@ class Dimensions implements Stringable
 	/**
 	 * Recalculates the width and height to fit into the given box.
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * $dimensions = new Dimensions(1200, 768);
 	 * $dimensions->fit(500);
 	 *
@@ -80,8 +79,7 @@ class Dimensions implements Stringable
 	 *
 	 * echo $dimensions->height();
 	 * // output: 320
-	 *
-	 * </code>
+	 * ```
 	 *
 	 * @param int $box the max width and/or height
 	 * @param bool $force If true, the dimensions will be
@@ -122,8 +120,7 @@ class Dimensions implements Stringable
 	/**
 	 * Recalculates the width and height to fit the given height
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * $dimensions = new Dimensions(1200, 768);
 	 * $dimensions->fitHeight(500);
 	 *
@@ -132,8 +129,7 @@ class Dimensions implements Stringable
 	 *
 	 * echo $dimensions->height();
 	 * // output: 500
-	 *
-	 * </code>
+	 * ```
 	 *
 	 * @param int|null $fit the max height
 	 * @param bool $force If true, the dimensions will be
@@ -180,8 +176,7 @@ class Dimensions implements Stringable
 	/**
 	 * Recalculates the width and height to fit the given width
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * $dimensions = new Dimensions(1200, 768);
 	 * $dimensions->fitWidth(500);
 	 *
@@ -190,8 +185,7 @@ class Dimensions implements Stringable
 	 *
 	 * echo $dimensions->height();
 	 * // output: 320
-	 *
-	 * </code>
+	 * ```
 	 *
 	 * @param int|null $fit the max width
 	 * @param bool $force If true, the dimensions will be
@@ -337,13 +331,11 @@ class Dimensions implements Stringable
 	/**
 	 * Calculates and returns the ratio
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * $dimensions = new Dimensions(1200, 768);
 	 * echo $dimensions->ratio();
 	 * // output: 1.5625
-	 *
-	 * </code>
+	 * ```
 	 */
 	public function ratio(): float
 	{

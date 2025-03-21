@@ -114,15 +114,14 @@ export default {
 		},
 		/**
 		 * If `true`, the item will be selectable via a checkbox
+		 * @since 5.0.0
 		 */
 		selecting: Boolean,
 		/**
 		 * If `false`, the select checkbox will be disabled
+		 * @since 5.0.0
 		 */
-		selectable: {
-			type: Boolean,
-			default: true
-		},
+		selectable: Boolean,
 		/**
 		 * If `true`, the sort handle will be shown on hover
 		 */
@@ -356,7 +355,7 @@ export default {
 }
 
 /** Selectable state */
-.k-item[data-selectable="true"] {
+.k-item[data-selecting="true"][data-selectable="true"] {
 	cursor: pointer;
 }
 .k-item-options-checkbox {

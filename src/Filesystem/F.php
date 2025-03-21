@@ -172,12 +172,10 @@ class F
 	/**
 	 * Just an alternative for dirname() to stay consistent
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * $dirname = F::dirname('/var/www/test.txt');
 	 * // dirname is /var/www
-	 *
-	 * </code>
+	 * ```
 	 *
 	 * @param string $file The path
 	 */
@@ -255,12 +253,10 @@ class F
 	/**
 	 * Extracts the filename from a file path
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * $filename = F::filename('/var/www/test.txt');
 	 * // filename is test.txt
-	 *
-	 * </code>
+	 * ```
 	 *
 	 * @param string $name The path
 	 */
@@ -725,12 +721,10 @@ class F
 	/**
 	 * Deletes a file
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * $remove = F::remove('test.txt');
-	 * if($remove) echo 'The file has been removed';
-	 *
-	 * </code>
+	 * if ($remove) echo 'The file has been removed';
+	 * ```
 	 *
 	 * @param string $file The path for the file
 	 */
@@ -757,12 +751,10 @@ class F
 	 * Sanitize a file's full name (filename and extension)
 	 * to strip unwanted special characters
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * $safe = f::safeName('über genius.txt');
 	 * // safe will be ueber-genius.txt
-	 *
-	 * </code>
+	 * ```
 	 *
 	 * @param string $string The file name
 	 */

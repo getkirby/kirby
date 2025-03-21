@@ -1023,15 +1023,13 @@ class Str
 	/**
 	 * Shortens a string and adds an ellipsis if the string is too long
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * echo Str::short('This is a very, very, very long string', 10);
 	 * // output: This is a…
 	 *
 	 * echo Str::short('This is a very, very, very long string', 10, '####');
 	 * // output: This i####
-	 *
-	 * </code>
+	 * ```
 	 *
 	 * @param string $string The string to be shortened
 	 * @param int $length The final number of characters the
@@ -1285,12 +1283,10 @@ class Str
 	/**
 	 * Replaces placeholders in string with values from the data array
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * echo Str::template('From {{ b }} to {{ a }}', ['a' => 'there', 'b' => 'here']);
 	 * // output: From here to there
-	 *
-	 * </code>
+	 * ```
 	 *
 	 * @param string|null $string The string with placeholders
 	 * @param array $data Associative array with placeholders as
@@ -1419,12 +1415,10 @@ class Str
 	/**
 	 * Removes all html tags and encoded chars from a string
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * echo str::unhtml('some <em>crazy</em> stuff');
 	 * // output: some uber crazy stuff
-	 *
-	 * </code>
+	 * ```
 	 */
 	public static function unhtml(string|null $string): string
 	{

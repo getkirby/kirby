@@ -34,6 +34,7 @@ class Page extends ModelWithContent
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
+	use HasModels;
 	/**
 	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
 	 */
@@ -48,11 +49,6 @@ class Page extends ModelWithContent
 	 * @todo Remove when support for PHP 8.2 is dropped
 	 */
 	public static array $methods = [];
-
-	/**
-	 * Registry with all Page models
-	 */
-	public static array $models = [];
 
 	/**
 	 * The PageBlueprint object
@@ -143,9 +139,15 @@ class Page extends ModelWithContent
 		$this->parent  = $props['parent'] ?? null;
 		$this->root    = $props['root'] ?? null;
 
+		// Set blueprint before setting content
+		// or translations in the parent constructor.
+		// Otherwise, the blueprint definition cannot be
+		// used when creating the right field values
+		// for the content.
+		$this->setBlueprint($props['blueprint'] ?? null);
+
 		parent::__construct($props);
 
-		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setChildren($props['children'] ?? null);
 		$this->setDrafts($props['drafts'] ?? null);
 		$this->setFiles($props['files'] ?? null);
@@ -410,7 +412,7 @@ class Page extends ModelWithContent
 	 */
 	public static function factory($props): static
 	{
-		return static::model($props['model'] ?? 'default', $props);
+		return static::model($props['model'] ?? $props['template'] ?? 'default', $props);
 	}
 
 	/**
@@ -785,26 +787,6 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Creates a page model if it has been registered
-	 * @internal
-	 */
-	public static function model(string $name, array $props = []): static
-	{
-		$class   = static::$models[$name] ?? null;
-		$class ??= static::$models['default'] ?? null;
-
-		if ($class !== null) {
-			$object = new $class($props);
-
-			if ($object instanceof self) {
-				return $object;
-			}
-		}
-
-		return new static($props);
-	}
-
-	/**
 	 * Returns the last modification date of the page
 	 */
 	public function modified(
@@ -906,6 +888,10 @@ class Page extends ModelWithContent
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
+		if ($this->permissions()->can('preview') !== true) {
+			return null;
+		}
+
 		return $this->version($versionId)->url();
 	}
 
@@ -1116,7 +1102,7 @@ class Page extends ModelWithContent
 	protected function setTemplate(string|null $template = null): static
 	{
 		if ($template !== null) {
-			$this->intendedTemplate = $this->kirby()->template($template);
+			$this->intendedTemplate = $this->kirby()->template(strtolower($template));
 		}
 
 		return $this;

@@ -3,7 +3,9 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Blueprint;
+use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\Exception;
 use Kirby\Form\Form;
 
 /**
@@ -100,6 +102,7 @@ class Content
 			'fields' => $old->fields(),
 			'model'  => $this->parent
 		]);
+
 		$newForm = new Form([
 			'fields' => $new->fields(),
 			'model'  => $this->parent
@@ -120,6 +123,12 @@ class Content
 			} else {
 				$data[$name] = $newField->default();
 			}
+		}
+
+		// if the parent is a file, overwrite the template
+		// with the new template name
+		if ($this->parent instanceof File) {
+			$data['template'] = $to;
 		}
 
 		// preserve existing fields
@@ -228,24 +237,17 @@ class Content
 	}
 
 	/**
-	 * Updates the content and returns
-	 * a cloned object
+	 * Removed in 5.0.0. We only keep it to simplify debugging,
+	 * when this method is still in use in the wild.
 	 *
-	 * @return $this
+	 * Use $model->version()->update() instead.
+	 *
+	 * @todo Remove in 7.0.0
 	 */
 	public function update(
 		array|null $content = null,
 		bool $overwrite = false
 	): static {
-		$content    = array_change_key_case((array)$content, CASE_LOWER);
-		$this->data = match($overwrite) {
-			true  => $content,
-			false => [...$this->data, ...$content]
-		};
-
-		// clear cache of Field objects
-		$this->fields = [];
-
-		return $this;
+		throw new Exception('`$content->update()` is no longer functional. Please use `$model->version()->update()` instead');
 	}
 }

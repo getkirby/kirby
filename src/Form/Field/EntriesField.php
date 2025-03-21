@@ -93,6 +93,9 @@ class EntriesField extends FieldClass
 			);
 		}
 
+		// remove the unsupported props from the entry field
+		unset($attrs['counter'], $attrs['label']);
+
 		$this->field = $attrs;
 	}
 

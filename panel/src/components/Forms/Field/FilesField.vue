@@ -55,11 +55,14 @@ export default {
 							}
 						}
 
-						await this.$panel.content.update({
-							[this.name]: this.selected
-						});
-
+						// send the input event
+						// the content object gets updated
 						this.onInput();
+
+						// the `$panel.content.update()` event sends
+						// the updated form value object to the server
+						await this.$panel.content.update();
+
 						this.$events.emit("file.upload");
 						this.$events.emit("model.update");
 					}

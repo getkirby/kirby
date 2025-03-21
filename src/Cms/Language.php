@@ -230,8 +230,7 @@ class Language implements Stringable
 		// apply before hook
 		$language = $kirby->apply(
 			'language.delete:before',
-			['language' => $this],
-			'language'
+			['language' => $this]
 		);
 
 		// re-validate the language rules after before hook was applied
@@ -303,6 +302,16 @@ class Language implements Stringable
 	public function exists(): bool
 	{
 		return file_exists($this->root());
+	}
+
+	/**
+	 * Checks if the language is the same
+	 * as the given language or language code
+	 * @since 5.0.0
+	 */
+	public function is(self|string $language): bool
+	{
+		return $this->code() === static::ensure($language)->code();
 	}
 
 	/**
@@ -591,8 +600,7 @@ class Language implements Stringable
 			[
 				'language' => $this,
 				'input'    => $props
-			],
-			'language'
+			]
 		);
 
 		// updated language object
@@ -628,8 +636,7 @@ class Language implements Stringable
 				'newLanguage' => $language,
 				'oldLanguage' => $this,
 				'input'       => $props
-			],
-			'newLanguage'
+			]
 		);
 
 		return $language;

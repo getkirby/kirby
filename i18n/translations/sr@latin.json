@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "Postoji greška u redu \"{field}\" na ovom polju {index}",
+
 	"error.email.preset.notFound": "Email preset \"{name}\" nije pronađen",
 
 	"error.field.converter.invalid": "Neispravan converter \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Polje \"{ name }\": Tip polja \"{ type }\" ne postoji",
 
 	"error.file.changeName.empty": "Naziv ne sme biti prazan",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Šablon za datoteku \"{id}\" se ne može promeniti u \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Nije vam dozvoljeno da menjate šablon za datoteku \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Fajl sa nazivom \"{filename}\" već postoji",
 	"error.file.extension.forbidden": "Extension \"{extension}\" nije dozvoljena",
 	"error.file.extension.invalid": "Nevažeći dodatak: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Stranica \"{slug}\" ne može biti obrisana",
 	"error.page.delete.confirm": "Molimo ukucajte naslov stranice da potvrdite",
 	"error.page.delete.hasChildren": "Stranica ima podstranice i ne može biti obrisana",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Nemate ovlašćenja da obrišete \"{slug}\"",
 	"error.page.draft.duplicate": "Draft stranice sa URL appendix \"{slug}\" već postoji",
 	"error.page.duplicate": "Stranica sa URL appendix-om \"{slug}\" već postoji",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Da li zaista želite da izbrišete sve unose?",
+	"field.entries.empty": "Još nema unosa",
+
 	"field.files.empty": "Još nijedna datoteka nije izabrana",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Promena pozicije",
 
 	"files": "Fajlovi",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Još nema fajlova",
 
 	"filter": "Filter",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "Nema važeće licence",
 	"license.status.missing.label": "Molimo vas aktivirajte svoju licencu",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Upravljajte svojom licencom",
 	"license.purchased": "Kupljeno",
 	"license.success": "Hvala vam što podržavate Kirby",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Stranica je dostupna samo preko URL-a",
 
 	"pages": "Stranice",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Još nema stranica",
 	"pages.status.draft": "Nacrti",
 	"pages.status.listed": "Objavljeno",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Čini se da je fascikla sa sadržajem izložena",
 	"system.issues.eol.kirby": "Vaša instalirana Kirby verzija je stigla do kraja svog životnog veka i neće dobijati dalja bezbednosna ažuriranja",
 	"system.issues.eol.plugin": "Vaša instalirana verzija  { plugin } dodatka je stigla do kraja svog životnog veka i neće dobijati dalja bezbednosna ažuriranja",
@@ -665,7 +679,9 @@
 	"system.issues.git": "Čini se da je .git  fascikla izložena",
 	"system.issues.https": "Preporučujemo HTTPS za sve vaše sajtove",
 	"system.issues.kirby": "Čini se da je Kirby fascikla izložena",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "Čini se da je fascikla sajta izložena",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Na vašu instalaciju može uticati sledeća ranjivost ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Na vašu instalaciju može uticati sledeća ranjivost u { plugin } dodatku ({ severity } severity): { description }",
 	"system.updateStatus": "Ažuriraj status",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Promenite jezik",
 	"user.changeName": "Preimenujte ovog korisnika",
 	"user.changePassword": "Promenite lozinku",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nova lozinka",
 	"user.changePassword.new.confirm": "Potvrdite novu lozinku…",
 	"user.changeRole": "Promenite ulogu",

@@ -29,42 +29,12 @@ trait SiteActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$kirby = $this->kirby();
-
-		// store copy of the model to be passed
-		// to the `after` hook for comparison
-		$old = $this->hardcopy();
-
-		// check site rules
-		$this->rules()->$action(...array_values($arguments));
-
-		// run `before` hook and pass all arguments;
-		// the very first argument (which should be the model)
-		// is modified by the return value from the hook (if any returned)
-		$appliedTo = array_key_first($arguments);
-		$arguments[$appliedTo] = $kirby->apply(
-			'site.' . $action . ':before',
-			$arguments,
-			$appliedTo
+		$commit = new ModelCommit(
+			model: $this,
+			action: $action
 		);
 
-		// check site rules again, after the hook got applied
-		$this->rules()->$action(...array_values($arguments));
-
-		// run the main action closure
-		$result = $callback(...array_values($arguments));
-
-		// run `after` hook and apply return to action result
-		// (first argument, usually the new model) if anything returned
-		$result = $kirby->apply(
-			'site.' . $action . ':after',
-			['newSite' => $result, 'oldSite' => $old],
-			'newSite'
-		);
-
-		$kirby->cache('pages')->flush();
-
-		return $result;
+		return $commit->call($arguments, $callback);
 	}
 
 	/**

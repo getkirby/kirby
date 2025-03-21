@@ -4,12 +4,14 @@ namespace Kirby\Content;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blocks;
+use Kirby\Cms\Collection;
 use Kirby\Cms\Files;
 use Kirby\Cms\Layouts;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Cms\Users;
+use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
@@ -155,6 +157,51 @@ class FieldMethodsTest extends TestCase
 	{
 		$field = $this->field(null);
 		$this->assertNull($field->toDate('d.m.Y'));
+	}
+
+	public function testToEntries()
+	{
+		$value   = [
+			'Text',
+			'Some text',
+			'Another text',
+		];
+		$page    = new Page(['slug' => 'test']);
+		$field   = $this->field(Data::encode($value, 'yaml'), $page);
+		$entries = $field->toEntries();
+
+		$this->assertInstanceOf(Collection::class, $entries);
+		$this->assertSame($page, $entries->parent());
+		$this->assertCount(3, $entries);
+		$this->assertInstanceOf(Field::class, $entries->first());
+		$this->assertSame('Text', $entries->first()->value());
+		$this->assertSame('TEXT', $entries->first()->upper()->value());
+		$this->assertSame('Some text', $entries->nth(1)->value());
+		$this->assertSame('Another text', $entries->nth(2)->value());
+	}
+
+	public function testToEntriesDateMethod()
+	{
+		$value   = ['2012-12-12'];
+		$page    = new Page(['slug' => 'test']);
+		$field   = $this->field(Data::encode($value, 'yaml'), $page);
+		$entries = $field->toEntries();
+
+		$this->assertInstanceOf(Collection::class, $entries);
+		$this->assertSame($page, $entries->parent());
+		$this->assertCount(1, $entries);
+		$this->assertInstanceOf(Field::class, $entries->first());
+		$this->assertSame('2012-12-12', $entries->first()->value());
+		$this->assertSame('12.12.2012', $entries->first()->toDate('d.m.Y'));
+	}
+
+	public function testToEntriesEmptyValue()
+	{
+		$field   = $this->field();
+		$entries = $field->toEntries();
+
+		$this->assertInstanceOf(Collection::class, $entries);
+		$this->assertCount(0, $entries);
 	}
 
 	public function testToFile()

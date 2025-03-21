@@ -2,7 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
@@ -50,6 +49,7 @@ class Version
 		// in the future, to provide multi-language support with truly
 		// individual versions of pages and no longer enforce the fallback.
 		if ($language->isDefault() === false) {
+			// merge the fields with the default language
 			$fields = [
 				...$this->read('default') ?? [],
 				...$fields
@@ -62,6 +62,7 @@ class Version
 		return new Content(
 			parent: $this->model,
 			data:   $fields,
+			normalize: false
 		);
 	}
 
@@ -128,6 +129,9 @@ class Version
 			language: $language,
 			fields: $this->prepareFieldsBeforeWrite($fields, $language)
 		);
+
+		// make sure that an older version does not exist in the cache
+		VersionCache::remove($this, $language);
 	}
 
 	/**
@@ -135,6 +139,14 @@ class Version
 	 */
 	public function delete(Language|string $language = 'default'): void
 	{
+		if ($language === '*') {
+			foreach (Languages::ensure() as $language) {
+				$this->delete($language);
+			}
+
+			return;
+		}
+
 		$language = Language::ensure($language);
 
 		// check if deleting is allowed
@@ -147,6 +159,9 @@ class Version
 		if ($this->id->is(VersionId::changes()) === true && $this->exists('*') === false) {
 			(new Changes())->untrack($this->model);
 		}
+
+		// Remove the version from the cache
+		VersionCache::remove($this, $language);
 	}
 
 	/**
@@ -319,6 +334,10 @@ class Version
 			toLanguage: $toLanguage,
 			toStorage: $toStorage
 		);
+
+		// remove both versions from the cache
+		VersionCache::remove($fromVersion, $fromLanguage);
+		VersionCache::remove($toVersion, $toLanguage);
 	}
 
 	/**
@@ -372,7 +391,10 @@ class Version
 	 */
 	protected function prepareFieldsAfterRead(array $fields, Language $language): array
 	{
-		return $this->convertFieldNamesToLowerCase($fields);
+		$fields = $this->convertFieldNamesToLowerCase($fields);
+
+		// ignore all fields with null values
+		return array_filter($fields, fn ($field) => $field !== null);
 	}
 
 	/**
@@ -469,7 +491,7 @@ class Version
 		VersionRules::publish($this, $language);
 
 		// update the latest version
-		$this->model->update(
+		$this->model = $this->model->update(
 			input: $this->read($language),
 			languageCode: $language->code(),
 			validate: true
@@ -492,8 +514,17 @@ class Version
 			// make sure that the version exists
 			VersionRules::read($this, $language);
 
-			$fields = $this->model->storage()->read($this->id, $language);
-			$fields = $this->prepareFieldsAfterRead($fields, $language);
+			$fields = VersionCache::get($this, $language);
+
+			if ($fields === null) {
+				$fields = $this->model->storage()->read($this->id, $language);
+				$fields = $this->prepareFieldsAfterRead($fields, $language);
+
+				if ($fields !== null) {
+					VersionCache::set($this, $language, $fields);
+				}
+			}
+
 			return $fields;
 		} catch (NotFoundException) {
 			return null;
@@ -521,6 +552,10 @@ class Version
 			language: $language,
 			fields: $this->prepareFieldsBeforeWrite($fields, $language)
 		);
+
+		// remove the version from the cache to read
+		// a fresh version next time
+		VersionCache::remove($this, $language);
 	}
 
 	/**
@@ -586,6 +621,10 @@ class Version
 			language: $language,
 			fields: $this->prepareFieldsBeforeWrite($fields, $language)
 		);
+
+		// remove the version from the cache to read
+		// a fresh version next time
+		VersionCache::remove($this, $language);
 	}
 
 	/**

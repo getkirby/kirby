@@ -30,6 +30,7 @@ class User extends ModelWithContent
 {
 	use HasFiles;
 	use HasMethods;
+	use HasModels;
 	/**
 	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Users>
 	 */
@@ -43,11 +44,6 @@ class User extends ModelWithContent
 	 * @todo Remove when support for PHP 8.2 is dropped
 	 */
 	public static array $methods = [];
-
-	/**
-	 * Registry with all User models
-	 */
-	public static array $models = [];
 
 	protected UserBlueprint|null $blueprint = null;
 	protected array $credentials;
@@ -87,9 +83,15 @@ class User extends ModelWithContent
 		$this->password = $props['password'] ?? null;
 		$this->role     = $set('role', fn ($role) => Str::lower(trim($role)));
 
+		// Set blueprint before setting content
+		// or translations in the parent constructor.
+		// Otherwise, the blueprint definition cannot be
+		// used when creating the right field values
+		// for the content.
+		$this->setBlueprint($props['blueprint'] ?? null);
+
 		parent::__construct($props);
 
-		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setFiles($props['files'] ?? null);
 	}
 
@@ -218,11 +220,7 @@ class User extends ModelWithContent
 	 */
 	public static function factory(mixed $props): static
 	{
-		if (empty($props['model']) === false) {
-			return static::model($props['model'], $props);
-		}
-
-		return new static($props);
+		return static::model($props['model'] ?? $props['role'] ?? 'default', $props);
 	}
 
 	/**
@@ -445,23 +443,6 @@ class User extends ModelWithContent
 	public function mediaUrl(): string
 	{
 		return $this->kirby()->url('media') . '/users/' . $this->id();
-	}
-
-	/**
-	 * Creates a user model if it has been registered
-	 * @internal
-	 */
-	public static function model(string $name, array $props = []): static
-	{
-		if ($class = (static::$models[$name] ?? null)) {
-			$object = new $class($props);
-
-			if ($object instanceof self) {
-				return $object;
-			}
-		}
-
-		return new static($props);
 	}
 
 	/**

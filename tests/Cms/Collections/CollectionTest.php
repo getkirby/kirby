@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Content\Field;
 use Kirby\Toolkit\Obj;
+use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 
 class MockObject
@@ -39,6 +40,7 @@ class MockObject
 	}
 }
 
+#[CoversClass(Collection::class)]
 class CollectionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Collection';
@@ -507,5 +509,22 @@ class CollectionTest extends TestCase
 			'b' => 'b',
 			'c' => 'c'
 		]);
+	}
+
+	public function testUpdate(): void
+	{
+		$collection = new Collection([
+			new MockObject(['id' => 'a', 'group' => 'a']),
+			new MockObject(['id' => 'b', 'group' => 'a'])
+		]);
+
+		$this->assertSame('a', $collection->first()->group());
+		$this->assertSame('a', $collection->last()->group());
+
+		$new = new MockObject(['id' => 'b', 'group' => 'b']);
+		$collection->update($new);
+
+		$this->assertSame('a', $collection->first()->group());
+		$this->assertSame('b', $collection->last()->group());
 	}
 }

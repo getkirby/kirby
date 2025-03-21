@@ -11,84 +11,16 @@
 			</k-text>
 		</k-lab-example>
 
-		<k-lab-example label="data-theme=blue|info">
-			<div class="k-theming-example" data-theme="blue">
+		<k-lab-example
+			v-for="theme in themes"
+			:key="theme.name"
+			:label="label(theme)"
+		>
+			<div class="k-theming-example" :data-theme="theme.name">
 				<k-icon type="star" />
 				<p class="k-theming-example-text">Example Text</p>
 				<p class="k-theming-example-text-dimmed">Example Text Dimmed</p>
-				<p class="k-theming-example-back"></p>
-			</div>
-		</k-lab-example>
-		<k-lab-example label="data-theme=green|positive">
-			<div class="k-theming-example" data-theme="green">
-				<k-icon type="star" />
-				<p class="k-theming-example-text">Example Text</p>
-				<p class="k-theming-example-text-dimmed">Example Text Dimmed</p>
-				<p class="k-theming-example-back"></p>
-			</div>
-		</k-lab-example>
-		<k-lab-example label="data-theme=yellow|warning">
-			<div class="k-theming-example" data-theme="yellow">
-				<k-icon type="star" />
-				<p class="k-theming-example-text">Example Text</p>
-				<p class="k-theming-example-text-dimmed">Example Text Dimmed</p>
-				<p class="k-theming-example-back"></p>
-			</div>
-		</k-lab-example>
-		<k-lab-example label="data-theme=orange|notice">
-			<div class="k-theming-example" data-theme="orange">
-				<k-icon type="star" />
-				<p class="k-theming-example-text">Example Text</p>
-				<p class="k-theming-example-text-dimmed">Example Text Dimmed</p>
-				<p class="k-theming-example-back"></p>
-			</div>
-		</k-lab-example>
-		<k-lab-example label="data-theme=red|error|negative">
-			<div class="k-theming-example" data-theme="red">
-				<k-icon type="star" />
-				<p class="k-theming-example-text">Example Text</p>
-				<p class="k-theming-example-text-dimmed">Example Text Dimmed</p>
-				<p class="k-theming-example-back"></p>
-			</div>
-		</k-lab-example>
-		<k-lab-example label="data-theme=pink|love">
-			<div class="k-theming-example" data-theme="love">
-				<k-icon type="star" />
-				<p class="k-theming-example-text">Example Text</p>
-				<p class="k-theming-example-text-dimmed">Example Text Dimmed</p>
-				<p class="k-theming-example-back"></p>
-			</div>
-		</k-lab-example>
-		<k-lab-example label="data-theme=aqua">
-			<div class="k-theming-example" data-theme="aqua">
-				<k-icon type="star" />
-				<p class="k-theming-example-text">Example Text</p>
-				<p class="k-theming-example-text-dimmed">Example Text Dimmed</p>
-				<p class="k-theming-example-back"></p>
-			</div>
-		</k-lab-example>
-		<k-lab-example label="data-theme=purple">
-			<div class="k-theming-example" data-theme="purple">
-				<k-icon type="star" />
-				<p class="k-theming-example-text">Example Text</p>
-				<p class="k-theming-example-text-dimmed">Example Text Dimmed</p>
-				<p class="k-theming-example-back"></p>
-			</div>
-		</k-lab-example>
-		<k-lab-example label="data-theme=gray|passive">
-			<div class="k-theming-example" data-theme="passive">
-				<k-icon type="star" />
-				<p class="k-theming-example-text">Example Text</p>
-				<p class="k-theming-example-text-dimmed">Example Text Dimmed</p>
-				<p class="k-theming-example-back"></p>
-			</div>
-		</k-lab-example>
-		<k-lab-example label="data-theme=white">
-			<div class="k-theming-example" data-theme="white">
-				<k-icon type="star" />
-				<p class="k-theming-example-text">Example Text</p>
-				<p class="k-theming-example-text-dimmed">Example Text Dimmed</p>
-				<p class="k-theming-example-back"></p>
+				<k-box icon="box" :theme="theme.name">Example Box</k-box>
 			</div>
 		</k-lab-example>
 	</k-lab-examples>
@@ -97,24 +29,86 @@
 <script>
 export default {
 	computed: {
+		themes() {
+			return [
+				{
+					name: "blue",
+					alias: "info"
+				},
+				{
+					name: "green",
+					alias: "positive"
+				},
+				{
+					name: "yellow",
+					alias: "warning"
+				},
+				{
+					name: "orange",
+					alias: "notice"
+				},
+				{
+					name: "red",
+					alias: "error|negative"
+				},
+				{
+					name: "pink",
+					alias: "love"
+				},
+				{
+					name: "aqua"
+				},
+				{
+					name: "purple"
+				},
+				{
+					name: "gray",
+					alias: "passive"
+				},
+				{
+					name: "white"
+				}
+			];
+		},
 		variables() {
 			return `
 	--theme-color-100
+	--theme-color-150
 	--theme-color-200
+	--theme-color-250
 	--theme-color-300
+	--theme-color-350
 	--theme-color-400
+	--theme-color-450
 	--theme-color-500
+	--theme-color-550
 	--theme-color-600
+	--theme-color-650
 	--theme-color-700
+	--theme-color-750
 	--theme-color-800
+	--theme-color-850
 	--theme-color-900
+	--theme-color-950
 
-	--theme-color-text
-	--theme-color-text-dimmed
 	--theme-color-back
+	--theme-color-border
 	--theme-color-hover
 	--theme-color-icon
+	--theme-color-icon-highlight
+	--theme-color-text
+	--theme-color-text-dimmed
+	--theme-color-text-highlight
 			`;
+		}
+	},
+	methods: {
+		label(theme) {
+			if (theme.alias) {
+				return `data-theme=${theme.name}|${theme.alias}`;
+			}
+
+			return `data-theme=${theme.name}`;
 		}
 	}
 };
@@ -124,21 +118,18 @@ export default {
 .k-theming-example {
 	display: flex;
 	align-items: center;
-	gap: var(--spacing-3);
+	gap: var(--spacing-6);
 }
-.k-theming-example svg {
+.k-theming-example > svg {
 	color: var(--theme-color-icon);
+}
+.k-theming-example p {
+	white-space: nowrap;
 }
 .k-theming-example-text {
 	color: var(--theme-color-text);
 }
 .k-theming-example-text-dimmed {
 	color: var(--theme-color-text-dimmed);
-}
-.k-theming-example-back {
-	width: 2rem;
-	height: 2rem;
-	border-radius: var(--rounded);
-	background: var(--theme-color-back);
 }
 </style>

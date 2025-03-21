@@ -44,5 +44,21 @@
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
+
+		<k-lab-example label="HTML">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-files-field-preview
+					:value="[
+						{
+							image: { icon: 'code', back: 'black', color: 'white' },
+							filename: '<b>test-1.js</b> (123kb)',
+							link: '/'
+						}
+					]"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
 	</k-lab-examples>
 </template>
