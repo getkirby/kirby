@@ -92,7 +92,7 @@ class Query
 	}
 
 	/**
-	 * @deprecated 6.0.0
+	 * @deprecated 5.1.0
 	 * @codeCoverageIgnore
 	 */
 	private function resolveLegacy(array|object $data = []): mixed
