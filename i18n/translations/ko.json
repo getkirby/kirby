@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "{index}번째 필드({field})에 오류가 있습니다.",
+
 	"error.email.preset.notFound": "기본 이메일 주소({name})가 없습니다.",
 
 	"error.field.converter.invalid": "컨버터({converter})가 올바르지 않습니다.",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "필드({name}): 필드 타입({type})이 없습니다.",
 
 	"error.file.changeName.empty": "이름을 입력하세요.",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "파일({id}) 템플릿을 다음 템플릿({template})으로 변경할 수 없습니다. (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "파일({id}) 템플릿을 변경할 수 없습니다.",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "파일명이 같은 파일({filename})이 있습니다.",
 	"error.file.extension.forbidden": "이 확장자({extension})는 업로드할 수 없습니다.",
 	"error.file.extension.invalid": "확장자({extension})가 올바르지 않습니다.",
@@ -170,6 +179,7 @@
 	"error.page.delete": "페이지({slug})를 삭제할 수 없습니다.",
 	"error.page.delete.confirm": "페이지를 삭제하려면 페이지의 제목을 입력하세요.",
 	"error.page.delete.hasChildren": "하위 페이지가 있는 페이지는 삭제할 수 없습니다.",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "페이지({slug})를 삭제할 권한이 없습니다.",
 	"error.page.draft.duplicate": "고유 주소({slug})가 같은 초안 페이지가 있습니다.",
 	"error.page.duplicate": "고유 주소({slug})가 같은 페이지가 있습니다.",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "영상 URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "모든 항목을 삭제할까요?",
+	"field.entries.empty": "항목이 없습니다.",
+
 	"field.files.empty": "선택한 파일이 없습니다.",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "순서 변경",
 
 	"files": "파일",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "파일이 없습니다.",
 
 	"filter": "필터",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "유효한 라이선스가 없습니다.",
 	"license.status.missing.label": "라이선스를 활성화하세요.",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "라이선스 관리",
 	"license.purchased": "구입했습니다.",
 	"license.success": "Kirby와 함께해주셔서 감사합니다.",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "오직 URL을 통해 접근할 수 있습니다.",
 
 	"pages": "페이지",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "페이지가 없습니다.",
 	"pages.status.draft": "초안",
 	"pages.status.listed": "발행",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "정보 복사",
 	"system.info.copied": "시스템 정보가 복사되었습니다.",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "<code>/content</code> 폴더의 권한을 확인하세요.",
 	"system.issues.eol.kirby": "설치된 Kirby 버전이 만료되었습니다. 더 이상 보안 업데이트를 받을 수 없습니다.",
 	"system.issues.eol.plugin": "설치된 플러그인({plugin}의 지원이 종료되었습니다. 더 이상 보안 업데이트를 받을 수 없습니다.",
@@ -665,7 +679,9 @@
 	"system.issues.git": "<code>/.git</code> 폴더의 권한을 확인하세요.",
 	"system.issues.https": "HTTPS를 권장합니다.",
 	"system.issues.kirby": "<code>/kirby</code> 폴더의 권한을 확인하세요.",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "<code>/site</code> 폴더의 권한을 확인하세요.",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "설치한 시스템에 취약점이 있습니다.\n심각도: {severity}\n{description}",
 	"system.issues.vulnerability.plugin": "설치한 플러그인({plugin})에 취약점이 있습니다.\n심각도: {severity}\n{ description }",
 	"system.updateStatus": "업데이트 상태",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "언어 변경",
 	"user.changeName": "사용자명 변경",
 	"user.changePassword": "암호 변경",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "새 암호",
 	"user.changePassword.new.confirm": "새 암호 확인",
 	"user.changeRole": "역할 변경",

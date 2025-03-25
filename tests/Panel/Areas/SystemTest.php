@@ -34,6 +34,25 @@ class SystemTest extends AreaTestCase
 		$this->install();
 	}
 
+	protected function compilerWarning(): array
+	{
+		return [
+			'id'    => 'vue-compiler',
+			'link'  => 'https://getkirby.com/security/vue-compiler',
+			'text'  => 'The Vue template compiler is enabled',
+			'theme' => 'notice'
+		];
+	}
+
+	protected function customWarning(): array
+	{
+		return [
+			'text'  => 'This is a very important announcement!',
+			'kirby' => '*',
+			'php'   => '*'
+		];
+	}
+
 	public function testViewWithoutAuthentication(): void
 	{
 		$this->assertRedirect('system', 'login');
@@ -82,6 +101,12 @@ class SystemTest extends AreaTestCase
 				'text'  => 'This is a very important announcement!',
 				'kirby' => '*',
 				'php'   => '*'
+			],
+			[
+				'id'    => 'vue-compiler',
+				'link' => 'https://getkirby.com/security/vue-compiler',
+				'text' => 'The Vue template compiler is enabled',
+				'theme' => 'notice',
 			]
 		], $props['security']);
 		$this->assertSame([
@@ -90,6 +115,32 @@ class SystemTest extends AreaTestCase
 			'kirby'   => null,
 			'site'    => 'https://example.com/site'
 		], $props['urls']);
+	}
+
+	public function testViewLocal(): void
+	{
+		$this->app([
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertSame([], $props['exceptions']);
+		$this->assertSame([
+			$this->customWarning(),
+			[
+				'id'    => 'local',
+				'icon'  => 'info',
+				'theme' => 'info',
+				'text'  => 'The site is running locally with relaxed security checks'
+			],
+			$this->compilerWarning()
+		], $props['security']);
 	}
 
 	public function testViewDebug(): void
@@ -107,17 +158,43 @@ class SystemTest extends AreaTestCase
 
 		$this->assertSame([], $props['exceptions']);
 		$this->assertSame([
+			$this->customWarning(),
 			[
-				'text'  => 'This is a very important announcement!',
-				'kirby' => '*',
-				'php'   => '*'
+				'id'    => 'debug',
+				'icon'  => 'alert',
+				'theme' => 'negative',
+				'text'  => 'Debugging must be turned off in production',
+				'link'  => 'https://getkirby.com/security/debug'
 			],
-			[
-				'id'   => 'debug',
-				'text' => 'Debugging must be turned off in production',
-				'link' => 'https://getkirby.com/security/debug'
-			]
+			$this->compilerWarning()
 		], $props['security']);
+	}
+
+	public function testViewWithoutConfiguredTemplateCompiler(): void
+	{
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertArrayHasKey(1, $props['security']);
+		$this->assertSame($this->compilerWarning(), $props['security'][1]);
+	}
+
+	public function testViewWithConfiguredTemplateCompiler(): void
+	{
+		$this->app([
+			'options' => [
+				'panel.vue.compiler' => true
+			]
+		]);
+
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertArrayNotHasKey(1, $props['security']);
 	}
 
 	public function testViewHttps(): void
@@ -134,16 +211,13 @@ class SystemTest extends AreaTestCase
 		$props = $view['props'];
 
 		$this->assertSame([
-			[
-				'text'  => 'This is a very important announcement!',
-				'kirby' => '*',
-				'php'   => '*'
-			],
+			$this->customWarning(),
 			[
 				'id'   => 'https',
 				'text' => 'We recommend HTTPS for all your sites',
 				'link' => 'https://getkirby.com/security/https'
-			]
+			],
+			$this->compilerWarning()
 		], $props['security']);
 	}
 
@@ -339,6 +413,7 @@ class SystemTest extends AreaTestCase
 		$this->app([
 			'options' => [
 				'updates' => false,
+				'panel.vue.compiler' => true
 			]
 		]);
 
@@ -388,7 +463,9 @@ class SystemTest extends AreaTestCase
 				'icon'  => 'server'
 			],
 		], $props['environment']);
+
 		$this->assertSame([], $props['security']);
+
 		$this->assertSame([
 			[
 				'author'  => 'A, B',

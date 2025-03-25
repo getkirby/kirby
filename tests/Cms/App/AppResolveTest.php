@@ -4,11 +4,17 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\App
+ */
 class AppResolveTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppResolve';
 
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolveHomePage()
 	{
 		$app = new App([
@@ -30,6 +36,9 @@ class AppResolveTest extends TestCase
 		$this->assertTrue($result->isHomePage());
 	}
 
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolveMainPage()
 	{
 		$app = new App([
@@ -51,6 +60,9 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test', $result->id());
 	}
 
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolveSubPage()
 	{
 		$app = new App([
@@ -75,6 +87,9 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test/subpage', $result->id());
 	}
 
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolvePageRepresentation()
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
@@ -118,6 +133,34 @@ class AppResolveTest extends TestCase
 		$this->assertSame('png', $result->body());
 	}
 
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolvePageHtmlRepresentation()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test'
+					]
+				],
+			]
+		]);
+
+		$response = $app->resolve('test.html');
+		$this->assertSame(301, $response->code());
+		$this->assertSame('/test', $response->header('Location'));
+
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolveSiteFile()
 	{
 		$app = new App([
@@ -142,6 +185,9 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test.jpg', $result->id());
 	}
 
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolvePageFile()
 	{
 		$app = new App([
@@ -171,6 +217,9 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test/test.jpg', $result->id());
 	}
 
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolveMultilangPageRepresentation()
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
@@ -253,6 +302,9 @@ class AppResolveTest extends TestCase
 		$this->assertSame('en', $app->language()->code());
 	}
 
+	/**
+	 * @covers ::resolve
+	 */
 	public function testRepresentationErrorType()
 	{
 		$this->app = new App([

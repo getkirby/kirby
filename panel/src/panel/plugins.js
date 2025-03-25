@@ -127,9 +127,27 @@ export const installComponentMixins = (options) => {
 		section
 	};
 
-	options.mixins = options.mixins.map((mixin) =>
-		typeof mixin === "string" ? mixins[mixin] : mixin
-	);
+	options.mixins = options.mixins
+		.map((mixin) => {
+			// mixin got referenced by name
+			if (typeof mixin === "string" && mixins[mixin] !== undefined) {
+				// component inherits from a parent component:
+				// make sure to only include the mixin if the parent component
+				// hasn't already included it (to avoid duplicate mixins)
+				if (options.extends) {
+					const inherited = new options.extends().$options.mixins ?? [];
+
+					if (inherited.includes(mixins[mixin]) === true) {
+						return;
+					}
+				}
+
+				return mixins[mixin];
+			}
+
+			return mixin;
+		})
+		.filter((mixin) => mixin !== undefined);
 
 	return options;
 };

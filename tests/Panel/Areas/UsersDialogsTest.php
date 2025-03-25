@@ -160,6 +160,7 @@ class UsersDialogsTest extends AreaTestCase
 
 		$this->assertFormDialog($dialog);
 
+		$this->assertSame('Your current password', $props['fields']['currentPassword']['label']);
 		$this->assertSame('New password', $props['fields']['password']['label']);
 		$this->assertSame('Confirm the new password…', $props['fields']['passwordConfirmation']['label']);
 		$this->assertSame('Change', $props['submitButton']);
@@ -168,8 +169,9 @@ class UsersDialogsTest extends AreaTestCase
 	public function testChangePasswordOnSubmit(): void
 	{
 		$this->submit([
-			'password'             => '12345678',
-			'passwordConfirmation' => '12345678'
+			'currentPassword'      => '12345678',
+			'password'             => 'abcdefgh',
+			'passwordConfirmation' => 'abcdefgh'
 		]);
 
 		$dialog = $this->dialog('users/test/changePassword');
@@ -177,14 +179,29 @@ class UsersDialogsTest extends AreaTestCase
 		$this->assertSame('user.changePassword', $dialog['event']);
 		$this->assertSame(200, $dialog['code']);
 
-		$this->assertTrue($this->app->user('test')->validatePassword(12345678));
+		$this->assertTrue($this->app->user('test')->validatePassword('abcdefgh'));
+	}
+
+	public function testChangePasswordOnSubmitWithInvalidCurrentPassword(): void
+	{
+		$this->submit([
+			'currentPassword'      => '123456',
+			'password'             => 'abcdefgh',
+			'passwordConfirmation' => 'abcdefgh'
+		]);
+
+		$dialog = $this->dialog('users/test/changePassword');
+
+		$this->assertSame(400, $dialog['code']);
+		$this->assertSame('Wrong password', $dialog['error']);
 	}
 
 	public function testChangePasswordOnSubmitWithInvalidPassword(): void
 	{
 		$this->submit([
-			'password'             => '1234567',
-			'passwordConfirmation' => '1234567'
+			'currentPassword'      => '12345678',
+			'password'             => 'abcdef',
+			'passwordConfirmation' => 'abcdef'
 		]);
 
 		$dialog = $this->dialog('users/test/changePassword');
@@ -196,8 +213,9 @@ class UsersDialogsTest extends AreaTestCase
 	public function testChangePasswordOnSubmitWithInvalidConfirmation(): void
 	{
 		$this->submit([
-			'password'             => '12345678',
-			'passwordConfirmation' => '1234567'
+			'currentPassword'      => '12345678',
+			'password'             => 'abcdefgh',
+			'passwordConfirmation' => 'abcdefg'
 		]);
 
 		$dialog = $this->dialog('users/test/changePassword');

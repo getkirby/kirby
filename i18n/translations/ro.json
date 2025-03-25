@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "Există o eroare la câmpul \"{field}\" pe rândul {index}",
+
 	"error.email.preset.notFound": "Preset-ul de e-mail \"{name}\" nu a fost găsit",
 
 	"error.field.converter.invalid": "Convertorul \"{converter}\" nu este valid",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Câmpul \"{ name }\": Tipul de câmp \"{ type }\" nu există",
 
 	"error.file.changeName.empty": "Numele nu trebuie să fie gol",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Șablonul pentru fișierul \"{id}\" nu poate fi schimbat la \"{template}\" (valide: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Nu ai voie să schimbi șablonul pentru fișierul \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Există deja un fișier cu numele \"{filename}\"",
 	"error.file.extension.forbidden": "Extensia de fișier \"{extension}\" nu este permisă",
 	"error.file.extension.invalid": "Extensie de fișier nevalidă: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Pagina \"{slug}\" nu poate fi ștearsă",
 	"error.page.delete.confirm": "Te rog introdu titlul paginii pentru a confirma",
 	"error.page.delete.hasChildren": "Pagina are subpagini și nu poate fi ștearsă",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Nu ai voie să ștergi \"{slug}\"",
 	"error.page.draft.duplicate": "Există deja o ciornă cu apendicele URL \"{slug}\"",
 	"error.page.duplicate": "Există deja o pagină cu apendicele URL \"{slug}\"",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "URL-ul video-ului",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Chiar vrei să ștergi toate înregistrările?",
+	"field.entries.empty": "Nicio înregistrare deocamdată",
+
 	"field.files.empty": "Niciun fișier selectat deocamdată",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,6 +394,7 @@
 	"file.sort": "Schimbă poziția",
 
 	"files": "Fișiere",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "Niciun fișier deocamdată",
 
 	"filter": "Filtru",
@@ -468,7 +482,7 @@
 	"license.status.missing.info": "Licență nevalidă",
 	"license.status.missing.label": "Vă rugăm să activați licența",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Gestionează-ți licențele",
 	"license.purchased": "Achiziționat",
 	"license.success": "Mulțumim că susții Kirby",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Pagina este accesibilă doar prin URL",
 
 	"pages": "Pagini",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Nicio pagină deocamdată",
 	"pages.status.draft": "Ciorne",
 	"pages.status.listed": "Publicate",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Directorul de conținut pare să fie expus",
 	"system.issues.eol.kirby": "Versiunea instalată de Kirby a ajuns la sfârșitul vieții utile și nu va mai primi actualizări de securitate.",
 	"system.issues.eol.plugin": "Versiunea instalată a plugin-ului { plugin } a ajuns la sfârșitul vieții utile și nu va mai primi actualizări de securitate.",
@@ -665,7 +679,9 @@
 	"system.issues.git": "Directorul .git pare să fie expus",
 	"system.issues.https": "Recomandăm HTTPS pentru toate site-urile.",
 	"system.issues.kirby": "Directorul Kirby pare să fie expus",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "Directorul site pare să fie expus",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Instalarea ta ar putea fi afectată de următoarea vulnerabilitate ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Instalarea ta ar putea fi afectată de următoarea vulnerabilitate în plugin-ul { plugin } ({ severity } severity): { description }",
 	"system.updateStatus": "Starea actualizării",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Schimbă limba",
 	"user.changeName": "Redenumește acest utilizator",
 	"user.changePassword": "Schimbă parola",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Parola nouă",
 	"user.changePassword.new.confirm": "Confirmă parola nouă...",
 	"user.changeRole": "Schimbă rolul",

@@ -1214,8 +1214,10 @@ class App
 	 * @internal
 	 * @throws \Kirby\Exception\NotFoundException if the home page cannot be found
 	 */
-	public function resolve(string|null $path = null, string|null $language = null): mixed
-	{
+	public function resolve(
+		string|null $path = null,
+		string|null $language = null
+	): mixed {
 		// set the current translation
 		$this->setCurrentTranslation($language);
 
@@ -1263,6 +1265,12 @@ class App
 		// only try to return a representation
 		// when the page has been found
 		if ($page) {
+			// if extension is the default content type,
+			// redirect to page URL without extension
+			if ($extension === 'html') {
+				return Response::redirect($page->url(), 301);
+			}
+
 			try {
 				$response = $this->response();
 				$output   = $page->render([], $extension);
@@ -1407,7 +1415,7 @@ class App
 	public function sessionHandler(): AutoSession
 	{
 		return $this->sessionHandler ??= new AutoSession(
-			$this->root('sessions'),
+			($this->component('session::store'))($this),
 			$this->option('session', [])
 		);
 	}

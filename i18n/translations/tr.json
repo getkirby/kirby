@@ -22,7 +22,7 @@
 	"copy.all": "Tümünü kopyala",
 	"copy.success": "{count} kopyalandı!",
 	"copy.success.multiple": "{count} kopyalandı!",
-	"copy.url": "Copy URL",
+	"copy.url": "URL kopyala",
 	"create": "Oluştur",
 	"custom": "Özel",
 
@@ -92,15 +92,23 @@
 
 	"error.cache.type.invalid": "Geçersiz önbellek türü \"{type}\"",
 
-	"error.content.lock.delete": "The version is locked and cannot be deleted",
-	"error.content.lock.move": "The source version is locked and cannot be moved",
-	"error.content.lock.publish": "This version is already published",
-	"error.content.lock.replace": "The version is locked and cannot be replaced",
-	"error.content.lock.update": "The version is locked and cannot be updated",
+	"error.content.lock.delete": "Bu sürüm kilitlidir ve silinemez",
+	"error.content.lock.move": "Bu kaynak sürümü kilitlidir ve taşınamaz",
+	"error.content.lock.publish": "Bu sürüm zaten yayınlandı",
+	"error.content.lock.replace": "Bu sürüm kilitlidir ve değiştirilemez",
+	"error.content.lock.update": "Bu sürüm kilitlidir ve güncellenemez",
+
+	"error.entries.max.plural": "{max} girdiden fazlasını eklememelisiniz",
+	"error.entries.max.singular": "Birden fazla girdi eklememelisiniz",
+	"error.entries.min.plural": "En az {min} girdi eklemelisiniz",
+	"error.entries.min.singular": "En az bir girdi eklemelisiniz",
+	"error.entries.supports": "\"{type}\" alan türü girdiler alanı için desteklenmiyor",
+	"error.entries.validation": "{index} satırındaki \"{field}\" alanında bir hata var",
 
 	"error.email.preset.notFound": "\"{name}\" e-posta adresi bulunamadı",
 
 	"error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",
+	"error.field.link.options": "Geçersiz seçenekler: {options}",
 	"error.field.type.missing": "\"{ name }\" alanı: \"{ type }\" alan türü mevcut değil",
 
 	"error.file.changeName.empty": "İsim boş olmamalıdır",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "\"{id}\" dosyası için şablon \"{template}\" olarak değiştirilemez (geçerli: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "\"{id}\" dosyası için şablonu değiştirmenize izin verilmiyor",
 
+	"error.file.delete.multiple": "Tüm dosyalar silinemedi. Silinmeyi engelleyen belirli hatayı görmek için kalan her dosyayı ayrı ayrı deneyin.",
 	"error.file.duplicate": "\"{filename}\" isimli bir dosya zaten var",
 	"error.file.extension.forbidden": "\"{extension}\" dosya uzantısına izin verilmiyor",
 	"error.file.extension.invalid": "Geçersiz uzantı: {extension}",
@@ -126,7 +135,7 @@
 	"error.file.name.missing": "Dosya adı boş bırakılamaz",
 	"error.file.notFound": "\"{filename}\" dosyası bulunamadı",
 	"error.file.orientation": "Resmin oryantasyonu \"{orientation}\" olmalıdır",
-	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
+	"error.file.sort.permission": "\"{filename}\" dosyasının sıralamasını değiştiremezsiniz",
 	"error.file.type.forbidden": "{type} dosya yükleme izni yok",
 	"error.file.type.invalid": "Geçersiz dosya türü: {type}",
 	"error.file.undefined": "Dosya bulunamad\u0131",
@@ -170,6 +179,7 @@
 	"error.page.delete": "\"{slug}\" sayfası silinemedi",
 	"error.page.delete.confirm": "Onaylamak için sayfa başlığını girin",
 	"error.page.delete.hasChildren": "Sayfada alt sayfalar var ve silinemiyor",
+	"error.page.delete.multiple": "Tüm sayfalar silinemedi. Silinmeyi engelleyen belirli hatayı görmek için kalan her sayfayı ayrı ayrı deneyin.",
 	"error.page.delete.permission": "\"{slug}\" öğesini silmenize izin verilmiyor",
 	"error.page.draft.duplicate": "\"{slug}\" adres eki olan bir sayfa taslağı zaten mevcut",
 	"error.page.duplicate": "\"{slug}\" adres eki içeren bir sayfa zaten mevcut",
@@ -177,7 +187,7 @@
 	"error.page.move.ancestor": "Sayfa kendi içine taşınamaz",
 	"error.page.move.directory": "Sayfa dizini taşınamaz",
 	"error.page.move.duplicate": "\"{slug}\" URL ekine sahip bir alt sayfa zaten mevcut",
-	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
+	"error.page.move.noSections": "\"{parent}\" sayfası, planında herhangi bir sayfa bölümü bulunmadığı için herhangi bir sayfanın üst öğesi olamaz",
 	"error.page.move.notFound": "Taşınan sayfa bulunamadı",
 	"error.page.move.permission": "\"{slug}\" öğesini taşımanıza izin verilmiyor",
 	"error.page.move.template": "\"{template}\" şablonu \"{parent}\" alt sayfası olarak kabul edilmiyor",
@@ -307,9 +317,9 @@
 	"field.blocks.heading.name": "Başlık",
 	"field.blocks.heading.text": "Metin",
 	"field.blocks.heading.placeholder": "Başlık …",
-	"field.blocks.figure.back.plain": "Plain",
-	"field.blocks.figure.back.pattern.light": "Pattern (light)",
-	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
+	"field.blocks.figure.back.plain": "Düz",
+	"field.blocks.figure.back.pattern.light": "Desen (açık)",
+	"field.blocks.figure.back.pattern.dark": "Desen (koyu)",
 	"field.blocks.image.alt": "Alternatif metin",
 	"field.blocks.image.caption": "Altyazı",
 	"field.blocks.image.crop": "Kırp",
@@ -346,8 +356,11 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Tüm girdileri gerçekten silmek istiyor musunuz?",
+	"field.entries.empty": "Henüz bir girdi yok",
+
 	"field.files.empty": "Henüz dosya seçilmedi",
-	"field.files.empty.single": "No file selected yet",
+	"field.files.empty.single": "Henüz dosya seçilmedi",
 
 	"field.layout.change": "Düzeni değiştir",
 	"field.layout.delete": "Düzeni sil",
@@ -359,14 +372,14 @@
 	"field.object.empty": "Henüz bilgi yok",
 
 	"field.pages.empty": "Henüz sayfa seçilmedi",
-	"field.pages.empty.single": "No page selected yet",
+	"field.pages.empty.single": "Henüz sayfa seçilmedi",
 
 	"field.structure.delete.confirm": "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
 	"field.structure.delete.confirm.all": "Tüm girdileri gerçekten silmek istiyor musunuz?",
 	"field.structure.empty": "Hen\u00fcz bir girdi yok",
 
 	"field.users.empty": "Henüz kullanıcı seçilmedi",
-	"field.users.empty.single": "No user selected yet",
+	"field.users.empty.single": "Henüz kullanıcı seçilmedi",
 
 	"fields.empty": "Henüz alan yok",
 
@@ -381,16 +394,17 @@
 	"file.sort": "Pozisyon değiştir",
 
 	"files": "Dosyalar",
+	"files.delete.confirm.selected": "Seçili dosyaları gerçekten silmek istiyor musunuz? Bu eylem geri alınamaz.",
 	"files.empty": "Henüz dosya yok",
 
 	"filter": "Filtre",
 
-	"form.discard": "Discard changes",
-	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
-	"form.locked": "This content is disabled for you as it is currently edited by another user",
-	"form.unsaved": "The current changes have not yet been saved",
-	"form.preview": "Preview changes",
-	"form.preview.draft": "Preview draft",
+	"form.discard": "Değişiklikleri iptal et",
+	"form.discard.confirm": "Gerçekten <strong>tüm değişikliklerinizi silmek</strong> istiyor musunuz?",
+	"form.locked": "Bu içerik şu anda başka bir kullanıcı tarafından düzenlendiği için sizin için devre dışı bırakıldı",
+	"form.unsaved": "Mevcut değişiklikler henüz kaydedilmedi",
+	"form.preview": "Değişiklikleri önizle",
+	"form.preview.draft": "Taslağı önizle",
 
 	"hide": "Gizle",
 	"hour": "Saat",
@@ -467,8 +481,8 @@
 	"license.status.missing.bubble": "Sitenizi yayına almaya hazır mısınız?",
 	"license.status.missing.info": "Geçerli lisans yok",
 	"license.status.missing.label": "Lütfen lisansınızı etkinleştirin",
-	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.info": "Lisans durumu bilinmiyor",
+	"license.status.unknown.label": "Bilinmiyor",
 	"license.manage": "Lisanslarınızı yönetin",
 	"license.purchased": "Satın alındı",
 	"license.success": "Kirby'yi desteklediğiniz için teşekkürler",
@@ -481,9 +495,9 @@
 
 	"lock.unsaved": "Kaydedilmemiş değişiklikler",
 	"lock.unsaved.empty": "Daha fazla kaydedilmemiş değişiklik yok",
-	"lock.unsaved.files": "Unsaved files",
-	"lock.unsaved.pages": "Unsaved pages",
-	"lock.unsaved.users": "Unsaved accounts",
+	"lock.unsaved.files": "Kaydedilmemiş dosyalar",
+	"lock.unsaved.pages": "Kaydedilmemiş sayfalar",
+	"lock.unsaved.users": "Kaydedilmemiş hesaplar",
 	"lock.isLocked": "{email} tarafından yapılan kaydedilmemiş değişiklikler",
 	"lock.unlock": "Kilidi Aç",
 	"lock.unlock.submit": "Kaydedilmemiş değişikliklerin kilidini <strong>{email}</strong> ile açın ve üzerine yazın",
@@ -590,6 +604,7 @@
 	"page.status.unlisted.description": "Bu sayfa sadece bağlantı adresi ile erişilebilir",
 
 	"pages": "Sayfalar",
+	"pages.delete.confirm.selected": "Seçili sayfaları gerçekten silmek istiyor musunuz? Bu işlem geri alınamaz.",
 	"pages.empty": "Henüz sayfa yok",
 	"pages.status.draft": "Taslaklar",
 	"pages.status.listed": "Yayınlandı",
@@ -607,7 +622,7 @@
 	"prev": "Önceki",
 	"preview": "Önizle",
 
-	"publish": "Publish",
+	"publish": "Yayınla",
 	"published": "Yayınlandı",
 
 	"remove": "Kaldır",
@@ -629,9 +644,9 @@
 	"role.nobody.title": "Hiçkimse",
 
 	"save": "Kaydet",
-	"saved": "Saved",
+	"saved": "Kaydedildi",
 	"search": "Arama",
-	"searching": "Searching",
+	"searching": "Arama",
 	"search.min": "Aramak için {min} karakter girin",
 	"search.all": "Tüm {count} sonuçlarını göster",
 	"search.results.none": "Sonuç yok",
@@ -656,7 +671,6 @@
 
 	"system.info.copy": "Bilgileri kopyala",
 	"system.info.copied": "Sistem bilgisi kopyalandı",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
 	"system.issues.eol.kirby": "Yüklü Kirby sürümünüz kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
 	"system.issues.eol.plugin": "{ plugin } eklentisinin yüklü sürümü kullanım ömrünün sonuna ulaştı ve daha fazla güvenlik güncellemesi almayacak",
@@ -665,7 +679,9 @@
 	"system.issues.git": ".git klasörü açığa çıkmış görünüyor",
 	"system.issues.https": "Tüm siteleriniz için HTTPS'yi öneriyoruz",
 	"system.issues.kirby": "Kirby klasörü açığa çıkmış görünüyor",
+	"system.issues.local": "Site rahat güvenlik kontrolleri ile yerel olarak çalışıyor",
 	"system.issues.site": "Site klasörü açığa çıkmış görünüyor",
+	"system.issues.vue.compiler": "Vue şablon derleyicisi etkinleştirildi",
 	"system.issues.vulnerability.kirby": "Kurulumunuz aşağıdaki güvenlik açığından ({ severity } önem derecesi) etkilenebilir: { description }",
 	"system.issues.vulnerability.plugin": "Kurulumunuz, { plugin } eklentisindeki ({ severity } önem derecesi) aşağıdaki güvenlik açığından etkilenebilir: { description }",
 	"system.updateStatus": "Güncelleme durumu",
@@ -682,10 +698,10 @@
 	"tel.placeholder": "+49123456789",
 	"template": "\u015eablon",
 
-	"theme": "Theme",
-	"theme.light": "Lights on",
-	"theme.dark": "Lights off",
-	"theme.automatic": "Match system default",
+	"theme": "Tema",
+	"theme.light": "Açık mod",
+	"theme.dark": "Koyu mod",
+	"theme.automatic": "Sistem varsayılanı",
 
 	"title": "Başlık",
 	"today": "Bugün",
@@ -745,6 +761,7 @@
 	"user.changeLanguage": "Dili değiştir",
 	"user.changeName": "Kullanıcıyı yeniden adlandır",
 	"user.changePassword": "Şifre değiştir",
+	"user.changePassword.current": "Mevcut şifreniz",
 	"user.changePassword.new": "Yeni Şifre",
 	"user.changePassword.new.confirm": "Şifreyi onaylayın...",
 	"user.changeRole": "Rolü değiştir",
@@ -756,13 +773,13 @@
 	"users": "Kullanıcılar",
 
 	"version": "Versiyon",
-	"version.changes": "Changed version",
-	"version.compare": "Compare versions",
+	"version.changes": "Değiştirilen sürüm",
+	"version.compare": "Sürümleri karşılaştırın",
 	"version.current": "Mevcut sürüm",
 	"version.latest": "En son sürüm",
 	"versionInformation": "Sürüm bilgisi",
 
-	"view": "View",
+	"view": "Görüntüle",
 	"view.account": "Hesap Bilgilerin",
 	"view.installation": "Kurulum",
 	"view.languages": "Diller",

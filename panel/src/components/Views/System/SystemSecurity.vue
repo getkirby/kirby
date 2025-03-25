@@ -13,11 +13,11 @@
 		<k-items
 			:items="
 				issues.map((issue) => ({
-					// give each message an image prop unless it already has one
+					theme: 'negative',
 					image: {
-						back: 'var(--color-red-200)',
+						back: 'var(--theme-color-200)',
 						icon: issue.icon ?? 'alert',
-						color: 'var(--color-red)'
+						color: 'var(--theme-color-icon)'
 					},
 					target: '_blank',
 					...issue
@@ -92,7 +92,7 @@ export default {
 			if (status !== "ok") {
 				this.issues.push({
 					id: "method-overwrite-text",
-					text: this.$t("system.issues.api.methods"),
+					text: "Your server does not support PATCH requests",
 					link: "https://getkirby.com/docs/reference/system/options/api#methods-overwrite",
 					icon: "protected"
 				});
