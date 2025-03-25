@@ -92,7 +92,7 @@ export default {
 			if (status !== "ok") {
 				this.issues.push({
 					id: "method-overwrite-text",
-					text: this.$t("system.issues.api.methods"),
+					text: "Your server does not support PATCH requests",
 					link: "https://getkirby.com/docs/reference/system/options/api#methods-overwrite",
 					icon: "protected"
 				});
