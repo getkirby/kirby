@@ -1,7 +1,7 @@
 # Kirby License Agreement
 
-Published: November 12, 2024  
-Source: https://getkirby.com/license/2024-11-12
+Published: March 18, 2025  
+Source: https://getkirby.com/license/2025-03-18
 
 ## About this Agreement
 
@@ -33,7 +33,7 @@ Before we get started with the conditions of the Agreement, let's define the ter
 
 - When we refer to **"You"**, we mean the licensee. Before purchasing Kirby, that's the individual or company that has downloaded and/or installed Kirby for a Development Installation or Private Installation. When used for a Public Site, the licensee is the individual or company that has purchased the Kirby license or received a free license from Us on request. If you work on a client project and have purchased the Kirby license for your client, you (and _not_ the client) are the licensee.
 - When we refer to **"We"**/**"Us"**/**"Our"**, we mean the licensor, the Content Folder GmbH & Co. KG. You can find Our company and contact information on Our [contact page](https://getkirby.com/contact).
-- **"Client"** is the individual or company on whose behalf You create or work on a Website. This only applies if the client is not the licensee.
+- **"Client"** refers to the individual or company that is primarily responsible for and benefits from the Website, unless they are the licensee. You might create or work on the Website on behalf of the Client, either directly or through other intermediaries (e.g. as a freelancer for an agency that works on a client website).
 - A **"Website"** is a single Kirby project that is defined by its domain name and root directory (e.g. `https://sub.example.com` or `https://example.com/example/`). Each (sub)domain and root directory is a separate Website, even if the projects are related in any way. Exception: If You use the cross-domain multi-language feature with the same `content` folder, these domains count as the same Website.
   You may use Kirby as a headless backend or as a static site generator. In these cases the Website is defined by the domain and root directory of the user- or visitor-facing frontend(s).
 - A **"Development Installation"** is a Website that is installed purely for the purposes of development and client preview. It must only be accessible by a restricted number of users (like on a personal computer, on a server in a network with restricted access or when protecting a staging website with a password that only a restricted number of users know).
