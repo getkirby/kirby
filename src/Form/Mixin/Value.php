@@ -60,6 +60,29 @@ trait Value
 	}
 
 	/**
+	 * Checks if the field can be stored in the given language.
+	 */
+	public function isStorable(Language $language): bool
+	{
+		// the field cannot be saved at all
+		if ($this->isSaveable() === false) {
+			return false;
+		}
+
+		// the field cannot be translated into the given language
+		if ($this->isTranslatable($language) === false) {
+			return false;
+		}
+
+		// the field is hidden by a `when` rule
+		if ($this->isActive() === false) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * A field might be saveable, but can still not be submitted
 	 * because it is disabled, not translatable into the given
 	 * language or not active due to a `when` rule.
