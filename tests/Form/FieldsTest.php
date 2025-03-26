@@ -8,9 +8,19 @@ use Kirby\Cms\TestCase;
 use Kirby\Form\Field\UnknownField;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+class UnfillableTestField extends FieldClass
+{
+	public function isFillable(): bool
+	{
+		return false;
+	}
+}
+
 #[CoversClass(Fields::class)]
 class FieldsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Form.Fields';
+
 	protected Page $model;
 
 	public function setUp(): void
@@ -21,11 +31,14 @@ class FieldsTest extends TestCase
 
 	public function testAppendUnknownFields(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type' => 'text',
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
 			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$fields->appendUnknownFields([
 			'a' => 'A',
@@ -39,14 +52,17 @@ class FieldsTest extends TestCase
 
 	public function testConstruct(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type' => 'text',
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+				'b' => [
+					'type' => 'text',
+				],
 			],
-			'b' => [
-				'type' => 'text',
-			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame('a', $fields->first()->name());
 		$this->assertSame($this->model, $fields->first()->model());
@@ -56,14 +72,17 @@ class FieldsTest extends TestCase
 
 	public function testConstructWithModel(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type' => 'text',
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+				'b' => [
+					'type' => 'text',
+				],
 			],
-			'b' => [
-				'type' => 'text',
-			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame('a', $fields->first()->name());
 		$this->assertSame($this->model, $fields->first()->model());
@@ -73,38 +92,43 @@ class FieldsTest extends TestCase
 
 	public function testDefaults(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'default' => 'a',
-				'type'    => 'text'
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'default' => 'a',
+					'type'    => 'text'
+				],
+				'b' => [
+					'type'    => 'text'
+				],
 			],
-			'b' => [
-				'default' => 'b',
-				'type'    => 'text'
-			],
-		], $this->model);
-
-		$this->assertSame(
-			['a' => 'a', 'b' => 'b'],
-			$fields->defaults()
+			model: $this->model
 		);
+
+		$this->assertSame([
+			'a' => 'a',
+			'b' => null
+		], $fields->defaults());
 	}
 
 	public function testErrors(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'label'    => 'A',
-				'type'     => 'text',
-				'required' => true
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'label'    => 'A',
+					'type'     => 'text',
+					'required' => true
+				],
+				'b' => [
+					'label'     => 'B',
+					'type'      => 'text',
+					'maxlength' => 3,
+					'value'     => 'Too long'
+				],
 			],
-			'b' => [
-				'label'    => 'B',
-				'type'      => 'text',
-				'maxlength' => 3,
-				'value'     => 'Too long'
-			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame([
 			'a' => [
@@ -137,67 +161,63 @@ class FieldsTest extends TestCase
 
 	public function testErrorsWithoutErrors(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type' => 'text',
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+				'b' => [
+					'type' => 'text',
+				],
 			],
-			'b' => [
-				'type' => 'text',
-			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame([], $fields->errors());
 	}
 
 	public function testFill(): void
 	{
-		Field::$types['foo'] = [
-			'save' => false
-		];
-
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-				'value' => 'A'
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				],
+				'b' => [
+					'type'  => 'text',
+					'value' => 'B'
+				]
 			],
-			'b' => [
-				'type'  => 'text',
-				'value' => 'B'
-			],
-			'c' => [
-				'type'  => 'foo',
-				'value' => 'C'
-			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame([
 			'a' => 'A',
 			'b' => 'B',
-			'c' => null
 		], $fields->toFormValues());
 
 		$fields->fill([
-			'a' => 'A updated',
-			'b' => 'B updated',
-			'c' => 'C updated',
-			'd' => 'D new'
+			'a' => 'A updated'
 		]);
 
 		$this->assertSame([
 			'a' => 'A updated',
-			'b' => 'B updated',
-			'c' => null
+			'b' => 'B',
 		], $fields->toFormValues());
 	}
 
 	public function testFillWithClosureValues(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-				'value' => 'A'
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				],
 			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$fields->fill([
 			'a' => fn ($value) => $value . ' updated'
@@ -206,6 +226,58 @@ class FieldsTest extends TestCase
 		$this->assertSame([
 			'a' => 'A updated'
 		], $fields->toFormValues());
+	}
+
+	public function testFillWithUnfillableField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => new UnfillableTestField(['name' => 'a']),
+				'b' => [
+					'type' => 'text',
+				]
+			],
+			model: $this->model
+		);
+
+		$fields->fill([
+			'a' => 'A',
+			'b' => 'B'
+		]);
+
+		$this->assertSame([
+			'b' => 'B',
+		], $fields->toFormValues());
+	}
+
+	public function testFillWithUnknownFields(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+			],
+			model: $this->model
+		);
+
+		$input = [
+			'a' => 'A',
+			'b' => 'B',
+		];
+
+		$fields->fill($input);
+
+		$this->assertSame([
+			'a' => 'A',
+		], $fields->toFormValues(), 'Unknown fields are not included');
+
+		$fields->appendUnknownFields($input)->fill($input);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toFormValues(), 'Unknown fields are included');
 	}
 
 	public function testFind(): void
@@ -223,11 +295,14 @@ class FieldsTest extends TestCase
 			]
 		];
 
-		$fields = new Fields([
-			'mother' => [
-				'type' => 'test',
+		$fields = new Fields(
+			fields: [
+				'mother' => [
+					'type' => 'test',
+				],
 			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame('mother', $fields->find('mother')->name());
 		$this->assertSame('child', $fields->find('mother+child')->name());
@@ -236,11 +311,14 @@ class FieldsTest extends TestCase
 
 	public function testFindWhenFieldHasNoForm(): void
 	{
-		$fields = new Fields([
-			'mother' => [
-				'type' => 'text',
+		$fields = new Fields(
+			fields: [
+				'mother' => [
+					'type' => 'text',
+				],
 			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertNull($fields->find('mother+child'));
 	}
@@ -254,17 +332,20 @@ class FieldsTest extends TestCase
 
 		// language passed
 		$language = new Language(['code' => 'de']);
-		$fields = new Fields([], language: $language);
+		$fields = new Fields(fields: [], language: $language);
 		$this->assertSame('de', $fields->language()->code());
 		$this->assertFalse($fields->language()->isDefault());
 	}
 
 	public function testRemoveUnknownFields(): void
 	{
-		$fields = new Fields([
-			'a' => new Field('text', ['name' => 'a']),
-			'b' => new UnknownField(name: 'b'),
-		], $this->model);
+		$fields = new Fields(
+			fields: [
+				'a' => new Field('text', ['name' => 'a']),
+				'b' => new UnknownField(name: 'b'),
+			],
+			model: $this->model
+		);
 
 		$this->assertCount(2, $fields);
 
@@ -280,59 +361,41 @@ class FieldsTest extends TestCase
 
 	public function testSubmit(): void
 	{
-		Field::$types['foo'] = [
-			'save' => false
-		];
-
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-				'value' => 'A'
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'text',
+					'value' => 'B',
+				],
 			],
-			'b' => [
-				'type'  => 'text',
-				'value' => 'B'
-			],
-			'c' => [
-				'type'  => 'foo',
-				'value' => 'C'
-			],
-			'd' => [
-				'type'     => 'text',
-				'value'    => 'D',
-				'disabled' => true
-			],
-		], $this->model);
-
-		$this->assertSame([
-			'a' => 'A',
-			'b' => 'B',
-			'd' => 'D'
-		], $fields->toStoredValues());
+			model: $this->model
+		);
 
 		$fields->submit([
 			'a' => 'A updated',
-			'b' => 'B updated',
-			'c' => 'C updated',
-			'd' => 'D updated',
-			'e' => 'E new'
 		]);
 
 		$this->assertSame([
 			'a' => 'A updated',
-			'b' => 'B updated',
-			'd' => 'D'
+			'b' => 'B',
 		], $fields->toStoredValues());
 	}
 
 	public function testSubmitWithClosureValues(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-				'value' => 'A'
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
 			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$fields->submit([
 			'a' => fn ($value) => $value . ' updated'
@@ -340,19 +403,80 @@ class FieldsTest extends TestCase
 
 		$this->assertSame([
 			'a' => 'A updated'
-		], $fields->toFormValues());
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithDisabledField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'     => 'text',
+					'disabled' => true,
+					'value'    => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit([
+			'a' => 'A updated',
+			'b' => 'B updated',
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => 'B'
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithUnknownField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+			],
+			model: $this->model
+		);
+
+		$input = [
+			'a' => 'A',
+			'b' => 'B',
+		];
+
+		$fields->submit($input);
+
+		$this->assertSame([
+			'a' => 'A',
+		], $fields->toStoredValues(), 'Unknown fields are not included');
+
+		$fields->appendUnknownFields($input)->submit($input);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toStoredValues(), 'Unknown fields are included');
 	}
 
 	public function testToArray(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type' => 'text',
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+				'b' => [
+					'type' => 'text',
+				],
 			],
-			'b' => [
-				'type' => 'text',
-			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame(
 			['a' => 'a', 'b' => 'b'],
@@ -362,47 +486,153 @@ class FieldsTest extends TestCase
 
 	public function testToFormValues(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-				'value' => 'Value a'
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				],
+				'b' => [
+					'type'  => 'text',
+					'value' => 'B'
+				],
 			],
-			'b' => [
-				'type'  => 'text',
-				'value' => 'Value b'
-			],
-		], $this->model);
-
-		$this->assertSame(
-			['a' => 'Value a', 'b' => 'Value b'],
-			$fields->toFormValues()
+			model: $this->model
 		);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toFormValues());
 	}
 
-	public function testToStoredValues(): void
+	public function testToFormValuesWithNonSaveableField(): void
 	{
 		Field::$types['test'] = [
 			'save' => fn ($value) => $value . ' stored'
 		];
 
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'test',
-				'value' => 'Value a'
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'test',
+					'value' => 'A'
+				],
+				'b' => [
+					'type'  => 'test',
+					'value' => 'B'
+				],
 			],
-			'b' => [
-				'type'  => 'test',
-				'value' => 'Value b'
-			],
-		], $this->model);
+			model: $this->model
+		);
 
-		$this->assertSame(
-			['a' => 'Value a', 'b' => 'Value b'],
-			$fields->toFormValues()
-		);
-		$this->assertSame(
-			['a' => 'Value a stored', 'b' => 'Value b stored'],
-			$fields->toStoredValues()
-		);
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toFormValues());
 	}
+
+	public function testToStoredValues(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				],
+				'b' => [
+					'type'  => 'text',
+					'value' => 'B'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toStoredValues());
+	}
+
+	public function testToStoredValuesWithNonSaveableField(): void
+	{
+		Field::$types['test'] = [
+			'save' => fn ($value) => $value . ' stored'
+		];
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'test',
+					'value' => 'A'
+				],
+				'b' => [
+					'type'  => 'test',
+					'value' => 'B'
+				],
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => 'A stored',
+			'b' => 'B stored'
+		], $fields->toStoredValues());
+	}
+
+	public function testToStoredValuesWithNonTranslatableFieldsInPrimaryLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'      => 'text',
+					'translate' => true,
+					'value'     => 'A'
+				],
+				'b' => [
+					'type'      => 'text',
+					'translate' => false,
+					'value'     => 'B'
+				]
+			],
+			model: $this->model,
+			language: $this->app->language('en')
+		);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toStoredValues());
+	}
+
+	public function testToStoredValuesWithNonTranslatableFieldsInSecondaryLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'      => 'text',
+					'translate' => true,
+					'value'     => 'A'
+				],
+				'b' => [
+					'type'      => 'text',
+					'translate' => false,
+					'value'     => 'B'
+				]
+			],
+			model: $this->model,
+			language: $this->app->language('de')
+		);
+
+		$this->assertSame([
+			'a' => 'A'
+		], $fields->toStoredValues());
+	}
+
 }

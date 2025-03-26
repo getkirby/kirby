@@ -255,7 +255,19 @@ class Fields extends Collection
 	 */
 	public function toFormValues(bool $defaults = false): array
 	{
-		return $this->toArray(fn ($field) => $field->toFormValue($defaults));
+		$values   = [];
+		$language = $this->language();
+
+		foreach ($this->data as $name => $field) {
+			// don't add non-fillable fields
+			if ($field->isFillable($language) === false) {
+				continue;
+			}
+
+			$values[$name] = $field->toFormValue($defaults);
+		}
+
+		return $values;
 	}
 
 	/**
@@ -264,22 +276,18 @@ class Fields extends Collection
 	 */
 	public function toStoredValues(bool $defaults = false): array
 	{
-		$store    = [];
+		$values   = [];
 		$language = $this->language();
 
 		foreach ($this->data as $name => $field) {
-			// don't add non-saveable fields to the store
-			if ($field->isSaveable() === false) {
+			// don't add non-storable fields to the store
+			if ($field->isStorable($language) === false) {
 				continue;
 			}
 
-			if ($field->isTranslatable($language) === true) {
-				$value = $field->toStoredValue($defaults);
-			}
-
-			$store[$name] = $value ?? null;
+			$values[$name] = $field->toStoredValue($defaults);
 		}
 
-		return $store;
+		return $values;
 	}
 }
