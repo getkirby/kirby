@@ -670,12 +670,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			'language'       => $languageCode,
 		]);
 
-		// validate the input
-		if ($validate === true && $form->isInvalid() === true) {
-			throw new InvalidArgumentException(
-				fallback: 'Invalid form with errors',
-				details: $form->errors()
-			);
+		if ($validate === true) {
+			$form->validate();
 		}
 
 		return $this->commit(
