@@ -532,6 +532,67 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testToProps(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => [
+				'autofocus'  => false,
+				'counter'    => true,
+				'disabled'   => false,
+				'font'       => 'sans-serif',
+				'hidden'     => false,
+				'name'       => 'a',
+				'required'   => false,
+				'saveable'   => true,
+				'spellcheck' => false,
+				'translate'  => true,
+				'type'       => 'text',
+				'width'      => '1/1',
+			],
+		], $fields->toProps());
+	}
+
+	public function testToPropsForNonTranslatableField(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'translate' => false,
+					'type'      => 'text',
+					'value'     => 'A',
+				],
+				'b' => [
+					'type'      => 'text',
+					'value'     => 'B',
+				]
+			],
+			model: $this->model,
+			language: $this->app->language('de')
+		);
+
+		$props = $fields->toProps();
+
+		$this->assertTrue($props['a']['disabled']);
+		$this->assertFalse($props['a']['translate']);
+
+		$this->assertFalse($props['b']['disabled']);
+		$this->assertTrue($props['b']['translate']);
+	}
+
 	public function testToStoredValues(): void
 	{
 		$this->setUpSingleLanguage();

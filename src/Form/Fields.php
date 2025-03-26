@@ -271,6 +271,28 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Returns an array with the props of each field
+	 * for the frontend
+	 */
+	public function toProps(): array
+	{
+		$props    = [];
+		$language = $this->language();
+
+		foreach ($this->data as $name => $field) {
+			$props[$name] = $field->toArray();
+
+			if ($field->isTranslatable($language) === false) {
+				$props[$name]['disabled'] = true;
+			}
+
+			unset($props[$name]['value']);
+		}
+
+		return $props;
+	}
+
+	/**
 	 * Returns an array with the stored value of each field
 	 * (e.g. used for saving to content storage)
 	 */
