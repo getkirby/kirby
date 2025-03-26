@@ -23,7 +23,9 @@ class UnknownField extends FieldClass
 {
 	public function __construct(string $name)
 	{
-		$this->name = $name;
+		parent::__construct([
+			'name' => $name,
+		]);
 	}
 
 	public function props(): array
