@@ -123,7 +123,6 @@ export default {
 		paste(e) {
 			this.$emit("paste", e);
 			this.close();
-			this.close();
 		},
 		close() {
 			this.$emit("cancel");
