@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Cms\TestCase;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * @coversDefaultClass \Kirby\Form\Fields
@@ -284,5 +285,37 @@ class FieldsTest extends TestCase
 
 		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
 		$this->assertSame(['a' => 'Value a stored', 'b' => 'Value b stored'], $fields->toStoredValues());
+	}
+
+	public function testValidate(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'     => 'text',
+					'required' => true,
+				]
+			],
+			model: $this->model
+		);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid form with errors');
+
+		$fields->validate();
+	}
+
+	public function testValidateWithoutErrors(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertNull($fields->validate());
 	}
 }
