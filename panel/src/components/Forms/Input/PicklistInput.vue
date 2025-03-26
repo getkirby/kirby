@@ -168,21 +168,21 @@ export default {
 			if (this.query.length < (this.search.min ?? 0)) {
 				return;
 			}
-
+			// include the info field in the search if the user has set the option to true...
 			if (this.search.infofield) {
-				// Check if the query matches any of the fields and return as one matches
+				// check if the query matches any of the fields and return as one matches
 				let results = this.$helper.array.search(this.options, this.query, { field: "text" });
 
 				results = results.concat(this.$helper.array.search(this.options, this.query, { field: "info" }));
 
-				// Remove duplicates
+				// remove duplicates
 				results = results.filter((item, index, self) =>
 					index === self.findIndex((t) => t === item)
 				);
 
 				return results;
 			}
-
+			// ...otherwise just search the text field
 			return this.$helper.array.search(this.options, this.query, {
 				field: "text"
 			});
