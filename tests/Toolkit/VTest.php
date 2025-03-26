@@ -7,6 +7,8 @@ use Kirby\Cms\App;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class CanBeCounted implements \Countable
@@ -25,9 +27,7 @@ class HasCount
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\V
- */
+#[CoversClass(V::class)]
 class VTest extends TestCase
 {
 	public function tearDown(): void
@@ -35,18 +35,12 @@ class VTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::validators
-	 */
 	public function testValidators()
 	{
 		$this->assertNotEmpty(V::$validators);
 		$this->assertNotEmpty(V::validators());
 	}
 
-	/**
-	 * @covers ::__callStatic
-	 */
 	public function testCustomValidator()
 	{
 		V::$validators['me'] = function ($name): bool {
@@ -59,9 +53,6 @@ class VTest extends TestCase
 		$this->assertFalse(V::me('you'));
 	}
 
-	/**
-	 * @covers ::__callStatic
-	 */
 	public function testCallInvalidMethod()
 	{
 		$this->expectException(Exception::class);
@@ -298,9 +289,6 @@ class VTest extends TestCase
 		$this->assertFalse(V::in('bastian', []));
 	}
 
-	/**
-	 * @covers ::invalid
-	 */
 	public function testInvalid()
 	{
 		$data = [
@@ -341,9 +329,6 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	/**
-	 * @covers ::invalid
-	 */
 	public function testInvalidSimple()
 	{
 		$data   = ['homer', null];
@@ -352,9 +337,6 @@ class VTest extends TestCase
 		$this->assertSame(1, $result[1]);
 	}
 
-	/**
-	 * @covers ::invalid
-	 */
 	public function testInvalidRequired()
 	{
 		$rules    = ['email' => ['required']];
@@ -385,9 +367,6 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	/**
-	 * @covers ::invalid
-	 */
 	public function testInvalidOptions()
 	{
 		$rules = [
@@ -418,9 +397,6 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	/**
-	 * @covers ::invalid
-	 */
 	public function testInvalidWithMultipleMessages()
 	{
 		$data     = ['username' => ''];
@@ -848,13 +824,8 @@ class VTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::input
-	 * @covers ::message
-	 * @covers ::value
-	 * @dataProvider inputProvider
-	 */
-	public function testInput($input, $rules, $result, $message = null)
+	#[DataProvider('inputProvider')]
+	public function testInput(array $input, array $rules, bool $result, string|null $message = null)
 	{
 		// load the translation strings
 		new App();
@@ -867,9 +838,6 @@ class VTest extends TestCase
 		$this->assertTrue(V::input($input, $rules));
 	}
 
-	/**
-	 * @covers ::value
-	 */
 	public function testValue()
 	{
 		$result = V::value('test@getkirby.com', [
@@ -881,9 +849,6 @@ class VTest extends TestCase
 		$this->assertTrue($result);
 	}
 
-	/**
-	 * @covers ::value
-	 */
 	public function testValueFails()
 	{
 		// load the translation strings
