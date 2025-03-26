@@ -302,6 +302,16 @@ class Form
 	}
 
 	/**
+	 * Validates the form and throws an exception if there are any errors
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public function validate(): void
+	{
+		$this->fields->validate();
+	}
+
+	/**
 	 * Returns form values
 	 */
 	public function values(): array

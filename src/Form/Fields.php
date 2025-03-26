@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Closure;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field\UnknownField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
@@ -311,5 +312,23 @@ class Fields extends Collection
 		}
 
 		return $values;
+	}
+
+	/**
+	 * Checks for errors in all fields and throws an
+	 * exception if there are any
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public function validate(): void
+	{
+		$errors = $this->errors();
+
+		if ($errors !==	[]) {
+			throw new InvalidArgumentException(
+				fallback: 'Invalid form with errors',
+				details: $errors
+			);
+		}
 	}
 }
