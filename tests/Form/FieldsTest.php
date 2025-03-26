@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Cms\TestCase;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field\UnknownField;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -696,4 +697,35 @@ class FieldsTest extends TestCase
 		], $fields->toStoredValues());
 	}
 
+	public function testValidate(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'     => 'text',
+					'required' => true,
+				]
+			],
+			model: $this->model
+		);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid form with errors');
+
+		$fields->validate();
+	}
+
+	public function testValidateWithoutErrors(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertNull($fields->validate());
+	}
 }
