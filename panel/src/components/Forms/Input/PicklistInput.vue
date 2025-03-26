@@ -161,6 +161,7 @@ export default {
 					option.disabled ||
 					(this.isFull && this.value.includes(option.value) === false),
 				text: this.highlight(option.text)
+				...(this.search.infofield && option.info ? { info: this.highlight(option.info) } : {})
 			}));
 		},
 		filteredOptions() {
