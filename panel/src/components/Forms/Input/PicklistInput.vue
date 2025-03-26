@@ -169,6 +169,20 @@ export default {
 				return;
 			}
 
+			if (this.search.infofield) {
+				// Check if the query matches any of the fields and return as one matches
+				let results = this.$helper.array.search(this.options, this.query, { field: "text" });
+
+				results = results.concat(this.$helper.array.search(this.options, this.query, { field: "info" }));
+
+				// Remove duplicates
+				results = results.filter((item, index, self) =>
+					index === self.findIndex((t) => t === item)
+				);
+
+				return results;
+			}
+
 			return this.$helper.array.search(this.options, this.query, {
 				field: "text"
 			});
