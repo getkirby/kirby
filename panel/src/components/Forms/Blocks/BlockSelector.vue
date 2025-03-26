@@ -66,7 +66,7 @@ export default {
 			type: String
 		}
 	},
-	emits: ["cancel", "input", "paste", "submit"],
+	emits: ["cancel", "close", "input", "paste", "submit"],
 	data() {
 		return {
 			selected: null
@@ -121,10 +121,7 @@ export default {
 	methods: {
 		paste(e) {
 			this.$emit("paste", e);
-			this.close();
-		},
-		close() {
-			this.$emit("cancel");
+			this.$emit("close");
 		}
 	}
 };
