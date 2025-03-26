@@ -102,6 +102,14 @@ class License
 	}
 
 	/**
+	 * Deletes the license file if it exists.
+	 */
+	public function delete(): bool
+	{
+		return F::remove($this->root());
+	}
+
+	/**
 	 * Returns the activation domain if available
 	 */
 	public function domain(): string|null
@@ -329,7 +337,7 @@ class License
 	public static function read(): static
 	{
 		try {
-			$license = Json::read(App::instance()->root('license'));
+			$license = Json::read(static::root());
 		} catch (Throwable) {
 			return new static();
 		}
@@ -411,6 +419,14 @@ class License
 	}
 
 	/**
+	 * Returns the path to the license file
+	 */
+	public static function root(): string
+	{
+		return App::instance()->root('license');
+	}
+
+	/**
 	 * Saves the license in the config folder
 	 */
 	public function save(): bool
@@ -421,11 +437,11 @@ class License
 			);
 		}
 
-		// where to store the license file
-		$file = App::instance()->root('license');
-
 		// save the license information
-		return Json::write($file, $this->content());
+		return Json::write(
+			$this->root(),
+			$this->content()
+		);
 	}
 
 	/**
