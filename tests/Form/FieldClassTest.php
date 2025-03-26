@@ -257,6 +257,39 @@ class FieldClassTest extends TestCase
 		$this->assertFalse($field->isSaveable());
 	}
 
+	public function testIsStorable()
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField();
+		$this->assertTrue($field->isStorable($language));
+
+		$field = new UnsaveableField();
+		$this->assertFalse($field->isStorable($language));
+	}
+
+	public function testIsStorableWithDisabledField()
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField(['disabled' => true]);
+		$this->assertTrue($field->isStorable($language), 'The value of a storable field must not be changed on submit, but can still be stored.');
+	}
+
+	public function testIsStorableWithNonDefaultLanguage()
+	{
+		$language = new Language([
+			'code'    => 'de',
+			'default' => false
+		]);
+
+		$field = new TestField(['translate' => true]);
+		$this->assertTrue($field->isStorable($language));
+
+		$field = new TestField(['translate' => false]);
+		$this->assertFalse($field->isStorable($language));
+	}
+
 	public function testIsSubmittable()
 	{
 		$language = Language::ensure('current');
@@ -276,7 +309,7 @@ class FieldClassTest extends TestCase
 		$this->assertFalse($field->isSubmittable($language));
 	}
 
-	public function testIsSubmittableWithNonDefailtLanguage()
+	public function testIsSubmittableWithNonDefaultLanguage()
 	{
 		$language = new Language([
 			'code'    => 'de',
