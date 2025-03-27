@@ -172,7 +172,7 @@ trait UserActions
 
 		// create the instance without content or translations
 		// to avoid that the user is created in memory storage
-		$user = static::factory([
+		$user = User::factory([
 			...$props,
 			'content'      => null,
 			'translations' => null

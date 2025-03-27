@@ -419,7 +419,7 @@ trait PageActions
 
 		// create the instance without content or translations
 		// to avoid that the page is created in memory storage
-		$page = static::factory([
+		$page = Page::factory([
 			...$props,
 			'content'      => null,
 			'translations' => null
