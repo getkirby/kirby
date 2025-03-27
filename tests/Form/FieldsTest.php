@@ -273,7 +273,7 @@ class FieldsTest extends TestCase
 			'a' => 'A',
 		], $fields->toFormValues(), 'Unknown fields are not included');
 
-		$fields->appendUnknownFields($input)->fill($input);
+		$fields->fill($input, strict: false);
 
 		$this->assertSame([
 			'a' => 'A',
@@ -457,7 +457,7 @@ class FieldsTest extends TestCase
 			'a' => 'A',
 		], $fields->toStoredValues(), 'Unknown fields are not included');
 
-		$fields->appendUnknownFields($input)->submit($input);
+		$fields->submit($input, strict: false);
 
 		$this->assertSame([
 			'a' => 'A',
