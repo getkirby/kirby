@@ -7,6 +7,7 @@ use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Query\Expression
+ * @todo Deprecate in v6
  */
 class ExpressionTest extends TestCase
 {
