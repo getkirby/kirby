@@ -109,8 +109,14 @@ class Fields extends Collection
 	/**
 	 * Sets the value for each field with a matching key in the input array
 	 */
-	public function fill(array $input): static
-	{
+	public function fill(
+		array $input,
+		bool $strict = true
+	): static {
+		if ($strict === false) {
+			$this->appendUnknownFields($input);
+		}
+
 		foreach ($input as $name => $value) {
 			if (!$field = $this->get($name)) {
 				continue;
@@ -211,9 +217,15 @@ class Fields extends Collection
 	 * but only if the field is not disabled
 	 * @since 5.0.0
 	 */
-	public function submit(array $input): static
-	{
+	public function submit(
+		array $input,
+		bool $strict = true
+	): static {
 		$language = $this->language();
+
+		if ($strict === false) {
+			$this->appendUnknownFields($input);
+		}
 
 		foreach ($input as $name => $value) {
 			if (!$field = $this->get($name)) {
