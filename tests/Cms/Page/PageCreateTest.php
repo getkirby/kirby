@@ -7,6 +7,14 @@ use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
+class NewDefaultPage extends Page
+{
+}
+
+class NewParentPage extends Page
+{
+}
+
 class NewUncreatablePage extends Page
 {
 	public static function create(array $props): static
@@ -433,5 +441,35 @@ class PageCreateTest extends ModelTestCase
 
 		$this->assertSame('Title EN', $page->content('en')->title()->value());
 		$this->assertSame('Title DE', $page->content('de')->title()->value());
+	}
+
+	/**
+	 * Issue: https://github.com/getkirby/kirby/issues/7084
+	 */
+	public function testCreateWithCustomModel(): void
+	{
+		$this->setupSingleLanguage();
+
+		$this->app = $this->app->clone([
+			'pageModels' => [
+				'default' => NewDefaultPage::class,
+				'parent'  => NewParentPage::class,
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$parent = $this->app->site()->createChild([
+			'slug'     => 'parent',
+			'template' => 'parent',
+		]);
+
+		$child = $parent->createChild([
+			'slug'     => 'test',
+			'parent'   => $parent,
+		]);
+
+		$this->assertInstanceOf(NewParentPage::class, $parent);
+		$this->assertInstanceOf(NewDefaultPage::class, $child);
 	}
 }
