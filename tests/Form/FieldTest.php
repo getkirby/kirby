@@ -394,6 +394,37 @@ class FieldTest extends TestCase
 		$this->assertSame('test2 computed', $field->computedValue());
 	}
 
+	public function testFillWithRestoredState()
+	{
+		Field::$types = [
+			'test' => $definition = [
+				'computed' => [
+					'options' => fn () => ['a', 'b', 'c']
+				],
+				'methods' => [
+					'optionsDebugger' => fn () => $this->options
+				]
+			]
+		];
+
+		$page = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $page,
+			'value' => 'test'
+		]);
+
+		$this->assertSame(['a', 'b', 'c'], $field->options());
+		$this->assertEquals(Field::setup('test'), $field->optionsDebugger());
+
+		// filling a new value must not break the mandatory
+		// component definition properties
+		$field->fill('test2');
+
+		$this->assertSame(['a', 'b', 'c'], $field->options());
+		$this->assertEquals(Field::setup('test'), $field->optionsDebugger());
+	}
+
 	public function testHelp()
 	{
 		Field::$types = [
@@ -1030,6 +1061,27 @@ class FieldTest extends TestCase
 		$this->assertSame('a', $field->formFields()->first()->name());
 		$this->assertSame('b', $field->siblings()->last()->name());
 		$this->assertSame('b', $field->formFields()->last()->name());
+	}
+
+	/**
+	 * @covers ::submit
+	 */
+	public function testSubmit(): void
+	{
+		Field::$types = [
+			'test' => []
+		];
+
+		$page = new Page(['slug' => 'test']);
+		$field = new Field('test', [
+			'model' => $page,
+			'value' => 'test'
+		]);
+
+		$this->assertSame('test', $field->value());
+
+		$field->submit('test2');
+		$this->assertSame('test2', $field->value());
 	}
 
 	/**

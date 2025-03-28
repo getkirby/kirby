@@ -2,41 +2,73 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\App;
+use Kirby\Cms\File;
+use Kirby\Cms\Language;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Cms\Site;
 use Kirby\Cms\TestCase;
+use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\UnknownField;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Form\Fields
- */
+class UnfillableTestField extends FieldClass
+{
+	public function isFillable(): bool
+	{
+		return false;
+	}
+}
+
+#[CoversClass(Fields::class)]
 class FieldsTest extends TestCase
 {
-	protected App $app;
+	public const TMP = KIRBY_TMP_DIR . '/Form.Fields';
+
 	protected Page $model;
 
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
+		parent::setUp();
 		$this->model = new Page(['slug' => 'test']);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstruct()
+	public function testAppendUnknownFields(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
 			],
-			'b' => [
-				'type'  => 'text',
+			model: $this->model
+		);
+
+		$fields->appendUnknownFields([
+			'a' => 'A',
+			'b' => 'B',
+		]);
+
+		$this->assertCount(2, $fields);
+		$this->assertInstanceOf(Field::class, $fields->get('a'));
+		$this->assertInstanceOf(UnknownField::class, $fields->get('b'));
+	}
+
+	public function testConstruct(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+				'b' => [
+					'type' => 'text',
+				],
 			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame('a', $fields->first()->name());
 		$this->assertSame($this->model, $fields->first()->model());
@@ -44,19 +76,19 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructWithModel()
+	public function testConstructWithModel(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+				'b' => [
+					'type' => 'text',
+				],
 			],
-			'b' => [
-				'type'  => 'text',
-			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame('a', $fields->first()->name());
 		$this->assertSame($this->model, $fields->first()->model());
@@ -64,43 +96,45 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	/**
-	 * @covers ::defaults
-	 */
-	public function testDefaults()
+	public function testDefaults(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'default' => 'a',
-				'type'    => 'text'
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'default' => 'a',
+					'type'    => 'text'
+				],
+				'b' => [
+					'type'    => 'text'
+				],
 			],
-			'b' => [
-				'default' => 'b',
-				'type'    => 'text'
-			],
-		], $this->model);
+			model: $this->model
+		);
 
-		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->defaults());
+		$this->assertSame([
+			'a' => 'a',
+			'b' => null
+		], $fields->defaults());
 	}
 
-	/**
-	 * @covers ::errors
-	 */
-	public function testErrors()
+	public function testErrors(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'label'    => 'A',
-				'type'     => 'text',
-				'required' => true
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'label'    => 'A',
+					'type'     => 'text',
+					'required' => true
+				],
+				'b' => [
+					'label'     => 'B',
+					'type'      => 'text',
+					'maxlength' => 3,
+					'value'     => 'Too long'
+				],
 			],
-			'b' => [
-				'label'    => 'B',
-				'type'      => 'text',
-				'maxlength' => 3,
-				'value'     => 'Too long'
-			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame([
 			'a' => [
@@ -131,158 +165,630 @@ class FieldsTest extends TestCase
 		], $fields->errors());
 	}
 
-	/**
-	 * @covers ::errors
-	 */
-	public function testErrorsWithoutErrors()
+	public function testErrorsWithoutErrors(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+				'b' => [
+					'type' => 'text',
+				],
 			],
-			'b' => [
-				'type'  => 'text',
-			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame([], $fields->errors());
 	}
 
-	/**
-	 * @covers ::fill
-	 */
-	public function testFill()
+	public function testFill(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-				'value' => 'A'
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				],
+				'b' => [
+					'type'  => 'text',
+					'value' => 'B'
+				]
 			],
-			'b' => [
-				'type'  => 'text',
-				'value' => 'B'
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B',
+		], $fields->toFormValues());
+
+		$fields->fill([
+			'a' => 'A updated'
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => 'B',
+		], $fields->toFormValues());
+	}
+
+	public function testFillWithClosureValues(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				],
 			],
-		], $this->model);
+			model: $this->model
+		);
+
+		$fields->fill([
+			'a' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated'
+		], $fields->toFormValues());
+	}
+
+	public function testFillWithUnfillableField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => new UnfillableTestField(['name' => 'a']),
+				'b' => [
+					'type' => 'text',
+				]
+			],
+			model: $this->model
+		);
+
+		$fields->fill([
+			'a' => 'A',
+			'b' => 'B'
+		]);
+
+		$this->assertSame([
+			'b' => 'B',
+		], $fields->toFormValues());
+	}
+
+	public function testFillWithUnknownFields(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+			],
+			model: $this->model
+		);
+
+		$input = [
+			'a' => 'A',
+			'b' => 'B',
+		];
+
+		$fields->fill($input);
+
+		$this->assertSame([
+			'a' => 'A',
+		], $fields->toFormValues(), 'Unknown fields are not included');
+
+		$fields->fill($input, strict: false);
 
 		$this->assertSame([
 			'a' => 'A',
 			'b' => 'B'
-		], $fields->toArray(fn ($field) => $field->value()));
-
-		$fields->fill($input = [
-			'a' => 'A updated',
-			'b' => 'B updated'
-		]);
-
-		$this->assertSame($input, $fields->toArray(fn ($field) => $field->value()));
+		], $fields->toFormValues(), 'Unknown fields are included');
 	}
 
-	/**
-	 * @covers ::findByKey
-	 * @covers ::findByKeyRecursive
-	 */
-	public function testFind()
+	public function testFind(): void
 	{
 		Field::$types['test'] = [
 			'methods' => [
-				'form' => function () {
-					return new Form([
-						'fields' => [
-							'child' => [
-								'type'  => 'text',
-							],
+				'form' => fn () => new Form([
+					'fields' => [
+						'child' => [
+							'type'  => 'text',
 						],
-						'model' => $this->model
-					]);
-				}
+					],
+					'model' => $this->model
+				])
 			]
 		];
 
-		$fields = new Fields([
-			'mother' => [
-				'type'  => 'test',
+		$fields = new Fields(
+			fields: [
+				'mother' => [
+					'type' => 'test',
+				],
 			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame('mother', $fields->find('mother')->name());
 		$this->assertSame('child', $fields->find('mother+child')->name());
 		$this->assertNull($fields->find('mother+missing-child'));
 	}
 
-	/**
-	 * @covers ::findByKey
-	 * @covers ::findByKeyRecursive
-	 */
-	public function testFindWhenFieldHasNoForm()
+	public function testFindWhenFieldHasNoForm(): void
 	{
-		$fields = new Fields([
-			'mother' => [
-				'type'  => 'text',
+		$fields = new Fields(
+			fields: [
+				'mother' => [
+					'type' => 'text',
+				],
 			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertNull($fields->find('mother+child'));
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
-	public function testToArray()
+	public function testLanguage(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-			],
-			'b' => [
-				'type'  => 'text',
-			],
-		], $this->model);
+		// no language passed = current language
+		$fields = new Fields();
+		$this->assertSame('en', $fields->language()->code());
+		$this->assertTrue($fields->language()->isDefault());
 
-		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->toArray(fn ($field) => $field->name()));
+		// language passed
+		$language = new Language(['code' => 'de']);
+		$fields = new Fields(fields: [], language: $language);
+		$this->assertSame('de', $fields->language()->code());
+		$this->assertFalse($fields->language()->isDefault());
 	}
 
-	/**
-	 * @covers ::toFormValues
-	 */
-	public function testToFormValues()
+	public function testRemoveUnknownFields(): void
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-				'value' => 'Value a'
+		$fields = new Fields(
+			fields: [
+				'a' => new Field('text', ['name' => 'a']),
+				'b' => new UnknownField(name: 'b'),
 			],
-			'b' => [
-				'type'  => 'text',
-				'value' => 'Value b'
-			],
-		], $this->model);
+			model: $this->model
+		);
 
-		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
+		$this->assertCount(2, $fields);
+
+		$this->assertInstanceOf(Field::class, $fields->get('a'));
+		$this->assertInstanceOf(UnknownField::class, $fields->get('b'));
+
+		$fields->removeUnknownFields();
+
+		$this->assertCount(1, $fields);
+		$this->assertInstanceOf(Field::class, $fields->get('a'));
+		$this->assertNull($fields->get('b'));
 	}
 
-	/**
-	 * @covers ::toStoredValues
-	 */
-	public function testToStoredValues()
+	public function testSubmit(): void
 	{
-		Field::$types['test'] = [
-			'save' => function ($value) {
-				return $value . ' stored';
-			}
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'text',
+					'value' => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit([
+			'a' => 'A updated',
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => 'B',
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithClosureValues(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit([
+			'a' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated'
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithDisabledField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'     => 'text',
+					'disabled' => true,
+					'value'    => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit([
+			'a' => 'A updated',
+			'b' => 'B updated',
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => 'B'
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithUnknownField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+			],
+			model: $this->model
+		);
+
+		$input = [
+			'a' => 'A',
+			'b' => 'B',
 		];
 
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'test',
-				'value' => 'Value a'
-			],
-			'b' => [
-				'type'  => 'test',
-				'value' => 'Value b'
-			],
-		], $this->model);
+		$fields->submit($input);
 
-		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
-		$this->assertSame(['a' => 'Value a stored', 'b' => 'Value b stored'], $fields->toStoredValues());
+		$this->assertSame([
+			'a' => 'A',
+		], $fields->toStoredValues(), 'Unknown fields are not included');
+
+		$fields->submit($input, strict: false);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toStoredValues(), 'Unknown fields are included');
+	}
+
+	public function testToArray(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+				'b' => [
+					'type' => 'text',
+				],
+			],
+			model: $this->model
+		);
+
+		$this->assertSame(
+			['a' => 'a', 'b' => 'b'],
+			$fields->toArray(fn ($field) => $field->name())
+		);
+	}
+
+	public function testToFormValues(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				],
+				'b' => [
+					'type'  => 'text',
+					'value' => 'B'
+				],
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toFormValues());
+	}
+
+	public function testToFormValuesWithNonSaveableField(): void
+	{
+		Field::$types['test'] = [
+			'save' => fn ($value) => $value . ' stored'
+		];
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'test',
+					'value' => 'A'
+				],
+				'b' => [
+					'type'  => 'test',
+					'value' => 'B'
+				],
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toFormValues());
+	}
+
+	public function testToProps(): void
+	{
+		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => [
+				'autofocus'  => false,
+				'counter'    => true,
+				'disabled'   => false,
+				'font'       => 'sans-serif',
+				'hidden'     => false,
+				'name'       => 'a',
+				'required'   => false,
+				'saveable'   => true,
+				'spellcheck' => false,
+				'translate'  => true,
+				'type'       => 'text',
+				'width'      => '1/1',
+			],
+		], $fields->toProps());
+	}
+
+	public static function modelProvider(): array
+	{
+		return [
+			[new Page(['slug' => 'test']), true],
+			[new Site(), true],
+			[new User(['email' => 'test@getkirby.com']), false],
+			[new File(['filename' => 'test.jpg', 'parent' => new Site()]), false],
+		];
+	}
+
+	#[DataProvider('modelProvider')]
+	public function testToPropsWithSkippedTitleFieldForPage(ModelWithContent $model, bool $skip): void
+	{
+		$this->setUpSingleLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'title' => [
+					'type' => 'text',
+				],
+				'subtitle' => [
+					'type' => 'text',
+				]
+			],
+			model: $model
+		);
+
+		$props = $fields->toProps();
+
+		if ($skip === false) {
+			$this->assertCount(2, $props);
+			$this->assertArrayHasKey('title', $props);
+			$this->assertArrayHasKey('subtitle', $props);
+		} else {
+			$this->assertCount(1, $props);
+			$this->assertArrayHasKey('subtitle', $props);
+		}
+	}
+
+	public function testToPropsWithoutUpdatePermission(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertTrue($fields->toProps()['a']['disabled']);
+	}
+
+	public function testToPropsForNonTranslatableField(): void
+	{
+		$this->setUpMultiLanguage();
+		$this->app->impersonate('kirby');
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'translate' => false,
+					'type'      => 'text',
+					'value'     => 'A',
+				],
+				'b' => [
+					'type'      => 'text',
+					'value'     => 'B',
+				]
+			],
+			model: $this->model,
+			language: $this->app->language('de')
+		);
+
+		$props = $fields->toProps();
+
+		$this->assertTrue($props['a']['disabled']);
+		$this->assertFalse($props['a']['translate']);
+
+		$this->assertFalse($props['b']['disabled']);
+		$this->assertTrue($props['b']['translate']);
+	}
+
+	public function testToStoredValues(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				],
+				'b' => [
+					'type'  => 'text',
+					'value' => 'B'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toStoredValues());
+	}
+
+	public function testToStoredValuesWithNonSaveableField(): void
+	{
+		Field::$types['test'] = [
+			'save' => fn ($value) => $value . ' stored'
+		];
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'test',
+					'value' => 'A'
+				],
+				'b' => [
+					'type'  => 'test',
+					'value' => 'B'
+				],
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => 'A stored',
+			'b' => 'B stored'
+		], $fields->toStoredValues());
+	}
+
+	public function testToStoredValuesWithNonTranslatableFieldsInPrimaryLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'      => 'text',
+					'translate' => true,
+					'value'     => 'A'
+				],
+				'b' => [
+					'type'      => 'text',
+					'translate' => false,
+					'value'     => 'B'
+				]
+			],
+			model: $this->model,
+			language: $this->app->language('en')
+		);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toStoredValues());
+	}
+
+	public function testToStoredValuesWithNonTranslatableFieldsInSecondaryLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'      => 'text',
+					'translate' => true,
+					'value'     => 'A'
+				],
+				'b' => [
+					'type'      => 'text',
+					'translate' => false,
+					'value'     => 'B'
+				]
+			],
+			model: $this->model,
+			language: $this->app->language('de')
+		);
+
+		$this->assertSame([
+			'a' => 'A'
+		], $fields->toStoredValues());
+	}
+
+	public function testValidate(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'     => 'text',
+					'required' => true,
+				]
+			],
+			model: $this->model
+		);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid form with errors');
+
+		$fields->validate();
+	}
+
+	public function testValidateWithoutErrors(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertNull($fields->validate());
 	}
 }

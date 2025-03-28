@@ -3,7 +3,12 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\UnknownField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
@@ -21,20 +26,18 @@ use Kirby\Toolkit\Str;
  */
 class Fields extends Collection
 {
-	/**
-	 * Cache for the errors array
-	 *
-	 * @var array<string, array<string, string>>|null
-	 */
-	protected array|null $errors = null;
+	protected Language $language;
 
 	public function __construct(
 		array $fields = [],
-		protected ModelWithContent|null $model = null
+		protected ModelWithContent|null $model = null,
+		Language|null $language = null
 	) {
 		foreach ($fields as $name => $field) {
 			$this->__set($name, $field);
 		}
+
+		$this->language = $language ?? Language::ensure('current');
 	}
 
 	/**
@@ -54,9 +57,26 @@ class Fields extends Collection
 		}
 
 		parent::__set($field->name(), $field);
+	}
 
-		// reset the errors cache if new fields are added
-		$this->errors = null;
+	/**
+	 * Goes through the given input and appends hidden fields
+	 * for each key that is not already present in the collection.
+	 * This is useful for forms that are used to update models
+	 * with additional fields that are not part of the original
+	 * blueprint.
+	 *
+	 * @since 5.0.0
+	 */
+	public function appendUnknownFields(array $input): static
+	{
+		foreach ($input as $name => $value) {
+			if ($this->get($name) === null) {
+				$this->data[$name] = new UnknownField(name: $name);
+			}
+		}
+
+		return $this;
 	}
 
 	/**
@@ -72,37 +92,50 @@ class Fields extends Collection
 	 */
 	public function errors(): array
 	{
-		if ($this->errors !== null) {
-			return $this->errors; // @codeCoverageIgnore
-		}
-
-		$this->errors = [];
+		$errors = [];
 
 		foreach ($this->data as $name => $field) {
-			$errors = $field->errors();
+			$fieldErrors = $field->errors();
 
-			if ($errors !== []) {
-				$this->errors[$name] = [
+			if ($fieldErrors !== []) {
+				$errors[$name] = [
 					'label'   => $field->label(),
-					'message' => $errors
+					'message' => $fieldErrors
 				];
 			}
 		}
 
-		return $this->errors;
+		return $errors;
 	}
 
 	/**
 	 * Sets the value for each field with a matching key in the input array
 	 */
-	public function fill(array $input): static
-	{
-		foreach ($input as $name => $value) {
-			$this->get($name)?->fill($value);
+	public function fill(
+		array $input,
+		bool $strict = true
+	): static {
+		if ($strict === false) {
+			$this->appendUnknownFields($input);
 		}
 
-		// reset the errors cache
-		$this->errors = null;
+		foreach ($input as $name => $value) {
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-fillable fields
+			if ($field->isFillable() === false) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->value());
+			}
+
+			$field->fill($value);
+		}
 
 		return $this;
 	}
@@ -160,6 +193,68 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Returns the language of the fields
+	 * @since 5.0.0
+	 */
+	public function language(): Language
+	{
+		return $this->language;
+	}
+
+	/**
+	 * Removes all unknown fields from the collection.
+	 * This is useful if you want to be strict about
+	 * the submitted or filled in values.
+	 *
+	 * @since 5.0.0
+	 */
+	public function removeUnknownFields(): static
+	{
+		$this->data = array_filter($this->data, fn ($field) => $field instanceof UnknownField === false);
+		return $this;
+	}
+
+	/**
+	 * Sets the value for each field with a matching key in the input array
+	 * but only if the field is not disabled
+	 * @since 5.0.0
+	 */
+	public function submit(
+		array $input,
+		bool $strict = true
+	): static {
+		$language = $this->language();
+
+		if ($strict === false) {
+			$this->appendUnknownFields($input);
+		}
+
+		foreach ($input as $name => $value) {
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-submittable fields
+			if ($field->isSubmittable($language) === false) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->value());
+			}
+
+			// submit the value to the field
+			// the field class might override this method
+			// to handle submitted values differently
+			$field->submit($value);
+		}
+
+		// reset the errors cache
+		return $this;
+	}
+
+	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
@@ -171,17 +266,94 @@ class Fields extends Collection
 
 	/**
 	 * Returns an array with the form value of each field
+	 * (e.g. used as data for Panel Vue components)
 	 */
 	public function toFormValues(bool $defaults = false): array
 	{
-		return $this->toArray(fn ($field) => $field->toFormValue($defaults));
+		$values   = [];
+		$language = $this->language();
+
+		foreach ($this->data as $name => $field) {
+			// don't add non-fillable fields
+			if ($field->isFillable($language) === false) {
+				continue;
+			}
+
+			$values[$name] = $field->toFormValue($defaults);
+		}
+
+		return $values;
+	}
+
+	/**
+	 * Returns an array with the props of each field
+	 * for the frontend
+	 */
+	public function toProps(): array
+	{
+		$fields      = $this->data;
+		$props       = [];
+		$language    = $this->language();
+		$permissions = $this->model->permissions()->can('update');
+
+		if (
+			$this->model instanceof Page ||
+			$this->model instanceof Site
+		) {
+			// the title should never be updated directly via
+			// fields section to avoid conflicts with the rename dialog
+			unset($fields['title']);
+		}
+
+		foreach ($fields as $name => $field) {
+			$props[$name] = $field->toArray();
+
+			if ($permissions === false || $field->isTranslatable($language) === false) {
+				$props[$name]['disabled'] = true;
+			}
+
+			unset($props[$name]['value']);
+		}
+
+		return $props;
 	}
 
 	/**
 	 * Returns an array with the stored value of each field
+	 * (e.g. used for saving to content storage)
 	 */
 	public function toStoredValues(bool $defaults = false): array
 	{
-		return $this->toArray(fn ($field) => $field->toStoredValue($defaults));
+		$values   = [];
+		$language = $this->language();
+
+		foreach ($this->data as $name => $field) {
+			// don't add non-storable fields to the store
+			if ($field->isStorable($language) === false) {
+				continue;
+			}
+
+			$values[$name] = $field->toStoredValue($defaults);
+		}
+
+		return $values;
+	}
+
+	/**
+	 * Checks for errors in all fields and throws an
+	 * exception if there are any
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public function validate(): void
+	{
+		$errors = $this->errors();
+
+		if ($errors !==	[]) {
+			throw new InvalidArgumentException(
+				fallback: 'Invalid form with errors',
+				details: $errors
+			);
+		}
 	}
 }

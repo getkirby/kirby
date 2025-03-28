@@ -3,8 +3,8 @@
 namespace Kirby\Form;
 
 use Closure;
-use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
@@ -48,10 +48,13 @@ class Form
 		$strict = $props['strict'] ?? false;
 		$inject = $props;
 
+		// get the language for the form
+		$language = Language::ensure($props['language'] ?? 'current');
+
 		// prepare field properties for multilang setups
 		$fields = static::prepareFieldsForLanguage(
 			$fields,
-			$props['language'] ?? null
+			$language
 		);
 
 		// lowercase all value names
@@ -61,7 +64,8 @@ class Form
 		unset($inject['fields'], $inject['values'], $inject['input']);
 
 		$this->fields = new Fields(
-			model: $model
+			model: $model,
+			language: $language
 		);
 
 		$this->values = [];
@@ -231,24 +235,17 @@ class Form
 	 */
 	protected static function prepareFieldsForLanguage(
 		array $fields,
-		string|null $language = null
+		Language $language
 	): array {
-		$kirby = App::instance(null, true);
-
-		// only modify the fields if we have a valid Kirby multilang instance
-		if ($kirby?->multilang() !== true) {
+		if ($language->isDefault() === true) {
 			return $fields;
 		}
 
-		$language ??= $kirby->language()->code();
-
-		if ($language !== $kirby->defaultLanguage()->code()) {
-			foreach ($fields as $fieldName => $fieldProps) {
-				// switch untranslatable fields to readonly
-				if (($fieldProps['translate'] ?? true) === false) {
-					$fields[$fieldName]['unset']    = true;
-					$fields[$fieldName]['disabled'] = true;
-				}
+		foreach ($fields as $fieldName => $fieldProps) {
+			// switch untranslatable fields to readonly
+			if (($fieldProps['translate'] ?? true) === false) {
+				$fields[$fieldName]['unset']    = true;
+				$fields[$fieldName]['disabled'] = true;
 			}
 		}
 
@@ -285,6 +282,7 @@ class Form
 
 	/**
 	 * Returns an array with the form value of each field
+	 * (e.g. used as data for Panel Vue components)
 	 */
 	public function toFormValues(bool $defaults = false): array
 	{
@@ -293,10 +291,21 @@ class Form
 
 	/**
 	 * Returns an array with the stored value of each field
+	 * (e.g. used for saving to content storage)
 	 */
 	public function toStoredValues(bool $defaults = false): array
 	{
 		return $this->fields->toStoredValues($defaults);
+	}
+
+	/**
+	 * Validates the form and throws an exception if there are any errors
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public function validate(): void
+	{
+		$this->fields->validate();
 	}
 
 	/**

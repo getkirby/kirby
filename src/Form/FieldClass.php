@@ -121,10 +121,12 @@ abstract class FieldClass
 	/**
 	 * Sets a new value for the field
 	 */
-	public function fill(mixed $value = null): void
+	public function fill(mixed $value = null): static
 	{
 		$this->value = $value;
 		$this->errors = null;
+
+		return $this;
 	}
 
 	/**
@@ -343,6 +345,18 @@ abstract class FieldClass
 		}
 
 		return null;
+	}
+
+	/**
+	 * Submits a new value for the field
+	 * @since 5.0.0
+	 */
+	public function submit(mixed $value = null): static
+	{
+		$this->value  = $value;
+		$this->errors = null;
+
+		return $this;
 	}
 
 	/**
