@@ -598,7 +598,11 @@ class F
 	 */
 	public static function read(string $file): string|false
 	{
-		return @file_get_contents($file);
+		try {
+			return @file_get_contents($file);
+		} catch (Throwable) {
+			return false;
+		}
 	}
 
 	/**
