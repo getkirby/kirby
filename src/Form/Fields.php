@@ -5,6 +5,8 @@ namespace Kirby\Form;
 use Closure;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Field\UnknownField;
 use Kirby\Toolkit\A;
@@ -289,11 +291,21 @@ class Fields extends Collection
 	 */
 	public function toProps(): array
 	{
+		$fields      = $this->data;
 		$props       = [];
 		$language    = $this->language();
 		$permissions = $this->model->permissions()->can('update');
 
-		foreach ($this->data as $name => $field) {
+		if (
+			$this->model instanceof Page ||
+			$this->model instanceof Site
+		) {
+			// the title should never be updated directly via
+			// fields section to avoid conflicts with the rename dialog
+			unset($fields['title']);
+		}
+
+		foreach ($fields as $name => $field) {
 			$props[$name] = $field->toArray();
 
 			if ($permissions === false || $field->isTranslatable($language) === false) {
