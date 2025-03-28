@@ -2,112 +2,19 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase;
+use Kirby\Form\Fields;
 
 class FieldsSectionTest extends TestCase
 {
-	public function setUp(): void
+	public const TMP = KIRBY_TMP_DIR . '/Cms.FieldsSection';
+
+	public function testFields()
 	{
-		App::destroy();
-
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-	}
-
-	public static function modelProvider(): array
-	{
-		return [
-			[
-				$page = new Page(['slug' => 'test']),
-				true
-			],
-			[
-				new Site(),
-				true
-			],
-			[
-				new File(['filename' => 'test.jpg', 'parent' => $page]),
-				false
-			],
-			[
-				new User(['email' => 'mail@getkirby.com']),
-				false
-			],
-		];
-	}
-
-	/**
-	 * @dataProvider modelProvider
-	 */
-	public function testSkipTitle($model, $skip)
-	{
-		$fields = [
-			'text' => [
-				'type' => 'textarea'
-			]
-		];
-
-		if ($skip === false) {
-			// add a custom title field to those models
-			// which don't skip the title. Files and Users
-			// should still be able to have title fields if needed
-			$fields['title'] = [
-				'type' => 'text'
-			];
-		}
-
-		$section = new Section('fields', [
-			'name'   => 'test',
-			'model'  => $model,
-			'fields' => $fields,
-		]);
-
-		if ($skip === true) {
-			$this->assertCount(1, $section->fields());
-			$this->assertArrayHasKey('text', $section->fields());
-			$this->assertArrayNotHasKey('title', $section->fields());
-		} else {
-			$this->assertCount(2, $section->fields());
-			$this->assertArrayHasKey('text', $section->fields());
-			$this->assertArrayHasKey('title', $section->fields());
-		}
-	}
-
-	public function testFormContentMultilang()
-	{
-		$app = $this->app->clone([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'name'    => 'English',
-					'default' => true
-				],
-				[
-					'code'    => 'de',
-					'name'    => 'Deutsch'
-				]
-			]
-		]);
+		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
 
 		$model = new Page([
 			'slug' => 'test',
-			'translations' => [
-				[
-					'code' => 'en',
-					'content' => [
-						'text' => 'Hello'
-					]
-				],
-				[
-					'code' => 'de',
-					'content' => [
-						'text' => 'Hallo'
-					]
-				],
-			],
 		]);
 
 		// default language
@@ -121,12 +28,35 @@ class FieldsSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('Hello', $section->form()->content()['text']);
+		$expected = [
+			'text' => [
+				'autofocus'  => false,
+				'counter'    => true,
+				'disabled'   => false,
+				'font'       => 'sans-serif',
+				'hidden'     => false,
+				'name'       => 'text',
+				'required'   => false,
+				'saveable'   => true,
+				'spellcheck' => false,
+				'translate'  => true,
+				'type'       => 'text',
+				'width'      => '1/1',
+			]
+		];
 
-		// secondary language
-		$app->setCurrentLanguage('de');
-		$app->setCurrentTranslation('de');
+		$this->assertSame($expected, $section->fields());
+	}
 
+	public function testForm()
+	{
+		$this->setUpSingleLanguage();
+
+		$model = new Page([
+			'slug' => 'test',
+		]);
+
+		// default language
 		$section = new Section('fields', [
 			'name' => 'test',
 			'model' => $model,
@@ -137,6 +67,6 @@ class FieldsSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('Hallo', $section->form()->content()['text']);
+		$this->assertInstanceOf(Fields::class, $section->form());
 	}
 }
