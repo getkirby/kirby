@@ -598,15 +598,11 @@ class F
 	 */
 	public static function read(string $file): string|false
 	{
-		if (
-			is_readable($file) !== true &&
-			Str::startsWith($file, 'https://') !== true &&
-			Str::startsWith($file, 'http://') !== true
-		) {
+		try {
+			return @file_get_contents($file);
+		} catch (Throwable) {
 			return false;
 		}
-
-		return file_get_contents($file);
 	}
 
 	/**
