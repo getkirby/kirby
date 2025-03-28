@@ -255,21 +255,17 @@ class A
 	 * // result: ['cat' => 'miao', 'dog' => 'wuff'];
 	 * ```
 	 *
-	 * @param mixed $array The source array
+	 * @param array $array The source array
 	 * @param string|int|array|null $key The key to look for
 	 * @param mixed $default Optional default value, which
 	 *                       should be returned if no element
 	 *                       has been found
 	 */
 	public static function get(
-		$array,
+		array $array,
 		string|int|array|null $key,
 		mixed $default = null
 	) {
-		if (is_array($array) === false) {
-			return $array;
-		}
-
 		// return the entire array if the key is null
 		if ($key === null) {
 			return $array;
