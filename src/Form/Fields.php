@@ -289,13 +289,14 @@ class Fields extends Collection
 	 */
 	public function toProps(): array
 	{
-		$props    = [];
-		$language = $this->language();
+		$props       = [];
+		$language    = $this->language();
+		$permissions = $this->model->permissions()->can('update');
 
 		foreach ($this->data as $name => $field) {
 			$props[$name] = $field->toArray();
 
-			if ($field->isTranslatable($language) === false) {
+			if ($permissions === false || $field->isTranslatable($language) === false) {
 				$props[$name]['disabled'] = true;
 			}
 

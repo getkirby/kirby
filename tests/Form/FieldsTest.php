@@ -536,6 +536,7 @@ class FieldsTest extends TestCase
 	public function testToProps(): void
 	{
 		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
 
 		$fields = new Fields(
 			fields: [
@@ -565,9 +566,27 @@ class FieldsTest extends TestCase
 		], $fields->toProps());
 	}
 
+	public function testToPropsWithoutUpdatePermission(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertTrue($fields->toProps()['a']['disabled']);
+	}
+
 	public function testToPropsForNonTranslatableField(): void
 	{
 		$this->setUpMultiLanguage();
+		$this->app->impersonate('kirby');
 
 		$fields = new Fields(
 			fields: [
