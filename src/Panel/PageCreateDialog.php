@@ -180,6 +180,9 @@ class PageCreateDialog
 			// switch all fields to 1/1
 			$field['width'] = '1/1';
 
+			// switch off validation
+			$field['novalidate'] = ($this->blueprint()->create()['status'] ?? 'draft') !== 'draft';
+
 			// add the field to the form
 			$custom[$name] = $field;
 		}
