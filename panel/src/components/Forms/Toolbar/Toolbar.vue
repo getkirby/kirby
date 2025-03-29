@@ -1,7 +1,7 @@
 <template>
 	<nav v-if="buttons.length" class="k-toolbar" :data-theme="theme">
 		<template v-for="(button, index) in buttons">
-			<hr v-if="button === '|'" :key="index" />
+			<hr v-if="button === '|'" :key="'separator-' + index" />
 
 			<k-button
 				v-else-if="button.when ?? true"
