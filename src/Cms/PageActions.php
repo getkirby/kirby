@@ -568,7 +568,10 @@ trait PageActions
 			// up the directory if it's empty
 			$page->versions()->delete();
 
-			if ($page->isListed() === true) {
+			if (
+				$page->isListed() === true &&
+				$page->blueprint()->num() === 'default'
+			) {
 				$page->resortSiblingsAfterUnlisting();
 			}
 
@@ -783,7 +786,7 @@ trait PageActions
 		}
 
 		// Update the parent's children collection with the new sorting
-		$parent->children = $siblings->sort('num', 'asc');
+		$parent->children = $siblings->sort('isListed', 'desc', 'num', 'asc');
 		$parent->childrenAndDrafts = null;
 
 		return true;
@@ -815,7 +818,7 @@ trait PageActions
 			}
 
 			// Update the parent's children collection with the new sorting
-			$parent->children = $siblings->sort('num', 'asc');
+			$parent->children = $siblings->sort('isListed', 'desc', 'num', 'asc');
 			$parent->childrenAndDrafts = null;
 		}
 
