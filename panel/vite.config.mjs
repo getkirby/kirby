@@ -4,16 +4,17 @@ import path from "path";
 import { defineConfig, loadEnv, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import externalize from "rollup-plugin-external-globals";
 import kirby from "./scripts/vite-kirby.mjs";
 import postcssLightDarkFunction from "@csstools/postcss-light-dark-function";
 
 /**
  * Returns all aliases used in the project
  */
-function createAliases() {
+function createAliases(proxy) {
 	return {
-		"@": path.resolve(__dirname, "src")
+		"@": path.resolve(__dirname, "src"),
+		// use absolute proxied url to avoid Vue being loaded twice
+		vue: proxy.target + ":3000/node_modules/vue/dist/vue.esm.browser.js"
 	};
 }
 
@@ -60,26 +61,19 @@ function createPlugins(mode) {
 			viteStaticCopy({
 				targets: [
 					{
-						src: "node_modules/vue/dist/vue.runtime.min.js",
+						src: "node_modules/vue/dist/vue.esm.browser.js",
 						dest: "js"
 					},
 					{
-						src: "node_modules/vue/dist/vue.min.js",
+						src: "node_modules/vue/dist/vue.esm.browser.min.js",
+						dest: "js"
+					},
+					{
+						src: "node_modules/vue/dist/vue.runtime.esm.js",
 						dest: "js"
 					}
 				]
 			})
-		);
-	}
-
-	if (!process.env.VITEST) {
-		plugins.push(
-			// Externalize Vue so it's not loaded from node_modules
-			// but accessed via window.Vue
-			{
-				...externalize({ vue: "Vue" }),
-				enforce: "post"
-			}
 		);
 	}
 
@@ -121,6 +115,7 @@ export default defineConfig(({ mode }) => {
 			minify: "terser",
 			cssCodeSplit: false,
 			rollupOptions: {
+				external: ["vue"],
 				input: "./src/index.js",
 				output: {
 					entryFileNames: "js/[name].min.js",
@@ -140,7 +135,7 @@ export default defineConfig(({ mode }) => {
 			holdUntilCrawlEnd: false
 		},
 		resolve: {
-			alias: createAliases()
+			alias: createAliases(proxy)
 		},
 		server: createServer(proxy),
 		test: createTest()
