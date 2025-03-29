@@ -111,4 +111,26 @@ class PageDeleteTest extends ModelTestCase
 		$this->assertCount(0, $site->children());
 	}
 
+	public function testDeletePageWithChildrenAndDrafts(): void
+	{
+		$page = Page::create([
+			'slug' => 'test',
+			'num'  => 1
+		]);
+
+		$draft = $page->createChild([
+			'slug'  => 'child-a',
+			'draft' => true
+		]);
+
+		$child = $page->createChild([
+			'slug'  => 'child-b',
+			'draft' => false
+		]);
+
+		$page->delete(force: true);
+
+		$this->assertFalse($page->exists());
+	}
+
 }

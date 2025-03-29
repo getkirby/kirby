@@ -559,7 +559,7 @@ trait PageActions
 			}
 
 			// delete all children individually
-			foreach ($page->children() as $child) {
+			foreach ($page->childrenAndDrafts() as $child) {
 				$child->delete(true);
 			}
 
