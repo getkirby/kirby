@@ -348,6 +348,6 @@ class Assets
 			return $this->url . '/js/vue.esm.browser.min.js';
 		}
 
-		return $this->url . '/js/vue.runtime.esm.js';
+		return $this->url . '/js/vue.runtime.esm.min.js';
 	}
 }

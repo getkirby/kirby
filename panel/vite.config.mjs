@@ -2,6 +2,7 @@
 import path from "path";
 
 import { defineConfig, loadEnv, splitVendorChunkPlugin } from "vite";
+import { minify } from "terser";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import kirby from "./scripts/vite-kirby.mjs";
@@ -70,7 +71,18 @@ function createPlugins(mode) {
 					},
 					{
 						src: "node_modules/vue/dist/vue.runtime.esm.js",
-						dest: "js"
+						dest: "js",
+						rename: "vue.runtime.esm.min.js",
+						// TODO: we can simplify this in Vue 3 as a minified version
+						// is provided by Vue itself by default
+						transform: async (content) => {
+							content = content.replaceAll(
+								"process.env.NODE_ENV",
+								"'production'"
+							);
+							const minified = await minify(content);
+							return minified.code;
+						}
 					}
 				]
 			})
