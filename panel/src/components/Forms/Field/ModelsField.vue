@@ -17,7 +17,7 @@
 
 		<k-dropzone :disabled="!hasDropzone" @drop="drop">
 			<k-input-validator
-				v-bind="{ min, max, required }"
+				v-bind="{ min, max, novalidate, required }"
 				:value="JSON.stringify(value)"
 			>
 				<k-collection

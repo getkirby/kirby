@@ -6,7 +6,7 @@ export default class InputValidator extends HTMLElement {
 	static formAssociated = true;
 
 	static get observedAttributes() {
-		return ["min", "max", "required", "value"];
+		return ["min", "max", "novalidate", "required", "value"];
 	}
 
 	attributeChangedCallback(attribute, oldValue, newValue) {
@@ -20,6 +20,7 @@ export default class InputValidator extends HTMLElement {
 
 		this.max = null;
 		this.min = null;
+		this.novalidate = false;
 		this.required = false;
 	}
 

@@ -18,6 +18,7 @@
 
 		<textarea
 			ref="output"
+			:formnovalidate="novalidate"
 			:name="name"
 			:required="required"
 			:value="value"

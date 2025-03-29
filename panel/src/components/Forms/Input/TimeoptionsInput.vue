@@ -42,6 +42,7 @@
 		<input
 			:id="id"
 			:disabled="disabled"
+			:formnovalidate="novalidate"
 			:min="min"
 			:max="max"
 			:name="name"

@@ -1,7 +1,7 @@
 <template>
 	<div :data-can-add="canAdd" class="k-tags-input">
 		<k-input-validator
-			v-bind="{ min, max, required }"
+			v-bind="{ min, max, novalidate, required }"
 			:value="JSON.stringify(value)"
 		>
 			<k-tags

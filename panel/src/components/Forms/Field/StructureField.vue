@@ -45,7 +45,7 @@
 		</template>
 
 		<k-input-validator
-			v-bind="{ min, max, required }"
+			v-bind="{ min, max, novalidate, required }"
 			:value="JSON.stringify(items)"
 		>
 			<template v-if="hasFields">

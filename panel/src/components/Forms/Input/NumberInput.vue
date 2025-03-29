@@ -14,6 +14,7 @@
 			value: number
 		}"
 		:class="['k-number-input', $attrs.class]"
+		:formnovalidate="novalidate"
 		:style="$attrs.style"
 		type="number"
 		@blur="onBlur"

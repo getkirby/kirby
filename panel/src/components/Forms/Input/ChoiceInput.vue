@@ -16,6 +16,7 @@
 				value
 			}"
 			:class="[variant === 'invisible' ? 'sr-only' : null, $attrs.class]"
+			:formnovalidate="novalidate"
 			:data-variant="variant"
 			@input="$emit('input', $event.target.checked)"
 		/>

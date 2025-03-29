@@ -5,6 +5,7 @@
 		:autofocus="autofocus"
 		:class="['k-string-input', `k-${type}-input`, $attrs.class]"
 		:disabled="disabled"
+		:formnovalidate="novalidate"
 		:placeholder="display"
 		:required="required"
 		:style="$attrs.style"

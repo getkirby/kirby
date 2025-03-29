@@ -16,6 +16,7 @@
 				required,
 				step
 			}"
+			:formnovalidate="novalidate"
 			:value="position"
 			type="range"
 			@input="$emit('input', $event.target.valueAsNumber)"

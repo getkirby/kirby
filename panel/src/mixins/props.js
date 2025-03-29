@@ -12,6 +12,7 @@ import layout from "./props/layout.js";
 import maxlength from "./props/maxlength.js";
 import minlength from "./props/minlength.js";
 import name from "./props/name.js";
+import novalidate from "./props/novalidate.js";
 import options from "./props/options.js";
 import pattern from "./props/pattern.js";
 import placeholder from "./props/placeholder.js";
@@ -34,6 +35,7 @@ export {
 	maxlength,
 	minlength,
 	name,
+	novalidate,
 	options,
 	pattern,
 	placeholder,

@@ -27,6 +27,7 @@
 							:value="iso.date"
 							:min="min"
 							:max="max"
+							:novalidate="novalidate"
 							@input="onDateInput"
 						/>
 					</k-dropdown-content>
@@ -39,6 +40,7 @@
 				ref="timeInput"
 				:disabled="disabled"
 				:display="time.display"
+				:novalidate="novalidate"
 				:required="required"
 				:step="time.step"
 				:value="iso.time"
@@ -58,6 +60,7 @@
 					<k-dropdown-content ref="times" align-x="end">
 						<k-timeoptions-input
 							:display="time.display"
+							:novalidate="novalidate"
 							:value="value"
 							@input="onTimesInput"
 						/>

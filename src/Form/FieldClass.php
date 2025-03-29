@@ -38,6 +38,7 @@ abstract class FieldClass
 
 	protected bool $disabled;
 	protected string|null $name;
+	protected bool $novalidate;
 	protected Fields $siblings;
 
 	public function __construct(
@@ -53,6 +54,7 @@ abstract class FieldClass
 		$this->setLabel($params['label'] ?? null);
 		$this->setModel($params['model'] ?? null);
 		$this->setName($params['name'] ?? null);
+		$this->setNovalidate($params['novalidate'] ?? false);
 		$this->setPlaceholder($params['placeholder'] ?? null);
 		$this->setRequired($params['required'] ?? false);
 		$this->setSiblings($params['siblings'] ?? null);
@@ -169,6 +171,11 @@ abstract class FieldClass
 	protected function setName(string|null $name = null): void
 	{
 		$this->name = strtolower($name ?? $this->type());
+	}
+
+	protected function setNovalidate(bool $novalidate = false): void
+	{
+		$this->novalidate = $novalidate;
 	}
 
 	protected function setSiblings(Fields|null $siblings = null): void
