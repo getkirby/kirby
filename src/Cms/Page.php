@@ -378,7 +378,7 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the directory path relative to the `content` root
-  	 * (including optional sorting numbers and draft directories)
+	 * (including optional sorting numbers and draft directories)
 	 */
 	public function diruri(): string
 	{
