@@ -1,4 +1,4 @@
-import { useUid } from "@/helpers/useUid.js";
+import { useId } from "vue";
 
 export default {
 	props: {
@@ -7,7 +7,7 @@ export default {
 		 */
 		id: {
 			type: [Number, String],
-			default: () => useUid()
+			default: () => useId()
 		}
 	}
 };
