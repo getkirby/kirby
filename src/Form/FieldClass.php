@@ -39,6 +39,7 @@ abstract class FieldClass
 	protected string|null $icon;
 	protected string|null $label;
 	protected string|null $name;
+	protected bool $novalidate;
 	protected string|null $placeholder;
 	protected bool $required;
 	protected Fields $siblings;
@@ -58,6 +59,7 @@ abstract class FieldClass
 		$this->setLabel($params['label'] ?? null);
 		$this->setModel($params['model'] ?? null);
 		$this->setName($params['name'] ?? null);
+		$this->setNovalidate($params['novalidate'] ?? false);
 		$this->setPlaceholder($params['placeholder'] ?? null);
 		$this->setRequired($params['required'] ?? false);
 		$this->setSiblings($params['siblings'] ?? null);
@@ -300,6 +302,11 @@ abstract class FieldClass
 	protected function setName(string|null $name = null): void
 	{
 		$this->name = $name;
+	}
+
+	protected function setNovalidate(bool $novalidate = false): void
+	{
+		$this->novalidate = $novalidate;
 	}
 
 	protected function setPlaceholder(array|string|null $placeholder = null): void
