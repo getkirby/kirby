@@ -155,6 +155,36 @@ class SiteTest extends TestCase
 		$this->assertArrayHasKey('tabs', $props);
 	}
 
+	public function testPreviewPermissionsWithoutHomePage()
+	{
+		$props = $this->panel()->props();
+
+		$this->assertFalse($props['permissions']['preview']);
+	}
+
+	public function testPreviewPermissionsWithHomePage()
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'home']
+				]
+			]
+		]);
+
+		// without logged in user
+		$props = $this->app->site()->panel()->props();
+
+		$this->assertFalse($props['permissions']['preview']);
+
+		// with logged in user
+		$this->app->impersonate('kirby');
+
+		$props = $this->app->site()->panel()->props();
+
+		$this->assertTrue($props['permissions']['preview']);
+	}
+
 	/**
 	 * @covers ::view
 	 */

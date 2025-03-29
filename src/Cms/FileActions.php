@@ -196,7 +196,7 @@ trait FileActions
 		$props = static::normalizeProps($props);
 
 		// create the basic file and a test upload object
-		$file = static::factory([
+		$file = File::factory([
 			...$props,
 			'content'      => null,
 			'translations' => null,
