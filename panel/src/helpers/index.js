@@ -23,7 +23,7 @@ import "./regex.js";
 
 export default {
 	install(app) {
-		app.prototype.$helper = {
+		app.config.globalProperties.$helper = {
 			array,
 			clipboard,
 			clone: object.clone,
@@ -50,6 +50,6 @@ export default {
 			uuid: string.uuid
 		};
 
-		app.prototype.$esc = string.escapeHTML;
+		app.config.globalProperties.$esc = string.escapeHTML;
 	}
 };

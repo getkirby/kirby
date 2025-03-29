@@ -3,8 +3,8 @@
 		v-if="pages > 1"
 		layout="collapsed"
 		class="k-pagination"
-		@keydown.left.native="prev"
-		@keydown.right.native="next"
+		@keydown.left="prev"
+		@keydown.right="next"
 	>
 		<!-- prev -->
 		<k-button
@@ -32,8 +32,8 @@
 				ref="dropdown"
 				align-x="end"
 				class="k-pagination-selector"
-				@keydown.left.native.stop
-				@keydown.right.native.stop
+				@keydown.left.stop
+				@keydown.right.stop
 			>
 				<form method="dialog" @click.stop @submit="goTo($refs.page.value)">
 					<label>

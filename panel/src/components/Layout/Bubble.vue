@@ -8,7 +8,7 @@
 			background: $helper.color(back),
 			...$attrs.style
 		}"
-		@click.native.stop
+		@click.stop
 	>
 		<!-- @slot Replace the default image -->
 		<slot name="image">

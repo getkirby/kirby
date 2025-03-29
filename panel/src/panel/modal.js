@@ -1,10 +1,9 @@
 // @ts-check
 
+import { reactive } from "vue";
 import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 import focus from "@/helpers/focus.js";
-import "@/helpers/array.js";
-import { reactive, set } from "vue";
 import { wrap } from "@/helpers/array.js";
 
 /**
@@ -88,9 +87,7 @@ export default (panel, key, defaults) => {
 				return;
 			}
 
-			// make sure that value is reactive
-			set(this.props, "value", value);
-
+			this.props.value = value;
 			this.emit("input", value);
 		},
 
