@@ -34,7 +34,7 @@ class LanguageVariable
 	 */
 	public static function create(
 		string $key,
-		string|null $value = null
+		string|array|null $value = null
 	): static {
 		if (is_numeric($key) === true) {
 			throw new InvalidArgumentException(
@@ -91,12 +91,28 @@ class LanguageVariable
 	}
 
 	/**
+	 * Returns the default language variable
+	 */
+	public function defaultLanguageVariable(): LanguageVariable
+	{
+		return $this->kirby->defaultLanguage()->variable($this->key);
+	}
+
+	/**
 	 * Checks if a language variable exists in the default language
 	 */
 	public function exists(): bool
 	{
 		$language = $this->kirby->defaultLanguage();
 		return isset($language->translations()[$this->key]) === true;
+	}
+
+	/**
+	 * Checks if the value is an array
+	 */
+	public function isArray(): bool
+	{
+		return is_array($this->value());
 	}
 
 	/**
@@ -110,7 +126,7 @@ class LanguageVariable
 	/**
 	 * Sets a new value for the language variable
 	 */
-	public function update(string|null $value = null): static
+	public function update(string|array|null $value = null): static
 	{
 		$translations             = $this->language->translations();
 		$translations[$this->key] = $value ?? '';
@@ -123,7 +139,7 @@ class LanguageVariable
 	/**
 	 * Returns the value if the variable has been translated.
 	 */
-	public function value(): string|null
+	public function value(): string|array|null
 	{
 		return $this->language->translations()[$this->key] ?? null;
 	}
