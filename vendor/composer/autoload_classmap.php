@@ -320,6 +320,7 @@ return array(
     'Kirby\\Parsley\\Schema\\Plain' => $baseDir . '/src/Parsley/Schema/Plain.php',
     'Kirby\\Plugin\\Asset' => $baseDir . '/src/Plugin/Asset.php',
     'Kirby\\Plugin\\Assets' => $baseDir . '/src/Plugin/Assets.php',
+    'Kirby\\Plugin\\Autoloader' => $baseDir . '/src/Plugin/Autoloader.php',
     'Kirby\\Plugin\\License' => $baseDir . '/src/Plugin/License.php',
     'Kirby\\Plugin\\LicenseStatus' => $baseDir . '/src/Plugin/LicenseStatus.php',
     'Kirby\\Plugin\\Plugin' => $baseDir . '/src/Plugin/Plugin.php',
