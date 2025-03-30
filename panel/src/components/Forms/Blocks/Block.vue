@@ -106,6 +106,7 @@ export default {
 		"paste",
 		"prepend",
 		"remove",
+		"removeSelected",
 		"selectDown",
 		"selectUp",
 		"show",
