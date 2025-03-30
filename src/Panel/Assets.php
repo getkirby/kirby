@@ -229,27 +229,29 @@ class Assets
 	{
 		$js = [
 			'vendor' => [
-				'src'  => $this->url . '/js/vendor.min.js',
-				'type' => 'module'
+				'nonce' => $this->nonce,
+				'src'   => $this->url . '/js/vendor.min.js',
+				'type'  => 'module'
 			],
 			'plugin-registry' => [
-				'src'  => $this->url . '/js/plugins.js',
-				'type' => 'module'
+				'nonce' => $this->nonce,
+				'src'   => $this->url . '/js/plugins.js',
+				'type'  => 'module'
 			],
 			'plugins' => [
 				'nonce' => $this->nonce,
 				'src'   => $this->plugins->url('js'),
-				'defer' => true,
+				'defer' => true
 			],
 			...A::map($this->custom('panel.js'), fn ($src) => [
+				'nonce' => $this->nonce,
 				'src'   => $src,
 				'type'  => 'module',
 				'defer' => true
 			]),
 			'index' => [
-				'src'   => $this->url . '/js/index.min.js',
-				'type'  => 'module',
-				'defer' => true
+				'src'  => $this->url . '/js/index.min.js',
+				'type' => 'module'
 			],
 		];
 
@@ -259,8 +261,8 @@ class Assets
 		// to be loaded in dev mode
 		if ($this->isDev === true) {
 			// Load the non-minified index.js, remove vendor script
-			$js['vendor']['src'] = null;
 			$js['index']['src']  = $this->url . '/src/index.js';
+			$js['vendor'] = null;
 
 			// Add vite dev client
 			$js['vite'] = [
@@ -270,7 +272,7 @@ class Assets
 			];
 		}
 
-		return array_filter($js, fn ($js) => empty($js['src']) === false);
+		return array_filter($js);
 	}
 
 	/**

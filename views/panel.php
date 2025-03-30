@@ -45,7 +45,7 @@ use Kirby\Toolkit\Html;
   <?php endforeach ?>
 
   <?php foreach ($assets['js'] as $js): ?>
-  <?php if (($js['defer'] ?? null) !== true): ?>
+  <?php if (($js['type'] ?? null) === 'module'): ?>
   <link rel="modulepreload" href="<?= $js['src'] ?>">
   <?php endif ?>
   <?php endforeach ?>
