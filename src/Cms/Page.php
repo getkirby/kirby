@@ -361,7 +361,7 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Sorting number + Slug
+	 * Returns the directory name (UID with optional sorting number)
 	 */
 	public function dirname(): string
 	{
@@ -377,7 +377,8 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Sorting number + Slug
+	 * Returns the directory path relative to the `content` root
+	 * (including optional sorting numbers and draft directories)
 	 */
 	public function diruri(): string
 	{
