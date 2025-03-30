@@ -12,11 +12,17 @@ import postcssLightDarkFunction from "@csstools/postcss-light-dark-function";
  * Returns all aliases used in the project
  */
 function createAliases(proxy) {
-	return {
-		"@": path.resolve(__dirname, "src"),
-		// use absolute proxied url to avoid Vue being loaded twice
-		vue: proxy.target + ":3000/node_modules/vue/dist/vue.esm.browser.js"
+	const aliases = {
+		"@": path.resolve(__dirname, "src")
 	};
+
+	if (!process.env.VITEST) {
+		// use absolute proxied url to avoid Vue being loaded twice
+		aliases.vue =
+			proxy.target + ":3000/node_modules/vue/dist/vue.esm.browser.js";
+	}
+
+	return aliases;
 }
 
 /**
@@ -62,14 +68,6 @@ function createPlugins(mode) {
 			viteStaticCopy({
 				targets: [
 					{
-						src: "node_modules/vue/dist/vue.esm.browser.js",
-						dest: "js"
-					},
-					{
-						src: "node_modules/vue/dist/vue.esm.browser.min.js",
-						dest: "js"
-					},
-					{
 						src: "node_modules/vue/dist/vue.runtime.esm.js",
 						dest: "js",
 						rename: "vue.runtime.esm.min.js",
@@ -83,6 +81,16 @@ function createPlugins(mode) {
 							const minified = await minify(content);
 							return minified.code;
 						}
+					},
+					{
+						src: "node_modules/vue/dist/vue.esm.browser.min.js",
+						dest: "js"
+					},
+					// Also copy the non-minified version to the dist folder as
+					// we will expose this for plugins in dev mode with Vue 3
+					{
+						src: "node_modules/vue/dist/vue.esm.browser.js",
+						dest: "js"
 					}
 				]
 			})
