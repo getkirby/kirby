@@ -12,52 +12,155 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromDraftToListed(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
+		$parent = Page::create([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'child-a',
+					'num'  => 1
+				],
+				[
+					'slug' => 'child-b',
+					'num'  => null
+				]
+			],
+			'drafts' => [
+				[
+					'slug'  => 'child-c',
+					'draft' => true
+				]
+			]
 		]);
 
-		$this->assertTrue($page->isDraft());
+		$page     = $parent->draft('child-c');
+		$children = $parent->childrenAndDrafts();
 
-		$listed = $page->changeStatus('listed');
+		$this->assertTrue($page->isDraft());
+		$this->assertTrue($parent->drafts()->has($page));
+		$this->assertFalse($parent->children()->listed()->has($page));
+		$this->assertSame('child-a', $children->nth(0)->slug());
+		$this->assertSame('child-b', $children->nth(1)->slug());
+		$this->assertSame('child-c', $children->nth(2)->slug());
+
+		$listed   = $page->changeStatus('listed');
+		$children = $parent->childrenAndDrafts();
 
 		$this->assertSame('listed', $listed->status());
-		$this->assertSame(1, $listed->num());
-		$this->assertFalse($listed->parentModel()->drafts()->has($listed));
-		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
+		$this->assertSame(2, $listed->num());
+
+		$this->assertFalse($parent->drafts()->has($page));
+		$this->assertTrue($parent->children()->listed()->has($page));
+		$this->assertSame('child-a', $children->nth(0)->slug());
+		$this->assertSame('child-c', $children->nth(1)->slug());
+		$this->assertSame('child-b', $children->nth(2)->slug());
 	}
 
 	public function testChangeStatusFromDraftToDraft(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
+		$parent = Page::create([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'child-a',
+					'num'  => 1
+				],
+				[
+					'slug' => 'child-b',
+					'num'  => null
+				]
+			],
+			'drafts' => [
+				[
+					'slug'  => 'child-c',
+					'draft' => true
+				]
+			]
 		]);
 
-		$draft = $page->changeStatus('draft');
+		$page = $parent->draft('child-c');
+
+		$this->assertTrue($page->isDraft());
+		$this->assertTrue($parent->drafts()->has($page));
+		$this->assertFalse($parent->children()->listed()->has($page));
+
+		$draft    = $page->changeStatus('draft');
+		$children = $parent->childrenAndDrafts();
 
 		$this->assertSame($draft, $page);
+		$this->assertTrue($parent->drafts()->has($page));
+		$this->assertFalse($parent->children()->listed()->has($page));
+		$this->assertSame('child-a', $children->nth(0)->slug());
+		$this->assertSame('child-b', $children->nth(1)->slug());
+		$this->assertSame('child-c', $children->nth(2)->slug());
 	}
 
 	public function testChangeStatusFromDraftToUnlisted(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
+		$parent = Page::create([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'child-a',
+					'num'  => 1
+				],
+				[
+					'slug' => 'child-b',
+					'num'  => null
+				]
+			],
+			'drafts' => [
+				[
+					'slug'  => 'child-c',
+					'draft' => true
+				]
+			]
 		]);
 
+		$page = $parent->draft('child-c');
+
 		$this->assertTrue($page->isDraft());
+		$this->assertTrue($parent->drafts()->has($page));
+		$this->assertFalse($parent->children()->unlisted()->has($page));
 
 		$unlisted = $page->changeStatus('unlisted');
+		$children = $parent->childrenAndDrafts();
 
 		$this->assertSame('unlisted', $unlisted->status());
 		$this->assertNull($unlisted->num());
-		$this->assertFalse($unlisted->parentModel()->drafts()->has($unlisted));
-		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
+		$this->assertFalse($parent->drafts()->has($unlisted));
+		$this->assertTrue($parent->children()->unlisted()->has($unlisted));
+		$this->assertSame('child-a', $children->nth(0)->slug());
+		$this->assertSame('child-b', $children->nth(1)->slug());
+		$this->assertSame('child-c', $children->nth(2)->slug());
 	}
 
 	public function testChangeStatusFromListedToDraft(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
+		$parent = Page::create([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'child-a',
+					'num'  => 1
+				],
+				[
+					'slug' => 'child-b',
+					'num'  => null
+				]
+			],
+			'drafts' => [
+				[
+					'slug'  => 'child-c',
+					'draft' => true
+				]
+			]
 		]);
+
+		$page = $parent->find('child-a');
+
+		$this->assertSame(1, $page->num());
+		$this->assertFalse($parent->drafts()->has($page));
+		$this->assertTrue($parent->children()->listed()->has($page));
 
 		$page = $page->changeStatus('listed');
 
@@ -65,55 +168,123 @@ class PageChangeStatusTest extends ModelTestCase
 		$this->assertSame(1, $page->num());
 		$this->assertFalse($page->isDraft());
 
-		$draft = $page->changeStatus('draft');
+		$draft    = $page->changeStatus('draft');
+		$children = $parent->childrenAndDrafts();
 
 		$this->assertTrue($draft->isDraft());
 		$this->assertSame('draft', $draft->status());
 		$this->assertNull($draft->num());
-		$this->assertTrue($draft->parentModel()->drafts()->has($draft));
-		$this->assertFalse($draft->parentModel()->children()->listed()->has($draft));
+		$this->assertTrue($parent->drafts()->has($draft));
+		$this->assertFalse($parent->children()->listed()->has($draft));
+		$this->assertSame('child-b', $children->nth(0)->slug());
+		$this->assertSame('child-c', $children->nth(1)->slug());
+		$this->assertSame('child-a', $children->nth(2)->slug());
 	}
 
 	public function testChangeStatusFromListedToListed(): void
 	{
-		$page = Page::create([
-			'slug'  => 'test',
-			'num'   => 1,
-			'draft' => false
+		$parent = Page::create([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'child-a',
+					'num'  => 1
+				],
+				[
+					'slug' => 'child-b',
+					'num'  => null
+				]
+			],
+			'drafts' => [
+				[
+					'slug'  => 'child-c',
+					'draft' => true
+				]
+			]
 		]);
+
+		$page = $parent->find('child-a');
+
+		$this->assertSame(1, $page->num());
+		$this->assertFalse($parent->drafts()->has($page));
+		$this->assertTrue($parent->children()->listed()->has($page));
 
 		$listed = $page->changeStatus('listed');
 
 		$this->assertSame($listed, $page);
+		$this->assertFalse($parent->drafts()->has($page));
+		$this->assertTrue($parent->children()->listed()->has($page));
 	}
 
 	public function testChangeStatusFromListedToUnlisted(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
+		$parent = Page::create([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'child-a',
+					'num'  => 1
+				],
+				[
+					'slug' => 'child-b',
+					'num'  => null
+				]
+			],
+			'drafts' => [
+				[
+					'slug'  => 'child-c',
+					'draft' => true
+				]
+			]
 		]);
+
+		$page = $parent->find('child-a');
+
+		$this->assertFalse($parent->children()->unlisted()->has($page));
+		$this->assertTrue($parent->children()->listed()->has($page));
 
 		$listed = $page->changeStatus('listed');
 		$this->assertTrue($listed->isListed());
 		$this->assertSame(1, $listed->num());
 
-		$this->assertFalse($listed->parentModel()->children()->unlisted()->has($listed));
-		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
+		$this->assertFalse($parent->children()->unlisted()->has($listed));
+		$this->assertTrue($parent->children()->listed()->has($listed));
 
 		$unlisted = $listed->changeStatus('unlisted');
 
 		$this->assertTrue($unlisted->isUnlisted());
 		$this->assertNull($unlisted->num());
 
-		$this->assertFalse($unlisted->parentModel()->children()->listed()->has($unlisted));
-		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
+		$this->assertFalse($parent->children()->listed()->has($unlisted));
+		$this->assertTrue($parent->children()->unlisted()->has($unlisted));
 	}
 
 	public function testChangeStatusFromUnlistedToListed(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
+		$parent = Page::create([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'child-a',
+					'num'  => 1
+				],
+				[
+					'slug' => 'child-b',
+					'num'  => null
+				]
+			],
+			'drafts' => [
+				[
+					'slug'  => 'child-c',
+					'draft' => true
+				]
+			]
 		]);
+
+		$page = $parent->find('child-b');
+
+		$this->assertTrue($parent->children()->unlisted()->has($page));
+		$this->assertFalse($parent->children()->listed()->has($page));
 
 		// change to unlisted
 		$unlisted = $page->changeStatus('unlisted');
@@ -121,28 +292,53 @@ class PageChangeStatusTest extends ModelTestCase
 		$this->assertTrue($unlisted->isUnlisted());
 		$this->assertNull($unlisted->num());
 
-		$this->assertFalse($unlisted->parentModel()->children()->listed()->has($unlisted));
-		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
+		$this->assertFalse($parent->children()->listed()->has($unlisted));
+		$this->assertTrue($parent->children()->unlisted()->has($unlisted));
 
 		// change to listed
 		$listed = $unlisted->changeStatus('listed');
 		$this->assertTrue($listed->isListed());
-		$this->assertSame(1, $listed->num());
+		$this->assertSame(2, $listed->num());
 
-		$this->assertFalse($listed->parentModel()->children()->unlisted()->has($listed));
-		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
+		$this->assertFalse($parent->children()->unlisted()->has($listed));
+		$this->assertTrue($parent->children()->listed()->has($listed));
 	}
 
 	public function testChangeStatusFromUnlistedToUnlisted(): void
 	{
-		$page = Page::create([
-			'slug'  => 'test',
-			'draft' => false
+		$parent = Page::create([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'child-a',
+					'num'  => 1
+				],
+				[
+					'slug' => 'child-b',
+					'num'  => null
+				]
+			],
+			'drafts' => [
+				[
+					'slug'  => 'child-c',
+					'draft' => true
+				]
+			]
 		]);
+
+		$page = $parent->find('child-b');
+
+		$this->assertTrue($parent->children()->unlisted()->has($page));
+		$this->assertFalse($parent->children()->listed()->has($page));
 
 		$unlisted = $page->changeStatus('unlisted');
 
 		$this->assertSame($unlisted, $page);
+		$this->assertTrue($unlisted->isUnlisted());
+		$this->assertNull($unlisted->num());
+
+		$this->assertTrue($parent->children()->unlisted()->has($unlisted));
+		$this->assertFalse($parent->children()->listed()->has($unlisted));
 	}
 
 	public function testChangeStatusToDraftHooks(): void

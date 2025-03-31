@@ -11,11 +11,17 @@ import postcssLightDarkFunction from "@csstools/postcss-light-dark-function";
  * Returns all aliases used in the project
  */
 function createAliases(proxy) {
-	return {
-		"@": path.resolve(__dirname, "src"),
-		// use absolute proxied url to avoid Vue being loaded twice
-		vue: proxy.target + ":3000/node_modules/vue/dist/vue.esm-browser.js"
+	const aliases = {
+		"@": path.resolve(__dirname, "src")
 	};
+
+	if (!process.env.VITEST) {
+		// use absolute proxied url to avoid Vue being loaded twice
+		aliases.vue =
+			proxy.target + ":3000/node_modules/vue/dist/vue.esm-browser.js";
+	}
+
+	return aliases;
 }
 
 /**

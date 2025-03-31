@@ -40,7 +40,7 @@ class Assets
 		$this->nonce   = $this->kirby->nonce();
 		$this->plugins = new Plugins();
 
-		// check if Panel is running in dev mode to
+		// Check if Panel is running in dev mode to
 		// get the assets from the Vite dev server;
 		// dev mode = explicitly enabled in the config AND Vite is running
 		$this->isDev =
@@ -52,7 +52,7 @@ class Assets
 		$this->isPluginDev =
 			is_file($this->kirby->root('plugins') . '/.vite-running') === true;
 
-		// get the base URL
+		// Get the base URL
 		$this->url = $this->url();
 	}
 
@@ -205,10 +205,7 @@ class Assets
 	public function icons(): string
 	{
 		$dir   = $this->kirby->root('panel') . '/';
-		$dir  .= match ($this->isDev) {
-			true  => 'public',
-			false => 'dist'
-		};
+		$dir  .= $this->isDev ? 'public' : 'dist';
 		$icons = F::read($dir . '/img/icons.svg');
 		$icons = preg_replace('/<!--(.|\s)*?-->/', '', $icons);
 		return $icons;
@@ -252,16 +249,15 @@ class Assets
 			],
 		];
 
-		// during dev mode, add vite client and adapt
+		// During dev mode, add vite client and adapt
 		// path to `index.js` - vendor does not need
 		// to be loaded in dev mode
 		if ($this->isDev === true) {
-			// load the non-minified index.js, remove vendor script
-			// and development version of Vue
-			$js['vendor']['src'] = null;
-			$js['index']['src']  = $this->url . '/src/index.js';
+			// Load the non-minified index.js, remove vendor script
+			$js['index']['src'] = $this->url . '/src/index.js';
+			$js['vendor'] = null;
 
-			// add vite dev client
+			// Add vite dev client
 			$js['vite'] = [
 				'nonce' => $this->nonce,
 				'src'   => $this->url . '/@vite/client',
@@ -269,7 +265,7 @@ class Assets
 			];
 		}
 
-		return array_filter($js, fn ($js) => empty($js['src']) === false);
+		return array_filter($js);
 	}
 
 	/**
@@ -338,12 +334,12 @@ class Assets
 	 */
 	public function vue(): string
 	{
-		// during dev mode, load the dev version of Vue
+		// During dev mode, load the dev version of Vue
 		if ($this->isDev === true) {
 			return $this->url . '/node_modules/vue/dist/vue.esm-browser.js';
 		}
 
-		// when any plugin is in dev mode, also load the dev version
+		// When any plugin is in dev mode, also load the dev version
 		// of Vue  but from the dist folder, not node_modules
 		if ($this->isPluginDev === true) {
 			return $this->url . '/js/vue.esm-browser.js';
