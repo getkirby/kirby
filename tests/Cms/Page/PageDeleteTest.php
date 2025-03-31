@@ -72,18 +72,30 @@ class PageDeleteTest extends ModelTestCase
 
 	public function testDeletePage(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
-			'num'  => 1
+		$parent = Page::create(['slug' => 'test']);
+		$listed = Page::create([
+			'slug'   => 'child-a',
+			'num'    => 1,
+			'parent' => $parent
 		]);
 
-		$this->assertTrue($page->exists());
-		$this->assertTrue($page->parentModel()->children()->has($page));
+		$unlisted = Page::create([
+			'slug'   => 'child-b',
+			'draft'  => false,
+			'parent' => $parent
+		]);
 
-		$page->delete();
+		$this->assertTrue($listed->exists());
+		$this->assertTrue($parent->children()->has($listed));
+		$this->assertTrue($unlisted->exists());
+		$this->assertTrue($parent->children()->has($unlisted));
 
-		$this->assertFalse($page->exists());
-		$this->assertFalse($page->parentModel()->children()->has($page));
+		$listed->delete();
+
+		$this->assertFalse($listed->exists());
+		$this->assertFalse($parent->children()->has($listed));
+		$this->assertTrue($unlisted->exists());
+		$this->assertTrue($parent->children()->has($unlisted));
 	}
 
 	public function testDeleteMultipleSortedPages(): void
@@ -118,12 +130,12 @@ class PageDeleteTest extends ModelTestCase
 			'num'  => 1
 		]);
 
-		$draft = $page->createChild([
+		$page->createChild([
 			'slug'  => 'child-a',
 			'draft' => true
 		]);
 
-		$child = $page->createChild([
+		$page->createChild([
 			'slug'  => 'child-b',
 			'draft' => false
 		]);

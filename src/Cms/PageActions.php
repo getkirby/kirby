@@ -568,7 +568,10 @@ trait PageActions
 			// up the directory if it's empty
 			$page->versions()->delete();
 
-			if ($page->isDraft() === false) {
+			if (
+				$page->isListed() === true &&
+				$page->blueprint()->num() === 'default'
+			) {
 				$page->resortSiblingsAfterUnlisting();
 			}
 
@@ -742,19 +745,20 @@ trait PageActions
 	 */
 	protected function resortSiblingsAfterListing(int|null $position = null): bool
 	{
-		// get all siblings including the current page
-		$siblings = $this
-			->parentModel()
-			->children()
+		$parent   = $this->parentModel();
+		$siblings = $parent->children();
+
+		// Get all listed siblings including the current page
+		$listed = $siblings
 			->listed()
 			->append($this)
 			->filter(fn ($page) => $page->blueprint()->num() === 'default');
 
-		// get a non-associative array of ids
-		$keys  = $siblings->keys();
+		// Get a non-associative array of ids
+		$keys  = $listed->keys();
 		$index = array_search($this->id(), $keys);
 
-		// if the page is not included in the siblings something went wrong
+		// If the page is not included in the siblings something went wrong
 		if ($index === false) {
 			throw new LogicException(
 				message: 'The page is not included in the sorting index'
@@ -765,8 +769,8 @@ trait PageActions
 			$position = count($keys);
 		}
 
-		// move the current page number in the array of keys
-		// subtract 1 from the num and the position, because of the
+		// Move the current page number in the array of keys.
+		// Subtract 1 from the num and the position, because of the
 		// zero-based array keys
 		$sorted = A::move($keys, $index, $position - 1);
 
@@ -775,11 +779,14 @@ trait PageActions
 				continue;
 			}
 
-			$siblings->get($id)?->changeNum($key + 1);
+			// Apply the new sorting number
+			// and update the new object in the siblings collection
+			$newSibling = $listed->get($id)?->changeNum($key + 1);
+			$siblings->update($newSibling);
 		}
 
-		$parent = $this->parentModel();
-		$parent->children = $parent->children()->sort('num', 'asc');
+		// Update the parent's children collection with the new sorting
+		$parent->children = $siblings->sort('isListed', 'desc', 'num', 'asc');
 		$parent->childrenAndDrafts = null;
 
 		return true;
@@ -792,19 +799,26 @@ trait PageActions
 	{
 		$index    = 0;
 		$parent   = $this->parentModel();
-		$siblings = $parent
-			->children()
+		$siblings = $parent->children();
+
+		// Get all listed siblings excluding the current page
+		$listed = $siblings
 			->listed()
 			->not($this)
 			->filter(fn ($page) => $page->blueprint()->num() === 'default');
 
-		if ($siblings->count() > 0) {
-			foreach ($siblings as $sibling) {
+		if ($listed->count() > 0) {
+			foreach ($listed as $sibling) {
 				$index++;
-				$sibling->changeNum($index);
+
+				// Apply the new sorting number
+				// and update the new object in the siblings collection
+				$newSibling = $sibling->changeNum($index);
+				$siblings->update($newSibling);
 			}
 
-			$parent->children = $siblings->sort('num', 'asc');
+			// Update the parent's children collection with the new sorting
+			$parent->children = $siblings->sort('isListed', 'desc', 'num', 'asc');
 			$parent->childrenAndDrafts = null;
 		}
 
