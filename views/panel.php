@@ -20,6 +20,12 @@ use Kirby\Toolkit\Html;
 
   <title>Kirby Panel</title>
 
+	<script type="importmap">
+	{
+	  "imports": <?= json_encode($assets['import-maps'] ?? []) ?>
+	}
+	</script>
+
   <script nonce="<?= $nonce ?>">
     if (
         !window.CSS ||
@@ -60,16 +66,16 @@ use Kirby\Toolkit\Html;
     window.fiber = <?= json_encode($fiber) ?>;
   </script>
 
-  <?php foreach ($assets['js'] as $key => $js): ?>
-  <?php if ($key === 'index'): ?>
-  <script type="module" nonce="<?= $nonce ?>">
-    <?= $assets['plugin-imports'] ?>
-    import('<?= $js['src'] ?>')
-  </script>
-  <?php else: ?>
-  <?= Html::tag('script', '', $js) . PHP_EOL ?>
-  <?php endif ?>
-  <?php endforeach ?>
+	<?php foreach ($assets['js'] as $key => $js): ?>
+		<?php if ($key === 'index'): ?>
+			<script type="module" nonce="<?= $nonce ?>" defer>
+				<?= $assets['plugin-imports'] ?>
+    		import('<?= $js['src'] ?>')
+			</script>
+		<?php else: ?>
+			<?= Html::tag('script', '', $js) . PHP_EOL ?>
+		<?php endif ?>
+	<?php endforeach ?>
 
 </body>
 </html>
