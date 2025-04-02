@@ -266,7 +266,12 @@ export default {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
-
+/** Provides a consistent look when texts are long in small dialogs */
+@container (max-width: 25rem) {
+	.k-item[data-layout="list"] .k-item-content:has(.k-item-info) {
+		flex-direction: column;
+	}
+}
 .k-item[data-layout="list"] .k-sort-button {
 	--button-width: calc(1.5rem + var(--spacing-1));
 	--button-height: var(--item-height);
