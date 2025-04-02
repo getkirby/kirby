@@ -267,8 +267,8 @@ export default {
 	text-overflow: ellipsis;
 }
 /** Provides a consistent look when texts are long in small dialogs */
-@container (max-width: 30rem) {
-	.k-dialog .k-item[data-layout="list"] .k-item-content:has(.k-item-info) {
+@container (max-width: 25rem) {
+	.k-item[data-layout="list"] .k-item-content:has(.k-item-info) {
 		flex-direction: column;
 	}
 }
