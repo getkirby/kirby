@@ -1046,6 +1046,40 @@ class VersionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::publish
+	 */
+	public function testPublishWithRemovedField()
+	{
+		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
+
+		$model = new File([
+			'parent'   => $this->model,
+			'filename' => 'test.jpg',
+		]);
+
+		$latest = $model->version('latest');
+		$latest->save([
+			'title' => 'Title',
+			'focus' => '50% 50%'
+		]);
+
+		$changes = $model->version('changes');
+		$changes->save([
+			'title' => 'Updated title',
+			'focus' => null,
+		]);
+
+		$changes->publish();
+
+		// get the updated model through the changes version
+		$latest = $changes->model()->version('latest')->read();
+
+		$this->assertArrayNotHasKey('focus', $latest);
+		$this->assertSame('Updated title', $latest['title']);
+	}
+
+	/**
 	 * @covers ::read
 	 * @covers ::convertFieldNamesToLowerCase
 	 * @covers ::prepareFieldsAfterRead

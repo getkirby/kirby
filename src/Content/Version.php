@@ -234,19 +234,23 @@ class Version
 
 		$a = Form::for(
 			model: $this->model,
+			merge: false,
 			props: [
 				'language' => $language->code(),
 				'values'   => $a,
-			]
+			],
 		)->values();
 
 		$b = Form::for(
 			model: $this->model,
+			merge: false,
 			props: [
 				'language' => $language->code(),
 				'values'   => $b
 			]
 		)->values();
+
+		dump($a, $b);
 
 		ksort($a);
 		ksort($b);
@@ -490,9 +494,26 @@ class Version
 		// check if publishing is allowed
 		VersionRules::publish($this, $language);
 
+		$changes = $this->read($language);
+		$latest  = $this->model->version(VersionId::latest())->read($language);
+
+		// Find all fields that were removed from the changeds version
+		// and need to be explicitly set to null when merging with the
+		// latest version.
+		//
+		// @todo This is a hack to avoid the fact that Kirby merges
+		// arrays by reference, which means that fields removed in one
+		// version are still present in another version. We need to remove
+		// this once we have a proper way to handle this in forms.
+		foreach (array_diff_key($latest, $changes) as $key => $value) {
+			$changes[$key] = null;
+		}
+
+		dump($changes);
+
 		// update the latest version
 		$this->model = $this->model->update(
-			input: $this->read($language),
+			input: $changes,
 			languageCode: $language->code(),
 			validate: true
 		);
