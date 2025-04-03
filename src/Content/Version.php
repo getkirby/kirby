@@ -250,8 +250,6 @@ class Version
 			]
 		)->values();
 
-		dump($a, $b);
-
 		ksort($a);
 		ksort($b);
 
@@ -508,8 +506,6 @@ class Version
 		foreach (array_diff_key($latest, $changes) as $key => $value) {
 			$changes[$key] = null;
 		}
-
-		dump($changes);
 
 		// update the latest version
 		$this->model = $this->model->update(
