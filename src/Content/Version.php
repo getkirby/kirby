@@ -495,7 +495,7 @@ class Version
 		$changes = $this->read($language);
 		$latest  = $this->model->version(VersionId::latest())->read($language);
 
-		// Find all fields that were removed from the changeds version
+		// Find all fields that were removed from the changed version
 		// and need to be explicitly set to null when merging with the
 		// latest version.
 		//
