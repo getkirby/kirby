@@ -175,7 +175,8 @@ class Form
 
 	public static function for(
 		ModelWithContent $model,
-		array $props = []
+		array $props = [],
+		bool $merge = true
 	): static {
 		// get the original model data
 		$original = $model->content($props['language'] ?? null)->toArray();
@@ -188,8 +189,13 @@ class Form
 			}
 		}
 
+		if ($merge === true) {
+			$props['values'] = [...$original, ...$values];
+		} else {
+			$props['values'] = $values;
+		}
+
 		// set a few defaults
-		$props['values']   = [...$original, ...$values];
 		$props['fields'] ??= [];
 		$props['model']    = $model;
 

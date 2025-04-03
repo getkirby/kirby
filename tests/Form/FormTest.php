@@ -406,6 +406,37 @@ class FormTest extends TestCase
 	}
 
 	/**
+	 * @covers ::for
+	 */
+	public function testForPageWithoutMerge()
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'content' => [
+				'title' => 'Test',
+				'date'  => '2012-12-12'
+			],
+		]);
+
+		$form = Form::for(
+			model: $page,
+			props: [
+				'values' => [
+					'title' => 'Updated Title',
+				],
+			],
+			merge: false
+		);
+
+		$values   = $form->values();
+		$expected = [
+			'title' => 'Updated Title'
+		];
+
+		$this->assertSame($expected, $values, 'The date field should not be present');
+	}
+
+	/**
 	 * @covers ::strings
 	 */
 	public function testStrings()
