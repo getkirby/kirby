@@ -394,6 +394,37 @@ class FieldTest extends TestCase
 		$this->assertSame('test2 computed', $field->computedValue());
 	}
 
+	public function testFillWithRestoredState()
+	{
+		Field::$types = [
+			'test' => $definition = [
+				'computed' => [
+					'options' => fn () => ['a', 'b', 'c']
+				],
+				'methods' => [
+					'optionsDebugger' => fn () => $this->options
+				]
+			]
+		];
+
+		$page = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $page,
+			'value' => 'test'
+		]);
+
+		$this->assertSame(['a', 'b', 'c'], $field->options());
+		$this->assertEquals(Field::setup('test'), $field->optionsDebugger());
+
+		// filling a new value must not break the mandatory
+		// component definition properties
+		$field->fill('test2');
+
+		$this->assertSame(['a', 'b', 'c'], $field->options());
+		$this->assertEquals(Field::setup('test'), $field->optionsDebugger());
+	}
+
 	public function testHelp()
 	{
 		Field::$types = [
