@@ -39,7 +39,6 @@ abstract class FieldClass
 	protected string|null $label;
 	protected string|null $name;
 	protected string|null $placeholder;
-	protected bool $required;
 	protected Fields $siblings;
 	protected string|null $width;
 
@@ -158,11 +157,6 @@ abstract class FieldClass
 		return false;
 	}
 
-	public function isRequired(): bool
-	{
-		return $this->required;
-	}
-
 	/**
 	 * The field label can be set as string or associative array with translations
 	 */
@@ -224,14 +218,6 @@ abstract class FieldClass
 		];
 	}
 
-	/**
-	 * If `true`, the field has to be filled in correctly to be saved.
-	 */
-	public function required(): bool
-	{
-		return $this->required;
-	}
-
 	protected function setAfter(array|string|null $after = null): void
 	{
 		$this->after = $this->i18n($after);
@@ -275,11 +261,6 @@ abstract class FieldClass
 	protected function setPlaceholder(array|string|null $placeholder = null): void
 	{
 		$this->placeholder = $this->i18n($placeholder);
-	}
-
-	protected function setRequired(bool $required = false): void
-	{
-		$this->required = $required;
 	}
 
 	protected function setSiblings(Fields|null $siblings = null): void

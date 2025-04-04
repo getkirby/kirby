@@ -18,6 +18,8 @@ use Kirby\Toolkit\V;
  */
 trait Validation
 {
+	protected bool $required;
+
 	/**
 	 * An array of all found errors
 	 */
@@ -30,6 +32,14 @@ trait Validation
 	public function errors(): array
 	{
 		return $this->errors ??= $this->validate();
+	}
+
+	/**
+	 * Checks if the field is required
+	 */
+	public function isRequired(): bool
+	{
+		return $this->required;
 	}
 
 	/**
@@ -46,6 +56,19 @@ trait Validation
 	public function isValid(): bool
 	{
 		return $this->errors() === [];
+	}
+
+	/**
+	 * Getter for the required property
+	 */
+	public function required(): bool
+	{
+		return $this->required;
+	}
+
+	protected function setRequired(bool $required = false): void
+	{
+		$this->required = $required;
 	}
 
 	/**
