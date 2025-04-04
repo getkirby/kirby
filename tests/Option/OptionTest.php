@@ -2,6 +2,7 @@
 
 namespace Kirby\Option;
 
+use Kirby\Cms\Page;
 use Kirby\Field\TestCase;
 
 /**
@@ -19,19 +20,19 @@ class OptionTest extends TestCase
 		$option = new Option('test');
 		$this->assertSame('test', $option->value);
 		$this->assertSame('test', $option->id());
-		$this->assertSame('test', $option->text->translations['en']);
+		$this->assertSame('test', $option->text['en']);
 
 		// int
 		$option = new Option(1);
 		$this->assertSame(1, $option->value);
 		$this->assertSame(1, $option->id());
-		$this->assertSame(1, $option->text->translations['en']);
+		$this->assertSame(1, $option->text['en']);
 
 		// float
 		$option = new Option(1.1);
 		$this->assertSame(1.1, $option->value);
 		$this->assertSame(1.1, $option->id());
-		$this->assertSame(1.1, $option->text->translations['en']);
+		$this->assertSame(1.1, $option->text['en']);
 	}
 
 	/**
@@ -64,7 +65,7 @@ class OptionTest extends TestCase
 		]);
 
 		$this->assertSame('test', $option->value);
-		$this->assertSame('Test Option', $option->text->translations['en']);
+		$this->assertSame('Test Option', $option->text['en']);
 
 		// array
 		$option = Option::factory([
@@ -75,7 +76,7 @@ class OptionTest extends TestCase
 		]);
 
 		$this->assertSame('test', $option->value);
-		$this->assertSame('Test Option', $option->text->translations['de']);
+		$this->assertSame('Test Option', $option->text['de']);
 	}
 
 	/**
@@ -97,6 +98,7 @@ class OptionTest extends TestCase
 			'value'    => 'test',
 		];
 
-		$this->assertSame($expected, $option->render($this->model()));
+		$model = new Page(['slug' => 'test']);
+		$this->assertSame($expected, $option->render($model));
 	}
 }

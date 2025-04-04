@@ -2,7 +2,7 @@
 
 namespace Kirby\Field;
 
-use Kirby\Blueprint\TestCase as BaseTestCase;
+use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
