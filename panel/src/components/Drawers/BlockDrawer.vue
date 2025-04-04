@@ -11,7 +11,7 @@
 	>
 		<template #options>
 			<k-button
-				v-if="hidden"
+				v-if="isHidden"
 				class="k-drawer-option"
 				icon="hidden"
 				@click="show"
@@ -64,9 +64,14 @@ export default {
 		"submit",
 		"tab"
 	],
+	data() {
+		return {
+			isHidden: this.hidden
+		};
+	},
 	methods: {
 		show() {
-			this.hidden = false;
+			this.isHidden = false;
 			this.$emit("show");
 		}
 	}
