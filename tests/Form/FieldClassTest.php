@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Exception;
+use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
 
@@ -263,6 +264,28 @@ class FieldClassTest extends TestCase
 
 		$field = new HiddenField();
 		$this->assertTrue($field->isHidden());
+	}
+
+	public function testIsTranslatable()
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField();
+		$this->assertTrue($field->isTranslatable($language));
+	}
+
+	public function testIsTranslatableWithNonDefaultLanguage()
+	{
+		$language = new Language([
+			'code'    => 'de',
+			'default' => false
+		]);
+
+		$field = new TestField(['translate' => true]);
+		$this->assertTrue($field->isTranslatable($language));
+
+		$field = new TestField(['translate' => false]);
+		$this->assertFalse($field->isTranslatable($language));
 	}
 
 	/**
