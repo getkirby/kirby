@@ -14,7 +14,7 @@
 				v-if="hidden"
 				class="k-drawer-option"
 				icon="hidden"
-				@click="$emit('show')"
+				@click="show"
 			/>
 			<k-button
 				:disabled="!prev"
@@ -63,6 +63,12 @@ export default {
 		"show",
 		"submit",
 		"tab"
-	]
+	],
+	methods: {
+		show() {
+			this.hidden = false;
+			this.$emit("show");
+		}
+	}
 };
 </script>
