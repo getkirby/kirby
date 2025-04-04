@@ -220,7 +220,6 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertSame('test', $field->default());
-		$this->assertSame('test', $field->default);
 		$this->assertSame('test', $field->data(true));
 
 		// don't overwrite existing values
@@ -231,9 +230,7 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertSame('test', $field->default());
-		$this->assertSame('test', $field->default);
 		$this->assertSame('something', $field->value());
-		$this->assertSame('something', $field->value);
 		$this->assertSame('something', $field->data(true));
 
 		// with query
@@ -243,7 +240,6 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertSame('blog', $field->default());
-		$this->assertSame('blog', $field->default);
 		$this->assertSame('blog', $field->data(true));
 	}
 
@@ -384,13 +380,11 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertSame('test', $field->value());
-		$this->assertSame('test', $field->value);
 		$this->assertSame('test computed', $field->computedValue());
 
 		$field->fill('test2');
 
 		$this->assertSame('test2', $field->value());
-		$this->assertSame('test2', $field->value);
 		$this->assertSame('test2 computed', $field->computedValue());
 	}
 

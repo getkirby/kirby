@@ -33,7 +33,6 @@ abstract class FieldClass
 	protected string|null $after;
 	protected bool $autofocus;
 	protected string|null $before;
-	protected mixed $default;
 	protected bool $disabled;
 	protected string|null $help;
 	protected string|null $icon;
@@ -42,7 +41,6 @@ abstract class FieldClass
 	protected string|null $placeholder;
 	protected bool $required;
 	protected Fields $siblings;
-	protected mixed $value = null;
 	protected string|null $width;
 
 	public function __construct(
@@ -119,17 +117,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Sets a new value for the field
-	 */
-	public function fill(mixed $value): static
-	{
-		$this->value = $value;
-		$this->errors = null;
-
-		return $this;
-	}
-
-	/**
 	 * Optional help text below the field
 	 */
 	public function help(): string|null
@@ -174,11 +161,6 @@ abstract class FieldClass
 	public function isRequired(): bool
 	{
 		return $this->required;
-	}
-
-	public function isSaveable(): bool
-	{
-		return true;
 	}
 
 	/**
@@ -250,15 +232,6 @@ abstract class FieldClass
 		return $this->required;
 	}
 
-	/**
-	 * Checks if the field is saveable
-	 * @deprecated 5.0.0 Use `::isSaveable()` instead
-	 */
-	public function save(): bool
-	{
-		return $this->isSaveable();
-	}
-
 	protected function setAfter(array|string|null $after = null): void
 	{
 		$this->after = $this->i18n($after);
@@ -272,11 +245,6 @@ abstract class FieldClass
 	protected function setBefore(array|string|null $before = null): void
 	{
 		$this->before = $this->i18n($before);
-	}
-
-	protected function setDefault(mixed $default = null): void
-	{
-		$this->default = $default;
 	}
 
 	protected function setDisabled(bool $disabled = false): void

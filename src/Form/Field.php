@@ -368,15 +368,6 @@ class Field extends Component
 	}
 
 	/**
-	 * Checks if the field is saveable
-	 * @deprecated 5.0.0 Use `::isSaveable()` instead
-	 */
-	public function save(): bool
-	{
-		return $this->isSaveable();
-	}
-
-	/**
 	 * Parent collection with all fields of the current form
 	 */
 	public function siblings(): Fields

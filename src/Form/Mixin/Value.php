@@ -11,6 +11,9 @@ namespace Kirby\Form\Mixin;
  */
 trait Value
 {
+	protected mixed $default = null;
+	protected mixed $value = null;
+
 	/**
 	 * @deprecated 5.0.0 Use `::toStoredValue()` instead
 	 */
@@ -32,6 +35,17 @@ trait Value
 	}
 
 	/**
+	 * Sets a new value for the field
+	 */
+	public function fill(mixed $value): static
+	{
+		$this->value = $value;
+		$this->errors = null;
+
+		return $this;
+	}
+
+	/**
 	 * Checks if the field is empty
 	 */
 	public function isEmpty(): bool
@@ -45,6 +59,14 @@ trait Value
 	public function isEmptyValue(mixed $value = null): bool
 	{
 		return in_array($value, [null, '', []], true);
+	}
+
+	/**
+	 * Checks if the field is saveable
+	 */
+	public function isSaveable(): bool
+	{
+		return true;
 	}
 
 	/**
@@ -67,6 +89,20 @@ trait Value
 		}
 
 		return true;
+	}
+
+	/**
+	 * Checks if the field is saveable
+	 * @deprecated 5.0.0 Use `::isSaveable()` instead
+	 */
+	public function save(): bool
+	{
+		return $this->isSaveable();
+	}
+
+	protected function setDefault(mixed $default = null): void
+	{
+		$this->default = $default;
 	}
 
 	/**
