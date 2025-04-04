@@ -121,7 +121,7 @@ abstract class FieldClass
 	/**
 	 * Sets a new value for the field
 	 */
-	public function fill(mixed $value = null): static
+	public function fill(mixed $value): static
 	{
 		$this->value = $value;
 		$this->errors = null;
