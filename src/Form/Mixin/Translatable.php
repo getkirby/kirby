@@ -17,6 +17,8 @@ trait Translatable
 
 	/**
 	 * Should the field be translatable into the given language?
+	 *
+	 * @since 5.0.0
 	 */
 	public function isTranslatable(Language $language): bool
 	{
