@@ -1,5 +1,4 @@
-import {
-	default as Vue,
+import Vue, {
 	computed,
 	customRef,
 	defineAsyncComponent,
