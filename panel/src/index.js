@@ -9,8 +9,6 @@ import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
 
-window.Vue = Vue;
-
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
