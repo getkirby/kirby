@@ -98,7 +98,8 @@ class App
 	 */
 	public function __construct(array $props = [], bool $setInstance = true)
 	{
-		$this->core = new Core($this);
+		$this->core   = new Core($this);
+		$this->events = new Events($this);
 
 		// start with a fresh version cache
 		VersionCache::$cache = [];
@@ -150,8 +151,6 @@ class App
 		$this->extensionsFromPlugins();
 		$this->extensionsFromOptions();
 		$this->extensionsFromFolders();
-
-		$this->events = new Events(bind: $this);
 
 		// must be set after the extensions are loaded.
 		// the default storage instance must be defined
