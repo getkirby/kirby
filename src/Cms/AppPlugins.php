@@ -184,10 +184,7 @@ trait AppPlugins
 	 */
 	protected function extendBlockModels(array $models): array
 	{
-		return $this->extensions['blockModels'] = Block::$models = [
-			...Block::$models,
-			...$models
-		];
+		return $this->extensions['blockModels'] = Block::extendModels($models);
 	}
 
 	/**

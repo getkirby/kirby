@@ -26,13 +26,9 @@ use Throwable;
 class Block extends Item implements Stringable
 {
 	use HasMethods;
+	use HasModels;
 
 	public const ITEMS_CLASS = Blocks::class;
-
-	/**
-	 * Registry with all block models
-	 */
-	public static array $models = [];
 
 	protected Content $content;
 	protected bool $isHidden;
@@ -136,29 +132,7 @@ class Block extends Item implements Stringable
 	 */
 	public static function factory(array $params): static
 	{
-		$type = $params['type'] ?? null;
-
-		if (
-			empty($type) === false &&
-			$class = (static::$models[$type] ?? null)
-		) {
-			$object = new $class($params);
-
-			if ($object instanceof self) {
-				return $object;
-			}
-		}
-
-		// default model for blocks
-		if ($class = (static::$models['default'] ?? null)) {
-			$object = new $class($params);
-
-			if ($object instanceof self) {
-				return $object;
-			}
-		}
-
-		return new static($params);
+		return static::model($params['type'] ?? 'default', $params);
 	}
 
 	/**
