@@ -513,10 +513,7 @@ trait AppPlugins
 	 */
 	protected function extendPageModels(array $models): array
 	{
-		return $this->extensions['pageModels'] = Page::$models = [
-			...Page::$models,
-			...$models
-		];
+		return $this->extensions['pageModels'] = Page::extendModels($models);
 	}
 
 	/**
@@ -687,10 +684,7 @@ trait AppPlugins
 	 */
 	protected function extendUserModels(array $models): array
 	{
-		return $this->extensions['userModels'] = User::$models = [
-			...User::$models,
-			...$models
-		];
+		return $this->extensions['userModels'] = User::extendModels($models);
 	}
 
 	/**

@@ -13,11 +13,23 @@ class UserModelTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserModel';
 
-	public function testUserModel(): void
+	public function setUp(): void
 	{
-		User::$models = [
+		parent::setUp();
+		User::$models = [];
+	}
+
+	public function tearDown(): void
+	{
+		parent::tearDown();
+		User::$models = [];
+	}
+
+	public function testModel(): void
+	{
+		User::extendModels([
 			'dummy' => UserTestModel::class
-		];
+		]);
 
 		$user = User::factory([
 			'slug'  => 'test',
@@ -25,7 +37,20 @@ class UserModelTest extends ModelTestCase
 		]);
 
 		$this->assertInstanceOf(UserTestModel::class, $user);
-
-		User::$models = [];
 	}
+
+	public function testModelWithUppercaseKey(): void
+	{
+		User::extendModels([
+			'Dummy' => UserTestModel::class
+		]);
+
+		$user = User::factory([
+			'slug'  => 'test',
+			'model' => 'dummy'
+		]);
+
+		$this->assertInstanceOf(UserTestModel::class, $user);
+	}
+
 }
