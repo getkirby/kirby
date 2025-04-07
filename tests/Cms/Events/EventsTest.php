@@ -7,15 +7,25 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Events::class)]
 class EventsTest extends TestCase
 {
+	protected function app(array $hooks): App
+	{
+		return new App([
+			'hooks' => $hooks
+		]);
+	}
+
+	protected function events(array $hooks): Events
+	{
+		return new Events($this->app($hooks));
+	}
+
 	public function testApply(): void
 	{
-		$events = new Events(
-			hooks: [
-				'test' => [
-					fn (string $message) => 'message: ' . $message
-				]
+		$events = $this->events([
+			'test' => [
+				fn (string $message) => 'message: ' . $message
 			]
-		);
+		]);
 
 		$result = $events->apply('test', ['message' => 'hello']);
 		$this->assertSame('message: hello', $result);
@@ -23,16 +33,14 @@ class EventsTest extends TestCase
 
 	public function testApplyNesting(): void
 	{
-		$events = new Events(
-			hooks: [
-				'a' => [
-					fn (string $message) => 'a: ' . $this->apply('b', ['message' => $message])
-				],
-				'b' => [
-					fn (string $message) => 'b: ' . $message
-				]
+		$events = $this->events([
+			'a' => [
+				fn (string $message) => 'a: ' . $this->apply('b', ['message' => $message])
+			],
+			'b' => [
+				fn (string $message) => 'b: ' . $message
 			]
-		);
+		]);
 
 		$result = $events->apply('a', ['message' => 'hello']);
 
@@ -41,28 +49,23 @@ class EventsTest extends TestCase
 
 	public function testApplyWithLoopProtection(): void
 	{
-		$events = new Events(
-			hooks: [
-				'test' => [
-					fn (string $message) => 'message: ' . $this->apply('test', ['message' => $message])
-				]
+		$app = $this->app([
+			'test' => [
+				fn (string $message) => 'message: ' . $this->apply('test', ['message' => $message])
 			]
-		);
+		]);
 
-		$result = $events->apply('test', ['message' => 'hello']);
-
+		$result = $app->apply('test', ['message' => 'hello']);
 		$this->assertSame('message: hello', $result);
 	}
 
 	public function testApplyWithWildcard(): void
 	{
-		$events = new Events(
-			hooks: [
-				'test.*' => [
-					fn (string $message) => 'message: ' . $message
-				]
+		$events = $this->events([
+			'test.*' => [
+				fn (string $message) => 'message: ' . $message
 			]
-		);
+		]);
 
 		$a = $events->apply('test.a', ['message' => 'hello']);
 		$b = $events->apply('test.b', ['message' => 'hello']);
@@ -71,44 +74,25 @@ class EventsTest extends TestCase
 		$this->assertSame('message: hello', $b);
 	}
 
-	public function testApplyWithBoundApp(): void
-	{
-		$self  = $this;
-		$events = new Events(
-			bind: $app = $this->app,
-			hooks: [
-				'test' => [
-					function () use ($self, $app) {
-						$self->assertSame($this, $app);
-					}
-				]
-			]
-		);
-
-		$events->apply('test', ['message' => 'hello']);
-	}
-
 	public function testApplyWithoutHooks(): void
 	{
-		$events = new Events(
-			hooks: []
-		);
+		$events = $this->events([]);
+
+		$event  = new Event('test');
+		$this->assertSame([], $events->hooks($event));
 
 		$result = $events->apply('test', ['message' => 'hello']);
-
 		$this->assertSame('hello', $result);
 	}
 
 	public function testApplyWithoutModifier(): void
 	{
-		$events = new Events(
-			hooks: [
-				'test' => [
-					fn ($a, $b) => $a . ' ' . $b,
-					fn ($a, $b) => $b . ' ' . $a
-				]
+		$events = $this->events([
+			'test' => [
+				fn ($a, $b) => $a . ' ' . $b,
+				fn ($a, $b) => $b . ' ' . $a
 			]
-		);
+		]);
 
 		$result = $events->apply('test', ['a' => 'hello', 'b' => 'world']);
 		$this->assertSame('world hello world', $result);
@@ -116,14 +100,12 @@ class EventsTest extends TestCase
 
 	public function testApplyWithModifier(): void
 	{
-		$events = new Events(
-			hooks: [
-				'test' => [
-					fn ($a, $b) => $a . ' ' . $b,
-					fn ($a, $b) => $b . ' ' . $a
-				]
+		$events = $this->events([
+			'test' => [
+				fn ($a, $b) => $a . ' ' . $b,
+				fn ($a, $b) => $b . ' ' . $a
 			]
-		);
+		]);
 
 		$result = $events->apply('test', ['a' => 'hello', 'b' => 'world'], 'b');
 		$this->assertSame('hello world hello', $result);
@@ -131,13 +113,11 @@ class EventsTest extends TestCase
 
 	public function testHooksWithSingleHandler(): void
 	{
-		$events = new Events(
-			hooks: [
-				'test' => $handlers = [
-					fn () => 'test'
-				]
+		$events = $this->events([
+			'test' => $handlers = [
+				fn () => 'test'
 			]
-		);
+		]);
 
 		$event = new Event('test');
 		$this->assertSame($handlers, $events->hooks($event));
@@ -145,14 +125,12 @@ class EventsTest extends TestCase
 
 	public function testHooksWithMultipleHandlers(): void
 	{
-		$events = new Events(
-			hooks: [
-				'test' => $handlers = [
-					fn () => 'a',
-					fn () => 'b'
-				]
+		$events = $this->events([
+			'test' => $handlers = [
+				fn () => 'a',
+				fn () => 'b'
 			]
-		);
+		]);
 
 		$event = new Event('test');
 		$this->assertSame($handlers, $events->hooks($event));
@@ -160,22 +138,20 @@ class EventsTest extends TestCase
 
 	public function testHooksWithWildcards(): void
 	{
-		$events = new Events(
-			hooks: [
-				'type.action:state' => $typeAndActionAndState = [
-					fn () => 'test'
-				],
-				'type.action:*' => $typeAndAction = [
-					fn () => 'test'
-				],
-				'type.*:*' => $type = [
-					fn () => 'test'
-				],
-				'*' => $any = [
-					fn () => 'test'
-				]
+		$events = $this->events([
+			'type.action:state' => $typeAndActionAndState = [
+				fn () => 'test'
+			],
+			'type.action:*' => $typeAndAction = [
+				fn () => 'test'
+			],
+			'type.*:*' => $type = [
+				fn () => 'test'
+			],
+			'*' => $any = [
+				fn () => 'test'
 			]
-		);
+		]);
 
 		// full match
 		$event = new Event('type.action:state');
@@ -208,25 +184,16 @@ class EventsTest extends TestCase
 		], $events->hooks($event));
 	}
 
-	public function testHooksWithoutHandlers(): void
-	{
-		$events = new Events();
-		$event  = new Event('test');
-		$this->assertSame([], $events->hooks($event));
-	}
-
 	public function testTrigger(): void
 	{
 		$count = 0;
-		$events = new Events(
-			hooks: [
-				'test' => [
-					function () use (&$count) {
-						$count++;
-					}
-				]
+		$events = $this->events([
+			'test' => [
+				function () use (&$count) {
+					$count++;
+				}
 			]
-		);
+		]);
 
 		$events->trigger('test');
 		$this->assertSame(1, $count);
@@ -235,57 +202,50 @@ class EventsTest extends TestCase
 	public function testTriggerNesting(): void
 	{
 		$message = '';
-		$events = new Events(
-			hooks: [
-				'a' => [
-					function () use (&$message) {
-						$message .= 'a';
-						$this->trigger('b');
-					}
-				],
-				'b' => [
-					function () use (&$message) {
-						$message .= 'b';
-					}
-				]
+		$events = $this->events([
+			'a' => [
+				function () use (&$message) {
+					$message .= 'a';
+					$this->trigger('b');
+				}
+			],
+			'b' => [
+				function () use (&$message) {
+					$message .= 'b';
+				}
 			]
-		);
+		]);
 
 		$events->trigger('a');
-
 		$this->assertSame('ab', $message);
 	}
 
 	public function testTriggerWithLoopProtection(): void
 	{
 		$count = 0;
-		$events = new Events(
-			hooks: [
-				'test' => [
-					function () use (&$count) {
-						$count++;
-						$this->trigger('test');
-					}
-				]
+		$app   = $this->app([
+			'test' => [
+				function () use (&$count) {
+					$count++;
+					$this->trigger('test');
+				}
 			]
-		);
+		]);
 
-		$events->trigger('test');
+		$app->trigger('test');
 		$this->assertSame(1, $count);
 	}
 
 	public function testTriggerWithWildcard(): void
 	{
-		$count = 0;
-		$events = new Events(
-			hooks: [
-				'test.*' => [
-					function () use (&$count) {
-						$count++;
-					}
-				]
+		$count  = 0;
+		$events = $this->events([
+			'test.*' => [
+				function () use (&$count) {
+					$count++;
+				}
 			]
-		);
+		]);
 
 		$events->trigger('test.a');
 		$events->trigger('test.b');
@@ -295,17 +255,14 @@ class EventsTest extends TestCase
 
 	public function testTriggerWithBoundApp(): void
 	{
-		$self  = $this;
-		$events = new Events(
-			bind: $app = $this->app,
-			hooks: [
-				'test' => [
-					function () use ($self, $app) {
-						$self->assertSame($this, $app);
-					}
-				]
+		$self   = $this;
+		$events = $this->events([
+			'test' => [
+				function () use ($self) {
+					$self->assertInstanceOf(App::class, $this);
+				}
 			]
-		);
+		]);
 
 		$events->trigger('test');
 	}
@@ -313,18 +270,16 @@ class EventsTest extends TestCase
 	public function testTriggerWithMultipleHandlers(): void
 	{
 		$count = 0;
-		$events = new Events(
-			hooks: [
-				'test' => [
-					function () use (&$count) {
-						$count++;
-					},
-					function () use (&$count) {
-						$count++;
-					}
-				]
+		$events = $this->events([
+			'test' => [
+				function () use (&$count) {
+					$count++;
+				},
+				function () use (&$count) {
+					$count++;
+				}
 			]
-		);
+		]);
 
 		$events->trigger('test');
 
