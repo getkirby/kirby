@@ -51,7 +51,7 @@ class EntriesField extends FieldClass
 		return $this->form()->fields()->first()->toArray();
 	}
 
-	/**	
+	/**
 	 * @psalm-suppress MethodSignatureMismatch
 	 */
 	public function fill(mixed $value): static
