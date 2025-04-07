@@ -105,7 +105,10 @@ class BlocksField extends FieldClass
 		return $groups === [] ? null : $groups;
 	}
 
-	public function fill(mixed $value = null): static
+	/**	
+	 * @psalm-suppress MethodSignatureMismatch
+	 */
+	public function fill(mixed $value): static
 	{
 		$value  = BlocksCollection::parse($value);
 		$blocks = BlocksCollection::factory($value)->toArray();
