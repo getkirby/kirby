@@ -100,6 +100,9 @@ trait Value
 		return $this->isSaveable();
 	}
 
+	/**
+	 * @internal
+	 */
 	protected function setDefault(mixed $default = null): void
 	{
 		$this->default = $default;
