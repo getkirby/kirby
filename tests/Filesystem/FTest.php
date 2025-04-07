@@ -624,10 +624,33 @@ class FTest extends TestCase
 		file_put_contents($this->test, $content = 'my content is awesome');
 
 		$this->assertSame($content, F::read($this->test));
-		$this->assertFalse(F::read('invalid file'));
+	}
 
-		// TODO: This test is unreliable in CI (does not always get a response)
-		// $this->assertStringContainsString('Example Domain', F::read('https://example.com'));
+	/**
+	 * @covers ::read
+	 */
+	public function testReadFileWithoutReadPermissions()
+	{
+		file_put_contents($this->test, 'my content is awesome');
+		chmod($this->test, 0000);
+
+		$this->assertFalse(F::read($this->test));
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadInvalidFile()
+	{
+		$this->assertFalse(F::read('invalid file'));
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadRemoteFile()
+	{
+		$this->assertFalse(F::read('https://example.com/some-file.jpg'));
 	}
 
 	/**
