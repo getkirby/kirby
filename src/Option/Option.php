@@ -2,10 +2,8 @@
 
 namespace Kirby\Option;
 
-use Kirby\Blueprint\Factory;
-use Kirby\Blueprint\NodeIcon;
-use Kirby\Blueprint\NodeText;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Toolkit\I18n;
 
 /**
  * Option for select fields, radio fields, etc.
@@ -18,14 +16,16 @@ use Kirby\Cms\ModelWithContent;
  */
 class Option
 {
+	public string|array $text;
+
 	public function __construct(
 		public string|int|float|null $value,
 		public bool $disabled = false,
-		public NodeIcon|null $icon = null,
-		public NodeText|null $info = null,
-		public NodeText|null $text = null
+		public string|null $icon = null,
+		public string|array|null $info = null,
+		string|array|null $text = null
 	) {
-		$this->text ??= new NodeText(['en' => $this->value]);
+		$this->text = $text ?? ['en' => $this->value];
 	}
 
 	public static function factory(string|int|float|array|null $props): static
@@ -34,11 +34,25 @@ class Option
 			$props = ['value' => $props];
 		}
 
-		$props = Factory::apply($props, [
-			'icon' => NodeIcon::class,
-			'info' => NodeText::class,
-			'text' => NodeText::class
-		]);
+		// Normalize info to be an array
+		if (isset($props['info']) === true) {
+			$props['info'] = match (true) {
+				is_array($props['info']) => $props['info'],
+				$props['info'] === null,
+				$props['info'] === false => null,
+				default                  => ['en' => $props['info']]
+			};
+		}
+
+		// Normalize text to be an array
+		if (isset($props['text']) === true) {
+			$props['text'] = match (true) {
+				is_array($props['text']) => $props['text'],
+				$props['text'] === null,
+				$props['text'] === false => null,
+				default                  => ['en' => $props['text']]
+			};
+		}
 
 		return new static(...$props);
 	}
@@ -53,11 +67,14 @@ class Option
 	 */
 	public function render(ModelWithContent $model): array
 	{
+		$info = I18n::translate($this->info, $this->info);
+		$text = I18n::translate($this->text, $this->text);
+
 		return [
 			'disabled' => $this->disabled,
-			'icon'     => $this->icon?->render($model),
-			'info'     => $this->info?->render($model),
-			'text'     => $this->text?->render($model),
+			'icon'     => $this->icon,
+			'info'     => $info ? $model->toSafeString($info) : $info,
+			'text'     => $text ? $model->toSafeString($text) : $text,
 			'value'    => $this->value
 		];
 	}

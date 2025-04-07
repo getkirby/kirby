@@ -31,9 +31,24 @@ class PageModelTest extends ModelTestCase
 
 	public function testModel(): void
 	{
-		Page::$models = [
+		Page::extendModels([
 			'test' => PageTestModel::class
-		];
+		]);
+
+		$page = Page::factory([
+			'slug'  => 'test',
+			'model' => 'test'
+		]);
+
+		$this->assertInstanceOf(PageTestModel::class, $page);
+		$this->assertSame('test', $page->test());
+	}
+
+	public function testModelWithUppercaseKey(): void
+	{
+		Page::extendModels([
+			'Test' => PageTestModel::class
+		]);
 
 		$page = Page::factory([
 			'slug'  => 'test',
@@ -46,9 +61,9 @@ class PageModelTest extends ModelTestCase
 
 	public function testModelWithDefaultFallback(): void
 	{
-		Page::$models = [
+		Page::extendModels([
 			'default' => PageTestModel::class
-		];
+		]);
 
 		$page = Page::factory([
 			'slug'  => 'test',

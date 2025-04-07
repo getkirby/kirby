@@ -4,6 +4,7 @@ namespace Kirby\Form;
 
 use Closure;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
@@ -171,6 +172,7 @@ class Fields extends Collection
 
 	/**
 	 * Returns an array with the form value of each field
+	 * (e.g. used as data for Panel Vue components)
 	 */
 	public function toFormValues(bool $defaults = false): array
 	{
@@ -179,9 +181,28 @@ class Fields extends Collection
 
 	/**
 	 * Returns an array with the stored value of each field
+	 * (e.g. used for saving to content storage)
 	 */
 	public function toStoredValues(bool $defaults = false): array
 	{
 		return $this->toArray(fn ($field) => $field->toStoredValue($defaults));
+	}
+
+	/**
+	 * Checks for errors in all fields and throws an
+	 * exception if there are any
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public function validate(): void
+	{
+		$errors = $this->errors();
+
+		if ($errors !==	[]) {
+			throw new InvalidArgumentException(
+				fallback: 'Invalid form with errors',
+				details: $errors
+			);
+		}
 	}
 }

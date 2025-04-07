@@ -6,6 +6,19 @@ use Kirby\Cms\App;
 use Kirby\Form\FieldClass;
 use Throwable;
 
+/**
+ * Exception fields are internal fields that replace a broken field
+ * to help debug the issue by displaying a useful error message
+ * in the Panel. The use the info field component to display the error message.
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since 5.0.0
+ * @internal
+ */
 class ExceptionField extends FieldClass
 {
 	public function __construct(

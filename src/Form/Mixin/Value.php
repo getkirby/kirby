@@ -11,6 +11,9 @@ namespace Kirby\Form\Mixin;
  */
 trait Value
 {
+	protected mixed $default = null;
+	protected mixed $value = null;
+
 	/**
 	 * @deprecated 5.0.0 Use `::toStoredValue()` instead
 	 */
@@ -32,6 +35,17 @@ trait Value
 	}
 
 	/**
+	 * Sets a new value for the field
+	 */
+	public function fill(mixed $value): static
+	{
+		$this->value = $value;
+		$this->errors = null;
+
+		return $this;
+	}
+
+	/**
 	 * Checks if the field is empty
 	 */
 	public function isEmpty(): bool
@@ -45,6 +59,14 @@ trait Value
 	public function isEmptyValue(mixed $value = null): bool
 	{
 		return in_array($value, [null, '', []], true);
+	}
+
+	/**
+	 * Checks if the field is saveable
+	 */
+	public function isSaveable(): bool
+	{
+		return true;
 	}
 
 	/**
@@ -70,8 +92,25 @@ trait Value
 	}
 
 	/**
+	 * Checks if the field is saveable
+	 * @deprecated 5.0.0 Use `::isSaveable()` instead
+	 */
+	public function save(): bool
+	{
+		return $this->isSaveable();
+	}
+
+	/**
+	 * @internal
+	 */
+	protected function setDefault(mixed $default = null): void
+	{
+		$this->default = $default;
+	}
+
+	/**
 	 * Returns the value of the field in a format to be used in forms
-	 * @alias for `::value()`
+	 * (e.g. used as data for Panel Vue components)
 	 */
 	public function toFormValue(bool $default = false): mixed
 	{
@@ -87,7 +126,8 @@ trait Value
 	}
 
 	/**
-	 * Returns the value of the field in a format to be stored by our storage classes
+	 * Returns the value of the field in a format
+	 * to be stored by our storage classes
 	 */
 	public function toStoredValue(bool $default = false): mixed
 	{
@@ -98,7 +138,8 @@ trait Value
 	 * Returns the value of the field if saveable
 	 * otherwise it returns null
 	 *
-	 * @alias for `::toFormValue()` might get deprecated or reused later
+	 * @see `self::toFormValue()`
+	 * @todo might get deprecated or reused later
 	 */
 	public function value(bool $default = false): mixed
 	{

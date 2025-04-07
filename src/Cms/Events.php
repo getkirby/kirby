@@ -19,17 +19,12 @@ use Closure;
  */
 class Events
 {
-	protected App|self $bind;
-	protected array $hooks;
-	protected array $processed = [];
 	protected int $level = 0;
+	protected array $processed = [];
 
 	public function __construct(
-		array|null $hooks = null,
-		App|null $bind = null
+		protected App $app
 	) {
-		$this->bind  = $bind ?? $this;
-		$this->hooks = $hooks ?? $bind?->extensions('hooks') ?? [];
 	}
 
 	/**
@@ -61,18 +56,19 @@ class Events
 	public function hooks(Event $event): array
 	{
 		// get all hooks for the event name
-		$name  = $event->name();
-		$hooks = $this->hooks[$name] ?? [];
+		$name   = $event->name();
+		$hooks  = $this->app->extensions('hooks') ?? [];
+		$result = $hooks[$name] ?? [];
 
 		// get all hooks for the event name wildcards
 		foreach ($event->nameWildcards() as $wildcard) {
-			$hooks = [
-				...$hooks,
-				...$this->hooks[$wildcard] ?? []
+			$result = [
+				...$result,
+				...$hooks[$wildcard] ?? []
 			];
 		}
 
-		return $hooks;
+		return $result;
 	}
 
 	/**
@@ -102,7 +98,7 @@ class Events
 			$this->processed[$name][] = $hook;
 
 			// bind the Kirby instance to the hook and run it
-			$result = $event->call($this->bind, $hook);
+			$result = $event->call($this->app, $hook);
 
 			// run the afterEach callback
 			if ($afterEach !== null) {

@@ -20,6 +20,18 @@ trait HasModels
 	public static array $models = [];
 
 	/**
+	 * Adds new models to the registry
+	 * @internal
+	 */
+	public static function extendModels(array $models): array
+	{
+		return static::$models = [
+			...static::$models,
+			...array_change_key_case($models, CASE_LOWER)
+		];
+	}
+
+	/**
 	 * Creates a page model if it has been registered
 	 * @internal
 	 */
