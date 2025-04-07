@@ -607,6 +607,10 @@ class F
 	 */
 	public static function read(string $file): string|false
 	{
+		if (str_contains($file, '://') === true) {
+			return false;
+		}
+
 		try {
 			return @file_get_contents($file);
 		} catch (Throwable) {
