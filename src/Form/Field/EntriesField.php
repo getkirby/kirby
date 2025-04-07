@@ -51,7 +51,11 @@ class EntriesField extends FieldClass
 		return $this->form()->fields()->first()->toArray();
 	}
 
-	public function fill(mixed $value = null): static
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
+	 */
+	public function fill(mixed $value): static
 	{
 		$value = Data::decode($value ?? '', 'yaml');
 		parent::fill($value);

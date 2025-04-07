@@ -30,7 +30,11 @@ class LayoutField extends BlocksField
 		parent::__construct($params);
 	}
 
-	public function fill(mixed $value = null): static
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
+	 */
+	public function fill(mixed $value): static
 	{
 		$value   = Data::decode($value, type: 'json', fail: false);
 		$layouts = Layouts::factory($value, ['parent' => $this->model])->toArray();

@@ -337,14 +337,6 @@ class Field extends Component
 	}
 
 	/**
-	 * Checks if the field is required
-	 */
-	public function isRequired(): bool
-	{
-		return $this->required ?? false;
-	}
-
-	/**
 	 * Checks if the field is saveable
 	 */
 	public function isSaveable(): bool
@@ -365,15 +357,6 @@ class Field extends Component
 		}
 
 		return [];
-	}
-
-	/**
-	 * Checks if the field is saveable
-	 * @deprecated 5.0.0 Use `::isSaveable()` instead
-	 */
-	public function save(): bool
-	{
-		return $this->isSaveable();
 	}
 
 	/**
