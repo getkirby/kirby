@@ -15,10 +15,10 @@ class ExceptionFieldTest extends TestCase
 		$this->app = new App();
 	}
 
-	public function testIsSaveable(): void
+	public function testHasValue(): void
 	{
 		$field = new ExceptionField('test', new Exception());
-		$this->assertFalse($field->isSaveable());
+		$this->assertFalse($field->hasValue());
 	}
 
 	public function testLabel(): void

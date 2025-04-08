@@ -21,7 +21,7 @@ class HiddenField extends FieldClass
 
 class UnsaveableField extends FieldClass
 {
-	public function isSaveable(): bool
+	public function hasValue(): bool
 	{
 		return false;
 	}
@@ -320,15 +320,15 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
-	 * @covers ::isSaveable
+	 * @covers ::hasValue
 	 */
-	public function testIsSaveable()
+	public function testHasValue()
 	{
 		$field = new TestField();
-		$this->assertTrue($field->isSaveable());
+		$this->assertTrue($field->hasValue());
 
 		$field = new UnsaveableField();
-		$this->assertFalse($field->isSaveable());
+		$this->assertFalse($field->hasValue());
 	}
 
 	/**

@@ -306,6 +306,14 @@ class Field extends Component
 	}
 
 	/**
+	 * Checks if the field has a value
+	 */
+	public function hasValue(): bool
+	{
+		return ($this->options['save'] ?? true) !== false;
+	}
+
+	/**
 	 * Checks if the field is disabled
 	 */
 	public function isDisabled(): bool
@@ -334,14 +342,6 @@ class Field extends Component
 	public function isHidden(): bool
 	{
 		return ($this->options['hidden'] ?? false) === true;
-	}
-
-	/**
-	 * Checks if the field is saveable
-	 */
-	public function isSaveable(): bool
-	{
-		return ($this->options['save'] ?? true) !== false;
 	}
 
 	/**
@@ -385,7 +385,7 @@ class Field extends Component
 		unset($array['model']);
 
 		$array['hidden']   = $this->isHidden();
-		$array['saveable'] = $this->isSaveable();
+		$array['saveable'] = $this->hasValue();
 
 		ksort($array);
 

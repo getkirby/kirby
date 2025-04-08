@@ -188,8 +188,8 @@ class Validations
 	public static function required(Field|FieldClass $field, mixed $value): bool
 	{
 		if (
+			$field->hasValue() === true &&
 			$field->isRequired() === true &&
-			$field->isSaveable() === true &&
 			$field->isEmptyValue($value) === true
 		) {
 			throw new InvalidArgumentException(

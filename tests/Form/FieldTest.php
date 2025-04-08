@@ -666,10 +666,10 @@ class FieldTest extends TestCase
 	}
 
 	/**
-	 * @covers ::isSaveable
+	 * @covers ::hasValue
 	 * @covers ::save
 	 */
-	public function testIsSaveable()
+	public function testHasValue()
 	{
 		Field::$types = [
 			'store-me' => [
@@ -686,14 +686,14 @@ class FieldTest extends TestCase
 			'model' => $page
 		]);
 
-		$this->assertTrue($a->isSaveable());
+		$this->assertTrue($a->hasValue());
 		$this->assertTrue($a->save());
 
 		$b = new Field('dont-store-me', [
 			'model' => $page
 		]);
 
-		$this->assertFalse($b->isSaveable());
+		$this->assertFalse($b->hasValue());
 		$this->assertFalse($b->save());
 	}
 
