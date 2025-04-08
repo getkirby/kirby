@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Cms\Language;
+
 /**
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -67,6 +69,32 @@ trait Value
 	public function isEmptyValue(mixed $value = null): bool
 	{
 		return in_array($value, [null, '', []], true);
+	}
+
+	/**
+	 * A field might have a value, but can still not be submitted
+	 * because it is disabled, not translatable into the given
+	 * language or not active due to a `when` rule.
+	 */
+	public function isSubmittable(Language $language): bool
+	{
+		if ($this->hasValue() === false) {
+			return false;
+		}
+
+		if ($this->isDisabled() === true) {
+			return false;
+		}
+
+		if ($this->isTranslatable($language) === false) {
+			return false;
+		}
+
+		if ($this->isActive() === false) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
