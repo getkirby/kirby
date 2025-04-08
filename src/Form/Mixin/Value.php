@@ -72,7 +72,7 @@ trait Value
 	/**
 	 * Checks if the field needs a value before being saved;
 	 * this is the case if all of the following requirements are met:
-	 * - The field is saveable
+	 * - The field has a value
 	 * - The field is required
 	 * - The field is currently empty
 	 * - The field is not currently inactive because of a `when` rule
@@ -135,7 +135,7 @@ trait Value
 	}
 
 	/**
-	 * Returns the value of the field if saveable
+	 * Returns the value of the field if it has a value
 	 * otherwise it returns null
 	 *
 	 * @see `self::toFormValue()`
