@@ -4,10 +4,9 @@ namespace Kirby\Toolkit;
 
 use Exception;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\View
- */
+#[CoversClass(View::class)]
 class ViewTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/view';
@@ -17,10 +16,6 @@ class ViewTest extends TestCase
 		return new View(static::FIXTURES . '/view.php', $data);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::data
-	 */
 	public function testData()
 	{
 		$view = $this->view();
@@ -30,9 +25,6 @@ class ViewTest extends TestCase
 		$this->assertSame(['test'], $view->data());
 	}
 
-	/**
-	 * @covers ::exists
-	 */
 	public function testExists()
 	{
 		$view = $this->view();
@@ -42,28 +34,18 @@ class ViewTest extends TestCase
 		$this->assertFalse($view->exists());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::file
-	 */
 	public function testFile()
 	{
 		$view = $this->view();
 		$this->assertSame(static::FIXTURES . '/view.php', $view->file());
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRender()
 	{
 		$view = $this->view(['name' => 'Homer']);
 		$this->assertSame('Hello Homer', $view->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderWithMissingFile()
 	{
 		$this->expectException(Exception::class);
@@ -73,9 +55,6 @@ class ViewTest extends TestCase
 		$view->render();
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderWithException()
 	{
 		$this->expectException(Exception::class);
@@ -85,10 +64,6 @@ class ViewTest extends TestCase
 		$view->render();
 	}
 
-	/**
-	 * @covers ::toString
-	 * @covers ::__toString
-	 */
 	public function testToString()
 	{
 		$view = $this->view(['name' => 'Tester']);

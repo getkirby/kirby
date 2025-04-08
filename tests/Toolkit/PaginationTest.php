@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use Kirby\Exception\ErrorPageException;
 use Kirby\Exception\Exception;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PaginationTest extends TestCase
 {
@@ -339,10 +340,8 @@ class PaginationTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider rangeProvider
-	 */
-	public function testRange($case)
+	#[DataProvider('rangeProvider')]
+	public function testRange(array $case)
 	{
 		$pagination = new Pagination([
 			'page'  => $case['page'],
