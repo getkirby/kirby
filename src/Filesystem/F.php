@@ -611,11 +611,19 @@ class F
 			return false;
 		}
 
-		try {
-			return @file_get_contents($file);
-		} catch (Throwable) {
+		// exit early on empty paths that would trigger a PHP `ValueError`
+		if ($file === '') {
 			return false;
 		}
+
+		// to increase performance, directly try to load the file without checking
+		// if it exists; fall back to a `false` return value if it doesn't exist
+		// or is not readable while letting other warnings through
+		return Helpers::handleErrors(
+			fn (): string|false => file_get_contents($file),
+			fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file') || str_contains($errstr, 'Permission denied'),
+			false
+		);
 	}
 
 	/**
