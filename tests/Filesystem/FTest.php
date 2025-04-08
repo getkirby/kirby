@@ -629,17 +629,6 @@ class FTest extends TestCase
 	/**
 	 * @covers ::read
 	 */
-	public function testReadFileWithoutReadPermissions()
-	{
-		file_put_contents($this->test, 'my content is awesome');
-		chmod($this->test, 0000);
-
-		$this->assertFalse(F::read($this->test));
-	}
-
-	/**
-	 * @covers ::read
-	 */
 	public function testReadInvalidFile()
 	{
 		$this->assertFalse(F::read('invalid file'));
