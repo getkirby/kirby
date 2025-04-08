@@ -319,6 +319,75 @@ class FieldClassTest extends TestCase
 		$this->assertTrue($field->required());
 	}
 
+	public function testIsSubmittable()
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField();
+		$this->assertTrue($field->isSubmittable($language));
+
+		$field = new NoValueField();
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithDisabledField()
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField(['disabled' => true]);
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithNonDefaultLanguage()
+	{
+		$language = new Language([
+			'code'    => 'de',
+			'default' => false
+		]);
+
+		$field = new TestField(['translate' => true]);
+		$this->assertTrue($field->isSubmittable($language));
+
+		$field = new TestField(['translate' => false]);
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithWhenQueryAndMatchingValue()
+	{
+		$language = Language::ensure('current');
+
+		$siblings = new Fields([
+			new TestField(['name' => 'a', 'value' => 'b']),
+		]);
+
+		$field = new TestField([
+			'siblings' => $siblings,
+			'when'     => [
+				'a' => 'b'
+			],
+		]);
+
+		$this->assertTrue($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithWhenQueryAndNonMatchingValue()
+	{
+		$language = Language::ensure('current');
+
+		$siblings = new Fields([
+			new TestField(['name' => 'a', 'value' => 'something-else']),
+		]);
+
+		$field = new TestField([
+			'siblings' => $siblings,
+			'when'     => [
+				'a' => 'b'
+			],
+		]);
+
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
 	/**
 	 * @covers ::hasValue
 	 */
