@@ -19,7 +19,7 @@ class HiddenField extends FieldClass
 	}
 }
 
-class UnsaveableField extends FieldClass
+class NoValueField extends FieldClass
 {
 	public function hasValue(): bool
 	{
@@ -327,7 +327,7 @@ class FieldClassTest extends TestCase
 		$field = new TestField();
 		$this->assertTrue($field->hasValue());
 
-		$field = new UnsaveableField();
+		$field = new NoValueField();
 		$this->assertFalse($field->hasValue());
 	}
 
@@ -601,7 +601,7 @@ class FieldClassTest extends TestCase
 		$field = new TestField(['default' => 'Default value']);
 		$this->assertSame('Default value', $field->value(true));
 
-		$field = new UnsaveableField(['value' => 'Test']);
+		$field = new NoValueField(['value' => 'Test']);
 		$this->assertNull($field->value());
 	}
 
