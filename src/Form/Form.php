@@ -89,7 +89,7 @@ class Form
 				);
 			}
 
-			if ($field->isSaveable() === true) {
+			if ($field->hasValue() === true) {
 				$this->values[$name] = $field->value();
 			}
 
@@ -126,7 +126,7 @@ class Form
 		$data = $this->values;
 
 		foreach ($this->fields as $field) {
-			if ($field->isSaveable() === false || $field->unset() === true) {
+			if ($field->hasValue() === false || $field->unset() === true) {
 				if ($includeNulls === true) {
 					$data[$field->name()] = null;
 				} else {

@@ -210,7 +210,7 @@ abstract class FieldClass
 			'name'        => $this->name(),
 			'placeholder' => $this->placeholder(),
 			'required'    => $this->isRequired(),
-			'saveable'    => $this->isSaveable(),
+			'saveable'    => $this->hasValue(),
 			'translate'   => $this->translate(),
 			'type'        => $this->type(),
 			'when'        => $this->when(),

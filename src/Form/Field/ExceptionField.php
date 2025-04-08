@@ -28,7 +28,7 @@ class ExceptionField extends FieldClass
 		$this->name = $name;
 	}
 
-	public function isSaveable(): bool
+	public function hasValue(): bool
 	{
 		return false;
 	}
