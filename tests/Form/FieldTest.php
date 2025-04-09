@@ -1168,7 +1168,6 @@ class FieldTest extends TestCase
 	}
 
 	/**
-	 * @covers ::validate
 	 * @covers ::validations
 	 * @covers ::errors
 	 */
@@ -1223,7 +1222,6 @@ class FieldTest extends TestCase
 	}
 
 	/**
-	 * @covers ::validate
 	 * @covers ::validations
 	 * @covers ::isValid
 	 */
@@ -1283,7 +1281,6 @@ class FieldTest extends TestCase
 	}
 
 	/**
-	 * @covers ::validate
 	 * @covers ::validations
 	 * @covers ::errors
 	 * @covers ::isValid
