@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
@@ -22,13 +23,18 @@ use Kirby\Toolkit\Str;
  */
 class Fields extends Collection
 {
+	protected Language $language;
+
 	public function __construct(
 		array $fields = [],
-		protected ModelWithContent|null $model = null
+		protected ModelWithContent|null $model = null,
+		Language|null $language = null
 	) {
 		foreach ($fields as $name => $field) {
 			$this->__set($name, $field);
 		}
+
+		$this->language = $language ?? Language::ensure('current');
 	}
 
 	/**
@@ -141,6 +147,14 @@ class Fields extends Collection
 		}
 
 		return $field;
+	}
+
+	/**
+	 * Returns the language of the fields
+	 */
+	public function language(): Language
+	{
+		return $this->language;
 	}
 
 	/**
