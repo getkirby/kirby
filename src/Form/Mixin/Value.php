@@ -70,6 +70,35 @@ trait Value
 	}
 
 	/**
+	 * Checks if the field can be stored in the given language.
+	 */
+	public function isStorable(Language $language): bool
+	{
+		// the field cannot be stored at all if it has no value
+		if ($this->hasValue() === false) {
+			return false;
+		}
+
+		// the field cannot be translated into the given language
+		if ($this->isTranslatable($language) === false) {
+			return false;
+		}
+
+		// the field is hidden by a `when` rule
+		if ($this->isActive() === false) {
+			return false;
+		}
+
+		// We don't need to check if the field is disabled.
+		// A disabled field can still have a value and that value
+		// should still be stored. But that value must not be changed
+		// on submit. That's why we check for the disabled state
+		// in the isSubmittable method.
+
+		return true;
+	}
+
+	/**
 	 * A field might have a value, but can still not be submitted
 	 * because it is disabled, not translatable into the given
 	 * language or not active due to a `when` rule.
