@@ -91,6 +91,12 @@ trait Value
 			return false;
 		}
 
+		// We don't need to check if the field is disabled.
+		// A disabled field can still have a value and that value
+		// should still be stored. But that value must not be changed
+		// on submit. That's why we check for the disabled state
+		// in the isSubmittable method.
+
 		return true;
 	}
 
