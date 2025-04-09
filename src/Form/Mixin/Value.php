@@ -42,8 +42,6 @@ trait Value
 	public function fill(mixed $value): static
 	{
 		$this->value = $value;
-		$this->errors = null;
-
 		return $this;
 	}
 
