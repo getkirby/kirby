@@ -64,7 +64,8 @@ class Form
 		unset($inject['fields'], $inject['values'], $inject['input']);
 
 		$this->fields = new Fields(
-			model: $model
+			model: $model,
+			language: $language
 		);
 
 		$this->values = [];
