@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Cms\TestCase;
 use Kirby\Exception\InvalidArgumentException;
@@ -223,6 +224,23 @@ class FieldsTest extends TestCase
 		], $this->model);
 
 		$this->assertNull($fields->find('mother+child'));
+	}
+
+	/**
+	 * @covers ::language
+	 */
+	public function testLanguage(): void
+	{
+		// no language passed = current language
+		$fields = new Fields();
+		$this->assertSame('en', $fields->language()->code());
+		$this->assertTrue($fields->language()->isDefault());
+
+		// language passed
+		$language = new Language(['code' => 'de']);
+		$fields = new Fields(fields: [], language: $language);
+		$this->assertSame('de', $fields->language()->code());
+		$this->assertFalse($fields->language()->isDefault());
 	}
 
 	/**
