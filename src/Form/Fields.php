@@ -22,13 +22,6 @@ use Kirby\Toolkit\Str;
  */
 class Fields extends Collection
 {
-	/**
-	 * Cache for the errors array
-	 *
-	 * @var array<string, array<string, string>>|null
-	 */
-	protected array|null $errors = null;
-
 	public function __construct(
 		array $fields = [],
 		protected ModelWithContent|null $model = null
@@ -55,9 +48,6 @@ class Fields extends Collection
 		}
 
 		parent::__set($field->name(), $field);
-
-		// reset the errors cache if new fields are added
-		$this->errors = null;
 	}
 
 	/**
@@ -73,24 +63,20 @@ class Fields extends Collection
 	 */
 	public function errors(): array
 	{
-		if ($this->errors !== null) {
-			return $this->errors; // @codeCoverageIgnore
-		}
-
-		$this->errors = [];
+		$errors = [];
 
 		foreach ($this->data as $name => $field) {
-			$errors = $field->errors();
+			$fieldErrors = $field->errors();
 
-			if ($errors !== []) {
-				$this->errors[$name] = [
+			if ($fieldErrors !== []) {
+				$errors[$name] = [
 					'label'   => $field->label(),
-					'message' => $errors
+					'message' => $fieldErrors
 				];
 			}
 		}
 
-		return $this->errors;
+		return $errors;
 	}
 
 	/**
@@ -101,9 +87,6 @@ class Fields extends Collection
 		foreach ($input as $name => $value) {
 			$this->get($name)?->fill($value);
 		}
-
-		// reset the errors cache
-		$this->errors = null;
 
 		return $this;
 	}

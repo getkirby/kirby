@@ -21,63 +21,10 @@ trait Validation
 	protected bool $required;
 
 	/**
-	 * An array of all found errors
-	 */
-	protected array|null $errors = null;
-
-	/**
 	 * Runs all validations and returns an array of
 	 * error messages
 	 */
 	public function errors(): array
-	{
-		return $this->errors ??= $this->validate();
-	}
-
-	/**
-	 * Checks if the field is required
-	 */
-	public function isRequired(): bool
-	{
-		return $this->required;
-	}
-
-	/**
-	 * Checks if the field is invalid
-	 */
-	public function isInvalid(): bool
-	{
-		return $this->isValid() === false;
-	}
-
-	/**
-	 * Checks if the field is valid
-	 */
-	public function isValid(): bool
-	{
-		return $this->errors() === [];
-	}
-
-	/**
-	 * Getter for the required property
-	 */
-	public function required(): bool
-	{
-		return $this->required;
-	}
-
-	/**
-	 * @internal
-	 */
-	protected function setRequired(bool $required = false): void
-	{
-		$this->required = $required;
-	}
-
-	/**
-	 * Runs the validations defined for the field
-	 */
-	protected function validate(): array
 	{
 		$validations = $this->validations();
 		$value       = $this->value();
@@ -121,6 +68,46 @@ trait Validation
 		}
 
 		return $errors;
+	}
+
+	/**
+	 * Checks if the field is required
+	 */
+	public function isRequired(): bool
+	{
+		return $this->required;
+	}
+
+	/**
+	 * Checks if the field is invalid
+	 */
+	public function isInvalid(): bool
+	{
+		return $this->errors() !== [];
+	}
+
+	/**
+	 * Checks if the field is valid
+	 */
+	public function isValid(): bool
+	{
+		return $this->errors() === [];
+	}
+
+	/**
+	 * Getter for the required property
+	 */
+	public function required(): bool
+	{
+		return $this->required;
+	}
+
+	/**
+	 * @internal
+	 */
+	protected function setRequired(bool $required = false): void
+	{
+		$this->required = $required;
 	}
 
 	/**

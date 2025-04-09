@@ -49,8 +49,7 @@ class LayoutField extends BlocksField
 			}
 		}
 
-		$this->value  = $layouts;
-		$this->errors = null;
+		$this->value = $layouts;
 
 		return $this;
 	}
