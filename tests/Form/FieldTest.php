@@ -1058,6 +1058,26 @@ class FieldTest extends TestCase
 	}
 
 	/**
+	 * @covers ::submit
+	 */
+	public function testSubmit(): void
+	{
+		Field::$types = [
+			'test' => []
+		];
+
+		$field = new Field('test', [
+			'model' => new Page(['slug' => 'test']),
+			'value' => 'test'
+		]);
+
+		$this->assertSame('test', $field->value());
+
+		$field->submit('test2');
+		$this->assertSame('test2', $field->value());
+	}
+
+	/**
 	 * @covers ::toArray
 	 */
 	public function testToArray()

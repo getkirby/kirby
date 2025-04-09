@@ -622,6 +622,17 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
+	 * @covers ::submit
+	 */
+	public function testSubmit(): void
+	{
+		$field = new TestField();
+		$this->assertNull($field->value());
+		$field->submit('Test value');
+		$this->assertSame('Test value', $field->value());
+	}
+
+	/**
 	 * @covers ::toStoredValue
 	 */
 	public function testToStoredValue()

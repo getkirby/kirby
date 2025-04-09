@@ -137,6 +137,20 @@ trait Value
 	}
 
 	/**
+	 * Submits a new value for the field.
+	 * Fields can overwrite this method to provide custom
+	 * submit logic. This is useful if the field component
+	 * sends data that needs to be processed before being
+	 * stored.
+	 *
+	 * @since 5.0.0
+	 */
+	public function submit(mixed $value): static
+	{
+		return $this->fill($value);
+	}
+
+	/**
 	 * Returns the value of the field in a format to be used in forms
 	 * (e.g. used as data for Panel Vue components)
 	 */
