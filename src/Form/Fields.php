@@ -173,9 +173,9 @@ class Fields extends Collection
 	 * Returns an array with the form value of each field
 	 * (e.g. used as data for Panel Vue components)
 	 */
-	public function toFormValues(bool $defaults = false): array
+	public function toFormValues(): array
 	{
-		return $this->toArray(fn ($field) => $field->toFormValue($defaults));
+		return $this->toArray(fn ($field) => $field->toFormValue());
 	}
 
 	/**
@@ -221,9 +221,9 @@ class Fields extends Collection
 	 * Returns an array with the stored value of each field
 	 * (e.g. used for saving to content storage)
 	 */
-	public function toStoredValues(bool $defaults = false): array
+	public function toStoredValues(): array
 	{
-		return $this->toArray(fn ($field) => $field->toStoredValue($defaults));
+		return $this->toArray(fn ($field) => $field->toStoredValue());
 	}
 
 	/**
