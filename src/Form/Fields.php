@@ -188,6 +188,41 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Sets the value for each field with a matching key in the input array
+	 * but only if the field is not disabled
+	 * @since 5.0.0
+	 */
+	public function submit(
+		array $input
+	): static {
+		$language = $this->language();
+
+		foreach ($input as $name => $value) {
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-submittable fields
+			if ($field->isSubmittable($language) === false) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->value());
+			}
+
+			// submit the value to the field
+			// the field class might override this method
+			// to handle submitted values differently
+			$field->submit($value);
+		}
+
+		// reset the errors cache
+		return $this;
+	}
+
+	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.

@@ -306,6 +306,111 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testSubmit(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'text',
+					'value' => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit([
+			'a' => 'A updated',
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => 'B',
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithClosureValues(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit([
+			'a' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated'
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithDisabledField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'     => 'text',
+					'disabled' => true,
+					'value'    => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit([
+			'a' => 'A updated',
+			'b' => 'B updated',
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => 'B'
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithPassthrough(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+			],
+			model: $this->model
+		);
+
+		$input = [
+			'a' => 'A',
+			'b' => 'B',
+		];
+
+		$fields->submit($input);
+
+		$this->assertSame([
+			'a' => 'A',
+		], $fields->toStoredValues(), 'Unknown fields are not included');
+
+		$fields->passthrough($input)->submit($input);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toStoredValues(), 'Unknown fields are included');
+	}
+
 	public function testToArray()
 	{
 		$fields = new Fields([
