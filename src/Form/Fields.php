@@ -201,10 +201,16 @@ class Fields extends Collection
 		foreach ($fields as $name => $field) {
 			$props[$name] = $field->toArray();
 
+			// the field should be disabled in the form if the user
+			// has no update permissions for the model or if the field
+			// is not translatable into the current language
 			if ($permissions === false || $field->isTranslatable($language) === false) {
 				$props[$name]['disabled'] = true;
 			}
 
+			// the value should not be included in the props
+			// we pass on the values to the frontend via the model
+			// view props to make them globally available for the view.
 			unset($props[$name]['value']);
 		}
 
