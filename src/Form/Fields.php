@@ -26,7 +26,7 @@ use Kirby\Toolkit\Str;
 class Fields extends Collection
 {
 	protected Language $language;
-	protected array $passthrough = []; 
+	protected array $passthrough = [];
 
 	public function __construct(
 		array $fields = [],
@@ -178,8 +178,8 @@ class Fields extends Collection
 			if ($this->get(strtolower($key)) !== null) {
 				continue;
 			}
-			
-			$this->passthrough[$key] = $value;			
+
+			$this->passthrough[$key] = $value;
 		}
 
 		return $this;
@@ -252,7 +252,7 @@ class Fields extends Collection
 		return $this->toValues('toStoredValue');
 	}
 
-	/** 
+	/**
 	 * Returns an array with the values of each field
 	 * and adds passthrough values if they don't exist
 	 * @internal
@@ -262,7 +262,7 @@ class Fields extends Collection
 		$values = $this->toArray(fn ($field) => $field->{$method}());
 
 		foreach ($this->passthrough as $key => $value) {
-			if (isset($values[$key]) === false) {	
+			if (isset($values[$key]) === false) {
 				$values[$key] = $value;
 			}
 		}

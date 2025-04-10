@@ -11,10 +11,10 @@ use Kirby\Cms\Site;
 use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Form\Fields
- */
+#[CoversClass(Fields::class)]
 class FieldsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Form.Fields';
@@ -32,9 +32,6 @@ class FieldsTest extends TestCase
 		$this->model = new Page(['slug' => 'test']);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstruct()
 	{
 		$fields = new Fields([
@@ -52,9 +49,6 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructWithModel()
 	{
 		$fields = new Fields([
@@ -72,9 +66,6 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	/**
-	 * @covers ::defaults
-	 */
 	public function testDefaults()
 	{
 		$fields = new Fields([
@@ -91,9 +82,6 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->defaults());
 	}
 
-	/**
-	 * @covers ::errors
-	 */
 	public function testErrors()
 	{
 		$fields = new Fields([
@@ -139,9 +127,6 @@ class FieldsTest extends TestCase
 		], $fields->errors());
 	}
 
-	/**
-	 * @covers ::errors
-	 */
 	public function testErrorsWithoutErrors()
 	{
 		$fields = new Fields([
@@ -156,9 +141,6 @@ class FieldsTest extends TestCase
 		$this->assertSame([], $fields->errors());
 	}
 
-	/**
-	 * @covers ::fill
-	 */
 	public function testFill()
 	{
 		$fields = new Fields([
@@ -185,10 +167,6 @@ class FieldsTest extends TestCase
 		$this->assertSame($input, $fields->toArray(fn ($field) => $field->value()));
 	}
 
-	/**
-	 * @covers ::findByKey
-	 * @covers ::findByKeyRecursive
-	 */
 	public function testFind()
 	{
 		Field::$types['test'] = [
@@ -217,10 +195,6 @@ class FieldsTest extends TestCase
 		$this->assertNull($fields->find('mother+missing-child'));
 	}
 
-	/**
-	 * @covers ::findByKey
-	 * @covers ::findByKeyRecursive
-	 */
 	public function testFindWhenFieldHasNoForm()
 	{
 		$fields = new Fields([
@@ -232,9 +206,6 @@ class FieldsTest extends TestCase
 		$this->assertNull($fields->find('mother+child'));
 	}
 
-	/**
-	 * @covers ::language
-	 */
 	public function testLanguage(): void
 	{
 		// no language passed = current language
@@ -249,9 +220,67 @@ class FieldsTest extends TestCase
 		$this->assertFalse($fields->language()->isDefault());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
+	public function testPassthrough(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'value' => 'a'
+			],
+		], $this->model);
+
+		$fields->passthrough([
+			'b' => 'B',
+		]);
+
+		$this->assertSame([
+			'a' => 'a',
+			'b' => 'B'
+		], $fields->toFormValues());
+	}
+
+	public function testPassthroughWithExistingField(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'value' => 'a'
+			],
+		], $this->model);
+
+		$fields->passthrough([
+			'a' => 'A', // should be ignored
+			'b' => 'B',
+		]);
+
+		$this->assertSame([
+			'a' => 'a',
+			'b' => 'B'
+		], $fields->toFormValues());
+	}
+
+	public function testPassthroughWithEmptyArray(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'value' => 'a'
+			],
+		], $this->model);
+
+		// add passthrough values
+		$fields->passthrough([
+			'b' => 'B',
+		]);
+
+		// remove passthrough values
+		$fields->passthrough();
+
+		$this->assertSame([
+			'a' => 'a',
+		], $fields->toFormValues());
+	}
+
 	public function testToArray()
 	{
 		$fields = new Fields([
@@ -266,9 +295,6 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->toArray(fn ($field) => $field->name()));
 	}
 
-	/**
-	 * @covers ::toFormValues
-	 */
 	public function testToFormValues()
 	{
 		$fields = new Fields([
@@ -285,9 +311,6 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
 	}
 
-	/**
-	 * @covers ::toProps
-	 */
 	public function testToProps(): void
 	{
 		$this->setUpSingleLanguage();
@@ -331,10 +354,7 @@ class FieldsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::toProps
-	 * @dataProvider modelProvider
-	 */
+	#[DataProvider('modelProvider')]
 	public function testToPropsWithSkippedTitleFieldForPage(ModelWithContent $model, bool $skip): void
 	{
 		$this->setUpSingleLanguage();
@@ -363,9 +383,6 @@ class FieldsTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::toProps
-	 */
 	public function testToPropsWithoutUpdatePermission(): void
 	{
 		$this->setUpSingleLanguage();
@@ -383,9 +400,6 @@ class FieldsTest extends TestCase
 		$this->assertTrue($fields->toProps()['a']['disabled']);
 	}
 
-	/**
-	 * @covers ::toProps
-	 */
 	public function testToPropsForNonTranslatableField(): void
 	{
 		$this->setUpMultiLanguage();
@@ -416,9 +430,6 @@ class FieldsTest extends TestCase
 		$this->assertTrue($props['b']['translate']);
 	}
 
-	/**
-	 * @covers ::toStoredValues
-	 */
 	public function testToStoredValues()
 	{
 		Field::$types['test'] = [
