@@ -14,6 +14,7 @@ use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Content\Versions;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Fields;
 use Kirby\Form\Form;
 use Kirby\Panel\Model;
 use Kirby\Toolkit\Str;
@@ -260,12 +261,13 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function createDefaultContent(): array
 	{
-		// create the form to get the generate the defaults
-		$form = Form::for($this, [
-			'language' => Language::ensure('default')->code(),
-		]);
+		$fields = new Fields(
+			fields: $this->blueprint()->fields(),
+			model: $this,
+			language: Language::ensure('default'),
+		);
 
-		return $form->strings(true);
+		return $fields->fill($fields->defaults())->toStoredValues();
 	}
 
 	/**
