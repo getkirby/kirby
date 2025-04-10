@@ -94,7 +94,21 @@ class Fields extends Collection
 	public function fill(array $input): static
 	{
 		foreach ($input as $name => $value) {
-			$this->get($name)?->fill($value);
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-value field
+			if ($field->hasValue() === false) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->toFormValue());
+			}
+
+			$field->fill($value);
 		}
 
 		return $this;

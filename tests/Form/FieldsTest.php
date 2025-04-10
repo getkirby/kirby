@@ -167,6 +167,82 @@ class FieldsTest extends TestCase
 		$this->assertSame($input, $fields->toArray(fn ($field) => $field->value()));
 	}
 
+	public function testFillWithClosureValues(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->fill([
+			'a' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated'
+		], $fields->toFormValues());
+	}
+
+	public function testFillWithNoValueField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'info',
+				],
+				'b' => [
+					'type' => 'text',
+				]
+			],
+			model: $this->model
+		);
+
+		$fields->fill([
+			'a' => 'A',
+			'b' => 'B'
+		]);
+
+		$this->assertSame([
+			'a' => null,
+			'b' => 'B',
+		], $fields->toFormValues());
+	}
+
+	public function testFillWithUnknownFields(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+			],
+			model: $this->model
+		);
+
+		$input = [
+			'a' => 'A',
+			'b' => 'B',
+		];
+
+		$fields->fill($input);
+
+		$this->assertSame([
+			'a' => 'A',
+		], $fields->toFormValues(), 'Unknown fields are not included');
+
+		$fields->passthrough($input)->fill($input);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toFormValues(), 'Unknown fields are included');
+	}
+
 	public function testFind()
 	{
 		Field::$types['test'] = [
