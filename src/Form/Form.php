@@ -7,7 +7,6 @@ use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
-use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field\ExceptionField;
 use Kirby\Toolkit\A;
 use Throwable;
@@ -164,13 +163,7 @@ class Form
 	 */
 	public function field(string $name): Field|FieldClass
 	{
-		if ($field = $this->fields->find($name)) {
-			return $field;
-		}
-
-		throw new NotFoundException(
-			message: 'The field could not be found'
-		);
+		return $this->fields->field($name);
 	}
 
 	/**

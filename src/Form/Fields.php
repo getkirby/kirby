@@ -8,6 +8,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
@@ -86,6 +87,24 @@ class Fields extends Collection
 		}
 
 		return $errors;
+	}
+
+
+	/**
+	 * Get the field object by name and throw
+	 * an exception if it cannot be found
+	 *
+	 * @throws \Kirby\Exception\NotFoundException
+	 */
+	public function field(string $name): Field|FieldClass
+	{
+		if ($field = $this->find($name)) {
+			return $field;
+		}
+
+		throw new NotFoundException(
+			message: 'The field could not be found'
+		);
 	}
 
 	/**
