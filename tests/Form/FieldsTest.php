@@ -381,6 +381,70 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testReset(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+			],
+			'b' => [
+				'type'  => 'text',
+			],
+		], $this->model);
+
+		$fields->fill([
+			'a' => 'A',
+			'b' => 'B',
+		]);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B',
+		], $fields->toFormValues());
+
+		$fields->reset();
+
+		$this->assertSame([
+			'a' => '',
+			'b' => '',
+		], $fields->toFormValues());
+	}
+
+	public function testResetStructureFields(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type' => 'structure',
+				'fields' => [
+					'text' => [
+						'type'  => 'text',
+					],
+				],
+			],
+		], $this->model);
+
+		$fields->fill([
+			'a' => $input = [
+				[
+					'text' => 'A',
+				],
+				[
+					'text' => 'B',
+				]
+			],
+		]);
+
+		$this->assertSame([
+			'a' => $input
+		], $fields->toFormValues());
+
+		$fields->reset();
+
+		$this->assertSame([
+			'a' => []
+		], $fields->toFormValues());
+	}
+
 	public function testSubmit(): void
 	{
 		$fields = new Fields(

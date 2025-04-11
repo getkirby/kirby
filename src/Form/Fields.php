@@ -202,6 +202,18 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Resets the value of each field
+	 */
+	public function reset(): static
+	{
+		foreach ($this->data as $field) {
+			$field->fill(null);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Sets the value for each field with a matching key in the input array
 	 * but only if the field is not disabled
 	 * @since 5.0.0
