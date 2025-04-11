@@ -9,7 +9,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Form;
+use Kirby\Form\Fields;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Str;
 
@@ -217,6 +217,12 @@ class Version
 
 		$language = Language::ensure($language);
 
+		$fields = new Fields(
+			fields: $this->model->blueprint()->fields(),
+			model: $this->model,
+			language: $language
+		);
+
 		// read fields low-level from storage
 		$a = $this->read($language) ?? [];
 		$b = $version->read($language) ?? [];
@@ -232,21 +238,8 @@ class Version
 			$b['uuid']
 		);
 
-		$a = Form::for(
-			model: $this->model,
-			props: [
-				'language' => $language->code(),
-				'values'   => $a,
-			]
-		)->values();
-
-		$b = Form::for(
-			model: $this->model,
-			props: [
-				'language' => $language->code(),
-				'values'   => $b
-			]
-		)->values();
+		$a = $fields->reset()->passthrough($a)->fill($a)->toFormValues();
+		$b = $fields->reset()->passthrough($b)->fill($b)->toFormValues();
 
 		ksort($a);
 		ksort($b);
