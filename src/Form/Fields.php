@@ -167,6 +167,18 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Creates a new Fields instance for the given model and language
+	 */
+	public static function for(ModelWithContent $model, Language|string $language = 'default'): static
+	{
+		return new static(
+			fields: $model->blueprint()->fields(),
+			model: $model,
+			language: Language::ensure($language),
+		);
+	}
+
+	/**
 	 * Returns the language of the fields
 	 */
 	public function language(): Language

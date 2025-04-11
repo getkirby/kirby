@@ -100,11 +100,7 @@ class Changes
 		$language = Language::ensure('current');
 
 		// create the fields instance for the model
-		$fields = new Fields(
-			fields: $model->blueprint()->fields(),
-			model: $model,
-			language: $language
-		);
+		$fields = Fields::for($model, $language);
 
 		// get the changes and latest version for the model
 		$changes = $model->version(VersionId::changes());

@@ -215,13 +215,8 @@ class Version
 			return true;
 		}
 
-		$language = Language::ensure($language);
-
-		$fields = new Fields(
-			fields: $this->model->blueprint()->fields(),
-			model: $this->model,
-			language: $language
-		);
+		$fields   = Fields::for($this->model, $language);
+		$language = $fields->language();
 
 		// read fields low-level from storage
 		$a = $this->read($language) ?? [];
@@ -268,16 +263,10 @@ class Version
 	 */
 	public function isValid(Language|string $language = 'default'): bool
 	{
-		$fields = new Fields(
-			fields: $this->model->blueprint()->fields(),
-			model: $this->model,
-			language: $language = Language::ensure($language),
-		);
-
-		$fields->fill(
+		$fields = Fields::for($this->model, $language)->fill(
 			$this->content($language)->toArray()
 		);
-	
+
 		return $fields->isValid() === true;
 	}
 
