@@ -96,17 +96,15 @@ class ModelTest extends TestCase
 		);
 
 		$panel->model()->version('latest')->save([
-			'foo'  => 'foo',
-			'uuid' => 'test'
+			'foo' => 'foo',
 		]);
 
 		$panel->model()->version('changes')->save([
-			'foo' => 'foobar'
+			'foo' => 'foobar',
 		]);
 
 		$this->assertSame([
-			'foo'  => 'foobar',
-			'uuid' => 'test'
+			'foo' => 'foobar',
 		], $panel->content());
 	}
 

@@ -4,9 +4,10 @@ namespace Kirby\Panel;
 
 use Closure;
 use Kirby\Cms\File as CmsFile;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
-use Kirby\Form\Form;
+use Kirby\Form\Fields;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
 
@@ -34,24 +35,12 @@ abstract class Model
 
 	/**
 	 * Get the content values for the model
+	 *
+	 * @deprecated Use `versions()` instead
 	 */
 	public function content(): array
 	{
-		$version = $this->model->version('changes');
-		$changes = [];
-
-		if ($version->exists('current') === true) {
-			$changes = $version->content('current')->toArray();
-		}
-
-		// create a form which will collect the latest values for the model,
-		// but also pass along unpublished changes as overwrites
-		return Form::for(
-			model: $this->model,
-			props: [
-				'values' => $changes
-			]
-		)->values();
+		return $this->versions()['changes'];
 	}
 
 	/**
@@ -344,10 +333,12 @@ abstract class Model
 
 	/**
 	 * Get the original content values for the model
+	 *
+	 * @deprecated Use `versions()` instead
 	 */
 	public function originals(): array
 	{
-		return Form::for(model: $this->model)->values();
+		return $this->versions()['latest'];
 	}
 
 	/**
@@ -387,15 +378,16 @@ abstract class Model
 		$request   = $this->model->kirby()->request();
 		$tabs      = $blueprint->tabs();
 		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
+		$versions  = $this->versions();
 
 		$props = [
 			'api'         => $link,
 			'buttons'     => fn () => $this->buttons(),
-			'content'     => (object)$this->content(),
+			'content'     => (object)$versions['changes'],
 			'id'          => $this->model->id(),
 			'link'        => $link,
 			'lock'        => $this->model->lock()->toArray(),
-			'originals'   => (object)$this->originals(),
+			'originals'   => (object)$versions['latest'],
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,
 			'uuid'        => fn () => $this->model->uuid()?->toString()
@@ -465,6 +457,32 @@ abstract class Model
 		}
 
 		return $this->model->kirby()->url('panel') . '/' . $this->path();
+	}
+
+	public function versions(): array
+	{
+		$language = Language::ensure('current');
+
+		$fields = new Fields(
+			fields: $this->model->blueprint()->fields(),
+			model: $this->model,
+			language: $language
+		);
+
+		$latestVersion  = $this->model->version('latest');
+		$changesVersion = $this->model->version('changes');
+
+		$latestContent  = $latestVersion->content($language)->toArray();
+		$changesContent = $latestContent;
+
+		if ($changesVersion->exists($language) === true) {
+			$changesContent = $changesVersion->content($language)->toArray();
+		}
+
+		return [
+			'latest'  => $fields->reset()->passthrough($latestContent)->fill($latestContent)->toFormValues(),
+			'changes' => $fields->reset()->passthrough($changesContent)->fill($changesContent)->toFormValues()
+		];
 	}
 
 	/**
