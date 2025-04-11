@@ -167,8 +167,10 @@ class Fields extends Collection
 	 */
 	public function passthrough(array $values = []): static
 	{
+		// always start with a fresh set of passthrough values
+		$this->passthrough = [];
+
 		if ($values === []) {
-			$this->passthrough = [];
 			return $this;
 		}
 

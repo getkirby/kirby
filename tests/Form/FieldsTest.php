@@ -259,6 +259,31 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testPassthroughWithExistingPassthroughValues(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'value' => 'a'
+			],
+		], $this->model);
+
+		// add passthrough values
+		$fields->passthrough([
+			'b' => 'B',
+		]);
+
+		// replace passthrough values
+		$fields->passthrough([
+			'c' => 'C'
+		]);
+
+		$this->assertSame([
+			'a' => 'a',
+			'c' => 'C'
+		], $fields->toFormValues());
+	}
+
 	public function testPassthroughWithEmptyArray(): void
 	{
 		$fields = new Fields([
