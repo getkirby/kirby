@@ -264,6 +264,24 @@ class Version
 	}
 
 	/**
+	 * Checks if the version is valid for the given language
+	 */
+	public function isValid(Language|string $language = 'default'): bool
+	{
+		$fields = new Fields(
+			fields: $this->model->blueprint()->fields(),
+			model: $this->model,
+			language: $language = Language::ensure($language),
+		);
+
+		$fields->fill(
+			$this->content($language)->toArray()
+		);
+	
+		return $fields->isValid() === true;
+	}
+
+	/**
 	 * Returns the lock object for the version
 	 */
 	public function lock(Language|string $language = 'default'): Lock

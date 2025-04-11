@@ -357,7 +357,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function isValid(): bool
 	{
-		return Form::for($this)->isValid() === true;
+		return $this->version('latest')->isValid('current') === true;
 	}
 
 	/**
