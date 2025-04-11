@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Api\Api as BaseApi;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Form;
+use Kirby\Form\Fields;
 use Kirby\Session\Session;
 
 /**
@@ -69,7 +69,7 @@ class Api extends BaseApi
 		string $name,
 		string|null $path = null
 	): mixed {
-		$field = Form::for($model)->field($name);
+		$field = Fields::for($model, 'current')->field($name);
 
 		$fieldApi = $this->clone([
 			'data'   => [...$this->data(), 'field' => $field],
