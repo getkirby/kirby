@@ -206,6 +206,10 @@ class Fields extends Collection
 	 */
 	public function reset(): static
 	{
+		// reset the passthrough values
+		$this->passthrough = [];
+
+		// reset the values of each field
 		foreach ($this->data as $field) {
 			$field->fill(null);
 		}

@@ -445,6 +445,28 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testResetWithPassthroughValues(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type' => 'text',
+			],
+		], $this->model);
+
+		$fields->passthrough(['b' => 'B'])->fill(['a' => 'A']);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toFormValues());
+
+		$fields->reset();
+
+		$this->assertSame([
+			'a' => ''
+		], $fields->toFormValues());
+	}
+
 	public function testSubmit(): void
 	{
 		$fields = new Fields(
