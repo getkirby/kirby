@@ -7,7 +7,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
-use Kirby\Form\Form;
+use Kirby\Form\Fields;
 use Kirby\Http\Router;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -37,7 +37,7 @@ class Field
 		string|null $path = null,
 		string $method = 'GET',
 	) {
-		$field  = Form::for($model)->field($fieldName);
+		$field  = Fields::for($model, 'current')->field($fieldName);
 		$routes = [];
 
 		foreach ($field->dialogs() as $dialogId => $dialog) {
@@ -66,7 +66,7 @@ class Field
 		string|null $path = null,
 		string $method = 'GET',
 	) {
-		$field  = Form::for($model)->field($fieldName);
+		$field  = Fields::for($model, 'current')->field($fieldName);
 		$routes = [];
 
 		foreach ($field->drawers() as $drawerId => $drawer) {
