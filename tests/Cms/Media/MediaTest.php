@@ -282,23 +282,20 @@ class MediaTest extends TestCase
 
 		// get file object
 		$file  = $this->app->file('test.jpg');
-		Dir::make(static::TMP . '/media/assets/site/' . $file->mediaHash());
+		Dir::make(static::TMP . '/media/assets/content/' . $file->mediaHash());
 		$this->assertIsFile($file);
 
 		// create job file
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
-		F::write(static::TMP . '/media/assets/site/' . $file->mediaHash() . '/.jobs/' . $file->filename() . '.json', $jobString);
+		F::write(static::TMP . '/media/assets/content/' . $file->mediaHash() . '/.jobs/' . $file->filename() . '.json', $jobString);
 
-		// copy to media folder
-		$file->asset()->copy($mediaPath = static::TMP . '/media/assets/site/' . $file->mediaHash() . '/' . $file->filename());
-
-		$thumb = Media::thumb('site', $file->mediaHash(), $file->filename());
+		$thumb = Media::thumb('content', $file->mediaHash(), $file->filename());
 		$this->assertInstanceOf(Response::class, $thumb);
 		$this->assertNotFalse($thumb->body());
 		$this->assertSame(200, $thumb->code());
 		$this->assertSame('image/jpeg', $thumb->type());
 
-		$thumbInfo = getimagesize($mediaPath);
+		$thumbInfo = getimagesize(static::TMP . '/media/assets/content/' . $file->mediaHash() . '/' . $file->filename());
 		$this->assertSame(64, $thumbInfo[0]);
 		$this->assertSame(64, $thumbInfo[1]);
 	}
