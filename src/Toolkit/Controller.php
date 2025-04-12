@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Closure;
+use Exception;
 use Kirby\Filesystem\F;
 use ReflectionFunction;
 
@@ -60,10 +61,22 @@ class Controller
 		return $this->function->call($bind, ...$args);
 	}
 
-	public static function load(string $file): static|null
+	public static function load(string $file, string|null $in = null): static|null
 	{
 		if (is_file($file) === false) {
 			return null;
+		}
+
+		// restrict file paths to the provided root
+		// to prevent path traversal
+		if ($in !== null) {
+			try {
+				$file = F::realpath($file, $in);
+			} catch (Exception) {
+				// don't expose whether the file exists
+				// (which would have returned `null` above)
+				return null;
+			}
 		}
 
 		$function = F::load($file);
