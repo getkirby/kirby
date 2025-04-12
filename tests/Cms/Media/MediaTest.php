@@ -257,7 +257,11 @@ class MediaTest extends TestCase
 		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
 
 		// get file object
-		$file = $this->app->file('test.jpg');
+		$site = $this->app->site();
+		$file = $site->file('test.jpg');
+
+		// make the image mysteriously disappear again
+		F::remove(static::TMP . '/content/test.jpg');
 
 		// create a valid job file
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
@@ -266,8 +270,7 @@ class MediaTest extends TestCase
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('File not found');
 
-		// but the file cannot be found in the media folder
-		Media::thumb($file, $file->mediaHash(), $file->filename());
+		Media::thumb($site, $file->mediaHash(), $file->filename());
 	}
 
 	public function testThumbStringModel()
