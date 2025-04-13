@@ -86,7 +86,7 @@ class AssetsTest extends TestCase
 		]);
 
 		// add vite file
-		F::write(static::VITE_RUNNING_PATH, '');
+		touch(static::VITE_RUNNING_PATH);
 	}
 
 	/**
@@ -124,8 +124,8 @@ class AssetsTest extends TestCase
 	 */
 	public function testCssWithCustomFile(): void
 	{
-		F::write(static::TMP . '/panel.css', '');
-		F::write(static::TMP . '/foo.css', '');
+		touch(static::TMP . '/panel.css');
+		touch(static::TMP . '/foo.css');
 
 		// single
 		$this->app->clone([
@@ -483,8 +483,8 @@ class AssetsTest extends TestCase
 	 */
 	public function testJsWithCustomFile(): void
 	{
-		F::write(static::TMP . '/panel.js', '');
-		F::write(static::TMP . '/foo.js', '');
+		touch(static::TMP . '/panel.js');
+		touch(static::TMP . '/foo.js');
 
 		// single
 		$this->app->clone([
