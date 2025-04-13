@@ -11,6 +11,7 @@ use PHPUnit\Runner\Extension\Extension;
 use PHPUnit\Runner\Extension\Facade;
 use PHPUnit\Runner\Extension\ParameterCollection;
 use PHPUnit\TextUI\Configuration\Configuration;
+use ReflectionFunction;
 
 /**
  * PHPUnit extension to bootstrap the tests and
@@ -54,6 +55,10 @@ final class PhpUnitExtension implements Extension
 
 		// prevent PHPUnit tests from accessing files outside the repo
 		Core::$indexRoot = '/dev/null';
+
+		// check if the `dump()` helper was overridden, e.g. by Herd
+		$dump = new ReflectionFunction('dump');
+		define('KIRBY_DUMP_OVERRIDDEN', str_starts_with($dump->getFileName(), dirname(__DIR__)) === false);
 	}
 }
 
