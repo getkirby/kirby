@@ -3,9 +3,13 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\App;
+use Kirby\Cms\File;
 use Kirby\Cms\Language;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Cms\Site;
 use Kirby\Cms\TestCase;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -13,6 +17,8 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class FieldsTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Form.Fields';
+
 	protected App $app;
 	protected Page $model;
 
@@ -277,6 +283,137 @@ class FieldsTest extends TestCase
 		], $this->model);
 
 		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
+	}
+
+	/**
+	 * @covers ::toProps
+	 */
+	public function testToProps(): void
+	{
+		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => [
+				'autofocus'  => false,
+				'counter'    => true,
+				'disabled'   => false,
+				'font'       => 'sans-serif',
+				'hidden'     => false,
+				'name'       => 'a',
+				'required'   => false,
+				'saveable'   => true,
+				'spellcheck' => false,
+				'translate'  => true,
+				'type'       => 'text',
+				'width'      => '1/1',
+			],
+		], $fields->toProps());
+	}
+
+	public static function modelProvider(): array
+	{
+		return [
+			[new Page(['slug' => 'test']), true],
+			[new Site(), true],
+			[new User(['email' => 'test@getkirby.com']), false],
+			[new File(['filename' => 'test.jpg', 'parent' => new Site()]), false],
+		];
+	}
+
+	/**
+	 * @covers ::toProps
+	 * @dataProvider modelProvider
+	 */
+	public function testToPropsWithSkippedTitleFieldForPage(ModelWithContent $model, bool $skip): void
+	{
+		$this->setUpSingleLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'title' => [
+					'type' => 'text',
+				],
+				'subtitle' => [
+					'type' => 'text',
+				]
+			],
+			model: $model
+		);
+
+		$props = $fields->toProps();
+
+		if ($skip === false) {
+			$this->assertCount(2, $props);
+			$this->assertArrayHasKey('title', $props);
+			$this->assertArrayHasKey('subtitle', $props);
+		} else {
+			$this->assertCount(1, $props);
+			$this->assertArrayHasKey('subtitle', $props);
+		}
+	}
+
+	/**
+	 * @covers ::toProps
+	 */
+	public function testToPropsWithoutUpdatePermission(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertTrue($fields->toProps()['a']['disabled']);
+	}
+
+	/**
+	 * @covers ::toProps
+	 */
+	public function testToPropsForNonTranslatableField(): void
+	{
+		$this->setUpMultiLanguage();
+		$this->app->impersonate('kirby');
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'translate' => false,
+					'type'      => 'text',
+					'value'     => 'A',
+				],
+				'b' => [
+					'type'      => 'text',
+					'value'     => 'B',
+				]
+			],
+			model: $this->model,
+			language: $this->app->language('de')
+		);
+
+		$props = $fields->toProps();
+
+		$this->assertTrue($props['a']['disabled']);
+		$this->assertFalse($props['a']['translate']);
+
+		$this->assertFalse($props['b']['disabled']);
+		$this->assertTrue($props['b']['translate']);
 	}
 
 	/**
