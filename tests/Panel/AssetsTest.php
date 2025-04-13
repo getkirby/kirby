@@ -178,6 +178,7 @@ class AssetsTest extends TestCase
 	 */
 	public function testCssWithCustomUrl(): void
 	{
+		$this->setDevMode();
 		$this->setCustomUrl();
 
 		// default asset setup
@@ -337,6 +338,7 @@ class AssetsTest extends TestCase
 	 */
 	public function testFaviconsWithCustomUrl(): void
 	{
+		$this->setDevMode();
 		$this->setCustomUrl();
 
 		// default asset setup
@@ -536,6 +538,7 @@ class AssetsTest extends TestCase
 	 */
 	public function testJsWithCustomUrl(): void
 	{
+		$this->setDevMode();
 		$this->setCustomUrl();
 
 		// default asset setup
