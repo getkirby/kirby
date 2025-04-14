@@ -203,7 +203,7 @@ class Fields extends Collection
 	 */
 	public function toFormValues(): array
 	{
-		return $this->toValues('toFormValue');
+		return $this->toValues(fn ($field) => $field->toFormValue());
 	}
 
 	/**
@@ -251,7 +251,7 @@ class Fields extends Collection
 	 */
 	public function toStoredValues(): array
 	{
-		return $this->toValues('toStoredValue');
+		return $this->toValues(fn ($field) => $field->toStoredValue());
 	}
 
 	/**
@@ -259,9 +259,9 @@ class Fields extends Collection
 	 * and adds passthrough values if they don't exist
 	 * @internal
 	 */
-	protected function toValues(string $method): array
+	protected function toValues(Closure $method): array
 	{
-		$values = $this->toArray(fn ($field) => $field->{$method}());
+		$values = $this->toArray($method);
 
 		foreach ($this->passthrough as $key => $value) {
 			if (isset($values[$key]) === false) {
