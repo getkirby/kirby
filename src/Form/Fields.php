@@ -223,7 +223,7 @@ class Fields extends Collection
 
 			// resolve closure values
 			if ($value instanceof Closure) {
-				$value = $value($field->value());
+				$value = $value($field->toFormValue());
 			}
 
 			// submit the value to the field
