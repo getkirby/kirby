@@ -208,7 +208,6 @@ class FieldsTest extends TestCase
 		]);
 
 		$this->assertSame([
-			'a' => null,
 			'b' => 'B',
 		], $fields->toFormValues());
 	}
@@ -517,6 +516,27 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
 	}
 
+	public function testToFormValuesWithNonValueField(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type' => 'info',
+			],
+			'b' => [
+				'type' => 'text',
+			],
+		], $this->model);
+
+		$fields->fill([
+			'a' => 'Value a',
+			'b' => 'Value b',
+		]);
+
+		$this->assertSame([
+			'b' => 'Value b',
+		], $fields->toFormValues());
+	}
+
 	public function testToProps(): void
 	{
 		$this->setUpSingleLanguage();
@@ -657,6 +677,27 @@ class FieldsTest extends TestCase
 
 		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
 		$this->assertSame(['a' => 'Value a stored', 'b' => 'Value b stored'], $fields->toStoredValues());
+	}
+
+	public function testToStoredValuesWithNonValueField(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type' => 'info',
+			],
+			'b' => [
+				'type' => 'text',
+			],
+		], $this->model);
+
+		$fields->fill([
+			'a' => 'Value a',
+			'b' => 'Value b',
+		]);
+
+		$this->assertSame([
+			'b' => 'Value b',
+		], $fields->toStoredValues());
 	}
 
 	public function testValidate(): void
