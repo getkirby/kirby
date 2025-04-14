@@ -137,7 +137,11 @@ class Form
 					unset($data[$field->name()]);
 				}
 			} else {
-				$data[$field->name()] = $field->data($defaults);
+				if ($defaults === true && $field->isEmpty() === true) {
+					$field->fill($field->default());
+				}
+
+				$data[$field->name()] = $field->toStoredValue();
 			}
 		}
 
