@@ -118,6 +118,29 @@ class ViewButtonTest extends AreaTestCase
 	}
 
 	/**
+	 * @covers ::factory
+	 */
+	public function testFactoryFromBooleanButton()
+	{
+		// Default
+		$button = ViewButton::factory(
+			button: true,
+			name: 'foo',
+			view: 'test'
+		);
+		$this->assertInstanceOf(ViewButton::class, $button);
+		$this->assertSame('k-foo-view-button', $button->component);
+
+		// Disable the button
+		$button = ViewButton::factory(
+			button: false,
+			name: 'foo',
+			view: 'test'
+		);
+		$this->assertNull($button);
+	}
+
+	/**
 	 * @covers ::find
 	 */
 	public function testFind(): void
