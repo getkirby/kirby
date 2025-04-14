@@ -14,9 +14,11 @@ use Kirby\Toolkit\Str;
  */
 class AssetsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Assets';
+	public const TMP               = KIRBY_TMP_DIR . '/Panel.Assets';
+	public const VITE_RUNNING_PATH = KIRBY_DIR . '/panel/.vite-running';
 
-	protected $app;
+	protected App $app;
+	protected bool $hadViteRunning;
 
 	public function setUp(): void
 	{
@@ -26,6 +28,10 @@ class AssetsTest extends TestCase
 			]
 		]);
 
+		// initialize development mode to a known state
+		$this->hadViteRunning = is_file(static::VITE_RUNNING_PATH);
+		F::remove(static::VITE_RUNNING_PATH);
+
 		Dir::make(static::TMP);
 	}
 
@@ -33,6 +39,13 @@ class AssetsTest extends TestCase
 	{
 		// clear session file first
 		$this->app->session()->destroy();
+
+		// reset development mode
+		if ($this->hadViteRunning === true) {
+			touch(static::VITE_RUNNING_PATH);
+		} else {
+			F::remove(static::VITE_RUNNING_PATH);
+		}
 
 		Dir::remove(static::TMP);
 
@@ -73,7 +86,7 @@ class AssetsTest extends TestCase
 		]);
 
 		// add vite file
-		F::write($app->roots()->panel() . '/.vite-running', '');
+		F::write(static::VITE_RUNNING_PATH, '');
 	}
 
 	/**

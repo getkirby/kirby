@@ -45,6 +45,7 @@ final class PhpUnitExtension implements Extension
 			$tmpDir .= '/' . getenv('UNIQUE_TEST_TOKEN');
 		}
 
+		define('KIRBY_DIR', dirname(__DIR__));
 		define('KIRBY_TMP_DIR', $tmpDir);
 		define('KIRBY_TESTING', true);
 
