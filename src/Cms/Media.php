@@ -128,6 +128,8 @@ class Media
 			$source = match (true) {
 				is_string($model) === true
 					=> $kirby->root('index') . '/' . $model . '/' . $options['filename'],
+				$model instanceof File
+					=> $model->root(),
 				default
 				=> $model->file($options['filename'])->root()
 			};
