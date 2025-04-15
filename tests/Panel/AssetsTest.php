@@ -13,7 +13,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Assets::class)]
 class AssetsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Assets';
+	public const TMP               = KIRBY_TMP_DIR . '/Panel.Assets';
+	public const VITE_RUNNING_PATH = KIRBY_DIR . '/panel/.vite-running';
+
+	protected bool $hadViteRunning;
 
 	public function setUp(): void
 	{
@@ -23,6 +26,10 @@ class AssetsTest extends TestCase
 			]
 		]);
 
+		// initialize development mode to a known state
+		$this->hadViteRunning = is_file(static::VITE_RUNNING_PATH);
+		F::remove(static::VITE_RUNNING_PATH);
+
 		Dir::make(static::TMP);
 	}
 
@@ -30,6 +37,13 @@ class AssetsTest extends TestCase
 	{
 		// clear session file first
 		$this->app->session()->destroy();
+
+		// reset development mode
+		if ($this->hadViteRunning === true) {
+			touch(static::VITE_RUNNING_PATH);
+		} else {
+			F::remove(static::VITE_RUNNING_PATH);
+		}
 
 		Dir::remove(static::TMP);
 
@@ -70,7 +84,7 @@ class AssetsTest extends TestCase
 		]);
 
 		// add vite file
-		F::write($app->roots()->panel() . '/.vite-running', '');
+		touch(static::VITE_RUNNING_PATH);
 	}
 
 	public function testCss(): void
@@ -98,8 +112,8 @@ class AssetsTest extends TestCase
 
 	public function testCssWithCustomFile(): void
 	{
-		F::write(static::TMP . '/panel.css', '');
-		F::write(static::TMP . '/foo.css', '');
+		touch(static::TMP . '/panel.css');
+		touch(static::TMP . '/foo.css');
 
 		// single
 		$this->app->clone([
@@ -146,6 +160,7 @@ class AssetsTest extends TestCase
 
 	public function testCssWithCustomUrl(): void
 	{
+		$this->setDevMode();
 		$this->setCustomUrl();
 
 		// default asset setup
@@ -283,6 +298,7 @@ class AssetsTest extends TestCase
 
 	public function testFaviconsWithCustomUrl(): void
 	{
+		$this->setDevMode();
 		$this->setCustomUrl();
 
 		// default asset setup
@@ -353,8 +369,8 @@ class AssetsTest extends TestCase
 
 	public function testJsWithCustomFile(): void
 	{
-		F::write(static::TMP . '/panel.js', '');
-		F::write(static::TMP . '/foo.js', '');
+		touch(static::TMP . '/panel.js');
+		touch(static::TMP . '/foo.js');
 
 		// single
 		$this->app->clone([
@@ -402,6 +418,7 @@ class AssetsTest extends TestCase
 
 	public function testJsWithCustomUrl(): void
 	{
+		$this->setDevMode();
 		$this->setCustomUrl();
 
 		// default asset setup
