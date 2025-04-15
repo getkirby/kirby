@@ -26,6 +26,7 @@ use Kirby\Toolkit\Str;
 class Fields extends Collection
 {
 	protected Language $language;
+	protected array $passthrough = [];
 
 	public function __construct(
 		array $fields = [],
@@ -160,6 +161,33 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Adds values to the passthrough array
+	 * which will be added to the form data
+	 * if the field does not exist
+	 */
+	public function passthrough(array $values = []): static
+	{
+		// always start with a fresh set of passthrough values
+		$this->passthrough = [];
+
+		if ($values === []) {
+			return $this;
+		}
+
+		foreach ($values as $key => $value) {
+			// check if the field exists and don't passthrough
+			// values for existing fields
+			if ($this->get(strtolower($key)) !== null) {
+				continue;
+			}
+
+			$this->passthrough[$key] = $value;
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
@@ -175,7 +203,7 @@ class Fields extends Collection
 	 */
 	public function toFormValues(): array
 	{
-		return $this->toArray(fn ($field) => $field->toFormValue());
+		return $this->toValues(fn ($field) => $field->toFormValue());
 	}
 
 	/**
@@ -223,7 +251,25 @@ class Fields extends Collection
 	 */
 	public function toStoredValues(): array
 	{
-		return $this->toArray(fn ($field) => $field->toStoredValue());
+		return $this->toValues(fn ($field) => $field->toStoredValue());
+	}
+
+	/**
+	 * Returns an array with the values of each field
+	 * and adds passthrough values if they don't exist
+	 * @internal
+	 */
+	protected function toValues(Closure $method): array
+	{
+		$values = $this->toArray($method);
+
+		foreach ($this->passthrough as $key => $value) {
+			if (isset($values[$key]) === false) {
+				$values[$key] = $value;
+			}
+		}
+
+		return $values;
 	}
 
 	/**
