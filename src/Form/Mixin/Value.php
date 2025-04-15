@@ -17,7 +17,11 @@ trait Value
 	protected mixed $value = null;
 
 	/**
-	 * @deprecated 5.0.0 Use `::toStoredValue()` instead
+	 * @deprecated 5.0.0 Use `::toStoredValue()` instead to receive
+	 * the value in the format that will be needed for content files.
+	 *
+	 * If you need to get the value with the default as fallback, you should use
+	 * the fill method first `$field->fill($field->default())->toStoredValue()`
 	 */
 	public function data(bool $default = false): mixed
 	{
@@ -209,6 +213,9 @@ trait Value
 	 *
 	 * @see `self::toFormValue()`
 	 * @todo might get deprecated or reused later. Use `self::toFormValue()` instead.
+	 *
+	 * If you need the form value with the default as fallback, you should use
+	 * the fill method first `$field->fill($field->default())->toFormValue()`
 	 */
 	public function value(bool $default = false): mixed
 	{
