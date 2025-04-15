@@ -137,7 +137,11 @@ class Form
 					unset($data[$field->name()]);
 				}
 			} else {
-				$data[$field->name()] = $field->toStoredValue($defaults);
+				if ($defaults === true && $field->isEmpty() === true) {
+					$field->fill($field->default());
+				}
+
+				$data[$field->name()] = $field->toStoredValue();
 			}
 		}
 
@@ -284,18 +288,18 @@ class Form
 	 * Returns an array with the form value of each field
 	 * (e.g. used as data for Panel Vue components)
 	 */
-	public function toFormValues(bool $defaults = false): array
+	public function toFormValues(): array
 	{
-		return $this->fields->toFormValues($defaults);
+		return $this->fields->toFormValues();
 	}
 
 	/**
 	 * Returns an array with the stored value of each field
 	 * (e.g. used for saving to content storage)
 	 */
-	public function toStoredValues(bool $defaults = false): array
+	public function toStoredValues(): array
 	{
-		return $this->fields->toStoredValues($defaults);
+		return $this->fields->toStoredValues();
 	}
 
 	/**

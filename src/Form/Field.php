@@ -395,9 +395,9 @@ class Field extends Component
 	/**
 	 * Returns the value of the field in a format to be stored by our storage classes
 	 */
-	public function toStoredValue(bool $default = false): mixed
+	public function toStoredValue(): mixed
 	{
-		$value = $this->value($default);
+		$value = $this->toFormValue();
 		$store = $this->options['save'] ?? true;
 
 		if ($store === false) {

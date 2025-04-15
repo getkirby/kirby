@@ -17,11 +17,19 @@ trait Value
 	protected mixed $value = null;
 
 	/**
-	 * @deprecated 5.0.0 Use `::toStoredValue()` instead
+	 * @deprecated 5.0.0 Use `::toStoredValue()` instead to receive
+	 * the value in the format that will be needed for content files.
+	 *
+	 * If you need to get the value with the default as fallback, you should use
+	 * the fill method first `$field->fill($field->default())->toStoredValue()`
 	 */
 	public function data(bool $default = false): mixed
 	{
-		return $this->toStoredValue($default);
+		if ($default === true && $this->isEmpty() === true) {
+			$this->fill($this->default());
+		}
+
+		return $this->toStoredValue();
 	}
 
 	/**
@@ -181,14 +189,10 @@ trait Value
 	 * Returns the value of the field in a format to be used in forms
 	 * (e.g. used as data for Panel Vue components)
 	 */
-	public function toFormValue(bool $default = false): mixed
+	public function toFormValue(): mixed
 	{
 		if ($this->hasValue() === false) {
 			return null;
-		}
-
-		if ($default === true && $this->isEmpty() === true) {
-			return $this->default();
 		}
 
 		return $this->value;
@@ -198,9 +202,9 @@ trait Value
 	 * Returns the value of the field in a format
 	 * to be stored by our storage classes
 	 */
-	public function toStoredValue(bool $default = false): mixed
+	public function toStoredValue(): mixed
 	{
-		return $this->toFormValue($default);
+		return $this->toFormValue();
 	}
 
 	/**
@@ -208,10 +212,17 @@ trait Value
 	 * otherwise it returns null
 	 *
 	 * @see `self::toFormValue()`
-	 * @todo might get deprecated or reused later
+	 * @todo might get deprecated or reused later. Use `self::toFormValue()` instead.
+	 *
+	 * If you need the form value with the default as fallback, you should use
+	 * the fill method first `$field->fill($field->default())->toFormValue()`
 	 */
 	public function value(bool $default = false): mixed
 	{
-		return $this->toFormValue($default);
+		if ($default === true && $this->isEmpty() === true) {
+			$this->fill($this->default());
+		}
+
+		return $this->toFormValue();
 	}
 }

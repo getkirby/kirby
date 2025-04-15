@@ -1126,7 +1126,6 @@ class FieldTest extends TestCase
 		$this->assertNull($field->value());
 
 		$field = new Field('test', ['default' => 'Default value']);
-		$this->assertSame('Default value', $field->toFormValue(true));
 		$this->assertSame('Default value', $field->value(true));
 
 		Field::$types['test'] = [
