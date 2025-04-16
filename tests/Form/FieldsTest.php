@@ -167,6 +167,81 @@ class FieldsTest extends TestCase
 		$this->assertSame($input, $fields->toArray(fn ($field) => $field->value()));
 	}
 
+	public function testFillWithClosureValues(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A'
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->fill([
+			'a' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated'
+		], $fields->toFormValues());
+	}
+
+	public function testFillWithNoValueField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'info',
+				],
+				'b' => [
+					'type' => 'text',
+				]
+			],
+			model: $this->model
+		);
+
+		$fields->fill([
+			'a' => 'A',
+			'b' => 'B'
+		]);
+
+		$this->assertSame([
+			'b' => 'B',
+		], $fields->toFormValues());
+	}
+
+	public function testFillWithUnknownFields(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+			],
+			model: $this->model
+		);
+
+		$input = [
+			'a' => 'A',
+			'b' => 'B',
+		];
+
+		$fields->fill($input);
+
+		$this->assertSame([
+			'a' => 'A',
+		], $fields->toFormValues(), 'Unknown fields are not included');
+
+		$fields->passthrough($input)->fill($input);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toFormValues(), 'Unknown fields are included');
+	}
+
 	public function testFind()
 	{
 		Field::$types['test'] = [
@@ -306,6 +381,111 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testSubmit(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'text',
+					'value' => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit([
+			'a' => 'A updated',
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => 'B',
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithClosureValues(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit([
+			'a' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated'
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithDisabledField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'     => 'text',
+					'disabled' => true,
+					'value'    => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit([
+			'a' => 'A updated',
+			'b' => 'B updated',
+		]);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => 'B'
+		], $fields->toStoredValues());
+	}
+
+	public function testSubmitWithPassthrough(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'text',
+				],
+			],
+			model: $this->model
+		);
+
+		$input = [
+			'a' => 'A',
+			'b' => 'B',
+		];
+
+		$fields->submit($input);
+
+		$this->assertSame([
+			'a' => 'A',
+		], $fields->toStoredValues(), 'Unknown fields are not included');
+
+		$fields->passthrough($input)->submit($input);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B'
+		], $fields->toStoredValues(), 'Unknown fields are included');
+	}
+
 	public function testToArray()
 	{
 		$fields = new Fields([
@@ -334,6 +514,27 @@ class FieldsTest extends TestCase
 		], $this->model);
 
 		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
+	}
+
+	public function testToFormValuesWithNonValueField(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type' => 'info',
+			],
+			'b' => [
+				'type' => 'text',
+			],
+		], $this->model);
+
+		$fields->fill([
+			'a' => 'Value a',
+			'b' => 'Value b',
+		]);
+
+		$this->assertSame([
+			'b' => 'Value b',
+		], $fields->toFormValues());
 	}
 
 	public function testToProps(): void
@@ -476,6 +677,27 @@ class FieldsTest extends TestCase
 
 		$this->assertSame(['a' => 'Value a', 'b' => 'Value b'], $fields->toFormValues());
 		$this->assertSame(['a' => 'Value a stored', 'b' => 'Value b stored'], $fields->toStoredValues());
+	}
+
+	public function testToStoredValuesWithNonValueField(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type' => 'info',
+			],
+			'b' => [
+				'type' => 'text',
+			],
+		], $this->model);
+
+		$fields->fill([
+			'a' => 'Value a',
+			'b' => 'Value b',
+		]);
+
+		$this->assertSame([
+			'b' => 'Value b',
+		], $fields->toStoredValues());
 	}
 
 	public function testValidate(): void

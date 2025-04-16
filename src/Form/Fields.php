@@ -94,7 +94,21 @@ class Fields extends Collection
 	public function fill(array $input): static
 	{
 		foreach ($input as $name => $value) {
-			$this->get($name)?->fill($value);
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-value field
+			if ($field->hasValue() === false) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->toFormValue());
+			}
+
+			$field->fill($value);
 		}
 
 		return $this;
@@ -188,6 +202,41 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Sets the value for each field with a matching key in the input array
+	 * but only if the field is not disabled
+	 * @since 5.0.0
+	 */
+	public function submit(
+		array $input
+	): static {
+		$language = $this->language();
+
+		foreach ($input as $name => $value) {
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-submittable fields
+			if ($field->isSubmittable($language) === false) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->toFormValue());
+			}
+
+			// submit the value to the field
+			// the field class might override this method
+			// to handle submitted values differently
+			$field->submit($value);
+		}
+
+		// reset the errors cache
+		return $this;
+	}
+
+	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
@@ -203,7 +252,10 @@ class Fields extends Collection
 	 */
 	public function toFormValues(): array
 	{
-		return $this->toValues(fn ($field) => $field->toFormValue());
+		return $this->toValues(
+			fn ($field) => $field->toFormValue(),
+			fn ($field) => $field->hasValue()
+		);
 	}
 
 	/**
@@ -251,7 +303,10 @@ class Fields extends Collection
 	 */
 	public function toStoredValues(): array
 	{
-		return $this->toValues(fn ($field) => $field->toStoredValue());
+		return $this->toValues(
+			fn ($field) => $field->toStoredValue(),
+			fn ($field) => $field->isStorable($this->language())
+		);
 	}
 
 	/**
@@ -259,9 +314,9 @@ class Fields extends Collection
 	 * and adds passthrough values if they don't exist
 	 * @internal
 	 */
-	protected function toValues(Closure $method): array
+	protected function toValues(Closure $method, Closure $filter): array
 	{
-		$values = $this->toArray($method);
+		$values = $this->filter($filter)->toArray($method);
 
 		foreach ($this->passthrough as $key => $value) {
 			if (isset($values[$key]) === false) {
