@@ -8,6 +8,11 @@ use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
+class TestComponentWithCustomProperty extends Component
+{
+	public string $b = 'custom property';
+}
+
 #[CoversClass(Component::class)]
 class ComponentTest extends TestCase
 {
@@ -95,6 +100,51 @@ class ComponentTest extends TestCase
 		$this->expectExceptionMessage('Please provide a value for "prop"');
 
 		new Component('test');
+	}
+
+	public function testPropUnsetting()
+	{
+		Component::$types = [
+			'a' => [
+				'props' => [
+					'a' => fn ($prop) => $prop,
+					'b' => fn ($prop) => $prop
+				]
+			],
+			'b' => [
+				'extends' => 'a',
+				'props' => [
+					'b' => null
+				]
+			]
+		];
+
+		$component = new Component('b', [
+			'a' => 'a',
+			'b' => 'b'
+		]);
+
+		$this->assertSame('a', $component->a());
+		$this->assertNull($component->b());
+	}
+
+	public function testPropUnsettingWithCustomProperty()
+	{
+		TestComponentWithCustomProperty::$types = [
+			'a' => [
+				'props' => [
+					'a' => fn ($prop) => $prop,
+					'b' => null // this should not have any effect on the custom property
+				]
+			]
+		];
+
+		$component = new TestComponentWithCustomProperty('a', [
+			'a' => 'a'
+		]);
+
+		$this->assertSame('a', $component->a());
+		$this->assertSame('custom property', $component->b());
 	}
 
 	public function testAttrs()
