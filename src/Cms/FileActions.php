@@ -210,26 +210,24 @@ trait FileActions
 			...$props['content'],
 		];
 
+		// reuse the existing content if the uploaded file
+		// is identical to an existing file
+		if ($file->exists() === true) {
+			$existing = $file->parent()->file($file->filename());
+
+			if (
+				$file->sha1() === $upload->sha1() &&
+				$file->template() === $existing->template()
+			) {
+				// read the content of the existing file and use it
+				$props['content'] = $existing->content()->toArray();
+			}
+		}
+
 		// make sure that a UUID gets generated
 		// and added to content right away
-		if (
-			Uuids::enabled() === true &&
-			empty($props['content']['uuid']) === true
-		) {
-			// sets the current uuid if it is the exact same file
-			if ($file->exists() === true) {
-				$existing = $file->parent()->file($file->filename());
-
-				if (
-					$file->sha1() === $upload->sha1() &&
-					$file->template() === $existing->template()
-				) {
-					// use existing content data if it is the exact same file
-					$content = $existing->content()->toArray();
-				}
-			}
-
-			$props['content']['uuid'] = Uuid::generate();
+		if (Uuids::enabled() === true) {
+			$props['content']['uuid'] ??= Uuid::generate();
 		}
 
 		// keep the initial storage class
