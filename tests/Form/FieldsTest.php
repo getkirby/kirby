@@ -11,6 +11,7 @@ use Kirby\Cms\Site;
 use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -140,6 +141,32 @@ class FieldsTest extends TestCase
 
 		$this->assertSame([], $fields->errors());
 	}
+
+	public function testField()
+	{
+		$fields = new Fields([
+			'test' => [
+				'type'  => 'text',
+			],
+		], $this->model);
+
+		$this->assertSame('test', $fields->field('test')->name());
+	}
+
+	public function testFieldWithMissingField()
+	{
+		$fields = new Fields([
+			'test' => [
+				'type'  => 'text',
+			],
+		], $this->model);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The field could not be found');
+
+		$fields->field('missing');
+	}
+
 
 	public function testFill()
 	{
