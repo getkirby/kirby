@@ -18,7 +18,10 @@ class FileChangeTemplateTest extends ModelTestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$this->app = $this->app->clone([
+		$app = $this->app->clone([
+			'roots' => [
+				'index' => static::TMP
+			],
 			'blueprints' => [
 				'pages/test' => [
 					'sections' => [
@@ -55,6 +58,14 @@ class FileChangeTemplateTest extends ModelTestCase
 					]
 				],
 			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test'
+					]
+				]
+			],
 			'hooks' => [
 				'file.changeTemplate:before' => function (File $file, $template) use ($phpunit, &$calls) {
 					$phpunit->assertSame('a', $file->template());
@@ -69,20 +80,16 @@ class FileChangeTemplateTest extends ModelTestCase
 			]
 		]);
 
-		$this->app->impersonate('kirby');
+		$app->impersonate('kirby');
 
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'test'
-		]);
-
-		$file = new File([
+		$page = $app->page('test');
+		$file = $page->createFile([
 			'filename' => 'test.jpg',
-			'parent'   => $page,
+			'source'   => self::FIXTURES . '/test.jpg',
+			'template' => 'a',
 			'content'  => [
-				'template' => 'a',
-				'caption'  => 'Caption',
-				'text'     => 'Text'
+				'caption' => 'Caption',
+				'text'    => 'Text'
 			]
 		]);
 
