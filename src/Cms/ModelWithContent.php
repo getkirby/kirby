@@ -237,14 +237,14 @@ abstract class ModelWithContent implements Identifiable, Stringable
 				// Convert the content to the new blueprint
 				$content = $oldVersion->content($language)->convertTo($blueprint);
 
-				// Save to re-create the new version
-				// with the converted/updated content
-				$new->version($oldVersion->id())->save($content, $language);
-
 				// Delete the old versions. This will also remove the
 				// content files from the storage if this is a plain text
 				// storage instance.
 				$oldVersion->delete($language);
+
+				// Save to re-create the new version
+				// with the converted/updated content
+				$new->version($oldVersion->id())->save($content, $language);
 			}
 		}
 
