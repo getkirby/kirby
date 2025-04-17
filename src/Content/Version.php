@@ -233,8 +233,8 @@ class Version
 			$b['uuid']
 		);
 
-		$a = $fields->reset()->passthrough($a)->fill($a)->toFormValues();
-		$b = $fields->reset()->passthrough($b)->fill($b)->toFormValues();
+		$a = $fields->reset()->fill(input: $a, passthrough: true)->toFormValues();
+		$b = $fields->reset()->fill(input: $b, passthrough: true)->toFormValues();
 
 		ksort($a);
 		ksort($b);
