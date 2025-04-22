@@ -36,7 +36,7 @@ abstract class Model
 	/**
 	 * Get the content values for the model
 	 *
-	 * @deprecated Use `versions()` instead
+	 * @deprecated 5.0.0 Use `self::versions()` instead
 	 */
 	public function content(): array
 	{
