@@ -308,6 +308,43 @@ class FieldsTest extends TestCase
 		$this->assertNull($fields->find('mother+child'));
 	}
 
+	public function testFor(): void
+	{
+		$this->model = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'fields' => [
+					'a' => [
+						'type' => 'text',
+					],
+					'b' => [
+						'type' => 'text',
+					]
+				]
+			]
+		]);
+
+		$fields = Fields::for($this->model);
+
+		$this->assertTrue($fields->language()->isDefault());
+		$this->assertCount(2, $fields);
+
+		$this->assertSame('a', $fields->first()->name());
+		$this->assertSame('b', $fields->last()->name());
+
+		$this->assertSame($this->model, $fields->first()->model());
+		$this->assertSame($this->model, $fields->last()->model());
+	}
+
+	public function testForWithLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$fields = Fields::for($this->model, 'de');
+
+		$this->assertSame('de', $fields->language()->code());
+	}
+
 	public function testLanguage(): void
 	{
 		// no language passed = current language
