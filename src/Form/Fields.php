@@ -109,8 +109,14 @@ class Fields extends Collection
 	/**
 	 * Sets the value for each field with a matching key in the input array
 	 */
-	public function fill(array $input): static
-	{
+	public function fill(
+		array $input,
+		bool $passthrough = false
+	): static {
+		if ($passthrough === true) {
+			$this->passthrough($input);
+		}
+
 		foreach ($input as $name => $value) {
 			if (!$field = $this->get($name)) {
 				continue;
@@ -255,9 +261,14 @@ class Fields extends Collection
 	 * @since 5.0.0
 	 */
 	public function submit(
-		array $input
+		array $input,
+		bool $passthrough = false
 	): static {
 		$language = $this->language();
+
+		if ($passthrough === true) {
+			$this->passthrough($input);
+		}
 
 		foreach ($input as $name => $value) {
 			if (!$field = $this->get($name)) {

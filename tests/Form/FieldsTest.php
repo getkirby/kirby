@@ -239,7 +239,7 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
-	public function testFillWithUnknownFields(): void
+	public function testFillWithPassthrough(): void
 	{
 		$fields = new Fields(
 			fields: [
@@ -261,7 +261,10 @@ class FieldsTest extends TestCase
 			'a' => 'A',
 		], $fields->toFormValues(), 'Unknown fields are not included');
 
-		$fields->passthrough($input)->fill($input);
+		$fields->fill(
+			input: $input,
+			passthrough: true
+		);
 
 		$this->assertSame([
 			'a' => 'A',
@@ -628,7 +631,10 @@ class FieldsTest extends TestCase
 			'a' => 'A',
 		], $fields->toStoredValues(), 'Unknown fields are not included');
 
-		$fields->passthrough($input)->submit($input);
+		$fields->submit(
+			input: $input,
+			passthrough: true
+		);
 
 		$this->assertSame([
 			'a' => 'A',
