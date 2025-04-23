@@ -436,6 +436,18 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist();
 	}
 
+	public function testErrors(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertTrue($version->errors() === []);
+	}
+
 	/**
 	 * @covers ::exists
 	 */
