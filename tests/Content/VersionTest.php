@@ -387,7 +387,7 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist();
 	}
 
-	public function testErrors(): void
+	public function testErrorsWithoutErrors(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -397,6 +397,40 @@ class VersionTest extends TestCase
 		);
 
 		$this->assertTrue($version->errors() === []);
+	}
+
+	public function testErrorsWithRequiredField(): void
+	{
+		$this->setUpSingleLanguage([
+			'children' => [
+				[
+					'slug'     => 'a-page',
+					'template' => 'article',
+					'blueprint' => [
+						'fields' => [
+							'text' => [
+								'type'     => 'text',
+								'required' => true
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertSame([
+			'text' => [
+				'label'   => 'Text',
+				'message' => [
+					'required' => 'Please enter something'
+				]
+			]
+		], $version->errors());
 	}
 
 	public function testExistsLatestMultiLanguage(): void
