@@ -2,10 +2,12 @@
 
 namespace Kirby\Api\Controller;
 
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\Lock;
 use Kirby\Content\VersionId;
 use Kirby\Filesystem\F;
+use Kirby\Form\Fields;
 use Kirby\Form\Form;
 
 /**
@@ -90,34 +92,45 @@ class Changes
 	 */
 	public static function save(ModelWithContent $model, array $input): array
 	{
-		// we need to run the input through the form
-		// class to get a set of storable field values
-		// that we can send to the content storage handler
-		$form = Form::for($model, [
-			'ignoreDisabled' => true,
-			'input'          => $input,
-		]);
-
-		$changes = $model->version(VersionId::changes());
-		$latest  = $model->version(VersionId::latest());
-
 		// Removes the old .lock file when it is no longer needed
 		// @todo Remove in 6.0.0
 		static::cleanup($model);
 
-		// combine the new field changes with the
-		// last published state
-		$changes->save(
-			fields: [
-				...$latest->read(),
-				...$form->strings(),
-			],
-			language: 'current'
+		// get the current language
+		$language = Language::ensure('current');
+
+		// create the fields instance for the model
+		$fields = Fields::for($model, $language);
+
+		// get the changes and latest version for the model
+		$changes = $model->version(VersionId::changes());
+		$latest  = $model->version(VersionId::latest());
+
+		// get the source version for the existing content
+		$source  = $changes->exists($language) === true ? $changes : $latest;
+		$content = $source->content($language)->toArray();
+
+		// fill in the form values and pass through any values that are not
+		// defined as fields, such as uuid, title or similar.
+		$fields->fill(
+			input: $content,
+			passthrough: true
 		);
 
-		if ($changes->isIdentical(version: $latest, language: 'current')) {
+		// submit the new values from the request input
+		$fields->submit($input);
+
+		// save the changes
+		$changes->save(
+			fields:   $fields->toStoredValues(),
+			language: $language
+		);
+
+		// if the changes are identical to the latest version,
+		// we can delete the changes version already at this point
+		if ($changes->isIdentical(version: $latest, language: $language)) {
 			$changes->delete(
-				language: 'current'
+				language: $language
 			);
 		}
 
