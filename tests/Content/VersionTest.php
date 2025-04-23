@@ -396,6 +396,7 @@ class VersionTest extends TestCase
 			id: VersionId::latest()
 		);
 
+		$this->assertTrue($version->isValid());
 		$this->assertTrue($version->errors() === []);
 	}
 
@@ -422,6 +423,8 @@ class VersionTest extends TestCase
 			model: $this->model,
 			id: VersionId::latest()
 		);
+
+		$this->assertFalse($version->isValid());
 
 		$this->assertSame([
 			'text' => [

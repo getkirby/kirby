@@ -273,6 +273,14 @@ class Version
 	}
 
 	/**
+	 * Checks if there are any validation errors for the given language
+	 */
+	public function isValid(Language|string $language = 'default'): bool
+	{
+		return $this->errors($language) === [];
+	}
+
+	/**
 	 * Returns the lock object for the version
 	 */
 	public function lock(Language|string $language = 'default'): Lock
