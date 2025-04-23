@@ -11,6 +11,8 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ExtendedModelWithContent extends ModelWithContent
 {
@@ -97,6 +99,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 	}
 }
 
+#[CoversClass(ModelWithContent::class)]
 class ModelWithContentTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.ModelWithContent';
@@ -266,9 +269,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Original Title', $page->content()->title()->value());
 	}
 
-	/**
-	 * @dataProvider modelsProvider
-	 */
+	#[DataProvider('modelsProvider')]
 	public function testBlueprints(ModelWithContent $model)
 	{
 		$model = new BlueprintsModelWithContent($model);
@@ -309,17 +310,13 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame([], $model->blueprints('foo'));
 	}
 
-	/**
-	 * @dataProvider modelsProvider
-	 */
+	#[DataProvider('modelsProvider')]
 	public function testIsValid(ModelWithContent $model): void
 	{
 		$this->assertTrue($model->isValid());
 	}
 
-	/**
-	 * @dataProvider modelsProvider
-	 */
+	#[DataProvider('modelsProvider')]
 	public function testIsValidWithErrors(ModelWithContent $model): void
 	{
 		// we can only test this with a real model
@@ -358,9 +355,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertNull($lock->user());
 	}
 
-	/**
-	 * @dataProvider modelsProvider
-	 */
+	#[DataProvider('modelsProvider')]
 	public function testPurge(ModelWithContent $model)
 	{
 		$model = new BlueprintsModelWithContent($model);
