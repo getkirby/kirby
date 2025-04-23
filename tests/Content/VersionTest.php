@@ -8,18 +8,14 @@ use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Content\Version
- * @covers ::__construct
- */
+#[CoversClass(Version::class)]
 class VersionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.Version';
 
-	/**
-	 * @covers ::content
-	 */
 	public function testContentMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -38,9 +34,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expected['de']['content']['title'], $version->content($this->app->language('de'))->get('title')->value());
 	}
 
-	/**
-	 * @covers ::content
-	 */
 	public function testContentSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -55,9 +48,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expected['content']['title'], $version->content()->get('title')->value());
 	}
 
-	/**
-	 * @covers ::content
-	 */
 	public function testContentWithFallback(): void
 	{
 		$this->setUpMultiLanguage();
@@ -80,9 +70,6 @@ class VersionTest extends TestCase
 		$this->assertSame($version->content('en')->toArray(), $version->content('de')->toArray());
 	}
 
-	/**
-	 * @covers ::content
-	 */
 	public function testContentWithNullValues(): void
 	{
 		$this->setUpMultiLanguage();
@@ -112,10 +99,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expectedContentDE, $version->content('de')->toArray());
 	}
 
-	/**
-	 * @covers ::content
-	 * @covers ::prepareFieldsForContent
-	 */
 	public function testContentPrepareFields(): void
 	{
 		$this->setUpSingleLanguage();
@@ -159,9 +142,6 @@ class VersionTest extends TestCase
 		], $version->content()->toArray());
 	}
 
-	/**
-	 * @covers ::contentFile
-	 */
 	public function testContentFileMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -178,9 +158,6 @@ class VersionTest extends TestCase
 		$this->assertSame($this->contentFile('de'), $version->contentFile($this->app->language('de')));
 	}
 
-	/**
-	 * @covers ::contentFile
-	 */
 	public function testContentFileSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -193,9 +170,6 @@ class VersionTest extends TestCase
 		$this->assertSame($this->contentFile(), $version->contentFile());
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -222,9 +196,6 @@ class VersionTest extends TestCase
 		$this->assertContentFileExists('de');
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateMultiLanguageWhenLatestTranslationIsMissing(): void
 	{
 		$this->setUpMultiLanguage();
@@ -260,9 +231,6 @@ class VersionTest extends TestCase
 		$this->assertContentFileExists('de', $changes->id());
 	}
 
-	/**
-	 * @covers ::create
-	 */
 	public function testCreateSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -281,11 +249,6 @@ class VersionTest extends TestCase
 		$this->assertContentFileExists();
 	}
 
-	/**
-	 * @covers ::create
-	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::prepareFieldsBeforeWrite
-	 */
 	public function testCreateWithDirtyFields(): void
 	{
 		$this->setUpMultiLanguage();
@@ -338,9 +301,6 @@ class VersionTest extends TestCase
 		$this->assertArrayNotHasKey('date', $version->read('de'));
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDeleteMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -369,9 +329,6 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('de');
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDeleteMultiLanguageWithWildcard(): void
 	{
 		$this->setUpMultiLanguage();
@@ -392,9 +349,6 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist('de');
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDeleteSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -415,9 +369,6 @@ class VersionTest extends TestCase
 		$this->assertContentFileDoesNotExist();
 	}
 
-	/**
-	 * @covers ::delete
-	 */
 	public function testDeleteSingleLanguageWithWildcard(): void
 	{
 		$this->setUpSingleLanguage();
@@ -448,9 +399,6 @@ class VersionTest extends TestCase
 		$this->assertTrue($version->errors() === []);
 	}
 
-	/**
-	 * @covers ::exists
-	 */
 	public function testExistsLatestMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -478,9 +426,6 @@ class VersionTest extends TestCase
 		$this->assertTrue($version->exists($this->app->language('de')));
 	}
 
-	/**
-	 * @covers ::exists
-	 */
 	public function testExistsWithLanguageWildcard(): void
 	{
 		$this->setUpMultiLanguage();
@@ -507,9 +452,6 @@ class VersionTest extends TestCase
 		$this->assertTrue($version->exists('*'));
 	}
 
-	/**
-	 * @covers ::exists
-	 */
 	public function testExistsLatestSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -526,9 +468,6 @@ class VersionTest extends TestCase
 		$this->assertTrue($version->exists());
 	}
 
-	/**
-	 * @covers ::id
-	 */
 	public function testId(): void
 	{
 		$this->setUpSingleLanguage();
@@ -541,9 +480,6 @@ class VersionTest extends TestCase
 		$this->assertSame($id, $version->id());
 	}
 
-	/**
-	 * @covers ::isIdentical
-	 */
 	public function testIsIdenticalMultiLanguage()
 	{
 		$this->setUpMultiLanguage();
@@ -579,9 +515,6 @@ class VersionTest extends TestCase
 		$this->assertFalse($a->isIdentical(VersionId::changes(), 'de'));
 	}
 
-	/**
-	 * @covers ::isIdentical
-	 */
 	public function testIsIdenticalSingleLanguage()
 	{
 		$this->setUpSingleLanguage();
@@ -609,9 +542,6 @@ class VersionTest extends TestCase
 		$this->assertFalse($a->isIdentical('changes'));
 	}
 
-	/**
-	 * @covers ::isIdentical
-	 */
 	public function testIsIdenticalWithoutChanges()
 	{
 		$this->setUpSingleLanguage();
@@ -639,9 +569,6 @@ class VersionTest extends TestCase
 		$this->assertTrue($a->isIdentical('changes'));
 	}
 
-	/**
-	 * @covers ::isIdentical
-	 */
 	public function testIsIdenticalWithSameVersion()
 	{
 		$this->setUpSingleLanguage();
@@ -659,9 +586,6 @@ class VersionTest extends TestCase
 		$this->assertTrue($a->isIdentical('latest'));
 	}
 
-	/**
-	 * @covers ::isLocked
-	 */
 	public function testIsLocked(): void
 	{
 		$this->setUpSingleLanguage();
@@ -674,9 +598,6 @@ class VersionTest extends TestCase
 		$this->assertFalse($version->isLocked());
 	}
 
-	/**
-	 * @covers ::lock
-	 */
 	public function testLock(): void
 	{
 		$this->setUpSingleLanguage();
@@ -689,9 +610,6 @@ class VersionTest extends TestCase
 		$this->assertInstanceOf(Lock::class, $version->lock());
 	}
 
-	/**
-	 * @covers ::model
-	 */
 	public function testModel(): void
 	{
 		$this->setUpSingleLanguage();
@@ -704,9 +622,6 @@ class VersionTest extends TestCase
 		$this->assertSame($this->model, $version->model());
 	}
 
-	/**
-	 * @covers ::modified
-	 */
 	public function testModifiedMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -722,9 +637,6 @@ class VersionTest extends TestCase
 		$this->assertSame($modified, $version->modified($this->app->language('de')));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
 	public function testModifiedMultiLanguageIfNotExists(): void
 	{
 		$this->setUpMultiLanguage();
@@ -740,9 +652,6 @@ class VersionTest extends TestCase
 		$this->assertNull($version->modified($this->app->language('de')));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
 	public function testModifiedSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -757,9 +666,6 @@ class VersionTest extends TestCase
 		$this->assertSame($modified, $version->modified());
 	}
 
-	/**
-	 * @covers ::modified
-	 */
 	public function testModifiedSingleLanguageIfNotExists(): void
 	{
 		$this->setUpSingleLanguage();
@@ -772,9 +678,6 @@ class VersionTest extends TestCase
 		$this->assertNull($version->modified());
 	}
 
-	/**
-	 * @covers ::move
-	 */
 	public function testMoveToLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -814,9 +717,6 @@ class VersionTest extends TestCase
 		$this->assertSame($content, Data::read($fileEN));
 	}
 
-	/**
-	 * @covers ::move
-	 */
 	public function testMoveToVersion(): void
 	{
 		$this->setUpMultiLanguage();
@@ -874,11 +774,7 @@ class VersionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::previewToken
-	 * @covers ::previewTokenFromUrl
-	 * @dataProvider previewTokenIndexUrlProvider
-	 */
+	#[DataProvider('previewTokenIndexUrlProvider')]
 	public function testPreviewToken(string $indexUrl)
 	{
 		$this->setUpSingleLanguage();
@@ -914,9 +810,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->previewToken());
 	}
 
-	/**
-	 * @covers ::previewToken
-	 */
 	public function testPreviewTokenCustomSalt()
 	{
 		$this->setUpSingleLanguage();
@@ -938,9 +831,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->previewToken());
 	}
 
-	/**
-	 * @covers ::previewToken
-	 */
 	public function testPreviewTokenCustomSaltCallback()
 	{
 		$this->setUpSingleLanguage();
@@ -966,9 +856,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->previewToken());
 	}
 
-	/**
-	 * @covers ::previewToken
-	 */
 	public function testPreviewTokenInvalidModel()
 	{
 		$this->expectException(LogicException::class);
@@ -984,9 +871,6 @@ class VersionTest extends TestCase
 		$version->previewToken();
 	}
 
-	/**
-	 * @covers ::previewToken
-	 */
 	public function testPreviewTokenMissingHomePage()
 	{
 		$this->expectException(NotFoundException::class);
@@ -1006,9 +890,6 @@ class VersionTest extends TestCase
 		$version->previewToken();
 	}
 
-	/**
-	 * @covers ::publish
-	 */
 	public function testPublish()
 	{
 		$this->setUpSingleLanguage();
@@ -1037,9 +918,6 @@ class VersionTest extends TestCase
 		$this->assertSame('Title changes', Data::read($fileLatest)['title']);
 	}
 
-	/**
-	 * @covers ::publish
-	 */
 	public function testPublishAlreadyLatestVersion()
 	{
 		$this->setUpSingleLanguage();
@@ -1057,11 +935,6 @@ class VersionTest extends TestCase
 		$version->publish();
 	}
 
-	/**
-	 * @covers ::read
-	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::prepareFieldsAfterRead
-	 */
 	public function testReadMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1079,11 +952,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expected['de']['content'], $version->read($this->app->language('de')));
 	}
 
-	/**
-	 * @covers ::read
-	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::prepareFieldsAfterRead
-	 */
 	public function testReadSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1098,9 +966,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expected['content'], $version->read());
 	}
 
-	/**
-	 * @covers ::read
-	 */
 	public function testReadLatestWithoutContentFile(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1116,11 +981,6 @@ class VersionTest extends TestCase
 		$this->assertSame([], $version->read());
 	}
 
-	/**
-	 * @covers ::read
-	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::prepareFieldsAfterRead
-	 */
 	public function testReadWithDirtyFields(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1140,11 +1000,6 @@ class VersionTest extends TestCase
 		$this->assertArrayHasKey('subtitle', $version->read());
 	}
 
-	/**
-	 * @covers ::read
-	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::prepareFieldsAfterRead
-	 */
 	public function testReadWithInvalidLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1205,11 +1060,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->read());
 	}
 
-	/**
-	 * @covers ::replace
-	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::prepareFieldsBeforeWrite
-	 */
 	public function testReplaceMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1235,11 +1085,6 @@ class VersionTest extends TestCase
 		$this->assertSame(['title' => 'Updated Title Deutsch'], Data::read($expected['de']['file']));
 	}
 
-	/**
-	 * @covers ::replace
-	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::prepareFieldsBeforeWrite
-	 */
 	public function testReplaceSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1258,11 +1103,6 @@ class VersionTest extends TestCase
 		$this->assertSame(['title' => 'Updated Title'], Data::read($expected['file']));
 	}
 
-	/**
-	 * @covers ::replace
-	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::prepareFieldsBeforeWrite
-	 */
 	public function testReplaceWithDirtyFields(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1317,9 +1157,6 @@ class VersionTest extends TestCase
 		$this->assertArrayNotHasKey('date', $version->read('de'));
 	}
 
-	/**
-	 * @covers ::save
-	 */
 	public function testSaveExistingMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1347,9 +1184,6 @@ class VersionTest extends TestCase
 		$this->assertSame('Subtitle Deutsch', Data::read($expected['de']['file'])['subtitle']);
 	}
 
-	/**
-	 * @covers ::save
-	 */
 	public function testSaveExistingSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1369,9 +1203,6 @@ class VersionTest extends TestCase
 		$this->assertSame('Subtitle', Data::read($expected['file'])['subtitle']);
 	}
 
-	/**
-	 * @covers ::save
-	 */
 	public function testSaveNonExistingMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1398,9 +1229,6 @@ class VersionTest extends TestCase
 		$this->assertContentFileExists('de');
 	}
 
-	/**
-	 * @covers ::save
-	 */
 	public function testSaveNonExistingSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1419,9 +1247,6 @@ class VersionTest extends TestCase
 		$this->assertContentFileExists();
 	}
 
-	/**
-	 * @covers ::save
-	 */
 	public function testSaveOverwriteMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1447,9 +1272,6 @@ class VersionTest extends TestCase
 		$this->assertSame(['title' => 'Updated Title Deutsch'], Data::read($expected['de']['file']));
 	}
 
-	/**
-	 * @covers ::save
-	 */
 	public function testSaveOverwriteSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1468,9 +1290,6 @@ class VersionTest extends TestCase
 		$this->assertSame(['title' => 'Updated Title'], Data::read($expected['file']));
 	}
 
-	/**
-	 * @covers ::touch
-	 */
 	public function testTouchMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1500,9 +1319,6 @@ class VersionTest extends TestCase
 		$this->assertGreaterThanOrEqual($minTime, filemtime($rootDE));
 	}
 
-	/**
-	 * @covers ::touch
-	 */
 	public function testTouchSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1524,9 +1340,6 @@ class VersionTest extends TestCase
 		$this->assertGreaterThanOrEqual($minTime, filemtime($root));
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdateMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1554,9 +1367,6 @@ class VersionTest extends TestCase
 		$this->assertSame('Subtitle Deutsch', Data::read($expected['de']['file'])['subtitle']);
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdateSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1576,11 +1386,6 @@ class VersionTest extends TestCase
 		$this->assertSame('Subtitle', Data::read($expected['file'])['subtitle']);
 	}
 
-	/**
-	 * @covers ::update
-	 * @covers ::convertFieldNamesToLowerCase
-	 * @covers ::prepareFieldsBeforeWrite
-	 */
 	public function testUpdateWithDirtyFields(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1635,10 +1440,6 @@ class VersionTest extends TestCase
 		$this->assertArrayNotHasKey('date', $version->read('de'));
 	}
 
-	/**
-	 * @covers ::url
-	 * @covers ::urlWithQueryParams
-	 */
 	public function testUrlPage()
 	{
 		$this->setUpSingleLanguage();
@@ -1654,9 +1455,6 @@ class VersionTest extends TestCase
 		$this->assertSame('/a-page', $version->url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrlPageUnauthenticated()
 	{
 		$this->setUpSingleLanguage();
@@ -1712,13 +1510,7 @@ class VersionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::previewTokenFromUrl
-	 * @covers ::url
-	 * @covers ::urlFromOption
-	 * @covers ::urlWithQueryParams
-	 * @dataProvider pageUrlProvider
-	 */
+	#[DataProvider('pageUrlProvider')]
 	public function testUrlPageCustom(
 		$input,
 		$expected,
@@ -1792,10 +1584,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->url());
 	}
 
-	/**
-	 * @covers ::url
-	 * @covers ::urlWithQueryParams
-	 */
 	public function testUrlSite()
 	{
 		$this->setUpSingleLanguage();
@@ -1811,9 +1599,6 @@ class VersionTest extends TestCase
 		$this->assertSame('/', $version->url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrlSiteUnauthenticated()
 	{
 		$this->setUpSingleLanguage();
@@ -1845,13 +1630,7 @@ class VersionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::previewTokenFromUrl
-	 * @covers ::url
-	 * @covers ::urlFromOption
-	 * @covers ::urlWithQueryParams
-	 * @dataProvider siteUrlProvider
-	 */
+	#[DataProvider('siteUrlProvider')]
 	public function testUrlSiteCustom(
 		$input,
 		$expected,
@@ -1922,9 +1701,6 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrlInvalidModel()
 	{
 		$this->expectException(LogicException::class);
