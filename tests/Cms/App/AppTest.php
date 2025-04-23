@@ -1265,8 +1265,19 @@ class AppTest extends TestCase
 		$this->assertSame('Hello', $app->render()->body());
 
 		$_ENV['KIRBY_RENDER'] = false;
-
 		$this->assertNull($app->render());
+
+		$_ENV['KIRBY_RENDER'] = '0';
+		$this->assertNull($app->render());
+
+		$_ENV['KIRBY_RENDER'] = 'false';
+		$this->assertNull($app->render());
+
+		$_ENV['KIRBY_RENDER'] = '1';
+		$this->assertNotNull($app->render());
+
+		$_ENV['KIRBY_RENDER'] = 'true';
+		$this->assertNotNull($app->render());
 
 		unset($_ENV['KIRBY_RENDER']);
 	}

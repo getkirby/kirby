@@ -1190,7 +1190,7 @@ class App
 		string|null $path = null,
 		string|null $method = null
 	): Response|null {
-		if (($_ENV['KIRBY_RENDER'] ?? true) === false) {
+		if ((filter_var($_ENV['KIRBY_RENDER'] ?? true, FILTER_VALIDATE_BOOLEAN)) === false) {
 			return null;
 		}
 
