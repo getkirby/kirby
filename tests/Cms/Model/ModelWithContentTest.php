@@ -12,9 +12,6 @@ use Kirby\Panel\Page as PanelPage;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
 
-/**
- * @coversDefaultClass \Kirby\Cms\ModelWithContent
- */
 class ExtendedModelWithContent extends ModelWithContent
 {
 	public function blueprint(): Blueprint
