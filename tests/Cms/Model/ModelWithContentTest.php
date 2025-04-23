@@ -309,6 +309,34 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame([], $model->blueprints('foo'));
 	}
 
+	/**
+	 * @dataProvider modelsProvider
+	 */
+	public function testIsValid(ModelWithContent $model): void
+	{
+		$this->assertTrue($model->isValid());
+	}
+
+	/**
+	 * @dataProvider modelsProvider
+	 */
+	public function testIsValidWithErrors(ModelWithContent $model): void
+	{
+		// we can only test this with a real model
+		$model = $model->clone([
+			'blueprint' => [
+				'fields' => [
+					'test' => [
+						'required' => true,
+						'type' => 'text'
+					]
+				]
+			]
+		]);
+
+		$this->assertFalse($model->isValid());
+	}
+
 	public function testKirby()
 	{
 		$kirby = new App();
