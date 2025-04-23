@@ -332,16 +332,6 @@ abstract class Model
 	}
 
 	/**
-	 * Get the original content values for the model
-	 *
-	 * @deprecated Use `versions()` instead
-	 */
-	public function originals(): array
-	{
-		return $this->versions()['latest'];
-	}
-
-	/**
 	 * Returns the full path without leading slash
 	 */
 	abstract public function path(): string;
