@@ -662,23 +662,45 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		string|null $languageCode = null,
 		bool $validate = false
 	): static {
-		$form = Form::for($this, [
-			'ignoreDisabled' => $validate === false,
-			'input'          => $input,
-			'language'       => $languageCode,
-		]);
+		$fields = Fields::for(
+			model: $this,
+			language: $languageCode ?? 'current'
+		);
 
+		// We need the language a couple times and
+		// Fields::for already runs Language::ensure for us.
+		$language = $fields->language();
+
+		// Add the existing content and pass through
+		// values for fields that are not defined,
+		// to not loose them.
+		$fields->fill(
+			input: $this->content($language)->toArray(),
+			passthrough: true,
+		);
+
+		// Submit the new values
+		//
+		// @todo We want this to be strict in v6 and
+		// later and we need to switch passthrough to false
+		// in order to achieve that.
+		$fields->submit(
+			input: $input ?? [],
+			passthrough: true
+		);
+
+		// Validate all fields if wanted
 		if ($validate === true) {
-			$form->validate();
+			$fields->validate();
 		}
 
 		return $this->commit(
 			'update',
 			[
 				static::CLASS_ALIAS => $this,
-				'values'            => $form->data(),
-				'strings'           => $form->strings(),
-				'languageCode'      => $languageCode
+				'values'            => $fields->toFormValues(),
+				'strings'           => $fields->toStoredValues(),
+				'languageCode'      => $language->code()
 			],
 			fn ($model, $values, $strings, $languageCode) =>
 				$model->save($strings, $languageCode, true)
