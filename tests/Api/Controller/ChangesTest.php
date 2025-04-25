@@ -141,6 +141,10 @@ class ChangesTest extends TestCase
 		$this->assertFileDoesNotExist($this->page->root() . '/_changes/article.txt');
 	}
 
+	/**
+	 * @todo We want to ignore undefined fields later in v6. This needs to be
+	 * refactored at that point to make sure that undefined fields are not saved.
+	 */
 	public function testSaveWithUndefinedField()
 	{
 		Data::write($this->page->root() . '/article.txt', [
@@ -151,16 +155,17 @@ class ChangesTest extends TestCase
 
 		$response = Changes::save($this->page, [
 			'text'      => 'Test',
-			'undefined' => 'This should not be saved'
+			'undefined' => 'This should be passed through'
 		]);
 
 		// the changes file should have the changes
 		$changes = Data::read($this->page->root() . '/_changes/article.txt');
 
 		$this->assertSame([
-			'title' => 'Test',
-			'text'  => 'Test',
-			'uuid'  => 'test'
+			'title'     => 'Test',
+			'text'      => 'Test',
+			'uuid'      => 'test',
+			'undefined' => 'This should be passed through'
 		], $changes);
 	}
 }

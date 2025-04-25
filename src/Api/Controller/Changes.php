@@ -118,7 +118,10 @@ class Changes
 		);
 
 		// submit the new values from the request input
-		$fields->submit($input);
+		$fields->submit(
+			input: $input,
+			passthrough: true
+		);
 
 		// save the changes
 		$changes->save(
