@@ -11,7 +11,6 @@
 			size="sm"
 			variant="filled"
 			:disabled="isDisabled"
-			:responsive="true"
 			:theme="theme"
 		/>
 	</k-button-group>
@@ -46,6 +45,7 @@ export default {
 					{
 						icon: "download",
 						text: this.$t("download"),
+						responsive: true,
 						click: () => this.download()
 					}
 				];
@@ -70,6 +70,7 @@ export default {
 					{
 						icon: "undo",
 						text: this.$t("revert"),
+						responsive: true,
 						click: () => this.revert()
 					},
 					{
