@@ -39,7 +39,7 @@ class Form
 		Language|string|null $language = null
 	) {
 		if ($props !== []) {
-			$this->__constructLegacy(...$props);
+			$this->legacyConstruct(...$props);
 			return;
 		}
 
@@ -47,36 +47,6 @@ class Form
 			fields: $fields,
 			model: $model,
 			language: $language
-		);
-	}
-
-	/**
-	 * Legacy constructor to support the old props array
-	 * @deprecated 5.0.0 Use the new constructor with named parameters instead
-	 */
-	protected function __constructLegacy(
-		array $props = [],
-		array $fields = [],
-		ModelWithContent|null $model = null,
-		Language|string|null $language = null,
-		array $values = [],
-		array $input = [],
-		bool $strict = false
-	): void {
-		$this->fields = new Fields(
-			fields: $fields,
-			model: $model,
-			language: $language
-		);
-
-		$this->fill(
-			input: $values,
-			passthrough: $strict === false
-		);
-
-		$this->submit(
-			input: $input,
-			passthrough: $strict === false
 		);
 	}
 
@@ -170,32 +140,40 @@ class Form
 
 	public static function for(
 		ModelWithContent $model,
-		array $props = []
+		array $props = [],
+		Language|string|null $language = null,
+		array $input = [],
+		array $values = [],
+		bool $passthrough = true
 	): static {
+		if ($props !== []) {
+			return static::legacyFor(
+				$model,
+				...$props
+			);
+		}
+
 		$form = new static(
 			fields: $model->blueprint()->fields(),
 			model: $model,
-			language: $props['language'] ?? 'current'
+			language: $language
 		);
-
-		$passthrough = ($props['strict'] ?? false) !== true;
-		$language    = $form->language();
 
 		// fill the form with the latest content of the model
 		$form->fill(
-			input: $model->content($language)->toArray(),
+			input: $model->content($form->language())->toArray(),
 			passthrough: $passthrough
 		);
 
 		// add additional initial values
 		$form->fill(
-			input: $props['values'] ?? [],
+			input: $values,
 			passthrough: $passthrough
 		);
 
 		// submit input values
 		$form->submit(
-			input: $props['input'] ?? [],
+			input: $input,
 			passthrough: $passthrough
 		);
 
@@ -224,6 +202,57 @@ class Form
 	public function language(): Language
 	{
 		return $this->fields->language();
+	}
+
+	/**
+	 * Legacy constructor to support the old props array
+	 *
+	 * @deprecated 5.0.0 Use the new constructor with named parameters instead
+	 */
+	protected function legacyConstruct(
+		array $fields = [],
+		ModelWithContent|null $model = null,
+		Language|string|null $language = null,
+		array $values = [],
+		array $input = [],
+		bool $strict = false
+	): void {
+		$this->__construct(
+			fields: $fields,
+			model: $model,
+			language: $language
+		);
+
+		$this->fill(
+			input: $values,
+			passthrough: $strict === false
+		);
+
+		$this->submit(
+			input: $input,
+			passthrough: $strict === false
+		);
+	}
+
+	/**
+	 * Legacy for method to support the old props array
+	 *
+	 * @deprecated 5.0.0 Use `::for()` with named parameters instead
+	 */
+	protected static function legacyFor(
+		ModelWithContent $model,
+		Language|string|null $language = null,
+		bool $strict = false,
+		array $input = [],
+		array $values = [],
+	): static {
+		return static::for(
+			model: $model,
+			language: $language,
+			values: $values,
+			input: $input,
+			passthrough: $strict === false
+		);
 	}
 
 	/**
