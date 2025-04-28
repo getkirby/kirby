@@ -165,6 +165,20 @@ class Version
 	}
 
 	/**
+	 * Returns all validation errors for the given language
+	 */
+	public function errors(Language|string $language = 'default'): array
+	{
+		$fields = Fields::for($this->model, $language);
+
+		$fields->fill(
+			$this->content($language)->toArray()
+		);
+
+		return $fields->errors();
+	}
+
+	/**
 	 * Checks if a version exists for the given language
 	 */
 	public function exists(Language|string $language = 'default'): bool
@@ -256,6 +270,14 @@ class Version
 	public function isLocked(Language|string $language = 'default'): bool
 	{
 		return $this->lock($language)->isLocked();
+	}
+
+	/**
+	 * Checks if there are any validation errors for the given language
+	 */
+	public function isValid(Language|string $language = 'default'): bool
+	{
+		return $this->errors($language) === [];
 	}
 
 	/**
