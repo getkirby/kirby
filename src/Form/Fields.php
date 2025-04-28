@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
@@ -27,18 +28,20 @@ use Kirby\Toolkit\Str;
 class Fields extends Collection
 {
 	protected Language $language;
+	protected ModelWithContent $model;
 	protected array $passthrough = [];
 
 	public function __construct(
 		array $fields = [],
-		protected ModelWithContent|null $model = null,
-		Language|null $language = null
+		ModelWithContent|null $model = null,
+		Language|string|null $language = null
 	) {
+		$this->model    = $model ?? App::instance()->site();
+		$this->language = Language::ensure($language ?? 'current');
+
 		foreach ($fields as $name => $field) {
 			$this->__set($name, $field);
 		}
-
-		$this->language = $language ?? Language::ensure('current');
 	}
 
 	/**
@@ -195,12 +198,12 @@ class Fields extends Collection
 	 */
 	public static function for(
 		ModelWithContent $model,
-		Language|string $language = 'default'
+		Language|string|null $language = null
 	): static {
 		return new static(
 			fields: $model->blueprint()->fields(),
 			model: $model,
-			language: Language::ensure($language),
+			language: $language,
 		);
 	}
 

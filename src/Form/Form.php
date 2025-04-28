@@ -2,7 +2,6 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
@@ -37,7 +36,7 @@ class Form
 		array $props = [],
 		array $fields = [],
 		ModelWithContent|null $model = null,
-		Language|null $language = null
+		Language|string|null $language = null
 	) {
 		if ($props !== []) {
 			$this->__constructLegacy(...$props);
@@ -51,7 +50,7 @@ class Form
 		);
 	}
 
-	/**	
+	/**
 	 * Legacy constructor to support the old props array
 	 * @deprecated 5.0.0 Use the new constructor with named parameters instead
 	 */
@@ -59,15 +58,11 @@ class Form
 		array $props = [],
 		array $fields = [],
 		ModelWithContent|null $model = null,
-		Language|string|null $language = 'current',
+		Language|string|null $language = null,
 		array $values = [],
 		array $input = [],
 		bool $strict = false
 	): void {
-		$model ??= App::instance()->site();
-		$language    = Language::ensure($language ?? 'current');
-		$passthrough = $strict === false;
-
 		$this->fields = new Fields(
 			fields: $fields,
 			model: $model,
@@ -76,12 +71,12 @@ class Form
 
 		$this->fill(
 			input: $values,
-			passthrough: $passthrough
+			passthrough: $strict === false
 		);
 
 		$this->submit(
 			input: $input,
-			passthrough: $passthrough
+			passthrough: $strict === false
 		);
 	}
 
@@ -177,11 +172,11 @@ class Form
 		ModelWithContent $model,
 		array $props = []
 	): static {
-		$form = new static([
-			'language' => $props['language'] ?? 'current',
-			'fields'   => $model->blueprint()->fields(),
-			'model'    => $model,
-		]);
+		$form = new static(
+			fields: $model->blueprint()->fields(),
+			model: $model,
+			language: $props['language'] ?? 'current'
+		);
 
 		$passthrough = ($props['strict'] ?? false) !== true;
 		$language    = $form->language();
