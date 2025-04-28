@@ -52,14 +52,14 @@ class Form
 		);
 
 		if (isset($props['values']) === true) {
-			$this->fields->fill(
+			$this->fill(
 				input: $props['values'],
 				passthrough: $passthrough
 			);
 		}
 
 		if (isset($props['input']) === true) {
-			$this->fields->submit(
+			$this->submit(
 				input: $props['input'],
 				passthrough: $passthrough
 			);
@@ -69,6 +69,8 @@ class Form
 	/**
 	 * Returns the data required to write to the content file
 	 * Doesn't include default and null values
+	 * 
+	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
 	 */
 	public function content(): array
 	{
@@ -78,7 +80,7 @@ class Form
 	/**
 	 * Returns data for all fields in the form
 	 *
-	 * @param false $defaults
+	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
 	 */
 	public function data($defaults = false, bool $includeNulls = true): array
 	{
@@ -137,40 +139,53 @@ class Form
 		return $this->fields;
 	}
 
+	/**
+	 * Shortcut for `::fields()->fill()`
+	 */
+	public function fill(
+		array $input, 
+		bool $passthrough = false
+	): static {
+		$this->fields->fill(
+			input: $input,
+			passthrough: $passthrough
+		);
+
+		return $this;
+	}
+
 	public static function for(
 		ModelWithContent $model,
 		array $props = []
 	): static {
-		// get the original model data
-		$original = $model->content($props['language'] ?? null)->toArray();
-		$values   = $props['values'] ?? [];
+		$form = new static([
+			'language' => $props['language'] ?? 'current',
+			'fields'   => $model->blueprint()->fields(),
+			'model'    => $model,
+		]);
 
-		// convert closures to values
-		foreach ($values as $key => $value) {
-			if ($value instanceof Closure) {
-				$values[$key] = $value($original[$key] ?? null);
-			}
-		}
+		$passthrough = ($props['strict'] ?? false) !== true;
+		$language    = $form->language();
 
-		// set a few defaults
-		$props['values']   = [...$original, ...$values];
-		$props['fields'] ??= [];
-		$props['model']    = $model;
+		// fill the form with the latest content of the model
+		$form->fill(
+			input: $model->content($language)->toArray(),
+			passthrough: $passthrough
+		);
 
-		// search for the blueprint
-		$props['fields'] = $model->blueprint()->fields();
+		// add additional initial values
+		$form->fill(
+			input: $props['values'] ?? [],
+			passthrough: $passthrough
+		);
 
-		$ignoreDisabled = $props['ignoreDisabled'] ?? false;
+		// submit input values
+		$form->submit(
+			input: $props['input'] ?? [],
+			passthrough: $passthrough
+		);
 
-		// REFACTOR: this could be more elegant
-		if ($ignoreDisabled === true) {
-			$props['fields'] = array_map(function ($field) {
-				$field['disabled'] = false;
-				return $field;
-			}, $props['fields']);
-		}
-
-		return new static($props);
+		return $form;
 	}
 
 	/**
@@ -189,8 +204,18 @@ class Form
 		return $this->fields->errors() === [];
 	}
 
+	/**	
+	 * Returns the language of the form
+	 */
+	public function language(): Language
+	{
+		return $this->fields->language();
+	}
+
 	/**
 	 * Converts the data of fields to strings
+	 * 
+	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
 	 */
 	public function strings($defaults = false): array
 	{
@@ -201,6 +226,21 @@ class Form
 				default		     => $value
 			}
 		);
+	}
+
+	/**
+	 * Shortcut for `::fields()->submit()`
+	 */
+	public function submit(
+		array $input, 
+		bool $passthrough = false
+	): static {
+		$this->fields->submit(
+			input: $input,
+			passthrough: $passthrough
+		);
+
+		return $this;
 	}
 
 	/**
@@ -226,6 +266,9 @@ class Form
 		return $this->fields->toFormValues();
 	}
 
+	/**
+	 * Shortcut for `::fields()->toProps()`
+	 */
 	public function toProps(): array
 	{
 		return $this->fields->toProps();
@@ -252,6 +295,8 @@ class Form
 
 	/**
 	 * Returns form values
+	 * 
+	 * @deprecated 5.0.0 Use `::toFormValues()` instead
 	 */
 	public function values(): array
 	{
