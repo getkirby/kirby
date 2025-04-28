@@ -256,6 +256,15 @@ class Form
 	}
 
 	/**
+	 * Shortcut for `::fields()->reset()`
+	 */
+	public function reset(): static
+	{
+		$this->fields->reset();
+		return $this;
+	}
+
+	/**
 	 * Converts the data of fields to strings
 	 *
 	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
