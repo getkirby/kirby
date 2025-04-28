@@ -217,19 +217,26 @@ class Fields extends Collection
 	 * which will be added to the form data
 	 * if the field does not exist
 	 */
-	public function passthrough(array $values = []): static
+	public function passthrough(array|null $values = null): static|array
 	{
-		// always start with a fresh set of passthrough values
-		$this->passthrough = [];
+		// use passthrough method as getter if the value is null
+		if ($values === null) {
+			return $this->passthrough;
+		}
 
+		// always start with a fresh set of passthrough values
+		// if the values array is empty
 		if ($values === []) {
+			$this->passthrough = [];
 			return $this;
 		}
 
 		foreach ($values as $key => $value) {
+			$key = strtolower($key);
+
 			// check if the field exists and don't passthrough
 			// values for existing fields
-			if ($this->get(strtolower($key)) !== null) {
+			if ($this->get($key) !== null) {
 				continue;
 			}
 

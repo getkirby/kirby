@@ -381,6 +381,28 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testPassthroughAsGetter(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'value' => 'A'
+			],
+		], $this->model);
+
+		$this->assertSame([], $fields->passthrough());
+
+		$fields->passthrough([
+			'a' => 'A', // should be ignored
+			'b' => 'B',
+		]);
+
+		$this->assertSame([
+			'b' => 'B'
+		], $fields->passthrough());
+	}
+
+
 	public function testPassthroughWithExistingField(): void
 	{
 		$fields = new Fields([
@@ -401,12 +423,37 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
-	public function testPassthroughWithExistingPassthroughValues(): void
+
+	public function testPassthroughWithUpperAndLowerCases(): void
 	{
 		$fields = new Fields([
 			'a' => [
 				'type'  => 'text',
 				'value' => 'a'
+			],
+		], $this->model);
+
+		$fields->passthrough([
+			'A' => 'A', // should be ignored even with the wrong case
+			'b' => 'B',
+		]);
+
+		$fields->passthrough([
+			'B' => 'B changed' // should be stored with the lower case 'b' key
+		]);
+
+		$this->assertSame([
+			'a' => 'a',
+			'b' => 'B changed'
+		], $fields->toFormValues());
+	}
+
+	public function testPassthroughWithExistingPassthroughValues(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+				'value' => 'A'
 			],
 		], $this->model);
 
@@ -421,7 +468,8 @@ class FieldsTest extends TestCase
 		]);
 
 		$this->assertSame([
-			'a' => 'a',
+			'a' => 'A',
+			'b' => 'B',
 			'c' => 'C'
 		], $fields->toFormValues());
 	}
@@ -431,7 +479,7 @@ class FieldsTest extends TestCase
 		$fields = new Fields([
 			'a' => [
 				'type'  => 'text',
-				'value' => 'a'
+				'value' => 'A'
 			],
 		], $this->model);
 
@@ -441,10 +489,40 @@ class FieldsTest extends TestCase
 		]);
 
 		// remove passthrough values
-		$fields->passthrough();
+		$fields->passthrough([]);
 
 		$this->assertSame([
-			'a' => 'a',
+			'a' => 'A',
+		], $fields->toFormValues());
+	}
+
+	public function testPassthroughWithFillAndSubmit(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'type'  => 'text',
+			],
+		], $this->model);
+
+		$fields->fill(
+			input: [
+				'a' => 'A',
+				'b' => 'B'
+			],
+			passthrough: true
+		);
+
+		$fields->submit(
+			input: [
+				'c' => 'C',
+			],
+			passthrough: true
+		);
+
+		$this->assertSame([
+			'a' => 'A',
+			'b' => 'B',
+			'c' => 'C',
 		], $fields->toFormValues());
 	}
 
