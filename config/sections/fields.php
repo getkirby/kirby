@@ -10,13 +10,11 @@ return [
 	],
 	'computed' => [
 		'form' => function () {
-			return new Form([
-				'fields'   => $this->fields,
-				'values'   => $this->model->content('current')->toArray(),
-				'model'    => $this->model,
-				'language' => 'current',
-				'strict'   => true
-			]);
+			return new Form(
+				fields: $this->fields,
+				model: $this->model,
+				language: 'current'
+			);
 		},
 		'fields' => function () {
 			return $this->form->fields()->toProps();
