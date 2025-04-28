@@ -972,6 +972,37 @@ class VersionTest extends TestCase
 		$version->publish();
 	}
 
+	public function testPublishNullValues(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$this->app->impersonate('kirby');
+
+		$latest = $this->model->version('latest');
+
+		$latest->save([
+			'focus' => '50% 50%'
+		]);
+
+		// use the sibling method to get the changes version,
+		// because this way, the model will have been updated
+		// after the mutating save call above
+		$changes = $latest->sibling('changes');
+
+		// remove the focus point
+		$changes->save([
+			'focus' => null
+		]);
+
+		// publish the changes and overwrite the latest version
+		$changes->publish();
+
+		// get the latest version as array
+		$latestContent = $changes->sibling('latest')->read();
+
+		$this->assertArrayNotHasKey('focus', $latestContent, 'The focus point should have been removed');
+	}
+
 	public function testReadMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1325,6 +1356,19 @@ class VersionTest extends TestCase
 		], 'default', true);
 
 		$this->assertSame(['title' => 'Updated Title'], Data::read($expected['file']));
+	}
+
+	public function testSibling(): void
+	{
+		$this->setUpSingleLanguage();
+
+		// start from the latest version
+		$latest  = $this->model->version('latest');
+		// move to the changes version
+		$changes = $latest->sibling('changes');
+
+		$this->assertTrue($changes->id()->is('changes'));
+		$this->assertSame($latest->model(), $changes->model());
 	}
 
 	public function testTouchMultiLanguage(): void
