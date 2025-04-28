@@ -17,11 +17,11 @@ class FileBlueprintsTest extends ModelTestCase
 					'sections' => [
 						[
 							'type' => 'files',
-							'template' => 'for-section/a'
+							'template' => 'for-section-a'
 						],
 						[
 							'type' => 'files',
-							'template' => 'for-section/b'
+							'template' => 'for-section-b'
 						],
 						[
 							'type' => 'files',
@@ -38,42 +38,42 @@ class FileBlueprintsTest extends ModelTestCase
 								],
 								'c' => [
 									'type'    => 'files',
-									'uploads' => 'for-fields/a'
+									'uploads' => 'for-fields-a'
 								],
 								'd' => [
 									'type'    => 'files',
 									'uploads' => [
-										'template' => 'for-fields/b'
+										'template' => 'for-fields-b'
 									]
 								],
 								'e' => [
 									'type'    => 'files',
 									'uploads' => [
-										'parent'   => 'foo',
-										'template' => 'for-fields/c'
+										'parent'   => 'site',
+										'template' => 'for-fields-c'
 									]
 								],
 								'f' => [
 									'type'    => 'files',
-									'uploads' => 'for-fields/c'
+									'uploads' => 'for-fields-c'
 								],
 								'g' => [
 									'type'    => 'textarea',
-									'uploads' => 'for-fields/d'
+									'uploads' => 'for-fields-d'
 								],
 								'h' => [
 									'type'    => 'structure',
 									'fields'  => [
 										[
 											'type'    => 'files',
-											'uploads' => 'for-fields/e'
+											'uploads' => 'for-fields-e'
 										],
 										[
 											'type'    => 'structure',
 											'fields'  => [
 												[
 													'type'    => 'files',
-													'uploads' => 'for-fields/f'
+													'uploads' => 'for-fields-f'
 												]
 											]
 										]
@@ -83,29 +83,29 @@ class FileBlueprintsTest extends ModelTestCase
 						]
 					]
 				],
-				'files/for-section/a' => [
+				'files/for-section-a' => [
 					'title' => 'Type A'
 				],
-				'files/for-section/b' => [
+				'files/for-section-b' => [
 					'title' => 'Type B'
 				],
-				'files/for-fields/a' => [
+				'files/for-fields-a' => [
 					'title' => 'Field Type A'
 				],
-				'files/for-fields/b' => [
+				'files/for-fields-b' => [
 					'title' => 'Field Type B'
 				],
-				'files/for-fields/c' => [
+				'files/for-fields-c' => [
 					'title' => 'Field Type C',
 					'accept' => 'image'
 				],
-				'files/for-fields/d' => [
+				'files/for-fields-d' => [
 					'title' => 'Field Type D'
 				],
-				'files/for-fields/e' => [
+				'files/for-fields-e' => [
 					'title' => 'Field Type E'
 				],
-				'files/for-fields/f' => [
+				'files/for-fields-f' => [
 					'title' => 'Field Type F'
 				],
 				'files/current' => [
@@ -128,14 +128,14 @@ class FileBlueprintsTest extends ModelTestCase
 		$blueprints = $file->blueprints();
 		$this->assertCount(9, $blueprints);
 		$this->assertSame('default', $blueprints[0]['name']);
-		$this->assertSame('for-fields/a', $blueprints[1]['name']);
-		$this->assertSame('for-fields/b', $blueprints[2]['name']);
-		$this->assertSame('for-fields/d', $blueprints[3]['name']);
-		$this->assertSame('for-fields/e', $blueprints[4]['name']);
-		$this->assertSame('for-fields/f', $blueprints[5]['name']);
+		$this->assertSame('for-fields-a', $blueprints[1]['name']);
+		$this->assertSame('for-fields-b', $blueprints[2]['name']);
+		$this->assertSame('for-fields-d', $blueprints[3]['name']);
+		$this->assertSame('for-fields-e', $blueprints[4]['name']);
+		$this->assertSame('for-fields-f', $blueprints[5]['name']);
 		$this->assertSame('current', $blueprints[6]['name']);
-		$this->assertSame('for-section/a', $blueprints[7]['name']);
-		$this->assertSame('for-section/b', $blueprints[8]['name']);
+		$this->assertSame('for-section-a', $blueprints[7]['name']);
+		$this->assertSame('for-section-b', $blueprints[8]['name']);
 	}
 
 	public function testBlueprintsInSection(): void
@@ -146,11 +146,11 @@ class FileBlueprintsTest extends ModelTestCase
 					'sections' => [
 						'section-a' => [
 							'type' => 'files',
-							'template' => 'for-section/a'
+							'template' => 'for-section-a'
 						],
 						'section-b' => [
 							'type' => 'files',
-							'template' => 'for-section/b'
+							'template' => 'for-section-b'
 						],
 						'section-c' => [
 							'type' => 'fields',
@@ -160,42 +160,42 @@ class FileBlueprintsTest extends ModelTestCase
 								],
 								[
 									'type'    => 'files',
-									'uploads' => 'for-fields/a'
+									'uploads' => 'for-fields-a'
 								],
 								[
 									'type'    => 'files',
 									'uploads' => [
-										'template' => 'for-fields/b'
+										'template' => 'for-fields-b'
 									]
 								],
 								[
 									'type'    => 'files',
 									'uploads' => [
-										'parent'   => 'foo',
-										'template' => 'for-fields/c'
+										'parent'   => 'site',
+										'template' => 'for-fields-c'
 									]
 								],
 								[
 									'type'    => 'files',
-									'uploads' => 'for-fields/c'
+									'uploads' => 'for-fields-c'
 								]
 							]
 						]
 					]
 				],
-				'files/for-section/a' => [
+				'files/for-section-a' => [
 					'title' => 'Type A'
 				],
-				'files/for-section/b' => [
+				'files/for-section-b' => [
 					'title' => 'Type B'
 				],
-				'files/for-fields/a' => [
+				'files/for-fields-a' => [
 					'title' => 'Field Type A'
 				],
-				'files/for-fields/b' => [
+				'files/for-fields-b' => [
 					'title' => 'Field Type B'
 				],
-				'files/for-fields/c' => [
+				'files/for-fields-c' => [
 					'title' => 'Field Type C',
 					'accept' => 'image'
 				],
@@ -218,15 +218,16 @@ class FileBlueprintsTest extends ModelTestCase
 
 
 		$blueprints = $file->blueprints('section-a');
+
 		$this->assertCount(2, $blueprints);
 		$this->assertSame('current', $blueprints[0]['name']);
-		$this->assertSame('for-section/a', $blueprints[1]['name']);
+		$this->assertSame('for-section-a', $blueprints[1]['name']);
 
 		$blueprints = $file->blueprints('section-c');
 		$this->assertCount(4, $blueprints);
 		$this->assertSame('default', $blueprints[0]['name']);
-		$this->assertSame('for-fields/a', $blueprints[1]['name']);
-		$this->assertSame('for-fields/b', $blueprints[2]['name']);
+		$this->assertSame('for-fields-a', $blueprints[1]['name']);
+		$this->assertSame('for-fields-b', $blueprints[2]['name']);
 		$this->assertSame('current', $blueprints[3]['name']);
 	}
 }
