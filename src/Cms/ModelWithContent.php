@@ -662,11 +662,11 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		string|null $languageCode = null,
 		bool $validate = false
 	): static {
-		$form = Form::for($this, [
-			'ignoreDisabled' => $validate === false,
-			'input'          => $input,
-			'language'       => $languageCode,
-		]);
+		$form = Form::for(
+			model: $this,
+			input: $input ?? [],
+			language: $languageCode,
+		);
 
 		if ($validate === true) {
 			$form->validate();
@@ -678,7 +678,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 				static::CLASS_ALIAS => $this,
 				'values'            => $form->data(),
 				'strings'           => $form->strings(),
-				'languageCode'      => $languageCode
+				'languageCode'      => $form->language()->code()
 			],
 			fn ($model, $values, $strings, $languageCode) =>
 				$model->save($strings, $languageCode, true)
