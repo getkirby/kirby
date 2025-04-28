@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
@@ -31,82 +32,37 @@ class Form
 	protected Fields $fields;
 
 	/**
-	 * All values of form
-	 */
-	protected array $values = [];
-
-	/**
 	 * Form constructor
 	 */
-	public function __construct(array $props)
+	public function __construct(
+		array $props = [],
+	) {
+		$this->legacyConstructor($props);
+	}
+
+	protected function legacyConstructor(array $props): void
 	{
-		$fields = $props['fields'] ?? [];
-		$values = $props['values'] ?? [];
-		$input  = $props['input']  ?? [];
-		$model  = $props['model']  ?? null;
-		$strict = $props['strict'] ?? false;
-		$inject = $props;
-
-		// get the language for the form
-		$language = Language::ensure($props['language'] ?? 'current');
-
-		// prepare field properties for multilang setups
-		$fields = static::prepareFieldsForLanguage(
-			$fields,
-			$language
-		);
-
-		// lowercase all value names
-		$values = array_change_key_case($values);
-		$input  = array_change_key_case($input);
-
-		unset($inject['fields'], $inject['values'], $inject['input']);
+		$passthrough = ($props['strict'] ?? false) === false;
+		$language    = Language::ensure($props['language'] ?? 'current');
 
 		$this->fields = new Fields(
-			model: $model,
+			fields: $props['fields'] ?? [],
+			model: $props['model'] ?? App::instance()->site(),
 			language: $language
 		);
 
-		$this->values = [];
-
-		foreach ($fields as $name => $props) {
-			// inject stuff from the form constructor (model, etc.)
-			$props = [...$inject, ...$props];
-
-			// inject the name
-			$props['name'] = $name = strtolower($name);
-
-			// check if the field is disabled and
-			// overwrite the field value if not set
-			$props['value'] = match ($props['disabled'] ?? false) {
-				true    => $values[$name] ?? null,
-				default => $input[$name] ?? $values[$name] ?? null
-			};
-
-			try {
-				$field = Field::factory($props['type'], $props, $this->fields);
-			} catch (Throwable $e) {
-				$field = new ExceptionField(
-					name: $props['name'],
-					exception: $e
-				);
-			}
-
-			if ($field->hasValue() === true) {
-				$this->values[$name] = $field->value();
-			}
-
-			$this->fields->append($name, $field);
+		if (isset($props['values']) === true) {
+			$this->fields->fill(
+				input: $props['values'],
+				passthrough: $passthrough
+			);
 		}
 
-		if ($strict !== true) {
-			// use all given values, no matter
-			// if there's a field or not.
-			$input = [...$values, ...$input];
-
-			foreach ($input as $key => $value) {
-				$this->values[$key] ??= $value;
-			}
+		if (isset($props['input']) === true) {
+			$this->fields->submit(
+				input: $props['input'],
+				passthrough: $passthrough
+			);
 		}
 	}
 
@@ -126,21 +82,28 @@ class Form
 	 */
 	public function data($defaults = false, bool $includeNulls = true): array
 	{
-		$data = $this->values;
+		$data = [];
+		$language = $this->fields->language();
 
 		foreach ($this->fields as $field) {
-			if ($field->hasValue() === false || $field->unset() === true) {
+			if ($field->isStorable($language) === false) {
 				if ($includeNulls === true) {
 					$data[$field->name()] = null;
-				} else {
-					unset($data[$field->name()]);
-				}
-			} else {
-				if ($defaults === true && $field->isEmpty() === true) {
-					$field->fill($field->default());
 				}
 
-				$data[$field->name()] = $field->toStoredValue();
+				continue;
+			}
+
+			if ($defaults === true && $field->isEmpty() === true) {
+				$field->fill($field->default());
+			}
+
+			$data[$field->name()] = $field->toStoredValue();
+		}
+
+		foreach ($this->fields->passthrough() as $key => $value) {
+			if (isset($data[$key]) === false) {
+				$data[$key] = $value;
 			}
 		}
 
@@ -227,29 +190,6 @@ class Form
 	}
 
 	/**
-	 * Disables fields in secondary languages when
-	 * they are configured to be untranslatable
-	 */
-	protected static function prepareFieldsForLanguage(
-		array $fields,
-		Language $language
-	): array {
-		if ($language->isDefault() === true) {
-			return $fields;
-		}
-
-		foreach ($fields as $fieldName => $fieldProps) {
-			// switch untranslatable fields to readonly
-			if (($fieldProps['translate'] ?? true) === false) {
-				$fields[$fieldName]['unset']    = true;
-				$fields[$fieldName]['disabled'] = true;
-			}
-		}
-
-		return $fields;
-	}
-
-	/**
 	 * Converts the data of fields to strings
 	 */
 	public function strings($defaults = false): array
@@ -286,6 +226,11 @@ class Form
 		return $this->fields->toFormValues();
 	}
 
+	public function toProps(): array
+	{
+		return $this->fields->toProps();
+	}
+
 	/**
 	 * Returns an array with the stored value of each field
 	 * (e.g. used for saving to content storage)
@@ -310,6 +255,6 @@ class Form
 	 */
 	public function values(): array
 	{
-		return $this->values;
+		return $this->fields->toFormValues();
 	}
 }

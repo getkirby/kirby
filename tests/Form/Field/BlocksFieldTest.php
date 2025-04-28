@@ -341,6 +341,8 @@ class BlocksFieldTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$props = [
 			'fieldsets' => [
 				'heading' => [

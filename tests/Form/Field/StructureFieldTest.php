@@ -351,6 +351,8 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$field = $this->field('structure', [
 			'fields' => [
 				'a' => [
@@ -365,13 +367,17 @@ class StructureFieldTest extends TestCase
 
 		$app->setCurrentLanguage('en');
 
-		$this->assertFalse($field->form()->fields()->a()->disabled());
-		$this->assertFalse($field->form()->fields()->b()->disabled());
+		$props = $field->form()->toProps();
+
+		$this->assertFalse($props['a']['disabled']);
+		$this->assertFalse($props['b']['disabled']);
 
 		$app->setCurrentLanguage('de');
 
-		$this->assertFalse($field->form()->fields()->a()->disabled());
-		$this->assertTrue($field->form()->fields()->b()->disabled());
+		$props = $field->form()->toProps();
+
+		$this->assertFalse($props['a']['disabled']);
+		$this->assertTrue($props['b']['disabled']);
 	}
 
 	public function testDefault()

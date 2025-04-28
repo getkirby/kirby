@@ -6,7 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
-use Kirby\Form\Field\ExceptionField;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
 /**
@@ -310,8 +310,11 @@ class FormTest extends TestCase
 	/**
 	 * @covers ::__construct
 	 */
-	public function testExceptionField()
+	public function testFieldException()
 	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Field "test": The field type "does-not-exist" does not exist');
+
 		$form = new Form([
 			'fields' => [
 				'test' => [
@@ -320,8 +323,6 @@ class FormTest extends TestCase
 				]
 			]
 		]);
-
-		$this->assertInstanceOf(ExceptionField::class, $form->fields()->first());
 	}
 
 	/**
