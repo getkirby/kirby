@@ -237,7 +237,7 @@ class Fields extends Collection
 			if ($value instanceof Closure) {
 				$value = $value($this->passthrough[$key] ?? null);
 			}
-	
+
 			$this->passthrough[$key] = $value;
 		}
 
