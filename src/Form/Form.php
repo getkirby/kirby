@@ -148,6 +148,16 @@ class Form
 	}
 
 	/**
+	 * Returns an array with the default value of each field
+	 *
+	 * @since 5.0.0
+	 */
+	public function defaults(): array
+	{
+		return $this->fields->defaults();
+	}
+
+	/**
 	 * An array of all found errors
 	 */
 	public function errors(): array
@@ -174,6 +184,26 @@ class Form
 		return $this->fields;
 	}
 
+	/**
+	 * Sets the value for each field with a matching key in the input array
+	 *
+	 * @since 5.0.0
+	 */
+	public function fill(
+		array $input,
+		bool $passthrough = false
+	): static {
+		$this->fields->fill(
+			input: $input,
+			passthrough: $passthrough
+		);
+		return $this;
+	}
+
+	/**
+	 * Creates a new Form instance for the given model with the fields
+	 * from the blueprint and the values from the content
+	 */
 	public static function for(
 		ModelWithContent $model,
 		array $props = []
@@ -227,6 +257,37 @@ class Form
 	}
 
 	/**
+	 * Returns the language of the form
+	 *
+	 * @since 5.0.0
+	 */
+	public function language(): Language
+	{
+		return $this->fields->language();
+	}
+
+	/**
+	 * Adds values to the passthrough array
+	 * which will be added to the form data
+	 * if the field does not exist
+	 *
+	 * @since 5.0.0
+	 */
+	public function passthrough(
+		array|null $values = null
+	): static|array {
+		if ($values === null) {
+			return $this->fields->passthrough();
+		}
+
+		$this->fields->passthrough(
+			values: $values
+		);
+
+		return $this;
+	}
+
+	/**
 	 * Disables fields in secondary languages when
 	 * they are configured to be untranslatable
 	 */
@@ -250,6 +311,17 @@ class Form
 	}
 
 	/**
+	 * Resets the value of each field
+	 *
+	 * @since 5.0.0
+	 */
+	public function reset(): static
+	{
+		$this->fields->reset();
+		return $this;
+	}
+
+	/**
 	 * Converts the data of fields to strings
 	 */
 	public function strings($defaults = false): array
@@ -261,6 +333,23 @@ class Form
 				default		     => $value
 			}
 		);
+	}
+
+	/**
+	 * Sets the value for each field with a matching key in the input array
+	 * but only if the field is not disabled
+	 *
+	 * @since 5.0.0
+	 */
+	public function submit(
+		array $input,
+		bool $passthrough = false
+	): static {
+		$this->fields->submit(
+			input: $input,
+			passthrough: $passthrough
+		);
+		return $this;
 	}
 
 	/**
@@ -280,6 +369,8 @@ class Form
 	/**
 	 * Returns an array with the form value of each field
 	 * (e.g. used as data for Panel Vue components)
+	 *
+	 * @since 5.0.0
 	 */
 	public function toFormValues(): array
 	{
@@ -287,8 +378,21 @@ class Form
 	}
 
 	/**
+	 * Returns an array with the props of each field
+	 * for the frontend
+	 *
+	 * @since 5.0.0
+	 */
+	public function toProps(): array
+	{
+		return $this->fields->toProps();
+	}
+
+	/**
 	 * Returns an array with the stored value of each field
 	 * (e.g. used for saving to content storage)
+	 *
+	 * @since 5.0.0
 	 */
 	public function toStoredValues(): array
 	{
