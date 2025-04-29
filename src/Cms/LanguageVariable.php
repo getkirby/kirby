@@ -91,14 +91,6 @@ class LanguageVariable
 	}
 
 	/**
-	 * Returns the default language variable
-	 */
-	public function defaultLanguageVariable(): LanguageVariable
-	{
-		return $this->kirby->defaultLanguage()->variable($this->key);
-	}
-
-	/**
 	 * Checks if a language variable exists in the default language
 	 */
 	public function exists(): bool
@@ -109,10 +101,11 @@ class LanguageVariable
 
 	/**
 	 * Checks if the value is an array
+	 * @since 5.0.0
 	 */
-	public function isArray(): bool
+	public function hasMultipleValues(): bool
 	{
-		return is_array($this->value());
+		return is_array($this->value()) === true;
 	}
 
 	/**

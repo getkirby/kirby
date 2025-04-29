@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Cms\Language;
 use Kirby\Cms\LanguageVariable;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
@@ -272,15 +273,15 @@ return [
 			$fields['key']['disabled']  = true;
 			$fields['multiple']['type'] = 'hidden';
 
-			// check if the variable is an array
-			$isVariableArray = match ($language->isDefault()) {
-				true  => $variable->isArray(),
-				false => Find::language('default')->variable($translationKey, true)->isArray()
-			};
+			// check if the variable has multiple values;
+			// ensure to use the default language for this check because
+			// the variable might not exist in the current language but
+			// already be defined in the default language with multiple values
+			$isVariableArray = Language::ensure('default')->variable($translationKey, true)->hasMultipleValues();
 
 			// set the correct value field
-			// when value is string, load value for value field
-			// when value is array, load value for entries field
+			// when value is string, set value for value field
+			// when value is array, set value for entries field
 			if ($isVariableArray === true) {
 				$fields['entries']['autofocus'] = true;
 				$value                          = [
