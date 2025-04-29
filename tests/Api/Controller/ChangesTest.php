@@ -62,9 +62,12 @@ class ChangesTest extends TestCase
 			'uuid'  => 'test'
 		]);
 
-		// create an empty changes file to be able to check if it
+		// create a changes file to be able to check if it
 		// is being cleaned up correctly after publishing
-		Data::write($file = $this->page->root() . '/_changes/article.txt', []);
+		Data::write($file = $this->page->root() . '/_changes/article.txt', [
+			'title' => 'Title modified',
+			'uuid'  => 'test',
+		]);
 
 		$response = Changes::publish($this->page, [
 			'text' => 'Test'
@@ -79,7 +82,7 @@ class ChangesTest extends TestCase
 		$published = Data::read($this->page->root() . '/article.txt');
 
 		$this->assertSame([
-			'title' => 'Test',
+			'title' => 'Title modified',
 			'text'  => 'Test',
 			'uuid'  => 'test'
 		], $published);

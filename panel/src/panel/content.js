@@ -41,6 +41,14 @@ export default (panel) => {
 				}
 			}
 
+			// find all fields that have been present in the original content
+			// but have been removed from the current content
+			for (const field in panel.view.props.originals) {
+				if (panel.view.props.content[field] === undefined) {
+					changes[field] = null;
+				}
+			}
+
 			return changes;
 		},
 
@@ -186,7 +194,6 @@ export default (panel) => {
 			}
 
 			panel.view.props.content = {
-				...panel.view.props.originals,
 				...panel.view.props.content,
 				...values
 			};
