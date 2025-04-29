@@ -267,9 +267,10 @@ return [
 
 			$fields = $translationDialogFields;
 
-			// the key and multiple fields cannot be changed
-			$fields['key']['disabled']      = true;
-			$fields['multiple']['disabled'] = true;
+			// the key field cannot be changed
+			// the multiple field is hidden
+			$fields['key']['disabled']  = true;
+			$fields['multiple']['type'] = 'hidden';
 
 			// check if the variable is an array
 			$isVariableArray = match ($language->isDefault()) {
