@@ -66,7 +66,7 @@ class LanguageVariable
 
 		$translations[$key] = $value ?? '';
 
-		$language->update(['translations' => $translations]);
+		$language = $language->update(['translations' => $translations]);
 
 		return $language->variable($key);
 	}
