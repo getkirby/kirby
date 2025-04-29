@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
@@ -70,6 +71,48 @@ class LanguageVariableTest extends TestCase
 		LanguageVariable::create('0');
 	}
 
+	public function testCreateWithDuplicateKey(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('The variable already exists');
+
+		LanguageVariable::create('foo', 'bar');
+		LanguageVariable::create('foo', 'baz');
+	}
+
+	public function testCreateWithCoreKey(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('The variable is part of the core translation and cannot be overwritten');
+
+		LanguageVariable::create('date', 'bar');
+	}
+
+	public function testDelete(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$variable = LanguageVariable::create('foo', 'bar');
+		$this->assertTrue($variable->exists());
+		$variable->delete();
+		$this->assertFalse($variable->exists());
+	}
+
+	public function testExists(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$variable = new LanguageVariable($this->app->defaultLanguage(), 'foo');
+		$this->assertFalse($variable->exists());
+
+		$variable = LanguageVariable::create('foo', 'bar');
+		$this->assertTrue($variable->exists());
+	}
+
 	public function testHasMultipleValues(): void
 	{
 		// impersonate kirby to make sure the translation
@@ -88,5 +131,17 @@ class LanguageVariableTest extends TestCase
 		$language = new Language(['code' => 'test']);
 		$variable = new LanguageVariable($language, 'foo');
 		$this->assertSame('foo', $variable->key());
+	}
+
+	public function testUpdate(): void
+	{
+		// impersonate kirby to allow updating the variable
+		$this->app->impersonate('kirby');
+
+		$variable = LanguageVariable::create('foo', 'bar');
+		$this->assertSame('bar', $variable->value());
+
+		$variable = $variable->update('baz');
+		$this->assertSame('baz', $variable->value());
 	}
 }
