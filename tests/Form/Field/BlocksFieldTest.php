@@ -341,6 +341,10 @@ class BlocksFieldTest extends TestCase
 			]
 		]);
 
+		// we need an authenticated user to make sure
+		// that the fields are not disabled by default
+		$app->impersonate('kirby');
+
 		$props = [
 			'fieldsets' => [
 				'heading' => [
