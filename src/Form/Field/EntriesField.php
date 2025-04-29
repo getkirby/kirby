@@ -40,11 +40,6 @@ class EntriesField extends FieldClass
 		$this->setMax($params['max'] ?? null);
 		$this->setMin($params['min'] ?? null);
 		$this->setSortable($params['sortable'] ?? true);
-
-		$this->form = new Form(
-			fields: [$this->field()],
-			model: $this->model
-		);
 	}
 
 	public function field(): array
@@ -69,7 +64,10 @@ class EntriesField extends FieldClass
 
 	public function form(): Form
 	{
-		return $this->form;
+		return $this->form ??= new Form(
+			fields: [$this->field()],
+			model: $this->model
+		);
 	}
 
 	public function props(): array
