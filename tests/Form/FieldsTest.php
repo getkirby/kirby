@@ -258,16 +258,13 @@ class FieldsTest extends TestCase
 			'b' => 'B',
 		];
 
-		$fields->fill($input);
+		$fields->fill($input, passthrough: false);
 
 		$this->assertSame([
 			'a' => 'A',
 		], $fields->toFormValues(), 'Unknown fields are not included');
 
-		$fields->fill(
-			input: $input,
-			passthrough: true
-		);
+		$fields->fill($input, passthrough: true);
 
 		$this->assertSame([
 			'a' => 'A',
@@ -514,15 +511,13 @@ class FieldsTest extends TestCase
 			input: [
 				'a' => 'A',
 				'b' => 'B'
-			],
-			passthrough: true
+			]
 		);
 
 		$fields->submit(
 			input: [
 				'c' => 'C',
-			],
-			passthrough: true
+			]
 		);
 
 		$this->assertSame([
@@ -709,16 +704,13 @@ class FieldsTest extends TestCase
 			'b' => 'B',
 		];
 
-		$fields->submit($input);
+		$fields->submit($input, passthrough: false);
 
 		$this->assertSame([
 			'a' => 'A',
 		], $fields->toStoredValues(), 'Unknown fields are not included');
 
-		$fields->submit(
-			input: $input,
-			passthrough: true
-		);
+		$fields->submit($input, passthrough: true);
 
 		$this->assertSame([
 			'a' => 'A',

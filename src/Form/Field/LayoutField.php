@@ -309,10 +309,7 @@ class LayoutField extends BlocksField
 					$layoutIndex++;
 
 					// validate settings form
-					$form = $attrsForm->reset()->fill(
-						input: $layout['attrs'] ?? [],
-						passthrough: true
-					);
+					$form = $attrsForm->reset()->fill($layout['attrs'] ?? []);
 
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
@@ -345,10 +342,7 @@ class LayoutField extends BlocksField
 							}
 
 							// overwrite the content with the serialized form
-							$form = $blockForms[$blockType]->reset()->fill(
-								input:       $block['content'],
-								passthrough: true
-							);
+							$form = $blockForms[$blockType]->reset()->fill($block['content']);
 
 							foreach ($form->fields() as $field) {
 								$errors = $field->errors();

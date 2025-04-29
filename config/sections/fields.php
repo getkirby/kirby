@@ -22,11 +22,7 @@ return [
 	],
 	'methods' => [
 		'errors' => function () {
-			$this->form->fill(
-				input: $this->model->content('current')->toArray(),
-				passthrough: true
-			);
-
+			$this->form->fill($this->model->content('current')->toArray());
 			return $this->form->errors();
 		}
 	],

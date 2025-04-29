@@ -112,16 +112,10 @@ class Changes
 
 		// fill in the form values and pass through any values that are not
 		// defined as fields, such as uuid, title or similar.
-		$fields->fill(
-			input: $content,
-			passthrough: true
-		);
+		$fields->fill(input: $content);
 
 		// submit the new values from the request input
-		$fields->submit(
-			input: $input,
-			passthrough: true
-		);
+		$fields->submit(input: $input);
 
 		// save the changes
 		$changes->save(

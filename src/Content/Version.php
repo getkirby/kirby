@@ -170,9 +170,8 @@ class Version
 	public function errors(Language|string $language = 'default'): array
 	{
 		$fields = Fields::for($this->model, $language);
-
 		$fields->fill(
-			$this->content($language)->toArray()
+			input: $this->content($language)->toArray()
 		);
 
 		return $fields->errors();
@@ -247,8 +246,8 @@ class Version
 			$b['uuid']
 		);
 
-		$a = $fields->reset()->fill(input: $a, passthrough: true)->toFormValues();
-		$b = $fields->reset()->fill(input: $b, passthrough: true)->toFormValues();
+		$a = $fields->reset()->fill(input: $a)->toFormValues();
+		$b = $fields->reset()->fill(input: $b)->toFormValues();
 
 		ksort($a);
 		ksort($b);

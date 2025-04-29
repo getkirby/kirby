@@ -138,10 +138,10 @@ class Form
 	 */
 	public function fill(
 		array $input,
-		bool $passthrough = false
+		bool $passthrough = true
 	): static {
 		$this->fields->fill(
-			input: $input,
+			input:       $input,
 			passthrough: $passthrough
 		);
 		return $this;
@@ -170,10 +170,7 @@ class Form
 		);
 
 		// fill the form with the latest content of the model
-		$form->fill(
-			input: $model->content($form->language())->toArray(),
-			passthrough: true
-		);
+		$form->fill(input: $model->content($form->language())->toArray());
 
 		return $form;
 	}
@@ -321,10 +318,10 @@ class Form
 	 */
 	public function submit(
 		array $input,
-		bool $passthrough = false
+		bool $passthrough = true
 	): static {
 		$this->fields->submit(
-			input: $input,
+			input:       $input,
 			passthrough: $passthrough
 		);
 		return $this;
