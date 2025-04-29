@@ -224,13 +224,6 @@ class Fields extends Collection
 			return $this->passthrough;
 		}
 
-		// always start with a fresh set of passthrough values
-		// if the values array is empty
-		if ($values === []) {
-			$this->passthrough = [];
-			return $this;
-		}
-
 		foreach ($values as $key => $value) {
 			$key = strtolower($key);
 
