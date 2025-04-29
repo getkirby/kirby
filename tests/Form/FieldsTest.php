@@ -363,6 +363,10 @@ class FieldsTest extends TestCase
 		$fields = new Fields(fields: [], language: $language);
 		$this->assertSame('de', $fields->language()->code());
 		$this->assertFalse($fields->language()->isDefault());
+
+		// language code passed
+		$fields = new Fields(fields: [], language: 'en');
+		$this->assertSame('en', $fields->language()->code());
 	}
 
 	public function testPassthrough(): void

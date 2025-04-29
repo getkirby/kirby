@@ -34,15 +34,14 @@ class Fields extends Collection
 	public function __construct(
 		array $fields = [],
 		ModelWithContent|null $model = null,
-		Language|null $language = null
+		Language|string|null $language = null
 	) {
-		$this->model = $model ?? App::instance()->site();
+		$this->model    = $model ?? App::instance()->site();
+		$this->language = Language::ensure($language ?? 'current');
 
 		foreach ($fields as $name => $field) {
 			$this->__set($name, $field);
 		}
-
-		$this->language = $language ?? Language::ensure('current');
 	}
 
 	/**
