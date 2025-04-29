@@ -120,20 +120,13 @@ class BlocksField extends FieldClass
 		return $this;
 	}
 
-	public function form(array $fields, array $input = []): Form
+	public function form(array $fields): Form
 	{
-		$form = new Form(
+		return new Form(
 			fields: $fields,
 			model: $this->model,
 			language: 'current'
 		);
-
-		$form->fill(
-			input: $input,
-			passthrough: true
-		);
-
-		return $form;
 	}
 
 	public function isEmpty(): bool

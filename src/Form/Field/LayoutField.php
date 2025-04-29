@@ -56,14 +56,14 @@ class LayoutField extends BlocksField
 
 	public function attrsForm(array $input = []): Form
 	{
-		$settings = $this->settings();
+		$form = new Form(
+			fields: $this->settings()?->fields() ?? [],
+			model:  $this->model
+		);
 
-		return new Form([
-			'fields' => $settings?->fields() ?? [],
-			'model'  => $this->model,
-			'strict' => true,
-			'values' => $input,
-		]);
+		$form->fill(input: $input, passthrough: false);
+
+		return $form;
 	}
 
 	public function layouts(): array|null
@@ -302,14 +302,18 @@ class LayoutField extends BlocksField
 	{
 		return [
 			'layout' => function ($value) {
-				$fields      = [];
+				$attrsForm   = $this->attrsForm();
+				$blockForms  = [];
 				$layoutIndex = 0;
 
 				foreach ($value as $layout) {
 					$layoutIndex++;
 
 					// validate settings form
-					$form = $this->attrsForm($layout['attrs'] ?? []);
+					$form = $attrsForm->reset()->fill(
+						input: $layout['attrs'] ?? [],
+						passthrough: true
+					);
 
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
@@ -330,19 +334,22 @@ class LayoutField extends BlocksField
 							$blockIndex++;
 							$blockType = $block['type'];
 
-							try {
-								$fieldset    = $this->fieldset($blockType);
-								$blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
-							} catch (Throwable) {
-								// skip invalid blocks
-								continue;
+							if (isset($blockForms[$blockType]) === false) {
+								try {
+									$fieldset = $this->fieldset($blockType);
+									$fields   = $this->fields($blockType) ?? [];
+									$blockForms[$blockType] = $this->form($fields);
+								} catch (Throwable) {
+									// skip invalid blocks
+									continue;
+								}
 							}
 
-							// store the fields for the next round
-							$fields[$blockType] = $blockFields;
-
 							// overwrite the content with the serialized form
-							$form = $this->form($blockFields, $block['content']);
+							$form = $blockForms[$blockType]->reset()->fill(
+								input:       $block['content'],
+								passthrough: true
+							);
 
 							foreach ($form->fields() as $field) {
 								$errors = $field->errors();
