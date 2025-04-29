@@ -2,7 +2,6 @@
 
 namespace Kirby\Form;
 
-use Closure;
 use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
@@ -154,38 +153,29 @@ class Form
 	 */
 	public static function for(
 		ModelWithContent $model,
-		array $props = []
+		array $props = [],
+		Language|string|null $language = null,
 	): static {
-		// get the original model data
-		$original = $model->content($props['language'] ?? null)->toArray();
-		$values   = $props['values'] ?? [];
-
-		// convert closures to values
-		foreach ($values as $key => $value) {
-			if ($value instanceof Closure) {
-				$values[$key] = $value($original[$key] ?? null);
-			}
+		if ($props !== []) {
+			return static::legacyFor(
+				$model,
+				...$props
+			);
 		}
 
-		// set a few defaults
-		$props['values']   = [...$original, ...$values];
-		$props['fields'] ??= [];
-		$props['model']    = $model;
+		$form = new static(
+			fields: $model->blueprint()->fields(),
+			model: $model,
+			language: $language
+		);
 
-		// search for the blueprint
-		$props['fields'] = $model->blueprint()->fields();
+		// fill the form with the latest content of the model
+		$form->fill(
+			input: $model->content($form->language())->toArray(),
+			passthrough: true
+		);
 
-		$ignoreDisabled = $props['ignoreDisabled'] ?? false;
-
-		// REFACTOR: this could be more elegant
-		if ($ignoreDisabled === true) {
-			$props['fields'] = array_map(function ($field) {
-				$field['disabled'] = false;
-				return $field;
-			}, $props['fields']);
-		}
-
-		return new static($props);
+		return $form;
 	}
 
 	/**
