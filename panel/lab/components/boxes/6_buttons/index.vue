@@ -15,7 +15,7 @@
 <script>
 export default {
 	props: {
-		themes: Array,
-	},
+		themes: Array
+	}
 };
 </script>

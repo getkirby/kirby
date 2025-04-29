@@ -65,7 +65,7 @@ export default (panel) => {
 							: option.dialog.url;
 					const options =
 						typeof option.dialog === "object" ? option.dialog : {};
-					return panel.app.$dialog(url, options);
+					return panel.dialog.open(url, options);
 				};
 
 				return option;
