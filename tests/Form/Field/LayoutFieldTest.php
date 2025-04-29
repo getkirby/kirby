@@ -234,6 +234,20 @@ class LayoutFieldTest extends TestCase
 		], $field->errors());
 	}
 
+	public function testValidationsWithInvalidBlockType()
+	{
+		$field = $this->field('layout', [
+			'value' => [
+				[
+					'type' => 'does-not-exist',
+				],
+			],
+		]);
+
+		$this->assertTrue($field->isValid());
+		$this->assertSame([], $field->errors());
+	}
+
 	public function testValidationsSettings()
 	{
 		$field = $this->field('layout', [
