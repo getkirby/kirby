@@ -36,69 +36,22 @@ class Form
 	/**
 	 * Form constructor
 	 */
-	public function __construct(array $props)
-	{
-		$fields = $props['fields'] ?? [];
-		$values = $props['values'] ?? [];
-		$input  = $props['input']  ?? [];
-		$model  = $props['model']  ?? null;
-		$strict = $props['strict'] ?? false;
-		$inject = $props;
-
-		// get the language for the form
-		$language = Language::ensure($props['language'] ?? 'current');
-
-		// prepare field properties for multilang setups
-		$fields = static::prepareFieldsForLanguage(
-			$fields,
-			$language
-		);
-
-		// lowercase all value names
-		$values = array_change_key_case($values);
-		$input  = array_change_key_case($input);
-
-		unset($inject['fields'], $inject['values'], $inject['input']);
+	public function __construct(
+		array $props = [],
+		array $fields = [],
+		ModelWithContent|null $model = null,
+		Language|string|null $language = null
+	) {
+		if ($props !== []) {
+			$this->legacyConstruct(...$props);
+			return;
+		}
 
 		$this->fields = new Fields(
+			fields: $fields,
 			model: $model,
 			language: $language
 		);
-
-		$this->values = [];
-
-		foreach ($fields as $name => $props) {
-			// inject stuff from the form constructor (model, etc.)
-			$props = [...$inject, ...$props];
-
-			// inject the name
-			$props['name'] = $name = strtolower($name);
-
-			// check if the field is disabled and
-			// overwrite the field value if not set
-			$props['value'] = match ($props['disabled'] ?? false) {
-				true    => $values[$name] ?? null,
-				default => $input[$name] ?? $values[$name] ?? null
-			};
-
-			$field = Field::factory($props['type'], $props, $this->fields);
-
-			if ($field->hasValue() === true) {
-				$this->values[$name] = $field->value();
-			}
-
-			$this->fields->append($name, $field);
-		}
-
-		if ($strict !== true) {
-			// use all given values, no matter
-			// if there's a field or not.
-			$input = [...$values, ...$input];
-
-			foreach ($input as $key => $value) {
-				$this->values[$key] ??= $value;
-			}
-		}
 	}
 
 	/**
