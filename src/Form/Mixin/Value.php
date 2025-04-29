@@ -92,11 +92,6 @@ trait Value
 			return false;
 		}
 
-		// the field is hidden by a `when` rule
-		if ($this->isActive() === false) {
-			return false;
-		}
-
 		// We don't need to check if the field is disabled.
 		// A disabled field can still have a value and that value
 		// should still be stored. But that value must not be changed
