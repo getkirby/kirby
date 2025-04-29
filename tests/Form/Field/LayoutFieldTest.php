@@ -394,6 +394,44 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame($original[0]['columns'][0]['blocks'][0]['content'], $pasted[0]['columns'][0]['blocks'][0]['content']);
 	}
 
+	public function testRouteCreate()
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'body' => [
+					'columns' => ['1/2', '1/2'],
+					'attrs' => [
+						'class' => 'test'
+					]
+				]
+			]
+		]);
+
+		// we need to impersonate Kirby to get the correct form
+		// without disabled fields for permission reasons
+		$this->app->impersonate('kirby');
+
+		$field = $this->field('layout', [
+			'settings' => [
+				'fields' => [
+					'class' => [
+						'type' => 'text',
+					]
+				]
+			]
+		]);
+
+		$route = $field->routes()[4];
+
+		$response = $route['action']();
+
+		$this->assertSame('test', $response['attrs']['class']);
+		$this->assertSame('1/2', $response['columns'][0]['width']);
+		$this->assertSame('1/2', $response['columns'][1]['width']);
+		$this->assertSame([], $response['columns'][0]['blocks']);
+		$this->assertSame([], $response['columns'][1]['blocks']);
+	}
+
 	public function testRoutePaste()
 	{
 		$value = [

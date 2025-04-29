@@ -146,10 +146,11 @@ class LayoutField extends BlocksField
 			'action'  => function () use ($field): array {
 				$request = App::instance()->request();
 
-				$columns  = $request->get('columns') ?? ['1/1'];
-				$input    = $request->get('attrs') ?? [];
-				$form     = $field->attrsForm();
-				$form->fill(input: $form->defaults())->fill(input: $input);
+				$columns = $request->get('columns') ?? ['1/1'];
+				$form    = $field->attrsForm();
+
+				$form->fill(input: $form->defaults());
+				$form->submit(input: $request->get('attrs') ?? []);
 
 				return Layout::factory([
 					'attrs'   => $form->toFormValues(),
