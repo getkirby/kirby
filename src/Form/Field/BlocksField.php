@@ -63,10 +63,7 @@ class BlocksField extends FieldClass
 				$forms[$type]  ??= $this->form($fields[$type]);
 
 				// overwrite the block content with form values
-				$block['content'] = $forms[$type]->reset()->fill(
-					input: $block['content'],
-					passthrough: true
-				)->$to();
+				$block['content'] = $forms[$type]->reset()->fill(input: $block['content'])->$to();
 
 				// create id if not exists
 				$block['id'] ??= Str::uuid();
@@ -341,10 +338,7 @@ class BlocksField extends FieldClass
 					}
 
 					// overwrite the content with the serialized form
-					$form = $forms[$type]->reset()->fill(
-						input:       $block['content'],
-						passthrough: true
-					);
+					$form = $forms[$type]->reset()->fill($block['content']);
 
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();

@@ -474,8 +474,8 @@ abstract class Model
 		}
 
 		return [
-			'latest'  => $fields->reset()->fill(input: $latestContent, passthrough: true)->toFormValues(),
-			'changes' => $fields->reset()->fill(input: $changesContent, passthrough: true)->toFormValues()
+			'latest'  => $fields->reset()->fill($latestContent)->toFormValues(),
+			'changes' => $fields->reset()->fill($changesContent)->toFormValues()
 		];
 	}
 

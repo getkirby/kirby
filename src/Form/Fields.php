@@ -119,7 +119,7 @@ class Fields extends Collection
 	 */
 	public function fill(
 		array $input,
-		bool $passthrough = false
+		bool $passthrough = true
 	): static {
 		if ($passthrough === true) {
 			$this->passthrough($input);
@@ -283,7 +283,7 @@ class Fields extends Collection
 	 */
 	public function submit(
 		array $input,
-		bool $passthrough = false
+		bool $passthrough = true
 	): static {
 		$language = $this->language();
 

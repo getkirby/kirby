@@ -262,7 +262,6 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function createDefaultContent(): array
 	{
 		$fields = Fields::for($this, 'default');
-
 		return $fields->fill($fields->defaults())->toStoredValues();
 	}
 
@@ -667,10 +666,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			language: $languageCode,
 		);
 
-		$form->submit(
-			input: $input ?? [],
-			passthrough: true
-		);
+		$form->submit($input ?? []);
 
 		if ($validate === true) {
 			$form->validate();
