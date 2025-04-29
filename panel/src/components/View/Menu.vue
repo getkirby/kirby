@@ -154,13 +154,8 @@ export default {
 }
 /* Keep the remaining space between 2nd last and last button group */
 .k-panel-menu-buttons[data-second-last="true"] {
-	flex-grow: 1;
+	margin-bottom: auto;
 }
-/* Move the last menu to the end */
-.k-panel-menu-buttons:last-child {
-	justify-content: flex-end;
-}
-
 /* Menu buttons incl. search */
 .k-panel-menu-button {
 	--button-align: flex-start;

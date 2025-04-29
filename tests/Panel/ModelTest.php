@@ -96,17 +96,15 @@ class ModelTest extends TestCase
 		);
 
 		$panel->model()->version('latest')->save([
-			'foo'  => 'foo',
-			'uuid' => 'test'
+			'foo' => 'foo',
 		]);
 
 		$panel->model()->version('changes')->save([
-			'foo' => 'foobar'
+			'foo' => 'foobar',
 		]);
 
 		$this->assertSame([
-			'foo'  => 'foobar',
-			'uuid' => 'test'
+			'foo' => 'foobar',
 		], $panel->content());
 	}
 
@@ -545,5 +543,31 @@ class ModelTest extends TestCase
 	{
 		$this->assertSame('/panel/custom', $this->panel()->url());
 		$this->assertSame('/custom', $this->panel()->url(true));
+	}
+
+	/**
+	 * @covers ::versions
+	 */
+	public function testVersions()
+	{
+		$panel = $this->panel([]);
+
+		$panel->model()->version('latest')->save($latest = [
+			'foo' => 'bar'
+		]);
+
+		$versions = $panel->versions();
+
+		$this->assertSame($latest, $versions['latest']);
+		$this->assertSame($latest, $versions['changes']);
+
+		$panel->model()->version('changes')->save($changes = [
+			'foo' => 'baz'
+		]);
+
+		$versions = $panel->versions();
+
+		$this->assertSame($latest, $versions['latest']);
+		$this->assertSame($changes, $versions['changes']);
 	}
 }

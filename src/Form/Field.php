@@ -285,9 +285,6 @@ class Field extends Component
 		// reevaluate the computed props
 		$this->applyComputed($this->options['computed'] ?? []);
 
-		// reset the errors cache
-		$this->errors = null;
-
 		// restore the original state
 		$this->attrs   = $attrs;
 		$this->methods = $methods;
@@ -303,6 +300,14 @@ class Field extends Component
 	public function formFields(): Fields
 	{
 		return $this->siblings;
+	}
+
+	/**
+	 * Checks if the field has a value
+	 */
+	public function hasValue(): bool
+	{
+		return ($this->options['save'] ?? true) !== false;
 	}
 
 	/**
@@ -334,14 +339,6 @@ class Field extends Component
 	public function isHidden(): bool
 	{
 		return ($this->options['hidden'] ?? false) === true;
-	}
-
-	/**
-	 * Checks if the field is saveable
-	 */
-	public function isSaveable(): bool
-	{
-		return ($this->options['save'] ?? true) !== false;
 	}
 
 	/**
@@ -385,7 +382,7 @@ class Field extends Component
 		unset($array['model']);
 
 		$array['hidden']   = $this->isHidden();
-		$array['saveable'] = $this->isSaveable();
+		$array['saveable'] = $this->hasValue();
 
 		ksort($array);
 
@@ -398,9 +395,9 @@ class Field extends Component
 	/**
 	 * Returns the value of the field in a format to be stored by our storage classes
 	 */
-	public function toStoredValue(bool $default = false): mixed
+	public function toStoredValue(): mixed
 	{
-		$value = $this->value($default);
+		$value = $this->toFormValue();
 		$store = $this->options['save'] ?? true;
 
 		if ($store === false) {

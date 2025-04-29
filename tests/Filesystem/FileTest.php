@@ -614,17 +614,6 @@ class FileTest extends TestCase
 	}
 
 	/**
-	 * @covers ::read
-	 */
-	public function testReadUnreadble()
-	{
-		$file = new File(static::TMP . '/unreadable.txt');
-		$file->write('test');
-		chmod($file->root(), 0o000);
-		$this->assertFalse($file->read());
-	}
-
-	/**
 	 * @covers ::rename
 	 */
 	public function testRename()

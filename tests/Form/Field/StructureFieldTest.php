@@ -255,7 +255,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame($expected, $data);
 
 		// filled mother form
-		$motherForm = $field->form($value[0]);
+		$motherForm = $field->form()->fill(input: $value[0], passthrough: true);
 		$expected   = $value[0];
 
 		$this->assertEquals($expected, $motherForm->data()); // cannot use strict assertion (array order)
@@ -271,9 +271,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame('', $childrenForm->data()['name']);
 
 		// filled children form
-		$childrenForm = $childrenField->form([
-			'name' => 'Test'
-		]);
+		$childrenForm = $childrenField->form()->fill(input: ['name' => 'Test'], passthrough: true);
 
 		$this->assertSame('Test', $childrenForm->data()['name']);
 
@@ -351,6 +349,10 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
+		// we need an authenticated user to make sure
+		// that the fields are not disabled by default
+		$app->impersonate('kirby');
+
 		$field = $this->field('structure', [
 			'fields' => [
 				'a' => [
@@ -365,13 +367,17 @@ class StructureFieldTest extends TestCase
 
 		$app->setCurrentLanguage('en');
 
-		$this->assertFalse($field->form()->fields()->a()->disabled());
-		$this->assertFalse($field->form()->fields()->b()->disabled());
+		$props = $field->form()->fields()->toProps();
+
+		$this->assertFalse($props['a']['disabled']);
+		$this->assertFalse($props['b']['disabled']);
 
 		$app->setCurrentLanguage('de');
 
-		$this->assertFalse($field->form()->fields()->a()->disabled());
-		$this->assertTrue($field->form()->fields()->b()->disabled());
+		$props = $field->form()->fields()->toProps();
+
+		$this->assertFalse($props['a']['disabled']);
+		$this->assertTrue($props['b']['disabled']);
 	}
 
 	public function testDefault()

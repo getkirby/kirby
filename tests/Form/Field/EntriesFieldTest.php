@@ -2,7 +2,6 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -388,18 +387,18 @@ class EntriesFieldTest extends TestCase
 		]);
 
 		$this->assertSame(
-			Data::encode($value, 'yaml'),
+			$value,
 			$field->toStoredValue()
 		);
 
 		// empty tests
 		$field->fill(null);
-		$this->assertSame('', $field->toStoredValue());
+		$this->assertSame([], $field->toStoredValue());
 
 		$field->fill('');
-		$this->assertSame('', $field->toStoredValue());
+		$this->assertSame([], $field->toStoredValue());
 
 		$field->fill([]);
-		$this->assertSame('', $field->toStoredValue());
+		$this->assertSame([], $field->toStoredValue());
 	}
 }

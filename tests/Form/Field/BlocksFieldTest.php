@@ -341,6 +341,10 @@ class BlocksFieldTest extends TestCase
 			]
 		]);
 
+		// we need an authenticated user to make sure
+		// that the fields are not disabled by default
+		$app->impersonate('kirby');
+
 		$props = [
 			'fieldsets' => [
 				'heading' => [
@@ -472,6 +476,20 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame([
 			'blocks' => 'There\'s an error on the "Video-URL" field in block 2 using the "Video" block type'
 		], $field->errors());
+	}
+
+	public function testValidationsWithInvalidBlockType()
+	{
+		$field = $this->field('blocks', [
+			'value' => [
+				[
+					'type' => 'not-exists',
+				]
+			]
+		]);
+
+		$this->assertTrue($field->isValid());
+		$this->assertSame([], $field->errors());
 	}
 
 	public function testEmpty()

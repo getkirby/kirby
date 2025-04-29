@@ -9,7 +9,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Form;
+use Kirby\Form\Fields;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Str;
 
@@ -101,7 +101,7 @@ class Version
 		Language|string $language = 'default'
 	): void {
 		$language = Language::ensure($language);
-		$latest   = $this->model->version(VersionId::latest());
+		$latest   = $this->sibling(VersionId::latest());
 
 		// if the latest version of the translation does not exist yet,
 		// we have to copy over the content from the default language first.
@@ -165,6 +165,19 @@ class Version
 	}
 
 	/**
+	 * Returns all validation errors for the given language
+	 */
+	public function errors(Language|string $language = 'default'): array
+	{
+		$fields = Fields::for($this->model, $language);
+		$fields->fill(
+			input: $this->content($language)->toArray()
+		);
+
+		return $fields->errors();
+	}
+
+	/**
 	 * Checks if a version exists for the given language
 	 */
 	public function exists(Language|string $language = 'default'): bool
@@ -208,7 +221,7 @@ class Version
 		}
 
 		if ($version instanceof VersionId) {
-			$version = $this->model->version($version);
+			$version = $this->sibling($version);
 		}
 
 		if ($version->id()->is($this->id) === true) {
@@ -216,6 +229,7 @@ class Version
 		}
 
 		$language = Language::ensure($language);
+		$fields   = Fields::for($this->model, $language);
 
 		// read fields low-level from storage
 		$a = $this->read($language) ?? [];
@@ -232,21 +246,8 @@ class Version
 			$b['uuid']
 		);
 
-		$a = Form::for(
-			model: $this->model,
-			props: [
-				'language' => $language->code(),
-				'values'   => $a,
-			]
-		)->values();
-
-		$b = Form::for(
-			model: $this->model,
-			props: [
-				'language' => $language->code(),
-				'values'   => $b
-			]
-		)->values();
+		$a = $fields->reset()->fill(input: $a)->toFormValues();
+		$b = $fields->reset()->fill(input: $b)->toFormValues();
 
 		ksort($a);
 		ksort($b);
@@ -268,6 +269,14 @@ class Version
 	public function isLocked(Language|string $language = 'default'): bool
 	{
 		return $this->lock($language)->isLocked();
+	}
+
+	/**
+	 * Checks if there are any validation errors for the given language
+	 */
+	public function isValid(Language|string $language = 'default'): bool
+	{
+		return $this->errors($language) === [];
 	}
 
 	/**
@@ -317,7 +326,7 @@ class Version
 		$fromVersion  = $this;
 		$fromLanguage = Language::ensure($fromLanguage);
 		$toLanguage   = Language::ensure($toLanguage ?? $fromLanguage);
-		$toVersion    = $this->model->version($toVersionId ?? $this->id);
+		$toVersion    = $this->sibling($toVersionId ?? $this->id);
 
 		// check if moving is allowed
 		VersionRules::move(
@@ -490,9 +499,22 @@ class Version
 		// check if publishing is allowed
 		VersionRules::publish($this, $language);
 
+		$latest  = $this->sibling(VersionId::latest())->read($language);
+		$changes = $this->read($language);
+
+		// overwrite all fields that are not in the `changes` version
+		// with a null value. The ModelWithContent::update method will merge
+		// the input with the existing content fields and setting null values
+		// for removed fields will take care of not inheriting old values.
+		foreach ($latest as $key => $value) {
+			if (isset($changes[$key]) === false) {
+				$changes[$key] = null;
+			}
+		}
+
 		// update the latest version
 		$this->model = $this->model->update(
-			input: $this->read($language),
+			input: $changes,
 			languageCode: $language->code(),
 			validate: true
 		);
@@ -577,6 +599,17 @@ class Version
 		}
 
 		$this->update($fields, $language);
+	}
+
+	/**
+	 * Returns a sibling version for the same model
+	 */
+	public function sibling(VersionId|string $id): Version
+	{
+		return new Version(
+			model: $this->model,
+			id: VersionId::from($id)
+		);
 	}
 
 	/**

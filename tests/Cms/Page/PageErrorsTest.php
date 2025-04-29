@@ -58,4 +58,25 @@ class PageErrorsTest extends ModelTestCase
 			]
 		], $page->errors());
 	}
+
+	public function testErrorsWithRequiredFieldAndContent(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'content' => [
+				'test' => 'test'
+			],
+			'blueprint' => [
+				'name' => 'test',
+				'fields' => [
+					'test' => [
+						'required' => true,
+						'type'     => 'text'
+					]
+				]
+			]
+		]);
+
+		$this->assertSame([], $page->errors());
+	}
 }

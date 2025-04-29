@@ -77,7 +77,7 @@ class Fieldset extends Item
 	protected function createFields(array $fields = []): array
 	{
 		$fields = Blueprint::fieldsProps($fields);
-		$fields = $this->form($fields)->fields()->toArray();
+		$fields = $this->form($fields)->fields()->toProps();
 
 		// collect all fields
 		$this->fields = [...$this->fields, ...$fields];
@@ -157,12 +157,17 @@ class Fieldset extends Item
 	 */
 	public function form(array $fields, array $input = []): Form
 	{
-		return new Form([
-			'fields' => $fields,
-			'model'  => $this->parent,
-			'strict' => true,
-			'values' => $input,
-		]);
+		$form = new Form(
+			fields: $fields,
+			model: $this->parent,
+		);
+
+		$form->fill(
+			input: $input,
+			passthrough: false
+		);
+
+		return $form;
 	}
 
 	public function icon(): string|null

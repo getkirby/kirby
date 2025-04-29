@@ -57,12 +57,18 @@ class ViewButton extends Button
 	 * and resolving to proper instance
 	 */
 	public static function factory(
-		string|array|Closure|true $button = true,
+		string|array|Closure|bool $button = true,
 		string|int|null $name = null,
 		string|null $view = null,
 		ModelWithContent|Language|null $model = null,
 		array $data = []
 	): static|null {
+		// if referenced by name (`name: false`),
+		// don't render anything
+		if ($button === false) {
+			return null;
+		}
+
 		// transform `- name` notation to `name: true`
 		if (
 			is_string($name) === false &&

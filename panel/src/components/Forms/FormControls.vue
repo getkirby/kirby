@@ -4,7 +4,6 @@
 			<k-button
 				v-for="button in buttons"
 				:key="button.text"
-				:responsive="true"
 				v-bind="button"
 				size="sm"
 				variant="filled"
@@ -76,6 +75,7 @@ export default {
 						dropdown: true,
 						text: this.editor,
 						icon: "lock",
+						responsive: true,
 						click: () => this.$refs.dropdown.toggle()
 					}
 				];
@@ -87,6 +87,7 @@ export default {
 						theme: "notice",
 						text: this.$t("discard"),
 						icon: "undo",
+						responsive: true,
 						click: () => this.discard()
 					},
 					{
