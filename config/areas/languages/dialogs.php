@@ -202,6 +202,9 @@ return [
 				'props' => [
 					'fields' => $translationDialogFields,
 					'size'   => 'large',
+					'value'  => [
+						'multiple' => false,
+					]
 				],
 			];
 		},
