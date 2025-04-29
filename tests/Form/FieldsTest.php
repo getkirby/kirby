@@ -430,6 +430,27 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testPassthroughWithClosureValues(): void
+	{
+		$fields = new Fields([], $this->model);
+
+		$fields->passthrough([
+			'test' => 'Test', // should be ignored
+		]);
+
+		$this->assertSame([
+			'test' => 'Test',
+		], $fields->toFormValues());
+
+
+		$fields->passthrough([
+			'test' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'test' => 'Test updated'
+		], $fields->toFormValues());
+	}
 
 	public function testPassthroughWithUpperAndLowerCases(): void
 	{

@@ -236,6 +236,11 @@ class Fields extends Collection
 				continue;
 			}
 
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($this->passthrough[$key] ?? null);
+			}
+
 			$this->passthrough[$key] = $value;
 		}
 
