@@ -297,29 +297,6 @@ class Form
 	}
 
 	/**
-	 * Disables fields in secondary languages when
-	 * they are configured to be untranslatable
-	 */
-	protected static function prepareFieldsForLanguage(
-		array $fields,
-		Language $language
-	): array {
-		if ($language->isDefault() === true) {
-			return $fields;
-		}
-
-		foreach ($fields as $fieldName => $fieldProps) {
-			// switch untranslatable fields to readonly
-			if (($fieldProps['translate'] ?? true) === false) {
-				$fields[$fieldName]['unset']    = true;
-				$fields[$fieldName]['disabled'] = true;
-			}
-		}
-
-		return $fields;
-	}
-
-	/**
 	 * Resets the value of each field
 	 *
 	 * @since 5.0.0
