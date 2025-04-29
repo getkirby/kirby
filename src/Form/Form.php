@@ -463,9 +463,11 @@ class Form
 
 	/**
 	 * Returns form values
+	 *
+	 * @deprecated 5.0.0 Use `::toFormValues()` instead
 	 */
 	public function values(): array
 	{
-		return $this->values;
+		return $this->fields->toFormValues();
 	}
 }
