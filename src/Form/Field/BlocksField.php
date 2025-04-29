@@ -48,10 +48,11 @@ class BlocksField extends FieldClass
 
 	public function blocksToValues(
 		array $blocks,
-		string $to = 'values'
+		string $to = 'toFormValues'
 	): array {
 		$result = [];
 		$fields = [];
+		$forms  = [];
 
 		foreach ($blocks as $block) {
 			try {
@@ -59,11 +60,12 @@ class BlocksField extends FieldClass
 
 				// get and cache fields at the same time
 				$fields[$type] ??= $this->fields($block['type']);
+				$forms[$type]  ??= $this->form($fields[$type]);
 
 				// overwrite the block content with form values
-				$block['content'] = $this->form(
-					$fields[$type],
-					$block['content']
+				$block['content'] = $forms[$type]->reset()->fill(
+					input: $block['content'],
+					passthrough: true
 				)->$to();
 
 				// create id if not exists
@@ -118,14 +120,13 @@ class BlocksField extends FieldClass
 		return $this;
 	}
 
-	public function form(array $fields, array $input = []): Form
+	public function form(array $fields): Form
 	{
-		return new Form([
-			'fields' => $fields,
-			'model'  => $this->model,
-			'strict' => true,
-			'values' => $input,
-		]);
+		return new Form(
+			fields: $fields,
+			model: $this->model,
+			language: 'current'
+		);
 	}
 
 	public function isEmpty(): bool
@@ -205,12 +206,13 @@ class BlocksField extends FieldClass
 				'action'  => function (
 					string $fieldsetType
 				) use ($field): array {
-					$fields   = $field->fields($fieldsetType);
-					$defaults = $field->form($fields, [])->data(true);
-					$content  = $field->form($fields, $defaults)->values();
+					$fields = $field->fields($fieldsetType);
+					$form   = $field->form($fields);
+
+					$form->fill(input: $form->defaults());
 
 					return Block::factory([
-						'content' => $content,
+						'content' => $form->toFormValues(),
 						'type'    => $fieldsetType
 					])->toArray();
 				}
@@ -283,7 +285,7 @@ class BlocksField extends FieldClass
 	public function toStoredValue(bool $default = false): mixed
 	{
 		$value  = $this->toFormValue($default);
-		$blocks = $this->blocksToValues((array)$value, 'content');
+		$blocks = $this->blocksToValues((array)$value, 'toStoredValues');
 
 		// returns empty string to avoid storing empty array as string `[]`
 		// and to consistency work with `$field->isEmpty()`
@@ -318,26 +320,32 @@ class BlocksField extends FieldClass
 					);
 				}
 
-				$fields = [];
+				$forms  = [];
 				$index  = 0;
 
 				foreach ($value as $block) {
 					$index++;
 					$type = $block['type'];
 
-					try {
-						$fieldset    = $this->fieldset($type);
-						$blockFields = $fields[$type] ?? $fieldset->fields() ?? [];
-					} catch (Throwable) {
-						// skip invalid blocks
-						continue;
+					// create the form for the block
+					// and cache it for later use
+					if (isset($forms[$type]) === false) {
+						try {
+							$fieldset     = $this->fieldset($type);
+							$fields       = $fieldset->fields() ?? [];
+							$forms[$type] = $this->form($fields);
+						} catch (Throwable) {
+							// skip invalid blocks
+							continue;
+						}
 					}
 
-					// store the fields for the next round
-					$fields[$type] = $blockFields;
-
 					// overwrite the content with the serialized form
-					$form = $this->form($blockFields, $block['content']);
+					$form = $forms[$type]->reset()->fill(
+						input:       $block['content'],
+						passthrough: true
+					);
+
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
 
