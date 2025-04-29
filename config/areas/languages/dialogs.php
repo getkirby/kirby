@@ -285,16 +285,14 @@ return [
 				$value                          = [
 					'entries'  => $variable->value(),
 					'key'      => $variable->key(),
-					'multiple' => true,
-					'value'    => ''
+					'multiple' => true
 				];
 			} else {
 				$fields['value']['autofocus'] = true;
 				$value                        = [
-					'entries'  => [],
 					'key'      => $variable->key(),
 					'multiple' => false,
-					'value'    => ''
+					'value'    => $variable->value()
 				];
 			}
 
