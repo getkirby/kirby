@@ -98,15 +98,15 @@ class Content
 		);
 
 		// forms
-		$oldForm = new Form([
-			'fields' => $old->fields(),
-			'model'  => $this->parent
-		]);
+		$oldForm = new Form(
+			fields: $old->fields(),
+			model: $this->parent
+		);
 
-		$newForm = new Form([
-			'fields' => $new->fields(),
-			'model'  => $this->parent
-		]);
+		$newForm = new Form(
+			fields: $new->fields(),
+			model: $this->parent
+		);
 
 		// fields
 		$oldFields = $oldForm->fields();
