@@ -258,6 +258,67 @@ class Form
 	}
 
 	/**
+	 * Legacy constructor to support the old props array
+	 *
+	 * @deprecated 5.0.0 Use the new constructor with named parameters instead
+	 */
+	protected function legacyConstruct(
+		array $fields = [],
+		ModelWithContent|null $model = null,
+		Language|string|null $language = null,
+		array $values = [],
+		array $input = [],
+		bool $strict = false
+	): void {
+		$this->__construct(
+			fields: $fields,
+			model: $model,
+			language: $language
+		);
+
+		$this->fill(
+			input: $values,
+			passthrough: $strict === false
+		);
+
+		$this->submit(
+			input: $input,
+			passthrough: $strict === false
+		);
+	}
+
+	/**
+	 * Legacy for method to support the old props array
+	 *
+	 * @deprecated 5.0.0 Use `::for()` with named parameters instead
+	 */
+	protected static function legacyFor(
+		ModelWithContent $model,
+		Language|string|null $language = null,
+		bool $strict = false,
+		array|null $input = [],
+		array|null $values = [],
+		bool $ignoreDisabled = false
+	): static {
+		$form = static::for(
+			model: $model,
+			language: $language,
+		);
+
+		$form->fill(
+			input: $values ?? [],
+			passthrough: $strict === false
+		);
+
+		$form->submit(
+			input: $input ?? [],
+			passthrough: $strict === false
+		);
+
+		return $form;
+	}
+
+	/**
 	 * Adds values to the passthrough array
 	 * which will be added to the form data
 	 * if the field does not exist
