@@ -52,7 +52,7 @@ class Form
 	/**
 	 * Returns the data required to write to the content file
 	 * Doesn't include default and null values
-	 * 
+	 *
 	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
 	 */
 	public function content(): array
@@ -67,21 +67,28 @@ class Form
 	 */
 	public function data($defaults = false, bool $includeNulls = true): array
 	{
-		$data = [];
+		$data     = [];
+		$language = $this->fields->language();
 
 		foreach ($this->fields as $field) {
-			if ($field->hasValue() === false || $field->unset() === true) {
+			if ($field->isStorable($language) === false) {
 				if ($includeNulls === true) {
 					$data[$field->name()] = null;
-				} else {
-					unset($data[$field->name()]);
-				}
-			} else {
-				if ($defaults === true && $field->isEmpty() === true) {
-					$field->fill($field->default());
 				}
 
-				$data[$field->name()] = $field->toStoredValue();
+				continue;
+			}
+
+			if ($defaults === true && $field->isEmpty() === true) {
+				$field->fill($field->default());
+			}
+
+			$data[$field->name()] = $field->toStoredValue();
+		}
+
+		foreach ($this->fields->passthrough() as $key => $value) {
+			if (isset($data[$key]) === false) {
+				$data[$key] = $value;
 			}
 		}
 
