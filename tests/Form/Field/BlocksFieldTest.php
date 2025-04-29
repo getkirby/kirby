@@ -478,6 +478,20 @@ class BlocksFieldTest extends TestCase
 		], $field->errors());
 	}
 
+	public function testValidationsWithInvalidBlockType()
+	{
+		$field = $this->field('blocks', [
+			'value' => [
+				[
+					'type' => 'not-exists',
+				]
+			]
+		]);
+
+		$this->assertTrue($field->isValid());
+		$this->assertSame([], $field->errors());
+	}
+
 	public function testEmpty()
 	{
 		$field = $this->field('blocks', [
