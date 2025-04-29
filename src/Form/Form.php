@@ -29,11 +29,6 @@ class Form
 	protected Fields $fields;
 
 	/**
-	 * All values of form
-	 */
-	protected array $values = [];
-
-	/**
 	 * Form constructor
 	 */
 	public function __construct(
@@ -72,7 +67,7 @@ class Form
 	 */
 	public function data($defaults = false, bool $includeNulls = true): array
 	{
-		$data = $this->values;
+		$data = [];
 
 		foreach ($this->fields as $field) {
 			if ($field->hasValue() === false || $field->unset() === true) {
