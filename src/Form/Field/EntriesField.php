@@ -65,11 +65,12 @@ class EntriesField extends FieldClass
 
 	public function form(array $values = []): Form
 	{
-		return new Form([
-			'fields' => [$this->field()],
-			'values' => $values,
-			'model'  => $this->model
-		]);
+		$form = new Form(
+			fields: [$this->field()],
+			model:  $this->model
+		);
+
+		return $form->fill(input: $values);
 	}
 
 	public function props(): array
