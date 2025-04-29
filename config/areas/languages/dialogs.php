@@ -51,8 +51,9 @@ $translationDialogFields = [
 	],
 	'multiple' => [
 		'label'   => I18n::translate('language.variable.multiple'),
-		'type'    => 'toggle',
-		'default' => false
+		'text'    => I18n::translate('language.variable.multiple.text'),
+		'help'    => I18n::translate('language.variable.multiple.help'),
+		'type'    => 'toggle'
 	],
 	'value' => [
 		'buttons' => false,
@@ -71,12 +72,11 @@ $translationDialogFields = [
 		'min'   => 1,
 		'when'  => [
 			'multiple' => true
-		]
+		],
 	]
 ];
 
 return [
-
 	// create language
 	'language.create' => [
 		'pattern' => 'languages/create',
