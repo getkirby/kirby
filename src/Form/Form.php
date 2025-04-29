@@ -7,9 +7,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
-use Kirby\Form\Field\ExceptionField;
 use Kirby\Toolkit\A;
-use Throwable;
 
 /**
  * The main form class, that is being
@@ -83,14 +81,7 @@ class Form
 				default => $input[$name] ?? $values[$name] ?? null
 			};
 
-			try {
-				$field = Field::factory($props['type'], $props, $this->fields);
-			} catch (Throwable $e) {
-				$field = new ExceptionField(
-					name: $props['name'],
-					exception: $e
-				);
-			}
+			$field = Field::factory($props['type'], $props, $this->fields);
 
 			if ($field->hasValue() === true) {
 				$this->values[$name] = $field->value();
