@@ -36,12 +36,13 @@ class LayoutField extends BlocksField
 	 */
 	public function fill(mixed $value): static
 	{
+		$attrs   = $this->attrsForm();
 		$value   = Data::decode($value, type: 'json', fail: false);
 		$layouts = Layouts::factory($value, ['parent' => $this->model])->toArray();
 
 		foreach ($layouts as $layoutIndex => $layout) {
 			if ($this->settings !== null) {
-				$layouts[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->values();
+				$layouts[$layoutIndex]['attrs'] = $attrs->reset()->fill($layout['attrs'])->toFormValues();
 			}
 
 			foreach ($layout['columns'] as $columnIndex => $column) {
@@ -54,16 +55,12 @@ class LayoutField extends BlocksField
 		return $this;
 	}
 
-	public function attrsForm(array $input = []): Form
+	public function attrsForm(): Form
 	{
-		$form = new Form(
+		return new Form(
 			fields: $this->settings()?->fields() ?? [],
 			model:  $this->model
 		);
-
-		$form->fill(input: $input, passthrough: false);
-
-		return $form;
 	}
 
 	public function layouts(): array|null
@@ -149,13 +146,13 @@ class LayoutField extends BlocksField
 			'action'  => function () use ($field): array {
 				$request = App::instance()->request();
 
-				$input    = $request->get('attrs') ?? [];
-				$defaults = $field->attrsForm($input)->data(true);
-				$attrs    = $field->attrsForm($defaults)->values();
 				$columns  = $request->get('columns') ?? ['1/1'];
+				$input    = $request->get('attrs') ?? [];
+				$form     = $field->attrsForm();
+				$form->fill(input: $form->defaults())->fill(input: $input);
 
 				return Layout::factory([
-					'attrs'   => $attrs,
+					'attrs'   => $form->toFormValues(),
 					'columns' => array_map(fn ($width) => [
 						'blocks' => [],
 						'id'     => Str::uuid(),
@@ -276,6 +273,7 @@ class LayoutField extends BlocksField
 
 	public function toStoredValue(bool $default = false): mixed
 	{
+		$attrs = $this->attrsForm();
 		$value = $this->toFormValue($default);
 		$value = Layouts::factory($value, ['parent' => $this->model])->toArray();
 
@@ -287,7 +285,7 @@ class LayoutField extends BlocksField
 
 		foreach ($value as $layoutIndex => $layout) {
 			if ($this->settings !== null) {
-				$value[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->content();
+				$value[$layoutIndex]['attrs'] = $attrs->reset()->fill($layout['attrs'])->toStoredValues();
 			}
 
 			foreach ($layout['columns'] as $columnIndex => $column) {
