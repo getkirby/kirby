@@ -157,12 +157,17 @@ class Fieldset extends Item
 	 */
 	public function form(array $fields, array $input = []): Form
 	{
-		return new Form([
-			'fields' => $fields,
-			'model'  => $this->parent,
-			'strict' => true,
-			'values' => $input,
-		]);
+		$form = new Form(
+			fields: $fields,
+			model: $this->parent,
+		);
+
+		$form->fill(
+			input: $input,
+			passthrough: false
+		);
+
+		return $form;
 	}
 
 	public function icon(): string|null
