@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
@@ -27,13 +28,16 @@ use Kirby\Toolkit\Str;
 class Fields extends Collection
 {
 	protected Language $language;
+	protected ModelWithContent $model;
 	protected array $passthrough = [];
 
 	public function __construct(
 		array $fields = [],
-		protected ModelWithContent|null $model = null,
+		ModelWithContent|null $model = null,
 		Language|null $language = null
 	) {
+		$this->model = $model ?? App::instance()->site();
+
 		foreach ($fields as $name => $field) {
 			$this->__set($name, $field);
 		}
