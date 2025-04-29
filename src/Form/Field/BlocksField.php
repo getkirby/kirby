@@ -327,26 +327,32 @@ class BlocksField extends FieldClass
 					);
 				}
 
-				$fields = [];
+				$forms  = [];
 				$index  = 0;
 
 				foreach ($value as $block) {
 					$index++;
 					$type = $block['type'];
 
-					try {
-						$fieldset    = $this->fieldset($type);
-						$blockFields = $fields[$type] ?? $fieldset->fields() ?? [];
-					} catch (Throwable) {
-						// skip invalid blocks
-						continue;
+					// create the form for the block
+					// and cache it for later use
+					if (isset($forms[$type]) === false) {
+						try {
+							$fieldset     = $this->fieldset($type);
+							$fields       = $fieldset->fields() ?? [];
+							$forms[$type] = $this->form($fields);
+						} catch (Throwable) {
+							// skip invalid blocks
+							continue;
+						}
 					}
 
-					// store the fields for the next round
-					$fields[$type] = $blockFields;
-
 					// overwrite the content with the serialized form
-					$form = $this->form($blockFields, $block['content']);
+					$form = $forms[$type]->reset()->fill(
+						input:       $block['content'],
+						passthrough: true
+					);
+
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
 
