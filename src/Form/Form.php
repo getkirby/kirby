@@ -104,6 +104,8 @@ class Form
 	/**
 	 * Returns the data required to write to the content file
 	 * Doesn't include default and null values
+	 * 
+	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
 	 */
 	public function content(): array
 	{
@@ -113,7 +115,7 @@ class Form
 	/**
 	 * Returns data for all fields in the form
 	 *
-	 * @param false $defaults
+	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
 	 */
 	public function data($defaults = false, bool $includeNulls = true): array
 	{
@@ -375,6 +377,8 @@ class Form
 
 	/**
 	 * Converts the data of fields to strings
+	 *
+	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
 	 */
 	public function strings($defaults = false): array
 	{
