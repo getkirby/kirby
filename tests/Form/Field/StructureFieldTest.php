@@ -255,7 +255,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame($expected, $data);
 
 		// filled mother form
-		$motherForm = $field->form($value[0]);
+		$motherForm = $field->form()->fill(input: $value[0], passthrough: true);
 		$expected   = $value[0];
 
 		$this->assertEquals($expected, $motherForm->data()); // cannot use strict assertion (array order)
@@ -271,9 +271,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame('', $childrenForm->data()['name']);
 
 		// filled children form
-		$childrenForm = $childrenField->form([
-			'name' => 'Test'
-		]);
+		$childrenForm = $childrenField->form()->fill(input: ['name' => 'Test'], passthrough: true);
 
 		$this->assertSame('Test', $childrenForm->data()['name']);
 

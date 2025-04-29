@@ -172,19 +172,12 @@ return [
 
 			return $value;
 		},
-		'form' => function (array $values = []) {
-			$form = new Form(
+		'form' => function () {
+			return new Form(
 				fields: $this->attrs['fields'] ?? [],
 				model: $this->model,
 				language: 'current'
 			);
-
-			$form->fill(
-				input: $values,
-				passthrough: true
-			);
-
-			return $form;
 		},
 	],
 	'save' => function ($value) {
