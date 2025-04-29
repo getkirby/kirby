@@ -49,7 +49,7 @@ class FileBlueprintsTest extends ModelTestCase
 								'e' => [
 									'type'    => 'files',
 									'uploads' => [
-										'parent'   => 'foo',
+										'parent'   => 'site',
 										'template' => 'for-fields/c'
 									]
 								],
@@ -171,7 +171,7 @@ class FileBlueprintsTest extends ModelTestCase
 								[
 									'type'    => 'files',
 									'uploads' => [
-										'parent'   => 'foo',
+										'parent'   => 'site',
 										'template' => 'for-fields/c'
 									]
 								],
@@ -215,7 +215,6 @@ class FileBlueprintsTest extends ModelTestCase
 			'content'  => ['template' => 'current'],
 			'parent'   => $page
 		]);
-
 
 		$blueprints = $file->blueprints('section-a');
 		$this->assertCount(2, $blueprints);
