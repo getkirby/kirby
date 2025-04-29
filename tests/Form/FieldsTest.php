@@ -35,14 +35,17 @@ class FieldsTest extends TestCase
 
 	public function testConstruct()
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+				],
+				'b' => [
+					'type'  => 'text',
+				],
 			],
-			'b' => [
-				'type'  => 'text',
-			],
-		], $this->model);
+			model: $this->model
+		);
 
 		$this->assertSame('a', $fields->first()->name());
 		$this->assertSame($this->model, $fields->first()->model());
@@ -50,21 +53,21 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	public function testConstructWithModel()
+	public function testConstructWithoutModel()
 	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-			],
-			'b' => [
-				'type'  => 'text',
-			],
-		], $this->model);
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+				],
+				'b' => [
+					'type'  => 'text',
+				],
+			]
+		);
 
-		$this->assertSame('a', $fields->first()->name());
-		$this->assertSame($this->model, $fields->first()->model());
-		$this->assertSame('b', $fields->last()->name());
-		$this->assertSame($this->model, $fields->last()->model());
+		$this->assertSame($this->app->site(), $fields->first()->model());
+		$this->assertSame($this->app->site(), $fields->last()->model());
 	}
 
 	public function testDefaults()
@@ -360,6 +363,10 @@ class FieldsTest extends TestCase
 		$fields = new Fields(fields: [], language: $language);
 		$this->assertSame('de', $fields->language()->code());
 		$this->assertFalse($fields->language()->isDefault());
+
+		// language code passed
+		$fields = new Fields(fields: [], language: 'en');
+		$this->assertSame('en', $fields->language()->code());
 	}
 
 	public function testPassthrough(): void
@@ -423,6 +430,27 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues());
 	}
 
+	public function testPassthroughWithClosureValues(): void
+	{
+		$fields = new Fields([], $this->model);
+
+		$fields->passthrough([
+			'test' => 'Test', // should be ignored
+		]);
+
+		$this->assertSame([
+			'test' => 'Test',
+		], $fields->toFormValues());
+
+
+		$fields->passthrough([
+			'test' => fn ($value) => $value . ' updated'
+		]);
+
+		$this->assertSame([
+			'test' => 'Test updated'
+		], $fields->toFormValues());
+	}
 
 	public function testPassthroughWithUpperAndLowerCases(): void
 	{
@@ -471,28 +499,6 @@ class FieldsTest extends TestCase
 			'a' => 'A',
 			'b' => 'B',
 			'c' => 'C'
-		], $fields->toFormValues());
-	}
-
-	public function testPassthroughWithEmptyArray(): void
-	{
-		$fields = new Fields([
-			'a' => [
-				'type'  => 'text',
-				'value' => 'A'
-			],
-		], $this->model);
-
-		// add passthrough values
-		$fields->passthrough([
-			'b' => 'B',
-		]);
-
-		// remove passthrough values
-		$fields->passthrough([]);
-
-		$this->assertSame([
-			'a' => 'A',
 		], $fields->toFormValues());
 	}
 

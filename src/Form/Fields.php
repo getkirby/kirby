@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
@@ -27,18 +28,20 @@ use Kirby\Toolkit\Str;
 class Fields extends Collection
 {
 	protected Language $language;
+	protected ModelWithContent $model;
 	protected array $passthrough = [];
 
 	public function __construct(
 		array $fields = [],
-		protected ModelWithContent|null $model = null,
-		Language|null $language = null
+		ModelWithContent|null $model = null,
+		Language|string|null $language = null
 	) {
+		$this->model    = $model ?? App::instance()->site();
+		$this->language = Language::ensure($language ?? 'current');
+
 		foreach ($fields as $name => $field) {
 			$this->__set($name, $field);
 		}
-
-		$this->language = $language ?? Language::ensure('current');
 	}
 
 	/**
@@ -62,6 +65,8 @@ class Fields extends Collection
 
 	/**
 	 * Returns an array with the default value of each field
+	 *
+	 * @since 5.0.0
 	 */
 	public function defaults(): array
 	{
@@ -93,6 +98,7 @@ class Fields extends Collection
 	 * Get the field object by name
 	 * and handle nested fields correctly
 	 *
+	 * @since 5.0.0
 	 * @throws \Kirby\Exception\NotFoundException
 	 */
 	public function field(string $name): Field|FieldClass
@@ -108,6 +114,8 @@ class Fields extends Collection
 
 	/**
 	 * Sets the value for each field with a matching key in the input array
+	 *
+	 * @since 5.0.0
 	 */
 	public function fill(
 		array $input,
@@ -192,20 +200,24 @@ class Fields extends Collection
 
 	/**
 	 * Creates a new Fields instance for the given model and language
+	 *
+	 * @since 5.0.0
 	 */
 	public static function for(
 		ModelWithContent $model,
-		Language|string $language = 'default'
+		Language|string|null $language = null
 	): static {
 		return new static(
 			fields: $model->blueprint()->fields(),
 			model: $model,
-			language: Language::ensure($language),
+			language: $language,
 		);
 	}
 
 	/**
 	 * Returns the language of the fields
+	 *
+	 * @since 5.0.0
 	 */
 	public function language(): Language
 	{
@@ -216,19 +228,14 @@ class Fields extends Collection
 	 * Adds values to the passthrough array
 	 * which will be added to the form data
 	 * if the field does not exist
+	 *
+	 * @since 5.0.0
 	 */
 	public function passthrough(array|null $values = null): static|array
 	{
 		// use passthrough method as getter if the value is null
 		if ($values === null) {
 			return $this->passthrough;
-		}
-
-		// always start with a fresh set of passthrough values
-		// if the values array is empty
-		if ($values === []) {
-			$this->passthrough = [];
-			return $this;
 		}
 
 		foreach ($values as $key => $value) {
@@ -240,6 +247,11 @@ class Fields extends Collection
 				continue;
 			}
 
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($this->passthrough[$key] ?? null);
+			}
+
 			$this->passthrough[$key] = $value;
 		}
 
@@ -248,6 +260,8 @@ class Fields extends Collection
 
 	/**
 	 * Resets the value of each field
+	 *
+	 * @since 5.0.0
 	 */
 	public function reset(): static
 	{
@@ -315,6 +329,8 @@ class Fields extends Collection
 	/**
 	 * Returns an array with the form value of each field
 	 * (e.g. used as data for Panel Vue components)
+	 *
+	 * @since 5.0.0
 	 */
 	public function toFormValues(): array
 	{
@@ -327,6 +343,8 @@ class Fields extends Collection
 	/**
 	 * Returns an array with the props of each field
 	 * for the frontend
+	 *
+	 * @since 5.0.0
 	 */
 	public function toProps(): array
 	{
@@ -366,6 +384,8 @@ class Fields extends Collection
 	/**
 	 * Returns an array with the stored value of each field
 	 * (e.g. used for saving to content storage)
+	 *
+	 * @since 5.0.0
 	 */
 	public function toStoredValues(): array
 	{
@@ -397,6 +417,7 @@ class Fields extends Collection
 	 * Checks for errors in all fields and throws an
 	 * exception if there are any
 	 *
+	 * @since 5.0.0
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function validate(): void
