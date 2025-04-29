@@ -2,7 +2,6 @@
 
 namespace Kirby\Form;
 
-use Closure;
 use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
@@ -29,81 +28,31 @@ class Form
 	protected Fields $fields;
 
 	/**
-	 * All values of form
-	 */
-	protected array $values = [];
-
-	/**
 	 * Form constructor
 	 */
-	public function __construct(array $props)
-	{
-		$fields = $props['fields'] ?? [];
-		$values = $props['values'] ?? [];
-		$input  = $props['input']  ?? [];
-		$model  = $props['model']  ?? null;
-		$strict = $props['strict'] ?? false;
-		$inject = $props;
-
-		// get the language for the form
-		$language = Language::ensure($props['language'] ?? 'current');
-
-		// prepare field properties for multilang setups
-		$fields = static::prepareFieldsForLanguage(
-			$fields,
-			$language
-		);
-
-		// lowercase all value names
-		$values = array_change_key_case($values);
-		$input  = array_change_key_case($input);
-
-		unset($inject['fields'], $inject['values'], $inject['input']);
+	public function __construct(
+		array $props = [],
+		array $fields = [],
+		ModelWithContent|null $model = null,
+		Language|string|null $language = null
+	) {
+		if ($props !== []) {
+			$this->legacyConstruct(...$props);
+			return;
+		}
 
 		$this->fields = new Fields(
+			fields: $fields,
 			model: $model,
 			language: $language
 		);
-
-		$this->values = [];
-
-		foreach ($fields as $name => $props) {
-			// inject stuff from the form constructor (model, etc.)
-			$props = [...$inject, ...$props];
-
-			// inject the name
-			$props['name'] = $name = strtolower($name);
-
-			// check if the field is disabled and
-			// overwrite the field value if not set
-			$props['value'] = match ($props['disabled'] ?? false) {
-				true    => $values[$name] ?? null,
-				default => $input[$name] ?? $values[$name] ?? null
-			};
-
-			$field = Field::factory($props['type'], $props, $this->fields);
-
-			if ($field->hasValue() === true) {
-				$this->values[$name] = $field->value();
-			}
-
-			$this->fields->append($name, $field);
-		}
-
-		if ($strict !== true) {
-			// use all given values, no matter
-			// if there's a field or not.
-			$input = [...$values, ...$input];
-
-			foreach ($input as $key => $value) {
-				$this->values[$key] ??= $value;
-			}
-		}
 	}
 
 	/**
 	 * Returns the data required to write to the content file
 	 * Doesn't include default and null values
+	 *
+	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
 	 */
 	public function content(): array
 	{
@@ -113,25 +62,32 @@ class Form
 	/**
 	 * Returns data for all fields in the form
 	 *
-	 * @param false $defaults
+	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
 	 */
 	public function data($defaults = false, bool $includeNulls = true): array
 	{
-		$data = $this->values;
+		$data     = [];
+		$language = $this->fields->language();
 
 		foreach ($this->fields as $field) {
-			if ($field->hasValue() === false || $field->unset() === true) {
+			if ($field->isStorable($language) === false) {
 				if ($includeNulls === true) {
 					$data[$field->name()] = null;
-				} else {
-					unset($data[$field->name()]);
-				}
-			} else {
-				if ($defaults === true && $field->isEmpty() === true) {
-					$field->fill($field->default());
 				}
 
-				$data[$field->name()] = $field->toStoredValue();
+				continue;
+			}
+
+			if ($defaults === true && $field->isEmpty() === true) {
+				$field->fill($field->default());
+			}
+
+			$data[$field->name()] = $field->toStoredValue();
+		}
+
+		foreach ($this->fields->passthrough() as $key => $value) {
+			if (isset($data[$key]) === false) {
+				$data[$key] = $value;
 			}
 		}
 
@@ -197,38 +153,29 @@ class Form
 	 */
 	public static function for(
 		ModelWithContent $model,
-		array $props = []
+		array $props = [],
+		Language|string|null $language = null,
 	): static {
-		// get the original model data
-		$original = $model->content($props['language'] ?? null)->toArray();
-		$values   = $props['values'] ?? [];
-
-		// convert closures to values
-		foreach ($values as $key => $value) {
-			if ($value instanceof Closure) {
-				$values[$key] = $value($original[$key] ?? null);
-			}
+		if ($props !== []) {
+			return static::legacyFor(
+				$model,
+				...$props
+			);
 		}
 
-		// set a few defaults
-		$props['values']   = [...$original, ...$values];
-		$props['fields'] ??= [];
-		$props['model']    = $model;
+		$form = new static(
+			fields: $model->blueprint()->fields(),
+			model: $model,
+			language: $language
+		);
 
-		// search for the blueprint
-		$props['fields'] = $model->blueprint()->fields();
+		// fill the form with the latest content of the model
+		$form->fill(
+			input: $model->content($form->language())->toArray(),
+			passthrough: true
+		);
 
-		$ignoreDisabled = $props['ignoreDisabled'] ?? false;
-
-		// REFACTOR: this could be more elegant
-		if ($ignoreDisabled === true) {
-			$props['fields'] = array_map(function ($field) {
-				$field['disabled'] = false;
-				return $field;
-			}, $props['fields']);
-		}
-
-		return new static($props);
+		return $form;
 	}
 
 	/**
@@ -258,6 +205,67 @@ class Form
 	}
 
 	/**
+	 * Legacy constructor to support the old props array
+	 *
+	 * @deprecated 5.0.0 Use the new constructor with named parameters instead
+	 */
+	protected function legacyConstruct(
+		array $fields = [],
+		ModelWithContent|null $model = null,
+		Language|string|null $language = null,
+		array $values = [],
+		array $input = [],
+		bool $strict = false
+	): void {
+		$this->__construct(
+			fields: $fields,
+			model: $model,
+			language: $language
+		);
+
+		$this->fill(
+			input: $values,
+			passthrough: $strict === false
+		);
+
+		$this->submit(
+			input: $input,
+			passthrough: $strict === false
+		);
+	}
+
+	/**
+	 * Legacy for method to support the old props array
+	 *
+	 * @deprecated 5.0.0 Use `::for()` with named parameters instead
+	 */
+	protected static function legacyFor(
+		ModelWithContent $model,
+		Language|string|null $language = null,
+		bool $strict = false,
+		array|null $input = [],
+		array|null $values = [],
+		bool $ignoreDisabled = false
+	): static {
+		$form = static::for(
+			model: $model,
+			language: $language,
+		);
+
+		$form->fill(
+			input: $values ?? [],
+			passthrough: $strict === false
+		);
+
+		$form->submit(
+			input: $input ?? [],
+			passthrough: $strict === false
+		);
+
+		return $form;
+	}
+
+	/**
 	 * Adds values to the passthrough array
 	 * which will be added to the form data
 	 * if the field does not exist
@@ -279,29 +287,6 @@ class Form
 	}
 
 	/**
-	 * Disables fields in secondary languages when
-	 * they are configured to be untranslatable
-	 */
-	protected static function prepareFieldsForLanguage(
-		array $fields,
-		Language $language
-	): array {
-		if ($language->isDefault() === true) {
-			return $fields;
-		}
-
-		foreach ($fields as $fieldName => $fieldProps) {
-			// switch untranslatable fields to readonly
-			if (($fieldProps['translate'] ?? true) === false) {
-				$fields[$fieldName]['unset']    = true;
-				$fields[$fieldName]['disabled'] = true;
-			}
-		}
-
-		return $fields;
-	}
-
-	/**
 	 * Resets the value of each field
 	 *
 	 * @since 5.0.0
@@ -314,6 +299,8 @@ class Form
 
 	/**
 	 * Converts the data of fields to strings
+	 *
+	 * @deprecated 5.0.0 Use `::toStoredValues()` instead
 	 */
 	public function strings($defaults = false): array
 	{
@@ -402,9 +389,11 @@ class Form
 
 	/**
 	 * Returns form values
+	 *
+	 * @deprecated 5.0.0 Use `::toFormValues()` instead
 	 */
 	public function values(): array
 	{
-		return $this->values;
+		return $this->fields->toFormValues();
 	}
 }
