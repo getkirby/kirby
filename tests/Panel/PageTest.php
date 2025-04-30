@@ -530,7 +530,6 @@ class PageTest extends TestCase
 		$props = $panel->props();
 
 		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('content', $props['model']);
 		$this->assertArrayHasKey('id', $props['model']);
 		$this->assertArrayHasKey('parent', $props['model']);
 		$this->assertArrayHasKey('previewUrl', $props['model']);
@@ -543,6 +542,7 @@ class PageTest extends TestCase
 		$this->assertArrayHasKey('permissions', $props);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertArrayHasKey('tabs', $props);
+		$this->assertArrayHasKey('versions', $props);
 
 		$this->assertNull($props['next']());
 		$this->assertNull($props['prev']());

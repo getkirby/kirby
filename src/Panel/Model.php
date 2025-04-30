@@ -373,14 +373,16 @@ abstract class Model
 		$props = [
 			'api'         => $link,
 			'buttons'     => fn () => $this->buttons(),
-			'content'     => (object)$versions['changes'],
 			'id'          => $this->model->id(),
 			'link'        => $link,
 			'lock'        => $this->model->lock()->toArray(),
-			'originals'   => (object)$versions['latest'],
 			'permissions' => $this->model->permissions()->toArray(),
 			'tabs'        => $tabs,
-			'uuid'        => fn () => $this->model->uuid()?->toString()
+			'uuid'        => fn () => $this->model->uuid()?->toString(),
+			'versions'    => [
+				'latest'  => (object)$versions['latest'],
+				'changes' => (object)$versions['changes']
+			]
 		];
 
 		// only send the tab if it exists

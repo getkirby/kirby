@@ -391,7 +391,6 @@ class UserTest extends TestCase
 
 		$this->assertArrayHasKey('model', $props);
 		$this->assertArrayHasKey('avatar', $props['model']);
-		$this->assertArrayHasKey('content', $props['model']);
 		$this->assertArrayHasKey('email', $props['model']);
 		$this->assertArrayHasKey('id', $props['model']);
 		$this->assertArrayHasKey('language', $props['model']);
@@ -405,6 +404,7 @@ class UserTest extends TestCase
 		$this->assertArrayHasKey('permissions', $props);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertArrayHasKey('tabs', $props);
+		$this->assertArrayHasKey('versions', $props);
 
 		$this->assertNull($props['next']());
 		$this->assertNull($props['prev']());
