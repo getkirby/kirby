@@ -19,26 +19,28 @@ export default (panel) => {
 			this.saveAbortController?.abort();
 		},
 
+		dialog: null,
+
 		/**
 		 * Returns an object with all changed fields
 		 * @param {Object} env
 		 * @returns {Object}
 		 */
-		changes(env = {}) {
+		diff(env = {}) {
 			// changes can only be computed for the current view
 			if (this.isCurrent(env) === false) {
 				throw new Error("Cannot get changes for another view");
 			}
 
 			const versions = this.versions();
-			const changes = {};
+			const diff = {};
 
 			for (const field in versions.changes) {
 				const changed = JSON.stringify(versions.changes[field]);
 				const original = JSON.stringify(versions.latest[field]);
 
 				if (changed !== original) {
-					changes[field] = versions.changes[field];
+					diff[field] = versions.changes[field];
 				}
 			}
 
@@ -46,14 +48,12 @@ export default (panel) => {
 			// but have been removed from the current content
 			for (const field in versions.latest) {
 				if (versions.changes[field] === undefined) {
-					changes[field] = null;
+					diff[field] = null;
 				}
 			}
 
-			return changes;
+			return diff;
 		},
-
-		dialog: null,
 
 		/**
 		 * Removes all unpublished changes
@@ -344,10 +344,7 @@ export default (panel) => {
 		 * @returns {Object}
 		 */
 		versions() {
-			return {
-				latest: panel.view.props.originals,
-				changes: panel.view.props.content
-			};
+			return panel.view.props.versions;
 		}
 	});
 
