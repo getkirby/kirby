@@ -12,8 +12,8 @@
 				:image="tag.image"
 				:link="tag.link"
 				:text="tag.text"
+				element="div"
 				theme="light"
-				@click.native.stop
 			/>
 		</li>
 	</ul>
