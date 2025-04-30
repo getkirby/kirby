@@ -30,7 +30,7 @@
 			</template>
 		</k-header>
 
-		<k-model-tabs :changes="changes" :tab="tab.name" :tabs="tabs" />
+		<k-model-tabs :diff="diff" :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"

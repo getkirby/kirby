@@ -9,7 +9,6 @@ export default {
 		api: String,
 		blueprint: String,
 		buttons: Array,
-		content: Object,
 		id: String,
 		link: String,
 		lock: {
@@ -17,7 +16,6 @@ export default {
 		},
 		model: Object,
 		next: Object,
-		originals: Object,
 		prev: Object,
 		permissions: {
 			type: Object,
@@ -35,7 +33,8 @@ export default {
 			type: Array,
 			default: () => []
 		},
-		uuid: String
+		uuid: String,
+		versions: Object
 	},
 	data() {
 		return {
@@ -43,8 +42,11 @@ export default {
 		};
 	},
 	computed: {
-		changes() {
-			return this.$panel.content.changes({
+		content() {
+			return this.versions.changes;
+		},
+		diff() {
+			return this.$panel.content.diff({
 				api: this.api,
 				language: this.$panel.language.code
 			});
@@ -53,7 +55,7 @@ export default {
 			return this.lock.user.email;
 		},
 		hasChanges() {
-			return length(this.changes) > 0;
+			return length(this.diff) > 0;
 		},
 		isLocked() {
 			return this.lock.isLocked;
