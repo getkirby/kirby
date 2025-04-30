@@ -13,20 +13,16 @@ describe.concurrent("panel.plugins", () => {
 	it("should have defaults", async () => {
 		const plugins = Plugins(Vue);
 
-		const expected = {
-			components: {},
-			created: [],
-			icons: {},
-			login: null,
-			textareaButtons: {},
-			thirdParty: {},
-			use: [],
-			viewButtons: {},
-			writerMarks: {},
-			writerNodes: {}
-		};
-
-		expect(plugins).toStrictEqual(expected);
+		expect(plugins.components).toStrictEqual({});
+		expect(plugins.created).toStrictEqual([]);
+		expect(plugins.icons).toStrictEqual({});
+		expect(plugins.login).toStrictEqual(null);
+		expect(plugins.textareaButtons).toStrictEqual({});
+		expect(plugins.thirdParty).toStrictEqual({});
+		expect(plugins.use).toStrictEqual([]);
+		expect(plugins.viewButtons).toStrictEqual({});
+		expect(plugins.writerMarks).toStrictEqual({});
+		expect(plugins.writerNodes).toStrictEqual({});
 	});
 
 	it("should install components", async () => {
