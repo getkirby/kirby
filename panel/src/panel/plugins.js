@@ -97,7 +97,7 @@ export const installPlugins = (app, plugins) => {
 
 /**
  * Resolves a component extension if defined as component name
- * @since 5.0.0
+ * @since 4.0.0
  *
  * @param {Vue} app
  * @param {String} name
@@ -128,7 +128,7 @@ export const resolveComponentExtension = (app, name, component) => {
 
 /**
  * Resolve available mixins if they are defined
- * @since 5.0.0
+ * @since 4.0.0
  *
  * @param {Object} component
  * @returns {Object} The updated component options
@@ -190,7 +190,11 @@ export const resolveComponentRender = (component) => {
  * @since 4.0.0
  */
 export default (app, plugins = {}) => {
-	return {
+	plugins = {
+		// expose helper functions for kirbyup
+		resolveComponentExtension,
+		resolveComponentMixins,
+		resolveComponentRender,
 		// defaults
 		components: {},
 		created: [],
@@ -202,15 +206,12 @@ export default (app, plugins = {}) => {
 		viewButtons: {},
 		writerMarks: {},
 		writerNodes: {},
-
 		// registered
-		...plugins,
-		use: installPlugins(app, plugins.use),
-		components: installComponents(app, plugins.components),
-
-		// expose helper functions for kirbyup
-		resolveComponentExtension,
-		resolveComponentMixins,
-		resolveComponentRender
+		...plugins
 	};
+
+	plugins.use = installPlugins(app, plugins.use);
+	plugins.components = installComponents(app, plugins.components);
+
+	return plugins;
 };
