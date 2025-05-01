@@ -7,7 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Content\VersionId
+ * @coversDefaultClass \Kirby\Content\VersionId
  */
 class VersionIdTest extends TestCase
 {
@@ -16,18 +16,6 @@ class VersionIdTest extends TestCase
 		parent::tearDown();
 
 		VersionId::$render = null;
-	}
-
-	/**
-	 * @covers ::all
-	 */
-	public function testAll()
-	{
-		$list = VersionId::all();
-
-		$this->assertCount(2, $list);
-		$this->assertSame('latest', $list[0]->value());
-		$this->assertSame('changes', $list[1]->value());
 	}
 
 	/**

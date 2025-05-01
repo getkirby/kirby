@@ -10,6 +10,7 @@ use Kirby\Cache\RedisCache;
 use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
+use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Panel\Ui\FilePreviews\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreviews\ImageFilePreview;
@@ -251,6 +252,7 @@ class Core
 			'color'       => $this->root . '/fields/color.php',
 			'date'        => $this->root . '/fields/date.php',
 			'email'       => $this->root . '/fields/email.php',
+			'entries'     => EntriesField::class,
 			'files'       => $this->root . '/fields/files.php',
 			'gap'         => $this->root . '/fields/gap.php',
 			'headline'    => $this->root . '/fields/headline.php',

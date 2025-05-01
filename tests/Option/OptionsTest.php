@@ -21,10 +21,10 @@ class OptionsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('a', $options->first()->text->translations['en']);
+		$this->assertSame('a', $options->first()->text['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('b', $options->last()->text->translations['en']);
+		$this->assertSame('b', $options->last()->text['en']);
 	}
 
 	/**
@@ -35,10 +35,10 @@ class OptionsTest extends TestCase
 		$options = Options::factory(['a', 'b']);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('a', $options->first()->text->translations['en']);
+		$this->assertSame('a', $options->first()->text['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('b', $options->last()->text->translations['en']);
+		$this->assertSame('b', $options->last()->text['en']);
 	}
 
 	/**
@@ -52,10 +52,10 @@ class OptionsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('Option A', $options->first()->text->translations['en']);
+		$this->assertSame('Option A', $options->first()->text['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('Option B', $options->last()->text->translations['en']);
+		$this->assertSame('Option B', $options->last()->text['en']);
 	}
 
 	/**
@@ -69,10 +69,10 @@ class OptionsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('Option A', $options->first()->text->translations['en']);
+		$this->assertSame('Option A', $options->first()->text['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('Option B', $options->last()->text->translations['en']);
+		$this->assertSame('Option B', $options->last()->text['en']);
 	}
 
 	/**
@@ -86,12 +86,12 @@ class OptionsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('Option A', $options->first()->text->translations['en']);
-		$this->assertSame('Variante A', $options->first()->text->translations['de']);
+		$this->assertSame('Option A', $options->first()->text['en']);
+		$this->assertSame('Variante A', $options->first()->text['de']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('Option B', $options->last()->text->translations['en']);
-		$this->assertSame('Variante B', $options->last()->text->translations['de']);
+		$this->assertSame('Option B', $options->last()->text['en']);
+		$this->assertSame('Variante B', $options->last()->text['de']);
 	}
 
 	/**

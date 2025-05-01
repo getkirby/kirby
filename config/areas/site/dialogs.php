@@ -259,7 +259,7 @@ return [
 
 			// the page title changed
 			if ($page->title()->value() !== $title) {
-				$page->changeTitle($title);
+				$page = $page->changeTitle($title);
 				$response['event'][] = 'page.changeTitle';
 			}
 

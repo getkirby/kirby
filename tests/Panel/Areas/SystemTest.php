@@ -139,6 +139,32 @@ class SystemTest extends AreaTestCase
 		], $props['urls']);
 	}
 
+	public function testViewLocal(): void
+	{
+		$this->app([
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertSame([], $props['exceptions']);
+		$this->assertSame([
+			$this->customWarning(),
+			[
+				'id'    => 'local',
+				'icon'  => 'info',
+				'theme' => 'info',
+				'text'  => 'The site is running locally with relaxed security checks'
+			],
+			$this->compilerWarning()
+		], $props['security']);
+	}
+
 	public function testViewDebug(): void
 	{
 		$this->app([
@@ -158,8 +184,8 @@ class SystemTest extends AreaTestCase
 			[
 				'id'    => 'debug',
 				'icon'  => 'alert',
-				'text'  => 'Debugging must be turned off in production',
 				'theme' => 'negative',
+				'text'  => 'Debugging must be turned off in production',
 				'link'  => 'https://getkirby.com/security/debug'
 			],
 			$this->compilerWarning()

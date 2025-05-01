@@ -76,7 +76,7 @@ class FileUuidTest extends TestCase
 	public function testIdGenerateExistingButEmpty()
 	{
 		$file = $this->app->file('page-b/foo.pdf');
-		$file->content()->update(['uuid' => '']);
+		$file->version()->save(['uuid' => '']);
 
 		$uuid = $file->uuid();
 		$this->assertSame(16, strlen($uuid->id()));
@@ -203,9 +203,9 @@ class FileUuidTest extends TestCase
 		$this->assertSame($file->translation('de')->content()['uuid'], $file->uuid()->id());
 
 		// the uuid must be stored in the primary language file
-		$this->assertSame($file->readContent('en')['uuid'], $file->uuid()->id());
+		$this->assertSame($file->version()->read('en')['uuid'], $file->uuid()->id());
 
 		// the secondary language must not have the uuid in the content file
-		$this->assertNull($file->readContent('de')['uuid'] ?? null);
+		$this->assertNull($file->version()->read('de')['uuid'] ?? null);
 	}
 }

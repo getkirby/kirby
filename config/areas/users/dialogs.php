@@ -42,7 +42,9 @@ return [
 							'link'     => false,
 							'required' => true
 						]),
-						'password'     => Field::password(),
+						'password'     => Field::password([
+							'autocomplete' => 'new-password'
+						]),
 						'translation'  => Field::translation([
 							'required' => true
 						]),
@@ -187,13 +189,16 @@ return [
 				'props' => [
 					'fields'       => [
 						'currentPassword' => Field::password([
-							'label' => I18n::translate('user.changePassword.current'),
+							'label'        => I18n::translate('user.changePassword.current'),
+							'autocomplete' => 'current-password'
 						]),
 						'password' => Field::password([
-							'label' => I18n::translate('user.changePassword.new'),
+							'label'        => I18n::translate('user.changePassword.new'),
+							'autocomplete' => 'new-password'
 						]),
 						'passwordConfirmation' => Field::password([
-							'label' => I18n::translate('user.changePassword.new.confirm'),
+							'label'        => I18n::translate('user.changePassword.new.confirm'),
+							'autocomplete' => 'new-password'
 						])
 					],
 					'submitButton' => I18n::translate('change'),

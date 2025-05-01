@@ -34,6 +34,7 @@ class Page extends ModelWithContent
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
+	use HasModels;
 	/**
 	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
 	 */
@@ -48,11 +49,6 @@ class Page extends ModelWithContent
 	 * @todo Remove when support for PHP 8.2 is dropped
 	 */
 	public static array $methods = [];
-
-	/**
-	 * Registry with all Page models
-	 */
-	public static array $models = [];
 
 	/**
 	 * The PageBlueprint object
@@ -143,9 +139,15 @@ class Page extends ModelWithContent
 		$this->parent  = $props['parent'] ?? null;
 		$this->root    = $props['root'] ?? null;
 
+		// Set blueprint before setting content
+		// or translations in the parent constructor.
+		// Otherwise, the blueprint definition cannot be
+		// used when creating the right field values
+		// for the content.
+		$this->setBlueprint($props['blueprint'] ?? null);
+
 		parent::__construct($props);
 
-		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setChildren($props['children'] ?? null);
 		$this->setDrafts($props['drafts'] ?? null);
 		$this->setFiles($props['files'] ?? null);
@@ -359,7 +361,7 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Sorting number + Slug
+	 * Returns the directory name (UID with optional sorting number)
 	 */
 	public function dirname(): string
 	{
@@ -375,7 +377,8 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Sorting number + Slug
+	 * Returns the directory path relative to the `content` root
+	 * (including optional sorting numbers and draft directories)
 	 */
 	public function diruri(): string
 	{
@@ -410,7 +413,7 @@ class Page extends ModelWithContent
 	 */
 	public static function factory($props): static
 	{
-		return static::model($props['model'] ?? 'default', $props);
+		return static::model($props['model'] ?? $props['template'] ?? 'default', $props);
 	}
 
 	/**
@@ -513,11 +516,11 @@ class Page extends ModelWithContent
 
 	/**
 	 * Checks if the page is accessible to the current user
-	 * This permission depends on the `read` option until v5
+	 * This permission depends on the `read` option until v6
 	 */
 	public function isAccessible(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v5
+		// TODO: remove this check when `read` option deprecated in v6
 		if ($this->isReadable() === false) {
 			return false;
 		}
@@ -675,11 +678,11 @@ class Page extends ModelWithContent
 
 	/**
 	 * Check if the page can be listable by the current user
-	 * This permission depends on the `read` option until v5
+	 * This permission depends on the `read` option until v6
 	 */
 	public function isListable(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v5
+		// TODO: remove this check when `read` option deprecated in v6
 		if ($this->isReadable() === false) {
 			return false;
 		}
@@ -738,7 +741,7 @@ class Page extends ModelWithContent
 
 	/**
 	 * Check if the page can be read by the current user
-	 * @todo Deprecate `read` option in v5 and make the necessary changes for `access` and `list` options.
+	 * @todo Deprecate `read` option in v6 and make the necessary changes for `access` and `list` options.
 	 */
 	public function isReadable(): bool
 	{
@@ -782,26 +785,6 @@ class Page extends ModelWithContent
 	public function mediaUrl(): string
 	{
 		return $this->kirby()->url('media') . '/pages/' . $this->id();
-	}
-
-	/**
-	 * Creates a page model if it has been registered
-	 * @internal
-	 */
-	public static function model(string $name, array $props = []): static
-	{
-		$class   = static::$models[$name] ?? null;
-		$class ??= static::$models['default'] ?? null;
-
-		if ($class !== null) {
-			$object = new $class($props);
-
-			if ($object instanceof self) {
-				return $object;
-			}
-		}
-
-		return new static($props);
 	}
 
 	/**
@@ -906,6 +889,10 @@ class Page extends ModelWithContent
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
+		if ($this->permissions()->can('preview') !== true) {
+			return null;
+		}
+
 		return $this->version($versionId)->url();
 	}
 
@@ -1116,7 +1103,7 @@ class Page extends ModelWithContent
 	protected function setTemplate(string|null $template = null): static
 	{
 		if ($template !== null) {
-			$this->intendedTemplate = $this->kirby()->template($template);
+			$this->intendedTemplate = $this->kirby()->template(strtolower($template));
 		}
 
 		return $this;

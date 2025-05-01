@@ -270,6 +270,12 @@ class Field extends Component
 	 */
 	public function fill(mixed $value): static
 	{
+		// remember the current state to restore it afterwards
+		$attrs   = $this->attrs;
+		$methods = $this->methods;
+		$options = $this->options;
+		$type    = $this->type;
+
 		// overwrite the attribute value
 		$this->value = $this->attrs['value'] = $value;
 
@@ -277,10 +283,13 @@ class Field extends Component
 		$this->applyProp('value', $this->options['props']['value'] ?? $value);
 
 		// reevaluate the computed props
-		$this->applyComputed($this->options['computed']);
+		$this->applyComputed($this->options['computed'] ?? []);
 
-		// reset the errors cache
-		$this->errors = null;
+		// restore the original state
+		$this->attrs   = $attrs;
+		$this->methods = $methods;
+		$this->options = $options;
+		$this->type    = $type;
 
 		return $this;
 	}
@@ -291,6 +300,14 @@ class Field extends Component
 	public function formFields(): Fields
 	{
 		return $this->siblings;
+	}
+
+	/**
+	 * Checks if the field has a value
+	 */
+	public function hasValue(): bool
+	{
+		return ($this->options['save'] ?? true) !== false;
 	}
 
 	/**
@@ -325,22 +342,6 @@ class Field extends Component
 	}
 
 	/**
-	 * Checks if the field is required
-	 */
-	public function isRequired(): bool
-	{
-		return $this->required ?? false;
-	}
-
-	/**
-	 * Checks if the field is saveable
-	 */
-	public function isSaveable(): bool
-	{
-		return ($this->options['save'] ?? true) !== false;
-	}
-
-	/**
 	 * Returns field api routes
 	 */
 	public function routes(): array
@@ -353,15 +354,6 @@ class Field extends Component
 		}
 
 		return [];
-	}
-
-	/**
-	 * Checks if the field is saveable
-	 * @deprecated 5.0.0 Use `::isSaveable()` instead
-	 */
-	public function save(): bool
-	{
-		return $this->isSaveable();
 	}
 
 	/**
@@ -390,7 +382,7 @@ class Field extends Component
 		unset($array['model']);
 
 		$array['hidden']   = $this->isHidden();
-		$array['saveable'] = $this->isSaveable();
+		$array['saveable'] = $this->hasValue();
 
 		ksort($array);
 
@@ -403,9 +395,9 @@ class Field extends Component
 	/**
 	 * Returns the value of the field in a format to be stored by our storage classes
 	 */
-	public function toStoredValue(bool $default = false): mixed
+	public function toStoredValue(): mixed
 	{
-		$value = $this->value($default);
+		$value = $this->toFormValue();
 		$store = $this->options['save'] ?? true;
 
 		if ($store === false) {

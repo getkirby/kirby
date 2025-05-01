@@ -76,7 +76,7 @@ class PageUuidTest extends TestCase
 	public function testIdGenerateExistingButEmpty()
 	{
 		$page = $this->app->page('page-b');
-		$page->content()->update(['uuid' => '']);
+		$page->version()->save(['uuid' => '']);
 
 		$uuid = $page->uuid();
 		$this->assertSame(16, strlen($uuid->id()));
@@ -188,10 +188,10 @@ class PageUuidTest extends TestCase
 		$this->assertSame($page->translation('de')->content()['uuid'], $page->uuid()->id());
 
 		// the uuid must be stored in the primary language file
-		$this->assertSame($page->readContent('en')['uuid'], $page->uuid()->id());
+		$this->assertSame($page->version()->read('en')['uuid'], $page->uuid()->id());
 
 		// the secondary language must not have the uuid in the content file
-		$this->assertNull($page->readContent('de')['uuid'] ?? null);
+		$this->assertNull($page->version()->read('de')['uuid'] ?? null);
 
 		$this->assertStringStartsWith('https://getkirby.com/' . $language . '/@/page/', $page->uuid()->url());
 	}

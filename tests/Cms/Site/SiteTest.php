@@ -2,167 +2,23 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\F;
 use Kirby\Panel\Site as Panel;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class SiteTest extends TestCase
+#[CoversClass(Site::class)]
+class SiteTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Site';
 
-	public function testUrl()
+	public function testApiUrl(): void
 	{
-		$site = new Site([
-			'url' => $url = 'https://getkirby.com'
-		]);
+		$site = new Site();
 
-		$this->assertSame($url, $site->url());
-		$this->assertSame($url, $site->__toString());
+		$this->assertSame('/api/site', $site->apiUrl());
+		$this->assertSame('site', $site->apiUrl(true));
 	}
 
-	public function testToString()
-	{
-		$site = new Site(['url' => 'https://getkirby.com']);
-		$this->assertSame('https://getkirby.com', $site->toString('{{ site.url }}'));
-	}
-
-	public function testBreadcrumb()
-	{
-		$site = new Site([
-			'children' => [
-				[
-					'slug' => 'home',
-				],
-				[
-					'slug' => 'grandma',
-					'children' => [
-						[
-							'slug' => 'mother',
-							'children' => [
-								[
-									'slug' => 'child'
-								]
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$site->visit('grandma/mother/child');
-
-		$crumb = $site->breadcrumb();
-
-		$this->assertSame($site->find('home'), $crumb->nth(0));
-		$this->assertSame($site->find('grandma'), $crumb->nth(1));
-		$this->assertSame($site->find('grandma/mother'), $crumb->nth(2));
-		$this->assertSame($site->find('grandma/mother/child'), $crumb->nth(3));
-	}
-
-	public function testBreadcrumbSideEffects()
-	{
-		$site = new Site([
-			'children' => [
-				[
-					'slug' => 'home',
-				],
-				[
-					'slug' => 'grandma',
-					'children' => [
-						[
-							'slug' => 'mother',
-							'children' => [
-								[
-									'slug' => 'child-a'
-								],
-								[
-									'slug' => 'child-b'
-								],
-								[
-									'slug' => 'child-c'
-								]
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$page  = $site->visit('grandma/mother/child-b');
-		$crumb = $site->breadcrumb();
-
-		$this->assertSame($site->find('home'), $crumb->nth(0));
-		$this->assertSame($site->find('grandma'), $crumb->nth(1));
-		$this->assertSame($site->find('grandma/mother'), $crumb->nth(2));
-		$this->assertSame($site->find('grandma/mother/child-b'), $crumb->nth(3));
-
-		$this->assertSame('child-a', $page->prev()->slug());
-		$this->assertSame('child-c', $page->next()->slug());
-	}
-
-	public function testModified()
-	{
-		$app = new App([
-			'roots' => [
-				'index'   => static::TMP,
-				'content' => static::TMP
-			]
-		]);
-
-		// create the site file
-		F::write($file = static::TMP . '/site.txt', 'test');
-
-		$modified = filemtime($file);
-		$site     = $app->site();
-
-		$this->assertSame($modified, $site->modified());
-
-		// default date handler
-		$format = 'd.m.Y';
-		$this->assertSame(date($format, $modified), $site->modified($format));
-
-		// custom date handler
-		$format = '%d.%m.%Y';
-		$this->assertSame(@strftime($format, $modified), $site->modified($format, 'strftime'));
-	}
-
-	public function testModifiedInMultilangInstallation()
-	{
-		$app = new App([
-			'roots' => [
-				'index'   => static::TMP,
-				'content' => static::TMP
-			],
-			'languages' => [
-				[
-					'code'    => 'en',
-					'default' => true,
-					'name'    => 'English'
-				],
-				[
-					'code'    => 'de',
-					'name'    => 'Deutsch'
-				]
-			]
-		]);
-
-		// create the english site
-		F::write($file = static::TMP . '/site.en.txt', 'test');
-		touch($file, $modified = \time() + 2);
-
-		$this->assertSame($modified, $app->site()->modified());
-
-		// create the german site
-		F::write($file = static::TMP . '/site.de.txt', 'test');
-		touch($file, $modified = \time() + 5);
-
-		// change the language
-		$app->setCurrentLanguage('de');
-		$app->setCurrentTranslation('de');
-
-		$this->assertSame($modified, $app->site()->modified());
-	}
-
-	public function testIs()
+	public function testIs(): void
 	{
 		$appA = new App([
 			'roots' => [
@@ -186,73 +42,7 @@ class SiteTest extends TestCase
 		$this->assertFalse($b->is($c));
 	}
 
-
-	public static function previewUrlProvider(): array
-	{
-		return [
-			[null, '/'],
-			['https://test.com', 'https://test.com'],
-			['{{ site.url }}#test', '/#test'],
-			[false, null],
-			[null, null, false],
-		];
-	}
-
-	/**
-	 * @dataProvider previewUrlProvider
-	 */
-	public function testCustomPreviewUrl(
-		$input,
-		$expected,
-		bool $authenticated = true
-	): void {
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'urls' => [
-				'index' => '/'
-			],
-			'users' => [
-				[
-					'id'    => 'test',
-					'email' => 'test@getkirby.com',
-					'role'  => 'editor'
-				]
-			],
-			'roles' => [
-				[
-					'id'    => 'editor',
-					'name'  => 'editor',
-				]
-			]
-		]);
-
-		// authenticate
-		if ($authenticated) {
-			$app->impersonate('test@getkirby.com');
-		}
-
-		$options = [];
-
-		if ($input !== null) {
-			$options = [
-				'preview' => $input
-			];
-		}
-
-		// simple
-		$site = new Site([
-			'blueprint' => [
-				'name'    => 'site',
-				'options' => $options
-			]
-		]);
-
-		$this->assertSame($expected, $site->previewUrl());
-	}
-
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$site = new Site();
 		$data = $site->toArray();
@@ -275,8 +65,22 @@ class SiteTest extends TestCase
 		$this->assertFalse($data['homePage']);
 		$this->assertFalse($data['page']);
 		$this->assertNull($data['title']);
-		$this->assertSame([], $data['translations']);
+		$this->assertSame([
+			'en' => [
+				'code'    => 'en',
+				'content' => [],
+				'exists'  => false,
+				'slug'    => null
+			]
+		], $data['translations']);
 		$this->assertSame('/', $data['url']);
+	}
+
+	public function testToString(): void
+	{
+		$site   = new Site(['url' => 'https://getkirby.com']);
+		$string = $site->toString('{{ site.url }}');
+		$this->assertSame('https://getkirby.com', $string);
 	}
 
 	public function testPanel()
@@ -285,7 +89,7 @@ class SiteTest extends TestCase
 		$this->assertInstanceOf(Panel::class, $site->panel());
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$site = new Site([
 			'content' => [
@@ -295,13 +99,5 @@ class SiteTest extends TestCase
 
 		$this->assertSame('Mægazine', $site->query('site.title')->value());
 		$this->assertSame('Mægazine', $site->query('model.title')->value());
-	}
-
-	public function testApiUrl()
-	{
-		$site = new Site();
-
-		$this->assertSame('/api/site', $site->apiUrl());
-		$this->assertSame('site', $site->apiUrl(true));
 	}
 }

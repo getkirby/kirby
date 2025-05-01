@@ -3,15 +3,13 @@
 namespace Kirby\Toolkit;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Obj
- */
+#[CoversClass(Obj::class)]
 class ObjTest extends TestCase
 {
 	/**
 	 * covers ::__construct
-	 * @covers ::__call
 	 */
 	public function test__call()
 	{
@@ -19,18 +17,12 @@ class ObjTest extends TestCase
 		$this->assertSame('bar', $obj->foo());
 	}
 
-	/**
-	 * @covers ::__get
-	 */
 	public function test__get()
 	{
 		$obj = new Obj();
 		$this->assertNull($obj->foo);
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGetMultiple()
 	{
 		$obj = new Obj([
@@ -50,9 +42,6 @@ class ObjTest extends TestCase
 		$this->assertSame($obj->toArray(), $obj->get(['one', 'two', 'three']));
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGetMultipleInvalidFallback()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -62,18 +51,12 @@ class ObjTest extends TestCase
 		$obj->get(['two'], 'invalid fallback');
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray()
 	{
 		$obj = new Obj($expected = ['foo' => 'bar']);
 		$this->assertSame($expected, $obj->toArray());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArrayWithChild()
 	{
 		$parent = new Obj([
@@ -89,18 +72,12 @@ class ObjTest extends TestCase
 		$this->assertSame($expected, $parent->toArray());
 	}
 
-	/**
-	 * @covers ::toJson
-	 */
 	public function testToJson()
 	{
 		$obj = new Obj($expected = ['foo' => 'bar']);
 		$this->assertSame(json_encode($expected), $obj->toJson());
 	}
 
-	/**
-	 * @covers ::toKeys
-	 */
 	public function testToKeys()
 	{
 		$obj = new Obj(['foo' => 'bar']);
@@ -110,9 +87,6 @@ class ObjTest extends TestCase
 		$this->assertSame(['foo', 'one'], $obj->toKeys());
 	}
 
-	/**
-	 * @covers ::__debugInfo
-	 */
 	public function test__debugInfo()
 	{
 		$obj = new Obj($expected = ['foo' => 'bar']);

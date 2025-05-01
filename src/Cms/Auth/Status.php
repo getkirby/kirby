@@ -61,11 +61,11 @@ class Status implements Stringable
 			);
 		}
 
-		$this->kirby 		 	 = $props['kirby'];
-		$this->challenge 		 = $props['challenge'] ?? null;
+		$this->kirby             = $props['kirby'];
+		$this->challenge         = $props['challenge'] ?? null;
 		$this->challengeFallback = $props['challengeFallback'] ?? null;
-		$this->email 		 	 = $props['email'] ?? null;
-		$this->status 			 = $props['status'];
+		$this->email             = $props['email'] ?? null;
+		$this->status            = $props['status'];
 	}
 
 	/**
@@ -104,11 +104,11 @@ class Status implements Stringable
 	public function clone(array $props = []): static
 	{
 		return new static(array_replace_recursive([
-			'kirby' 			=> $this->kirby,
-			'challenge' 		=> $this->challenge,
+			'kirby'             => $this->kirby,
+			'challenge'         => $this->challenge,
 			'challengeFallback' => $this->challengeFallback,
-			'email' 			=> $this->email,
-			'status' 			=> $this->status,
+			'email'             => $this->email,
+			'status'            => $this->status,
 		], $props));
 	}
 

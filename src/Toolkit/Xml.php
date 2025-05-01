@@ -220,7 +220,7 @@ class Xml
 	/**
 	 * Removes all HTML/XML tags and encoded chars from a string
 	 *
-	 * ```
+	 * ```php
 	 * echo Xml::decode('some &uuml;ber <em>crazy</em> stuff');
 	 * // output: some über crazy stuff
 	 * ```

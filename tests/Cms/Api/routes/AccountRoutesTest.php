@@ -388,11 +388,11 @@ class AccountRoutesTest extends TestCase
 	{
 		$response = $this->app->api()->call('account', 'PATCH', [
 			'body' => [
-				'name' => 'Test User'
+				'position' => 'Admin'
 			]
 		]);
 
 		$this->assertSame('ok', $response['status']);
-		$this->assertSame('Test User', $response['data']['content']['name']);
+		$this->assertSame('Admin', $response['data']['content']['position']);
 	}
 }

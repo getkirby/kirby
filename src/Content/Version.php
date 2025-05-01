@@ -2,7 +2,6 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
@@ -10,7 +9,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Form;
+use Kirby\Form\Fields;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Str;
 
@@ -50,6 +49,7 @@ class Version
 		// in the future, to provide multi-language support with truly
 		// individual versions of pages and no longer enforce the fallback.
 		if ($language->isDefault() === false) {
+			// merge the fields with the default language
 			$fields = [
 				...$this->read('default') ?? [],
 				...$fields
@@ -62,6 +62,7 @@ class Version
 		return new Content(
 			parent: $this->model,
 			data:   $fields,
+			normalize: false
 		);
 	}
 
@@ -100,7 +101,7 @@ class Version
 		Language|string $language = 'default'
 	): void {
 		$language = Language::ensure($language);
-		$latest   = $this->model->version(VersionId::latest());
+		$latest   = $this->sibling(VersionId::latest());
 
 		// if the latest version of the translation does not exist yet,
 		// we have to copy over the content from the default language first.
@@ -128,6 +129,9 @@ class Version
 			language: $language,
 			fields: $this->prepareFieldsBeforeWrite($fields, $language)
 		);
+
+		// make sure that an older version does not exist in the cache
+		VersionCache::remove($this, $language);
 	}
 
 	/**
@@ -135,6 +139,14 @@ class Version
 	 */
 	public function delete(Language|string $language = 'default'): void
 	{
+		if ($language === '*') {
+			foreach (Languages::ensure() as $language) {
+				$this->delete($language);
+			}
+
+			return;
+		}
+
 		$language = Language::ensure($language);
 
 		// check if deleting is allowed
@@ -147,6 +159,22 @@ class Version
 		if ($this->id->is(VersionId::changes()) === true && $this->exists('*') === false) {
 			(new Changes())->untrack($this->model);
 		}
+
+		// Remove the version from the cache
+		VersionCache::remove($this, $language);
+	}
+
+	/**
+	 * Returns all validation errors for the given language
+	 */
+	public function errors(Language|string $language = 'default'): array
+	{
+		$fields = Fields::for($this->model, $language);
+		$fields->fill(
+			input: $this->content($language)->toArray()
+		);
+
+		return $fields->errors();
 	}
 
 	/**
@@ -193,7 +221,7 @@ class Version
 		}
 
 		if ($version instanceof VersionId) {
-			$version = $this->model->version($version);
+			$version = $this->sibling($version);
 		}
 
 		if ($version->id()->is($this->id) === true) {
@@ -201,6 +229,7 @@ class Version
 		}
 
 		$language = Language::ensure($language);
+		$fields   = Fields::for($this->model, $language);
 
 		// read fields low-level from storage
 		$a = $this->read($language) ?? [];
@@ -217,21 +246,8 @@ class Version
 			$b['uuid']
 		);
 
-		$a = Form::for(
-			model: $this->model,
-			props: [
-				'language' => $language->code(),
-				'values'   => $a,
-			]
-		)->values();
-
-		$b = Form::for(
-			model: $this->model,
-			props: [
-				'language' => $language->code(),
-				'values'   => $b
-			]
-		)->values();
+		$a = $fields->reset()->fill(input: $a)->toFormValues();
+		$b = $fields->reset()->fill(input: $b)->toFormValues();
 
 		ksort($a);
 		ksort($b);
@@ -253,6 +269,14 @@ class Version
 	public function isLocked(Language|string $language = 'default'): bool
 	{
 		return $this->lock($language)->isLocked();
+	}
+
+	/**
+	 * Checks if there are any validation errors for the given language
+	 */
+	public function isValid(Language|string $language = 'default'): bool
+	{
+		return $this->errors($language) === [];
 	}
 
 	/**
@@ -302,7 +326,7 @@ class Version
 		$fromVersion  = $this;
 		$fromLanguage = Language::ensure($fromLanguage);
 		$toLanguage   = Language::ensure($toLanguage ?? $fromLanguage);
-		$toVersion    = $this->model->version($toVersionId ?? $this->id);
+		$toVersion    = $this->sibling($toVersionId ?? $this->id);
 
 		// check if moving is allowed
 		VersionRules::move(
@@ -319,6 +343,10 @@ class Version
 			toLanguage: $toLanguage,
 			toStorage: $toStorage
 		);
+
+		// remove both versions from the cache
+		VersionCache::remove($fromVersion, $fromLanguage);
+		VersionCache::remove($toVersion, $toLanguage);
 	}
 
 	/**
@@ -372,7 +400,10 @@ class Version
 	 */
 	protected function prepareFieldsAfterRead(array $fields, Language $language): array
 	{
-		return $this->convertFieldNamesToLowerCase($fields);
+		$fields = $this->convertFieldNamesToLowerCase($fields);
+
+		// ignore all fields with null values
+		return array_filter($fields, fn ($field) => $field !== null);
 	}
 
 	/**
@@ -468,9 +499,22 @@ class Version
 		// check if publishing is allowed
 		VersionRules::publish($this, $language);
 
+		$latest  = $this->sibling(VersionId::latest())->read($language);
+		$changes = $this->read($language);
+
+		// overwrite all fields that are not in the `changes` version
+		// with a null value. The ModelWithContent::update method will merge
+		// the input with the existing content fields and setting null values
+		// for removed fields will take care of not inheriting old values.
+		foreach ($latest as $key => $value) {
+			if (isset($changes[$key]) === false) {
+				$changes[$key] = null;
+			}
+		}
+
 		// update the latest version
-		$this->model->update(
-			input: $this->read($language),
+		$this->model = $this->model->update(
+			input: $changes,
 			languageCode: $language->code(),
 			validate: true
 		);
@@ -492,8 +536,17 @@ class Version
 			// make sure that the version exists
 			VersionRules::read($this, $language);
 
-			$fields = $this->model->storage()->read($this->id, $language);
-			$fields = $this->prepareFieldsAfterRead($fields, $language);
+			$fields = VersionCache::get($this, $language);
+
+			if ($fields === null) {
+				$fields = $this->model->storage()->read($this->id, $language);
+				$fields = $this->prepareFieldsAfterRead($fields, $language);
+
+				if ($fields !== null) {
+					VersionCache::set($this, $language, $fields);
+				}
+			}
+
 			return $fields;
 		} catch (NotFoundException) {
 			return null;
@@ -521,6 +574,10 @@ class Version
 			language: $language,
 			fields: $this->prepareFieldsBeforeWrite($fields, $language)
 		);
+
+		// remove the version from the cache to read
+		// a fresh version next time
+		VersionCache::remove($this, $language);
 	}
 
 	/**
@@ -542,6 +599,17 @@ class Version
 		}
 
 		$this->update($fields, $language);
+	}
+
+	/**
+	 * Returns a sibling version for the same model
+	 */
+	public function sibling(VersionId|string $id): Version
+	{
+		return new Version(
+			model: $this->model,
+			id: VersionId::from($id)
+		);
 	}
 
 	/**
@@ -586,6 +654,10 @@ class Version
 			language: $language,
 			fields: $this->prepareFieldsBeforeWrite($fields, $language)
 		);
+
+		// remove the version from the cache to read
+		// a fresh version next time
+		VersionCache::remove($this, $language);
 	}
 
 	/**

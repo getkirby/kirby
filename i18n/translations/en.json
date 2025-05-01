@@ -98,6 +98,13 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "There's an error on the \"{field}\" field in row {index}",
+
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
 	"error.field.converter.invalid": "Invalid converter \"{converter}\"",
@@ -349,6 +356,9 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.entries.empty": "No entries yet",
+
 	"field.files.empty": "No files selected yet",
 	"field.files.empty.single": "No file selected yet",
 
@@ -439,7 +449,12 @@
 	"language.variables.empty": "No translations yet",
 
 	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.entries": "Values",
+	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Key",
+	"language.variable.multiple": "Countable?",
+	"language.variable.multiple.text": "Use different translation strings",
+	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "The variable could not be found",
 	"language.variable.value": "Value",
 
@@ -661,7 +676,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -670,6 +684,7 @@
 	"system.issues.git": "The .git folder seems to be exposed",
 	"system.issues.https": "We recommend HTTPS for all your sites",
 	"system.issues.kirby": "The kirby folder seems to be exposed",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "The site folder seems to be exposed",
 	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",

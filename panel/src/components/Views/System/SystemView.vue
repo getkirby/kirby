@@ -46,7 +46,7 @@ export default {
 		info: Object,
 		plugins: Array,
 		security: Array,
-		urls: Object
+		urls: [Object, Array]
 	},
 	mounted() {
 		// print exceptions from the backend's update check

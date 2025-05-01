@@ -187,9 +187,6 @@ export default {
 	position: relative;
 	display: block !important;
 }
-.k-coords-input img {
-	width: 100%;
-}
 .k-coords-input-thumb {
 	position: absolute;
 	aspect-ratio: 1/1;

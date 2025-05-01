@@ -151,7 +151,19 @@ class Component
 	{
 		// unset prop
 		if ($value === null) {
-			unset($this->props[$name], $this->$name);
+			unset($this->props[$name]);
+
+			/**
+			 * Unset dynamic declared properties
+			 * that are not defined in the class
+			 */
+			if (
+				isset($this->$name) === true &&
+				array_key_exists($name, get_object_vars($this)) === true &&
+				array_key_exists($name, get_class_vars(get_class($this))) === false
+			) {
+				unset($this->$name);
+			}
 
 			return;
 		}

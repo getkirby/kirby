@@ -43,7 +43,7 @@ export default {
 			default: () => []
 		},
 		urls: {
-			type: Object,
+			type: [Object, Array],
 			default: () => ({})
 		}
 	},
@@ -63,7 +63,7 @@ export default {
 		// call the check method on every URL in the `urls` object
 		const promises = Object.entries(this.urls).map(this.check);
 
-		await promiseAll([...promises, this.testPatchRequests()]);
+		await promiseAll(promises);
 
 		console.info(
 			`System health checks ended. ${
@@ -90,22 +90,6 @@ export default {
 		},
 		retry() {
 			this.$go(window.location.href);
-		},
-		/**
-		 * Checks if server supports PATH request or if
-		 * the `api.methodOverwrite` option needs to be activated
-		 */
-		async testPatchRequests() {
-			const { status } = await this.$api.patch("system/method-test");
-
-			if (status !== "ok") {
-				this.issues.push({
-					id: "method-overwrite-text",
-					text: this.$t("system.issues.api.methods"),
-					link: "https://getkirby.com/docs/reference/system/options/api#methods-overwrite",
-					icon: "protected"
-				});
-			}
 		}
 	}
 };

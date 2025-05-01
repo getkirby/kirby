@@ -114,15 +114,14 @@ export default {
 		},
 		/**
 		 * If `true`, the item will be selectable via a checkbox
+		 * @since 5.0.0
 		 */
 		selecting: Boolean,
 		/**
 		 * If `false`, the select checkbox will be disabled
+		 * @since 5.0.0
 		 */
-		selectable: {
-			type: Boolean,
-			default: true
-		},
+		selectable: Boolean,
 		/**
 		 * If `true`, the sort handle will be shown on hover
 		 */
@@ -267,7 +266,12 @@ export default {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
-
+/** Provides a consistent look when texts are long in small dialogs */
+@container (max-width: 25rem) {
+	.k-item[data-layout="list"] .k-item-content:has(.k-item-info) {
+		flex-direction: column;
+	}
+}
 .k-item[data-layout="list"] .k-sort-button {
 	--button-width: calc(1.5rem + var(--spacing-1));
 	--button-height: var(--item-height);
@@ -356,7 +360,7 @@ export default {
 }
 
 /** Selectable state */
-.k-item[data-selectable="true"] {
+.k-item[data-selecting="true"][data-selectable="true"] {
 	cursor: pointer;
 }
 .k-item-options-checkbox {

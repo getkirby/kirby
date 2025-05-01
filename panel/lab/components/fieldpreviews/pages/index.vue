@@ -44,5 +44,21 @@
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
+
+		<k-lab-example label="HTML">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-pages-field-preview
+					:value="[
+						{
+							image: { icon: 'page', back: 'black', color: 'white' },
+							text: '<b>Projects</b> (4)',
+							link: '/'
+						}
+					]"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
 	</k-lab-examples>
 </template>

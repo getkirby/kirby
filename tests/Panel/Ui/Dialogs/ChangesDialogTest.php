@@ -68,8 +68,13 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 
-		$this->app->file('file://test')->version(VersionId::latest())->save([]);
-		$this->app->file('file://test')->version(VersionId::changes())->save([]);
+		$this->app->file('file://test')->version(VersionId::latest())->save([
+			'alt' => 'Test'
+		]);
+
+		$this->app->file('file://test')->version(VersionId::changes())->save([
+			'alt' => 'Test'
+		]);
 
 		$dialog = new ChangesDialog();
 		$files  = $dialog->files();

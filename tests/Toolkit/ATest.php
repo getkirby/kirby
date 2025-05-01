@@ -5,10 +5,9 @@ namespace Kirby\Toolkit;
 use Exception;
 use InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\A
- */
+#[CoversClass(A::class)]
 class ATest extends TestCase
 {
 	protected function _array(): array
@@ -20,9 +19,6 @@ class ATest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::append
-	 */
 	public function testAppend()
 	{
 		// associative
@@ -47,9 +43,6 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::apply
-	 */
 	public function testApply()
 	{
 		$array = [
@@ -76,9 +69,6 @@ class ATest extends TestCase
 		$this->assertSame($expected, A::apply($array, 'b', 'c'));
 	}
 
-	/**
-	 * @covers ::count
-	 */
 	public function testCount()
 	{
 		$this->assertSame(3, A::count($this->_array()));
@@ -86,9 +76,6 @@ class ATest extends TestCase
 		$this->assertSame(0, A::count([]));
 	}
 
-	/**
-	 * @covers ::every
-	 */
 	public function testEvery()
 	{
 		// The value should be passed to the callback
@@ -148,9 +135,6 @@ class ATest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::find
-	 */
 	public function testFind()
 	{
 		$array = $this->_array();
@@ -218,15 +202,9 @@ class ATest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGet()
 	{
 		$array = $this->_array();
-
-		// non-array
-		$this->assertSame('test', A::get('test', 'test'));
 
 		// single key
 		$this->assertSame('miao', A::get($array, 'cat'));
@@ -255,9 +233,6 @@ class ATest extends TestCase
 		], A::get($array, ['cat', 'elephant'], 'toot'));
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGetWithDotNotation()
 	{
 		$data = [
@@ -294,9 +269,6 @@ class ATest extends TestCase
 		$this->assertSame('default', A::get($data, 'grand.ma.cousins.4.name', 'default'));
 	}
 
-	/**
-	 * @covers ::get
-	 */
 	public function testGetWithNonexistingOptions()
 	{
 		$data = [
@@ -308,9 +280,6 @@ class ATest extends TestCase
 		$this->assertSame('not great yet', A::get($data, 'alexander'));
 	}
 
-	/**
-	 * @covers ::has
-	 */
 	public function testHas()
 	{
 		$array = $this->_array();
@@ -321,9 +290,6 @@ class ATest extends TestCase
 		$this->assertFalse(A::has($array, ['miao']));
 	}
 
-	/**
-	 * @covers ::implode
-	 */
 	public function testImplode()
 	{
 		$array = ['a', 'b', 'c'];
@@ -337,9 +303,6 @@ class ATest extends TestCase
 		$this->assertSame('ABCD', A::implode($array));
 	}
 
-	/**
-	 * @covers ::map
-	 */
 	public function testMap()
 	{
 		$array = [
@@ -374,9 +337,6 @@ class ATest extends TestCase
 		$this->assertSame($expected, A::map($array, 'Str::upper'));
 	}
 
-	/**
-	 * @covers ::merge
-	 */
 	public function testMerge()
 	{
 		// simple non-associative arrays
@@ -431,9 +391,6 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::merge
-	 */
 	public function testMergeMultiples()
 	{
 		// simple non-associative arrays
@@ -461,9 +418,6 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::merge
-	 */
 	public function testMergeModes()
 	{
 		// simple non-associative arrays
@@ -516,9 +470,6 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::prepend
-	 */
 	public function testPrepend()
 	{
 		// associative
@@ -540,9 +491,6 @@ class ATest extends TestCase
 		$this->assertSame(['d', 'e', 'f', 'a' => 'A', 'b' => 'B', 'c' => 'C'], $result);
 	}
 
-	/**
-	 * @covers ::pluck
-	 */
 	public function testPluck()
 	{
 		$array = [
@@ -558,9 +506,6 @@ class ATest extends TestCase
 		], A::pluck($array, 'username'));
 	}
 
-	/**
-	 * @covers ::shuffle
-	 */
 	public function testShuffle()
 	{
 		$array = $this->_array();
@@ -571,9 +516,6 @@ class ATest extends TestCase
 		$this->assertSame($array['bird'], $shuffled['bird']);
 	}
 
-	/**
-	 * @covers ::reduce
-	 */
 	public function testReduce()
 	{
 		$array = $this->_array();
@@ -592,9 +534,6 @@ class ATest extends TestCase
 		$this->assertSame(null, $reduced);
 	}
 
-	/**
-	 * @covers ::slice
-	 */
 	public function testSlice()
 	{
 		$array = $this->_array();
@@ -606,9 +545,6 @@ class ATest extends TestCase
 		$this->assertSame($array, A::slice($array, 0));
 	}
 
-	/**
-	 * @covers ::some
-	 */
 	public function testSome()
 	{
 		// The value should be passed to the callback
@@ -660,9 +596,6 @@ class ATest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::sum
-	 */
 	public function testSum()
 	{
 		$array = $this->_array();
@@ -673,25 +606,16 @@ class ATest extends TestCase
 		$this->assertSame(6.0, A::sum([1.2, 2.4, 2.4]));
 	}
 
-	/**
-	 * @covers ::first
-	 */
 	public function testFirst()
 	{
 		$this->assertSame('miao', A::first($this->_array()));
 	}
 
-	/**
-	 * @covers ::last
-	 */
 	public function testLast()
 	{
 		$this->assertSame('tweet', A::last($this->_array()));
 	}
 
-	/**
-	 * @covers ::random
-	 */
 	public function testRandom()
 	{
 		$array       = $this->_array();
@@ -717,9 +641,6 @@ class ATest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::random
-	 */
 	public function testRandomInvalidCount()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -727,9 +648,6 @@ class ATest extends TestCase
 		A::random([1, 2, 3], 4);
 	}
 
-	/**
-	 * @covers ::fill
-	 */
 	public function testFill()
 	{
 		$array = [
@@ -772,9 +690,6 @@ class ATest extends TestCase
 		$this->assertSame([false, true, false], A::fill([], 3, [V::class, 'accepted']));
 	}
 
-	/**
-	 * @covers ::move
-	 */
 	public function testMove()
 	{
 		$input = [
@@ -794,9 +709,6 @@ class ATest extends TestCase
 		$this->assertSame(['b', 'a', 'c', 'd'], A::move($input, 1, 0));
 	}
 
-	/**
-	 * @covers ::move
-	 */
 	public function testMoveWithInvalidFrom()
 	{
 		$this->expectException(Exception::class);
@@ -805,9 +717,6 @@ class ATest extends TestCase
 		A::move(['a', 'b', 'c'], -1, 2);
 	}
 
-	/**
-	 * @covers ::move
-	 */
 	public function testMoveWithInvalidTo()
 	{
 		$this->expectException(Exception::class);
@@ -816,9 +725,6 @@ class ATest extends TestCase
 		A::move(['a', 'b', 'c'], 0, 4);
 	}
 
-	/**
-	 * @covers ::missing
-	 */
 	public function testMissing()
 	{
 		$required = ['cat', 'elephant'];
@@ -827,9 +733,6 @@ class ATest extends TestCase
 		$this->assertSame([], A::missing($this->_array(), ['cat']));
 	}
 
-	/**
-	 * @covers ::nest
-	 */
 	public function testNest()
 	{
 		// simple example
@@ -1003,9 +906,6 @@ class ATest extends TestCase
 		$this->assertSame($expected, A::nest($input));
 	}
 
-	/**
-	 * @covers ::nestByKeys
-	 */
 	public function testNestByKeys()
 	{
 		$this->assertSame('test', A::nestByKeys('test', []));
@@ -1013,9 +913,6 @@ class ATest extends TestCase
 		$this->assertSame(['a' => ['b' => 'test']], A::nestByKeys('test', ['a', 'b']));
 	}
 
-	/**
-	 * @covers ::sort
-	 */
 	public function testSort()
 	{
 		$array = [
@@ -1060,9 +957,6 @@ class ATest extends TestCase
 		$this->assertSame(3, array_search('img12.png', array_column($natural, 'file')));
 	}
 
-	/**
-	 * @covers ::isAssociative
-	 */
 	public function testIsAssociative()
 	{
 		$yes = $this->_array();
@@ -1072,9 +966,6 @@ class ATest extends TestCase
 		$this->assertFalse(A::isAssociative($no));
 	}
 
-	/**
-	 * @covers ::average
-	 */
 	public function testAverage()
 	{
 		$array = [5, 2, 4, 7, 9.7];
@@ -1085,9 +976,6 @@ class ATest extends TestCase
 		$this->assertNull(A::average([]));
 	}
 
-	/**
-	 * @covers ::extend
-	 */
 	public function testExtend()
 	{
 		// simple
@@ -1128,9 +1016,6 @@ class ATest extends TestCase
 		$this->assertSame($merged, A::extend($a, $b));
 	}
 
-	/**
-	 * @covers ::join
-	 */
 	public function testJoin()
 	{
 		$array = ['a', 'b', 'c'];
@@ -1142,9 +1027,6 @@ class ATest extends TestCase
 		$this->assertSame('a/b/c', A::join('a/b/c'));
 	}
 
-	/**
-	 * @covers ::keyBy
-	 */
 	public function testKeyBy()
 	{
 		$array = [
@@ -1182,9 +1064,6 @@ class ATest extends TestCase
 		$this->assertSame($array_by_id, A::keyBy($array_by_cb, 'id'));
 	}
 
-	/**
-	 * @covers ::keyBy
-	 */
 	public function testKeyByWithNonexistentKeys()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -1199,9 +1078,6 @@ class ATest extends TestCase
 		A::keyBy($array, 'nonexistent');
 	}
 
-	/**
-	 * @covers ::update
-	 */
 	public function testUpdate()
 	{
 		$array = $this->_array();
@@ -1221,9 +1097,6 @@ class ATest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::wrap
-	 */
 	public function testWrap()
 	{
 		$result = A::wrap($expected = ['a', 'b']);
@@ -1237,9 +1110,6 @@ class ATest extends TestCase
 	}
 
 
-	/**
-	 * @covers ::filter
-	 */
 	public function testFilter()
 	{
 		$associativeArray = $this->_array();
@@ -1267,9 +1137,6 @@ class ATest extends TestCase
 		$this->assertSame([1 => 'dog', 2 => 'bird'], $result);
 	}
 
-	/**
-	 * @covers ::without
-	 */
 	public function testWithout()
 	{
 		$associativeArray = $this->_array();

@@ -9,7 +9,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
 /**
- * @coversDefaultClass Kirby\Cms\System
+ * @coversDefaultClass \Kirby\Cms\System
  */
 class SystemTest extends TestCase
 {
@@ -222,7 +222,7 @@ class SystemTest extends TestCase
 		Dir::make(static::TMP . '/kirby');
 
 		$this->assertSame('/kirby', $system->folderUrl('kirby'));
-		$this->assertSame('/kirby/composer.json', $system->exposedFileUrl('kirby'));
+		$this->assertSame('/kirby/LICENSE.md', $system->exposedFileUrl('kirby'));
 	}
 
 	/**

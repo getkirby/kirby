@@ -220,7 +220,6 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertSame('test', $field->default());
-		$this->assertSame('test', $field->default);
 		$this->assertSame('test', $field->data(true));
 
 		// don't overwrite existing values
@@ -231,9 +230,7 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertSame('test', $field->default());
-		$this->assertSame('test', $field->default);
 		$this->assertSame('something', $field->value());
-		$this->assertSame('something', $field->value);
 		$this->assertSame('something', $field->data(true));
 
 		// with query
@@ -243,7 +240,6 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertSame('blog', $field->default());
-		$this->assertSame('blog', $field->default);
 		$this->assertSame('blog', $field->data(true));
 	}
 
@@ -384,14 +380,43 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertSame('test', $field->value());
-		$this->assertSame('test', $field->value);
 		$this->assertSame('test computed', $field->computedValue());
 
 		$field->fill('test2');
 
 		$this->assertSame('test2', $field->value());
-		$this->assertSame('test2', $field->value);
 		$this->assertSame('test2 computed', $field->computedValue());
+	}
+
+	public function testFillWithRestoredState()
+	{
+		Field::$types = [
+			'test' => $definition = [
+				'computed' => [
+					'options' => fn () => ['a', 'b', 'c']
+				],
+				'methods' => [
+					'optionsDebugger' => fn () => $this->options
+				]
+			]
+		];
+
+		$page = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $page,
+			'value' => 'test'
+		]);
+
+		$this->assertSame(['a', 'b', 'c'], $field->options());
+		$this->assertEquals(Field::setup('test'), $field->optionsDebugger());
+
+		// filling a new value must not break the mandatory
+		// component definition properties
+		$field->fill('test2');
+
+		$this->assertSame(['a', 'b', 'c'], $field->options());
+		$this->assertEquals(Field::setup('test'), $field->optionsDebugger());
 	}
 
 	public function testHelp()
@@ -641,10 +666,10 @@ class FieldTest extends TestCase
 	}
 
 	/**
-	 * @covers ::isSaveable
+	 * @covers ::hasValue
 	 * @covers ::save
 	 */
-	public function testIsSaveable()
+	public function testHasValue()
 	{
 		Field::$types = [
 			'store-me' => [
@@ -661,14 +686,14 @@ class FieldTest extends TestCase
 			'model' => $page
 		]);
 
-		$this->assertTrue($a->isSaveable());
+		$this->assertTrue($a->hasValue());
 		$this->assertTrue($a->save());
 
 		$b = new Field('dont-store-me', [
 			'model' => $page
 		]);
 
-		$this->assertFalse($b->isSaveable());
+		$this->assertFalse($b->hasValue());
 		$this->assertFalse($b->save());
 	}
 
@@ -1033,6 +1058,26 @@ class FieldTest extends TestCase
 	}
 
 	/**
+	 * @covers ::submit
+	 */
+	public function testSubmit(): void
+	{
+		Field::$types = [
+			'test' => []
+		];
+
+		$field = new Field('test', [
+			'model' => new Page(['slug' => 'test']),
+			'value' => 'test'
+		]);
+
+		$this->assertSame('test', $field->value());
+
+		$field->submit('test2');
+		$this->assertSame('test2', $field->value());
+	}
+
+	/**
 	 * @covers ::toArray
 	 */
 	public function testToArray()
@@ -1081,7 +1126,6 @@ class FieldTest extends TestCase
 		$this->assertNull($field->value());
 
 		$field = new Field('test', ['default' => 'Default value']);
-		$this->assertSame('Default value', $field->toFormValue(true));
 		$this->assertSame('Default value', $field->value(true));
 
 		Field::$types['test'] = [
@@ -1143,7 +1187,6 @@ class FieldTest extends TestCase
 	}
 
 	/**
-	 * @covers ::validate
 	 * @covers ::validations
 	 * @covers ::errors
 	 */
@@ -1198,7 +1241,6 @@ class FieldTest extends TestCase
 	}
 
 	/**
-	 * @covers ::validate
 	 * @covers ::validations
 	 * @covers ::isValid
 	 */
@@ -1258,7 +1300,6 @@ class FieldTest extends TestCase
 	}
 
 	/**
-	 * @covers ::validate
 	 * @covers ::validations
 	 * @covers ::errors
 	 * @covers ::isValid

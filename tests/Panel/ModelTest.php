@@ -96,17 +96,15 @@ class ModelTest extends TestCase
 		);
 
 		$panel->model()->version('latest')->save([
-			'foo'  => 'foo',
-			'uuid' => 'test'
+			'foo' => 'foo',
 		]);
 
 		$panel->model()->version('changes')->save([
-			'foo' => 'foobar'
+			'foo' => 'foobar',
 		]);
 
 		$this->assertSame([
-			'foo'  => 'foobar',
-			'uuid' => 'test'
+			'foo' => 'foobar',
 		], $panel->content());
 	}
 
@@ -309,6 +307,34 @@ class ModelTest extends TestCase
 		$this->assertSame($ratio, $image['ratio']);
 		$this->assertStringContainsString('test-38x38-crop.jpg 1x', $image['srcset']);
 		$this->assertStringContainsString('test-76x76-crop.jpg 2x', $image['srcset']);
+
+		// string ratio
+		$image = $panel->image([
+			'cover' => true,
+			'query' => 'site.image',
+			'ratio' => $ratio = '3/2'
+		], 'cards');
+		$this->assertArrayHasKey('url', $image);
+		$this->assertArrayHasKey('src', $image);
+		$this->assertArrayHasKey('srcset', $image);
+		$this->assertSame($ratio, $image['ratio']);
+		$this->assertStringContainsString('test-352x235-crop.jpg 352w', $image['srcset']);
+		$this->assertStringContainsString('test-864x576-crop.jpg 864w', $image['srcset']);
+		$this->assertStringContainsString('test-1408x939-crop.jpg 1408w', $image['srcset']);
+
+		// numeric ratio
+		$image = $panel->image([
+			'cover' => true,
+			'query' => 'site.image',
+			'ratio' => $ratio = 1.5
+		], 'cards');
+		$this->assertArrayHasKey('url', $image);
+		$this->assertArrayHasKey('src', $image);
+		$this->assertArrayHasKey('srcset', $image);
+		$this->assertSame($ratio, $image['ratio']);
+		$this->assertStringContainsString('test-352x235-crop.jpg 352w', $image['srcset']);
+		$this->assertStringContainsString('test-864x576-crop.jpg 864w', $image['srcset']);
+		$this->assertStringContainsString('test-1408x939-crop.jpg 1408w', $image['srcset']);
 	}
 
 	/**
@@ -517,5 +543,31 @@ class ModelTest extends TestCase
 	{
 		$this->assertSame('/panel/custom', $this->panel()->url());
 		$this->assertSame('/custom', $this->panel()->url(true));
+	}
+
+	/**
+	 * @covers ::versions
+	 */
+	public function testVersions()
+	{
+		$panel = $this->panel([]);
+
+		$panel->model()->version('latest')->save($latest = [
+			'foo' => 'bar'
+		]);
+
+		$versions = $panel->versions();
+
+		$this->assertSame($latest, $versions['latest']);
+		$this->assertSame($latest, $versions['changes']);
+
+		$panel->model()->version('changes')->save($changes = [
+			'foo' => 'baz'
+		]);
+
+		$versions = $panel->versions();
+
+		$this->assertSame($latest, $versions['latest']);
+		$this->assertSame($changes, $versions['changes']);
 	}
 }

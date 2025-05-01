@@ -59,17 +59,6 @@ class VersionId implements Stringable
 	}
 
 	/**
-	 * List of available version ids
-	 */
-	public static function all(): array
-	{
-		return [
-			static::latest(),
-			static::changes(),
-		];
-	}
-
-	/**
 	 * Creates a VersionId instance for the latest content changes
 	 */
 	public static function changes(): static

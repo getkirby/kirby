@@ -195,6 +195,10 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testDumpOnCli()
 	{
+		if (KIRBY_DUMP_OVERRIDDEN === true) {
+			$this->markTestSkipped('The dump() helper was externally overridden.');
+		}
+
 		$this->assertSame("test\n", dump('test', false));
 
 		$this->expectOutputString("test1\ntest2\n");
@@ -204,6 +208,10 @@ class HelperFunctionsTest extends HelpersTestCase
 
 	public function testDumpOnServer()
 	{
+		if (KIRBY_DUMP_OVERRIDDEN === true) {
+			$this->markTestSkipped('The dump() helper was externally overridden.');
+		}
+
 		$this->app = $this->app->clone([
 			'cli' => false
 		]);

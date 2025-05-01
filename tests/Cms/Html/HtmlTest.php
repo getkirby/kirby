@@ -6,7 +6,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Plugin\Plugin;
 
 /**
- * @coversDefaultClass Kirby\Cms\Html
+ * @coversDefaultClass \Kirby\Cms\Html
  */
 class HtmlTest extends TestCase
 {

@@ -46,7 +46,7 @@ class Fiber
 	{
 		return [
 			'api'         => [
-				'methodOverwrite' => $this->kirby->option('api.methodOverwrite', true)
+				'methodOverride' => $this->kirby->option('api.methodOverride', true)
 			],
 			'debug'       => $this->kirby->option('debug', false),
 			'kirbytext'   => $this->kirby->option('panel.kirbytext', true),

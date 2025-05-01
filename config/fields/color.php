@@ -88,7 +88,7 @@ return [
 				// @deprecated 4.0.0
 				// TODO: Remove in Kirby 6
 
-				Helpers::deprecated('Color field: the text => value notation for options has been deprecated and will be removed in Kirby 6. Please rewrite your options as value => text.');
+				Helpers::deprecated('Color field "' . $this->name . '": the text => value notation for options has been deprecated and will be removed in Kirby 6. Please rewrite your options as value => text.');
 
 				$options = A::map($options, fn ($option) => [
 					'value' => $option['text'],

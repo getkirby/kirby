@@ -2,6 +2,7 @@ export default {
 	props: {
 		blueprint: String,
 		help: String,
+		lock: [Boolean, Object],
 		name: String,
 		parent: String,
 		timestamp: Number

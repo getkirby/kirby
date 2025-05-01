@@ -3,7 +3,13 @@
 namespace Kirby\Form;
 
 use Closure;
+use Kirby\Cms\App;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
@@ -21,17 +27,18 @@ use Kirby\Toolkit\Str;
  */
 class Fields extends Collection
 {
-	/**
-	 * Cache for the errors array
-	 *
-	 * @var array<string, array<string, string>>|null
-	 */
-	protected array|null $errors = null;
+	protected Language $language;
+	protected ModelWithContent $model;
+	protected array $passthrough = [];
 
 	public function __construct(
 		array $fields = [],
-		protected ModelWithContent|null $model = null
+		ModelWithContent|null $model = null,
+		Language|string|null $language = null
 	) {
+		$this->model    = $model ?? App::instance()->site();
+		$this->language = Language::ensure($language ?? 'current');
+
 		foreach ($fields as $name => $field) {
 			$this->__set($name, $field);
 		}
@@ -54,13 +61,12 @@ class Fields extends Collection
 		}
 
 		parent::__set($field->name(), $field);
-
-		// reset the errors cache if new fields are added
-		$this->errors = null;
 	}
 
 	/**
 	 * Returns an array with the default value of each field
+	 *
+	 * @since 5.0.0
 	 */
 	public function defaults(): array
 	{
@@ -72,37 +78,70 @@ class Fields extends Collection
 	 */
 	public function errors(): array
 	{
-		if ($this->errors !== null) {
-			return $this->errors; // @codeCoverageIgnore
-		}
-
-		$this->errors = [];
+		$errors = [];
 
 		foreach ($this->data as $name => $field) {
-			$errors = $field->errors();
+			$fieldErrors = $field->errors();
 
-			if ($errors !== []) {
-				$this->errors[$name] = [
+			if ($fieldErrors !== []) {
+				$errors[$name] = [
 					'label'   => $field->label(),
-					'message' => $errors
+					'message' => $fieldErrors
 				];
 			}
 		}
 
-		return $this->errors;
+		return $errors;
+	}
+
+	/**
+	 * Get the field object by name
+	 * and handle nested fields correctly
+	 *
+	 * @since 5.0.0
+	 * @throws \Kirby\Exception\NotFoundException
+	 */
+	public function field(string $name): Field|FieldClass
+	{
+		if ($field = $this->find($name)) {
+			return $field;
+		}
+
+		throw new NotFoundException(
+			message: 'The field could not be found'
+		);
 	}
 
 	/**
 	 * Sets the value for each field with a matching key in the input array
+	 *
+	 * @since 5.0.0
 	 */
-	public function fill(array $input): static
-	{
-		foreach ($input as $name => $value) {
-			$this->get($name)?->fill($value);
+	public function fill(
+		array $input,
+		bool $passthrough = true
+	): static {
+		if ($passthrough === true) {
+			$this->passthrough($input);
 		}
 
-		// reset the errors cache
-		$this->errors = null;
+		foreach ($input as $name => $value) {
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-value field
+			if ($field->hasValue() === false) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->toFormValue());
+			}
+
+			$field->fill($value);
+		}
 
 		return $this;
 	}
@@ -160,6 +199,124 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Creates a new Fields instance for the given model and language
+	 *
+	 * @since 5.0.0
+	 */
+	public static function for(
+		ModelWithContent $model,
+		Language|string|null $language = null
+	): static {
+		return new static(
+			fields: $model->blueprint()->fields(),
+			model: $model,
+			language: $language,
+		);
+	}
+
+	/**
+	 * Returns the language of the fields
+	 *
+	 * @since 5.0.0
+	 */
+	public function language(): Language
+	{
+		return $this->language;
+	}
+
+	/**
+	 * Adds values to the passthrough array
+	 * which will be added to the form data
+	 * if the field does not exist
+	 *
+	 * @since 5.0.0
+	 */
+	public function passthrough(array|null $values = null): static|array
+	{
+		// use passthrough method as getter if the value is null
+		if ($values === null) {
+			return $this->passthrough;
+		}
+
+		foreach ($values as $key => $value) {
+			$key = strtolower($key);
+
+			// check if the field exists and don't passthrough
+			// values for existing fields
+			if ($this->get($key) !== null) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($this->passthrough[$key] ?? null);
+			}
+
+			$this->passthrough[$key] = $value;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Resets the value of each field
+	 *
+	 * @since 5.0.0
+	 */
+	public function reset(): static
+	{
+		// reset the passthrough values
+		$this->passthrough = [];
+
+		// reset the values of each field
+		foreach ($this->data as $field) {
+			$field->fill(null);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Sets the value for each field with a matching key in the input array
+	 * but only if the field is not disabled
+	 * @since 5.0.0
+	 */
+	public function submit(
+		array $input,
+		bool $passthrough = true
+	): static {
+		$language = $this->language();
+
+		if ($passthrough === true) {
+			$this->passthrough($input);
+		}
+
+		foreach ($input as $name => $value) {
+			if (!$field = $this->get($name)) {
+				continue;
+			}
+
+			// don't change the value of non-submittable fields
+			if ($field->isSubmittable($language) === false) {
+				continue;
+			}
+
+			// resolve closure values
+			if ($value instanceof Closure) {
+				$value = $value($field->toFormValue());
+			}
+
+			// submit the value to the field
+			// the field class might override this method
+			// to handle submitted values differently
+			$field->submit($value);
+		}
+
+		// reset the errors cache
+		return $this;
+	}
+
+	/**
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
@@ -171,17 +328,107 @@ class Fields extends Collection
 
 	/**
 	 * Returns an array with the form value of each field
+	 * (e.g. used as data for Panel Vue components)
+	 *
+	 * @since 5.0.0
 	 */
-	public function toFormValues(bool $defaults = false): array
+	public function toFormValues(): array
 	{
-		return $this->toArray(fn ($field) => $field->toFormValue($defaults));
+		return $this->toValues(
+			fn ($field) => $field->toFormValue(),
+			fn ($field) => $field->hasValue()
+		);
+	}
+
+	/**
+	 * Returns an array with the props of each field
+	 * for the frontend
+	 *
+	 * @since 5.0.0
+	 */
+	public function toProps(): array
+	{
+		$fields      = $this->data;
+		$props       = [];
+		$language    = $this->language();
+		$permissions = $this->model->permissions()->can('update');
+
+		if (
+			$this->model instanceof Page ||
+			$this->model instanceof Site
+		) {
+			// the title should never be updated directly via
+			// fields section to avoid conflicts with the rename dialog
+			unset($fields['title']);
+		}
+
+		foreach ($fields as $name => $field) {
+			$props[$name] = $field->toArray();
+
+			// the field should be disabled in the form if the user
+			// has no update permissions for the model or if the field
+			// is not translatable into the current language
+			if ($permissions === false || $field->isTranslatable($language) === false) {
+				$props[$name]['disabled'] = true;
+			}
+
+			// the value should not be included in the props
+			// we pass on the values to the frontend via the model
+			// view props to make them globally available for the view.
+			unset($props[$name]['value']);
+		}
+
+		return $props;
 	}
 
 	/**
 	 * Returns an array with the stored value of each field
+	 * (e.g. used for saving to content storage)
+	 *
+	 * @since 5.0.0
 	 */
-	public function toStoredValues(bool $defaults = false): array
+	public function toStoredValues(): array
 	{
-		return $this->toArray(fn ($field) => $field->toStoredValue($defaults));
+		return $this->toValues(
+			fn ($field) => $field->toStoredValue(),
+			fn ($field) => $field->isStorable($this->language())
+		);
+	}
+
+	/**
+	 * Returns an array with the values of each field
+	 * and adds passthrough values if they don't exist
+	 * @internal
+	 */
+	protected function toValues(Closure $method, Closure $filter): array
+	{
+		$values = $this->filter($filter)->toArray($method);
+
+		foreach ($this->passthrough as $key => $value) {
+			if (isset($values[$key]) === false) {
+				$values[$key] = $value;
+			}
+		}
+
+		return $values;
+	}
+
+	/**
+	 * Checks for errors in all fields and throws an
+	 * exception if there are any
+	 *
+	 * @since 5.0.0
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public function validate(): void
+	{
+		$errors = $this->errors();
+
+		if ($errors !==	[]) {
+			throw new InvalidArgumentException(
+				fallback: 'Invalid form with errors',
+				details: $errors
+			);
+		}
 	}
 }

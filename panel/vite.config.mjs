@@ -2,19 +2,27 @@
 import path from "path";
 
 import { defineConfig, loadEnv, splitVendorChunkPlugin } from "vite";
+import { minify } from "terser";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import externalize from "rollup-plugin-external-globals";
 import kirby from "./scripts/vite-kirby.mjs";
 import postcssLightDarkFunction from "@csstools/postcss-light-dark-function";
 
 /**
  * Returns all aliases used in the project
  */
-function createAliases() {
-	return {
+function createAliases(proxy) {
+	const aliases = {
 		"@": path.resolve(__dirname, "src")
 	};
+
+	if (!process.env.VITEST) {
+		// use absolute proxied url to avoid Vue being loaded twice
+		aliases.vue =
+			proxy.target + ":3000/node_modules/vue/dist/vue.esm.browser.js";
+	}
+
+	return aliases;
 }
 
 /**
@@ -60,26 +68,32 @@ function createPlugins(mode) {
 			viteStaticCopy({
 				targets: [
 					{
-						src: "node_modules/vue/dist/vue.runtime.min.js",
-						dest: "js"
+						src: "node_modules/vue/dist/vue.runtime.esm.js",
+						dest: "js",
+						rename: "vue.runtime.esm.min.js",
+						// TODO: we can simplify this in Vue 3 as a minified version
+						// is provided by Vue itself by default
+						transform: async (content) => {
+							content = content.replaceAll(
+								"process.env.NODE_ENV",
+								"'production'"
+							);
+							const minified = await minify(content);
+							return minified.code;
+						}
 					},
 					{
-						src: "node_modules/vue/dist/vue.min.js",
+						src: "node_modules/vue/dist/vue.esm.browser.min.js",
+						dest: "js"
+					},
+					// Also copy the non-minified version to the dist folder as
+					// we will expose this for plugins in dev mode with Vue 3
+					{
+						src: "node_modules/vue/dist/vue.esm.browser.js",
 						dest: "js"
 					}
 				]
 			})
-		);
-	}
-
-	if (!process.env.VITEST) {
-		plugins.push(
-			// Externalize Vue so it's not loaded from node_modules
-			// but accessed via window.Vue
-			{
-				...externalize({ vue: "Vue" }),
-				enforce: "post"
-			}
 		);
 	}
 
@@ -121,6 +135,7 @@ export default defineConfig(({ mode }) => {
 			minify: "terser",
 			cssCodeSplit: false,
 			rollupOptions: {
+				external: ["vue"],
 				input: "./src/index.js",
 				output: {
 					entryFileNames: "js/[name].min.js",
@@ -140,7 +155,7 @@ export default defineConfig(({ mode }) => {
 			holdUntilCrawlEnd: false
 		},
 		resolve: {
-			alias: createAliases()
+			alias: createAliases(proxy)
 		},
 		server: createServer(proxy),
 		test: createTest()
