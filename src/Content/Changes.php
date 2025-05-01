@@ -64,7 +64,7 @@ class Changes
 	public function ensure(Files|Pages|Users $tracked): Files|Pages|Users
 	{
 		foreach ($tracked as $model) {
-			if ($model->version(VersionId::changes())->exists('*') === false) {
+			if ($model->version('changes')->exists('*') === false) {
 				$this->untrack($model);
 				$tracked->remove($model);
 			}
@@ -101,7 +101,7 @@ class Changes
 		];
 
 		foreach ($this->kirby->models() as $model) {
-			if ($model->version(VersionId::changes())->exists('*') === true) {
+			if ($model->version('changes')->exists('*') === true) {
 				$models[$this->cacheKey($model)][] = (string)($model->uuid() ?? $model->id());
 			}
 		}

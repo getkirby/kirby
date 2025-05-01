@@ -36,7 +36,7 @@ class VersionRules
 			return;
 		}
 
-		if ($version->model()->version(VersionId::latest())->exists($language) === false) {
+		if ($version->model()->version('latest')->exists($language) === false) {
 			throw new LogicException(
 				message: 'A matching latest version for the changes does not exist'
 			);

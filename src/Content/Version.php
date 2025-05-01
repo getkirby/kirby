@@ -101,7 +101,7 @@ class Version
 		Language|string $language = 'default'
 	): void {
 		$language = Language::ensure($language);
-		$latest   = $this->sibling(VersionId::latest());
+		$latest   = $this->sibling('latest');
 
 		// if the latest version of the translation does not exist yet,
 		// we have to copy over the content from the default language first.
@@ -120,7 +120,7 @@ class Version
 		VersionRules::create($this, $fields, $language);
 
 		// track the changes
-		if ($this->id->is(VersionId::changes()) === true) {
+		if ($this->id->is(VersionId::CHANGES) === true) {
 			(new Changes())->track($this->model);
 		}
 
@@ -156,7 +156,10 @@ class Version
 
 		// untrack the changes if the version does no longer exist
 		// in any of the available languages
-		if ($this->id->is(VersionId::changes()) === true && $this->exists('*') === false) {
+		if (
+			$this->id->is(VersionId::CHANGES) === true &&
+			$this->exists('*') === false
+		) {
 			(new Changes())->untrack($this->model);
 		}
 
@@ -260,7 +263,7 @@ class Version
 	 */
 	public function isLatest(): bool
 	{
-		return $this->id->is('latest');
+		return $this->id->is(VersionId::LATEST);
 	}
 
 	/**
@@ -366,7 +369,7 @@ class Version
 		// add the editing user
 		if (
 			Lock::isEnabled() === true &&
-			$this->id->is(VersionId::changes()) === true
+			$this->id->is(VersionId::CHANGES) === true
 		) {
 			$fields['lock'] = $this->model->kirby()->user()?->id();
 
@@ -499,7 +502,7 @@ class Version
 		// check if publishing is allowed
 		VersionRules::publish($this, $language);
 
-		$latest  = $this->sibling(VersionId::latest())->read($language);
+		$latest  = $this->sibling('latest')->read($language);
 		$changes = $this->read($language);
 
 		// overwrite all fields that are not in the `changes` version

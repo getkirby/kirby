@@ -151,7 +151,7 @@ class PlainTextStorage extends Storage
 
 		// delete empty _drafts directories for pages
 		if (
-			$versionId->is(VersionId::latest()) === true &&
+			$versionId->is(VersionId::LATEST) === true &&
 			$this->model instanceof Page &&
 			$this->model->isDraft() === true
 		) {
@@ -195,7 +195,10 @@ class PlainTextStorage extends Storage
 
 		// A changed version or non-default language version does not exist
 		// if the content file was not found
-		if (VersionId::latest()->is($versionId) === false || $language->isDefault() === false) {
+		if (
+			$versionId->is(VersionId::LATEST) === false ||
+			$language->isDefault() === false
+		) {
 			return false;
 		}
 
