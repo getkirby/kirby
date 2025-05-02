@@ -86,11 +86,11 @@ class ChangesTest extends TestCase
 		// in cache and changes exist in reality. We need to save
 		// at least a single field here. Otherwise, the content file
 		// is not going to be created and the changes will not be detected.
-		$this->app->file('test/test.jpg')->version(VersionId::latest())->save([
+		$this->app->file('test/test.jpg')->version('latest')->save([
 			'alt' => 'Test'
 		]);
 
-		$this->app->file('test/test.jpg')->version(VersionId::changes())->save([
+		$this->app->file('test/test.jpg')->version('changes')->save([
 			'alt' => 'Test'
 		]);
 
@@ -124,16 +124,16 @@ class ChangesTest extends TestCase
 		$changes = new Changes();
 
 		$file = $this->app->file('test/test.jpg');
-		$file->version(VersionId::latest())->save(['foo' => 'bar']);
-		$file->version(VersionId::changes())->save(['foo' => 'bar']);
+		$file->version('latest')->save(['foo' => 'bar']);
+		$file->version('changes')->save(['foo' => 'bar']);
 
 		$page = $this->app->page('test');
-		$page->version(VersionId::latest())->save(['foo' => 'bar']);
-		$page->version(VersionId::changes())->save(['foo' => 'bar']);
+		$page->version('latest')->save(['foo' => 'bar']);
+		$page->version('changes')->save(['foo' => 'bar']);
 
 		$user = $this->app->user('test');
-		$user->version(VersionId::latest())->save(['foo' => 'bar']);
-		$user->version(VersionId::changes())->save(['foo' => 'bar']);
+		$user->version('latest')->save(['foo' => 'bar']);
+		$user->version('changes')->save(['foo' => 'bar']);
 
 		$this->app->cache('changes')->flush();
 
@@ -167,8 +167,8 @@ class ChangesTest extends TestCase
 		$this->assertSame([], $this->app->cache('changes')->get('pages'));
 
 		// in cache and changes exist in reality
-		$this->app->page('test')->version(VersionId::latest())->save([]);
-		$this->app->page('test')->version(VersionId::changes())->save([]);
+		$this->app->page('test')->version('latest')->save([]);
+		$this->app->page('test')->version('changes')->save([]);
 
 		$this->assertSame($cache, $this->app->cache('changes')->get('pages'));
 		$this->assertCount(1, $changes->pages());
@@ -360,8 +360,8 @@ class ChangesTest extends TestCase
 		$this->assertSame([], $this->app->cache('changes')->get('users'));
 
 		// in cache and changes exist in reality
-		$this->app->user('test')->version(VersionId::latest())->save([]);
-		$this->app->user('test')->version(VersionId::changes())->save([]);
+		$this->app->user('test')->version('latest')->save([]);
+		$this->app->user('test')->version('changes')->save([]);
 
 		$this->assertSame($cache, $this->app->cache('changes')->get('users'));
 		$this->assertCount(1, $changes->users());

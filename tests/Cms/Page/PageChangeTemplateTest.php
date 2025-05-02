@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Content\VersionId;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -107,9 +106,9 @@ class PageChangeTemplateTest extends ModelTestCase
 		$this->assertSame('article', $modified->intendedTemplate()->name());
 		$this->assertSame(2, $calls);
 
-		$this->assertFileExists($modified->version(VersionId::latest())->contentFile('en'));
-		$this->assertFileExists($modified->version(VersionId::latest())->contentFile('de'));
-		$this->assertFileDoesNotExist($modified->version(VersionId::latest())->contentFile('fr'));
+		$this->assertFileExists($modified->version('latest')->contentFile('en'));
+		$this->assertFileExists($modified->version('latest')->contentFile('de'));
+		$this->assertFileDoesNotExist($modified->version('latest')->contentFile('fr'));
 		$this->assertNull($modified->caption()->value());
 		$this->assertSame('Text', $modified->text()->value());
 		$this->assertNull($modified->content('de')->get('caption')->value());

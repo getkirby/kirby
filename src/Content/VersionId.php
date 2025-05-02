@@ -79,11 +79,11 @@ class VersionId implements Stringable
 	}
 
 	/**
-	 * Compares a string value with the id value
+	 * Compares a VersionId object or string value with this id
 	 */
-	public function is(string $value): bool
+	public function is(VersionId|string $id): bool
 	{
-		return $value === $this->value;
+		return static::from($id)->value === $this->value;
 	}
 
 	/**
