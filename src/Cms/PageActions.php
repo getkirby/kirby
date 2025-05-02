@@ -558,7 +558,7 @@ trait PageActions
 			$page->changeStorage(ImmutableMemoryStorage::class);
 
 			// clear UUID cache
-			$old->uuid()?->clear();
+			$page->uuid()?->clear();
 
 			// delete all files individually
 			foreach ($old->files() as $file) {

@@ -290,6 +290,9 @@ trait FileActions
 			// to still have access to it in after hooks
 			$file->changeStorage(ImmutableMemoryStorage::class);
 
+			// clear UUID cache
+			$file->uuid()?->clear();
+
 			// remove all public versions and clear the UUID cache
 			$old->unpublish();
 
