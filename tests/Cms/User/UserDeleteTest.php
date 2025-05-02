@@ -71,4 +71,26 @@ class UserDeleteTest extends ModelTestCase
 
 		$this->assertSame(2, $calls);
 	}
+
+	public function testDeleteHookWithUUIDAccess(): void
+	{
+		$phpunit = $this;
+		$uuid    = null;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.delete:after' => function ($status, User $user) use ($phpunit, &$uuid) {
+					$phpunit->assertSame($uuid, $user->uuid()->id());
+				}
+			]
+		]);
+
+		// we need to authenticate again after the app has been cloned
+		$this->app->impersonate('kirby');
+
+		$user = User::create(['email' => 'editor@domain.com']);
+		$uuid = $user->uuid()->id();
+
+		$user->delete();
+	}
 }

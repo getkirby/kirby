@@ -145,4 +145,24 @@ class PageDeleteTest extends ModelTestCase
 		$this->assertFalse($page->exists());
 	}
 
+	public function testDeleteHookWithUUIDAccess(): void
+	{
+		$phpunit = $this;
+		$uuid    = null;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.delete:after' => function ($status, Page $page) use ($phpunit, &$uuid) {
+					$phpunit->assertSame($uuid, $page->uuid()->id());
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create(['slug' => 'test']);
+		$uuid = $page->uuid()->id();
+
+		$page->delete();
+	}
 }

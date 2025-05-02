@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\MemoryStorage;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
@@ -243,21 +244,27 @@ trait UserActions
 	public function delete(): bool
 	{
 		return $this->commit('delete', ['user' => $this], function ($user) {
+			$old = $user->clone();
+
+			// keep the content in iummtable memory storage
+			// to still have access to it in after hooks
+			$user->changeStorage(ImmutableMemoryStorage::class);
+
 			// delete all files individually
-			foreach ($user->files() as $file) {
+			foreach ($old->files() as $file) {
 				$file->delete();
 			}
 
 			// delete all versions,
 			// the plain text storage handler will then clean
 			// up the directory if it's empty
-			$user->versions()->delete();
+			$old->versions()->delete();
 
 			// delete the user directory to get rid
 			// of the .htpasswd and index.php files.
 			// we need to solve this at a later point with
 			// something like a credential storage
-			Dir::remove($user->root());
+			Dir::remove($old->root());
 
 			return true;
 		});
