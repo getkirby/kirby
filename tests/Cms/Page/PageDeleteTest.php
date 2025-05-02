@@ -160,9 +160,14 @@ class PageDeleteTest extends ModelTestCase
 
 		$this->app->impersonate('kirby');
 
-		$page = Page::create(['slug' => 'test']);
-		$uuid = $page->uuid()->id();
+		$page        = Page::create(['slug' => 'test']);
+		$uuid        = $page->uuid()->id();
+		$contentFile = $page->root() . '/default.txt';
+
+		$this->assertFileExists($contentFile);
 
 		$page->delete();
+
+		$this->assertFileDoesNotExist($contentFile);
 	}
 }

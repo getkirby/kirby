@@ -88,9 +88,14 @@ class UserDeleteTest extends ModelTestCase
 		// we need to authenticate again after the app has been cloned
 		$this->app->impersonate('kirby');
 
-		$user = User::create(['email' => 'editor@domain.com']);
-		$uuid = $user->uuid()->id();
+		$user        = User::create(['email' => 'editor@domain.com']);
+		$uuid        = $user->uuid()->id();
+		$contentFile = $user->root() . '/user.txt';
+
+		$this->assertFileExists($contentFile);
 
 		$user->delete();
+
+		$this->assertFileDoesNotExist($contentFile);
 	}
 }

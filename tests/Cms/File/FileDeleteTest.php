@@ -91,9 +91,14 @@ class FileDeleteTest extends ModelTestCase
 
 		$this->app->impersonate('kirby');
 
-		$file = $this->createDummyFile();
-		$uuid = $file->uuid()->id();
+		$file        = $this->createDummyFile();
+		$uuid        = $file->uuid()->id();
+		$contentFile = $file->root() . '.txt';
+
+		$this->assertFileExists($contentFile);
 
 		$file->delete();
+
+		$this->assertFileDoesNotExist($contentFile);
 	}
 }
