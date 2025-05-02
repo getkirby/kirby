@@ -120,7 +120,7 @@ class Version
 		VersionRules::create($this, $fields, $language);
 
 		// track the changes
-		if ($this->id->is(VersionId::CHANGES) === true) {
+		if ($this->id->is('changes') === true) {
 			(new Changes())->track($this->model);
 		}
 
@@ -157,7 +157,7 @@ class Version
 		// untrack the changes if the version does no longer exist
 		// in any of the available languages
 		if (
-			$this->id->is(VersionId::CHANGES) === true &&
+			$this->id->is('changes') === true &&
 			$this->exists('*') === false
 		) {
 			(new Changes())->untrack($this->model);
@@ -263,7 +263,7 @@ class Version
 	 */
 	public function isLatest(): bool
 	{
-		return $this->id->is(VersionId::LATEST);
+		return $this->id->is('latest');
 	}
 
 	/**
@@ -369,7 +369,7 @@ class Version
 		// add the editing user
 		if (
 			Lock::isEnabled() === true &&
-			$this->id->is(VersionId::CHANGES) === true
+			$this->id->is('changes') === true
 		) {
 			$fields['lock'] = $this->model->kirby()->user()?->id();
 

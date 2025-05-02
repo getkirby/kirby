@@ -39,7 +39,7 @@ class PlainTextStorage extends Storage
 			=> $this->model->root()
 		};
 
-		if ($versionId->is(VersionId::CHANGES)) {
+		if ($versionId->is('changes')) {
 			$directory .= '/_changes';
 		}
 
@@ -151,7 +151,7 @@ class PlainTextStorage extends Storage
 
 		// delete empty _drafts directories for pages
 		if (
-			$versionId->is(VersionId::LATEST) === true &&
+			$versionId->is('latest') === true &&
 			$this->model instanceof Page &&
 			$this->model->isDraft() === true
 		) {
@@ -196,7 +196,7 @@ class PlainTextStorage extends Storage
 		// A changed version or non-default language version does not exist
 		// if the content file was not found
 		if (
-			$versionId->is(VersionId::LATEST) === false ||
+			$versionId->is('latest') === false ||
 			$language->isDefault() === false
 		) {
 			return false;
