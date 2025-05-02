@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\MemoryStorage;
 use Kirby\Content\VersionCache;
 use Kirby\Exception\InvalidArgumentException;
@@ -283,14 +284,23 @@ trait FileActions
 	public function delete(): bool
 	{
 		return $this->commit('delete', ['file' => $this], function ($file) {
+			$old = $file->clone();
+
+			// keep the content in iummtable memory storage
+			// to still have access to it in after hooks
+			$file->changeStorage(ImmutableMemoryStorage::class);
+
+			// clear UUID cache
+			$file->uuid()?->clear();
+
 			// remove all public versions and clear the UUID cache
-			$file->unpublish();
+			$old->unpublish();
 
 			// delete all versions
-			$file->versions()->delete();
+			$old->versions()->delete();
 
 			// delete the file from disk
-			F::remove($file->root());
+			F::remove($old->root());
 
 			return true;
 		});
