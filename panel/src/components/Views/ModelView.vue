@@ -1,6 +1,4 @@
 <script>
-import { length } from "@/helpers/object";
-
 /**
  * @internal
  */
@@ -46,16 +44,13 @@ export default {
 			return this.versions.changes;
 		},
 		diff() {
-			return this.$panel.content.diff({
-				api: this.api,
-				language: this.$panel.language.code
-			});
+			return this.$panel.content.diff();
 		},
 		editor() {
 			return this.lock.user.email;
 		},
-		hasChanges() {
-			return length(this.diff) > 0;
+		hasDiff() {
+			return this.$panel.content.hasDiff();
 		},
 		isLocked() {
 			return this.lock.isLocked;

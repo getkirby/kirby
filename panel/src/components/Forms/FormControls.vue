@@ -57,7 +57,7 @@
 export default {
 	props: {
 		editor: String,
-		hasChanges: Boolean,
+		hasDiff: Boolean,
 		isLocked: Boolean,
 		modified: [String, Date],
 		/**
@@ -81,7 +81,7 @@ export default {
 				];
 			}
 
-			if (this.hasChanges === true) {
+			if (this.hasDiff === true) {
 				return [
 					{
 						theme: "notice",

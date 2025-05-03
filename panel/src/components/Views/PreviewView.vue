@@ -80,7 +80,7 @@
 						/>
 						<k-form-controls
 							:editor="editor"
-							:has-changes="hasChanges"
+							:has-diff="hasDiff"
 							:is-locked="isLocked"
 							:modified="modified"
 							size="sm"
@@ -89,7 +89,7 @@
 						/>
 					</k-button-group>
 				</header>
-				<iframe v-if="hasChanges" ref="changes" :src="src.changes"></iframe>
+				<iframe v-if="hasDiff" ref="changes" :src="src.changes"></iframe>
 				<k-empty v-else>
 					<template v-if="lock.isLegacy">
 						This content is locked by our old lock system. <br />

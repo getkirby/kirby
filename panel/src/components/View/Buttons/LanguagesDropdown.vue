@@ -56,16 +56,16 @@ export default {
 		 * If translations other than the currently-viewed one
 		 * have any unsaved changes
 		 */
-		hasChanges: Boolean,
+		hasDiff: Boolean,
 		options: String
 	},
 	computed: {
 		changesBadge() {
-			// `hasChanges` provides the state for all other than the current
+			// `hasDiff` provides the state for all other than the current
 			// translation from the backend; for the current translation we need to
-			// check `content.hasChanges` as this state can change dynamically without
-			// any other backend request that would update `hasChanges`
-			if (this.hasChanges || this.$panel.content.hasChanges) {
+			// check `content.diff` as this state can change dynamically without
+			// any other backend request that would update `hasDiff`
+			if (this.hasDiff || this.$panel.content.hasDiff()) {
 				return {
 					theme: this.$panel.content.isLocked() ? "red" : "orange"
 				};

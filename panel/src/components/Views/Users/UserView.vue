@@ -25,7 +25,7 @@
 				<k-view-buttons :buttons="buttons" />
 				<k-form-controls
 					:editor="editor"
-					:has-changes="hasChanges"
+					:has-diff="hasDiff"
 					:is-locked="isLocked"
 					:modified="modified"
 					@discard="onDiscard"

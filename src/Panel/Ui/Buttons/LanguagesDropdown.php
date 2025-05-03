@@ -46,7 +46,7 @@ class LanguagesDropdown extends ViewButton
 	 * (the current language has to be handled in `k-languages-dropdown` as its
 	 * state can change dynamically without another backend request)
 	 */
-	public function hasChanges(): bool
+	public function hasDiff(): bool
 	{
 		foreach (Languages::ensure() as $language) {
 			if ($this->kirby->language()?->code() !== $language->code()) {
@@ -104,7 +104,7 @@ class LanguagesDropdown extends ViewButton
 	{
 		return [
 			...parent::props(),
-			'hasChanges' => $this->hasChanges()
+			'hasDiff' => $this->hasDiff()
 		];
 	}
 

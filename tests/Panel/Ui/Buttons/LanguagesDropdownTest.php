@@ -13,9 +13,9 @@ use Kirby\Panel\Areas\AreaTestCase;
 class LanguagesDropdownTest extends AreaTestCase
 {
 	/**
-	 * @covers ::hasChanges
+	 * @covers ::hasDiff
 	 */
-	public function testHasChanges()
+	public function testHasDiff()
 	{
 		$this->install();
 		$this->installLanguages();
@@ -24,17 +24,17 @@ class LanguagesDropdownTest extends AreaTestCase
 		$button = new LanguagesDropdown($page);
 
 		// no changes
-		$this->assertFalse($button->hasChanges());
+		$this->assertFalse($button->hasDiff());
 
 		// changes in current translation (not considered)
 		$page->version('latest')->save([], 'en');
 		$page->version('changes')->save([], 'en');
-		$this->assertFalse($button->hasChanges());
+		$this->assertFalse($button->hasDiff());
 
 		// changes in other translations
 		$page->version('latest')->save([], 'de');
 		$page->version('changes')->save([], 'de');
-		$this->assertTrue($button->hasChanges());
+		$this->assertTrue($button->hasDiff());
 	}
 
 	/**
@@ -105,7 +105,7 @@ class LanguagesDropdownTest extends AreaTestCase
 		$page   = new Page(['slug' => 'test']);
 		$button = new LanguagesDropdown($page);
 		$props  = $button->props();
-		$this->assertFalse($props['hasChanges']);
+		$this->assertFalse($props['hasDiff']);
 	}
 
 	/**

@@ -1,4 +1,4 @@
-import { isObject } from "@/helpers/object";
+import { isObject, length } from "@/helpers/object";
 import { reactive } from "vue";
 import throttle from "@/helpers/throttle.js";
 
@@ -122,6 +122,13 @@ export default (panel) => {
 				language: panel.language.code,
 				...env
 			};
+		},
+
+		/**
+		 * Whether there are any changes
+		 */
+		hasDiff(env = {}) {
+			return length(this.diff(env)) > 0;
 		},
 
 		/**
