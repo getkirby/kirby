@@ -85,7 +85,7 @@ export default (panel) => {
 				await this.request("discard", {}, env);
 
 				// update the props for the current view
-				panel.view.props.versions.changes = this.versions().latest;
+				panel.view.props.versions.changes = this.versions("latest");
 
 				this.emit("discard", {}, env);
 			} catch (error) {
@@ -195,12 +195,10 @@ export default (panel) => {
 				values = {};
 			}
 
-			panel.view.props.versions.changes = {
-				...this.versions().changes,
+			return (panel.view.props.versions.changes = {
+				...this.versions("changes"),
 				...values
-			};
-
-			return panel.view.props.versions.changes;
+			});
 		},
 
 		/**
@@ -231,7 +229,7 @@ export default (panel) => {
 				this.dialog?.close();
 
 				// update the props for the current view
-				panel.view.props.versions.latest = this.versions().changes;
+				panel.view.props.versions.latest = this.versions("changes");
 
 				this.emit("publish", { values }, env);
 			} catch (error) {
