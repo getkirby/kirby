@@ -227,6 +227,51 @@ class AuthTest extends TestCase
 	}
 
 	/**
+	 * @covers ::logout
+	 */
+	public function testLogoutActive()
+	{
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$this->app->impersonate('homer@simpsons.com');
+
+		$this->assertSame('marge', $session->get('kirby.userId'));
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.userId'));
+
+		$this->assertSame([
+			'challenge' => null,
+			'email'     => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
+	}
+
+	/**
+	 * @covers ::logout
+	 */
+	public function testLogoutPending()
+	{
+		$session = $this->app->session();
+
+		$this->auth->createChallenge('marge@simpsons.com');
+
+		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.userId'));
+
+		$this->assertSame([
+			'challenge' => null,
+			'email'     => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
+	}
+
+	/**
 	 * @covers ::type
 	 */
 	public function testTypeBasic1()
