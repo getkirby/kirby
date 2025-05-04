@@ -105,11 +105,13 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'marge@simpsons.com',
+			'mode'      => 'login',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertSame('email', $status->challenge(false));
 		$this->assertSame(1800, $session->timeout());
 		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
 		preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
 		$this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
@@ -122,10 +124,12 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'invalid@example.com',
+			'mode'      => 'login',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertNull($status->challenge(false));
 		$this->assertSame('invalid@example.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertNull($session->get('kirby.challenge.type'));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertSame('invalid@example.com', $this->failedEmail);
@@ -135,10 +139,12 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'error@getkirby.com',
+			'mode'      => 'login',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertNull($status->challenge(false));
 		$this->assertSame('error@getkirby.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertNull($session->get('kirby.challenge.type'));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertSame('invalid@example.com', $this->failedEmail); // a challenge error is not considered a failed login
@@ -169,10 +175,12 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'marge@simpsons.com',
+			'mode'      => 'login',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertNull($status->challenge(false));
 		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertNull($session->get('kirby.challenge.type'));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertSame('marge@simpsons.com', $this->failedEmail);
@@ -244,6 +252,7 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'marge@simpsons.com',
+			'mode'      => 'login',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertSame('email', $status->challenge(false));
@@ -255,6 +264,7 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'invalid@example.com',
+			'mode'      => 'login',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertNull($status->challenge(false));
@@ -273,6 +283,7 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'marge@simpsons.com',
+			'mode'      => 'login',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertSame('email', $status->challenge(false));
@@ -292,6 +303,7 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'test@exämple.com',
+			'mode'      => 'login',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertSame('email', $status->challenge(false));
@@ -346,11 +358,13 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'marge@simpsons.com',
+			'mode'      => '2fa',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertSame('email', $status->challenge(false));
 		$this->assertSame(1800, $session->timeout());
 		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('2fa', $session->get('kirby.challenge.mode'));
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
 		preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
 		$this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
@@ -370,11 +384,13 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'marge@simpsons.com',
+			'mode'      => '2fa',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertSame('email', $status->challenge(false));
 		$this->assertFalse($session->timeout());
 		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('2fa', $session->get('kirby.challenge.mode'));
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
 		preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
 		$this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
@@ -417,6 +433,7 @@ class AuthChallengeTest extends TestCase
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
 		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
 
@@ -441,6 +458,12 @@ class AuthChallengeTest extends TestCase
 			$this->assertInstanceOf(InvalidArgumentException::class, $e);
 			$this->assertSame('No authentication challenge is active', $e->getMessage());
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
+			$this->assertSame([
+				'challenge' => null,
+				'email'     => null,
+				'mode'      => null,
+				'status'    => 'inactive'
+			], $this->auth->status()->toArray());
 		}
 	}
 
@@ -459,6 +482,12 @@ class AuthChallengeTest extends TestCase
 			$this->assertInstanceOf(InvalidArgumentException::class, $e);
 			$this->assertSame('No authentication challenge is active', $e->getMessage());
 			$this->assertSame(['challengeDestroyed' => false], $e->getDetails());
+			$this->assertSame([
+				'challenge' => 'email',
+				'email'     => 'marge@simpsons.com',
+				'mode'      => null,
+				'status'    => 'pending'
+			], $this->auth->status()->toArray());
 		}
 	}
 
@@ -485,6 +514,12 @@ class AuthChallengeTest extends TestCase
 			$this->assertInstanceOf(PermissionException::class, $e);
 			$this->assertSame('Invalid code', $e->getMessage());
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
+			$this->assertSame([
+				'challenge' => null,
+				'email'     => null,
+				'mode'      => null,
+				'status'    => 'inactive'
+			], $this->auth->status()->toArray());
 		}
 	}
 
@@ -525,6 +560,7 @@ class AuthChallengeTest extends TestCase
 		$this->expectExceptionMessage('The user "invalid@example.com" cannot be found');
 
 		$this->app->session()->set('kirby.challenge.email', 'invalid@example.com');
+		$this->app->session()->set('kirby.challenge.mode', 'login');
 		$this->app->session()->set('kirby.challenge.type', 'email');
 		$this->auth->verifyChallenge('123456');
 	}
@@ -546,6 +582,7 @@ class AuthChallengeTest extends TestCase
 		$this->auth->track('homer@simpsons.com');
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
 		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 
 		$this->auth->verifyChallenge('123456');
@@ -561,6 +598,7 @@ class AuthChallengeTest extends TestCase
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
 		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time - 1);
 
@@ -574,8 +612,16 @@ class AuthChallengeTest extends TestCase
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
 		}
 
+		$this->assertSame([
+			'challenge' => null,
+			'email'     => null,
+			'mode'      => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
+
 		$this->assertNull($session->get('kirby.challenge.email'));
 		$this->assertNull($session->get('kirby.challenge.code'));
+		$this->assertNull($session->get('kirby.challenge.mode'));
 		$this->assertNull($session->get('kirby.challenge.type'));
 		$this->assertNull($session->get('kirby.challenge.timeout'));
 	}
@@ -598,6 +644,7 @@ class AuthChallengeTest extends TestCase
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
 		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time - 1);
 
@@ -613,6 +660,7 @@ class AuthChallengeTest extends TestCase
 
 		$this->assertNull($session->get('kirby.challenge.email'));
 		$this->assertNull($session->get('kirby.challenge.code'));
+		$this->assertNull($session->get('kirby.challenge.mode'));
 		$this->assertNull($session->get('kirby.challenge.type'));
 		$this->assertNull($session->get('kirby.challenge.timeout'));
 	}
@@ -630,6 +678,7 @@ class AuthChallengeTest extends TestCase
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
 		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
 
@@ -649,6 +698,7 @@ class AuthChallengeTest extends TestCase
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
 		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'test');
 		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
 
