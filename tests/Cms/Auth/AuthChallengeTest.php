@@ -65,7 +65,7 @@ class AuthChallengeTest extends TestCase
 		]);
 		Dir::make(static::TMP . '/site/accounts');
 
-		$this->auth = new Auth($this->app);
+		$this->auth = $this->app->auth();
 	}
 
 	public function tearDown(): void
