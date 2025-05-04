@@ -184,7 +184,22 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return $this->user($id)->changePassword($this->requestBody('password'));
+			$user = $this->user($id);
+
+			// validate password of acting user unless they have logged in to reset it;
+			// always validate password of acting user when changing password of other users
+			if ($this->session()->get('kirby.resetPassword') !== true || $user->isLoggedIn() !== true) {
+				$this->user()->validatePassword($this->requestBody('currentPassword'));
+			}
+
+			$result = $user->changePassword($this->requestBody('password'));
+
+			// only allow to reset the password once, now it is known again
+			if ($user->isLoggedIn() === true) {
+				$this->session()->remove('kirby.resetPassword');
+			}
+
+			return $result;
 		}
 	],
 	[

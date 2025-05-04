@@ -445,6 +445,29 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::verifyChallenge
+	 */
+	public function testVerifyChallengePasswordReset()
+	{
+		$session = $this->app->session();
+
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.mode', 'password-reset');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
+
+		$this->assertSame(
+			$this->app->user('marge@simpsons.com'),
+			$this->auth->verifyChallenge('123456')
+		);
+		$this->assertSame([
+			'kirby.userId'        => 'marge',
+			'kirby.resetPassword' => true,
+		], $session->data()->get());
+	}
+
+	/**
 	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */

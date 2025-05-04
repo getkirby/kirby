@@ -853,8 +853,15 @@ class Auth
 			) {
 				$class = static::$challenges[$challenge];
 				if ($class::verify($user, $code) === true) {
+					$mode = $session->get('kirby.challenge.mode');
+
 					$this->logout();
 					$user->loginPasswordless();
+
+					// allow the user to set a new password without knowing the previous one
+					if ($mode === 'password-reset') {
+						$session->set('kirby.resetPassword', true);
+					}
 
 					// clear the status cache
 					$this->status = null;

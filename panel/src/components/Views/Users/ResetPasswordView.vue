@@ -77,6 +77,7 @@ export default {
 			try {
 				await this.$api.users.changePassword(
 					this.$panel.user.id,
+					null,
 					this.values.password
 				);
 
