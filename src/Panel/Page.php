@@ -355,7 +355,6 @@ class Page extends Model
 		// Additional model information
 		// @deprecated Use the top-level props instead
 		$model = [
-			'content'    => $props['content'],
 			'id'         => $props['id'],
 			'link'       => $props['link'],
 			'parent'     => $this->model->parentModel()->panel()->url(true),

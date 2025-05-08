@@ -20,7 +20,7 @@
 				<k-view-buttons :buttons="buttons" @action="onAction" />
 				<k-form-controls
 					:editor="editor"
-					:has-changes="hasChanges"
+					:has-diff="hasDiff"
 					:is-locked="isLocked"
 					:modified="modified"
 					@discard="onDiscard"
@@ -37,7 +37,7 @@
 			@submit="onSubmit"
 		/>
 
-		<k-model-tabs :changes="changes" :tab="tab.name" :tabs="tabs" />
+		<k-model-tabs :diff="diff" :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"
