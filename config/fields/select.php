@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Field\FieldOptions;
+use Kirby\Toolkit\I18n;
 
 return [
 	'extends' => 'radio',
@@ -19,8 +20,8 @@ return [
 		/**
 		 * Custom placeholder string for empty option.
 		 */
-		'placeholder' => function (string $placeholder = '—') {
-			return $placeholder;
+		'placeholder' => function (string|array $placeholder = '—') {
+			return I18n::translate($placeholder, $placeholder);
 		},
 	],
 	'methods' => [
