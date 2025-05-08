@@ -194,8 +194,9 @@ return [
 
 			$result = $user->changePassword($this->requestBody('password'));
 
-			// only allow to reset the password once, now it is known again
+			// if we changed the password of the current user…
 			if ($user->isLoggedIn() === true) {
+				// …don't allow additional resets (now the password is known again)
 				$this->session()->remove('kirby.resetPassword');
 			}
 
