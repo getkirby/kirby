@@ -10,7 +10,7 @@
 			name,
 			placeholder,
 			required,
-			step: stepNumber,
+			step,
 			value: number
 		}"
 		:class="['k-number-input', $attrs.class]"
@@ -36,6 +36,7 @@ export const props = {
 		preselect: Boolean,
 		/**
 		 * The amount to increment with each input step. This can be a decimal.
+		 * Use "any" to allow any decimal value.
 		 */
 		step: [Number, String],
 		value: {
@@ -53,7 +54,6 @@ export default {
 	data() {
 		return {
 			number: this.format(this.value),
-			stepNumber: this.format(this.step),
 			timeout: null
 		};
 	},
@@ -92,17 +92,22 @@ export default {
 				return "";
 			}
 
+			// Handle "any" step value
+			if (this.step === "any") {
+				return value;
+			}
+
 			const decimals = this.decimals();
 
 			if (decimals) {
-				value = parseFloat(value).toFixed(decimals);
-			} else if (Number.isInteger(this.step)) {
-				value = parseInt(value);
-			} else {
-				value = parseFloat(value);
+				return parseFloat(value).toFixed(decimals);
 			}
 
-			return value;
+			if (Number.isInteger(this.step)) {
+				return parseInt(value);
+			}
+
+			return parseFloat(value);
 		},
 		clean() {
 			this.number = this.format(this.number);
