@@ -69,7 +69,7 @@ class AccountTest extends AreaTestCase
 
 		$view = $this->view('reset-password');
 		$this->assertSame('k-reset-password-view', $view['component']);
-		$this->assertFalse($view['props']['currentPassword']);
+		$this->assertFalse($view['props']['requirePassword']);
 	}
 
 	public function testResetPasswordWithoutResetMode(): void
@@ -79,6 +79,6 @@ class AccountTest extends AreaTestCase
 
 		$view = $this->view('reset-password');
 		$this->assertSame('k-reset-password-view', $view['component']);
-		$this->assertTrue($view['props']['currentPassword']);
+		$this->assertTrue($view['props']['requirePassword']);
 	}
 }

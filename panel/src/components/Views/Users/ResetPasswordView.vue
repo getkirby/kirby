@@ -31,7 +31,7 @@ export default {
 		/**
 		 * Enable the field for the current password of the acting user
 		 */
-		currentPassword: {
+		requirePassword: {
 			type: Boolean,
 			default: false
 		}
@@ -50,7 +50,7 @@ export default {
 		fields() {
 			let fields = {};
 
-			if (this.currentPassword === true) {
+			if (this.requirePassword === true) {
 				fields = {
 					currentPassword: {
 						autofocus: true,
@@ -69,7 +69,7 @@ export default {
 			return {
 				...fields,
 				password: {
-					autofocus: this.currentPassword === false,
+					autofocus: this.requirePassword === false,
 					label: this.$t("user.changePassword.new"),
 					icon: "key",
 					type: "password",
