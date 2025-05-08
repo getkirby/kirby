@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Data;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
@@ -49,13 +48,14 @@ class Role implements Stringable
 		return $this->name();
 	}
 
-	public static function admin(array $inject = []): static
+	public static function defaultAdmin(array $inject = []): static
 	{
-		try {
-			return static::load('admin');
-		} catch (Exception) {
-			return static::factory(static::defaults()['admin'], $inject);
-		}
+		return static::factory(static::defaults()['admin'], $inject);
+	}
+
+	public static function defaultNobody(array $inject = []): static
+	{
+		return static::factory(static::defaults()['nobody'], $inject);
 	}
 
 	protected static function defaults(): array
@@ -118,15 +118,6 @@ class Role implements Stringable
 	public function name(): string
 	{
 		return $this->name;
-	}
-
-	public static function nobody(array $inject = []): static
-	{
-		try {
-			return static::load('nobody');
-		} catch (Exception) {
-			return static::factory(static::defaults()['nobody'], $inject);
-		}
 	}
 
 	public function permissions(): Permissions

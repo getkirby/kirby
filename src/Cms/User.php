@@ -546,7 +546,7 @@ class User extends ModelWithContent
 
 		return $this->role =
 			$this->kirby()->roles()->find($name) ??
-			Role::nobody();
+			Role::defaultNobody();
 	}
 
 	/**
