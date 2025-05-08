@@ -16,10 +16,10 @@ export default (api) => ({
 	async changeName(id, name) {
 		return api.patch("users/" + id + "/name", { name: name });
 	},
-	async changePassword(id, currentPassword, password) {
+	async changePassword(id, password, currentPassword) {
 		return api.patch("users/" + id + "/password", {
-			currentPassword: currentPassword,
-			password: password
+			password: password,
+			currentPassword: currentPassword
 		});
 	},
 	async changeRole(id, role) {

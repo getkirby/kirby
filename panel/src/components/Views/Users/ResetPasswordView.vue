@@ -106,8 +106,8 @@ export default {
 			try {
 				await this.$api.users.changePassword(
 					this.$panel.user.id,
-					this.values.currentPassword,
-					this.values.password
+					this.values.password,
+					this.values.currentPassword
 				);
 
 				this.$panel.notification.success();
