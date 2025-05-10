@@ -922,7 +922,7 @@ class Page extends ModelWithContent
 		// make sure to convert it to an object no matter what happened
 		$versionId ??= VersionId::$render;
 		$versionId ??= $this->renderVersionFromRequest();
-		$versionId ??= VersionId::latest();
+		$versionId ??= 'latest';
 		$versionId   = VersionId::from($versionId);
 
 		// try to get the page from cache

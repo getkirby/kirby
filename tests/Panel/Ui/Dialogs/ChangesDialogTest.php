@@ -4,7 +4,6 @@ namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\Pages;
 use Kirby\Content\Changes;
-use Kirby\Content\VersionId;
 use Kirby\Panel\Areas\AreaTestCase;
 use Kirby\Uuid\Uuids;
 
@@ -68,11 +67,11 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 
-		$this->app->file('file://test')->version(VersionId::latest())->save([
+		$this->app->file('file://test')->version('latest')->save([
 			'alt' => 'Test'
 		]);
 
-		$this->app->file('file://test')->version(VersionId::changes())->save([
+		$this->app->file('file://test')->version('changes')->save([
 			'alt' => 'Test'
 		]);
 
@@ -100,8 +99,8 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 		$page = $this->app->page('page://test');
-		$page->version(VersionId::latest())->save([]);
-		$page->version(VersionId::changes())->save([]);
+		$page->version('latest')->save([]);
+		$page->version('changes')->save([]);
 
 		$dialog = new ChangesDialog();
 		$pages  = new Pages([$page]);
@@ -139,8 +138,8 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 
-		$this->app->page('page://test')->version(VersionId::latest())->save([]);
-		$this->app->page('page://test')->version(VersionId::changes())->save([]);
+		$this->app->page('page://test')->version('latest')->save([]);
+		$this->app->page('page://test')->version('changes')->save([]);
 
 		$dialog = new ChangesDialog();
 		$pages  = $dialog->pages();
@@ -166,8 +165,8 @@ class ChangesDialogTest extends AreaTestCase
 	{
 		$this->setUpModels();
 
-		$this->app->user('user://test')->version(VersionId::latest())->save([]);
-		$this->app->user('user://test')->version(VersionId::changes())->save([]);
+		$this->app->user('user://test')->version('latest')->save([]);
+		$this->app->user('user://test')->version('changes')->save([]);
 
 		$dialog = new ChangesDialog();
 		$users  = $dialog->users();

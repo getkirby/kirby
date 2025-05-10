@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\MemoryStorage;
 use Kirby\Content\VersionCache;
 use Kirby\Content\VersionId;
@@ -550,29 +551,35 @@ trait PageActions
 	public function delete(bool $force = false): bool
 	{
 		return $this->commit('delete', ['page' => $this, 'force' => $force], function ($page, $force) {
+			$old = $page->clone();
+
+			// keep the content in iummtable memory storage
+			// to still have access to it in after hooks
+			$page->changeStorage(ImmutableMemoryStorage::class);
+
 			// clear UUID cache
 			$page->uuid()?->clear();
 
 			// delete all files individually
-			foreach ($page->files() as $file) {
+			foreach ($old->files() as $file) {
 				$file->delete();
 			}
 
 			// delete all children individually
-			foreach ($page->childrenAndDrafts() as $child) {
+			foreach ($old->childrenAndDrafts() as $child) {
 				$child->delete(true);
 			}
 
 			// delete all versions,
 			// the plain text storage handler will then clean
 			// up the directory if it's empty
-			$page->versions()->delete();
+			$old->versions()->delete();
 
 			if (
-				$page->isListed() === true &&
-				$page->blueprint()->num() === 'default'
+				$old->isListed() === true &&
+				$old->blueprint()->num() === 'default'
 			) {
-				$page->resortSiblingsAfterUnlisting();
+				$old->resortSiblingsAfterUnlisting();
 			}
 
 			return true;

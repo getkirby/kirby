@@ -239,10 +239,12 @@ class AppPluginsTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'dummy',
 			'email'     => 'homer@simpsons.com',
+			'mode'      => 'login',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertSame('dummy', $status->challenge(false));
 		$this->assertSame('homer@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertSame('dummy', $session->get('kirby.challenge.type'));
 		$this->assertTrue(password_verify('test', $session->get('kirby.challenge.code')));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));

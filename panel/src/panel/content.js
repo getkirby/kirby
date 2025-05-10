@@ -1,4 +1,4 @@
-import { isObject } from "@/helpers/object";
+import { isObject, length } from "@/helpers/object";
 import { reactive } from "vue";
 import throttle from "@/helpers/throttle.js";
 
@@ -19,40 +19,41 @@ export default (panel) => {
 			this.saveAbortController?.abort();
 		},
 
+		dialog: null,
+
 		/**
 		 * Returns an object with all changed fields
 		 * @param {Object} env
 		 * @returns {Object}
 		 */
-		changes(env = {}) {
+		diff(env = {}) {
 			// changes can only be computed for the current view
 			if (this.isCurrent(env) === false) {
 				throw new Error("Cannot get changes for another view");
 			}
 
-			const changes = {};
+			const versions = this.versions();
+			const diff = {};
 
-			for (const field in panel.view.props.content) {
-				const changed = JSON.stringify(panel.view.props.content[field]);
-				const original = JSON.stringify(panel.view.props.originals[field]);
+			for (const field in versions.changes) {
+				const changed = JSON.stringify(versions.changes[field]);
+				const original = JSON.stringify(versions.latest[field]);
 
 				if (changed !== original) {
-					changes[field] = panel.view.props.content[field];
+					diff[field] = versions.changes[field];
 				}
 			}
 
 			// find all fields that have been present in the original content
 			// but have been removed from the current content
-			for (const field in panel.view.props.originals) {
-				if (panel.view.props.content[field] === undefined) {
-					changes[field] = null;
+			for (const field in versions.latest) {
+				if (versions.changes[field] === undefined) {
+					diff[field] = null;
 				}
 			}
 
-			return changes;
+			return diff;
 		},
-
-		dialog: null,
 
 		/**
 		 * Removes all unpublished changes
@@ -84,7 +85,7 @@ export default (panel) => {
 				await this.request("discard", {}, env);
 
 				// update the props for the current view
-				panel.view.props.content = panel.view.props.originals;
+				panel.view.props.versions.changes = this.version("latest");
 
 				this.emit("discard", {}, env);
 			} catch (error) {
@@ -124,12 +125,20 @@ export default (panel) => {
 		},
 
 		/**
+		 * Whether there are any changes
+		 */
+		hasDiff(env = {}) {
+			return length(this.diff(env)) > 0;
+		},
+
+		/**
 		 * Whether the api endpoint belongs to the current view
 		 * @var {String} api
 		 */
 		isCurrent(env = {}) {
-			const { api, language } = this.env(env);
-			return panel.view.props.api === api && panel.language.code === language;
+			const given = this.env(env);
+			const current = this.env();
+			return current.api === given.api && current.language === given.language;
 		},
 
 		/**
@@ -193,12 +202,12 @@ export default (panel) => {
 				values = {};
 			}
 
-			panel.view.props.content = {
-				...panel.view.props.content,
+			panel.view.props.versions.changes = {
+				...this.version("changes"),
 				...values
 			};
 
-			return panel.view.props.content;
+			return panel.view.props.versions.changes;
 		},
 
 		/**
@@ -229,7 +238,7 @@ export default (panel) => {
 				this.dialog?.close();
 
 				// update the props for the current view
-				panel.view.props.originals = panel.view.props.content;
+				panel.view.props.versions.latest = this.version("changes");
 
 				this.emit("publish", { values }, env);
 			} catch (error) {
@@ -281,7 +290,7 @@ export default (panel) => {
 
 				// update the lock timestamp
 				if (this.isCurrent(env) === true) {
-					panel.view.props.lock.modified = new Date();
+					this.lock(env).modified = new Date();
 				}
 
 				this.emit("save", { values }, env);
@@ -324,6 +333,23 @@ export default (panel) => {
 		 */
 		updateLazy(values = {}, env = {}) {
 			this.saveLazy(this.merge(values, env), env);
+		},
+
+		/**
+		 * Returns a specific version of the content
+		 * @param {String} versionId
+		 * @returns {Object|undefined}
+		 */
+		version(versionId) {
+			return this.versions()[versionId];
+		},
+
+		/**
+		 * Returns all versions of the content
+		 * @returns {Object}
+		 */
+		versions() {
+			return panel.view.props.versions;
 		}
 	});
 

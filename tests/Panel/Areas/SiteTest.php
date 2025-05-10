@@ -49,8 +49,10 @@ class SiteTest extends AreaTestCase
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
 
+		$this->assertSame('Test', $props['versions']['latest']['title']);
+		$this->assertSame('Test', $props['versions']['changes']['title']);
+
 		// model
-		$this->assertSame('Test', $model['content']['title']);
 		$this->assertSame('test', $model['id']);
 		$this->assertSame('draft', $model['status']);
 		$this->assertSame('Test', $model['title']);
@@ -106,9 +108,10 @@ class SiteTest extends AreaTestCase
 		], $props['lock']);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
+		$this->assertSame([], $props['versions']['changes']);
+		$this->assertSame([], $props['versions']['latest']);
 
 		// model
-		$this->assertSame([], $model['content']);
 		$this->assertSame('jpg', $model['extension']);
 		$this->assertSame('test.jpg', $model['filename']);
 		$this->assertSame('test/test.jpg', $model['id']);
@@ -174,7 +177,6 @@ class SiteTest extends AreaTestCase
 		$this->assertSame('k-site-view', $view['component']);
 
 		$this->assertSame('site', $props['blueprint']);
-		$this->assertSame([], $props['model']['content']);
 		$this->assertSame('/site', $props['model']['link']);
 		$this->assertSame('/', $props['model']['previewUrl']);
 		$this->assertSame('', $props['model']['title']);
@@ -213,7 +215,8 @@ class SiteTest extends AreaTestCase
 		$this->assertSame([], $props['tabs']);
 
 		// model
-		$this->assertSame([], $model['content']);
+		$this->assertSame([], $props['versions']['changes']);
+		$this->assertSame([], $props['versions']['latest']);
 		$this->assertSame('jpg', $model['extension']);
 		$this->assertSame('test.jpg', $model['filename']);
 		$this->assertSame('test.jpg', $model['id']);

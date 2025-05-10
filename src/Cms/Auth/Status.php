@@ -42,6 +42,12 @@ class Status implements Stringable
 	protected App $kirby;
 
 	/**
+	 * Purpose of the challenge:
+	 * `login|password-reset|2fa`
+	 */
+	protected string|null $mode;
+
+	/**
 	 * Authentication status:
 	 * `active|impersonated|pending|inactive`
 	 */
@@ -65,6 +71,7 @@ class Status implements Stringable
 		$this->challenge         = $props['challenge'] ?? null;
 		$this->challengeFallback = $props['challengeFallback'] ?? null;
 		$this->email             = $props['email'] ?? null;
+		$this->mode              = $props['mode'] ?? null;
 		$this->status            = $props['status'];
 	}
 
@@ -121,6 +128,16 @@ class Status implements Stringable
 	}
 
 	/**
+	 * Returns the purpose of the challenge
+	 *
+	 * @return string `login|password-reset|2fa`
+	 */
+	public function mode(): string|null
+	{
+		return $this->mode;
+	}
+
+	/**
 	 * Returns the authentication status
 	 *
 	 * @return string `active|impersonated|pending|inactive`
@@ -138,6 +155,7 @@ class Status implements Stringable
 		return [
 			'challenge' => $this->challenge(),
 			'email'     => $this->email(),
+			'mode'      => $this->mode(),
 			'status'    => $this->status()
 		];
 	}

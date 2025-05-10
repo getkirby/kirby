@@ -243,7 +243,6 @@ class User extends Model
 		$model = [
 			'account'  => $user->isLoggedIn(),
 			'avatar'   => $user->avatar()?->url(),
-			'content'  => $props['content'],
 			'email'    => $user->email(),
 			'id'       => $props['id'],
 			'language' => $this->translation()->name(),

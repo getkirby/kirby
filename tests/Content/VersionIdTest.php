@@ -69,8 +69,10 @@ class VersionIdTest extends TestCase
 
 		$this->assertTrue($version->is('latest'));
 		$this->assertTrue($version->is(VersionId::LATEST));
-		$this->assertFalse($version->is('something-else'));
+		$this->assertTrue($version->is(VersionId::latest()));
+		$this->assertFalse($version->is('changes'));
 		$this->assertFalse($version->is(VersionId::CHANGES));
+		$this->assertFalse($version->is(VersionId::changes()));
 	}
 
 	/**

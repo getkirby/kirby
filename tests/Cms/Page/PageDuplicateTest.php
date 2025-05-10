@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\Translation;
-use Kirby\Content\VersionId;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -54,17 +53,15 @@ class PageDuplicateTest extends ModelTestCase
 			language: $this->app->language('en')
 		);
 
-		$versionId = VersionId::latest();
-
-		$this->assertFileExists($page->version($versionId)->contentFile('en'));
+		$this->assertFileExists($page->version('latest')->contentFile('en'));
 
 		$drafts = $this->app->site()->drafts();
 		$childrenAndDrafts = $this->app->site()->childrenAndDrafts();
 
 		$copy = $page->duplicate('test-copy');
 
-		$this->assertFileExists($copy->version($versionId)->contentFile('en'));
-		$this->assertFileDoesNotExist($copy->version($versionId)->contentFile('de'));
+		$this->assertFileExists($copy->version('latest')->contentFile('en'));
+		$this->assertFileDoesNotExist($copy->version('latest')->contentFile('de'));
 
 		$this->assertIsPage($page, $drafts->find('test'));
 		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
@@ -84,10 +81,8 @@ class PageDuplicateTest extends ModelTestCase
 			'slug'  => 'test-de'
 		], 'de');
 
-		$versionId = VersionId::latest();
-
-		$this->assertFileExists($page->version($versionId)->contentFile('en'));
-		$this->assertFileExists($page->version($versionId)->contentFile('de'));
+		$this->assertFileExists($page->version('latest')->contentFile('en'));
+		$this->assertFileExists($page->version('latest')->contentFile('de'));
 
 		$this->assertSame('test', $page->slug());
 		$this->assertSame('test-de', $page->slug('de'));
@@ -180,12 +175,10 @@ class PageDuplicateTest extends ModelTestCase
 			language: $this->app->language('en')
 		);
 
-		$versionId = VersionId::latest();
-
 		$copy = $page->duplicate('test-copy', ['children' => true]);
 
-		$this->assertFileExists($copy->version($versionId)->contentFile('en'));
-		$this->assertFileDoesNotExist($copy->version($versionId)->contentFile('de'));
+		$this->assertFileExists($copy->version('latest')->contentFile('en'));
+		$this->assertFileDoesNotExist($copy->version('latest')->contentFile('de'));
 
 		$this->assertNotSame($page->uuid()->id(), $copy->uuid()->id());
 		$this->assertNotSame($this->app->page('test/foo')->uuid()->id(), $this->app->page('test-copy/foo')->uuid()->id());

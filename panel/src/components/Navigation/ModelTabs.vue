@@ -8,7 +8,7 @@
  */
 export default {
 	props: {
-		changes: Object,
+		diff: Object,
 		tab: String,
 		tabs: {
 			type: Array,
@@ -17,7 +17,7 @@ export default {
 	},
 	computed: {
 		withBadges() {
-			const changes = Object.keys(this.changes);
+			const changes = Object.keys(this.diff);
 
 			return this.tabs.map((tab) => {
 				// collect all fields per tab
