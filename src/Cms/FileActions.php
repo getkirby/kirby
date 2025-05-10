@@ -362,7 +362,7 @@ trait FileActions
 	 */
 	public function publish(): static
 	{
-		Media::publish($this, $this->mediaRoot());
+		Media::publish($this, $this->mediaPath());
 		return $this;
 	}
 

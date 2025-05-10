@@ -190,15 +190,15 @@ class MediaTest extends TestCase
 
 		// get file object
 		$file  = $this->app->file('test.jpg');
-		Dir::make(dirname($file->mediaRoot()));
+		Dir::make($file->mediaRoot());
 		$this->assertIsFile($file);
 
 		// create job file
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
-		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', $jobString);
+		F::write($file->mediaRoot() . '/.jobs/' . $file->filename() . '.json', $jobString);
 
 		// copy to media folder
-		$file->asset()->copy($mediaPath = $file->mediaRoot());
+		$file->asset()->copy($mediaPath = $file->mediaPath());
 
 		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
 		$this->assertInstanceOf(Response::class, $thumb);
@@ -240,7 +240,7 @@ class MediaTest extends TestCase
 		$file = $this->app->file('test.jpg');
 
 		// create an empty job file
-		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', '{}');
+		F::write($file->mediaRoot() . '/.jobs/' . $file->filename() . '.json', '{}');
 
 		$this->expectException(\Kirby\Exception\InvalidArgumentException::class);
 		$this->expectExceptionMessage('Incomplete thumbnail configuration');
@@ -265,7 +265,7 @@ class MediaTest extends TestCase
 
 		// create a valid job file
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
-		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', $jobString);
+		F::write($file->mediaRoot() . '/.jobs/' . $file->filename() . '.json', $jobString);
 
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('The file does not exist');
