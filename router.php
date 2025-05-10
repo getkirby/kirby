@@ -12,4 +12,4 @@ if ($uri !== '/' && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . ltrim($uri, '/
 
 $_SERVER['SCRIPT_NAME'] = '/index.php';
 
-require $_SERVER['DOCUMENT_ROOT'] . '/' . $_SERVER['SCRIPT_NAME'];
+require $_SERVER['DOCUMENT_ROOT'] . $_SERVER['SCRIPT_NAME'];

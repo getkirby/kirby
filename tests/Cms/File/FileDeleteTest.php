@@ -10,6 +10,18 @@ class FileDeleteTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileDelete';
 
+	protected function createDummyFile(): File
+	{
+		// create the dummy source
+		F::write($source = static::TMP . '/source.md', '# Test');
+
+		return File::create([
+			'filename' => 'test.md',
+			'parent'   => new Page(['slug' => 'test']),
+			'source'   => $source
+		]);
+	}
+
 	public function testDelete(): void
 	{
 		$file = new File([
@@ -17,25 +29,26 @@ class FileDeleteTest extends ModelTestCase
 			'parent'   => $this->app->site(),
 		]);
 
+		$contentFile = $file->version('latest')->contentFile('default');
+
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and an empty content file for it
-		F::write($file->version('latest')->contentFile('default'), '');
+		F::write($contentFile, '');
 
 		$this->assertFileExists($file->root());
-		$this->assertFileExists($file->version('latest')->contentFile('default'));
+		$this->assertFileExists($contentFile);
 
 		$result = $file->delete();
 
 		$this->assertTrue($result);
 
 		$this->assertFileDoesNotExist($file->root());
-		$this->assertFileDoesNotExist($file->version('latest')->contentFile('default'));
+		$this->assertFileDoesNotExist($contentFile);
 	}
 
 	public function testDeleteHooks(): void
 	{
-		$parent  = new Page(['slug' => 'test']);
 		$calls   = 0;
 		$phpunit = $this;
 
@@ -57,17 +70,35 @@ class FileDeleteTest extends ModelTestCase
 
 		$this->app->impersonate('kirby');
 
-		// create the dummy source
-		F::write($source = static::TMP . '/source.md', '# Test');
-
-		$file = File::create([
-			'filename' => 'test.md',
-			'source'   => $source,
-			'parent'   => $parent
-		]);
-
+		$file = $this->createDummyFile();
 		$file->delete();
 
 		$this->assertSame(2, $calls);
+	}
+
+	public function testDeleteHookWithUUIDAccess(): void
+	{
+		$phpunit = $this;
+		$uuid    = null;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'file.delete:after' => function ($status, File $file) use ($phpunit, &$uuid) {
+					$phpunit->assertSame($uuid, $file->uuid()->id());
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$file        = $this->createDummyFile();
+		$uuid        = $file->uuid()->id();
+		$contentFile = $file->root() . '.txt';
+
+		$this->assertFileExists($contentFile);
+
+		$file->delete();
+
+		$this->assertFileDoesNotExist($contentFile);
 	}
 }

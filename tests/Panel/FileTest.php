@@ -832,7 +832,6 @@ class FileTest extends TestCase
 		$props = $panel->props();
 
 		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('content', $props['model']);
 		$this->assertArrayHasKey('dimensions', $props['model']);
 		$this->assertArrayHasKey('extension', $props['model']);
 		$this->assertArrayHasKey('filename', $props['model']);
@@ -851,6 +850,7 @@ class FileTest extends TestCase
 		$this->assertArrayHasKey('permissions', $props);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertArrayHasKey('tabs', $props);
+		$this->assertArrayHasKey('versions', $props);
 	}
 
 	/**

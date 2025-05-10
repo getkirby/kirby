@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
 use Kirby\TestCase;
@@ -32,8 +33,9 @@ class AccountRoutesTest extends TestCase
 			],
 			'users' => [
 				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin'
+					'email'    => 'test@getkirby.com',
+					'role'     => 'admin',
+					'password' => password_hash('12345678', PASSWORD_DEFAULT)
 				],
 				[
 					'email' => 'editor@getkirby.com',
@@ -177,11 +179,53 @@ class AccountRoutesTest extends TestCase
 	{
 		$response = $this->app->api()->call('account/password', 'PATCH', [
 			'body' => [
+				'currentPassword' => '12345678',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertTrue($this->app->user()->validatePassword('super-secure-new-password'));
+	}
+
+	public function testChangePasswordMissingCurrentPassword()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'password' => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordWrongCurrentPassword()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Wrong password');
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'currentPassword' => 'definitely-not-correct',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordReset()
+	{
+		$this->app->session()->set('kirby.resetPassword', true);
+
+		$response = $this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
 				'password' => 'super-secure-new-password'
 			]
 		]);
 
 		$this->assertSame('ok', $response['status']);
+		$this->assertTrue($this->app->user()->validatePassword('super-secure-new-password'));
+		$this->assertNull($this->app->session()->get('kirby.resetPassword'));
 	}
 
 	public function testChangeRole()

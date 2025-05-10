@@ -170,7 +170,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	{
 		// get the targeted language
 		$language  = Language::ensure($languageCode ?? 'current');
-		$versionId = VersionId::$render ?? VersionId::latest();
+		$versionId = VersionId::$render ?? 'latest';
 		$version   = $this->version($versionId);
 
 		if ($version->exists($language) === true) {
@@ -368,7 +368,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function lock(): Lock
 	{
-		return $this->version(VersionId::changes())->lock('*');
+		return $this->version('changes')->lock('*');
 	}
 
 	/**
@@ -702,7 +702,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	{
 		return new Version(
 			model: $this,
-			id: VersionId::from($versionId ?? VersionId::latest())
+			id: VersionId::from($versionId ?? 'latest')
 		);
 	}
 

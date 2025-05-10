@@ -6,7 +6,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Content\VersionId;
 use Kirby\Toolkit\Str;
 
 /**
@@ -47,11 +46,11 @@ class LanguagesDropdown extends ViewButton
 	 * (the current language has to be handled in `k-languages-dropdown` as its
 	 * state can change dynamically without another backend request)
 	 */
-	public function hasChanges(): bool
+	public function hasDiff(): bool
 	{
 		foreach (Languages::ensure() as $language) {
 			if ($this->kirby->language()?->code() !== $language->code()) {
-				if ($this->model->version(VersionId::changes())->exists($language) === true) {
+				if ($this->model->version('changes')->exists($language) === true) {
 					return true;
 				}
 			}
@@ -105,7 +104,7 @@ class LanguagesDropdown extends ViewButton
 	{
 		return [
 			...parent::props(),
-			'hasChanges' => $this->hasChanges()
+			'hasDiff' => $this->hasDiff()
 		];
 	}
 

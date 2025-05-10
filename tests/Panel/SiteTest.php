@@ -143,7 +143,6 @@ class SiteTest extends TestCase
 		$props = $this->panel()->props();
 
 		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('content', $props['model']);
 		$this->assertArrayHasKey('previewUrl', $props['model']);
 		$this->assertArrayHasKey('title', $props['model']);
 
@@ -153,6 +152,7 @@ class SiteTest extends TestCase
 		$this->assertArrayHasKey('permissions', $props);
 		$this->assertArrayHasKey('tab', $props);
 		$this->assertArrayHasKey('tabs', $props);
+		$this->assertArrayHasKey('versions', $props);
 	}
 
 	public function testPreviewPermissionsWithoutHomePage()

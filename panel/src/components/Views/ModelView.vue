@@ -1,6 +1,4 @@
 <script>
-import { length } from "@/helpers/object";
-
 /**
  * @internal
  */
@@ -9,7 +7,6 @@ export default {
 		api: String,
 		blueprint: String,
 		buttons: Array,
-		content: Object,
 		id: String,
 		link: String,
 		lock: {
@@ -17,7 +14,6 @@ export default {
 		},
 		model: Object,
 		next: Object,
-		originals: Object,
 		prev: Object,
 		permissions: {
 			type: Object,
@@ -35,7 +31,8 @@ export default {
 			type: Array,
 			default: () => []
 		},
-		uuid: String
+		uuid: String,
+		versions: Object
 	},
 	data() {
 		return {
@@ -43,17 +40,17 @@ export default {
 		};
 	},
 	computed: {
-		changes() {
-			return this.$panel.content.changes({
-				api: this.api,
-				language: this.$panel.language.code
-			});
+		content() {
+			return this.versions.changes;
+		},
+		diff() {
+			return this.$panel.content.diff();
 		},
 		editor() {
 			return this.lock.user.email;
 		},
-		hasChanges() {
-			return length(this.changes) > 0;
+		hasDiff() {
+			return this.$panel.content.hasDiff();
 		},
 		isLocked() {
 			return this.lock.isLocked;

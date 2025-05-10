@@ -5,7 +5,6 @@ namespace Kirby\Api\Controller;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\Lock;
-use Kirby\Content\VersionId;
 use Kirby\Filesystem\F;
 use Kirby\Form\Fields;
 use Kirby\Form\Form;
@@ -41,7 +40,7 @@ class Changes
 	 */
 	public static function discard(ModelWithContent $model): array
 	{
-		$model->version(VersionId::changes())->delete('current');
+		$model->version('changes')->delete('current');
 
 		// Removes the old .lock file when it is no longer needed
 		// @todo Remove in 6.0.0
@@ -53,7 +52,7 @@ class Changes
 	}
 
 	/**
-	 * Saves the lastest state of changes first and then publishs them
+	 * Saves the lastest state of changes first and then publishes them
 	 */
 	public static function publish(ModelWithContent $model, array $input): array
 	{
@@ -68,7 +67,7 @@ class Changes
 		static::cleanup($model);
 
 		// get the changes version
-		$changes = $model->version(VersionId::changes());
+		$changes = $model->version('changes');
 
 		// if the changes version does not exist, we need to return early
 		if ($changes->exists('current') === false) {
@@ -103,8 +102,8 @@ class Changes
 		$fields = Fields::for($model, $language);
 
 		// get the changes and latest version for the model
-		$changes = $model->version(VersionId::changes());
-		$latest  = $model->version(VersionId::latest());
+		$changes = $model->version('changes');
+		$latest  = $model->version('latest');
 
 		// get the source version for the existing content
 		$source  = $changes->exists($language) === true ? $changes : $latest;

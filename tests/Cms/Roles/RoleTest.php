@@ -48,19 +48,19 @@ class RoleTest extends TestCase
 		Role::load('does-not-exist');
 	}
 
-	public function testAdmin()
+	public function testDefaultAdmin()
 	{
 		$app  = $this->app();
-		$role = Role::admin();
+		$role = Role::defaultAdmin();
 
 		$this->assertSame('admin', $role->name());
 		$this->assertSame('Admin', $role->title());
 	}
 
-	public function testNobody()
+	public function testDefaultNobody()
 	{
 		$app  = $this->app();
-		$role = Role::nobody();
+		$role = Role::defaultNobody();
 
 		$this->assertSame('nobody', $role->name());
 		$this->assertSame('Nobody', $role->title());
