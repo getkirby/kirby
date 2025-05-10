@@ -20,6 +20,7 @@ use Kirby\Cms\Url;
 use Kirby\Cms\User;
 use Kirby\Cms\Users;
 use Kirby\Data\Data;
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Image\QrCode;
@@ -76,13 +77,14 @@ class Field implements Stringable
 	{
 		$method = strtolower($method);
 
+		// call custom field method
 		if ($this->hasMethod($method) === true) {
 			return $this->callMethod($method, [clone $this, ...$arguments]);
 		}
 
-		// TODO: throw deprecation, then exception
-		// when unknown method is called
-		return $this;
+		throw new BadMethodCallException(
+			message: 'Field method "' . $method . '" does not exist'
+		);
 	}
 
 	/**
