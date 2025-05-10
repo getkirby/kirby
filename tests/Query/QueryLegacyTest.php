@@ -3,12 +3,11 @@
 namespace Kirby\Query;
 
 use Closure;
-use Kirby\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Query\Query
  */
-class QueryTest extends TestCase
+class QueryLegacyTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * @covers ::__construct
