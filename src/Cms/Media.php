@@ -53,7 +53,7 @@ class Media
 			}
 
 			// send the file to the browser
-			return Response::file($file->publish()->mediaRoot());
+			return Response::file($file->publish()->mediaPath());
 		}
 
 		// try to generate a thumb for the file
@@ -102,7 +102,7 @@ class Media
 				=> $kirby->root('media') . '/assets/' . $model . '/' . $hash,
 			// parent files for file model that already included hash
 			$model instanceof File
-				=> dirname($model->mediaRoot()),
+				=> $model->mediaRoot(),
 			// model files
 			default
 			=> $model->mediaRoot() . '/' . $hash
