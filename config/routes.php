@@ -79,35 +79,38 @@ return function (App $kirby) {
 			}
 		],
 		[
-			'pattern' => $media . '/pages/(:all)/(:any)/(:any)',
+			'pattern' => $media . '/pages/(:all)/(:any)/(:any)/(:any)',
 			'env'     => 'media',
 			'action'  => function (
 				string $path,
 				string $hash,
+				string $subhash,
 				string $filename
 			) use ($kirby) {
-				return Media::link($kirby->page($path), $hash, $filename);
+				return Media::link($kirby->page($path), $hash, $subhash, $filename);
 			}
 		],
 		[
-			'pattern' => $media . '/site/(:any)/(:any)',
+			'pattern' => $media . '/site/(:any)/(:any)/(:any)',
 			'env'     => 'media',
 			'action'  => function (
 				string $hash,
+				string $subhash,
 				string $filename
 			) use ($kirby) {
-				return Media::link($kirby->site(), $hash, $filename);
+				return Media::link($kirby->site(), $hash, $subhash, $filename);
 			}
 		],
 		[
-			'pattern' => $media . '/users/(:any)/(:any)/(:any)',
+			'pattern' => $media . '/users/(:any)/(:any)/(:any)/(:any)',
 			'env'     => 'media',
 			'action'  => function (
 				string $id,
 				string $hash,
+				string $subhash,
 				string $filename
 			) use ($kirby) {
-				return Media::link($kirby->user($id), $hash, $filename);
+				return Media::link($kirby->user($id), $hash, $subhash, $filename);
 			}
 		],
 		[
@@ -118,7 +121,7 @@ return function (App $kirby) {
 				string $hash,
 				string $filename
 			) {
-				return Media::thumb($path, $hash, $filename);
+				return Media::thumb($path, $hash, null, $filename);
 			}
 		],
 		[
