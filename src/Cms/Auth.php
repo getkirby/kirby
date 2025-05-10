@@ -147,9 +147,10 @@ class Auth
 			$this->fail($e);
 		}
 
-		// always set the email and timeout, even if the challenge
+		// always set the email, mode and timeout, even if the challenge
 		// won't be created; this avoids leaking whether the user exists
 		$session->set('kirby.challenge.email', $email);
+		$session->set('kirby.challenge.mode', $mode);
 		$session->set('kirby.challenge.timeout', time() + $timeout);
 
 		// sleep for a random amount of milliseconds
@@ -482,6 +483,7 @@ class Auth
 			// a challenge is currently pending
 			$props['status']            = 'pending';
 			$props['email']             = $email;
+			$props['mode']              = $sessionObj->get('kirby.challenge.mode');
 			$props['challenge']         = $sessionObj->get('kirby.challenge.type');
 			$props['challengeFallback'] = A::last($this->enabledChallenges());
 		} else {
@@ -636,6 +638,7 @@ class Auth
 		$session = $this->kirby->session();
 		$session->remove('kirby.challenge.code');
 		$session->remove('kirby.challenge.email');
+		$session->remove('kirby.challenge.mode');
 		$session->remove('kirby.challenge.timeout');
 		$session->remove('kirby.challenge.type');
 
@@ -850,8 +853,15 @@ class Auth
 			) {
 				$class = static::$challenges[$challenge];
 				if ($class::verify($user, $code) === true) {
+					$mode = $session->get('kirby.challenge.mode');
+
 					$this->logout();
 					$user->loginPasswordless();
+
+					// allow the user to set a new password without knowing the previous one
+					if ($mode === 'password-reset') {
+						$session->set('kirby.resetPassword', true);
+					}
 
 					// clear the status cache
 					$this->status = null;

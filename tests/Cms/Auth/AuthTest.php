@@ -79,6 +79,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'kirby@getkirby.com',
+			'mode'      => null,
 			'status'    => 'impersonated'
 		], $this->auth->status()->toArray());
 		$this->assertIsUser($user, $this->auth->user());
@@ -92,6 +93,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'homer@simpsons.com',
+			'mode'      => null,
 			'status'    => 'impersonated'
 		], $this->auth->status()->toArray());
 		$this->assertSame('homer@simpsons.com', $user->email());
@@ -103,6 +105,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => null,
+			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
 		$this->assertNull($this->auth->user());
@@ -113,6 +116,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'marge@simpsons.com',
+			'mode'      => null,
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
 		$this->assertSame('marge@simpsons.com', $this->auth->user()->email());
@@ -120,6 +124,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'nobody@getkirby.com',
+			'mode'      => null,
 			'status'    => 'impersonated'
 		], $this->auth->status()->toArray());
 		$this->assertSame($impersonated, $this->auth->user());
@@ -133,6 +138,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => null,
+			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
 		$this->assertNull($this->auth->impersonate());
@@ -224,6 +230,55 @@ class AuthTest extends TestCase
 		);
 
 		$this->auth->login('kirby@getkirby.com', 'somewhere-in-japan');
+	}
+
+	/**
+	 * @covers ::logout
+	 */
+	public function testLogoutActive()
+	{
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$this->app->impersonate('homer@simpsons.com');
+
+		$this->assertSame('marge', $session->get('kirby.userId'));
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.userId'));
+
+		$this->assertSame([
+			'challenge' => null,
+			'email'     => null,
+			'mode'      => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
+	}
+
+	/**
+	 * @covers ::logout
+	 */
+	public function testLogoutPending()
+	{
+		$session = $this->app->session();
+
+		$this->auth->createChallenge('marge@simpsons.com');
+
+		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.userId'));
+		$this->assertNull($session->get('kirby.challenge.mode'));
+
+		$this->assertSame([
+			'challenge' => null,
+			'email'     => null,
+			'mode'      => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
 	}
 
 	/**
@@ -347,6 +402,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'marge@simpsons.com',
+			'mode'      => null,
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
 
@@ -360,6 +416,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'marge@simpsons.com',
+			'mode'      => null,
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
 	}
@@ -379,6 +436,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'homer@simpsons.com',
+			'mode'      => null,
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
 	}
@@ -396,6 +454,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => null,
+			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
 
@@ -415,6 +474,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => null,
+			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
 
@@ -440,6 +500,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'homer@simpsons.com',
+			'mode'      => null,
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
 	}
