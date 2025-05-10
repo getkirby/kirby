@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
+use Throwable;
 
 /**
  * The Collection class serves as foundation
@@ -126,7 +127,13 @@ class Collection extends BaseCollection
 				is_object($args[0]) === true &&
 				is_callable([$args[0], 'id']) === true
 			) {
-				return parent::append($args[0]->id(), $args[0]);
+				try {
+					return parent::append($args[0]->id(), $args[0]);
+				} catch (Throwable) {
+					// is_callable might be true when the object implements
+					// the magic __call method, but __call can still throw
+					// an exception
+				}
 			}
 
 			return parent::append($args[0]);
