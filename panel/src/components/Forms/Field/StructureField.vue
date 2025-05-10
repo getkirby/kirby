@@ -352,7 +352,7 @@ export default {
 		navigate(item, step) {
 			const index = this.findIndex(item);
 
-			if (this.disabled === true || index === -1) {
+			if (index === -1) {
 				return;
 			}
 
@@ -369,7 +369,7 @@ export default {
 		open(item, field, replace = false) {
 			const index = this.findIndex(item);
 
-			if (this.disabled === true || index === -1) {
+			if (index === -1) {
 				return false;
 			}
 
@@ -377,6 +377,7 @@ export default {
 				component: "k-structure-drawer",
 				id: this.id,
 				props: {
+					disabled: this.disabled,
 					icon: this.icon ?? "list-bullet",
 					next: this.items[index + 1],
 					prev: this.items[index - 1],
@@ -556,12 +557,20 @@ export default {
 </script>
 
 <style>
-.k-structure-field:not([data-disabled="true"]) td.k-table-column {
+.k-structure-field td.k-table-column {
 	cursor: pointer;
 }
 .k-structure-field .k-table + footer {
 	display: flex;
 	justify-content: center;
 	margin-top: var(--spacing-3);
+}
+
+/* Allow interaction with disabled structure field to open the drawer */
+.k-structure-field[data-disabled="true"] {
+	cursor: initial;
+}
+.k-structure-field[data-disabled="true"] * {
+	pointer-events: initial;
 }
 </style>
