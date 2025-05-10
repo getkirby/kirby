@@ -25,11 +25,13 @@ class Media
 	/**
 	 * Tries to find a file by model and filename
 	 * and to copy it to the media folder.
+	 *
+	 * @todo v6 Make `$subhash` argument accept only strings
 	 */
 	public static function link(
 		Page|Site|User|null $model,
 		string $hash,
-		string $subhash,
+		string|null $subhash,
 		string $filename
 	): Response|false {
 		if ($model === null) {
@@ -42,6 +44,12 @@ class Media
 		// try to find a file by model and filename
 		// this should work for all original files
 		if ($file = $model->file($filename)) {
+			// support old URLs without the new subhash
+			// TODO: Remove in v6
+			if ($subhash === null) {
+				return Response::redirect($file->mediaUrl(), 307);
+			}
+
 			// check if the subhash was correct
 			// (otherwise the request cannot be trusted)
 			if ($file->mediaToken($file->filename()) !== $subhash) {
@@ -86,6 +94,15 @@ class Media
 
 		// unpublish all files except stuff in the version folder
 		Media::unpublish($directory, $file, $version);
+
+		// check if we can migrate files from their pre-5.1 location
+		// to avoid having to regenerate all thumbs
+		foreach (Dir::read($version, absolute: true) as $item) {
+			if (is_file($item) === true) {
+				$filename = basename($item);
+				F::move($item, $file->mediaPath($filename));
+			}
+		}
 
 		// copy/overwrite the file to the dest folder
 		return F::copy($src, $dest, true);
@@ -149,6 +166,12 @@ class Media
 
 		// …but file objects from a real model need special handling
 		if ($source instanceof File) {
+			// support old URLs without the new subhash
+			// TODO: Remove in v6
+			if ($subhash === null) {
+				return Response::redirect($source->mediaUrl($filename), 307);
+			}
+
 			// validate the user-provided subhash
 			if ($subhash !== $source->mediaToken($filename)) {
 				throw new NotFoundException(
@@ -156,8 +179,14 @@ class Media
 				);
 			}
 
-			// continue with the file paths
-			$thumb  = $source->mediaPath($filename);
+			// check if we can migrate the thumb from its pre-5.1 location
+			$thumb = $source->mediaPath($filename);
+			if (is_file($source->mediaRoot() . '/' . $filename) === true) {
+				$source->publish();
+				return Response::file($thumb);
+			}
+
+			// continue with the file path
 			$source = $source->root();
 		}
 
