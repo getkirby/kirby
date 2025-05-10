@@ -14,6 +14,7 @@ use Kirby\Cms\Users;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
@@ -68,10 +69,11 @@ class FieldTest extends TestCase
 
 	public function test__callNonExistingMethod(): void
 	{
-		$field  = $this->field('value');
-		$result = $field->methodDoesNotExist();
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Field method "methoddoesnotexist" does not exist');
 
-		$this->assertSame($field, $result);
+		$field  = $this->field('value');
+		$field->methodDoesNotExist();
 	}
 
 	public function test__debugInfo(): void
