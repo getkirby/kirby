@@ -79,35 +79,86 @@ return function (App $kirby) {
 			}
 		],
 		[
-			'pattern' => $media . '/pages/(:all)/(:any)/(:any)',
+			'pattern' => $media . '/pages/(:all)/(:any)/(:any)/(:any)',
 			'env'     => 'media',
 			'action'  => function (
 				string $path,
 				string $hash,
+				string $subhash,
 				string $filename
 			) use ($kirby) {
-				return Media::link($kirby->page($path), $hash, $filename);
+				// support old URLs without the new subhash
+				// TODO: Remove this logic in v6 and directly pass `$kirby->page($path)` to `Media::link()`
+				$page = $kirby->page($path);
+				if ($page === null) {
+					$page    = $kirby->page($path . '/' . $hash);
+					$hash    = $subhash;
+					$subhash = null;
+				}
+
+				return Media::link($page, $hash, $subhash, $filename);
 			}
 		],
 		[
+			// support old URLs for pages in the topmost level without the new subhash
+			// TODO: Remove this route in v6
+			'pattern' => $media . '/pages/(:any)/(:any)/(:any)',
+			'env'     => 'media',
+			'action'  => function (
+				string $uid,
+				string $hash,
+				string $filename
+			) use ($kirby) {
+				return Media::link($kirby->page($uid), $hash, null, $filename);
+			}
+		],
+		[
+			'pattern' => $media . '/site/(:any)/(:any)/(:any)',
+			'env'     => 'media',
+			'action'  => function (
+				string $hash,
+				string $subhash,
+				string $filename
+			) use ($kirby) {
+				return Media::link($kirby->site(), $hash, $subhash, $filename);
+			}
+		],
+		[
+			// support old URLs without the new subhash
+			// TODO: Remove this route in v6
 			'pattern' => $media . '/site/(:any)/(:any)',
 			'env'     => 'media',
 			'action'  => function (
 				string $hash,
 				string $filename
 			) use ($kirby) {
-				return Media::link($kirby->site(), $hash, $filename);
+				return Media::link($kirby->site(), $hash, null, $filename);
 			}
 		],
 		[
+			'pattern' => $media . '/users/(:any)/(:any)/(:any)/(:any)',
+			'env'     => 'media',
+			'action'  => function (
+				string $id,
+				string $hash,
+				string $subhash,
+				string $filename
+			) use ($kirby) {
+				return Media::link($kirby->user($id), $hash, $subhash, $filename);
+			}
+		],
+		[
+			// support old URLs without the new subhash
+			// TODO: Remove this route in v6
 			'pattern' => $media . '/users/(:any)/(:any)/(:any)',
 			'env'     => 'media',
 			'action'  => function (
 				string $id,
 				string $hash,
+				string $subhash,
 				string $filename
 			) use ($kirby) {
-				return Media::link($kirby->user($id), $hash, $filename);
+				return Media::link($kirby->user($id), $hash, null, $filename);
 			}
 		],
 		[
@@ -118,7 +169,7 @@ return function (App $kirby) {
 				string $hash,
 				string $filename
 			) {
-				return Media::thumb($path, $hash, $filename);
+				return Media::thumb($path, $hash, null, $filename);
 			}
 		],
 		[

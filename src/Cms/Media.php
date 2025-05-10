@@ -25,10 +25,13 @@ class Media
 	/**
 	 * Tries to find a file by model and filename
 	 * and to copy it to the media folder.
+	 *
+	 * @todo v6 Make `$subhash` argument accept only strings
 	 */
 	public static function link(
 		Page|Site|User|null $model,
 		string $hash,
+		string|null $subhash,
 		string $filename
 	): Response|false {
 		if ($model === null) {
@@ -41,6 +44,18 @@ class Media
 		// try to find a file by model and filename
 		// this should work for all original files
 		if ($file = $model->file($filename)) {
+			// support old URLs without the new subhash
+			// TODO: Remove in v6
+			if ($subhash === null) {
+				return Response::redirect($file->mediaUrl(), 307);
+			}
+
+			// check if the subhash was correct
+			// (otherwise the request cannot be trusted)
+			if ($file->mediaToken($file->filename()) !== $subhash) {
+				return false;
+			}
+
 			// check if the request contained an outdated media hash
 			if ($file->mediaHash() !== $hash) {
 				// if at least the token was correct, redirect
@@ -58,7 +73,7 @@ class Media
 
 		// try to generate a thumb for the file
 		try {
-			return static::thumb($model, $hash, $filename);
+			return static::thumb($model, $hash, $subhash, $filename);
 		} catch (NotFoundException) {
 			// render the error page if there is no job for this filename
 			return false;
@@ -74,11 +89,20 @@ class Media
 		FileRules::validFile($file, false);
 
 		$src       = $file->root();
-		$version   = dirname($dest);
+		$version   = dirname($dest, 2);
 		$directory = dirname($version);
 
 		// unpublish all files except stuff in the version folder
 		Media::unpublish($directory, $file, $version);
+
+		// check if we can migrate files from their pre-5.1 location
+		// to avoid having to regenerate all thumbs
+		foreach (Dir::read($version, absolute: true) as $item) {
+			if (is_file($item) === true) {
+				$filename = basename($item);
+				F::move($item, $file->mediaPath($filename));
+			}
+		}
 
 		// copy/overwrite the file to the dest folder
 		return F::copy($src, $dest, true);
@@ -92,6 +116,7 @@ class Media
 	public static function thumb(
 		File|Page|Site|User|string $model,
 		string $hash,
+		string|null $subhash,
 		string $filename
 	): Response|false {
 		$kirby = App::instance();
@@ -108,8 +133,7 @@ class Media
 			=> $model->mediaRoot() . '/' . $hash
 		};
 
-		$thumb = $root . '/' . $filename;
-		$job   = $root . '/.jobs/' . $filename . '.json';
+		$job = $root . '/.jobs/' . $filename . '.json';
 
 		try {
 			$options = Data::read($job);
@@ -126,18 +150,47 @@ class Media
 			);
 		}
 
-		try {
-			// find the correct source file depending on the model
-			// this adds support for custom assets
-			$source = match (true) {
-				is_string($model) === true
-					=> $kirby->root('index') . '/' . $model . '/' . $options['filename'],
-				$model instanceof File
-					=> $model->root(),
-				default
-				=> $model->file($options['filename'])->root()
-			};
+		// find the correct source file depending on the model
+		// this adds support for custom assets
+		$source = match (true) {
+			is_string($model) === true
+				=> $kirby->root('index') . '/' . $model . '/' . $options['filename'],
+			$model instanceof File
+				=> $model,
+			default
+			=> $model->file($options['filename']) ?? throw new NotFoundException('Could not find referenced source file')
+		};
 
+		// default to a simple target path for custom assets…
+		$thumb = $root . '/' . $filename;
+
+		// …but file objects from a real model need special handling
+		if ($source instanceof File) {
+			// support old URLs without the new subhash
+			// TODO: Remove in v6
+			if ($subhash === null) {
+				return Response::redirect($source->mediaUrl($filename), 307);
+			}
+
+			// validate the user-provided subhash
+			if ($subhash !== $source->mediaToken($filename)) {
+				throw new NotFoundException(
+					message: 'The provided subhash for the thumbnail configuration is invalid'
+				);
+			}
+
+			// check if we can migrate the thumb from its pre-5.1 location
+			$thumb = $source->mediaPath($filename);
+			if (is_file($source->mediaRoot() . '/' . $filename) === true) {
+				$source->publish();
+				return Response::file($thumb);
+			}
+
+			// continue with the file path
+			$source = $source->root();
+		}
+
+		try {
 			// generate the thumbnail and save it in the media folder
 			$kirby->thumb($source, $thumb, $options);
 

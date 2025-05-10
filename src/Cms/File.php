@@ -390,7 +390,7 @@ class File extends ModelWithContent
 	{
 		$filename ??= $this->filename();
 
-		return $this->mediaRoot() . '/' . $filename;
+		return $this->mediaRoot() . '/' . $this->mediaToken($filename) . '/' . $filename;
 	}
 
 	/**
@@ -405,10 +405,12 @@ class File extends ModelWithContent
 	/**
 	 * Creates a non-guessable token string for this file
 	 * @internal
+	 *
+	 * @param string $key Optional thumb/original key to differentiate the media path
 	 */
-	public function mediaToken(): string
+	public function mediaToken(string $key = ''): string
 	{
-		$token = $this->kirby()->contentToken($this, $this->id());
+		$token = $this->kirby()->contentToken($this, $this->id() . $key);
 		return substr($token, 0, 10);
 	}
 
@@ -423,7 +425,7 @@ class File extends ModelWithContent
 		$url        = $this->parent()->mediaUrl() . '/' . $this->mediaHash();
 		$filename ??= $this->filename();
 
-		return $url . '/' . $filename;
+		return $url . '/' . $this->mediaToken($filename) . '/' . $filename;
 	}
 
 	/**

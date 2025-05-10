@@ -75,16 +75,17 @@ return [
 			return $file;
 		}
 
-		// create url and root
-		$mediaRoot = $file->mediaRoot();
-		$template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
-		$thumbRoot = (new Filename($file->root(), $template, $options))->toString();
-		$thumbName = basename($thumbRoot);
+		// create url and root;
+		// include the thumb attributes in the media hash to prevent
+		// direct access to individual file versions by URL guessing
+		$template  = '{{ name }}{{ attributes }}.{{ extension }}';
+		$thumbName = (new Filename($file->root(), $template, $options))->toString();
+		$thumbRoot = $file->mediaPath($thumbName);
 
 		// check if the thumb already exists
 		if (file_exists($thumbRoot) === false) {
 			// if not, create job file
-			$job = $mediaRoot . '/.jobs/' . $thumbName . '.json';
+			$job = $file->mediaRoot() . '/.jobs/' . $thumbName . '.json';
 
 			try {
 				Data::write(
