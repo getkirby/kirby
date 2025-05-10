@@ -31,16 +31,6 @@ class VersionRules
 				message: 'The version already exists'
 			);
 		}
-
-		if ($version->isLatest() === true) {
-			return;
-		}
-
-		if ($version->model()->version('latest')->exists($language) === false) {
-			throw new LogicException(
-				message: 'A matching latest version for the changes does not exist'
-			);
-		}
 	}
 
 	/**
