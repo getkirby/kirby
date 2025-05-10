@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\File;
 use Kirby\Cms\Find;
@@ -11,6 +11,8 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
+use Kirby\Panel\Field;
+use Kirby\Panel\Panel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 

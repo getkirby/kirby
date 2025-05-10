@@ -2,8 +2,6 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Http\Response;
-
 /**
  * The Drawer response class handles Fiber
  * requests to render the JSON object for
@@ -17,5 +15,5 @@ use Kirby\Http\Response;
  */
 class Drawer extends Dialog
 {
-	protected static string $key = '$drawer';
+	protected static string $key = 'drawer';
 }

@@ -68,7 +68,7 @@ class DialogTest extends TestCase
 		]);
 
 		$expected = [
-			'$dialog' => [
+			'dialog' => [
 				'test'     => 'Test',
 				'code'     => 200,
 				'path'     => null,
@@ -89,7 +89,7 @@ class DialogTest extends TestCase
 	{
 		$response = Dialog::response(true);
 		$expected = [
-			'$dialog' => [
+			'dialog' => [
 				'code'     => 200,
 				'path'     => null,
 				'query'    => [],
@@ -107,7 +107,7 @@ class DialogTest extends TestCase
 	{
 		$response = Dialog::response(1234);
 		$expected = [
-			'$dialog' => [
+			'dialog' => [
 				'code'     => 500,
 				'error'    => 'Invalid response',
 				'path'     => null,
@@ -127,7 +127,7 @@ class DialogTest extends TestCase
 		$exception = new Exception('Test');
 		$response  = Dialog::response($exception);
 		$expected  = [
-			'$dialog' => [
+			'dialog' => [
 				'code'     => 500,
 				'error'    => 'Test',
 				'path'     => null,
@@ -147,7 +147,7 @@ class DialogTest extends TestCase
 		$exception = new NotFoundException(message: 'Test');
 		$response  = Dialog::response($exception);
 		$expected  = [
-			'$dialog' => [
+			'dialog' => [
 				'code'     => 404,
 				'error'    => 'Test',
 				'path'     => null,

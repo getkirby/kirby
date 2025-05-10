@@ -68,7 +68,7 @@ class DropdownTest extends TestCase
 		]);
 
 		$expected = [
-			'$dropdown' => [
+			'dropdown' => [
 				'options'  => ['Test'],
 				'code'     => 200,
 				'path'     => null,
@@ -89,7 +89,7 @@ class DropdownTest extends TestCase
 	{
 		$response = Dropdown::response(1234);
 		$expected = [
-			'$dropdown' => [
+			'dropdown' => [
 				'code'     => 500,
 				'error'    => 'Invalid response',
 				'path'     => null,
@@ -109,7 +109,7 @@ class DropdownTest extends TestCase
 		$exception = new Exception('Test');
 		$response  = Dropdown::response($exception);
 		$expected  = [
-			'$dropdown' => [
+			'dropdown' => [
 				'code'     => 500,
 				'error'    => 'Test',
 				'path'     => null,
@@ -129,7 +129,7 @@ class DropdownTest extends TestCase
 		$exception = new NotFoundException(message: 'Test');
 		$response  = Dropdown::response($exception);
 		$expected  = [
-			'$dropdown' => [
+			'dropdown' => [
 				'code'     => 404,
 				'error'    => 'Test',
 				'path'     => null,
@@ -181,8 +181,9 @@ class DropdownTest extends TestCase
 	 */
 	public function testRoutesForDropdownsWithOptions(): void
 	{
-		$area = [
-			'dropdowns' => [
+		$routes = Router::routesForDropdowns(new Area(
+			id: 'test',
+			dropdowns: [
 				'test' => [
 					'pattern' => 'test',
 					'options' => $action = fn () => [
@@ -193,9 +194,7 @@ class DropdownTest extends TestCase
 					]
 				]
 			]
-		];
-
-		$routes = Panel::routesForDropdowns('test', $area);
+		));
 
 		$expected = [
 			[
@@ -215,8 +214,9 @@ class DropdownTest extends TestCase
 	 */
 	public function testRoutesForDropdownsWithShortcut(): void
 	{
-		$area = [
-			'dropdowns' => [
+		$routes = Router::routesForDropdowns(new Area(
+			id: 'test',
+			dropdowns: [
 				'test' => $action = fn () => [
 					[
 						'text' => 'Test',
@@ -224,9 +224,7 @@ class DropdownTest extends TestCase
 					]
 				]
 			]
-		];
-
-		$routes = Panel::routesForDropdowns('test', $area);
+		));
 
 		$expected = [
 			[

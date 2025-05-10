@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\Pages;
 use Kirby\Content\Changes;
@@ -8,7 +8,7 @@ use Kirby\Panel\Areas\AreaTestCase;
 use Kirby\Uuid\Uuids;
 
 /**
- * @coversDefaultClass \Kirby\Panel\ChangesDialog
+ * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\ChangesDialog
  * @covers ::__construct
  */
 class ChangesDialogTest extends AreaTestCase

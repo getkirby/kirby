@@ -5,7 +5,6 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Data\Json;
 use Kirby\Filesystem\F;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
