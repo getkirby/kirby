@@ -488,8 +488,8 @@ class Version
 		// check if publishing is allowed
 		VersionRules::publish($this, $language);
 
-		$latest  = $this->sibling('latest')->read($language);
-		$changes = $this->read($language);
+		$latest  = $this->sibling('latest')->read($language) ?? [];
+		$changes = $this->read($language) ?? [];
 
 		// overwrite all fields that are not in the `changes` version
 		// with a null value. The ModelWithContent::update method will merge
