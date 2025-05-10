@@ -6,8 +6,7 @@
 			:key="drawer.id"
 			v-bind="isCurrent(drawer.id) ? $panel.drawer.props : drawer.props"
 			:breadcrumb="$panel.drawer.breadcrumb"
-			:disabled="isCurrent(drawer.id) === false"
-			:visible="true"
+			:visible="isCurrent(drawer.id) === true"
 			v-on="isCurrent(drawer.id) ? $panel.drawer.listeners() : drawer.on"
 		/>
 	</div>
@@ -22,10 +21,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-drawer[aria-disabled="true"] {
-	display: none;
-	pointer-events: none;
-}
-</style>

@@ -1,7 +1,6 @@
 <template>
 	<portal v-if="visible" to="drawer">
 		<form
-			:aria-disabled="disabled"
 			:class="$vnode.data.staticClass"
 			class="k-drawer"
 			method="dialog"
