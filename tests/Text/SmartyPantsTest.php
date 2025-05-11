@@ -3,16 +3,12 @@
 namespace Kirby\Text;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Text\SmartyPants
- */
+#[CoversClass(SmartyPants::class)]
 class SmartyPantsTest extends TestCase
 {
-	/**
-	 * @covers ::parse
-	 */
-	public function testParse()
+	public function testParse(): void
 	{
 		$parser   = new SmartyPants();
 		$result   = $parser->parse('This is a "test quote"');
@@ -21,10 +17,7 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::parse
-	 */
-	public function testParseEmpty()
+	public function testParseEmpty(): void
 	{
 		$parser = new SmartyPants();
 
@@ -32,10 +25,7 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame('', $parser->parse(''));
 	}
 
-	/**
-	 * @covers ::defaults
-	 */
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$expected = [
 			'attr'                       => 1,
@@ -71,10 +61,7 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame($expected, $parser->defaults());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testDoubleQuotesOption()
+	public function testDoubleQuotesOption(): void
 	{
 		$parser = new SmartyPants([
 			'doublequote.open'  => '<',
@@ -85,10 +72,7 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame('<test>', $result);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testSingleQuotesOption()
+	public function testSingleQuotesOption(): void
 	{
 		$parser = new SmartyPants([
 			'singlequote.open'  => '<',
@@ -99,10 +83,7 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame('<test>', $result);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testEmDashOption()
+	public function testEmDashOption(): void
 	{
 		$parser = new SmartyPants([
 			'emdash' => 'emdash',
@@ -112,10 +93,7 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame('emdash', $result);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testEllipsisOption()
+	public function testEllipsisOption(): void
 	{
 		$parser = new SmartyPants([
 			'ellipsis' => 'ellipsis',
