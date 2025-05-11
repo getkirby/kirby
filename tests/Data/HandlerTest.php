@@ -5,19 +5,14 @@ namespace Kirby\Data;
 use Exception;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\Handler
- */
+#[CoversClass(Handler::class)]
 class HandlerTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Data.Handler';
 
-	/**
-	 * @covers ::read
-	 * @covers ::write
-	 */
-	public function testReadWrite()
+	public function testReadWrite(): void
 	{
 		$data = [
 			'name'  => 'Homer Simpson',
@@ -34,10 +29,7 @@ class HandlerTest extends TestCase
 		$this->assertSame($data, $result);
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testReadFileMissing()
+	public function testReadFileMissing(): void
 	{
 		$file = static::TMP . '/does-not-exist.json';
 
