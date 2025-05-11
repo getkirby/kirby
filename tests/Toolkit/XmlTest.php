@@ -136,12 +136,12 @@ class XmlTest extends TestCase
 		$array = Xml::parse($xml);
 
 		$this->assertSame([
-			'@name' => 'x',
+			'@name'  => 'x',
 			'@value' => 'this is a file: foo bar (with entities)'
 		], $array);
 	}
 
-	public function testParseRecursiveEntities()
+	public function testParseRecursiveEntities(): void
 	{
 		$xml = file_get_contents(static::FIXTURES . '/billion-laughs.xml');
 		$this->assertNull(Xml::parse($xml));

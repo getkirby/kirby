@@ -280,7 +280,7 @@ class Xml
 	{
 		$xml = @simplexml_load_string($xml);
 
-		if (is_object($xml) !== true) {
+		if (is_object($xml) === false) {
 			return null;
 		}
 
