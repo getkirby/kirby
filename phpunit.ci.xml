@@ -17,6 +17,7 @@
 	failOnEmptyTestSuite="true"
 	failOnIncomplete="true"
 	failOnNotice="true"
+	failOnPhpunitDeprecation="true"
 	failOnRisky="true"
 	failOnSkipped="true"
 	failOnWarning="true"
