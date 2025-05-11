@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+	beStrictAboutOutputDuringTests="true"
+	bootstrap="tests/bootstrap.php"
+	cacheDirectory=".phpunit.cache"
+	colors="true"
+	controlGarbageCollector="true"
+	displayDetailsOnIncompleteTests="true"
+	displayDetailsOnTestsThatTriggerDeprecations="true"
+	displayDetailsOnTestsThatTriggerErrors="true"
+	displayDetailsOnTestsThatTriggerNotices="true"
+	displayDetailsOnTestsThatTriggerWarnings="true"
+	failOnDeprecation="true"
+	failOnEmptyTestSuite="true"
+	failOnIncomplete="true"
+	failOnNotice="true"
+	failOnRisky="true"
+	failOnWarning="true"
+	stderr="true"
+>
+	<source>
+		<include>
+			<directory>./config</directory>
+			<directory>./src</directory>
+		</include>
+
+		<exclude>
+			<directory suffix=".php">./config/areas/lab</directory>
+			<directory suffix=".php">./config/blocks</directory>
+			<directory suffix=".php">./config/templates</directory>
+			<file>./config/api/routes/changes.php</file>
+			<file>./config/areas/account/buttons.php</file>
+			<file>./config/areas/files/buttons.php</file>
+			<file>./config/areas/languages/buttons.php</file>
+			<file>./config/areas/site/buttons.php</file>
+			<file>./config/areas/users/buttons.php</file>
+			<file>./config/aliases.php</file>
+			<file>./config/setup.php</file>
+			<file>./config/areas/files/requests.php</file>
+			<file>./config/areas/site/requests.php</file>
+		</exclude>
+	</source>
+
+	<testsuites>
+		<testsuite name="Classes">
+			<directory>./tests/</directory>
+		</testsuite>
+	</testsuites>
+
+	<php>
+		<ini name="memory_limit" value="2048M" />
+	</php>
+
+	<coverage ignoreDeprecatedCodeUnits="true" />
+
+	<extensions>
+		<bootstrap class="Kirby\PhpUnitExtension"/>
+	</extensions>
+</phpunit>
