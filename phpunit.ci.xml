@@ -8,7 +8,7 @@
 	colors="true"
 	controlGarbageCollector="true"
 	displayDetailsOnIncompleteTests="true"
-	displayDetailsOnSkippedTests="false"
+	displayDetailsOnSkippedTests="true"
 	displayDetailsOnTestsThatTriggerDeprecations="true"
 	displayDetailsOnTestsThatTriggerErrors="true"
 	displayDetailsOnTestsThatTriggerNotices="true"
@@ -17,7 +17,9 @@
 	failOnEmptyTestSuite="true"
 	failOnIncomplete="true"
 	failOnNotice="true"
+	failOnPhpunitDeprecation="true"
 	failOnRisky="true"
+	failOnSkipped="true"
 	failOnWarning="true"
 	stderr="true"
 >

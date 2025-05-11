@@ -17,6 +17,7 @@
 # tests
 .phpbench
 .phpunit.cache
+phpunit.xml
 /tests/coverage
 /tests/tmp
 
