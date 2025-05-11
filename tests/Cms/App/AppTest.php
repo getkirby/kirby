@@ -11,6 +11,7 @@ use Kirby\Http\Route;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 use ReflectionMethod;
+use Whoops\Handler\PrettyPageHandler;
 
 /**
  * @coversDefaultClass \Kirby\Cms\App
@@ -29,6 +30,7 @@ class AppTest extends TestCase
 
 	public function tearDown(): void
 	{
+		App::destroy();
 		Dir::remove(static::TMP);
 		$_SERVER = $this->_SERVER;
 	}
@@ -456,7 +458,6 @@ class AppTest extends TestCase
 
 	public function testOptionFromPlugin()
 	{
-		App::destroy();
 		App::plugin('namespace/plugin', [
 			'options' => [
 				'key' => 'A',
@@ -500,8 +501,6 @@ class AppTest extends TestCase
 
 	public function testOptions()
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null'
@@ -520,8 +519,6 @@ class AppTest extends TestCase
 
 	public function testOptionsFromFile()
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
@@ -545,8 +542,6 @@ class AppTest extends TestCase
 
 	public function testOptionsFromFileWithEnv1()
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
@@ -571,8 +566,6 @@ class AppTest extends TestCase
 
 	public function testOptionsFromFileWithEnv2()
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
@@ -597,10 +590,8 @@ class AppTest extends TestCase
 		], $app->options());
 	}
 
-	public function testOptionsOnReady()
+	public function testOptionsOnReady(): void
 	{
-		App::destroy();
-
 		$app = new App([
 			'cli' => false,
 			'roots' => [
@@ -626,25 +617,31 @@ class AppTest extends TestCase
 		]);
 
 		$this->assertSame([
-			'ready' => $ready,
-			'whoops' => true,
-			'test' => '/dev/null',
+			'ready'        => $ready,
+			'whoops'       => true,
+			'test'         => '/dev/null',
 			'another.test' => 'foo',
-			'debug' => true,
-			'home' => 'test',
-			'error' => 'another-test',
-			'slugs' => 'de'
+			'debug'        => true,
+			'home'         => 'test',
+			'error'        => 'another-test',
+			'slugs'        => 'de'
 		], $app->options());
 
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
 		$whoopsMethod->setAccessible(true);
 		$whoopsHandler = $whoopsMethod->invoke($app)->getHandlers()[0];
-		$this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $whoopsHandler);
+		$this->assertInstanceOf(PrettyPageHandler::class, $whoopsHandler);
 
 		$this->assertSame('test', $app->site()->homePageId());
 		$this->assertSame('another-test', $app->site()->errorPageId());
 
 		$this->assertSame('ss', Str::$language['ß']);
+
+		// Suppresses PHPUnit warnings:
+		// Test code or tested code did not remove its own error handlers
+		// Test code or tested code did not remove its own exception handlers
+		restore_error_handler();
+		restore_exception_handler();
 	}
 
 	public function testRolesFromFixtures()
@@ -730,7 +727,6 @@ class AppTest extends TestCase
 
 	public function testInstance()
 	{
-		App::destroy();
 		$this->assertNull(App::instance(null, true));
 
 		$instance1 = new App();
@@ -951,8 +947,6 @@ class AppTest extends TestCase
 
 	public function testUrlFromEnvWithDetection()
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
@@ -971,8 +965,6 @@ class AppTest extends TestCase
 
 	public function testUrlFromEnvWithOverride()
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
