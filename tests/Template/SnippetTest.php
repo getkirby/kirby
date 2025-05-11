@@ -5,19 +5,16 @@ namespace Kirby\Template;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
-/**
- * @coversDefaultClass \Kirby\Template\Snippet
- */
+#[CoversClass(Snippet::class)]
 class SnippetTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	/**
-	 * @covers ::close
-	 */
-	public function testCloseWhenNotOpen()
+	public function testCloseWhenNotOpen(): void
 	{
 		$snippet = new Snippet('test.php');
 
@@ -27,10 +24,7 @@ class SnippetTest extends TestCase
 		$snippet->close();
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		// all output must be captured
 		$this->expectOutputString('');
@@ -67,10 +61,7 @@ class SnippetTest extends TestCase
 		$snippet->close(); // close output buffers to reset global state
 	}
 
-	/**
-	 * @covers ::file
-	 */
-	public function testFile()
+	public function testFile(): void
 	{
 		App::plugin('test/d', [
 			'snippets' => [
@@ -90,11 +81,7 @@ class SnippetTest extends TestCase
 		$this->assertSame('bar.php', Snippet::file('foo'));
 	}
 
-	/**
-	 * @covers ::begin
-	 * @covers ::end
-	 */
-	public function testHelpers()
+	public function testHelpers(): void
 	{
 		ob_start();
 
@@ -107,12 +94,7 @@ class SnippetTest extends TestCase
 		$this->assertSame('Nice', ob_get_clean());
 	}
 
-	/**
-	 * @covers ::open
-	 * @covers ::close
-	 * @covers ::parent
-	 */
-	public function testNestedComponents()
+	public function testNestedComponents(): void
 	{
 		$a = new Snippet(file: 'a.php');
 
@@ -134,11 +116,7 @@ class SnippetTest extends TestCase
 		$this->assertSame($a, $b->parent());
 	}
 
-	/**
-	 * @covers ::open
-	 * @covers ::close
-	 */
-	public function testOpenCloseWithSlotsAndSwallowedDefaultContent()
+	public function testOpenCloseWithSlotsAndSwallowedDefaultContent(): void
 	{
 		// all output must be captured
 		$this->expectOutputString('');
@@ -159,11 +137,7 @@ class SnippetTest extends TestCase
 		$this->assertSame('Default content', $slots->default()->render());
 	}
 
-	/**
-	 * @covers ::open
-	 * @covers ::close
-	 */
-	public function testOpenCloseWithDefaultSlotContent()
+	public function testOpenCloseWithDefaultSlotContent(): void
 	{
 		// all output must be captured
 		$this->expectOutputString('');
@@ -187,12 +161,11 @@ class SnippetTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::render
-	 * @dataProvider renderWithSlotsProvider
-	 */
-	public function testRenderWithSlots(string|null $file, string $expected)
-	{
+	#[DataProvider('renderWithSlotsProvider')]
+	public function testRenderWithSlots(
+		string|null $file,
+		string $expected
+	): void {
 		// all output must be captured
 		$this->expectOutputString('');
 
@@ -220,10 +193,7 @@ class SnippetTest extends TestCase
 		$this->assertSame($expected, $snippet->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderWithoutClosing()
+	public function testRenderWithoutClosing(): void
 	{
 		// all output must be captured
 		$this->expectOutputString('');
@@ -235,10 +205,7 @@ class SnippetTest extends TestCase
 		$this->assertSame("<h1>Layout</h1>\ncontent<footer>with other stuff</footer>\n", $snippet->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderWithoutClosingAndMultipleSlots()
+	public function testRenderWithoutClosingAndMultipleSlots(): void
 	{
 		// all output must be captured
 		$this->expectOutputString('');
@@ -256,10 +223,7 @@ class SnippetTest extends TestCase
 		$this->assertSame("<h1>Layout</h1>\n<header>Header content</header>\n<main>Body content</main>\n", $snippet->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderWithLazySlots()
+	public function testRenderWithLazySlots(): void
 	{
 		$snippet = new Snippet(static::FIXTURES . '/slots.php');
 
@@ -276,11 +240,7 @@ class SnippetTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::render
-	 */
-	public function testRenderWithData()
+	public function testRenderWithData(): void
 	{
 		$snippet = new Snippet(
 			file: static::FIXTURES . '/data.php',
@@ -290,10 +250,7 @@ class SnippetTest extends TestCase
 		$this->assertSame('hello', $snippet->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderWithLazyData()
+	public function testRenderWithLazyData(): void
 	{
 		$snippet = new Snippet(
 			file: static::FIXTURES . '/data.php',
@@ -302,10 +259,7 @@ class SnippetTest extends TestCase
 		$this->assertSame('hello', $snippet->render(data: ['message' => 'hello']));
 	}
 
-	/**
-	 * @covers ::root
-	 */
-	public function testRoot()
+	public function testRoot(): void
 	{
 		new App([
 			'roots' => [
@@ -316,10 +270,7 @@ class SnippetTest extends TestCase
 		$this->assertSame($root, Snippet::root());
 	}
 
-	/**
-	 * @covers ::scope
-	 */
-	public function testScope()
+	public function testScope(): void
 	{
 		$closure = function ($scope) use (&$data) {
 			$this->assertArrayHasKey('slots', $scope);
@@ -344,10 +295,7 @@ class SnippetTest extends TestCase
 		$this->assertSame('Scope snippet success', $snippet->render());
 	}
 
-	/**
-	 * @covers ::scope
-	 */
-	public function testScopeWithDefaultSlot()
+	public function testScopeWithDefaultSlot(): void
 	{
 		$closure = function ($scope) use (&$data, &$slot) {
 			$this->assertArrayHasKey('closure', $scope);
@@ -376,10 +324,7 @@ class SnippetTest extends TestCase
 		$this->assertSame('Scope snippet success', $snippet->render());
 	}
 
-	/**
-	 * @covers ::scope
-	 */
-	public function testScopeWithoutSlots()
+	public function testScopeWithoutSlots(): void
 	{
 		new App([
 			'roots' => [
@@ -430,10 +375,7 @@ class SnippetTest extends TestCase
 		$this->assertSame('Scope snippet success', $result);
 	}
 
-	/**
-	 * @covers ::scope
-	 */
-	public function testScopeWithInvalidData()
+	public function testScopeWithInvalidData(): void
 	{
 		new App([
 			'roots' => [
@@ -452,12 +394,7 @@ class SnippetTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::slots
-	 * @covers ::slot
-	 * @covers ::endslot
-	 */
-	public function testSlots()
+	public function testSlots(): void
 	{
 		// all output must be captured
 		$this->expectOutputString('');
