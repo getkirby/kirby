@@ -124,7 +124,7 @@ jobs:
 
       - name: Run tests
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: phpunit --fail-on-skipped --coverage-clover ${{ github.workspace }}/clover.xml
+        run: phpunit -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Statically analyze using Psalm
         if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.4'

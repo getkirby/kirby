@@ -8,7 +8,7 @@
 	colors="true"
 	controlGarbageCollector="true"
 	displayDetailsOnIncompleteTests="true"
-	displayDetailsOnSkippedTests="false"
+	displayDetailsOnSkippedTests="true"
 	displayDetailsOnTestsThatTriggerDeprecations="true"
 	displayDetailsOnTestsThatTriggerErrors="true"
 	displayDetailsOnTestsThatTriggerNotices="true"
@@ -18,6 +18,7 @@
 	failOnIncomplete="true"
 	failOnNotice="true"
 	failOnRisky="true"
+	failOnSkipped="true"
 	failOnWarning="true"
 	stderr="true"
 >
