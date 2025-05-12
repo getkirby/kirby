@@ -117,6 +117,12 @@ class Helpers
 	) {
 		$override = null;
 
+		// backup current locale
+		$locale = setlocale(LC_MESSAGES, 0);
+
+		// set locale to C to avoid locale errors
+		setlocale(LC_MESSAGES, 'C');
+
 		/**
 		 * @psalm-suppress UndefinedVariable
 		 */
@@ -153,6 +159,9 @@ class Helpers
 			// exception; this avoids modifying global state
 			restore_error_handler();
 		}
+
+		// reset to original locale
+		setlocale(LC_MESSAGES, $locale);
 
 		return $override ?? $result;
 	}
