@@ -116,6 +116,7 @@ class VersionTest extends TestCase
 		]);
 
 		$this->assertSame([
+			'slug' => 'foo',
 			'text' => 'Lorem ipsum'
 		], $version->content()->toArray());
 
