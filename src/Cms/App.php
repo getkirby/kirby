@@ -1292,11 +1292,35 @@ class App
 
 		// try to resolve image urls for pages and drafts
 		if ($page = $site->findPageOrDraft($id)) {
-			return $page->file($filename);
+			return $this->resolveFile($page->file($filename));
 		}
 
 		// try to resolve site files at least
-		return $site->file($filename);
+		return $this->resolveFile($site->file($filename));
+	}
+
+	/**
+	 * Filters a resolved file object using the configuration
+	 */
+	protected function resolveFile(File|null $file): File|null
+	{
+		// shortcut for files that don't exist
+		if ($file === null) {
+			return null;
+		}
+
+		$option = $this->option('content.fileRedirects', true);
+
+		if ($option === true) {
+			return $file;
+		}
+
+		if ($option instanceof Closure) {
+			return $option($file) === true ? $file : null;
+		}
+
+		// option was set to `false` or an invalid value
+		return null;
 	}
 
 	/**
