@@ -127,7 +127,9 @@ class Menu
 			'link'     => $area['link'] ?? null,
 			'dialog'   => $area['dialog'] ?? null,
 			'drawer'   => $area['drawer'] ?? null,
+			'target'   => $area['target'] ?? null,
 			'text'     => I18n::translate($area['label'], $area['label']),
+			'title'    => I18n::translate($area['title'] ?? null, $area['title'] ?? null),
 			...$menu
 		];
 
