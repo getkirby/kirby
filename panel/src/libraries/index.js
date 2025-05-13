@@ -4,7 +4,7 @@ import dayjs from "./dayjs";
 
 export default {
 	install(app) {
-		app.prototype.$library = {
+		app.config.globalProperties.$library = {
 			autosize,
 			colors,
 			dayjs

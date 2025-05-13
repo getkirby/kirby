@@ -251,7 +251,7 @@ export default {
 			const index = this.rows.findIndex((element) => element.id === layout.id);
 
 			if (index !== -1) {
-				this.$delete(this.rows, index);
+				this.rows.splice(index, 1);
 			}
 
 			this.save();

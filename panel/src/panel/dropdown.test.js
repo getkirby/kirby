@@ -8,7 +8,7 @@ import Panel from "./panel.js";
 
 describe.concurrent("panel.dropdown", () => {
 	it("should have a default state", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const dropdown = Dropdown(panel);
 
 		const state = {
@@ -27,7 +27,7 @@ describe.concurrent("panel.dropdown", () => {
 	});
 
 	it("should set options", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const dropdown = Dropdown(panel);
 
 		const options = [{ label: "A" }, { label: "B" }];

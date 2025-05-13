@@ -32,7 +32,7 @@
 							v-bind="$props"
 							:options="convertedOptions"
 							@input="$emit('input', $event)"
-							@click.native.stop
+							@click.stop
 						/>
 					</k-dropdown-content>
 				</template>

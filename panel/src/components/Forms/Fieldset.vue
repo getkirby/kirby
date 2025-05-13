@@ -109,7 +109,7 @@ export default {
 		},
 		onInput(value, field, name) {
 			const values = this.value;
-			this.$set(values, name, value);
+			values[name] = value;
 			this.$emit("input", values, field, name);
 		}
 	}

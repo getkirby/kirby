@@ -8,7 +8,7 @@ import Panel from "./panel.js";
 
 describe.concurrent("panel.drag", () => {
 	it("should have a default state", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const drag = Drag(panel);
 		const state = {
 			type: null,
@@ -22,7 +22,7 @@ describe.concurrent("panel.drag", () => {
 
 describe.concurrent("panel.drag", () => {
 	it("should store drag info", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const drag = Drag(panel);
 
 		expect(drag.isDragging).toStrictEqual(false);
