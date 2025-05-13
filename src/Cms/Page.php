@@ -770,12 +770,21 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Returns the root to the media folder for the page
+	 * Returns the absolute path to the media folder for the page
+	 * @internal
+	 */
+	public function mediaDir(): string
+	{
+		return $this->kirby()->root('media') . '/pages/' . $this->id();
+	}
+
+	/**
+	 * @see `::mediaDir`
 	 * @internal
 	 */
 	public function mediaRoot(): string
 	{
-		return $this->kirby()->root('media') . '/pages/' . $this->id();
+		return $this->mediaDir();
 	}
 
 	/**

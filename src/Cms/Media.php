@@ -53,7 +53,7 @@ class Media
 			}
 
 			// send the file to the browser
-			return Response::file($file->publish()->mediaPath());
+			return Response::file($file->publish()->mediaRoot());
 		}
 
 		// try to generate a thumb for the file
@@ -104,7 +104,7 @@ class Media
 				=> $media . '/assets/' . $model . '/' . $hash,
 			// parent files for file model that already included hash
 			$model instanceof File
-				=> $model->mediaRoot(),
+				=> $model->mediaDir(),
 			// model files
 			default
 			=> $model->mediaRoot() . '/' . $hash

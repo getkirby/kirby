@@ -24,6 +24,19 @@ class FileMediaTest extends ModelTestCase
 		]);
 	}
 
+	public function testMediaDir(): void
+	{
+		F::write($root = static::TMP . '/content/test.jpg', 'test');
+		touch($root, 5432112345);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->app->site()
+		]);
+
+		$this->assertSame(self::TMP . '/media/site/08756f3115-5432112345', $file->mediaDir());
+	}
+
 	public function testMediaHash(): void
 	{
 		F::write($root = static::TMP . '/content/test.jpg', 'test');
@@ -37,20 +50,6 @@ class FileMediaTest extends ModelTestCase
 		$this->assertSame('08756f3115-5432112345', $file->mediaHash());
 	}
 
-	public function testMediaPath(): void
-	{
-		F::write($root = static::TMP . '/content/test.jpg', 'test');
-		touch($root, 5432112345);
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $this->app->site()
-		]);
-
-		$this->assertSame(self::TMP . '/media/site/08756f3115-5432112345/test.jpg', $file->mediaPath());
-		$this->assertSame(self::TMP . '/media/site/08756f3115-5432112345/test-120x.jpg', $file->mediaPath('test-120x.jpg'));
-	}
-
 	public function testMediaRoot(): void
 	{
 		F::write($root = static::TMP . '/content/test.jpg', 'test');
@@ -61,7 +60,8 @@ class FileMediaTest extends ModelTestCase
 			'parent'   => $this->app->site()
 		]);
 
-		$this->assertSame(self::TMP . '/media/site/08756f3115-5432112345', $file->mediaRoot());
+		$this->assertSame(self::TMP . '/media/site/08756f3115-5432112345/test.jpg', $file->mediaRoot());
+		$this->assertSame(self::TMP . '/media/site/08756f3115-5432112345/test-120x.jpg', $file->mediaRoot('test-120x.jpg'));
 	}
 
 	public function testMediaToken(): void

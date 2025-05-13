@@ -76,7 +76,7 @@ return [
 		}
 
 		// create url and root
-		$mediaRoot = $file->mediaRoot();
+		$mediaRoot = $file->mediaDir();
 		$template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
 		$thumbRoot = (new Filename($file->root(), $template, $options))->toString();
 		$thumbName = basename($thumbRoot);
