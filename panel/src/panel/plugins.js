@@ -178,7 +178,7 @@ export const resolveComponentMixins = (component) => {
  */
 export const resolveComponentRender = (component) => {
 	if (component.template) {
-		component.render = null;
+		delete component.render;
 	}
 
 	return component;

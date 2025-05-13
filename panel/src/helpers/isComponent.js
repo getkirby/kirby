@@ -5,7 +5,7 @@
  * @returns {bool}
  */
 export default (name, app) => {
-	app ??= window.panel.app;
+	app ??= window.panel?.app;
 	const components = app?._context.components ?? {};
 	return Object.hasOwn(components, name);
 };
