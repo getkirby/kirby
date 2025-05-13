@@ -13,7 +13,7 @@ class PHPMailerTest extends TestCase
 		return parent::_email($props, $mailer);
 	}
 
-	public function testSend()
+	public function testSend(): void
 	{
 		$email = $this->_email([
 			'to' => 'test@test.com'
@@ -23,7 +23,7 @@ class PHPMailerTest extends TestCase
 		$this->assertTrue($email->isSent());
 	}
 
-	public function testProperties()
+	public function testProperties(): void
 	{
 		$phpunit = $this;
 		$fixtures = static::FIXTURES;
@@ -93,7 +93,7 @@ class PHPMailerTest extends TestCase
 		$this->assertTrue($beforeSend);
 	}
 
-	public function testBeforeSendInvalid()
+	public function testBeforeSendInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
@@ -110,7 +110,7 @@ class PHPMailerTest extends TestCase
 		$email->send(true);
 	}
 
-	public function testSMTPTransportDefaults()
+	public function testSMTPTransportDefaults(): void
 	{
 		$phpunit = $this;
 		$beforeSend = false;
@@ -142,7 +142,7 @@ class PHPMailerTest extends TestCase
 		$this->assertTrue($beforeSend);
 	}
 
-	public function testSMTPTransportSecurity1()
+	public function testSMTPTransportSecurity1(): void
 	{
 		$phpunit = $this;
 		$beforeSend = false;
@@ -171,7 +171,7 @@ class PHPMailerTest extends TestCase
 		$this->assertTrue($beforeSend);
 	}
 
-	public function testSMTPTransportSecurity2()
+	public function testSMTPTransportSecurity2(): void
 	{
 		$phpunit = $this;
 		$beforeSend = false;
@@ -201,7 +201,7 @@ class PHPMailerTest extends TestCase
 		$this->assertTrue($beforeSend);
 	}
 
-	public function testSMTPTransportSecurity3()
+	public function testSMTPTransportSecurity3(): void
 	{
 		$phpunit = $this;
 		$beforeSend = false;
@@ -231,7 +231,7 @@ class PHPMailerTest extends TestCase
 		$this->assertTrue($beforeSend);
 	}
 
-	public function testSMTPTransportSecurityInvalid()
+	public function testSMTPTransportSecurityInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Could not automatically detect the "security" protocol from the "port" option, please set it explicitly to "tls" or "ssl".');

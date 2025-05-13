@@ -2,12 +2,12 @@
 
 namespace Kirby\Email;
 
-/**
- * @coversDefaultClass \Kirby\Email\Body
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Body::class)]
 class BodyTest extends TestCase
 {
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$body = new Body();
 
@@ -15,7 +15,7 @@ class BodyTest extends TestCase
 		$this->assertSame('', $body->text());
 	}
 
-	public function testConstructParams()
+	public function testConstructParams(): void
 	{
 		$data = [
 			'html' => '<strong>We will never reply</strong>',
@@ -28,7 +28,7 @@ class BodyTest extends TestCase
 		$this->assertSame($data['text'], $body->text());
 	}
 
-	public function testConstructNullParams()
+	public function testConstructNullParams(): void
 	{
 		$body = new Body([
 			'html' => null,
