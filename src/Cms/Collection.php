@@ -163,9 +163,9 @@ class Collection extends BaseCollection
 		$field,
 		bool $caseInsensitive = true
 	): self {
-		if (is_string($field) === true) {
-			$groups = new self([], $this->parent());
+		$groups = new self(parent: $this->parent());
 
+		if (is_string($field) === true) {
 			foreach ($this->data as $key => $item) {
 				$value = $this->getAttribute($item, $field);
 
@@ -196,11 +196,9 @@ class Collection extends BaseCollection
 		}
 
 		// use the parent method but unwrap the Toolkit collection
-		// and rewrap it as a Cms collection
-		return new self(
-			parent::group($field, $caseInsensitive)->data,
-			$this->parent()
-		);
+		// and rewrap it as a Cms\Collection instance
+		$groups->data = parent::group($field, $caseInsensitive)->data;
+		return $groups;
 	}
 
 	/**
