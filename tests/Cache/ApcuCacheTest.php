@@ -3,10 +3,9 @@
 namespace Kirby\Cache;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cache\ApcuCache
- */
+#[CoversClass(ApcuCache::class)]
 class ApcuCacheTest extends TestCase
 {
 	public function setUp(): void
@@ -19,23 +18,14 @@ class ApcuCacheTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
-	public function testEnabled()
+	public function testEnabled(): void
 	{
 		$cache = new ApcuCache();
 
 		$this->assertTrue($cache->enabled());
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::exists
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
-	public function testOperations()
+	public function testOperations(): void
 	{
 		$cache = new ApcuCache([]);
 
@@ -54,13 +44,7 @@ class ApcuCacheTest extends TestCase
 		$this->assertFalse($cache->remove('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::exists
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
-	public function testOperationsWithPrefix()
+	public function testOperationsWithPrefix(): void
 	{
 		$cache1 = new ApcuCache([
 			'prefix' => 'test1'
@@ -89,10 +73,7 @@ class ApcuCacheTest extends TestCase
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
 	}
 
-	/**
-	 * @covers ::flush
-	 */
-	public function testFlush()
+	public function testFlush(): void
 	{
 		$cache = new ApcuCache([]);
 
@@ -109,10 +90,7 @@ class ApcuCacheTest extends TestCase
 		$this->assertFalse($cache->exists('c'));
 	}
 
-	/**
-	 * @covers ::flush
-	 */
-	public function testFlushWithPrefix()
+	public function testFlushWithPrefix(): void
 	{
 		$cache1 = new ApcuCache([
 			'prefix' => 'test1'

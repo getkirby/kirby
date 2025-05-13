@@ -3,10 +3,10 @@
 namespace Kirby\Cache;
 
 use Kirby\TestCase;
+use Memcached;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cache\MemCached
- */
+#[CoversClass(\Kirby\Cache\MemCached::class)]
 class MemCachedTest extends TestCase
 {
 	public function setUp(): void
@@ -16,7 +16,7 @@ class MemCachedTest extends TestCase
 			return;
 		}
 
-		$connection = new \Memcached();
+		$connection = new Memcached();
 		$connection->addServer('localhost', 11211);
 		if (is_array($connection->getStats()) !== true) {
 			$this->markTestSkipped('The Memcached server is not running.');
@@ -25,27 +25,19 @@ class MemCachedTest extends TestCase
 
 	public function tearDown(): void
 	{
-		$connection = new \Memcached();
+		$connection = new Memcached();
 		$connection->addServer('localhost', 11211);
 		$connection->flush();
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
-	public function testEnabled()
+	public function testEnabled(): void
 	{
 		$cache = new MemCached();
 
 		$this->assertTrue($cache->enabled());
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
-	public function testOperations()
+	public function testOperations(): void
 	{
 		$cache = new MemCached([]);
 
@@ -64,12 +56,7 @@ class MemCachedTest extends TestCase
 		$this->assertFalse($cache->remove('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
-	public function testOperationsWithPrefix()
+	public function testOperationsWithPrefix(): void
 	{
 		$cache1 = new MemCached([
 			'prefix' => 'test1'
@@ -98,10 +85,7 @@ class MemCachedTest extends TestCase
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructServer()
+	public function testConstructServer(): void
 	{
 		$cache = new MemCached([
 			'host' => 'localhost',
@@ -120,10 +104,7 @@ class MemCachedTest extends TestCase
 		$this->assertFalse($cache->remove('foo'));
 	}
 
-	/**
-	 * @covers ::flush
-	 */
-	public function testFlush()
+	public function testFlush(): void
 	{
 		$cache = new MemCached([]);
 

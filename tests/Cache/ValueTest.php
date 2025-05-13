@@ -3,17 +3,13 @@
 namespace Kirby\Cache;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use TypeError;
 
-/**
- * @coversDefaultClass \Kirby\Cache\Value
- */
+#[CoversClass(Value::class)]
 class ValueTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::created
-	 */
-	public function testCreated()
+	public function testCreated(): void
 	{
 		$value = new Value('foo');
 		$this->assertSame(time(), $value->created());
@@ -22,10 +18,7 @@ class ValueTest extends TestCase
 		$this->assertSame(1000, $value->created());
 	}
 
-	/**
-	 * @covers ::expires
-	 */
-	public function testExpires()
+	public function testExpires(): void
 	{
 		$value = new Value('foo');
 		$this->assertNull($value->expires());
@@ -46,11 +39,7 @@ class ValueTest extends TestCase
 		$this->assertSame(1234567890, $value->expires());
 	}
 
-	/**
-	 * @covers ::fromArray
-	 * @covers ::toArray
-	 */
-	public function testArrayConversion()
+	public function testArrayConversion(): void
 	{
 		$data = [
 			'created' => 10000,
@@ -106,12 +95,9 @@ class ValueTest extends TestCase
 		], $value->toArray());
 	}
 
-	/**
-	 * @covers ::fromArray
-	 */
-	public function testFromArrayInvalid()
+	public function testFromArrayInvalid(): void
 	{
-		$this->expectException(\TypeError::class);
+		$this->expectException(TypeError::class);
 
 		$data = [
 			'created' => 'invalid',
@@ -121,11 +107,7 @@ class ValueTest extends TestCase
 		$value = Value::fromArray($data);
 	}
 
-	/**
-	 * @covers ::fromJson
-	 * @covers ::toJson
-	 */
-	public function testJsonConversion()
+	public function testJsonConversion(): void
 	{
 		$data = json_encode([
 			'created' => 10000,
@@ -179,10 +161,7 @@ class ValueTest extends TestCase
 		$this->assertNull(Value::fromJson($data));
 	}
 
-	/**
-	 * @covers ::value
-	 */
-	public function testValue()
+	public function testValue(): void
 	{
 		$value = new Value('foo');
 		$this->assertSame('foo', $value->value());

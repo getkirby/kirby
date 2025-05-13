@@ -3,10 +3,11 @@
 namespace Kirby\Cache;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Redis;
+use Throwable;
 
-/**
- * @coversDefaultClass \Kirby\Cache\RedisCache
- */
+#[CoversClass(RedisCache::class)]
 class RedisCacheTest extends TestCase
 {
 	public function setUp(): void
@@ -17,9 +18,9 @@ class RedisCacheTest extends TestCase
 		}
 
 		try {
-			$connection = new \Redis();
+			$connection = new Redis();
 			$connection->ping();
-		} catch (\Throwable) {
+		} catch (Throwable) {
 			$this->markTestSkipped('The Redis server is not running.');
 		}
 	}
@@ -30,11 +31,7 @@ class RedisCacheTest extends TestCase
 		$connection->flush();
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::enabled
-	 */
-	public function testConstructServer()
+	public function testConstructServer(): void
 	{
 		// invalid port
 		$cache = new RedisCache([
@@ -49,10 +46,7 @@ class RedisCacheTest extends TestCase
 		$this->assertFalse($cache->enabled());
 	}
 
-	/**
-	 * @covers ::databaseNum
-	 */
-	public function testDatabase()
+	public function testDatabase(): void
 	{
 		$cache = new RedisCache([
 			'database' => 1
@@ -65,20 +59,13 @@ class RedisCacheTest extends TestCase
 		$this->assertSame('A basic value', $cache->retrieve('a')->value());
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
-	public function testEnabled()
+	public function testEnabled(): void
 	{
 		$cache = new RedisCache();
 		$this->assertTrue($cache->enabled());
 	}
 
-	/**
-	 * @covers ::exists
-	 * @covers ::flush
-	 */
-	public function testFlush()
+	public function testFlush(): void
 	{
 		$cache = new RedisCache();
 
@@ -96,14 +83,7 @@ class RedisCacheTest extends TestCase
 		$this->assertFalse($cache->exists('c'));
 	}
 
-	/**
-	 * @covers ::exists
-	 * @covers ::key
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
-	public function testOperations()
+	public function testOperations(): void
 	{
 		$cache = new RedisCache();
 
@@ -122,15 +102,7 @@ class RedisCacheTest extends TestCase
 		$this->assertFalse($cache->remove('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::exists
-	 * @covers ::key
-	 * @covers ::set
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
-	public function testOperationsWithPrefix()
+	public function testOperationsWithPrefix(): void
 	{
 		$cache1 = new RedisCache([
 			'prefix' => 'test1:'
