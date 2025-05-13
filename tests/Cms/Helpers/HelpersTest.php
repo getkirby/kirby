@@ -147,6 +147,27 @@ class HelpersTest extends HelpersTestCase
 	/**
 	 * @covers ::handleErrors
 	 */
+	public function testHandleErrorsLocaleReset()
+	{
+		setlocale(LC_ALL, 'de_DE.UTF-8');
+
+		try {
+			Helpers::handleErrors(
+				function () {
+					$this->assertSame('C', setlocale(LC_MESSAGES, 0));
+					throw new Exception(message: 'Exception inside the action');
+				},
+				fn () => $this->fail('Condition handler should not be called because no warning was triggered')
+			);
+		} catch (Exception $e) {
+			$this->assertSame('Exception inside the action', $e->getMessage());
+			$this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
+		}
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
 	public function testHandleErrorsWarningCaught1()
 	{
 		$this->activeErrorHandlers++;
