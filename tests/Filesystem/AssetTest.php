@@ -25,12 +25,12 @@ class AssetTest extends TestCase
 		]);
 	}
 
-	protected function _asset($file = 'images/logo.svg')
+	protected function _asset($file = 'images/logo.svg'): Asset
 	{
 		return new Asset($file);
 	}
 
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$asset = $this->_asset($file = 'images/logo.svg');
 
@@ -53,7 +53,7 @@ class AssetTest extends TestCase
 		$this->assertSame('images', $asset->path());
 	}
 
-	public function testCall()
+	public function testCall(): void
 	{
 		$asset = $this->_asset($file = 'images/logo.svg');
 
@@ -72,7 +72,7 @@ class AssetTest extends TestCase
 		$asset->foo();
 	}
 
-	public function testMedia()
+	public function testMedia(): void
 	{
 		$asset = $this->_asset();
 
@@ -93,13 +93,13 @@ class AssetTest extends TestCase
 		$this->assertSame(dirname($mediaUrl) . '/test.jpg', $asset->mediaUrl('test.jpg'));
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		$asset = $this->_asset();
 		$this->assertSame('<img alt="" src="https://getkirby.com/images/logo.svg">', $asset->__toString());
 	}
 
-	public function testNonExistingMethod()
+	public function testNonExistingMethod(): void
 	{
 		$asset = $this->_asset();
 		$this->expectException(BadMethodCallException::class);
