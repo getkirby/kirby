@@ -159,10 +159,10 @@ class Helpers
 			// action or the standard error handler threw an
 			// exception; this avoids modifying global state
 			restore_error_handler();
-		}
 
-		// reset to original locale
-		setlocale(LC_MESSAGES, $locale);
+			// reset to original locale
+			setlocale(LC_MESSAGES, $locale);
+		}
 
 		return $override ?? $result;
 	}
