@@ -56,8 +56,8 @@ class Version
 			];
 		}
 
-		// prepare raw content file fields as fields for Content object
-		$fields = $this->prepareFieldsForContent($fields, $language);
+		// remove fields that should not be used for the Content object
+		unset($fields['lock']);
 
 		return new Content(
 			parent: $this->model,
@@ -101,20 +101,6 @@ class Version
 		Language|string $language = 'default'
 	): void {
 		$language = Language::ensure($language);
-		$latest   = $this->sibling('latest');
-
-		// if the latest version of the translation does not exist yet,
-		// we have to copy over the content from the default language first.
-		if (
-			$this->isLatest() === false &&
-			$language->isDefault() === false &&
-			$latest->exists($language) === false
-		) {
-			$latest->create(
-				fields: $latest->read(Language::ensure('default')),
-				language: $language
-			);
-		}
 
 		// check if creating is allowed
 		VersionRules::create($this, $fields, $language);
@@ -126,8 +112,8 @@ class Version
 
 		$this->model->storage()->create(
 			versionId: $this->id,
-			language: $language,
-			fields: $this->prepareFieldsBeforeWrite($fields, $language)
+			language:  $language,
+			fields:    $this->prepareFieldsBeforeWrite($fields, $language)
 		);
 
 		// make sure that an older version does not exist in the cache
@@ -238,13 +224,11 @@ class Version
 		$a = $this->read($language) ?? [];
 		$b = $version->read($language) ?? [];
 
-		// apply same preparation as for content
-		$a = $this->prepareFieldsForContent($a, $language);
-		$b = $this->prepareFieldsForContent($b, $language);
-
-		// remove additional fields that should not be
+		// remove fields that should not be
 		// considered in the comparison
 		unset(
+			$a['lock'],
+			$b['lock'],
 			$a['uuid'],
 			$b['uuid']
 		);
@@ -410,23 +394,6 @@ class Version
 	}
 
 	/**
-	 * Make sure that the Content object receives the right set of fields
-	 * filtering fields used for lower logic (e.g. lock)
-	 */
-	protected function prepareFieldsForContent(
-		array $fields,
-		Language $language
-	): array {
-		unset($fields['lock']);
-
-		if ($this->model instanceof Page) {
-			unset($fields['slug']);
-		}
-
-		return $fields;
-	}
-
-	/**
 	 * Returns a verification token for the authentication
 	 * of draft and version previews
 	 * @internal
@@ -502,8 +469,8 @@ class Version
 		// check if publishing is allowed
 		VersionRules::publish($this, $language);
 
-		$latest  = $this->sibling('latest')->read($language);
-		$changes = $this->read($language);
+		$latest  = $this->sibling('latest')->read($language) ?? [];
+		$changes = $this->read($language) ?? [];
 
 		// overwrite all fields that are not in the `changes` version
 		// with a null value. The ModelWithContent::update method will merge

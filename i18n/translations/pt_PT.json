@@ -20,7 +20,7 @@
 	"coordinates": "Coordenadas",
 	"copy": "Copiar",
 	"copy.all": "Copiar todos",
-	"copy.success": "{count} copiados!",
+	"copy.success": "Copiado",
 	"copy.success.multiple": "{count} copiados!",
 	"copy.url": "Copiar URL",
 	"create": "Criar",
@@ -38,7 +38,7 @@
 	"days.tue": "Ter",
 	"days.wed": "Qua",
 
-	"debugging": "Depuração ",
+	"debugging": "Debugging ",
 
 	"delete": "Eliminar",
 	"delete.all": "Eliminar todos",

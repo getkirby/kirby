@@ -12,8 +12,11 @@ class XmlTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/xml';
 
 	#[DataProvider('attrProvider')]
-	public function testAttr(array $input, bool|null $value, string $expected)
-	{
+	public function testAttr(
+		array $input,
+		bool|null $value,
+		string $expected
+	): void {
 		$this->assertSame($expected, Xml::attr($input, $value));
 	}
 
@@ -33,7 +36,7 @@ class XmlTest extends TestCase
 		];
 	}
 
-	public function testAttrArrayValue()
+	public function testAttrArrayValue(): void
 	{
 		$result = Xml::attr('a', ['a', 'b']);
 		$this->assertSame('a="a b"', $result);
@@ -51,7 +54,7 @@ class XmlTest extends TestCase
 		$this->assertSame('a="&"', $result);
 	}
 
-	public function testParseSimplifyCreate()
+	public function testParseSimplifyCreate(): void
 	{
 		$this->assertSame('<name>Homer</name>', Xml::create('Homer', 'name', false));
 		$this->assertSame('<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . '<name>Homer</name>', Xml::create('Homer', 'name', true));
@@ -130,24 +133,24 @@ class XmlTest extends TestCase
 		$this->assertNull(Xml::parse('<this>is invalid</that>'));
 	}
 
-	public function testParseEntities()
+	public function testParseEntities(): void
 	{
 		$xml   = '<!DOCTYPE d [<!ENTITY e "bar">]><x>this is a file: foo &e; (with entities)</x>';
 		$array = Xml::parse($xml);
 
 		$this->assertSame([
-			'@name' => 'x',
+			'@name'  => 'x',
 			'@value' => 'this is a file: foo bar (with entities)'
 		], $array);
 	}
 
-	public function testParseRecursiveEntities()
+	public function testParseRecursiveEntities(): void
 	{
 		$xml = file_get_contents(static::FIXTURES . '/billion-laughs.xml');
 		$this->assertNull(Xml::parse($xml));
 	}
 
-	public function testParseXXE()
+	public function testParseXXE(): void
 	{
 		$xml   = '<!DOCTYPE d [<!ENTITY e SYSTEM "' . __FILE__ . '">]><x>this is a file: &e; with an XXE vulnerability</x>';
 		$array = Xml::parse($xml);
@@ -158,7 +161,7 @@ class XmlTest extends TestCase
 		], $array);
 	}
 
-	public function testEncodeDecode()
+	public function testEncodeDecode(): void
 	{
 		$expected = 'S&#252;per &#214;nenc&#339;ded &#223;tring';
 		$this->assertSame($expected, Xml::encode('Süper Önencœded ßtring'));
@@ -172,12 +175,12 @@ class XmlTest extends TestCase
 		$this->assertSame('', Xml::encode(null));
 	}
 
-	public function testEntities()
+	public function testEntities(): void
 	{
 		$this->assertSame(Xml::$entities, Xml::entities());
 	}
 
-	public function testTag()
+	public function testTag(): void
 	{
 		$tag = Xml::tag('name', 'content');
 		$this->assertSame('<name>content</name>', $tag);
@@ -205,8 +208,10 @@ class XmlTest extends TestCase
 	}
 
 	#[DataProvider('valueProvider')]
-	public function testValue(bool|int|string|null $input, string|null $expected)
-	{
+	public function testValue(
+		bool|int|string|null $input,
+		string|null $expected
+	): void {
 		$this->assertSame($expected, Xml::value($input));
 	}
 

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Exception as GlobalException;
 use Generator;
 use Kirby\Content\Storage;
 use Kirby\Content\VersionCache;
@@ -312,9 +313,18 @@ class App
 			}
 		}
 
-		foreach (glob($this->root('blueprints') . '/' . $type . '/*.yml') as $blueprint) {
-			$name = F::name($blueprint);
-			$blueprints[$name] = $name;
+		try {
+			// protect against path traversal attacks
+			$root     = $this->root('blueprints') . '/' . $type;
+			$realpath = Dir::realpath($root, $this->root('blueprints'));
+
+			foreach (glob($realpath . '/*.yml') as $blueprint) {
+				$name = F::name($blueprint);
+				$blueprints[$name] = $name;
+			}
+		} catch (GlobalException) {
+			// if the realpath operation failed, the following glob was skipped,
+			// keeping just the blueprints from extensions
 		}
 
 		ksort($blueprints);
@@ -478,8 +488,7 @@ class App
 		}
 
 		// controller from site root
-		$root         = $this->root('controllers') . '/' . $name . '.php';
-		$controller   = Controller::load($root);
+		$controller   = Controller::load($this->root('controllers') . '/' . $name . '.php', $this->root('controllers'));
 		// controller from extension
 		$controller ??= $this->extension('controllers', $name);
 

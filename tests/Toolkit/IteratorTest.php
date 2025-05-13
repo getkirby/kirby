@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Iterator::class)]
 class IteratorTest extends TestCase
 {
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$iterator = new Iterator($expected = [
 			'one' => 'eins',
@@ -17,7 +17,7 @@ class IteratorTest extends TestCase
 		$this->assertSame($expected, $iterator->data);
 	}
 
-	public function testKey()
+	public function testKey(): void
 	{
 		$iterator = new Iterator([
 			'one' => 'eins',
@@ -27,7 +27,7 @@ class IteratorTest extends TestCase
 		$this->assertSame('one', $iterator->key());
 	}
 
-	public function testKeys()
+	public function testKeys(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -42,7 +42,7 @@ class IteratorTest extends TestCase
 		], $iterator->keys());
 	}
 
-	public function testCurrent()
+	public function testCurrent(): void
 	{
 		$iterator = new Iterator([
 			'one' => 'eins',
@@ -52,7 +52,7 @@ class IteratorTest extends TestCase
 		$this->assertSame('eins', $iterator->current());
 	}
 
-	public function testPrevNext()
+	public function testPrevNext(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -75,7 +75,7 @@ class IteratorTest extends TestCase
 		$this->assertSame('eins', $iterator->current());
 	}
 
-	public function testRewind()
+	public function testRewind(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -91,7 +91,7 @@ class IteratorTest extends TestCase
 		$this->assertSame('eins', $iterator->current());
 	}
 
-	public function testValid()
+	public function testValid(): void
 	{
 		$iterator = new Iterator([]);
 		$this->assertFalse($iterator->valid());
@@ -100,7 +100,7 @@ class IteratorTest extends TestCase
 		$this->assertTrue($iterator->valid());
 	}
 
-	public function testCount()
+	public function testCount(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -116,7 +116,7 @@ class IteratorTest extends TestCase
 		$this->assertSame(0, $iterator->count());
 	}
 
-	public function testIndexOf()
+	public function testIndexOf(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -129,7 +129,7 @@ class IteratorTest extends TestCase
 		$this->assertSame(2, $iterator->indexOf('drei'));
 	}
 
-	public function testKeyOf()
+	public function testKeyOf(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -142,7 +142,7 @@ class IteratorTest extends TestCase
 		$this->assertSame('three', $iterator->keyOf('drei'));
 	}
 
-	public function testHas()
+	public function testHas(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -154,7 +154,7 @@ class IteratorTest extends TestCase
 		$this->assertFalse($iterator->has('three'));
 	}
 
-	public function testIsset()
+	public function testIsset(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -166,7 +166,7 @@ class IteratorTest extends TestCase
 		$this->assertFalse(isset($iterator->three));
 	}
 
-	public function testDebugInfo()
+	public function testDebugInfo(): void
 	{
 		$array = [
 			'one'   => 'eins',

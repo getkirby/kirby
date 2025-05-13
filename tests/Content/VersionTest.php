@@ -116,6 +116,7 @@ class VersionTest extends TestCase
 		]);
 
 		$this->assertSame([
+			'slug' => 'foo',
 			'text' => 'Lorem ipsum'
 		], $version->content()->toArray());
 
@@ -194,41 +195,6 @@ class VersionTest extends TestCase
 
 		$this->assertContentFileExists('en');
 		$this->assertContentFileExists('de');
-	}
-
-	public function testCreateMultiLanguageWhenLatestTranslationIsMissing(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$latest = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$changes = new Version(
-			model: $this->model,
-			id: VersionId::changes()
-		);
-
-		$this->assertContentFileDoesNotExist('en', $latest->id());
-		$this->assertContentFileDoesNotExist('en', $changes->id());
-		$this->assertContentFileDoesNotExist('de', $latest->id());
-		$this->assertContentFileDoesNotExist('de', $changes->id());
-
-		// create the latest version for the default translation
-		$latest->save([
-			'title' => 'Test'
-		], $this->app->language('en'));
-
-		// create a changes version in the other language
-		$changes->save([
-			'title' => 'Translated Test',
-		], $this->app->language('de'));
-
-		$this->assertContentFileExists('en', $latest->id());
-		$this->assertContentFileDoesNotExist('en', $changes->id());
-		$this->assertContentFileExists('de', $latest->id());
-		$this->assertContentFileExists('de', $changes->id());
 	}
 
 	public function testCreateSingleLanguage(): void
