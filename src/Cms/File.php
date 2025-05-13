@@ -374,6 +374,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute path to the media folder for the file and its versions
 	 * @internal
+	 * @since 5.0.0
 	 */
 	public function mediaDir(): string
 	{
