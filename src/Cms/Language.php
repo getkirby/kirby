@@ -57,7 +57,7 @@ class Language
 		}
 
 		static::$kirby      = $props['kirby'] ?? null;
-		$this->code         = trim($props['code']);
+		$this->code         = basename(trim($props['code'])); // prevent path traversal
 		$this->default      = ($props['default'] ?? false) === true;
 		$this->direction    = ($props['direction'] ?? null) === 'rtl' ? 'rtl' : 'ltr';
 		$this->name         = trim($props['name'] ?? $this->code);
@@ -325,6 +325,7 @@ class Language
 	public static function loadRules(string $code): array
 	{
 		$kirby = App::instance();
+		$code  = basename($code); // prevent path traversal
 		$code  = Str::contains($code, '.') ? Str::before($code, '.') : $code;
 		$file  = $kirby->root('i18n:rules') . '/' . $code . '.json';
 
