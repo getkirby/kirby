@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Http\Url as BaseUrl;
 use Kirby\Filesystem\F;
+use Kirby\Http\Url as BaseUrl;
 use Kirby\Toolkit\Str;
 
 /**
