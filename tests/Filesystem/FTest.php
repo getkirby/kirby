@@ -87,8 +87,22 @@ class FTest extends TestCase
 	 */
 	public function testExists()
 	{
+		$this->assertFalse(F::exists($this->test));
 		touch($this->test);
 		$this->assertTrue(F::exists($this->test));
+	}
+
+	/**
+	 * @covers ::exists
+	 */
+	public function testExistsIn()
+	{
+		$this->assertFalse(F::exists($this->test, static::TMP));
+		touch($this->test);
+		$this->assertTrue(F::exists($this->test, static::TMP));
+		$this->assertTrue(F::exists(static::TMP . '/../Filesystem.F/moved.txt', static::TMP));
+		$this->assertTrue(F::exists($this->test, dirname(static::TMP)));
+		$this->assertFalse(F::exists($this->test, static::FIXTURES));
 	}
 
 	/**

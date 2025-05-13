@@ -30,6 +30,8 @@ class Docs
 	public function __construct(
 		protected string $name
 	) {
+		// protect against path traversal
+		$this->name  = basename($name);
 		$this->kirby = App::instance();
 		$this->json  = $this->read();
 	}
