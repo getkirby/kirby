@@ -200,6 +200,7 @@ class AppResolveTest extends TestCase
 
 	/**
 	 * @covers ::resolve
+	 * @covers ::resolveFile
 	 */
 	public function testResolveSiteFile()
 	{
@@ -227,6 +228,7 @@ class AppResolveTest extends TestCase
 
 	/**
 	 * @covers ::resolve
+	 * @covers ::resolveFile
 	 */
 	public function testResolvePageFile()
 	{
@@ -255,6 +257,94 @@ class AppResolveTest extends TestCase
 
 		$this->assertIsFile($result);
 		$this->assertSame('test/test.jpg', $result->id());
+	}
+
+	/**
+	 * @covers ::resolve
+	 * @covers ::resolveFile
+	 */
+	public function testResolveFileDisabled()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							['filename' => 'test.jpg']
+						],
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => false
+				]
+			]
+		]);
+
+		// missing file
+		$result = $app->resolve('test/test.png');
+		$this->assertNull($result);
+
+		// existing file
+		$result = $app->resolve('test/test.jpg');
+		$this->assertNull($result);
+	}
+
+	/**
+	 * @covers ::resolve
+	 * @covers ::resolveFile
+	 */
+	public function testResolveFileClosure()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							[
+								'content'  => [
+									'public' => 'true'
+								],
+								'filename' => 'test-public.jpg'
+							],
+							[
+								'content'  => [
+									'public' => 'false'
+								],
+								'filename' => 'test-private.jpg'
+							]
+						],
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => fn (File $file): bool => $file->public()->toBool()
+				]
+			]
+		]);
+
+		// missing file
+		$result = $app->resolve('test/test.png');
+		$this->assertNull($result);
+
+		// existing file (allowed)
+		$result = $app->resolve('test/test-public.jpg');
+		$this->assertIsFile($result);
+		$this->assertSame('test/test-public.jpg', $result->id());
+
+		// existing file (not allowed)
+		$result = $app->resolve('test/test-private.jpg');
+		$this->assertNull($result);
 	}
 
 	/**

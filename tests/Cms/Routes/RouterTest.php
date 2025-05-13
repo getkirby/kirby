@@ -162,6 +162,32 @@ class RouterTest extends TestCase
 		$this->assertSame('background.jpg', $file->id());
 	}
 
+	public function testPageFileRouteDisabled()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'projects',
+						'files' => [
+							[
+								'filename' => 'cover.jpg'
+							]
+						]
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => false
+				]
+			]
+		]);
+
+		$file = $app->call('projects/cover.jpg');
+		$this->assertNull($file);
+	}
+
 	public function testNestedPageRoute()
 	{
 		$app = $this->app->clone([
