@@ -160,6 +160,21 @@ class DirTest extends TestCase
 	}
 
 	/**
+	 * @covers ::exists
+	 */
+	public function testExistsIn()
+	{
+		$test = static::TMP . '/test';
+
+		$this->assertFalse(Dir::exists($test, static::TMP));
+		Dir::make($test);
+		$this->assertTrue(Dir::exists($test, static::TMP));
+		$this->assertTrue(Dir::exists(static::TMP . '/../Filesystem.Dir/test', static::TMP));
+		$this->assertTrue(Dir::exists($test, dirname(static::TMP)));
+		$this->assertFalse(Dir::exists($test, static::FIXTURES));
+	}
+
+	/**
 	 * @covers ::index
 	 */
 	public function testIndex()
@@ -653,6 +668,68 @@ class DirTest extends TestCase
 		];
 
 		$this->assertSame($expected, $files);
+	}
+
+	/**
+	 * @covers ::realpath
+	 */
+	public function testRealpath()
+	{
+		$path = Dir::realpath(__DIR__ . '/../Filesystem');
+		$this->assertSame(__DIR__, $path);
+	}
+
+	/**
+	 * @covers ::realpath
+	 */
+	public function testRealpathToMissingFile()
+	{
+		$path = __DIR__ . '/../does-not-exist';
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The directory does not exist at the given path: "' . $path . '"');
+
+		Dir::realpath($path);
+	}
+
+	/**
+	 * @covers ::realpath
+	 */
+	public function testRealpathToParent()
+	{
+		$parent = __DIR__ . '/..';
+		$dir    = $parent . '/Filesystem';
+		$path   = Dir::realpath($dir, $parent);
+
+		$this->assertSame(__DIR__, $path);
+	}
+
+	/**
+	 * @covers ::realpath
+	 */
+	public function testRealpathToNonExistingParent()
+	{
+		$parent = __DIR__ . '/../does-not-exist';
+		$dir    = __DIR__ . '/../Filesystem';
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
+
+		Dir::realpath($dir, $parent);
+	}
+
+	/**
+	 * @covers ::realpath
+	 */
+	public function testRealpathToInvalidParent()
+	{
+		$parent = __DIR__ . '/../Cms';
+		$dir    = __DIR__ . '/../Filesystem';
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The directory is not within the parent directory');
+
+		Dir::realpath($dir, $parent);
 	}
 
 	/**

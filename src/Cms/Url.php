@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
 use Kirby\Http\Url as BaseUrl;
 use Kirby\Toolkit\Str;
 
@@ -63,10 +64,11 @@ class Url extends BaseUrl
 		$kirby = App::instance();
 		$page  = $kirby->site()->page();
 		$path  = $assetPath . '/' . $page->template() . '.' . $extension;
-		$file  = $kirby->root('assets') . '/' . $path;
+		$root  = $kirby->root('assets');
+		$file  = $root . '/' . $path;
 		$url   = $kirby->url('assets') . '/' . $path;
 
-		return file_exists($file) === true ? $url : null;
+		return F::exists($file, $root) === true ? $url : null;
 	}
 
 	/**

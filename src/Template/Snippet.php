@@ -5,6 +5,7 @@ namespace Kirby\Template;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Tpl;
 
@@ -189,7 +190,7 @@ class Snippet extends Tpl
 			$name = (string)$name;
 			$file = $root . '/' . $name . '.php';
 
-			if (file_exists($file) === false) {
+			if (F::exists($file, $root) === false) {
 				$file = $kirby->extensions('snippets')[$name] ?? null;
 			}
 
