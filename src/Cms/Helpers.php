@@ -120,7 +120,8 @@ class Helpers
 		// backup current locale
 		$locale = setlocale(LC_MESSAGES, 0);
 
-		// set locale to C to avoid locale errors
+		// set locale to C so that errors and warning messages are
+		// printed in English for robust comparisons in the handler
 		setlocale(LC_MESSAGES, 'C');
 
 		/**
