@@ -3,22 +3,22 @@
 namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
+use Kirby\Parsley\Schema;
 use Kirby\Toolkit\Dom;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Parsley\Schema\Plain
- */
+#[CoversClass(Plain::class)]
 class PlainTest extends TestCase
 {
+	/** @var \Kirby\Parsley\Schema\Plain */
+	protected Schema $schema;
+
 	public function setUp(): void
 	{
 		$this->schema = new Plain();
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
-	public function testFallback()
+	public function testFallback(): void
 	{
 		$expected = [
 			'content' => [
@@ -27,21 +27,15 @@ class PlainTest extends TestCase
 			'type' => 'text',
 		];
 
-		return $this->assertSame($expected, $this->schema->fallback('Test'));
+		$this->assertSame($expected, $this->schema->fallback('Test'));
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
-	public function testFallbackForEmptyContent()
+	public function testFallbackForEmptyContent(): void
 	{
-		return $this->assertNull($this->schema->fallback(''));
+		$this->assertNull($this->schema->fallback(''));
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
-	public function testFallbackForDomElement()
+	public function testFallbackForDomElement(): void
 	{
 		$dom      = new Dom('<p>Test</p>');
 		$p        = $dom->query('//p')[0];
@@ -58,36 +52,24 @@ class PlainTest extends TestCase
 		$this->assertSame($expected, $fallback);
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
-	public function testFallbackForInvalidContent()
+	public function testFallbackForInvalidContent(): void
 	{
 		$this->assertNull($this->schema->fallback(''));
 	}
 
-	/**
-	 * @covers ::marks
-	 */
-	public function testMarks()
+	public function testMarks(): void
 	{
-		return $this->assertSame([], $this->schema->marks());
+		$this->assertSame([], $this->schema->marks());
 	}
 
-	/**
-	 * @covers ::nodes
-	 */
-	public function testNodes()
+	public function testNodes(): void
 	{
-		return $this->assertSame([], $this->schema->nodes());
+		$this->assertSame([], $this->schema->nodes());
 	}
 
-	/**
-	 * @covers ::skip
-	 */
-	public function testSkip()
+	public function testSkip(): void
 	{
-		return $this->assertSame([
+		$this->assertSame([
 			'base',
 			'link',
 			'meta',
