@@ -5,10 +5,9 @@ namespace Kirby\Database\Sql;
 use Kirby\Database\Database;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Database\Sql\Sqlite
- */
+#[CoversClass(Sqlite::class)]
 class SqliteTest extends TestCase
 {
 	public function setUp(): void
@@ -23,19 +22,13 @@ class SqliteTest extends TestCase
 		$this->sql = new Sqlite($this->database);
 	}
 
-	/**
-	 * @covers ::columns
-	 */
-	public function testColumns()
+	public function testColumns(): void
 	{
 		$result = $this->sql->columns('test');
 		$this->assertSame('PRAGMA table_info("test")', $result['query']);
 	}
 
-	/**
-	 * @covers ::columns
-	 */
-	public function testColumnsInvalidTable()
+	public function testColumnsInvalidTable(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid table does-not-exist');
@@ -43,10 +36,7 @@ class SqliteTest extends TestCase
 		$this->sql->columns('does-not-exist');
 	}
 
-	/**
-	 * @covers ::combineIdentifier
-	 */
-	public function testCombineIdentifier()
+	public function testCombineIdentifier(): void
 	{
 		$this->assertSame('"test"."id"', $this->sql->combineIdentifier('test', 'id'));
 		$this->assertSame('"test".*', $this->sql->combineIdentifier('test', '*'));
@@ -56,10 +46,7 @@ class SqliteTest extends TestCase
 		$this->assertSame('"id"', $this->sql->combineIdentifier('test', 'id', true));
 	}
 
-	/**
-	 * @covers ::createTable
-	 */
-	public function testCreateTable()
+	public function testCreateTable(): void
 	{
 		// basic example
 		$table = $this->sql->createTable('table', [
@@ -138,10 +125,7 @@ class SqliteTest extends TestCase
 		$this->assertSame([], $table['bindings']);
 	}
 
-	/**
-	 * @covers ::quoteIdentifier
-	 */
-	public function testQuoteIdentifier()
+	public function testQuoteIdentifier(): void
 	{
 		$this->assertSame('*', $this->sql->quoteIdentifier('*'));
 		$this->assertSame('"test"', $this->sql->quoteIdentifier('test'));
@@ -150,20 +134,14 @@ class SqliteTest extends TestCase
 		$this->assertSame('"another\'test"', $this->sql->quoteIdentifier("another'test"));
 	}
 
-	/**
-	 * @covers ::tables
-	 */
-	public function testTables()
+	public function testTables(): void
 	{
 		$result = $this->sql->tables();
 		$this->assertSame('SELECT name FROM sqlite_master WHERE type = \'table\' OR type = \'view\'', $result['query']);
 		$this->assertSame([], $result['bindings']);
 	}
 
-	/**
-	 * @covers ::tables
-	 */
-	public function testValidateTable()
+	public function testValidateTable(): void
 	{
 		$this->assertTrue($this->database->validateTable('test'));
 		$this->assertTrue($this->database->validateTable('view_test'));
