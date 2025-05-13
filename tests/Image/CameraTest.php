@@ -3,7 +3,9 @@
 namespace Kirby\Image;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Camera::class)]
 class CameraTest extends TestCase
 {
 	protected function _exif(): array
@@ -14,7 +16,7 @@ class CameraTest extends TestCase
 		];
 	}
 
-	public function testSetup()
+	public function testSetup(): void
 	{
 		$exif   = $this->_exif();
 		$camera = new Camera($exif);
@@ -22,7 +24,7 @@ class CameraTest extends TestCase
 		$this->assertSame($exif['Model'], $camera->model());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$exif   = $this->_exif();
 		$camera = new Camera($exif);
@@ -30,7 +32,7 @@ class CameraTest extends TestCase
 		$this->assertSame(array_change_key_case($exif), $camera->__debugInfo());
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		$exif   = $this->_exif();
 		$camera = new Camera($exif);
