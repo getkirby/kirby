@@ -14,7 +14,7 @@ class StorageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.Storage';
 
-	public function testAllMultiLanguageForFile()
+	public function testAllMultiLanguageForFile(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -46,7 +46,7 @@ class StorageTest extends TestCase
 		$this->assertCount(4, $versions);
 	}
 
-	public function testAllSingleLanguageForFile()
+	public function testAllSingleLanguageForFile(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -73,7 +73,7 @@ class StorageTest extends TestCase
 		$this->assertCount(2, $versions);
 	}
 
-	public function testAllMultiLanguageForPage()
+	public function testAllMultiLanguageForPage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -100,7 +100,7 @@ class StorageTest extends TestCase
 		$this->assertCount(4, $versions);
 	}
 
-	public function testAllSingleLanguageForPage()
+	public function testAllSingleLanguageForPage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -123,7 +123,7 @@ class StorageTest extends TestCase
 		$this->assertCount(2, $versions);
 	}
 
-	public function testCopyMultiLanguage()
+	public function testCopyMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -147,7 +147,7 @@ class StorageTest extends TestCase
 		$this->assertTrue($handler->exists(VersionId::latest(), $de));
 	}
 
-	public function testCopySingleLanguage()
+	public function testCopySingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -168,7 +168,7 @@ class StorageTest extends TestCase
 		$this->assertTrue($handler->exists(VersionId::changes(), Language::single()));
 	}
 
-	public function testCopyToAnotherStorage()
+	public function testCopyToAnotherStorage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -190,7 +190,7 @@ class StorageTest extends TestCase
 		$this->assertTrue($handler2->exists(VersionId::latest(), Language::single()));
 	}
 
-	public function testCopyToTheSameStorageLocation()
+	public function testCopyToTheSameStorageLocation(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -218,7 +218,7 @@ class StorageTest extends TestCase
 		$this->assertSame($content, $handler->read($versionId, $language), 'The content should still be the same');
 	}
 
-	public function testCopyAll()
+	public function testCopyAll(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -241,7 +241,7 @@ class StorageTest extends TestCase
 		$this->assertTrue($handler2->exists(VersionId::changes(), Language::single()));
 	}
 
-	public function testDeleteLanguageMultiLanguage()
+	public function testDeleteLanguageMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -260,7 +260,7 @@ class StorageTest extends TestCase
 		$this->assertFalse($handler->exists(VersionId::changes(), $this->app->language('de')));
 	}
 
-	public function testDeleteLanguageSingleLanguage()
+	public function testDeleteLanguageSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -283,7 +283,7 @@ class StorageTest extends TestCase
 		$this->assertFalse($handler->exists(VersionId::changes(), $language));
 	}
 
-	public function testFrom()
+	public function testFrom(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -324,7 +324,7 @@ class StorageTest extends TestCase
 		$this->assertSame($changesDE, $handlerB->read($versionChanges, $de));
 	}
 
-	public function testIsSameStorageLocation()
+	public function testIsSameStorageLocation(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -338,7 +338,7 @@ class StorageTest extends TestCase
 		));
 	}
 
-	public function testIsSameStorageLocationWithDifferentVersionIds()
+	public function testIsSameStorageLocationWithDifferentVersionIds(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -352,7 +352,7 @@ class StorageTest extends TestCase
 		));
 	}
 
-	public function testIsSameStorageLocationWithDifferentLanguages()
+	public function testIsSameStorageLocationWithDifferentLanguages(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -366,7 +366,7 @@ class StorageTest extends TestCase
 		));
 	}
 
-	public function testIsSameStorageLocationWithDifferentStorageInstances()
+	public function testIsSameStorageLocationWithDifferentStorageInstances(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -382,7 +382,7 @@ class StorageTest extends TestCase
 		));
 	}
 
-	public function testModel()
+	public function testModel(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -391,7 +391,7 @@ class StorageTest extends TestCase
 		$this->assertSame($this->model, $handler->model());
 	}
 
-	public function testMoveMultiLanguage()
+	public function testMoveMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -415,7 +415,7 @@ class StorageTest extends TestCase
 		$this->assertTrue($handler->exists(VersionId::latest(), $de));
 	}
 
-	public function testMoveSingleLanguage()
+	public function testMoveSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -437,7 +437,7 @@ class StorageTest extends TestCase
 		$this->assertTrue($handler->exists(VersionId::changes(), Language::single()));
 	}
 
-	public function testMoveToTheSameStorageLocation()
+	public function testMoveToTheSameStorageLocation(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -465,7 +465,7 @@ class StorageTest extends TestCase
 		$this->assertSame($content, $handler->read($versionId, $language), 'The content should still be the same');
 	}
 
-	public function testMoveToAnotherStorage()
+	public function testMoveToAnotherStorage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -487,7 +487,7 @@ class StorageTest extends TestCase
 		$this->assertTrue($handler2->exists(VersionId::latest(), Language::single()));
 	}
 
-	public function testMoveAll()
+	public function testMoveAll(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -510,7 +510,7 @@ class StorageTest extends TestCase
 		$this->assertTrue($handler2->exists(VersionId::changes(), Language::single()));
 	}
 
-	public function testMoveSingleLanguageToMultiLanguage()
+	public function testMoveSingleLanguageToMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -536,7 +536,7 @@ class StorageTest extends TestCase
 		$this->assertFileExists($this->model->root() . '/_changes/article.en.txt');
 	}
 
-	public function testMoveMultiLanguageToSingleLanguage()
+	public function testMoveMultiLanguageToSingleLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -563,7 +563,7 @@ class StorageTest extends TestCase
 		$this->assertFileExists($this->model->root() . '/_changes/article.txt');
 	}
 
-	public function testReplaceStrings()
+	public function testReplaceStrings(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -590,7 +590,7 @@ class StorageTest extends TestCase
 		$this->assertSame($expected, $handler->read($versionId, $language));
 	}
 
-	public function testReplaceStringsWithNullValues()
+	public function testReplaceStringsWithNullValues(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -611,7 +611,7 @@ class StorageTest extends TestCase
 		], $handler->read(VersionId::latest(), Language::single()));
 	}
 
-	public function testTouchLanguageMultiLanguage()
+	public function testTouchLanguageMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 

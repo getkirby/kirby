@@ -3,17 +3,12 @@
 namespace Kirby\Content;
 
 use Kirby\Exception\NotFoundException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\Translations
- * @covers ::__construct
- */
+#[CoversClass(Translations::class)]
 class TranslationsTest extends TestCase
 {
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateMultiLanguage()
+	public function testCreateMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -41,10 +36,7 @@ class TranslationsTest extends TestCase
 		$this->assertSame('de', $translations->last()->language()->code());
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateSingleLanguage()
+	public function testCreateSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -73,10 +65,7 @@ class TranslationsTest extends TestCase
 		$this->assertTrue($translations->first()->language()->isSingle());
 	}
 
-	/**
-	 * @covers ::findByKey
-	 */
-	public function testFindByKeyMultiLanguage()
+	public function testFindByKeyMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -91,10 +80,7 @@ class TranslationsTest extends TestCase
 		$this->assertSame('de', $translations->findByKey('de')->language()->code());
 	}
 
-	/**
-	 * @covers ::findByKey
-	 */
-	public function testFindByKeySingleLanguage()
+	public function testFindByKeySingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -108,10 +94,7 @@ class TranslationsTest extends TestCase
 		$this->assertSame('en', $translations->findByKey('current')->language()->code());
 	}
 
-	/**
-	 * @covers ::findByKey
-	 */
-	public function testFindByKeyWithInvalidLanguage()
+	public function testFindByKeyWithInvalidLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -126,10 +109,7 @@ class TranslationsTest extends TestCase
 		$translations->findByKey('fr');
 	}
 
-	/**
-	 * @covers ::load
-	 */
-	public function testLoadMultiLanguage()
+	public function testLoadMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -143,10 +123,7 @@ class TranslationsTest extends TestCase
 		$this->assertSame('de', $translations->last()->language()->code());
 	}
 
-	/**
-	 * @covers ::load
-	 */
-	public function testLoadSingleLanguage()
+	public function testLoadSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 

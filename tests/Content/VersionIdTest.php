@@ -5,10 +5,9 @@ namespace Kirby\Content;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\VersionId
- */
+#[CoversClass(VersionId::class)]
 class VersionIdTest extends TestCase
 {
 	public function tearDown(): void
@@ -18,21 +17,14 @@ class VersionIdTest extends TestCase
 		VersionId::$render = null;
 	}
 
-	/**
-	 * @covers ::changes
-	 * @covers ::value
-	 */
-	public function testChanges()
+	public function testChanges(): void
 	{
 		$version = VersionId::changes();
 
 		$this->assertSame('changes', $version->value());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructWithInvalidId()
+	public function testConstructWithInvalidId(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid Version ID');
@@ -40,30 +32,19 @@ class VersionIdTest extends TestCase
 		new VersionId('foo');
 	}
 
-	/**
-	 * @covers ::from
-	 * @covers ::value
-	 */
-	public function testFromString()
+	public function testFromString(): void
 	{
 		$version = VersionId::from('latest');
 		$this->assertSame('latest', $version->value());
 	}
 
-	/**
-	 * @covers ::from
-	 * @covers ::value
-	 */
-	public function testFromInstance()
+	public function testFromInstance(): void
 	{
 		$version = VersionId::from(VersionId::latest());
 		$this->assertSame('latest', $version->value());
 	}
 
-	/**
-	 * @covers ::is
-	 */
-	public function testIs()
+	public function testIs(): void
 	{
 		$version = VersionId::latest();
 
@@ -75,21 +56,14 @@ class VersionIdTest extends TestCase
 		$this->assertFalse($version->is(VersionId::changes()));
 	}
 
-	/**
-	 * @covers ::latest
-	 * @covers ::value
-	 */
-	public function testLatest()
+	public function testLatest(): void
 	{
 		$version = VersionId::latest();
 
 		$this->assertSame('latest', $version->value());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderString()
+	public function testRenderString(): void
 	{
 		$executed = 0;
 
@@ -117,10 +91,7 @@ class VersionIdTest extends TestCase
 		$this->assertSame(3, $executed);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderInstance()
+	public function testRenderInstance(): void
 	{
 		$executed = 0;
 
@@ -148,10 +119,7 @@ class VersionIdTest extends TestCase
 		$this->assertSame(3, $executed);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderPreviousValue()
+	public function testRenderPreviousValue(): void
 	{
 		$executed = 0;
 
@@ -169,10 +137,7 @@ class VersionIdTest extends TestCase
 		$this->assertSame(1, $executed);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderException()
+	public function testRenderException(): void
 	{
 		$executed = 0;
 
@@ -194,10 +159,7 @@ class VersionIdTest extends TestCase
 		$this->assertSame(3, $executed);
 	}
 
-	/**
-	 * @covers ::__toString
-	 */
-	public function testToString()
+	public function testToString(): void
 	{
 		$this->assertSame('latest', (string)VersionId::latest());
 		$this->assertSame('changes', (string)VersionId::changes());

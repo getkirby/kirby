@@ -3,13 +3,12 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\LockedContentException
- */
+#[CoversClass(LockedContentException::class)]
 class LockedContentExceptionTest extends TestCase
 {
-	public function testException()
+	public function testException(): void
 	{
 		$lock = new Lock(
 			user: new User(['username' => 'test']),
@@ -26,7 +25,7 @@ class LockedContentExceptionTest extends TestCase
 		$this->assertSame('error.content.lock', $exception->getKey());
 	}
 
-	public function testCustomMessage()
+	public function testCustomMessage(): void
 	{
 		$lock = new Lock(
 			user: new User(['username' => 'test']),

@@ -18,7 +18,7 @@ class VersionCacheTest extends TestCase
 		$this->setUpMultiLanguage();
 	}
 
-	public function testKeyForFile()
+	public function testKeyForFile(): void
 	{
 		$parent = new Page(['slug' => 'test']);
 		$model  = new File(['filename' => 'test.jpg', 'parent' => $parent]);
@@ -29,7 +29,7 @@ class VersionCacheTest extends TestCase
 		$this->assertSame($hash . ':changes:en', VersionCache::key($model->version('changes'), Language::ensure()));
 	}
 
-	public function testKeyForPage()
+	public function testKeyForPage(): void
 	{
 		$model = new Page(['slug' => 'test']);
 		$hash  = spl_object_hash($model);
@@ -39,7 +39,7 @@ class VersionCacheTest extends TestCase
 		$this->assertSame($hash . ':changes:en', VersionCache::key($model->version('changes'), Language::ensure()));
 	}
 
-	public function testKeyForSite()
+	public function testKeyForSite(): void
 	{
 		$model = new Site();
 		$hash  = spl_object_hash($model);
@@ -49,7 +49,7 @@ class VersionCacheTest extends TestCase
 		$this->assertSame($hash . ':changes:en', VersionCache::key($model->version('changes'), Language::ensure()));
 	}
 
-	public function testKeyForUser()
+	public function testKeyForUser(): void
 	{
 		$model = new User(['id' => 'test']);
 		$hash  = spl_object_hash($model);
@@ -59,7 +59,7 @@ class VersionCacheTest extends TestCase
 		$this->assertSame($hash . ':changes:en', VersionCache::key($model->version('changes'), Language::ensure()));
 	}
 
-	public function testGetSetAndRemove()
+	public function testGetSetAndRemove(): void
 	{
 		$model    = new Page(['slug' => 'test']);
 		$version  = $model->version();
