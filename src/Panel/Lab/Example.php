@@ -71,7 +71,7 @@ class Example
 
 	public function exists(): bool
 	{
-		return is_dir($this->root) === true;
+		return Dir::exists($this->root, $this->parent->root()) === true;
 	}
 
 	public function file(string $filename): string
