@@ -3,13 +3,12 @@
 namespace Kirby\Exception;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
 class AuthExceptionTest extends TestCase
 {
-	/**
-	 * @coversNothing
-	 */
-	public function testDefaults()
+	#[CoversNothing]
+	public function testDefaults(): void
 	{
 		$exception = new AuthException();
 		$this->assertSame('error.auth', $exception->getKey());
