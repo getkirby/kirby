@@ -104,7 +104,7 @@ class Media
 				=> $media . '/assets/' . $model . '/' . $hash,
 			// parent files for file model that already included hash
 			$model instanceof File
-				=> dirname($model->mediaRoot()),
+				=> $model->mediaDir(),
 			// model files
 			default
 			=> $model->mediaRoot() . '/' . $hash

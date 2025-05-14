@@ -372,6 +372,16 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the absolute path to the media folder for the file and its versions
+	 * @internal
+	 * @since 5.0.0
+	 */
+	public function mediaDir(): string
+	{
+		return $this->parent()->mediaDir() . '/' . $this->mediaHash();
+	}
+
+	/**
 	 * Creates a unique media hash
 	 * @internal
 	 */
@@ -383,10 +393,14 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute path to the file in the public media folder
 	 * @internal
+	 *
+	 * @param string|null $filename Optional override for the filename
 	 */
-	public function mediaRoot(): string
+	public function mediaRoot(string|null $filename = null): string
 	{
-		return $this->parent()->mediaRoot() . '/' . $this->mediaHash() . '/' . $this->filename();
+		$filename ??= $this->filename();
+
+		return $this->mediaDir() . '/' . $filename;
 	}
 
 	/**
@@ -402,10 +416,15 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute Url to the file in the public media folder
 	 * @internal
+	 *
+	 * @param string|null $filename Optional override for the filename
 	 */
-	public function mediaUrl(): string
+	public function mediaUrl(string|null $filename = null): string
 	{
-		return $this->parent()->mediaUrl() . '/' . $this->mediaHash() . '/' . $this->filename();
+		$url        = $this->parent()->mediaUrl() . '/' . $this->mediaHash();
+		$filename ??= $this->filename();
+
+		return $url . '/' . $filename;
 	}
 
 	/**

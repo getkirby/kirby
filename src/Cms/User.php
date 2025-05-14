@@ -427,12 +427,21 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Returns the root to the media folder for the user
+	 * Returns the absolute path to the media folder for the user
+	 * @internal
+	 */
+	public function mediaDir(): string
+	{
+		return $this->kirby()->root('media') . '/users/' . $this->id();
+	}
+
+	/**
+	 * @see `::mediaDir`
 	 * @internal
 	 */
 	public function mediaRoot(): string
 	{
-		return $this->kirby()->root('media') . '/users/' . $this->id();
+		return $this->mediaDir();
 	}
 
 	/**
