@@ -132,18 +132,18 @@ class Media
 			// this adds support for custom assets
 			$source = match (true) {
 				is_string($model) === true
-					=> $index . '/' . $model . '/' . $options['filename'],
+					=> F::realpath(
+						$index . '/' . $model . '/' . $options['filename'],
+						$index
+					),
 				$model instanceof File
 					=> $model->root(),
 				default
 				=> $model->file($options['filename'])->root()
 			};
 
-			// prevent path traversal
-			$root = F::realpath($source, $index);
-
 			// generate the thumbnail and save it in the media folder
-			$kirby->thumb($root, $thumb, $options);
+			$kirby->thumb($source, $thumb, $options);
 
 			// remove the job file once the thumbnail has been created
 			F::remove($job);
