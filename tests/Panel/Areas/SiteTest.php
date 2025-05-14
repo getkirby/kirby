@@ -143,8 +143,7 @@ class SiteTest extends AreaTestCase
 
 		$this->assertSame('k-preview-view', $view['component']);
 		$this->assertSame('Test | Preview', $view['title']);
-		$this->assertSame('/test?_token=' . $token . '&_version=changes', $props['src']['changes']);
-		$this->assertSame('/test', $props['src']['latest']);
+		$this->assertSame('/test?_token=' . $token . '&_version=changes', $props['src']);
 	}
 
 	public function testSiteWithoutAuthentication(): void
@@ -247,8 +246,7 @@ class SiteTest extends AreaTestCase
 
 		$this->assertSame('k-preview-view', $view['component']);
 		$this->assertSame('Site | Preview', $view['title']);
-		$this->assertSame('/?_token=' . $token . '&_version=changes', $props['src']['changes']);
-		$this->assertSame('/', $props['src']['latest']);
+		$this->assertSame('/?_token=' . $token . '&_version=changes', $props['src']);
 	}
 
 	public function testSiteTitle(): void

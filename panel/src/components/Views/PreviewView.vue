@@ -1,5 +1,5 @@
 <template>
-	<k-panel class="k-panel-inside k-preview-view" :data-version="version">
+	<k-panel class="k-panel-inside k-preview-view" :data-version-id="versionId">
 		<header class="k-preview-view-header">
 			<k-button-group>
 				<k-button
@@ -18,13 +18,13 @@
 
 			<k-button-group>
 				<p
-					v-if="version === 'changes' && hasDiff === false"
+					v-if="versionId === 'changes' && hasDiff === false"
 					class="k-preview-view-no-changes"
 				>
 					{{ $t("lock.unsaved.empty") }}
 				</p>
 				<k-form-controls
-					v-if="version === 'changes'"
+					v-if="versionId === 'changes'"
 					:editor="editor"
 					:has-diff="hasDiff"
 					:is-locked="isLocked"
@@ -37,7 +37,7 @@
 		</header>
 		<main class="k-preview-view-grid">
 			<div class="k-preview-view-browser">
-				<iframe ref="browser" :src="src[version]"></iframe>
+				<iframe ref="browser" :src="src"></iframe>
 			</div>
 		</main>
 	</k-panel>
@@ -50,8 +50,8 @@ export default {
 	extends: ModelView,
 	props: {
 		back: String,
-		version: String,
-		src: Object,
+		versionId: String,
+		src: String,
 		title: String
 	},
 	mounted() {

@@ -22,11 +22,9 @@ return [
 		'action'  => function (string $path, string $versionId) {
 			$page = Find::page($path);
 			$view = $page->panel()->view();
+			$src  = $page->previewUrl($versionId);
 
-			$changesUrl = $page->previewUrl('changes');
-			$latestUrl  = $page->previewUrl('latest');
-
-			if ($latestUrl === null) {
+			if ($src === null) {
 				throw new PermissionException('The preview is not available');
 			}
 
@@ -44,11 +42,8 @@ return [
 							)
 							->bind(['versionId' => $versionId])
 							->render(),
-					'version' => $versionId,
-					'src'     => [
-						'changes' => $changesUrl,
-						'latest'  => $latestUrl,
-					]
+					'src'       => $src,
+					'versionId' => $versionId,
 				],
 				'title' => $view['props']['title'] . ' | ' . I18n::translate('preview'),
 			];
@@ -69,11 +64,9 @@ return [
 		'action'  => function (string $versionId) {
 			$site = App::instance()->site();
 			$view = $site->panel()->view();
+			$src  = $site->previewUrl($versionId);
 
-			$changesUrl = $site->previewUrl('changes');
-			$latestUrl  = $site->previewUrl('latest');
-
-			if ($latestUrl === null) {
+			if ($src === null) {
 				throw new PermissionException('The preview is not available');
 			}
 
@@ -91,11 +84,8 @@ return [
 							)
 							->bind(['versionId' => $versionId])
 							->render(),
-					'version' => $versionId,
-					'src'     => [
-						'changes' => $changesUrl,
-						'latest'  => $latestUrl,
-					]
+					'src'     => $src,
+					'version' => $versionId
 				],
 				'title' => I18n::translate('view.site') . ' | ' . I18n::translate('preview'),
 			];
