@@ -268,7 +268,7 @@ class MediaTest extends TestCase
 		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', $jobString);
 
 		$this->expectException(\Exception::class);
-		$this->expectExceptionMessage('The file does not exist');
+		$this->expectExceptionMessage('File not found');
 
 		Media::thumb($site, $file->mediaHash(), $file->filename());
 	}
