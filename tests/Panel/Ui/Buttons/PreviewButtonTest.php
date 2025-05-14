@@ -18,10 +18,10 @@ class PreviewButtonTest extends TestCase
 
 		$this->assertSame('k-view-button', $button->component);
 		$this->assertSame('k-preview-view-button', $button->class);
-		$this->assertSame('open', $button->icon);
+		$this->assertSame('window', $button->icon);
 		$this->assertSame('https://getkirby.com', $button->link);
 		$this->assertSame('_blank', $button->target);
-		$this->assertSame('Open', $button->title);
+		$this->assertSame('Preview', $button->title);
 	}
 
 }
