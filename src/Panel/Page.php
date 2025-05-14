@@ -47,6 +47,7 @@ class Page extends Model
 	public function buttons(): array
 	{
 		return ViewButtons::view($this)->defaults(
+			'open',
 			'preview',
 			'settings',
 			'languages',

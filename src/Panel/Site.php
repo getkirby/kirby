@@ -31,6 +31,7 @@ class Site extends Model
 	public function buttons(): array
 	{
 		return ViewButtons::view($this)->defaults(
+			'open',
 			'preview',
 			'languages'
 		)->render();

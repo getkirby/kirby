@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Exception\PermissionException;
+use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -17,8 +18,8 @@ return [
 		}
 	],
 	'page.preview' => [
-		'pattern' => 'pages/(:any)/preview/(changes|latest|compare)',
-		'action'  => function (string $path, string $version) {
+		'pattern' => 'pages/(:any)/preview/(changes|latest)',
+		'action'  => function (string $path, string $versionId) {
 			$page = Find::page($path);
 			$view = $page->panel()->view();
 
@@ -34,7 +35,16 @@ return [
 				'props'     => [
 					...$view['props'],
 					'back'    => $view['props']['link'],
-					'version' => $version,
+					'buttons' => fn () =>
+						ViewButtons::view('page.preview', model: $page)
+							->defaults(
+								'page.versions',
+								'languages',
+								'page.open'
+							)
+							->bind(['versionId' => $versionId])
+							->render(),
+					'version' => $versionId,
 					'src'     => [
 						'changes' => $changesUrl,
 						'latest'  => $latestUrl,
@@ -55,8 +65,8 @@ return [
 		}
 	],
 	'site.preview' => [
-		'pattern' => 'site/preview/(changes|latest|compare)',
-		'action'  => function (string $version) {
+		'pattern' => 'site/preview/(changes|latest)',
+		'action'  => function (string $versionId) {
 			$site = App::instance()->site();
 			$view = $site->panel()->view();
 
@@ -72,7 +82,16 @@ return [
 				'props'     => [
 					...$view['props'],
 					'back'    => $view['props']['link'],
-					'version' => $version,
+					'buttons' => fn () =>
+						ViewButtons::view('site.preview', model: $site)
+							->defaults(
+								'site.versions',
+								'languages',
+								'site.open'
+							)
+							->bind(['versionId' => $versionId])
+							->render(),
+					'version' => $versionId,
 					'src'     => [
 						'changes' => $changesUrl,
 						'latest'  => $latestUrl,

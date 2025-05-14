@@ -136,7 +136,7 @@ class FileTest extends TestCase
 	public function testButtons()
 	{
 		$this->assertSame([
-			'k-preview-view-button',
+			'k-open-view-button',
 			'k-settings-view-button',
 			'k-languages-view-button',
 		], array_column($this->panel()->buttons(), 'component'));
