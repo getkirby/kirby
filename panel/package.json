@@ -21,7 +21,7 @@
 		"prosemirror-keymap": "^1.2.3",
 		"prosemirror-model": "^1.25.1",
 		"prosemirror-schema-list": "^1.5.1",
-		"prosemirror-view": "^1.39.2",
+		"prosemirror-view": "^1.39.3",
 		"sortablejs": "^1.15.6",
 		"vue": "^2.7.16"
 	},
@@ -34,7 +34,7 @@
 		"glob": "^11.0.2",
 		"jsdom": "^26.1.0",
 		"prettier": "^3.5.3",
-		"terser": "^5.39.0",
+		"terser": "^5.39.1",
 		"vite": "^6.3.5",
 		"vite-plugin-static-copy": "^2.3.1",
 		"vitest": "^3.1.3",
