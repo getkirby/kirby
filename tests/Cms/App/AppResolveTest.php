@@ -280,6 +280,9 @@ class AppResolveTest extends TestCase
 							['filename' => 'test.jpg']
 						],
 					]
+				],
+				'files' => [
+					['filename' => 'test-site.jpg']
 				]
 			],
 			'options' => [
@@ -291,6 +294,10 @@ class AppResolveTest extends TestCase
 
 		// missing file
 		$result = $app->resolve('test/test.png');
+		$this->assertNull($result);
+
+		// file that only exists on the site
+		$result = $app->resolve('another-page/test-site.jpg');
 		$this->assertNull($result);
 
 		// existing file

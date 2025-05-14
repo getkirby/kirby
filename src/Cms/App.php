@@ -1304,16 +1304,21 @@ class App
 			}
 		}
 
+		// try to resolve clean URLs to site files
+		if (str_contains($path, '/') === false) {
+			return $this->resolveFile($site->file($path));
+		}
+
 		$id       = dirname($path);
 		$filename = basename($path);
 
-		// try to resolve image urls for pages and drafts
+		// try to resolve clean URLs to files for pages and drafts
 		if ($page = $site->findPageOrDraft($id)) {
 			return $this->resolveFile($page->file($filename));
 		}
 
-		// try to resolve site files at least
-		return $this->resolveFile($site->file($filename));
+		// none of our resolvers were successful
+		return null;
 	}
 
 	/**
