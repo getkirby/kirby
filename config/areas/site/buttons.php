@@ -22,7 +22,6 @@ return [
 		if ($site->previewUrl() !== null) {
 			return new PreviewButton(
 				link: $site->panel()->url(true) . '/preview/changes',
-				target: null
 			);
 		}
 	},
@@ -43,7 +42,6 @@ return [
 		if ($page->previewUrl() !== null) {
 			return new PreviewButton(
 				link: $page->panel()->url(true) . '/preview/changes',
-				target: null
 			);
 		}
 	},
