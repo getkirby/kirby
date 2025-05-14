@@ -202,6 +202,37 @@ class AppResolveTest extends TestCase
 	 * @covers ::resolve
 	 * @covers ::resolveFile
 	 */
+	public function testResolveFileDefault()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							['filename' => 'test.jpg']
+						],
+					]
+				]
+			]
+		]);
+
+		// missing file
+		$result = $app->resolve('test/test.png');
+		$this->assertNull($result);
+
+		// existing file
+		$result = $app->resolve('test/test.jpg');
+		$this->assertNull($result);
+	}
+
+	/**
+	 * @covers ::resolve
+	 * @covers ::resolveFile
+	 */
 	public function testResolveSiteFile()
 	{
 		$app = new App([
@@ -212,6 +243,11 @@ class AppResolveTest extends TestCase
 				'files' => [
 					['filename' => 'test.jpg']
 				],
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
 			]
 		]);
 
@@ -245,6 +281,11 @@ class AppResolveTest extends TestCase
 						],
 					]
 				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
 			]
 		]);
 
@@ -257,42 +298,6 @@ class AppResolveTest extends TestCase
 
 		$this->assertIsFile($result);
 		$this->assertSame('test/test.jpg', $result->id());
-	}
-
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveFile
-	 */
-	public function testResolveFileDisabled()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'files' => [
-							['filename' => 'test.jpg']
-						],
-					]
-				]
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => false
-				]
-			]
-		]);
-
-		// missing file
-		$result = $app->resolve('test/test.png');
-		$this->assertNull($result);
-
-		// existing file
-		$result = $app->resolve('test/test.jpg');
-		$this->assertNull($result);
 	}
 
 	/**

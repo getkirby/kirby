@@ -1326,7 +1326,7 @@ class App
 			return null;
 		}
 
-		$option = $this->option('content.fileRedirects', true);
+		$option = $this->option('content.fileRedirects', false);
 
 		if ($option === true) {
 			return $file;
