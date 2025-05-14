@@ -18,7 +18,7 @@ return [
 	],
 	'page.preview' => [
 		'pattern' => 'pages/(:any)/preview/(changes|latest|compare)',
-		'action'  => function (string $path, string $mode) {
+		'action'  => function (string $path, string $version) {
 			$page = Find::page($path);
 			$view = $page->panel()->view();
 
@@ -33,14 +33,14 @@ return [
 				'component' => 'k-preview-view',
 				'props'     => [
 					...$view['props'],
-					'back' => $view['props']['link'],
-					'mode' => $mode,
-					'src'  => [
+					'back'    => $view['props']['link'],
+					'version' => $version,
+					'src'     => [
 						'changes' => $changesUrl,
 						'latest'  => $latestUrl,
 					]
 				],
-				'title' => $view['props']['title'] . ' | ' . I18n::translate('changes'),
+				'title' => $view['props']['title'] . ' | ' . I18n::translate('preview'),
 			];
 		}
 	],
@@ -56,7 +56,7 @@ return [
 	],
 	'site.preview' => [
 		'pattern' => 'site/preview/(changes|latest|compare)',
-		'action'  => function (string $mode) {
+		'action'  => function (string $version) {
 			$site = App::instance()->site();
 			$view = $site->panel()->view();
 
@@ -71,14 +71,14 @@ return [
 				'component' => 'k-preview-view',
 				'props'     => [
 					...$view['props'],
-					'back' => $view['props']['link'],
-					'mode' => $mode,
-					'src'  => [
+					'back'    => $view['props']['link'],
+					'version' => $version,
+					'src'     => [
 						'changes' => $changesUrl,
 						'latest'  => $latestUrl,
 					]
 				],
-				'title' => I18n::translate('view.site') . ' | ' . I18n::translate('changes'),
+				'title' => I18n::translate('view.site') . ' | ' . I18n::translate('preview'),
 			];
 		}
 	],

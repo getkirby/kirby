@@ -5,25 +5,23 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Panel\Ui\Buttons\LanguagesDropdown;
 use Kirby\Panel\Ui\Buttons\PageStatusButton;
-use Kirby\Panel\Ui\Buttons\PreviewDropdownButton;
+use Kirby\Panel\Ui\Buttons\PreviewButton;
 use Kirby\Panel\Ui\Buttons\SettingsButton;
 
 return [
 	'site.preview' => function (Site $site) {
 		if ($site->previewUrl() !== null) {
-			return new PreviewDropdownButton(
-				open: $site->previewUrl(),
-				preview: $site->panel()->url(true) . '/preview/compare',
-				copy: $site->previewUrl(),
+			return new PreviewButton(
+				link: $site->panel()->url(true) . '/preview/changes',
+				target: null
 			);
 		}
 	},
 	'page.preview' => function (Page $page) {
 		if ($page->previewUrl() !== null) {
-			return new PreviewDropdownButton(
-				open: $page->previewUrl(),
-				preview: $page->panel()->url(true) . '/preview/compare',
-				copy: $page->previewUrl(),
+			return new PreviewButton(
+				link: $page->panel()->url(true) . '/preview/changes',
+				target: null
 			);
 		}
 	},

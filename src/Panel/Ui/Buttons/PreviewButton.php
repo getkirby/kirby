@@ -18,13 +18,14 @@ use Kirby\Toolkit\I18n;
 class PreviewButton extends ViewButton
 {
 	public function __construct(
-		public string|null $link
+		public string|null $link,
+		public string|null $target = '_blank'
 	) {
 		parent::__construct(
 			class: 'k-preview-view-button',
 			icon: 'open',
 			link: $link,
-			target: '_blank',
+			target: $target,
 			title: I18n::translate('open')
 		);
 	}

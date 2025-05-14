@@ -109,7 +109,7 @@ class Page extends Model
 
 			$result['preview'] = [
 				'icon'     => 'window',
-				'link'     => $page->panel()->url(true) . '/preview/compare',
+				'link'     => $page->panel()->url(true) . '/preview/changes',
 				'text'     => I18n::translate('preview'),
 				'disabled' => $isPreviewDisabled
 			];

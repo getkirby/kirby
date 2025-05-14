@@ -142,7 +142,7 @@ class SiteTest extends AreaTestCase
 		$token = $page->version('changes')->previewToken();
 
 		$this->assertSame('k-preview-view', $view['component']);
-		$this->assertSame('Test | Changes', $view['title']);
+		$this->assertSame('Test | Preview', $view['title']);
 		$this->assertSame('/test?_token=' . $token . '&_version=changes', $props['src']['changes']);
 		$this->assertSame('/test', $props['src']['latest']);
 	}
@@ -246,7 +246,7 @@ class SiteTest extends AreaTestCase
 		$token = $site->version('changes')->previewToken();
 
 		$this->assertSame('k-preview-view', $view['component']);
-		$this->assertSame('Site | Changes', $view['title']);
+		$this->assertSame('Site | Preview', $view['title']);
 		$this->assertSame('/?_token=' . $token . '&_version=changes', $props['src']['changes']);
 		$this->assertSame('/', $props['src']['latest']);
 	}
