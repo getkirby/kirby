@@ -32,28 +32,7 @@
 					@discard="onDiscard"
 					@submit="onSubmit"
 				/>
-				<k-button
-					icon="git-branch"
-					size="sm"
-					variant="filled"
-					:dropdown="true"
-					:responsive="true"
-					@click="$refs.versions.toggle()"
-				>
-					{{ versionOptions[version].label }}
-				</k-button>
-				<k-dropdown-content
-					ref="versions"
-					:options="versionDropdown"
-					align-x="end"
-				/>
-				<k-button
-					:link="src[version]"
-					icon="open"
-					size="sm"
-					target="_blank"
-					variant="filled"
-				/>
+				<k-view-buttons :buttons="buttons" />
 			</k-button-group>
 		</header>
 		<main class="k-preview-view-grid">
@@ -74,27 +53,6 @@ export default {
 		version: String,
 		src: Object,
 		title: String
-	},
-	computed: {
-		versionOptions() {
-			return {
-				latest: {
-					label: this.$t("version.latest"),
-					icon: "git-branch",
-					link: this.link + "/preview/latest",
-					current: this.version === "latest"
-				},
-				changes: {
-					label: this.$t("version.changes"),
-					icon: "git-branch",
-					link: this.link + "/preview/changes",
-					current: this.version === "changes"
-				}
-			};
-		},
-		versionDropdown() {
-			return [this.versionOptions.latest, "-", this.versionOptions.changes];
-		}
 	},
 	mounted() {
 		this.$events.on("keydown.esc", this.onExit);
