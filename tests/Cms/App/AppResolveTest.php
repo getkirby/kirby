@@ -324,6 +324,11 @@ class AppResolveTest extends TestCase
 						],
 					]
 				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
 			]
 		]);
 
@@ -361,11 +366,6 @@ class AppResolveTest extends TestCase
 					]
 				]
 			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => false
-				]
-			]
 		]);
 
 		// missing file

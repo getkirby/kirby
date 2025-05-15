@@ -9,15 +9,49 @@ class FilePreviewUrlTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePreviewUrl';
 
-	public function testPreviewUrl(): void
+	public function testPreviewUrlRedirects()
 	{
-		$page = new Page(['slug'  => 'test']);
-		$file = new File([
-			'filename' => 'test.pdf',
-			'parent'   => $page
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'    => 'editor',
+					'name'  => 'editor',
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => fn (File $file) => $file->filename() === 'allowed.pdf'
+				]
+			]
 		]);
 
-		$this->assertSame('/test/test.pdf', $file->previewUrl());
+		// authenticate
+		$app->impersonate('test@getkirby.com');
+
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [
+				[
+					'filename' => 'allowed.pdf'
+				],
+				[
+					'filename' => 'not-allowed.pdf'
+				]
+			]
+		]);
+
+		$file1 = $page->file('allowed.pdf');
+		$this->assertSame('/test/allowed.pdf', $file1->previewUrl());
+
+		$file2 = $page->file('not-allowed.pdf');
+		$this->assertSame('/media/pages/test/' . $file2->mediaHash() . '/not-allowed.pdf', $file2->previewUrl());
 	}
 
 	public function testPreviewUrlUnauthenticated(): void
