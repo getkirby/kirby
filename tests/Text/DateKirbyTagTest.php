@@ -4,10 +4,12 @@ namespace Kirby\Text;
 
 use Kirby\Cms\App;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
+#[CoversNothing]
 class DateKirbyTagTest extends TestCase
 {
-	public function testDate()
+	public function testDate(): void
 	{
 		$app = App::instance();
 		$this->assertSame(date('d.m.Y'), $app->kirbytags('(date: d.m.Y)'));

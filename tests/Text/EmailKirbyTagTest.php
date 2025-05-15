@@ -5,10 +5,12 @@ namespace Kirby\Text;
 use Kirby\Cms\App;
 use Kirby\TestCase;
 use Kirby\Toolkit\Html;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
+#[CoversNothing]
 class EmailKirbyTagTest extends TestCase
 {
-	public function testEmail()
+	public function testEmail(): void
 	{
 		$app      = App::instance();
 		$html     = $app->kirbytags('(email: mail@company.com?subject=Test class: email)');

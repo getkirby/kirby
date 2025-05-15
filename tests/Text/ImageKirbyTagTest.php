@@ -5,7 +5,9 @@ namespace Kirby\Text;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
+#[CoversNothing]
 class ImageKirbyTagTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Text.ImageKirbyTag';
@@ -26,7 +28,7 @@ class ImageKirbyTagTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testWithoutFigure()
+	public function testWithoutFigure(): void
 	{
 		$kirby = $this->app->clone([
 			'options' => [
@@ -43,7 +45,7 @@ class ImageKirbyTagTest extends TestCase
 		$this->assertSame($expected, $kirby->kirbytext('(image: https://test.com/something.jpg)'));
 	}
 
-	public function testWithCaption()
+	public function testWithCaption(): void
 	{
 		$kirby    = $this->app->clone();
 		$expected = '<figure><img alt="" src="/myimage.jpg"><figcaption>This is an <em>awesome</em> image and this a <a href="">link</a></figcaption></figure>';
@@ -51,7 +53,7 @@ class ImageKirbyTagTest extends TestCase
 		$this->assertSame($expected, $kirby->kirbytext('(image: myimage.jpg caption: This is an *awesome* image and this a <a href="">link</a>)'));
 	}
 
-	public function testWithSrcset()
+	public function testWithSrcset(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [
@@ -79,7 +81,7 @@ class ImageKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testWithSrcsetFromThumbsOption()
+	public function testWithSrcsetFromThumbsOption(): void
 	{
 		$kirby = $this->app->clone([
 			'options' => [
@@ -117,7 +119,7 @@ class ImageKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testWithSrcsetFromDefaults()
+	public function testWithSrcsetFromDefaults(): void
 	{
 		$kirby = $this->app->clone([
 			'options' => [
@@ -152,7 +154,7 @@ class ImageKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testWithFileLink()
+	public function testWithFileLink(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [
@@ -184,7 +186,7 @@ class ImageKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testWithFileUUID()
+	public function testWithFileUUID(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [
@@ -214,7 +216,7 @@ class ImageKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testWithParent()
+	public function testWithParent(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -249,7 +251,7 @@ class ImageKirbyTagTest extends TestCase
 		]));
 	}
 
-	public function testWithWidthHeightAuto()
+	public function testWithWidthHeightAuto(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
