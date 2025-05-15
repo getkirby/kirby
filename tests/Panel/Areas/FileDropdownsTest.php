@@ -107,9 +107,10 @@ class FileDropdownsTest extends AreaTestCase
 		$this->login();
 
 		$options = $this->dropdown('pages/test/files/test.jpg')['options'];
+		$file    = $this->app->file('test/test.jpg');
 
 		$open = $options[0];
-		$this->assertSame('/test/test.jpg', $open['link']);
+		$this->assertSame($file->previewUrl(), $open['link']);
 		$this->assertSame('_blank', $open['target']);
 		$this->assertSame('Open', $open['text']);
 
