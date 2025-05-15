@@ -103,7 +103,7 @@ export default {
 	width: 100%;
 	flex-grow: 1;
 }
-@container (max-width: 60rem) {
+@container (max-width: 30rem) {
 	.k-preview-browser-message {
 		display: none;
 	}
