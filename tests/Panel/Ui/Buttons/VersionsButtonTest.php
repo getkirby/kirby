@@ -25,11 +25,17 @@ class VersionsButtonTest extends TestCase
 		$this->assertSame('k-view-button', $button->component);
 		$this->assertSame('k-versions-view-button', $button->class);
 		$this->assertSame('git-branch', $button->icon);
+
 		$this->assertSame('Latest version', $button->text);
 		$this->assertSame('Latest version', $button->options[0]['label']);
 		$this->assertTrue($button->options[0]['current']);
-		$this->assertSame('-', $button->options[1]);
-		$this->assertSame('Changed version', $button->options[2]['label']);
-		$this->assertFalse($button->options[2]['current']);
+
+		$this->assertSame('Changed version', $button->options[1]['label']);
+		$this->assertFalse($button->options[1]['current']);
+
+		$this->assertSame('-', $button->options[2]);
+
+		$this->assertSame('Compare versions', $button->options[3]['label']);
+		$this->assertFalse($button->options[3]['current']);
 	}
 }
