@@ -1323,8 +1323,9 @@ class App
 
 	/**
 	 * Filters a resolved file object using the configuration
+	 * @internal
 	 */
-	protected function resolveFile(File|null $file): File|null
+	public function resolveFile(File|null $file): File|null
 	{
 		// shortcut for files that don't exist
 		if ($file === null) {
