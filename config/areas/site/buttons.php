@@ -3,7 +3,6 @@
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
-use Kirby\Content\VersionId;
 use Kirby\Panel\Ui\Buttons\LanguagesDropdown;
 use Kirby\Panel\Ui\Buttons\OpenButton;
 use Kirby\Panel\Ui\Buttons\PageStatusButton;
@@ -13,10 +12,12 @@ use Kirby\Panel\Ui\Buttons\VersionsButton;
 
 return [
 	'site.open' => function (Site $site, string $versionId = 'latest') {
-		if ($site->previewUrl() !== null) {
-			$versionId = $versionId === 'compare' ? 'changes' : VersionId::from($versionId);
+		$versionId = $versionId === 'compare' ? 'changes' : $versionId;
+		$link      = $site->previewUrl($versionId);
+
+		if ($link !== null) {
 			return new OpenButton(
-				link: $site->previewUrl($versionId),
+				link: $link,
 			);
 		}
 	},
@@ -34,10 +35,12 @@ return [
 		);
 	},
 	'page.open' => function (Page $page, string $versionId = 'latest') {
-		if ($page->previewUrl() !== null) {
-			$versionId = $versionId === 'compare' ? 'changes' : VersionId::from($versionId);
+		$versionId = $versionId === 'compare' ? 'changes' : $versionId;
+		$link      = $page->previewUrl($versionId);
+
+		if ($link !== null) {
 			return new OpenButton(
-				link: $page->previewUrl($versionId),
+				link: $link,
 			);
 		}
 	},
