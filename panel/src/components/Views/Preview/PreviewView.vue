@@ -11,9 +11,21 @@
 					variant="filled"
 				>
 				</k-button>
-				<k-button class="k-preview-view-title" icon="title" element="span">
+				<k-button
+					class="k-preview-view-title"
+					icon="title"
+					:dropdown="true"
+					@click="$refs.tree.toggle()"
+				>
 					{{ title }}
 				</k-button>
+				<k-dropdown-content
+					ref="tree"
+					theme="light"
+					class="k-preview-view-tree"
+				>
+					<k-page-tree :current="id" @click.native.stop @select="navigate" />
+				</k-dropdown-content>
 			</k-button-group>
 
 			<k-button-group>
@@ -79,6 +91,20 @@ export default {
 			}
 
 			this.$panel.view.open(this.link);
+		},
+		navigate(page) {
+			if (page.id === this.id) {
+				return;
+			}
+
+			this.$refs.tree.close();
+
+			if (page.id === "/") {
+				return this.$panel.view.open("site/preview/" + this.versionId);
+			}
+
+			const url = this.$api.pages.url(page.id, "preview/" + this.versionId);
+			this.$panel.view.open(url);
 		}
 	}
 };
@@ -100,6 +126,11 @@ export default {
 	align-items: center;
 	padding: var(--spacing-3);
 }
+.k-preview-view-tree {
+	--tree-branch-color-back: transparent;
+	--tree-branch-hover-color-back: var(--color-blue-250);
+}
+
 .k-preview-view-grid {
 	display: flex;
 	justify-content: center;
