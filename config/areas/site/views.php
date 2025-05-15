@@ -18,13 +18,16 @@ return [
 		}
 	],
 	'page.preview' => [
-		'pattern' => 'pages/(:any)/preview/(changes|latest)',
+		'pattern' => 'pages/(:any)/preview/(changes|latest|compare)',
 		'action'  => function (string $path, string $versionId) {
 			$page = Find::page($path);
 			$view = $page->panel()->view();
-			$src  = $page->previewUrl($versionId);
+			$src  = [
+				'latest'  => $page->previewUrl('latest'),
+				'changes' => $page->previewUrl('changes'),
+			];
 
-			if ($src === null) {
+			if ($src['latest'] === null) {
 				throw new PermissionException('The preview is not available');
 			}
 
@@ -38,7 +41,6 @@ return [
 							->defaults(
 								'page.versions',
 								'languages',
-								'page.open'
 							)
 							->bind(['versionId' => $versionId])
 							->render(),
@@ -60,13 +62,16 @@ return [
 		}
 	],
 	'site.preview' => [
-		'pattern' => 'site/preview/(changes|latest)',
+		'pattern' => 'site/preview/(changes|latest|compare)',
 		'action'  => function (string $versionId) {
 			$site = App::instance()->site();
 			$view = $site->panel()->view();
-			$src  = $site->previewUrl($versionId);
+			$src  = [
+				'latest'  => $site->previewUrl('latest'),
+				'changes' => $site->previewUrl('changes'),
+			];
 
-			if ($src === null) {
+			if ($src['latest'] === null) {
 				throw new PermissionException('The preview is not available');
 			}
 
@@ -79,13 +84,12 @@ return [
 						ViewButtons::view('site.preview', model: $site)
 							->defaults(
 								'site.versions',
-								'languages',
-								'site.open'
+								'languages'
 							)
 							->bind(['versionId' => $versionId])
 							->render(),
-					'src'     => $src,
-					'version' => $versionId
+					'src'       => $src,
+					'versionId' => $versionId
 				],
 				'title' => I18n::translate('view.site') . ' | ' . I18n::translate('preview'),
 			];
