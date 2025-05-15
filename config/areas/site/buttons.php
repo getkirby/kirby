@@ -4,28 +4,58 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Panel\Ui\Buttons\LanguagesDropdown;
+use Kirby\Panel\Ui\Buttons\OpenButton;
 use Kirby\Panel\Ui\Buttons\PageStatusButton;
-use Kirby\Panel\Ui\Buttons\PreviewDropdownButton;
+use Kirby\Panel\Ui\Buttons\PreviewButton;
 use Kirby\Panel\Ui\Buttons\SettingsButton;
+use Kirby\Panel\Ui\Buttons\VersionsButton;
 
 return [
+	'site.open' => function (Site $site, string $versionId = 'latest') {
+		$versionId = $versionId === 'compare' ? 'changes' : $versionId;
+		$link      = $site->previewUrl($versionId);
+
+		if ($link !== null) {
+			return new OpenButton(
+				link: $link,
+			);
+		}
+	},
 	'site.preview' => function (Site $site) {
 		if ($site->previewUrl() !== null) {
-			return new PreviewDropdownButton(
-				open: $site->previewUrl(),
-				preview: $site->panel()->url(true) . '/preview/compare',
-				copy: $site->previewUrl(),
+			return new PreviewButton(
+				link: $site->panel()->url(true) . '/preview/changes',
+			);
+		}
+	},
+	'site.versions' => function (Site $site, string $versionId = 'latest') {
+		return new VersionsButton(
+			model: $site,
+			versionId: $versionId
+		);
+	},
+	'page.open' => function (Page $page, string $versionId = 'latest') {
+		$versionId = $versionId === 'compare' ? 'changes' : $versionId;
+		$link      = $page->previewUrl($versionId);
+
+		if ($link !== null) {
+			return new OpenButton(
+				link: $link,
 			);
 		}
 	},
 	'page.preview' => function (Page $page) {
 		if ($page->previewUrl() !== null) {
-			return new PreviewDropdownButton(
-				open: $page->previewUrl(),
-				preview: $page->panel()->url(true) . '/preview/compare',
-				copy: $page->previewUrl(),
+			return new PreviewButton(
+				link: $page->panel()->url(true) . '/preview/changes',
 			);
 		}
+	},
+	'page.versions' => function (Page $page, string $versionId = 'latest') {
+		return new VersionsButton(
+			model: $page,
+			versionId: $versionId
+		);
 	},
 	'page.settings' => fn (Page $page) => new SettingsButton(model: $page),
 	'page.status'   => fn (Page $page) => new PageStatusButton($page),

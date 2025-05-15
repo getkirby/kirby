@@ -5,7 +5,7 @@ namespace Kirby\Panel\Ui\Buttons;
 use Kirby\Toolkit\I18n;
 
 /**
- * Preview view button
+ * Open view button
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -15,16 +15,18 @@ use Kirby\Toolkit\I18n;
  * @since     5.0.0
  * @internal
  */
-class PreviewButton extends ViewButton
+class OpenButton extends ViewButton
 {
 	public function __construct(
-		public string|null $link
+		public string|null $link,
+		public string|null $target = '_blank'
 	) {
 		parent::__construct(
-			class: 'k-preview-view-button',
-			icon: 'window',
+			class: 'k-open-view-button',
+			icon: 'open',
 			link: $link,
-			title: I18n::translate('preview')
+			target: $target,
+			title: I18n::translate('open')
 		);
 	}
 }

@@ -19,7 +19,7 @@
 					:has-diff="hasDiff"
 					:is-locked="isLocked"
 					:modified="modified"
-					:preview="permissions.preview ? api + '/preview/compare' : false"
+					:preview="permissions.preview ? api + '/preview/changes' : false"
 					@discard="onDiscard"
 					@submit="onSubmit"
 				/>

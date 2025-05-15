@@ -73,7 +73,7 @@ class File extends Model
 	public function buttons(): array
 	{
 		return ViewButtons::view($this)->defaults(
-			'preview',
+			'open',
 			'settings',
 			'languages'
 		)->render();
