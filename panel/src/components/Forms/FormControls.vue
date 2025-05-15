@@ -4,9 +4,10 @@
 			<k-button
 				v-for="button in buttons"
 				:key="button.text"
+				class="k-form-controls-button"
 				v-bind="button"
-				size="sm"
 				variant="filled"
+				:size="size"
 			/>
 		</k-button-group>
 		<k-dropdown-content
@@ -50,11 +51,7 @@
 </template>
 
 <script>
-/**
- * @displayName FormControls
- * @since 5.0.0
- */
-export default {
+export const props = {
 	props: {
 		editor: String,
 		hasDiff: Boolean,
@@ -63,8 +60,20 @@ export default {
 		/**
 		 * Preview URL for changes
 		 */
-		preview: [String, Boolean]
-	},
+		preview: [String, Boolean],
+		size: {
+			type: String,
+			default: "sm"
+		}
+	}
+};
+
+/**
+ * @displayName FormControls
+ * @since 5.0.0
+ */
+export default {
+	mixins: [props],
 	emits: ["discard", "submit"],
 	computed: {
 		buttons() {
