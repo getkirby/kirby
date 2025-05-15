@@ -49,8 +49,8 @@ abstract class FilePreview extends Component
 			],
 			[
 				'title' => I18n::translate('url'),
-				'text'  => '/' . $this->file->id(),
-				'link'  => $this->file->previewUrl()
+				'link'  => $link = $this->file->previewUrl(),
+				'text'  => $link,
 			],
 			[
 				'title' => I18n::translate('size'),
