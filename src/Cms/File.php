@@ -619,7 +619,9 @@ class File extends ModelWithContent
 	/**
 	 * Clean file URL that uses the parent page URL
 	 * and the filename as a more stable alternative
-	 * for the media URLs if available
+	 * for the media URLs if available. The `content.fileRedirects`
+	 * option is used to disable this behavior or enable it
+	 * on a per-file basis.
 	 */
 	public function previewUrl(): string|null
 	{
