@@ -25,7 +25,7 @@ class VersionsButton extends ViewButton
 	) {
 		$versionId = $versionId === 'compare' ? 'compare' : VersionId::from($versionId)->value();
 		$viewUrl   = $model->panel()->url(true) . '/preview';
-			
+
 		parent::__construct(
 			class: 'k-versions-view-button',
 			icon: $versionId === 'compare' ? 'layout-columns' : 'git-branch',
@@ -49,7 +49,7 @@ class VersionsButton extends ViewButton
 					'link'    => $viewUrl . '/compare',
 					'current' => $versionId === 'compare'
 				],
-				
+
 			],
 			text: I18n::translate('version.' . $versionId),
 		);
