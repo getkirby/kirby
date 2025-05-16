@@ -117,12 +117,17 @@ class Helpers
 	) {
 		$override = null;
 
-		// backup current locale
-		$locale = setlocale(LC_MESSAGES, 0);
+		// check if the LC_MESSAGES constant is defined
+		// some environments do not support LC_MESSAGES especially on Windows
+		// LC_MESSAGES constant is available if PHP was compiled with libintl
+		if (defined('LC_MESSAGES') === true) {
+			// backup current locale
+			$locale = setlocale(LC_MESSAGES, 0);
 
-		// set locale to C so that errors and warning messages are
-		// printed in English for robust comparisons in the handler
-		setlocale(LC_MESSAGES, 'C');
+			// set locale to C so that errors and warning messages are
+			// printed in English for robust comparisons in the handler
+			setlocale(LC_MESSAGES, 'C');
+		}
 
 		/**
 		 * @psalm-suppress UndefinedVariable
@@ -160,8 +165,11 @@ class Helpers
 			// exception; this avoids modifying global state
 			restore_error_handler();
 
-			// reset to original locale
-			setlocale(LC_MESSAGES, $locale);
+			// check if the LC_MESSAGES constant is defined
+			if (defined('LC_MESSAGES') === true) {
+				// reset to original locale
+				setlocale(LC_MESSAGES, $locale);
+			}
 		}
 
 		return $override ?? $result;
