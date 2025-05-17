@@ -23,12 +23,12 @@ class HeaderTest extends TestCase
 		503 => 'HTTP/1.1 503 Service Unavailable'
 	];
 
-	public function testCreateSingle()
+	public function testCreateSingle(): void
 	{
 		$this->assertSame('Key: Value', Header::create('Key', 'Value'));
 	}
 
-	public function testCreateMultiple()
+	public function testCreateMultiple(): void
 	{
 		$input = [
 			'a' => 'value a',
@@ -43,7 +43,7 @@ class HeaderTest extends TestCase
 		$this->assertSame(implode("\r\n", $expected), Header::create($input));
 	}
 
-	public function testNamedStatuses()
+	public function testNamedStatuses(): void
 	{
 		$h = $this->statusHeaders;
 		$this->assertSame($h[200], Header::success(false), 'success status should be 200');
@@ -58,7 +58,7 @@ class HeaderTest extends TestCase
 		$this->assertSame($h[503], Header::unavailable(false), 'unavailable status should be 503');
 	}
 
-	public function testStatusCodeOnly()
+	public function testStatusCodeOnly(): void
 	{
 		$h = $this->statusHeaders;
 
@@ -107,7 +107,7 @@ class HeaderTest extends TestCase
 		);
 	}
 
-	public function testRedirect()
+	public function testRedirect(): void
 	{
 		$h = $this->statusHeaders;
 		$this->assertSame(
@@ -122,7 +122,7 @@ class HeaderTest extends TestCase
 		);
 	}
 
-	public function testContentType()
+	public function testContentType(): void
 	{
 		$this->assertSame(
 			'Content-type: video/webm',
