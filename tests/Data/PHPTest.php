@@ -6,20 +6,15 @@ use Exception;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\PHP
- */
+#[CoversClass(PHP::class)]
 class PHPTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/php';
 	public const TMP      = KIRBY_TMP_DIR . '/Data.PHP';
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeArray
-	 */
-	public function testEncode()
+	public function testEncode(): void
 	{
 		$input    = static::FIXTURES . '/input.php';
 		$expected = static::FIXTURES . '/expected.php';
@@ -32,10 +27,7 @@ class PHPTest extends TestCase
 		$this->assertSame('123', PHP::encode(123));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecode()
+	public function testDecode(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('The PHP::decode() method is not implemented');
@@ -44,10 +36,7 @@ class PHPTest extends TestCase
 		$result = PHP::decode($input);
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testRead()
+	public function testRead(): void
 	{
 		$input  = static::FIXTURES . '/input.php';
 		$result = PHP::read($input);
@@ -55,10 +44,7 @@ class PHPTest extends TestCase
 		$this->assertSame($result, include $input);
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testReadFileMissing()
+	public function testReadFileMissing(): void
 	{
 		$file = static::TMP . '/does-not-exist.php';
 
@@ -68,10 +54,7 @@ class PHPTest extends TestCase
 		PHP::read($file);
 	}
 
-	/**
-	 * @covers ::write
-	 */
-	public function testWrite()
+	public function testWrite(): void
 	{
 		$input = include static::FIXTURES . '/input.php';
 		$file  = static::TMP . '/tmp.php';
