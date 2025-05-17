@@ -57,6 +57,7 @@ export default {
 					info: option.info,
 					label: option.text,
 					name: this.name ?? this.id,
+					novalidate: this.novalidate,
 					type: "radio",
 					value: option.value
 				};

@@ -49,6 +49,7 @@
 					:id="id"
 					ref="input"
 					:disabled="disabled"
+					:novalidate="novalidate"
 					:pattern="currentType.pattern ?? null"
 					:placeholder="currentType.placeholder"
 					:required="required"
