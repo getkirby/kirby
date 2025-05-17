@@ -6,10 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Plugin\Assets
- */
+#[CoversClass(Assets::class)]
 class AssetsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
@@ -41,10 +40,7 @@ class AssetsTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::clean
-	 */
-	public function testClean()
+	public function testClean(): void
 	{
 		// create orphans
 		F::write(
@@ -65,11 +61,7 @@ class AssetsTest extends TestCase
 		$this->assertFileDoesNotExist($b);
 	}
 
-	/**
-	 * @covers ::css
-	 * @covers ::js
-	 */
-	public function testCss()
+	public function testCss(): void
 	{
 		// assets defined in plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
@@ -88,10 +80,7 @@ class AssetsTest extends TestCase
 		$this->assertSame('test.js', $assets->js()->first()->path());
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		// assets defined in plugin config
 		$plugin = new Plugin('getkirby/test-plugin', [
@@ -149,10 +138,7 @@ class AssetsTest extends TestCase
 		$this->assertSame(static::FIXTURES . '/assets/test.css', $assets->get('test.css')->root());
 	}
 
-	/**
-	 * @covers ::plugin
-	 */
-	public function testPlugin()
+	public function testPlugin(): void
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
 			'root' => static::FIXTURES
@@ -162,10 +148,7 @@ class AssetsTest extends TestCase
 		$this->assertSame($plugin, $assets->plugin());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolve()
+	public function testResolve(): void
 	{
 		touch(static::TMP . '/site/plugins/b/foo/bar.css', 1337000000);
 
@@ -219,7 +202,7 @@ class AssetsTest extends TestCase
 		$this->assertSame('text/css', $response->type());
 	}
 
-	public function testResolveAutomaticFromAssetsFolder()
+	public function testResolveAutomaticFromAssetsFolder(): void
 	{
 		touch(static::TMP . '/site/plugins/a/assets/test.css', 1337000000);
 
@@ -245,7 +228,7 @@ class AssetsTest extends TestCase
 		$this->assertFalse(is_link($media));
 	}
 
-	public function testAppCallInvalid()
+	public function testAppCallInvalid(): void
 	{
 		$response = App::instance()->call('media/plugins/test/test/test.invalid');
 		$this->assertNull($response);
