@@ -600,18 +600,18 @@ class VTest extends TestCase
 		$this->assertFalse(V::size(7, 5, '<'));
 
 		$field = new Field(null, 'foo', 2);
-		$this->assertTrue(V::size($field->foo(), 2));
-		$this->assertTrue(V::size($field->foo(), 3, '<'));
-		$this->assertTrue(V::size($field->foo(), 1, '>'));
-		$this->assertFalse(V::size($field->foo(), 1, '<'));
-		$this->assertFalse(V::size($field->foo(), 3, '>'));
+		$this->assertTrue(V::size($field, 2));
+		$this->assertTrue(V::size($field, 3, '<'));
+		$this->assertTrue(V::size($field, 1, '>'));
+		$this->assertFalse(V::size($field, 1, '<'));
+		$this->assertFalse(V::size($field, 3, '>'));
 
 		$field = new Field(null, 'foo', 'hello');
-		$this->assertTrue(V::size($field->foo(), 5));
-		$this->assertTrue(V::size($field->foo(), 6, '<'));
-		$this->assertTrue(V::size($field->foo(), 4, '>'));
-		$this->assertFalse(V::size($field->foo(), 4, '<'));
-		$this->assertFalse(V::size($field->foo(), 6, '>'));
+		$this->assertTrue(V::size($field, 5));
+		$this->assertTrue(V::size($field, 6, '<'));
+		$this->assertTrue(V::size($field, 4, '>'));
+		$this->assertFalse(V::size($field, 4, '<'));
+		$this->assertFalse(V::size($field, 6, '>'));
 	}
 
 	public function testSizeInvalid(): void
