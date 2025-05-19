@@ -19,7 +19,8 @@ use Kirby\Toolkit\Str;
  * @author    Ahmet Bora <ahmet@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
  */
 class EntriesField extends FieldClass
 {
