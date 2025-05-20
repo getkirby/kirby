@@ -3,21 +3,21 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
- * @covers \Kirby\Sane\Html
  * @todo Add more tests from DOMPurify and the other test classes
  */
+#[CoversClass(Html::class)]
 class HtmlTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Html';
 
 	protected static string $type = 'html';
 
-	/**
-	 * @dataProvider allowedProvider
-	 */
-	public function testAllowed(string $file)
+	#[DataProvider('allowedProvider')]
+	public function testAllowed(string $file): void
 	{
 		$fixture = $this->fixture($file);
 
@@ -27,18 +27,21 @@ class HtmlTest extends TestCase
 		$this->assertStringEqualsFile($fixture, $sanitized);
 	}
 
-	public static function allowedProvider()
+	public static function allowedProvider(): array
 	{
 		return static::fixtureList('allowed', 'html');
 	}
 
-	public function testDisallowedExternalFile()
+	public function testDisallowedExternalFile(): void
 	{
 		$fixture   = $this->fixture('disallowed/link-subfolder.html');
 		$sanitized = $this->fixture('sanitized/link-subfolder.html');
 
-		$this->assertStringEqualsFile($fixture, Html::sanitize(file_get_contents($fixture)));
-		$this->assertStringEqualsFile($sanitized, Html::sanitize(file_get_contents($fixture), isExternal: true));
+		$html = Html::sanitize(file_get_contents($fixture));
+		$this->assertStringEqualsFile($fixture, $html);
+
+		$html = Html::sanitize(file_get_contents($fixture), isExternal: true);
+		$this->assertStringEqualsFile($sanitized, $html);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL points outside of the site index URL');

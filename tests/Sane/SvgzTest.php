@@ -3,20 +3,18 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \Kirby\Sane\Svgz
- */
+#[CoversClass(Svgz::class)]
 class SvgzTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Svgz';
 
 	protected static string $type = 'svgz';
 
-	/**
-	 * @dataProvider allowedProvider
-	 */
-	public function testAllowed(string $file)
+	#[DataProvider('allowedProvider')]
+	public function testAllowed(string $file): void
 	{
 		$fixture = $this->fixture($file);
 
@@ -30,15 +28,13 @@ class SvgzTest extends TestCase
 		$this->assertSame(gzdecode($input), gzdecode($sanitized));
 	}
 
-	public static function allowedProvider()
+	public static function allowedProvider(): array
 	{
 		return static::fixtureList('allowed', 'svgz');
 	}
 
-	/**
-	 * @dataProvider invalidProvider
-	 */
-	public function testInvalid(string $file)
+	#[DataProvider('invalidProvider')]
+	public function testInvalid(string $file): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Could not uncompress gzip data');
@@ -46,12 +42,12 @@ class SvgzTest extends TestCase
 		Svgz::validateFile($this->fixture($file));
 	}
 
-	public static function invalidProvider()
+	public static function invalidProvider(): array
 	{
 		return static::fixtureList('invalid', 'svgz');
 	}
 
-	public function testDisallowedDoctypeEntityAttack()
+	public function testDisallowedDoctypeEntityAttack(): void
 	{
 		$fixture   = $this->fixture('disallowed/doctype-entity-attack.svgz');
 		$sanitized = $this->fixture('sanitized/doctype-entity-attack.svg');
@@ -63,7 +59,7 @@ class SvgzTest extends TestCase
 		Svgz::validateFile($fixture);
 	}
 
-	public function testDisallowedExternalFile()
+	public function testDisallowedExternalFile(): void
 	{
 		$fixture   = $this->fixture('disallowed/xlink-subfolder.svg');
 		$fixtureZ  = $this->fixture('disallowed/xlink-subfolder.svgz');
