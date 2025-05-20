@@ -5,7 +5,9 @@ namespace Kirby\Text;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
+#[CoversNothing]
 class VideoKirbyTagTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Text.VideoKirbyTag';
@@ -26,7 +28,7 @@ class VideoKirbyTagTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testLocal()
+	public function testLocal(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [
@@ -52,7 +54,7 @@ class VideoKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testInlineAttrs()
+	public function testInlineAttrs(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [
@@ -93,7 +95,7 @@ class VideoKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testPredefinedAttrs()
+	public function testPredefinedAttrs(): void
 	{
 		$kirby = $this->app->clone([
 			'options' => [
@@ -139,7 +141,7 @@ class VideoKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testAutoplayRelatedAttrs()
+	public function testAutoplayRelatedAttrs(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -168,7 +170,7 @@ class VideoKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testAutoplayAttrsOverride()
+	public function testAutoplayAttrsOverride(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -197,7 +199,7 @@ class VideoKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$kirby = $this->app->clone([
 			'options' => [
@@ -229,7 +231,7 @@ class VideoKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testRemote()
+	public function testRemote(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [
