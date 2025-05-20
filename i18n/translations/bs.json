@@ -210,7 +210,7 @@
 	"error.section.pages.min.plural": "Sekcija \"{section}\" zahtjeva najmanje {min} stranica",
 	"error.section.pages.min.singular": "Sekcija \"{section}\" zahtjeva najmanje jednu stranicu",
 
-	"error.section.notLoaded": "Sekcija \"{name}\" nije loadana",
+	"error.section.notLoaded": "Sekcija \"{name}\" se nije mogla učitati",
 	"error.section.type.invalid": "Tip sekcije \"{type}\" nije važeći",
 
 	"error.site.changeTitle.empty": "The title must not be empty",
