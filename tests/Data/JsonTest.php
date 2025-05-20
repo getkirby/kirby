@@ -5,17 +5,13 @@ namespace Kirby\Data;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use stdClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\Json
- */
+#[CoversClass(Json::class)]
 class JsonTest extends TestCase
 {
-	/**
-	 * @covers ::encode
-	 * @covers ::decode
-	 */
-	public function testEncodeDecode()
+	public function testEncodeDecode(): void
 	{
 		$array = [
 			'name'     => 'Homer',
@@ -35,21 +31,15 @@ class JsonTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Json::decode(['this is' => 'an array']));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeInvalid1()
+	public function testDecodeInvalid1(): void
 	{
 		// pass invalid object
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid JSON data; please pass a string');
-		Json::decode(new \stdClass());
+		Json::decode(new stdClass());
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeInvalid2()
+	public function testDecodeInvalid2(): void
 	{
 		// pass invalid int
 		$this->expectException(InvalidArgumentException::class);
@@ -57,10 +47,7 @@ class JsonTest extends TestCase
 		Json::decode(1);
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeCorrupted1()
+	public function testDecodeCorrupted1(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('JSON string is invalid');
@@ -68,10 +55,7 @@ class JsonTest extends TestCase
 		Json::decode('some gibberish');
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeCorrupted2()
+	public function testDecodeCorrupted2(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('JSON string is invalid');
@@ -79,10 +63,7 @@ class JsonTest extends TestCase
 		Json::decode('true');
 	}
 
-	/**
-	 * @covers ::encode
-	 */
-	public function testEncodePretty()
+	public function testEncodePretty(): void
 	{
 		$array = [
 			'name'     => 'Homer',
@@ -100,10 +81,7 @@ class JsonTest extends TestCase
 }', $data);
 	}
 
-	/**
-	 * @covers ::encode
-	 */
-	public function testEncodeUnicode()
+	public function testEncodeUnicode(): void
 	{
 		$string  = 'здравей';
 		$this->assertSame('"' . $string . '"', Json::encode($string));
