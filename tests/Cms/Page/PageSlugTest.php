@@ -60,6 +60,8 @@ class PageSlugTest extends ModelTestCase
 	{
 		$this->setUpMultiLanguage();
 
+		$this->app->impersonate('kirby');
+
 		$page = Page::create([
 			'slug' => 'test'
 		]);
@@ -73,7 +75,7 @@ class PageSlugTest extends ModelTestCase
 		$this->assertSame('test-translated', $modified->slug('de'));
 		$this->assertSame('test', $modified->slug());
 
-		$changes = $modified->version('changes')->content();
+		$changes = $modified->version('changes')->content('de');
 
 		$this->assertSame('test-translated', $changes->get('slug')->value());
 		$this->assertSame('Some additional text', $changes->get('text')->value());
