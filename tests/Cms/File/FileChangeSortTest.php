@@ -57,4 +57,30 @@ class FileChangeSortTest extends ModelTestCase
 		$file1->changeSort(3);
 		$this->assertSame(2, $calls);
 	}
+
+	public function testChangeSortWhenChangesExist(): void
+	{
+		$page = Page::create([
+			'slug' => 'test'
+		]);
+
+		$file = File::create([
+			'filename' => 'doc.pdf',
+			'parent'   => $page,
+			'source'   => __DIR__ . '/fixtures/files/doc.pdf'
+		]);
+
+		$file->version('changes')->save([
+			'text' => 'Some additional text'
+		]);
+
+		$modified = $file->changeSort(3);
+
+		$this->assertSame(3, $modified->sort()->toInt());
+
+		$changes = $modified->version('changes')->content();
+
+		$this->assertSame(3, $changes->get('sort')->toInt());
+		$this->assertSame('Some additional text', $changes->get('text')->value());
+	}
 }
