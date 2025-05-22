@@ -181,11 +181,22 @@ return [
 		},
 	],
 	'save' => function ($value) {
-		$data = [];
-		$form = $this->form();
+		$data     = [];
+		$form     = $this->form();
+		$defaults = $form->defaults();
 
-		foreach ($value as $row) {
-			$row = $form->reset()->submit(input: $row, passthrough: true)->toStoredValues();
+		foreach ($value as $index => $row) {
+			$row = $form
+				->reset()
+				->fill(
+					input: $defaults,
+					passthrough: true
+				)
+				->submit(
+					input: $row,
+					passthrough: true
+				)
+				->toStoredValues();
 
 			// remove frontend helper id
 			unset($row['_id']);
