@@ -95,11 +95,19 @@ class AssetTest extends TestCase
 
 		$mediaHash = crc32('logo.svg') . '-';
 		$mediaPath = 'assets/images/' . $mediaHash . '/logo.svg';
+		$mediaRoot = $this->app->root('media') . '/' . $mediaPath;
+		$mediaDir  = dirname($mediaRoot);
+		$mediaUrl  = $this->app->url('media') . '/' . $mediaPath;
 
+		$this->assertSame($mediaDir, $asset->mediaDir());
 		$this->assertSame($mediaHash, $asset->mediaHash());
 		$this->assertSame($mediaPath, $asset->mediaPath());
-		$this->assertSame($this->app->root('media') . '/' . $mediaPath, $asset->mediaRoot());
-		$this->assertSame($this->app->url('media') . '/' . $mediaPath, $asset->mediaUrl());
+		$this->assertSame($mediaRoot, $asset->mediaRoot());
+		$this->assertSame($mediaUrl, $asset->mediaUrl());
+
+		$this->assertSame(dirname($mediaPath) . '/test.jpg', $asset->mediaPath('test.jpg'));
+		$this->assertSame($mediaDir . '/test.jpg', $asset->mediaRoot('test.jpg'));
+		$this->assertSame(dirname($mediaUrl) . '/test.jpg', $asset->mediaUrl('test.jpg'));
 	}
 
 	public function testToString()
