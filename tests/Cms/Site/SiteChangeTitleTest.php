@@ -16,6 +16,30 @@ class SiteChangeTitleTest extends ModelTestCase
 		$this->assertSame('Test', $site->title()->value());
 	}
 
+	public function testChangeTitleWhenChangesExist()
+	{
+		$site = new Site();
+
+		// save the original title
+		$site->version('latest')->save([
+			'title' => 'Old Title'
+		]);
+
+		// add some changes
+		$site->version('changes')->save([
+			'text' => 'Some additional text'
+		]);
+
+		$modified = $site->changeTitle('New Title');
+
+		$this->assertSame('New Title', $modified->title()->value());
+
+		$changes = $modified->version('changes')->content();
+
+		$this->assertSame('New Title', $changes->get('title')->value(), 'The title should be updated in the changes version');
+		$this->assertSame('Some additional text', $changes->get('text')->value(), 'Other changes should remain the same');
+	}
+
 	public function testChangeTitleHooks(): void
 	{
 		$calls = 0;
