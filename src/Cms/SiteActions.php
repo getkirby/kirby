@@ -44,23 +44,18 @@ trait SiteActions
 		string $title,
 		string|null $languageCode = null
 	): static {
-		// if the `$languageCode` argument is not set and is not the default language
-		// the `$languageCode` argument is sent as the current language
-		if (
-			$languageCode === null &&
-			$language = $this->kirby()->language()
-		) {
-			if ($language->isDefault() === false) {
-				$languageCode = $language->code();
-			}
-		}
+		$language = Language::ensure($languageCode ?? 'current');
 
-		$arguments = ['site' => $this, 'title' => trim($title), 'languageCode' => $languageCode];
+		$arguments = [
+			'site'         => $this,
+			'title'        => trim($title),
+			'languageCode' => $languageCode,
+		];
 
 		return $this->commit(
 			'changeTitle',
 			$arguments,
-			fn ($site, $title, $languageCode) => $site->save(['title' => $title], $languageCode)
+			fn ($site, $title, $languageCode) => $site->save(['title' => $title], $language->code())
 		);
 	}
 
