@@ -537,6 +537,15 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
+	 * @covers ::name
+	 */
+	public function testNameCase()
+	{
+		$field = new TestField(['name' => 'myTest']);
+		$this->assertSame('mytest', $field->name());
+	}
+
+	/**
 	 * @covers ::params
 	 */
 	public function testParams()

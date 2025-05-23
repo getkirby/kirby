@@ -833,6 +833,20 @@ class FieldTest extends TestCase
 		$this->assertSame('mytest', $field->name());
 	}
 
+	public function testNameCase()
+	{
+		Field::$types = [
+			'test' => []
+		];
+
+		$field = new Field('test', [
+			'model' => new Page(['slug' => 'test']),
+			'name'  => 'myTest'
+		]);
+
+		$this->assertSame('mytest', $field->name());
+	}
+
 	/**
 	 * @covers ::needsValue
 	 * @covers ::errors
