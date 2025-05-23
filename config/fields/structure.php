@@ -190,7 +190,6 @@ return [
 				->reset()
 				->fill(
 					input: $defaults,
-					passthrough: true
 				)
 				->submit(
 					input: $row,
