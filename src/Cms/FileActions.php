@@ -104,10 +104,23 @@ trait FileActions
 			return $this;
 		}
 
+		$arguments = [
+			'file'     => $this,
+			'position' => $sort
+		];
+
 		return $this->commit(
 			'changeSort',
-			['file' => $this, 'position' => $sort],
-			fn ($file, $sort) => $file->save(['sort' => $sort])
+			$arguments,
+			function ($file, $sort) {
+				// make sure to update the sort in the changes version as well
+				// otherwise the new sort would be lost as soon as the changes are saved
+				if ($file->version('changes')->exists() === true) {
+					$file->version('changes')->update(['sort' => $sort]);
+				}
+
+				return $file->save(['sort' => $sort]);
+			}
 		);
 	}
 
