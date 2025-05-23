@@ -119,9 +119,9 @@ class Asset
 	/**
 	 * Returns the absolute Url to the file in the public media folder
 	 */
-	public function mediaUrl(): string
+	public function mediaUrl(string|null $filename = null): string
 	{
-		return $this->kirby()->url('media') . '/' . $this->mediaPath();
+		return $this->kirby()->url('media') . '/' . $this->mediaPath($filename);
 	}
 
 	/**
