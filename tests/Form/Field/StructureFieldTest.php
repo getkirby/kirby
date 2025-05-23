@@ -449,6 +449,34 @@ class StructureFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
+	public function testSubmitWithDisabledFieldAndDefaultValue()
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'a' => [
+					'type'     => 'text',
+					'default'  => 'Default Title',
+					'disabled' => true
+				],
+				'b' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$field->submit([
+			[
+				'a' => 'A',
+				'b' => 'B'
+			]
+		]);
+
+		$value = $field->toStoredValue();
+
+		$this->assertSame('Default Title', $value[0]['a']);
+		$this->assertSame('B', $value[0]['b']);
+	}
+
 	public function testValidationsInvalid()
 	{
 		$field = $this->field('structure', [
