@@ -53,11 +53,16 @@ trait SiteActions
 			'language'     => $language
 		];
 
-		return $this->commit(
-			'changeTitle',
-			$arguments,
-			fn ($site, $title, $languageCode, $language) => $site->save(['title' => $title], $language->code())
-		);
+		return $this->commit('changeTitle', $arguments, function ($site, $title, $languageCode, $language) {
+
+			// make sure to update the title in the changes version as well
+			// otherwise the new title would be lost as soon as the changes are saved
+			if ($site->version('changes')->exists($language) === true) {
+				$site->version('changes')->update(['title' => $title], $language);
+			}
+
+			return $site->save(['title' => $title], $language->code());
+		});
 	}
 
 	/**
