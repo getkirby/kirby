@@ -82,6 +82,16 @@ class Asset
 	}
 
 	/**
+	 * Returns the absolute path to the media folder for the file and its versions
+	 * @internal
+	 * @since 5.0.0
+	 */
+	public function mediaDir(): string
+	{
+		return dirname($this->mediaRoot());
+	}
+
+	/**
 	 * Create a unique media hash
 	 */
 	public function mediaHash(): string
