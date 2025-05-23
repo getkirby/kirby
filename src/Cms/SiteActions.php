@@ -50,12 +50,13 @@ trait SiteActions
 			'site'         => $this,
 			'title'        => trim($title),
 			'languageCode' => $languageCode,
+			'language'     => $language
 		];
 
 		return $this->commit(
 			'changeTitle',
 			$arguments,
-			fn ($site, $title, $languageCode) => $site->save(['title' => $title], $language->code())
+			fn ($site, $title, $languageCode, $language) => $site->save(['title' => $title], $language->code())
 		);
 	}
 
