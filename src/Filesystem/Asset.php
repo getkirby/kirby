@@ -102,9 +102,10 @@ class Asset
 	/**
 	 * Returns the relative path starting at the media folder
 	 */
-	public function mediaPath(): string
+	public function mediaPath(string|null $filename = null): string
 	{
-		return 'assets/' . $this->path() . '/' . $this->mediaHash() . '/' . $this->filename();
+		$filename ??= $this->filename();
+		return 'assets/' . $this->path() . '/' . $this->mediaHash() . '/' . $filename;
 	}
 
 	/**
