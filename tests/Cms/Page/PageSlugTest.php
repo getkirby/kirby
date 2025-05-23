@@ -56,6 +56,31 @@ class PageSlugTest extends ModelTestCase
 		$this->assertSame('test', $page->slug('en'));
 	}
 
+	public function testSlugInMultiLanguageModeWhenChangesExist(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug' => 'test'
+		]);
+
+		$page->version('changes')->save([
+			'text' => 'Some additional text'
+		], 'de');
+
+		$modified = $page->changeSlug('test-translated', 'de');
+
+		$this->assertSame('test-translated', $modified->slug('de'));
+		$this->assertSame('test', $modified->slug());
+
+		$changes = $modified->version('changes')->content('de');
+
+		$this->assertSame('test-translated', $changes->get('slug')->value());
+		$this->assertSame('Some additional text', $changes->get('text')->value());
+	}
+
 	public function testSlugWithInvalidValue(): void
 	{
 		$this->expectException(TypeError::class);
