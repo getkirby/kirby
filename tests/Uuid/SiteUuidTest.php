@@ -3,27 +3,20 @@
 namespace Kirby\Uuid;
 
 use Generator;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Uuid\SiteUuid
- */
+#[CoversClass(SiteUuid::class)]
 class SiteUuidTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.SiteUuid';
 
-	/**
-	 * @covers ::id
-	 */
-	public function testId()
+	public function testId(): void
 	{
 		$site = $this->app->site();
 		$this->assertSame('', $site->uuid()->id());
 	}
 
-	/**
-	 * @covers ::index
-	 */
-	public function testIndex()
+	public function testIndex(): void
 	{
 		$index = SiteUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
@@ -31,29 +24,19 @@ class SiteUuidTest extends TestCase
 		$this->assertSame(1, iterator_count($index));
 	}
 
-	/**
-	 * @covers ::model
-	 */
-	public function testModel()
+	public function testModel(): void
 	{
 		$site = $this->app->site();
 		$this->assertIsSite($site, Uuid::for('site://')->model());
 	}
 
-	/**
-	 * @covers ::populate
-	 */
-	public function testPopulate()
+	public function testPopulate(): void
 	{
 		$uuid = $this->app->site()->uuid();
 		$this->assertTrue($uuid->populate());
 	}
 
-	/**
-	 * @covers ::toString
-	 * @covers ::__toString
-	 */
-	public function testToString()
+	public function testToString(): void
 	{
 		$uuid = $this->app->site()->uuid();
 		$this->assertSame('site://', $uuid->toString());
