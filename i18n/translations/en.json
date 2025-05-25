@@ -474,6 +474,7 @@
 	"license.code": "Code",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Please enter your license code",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can activate this site with another license key afterwards.</p><p>The license will remain registered to the domain on the license hub. To change this, contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.demo.info": "This is a demo installation",
