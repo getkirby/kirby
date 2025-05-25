@@ -6,7 +6,7 @@ class IdentifiableModelActionsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.IdentifiableModelActions';
 
-	public function testFileChangeName()
+	public function testFileChangeName(): void
 	{
 		$file = $this->app->file('page-a/test.pdf');
 		$uuid = $file->uuid();
@@ -19,7 +19,7 @@ class IdentifiableModelActionsTest extends TestCase
 		$this->assertFalse($uuid->isCached());
 	}
 
-	public function testFileDelete()
+	public function testFileDelete(): void
 	{
 		$file = $this->app->file('page-a/test.pdf');
 		$uuid = $file->uuid();
@@ -32,7 +32,7 @@ class IdentifiableModelActionsTest extends TestCase
 		$this->assertFalse($uuid->isCached());
 	}
 
-	public function testPageChangeSlug()
+	public function testPageChangeSlug(): void
 	{
 		$page = $this->app->page('page-a');
 		$uuid = $page->uuid();
@@ -45,7 +45,7 @@ class IdentifiableModelActionsTest extends TestCase
 		$this->assertFalse($uuid->isCached());
 	}
 
-	public function testPageDelete()
+	public function testPageDelete(): void
 	{
 		$page = $this->app->page('page-b');
 		$uuid = $page->uuid();

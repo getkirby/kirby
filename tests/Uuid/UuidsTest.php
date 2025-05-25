@@ -6,18 +6,14 @@ use Kirby\Cache\Cache;
 use Kirby\Cache\MemoryCache;
 use Kirby\Cache\NullCache;
 use Kirby\Exception\LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Uuid\Uuids
- */
+#[CoversClass(Uuids::class)]
 class UuidsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.Uuids';
 
-	/**
-	 * @covers ::cache
-	 */
-	public function testCache()
+	public function testCache(): void
 	{
 		$this->assertInstanceOf(Cache::class, Uuids::cache());
 
@@ -40,10 +36,7 @@ class UuidsTest extends TestCase
 		$this->assertInstanceOf(NullCache::class, Uuids::cache());
 	}
 
-	/**
-	 * @covers ::each
-	 */
-	public function testEach()
+	public function testEach(): void
 	{
 		$models = 0;
 		Uuids::each(function ($model) use (&$models) {
@@ -52,20 +45,14 @@ class UuidsTest extends TestCase
 		$this->assertSame(7, $models);
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
-	public function testEnabled()
+	public function testEnabled(): void
 	{
 		$this->assertTrue(Uuids::enabled());
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 		$this->assertFalse(Uuids::enabled());
 	}
 
-	/**
-	 * @covers ::generate
-	 */
-	public function testGenerate()
+	public function testGenerate(): void
 	{
 		$page = $this->app->page('page-b');
 		$file = $this->app->file('page-b/foo.pdf');
@@ -80,10 +67,7 @@ class UuidsTest extends TestCase
 		$this->assertNotNull($file->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::generate
-	 */
-	public function testGenerateIfDisabled()
+	public function testGenerateIfDisabled(): void
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 
@@ -93,10 +77,7 @@ class UuidsTest extends TestCase
 		Uuids::generate();
 	}
 
-	/**
-	 * @covers ::populate
-	 */
-	public function testPopulate()
+	public function testPopulate(): void
 	{
 		$page     = $this->app->page('page-a');
 		$pageFile = $this->app->file('page-a/test.pdf');
@@ -199,10 +180,7 @@ class UuidsTest extends TestCase
 		Uuids::cache()->flush();
 	}
 
-	/**
-	 * @covers ::populate
-	 */
-	public function testPopulateIfDisabled()
+	public function testPopulateIfDisabled(): void
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 

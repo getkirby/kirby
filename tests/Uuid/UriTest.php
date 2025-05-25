@@ -2,9 +2,10 @@
 
 namespace Kirby\Uuid;
 
-/**
- * @coversDefaultClass \Kirby\Uuid\Uri
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+
+#[CoversClass(Uri::class)]
 class UriTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.Uri';
@@ -36,30 +37,21 @@ class UriTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::domain
-	 * @dataProvider provider
-	 */
-	public function testDomain(string $input, string $scheme, string|null $domain)
+	#[DataProvider('provider')]
+	public function testDomain(string $input, string $scheme, string|null $domain): void
 	{
 		$uri = new Uri($input);
 		$this->assertSame($domain, $uri->domain());
 	}
 
-	/**
-	 * @covers ::host
-	 * @dataProvider provider
-	 */
-	public function testHost(string $input, string $scheme, string|null $domain, string|null $path)
+	#[DataProvider('provider')]
+	public function testHost(string $input, string $scheme, string|null $domain, string|null $path): void
 	{
 		$uri = new Uri($input);
 		$this->assertSame($domain ?? '', $uri->host());
 	}
 
-	/**
-	 * @covers ::host
-	 */
-	public function testHostSet()
+	public function testHostSet(): void
 	{
 		$uri = new Uri('page://my-id');
 		$this->assertSame('my-id', $uri->host());
@@ -68,32 +60,22 @@ class UriTest extends TestCase
 		$this->assertSame('page://my-other-id', $uri->toString());
 	}
 
-	/**
-	 * @dataProvider provider
-	 */
-	public function testPath(string $input, string $scheme, string|null $domain, string|null $path)
+	#[DataProvider('provider')]
+	public function testPath(string $input, string $scheme, string|null $domain, string|null $path): void
 	{
 		$uri = new Uri($input);
 		$this->assertSame($path ?? '', $uri->path()->toString());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::base
-	 * @covers ::toString
-	 * @dataProvider provider
-	 */
-	public function testToString(string $input)
+	#[DataProvider('provider')]
+	public function testToString(string $input): void
 	{
 		$uri = new Uri($input);
 		$this->assertSame($input, $uri->toString());
 	}
 
-	/**
-	 * @covers ::type
-	 * @dataProvider provider
-	 */
-	public function testType(string $input, string $scheme)
+	#[DataProvider('provider')]
+	public function testType(string $input, string $scheme): void
 	{
 		$uri = new Uri($input);
 		$this->assertSame($scheme, $uri->type());
