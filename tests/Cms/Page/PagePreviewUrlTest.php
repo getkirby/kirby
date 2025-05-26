@@ -18,7 +18,7 @@ class PagePreviewUrlTest extends ModelTestCase
 			[true, '/test', null, false],
 			[true, '/test?{token}', 'test', true],
 			['/something/different', '/something/different', null, false],
-			['/something/different', '/something/different?{token}', 'something\/different', true],
+			['/something/different', '/something/different?{token}', 'something/different', true],
 			['{{ site.url }}#{{ page.slug }}', '/#test', null, false],
 			['{{ site.url }}#{{ page.slug }}', '/?{token}#test', '', true],
 			['{{ page.url }}?preview=true', '/test?preview=true&{token}', 'test', true],

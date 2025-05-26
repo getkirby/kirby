@@ -451,7 +451,7 @@ class Version
 
 		$token = $this->model->kirby()->contentToken(
 			null,
-			json_encode($data)
+			json_encode($data, JSON_UNESCAPED_SLASHES)
 		);
 
 		return substr($token, 0, 10);
