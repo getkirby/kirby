@@ -24,7 +24,8 @@
 				<k-button :link="src" icon="open" size="xs" target="_blank" />
 			</k-button-group>
 		</header>
-		<iframe ref="browser" :src="src"></iframe>
+
+		<iframe ref="browser" :src="srcWithPreviewParam" />
 	</div>
 </template>
 
@@ -39,6 +40,13 @@ export default {
 		versionId: String
 	},
 	emits: ["discard", "submit"],
+	computed: {
+		srcWithPreviewParam() {
+			const uri = new URL(this.src);
+			uri.searchParams.append("_preview", true);
+			return uri.toString();
+		}
+	},
 	mounted() {
 		this.$events.on("content.discard", this.reload);
 		this.$events.on("content.publish", this.reload);
