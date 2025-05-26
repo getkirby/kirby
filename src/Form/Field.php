@@ -57,22 +57,22 @@ class Field extends Component
 		array $attrs = [],
 		Fields|null $siblings = null
 	) {
+		if (isset(static::$types[$type]) === false) {
+			throw new InvalidArgumentException(
+				key: 'field.type.missing',
+				data: [
+					'name' => $attrs['name'] ?? '-',
+					'type' => $type
+				]
+			);
+		}
+
 		// use the type as fallback for the name
 		$attrs['name'] ??= $type;
 		$attrs['type']   = $type;
 
 		// set the name to lowercase
 		$attrs['name'] = strtolower($attrs['name']);
-
-		if (isset(static::$types[$type]) === false) {
-			throw new InvalidArgumentException(
-				key: 'field.type.missing',
-				data: [
-					'name' => $attrs['name'],
-					'type' => $attrs['type']
-				]
-			);
-		}
 
 		$this->setModel($attrs['model'] ?? null);
 
