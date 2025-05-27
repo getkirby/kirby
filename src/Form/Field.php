@@ -67,11 +67,14 @@ class Field extends Component
 			);
 		}
 
-		$this->setModel($attrs['model'] ?? null);
-
 		// use the type as fallback for the name
 		$attrs['name'] ??= $type;
 		$attrs['type']   = $type;
+
+		// set the name to lowercase
+		$attrs['name'] = strtolower($attrs['name']);
+
+		$this->setModel($attrs['model'] ?? null);
 
 		parent::__construct($type, $attrs);
 
