@@ -34,7 +34,7 @@
 					@chooseToAppend="choose(index + 1)"
 					@chooseToConvert="chooseToConvert(block)"
 					@chooseToPrepend="choose(index)"
-					@click.native="onClickBlock(block, $event)"
+					@click="onClickBlock(block, $event)"
 					@close="isEditing = false"
 					@copy="copy()"
 					@duplicate="duplicate(block, index)"
@@ -70,7 +70,6 @@
 </template>
 
 <script>
-import { set } from "vue";
 import { autofocus, disabled, id } from "@/mixins/props.js";
 
 export const props = {
@@ -167,7 +166,7 @@ export default {
 		this.$events.on("keyup", this.onKey);
 		this.$events.on("paste", this.onPaste);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("blur", this.onBlur);
 		this.$events.off("click", this.onClickGlobal);
 		this.$events.off("copy", this.onCopy);
@@ -371,7 +370,7 @@ export default {
 			}
 		},
 		hide(block) {
-			set(block, "isHidden", true);
+			block.isHidden = true;
 			this.save();
 		},
 		isInputEvent() {
@@ -592,7 +591,7 @@ export default {
 
 			if (index !== -1) {
 				this.deselect(block);
-				this.$delete(this.blocks, index);
+				this.blocks.splice(index, 1);
 				this.save();
 			}
 		},
@@ -624,7 +623,7 @@ export default {
 						for (const id of this.selected) {
 							const index = this.findIndex(id);
 							if (index !== -1) {
-								this.$delete(this.blocks, index);
+								this.blocks.splice(index, 1);
 							}
 						}
 
@@ -664,7 +663,7 @@ export default {
 			this.selected = Object.values(this.blocks).map((block) => block.id);
 		},
 		show(block) {
-			set(block, "isHidden", false);
+			block.isHidden = false;
 			this.save();
 		},
 		async sort(block, from, to) {
@@ -705,7 +704,7 @@ export default {
 			const index = this.findIndex(block.id);
 			if (index !== -1) {
 				for (const key in content) {
-					set(this.blocks[index].content, key, content[key]);
+					this.blocks[index].content[key] = content[key];
 				}
 			}
 			this.save();

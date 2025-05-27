@@ -4,7 +4,7 @@
 		:content="content"
 		:fieldset="fieldset"
 		:style="$attrs.style"
-		@dblclick.native="$emit('open')"
+		@dblclick="$emit('open')"
 	/>
 </template>
 

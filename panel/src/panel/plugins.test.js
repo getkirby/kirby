@@ -4,14 +4,11 @@
 
 import { describe, expect, it } from "vitest";
 import Plugins from "./plugins.js";
-import Vue from "vue";
 import isComponent from "@/helpers/isComponent.js";
 
 describe.concurrent("panel.plugins", () => {
-	window.Vue = Vue;
-
 	it("should have defaults", async () => {
-		const plugins = Plugins(Vue);
+		const plugins = Plugins(app);
 
 		expect(plugins.components).toStrictEqual({});
 		expect(plugins.created).toStrictEqual([]);
@@ -30,25 +27,25 @@ describe.concurrent("panel.plugins", () => {
 			template: `<p>test</p>`
 		};
 
-		const plugins = Plugins(Vue, {
+		const plugins = Plugins(app, {
 			components: {
 				"k-test": component
 			}
 		});
 
 		expect(plugins.components["k-test"]).toStrictEqual(component);
-		expect(isComponent("k-test")).true;
+		expect(isComponent("k-test", app)).toStrictEqual(true);
 	});
 
 	it("should install plugin", async () => {
-		Plugins(Vue, {
+		Plugins(app, {
 			use: [
-				(Vue) => (Vue.prototype.$a = "A"),
-				(Vue) => (Vue.prototype.$b = "B")
+				(app) => (app.config.globalProperties.$a = "A"),
+				(app) => (app.config.globalProperties.$b = "B")
 			]
 		});
 
-		expect(Vue.prototype.$a).toStrictEqual("A");
-		expect(Vue.prototype.$b).toStrictEqual("B");
+		expect(app.config.globalProperties.$a).toStrictEqual("A");
+		expect(app.config.globalProperties.$b).toStrictEqual("B");
 	});
 });

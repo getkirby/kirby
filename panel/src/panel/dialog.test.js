@@ -8,7 +8,7 @@ import Panel from "./panel.js";
 
 describe.concurrent("panel.dialog", () => {
 	it("should have a default state", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const dialog = Dialog(panel);
 		const state = {
 			component: null,

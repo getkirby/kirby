@@ -5,13 +5,10 @@
 import { describe, expect, it } from "vitest";
 import Modal, { defaults } from "./modal.js";
 import Panel from "./panel.js";
-import Vue from "vue";
 
 describe.concurrent("panel/modal.js", () => {
-	window.Vue = Vue;
-
 	it("should have a default state", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const modal = Modal(panel, "test", defaults());
 
 		const state = {
@@ -30,7 +27,7 @@ describe.concurrent("panel/modal.js", () => {
 	});
 
 	it("should open and close", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const modal = Modal(panel, "test", defaults());
 		let opened = false;
 		let closed = false;
@@ -59,7 +56,7 @@ describe.concurrent("panel/modal.js", () => {
 	});
 
 	it("should cancel", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const modal = Modal(panel, "test", defaults());
 		let cancelled = false;
 
@@ -82,7 +79,7 @@ describe.concurrent("panel/modal.js", () => {
 	});
 
 	it("should close a previous notification", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const modal = Modal(panel, "test", defaults());
 
 		// open a notification first
@@ -100,7 +97,7 @@ describe.concurrent("panel/modal.js", () => {
 	});
 
 	it("should not close a previous notification on re-open", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const modal = Modal(panel, "test", defaults());
 
 		await modal.open({
@@ -119,7 +116,7 @@ describe.concurrent("panel/modal.js", () => {
 	});
 
 	it("should change value", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const modal = Modal(panel, "test", defaults());
 		let input = null;
 
@@ -140,7 +137,7 @@ describe.concurrent("panel/modal.js", () => {
 	});
 
 	it("should send notification after submit", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const modal = Modal(panel, "test", defaults());
 
 		modal.success({
@@ -152,7 +149,7 @@ describe.concurrent("panel/modal.js", () => {
 	});
 
 	it("should emit panel events after submit", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const modal = Modal(panel, "test", defaults());
 		const emitted = [];
 
@@ -172,7 +169,7 @@ describe.concurrent("panel/modal.js", () => {
 	});
 
 	it("should close modal after submit", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const modal = Modal(panel, "test", defaults());
 
 		await modal.open({

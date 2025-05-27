@@ -116,7 +116,7 @@
 							:value="row[columnIndex]"
 							:style="{ width: width(column.width) }"
 							class="k-table-column"
-							@click.native="
+							@click="
 								onCell({
 									row,
 									rowIndex,
@@ -293,7 +293,7 @@ export default {
 		hasOptions() {
 			return (
 				this.selecting ||
-				this.$scopedSlots.options ||
+				this.$slots.options ||
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
 			);

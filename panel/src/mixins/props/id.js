@@ -1,13 +1,13 @@
+import { useId } from "vue";
+
 export default {
 	props: {
 		/**
-		 * A unique ID. The component `_uid` will be used as default.
+		 * A unique ID
 		 */
 		id: {
 			type: [Number, String],
-			default() {
-				return this._uid;
-			}
+			default: () => useId()
 		}
 	}
 };
