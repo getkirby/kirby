@@ -255,7 +255,7 @@ abstract class FieldClass
 
 	protected function setName(string|null $name = null): void
 	{
-		$this->name = $name;
+		$this->name = strtolower($name ?? $this->type());
 	}
 
 	protected function setPlaceholder(array|string|null $placeholder = null): void
