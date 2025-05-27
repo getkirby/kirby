@@ -154,6 +154,7 @@ export default {
 			if (newValue !== oldValue && newValue !== this.html) {
 				this.html = newValue;
 				this.editor.setContent(this.html);
+				this.isEmpty = this.editor.isEmpty();
 			}
 		}
 	},
