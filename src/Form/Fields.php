@@ -6,8 +6,6 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\Page;
-use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
@@ -352,15 +350,6 @@ class Fields extends Collection
 		$props       = [];
 		$language    = $this->language();
 		$permissions = $this->model->permissions()->can('update');
-
-		if (
-			$this->model instanceof Page ||
-			$this->model instanceof Site
-		) {
-			// the title should never be updated directly via
-			// fields section to avoid conflicts with the rename dialog
-			unset($fields['title']);
-		}
 
 		foreach ($fields as $name => $field) {
 			$props[$name] = $field->toArray();
