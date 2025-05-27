@@ -28,16 +28,16 @@
 	"devDependencies": {
 		"@csstools/postcss-light-dark-function": "^2.0.8",
 		"@vitejs/plugin-vue2": "^2.3.3",
-		"eslint": "^9.26.0",
+		"eslint": "^9.27.0",
 		"eslint-config-prettier": "^10.1.5",
 		"eslint-plugin-vue": "^9.33.0",
 		"glob": "^11.0.2",
 		"jsdom": "^26.1.0",
 		"prettier": "^3.5.3",
-		"terser": "^5.39.1",
+		"terser": "^5.39.2",
 		"vite": "^6.3.5",
 		"vite-plugin-static-copy": "^2.3.1",
-		"vitest": "^3.1.3",
+		"vitest": "^3.1.4",
 		"vue-docgen-api": "^4.79.2"
 	},
 	"browserslist": [
