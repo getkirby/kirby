@@ -613,6 +613,46 @@ class VersionTest extends TestCase
 		$this->assertInstanceOf(Lock::class, $version->lock());
 	}
 
+	public function testMemory()
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertInstanceOf(VersionMemory::class, $version->memory());
+	}
+
+	public function testMemoryMultiLanguage()
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertInstanceOf(VersionMemory::class, $version->memory('en'));
+		$this->assertInstanceOf(VersionMemory::class, $version->memory('de'));
+
+		$this->assertSame([], $version->memory('en')->read());
+		$this->assertSame([], $version->memory('de')->read());
+
+		$version->memory('en')->set('foo', 'bar');
+		$version->memory('de')->set('foo', 'baz');
+
+		$this->assertSame(['foo' => 'bar'], $version->memory('en')->read());
+		$this->assertSame(['foo' => 'baz'], $version->memory('de')->read());
+
+		$version->memory('en')->flush();
+		$version->memory('de')->flush();
+
+		$this->assertSame([], $version->memory('en')->read());
+		$this->assertSame([], $version->memory('de')->read());
+	}
+
 	public function testModel(): void
 	{
 		$this->setUpSingleLanguage();

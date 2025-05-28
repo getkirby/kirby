@@ -275,6 +275,17 @@ class Version
 	}
 
 	/**
+	 * Returns a memory object for the given language
+	 */
+	public function memory(Language|string $language = 'default'): VersionMemory
+	{
+		return new VersionMemory(
+			version: $this,
+			language: Language::ensure($language)
+		);
+	}
+
+	/**
 	 * Returns the parent model
 	 */
 	public function model(): ModelWithContent
