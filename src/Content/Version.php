@@ -42,6 +42,12 @@ class Version
 		$language = Language::ensure($language);
 		$fields   = $this->read($language) ?? [];
 
+		// add fields from memory
+		$fields = [
+			...$fields,
+			...$this->memory($language)->read(),
+		];
+
 		// This is where we merge content from the default language
 		// to provide a fallback for missing/untranslated fields.
 		//
@@ -52,6 +58,7 @@ class Version
 			// merge the fields with the default language
 			$fields = [
 				...$this->read('default') ?? [],
+				...$this->memory('default')->read(),
 				...$fields
 			];
 		}

@@ -70,6 +70,57 @@ class VersionTest extends TestCase
 		$this->assertSame($version->content('en')->toArray(), $version->content('de')->toArray());
 	}
 
+	public function testContentWithMemory(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertSame([], $version->memory()->read());
+
+		$expected = $this->createContentSingleLanguage();
+
+		$this->assertSame($expected['content']['title'], $version->content()->get('title')->value());
+
+		$version->memory()->set('title', 'Custom title');
+		$version->memory()->set('non-existing-field', 'Another value');
+
+		$this->assertSame('Custom title', $version->content()->get('title')->value(), 'Title should be overwritten');
+		$this->assertSame('Another value', $version->content()->get('non-existing-field')->value(), 'Non-existing field should be added');
+	}
+
+	public function testContentWithMemoryMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertSame([], $version->memory('en')->read());
+		$this->assertSame([], $version->memory('de')->read());
+
+		$expected = $this->createContentMultiLanguage();
+
+		$this->assertSame($expected['en']['content']['title'], $version->content('en')->get('title')->value());
+		$this->assertSame($expected['de']['content']['title'], $version->content('de')->get('title')->value());
+
+		$version->memory('en')->set('title', 'Custom title EN');
+		$version->memory('en')->set('non-existing-field', 'Another value EN');
+		$version->memory('de')->set('title', 'Custom title DE');
+		$version->memory('de')->set('non-existing-field', 'Another value DE');
+
+		$this->assertSame('Custom title EN', $version->content('en')->get('title')->value(), 'Title should be overwritten');
+		$this->assertSame('Custom title DE', $version->content('de')->get('title')->value(), 'Title should be overwritten');
+
+		$this->assertSame('Another value EN', $version->content('en')->get('non-existing-field')->value(), 'Non-existing field should be added');
+		$this->assertSame('Another value DE', $version->content('de')->get('non-existing-field')->value(), 'Non-existing field should be added');
+	}
+
 	public function testContentWithNullValues(): void
 	{
 		$this->setUpMultiLanguage();
