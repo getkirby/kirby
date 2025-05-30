@@ -279,7 +279,9 @@ export default (panel) => {
 		async save(values = {}, env = {}) {
 			// ensure to abort unfinished previous save request
 			// to avoid race conditions with older content
-			this.saveAbortController?.abort();
+			this.cancelSaving();
+
+			// create a new abort controller
 			this.saveAbortController = new AbortController();
 
 			try {
