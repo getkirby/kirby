@@ -295,8 +295,8 @@ export default {
 				title: selection
 			};
 		},
-		prepend(text) {
-			this.insert(text + " " + this.selection());
+		async prepend(text) {
+			return this.insert(text + " " + this.selection());
 		},
 		restoreSelectionCallback() {
 			// store selection
