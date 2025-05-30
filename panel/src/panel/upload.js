@@ -344,6 +344,8 @@ export default (panel) => {
 
 				file.completed = true;
 				file.model = response.data;
+
+				panel.events.emit("file.upload", file);
 			} catch (error) {
 				panel.error(error, false);
 
