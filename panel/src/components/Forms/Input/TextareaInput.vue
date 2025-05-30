@@ -298,6 +298,9 @@ export default {
 		async prepend(text) {
 			return this.insert(text + " " + this.selection());
 		},
+		/**
+		 * @deprecated 5.0.0 Use `setSelectionRange` instead
+		 */
 		restoreSelectionCallback() {
 			// store selection
 			const selectionRange = this.selectionRange();
