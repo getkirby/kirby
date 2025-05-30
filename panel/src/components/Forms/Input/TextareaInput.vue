@@ -160,7 +160,7 @@ export default {
 					submit: async (file) => {
 						this.$panel.dialog.close();
 						await this.setSelectionRange(selectionRange);
-						this.insertFile(file);
+						await this.insertFile(file);
 					}
 				}
 			});
@@ -195,9 +195,9 @@ export default {
 
 			return input.value;
 		},
-		insertFile(files) {
+		async insertFile(files) {
 			if (files?.length > 0) {
-				this.insert(files.map((file) => file.dragText).join("\n\n"));
+				await this.insert(files.map((file) => file.dragText).join("\n\n"));
 			}
 		},
 		insertUpload(files) {
