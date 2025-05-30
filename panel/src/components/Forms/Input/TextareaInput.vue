@@ -202,7 +202,11 @@ export default {
 		},
 		async insertUpload(files) {
 			await this.insertFile(files);
-			this.$events.emit("model.update");
+			// `$panel.content.update()` cancels the previously
+			// started lazy save request from the emitted `input`
+			// event in `insertFile` > `insert` and reloads the view
+			// after the request went through.
+			await this.$panel.content.update();
 		},
 		onCommand(command, ...args) {
 			if (typeof this[command] !== "function") {
