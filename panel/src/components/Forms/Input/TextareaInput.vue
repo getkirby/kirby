@@ -329,7 +329,7 @@ export default {
 			this.$refs.input.setSelectionRange(start, end);
 			return this.$nextTick();
 		},
-		toggle(before, after) {
+		async toggle(before, after) {
 			after = after ?? before;
 			const selection = this.selection();
 
