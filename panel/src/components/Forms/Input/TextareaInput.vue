@@ -346,8 +346,8 @@ export default {
 		upload() {
 			this.$panel.upload.pick(this.uploadOptions);
 		},
-		wrap(before, after) {
-			this.insert(before + this.selection() + (after ?? before));
+		async wrap(before, after) {
+			return this.insert(before + this.selection() + (after ?? before));
 		}
 	}
 };
