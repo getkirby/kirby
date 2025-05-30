@@ -141,7 +141,7 @@ export default {
 					submit: async (text) => {
 						this.$panel.dialog.close();
 						await this.setSelectionRange(selectionRange);
-						this.insert(text);
+						await this.insert(text);
 					}
 				}
 			});
@@ -168,7 +168,7 @@ export default {
 		focus() {
 			this.$refs.input.focus();
 		},
-		insert(text) {
+		async insert(text) {
 			const input = this.$refs.input;
 			const current = input.value;
 
@@ -176,22 +176,24 @@ export default {
 				text = text(this.$refs.input, this.selection());
 			}
 
-			setTimeout(() => {
-				input.focus();
+			this.focus();
 
-				// try first via execCommand as this will be considered
-				// as a user action and can be undone by the browser's
-				// native undo function
-				document.execCommand("insertText", false, text);
+			// try first via execCommand as this will be considered
+			// as a user action and can be undone by the browser's
+			// native undo function
+			document.execCommand("insertText", false, text);
 
-				if (input.value === current) {
-					const { start, end } = this.selectionRange();
-					const mode = start === end ? "end" : "select";
-					input.setRangeText(text, start, end, mode);
-				}
+			if (input.value === current) {
+				const { start, end } = this.selectionRange();
+				const mode = start === end ? "end" : "select";
+				input.setRangeText(text, start, end, mode);
+			}
 
-				this.$emit("input", input.value);
-			});
+			await this.$nextTick();
+
+			this.$emit("input", input.value);
+
+			return input.value;
 		},
 		insertFile(files) {
 			if (files?.length > 0) {
