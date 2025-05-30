@@ -355,6 +355,8 @@ export default (panel) => {
 
 				// reset the progress bar on error
 				file.progress = 0;
+
+				panel.events.emit("file.upload.error", file);
 			}
 		}
 	});
