@@ -38,6 +38,10 @@ export default (panel) => {
 		...parent,
 		...listeners(),
 		input: null,
+		announce() {
+			panel.notification.success({ context: "view" });
+			panel.events.emit("model.update");
+		},
 		/**
 		 * Called when dialog's cancel button was clicked
 		 */
@@ -53,7 +57,7 @@ export default (panel) => {
 			// been completely uploaded
 			if (this.completed.length > 0) {
 				await this.emit("complete", this.completed);
-				panel.view.reload();
+				this.announce();
 			}
 
 			this.reset();
@@ -75,11 +79,7 @@ export default (panel) => {
 
 			if (this.completed.length > 0) {
 				await this.emit("done", this.completed);
-
-				if (panel.drawer.isOpen === false) {
-					panel.notification.success({ context: "view" });
-					panel.view.reload();
-				}
+				this.announce();
 			}
 
 			this.reset();
