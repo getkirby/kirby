@@ -94,15 +94,16 @@ export default {
 	},
 	computed: {
 		uploadOptions() {
-			const restoreSelection = this.restoreSelectionCallback();
+			const selectionRange = this.selectionRange();
 
 			return {
 				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				multiple: false,
 				on: {
-					cancel: restoreSelection,
-					done: (files) => {
-						restoreSelection(() => this.insertUpload(files));
+					cancel: async () => await this.setSelectionRange(selectionRange),
+					done: async (files) => {
+						await this.setSelectionRange(selectionRange);
+						this.insertUpload(files);
 					}
 				}
 			};
@@ -128,7 +129,7 @@ export default {
 	},
 	methods: {
 		dialog(dialog) {
-			const restoreSelection = this.restoreSelectionCallback();
+			const selectionRange = this.selectionRange();
 
 			this.$panel.dialog.open({
 				component: "k-toolbar-" + dialog + "-dialog",
@@ -136,16 +137,17 @@ export default {
 					value: this.parseSelection()
 				},
 				on: {
-					cancel: restoreSelection,
-					submit: (text) => {
+					cancel: async () => await this.setSelectionRange(selectionRange),
+					submit: async (text) => {
 						this.$panel.dialog.close();
-						restoreSelection(() => this.insert(text));
+						await this.setSelectionRange(selectionRange);
+						this.insert(text);
 					}
 				}
 			});
 		},
 		file() {
-			const restoreSelection = this.restoreSelectionCallback();
+			const selectionRange = this.selectionRange();
 
 			this.$panel.dialog.open({
 				component: "k-files-dialog",
@@ -154,10 +156,11 @@ export default {
 					multiple: false
 				},
 				on: {
-					cancel: restoreSelection,
-					submit: (file) => {
-						restoreSelection(() => this.insertFile(file));
+					cancel: async () => await this.setSelectionRange(selectionRange),
+					submit: async (file) => {
 						this.$panel.dialog.close();
+						await this.setSelectionRange(selectionRange);
+						this.insertFile(file);
 					}
 				}
 			});
@@ -182,8 +185,7 @@ export default {
 				document.execCommand("insertText", false, text);
 
 				if (input.value === current) {
-					const start = input.selectionStart;
-					const end = input.selectionEnd;
+					const { start, end } = this.selectionRange();
 					const mode = start === end ? "end" : "select";
 					input.setRangeText(text, start, end, mode);
 				}
@@ -296,29 +298,34 @@ export default {
 		},
 		restoreSelectionCallback() {
 			// store selection
-			const start = this.$refs.input.selectionStart;
-			const end = this.$refs.input.selectionEnd;
+			const selectionRange = this.selectionRange();
 
 			// restore selection as `insert` method
 			// depends on it
-			return (callback) => {
-				setTimeout(() => {
-					this.$refs.input.setSelectionRange(start, end);
+			return async (callback) => {
+				await this.setSelectionRange(selectionRange);
 
-					if (callback) {
-						callback();
-					}
-				});
+				if (callback) {
+					callback();
+				}
 			};
 		},
 		select() {
 			this.$refs.select();
 		},
 		selection() {
-			return this.$refs.input.value.substring(
-				this.$refs.input.selectionStart,
-				this.$refs.input.selectionEnd
-			);
+			const { start, end } = this.selectionRange();
+			return this.$refs.input.value.substring(start, end);
+		},
+		selectionRange() {
+			return {
+				start: this.$refs.input.selectionStart,
+				end: this.$refs.input.selectionEnd
+			};
+		},
+		async setSelectionRange({ start, end }) {
+			this.$refs.input.setSelectionRange(start, end);
+			return this.$nextTick();
 		},
 		toggle(before, after) {
 			after = after ?? before;
