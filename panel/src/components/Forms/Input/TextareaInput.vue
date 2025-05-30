@@ -103,7 +103,7 @@ export default {
 					cancel: async () => await this.setSelectionRange(selectionRange),
 					done: async (files) => {
 						await this.setSelectionRange(selectionRange);
-						this.insertUpload(files);
+						await this.insertUpload(files);
 					}
 				}
 			};
@@ -200,8 +200,8 @@ export default {
 				await this.insert(files.map((file) => file.dragText).join("\n\n"));
 			}
 		},
-		insertUpload(files) {
-			this.insertFile(files);
+		async insertUpload(files) {
+			await this.insertFile(files);
 			this.$events.emit("model.update");
 		},
 		onCommand(command, ...args) {
