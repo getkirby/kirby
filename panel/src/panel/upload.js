@@ -78,6 +78,7 @@ export default (panel) => {
 			panel.dialog.close();
 
 			if (this.completed.length > 0) {
+				await this.emit("complete", this.completed);
 				await this.emit("done", this.completed);
 				this.announce();
 			}
