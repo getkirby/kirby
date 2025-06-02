@@ -173,7 +173,7 @@ export default {
 			const current = input.value;
 
 			if (typeof text === "function") {
-				text = text(this.$refs.input, this.selection());
+				text = text(input, this.selection());
 			}
 
 			this.focus();
@@ -337,7 +337,7 @@ export default {
 			return this.$nextTick();
 		},
 		async toggle(before, after) {
-			after = after ?? before;
+			after ??= before;
 			const selection = this.selection();
 
 			if (selection.startsWith(before) && selection.endsWith(after)) {
@@ -354,7 +354,8 @@ export default {
 			this.$panel.upload.pick(this.uploadOptions);
 		},
 		async wrap(before, after) {
-			return this.insert(before + this.selection() + (after ?? before));
+			after ??= before;
+			await this.insert(before + this.selection() + after);
 		}
 	}
 };
