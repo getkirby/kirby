@@ -788,12 +788,15 @@ class VersionTest extends TestCase
 			]
 		]);
 
+		$siteUrl = $this->app->url();
+		$pageUrl = $this->app->page('a-page')->url();
+
 		// site
 		$version = new Version(
 			model: $this->app->site(),
 			id: VersionId::latest()
 		);
-		$expected = substr(hash_hmac('sha1', '{"uri":"","versionId":"latest"}', static::TMP . '/content'), 0, 10);
+		$expected = substr(hash_hmac('sha1', '{"url":"' . $siteUrl . '","versionId":"latest"}', static::TMP . '/content'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 
 		// homepage
@@ -801,7 +804,7 @@ class VersionTest extends TestCase
 			model: $this->app->site()->page('home'),
 			id: VersionId::latest()
 		);
-		$expected = substr(hash_hmac('sha1', '{"uri":"","versionId":"latest"}', static::TMP . '/content'), 0, 10);
+		$expected = substr(hash_hmac('sha1', '{"url":"' . $siteUrl . '","versionId":"latest"}', static::TMP . '/content'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 
 		// another page
@@ -809,7 +812,7 @@ class VersionTest extends TestCase
 			model: $this->model,
 			id: VersionId::latest()
 		);
-		$expected = substr(hash_hmac('sha1', '{"uri":"a-page","versionId":"latest"}', static::TMP . '/content'), 0, 10);
+		$expected = substr(hash_hmac('sha1', '{"url":"' . $pageUrl . '","versionId":"latest"}', static::TMP . '/content'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 	}
 
@@ -830,7 +833,7 @@ class VersionTest extends TestCase
 			id: VersionId::latest()
 		);
 
-		$expected = substr(hash_hmac('sha1', '{"uri":"a-page","versionId":"latest"}', 'testsalt'), 0, 10);
+		$expected = substr(hash_hmac('sha1', '{"url":"/a-page","versionId":"latest"}', 'testsalt'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 	}
 
@@ -855,7 +858,7 @@ class VersionTest extends TestCase
 			id: VersionId::latest()
 		);
 
-		$expected = substr(hash_hmac('sha1', '{"uri":"a-page","versionId":"latest"}', 'salt-lake-city'), 0, 10);
+		$expected = substr(hash_hmac('sha1', '{"url":"/a-page","versionId":"latest"}', 'salt-lake-city'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 	}
 
@@ -1519,38 +1522,38 @@ class VersionTest extends TestCase
 		return [
 			// latest version
 			[null, '/test', null, false, 'latest'],
-			[null, '/test?{token}', 'test', true, 'latest'],
+			[null, '/test?{token}', '/test', true, 'latest'],
 			[true, '/test', null, false, 'latest'],
-			[true, '/test?{token}', 'test', true, 'latest'],
+			[true, '/test?{token}', '/test', true, 'latest'],
 			['https://test.com', 'https://test.com', null, false, 'latest'],
-			['https://test.com', 'https://test.com', null, true, 'latest'],
-			['/something/different', '/something/different', 'something/different', false, 'latest'],
-			['/something/different', '/something/different?{token}', 'something/different', true, 'latest'],
+			['https://test.com', 'https://test.com?{token}', 'https://test.com', true, 'latest'],
+			['/something/different', '/something/different', '/something/different', false, 'latest'],
+			['/something/different', '/something/different?{token}', '/something/different', true, 'latest'],
 			['{{ site.url }}#{{ page.slug }}', '/#test', null, false, 'latest'],
-			['{{ site.url }}#{{ page.slug }}', '/?{token}#test', '', true, 'latest'],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}#test', '/', true, 'latest'],
 			['{{ page.url }}?preview=true', '/test?preview=true', null, false, 'latest'],
-			['{{ page.url }}?preview=true', '/test?preview=true&{token}', 'test', true, 'latest'],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}', '/test', true, 'latest'],
 			['{{ page.url }}/param:something', '/test/param:something', null, false, 'latest'],
-			['{{ page.url }}/param:something', '/test/param:something?{token}', 'test', true, 'latest'],
+			['{{ page.url }}/param:something', '/test/param:something?{token}', '/test', true, 'latest'],
 			[false, null, null, false, 'latest'],
 			[false, null, null, true, 'latest'],
 			[null, null, null, false, 'latest', false],
 
 			// changes version
-			[null, '/test?{token}&_version=changes', 'test', false, 'changes'],
-			[null, '/test?{token}&_version=changes', 'test', true, 'changes'],
-			[true, '/test?{token}&_version=changes', 'test', false, 'changes'],
-			[true, '/test?{token}&_version=changes', 'test', true, 'changes'],
-			['https://test.com', 'https://test.com', null, false, 'changes'],
-			['https://test.com', 'https://test.com', null, true, 'changes'],
-			['/something/different', '/something/different?{token}&_version=changes', 'something/different', false, 'changes'],
-			['/something/different', '/something/different?{token}&_version=changes', 'something/different', true, 'changes'],
-			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', '', false, 'changes'],
-			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', '', true, 'changes'],
-			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', 'test', false, 'changes'],
-			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', 'test', true, 'changes'],
-			['{{ page.url }}/param:something', '/test/param:something?{token}&_version=changes', 'test', false, 'changes'],
-			['{{ page.url }}/param:something', '/test/param:something?{token}&_version=changes', 'test', true, 'changes'],
+			[null, '/test?{token}&_version=changes', '/test', false, 'changes'],
+			[null, '/test?{token}&_version=changes', '/test', true, 'changes'],
+			[true, '/test?{token}&_version=changes', '/test', false, 'changes'],
+			[true, '/test?{token}&_version=changes', '/test', true, 'changes'],
+			['https://test.com', 'https://test.com?{token}&_version=changes', 'https://test.com', false, 'changes'],
+			['https://test.com', 'https://test.com?{token}&_version=changes', 'https://test.com', true, 'changes'],
+			['/something/different', '/something/different?{token}&_version=changes', '/something/different', false, 'changes'],
+			['/something/different', '/something/different?{token}&_version=changes', '/something/different', true, 'changes'],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', '/', false, 'changes'],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', '/', true, 'changes'],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', '/test', false, 'changes'],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', '/test', true, 'changes'],
+			['{{ page.url }}/param:something', '/test/param:something?{token}&_version=changes', '/test', false, 'changes'],
+			['{{ page.url }}/param:something', '/test/param:something?{token}&_version=changes', '/test', true, 'changes'],
 			[false, null, null, false, 'changes'],
 			[false, null, null, true, 'changes'],
 			[null, null, null, false, 'changes', false],
@@ -1561,7 +1564,7 @@ class VersionTest extends TestCase
 	public function testUrlPageCustom(
 		$input,
 		$expected,
-		$expectedUri,
+		$expectedUrl,
 		bool $draft,
 		string $versionId,
 		bool $authenticated = true
@@ -1610,7 +1613,7 @@ class VersionTest extends TestCase
 			$expectedToken = substr(
 				hash_hmac(
 					'sha1',
-					'{"uri":"' . $expectedUri . '","versionId":"' . $versionId . '"}',
+					'{"url":"' . $expectedUrl . '","versionId":"' . $versionId . '"}',
 					$page->kirby()->root('content')
 				),
 				0,
@@ -1662,18 +1665,18 @@ class VersionTest extends TestCase
 	{
 		return [
 			// latest version
-			[null, '/', 'latest'],
-			['https://test.com', 'https://test.com', 'latest'],
-			['{{ site.url }}#test', '/#test', 'latest'],
-			[false, null, 'latest'],
-			[null, null, 'latest', false],
+			[null, '/', '/', 'latest'],
+			['https://test.com', 'https://test.com', 'https://test.com', 'latest'],
+			['{{ site.url }}#test', '/#test', '/', 'latest'],
+			[false, null, null, 'latest'],
+			[null, null, null, 'latest', false],
 
 			// changes version
-			[null, '/?{token}&_version=changes', 'changes'],
-			['https://test.com', 'https://test.com', 'changes'],
-			['{{ site.url }}#test', '/?{token}&_version=changes#test', 'changes'],
-			[false, null, 'changes'],
-			[null, null, 'changes', false],
+			[null, '/?{token}&_version=changes', '/', 'changes'],
+			['https://test.com', 'https://test.com?{token}&_version=changes', 'https://test.com', 'changes'],
+			['{{ site.url }}#test', '/?{token}&_version=changes#test', '/', 'changes'],
+			[false, null, null, 'changes'],
+			[null, null, null, 'changes', false],
 		];
 	}
 
@@ -1681,6 +1684,7 @@ class VersionTest extends TestCase
 	public function testUrlSiteCustom(
 		$input,
 		$expected,
+		$expectedUrl,
 		string $versionId,
 		bool $authenticated = true
 	): void {
@@ -1727,7 +1731,7 @@ class VersionTest extends TestCase
 			$expectedToken = substr(
 				hash_hmac(
 					'sha1',
-					'{"uri":"","versionId":"' . $versionId . '"}',
+					'{"url":"' . $expectedUrl . '","versionId":"' . $versionId . '"}',
 					$site->kirby()->root('content')
 				),
 				0,
