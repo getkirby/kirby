@@ -248,6 +248,7 @@ export default {
 
 .k-tags {
 	display: inline-flex;
+	max-width: 100%;
 	gap: var(--tags-gap);
 	align-items: center;
 	flex-wrap: wrap;
