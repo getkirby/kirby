@@ -41,6 +41,7 @@
 				@dragover="onOver"
 				@dragleave="onOut"
 				@drop="onDrop"
+				@selectionchange="onSelectionChange"
 			/>
 		</div>
 	</div>
@@ -89,20 +90,19 @@ export default {
 	emits: ["focus", "input", "submit"],
 	data() {
 		return {
-			over: false
+			over: false,
+			selectionRange: null
 		};
 	},
 	computed: {
 		uploadOptions() {
-			const selectionRange = this.selectionRange();
-
 			return {
 				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				multiple: false,
 				on: {
-					cancel: async () => await this.setSelectionRange(selectionRange),
+					cancel: async () => await this.restoreSelection(),
 					done: async (files) => {
-						await this.setSelectionRange(selectionRange);
+						await this.restoreSelection();
 						await this.insertUpload(files);
 					}
 				}
@@ -129,26 +129,22 @@ export default {
 	},
 	methods: {
 		dialog(dialog) {
-			const selectionRange = this.selectionRange();
-
 			this.$panel.dialog.open({
 				component: "k-toolbar-" + dialog + "-dialog",
 				props: {
 					value: this.parseSelection()
 				},
 				on: {
-					cancel: async () => await this.setSelectionRange(selectionRange),
+					cancel: async () => await this.restoreSelection(),
 					submit: async (text) => {
 						this.$panel.dialog.close();
-						await this.setSelectionRange(selectionRange);
+						await this.restoreSelection();
 						await this.insert(text);
 					}
 				}
 			});
 		},
 		file() {
-			const selectionRange = this.selectionRange();
-
 			this.$panel.dialog.open({
 				component: "k-files-dialog",
 				props: {
@@ -156,10 +152,10 @@ export default {
 					multiple: false
 				},
 				on: {
-					cancel: async () => await this.setSelectionRange(selectionRange),
+					cancel: async () => await this.restoreSelection(),
 					submit: async (file) => {
 						this.$panel.dialog.close();
-						await this.setSelectionRange(selectionRange);
+						await this.restoreSelection();
 						await this.insertFile(file);
 					}
 				}
@@ -184,12 +180,11 @@ export default {
 			document.execCommand("insertText", false, text);
 
 			if (input.value === current) {
-				const { start, end } = this.selectionRange();
+				const { start, end } = this.selectionRange;
+
 				const mode = start === end ? "end" : "select";
 				input.setRangeText(text, start, end, mode);
 			}
-
-			await this.$nextTick();
 
 			this.$emit("input", input.value);
 
@@ -256,6 +251,12 @@ export default {
 				this.over = true;
 			}
 		},
+		onSelectionChange() {
+			this.selectionRange = {
+				start: this.$refs.input.selectionStart,
+				end: this.$refs.input.selectionEnd
+			};
+		},
 		onShortcut($event) {
 			if (
 				this.buttons !== false &&
@@ -302,17 +303,24 @@ export default {
 		async prepend(text) {
 			return this.insert(text + " " + this.selection());
 		},
+		async restoreSelection() {
+			if (this.selectionRange) {
+				this.$refs.input.setSelectionRange(
+					this.selectionRange.start,
+					this.selectionRange.end
+				);
+			}
+
+			await this.$nextTick();
+		},
 		/**
-		 * @deprecated 5.0.0 Use `setSelectionRange` instead
+		 * @deprecated 5.0.0 Use `restoreSelection` instead
 		 */
 		restoreSelectionCallback() {
-			// store selection
-			const selectionRange = this.selectionRange();
-
 			// restore selection as `insert` method
 			// depends on it
 			return async (callback) => {
-				await this.setSelectionRange(selectionRange);
+				await this.restoreSelection();
 
 				if (callback) {
 					callback();
@@ -323,18 +331,12 @@ export default {
 			this.$refs.select();
 		},
 		selection() {
-			const { start, end } = this.selectionRange();
+			if (!this.selectionRange) {
+				return "";
+			}
+
+			const { start, end } = this.selectionRange;
 			return this.$refs.input.value.substring(start, end);
-		},
-		selectionRange() {
-			return {
-				start: this.$refs.input.selectionStart,
-				end: this.$refs.input.selectionEnd
-			};
-		},
-		async setSelectionRange({ start, end }) {
-			this.$refs.input.setSelectionRange(start, end);
-			return this.$nextTick();
 		},
 		async toggle(before, after) {
 			after ??= before;
