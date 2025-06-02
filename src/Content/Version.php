@@ -11,7 +11,6 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
 use Kirby\Http\Uri;
-use Kirby\Toolkit\Str;
 
 /**
  * The Version class handles all actions for a single
@@ -415,29 +414,15 @@ class Version
 			throw new LogicException('Invalid model type');
 		}
 
-		return $this->previewTokenFromUrl($this->model->url())
-			?? throw new LogicException('Cannot produce local preview token for model');
+		return $this->previewTokenFromUrl($this->model->url());
 	}
 
 	/**
 	 * Returns a verification token for the authentication
 	 * of draft and version previews from a raw URL
-	 * if the URL comes from the same site
 	 */
-	protected function previewTokenFromUrl(string $url): string|null
+	protected function previewTokenFromUrl(string $url): string
 	{
-		$localPrefix = $this->model->kirby()->url('base') . '/';
-
-		// normalize homepage URLs to have a trailing slash
-		// to make the following logic work with those as well
-		if ($url . '/' === $localPrefix) {
-			$url .= '/';
-		}
-
-		if (Str::startsWith($url, $localPrefix) === false) {
-			return null;
-		}
-
 		// get rid of all modifiers after the path
 		$uri = new Uri($url);
 		$uri->fragment = null;
@@ -445,13 +430,13 @@ class Version
 		$uri->query    = null;
 
 		$data = [
-			'uri'       => Str::after($uri->toString(), $localPrefix),
+			'url'       => $uri->toString(),
 			'versionId' => $this->id->value()
 		];
 
 		$token = $this->model->kirby()->contentToken(
 			null,
-			json_encode($data)
+			json_encode($data, JSON_UNESCAPED_SLASHES)
 		);
 
 		return substr($token, 0, 10);
