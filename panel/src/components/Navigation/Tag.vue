@@ -106,6 +106,7 @@ export default {
 .k-tag {
 	position: relative;
 	height: var(--tag-height);
+	max-width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;

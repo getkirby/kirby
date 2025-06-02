@@ -41,5 +41,11 @@
 				text="Foo"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Too long">
+			<k-tag
+				:removable="true"
+				text="Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit sit amet non magna. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor."
+			/>
+		</k-lab-example>
 	</k-lab-examples>
 </template>

@@ -173,6 +173,7 @@ export default {
 /* Element container */
 .k-input-element {
 	flex-grow: 1;
+	min-width: 0;
 }
 
 /* Icon */
