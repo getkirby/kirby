@@ -20,6 +20,7 @@
 					v-bind="inputProps"
 					:value="value"
 					@input="$emit('input', $event)"
+					@submit="$emit('submit', $event)"
 				/>
 			</slot>
 		</span>
@@ -53,7 +54,7 @@ export const props = {
 			default: null
 		}
 	},
-	emits: ["input"]
+	emits: ["input", "submit"]
 };
 
 export default {
