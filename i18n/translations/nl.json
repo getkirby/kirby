@@ -20,7 +20,7 @@
 	"coordinates": "Coördinaten ",
 	"copy": "Kopiëren",
 	"copy.all": "Kopieer alles",
-	"copy.success": "{count} gekopieerd!",
+	"copy.success": "Gekopieerd",
 	"copy.success.multiple": "{count} gekopieerd!",
 	"copy.url": "Kopieer URL",
 	"create": "Aanmaken",
