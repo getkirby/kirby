@@ -42,8 +42,9 @@ trait HasMethods
 
 	/**
 	 * Checks if the object has a registered method
+	 * @internal
 	 */
-	protected function hasMethod(string $method): bool
+	public function hasMethod(string $method): bool
 	{
 		return $this->getMethod($method) !== null;
 	}
