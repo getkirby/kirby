@@ -723,7 +723,7 @@ class FileTest extends TestCase
 		$this->assertSame('//@/file/my-file-uuid', $page->file('test.pdf')->permalink());
 	}
 
-	public function testPreviewUrl()
+	public function testPreviewUrlRedirects()
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -738,6 +738,11 @@ class FileTest extends TestCase
 					'id'    => 'editor',
 					'name'  => 'editor',
 				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => fn (File $file) => $file->filename() === 'allowed.pdf'
+				]
 			]
 		]);
 
@@ -748,13 +753,19 @@ class FileTest extends TestCase
 			'slug'  => 'test',
 			'files' => [
 				[
-					'filename' => 'test.pdf'
+					'filename' => 'allowed.pdf'
+				],
+				[
+					'filename' => 'not-allowed.pdf'
 				]
 			]
 		]);
 
-		$file = $page->file('test.pdf');
-		$this->assertSame('/test/test.pdf', $file->previewUrl());
+		$file1 = $page->file('allowed.pdf');
+		$this->assertSame('/test/allowed.pdf', $file1->previewUrl());
+
+		$file2 = $page->file('not-allowed.pdf');
+		$this->assertSame('/media/pages/test/' . $file2->mediaHash() . '/not-allowed.pdf', $file2->previewUrl());
 	}
 
 	public function testPreviewUrlUnauthenticated()

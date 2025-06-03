@@ -46,6 +46,10 @@
 				<k-number-input :step="0.01" :value="value" @input="value = $event" />
 			</k-lab-example>
 
+			<k-lab-example label="Step: any">
+				<k-number-input step="any" :value="value" @input="value = $event" />
+			</k-lab-example>
+
 			<k-lab-example label="Min: 5">
 				<k-number-input :min="5" :value="value" @input="value = $event" />
 			</k-lab-example>
