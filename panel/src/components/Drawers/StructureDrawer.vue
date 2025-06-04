@@ -9,7 +9,7 @@
 		@submit="$emit('submit', $event)"
 		@tab="$emit('tab', $event)"
 	>
-		<template #options>
+		<template v-if="!disabled" #options>
 			<k-button
 				:disabled="!prev"
 				class="k-drawer-option"

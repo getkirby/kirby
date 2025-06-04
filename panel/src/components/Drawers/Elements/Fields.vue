@@ -1,6 +1,7 @@
 <template>
 	<k-fieldset
 		v-if="hasFields"
+		:disabled="disabled"
 		:fields="fields"
 		:value="value"
 		class="k-drawer-fields"
@@ -13,6 +14,7 @@
 <script>
 export const props = {
 	props: {
+		disabled: Boolean,
 		empty: {
 			type: String,
 			default: () => window.panel.t("drawer.fields.empty")
