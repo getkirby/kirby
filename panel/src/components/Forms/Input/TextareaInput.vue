@@ -29,6 +29,7 @@
 					value
 				}"
 				v-direction
+				:formnovalidate="novalidate"
 				:data-font="font"
 				class="k-textarea-input-native"
 				@click="$refs.toolbar?.close()"
