@@ -6,7 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
+#[CoversNothing]
 class LinkKirbyTagTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Text.LinkKirbyTag';
@@ -27,7 +29,7 @@ class LinkKirbyTagTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testWithLangAttribute()
+	public function testWithLangAttribute(): void
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -52,7 +54,7 @@ class LinkKirbyTagTest extends TestCase
 		$this->assertSame('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
 	}
 
-	public function testWithHash()
+	public function testWithHash(): void
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -79,7 +81,7 @@ class LinkKirbyTagTest extends TestCase
 		$this->assertSame('<a href="https://getkirby.com/de/a#anchor">getkirby.com/de/a</a>', $app->kirbytags('(link: a#anchor lang: de)'));
 	}
 
-	public function testWithUuid()
+	public function testWithUuid(): void
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -114,7 +116,7 @@ class LinkKirbyTagTest extends TestCase
 		$this->assertSame('<a href="https://getkirby.com/error">file</a>', $result);
 	}
 
-	public function testWithUuidDebug()
+	public function testWithUuidDebug(): void
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -145,7 +147,7 @@ class LinkKirbyTagTest extends TestCase
 		$app->kirbytags('(link: page://not-exists)');
 	}
 
-	public function testWithUuidDebugText()
+	public function testWithUuidDebugText(): void
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -176,7 +178,7 @@ class LinkKirbyTagTest extends TestCase
 		$app->kirbytags('(link: page://not-exists text: click here)');
 	}
 
-	public function testWithUuidAndLang()
+	public function testWithUuidAndLang(): void
 	{
 		$app = $this->app->clone([
 			'urls' => [
