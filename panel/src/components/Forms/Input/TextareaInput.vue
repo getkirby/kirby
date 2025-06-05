@@ -41,6 +41,7 @@
 				@dragover="onOver"
 				@dragleave="onOut"
 				@drop="onDrop"
+				@selectionchange="onSelectionChange"
 			/>
 		</div>
 	</div>
@@ -89,20 +90,20 @@ export default {
 	emits: ["focus", "input", "submit"],
 	data() {
 		return {
-			over: false
+			over: false,
+			selectionRange: null
 		};
 	},
 	computed: {
 		uploadOptions() {
-			const restoreSelection = this.restoreSelectionCallback();
-
 			return {
 				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				multiple: false,
 				on: {
-					cancel: restoreSelection,
-					done: (files) => {
-						restoreSelection(() => this.insertUpload(files));
+					cancel: async () => await this.restoreSelection(),
+					done: async (files) => {
+						await this.restoreSelection();
+						await this.insertUpload(files);
 					}
 				}
 			};
@@ -128,25 +129,22 @@ export default {
 	},
 	methods: {
 		dialog(dialog) {
-			const restoreSelection = this.restoreSelectionCallback();
-
 			this.$panel.dialog.open({
 				component: "k-toolbar-" + dialog + "-dialog",
 				props: {
 					value: this.parseSelection()
 				},
 				on: {
-					cancel: restoreSelection,
-					submit: (text) => {
+					cancel: async () => await this.restoreSelection(),
+					submit: async (text) => {
 						this.$panel.dialog.close();
-						restoreSelection(() => this.insert(text));
+						await this.restoreSelection();
+						await this.insert(text);
 					}
 				}
 			});
 		},
 		file() {
-			const restoreSelection = this.restoreSelectionCallback();
-
 			this.$panel.dialog.open({
 				component: "k-files-dialog",
 				props: {
@@ -154,10 +152,11 @@ export default {
 					multiple: false
 				},
 				on: {
-					cancel: restoreSelection,
-					submit: (file) => {
-						restoreSelection(() => this.insertFile(file));
+					cancel: async () => await this.restoreSelection(),
+					submit: async (file) => {
 						this.$panel.dialog.close();
+						await this.restoreSelection();
+						await this.insertFile(file);
 					}
 				}
 			});
@@ -165,40 +164,44 @@ export default {
 		focus() {
 			this.$refs.input.focus();
 		},
-		insert(text) {
+		async insert(text) {
 			const input = this.$refs.input;
 			const current = input.value;
 
 			if (typeof text === "function") {
-				text = text(this.$refs.input, this.selection());
+				text = text(input, this.selection());
 			}
 
-			setTimeout(() => {
-				input.focus();
+			this.focus();
 
-				// try first via execCommand as this will be considered
-				// as a user action and can be undone by the browser's
-				// native undo function
-				document.execCommand("insertText", false, text);
+			// try first via execCommand as this will be considered
+			// as a user action and can be undone by the browser's
+			// native undo function
+			document.execCommand("insertText", false, text);
 
-				if (input.value === current) {
-					const start = input.selectionStart;
-					const end = input.selectionEnd;
-					const mode = start === end ? "end" : "select";
-					input.setRangeText(text, start, end, mode);
-				}
+			if (input.value === current) {
+				const { start, end } = this.selectionRange;
 
-				this.$emit("input", input.value);
-			});
+				const mode = start === end ? "end" : "select";
+				input.setRangeText(text, start, end, mode);
+			}
+
+			this.$emit("input", input.value);
+
+			return input.value;
 		},
-		insertFile(files) {
+		async insertFile(files) {
 			if (files?.length > 0) {
-				this.insert(files.map((file) => file.dragText).join("\n\n"));
+				await this.insert(files.map((file) => file.dragText).join("\n\n"));
 			}
 		},
-		insertUpload(files) {
-			this.insertFile(files);
-			this.$events.emit("model.update");
+		async insertUpload(files) {
+			await this.insertFile(files);
+			// `$panel.content.update()` cancels the previously
+			// started lazy save request from the emitted `input`
+			// event in `insertFile` > `insert` and reloads the view
+			// after the request went through.
+			await this.$panel.content.update();
 		},
 		onCommand(command, ...args) {
 			if (typeof this[command] !== "function") {
@@ -248,6 +251,12 @@ export default {
 				this.over = true;
 			}
 		},
+		onSelectionChange() {
+			this.selectionRange = {
+				start: this.$refs.input.selectionStart,
+				end: this.$refs.input.selectionEnd
+			};
+		},
 		onShortcut($event) {
 			if (
 				this.buttons !== false &&
@@ -291,37 +300,46 @@ export default {
 				title: selection
 			};
 		},
-		prepend(text) {
-			this.insert(text + " " + this.selection());
+		async prepend(text) {
+			return this.insert(text + " " + this.selection());
 		},
-		restoreSelectionCallback() {
-			// store selection
-			const start = this.$refs.input.selectionStart;
-			const end = this.$refs.input.selectionEnd;
+		async restoreSelection() {
+			if (this.selectionRange) {
+				this.$refs.input.setSelectionRange(
+					this.selectionRange.start,
+					this.selectionRange.end
+				);
+			}
 
+			await this.$nextTick();
+		},
+		/**
+		 * @deprecated 5.0.0 Use `restoreSelection` instead
+		 */
+		restoreSelectionCallback() {
 			// restore selection as `insert` method
 			// depends on it
-			return (callback) => {
-				setTimeout(() => {
-					this.$refs.input.setSelectionRange(start, end);
+			return async (callback) => {
+				await this.restoreSelection();
 
-					if (callback) {
-						callback();
-					}
-				});
+				if (callback) {
+					callback();
+				}
 			};
 		},
 		select() {
 			this.$refs.select();
 		},
 		selection() {
-			return this.$refs.input.value.substring(
-				this.$refs.input.selectionStart,
-				this.$refs.input.selectionEnd
-			);
+			if (!this.selectionRange) {
+				return "";
+			}
+
+			const { start, end } = this.selectionRange;
+			return this.$refs.input.value.substring(start, end);
 		},
-		toggle(before, after) {
-			after = after ?? before;
+		async toggle(before, after) {
+			after ??= before;
 			const selection = this.selection();
 
 			if (selection.startsWith(before) && selection.endsWith(after)) {
@@ -337,8 +355,9 @@ export default {
 		upload() {
 			this.$panel.upload.pick(this.uploadOptions);
 		},
-		wrap(before, after) {
-			this.insert(before + this.selection() + (after ?? before));
+		async wrap(before, after) {
+			after ??= before;
+			await this.insert(before + this.selection() + after);
 		}
 	}
 };
