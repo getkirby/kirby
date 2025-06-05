@@ -3,6 +3,6 @@ export default {
 		/**
 		 * A descriptive label for the field
 		 */
-		label: String
+		label: [String, Boolean]
 	}
 };

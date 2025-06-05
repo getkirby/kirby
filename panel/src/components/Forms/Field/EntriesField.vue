@@ -230,7 +230,7 @@ export default {
 		value: {
 			handler(entries) {
 				// no need to add ids again if the values are the same
-				if (entries === this.values) {
+				if (entries === this.values || Array.isArray(entries) === false) {
 					return;
 				}
 
