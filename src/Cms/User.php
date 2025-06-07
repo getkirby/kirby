@@ -24,15 +24,14 @@ use SensitiveParameter;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Users>
  */
 class User extends ModelWithContent
 {
 	use HasFiles;
 	use HasMethods;
 	use HasModels;
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Users>
-	 */
 	use HasSiblings;
 	use UserActions;
 

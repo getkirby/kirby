@@ -18,12 +18,11 @@ use Kirby\Toolkit\I18n;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
  */
 class Field extends Component
 {
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
-	 */
 	use HasSiblings;
 	use Mixin\Api;
 	use Mixin\Model;

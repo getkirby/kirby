@@ -26,12 +26,11 @@ use Stringable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>
  */
 class Language implements Stringable
 {
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>
-	 */
 	use HasSiblings;
 
 	/**

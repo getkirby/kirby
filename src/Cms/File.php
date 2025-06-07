@@ -29,15 +29,14 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Files>
  */
 class File extends ModelWithContent
 {
 	use FileActions;
 	use FileModifications;
 	use HasMethods;
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Files>
-	 */
 	use HasSiblings;
 	use IsFile;
 

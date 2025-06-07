@@ -22,12 +22,10 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  *
  * @template TCollection of \Kirby\Cms\Items
+ * @use \Kirby\Cms\HasSiblings<TCollection>
  */
 class Item
 {
-	/**
-	 * @use \Kirby\Cms\HasSiblings<TCollection>
-	 */
 	use HasSiblings;
 
 	public const ITEMS_CLASS = Items::class;
