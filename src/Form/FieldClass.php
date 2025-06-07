@@ -16,12 +16,11 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
  */
 abstract class FieldClass
 {
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
-	 */
 	use HasSiblings;
 	use Mixin\Api;
 	use Mixin\Model;
