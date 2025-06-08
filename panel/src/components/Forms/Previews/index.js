@@ -46,8 +46,8 @@ export default {
 
 		app.component("k-checkboxes-field-preview", TagsFieldPreview);
 		app.component("k-multiselect-field-preview", TagsFieldPreview);
-		app.component("k-radio-field-preview", TagFieldPreview);
-		app.component("k-select-field-preview", TagFieldPreview);
+		app.component("k-radio-field-preview", TagsFieldPreview);
+		app.component("k-select-field-preview", TagsFieldPreview);
 		app.component("k-toggles-field-preview", TagsFieldPreview);
 	}
 };
