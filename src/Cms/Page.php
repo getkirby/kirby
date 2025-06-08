@@ -28,6 +28,8 @@ use Throwable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
  */
 class Page extends ModelWithContent
 {
@@ -35,9 +37,6 @@ class Page extends ModelWithContent
 	use HasFiles;
 	use HasMethods;
 	use HasModels;
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
-	 */
 	use HasSiblings;
 	use PageActions;
 	use PageSiblings;
