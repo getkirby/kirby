@@ -3,10 +3,10 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \Kirby\Sane\Xml
- */
+#[CoversClass(Xml::class)]
 class XmlTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Xml';
@@ -18,10 +18,8 @@ class XmlTest extends TestCase
 		Xml::$allowedDomains = true;
 	}
 
-	/**
-	 * @dataProvider allowedProvider
-	 */
-	public function testAllowed(string $file)
+	#[DataProvider('allowedProvider')]
+	public function testAllowed(string $file): void
 	{
 		$fixture = $this->fixture($file);
 
@@ -31,12 +29,12 @@ class XmlTest extends TestCase
 		$this->assertStringEqualsFile($fixture, $sanitized);
 	}
 
-	public static function allowedProvider()
+	public static function allowedProvider(): array
 	{
 		return static::fixtureList('allowed', 'xml');
 	}
 
-	public function testAllowedCustomDomainAllowlist()
+	public function testAllowedCustomDomainAllowlist(): void
 	{
 		Xml::$allowedDomains = ['getkirby.com'];
 
@@ -48,10 +46,8 @@ class XmlTest extends TestCase
 		$this->assertStringEqualsFile($fixture, $sanitized);
 	}
 
-	/**
-	 * @dataProvider invalidProvider
-	 */
-	public function testInvalid(string $file)
+	#[DataProvider('invalidProvider')]
+	public function testInvalid(string $file): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The markup could not be parsed');
@@ -59,12 +55,12 @@ class XmlTest extends TestCase
 		Xml::validateFile($this->fixture($file));
 	}
 
-	public static function invalidProvider()
+	public static function invalidProvider(): array
 	{
 		return static::fixtureList('invalid', 'xml');
 	}
 
-	public function testDisallowedJavascriptUrl()
+	public function testDisallowedJavascriptUrl(): void
 	{
 		$fixture   = "<xml>\n<a href='javascript:alert(1)'></a>\n</xml>";
 		$sanitized = "<xml>\n<a/>\n</xml>";
@@ -76,7 +72,7 @@ class XmlTest extends TestCase
 		Xml::validate($fixture);
 	}
 
-	public function testDisallowedJavascriptUrlWithUnicodeLS()
+	public function testDisallowedJavascriptUrlWithUnicodeLS(): void
 	{
 		/**
 		 * Test fixture inspired by DOMPurify
@@ -94,7 +90,7 @@ class XmlTest extends TestCase
 		Xml::validate($fixture);
 	}
 
-	public function testDisallowedXlinkAttack()
+	public function testDisallowedXlinkAttack(): void
 	{
 		$fixture   = $this->fixture('disallowed/xlink-attack.xml');
 		$sanitized = $this->fixture('sanitized/xlink-attack.xml');
@@ -106,7 +102,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedDataUriSvg1()
+	public function testDisallowedDataUriSvg1(): void
 	{
 		$fixture   = $this->fixture('disallowed/data-uri-svg-1.xml');
 		$sanitized = $this->fixture('sanitized/data-uri-svg-1.xml');
@@ -118,7 +114,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedDataUriSvg2()
+	public function testDisallowedDataUriSvg2(): void
 	{
 		$fixture   = $this->fixture('disallowed/data-uri-svg-2.xml');
 		$sanitized = $this->fixture('sanitized/data-uri-svg-2.xml');
@@ -130,7 +126,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedExternalFile()
+	public function testDisallowedExternalFile(): void
 	{
 		$fixture   = $this->fixture('disallowed/xlink-subfolder.xml');
 		$sanitized = $this->fixture('sanitized/xlink-subfolder.xml');
@@ -143,7 +139,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedExternalSource1()
+	public function testDisallowedExternalSource1(): void
 	{
 		$fixture    = $this->fixture('disallowed/external-source-1.xml');
 		$sanitized1 = $this->fixture('sanitized/external-source-1.xml');
@@ -164,7 +160,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedExternalSource2()
+	public function testDisallowedExternalSource2(): void
 	{
 		$fixture    = $this->fixture('disallowed/external-source-2.xml');
 		$sanitized1 = $this->fixture('sanitized/external-source-2.xml');
@@ -185,7 +181,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedNamespaceSvg()
+	public function testDisallowedNamespaceSvg(): void
 	{
 		$fixture   = $this->fixture('disallowed/namespace-svg.xml');
 		$sanitized = $this->fixture('sanitized/namespace-svg.xml');
@@ -197,7 +193,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedNamespaceXhtml1()
+	public function testDisallowedNamespaceXhtml1(): void
 	{
 		$fixture   = $this->fixture('disallowed/namespace-xhtml-1.xml');
 		$sanitized = $this->fixture('sanitized/namespace-xhtml-1.xml');
@@ -209,7 +205,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedNamespaceXhtml2()
+	public function testDisallowedNamespaceXhtml2(): void
 	{
 		$fixture   = $this->fixture('disallowed/namespace-xhtml-2.xml');
 		$sanitized = $this->fixture('sanitized/namespace-xhtml-2.xml');
@@ -221,7 +217,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedDoctypeExternal1()
+	public function testDisallowedDoctypeExternal1(): void
 	{
 		$fixture   = $this->fixture('disallowed/doctype-external-1.xml');
 		$sanitized = $this->fixture('sanitized/doctype-external-1.xml');
@@ -233,7 +229,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedDoctypeExternal2()
+	public function testDisallowedDoctypeExternal2(): void
 	{
 		$fixture   = $this->fixture('disallowed/doctype-external-2.xml');
 		$sanitized = $this->fixture('sanitized/doctype-external-2.xml');
@@ -245,7 +241,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedDoctypeEntityAttack()
+	public function testDisallowedDoctypeEntityAttack(): void
 	{
 		$fixture   = $this->fixture('disallowed/doctype-entity-attack.xml');
 		$sanitized = $this->fixture('sanitized/doctype-entity-attack.xml');
@@ -257,7 +253,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedDoctypeSvg()
+	public function testDisallowedDoctypeSvg(): void
 	{
 		$fixture   = $this->fixture('disallowed/doctype-svg.xml');
 		$sanitized = $this->fixture('sanitized/doctype-svg.xml');
@@ -269,7 +265,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedDoctypeXhtml()
+	public function testDisallowedDoctypeXhtml(): void
 	{
 		$fixture   = $this->fixture('disallowed/doctype-xhtml.xml');
 		$sanitized = $this->fixture('sanitized/doctype-xhtml.xml');
@@ -281,7 +277,7 @@ class XmlTest extends TestCase
 		Xml::validateFile($fixture);
 	}
 
-	public function testDisallowedStylesheet()
+	public function testDisallowedStylesheet(): void
 	{
 		$fixture   = $this->fixture('disallowed/stylesheet.xml');
 		$sanitized = $this->fixture('sanitized/stylesheet.xml');
