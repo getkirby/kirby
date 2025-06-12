@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RouteTest extends TestCase
 {
@@ -13,7 +14,7 @@ class RouteTest extends TestCase
 		return $route;
 	}
 
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$route = new Route('/', 'POST', $func = fn () => 'test');
 
@@ -23,7 +24,7 @@ class RouteTest extends TestCase
 		$this->assertSame('test', $route->action()->call($route));
 	}
 
-	public function testName()
+	public function testName(): void
 	{
 		$route = new Route('a', 'GET', function () {
 		}, [
@@ -33,7 +34,7 @@ class RouteTest extends TestCase
 		$this->assertSame('test', $route->name());
 	}
 
-	public function testAttributes()
+	public function testAttributes(): void
 	{
 		$route = new Route('a', 'GET', function () {
 		}, $attributes = [
@@ -44,7 +45,7 @@ class RouteTest extends TestCase
 		$this->assertSame($attributes, $route->attributes());
 	}
 
-	public function testAttributesGetter()
+	public function testAttributesGetter(): void
 	{
 		$route = new Route('a', 'GET', function () {
 		}, [
@@ -55,19 +56,19 @@ class RouteTest extends TestCase
 		$this->assertNull($route->b());
 	}
 
-	public function testPattern()
+	public function testPattern(): void
 	{
 		$route = $this->_route();
 		$this->assertSame('a', $route->pattern());
 	}
 
-	public function testMethod()
+	public function testMethod(): void
 	{
 		$route = $this->_route();
 		$this->assertSame('GET', $route->method());
 	}
 
-	public function testRegex()
+	public function testRegex(): void
 	{
 		$route = $this->_route();
 		$this->assertSame('a/(-?[0-9]+)/b', $route->regex('a/(:num)/b'));
@@ -114,10 +115,8 @@ class RouteTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider patternProvider
-	 */
-	public function testParse($pattern, $input, $match)
+	#[DataProvider('patternProvider')]
+	public function testParse($pattern, $input, $match): void
 	{
 		$route = $this->_route();
 

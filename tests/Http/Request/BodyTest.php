@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class BodyTest extends TestCase
 {
-	public function testContents()
+	public function testContents(): void
 	{
 		// default contents
 		$body = new Body();
@@ -28,7 +28,7 @@ class BodyTest extends TestCase
 		$this->assertSame('foo', $body->contents());
 	}
 
-	public function testData()
+	public function testData(): void
 	{
 		// default
 		$data = [];
@@ -56,7 +56,7 @@ class BodyTest extends TestCase
 		$this->assertSame([], $body->data());
 	}
 
-	public function testToArrayAndDebuginfo()
+	public function testToArrayAndDebuginfo(): void
 	{
 		$data = ['a' => 'a'];
 		$body = new Body($data);
@@ -64,14 +64,14 @@ class BodyTest extends TestCase
 		$this->assertSame($data, $body->__debugInfo());
 	}
 
-	public function testToJson()
+	public function testToJson(): void
 	{
 		$data = ['a' => 'a'];
 		$body = new Body($data);
 		$this->assertSame(json_encode($data), $body->toJson());
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		// default
 		$body = new Body();

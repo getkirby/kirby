@@ -19,34 +19,34 @@ class CookieTest extends TestCase
 		Cookie::$key = $this->cookieKey;
 	}
 
-	public function testKey()
+	public function testKey(): void
 	{
 		$this->assertSame('KirbyHttpCookieKey', Cookie::$key);
 		Cookie::$key = 'KirbyToolkitCookieKey';
 		$this->assertSame('KirbyToolkitCookieKey', Cookie::$key);
 	}
 
-	public function testLifetime()
+	public function testLifetime(): void
 	{
 		$this->assertSame(253402214400, Cookie::lifetime(253402214400));
 		$this->assertSame((600 + time()), Cookie::lifetime(10));
 		$this->assertSame(0, Cookie::lifetime(-10));
 	}
 
-	public function testSet()
+	public function testSet(): void
 	{
 		Cookie::set('foo', 'bar');
 		$this->assertSame('171fb1229817374e4110110384cb6be060d97351+bar', $_COOKIE['foo']);
 	}
 
-	public function testForever()
+	public function testForever(): void
 	{
 		Cookie::forever('forever', 'bar');
 		$this->assertSame('171fb1229817374e4110110384cb6be060d97351+bar', $_COOKIE['forever']);
 		$this->assertTrue(Cookie::exists('forever'));
 	}
 
-	public function testRemove()
+	public function testRemove(): void
 	{
 		Cookie::forever('forever', 'bar');
 
@@ -55,7 +55,7 @@ class CookieTest extends TestCase
 		$this->assertFalse(Cookie::remove('none'));
 	}
 
-	public function testExists()
+	public function testExists(): void
 	{
 		Cookie::set('foo', 'bar');
 
@@ -63,7 +63,7 @@ class CookieTest extends TestCase
 		$this->assertFalse(Cookie::exists('new'));
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		Cookie::set('foo', 'bar');
 
@@ -72,7 +72,7 @@ class CookieTest extends TestCase
 		$this->assertSame($_COOKIE, Cookie::get());
 	}
 
-	public function testGetSetTrack()
+	public function testGetSetTrack(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -88,7 +88,7 @@ class CookieTest extends TestCase
 		$this->assertSame(['foo', 'bar'], $app->response()->usesCookies());
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		// valid
 		$_COOKIE['foo'] = '171fb1229817374e4110110384cb6be060d97351+bar';
