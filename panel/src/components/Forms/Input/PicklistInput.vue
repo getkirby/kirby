@@ -161,6 +161,7 @@ export default {
 					option.disabled ||
 					(this.isFull && this.value.includes(option.value) === false),
 				text: this.highlight(option.text)
+				...(this.search.infofield && option.info ? { info: this.highlight(option.info) } : {})
 			}));
 		},
 		filteredOptions() {
@@ -168,7 +169,21 @@ export default {
 			if (this.query.length < (this.search.min ?? 0)) {
 				return;
 			}
+			// include the info field in the search if the user has set the option to true...
+			if (this.search.infofield) {
+				// check if the query matches any of the fields and return as one matches
+				let results = this.$helper.array.search(this.options, this.query, { field: "text" });
 
+				results = results.concat(this.$helper.array.search(this.options, this.query, { field: "info" }));
+
+				// remove duplicates
+				results = results.filter((item, index, self) =>
+					index === self.findIndex((t) => t === item)
+				);
+
+				return results;
+			}
+			// ...otherwise just search the text field
 			return this.$helper.array.search(this.options, this.query, {
 				field: "text"
 			});
