@@ -22,6 +22,7 @@
 			@keydown.delete="onDelete"
 		/>
 		<input
+			:formnovalidate="novalidate"
 			:name="name"
 			:required="required"
 			:value="value ? [value.x, value.y] : null"

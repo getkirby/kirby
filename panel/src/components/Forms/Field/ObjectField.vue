@@ -57,6 +57,7 @@
 		<input
 			type="checkbox"
 			:checked="!isEmpty"
+			:formnovalidate="novalidate"
 			:required="required"
 			class="input-hidden"
 		/>
