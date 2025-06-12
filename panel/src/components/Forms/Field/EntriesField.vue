@@ -229,10 +229,7 @@ export default {
 	watch: {
 		value: {
 			handler(entries) {
-				if (Array.isArray(entries) === false) {
-					this.entries = [];
-					return;
-				}
+				entries ??= [];
 
 				// no need to add ids again if the values are the same
 				if (entries === this.values) {
