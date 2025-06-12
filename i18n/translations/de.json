@@ -307,7 +307,7 @@
 	"field.blocks.delete.confirm.all": "Willst du wirklich alle Blöcke löschen?",
 	"field.blocks.delete.confirm.selected": "Willst du wirklich die ausgewählten Blöcke löschen?",
 	"field.blocks.empty": "Keine Blöcke",
-	"field.blocks.fieldsets.empty": "Keine Block Definition",
+	"field.blocks.fieldsets.empty": "Keine Blockdefinitionen",
 	"field.blocks.fieldsets.label": "Bitte wähle einen Blocktyp aus …",
 	"field.blocks.fieldsets.paste": "Drücke <kbd>{{ shortcut }}</kbd> um Layouts/Blocks von deinem Clipboard zu importieren. <small>Nur die, die im aktuellen Feld erlaubt sind werden eingefügt.</small>",
 	"field.blocks.gallery.name": "Galerie",
@@ -357,7 +357,7 @@
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
 	"field.entries.delete.confirm.all": "Möchtest du wirklich alle Einträge löschen?",
-	"field.entries.empty": "Es bestehen keine Einträge.",
+	"field.entries.empty": "Keine Einträge",
 
 	"field.files.empty": "Keine Dateien ausgewählt",
 	"field.files.empty.single": "Keine Dateien ausgewählt",
