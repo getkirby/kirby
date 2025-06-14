@@ -84,9 +84,10 @@ export default {
 	border-end-end-radius: 0;
 }
 
-.k-button-group[data-layout="collapsed"] > .k-button:not([data-theme]) {
+.k-button-group[data-layout="collapsed"] > .k-button {
 	--theme-color-border: var(--panel-color-back);
 }
+
 .k-button-group[data-layout="collapsed"]
 	> .k-button[data-variant="filled"]:not(:first-child) {
 	border-start-start-radius: 0;
