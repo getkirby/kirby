@@ -281,7 +281,8 @@ class Fields extends Collection
 	 */
 	public function submit(
 		array $input,
-		bool $passthrough = true
+		bool $passthrough = true,
+		bool $force = false
 	): static {
 		$language = $this->language();
 
@@ -294,8 +295,13 @@ class Fields extends Collection
 				continue;
 			}
 
-			// don't change the value of non-submittable fields
-			if ($field->isSubmittable($language) === false) {
+			// don't submit fields without a value
+			if ($force === true && $field->hasValue() === false) {
+				continue;
+			}
+
+			// don't submit fields that are not submittable
+			if ($force === false && $field->isSubmittable($language) === false) {
 				continue;
 			}
 

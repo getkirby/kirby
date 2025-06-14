@@ -637,6 +637,35 @@ class FieldsTest extends TestCase
 		], $fields->toStoredValues());
 	}
 
+	public function testSubmitWithForceAndANoValueField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'info',
+					'value' => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(
+			input: [
+				'a' => 'A updated',
+				'b' => 'B updated',
+			],
+			force: true
+		);
+
+		$this->assertSame([
+			'a' => 'A updated',
+		], $fields->toStoredValues(), 'The info field can never be submitted. It has no value.');
+	}
+
 	public function testSubmitWithClosureValues(): void
 	{
 		$fields = new Fields(
