@@ -318,11 +318,13 @@ class Form
 	 */
 	public function submit(
 		array $input,
-		bool $passthrough = true
+		bool $passthrough = true,
+		bool $force = false
 	): static {
 		$this->fields->submit(
-			input:       $input,
-			passthrough: $passthrough
+			input: $input,
+			passthrough: $passthrough,
+			force: $force
 		);
 		return $this;
 	}

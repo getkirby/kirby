@@ -637,6 +637,66 @@ class FieldsTest extends TestCase
 		], $fields->toStoredValues());
 	}
 
+	public function testSubmitWithForceAndANoValueField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'info',
+					'value' => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(
+			input: [
+				'a' => 'A updated',
+				'b' => 'B updated',
+			],
+			force: true
+		);
+
+		$this->assertSame([
+			'a' => 'A updated',
+		], $fields->toStoredValues(), 'The info field can never be submitted. It has no value.');
+	}
+
+	public function testSubmitWithForceAndAComplexDisabledField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'     => 'date',
+					'disabled' => true,
+					'value'    => '2025-01-01',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(
+			input: [
+				'a' => 'A updated',
+				'b' => '03.04.2025',
+			],
+			force: true
+		);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => '2025-04-03',
+		], $fields->toStoredValues(), 'The date field should still be able to format the value correctly even if it was disabled.');
+	}
+
 	public function testSubmitWithClosureValues(): void
 	{
 		$fields = new Fields(
