@@ -666,7 +666,10 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			language: $languageCode,
 		);
 
-		$form->submit($input ?? []);
+		$form->submit(
+			input: $input ?? [],
+			force: $validate === false
+		);
 
 		if ($validate === true) {
 			$form->validate();
