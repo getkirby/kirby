@@ -117,8 +117,11 @@ class ViewButton extends Button
 		string $name,
 		string|null $view = null
 	): array|Closure {
-		// collect all buttons from areas
-		$buttons = Panel::buttons();
+		// collect all buttons from areas and config
+		$buttons = [
+			...Panel::buttons(),
+			...App::instance()->option('panel.viewButtons.' . $view, [])
+		];
 
 		// try to find by full name (view-prefixed)
 		if ($view && $button = $buttons[$view . '.' . $name] ?? null) {
