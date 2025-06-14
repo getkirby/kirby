@@ -149,14 +149,18 @@ export default (panel, key, defaults) => {
 		/**
 		 * Custom submitter for the dialog/drawer
 		 * It will automatically close the modal
-		 * if there's no submit listner or backend route.
+		 * if there's no submit listener or backend route.
 		 *
 		 * @param {Object} value
 		 * @param {Object} options
 		 * @returns {Promise} The new state or false if the request failed
 		 */
 		async submit(value, options = {}) {
-			value = value ?? this.props.value;
+			if (this.isLoading === true) {
+				return;
+			}
+
+			value ??= this.props.value;
 
 			if (this.hasEventListener("submit")) {
 				return this.emit("submit", value, options);
