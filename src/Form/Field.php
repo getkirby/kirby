@@ -161,7 +161,7 @@ class Field extends Component
 					return $when;
 				},
 				/**
-				 * The width of the field in the field grid. Available widths: `1/1`, `1/2`, `1/3`, `1/4`, `2/3`, `3/4`
+				 * The width of the field in the field grid, e.g. `1/1`, `1/2`, `1/3`, `1/4`, `2/3`, `3/4`
 				 */
 				'width' => function (string $width = '1/1') {
 					return $width;
