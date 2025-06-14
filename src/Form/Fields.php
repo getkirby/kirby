@@ -277,7 +277,10 @@ class Fields extends Collection
 	/**
 	 * Sets the value for each field with a matching key in the input array
 	 * but only if the field is not disabled
+	 *
 	 * @since 5.0.0
+	 * @param bool $passthrough If true, values for undefined fields will be submitted
+	 * @param bool $force If true, values for fields that cannot be submitted (e.g. disabled or untranslatable fields) will be submitted
 	 */
 	public function submit(
 		array $input,
