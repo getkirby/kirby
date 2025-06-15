@@ -3,7 +3,6 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Page;
-use Kirby\Exception\Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Content::class)]
@@ -197,9 +196,33 @@ class ContentTest extends TestCase
 			'b' => 'B'
 		]);
 
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('`$content->update()` is no longer functional. Please use `$model->version()->update()` instead');
+		$content->update([
+			'a' => 'aaa'
+		]);
 
-		$content->update();
+		$this->assertSame('aaa', $content->get('a')->value());
+
+		$content->update([
+			'miXED' => 'mixed!'
+		]);
+
+		$this->assertSame('mixed!', $content->get('mixed')->value());
+
+		// Field objects should be cleared on update
+		$content->update([
+			'a' => 'aaaaaa'
+		]);
+
+		$this->assertSame('aaaaaa', $content->get('a')->value());
+
+		$content->update($expected = [
+			'TEST' => 'TEST'
+		], true);
+
+		$this->assertSame(['test' => 'TEST'], $content->data());
+
+		$content->update(null, true);
+
+		$this->assertSame([], $content->data());
 	}
 }
