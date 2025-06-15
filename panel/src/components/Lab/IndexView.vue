@@ -1,6 +1,18 @@
 <template>
 	<k-panel-inside class="k-lab-index-view">
-		<k-header>Lab</k-header>
+		<k-header>
+			Lab
+
+			<template #buttons>
+				<k-input
+					type="search"
+					icon="search"
+					:placeholder="$t('filter') + ' …'"
+					:value="q"
+					@input="q = $event"
+				/>
+			</template>
+		</k-header>
 
 		<k-tabs
 			:tab="tab"
@@ -13,7 +25,7 @@
 		<k-box v-if="info" icon="question" theme="info" :text="info" :html="true" />
 
 		<k-section
-			v-for="category in categories"
+			v-for="category in filteredCategories"
 			:key="category.name"
 			:headline="category.name"
 		>
@@ -34,11 +46,45 @@ export default {
 		categories: Array,
 		info: String,
 		tab: String
+	},
+	data() {
+		return {
+			q: ""
+		};
+	},
+	computed: {
+		filteredCategories() {
+			if (!this.q) {
+				return this.categories;
+			}
+
+			const categories = this.$helper.object.clone(this.categories);
+			const query = this.q.toLowerCase();
+
+			for (const category of categories) {
+				category.examples = category.examples.filter((example) =>
+					example.text.toLowerCase().includes(query)
+				);
+			}
+
+			return categories.filter((category) => category.examples.length > 0);
+		}
 	}
 };
 </script>
 
 <style>
+.k-lab-index-view .k-panel-main > .k-header .k-input {
+	--input-color-back: var(--color-border);
+	--input-color-border: transparent;
+	--input-height: var(--height-md);
+	width: 40cqw;
+	max-width: 20rem;
+	transform: translateY(-0.5rem);
+}
+.k-lab-index-view .k-panel-main > .k-header > .k-header-buttons {
+	margin-bottom: 0;
+}
 .k-lab-index-view .k-panel-main > .k-box {
 	margin-bottom: var(--spacing-8);
 }
