@@ -56,7 +56,7 @@ class Segments extends Collection
 	/**
 	 * Splits the string of a segment chaing into an
 	 * array of segments as well as conenctors (`.` or `?.`)
-	 * @internal
+	 * @unstable
 	 */
 	public static function parse(string $string): array
 	{

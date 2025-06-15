@@ -30,7 +30,7 @@
 <script>
 /**
  * @since 4.0.0
- * @internal
+ * @unstable
  */
 export default {
 	props: {

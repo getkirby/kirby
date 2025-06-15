@@ -13,14 +13,14 @@ use Kirby\Toolkit\A;
  * note that it is so far not viable to build custom
  * handlers because the CMS core relies on the filesystem
  * and cannot fully benefit from this abstraction yet
- * @internal
- * @since 4.0.0
  *
  * @package   Kirby Content
  * @author    Lukas Bestle <lukas@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
+ * @unstable
  */
 abstract class Storage
 {
@@ -104,7 +104,7 @@ abstract class Storage
 
 	/**
 	 * Deletes all versions when deleting a language
-	 * @internal
+	 * @unstable
 	 * @todo Move to `Language` class
 	 */
 	public function deleteLanguage(Language $language): void
@@ -226,7 +226,7 @@ abstract class Storage
 
 	/**
 	 * Adapts all versions when converting languages
-	 * @internal
+	 * @unstable
 	 * @todo Move to `Language` class
 	 */
 	public function moveLanguage(
@@ -290,7 +290,7 @@ abstract class Storage
 
 	/**
 	 * Touches all versions of a language
-	 * @internal
+	 * @unstable
 	 * @todo Move to `Language` class
 	 */
 	public function touchLanguage(Language $language): void

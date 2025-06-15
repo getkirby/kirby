@@ -396,7 +396,7 @@ class Fields extends Collection
 	/**
 	 * Returns an array with the values of each field
 	 * and adds passthrough values if they don't exist
-	 * @internal
+	 * @unstable
 	 */
 	protected function toValues(Closure $method, Closure $filter): array
 	{

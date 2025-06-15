@@ -189,7 +189,7 @@ class App
 	/**
 	 * Returns the Api instance
 	 *
-	 * @internal
+	 * @unstable
 	 */
 	public function api(): Api
 	{
@@ -388,8 +388,6 @@ class App
 
 	/**
 	 * Returns a core component
-	 *
-	 * @internal
 	 */
 	public function component(string $name): mixed
 	{
@@ -398,8 +396,6 @@ class App
 
 	/**
 	 * Returns the content extension
-	 *
-	 * @internal
 	 */
 	public function contentExtension(): string
 	{
@@ -408,8 +404,6 @@ class App
 
 	/**
 	 * Returns files that should be ignored when scanning folders
-	 *
-	 * @internal
 	 */
 	public function contentIgnore(): array
 	{
@@ -726,7 +720,7 @@ class App
 	 * Takes almost any kind of input and
 	 * tries to convert it into a valid response
 	 *
-	 * @internal
+	 * @unstable
 	 */
 	public function io(mixed $input): Response
 	{
@@ -826,7 +820,6 @@ class App
 	/**
 	 * Renders a single KirbyTag with the given attributes
 	 *
-	 * @internal
 	 * @param string|array $type Tag type or array with all tag arguments
 	 *                           (the key of the first element becomes the type)
 	 */
@@ -857,12 +850,12 @@ class App
 	}
 
 	/**
-	 * KirbyTags Parser
-	 *
-	 * @internal
+	 * Parses and resolves KirbyTags in text
 	 */
-	public function kirbytags(string|null $text = null, array $data = []): string
-	{
+	public function kirbytags(
+		string|null $text = null,
+		array $data = []
+	): string {
 		$data['kirby']  ??= $this;
 		$data['site']   ??= $data['kirby']->site();
 		$data['parent'] ??= $data['site']->page();
@@ -878,11 +871,11 @@ class App
 
 	/**
 	 * Parses KirbyTags first and Markdown afterwards
-	 *
-	 * @internal
 	 */
-	public function kirbytext(string|null $text = null, array $options = []): string
-	{
+	public function kirbytext(
+		string|null $text = null,
+		array $options = []
+	): string {
 		$text = $this->apply('kirbytext:before', compact('text'));
 		$text = $this->kirbytags($text, $options);
 		$text = $this->markdown($text, $options['markdown'] ?? []);
@@ -915,8 +908,6 @@ class App
 
 	/**
 	 * Returns the current language code
-	 *
-	 * @internal
 	 */
 	public function languageCode(string|null $languageCode = null): string|null
 	{
@@ -953,8 +944,6 @@ class App
 
 	/**
 	 * Parses Markdown
-	 *
-	 * @internal
 	 */
 	public function markdown(string|null $text = null, array|null $options = null): string
 	{
@@ -1226,7 +1215,7 @@ class App
 	/**
 	 * Path resolver for the router
 	 *
-	 * @internal
+	 * @unstable
 	 * @throws \Kirby\Exception\NotFoundException if the home page cannot be found
 	 */
 	public function resolve(
@@ -1380,8 +1369,6 @@ class App
 
 	/**
 	 * Returns the Router singleton
-	 *
-	 * @internal
 	 */
 	public function router(): Router
 	{
@@ -1413,8 +1400,6 @@ class App
 
 	/**
 	 * Returns all defined routes
-	 *
-	 * @internal
 	 */
 	public function routes(): array
 	{
@@ -1462,8 +1447,6 @@ class App
 	/**
 	 * Load and set the current language if it exists
 	 * Otherwise fall back to the default language
-	 *
-	 * @internal
 	 */
 	public function setCurrentLanguage(
 		string|null $languageCode = null
@@ -1573,8 +1556,6 @@ class App
 
 	/**
 	 * Applies the smartypants rule on the text
-	 *
-	 * @internal
 	 */
 	public function smartypants(string|null $text = null): string
 	{
@@ -1651,8 +1632,6 @@ class App
 	/**
 	 * Uses the template component to initialize
 	 * and return the Template object
-	 *
-	 * @internal
 	 */
 	public function template(
 		string $name,

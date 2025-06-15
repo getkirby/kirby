@@ -61,7 +61,6 @@ class Page extends Model
 	 * used in the panel, when the page
 	 * gets dragged onto a textarea
 	 *
-	 * @internal
 	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
 	 */
 	public function dragText(string|null $type = null): string
@@ -233,8 +232,6 @@ class Page extends Model
 
 	/**
 	 * Returns the image file object based on provided query
-	 *
-	 * @internal
 	 */
 	protected function imageSource(
 		string|null $query = null
@@ -245,8 +242,6 @@ class Page extends Model
 
 	/**
 	 * Returns the full path without leading slash
-	 *
-	 * @internal
 	 */
 	public function path(): string
 	{
@@ -284,8 +279,6 @@ class Page extends Model
 	 * Returns navigation array with
 	 * previous and next page
 	 * based on blueprint definition
-	 *
-	 * @internal
 	 */
 	public function prevNext(): array
 	{
@@ -344,10 +337,7 @@ class Page extends Model
 	}
 
 	/**
-	 * Returns the data array for the
-	 * view's component props
-	 *
-	 * @internal
+	 * Returns the data array for the view's component props
 	 */
 	public function props(): array
 	{
@@ -375,10 +365,7 @@ class Page extends Model
 	}
 
 	/**
-	 * Returns the data array for
-	 * this model's Panel view
-	 *
-	 * @internal
+	 * Returns the data array for this model's Panel view
 	 */
 	public function view(): array
 	{

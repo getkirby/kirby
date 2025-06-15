@@ -12,15 +12,14 @@ use Kirby\Toolkit\Str;
 /**
  * Docs for a single Vue component
  *
- * @internal
- * @since 4.0.0
- * @codeCoverageIgnore
- *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
+ * @internal
+ * @codeCoverageIgnore
  */
 class Docs
 {
@@ -150,6 +149,11 @@ class Docs
 		return $this->json['tags']['internal']['description'] ?? false;
 	}
 
+	public function isUnstable(): bool
+	{
+		return $this->json['tags']['unstable']['description'] ?? false;
+	}
+
 	protected function kt(string $text, bool $inline = false): string
 	{
 		return $this->kirby->kirbytext($text, [
@@ -220,15 +224,14 @@ class Docs
 			return null;
 		}
 
-		$default    = $prop['defaultValue']['value'] ?? null;
-		$deprecated = $this->kt($prop['tags']['deprecated'][0]['description'] ?? '');
+		$default = $prop['defaultValue']['value'] ?? null;
 
 		return [
 			'name'        => Str::camelToKebab($prop['name']),
 			'type'        => $type,
 			'description' => $this->kt($prop['description'] ?? ''),
 			'default'     => $this->propDefault($default, $type),
-			'deprecated'  => $deprecated,
+			'deprecated'  => $this->kt($prop['tags']['deprecated'][0]['description'] ?? ''),
 			'example'     => $prop['tags']['example'][0]['description'] ?? null,
 			'required'    => $prop['required'] ?? false,
 			'since'       => $prop['tags']['since'][0]['description'] ?? null,

@@ -38,7 +38,7 @@
 import Dialog from "@/mixins/dialog.js";
 
 /**
- * @internal
+ * @unstable
  */
 export default {
 	mixins: [Dialog],

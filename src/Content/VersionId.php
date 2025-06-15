@@ -12,14 +12,13 @@ use Stringable;
  * to the content. In the future, we also plan to use this
  * for older revisions of the content.
  *
- * @internal
- * @since 5.0.0
- *
  * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
+ * @unstable
  */
 class VersionId implements Stringable
 {

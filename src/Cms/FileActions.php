@@ -174,7 +174,6 @@ trait FileActions
 
 	/**
 	 * Copy the file to the given page
-	 * @internal
 	 */
 	public function copy(Page $page): static
 	{

@@ -209,7 +209,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the global error page id
-	 * @internal
 	 */
 	public function errorPageId(): string
 	{
@@ -234,7 +233,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the global home page id
-	 * @internal
 	 */
 	public function homePageId(): string
 	{
@@ -244,7 +242,6 @@ class Site extends ModelWithContent
 	/**
 	 * Creates an inventory of all files
 	 * and children in the site directory
-	 * @internal
 	 */
 	public function inventory(): array
 	{
@@ -276,7 +273,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the absolute path to the media folder for the page
-	 * @internal
 	 */
 	public function mediaDir(): string
 	{
@@ -285,7 +281,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * @see `::mediaDir`
-	 * @internal
 	 */
 	public function mediaRoot(): string
 	{
@@ -294,7 +289,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * The site's base url for any files
-	 * @internal
 	 */
 	public function mediaUrl(): string
 	{
@@ -367,7 +361,7 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the preview URL with authentication for drafts and versions
-	 * @internal
+	 * @unstable
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
@@ -468,10 +462,8 @@ class Site extends ModelWithContent
 	}
 
 	/**
-	 * Sets the current page by
-	 * id or page object and
+	 * Sets the current page by id or page object and
 	 * returns the current page
-	 * @internal
 	 */
 	public function visit(
 		string|Page $page,

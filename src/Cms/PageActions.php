@@ -360,7 +360,6 @@ trait PageActions
 
 	/**
 	 * Copies the page to a new parent
-	 * @internal
 	 *
 	 * @throws \Kirby\Exception\DuplicateException If the page already exists
 	 */
@@ -699,7 +698,6 @@ trait PageActions
 	/**
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If the folder cannot be moved
-	 * @internal
 	 */
 	public function publish(): static
 	{
@@ -848,9 +846,7 @@ trait PageActions
 	}
 
 	/**
-	 * Convert a page from listed or
-	 * unlisted to draft.
-	 * @internal
+	 * Convert a page from listed or unlisted to draft
 	 *
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If the folder cannot be moved

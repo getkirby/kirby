@@ -41,8 +41,7 @@ trait HasMethods
 	}
 
 	/**
-	 * Checks if the object has a registered method
-	 * @internal
+	 * Checks if the object has a registered custom method
 	 */
 	public function hasMethod(string $method): bool
 	{

@@ -9,14 +9,13 @@ use Kirby\Cms\Language;
  * to avoid multiple storage reads for the same
  * content.
  *
- * @internal
- * @since 5.0.0
- *
  * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
+ * @unstable
  */
 class VersionCache
 {

@@ -178,7 +178,6 @@ class Helpers
 	/**
 	 * Checks if a helper was overridden by the user
 	 * by setting the `KIRBY_HELPER_*` constant
-	 * @internal
 	 *
 	 * @param string $name Name of the helper
 	 */
