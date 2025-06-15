@@ -75,11 +75,16 @@ export default {
 
 <style>
 .k-lab-index-view .k-panel-main > .k-header .k-input {
-	width: 12rem;
-	--input-color-back: var(--color-gray-300);
-	--input-color-icon: var(--color-text-dimmed);
+	--input-color-back: var(--color-border);
+	--input-color-border: transparent;
+	--input-height: var(--height-md);
+	width: 40cqw;
+	max-width: 20rem;
+	transform: translateY(-0.5rem);
 }
-
+.k-lab-index-view .k-panel-main > .k-header > .k-header-buttons {
+	margin-bottom: 0;
+}
 .k-lab-index-view .k-panel-main > .k-box {
 	margin-bottom: var(--spacing-8);
 }
