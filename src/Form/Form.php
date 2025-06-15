@@ -315,14 +315,18 @@ class Form
 	 * but only if the field is not disabled
 	 *
 	 * @since 5.0.0
+	 * @param bool $passthrough If true, values for undefined fields will be submitted
+	 * @param bool $force If true, values for fields that cannot be submitted (e.g. disabled or untranslatable fields) will be submitted
 	 */
 	public function submit(
 		array $input,
-		bool $passthrough = true
+		bool $passthrough = true,
+		bool $force = false
 	): static {
 		$this->fields->submit(
-			input:       $input,
-			passthrough: $passthrough
+			input: $input,
+			passthrough: $passthrough,
+			force: $force
 		);
 		return $this;
 	}
