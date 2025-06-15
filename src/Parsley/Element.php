@@ -8,16 +8,14 @@ use DOMXPath;
 use Kirby\Toolkit\Str;
 
 /**
- * Represents a block level element
- * in an HTML document
- *
- * @since 3.5.0
+ * Represents a block level element in an HTML document
  *
  * @package   Kirby Parsley
- * @author    Bastian Allgeier <bastian@getkirby.com>,
+ * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.5.0
  */
 class Element
 {
