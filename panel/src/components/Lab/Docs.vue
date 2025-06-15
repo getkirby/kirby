@@ -7,7 +7,7 @@
 			title="Unstable"
 			text="This component has been marked as unstable and may change in the future."
 		/>
-		<k-lab-docs-description :description="description" :since="since" />
+		<k-lab-docs-description :description="description" />
 		<k-lab-docs-examples :examples="examples" />
 		<k-lab-docs-props :props="props" />
 		<k-lab-docs-slots :slots="slots" />
