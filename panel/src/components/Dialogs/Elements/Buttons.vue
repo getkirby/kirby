@@ -1,11 +1,7 @@
 <template>
 	<k-button-group class="k-dialog-buttons">
 		<k-button v-if="cancel" v-bind="cancel" />
-		<k-button
-			v-if="submit"
-			v-bind="submit"
-			:icon="$panel.dialog.isLoading ? 'loader' : submit.icon"
-		/>
+		<k-button v-if="submit" v-bind="submit" />
 	</k-button-group>
 </template>
 
@@ -77,7 +73,7 @@ export default {
 			return this.button(this.submitButton, {
 				class: "k-dialog-button-submit",
 				disabled: this.disabled || this.$panel.dialog.isLoading,
-				icon: this.icon,
+				icon: this.$panel.dialog.isLoading ? "loader" : this.icon,
 				text: this.$t("confirm"),
 				theme: this.theme,
 				type: "submit",
