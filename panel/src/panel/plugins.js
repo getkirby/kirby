@@ -1,3 +1,4 @@
+import Vue from "vue";
 import { isObject } from "@/helpers/object.js";
 import isComponent from "@/helpers/isComponent.js";
 
@@ -153,7 +154,8 @@ export const resolveComponentMixins = (component) => {
 				// make sure to only include the mixin if the parent component
 				// hasn't already included it (to avoid duplicate mixins)
 				if (component.extends) {
-					const inherited = new component.extends().$options.mixins ?? [];
+					const extended = Vue.extend(component.extends);
+					const inherited = new extended().$options.mixins ?? [];
 
 					if (inherited.includes(mixins[mixin]) === true) {
 						return;
