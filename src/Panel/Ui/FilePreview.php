@@ -17,7 +17,6 @@ use Kirby\Toolkit\I18n;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
- * @internal
  */
 abstract class FilePreview extends Component
 {

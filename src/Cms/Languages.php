@@ -57,7 +57,6 @@ class Languages extends Collection
 
 	/**
 	 * Creates a new language with the given props
-	 * @internal
 	 */
 	public function create(array $props): Language
 	{
@@ -77,7 +76,7 @@ class Languages extends Collection
 	 * if in single-language mode. In single-language mode
 	 * `Language::single()` is used to create the default language
 	 *
-	 * @internal
+	 * @unstable
 	 */
 	public static function ensure(): static
 	{
@@ -91,8 +90,8 @@ class Languages extends Collection
 	}
 
 	/**
-	 * Convert all defined languages to a collection
-	 * @internal
+	 * Load all languages from the languages directory
+	 * and convert them to a collection
 	 */
 	public static function load(): static
 	{

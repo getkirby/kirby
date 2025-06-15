@@ -213,8 +213,7 @@ class User extends ModelWithContent
 
 	/**
 	 * Constructs a User object and also
-	 * takes User models into account.
-	 * @internal
+	 * takes User models into account
 	 */
 	public static function factory(mixed $props): static
 	{
@@ -222,9 +221,8 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Hashes the user's password unless it is `null`,
+	 * Hashes the provided password unless it is `null`,
 	 * which will leave it as `null`
-	 * @internal
 	 */
 	public static function hashPassword(
 		#[SensitiveParameter]
@@ -427,7 +425,6 @@ class User extends ModelWithContent
 
 	/**
 	 * Returns the absolute path to the media folder for the user
-	 * @internal
 	 */
 	public function mediaDir(): string
 	{
@@ -436,7 +433,6 @@ class User extends ModelWithContent
 
 	/**
 	 * @see `::mediaDir`
-	 * @internal
 	 */
 	public function mediaRoot(): string
 	{
@@ -445,7 +441,6 @@ class User extends ModelWithContent
 
 	/**
 	 * Returns the media url for the user object
-	 * @internal
 	 */
 	public function mediaUrl(): string
 	{
@@ -490,7 +485,6 @@ class User extends ModelWithContent
 
 	/**
 	 * Create a dummy nobody
-	 * @internal
 	 */
 	public static function nobody(): static
 	{

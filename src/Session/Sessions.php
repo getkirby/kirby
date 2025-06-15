@@ -188,7 +188,6 @@ class Sessions
 
 	/**
 	 * Getter for the session store instance
-	 * @internal
 	 */
 	public function store(): SessionStore
 	{
@@ -197,7 +196,6 @@ class Sessions
 
 	/**
 	 * Getter for the cookie name
-	 * @internal
 	 */
 	public function cookieName(): string
 	{

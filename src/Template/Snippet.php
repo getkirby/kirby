@@ -28,7 +28,6 @@ class Snippet extends Tpl
 	 * snippet. This is used to start
 	 * and end slots within this snippet
 	 * in the helper functions
-	 * @internal
 	 */
 	public static self|null $current = null;
 

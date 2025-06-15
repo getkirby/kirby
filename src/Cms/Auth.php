@@ -648,7 +648,6 @@ class Auth
 
 	/**
 	 * Clears the cached user data after logout
-	 * @internal
 	 */
 	public function flush(): void
 	{

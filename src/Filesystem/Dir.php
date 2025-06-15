@@ -216,8 +216,6 @@ class Dir
 	 * relevant information.
 	 *
 	 * Don't use outside the Cms context.
-	 *
-	 * @internal
 	 */
 	public static function inventory(
 		string $dir,

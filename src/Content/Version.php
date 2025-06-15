@@ -16,14 +16,13 @@ use Kirby\Http\Uri;
  * The Version class handles all actions for a single
  * version and is identified by a VersionId instance
  *
- * @internal
- * @since 5.0.0
- *
  * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
+ * @unstable
  */
 class Version
 {
@@ -395,7 +394,7 @@ class Version
 	/**
 	 * Returns a verification token for the authentication
 	 * of draft and version previews
-	 * @internal
+	 * @unstable
 	 */
 	public function previewToken(): string
 	{
@@ -617,7 +616,7 @@ class Version
 
 	/**
 	 * Returns the preview URL with authentication for drafts and versions
-	 * @internal
+	 * @unstable
 	 */
 	public function url(): string|null
 	{

@@ -32,8 +32,7 @@ trait HasModels
 	}
 
 	/**
-	 * Creates a page model if it has been registered
-	 * @internal
+	 * Creates an object from model if it has been registered
 	 */
 	public static function model(string $name, array $props = []): static
 	{

@@ -30,8 +30,6 @@ trait AppErrors
 	 * Allows to disable Whoops globally in CI;
 	 * can be overridden by explicitly setting
 	 * the `whoops` option to `true` or `false`
-	 *
-	 * @internal
 	 */
 	public static bool $enableWhoops = true;
 

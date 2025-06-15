@@ -82,8 +82,8 @@ class Asset
 	}
 
 	/**
-	 * Returns the absolute path to the media folder for the file and its versions
-	 * @internal
+	 * Returns the absolute path to the media folder
+	 * for the file and its versions
 	 * @since 5.0.0
 	 */
 	public function mediaDir(): string

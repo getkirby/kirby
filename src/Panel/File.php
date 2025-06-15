@@ -85,7 +85,6 @@ class File extends Model
 	 * used in the panel, when the file
 	 * gets dragged onto a textarea
 	 *
-	 * @internal
 	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
 	 */
 	public function dragText(
@@ -280,7 +279,6 @@ class File extends Model
 
 	/**
 	 * Returns the image file object based on provided query
-	 * @internal
 	 */
 	protected function imageSource(
 		string|null $query = null
@@ -389,9 +387,7 @@ class File extends Model
 	}
 
 	/**
-	 * Returns the data array for the
-	 * view's component props
-	 * @internal
+	 * Returns the data array for the view's component props
 	 */
 	public function props(): array
 	{
@@ -430,9 +426,7 @@ class File extends Model
 	}
 
 	/**
-	 * Returns navigation array with
-	 * previous and next file
-	 * @internal
+	 * Returns navigation array with previous and next file
 	 */
 	public function prevNext(): array
 	{
@@ -466,9 +460,7 @@ class File extends Model
 	}
 
 	/**
-	 * Returns the data array for
-	 * this model's Panel view
-	 * @internal
+	 * Returns the data array for this model's Panel view
 	 */
 	public function view(): array
 	{
