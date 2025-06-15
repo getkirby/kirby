@@ -29,7 +29,7 @@
 							</k-text>
 						</td>
 						<td class="k-lab-docs-description">
-							<k-lab-docs-deprecated :deprecated="prop.deprecated" />
+							<k-lab-docs-warning title="Deprecated" :text="prop.deprecated" />
 
 							<k-text
 								v-if="prop.description?.length"
