@@ -35,6 +35,7 @@ class Doc
 		public string|null $docBlock = null,
 		public array $events = [],
 		public array $examples = [],
+		public bool $isUnstable = false,
 		public array $methods = [],
 		public array $props = [],
 		public string|null $since = null,
@@ -93,11 +94,12 @@ class Doc
 			description: $data['description'] ?? null,
 			deprecated:  $data['tags']['deprecated'][0]['description'] ?? null,
 			docBlock:    $data['docsBlocks'][0] ?? null,
-			since:       $data['tags']['since'][0]['description'] ?? null,
 			examples:    $data['tags']['examples'] ?? [],
 			events:      $gather('events', Event::class),
+			isUnstable:  isset($data['tags']['unstable']) === true,
 			methods:     $gather('methods', Method::class),
 			props:       $gather('props', Prop::class),
+			since:       $data['tags']['since'][0]['description'] ?? null,
 			slots:       $gather('slots', Slot::class)
 		);
 	}
@@ -165,6 +167,7 @@ class Doc
 			'docBlock'    => $this->docBlock,
 			'events'      => $this->events,
 			'examples'    => $this->examples,
+			'isUnstable'  => $this->isUnstable,
 			'methods'     => $this->methods,
 			'props'       => $this->props,
 			'since'       => $this->since,
@@ -181,7 +184,7 @@ class Doc
 	{
 		return [
 			'image' => [
-				'icon' => 'book',
+				'icon' => $this->isUnstable ? 'lab' : 'book',
 				'back' => 'light-dark(white, var(--color-gray-800))',
 			],
 			'text' => $this->name,
