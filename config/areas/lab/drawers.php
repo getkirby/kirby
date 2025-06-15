@@ -16,12 +16,19 @@ return [
 				];
 			}
 
+			$doc   = Doc::factory($component);
+			$title = $component;
+
+			if ($since = $doc->since) {
+				$title .= ' (since ' . $since . ')';
+			}
+
 			return [
 				'component' => 'k-lab-docs-drawer',
 				'props' => [
 					'icon' => 'book',
-					'title' => $component,
-					'docs'  => Doc::factory($component)->toArray()
+					'title' => $title,
+					'docs'  => $doc->toArray()
 				]
 			];
 		},
