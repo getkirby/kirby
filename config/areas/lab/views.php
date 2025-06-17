@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Panel\Lab\Category;
+use Kirby\Panel\Lab\Doc;
 use Kirby\Panel\Lab\Docs;
 
 return [
@@ -21,18 +22,7 @@ return [
 	'lab.docs' => [
 		'pattern' => 'lab/docs',
 		'action'  => function () {
-			$props = match (Docs::isInstalled()) {
-				true => [
-					'categories' => [['examples' => Docs::all()]],
-					'tab'        => 'docs',
-				],
-				false => [
-					'info' => 'The UI docs are not installed.',
-					'tab'  => 'docs',
-				]
-			};
-
-			return [
+			$view = [
 				'component' => 'k-lab-index-view',
 				'title'     => 'Docs',
 				'breadcrumb' => [
@@ -40,8 +30,28 @@ return [
 						'label' => 'Docs',
 						'link'  => 'lab/docs'
 					]
+				]
+			];
+
+			// if docs are not installed, show info message
+			if (Docs::isInstalled() === false) {
+				return [
+					...$view,
+					'props' => [
+						'info' => 'The UI docs are not installed.',
+						'tab'  => 'docs',
+					],
+				];
+			}
+
+			return [
+				...$view,
+				'props' => [
+					'categories' => [
+						['examples' => Docs::all()]
+					],
+					'tab'        => 'docs',
 				],
-				'props' => $props,
 			];
 		}
 	],
@@ -71,12 +81,24 @@ return [
 				];
 			}
 
-			$docs = new Docs($component);
+			$doc = Doc::factory($component);
+
+			if ($doc === null) {
+				return [
+					'component'  => 'k-lab-index-view',
+					'title'      => $component,
+					'breadcrumb' => $crumbs,
+					'props'      => [
+						'info' => 'No UI docs found for ' . $component . '.',
+						'tab'  => 'docs',
+					],
+				];
+			}
 
 			// header buttons
 			$buttons = [];
 
-			if ($lab = $docs->lab()) {
+			if ($lab = $doc->lab()) {
 				$buttons[] = [
 					'props' => [
 						'text' => 'Lab examples',
@@ -89,7 +111,7 @@ return [
 			$buttons[] = [
 				'props' => [
 					'icon'   => 'github',
-					'link'   => $docs->github(),
+					'link'   => $doc->source(),
 					'target' => '_blank'
 				]
 			];
@@ -101,7 +123,7 @@ return [
 				'props'      => [
 					'buttons'   => $buttons,
 					'component' => $component,
-					'docs'      => $docs->toArray(),
+					'docs'      => $doc->toArray(),
 					'lab'       => $lab
 				]
 			];
@@ -133,18 +155,11 @@ return [
 			$vue      = $example->vue();
 			$compiler = App::instance()->option('panel.vue.compiler', true);
 
-			if ($docs = $props['docs'] ?? null) {
-				if (
-					Docs::isInstalled() === true &&
-					Docs::exists($docs) === true
-				) {
-					$docs = new Docs($docs);
-				} else {
-					$docs = null;
-				}
+			if ($doc = $props['docs'] ?? null) {
+				$doc = Doc::factory($doc);
 			}
 
-			$github = $docs?->github();
+			$github = $doc?->source();
 
 			if ($source = $props['source'] ?? null) {
 				$github ??= 'https://github.com/getkirby/kirby/tree/main/' . $source;
@@ -153,12 +168,12 @@ return [
 			// header buttons
 			$buttons = [];
 
-			if ($docs) {
+			if ($doc) {
 				$buttons[] = [
 					'props' => [
-						'text'   => $docs->name(),
+						'text'   => $doc->name,
 						'icon'   => 'book',
-						'drawer' => 'lab/docs/' . $docs->name()
+						'drawer' => 'lab/docs/' . $doc->name
 					]
 				];
 			}
@@ -187,7 +202,7 @@ return [
 				'props' => [
 					'buttons'  => $buttons,
 					'compiler' => $compiler,
-					'docs'     => $docs?->name(),
+					'docs'     => $doc?->name,
 					'examples' => $vue['examples'],
 					'file'     => $example->module(),
 					'github'   => $github,
