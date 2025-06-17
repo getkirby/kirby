@@ -357,6 +357,7 @@ class Core
 			'config'      => fn (array $roots) => $roots['site'] . '/config',
 			'controllers' => fn (array $roots) => $roots['site'] . '/controllers',
 			'languages'   => fn (array $roots) => $roots['site'] . '/languages',
+			'licenses'     => fn (array $roots) => $roots['site'] . '/licenses',
 			'license'     => fn (array $roots) => $roots['config'] . '/.license',
 			'logs'        => fn (array $roots) => $roots['site'] . '/logs',
 			'models'      => fn (array $roots) => $roots['site'] . '/models',
