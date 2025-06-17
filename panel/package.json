@@ -28,10 +28,10 @@
 	"devDependencies": {
 		"@csstools/postcss-light-dark-function": "^2.0.9",
 		"@vitejs/plugin-vue2": "^2.3.3",
-		"eslint": "^9.28.0",
+		"eslint": "^9.29.0",
 		"eslint-config-prettier": "^10.1.5",
 		"eslint-plugin-vue": "^9.33.0",
-		"glob": "^11.0.2",
+		"glob": "^11.0.3",
 		"jsdom": "^26.1.0",
 		"prettier": "^3.5.3",
 		"terser": "^5.42.0",
