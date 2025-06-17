@@ -1,0 +1,1 @@
+{"description":"View header button to toggle the Panel theme","displayName":"ThemeViewButton","tags":{"since":[{"description":"5.0.0","title":"since"}],"unstable":[{"description":true,"title":"unstable"}]},"component":"k-theme-view-button","sourceFile":"src/components/View/Buttons/ThemeButton.vue"}
