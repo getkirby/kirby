@@ -215,7 +215,7 @@ trait FileActions
 			'translations' => null,
 		]);
 
-		$upload = $file->asset($props['source']);
+		$upload = $file->assetFactory($props['source']);
 
 		// merge the content with the defaults
 		$props['content'] = [
