@@ -108,14 +108,15 @@ class Version
 			(new Changes())->track($this->model);
 		}
 
+		// When we don't flush the version cache here,
+		// there are potential UUID race conditions
+		VersionCache::$cache = [];
+
 		$this->model->storage()->create(
 			versionId: $this->id,
 			language:  $language,
 			fields:    $this->prepareFieldsBeforeWrite($fields, $language)
 		);
-
-		// make sure that an older version does not exist in the cache
-		VersionCache::remove($this, $language);
 	}
 
 	/**
