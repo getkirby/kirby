@@ -215,7 +215,8 @@ trait FileActions
 			'translations' => null,
 		]);
 
-		$upload = $file->asset($props['source']);
+		$upload   = $file->assetFactory($props['source']);
+		$existing = null;
 
 		// merge the content with the defaults
 		$props['content'] = [
@@ -247,7 +248,14 @@ trait FileActions
 		$storage = $file->storage()::class;
 
 		// make sure that the temporary page is stored in memory
-		$file->changeStorage(MemoryStorage::class);
+		$file->changeStorage(
+			toStorage: MemoryStorage::class,
+			// when there’s already an existing file,
+			// we need to make sure that the content is
+			// copied to memory and the existing content
+			// storage entry is not deleted by this step
+			copy: $existing !== null
+		);
 
 		// inject the content
 		$file->setContent($props['content']);
