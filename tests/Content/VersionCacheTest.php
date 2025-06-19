@@ -22,41 +22,41 @@ class VersionCacheTest extends TestCase
 	{
 		$parent = new Page(['slug' => 'test']);
 		$model  = new File(['filename' => 'test.jpg', 'parent' => $parent]);
-		$hash   = spl_object_hash($model);
+		$hash   = spl_object_hash($model->storage());
 
-		$this->assertSame($hash . ':latest:en', VersionCache::key($model->version(), Language::ensure()));
-		$this->assertSame($hash . ':latest:de', VersionCache::key($model->version(), Language::ensure('de')));
-		$this->assertSame($hash . ':changes:en', VersionCache::key($model->version('changes'), Language::ensure()));
+		$this->assertSame('file:test/test.jpg:latest:en:' . $hash, VersionCache::key($model->version(), Language::ensure()));
+		$this->assertSame('file:test/test.jpg:latest:de:' . $hash, VersionCache::key($model->version(), Language::ensure('de')));
+		$this->assertSame('file:test/test.jpg:changes:en:' . $hash, VersionCache::key($model->version('changes'), Language::ensure()));
 	}
 
 	public function testKeyForPage()
 	{
 		$model = new Page(['slug' => 'test']);
-		$hash  = spl_object_hash($model);
+		$hash  = spl_object_hash($model->storage());
 
-		$this->assertSame($hash . ':latest:en', VersionCache::key($model->version(), Language::ensure()));
-		$this->assertSame($hash . ':latest:de', VersionCache::key($model->version(), Language::ensure('de')));
-		$this->assertSame($hash . ':changes:en', VersionCache::key($model->version('changes'), Language::ensure()));
+		$this->assertSame('page:test:latest:en:' . $hash, VersionCache::key($model->version(), Language::ensure()));
+		$this->assertSame('page:test:latest:de:' . $hash, VersionCache::key($model->version(), Language::ensure('de')));
+		$this->assertSame('page:test:changes:en:' . $hash, VersionCache::key($model->version('changes'), Language::ensure()));
 	}
 
 	public function testKeyForSite()
 	{
 		$model = new Site();
-		$hash  = spl_object_hash($model);
+		$hash  = spl_object_hash($model->storage());
 
-		$this->assertSame($hash . ':latest:en', VersionCache::key($model->version(), Language::ensure()));
-		$this->assertSame($hash . ':latest:de', VersionCache::key($model->version(), Language::ensure('de')));
-		$this->assertSame($hash . ':changes:en', VersionCache::key($model->version('changes'), Language::ensure()));
+		$this->assertSame('site::latest:en:' . $hash, VersionCache::key($model->version(), Language::ensure()));
+		$this->assertSame('site::latest:de:' . $hash, VersionCache::key($model->version(), Language::ensure('de')));
+		$this->assertSame('site::changes:en:' . $hash, VersionCache::key($model->version('changes'), Language::ensure()));
 	}
 
 	public function testKeyForUser()
 	{
 		$model = new User(['id' => 'test']);
-		$hash  = spl_object_hash($model);
+		$hash  = spl_object_hash($model->storage());
 
-		$this->assertSame($hash . ':latest:en', VersionCache::key($model->version(), Language::ensure()));
-		$this->assertSame($hash . ':latest:de', VersionCache::key($model->version(), Language::ensure('de')));
-		$this->assertSame($hash . ':changes:en', VersionCache::key($model->version('changes'), Language::ensure()));
+		$this->assertSame('user:test:latest:en:' . $hash, VersionCache::key($model->version(), Language::ensure()));
+		$this->assertSame('user:test:latest:de:' . $hash, VersionCache::key($model->version(), Language::ensure('de')));
+		$this->assertSame('user:test:changes:en:' . $hash, VersionCache::key($model->version('changes'), Language::ensure()));
 	}
 
 	public function testGetSetAndRemove()

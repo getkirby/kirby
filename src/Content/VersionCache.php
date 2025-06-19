@@ -30,7 +30,13 @@ class VersionCache
 	 */
 	public static function key(Version $version, Language $language): string
 	{
-		return spl_object_hash($version->model()) . ':' . $version->id() . ':' . $language->code();
+		$model = $version->model();
+
+		// This solution isn't perfect yet. We need a more unique solution
+		// that won't change when the object gets destroyed.
+		$storageId = spl_object_hash($model->storage());
+
+		return $model::CLASS_ALIAS . ':' . $model->id() . ':' . $version->id() . ':' . $language->code() . ':' . spl_object_hash($model->storage());
 	}
 
 	/**
