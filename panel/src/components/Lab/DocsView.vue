@@ -3,6 +3,8 @@
 		<k-header>
 			{{ component }}
 
+			<span class="k-lab-docs-view-since">Since {{ docs.since }}</span>
+
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />
 			</template>
@@ -35,3 +37,15 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-lab-docs-view-since {
+	padding: var(--spacing-1) var(--spacing-2);
+	margin-inline-start: var(--spacing-3);
+	font-size: var(--text-xs);
+	font-weight: var(--font-normal);
+	background-color: var(--color-blue-300);
+	border: 1px solid var(--color-blue-400);
+	border-radius: var(--rounded);
+}
+</style>
