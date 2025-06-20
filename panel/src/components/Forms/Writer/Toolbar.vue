@@ -26,6 +26,13 @@ export default {
 			type: Object
 		},
 		/**
+		 * Which headings to show in the toolbar
+		 */
+		headings: {
+			default: () => [1, 2, 3, 4, 5, 6],
+			type: [Array, Boolean]
+		},
+		/**
 		 * Whether the toolbar is displayed inline or as
 		 * a floating toolbar near the selection
 		 */
@@ -155,10 +162,10 @@ export default {
 				return available;
 			}
 
-			// get requested nodes from available entries
-			// if they are available
+			const expandedNodes = this.expandNodeTypes(this.nodes);
+
 			return Object.fromEntries(
-				this.nodes
+				expandedNodes
 					.filter((node) => available[node])
 					.map((node) => [node, available[node]])
 			);
@@ -296,6 +303,25 @@ export default {
 				label: entry.label,
 				click: () => this.command(entry.command ?? type)
 			};
+		},
+		/**
+		 * Helper method to expand node types
+		 * @returns {Array}
+		 */
+		expandNodeTypes(nodes) {
+			const expanded = [];
+
+			nodes.forEach((node) => {
+				if (node === 'heading') {
+					this.headings.forEach((level) => {
+						expanded.push(`h${level}`);
+					});
+				} else {
+					expanded.push(node);
+				}
+			});
+
+			return expanded;
 		},
 		/**
 		 * Creates an inline button object
