@@ -34,10 +34,10 @@
 		"glob": "^11.0.3",
 		"jsdom": "^26.1.0",
 		"prettier": "^3.5.3",
-		"terser": "^5.42.0",
+		"terser": "^5.43.1",
 		"vite": "^6.3.5",
 		"vite-plugin-static-copy": "^2.3.1",
-		"vitest": "^3.2.3",
+		"vitest": "^3.2.4",
 		"vue-docgen-api": "^4.79.2"
 	},
 	"browserslist": [
