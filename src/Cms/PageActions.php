@@ -131,7 +131,7 @@ trait PageActions
 
 				// hard reset for the version cache
 				// to avoid broken/overlapping page references
-				VersionCache::$cache = [];
+				VersionCache::reset();
 
 				// remove from the siblings
 				ModelState::update(

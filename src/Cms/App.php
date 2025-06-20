@@ -103,7 +103,7 @@ class App
 		$this->events = new Events($this);
 
 		// start with a fresh version cache
-		VersionCache::$cache = [];
+		VersionCache::reset();
 
 		// register all roots to be able to load stuff afterwards
 		$this->bakeRoots($props['roots'] ?? []);

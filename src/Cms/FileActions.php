@@ -81,7 +81,7 @@ trait FileActions
 
 			// hard reset for the version cache
 			// to avoid broken/overlapping file references
-			VersionCache::$cache = [];
+			VersionCache::reset();
 
 			// move the content storage versions
 			$oldFile->storage()->moveAll(to: $newFile->storage());
