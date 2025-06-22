@@ -184,11 +184,11 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
 	// replace according to language and ascii rules
 	for (const ruleset of rules) {
 		for (const rule in ruleset) {
-			const isTrimmed = rule.slice(0, 1) !== "/";
-			const trimmed = rule.slice(1, rule.length - 1);
-			const regex = isTrimmed ? rule : trimmed;
+			const isRegex = rule.startsWith("/") && rule.endsWith("/");
+			const pattern = isRegex ? rule.slice(1, -1) : rule;
+
 			string = string.replace(
-				new RegExp(RegExp.escape(regex), "g"),
+				new RegExp(RegExp.escape(pattern), "g"),
 				ruleset[rule]
 			);
 		}
@@ -200,18 +200,18 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
 	// replace non-allowed characters (e.g. spaces) with separator
 	string = string.replace(new RegExp("[^" + allowed + "]", "ig"), separator);
 
-	// remove double separators
+	// replace slashes with dashes
+	string = string.replace("/", separator);
+
+	// remove groups of multiple separators
 	string = string.replace(
 		new RegExp("[" + RegExp.escape(separator) + "]{2,}", "g"),
 		separator
 	);
 
-	// replace slashes with dashes
-	string = string.replace("/", separator);
-
 	// trim leading and trailing non-word-chars
-	string = string.replace(new RegExp("^[^a-z0-9]+", "g"), "");
-	string = string.replace(new RegExp("[^a-z0-9]+$", "g"), "");
+	string = string.replace(/^\W+/g, "");
+	string = string.replace(/\W+$/g, "");
 
 	return string;
 }
