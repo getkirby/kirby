@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
@@ -38,6 +39,39 @@ class FileCreateTest extends ModelTestCase
 	}
 
 	public function testCreateDuplicate(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$sourceA = static::TMP . '/sourceA.md';
+		$sourceB = static::TMP . '/sourceB.md';
+
+		// create the dummy source
+		F::write($sourceA, '# Test A');
+		F::write($sourceB, '# Test B');
+
+		$resultA = File::create([
+			'filename' => 'test.md',
+			'source'   => $sourceA,
+			'parent'   => $parent
+		]);
+
+		// add some content for $resultA
+		$resultA = $resultA->update([
+			'a' => 'A'
+		]);
+
+		try {
+			File::create([
+				'filename' => 'test.md',
+				'source'   => $sourceB,
+				'parent'   => $parent
+			]);
+		} catch (DuplicateException $e) {
+			$this->assertSame('A file with the name "test.md" already exists', $e->getMessage());
+			$this->assertSame('A', $resultA->a()->value(), 'Content should be preserved');
+		}
+	}
+
+	public function testCreateDuplicateWithIdenticalSource(): void
 	{
 		$parent = new Page(['slug' => 'test']);
 		$source = static::TMP . '/source.md';

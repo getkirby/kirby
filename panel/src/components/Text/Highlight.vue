@@ -16,7 +16,7 @@ Prism.manual = true;
 
 /**
  * @since 4.0.0
- * @internal
+ * @unstable
  */
 export default {
 	mounted() {

@@ -6,8 +6,6 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\Page;
-use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
@@ -279,11 +277,15 @@ class Fields extends Collection
 	/**
 	 * Sets the value for each field with a matching key in the input array
 	 * but only if the field is not disabled
+	 *
 	 * @since 5.0.0
+	 * @param bool $passthrough If true, values for undefined fields will be submitted
+	 * @param bool $force If true, values for fields that cannot be submitted (e.g. disabled or untranslatable fields) will be submitted
 	 */
 	public function submit(
 		array $input,
-		bool $passthrough = true
+		bool $passthrough = true,
+		bool $force = false
 	): static {
 		$language = $this->language();
 
@@ -296,8 +298,13 @@ class Fields extends Collection
 				continue;
 			}
 
-			// don't change the value of non-submittable fields
-			if ($field->isSubmittable($language) === false) {
+			// don't submit fields without a value
+			if ($force === true && $field->hasValue() === false) {
+				continue;
+			}
+
+			// don't submit fields that are not submittable
+			if ($force === false && $field->isSubmittable($language) === false) {
 				continue;
 			}
 
@@ -353,15 +360,6 @@ class Fields extends Collection
 		$language    = $this->language();
 		$permissions = $this->model->permissions()->can('update');
 
-		if (
-			$this->model instanceof Page ||
-			$this->model instanceof Site
-		) {
-			// the title should never be updated directly via
-			// fields section to avoid conflicts with the rename dialog
-			unset($fields['title']);
-		}
-
 		foreach ($fields as $name => $field) {
 			$props[$name] = $field->toArray();
 
@@ -398,7 +396,7 @@ class Fields extends Collection
 	/**
 	 * Returns an array with the values of each field
 	 * and adds passthrough values if they don't exist
-	 * @internal
+	 * @unstable
 	 */
 	protected function toValues(Closure $method, Closure $filter): array
 	{

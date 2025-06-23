@@ -17,7 +17,6 @@ use Kirby\Toolkit\I18n;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
- * @internal
  */
 abstract class FilePreview extends Component
 {
@@ -49,8 +48,8 @@ abstract class FilePreview extends Component
 			],
 			[
 				'title' => I18n::translate('url'),
-				'text'  => '/' . $this->file->id(),
-				'link'  => $this->file->previewUrl()
+				'link'  => $link = $this->file->previewUrl(),
+				'text'  => $link,
 			],
 			[
 				'title' => I18n::translate('size'),

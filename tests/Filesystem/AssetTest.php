@@ -5,10 +5,9 @@ namespace Kirby\Filesystem;
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Filesystem\Asset
- */
+#[CoversClass(Asset::class)]
 class AssetTest extends TestCase
 {
 	public function setUp(): void
@@ -31,13 +30,6 @@ class AssetTest extends TestCase
 		return new Asset($file);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::root
-	 * @covers ::id
-	 * @covers ::url
-	 * @covers ::path
-	 */
 	public function testConstruct()
 	{
 		$asset = $this->_asset($file = 'images/logo.svg');
@@ -61,9 +53,6 @@ class AssetTest extends TestCase
 		$this->assertSame('images', $asset->path());
 	}
 
-	/**
-	 * @covers ::__call
-	 */
 	public function testCall()
 	{
 		$asset = $this->_asset($file = 'images/logo.svg');
@@ -83,23 +72,25 @@ class AssetTest extends TestCase
 		$asset->foo();
 	}
 
-	/**
-	 * @covers ::mediaHash
-	 * @covers ::mediaPath
-	 * @covers ::mediaRoot
-	 * @covers ::mediaUrl
-	 */
 	public function testMedia()
 	{
 		$asset = $this->_asset();
 
 		$mediaHash = crc32('logo.svg') . '-';
 		$mediaPath = 'assets/images/' . $mediaHash . '/logo.svg';
+		$mediaRoot = $this->app->root('media') . '/' . $mediaPath;
+		$mediaDir  = dirname($mediaRoot);
+		$mediaUrl  = $this->app->url('media') . '/' . $mediaPath;
 
+		$this->assertSame($mediaDir, $asset->mediaDir());
 		$this->assertSame($mediaHash, $asset->mediaHash());
 		$this->assertSame($mediaPath, $asset->mediaPath());
-		$this->assertSame($this->app->root('media') . '/' . $mediaPath, $asset->mediaRoot());
-		$this->assertSame($this->app->url('media') . '/' . $mediaPath, $asset->mediaUrl());
+		$this->assertSame($mediaRoot, $asset->mediaRoot());
+		$this->assertSame($mediaUrl, $asset->mediaUrl());
+
+		$this->assertSame(dirname($mediaPath) . '/test.jpg', $asset->mediaPath('test.jpg'));
+		$this->assertSame($mediaDir . '/test.jpg', $asset->mediaRoot('test.jpg'));
+		$this->assertSame(dirname($mediaUrl) . '/test.jpg', $asset->mediaUrl('test.jpg'));
 	}
 
 	public function testToString()

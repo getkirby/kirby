@@ -18,12 +18,11 @@ use Kirby\Toolkit\I18n;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
  */
 class Field extends Component
 {
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
-	 */
 	use HasSiblings;
 	use Mixin\Api;
 	use Mixin\Model;
@@ -67,11 +66,14 @@ class Field extends Component
 			);
 		}
 
-		$this->setModel($attrs['model'] ?? null);
-
 		// use the type as fallback for the name
 		$attrs['name'] ??= $type;
 		$attrs['type']   = $type;
+
+		// set the name to lowercase
+		$attrs['name'] = strtolower($attrs['name']);
+
+		$this->setModel($attrs['model'] ?? null);
 
 		parent::__construct($type, $attrs);
 
@@ -159,7 +161,7 @@ class Field extends Component
 					return $when;
 				},
 				/**
-				 * The width of the field in the field grid. Available widths: `1/1`, `1/2`, `1/3`, `1/4`, `2/3`, `3/4`
+				 * The width of the field in the field grid, e.g. `1/1`, `1/2`, `1/3`, `1/4`, `2/3`, `3/4`
 				 */
 				'width' => function (string $width = '1/1') {
 					return $width;

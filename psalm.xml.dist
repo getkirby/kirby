@@ -34,6 +34,9 @@
 
 		<!-- Don't warn about duplicate array keys as Psalm will throw false positive when unpacking arrays -->
 		<DuplicateArrayKey errorLevel="suppress" />
+
+		<!-- Don't warn about missing template params as Psalm does not recognize this correctly when using `@uses` for traits in class docblock -->
+		<MissingTemplateParam errorLevel="suppress" />
 	</issueHandlers>
 
 	<plugins>

@@ -6,13 +6,15 @@ use Closure;
 use Stringable;
 
 /**
- * License
+ * Represents the license of a plugin.
+ * Used to display the license in the Panel system view
  *
  * @package   Kirby Plugin
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
  */
 class License implements Stringable
 {

@@ -5,7 +5,6 @@ namespace Kirby\Form;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Language;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\TestCase;
@@ -13,7 +12,6 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Fields::class)]
 class FieldsTest extends TestCase
@@ -639,6 +637,66 @@ class FieldsTest extends TestCase
 		], $fields->toStoredValues());
 	}
 
+	public function testSubmitWithForceAndANoValueField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'info',
+					'value' => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(
+			input: [
+				'a' => 'A updated',
+				'b' => 'B updated',
+			],
+			force: true
+		);
+
+		$this->assertSame([
+			'a' => 'A updated',
+		], $fields->toStoredValues(), 'The info field can never be submitted. It has no value.');
+	}
+
+	public function testSubmitWithForceAndAComplexDisabledField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'     => 'date',
+					'disabled' => true,
+					'value'    => '2025-01-01',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(
+			input: [
+				'a' => 'A updated',
+				'b' => '03.04.2025',
+			],
+			force: true
+		);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => '2025-04-03',
+		], $fields->toStoredValues(), 'The date field should still be able to format the value correctly even if it was disabled.');
+	}
+
 	public function testSubmitWithClosureValues(): void
 	{
 		$fields = new Fields(
@@ -810,35 +868,6 @@ class FieldsTest extends TestCase
 			[new User(['email' => 'test@getkirby.com']), false],
 			[new File(['filename' => 'test.jpg', 'parent' => new Site()]), false],
 		];
-	}
-
-	#[DataProvider('modelProvider')]
-	public function testToPropsWithSkippedTitleFieldForPage(ModelWithContent $model, bool $skip): void
-	{
-		$this->setUpSingleLanguage();
-
-		$fields = new Fields(
-			fields: [
-				'title' => [
-					'type' => 'text',
-				],
-				'subtitle' => [
-					'type' => 'text',
-				]
-			],
-			model: $model
-		);
-
-		$props = $fields->toProps();
-
-		if ($skip === false) {
-			$this->assertCount(2, $props);
-			$this->assertArrayHasKey('title', $props);
-			$this->assertArrayHasKey('subtitle', $props);
-		} else {
-			$this->assertCount(1, $props);
-			$this->assertArrayHasKey('subtitle', $props);
-		}
 	}
 
 	public function testToPropsWithoutUpdatePermission(): void

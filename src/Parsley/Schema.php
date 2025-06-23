@@ -3,15 +3,15 @@
 namespace Kirby\Parsley;
 
 /**
- * Block schema definition
- *
- * @since 3.5.0
+ * Schema definition how to parse
+ * the HTML document into blocks
  *
  * @package   Kirby Parsley
- * @author    Bastian Allgeier <bastian@getkirby.com>,
+ * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.5.0
  */
 class Schema
 {

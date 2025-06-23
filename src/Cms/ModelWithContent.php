@@ -107,7 +107,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Moves or copies the model to a new storage instance/type
 	 * @since 5.0.0
-	 * @internal
+	 * @unstable
 	 */
 	public function changeStorage(Storage|string $toStorage, bool $copy = false): static
 	{
@@ -183,7 +183,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Prepares the content that should be written
 	 * to the text file
-	 * @internal
+	 * @unstable
 	 */
 	public function contentFileData(
 		array $data,
@@ -395,7 +395,6 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 	/**
 	 * Creates a string query, starting from the model
-	 * @internal
 	 */
 	public function query(
 		string|null $query = null,
@@ -440,7 +439,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	abstract public function root(): string|null;
 
 	/**
-	 * @internal
+	 * Low-level method to save the model with the given data.
+	 * Consider using `::update()` instead.
 	 */
 	public function save(
 		array|null $data = null,
@@ -547,7 +547,6 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 	/**
 	 * Returns the content storage handler
-	 * @internal
 	 */
 	public function storage(): Storage
 	{
@@ -666,7 +665,10 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			language: $languageCode,
 		);
 
-		$form->submit($input ?? []);
+		$form->submit(
+			input: $input ?? [],
+			force: $validate === false
+		);
 
 		if ($validate === true) {
 			$form->validate();

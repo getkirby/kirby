@@ -864,6 +864,7 @@ class FTest extends TestCase
 		$this->assertSame('code', F::type('py'));
 		$this->assertSame('code', F::type('java'));
 		$this->assertNull(F::type('foo'));
+		$this->assertNull(F::type('tmp'));
 	}
 
 	/**
@@ -872,6 +873,17 @@ class FTest extends TestCase
 	public function testTypeWithoutExtension()
 	{
 		F::write($file = static::TMP . '/test', '<?php echo "foo"; ?>');
+
+		$this->assertSame('text/x-php', F::mime($file));
+		$this->assertSame('code', F::type($file));
+	}
+
+	/**
+	 * @covers ::type
+	 */
+	public function testTypeWithTmpExtension()
+	{
+		F::write($file = static::TMP . '/test.tmp', '<?php echo "foo"; ?>');
 
 		$this->assertSame('text/x-php', F::mime($file));
 		$this->assertSame('code', F::type($file));

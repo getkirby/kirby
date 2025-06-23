@@ -105,8 +105,6 @@ trait AppTranslations
 
 	/**
 	 * Set the current translation
-	 *
-	 * @internal
 	 */
 	public function setCurrentTranslation(string|null $translationCode = null): void
 	{

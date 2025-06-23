@@ -3,20 +3,20 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Language;
+use WeakMap;
 
 /**
  * The Version cache class keeps content fields
  * to avoid multiple storage reads for the same
  * content.
  *
- * @internal
- * @since 5.0.0
- *
  * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
+ * @unstable
  */
 class VersionCache
 {
@@ -24,22 +24,17 @@ class VersionCache
 	 * All cache values for all versions
 	 * and language combinations
 	 */
-	public static array $cache = [];
-
-	/**
-	 * Creates a unique cache key for any version/language combination
-	 */
-	public static function key(Version $version, Language $language): string
-	{
-		return spl_object_hash($version->model()) . ':' . $version->id() . ':' . $language->code();
-	}
+	protected static WeakMap $cache;
 
 	/**
 	 * Tries to receive a fields for a version/language combination
 	 */
 	public static function get(Version $version, Language $language): array|null
 	{
-		return static::$cache[static::key($version, $language)] ?? null;
+		$model = $version->model();
+		$key   = $version->id() . ':' . $language->code();
+
+		return static::$cache[$model][$key] ?? null;
 	}
 
 	/**
@@ -47,14 +42,40 @@ class VersionCache
 	 */
 	public static function remove(Version $version, Language $language): void
 	{
-		unset(static::$cache[static::key($version, $language)]);
+		$model = $version->model();
+
+		if (isset(static::$cache[$model]) === false) {
+			return;
+		}
+
+		// Avoid indirect manipulation of WeakMap
+		$key = $version->id() . ':' . $language->code();
+		$map = static::$cache[$model];
+		unset($map[$key]);
+		static::$cache[$model] = $map;
+	}
+
+	/**
+	 * Resets the cache
+	 */
+	public static function reset(): void
+	{
+		static::$cache = new WeakMap();
 	}
 
 	/**
 	 * Keeps fields for a version/language combination
 	 */
-	public static function set(Version $version, Language $language, array $fields = []): void
-	{
-		static::$cache[static::key($version, $language)] = $fields;
+	public static function set(
+		Version $version,
+		Language $language,
+		array $fields = []
+	): void {
+		$model = $version->model();
+		$key   = $version->id() . ':' . $language->code();
+
+		static::$cache ??= new WeakMap();
+		static::$cache[$model] ??= [];
+		static::$cache[$model][$key] = $fields;
 	}
 }

@@ -103,7 +103,7 @@ class App
 		$this->events = new Events($this);
 
 		// start with a fresh version cache
-		VersionCache::$cache = [];
+		VersionCache::reset();
 
 		// register all roots to be able to load stuff afterwards
 		$this->bakeRoots($props['roots'] ?? []);
@@ -189,7 +189,7 @@ class App
 	/**
 	 * Returns the Api instance
 	 *
-	 * @internal
+	 * @unstable
 	 */
 	public function api(): Api
 	{
@@ -388,8 +388,6 @@ class App
 
 	/**
 	 * Returns a core component
-	 *
-	 * @internal
 	 */
 	public function component(string $name): mixed
 	{
@@ -398,8 +396,6 @@ class App
 
 	/**
 	 * Returns the content extension
-	 *
-	 * @internal
 	 */
 	public function contentExtension(): string
 	{
@@ -408,8 +404,6 @@ class App
 
 	/**
 	 * Returns files that should be ignored when scanning folders
-	 *
-	 * @internal
 	 */
 	public function contentIgnore(): array
 	{
@@ -726,7 +720,7 @@ class App
 	 * Takes almost any kind of input and
 	 * tries to convert it into a valid response
 	 *
-	 * @internal
+	 * @unstable
 	 */
 	public function io(mixed $input): Response
 	{
@@ -826,7 +820,6 @@ class App
 	/**
 	 * Renders a single KirbyTag with the given attributes
 	 *
-	 * @internal
 	 * @param string|array $type Tag type or array with all tag arguments
 	 *                           (the key of the first element becomes the type)
 	 */
@@ -857,12 +850,12 @@ class App
 	}
 
 	/**
-	 * KirbyTags Parser
-	 *
-	 * @internal
+	 * Parses and resolves KirbyTags in text
 	 */
-	public function kirbytags(string|null $text = null, array $data = []): string
-	{
+	public function kirbytags(
+		string|null $text = null,
+		array $data = []
+	): string {
 		$data['kirby']  ??= $this;
 		$data['site']   ??= $data['kirby']->site();
 		$data['parent'] ??= $data['site']->page();
@@ -878,11 +871,11 @@ class App
 
 	/**
 	 * Parses KirbyTags first and Markdown afterwards
-	 *
-	 * @internal
 	 */
-	public function kirbytext(string|null $text = null, array $options = []): string
-	{
+	public function kirbytext(
+		string|null $text = null,
+		array $options = []
+	): string {
 		$text = $this->apply('kirbytext:before', compact('text'));
 		$text = $this->kirbytags($text, $options);
 		$text = $this->markdown($text, $options['markdown'] ?? []);
@@ -915,8 +908,6 @@ class App
 
 	/**
 	 * Returns the current language code
-	 *
-	 * @internal
 	 */
 	public function languageCode(string|null $languageCode = null): string|null
 	{
@@ -953,8 +944,6 @@ class App
 
 	/**
 	 * Parses Markdown
-	 *
-	 * @internal
 	 */
 	public function markdown(string|null $text = null, array|null $options = null): string
 	{
@@ -1226,7 +1215,7 @@ class App
 	/**
 	 * Path resolver for the router
 	 *
-	 * @internal
+	 * @unstable
 	 * @throws \Kirby\Exception\NotFoundException if the home page cannot be found
 	 */
 	public function resolve(
@@ -1304,16 +1293,46 @@ class App
 			}
 		}
 
+		// try to resolve clean URLs to site files
+		if (str_contains($path, '/') === false) {
+			return $this->resolveFile($site->file($path));
+		}
+
 		$id       = dirname($path);
 		$filename = basename($path);
 
-		// try to resolve image urls for pages and drafts
+		// try to resolve clean URLs to files for pages and drafts
 		if ($page = $site->findPageOrDraft($id)) {
-			return $page->file($filename);
+			return $this->resolveFile($page->file($filename));
 		}
 
-		// try to resolve site files at least
-		return $site->file($filename);
+		// none of our resolvers were successful
+		return null;
+	}
+
+	/**
+	 * Filters a resolved file object using the configuration
+	 * @internal
+	 */
+	public function resolveFile(File|null $file): File|null
+	{
+		// shortcut for files that don't exist
+		if ($file === null) {
+			return null;
+		}
+
+		$option = $this->option('content.fileRedirects', false);
+
+		if ($option === true) {
+			return $file;
+		}
+
+		if ($option instanceof Closure) {
+			return $option($file) === true ? $file : null;
+		}
+
+		// option was set to `false` or an invalid value
+		return null;
 	}
 
 	/**
@@ -1350,8 +1369,6 @@ class App
 
 	/**
 	 * Returns the Router singleton
-	 *
-	 * @internal
 	 */
 	public function router(): Router
 	{
@@ -1383,8 +1400,6 @@ class App
 
 	/**
 	 * Returns all defined routes
-	 *
-	 * @internal
 	 */
 	public function routes(): array
 	{
@@ -1432,8 +1447,6 @@ class App
 	/**
 	 * Load and set the current language if it exists
 	 * Otherwise fall back to the default language
-	 *
-	 * @internal
 	 */
 	public function setCurrentLanguage(
 		string|null $languageCode = null
@@ -1543,8 +1556,6 @@ class App
 
 	/**
 	 * Applies the smartypants rule on the text
-	 *
-	 * @internal
 	 */
 	public function smartypants(string|null $text = null): string
 	{
@@ -1621,8 +1632,6 @@ class App
 	/**
 	 * Uses the template component to initialize
 	 * and return the Template object
-	 *
-	 * @internal
 	 */
 	public function template(
 		string $name,

@@ -53,7 +53,7 @@ class Expression
 	/**
 	 * Splits a comparison string into an array
 	 * of expressions and operators
-	 * @internal
+	 * @unstable
 	 */
 	public static function parse(string $string): array
 	{

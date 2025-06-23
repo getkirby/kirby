@@ -93,7 +93,7 @@ export default {
 			default: () => []
 		},
 		/**
-		 * @private
+		 * @internal
 		 */
 		data: Object,
 		/**

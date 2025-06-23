@@ -123,7 +123,7 @@ class RouterTest extends TestCase
 		$this->assertSame('xml', $result->body());
 	}
 
-	public function testPageFileRoute()
+	public function testPageFileRouteDefault()
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -141,11 +141,37 @@ class RouterTest extends TestCase
 		]);
 
 		$file = $app->call('projects/cover.jpg');
+		$this->assertNull($file);
+	}
+
+	public function testPageFileRouteEnabled()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'projects',
+						'files' => [
+							[
+								'filename' => 'cover.jpg'
+							]
+						]
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
+			]
+		]);
+
+		$file = $app->call('projects/cover.jpg');
 		$this->assertIsFile($file);
 		$this->assertSame('projects/cover.jpg', $file->id());
 	}
 
-	public function testSiteFileRoute()
+	public function testSiteFileRouteDefault()
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -153,6 +179,27 @@ class RouterTest extends TestCase
 					[
 						'filename' => 'background.jpg'
 					]
+				]
+			]
+		]);
+
+		$file = $app->call('background.jpg');
+		$this->assertNull($file);
+	}
+
+	public function testSiteFileRouteEnabled()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'background.jpg'
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
 				]
 			]
 		]);

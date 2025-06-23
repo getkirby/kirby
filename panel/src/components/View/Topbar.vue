@@ -17,7 +17,7 @@
 
 <script>
 /**
- * @internal
+ * @unstable
  */
 export default {
 	props: {

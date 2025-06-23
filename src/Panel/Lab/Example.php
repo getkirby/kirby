@@ -10,15 +10,14 @@ use Kirby\Http\Response;
 /**
  * One or multiple lab examples with one or multiple tabs
  *
- * @internal
- * @since 4.0.0
- * @codeCoverageIgnore
- *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
+ * @internal
+ * @codeCoverageIgnore
  */
 class Example
 {

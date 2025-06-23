@@ -52,13 +52,7 @@ export default {
 		uploadOptions() {
 			return {
 				...this.options.upload,
-				url: this.$panel.urls.api + "/" + this.options.upload.api,
-				on: {
-					complete: () => {
-						this.$panel.notification.success({ context: "view" });
-						this.$events.emit("file.upload");
-					}
-				}
+				url: this.$panel.urls.api + "/" + this.options.upload.api
 			};
 		}
 	},

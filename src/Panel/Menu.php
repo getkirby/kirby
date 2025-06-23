@@ -9,13 +9,14 @@ use Kirby\Toolkit\I18n;
 /**
  * The Menu class takes care of gathering
  * all menu entries for the Panel
- * @since 4.0.0
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
+ * @unstable
  */
 class Menu
 {
@@ -28,7 +29,6 @@ class Menu
 
 	/**
 	 * Returns all areas that are configured for the menu
-	 * @internal
 	 */
 	public function areas(): array
 	{
@@ -88,7 +88,6 @@ class Menu
 
 	/**
 	 * Transforms an area definition into a menu entry
-	 * @internal
 	 */
 	public function entry(array $area): array|false
 	{
@@ -166,7 +165,6 @@ class Menu
 	/**
 	 * Checks if the access permission to a specific area is granted.
 	 * Defaults to allow access.
-	 * @internal
 	 */
 	public function hasPermission(string $id): bool
 	{
@@ -175,7 +173,6 @@ class Menu
 
 	/**
 	 * Whether the menu entry should receive aria-current
-	 * @internal
 	 */
 	public function isCurrent(
 		string $id,
@@ -194,7 +191,6 @@ class Menu
 
 	/**
 	 * Default options entries for bottom of menu
-	 * @internal
 	 */
 	public function options(): array
 	{

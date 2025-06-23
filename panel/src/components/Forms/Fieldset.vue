@@ -47,7 +47,7 @@
 export default {
 	props: {
 		/**
-		 * @private
+		 * @internal
 		 */
 		config: Object,
 		/**

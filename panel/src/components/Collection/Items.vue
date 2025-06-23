@@ -75,7 +75,7 @@ export const props = {
 		},
 		/**
 		 * Optional fields configuration that is used for table layout
-		 * @internal
+		 * @unstable
 		 */
 		fields: {
 			type: Object,

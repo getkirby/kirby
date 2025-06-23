@@ -1,6 +1,12 @@
 <template>
 	<div class="k-lab-docs">
-		<k-lab-docs-deprecated :deprecated="deprecated" />
+		<k-lab-docs-warning title="Deprecated" :text="deprecated" />
+		<k-lab-docs-warning
+			v-if="isUnstable"
+			icon="lab"
+			title="Unstable"
+			text="This component has been marked as unstable and may change in the future."
+		/>
 		<k-lab-docs-description :description="description" :since="since" />
 		<k-lab-docs-examples :examples="examples" />
 		<k-lab-docs-props :props="props" />
@@ -12,7 +18,7 @@
 </template>
 
 <script>
-import { props as DeprecatedProps } from "./Docs/Deprecated.vue";
+import Warning from "./Docs/Warning.vue";
 import Desc, { props as DescProps } from "./Docs/Description.vue";
 import Examples, { props as ExamplesProps } from "./Docs/Examples.vue";
 import Props, { props as PropsProps } from "./Docs/Props.vue";
@@ -21,12 +27,13 @@ import Events, { props as EventsProps } from "./Docs/Events.vue";
 import Methods, { props as MethodsProps } from "./Docs/Methods.vue";
 import DocBlock, { props as DocBlockProps } from "./Docs/DocBlock.vue";
 
-import DocDeprecated from "./DocsDeprecated.vue";
+import DocWarning from "./DocsWarning.vue";
 import DocParams from "./DocsParams.vue";
 import DocTypes from "./DocsTypes.vue";
 
 export default {
 	components: {
+		"k-lab-docs-warning": Warning,
 		"k-lab-docs-description": Desc,
 		"k-lab-docs-examples": Examples,
 		"k-lab-docs-props": Props,
@@ -36,7 +43,6 @@ export default {
 		"k-lab-docs-docblock": DocBlock
 	},
 	mixins: [
-		DeprecatedProps,
 		DescProps,
 		ExamplesProps,
 		PropsProps,
@@ -46,11 +52,13 @@ export default {
 		DocBlockProps
 	],
 	props: {
-		component: String
+		component: String,
+		deprecated: String,
+		isUnstable: Boolean
 	},
 	created() {
-		if (this.$helper.isComponent("k-lab-docs-deprecated") === false) {
-			window.panel.app.component("k-lab-docs-deprecated", DocDeprecated);
+		if (this.$helper.isComponent("k-lab-docs-warning") === false) {
+			window.panel.app.component("k-lab-docs-warning", DocWarning);
 			window.panel.app.component("k-lab-docs-params", DocParams);
 			window.panel.app.component("k-lab-docs-types", DocTypes);
 		}

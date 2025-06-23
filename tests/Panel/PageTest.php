@@ -103,6 +103,7 @@ class PageTest extends TestCase
 	public function testButtons()
 	{
 		$this->assertSame([
+			'k-open-view-button',
 			'k-preview-view-button',
 			'k-settings-view-button',
 			'k-languages-view-button',

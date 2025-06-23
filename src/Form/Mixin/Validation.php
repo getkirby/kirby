@@ -102,9 +102,6 @@ trait Validation
 		return $this->required;
 	}
 
-	/**
-	 * @internal
-	 */
 	protected function setRequired(bool $required = false): void
 	{
 		$this->required = $required;

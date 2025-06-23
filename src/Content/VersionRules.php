@@ -10,14 +10,13 @@ use Kirby\Exception\NotFoundException;
  * The VersionRules class handles the validation for all
  * modification actions on a single version
  *
- * @internal
- * @since 5.0.0
- *
  * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
+ * @unstable
  */
 class VersionRules
 {

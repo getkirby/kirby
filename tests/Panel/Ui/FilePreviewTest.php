@@ -54,6 +54,7 @@ class FilePreviewTest extends TestCase
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
 		$preview = new DummyFilePreview($file);
 		$details = $preview->details();
+		$link    = $file->previewUrl();
 
 		$this->assertSame([
 			[
@@ -66,8 +67,8 @@ class FilePreviewTest extends TestCase
 			],
 			[
 				'title' => 'Url',
-				'text'  => '/test/test.jpg',
-				'link'  => '/test/test.jpg',
+				'link'  => $link,
+				'text'  => $link,
 			],
 			[
 				'title' => 'Size',

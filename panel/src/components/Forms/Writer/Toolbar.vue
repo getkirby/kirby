@@ -14,7 +14,7 @@
 /**
  * Toolbar for `k-writer`
  * @displayName WriterToolbar
- * @internal
+ * @unstable
  */
 export default {
 	props: {

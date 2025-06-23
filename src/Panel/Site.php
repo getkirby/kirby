@@ -31,6 +31,7 @@ class Site extends Model
 	public function buttons(): array
 	{
 		return ViewButtons::view($this)->defaults(
+			'open',
 			'preview',
 			'languages'
 		)->render();
@@ -51,8 +52,6 @@ class Site extends Model
 
 	/**
 	 * Returns the image file object based on provided query
-	 *
-	 * @internal
 	 */
 	protected function imageSource(
 		string|null $query = null
@@ -70,10 +69,7 @@ class Site extends Model
 	}
 
 	/**
-	 * Returns the data array for the
-	 * view's component props
-	 *
-	 * @internal
+	 * Returns the data array for the view's component props
 	 */
 	public function props(): array
 	{
@@ -102,10 +98,7 @@ class Site extends Model
 	}
 
 	/**
-	 * Returns the data array for
-	 * this model's Panel view
-	 *
-	 * @internal
+	 * Returns the data array for this model's Panel view
 	 */
 	public function view(): array
 	{

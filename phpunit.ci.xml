@@ -53,6 +53,7 @@
 	</testsuites>
 
 	<php>
+		<ini name="date.timezone" value="UTC" />
 		<ini name="memory_limit" value="2048M" />
 	</php>
 

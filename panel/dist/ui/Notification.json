@@ -1,0 +1,1 @@
+{"description":"Displays notification from `panel.notification`","tags":{"unstable":[{"description":true,"title":"unstable"}],"since":[{"description":"4.0.0","title":"since"}]},"displayName":"Notification","component":"k-notification","sourceFile":"src/components/Misc/Notification.vue"}

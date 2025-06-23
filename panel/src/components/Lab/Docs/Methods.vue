@@ -21,7 +21,10 @@
 							</k-text>
 						</td>
 						<td>
-							<k-lab-docs-deprecated :deprecated="method.deprecated" />
+							<k-lab-docs-warning
+								title="Deprecated"
+								:text="method.deprecated"
+							/>
 							<k-text :html="method.description" />
 						</td>
 						<td>

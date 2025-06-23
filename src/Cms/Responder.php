@@ -387,8 +387,9 @@ class Responder implements Stringable
 	 * all caches due to using dynamic data based on auth
 	 * and/or cookies; the request data only matters if it
 	 * is actually used/relied on by the response
+	 *
 	 * @since 3.7.0
-	 * @internal
+	 * @unstable
 	 */
 	public static function isPrivate(bool $usesAuth, array $usesCookies): bool
 	{

@@ -190,15 +190,15 @@ class MediaTest extends TestCase
 
 		// get file object
 		$file  = $this->app->file('test.jpg');
-		Dir::make(dirname($file->mediaRoot()));
+		Dir::make($file->mediaDir());
 		$this->assertIsFile($file);
 
 		// create job file
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
-		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', $jobString);
+		F::write($file->mediaDir() . '/.jobs/' . $file->filename() . '.json', $jobString);
 
 		// copy to media folder
-		$file->asset()->copy($mediaPath = $file->mediaRoot());
+		$file->asset()->copy($mediaRoot = $file->mediaRoot());
 
 		$thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
 		$this->assertInstanceOf(Response::class, $thumb);
@@ -206,7 +206,7 @@ class MediaTest extends TestCase
 		$this->assertSame(200, $thumb->code());
 		$this->assertSame('image/jpeg', $thumb->type());
 
-		$thumbInfo = getimagesize($mediaPath);
+		$thumbInfo = getimagesize($mediaRoot);
 		$this->assertSame(64, $thumbInfo[0]);
 		$this->assertSame(64, $thumbInfo[1]);
 	}
@@ -240,7 +240,7 @@ class MediaTest extends TestCase
 		$file = $this->app->file('test.jpg');
 
 		// create an empty job file
-		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', '{}');
+		F::write($file->mediaDir() . '/.jobs/' . $file->filename() . '.json', '{}');
 
 		$this->expectException(\Kirby\Exception\InvalidArgumentException::class);
 		$this->expectExceptionMessage('Incomplete thumbnail configuration');
@@ -265,10 +265,10 @@ class MediaTest extends TestCase
 
 		// create a valid job file
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
-		F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', $jobString);
+		F::write($file->mediaDir() . '/.jobs/' . $file->filename() . '.json', $jobString);
 
 		$this->expectException(\Exception::class);
-		$this->expectExceptionMessage('The file does not exist');
+		$this->expectExceptionMessage('File not found');
 
 		Media::thumb($site, $file->mediaHash(), $file->filename());
 	}
