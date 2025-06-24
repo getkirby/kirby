@@ -6,7 +6,10 @@
 	>
 		<legend class="sr-only">{{ $t("options") }}</legend>
 
-		<k-input-validator :required="required" :value="JSON.stringify(value)">
+		<k-input-validator
+			v-bind="{ novalidate, required }"
+			:value="JSON.stringify(value)"
+		>
 			<ul
 				:data-labels="labels"
 				:style="{ '--options': columns ?? options.length }"

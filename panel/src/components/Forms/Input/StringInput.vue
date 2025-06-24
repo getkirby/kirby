@@ -18,6 +18,7 @@
 		}"
 		:aria-label="ariaLabel"
 		:class="['k-string-input', $attrs.class]"
+		:formnovalidate="novalidate"
 		:data-font="font"
 		:style="$attrs.style"
 		@input="$emit('input', $event.target.value)"

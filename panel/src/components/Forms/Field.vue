@@ -50,10 +50,18 @@
 </template>
 
 <script>
-import { disabled, help, id, label, name, required } from "@/mixins/props.js";
+import {
+	disabled,
+	help,
+	id,
+	label,
+	name,
+	novalidate,
+	required
+} from "@/mixins/props.js";
 
 export const props = {
-	mixins: [disabled, help, id, label, name, required],
+	mixins: [disabled, help, id, label, name, novalidate, required],
 	props: {
 		counter: [Boolean, Object],
 		endpoints: Object,

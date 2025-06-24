@@ -40,10 +40,10 @@
 </template>
 
 <script>
-import { after, before, disabled } from "@/mixins/props.js";
+import { after, before, disabled, novalidate } from "@/mixins/props.js";
 
 export const props = {
-	mixins: [after, before, disabled],
+	mixins: [after, before, disabled, novalidate],
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
