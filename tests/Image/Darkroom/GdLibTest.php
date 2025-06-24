@@ -5,6 +5,7 @@ namespace Kirby\Image\Darkroom;
 use claviska\SimpleImage;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionMethod;
 
 class SimpleImageMock extends SimpleImage
@@ -19,9 +20,7 @@ class SimpleImageMock extends SimpleImage
 }
 
 
-/**
- * @coversDefaultClass \Kirby\Image\Darkroom\GdLib
- */
+#[CoversClass(GdLib::class)]
 class GdLibTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/../fixtures/image';
@@ -37,7 +36,7 @@ class GdLibTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testProcess()
+	public function testProcess(): void
 	{
 		$gd = new GdLib();
 
@@ -59,20 +58,14 @@ class GdLibTest extends TestCase
 		], $gd->process($file));
 	}
 
-	/**
-	 * @covers ::mime
-	 */
-	public function testProcessWithFormat()
+	public function testProcessWithFormat(): void
 	{
 		$gd = new GdLib(['format' => 'webp']);
 		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
 		$this->assertSame('webp', $gd->process($file)['format']);
 	}
 
-	/**
-	 * @covers ::sharpen
-	 */
-	public function testSharpen()
+	public function testSharpen(): void
 	{
 		$gd = new GdLib();
 
@@ -88,10 +81,7 @@ class GdLibTest extends TestCase
 		$this->assertSame(50, $result->sharpen);
 	}
 
-	/**
-	 * @covers ::sharpen
-	 */
-	public function testSharpenWithoutValue()
+	public function testSharpenWithoutValue(): void
 	{
 		$gd = new GdLib();
 

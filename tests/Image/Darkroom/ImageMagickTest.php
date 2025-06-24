@@ -5,11 +5,11 @@ namespace Kirby\Image\Darkroom;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\F;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionMethod;
 
-/**
- * @coversDefaultClass \Kirby\Image\Darkroom\ImageMagick
- */
+#[CoversClass(ImageMagick::class)]
 class ImageMagickTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/../fixtures/image';
@@ -25,7 +25,7 @@ class ImageMagickTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testProcess()
+	public function testProcess(): void
 	{
 		$im = new ImageMagick();
 
@@ -50,10 +50,7 @@ class ImageMagickTest extends TestCase
 		], $im->process($file));
 	}
 
-	/**
-	 * @covers ::sharpen
-	 */
-	public function testSharpen()
+	public function testSharpen(): void
 	{
 		$im = new ImageMagick();
 
@@ -67,10 +64,7 @@ class ImageMagickTest extends TestCase
 		$this->assertSame("-sharpen '0x0.5'", $result);
 	}
 
-	/**
-	 * @covers ::sharpen
-	 */
-	public function testSharpenWithoutValue()
+	public function testSharpenWithoutValue(): void
 	{
 		$im = new ImageMagick();
 
@@ -84,10 +78,7 @@ class ImageMagickTest extends TestCase
 		$this->assertNull($result);
 	}
 
-	/**
-	 * @covers ::save
-	 */
-	public function testSaveWithFormat()
+	public function testSaveWithFormat(): void
 	{
 		$im = new ImageMagick(['format' => 'webp']);
 
@@ -97,10 +88,8 @@ class ImageMagickTest extends TestCase
 		$this->assertTrue(F::exists($webp));
 	}
 
-	/**
-	 * @dataProvider keepColorProfileStripMetaProvider
-	 */
-	public function testKeepColorProfileStripMeta(string $basename, bool $crop)
+	#[DataProvider('keepColorProfileStripMetaProvider')]
+	public function testKeepColorProfileStripMeta(string $basename, bool $crop): void
 	{
 		$im = new ImageMagick([
 			'bin' => 'convert',
