@@ -2,18 +2,15 @@
 
 namespace Kirby\Parsley;
 
+use DOMDocument;
 use Kirby\TestCase;
 use Kirby\Toolkit\Dom;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Parsley\Inline
- */
+#[CoversClass(Inline::class)]
 class InlineTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructTrim()
+	public function testConstructTrim(): void
 	{
 		$dom    = new Dom('<span> Test </span>');
 		$dom    = $dom->query('//span')[0];
@@ -26,10 +23,7 @@ class InlineTest extends TestCase
 		$this->assertSame(' ', $inline->innerHtml());
 	}
 
-	/**
-	 * @covers ::parseAttrs
-	 */
-	public function testParseAttrs()
+	public function testParseAttrs(): void
 	{
 		$dom    = new Dom('<b class="foo">Test</b>');
 		$b      = $dom->query('//b')[0];
@@ -42,10 +36,7 @@ class InlineTest extends TestCase
 		$this->assertSame(['class' => 'foo'], $attrs);
 	}
 
-	/**
-	 * @covers ::parseAttrs
-	 */
-	public function testParseAttrsWithDefaults()
+	public function testParseAttrsWithDefaults(): void
 	{
 		$dom    = new Dom('<b>Test</b>');
 		$b      = $dom->query('//b')[0];
@@ -59,10 +50,7 @@ class InlineTest extends TestCase
 		$this->assertSame(['class' => 'foo'], $attrs);
 	}
 
-	/**
-	 * @covers ::parseAttrs
-	 */
-	public function testParseAttrsWithIgnoredAttrs()
+	public function testParseAttrsWithIgnoredAttrs(): void
 	{
 		$dom    = new Dom('<b class="foo">Test</b>');
 		$b      = $dom->query('//b')[0];
@@ -73,10 +61,7 @@ class InlineTest extends TestCase
 		$this->assertSame([], $attrs);
 	}
 
-	/**
-	 * @covers ::parseInnerHtml
-	 */
-	public function testParseInnerHtml()
+	public function testParseInnerHtml(): void
 	{
 		$dom    = new Dom('<p><b>Bold</b> <i>Italic</i></p>');
 		$p      = $dom->query('//p')[0];
@@ -88,10 +73,7 @@ class InlineTest extends TestCase
 		$this->assertSame('<b>Bold</b> <i>Italic</i>', $html);
 	}
 
-	/**
-	 * @covers ::parseInnerHtml
-	 */
-	public function testParseInnerHtmlWithEmptyParagraph()
+	public function testParseInnerHtmlWithEmptyParagraph(): void
 	{
 		$dom  = new Dom('<p> </p>');
 		$p    = $dom->query('//p')[0];
@@ -100,12 +82,9 @@ class InlineTest extends TestCase
 		$this->assertNull($html);
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
-	public function testParseNodeWithComment()
+	public function testParseNodeWithComment(): void
 	{
-		$dom = new \DOMDocument();
+		$dom = new DOMDocument();
 		$dom->loadHTML('<!-- comment -->');
 
 		$comment = $dom->childNodes[1];
@@ -114,10 +93,7 @@ class InlineTest extends TestCase
 		$this->assertNull($html);
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
-	public function testParseNodeWithEmptyParagraph()
+	public function testParseNodeWithEmptyParagraph(): void
 	{
 		$dom  = new Dom('<p> </p>');
 		$p    = $dom->query('//p')[0];
@@ -128,10 +104,7 @@ class InlineTest extends TestCase
 		$this->assertNull($html);
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
-	public function testParseNodeWithKnownMarks()
+	public function testParseNodeWithKnownMarks(): void
 	{
 		$dom  = new Dom('<p><b>Test</b> <i>Test</i></p>');
 		$p    = $dom->query('//p')[0];
@@ -143,10 +116,7 @@ class InlineTest extends TestCase
 		$this->assertSame('<b>Test</b> <i>Test</i>', $html);
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
-	public function testParseNodeWithKnownMarksWithAttrs()
+	public function testParseNodeWithKnownMarksWithAttrs(): void
 	{
 		$dom  = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
 		$p    = $dom->query('//p')[0];
@@ -159,10 +129,7 @@ class InlineTest extends TestCase
 		$this->assertSame('<a href="https://getkirby.com">Test</a>', $html);
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
-	public function testParseNodeWithKnownMarksWithAttrDefaults()
+	public function testParseNodeWithKnownMarksWithAttrDefaults(): void
 	{
 		$dom  = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
 		$p    = $dom->query('//p')[0];
@@ -178,10 +145,7 @@ class InlineTest extends TestCase
 		$this->assertSame('<a href="https://getkirby.com" rel="test">Test</a>', $html);
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
-	public function testParseNodeWithUnkownMarks()
+	public function testParseNodeWithUnkownMarks(): void
 	{
 		$dom     = new Dom('<p><b>Test</b> <i>Test</i></p>');
 		$p       = $dom->query('//p')[0];
@@ -190,10 +154,7 @@ class InlineTest extends TestCase
 		$this->assertSame('Test Test', $html);
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
-	public function testParseNodeWithSelfClosingElement()
+	public function testParseNodeWithSelfClosingElement(): void
 	{
 		$dom  = new Dom('<p><br></p>');
 		$p    = $dom->query('//p')[0];
@@ -204,10 +165,7 @@ class InlineTest extends TestCase
 		$this->assertSame('<br />', $html);
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
-	public function testParseNodeWithText()
+	public function testParseNodeWithText(): void
 	{
 		$dom  = new Dom('Test');
 		$text = $dom->query('//text()')[0];
@@ -216,10 +174,7 @@ class InlineTest extends TestCase
 		$this->assertSame('Test', $html);
 	}
 
-	/**
-	 * @covers ::parseNode
-	 */
-	public function testParseNodeWithTextEncoded()
+	public function testParseNodeWithTextEncoded(): void
 	{
 		$dom  = new Dom('Test & Test');
 		$text = $dom->query('//text()')[0];
