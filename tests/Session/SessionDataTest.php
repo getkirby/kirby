@@ -4,10 +4,9 @@ namespace Kirby\Session;
 
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Session\SessionData
- */
+#[CoversClass(SessionData::class)]
 class SessionDataTest extends TestCase
 {
 	protected Session $session;
@@ -27,10 +26,7 @@ class SessionDataTest extends TestCase
 		unset($this->session, $this->sessionData);
 	}
 
-	/**
-	 * @covers ::set
-	 */
-	public function testSet()
+	public function testSet(): void
 	{
 		// string as key
 		$this->session->ensuredToken = false;
@@ -60,10 +56,7 @@ class SessionDataTest extends TestCase
 		$this->assertSame('someValue2', $this->sessionData->get('someKey2'));
 	}
 
-	/**
-	 * @covers ::increment
-	 */
-	public function testIncrement()
+	public function testIncrement(): void
 	{
 		$this->session->ensuredToken = false;
 		$this->session->preparedForWriting = false;
@@ -88,10 +81,7 @@ class SessionDataTest extends TestCase
 		$this->assertSame(155, $this->sessionData->get('someInt'));
 	}
 
-	/**
-	 * @covers ::increment
-	 */
-	public function testIncrementNonIntValue()
+	public function testIncrementNonIntValue(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.data.increment.nonInt');
@@ -99,10 +89,7 @@ class SessionDataTest extends TestCase
 		$this->sessionData->increment('someString', 10);
 	}
 
-	/**
-	 * @covers ::decrement
-	 */
-	public function testDecrement()
+	public function testDecrement(): void
 	{
 		$this->session->ensuredToken = false;
 		$this->session->preparedForWriting = false;
@@ -127,10 +114,7 @@ class SessionDataTest extends TestCase
 		$this->assertSame(85, $this->sessionData->get('someInt'));
 	}
 
-	/**
-	 * @covers ::decrement
-	 */
-	public function testDecrementNonIntValue()
+	public function testDecrementNonIntValue(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.data.decrement.nonInt');
@@ -138,10 +122,7 @@ class SessionDataTest extends TestCase
 		$this->sessionData->decrement('someString', 10);
 	}
 
-	/**
-	 * @covers ::get
-	 */
-	public function testGet()
+	public function testGet(): void
 	{
 		// string as key
 		$this->assertSame('someValue', $this->sessionData->get('someString', 'someDefault'));
@@ -156,10 +137,7 @@ class SessionDataTest extends TestCase
 		], $this->sessionData->get());
 	}
 
-	/**
-	 * @covers ::pull
-	 */
-	public function testPull()
+	public function testPull(): void
 	{
 		$this->session->ensuredToken = false;
 		$this->session->preparedForWriting = false;
@@ -172,10 +150,7 @@ class SessionDataTest extends TestCase
 		$this->assertSame('someDefault', $this->sessionData->pull('someOtherString', 'someDefault'));
 	}
 
-	/**
-	 * @covers ::remove
-	 */
-	public function testRemove()
+	public function testRemove(): void
 	{
 		// string as key
 		$this->session->ensuredToken = false;
@@ -194,10 +169,7 @@ class SessionDataTest extends TestCase
 		$this->assertSame([], $this->sessionData->get());
 	}
 
-	/**
-	 * @covers ::clear
-	 */
-	public function testClear()
+	public function testClear(): void
 	{
 		$this->session->ensuredToken = false;
 		$this->session->preparedForWriting = false;
@@ -207,10 +179,7 @@ class SessionDataTest extends TestCase
 		$this->assertSame([], $this->sessionData->get());
 	}
 
-	/**
-	 * @covers ::reload
-	 */
-	public function testReload()
+	public function testReload(): void
 	{
 		$newData = ['someOtherString' => 'someOtherValue'];
 
