@@ -57,7 +57,12 @@ export default {
 				url: this.$panel.urls.api + "/" + this.api + "/avatar",
 				accept: "image/*",
 				immediate: true,
-				multiple: false
+				multiple: false,
+				on: {
+					done: () => {
+						this.$panel.view.reload();
+					}
+				}
 			});
 		}
 	}
