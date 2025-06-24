@@ -4,18 +4,15 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\App;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Uuid\FileUuid
- */
+#[CoversClass(FileUuid::class)]
 class FileUuidTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.FileUuid';
 
-	/**
-	 * @covers ::findByCache
-	 */
-	public function testFindByCache()
+	public function testFindByCache(): void
 	{
 		$file = $this->app->file('page-a/test.pdf');
 
@@ -32,10 +29,7 @@ class FileUuidTest extends TestCase
 		$this->assertIsFile($file, $uuid->model(true));
 	}
 
-	/**
-	 * @covers ::findByIndex
-	 */
-	public function testFindByIndex()
+	public function testFindByIndex(): void
 	{
 		$file = $this->app->file('page-a/test.pdf');
 		$uuid  = new FileUuid('file://my-file');
@@ -49,19 +43,13 @@ class FileUuidTest extends TestCase
 		$this->assertNull($uuid->model());
 	}
 
-	/**
-	 * @covers ::id
-	 */
-	public function testId()
+	public function testId(): void
 	{
 		$uuid = new FileUuid('file://just-a-file');
 		$this->assertSame('just-a-file', $uuid->id());
 	}
 
-	/**
-	 * @covers ::id
-	 */
-	public function testIdGenerate()
+	public function testIdGenerate(): void
 	{
 		$file = $this->app->file('page-b/foo.pdf');
 
@@ -70,10 +58,7 @@ class FileUuidTest extends TestCase
 		$this->assertSame($uuid->id(), $file->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::id
-	 */
-	public function testIdGenerateExistingButEmpty()
+	public function testIdGenerateExistingButEmpty(): void
 	{
 		$file = $this->app->file('page-b/foo.pdf');
 		$file->version()->save(['uuid' => '']);
@@ -83,10 +68,7 @@ class FileUuidTest extends TestCase
 		$this->assertSame($uuid->id(), $file->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::index
-	 */
-	public function testIndex()
+	public function testIndex(): void
 	{
 		$index = FileUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
@@ -94,29 +76,20 @@ class FileUuidTest extends TestCase
 		$this->assertSame(4, iterator_count($index));
 	}
 
-	/**
-	 * @covers ::retrieveId
-	 */
-	public function testRetrieveId()
+	public function testRetrieveId(): void
 	{
 		$file = $this->app->file('page-a/test.pdf');
 		$this->assertSame('my-file', ModelUuid::retrieveId($file));
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$file = $this->app->file('page-a/test.pdf');
 		$url  = 'https://getkirby.com/@/file/my-file';
 		$this->assertSame($url, $file->uuid()->url());
 	}
 
-	/**
-	 * @covers ::value
-	 */
-	public function testValue()
+	public function testValue(): void
 	{
 		$file = $this->app->file('page-a/test.pdf');
 		$uuid = $file->uuid();
@@ -132,11 +105,8 @@ class FileUuidTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider multilangProvider
-	 * @covers ::id
-	 */
-	public function testMultilang(string $language, string $title)
+	#[DataProvider('multilangProvider')]
+	public function testMultilang(string $language, string $title): void
 	{
 		$app = new App([
 			'roots' => [
