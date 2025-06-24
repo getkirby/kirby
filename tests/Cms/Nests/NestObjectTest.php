@@ -7,7 +7,7 @@ use Kirby\TestCase;
 
 class NestObjectTest extends TestCase
 {
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$o = new NestObject($expected = [
 			'a' => 'A',
@@ -17,7 +17,7 @@ class NestObjectTest extends TestCase
 		$this->assertSame($expected, $o->toArray());
 	}
 
-	public function testToArrayWithFields()
+	public function testToArrayWithFields(): void
 	{
 		$o = new NestObject([
 			'a' => new Field(null, 'a', 'A'),
@@ -32,7 +32,7 @@ class NestObjectTest extends TestCase
 		$this->assertSame($expected, $o->toArray());
 	}
 
-	public function testToArrayWithNestedObjects()
+	public function testToArrayWithNestedObjects(): void
 	{
 		$o = new NestObject([
 			'user' => new NestObject([

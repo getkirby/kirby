@@ -211,7 +211,7 @@ class UserCreateTest extends ModelTestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function testCreateWithTranslations()
+	public function testCreateWithTranslations(): void
 	{
 		$this->app = $this->app->clone([
 			'languages' => [
@@ -249,7 +249,7 @@ class UserCreateTest extends ModelTestCase
 		$this->assertSame('Title DE', $user->content('de')->title()->value());
 	}
 
-	public function testCreateWithTranslationsAndContent()
+	public function testCreateWithTranslationsAndContent(): void
 	{
 		$this->app = $this->app->clone([
 			'languages' => [

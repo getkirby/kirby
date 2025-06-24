@@ -20,7 +20,7 @@ class PagesMethodsTest extends TestCase
 		]);
 	}
 
-	public function testPagesMethod()
+	public function testPagesMethod(): void
 	{
 		$pages = $this->app->site()->children();
 		$this->assertSame('pages method', $pages->test());

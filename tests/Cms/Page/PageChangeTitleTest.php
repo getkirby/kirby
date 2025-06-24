@@ -28,7 +28,7 @@ class PageChangeTitleTest extends ModelTestCase
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
 	}
 
-	public function testChangeTitleWhenChangesExist()
+	public function testChangeTitleWhenChangesExist(): void
 	{
 		$page = Page::create([
 			'slug' => 'test',

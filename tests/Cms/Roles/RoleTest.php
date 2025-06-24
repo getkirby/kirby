@@ -17,7 +17,7 @@ class RoleTest extends TestCase
 		]);
 	}
 
-	public function testProps()
+	public function testProps(): void
 	{
 		$role = new Role([
 			'description' => 'Test',
@@ -30,7 +30,7 @@ class RoleTest extends TestCase
 		$this->assertSame('Test', $role->description());
 	}
 
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$app  = $this->app();
 		$role = Role::load(static::FIXTURES . '/blueprints/users/editor.yml');
@@ -40,7 +40,7 @@ class RoleTest extends TestCase
 		$this->assertSame('This should be inherited', $role->description());
 	}
 
-	public function testMissingRole()
+	public function testMissingRole(): void
 	{
 		$this->expectException(Exception::class);
 
@@ -48,7 +48,7 @@ class RoleTest extends TestCase
 		Role::load('does-not-exist');
 	}
 
-	public function testDefaultAdmin()
+	public function testDefaultAdmin(): void
 	{
 		$app  = $this->app();
 		$role = Role::defaultAdmin();
@@ -57,7 +57,7 @@ class RoleTest extends TestCase
 		$this->assertSame('Admin', $role->title());
 	}
 
-	public function testDefaultNobody()
+	public function testDefaultNobody(): void
 	{
 		$app  = $this->app();
 		$role = Role::defaultNobody();
@@ -67,7 +67,7 @@ class RoleTest extends TestCase
 		$this->assertTrue($role->isNobody());
 	}
 
-	public function testTranslateTitle()
+	public function testTranslateTitle(): void
 	{
 		$role = new Role([
 			'name' => 'editor',
@@ -80,7 +80,7 @@ class RoleTest extends TestCase
 		$this->assertSame('Editor', $role->title());
 	}
 
-	public function testTranslateDescription()
+	public function testTranslateDescription(): void
 	{
 		$role = new Role([
 			'name' => 'editor',
@@ -93,7 +93,7 @@ class RoleTest extends TestCase
 		$this->assertSame('Editor', $role->title());
 	}
 
-	public function testToArrayAndDebugInfo()
+	public function testToArrayAndDebugInfo(): void
 	{
 		$role = new Role([
 			'name'        => 'editor',

@@ -32,7 +32,7 @@ class LanguageRouterTest extends TestCase
 		App::destroy();
 	}
 
-	public function testRouteForSingleLanguage()
+	public function testRouteForSingleLanguage(): void
 	{
 		$app = $this->app->clone([
 			'routes' => [
@@ -58,7 +58,7 @@ class LanguageRouterTest extends TestCase
 		$this->assertSame('en', $router->call('anything'));
 	}
 
-	public function testRouteWithoutLanguageScope()
+	public function testRouteWithoutLanguageScope(): void
 	{
 		$app = $this->app->clone([
 			'routes' => [
@@ -74,7 +74,7 @@ class LanguageRouterTest extends TestCase
 		$this->assertCount(1, $language->router()->routes());
 	}
 
-	public function testRouteForMultipleLanguages()
+	public function testRouteForMultipleLanguages(): void
 	{
 		$app = $this->app->clone([
 			'routes' => [
@@ -95,7 +95,7 @@ class LanguageRouterTest extends TestCase
 		$this->assertSame('slug', $router->call('slug'));
 	}
 
-	public function testRouteWildcard()
+	public function testRouteWildcard(): void
 	{
 		$app = $this->app->clone([
 			'routes' => [
@@ -116,7 +116,7 @@ class LanguageRouterTest extends TestCase
 		$this->assertSame('slug', $router->call('slug'));
 	}
 
-	public function testRouteWithPageScope()
+	public function testRouteWithPageScope(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -140,7 +140,7 @@ class LanguageRouterTest extends TestCase
 		$this->assertSame('slug', $router->call('notes/slug'));
 	}
 
-	public function testRouteWithPageScopeAndMultiplePatterns()
+	public function testRouteWithPageScopeAndMultiplePatterns(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -168,7 +168,7 @@ class LanguageRouterTest extends TestCase
 		$this->assertSame('slug', $router->call('notes/b/slug'));
 	}
 
-	public function testRouteWithPageScopeAndInvalidPage()
+	public function testRouteWithPageScopeAndInvalidPage(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -193,7 +193,7 @@ class LanguageRouterTest extends TestCase
 		$router   = $language->router()->call('notes/a/slug');
 	}
 
-	public function testUUIDRoute()
+	public function testUUIDRoute(): void
 	{
 		$app = $this->app->clone([
 			'site' => [

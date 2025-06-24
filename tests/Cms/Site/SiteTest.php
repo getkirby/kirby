@@ -83,7 +83,7 @@ class SiteTest extends ModelTestCase
 		$this->assertSame('https://getkirby.com', $string);
 	}
 
-	public function testPanel()
+	public function testPanel(): void
 	{
 		$site = new Site();
 		$this->assertInstanceOf(Panel::class, $site->panel());

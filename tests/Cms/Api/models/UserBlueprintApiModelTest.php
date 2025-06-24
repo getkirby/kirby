@@ -14,7 +14,7 @@ class UserBlueprintApiModelTest extends ApiModelTestCase
 		$this->user = new User(['email' => 'test@getkirby.com']);
 	}
 
-	public function testName()
+	public function testName(): void
 	{
 		$blueprint = new UserBlueprint([
 			'name'  => 'test',
@@ -24,7 +24,7 @@ class UserBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertAttr($blueprint, 'name', 'test');
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$blueprint = new UserBlueprint([
 			'name'  => 'test',
@@ -43,7 +43,7 @@ class UserBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertArrayHasKey('update', $options);
 	}
 
-	public function testTabs()
+	public function testTabs(): void
 	{
 		$blueprint = new UserBlueprint([
 			'name'  => 'test',
@@ -53,7 +53,7 @@ class UserBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertAttr($blueprint, 'tabs', []);
 	}
 
-	public function testTitle()
+	public function testTitle(): void
 	{
 		$blueprint = new UserBlueprint([
 			'name'  => 'test',

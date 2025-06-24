@@ -77,7 +77,7 @@ class AppTranslationsTest extends TestCase
 		return $this->app;
 	}
 
-	public function testTranslations()
+	public function testTranslations(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -100,7 +100,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertCount($i, $translations);
 	}
 
-	public function testTranslationFromCurrentLanguage()
+	public function testTranslationFromCurrentLanguage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -155,7 +155,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('Hallo', t('hello'));
 	}
 
-	public function testTranslationFallback()
+	public function testTranslationFallback(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -200,7 +200,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('English', t('translation.name'));
 	}
 
-	public function testSetCurrentTranslation()
+	public function testSetCurrentTranslation(): void
 	{
 		$app = $this->app();
 
@@ -213,7 +213,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('Reset', t('reset'));
 	}
 
-	public function testTranslationInTemplate()
+	public function testTranslationInTemplate(): void
 	{
 		// create a dummy template
 		F::write(static::TMP . '/test.php', '<?= t("button") ?>');
@@ -259,7 +259,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('Button', $result->body());
 	}
 
-	public function testExceptionWithoutLanguage()
+	public function testExceptionWithoutLanguage(): void
 	{
 		I18n::$load = null;
 		I18n::$translations = [];
@@ -273,7 +273,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame($fallbackError, $exception->getMessage());
 	}
 
-	public function testExceptionWithDefaultLanguage()
+	public function testExceptionWithDefaultLanguage(): void
 	{
 		$this->app();
 
@@ -281,7 +281,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('This is a test error', $exception->getMessage());
 	}
 
-	public function testExceptionWithTranslation()
+	public function testExceptionWithTranslation(): void
 	{
 		$app = $this->app();
 		$app->setCurrentTranslation('de');
@@ -290,7 +290,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('Das ist ein Testfehler', $exception->getMessage());
 	}
 
-	public function testExceptionPinned()
+	public function testExceptionPinned(): void
 	{
 		$app = $this->app();
 
@@ -304,7 +304,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('This would be the fallback error', $exception->getMessage());
 	}
 
-	public function testExceptionInvalidKey()
+	public function testExceptionInvalidKey(): void
 	{
 		$app = $this->app();
 
@@ -317,7 +317,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('This would be the fallback error', $exception->getMessage());
 	}
 
-	public function testLanguageTranslationWithSlugs()
+	public function testLanguageTranslationWithSlugs(): void
 	{
 		// create a dummy template
 		F::write(static::TMP . '/test.php', '<?= t("button") ?>');
@@ -388,7 +388,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('kompaniya', Str::slug('Компания'));
 	}
 
-	public function testLocaleString()
+	public function testLocaleString(): void
 	{
 		$this->assertSame('C', setlocale(LC_ALL, '0'));
 
@@ -405,7 +405,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('de_DE.' . $this->localeSuffix, setlocale(LC_CTYPE, '0'));
 	}
 
-	public function testLocaleArray()
+	public function testLocaleArray(): void
 	{
 		$this->assertSame('C', setlocale(LC_ALL, '0'));
 
@@ -428,7 +428,7 @@ class AppTranslationsTest extends TestCase
 		$this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_COLLATE, '0'));
 	}
 
-	public function testPanelLanguage()
+	public function testPanelLanguage(): void
 	{
 		// single-language setup
 		$app = new App([

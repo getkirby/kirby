@@ -6,10 +6,9 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth
- */
+#[CoversClass(Auth::class)]
 class AuthProtectionTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -62,18 +61,12 @@ class AuthProtectionTest extends TestCase
 		$this->failedEmail = null;
 	}
 
-	/**
-	 * @covers ::logfile
-	 */
-	public function testLogfile()
+	public function testLogfile(): void
 	{
 		$this->assertSame(static::TMP . '/site/accounts/.logins', $this->auth->logfile());
 	}
 
-	/**
-	 * @covers ::log
-	 */
-	public function testLog()
+	public function testLog(): void
 	{
 		copy(static::FIXTURES . '/logins.cleanup.json', static::TMP . '/site/accounts/.logins');
 
@@ -106,20 +99,14 @@ class AuthProtectionTest extends TestCase
 		$this->assertFileDoesNotExist(static::TMP . '/site/accounts/.logins');
 	}
 
-	/**
-	 * @covers ::ipHash
-	 */
-	public function testIpHash()
+	public function testIpHash(): void
 	{
 		$this->app->visitor()->ip('10.1.123.234');
 
 		$this->assertSame('87084f11690867b977a611dd2c943a918c3197f4c02b25ab59', $this->auth->ipHash());
 	}
 
-	/**
-	 * @covers ::isBlocked
-	 */
-	public function testIsBlocked()
+	public function testIsBlocked(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
@@ -134,10 +121,7 @@ class AuthProtectionTest extends TestCase
 		$this->assertTrue($this->auth->isBlocked('lisa@simpsons.com'));
 	}
 
-	/**
-	 * @covers ::track
-	 */
-	public function testTrack()
+	public function testTrack(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
@@ -192,10 +176,7 @@ class AuthProtectionTest extends TestCase
 		$this->assertSame(json_encode($data), file_get_contents(static::TMP . '/site/accounts/.logins'));
 	}
 
-	/**
-	 * @covers ::validatePassword
-	 */
-	public function testValidatePasswordValid()
+	public function testValidatePasswordValid(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
@@ -207,11 +188,7 @@ class AuthProtectionTest extends TestCase
 		$this->assertNull($this->failedEmail);
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::validatePassword
-	 */
-	public function testValidatePasswordInvalid1()
+	public function testValidatePasswordInvalid1(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
@@ -230,11 +207,7 @@ class AuthProtectionTest extends TestCase
 		$this->assertSame('lisa@simpsons.com', $this->failedEmail);
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::validatePassword
-	 */
-	public function testValidatePasswordInvalid2()
+	public function testValidatePasswordInvalid2(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
@@ -254,11 +227,7 @@ class AuthProtectionTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $this->failedEmail);
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::validatePassword
-	 */
-	public function testValidatePasswordBlocked()
+	public function testValidatePasswordBlocked(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
@@ -276,11 +245,7 @@ class AuthProtectionTest extends TestCase
 		$this->assertSame('homer@simpsons.com', $this->failedEmail);
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::validatePassword
-	 */
-	public function testValidatePasswordDebugInvalid1()
+	public function testValidatePasswordDebugInvalid1(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 		$this->app = $this->app->clone([
@@ -307,11 +272,7 @@ class AuthProtectionTest extends TestCase
 		$this->assertSame('lisa@simpsons.com', $this->failedEmail);
 	}
 
-	/**
-	 * @covers ::fail
-	 * @covers ::validatePassword
-	 */
-	public function testValidatePasswordDebugInvalid2()
+	public function testValidatePasswordDebugInvalid2(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 		$this->app = $this->app->clone([
@@ -339,12 +300,7 @@ class AuthProtectionTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $this->failedEmail);
 	}
 
-	/**
-	 * @covers ::checkRateLimit
-	 * @covers ::fail
-	 * @covers ::validatePassword
-	 */
-	public function testValidatePasswordDebugBlocked()
+	public function testValidatePasswordDebugBlocked(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 		$this->app = $this->app->clone([
@@ -370,10 +326,7 @@ class AuthProtectionTest extends TestCase
 		$this->assertSame('homer@simpsons.com', $this->failedEmail);
 	}
 
-	/**
-	 * @covers ::validatePassword
-	 */
-	public function testValidatePasswordWithUnicodeEmail()
+	public function testValidatePasswordWithUnicodeEmail(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 
@@ -384,10 +337,7 @@ class AuthProtectionTest extends TestCase
 		$this->assertSame('test@exämple.com', $user->email());
 	}
 
-	/**
-	 * @covers ::validatePassword
-	 */
-	public function testValidatePasswordWithPunycodeEmail()
+	public function testValidatePasswordWithPunycodeEmail(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
 

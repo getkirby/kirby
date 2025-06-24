@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Response
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Response::class)]
 class ResponseTest extends TestCase
 {
 	public function setUp(): void
@@ -16,10 +16,7 @@ class ResponseTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::redirect
-	 */
-	public function testRedirect()
+	public function testRedirect(): void
 	{
 		$response = Response::redirect();
 		$this->assertSame('', $response->body());
@@ -27,10 +24,7 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Location' => 'https://getkirby.test'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
-	/**
-	 * @covers ::redirect
-	 */
-	public function testRedirectWithLocation()
+	public function testRedirectWithLocation(): void
 	{
 		$response = Response::redirect('https://getkirby.com');
 		$this->assertSame('', $response->body());
@@ -38,10 +32,7 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Location' => 'https://getkirby.com'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
-	/**
-	 * @covers ::redirect
-	 */
-	public function testRedirectWithInternationalLocation()
+	public function testRedirectWithInternationalLocation(): void
 	{
 		$response = Response::redirect('https://täst.de');
 		$this->assertSame('', $response->body());
@@ -49,10 +40,7 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Location' => 'https://xn--tst-qla.de'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
-	/**
-	 * @covers ::redirect
-	 */
-	public function testRedirectWithResponseCodeAndUri()
+	public function testRedirectWithResponseCodeAndUri(): void
 	{
 		$response = Response::redirect('/uri', 301);
 		$this->assertSame('', $response->body());

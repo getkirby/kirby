@@ -17,7 +17,7 @@ class InfoSectionTest extends TestCase
 		]);
 	}
 
-	public function testHeadline()
+	public function testHeadline(): void
 	{
 		// single headline
 		$section = new Section('info', [
@@ -41,7 +41,7 @@ class InfoSectionTest extends TestCase
 		$this->assertSame('Information', $section->headline());
 	}
 
-	public function testText()
+	public function testText(): void
 	{
 		// single language text
 		$section = new Section('info', [
@@ -65,7 +65,7 @@ class InfoSectionTest extends TestCase
 		$this->assertSame('<p>Information</p>', $section->text());
 	}
 
-	public function testTheme()
+	public function testTheme(): void
 	{
 		$section = new Section('info', [
 			'name'  => 'test',
@@ -76,7 +76,7 @@ class InfoSectionTest extends TestCase
 		$this->assertSame('notice', $section->theme());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$section = new Section('info', [
 			'name'  => 'test',

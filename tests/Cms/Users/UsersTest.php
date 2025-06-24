@@ -6,7 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 
 class UsersTest extends TestCase
 {
-	public function testAddUser()
+	public function testAddUser(): void
 	{
 		$users = Users::factory([
 			['email' => 'a@getkirby.com']
@@ -23,7 +23,7 @@ class UsersTest extends TestCase
 		$this->assertSame('b@getkirby.com', $result->nth(1)->email());
 	}
 
-	public function testAddCollection()
+	public function testAddCollection(): void
 	{
 		$a = Users::factory([
 			['email' => 'a@getkirby.com']
@@ -42,7 +42,7 @@ class UsersTest extends TestCase
 		$this->assertSame('c@getkirby.com', $c->nth(2)->email());
 	}
 
-	public function testAddById()
+	public function testAddById(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -68,7 +68,7 @@ class UsersTest extends TestCase
 		$this->assertSame('c@getkirby.com', $users->nth(2)->email());
 	}
 
-	public function testAddNull()
+	public function testAddNull(): void
 	{
 		$users = new Users();
 		$this->assertCount(0, $users);
@@ -78,7 +78,7 @@ class UsersTest extends TestCase
 		$this->assertCount(0, $users);
 	}
 
-	public function testAddFalse()
+	public function testAddFalse(): void
 	{
 		$users = new Users();
 		$this->assertCount(0, $users);
@@ -88,7 +88,7 @@ class UsersTest extends TestCase
 		$this->assertCount(0, $users);
 	}
 
-	public function testAddInvalidObject()
+	public function testAddInvalidObject(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('You must pass a Users or User object or an ID of an existing user to the Users collection');
@@ -98,7 +98,7 @@ class UsersTest extends TestCase
 		$users->add($site);
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -127,7 +127,7 @@ class UsersTest extends TestCase
 		$this->assertSame('c.jpg', $files->find('user-c/c.jpg')->filename());
 	}
 
-	public function testFind()
+	public function testFind(): void
 	{
 		$users = new Users([
 			new User(['email' => 'a@getkirby.com']),
@@ -143,7 +143,7 @@ class UsersTest extends TestCase
 		$this->assertSame($last, $users->find($last->email()));
 	}
 
-	public function testFindByEmail()
+	public function testFindByEmail(): void
 	{
 		$users = new Users([
 			new User(['email' => 'a@getkirby.com']),
@@ -156,7 +156,7 @@ class UsersTest extends TestCase
 		$this->assertSame('b@getkirby.com', $users->find('b@getkirby.com')->email());
 	}
 
-	public function testFindByUuid()
+	public function testFindByUuid(): void
 	{
 		$app = new App([
 			'users' => [
@@ -173,7 +173,7 @@ class UsersTest extends TestCase
 		$this->assertSame($b, $app->user('user://foo')->email());
 	}
 
-	public function testCustomMethods()
+	public function testCustomMethods(): void
 	{
 		Users::$methods = [
 			'test' => function () {
@@ -195,7 +195,7 @@ class UsersTest extends TestCase
 		Users::$methods = [];
 	}
 
-	public function testRoles()
+	public function testRoles(): void
 	{
 		$app = new App([
 			'users' => [
