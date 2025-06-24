@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class ParamsTest extends TestCase
 {
-	public function testConstructWithArray()
+	public function testConstructWithArray(): void
 	{
 		$params = new Params([
 			'a' => 'value-a',
@@ -17,7 +17,7 @@ class ParamsTest extends TestCase
 		$this->assertSame('value-b', $params->b);
 	}
 
-	public function testConstructWithString()
+	public function testConstructWithString(): void
 	{
 		$params = new Params('a:value-a/b:value-b');
 
@@ -25,7 +25,7 @@ class ParamsTest extends TestCase
 		$this->assertSame('value-b', $params->b);
 	}
 
-	public function testConstructWithEmptyValue()
+	public function testConstructWithEmptyValue(): void
 	{
 		$params = new Params('a:/b:');
 
@@ -33,7 +33,7 @@ class ParamsTest extends TestCase
 		$this->assertNull($params->b);
 	}
 
-	public function testConstructWithSpecialChars()
+	public function testConstructWithSpecialChars(): void
 	{
 		$params = new Params(
 			'a%2Fa%3A%20%3Ba%3F%22%3E:value-A%2FA%3A%20%3BA%3F%22%3E/' .
@@ -44,7 +44,7 @@ class ParamsTest extends TestCase
 		$this->assertSame('value-B/B: ;B?">', $params->{'b/b: ;b?">'});
 	}
 
-	public function testExtractFromNull()
+	public function testExtractFromNull(): void
 	{
 		$params   = Params::extract();
 		$expected = [
@@ -56,7 +56,7 @@ class ParamsTest extends TestCase
 		$this->assertSame($expected, $params);
 	}
 
-	public function testExtractFromEmptyString()
+	public function testExtractFromEmptyString(): void
 	{
 		$params   = Params::extract('');
 		$expected = [
@@ -68,7 +68,7 @@ class ParamsTest extends TestCase
 		$this->assertSame($expected, $params);
 	}
 
-	public function testExtractFromZeroString()
+	public function testExtractFromZeroString(): void
 	{
 		$params   = Params::extract('price:0');
 		$expected = ['price' => '0'];
@@ -76,7 +76,7 @@ class ParamsTest extends TestCase
 		$this->assertSame($expected, $params['params']);
 	}
 
-	public function testExtractFromSeparator()
+	public function testExtractFromSeparator(): void
 	{
 		$params   = Params::extract(Params::separator());
 		$expected = [
@@ -88,7 +88,7 @@ class ParamsTest extends TestCase
 		$this->assertSame($expected, $params);
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		$params = new Params([
 			'a' => 'value-a',
@@ -98,7 +98,7 @@ class ParamsTest extends TestCase
 		$this->assertSame('a:value-a/b:value-b', $params->toString());
 	}
 
-	public function testToStringWithLeadingSlash()
+	public function testToStringWithLeadingSlash(): void
 	{
 		$params = new Params([
 			'a' => 'value-a',
@@ -108,7 +108,7 @@ class ParamsTest extends TestCase
 		$this->assertSame('/a:value-a/b:value-b', $params->toString(true));
 	}
 
-	public function testToStringWithTrailingSlash()
+	public function testToStringWithTrailingSlash(): void
 	{
 		$params = new Params([
 			'a' => 'value-a',
@@ -118,7 +118,7 @@ class ParamsTest extends TestCase
 		$this->assertSame('a:value-a/b:value-b/', $params->toString(false, true));
 	}
 
-	public function testToStringWithWindowsSeparator()
+	public function testToStringWithWindowsSeparator(): void
 	{
 		Params::$separator = ';';
 
@@ -132,7 +132,7 @@ class ParamsTest extends TestCase
 		Params::$separator = null;
 	}
 
-	public function testToStringWithSpecialChars()
+	public function testToStringWithSpecialChars(): void
 	{
 		$params = new Params([
 			'a/a: ;a?">' => 'value-A/A: ;A?">',
@@ -146,7 +146,7 @@ class ParamsTest extends TestCase
 		);
 	}
 
-	public function testUnsetParam()
+	public function testUnsetParam(): void
 	{
 		$params = new Params(['foo' => 'bar']);
 		$params->foo = null;
