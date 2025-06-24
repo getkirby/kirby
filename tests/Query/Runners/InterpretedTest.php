@@ -47,7 +47,7 @@ class InterpretedTest extends TestCase
 	 * Runners should keep a cache of parsed queries
 	 * to avoid parsing the same query multiple times
 	 */
-	public function testResolverMemoryCache()
+	public function testResolverMemoryCache(): void
 	{
 		$cache = [];
 

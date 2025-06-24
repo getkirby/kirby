@@ -79,7 +79,7 @@ class TokenizerTest extends TestCase
 		Tokenizer::token('a ?? %', 5);
 	}
 
-	public function testTokens()
+	public function testTokens(): void
 	{
 		$string    = static::stringProvider();
 		$tokenizer = new Tokenizer($string);

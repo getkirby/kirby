@@ -3,65 +3,46 @@
 namespace Kirby\Query;
 
 use Closure;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Kirby\Query\Query
- */
-class QueryLegacyTest extends \PHPUnit\Framework\TestCase
+#[CoversClass(Query::class)]
+class QueryLegacyTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::factory
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$query = Query::factory(' user.me ');
 		$this->assertSame('user.me', $query->query);
 	}
 
-	/**
-	 * @covers ::intercept
-	 */
-	public function testIntercept()
+	public function testIntercept(): void
 	{
 		$query = new Query('kirby');
 		$this->assertSame('foo', $query->intercept('foo'));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolve()
+	public function testResolve(): void
 	{
 		$query = new Query("user.self.likes(['(', ')']).self.drink");
 		$data  = ['user' => new TestUser()];
 		$this->assertSame(['gin', 'tonic', 'cucumber'], $query->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithEmptyQuery()
+	public function testResolveWithEmptyQuery(): void
 	{
 		$query = new Query('');
 		$data = ['foo' => 'bar'];
 		$this->assertSame($data, $query->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithComparisonExpresion()
+	public function testResolveWithComparisonExpresion(): void
 	{
 		$query = new Query('user.nothing ?? (user.nothing ?? user.isYello(false)) ? user.says("error") : (user.nothing ?? user.says("success"))');
 		$data  = ['user' => new TestUser()];
 		$this->assertSame('success', $query->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithExactArrayMatch()
+	public function testResolveWithExactArrayMatch(): void
 	{
 		$query = new Query('user');
 		$this->assertSame('homer', $query->resolve(['user' => 'homer']));
@@ -73,10 +54,7 @@ class QueryLegacyTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame('homer', $query->resolve(['user.callback' => fn () => 'homer']));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithClosureArgument()
+	public function testResolveWithClosureArgument(): void
 	{
 		$query = new Query('foo.bar(() => foo.homer)');
 		$data  = [

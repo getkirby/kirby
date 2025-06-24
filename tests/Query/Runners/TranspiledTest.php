@@ -110,7 +110,7 @@ class TranspiledTest extends TestCase
 			PHP, $representation);
 	}
 
-	public function testResolverMemoryCache()
+	public function testResolverMemoryCache(): void
 	{
 		$cache = [];
 
@@ -152,7 +152,7 @@ class TranspiledTest extends TestCase
 		$this->assertSame(97, $result);
 	}
 
-	public function testResolverFileCache()
+	public function testResolverFileCache(): void
 	{
 		$runner1 = new Transpiled(root: static::TMP);
 		$runner2 = new Transpiled(root: static::TMP);
