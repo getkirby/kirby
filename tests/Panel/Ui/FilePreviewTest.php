@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\FilePreviews\DefaultFilePreview;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class DummyFilePreview extends FilePreview
 {
@@ -27,10 +28,7 @@ class InvalidFilePreview
 {
 }
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\FilePreview
- * @covers ::__construct
- */
+#[CoversClass(FilePreview::class)]
 class FilePreviewTest extends TestCase
 {
 	public function setUp(): void
@@ -45,10 +43,7 @@ class FilePreviewTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	/**
-	 * @covers ::details
-	 */
-	public function testDetails()
+	public function testDetails(): void
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
@@ -77,10 +72,7 @@ class FilePreviewTest extends TestCase
 		], $details);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$page = new Page(['slug' => 'test']);
 		$file = new File(['filename' => 'test.docx', 'parent' => $page]);
@@ -89,10 +81,7 @@ class FilePreviewTest extends TestCase
 		$this->assertInstanceOf(DefaultFilePreview::class, $preview);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryWithCustomHandler()
+	public function testFactoryWithCustomHandler(): void
 	{
 		new App([
 			'roots' => [
@@ -114,10 +103,7 @@ class FilePreviewTest extends TestCase
 		$this->assertInstanceOf(DummyFilePreview::class, $preview);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryWithCustomHandlerInvalid()
+	public function testFactoryWithCustomHandlerInvalid(): void
 	{
 		new App([
 			'roots' => [
@@ -138,10 +124,7 @@ class FilePreviewTest extends TestCase
 		FilePreview::factory($file);
 	}
 
-	/**
-	 * @covers ::image
-	 */
-	public function testImage()
+	public function testImage(): void
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
@@ -153,10 +136,7 @@ class FilePreviewTest extends TestCase
 		$this->assertIsString($image['src']);
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
@@ -168,10 +148,7 @@ class FilePreviewTest extends TestCase
 		$this->assertIsString($props['url']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);

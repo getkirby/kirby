@@ -5,10 +5,9 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Field
- */
+#[CoversClass(Field::class)]
 class FieldTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Field';
@@ -32,9 +31,6 @@ class FieldTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::email
-	 */
 	public function testEmail(): void
 	{
 		// default
@@ -55,9 +51,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
-	/**
-	 * @covers ::filePosition
-	 */
 	public function testFilePosition(): void
 	{
 		$this->app = $this->app->clone([
@@ -108,18 +101,12 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
-	/**
-	 * @covers ::hidden
-	 */
 	public function testHidden(): void
 	{
 		$field = Field::hidden();
 		$this->assertSame(['hidden' => true], $field);
 	}
 
-	/**
-	 * @covers ::pagePosition
-	 */
 	public function testPagePosition(): void
 	{
 		$this->app = $this->app->clone([
@@ -170,9 +157,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
-	/**
-	 * @covers ::pagePosition
-	 */
 	public function testPagePositionWithNotEnoughOptions(): void
 	{
 		$this->app = $this->app->clone([
@@ -190,9 +174,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['hidden']);
 	}
 
-	/**
-	 * @covers ::password
-	 */
 	public function testPassword(): void
 	{
 		// default
@@ -212,9 +193,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
-	/**
-	 * @covers ::role
-	 */
 	public function testRole(): void
 	{
 		$field = Field::role();
@@ -295,9 +273,6 @@ class FieldTest extends TestCase
 		$this->assertSame($expected, $field);
 	}
 
-	/**
-	 * @covers ::slug
-	 */
 	public function testSlug(): void
 	{
 		// default
@@ -318,9 +293,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
-	/**
-	 * @covers ::title
-	 */
 	public function testTitle(): void
 	{
 		// default
@@ -341,9 +313,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
-	/**
-	 * @covers ::template
-	 */
 	public function testTemplate(): void
 	{
 		// default = no templates available
@@ -407,9 +376,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
-	/**
-	 * @covers ::translation
-	 */
 	public function testTranslation(): void
 	{
 		// default
@@ -429,9 +395,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
-	/**
-	 * @covers ::username
-	 */
 	public function testUsername(): void
 	{
 		// default
