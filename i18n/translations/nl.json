@@ -449,7 +449,12 @@
 	"language.variables.empty": "Nog geen vertalingen",
 
 	"language.variable.delete.confirm": "Weet je zeker dat je de variabele voor {key} wil verwijderen?",
+	"language.variable.entries": "Values",
+	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Key",
+	"language.variable.multiple": "Countable?",
+	"language.variable.multiple.text": "Use different translation strings",
+	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "De variabele kan niet gevonden worden",
 	"language.variable.value": "Waarde",
 
