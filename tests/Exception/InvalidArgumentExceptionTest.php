@@ -3,13 +3,12 @@
 namespace Kirby\Exception;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
 class InvalidArgumentExceptionTest extends TestCase
 {
-	/**
-	 * @coversNothing
-	 */
-	public function testDefaults()
+	#[CoversNothing]
+	public function testDefaults(): void
 	{
 		$exception = new InvalidArgumentException();
 		$this->assertSame('error.invalidArgument', $exception->getKey());
@@ -18,10 +17,8 @@ class InvalidArgumentExceptionTest extends TestCase
 		$this->assertSame(['argument' => null, 'method' => null], $exception->getData());
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testPlaceholders()
+	#[CoversNothing]
+	public function testPlaceholders(): void
 	{
 		$exception = new InvalidArgumentException(data: [
 			'argument' => 'key',
@@ -34,10 +31,8 @@ class InvalidArgumentExceptionTest extends TestCase
 		], $exception->getData());
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testPlaceholdersWithNamedArguments()
+	#[CoversNothing]
+	public function testPlaceholdersWithNamedArguments(): void
 	{
 		$exception = new InvalidArgumentException(
 			data: [

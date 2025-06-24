@@ -3,13 +3,12 @@
 namespace Kirby\Exception;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
 class PermissionExceptionTest extends TestCase
 {
-	/**
-	 * @coversNothing
-	 */
-	public function testDefaults()
+	#[CoversNothing]
+	public function testDefaults(): void
 	{
 		$exception = new PermissionException();
 		$this->assertSame('error.permission', $exception->getKey());
