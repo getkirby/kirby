@@ -6,7 +6,7 @@ use Kirby\Toolkit\I18n;
 
 class ToggleFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('toggle');
 
@@ -16,7 +16,7 @@ class ToggleFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testText()
+	public function testText(): void
 	{
 		$field = $this->field('toggle', [
 			'text' => 'Yay {{ page.slug }}'
@@ -25,7 +25,7 @@ class ToggleFieldTest extends TestCase
 		$this->assertSame('Yay test', $field->text());
 	}
 
-	public function testTextWithTranslation()
+	public function testTextWithTranslation(): void
 	{
 		$props = [
 			'text' => [
@@ -45,7 +45,7 @@ class ToggleFieldTest extends TestCase
 		$this->assertSame('Ja test', $field->text());
 	}
 
-	public function testBooleanDefaultValue()
+	public function testBooleanDefaultValue(): void
 	{
 		// true
 		$field = $this->field('toggle', [
@@ -62,7 +62,7 @@ class ToggleFieldTest extends TestCase
 		$this->assertTrue($field->default() === false);
 	}
 
-	public function testTextToggle()
+	public function testTextToggle(): void
 	{
 		$field = $this->field('toggle', [
 			'text' => [
@@ -74,7 +74,7 @@ class ToggleFieldTest extends TestCase
 		$this->assertSame(['Yes test', 'No test'], $field->text());
 	}
 
-	public function testTextToggleWithTranslation()
+	public function testTextToggleWithTranslation(): void
 	{
 		$props = [
 			'text' => [

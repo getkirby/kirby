@@ -2,9 +2,11 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class DateFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('date');
 
@@ -17,7 +19,7 @@ class DateFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testEmptyDate()
+	public function testEmptyDate(): void
 	{
 		$field = $this->field('date', [
 			'value' => null
@@ -27,7 +29,7 @@ class DateFieldTest extends TestCase
 		$this->assertNull($field->toString());
 	}
 
-	public function testMinMax()
+	public function testMinMax(): void
 	{
 		// empty
 		$field = $this->field('date', [
@@ -136,7 +138,7 @@ class DateFieldTest extends TestCase
 		];
 	}
 
-	public function testSave()
+	public function testSave(): void
 	{
 		// default value
 		$field = $this->field('date', [
@@ -156,7 +158,7 @@ class DateFieldTest extends TestCase
 	/**
 	 * @link https://github.com/getkirby/kirby/issues/3642
 	 */
-	public function testTimeWithDefaultNow()
+	public function testTimeWithDefaultNow(): void
 	{
 		$field = $this->field('date', [
 			'time'    => true,
@@ -167,10 +169,8 @@ class DateFieldTest extends TestCase
 		$this->assertSame($now, $field->default());
 	}
 
-	/**
-	 * @dataProvider valueProvider
-	 */
-	public function testValue($input, $expected, $step = null)
+	#[DataProvider('valueProvider')]
+	public function testValue($input, $expected, $step = null): void
 	{
 		$field = $this->field('date', [
 			'value' => $input,

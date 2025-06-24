@@ -8,7 +8,7 @@ class PagePickerMixinTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerMixin';
 
-	public function testPagesWithoutParent()
+	public function testPagesWithoutParent(): void
 	{
 		$app = $this->app->clone([
 			'fields' => [
@@ -51,7 +51,7 @@ class PagePickerMixinTest extends TestCase
 		$this->assertSame('c', $pages[2]['id']);
 	}
 
-	public function testPagesWithParent()
+	public function testPagesWithParent(): void
 	{
 		$app = $this->app->clone([
 			'fields' => [
@@ -99,7 +99,7 @@ class PagePickerMixinTest extends TestCase
 		$this->assertSame('a/aa', $pages[0]['id']);
 	}
 
-	public function testPageChildren()
+	public function testPageChildren(): void
 	{
 		$app = $this->app->clone([
 			'fields' => [
@@ -151,7 +151,7 @@ class PagePickerMixinTest extends TestCase
 		$this->assertSame('test/c', $pages[2]['id']);
 	}
 
-	public function testPageChildrenWithoutSubpages()
+	public function testPageChildrenWithoutSubpages(): void
 	{
 		$app = $this->app->clone([
 			'fields' => [
@@ -200,7 +200,7 @@ class PagePickerMixinTest extends TestCase
 		$this->assertSame('test/c', $pages[2]['id']);
 	}
 
-	public function testMap()
+	public function testMap(): void
 	{
 		$app = $this->app->clone([
 			'fields' => [
