@@ -5,7 +5,9 @@ namespace Kirby\Email;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use PHPMailer\PHPMailer\PHPMailer as Mailer;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Email::class)]
 class EmailTest extends TestCase
 {
 	protected function _email($props = [], $mailer = Email::class)
@@ -13,7 +15,7 @@ class EmailTest extends TestCase
 		return parent::_email($props, $mailer);
 	}
 
-	public function testProperties()
+	public function testProperties(): void
 	{
 		$email = $this->_email([
 			'from' => $from = 'no-reply@supercompany.com',
@@ -52,7 +54,7 @@ class EmailTest extends TestCase
 		$this->assertSame(['type' => 'mail'], $email->transport());
 	}
 
-	public function testRequiredProperty()
+	public function testRequiredProperty(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The property "from" is required');
@@ -60,7 +62,7 @@ class EmailTest extends TestCase
 		$this->_email(['from' => null]);
 	}
 
-	public function testOptionalAddresses()
+	public function testOptionalAddresses(): void
 	{
 		$email = $this->_email([
 			'replyTo' => null,
@@ -73,7 +75,7 @@ class EmailTest extends TestCase
 		$this->assertSame([], $email->bcc());
 	}
 
-	public function testInvalidAddress()
+	public function testInvalidAddress(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('"not-valid" is not a valid email address');
@@ -86,7 +88,7 @@ class EmailTest extends TestCase
 		]);
 	}
 
-	public function testIsSent()
+	public function testIsSent(): void
 	{
 		$email = $this->_email([]);
 		$this->assertFalse($email->isSent());
@@ -94,7 +96,7 @@ class EmailTest extends TestCase
 		$this->assertTrue($email->isSent());
 	}
 
-	public function testBody()
+	public function testBody(): void
 	{
 		$email = $this->_email([
 			'body' => $body = [
@@ -110,7 +112,7 @@ class EmailTest extends TestCase
 		$this->assertTrue($email->isHtml());
 	}
 
-	public function testBodyHtmlOnly()
+	public function testBodyHtmlOnly(): void
 	{
 		$email = $this->_email([
 			'body' => $body = [
@@ -125,7 +127,7 @@ class EmailTest extends TestCase
 		$this->assertTrue($email->isHtml());
 	}
 
-	public function testAttachments()
+	public function testAttachments(): void
 	{
 		$email = $this->_email([
 			'attachments' => $attachments = [
@@ -137,7 +139,7 @@ class EmailTest extends TestCase
 		$this->assertSame($attachments, $email->attachments());
 	}
 
-	public function testBeforeSend()
+	public function testBeforeSend(): void
 	{
 		$phpunit = $this;
 		$smtpOptions = [
