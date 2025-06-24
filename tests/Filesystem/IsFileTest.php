@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class AFile
 {
@@ -14,9 +15,7 @@ class AFile
 	public string $foo = 'bar';
 }
 
-/**
- * @coversDefaultClass \Kirby\Filesystem\IsFile
- */
+#[CoversClass(IsFile::class)]
 class IsFileTest extends TestCase
 {
 	protected function _asset($file = 'blank.pdf')
@@ -27,12 +26,7 @@ class IsFileTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::root
-	 * @covers ::url
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$asset = $this->_asset();
 
@@ -40,10 +34,7 @@ class IsFileTest extends TestCase
 		$this->assertSame('https://foo.bar/blank.pdf', $asset->url());
 	}
 
-	/**
-	 * @covers ::asset
-	 */
-	public function testAsset()
+	public function testAsset(): void
 	{
 		$asset = $this->_asset();
 		$file = $asset->asset();
@@ -52,10 +43,7 @@ class IsFileTest extends TestCase
 		$this->assertSame($file, $asset->asset());
 	}
 
-	/**
-	 * @covers ::asset
-	 */
-	public function testAssetStringProp()
+	public function testAssetStringProp(): void
 	{
 		$asset = $this->_asset();
 		$file =  $asset->asset('/dev/null/blank.pdf');
@@ -64,46 +52,31 @@ class IsFileTest extends TestCase
 		$this->assertSame('/dev/null/blank.pdf', $file->root());
 	}
 
-	/**
-	 * @covers ::asset
-	 */
-	public function testAssetImage()
+	public function testAssetImage(): void
 	{
 		$asset = $this->_asset('cat.jpg');
 		$this->assertInstanceOf(Image::class, $asset->asset());
 	}
 
-	/**
-	 * @covers ::kirby
-	 */
-	public function testKirby()
+	public function testKirby(): void
 	{
 		$asset = $this->_asset();
 		$this->assertInstanceOf(App::class, $asset->kirby());
 	}
 
-	/**
-	 * @covers ::__call
-	 */
-	public function testCall()
+	public function testCall(): void
 	{
 		$asset = $this->_asset();
 		$this->assertSame('pdf', $asset->extension());
 	}
 
-	/**
-	 * @covers ::__call
-	 */
-	public function testCallPublicProperty()
+	public function testCallPublicProperty(): void
 	{
 		$asset = $this->_asset();
 		$this->assertSame('bar', $asset->foo());
 	}
 
-	/**
-	 * @covers ::__call
-	 */
-	public function testCallNotExisting()
+	public function testCallNotExisting(): void
 	{
 		$asset = $this->_asset();
 		$this->expectException(BadMethodCallException::class);
