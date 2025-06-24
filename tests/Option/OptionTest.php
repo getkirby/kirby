@@ -4,17 +4,12 @@ namespace Kirby\Option;
 
 use Kirby\Cms\Page;
 use Kirby\Field\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Option\Option
- */
+#[CoversClass(Option::class)]
 class OptionTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::id
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		// string
 		$option = new Option('test');
@@ -35,10 +30,7 @@ class OptionTest extends TestCase
 		$this->assertSame(1.1, $option->text['en']);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryWithJustValue()
+	public function testFactoryWithJustValue(): void
 	{
 		// string
 		$option = Option::factory('test');
@@ -53,10 +45,7 @@ class OptionTest extends TestCase
 		$this->assertSame(1.0, $option->value);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryWithValueAndText()
+	public function testFactoryWithValueAndText(): void
 	{
 		// string
 		$option = Option::factory([
@@ -79,10 +68,7 @@ class OptionTest extends TestCase
 		$this->assertSame('Test Option', $option->text['de']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		$option = Option::factory([
 			'value' => 'test',
