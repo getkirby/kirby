@@ -4,10 +4,9 @@ namespace Kirby\Plugin;
 
 use Kirby\Cms\TestCase;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Plugin\Asset
- */
+#[CoversClass(Asset::class)]
 class AssetTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
@@ -28,10 +27,7 @@ class AssetTest extends TestCase
 		touch(static::TMP . '/test-plugin/assets/test.css', 1337000000);
 	}
 
-	/**
-	 * @covers ::extension
-	 */
-	public function testExtension()
+	public function testExtension(): void
 	{
 		$asset = new Asset(
 			'test.css',
@@ -42,10 +38,7 @@ class AssetTest extends TestCase
 		$this->assertSame('css', $asset->extension());
 	}
 
-	/**
-	 * @covers ::filename
-	 */
-	public function testFilename()
+	public function testFilename(): void
 	{
 		$asset = new Asset(
 			'test.css',
@@ -56,14 +49,7 @@ class AssetTest extends TestCase
 		$this->assertSame('test.css', $asset->filename());
 	}
 
-	/**
-	 * @covers ::mediaHash
-	 * @covers ::mediaRoot
-	 * @covers ::mediaUrl
-	 * @covers ::url
-	 * @covers ::__toString
-	 */
-	public function testMedia()
+	public function testMedia(): void
 	{
 		$asset = new Asset(
 			'test.css',
@@ -78,10 +64,7 @@ class AssetTest extends TestCase
 		$this->assertSame($url, (string)$asset);
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModified()
+	public function testModified(): void
 	{
 		$asset = new Asset(
 			'test.css',
@@ -92,13 +75,7 @@ class AssetTest extends TestCase
 		$this->assertSame(1337000000, $asset->modified());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::path
-	 * @covers ::plugin
-	 * @covers ::root
-	 */
-	public function testPathRoot()
+	public function testPathRoot(): void
 	{
 		$asset = new Asset(
 			$path = 'test.css',
@@ -111,10 +88,7 @@ class AssetTest extends TestCase
 		$this->assertSame($root, $asset->root());
 	}
 
-	/**
-	 * @covers ::publish
-	 */
-	public function testPublish()
+	public function testPublish(): void
 	{
 		$asset = new Asset(
 			'test.css',
