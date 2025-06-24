@@ -17,8 +17,6 @@ class LanguageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Language';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -320,6 +318,59 @@ class LanguageTest extends TestCase
 		$this->assertSame('ltr', $language->direction());
 	}
 
+	public function testEnsureInMultiLanguageMode()
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				],
+			]
+		]);
+
+		// default language
+		$language = Language::ensure();
+
+		$this->assertSame('en', $language->code());
+
+		// with language code
+		$language = Language::ensure('de');
+
+		$this->assertSame('de', $language->code());
+
+		// with language object
+		$language = Language::ensure($app->language('de'));
+
+		$this->assertSame('de', $language->code());
+
+		// with `current` keyword
+		$language = Language::ensure('current');
+
+		$this->assertSame('en', $language->code());
+
+		// with `default` keyword
+		$language = Language::ensure('default');
+
+		$this->assertSame('en', $language->code());
+	}
+
+	public function testEnsureInSingleLanguageMode()
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP,
+			]
+		]);
+
+		$language = Language::ensure();
+
+		$this->assertSame('en', $language->code());
+	}
+
 	/**
 	 * @covers ::exists
 	 */
@@ -340,6 +391,39 @@ class LanguageTest extends TestCase
 		F::write($language->root(), 'test');
 
 		$this->assertTrue($language->exists());
+	}
+
+	/**
+	 * @covers ::is
+	 */
+	public function testIs()
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				],
+			]
+		]);
+
+		$en = new Language([
+			'code' => 'en'
+		]);
+
+		$de = new Language([
+			'code' => 'de'
+		]);
+
+		$this->assertTrue($en->is('en'));
+		$this->assertTrue($en->is($en));
+		$this->assertTrue($en->is(new Language(['code' => 'en'])));
+
+		$this->assertFalse($en->is('de'));
+		$this->assertFalse($en->is($de));
 	}
 
 	/**
@@ -373,6 +457,27 @@ class LanguageTest extends TestCase
 			'default' => 'foo'
 		]);
 		$this->assertFalse($language->isDefault());
+	}
+
+	/**
+	 * @covers ::isSingle
+	 */
+	public function testIsSingle()
+	{
+		// default
+		$language = new Language([
+			'code' => 'en'
+		]);
+
+		$this->assertFalse($language->isSingle());
+
+		// true
+		$language = new Language([
+			'code'   => 'en',
+			'single' => true
+		]);
+
+		$this->assertTrue($language->isSingle());
 	}
 
 	/**
@@ -658,6 +763,17 @@ class LanguageTest extends TestCase
 		$data = include $file;
 
 		$this->assertSame('test', $data['custom']);
+	}
+
+	/**
+	 * @covers ::single
+	 */
+	public function testSingle()
+	{
+		$language = Language::single();
+
+		$this->assertSame('en', $language->code());
+		$this->assertSame('en', $language->name());
 	}
 
 	/**

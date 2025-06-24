@@ -36,11 +36,6 @@ class Component
 	public static array $types = [];
 
 	/**
-	 * An array of all passed attributes
-	 */
-	protected array $attrs = [];
-
-	/**
 	 * An array of all computed properties
 	 */
 	protected array $computed = [];
@@ -62,20 +57,21 @@ class Component
 	protected array $props = [];
 
 	/**
-	 * The component type
-	 */
-	protected string $type;
-
-	/**
 	 * Creates a new component for the given type
+	 *
+	 * @param string $type The component type
+	 * @param array $attrs An array of all passed attributes
 	 */
-	public function __construct(string $type, array $attrs = [])
-	{
+	public function __construct(
+		protected string $type,
+		protected array $attrs = []
+	) {
 		if (isset(static::$types[$type]) === false) {
-			throw new InvalidArgumentException('Undefined component type: ' . $type);
+			throw new InvalidArgumentException(
+				message: 'Undefined component type: ' . $type
+			);
 		}
 
-		$this->attrs   = $attrs;
 		$this->options = $options = static::setup($type);
 		$this->methods = $methods = $options['methods'] ?? [];
 
@@ -91,6 +87,8 @@ class Component
 			$this->applyComputed($options['computed']);
 		}
 
+		// Reset main properties to avoid them being overwritten
+		// when applying props and computes
 		$this->attrs   = $attrs;
 		$this->methods = $methods;
 		$this->options = $options;
@@ -147,34 +145,63 @@ class Component
 	}
 
 	/**
+	 * Register a single property
+	 */
+	protected function applyProp(string $name, mixed $value): void
+	{
+		// unset prop
+		if ($value === null) {
+			unset($this->props[$name]);
+
+			/**
+			 * Unset dynamic declared properties
+			 * that are not defined in the class
+			 */
+			if (
+				isset($this->$name) === true &&
+				array_key_exists($name, get_object_vars($this)) === true &&
+				array_key_exists($name, get_class_vars(get_class($this))) === false
+			) {
+				unset($this->$name);
+			}
+
+			return;
+		}
+
+		// apply a prop via a closure
+		if ($value instanceof Closure) {
+			if (isset($this->attrs[$name]) === true) {
+				try {
+					$this->$name = $this->props[$name] = $value->call(
+						$this,
+						$this->attrs[$name]
+					);
+					return;
+				} catch (TypeError) {
+					throw new TypeError('Invalid value for "' . $name . '"');
+				}
+			}
+
+			try {
+				$this->$name = $this->props[$name] = $value->call($this);
+				return;
+			} catch (ArgumentCountError) {
+				throw new ArgumentCountError('Please provide a value for "' . $name . '"');
+			}
+		}
+
+		// simple prop assignment by value
+		$this->$name = $this->props[$name] = $value;
+	}
+
+	/**
 	 * Register all defined props and apply the
 	 * passed values.
 	 */
 	protected function applyProps(array $props): void
 	{
-		foreach ($props as $name => $function) {
-			if ($function instanceof Closure) {
-				if (isset($this->attrs[$name]) === true) {
-					try {
-						$this->$name = $this->props[$name] = $function->call(
-							$this,
-							$this->attrs[$name]
-						);
-						continue;
-					} catch (TypeError) {
-						throw new TypeError('Invalid value for "' . $name . '"');
-					}
-				}
-
-				try {
-					$this->$name = $this->props[$name] = $function->call($this);
-					continue;
-				} catch (ArgumentCountError) {
-					throw new ArgumentCountError('Please provide a value for "' . $name . '"');
-				}
-			}
-
-			$this->$name = $this->props[$name] = $function;
+		foreach ($props as $name => $value) {
+			$this->applyProp($name, $value);
 		}
 	}
 
@@ -201,7 +228,9 @@ class Component
 		// load definitions from string
 		if (is_string($definition) === true) {
 			if (is_file($definition) !== true) {
-				throw new Exception('Component definition ' . $definition . ' does not exist');
+				throw new Exception(
+					'Component definition ' . $definition . ' does not exist'
+				);
 			}
 
 			static::$types[$type] = $definition = F::load(
@@ -269,7 +298,7 @@ class Component
 			return $closure->call($this);
 		}
 
-		$array = array_merge($this->attrs, $this->props, $this->computed);
+		$array = [...$this->attrs, ...$this->props, ...$this->computed];
 
 		ksort($array);
 

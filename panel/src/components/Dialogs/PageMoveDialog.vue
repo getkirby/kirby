@@ -53,10 +53,11 @@ export default {
 	margin-bottom: var(--spacing-2);
 }
 .k-page-move-parent {
-	--tree-color-back: var(--color-white);
-	--tree-color-hover-back: var(--color-light);
+	--tree-color-back: var(--input-color-back);
+	--tree-branch-color-back: var(--input-color-back);
+	--tree-branch-hover-color-back: var(--panel-color-back);
 	padding: var(--spacing-3);
-	background: var(--color-white);
+	background: var(--tree-color-back);
 	border-radius: var(--rounded);
 	box-shadow: var(--shadow);
 }

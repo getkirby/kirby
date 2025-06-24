@@ -19,20 +19,20 @@ export default {
 		fields: {
 			default: () => ({
 				href: {
-					label: window.panel.$t("link"),
+					label: window.panel.t("link"),
 					type: "link",
-					placeholder: window.panel.$t("url.placeholder"),
+					placeholder: window.panel.t("url.placeholder"),
 					icon: "url"
 				},
 				title: {
-					label: window.panel.$t("title"),
+					label: window.panel.t("title"),
 					type: "text",
 					icon: "title"
 				},
 				target: {
-					label: window.panel.$t("open.newWindow"),
+					label: window.panel.t("open.newWindow"),
 					type: "toggle",
-					text: [window.panel.$t("no"), window.panel.$t("yes")]
+					text: [window.panel.t("no"), window.panel.t("yes")]
 				}
 			})
 		},
@@ -42,7 +42,7 @@ export default {
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
-			default: () => window.panel.$t("insert")
+			default: () => window.panel.t("insert")
 		}
 	},
 	data() {

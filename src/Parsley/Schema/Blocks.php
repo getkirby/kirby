@@ -8,16 +8,15 @@ use Kirby\Parsley\Element;
 use Kirby\Toolkit\Str;
 
 /**
- * The plain schema definition converts
- * the entire document into simple text blocks
- *
- * @since 3.5.0
+ * The blocks schema definition converts
+ * the entire document into blocks for the blocks field
  *
  * @package   Kirby Parsley
- * @author    Bastian Allgeier <bastian@getkirby.com>,
+ * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.5.0
  */
 class Blocks extends Plain
 {
@@ -187,7 +186,7 @@ class Blocks extends Plain
 				} elseif ($child instanceof DOMElement) {
 					$child = new Element($child);
 					$list  = ['ul', 'ol'];
-					$innerHtml .= match (in_array($child->tagName(), $list)) {
+					$innerHtml .= match (in_array($child->tagName(), $list, true)) {
 						true    => $this->list($child),
 						default => $child->innerHTML($this->marks())
 					};

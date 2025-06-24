@@ -22,7 +22,6 @@
 			<table
 				v-if="!isEmpty"
 				:aria-disabled="disabled"
-				:data-invalid="isInvalid"
 				class="k-table k-object-field-table"
 			>
 				<tbody>
@@ -46,13 +45,21 @@
 					</template>
 				</tbody>
 			</table>
-			<k-empty v-else :data-invalid="isInvalid" icon="box" @click="add">
+			<k-empty v-else icon="box" @click="add">
 				{{ empty ?? $t("field.object.empty") }}
 			</k-empty>
 		</template>
 		<template v-else>
 			<k-empty icon="box">{{ $t("fields.empty") }}</k-empty>
 		</template>
+
+		<!-- Validation -->
+		<input
+			type="checkbox"
+			:checked="!isEmpty"
+			:required="required"
+			class="input-hidden"
+		/>
 	</k-field>
 </template>
 
@@ -80,9 +87,6 @@ export default {
 			return (
 				this.object === null || this.$helper.object.length(this.object) === 0
 			);
-		},
-		isInvalid() {
-			return this.required === true && this.isEmpty;
 		}
 	},
 	watch: {

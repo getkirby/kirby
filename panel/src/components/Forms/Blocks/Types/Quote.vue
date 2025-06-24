@@ -1,6 +1,6 @@
 <template>
 	<div class="k-block-type-quote-editor">
-		<k-writer
+		<k-writer-input
 			ref="text"
 			:disabled="disabled"
 			:inline="textField.inline ?? false"
@@ -10,7 +10,7 @@
 			class="k-block-type-quote-text"
 			@input="update({ text: $event })"
 		/>
-		<k-writer
+		<k-writer-input
 			ref="citation"
 			:disabled="disabled"
 			:inline="citationField.inline ?? true"
@@ -50,7 +50,7 @@ export default {
 <style>
 .k-block-type-quote-editor {
 	padding-inline-start: var(--spacing-3);
-	border-inline-start: 2px solid var(--color-black);
+	border-inline-start: 2px solid light-dark(var(--color-black), var(--color-border));
 }
 .k-block-type-quote-text {
 	font-size: var(--text-xl);

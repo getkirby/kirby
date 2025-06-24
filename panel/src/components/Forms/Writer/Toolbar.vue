@@ -4,7 +4,7 @@
 		ref="toolbar"
 		:buttons="buttons"
 		:data-inline="inline"
-		:theme="inline ? 'dark' : 'light'"
+		:theme="theme"
 		:style="positions"
 		class="k-writer-toolbar"
 	/>
@@ -14,7 +14,7 @@
 /**
  * Toolbar for `k-writer`
  * @displayName WriterToolbar
- * @internal
+ * @unstable
  */
 export default {
 	props: {
@@ -68,125 +68,83 @@ export default {
 	},
 	computed: {
 		/**
-		 * The currently active node, if any
+		 * Currently active dropdown entry, if any
+		 * @returns {Object|undefined}
 		 */
-		activeNode() {
-			const nodes = Object.values(this.nodeButtons);
-			return nodes.find((button) => this.isNodeActive(button)) ?? false;
+		activeDropdownEntry() {
+			return Object.values(this.dropdownEntries).findLast(this.isNodeActive);
 		},
 		/**
 		 * Button objects for k-toolbar
+		 * @returns {Array}
 		 */
 		buttons() {
 			const buttons = [];
 
-			// Nodes
-			if (this.hasNodes) {
-				const nodes = [];
-
-				let nodeIndex = 0;
-
-				for (const nodeType in this.nodeButtons) {
-					const node = this.nodeButtons[nodeType];
-
-					nodes.push({
-						current: this.activeNode?.id === node.id,
-						disabled: this.activeNode?.when?.includes(node.name) === false,
-						icon: node.icon,
-						label: node.label,
-						click: () => this.command(node.command ?? nodeType)
-					});
-
-					if (
-						node.separator === true &&
-						nodeIndex !== Object.keys(this.nodeButtons).length - 1
-					) {
-						nodes.push("-");
-					}
-
-					nodeIndex++;
-				}
-
-				buttons.push({
-					current: Boolean(this.activeNode),
-					icon: this.activeNode.icon ?? "title",
-					dropdown: nodes
-				});
+			// button for nodes dropdown
+			if (this.hasDropdownEntries) {
+				buttons.push(this.dropdownInlineButton);
 			}
 
-			// Divider between nodes and marks
-			if (this.hasNodes && this.hasMarks) {
+			// divider between dropdown and inline buttons
+			if (this.hasDropdownEntries && this.hasInlineEntries) {
 				buttons.push("|");
 			}
 
-			// Marks
-			if (this.hasMarks) {
-				for (const markType in this.markButtons) {
-					const mark = this.markButtons[markType];
-
-					if (mark === "|") {
-						buttons.push("|");
-						continue;
-					}
-
-					buttons.push({
-						current: this.editor.activeMarks.includes(markType),
-						icon: mark.icon,
-						label: mark.label,
-						click: (e) => this.command(mark.command ?? markType, e)
-					});
-				}
+			// inline buttons (all marks and inline nodes)
+			for (const [type, entry] of Object.entries(this.inlineEntries)) {
+				buttons.push(this.inlineButton(entry, type));
 			}
 
 			return buttons;
 		},
 		/**
-		 * Whether there are any marks to show in the toolbar
+		 * All dropdown buttons
+		 * @returns {Array}
 		 */
-		hasMarks() {
-			return this.$helper.object.length(this.markButtons) > 0;
-		},
-		/**
-		 * Whether there are any nodes to show in the toolbar
-		 */
-		hasNodes() {
-			return this.$helper.object.length(this.nodeButtons) > 1;
-		},
-		/**
-		 * All marks that are available and requested based on the `marks` prop
-		 */
-		markButtons() {
-			const available = this.editor.buttons("mark");
+		dropdown() {
+			const buttons = [];
+			const entries = Object.entries(this.dropdownEntries);
+			let index = 0;
 
-			if (this.marks === false || this.$helper.object.length(available) === 0) {
-				return {};
-			}
+			for (const [type, entry] of entries) {
+				// add dropdown button for each entry
+				buttons.push(this.dropdownButton(entry, type));
 
-			if (this.marks === true) {
-				return available;
-			}
-
-			const buttons = {};
-
-			for (const [index, mark] of this.marks.entries()) {
-				if (mark === "|") {
-					buttons["divider" + index] = "|";
-				} else if (available[mark]) {
-					buttons[mark] = available[mark];
+				// add separator between dropdown entries
+				// unless it's the last entry
+				if (entry.separator === true && index !== entries.length - 1) {
+					buttons.push("-");
 				}
+
+				index++;
 			}
 
 			return buttons;
 		},
 		/**
-		 * All nodes that are available and requested based on the `nodes` prop
+		 * Dropdown inline button for the toolbar
+		 * @returns {Object}
 		 */
-		nodeButtons() {
-			const available = this.editor.buttons("node");
-
-			if (this.nodes === false || this.$helper.object.length(available) === 0) {
+		dropdownInlineButton() {
+			return {
+				current: Boolean(this.activeDropdownEntry),
+				dropdown: this.dropdown,
+				icon: this.activeDropdownEntry?.icon ?? "title"
+			};
+		},
+		/**
+		 * All dropdown entries that are available and requested
+		 * based on the `nodes` prop
+		 * @returns {Object}
+		 */
+		dropdownEntries() {
+			if (this.nodes === false) {
 				return {};
 			}
+
+			// get all non-inline nodes
+			const available = this.nodesForBlock;
 
 			// remove the paragraph when certain nodes are requested to be loaded
 			if (this.editor.nodes.doc.content !== "block+" && available.paragraph) {
@@ -197,16 +155,98 @@ export default {
 				return available;
 			}
 
-			const buttons = {};
+			// get requested nodes from available entries
+			// if they are available
+			return Object.fromEntries(
+				this.nodes
+					.filter((node) => available[node])
+					.map((node) => [node, available[node]])
+			);
+		},
+		/**
+		 * Whether there are any block buttons to show in the toolbar dropdown
+		 * @returns {Boolean}
+		 */
+		hasDropdownEntries() {
+			return this.$helper.object.length(this.dropdownEntries) > 0;
+		},
+		/**
+		 * Whether there are any inline buttons to show in the toolbar
+		 * @returns {Boolean}
+		 */
+		hasInlineEntries() {
+			return this.$helper.object.length(this.inlineEntries) > 1;
+		},
+		/**
+		 * All inline entries that are available and requested
+		 * as based on the `marks` and `nodes` props
+		 * @returns {Object}
+		 */
+		inlineEntries() {
+			let entries = {};
 
-			for (const node of this.nodes) {
-				if (available[node]) {
-					buttons[node] = available[node];
+			// inline nodes
+			if (this.nodes === true) {
+				// add all inline nodes
+				entries = this.nodesForInline;
+			} else if (this.nodes !== false) {
+				// add requested inline nodes
+				for (const node of this.nodes) {
+					if (this.nodesForInline[node]) {
+						entries[node] = this.nodesForInline[node];
+					}
 				}
 			}
 
-			return buttons;
+			// add divider between inline nodes and marks
+			if (this.$helper.object.length(entries) > 0) {
+				entries["divider-inline-nodes"] = "|";
+			}
+
+			// marks
+			const marks = this.editor.buttons("mark");
+
+			if (this.marks === true) {
+				// add all marks to existing entries
+				return { ...entries, ...marks };
+			}
+
+			if (this.marks !== false) {
+				// add only requested marks to existing entries
+				for (const [index, mark] of this.marks.entries()) {
+					if (mark === "|") {
+						entries["divider" + index] = "|";
+					} else if (marks[mark]) {
+						entries[mark] = marks[mark];
+					}
+				}
+			}
+
+			return entries;
 		},
+		/**
+		 * All block nodes
+		 * @returns {Object}
+		 */
+		nodesForBlock() {
+			return this.$helper.object.filter(
+				this.editor.buttons("node"),
+				(button) => button.inline !== true
+			);
+		},
+		/**
+		 * All inline nodes
+		 * @returns {Object}
+		 */
+		nodesForInline() {
+			return this.$helper.object.filter(
+				this.editor.buttons("node"),
+				(button) => button.inline === true
+			);
+		},
+		/**
+		 * @returns {Object|null}
+		 */
 		positions() {
 			// only set position when toolbar is inline,
 			// otherwise the top value is overwriting the top offset
@@ -219,6 +259,12 @@ export default {
 				top: this.position.y + "px",
 				left: this.position.x + "px"
 			};
+		},
+		/**
+		 * @returns {String}
+		 */
+		theme() {
+			return this.inline ? "dark" : "light";
 		}
 	},
 	methods: {
@@ -236,6 +282,48 @@ export default {
 			this.$emit("command", command, ...args);
 		},
 		/**
+		 * Creates a dropdown button object
+		 * @param {Object} entry
+		 * @param {String} type
+		 * @returns {Object}
+		 */
+		dropdownButton(entry, type) {
+			return {
+				current: this.activeDropdownEntry?.id === entry.id,
+				disabled:
+					this.activeDropdownEntry?.when?.includes(entry.name) === false,
+				icon: entry.icon,
+				label: entry.label,
+				click: () => this.command(entry.command ?? type)
+			};
+		},
+		/**
+		 * Creates an inline button object
+		 * @param {Object} entry
+		 * @param {String} type
+		 * @returns {Object}
+		 */
+		inlineButton(entry, type) {
+			if (entry === "|") {
+				return "|";
+			}
+
+			return {
+				current: this.isMarkActive({ ...entry, name: type }),
+				icon: entry.icon,
+				label: entry.label,
+				click: (e) => this.command(entry.command ?? type, e)
+			};
+		},
+		/**
+		 * Checks if the given mark is active
+		 * @param {Object} mark
+		 * @returns {Boolean}
+		 */
+		isMarkActive(mark) {
+			return this.editor.activeMarks.includes(mark.name);
+		},
+		/**
 		 * Checks if the given node is active
 		 * @param {Object} node
 		 * @returns {Boolean}
@@ -245,17 +333,7 @@ export default {
 				return false;
 			}
 
-			// Since the list element also contains a paragraph,
-			// don't consider paragraph as an active node when
-			// the list item is active
-			if (node.name === "paragraph") {
-				return (
-					this.editor.activeNodes.includes("listItem") === false &&
-					this.editor.activeNodes.includes("quote") === false
-				);
-			}
-
-			// Te might have multiple node buttons for the same node
+			// We might have multiple node buttons for the same node
 			// (e.g. headings). To know which one is active, we need
 			// to compare the active attributes with the
 			// attributes of the node button
@@ -342,15 +420,15 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-writer:has(.k-toolbar:not([data-inline="true"])) */
-.k-writer:not([data-toolbar-inline="true"]):not([data-disabled="true"]) {
+.k-writer-input:has(
+		.k-toolbar:not([data-inline="true"], [data-disabled="true"])
+	) {
 	grid-template-areas: "topbar" "content";
 	grid-template-rows: var(--toolbar-size) 1fr;
 	gap: 0;
 }
 
-/** TODO: .k-writer-toolbar:not(:has(~ :focus-within)) */
-.k-writer:not(:focus-within) {
+.k-writer-toolbar:not(:has(~ :focus-within)) {
 	--toolbar-current: currentColor;
 }
 

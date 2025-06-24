@@ -15,10 +15,8 @@ class AuthProtectionTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AuthProtection';
 
-	public $failedEmail;
-
-	protected $app;
-	protected $auth;
+	protected Auth $auth;
+	public string|null $failedEmail = null;
 
 	public function setUp(): void
 	{

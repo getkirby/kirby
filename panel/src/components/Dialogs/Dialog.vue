@@ -1,10 +1,13 @@
 <template>
 	<portal v-if="visible" to="dialog">
 		<form
-			:class="$vnode.data.staticClass"
-			:data-has-footer="cancelButton || submitButton"
+			:class="[
+				'k-dialog',
+				$vnode.data.class,
+				$vnode.data.staticClass,
+				$attrs.class
+			]"
 			:data-size="size"
-			class="k-dialog"
 			method="dialog"
 			@click.stop
 			@submit.prevent="$emit('submit')"
@@ -46,7 +49,7 @@ export default {
 
 <style>
 :root {
-	--dialog-color-back: var(--color-light);
+	--dialog-color-back: var(--panel-color-back);
 	--dialog-color-text: currentColor;
 	--dialog-margin: var(--spacing-6);
 	--dialog-padding: var(--spacing-6);

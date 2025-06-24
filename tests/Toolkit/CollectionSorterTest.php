@@ -4,14 +4,12 @@ namespace Kirby\Toolkit;
 
 class MockObject
 {
-	protected $value;
-
-	public function __construct(string $value)
-	{
-		$this->value = $value;
+	public function __construct(
+		protected string $value
+	) {
 	}
 
-	public function value()
+	public function value(): string
 	{
 		return $this->value;
 	}
@@ -19,7 +17,7 @@ class MockObject
 
 class MockObjectString extends MockObject
 {
-	public function __toString()
+	public function __toString(): string
 	{
 		return (string)$this->value;
 	}
@@ -27,7 +25,7 @@ class MockObjectString extends MockObject
 
 class CollectionSorterTest extends TestCase
 {
-	public function testSort()
+	public function testSort(): void
 	{
 		$collection = new Collection([
 			[
@@ -71,7 +69,7 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('blue', $sorted->nth(2)['color']);
 	}
 
-	public function testSortFlags()
+	public function testSortFlags(): void
 	{
 		$collection = new Collection([
 			['name' => 'img12.png'],
@@ -99,7 +97,7 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('img1.png', $sorted->nth(3)['name']);
 	}
 
-	public function testSortCases()
+	public function testSortCases(): void
 	{
 		$collection = new Collection([
 			['name' => 'a'],
@@ -115,7 +113,7 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('c', $sorted->nth(3)['name']);
 	}
 
-	public function testSortIntegers()
+	public function testSortIntegers(): void
 	{
 		$collection = new Collection([
 			['number' => 12],
@@ -131,7 +129,7 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame(12, $sorted->nth(3)['number']);
 	}
 
-	public function testSortZeros()
+	public function testSortZeros(): void
 	{
 		$collection = new Collection([
 			[
@@ -159,7 +157,7 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('4', $sorted->nth(3)['title']);
 	}
 
-	public function testSortCallable()
+	public function testSortCallable(): void
 	{
 		$collection = new Collection([
 			[
@@ -198,13 +196,13 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('First Article', $sorted->nth(2)['title']);
 	}
 
-	public function testSortEmpty()
+	public function testSortEmpty(): void
 	{
 		$collection = new Collection();
 		$this->assertSame($collection, $collection->sort());
 	}
 
-	public function testSortObjects()
+	public function testSortObjects(): void
 	{
 		$bastian = new MockObjectString('Bastian');
 		$nico    = new MockObjectString('Nico');
@@ -222,7 +220,7 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame($sonja, $sorted->nth(2)['name']);
 	}
 
-	public function testSortNoRecursiveDependencyError()
+	public function testSortNoRecursiveDependencyError(): void
 	{
 		// arrays; shouldn't be a problem
 		$collection = new Collection([
@@ -271,7 +269,7 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame($sonja, $sorted->nth(3));
 	}
 
-	public function testFlip()
+	public function testFlip(): void
 	{
 		$collection = new Collection([
 			['name' => 'img12.png'],
@@ -289,7 +287,7 @@ class CollectionSorterTest extends TestCase
 		$this->assertSame('img12.png', $flipped->nth(2)['name']);
 	}
 
-	public function testShuffle()
+	public function testShuffle(): void
 	{
 		$collection = new Collection([
 			['name' => 'img12.png'],

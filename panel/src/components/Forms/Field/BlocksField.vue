@@ -1,5 +1,9 @@
 <template>
-	<k-field v-bind="$props" class="k-blocks-field">
+	<k-field
+		v-bind="$props"
+		:class="['k-blocks-field', $attrs.class]"
+		:style="$attrs.style"
+	>
 		<template v-if="!disabled && hasFieldsets" #options>
 			<k-button-group layout="collapsed">
 				<k-button
@@ -23,13 +27,18 @@
 			</k-button-group>
 		</template>
 
-		<k-blocks
-			ref="blocks"
-			v-bind="$props"
-			@close="opened = $event"
-			@open="opened = $event"
-			v-on="$listeners"
-		/>
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
+		>
+			<k-blocks
+				ref="blocks"
+				v-bind="$props"
+				@close="opened = $event"
+				@open="opened = $event"
+				@input="$emit('input', $event)"
+			/>
+		</k-input-validator>
 
 		<footer v-if="!disabled && !isEmpty && !isFull && hasFieldsets">
 			<k-button
@@ -101,7 +110,7 @@ export default {
 .k-blocks-field {
 	position: relative;
 }
-/** TODO: .k-blocks-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
+
 .k-blocks-field > footer {
 	display: flex;
 	justify-content: center;

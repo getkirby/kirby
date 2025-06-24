@@ -32,10 +32,4 @@ export default {
 .k-lab-example .k-headline {
 	margin-bottom: 0.5rem;
 }
-.k-lab-example .k-browser {
-	border: 1px solid var(--color-border);
-	background: var(--color-white);
-	border-radius: var(--rounded);
-	padding: var(--spacing-2);
-}
 </style>

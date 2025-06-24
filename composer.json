@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "4.8.0",
+	"version": "5.0.0",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -24,7 +24,7 @@
 		"source": "https://github.com/getkirby/kirby"
 	},
 	"require": {
-		"php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+		"php": "~8.2.0 || ~8.3.0 || ~8.4.0",
 		"ext-SimpleXML": "*",
 		"ext-ctype": "*",
 		"ext-curl": "*",
@@ -39,14 +39,14 @@
 		"christian-riesen/base32": "1.6.0",
 		"claviska/simpleimage": "4.2.1",
 		"composer/semver": "3.4.3",
-		"filp/whoops": "2.18.0",
+		"filp/whoops": "2.18.3",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.17.0",
 		"michelf/php-smartypants": "1.8.1",
 		"phpmailer/phpmailer": "6.10.0",
 		"symfony/polyfill-intl-idn": "1.32.0",
 		"symfony/polyfill-mbstring": "1.32.0",
-		"symfony/yaml": "6.4.21"
+		"symfony/yaml": "7.3.0"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"
@@ -58,6 +58,7 @@
 		"ext-fileinfo": "Improved mime type detection for files",
 		"ext-intl": "Improved i18n number formatting",
 		"ext-memcached": "Support for the Memcached cache driver",
+		"ext-redis": "Support for the Redis cache driver",
 		"ext-sodium": "Support for the crypto class and more robust session handling",
 		"ext-zip": "Support for ZIP archive file functions",
 		"ext-zlib": "Sanitization and validation for svgz files"
@@ -80,7 +81,7 @@
 		},
 		"optimize-autoloader": true,
 		"platform": {
-			"php": "8.1.0"
+			"php": "8.2.0"
 		},
 		"platform-check": false
 	},

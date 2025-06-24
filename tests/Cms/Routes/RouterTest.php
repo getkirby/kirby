@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
@@ -122,7 +123,7 @@ class RouterTest extends TestCase
 		$this->assertSame('xml', $result->body());
 	}
 
-	public function testPageFileRoute()
+	public function testPageFileRouteDefault()
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -140,28 +141,10 @@ class RouterTest extends TestCase
 		]);
 
 		$file = $app->call('projects/cover.jpg');
-		$this->assertIsFile($file);
-		$this->assertSame('projects/cover.jpg', $file->id());
+		$this->assertNull($file);
 	}
 
-	public function testSiteFileRoute()
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'files' => [
-					[
-						'filename' => 'background.jpg'
-					]
-				]
-			]
-		]);
-
-		$file = $app->call('background.jpg');
-		$this->assertIsFile($file);
-		$this->assertSame('background.jpg', $file->id());
-	}
-
-	public function testPageFileRouteDisabled()
+	public function testPageFileRouteEnabled()
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -178,13 +161,52 @@ class RouterTest extends TestCase
 			],
 			'options' => [
 				'content' => [
-					'fileRedirects' => false
+					'fileRedirects' => true
 				]
 			]
 		]);
 
 		$file = $app->call('projects/cover.jpg');
+		$this->assertIsFile($file);
+		$this->assertSame('projects/cover.jpg', $file->id());
+	}
+
+	public function testSiteFileRouteDefault()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'background.jpg'
+					]
+				]
+			]
+		]);
+
+		$file = $app->call('background.jpg');
 		$this->assertNull($file);
+	}
+
+	public function testSiteFileRouteEnabled()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'background.jpg'
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
+			]
+		]);
+
+		$file = $app->call('background.jpg');
+		$this->assertIsFile($file);
+		$this->assertSame('background.jpg', $file->id());
 	}
 
 	public function testNestedPageRoute()
@@ -338,9 +360,7 @@ class RouterTest extends TestCase
 			'routes' => [
 				[
 					'pattern' => $pattern,
-					'action'  => function () {
-						return 'test';
-					}
+					'action'  => fn () => 'test'
 				]
 			]
 		]);
@@ -350,7 +370,7 @@ class RouterTest extends TestCase
 
 	public function testBadMethodRoute()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid routing method: WURST');
 		$this->expectExceptionCode(400);
 

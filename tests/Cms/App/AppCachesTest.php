@@ -13,11 +13,12 @@ class AppCachesTest extends TestCase
 
 	public function app(array $props = [])
 	{
-		return new App(array_merge([
+		return new App([
 			'roots' => [
 				'index' => static::TMP,
-			]
-		], $props));
+			],
+			...$props
+		]);
 	}
 
 	public function tearDown(): void

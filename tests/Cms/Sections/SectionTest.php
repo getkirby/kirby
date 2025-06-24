@@ -7,8 +7,7 @@ use Kirby\TestCase;
 
 class SectionTest extends TestCase
 {
-	protected $app;
-	protected $sectionTypes;
+	protected array $sectionTypes;
 
 	public function setUp(): void
 	{
@@ -46,9 +45,7 @@ class SectionTest extends TestCase
 		// return simple string
 		Section::$types = [
 			'test' => [
-				'api' => function () {
-					return 'Hello World';
-				}
+				'api' => fn () => 'Hello World'
 			]
 		];
 
@@ -75,12 +72,8 @@ class SectionTest extends TestCase
 	{
 		Section::$types['test'] = [
 			'props' => [
-				'example' => function ($example = 'default') {
-					return $example;
-				},
-				'buttons' => function ($buttons = ['one', 'two']) {
-					return $buttons;
-				},
+				'example' => fn ($example = 'default') => $example,
+				'buttons' => fn ($buttons = ['one', 'two']) => $buttons
 			]
 		];
 
@@ -96,12 +89,8 @@ class SectionTest extends TestCase
 	{
 		Section::$types['test'] = [
 			'props' => [
-				'a' => function ($a) {
-					return $a;
-				},
-				'b' => function ($b) {
-					return $b;
-				}
+				'a' => fn ($a) => $a,
+				'b' => fn ($b) => $b
 			]
 		];
 

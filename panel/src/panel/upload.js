@@ -1,12 +1,14 @@
+import { reactive } from "vue";
 import { uuid } from "@/helpers/string";
 import State from "./state.js";
 import listeners from "./listeners.js";
 import queue from "@/helpers/queue.js";
-import upload from "@/helpers/upload.js";
+import { uploadAsChunks } from "@/helpers/upload.js";
 import { extension, name, niceSize } from "@/helpers/file.js";
 
 export const defaults = () => {
 	return {
+		abort: null,
 		accept: "*",
 		attributes: {},
 		files: [],
@@ -32,23 +34,30 @@ export const defaults = () => {
 export default (panel) => {
 	const parent = State("upload", defaults());
 
-	return {
+	return reactive({
 		...parent,
 		...listeners(),
 		input: null,
+		announce() {
+			panel.notification.success({ context: "view" });
+			panel.events.emit("model.update");
+		},
 		/**
 		 * Called when dialog's cancel button was clicked
 		 */
-		cancel() {
-			this.emit("cancel");
+		async cancel() {
+			await this.emit("cancel");
+
+			// abort any ongoing requests
+			this.abort?.abort();
 
 			// emit complete event if any files have been completed,
 			// e.g. when first submit/upload yielded any errors and
 			// now cancel was clicked, but already some files have
 			// been completely uploaded
 			if (this.completed.length > 0) {
-				this.emit("complete", this.completed);
-				panel.view.reload();
+				await this.emit("complete", this.completed);
+				this.announce();
 			}
 
 			this.reset();
@@ -65,16 +74,13 @@ export default (panel) => {
 		 * Gets called when the dialog's submit button was clicked
 		 * and all remaining files have been uploaded
 		 */
-		done() {
+		async done() {
 			panel.dialog.close();
 
 			if (this.completed.length > 0) {
-				this.emit("done", this.completed);
-
-				if (panel.drawer.isOpen === false) {
-					panel.notification.success({ context: "view" });
-					panel.view.reload();
-				}
+				await this.emit("complete", this.completed);
+				await this.emit("done", this.completed);
+				this.announce();
 			}
 
 			this.reset();
@@ -272,6 +278,9 @@ export default (panel) => {
 				throw new Error("The upload URL is missing");
 			}
 
+			// prepare the abort controller
+			this.abort = new AbortController();
+
 			// gather upload tasks for all files
 			const files = [];
 
@@ -318,18 +327,25 @@ export default (panel) => {
 		},
 		async upload(file, attributes) {
 			try {
-				const response = await upload(file.src, {
-					attributes: attributes,
-					headers: { "x-csrf": panel.system.csrf },
-					filename: file.name + "." + file.extension,
-					url: this.url,
-					progress: (xhr, src, progress) => {
-						file.progress = progress;
-					}
-				});
+				const response = await uploadAsChunks(
+					file.src,
+					{
+						abort: this.abort.signal,
+						attributes: attributes,
+						filename: file.name + "." + file.extension,
+						headers: { "x-csrf": panel.system.csrf },
+						url: this.url,
+						progress: (xhr, src, progress) => {
+							file.progress = progress;
+						}
+					},
+					panel.config.upload
+				);
 
 				file.completed = true;
 				file.model = response.data;
+
+				panel.events.emit("file.upload", file);
 			} catch (error) {
 				panel.error(error, false);
 
@@ -339,7 +355,9 @@ export default (panel) => {
 
 				// reset the progress bar on error
 				file.progress = 0;
+
+				panel.events.emit("file.upload.error", file);
 			}
 		}
-	};
+	});
 };

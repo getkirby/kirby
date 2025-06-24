@@ -147,18 +147,14 @@ export default {
 </script>
 
 <style>
-.k-search-view .k-header {
-	margin-bottom: 0;
-}
-
 /* if not tabs are displayed, add space */
 .k-header + .k-search-view-results {
 	margin-top: var(--spacing-12);
 }
 
 .k-search-view-input {
+	--input-color-back: var(--color-border);
 	--input-color-border: transparent;
-	--input-color-back: var(--color-gray-300);
 	--input-height: var(--height-md);
 	width: 40cqw;
 }

@@ -4,7 +4,7 @@
 			<template v-for="(field, fieldName) in fields">
 				<k-column
 					v-if="$helper.field.isVisible(field, value)"
-					:key="field.signature"
+					:key="fieldName"
 					:width="field.width"
 				>
 					<!-- @event input Triggered whenever any field value changes -->
@@ -19,13 +19,9 @@
 						:disabled="disabled || field.disabled"
 						:form-data="value"
 						:name="fieldName"
-						:novalidate="novalidate"
 						:value="value[fieldName]"
 						@input="onInput($event, field, fieldName)"
 						@focus="$emit('focus', $event, field, fieldName)"
-						@invalid="
-							($invalid, $v) => onInvalid($invalid, $v, field, fieldName)
-						"
 						@submit="$emit('submit', $event, field, fieldName)"
 					/>
 					<k-box v-else theme="negative">
@@ -51,7 +47,7 @@
 export default {
 	props: {
 		/**
-		 * @private
+		 * @internal
 		 */
 		config: Object,
 		/**
@@ -67,13 +63,6 @@ export default {
 			default: () => ({})
 		},
 		/**
-		 * If `true`, form fields won't show their validation status on the fly.
-		 */
-		novalidate: {
-			type: Boolean,
-			default: false
-		},
-		/**
 		 * Key/Value object with all values for all fields
 		 */
 		value: {
@@ -81,12 +70,7 @@ export default {
 			default: () => ({})
 		}
 	},
-	emits: ["focus", "input", "invalid", "submit"],
-	data() {
-		return {
-			errors: {}
-		};
-	},
+	emits: ["focus", "input", "submit"],
 	methods: {
 		/**
 		 * Focus a specific field in the fieldset or the first one if no name is given
@@ -123,17 +107,10 @@ export default {
 		hasField(name) {
 			return this.$refs[name]?.[0];
 		},
-		onInvalid($invalid, $v, field, fieldName) {
-			this.errors[fieldName] = $v;
-			this.$emit("invalid", this.errors);
-		},
 		onInput(value, field, name) {
 			const values = this.value;
 			this.$set(values, name, value);
 			this.$emit("input", values, field, name);
-		},
-		hasErrors() {
-			return this.$helper.object.length(this.errors) > 0;
 		}
 	}
 };

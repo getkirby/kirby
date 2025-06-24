@@ -16,7 +16,7 @@ Prism.manual = true;
 
 /**
  * @since 4.0.0
- * @internal
+ * @unstable
  */
 export default {
 	mounted() {
@@ -32,10 +32,33 @@ export default {
 </script>
 
 <style>
+:root {
+	--highlight-punctuation: var(--color-gray-500);
+	--highlight-variable: var(--color-red-500);
+	--highlight-constant: var(--color-orange-500);
+	--highlight-keyword: var(--color-purple-500);
+	--highlight-function: var(--color-blue-500);
+	--highlight-operator: var(--color-aqua-500);
+	--highlight-string: var(--color-green-500);
+	--highlight-scope: var(--color-yellow-500);
+}
+
+.k-panel[data-theme="dark"] {
+	--highlight-punctuation: var(--color-gray-400);
+	--highlight-variable: var(--color-red-400);
+	--highlight-constant: var(--color-orange-400);
+	--highlight-keyword: var(--color-purple-400);
+	--highlight-function: var(--color-blue-400);
+	--highlight-operator: var(--color-aqua-400);
+	--highlight-string: var(--color-green-400);
+	--highlight-scope: var(--color-yellow-400);
+}
+
 .token.punctuation,
 .token.comment,
-.token.doctype {
-	color: var(--color-gray-500);
+.token.doctype,
+.token.title .punctuation {
+	color: var(--highlight-punctuation);
 }
 .token.tag,
 .token.markup,
@@ -46,7 +69,7 @@ export default {
 .token.kirbytag-bracket,
 .token.prolog,
 .token.delimiter {
-	color: var(--color-red-500);
+	color: var(--highlight-variable);
 }
 .token.constant,
 .token.number,
@@ -58,40 +81,37 @@ export default {
 .token.entity,
 .token.bold,
 .token.bold > .punctuation {
-	color: var(--color-orange-500);
+	color: var(--highlight-constant);
 }
 .token.keyword,
 .token.italic,
 .token.italic > .punctuation {
-	color: var(--color-purple-500);
+	color: var(--highlight-keyword);
 }
 .token.function {
-	color: var(--color-blue-500);
+	color: var(--highlight-function);
 }
 .token.operator,
 .token.title {
-	color: var(--color-aqua-500);
+	color: var(--highlight-operator);
 }
 .token.string,
 .token.attr-value,
 .token.attr-value .punctuation,
 .token.list.punctuation {
-	color: var(--color-green-500);
+	color: var(--highlight-string);
 }
 .token.scope,
 .token.class-name,
 .token.property,
 .token.url {
-	color: var(--color-yellow-500);
+	color: var(--highlight-scope);
 }
 .token.title,
 .token.kirbytag-bracket,
 .token.list.punctuation,
 .token.bold {
 	font-weight: var(--font-bold);
-}
-.token.title .punctuation {
-	color: var(--color-gray-500);
 }
 .token.italic {
 	font-style: italic;

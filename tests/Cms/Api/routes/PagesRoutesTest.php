@@ -9,8 +9,6 @@ class PagesRoutesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PagesRoutes';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

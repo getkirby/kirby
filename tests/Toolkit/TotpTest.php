@@ -4,10 +4,9 @@ namespace Kirby\Toolkit;
 
 use Base32\Base32;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Totp
- */
+#[CoversClass(Totp::class)]
 class TotpTest extends TestCase
 {
 	public function tearDown(): void
@@ -15,10 +14,7 @@ class TotpTest extends TestCase
 		MockTime::$time = 1337000000;
 	}
 
-	/**
-	 * @covers ::generate
-	 */
-	public function testGenerate()
+	public function testGenerate(): void
 	{
 		// test cases taken from the appendix of RFC6238:
 		// https://datatracker.ietf.org/doc/html/rfc6238#appendix-B
@@ -45,11 +41,7 @@ class TotpTest extends TestCase
 		$this->assertSame('353130', $totp->generate());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::secret
-	 */
-	public function testSecret()
+	public function testSecret(): void
 	{
 		// randomly generated secret
 		$totp1 = new Totp();
@@ -68,10 +60,7 @@ class TotpTest extends TestCase
 		$this->assertSame($secret, $totp4->secret());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testSecretInvalid1()
+	public function testSecretInvalid1(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
@@ -79,10 +68,7 @@ class TotpTest extends TestCase
 		new Totp('');
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testSecretInvalid2()
+	public function testSecretInvalid2(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
@@ -90,10 +76,7 @@ class TotpTest extends TestCase
 		new Totp('TOOSHORT');
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testSecretInvalid3()
+	public function testSecretInvalid3(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('TOTP secrets should be 32 Base32 digits (= 20 bytes)');
@@ -101,10 +84,7 @@ class TotpTest extends TestCase
 		new Totp('ABcDEfGHiJKlMNoPQRStuVWXYZ012345'); // invalid Base32 digits
 	}
 
-	/**
-	 * @covers ::uri
-	 */
-	public function testUri()
+	public function testUri(): void
 	{
 		$totp = new Totp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
 
@@ -115,10 +95,7 @@ class TotpTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::verify
-	 */
-	public function testVerify()
+	public function testVerify(): void
 	{
 		MockTime::$time = 1111111111;
 		$totp = new Totp(Base32::encode('12345678901234567890'));

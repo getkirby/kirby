@@ -1,9 +1,10 @@
 <template>
 	<k-navigate
+		:class="['k-picklist-input', $attrs.class]"
+		:style="$attrs.style"
 		element="nav"
 		axis="y"
 		select="input[type=search], label, .k-picklist-input-body button"
-		class="k-picklist-input"
 		@prev="$emit('escape')"
 	>
 		<header v-if="search" class="k-picklist-input-header">
@@ -30,16 +31,21 @@
 
 		<template v-if="filteredOptions.length">
 			<div class="k-picklist-input-body">
-				<component
-					:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
-					ref="options"
-					:disabled="disabled"
-					:options="choices"
-					:value="value"
-					class="k-picklist-input-options"
-					@input="input"
-					@keydown.native.enter.prevent="enter"
-				/>
+				<k-input-validator
+					v-bind="{ min, max, required }"
+					:value="JSON.stringify(value)"
+				>
+					<component
+						:is="multiple ? 'k-checkboxes-input' : 'k-radio-input'"
+						ref="options"
+						:disabled="disabled"
+						:options="choices"
+						:value="value"
+						class="k-picklist-input-options"
+						@input="input"
+						@keydown.native.enter.prevent="enter"
+					/>
+				</k-input-validator>
 				<k-button
 					v-if="display !== true && filteredOptions.length > display"
 					class="k-picklist-input-more"
@@ -64,12 +70,6 @@
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { autofocus, disabled, options, required } from "@/mixins/props.js";
-
-import {
-	required as validateRequired,
-	minLength as validateMinLength,
-	maxLength as validateMaxLength
-} from "vuelidate/lib/validators";
 
 export const picklist = {
 	mixins: [autofocus, disabled, options, required],
@@ -223,17 +223,6 @@ export default {
 			return this.create === false && this.filteredOptions.length === 0;
 		}
 	},
-	watch: {
-		value: {
-			handler() {
-				/**
-				 * Validation failed
-				 */
-				this.$emit("invalid", this.$v.$invalid, this.$v);
-			},
-			immediate: true
-		}
-	},
 	methods: {
 		add() {
 			if (this.showCreate) {
@@ -283,15 +272,6 @@ export default {
 			 */
 			this.$emit("input", values);
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				minLength: this.min ? validateMinLength(this.min) : true,
-				maxLength: this.max ? validateMaxLength(this.max) : true
-			}
-		};
 	}
 };
 </script>

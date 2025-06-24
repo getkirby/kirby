@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import State from "./state.js";
 
 export const defaults = () => {
@@ -14,7 +15,7 @@ export const defaults = () => {
 export default (panel) => {
 	const parent = State("menu", defaults());
 	const media = window.matchMedia?.("(max-width: 60rem)");
-	const menu = {
+	const menu = reactive({
 		...parent,
 
 		/**
@@ -116,7 +117,7 @@ export default (panel) => {
 				this.open();
 			}
 		}
-	};
+	});
 
 	// escape key event
 	panel.events.on("keydown.esc", menu.escape.bind(menu));

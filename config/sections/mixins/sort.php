@@ -29,7 +29,7 @@ return [
 
 			if (
 				$this->type === 'pages' &&
-				in_array($this->status, ['listed', 'published', 'all']) === false
+				in_array($this->status, ['listed', 'published', 'all'], true) === false
 			) {
 				return false;
 			}

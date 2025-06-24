@@ -1,10 +1,11 @@
 <template>
-	<k-writer
+	<k-writer-input
 		ref="input"
 		v-bind="$props"
+		:class="['k-list-input', $attrs.class]"
 		:extensions="listExtensions"
+		:style="$attrs.style"
 		:value="list"
-		class="k-list-input"
 		@input="onInput"
 	/>
 </template>
@@ -87,7 +88,7 @@ export default {
 </script>
 
 <style>
-.k-list-input.k-writer[data-placeholder][data-empty="true"]::before {
+.k-list-input.k-writer-input[data-placeholder][data-empty="true"]::before {
 	padding-inline-start: 2.5em;
 }
 </style>

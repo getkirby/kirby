@@ -9,17 +9,15 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
 /**
- * @coversDefaultClass Kirby\Cms\System
+ * @coversDefaultClass \Kirby\Cms\System
  */
 class SystemTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/SystemTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.System';
 
-	protected static $updateStatusHost;
-
-	protected $app;
-	protected $subTmp;
+	protected static string $updateStatusHost;
+	protected string|null $subTmp = null;
 
 	public static function setUpBeforeClass(): void
 	{
@@ -44,7 +42,7 @@ class SystemTest extends TestCase
 	public function tearDown(): void
 	{
 		if ($this->subTmp !== null) {
-			chmod($this->subTmp, 0755);
+			chmod($this->subTmp, 0o755);
 			Dir::remove($this->subTmp);
 		}
 
@@ -298,7 +296,6 @@ class SystemTest extends TestCase
 
 	/**
 	 * @dataProvider providerForRoots
-	 * @param $root
 	 * @throws \Kirby\Exception\PermissionException
 	 */
 	public function testInitPermission($root)
@@ -316,7 +313,7 @@ class SystemTest extends TestCase
 		Dir::make($this->subTmp);
 
 		// set no writable
-		chmod($this->subTmp, 0444);
+		chmod($this->subTmp, 0o444);
 
 		// /site/accounts
 		$this->expectException(PermissionException::class);

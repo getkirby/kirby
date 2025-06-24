@@ -15,8 +15,6 @@ class SiteTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Site';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -37,6 +35,18 @@ class SiteTest extends TestCase
 	{
 		$site = new ModelSite($props);
 		return new Site($site);
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$this->assertSame([
+			'k-open-view-button',
+			'k-preview-view-button',
+			'k-languages-view-button',
+		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	/**
@@ -134,7 +144,6 @@ class SiteTest extends TestCase
 		$props = $this->panel()->props();
 
 		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('content', $props['model']);
 		$this->assertArrayHasKey('previewUrl', $props['model']);
 		$this->assertArrayHasKey('title', $props['model']);
 
@@ -144,6 +153,37 @@ class SiteTest extends TestCase
 		$this->assertArrayHasKey('permissions', $props);
 		$this->assertArrayHasKey('tab', $props);
 		$this->assertArrayHasKey('tabs', $props);
+		$this->assertArrayHasKey('versions', $props);
+	}
+
+	public function testPreviewPermissionsWithoutHomePage()
+	{
+		$props = $this->panel()->props();
+
+		$this->assertFalse($props['permissions']['preview']);
+	}
+
+	public function testPreviewPermissionsWithHomePage()
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'home']
+				]
+			]
+		]);
+
+		// without logged in user
+		$props = $this->app->site()->panel()->props();
+
+		$this->assertFalse($props['permissions']['preview']);
+
+		// with logged in user
+		$this->app->impersonate('kirby');
+
+		$props = $this->app->site()->panel()->props();
+
+		$this->assertTrue($props['permissions']['preview']);
 	}
 
 	/**

@@ -65,8 +65,13 @@ return [
 	'validations' => [
 		'boolean',
 		'required' => function ($value) {
-			if ($this->isRequired() && ($value === false || $this->isEmpty($value))) {
-				throw new InvalidArgumentException(I18n::translate('field.required'));
+			if (
+				$this->isRequired() &&
+				($value === false || $this->isEmptyValue($value))
+			) {
+				throw new InvalidArgumentException(
+					message: I18n::translate('field.required')
+				);
 			}
 		},
 	]

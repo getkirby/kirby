@@ -18,8 +18,8 @@ class SessionsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/store';
 
-	protected $store;
-	protected $sessions;
+	protected SessionStore $store;
+	protected Sessions $sessions;
 
 	public function setUp(): void
 	{

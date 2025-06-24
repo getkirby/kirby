@@ -24,7 +24,7 @@ export default {
 </script>
 
 <style>
-.k-drawer[aria-disabled] {
+.k-drawer[aria-disabled="true"] {
 	display: none;
 	pointer-events: none;
 }

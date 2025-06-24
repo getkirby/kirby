@@ -1,5 +1,9 @@
 <template>
-	<k-field v-bind="$props" class="k-layout-field">
+	<k-field
+		v-bind="$props"
+		:class="['k-layout-field', $attrs.class]"
+		:style="$attrs.style"
+	>
 		<template v-if="!disabled && hasFieldsets" #options>
 			<k-button-group layout="collapsed">
 				<k-button
@@ -21,7 +25,16 @@
 			</k-button-group>
 		</template>
 
-		<k-layouts ref="layouts" v-bind="$props" @input="$emit('input', $event)" />
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
+		>
+			<k-layouts
+				ref="layouts"
+				v-bind="$props"
+				@input="$emit('input', $event)"
+			/>
+		</k-input-validator>
 
 		<footer v-if="!disabled && hasFieldsets">
 			<k-button
@@ -77,7 +90,6 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-layout-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
 .k-layout-field > footer {
 	display: flex;
 	justify-content: center;

@@ -69,9 +69,6 @@ export default {
 			return this.pending.email ? "code" : "login";
 		}
 	},
-	mounted() {
-		this.$store.dispatch("content/clear");
-	},
 	methods: {
 		async onError(error) {
 			if (error === null) {
@@ -94,8 +91,8 @@ export default {
 
 <style>
 .k-login {
-	--dialog-color-back: var(--color-white);
-	--dialog-shadow: var(--shadow);
+	--dialog-color-back: light-dark(var(--color-white), var(--color-gray-950));
+	--dialog-shadow: light-dark(var(--shadow), none);
 
 	container-type: inline-size;
 }

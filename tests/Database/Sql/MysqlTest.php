@@ -3,7 +3,6 @@
 namespace Kirby\Database\Sql;
 
 use Kirby\Database\Database;
-use Kirby\TestCase;
 use Kirby\Toolkit\A;
 
 /**
@@ -11,9 +10,6 @@ use Kirby\Toolkit\A;
  */
 class MysqlTest extends TestCase
 {
-	protected $database;
-	protected $sql;
-
 	public function setUp(): void
 	{
 		$this->database = new Database([

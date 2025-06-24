@@ -1,7 +1,7 @@
 <template>
-	<nav class="k-toolbar" :data-theme="theme">
+	<nav v-if="buttons.length" class="k-toolbar" :data-theme="theme">
 		<template v-for="(button, index) in buttons">
-			<hr v-if="button === '|'" :key="index" />
+			<hr v-if="button === '|'" :key="'separator-' + index" />
 
 			<k-button
 				v-else-if="button.when ?? true"
@@ -81,11 +81,14 @@ export default {
 <style>
 :root {
 	--toolbar-size: var(--height);
-	--toolbar-text: var(--color-black);
-	--toolbar-back: var(--color-white);
-	--toolbar-hover: rgba(239, 239, 239, 0.5);
-	--toolbar-border: rgba(0, 0, 0, 0.1);
+	--toolbar-text: light-dark(var(--color-black), var(--color-white));
+	--toolbar-back: light-dark(var(--color-white), var(--color-gray-850));
+	--toolbar-hover: light-dark(var(--color-gray-200), var(--color-gray-750));
+	--toolbar-border: var(--panel-color-back);
 	--toolbar-current: var(--color-focus);
+}
+:where(.k-textarea-input, .k-writer-input):not(:focus-within) {
+	--toolbar-text: light-dark(var(--color-gray-300), var(--color-gray-700));
 }
 
 .k-toolbar {
@@ -98,13 +101,6 @@ export default {
 	color: var(--toolbar-text);
 	background: var(--toolbar-back);
 	border-radius: var(--rounded);
-}
-
-.k-toolbar[data-theme="dark"] {
-	--toolbar-text: var(--color-white);
-	--toolbar-back: var(--color-black);
-	--toolbar-hover: rgba(255, 255, 255, 0.2);
-	--toolbar-border: var(--color-gray-800);
 }
 
 .k-toolbar > hr {
@@ -122,7 +118,7 @@ export default {
 .k-toolbar-button:hover {
 	--button-color-back: var(--toolbar-hover);
 }
-.k-toolbar .k-button[aria-current] {
+.k-toolbar .k-button[aria-current="true"] {
 	--button-color-text: var(--toolbar-current);
 }
 .k-toolbar > .k-button:first-child {
@@ -136,11 +132,9 @@ export default {
 
 :where(.k-textarea-input, .k-writer-input):not(:focus-within) {
 	--toolbar-text: var(--color-gray-400);
-	--toolbar-border: var(--color-background);
+	--toolbar-border: var(--panel-color-back);
 }
-/** TODO: .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */
-:where(.k-textarea-input, .k-writer-input):focus-within
-	.k-toolbar:not([data-inline="true"]) {
+.k-toolbar:not([data-inline="true"]):has(~ :focus-within) {
 	position: sticky;
 	top: var(--header-sticky-offset);
 	inset-inline: 0;

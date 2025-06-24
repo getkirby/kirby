@@ -2,8 +2,9 @@
 
 namespace Kirby\Form;
 
+use Exception;
+use Kirby\Cms\Language;
 use Kirby\Cms\Page;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 
 class TestField extends FieldClass
@@ -18,27 +19,11 @@ class HiddenField extends FieldClass
 	}
 }
 
-class UnsaveableField extends FieldClass
+class NoValueField extends FieldClass
 {
-	public function isSaveable(): bool
+	public function hasValue(): bool
 	{
 		return false;
-	}
-}
-
-class JsonField extends FieldClass
-{
-	public function fill($value = null): void
-	{
-		$this->value = $this->valueFromJson($value);
-	}
-}
-
-class YamlField extends FieldClass
-{
-	public function fill($value = null): void
-	{
-		$this->value = $this->valueFromYaml($value);
 	}
 }
 
@@ -50,7 +35,7 @@ class ValidatedField extends FieldClass
 			'minlength',
 			'custom' => function ($value) {
 				if ($value !== 'a') {
-					throw new \Exception('Please enter an a');
+					throw new Exception('Please enter an a');
 				}
 			}
 		];
@@ -207,7 +192,7 @@ class FieldClassTest extends TestCase
 
 	/**
 	 * @covers ::errors
-	 * @covers ::validate
+	 * @covers ::validations
 	 */
 	public function testErrors()
 	{
@@ -280,6 +265,28 @@ class FieldClassTest extends TestCase
 		$this->assertTrue($field->isHidden());
 	}
 
+	public function testIsTranslatable()
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField();
+		$this->assertTrue($field->isTranslatable($language));
+	}
+
+	public function testIsTranslatableWithNonDefaultLanguage()
+	{
+		$language = new Language([
+			'code'    => 'de',
+			'default' => false
+		]);
+
+		$field = new TestField(['translate' => true]);
+		$this->assertTrue($field->isTranslatable($language));
+
+		$field = new TestField(['translate' => false]);
+		$this->assertFalse($field->isTranslatable($language));
+	}
+
 	/**
 	 * @covers ::isInvalid
 	 * @covers ::isValid
@@ -311,16 +318,118 @@ class FieldClassTest extends TestCase
 		$this->assertTrue($field->required());
 	}
 
+	public function testIsStorable()
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField();
+		$this->assertTrue($field->isStorable($language));
+
+		$field = new NoValueField();
+		$this->assertFalse($field->isStorable($language));
+	}
+
+	public function testIsStorableWithDisabledField()
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField(['disabled' => true]);
+		$this->assertTrue($field->isStorable($language), 'The value of a storable field must not be changed on submit, but can still be stored.');
+	}
+
+	public function testIsStorableWithNonDefaultLanguage()
+	{
+		$language = new Language([
+			'code'    => 'de',
+			'default' => false
+		]);
+
+		$field = new TestField(['translate' => true]);
+		$this->assertTrue($field->isStorable($language));
+
+		$field = new TestField(['translate' => false]);
+		$this->assertFalse($field->isStorable($language));
+	}
+
+	public function testIsSubmittable()
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField();
+		$this->assertTrue($field->isSubmittable($language));
+
+		$field = new NoValueField();
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithDisabledField()
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField(['disabled' => true]);
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithNonDefaultLanguage()
+	{
+		$language = new Language([
+			'code'    => 'de',
+			'default' => false
+		]);
+
+		$field = new TestField(['translate' => true]);
+		$this->assertTrue($field->isSubmittable($language));
+
+		$field = new TestField(['translate' => false]);
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithWhenQueryAndMatchingValue()
+	{
+		$language = Language::ensure('current');
+
+		$siblings = new Fields([
+			new TestField(['name' => 'a', 'value' => 'b']),
+		]);
+
+		$field = new TestField([
+			'siblings' => $siblings,
+			'when'     => [
+				'a' => 'b'
+			],
+		]);
+
+		$this->assertTrue($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithWhenQueryAndNonMatchingValue()
+	{
+		$language = Language::ensure('current');
+
+		$siblings = new Fields([
+			new TestField(['name' => 'a', 'value' => 'something-else']),
+		]);
+
+		$field = new TestField([
+			'siblings' => $siblings,
+			'when'     => [
+				'a' => 'b'
+			],
+		]);
+
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
 	/**
-	 * @covers ::isSaveable
+	 * @covers ::hasValue
 	 */
-	public function testIsSaveable()
+	public function testHasValue()
 	{
 		$field = new TestField();
-		$this->assertTrue($field->isSaveable());
+		$this->assertTrue($field->hasValue());
 
-		$field = new UnsaveableField();
-		$this->assertFalse($field->isSaveable());
+		$field = new NoValueField();
+		$this->assertFalse($field->hasValue());
 	}
 
 	/**
@@ -428,6 +537,15 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
+	 * @covers ::name
+	 */
+	public function testNameCase()
+	{
+		$field = new TestField(['name' => 'myTest']);
+		$this->assertSame('mytest', $field->name());
+	}
+
+	/**
 	 * @covers ::params
 	 */
 	public function testParams()
@@ -502,7 +620,6 @@ class FieldClassTest extends TestCase
 		$array = $field->toArray();
 
 		$this->assertSame($props, $field->props());
-		$this->assertEquals($props + ['signature' => $array['signature']], $array); // cannot use strict assertion (array order)
 	}
 
 	/**
@@ -546,12 +663,25 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
-	 * @covers ::store
+	 * @covers ::submit
 	 */
-	public function testStore()
+	public function testSubmit(): void
 	{
 		$field = new TestField();
-		$this->assertSame('test', $field->store('test'));
+		$this->assertNull($field->value());
+		$field->submit('Test value');
+		$this->assertSame('Test value', $field->value());
+	}
+
+	/**
+	 * @covers ::toStoredValue
+	 */
+	public function testToStoredValue()
+	{
+		$field = new TestField();
+		$field->fill('test');
+
+		$this->assertSame('test', $field->toStoredValue());
 	}
 
 	/**
@@ -592,59 +722,8 @@ class FieldClassTest extends TestCase
 		$field = new TestField(['default' => 'Default value']);
 		$this->assertSame('Default value', $field->value(true));
 
-		$field = new UnsaveableField(['value' => 'Test']);
+		$field = new NoValueField(['value' => 'Test']);
 		$this->assertNull($field->value());
-	}
-
-	/**
-	 * @covers ::valueFromJson
-	 */
-	public function testValueFromJson()
-	{
-		$value = [
-			[
-				'content' => 'Heading 1',
-				'id' => 'h1',
-				'type' => 'h1',
-			]
-		];
-
-		// use simple value
-		$field = new JsonField(['value' => json_encode($value)]);
-		$this->assertSame($value, $field->value());
-
-		// use empty value
-		$field = new JsonField(['value' => '']);
-		$this->assertSame([], $field->value());
-
-		// use invalid value
-		$field = new JsonField(['value' => '{invalid}']);
-		$this->assertSame([], $field->value());
-	}
-
-	/**
-	 * @covers ::valueFromYaml
-	 */
-	public function testValueFromYaml()
-	{
-		$value = "name: Homer\nchildren:\n  - Lisa\n  - Bart\n  - Maggie\n";
-		$expected = [
-			'name'     => 'Homer',
-			'children' => ['Lisa', 'Bart', 'Maggie']
-		];
-
-		// use simple value
-		$field = new YamlField(['value' => $value]);
-		$this->assertSame($expected, $field->value());
-
-		// use empty value
-		$field = new YamlField(['value' => '']);
-		$this->assertSame([], $field->value());
-
-		// use invalid value
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
-		new YamlField(['value' => new \stdClass()]);
 	}
 
 	/**

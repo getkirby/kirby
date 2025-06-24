@@ -57,14 +57,14 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        php: ["8.1", "8.2", "8.3", "8.4"]
+        php: ["8.2", "8.3", "8.4"]
     env:
-      extensions: mbstring, ctype, curl, gd, apcu, memcached
+      extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
       ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
 
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # pin@v4
         with:
           fetch-depth: 2
 
@@ -72,28 +72,33 @@ jobs:
         run: mkdir sarif
 
       - name: Install memcached
-        uses: niden/actions-memcached@3b3ecd9d0d035ea92db716dc1540a7dbe9e56349 # v7
+        uses: niden/actions-memcached@3b3ecd9d0d035ea92db716dc1540a7dbe9e56349 # pin@v7
+
+      - name: Install redis
+        uses: supercharge/redis-github-action@ea9b21c6ecece47bd99595c532e481390ea0f044 # pin@v1
+        with:
+          redis-version: 7
 
       - name: Install system locales
         run: sudo apt-get update && sudo apt-get install -y locales-all
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@d814e887327271b6e290b018d51bba9f62590488 # v1
+        uses: shivammathur/cache-extensions@d814e887327271b6e290b018d51bba9f62590488 # pin@v1
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           key: php-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # pin@v4
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # pin@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
@@ -108,7 +113,7 @@ jobs:
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # pin@v4
         with:
           path: ~/.cache/psalm
           key: backend-analysis-${{ matrix.php }}
@@ -119,7 +124,7 @@ jobs:
 
       - name: Run tests
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: phpunit --fail-on-skipped --coverage-clover ${{ github.workspace }}/clover.xml
+        run: phpunit -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Statically analyze using Psalm
         if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.4'
@@ -130,7 +135,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           PHP: ${{ matrix.php }}
         if: env.token != ''
-        uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # pin@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
           fail_ci_if_error: true
@@ -140,7 +145,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success' && github.repository == 'getkirby/kirby' && matrix.php != '8.4'
-        uses: github/codeql-action/upload-sarif@b8d3b6e8af63cde30bdc382c0bc28114f4346c88 # v2
+        uses: github/codeql-action/upload-sarif@b56ba49b26e50535fa1e7f7db0f4f7b4bf65d80d # pin@v3
         with:
           sarif_file: sarif
 
@@ -167,26 +172,26 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 5
     env:
-      php: "8.1"
-      extensions: mbstring, ctype, curl, gd, apcu, memcached
+      php: "8.2"
+      extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
 
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # pin@v4
 
       - name: Preparations
         run: mkdir sarif
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@d814e887327271b6e290b018d51bba9f62590488 # v1
+        uses: shivammathur/cache-extensions@d814e887327271b6e290b018d51bba9f62590488 # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           key: php-analysis-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # pin@v4
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
@@ -194,7 +199,7 @@ jobs:
 
       - name: Setup PHP environment
         id: finishPrepare
-        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
@@ -221,7 +226,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success' && github.repository == 'getkirby/kirby'
-        uses: github/codeql-action/upload-sarif@b8d3b6e8af63cde30bdc382c0bc28114f4346c88 # v2
+        uses: github/codeql-action/upload-sarif@b56ba49b26e50535fa1e7f7db0f4f7b4bf65d80d # pin@v3
         with:
           sarif_file: sarif
 
@@ -248,22 +253,22 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 5
     env:
-      php: "8.1"
+      php: "8.2"
 
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # pin@v4
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # pin@v2
         with:
           php-version: ${{ env.php }}
           coverage: none
-          tools: php-cs-fixer:3.52.1
+          tools: php-cs-fixer:3.65.0
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # pin@v4
         with:
           path: ~/.php-cs-fixer
           key: coding-style

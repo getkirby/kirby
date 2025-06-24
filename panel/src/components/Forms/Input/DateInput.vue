@@ -3,10 +3,11 @@
 		:id="id"
 		v-direction
 		:autofocus="autofocus"
-		:class="`k-text-input k-${type}-input`"
+		:class="['k-text-input', `k-${type}-input`, $attrs.class]"
 		:disabled="disabled"
 		:placeholder="display"
 		:required="required"
+		:style="$attrs.style"
 		:value="formatted"
 		autocomplete="off"
 		spellcheck="false"
@@ -90,8 +91,6 @@ export const props = {
  * input parts via tab key).
  *
  * @example <k-input :value="date" @input="date = $event" type="date" name="date" />
- *
- * @todo remove vuelidate parts in v5 - until then we keep parrallel validation
  */
 export default {
 	mixins: [Input, props],
@@ -201,7 +200,6 @@ export default {
 			this.dt = dt;
 			this.formatted = this.pattern.format(dt);
 			this.validate();
-			this.$emit("invalid", this.$v.$invalid, this.$v);
 		},
 		/**
 		 * Convert the dayjs object to an ISO string
@@ -469,21 +467,6 @@ export default {
 
 			this.$el?.setCustomValidity(errors.join(", "));
 		}
-	},
-	validations() {
-		return {
-			value: {
-				min:
-					this.dt && this.min
-						? () => this.dt.validate(this.min, "min", this.rounding.unit)
-						: true,
-				max:
-					this.dt && this.max
-						? () => this.dt.validate(this.max, "max", this.rounding.unit)
-						: true,
-				required: this.required ? () => !!this.dt : true
-			}
-		};
 	}
 };
 </script>

@@ -44,7 +44,6 @@ class GdLibTest extends TestCase
 		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
 
 		$this->assertSame([
-			'autoOrient' => true,
 			'blur' => false,
 			'crop' => false,
 			'format' => null,
@@ -77,7 +76,7 @@ class GdLibTest extends TestCase
 	{
 		$gd = new GdLib();
 
-		$method = new ReflectionMethod(get_class($gd), 'sharpen');
+		$method = new ReflectionMethod($gd::class, 'sharpen');
 		$method->setAccessible(true);
 
 		$simpleImage = new SimpleImageMock();
@@ -96,7 +95,7 @@ class GdLibTest extends TestCase
 	{
 		$gd = new GdLib();
 
-		$method = new ReflectionMethod(get_class($gd), 'sharpen');
+		$method = new ReflectionMethod($gd::class, 'sharpen');
 		$method->setAccessible(true);
 
 		$simpleImage = new SimpleImageMock();

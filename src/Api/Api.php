@@ -12,9 +12,7 @@ use Kirby\Http\Response;
 use Kirby\Http\Route;
 use Kirby\Http\Router;
 use Kirby\Toolkit\Collection as BaseCollection;
-use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Pagination;
-use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -212,7 +210,7 @@ class Api
 	 */
 	public function clone(array $props = []): static
 	{
-		return new static(array_merge([
+		return new static([
 			'autentication' => $this->authentication,
 			'data'			=> $this->data,
 			'routes'		=> $this->routes,
@@ -220,8 +218,9 @@ class Api
 			'collections'   => $this->collections,
 			'models'		=> $this->models,
 			'requestData'   => $this->requestData,
-			'requestMethod' => $this->requestMethod
-		], $props));
+			'requestMethod' => $this->requestMethod,
+			...$props
+		]);
 	}
 
 	/**
@@ -235,7 +234,9 @@ class Api
 		array|BaseCollection|null $collection = null
 	): Collection {
 		if (isset($this->collections[$name]) === false) {
-			throw new NotFoundException(sprintf('The collection "%s" does not exist', $name));
+			throw new NotFoundException(
+				message: sprintf('The collection "%s" does not exist', $name)
+			);
 		}
 
 		return new Collection($this, $collection, $this->collections[$name]);
@@ -262,7 +263,9 @@ class Api
 		}
 
 		if ($this->hasData($key) === false) {
-			throw new NotFoundException(sprintf('Api data for "%s" does not exist', $key));
+			throw new NotFoundException(
+				message: sprintf('Api data for "%s" does not exist', $key)
+			);
 		}
 
 		// lazy-load data wrapped in Closures
@@ -322,7 +325,9 @@ class Api
 		$name ??= $this->match($this->models, $object);
 
 		if (isset($this->models[$name]) === false) {
-			throw new NotFoundException(sprintf('The model "%s" does not exist', $name ?? 'NULL'));
+			throw new NotFoundException(
+				message: sprintf('The model "%s" does not exist', $name ?? 'NULL')
+			);
 		}
 
 		return new Model($this, $object, $this->models[$name]);
@@ -431,7 +436,9 @@ class Api
 			return $this->collection($collection, $object);
 		}
 
-		throw new NotFoundException(sprintf('The object "%s" cannot be resolved', get_class($object)));
+		throw new NotFoundException(
+			message: sprintf('The object "%s" cannot be resolved', $object::class)
+		);
 	}
 
 	/**
@@ -541,7 +548,7 @@ class Api
 			'status'    => 'error',
 			'message'   => $e->getMessage(),
 			'code'      => empty($e->getCode()) === true ? 500 : $e->getCode(),
-			'exception' => get_class($e),
+			'exception' => $e::class,
 			'key'       => null,
 			'file'      => F::relativepath($e->getFile(), $docRoot),
 			'line'      => $e->getLine(),
@@ -577,13 +584,12 @@ class Api
 	protected function setRequestData(
 		array|null $requestData = []
 	): static {
-		$defaults = [
+		$this->requestData = [
 			'query' => [],
 			'body'  => [],
-			'files' => []
+			'files' => [],
+			...$requestData ?? []
 		];
-
-		$this->requestData = array_merge($defaults, (array)$requestData);
 		return $this;
 	}
 
@@ -611,131 +617,6 @@ class Api
 		bool $single = false,
 		bool $debug = false
 	): array {
-		$trials  = 0;
-		$uploads = [];
-		$errors  = [];
-		$files   = $this->requestFiles();
-
-		// get error messages from translation
-		$errorMessages = [
-			UPLOAD_ERR_INI_SIZE   => I18n::translate('upload.error.iniSize'),
-			UPLOAD_ERR_FORM_SIZE  => I18n::translate('upload.error.formSize'),
-			UPLOAD_ERR_PARTIAL    => I18n::translate('upload.error.partial'),
-			UPLOAD_ERR_NO_FILE    => I18n::translate('upload.error.noFile'),
-			UPLOAD_ERR_NO_TMP_DIR => I18n::translate('upload.error.tmpDir'),
-			UPLOAD_ERR_CANT_WRITE => I18n::translate('upload.error.cantWrite'),
-			UPLOAD_ERR_EXTENSION  => I18n::translate('upload.error.extension')
-		];
-
-		if (empty($files) === true) {
-			$postMaxSize       = Str::toBytes(ini_get('post_max_size'));
-			$uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
-
-			if ($postMaxSize < $uploadMaxFileSize) {
-				throw new Exception(
-					I18n::translate(
-						'upload.error.iniPostSize',
-						'The uploaded file exceeds the post_max_size directive in php.ini'
-					)
-				);
-			}
-
-			throw new Exception(
-				I18n::translate(
-					'upload.error.noFiles',
-					'No files were uploaded'
-				)
-			);
-		}
-
-		foreach ($files as $upload) {
-			if (
-				isset($upload['tmp_name']) === false &&
-				is_array($upload) === true
-			) {
-				continue;
-			}
-
-			$trials++;
-
-			try {
-				if ($upload['error'] !== 0) {
-					throw new Exception(
-						$errorMessages[$upload['error']] ??
-						I18n::translate('upload.error.default', 'The file could not be uploaded')
-					);
-				}
-
-				// get the extension of the uploaded file
-				$extension = F::extension($upload['name']);
-
-				// try to detect the correct mime and add the extension
-				// accordingly. This will avoid .tmp filenames
-				if (
-					empty($extension) === true ||
-					in_array($extension, ['tmp', 'temp']) === true
-				) {
-					$mime      = F::mime($upload['tmp_name']);
-					$extension = F::mimeToExtension($mime);
-					$filename  = F::name($upload['name']) . '.' . $extension;
-				} else {
-					$filename = basename($upload['name']);
-				}
-
-				$source = dirname($upload['tmp_name']) . '/' . uniqid() . '.' . $filename;
-
-				// move the file to a location including the extension,
-				// for better mime detection
-				if (
-					$debug === false &&
-					move_uploaded_file($upload['tmp_name'], $source) === false
-				) {
-					throw new Exception(
-						I18n::translate('upload.error.cantMove')
-					);
-				}
-
-				$data = $callback($source, $filename);
-
-				if (is_object($data) === true) {
-					$data = $this->resolve($data)->toArray();
-				}
-
-				$uploads[$upload['name']] = $data;
-			} catch (Exception $e) {
-				$errors[$upload['name']] = $e->getMessage();
-			}
-
-			if ($single === true) {
-				break;
-			}
-		}
-
-		// return a single upload response
-		if ($trials === 1) {
-			if (empty($errors) === false) {
-				return [
-					'status'  => 'error',
-					'message' => current($errors)
-				];
-			}
-
-			return [
-				'status' => 'ok',
-				'data'   => current($uploads)
-			];
-		}
-
-		if (empty($errors) === false) {
-			return [
-				'status' => 'error',
-				'errors' => $errors
-			];
-		}
-
-		return [
-			'status' => 'ok',
-			'data'   => $uploads
-		];
+		return (new Upload($this, $single, $debug))->process($callback);
 	}
 }

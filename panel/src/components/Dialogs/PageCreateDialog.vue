@@ -18,7 +18,6 @@
 		/>
 		<k-dialog-fields
 			:fields="fields"
-			:novalidate="novalidate"
 			:value="value"
 			@input="$emit('input', $event)"
 			@submit="$emit('submit', $event)"
@@ -41,7 +40,7 @@ export default {
 		},
 		submitButton: {
 			type: [String, Boolean],
-			default: () => window.panel.$t("save")
+			default: () => window.panel.t("save")
 		},
 		template: {
 			type: String

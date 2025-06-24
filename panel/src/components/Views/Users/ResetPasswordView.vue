@@ -27,10 +27,20 @@
  * @internal
  */
 export default {
+	props: {
+		/**
+		 * Enable the field for the current password of the acting user
+		 */
+		requirePassword: {
+			type: Boolean,
+			default: false
+		}
+	},
 	data() {
 		return {
 			isLoading: false,
 			values: {
+				currentPassword: null,
 				password: null,
 				passwordConfirmation: null
 			}
@@ -38,9 +48,28 @@ export default {
 	},
 	computed: {
 		fields() {
+			let fields = {};
+
+			if (this.requirePassword === true) {
+				fields = {
+					currentPassword: {
+						autofocus: true,
+						label: this.$t("user.changePassword.current"),
+						icon: "key",
+						type: "password",
+						width: "1/2"
+					},
+					gap: {
+						type: "gap",
+						width: "1/2"
+					}
+				};
+			}
+
 			return {
+				...fields,
 				password: {
-					autofocus: true,
+					autofocus: this.requirePassword === false,
 					label: this.$t("user.changePassword.new"),
 					icon: "key",
 					type: "password",
@@ -77,7 +106,8 @@ export default {
 			try {
 				await this.$api.users.changePassword(
 					this.$panel.user.id,
-					this.values.password
+					this.values.password,
+					this.values.currentPassword
 				);
 
 				this.$panel.notification.success();

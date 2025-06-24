@@ -63,6 +63,7 @@ export default {
 	--input-padding: var(--spacing-3);
 	--input-padding-multiline: var(--input-padding);
 }
+
 .k-block-type-code-editor .k-input[data-type="textarea"] {
 	white-space: pre-wrap;
 }

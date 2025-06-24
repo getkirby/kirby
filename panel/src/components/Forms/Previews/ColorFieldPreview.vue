@@ -1,5 +1,5 @@
 <template>
-	<div class="k-color-field-preview">
+	<div :class="['k-color-field-preview', $attrs.class]" :style="$attrs.style">
 		<k-color-frame :color="value" />
 		<template v-if="text">
 			{{ text }}

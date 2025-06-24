@@ -38,7 +38,9 @@ class Xml extends Handler
 		}
 
 		if (is_string($string) === false) {
-			throw new InvalidArgumentException('Invalid XML data; please pass a string');
+			throw new InvalidArgumentException(
+				message: 'Invalid XML data; please pass a string'
+			);
 		}
 
 		$result = XmlConverter::parse($string);
@@ -53,6 +55,6 @@ class Xml extends Handler
 			return $result;
 		}
 
-		throw new InvalidArgumentException('XML string is invalid');
+		throw new InvalidArgumentException(message: 'XML string is invalid');
 	}
 }

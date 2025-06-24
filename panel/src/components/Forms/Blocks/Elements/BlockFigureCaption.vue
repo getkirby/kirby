@@ -1,6 +1,6 @@
 <template>
 	<figcaption class="k-block-figure-caption">
-		<k-writer
+		<k-writer-input
 			:disabled="disabled"
 			:inline="true"
 			:marks="marks"

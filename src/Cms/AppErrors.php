@@ -30,8 +30,6 @@ trait AppErrors
 	 * Allows to disable Whoops globally in CI;
 	 * can be overridden by explicitly setting
 	 * the `whoops` option to `true` or `false`
-	 *
-	 * @internal
 	 */
 	public static bool $enableWhoops = true;
 
@@ -148,11 +146,14 @@ trait AppErrors
 			if ($this->option('debug') === true) {
 				echo Response::json([
 					'status'    => 'error',
-					'exception' => get_class($exception),
+					'exception' => $exception::class,
 					'code'      => $code,
 					'message'   => $exception->getMessage(),
 					'details'   => $details,
-					'file'      => F::relativepath($exception->getFile(), $this->environment()->get('DOCUMENT_ROOT', '')),
+					'file'      => F::relativepath(
+						$exception->getFile(),
+						$this->environment()->get('DOCUMENT_ROOT', '')
+					),
 					'line'      => $exception->getLine(),
 				], $httpCode);
 			} else {

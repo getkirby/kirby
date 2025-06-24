@@ -14,7 +14,7 @@ class AutoSessionTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/store';
 
-	protected $store;
+	protected SessionStore $store;
 
 	public function setUp(): void
 	{

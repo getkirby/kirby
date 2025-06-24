@@ -55,8 +55,11 @@ class Sqlite extends Sql
 	 *                     used for a VALUES clause; only relevant
 	 *                     for SQLite
 	 */
-	public function combineIdentifier(string $table, string $column, bool $values = false): string
-	{
+	public function combineIdentifier(
+		string $table,
+		string $column,
+		bool $values = false
+	): string {
 		// SQLite doesn't support qualified column names for VALUES clauses
 		if ($values === true) {
 			return $this->quoteIdentifier($column);
@@ -72,14 +75,17 @@ class Sqlite extends Sql
 	 * @param array $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
 	 * @return array Array with a `query` string and a `bindings` array
 	 */
-	public function createTable(string $table, array $columns = []): array
-	{
+	public function createTable(
+		string $table,
+		array $columns = []
+	): array {
 		$inner = $this->createTableInner($columns);
+		$keys  = [];
 
 		// add keys
-		$keys = [];
 		foreach ($inner['keys'] as $key => $columns) {
-			// quote each column name and make a list string out of the column names
+			// quote each column name and
+			// make a list string out of the column names
 			$columns = implode(', ', array_map(
 				fn ($name) => $this->quoteIdentifier($name),
 				$columns
@@ -88,15 +94,16 @@ class Sqlite extends Sql
 			if ($key === 'primary') {
 				$inner['query'] .= ',' . PHP_EOL . 'PRIMARY KEY (' . $columns . ')';
 			} else {
-				// SQLite only supports index creation using a separate CREATE INDEX query
-				$unique = isset($inner['unique'][$key]) === true ? 'UNIQUE ' : '';
-				$keys[] = 'CREATE ' . $unique . 'INDEX ' . $this->quoteIdentifier($table . '_index_' . $key) .
-							 ' ON ' . $this->quoteIdentifier($table) . ' (' . $columns . ')';
+				// SQLite only supports index creation
+				// using a separate CREATE INDEX query
+				$unique = isset($inner['unique'][$key]) ? 'UNIQUE ' : '';
+				$keys[] = 'CREATE ' . $unique . 'INDEX ' . $this->quoteIdentifier($table . '_index_' . $key) . ' ON ' . $this->quoteIdentifier($table) . ' (' . $columns . ')';
 			}
 		}
 
 		$query = 'CREATE TABLE ' . $this->quoteIdentifier($table) . ' (' . PHP_EOL . $inner['query'] . PHP_EOL . ')';
-		if (empty($keys) === false) {
+
+		if ($keys !== []) {
 			$query .= ';' . PHP_EOL . implode(';' . PHP_EOL, $keys);
 		}
 

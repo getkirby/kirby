@@ -40,7 +40,7 @@ export const props = {
 };
 
 /**
- * @internal
+ * @unstable
  */
 export default {
 	mixins: [props],
@@ -61,18 +61,16 @@ export default {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
-	background: var(--color-white);
 	min-height: 6rem;
 }
 .k-layout-column:focus {
 	outline: 0;
 }
 .k-layout-column > .k-blocks {
-	background: none;
 	box-shadow: none;
 	padding: 0;
 	height: 100%;
-	background: var(--color-white);
+	background: light-dark(var(--color-white), var(--color-gray-850));
 	min-height: 4rem;
 }
 .k-layout-column > .k-blocks[data-empty="true"] {
@@ -90,7 +88,7 @@ export default {
 	> .k-block-container:last-of-type {
 	flex-grow: 1;
 }
-.k-layout-column > .k-blocks > .k-blocks-list > .k-blocks-empty.k-box {
+.k-layout-column > .k-blocks > .k-blocks-list + .k-blocks-empty.k-box {
 	--box-color-back: transparent;
 	position: absolute;
 	inset: 0;
@@ -99,7 +97,7 @@ export default {
 	transition: opacity 0.3s;
 	border: 0;
 }
-.k-layout-column > .k-blocks > .k-blocks-list > .k-blocks-empty:hover {
+.k-layout-column > .k-blocks > .k-blocks-list + .k-blocks-empty:hover {
 	opacity: 1;
 }
 </style>

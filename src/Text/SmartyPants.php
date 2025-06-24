@@ -72,7 +72,7 @@ class SmartyPants
 	 */
 	public function __construct(array $options = [])
 	{
-		$this->options = array_merge($this->defaults(), $options);
+		$this->options = [...$this->defaults(), ...$options];
 		$this->parser  = new SmartyPantsTypographer($this->options['attr']);
 
 		// configuration

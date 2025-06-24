@@ -8,12 +8,13 @@ class PaginationTest extends TestCase
 {
 	protected function pagination(array $options = [])
 	{
-		return new Pagination(array_merge([
+		return new Pagination([
 			'page'  => 1,
 			'limit' => 10,
 			'total' => 120,
-			'url'   => new Uri('https://getkirby.com')
-		], $options));
+			'url'   => new Uri('https://getkirby.com'),
+			...$options
+		]);
 	}
 
 	public function testCustomAppUrl()

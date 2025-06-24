@@ -65,7 +65,7 @@ export default {
 	max-width: 100%;
 	outline-offset: -2px;
 	border-radius: var(--rounded);
-	border: 1px solid var(--color-gray-300);
+	border: 1px solid var(--color-border);
 }
 .k-lab-example + .k-lab-example {
 	margin-top: var(--spacing-12);
@@ -78,7 +78,7 @@ export default {
 	height: var(--height-md);
 	padding-block: var(--spacing-3);
 	padding-inline: var(--spacing-2);
-	border-bottom: 1px solid var(--color-gray-300);
+	border-bottom: 1px solid var(--color-border);
 }
 .k-lab-example-label {
 	font-size: 12px;
@@ -89,7 +89,7 @@ export default {
 .k-lab-example-code {
 	padding: var(--spacing-16);
 }
-.k-lab-example[data-flex] .k-lab-example-canvas {
+.k-lab-example[data-flex="true"] .k-lab-example-canvas {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-6);

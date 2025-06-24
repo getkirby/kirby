@@ -10,7 +10,7 @@ export default {
 				const fields = EmailDialog.props.fields.default();
 
 				// change the label to "Link Text"
-				fields.title.label = window.panel.$t("link.text");
+				fields.title.label = window.panel.t("link.text");
 
 				return fields;
 			}

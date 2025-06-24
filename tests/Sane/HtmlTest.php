@@ -12,7 +12,7 @@ class HtmlTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Html';
 
-	protected static $type = 'html';
+	protected static string $type = 'html';
 
 	/**
 	 * @dataProvider allowedProvider
@@ -21,7 +21,7 @@ class HtmlTest extends TestCase
 	{
 		$fixture = $this->fixture($file);
 
-		$this->assertNull(Html::validateFile($fixture));
+		Html::validateFile($fixture);
 
 		$sanitized = Html::sanitize(file_get_contents($fixture));
 		$this->assertStringEqualsFile($fixture, $sanitized);

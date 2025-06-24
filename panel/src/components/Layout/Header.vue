@@ -1,8 +1,5 @@
 <template>
-	<header
-		class="k-header"
-		:data-has-buttons="Boolean($slots.buttons || $slots.left || $slots.right)"
-	>
+	<header class="k-header">
 		<h1 class="k-header-title">
 			<!--
 				Edit button has been clicked
@@ -18,28 +15,16 @@
 					<!-- @slot Headline text -->
 					<slot />
 				</span>
-				<span class="k-header-title-icon"><k-icon type="edit" /></span>
+				<span class="k-header-title-icon">
+					<k-icon type="edit" />
+				</span>
 			</button>
 			<span v-else class="k-header-title-text"><slot /></span>
 		</h1>
 
-		<div
-			v-if="$slots.buttons || $slots.left || $slots.right"
-			class="k-header-buttons"
-		>
+		<div v-if="$slots.buttons" class="k-header-buttons">
 			<!-- @slot Position for optional buttons opposite the headline -->
 			<slot name="buttons" />
-
-			<!--
-				@slot
-				@deprecated 4.0.0 left slot, use buttons slot instead
-			-->
-			<slot name="left" />
-			<!--
-				@slot
-				@deprecated 4.0.0 right slot, use buttons slot instead
-			-->
-			<slot name="right" />
 		</div>
 	</header>
 </template>
@@ -64,34 +49,15 @@ export default {
 		/**
 		 * Whether the headline is editable
 		 */
-		editable: {
-			type: Boolean
-		},
-		/**
-		 * @deprecated 4.0.0 Has no effect anymore, use `k-tabs` as standalone component instead
-		 */
-		tabs: Array
+		editable: Boolean
 	},
-	emits: ["edit"],
-	mounted() {
-		if (this.tabs) {
-			window.panel.deprecated(
-				"<k-header>: `tabs` prop isn't supported anymore and has no effect. Use `<k-tabs>` as standalone component instead."
-			);
-		}
-
-		if (this.$slots.left || this.$slots.right) {
-			window.panel.deprecated(
-				"<k-header>: left/right slots will be removed in a future version. Use `buttons` slot instead."
-			);
-		}
-	}
+	emits: ["edit"]
 };
 </script>
 
 <style>
 :root {
-	--header-color-back: var(--color-light);
+	--header-color-back: var(--panel-color-back);
 	--header-padding-block: var(--spacing-4);
 	--header-sticky-offset: var(--scroll-top);
 }
@@ -102,6 +68,7 @@ export default {
 	flex-wrap: wrap;
 	align-items: baseline;
 	justify-content: space-between;
+	column-gap: var(--spacing-3);
 	border-bottom: 1px solid var(--color-border);
 	background: var(--header-color-back);
 	padding-top: var(--header-padding-block);
@@ -109,6 +76,11 @@ export default {
 	box-shadow:
 		2px 0 0 0 var(--header-color-back),
 		-2px 0 0 0 var(--header-color-back);
+}
+
+/** Remove the bottom margin from the header if it is followed by tabs */
+.k-header:has(+ .k-tabs) {
+	margin-bottom: 0;
 }
 
 .k-header-title {
@@ -154,18 +126,16 @@ export default {
 
 .k-header-buttons {
 	display: flex;
-	flex-shrink: 0;
 	gap: var(--spacing-2);
 	margin-bottom: var(--header-padding-block);
 }
 
-/** TODO: .k-header:has(.k-header-buttons) */
-.k-header[data-has-buttons="true"] {
+.k-header:has(.k-header-buttons) {
 	position: sticky;
 	top: var(--scroll-top);
 	z-index: var(--z-toolbar);
 }
-:root:has(.k-header[data-has-buttons="true"]) {
+:root:has(.k-header .k-header-buttons) {
 	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
 }
 </style>

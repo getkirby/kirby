@@ -1,5 +1,10 @@
 <template>
-	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
+	<k-field
+		v-bind="$props"
+		:class="['k-structure-field', $attrs.class]"
+		:style="$attrs.style"
+		@click.native.stop
+	>
 		<template v-if="hasFields && !disabled" #options>
 			<k-button-group layout="collapsed">
 				<k-button
@@ -39,50 +44,49 @@
 			</k-button-group>
 		</template>
 
-		<template v-if="hasFields">
-			<!-- Empty State -->
-			<k-empty
-				v-if="items.length === 0"
-				:data-invalid="isInvalid"
-				icon="list-bullet"
-				@click="add()"
-			>
-				{{ empty ?? $t("field.structure.empty") }}
-			</k-empty>
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(items)"
+		>
+			<template v-if="hasFields">
+				<!-- Empty State -->
+				<k-empty v-if="items.length === 0" icon="list-bullet" @click="add()">
+					{{ empty ?? $t("field.structure.empty") }}
+				</k-empty>
 
-			<!-- Table -->
-			<template v-else>
-				<k-table
-					:columns="columns"
-					:disabled="disabled"
-					:fields="fields"
-					:empty="$t('field.structure.empty')"
-					:index="index"
-					:options="options"
-					:pagination="limit ? pagination : false"
-					:rows="paginatedItems"
-					:sortable="isSortable"
-					:data-invalid="isInvalid"
-					@cell="open($event.row, $event.columnIndex)"
-					@input="onTableInput"
-					@option="option"
-					@paginate="paginate"
-				/>
-
-				<footer v-if="more">
-					<k-button
-						:title="$t('add')"
-						icon="add"
-						size="xs"
-						variant="filled"
-						@click="add()"
+				<!-- Table -->
+				<template v-else>
+					<k-table
+						:columns="columns"
+						:disabled="disabled"
+						:fields="fields"
+						:empty="$t('field.structure.empty')"
+						:index="index"
+						:options="options"
+						:pagination="limit ? pagination : false"
+						:rows="paginatedItems"
+						:sortable="isSortable"
+						@cell="open($event.row, $event.columnIndex)"
+						@input="onTableInput"
+						@option="option"
+						@paginate="paginate"
 					/>
-				</footer>
+
+					<footer v-if="more">
+						<k-button
+							:title="$t('add')"
+							icon="add"
+							size="xs"
+							variant="filled"
+							@click="add()"
+						/>
+					</footer>
+				</template>
 			</template>
-		</template>
-		<template v-else>
-			<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
-		</template>
+			<template v-else>
+				<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
+			</template>
+		</k-input-validator>
 	</k-field>
 </template>
 
@@ -157,16 +161,6 @@ export default {
 	},
 	computed: {
 		/**
-		 * Config options for `k-draggable`
-		 * @returns {Object}
-		 */
-		dragOptions() {
-			return {
-				disabled: !this.isSortable,
-				fallbackClass: "k-sortable-row-fallback"
-			};
-		},
-		/**
 		 * Index of first row that is displayed
 		 * @returns {number}
 		 */
@@ -179,25 +173,6 @@ export default {
 		},
 		hasFields() {
 			return this.$helper.object.length(this.fields) > 0;
-		},
-		/**
-		 * Returns if field is invalid
-		 * @returns {bool}
-		 */
-		isInvalid() {
-			if (this.disabled === true) {
-				return false;
-			}
-
-			if (this.min && this.items.length < this.min) {
-				return true;
-			}
-
-			if (this.max && this.items.length > this.max) {
-				return true;
-			}
-
-			return false;
 		},
 		/**
 		 * Returns whether the rows can be sorted
@@ -451,7 +426,7 @@ export default {
 
 				case "duplicate":
 					this.add({
-						...structuredClone(row),
+						...this.$helper.object.clone(row),
 						_id: this.$helper.uuid()
 					});
 					break;
@@ -584,7 +559,6 @@ export default {
 .k-structure-field:not([data-disabled="true"]) td.k-table-column {
 	cursor: pointer;
 }
-/** .k-structure-field .k-table:has(+ footer) */
 .k-structure-field .k-table + footer {
 	display: flex;
 	justify-content: center;

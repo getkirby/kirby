@@ -37,12 +37,12 @@ export default {
 
 <style>
 .k-lab-code-editor {
-	background: var(--color-black);
-	color: var(--color-white);
+	background: var(--code-color-back);
+	color: var(--code-color-text);
 	border-radius: var(--rounded);
 }
 .k-lab-code-editor .k-textarea-input {
 	padding: var(--code-padding);
-	border-right: 1px solid var(--color-gray-800);
+	border-right: 1px solid var(--color-border);
 }
 </style>

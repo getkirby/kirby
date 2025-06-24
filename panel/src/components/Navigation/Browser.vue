@@ -52,17 +52,30 @@ export default {
 </script>
 
 <style>
+:root {
+	--browser-item-hover-color-back: light-dark(
+		var(--color-gray-300),
+		var(--color-gray-950)
+	);
+	--browser-item-hover-color-text: currentColor;
+	--browser-item-selected-color-back: light-dark(
+		var(--color-blue-300),
+		var(--color-blue-800)
+	);
+	--browser-item-selected-color-text: currentColor;
+	--browser-item-gap: 1px;
+	--browser-item-size: 1fr;
+	--browser-item-height: var(--height-sm);
+	--browser-item-padding: 0.25rem;
+	--browser-item-rounded: var(--rounded);
+}
+
 .k-browser {
 	container-type: inline-size;
 	font-size: var(--text-sm);
 }
 
 .k-browser-items {
-	--browser-item-gap: 1px;
-	--browser-item-size: 1fr;
-	--browser-item-height: var(--height-sm);
-	--browser-item-padding: 0.25rem;
-	--browser-item-rounded: var(--rounded);
 	display: grid;
 	column-gap: var(--browser-item-gap);
 	row-gap: var(--browser-item-gap);
@@ -84,6 +97,10 @@ export default {
 	white-space: nowrap;
 	cursor: pointer;
 }
+.k-browser-item:hover {
+	background: var(--browser-item-hover-color-back);
+	color: var(--browser-item-hover-color-text);
+}
 
 .k-browser-item-image {
 	height: calc(var(--browser-item-height) - var(--browser-item-padding) * 2);
@@ -92,10 +109,9 @@ export default {
 	box-shadow: var(--shadow);
 	flex-shrink: 0;
 }
-/** TODO: .k-browser-item-image:has(svg) */
 .k-browser-item-image.k-icon-frame {
 	box-shadow: none;
-	background: var(--color-white);
+	background: light-dark(var(--color-white), var(--color-black));
 }
 .k-browser-item-image svg {
 	transform: scale(0.8);
@@ -108,6 +124,7 @@ export default {
 	width: 0;
 }
 .k-browser-item[aria-selected] {
-	background: var(--color-blue-300);
+	background: var(--browser-item-selected-color-back);
+	color: var(--browser-item-selected-color-text);
 }
 </style>

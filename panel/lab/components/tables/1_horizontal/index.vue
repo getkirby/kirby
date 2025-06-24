@@ -47,8 +47,8 @@
 				<table>
 					<thead>
 						<tr>
-							<th data-has-button><button>Name</button></th>
-							<th data-has-button><button>Date</button></th>
+							<th data-has-button="true"><button>Name</button></th>
+							<th data-has-button="true"><button>Date</button></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -129,10 +129,10 @@
 						}"
 						element="tbody"
 					>
-						<tr v-for="i in 2" :key="i">
+						<tr v-for="i in 2" :key="i" class="k-table-sortable-row">
 							<td class="k-table-index-column" data-sortable="true">
 								<span class="k-table-index">{{ i }}</span>
-								<k-sort-handle />
+								<k-sort-handle class="k-table-sort-handle" />
 							</td>
 							<td>Kirby</td>
 							<td>mail@getkirby.com</td>

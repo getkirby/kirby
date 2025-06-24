@@ -3,7 +3,6 @@
 		:is="element"
 		:for="input"
 		:class="'k-' + type + '-label'"
-		:data-invalid="invalid"
 		class="k-label"
 	>
 		<k-link v-if="link" :to="link">
@@ -14,8 +13,8 @@
 			<slot />
 		</span>
 
-		<abbr v-if="required && !invalid" :title="$t(type + '.required')">✶</abbr>
-		<abbr :title="$t(type + '.invalid')" class="k-label-invalid">&times;</abbr>
+		<abbr v-if="required" :title="$t(type + '.required')">✶</abbr>
+		<abbr :title="$t(type + '.invalid')" data-theme="negative" class="k-label-invalid">&times;</abbr>
 	</component>
 </template>
 
@@ -77,7 +76,7 @@ export default {
 	min-width: 0;
 	flex: 1;
 }
-[aria-disabled] .k-label {
+[aria-disabled="true"] .k-label {
 	opacity: var(--opacity-disabled);
 	cursor: not-allowed;
 }
@@ -107,19 +106,19 @@ export default {
 
 .k-label abbr.k-label-invalid {
 	display: none;
-	color: var(--color-red-700);
+	color: var(--theme-color-text);
 }
 
 /** Tracking invalid via CSS */
 /** TODO: replace once invalid state is tracked in panel.content */
-:where(.k-field:has([data-invalid]), .k-section:has([data-invalid]))
+:where(.k-field:has(:invalid), .k-section:has([data-invalid="true"]))
 	> header
 	> .k-label
 	abbr.k-label-invalid {
 	display: inline-block;
 }
 
-.k-field:has([data-invalid])
+.k-field:has(:invalid)
 	> .k-field-header
 	> .k-label
 	abbr:has(+ abbr.k-label-invalid) {

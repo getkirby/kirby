@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 class CollectionMutatorTest extends TestCase
 {
-	public function testData()
+	public function testData(): void
 	{
 		$collection = new Collection();
 
@@ -27,7 +27,7 @@ class CollectionMutatorTest extends TestCase
 		], $collection->data());
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$collection = new Collection([
 			'one' => 'eins',
@@ -42,7 +42,7 @@ class CollectionMutatorTest extends TestCase
 		$this->assertSame([], $collection->empty()->data());
 	}
 
-	public function testSet()
+	public function testSet(): void
 	{
 		$collection = new Collection();
 		$this->assertNull($collection->one);
@@ -60,7 +60,7 @@ class CollectionMutatorTest extends TestCase
 		$this->assertSame('drei', $collection->three);
 	}
 
-	public function testAppend()
+	public function testAppend(): void
 	{
 		$collection = new Collection([
 			'one' => 'eins'
@@ -72,7 +72,7 @@ class CollectionMutatorTest extends TestCase
 		$this->assertSame('zwei', $collection->last());
 	}
 
-	public function testPrepend()
+	public function testPrepend(): void
 	{
 		$collection = new Collection([
 			'one' => 'eins'
@@ -84,7 +84,7 @@ class CollectionMutatorTest extends TestCase
 		$this->assertSame('null', $collection->zero());
 	}
 
-	public function testExtend()
+	public function testExtend(): void
 	{
 		$collection = new Collection([
 			'one' => 'eins'
@@ -98,7 +98,7 @@ class CollectionMutatorTest extends TestCase
 		$this->assertSame('zwei', $result->two());
 	}
 
-	public function testRemove()
+	public function testRemove(): void
 	{
 		$collection = new Collection([
 			'one' => 'eins',
@@ -110,7 +110,7 @@ class CollectionMutatorTest extends TestCase
 		$this->assertNull($collection->two());
 	}
 
-	public function testUnset()
+	public function testUnset(): void
 	{
 		$collection = new Collection([
 			'one' => 'eins',
@@ -122,7 +122,7 @@ class CollectionMutatorTest extends TestCase
 		$this->assertNull($collection->two());
 	}
 
-	public function testMap()
+	public function testMap(): void
 	{
 		$collection = new Collection([
 			'one' => 'eins',
@@ -130,13 +130,11 @@ class CollectionMutatorTest extends TestCase
 		]);
 
 		$this->assertSame('zwei', $collection->two());
-		$collection->map(function ($item) {
-			return $item . '-ish';
-		});
+		$collection->map(fn ($item) => $item . '-ish');
 		$this->assertSame('zwei-ish', $collection->two());
 	}
 
-	public function testPluck()
+	public function testPluck(): void
 	{
 		$collection = new Collection([
 			[
@@ -150,7 +148,7 @@ class CollectionMutatorTest extends TestCase
 		$this->assertSame(['homer', 'marge'], $collection->pluck('username'));
 	}
 
-	public function testPluckAndSplit()
+	public function testPluckAndSplit(): void
 	{
 		$collection = new Collection([
 			[
@@ -168,7 +166,7 @@ class CollectionMutatorTest extends TestCase
 		$this->assertSame($expected, $collection->pluck('simpsons', ', '));
 	}
 
-	public function testPluckUnique()
+	public function testPluckUnique(): void
 	{
 		$collection = new Collection([
 			[

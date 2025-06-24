@@ -1,8 +1,9 @@
 <template>
 	<k-dialog
 		v-bind="$props"
-		class="k-layout-selector"
+		:class="['k-layout-selector', $attrs.class]"
 		:size="selector?.size ?? 'medium'"
+		:style="$attrs.style"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', value)"
 	>
@@ -37,7 +38,7 @@
 import Dialog from "@/mixins/dialog.js";
 
 /**
- * @internal
+ * @unstable
  */
 export default {
 	mixins: [Dialog],
@@ -85,8 +86,11 @@ export default {
 	}
 }
 .k-layout-selector-option {
-	--color-border: hsla(var(--color-gray-hs), 0%, 6%);
-	--color-back: var(--color-white);
+	--color-border: light-dark(
+		hsla(var(--color-gray-hs), 0%, 6%),
+		hsla(var(--color-gray-hs), 60%, 10%)
+	);
+	--color-back: light-dark(var(--color-white), var(--color-gray-950));
 	border-radius: var(--rounded);
 }
 .k-layout-selector-option:focus-visible {
@@ -110,10 +114,10 @@ export default {
 	height: 100%;
 }
 .k-layout-selector-option:hover {
-	--color-border: var(--color-gray-500);
-	--color-back: var(--color-gray-100);
+	--color-border: light-dark(var(--color-gray-500), var(--color-gray-800));
+	--color-back: light-dark(var(--color-gray-100), var(--color-gray-900));
 }
-.k-layout-selector-option[aria-current] {
+.k-layout-selector-option[aria-current="true"] {
 	--color-border: var(--color-focus);
 	--color-back: var(--color-blue-300);
 }

@@ -2,6 +2,8 @@
 
 namespace Kirby\Image;
 
+use Stringable;
+
 /**
  * Returns the latitude and longitude values
  * for exif location data if available
@@ -12,7 +14,7 @@ namespace Kirby\Image;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Location
+class Location implements Stringable
 {
 	protected float|null $lat = null;
 	protected float|null $lng = null;
@@ -62,7 +64,7 @@ class Location
 	 */
 	protected function gps(array $coord, string $hemi): float
 	{
-		$degrees = count($coord) > 0 ? $this->num($coord[0]) : 0;
+		$degrees = $coord !== [] ? $this->num($coord[0]) : 0;
 		$minutes = count($coord) > 1 ? $this->num($coord[1]) : 0;
 		$seconds = count($coord) > 2 ? $this->num($coord[2]) : 0;
 

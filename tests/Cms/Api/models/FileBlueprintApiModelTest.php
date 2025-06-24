@@ -6,7 +6,7 @@ use Kirby\Cms\Api\ApiModelTestCase;
 
 class FileBlueprintApiModelTest extends ApiModelTestCase
 {
-	protected $file;
+	protected File $file;
 
 	public function setUp(): void
 	{

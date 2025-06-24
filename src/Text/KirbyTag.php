@@ -46,7 +46,9 @@ class KirbyTag
 		// type aliases
 		if (isset(static::$types[$type]) === false) {
 			if (isset(static::$aliases[$type]) === false) {
-				throw new InvalidArgumentException('Undefined tag type: ' . $type);
+				throw new InvalidArgumentException(
+					message: 'Undefined tag type: ' . $type
+				);
 			}
 
 			$type = static::$aliases[$type];
@@ -63,7 +65,7 @@ class KirbyTag
 			$attrName = strtolower($attrName);
 
 			// applies only defined attributes to safely update
-			if (in_array($attrName, $availableAttrs) === true) {
+			if (in_array($attrName, $availableAttrs, true) === true) {
 				$this->{$attrName} = $attrValue;
 			}
 		}
@@ -172,7 +174,7 @@ class KirbyTag
 
 		// use substr instead of rtrim to keep non-tagged brackets
 		// (link: file.pdf text: Download (PDF))
-		if (substr($tag, -1) === ')') {
+		if (str_ends_with($tag, ')') === true) {
 			$tag = substr($tag, 0, -1);
 		}
 
@@ -230,7 +232,9 @@ class KirbyTag
 			return (string)$callback($this);
 		}
 
-		throw new BadMethodCallException('Invalid tag render function in tag: ' . $this->type);
+		throw new BadMethodCallException(
+			message: 'Invalid tag render function in tag: ' . $this->type
+		);
 	}
 
 	public function type(): string

@@ -13,15 +13,12 @@ namespace Kirby\Cms;
  */
 class UserPermissions extends ModelPermissions
 {
-	protected string $category = 'users';
-
-	public function __construct(User $model)
+	/**
+	 * Used to cache once determined permissions in memory
+	 */
+	protected static function cacheKey(ModelWithContent|Language $model): string
 	{
-		parent::__construct($model);
-
-		// change the scope of the permissions,
-		// when the current user is this user
-		$this->category = $this->user?->is($model) ? 'user' : 'users';
+		return $model->role()->id();
 	}
 
 	protected function canChangeRole(): bool
@@ -29,7 +26,7 @@ class UserPermissions extends ModelPermissions
 		// protect admin from role changes by non-admin
 		if (
 			$this->model->isAdmin() === true &&
-			$this->user->isAdmin() !== true
+			static::user()->isAdmin() !== true
 		) {
 			return false;
 		}
@@ -45,7 +42,7 @@ class UserPermissions extends ModelPermissions
 	protected function canCreate(): bool
 	{
 		// the admin can always create new users
-		if ($this->user->isAdmin() === true) {
+		if (static::user()->isAdmin() === true) {
 			return true;
 		}
 
@@ -60,5 +57,12 @@ class UserPermissions extends ModelPermissions
 	protected function canDelete(): bool
 	{
 		return $this->model->isLastAdmin() !== true;
+	}
+
+	protected static function category(ModelWithContent|Language $model): string
+	{
+		// change the scope of the permissions,
+		// when the current user is this user
+		return static::user()->is($model) ? 'user' : 'users';
 	}
 }

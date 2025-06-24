@@ -15,8 +15,7 @@ class BlueprintTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Blueprint';
 
-	protected $app;
-	protected $model;
+	protected ModelWithContent $model;
 
 	public function setUp(): void
 	{
@@ -339,6 +338,34 @@ class BlueprintTest extends TestCase
 	}
 
 	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'buttons' => ['foo', 'bar']
+		]);
+
+		$this->assertSame(['foo', 'bar'], $blueprint->buttons());
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtonsDisabled()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'buttons' => false
+		]);
+
+		$this->assertSame(false, $blueprint->buttons());
+	}
+
+	/**
 	 * @covers ::__debugInfo
 	 */
 	public function testDebugInfo()
@@ -635,9 +662,7 @@ class BlueprintTest extends TestCase
 
 		$this->app = $this->app->clone([
 			'blueprints' => [
-				'pages/test' => function () {
-					return ['title' => 'Test'];
-				}
+				'pages/test' => fn () => ['title' => 'Test']
 			]
 		]);
 
@@ -661,9 +686,7 @@ class BlueprintTest extends TestCase
 				'blueprints' => static::TMP,
 			],
 			'blueprints' => [
-				'pages/test' => function () {
-					return static::TMP . '/custom/test.yml';
-				}
+				'pages/test' => fn () => static::TMP . '/custom/test.yml'
 			]
 		]);
 

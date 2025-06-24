@@ -17,7 +17,7 @@ export default {
 			type: Object,
 			default: () => ({
 				icon: "image",
-				text: window.panel.$t("dialog.files.empty")
+				text: window.panel.t("dialog.files.empty")
 			})
 		}
 	}

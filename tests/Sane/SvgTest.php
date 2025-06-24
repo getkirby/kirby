@@ -11,7 +11,7 @@ class SvgTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Svg';
 
-	protected static $type = 'svg';
+	protected static string $type = 'svg';
 
 	/**
 	 * @dataProvider allowedProvider
@@ -21,7 +21,7 @@ class SvgTest extends TestCase
 		$fixture = $this->fixture($file);
 		$cleaned = $this->fixture(str_replace('allowed', 'cleaned', $file));
 
-		$this->assertNull(Svg::validateFile($fixture));
+		Svg::validateFile($fixture);
 
 		$sanitized = Svg::sanitize(file_get_contents($fixture));
 		$this->assertStringEqualsFile(is_file($cleaned) ? $cleaned : $fixture, $sanitized);
@@ -37,7 +37,7 @@ class SvgTest extends TestCase
 		$fixture = '<svg><path aria-label="Test" /></svg>';
 		$cleaned = '<svg><path aria-label="Test"/></svg>';
 
-		$this->assertNull(Svg::validate($fixture));
+		Svg::validate($fixture);
 		$this->assertSame($cleaned, Svg::sanitize($fixture));
 	}
 
@@ -46,7 +46,7 @@ class SvgTest extends TestCase
 		$fixture = '<svg><path data-color="test" /></svg>';
 		$cleaned = '<svg><path data-color="test"/></svg>';
 
-		$this->assertNull(Svg::validate($fixture));
+		Svg::validate($fixture);
 		$this->assertSame($cleaned, Svg::sanitize($fixture));
 	}
 

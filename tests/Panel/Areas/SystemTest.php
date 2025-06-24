@@ -9,7 +9,7 @@ class SystemTest extends AreaTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/SystemTest';
 
-	protected static $host;
+	protected static string $host;
 
 	public static function setUpBeforeClass(): void
 	{
@@ -50,6 +50,28 @@ class SystemTest extends AreaTestCase
 			'text'  => 'This is a very important announcement!',
 			'kirby' => '*',
 			'php'   => '*'
+		];
+	}
+
+	protected function unknownLicense(): array
+	{
+		return [
+			'link'   => null,
+			'name'   => '-',
+			'status' => $this->unknownLicenseStatus()
+		];
+	}
+
+	protected function unknownLicenseStatus(): array
+	{
+		return [
+			'dialog' => null,
+			'drawer' => null,
+			'icon'   => 'question',
+			'label'  => 'Unknown',
+			'link'	 => null,
+			'theme'  => 'passive',
+			'value'  => 'unknown',
 		];
 	}
 
@@ -254,28 +276,30 @@ class SystemTest extends AreaTestCase
 		$expected = [
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/private',
 					'href' => null
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '?',
 					'icon' => 'question',
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/private',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			],
 			[
 				'author'  => 'A, B',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '1.0.0',
 					'icon' => 'info',
@@ -288,18 +312,19 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/unknown',
 					'href' => null
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '1.0.0',
 					'icon' => 'question',
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/unknown',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			]
@@ -348,28 +373,30 @@ class SystemTest extends AreaTestCase
 		$expected = [
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/private',
 					'href' => null
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '?',
 					'icon' => 'question',
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/private',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			],
 			[
 				'author'  => 'A, B',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '1.0.0',
 					'icon' => 'info',
@@ -382,18 +409,19 @@ class SystemTest extends AreaTestCase
 			],
 			[
 				'author'  => '–',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/unknown',
 					'href' => null
 				],
+				'status' => $this->unknownLicenseStatus(),
 				'version' => [
 					'currentVersion' => '1.0.0',
 					'icon' => 'question',
 					'label' => 'Could not check for updates',
 					'latestVersion' => '?',
 					'pluginName' => 'getkirby/unknown',
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null
 				]
 			]
@@ -469,11 +497,12 @@ class SystemTest extends AreaTestCase
 		$this->assertSame([
 			[
 				'author'  => 'A, B',
-				'license' => '–',
+				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/public',
 					'href' => 'https://getkirby.com'
 				],
+				'status'  => $this->unknownLicenseStatus(),
 				'version' => '1.0.0'
 			]
 		], $props['plugins']);

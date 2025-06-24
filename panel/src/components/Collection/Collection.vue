@@ -4,7 +4,7 @@
 			v-if="items.length === 0"
 			v-bind="empty"
 			:layout="layout"
-			v-on="$listeners['empty'] ? { click: onEmpty } : {}"
+			v-on="listeners"
 		/>
 
 		<k-items
@@ -15,6 +15,7 @@
 				items,
 				layout,
 				link,
+				selecting,
 				size,
 				sortable,
 				theme
@@ -22,6 +23,7 @@
 			@change="$emit('change', $event)"
 			@item="$emit('item', $event)"
 			@option="onOption"
+			@select="onSelect"
 			@sort="$emit('sort', $event)"
 		>
 			<template #options="{ item, index }">
@@ -92,6 +94,14 @@ export default {
 
 			return true;
 		},
+		listeners() {
+			if (this.$listeners["empty"]) {
+				return {
+					click: this.onEmpty
+				};
+			}
+			return {};
+		},
 		paginationOptions() {
 			const options =
 				typeof this.pagination !== "object" ? {} : this.pagination;
@@ -118,6 +128,9 @@ export default {
 		onOption(...args) {
 			this.$emit("action", ...args);
 			this.$emit("option", ...args);
+		},
+		onSelect(...args) {
+			this.$emit("select", ...args);
 		}
 	}
 };

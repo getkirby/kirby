@@ -14,11 +14,9 @@ class PluginTest extends AreaTestCase
 					'views' => [
 						[
 							'pattern' => 'foo',
-							'action'  => function () {
-								return [
-									'component' => 'k-foo-view'
-								];
-							}
+							'action'  => fn () => [
+								'component' => 'k-foo-view'
+							]
 						]
 					]
 				]
@@ -40,21 +38,17 @@ class PluginTest extends AreaTestCase
 					'views' => [
 						[
 							'pattern' => 'foo',
-							'when' => fn () => true,
-							'action'  => function () {
-								return [
-									'component' => 'k-foo-view',
-								];
-							}
+							'when'    => fn () => true,
+							'action'  => fn () => [
+								'component' => 'k-foo-view',
+							]
 						],
 						[
 							'pattern' => 'bar',
-							'when' => fn () => false,
-							'action'  => function () {
-								return [
-									'component' => 'k-bar-view',
-								];
-							}
+							'when'    => fn () => false,
+							'action'  => fn () => [
+								'component' => 'k-bar-view',
+							]
 						]
 					]
 				]

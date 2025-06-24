@@ -19,8 +19,8 @@ use TypeError;
  */
 class SessionTest extends TestCase
 {
-	protected $store;
-	protected $sessions;
+	protected SessionStore $store;
+	protected Sessions $sessions;
 
 	public function setUp(): void
 	{

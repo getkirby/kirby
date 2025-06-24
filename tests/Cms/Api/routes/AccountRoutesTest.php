@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
 use Kirby\TestCase;
@@ -10,8 +11,6 @@ class AccountRoutesTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AccountRoutes';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -34,8 +33,9 @@ class AccountRoutesTest extends TestCase
 			],
 			'users' => [
 				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin'
+					'email'    => 'test@getkirby.com',
+					'role'     => 'admin',
+					'password' => password_hash('12345678', PASSWORD_DEFAULT)
 				],
 				[
 					'email' => 'editor@getkirby.com',
@@ -179,11 +179,53 @@ class AccountRoutesTest extends TestCase
 	{
 		$response = $this->app->api()->call('account/password', 'PATCH', [
 			'body' => [
+				'currentPassword' => '12345678',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertTrue($this->app->user()->validatePassword('super-secure-new-password'));
+	}
+
+	public function testChangePasswordMissingCurrentPassword()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'password' => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordWrongCurrentPassword()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Wrong password');
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'currentPassword' => 'definitely-not-correct',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordReset()
+	{
+		$this->app->session()->set('kirby.resetPassword', true);
+
+		$response = $this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
 				'password' => 'super-secure-new-password'
 			]
 		]);
 
 		$this->assertSame('ok', $response['status']);
+		$this->assertTrue($this->app->user()->validatePassword('super-secure-new-password'));
+		$this->assertNull($this->app->session()->get('kirby.resetPassword'));
 	}
 
 	public function testChangeRole()
@@ -218,22 +260,16 @@ class AccountRoutesTest extends TestCase
 			],
 			'fields' => [
 				'test' => [
-					'api' => function () {
-						return [
-							[
-								'pattern' => '/',
-								'action'  => function () {
-									return 'Test home route';
-								}
-							],
-							[
-								'pattern' => 'nested',
-								'action'  => function () {
-									return 'Test nested route';
-								}
-							],
-						];
-					}
+					'api' => fn () => [
+						[
+							'pattern' => '/',
+							'action'  => fn () => 'Test home route'
+						],
+						[
+							'pattern' => 'nested',
+							'action'  => fn () => 'Test nested route'
+						],
+					]
 				]
 			]
 		]);
@@ -371,11 +407,9 @@ class AccountRoutesTest extends TestCase
 			],
 			'sections' => [
 				'test' => [
-					'toArray' => function () {
-						return [
-							'foo' => 'bar'
-						];
-					}
+					'toArray' => fn () => [
+						'foo' => 'bar'
+					]
 				]
 			]
 		]);
@@ -398,11 +432,11 @@ class AccountRoutesTest extends TestCase
 	{
 		$response = $this->app->api()->call('account', 'PATCH', [
 			'body' => [
-				'name' => 'Test User'
+				'position' => 'Admin'
 			]
 		]);
 
 		$this->assertSame('ok', $response['status']);
-		$this->assertSame('Test User', $response['data']['content']['name']);
+		$this->assertSame('Admin', $response['data']['content']['position']);
 	}
 }

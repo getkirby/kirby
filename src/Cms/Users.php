@@ -19,6 +19,8 @@ use Kirby\Uuid\HasUuids;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Cms\Collection<\Kirby\Cms\User>
  */
 class Users extends Collection
 {
@@ -47,23 +49,25 @@ class Users extends Collection
 	{
 		// add a users collection
 		if ($object instanceof self) {
-			$this->data = array_merge($this->data, $object->data);
+			$this->data = [...$this->data, ...$object->data];
 
-			// add a user by id
+		// add a user by id
 		} elseif (
 			is_string($object) === true &&
 			$user = App::instance()->user($object)
 		) {
 			$this->__set($user->id(), $user);
 
-			// add a user object
+		// add a user object
 		} elseif ($object instanceof User) {
 			$this->__set($object->id(), $object);
 
-			// give a useful error message on invalid input;
-			// silently ignore "empty" values for compatibility with existing setups
+		// give a useful error message on invalid input;
+		// silently ignore "empty" values for compatibility with existing setups
 		} elseif (in_array($object, [null, false, true], true) !== true) {
-			throw new InvalidArgumentException('You must pass a Users or User object or an ID of an existing user to the Users collection');
+			throw new InvalidArgumentException(
+				message: 'You must pass a Users or User object or an ID of an existing user to the Users collection'
+			);
 		}
 
 		return $this;

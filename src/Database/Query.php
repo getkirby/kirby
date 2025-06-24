@@ -24,11 +24,6 @@ class Query
 	public const ERROR_INVALID_QUERY_METHOD = 0;
 
 	/**
-	 * Parent Database object
-	 */
-	protected Database|null $database = null;
-
-	/**
 	 * The object which should be fetched for each row
 	 * or function to call for each row
 	 */
@@ -43,11 +38,6 @@ class Query
 	 * An array of bindings for the final query
 	 */
 	protected array $bindings = [];
-
-	/**
-	 * The table name
-	 */
-	protected string $table;
 
 	/**
 	 * The name of the primary key column
@@ -82,7 +72,7 @@ class Query
 	/**
 	 * WHERE clause
 	 */
-	protected $where = null;
+	protected string|null $where = null;
 
 	/**
 	 * GROUP BY clause
@@ -92,12 +82,12 @@ class Query
 	/**
 	 * HAVING clause
 	 */
-	protected $having = null;
+	protected string|null $having = null;
 
 	/**
 	 * ORDER BY clause
 	 */
-	protected $order = null;
+	protected string|null $order = null;
 
 	/**
 	 * The offset, which should be applied to the select query
@@ -115,14 +105,12 @@ class Query
 	protected bool $debug = false;
 
 	/**
-	 * Constructor
-	 *
-	 * @param \Kirby\Database\Database $database Database object
-	 * @param string $table Optional name of the table, which should be queried
+	 * @param string $table name of the table, which should be queried
 	 */
-	public function __construct(Database $database, string $table)
-	{
-		$this->database = $database;
+	public function __construct(
+		protected Database $database,
+		protected string $table
+	) {
 		$this->table($table);
 	}
 
@@ -220,7 +208,9 @@ class Query
 	public function table(string $table): static
 	{
 		if ($this->database->validateTable($table) === false) {
-			throw new InvalidArgumentException('Invalid table: ' . $table);
+			throw new InvalidArgumentException(
+				message: 'Invalid table: ' . $table
+			);
 		}
 
 		$this->table = $table;
@@ -335,7 +325,7 @@ class Query
 	public function bindings(array|null $bindings = null): array|static
 	{
 		if (is_array($bindings) === true) {
-			$this->bindings = array_merge($this->bindings, $bindings);
+			$this->bindings = [...$this->bindings, ...$bindings];
 			return $this;
 		}
 
@@ -418,7 +408,6 @@ class Query
 	/**
 	 * Attaches an order clause
 	 *
-	 * @param string|null $order
 	 * @return $this
 	 */
 	public function order(string|null $order = null)
@@ -540,8 +529,11 @@ class Query
 	 *
 	 * @param int $default An optional default value, which should be returned if the query fails
 	 */
-	public function aggregate(string $method, string $column = '*', int $default = 0)
-	{
+	public function aggregate(
+		string $method,
+		string $column = '*',
+		int $default = 0
+	) {
 		// reset the sorting to avoid counting issues
 		$this->order = null;
 
@@ -589,7 +581,11 @@ class Query
 			$this->database->fail();
 		}
 
-		$result = $this->database->query($sql['query'], $sql['bindings'], $params);
+		$result = $this->database->query(
+			$sql['query'],
+			$sql['bindings'],
+			$params
+		);
 
 		$this->reset();
 
@@ -720,10 +716,10 @@ class Query
 		// if there isn't already an explicit order, order by the primary key
 		// instead of the column that was requested (which would be implied otherwise)
 		if ($this->order === null) {
-			$sql        = $this->database->sql();
-			$primaryKey = $sql->combineIdentifier($this->table, $this->primaryKeyName);
+			$sql = $this->database->sql();
+			$key = $sql->combineIdentifier($this->table, $this->primaryKeyName);
 
-			$this->order($primaryKey . ' ASC');
+			$this->order($key . ' ASC');
 		}
 
 		$results = $this->query($this->select([$column])->build('select'), [
@@ -770,7 +766,9 @@ class Query
 	 */
 	public function insert($values = null)
 	{
-		$query = $this->execute($this->values($values)->build('insert'));
+		$query = $this->execute(
+			$this->values($values)->build('insert')
+		);
 
 		if ($this->debug === true) {
 			return $query;
@@ -787,7 +785,9 @@ class Query
 	 */
 	public function update($values = null, $where = null): bool
 	{
-		return $this->execute($this->values($values)->where($where)->build('update'));
+		return $this->execute(
+			$this->values($values)->where($where)->build('update')
+		);
 	}
 
 	/**
@@ -797,7 +797,9 @@ class Query
 	 */
 	public function delete($where = null): bool
 	{
-		return $this->execute($this->where($where)->build('delete'));
+		return $this->execute(
+			$this->where($where)->build('delete')
+		);
 	}
 
 	/**
@@ -809,7 +811,11 @@ class Query
 			$column = Str::lower($match[1]);
 			return $this->findBy($column, $arguments[0]);
 		}
-		throw new InvalidArgumentException('Invalid query method: ' . $method, static::ERROR_INVALID_QUERY_METHOD);
+
+		throw new InvalidArgumentException(
+			message: 'Invalid query method: ' . $method,
+			code: static::ERROR_INVALID_QUERY_METHOD
+		);
 	}
 
 	/**
@@ -818,8 +824,11 @@ class Query
 	 * @param array $args Arguments, see where() description
 	 * @param mixed $current Current value (like $this->where)
 	 */
-	protected function filterQuery(array $args, $current, string $mode = 'AND')
-	{
+	protected function filterQuery(
+		array $args,
+		$current,
+		string $mode = 'AND'
+	) {
 		$result = '';
 
 		switch (count($args)) {
@@ -827,14 +836,16 @@ class Query
 
 				if ($args[0] === null) {
 					return $current;
+				}
 
-					// ->where('username like "myuser"');
-				} elseif (is_string($args[0]) === true) {
+				// ->where('username like "myuser"');
+				if (is_string($args[0]) === true) {
 					// simply add the entire string to the where clause
-					// escaping or using bindings has to be done before calling this method
+					// escaping or using bindings has to be done
+					// before calling this method
 					$result = $args[0];
 
-					// ->where(['username' => 'myuser']);
+				// ->where(['username' => 'myuser']);
 				} elseif (is_array($args[0]) === true) {
 					// simple array mode (AND operator)
 					$sql = $this->database->sql()->values($this->table, $args[0], ' AND ', true, true);
@@ -852,7 +863,7 @@ class Query
 					call_user_func($args[0], $query);
 
 					// copy over the bindings from the nested query
-					$this->bindings = array_merge($this->bindings, $query->bindings);
+					$this->bindings = [...$this->bindings, ...$query->bindings];
 
 					$result = '(' . $query->where . ')';
 				}
@@ -861,15 +872,21 @@ class Query
 			case 2:
 
 				// ->where('username like :username', ['username' => 'myuser'])
-				if (is_string($args[0]) === true && is_array($args[1]) === true) {
+				if (
+					is_string($args[0]) === true &&
+					is_array($args[1]) === true
+				) {
 					// prepared where clause
 					$result = $args[0];
 
 					// store the bindings
 					$this->bindings($args[1]);
 
-					// ->where('username like ?', 'myuser')
-				} elseif (is_string($args[0]) === true && is_scalar($args[1]) === true) {
+				// ->where('username like ?', 'myuser')
+				} elseif (
+					is_string($args[0]) === true &&
+					is_scalar($args[1]) === true
+				) {
 					// prepared where clause
 					$result = $args[0];
 
@@ -881,7 +898,10 @@ class Query
 			case 3:
 
 				// ->where('username', 'like', 'myuser');
-				if (is_string($args[0]) === true && is_string($args[1]) === true) {
+				if (
+					is_string($args[0]) === true &&
+					is_string($args[1]) === true
+				) {
 					// validate column
 					$sql = $this->database->sql();
 					$key = $sql->columnName($this->table, $args[0]);
@@ -890,8 +910,10 @@ class Query
 					// ->where('quantity', 'between', [10, 50]);
 					$predicate = trim(strtoupper($args[1]));
 					if (is_array($args[2]) === true) {
-						if (in_array($predicate, ['IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN']) === false) {
-							throw new InvalidArgumentException('Invalid predicate ' . $predicate);
+						if (in_array($predicate, ['IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN'], true) === false) {
+							throw new InvalidArgumentException(
+								message: 'Invalid predicate ' . $predicate
+							);
 						}
 
 						// build a list of bound values
@@ -913,7 +935,7 @@ class Query
 						};
 						$result = $key . ' ' . $predicate . ' ' . $values;
 
-						// ->where('username', 'like', 'myuser');
+					// ->where('username', 'like', 'myuser');
 					} else {
 						$predicates = [
 							'=', '>=', '>', '<=', '<', '<>', '!=', '<=>',
@@ -923,8 +945,10 @@ class Query
 							'REGEXP', 'NOT REGEXP'
 						];
 
-						if (in_array($predicate, $predicates) === false) {
-							throw new InvalidArgumentException('Invalid predicate/operator ' . $predicate);
+						if (in_array($predicate, $predicates, true) === false) {
+							throw new InvalidArgumentException(
+								message: 'Invalid predicate/operator ' . $predicate
+							);
 						}
 
 						$valueBinding = $sql->bindingName('value');

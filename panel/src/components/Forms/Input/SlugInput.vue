@@ -1,32 +1,24 @@
 <template>
-	<input
-		ref="input"
-		v-bind="{
-			autofocus,
-			disabled,
-			id,
-			minlength,
-			name,
-			pattern,
-			placeholder,
-			required
-		}"
-		v-direction
+	<k-string-input
+		v-bind="$props"
+		:spellcheck="false"
 		:value="slug"
 		autocomplete="off"
-		spellcheck="false"
-		type="text"
-		class="k-text-input"
-		v-on="listeners"
+		class="k-slug-input"
+		@input="$emit('input', $event)"
 	/>
 </template>
 
 <script>
-import TextInput, { props as TextInputProps } from "./TextInput.vue";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [TextInputProps],
+	mixins: [StringInputProps],
 	props: {
+		// unset unused props
+		autocomplete: null,
+		spellcheck: null,
+
 		/**
 		 * Allow only specific characters for slug generation
 		 */
@@ -54,7 +46,7 @@ export const props = {
  * @example <k-input :value="slug" @input="slug = $event" name="slug" type="slug" />
  */
 export default {
-	extends: TextInput,
+	extends: StringInput,
 	mixins: [props],
 	data() {
 		return {

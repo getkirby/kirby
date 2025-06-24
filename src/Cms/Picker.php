@@ -23,7 +23,7 @@ abstract class Picker
 	 */
 	public function __construct(array $params = [])
 	{
-		$this->options = array_merge($this->defaults(), $params);
+		$this->options = [...$this->defaults(), ...$params];
 		$this->kirby   = $this->options['model']->kirby();
 		$this->site    = $this->kirby->site();
 	}

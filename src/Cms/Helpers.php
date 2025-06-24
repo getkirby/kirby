@@ -28,7 +28,7 @@ class Helpers
 	 * Helpers::$deprecations['<deprecation-key>'] = false;
 	 * ```
 	 */
-	public static $deprecations = [
+	public static array $deprecations = [
 		// The internal `$model->contentFile*()` methods have been deprecated
 		'model-content-file' => true,
 
@@ -38,11 +38,12 @@ class Helpers
 		// TODO: switch to true in v6
 		'plugin-extends-root' => false,
 
-		// Passing a single space as value to `Xml::attr()` has been
-		// deprecated. In a future version, passing a single space won't
-		// render an empty value anymore but a single space.
-		// To render an empty value, please pass an empty string.
-		'xml-attr-single-space' => true,
+		// The `Content\Translation` class keeps a set of methods from the old
+		// `ContentTranslation` class for compatibility that should no longer be used.
+		// Some of them can be replaced by using `Version` class methods instead
+		// (see method comments). `Content\Translation::contentFile` should be avoided
+		//  entirely and has no recommended replacement.
+		'translation-methods' => true
 	];
 
 	/**
@@ -116,6 +117,18 @@ class Helpers
 	) {
 		$override = null;
 
+		// check if the LC_MESSAGES constant is defined
+		// some environments do not support LC_MESSAGES especially on Windows
+		// LC_MESSAGES constant is available if PHP was compiled with libintl
+		if (defined('LC_MESSAGES') === true) {
+			// backup current locale
+			$locale = setlocale(LC_MESSAGES, 0);
+
+			// set locale to C so that errors and warning messages are
+			// printed in English for robust comparisons in the handler
+			setlocale(LC_MESSAGES, 'C');
+		}
+
 		/**
 		 * @psalm-suppress UndefinedVariable
 		 */
@@ -151,6 +164,12 @@ class Helpers
 			// action or the standard error handler threw an
 			// exception; this avoids modifying global state
 			restore_error_handler();
+
+			// check if the LC_MESSAGES constant is defined
+			if (defined('LC_MESSAGES') === true) {
+				// reset to original locale
+				setlocale(LC_MESSAGES, $locale);
+			}
 		}
 
 		return $override ?? $result;
@@ -159,7 +178,6 @@ class Helpers
 	/**
 	 * Checks if a helper was overridden by the user
 	 * by setting the `KIRBY_HELPER_*` constant
-	 * @internal
 	 *
 	 * @param string $name Name of the helper
 	 */
@@ -189,6 +207,8 @@ class Helpers
 			return count($value);
 		}
 
-		throw new InvalidArgumentException('Could not determine the size of the given value');
+		throw new InvalidArgumentException(
+			message: 'Could not determine the size of the given value'
+		);
 	}
 }

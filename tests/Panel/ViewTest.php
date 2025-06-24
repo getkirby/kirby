@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\TestCase;
@@ -16,8 +17,6 @@ use Kirby\Toolkit\Str;
 class ViewTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.View';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -269,7 +268,7 @@ class ViewTest extends TestCase
 		$this->assertSame([], $view['breadcrumb']);
 		$this->assertSame(200, $view['code']);
 		$this->assertSame('', $view['path']);
-		$this->assertTrue(is_int($view['timestamp']));
+		$this->assertIsInt($view['timestamp']);
 		$this->assertSame([], $view['props']);
 		$this->assertSame('pages', $view['search']);
 
@@ -321,8 +320,8 @@ class ViewTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'languages' => [
-				[ 'code' => 'en', 'name' => 'English', 'default' => true ],
-				[ 'code' => 'de', 'name' => 'Deutsch']
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch']
 			],
 			'options' => [
 				'languages' => true
@@ -342,15 +341,19 @@ class ViewTest extends TestCase
 				'code'      => 'en',
 				'default'   => true,
 				'direction' => 'ltr',
+				'locale'    => [LC_ALL => 'en'],
 				'name'      => 'English',
-				'rules'     => Language::loadRules('en')
+				'rules'     => Language::loadRules('en'),
+				'url'       => '/en'
 			],
 			[
 				'code'      => 'de',
 				'default'   => false,
 				'direction' => 'ltr',
+				'locale'    => [LC_ALL => 'de'],
 				'name'      => 'Deutsch',
-				'rules'     => Language::loadRules('de')
+				'rules'     => Language::loadRules('de'),
+				'url'       => '/de'
 			]
 		];
 
@@ -366,9 +369,9 @@ class ViewTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'languages' => [
-				[ 'code' => 'en', 'name' => 'English', 'default' => true],
-				[ 'code' => 'de', 'name' => 'Deutsch'],
-				[ 'code' => 'ar', 'name' => 'Arabic', 'direction' => 'rtl'],
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch'],
+				['code' => 'ar', 'name' => 'Arabic', 'direction' => 'rtl'],
 			],
 			'options' => [
 				'languages' => true
@@ -607,7 +610,7 @@ class ViewTest extends TestCase
 			]
 		]);
 
-		$exception = new \Kirby\Exception\NotFoundException('Test');
+		$exception = new NotFoundException(message: 'Test');
 		$response  = View::response($exception);
 		$json      = json_decode($response->body(), true);
 

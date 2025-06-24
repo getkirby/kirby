@@ -22,10 +22,10 @@ class UserPicker extends Picker
 	 */
 	public function defaults(): array
 	{
-		$defaults = parent::defaults();
-		$defaults['text'] = '{{ user.username }}';
-
-		return $defaults;
+		return [
+			...parent::defaults(),
+			'text' => '{{ user.username }}'
+		];
 	}
 
 	/**
@@ -52,14 +52,13 @@ class UserPicker extends Picker
 
 		// catch invalid data
 		if ($users instanceof Users === false) {
-			throw new InvalidArgumentException('Your query must return a set of users');
+			throw new InvalidArgumentException(
+				message: 'Your query must return a set of users'
+			);
 		}
 
-		// search
-		$users = $this->search($users);
-
-		// sort
-		$users = $users->sort('username', 'asc');
+		// search & sort
+		$users = $this->search($users)->sort('username', 'asc');
 
 		// paginate
 		return $this->paginate($users);

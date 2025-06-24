@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+
 class RoleTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -40,25 +42,25 @@ class RoleTest extends TestCase
 
 	public function testMissingRole()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 
-		$app  = $this->app();
-		$role = Role::load('does-not-exist');
+		$this->app();
+		Role::load('does-not-exist');
 	}
 
-	public function testAdmin()
+	public function testDefaultAdmin()
 	{
 		$app  = $this->app();
-		$role = Role::admin();
+		$role = Role::defaultAdmin();
 
 		$this->assertSame('admin', $role->name());
 		$this->assertSame('Admin', $role->title());
 	}
 
-	public function testNobody()
+	public function testDefaultNobody()
 	{
 		$app  = $this->app();
-		$role = Role::nobody();
+		$role = Role::defaultNobody();
 
 		$this->assertSame('nobody', $role->name());
 		$this->assertSame('Nobody', $role->title());

@@ -5,12 +5,13 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Content\Field;
 use Kirby\Toolkit\Obj;
+use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 
-class MockObject extends Model
+class MockObject
 {
-	protected $id;
-	protected $group;
+	protected string|Field $id;
+	protected string|null $group;
 
 	public function __construct(array $props = [])
 	{
@@ -18,12 +19,12 @@ class MockObject extends Model
 		$this->group = $props['group'] ?? null;
 	}
 
-	public function id()
+	public function id(): string|Field
 	{
 		return $this->id;
 	}
 
-	public function group()
+	public function group(): string|null
 	{
 		return $this->group;
 	}
@@ -33,23 +34,22 @@ class MockObject extends Model
 		return ['id' => $this->id];
 	}
 
-	public function uuid()
+	public function uuid(): string|Field
 	{
 		return $this->id;
 	}
 }
 
+#[CoversClass(Collection::class)]
 class CollectionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Collection';
 
-	public function testCollectionMethods()
+	public function testCollectionMethods(): void
 	{
 		$kirby = $this->kirby([
 			'collectionMethods' => [
-				'test' => function () {
-					return 'collection test';
-				}
+				'test' => fn () => 'collection test'
 			],
 			'roots' => [
 				'index' => '/dev/null'
@@ -68,7 +68,7 @@ class CollectionTest extends TestCase
 		Pages::$methods = [];
 	}
 
-	public function testWithValidObjects()
+	public function testWithValidObjects(): void
 	{
 		$collection = new Collection([
 			$a = new MockObject(['id' => 'a', 'name' => 'a']),
@@ -80,7 +80,7 @@ class CollectionTest extends TestCase
 		$this->assertSame($c, $collection->last());
 	}
 
-	public function testWithArray()
+	public function testWithArray(): void
 	{
 		$collection = new Collection([
 			$a = ['id' => 'a', 'name' => 'a'],
@@ -92,7 +92,7 @@ class CollectionTest extends TestCase
 		$this->assertSame($c, $collection->last());
 	}
 
-	public function testGetAttribute()
+	public function testGetAttribute(): void
 	{
 		$object     = new MockObject(['id' => 'a']);
 		$collection = new Collection();
@@ -101,7 +101,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('a', $value);
 	}
 
-	public function testGetAttributeWithField()
+	public function testGetAttributeWithField(): void
 	{
 		$object = new MockObject([
 			'id' => $field = new Field(null, 'id', 'a')
@@ -113,7 +113,7 @@ class CollectionTest extends TestCase
 		$this->assertSame($field, $value);
 	}
 
-	public function testAppend()
+	public function testAppend(): void
 	{
 		$a = new MockObject(['id' => 'a', 'name' => 'A']);
 		$b = new MockObject(['id' => 'b', 'name' => 'B']);
@@ -145,7 +145,7 @@ class CollectionTest extends TestCase
 		$this->assertSame([$a, $b, $c, $d, 'a simple string'], $collection->values());
 	}
 
-	public function testFindByUuid()
+	public function testFindByUuid(): void
 	{
 		$collection = new Collection([
 			$page = new Page([
@@ -166,7 +166,7 @@ class CollectionTest extends TestCase
 		$this->assertNull($result);
 	}
 
-	public function testGroup()
+	public function testGroup(): void
 	{
 		$collection = new Collection([
 			new MockObject(['id' => 'a', 'group' => 'a']),
@@ -186,7 +186,7 @@ class CollectionTest extends TestCase
 		$this->assertCount(1, $groupB);
 	}
 
-	public function testGroupWithInvalidKey()
+	public function testGroupWithInvalidKey(): void
 	{
 		$collection = new Collection([
 			new MockObject(['id' => 'a', 'group' => 'a']),
@@ -200,7 +200,7 @@ class CollectionTest extends TestCase
 		$collection->group(1);
 	}
 
-	public function testGroupCaseSensitive()
+	public function testGroupCaseSensitive(): void
 	{
 		$collection = new Collection([
 			new Page(['slug' => 'a', 'content' => ['group' => 'a']]),
@@ -221,7 +221,27 @@ class CollectionTest extends TestCase
 		$this->assertCount(1, $groupB);
 	}
 
-	public function testIndexOfWithObject()
+	public function testGroupWithClosure(): void
+	{
+		$collection = new Collection([
+			new MockObject(['id' => 'a', 'group' => 'a']),
+			new MockObject(['id' => 'b', 'group' => 'a']),
+			new MockObject(['id' => 'c', 'group' => 'b']),
+		]);
+
+		$groups = $collection->group(fn ($object) => $object->group());
+
+		$this->assertInstanceOf(Collection::class, $groups);
+		$this->assertCount(2, $groups);
+
+		$groupA = $groups->first();
+		$groupB = $groups->last();
+
+		$this->assertCount(2, $groupA);
+		$this->assertCount(1, $groupB);
+	}
+
+	public function testIndexOfWithObject(): void
 	{
 		$collection = new Collection([
 			$a = new MockObject(['id' => 'a']),
@@ -237,7 +257,7 @@ class CollectionTest extends TestCase
 		$this->assertFalse($collection->indexOf($d));
 	}
 
-	public function testIndexOfWithString()
+	public function testIndexOfWithString(): void
 	{
 		$collection = new Collection([
 			new MockObject(['id' => 'a']),
@@ -251,7 +271,7 @@ class CollectionTest extends TestCase
 		$this->assertFalse($collection->indexOf('d'));
 	}
 
-	public function testNotWithObjects()
+	public function testNotWithObjects(): void
 	{
 		$collection = new Collection([
 			$a = new MockObject(['id' => 'a']),
@@ -272,7 +292,7 @@ class CollectionTest extends TestCase
 		$this->assertSame($c, $result->last());
 	}
 
-	public function testNotWithCollection()
+	public function testNotWithCollection(): void
 	{
 		$collection = new Collection([
 			new MockObject(['id' => 'a']),
@@ -287,7 +307,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('b', $result->first()->id());
 	}
 
-	public function testNotWithSimpleArray()
+	public function testNotWithSimpleArray(): void
 	{
 		$collection = new Collection([
 			new MockObject(['id' => 'a']),
@@ -302,7 +322,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('b', $result->first()->id());
 	}
 
-	public function testNotWithCollectionsArray()
+	public function testNotWithCollectionsArray(): void
 	{
 		$collection = new Collection([
 			new MockObject(['id' => 'a']),
@@ -325,7 +345,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('c', $result->first()->id());
 	}
 
-	public function testNotWithObjectsArray()
+	public function testNotWithObjectsArray(): void
 	{
 		$collection = new Collection([
 			new MockObject(['id' => 'a']),
@@ -344,7 +364,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('a', $result->first()->id());
 	}
 
-	public function testNotWithString()
+	public function testNotWithString(): void
 	{
 		$collection = new Collection([
 			$a = new MockObject(['id' => 'a']),
@@ -365,7 +385,7 @@ class CollectionTest extends TestCase
 		$this->assertSame($c, $result->last());
 	}
 
-	public function testPaginate()
+	public function testPaginate(): void
 	{
 		$collection = new Collection([
 			$a = new MockObject(['id' => 'a']),
@@ -395,7 +415,7 @@ class CollectionTest extends TestCase
 		$this->assertSame($c, $result->last());
 	}
 
-	public function testPrepend()
+	public function testPrepend(): void
 	{
 		$a = new MockObject(['id' => 'a', 'name' => 'A']);
 		$b = new MockObject(['id' => 'b', 'name' => 'B']);
@@ -427,7 +447,7 @@ class CollectionTest extends TestCase
 		$this->assertSame(['a simple string', $d, $c, $b, $a], $collection->values());
 	}
 
-	public function testQuerySearch()
+	public function testQuerySearch(): void
 	{
 		$collection = new Collection([
 			new Page(['slug' => 'project-a']),
@@ -454,7 +474,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('project-b', $result->first()->id());
 	}
 
-	public function testQueryPagination()
+	public function testQueryPagination(): void
 	{
 		$collection = new Collection([
 			new Page(['slug' => 'project-a']),
@@ -471,7 +491,7 @@ class CollectionTest extends TestCase
 		$this->assertSame(3, $result->pagination()->pages());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$collection = new Collection([
 			new MockObject(['id' => 'a']),
@@ -494,7 +514,7 @@ class CollectionTest extends TestCase
 		]);
 	}
 
-	public function testToArrayWithCallback()
+	public function testToArrayWithCallback(): void
 	{
 		$collection = new Collection([
 			new MockObject(['id' => 'a']),
@@ -502,14 +522,29 @@ class CollectionTest extends TestCase
 			new MockObject(['id' => 'c'])
 		]);
 
-		$array = $collection->toArray(function ($object) {
-			return $object->id();
-		});
+		$array = $collection->toArray(fn ($object) => $object->id());
 
 		$this->assertSame($array, [
 			'a' => 'a',
 			'b' => 'b',
 			'c' => 'c'
 		]);
+	}
+
+	public function testUpdate(): void
+	{
+		$collection = new Collection([
+			new MockObject(['id' => 'a', 'group' => 'a']),
+			new MockObject(['id' => 'b', 'group' => 'a'])
+		]);
+
+		$this->assertSame('a', $collection->first()->group());
+		$this->assertSame('a', $collection->last()->group());
+
+		$new = new MockObject(['id' => 'b', 'group' => 'b']);
+		$collection->update($new);
+
+		$this->assertSame('a', $collection->first()->group());
+		$this->assertSame('b', $collection->last()->group());
 	}
 }

@@ -3,7 +3,10 @@
 	<k-table
 		v-if="layout === 'table'"
 		v-bind="table"
+		:class="$attrs.class"
+		:style="$attrs.style"
 		@change="$emit('change', $event)"
+		@select="onSelect"
 		@sort="$emit('sort', $event)"
 		@option="onOption"
 	>
@@ -18,13 +21,13 @@
 	<!-- Layout: cards, cardlets, list -->
 	<k-draggable
 		v-else
-		class="k-items"
-		:class="'k-' + layout + '-items'"
+		:class="['k-items', 'k-' + layout + '-items', $attrs.class]"
 		:data-layout="layout"
 		:data-size="size"
 		:handle="true"
 		:list="items"
 		:options="dragOptions"
+		:style="$attrs.style"
 		@change="$emit('change', $event)"
 		@end="$emit('sort', items, $event)"
 	>
@@ -37,6 +40,8 @@
 					:image="imageOptions(item)"
 					:layout="layout"
 					:link="link ? item.link : false"
+					:selecting="selecting"
+					:selectable="item.selectable"
 					:sortable="sortable && item.sortable"
 					:theme="item.theme ?? theme"
 					:width="item.column"
@@ -44,6 +49,7 @@
 					@drag="onDragStart($event, item.dragText)"
 					@mouseover.native="$emit('hover', $event, item, itemIndex)"
 					@option="onOption($event, item, itemIndex)"
+					@select="onSelect(item, itemIndex)"
 				>
 					<template #options>
 						<slot name="options" v-bind="{ item, index: itemIndex }" />
@@ -72,7 +78,7 @@ export const props = {
 		},
 		/**
 		 * Optional fields configuration that is used for table layout
-		 * @internal
+		 * @unstable
 		 */
 		fields: {
 			type: Object,
@@ -92,6 +98,10 @@ export const props = {
 			type: Boolean,
 			default: true
 		},
+		/**
+		 * Whether items are in selecting mode
+		 */
+		selecting: Boolean,
 		/**
 		 * Whether items are generally sortable.
 		 * Each item can disable this individually.
@@ -138,6 +148,7 @@ export default {
 				columns: this.columns,
 				fields: this.fields,
 				rows: this.items,
+				selecting: this.selecting,
 				sortable: this.sortable
 			};
 		}
@@ -148,6 +159,9 @@ export default {
 		},
 		onOption(option, item, itemIndex) {
 			this.$emit("option", option, item, itemIndex);
+		},
+		onSelect(event, item, itemIndex) {
+			this.$emit("select", event, item, itemIndex);
 		},
 		imageOptions(item) {
 			let globalOptions = this.image;

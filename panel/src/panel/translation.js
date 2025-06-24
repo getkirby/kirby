@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import { template } from "@/helpers/string.js";
 import State from "./state.js";
 
@@ -6,18 +7,21 @@ export const defaults = () => {
 		code: null,
 		data: {},
 		direction: "ltr",
-		name: null
+		name: null,
+		weekday: 1
 	};
 };
 
 /**
- * Represents the current interface ranslation
+ * Represents the interface language
+ * for the current user
+ *
  * @since 4.0.0
  */
 export default () => {
 	const parent = State("translation", defaults());
 
-	return {
+	return reactive({
 		...parent,
 
 		/**
@@ -69,5 +73,5 @@ export default () => {
 
 			return template(string, data);
 		}
-	};
+	});
 };

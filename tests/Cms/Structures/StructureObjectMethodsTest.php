@@ -2,12 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 class StructureObjectMethodsTest extends TestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -15,9 +13,7 @@ class StructureObjectMethodsTest extends TestCase
 				'index' => '/dev/null',
 			],
 			'structureObjectMethods' => [
-				'test' => function () {
-					return 'structure object method';
-				}
+				'test' => fn () => 'structure object method'
 			]
 		]);
 	}

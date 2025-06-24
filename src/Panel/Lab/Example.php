@@ -10,15 +10,14 @@ use Kirby\Http\Response;
 /**
  * One or multiple lab examples with one or multiple tabs
  *
- * @internal
- * @since 4.0.0
- * @codeCoverageIgnore
- *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
+ * @internal
+ * @codeCoverageIgnore
  */
 class Example
 {
@@ -34,7 +33,9 @@ class Example
 		$this->root = $this->parent->root() . '/' . $this->id;
 
 		if ($this->exists() === false) {
-			throw new NotFoundException('The example could not be found');
+			throw new NotFoundException(
+				message: 'The example could not be found'
+			);
 		}
 
 		$this->tabs = $this->collectTabs();
@@ -43,7 +44,7 @@ class Example
 
 	public function collectTab(string|null $tab): string|null
 	{
-		if (empty($this->tabs) === true) {
+		if ($this->tabs === []) {
 			return null;
 		}
 
@@ -171,7 +172,7 @@ class Example
 		return [
 			'image' => [
 				'icon' => $this->parent->icon(),
-				'back' => 'white',
+				'back' => 'light-dark(white, var(--color-gray-800))',
 			],
 			'text' => $this->title(),
 			'link' => $this->url()

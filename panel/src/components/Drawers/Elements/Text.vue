@@ -16,7 +16,7 @@ export const props = {
 		 */
 		empty: {
 			type: String,
-			default: () => window.panel.$t("drawer.text.empty")
+			default: () => window.panel.t("drawer.text.empty")
 		},
 		text: {
 			type: String

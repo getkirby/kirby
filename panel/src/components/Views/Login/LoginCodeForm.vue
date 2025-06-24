@@ -7,7 +7,6 @@
 			:counter="false"
 			:help="$t('login.code.text.' + pending.challenge)"
 			:label="$t('login.code.label.' + mode)"
-			:novalidate="true"
 			:placeholder="$t('login.code.placeholder.' + pending.challenge)"
 			:required="true"
 			:value="code"

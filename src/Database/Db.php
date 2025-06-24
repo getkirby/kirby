@@ -112,7 +112,9 @@ class Db
 			return call_user_func_array([static::$connection, $method], $arguments);
 		}
 
-		throw new InvalidArgumentException('Invalid static Db method: ' . $method);
+		throw new InvalidArgumentException(
+			message: 'Invalid static Db method: ' . $method
+		);
 	}
 }
 

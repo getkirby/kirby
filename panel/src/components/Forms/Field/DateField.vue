@@ -1,17 +1,16 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-date-field">
-		<div
-			ref="body"
-			:data-has-time="Boolean(time)"
-			:data-invalid="!novalidate && isInvalid"
-			class="k-date-field-body"
-		>
+	<k-field
+		v-bind="$props"
+		:class="['k-date-field', $attrs.class]"
+		:input="id"
+		:style="$attrs.style"
+	>
+		<div ref="body" :data-has-time="Boolean(time)" class="k-date-field-body">
 			<!-- Date input -->
 			<k-input
 				ref="dateInput"
 				v-bind="$props"
 				type="date"
-				@invalid="onDateInvalid"
 				@input="onDateInput"
 				@submit="$emit('submit')"
 			>
@@ -123,7 +122,6 @@ export default {
 	emits: ["input", "submit"],
 	data() {
 		return {
-			isInvalid: false,
 			// keep an object of separate ISO values
 			// for date and time parts
 			iso: this.toIso(this.value)
@@ -201,13 +199,6 @@ export default {
 			this.onInput();
 		},
 		/**
-		 * Handle invalid event from date input
-		 * @param {bool} state
-		 */
-		onDateInvalid(state) {
-			this.isInvalid = state;
-		},
-		/**
 		 * Handle input event from time input
 		 * @param {string} value
 		 */
@@ -251,7 +242,6 @@ export default {
 }
 
 @container (min-width: 20rem) {
-	/** TODO: .k-date-field-body:has(.k-time-input) */
 	.k-date-field-body[data-has-time="true"] {
 		grid-template-columns: 1fr minmax(6rem, 9rem);
 	}

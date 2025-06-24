@@ -3,8 +3,6 @@
  *
  * @param {Object|array} value
  * @returns  {Object|array}
- *
- * @deprecated Use `structuredClone` instead
  */
 export function clone(value) {
 	if (value === undefined) {
@@ -12,6 +10,20 @@ export function clone(value) {
 	}
 
 	return structuredClone(value);
+}
+
+/**
+ * Filters the object via a predicate callback
+ * @since 5.0.0
+ *
+ * @param {object} object
+ * @param {function} predicate
+ * @returns {object}
+ */
+export function filter(object, predicate) {
+	return Object.fromEntries(
+		Object.entries(object).filter(([key, value]) => predicate(value, key))
+	);
 }
 
 /**
@@ -104,6 +116,7 @@ export function toLowerKeys(obj) {
 
 export default {
 	clone,
+	filter,
 	isEmpty,
 	isObject,
 	length,

@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Cms\Language;
 use Kirby\Cms\LanguageVariable;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
@@ -49,16 +50,34 @@ $translationDialogFields = [
 		'label'   => I18n::translate('language.variable.key'),
 		'type'    => 'text'
 	],
+	'multiple' => [
+		'label'   => I18n::translate('language.variable.multiple'),
+		'text'    => I18n::translate('language.variable.multiple.text'),
+		'help'    => I18n::translate('language.variable.multiple.help'),
+		'type'    => 'toggle'
+	],
 	'value' => [
 		'buttons' => false,
 		'counter' => false,
 		'label'   => I18n::translate('language.variable.value'),
-		'type'    => 'textarea'
+		'type'    => 'textarea',
+		'when'    => [
+			'multiple' => false
+		]
+	],
+	'entries' => [
+		'field' => ['type' => 'text'],
+		'label' => I18n::translate('language.variable.entries'),
+		'help'  => I18n::translate('language.variable.entries.help'),
+		'type'  => 'entries',
+		'min'   => 1,
+		'when'  => [
+			'multiple' => true
+		],
 	]
 ];
 
 return [
-
 	// create language
 	'language.create' => [
 		'pattern' => 'languages/create',
@@ -184,6 +203,9 @@ return [
 				'props' => [
 					'fields' => $translationDialogFields,
 					'size'   => 'large',
+					'value'  => [
+						'multiple' => false,
+					]
 				],
 			];
 		},
@@ -191,8 +213,13 @@ return [
 			$request  = App::instance()->request();
 			$language = Find::language($languageCode);
 
-			$key   = $request->get('key', '');
-			$value = $request->get('value', '');
+			$key      = $request->get('key', '');
+			$multiple = $request->get('multiple', false);
+
+			$value = match ($multiple) {
+				true    => $request->get('entries', []),
+				default => $request->get('value', '')
+			};
 
 			LanguageVariable::create($key, $value);
 
@@ -209,9 +236,9 @@ return [
 			$variable = Find::language($languageCode)->variable($translationKey, true);
 
 			if ($variable->exists() === false) {
-				throw new NotFoundException([
-					'key' => 'language.variable.notFound'
-				]);
+				throw new NotFoundException(
+					key: 'language.variable.notFound'
+				);
 			}
 
 			return [
@@ -230,48 +257,65 @@ return [
 	'language.translation.update' => [
 		'pattern' => 'languages/(:any)/translations/(:any)/update',
 		'load'    => function (string $languageCode, string $translationKey) use ($translationDialogFields) {
-			$variable = Find::language($languageCode)->variable($translationKey, true);
+			$language = Find::language($languageCode);
+			$variable = $language->variable($translationKey, true);
 
 			if ($variable->exists() === false) {
-				throw new NotFoundException([
-					'key' => 'language.variable.notFound'
-				]);
+				throw new NotFoundException(
+					key: 'language.variable.notFound'
+				);
 			}
 
 			$fields = $translationDialogFields;
-			$fields['key']['disabled'] = true;
-			$fields['value']['autofocus'] = true;
 
-			// shows info text when variable is an array
-			// TODO: 5.0: use entries field instead showing info text
-			$isVariableArray = is_array($variable->value()) === true;
+			// the key field cannot be changed
+			// the multiple field is hidden
+			$fields['key']['disabled']  = true;
+			$fields['multiple']['type'] = 'hidden';
 
+			// check if the variable has multiple values;
+			// ensure to use the default language for this check because
+			// the variable might not exist in the current language but
+			// already be defined in the default language with multiple values
+			$isVariableArray = Language::ensure('default')->variable($translationKey, true)->hasMultipleValues();
+
+			// set the correct value field
+			// when value is string, set value for value field
+			// when value is array, set value for entries field
 			if ($isVariableArray === true) {
-				$fields['value'] = [
-					'label' => I18n::translate('info'),
-					'type'  => 'info',
-					'text'  => 'You are using an array variable for this key. Please modify it in the language file in /site/languages',
+				$fields['entries']['autofocus'] = true;
+				$value                          = [
+					'entries'  => $variable->value(),
+					'key'      => $variable->key(),
+					'multiple' => true
+				];
+			} else {
+				$fields['value']['autofocus'] = true;
+				$value                        = [
+					'key'      => $variable->key(),
+					'multiple' => false,
+					'value'    => $variable->value()
 				];
 			}
 
 			return [
 				'component' => 'k-form-dialog',
 				'props'     => [
-					'cancelButton' => $isVariableArray === false,
-					'fields'       => $fields,
-					'size'         => 'large',
-					'submitButton' => $isVariableArray === false,
-					'value'        => [
-						'key'   => $variable->key(),
-						'value' => $variable->value()
-					]
-				],
+					'fields' => $fields,
+					'size'   => 'large',
+					'value'  => $value
+				]
 			];
 		},
 		'submit' => function (string $languageCode, string $translationKey) {
-			Find::language($languageCode)->variable($translationKey, true)->update(
-				App::instance()->request()->get('value', '')
-			);
+			$request  = App::instance()->request();
+			$multiple = $request->get('multiple', false);
+			$value    = match ($multiple) {
+				true    => $request->get('entries', []),
+				default => $request->get('value', '')
+			};
+
+			Find::language($languageCode)->variable($translationKey, true)->update($value);
 
 			return true;
 		}

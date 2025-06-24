@@ -45,7 +45,7 @@ export default {
 			default: () => {
 				return {
 					icon: "upload",
-					text: window.panel.$t("replace")
+					text: window.panel.t("replace")
 				};
 			}
 		}

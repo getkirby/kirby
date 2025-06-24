@@ -53,7 +53,7 @@ return [
 				];
 			}
 
-			throw new LogicException('The upgrade failed');
+			throw new LogicException(message: 'The upgrade failed');
 			// @codeCoverageIgnoreEnd
 		}
 	],

@@ -68,7 +68,7 @@ class FileCacheTest extends TestCase
 			'root' => $root = static::TMP
 		]);
 
-		chmod($root, 0444);
+		chmod($root, 0o444);
 
 		$this->assertFalse($cache->enabled());
 	}

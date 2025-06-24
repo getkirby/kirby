@@ -9,8 +9,7 @@ use Kirby\Toolkit\Str;
 
 class TestCase extends BaseTestCase
 {
-	protected $app;
-	protected $page = null;
+	protected Page|null $page = null;
 
 	public function setUp(): void
 	{
@@ -86,7 +85,7 @@ class TestCase extends BaseTestCase
 
 		App::destroy();
 
-		$app = new App(array_merge([
+		$app = new App([
 			'hooks' => $hooks,
 			'roots' => ['index' => '/dev/null'],
 			'user'  => 'test@getkirby.com',
@@ -95,8 +94,9 @@ class TestCase extends BaseTestCase
 					'email' => 'test@getkirby.com',
 					'role'  => 'admin'
 				]
-			]
-		], $appProps));
+			],
+			...$appProps
+		]);
 
 		$action->call($this, $app);
 		$this->assertSame(count($hooks), $triggered);

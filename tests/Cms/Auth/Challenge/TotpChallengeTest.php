@@ -14,8 +14,6 @@ class TotpChallengeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth.TotpChallenge';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

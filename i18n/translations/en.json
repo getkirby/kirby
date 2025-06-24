@@ -20,7 +20,9 @@
 	"coordinates": "Coordinates",
 	"copy": "Copy",
 	"copy.all": "Copy all",
-	"copy.success": "{count} copied!",
+	"copy.success": "Copied",
+	"copy.success.multiple": "{count} copied!",
+	"copy.url": "Copy URL",
 	"create": "Create",
 	"custom": "Custom",
 
@@ -90,6 +92,19 @@
 
 	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
 
+	"error.content.lock.delete": "The version is locked and cannot be deleted",
+	"error.content.lock.move": "The source version is locked and cannot be moved",
+	"error.content.lock.publish": "This version is already published",
+	"error.content.lock.replace": "The version is locked and cannot be replaced",
+	"error.content.lock.update": "The version is locked and cannot be updated",
+
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "There's an error on the \"{field}\" field in row {index}",
+
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
 	"error.field.converter.invalid": "Invalid converter \"{converter}\"",
@@ -101,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "A file with the name \"{filename}\" already exists",
 	"error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
 	"error.file.extension.invalid": "Invalid extension: {extension}",
@@ -119,6 +135,7 @@
 	"error.file.name.missing": "The filename must not be empty",
 	"error.file.notFound": "The file \"{filename}\" cannot be found",
 	"error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
 	"error.file.type.forbidden": "You are not allowed to upload {type} files",
 	"error.file.type.invalid": "Invalid file type: {type}",
 	"error.file.undefined": "The file cannot be found",
@@ -162,6 +179,7 @@
 	"error.page.delete": "The page \"{slug}\" cannot be deleted",
 	"error.page.delete.confirm": "Please enter the page title to confirm",
 	"error.page.delete.hasChildren": "The page has subpages and cannot be deleted",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "You are not allowed to delete \"{slug}\"",
 	"error.page.draft.duplicate": "A page draft with the URL appendix \"{slug}\" already exists",
 	"error.page.duplicate": "A page with the URL appendix \"{slug}\" already exists",
@@ -338,6 +356,9 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.entries.empty": "No entries yet",
+
 	"field.files.empty": "No files selected yet",
 	"field.files.empty.single": "No file selected yet",
 
@@ -373,9 +394,17 @@
 	"file.sort": "Change position",
 
 	"files": "Files",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "No files yet",
 
 	"filter": "Filter",
+
+	"form.discard": "Discard changes",
+	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
+	"form.locked": "This content is disabled for you as it is currently edited by another user",
+	"form.unsaved": "The current changes have not yet been saved",
+	"form.preview": "Preview changes",
+	"form.preview.draft": "Preview draft",
 
 	"hide": "Hide",
 	"hour": "Hour",
@@ -420,7 +449,12 @@
 	"language.variables.empty": "No translations yet",
 
 	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.entries": "Values",
+	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Key",
+	"language.variable.multiple": "Countable?",
+	"language.variable.multiple.text": "Use different translation strings",
+	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "The variable could not be found",
 	"language.variable.value": "Value",
 
@@ -452,6 +486,8 @@
 	"license.status.missing.bubble": "Ready to launch your site?",
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
+	"license.status.unknown.info": "The license status is unknown",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Thank you for supporting Kirby",
@@ -463,7 +499,10 @@
 	"loading": "Loading",
 
 	"lock.unsaved": "Unsaved changes",
-	"lock.unsaved.empty": "There are no more unsaved changes",
+	"lock.unsaved.empty": "There are no unsaved changes",
+	"lock.unsaved.files": "Unsaved files",
+	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Unlock",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
@@ -570,6 +609,7 @@
 	"page.status.unlisted.description": "The page is only accessible via URL",
 
 	"pages": "Pages",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "No pages yet",
 	"pages.status.draft": "Drafts",
 	"pages.status.listed": "Published",
@@ -586,6 +626,10 @@
 	"plugins": "Plugins",
 	"prev": "Previous",
 	"preview": "Preview",
+
+	"publish": "Publish",
+	"published": "Published",
+
 	"remove": "Remove",
 	"rename": "Rename",
 	"renew": "Renew",
@@ -605,6 +649,7 @@
 	"role.nobody.title": "Nobody",
 
 	"save": "Save",
+	"saved": "Saved",
 	"search": "Search",
 	"searching": "Searching",
 	"search.min": "Enter {min} characters to search",
@@ -631,7 +676,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -658,6 +702,12 @@
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",
 	"template": "Template",
+
+	"theme": "Theme",
+	"theme.light": "Lights on",
+	"theme.dark": "Lights off",
+	"theme.automatic": "Match system default",
+
 	"title": "Title",
 	"today": "Today",
 
@@ -728,10 +778,13 @@
 	"users": "Users",
 
 	"version": "Version",
+	"version.changes": "Changed version",
+	"version.compare": "Compare versions",
 	"version.current": "Current version",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
+	"view": "View",
 	"view.account": "Your account",
 	"view.installation": "Installation",
 	"view.languages": "Languages",

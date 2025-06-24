@@ -38,7 +38,7 @@ return [
 	],
 	'methods' => [
 		'toNumber' => function ($value): float|null {
-			if ($this->isEmpty($value) === true) {
+			if ($this->isEmptyValue($value) === true) {
 				return null;
 			}
 

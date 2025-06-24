@@ -105,12 +105,6 @@ class FileDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('pages/test/files/test.jpg/changeName');
 
 		$this->assertSame('file.changeName', $dialog['event']);
-		$this->assertSame([
-			'content/move' => [
-				'/pages/test/files/test.jpg',
-				'/pages/test/files/new-test.jpg'
-			]
-		], $dialog['dispatch']);
 		$this->assertSame(200, $dialog['code']);
 		$this->assertSame('new-test', $this->app->page('test')->file('new-test.jpg')->name());
 	}
@@ -154,12 +148,6 @@ class FileDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('site/files/test.jpg/changeName');
 
 		$this->assertSame('file.changeName', $dialog['event']);
-		$this->assertSame([
-			'content/move' => [
-				'/site/files/test.jpg',
-				'/site/files/new-test.jpg'
-			]
-		], $dialog['dispatch']);
 		$this->assertSame(200, $dialog['code']);
 		$this->assertSame('new-test', $this->app->site()->file('new-test.jpg')->name());
 	}
@@ -203,12 +191,6 @@ class FileDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('users/test/files/test.jpg/changeName');
 
 		$this->assertSame('file.changeName', $dialog['event']);
-		$this->assertSame([
-			'content/move' => [
-				'/users/test/files/test.jpg',
-				'/users/test/files/new-test.jpg'
-			]
-		], $dialog['dispatch']);
 		$this->assertSame(200, $dialog['code']);
 		$this->assertSame('new-test', $this->app->user('test')->file('new-test.jpg')->name());
 	}
@@ -460,7 +442,6 @@ class FileDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('pages/test/files/test.jpg/delete');
 
 		$this->assertSame('file.delete', $dialog['event']);
-		$this->assertSame(['content/remove' => ['/pages/test/files/test.jpg']], $dialog['dispatch']);
 		$this->assertSame(200, $dialog['code']);
 		$this->assertFalse($dialog['redirect']);
 		$this->assertCount(0, $this->app->page('test')->files());
@@ -499,7 +480,6 @@ class FileDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('site/files/test.jpg/delete');
 
 		$this->assertSame('file.delete', $dialog['event']);
-		$this->assertSame(['content/remove' => ['/site/files/test.jpg']], $dialog['dispatch']);
 		$this->assertSame(200, $dialog['code']);
 		$this->assertFalse($dialog['redirect']);
 		$this->assertCount(0, $this->app->site()->files());
@@ -538,7 +518,6 @@ class FileDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('users/test/files/test.jpg/delete');
 
 		$this->assertSame('file.delete', $dialog['event']);
-		$this->assertSame(['content/remove' => ['/users/test/files/test.jpg']], $dialog['dispatch']);
 		$this->assertSame(200, $dialog['code']);
 		$this->assertFalse($dialog['redirect']);
 		$this->assertCount(0, $this->app->user('test')->files());

@@ -36,7 +36,7 @@ export default {
 
 <style>
 .k-block-type-markdown-input {
-	--input-color-back: var(--color-light);
+	--input-color-back: var(--panel-color-back);
 	--input-color-border: none;
 	--input-outline-focus: none;
 	--input-padding-multiline: var(--spacing-3);

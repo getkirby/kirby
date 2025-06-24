@@ -7,7 +7,7 @@ use Kirby\TestCase;
 
 class CookieTest extends TestCase
 {
-	protected $cookieKey;
+	protected string $cookieKey;
 
 	public function setUp(): void
 	{

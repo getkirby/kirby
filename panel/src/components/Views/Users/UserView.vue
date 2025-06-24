@@ -1,7 +1,6 @@
 <template>
 	<k-panel-inside
-		:data-has-tabs="tabs.length > 1"
-		:data-id="model.id"
+		:data-id="id"
 		:data-locked="isLocked"
 		:data-template="blueprint"
 		class="k-user-view"
@@ -13,60 +12,53 @@
 		<k-header
 			:editable="canChangeName"
 			class="k-user-view-header"
-			@edit="$dialog(id + '/changeName')"
+			@edit="$dialog(api + '/changeName')"
 		>
-			<span
-				v-if="!model.name || model.name.length === 0"
-				class="k-user-name-placeholder"
-			>
+			<span v-if="!name || name.length === 0" class="k-user-name-placeholder">
 				{{ $t("name") }} …
 			</span>
 			<template v-else>
-				{{ model.name }}
+				{{ name }}
 			</template>
 
 			<template #buttons>
-				<k-button-group>
-					<k-button
-						:disabled="isLocked"
-						:dropdown="true"
-						:title="$t('settings')"
-						icon="cog"
-						size="sm"
-						variant="filled"
-						class="k-user-view-options"
-						@click="$refs.settings.toggle()"
-					/>
-					<k-dropdown-content
-						ref="settings"
-						align-x="end"
-						:options="$dropdown(id)"
-					/>
-					<k-languages-dropdown />
-				</k-button-group>
-
-				<k-form-buttons :lock="lock" />
+				<k-view-buttons :buttons="buttons" />
+				<k-form-controls
+					:editor="editor"
+					:has-diff="hasDiff"
+					:is-locked="isLocked"
+					:modified="modified"
+					@discard="onDiscard"
+					@submit="onSubmit"
+				/>
 			</template>
 		</k-header>
 
 		<k-user-profile
+			:id="id"
+			:api="api"
+			:avatar="avatar"
+			:email="email"
 			:can-change-email="canChangeEmail"
 			:can-change-language="canChangeLanguage"
 			:can-change-name="canChangeName"
 			:can-change-role="canChangeRole"
 			:is-locked="isLocked"
-			:model="model"
-			:permissions="permissions"
+			:language="language"
+			:role="role"
 		/>
 
-		<k-model-tabs :tab="tab.name" :tabs="tabs" />
+		<k-model-tabs :diff="diff" :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"
+			:content="content"
 			:empty="$t('user.blueprint', { blueprint: $esc(blueprint) })"
 			:lock="lock"
-			:parent="id"
+			:parent="api"
 			:tab="tab"
+			@input="onInput"
+			@submit="onSubmit"
 		/>
 	</k-panel-inside>
 </template>
@@ -77,10 +69,15 @@ import ModelView from "../ModelView.vue";
 export default {
 	extends: ModelView,
 	props: {
+		avatar: String,
 		canChangeEmail: Boolean,
 		canChangeLanguage: Boolean,
 		canChangeName: Boolean,
-		canChangeRole: Boolean
+		canChangeRole: Boolean,
+		email: String,
+		language: String,
+		name: String,
+		role: String
 	}
 };
 </script>
@@ -100,7 +97,6 @@ export default {
 .k-user-view .k-user-profile {
 	margin-bottom: var(--spacing-12);
 }
-/** .k-user-view:has(.k-tabs) .k-user-profile */
 .k-user-view[data-has-tabs="true"] .k-user-profile {
 	margin-bottom: 0;
 }

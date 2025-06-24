@@ -41,7 +41,6 @@
 						type: 'hidden'
 					}
 				}"
-				:novalidate="true"
 				:value="value"
 				class="k-totp-dialog-fields"
 				@input="$emit('input', $event)"
@@ -85,7 +84,7 @@ export default {
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
 			default: () => ({
-				text: window.panel.$t("activate"),
+				text: window.panel.t("activate"),
 				icon: "lock",
 				theme: "notice"
 			})

@@ -3,70 +3,20 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Cms\ContentLock;
+use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
-class CustomContentLockIsLocked extends ContentLock
-{
-	public function __construct()
-	{
-		$this->model = new ModelPage(['slug' => 'test']);
-	}
-
-	public function get(): array
-	{
-		return ['email' => 'foo@bar.com'];
-	}
-
-	public function isLocked(): bool
-	{
-		return true;
-	}
-
-	public function isUnlocked(): bool
-	{
-		return false;
-	}
-}
-
-class CustomContentLockIsUnlocked extends CustomContentLockIslocked
-{
-	public function isUnlocked(): bool
-	{
-		return true;
-	}
-}
-
-class ModelSiteNoLocking extends ModelSite
-{
-	public function lock(): ContentLock|null
-	{
-		return null;
-	}
-}
-
-class ModelSiteTestForceLocked extends ModelSite
-{
-	public function lock(): ContentLock|null
-	{
-		return new CustomContentLockIsLocked();
-	}
-}
-
-class ModelSiteTestForceUnlocked extends ModelSite
-{
-	public function lock(): ContentLock|null
-	{
-		return new CustomContentLockIsUnlocked();
-	}
-}
-
 class CustomPanelModel extends Model
 {
+	public function buttons(): array
+	{
+		return [];
+	}
+
 	public function path(): string
 	{
 		return 'custom';
@@ -97,8 +47,6 @@ class ModelSiteWithImageMethod extends ModelSite
 class ModelTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Model';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -133,7 +81,31 @@ class ModelTest extends TestCase
 				'foo' => 'bar'
 			]
 		]);
+
 		$this->assertSame($content, $panel->content());
+	}
+
+	/**
+	 * @covers ::__construct
+	 * @covers ::content
+	 */
+	public function testContentWithChanges()
+	{
+		$panel = new CustomPanelModel(
+			new ModelPage(['slug' => 'test'])
+		);
+
+		$panel->model()->version('latest')->save([
+			'foo' => 'foo',
+		]);
+
+		$panel->model()->version('changes')->save([
+			'foo' => 'foobar',
+		]);
+
+		$this->assertSame([
+			'foo' => 'foobar',
+		], $panel->content());
 	}
 
 	/**
@@ -145,7 +117,7 @@ class ModelTest extends TestCase
 			'options' => [
 				'panel' => [
 					'markdown' => [
-						'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+						'fileDragText' => function (ModelFile $file, string $url) {
 							if ($file->extension() === 'heic') {
 								return sprintf('![](%s)', $file->id());
 							}
@@ -188,7 +160,7 @@ class ModelTest extends TestCase
 			'options' => [
 				'panel' => [
 					'kirbytext' => [
-						'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+						'fileDragText' => function (ModelFile $file, string $url) {
 							if ($file->extension() === 'heic') {
 								return sprintf('(image: %s)', $file->id());
 							}
@@ -480,7 +452,7 @@ class ModelTest extends TestCase
 	{
 		$site  = new ModelSiteWithImageMethod();
 		$panel = new CustomPanelModel($site);
-		$image = $panel->image([ 'back' => '{{ site.panelBack }}']);
+		$image = $panel->image(['back' => '{{ site.panelBack }}']);
 		$this->assertSame('blue', $image['back']);
 	}
 
@@ -494,31 +466,12 @@ class ModelTest extends TestCase
 	}
 
 	/**
-	 * @covers ::lock
+	 * @covers ::model
 	 */
-	public function testLock()
+	public function testModel()
 	{
-		// content locking not supported
-		$site = new ModelSiteNoLocking();
-		$this->assertFalse($site->panel()->lock());
-
-		Dir::make(static::TMP . '/content');
-		$app = $this->app->clone();
-		$app->impersonate('kirby');
-
-		// no lock or unlock
-		$site = new ModelSite();
-		$this->assertSame(['state' => null, 'data' => false], $site->panel()->lock());
-
-		// lock
-		$site = new ModelSiteTestForceLocked();
-		$lock = $site->panel()->lock();
-		$this->assertSame('lock', $lock['state']);
-		$this->assertSame('foo@bar.com', $lock['data']['email']);
-
-		// unlock
-		$site = new ModelSiteTestForceUnlocked();
-		$this->assertSame('unlock', $site->panel()->lock()['state']);
+		$panel  = $this->panel();
+		$this->assertInstanceOf(ModelSite::class, $panel->model());
 	}
 
 	/**
@@ -590,5 +543,31 @@ class ModelTest extends TestCase
 	{
 		$this->assertSame('/panel/custom', $this->panel()->url());
 		$this->assertSame('/custom', $this->panel()->url(true));
+	}
+
+	/**
+	 * @covers ::versions
+	 */
+	public function testVersions()
+	{
+		$panel = $this->panel([]);
+
+		$panel->model()->version('latest')->save($latest = [
+			'foo' => 'bar'
+		]);
+
+		$versions = $panel->versions();
+
+		$this->assertSame($latest, $versions['latest']);
+		$this->assertSame($latest, $versions['changes']);
+
+		$panel->model()->version('changes')->save($changes = [
+			'foo' => 'baz'
+		]);
+
+		$versions = $panel->versions();
+
+		$this->assertSame($latest, $versions['latest']);
+		$this->assertSame($changes, $versions['changes']);
 	}
 }

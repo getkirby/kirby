@@ -1,5 +1,9 @@
 <template>
-	<div :data-disabled="disabled" class="k-range-input">
+	<div
+		:class="['k-range-input', $attrs.class]"
+		:data-disabled="disabled"
+		:style="$attrs.style"
+	>
 		<input
 			ref="range"
 			v-bind="{
@@ -30,12 +34,6 @@
 
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
-
-import {
-	required as validateRequired,
-	minValue as validateMinValue,
-	maxValue as validateMaxValue
-} from "vuelidate/lib/validators";
 
 export const props = {
 	mixins: [InputProps],
@@ -80,8 +78,6 @@ export const props = {
 
 /**
  * @example <k-input :value="range" @input="range = $event" name="range" type="range" />
- *
- * @todo remove vuelidate parts in v5 - until then we keep parrallel validation
  */
 export default {
 	mixins: [Input, props],
@@ -104,21 +100,18 @@ export default {
 		position() {
 			return this.value || this.value === 0
 				? this.value
-				: this.default ?? this.baseline;
+				: (this.default ?? this.baseline);
 		}
 	},
 	watch: {
-		position() {
-			this.onInvalid();
-		},
-		value() {
-			this.validate();
+		value: {
+			handler() {
+				this.validate();
+			},
+			immediate: true
 		}
 	},
 	mounted() {
-		this.onInvalid();
-		this.validate();
-
 		if (this.$props.autofocus) {
 			this.focus();
 		}
@@ -134,9 +127,6 @@ export default {
 			return new Intl.NumberFormat(locale, {
 				minimumFractionDigits: digits
 			}).format(value);
-		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
 		},
 		onInput(value) {
 			this.$emit("input", value);
@@ -158,15 +148,6 @@ export default {
 
 			this.$refs.range?.setCustomValidity(errors.join(", "));
 		}
-	},
-	validations() {
-		return {
-			position: {
-				required: this.required ? validateRequired : true,
-				min: this.min ? validateMinValue(this.min) : true,
-				max: this.max ? validateMaxValue(this.max) : true
-			}
-		};
 	}
 };
 </script>
@@ -174,8 +155,8 @@ export default {
 <style>
 .k-range-input {
 	--range-track-height: 1px;
-	--range-track-back: var(--color-gray-300);
 	--range-tooltip-back: var(--color-black);
+
 	display: flex;
 	align-items: center;
 	border-radius: var(--range-track-height);
@@ -214,7 +195,10 @@ export default {
 }
 
 .k-range-input[data-disabled="true"] {
-	--range-tooltip-back: var(--color-gray-600);
+	--range-tooltip-back: light-dark(
+		var(--color-gray-600),
+		var(--color-gray-850)
+	);
 }
 
 /* Input context */

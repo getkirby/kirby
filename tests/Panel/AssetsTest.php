@@ -8,16 +8,14 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Assets
- */
+#[CoversClass(Assets::class)]
 class AssetsTest extends TestCase
 {
 	public const TMP               = KIRBY_TMP_DIR . '/Panel.Assets';
 	public const VITE_RUNNING_PATH = KIRBY_DIR . '/panel/.vite-running';
 
-	protected App $app;
 	protected bool $hadViteRunning;
 
 	public function setUp(): void
@@ -89,9 +87,6 @@ class AssetsTest extends TestCase
 		touch(static::VITE_RUNNING_PATH);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCss(): void
 	{
 		// default asset setup
@@ -104,9 +99,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('/media/plugins/index.css?0', $css['plugins']);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssInDevMode(): void
 	{
 		$this->setDevMode();
@@ -118,10 +110,6 @@ class AssetsTest extends TestCase
 		$this->assertSame(['plugins' => '/media/plugins/index.css?0'], $css);
 	}
 
-	/**
-	 * @covers ::css
-	 * @covers ::custom
-	 */
 	public function testCssWithCustomFile(): void
 	{
 		touch(static::TMP . '/panel.css');
@@ -156,9 +144,6 @@ class AssetsTest extends TestCase
 		$this->assertSame($url, $assets['custom-2']);
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithCustomFileMissing(): void
 	{
 		$this->app->clone([
@@ -173,9 +158,6 @@ class AssetsTest extends TestCase
 		$this->assertEmpty($assets->custom('panel.css'));
 	}
 
-	/**
-	 * @covers ::css
-	 */
 	public function testCssWithCustomUrl(): void
 	{
 		$this->setDevMode();
@@ -190,10 +172,6 @@ class AssetsTest extends TestCase
 		$this->assertSame(['plugins' => '/media/plugins/index.css?0'], $css);
 	}
 
-	/**
-	 * @covers ::external
-	 * @covers ::custom
-	 */
 	public function testExternalWithCustomCssJs(): void
 	{
 		// custom panel css and js
@@ -217,9 +195,6 @@ class AssetsTest extends TestCase
 		$this->assertTrue(Str::contains($external['js']['custom-0']['src'], 'assets/panel.js'));
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFavicons(): void
 	{
 		// default asset setup
@@ -235,9 +210,6 @@ class AssetsTest extends TestCase
 		$this->assertSame($base . '/favicon-dark.png', $favicons[4]['href']);
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFaviconsInDevMode(): void
 	{
 		$this->setDevMode();
@@ -253,9 +225,6 @@ class AssetsTest extends TestCase
 		$this->assertSame($base . '/favicon-dark.png', $favicons[4]['href']);
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFaviconsWithCustomArraySetup(): void
 	{
 		// array
@@ -287,9 +256,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('/assets/my-favicon.png', $favicons[1]['href']);
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFaviconsWithCustomStringSetup(): void
 	{
 		// array
@@ -311,9 +277,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('/assets/favicon.ico', $favicons[0]['href']);
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFaviconsWithCustomInvalidSetup(): void
 	{
 		// array
@@ -333,9 +296,6 @@ class AssetsTest extends TestCase
 		$assets->favicons();
 	}
 
-	/**
-	 * @covers ::favicons
-	 */
 	public function testFaviconsWithCustomUrl(): void
 	{
 		$this->setDevMode();
@@ -352,89 +312,23 @@ class AssetsTest extends TestCase
 		$this->assertSame($base . '/favicon.svg', $favicons[2]['href']);
 	}
 
-	/**
-	 * @todo Remove backward compatibility part test in v5
-	 */
-	public function testFaviconsWithRelIndex(): void
-	{
-		// array
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'favicon' => [
-						'shortcut icon' => [
-							'type' => 'image/svg+xml',
-							'url'  => 'assets/my-favicon.svg',
-						],
-						'alternate icon' => [
-							'type' => 'image/png',
-							'url'  => 'assets/my-favicon.png',
-						]
-					]
-				]
-			]
-		]);
-
-		// default asset setup
-		$assets  = new Assets();
-		$favicons = $assets->favicons();
-
-		// icons
-		$this->assertSame('shortcut icon', $favicons[0]['rel']);
-		$this->assertSame('/assets/my-favicon.svg', $favicons[0]['href']);
-		$this->assertSame('alternate icon', $favicons[1]['rel']);
-		$this->assertSame('/assets/my-favicon.png', $favicons[1]['href']);
-	}
-
-	/**
-	 * @todo Remove backward compatibility part test in v5
-	 */
-	public function testFaviconsWithUrlOption(): void
-	{
-		// array
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'favicon' => [
-						[
-							'rel'  => 'shortcut icon',
-							'type' => 'image/svg+xml',
-							'url'  => 'assets/my-favicon.svg',
-						],
-						[
-							'rel'  => 'alternate icon',
-							'type' => 'image/png',
-							'url'  => 'assets/my-favicon.png',
-						]
-					]
-				]
-			]
-		]);
-
-		// default asset setup
-		$assets  = new Assets();
-		$favicons = $assets->favicons();
-
-		// icons
-		$this->assertSame('/assets/my-favicon.svg', $favicons[0]['href']);
-		$this->assertSame('/assets/my-favicon.png', $favicons[1]['href']);
-	}
-
-	/**
-	 * @covers ::icons
-	 */
 	public function testIcons(): void
 	{
 		$assets = new Assets();
 		$icons = $assets->icons();
 
 		$this->assertNotNull($icons);
-		$this->assertTrue(strpos($icons, '<svg', 0) !== false);
+		$this->assertTrue(str_contains($icons, '<svg'));
 	}
 
-	/**
-	 * @covers ::js
-	 */
+	public function testImportMaps(): void
+	{
+		$assets = new Assets();
+		$importMaps = $assets->importMaps();
+
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm.browser.min.js', $importMaps['vue']);
+	}
+
 	public function testJs(): void
 	{
 		// default asset setup
@@ -443,12 +337,11 @@ class AssetsTest extends TestCase
 		$js     = $assets->js();
 
 		// js
-		$this->assertSame($base . '/js/vue.min.js', $js['vue']['src']);
 		$this->assertSame($base . '/js/vendor.min.js', $js['vendor']['src']);
 		$this->assertSame('module', $js['vendor']['type']);
 
-		$this->assertSame($base . '/js/plugins.js', $js['pluginloader']['src']);
-		$this->assertSame('module', $js['pluginloader']['type']);
+		$this->assertSame($base . '/js/plugins.js', $js['plugin-registry']['src']);
+		$this->assertSame('module', $js['plugin-registry']['type']);
 
 		$this->assertSame('/media/plugins/index.js?0', $js['plugins']['src']);
 		$this->assertTrue($js['plugins']['defer']);
@@ -458,9 +351,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('module', $js['index']['type']);
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsInDevMode(): void
 	{
 		$this->setDevMode();
@@ -470,17 +360,13 @@ class AssetsTest extends TestCase
 		$js     = $assets->js();
 
 		$this->assertSame([
-			'vue' => $base . '/node_modules/vue/dist/vue.js',
-			'pluginloader' => $base . '/js/plugins.js',
-			'plugins' => '/media/plugins/index.js?0',
-			'index' => $base . '/src/index.js',
-			'vite' => $base . '/@vite/client'
+			'plugin-registry' => $base . '/js/plugins.js',
+			'plugins'         => '/media/plugins/index.js?0',
+			'index'           => $base . '/src/index.js',
+			'vite'            => $base . '/@vite/client'
 		], array_map(fn ($js) => $js['src'], $js));
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsWithCustomFile(): void
 	{
 		touch(static::TMP . '/panel.js');
@@ -516,9 +402,6 @@ class AssetsTest extends TestCase
 		$this->assertSame($url, $assets['custom-2']);
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsWithCustomFileMissing(): void
 	{
 		$this->app->clone([
@@ -533,9 +416,6 @@ class AssetsTest extends TestCase
 		$this->assertEmpty($assets->custom('panel.js'));
 	}
 
-	/**
-	 * @covers ::js
-	 */
 	public function testJsWithCustomUrl(): void
 	{
 		$this->setDevMode();
@@ -548,17 +428,13 @@ class AssetsTest extends TestCase
 
 		// js
 		$this->assertSame([
-			'vue' => $base . '/node_modules/vue/dist/vue.js',
-			'pluginloader' => $base . '/js/plugins.js',
-			'plugins' => '/media/plugins/index.js?0',
-			'index' => $base . '/src/index.js',
-			'vite' => $base . '/@vite/client'
+			'plugin-registry' => $base . '/js/plugins.js',
+			'plugins'         => '/media/plugins/index.js?0',
+			'index'           => $base . '/src/index.js',
+			'vite'            => $base . '/@vite/client'
 		], array_map(fn ($js) => $js['src'], $js));
 	}
 
-	/**
-	 * @covers ::link
-	 */
 	public function testLink(): void
 	{
 		$assets = new Assets();
@@ -577,15 +453,17 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$vue    = $assets->vue();
 
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.min.js', $vue);
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm.browser.min.js', $vue);
 	}
 
 	public function testVueInDevMode()
 	{
-		$assets = new Assets();
-		$vue    = $assets->vue(production: false);
+		$this->setDevMode();
 
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/node_modules/vue/dist/vue.js', $vue);
+		$assets = new Assets();
+		$vue    = $assets->vue();
+
+		$this->assertSame('http://sandbox.test:3000/node_modules/vue/dist/vue.esm.browser.js', $vue);
 	}
 
 	public function testVueWithDisabledTemplateCompiler()
@@ -603,24 +481,6 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$vue    = $assets->vue();
 
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.runtime.min.js', $vue);
-	}
-
-	public function testVueWithDisabledTemplateCompilerInDevMode()
-	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'vue' => [
-						'compiler' => false
-					]
-				]
-			]
-		]);
-
-		$assets = new Assets();
-		$vue    = $assets->vue(production: false);
-
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/node_modules/vue/dist/vue.runtime.js', $vue);
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.runtime.esm.min.js', $vue);
 	}
 }

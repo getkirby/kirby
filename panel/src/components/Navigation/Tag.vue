@@ -1,9 +1,9 @@
 <template>
-	<button
-		ref="button"
+	<component
+		:is="element ?? (link ? 'k-link' : 'button')"
 		:aria-disabled="disabled"
-		:data-has-image="Boolean(image)"
-		:data-has-toggle="isRemovable"
+		:data-theme="theme"
+		:to="link"
 		class="k-tag"
 		type="button"
 		@keydown.delete.prevent="remove"
@@ -32,16 +32,11 @@
 			icon="cancel-small"
 			@click.native.stop="remove"
 		/>
-	</button>
+	</component>
 </template>
 
 <script>
-/**
- * A simple tag button with optional image/icon and remove button
- *
- * @example <k-tag>Design</k-tag>
- */
-export default {
+export const props = {
 	props: {
 		/**
 		 * Dims the tag and hides the remove button
@@ -55,15 +50,42 @@ export default {
 			type: Boolean
 		},
 		/**
+		 * Enables the remove button
+		 */
+		removable: Boolean,
+		/**
+		 * @values "dark"|"light"
+		 * @since 5.0.0
+		 */
+		theme: {
+			type: String,
+			default: "dark"
+		}
+	}
+};
+
+/**
+ * A simple tag button with optional image/icon and remove button
+ *
+ * @example <k-tag>Design</k-tag>
+ */
+export default {
+	mixins: [props],
+	props: {
+		/**
+		 * HTML element to use
+		 */
+		element: String,
+		/**
 		 * See `k-image-frame` or `k-icon-frame` for available options
 		 */
 		image: {
 			type: Object
 		},
 		/**
-		 * Enables the remove button
+		 * Sets a link on the tag. Link can be absolute or relative.
 		 */
-		removable: Boolean,
+		link: String,
 		/**
 		 * Text to display in the bubble
 		 */
@@ -86,7 +108,7 @@ export default {
 			}
 		},
 		focus() {
-			this.$refs.button.focus();
+			this.$el.focus();
 		}
 	}
 };
@@ -94,13 +116,21 @@ export default {
 
 <style>
 :root {
-	--tag-color-back: var(--color-black);
+	--tag-color-back: var(--color-gray-950);
 	--tag-color-text: var(--color-white);
 	--tag-color-toggle: currentColor;
 	--tag-color-disabled-back: var(--color-gray-600);
 	--tag-color-disabled-text: var(--tag-color-text);
 	--tag-height: var(--height-xs);
 	--tag-rounded: var(--rounded-sm);
+	--tag-text-size: var(--text-sm);
+}
+
+.k-tag[data-theme="light"] {
+	--tag-color-back: var(--panel-color-back);
+	--tag-color-text: var(--color-text);
+	--tag-color-disabled-back: var(--color-gray-200);
+	--tag-color-disabled-text: var(--color-gray-600);
 }
 
 .k-tag {
@@ -110,15 +140,17 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	font-size: var(--text-sm);
+	font-size: var(--tag-text-size);
 	line-height: 1;
 	color: var(--tag-color-text);
 	background-color: var(--tag-color-back);
 	border-radius: var(--tag-rounded);
-	cursor: pointer;
 	user-select: none;
 }
-.k-tag:not([aria-disabled]):focus {
+button.k-tag:not([aria-disabled="true"]) {
+	cursor: pointer;
+}
+.k-tag:not([aria-disabled="true"]):focus {
 	outline: var(--outline);
 }
 .k-tag-image {
@@ -138,8 +170,7 @@ export default {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
-/** TODO: .k-tag:has(.k-tag-toggle) .k-tag-text  */
-.k-tag[data-has-toggle="true"] .k-tag-text {
+.k-tag:has(.k-tag-toggle) .k-tag-text {
 	padding-inline-end: 0;
 }
 .k-tag-toggle {
@@ -153,7 +184,7 @@ export default {
 	filter: brightness(100%);
 }
 
-.k-tag:where([aria-disabled]) {
+.k-tag:where([aria-disabled="true"]) {
 	background-color: var(--tag-color-disabled-back);
 	color: var(--tag-color-disabled-text);
 	cursor: not-allowed;

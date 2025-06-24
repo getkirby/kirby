@@ -2,9 +2,10 @@
 	<component
 		:is="component"
 		v-bind="attrs"
+		:class="['k-button', $attrs.class]"
 		:data-has-icon="Boolean(icon)"
 		:data-has-text="Boolean(text || $slots.default)"
-		class="k-button"
+		:style="$attrs.style"
 		@click="onClick"
 	>
 		<span v-if="icon" class="k-button-icon">
@@ -21,6 +22,13 @@
 		<span v-if="dropdown && (text || $slots.default)" class="k-button-arrow">
 			<k-icon type="angle-dropdown" />
 		</span>
+		<span
+			v-if="badge"
+			class="k-button-badge"
+			:data-theme="badge.theme ?? theme"
+		>
+			{{ badge.text }}
+		</span>
 	</component>
 </template>
 
@@ -34,6 +42,13 @@ export const props = {
 		 * Sets autofocus on button (when supported by element)
 		 */
 		autofocus: Boolean,
+		/**
+		 * Display a (colored) badge on the top-right of the button
+		 * @value { text, theme }
+		 * @example { text: 5, theme: "positive" }
+		 * @since 5.0.0
+		 */
+		badge: Object,
 		/**
 		 * Pass instead of a link URL to be triggered on clicking the button
 		 */
@@ -104,10 +119,6 @@ export const props = {
 		 */
 		theme: String,
 		/**
-		 * @deprecated 4.0.0 Use the `title` prop instead
-		 */
-		tooltip: String,
-		/**
 		 * The type attribute sets the button type like in HTML.
 		 * @values "button", "submit", "reset"
 		 */
@@ -146,8 +157,7 @@ export default {
 				"data-variant": this.variant,
 				id: this.id,
 				tabindex: this.tabindex,
-				/** @todo button.prop.tooltip.deprecated - adapt @ 5.0 */
-				title: this.title ?? this.tooltip
+				title: this.title
 			};
 
 			if (this.component === "k-link") {
@@ -182,13 +192,6 @@ export default {
 			}
 
 			return "button";
-		}
-	},
-	mounted() {
-		if (this.tooltip) {
-			window.panel.deprecated(
-				"<k-button>: the `tooltip` prop will be removed in a future version. Use the `title` prop instead."
-			);
 		}
 	},
 	methods: {
@@ -237,6 +240,10 @@ export default {
 	--button-rounded: var(--spacing-1);
 	--button-text-display: block;
 	--button-icon-display: block;
+	--button-filled-color-back: light-dark(
+		var(--color-gray-300),
+		var(--color-gray-950)
+	);
 }
 
 .k-button {
@@ -254,7 +261,6 @@ export default {
 	width: var(--button-width);
 	color: var(--button-color-text);
 	font-variant-numeric: tabular-nums;
-	overflow-x: clip;
 	text-align: var(--button-align);
 	flex-shrink: 0;
 }
@@ -286,12 +292,12 @@ export default {
 	--button-color-icon: var(--color-text);
 	--button-color-text: var(--color-text-dimmed);
 }
-.k-button:where([data-variant="dimmed"]):not([aria-disabled]):is(
+.k-button:where([data-variant="dimmed"]):not([aria-disabled="true"]):is(
 		:hover,
-		[aria-current]
+		[aria-current="true"]
 	)
 	.k-button-text {
-	filter: brightness(75%);
+	filter: light-dark(brightness(75%), brightness(125%));
 }
 .k-button:where([data-variant="dimmed"][data-theme]) {
 	--button-color-icon: var(--theme-color-icon);
@@ -303,25 +309,24 @@ export default {
 
 /** Filled Buttons **/
 .k-button:where([data-variant="filled"]) {
-	--button-color-back: var(--color-gray-300);
+	--button-color-back: var(--button-filled-color-back);
 }
-.k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
+.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
 	filter: brightness(97%);
 }
+
 .k-button:where([data-variant="filled"][data-theme]) {
-	--button-color-icon: var(--theme-color-700);
+	--button-color-icon: var(--theme-color-icon-highlight);
 	--button-color-back: var(--theme-color-back);
+	--button-color-text: var(--theme-color-text-highlight);
 }
 .k-button:where([data-theme$="-icon"][data-variant="filled"]) {
-	--button-color-icon: hsl(
-		var(--theme-color-hs),
-		57%
-	); /* slightly improve the contrast */
-	--button-color-back: var(--color-gray-300);
+	--button-color-icon: var(--theme-color-icon);
+	--button-color-back: var(--button-filled-color-back);
+	--button-color-text: currentColor;
 }
 
 /** Icon Buttons **/
-/** TODO: .k-button:not(:has(.k-button-text)) */
 .k-button:not([data-has-text="true"]) {
 	--button-padding: 0;
 	aspect-ratio: 1/1;
@@ -329,7 +334,6 @@ export default {
 
 /** Responsive buttons **/
 @container (max-width: 30rem) {
-	/** TODO: .k-button:is([data-responsive]:has(.k-button-icon)) */
 	.k-button[data-responsive="true"][data-has-icon="true"] {
 		--button-padding: 0;
 		aspect-ratio: 1/1;
@@ -338,8 +342,7 @@ export default {
 	.k-button[data-responsive="text"][data-has-text="true"] {
 		--button-icon-display: none;
 	}
-	/** TODO: .k-button:is([data-responsive]:has(.k-button-icon)) .k-button-arrow */
-	.k-button[data-responsive][data-has-icon="true"] .k-button-arrow {
+	.k-button[data-responsive="true"][data-has-icon="true"] .k-button-arrow {
 		display: none;
 	}
 }
@@ -369,11 +372,32 @@ export default {
 	margin-inline-end: -0.125rem;
 }
 
+/** Badge **/
+.k-button-badge {
+	position: absolute;
+	top: 0;
+	inset-inline-end: 0;
+	transform: translate(40%, -20%);
+	min-width: 1em;
+	min-height: 1em;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.5;
+	padding: 0 var(--spacing-1);
+	border-radius: 1em;
+	text-align: center;
+	font-size: 0.6rem;
+	box-shadow: var(--shadow-md);
+	background: var(--theme-color-back);
+	border: 1px solid light-dark(var(--theme-color-500), var(--color-black));
+	color: var(--theme-color-text-highlight);
+	z-index: 1;
+}
+
 /** Disabled button **/
-.k-button:where([aria-disabled]) {
+.k-button:where([aria-disabled="true"]) {
 	cursor: not-allowed;
 }
-.k-button:where([aria-disabled]) > * {
+.k-button:where([aria-disabled="true"]) > * {
 	opacity: var(--opacity-disabled);
 }
 </style>

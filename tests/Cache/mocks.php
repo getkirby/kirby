@@ -20,7 +20,7 @@ function time(): int
 
 class TestCache extends Cache
 {
-	public $store = [];
+	public array $store = [];
 
 	public function set(string $key, $value, int $minutes = 0, int|null $created = null): bool
 	{

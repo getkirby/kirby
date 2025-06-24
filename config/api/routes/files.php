@@ -47,7 +47,7 @@ return [
 			// move_uploaded_file() not working with unit test
 			// @codeCoverageIgnoreStart
 			return $this->upload(function ($source, $filename) use ($path) {
-				// move the source file from the temp dir
+				// move the source file to the content folder
 				return $this->parent($path)->createFile([
 					'content' => [
 						'sort' => $this->requestBody('sort')

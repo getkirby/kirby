@@ -1,5 +1,5 @@
 <template>
-	<span :data-invalid="!valid" class="k-counter">
+	<span :data-invalid="!valid" :data-theme="valid ? 'positive' : 'negative'" class="k-counter">
 		<span>{{ count }}</span>
 
 		<span v-if="min || max" class="k-counter-rules">
@@ -53,13 +53,13 @@ export default {
 <style>
 .k-counter {
 	font-size: var(--text-xs);
-	color: var(--color-gray-900);
+	color: var(--color-text);
 }
-.k-counter[data-invalid="true"] {
-	color: var(--color-red-700);
+.k-counter[data-theme] {
+	color: var(--theme-color-text);
 }
 .k-counter-rules {
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 	padding-inline-start: 0.5rem;
 }
 </style>

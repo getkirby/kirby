@@ -64,7 +64,9 @@ class Locale
 		$normalizedCategory = static::normalizeConstant($category);
 
 		if (is_int($normalizedCategory) !== true) {
-			throw new InvalidArgumentException('Invalid locale category "' . $category . '"');
+			throw new InvalidArgumentException(
+				message: 'Invalid locale category "' . $category . '"'
+			);
 		}
 
 		if ($normalizedCategory !== LC_ALL) {
@@ -72,7 +74,9 @@ class Locale
 			$locale = setlocale($normalizedCategory, 0);
 
 			if (is_string($locale) !== true) {
-				throw new Exception('Could not determine locale for category "' . $category . '"');
+				throw new Exception(
+					message: 'Could not determine locale for category "' . $category . '"'
+				);
 			}
 
 			return $locale;
@@ -107,6 +111,7 @@ class Locale
 		if (is_array($locale) === true) {
 			// replace string constant keys with the constant values
 			$convertedLocale = [];
+
 			foreach ($locale as $key => $value) {
 				$convertedLocale[static::normalizeConstant($key)] = $value;
 			}
@@ -118,7 +123,9 @@ class Locale
 			return [LC_ALL => $locale];
 		}
 
-		throw new InvalidArgumentException('Locale must be string or array');
+		throw new InvalidArgumentException(
+			message: 'Locale must be string or array'
+		);
 	}
 
 	/**
@@ -147,8 +154,9 @@ class Locale
 	 * Tries to convert an `LC_*` constant name
 	 * to its constant value
 	 */
-	protected static function normalizeConstant(int|string $constant): int|string
-	{
+	protected static function normalizeConstant(
+		int|string $constant
+	): int|string {
 		if (
 			is_string($constant) === true &&
 			Str::startsWith($constant, 'LC_') === true
@@ -169,11 +177,13 @@ class Locale
 	protected static function supportedConstants(bool $withAll = false): array
 	{
 		$names = static::LOCALE_CONSTANTS;
+
 		if ($withAll === true) {
 			array_unshift($names, 'LC_ALL');
 		}
 
 		$constants = [];
+
 		foreach ($names as $name) {
 			if (defined($name) === true) {
 				$constants[constant($name)] = $name;

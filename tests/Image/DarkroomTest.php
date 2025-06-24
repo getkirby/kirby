@@ -2,6 +2,7 @@
 
 namespace Kirby\Image;
 
+use Exception;
 use Kirby\TestCase;
 
 class DarkroomTest extends TestCase
@@ -28,10 +29,10 @@ class DarkroomTest extends TestCase
 
 	public function testFactoryWithInvalidType()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid Darkroom type');
 
-		$instance = Darkroom::factory('does-not-exist');
+		Darkroom::factory('does-not-exist');
 	}
 
 	public function testCropWithoutPosition()
@@ -81,7 +82,6 @@ class DarkroomTest extends TestCase
 		$darkroom = new Darkroom();
 		$options  = $darkroom->preprocess('/dev/null');
 
-		$this->assertTrue($options['autoOrient']);
 		$this->assertFalse($options['crop']);
 		$this->assertFalse($options['blur']);
 		$this->assertFalse($options['grayscale']);

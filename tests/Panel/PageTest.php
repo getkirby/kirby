@@ -5,15 +5,20 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
+use Kirby\Cms\User as ModelUser;
+use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
-class ModelPageTestForceLocked extends ModelPage
+class PageForceLocked extends ModelPage
 {
-	public function isLocked(): bool
+	public function lock(): Lock
 	{
-		return true;
+		return new Lock(
+			user: new ModelUser(['email' => 'test@getkirby.com']),
+			modified: time()
+		);
 	}
 }
 
@@ -23,8 +28,6 @@ class ModelPageTestForceLocked extends ModelPage
 class PageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Page';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -40,6 +43,12 @@ class PageTest extends TestCase
 	public function tearDown(): void
 	{
 		Dir::remove(static::TMP);
+	}
+
+	protected function panel(array $props = [])
+	{
+		$page = new ModelPage(['slug' => 'test', ...$props]);
+		return new Page($page);
 	}
 
 	/**
@@ -86,6 +95,20 @@ class PageTest extends TestCase
 				'link'  => '/pages/a+b+c'
 			]
 		], $page->breadcrumb());
+	}
+
+	/**
+	 * @covers ::buttons
+	 */
+	public function testButtons()
+	{
+		$this->assertSame([
+			'k-open-view-button',
+			'k-preview-view-button',
+			'k-settings-view-button',
+			'k-languages-view-button',
+			'k-status-view-button',
+		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	/**
@@ -159,7 +182,7 @@ class PageTest extends TestCase
 				'panel' => [
 					'kirbytext' => false,
 					'markdown' => [
-						'pageDragText' => function (\Kirby\Cms\Page $page) {
+						'pageDragText' => function (ModelPage $page) {
 							return sprintf('Links sind toll: %s', $page->url());
 						},
 					]
@@ -190,7 +213,7 @@ class PageTest extends TestCase
 			'options' => [
 				'panel' => [
 					'kirbytext' => [
-						'pageDragText' => function (\Kirby\Cms\Page $page) {
+						'pageDragText' => function (ModelPage $page) {
 							return sprintf('Links sind toll: %s', $page->url());
 						},
 					]
@@ -384,7 +407,7 @@ class PageTest extends TestCase
 	 */
 	public function testOptionsWithLockedPage()
 	{
-		$page = new ModelPageTestForceLocked([
+		$page = new PageForceLocked([
 			'slug' => 'test',
 		]);
 
@@ -429,7 +452,6 @@ class PageTest extends TestCase
 			'update'         => false,
 		];
 
-		$panel = new Page($page);
 		$this->assertSame($expected, $panel->options(['preview']));
 	}
 
@@ -509,7 +531,6 @@ class PageTest extends TestCase
 		$props = $panel->props();
 
 		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('content', $props['model']);
 		$this->assertArrayHasKey('id', $props['model']);
 		$this->assertArrayHasKey('parent', $props['model']);
 		$this->assertArrayHasKey('previewUrl', $props['model']);
@@ -522,13 +543,10 @@ class PageTest extends TestCase
 		$this->assertArrayHasKey('permissions', $props);
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertArrayHasKey('tabs', $props);
+		$this->assertArrayHasKey('versions', $props);
 
 		$this->assertNull($props['next']());
 		$this->assertNull($props['prev']());
-		$this->assertSame([
-			'label' => 'Unlisted',
-			'text'  => 'The page is only accessible via URL'
-		], $props['status']());
 	}
 
 	/**
@@ -641,48 +659,6 @@ class PageTest extends TestCase
 		$this->assertSame('/pages/baz?tab=test', $prevNext['next']()['link']);
 
 		$_GET = [];
-	}
-
-	/**
-	 * @covers ::props
-	 */
-	public function testPropsStatus()
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'num'   => 0
-		]);
-
-		$props = (new Page($page))->props();
-		$this->assertSame([
-			'label' => 'Public',
-			'text'  => 'The page is public for anyone'
-		], $props['status']());
-
-
-		$app = $this->app->clone([
-			'blueprints' => [
-				'pages/note' => [
-					'status' => [
-						'unlisted' => 'Foo',
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'template' => 'note'
-					]
-				]
-			]
-		]);
-
-		$props = (new Page($app->page('test')))->props();
-		$this->assertSame([
-			'label' => 'Foo',
-			'text'  => null
-		], $props['status']());
 	}
 
 	/**

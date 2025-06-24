@@ -46,6 +46,6 @@ export default {
 	--range-track-height: var(--range-thumb-size);
 
 	color: black;
-	background: var(--color-white) var(--pattern-light);
+	background: white var(--pattern-light);
 }
 </style>

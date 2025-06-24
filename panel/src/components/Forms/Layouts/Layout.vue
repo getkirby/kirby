@@ -61,7 +61,7 @@ export const props = {
 };
 
 /**
- * @internal
+ * @unstable
  */
 export default {
 	mixins: [props],
@@ -182,17 +182,15 @@ export default {
 .k-layout {
 	--layout-border-color: var(--color-gray-300);
 	--layout-toolbar-width: 2rem;
-
 	position: relative;
 	padding-inline-end: var(--layout-toolbar-width);
-	background: #fff;
 	box-shadow: var(--shadow);
 }
 [data-disabled="true"] .k-layout {
 	padding-inline-end: 0;
 }
 .k-layout:not(:last-of-type) {
-	margin-bottom: 1px;
+	margin-bottom: var(--spacing-2);
 }
 .k-layout:focus {
 	outline: 0;
@@ -209,12 +207,13 @@ export default {
 	justify-content: space-between;
 	padding-bottom: var(--spacing-2);
 	font-size: var(--text-sm);
-	background: var(--color-gray-100);
-	border-inline-start: 1px solid var(--color-light);
+	background: light-dark(var(--color-gray-100), var(--color-gray-850));
+	border-inline-start: 1px solid var(--panel-color-back);
 	color: var(--color-gray-500);
+	border-radius: var(--rounded);
 }
 .k-layout-toolbar:hover {
-	color: var(--color-black);
+	color: light-dark(var(--color-black), var(--color-white));
 }
 .k-layout-toolbar-button {
 	width: var(--layout-toolbar-width);
@@ -224,8 +223,7 @@ export default {
 /** Columns **/
 .k-layout-columns.k-grid {
 	grid-gap: 1px;
-	background: var(--layout-border-color);
-	background: var(--color-gray-300);
+	background: var(--panel-color-back);
 }
 .k-layout:not(:first-child) .k-layout-columns.k-grid {
 	border-top: 0;

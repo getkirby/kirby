@@ -34,13 +34,12 @@ class MemCached extends Cache
 	 */
 	public function __construct(array $options = [])
 	{
-		$defaults = [
+		parent::__construct([
 			'host'    => 'localhost',
 			'port'    => 11211,
 			'prefix'  => null,
-		];
-
-		parent::__construct(array_merge($defaults, $options));
+			...$options
+		]);
 
 		$this->connection = new MemcachedExt();
 		$this->enabled = $this->connection->addServer(
@@ -62,10 +61,10 @@ class MemCached extends Cache
 	 * Writes an item to the cache for a given number of minutes and
 	 * returns whether the operation was successful
 	 *
-	 * <code>
-	 *   // put an item in the cache for 15 minutes
-	 *   $cache->set('value', 'my value', 15);
-	 * </code>
+	 * ```php
+	 * // put an item in the cache for 15 minutes
+	 * $cache->set('value', 'my value', 15);
+	 * ```
 	 */
 	public function set(string $key, $value, int $minutes = 0): bool
 	{

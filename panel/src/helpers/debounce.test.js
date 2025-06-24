@@ -53,4 +53,27 @@ describe.concurrent("$helper.debounce()", () => {
 		vi.advanceTimersByTime(500);
 		expect(callback).toHaveBeenCalled();
 	});
+
+	it("should call the function at the start when leading", () => {
+		const callback = vi.fn();
+		const debounced = debounce(callback, 1000, {
+			leading: true,
+			trailing: true
+		});
+
+		debounced();
+		expect(callback).toHaveBeenCalledTimes(1);
+
+		vi.advanceTimersByTime(500);
+		expect(callback).toHaveBeenCalledTimes(1);
+
+		debounced();
+		expect(callback).toHaveBeenCalledTimes(1);
+
+		vi.advanceTimersByTime(500);
+		expect(callback).toHaveBeenCalledTimes(1);
+
+		vi.advanceTimersByTime(500);
+		expect(callback).toHaveBeenCalledTimes(2);
+	});
 });

@@ -14,13 +14,13 @@ class ConfigTest extends TestCase
 		Config::$data = [];
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$this->assertSame('testvalue', Config::get('testvar'));
 		$this->assertSame('defaultvalue', Config::get('nonexistentvar', 'defaultvalue'));
 	}
 
-	public function testSet()
+	public function testSet(): void
 	{
 		Config::set('anothervar', 'anothervalue');
 		Config::set('testvar', 'overwrittenvalue');

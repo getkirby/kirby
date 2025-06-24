@@ -14,7 +14,7 @@ class TestCase extends BaseTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	protected static $type;
+	protected static string $type;
 
 	public function setUp(): void
 	{
@@ -36,7 +36,6 @@ class TestCase extends BaseTestCase
 	 *
 	 * @param string $name Fixture name including file extension
 	 * @param bool $tmp If true, the fixture will be copied to a temporary location
-	 * @return string
 	 */
 	protected function fixture(string $name, bool $tmp = false): string
 	{
@@ -57,7 +56,6 @@ class TestCase extends BaseTestCase
 	 *
 	 * @param string $directory `'allowed'`, `'disallowed'` or `'invalid'`
 	 * @param string $extension File extension to filter by
-	 * @return array
 	 */
 	protected static function fixtureList(
 		string $directory,

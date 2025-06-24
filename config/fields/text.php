@@ -10,11 +10,14 @@ return [
 		 * The field value will be converted with the selected converter before the value gets saved. Available converters: `lower`, `upper`, `ucfirst`, `slug`
 		 */
 		'converter' => function ($value = null) {
-			if ($value !== null && array_key_exists($value, $this->converters()) === false) {
-				throw new InvalidArgumentException([
-					'key'  => 'field.converter.invalid',
-					'data' => ['converter' => $value]
-				]);
+			if (
+				$value !== null &&
+				array_key_exists($value, $this->converters()) === false
+			) {
+				throw new InvalidArgumentException(
+					key: 'field.converter.invalid',
+					data: ['converter' => $value]
+				);
 			}
 
 			return $value;

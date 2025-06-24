@@ -285,7 +285,11 @@ export default class Editor extends Emitter {
 
 		// Only emit an update if the doc has changed and
 		// an update has not been actively prevented
-		if (transaction.docChanged || !transaction.getMeta("preventUpdate")) {
+		if (
+			transaction.docChanged &&
+			!transaction.getMeta("preventUpdate") &&
+			transaction.steps.length > 0
+		) {
 			this.emit("update", payload);
 		}
 
@@ -396,7 +400,7 @@ export default class Editor extends Emitter {
 		// give extensions access to our view
 		this.extensions.view = this.view;
 
-		this.setContent(this.options.content, true);
+		this.setContent(this.options.content);
 	}
 
 	insertText(text, selected = false) {
@@ -412,16 +416,6 @@ export default class Editor extends Emitter {
 		}
 	}
 
-	isEditable() {
-		return this.options.editable;
-	}
-
-	isEmpty() {
-		if (this.state) {
-			return this.state.doc.textContent.length === 0;
-		}
-	}
-
 	get isActive() {
 		return Object.entries({
 			...this.activeMarks,
@@ -433,6 +427,16 @@ export default class Editor extends Emitter {
 			}),
 			{}
 		);
+	}
+
+	isEditable() {
+		return this.options.editable;
+	}
+
+	isEmpty() {
+		if (this.state) {
+			return this.state.doc.textContent.length === 0;
+		}
 	}
 
 	removeMark(mark) {

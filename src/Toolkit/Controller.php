@@ -20,8 +20,9 @@ use ReflectionFunction;
  */
 class Controller
 {
-	public function __construct(protected Closure $function)
-	{
+	public function __construct(
+		protected Closure $function
+	) {
 	}
 
 	public function arguments(array $data = []): array

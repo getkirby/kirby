@@ -5,11 +5,12 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use TypeError;
 
 class UriTest extends TestCase
 {
-	protected static $example1 = 'https://getkirby.com';
-	protected static $example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/with:kirby/?q=awesome#top';
+	protected static string $example1 = 'https://getkirby.com';
+	protected static string $example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/with:kirby/?q=awesome#top';
 
 	protected function setUp(): void
 	{
@@ -196,9 +197,9 @@ class UriTest extends TestCase
 
 	public function testInvalidPortFormat1()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
-		$url = new Uri(['port' => 'a']);
+		new Uri(['port' => 'a']);
 	}
 
 	public function testInvalidPortFormat2()
@@ -230,6 +231,9 @@ class UriTest extends TestCase
 	public function testValidPath()
 	{
 		$url = new Uri(['path' => '/a/b/c']);
+		$this->assertSame('a/b/c', $url->path()->toString());
+
+		$url = new Uri(['path' => '/a/b/c/']);
 		$this->assertSame('a/b/c', $url->path()->toString());
 
 		$url = new Uri(['path' => ['a', 'b', 'c']]);
@@ -315,6 +319,20 @@ class UriTest extends TestCase
 			[static::$example1, [], static::$example1],
 			[static::$example2, [], static::$example2],
 
+			// relative path
+			[
+				'/search',
+				[],
+				'/search'
+			],
+
+			// relative path with trailing slash
+			[
+				'/search/',
+				[],
+				'/search/'
+			],
+
 			// relative path + adding params
 			[
 				'/search',
@@ -323,6 +341,16 @@ class UriTest extends TestCase
 					'query'  => ['q' => 'something']
 				],
 				'/search/page:2?q=something'
+			],
+
+			// relative path with trailing slash + adding params
+			[
+				'/search/',
+				[
+					'params' => ['page' => 2],
+					'query'  => ['q' => 'something']
+				],
+				'/search/page:2/?q=something'
 			],
 
 			// relative path with colon + adding query

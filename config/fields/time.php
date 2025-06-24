@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
 
@@ -97,27 +97,27 @@ return [
 			$format = 'H:i:s';
 
 			if ($min && $max && $value->isBetween($min, $max) === false) {
-				throw new Exception([
-					'key' => 'validation.time.between',
-					'data' => [
+				throw new InvalidArgumentException(
+					key: 'validation.time.between',
+					data: [
 						'min' => $min->format($format),
 						'max' => $min->format($format)
 					]
-				]);
-			} elseif ($min && $value->isMin($min) === false) {
-				throw new Exception([
-					'key' => 'validation.time.after',
-					'data' => [
-						'time' => $min->format($format),
-					]
-				]);
-			} elseif ($max && $value->isMax($max) === false) {
-				throw new Exception([
-					'key' => 'validation.time.before',
-					'data' => [
-						'time' => $max->format($format),
-					]
-				]);
+				);
+			}
+
+			if ($min && $value->isMin($min) === false) {
+				throw new InvalidArgumentException(
+					key: 'validation.time.after',
+					data: ['time' => $min->format($format)]
+				);
+			}
+
+			if ($max && $value->isMax($max) === false) {
+				throw new InvalidArgumentException(
+					key: 'validation.time.before',
+					data: ['time' => $max->format($format)]
+				);
 			}
 
 			return true;

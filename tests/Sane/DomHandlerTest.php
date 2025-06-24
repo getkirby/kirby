@@ -11,7 +11,7 @@ class DomHandlerTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.DomHandler';
 
-	protected static $type = 'sane';
+	protected static string $type = 'sane';
 
 	public function testSanitize()
 	{

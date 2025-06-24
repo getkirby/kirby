@@ -1,8 +1,9 @@
 <template>
 	<div
 		:aria-disabled="disabled"
+		:class="['k-coords-input', $attrs.class]"
 		:data-empty="!value"
-		class="k-coords-input"
+		:style="$attrs.style"
 		@mousedown="onDrag"
 		@click="onMove"
 		@keydown="onKeys"
@@ -186,9 +187,6 @@ export default {
 	position: relative;
 	display: block !important;
 }
-.k-coords-input img {
-	width: 100%;
-}
 .k-coords-input-thumb {
 	position: absolute;
 	aspect-ratio: 1/1;
@@ -199,7 +197,7 @@ export default {
 	transform: translate(-50%, -50%);
 	cursor: move;
 }
-.k-coords-input[data-empty] .k-coords-input-thumb {
+.k-coords-input[data-empty="true"] .k-coords-input-thumb {
 	opacity: 0;
 }
 .k-coords-input-thumb:active {
@@ -208,7 +206,7 @@ export default {
 .k-coords-input:focus-within {
 	outline: var(--outline);
 }
-.k-coords-input[aria-disabled] {
+.k-coords-input[aria-disabled="true"] {
 	pointer-events: none;
 	opacity: var(--opacity-disabled);
 }

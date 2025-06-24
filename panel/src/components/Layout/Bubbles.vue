@@ -1,5 +1,5 @@
 <template>
-	<ul class="k-bubbles">
+	<ul :class="['k-bubbles', $attrs.class]" :style="$attrs.style">
 		<li v-for="(bubble, id) in items" :key="id">
 			<k-bubble v-bind="bubble" :html="html" />
 		</li>
@@ -22,6 +22,7 @@ export const props = {
 /**
  * Display a list of `<k-bubble>`
  * @since 3.7.0
+ * @deprecated 5.0.0 Use `<k-tags>` instead
  *
  * @example <k-bubbles :bubbles="['Hello', 'World']" />
  */
@@ -46,6 +47,11 @@ export default {
 				bubble === "string" ? { text: bubble } : bubble
 			);
 		}
+	},
+	mounted() {
+		window.panel.deprecated(
+			"<k-bubbles> will be removed in a future version. Use <k-tags> instead."
+		);
 	}
 };
 </script>

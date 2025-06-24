@@ -8,6 +8,7 @@
  */
 export default {
 	props: {
+		diff: Object,
 		tab: String,
 		tabs: {
 			type: Array,
@@ -16,7 +17,7 @@ export default {
 	},
 	computed: {
 		withBadges() {
-			const changed = Object.keys(this.$store.getters["content/changes"]());
+			const changes = Object.keys(this.diff);
 
 			return this.tabs.map((tab) => {
 				// collect all fields per tab
@@ -35,7 +36,7 @@ export default {
 
 				// get count of changed fields in this tab
 				tab.badge = fields.filter((field) =>
-					changed.includes(field.toLowerCase())
+					changes.includes(field.toLowerCase())
 				).length;
 
 				return tab;

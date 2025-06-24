@@ -3,27 +3,20 @@
 namespace Kirby\Toolkit;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Html
- */
+#[CoversClass(Html::class)]
 class HtmlTest extends TestCase
 {
-	/**
-	 * @covers ::__callStatic()
-	 */
-	public function testCallStatic()
+	public function testCallStatic(): void
 	{
 		$this->assertSame('<div>test</div>', Html::div('test'));
 		$this->assertSame('<div class="test">test</div>', Html::div('test', ['class' => 'test']));
 		$this->assertSame('<hr class="test">', Html::hr(['class' => 'test']));
 	}
 
-	/**
-	 * @covers ::a
-	 * @covers ::link
-	 */
-	public function testA()
+	public function testA(): void
 	{
 		$html = Html::a('https://getkirby.com');
 		$expected = '<a href="https://getkirby.com">getkirby.com</a>';
@@ -41,11 +34,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::a
-	 * @covers ::link
-	 */
-	public function testAWithText()
+	public function testAWithText(): void
 	{
 		$html = Html::a('https://getkirby.com', 'Kirby');
 		$expected = '<a href="https://getkirby.com">Kirby</a>';
@@ -62,11 +51,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::a
-	 * @covers ::link
-	 */
-	public function testAWithAttributes()
+	public function testAWithAttributes(): void
 	{
 		$html = Html::a('https://getkirby.com', 'Kirby', ['class' => 'test']);
 		$expected = '<a class="test" href="https://getkirby.com">Kirby</a>';
@@ -83,34 +68,26 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::a
-	 * @covers ::link
-	 */
-	public function testAWithTarget()
+	public function testAWithTarget(): void
 	{
 		$html = Html::a('https://getkirby.com', 'Kirby', ['target' => '_blank']);
 		$expected = '<a href="https://getkirby.com" rel="noreferrer" target="_blank">Kirby</a>';
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::a
-	 * @covers ::link
-	 */
-	public function testAWithTargetAndRel()
+	public function testAWithTargetAndRel(): void
 	{
 		$html = Html::a('https://getkirby.com', 'Kirby', ['target' => '_blank', 'rel' => 'noopener']);
 		$expected = '<a href="https://getkirby.com" rel="noopener" target="_blank">Kirby</a>';
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers       ::attr
-	 * @dataProvider attrProvider
-	 */
-	public function testAttr($input, $value, $expected)
-	{
+	#[DataProvider('attrProvider')]
+	public function testAttr(
+		array $input,
+		bool|null $value,
+		string|null $expected
+	): void {
 		$this->assertSame($expected, Html::attr($input, $value));
 	}
 
@@ -130,10 +107,7 @@ class HtmlTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::attr
-	 */
-	public function testAttrArrayValue()
+	public function testAttrArrayValue(): void
 	{
 		$result = Html::attr('a', ['a', 'b']);
 		$this->assertSame('a="a b"', $result);
@@ -151,45 +125,30 @@ class HtmlTest extends TestCase
 		$this->assertSame('a="&"', $result);
 	}
 
-	/**
-	 * @covers ::attr
-	 */
-	public function testAttrWithBeforeValue()
+	public function testAttrWithBeforeValue(): void
 	{
 		$attr = Html::attr(['test' => 'test'], null, ' ');
 		$this->assertSame(' test="test"', $attr);
 	}
 
-	/**
-	 * @covers ::attr
-	 */
-	public function testAttrWithAfterValue()
+	public function testAttrWithAfterValue(): void
 	{
 		$attr = Html::attr(['test' => 'test'], null, null, ' ');
 		$this->assertSame('test="test" ', $attr);
 	}
 
-	/**
-	 * @covers ::attr
-	 */
-	public function testAttrWithoutValues()
+	public function testAttrWithoutValues(): void
 	{
 		$attr = Html::attr([]);
 		$this->assertNull($attr);
 	}
 
-	/**
-	 * @covers ::breaks
-	 */
-	public function testBreaks()
+	public function testBreaks(): void
 	{
 		$this->assertSame("line 1<br />\nline 2", Html::breaks("line 1\nline 2"));
 	}
 
-	/**
-	 * @covers ::email
-	 */
-	public function testEmail()
+	public function testEmail(): void
 	{
 		$html = Html::email('mail@company.com?subject=Test');
 		$expected = '!^<a href="mailto:(.*?)">(.*?)</a>$!';
@@ -199,10 +158,7 @@ class HtmlTest extends TestCase
 		$this->assertSame('mail@company.com', Html::decode($matches[2]));
 	}
 
-	/**
-	 * @covers ::email
-	 */
-	public function testEmailWithText()
+	public function testEmailWithText(): void
 	{
 		$html = Html::email('mail@company.com', '<b>Email</b>');
 		$expected = '!^<a href="mailto:(.*?)">&lt;b&gt;Email&lt;/b&gt;</a>$!';
@@ -211,10 +167,7 @@ class HtmlTest extends TestCase
 		$this->assertSame('mail@company.com', Html::decode($matches[1]));
 	}
 
-	/**
-	 * @covers ::email
-	 */
-	public function testEmailWithArrayText()
+	public function testEmailWithArrayText(): void
 	{
 		$html = Html::email('mail@company.com', ['<b>Email</b>']);
 		$expected = '!^<a href="mailto:(.*?)"><b>Email</b></a>$!';
@@ -223,19 +176,13 @@ class HtmlTest extends TestCase
 		$this->assertSame('mail@company.com', Html::decode($matches[1]));
 	}
 
-	/**
-	 * @covers ::email
-	 */
-	public function testEmailWithoutAddress()
+	public function testEmailWithoutAddress(): void
 	{
 		$html = Html::email('');
 		$this->assertSame('', $html);
 	}
 
-	/**
-	 * @covers ::email
-	 */
-	public function testEmailWithAttributes()
+	public function testEmailWithAttributes(): void
 	{
 		$html = Html::email('mail@company.com', 'Email', ['class' => 'email']);
 		$expected = '!^<a class="email" href="mailto:(.*?)">Email</a>$!';
@@ -244,10 +191,7 @@ class HtmlTest extends TestCase
 		$this->assertSame('mail@company.com', Html::decode($matches[1]));
 	}
 
-	/**
-	 * @covers ::email
-	 */
-	public function testEmailWithTarget()
+	public function testEmailWithTarget(): void
 	{
 		$html = Html::email('mail@company.com', 'Email', ['target' => '_blank']);
 		$expected = '!^<a href="mailto:(.*?)" rel="noreferrer" target="_blank">Email</a>$!';
@@ -256,10 +200,7 @@ class HtmlTest extends TestCase
 		$this->assertSame('mail@company.com', Html::decode($matches[1]));
 	}
 
-	/**
-	 * @covers ::encode
-	 */
-	public function testEncode()
+	public function testEncode(): void
 	{
 		$html = Html::encode('äöü');
 		$expected = '&auml;&ouml;&uuml;';
@@ -277,10 +218,7 @@ class HtmlTest extends TestCase
 		$this->assertSame('', Html::encode(null));
 	}
 
-	/**
-	 * @covers ::entities
-	 */
-	public function testEntities()
+	public function testEntities(): void
 	{
 		Html::$entities = null;
 		$this->assertTrue(count(Html::entities()) > 0);
@@ -294,10 +232,7 @@ class HtmlTest extends TestCase
 		Html::$entities = null;
 	}
 
-	/**
-	 * @covers ::figure
-	 */
-	public function testFigure()
+	public function testFigure(): void
 	{
 		$html = Html::figure('test');
 		$expected = '<figure>test</figure>';
@@ -312,10 +247,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::gist
-	 */
-	public function testGist()
+	public function testGist(): void
 	{
 		$html = Html::gist($url = 'https://gist.github.com/bastianallgeier/dfb2a889ae73c7c318ea300efd2df6ff');
 		$expected = '<script src="' . $url . '.js"></script>';
@@ -326,30 +258,21 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::iframe
-	 */
-	public function testIframe()
+	public function testIframe(): void
 	{
 		$html = Html::iframe($url = 'https://getkirby.com');
 		$expected = '<iframe src="' . $url . '"></iframe>';
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::img
-	 */
-	public function testImg()
+	public function testImg(): void
 	{
 		$html = Html::img($src = 'https://getkirby.com/image.jpg');
 		$expected = '<img alt="" src="' . $src . '">';
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::isVoid
-	 */
-	public function testIsVoid()
+	public function testIsVoid(): void
 	{
 		$original = Html::$voidList;
 
@@ -363,10 +286,7 @@ class HtmlTest extends TestCase
 		Html::$voidList = $original;
 	}
 
-	/**
-	 * @covers ::rel
-	 */
-	public function testRel()
+	public function testRel(): void
 	{
 		$html = Html::rel('me');
 		$expected = 'me';
@@ -381,43 +301,28 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::tel
-	 * @covers ::link
-	 */
-	public function testTel()
+	public function testTel(): void
 	{
 		$html = Html::tel('1234');
 		$expected = '<a href="tel:1234">1234</a>';
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::tel
-	 * @covers ::link
-	 */
-	public function testTelWithText()
+	public function testTelWithText(): void
 	{
 		$html = Html::tel('1234', 'Tel');
 		$expected = '<a href="tel:1234">Tel</a>';
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::tel
-	 * @covers ::link
-	 */
-	public function testTelWithArrayText()
+	public function testTelWithArrayText(): void
 	{
 		$html = Html::tel('1234', ['<b>Tel</b>']);
 		$expected = '<a href="tel:1234"><b>Tel</b></a>';
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::tag
-	 */
-	public function testTag()
+	public function testTag(): void
 	{
 		$html = Html::tag('p', 'test');
 		$expected = '<p>test</p>';
@@ -458,12 +363,11 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers       ::value
-	 * @dataProvider valueProvider
-	 */
-	public function testValue($input, $expected)
-	{
+	#[DataProvider('valueProvider')]
+	public function testValue(
+		bool|int|string|null $input,
+		string|null $expected
+	): void {
 		$this->assertSame($expected, Html::value($input));
 	}
 
@@ -480,15 +384,11 @@ class HtmlTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers       ::video
-	 * @covers       ::youtube
-	 * @covers       ::vimeo
-	 * @covers       ::videoAttr
-	 * @dataProvider videoProvider
-	 */
-	public function testVideo($url, $src)
-	{
+	#[DataProvider('videoProvider')]
+	public function testVideo(
+		string $url,
+		string|bool $src
+	): void {
 		// invalid URLs
 		if ($src === false) {
 			$this->assertNull(Html::video($url));
@@ -545,10 +445,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::video
-	 */
-	public function testVideoFile()
+	public function testVideoFile(): void
 	{
 		$html = Html::video('https://getkirby.com/myvideo.mp4');
 		$expected = '<video><source src="https://getkirby.com/myvideo.mp4" type="video/mp4"></video>';
@@ -744,18 +641,12 @@ class HtmlTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::vimeo
-	 */
-	public function testVimeoInvalidUrl()
+	public function testVimeoInvalidUrl(): void
 	{
 		$this->assertNull(Html::vimeo('https://getkirby.com'));
 	}
 
-	/**
-	 * @covers ::youtube
-	 */
-	public function testYoutubeInvalidUrl()
+	public function testYoutubeInvalidUrl(): void
 	{
 		$this->assertNull(Html::youtube('https://getkirby.com'));
 	}

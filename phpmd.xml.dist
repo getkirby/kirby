@@ -23,8 +23,9 @@
 		<!-- Temporarily disabled for step-by-step refactoring/suppression -->
 		<exclude name="CyclomaticComplexity" />
 		<exclude name="NPathComplexity" />
-		<exclude name="ExcessiveMethodLength" />
 		<exclude name="ExcessiveClassLength" />
+		<exclude name="ExcessiveMethodLength" />
+		<exclude name="ExcessiveParameterList" />
 		<exclude name="ExcessivePublicCount" />
 		<exclude name="TooManyFields" />
 		<exclude name="TooManyMethods" />

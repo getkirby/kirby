@@ -68,7 +68,7 @@ export default {
 	align-items: center;
 	line-height: 1;
 	justify-content: space-between;
-	background: var(--color-white);
+	background: light-dark(var(--color-white), var(--color-gray-850));
 	font-size: var(--text-sm);
 }
 
@@ -84,7 +84,7 @@ export default {
 .k-drawer-option {
 	--button-width: var(--button-height);
 }
-.k-drawer-option[aria-disabled] {
+.k-drawer-option[aria-disabled="true"] {
 	opacity: var(--opacity-disabled);
 }
 </style>

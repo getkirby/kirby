@@ -3,8 +3,8 @@
 namespace Kirby\Database;
 
 use InvalidArgumentException;
-use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Pagination;
 use PDOException;
 
 /**
@@ -12,8 +12,6 @@ use PDOException;
  */
 class QueryTest extends TestCase
 {
-	protected $database;
-
 	public function setUp(): void
 	{
 		$this->database = new Database([
@@ -335,9 +333,7 @@ class QueryTest extends TestCase
 			->table('users')
 			->where(['username' => 'john']);
 
-		$x = function ($row, $key) {
-			return $row['fname'] . ' ' . $row['lname'];
-		};
+		$x = fn ($row, $key) => $row['fname'] . ' ' . $row['lname'];
 
 		$this->assertSame('John Lennon', (clone $query)->fetch($x)->first());
 		$this->assertSame('John Lennon', (clone $query)->fetch([$this, 'fetchTestCallable'])->first());
@@ -564,7 +560,7 @@ class QueryTest extends TestCase
 
 	public function testWhereInvalidPredicate()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid predicate INV');
 
 		$this->database
@@ -575,7 +571,7 @@ class QueryTest extends TestCase
 
 	public function testWhereInvalidPredicateOperator()
 	{
-		$this->expectException('InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid predicate/operator <!>');
 
 		$this->database
@@ -671,7 +667,7 @@ class QueryTest extends TestCase
 
 		$this->assertCount(5, $results);
 		$this->assertSame('John', $results->first()->fname());
-		$this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+		$this->assertTrue($pagination instanceof Pagination);
 		$this->assertSame(1, $pagination->pages());
 		$this->assertSame(5, $pagination->total());
 		$this->assertSame(1, $pagination->page());
@@ -685,7 +681,7 @@ class QueryTest extends TestCase
 
 		$this->assertCount(1, $results);
 		$this->assertSame('George', $results->first()->fname());
-		$this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+		$this->assertTrue($pagination instanceof Pagination);
 		$this->assertSame(5, $pagination->pages());
 		$this->assertSame(5, $pagination->total());
 		$this->assertSame(3, $pagination->page());
@@ -699,7 +695,7 @@ class QueryTest extends TestCase
 
 		$this->assertCount(2, $results);
 		$this->assertSame('Mark', $results->first()->fname());
-		$this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+		$this->assertTrue($pagination instanceof Pagination);
 		$this->assertSame(2, $pagination->pages());
 		$this->assertSame(5, $pagination->total());
 		$this->assertSame(2, $pagination->page());

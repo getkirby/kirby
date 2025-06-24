@@ -35,9 +35,7 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 				]
 			],
 			'collections' => [
-				'test' => function ($pages) {
-					return $pages;
-				}
+				'test' => fn ($pages) => $pages
 			]
 		]);
 

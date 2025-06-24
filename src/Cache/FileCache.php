@@ -32,13 +32,12 @@ class FileCache extends Cache
 	 */
 	public function __construct(array $options)
 	{
-		$defaults = [
+		parent::__construct([
 			'root'      => null,
 			'prefix'    => null,
-			'extension' => null
-		];
-
-		parent::__construct(array_merge($defaults, $options));
+			'extension' => null,
+			...$options
+		]);
 
 		// build the full root including prefix
 		$this->root = $this->options['root'];
@@ -120,10 +119,10 @@ class FileCache extends Cache
 	 * Writes an item to the cache for a given number of minutes and
 	 * returns whether the operation was successful
 	 *
-	 * <code>
-	 *   // put an item in the cache for 15 minutes
-	 *   $cache->set('value', 'my value', 15);
-	 * </code>
+	 * ```php
+	 * // put an item in the cache for 15 minutes
+	 * $cache->set('value', 'my value', 15);
+	 * ```
 	 */
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
@@ -196,7 +195,7 @@ class FileCache extends Cache
 
 				$files = array_diff($files, ['.', '..']);
 
-				if (empty($files) === true && Dir::remove($dir) === true) {
+				if ($files === [] && Dir::remove($dir) === true) {
 					// continue with the next level up
 					$dir = dirname($dir);
 				} else {

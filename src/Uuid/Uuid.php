@@ -14,6 +14,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
+use Stringable;
 
 /**
  * The `Uuid` classes provide an interface to connect
@@ -22,7 +23,7 @@ use Kirby\Toolkit\Str;
  * It also provides methods to cache these connections
  * for faster lookup.
  *
- * ```
+ * ```php
  * // get UUID string
  * $model->uuid()->toString();
  *
@@ -41,7 +42,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class Uuid
+abstract class Uuid implements Stringable
 {
 	protected const TYPE = 'uuid';
 
@@ -67,7 +68,9 @@ abstract class Uuid
 	) {
 		// throw exception when globally disabled
 		if (Uuids::enabled() === false) {
-			throw new LogicException('UUIDs have been disabled via the `content.uuid` config option.');
+			throw new LogicException(
+				message: 'UUIDs have been disabled via the `content.uuid` config option.'
+			);
 		}
 
 
@@ -83,7 +86,9 @@ abstract class Uuid
 			// in the rare case that both model and ID string
 			// got passed, make sure they match
 			if ($uuid && $uuid !== $this->uri->toString()) {
-				throw new LogicException('UUID: can\'t create new instance from both model and UUID string that do not match');
+				throw new LogicException(
+					message: 'UUID: can\'t create new instance from both model and UUID string that do not match'
+				);
 			}
 		} elseif ($uuid) {
 			$this->uri = new Uri($uuid);
@@ -133,7 +138,9 @@ abstract class Uuid
 	 */
 	protected function findByCache(): Identifiable|null
 	{
-		throw new LogicException('UUID class needs to implement the ::findByCache() method');
+		throw new LogicException(
+			message: 'UUID class needs to implement the ::findByCache() method'
+		);
 	}
 
 	/**
@@ -145,7 +152,9 @@ abstract class Uuid
 	 */
 	protected function findByIndex(): Identifiable|null
 	{
-		throw new LogicException('UUID class needs to implement the ::findByIndex() method');
+		throw new LogicException(
+			message: 'UUID class needs to implement the ::findByIndex() method'
+		);
 	}
 
 	/**
@@ -172,7 +181,9 @@ abstract class Uuid
 					// TODO: activate for uuid-block-structure-support
 					// 'block'  => new BlockUuid(uuid: $seed, context: $context),
 					// 'struct' => new StructureUuid(uuid: $seed, context: $context),
-					default  => throw new InvalidArgumentException('Invalid UUID URI: ' . $seed)
+					default  => throw new InvalidArgumentException(
+						message: 'Invalid UUID URI: ' . $seed
+					)
 				};
 			}
 
@@ -186,7 +197,9 @@ abstract class Uuid
 				);
 			}
 
-			throw new InvalidArgumentException('Invalid UUID string: ' . $seed);
+			throw new InvalidArgumentException(
+				message: 'Invalid UUID string: ' . $seed
+			);
 		}
 
 		// for model object
@@ -204,8 +217,9 @@ abstract class Uuid
 			// 	=> new BlockUuid(model: $seed, context: $context),
 			// $seed instanceof StructureObject
 			// 	=> new StructureUuid(model: $seed, context: $context),
-			default
-			=> throw new InvalidArgumentException('UUID not supported for: ' . get_class($seed))
+			default => throw new InvalidArgumentException(
+				message: 'UUID not supported for: ' . $seed::class
+			)
 		};
 	}
 
@@ -228,7 +242,7 @@ abstract class Uuid
 			return Str::uuid();
 		}
 
-		return Str::random($length, 'alphaNum');
+		return Str::lower(Str::random($length, 'alphaNum'));
 	}
 
 	/**
@@ -340,7 +354,9 @@ abstract class Uuid
 
 		if ($lazy === false) {
 			if (App::instance()->option('content.uuid.index') === false) {
-				throw new NotFoundException('Model for UUID ' . $this->uri->toString() . ' could not be found without searching in the site index');
+				throw new NotFoundException(
+					message: 'Model for UUID ' . $this->uri->toString() . ' could not be found without searching in the site index'
+				);
 			}
 
 			if ($this->model = $this->findByIndex()) {
@@ -402,7 +418,7 @@ abstract class Uuid
 	}
 
 	/**
-	 * @see ::render
+	 * @see self::render()
 	 */
 	public function __toString(): string
 	{

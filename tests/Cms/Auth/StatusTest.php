@@ -12,8 +12,6 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class StatusTest extends TestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -104,6 +102,25 @@ class StatusTest extends TestCase
 	}
 
 	/**
+	 * @covers ::mode
+	 */
+	public function testMode()
+	{
+		$status = new Status([
+			'kirby'  => $this->app,
+			'status' => 'inactive'
+		]);
+		$this->assertNull($status->mode());
+
+		$status = new Status([
+			'kirby'  => $this->app,
+			'mode'   => 'password-reset',
+			'status' => 'active'
+		]);
+		$this->assertSame('password-reset', $status->mode());
+	}
+
+	/**
 	 * @covers ::status
 	 */
 	public function testStatus()
@@ -150,12 +167,14 @@ class StatusTest extends TestCase
 			'challenge'         => null,
 			'challengeFallback' => 'email',
 			'email'             => 'homer@simpsons.com',
+			'mode'              => 'password-reset',
 			'status'            => 'pending'
 		]);
 
 		$this->assertSame([
 			'challenge' => 'email',
 			'email'     => 'homer@simpsons.com',
+			'mode'      => 'password-reset',
 			'status'    => 'pending'
 		], $status->toArray());
 	}

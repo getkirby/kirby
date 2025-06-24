@@ -1,9 +1,9 @@
 <template>
 	<k-frame
 		v-bind="$props"
+		:class="['k-image-frame', 'k-image', $attrs.class]"
+		:style="$attrs.style"
 		element="figure"
-		class="k-image-frame k-image"
-		v-on="$listeners"
 	>
 		<img
 			v-if="src"

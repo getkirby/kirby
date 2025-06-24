@@ -27,16 +27,16 @@ class UserRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the address
 	 */
-	public static function changeEmail(User $user, string $email): bool
+	public static function changeEmail(User $user, string $email): void
 	{
-		if ($user->permissions()->changeEmail() !== true) {
-			throw new PermissionException([
-				'key'  => 'user.changeEmail.permission',
-				'data' => ['name' => $user->username()]
-			]);
+		if ($user->permissions()->can('changeEmail') !== true) {
+			throw new PermissionException(
+				key: 'user.changeEmail.permission',
+				data: ['name' => $user->username()]
+			);
 		}
 
-		return static::validEmail($user, $email);
+		static::validEmail($user, $email);
 	}
 
 	/**
@@ -44,16 +44,16 @@ class UserRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the language
 	 */
-	public static function changeLanguage(User $user, string $language): bool
+	public static function changeLanguage(User $user, string $language): void
 	{
-		if ($user->permissions()->changeLanguage() !== true) {
-			throw new PermissionException([
-				'key'  => 'user.changeLanguage.permission',
-				'data' => ['name' => $user->username()]
-			]);
+		if ($user->permissions()->can('changeLanguage') !== true) {
+			throw new PermissionException(
+				key: 'user.changeLanguage.permission',
+				data: ['name' => $user->username()]
+			);
 		}
 
-		return static::validLanguage($user, $language);
+		static::validLanguage($user, $language);
 	}
 
 	/**
@@ -61,16 +61,14 @@ class UserRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the name
 	 */
-	public static function changeName(User $user, string $name): bool
+	public static function changeName(User $user, string $name): void
 	{
-		if ($user->permissions()->changeName() !== true) {
-			throw new PermissionException([
-				'key'  => 'user.changeName.permission',
-				'data' => ['name' => $user->username()]
-			]);
+		if ($user->permissions()->can('changeName') !== true) {
+			throw new PermissionException(
+				key: 'user.changeName.permission',
+				data: ['name' => $user->username()]
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -82,15 +80,15 @@ class UserRules
 		User $user,
 		#[SensitiveParameter]
 		string $password
-	): bool {
-		if ($user->permissions()->changePassword() !== true) {
-			throw new PermissionException([
-				'key'  => 'user.changePassword.permission',
-				'data' => ['name' => $user->username()]
-			]);
+	): void {
+		if ($user->permissions()->can('changePassword') !== true) {
+			throw new PermissionException(
+				key: 'user.changePassword.permission',
+				data: ['name' => $user->username()]
+			);
 		}
 
-		return static::validPassword($user, $password);
+		static::validPassword($user, $password);
 	}
 
 	/**
@@ -99,42 +97,40 @@ class UserRules
 	 * @throws \Kirby\Exception\LogicException If the user is the last admin
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the role
 	 */
-	public static function changeRole(User $user, string $role): bool
+	public static function changeRole(User $user, string $role): void
 	{
 		// prevent non-admins making a user to admin
 		if (
 			$user->kirby()->user()->isAdmin() === false &&
 			$role === 'admin'
 		) {
-			throw new PermissionException([
-				'key'  => 'user.changeRole.toAdmin'
-			]);
+			throw new PermissionException(
+				key: 'user.changeRole.toAdmin'
+			);
 		}
 
 		// prevent demoting the last admin
 		if ($role !== 'admin' && $user->isLastAdmin() === true) {
-			throw new LogicException([
-				'key'  => 'user.changeRole.lastAdmin',
-				'data' => ['name' => $user->username()]
-			]);
+			throw new LogicException(
+				key: 'user.changeRole.lastAdmin',
+				data: ['name' => $user->username()]
+			);
 		}
 
 		// check permissions
-		if ($user->permissions()->changeRole() !== true) {
-			throw new PermissionException([
-				'key'  => 'user.changeRole.permission',
-				'data' => ['name' => $user->username()]
-			]);
+		if ($user->permissions()->can('changeRole') !== true) {
+			throw new PermissionException(
+				key: 'user.changeRole.permission',
+				data: ['name' => $user->username()]
+			);
 		}
 
 		// prevent changing to role that is not available for user
 		if ($user->roles()->find($role) instanceof Role === false) {
-			throw new InvalidArgumentException([
-				'key' => 'user.role.invalid',
-			]);
+			throw new InvalidArgumentException(
+				key: 'user.role.invalid',
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -147,14 +143,16 @@ class UserRules
 		User $user,
 		#[SensitiveParameter]
 		string|null $secret
-	): bool {
+	): void {
 		$currentUser = $user->kirby()->user();
 
 		if (
 			$currentUser->is($user) === false &&
 			$currentUser->isAdmin() === false
 		) {
-			throw new PermissionException('You cannot change the time-based code for ' . $user->email());
+			throw new PermissionException(
+				message: 'You cannot change the time-based code for ' . $user->email()
+			);
 		}
 
 		// safety check to avoid accidental insecure secrets;
@@ -162,8 +160,6 @@ class UserRules
 		if ($secret !== null) {
 			new Totp($secret);
 		}
-
-		return true;
 	}
 
 	/**
@@ -171,7 +167,7 @@ class UserRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create a new user
 	 */
-	public static function create(User $user, array $props = []): bool
+	public static function create(User $user, array $props = []): void
 	{
 		static::validId($user, $user->id());
 		static::validEmail($user, $user->email(), true);
@@ -192,16 +188,16 @@ class UserRules
 
 		// admins are allowed everything
 		if ($currentUser?->isAdmin() === true) {
-			return true;
+			return;
 		}
 
 		// allow to create the first user
 		if ($user->kirby()->users()->count() === 0) {
-			return true;
+			return;
 		}
 
 		// check user permissions
-		if ($user->permissions()->create() !== true) {
+		if ($user->permissions()->can('create') !== true) {
 			throw new PermissionException([
 				'key' => 'user.create.permission'
 			]);
@@ -218,8 +214,6 @@ class UserRules
 				'key' => 'user.role.invalid',
 			]);
 		}
-
-		return true;
 	}
 
 	/**
@@ -228,26 +222,26 @@ class UserRules
 	 * @throws \Kirby\Exception\LogicException If this is the last user or last admin, which cannot be deleted
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to delete this user
 	 */
-	public static function delete(User $user): bool
+	public static function delete(User $user): void
 	{
 		if ($user->isLastAdmin() === true) {
-			throw new LogicException(['key' => 'user.delete.lastAdmin']);
+			throw new LogicException(
+				key: 'user.delete.lastAdmin'
+			);
 		}
 
 		if ($user->isLastUser() === true) {
-			throw new LogicException([
-				'key' => 'user.delete.lastUser'
-			]);
+			throw new LogicException(
+				key: 'user.delete.lastUser'
+			);
 		}
 
-		if ($user->permissions()->delete() !== true) {
-			throw new PermissionException([
-				'key'  => 'user.delete.permission',
-				'data' => ['name' => $user->username()]
-			]);
+		if ($user->permissions()->can('delete') !== true) {
+			throw new PermissionException(
+				key: 'user.delete.permission',
+				data: ['name' => $user->username()]
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -259,15 +253,13 @@ class UserRules
 		User $user,
 		array $values = [],
 		array $strings = []
-	): bool {
-		if ($user->permissions()->update() !== true) {
-			throw new PermissionException([
-				'key'  => 'user.update.permission',
-				'data' => ['name' => $user->username()]
-			]);
+	): void {
+		if ($user->permissions()->can('update') !== true) {
+			throw new PermissionException(
+				key: 'user.update.permission',
+				data: ['name' => $user->username()]
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -280,27 +272,24 @@ class UserRules
 		User $user,
 		string $email,
 		bool $strict = false
-	): bool {
+	): void {
 		if (V::email($email ?? null) === false) {
-			throw new InvalidArgumentException([
-				'key' => 'user.email.invalid',
-			]);
+			throw new InvalidArgumentException(
+				key: 'user.email.invalid'
+			);
 		}
 
-		if ($strict === true) {
-			$duplicate = $user->kirby()->users()->find($email);
-		} else {
-			$duplicate = $user->kirby()->users()->not($user)->find($email);
-		}
+		$duplicate = match ($strict) {
+			true  => $user->kirby()->users()->find($email),
+			false => $user->kirby()->users()->not($user)->find($email)
+		};
 
 		if ($duplicate) {
-			throw new DuplicateException([
-				'key'  => 'user.duplicate',
-				'data' => ['email' => $email]
-			]);
+			throw new DuplicateException(
+				key: 'user.duplicate',
+				data: ['email' => $email]
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -308,17 +297,19 @@ class UserRules
 	 *
 	 * @throws \Kirby\Exception\DuplicateException If the user already exists
 	 */
-	public static function validId(User $user, string $id): bool
+	public static function validId(User $user, string $id): void
 	{
-		if (in_array($id, ['account', 'kirby', 'nobody']) === true) {
-			throw new InvalidArgumentException('"' . $id . '" is a reserved word and cannot be used as user id');
+		if (in_array($id, ['account', 'kirby', 'nobody'], true) === true) {
+			throw new InvalidArgumentException(
+				message: '"' . $id . '" is a reserved word and cannot be used as user id'
+			);
 		}
 
 		if ($user->kirby()->users()->find($id)) {
-			throw new DuplicateException('A user with this id exists');
+			throw new DuplicateException(
+				message: 'A user with this id exists'
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -326,15 +317,11 @@ class UserRules
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the language does not exist
 	 */
-	public static function validLanguage(User $user, string $language): bool
+	public static function validLanguage(User $user, string $language): void
 	{
 		if (in_array($language, $user->kirby()->translations()->keys(), true) === false) {
-			throw new InvalidArgumentException([
-				'key' => 'user.language.invalid',
-			]);
+			throw new InvalidArgumentException(key: 'user.language.invalid');
 		}
-
-		return true;
 	}
 
 	/**
@@ -346,12 +333,10 @@ class UserRules
 		User $user,
 		#[SensitiveParameter]
 		string $password
-	): bool {
+	): void {
 		// too short passwords are ineffective
 		if (Str::length($password ?? null) < 8) {
-			throw new InvalidArgumentException([
-				'key' => 'user.password.invalid',
-			]);
+			throw new InvalidArgumentException(key: 'user.password.invalid');
 		}
 
 		// too long passwords can cause DoS attacks
@@ -359,12 +344,8 @@ class UserRules
 		// (blocked here as well to avoid passwords
 		// that cannot be used to log in)
 		if (Str::length($password ?? null) > 1000) {
-			throw new InvalidArgumentException([
-				'key' => 'user.password.excessive',
-			]);
+			throw new InvalidArgumentException(key: 'user.password.excessive');
 		}
-
-		return true;
 	}
 
 	/**
@@ -373,14 +354,12 @@ class UserRules
 	 * @throws \Kirby\Exception\InvalidArgumentException If the user role does not exist
 	 * @deprecated 4.5.0
 	 */
-	public static function validRole(User $user, string $role): bool
+	public static function validRole(User $user, string $role): void
 	{
-		if ($user->kirby()->roles()->find($role) instanceof Role) {
-			return true;
+		if ($user->kirby()->roles()->find($role) instanceof Role === false) {
+			throw new InvalidArgumentException(
+				key: 'user.role.invalid',
+			);
 		}
-
-		throw new InvalidArgumentException([
-			'key' => 'user.role.invalid',
-		]);
 	}
 }

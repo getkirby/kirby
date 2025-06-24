@@ -20,25 +20,27 @@ class Exif
 	 */
 	protected array $data = [];
 
-	protected Camera|null $camera = null;
-	protected Location|null $location = null;
-	protected string|null $timestamp = null;
-	protected string|null $exposure = null;
 	protected string|null $aperture = null;
-	protected string|null $iso = null;
+	protected Camera|null $camera = null;
+	protected string|null $exposure = null;
 	protected string|null $focalLength = null;
 	protected bool|null $isColor = null;
+	protected string|null $iso = null;
+	protected Location|null $location = null;
+	protected string|null $timestamp = null;
+	protected int $orientation;
 
 	public function __construct(
 		protected Image $image
 	) {
-		$this->data        = $this->read();
-		$this->timestamp   = $this->parseTimestamp();
-		$this->exposure    = $this->data['ExposureTime'] ?? null;
-		$this->iso         = $this->data['ISOSpeedRatings'] ?? null;
-		$this->focalLength = $this->parseFocalLength();
+		$this->data        = $this->read($image->root());
 		$this->aperture    = $this->computed()['ApertureFNumber'] ?? null;
+		$this->exposure    = $this->data['ExposureTime'] ?? null;
+		$this->focalLength = $this->parseFocalLength();
 		$this->isColor     = V::accepted($this->computed()['IsColor'] ?? null);
+		$this->iso         = $this->data['ISOSpeedRatings'] ?? null;
+		$this->orientation = $this->data['Orientation'] ?? 1;
+		$this->timestamp   = $this->parseTimestamp();
 	}
 
 	/**
@@ -124,7 +126,7 @@ class Exif
 	/**
 	 * Read the exif data of the image object if possible
 	 */
-	protected function read(): array
+	public static function read(string $root): array
 	{
 		// @codeCoverageIgnoreStart
 		if (function_exists('exif_read_data') === false) {
@@ -132,7 +134,7 @@ class Exif
 		}
 		// @codeCoverageIgnoreEnd
 
-		$data = @exif_read_data($this->image->root());
+		$data = @exif_read_data($root);
 		return is_array($data) ? $data : [];
 	}
 
@@ -142,6 +144,14 @@ class Exif
 	protected function computed(): array
 	{
 		return $this->data['COMPUTED'] ?? [];
+	}
+
+	/**
+	 * Returns the exif orientation
+	 */
+	public function orientation(): int
+	{
+		return $this->orientation;
 	}
 
 	/**
@@ -192,9 +202,10 @@ class Exif
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'camera'   => $this->camera(),
 			'location' => $this->location()
-		]);
+		];
 	}
 }

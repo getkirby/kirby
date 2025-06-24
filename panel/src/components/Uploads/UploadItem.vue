@@ -12,7 +12,6 @@
 		<k-input
 			:disabled="completed || !editable"
 			:after="'.' + extension"
-			:novalidate="true"
 			:required="true"
 			:value="name"
 			allow="a-z0-9@._-"
@@ -26,7 +25,7 @@
 				{{ niceSize }}
 				<template v-if="progress"> - {{ progress }}% </template>
 			</p>
-			<p v-if="error" class="k-upload-item-error">
+			<p v-if="error" class="k-upload-item-error" data-theme="negative">
 				{{ error }}
 			</p>
 			<k-progress
@@ -116,6 +115,10 @@ export default {
 </script>
 
 <style>
+:root {
+	--upload-item-color-back: var(--item-color-back);
+}
+
 .k-upload-item {
 	accent-color: var(--color-focus);
 	display: grid;
@@ -125,7 +128,7 @@ export default {
 	grid-template-columns: 6rem 1fr auto;
 	grid-template-rows: var(--input-height) 1fr;
 	border-radius: var(--rounded);
-	background: var(--color-white);
+	background: var(--upload-item-color-back);
 	box-shadow: var(--shadow);
 	min-height: 6rem;
 }
@@ -143,7 +146,7 @@ export default {
 	--input-rounded: 0;
 	grid-area: input;
 	font-size: var(--text-sm);
-	border-bottom: 1px solid var(--color-light);
+	border-bottom: 1px solid var(--color-border);
 	border-start-end-radius: var(--rounded);
 }
 .k-upload-item-input.k-input:focus-within {
@@ -152,7 +155,7 @@ export default {
 	border-radius: var(--rounded);
 }
 .k-upload-item-input.k-input[data-disabled="true"] {
-	--input-color-back: var(--color-white);
+	--input-color-back: var(--upload-item-color-back);
 }
 .k-upload-item-input .k-input-after {
 	color: var(--color-gray-600);
@@ -164,11 +167,11 @@ export default {
 .k-upload-item-error {
 	font-size: var(--text-xs);
 	margin-top: 0.25rem;
-	color: var(--color-red-700);
+	color: var(--theme-color-text);
 }
 .k-upload-item-progress {
 	--progress-height: 0.25rem;
-	--progress-color-back: var(--color-light);
+	--progress-color-back: var(--panel-color-back);
 	margin-bottom: 0.3125rem;
 }
 .k-upload-item-toggle {
@@ -177,8 +180,5 @@ export default {
 }
 .k-upload-item-toggle > * {
 	padding: var(--spacing-3);
-}
-.k-upload-item[data-completed] .k-upload-item-progress {
-	--progress-color-value: var(--color-green-400);
 }
 </style>

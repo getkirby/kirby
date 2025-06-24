@@ -1,4 +1,3 @@
-import AspectRatio from "./AspectRatio.vue";
 import Bar from "./Bar.vue";
 import Box from "./Box.vue";
 import Bubble from "./Bubble.vue";
@@ -17,11 +16,9 @@ import Stats from "./Stats.vue";
 import Table from "./Table.vue";
 import TableCell from "./TableCell.vue";
 import Tabs from "./Tabs.vue";
-import View from "./View.vue";
 
 export default {
 	install(app) {
-		app.component("k-aspect-ratio", AspectRatio);
 		app.component("k-bar", Bar);
 		app.component("k-box", Box);
 		app.component("k-bubble", Bubble);
@@ -41,6 +38,5 @@ export default {
 		app.component("k-table", Table);
 		app.component("k-table-cell", TableCell);
 		app.component("k-tabs", Tabs);
-		app.component("k-view", View);
 	}
 };

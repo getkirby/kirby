@@ -32,7 +32,6 @@ class ImageMagickTest extends TestCase
 		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
 
 		$this->assertSame([
-			'autoOrient' => true,
 			'blur' => false,
 			'crop' => false,
 			'format' => null,
@@ -58,7 +57,7 @@ class ImageMagickTest extends TestCase
 	{
 		$im = new ImageMagick();
 
-		$method = new ReflectionMethod(get_class($im), 'sharpen');
+		$method = new ReflectionMethod($im::class, 'sharpen');
 		$method->setAccessible(true);
 
 		$result = $method->invoke($im, '', [
@@ -75,7 +74,7 @@ class ImageMagickTest extends TestCase
 	{
 		$im = new ImageMagick();
 
-		$method = new ReflectionMethod(get_class($im), 'sharpen');
+		$method = new ReflectionMethod($im::class, 'sharpen');
 		$method->setAccessible(true);
 
 		$result = $method->invoke($im, '', [

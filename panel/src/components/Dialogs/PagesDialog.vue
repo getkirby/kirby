@@ -41,7 +41,7 @@ export default {
 			type: Object,
 			default: () => ({
 				icon: "page",
-				text: window.panel.$t("dialog.pages.empty")
+				text: window.panel.t("dialog.pages.empty")
 			})
 		}
 	},
@@ -62,7 +62,7 @@ export default {
 	margin-bottom: 0.5rem;
 	padding-inline-end: 38px;
 }
-.k-pages-dialog-navbar .k-button[aria-disabled] {
+.k-pages-dialog-navbar .k-button[aria-disabled="true"] {
 	opacity: 0;
 }
 .k-pages-dialog-navbar .k-headline {
@@ -70,7 +70,7 @@ export default {
 	text-align: center;
 }
 
-.k-pages-dialog-option[aria-disabled] {
+.k-pages-dialog-option[aria-disabled="true"] {
 	opacity: 0.25;
 }
 </style>

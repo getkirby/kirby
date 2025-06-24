@@ -2,7 +2,9 @@
 
 namespace Kirby\Panel;
 
+use Exception;
 use Kirby\Cms\App;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
@@ -12,8 +14,6 @@ use Kirby\TestCase;
 class DropdownTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Dropdown';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -106,7 +106,7 @@ class DropdownTest extends TestCase
 	 */
 	public function testResponseFromException(): void
 	{
-		$exception = new \Exception('Test');
+		$exception = new Exception('Test');
 		$response  = Dropdown::response($exception);
 		$expected  = [
 			'$dropdown' => [
@@ -126,7 +126,7 @@ class DropdownTest extends TestCase
 	 */
 	public function testResponseFromKirbyException(): void
 	{
-		$exception = new \Kirby\Exception\NotFoundException('Test');
+		$exception = new NotFoundException(message: 'Test');
 		$response  = Dropdown::response($exception);
 		$expected  = [
 			'$dropdown' => [
@@ -148,14 +148,12 @@ class DropdownTest extends TestCase
 	{
 		$dropdown = [
 			'pattern' => 'test',
-			'action'  => $action = function () {
-				return [
-					[
-						'text' => 'Test',
-						'link' => '/test'
-					]
-				];
-			}
+			'action'  => $action = fn () => [
+				[
+					'text' => 'Test',
+					'link' => '/test'
+				]
+			]
 		];
 
 		$routes = Dropdown::routes(
@@ -187,14 +185,12 @@ class DropdownTest extends TestCase
 			'dropdowns' => [
 				'test' => [
 					'pattern' => 'test',
-					'options' => $action = function () {
-						return [
-							[
-								'text' => 'Test',
-								'link' => '/test'
-							]
-						];
-					}
+					'options' => $action = fn () => [
+						[
+							'text' => 'Test',
+							'link' => '/test'
+						]
+					]
 				]
 			]
 		];
@@ -221,14 +217,12 @@ class DropdownTest extends TestCase
 	{
 		$area = [
 			'dropdowns' => [
-				'test' => $action = function () {
-					return [
-						[
-							'text' => 'Test',
-							'link' => '/test'
-						]
-					];
-				}
+				'test' => $action = fn () => [
+					[
+						'text' => 'Test',
+						'link' => '/test'
+					]
+				]
 			]
 		];
 

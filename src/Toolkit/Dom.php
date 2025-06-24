@@ -30,50 +30,30 @@ class Dom
 {
 	/**
 	 * Cache for the HTML body
-	 *
-	 * @var \DOMElement|null
 	 */
-	protected $body;
-
-	/**
-	 * The original input code as
-	 * passed to the constructor
-	 *
-	 * @var string
-	 */
-	protected $code;
+	protected DOMElement|null $body;
 
 	/**
 	 * Document object
-	 *
-	 * @var \DOMDocument
 	 */
-	protected $doc;
-
-	/**
-	 * Document type (`'HTML'` or `'XML'`)
-	 *
-	 * @var string
-	 */
-	protected $type;
+	protected DOMDocument $doc;
 
 	/**
 	 * Class constructor
 	 *
-	 * @param string $code XML or HTML code
+	 * @param string $code XML or HTML original input code
 	 * @param string $type Document type (`'HTML'` or `'XML'`)
 	 */
-	public function __construct(string $code, string $type = 'HTML')
-	{
-		$this->code = $code;
+	public function __construct(
+		protected string $code,
+		protected string $type = 'HTML'
+	) {
 		$this->doc  = new DOMDocument();
-
-		$loaderSetting = null;
+		$this->type = strtoupper($type);
 
 		// switch to "user error handling"
-		$intErrorsSetting = libxml_use_internal_errors(true);
+		$errors = libxml_use_internal_errors(true);
 
-		$this->type = strtoupper($type);
 		if ($this->type === 'HTML') {
 			// ensure proper parsing for HTML snippets
 			if (preg_match('/<(html|body)[> ]/i', $code) !== 1) {
@@ -82,13 +62,14 @@ class Dom
 
 			// the loadHTML() method expects ISO-8859-1 by default;
 			// force parsing as UTF-8 by injecting an XML declaration
-			$xmlDeclaration = 'encoding="UTF-8" id="' . Str::random(10) . '"';
-			$load = $this->doc->loadHTML('<?xml ' . $xmlDeclaration . '>' . $code);
+			$xml  = 'encoding="UTF-8" id="' . Str::random(10) . '"';
+			$load = $this->doc->loadHTML('<?xml ' . $xml . '>' . $code);
 
 			// remove the injected XML declaration again
 			$pis = $this->query('//processing-instruction()');
+
 			foreach (iterator_to_array($pis, false) as $pi) {
-				if ($pi->data === $xmlDeclaration) {
+				if ($pi->data === $xml) {
 					static::remove($pi);
 				}
 			}
@@ -104,7 +85,7 @@ class Dom
 		// get one error for use below and reset the global state
 		$error = libxml_get_last_error();
 		libxml_clear_errors();
-		libxml_use_internal_errors($intErrorsSetting);
+		libxml_use_internal_errors($errors);
 
 		if ($load !== true) {
 			$message = 'The markup could not be parsed';
@@ -113,10 +94,10 @@ class Dom
 				$message .= ': ' . $error->message;
 			}
 
-			throw new InvalidArgumentException([
-				'fallback' => $message,
-				'details'  => compact('error')
-			]);
+			throw new InvalidArgumentException(
+				fallback: $message,
+				details: compact('error')
+			);
 		}
 	}
 
@@ -138,7 +119,6 @@ class Dom
 
 	/**
 	 * Extracts all URLs wrapped in a url() wrapper. E.g. for style attributes.
-	 * @internal
 	 */
 	public static function extractUrls(string $value): array
 	{
@@ -161,16 +141,14 @@ class Dom
 
 	/**
 	 * Checks for allowed attributes according to the allowlist
-	 * @internal
 	 *
 	 * @return true|string If not allowed, an error message is returned
 	 */
 	public static function isAllowedAttr(
 		DOMAttr $attr,
 		array $options
-	): bool|string {
-		$options = static::normalizeSanitizeOptions($options);
-
+	): true|string {
+		$options     = static::normalizeSanitizeOptions($options);
 		$allowedTags = $options['allowedTags'];
 
 		// check if the attribute is in the list of global allowed attributes
@@ -182,31 +160,38 @@ class Dom
 		}
 
 		// configuration per tag name
-		$tagName            = $attr->ownerElement->nodeName;
-		$listedTagName      = static::listContainsName(array_keys($options['allowedTags']), $attr->ownerElement, $options);
-		$allowedAttrsForTag = $listedTagName ? ($allowedTags[$listedTagName] ?? true) : true;
+		$tag       = $attr->ownerElement->nodeName;
+		$listedTag = static::listContainsName(
+			array_keys($allowedTags),
+			$attr->ownerElement,
+			$options
+		);
+		$allowedAttrs = match ($listedTag) {
+			false   => true,
+			default => $allowedTags[$listedTag] ?? true
+		};
 
 		// the element allows all global attributes
-		if ($allowedAttrsForTag === true) {
+		if ($allowedAttrs === true) {
 			return $isAllowedGlobalAttr;
 		}
 
 		// specific attributes are allowed in addition to the global ones
-		if (is_array($allowedAttrsForTag) === true) {
+		if (is_array($allowedAttrs) === true) {
 			// if allowed globally, we don't need further checks
 			if ($isAllowedGlobalAttr === true) {
 				return true;
 			}
 
 			// otherwise the tag configuration decides
-			if (static::listContainsName($allowedAttrsForTag, $attr, $options) !== false) {
+			if (static::listContainsName($allowedAttrs, $attr, $options) !== false) {
 				return true;
 			}
 
-			return 'Not allowed by the "' . $tagName . '" element';
+			return 'Not allowed by the "' . $tag . '" element';
 		}
 
-		return 'The "' . $tagName . '" element does not allow attributes';
+		return 'The "' . $tag . '" element does not allow attributes';
 	}
 
 	/**
@@ -218,13 +203,12 @@ class Dom
 	public static function isAllowedGlobalAttr(
 		DOMAttr $attr,
 		array $options
-	): bool|string {
-		$options = static::normalizeSanitizeOptions($options);
-
+	): true|string {
+		$options      = static::normalizeSanitizeOptions($options);
 		$allowedAttrs = $options['allowedAttrs'];
 
+		// all attributes are allowed
 		if ($allowedAttrs === true) {
-			// all attributes are allowed
 			return true;
 		}
 
@@ -251,17 +235,15 @@ class Dom
 
 	/**
 	 * Checks if the URL is acceptable for URL attributes
-	 * @internal
 	 *
 	 * @return true|string If not allowed, an error message is returned
 	 */
 	public static function isAllowedUrl(
 		string $url,
 		array $options
-	): bool|string {
+	): true|string {
 		$options = static::normalizeSanitizeOptions($options);
-
-		$url = Str::lower($url);
+		$url     = Str::lower($url);
 
 		// allow empty URL values
 		if (empty($url) === true) {
@@ -280,7 +262,10 @@ class Dom
 
 		// allow site-internal URLs that didn't match the
 		// protocol-relative check above
-		if (mb_substr($url, 0, 1) === '/' && $options['allowHostRelativeUrls'] !== true) {
+		if (
+			mb_substr($url, 0, 1) === '/' &&
+			$options['allowHostRelativeUrls'] !== true
+		) {
 			// if a CMS instance is active, only allow the URL
 			// if it doesn't point outside of the index URL
 			if ($kirby = App::instance(null, true)) {
@@ -337,7 +322,7 @@ class Dom
 
 			$hostname = parse_url($url, PHP_URL_HOST);
 
-			if (in_array($hostname, $options['allowedDomains']) === true) {
+			if (in_array($hostname, $options['allowedDomains'], true) === true) {
 				return true;
 			}
 
@@ -415,8 +400,8 @@ class Dom
 	}
 
 	/**
-	 * Checks if a list contains the name of a node considering
-	 * the allowed namespaces
+	 * Checks if a list contains the name of a node
+	 * considering the allowed namespaces
 	 * @internal
 	 *
 	 * @param array $options See `Dom::sanitize()`
@@ -438,13 +423,17 @@ class Dom
 		// if the configuration does not define namespace URIs or if the
 		// currently checked node is from the special `xml:` namespace
 		// that has a fixed namespace according to the XML spec...
-		if ($allowedNamespaces === true || $node->namespaceURI === 'http://www.w3.org/XML/1998/namespace') {
+		if (
+			$allowedNamespaces === true ||
+			$node->namespaceURI === 'http://www.w3.org/XML/1998/namespace'
+		) {
 			// ...take the list as it is and only consider
 			// exact matches of the local name (which will
 			// contain a namespace if that namespace name
 			// is not defined in the document)
 
-			// the list contains the `xml:` prefix, so add it to the name as well
+			// the list contains the `xml:` prefix,
+			// so add it to the name as well
 			if ($node->namespaceURI === 'http://www.w3.org/XML/1998/namespace') {
 				$localName = 'xml:' . $localName;
 			}
@@ -463,6 +452,7 @@ class Dom
 			// try to find the expected origin namespace URI
 			$namespaceUri = null;
 			$itemLocal    = $item;
+
 			if (Str::contains($item, ':') === true) {
 				[$namespaceName, $itemLocal] = explode(':', $item);
 				$namespaceUri = $allowedNamespaces[$namespaceName] ?? null;
@@ -573,12 +563,14 @@ class Dom
 
 		// validate all processing instructions like <?xml-stylesheet
 		$pis = $this->query('//processing-instruction()');
+
 		foreach (iterator_to_array($pis, false) as $pi) {
 			$this->sanitizePI($pi, $options, $errors);
 		}
 
 		// validate all elements in the document tree
 		$elements = $this->doc->getElementsByTagName('*');
+
 		foreach (iterator_to_array($elements, false) as $element) {
 			$this->sanitizeElement($element, $options, $errors);
 		}
@@ -596,11 +588,10 @@ class Dom
 	 */
 	public function toString(bool $normalize = false): string
 	{
-		if ($this->type === 'HTML') {
-			$string = $this->exportHtml($normalize);
-		} else {
-			$string = $this->exportXml($normalize);
-		}
+		$string = match ($this->type) {
+			'HTML'  => $this->exportHtml($normalize),
+			default => $this->exportXml($normalize)
+		};
 
 		// add trailing newline if the input contained one
 		if (rtrim($this->code, "\r\n") !== $this->code) {
@@ -684,6 +675,7 @@ class Dom
 			// the input didn't contain an XML declaration;
 			// only return child nodes, which omits it
 			$result = [];
+
 			foreach ($this->doc->childNodes as $node) {
 				$result[] = $this->doc->saveXML($node);
 			}
@@ -869,14 +861,20 @@ class Dom
 
 				// custom check (if the attribute is still in the document)
 				if ($attr->ownerElement !== null && $options['attrCallback']) {
-					$errors = array_merge($errors, $options['attrCallback']($attr, $options) ?? []);
+					$errors = [
+						...$errors,
+						...$options['attrCallback']($attr, $options) ?? []
+					];
 				}
 			}
 		}
 
 		// custom check
 		if ($options['elementCallback']) {
-			$errors = array_merge($errors, $options['elementCallback']($element, $options) ?? []);
+			$errors = [
+				...$errors,
+				...$options['elementCallback']($element, $options) ?? []
+			];
 		}
 	}
 
@@ -894,7 +892,10 @@ class Dom
 		$name = $pi->nodeName;
 
 		// check for allow-listed processing instructions
-		if (is_array($options['allowedPIs']) === true && in_array($name, $options['allowedPIs']) === false) {
+		if (
+			is_array($options['allowedPIs']) === true &&
+			in_array($name, $options['allowedPIs'], true) === false
+		) {
 			$errors[] = new InvalidArgumentException(
 				'The "' . $name . '" processing instruction (line ' .
 				$pi->getLineNo() . ') is not allowed'
@@ -918,11 +919,15 @@ class Dom
 			empty($doctype->publicId) === false ||
 			empty($doctype->systemId) === false
 		) {
-			throw new InvalidArgumentException('The doctype must not reference external files');
+			throw new InvalidArgumentException(
+				message: 'The doctype must not reference external files'
+			);
 		}
 
 		if (empty($doctype->internalSubset) === false) {
-			throw new InvalidArgumentException('The doctype must not define a subset');
+			throw new InvalidArgumentException(
+				message: 'The doctype must not define a subset'
+			);
 		}
 
 		if ($options['doctypeCallback']) {

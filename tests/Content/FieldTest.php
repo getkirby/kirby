@@ -8,7 +8,7 @@ use stdClass;
 use TypeError;
 
 /**
- * @coversDefaultClass Kirby\Content\Field
+ * @coversDefaultClass \Kirby\Content\Field
  */
 class FieldTest extends TestCase
 {
@@ -118,9 +118,7 @@ class FieldTest extends TestCase
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame('Title', $field->value());
-		$field = $field->value(function ($value) {
-			return 'Modified';
-		});
+		$field = $field->value(fn ($value) => 'Modified');
 		$this->assertSame('Modified', $field->value());
 	}
 

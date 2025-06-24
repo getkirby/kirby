@@ -1,6 +1,6 @@
 import Modal, { defaults as modalDefaults } from "./modal.js";
 import History from "./history.js";
-import { set } from "vue";
+import { reactive, set } from "vue";
 import { uuid } from "@/helpers/string.js";
 
 export const defaults = () => {
@@ -22,11 +22,13 @@ export default (panel) => {
 		panel.drawer.submit();
 	});
 
-	return {
+	return reactive({
 		...parent,
+
 		get breadcrumb() {
 			return this.history.milestones;
 		},
+
 		/**
 		 * Closes the drawer and goes back to the
 		 * parent one if it has been stored
@@ -191,5 +193,5 @@ export default (panel) => {
 				this.focus();
 			});
 		}
-	};
+	});
 };

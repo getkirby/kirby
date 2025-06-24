@@ -8,8 +8,6 @@ class STest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.STest';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

@@ -90,6 +90,46 @@ class AppResolveTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
+	public function testResolveDraft()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'drafts' => [
+							[
+								'slug'  => 'a-draft',
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$result = $app->resolve('test/a-draft');
+		$this->assertNull($result);
+
+		$app = $app->clone([
+			'request' => [
+				'query' => [
+					'_token' => $app->page('test/a-draft')->version()->previewToken()
+				]
+			]
+		]);
+
+		$result = $app->resolve('test/a-draft');
+
+		$this->assertIsPage($result);
+		$this->assertSame('test/a-draft', $result->id());
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolvePageRepresentation()
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
@@ -161,6 +201,37 @@ class AppResolveTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
+	public function testResolveFileDefault()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							['filename' => 'test.jpg']
+						],
+					]
+				]
+			]
+		]);
+
+		// missing file
+		$result = $app->resolve('test/test.png');
+		$this->assertNull($result);
+
+		// existing file
+		$result = $app->resolve('test/test.jpg');
+		$this->assertNull($result);
+	}
+
+	/**
+	 * @covers ::resolve
+	 * @covers ::resolveFile
+	 */
 	public function testResolveSiteFile()
 	{
 		$app = new App([
@@ -171,6 +242,11 @@ class AppResolveTest extends TestCase
 				'files' => [
 					['filename' => 'test.jpg']
 				],
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
 			]
 		]);
 
@@ -202,12 +278,24 @@ class AppResolveTest extends TestCase
 							['filename' => 'test.jpg']
 						],
 					]
+				],
+				'files' => [
+					['filename' => 'test-site.jpg']
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
 				]
 			]
 		]);
 
 		// missing file
 		$result = $app->resolve('test/test.png');
+		$this->assertNull($result);
+
+		// file that only exists on the site
+		$result = $app->resolve('another-page/test-site.jpg');
 		$this->assertNull($result);
 
 		// existing file
@@ -235,6 +323,11 @@ class AppResolveTest extends TestCase
 							['filename' => 'test.jpg']
 						],
 					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
 				]
 			]
 		]);
@@ -273,11 +366,6 @@ class AppResolveTest extends TestCase
 					]
 				]
 			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => false
-				]
-			]
 		]);
 
 		// missing file

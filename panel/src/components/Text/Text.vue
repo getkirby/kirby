@@ -31,29 +31,15 @@ export default {
 		 * Font size of the text
 		 * @values tiny, small, medium, large, huge
 		 */
-		size: String,
-		/**
-		 * Visual appearance of the text
-		 * @values help
-		 * @deprecated 4.0.0 Use `k-help` class instead
-		 */
-		theme: String
+		size: String
 	},
 	computed: {
 		attrs() {
 			return {
 				class: "k-text",
 				"data-align": this.align,
-				"data-size": this.size,
-				"data-theme": this.theme
+				"data-size": this.size
 			};
-		}
-	},
-	mounted() {
-		if (this.theme) {
-			window.panel.deprecated(
-				'<k-text>: the `theme` prop will be removed in a future version. For help text, add `.k-help "` CSS class instead.'
-			);
 		}
 	}
 };
@@ -63,7 +49,8 @@ export default {
 :root {
 	--text-font-size: 1em;
 	--text-line-height: 1.5;
-	--link-color: var(--color-blue-800);
+	--link-color: light-dark(var(--color-blue-800), var(--color-blue-500));
+	--link-color-hover: light-dark(var(--color-blue-700), var(--color-blue-400));
 	--link-underline-offset: 2px;
 }
 
@@ -128,6 +115,9 @@ export default {
 	border-radius: var(--rounded-xs);
 	outline-offset: 2px;
 }
+.k-text :where(.k-link, a):hover {
+	color: var(--link-color-hover);
+}
 
 /* Lists */
 .k-text ol,
@@ -157,7 +147,7 @@ export default {
 	font-size: var(--text-lg);
 	line-height: 1.25;
 	padding-inline-start: var(--spacing-4);
-	border-inline-start: 2px solid var(--color-black);
+	border-inline-start: 2px solid light-dark(var(--color-black), var(--color-border));
 }
 
 /* Images */

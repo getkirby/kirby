@@ -2,12 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 class BlocksMethodsTest extends TestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -15,9 +13,7 @@ class BlocksMethodsTest extends TestCase
 				'index' => '/dev/null',
 			],
 			'blocksMethods' => [
-				'test' => function () {
-					return 'blocks method';
-				}
+				'test' => fn () => 'blocks method'
 			]
 		]);
 	}

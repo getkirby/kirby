@@ -1,4 +1,5 @@
 import { lcfirst } from "@/helpers/string";
+import clipboard from "@/helpers/clipboard";
 import mitt from "mitt";
 
 /**
@@ -34,6 +35,15 @@ export default (panel) => {
 	emitter.on("keydown.cmd./", () => panel.search());
 
 	/**
+	 * Custom copy to clipboard event
+	 * @since 5.0.0
+	 */
+	emitter.on("clipboard.write", async (e) => {
+		clipboard.write(e);
+		panel.notification.success(panel.t("copy.success") + "!");
+	});
+
+	/**
 	 * Config for globally delegated events.
 	 * Some events need to be fired on the document
 	 * and some on window. The boolean value determins if
@@ -48,6 +58,7 @@ export default (panel) => {
 			paste: true
 		},
 		window: {
+			beforeunload: false,
 			dragenter: false,
 			dragexit: false,
 			dragleave: false,
@@ -70,6 +81,15 @@ export default (panel) => {
 	 * methods (i.e. drag events)
 	 */
 	return {
+		/**
+		 * Global window beforeunload event
+		 *
+		 * @param {BeforeUnloadEvent} e
+		 */
+		beforeunload(e) {
+			this.emit("beforeunload", e);
+		},
+
 		/**
 		 * Global blur event
 		 *
@@ -352,39 +372,6 @@ export default (panel) => {
 			for (const event in events.window) {
 				window.removeEventListener(event, this[event]);
 			}
-		},
-
-		/**
-		 * @deprecated 4.0.0 use this.on instead
-		 */
-		$on(...args) {
-			window.panel.deprecated(
-				"`events.$on` will be removed in a future version. Use `events.on` instead."
-			);
-
-			emitter.on(...args);
-		},
-
-		/**
-		 * @deprecated 4.0.0 use this.emit instead
-		 */
-		$emit(...args) {
-			window.panel.deprecated(
-				"`events.$emit` will be removed in a future version. Use `events.emit` instead."
-			);
-
-			emitter.emit(...args);
-		},
-
-		/**
-		 * @deprecated 4.0.0 use this.off instead
-		 */
-		$off(...args) {
-			window.panel.deprecated(
-				"`events.$off` will be removed in a future version. Use `events.off` instead."
-			);
-
-			emitter.off(...args);
 		}
 	};
 };

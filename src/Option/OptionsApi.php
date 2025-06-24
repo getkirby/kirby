@@ -115,7 +115,9 @@ class OptionsApi extends OptionsProvider
 
 		// @codeCoverageIgnoreStart
 		if ($data === null) {
-			throw new NotFoundException('Options could not be loaded from API: ' . $model->toSafeString($this->url));
+			throw new NotFoundException(
+				message: 'Options could not be loaded from API: ' . $model->toSafeString($this->url)
+			);
 		}
 		// @codeCoverageIgnoreEnd
 

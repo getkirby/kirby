@@ -203,11 +203,11 @@ export default {
 <style>
 .k-block-options {
 	--toolbar-size: 30px;
-
-	box-shadow: var(--shadow-toolbar);
+	border: 1px solid light-dark(var(--color-border), var(--color-gray-900));
+	box-shadow: var(--shadow-xl);
 }
 .k-block-options > .k-button:not(:last-of-type) {
-	border-inline-end: 1px solid var(--color-background);
+	border-inline-end: 1px solid var(--toolbar-border);
 }
 .k-block-options .k-dropdown-content {
 	margin-top: 0.5rem;

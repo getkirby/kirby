@@ -28,7 +28,7 @@ abstract class FieldUuid extends Uuid
 	/**
 	 * Converts a content field to a related
 	 * models collection (e.g. Blocks or Structure)
-	 * @internal
+	 * @unstable
 	 */
 	abstract public static function fieldToCollection(Field $field): Collection;
 
@@ -88,7 +88,7 @@ abstract class FieldUuid extends Uuid
 	 */
 	public static function index(): Generator
 	{
-		$generate = function (Generator $models): Generator {
+		$generate = static function (Generator $models): Generator {
 			foreach ($models as $model) {
 				$fields = $model->blueprint()->fields();
 

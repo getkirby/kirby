@@ -13,7 +13,8 @@ describe.concurrent("panel.translation", () => {
 			code: null,
 			data: {},
 			direction: "ltr",
-			name: null
+			name: null,
+			weekday: 1
 		};
 
 		expect(translation.key()).toStrictEqual("translation");

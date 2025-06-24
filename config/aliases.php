@@ -75,7 +75,6 @@ return [
 	// Any of these might be removed at any point in the future
 	'kirby\cms\asset'              => 'Kirby\Filesystem\Asset',
 	'kirby\cms\content'            => 'Kirby\Content\Content',
-	'kirby\cms\contenttranslation' => 'Kirby\Content\ContentTranslation',
 	'kirby\cms\dir'                => 'Kirby\Filesystem\Dir',
 	'kirby\cms\filename'           => 'Kirby\Filesystem\Filename',
 	'kirby\cms\filefoundation'     => 'Kirby\Filesystem\IsFile',
@@ -83,6 +82,9 @@ return [
 	'kirby\cms\form'               => 'Kirby\Form\Form',
 	'kirby\cms\kirbytag'           => 'Kirby\Text\KirbyTag',
 	'kirby\cms\kirbytags'          => 'Kirby\Text\KirbyTags',
+	'kirby\cms\plugin'             => 'Kirby\Plugin\Plugin',
+	'kirby\cms\pluginasset'        => 'Kirby\Plugin\Asset',
+	'kirby\cms\pluginassets'       => 'Kirby\Plugin\Assets',
 	'kirby\cms\template'           => 'Kirby\Template\Template',
 	'kirby\form\options'           => 'Kirby\Option\Options',
 	'kirby\form\optionsapi'        => 'Kirby\Option\OptionsApi',

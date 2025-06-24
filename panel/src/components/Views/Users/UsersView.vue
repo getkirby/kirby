@@ -4,14 +4,7 @@
 			{{ $t("view.users") }}
 
 			<template #buttons>
-				<k-button
-					:disabled="!canCreate"
-					:text="$t('user.create')"
-					icon="add"
-					size="sm"
-					variant="filled"
-					@click="create"
-				/>
+				<k-view-buttons :buttons="buttons" />
 			</template>
 		</k-header>
 		<k-tabs :tab="role?.id ?? 'all'" :tabs="tabs" />
@@ -30,7 +23,7 @@
  */
 export default {
 	props: {
-		canCreate: Boolean,
+		buttons: Array,
 		role: Object,
 		roles: Array,
 		search: String,

@@ -15,27 +15,74 @@ abstract class AreaTestCase extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Areas.AreaTestCase';
 
-	protected $app;
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP,
+			],
+			'request' => [
+				'query' => [
+					'_json' => true,
+				]
+			],
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true
+				]
+			]
+		]);
 
-	public function app(array $params)
+		Dir::make(static::TMP);
+	}
+
+	public function tearDown(): void
+	{
+		// clear session file first
+		$this->app->session()->destroy();
+
+		Dir::remove(static::TMP);
+
+		// clear blueprint cache
+		Blueprint::$loaded = [];
+
+		// clean up server software fakes
+		unset($_SERVER['SERVER_SOFTWARE']);
+
+		App::destroy();
+	}
+
+	protected function app(array $params): App
 	{
 		return $this->app = $this->app->clone($params);
 	}
 
-	public function assertErrorView(string $path, string $message)
+	protected function assertErrorView(string $path, string $message): void
 	{
 		$view = $this->view($path);
 		$this->assertSame('k-error-view', $view['component']);
 		$this->assertSame($message, $view['props']['error']);
 	}
 
-	public function assertFormDialog(array $dialog)
+	protected function assertFormDialog(array $dialog): void
 	{
 		$this->assertSame('k-form-dialog', $dialog['component']);
 	}
 
-	public function assertRedirect(string $source, string $dest = '/', int $code = 302): void
+	protected function assertLanguageDropdown(string $path): void
 	{
+		$options = $this->dropdown($path)['options'];
+
+		$this->assertSame('English', $options[0]['text']);
+		$this->assertSame('-', $options[1]);
+		$this->assertSame('Deutsch', $options[2]['text']);
+	}
+
+	protected function assertRedirect(
+		string $source,
+		string $dest = '/',
+		int $code = 302
+	): void {
 		$response = $this->response($source);
 		$location = $response->header('Location');
 
@@ -44,27 +91,27 @@ abstract class AreaTestCase extends TestCase
 		$this->assertSame($dest, ltrim(Str::after($location, '/panel'), '/'));
 	}
 
-	public function assertRemoveDialog(array $dialog)
+	protected function assertRemoveDialog(array $dialog): void
 	{
 		$this->assertSame('k-remove-dialog', $dialog['component']);
 	}
 
-	public function assertTextDialog(array $dialog)
+	protected function assertTextDialog(array $dialog): void
 	{
 		$this->assertSame('k-text-dialog', $dialog['component']);
 	}
 
-	public function dialog(string $path)
+	protected function dialog(string $path): array
 	{
 		return $this->response('dialogs/' . $path, true)['$dialog'];
 	}
 
-	public function dropdown(string $path)
+	protected function dropdown(string $path): array
 	{
 		return $this->response('dropdowns/' . $path, true)['$dropdown'];
 	}
 
-	public function enableMultilang(): void
+	protected function enableMultilang(): void
 	{
 		$this->app([
 			'options' => [
@@ -77,7 +124,7 @@ abstract class AreaTestCase extends TestCase
 	 * Fake a ready setup and install
 	 * the first admin user
 	 */
-	public function install(): void
+	protected function install(): void
 	{
 		$this->installable();
 		$this->app([
@@ -95,7 +142,7 @@ abstract class AreaTestCase extends TestCase
 	/**
 	 * Fake a ready setup
 	 */
-	public function installable(): void
+	protected function installable(): void
 	{
 		// fake a valid server
 		$_SERVER['SERVER_SOFTWARE'] = 'php';
@@ -110,7 +157,7 @@ abstract class AreaTestCase extends TestCase
 		]);
 	}
 
-	public function installEditor(): void
+	protected function installEditor(): void
 	{
 		$this->app([
 			'blueprints' => [
@@ -134,7 +181,7 @@ abstract class AreaTestCase extends TestCase
 		]);
 	}
 
-	public function installLanguages(): void
+	protected function installLanguages(): void
 	{
 		$this->app([
 			'languages' => [
@@ -152,13 +199,15 @@ abstract class AreaTestCase extends TestCase
 		]);
 	}
 
-	public function login(string $user = 'test@getkirby.com'): void
+	protected function login(string $user = 'test@getkirby.com'): void
 	{
 		$this->app->impersonate($user);
 	}
 
-	public function response(string|null $path = null, bool $toJson = false)
-	{
+	protected function response(
+		string|null $path = null,
+		bool $toJson = false
+	): Response|array|null {
 		$response = Panel::router($path);
 
 		if ($toJson === true) {
@@ -168,33 +217,12 @@ abstract class AreaTestCase extends TestCase
 		return $response;
 	}
 
-	public function search(string $path)
+	protected function search(string $path): array
 	{
 		return $this->response('search/' . $path, true)['$search'];
 	}
 
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			],
-			'request' => [
-				'query' => [
-					'_json' => true,
-				]
-			],
-			'options' => [
-				'api' => [
-					'allowImpersonation' => true
-				]
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function submit(array $data)
+	protected function submit(array $data): void
 	{
 		$this->app([
 			'request' => [
@@ -207,23 +235,7 @@ abstract class AreaTestCase extends TestCase
 		$this->login();
 	}
 
-	public function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-
-		// clear blueprint cache
-		Blueprint::$loaded = [];
-
-		// clean up server software fakes
-		unset($_SERVER['SERVER_SOFTWARE']);
-
-		App::destroy();
-	}
-
-	public function view(string|null $path = null): array
+	protected function view(string|null $path = null): array
 	{
 		return $this->response($path, true)['$view'];
 	}

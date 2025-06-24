@@ -6,10 +6,9 @@ import Installation from "./Installation/index.js";
 import Languages from "./Languages/index.js";
 import Login from "./Login/index.js";
 import Pages from "./Pages/index.js";
+import Preview from "./Preview/index.js";
 import Users from "./Users/index.js";
 import System from "./System/index.js";
-
-import LegacyPluginView from "./LegacyPluginView.vue";
 
 export default {
 	install(app) {
@@ -21,10 +20,8 @@ export default {
 		app.use(Languages);
 		app.use(Login);
 		app.use(Pages);
+		app.use(Preview);
 		app.use(System);
 		app.use(Users);
-
-		/* Deprecated */
-		app.component("k-plugin-view", LegacyPluginView);
 	}
 };

@@ -48,20 +48,30 @@ class EmailChallenge extends Challenge
 		$formatted = substr($code, 0, 3) . ' ' . substr($code, 3, 3);
 
 		// use the login templates for 2FA
-		$mode = $options['mode'];
-		if ($mode === '2fa') {
-			$mode = 'login';
-		}
+		$mode = match($options['mode']) {
+			'2fa'   => 'login',
+			default => $options['mode']
+		};
 
 		$kirby = $user->kirby();
+		$from  = $kirby->option(
+			'auth.challenge.email.from',
+			'noreply@' . $kirby->url('index', true)->host()
+		);
+		$name  = $kirby->option(
+			'auth.challenge.email.fromName',
+			$kirby->site()->title()
+		);
+		$subject = $kirby->option(
+			'auth.challenge.email.subject',
+			I18n::translate('login.email.' . $mode . '.subject', null, $user->language())
+		);
+
 		$kirby->email([
-			'from' => $kirby->option('auth.challenge.email.from', 'noreply@' . $kirby->url('index', true)->host()),
-			'fromName' => $kirby->option('auth.challenge.email.fromName', $kirby->site()->title()),
-			'to' => $user,
-			'subject' => $kirby->option(
-				'auth.challenge.email.subject',
-				I18n::translate('login.email.' . $mode . '.subject', null, $user->language())
-			),
+			'from'     => $from,
+			'fromName' => $name,
+			'to'       => $user,
+			'subject'  => $subject,
 			'template' => 'auth/' . $mode,
 			'data' => [
 				'user'    => $user,

@@ -55,17 +55,13 @@ class Html extends Xml
 	 * ```php
 	 * Html::$void = ' />'
 	 * ```
-	 *
-	 * @var string
 	 */
-	public static $void = '>';
+	public static string $void = '>';
 
 	/**
 	 * List of HTML tags that are considered to be self-closing
-	 *
-	 * @var array
 	 */
-	public static $voidList = [
+	public static array $voidList = [
 		'area',
 		'base',
 		'br',
@@ -110,8 +106,11 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the tag
 	 * @return string The generated HTML
 	 */
-	public static function a(string $href, $text = null, array $attr = []): string
-	{
+	public static function a(
+		string $href,
+		$text = null,
+		array $attr = []
+	): string {
 		if (Str::startsWith($href, 'mailto:')) {
 			return static::email(substr($href, 7), $text, $attr);
 		}
@@ -159,9 +158,9 @@ class Html extends Xml
 
 		// HTML supports named entities
 		$entities = parent::entities();
-		$html = array_keys($entities);
-		$xml  = array_values($entities);
-		$attr = str_replace($xml, $html, $attr);
+		$html     = array_keys($entities);
+		$xml      = array_values($entities);
+		$attr     = str_replace($xml, $html, $attr);
 
 		if ($attr) {
 			return $before . $attr . $after;
@@ -197,21 +196,27 @@ class Html extends Xml
 
 		if (empty($text) === true) {
 			// show only the email address without additional parameters
-			$address = Str::contains($email, '?') ? Str::before($email, '?') : $email;
+			$address = match (Str::contains($email, '?')) {
+				true  => Str::before($email, '?'),
+				false => $email
+			};
 
 			$text = [Str::encode($address)];
 		}
 
-		$email = Str::encode($email);
-		$attr  = array_merge([
+		$attr = [
 			'href' => [
-				'value'  => 'mailto:' . $email,
+				'value'  => 'mailto:' . Str::encode($email),
 				'escape' => false
-			]
-		], $attr);
+			],
+			...$attr
+		];
 
 		// add rel=noopener to target blank links to improve security
-		$attr['rel'] = static::rel($attr['rel'] ?? null, $attr['target'] ?? null);
+		$attr['rel'] = static::rel(
+			$attr['rel'] ?? null,
+			$attr['target'] ?? null
+		);
 
 		return static::tag('a', $text, $attr);
 	}
@@ -234,7 +239,13 @@ class Html extends Xml
 
 		if ($keepTags === true) {
 			$list = static::entities();
-			unset($list['"'], $list['<'], $list['>'], $list['&']);
+
+			unset(
+				$list['"'],
+				$list['<'],
+				$list['>'],
+				$list['&']
+			);
 
 			$search = array_keys($list);
 			$values = array_values($list);
@@ -298,7 +309,7 @@ class Html extends Xml
 			$src .= '?file=' . $file;
 		}
 
-		return static::tag('script', '', array_merge($attr, ['src' => $src]));
+		return static::tag('script', '', [...$attr, 'src' => $src]);
 	}
 
 	/**
@@ -309,7 +320,7 @@ class Html extends Xml
 	 */
 	public static function iframe(string $src, array $attr = []): string
 	{
-		return static::tag('iframe', '', array_merge(['src' => $src], $attr));
+		return static::tag('iframe', '', ['src' => $src, ...$attr]);
 	}
 
 	/**
@@ -321,12 +332,11 @@ class Html extends Xml
 	 */
 	public static function img(string $src, array $attr = []): string
 	{
-		$attr = array_merge([
+		return static::tag('img', '', [
 			'src' => $src,
-			'alt' => ''
-		], $attr);
-
-		return static::tag('img', '', $attr);
+			'alt' => '',
+			...$attr
+		]);
 	}
 
 	/**
@@ -334,7 +344,7 @@ class Html extends Xml
 	 */
 	public static function isVoid(string $tag): bool
 	{
-		return in_array(strtolower($tag), static::$voidList);
+		return in_array(strtolower($tag), static::$voidList, true);
 	}
 
 	/**
@@ -350,7 +360,7 @@ class Html extends Xml
 		string|array|null $text = null,
 		array $attr = []
 	): string {
-		$attr = array_merge(['href' => $href], $attr);
+		$attr = ['href' => $href, ...$attr];
 
 		if (empty($text) === true) {
 			$text = $attr['href'];
@@ -361,7 +371,10 @@ class Html extends Xml
 		}
 
 		// add rel=noopener to target blank links to improve security
-		$attr['rel'] = static::rel($attr['rel'] ?? null, $attr['target'] ?? null);
+		$attr['rel'] = static::rel(
+			$attr['rel'] ?? null,
+			$attr['target'] ?? null
+		);
 
 		return static::tag('a', $text, $attr);
 	}
@@ -522,7 +535,7 @@ class Html extends Xml
 			isset($attr['allow']) === false &&
 			($attr['allowfullscreen'] ?? true) === true
 		) {
-			$attr['allow'] = 'fullscreen';
+			$attr['allow']           = 'fullscreen';
 			$attr['allowfullscreen'] = true;
 		}
 
@@ -592,7 +605,7 @@ class Html extends Xml
 		$host   = 'https://' . $uri->host() . '/embed';
 		$src    = null;
 
-		$isYoutubeId = function (string|null $id = null): bool {
+		$isYoutubeId = static function (string|null $id = null): bool {
 			if (empty($id) === true) {
 				return false;
 			}

@@ -57,7 +57,7 @@ return [
 						'email'       => '',
 						'password'    => '',
 						'translation' => $kirby->panelLanguage(),
-						'role'        => $role ?? $roles['options'][0]['value'] ?? null
+						'role'        => $role ?: $roles['options'][0]['value'] ?? null
 					]
 				]
 			];
@@ -231,9 +231,9 @@ return [
 
 			// compare passwords
 			if ($password !== $passwordConfirmation) {
-				throw new InvalidArgumentException([
-					'key' => 'user.password.notSame'
-				]);
+				throw new InvalidArgumentException(
+					key: 'user.password.notSame'
+				);
 			}
 
 			// change password if everything's fine
@@ -319,7 +319,6 @@ return [
 
 			return [
 				'event'    => 'user.delete',
-				'dispatch' => ['content/remove' => [$url]],
 				'redirect' => $redirect
 			];
 		}

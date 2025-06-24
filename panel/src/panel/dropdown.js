@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import Feature, { defaults } from "./feature.js";
 
 /**
@@ -6,7 +7,7 @@ import Feature, { defaults } from "./feature.js";
 export default (panel) => {
 	const parent = Feature(panel, "dropdown", defaults());
 
-	return {
+	return reactive({
 		...parent,
 
 		close() {
@@ -64,7 +65,7 @@ export default (panel) => {
 							: option.dialog.url;
 					const options =
 						typeof option.dialog === "object" ? option.dialog : {};
-					return panel.app.$dialog(url, options);
+					return panel.dialog.open(url, options);
 				};
 
 				return option;
@@ -73,7 +74,6 @@ export default (panel) => {
 
 		set(state) {
 			// deprecated dropdown responses only return the options
-			// TODO: remove in v5
 			if (state.options) {
 				// panel.deprecated(
 				// 	"`pandel.dropdown`: responses should return the full state object. Only returning the options has been deprecated and will be removed in a future version."
@@ -86,5 +86,5 @@ export default (panel) => {
 
 			return parent.set.call(this, state);
 		}
-	};
+	});
 };

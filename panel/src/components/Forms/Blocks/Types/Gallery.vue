@@ -49,7 +49,7 @@ export default {
 	extends: Block,
 	data() {
 		return {
-			back: this.onBack() ?? "white"
+			back: this.onBack() ?? "var(--block-color-back)"
 		};
 	},
 	computed: {
@@ -111,9 +111,9 @@ export default {
 }
 
 .k-block-type-gallery[data-disabled="true"] .k-block-type-gallery-placeholder {
-	background: var(--color-gray-250);
+	background: light-dark(var(--color-gray-250), var(--color-gray-950));
 }
 .k-block-type-gallery-placeholder {
-	background: var(--color-background);
+	background: var(--panel-color-back);
 }
 </style>

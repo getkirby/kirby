@@ -10,8 +10,8 @@ use Kirby\TestCase;
  */
 class SessionDataTest extends TestCase
 {
-	protected $session;
-	protected $sessionData;
+	protected Session $session;
+	protected SessionData $sessionData;
 
 	public function setUp(): void
 	{

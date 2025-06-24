@@ -1,14 +1,20 @@
 <template>
 	<k-field
 		v-bind="$props"
-		:input="id"
+		:class="['k-password-field', $attrs.class]"
 		:counter="counterOptions"
-		class="k-password-field"
+		:input="id"
+		:style="$attrs.style"
 	>
 		<template #options>
 			<slot name="options" />
 		</template>
-		<k-input v-bind="$props" ref="input" type="password" v-on="$listeners" />
+		<k-input
+			v-bind="$props"
+			ref="input"
+			type="password"
+			@input="$emit('input', $event)"
+		/>
 	</k-field>
 </template>
 

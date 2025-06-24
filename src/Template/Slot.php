@@ -3,6 +3,7 @@
 namespace Kirby\Template;
 
 use Kirby\Exception\LogicException;
+use Stringable;
 
 /**
  * The slot class catches all content
@@ -16,11 +17,10 @@ use Kirby\Exception\LogicException;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Slot
+class Slot implements Stringable
 {
 	/**
 	 * The captured slot content
-	 * @internal
 	 */
 	public string|null $content;
 
@@ -69,7 +69,7 @@ class Slot
 	public function close(): void
 	{
 		if ($this->open === false) {
-			throw new LogicException('The slot has not been opened');
+			throw new LogicException(message: 'The slot has not been opened');
 		}
 
 		$this->content = ob_get_clean();

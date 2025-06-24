@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\Field;
+use Kirby\Content\MemoryStorage;
+use Kirby\Content\PlainTextStorage;
 use Kirby\Email\Email;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
@@ -11,7 +13,7 @@ use Kirby\Toolkit\Obj;
 
 class CustomEmailProvider extends Email
 {
-	public static $apiKey;
+	public static string|null $apiKey = null;
 
 	public function __construct(array $props = [], bool $debug = false)
 	{
@@ -29,11 +31,9 @@ class AppComponentsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.AppComponents';
 
-	protected $kirby;
-
 	public function setUp(): void
 	{
-		$this->kirby = new App([
+		$this->app = new App([
 			'roots' => [
 				'index' => '/dev/null'
 			]
@@ -42,11 +42,9 @@ class AppComponentsTest extends TestCase
 
 	public function testCssPlugin()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'components' => [
-				'css' => function ($kirby, $url, $options) {
-					return '/test.css';
-				}
+				'css' => fn ($kirby, $url, $options) => '/test.css'
 			]
 		]);
 
@@ -56,11 +54,9 @@ class AppComponentsTest extends TestCase
 
 	public function testJsPlugin()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'components' => [
-				'js' => function ($kirby, $url, $options) {
-					return '/test.js';
-				}
+				'js' => fn ($kirby, $url, $options) => '/test.js'
 			]
 		]);
 
@@ -70,7 +66,7 @@ class AppComponentsTest extends TestCase
 
 	public function testKirbyTag()
 	{
-		$tag = $this->kirby->kirbytag('link', 'https://getkirby.com', ['text' => 'Kirby']);
+		$tag = $this->app->kirbytag('link', 'https://getkirby.com', ['text' => 'Kirby']);
 		$expected = '<a href="https://getkirby.com">Kirby</a>';
 
 		$this->assertSame($expected, $tag);
@@ -78,7 +74,7 @@ class AppComponentsTest extends TestCase
 
 	public function testKirbyTags()
 	{
-		$tag = $this->kirby->kirbytags('(link: https://getkirby.com text: Kirby)');
+		$tag = $this->app->kirbytags('(link: https://getkirby.com text: Kirby)');
 		$expected = '<a href="https://getkirby.com">Kirby</a>';
 
 		$this->assertSame($expected, $tag);
@@ -89,7 +85,7 @@ class AppComponentsTest extends TestCase
 		$text     = 'Test';
 		$expected = '<p>Test</p>';
 
-		$this->assertSame($expected, $this->kirby->kirbytext($text));
+		$this->assertSame($expected, $this->app->kirbytext($text));
 	}
 
 	public function testKirbytextWithSafeMode()
@@ -97,7 +93,7 @@ class AppComponentsTest extends TestCase
 		$text     = '<h1>**Test**</h1>';
 		$expected = '&lt;h1&gt;<strong>Test</strong>&lt;/h1&gt;';
 
-		$this->assertSame($expected, $this->kirby->kirbytext($text, [
+		$this->assertSame($expected, $this->app->kirbytext($text, [
 			'markdown' => [
 				'safe'   => true,
 				'inline' => true
@@ -110,7 +106,7 @@ class AppComponentsTest extends TestCase
 		$text     = 'Test';
 		$expected = 'Test';
 
-		$this->assertSame($expected, $this->kirby->kirbytext($text, [
+		$this->assertSame($expected, $this->app->kirbytext($text, [
 			'markdown' => [
 				'inline' => true
 			]
@@ -122,7 +118,7 @@ class AppComponentsTest extends TestCase
 		$text     = 'Test';
 		$expected = '<p>Test</p>';
 
-		$this->assertSame($expected, $this->kirby->markdown($text));
+		$this->assertSame($expected, $this->app->markdown($text));
 	}
 
 	public function testMarkdownInline()
@@ -130,7 +126,7 @@ class AppComponentsTest extends TestCase
 		$text     = 'Test';
 		$expected = 'Test';
 
-		$this->assertSame($expected, $this->kirby->markdown($text, ['inline' => true]));
+		$this->assertSame($expected, $this->app->markdown($text, ['inline' => true]));
 	}
 
 	public function testMarkdownWithSafeMode()
@@ -138,7 +134,7 @@ class AppComponentsTest extends TestCase
 		$text     = '<div>Test</div>';
 		$expected = '<p>&lt;div&gt;Test&lt;/div&gt;</p>';
 
-		$this->assertSame($expected, $this->kirby->markdown($text, ['safe' => true]));
+		$this->assertSame($expected, $this->app->markdown($text, ['safe' => true]));
 	}
 
 	public function testMarkdownCachedInstance()
@@ -148,16 +144,16 @@ class AppComponentsTest extends TestCase
 		$expected = '<p>1st line<br />
 2nd line</p>';
 
-		$this->assertSame($expected, $this->kirby->component('markdown')($this->kirby, $text, []));
+		$this->assertSame($expected, $this->app->component('markdown')($this->app, $text, []));
 
 		$expected = '<p>1st line
 2nd line</p>';
-		$this->assertSame($expected, $this->kirby->component('markdown')($this->kirby, $text, ['breaks' => false]));
+		$this->assertSame($expected, $this->app->component('markdown')($this->app, $text, ['breaks' => false]));
 	}
 
 	public function testMarkdownPlugin()
 	{
-		$this->kirby = $this->kirby->clone([
+		$this->app = $this->app->clone([
 			'components' => [
 				'markdown' => function (App $kirby, string|null $text = null, array $options = []) {
 					$result = Html::encode($text);
@@ -174,10 +170,10 @@ class AppComponentsTest extends TestCase
 		$text     = 'Test _case_';
 
 		$expected = '<pre><code><p>Test _case_</p></pre></code>';
-		$this->assertSame($expected, $this->kirby->markdown($text));
+		$this->assertSame($expected, $this->app->markdown($text));
 
 		$expected = '<pre><code>Test _case_</pre></code>';
-		$this->assertSame($expected, $this->kirby->markdown($text, ['inline' => true]));
+		$this->assertSame($expected, $this->app->markdown($text, ['inline' => true]));
 	}
 
 	public function testSmartypants()
@@ -185,12 +181,12 @@ class AppComponentsTest extends TestCase
 		$text     = '"Test"';
 		$expected = '&#8220;Test&#8221;';
 
-		$this->assertSame($expected, $this->kirby->smartypants($text));
+		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
 	public function testSmartypantsDisabled()
 	{
-		$this->kirby = $this->kirby->clone([
+		$this->app = $this->app->clone([
 			'options' => [
 				'smartypants'   => false
 			]
@@ -199,12 +195,12 @@ class AppComponentsTest extends TestCase
 		$text     = '"Test"';
 		$expected = '"Test"';
 
-		$this->assertSame($expected, $this->kirby->smartypants($text));
+		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
 	public function testSmartypantsOptions()
 	{
-		$this->kirby = $this->kirby->clone([
+		$this->app = $this->app->clone([
 			'options' => [
 				'languages'   => true,
 				'smartypants' => [
@@ -217,12 +213,12 @@ class AppComponentsTest extends TestCase
 		$text     = '"Test"';
 		$expected = '<Test>';
 
-		$this->assertSame($expected, $this->kirby->smartypants($text));
+		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
 	public function testSmartypantsMultiLang()
 	{
-		$this->kirby = $this->kirby->clone([
+		$this->app = $this->app->clone([
 			'options' => [
 				'languages'     => true,
 				'smartypants'   => true
@@ -255,12 +251,12 @@ class AppComponentsTest extends TestCase
 		$text     = '"Test"';
 		$expected = '<Test>';
 
-		$this->assertSame($expected, $this->kirby->smartypants($text));
+		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
 	public function testSmartypantsDefaultOptionsOnMultiLang()
 	{
-		$this->kirby = $this->kirby->clone([
+		$this->app = $this->app->clone([
 			'options' => [
 				'languages'     => true,
 				'smartypants'   => true
@@ -285,7 +281,7 @@ class AppComponentsTest extends TestCase
 		$text     = '"Test"';
 		$expected = '&#8220;Test&#8221;';
 
-		$this->assertSame($expected, $this->kirby->smartypants($text));
+		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
 	public function testSmartypantsCachedInstance()
@@ -293,15 +289,15 @@ class AppComponentsTest extends TestCase
 		$text     = '"Test"';
 		$expected = '&#8220;Test&#8221;';
 
-		$this->assertSame($expected, $this->kirby->component('smartypants')($this->kirby, $text, []));
+		$this->assertSame($expected, $this->app->component('smartypants')($this->app, $text, []));
 
 		$expected = 'TestTest&#8221;';
-		$this->assertSame($expected, $this->kirby->component('smartypants')($this->kirby, $text, ['doublequote.open' => 'Test']));
+		$this->assertSame($expected, $this->app->component('smartypants')($this->app, $text, ['doublequote.open' => 'Test']));
 	}
 
 	public function testSnippet()
 	{
-		$app = $this->kirby->clone([
+		$app = $this->app->clone([
 			'roots' => [
 				'snippets' => static::TMP
 			],
@@ -338,7 +334,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame('plugin', $app->snippet(['does-not-exist', 'plugin']));
 
 		// fallback from plugin with field
-		$this->assertSame('plugin', $app->snippet(['does-not-exist', new Field(null, 'test', 'plugin') ]));
+		$this->assertSame('plugin', $app->snippet(['does-not-exist', new Field(null, 'test', 'plugin')]));
 
 		// inject data
 		$this->assertSame('test', $app->snippet('variable', ['message' => 'test']));
@@ -352,18 +348,47 @@ class AppComponentsTest extends TestCase
 		$app->snippet('variable', ['message' => 'test'], false);
 	}
 
+	public function testStorage()
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$this->assertInstanceOf(PlainTextStorage::class, $this->app->storage($this->app->page('test')));
+	}
+
+	public function testStorageWithModifiedComponent()
+	{
+		$this->app = $this->app->clone([
+			'components' => [
+				'storage' => function (App $app, ModelWithContent $model) {
+					return new MemoryStorage($model);
+				}
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$this->assertInstanceOf(MemoryStorage::class, $this->app->storage($this->app->page('test')));
+	}
+
 	public function testTemplate()
 	{
-		$this->assertInstanceOf(Template::class, $this->kirby->template('default'));
+		$this->assertInstanceOf(Template::class, $this->app->template('default'));
 	}
 
 	public function testUrlPlugin()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'components' => [
-				'url' => function ($kirby, $path, $options) {
-					return 'test';
-				}
+				'url' => fn ($kirby, $path, $options) => 'test'
 			]
 		]);
 
@@ -372,7 +397,7 @@ class AppComponentsTest extends TestCase
 
 	public function testUrlPluginWithNativeComponent()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'components' => [
 				'url' => function ($kirby, $path, $options) {
 					if ($path === 'test') {
@@ -390,7 +415,7 @@ class AppComponentsTest extends TestCase
 
 	public function testUrlInvalidUuid()
 	{
-		$this->kirby->clone([
+		$this->app->clone([
 			'roots' => [
 				'index' => static::TMP,
 			]
@@ -404,7 +429,7 @@ class AppComponentsTest extends TestCase
 
 	public function testEmail()
 	{
-		$app = $this->kirby->clone([
+		$app = $this->app->clone([
 			'components' => [
 				'email' => function ($kirby, $props, $debug) {
 					return new CustomEmailProvider($props, $debug);

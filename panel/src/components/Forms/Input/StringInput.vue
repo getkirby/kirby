@@ -17,8 +17,9 @@
 			value
 		}"
 		:aria-label="ariaLabel"
+		:class="['k-string-input', $attrs.class]"
 		:data-font="font"
-		class="k-string-input"
+		:style="$attrs.style"
 		@input="$emit('input', $event.target.value)"
 	/>
 </template>
@@ -27,6 +28,7 @@
 import Input, { props as InputProps } from "@/mixins/input.js";
 import {
 	autocomplete,
+	autofocus,
 	font,
 	maxlength,
 	minlength,
@@ -39,6 +41,7 @@ export const props = {
 	mixins: [
 		InputProps,
 		autocomplete,
+		autofocus,
 		font,
 		maxlength,
 		minlength,
@@ -48,6 +51,7 @@ export const props = {
 	],
 	props: {
 		ariaLabel: String,
+		preselect: Boolean,
 		type: {
 			default: "text",
 			type: String
@@ -63,7 +67,21 @@ export const props = {
  * @example <k-string-input :value="value" type="text" @input="value = $event" />
  */
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	mounted() {
+		if (this.$props.autofocus) {
+			this.focus();
+		}
+
+		if (this.$props.preselect) {
+			this.select();
+		}
+	},
+	methods: {
+		select() {
+			this.$el.select();
+		}
+	}
 };
 </script>
 

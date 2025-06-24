@@ -9,23 +9,33 @@ export default (api) => {
 			cache: "no-store",
 			credentials: "same-origin",
 			mode: "same-origin",
-			headers: {
-				"content-type": "application/json",
-				"x-csrf": api.csrf,
-				"x-language": api.language,
-				...toLowerKeys(options.headers ?? {})
-			},
 			...options
+		};
+
+		// make sure to keep essential headers
+		// unless they are explicitely overwritten
+		options.headers = {
+			"content-type": "application/json",
+			"x-csrf": api.csrf,
+			"x-language": api.language,
+			...toLowerKeys(options.headers ?? {})
 		};
 
 		// adapt headers for all non-GET and non-POST methods
 		if (
-			api.methodOverwrite &&
+			api.methodOverride &&
 			options.method !== "GET" &&
 			options.method !== "POST"
 		) {
 			options.headers["x-http-method-override"] = options.method;
 			options.method = "POST";
+		}
+
+		// remove null headers
+		for (const key in options.headers) {
+			if (options.headers[key] === null) {
+				delete options.headers[key];
+			}
 		}
 
 		// build the request URL

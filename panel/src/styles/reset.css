@@ -50,15 +50,10 @@
 }
 
 :where(
-		textarea,
-		select,
-		input:not(
-				[type="checkbox"],
-				[type="radio"],
-				[type="reset"],
-				[type="submit"]
-			)
-	) {
+	textarea,
+	select,
+	input:not([type="checkbox"], [type="radio"], [type="reset"], [type="submit"])
+) {
 	width: 100%;
 	font-variant-numeric: tabular-nums;
 }
@@ -90,7 +85,7 @@
 }
 
 :where(input:-webkit-autofill) {
-	-webkit-text-fill-color: var(--input-color-text) !important;
+	-webkit-text-fill-color: var(--color-text) !important;
 	-webkit-background-clip: text;
 }
 
@@ -103,9 +98,9 @@
 	opacity: 1;
 }
 
-/* TODO: :where(label:has(> input:disabled), label:has(+ input:disabled)) {
+:where(label:has(> input:disabled), label:has(+ input:disabled)) {
 	cursor: not-allowed;
-} */
+}
 
 :where(a) {
 	color: currentColor;
@@ -207,6 +202,6 @@ body {
 	display: inline-block;
 	padding-inline: var(--spacing-2);
 	border-radius: var(--rounded);
-	background: var(--color-white);
+	background: light-dark(var(--color-white), var(--color-black));
 	box-shadow: var(--shadow);
 }

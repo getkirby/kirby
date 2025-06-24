@@ -24,14 +24,16 @@ class Svgz extends Svg
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed or recompressed
 	 */
-	public static function sanitize(string $string, bool $isExternal = false): string
-	{
+	public static function sanitize(
+		string $string,
+		bool $isExternal = false
+	): string {
 		$string = static::uncompress($string);
 		$string = parent::sanitize($string, $isExternal);
 		$string = @gzencode($string);
 
 		if (is_string($string) !== true) {
-			throw new InvalidArgumentException('Could not recompress gzip data'); // @codeCoverageIgnore
+			throw new InvalidArgumentException(message: 'Could not recompress gzip data'); // @codeCoverageIgnore
 		}
 
 		return $string;
@@ -46,8 +48,10 @@ class Svgz extends Svg
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
 	 */
-	public static function validate(string $string, bool $isExternal = false): void
-	{
+	public static function validate(
+		string $string,
+		bool $isExternal = false
+	): void {
 		$string = static::uncompress($string);
 		parent::validate($string, $isExternal);
 	}
@@ -62,7 +66,9 @@ class Svgz extends Svg
 		$string = @gzdecode($string, 10000000);
 
 		if (is_string($string) !== true) {
-			throw new InvalidArgumentException('Could not uncompress gzip data');
+			throw new InvalidArgumentException(
+				message: 'Could not uncompress gzip data'
+			);
 		}
 
 		return $string;

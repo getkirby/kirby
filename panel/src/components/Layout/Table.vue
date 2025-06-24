@@ -1,6 +1,14 @@
 <template>
-	<div :aria-disabled="disabled" class="k-table">
-		<table :data-disabled="disabled" :data-indexed="hasIndexColumn">
+	<div
+		:aria-disabled="disabled"
+		:class="['k-table', $attrs.class]"
+		:style="$attrs.style"
+	>
+		<table
+			:data-disabled="disabled"
+			:data-indexed="hasIndexColumn"
+			:data-selecting="selecting"
+		>
 			<!-- Header row -->
 			<thead>
 				<tr>
@@ -66,10 +74,13 @@
 				<template v-else>
 					<tr
 						v-for="(row, rowIndex) in values"
-						:key="rowIndex"
+						:key="row.id ?? row._id ?? row.value ?? JSON.stringify(row)"
 						:class="{
-							'k-table-sortable-row': sortable && row.sortable !== false
+							'k-table-sortable-row': rowIsSortable(row)
 						}"
+						:data-selecting="selecting"
+						:data-selectable="rowIsSelectable(row)"
+						:data-sortable="rowIsSortable(row)"
 					>
 						<!-- Index & drag handle -->
 						<td
@@ -88,7 +99,7 @@
 							</slot>
 
 							<k-sort-handle
-								v-if="sortable && row.sortable !== false"
+								v-if="rowIsSortable(row)"
 								class="k-table-sort-handle"
 							/>
 						</td>
@@ -97,7 +108,7 @@
 						<k-table-cell
 							v-for="(column, columnIndex) in columns"
 							:id="columnIndex"
-							:key="rowIndex + '-' + columnIndex"
+							:key="columnIndex"
 							:column="column"
 							:field="fields[columnIndex]"
 							:row="row"
@@ -128,13 +139,25 @@
 							data-mobile="true"
 							class="k-table-options-column"
 						>
-							<slot name="options" v-bind="{ row, rowIndex }">
-								<k-options-dropdown
-									:options="row.options ?? options"
-									:text="(row.options ?? options).length > 1"
-									@option="onOption($event, row, rowIndex)"
-								/>
-							</slot>
+							<template v-if="selecting">
+								<label class="k-table-select-checkbox">
+									<input
+										:disabled="row.selectable === false"
+										type="checkbox"
+										@change="$emit('select', row, rowIndex)"
+									/>
+								</label>
+							</template>
+
+							<template v-else>
+								<slot name="options" v-bind="{ row, rowIndex }">
+									<k-options-dropdown
+										:options="row.options ?? options"
+										:text="(row.options ?? options).length > 1"
+										@option="onOption($event, row, rowIndex)"
+									/>
+								</slot>
+							</template>
 						</td>
 					</tr>
 				</template>
@@ -205,6 +228,10 @@ export default {
 		 */
 		pagination: [Object, Boolean],
 		/**
+		 * Whether the table is in select mode
+		 */
+		selecting: Boolean,
+		/**
 		 * Whether table is sortable
 		 */
 		sortable: Boolean
@@ -246,7 +273,7 @@ export default {
 		 */
 		dragOptions() {
 			return {
-				disabled: !this.sortable,
+				disabled: !this.sortable || this.rows.length === 0,
 				draggable: ".k-table-sortable-row",
 				fallbackClass: "k-table-row-fallback",
 				ghostClass: "k-table-row-ghost"
@@ -265,6 +292,7 @@ export default {
 		 */
 		hasOptions() {
 			return (
+				this.selecting ||
 				this.$scopedSlots.options ||
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
@@ -344,6 +372,16 @@ export default {
 			this.$emit("input", this.values);
 			this.$emit("sort", this.values);
 		},
+		rowIsSelectable(row) {
+			return this.selecting === true && row.selectable !== false;
+		},
+		rowIsSortable(row) {
+			return (
+				this.sortable === true &&
+				this.selecting === false &&
+				row.sortable !== false
+			);
+		},
 		/**
 		 * Returns width styling based on column fraction
 		 * @param {string} fraction
@@ -366,10 +404,13 @@ export default {
 <style>
 :root {
 	--table-cell-padding: var(--spacing-3);
-	--table-color-back: var(--color-white);
-	--table-color-border: var(--color-background);
-	--table-color-hover: var(--color-gray-100);
-	--table-color-th-back: var(--color-gray-100);
+	--table-color-back: light-dark(var(--color-white), var(--color-gray-850));
+	--table-color-border: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.375));
+	--table-color-hover: light-dark(var(--color-gray-100), rgba(0, 0, 0, 0.1));
+	--table-color-th-back: light-dark(
+		var(--color-gray-100),
+		var(--color-gray-800)
+	);
 	--table-color-th-text: var(--color-text-dimmed);
 	--table-row-height: var(--input-height);
 }
@@ -419,7 +460,7 @@ export default {
 	color: var(--table-color-th-text);
 	background: var(--table-color-th-back);
 }
-.k-table th[data-has-button] {
+.k-table th[data-has-button="true"] {
 	padding: 0;
 }
 .k-table th button {
@@ -450,6 +491,9 @@ export default {
 }
 
 /* Table Body */
+.k-table tbody tr td {
+	background: var(--table-color-back);
+}
 .k-table tbody tr:hover td {
 	background: var(--table-color-hover);
 }
@@ -471,7 +515,7 @@ export default {
 
 /* Sortable tables */
 .k-table-row-ghost {
-	background: var(--color-white);
+	background: var(--table-color-back);
 	outline: var(--outline);
 	border-radius: var(--rounded);
 	margin-bottom: 2px;
@@ -491,17 +535,32 @@ export default {
 	color: var(--color-text-dimmed);
 	line-height: 1.1em;
 }
+.k-table .k-table-index-column:has(.k-table-index-checkbox) {
+	padding: 0;
+}
 
 /* Table Index with sort handle */
-.k-table .k-table-index-column .k-sort-handle {
+.k-table tr[data-sortable="true"] .k-table-index-column .k-sort-handle {
 	--button-width: 100%;
 	display: none;
 }
-.k-table tr.k-table-sortable-row:hover .k-table-index-column .k-table-index {
+.k-table tr[data-sortable="true"]:hover .k-table-index-column .k-table-index {
 	display: none;
 }
-.k-table tr.k-table-sortable-row:hover .k-table-index-column .k-sort-handle {
+.k-table tr[data-sortable="true"]:hover .k-table-index-column .k-sort-handle {
 	display: flex;
+}
+
+/* Selectable rows */
+.k-table
+	tr[data-selectable="true"]:has(.k-table-select-checkbox input:checked) {
+	--table-color-back: light-dark(var(--color-blue-250), var(--color-blue-800));
+	--table-color-hover: var(--table-color-back);
+}
+.k-table .k-table-select-checkbox {
+	height: 100%;
+	display: grid;
+	place-items: center;
 }
 
 /* Table Options */

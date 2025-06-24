@@ -1,8 +1,9 @@
 <template>
 	<div
+		:class="['k-blocks', $attrs.class]"
 		:data-disabled="disabled"
 		:data-empty="blocks.length === 0"
-		class="k-blocks"
+		:style="$attrs.style"
 	>
 		<template v-if="hasFieldsets">
 			<k-draggable
@@ -53,18 +54,12 @@
 					@split="split(block, index, $event)"
 					@update="update(block, $event)"
 				/>
-
-				<!-- No blocks -->
-				<template v-if="blocks.length === 0" #footer>
-					<k-empty
-						class="k-blocks-empty"
-						icon="box"
-						@click="choose(blocks.length)"
-					>
-						{{ empty ?? $t("field.blocks.empty") }}
-					</k-empty>
-				</template>
 			</k-draggable>
+
+			<!-- No blocks -->
+			<k-empty class="k-blocks-empty" icon="box" @click="choose(blocks.length)">
+				{{ empty ?? $t("field.blocks.empty") }}
+			</k-empty>
 		</template>
 
 		<!-- No fieldsets -->
@@ -86,6 +81,10 @@ export const props = {
 		fieldsets: Object,
 		fieldsetGroups: Object,
 		group: String,
+		min: {
+			type: Number,
+			default: null
+		},
 		max: {
 			type: Number,
 			default: null
@@ -112,17 +111,13 @@ export default {
 	computed: {
 		draggableOptions() {
 			return {
-				id: this.id,
 				handle: ".k-sort-handle",
 				list: this.blocks,
+				group: this.group,
 				move: this.move,
-				delay: 10,
 				data: {
 					fieldsets: this.fieldsets,
 					isFull: this.isFull
-				},
-				options: {
-					group: this.group
 				}
 			};
 		},
@@ -262,7 +257,7 @@ export default {
 
 			// a sign that it has been copied
 			this.$panel.notification.success({
-				message: this.$t("copy.success", { count: blocks.length }),
+				message: this.$t("copy.success.multiple", { count: blocks.length }),
 				icon: "template"
 			});
 		},
@@ -336,7 +331,7 @@ export default {
 		},
 		async duplicate(block, index) {
 			const copy = {
-				...structuredClone(block),
+				...this.$helper.object.clone(block),
 				id: this.$helper.uuid()
 			};
 			this.blocks.splice(index + 1, 0, copy);
@@ -381,7 +376,9 @@ export default {
 		},
 		isInputEvent() {
 			const focused = document.querySelector(":focus");
-			return focused?.matches("input, textarea, [contenteditable], .k-writer");
+			return focused?.matches(
+				"input, textarea, [contenteditable], .k-writer-input"
+			);
 		},
 		isLastSelected(block) {
 			const [lastItem] = this.selected.slice(-1);
@@ -413,10 +410,8 @@ export default {
 		move(event) {
 			// moving block between fields
 			if (event.from !== event.to) {
-				const block = event.draggedContext.element;
-				const to =
-					event.relatedContext.component.componentData ||
-					event.relatedContext.component.$parent.componentData;
+				const block = event.draggedData;
+				const to = event.toData;
 
 				// fieldset is not supported in target field
 				if (Object.keys(to.fieldsets).includes(block.type) === false) {
@@ -676,7 +671,7 @@ export default {
 			if (to < 0) {
 				return;
 			}
-			let blocks = structuredClone(this.blocks);
+			let blocks = this.$helper.object.clone(this.blocks);
 			blocks.splice(from, 1);
 			blocks.splice(to, 0, block);
 			this.blocks = blocks;
@@ -686,7 +681,7 @@ export default {
 		},
 		async split(block, index, contents) {
 			// prepare old block with reduced content chunk
-			const oldBlock = structuredClone(block);
+			const oldBlock = this.$helper.object.clone(block);
 			oldBlock.content = { ...oldBlock.content, ...contents[0] };
 
 			// create a new block and merge in default contents as
@@ -720,11 +715,15 @@ export default {
 </script>
 
 <style>
+:root {
+	--block-color-back: var(--item-color-back);
+}
+
 .k-blocks {
 	border-radius: var(--rounded);
 }
-.k-blocks:not([data-empty="true"], [data-disabled="true"]) {
-	background: var(--color-white);
+.k-blocks:not(:has(> .k-blocks-list:empty), [data-disabled="true"]) {
+	background: var(--block-color-back);
 	box-shadow: var(--shadow);
 }
 .k-blocks[data-disabled="true"]:not([data-empty="true"]) {
@@ -744,8 +743,12 @@ export default {
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
 }
-.k-blocks-list > .k-blocks-empty {
+
+.k-blocks > .k-blocks-empty {
 	display: flex;
 	align-items: center;
+}
+.k-blocks > .k-blocks-list:not(:empty) + .k-blocks-empty {
+	display: none;
 }
 </style>

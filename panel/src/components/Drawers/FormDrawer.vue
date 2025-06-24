@@ -8,7 +8,10 @@
 		@submit="$emit('submit', value)"
 		@tab="$emit('tab', $event)"
 	>
-		<slot slot="options" name="options" />
+		<template #options>
+			<slot name="options" />
+		</template>
+
 		<k-drawer-fields
 			:fields="fields"
 			:value="value"

@@ -4,30 +4,22 @@ namespace Kirby\Toolkit;
 
 use Closure;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\LazyValue
- */
+#[CoversClass(LazyValue::class)]
 class LazyValueTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::resolve
-	 */
-	public function testValue()
+	public function testValue(): void
 	{
 		$expected = 'test';
 		$value    = new LazyValue(fn () => $expected);
 		$this->assertInstanceOf(LazyValue::class, $value);
 		$this->assertNotInstanceOf(Closure::class, $value);
-		$this->assertFalse(is_callable($value));
+		$this->assertIsNotCallable($value);
 		$this->assertSame($expected, $value->resolve());
 	}
 
-	/**
-	 * @covers ::unwrap
-	 */
-	public function testUnwrap()
+	public function testUnwrap(): void
 	{
 		$value = LazyValue::unwrap($expected = 'a');
 		$this->assertSame($expected, $value);

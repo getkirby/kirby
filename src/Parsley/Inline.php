@@ -9,16 +9,14 @@ use DOMText;
 use Kirby\Toolkit\Html;
 
 /**
- * Represents an inline element
- * in an HTML document
- *
- * @since 3.5.0
+ * Represents an inline element in an HTML document
  *
  * @package   Kirby Parsley
- * @author    Bastian Allgeier <bastian@getkirby.com>,
+ * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.5.0
  */
 class Inline
 {

@@ -22,7 +22,6 @@ trait AppUsers
 
 	/**
 	 * Returns the Authentication layer class
-	 * @internal
 	 */
 	public function auth(): Auth
 	{
@@ -65,6 +64,33 @@ trait AppUsers
 			// to the original value, even if an error occurred
 			$auth->impersonate($userBefore?->id());
 		}
+	}
+
+	/**
+	 * Returns all user roles
+	 */
+	public function roles(): Roles
+	{
+		return $this->roles ??= Roles::load($this->root('roles'));
+	}
+
+	/**
+	 * Returns a specific user role by id
+	 * or the role of the current user if no id is given
+	 *
+	 * @param bool $allowImpersonation If set to false, only the role of the
+	 *                                 actually logged in user will be returned
+	 *                                 (when `$id` is passed as `null`)
+	 */
+	public function role(
+		string|null $id = null,
+		bool $allowImpersonation = true
+	): Role|null {
+		if ($id !== null) {
+			return $this->roles()->find($id);
+		}
+
+		return $this->user(null, $allowImpersonation)?->role();
 	}
 
 	/**

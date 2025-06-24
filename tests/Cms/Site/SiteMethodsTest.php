@@ -2,38 +2,22 @@
 
 namespace Kirby\Cms;
 
-use Kirby\TestCase as TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class SiteMethodsTest extends TestCase
+#[CoversClass(Site::class)]
+class SiteMethodsTest extends ModelTestCase
 {
-	protected $app;
+	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteMethods';
 
-	public function setUp(): void
+	public function testSiteMethod(): void
 	{
-		$this->app = new App([
+		new App([
 			'siteMethods' => [
-				'test' => function () {
-					return 'site method';
-				}
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'test',
-						'files' => [
-							[
-								'filename' => 'test.jpg'
-							]
-						]
-					]
-				]
+				'test' => fn () => 'site method'
 			]
 		]);
-	}
 
-	public function testSiteMethod()
-	{
-		$site = $this->app->site();
+		$site = new Site();
 		$this->assertSame('site method', $site->test());
 	}
 }

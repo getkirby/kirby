@@ -2,30 +2,33 @@
 import path from "path";
 
 import { defineConfig, loadEnv, splitVendorChunkPlugin } from "vite";
+import { minify } from "terser";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import externalize from "rollup-plugin-external-globals";
 import kirby from "./scripts/vite-kirby.mjs";
+import postcssLightDarkFunction from "@csstools/postcss-light-dark-function";
 
 /**
  * Returns all aliases used in the project
  */
-function createAliases() {
-	return {
+function createAliases(proxy) {
+	const aliases = {
 		"@": path.resolve(__dirname, "src")
 	};
+
+	if (!process.env.VITEST) {
+		// use absolute proxied url to avoid Vue being loaded twice
+		aliases.vue =
+			proxy.target + ":3000/node_modules/vue/dist/vue.esm.browser.js";
+	}
+
+	return aliases;
 }
 
 /**
  * Returns the server configuration
  */
-function createServer() {
-	const proxy = {
-		target: process.env.SERVER ?? "https://sandbox.test",
-		changeOrigin: true,
-		secure: false
-	};
-
+function createServer(proxy) {
 	return {
 		allowedHosts: [proxy.target.substring(8)],
 		cors: { origin: proxy.target },
@@ -59,32 +62,38 @@ function createPlugins(mode) {
 	const plugins = [vue(), splitVendorChunkPlugin(), kirby()];
 
 	// when building…
-	if (mode === "build") {
+	if (mode === "production") {
 		//copy Vue to the dist directory
 		plugins.push(
 			viteStaticCopy({
 				targets: [
 					{
-						src: "node_modules/vue/dist/vue.runtime.min.js",
-						dest: "js"
+						src: "node_modules/vue/dist/vue.runtime.esm.js",
+						dest: "js",
+						rename: "vue.runtime.esm.min.js",
+						// TODO: we can simplify this in Vue 3 as a minified version
+						// is provided by Vue itself by default
+						transform: async (content) => {
+							content = content.replaceAll(
+								"process.env.NODE_ENV",
+								"'production'"
+							);
+							const minified = await minify(content);
+							return minified.code;
+						}
 					},
 					{
-						src: "node_modules/vue/dist/vue.min.js",
+						src: "node_modules/vue/dist/vue.esm.browser.min.js",
+						dest: "js"
+					},
+					// Also copy the non-minified version to the dist folder as
+					// we will expose this for plugins in dev mode with Vue 3
+					{
+						src: "node_modules/vue/dist/vue.esm.browser.js",
 						dest: "js"
 					}
 				]
 			})
-		);
-	}
-
-	if (!process.env.VITEST) {
-		plugins.push(
-			// Externalize Vue so it's not loaded from node_modules
-			// but accessed via window.Vue
-			{
-				...externalize({ vue: "Vue" }),
-				enforce: "post"
-			}
 		);
 	}
 
@@ -105,7 +114,7 @@ function createTest() {
 /**
  * Returns the Vite configuration
  */
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(({ mode }) => {
 	// Load env file based on `mode` in the current working directory.
 	// Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
 	process.env = {
@@ -113,17 +122,20 @@ export default defineConfig(({ command, mode }) => {
 		...loadEnv(mode, process.cwd(), "")
 	};
 
+	const proxy = {
+		target: process.env.SERVER ?? "https://sandbox.test",
+		changeOrigin: true,
+		secure: false
+	};
+
 	return {
-		plugins: createPlugins(command),
-		define: {
-			// Fix vuelidate error
-			"process.env.BUILD": JSON.stringify("production")
-		},
+		plugins: createPlugins(mode),
 		base: "./",
 		build: {
 			minify: "terser",
 			cssCodeSplit: false,
 			rollupOptions: {
+				external: ["vue"],
 				input: "./src/index.js",
 				output: {
 					entryFileNames: "js/[name].min.js",
@@ -132,15 +144,20 @@ export default defineConfig(({ command, mode }) => {
 				}
 			}
 		},
+		css: {
+			postcss: {
+				plugins: [postcssLightDarkFunction()]
+			}
+		},
 		optimizeDeps: {
 			entries: "src/**/*.{js,vue}",
 			exclude: ["vitest", "vue"],
 			holdUntilCrawlEnd: false
 		},
 		resolve: {
-			alias: createAliases()
+			alias: createAliases(proxy)
 		},
-		server: createServer(),
+		server: createServer(proxy),
 		test: createTest()
 	};
 });

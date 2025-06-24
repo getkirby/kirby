@@ -21,7 +21,7 @@ export default {
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
-			default: () => window.panel.$t("delete")
+			default: () => window.panel.t("delete")
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		theme: {

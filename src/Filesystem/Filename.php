@@ -4,6 +4,7 @@ namespace Kirby\Filesystem;
 
 use Kirby\Cms\Language;
 use Kirby\Toolkit\Str;
+use Stringable;
 
 /**
  * The `Filename` class handles complex
@@ -27,7 +28,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Filename
+class Filename implements Stringable
 {
 	/**
 	 * The sanitized file extension
@@ -109,7 +110,10 @@ class Filename
 
 			$result[] = match ($key) {
 				'dimensions' => $value,
-				'crop'       => ($value === 'center') ? 'crop' : $key . '-' . $value,
+				'crop'       => match ($value) {
+					'center' => 'crop',
+					default  => $key . '-' . $value
+				},
 				default      => $key . $value
 			};
 		}
@@ -188,7 +192,11 @@ class Filename
 	public function grayscale(): bool
 	{
 		// normalize options
-		$value = $this->attributes['grayscale'] ?? $this->attributes['greyscale'] ?? $this->attributes['bw'] ?? false;
+		$value =
+			$this->attributes['grayscale'] ??
+			$this->attributes['greyscale'] ??
+			$this->attributes['bw'] ??
+			false;
 
 		// turn anything into boolean
 		return filter_var($value, FILTER_VALIDATE_BOOLEAN);

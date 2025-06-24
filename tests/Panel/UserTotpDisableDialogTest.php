@@ -16,8 +16,6 @@ class UserTotpDisableDialogTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.UserTotpDisableDialog';
 
-	protected App $app;
-
 	protected function setUp(): void
 	{
 		$this->app = new App([

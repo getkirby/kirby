@@ -3,7 +3,6 @@
 namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
-use Kirby\TestCase;
 use Kirby\Toolkit\Dom;
 
 /**
@@ -11,8 +10,6 @@ use Kirby\Toolkit\Dom;
  */
 class PlainTest extends TestCase
 {
-	protected $schema;
-
 	public function setUp(): void
 	{
 		$this->schema = new Plain();

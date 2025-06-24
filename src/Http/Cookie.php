@@ -25,12 +25,10 @@ class Cookie
 	/**
 	 * Set a new cookie
 	 *
-	 * <code>
-	 *
-	 * cookie::set('mycookie', 'hello', ['lifetime' => 60]);
+	 * ```php
 	 * // expires in 1 hour
-	 *
-	 * </code>
+	 * Cookie::set('mycookie', 'hello', ['lifetime' => 60]);
+	 * ```
 	 *
 	 * @param string $key The name of the cookie
 	 * @param string $value The cookie content
@@ -92,12 +90,10 @@ class Cookie
 	/**
 	 * Stores a cookie forever
 	 *
-	 * <code>
-	 *
-	 * cookie::forever('mycookie', 'hello');
+	 * ```php
 	 * // never expires
-	 *
-	 * </code>
+	 * Cookie::forever('mycookie', 'hello');
+	 * ```
 	 *
 	 * @param string $key The name of the cookie
 	 * @param string $value The cookie content
@@ -119,10 +115,10 @@ class Cookie
 	/**
 	 * Get a cookie value
 	 *
-	 * <code>
-	 * cookie::get('mycookie', 'peter');
+	 * ```php
 	 * // sample output: 'hello' or if the cookie is not set 'peter'
-	 * </code>
+	 * Cookie::get('mycookie', 'peter');
+	 * ```
 	 *
 	 * @param string|null $key The name of the cookie
 	 * @param string|null $default The default value, which should be returned
@@ -171,7 +167,7 @@ class Cookie
 	protected static function parse(string $string): string|null
 	{
 		// if no hash-value separator is present, we can't parse the value
-		if (strpos($string, '+') === false) {
+		if (str_contains($string, '+') === false) {
 			return null;
 		}
 
@@ -197,12 +193,10 @@ class Cookie
 	/**
 	 * Remove a cookie
 	 *
-	 * <code>
-	 *
-	 * cookie::remove('mycookie');
+	 * ```php
 	 * // mycookie is now gone
-	 *
-	 * </code>
+	 * Cookie::remove('mycookie');
+	 * ```
 	 *
 	 * @param string $key The name of the cookie
 	 * @return bool true: the cookie has been removed,

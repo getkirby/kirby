@@ -38,12 +38,10 @@ class Find
 			return $file;
 		}
 
-		throw new NotFoundException([
-			'key'  => 'file.notFound',
-			'data' => [
-				'filename' => $filename
-			]
-		]);
+		throw new NotFoundException(
+			key: 'file.notFound',
+			data: ['filename' => $filename]
+		);
 	}
 
 	/**
@@ -58,12 +56,10 @@ class Find
 			return $language;
 		}
 
-		throw new NotFoundException([
-			'key'  => 'language.notFound',
-			'data' => [
-				'code' => $code
-			]
-		]);
+		throw new NotFoundException(
+			key: 'language.notFound',
+			data: ['code' => $code]
+		);
 	}
 
 	/**
@@ -83,12 +79,10 @@ class Find
 			return $page;
 		}
 
-		throw new NotFoundException([
-			'key'  => 'page.notFound',
-			'data' => [
-				'slug' => $id
-			]
-		]);
+		throw new NotFoundException(
+			key: 'page.notFound',
+			data: ['slug' => $id]
+		);
 	}
 
 	/**
@@ -100,8 +94,11 @@ class Find
 	 */
 	public static function parent(string $path): ModelWithContent
 	{
-		$path       = trim($path, '/');
-		$modelType  = in_array($path, ['site', 'account']) ? $path : trim(dirname($path), '/');
+		$path      = trim($path, '/');
+		$modelType = match ($path) {
+			'site', 'account' => $path,
+			default           => trim(dirname($path), '/')
+		};
 		$modelTypes = [
 			'site'    => 'site',
 			'users'   => 'user',
@@ -126,12 +123,14 @@ class Find
 			// and filename
 			'file'    => static::file(...preg_split('$.*\K(/files/)$', $path)),
 			'user'    => $kirby->user(basename($path)),
-			default   => throw new InvalidArgumentException('Invalid model type: ' . $modelType)
+			default   => throw new InvalidArgumentException(
+				message: 'Invalid model type: ' . $modelType
+			)
 		};
 
-		return $model ?? throw new NotFoundException([
-			'key' => $modelName . '.undefined'
-		]);
+		return $model ?? throw new NotFoundException(
+			key: $modelName . '.undefined'
+		);
 	}
 
 	/**
@@ -159,17 +158,15 @@ class Find
 				$kirby->option('api.allowImpersonation', false)
 			);
 
-			return $user ?? throw new NotFoundException([
-				'key' => 'user.undefined'
-			]);
+			return $user ?? throw new NotFoundException(
+				key: 'user.undefined'
+			);
 		}
 
 		// get a specific user by id
-		return $kirby->user($id) ?? throw new NotFoundException([
-			'key'  => 'user.notFound',
-			'data' => [
-				'name' => $id
-			]
-		]);
+		return $kirby->user($id) ?? throw new NotFoundException(
+			key: 'user.notFound',
+			data: ['name' => $id]
+		);
 	}
 }

@@ -48,7 +48,7 @@ return [
 		'activeTypes' => function () {
 			return array_filter(
 				$this->availableTypes(),
-				fn (string $type) => in_array($type, $this->props['options']),
+				fn (string $type) => in_array($type, $this->props['options'], true),
 				ARRAY_FILTER_USE_KEY
 			);
 		},
@@ -153,17 +153,17 @@ return [
 				$detected = true;
 
 				if ($options['validate']($link) === false) {
-					throw new InvalidArgumentException([
-						'key' => 'validation.' . $type
-					]);
+					throw new InvalidArgumentException(
+						key: 'validation.' . $type
+					);
 				}
 			}
 
 			// none of the configured types has been detected
 			if ($detected === false) {
-				throw new InvalidArgumentException([
-					'key' => 'validation.linkType'
-				]);
+				throw new InvalidArgumentException(
+					key: 'validation.linkType'
+				);
 			}
 
 			return true;

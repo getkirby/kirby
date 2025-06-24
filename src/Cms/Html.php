@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use Kirby\Plugin\Assets;
+use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\A;
 
 /**
@@ -26,14 +28,14 @@ class Html extends \Kirby\Toolkit\Html
 	 * @param string|array|null $options Pass an array of attributes for the link tag or a media attribute string
 	 */
 	public static function css(
-		string|array|Plugin|PluginAssets $url,
+		string|array|Plugin|Assets $url,
 		string|array|null $options = null
 	): string|null {
 		if ($url instanceof Plugin) {
 			$url = $url->assets();
 		}
 
-		if ($url instanceof PluginAssets) {
+		if ($url instanceof Assets) {
 			$url = $url->css()->values(fn ($asset) => $asset->url());
 		}
 
@@ -65,9 +67,7 @@ class Html extends \Kirby\Toolkit\Html
 
 		$url  = ($kirby->component('css'))($kirby, $url, $options);
 		$url  = Url::to($url);
-		$attr = array_merge((array)$options, [
-			'href' => $url
-		]);
+		$attr = [...$options ?? [], 'href' => $url];
 
 		return '<link ' . static::attr($attr) . '>';
 	}
@@ -92,14 +92,14 @@ class Html extends \Kirby\Toolkit\Html
 	 * @since 3.7.0
 	 */
 	public static function js(
-		string|array|Plugin|PluginAssets $url,
+		string|array|Plugin|Assets $url,
 		string|array|bool|null $options = null
 	): string|null {
 		if ($url instanceof Plugin) {
 			$url = $url->assets();
 		}
 
-		if ($url instanceof PluginAssets) {
+		if ($url instanceof Assets) {
 			$url = $url->js()->values(fn ($asset) => $asset->url());
 		}
 
@@ -122,7 +122,7 @@ class Html extends \Kirby\Toolkit\Html
 
 		$url  = ($kirby->component('js'))($kirby, $url, $options);
 		$url  = Url::to($url);
-		$attr = array_merge((array)$options, ['src' => $url]);
+		$attr = [...$options ?? [], 'src' => $url];
 
 		return '<script ' . static::attr($attr) . '></script>';
 	}

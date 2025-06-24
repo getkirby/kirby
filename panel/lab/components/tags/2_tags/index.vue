@@ -3,8 +3,8 @@
 		<k-lab-example label="Tags">
 			<k-tags :value="['a', 'b', 'c']" />
 		</k-lab-example>
-		<k-lab-example label="Draggable">
-			<k-tags :value="['a', 'b', 'c']" :draggable="true" />
+		<k-lab-example label="Non-draggable">
+			<k-tags :value="['a', 'b', 'c']" :draggable="false" />
 		</k-lab-example>
 		<k-lab-example label="Options">
 			<k-tags

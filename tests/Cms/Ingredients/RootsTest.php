@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class RootsTest extends TestCase
 {
-	protected $indexRoot;
+	protected string|null $indexRoot;
 
 	public function setUp(): void
 	{

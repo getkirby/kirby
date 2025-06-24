@@ -18,12 +18,15 @@ class Json extends Handler
 	/**
 	 * Converts an array to an encoded JSON string
 	 */
-	public static function encode($data): string
+	public static function encode($data, bool $pretty = false): string
 	{
-		return json_encode(
-			$data,
-			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-		);
+		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+
+		if ($pretty === true) {
+			$constants |= JSON_PRETTY_PRINT;
+		}
+
+		return json_encode($data, $constants);
 	}
 
 	/**
@@ -40,7 +43,9 @@ class Json extends Handler
 		}
 
 		if (is_string($string) === false) {
-			throw new InvalidArgumentException('Invalid JSON data; please pass a string');
+			throw new InvalidArgumentException(
+				message: 'Invalid JSON data; please pass a string'
+			);
 		}
 
 		$result = json_decode($string, true);
@@ -49,6 +54,8 @@ class Json extends Handler
 			return $result;
 		}
 
-		throw new InvalidArgumentException('JSON string is invalid');
+		throw new InvalidArgumentException(
+			message: 'JSON string is invalid'
+		);
 	}
 }

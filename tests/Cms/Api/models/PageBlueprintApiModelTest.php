@@ -6,8 +6,6 @@ use Kirby\Cms\Api\ApiModelTestCase;
 
 class PageBlueprintApiModelTest extends ApiModelTestCase
 {
-	public $page;
-
 	public function setUp(): void
 	{
 		parent::setUp();

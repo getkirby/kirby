@@ -12,15 +12,14 @@ use Kirby\Toolkit\Str;
  * Category of lab examples located in
  * `kirby/panel/lab` and `site/lab`.
  *
- * @internal
- * @since 4.0.0
- * @codeCoverageIgnore
- *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
+ * @internal
+ * @codeCoverageIgnore
  */
 class Category
 {
@@ -93,7 +92,7 @@ class Category
 		return $this->id;
 	}
 
-	public static function installed(): bool
+	public static function isInstalled(): bool
 	{
 		return Dir::exists(static::base()) === true;
 	}

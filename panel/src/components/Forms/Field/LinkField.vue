@@ -1,6 +1,11 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-link-field">
-		<k-input v-bind="$props" :invalid="isInvalid" :icon="false">
+	<k-field
+		v-bind="$props"
+		:class="['k-link-field', $attrs.class]"
+		:input="id"
+		:style="$attrs.style"
+	>
+		<k-input v-bind="$props" :icon="false">
 			<div class="k-link-input-header">
 				<!-- Type selector -->
 				<k-button
@@ -46,8 +51,8 @@
 					:disabled="disabled"
 					:pattern="currentType.pattern ?? null"
 					:placeholder="currentType.placeholder"
+					:required="required"
 					:value="linkValue"
-					@invalid="onInvalid"
 					@input="onInput"
 				/>
 			</div>
@@ -122,11 +127,7 @@ export default {
 			/**
 			 * Open/close state for the file or page browser
 			 */
-			expanded: false,
-			/**
-			 * Validation state for the wrapping `k-input` component
-			 */
-			isInvalid: false
+			expanded: false
 		};
 	},
 	computed: {
@@ -214,9 +215,6 @@ export default {
 
 			this.$emit("input", this.currentType.value(value));
 		},
-		onInvalid(invalid) {
-			this.isInvalid = !!invalid;
-		},
 		onOutsideClick(event) {
 			if (this.$el.contains(event.target) === false) {
 				this.expanded = false;
@@ -240,9 +238,6 @@ export default {
 			if (type === this.currentType.id) {
 				return;
 			}
-
-			// reset validation
-			this.isInvalid = false;
 
 			// set the new type
 			this.linkType = type;
@@ -280,7 +275,7 @@ export default {
 .k-link-input-toggle.k-button {
 	--button-height: var(--height-sm);
 	--button-rounded: var(--rounded-sm);
-	--button-color-back: var(--color-gray-200);
+	--button-color-back: var(--panel-color-back);
 	margin-inline-start: 0.25rem;
 }
 
@@ -325,10 +320,11 @@ export default {
 .k-link-input-body {
 	display: grid;
 	overflow: hidden;
-	border-top: 1px solid var(--color-gray-300);
-	background: var(--color-gray-100);
-	--tree-color-back: var(--color-gray-100);
-	--tree-color-hover-back: var(--color-gray-200);
+	border-top: 1px solid var(--color-border);
+	background: var(--input-color-back);
+	--tree-color-back: var(--input-color-back);
+	--tree-branch-color-back: var(--input-color-back);
+	--tree-branch-hover-color-back: var(--panel-color-back);
 }
 
 .k-link-input-body[data-type="page"] .k-page-browser {
@@ -338,13 +334,10 @@ export default {
 	container-type: inline-size;
 	overflow: auto;
 }
-.k-link-field .k-bubbles-field-preview {
-	--bubble-rounded: var(--rounded-sm);
-	--bubble-size: var(--height-sm);
+.k-link-field .k-tags-field-preview {
+	--tag-rounded: var(--rounded-sm);
+	--tag-size: var(--height-sm);
 	padding-inline: 0;
-}
-.k-link-field .k-bubbles-field-preview .k-bubble {
-	font-size: var(--text-sm);
 }
 
 .k-link-field[data-disabled="true"] .k-link-input-model-placeholder {

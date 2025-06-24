@@ -10,7 +10,7 @@ use stdClass;
 
 class MyObj
 {
-	public $homer = 'simpson';
+	public string $homer = 'simpson';
 
 	public function foo(int $count)
 	{

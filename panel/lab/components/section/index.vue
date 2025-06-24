@@ -13,7 +13,7 @@
 		<k-lab-example label="Required">
 			<k-section :required="true" label="Label">
 				<p>This section is required</p>
-			</k-field>
+			</k-section>
 		</k-lab-example>
 		<k-lab-example label="Buttons">
 			<k-section :buttons="[{ icon: 'add', text: 'Add' }]" label="Label">

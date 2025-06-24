@@ -1,8 +1,17 @@
+<template>
+	<k-string-input
+		v-bind="$props"
+		type="email"
+		class="k-email-input"
+		@input="$emit('input', $event)"
+	/>
+</template>
+
 <script>
-import TextInput, { props as TextInputProps } from "./TextInput.vue";
+import StringInput, { props as StringInputProps } from "./StringInput.vue";
 
 export const props = {
-	mixins: [TextInputProps],
+	mixins: [StringInputProps],
 	props: {
 		autocomplete: {
 			type: String,
@@ -10,11 +19,7 @@ export const props = {
 		},
 		placeholder: {
 			type: String,
-			default: () => window.panel.$t("email.placeholder")
-		},
-		type: {
-			type: String,
-			default: "email"
+			default: () => window.panel.t("email.placeholder")
 		}
 	}
 };
@@ -23,7 +28,6 @@ export const props = {
  * @example <k-email-input :value="email" @input="email = $event" name="email" />
  */
 export default {
-	extends: TextInput,
-	mixins: [props]
+	mixins: [StringInput, props]
 };
 </script>

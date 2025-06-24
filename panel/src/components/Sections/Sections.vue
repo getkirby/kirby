@@ -13,7 +13,7 @@
 			:sticky="column.sticky"
 		>
 			<template v-for="(section, sectionIndex) in column.sections">
-				<template v-if="$helper.field.isVisible(section, content)">
+				<template v-if="isVisible(section)">
 					<component
 						:is="'k-' + section.type + '-section'"
 						v-if="exists(section.type)"
@@ -28,11 +28,13 @@
 						"
 						v-bind="section"
 						:column="column.width"
+						:content="content"
 						:lock="lock"
 						:name="section.name"
 						:parent="parent"
 						:timestamp="$panel.view.timestamp"
 						:class="'k-section-name-' + section.name"
+						@input="$emit('input', $event)"
 						@submit="$emit('submit', $event)"
 					/>
 					<template v-else>
@@ -54,21 +56,20 @@
 <script>
 export default {
 	props: {
-		empty: String,
 		blueprint: String,
+		content: Object,
+		empty: String,
 		lock: [Boolean, Object],
 		parent: String,
 		tab: Object
 	},
-	emits: ["submit"],
-	computed: {
-		content() {
-			return this.$store.getters["content/values"]();
-		}
-	},
+	emits: ["input", "submit"],
 	methods: {
 		exists(type) {
 			return this.$helper.isComponent(`k-${type}-section`);
+		},
+		isVisible(section) {
+			return this.$helper.field.isVisible(section, this.content);
 		}
 	}
 };

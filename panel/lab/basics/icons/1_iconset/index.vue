@@ -36,6 +36,7 @@ export default {
 	align-items: center;
 	gap: 0.75rem;
 	padding: var(--spacing-2);
+	color: var(--color-black);
 	background: var(--color-white);
 	border-radius: var(--rounded);
 	box-shadow: var(--shadow);

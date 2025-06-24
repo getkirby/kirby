@@ -431,7 +431,7 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new \Exception('nope');
+						throw new Exception('nope');
 					}
 				]
 			]
@@ -497,11 +497,11 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new NotFoundException([
-							'key'      => 'test',
-							'fallback' => 'Test',
-							'details'  => ['a' => 'A']
-						]);
+						throw new NotFoundException(
+							key: 'test',
+							fallback: 'Test',
+							details: ['a' => 'A']
+						);
 					}
 				]
 			]
@@ -530,13 +530,11 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new NotFoundException([
-							'key'      => 'test',
-							'fallback' => 'Test',
-							'details'  => [
-								'a' => 'A'
-							]
-						]);
+						throw new NotFoundException(
+							key: 'test',
+							fallback: 'Test',
+							details: ['a' => 'A']
+						);
 					}
 				]
 			]
@@ -554,7 +552,7 @@ class ApiTest extends TestCase
 			'exception' => NotFoundException::class,
 			'key'       => 'error.test',
 			'file'      => '/' . basename(__FILE__),
-			'line'      => __LINE__ - 24,
+			'line'      => __LINE__ - 22,
 			'details'   => ['a' => 'A'],
 			'route'     => 'test',
 		];
@@ -670,60 +668,5 @@ class ApiTest extends TestCase
 			'status' => 'ok',
 			'data'   => $uploads
 		], $data);
-	}
-
-	public function testUploadMultiple()
-	{
-		$api = new Api([
-			'requestMethod' => 'POST',
-			'requestData'   => [
-				'files' => [
-					[
-						'name'     => 'foo.txt',
-						'tmp_name' => KIRBY_TMP_DIR . '/api.api/foo',
-						'size'     => 123,
-						'error'    => 0
-					],
-					[
-						'name'     => 'bar.txt',
-						'tmp_name' => KIRBY_TMP_DIR . '/api.api/bar',
-						'size'     => 123,
-						'error'    => 0
-					]
-				]
-			],
-			'authentication' => fn () => new User(['language' => 'en'])
-		]);
-
-		$phpunit = $this;
-		$api->authenticate();
-
-		$uploads = [];
-		$data = $api->upload(function ($source, $filename) use ($phpunit, &$uploads) {
-			return [
-				'filename' => $filename
-			];
-		}, false, true);
-
-		$phpunit->assertSame([
-			'status' => 'ok',
-			'data'   => [
-				'foo.txt' => ['filename' => 'foo.txt'],
-				'bar.txt' => ['filename' => 'bar.txt'],
-			]
-		], $data);
-	}
-
-	public function testUploadFail()
-	{
-		$api = new Api([
-			'requestMethod' => 'POST',
-			'requestData'   => ['files' => []]
-		]);
-
-		$this->expectException(Exception::class);
-		$api->upload(function ($source) {
-			// empty closure
-		});
 	}
 }

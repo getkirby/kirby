@@ -69,12 +69,45 @@
 				width="1/2"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Selecting">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:selecting="true"
+				:selectable="true"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting & not selectable">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:selecting="true"
+				:selectable="false"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
 		<k-lab-example label="Theme: disabled">
 			<k-item
 				:image="{ src: 'https://picsum.photos/800/600' }"
 				info="With some info"
 				text="This is a nice item"
 				theme="disabled"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Wrap for long title/info">
+			<k-item
+				:buttons="[
+					{
+						icon: 'edit'
+					},
+					{
+						icon: 'trash'
+					}
+				]"
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				info="With some more information than usual"
+				text="This is a nice item with a rather long title that should wrap"
 			/>
 		</k-lab-example>
 	</k-lab-examples>

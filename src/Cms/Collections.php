@@ -41,7 +41,7 @@ class Collections
 	 * `$collections->myCollection()`
 	 *
 	 * @return \Kirby\Toolkit\Collection|null
-	 * @todo 5.0 Add return type declaration
+	 * @todo 6.0 Add return type declaration
 	 */
 	public function __call(string $name, array $arguments = [])
 	{
@@ -52,8 +52,8 @@ class Collections
 	 * Loads a collection by name if registered
 	 *
 	 * @return \Kirby\Toolkit\Collection|null
-	 * @todo 5.0 Add deprecation warning when anything else than a Collection is returned
-	 * @todo 6.0 Add PHP return type declaration for `Toolkit\Collection`
+	 * @todo 6.0 Add deprecation warning when anything else than a Collection is returned
+	 * @todo 7.0 Add PHP return type declaration for `Toolkit\Collection`
 	 */
 	public function get(string $name, array $data = [])
 	{
@@ -120,7 +120,12 @@ class Collections
 		// fallback to collections from plugins
 		$collections = $kirby->extensions('collections');
 
-		return $collections[$name] ??
-			throw new NotFoundException('The collection cannot be found');
+		if ($collection = $collections[$name] ?? null) {
+			return $collection;
+		}
+
+		throw new NotFoundException(
+			message: 'The collection cannot be found'
+		);
 	}
 }

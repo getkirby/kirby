@@ -3,24 +3,9 @@
 		<k-header>
 			{{ component }}
 
-			<k-button-group v-if="docs.github || lab" slot="buttons">
-				<k-button
-					v-if="lab"
-					icon="lab"
-					text="Lab examples"
-					size="sm"
-					variant="filled"
-					:link="'/lab/' + lab"
-				/>
-				<k-button
-					v-if="docs.github"
-					icon="github"
-					size="sm"
-					variant="filled"
-					:link="docs.github"
-					target="_blank"
-				/>
-			</k-button-group>
+			<template #buttons>
+				<k-view-buttons :buttons="buttons" />
+			</template>
 		</k-header>
 
 		<k-lab-docs v-bind="docs" />
@@ -35,6 +20,7 @@ export default {
 		"k-lab-docs": Docs
 	},
 	props: {
+		buttons: Array,
 		component: String,
 		docs: Object,
 		lab: String

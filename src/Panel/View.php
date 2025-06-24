@@ -2,10 +2,12 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -64,7 +66,7 @@ class View
 		$globalKeys = Str::split($globals, ',');
 
 		// add requested globals
-		if (empty($globalKeys) === true) {
+		if ($globalKeys === []) {
 			return $data;
 		}
 
@@ -96,7 +98,7 @@ class View
 		$onlyKeys = Str::split($only, ',');
 
 		// if a full request is made, return all data
-		if (empty($onlyKeys) === true) {
+		if ($onlyKeys === []) {
 			return $data;
 		}
 
@@ -160,29 +162,15 @@ class View
 			},
 			'$dialog'   => null,
 			'$drawer'   => null,
-			'$language' => function () use ($kirby, $multilang, $language) {
-				if ($multilang === true && $language) {
-					return [
-						'code'      => $language->code(),
-						'default'   => $language->isDefault(),
-						'direction' => $language->direction(),
-						'name'      => $language->name(),
-						'rules'     => $language->rules(),
-					];
-				}
+			'$language' => fn () => match ($multilang) {
+				false => null,
+				true  => $language?->toArray()
 			},
-			'$languages' => function () use ($kirby, $multilang): array {
-				if ($multilang === true) {
-					return $kirby->languages()->values(fn ($language) => [
-						'code'      => $language->code(),
-						'default'   => $language->isDefault(),
-						'direction' => $language->direction(),
-						'name'      => $language->name(),
-						'rules'     => $language->rules(),
-					]);
-				}
-
-				return [];
+			'$languages' => fn (): array => match ($multilang) {
+				false => [],
+				true  => $kirby->languages()->values(
+					fn ($language) => $language->toArray()
+				)
 			},
 			'$menu'       => function () use ($options, $permissions) {
 				$menu = new Menu(
@@ -197,18 +185,15 @@ class View
 			'$multilang'   => $multilang,
 			'$searches'    => static::searches($options['areas'] ?? [], $permissions),
 			'$url'         => $kirby->request()->url()->toString(),
-			'$user'        => function () use ($user) {
-				if ($user) {
-					return [
-						'email'       => $user->email(),
-						'id'          => $user->id(),
-						'language'    => $user->language(),
-						'role'        => $user->role()->id(),
-						'username'    => $user->username(),
-					];
-				}
-
-				return null;
+			'$user'        => fn () => match ($user) {
+				null    => null,
+				default =>  [
+					'email'    => $user->email(),
+					'id'       => $user->id(),
+					'language' => $user->language(),
+					'role'     => $user->role()->id(),
+					'username' => $user->username(),
+				]
 			},
 			'$view' => function () use ($kirby, $options, $view) {
 				$defaults = [
@@ -230,6 +215,7 @@ class View
 
 				// make sure that views and dialogs are gone
 				unset(
+					$view['buttons'],
 					$view['dialogs'],
 					$view['drawers'],
 					$view['dropdowns'],
@@ -276,11 +262,12 @@ class View
 		return [
 			'$config' => fn () => [
 				'api'         => [
-					'methodOverwrite' => $kirby->option('api.methodOverwrite', true)
+					'methodOverride' => $kirby->option('api.methodOverride', true)
 				],
 				'debug'       => $kirby->option('debug', false),
 				'kirbytext'   => $kirby->option('panel.kirbytext', true),
 				'translation' => $kirby->option('panel.language', 'en'),
+				'upload'      => Upload::chunkSize(),
 			],
 			'$system' => function () use ($kirby) {
 				$locales = [];
@@ -299,17 +286,17 @@ class View
 				];
 			},
 			'$translation' => function () use ($kirby) {
-				if ($user = $kirby->user()) {
-					$translation = $kirby->translation($user->language());
-				} else {
-					$translation = $kirby->translation($kirby->panelLanguage());
-				}
+				$translation = match ($user = $kirby->user()) {
+					null    => $kirby->translation($kirby->panelLanguage()),
+					default => $kirby->translation($user->language())
+				};
 
 				return [
 					'code'      => $translation->code(),
 					'data'      => $translation->dataWithFallback(),
 					'direction' => $translation->direction(),
 					'name'      => $translation->name(),
+					'weekday'   => Date::firstWeekday($translation->locale())
 				];
 			},
 			'$urls' => fn () => [
@@ -329,16 +316,17 @@ class View
 		// handle redirects
 		if ($data instanceof Redirect) {
 			return Response::redirect($data->location(), $data->code());
+		}
 
-			// handle Kirby exceptions
-		} elseif ($data instanceof Exception) {
+		// handle Kirby exceptions
+		if ($data instanceof Exception) {
 			$data = static::error($data->getMessage(), $data->getHttpCode());
 
-			// handle regular exceptions
+		// handle regular exceptions
 		} elseif ($data instanceof Throwable) {
 			$data = static::error($data->getMessage(), 500);
 
-			// only expect arrays from here on
+		// only expect arrays from here on
 		} elseif (is_array($data) === false) {
 			$data = static::error('Invalid Panel response', 500);
 		}

@@ -17,7 +17,7 @@
 				<table style="table-layout: auto">
 					<tbody>
 						<tr v-for="i in 4" :key="i">
-							<th data-has-button>
+							<th data-has-button="true">
 								<button>Label {{ i }}</button>
 							</th>
 							<td>Value {{ i }}</td>
@@ -48,19 +48,19 @@ export default {
 			return [
 				{
 					text: "Edit",
-					icon: "edit",
+					icon: "edit"
 				},
 				{
 					text: "Duplicate",
-					icon: "copy",
+					icon: "copy"
 				},
 				"-",
 				{
 					text: "Delete",
-					icon: "trash",
-				},
+					icon: "trash"
+				}
 			];
-		},
-	},
+		}
+	}
 };
 </script>

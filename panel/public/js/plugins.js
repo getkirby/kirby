@@ -1,3 +1,112 @@
+import Vue, {
+	computed,
+	customRef,
+	defineAsyncComponent,
+	defineComponent,
+	effectScope,
+	getCurrentInstance,
+	getCurrentScope,
+	inject,
+	isProxy,
+	isReactive,
+	isReadonly,
+	isRef,
+	isShallow,
+	markRaw,
+	nextTick,
+	onActivated,
+	onBeforeMount,
+	onBeforeUnmount,
+	onBeforeUpdate,
+	onDeactivated,
+	onErrorCaptured,
+	onMounted,
+	onRenderTracked,
+	onRenderTriggered,
+	onScopeDispose,
+	onServerPrefetch,
+	onUnmounted,
+	onUpdated,
+	provide,
+	proxyRefs,
+	readonly,
+	ref,
+	shallowReactive,
+	shallowReadonly,
+	shallowRef,
+	toRaw,
+	toRef,
+	toRefs,
+	triggerRef,
+	unref,
+	useAttrs,
+	useCssModule,
+	useCssVars,
+	useListeners,
+	useSlots,
+	watch,
+	watchEffect,
+	watchPostEffect,
+	watchSyncEffect
+} from "vue";
+
+// Assign Vue to the global window object
+window.Vue = Vue;
+
+// Keep named exports on the Vue constructor (like UMD build in Kirby 4)
+// TODO: Remove this when Panel plugins are loaded as ES modules (Kirby 6)
+Object.assign(Vue, {
+	computed,
+	customRef,
+	defineAsyncComponent,
+	defineComponent,
+	effectScope,
+	getCurrentInstance,
+	getCurrentScope,
+	inject,
+	isProxy,
+	isReactive,
+	isReadonly,
+	isRef,
+	isShallow,
+	markRaw,
+	nextTick,
+	onActivated,
+	onBeforeMount,
+	onBeforeUnmount,
+	onBeforeUpdate,
+	onDeactivated,
+	onErrorCaptured,
+	onMounted,
+	onRenderTracked,
+	onRenderTriggered,
+	onScopeDispose,
+	onServerPrefetch,
+	onUnmounted,
+	onUpdated,
+	provide,
+	proxyRefs,
+	readonly,
+	ref,
+	shallowReactive,
+	shallowReadonly,
+	shallowRef,
+	toRaw,
+	toRef,
+	toRefs,
+	triggerRef,
+	unref,
+	useAttrs,
+	useCssModule,
+	useCssVars,
+	useListeners,
+	useSlots,
+	watch,
+	watchEffect,
+	watchPostEffect,
+	watchSyncEffect
+});
+
 window.panel = window.panel ?? {};
 window.panel.plugins = {
 	components: {},
@@ -7,6 +116,7 @@ window.panel.plugins = {
 	textareaButtons: {},
 	thirdParty: {},
 	use: [],
+	viewButtons: {},
 	views: {},
 	writerMarks: {},
 	writerNodes: {}
@@ -46,6 +156,11 @@ window.panel.plugin = function (plugin, extensions) {
 			...options,
 			mixins: ["section", ...(options.mixins ?? [])]
 		};
+	});
+
+	// View Buttons
+	resolve(extensions, "viewButtons", (name, options) => {
+		window.panel.plugins.components[`k-${name}-view-button`] = options;
 	});
 
 	// `Vue.use`

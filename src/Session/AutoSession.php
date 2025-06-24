@@ -34,13 +34,14 @@ class AutoSession
 		array $options = []
 	) {
 		// merge options with defaults
-		$this->options = array_merge([
+		$this->options = [
 			'durationNormal' => 7200,
 			'durationLong'   => 1209600,
 			'timeout'        => 1800,
 			'cookieName'     => 'kirby_session',
-			'gcInterval'     => 100
-		], $options);
+			'gcInterval'     => 100,
+			...$options
+		];
 
 		// create an internal instance of the low-level Sessions class
 		$this->sessions = new Sessions($store, [
@@ -60,11 +61,12 @@ class AutoSession
 	public function get(array $options = []): Session
 	{
 		// merge options with defaults
-		$options = array_merge([
+		$options = [
 			'detect'     => false,
 			'createMode' => 'cookie',
-			'long'       => false
-		], $options);
+			'long'       => false,
+			...$options
+		];
 
 		// determine expiry options based on the session type
 		if ($options['long'] === true) {
@@ -103,6 +105,7 @@ class AutoSession
 			// the duration needs to be extended
 			$session->duration($duration);
 		}
+
 		if ($session->timeout() !== false) {
 			// a timeout exists
 			if ($timeout === false) {
@@ -115,8 +118,9 @@ class AutoSession
 		}
 
 		// if the session has been created and was not yet initialized,
-		// update the mode to a custom mode
-		// don't update back to cookie mode because the "special" behavior always wins
+		// update the mode to a custom mode;
+		// don't update back to cookie mode because the
+		// "special" behavior always wins
 		if ($session->token() === null && $options['createMode'] !== 'cookie') {
 			$session->mode($options['createMode']);
 		}
@@ -125,7 +129,8 @@ class AutoSession
 	}
 
 	/**
-	 * Creates a new empty session that is *not* automatically transmitted to the client
+	 * Creates a new empty session that is *not* automatically
+	 * transmitted to the client;
 	 * Useful for custom applications like a password reset link
 	 * Does *not* affect the automatic session
 	 *

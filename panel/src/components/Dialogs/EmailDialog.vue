@@ -19,12 +19,12 @@ export default {
 		fields: {
 			default: () => ({
 				href: {
-					label: window.panel.$t("email"),
+					label: window.panel.t("email"),
 					type: "email",
 					icon: "email"
 				},
 				title: {
-					label: window.panel.$t("title"),
+					label: window.panel.t("title"),
 					type: "text",
 					icon: "title"
 				}
@@ -36,7 +36,7 @@ export default {
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
-			default: () => window.panel.$t("insert")
+			default: () => window.panel.t("insert")
 		}
 	},
 	data() {

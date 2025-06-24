@@ -6,7 +6,7 @@
 			variant="filled"
 			@click="$refs.dropdown.toggle()"
 		>
-			<k-color-frame :color="value" ratio="1/1" />
+			<k-color-frame :color="valueAdapted" ratio="1/1" />
 		</k-button>
 		<k-dropdown-content
 			ref="dropdown"
@@ -14,7 +14,7 @@
 			:options="[
 				{
 					text: $t('field.blocks.figure.back.plain'),
-					click: 'var(--color-white)'
+					click: 'var(--block-color-back)'
 				},
 				{
 					text: $t('field.blocks.figure.back.pattern.light'),
@@ -34,6 +34,15 @@
 export default {
 	props: {
 		value: String
+	},
+	computed: {
+		valueAdapted() {
+			if (this.value === "transparent") {
+				return "var(--block-color-back)";
+			}
+
+			return this.value;
+		}
 	}
 };
 </script>
@@ -44,13 +53,14 @@ export default {
 	--color-frame-size: 1.5rem;
 	--button-height: 1.5rem;
 	--button-padding: 0 0.125rem;
-	--button-color-back: var(--color-white);
+	--button-color-back: var(--block-color-back);
 	gap: 0.25rem;
 	box-shadow: var(--shadow-toolbar);
-	border: 1px solid var(--color-white);
+	border: 1px solid var(--button-color-back);
+	overflow: clip;
 }
 .k-block-background-dropdown .k-color-frame {
-	border-right: 1px solid var(--color-gray-300);
+	border-right: 1px solid var(--color-border);
 }
 .k-block-background-dropdown .k-color-frame::after {
 	box-shadow: none;

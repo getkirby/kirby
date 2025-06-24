@@ -42,13 +42,12 @@ class Txt extends Handler
 	 */
 	protected static function encodeValue(array|string|float $value): string
 	{
-		// avoid problems with arrays
-		if (is_array($value) === true) {
-			$value = Data::encode($value, 'yaml');
-			// avoid problems with localized floats
-		} elseif (is_float($value) === true) {
-			$value = Str::float($value);
-		}
+		// avoid problems with certain values
+		$value = match (true) {
+			is_array($value) => Data::encode($value, 'yaml'),
+			is_float($value) => Str::float($value),
+			default          => $value
+		};
 
 		// escape accidental dividers within a field
 		$value = preg_replace('!(?<=\n|^)----!', '\\----', $value);
@@ -64,9 +63,10 @@ class Txt extends Handler
 		$value = trim($value);
 		$result = $key . ':';
 
-		// multi-line content
 		$result .= match (preg_match('!\R!', $value)) {
-			1       => "\n\n",
+			// multi-line content
+			1 => "\n\n",
+			// single line content, just add space after colon
 			default => ' ',
 		};
 
@@ -89,7 +89,9 @@ class Txt extends Handler
 		}
 
 		if (is_string($string) === false) {
-			throw new InvalidArgumentException('Invalid TXT data; please pass a string');
+			throw new InvalidArgumentException(
+				message: 'Invalid TXT data; please pass a string'
+			);
 		}
 
 		// remove Unicode BOM at the beginning of the file

@@ -1,24 +1,21 @@
 <template>
 	<nav v-if="tabs.length > 1" class="k-tabs">
-		<div v-for="btn in buttons" :key="btn.name" class="k-tabs-tab">
-			<k-button
-				ref="visible"
-				v-bind="btn"
-				variant="dimmed"
-				class="k-tab-button"
-			>
-				{{ btn.text }}
-			</k-button>
-			<span v-if="btn.badge" :data-theme="theme" class="k-tabs-badge">
-				{{ btn.badge }}
-			</span>
-		</div>
+		<k-button
+			v-for="btn in buttons"
+			:key="btn.name"
+			ref="visible"
+			v-bind="btn"
+			variant="dimmed"
+			class="k-tabs-button"
+		>
+			{{ btn.text }}
+		</k-button>
 
 		<template v-if="invisible.length">
 			<k-button
 				:current="!!invisible.find((button) => tab === button.name)"
 				:title="$t('more')"
-				class="k-tab-button k-tabs-dropdown-button"
+				class="k-tabs-button k-tabs-dropdown-button"
 				icon="dots"
 				variant="dimmed"
 				@click.stop="$refs.more.toggle()"
@@ -107,12 +104,23 @@ export default {
 	},
 	methods: {
 		button(tab) {
-			return {
+			const button = {
 				...tab,
 				current: tab.name === this.current,
 				title: tab.label,
 				text: tab.label ?? tab.text ?? tab.name
 			};
+
+			if (tab.badge) {
+				button.badge = {
+					theme: this.theme,
+					text: tab.badge
+				};
+			} else {
+				delete button.badge;
+			}
+
+			return button;
 		},
 		async resize() {
 			// container width
@@ -155,39 +163,23 @@ export default {
 	margin-inline: calc(var(--button-padding) * -1);
 }
 
-.k-tabs-tab {
+.k-tabs-button.k-button {
 	position: relative;
-}
-
-.k-tab-button.k-button {
 	margin-block: 2px;
 	overflow-x: visible;
 }
 
-.k-tab-button[aria-current]::after {
+.k-tabs-button[aria-current="true"]::after {
 	position: absolute;
 	content: "";
 	height: 2px;
 	inset-inline: var(--button-padding);
 	bottom: -2px;
-	background: currentColor;
+	background: var(--color-text);
 }
 
-.k-tabs-badge {
-	position: absolute;
-	top: 2px;
-	font-variant-numeric: tabular-nums;
-	inset-inline-end: var(--button-padding);
-	transform: translateX(75%);
-	line-height: 1.5;
-	padding: 0 var(--spacing-1);
-	border-radius: 1rem;
-	text-align: center;
-	font-size: 10px;
-	box-shadow: var(--shadow-md);
-	background: var(--theme-color-back);
-	border: 1px solid var(--theme-color-500);
-	color: var(--theme-color-text);
-	z-index: 1;
+.k-tabs-button .k-button-badge {
+	top: 3px;
+	inset-inline-end: calc(var(--button-padding) / 4);
 }
 </style>

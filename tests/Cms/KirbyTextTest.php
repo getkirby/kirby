@@ -13,9 +13,7 @@ class KirbyTextTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'hooks' => [
-				'kirbytext:before' => function ($text) {
-					return strtolower($text);
-				}
+				'kirbytext:before' => fn ($text) => strtolower($text)
 			]
 		]);
 
@@ -31,9 +29,7 @@ class KirbyTextTest extends TestCase
 				'index' => '/dev/null'
 			],
 			'hooks' => [
-				'kirbytext:after' => function ($text) {
-					return strip_tags($text);
-				}
+				'kirbytext:after' => fn ($text) => strip_tags($text)
 			]
 		]);
 

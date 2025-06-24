@@ -10,8 +10,6 @@ class ImageKirbyTagTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Text.ImageKirbyTag';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

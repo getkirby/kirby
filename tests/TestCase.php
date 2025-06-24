@@ -2,6 +2,7 @@
 
 namespace Kirby;
 
+use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
@@ -11,6 +12,8 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
+	protected App $app;
+
 	/**
 	 * Whether $actual is a File object
 	 * and optionally if it matches $expected (by reference or ID)
@@ -87,6 +90,44 @@ class TestCase extends BaseTestCase
 	protected function hasTmp(): bool
 	{
 		return defined(static::class . '::TMP');
+	}
+
+	/**
+	 * Set up a new multi language app instance with
+	 * English and German pre-installed
+	 */
+	public function setUpMultiLanguage(
+		array|null $site = null
+	): void {
+		$this->app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			],
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => $site ?? []
+		]);
+	}
+
+	/**
+	 * Set up a new single language app instance
+	 */
+	public function setUpSingleLanguage(
+		array|null $site = null
+	): void {
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => $site ?? []
+		]);
 	}
 
 	protected function setUpTmp(): void

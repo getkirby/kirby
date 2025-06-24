@@ -15,17 +15,22 @@
 	>
 		<k-navigate ref="navigate" :disabled="navigate === false" axis="y">
 			<!-- @slot Content of the dropdown which overrides passed `options` prop -->
-			<slot>
+			<slot v-bind="{ items }">
 				<template v-for="(option, index) in items">
 					<hr v-if="option === '-'" :key="'separator-' + index" />
-					<k-dropdown-item
+					<slot
 						v-else-if="option.when ?? true"
-						:key="'item-' + index"
-						v-bind="option"
-						@click="onOptionClick(option)"
+						name="item"
+						v-bind="{ item: option, index }"
 					>
-						{{ option.label ?? option.text }}
-					</k-dropdown-item>
+						<k-dropdown-item
+							:key="'item-' + index"
+							v-bind="option"
+							@click="onOptionClick(option)"
+						>
+							{{ option.label ?? option.text }}
+						</k-dropdown-item>
+					</slot>
 				</template>
 			</slot>
 		</k-navigate>
@@ -37,6 +42,8 @@ let OpenDropdown = null;
 
 /**
  * Dropdowns are constructed with two elements: `<k-dropdown-content>` holds any content shown when opening the dropdown: any number of `<k-dropdown-item>` elements or any other HTML; typically a `<k-button>` then is used to call the `toggle()` method on `<k-dropdown-content>`.
+ *
+ * @todo rename to `k-dropdown` in v6 (with alias to old name)
  */
 export default {
 	props: {
@@ -336,10 +343,10 @@ export default {
 
 <style>
 :root {
-	--dropdown-color-bg: var(--color-black);
-	--dropdown-color-text: var(--color-white);
+	--dropdown-color-bg: var(--color-gray-950);
 	--dropdown-color-current: var(--color-blue-500);
-	--dropdown-color-hr: rgba(255, 255, 255, 0.25);
+	--dropdown-color-hr: var(--color-gray-850);
+	--dropdown-color-text: var(--color-white);
 	--dropdown-padding: var(--spacing-2);
 	--dropdown-rounded: var(--rounded);
 	--dropdown-shadow: var(--shadow-xl);
@@ -383,8 +390,8 @@ export default {
 
 .k-dropdown-content[data-theme="light"] {
 	--dropdown-color-bg: var(--color-white);
-	--dropdown-color-text: var(--color-black);
 	--dropdown-color-current: var(--color-blue-800);
-	--dropdown-color-hr: rgba(0, 0, 0, 0.1);
+	--dropdown-color-hr: var(--color-gray-250);
+	--dropdown-color-text: var(--color-black);
 }
 </style>

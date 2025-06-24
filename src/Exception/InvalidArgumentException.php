@@ -3,7 +3,6 @@
 namespace Kirby\Exception;
 
 /**
- * InvalidArgumentException
  * Thrown when a method was called with invalid arguments
  *
  * @package   Kirby Exception

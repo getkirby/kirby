@@ -1,1 +1,0 @@
-{"description":"","tags":{"deprecated":[{"description":"Will be removed in v5.0.0","title":"deprecated"}],"todo":[{"description":"Remove in v5.0.0","title":"todo"}]},"displayName":"LegacyPluginView","props":[{"name":"id","type":{"name":"string"}}],"component":"k-legacy-plugin-view","sourceFile":"src/components/Views/LegacyPluginView.vue"}

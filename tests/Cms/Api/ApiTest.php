@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Exception\AuthException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -13,9 +14,8 @@ class ApiTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Api';
 
-	protected $api;
-	protected $locale;
-	protected $app;
+	protected Api $api;
+	protected string $locale;
 
 	public function setUp(): void
 	{
@@ -52,16 +52,12 @@ class ApiTest extends TestCase
 			'options' => [
 				'api' => [
 					'allowImpersonation' => true,
-					'authentication' => function () {
-						return true;
-					},
-					'routes' => [
+					'authentication'     => fn () => true,
+					'routes'             => [
 						[
 							'pattern' => 'foo',
 							'method'  => 'GET',
-							'action'  => function () {
-								return 'something';
-							}
+							'action'  => fn () => 'something'
 						]
 					]
 				],
@@ -595,7 +591,7 @@ class ApiTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The field "nonexists" could not be found');
+		$this->expectExceptionMessage('The field could not be found');
 
 		$page = $app->page('test');
 		$app->api()->fieldApi($page, 'nonexists');
@@ -612,7 +608,7 @@ class ApiTest extends TestCase
 		]);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('No field could be loaded');
+		$this->expectExceptionMessage('The field could not be found');
 
 		$page = $app->page('test');
 		$app->api()->fieldApi($page, '');
@@ -635,7 +631,7 @@ class ApiTest extends TestCase
 					'pattern' => 'test',
 					'method'  => 'POST',
 					'action'  => function () {
-						throw new \Exception('nope');
+						throw new Exception('nope');
 					}
 				]
 			]
@@ -664,18 +660,14 @@ class ApiTest extends TestCase
 		$app = $this->app->clone([
 			'sections' => [
 				'test' => [
-					'api' => function () {
-						return [
-							[
-								'pattern' => '/message',
-								'action'  => function () {
-									return [
-										'message' => 'Test'
-									];
-								}
+					'api' => fn () => [
+						[
+							'pattern' => '/message',
+							'action'  => fn () => [
+								'message' => 'Test'
 							]
-						];
-					}
+						]
+					]
 				]
 			],
 			'blueprints' => [

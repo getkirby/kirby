@@ -1,11 +1,13 @@
 <template>
-	<div class="k-block-title">
+	<div :class="['k-block-title', $attrs.class]" :style="$attrs.style">
 		<k-icon :type="icon" class="k-block-icon" />
-		<span v-if="name" class="k-block-name">
-			{{ name }}
-		</span>
-		<span v-if="label" class="k-block-label">
-			{{ label }}
+		<span class="k-block-title-text">
+			<span v-if="name" class="k-block-name">
+				{{ name }}
+			</span>
+			<span v-if="label" class="k-block-label">
+				{{ label }}
+			</span>
 		</span>
 	</div>
 </template>
@@ -69,20 +71,32 @@ export default {
 <style>
 .k-block-title {
 	display: flex;
-	align-items: center;
+	align-items: top;
 	min-width: 0;
 	padding-inline-end: 0.75rem;
-	line-height: 1;
 	gap: var(--spacing-2);
+	flex-shrink: 1;
+}
+.k-block-title-text {
+	display: flex;
+	flex-shrink: 1;
+	flex-wrap: wrap;
+	min-width: 0;
+	gap: var(--spacing-2);
+}
+.k-block-name,
+.k-block-label {
+	line-height: 1.25;
+	overflow: hidden;
+	min-width: 0;
+	white-space: wrap;
+	text-overflow: ellipsis;
+}
+.k-block-label {
+	color: var(--color-text-dimmed);
 }
 .k-block-icon {
 	--icon-color: var(--color-gray-600);
 	width: 1rem;
-}
-.k-block-label {
-	color: var(--color-text-dimmed);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 </style>

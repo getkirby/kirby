@@ -68,11 +68,11 @@ class Remote
 		// update the defaults with App config if set;
 		// request the App instance lazily
 		if ($app = App::instance(null, true)) {
-			$defaults = array_merge($defaults, $app->option('remote', []));
+			$defaults = [...$defaults, ...$app->option('remote', [])];
 		}
 
 		// set all options
-		$this->options = array_merge($defaults, $options);
+		$this->options = [...$defaults, ...$options];
 
 		// add the url
 		$this->options['url'] = $url;
@@ -95,11 +95,11 @@ class Remote
 		array $arguments = []
 	): static {
 		return new static(
-			url: $arguments[0],
-			options: array_merge(
-				['method' => strtoupper($method)],
-				$arguments[1] ?? []
-			)
+			url:     $arguments[0],
+			options: [
+				'method' => strtoupper($method),
+				...$arguments[1] ?? []
+			]
 		);
 	}
 
@@ -171,7 +171,9 @@ class Remote
 			$this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
 			$this->curlopt[CURLOPT_CAPATH] = $this->options['ca'];
 		} else {
-			throw new InvalidArgumentException('Invalid "ca" option for the Remote class');
+			throw new InvalidArgumentException(
+				message: 'Invalid "ca" option for the Remote class'
+			);
 		}
 
 		// add the progress
@@ -267,13 +269,13 @@ class Remote
 	 */
 	public static function get(string $url, array $params = []): static
 	{
-		$defaults = [
+		$options = [
 			'method' => 'GET',
 			'data'   => [],
+			...$params
 		];
 
-		$options = array_merge($defaults, $params);
-		$query   = http_build_query($options['data']);
+		$query = http_build_query($options['data']);
 
 		if (empty($query) === false) {
 			$url = match (Url::hasQuery($url)) {

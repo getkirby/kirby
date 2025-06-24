@@ -6,8 +6,7 @@ use Kirby\TestCase;
 
 class SortMixinTest extends TestCase
 {
-	protected $app;
-	protected $page;
+	protected Page $page;
 
 	public function setUp(): void
 	{
@@ -22,18 +21,14 @@ class SortMixinTest extends TestCase
 		Section::$types['test'] = [
 			'mixins' => ['sort'],
 			'props'  => [
-				'query' => function (string|null $query = null) {
-					return $query;
-				}
+				'query' => fn (string|null $query = null) => $query
 			]
 		];
 
 		Section::$types['pages'] = [
 			'mixins' => ['sort'],
 			'props'  => [
-				'status' => function (string|null $status = null) {
-					return $status;
-				},
+				'status' => fn (string|null $status = null) => $status
 			]
 		];
 	}

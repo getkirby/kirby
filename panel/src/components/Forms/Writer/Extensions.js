@@ -92,7 +92,7 @@ export default class Extensions {
 					buttons[button.id ?? button.name] = button;
 				}
 			} else {
-				buttons[extension.name] = extension.button;
+				buttons[extension.name] = { name: extension.name, ...extension.button };
 			}
 		}
 

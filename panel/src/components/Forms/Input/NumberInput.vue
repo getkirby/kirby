@@ -9,27 +9,23 @@
 			min,
 			name,
 			placeholder,
-			required
+			required,
+			step,
+			value: number
 		}"
-		:value="number"
-		:step="step"
-		class="k-number-input"
+		:class="['k-number-input', $attrs.class]"
+		:style="$attrs.style"
 		type="number"
+		@blur="onBlur"
+		@input="onInput($event.target.value)"
 		@keydown.ctrl.s="clean"
 		@keydown.meta.s="clean"
-		v-on="listeners"
 	/>
 </template>
 
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { placeholder } from "@/mixins/props.js";
-
-import {
-	required as validateRequired,
-	minValue as validateMinValue,
-	maxValue as validateMaxValue
-} from "vuelidate/lib/validators";
 
 export const props = {
 	mixins: [InputProps, placeholder],
@@ -58,23 +54,12 @@ export default {
 	data() {
 		return {
 			number: this.format(this.value),
-			timeout: null,
-			listeners: {
-				...this.$listeners,
-				input: (event) => this.onInput(event.target.value),
-				blur: this.onBlur
-			}
+			timeout: null
 		};
 	},
 	watch: {
 		value(value) {
 			this.number = value;
-		},
-		number: {
-			immediate: true,
-			handler() {
-				this.onInvalid();
-			}
 		}
 	},
 	mounted() {
@@ -138,9 +123,6 @@ export default {
 				this.$emit("input", value);
 			}
 		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
 		onInput(value) {
 			this.number = value;
 			this.emit(value);
@@ -152,15 +134,6 @@ export default {
 		select() {
 			this.$refs.input.select();
 		}
-	},
-	validations() {
-		return {
-			value: {
-				required: this.required ? validateRequired : true,
-				min: this.min ? validateMinValue(this.min) : true,
-				max: this.max ? validateMaxValue(this.max) : true
-			}
-		};
 	}
 };
 </script>

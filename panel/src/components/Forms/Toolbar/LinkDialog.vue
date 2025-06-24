@@ -8,13 +8,13 @@ export default {
 		fields: {
 			default: () => ({
 				href: {
-					label: window.panel.$t("link"),
+					label: window.panel.t("link"),
 					type: "link",
-					placeholder: window.panel.$t("url.placeholder"),
+					placeholder: window.panel.t("url.placeholder"),
 					icon: "url"
 				},
 				title: {
-					label: window.panel.$t("link.text"),
+					label: window.panel.t("link.text"),
 					type: "text",
 					icon: "title"
 				}

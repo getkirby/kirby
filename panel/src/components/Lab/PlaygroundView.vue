@@ -1,30 +1,10 @@
 <template>
-	<k-panel-inside
-		:data-has-tabs="tabs.length > 1"
-		class="k-lab-playground-view"
-	>
-		<k-header>
+	<k-panel-inside class="k-lab-playground-view">
+		<k-header class="k-lab-playground-header">
 			{{ title }}
 
 			<template #buttons>
-				<k-button-group v-if="docs || github">
-					<k-button
-						v-if="docs"
-						:text="docs"
-						icon="book"
-						size="sm"
-						variant="filled"
-						@click="openDocs"
-					/>
-					<k-button
-						v-if="github"
-						:link="github"
-						icon="github"
-						size="sm"
-						target="_blank"
-						variant="filled"
-					/>
-				</k-button-group>
+				<k-view-buttons :buttons="buttons" />
 			</template>
 		</k-header>
 		<k-tabs :tab="tab" :tabs="tabs" />
@@ -61,6 +41,7 @@ Vue.component("k-lab-table-cell", TableCell);
 
 export default {
 	props: {
+		buttons: Array,
 		compiler: Boolean,
 		docs: String,
 		examples: [Object, Array],
@@ -114,9 +95,6 @@ export default {
 			// update the code strings for each example
 			window.UiExamples = this.examples;
 		},
-		openDocs() {
-			this.$panel.drawer.open(`lab/docs/${this.docs}`);
-		},
 		async reloadComponent() {
 			await this.$panel.view.refresh();
 			this.createComponent();
@@ -131,10 +109,6 @@ export default {
 </script>
 
 <style>
-.k-lab-playground-view[data-has-tabs="true"] .k-header {
-	margin-bottom: 0;
-}
-
 .k-lab-examples h2 {
 	margin-bottom: var(--spacing-6);
 }
@@ -142,7 +116,8 @@ export default {
 	margin-top: var(--spacing-12);
 }
 
-.k-lab-input-examples .k-lab-example:has(:invalid) {
+:where(.k-lab-input-examples, .k-lab-field-examples)
+	.k-lab-example:has(:invalid) {
 	outline: 2px solid var(--color-red-500);
 	outline-offset: -2px;
 }

@@ -287,7 +287,6 @@ class UsersDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('users/editor/delete');
 
 		$this->assertSame('user.delete', $dialog['event']);
-		$this->assertSame(['/users/editor'], $dialog['dispatch']['content/remove']);
 		$this->assertSame(200, $dialog['code']);
 		$this->assertFalse($dialog['redirect']);
 		$this->assertCount(1, $this->app->users());

@@ -10,6 +10,7 @@ use Kirby\Toolkit\I18n;
 
 return [
 	'mixins' => [
+		'batch',
 		'details',
 		'empty',
 		'headline',
@@ -44,7 +45,7 @@ return [
 				$status = 'draft';
 			}
 
-			if (in_array($status, ['all', 'draft', 'published', 'listed', 'unlisted']) === false) {
+			if (in_array($status, ['all', 'draft', 'published', 'listed', 'unlisted'], true) === false) {
 				$status = 'all';
 			}
 
@@ -77,7 +78,9 @@ return [
 				$parent instanceof Site === false &&
 				$parent instanceof Page === false
 			) {
-				throw new InvalidArgumentException('The parent is invalid. You must choose the site or a page as parent.');
+				throw new InvalidArgumentException(
+					message: 'The parent is invalid. You must choose the site or a page as parent.'
+				);
 			}
 
 			return $parent;
@@ -111,7 +114,7 @@ return [
 				// filter by all set templates
 				if (
 					$this->templates &&
-					in_array($intendedTemplate, $this->templates) === false
+					in_array($intendedTemplate, $this->templates, true) === false
 				) {
 					return false;
 				}
@@ -119,7 +122,7 @@ return [
 				// exclude by all ignored templates
 				if (
 					$this->templatesIgnore &&
-					in_array($intendedTemplate, $this->templatesIgnore) === true
+					in_array($intendedTemplate, $this->templatesIgnore, true) === true
 				) {
 					return false;
 				}
@@ -147,25 +150,26 @@ return [
 				$pages = $pages->flip();
 			}
 
+			return $pages;
+		},
+		'modelsPaginated' => function () {
 			// pagination
-			$pages = $pages->paginate([
+			return $this->models()->paginate([
 				'page'   => $this->page,
 				'limit'  => $this->limit,
 				'method' => 'none' // the page is manually provided
 			]);
-
-			return $pages;
 		},
 		'pages' => function () {
 			return $this->models;
 		},
 		'total' => function () {
-			return $this->models->pagination()->total();
+			return $this->models()->count();
 		},
 		'data' => function () {
 			$data = [];
 
-			foreach ($this->models as $page) {
+			foreach ($this->modelsPaginated() as $page) {
 				$panel       = $page->panel();
 				$permissions = $page->permissions();
 
@@ -180,10 +184,11 @@ return [
 					'link'        => $panel->url(true),
 					'parent'      => $page->parentId(),
 					'permissions' => [
-						'sort'         => $permissions->can('sort'),
+						'delete'       => $permissions->can('delete'),
 						'changeSlug'   => $permissions->can('changeSlug'),
 						'changeStatus' => $permissions->can('changeStatus'),
 						'changeTitle'  => $permissions->can('changeTitle'),
+						'sort'         => $permissions->can('sort'),
 					],
 					'status'      => $page->status(),
 					'template'    => $page->intendedTemplate()->name(),
@@ -313,12 +318,28 @@ return [
 			return $blueprints;
 		},
 	],
+	// @codeCoverageIgnoreStart
+	'api' => function () {
+		return [
+			[
+				'pattern' => 'delete',
+				'method'  => 'DELETE',
+				'action'  => function () {
+					return $this->section()->deleteSelected(
+						ids: $this->requestBody('ids'),
+					);
+				}
+			]
+		];
+	},
+	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
 		return [
 			'data'    => $this->data,
 			'errors'  => $this->errors,
 			'options' => [
 				'add'      => $this->add,
+				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,

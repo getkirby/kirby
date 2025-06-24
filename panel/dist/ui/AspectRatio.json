@@ -1,1 +1,0 @@
-{"description":"","tags":{"deprecated":[{"description":"4.0.0 Use `<k-frame>` instead","title":"deprecated"}]},"displayName":"AspectRatio","props":[{"name":"cover","type":{"name":"boolean"}},{"name":"ratio","type":{"name":"string"}}],"slots":[{"name":"default","description":"Content"}],"component":"k-aspect-ratio","sourceFile":"src/components/Layout/AspectRatio.vue"}

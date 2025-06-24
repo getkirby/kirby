@@ -13,6 +13,8 @@ use Kirby\Toolkit\Collection as BaseCollection;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Toolkit\Collection<\Kirby\Cms\NestObject|\Kirby\Content\Field>
  */
 class NestCollection extends BaseCollection
 {
@@ -23,6 +25,8 @@ class NestCollection extends BaseCollection
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
-		return parent::toArray($map ?? fn ($object) => $object->toArray());
+		return parent::toArray(
+			$map ?? fn ($object) => $object->toArray()
+		);
 	}
 }

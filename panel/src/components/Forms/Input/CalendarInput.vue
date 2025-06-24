@@ -1,5 +1,9 @@
 <template>
-	<fieldset class="k-calendar-input" @click.stop>
+	<fieldset
+		:class="['k-calendar-input', $attrs.class]"
+		:style="$attrs.style"
+		@click.stop
+	>
 		<legend class="sr-only">{{ $t("date.select") }}</legend>
 		<!-- Month + year selects -->
 		<nav>
@@ -30,7 +34,7 @@
 			<thead>
 				<tr>
 					<th v-for="day in weekdays" :key="'weekday_' + day">
-						{{ day }}
+						{{ $t("days." + day) }}
 					</th>
 				</tr>
 			</thead>
@@ -90,6 +94,8 @@
 import { props as InputProps } from "@/mixins/input.js";
 import { IsoDateProps } from "./DateInput.vue";
 
+const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+
 /**
  * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
  * @since 4.0.0
@@ -119,32 +125,30 @@ export default {
 			return this.toDate().daysInMonth();
 		},
 		/**
-		 * Adjusted weekday number (Sunday is 7 not 0)
+		 * Weekday column index (0-6) the first day of the month
+		 * needs to be placed at
 		 * @returns {number}
 		 */
 		firstWeekday() {
-			const weekday = this.toDate().day();
-			return weekday > 0 ? weekday : 7;
+			const day = days[this.toDate().day()];
+			return this.weekdays.indexOf(day);
 		},
 		/**
-		 * Translated weekday names
+		 * Ordered weekday names abbreviations
 		 * @returns {array}
 		 */
 		weekdays() {
-			return ["mon", "tue", "wed", "thu", "fri", "sat", "sun"].map((day) =>
-				this.$t("days." + day)
-			);
+			const first = this.$panel.translation.weekday;
+			return [...days.slice(first), ...days.slice(0, first)];
 		},
 		/**
 		 * Weeks in the currently viewed month
 		 * @returns {number}
 		 */
 		weeks() {
-			// in which column do we need to start
-			const offset = this.firstWeekday - 1;
 			// how many weeks/rows do we need
 			// to cover offset and all days
-			return Math.ceil((this.numberOfDays + offset) / 7);
+			return Math.ceil((this.numberOfDays + this.firstWeekday) / 7);
 		},
 		/**
 		 * Translated month names
@@ -240,7 +244,7 @@ export default {
 			const end = start + 7;
 
 			for (let x = start; x < end; x++) {
-				const day = x - (this.firstWeekday - 1);
+				const day = x - this.firstWeekday;
 				const isPlaceholder = day <= 0 || day > this.numberOfDays;
 				days.push(!isPlaceholder ? day : "");
 			}

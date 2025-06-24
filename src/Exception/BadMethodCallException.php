@@ -3,7 +3,6 @@
 namespace Kirby\Exception;
 
 /**
- * BadMethodCallException
  * Thrown when a method was called that does not exist
  *
  * @package   Kirby Exception

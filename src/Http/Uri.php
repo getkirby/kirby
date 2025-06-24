@@ -5,6 +5,7 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use SensitiveParameter;
+use Stringable;
 use Throwable;
 
 /**
@@ -16,7 +17,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Uri
+class Uri implements Stringable
 {
 	/**
 	 * Cache for the current Uri object
@@ -100,8 +101,7 @@ class Uri
 
 			$props['username'] = $props['user'] ?? null;
 			$props['password'] = $props['pass'] ?? null;
-
-			$props = array_merge($props, $inject);
+			$props             = [...$props, ...$inject];
 		}
 
 		// parse the path and extract params
@@ -245,7 +245,7 @@ class Uri
 
 		if (
 			$this->port !== null &&
-			in_array($this->port, [80, 443]) === false
+			in_array($this->port, [80, 443], true) === false
 		) {
 			$domain .= ':' . $this->port;
 		}
@@ -374,7 +374,9 @@ class Uri
 
 		if ($port !== null) {
 			if ($port < 1 || $port > 65535) {
-				throw new InvalidArgumentException('Invalid port format: ' . $port);
+				throw new InvalidArgumentException(
+					message: 'Invalid port format: ' . $port
+				);
 			}
 		}
 
@@ -396,8 +398,13 @@ class Uri
 	 */
 	public function setScheme(string|null $scheme = null): static
 	{
-		if ($scheme !== null && in_array($scheme, static::$schemes) === false) {
-			throw new InvalidArgumentException('Invalid URL scheme: ' . $scheme);
+		if (
+			$scheme !== null &&
+			in_array($scheme, static::$schemes, true) === false
+		) {
+			throw new InvalidArgumentException(
+				message: 'Invalid URL scheme: ' . $scheme
+			);
 		}
 
 		$this->scheme = $scheme;
@@ -465,7 +472,7 @@ class Uri
 
 		$path = $this->path->toString($slash) . $this->params->toString(true);
 
-		if ($this->slash && $slash === true) {
+		if ($this->slash && ($path !== '' || $slash === true)) {
 			$path .= '/';
 		}
 
@@ -515,7 +522,7 @@ class Uri
 		// use the full path;
 		// automatically detect the trailing slash from it if possible
 		if (is_string($props['path']) === true) {
-			$props['slash'] = substr($props['path'], -1, 1) === '/';
+			$props['slash'] = str_ends_with($props['path'], '/') === true;
 		}
 
 		return $props;

@@ -4,8 +4,6 @@ namespace Kirby\Cms;
 
 class RTest extends TestCase
 {
-	protected $app;
-
 	public function setUp(): void
 	{
 		$this->app = new App([

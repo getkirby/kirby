@@ -2,12 +2,21 @@
 	<div
 		:data-disabled="disabled"
 		:data-translate="translate"
-		:class="['k-field', `k-field-name-${name}`, `k-field-type-${type}`]"
+		:class="[
+			'k-field',
+			`k-field-name-${name}`,
+			`k-field-type-${type}`,
+			$attrs.class
+		]"
+		:style="$attrs.style"
 		@focusin="$emit('focus', $event)"
 		@focusout="$emit('blur', $event)"
 	>
 		<slot name="header">
-			<header class="k-field-header">
+			<header
+				v-if="label || $slots.label || $slots.options || $slots.counter"
+				class="k-field-header"
+			>
 				<slot name="label">
 					<k-label
 						:input="input"

@@ -15,7 +15,7 @@
 				issues.map((issue) => ({
 					theme: 'negative',
 					image: {
-						back: 'var(--theme-color-200)',
+						back: 'light-dark(var(--theme-color-200), var(--theme-color-900))',
 						icon: issue.icon ?? 'alert',
 						color: 'var(--theme-color-icon)'
 					},
@@ -34,13 +34,22 @@
  */
 export default {
 	props: {
-		exceptions: Array,
-		security: Array,
-		urls: Object
+		exceptions: {
+			type: Array,
+			default: () => []
+		},
+		security: {
+			type: Array,
+			default: () => []
+		},
+		urls: {
+			type: [Object, Array],
+			default: () => ({})
+		}
 	},
 	data() {
 		return {
-			issues: structuredClone(this.security)
+			issues: this.$helper.object.clone(this.security)
 		};
 	},
 	async mounted() {
@@ -54,7 +63,7 @@ export default {
 		// call the check method on every URL in the `urls` object
 		const promises = Object.entries(this.urls ?? {}).map(this.check);
 
-		await promiseAll([...promises, this.testPatchRequests()]);
+		await promiseAll(promises);
 
 		console.info(
 			`System health checks ended. ${
@@ -81,22 +90,6 @@ export default {
 		},
 		retry() {
 			this.$go(window.location.href);
-		},
-		/**
-		 * Checks if server supports PATH request or if
-		 * the `api.methodOverwrite` option needs to be activated
-		 */
-		async testPatchRequests() {
-			const { status } = await this.$api.patch("system/method-test");
-
-			if (status !== "ok") {
-				this.issues.push({
-					id: "method-overwrite-text",
-					text: "Your server does not support PATCH requests",
-					link: "https://getkirby.com/docs/reference/system/options/api#methods-overwrite",
-					icon: "protected"
-				});
-			}
 		}
 	}
 };

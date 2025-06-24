@@ -58,7 +58,7 @@
 <script>
 /**
  * @since 4.0.0
- * @internal
+ * @unstable
  */
 export default {
 	data() {
@@ -98,8 +98,8 @@ export default {
 :root {
 	--menu-button-height: var(--height);
 	--menu-button-width: 100%;
-	--menu-color-back: var(--color-gray-250);
-	--menu-color-border: var(--color-gray-300);
+	--menu-color-back: light-dark(var(--color-gray-250), var(--color-gray-950));
+	--menu-color-border: light-dark(var(--color-gray-300), var(--color-gray-850));
 	--menu-display: none;
 	--menu-display-backdrop: block;
 	--menu-padding: var(--spacing-3);
@@ -154,13 +154,8 @@ export default {
 }
 /* Keep the remaining space between 2nd last and last button group */
 .k-panel-menu-buttons[data-second-last="true"] {
-	flex-grow: 1;
+	margin-bottom: auto;
 }
-/* Move the last menu to the end */
-.k-panel-menu-buttons:last-child {
-	justify-content: flex-end;
-}
-
 /* Menu buttons incl. search */
 .k-panel-menu-button {
 	--button-align: flex-start;
@@ -170,10 +165,11 @@ export default {
 	/* Make sure that buttons don't shrink in height */
 	flex-shrink: 0;
 }
-.k-panel-menu-button[aria-current] {
-	--button-color-back: var(--color-white);
+.k-panel-menu-button[aria-current="true"] {
+	--button-color-back: light-dark(var(--color-white), var(--color-gray-850));
 	box-shadow: var(--shadow);
 }
+
 /* Outline should not vanish behind other buttons */
 .k-panel-menu-button:focus {
 	z-index: 1;
@@ -191,7 +187,7 @@ export default {
 	content: "";
 	position: fixed;
 	inset: 0;
-	background: var(--color-backdrop);
+	background: var(--overlay-color-back);
 	display: var(--menu-display-backdrop);
 	pointer-events: none;
 	z-index: var(--z-drawer);
@@ -266,7 +262,7 @@ export default {
 	/* The toggle is visible on hover or focus */
 	.k-panel-menu-toggle:focus-visible,
 	/* The hover state is controlled via JS to avoid flickering */
-	.k-panel-menu[data-hover] .k-panel-menu-toggle {
+	.k-panel-menu[data-hover="true"] .k-panel-menu-toggle {
 		opacity: 1;
 	}
 	/* Create the outline on the icon on focus */

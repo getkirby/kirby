@@ -1,6 +1,6 @@
 /**
  * Returns props for a page status button
- * @internal
+ * @unstable
  *
  * @param {string} status
  * @param {boolean} disabled
@@ -8,7 +8,6 @@
  */
 export function status(status, disabled = false) {
 	const button = {
-		class: "k-status-icon",
 		icon: "status-" + status,
 		title:
 			window.panel.$t("page.status") +

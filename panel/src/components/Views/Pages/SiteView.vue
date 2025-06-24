@@ -1,44 +1,42 @@
 <template>
 	<k-panel-inside
-		:data-has-tabs="tabs.length > 1"
+		:data-id="id"
 		:data-locked="isLocked"
-		data-id="/"
-		data-template="site"
+		:data-template="blueprint"
 		class="k-site-view"
 	>
 		<k-header
 			:editable="permissions.changeTitle && !isLocked"
 			class="k-site-view-header"
-			@edit="$dialog('site/changeTitle')"
+			@edit="$dialog(api + '/changeTitle')"
 		>
-			{{ model.title }}
-			<template #buttons>
-				<k-button-group>
-					<k-button
-						:link="model.previewUrl"
-						:title="$t('open')"
-						icon="open"
-						target="_blank"
-						variant="filled"
-						size="sm"
-						class="k-site-view-preview"
-					/>
-					<k-languages-dropdown />
-				</k-button-group>
+			{{ title }}
 
-				<k-form-buttons :lock="lock" />
+			<template #buttons>
+				<k-view-buttons :buttons="buttons" />
+				<k-form-controls
+					:editor="editor"
+					:has-diff="hasDiff"
+					:is-locked="isLocked"
+					:modified="modified"
+					:preview="permissions.preview ? api + '/preview/changes' : false"
+					@discard="onDiscard"
+					@submit="onSubmit"
+				/>
 			</template>
 		</k-header>
 
-		<k-model-tabs :tab="tab.name" :tabs="tabs" />
+		<k-model-tabs :diff="diff" :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"
+			:content="content"
 			:empty="$t('site.blueprint')"
 			:lock="lock"
 			:tab="tab"
 			parent="site"
-			@submit="$emit('submit', $event)"
+			@input="onInput"
+			@submit="onSubmit"
 		/>
 	</k-panel-inside>
 </template>
@@ -48,17 +46,13 @@ import ModelView from "../ModelView.vue";
 
 export default {
 	extends: ModelView,
-	emits: ["submit"],
-	computed: {
-		protectedFields() {
-			return ["title"];
-		}
+	props: {
+		title: String
 	}
 };
 </script>
 
 <style>
-/** TODO: .k-site-view:has(.k-tabs) .k-site-view-header */
 .k-site-view[data-has-tabs="true"] .k-site-view-header {
 	margin-bottom: 0;
 }

@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Exception;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
@@ -16,6 +17,7 @@ class PHPTest extends TestCase
 
 	/**
 	 * @covers ::encode
+	 * @covers ::encodeArray
 	 */
 	public function testEncode()
 	{
@@ -60,7 +62,7 @@ class PHPTest extends TestCase
 	{
 		$file = static::TMP . '/does-not-exist.php';
 
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The file "' . $file . '" does not exist');
 
 		PHP::read($file);

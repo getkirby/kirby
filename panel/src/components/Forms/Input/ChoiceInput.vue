@@ -1,5 +1,9 @@
 <template>
-	<label class="k-choice-input" :aria-disabled="disabled">
+	<label
+		:aria-disabled="disabled"
+		:class="['k-choice-input', $attrs.class]"
+		:style="$attrs.style"
+	>
 		<input
 			v-bind="{
 				autofocus,
@@ -11,8 +15,8 @@
 				type,
 				value
 			}"
+			:class="[variant === 'invisible' ? 'sr-only' : null, $attrs.class]"
 			:data-variant="variant"
-			:class="{ 'sr-only': variant === 'invisible' }"
 			@input="$emit('input', $event.target.checked)"
 		/>
 		<span v-if="label || info" class="k-choice-input-label">
@@ -25,8 +29,7 @@
 </template>
 
 <script>
-import { props as InputProps } from "@/mixins/input.js";
-import Input from "@/mixins/input.js";
+import Input, { props as InputProps } from "@/mixins/input.js";
 
 export const props = {
 	mixins: [InputProps],
@@ -86,7 +89,7 @@ export default {
 .k-choice-input-label-info {
 	color: var(--choice-color-info);
 }
-.k-choice-input[aria-disabled] {
+.k-choice-input[aria-disabled="true"] {
 	cursor: not-allowed;
 }
 
@@ -98,14 +101,8 @@ export default {
 	border-radius: var(--input-rounded);
 }
 
-:where(.k-checkboxes-field, .k-radio-field)
-	.k-choice-input:not([aria-disabled="true"]) {
-	background: var(--input-color-back);
+:where(.k-checkboxes-field, .k-radio-field) .k-choice-input {
+	background: var(--item-color-back);
 	box-shadow: var(--shadow);
-}
-
-:where(.k-checkboxes-field, .k-radio-field)
-	.k-choice-input[aria-disabled="true"] {
-	border: 1px solid var(--input-color-border);
 }
 </style>

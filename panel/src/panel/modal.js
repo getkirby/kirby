@@ -4,7 +4,8 @@ import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 import focus from "@/helpers/focus.js";
 import "@/helpers/array.js";
-import { set } from "vue";
+import { reactive, set } from "vue";
+import { wrap } from "@/helpers/array.js";
 
 /**
  * Additional default values for modals
@@ -28,7 +29,7 @@ export const defaults = () => {
 export default (panel, key, defaults) => {
 	const parent = Feature(panel, key, defaults);
 
-	return {
+	return reactive({
 		...parent,
 
 		/**
@@ -148,14 +149,18 @@ export default (panel, key, defaults) => {
 		/**
 		 * Custom submitter for the dialog/drawer
 		 * It will automatically close the modal
-		 * if there's no submit listner or backend route.
+		 * if there's no submit listener or backend route.
 		 *
 		 * @param {Object} value
 		 * @param {Object} options
 		 * @returns {Promise} The new state or false if the request failed
 		 */
 		async submit(value, options = {}) {
-			value = value ?? this.props.value;
+			if (this.isLoading === true) {
+				return;
+			}
+
+			value ??= this.props.value;
 
 			if (this.hasEventListener("submit")) {
 				return this.emit("submit", value, options);
@@ -209,9 +214,6 @@ export default (panel, key, defaults) => {
 			// send custom events to the event bus
 			this.successEvents(success);
 
-			// dispatch store actions that might have been defined in the response
-			this.successDispatch(success);
-
 			// redirect or reload
 			if (success.route || success.redirect) {
 				// handle any redirects
@@ -225,25 +227,6 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
-		 * Dispatch deprecated store events
-		 *
-		 * @param {Object} state
-		 */
-		successDispatch(state) {
-			if (isObject(state.dispatch) === false) {
-				return;
-			}
-
-			for (const event in state.dispatch) {
-				const payload = state.dispatch[event];
-				panel.app.$store.dispatch(
-					event,
-					Array.isArray(payload) === true ? [...payload] : payload
-				);
-			}
-		},
-
-		/**
 		 * Emit all events that might be in the response
 		 *
 		 * @param {Object} state
@@ -251,7 +234,7 @@ export default (panel, key, defaults) => {
 		successEvents(state) {
 			if (state.event) {
 				// wrap single events to treat them all at once
-				const events = Array.wrap(state.event);
+				const events = wrap(state.event);
 
 				// emit all defined events
 				for (const event of events) {
@@ -309,5 +292,5 @@ export default (panel, key, defaults) => {
 		get value() {
 			return this.props?.value;
 		}
-	};
+	});
 };

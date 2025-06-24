@@ -21,6 +21,10 @@ insert_final_newline = true
 indent_size = 2
 insert_final_newline = false
 
+[views/**/*.php]
+indent_size = 2
+insert_final_newline = false
+
 [*.yml]
 indent_style = space
 

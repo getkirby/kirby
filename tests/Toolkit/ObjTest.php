@@ -3,35 +3,24 @@
 namespace Kirby\Toolkit;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Obj
- */
+#[CoversClass(Obj::class)]
 class ObjTest extends TestCase
 {
-	/**
-	 * covers ::__construct
-	 * @covers ::__call
-	 */
-	public function test__call()
+	public function test__call(): void
 	{
 		$obj = new Obj(['foo' => 'bar']);
 		$this->assertSame('bar', $obj->foo());
 	}
 
-	/**
-	 * @covers ::__get
-	 */
-	public function test__get()
+	public function test__get(): void
 	{
 		$obj = new Obj();
 		$this->assertNull($obj->foo);
 	}
 
-	/**
-	 * @covers ::get
-	 */
-	public function testGetMultiple()
+	public function testGetMultiple(): void
 	{
 		$obj = new Obj([
 			'one'   => 'first',
@@ -50,10 +39,7 @@ class ObjTest extends TestCase
 		$this->assertSame($obj->toArray(), $obj->get(['one', 'two', 'three']));
 	}
 
-	/**
-	 * @covers ::get
-	 */
-	public function testGetMultipleInvalidFallback()
+	public function testGetMultipleInvalidFallback(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('fallback value must be an array');
@@ -62,19 +48,13 @@ class ObjTest extends TestCase
 		$obj->get(['two'], 'invalid fallback');
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$obj = new Obj($expected = ['foo' => 'bar']);
 		$this->assertSame($expected, $obj->toArray());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
-	public function testToArrayWithChild()
+	public function testToArrayWithChild(): void
 	{
 		$parent = new Obj([
 			'child' => new Obj(['foo' => 'bar'])
@@ -89,19 +69,13 @@ class ObjTest extends TestCase
 		$this->assertSame($expected, $parent->toArray());
 	}
 
-	/**
-	 * @covers ::toJson
-	 */
-	public function testToJson()
+	public function testToJson(): void
 	{
 		$obj = new Obj($expected = ['foo' => 'bar']);
 		$this->assertSame(json_encode($expected), $obj->toJson());
 	}
 
-	/**
-	 * @covers ::toKeys
-	 */
-	public function testToKeys()
+	public function testToKeys(): void
 	{
 		$obj = new Obj(['foo' => 'bar']);
 		$this->assertSame(['foo'], $obj->toKeys());
@@ -110,10 +84,7 @@ class ObjTest extends TestCase
 		$this->assertSame(['foo', 'one'], $obj->toKeys());
 	}
 
-	/**
-	 * @covers ::__debugInfo
-	 */
-	public function test__debugInfo()
+	public function test__debugInfo(): void
 	{
 		$obj = new Obj($expected = ['foo' => 'bar']);
 		$this->assertSame($expected, $obj->__debugInfo());

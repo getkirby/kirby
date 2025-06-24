@@ -1,5 +1,9 @@
 <template>
-	<p class="k-url-field-preview" :class="$options.class" :data-link="link">
+	<p
+		:class="['k-url-field-preview', $options.class, $attrs.class]"
+		:data-link="Boolean(link)"
+		:style="$attrs.style"
+	>
 		{{ column.before }}
 		<k-link :to="link" @click.native.stop>
 			<span>{{ text }}</span>
@@ -35,7 +39,7 @@ export default {
 .k-url-field-preview {
 	padding-inline: var(--table-cell-padding);
 }
-.k-url-field-preview[data-link] {
+.k-url-field-preview[data-link="true"] {
 	color: var(--link-color);
 }
 .k-url-field-preview a {
@@ -56,6 +60,6 @@ export default {
 	text-underline-offset: var(--link-underline-offset);
 }
 .k-url-field-preview a:hover {
-	color: var(--color-black);
+	color: var(--link-color-hover);
 }
 </style>

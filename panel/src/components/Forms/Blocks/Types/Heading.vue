@@ -1,6 +1,10 @@
 <template>
-	<div :data-level="content.level" class="k-block-type-heading-input">
-		<k-writer
+	<div
+		:class="['k-block-type-heading-input', $attrs.class]"
+		:data-level="content.level"
+		:style="$attrs.style"
+	>
+		<k-writer-input
 			ref="input"
 			v-bind="textField"
 			:disabled="disabled"
@@ -118,13 +122,13 @@ export default {
 	--text-size: var(--text-sm);
 	line-height: 1.5em;
 }
-.k-block-type-heading-input .k-writer .ProseMirror strong {
+.k-block-type-heading-input .k-writer-input .ProseMirror strong {
 	font-weight: 700;
 }
 .k-block-type-heading-level {
 	--input-color-back: transparent;
 	--input-color-border: none;
-	--input-color-text: var(--color-gray-600);
+	--input-color-text: light-dark(var(--color-gray-600), var(--color-gray-500));
 	font-weight: var(--font-bold);
 	text-transform: uppercase;
 }

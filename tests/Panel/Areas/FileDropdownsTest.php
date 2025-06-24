@@ -13,6 +13,20 @@ class FileDropdownsTest extends AreaTestCase
 		$this->login();
 	}
 
+	protected function createLanguages(): array
+	{
+		return [
+			'en' => [
+				'code' => 'en',
+				'name' => 'English',
+			],
+			'de' => [
+				'code' => 'de',
+				'name' => 'Deutsch',
+			]
+		];
+	}
+
 	protected function createPageFile(): void
 	{
 		$this->app([
@@ -24,8 +38,9 @@ class FileDropdownsTest extends AreaTestCase
 							['filename' => 'test.jpg']
 						]
 					]
-				]
-			]
+				],
+			],
+			'languages' => $this->createLanguages(),
 		]);
 
 		// pretend the file exists
@@ -41,7 +56,8 @@ class FileDropdownsTest extends AreaTestCase
 				'files' => [
 					['filename' => 'test.jpg']
 				]
-			]
+			],
+			'languages' => $this->createLanguages(),
 		]);
 
 		// pretend the file exists
@@ -67,7 +83,8 @@ class FileDropdownsTest extends AreaTestCase
 					'email' => 'admin@getkirby.com',
 					'role'  => 'admin',
 				]
-			]
+			],
+			'languages' => $this->createLanguages(),
 		]);
 
 		// pretend the file exists
@@ -90,9 +107,10 @@ class FileDropdownsTest extends AreaTestCase
 		$this->login();
 
 		$options = $this->dropdown('pages/test/files/test.jpg')['options'];
+		$file    = $this->app->file('test/test.jpg');
 
 		$open = $options[0];
-		$this->assertSame('/test/test.jpg', $open['link']);
+		$this->assertSame($file->previewUrl(), $open['link']);
 		$this->assertSame('_blank', $open['target']);
 		$this->assertSame('Open', $open['text']);
 
@@ -163,5 +181,33 @@ class FileDropdownsTest extends AreaTestCase
 
 		$this->assertSame('/users/test/files/test.jpg/delete', $options[5]['dialog']);
 		$this->assertSame('Delete', $options[5]['text']);
+	}
+
+	public function testFileLanguageDropdownForAccountFile()
+	{
+		$this->createUserFile();
+		$this->login();
+		$this->assertLanguageDropdown('account/files/test.jpg/languages');
+	}
+
+	public function testFileLanguageDropdownForPageFile()
+	{
+		$this->createPageFile();
+		$this->login();
+		$this->assertLanguageDropdown('pages/test/files/test.jpg/languages');
+	}
+
+	public function testFileLanguageDropdownForSiteFile()
+	{
+		$this->createSiteFile();
+		$this->login();
+		$this->assertLanguageDropdown('site/files/test.jpg/languages');
+	}
+
+	public function testFileLanguageDropdownForUserFile()
+	{
+		$this->createUserFile();
+		$this->login();
+		$this->assertLanguageDropdown('users/test/files/test.jpg/languages');
 	}
 }

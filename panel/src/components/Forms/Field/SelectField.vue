@@ -1,6 +1,16 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-select-field">
-		<k-input v-bind="$props" ref="input" type="select" v-on="$listeners" />
+	<k-field
+		v-bind="$props"
+		:class="['k-select-field', $attrs.class]"
+		:input="id"
+		:style="$attrs.style"
+	>
+		<k-input
+			v-bind="$props"
+			ref="input"
+			type="select"
+			@input="$emit('input', $event)"
+		/>
 	</k-field>
 </template>
 

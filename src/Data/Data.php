@@ -4,6 +4,7 @@ namespace Kirby\Data;
 
 use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
+use Throwable;
 
 /**
  * The `Data` class provides readers and
@@ -61,13 +62,17 @@ class Data
 		}
 
 		if ($handler === null || class_exists($handler) === false) {
-			throw new Exception('Missing handler for type: "' . $type . '"');
+			throw new Exception(
+				message: 'Missing handler for type: "' . $type . '"'
+			);
 		}
 
 		$handler = new $handler();
 
 		if ($handler instanceof Handler === false) {
-			throw new Exception('Handler for type: "' . $type . '" needs to extend Kirby\\Data\\Handler');
+			throw new Exception(
+				message: 'Handler for type: "' . $type . '" needs to extend ' . Handler::class
+			);
 		}
 
 		return $handler;
@@ -76,9 +81,20 @@ class Data
 	/**
 	 * Decodes data with the specified handler
 	 */
-	public static function decode($string, string $type): array
-	{
-		return static::handler($type)->decode($string);
+	public static function decode(
+		$string,
+		string $type,
+		bool $fail = true
+	): array {
+		try {
+			return static::handler($type)->decode($string);
+		} catch (Throwable $e) {
+			if ($fail === false) {
+				return [];
+			}
+
+			throw $e;
+		}
 	}
 
 	/**
@@ -94,11 +110,22 @@ class Data
 	 * the data handler is automatically chosen by
 	 * the extension if not specified
 	 */
-	public static function read(string $file, string|null $type = null): array
-	{
-		$type  ??= F::extension($file);
-		$handler = static::handler($type);
-		return $handler->read($file);
+	public static function read(
+		string $file,
+		string|null $type = null,
+		bool $fail = true
+	): array {
+		try {
+			$type  ??= F::extension($file);
+			$handler = static::handler($type);
+			return $handler->read($file);
+		} catch (Throwable $e) {
+			if ($fail === false) {
+				return [];
+			}
+
+			throw $e;
+		}
 	}
 
 	/**

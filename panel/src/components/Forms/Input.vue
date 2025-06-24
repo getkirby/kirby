@@ -1,9 +1,9 @@
 <template>
 	<div
+		:class="['k-input', $attrs.class]"
 		:data-disabled="disabled"
-		:data-invalid="!novalidate && isInvalid"
 		:data-type="type"
-		class="k-input"
+		:style="$attrs.style"
 	>
 		<span
 			v-if="$slots.before || before"
@@ -19,7 +19,8 @@
 					ref="input"
 					v-bind="inputProps"
 					:value="value"
-					v-on="listeners"
+					@input="$emit('input', $event)"
+					@submit="$emit('submit', $event)"
 				/>
 			</slot>
 		</span>
@@ -39,51 +40,31 @@
 </template>
 
 <script>
-import { after, before, disabled, invalid } from "@/mixins/props.js";
+import { after, before, disabled } from "@/mixins/props.js";
 
 export const props = {
-	mixins: [after, before, disabled, invalid],
+	mixins: [after, before, disabled],
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
 		type: String,
 		icon: [String, Boolean],
-		novalidate: {
-			type: Boolean,
-			default: false
-		},
 		value: {
 			type: [String, Boolean, Number, Object, Array],
 			default: null
 		}
-	}
+	},
+	emits: ["input", "submit"]
 };
 
 export default {
 	mixins: [props],
-	data() {
-		return {
-			isInvalid: this.invalid,
-			listeners: {
-				...this.$listeners,
-				invalid: ($invalid, $v) => {
-					this.isInvalid = $invalid;
-					this.$emit("invalid", $invalid, $v);
-				}
-			}
-		};
-	},
 	computed: {
 		inputProps() {
 			return {
 				...this.$props,
 				...this.$attrs
 			};
-		}
-	},
-	watch: {
-		invalid() {
-			this.isInvalid = this.invalid;
 		}
 	},
 	methods: {
@@ -127,7 +108,7 @@ export default {
 
 <style>
 :root {
-	--input-color-back: var(--color-white);
+	--input-color-back: light-dark(var(--color-white), var(--color-gray-850));
 	--input-color-border: var(--color-border);
 	--input-color-description: var(--color-text-dimmed);
 	--input-color-icon: currentColor;
@@ -215,7 +196,7 @@ export default {
 
 /* Disabled state */
 .k-input[data-disabled="true"] {
-	--input-color-back: var(--color-background);
+	--input-color-back: var(--panel-color-back);
 	--input-color-icon: var(--color-gray-600);
 	pointer-events: none;
 }

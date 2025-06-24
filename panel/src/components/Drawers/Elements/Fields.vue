@@ -1,7 +1,6 @@
 <template>
 	<k-fieldset
 		v-if="hasFields"
-		:novalidate="novalidate"
 		:fields="fields"
 		:value="value"
 		class="k-drawer-fields"
@@ -16,13 +15,9 @@ export const props = {
 	props: {
 		empty: {
 			type: String,
-			default: () => window.panel.$t("drawer.fields.empty")
+			default: () => window.panel.t("drawer.fields.empty")
 		},
 		fields: Object,
-		novalidate: {
-			type: Boolean,
-			default: true
-		},
 		value: Object
 	}
 };

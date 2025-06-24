@@ -1,5 +1,5 @@
 <template>
-	<div class="k-toggle-field-preview">
+	<div :class="['k-toggle-field-preview', $attrs.class]" :style="$attrs.style">
 		<k-toggle-input
 			:disabled="!isEditable"
 			:text="text"

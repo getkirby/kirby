@@ -5,13 +5,13 @@ namespace Kirby\Filesystem;
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
-use Kirby\TestCase as TestCase;
+use Kirby\TestCase;
 
 class AFile
 {
 	use IsFile;
 
-	public $foo = 'bar';
+	public string $foo = 'bar';
 }
 
 /**

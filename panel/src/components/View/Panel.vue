@@ -6,6 +6,7 @@
 		:data-language-default="$panel.language.isDefault"
 		:data-menu="$panel.menu.isOpen ? 'true' : 'false'"
 		:data-role="$panel.user.role"
+		:data-theme="$panel.theme.current"
 		:data-translation="$panel.translation.code"
 		:data-user="$panel.user.id"
 		:dir="$panel.direction"
@@ -61,17 +62,20 @@ export default {};
 
 <style>
 :root {
+	--panel-color-back: light-dark(var(--color-gray-200), var(--color-gray-900));
 	--scroll-top: 0rem;
 }
 
 html {
 	overflow-x: hidden;
 	overflow-y: scroll;
-	background: var(--color-light);
+	background: var(--panel-color-back);
+	color: var(--color-text);
 }
 
 body {
 	font-size: var(--text-sm);
+	color: var(--color-text);
 }
 
 .k-panel[data-loading="true"] {

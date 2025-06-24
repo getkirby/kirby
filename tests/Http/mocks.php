@@ -6,12 +6,12 @@ use Exception;
 
 class HeadersSent
 {
-	public static $value = false;
+	public static bool $value = false;
 }
 
 class IniStore
 {
-	public static $data = [];
+	public static array $data = [];
 }
 
 /**

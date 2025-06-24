@@ -15,12 +15,7 @@
 					<h1 class="sr-only">
 						{{ $t("installation") }}
 					</h1>
-					<k-fieldset
-						:fields="fields"
-						:novalidate="true"
-						:value="user"
-						@input="user = $event"
-					/>
+					<k-fieldset :fields="fields" :value="user" @input="user = $event" />
 					<k-button
 						:text="$t('install')"
 						icon="check"
@@ -185,8 +180,9 @@ export default {
 
 <style>
 .k-installation-dialog {
-	--dialog-color-back: var(--color-white);
-	--dialog-shadow: var(--shadow);
+	--dialog-color-back: light-dark(var(--color-white), var(--color-gray-950));
+	--dialog-shadow: light-dark(var(--shadow), none);
+
 	container-type: inline-size;
 }
 .k-installation-view .k-button {

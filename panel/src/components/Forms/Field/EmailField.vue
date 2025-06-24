@@ -1,6 +1,16 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-email-field">
-		<k-input v-bind="$props" ref="input" type="email" v-on="$listeners">
+	<k-field
+		v-bind="$props"
+		:class="['k-email-field', $attrs.class]"
+		:input="id"
+		:style="$attrs.style"
+	>
+		<k-input
+			v-bind="$props"
+			ref="input"
+			type="email"
+			@input="$emit('input', $event)"
+		>
 			<template #icon>
 				<k-button
 					v-if="link"

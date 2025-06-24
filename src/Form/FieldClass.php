@@ -2,15 +2,9 @@
 
 namespace Kirby\Form;
 
-use Closure;
-use Exception;
-use Kirby\Cms\App;
 use Kirby\Cms\HasSiblings;
-use Kirby\Cms\ModelWithContent;
-use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
-use Throwable;
 
 /**
  * Abstract field class to be used instead
@@ -22,27 +16,29 @@ use Throwable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
  */
 abstract class FieldClass
 {
 	use HasSiblings;
+	use Mixin\Api;
+	use Mixin\Model;
+	use Mixin\Translatable;
+	use Mixin\Validation;
+	use Mixin\Value;
+	use Mixin\When;
 
 	protected string|null $after;
 	protected bool $autofocus;
 	protected string|null $before;
-	protected mixed $default;
 	protected bool $disabled;
 	protected string|null $help;
 	protected string|null $icon;
 	protected string|null $label;
-	protected ModelWithContent $model;
 	protected string|null $name;
 	protected string|null $placeholder;
-	protected bool $required;
 	protected Fields $siblings;
-	protected bool $translate;
-	protected mixed $value = null;
-	protected array|null $when;
 	protected string|null $width;
 
 	public function __construct(
@@ -56,7 +52,7 @@ abstract class FieldClass
 		$this->setHelp($params['help'] ?? null);
 		$this->setIcon($params['icon'] ?? null);
 		$this->setLabel($params['label'] ?? null);
-		$this->setModel($params['model'] ?? App::instance()->site());
+		$this->setModel($params['model'] ?? null);
 		$this->setName($params['name'] ?? null);
 		$this->setPlaceholder($params['placeholder'] ?? null);
 		$this->setRequired($params['required'] ?? false);
@@ -84,11 +80,6 @@ abstract class FieldClass
 		return $this->stringTemplate($this->after);
 	}
 
-	public function api(): array
-	{
-		return $this->routes();
-	}
-
 	public function autofocus(): bool
 	{
 		return $this->autofocus;
@@ -97,32 +88,6 @@ abstract class FieldClass
 	public function before(): string|null
 	{
 		return $this->stringTemplate($this->before);
-	}
-
-	/**
-	 * @deprecated 3.5.0
-	 * @todo remove when the general field class setup has been refactored
-	 *
-	 * Returns the field data
-	 * in a format to be stored
-	 * in Kirby's content fields
-	 */
-	public function data(bool $default = false): mixed
-	{
-		return $this->store($this->value($default));
-	}
-
-	/**
-	 * Returns the default value for the field,
-	 * which will be used when a page/file/user is created
-	 */
-	public function default(): mixed
-	{
-		if (is_string($this->default) === false) {
-			return $this->default;
-		}
-
-		return $this->stringTemplate($this->default);
 	}
 
 	/**
@@ -147,23 +112,6 @@ abstract class FieldClass
 	public function drawers(): array
 	{
 		return [];
-	}
-
-	/**
-	 * Runs all validations and returns an array of
-	 * error messages
-	 */
-	public function errors(): array
-	{
-		return $this->validate();
-	}
-
-	/**
-	 * Setter for the value
-	 */
-	public function fill(mixed $value = null): void
-	{
-		$this->value = $value;
 	}
 
 	/**
@@ -203,53 +151,9 @@ abstract class FieldClass
 		return $this->disabled;
 	}
 
-	public function isEmpty(): bool
-	{
-		return $this->isEmptyValue($this->value());
-	}
-
-	public function isEmptyValue(mixed $value = null): bool
-	{
-		return in_array($value, [null, '', []], true);
-	}
-
 	public function isHidden(): bool
 	{
 		return false;
-	}
-
-	/**
-	 * Checks if the field is invalid
-	 */
-	public function isInvalid(): bool
-	{
-		return $this->isValid() === false;
-	}
-
-	public function isRequired(): bool
-	{
-		return $this->required;
-	}
-
-	public function isSaveable(): bool
-	{
-		return true;
-	}
-
-	/**
-	 * Checks if the field is valid
-	 */
-	public function isValid(): bool
-	{
-		return empty($this->errors()) === true;
-	}
-
-	/**
-	 * Returns the Kirby instance
-	 */
-	public function kirby(): App
-	{
-		return $this->model->kirby();
 	}
 
 	/**
@@ -263,61 +167,11 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Returns the parent model
-	 */
-	public function model(): ModelWithContent
-	{
-		return $this->model;
-	}
-
-	/**
 	 * Returns the field name
 	 */
 	public function name(): string
 	{
 		return $this->name ?? $this->type();
-	}
-
-	/**
-	 * Checks if the field needs a value before being saved;
-	 * this is the case if all of the following requirements are met:
-	 * - The field is saveable
-	 * - The field is required
-	 * - The field is currently empty
-	 * - The field is not currently inactive because of a `when` rule
-	 */
-	protected function needsValue(): bool
-	{
-		// check simple conditions first
-		if (
-			$this->isSaveable() === false ||
-			$this->isRequired() === false ||
-			$this->isEmpty()    === false
-		) {
-			return false;
-		}
-
-		// check the data of the relevant fields if there is a `when` option
-		if (
-			empty($this->when) === false &&
-			is_array($this->when) === true &&
-			$formFields = $this->siblings()
-		) {
-			foreach ($this->when as $field => $value) {
-				$field      = $formFields->get($field);
-				$inputValue = $field?->value() ?? '';
-
-				// if the input data doesn't match the requested `when` value,
-				// that means that this field is not required and can be saved
-				// (*all* `when` conditions must be met for this field to be required)
-				if ($inputValue !== $value) {
-					return false;
-				}
-			}
-		}
-
-		// either there was no `when` condition or all conditions matched
-		return true;
 	}
 
 	/**
@@ -355,37 +209,12 @@ abstract class FieldClass
 			'name'        => $this->name(),
 			'placeholder' => $this->placeholder(),
 			'required'    => $this->isRequired(),
-			'saveable'    => $this->isSaveable(),
+			'saveable'    => $this->hasValue(),
 			'translate'   => $this->translate(),
 			'type'        => $this->type(),
 			'when'        => $this->when(),
 			'width'       => $this->width(),
 		];
-	}
-
-	/**
-	 * If `true`, the field has to be filled in correctly to be saved.
-	 */
-	public function required(): bool
-	{
-		return $this->required;
-	}
-
-	/**
-	 * Routes for the field API
-	 */
-	public function routes(): array
-	{
-		return [];
-	}
-
-	/**
-	 * @deprecated 3.5.0
-	 * @todo remove when the general field class setup has been refactored
-	 */
-	public function save(): bool
-	{
-		return $this->isSaveable();
 	}
 
 	protected function setAfter(array|string|null $after = null): void
@@ -401,11 +230,6 @@ abstract class FieldClass
 	protected function setBefore(array|string|null $before = null): void
 	{
 		$this->before = $this->i18n($before);
-	}
-
-	protected function setDefault(mixed $default = null): void
-	{
-		$this->default = $default;
 	}
 
 	protected function setDisabled(bool $disabled = false): void
@@ -428,14 +252,9 @@ abstract class FieldClass
 		$this->label = $this->i18n($label);
 	}
 
-	protected function setModel(ModelWithContent $model): void
-	{
-		$this->model = $model;
-	}
-
 	protected function setName(string|null $name = null): void
 	{
-		$this->name = $name;
+		$this->name = strtolower($name ?? $this->type());
 	}
 
 	protected function setPlaceholder(array|string|null $placeholder = null): void
@@ -443,27 +262,9 @@ abstract class FieldClass
 		$this->placeholder = $this->i18n($placeholder);
 	}
 
-	protected function setRequired(bool $required = false): void
-	{
-		$this->required = $required;
-	}
-
 	protected function setSiblings(Fields|null $siblings = null): void
 	{
 		$this->siblings = $siblings ?? new Fields([$this]);
-	}
-
-	protected function setTranslate(bool $translate = true): void
-	{
-		$this->translate = $translate;
-	}
-
-	/**
-	 * Setter for the when condition
-	 */
-	protected function setWhen(array|null $when = null): void
-	{
-		$this->when = $when;
 	}
 
 	/**
@@ -475,7 +276,7 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Returns all sibling fields
+	 * Returns all sibling fields for the HasSiblings trait
 	 */
 	protected function siblingsCollection(): Fields
 	{
@@ -495,29 +296,11 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Converts the given value to a value
-	 * that can be stored in the text file
-	 */
-	public function store(mixed $value): mixed
-	{
-		return $value;
-	}
-
-	/**
-	 * Should the field be translatable?
-	 */
-	public function translate(): bool
-	{
-		return $this->translate;
-	}
-
-	/**
 	 * Converts the field to a plain array
 	 */
 	public function toArray(): array
 	{
 		$props = $this->props();
-		$props['signature'] = md5(json_encode($props));
 
 		ksort($props);
 
@@ -530,109 +313,6 @@ abstract class FieldClass
 	public function type(): string
 	{
 		return lcfirst(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
-	}
-
-	/**
-	 * Runs the validations defined for the field
-	 */
-	protected function validate(): array
-	{
-		$validations = $this->validations();
-		$value       = $this->value();
-		$errors      = [];
-
-		// validate required values
-		if ($this->needsValue() === true) {
-			$errors['required'] = I18n::translate('error.validation.required');
-		}
-
-		foreach ($validations as $key => $validation) {
-			if (is_int($key) === true) {
-				// predefined validation
-				try {
-					Validations::$validation($this, $value);
-				} catch (Exception $e) {
-					$errors[$validation] = $e->getMessage();
-				}
-				continue;
-			}
-
-			if ($validation instanceof Closure) {
-				try {
-					$validation->call($this, $value);
-				} catch (Exception $e) {
-					$errors[$key] = $e->getMessage();
-				}
-			}
-		}
-
-		return $errors;
-	}
-
-	/**
-	 * Defines all validation rules
-	 * @codeCoverageIgnore
-	 */
-	protected function validations(): array
-	{
-		return [];
-	}
-
-	/**
-	 * Returns the value of the field if saveable
-	 * otherwise it returns null
-	 */
-	public function value(bool $default = false): mixed
-	{
-		if ($this->isSaveable() === false) {
-			return null;
-		}
-
-		if ($default === true && $this->isEmpty() === true) {
-			return $this->default();
-		}
-
-		return $this->value;
-	}
-
-	protected function valueFromJson(mixed $value): array
-	{
-		try {
-			return Data::decode($value, 'json');
-		} catch (Throwable) {
-			return [];
-		}
-	}
-
-	protected function valueFromYaml(mixed $value): array
-	{
-		return Data::decode($value, 'yaml');
-	}
-
-	protected function valueToJson(
-		array|null $value = null,
-		bool $pretty = false
-	): string {
-		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-
-		if ($pretty === true) {
-			$constants |= JSON_PRETTY_PRINT;
-		}
-
-		return json_encode($value, $constants);
-	}
-
-	protected function valueToYaml(array|null $value = null): string
-	{
-		return Data::encode($value, 'yaml');
-	}
-
-	/**
-	 * Conditions when the field will be shown
-	 */
-	public function when(): array|null
-	{
-		return $this->when;
 	}
 
 	/**

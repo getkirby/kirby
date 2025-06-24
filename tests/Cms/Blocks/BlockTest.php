@@ -10,8 +10,7 @@ class BlockTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.Block';
 
-	protected $app;
-	protected $page;
+	protected Page $page;
 
 	public function setUp(): void
 	{

@@ -6,6 +6,7 @@ use Closure;
 use Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
+use Stringable;
 
 /**
  * Representation of an Http response,
@@ -18,7 +19,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Response
+class Response implements Stringable
 {
 	/**
 	 * Store for all registered headers,
@@ -74,7 +75,7 @@ class Response
 		$this->charset = $charset ?? 'UTF-8';
 
 		// automatic mime type detection
-		if (strpos($this->type, '/') === false) {
+		if (str_contains($this->type, '/') === false) {
 			$this->type = F::extensionToMime($this->type) ?? 'text/html';
 		}
 	}
@@ -134,7 +135,7 @@ class Response
 		array $props = []
 	): static {
 		if (file_exists($file) === false) {
-			throw new Exception('The file could not be found');
+			throw new Exception(message: 'The file could not be found');
 		}
 
 		$filename ??= basename($file);
@@ -167,10 +168,11 @@ class Response
 	 */
 	public static function file(string $file, array $props = []): static
 	{
-		$props = array_merge([
+		$props = [
 			'body' => F::read($file),
-			'type' => F::extensionToMime(F::extension($file))
-		], $props);
+			'type' => F::extensionToMime(F::extension($file)),
+			...$props
+		];
 
 		// if we couldn't serve a correct MIME type, force
 		// the browser to display the file as plain text to

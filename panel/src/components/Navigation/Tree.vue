@@ -1,15 +1,15 @@
 <template>
-	<ul :class="$options.name" class="k-tree" :style="{ '--tree-level': level }">
+	<ul
+		:class="['k-tree', $options.name, $attrs.class]"
+		:style="{ '--tree-level': level, ...$attrs.style }"
+	>
 		<li
 			v-for="item in state"
 			:key="item.value"
 			:aria-expanded="item.open"
 			:aria-current="isItem(item, current)"
 		>
-			<p
-				class="k-tree-branch"
-				:data-has-subtree="item.hasChildren && item.open"
-			>
+			<p class="k-tree-branch">
 				<button
 					:disabled="!item.hasChildren"
 					class="k-tree-toggle"
@@ -113,13 +113,16 @@ export default {
 
 <style>
 :root {
-	--tree-color-back: var(--color-gray-200);
-	--tree-color-hover-back: var(--color-gray-300);
-	--tree-color-selected-back: var(--color-blue-300);
-	--tree-color-selected-text: var(--color-black);
-	--tree-color-text: var(--color-gray-dimmed);
-	--tree-level: 0;
+	--tree-color-back: var(--panel-color-back);
 	--tree-indentation: 0.6rem;
+	--tree-level: 0;
+
+	--tree-branch-color-back: var(--tree-color-back);
+	--tree-branch-color-text: var(--color-text-dimmed);
+	--tree-branch-hover-color-back: var(--browser-item-hover-color-back);
+	--tree-branch-hover-color-text: var(--browser-item-hover-color-text);
+	--tree-branch-selected-color-back: var(--browser-item-selected-color-back);
+	--tree-branch-selected-color-text: var(--browser-item-selected-color-text);
 }
 
 .k-tree-branch {
@@ -127,21 +130,20 @@ export default {
 	align-items: center;
 	padding-inline-start: calc(var(--tree-level) * var(--tree-indentation));
 	margin-bottom: 1px;
+	background: var(--tree-branch-color-back);
 }
-/** TODO: .k-tree-branch:has(+ .k-tree)  */
-.k-tree-branch[data-has-subtree="true"] {
+.k-tree-branch:has(+ .k-tree) {
 	inset-block-start: calc(var(--tree-level) * 1.5rem);
 	z-index: calc(100 - var(--tree-level));
-	background: var(--tree-color-back);
 }
 .k-tree-branch:hover,
-li[aria-current] > .k-tree-branch {
-	--tree-color-text: var(--tree-color-selected-text);
-	background: var(--tree-color-hover-back);
+li[aria-current="true"] > .k-tree-branch {
+	color: var(--tree-branch-hover-color-text);
+	background: var(--tree-branch-hover-color-back);
 	border-radius: var(--rounded);
 }
-li[aria-current] > .k-tree-branch {
-	background: var(--tree-color-selected-back);
+li[aria-current="true"] > .k-tree-branch {
+	background: var(--tree-branch-selected-color-back);
 }
 .k-tree-toggle {
 	--icon-size: 12px;

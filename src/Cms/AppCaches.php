@@ -40,10 +40,10 @@ trait AppCaches
 		$types = $this->extensions['cacheTypes'] ?? [];
 
 		if (array_key_exists($type, $types) === false) {
-			throw new InvalidArgumentException([
-				'key'  => 'cache.type.invalid',
-				'data' => ['type' => $type]
-			]);
+			throw new InvalidArgumentException(
+				key: 'cache.type.invalid',
+				data: ['type' => $type]
+			);
 		}
 
 		$className = $types[$type];
@@ -53,10 +53,10 @@ trait AppCaches
 
 		// check if it is a usable cache object
 		if ($cache instanceof Cache === false) {
-			throw new InvalidArgumentException([
-				'key'  => 'cache.type.invalid',
-				'data' => ['type' => $type]
-			]);
+			throw new InvalidArgumentException(
+				key: 'cache.type.invalid',
+				data: ['type' => $type]
+			);
 		}
 
 		return $this->caches[$key] = $cache;
@@ -93,7 +93,7 @@ trait AppCaches
 			return $defaults;
 		}
 
-		return array_merge($defaults, $options);
+		return [...$defaults, ...$options];
 	}
 
 	/**
@@ -111,7 +111,7 @@ trait AppCaches
 
 		// plain keys without dots don't need further investigation
 		// since they can never be from a plugin.
-		if (strpos($key, '.') === false) {
+		if (str_contains($key, '.') === false) {
 			return $prefixedKey;
 		}
 

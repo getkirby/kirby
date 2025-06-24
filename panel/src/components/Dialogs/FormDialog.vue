@@ -9,7 +9,6 @@
 			<k-dialog-text v-if="text" :text="text" />
 			<k-dialog-fields
 				:fields="fields"
-				:novalidate="novalidate"
 				:value="value"
 				@input="$emit('input', $event)"
 				@submit="$emit('submit', $event)"
@@ -31,7 +30,7 @@ export default {
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
-			default: () => window.panel.$t("save")
+			default: () => window.panel.t("save")
 		},
 		text: {
 			type: String

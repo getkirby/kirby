@@ -5,14 +5,13 @@ namespace Kirby\Toolkit;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Locale
- */
+#[CoversClass(Locale::class)]
 class LocaleTest extends TestCase
 {
-	protected $locales = [];
-	protected $localeSuffix;
+	protected array $locales = [];
+	protected string $localeSuffix = '';
 
 	public function setUp(): void
 	{
@@ -21,11 +20,13 @@ class LocaleTest extends TestCase
 
 		// test which locale suffix the system supports
 		setlocale(LC_ALL, 'de_DE.' . $this->localeSuffix);
-		if (setlocale(LC_ALL, '0') === 'de_DE.' . $this->localeSuffix) {
-			$this->localeSuffix = 'utf8';
-		} else {
-			$this->localeSuffix = 'UTF-8';
-		}
+
+		$this->localeSuffix = match (
+			setlocale(LC_ALL, '0') === 'de_DE.' . $this->localeSuffix
+		) {
+			true => 'utf8',
+			false => 'UTF-8'
+		};
 
 		// now set a baseline
 		setlocale(LC_ALL, 'C');
@@ -37,11 +38,7 @@ class LocaleTest extends TestCase
 		Locale::set($this->locales);
 	}
 
-	/**
-	 * @covers ::export
-	 * @covers ::supportedConstants
-	 */
-	public function testExport()
+	public function testExport(): void
 	{
 		// valid array
 		$this->assertSame([
@@ -67,12 +64,7 @@ class LocaleTest extends TestCase
 		]));
 	}
 
-	/**
-	 * @covers ::get
-	 * @covers ::normalizeConstant
-	 * @covers ::supportedConstants
-	 */
-	public function testGet()
+	public function testGet(): void
 	{
 		// default case (all locales are set to the same value)
 		$this->assertSame([LC_ALL => 'C'], Locale::get());
@@ -98,12 +90,7 @@ class LocaleTest extends TestCase
 		$this->assertSame('C', Locale::get('LC_CTYPE'));
 	}
 
-	/**
-	 * @covers ::get
-	 * @covers ::normalizeConstant
-	 * @covers ::supportedConstants
-	 */
-	public function testGetInvalid1()
+	public function testGetInvalid1(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid locale category "KIRBY_AWESOME_LOCALE"');
@@ -111,12 +98,7 @@ class LocaleTest extends TestCase
 		Locale::get('KIRBY_AWESOME_LOCALE');
 	}
 
-	/**
-	 * @covers ::get
-	 * @covers ::normalizeConstant
-	 * @covers ::supportedConstants
-	 */
-	public function testGetInvalid2()
+	public function testGetInvalid2(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Could not determine locale for category "987654321"');
@@ -124,11 +106,7 @@ class LocaleTest extends TestCase
 		Locale::get(987654321);
 	}
 
-	/**
-	 * @covers ::normalize
-	 * @covers ::normalizeConstant
-	 */
-	public function testNormalize()
+	public function testNormalize(): void
 	{
 		// empty array
 		$this->assertSame([], Locale::normalize([]));
@@ -153,10 +131,7 @@ class LocaleTest extends TestCase
 		Locale::normalize(123);
 	}
 
-	/**
-	 * @covers ::set
-	 */
-	public function testSetString()
+	public function testSetString(): void
 	{
 		$this->assertSame('C', setlocale(LC_ALL, '0'));
 		$this->assertSame('en-US', locale_get_default());
@@ -166,10 +141,7 @@ class LocaleTest extends TestCase
 		$this->assertSame('de_DE.' . $this->localeSuffix, locale_get_default());
 	}
 
-	/**
-	 * @covers ::set
-	 */
-	public function testSetArray1()
+	public function testSetArray1(): void
 	{
 		$this->assertSame('C', setlocale(LC_ALL, '0'));
 		$this->assertSame('en-US', locale_get_default());
@@ -185,10 +157,7 @@ class LocaleTest extends TestCase
 		$this->assertSame('de_AT.' . $this->localeSuffix, locale_get_default());
 	}
 
-	/**
-	 * @covers ::set
-	 */
-	public function testSetArray2()
+	public function testSetArray2(): void
 	{
 		$this->assertSame('C', setlocale(LC_ALL, '0'));
 		$this->assertSame('en-US', locale_get_default());

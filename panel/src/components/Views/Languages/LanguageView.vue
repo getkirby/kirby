@@ -4,37 +4,11 @@
 			<k-prev-next :prev="prev" :next="next" />
 		</template>
 
-		<k-header :editable="canUpdate" @edit="update()">
+		<k-header :editable="canUpdate" @edit="$dialog(`languages/${id}/update`)">
 			{{ name }}
 
 			<template #buttons>
-				<k-button-group>
-					<k-button
-						:link="url"
-						:title="$t('open')"
-						icon="open"
-						size="sm"
-						target="_blank"
-						variant="filled"
-					/>
-					<k-button
-						:disabled="!canUpdate"
-						:title="$t('settings')"
-						icon="cog"
-						size="sm"
-						variant="filled"
-						@click="update()"
-					/>
-					<k-button
-						v-if="deletable"
-						:disabled="!$panel.permissions.languages.delete"
-						:title="$t('delete')"
-						icon="trash"
-						size="sm"
-						variant="filled"
-						@click="remove()"
-					/>
-				</k-button-group>
+				<k-view-buttons :buttons="buttons" />
 			</template>
 		</k-header>
 
@@ -91,6 +65,7 @@
  */
 export default {
 	props: {
+		buttons: Array,
 		code: String,
 		deletable: Boolean,
 		direction: String,
@@ -127,18 +102,6 @@ export default {
 					encodeURIComponent(row.key)
 				)}/${option}`
 			);
-		},
-		remove() {
-			this.$dialog(`languages/${this.id}/delete`);
-		},
-		update(focus) {
-			this.$dialog(`languages/${this.id}/update`, {
-				on: {
-					ready: () => {
-						this.$panel.dialog.focus(focus);
-					}
-				}
-			});
 		},
 		updateTranslation({ row }) {
 			if (!this.canUpdate) {

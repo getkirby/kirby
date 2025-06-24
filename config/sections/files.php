@@ -6,6 +6,7 @@ use Kirby\Toolkit\I18n;
 
 return [
 	'mixins' => [
+		'batch',
 		'details',
 		'empty',
 		'headline',
@@ -90,14 +91,15 @@ return [
 				$files = $files->flip();
 			}
 
+			return $files;
+		},
+		'modelsPaginated' => function () {
 			// apply the default pagination
-			$files = $files->paginate([
+			return $this->models()->paginate([
 				'page'   => $this->page,
 				'limit'  => $this->limit,
 				'method' => 'none' // the page is manually provided
 			]);
-
-			return $files;
 		},
 		'files' => function () {
 			return $this->models;
@@ -105,15 +107,16 @@ return [
 		'data' => function () {
 			$data = [];
 
-			// the drag text needs to be absolute when the files come from
-			// a different parent model
-			$dragTextAbsolute = $this->model->is($this->parent) === false;
-
-			foreach ($this->models as $file) {
-				$panel = $file->panel();
+			foreach ($this->modelsPaginated() as $file) {
+				$panel       = $file->panel();
+				$permissions = $file->permissions();
 
 				$item = [
-					'dragText'  => $panel->dragText('auto', $dragTextAbsolute),
+					'dragText'  => $panel->dragText(
+						// the drag text needs to be absolute
+						// when the files come from a different parent model
+						absolute: $this->model->is($this->parent) === false
+					),
 					'extension' => $file->extension(),
 					'filename'  => $file->filename(),
 					'id'        => $file->id(),
@@ -125,6 +128,10 @@ return [
 					'link'      => $panel->url(true),
 					'mime'      => $file->mime(),
 					'parent'    => $file->parent()->panel()->path(),
+					'permissions' => [
+						'delete' => $permissions->can('delete'),
+						'sort'   => $permissions->can('sort'),
+					],
 					'template'  => $file->template(),
 					'text'      => $file->toSafeString($this->text),
 					'url'       => $file->url(),
@@ -140,7 +147,7 @@ return [
 			return $data;
 		},
 		'total' => function () {
-			return $this->models->pagination()->total();
+			return $this->models()->count();
 		},
 		'errors' => function () {
 			$errors = [];
@@ -179,14 +186,8 @@ return [
 			}
 
 			// count all uploaded files
-			$max = $this->max ? $this->max - $this->total : null;
-
-			if ($this->max && $this->total === $this->max - 1) {
-				$multiple = false;
-			} else {
-				$multiple = true;
-			}
-
+			$max      = $this->max ? $this->max - $this->total : null;
+			$multiple = !$max || $max > 1;
 			$template = $this->template === 'default' ? null : $this->template;
 
 			return [
@@ -220,6 +221,15 @@ return [
 
 					return true;
 				}
+			],
+			[
+				'pattern' => 'delete',
+				'method'  => 'DELETE',
+				'action'  => function () {
+					return $this->section()->deleteSelected(
+						ids: $this->requestBody('ids'),
+					);
+				}
 			]
 		];
 	},
@@ -231,6 +241,7 @@ return [
 			'options' => [
 				'accept'   => $this->accept,
 				'apiUrl'   => $this->parent->apiUrl(true) . '/sections/' . $this->name,
+				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,

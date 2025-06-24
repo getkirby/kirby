@@ -8,7 +8,7 @@ use Kirby\Exception\LogicException;
 use ReflectionProperty;
 
 /**
- * @coversDefaultClass Kirby\Template\Snippet
+ * @coversDefaultClass \Kirby\Template\Snippet
  */
 class SnippetTest extends TestCase
 {

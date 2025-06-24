@@ -2,14 +2,13 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 
 class FilesSectionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FilesSection';
-
-	protected $app;
 
 	public function setUp(): void
 	{
@@ -47,6 +46,41 @@ class FilesSectionTest extends TestCase
 		]);
 
 		$this->assertSame('*', $section->accept());
+	}
+
+	public function testBatchDefault()
+	{
+		$section = new Section('files', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertFalse($section->batch());
+		$this->assertFalse($section->toArray()['options']['batch']);
+	}
+
+	public function testBatchDisabled()
+	{
+		$section = new Section('files', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'batch' => false
+		]);
+
+		$this->assertFalse($section->batch());
+		$this->assertFalse($section->toArray()['options']['batch']);
+	}
+
+	public function testBatchEnabled()
+	{
+		$section = new Section('files', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'batch' => true
+		]);
+
+		$this->assertTrue($section->batch());
+		$this->assertTrue($section->toArray()['options']['batch']);
 	}
 
 	public function testHeadline()
@@ -154,7 +188,7 @@ class FilesSectionTest extends TestCase
 
 	public function testParentCollectionFail()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The parent for the section "files" has to be a page, site or user object');
 
 		$app = new App([
@@ -205,10 +239,12 @@ class FilesSectionTest extends TestCase
 			'slug'  => 'test',
 			'files' => [
 				[
-					'filename' => 'a.jpg'
+					'filename' => 'a.jpg',
+					'content'  => ['uuid' => 'test-a']
 				],
 				[
-					'filename' => 'b.jpg'
+					'filename' => 'b.jpg',
+					'content'  => ['uuid' => 'test-b']
 				]
 			]
 		]);
@@ -220,7 +256,7 @@ class FilesSectionTest extends TestCase
 		]);
 
 		$data = $section->data();
-		$this->assertSame('(image: a.jpg)', $data[0]['dragText']);
+		$this->assertSame('(image: file://test-a)', $data[0]['dragText']);
 	}
 
 	public function testDragTextWithDifferentParent()

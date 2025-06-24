@@ -75,10 +75,7 @@ class System
 
 		switch ($folder) {
 			case 'content':
-				return $url . '/' . basename($this->app->site()->storage()->contentFile(
-					'published',
-					'default'
-				));
+				return $url . '/' . basename($this->app->site()->version('latest')->contentFile());
 			case 'git':
 				return $url . '/config';
 			case 'kirby':
@@ -192,28 +189,36 @@ class System
 		try {
 			Dir::make($this->app->root('accounts'));
 		} catch (Throwable) {
-			throw new PermissionException('The accounts directory could not be created');
+			throw new PermissionException(
+				message: 'The accounts directory could not be created'
+			);
 		}
 
 		// init /site/sessions
 		try {
 			Dir::make($this->app->root('sessions'));
 		} catch (Throwable) {
-			throw new PermissionException('The sessions directory could not be created');
+			throw new PermissionException(
+				message: 'The sessions directory could not be created'
+			);
 		}
 
 		// init /content
 		try {
 			Dir::make($this->app->root('content'));
 		} catch (Throwable) {
-			throw new PermissionException('The content directory could not be created');
+			throw new PermissionException(
+				message: 'The content directory could not be created'
+			);
 		}
 
 		// init /media
 		try {
 			Dir::make($this->app->root('media'));
 		} catch (Throwable) {
-			throw new PermissionException('The media directory could not be created');
+			throw new PermissionException(
+				message: 'The media directory could not be created'
+			);
 		}
 	}
 
@@ -232,7 +237,7 @@ class System
 	{
 		return
 			$this->is2FA() === true &&
-			in_array('totp', $this->app->auth()->enabledChallenges()) === true;
+			in_array('totp', $this->app->auth()->enabledChallenges(), true) === true;
 	}
 
 	/**
@@ -363,7 +368,7 @@ class System
 	public function php(): bool
 	{
 		return
-			version_compare(PHP_VERSION, '8.1.0', '>=') === true &&
+			version_compare(PHP_VERSION, '8.2.0', '>=') === true &&
 			version_compare(PHP_VERSION, '8.5.0', '<')  === true;
 	}
 

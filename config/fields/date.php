@@ -125,27 +125,27 @@ return [
 			$format = $this->time === false ? 'd.m.Y' : 'd.m.Y H:i';
 
 			if ($min && $max && $value->isBetween($min, $max) === false) {
-				throw new Exception([
-					'key' => 'validation.date.between',
-					'data' => [
+				throw new Exception(
+					key: 'validation.date.between',
+					data: [
 						'min' => $min->format($format),
 						'max' => $max->format($format)
 					]
-				]);
-			} elseif ($min && $value->isMin($min) === false) {
-				throw new Exception([
-					'key' => 'validation.date.after',
-					'data' => [
-						'date' => $min->format($format),
-					]
-				]);
-			} elseif ($max && $value->isMax($max) === false) {
-				throw new Exception([
-					'key' => 'validation.date.before',
-					'data' => [
-						'date' => $max->format($format),
-					]
-				]);
+				);
+			}
+
+			if ($min && $value->isMin($min) === false) {
+				throw new Exception(
+					key: 'validation.date.after',
+					data: ['date' => $min->format($format)]
+				);
+			}
+
+			if ($max && $value->isMax($max) === false) {
+				throw new Exception(
+					key: 'validation.date.before',
+					data: ['date' => $max->format($format)]
+				);
 			}
 
 			return true;

@@ -15,8 +15,6 @@ class EmailChallengeTest extends TestCase
 	public const FIXTURES = __DIR__ . '/../fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.Auth.EmailChallenge';
 
-	protected $app;
-
 	public function setUp(): void
 	{
 		Email::$debug = true;

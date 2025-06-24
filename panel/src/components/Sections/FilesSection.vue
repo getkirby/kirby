@@ -23,23 +23,27 @@ export default {
 		},
 		items() {
 			return this.data.map((file) => {
-				file.sortable = this.options.sortable;
-				file.column = this.column;
-				file.options = this.$dropdown(file.link, {
-					query: {
-						view: "list",
-						update: this.options.sortable,
-						delete: this.data.length > this.options.min
-					}
-				});
+				const sortable =
+					file.permissions.sort && this.options.sortable && !this.isSelecting;
+				const deletable =
+					file.permissions.delete && this.data.length > this.options.min;
 
-				// add data-attributes info for item
-				file.data = {
-					"data-id": file.id,
-					"data-template": file.template
+				return {
+					...file,
+					column: this.column,
+					data: {
+						"data-id": file.id,
+						"data-template": file.template
+					},
+					options: this.$dropdown(file.link, {
+						query: {
+							view: "list",
+							delete: deletable
+						}
+					}),
+					selectable: this.isSelecting && deletable,
+					sortable: sortable
 				};
-
-				return file;
 			});
 		},
 		type() {
@@ -48,22 +52,14 @@ export default {
 		uploadOptions() {
 			return {
 				...this.options.upload,
-				url: this.$panel.urls.api + "/" + this.options.upload.api,
-				on: {
-					complete: () => {
-						this.$panel.notification.success({ context: "view" });
-						this.$events.emit("file.upload");
-					}
-				}
+				url: this.$panel.urls.api + "/" + this.options.upload.api
 			};
 		}
 	},
 	mounted() {
-		this.$events.on("model.update", this.reload);
 		this.$events.on("file.sort", this.reload);
 	},
 	destroyed() {
-		this.$events.off("model.update", this.reload);
 		this.$events.off("file.sort", this.reload);
 	},
 	methods: {

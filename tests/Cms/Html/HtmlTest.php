@@ -3,22 +3,21 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
+use Kirby\Plugin\Plugin;
 
 /**
- * @coversDefaultClass Kirby\Cms\Html
+ * @coversDefaultClass \Kirby\Cms\Html
  */
 class HtmlTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.Html';
 
-	protected $kirby;
-
 	public function setUp(): void
 	{
 		Dir::copy(static::FIXTURES, static::TMP);
 
-		$this->kirby = new App([
+		$this->app = new App([
 			'roots' => [
 				'index' => static::TMP
 			],

@@ -14,11 +14,6 @@ import Tag from "./Tag.vue";
 import Tags from "./Tags.vue";
 import Tree from "./Tree.vue";
 
-/** @deprecated 4.0.0 */
-import ButtonDisabled from "./ButtonDisabled.vue";
-import ButtonLink from "./ButtonLink.vue";
-import ButtonNative from "./ButtonNative.vue";
-
 export default {
 	install(app) {
 		app.component("k-breadcrumb", Breadcrumb);
@@ -36,10 +31,5 @@ export default {
 		app.component("k-tag", Tag);
 		app.component("k-tags", Tags);
 		app.component("k-tree", Tree);
-
-		/** @deprecated */
-		app.component("k-button-disabled", ButtonDisabled);
-		app.component("k-button-link", ButtonLink);
-		app.component("k-button-native", ButtonNative);
 	}
 };

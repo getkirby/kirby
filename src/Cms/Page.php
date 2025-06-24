@@ -4,12 +4,12 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Content\Field;
+use Kirby\Content\VersionId;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
-use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
@@ -28,12 +28,15 @@ use Throwable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
  */
 class Page extends ModelWithContent
 {
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
+	use HasModels;
 	use HasSiblings;
 	use PageActions;
 	use PageSiblings;
@@ -45,11 +48,6 @@ class Page extends ModelWithContent
 	 * @todo Remove when support for PHP 8.2 is dropped
 	 */
 	public static array $methods = [];
-
-	/**
-	 * Registry with all Page models
-	 */
-	public static array $models = [];
 
 	/**
 	 * The PageBlueprint object
@@ -125,10 +123,10 @@ class Page extends ModelWithContent
 	public function __construct(array $props)
 	{
 		if (isset($props['slug']) === false) {
-			throw new InvalidArgumentException('The page slug is required');
+			throw new InvalidArgumentException(
+				message: 'The page slug is required'
+			);
 		}
-
-		parent::__construct($props);
 
 		$this->slug    = $props['slug'];
 		// Sets the dirname manually, which works
@@ -140,7 +138,15 @@ class Page extends ModelWithContent
 		$this->parent  = $props['parent'] ?? null;
 		$this->root    = $props['root'] ?? null;
 
+		// Set blueprint before setting content
+		// or translations in the parent constructor.
+		// Otherwise, the blueprint definition cannot be
+		// used when creating the right field values
+		// for the content.
 		$this->setBlueprint($props['blueprint'] ?? null);
+
+		parent::__construct($props);
+
 		$this->setChildren($props['children'] ?? null);
 		$this->setDrafts($props['drafts'] ?? null);
 		$this->setFiles($props['files'] ?? null);
@@ -173,13 +179,14 @@ class Page extends ModelWithContent
 	 */
 	public function __debugInfo(): array
 	{
-		return array_merge($this->toArray(), [
+		return [
+			...$this->toArray(),
 			'content'      => $this->content(),
 			'children'     => $this->children(),
 			'siblings'     => $this->siblings(),
 			'translations' => $this->translations(),
 			'files'        => $this->files(),
-		]);
+		];
 	}
 
 	/**
@@ -220,8 +227,10 @@ class Page extends ModelWithContent
 			return $this->blueprints;
 		}
 
-		$blueprints      = [];
-		$templates       = $this->blueprint()->changeTemplate() ?? $this->blueprint()->options()['changeTemplate'] ?? [];
+		$blueprints  = [];
+		$templates   = $this->blueprint()->changeTemplate() ?? null;
+		$templates ??= $this->blueprint()->options()['changeTemplate'] ?? [];
+
 		$currentTemplate = $this->intendedTemplate()->name();
 
 		if (is_array($templates) === false) {
@@ -229,7 +238,7 @@ class Page extends ModelWithContent
 		}
 
 		// add the current template to the array if it's not already there
-		if (in_array($currentTemplate, $templates) === false) {
+		if (in_array($currentTemplate, $templates, true) === false) {
 			array_unshift($templates, $currentTemplate);
 		}
 
@@ -255,7 +264,7 @@ class Page extends ModelWithContent
 	/**
 	 * Builds the cache id for the page
 	 */
-	protected function cacheId(string $contentType): string
+	protected function cacheId(string $contentType, VersionId $versionId): string
 	{
 		$cacheId = [$this->id()];
 
@@ -263,6 +272,7 @@ class Page extends ModelWithContent
 			$cacheId[] = $this->kirby()->language()->code();
 		}
 
+		$cacheId[] = $versionId->value();
 		$cacheId[] = $contentType;
 
 		return implode('.', $cacheId);
@@ -283,22 +293,7 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Returns the content text file
-	 * which is found by the inventory method
-	 * @internal
-	 * @deprecated 4.0.0
-	 * @todo Remove in v5
-	 * @codeCoverageIgnore
-	 */
-	public function contentFileName(string|null $languageCode = null): string
-	{
-		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated. Please let us know via a GitHub issue if you need this method and tell us your use case.', 'model-content-file');
-		return $this->intendedTemplate()->name();
-	}
-
-	/**
 	 * Call the page controller
-	 * @internal
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the controller returns invalid objects for `kirby`, `site`, `pages` or `page`
 	 */
@@ -307,12 +302,13 @@ class Page extends ModelWithContent
 		string $contentType = 'html'
 	): array {
 		// create the template data
-		$data = array_merge($data, [
+		$data = [
+			...$data,
 			'kirby' => $kirby = $this->kirby(),
 			'site'  => $site  = $this->site(),
 			'pages' => new LazyValue(fn () => $site->children()),
 			'page'  => new LazyValue(fn () => $site->visit($this))
-		]);
+		];
 
 		// call the template controller if there's one.
 		$controllerData = $kirby->controller(
@@ -324,7 +320,7 @@ class Page extends ModelWithContent
 		// merge controller data with original data safely
 		// to provide original data to template even if
 		// it wasn't returned by the controller explicitly
-		if (empty($controllerData) === false) {
+		if ($controllerData !== []) {
 			$classes = [
 				'kirby' => App::class,
 				'site'  => Site::class,
@@ -339,7 +335,9 @@ class Page extends ModelWithContent
 					// original data was overwritten, but matches expected type
 					$value instanceof $classes[$key] => $value,
 					// throw error if data was overwritten with wrong type
-					default => throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"')
+					default => throw new InvalidArgumentException(
+						message: 'The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"'
+					)
 				};
 			}
 		}
@@ -386,11 +384,10 @@ class Page extends ModelWithContent
 			return $this->diruri;
 		}
 
-		if ($this->isDraft() === true) {
-			$dirname = '_drafts/' . $this->dirname();
-		} else {
-			$dirname = $this->dirname();
-		}
+		$dirname = match ($this->isDraft()) {
+			true  => '_drafts/' . $this->dirname(),
+			false => $this->dirname()
+		};
 
 		if ($parent = $this->parent()) {
 			return $this->diruri = $parent->diruri() . '/' . $dirname;
@@ -410,11 +407,10 @@ class Page extends ModelWithContent
 	/**
 	 * Constructs a Page object and also
 	 * takes page models into account.
-	 * @internal
 	 */
 	public static function factory($props): static
 	{
-		return static::model($props['model'] ?? 'default', $props);
+		return static::model($props['model'] ?? $props['template'] ?? 'default', $props);
 	}
 
 	/**
@@ -467,13 +463,13 @@ class Page extends ModelWithContent
 			return $this->intendedTemplate;
 		}
 
-		return $this->setTemplate($this->inventory()['template'])->intendedTemplate();
+		return $this
+			->setTemplate($this->inventory()['template'])
+			->intendedTemplate();
 	}
 
 	/**
-	 * Returns the inventory of files
-	 * children and content files
-	 * @internal
+	 * Returns the inventory of files children and content files
 	 */
 	public function inventory(): array
 	{
@@ -514,22 +510,17 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Checks if the page is accessible that accessible and listable.
-	 * This permission depends on the `read` option until v5
+	 * Checks if the page is accessible to the current user
+	 * This permission depends on the `read` option until v6
 	 */
 	public function isAccessible(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v5
+		// TODO: remove this check when `read` option deprecated in v6
 		if ($this->isReadable() === false) {
 			return false;
 		}
 
-		static $accessible   = [];
-		$role                = $this->kirby()->user()?->role()->id() ?? '__none__';
-		$template            = $this->intendedTemplate()->name();
-		$accessible[$role] ??= [];
-
-		return $accessible[$role][$template] ??= $this->permissions()->can('access');
+		return PagePermissions::canFromCache($this, 'access');
 	}
 
 	/**
@@ -554,7 +545,7 @@ class Page extends ModelWithContent
 	 * pages cache. This will also check if one
 	 * of the ignore rules from the config kick in.
 	 */
-	public function isCacheable(): bool
+	public function isCacheable(VersionId|null $versionId = null): bool
 	{
 		$kirby   = $this->kirby();
 		$cache   = $kirby->cache('pages');
@@ -566,11 +557,16 @@ class Page extends ModelWithContent
 			return false;
 		}
 
+		// updating the changes version does not flush the pages cache
+		if ($versionId?->is('changes') === true) {
+			return false;
+		}
+
 		// inspect the current request
 		$request = $kirby->request();
 
 		// disable the pages cache for any request types but GET or HEAD
-		if (in_array($request->method(), ['GET', 'HEAD']) === false) {
+		if (in_array($request->method(), ['GET', 'HEAD'], true) === false) {
 			return false;
 		}
 
@@ -593,7 +589,7 @@ class Page extends ModelWithContent
 
 		// ignore pages by id
 		if (is_array($ignore) === true) {
-			if (in_array($this->id(), $ignore) === true) {
+			if (in_array($this->id(), $ignore, true) === true) {
 				return false;
 			}
 		}
@@ -677,11 +673,11 @@ class Page extends ModelWithContent
 
 	/**
 	 * Check if the page can be listable by the current user
-	 * This permission depends on the `read` option until v5
+	 * This permission depends on the `read` option until v6
 	 */
 	public function isListable(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v5
+		// TODO: remove this check when `read` option deprecated in v6
 		if ($this->isReadable() === false) {
 			return false;
 		}
@@ -691,12 +687,7 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		static $listable   = [];
-		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
-		$template          = $this->intendedTemplate()->name();
-		$listable[$role] ??= [];
-
-		return $listable[$role][$template] ??= $this->permissions()->can('list');
+		return PagePermissions::canFromCache($this, 'list');
 	}
 
 	/**
@@ -710,7 +701,8 @@ class Page extends ModelWithContent
 	public function isMovableTo(Page|Site $parent): bool
 	{
 		try {
-			return PageRules::move($this, $parent);
+			PageRules::move($this, $parent);
+			return true;
 		} catch (Throwable) {
 			return false;
 		}
@@ -744,12 +736,12 @@ class Page extends ModelWithContent
 
 	/**
 	 * Check if the page can be read by the current user
-	 * @todo Deprecate `read` option in v5 and make the necessary changes for `access` and `list` options.
+	 * @todo Deprecate `read` option in v6 and make the necessary changes for `access` and `list` options.
 	 */
 	public function isReadable(): bool
 	{
 		static $readable   = [];
-		$role              = $this->kirby()->user()?->role()->id() ?? '__none__';
+		$role              = $this->kirby()->role()?->id() ?? '__none__';
 		$template          = $this->intendedTemplate()->name();
 		$readable[$role] ??= [];
 
@@ -773,62 +765,27 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Checks if the page access is verified.
-	 * This is only used for drafts so far.
-	 * @internal
+	 * Returns the absolute path to the media folder for the page
 	 */
-	public function isVerified(string|null $token = null): bool
-	{
-		if (
-			$this->isPublished() === true &&
-			$this->parents()->findBy('status', 'draft') === null
-		) {
-			return true;
-		}
-
-		if ($token === null) {
-			return false;
-		}
-
-		return $this->token() === $token;
-	}
-
-	/**
-	 * Returns the root to the media folder for the page
-	 * @internal
-	 */
-	public function mediaRoot(): string
+	public function mediaDir(): string
 	{
 		return $this->kirby()->root('media') . '/pages/' . $this->id();
 	}
 
 	/**
+	 * @see `::mediaDir`
+	 */
+	public function mediaRoot(): string
+	{
+		return $this->mediaDir();
+	}
+
+	/**
 	 * The page's base URL for any files
-	 * @internal
 	 */
 	public function mediaUrl(): string
 	{
 		return $this->kirby()->url('media') . '/pages/' . $this->id();
-	}
-
-	/**
-	 * Creates a page model if it has been registered
-	 * @internal
-	 */
-	public static function model(string $name, array $props = []): static
-	{
-		$class   = static::$models[$name] ?? null;
-		$class ??= static::$models['default'] ?? null;
-
-		if ($class !== null) {
-			$object = new $class($props);
-
-			if ($object instanceof self) {
-				return $object;
-			}
-		}
-
-		return new static($props);
 	}
 
 	/**
@@ -839,11 +796,8 @@ class Page extends ModelWithContent
 		string|null $handler = null,
 		string|null $languageCode = null
 	): int|string|false|null {
-		$identifier = $this->isDraft() === true ? 'changes' : 'published';
-
-		$modified = $this->storage()->modified(
-			$identifier,
-			$languageCode
+		$modified = $this->version()->modified(
+			$languageCode ?? 'current'
 		);
 
 		if ($modified === null) {
@@ -879,7 +833,6 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the parent id, if a parent exists
-	 * @internal
 	 */
 	public function parentId(): string|null
 	{
@@ -890,7 +843,6 @@ class Page extends ModelWithContent
 	 * Returns the parent model,
 	 * which can either be another Page
 	 * or the Site
-	 * @internal
 	 */
 	public function parentModel(): Page|Site
 	{
@@ -905,7 +857,7 @@ class Page extends ModelWithContent
 		$parents = new Pages();
 		$page    = $this->parent();
 
-		while ($page !== null) {
+		while ($page instanceof Page) {
 			$parents->append($page->id(), $page);
 			$page = $page->parent();
 		}
@@ -931,30 +883,16 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Draft preview Url
-	 * @internal
+	 * Returns the preview URL with authentication for drafts and versions
+	 * @unstable
 	 */
-	public function previewUrl(): string|null
+	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
-		$preview = $this->blueprint()->preview();
-
-		if ($preview === false) {
+		if ($this->permissions()->can('preview') !== true) {
 			return null;
 		}
 
-		$url = match ($preview) {
-			true    => $this->url(),
-			default => $preview
-		};
-
-		if ($this->isDraft() === true) {
-			$uri = new Uri($url);
-			$uri->query->token = $this->token();
-
-			$url = $uri->toString();
-		}
-
-		return $url;
+		return $this->version($versionId)->url();
 	}
 
 	/**
@@ -965,17 +903,31 @@ class Page extends ModelWithContent
 	 * the default template.
 	 *
 	 * @param string $contentType
+	 * @param \Kirby\Content\VersionId|string|null $versionId Optional override for the auto-detected version to render
 	 * @throws \Kirby\Exception\NotFoundException If the default template cannot be found
 	 */
-	public function render(array $data = [], $contentType = 'html'): string
-	{
+	public function render(
+		array $data = [],
+		$contentType = 'html',
+		VersionId|string|null $versionId = null
+	): string {
 		$kirby = $this->kirby();
 		$cache = $cacheId = $html = null;
 
+		// if not manually overridden, first use a globally set
+		// version ID (e.g. when rendering within another render),
+		// otherwise auto-detect from the request and fall back to
+		// the latest version if request is unauthenticated (no valid token);
+		// make sure to convert it to an object no matter what happened
+		$versionId ??= VersionId::$render;
+		$versionId ??= $this->renderVersionFromRequest();
+		$versionId ??= 'latest';
+		$versionId   = VersionId::from($versionId);
+
 		// try to get the page from cache
-		if (empty($data) === true && $this->isCacheable() === true) {
+		if ($data === [] && $this->isCacheable($versionId) === true) {
 			$cache       = $kirby->cache('pages');
-			$cacheId     = $this->cacheId($contentType);
+			$cacheId     = $this->cacheId($contentType, $versionId);
 			$result      = $cache->get($cacheId);
 			$html        = $result['html'] ?? null;
 			$response    = $result['response'] ?? [];
@@ -996,37 +948,39 @@ class Page extends ModelWithContent
 
 		// fetch the page regularly
 		if ($html === null) {
-			if ($contentType === 'html') {
-				$template = $this->template();
-			} else {
-				$template = $this->representation($contentType);
-			}
+			// set `VersionId::$render` to the intended version (only) while we render
+			$html = VersionId::render($versionId, function () use ($kirby, $data, $contentType) {
+				$template = match ($contentType) {
+					'html'  => $this->template(),
+					default => $this->representation($contentType)
+				};
 
-			if ($template->exists() === false) {
-				throw new NotFoundException([
-					'key' => 'template.default.notFound'
-				]);
-			}
+				if ($template->exists() === false) {
+					throw new NotFoundException(
+						key: 'template.default.notFound'
+					);
+				}
 
-			$kirby->data = $this->controller($data, $contentType);
+				$kirby->data = $this->controller($data, $contentType);
 
-			// trigger before hook and apply for `data`
-			$kirby->data = $kirby->apply('page.render:before', [
-				'contentType' => $contentType,
-				'data'        => $kirby->data,
-				'page'        => $this
-			], 'data');
+				// trigger before hook and apply for `data`
+				$kirby->data = $kirby->apply('page.render:before', [
+					'contentType' => $contentType,
+					'data'        => $kirby->data,
+					'page'        => $this
+				], 'data');
 
-			// render the page
-			$html = $template->render($kirby->data);
+				// render the page
+				$html = $template->render($kirby->data);
 
-			// trigger after hook and apply for `html`
-			$html = $kirby->apply('page.render:after', [
-				'contentType' => $contentType,
-				'data'        => $kirby->data,
-				'html'        => $html,
-				'page'        => $this
-			], 'html');
+				// trigger after hook and apply for `html`
+				return $kirby->apply('page.render:after', [
+					'contentType' => $contentType,
+					'data'        => $kirby->data,
+					'html'        => $html,
+					'page'        => $this
+				], 'html');
+			});
 
 			// cache the result
 			$response = $kirby->response();
@@ -1044,7 +998,42 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * @internal
+	 * Determines which version (if any) can be rendered
+	 * based on the token authentication in the current request
+	 * @unstable
+	 */
+	public function renderVersionFromRequest(): VersionId|null
+	{
+		$request = $this->kirby()->request();
+		$token   = $request->get('_token', '');
+
+		try {
+			$versionId = VersionId::from($request->get('_version', ''));
+		} catch (InvalidArgumentException) {
+			// ignore invalid enum values in the request
+			$versionId = VersionId::latest();
+		}
+
+		// authenticated requests can always be trusted
+		$expectedToken = $this->version($versionId)->previewToken();
+		if ($token !== '' && hash_equals($expectedToken, $token) === true) {
+			return $versionId;
+		}
+
+		// published pages with published parents can render
+		// the latest version without (valid) token
+		if (
+			$this->isPublished() === true &&
+			$this->parents()->findBy('status', 'draft') === null
+		) {
+			return VersionId::latest();
+		}
+
+		// drafts cannot be accessed without authentication
+		return null;
+	}
+
+	/**
 	 * @throws \Kirby\Exception\NotFoundException If the content representation cannot be found
 	 */
 	public function representation(mixed $type): Template
@@ -1057,7 +1046,9 @@ class Page extends ModelWithContent
 			return $representation;
 		}
 
-		throw new NotFoundException('The content representation cannot be found');
+		throw new NotFoundException(
+			message: 'The content representation cannot be found'
+		);
 	}
 
 	/**
@@ -1110,7 +1101,7 @@ class Page extends ModelWithContent
 	protected function setTemplate(string|null $template = null): static
 	{
 		if ($template !== null) {
-			$this->intendedTemplate = $this->kirby()->template($template);
+			$this->intendedTemplate = $this->kirby()->template(strtolower($template));
 		}
 
 		return $this;
@@ -1200,7 +1191,8 @@ class Page extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return array_merge(parent::toArray(), [
+		return [
+			...parent::toArray(),
 			'children'  => $this->children()->keys(),
 			'files'     => $this->files()->keys(),
 			'id'        => $this->id(),
@@ -1213,19 +1205,7 @@ class Page extends ModelWithContent
 			'uid'       => $this->uid(),
 			'uri'       => $this->uri(),
 			'url'       => $this->url()
-		]);
-	}
-
-	/**
-	 * Returns a verification token, which
-	 * is used for the draft authentication
-	 */
-	protected function token(): string
-	{
-		return $this->kirby()->contentToken(
-			$this,
-			$this->id() . $this->template()
-		);
+		];
 	}
 
 	/**

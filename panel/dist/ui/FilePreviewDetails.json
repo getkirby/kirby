@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"5.0.0","title":"since"}]},"displayName":"FilePreviewDetails","props":[{"name":"details","type":{"name":"array"},"defaultValue":{"value":"[]"}}],"slots":[{"name":"default"}],"component":"k-file-preview-details","sourceFile":"src/components/Views/Files/FilePreviewDetails.vue"}

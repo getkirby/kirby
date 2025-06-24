@@ -20,7 +20,7 @@ class Value
 	/**
 	 * Cached value
 	 */
-	protected $value;
+	protected mixed $value;
 
 	/**
 	 * the number of minutes until the value expires

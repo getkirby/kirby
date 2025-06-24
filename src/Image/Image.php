@@ -84,8 +84,8 @@ class Image extends File
 			'image/jp2',
 			'image/png',
 			'image/webp'
-		])) {
-			return $this->dimensions = Dimensions::forImage($this->root);
+		], true)) {
+			return $this->dimensions = Dimensions::forImage($this);
 		}
 
 		if ($this->extension() === 'svg') {
@@ -136,7 +136,9 @@ class Image extends File
 			return Html::img($url, $attr);
 		}
 
-		throw new LogicException('Calling Image::html() requires that the URL property is not null');
+		throw new LogicException(
+			message: 'Calling Image::html() requires that the URL property is not null'
+		);
 	}
 
 	/**
@@ -176,7 +178,7 @@ class Image extends File
 	 */
 	public function isResizable(): bool
 	{
-		return in_array($this->extension(), static::$resizableTypes) === true;
+		return in_array($this->extension(), static::$resizableTypes, true) === true;
 	}
 
 	/**
@@ -185,7 +187,7 @@ class Image extends File
 	 */
 	public function isViewable(): bool
 	{
-		return in_array($this->extension(), static::$viewableTypes) === true;
+		return in_array($this->extension(), static::$viewableTypes, true) === true;
 	}
 
 	/**
@@ -210,10 +212,11 @@ class Image extends File
 	 */
 	public function toArray(): array
 	{
-		$array = array_merge(parent::toArray(), [
+		$array = [
+			...parent::toArray(),
 			'dimensions' => $this->dimensions()->toArray(),
 			'exif'       => $this->exif()->toArray(),
-		]);
+		];
 
 		ksort($array);
 

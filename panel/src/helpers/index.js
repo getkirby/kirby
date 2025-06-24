@@ -15,6 +15,7 @@ import page from "./page.js";
 import ratio from "./ratio.js";
 import sort from "./sort.js";
 import string from "./string.js";
+import throttle from "./throttle.js";
 import upload from "./upload.js";
 import url from "./url.js";
 
@@ -43,6 +44,7 @@ export default {
 			slug: string.slug,
 			sort,
 			string,
+			throttle,
 			upload,
 			url,
 			uuid: string.uuid

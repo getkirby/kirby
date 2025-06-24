@@ -1,14 +1,20 @@
 <script>
-import BubblesFieldPreview from "./BubblesFieldPreview.vue";
+import TagsFieldPreview from "./TagsFieldPreview.vue";
 
 export default {
-	extends: BubblesFieldPreview,
+	extends: TagsFieldPreview,
 	class: "k-users-field-preview",
+	props: {
+		html: {
+			type: Boolean,
+			default: true
+		}
+	},
 	computed: {
-		bubble() {
+		tags() {
 			return this.value.map((user) => {
 				return {
-					text: user.username,
+					text: user.username ?? user.email,
 					link: user.link,
 					image: user.image
 				};

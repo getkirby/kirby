@@ -1,13 +1,15 @@
+import { clone } from "./object.js";
+
 /**
  * Loads the default value for a field definition
- * @internal
+ * @unstable
  *
  * @param {Object} field
  * @returns {mixed}
  */
 export function defaultValue(field) {
 	if (field.default !== undefined) {
-		return structuredClone(field.default);
+		return clone(field.default);
 	}
 
 	const component =
@@ -37,7 +39,7 @@ export function defaultValue(field) {
 
 /**
  * Creates form values for provided fields
- * @internal
+ * @unstable
  *
  * @param {Object} fields
  * @returns {Object}
@@ -59,7 +61,7 @@ export function form(fields) {
 /**
  * Checks if a form field is visible based on its "when" conditions
  * and the current form values. Also works for sections.
- * @internal
+ * @unstable
  *
  * @param {Object} field - The form field object
  * @param {Object} values - The current form values object
@@ -97,7 +99,7 @@ export function isVisible(field, values) {
 /**
  * Adds proper endpoint and section definitions
  * to subfields for a form field.
- * @internal
+ * @unstable
  *
  * @param {object} field
  * @param {object} fields

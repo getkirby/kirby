@@ -25,13 +25,11 @@ class PageRules
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the given number is invalid
 	 */
-	public static function changeNum(Page $page, int|null $num = null): bool
+	public static function changeNum(Page $page, int|null $num = null): void
 	{
 		if ($num !== null && $num < 0) {
-			throw new InvalidArgumentException(['key' => 'page.num.invalid']);
+			throw new InvalidArgumentException(key: 'page.num.invalid');
 		}
-
-		return true;
 	}
 
 	/**
@@ -40,15 +38,13 @@ class PageRules
 	 * @throws \Kirby\Exception\DuplicateException If a page with this slug already exists
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the slug
 	 */
-	public static function changeSlug(Page $page, string $slug): bool
+	public static function changeSlug(Page $page, string $slug): void
 	{
-		if ($page->permissions()->changeSlug() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.changeSlug.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+		if ($page->permissions()->can('changeSlug') !== true) {
+			throw new PermissionException(
+				key: 'page.changeSlug.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		self::validateSlugLength($slug);
@@ -58,24 +54,18 @@ class PageRules
 		$drafts   = $page->parentModel()->drafts();
 
 		if ($siblings->find($slug)?->is($page) === false) {
-			throw new DuplicateException([
-				'key'  => 'page.duplicate',
-				'data' => [
-					'slug' => $slug
-				]
-			]);
+			throw new DuplicateException(
+				key: 'page.duplicate',
+				data: ['slug' => $slug]
+			);
 		}
 
 		if ($drafts->find($slug)?->is($page) === false) {
-			throw new DuplicateException([
-				'key'  => 'page.draft.duplicate',
-				'data' => [
-					'slug' => $slug
-				]
-			]);
+			throw new DuplicateException(
+				key: 'page.draft.duplicate',
+				data: ['slug' => $slug]
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -87,16 +77,18 @@ class PageRules
 		Page $page,
 		string $status,
 		int|null $position = null
-	): bool {
+	): void {
 		if (isset($page->blueprint()->status()[$status]) === false) {
-			throw new InvalidArgumentException(['key' => 'page.status.invalid']);
+			throw new InvalidArgumentException(key: 'page.status.invalid');
 		}
 
-		return match ($status) {
+		match ($status) {
 			'draft'     => static::changeStatusToDraft($page),
 			'listed'    => static::changeStatusToListed($page, $position),
 			'unlisted'  => static::changeStatusToUnlisted($page),
-			default     => throw new InvalidArgumentException(['key' => 'page.status.invalid'])
+			default     => throw new InvalidArgumentException(
+				key: 'page.status.invalid'
+			)
 		};
 	}
 
@@ -105,27 +97,21 @@ class PageRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status or the page cannot be converted to a draft
 	 */
-	public static function changeStatusToDraft(Page $page): bool
+	public static function changeStatusToDraft(Page $page): void
 	{
-		if ($page->permissions()->changeStatus() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.changeStatus.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+		if ($page->permissions()->can('changeStatus') !== true) {
+			throw new PermissionException(
+				key: 'page.changeStatus.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		if ($page->isHomeOrErrorPage() === true) {
-			throw new PermissionException([
-				'key'  => 'page.changeStatus.toDraft.invalid',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new PermissionException(
+				key: 'page.changeStatus.toDraft.invalid',
+				data: ['slug' => $page->slug()]
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -134,30 +120,26 @@ class PageRules
 	 * @throws \Kirby\Exception\InvalidArgumentException If the given position is invalid
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status or the status for the page cannot be changed by any user
 	 */
-	public static function changeStatusToListed(Page $page, int $position): bool
+	public static function changeStatusToListed(Page $page, int $position): void
 	{
 		// no need to check for status changing permissions,
 		// instead we need to check for sorting permissions
 		if ($page->isListed() === true) {
 			if ($page->isSortable() !== true) {
-				throw new PermissionException([
-					'key'  => 'page.sort.permission',
-					'data' => [
-						'slug' => $page->slug()
-					]
-				]);
+				throw new PermissionException(
+					key: 'page.sort.permission',
+					data: ['slug' => $page->slug()]
+				);
 			}
 
-			return true;
+			return;
 		}
 
 		static::publish($page);
 
 		if ($position !== null && $position < 0) {
-			throw new InvalidArgumentException(['key' => 'page.num.invalid']);
+			throw new InvalidArgumentException(key: 'page.num.invalid');
 		}
-
-		return true;
 	}
 
 	/**
@@ -168,8 +150,6 @@ class PageRules
 	public static function changeStatusToUnlisted(Page $page)
 	{
 		static::publish($page);
-
-		return true;
 	}
 
 	/**
@@ -178,30 +158,26 @@ class PageRules
 	 * @throws \Kirby\Exception\LogicException If the template of the page cannot be changed at all
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the template
 	 */
-	public static function changeTemplate(Page $page, string $template): bool
+	public static function changeTemplate(Page $page, string $template): void
 	{
-		if ($page->permissions()->changeTemplate() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.changeTemplate.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+		if ($page->permissions()->can('changeTemplate') !== true) {
+			throw new PermissionException(
+				key: 'page.changeTemplate.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		$blueprints = $page->blueprints();
 
 		if (
 			count($blueprints) <= 1 ||
-			in_array($template, array_column($blueprints, 'name')) === false
+			in_array($template, array_column($blueprints, 'name'), true) === false
 		) {
-			throw new LogicException([
-				'key'  => 'page.changeTemplate.invalid',
-				'data' => ['slug' => $page->slug()]
-			]);
+			throw new LogicException(
+				key: 'page.changeTemplate.invalid',
+				data: ['slug' => $page->slug()]
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -210,20 +186,16 @@ class PageRules
 	 * @throws \Kirby\Exception\InvalidArgumentException If the new title is empty
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the title
 	 */
-	public static function changeTitle(Page $page, string $title): bool
+	public static function changeTitle(Page $page, string $title): void
 	{
-		if ($page->permissions()->changeTitle() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.changeTitle.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+		if ($page->permissions()->can('changeTitle') !== true) {
+			throw new PermissionException(
+				key: 'page.changeTitle.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		static::validateTitleLength($title);
-
-		return true;
 	}
 
 	/**
@@ -233,27 +205,23 @@ class PageRules
 	 * @throws \Kirby\Exception\InvalidArgumentException If the slug is invalid
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to create this page
 	 */
-	public static function create(Page $page): bool
+	public static function create(Page $page): void
 	{
-		if ($page->permissions()->create() !== true) {
-			throw new PermissionException([
-				'key' => 'page.create.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+		if ($page->permissions()->can('create') !== true) {
+			throw new PermissionException(
+				key: 'page.create.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		self::validateSlugLength($page->slug());
 		self::validateSlugProtectedPaths($page, $page->slug());
 
 		if ($page->exists() === true) {
-			throw new DuplicateException([
-				'key'  => 'page.draft.duplicate',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+			throw new DuplicateException(
+				key: 'page.draft.duplicate',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		$siblings = $page->parentModel()->children();
@@ -261,20 +229,18 @@ class PageRules
 		$slug     = $page->slug();
 
 		if ($siblings->find($slug)) {
-			throw new DuplicateException([
-				'key'  => 'page.duplicate',
-				'data' => ['slug' => $slug]
-			]);
+			throw new DuplicateException(
+				key: 'page.duplicate',
+				data: ['slug' => $slug]
+			);
 		}
 
 		if ($drafts->find($slug)) {
-			throw new DuplicateException([
-				'key'  => 'page.draft.duplicate',
-				'data' => ['slug' => $slug]
-			]);
+			throw new DuplicateException(
+				key: 'page.draft.duplicate',
+				data: ['slug' => $slug]
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -283,22 +249,18 @@ class PageRules
 	 * @throws \Kirby\Exception\LogicException If the page has children and should not be force-deleted
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to delete the page
 	 */
-	public static function delete(Page $page, bool $force = false): bool
+	public static function delete(Page $page, bool $force = false): void
 	{
-		if ($page->permissions()->delete() !== true) {
-			throw new PermissionException([
-				'key' => 'page.delete.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+		if ($page->permissions()->can('delete') !== true) {
+			throw new PermissionException(
+				key: 'page.delete.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		if (($page->hasChildren() === true || $page->hasDrafts() === true) && $force === false) {
-			throw new LogicException(['key' => 'page.delete.hasChildren']);
+			throw new LogicException(key: 'page.delete.hasChildren');
 		}
-
-		return true;
 	}
 
 	/**
@@ -310,56 +272,52 @@ class PageRules
 		Page $page,
 		string $slug,
 		array $options = []
-	): bool {
-		if ($page->permissions()->duplicate() !== true) {
-			throw new PermissionException([
-				'key' => 'page.duplicate.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+	): void {
+		if ($page->permissions()->can('duplicate') !== true) {
+			throw new PermissionException(
+				key: 'page.duplicate.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		self::validateSlugLength($slug);
-
-		return true;
 	}
 
 	/**
 	 * Check if the page can be moved
 	 * to the given parent
 	 */
-	public static function move(Page $page, Site|Page $parent): bool
+	public static function move(Page $page, Site|Page $parent): void
 	{
 		// if nothing changes, there's no need for checks
 		if ($parent->is($page->parent()) === true) {
-			return true;
+			return;
 		}
 
-		if ($page->permissions()->move() !== true) {
-			throw new PermissionException([
-				'key' => 'page.move.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+		if ($page->permissions()->can('move') !== true) {
+			throw new PermissionException(
+				key: 'page.move.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		// the page cannot be moved into itself
-		if ($parent instanceof Page && ($page->is($parent) === true || $page->isAncestorOf($parent) === true)) {
-			throw new LogicException([
-				'key' => 'page.move.ancestor',
-			]);
+		if (
+			$parent instanceof Page &&
+			(
+				$page->is($parent) === true ||
+				$page->isAncestorOf($parent) === true
+			)
+		) {
+			throw new LogicException(key: 'page.move.ancestor');
 		}
 
 		// check for duplicates
 		if ($parent->childrenAndDrafts()->find($page->slug())) {
-			throw new DuplicateException([
-				'key'  => 'page.move.duplicate',
-				'data' => [
-					'slug' => $page->slug(),
-				]
-			]);
+			throw new DuplicateException(
+				key: 'page.move.duplicate',
+				data: ['slug' => $page->slug()]
+			);
 		}
 
 		$allowed = [];
@@ -399,41 +357,37 @@ class PageRules
 			$allowed !== [] &&
 			in_array($page->intendedTemplate()->name(), $allowed) === false
 		) {
-			throw new PermissionException([
-				'key'  => 'page.move.template',
-				'data' => [
+			throw new PermissionException(
+				key: 'page.move.template',
+				data: [
 					'template' => $page->intendedTemplate()->name(),
 					'parent'   => $parent->id() ?? '/',
 				]
-			]);
+			);
 		}
-
-		return true;
 	}
 
 	/**
 	 * Check if the page can be published
 	 * (status change from draft to listed or unlisted)
 	 */
-	public static function publish(Page $page): bool
+	public static function publish(Page $page): void
 	{
-		if ($page->permissions()->changeStatus() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.changeStatus.permission',
-				'data' => [
+		if ($page->permissions()->can('changeStatus') !== true) {
+			throw new PermissionException(
+				key: 'page.changeStatus.permission',
+				data: [
 					'slug' => $page->slug()
 				]
-			]);
+			);
 		}
 
 		if ($page->isDraft() === true && empty($page->errors()) === false) {
-			throw new PermissionException([
-				'key'     => 'page.changeStatus.incomplete',
-				'details' => $page->errors()
-			]);
+			throw new PermissionException(
+				key:  'page.changeStatus.incomplete',
+				details: $page->errors()
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -441,18 +395,14 @@ class PageRules
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to update the page
 	 */
-	public static function update(Page $page, array $content = []): bool
+	public static function update(Page $page, array $content = []): void
 	{
-		if ($page->permissions()->update() !== true) {
-			throw new PermissionException([
-				'key'  => 'page.update.permission',
-				'data' => [
-					'slug' => $page->slug()
-				]
-			]);
+		if ($page->permissions()->can('update') !== true) {
+			throw new PermissionException(
+				key: 'page.update.permission',
+				data: ['slug' => $page->slug()]
+			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -466,21 +416,17 @@ class PageRules
 		$slugLength = Str::length($slug);
 
 		if ($slugLength === 0) {
-			throw new InvalidArgumentException([
-				'key' => 'page.slug.invalid',
-			]);
+			throw new InvalidArgumentException(key: 'page.slug.invalid');
 		}
 
 		if ($slugsMaxlength = App::instance()->option('slugs.maxlength', 255)) {
 			$maxlength = (int)$slugsMaxlength;
 
 			if ($slugLength > $maxlength) {
-				throw new InvalidArgumentException([
-					'key'  => 'page.slug.maxlength',
-					'data' => [
-						'length' => $maxlength
-					]
-				]);
+				throw new InvalidArgumentException(
+					key: 'page.slug.maxlength',
+					data: ['length' => $maxlength]
+				);
 			}
 		}
 	}
@@ -505,12 +451,10 @@ class PageRules
 			$index = array_search($slug, $paths);
 
 			if ($index !== false) {
-				throw new InvalidArgumentException([
-					'key'  => 'page.changeSlug.reserved',
-					'data' => [
-						'path' => $paths[$index]
-					]
-				]);
+				throw new InvalidArgumentException(
+					key: 'page.changeSlug.reserved',
+					data: ['path' => $paths[$index]]
+				);
 			}
 		}
 	}
@@ -523,9 +467,7 @@ class PageRules
 	public static function validateTitleLength(string $title): void
 	{
 		if (Str::length($title) === 0) {
-			throw new InvalidArgumentException([
-				'key' => 'page.changeTitle.empty',
-			]);
+			throw new InvalidArgumentException(key: 'page.changeTitle.empty');
 		}
 	}
 }

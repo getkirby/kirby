@@ -1,10 +1,11 @@
 <template>
 	<k-dialog
+		:class="['k-block-selector', $attrs.class]"
 		:cancel-button="false"
 		:size="size"
 		:submit-button="false"
+		:style="$attrs.style"
 		:visible="true"
-		class="k-block-selector"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', value)"
 	>
@@ -156,14 +157,14 @@ export default {
 }
 .k-block-types .k-button {
 	--button-color-icon: var(--color-text);
-	--button-color-back: var(--color-white);
+	--button-color-back: light-dark(var(--color-white), var(--color-gray-850));
 	--button-padding: var(--spacing-3);
 	width: 100%;
 	justify-content: start;
 	gap: 1rem;
 	box-shadow: var(--shadow);
 }
-.k-block-types .k-button[aria-disabled] {
+.k-block-types .k-button[aria-disabled="true"] {
 	opacity: var(--opacity-disabled);
 	--button-color-back: var(--color-gray-200);
 	box-shadow: none;

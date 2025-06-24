@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import "./array.js";
+import { wrap } from "./array.js";
 
-describe.concurrent("Array.wrap()", () => {
+describe.concurrent("array.wrap()", () => {
 	it("should wrap in an array", () => {
-		expect(Array.wrap("|")).toEqual(["|"]);
-		expect(Array.wrap(["|"])).toEqual(["|"]);
+		expect(wrap("|")).toEqual(["|"]);
+		expect(wrap(["|"])).toEqual(["|"]);
 	});
 });

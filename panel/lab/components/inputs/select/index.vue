@@ -1,6 +1,6 @@
 <template>
 	<k-lab-form>
-		<k-lab-examples>
+		<k-lab-examples class="k-lab-input-examples">
 			<k-lab-example label="Default">
 				<k-select-input
 					name="select"
@@ -56,13 +56,8 @@
 				/>
 			</k-lab-example>
 
-			<k-lab-example label="Empty: false">
-				<k-select-input
-					:empty="false"
-					:options="options"
-					:value="value"
-					@input="value = $event"
-				/>
+			<k-lab-example label="No empty option">
+				<k-select-input :required="true" :options="options" value="b" />
 			</k-lab-example>
 
 			<k-lab-example label="Multiple: true">

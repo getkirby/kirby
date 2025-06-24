@@ -131,7 +131,7 @@ class Route
 	 */
 	public static function next(): void
 	{
-		throw new Exceptions\NextRouteException('next');
+		throw new Exceptions\NextRouteException(message: 'next');
 	}
 
 	/**
@@ -177,7 +177,7 @@ class Route
 		// We only need to check routes with regular expression since all others
 		// would have been able to be matched by the search for literal matches
 		// we just did before we started searching.
-		if (strpos($pattern, '(') === false) {
+		if (str_contains($pattern, '(') === false) {
 			return false;
 		}
 

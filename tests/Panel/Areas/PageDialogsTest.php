@@ -480,12 +480,6 @@ class PageDialogsTest extends AreaTestCase
 
 		$this->assertSame(['page.changeSlug'], $dialog['event']);
 		$this->assertSame(200, $dialog['code']);
-		$this->assertSame([
-			'content/move' => [
-				'/pages/test',
-				'/pages/new-slug'
-			]
-		], $dialog['dispatch']);
 
 		$this->assertSame('new-slug', $this->app->page('new-slug')->slug());
 	}
@@ -529,12 +523,6 @@ class PageDialogsTest extends AreaTestCase
 
 		$this->assertSame(['page.changeTitle', 'page.changeSlug'], $dialog['event']);
 		$this->assertSame(200, $dialog['code']);
-		$this->assertSame([
-			'content/move' => [
-				'/pages/test',
-				'/pages/new-slug'
-			]
-		], $dialog['dispatch']);
 
 		$this->assertSame('New title', $this->app->page('new-slug')->title()->value());
 		$this->assertSame('new-slug', $this->app->page('new-slug')->slug());

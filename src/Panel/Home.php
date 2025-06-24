@@ -80,7 +80,9 @@ class Home
 			return Panel::url($menuItem['link']);
 		}
 
-		throw new NotFoundException('There’s no available Panel page to redirect to');
+		throw new NotFoundException(
+			message: 'There’s no available Panel page to redirect to'
+		);
 	}
 
 	/**
@@ -219,7 +221,9 @@ class Home
 
 		// compare domains to avoid external redirects
 		if (static::hasValidDomain($uri) !== true) {
-			throw new InvalidArgumentException('External URLs are not allowed for Panel redirects');
+			throw new InvalidArgumentException(
+				message: 'External URLs are not allowed for Panel redirects'
+			);
 		}
 
 		// remove all params to avoid

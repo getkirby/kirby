@@ -1,35 +1,10 @@
 <template>
 	<div :data-align="align" class="k-bar">
-		<!-- @todo bar.slots.deprecated - remove specific slots @ 5.0 -->
-		<template v-if="$slots.left || $slots.center || $slots.right">
-			<div v-if="$slots.left" class="k-bar-slot" data-position="left">
-				<!--
-					@slot
-					@deprecated Use `default` slot instead
-				-->
-				<slot name="left" />
-			</div>
-			<div v-if="$slots.center" class="k-bar-slot" data-position="center">
-				<!--
-					@slot
-					@deprecated Use `default` slot instead
-				-->
-				<slot name="center" />
-			</div>
-			<div v-if="$slots.right" class="k-bar-slot" data-position="right">
-				<!--
-					@slot
-					@deprecated Use `default` slot instead
-				-->
-				<slot name="right" />
-			</div>
-		</template>
-
 		<!--
 			@slot Contents of the bar
 			@since 4.0.0
 		-->
-		<slot v-else />
+		<slot />
 	</div>
 </template>
 
@@ -54,13 +29,6 @@ export default {
 			type: String,
 			default: "start"
 		}
-	},
-	mounted() {
-		if (this.$slots.left || this.$slots.center || this.$slots.right) {
-			window.panel.deprecated(
-				"<k-bar>: left/centre/right slots will be removed in a future version. Use with default slot only instead."
-			);
-		}
 	}
 };
 </script>
@@ -83,17 +51,6 @@ export default {
 }
 .k-bar:where([data-align="end"]):has(:first-child:last-child) {
 	justify-content: end;
-}
-
-/** @todo bar.slots.deprecated - remove @ 5.0 */
-.k-bar-slot {
-	flex-grow: 1;
-}
-.k-bar-slot[data-position="center"] {
-	text-align: center;
-}
-.k-bar-slot[data-position="right"] {
-	text-align: end;
 }
 </style>
 

@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import Modal, { defaults as modalDefaults } from "./modal.js";
 
 export const defaults = () => {
@@ -27,7 +28,7 @@ export default (panel) => {
 
 	const parent = Modal(panel, "dialog", defaults());
 
-	return {
+	return reactive({
 		...parent,
 
 		/**
@@ -100,6 +101,7 @@ export default (panel) => {
 		 * opens it manually.
 		 *
 		 * @param {any} dialog Vue component
+		 * @deprecated 4.0.0
 		 */
 		async openComponent(dialog) {
 			panel.deprecated(
@@ -134,5 +136,5 @@ export default (panel) => {
 
 			return state;
 		}
-	};
+	});
 };

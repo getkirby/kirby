@@ -116,7 +116,7 @@ class Url
 			return $home ?? static::home();
 		}
 
-		if (substr($path, 0, 1) === '#') {
+		if (str_starts_with($path, '#') === true) {
 			return $path;
 		}
 
@@ -226,7 +226,10 @@ class Url
 		$path ??= '';
 
 		// keep relative urls
-		if (substr($path, 0, 2) === './' || substr($path, 0, 3) === '../') {
+		if (
+			str_starts_with($path, './') === true ||
+			str_starts_with($path, '../') === true
+		) {
 			return $path;
 		}
 

@@ -7,7 +7,7 @@ namespace Kirby\Cms;
  */
 class CoreTest extends TestCase
 {
-	protected $core;
+	protected Core $core;
 
 	public function setUp(): void
 	{
@@ -257,6 +257,15 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('url', $fields);
 		$this->assertArrayHasKey('users', $fields);
 		$this->assertArrayHasKey('writer', $fields);
+	}
+
+	/**
+	 * @covers ::area
+	 */
+	public function testFilePreviews()
+	{
+		$previews = $this->core->filePreviews();
+		$this->assertCount(4, $previews);
 	}
 
 	/**

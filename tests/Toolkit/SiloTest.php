@@ -3,10 +3,9 @@
 namespace Kirby\Toolkit;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Silo
- */
+#[CoversClass(Silo::class)]
 class SiloTest extends TestCase
 {
 	public function setUp(): void
@@ -14,20 +13,13 @@ class SiloTest extends TestCase
 		Silo::$data = [];
 	}
 
-	/**
-	 * @covers ::get
-	 * @covers ::set
-	 */
-	public function testSetAndGet()
+	public function testSetAndGet(): void
 	{
 		Silo::set('foo', 'bar');
 		$this->assertSame('bar', Silo::get('foo'));
 	}
 
-	/**
-	 * @covers ::set
-	 */
-	public function testSetArray()
+	public function testSetArray(): void
 	{
 		Silo::set([
 			'a' => 'A',
@@ -37,10 +29,7 @@ class SiloTest extends TestCase
 		$this->assertSame(['a' => 'A', 'b' => 'B'], Silo::get());
 	}
 
-	/**
-	 * @covers ::get
-	 */
-	public function testGetArray()
+	public function testGetArray(): void
 	{
 		Silo::set('a', 'A');
 		Silo::set('b', 'B');
@@ -48,10 +37,7 @@ class SiloTest extends TestCase
 		$this->assertSame(['a' => 'A', 'b' => 'B'], Silo::get());
 	}
 
-	/**
-	 * @covers ::remove
-	 */
-	public function testRemoveByKey()
+	public function testRemoveByKey(): void
 	{
 		Silo::set('a', 'A');
 		$this->assertSame('A', Silo::get('a'));
@@ -59,10 +45,7 @@ class SiloTest extends TestCase
 		$this->assertNull(Silo::get('a'));
 	}
 
-	/**
-	 * @covers ::remove
-	 */
-	public function testRemoveAll()
+	public function testRemoveAll(): void
 	{
 		Silo::set('a', 'A');
 		Silo::set('b', 'B');

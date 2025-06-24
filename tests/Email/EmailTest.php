@@ -2,6 +2,7 @@
 
 namespace Kirby\Email;
 
+use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use PHPMailer\PHPMailer\PHPMailer as Mailer;
 
@@ -53,12 +54,10 @@ class EmailTest extends TestCase
 
 	public function testRequiredProperty()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The property "from" is required');
 
-		$email = $this->_email([
-			'from' => null
-		]);
+		$this->_email(['from' => null]);
 	}
 
 	public function testOptionalAddresses()
@@ -76,10 +75,10 @@ class EmailTest extends TestCase
 
 	public function testInvalidAddress()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('"not-valid" is not a valid email address');
 
-		$email = $this->_email([
+		$this->_email([
 			'to' => [
 				'valid@company.com',
 				'not-valid'
@@ -207,9 +206,7 @@ class EmailTest extends TestCase
 		// invalid
 		$mail = $this->_email([
 			'transport'  => $transport,
-			'beforeSend' => $beforeSend = function ($mailer) {
-				return 'string';
-			}
+			'beforeSend' => $beforeSend = fn ($mailer) => 'string'
 		], PHPMailer::class);
 
 		$this->expectException(InvalidArgumentException::class);

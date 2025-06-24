@@ -9,36 +9,42 @@ export default {
 		},
 		items() {
 			return this.data.map((page) => {
-				const disabled = page.permissions.changeStatus === false;
-				const status = this.$helper.page.status(page.status, disabled);
-				status.click = () => this.$dialog(page.link + "/changeStatus");
+				const sortable =
+					page.permissions.sort && this.options.sortable && !this.isSelecting;
+				const deletable =
+					page.permissions.delete && this.data.length > this.options.min;
 
-				page.flag = {
-					status: page.status,
-					disabled: disabled,
+				const flag = {
+					...this.$helper.page.status(
+						page.status,
+						page.permissions.changeStatus === false
+					),
 					click: () => this.$dialog(page.link + "/changeStatus")
 				};
 
-				page.sortable = page.permissions.sort && this.options.sortable;
-				page.deletable = this.data.length > this.options.min;
-				page.column = this.column;
-				page.buttons = [status, ...(page.buttons ?? [])];
-				page.options = this.$dropdown(page.link, {
-					query: {
-						view: "list",
-						delete: page.deletable,
-						sort: page.sortable
-					}
-				});
-
-				// add data-attributes info for item
-				page.data = {
-					"data-id": page.id,
-					"data-status": page.status,
-					"data-template": page.template
+				return {
+					...page,
+					buttons: [flag, ...(page.buttons ?? [])],
+					column: this.column,
+					data: {
+						"data-id": page.id,
+						"data-status": page.status,
+						"data-template": page.template
+					},
+					// TODO: remove `flag` once table layout has been refactored
+					// into a separate component and `buttons` support has been added
+					flag,
+					deletable,
+					options: this.$dropdown(page.link, {
+						query: {
+							view: "list",
+							delete: deletable,
+							sort: sortable
+						}
+					}),
+					selectable: this.isSelecting && deletable,
+					sortable
 				};
-
-				return page;
 			});
 		},
 		type() {

@@ -12,7 +12,6 @@
 	},
 	"dependencies": {
 		"autosize": "^6.0.1",
-		"container-query-polyfill": "^1.0.2",
 		"dayjs": "^1.11.13",
 		"mitt": "^3.0.1",
 		"portal-vue": "^2.1.7",
@@ -23,24 +22,22 @@
 		"prosemirror-model": "^1.25.1",
 		"prosemirror-schema-list": "^1.5.1",
 		"prosemirror-view": "^1.40.0",
-		"vue": "^2.7.16",
-		"vuedraggable": "^2.24.3",
-		"vuelidate": "^0.7.7",
-		"vuex": "^3.6.2"
+		"sortablejs": "^1.15.6",
+		"vue": "^2.7.16"
 	},
 	"devDependencies": {
+		"@csstools/postcss-light-dark-function": "^2.0.9",
 		"@vitejs/plugin-vue2": "^2.3.3",
-		"eslint": "^9.28.0",
+		"eslint": "^9.29.0",
 		"eslint-config-prettier": "^10.1.5",
 		"eslint-plugin-vue": "^9.33.0",
-		"glob": "^11.0.2",
+		"glob": "^11.0.3",
 		"jsdom": "^26.1.0",
-		"prettier": "^3.5.3",
-		"rollup-plugin-external-globals": "^0.13.0",
-		"terser": "^5.40.0",
+		"prettier": "^3.6.0",
+		"terser": "^5.43.1",
 		"vite": "^6.3.5",
 		"vite-plugin-static-copy": "^2.3.1",
-		"vitest": "^3.2.0",
+		"vitest": "^3.2.4",
 		"vue-docgen-api": "^4.79.2"
 	},
 	"browserslist": [

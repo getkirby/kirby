@@ -52,4 +52,23 @@ class UserDropdownsTest extends AreaTestCase
 		$this->assertSame('/users/editor/delete', $delete['dialog']);
 		$this->assertSame('Delete this user', $delete['text']);
 	}
+
+	public function testUserLanguageDropdown()
+	{
+		$this->app([
+			'languages' => [
+				'en' => [
+					'code' => 'en',
+					'name' => 'English',
+				],
+				'de' => [
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$this->login();
+		$this->assertLanguageDropdown('users/editor/languages');
+	}
 }

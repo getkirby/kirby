@@ -36,11 +36,13 @@ class Sessions
 	 *                       - `cookieName`: Name to use for the session cookie; defaults to `kirby_session`
 	 *                       - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
 	 */
-	public function __construct(SessionStore|string $store, array $options = [])
-	{
-		$this->store = match (is_string($store)) {
-			true    => new FileSessionStore($store),
-			default => $store
+	public function __construct(
+		SessionStore|string $store,
+		array $options = []
+	) {
+		$this->store = match (true) {
+			$store instanceof SessionStore => $store,
+			default                        => new FileSessionStore($store),
 		};
 
 		$this->mode       = $options['mode']       ?? 'cookie';
@@ -48,14 +50,14 @@ class Sessions
 		$gcInterval       = $options['gcInterval'] ?? 100;
 
 		// validate options
-		if (in_array($this->mode, ['cookie', 'header', 'manual']) === false) {
-			throw new InvalidArgumentException([
-				'data' => [
+		if (in_array($this->mode, ['cookie', 'header', 'manual'], true) === false) {
+			throw new InvalidArgumentException(
+				data: [
 					'method'   => 'Sessions::__construct',
 					'argument' => '$options[\'mode\']'
 				],
-				'translate' => false
-			]);
+				translate: false
+			);
 		}
 
 		// trigger automatic garbage collection with the given probability
@@ -71,13 +73,13 @@ class Sessions
 				$this->collectGarbage();
 			}
 		} elseif ($gcInterval !== false) {
-			throw new InvalidArgumentException([
-				'data' => [
+			throw new InvalidArgumentException(
+				data: [
 					'method'   => 'Sessions::__construct',
 					'argument' => '$options[\'gcInterval\']'
 				],
-				'translate' => false
-			]);
+				translate: false
+			);
 		}
 	}
 
@@ -129,14 +131,14 @@ class Sessions
 		$token = match ($this->mode) {
 			'cookie' => $this->tokenFromCookie(),
 			'header' => $this->tokenFromHeader(),
-			'manual' => throw new LogicException([
-				'key'       => 'session.sessions.manualMode',
-				'fallback'  => 'Cannot automatically get current session in manual mode',
-				'translate' => false,
-				'httpCode'  => 500
-			]),
+			'manual' => throw new LogicException(
+				key: 'session.sessions.manualMode',
+				fallback: 'Cannot automatically get current session in manual mode',
+				translate: false,
+				httpCode: 500
+			),
 			// unexpected error that shouldn't occur
-			default => throw new Exception(['translate' => false]) // @codeCoverageIgnore
+			default => throw new Exception(translate: false) // @codeCoverageIgnore
 		};
 
 		// no token was found, no session
@@ -162,11 +164,11 @@ class Sessions
 	 */
 	public function currentDetected(): Session|null
 	{
-		$tokenFromHeader = $this->tokenFromHeader();
-		$tokenFromCookie = $this->tokenFromCookie();
+		$header = $this->tokenFromHeader();
+		$cookie = $this->tokenFromCookie();
 
 		// prefer header token over cookie token
-		$token = $tokenFromHeader ?? $tokenFromCookie;
+		$token = $header ?? $cookie;
 
 		// no token was found, no session
 		if (is_string($token) === false) {
@@ -175,8 +177,10 @@ class Sessions
 
 		// token was found, try to get the session
 		try {
-			$mode = is_string($tokenFromHeader) ? 'header' : 'cookie';
-			return $this->get($token, $mode);
+			return $this->get($token, match (true) {
+				$header !== null => 'header',
+				$cookie !== null => 'cookie'
+			});
 		} catch (Throwable) {
 			return null;
 		}
@@ -184,7 +188,6 @@ class Sessions
 
 	/**
 	 * Getter for the session store instance
-	 * @internal
 	 */
 	public function store(): SessionStore
 	{
@@ -193,7 +196,6 @@ class Sessions
 
 	/**
 	 * Getter for the cookie name
-	 * @internal
 	 */
 	public function cookieName(): string
 	{
