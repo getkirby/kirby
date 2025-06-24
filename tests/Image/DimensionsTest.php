@@ -3,30 +3,22 @@
 namespace Kirby\Image;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Image\Dimensions
- */
+#[CoversClass(Dimensions::class)]
 class DimensionsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::width
-	 * @covers ::height
-	 */
-	public function testDimensions()
+	public function testDimensions(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
 		$this->assertSame(1200, $dimensions->width());
 		$this->assertSame(768, $dimensions->height());
 	}
 
-	/**
-	 * @covers ::crop
-	 */
-	public function testCrop()
+	public function testCrop(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
 		$dimensions->crop(1000, 500);
@@ -39,10 +31,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame(500, $dimensions->height());
 	}
 
-	/**
-	 * @covers ::fit
-	 */
-	public function testFit()
+	public function testFit(): void
 	{
 		// zero dimensions
 		$dimensions = new Dimensions(0, 0);
@@ -75,10 +64,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame(200, $dimensions->height());
 	}
 
-	/**
-	 * @covers ::fit
-	 */
-	public function testFitForce()
+	public function testFitForce(): void
 	{
 		// wider than tall
 		$dimensions = new Dimensions(1200, 768);
@@ -93,10 +79,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame(2000, $dimensions->height());
 	}
 
-	/**
-	 * @covers ::fitWidth
-	 */
-	public function testFitWidth()
+	public function testFitWidth(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
 		$dimensions->fitWidth(0);
@@ -121,10 +104,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame(1280, $dimensions->height());
 	}
 
-	/**
-	 * @covers ::fitHeight
-	 */
-	public function testFitHeight()
+	public function testFitHeight(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
 		$dimensions->fitHeight(0);
@@ -149,10 +129,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame(2000, $dimensions->height());
 	}
 
-	/**
-	 * @covers ::fitWidthAndHeight
-	 */
-	public function testFitWidthAndHeight()
+	public function testFitWidthAndHeight(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
 		$dimensions->fitWidthAndHeight(1000, 500);
@@ -165,10 +142,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame(781, $dimensions->height());
 	}
 
-	/**
-	 * @covers ::forImage
-	 */
-	public function testForImage()
+	public function testForImage(): void
 	{
 		$image = new Image([
 			'root' => __DIR__ . '/fixtures/image/onigiri-adobe-rgb-gps.jpg'
@@ -220,15 +194,12 @@ class DimensionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider imageOrientationProvider
-	 * @covers ::forImage
-	 */
+	#[DataProvider('imageOrientationProvider')]
 	public function testForImageOrientation(
 		string $filename,
 		int $width,
 		int $height
-	) {
+	): void {
 		$image = new Image([
 			'root' => __DIR__ . '/fixtures/orientation/' . $filename
 		]);
@@ -238,10 +209,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame($height, $dimensions->height());
 	}
 
-	/**
-	 * @covers ::forSvg
-	 */
-	public function testForSvg()
+	public function testForSvg(): void
 	{
 		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/circle.svg');
 		$this->assertSame(50, $dimensions->width());
@@ -256,10 +224,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame(25, $dimensions->height());
 	}
 
-	/**
-	 * @covers ::orientation
-	 */
-	public function testOrientation()
+	public function testOrientation(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
 		$this->assertSame('landscape', $dimensions->orientation());
@@ -275,10 +240,7 @@ class DimensionsTest extends TestCase
 		$this->assertFalse($dimensions->orientation());
 	}
 
-	/**
-	 * @covers ::ratio
-	 */
-	public function testRatio()
+	public function testRatio(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
 		$this->assertSame(1.5625, $dimensions->ratio());
@@ -290,10 +252,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame(0.0, $dimensions->ratio());
 	}
 
-	/**
-	 * @covers ::resize
-	 */
-	public function testResize()
+	public function testResize(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
 		$dimensions->resize(2000, 800, true);
@@ -301,11 +260,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame(800, $dimensions->height());
 	}
 
-	/**
-	 * @covers ::toArray
-	 * @covers ::__debugInfo
-	 */
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
 		$array = [
@@ -318,10 +273,7 @@ class DimensionsTest extends TestCase
 		$this->assertSame($array, $dimensions->__debugInfo());
 	}
 
-	/**
-	 * @covers ::__toString
-	 */
-	public function testToString()
+	public function testToString(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
 		$this->assertSame('1200 × 768', (string)$dimensions);
