@@ -165,7 +165,7 @@ class UserRulesTest extends ModelTestCase
 		UserRules::changeRole($user, 'editor');
 	}
 
-	public function testChangeRoleFromAdminByNonAdmin()
+	public function testChangeRoleFromAdminByNonAdmin(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.user.changeRole.permission');
@@ -398,7 +398,7 @@ class UserRulesTest extends ModelTestCase
 		], $input);
 	}
 
-	public function testDelete()
+	public function testDelete(): void
 	{
 		$this->expectNotToPerformAssertions();
 
@@ -437,7 +437,7 @@ class UserRulesTest extends ModelTestCase
 		UserRules::delete($user);
 	}
 
-	public function testDeletePermissions()
+	public function testDeletePermissions(): void
 	{
 		$permissions = $this->createMock(UserPermissions::class);
 		$permissions->method('can')->with('delete')->willReturn(false);

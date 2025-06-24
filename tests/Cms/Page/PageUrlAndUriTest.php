@@ -51,7 +51,7 @@ class PageUrlAndUriTest extends ModelTestCase
 		$this->assertSame('home', $page->uri());
 	}
 
-	public function testHomeChildUrlAndUriInMultiLanguageMode()
+	public function testHomeChildUrlAndUriInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
 

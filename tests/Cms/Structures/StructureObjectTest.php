@@ -6,19 +6,19 @@ use TypeError;
 
 class StructureObjectTest extends TestCase
 {
-	public function testId()
+	public function testId(): void
 	{
 		$object = new StructureObject(['id' => 'test']);
 		$this->assertSame('test', $object->id());
 	}
 
-	public function testInvalidId()
+	public function testInvalidId(): void
 	{
 		$this->expectException(TypeError::class);
 		new StructureObject(['id' => []]);
 	}
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$content = ['test' => 'Test'];
 		$object  = new StructureObject([
@@ -29,7 +29,7 @@ class StructureObjectTest extends TestCase
 		$this->assertSame($content, $object->content()->toArray());
 	}
 
-	public function testToDate()
+	public function testToDate(): void
 	{
 		$object = new StructureObject([
 			'id'      => 'test',
@@ -41,7 +41,7 @@ class StructureObjectTest extends TestCase
 		$this->assertSame('12.12.2012', $object->date()->toDate('d.m.Y'));
 	}
 
-	public function testDefaultContent()
+	public function testDefaultContent(): void
 	{
 		$object  = new StructureObject([
 			'id' => 'test',
@@ -50,7 +50,7 @@ class StructureObjectTest extends TestCase
 		$this->assertSame([], $object->content()->toArray());
 	}
 
-	public function testFields()
+	public function testFields(): void
 	{
 		$object = new StructureObject([
 			'id'      => 'test',
@@ -67,7 +67,7 @@ class StructureObjectTest extends TestCase
 		$this->assertSame('Text', $object->text()->value());
 	}
 
-	public function testFieldsParent()
+	public function testFieldsParent(): void
 	{
 		$parent = new Page(['slug' => 'test']);
 		$object = new StructureObject([
@@ -83,7 +83,7 @@ class StructureObjectTest extends TestCase
 		$this->assertSame($parent, $object->text()->parent());
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$parent = new Page(['slug' => 'test']);
 		$object = new StructureObject([
@@ -94,7 +94,7 @@ class StructureObjectTest extends TestCase
 		$this->assertSame($parent, $object->parent());
 	}
 
-	public function testParentFallback()
+	public function testParentFallback(): void
 	{
 		$object = new StructureObject([
 			'id'     => 'test',
@@ -103,7 +103,7 @@ class StructureObjectTest extends TestCase
 		$this->assertIsSite($object->parent());
 	}
 
-	public function testInvalidParent()
+	public function testInvalidParent(): void
 	{
 		$this->expectException(TypeError::class);
 
@@ -113,7 +113,7 @@ class StructureObjectTest extends TestCase
 		]);
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$content = [
 			'title' => 'Title',

@@ -22,7 +22,7 @@ class BlocksTest extends TestCase
 		$this->page = new Page(['slug' => 'test']);
 	}
 
-	public function testFactoryFromLayouts()
+	public function testFactoryFromLayouts(): void
 	{
 		$layouts = [
 			[
@@ -59,7 +59,7 @@ class BlocksTest extends TestCase
 	/**
 	 * @todo block.converter remove eventually
 	 */
-	public function testFactoryFromBuilderWithColumns()
+	public function testFactoryFromBuilderWithColumns(): void
 	{
 		$builder = [
 			[
@@ -79,7 +79,7 @@ class BlocksTest extends TestCase
 		$this->assertSame('text', $blocks->last()->type());
 	}
 
-	public function testHasType()
+	public function testHasType(): void
 	{
 		$input = [
 			[
@@ -93,7 +93,7 @@ class BlocksTest extends TestCase
 		$this->assertFalse($blocks->hasType('code'));
 	}
 
-	public function testParseJson()
+	public function testParseJson(): void
 	{
 		$input = [
 			[
@@ -105,7 +105,7 @@ class BlocksTest extends TestCase
 		$this->assertSame($input, $result);
 	}
 
-	public function testParseHtml()
+	public function testParseHtml(): void
 	{
 		$input = '<h1>Test</h1>';
 		$expected = [
@@ -122,7 +122,7 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testParseEmpty()
+	public function testParseEmpty(): void
 	{
 		$result = Blocks::parse(null);
 		$this->assertSame([], $result);
@@ -131,7 +131,7 @@ class BlocksTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testParseString()
+	public function testParseString(): void
 	{
 		$expected = [
 			[
@@ -146,7 +146,7 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testParsePageObject()
+	public function testParsePageObject(): void
 	{
 		$expected = [
 			[
@@ -161,7 +161,7 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testToHtml()
+	public function testToHtml(): void
 	{
 		$blocks = Blocks::factory([
 			[
@@ -183,7 +183,7 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $blocks->toHtml());
 	}
 
-	public function testToHtmlWithCustomSnippets()
+	public function testToHtmlWithCustomSnippets(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -212,7 +212,7 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $blocks->toHtml());
 	}
 
-	public function testExcerpt()
+	public function testExcerpt(): void
 	{
 		$blocks = Blocks::factory([
 			[
@@ -240,7 +240,7 @@ class BlocksTest extends TestCase
 	/**
 	 * @todo block.converter remove eventually
 	 */
-	public function testParseYaml()
+	public function testParseYaml(): void
 	{
 		$input = [
 			[

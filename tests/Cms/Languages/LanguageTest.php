@@ -9,10 +9,10 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Language
- */
+#[CoversClass(Language::class)]
 class LanguageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Language';
@@ -33,10 +33,7 @@ class LanguageTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructNoCode()
+	public function testConstructNoCode(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The property "code" is required');
@@ -58,11 +55,8 @@ class LanguageTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::baseUrl
-	 * @dataProvider baseUrlProvider
-	 */
-	public function testBaseUrl($kirbyUrl, $url, $expected)
+	#[DataProvider('baseUrlProvider')]
+	public function testBaseUrl($kirbyUrl, $url, $expected): void
 	{
 		new App([
 			'roots' => [
@@ -82,10 +76,7 @@ class LanguageTest extends TestCase
 		$this->assertSame($expected, $language->baseUrl());
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreate()
+	public function testCreate(): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -100,10 +91,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('/en', $language->url());
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateNoPermissions()
+	public function testCreateNoPermissions(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -130,10 +118,7 @@ class LanguageTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateWithoutLoggedUser()
+	public function testCreateWithoutLoggedUser(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to create a language');
@@ -143,10 +128,7 @@ class LanguageTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateHooks()
+	public function testCreateHooks(): void
 	{
 		$calls = 0;
 		$phpunit = $this;
@@ -177,21 +159,14 @@ class LanguageTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
-	/**
-	 * @covers ::code
-	 * @covers ::id
-	 */
-	public function testCodeAndId()
+	public function testCodeAndId(): void
 	{
 		$language = new Language(['code' => 'en']);
 		$this->assertSame('en', $language->code());
 		$this->assertSame('en', $language->id());
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDelete()
+	public function testDelete(): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -199,10 +174,7 @@ class LanguageTest extends TestCase
 		$this->assertTrue($language->delete());
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteNoPermissions()
+	public function testDeleteNoPermissions(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -229,10 +201,7 @@ class LanguageTest extends TestCase
 		$language->delete();
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteWithoutLoggedUser()
+	public function testDeleteWithoutLoggedUser(): void
 	{
 		$this->app->impersonate('kirby');
 		$language = Language::create(['code' => 'en']);
@@ -245,10 +214,7 @@ class LanguageTest extends TestCase
 		$language->delete();
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteHooks()
+	public function testDeleteHooks(): void
 	{
 		$calls = 0;
 		$phpunit = $this;
@@ -285,10 +251,7 @@ class LanguageTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
-	/**
-	 * @covers ::direction
-	 */
-	public function testDirection()
+	public function testDirection(): void
 	{
 		//default
 		$language = new Language([
@@ -318,7 +281,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('ltr', $language->direction());
 	}
 
-	public function testEnsureInMultiLanguageMode()
+	public function testEnsureInMultiLanguageMode(): void
 	{
 		$app = new App([
 			'languages' => [
@@ -358,7 +321,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('en', $language->code());
 	}
 
-	public function testEnsureInSingleLanguageMode()
+	public function testEnsureInSingleLanguageMode(): void
 	{
 		new App([
 			'roots' => [
@@ -371,10 +334,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('en', $language->code());
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExists()
+	public function testExists(): void
 	{
 		new App([
 			'roots' => [
@@ -393,10 +353,7 @@ class LanguageTest extends TestCase
 		$this->assertTrue($language->exists());
 	}
 
-	/**
-	 * @covers ::is
-	 */
-	public function testIs()
+	public function testIs(): void
 	{
 		$app = new App([
 			'languages' => [
@@ -426,10 +383,7 @@ class LanguageTest extends TestCase
 		$this->assertFalse($en->is($de));
 	}
 
-	/**
-	 * @covers ::isDefault
-	 */
-	public function testIsDefault()
+	public function testIsDefault(): void
 	{
 		// default
 		$language = new Language([
@@ -459,10 +413,7 @@ class LanguageTest extends TestCase
 		$this->assertFalse($language->isDefault());
 	}
 
-	/**
-	 * @covers ::isSingle
-	 */
-	public function testIsSingle()
+	public function testIsSingle(): void
 	{
 		// default
 		$language = new Language([
@@ -480,10 +431,7 @@ class LanguageTest extends TestCase
 		$this->assertTrue($language->isSingle());
 	}
 
-	/**
-	 * @covers ::locale
-	 */
-	public function testLocale()
+	public function testLocale(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -494,10 +442,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('en_US', $language->locale(LC_ALL));
 	}
 
-	/**
-	 * @covers ::locale
-	 */
-	public function testLocaleArray1()
+	public function testLocaleArray1(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -516,10 +461,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('en_US', $language->locale(LC_MONETARY));
 	}
 
-	/**
-	 * @covers ::locale
-	 */
-	public function testLocaleArray2()
+	public function testLocaleArray2(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -536,10 +478,7 @@ class LanguageTest extends TestCase
 		$this->assertNull($language->locale(LC_MONETARY));
 	}
 
-	/**
-	 * @covers ::locale
-	 */
-	public function testLocaleArray3()
+	public function testLocaleArray3(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -558,10 +497,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('en_US', $language->locale(LC_MONETARY));
 	}
 
-	/**
-	 * @covers ::locale
-	 */
-	public function testLocaleInvalid()
+	public function testLocaleInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 
@@ -571,10 +507,7 @@ class LanguageTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::locale
-	 */
-	public function testLocaleDefault()
+	public function testLocaleDefault(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -583,10 +516,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('en', $language->locale(LC_ALL));
 	}
 
-	/**
-	 * @covers ::name
-	 */
-	public function testName()
+	public function testName(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -617,11 +547,8 @@ class LanguageTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::path
-	 * @dataProvider pathProvider
-	 */
-	public function testPath($input, $expected)
+	#[DataProvider('pathProvider')]
+	public function testPath($input, $expected): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -647,11 +574,8 @@ class LanguageTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::pattern
-	 * @dataProvider patternProvider
-	 */
-	public function testPattern($input, $expected)
+	#[DataProvider('patternProvider')]
+	public function testPattern($input, $expected): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -661,10 +585,7 @@ class LanguageTest extends TestCase
 		$this->assertSame($expected, $language->pattern());
 	}
 
-	/**
-	 * @covers ::root
-	 */
-	public function testRoot()
+	public function testRoot(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -679,10 +600,7 @@ class LanguageTest extends TestCase
 		$this->assertSame(static::TMP . '/site/languages/de.php', $language->root());
 	}
 
-	/**
-	 * @covers ::router
-	 */
-	public function testRouter()
+	public function testRouter(): void
 	{
 		$language = new Language([
 			'code' => 'de'
@@ -691,10 +609,7 @@ class LanguageTest extends TestCase
 		$this->assertInstanceOf(LanguageRouter::class, $language->router());
 	}
 
-	/**
-	 * @covers ::save
-	 */
-	public function testSave()
+	public function testSave(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -765,10 +680,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('test', $data['custom']);
 	}
 
-	/**
-	 * @covers ::single
-	 */
-	public function testSingle()
+	public function testSingle(): void
 	{
 		$language = Language::single();
 
@@ -776,11 +688,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('en', $language->name());
 	}
 
-	/**
-	 * @covers ::toArray
-	 * @covers ::__debugInfo
-	 */
-	public function testToArrayAndDebuginfo()
+	public function testToArrayAndDebuginfo(): void
 	{
 		$language = new Language([
 			'code'   => 'de',
@@ -802,10 +710,7 @@ class LanguageTest extends TestCase
 		$this->assertSame($expected, $language->__debugInfo());
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlWithRelativeValue()
+	public function testUrlWithRelativeValue(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -815,10 +720,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('/super', $language->url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlWithAbsoluteValue()
+	public function testUrlWithAbsoluteValue(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -828,10 +730,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('https://en.getkirby.com', $language->url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlWithDash()
+	public function testUrlWithDash(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -841,10 +740,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('/', $language->url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlDefault()
+	public function testUrlDefault(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -853,10 +749,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('/en', $language->url());
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		Dir::make(static::TMP . '/content');
 
@@ -871,10 +764,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('English', $language->name());
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdateDefault()
+	public function testUpdateDefault(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -922,10 +812,7 @@ class LanguageTest extends TestCase
 		$app->language('de')->update(['default' => false]);
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdateHooks()
+	public function testUpdateHooks(): void
 	{
 		$calls = 0;
 		$phpunit = $this;
@@ -968,10 +855,7 @@ class LanguageTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdateNoPermissions()
+	public function testUpdateNoPermissions(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -999,10 +883,7 @@ class LanguageTest extends TestCase
 		$language->update(['name' => 'English']);
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdateWithoutLoggedUser()
+	public function testUpdateWithoutLoggedUser(): void
 	{
 		$this->app->impersonate('kirby');
 		$language = Language::create(['code' => 'en']);
@@ -1015,10 +896,7 @@ class LanguageTest extends TestCase
 		$language->update(['name' => 'English']);
 	}
 
-	/**
-	 * @covers ::variable
-	 */
-	public function testVariable()
+	public function testVariable(): void
 	{
 		$language = new Language([
 			'code' => 'en',
@@ -1029,10 +907,7 @@ class LanguageTest extends TestCase
 		$this->assertSame('test', $variable->key());
 	}
 
-	/**
-	 * @covers ::variable
-	 */
-	public function testVariableDecode()
+	public function testVariableDecode(): void
 	{
 		$language = new Language([
 			'code' => 'en',

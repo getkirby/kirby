@@ -27,7 +27,7 @@ class SectionTest extends TestCase
 		Section::$types = $this->sectionTypes;
 	}
 
-	public function testApi()
+	public function testApi(): void
 	{
 		// no defined as default
 		Section::$types = [
@@ -58,7 +58,7 @@ class SectionTest extends TestCase
 		$this->assertSame('Hello World', $section->api());
 	}
 
-	public function testMissingModel()
+	public function testMissingModel(): void
 	{
 		Section::$types['test'] = [];
 
@@ -68,7 +68,7 @@ class SectionTest extends TestCase
 		$section = new Section('test', []);
 	}
 
-	public function testPropsDefaults()
+	public function testPropsDefaults(): void
 	{
 		Section::$types['test'] = [
 			'props' => [
@@ -85,7 +85,7 @@ class SectionTest extends TestCase
 		$this->assertSame(['one', 'two'], $section->buttons());
 	}
 
-	public function testToResponse()
+	public function testToResponse(): void
 	{
 		Section::$types['test'] = [
 			'props' => [

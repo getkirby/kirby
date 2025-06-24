@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class NestCollectionTest extends TestCase
 {
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$collection = new NestCollection([
 			new NestObject([

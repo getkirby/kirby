@@ -23,7 +23,7 @@ class EmptySectionMixinTest extends TestCase
 		];
 	}
 
-	public function testDefaultEmpty()
+	public function testDefaultEmpty(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -32,7 +32,7 @@ class EmptySectionMixinTest extends TestCase
 		$this->assertNull($section->empty());
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -42,7 +42,7 @@ class EmptySectionMixinTest extends TestCase
 		$this->assertSame('Test', $section->empty());
 	}
 
-	public function testTranslateEmpty()
+	public function testTranslateEmpty(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,

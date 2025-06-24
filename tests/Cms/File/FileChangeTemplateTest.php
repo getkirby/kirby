@@ -312,7 +312,7 @@ class FileChangeTemplateTest extends ModelTestCase
 		$this->assertNull($modified->content()->get('template')->value());
 	}
 
-	public function testChangeTemplateInvalidAccept()
+	public function testChangeTemplateInvalidAccept(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -364,7 +364,7 @@ class FileChangeTemplateTest extends ModelTestCase
 		$file->changeTemplate('for-default-b');
 	}
 
-	public function testChangeTemplateManipulate()
+	public function testChangeTemplateManipulate(): void
 	{
 		$testImage = static::FIXTURES . '/test.jpg';
 
@@ -423,7 +423,7 @@ class FileChangeTemplateTest extends ModelTestCase
 		$this->assertSame(100, $file->height());
 	}
 
-	public function testChangeTemplateManipulateNonImage()
+	public function testChangeTemplateManipulateNonImage(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [

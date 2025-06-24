@@ -20,7 +20,7 @@ class AppIoTest extends TestCase
 		]);
 	}
 
-	public function testException()
+	public function testException(): void
 	{
 		$response = $this->app()->io(new Exception(
 			fallback: 'Nope',
@@ -31,7 +31,7 @@ class AppIoTest extends TestCase
 		$this->assertSame('Nope', $response->body());
 	}
 
-	public function testExceptionErrorPage()
+	public function testExceptionErrorPage(): void
 	{
 		$app = $this->app()->clone([
 			'site' => [
@@ -50,7 +50,7 @@ class AppIoTest extends TestCase
 		$this->assertSame('Error: Nope', $response->body());
 	}
 
-	public function testExceptionWithInvalidHttpCode()
+	public function testExceptionWithInvalidHttpCode(): void
 	{
 		$response = $this->app()->io(new \Exception('Nope', 8000));
 
@@ -58,7 +58,7 @@ class AppIoTest extends TestCase
 		$this->assertSame('Nope', $response->body());
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$response = $this->app()->io('');
 
@@ -66,7 +66,7 @@ class AppIoTest extends TestCase
 		$this->assertSame('Not found', $response->body());
 	}
 
-	public function testResponder()
+	public function testResponder(): void
 	{
 		$app   = $this->app();
 		$input = $app->response()->code(201)->body('Test');
@@ -77,7 +77,7 @@ class AppIoTest extends TestCase
 		$this->assertSame('Test', $response->body());
 	}
 
-	public function testResponse()
+	public function testResponse(): void
 	{
 		$input = new Response([
 			'code' => 200,
@@ -107,7 +107,7 @@ class AppIoTest extends TestCase
 		], $response->toArray());
 	}
 
-	public function testPage()
+	public function testPage(): void
 	{
 		$input = new Page([
 			'slug'     => 'test',
@@ -120,7 +120,7 @@ class AppIoTest extends TestCase
 		$this->assertSame('Test template', $response->body());
 	}
 
-	public function testPageErrorPageException()
+	public function testPageErrorPageException(): void
 	{
 		$input = new Page([
 			'slug'     => 'test',
@@ -133,7 +133,7 @@ class AppIoTest extends TestCase
 		$this->assertSame('Exception message', $response->body());
 	}
 
-	public function testPageErrorPageExceptionErrorPage()
+	public function testPageErrorPageExceptionErrorPage(): void
 	{
 		$app = $this->app()->clone([
 			'site' => [
@@ -157,7 +157,7 @@ class AppIoTest extends TestCase
 		$this->assertSame('Error: Exception message', $response->body());
 	}
 
-	public function testString()
+	public function testString(): void
 	{
 		$response = $this->app()->io('Test');
 
@@ -165,7 +165,7 @@ class AppIoTest extends TestCase
 		$this->assertSame('Test', $response->body());
 	}
 
-	public function testArray()
+	public function testArray(): void
 	{
 		$response = $this->app()->io($array = ['foo' => 'bar']);
 

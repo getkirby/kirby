@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class LayoutColumnTest extends TestCase
 {
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$column = new LayoutColumn();
 		$this->assertInstanceOf(Blocks::class, $column->blocks());
@@ -14,7 +14,7 @@ class LayoutColumnTest extends TestCase
 		$this->assertSame(12, $column->span());
 	}
 
-	public function testBlocks()
+	public function testBlocks(): void
 	{
 		$column = new LayoutColumn([
 			'blocks' => [
@@ -27,7 +27,7 @@ class LayoutColumnTest extends TestCase
 		$this->assertSame('text', $column->blocks()->last()->type());
 	}
 
-	public function testHiddenBlocks()
+	public function testHiddenBlocks(): void
 	{
 		$column = new LayoutColumn([
 			'blocks' => [
@@ -42,7 +42,7 @@ class LayoutColumnTest extends TestCase
 		$this->assertCount(2, $column->blocks(true));
 	}
 
-	public function testSpan()
+	public function testSpan(): void
 	{
 		$column = new LayoutColumn([
 			'width' => '1/2'
@@ -52,7 +52,7 @@ class LayoutColumnTest extends TestCase
 		$this->assertSame(3, $column->span(6));
 	}
 
-	public function testWidth()
+	public function testWidth(): void
 	{
 		$column = new LayoutColumn([
 			'width' => '1/2'
@@ -61,7 +61,7 @@ class LayoutColumnTest extends TestCase
 		$this->assertSame('1/2', $column->width());
 	}
 
-	public function testIsEmpty()
+	public function testIsEmpty(): void
 	{
 		$column = new LayoutColumn([
 			'blocks' => []
@@ -71,7 +71,7 @@ class LayoutColumnTest extends TestCase
 		$this->assertFalse($column->isNotEmpty());
 	}
 
-	public function testIsNotEmpty()
+	public function testIsNotEmpty(): void
 	{
 		$column = new LayoutColumn([
 			'blocks' => [

@@ -78,7 +78,7 @@ class ApiTest extends TestCase
 		setlocale(LC_ALL, $this->locale);
 	}
 
-	public function testCallLocaleSingleLang1()
+	public function testCallLocaleSingleLang1(): void
 	{
 		setlocale(LC_ALL, 'C');
 		$this->assertSame('C', setlocale(LC_ALL, 0));
@@ -87,7 +87,7 @@ class ApiTest extends TestCase
 		$this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
 	}
 
-	public function testCallLocaleSingleLang2()
+	public function testCallLocaleSingleLang2(): void
 	{
 		setlocale(LC_ALL, 'C');
 		$this->assertSame('C', setlocale(LC_ALL, 0));
@@ -100,7 +100,7 @@ class ApiTest extends TestCase
 		$_GET = [];
 	}
 
-	public function testCallLocaleMultiLang1()
+	public function testCallLocaleMultiLang1(): void
 	{
 		setlocale(LC_ALL, 'C');
 		$this->assertSame('C', setlocale(LC_ALL, 0));
@@ -128,7 +128,7 @@ class ApiTest extends TestCase
 		$this->assertSame('en_US.UTF-8', setlocale(LC_ALL, 0));
 	}
 
-	public function testCallLocaleMultiLang2()
+	public function testCallLocaleMultiLang2(): void
 	{
 		setlocale(LC_ALL, 'C');
 		$this->assertSame('C', setlocale(LC_ALL, 0));
@@ -160,7 +160,7 @@ class ApiTest extends TestCase
 		$_GET = [];
 	}
 
-	public function testCallTranslation()
+	public function testCallTranslation(): void
 	{
 		// with logged in user with language
 		$app = $this->app->clone([
@@ -272,7 +272,7 @@ class ApiTest extends TestCase
 		$this->assertSame('en', I18n::$locale);
 	}
 
-	public function testLanguage()
+	public function testLanguage(): void
 	{
 		$api = $this->api->clone([
 			'requestData' => [
@@ -285,7 +285,7 @@ class ApiTest extends TestCase
 		$this->assertSame('de', $api->language());
 	}
 
-	public function testFile()
+	public function testFile(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -328,7 +328,7 @@ class ApiTest extends TestCase
 		$this->assertSame('test.jpg', $api->file('users/test@getkirby.com', 'test.jpg')->filename());
 	}
 
-	public function testFileNotFound()
+	public function testFileNotFound(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "nope.jpg" cannot be found');
@@ -336,7 +336,7 @@ class ApiTest extends TestCase
 		$this->api->file('site', 'nope.jpg');
 	}
 
-	public function testFileNotReadable()
+	public function testFileNotReadable(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "protected.jpg" cannot be found');
@@ -357,7 +357,7 @@ class ApiTest extends TestCase
 		$this->api->file('site', 'protected.jpg');
 	}
 
-	public function testPage()
+	public function testPage(): void
 	{
 		$a  = $this->app->page('a');
 		$aa = $this->app->page('a/aa');
@@ -370,12 +370,12 @@ class ApiTest extends TestCase
 		$this->api->page('does-not-exist');
 	}
 
-	public function testPages()
+	public function testPages(): void
 	{
 		$this->assertSame(['a/aa', 'a/ab'], $this->api->pages('a')->keys());
 	}
 
-	public function testPagesNotAccessible()
+	public function testPagesNotAccessible(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -407,7 +407,7 @@ class ApiTest extends TestCase
 		$this->assertSame(['a', 'c'], $app->api()->pages()->keys());
 	}
 
-	public function testUser()
+	public function testUser(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -431,12 +431,12 @@ class ApiTest extends TestCase
 		$this->api->user('nope@getkirby.com');
 	}
 
-	public function testUsers()
+	public function testUsers(): void
 	{
 		$this->assertSame($this->app->users(), $this->api->users());
 	}
 
-	public function testFileGetRoute()
+	public function testFileGetRoute(): void
 	{
 		// regular
 		$result = $this->api->call('pages/a/files/a-regular-file.jpg', 'GET');
@@ -451,7 +451,7 @@ class ApiTest extends TestCase
 		$this->assertSame('a filename with spaces.jpg', $result['data']['filename']);
 	}
 
-	public function testAuthenticationWithoutCsrf()
+	public function testAuthenticationWithoutCsrf(): void
 	{
 		$auth = $this->createMock(Auth::class);
 		$auth->method('type')->willReturn('session');
@@ -472,7 +472,7 @@ class ApiTest extends TestCase
 		$function->call($api);
 	}
 
-	public function testAuthenticationWithoutUser()
+	public function testAuthenticationWithoutUser(): void
 	{
 		$auth = $this->createMock(Auth::class);
 		$auth->method('user')->willReturn(null);
@@ -492,7 +492,7 @@ class ApiTest extends TestCase
 		$function->call($api);
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -537,7 +537,7 @@ class ApiTest extends TestCase
 		$this->assertNull($api->parent('pages/does-not-exist'));
 	}
 
-	public function testFieldApi()
+	public function testFieldApi(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -580,7 +580,7 @@ class ApiTest extends TestCase
 		$this->assertSame('b.jpg', $response['data'][1]['filename']);
 	}
 
-	public function testFieldApiInvalidField()
+	public function testFieldApiInvalidField(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -597,7 +597,7 @@ class ApiTest extends TestCase
 		$app->api()->fieldApi($page, 'nonexists');
 	}
 
-	public function testFieldApiEmptyField()
+	public function testFieldApiEmptyField(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -614,7 +614,7 @@ class ApiTest extends TestCase
 		$app->api()->fieldApi($page, '');
 	}
 
-	public function testRenderExceptionWithDebugging()
+	public function testRenderExceptionWithDebugging(): void
 	{
 		// simulate the document root to test relative file paths
 		$app = $this->app->clone([
@@ -655,7 +655,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testSectionApi()
+	public function testSectionApi(): void
 	{
 		$app = $this->app->clone([
 			'sections' => [
@@ -698,7 +698,7 @@ class ApiTest extends TestCase
 		$this->assertSame('Test', $response['message']);
 	}
 
-	public function testSectionApiWithInvalidSection()
+	public function testSectionApiWithInvalidSection(): void
 	{
 		$app = $this->app->clone([
 			'site' => [

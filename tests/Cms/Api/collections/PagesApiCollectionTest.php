@@ -8,7 +8,7 @@ class PagesApiCollectionTest extends ApiCollectionTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PagesApiCollection';
 
-	public function testCollection()
+	public function testCollection(): void
 	{
 		$collection = $this->api->collection('pages', new Pages([
 			new Page(['slug' => 'a']),

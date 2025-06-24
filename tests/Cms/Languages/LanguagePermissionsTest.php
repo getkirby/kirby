@@ -3,10 +3,11 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Cms\LanguagePermissions
- */
+#[CoversClass(LanguagePermissions::class)]
+#[CoversClass(ModelPermissions::class)]
 class LanguagePermissionsTest extends TestCase
 {
 	public static function actionProvider(): array
@@ -18,11 +19,8 @@ class LanguagePermissionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithAdmin($action)
+	#[DataProvider('actionProvider')]
+	public function testWithAdmin($action): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -42,11 +40,8 @@ class LanguagePermissionsTest extends TestCase
 		$this->assertTrue($perms->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithNobody($action)
+	#[DataProvider('actionProvider')]
+	public function testWithNobody($action): void
 	{
 		new App([
 			'roots' => [
@@ -64,11 +59,8 @@ class LanguagePermissionsTest extends TestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	/**
-	 * @covers \Kirby\Cms\ModelPermissions::can
-	 * @dataProvider actionProvider
-	 */
-	public function testWithNoAdmin($action)
+	#[DataProvider('actionProvider')]
+	public function testWithNoAdmin($action): void
 	{
 		$app = new App([
 			'languages' => [
@@ -112,10 +104,7 @@ class LanguagePermissionsTest extends TestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	/**
-	 * @covers ::canDelete
-	 */
-	public function testCanDeleteWhenNotDeletable()
+	public function testCanDeleteWhenNotDeletable(): void
 	{
 		$app = new App([
 			'languages' => [

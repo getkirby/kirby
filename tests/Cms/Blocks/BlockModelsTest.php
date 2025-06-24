@@ -37,7 +37,7 @@ class BlockModelsTest extends TestCase
 		];
 	}
 
-	public function testBlockModel()
+	public function testBlockModel(): void
 	{
 		$block = Block::factory(['type' => 'heading']);
 
@@ -46,7 +46,7 @@ class BlockModelsTest extends TestCase
 		$this->assertSame($block->id(), $block->test());
 	}
 
-	public function testBlockModelFromConfig()
+	public function testBlockModelFromConfig(): void
 	{
 		new App([
 			'roots' => [
@@ -64,7 +64,7 @@ class BlockModelsTest extends TestCase
 		$this->assertSame($block->id(), $block->test());
 	}
 
-	public function testMissingBlockModel()
+	public function testMissingBlockModel(): void
 	{
 		$block = Block::factory(['type' => 'image']);
 
@@ -73,7 +73,7 @@ class BlockModelsTest extends TestCase
 		$this->assertFalse(method_exists($block, 'test'));
 	}
 
-	public function testDefaultBlockModel()
+	public function testDefaultBlockModel(): void
 	{
 		new App([
 			'roots' => [

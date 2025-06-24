@@ -136,7 +136,7 @@ class ModelWithContentTest extends TestCase
 		];
 	}
 
-	public function testContentForInvalidTranslation()
+	public function testContentForInvalidTranslation(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -169,7 +169,7 @@ class ModelWithContentTest extends TestCase
 		$app->page('foo')->content('fr');
 	}
 
-	public function testContentUpdate()
+	public function testContentUpdate(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -194,7 +194,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Test', $page->content()->get('title')->value());
 	}
 
-	public function testContentUpdateWithMultipleLanguages()
+	public function testContentUpdateWithMultipleLanguages(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -231,7 +231,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Test', $page->content()->get('title')->value());
 	}
 
-	public function testContentWithChanges()
+	public function testContentWithChanges(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -270,7 +270,7 @@ class ModelWithContentTest extends TestCase
 	}
 
 	#[DataProvider('modelsProvider')]
-	public function testBlueprints(ModelWithContent $model)
+	public function testBlueprints(ModelWithContent $model): void
 	{
 		$model = new BlueprintsModelWithContent($model);
 
@@ -334,7 +334,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertFalse($model->isValid());
 	}
 
-	public function testKirby()
+	public function testKirby(): void
 	{
 		$kirby = new App();
 		$model = new Page([
@@ -344,7 +344,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame($kirby, $model->kirby());
 	}
 
-	public function testLock()
+	public function testLock(): void
 	{
 		$page = new Page(['slug' => 'foo']);
 		$lock = $page->lock();
@@ -356,7 +356,7 @@ class ModelWithContentTest extends TestCase
 	}
 
 	#[DataProvider('modelsProvider')]
-	public function testPurge(ModelWithContent $model)
+	public function testPurge(ModelWithContent $model): void
 	{
 		$model = new BlueprintsModelWithContent($model);
 
@@ -391,7 +391,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertNull($model->blueprintsCache());
 	}
 
-	public function testSite()
+	public function testSite(): void
 	{
 		$site  = new Site();
 		$model = new Page([
@@ -401,14 +401,14 @@ class ModelWithContentTest extends TestCase
 		$this->assertIsSite($site, $model->site());
 	}
 
-	public function testToSafeString()
+	public function testToSafeString(): void
 	{
 		$model = new Page(['slug' => 'foo', 'content' => ['title' => 'value &']]);
 		$this->assertSame('Hello value &amp; foo', $model->toSafeString('Hello {{ model.title }} {{ model.slug }}'));
 		$this->assertSame('Hello value & foo', $model->toSafeString('Hello {< model.title >} {{ model.slug }}'));
 	}
 
-	public function testToSafeStringWithData()
+	public function testToSafeStringWithData(): void
 	{
 		$model = new Site();
 		$this->assertSame(
@@ -431,7 +431,7 @@ class ModelWithContentTest extends TestCase
 		);
 	}
 
-	public function testToSafeStringWithFallback()
+	public function testToSafeStringWithFallback(): void
 	{
 		$model = new Site();
 		$this->assertSame('Hello ', $model->toSafeString('Hello {{ invalid }}', []));
@@ -444,7 +444,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Hello foo/{{ invalid }}', $model->toSafeString('Hello {{ model.slug }}/{{ invalid }}', [], null));
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		$model = new Site();
 		$this->assertSame('Hello home', $model->toString('Hello {{ model.homePageId }}'));
@@ -453,7 +453,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Hello foo/home', $model->toString('Hello {{ model.slug }}/{{ site.homePageId }}'));
 	}
 
-	public function testToStringWithData()
+	public function testToStringWithData(): void
 	{
 		$model = new Site();
 		$this->assertSame('Hello home in value', $model->toString('Hello {{ model.homePageId }} in {{ key }}', ['key' => 'value']));
@@ -465,7 +465,7 @@ class ModelWithContentTest extends TestCase
 		);
 	}
 
-	public function testToStringWithFallback()
+	public function testToStringWithFallback(): void
 	{
 		$model = new Site();
 		$this->assertSame('Hello ', $model->toString('Hello {{ invalid }}', []));
@@ -478,7 +478,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Hello foo/{{ invalid }}', $model->toString('Hello {{ model.slug }}/{{ invalid }}', [], null));
 	}
 
-	public function testToStringWithoutValue()
+	public function testToStringWithoutValue(): void
 	{
 		$model = new Site();
 		$this->assertSame('', $model->toString());
@@ -487,7 +487,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('foo', $model->toString());
 	}
 
-	public function testTranslation()
+	public function testTranslation(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -543,7 +543,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('Deutscher Titel', $current->content()['title']);
 	}
 
-	public function testTranslationWithInvalidLanguauge()
+	public function testTranslationWithInvalidLanguauge(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -570,13 +570,13 @@ class ModelWithContentTest extends TestCase
 			]
 		]);
 
-		$this->expectException(\Kirby\Exception\NotFoundException::class);
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Invalid language: fr');
 
 		$fr = $app->page('foo')->translation('fr');
 	}
 
-	public function testUuid()
+	public function testUuid(): void
 	{
 		$model = new Site();
 		$this->assertInstanceOf(SiteUuid::class, $model->uuid());
@@ -585,7 +585,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertInstanceOf(PageUuid::class, $model->uuid());
 	}
 
-	public function testVersion()
+	public function testVersion(): void
 	{
 		$model = new Site();
 		$this->assertInstanceOf(Version::class, $model->version('latest'));
@@ -598,7 +598,7 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('latest', $model->version(VersionId::latest())->id()->value());
 	}
 
-	public function testVersionFallback()
+	public function testVersionFallback(): void
 	{
 		$model = new Page(['slug' => 'foo']);
 		$this->assertInstanceOf(Version::class, $model->version());

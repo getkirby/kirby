@@ -4,10 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Plugin\Plugin;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Html
- */
+#[CoversClass(Html::class)]
 class HtmlTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -27,10 +26,7 @@ class HtmlTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCss()
+	public function testCss(): void
 	{
 		$result   = Html::css('assets/css/index.css');
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
@@ -38,10 +34,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssWithMediaOption()
+	public function testCssWithMediaOption(): void
 	{
 		$result   = Html::css('assets/css/index.css', 'print');
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" media="print" rel="stylesheet">';
@@ -49,10 +42,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssWithAttrs()
+	public function testCssWithAttrs(): void
 	{
 		$result   = Html::css('assets/css/index.css', ['integrity' => 'nope']);
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" integrity="nope" rel="stylesheet">';
@@ -60,10 +50,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssWithValidRelAttr()
+	public function testCssWithValidRelAttr(): void
 	{
 		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet', 'title' => 'High contrast']);
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="alternate stylesheet" title="High contrast">';
@@ -71,10 +58,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssWithInvalidRelAttr()
+	public function testCssWithInvalidRelAttr(): void
 	{
 		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate', 'title' => 'High contrast']);
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet" title="High contrast">';
@@ -82,10 +66,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssWithRelAttrButNoTitle()
+	public function testCssWithRelAttrButNoTitle(): void
 	{
 		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet']);
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
@@ -93,10 +74,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssWithArray()
+	public function testCssWithArray(): void
 	{
 		$result = Html::css([
 			'assets/css/a.css',
@@ -109,10 +87,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssWithPluginAssets()
+	public function testCssWithPluginAssets(): void
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
 			'root' => $root = static::TMP . '/plugin'
@@ -125,10 +100,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::js
-	 */
-	public function testJs()
+	public function testJs(): void
 	{
 		$result   = Html::js('assets/js/index.js');
 		$expected = '<script src="https://getkirby.com/assets/js/index.js"></script>';
@@ -136,10 +108,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::js
-	 */
-	public function testJsWithAsyncOption()
+	public function testJsWithAsyncOption(): void
 	{
 		$result   = Html::js('assets/js/index.js', true);
 		$expected = '<script async src="https://getkirby.com/assets/js/index.js"></script>';
@@ -147,10 +116,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::js
-	 */
-	public function testJsWithAttrs()
+	public function testJsWithAttrs(): void
 	{
 		$result   = Html::js('assets/js/index.js', ['integrity' => 'nope']);
 		$expected = '<script integrity="nope" src="https://getkirby.com/assets/js/index.js"></script>';
@@ -158,10 +124,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::js
-	 */
-	public function testJsWithArray()
+	public function testJsWithArray(): void
 	{
 		$result = Html::js([
 			'assets/js/a.js',
@@ -174,10 +137,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::js
-	 */
-	public function testJsWithPluginAssets()
+	public function testJsWithPluginAssets(): void
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
 			'root' => $root = static::TMP . '/plugin'
@@ -190,44 +150,29 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::svg
-	 */
-	public function testSvg()
+	public function testSvg(): void
 	{
 		$result = Html::svg('test.svg');
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 
-	/**
-	 * @covers ::svg
-	 */
-	public function testSvgWithAbsolutePath()
+	public function testSvgWithAbsolutePath(): void
 	{
 		$result = Html::svg(static::TMP . '/test.svg');
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 
-	/**
-	 * @covers ::svg
-	 */
-	public function testSvgWithInvalidFileType()
+	public function testSvgWithInvalidFileType(): void
 	{
 		$this->assertFalse(Html::svg(123));
 	}
 
-	/**
-	 * @covers ::svg
-	 */
-	public function testSvgWithMissingFile()
+	public function testSvgWithMissingFile(): void
 	{
 		$this->assertFalse(Html::svg('somefile.svg'));
 	}
 
-	/**
-	 * @covers ::svg
-	 */
-	public function testSvgWithFileObject()
+	public function testSvgWithFileObject(): void
 	{
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()

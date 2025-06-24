@@ -44,7 +44,7 @@ class ModelCommitTest extends TestCase
 		];
 	}
 
-	public function testAfter()
+	public function testAfter(): void
 	{
 		$phpunit = $this;
 		$calls   = 0;
@@ -78,7 +78,7 @@ class ModelCommitTest extends TestCase
 		$this->assertSame(1, $calls);
 	}
 
-	public function testAfterFlushesCache()
+	public function testAfterFlushesCache(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -107,7 +107,7 @@ class ModelCommitTest extends TestCase
 		$this->assertSame(null, $this->app->cache('pages')->get('test'));
 	}
 
-	public function testAfterHookArgumentsForPageCreate()
+	public function testAfterHookArgumentsForPageCreate(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -127,7 +127,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testAfterHookArgumentsForPageDuplicate()
+	public function testAfterHookArgumentsForPageDuplicate(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -152,7 +152,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testAfterHookArgumentsForPageDelete()
+	public function testAfterHookArgumentsForPageDelete(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -173,7 +173,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testAfterHookArgumentsForPageUpdate()
+	public function testAfterHookArgumentsForPageUpdate(): void
 	{
 		$oldPage = new Page([
 			'slug' => 'test',
@@ -198,7 +198,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testAfterHookArgumentsForFileCreate()
+	public function testAfterHookArgumentsForFileCreate(): void
 	{
 		$file = new File([
 			'parent'   => $this->app->site(),
@@ -219,7 +219,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testAfterHookArgumentsForFileDelete()
+	public function testAfterHookArgumentsForFileDelete(): void
 	{
 		$file = new File([
 			'parent'   => $this->app->site(),
@@ -241,7 +241,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testAfterHookArgumentsForFileUpdate()
+	public function testAfterHookArgumentsForFileUpdate(): void
 	{
 		$oldFile = new File([
 			'parent'   => $this->app->site(),
@@ -268,7 +268,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testAfterHookArgumentsForSiteActions()
+	public function testAfterHookArgumentsForSiteActions(): void
 	{
 		$oldSite = new Site([
 			'name' => 'Test'
@@ -293,7 +293,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testAfterHookArgumentsForUserCreate()
+	public function testAfterHookArgumentsForUserCreate(): void
 	{
 		$user = new User([
 			'email' => 'test@test.com'
@@ -313,7 +313,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testAfterHookArgumentsForUserDelete()
+	public function testAfterHookArgumentsForUserDelete(): void
 	{
 		$user = new User([
 			'email' => 'test@test.com'
@@ -334,7 +334,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testAfterHookArgumentsForUserUpdate()
+	public function testAfterHookArgumentsForUserUpdate(): void
 	{
 		$oldUser = new User([
 			'email' => 'test@test.com'
@@ -359,7 +359,7 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
-	public function testBefore()
+	public function testBefore(): void
 	{
 		$phpunit = $this;
 		$calls   = 0;
@@ -393,7 +393,7 @@ class ModelCommitTest extends TestCase
 		$this->assertSame(1, $calls);
 	}
 
-	public function testHook()
+	public function testHook(): void
 	{
 		$phpunit = $this;
 		$calls   = 0;
@@ -440,7 +440,7 @@ class ModelCommitTest extends TestCase
 		$this->assertSame(1, $calls);
 	}
 
-	public function testHookWithModifiedModel()
+	public function testHookWithModifiedModel(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -485,7 +485,7 @@ class ModelCommitTest extends TestCase
 		$this->assertSame('Modified', $this->app->page('test')->title()->value(), 'The app state should be updated as well');
 	}
 
-	public function testHookWithModifiedModelLegacyMethod()
+	public function testHookWithModifiedModelLegacyMethod(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -534,7 +534,7 @@ class ModelCommitTest extends TestCase
 		$this->assertSame('Modified', $this->app->page('test')->title()->value(), 'The app state should be updated as well');
 	}
 
-	public function testHookWithMultipleHandlers()
+	public function testHookWithMultipleHandlers(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -592,7 +592,7 @@ class ModelCommitTest extends TestCase
 		$this->assertSame('Modified Subtitle', $this->app->page('test')->subtitle()->value());
 	}
 
-	public function testHookWithMultipleHandlersAndLegacyMethod()
+	public function testHookWithMultipleHandlersAndLegacyMethod(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [

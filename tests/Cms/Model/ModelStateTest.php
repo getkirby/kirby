@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ModelState::class)]
 class ModelStateTest extends TestCase
 {
-	public function testUpdateFile()
+	public function testUpdateFile(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -41,7 +41,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($next, $parent->file('test.jpg'));
 	}
 
-	public function testUpdateFileWithDuplicateAsMethod()
+	public function testUpdateFileWithDuplicateAsMethod(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -75,7 +75,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($current, $parent->file('test.jpg'));
 	}
 
-	public function testUpdatePage()
+	public function testUpdatePage(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -107,7 +107,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($next, $this->app->page('test'));
 	}
 
-	public function testUpdatePageWithDuplicateAsMethod()
+	public function testUpdatePageWithDuplicateAsMethod(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -139,7 +139,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($current, $this->app->page('test'));
 	}
 
-	public function testUpdateSite()
+	public function testUpdateSite(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -164,7 +164,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($this->app->site(), $next);
 	}
 
-	public function testUpdateSiteWithDuplicateAsMethod()
+	public function testUpdateSiteWithDuplicateAsMethod(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -190,7 +190,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($current, $this->app->site());
 	}
 
-	public function testUpdateUser()
+	public function testUpdateUser(): void
 	{
 		$this->app = $this->app->clone([
 			'users' => [
@@ -215,7 +215,7 @@ class ModelStateTest extends TestCase
 		$this->assertSame($this->app->user('admin'), $next);
 	}
 
-	public function testUpdateUserWithDuplicateAsMethod()
+	public function testUpdateUserWithDuplicateAsMethod(): void
 	{
 		$this->app = $this->app->clone([
 			'users' => [

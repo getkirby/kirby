@@ -8,7 +8,7 @@ class SiteApiModelTest extends ApiModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteApiModel';
 
-	public function testBlueprint()
+	public function testBlueprint(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -24,7 +24,7 @@ class SiteApiModelTest extends ApiModelTestCase
 		$this->assertSame('Test', $blueprint['title']);
 	}
 
-	public function testChildren()
+	public function testChildren(): void
 	{
 		$site = new Site([
 			'children' => [
@@ -39,7 +39,7 @@ class SiteApiModelTest extends ApiModelTestCase
 		$this->assertSame('b', $children[1]['id']);
 	}
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$site = new Site([
 			'content' => $content = [
@@ -51,7 +51,7 @@ class SiteApiModelTest extends ApiModelTestCase
 		$this->assertAttr($site, 'content', $content);
 	}
 
-	public function testDrafts()
+	public function testDrafts(): void
 	{
 		$site = new Site([
 			'drafts' => [
@@ -66,7 +66,7 @@ class SiteApiModelTest extends ApiModelTestCase
 		$this->assertSame('b', $drafts[1]['id']);
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$site = new Site([
 			'files' => [
@@ -81,7 +81,7 @@ class SiteApiModelTest extends ApiModelTestCase
 		$this->assertSame('b.jpg', $files[1]['filename']);
 	}
 
-	public function testTitle()
+	public function testTitle(): void
 	{
 		$site = new Site([
 			'content' => [
@@ -92,7 +92,7 @@ class SiteApiModelTest extends ApiModelTestCase
 		$this->assertAttr($site, 'title', 'Test');
 	}
 
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$site = new Site([
 			'url' => 'https://getkirby.com'
