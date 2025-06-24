@@ -6,16 +6,12 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Panel\Ui\FilePreview;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\FilePreviews\VideoFilePreview
- */
+#[CoversClass(VideoFilePreview::class)]
 class VideoFilePreviewTest extends TestCase
 {
-	/**
-	 * @covers ::accepts
-	 */
-	public function testAccepts()
+	public function testAccepts(): void
 	{
 		$page = new Page(['slug' => 'test']);
 
@@ -26,10 +22,7 @@ class VideoFilePreviewTest extends TestCase
 		$this->assertFalse(VideoFilePreview::accepts($file));
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.mp4', 'parent' => $page]);

@@ -5,11 +5,9 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Menu
- * @covers ::__construct
- */
+#[CoversClass(Menu::class)]
 class MenuTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Menu';
@@ -39,10 +37,7 @@ class MenuTest extends TestCase
 		unset($_SERVER['SERVER_SOFTWARE']);
 	}
 
-	/**
-	 * @covers ::areas
-	 */
-	public function testAreas()
+	public function testAreas(): void
 	{
 		$menu  = new Menu(
 			[
@@ -57,10 +52,7 @@ class MenuTest extends TestCase
 		$this->assertSame('site', $areas[0]['id']);
 	}
 
-	/**
-	 * @covers ::areas
-	 */
-	public function testAreasDefaultOrder()
+	public function testAreasDefaultOrder(): void
 	{
 		$menu  = new Menu(
 			[
@@ -79,10 +71,7 @@ class MenuTest extends TestCase
 		$this->assertSame(['site', 'foo'], array_column($areas, 'id'));
 	}
 
-	/**
-	 * @covers ::areas
-	 */
-	public function testAreasConfigOption()
+	public function testAreasConfigOption(): void
 	{
 		$this->app->clone([
 			'options' => [
@@ -132,10 +121,7 @@ class MenuTest extends TestCase
 		$this->assertSame('Buddies', $areas[3]['label']);
 	}
 
-	/**
-	 * @covers ::areas
-	 */
-	public function testAreasConfigOptionClosure()
+	public function testAreasConfigOptionClosure(): void
 	{
 		$test = $this;
 
@@ -155,10 +141,7 @@ class MenuTest extends TestCase
 		$this->assertCount(0, $areas);
 	}
 
-	/**
-	 * @covers ::entry
-	 */
-	public function testEntry()
+	public function testEntry(): void
 	{
 		$menu = new Menu([], [], 'account');
 		$this->assertTrue($menu->hasPermission('account'));
@@ -176,10 +159,7 @@ class MenuTest extends TestCase
 		], $entry);
 	}
 
-	/**
-	 * @covers ::entry
-	 */
-	public function testEntryDialog()
+	public function testEntryDialog(): void
 	{
 		$menu = new Menu([], [], 'account');
 
@@ -197,10 +177,7 @@ class MenuTest extends TestCase
 		], $entry);
 	}
 
-	/**
-	 * @covers ::entry
-	 */
-	public function testEntryMenu()
+	public function testEntryMenu(): void
 	{
 		$menu = new Menu([], [], 'account');
 		$this->assertFalse($menu->entry(['id' => 'account']));
@@ -224,19 +201,13 @@ class MenuTest extends TestCase
 		$this->assertTrue($entry['disabled']);
 	}
 
-	/**
-	 * @covers ::entry
-	 */
-	public function testEntryNoPermission()
+	public function testEntryNoPermission(): void
 	{
 		$menu = new Menu([], ['access' => ['account' => false]]);
 		$this->assertFalse($menu->entry(['id' => 'account']));
 	}
 
-	/**
-	 * @covers ::entry
-	 */
-	public function testEntryMultiLanguage()
+	public function testEntryMultiLanguage(): void
 	{
 		$menu = new Menu([], [], 'account');
 
@@ -256,10 +227,7 @@ class MenuTest extends TestCase
 		], $entry);
 	}
 
-	/**
-	 * @covers ::entries
-	 */
-	public function testEntries()
+	public function testEntries(): void
 	{
 		$menu = new Menu(
 			[
@@ -282,10 +250,7 @@ class MenuTest extends TestCase
 		$this->assertSame('logout', $entries[4]['link']);
 	}
 
-	/**
-	 * @covers ::hasPermission
-	 */
-	public function testHasPermission()
+	public function testHasPermission(): void
 	{
 		$menu = new Menu([], []);
 		$this->assertTrue($menu->hasPermission('account'));
@@ -297,10 +262,7 @@ class MenuTest extends TestCase
 		$this->assertFalse($menu->hasPermission('account'));
 	}
 
-	/**
-	 * @covers ::isCurrent
-	 */
-	public function testIsCurrent()
+	public function testIsCurrent(): void
 	{
 		$menu = new Menu([], [], 'account');
 
@@ -319,10 +281,7 @@ class MenuTest extends TestCase
 	}
 
 
-	/**
-	 * @covers ::options
-	 */
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$changes = [
 			'icon'     => 'edit-line',
