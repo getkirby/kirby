@@ -22,7 +22,7 @@ class ExtendedModel extends stdClass
 
 class ApiTest extends TestCase
 {
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$api = new Api([]);
 
@@ -36,7 +36,7 @@ class ApiTest extends TestCase
 		$this->assertSame([], $api->routes());
 	}
 
-	public function test__call()
+	public function test__call(): void
 	{
 		$api = new Api([
 			'data' => [
@@ -47,7 +47,7 @@ class ApiTest extends TestCase
 		$this->assertSame('bar', $api->foo());
 	}
 
-	public function testAuthentication()
+	public function testAuthentication(): void
 	{
 		$phpunit = $this;
 
@@ -64,7 +64,7 @@ class ApiTest extends TestCase
 		$api->authenticate();
 	}
 
-	public function testCall()
+	public function testCall(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -112,7 +112,7 @@ class ApiTest extends TestCase
 		$this->assertEquals(new Response('test', 'text/plain', 201), $result); // cannot use strict assertion (test for object contents)
 	}
 
-	public function testCallLocale()
+	public function testCallLocale(): void
 	{
 		$originalLocale = setlocale(LC_CTYPE, 0);
 
@@ -145,7 +145,7 @@ class ApiTest extends TestCase
 		$this->assertSame($originalLocale, setlocale(LC_CTYPE, 0));
 	}
 
-	public function testCollections()
+	public function testCollections(): void
 	{
 		$api = new Api([
 			'models' => [
@@ -185,7 +185,7 @@ class ApiTest extends TestCase
 		$api->collection('not-available', $instance);
 	}
 
-	public function testData()
+	public function testData(): void
 	{
 		$api = new Api([
 			'data' => $data = [
@@ -206,7 +206,7 @@ class ApiTest extends TestCase
 		$api->data('d');
 	}
 
-	public function testDebug()
+	public function testDebug(): void
 	{
 		$api = new Api([
 			'debug' => true
@@ -215,7 +215,7 @@ class ApiTest extends TestCase
 		$this->assertTrue($api->debug());
 	}
 
-	public function testModels()
+	public function testModels(): void
 	{
 		$api = new Api([
 			'models' => [
@@ -242,7 +242,7 @@ class ApiTest extends TestCase
 		$api->model('not-available', $instance);
 	}
 
-	public function testModelResolver()
+	public function testModelResolver(): void
 	{
 		$api = new Api([
 			'models' => [
@@ -268,7 +268,7 @@ class ApiTest extends TestCase
 		$this->assertInstanceOf(Model::class, $result);
 	}
 
-	public function testModelResolverWithMissingModel()
+	public function testModelResolverWithMissingModel(): void
 	{
 		$this->expectException(NotFoundException::class);
 
@@ -276,7 +276,7 @@ class ApiTest extends TestCase
 		$api->resolve(new MockModel());
 	}
 
-	public function testRequestData()
+	public function testRequestData(): void
 	{
 		$api = new Api([
 			'requestData' => $requestData = [
@@ -318,7 +318,7 @@ class ApiTest extends TestCase
 		$this->assertSame('fallback', $api->requestHeaders('x', 'fallback'));
 	}
 
-	public function testRenderString()
+	public function testRenderString(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -333,7 +333,7 @@ class ApiTest extends TestCase
 		$this->assertSame('test', $api->render('test', 'POST'));
 	}
 
-	public function testRenderArray()
+	public function testRenderArray(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -351,7 +351,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode(['a' => 'A']), $result->body());
 	}
 
-	public function testRenderTrue()
+	public function testRenderTrue(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -375,7 +375,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderFalse()
+	public function testRenderFalse(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -399,7 +399,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderNull()
+	public function testRenderNull(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -423,7 +423,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderException()
+	public function testRenderException(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -451,7 +451,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderExceptionWithDebugging()
+	public function testRenderExceptionWithDebugging(): void
 	{
 		$api = new Api([
 			'debug' => true,
@@ -489,7 +489,7 @@ class ApiTest extends TestCase
 		unset($_SERVER['DOCUMENT_ROOT']);
 	}
 
-	public function testRenderKirbyException()
+	public function testRenderKirbyException(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -521,7 +521,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderKirbyExceptionWithDebugging()
+	public function testRenderKirbyExceptionWithDebugging(): void
 	{
 		$api = new Api([
 			'debug' => true,
@@ -563,7 +563,7 @@ class ApiTest extends TestCase
 		unset($_SERVER['DOCUMENT_ROOT']);
 	}
 
-	public function testRenderWithSanitizedErrorCode()
+	public function testRenderWithSanitizedErrorCode(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -582,7 +582,7 @@ class ApiTest extends TestCase
 		$this->assertSame(500, $result->code());
 	}
 
-	public function testRequestMethod()
+	public function testRequestMethod(): void
 	{
 		$api = new Api([
 			'requestMethod' => 'POST',
@@ -591,7 +591,7 @@ class ApiTest extends TestCase
 		$this->assertSame('POST', $api->requestMethod());
 	}
 
-	public function testRoutes()
+	public function testRoutes(): void
 	{
 		$api = new Api([
 			'routes' => $routes = [
@@ -605,7 +605,7 @@ class ApiTest extends TestCase
 		$this->assertSame($routes, $api->routes());
 	}
 
-	public function testUpload()
+	public function testUpload(): void
 	{
 		$api = new Api([
 			'requestMethod' => 'POST',

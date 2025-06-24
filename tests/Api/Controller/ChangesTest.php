@@ -41,7 +41,7 @@ class ChangesTest extends TestCase
 		$this->tearDownTmp();
 	}
 
-	public function testDiscard()
+	public function testDiscard(): void
 	{
 		Data::write($file = $this->page->root() . '/_changes/article.txt', []);
 
@@ -52,7 +52,7 @@ class ChangesTest extends TestCase
 		$this->assertFileDoesNotExist($file);
 	}
 
-	public function testPublish()
+	public function testPublish(): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -88,7 +88,7 @@ class ChangesTest extends TestCase
 		], $published);
 	}
 
-	public function testSave()
+	public function testSave(): void
 	{
 		Data::write($this->page->root() . '/article.txt', [
 			// title and uuid should be passed through
@@ -120,7 +120,7 @@ class ChangesTest extends TestCase
 		], $changes);
 	}
 
-	public function testSaveWithNoDiff()
+	public function testSaveWithNoDiff(): void
 	{
 		Data::write($this->page->root() . '/article.txt', [
 			// title and uuid should be passed through
@@ -148,7 +148,7 @@ class ChangesTest extends TestCase
 	 * @todo We want to ignore undefined fields later in v6. This needs to be
 	 * refactored at that point to make sure that undefined fields are not saved.
 	 */
-	public function testSaveWithUndefinedField()
+	public function testSaveWithUndefinedField(): void
 	{
 		Data::write($this->page->root() . '/article.txt', [
 			// title and uuid should be passed through
