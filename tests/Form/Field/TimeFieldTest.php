@@ -2,9 +2,11 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class TimeFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('time');
 
@@ -19,7 +21,7 @@ class TimeFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testDisplayFor12HourNotation()
+	public function testDisplayFor12HourNotation(): void
 	{
 		$field = $this->field('time', [
 			'notation' => 12
@@ -28,7 +30,7 @@ class TimeFieldTest extends TestCase
 		$this->assertSame('hh:mm a', $field->display());
 	}
 
-	public function testDisplayWithCustomSetup()
+	public function testDisplayWithCustomSetup(): void
 	{
 		$field = $this->field('time', [
 			'display' => 'HH:mm:ss'
@@ -37,7 +39,7 @@ class TimeFieldTest extends TestCase
 		$this->assertSame('HH:mm:ss', $field->display());
 	}
 
-	public function testMinMax()
+	public function testMinMax(): void
 	{
 		// no value
 		$field = $this->field('time', [
@@ -160,10 +162,8 @@ class TimeFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider valueProvider
-	 */
-	public function testValue($input, $expected, $step = 1)
+	#[DataProvider('valueProvider')]
+	public function testValue($input, $expected, $step = 1): void
 	{
 		$field = $this->field('time', [
 			'default' => $input,

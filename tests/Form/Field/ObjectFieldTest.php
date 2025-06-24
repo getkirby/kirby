@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 class ObjectFieldTest extends TestCase
 {
-	public function testData()
+	public function testData(): void
 	{
 		$field = $this->field('object', [
 			'fields' => [
@@ -20,7 +20,7 @@ class ObjectFieldTest extends TestCase
 		$this->assertSame($value, $field->data());
 	}
 
-	public function testDataWhenEmpty()
+	public function testDataWhenEmpty(): void
 	{
 		$field = $this->field('object', [
 			'fields' => [
@@ -33,7 +33,7 @@ class ObjectFieldTest extends TestCase
 		$this->assertSame('', $field->data());
 	}
 
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('object', [
 			'fields' => [
@@ -50,7 +50,7 @@ class ObjectFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testDefaultValue()
+	public function testDefaultValue(): void
 	{
 		$field = $this->field('object', [
 			'fields' => [
@@ -70,7 +70,7 @@ class ObjectFieldTest extends TestCase
 		$this->assertSame($expected, $field->default());
 	}
 
-	public function testErrors()
+	public function testErrors(): void
 	{
 		$field = $this->field('object', [
 			'fields' => [
@@ -94,7 +94,7 @@ class ObjectFieldTest extends TestCase
 		$this->assertSame($expected, $field->errors());
 	}
 
-	public function testErrorsWhenEmpty()
+	public function testErrorsWhenEmpty(): void
 	{
 		$field = $this->field('object', [
 			'fields' => [
@@ -107,13 +107,13 @@ class ObjectFieldTest extends TestCase
 		$this->assertSame([], $field->errors());
 	}
 
-	public function testFieldsMissing()
+	public function testFieldsMissing(): void
 	{
 		$field = $this->field('object', []);
 		$this->assertSame([], $field->fields());
 	}
 
-	public function testTagsField()
+	public function testTagsField(): void
 	{
 		$field = $this->field('object', [
 			'fields' => [
