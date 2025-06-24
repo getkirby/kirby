@@ -2,9 +2,11 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class NumberFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('number');
 
@@ -36,10 +38,8 @@ class NumberFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider valueProvider
-	 */
-	public function testValue($input, $expected)
+	#[DataProvider('valueProvider')]
+	public function testValue($input, $expected): void
 	{
 		$field = $this->field('number', [
 			'value'   => $input,
@@ -52,7 +52,7 @@ class NumberFieldTest extends TestCase
 		$this->assertSame($expected, $field->step());
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('number', [
 			'value' => 1,
@@ -63,7 +63,7 @@ class NumberFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('number', [
 			'value' => 1,
@@ -74,7 +74,7 @@ class NumberFieldTest extends TestCase
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
-	public function testLargeValue()
+	public function testLargeValue(): void
 	{
 		$field = $this->field('number', [
 			'value' => 1000

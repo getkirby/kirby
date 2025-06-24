@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 class TagsFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('tags');
 
@@ -22,7 +22,7 @@ class TagsFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testOptionsQuery()
+	public function testOptionsQuery(): void
 	{
 		$app = $this->app()->clone([
 			'site' => [
@@ -117,7 +117,7 @@ class TagsFieldTest extends TestCase
 		$this->assertSame($expected, $field->options());
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('tags', [
 			'value'   => 'a',
@@ -131,7 +131,7 @@ class TagsFieldTest extends TestCase
 		$this->assertTrue($field->required());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('tags', [
 			'value'   => 'a, b',
@@ -144,7 +144,7 @@ class TagsFieldTest extends TestCase
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
-	public function testRequiredProps()
+	public function testRequiredProps(): void
 	{
 		$field = $this->field('tags', [
 			'options'  => ['a', 'b', 'c'],
@@ -155,7 +155,7 @@ class TagsFieldTest extends TestCase
 		$this->assertSame(1, $field->min());
 	}
 
-	public function testRequiredInvalid()
+	public function testRequiredInvalid(): void
 	{
 		$field = $this->field('tags', [
 			'options'  => ['a', 'b', 'c'],
@@ -166,7 +166,7 @@ class TagsFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testRequiredValid()
+	public function testRequiredValid(): void
 	{
 		$field = $this->field('tags', [
 			'options'  => ['a', 'b', 'c'],

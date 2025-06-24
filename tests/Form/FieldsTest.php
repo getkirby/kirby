@@ -31,7 +31,7 @@ class FieldsTest extends TestCase
 		$this->model = new Page(['slug' => 'test']);
 	}
 
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$fields = new Fields(
 			fields: [
@@ -51,7 +51,7 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	public function testConstructWithoutModel()
+	public function testConstructWithoutModel(): void
 	{
 		$fields = new Fields(
 			fields: [
@@ -68,7 +68,7 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->app->site(), $fields->last()->model());
 	}
 
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -84,7 +84,7 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->defaults());
 	}
 
-	public function testErrors()
+	public function testErrors(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -129,7 +129,7 @@ class FieldsTest extends TestCase
 		], $fields->errors());
 	}
 
-	public function testErrorsWithoutErrors()
+	public function testErrorsWithoutErrors(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -143,7 +143,7 @@ class FieldsTest extends TestCase
 		$this->assertSame([], $fields->errors());
 	}
 
-	public function testField()
+	public function testField(): void
 	{
 		$fields = new Fields([
 			'test' => [
@@ -154,7 +154,7 @@ class FieldsTest extends TestCase
 		$this->assertSame('test', $fields->field('test')->name());
 	}
 
-	public function testFieldWithMissingField()
+	public function testFieldWithMissingField(): void
 	{
 		$fields = new Fields([
 			'test' => [
@@ -169,7 +169,7 @@ class FieldsTest extends TestCase
 	}
 
 
-	public function testFill()
+	public function testFill(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -270,7 +270,7 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues(), 'Unknown fields are included');
 	}
 
-	public function testFind()
+	public function testFind(): void
 	{
 		Field::$types['test'] = [
 			'methods' => [
@@ -298,7 +298,7 @@ class FieldsTest extends TestCase
 		$this->assertNull($fields->find('mother+missing-child'));
 	}
 
-	public function testFindWhenFieldHasNoForm()
+	public function testFindWhenFieldHasNoForm(): void
 	{
 		$fields = new Fields([
 			'mother' => [
@@ -776,7 +776,7 @@ class FieldsTest extends TestCase
 		], $fields->toStoredValues(), 'Unknown fields are included');
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -790,7 +790,7 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->toArray(fn ($field) => $field->name()));
 	}
 
-	public function testToFormValues()
+	public function testToFormValues(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -917,7 +917,7 @@ class FieldsTest extends TestCase
 		$this->assertTrue($props['b']['translate']);
 	}
 
-	public function testToStoredValues()
+	public function testToStoredValues(): void
 	{
 		Field::$types['test'] = [
 			'save' => function ($value) {

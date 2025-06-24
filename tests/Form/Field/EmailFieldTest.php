@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 class EmailFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('email');
 
@@ -18,7 +18,7 @@ class EmailFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testEmailValidation()
+	public function testEmailValidation(): void
 	{
 		$field = $this->field('email', [
 			'value' => 'mail@getkirby.com'
@@ -33,7 +33,7 @@ class EmailFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testMinLength()
+	public function testMinLength(): void
 	{
 		$field = $this->field('email', [
 			'value' => 'mail@test.com',
@@ -44,7 +44,7 @@ class EmailFieldTest extends TestCase
 		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
-	public function testMaxLength()
+	public function testMaxLength(): void
 	{
 		$field = $this->field('email', [
 			'value'     => 'mail@test.com',

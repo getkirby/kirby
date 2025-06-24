@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 class WriterFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('writer');
 
@@ -17,7 +17,7 @@ class WriterFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testValueSanitized()
+	public function testValueSanitized(): void
 	{
 		$field = $this->field('writer', [
 			'value' => 'This is a <strong>test</strong><script>alert("Hacked")</script> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>'
@@ -26,7 +26,7 @@ class WriterFieldTest extends TestCase
 		$this->assertSame('This is a <strong>test</strong> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>', $field->value());
 	}
 
-	public function testValueTrimmed()
+	public function testValueTrimmed(): void
 	{
 		$field = $this->field('writer', [
 			'value' => 'test '
