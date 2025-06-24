@@ -22,7 +22,7 @@ class ItemsTest extends TestCase
 		$this->field = new Field($this->page, 'test', 'abcde');
 	}
 
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$items = new Items();
 
@@ -37,7 +37,7 @@ class ItemsTest extends TestCase
 		$this->assertSame($b->id(), $items->last()->id());
 	}
 
-	public function testFactoryFromArray()
+	public function testFactoryFromArray(): void
 	{
 		$items = Items::factory(
 			[
@@ -62,7 +62,7 @@ class ItemsTest extends TestCase
 		$this->assertSame($this->field, $items->first()->field());
 	}
 
-	public function testField()
+	public function testField(): void
 	{
 		$items = new Items([]);
 
@@ -76,7 +76,7 @@ class ItemsTest extends TestCase
 		$this->assertSame($this->field, $items->field());
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$items = new Items([]);
 
@@ -89,7 +89,7 @@ class ItemsTest extends TestCase
 		$this->assertSame($this->page, $items->parent());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$items = new Items();
 

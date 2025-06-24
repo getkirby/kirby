@@ -13,7 +13,7 @@ class PageBlueprintTest extends TestCase
 		Blueprint::$loaded = [];
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$blueprint = new PageBlueprint([
 			'model' => new Page(['slug' => 'test'])
@@ -41,7 +41,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
 	}
 
-	public function testExtendedOptionsFromString()
+	public function testExtendedOptionsFromString(): void
 	{
 		new App([
 			'blueprints' => [
@@ -79,7 +79,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
 	}
 
-	public function testExtendedOptions()
+	public function testExtendedOptions(): void
 	{
 		new App([
 			'blueprints' => [
@@ -135,7 +135,7 @@ class PageBlueprintTest extends TestCase
 	}
 
 	#[DataProvider('numProvider')]
-	public function testNum($input, $expected)
+	public function testNum($input, $expected): void
 	{
 		$blueprint = new PageBlueprint([
 			'model' => new Page(['slug' => 'test']),
@@ -145,7 +145,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->num());
 	}
 
-	public function testStatus()
+	public function testStatus(): void
 	{
 		$blueprint = new PageBlueprint([
 			'model'  => new Page(['slug' => 'test']),
@@ -174,7 +174,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->status());
 	}
 
-	public function testStatusWithCustomText()
+	public function testStatusWithCustomText(): void
 	{
 		$expected = [
 			'draft' => [
@@ -199,7 +199,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->status());
 	}
 
-	public function testStatusTranslations()
+	public function testStatusTranslations(): void
 	{
 		new App([
 			'roots' => [
@@ -245,7 +245,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->status());
 	}
 
-	public function testInvalidStatus()
+	public function testInvalidStatus(): void
 	{
 		$input = [
 			'draft'    => 'Draft',
@@ -272,7 +272,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->status());
 	}
 
-	public function testExtendStatus()
+	public function testExtendStatus(): void
 	{
 		new App([
 			'blueprints' => [
@@ -325,7 +325,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->status());
 	}
 
-	public function testExtendStatusFromString()
+	public function testExtendStatusFromString(): void
 	{
 		new App([
 			'blueprints' => [
@@ -354,7 +354,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->status());
 	}
 
-	public function testExtendNum()
+	public function testExtendNum(): void
 	{
 		new App([
 			'blueprints' => [
@@ -375,7 +375,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame('date', $blueprint->num());
 	}
 
-	public function testTitleI18n()
+	public function testTitleI18n(): void
 	{
 		$app = new App([
 			'site' => [
@@ -420,7 +420,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame('Simple Page', $page->blueprint()->title());
 	}
 
-	public function testTitleI18nWithFallbackLanguage()
+	public function testTitleI18nWithFallbackLanguage(): void
 	{
 		$app = new App([
 			'site' => [
@@ -457,7 +457,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame('Thanks to fallback', $page->blueprint()->title());
 	}
 
-	public function testTitleI18nArray()
+	public function testTitleI18nArray(): void
 	{
 		$app = new App([
 			'site' => [
@@ -497,7 +497,7 @@ class PageBlueprintTest extends TestCase
 		$this->assertSame('My title', $page->blueprint()->title());
 	}
 
-	public function testTitleI18nArrayFallBack()
+	public function testTitleI18nArrayFallBack(): void
 	{
 		$app = new App([
 			'site' => [

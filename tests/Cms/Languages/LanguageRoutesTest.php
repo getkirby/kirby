@@ -32,7 +32,7 @@ class LanguageRoutesTest extends TestCase
 		]);
 	}
 
-	public function testFallback()
+	public function testFallback(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -52,7 +52,7 @@ class LanguageRoutesTest extends TestCase
 		$this->assertSame($app->language()->code(), 'de');
 	}
 
-	public function testNotNextWhenFalsyReturn()
+	public function testNotNextWhenFalsyReturn(): void
 	{
 		$a = $b = $c = $d = $e = 0;
 

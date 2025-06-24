@@ -12,7 +12,7 @@ class UserBlueprintTest extends TestCase
 		Blueprint::$loaded = [];
 	}
 
-	public function testTranslatedDescription()
+	public function testTranslatedDescription(): void
 	{
 		$blueprint = new UserBlueprint([
 			'model' => new User(['email' => 'test@getkirby.com']),
@@ -25,7 +25,7 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame('User', $blueprint->description());
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$blueprint = new UserBlueprint([
 			'model' => new User(['email' => 'test@getkirby.com'])
@@ -45,7 +45,7 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->options());
 	}
 
-	public function testTitleI18n()
+	public function testTitleI18n(): void
 	{
 		$app = new App([
 			'blueprints' => [
@@ -89,7 +89,7 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame('Editor role', $user->role()->title());
 	}
 
-	public function testTitleI18nWithFallbackLanguage()
+	public function testTitleI18nWithFallbackLanguage(): void
 	{
 		$app = new App([
 			'blueprints' => [
@@ -124,7 +124,7 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame('Editor role', $user->role()->title());
 	}
 
-	public function testTitleI18nArray()
+	public function testTitleI18nArray(): void
 	{
 		$app = new App([
 			'blueprints' => [
@@ -165,7 +165,7 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame('Editor role', $user->role()->title());
 	}
 
-	public function testTitleI18nArrayFallBack()
+	public function testTitleI18nArrayFallBack(): void
 	{
 		$app = new App([
 			'blueprints' => [

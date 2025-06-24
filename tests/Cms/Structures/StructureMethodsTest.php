@@ -18,7 +18,7 @@ class StructureMethodsTest extends TestCase
 		]);
 	}
 
-	public function testBlocksMethod()
+	public function testBlocksMethod(): void
 	{
 		$blocks = Structure::factory([]);
 		$this->assertSame('structure method', $blocks->test());

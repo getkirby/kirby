@@ -9,7 +9,7 @@ class FilePreviewUrlTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePreviewUrl';
 
-	public function testPreviewUrlRedirects()
+	public function testPreviewUrlRedirects(): void
 	{
 		$app = $this->app->clone([
 			'users' => [

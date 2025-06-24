@@ -22,7 +22,7 @@ class AppUsersTest extends TestCase
 		]);
 	}
 
-	public function testImpersonate()
+	public function testImpersonate(): void
 	{
 		$self = $this;
 
@@ -104,13 +104,13 @@ class AppUsersTest extends TestCase
 		$this->assertTrue($caught);
 	}
 
-	public function testImpersonateErrorMissingUser()
+	public function testImpersonateErrorMissingUser(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->app->impersonate('homer@simpsons.com');
 	}
 
-	public function testRolesSet()
+	public function testRolesSet(): void
 	{
 		$app = new App([
 			'roles' => [
@@ -125,7 +125,7 @@ class AppUsersTest extends TestCase
 		$this->assertSame('editor', $app->roles()->last()->name());
 	}
 
-	public function testRolesLoad()
+	public function testRolesLoad(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -137,7 +137,7 @@ class AppUsersTest extends TestCase
 		$this->assertSame('editor', $app->roles()->last()->name());
 	}
 
-	public function testRoleManual()
+	public function testRoleManual(): void
 	{
 		$app = new App([
 			'roles' => [
@@ -152,7 +152,7 @@ class AppUsersTest extends TestCase
 		$this->assertNull($app->role('something'));
 	}
 
-	public function testRoleFromUser()
+	public function testRoleFromUser(): void
 	{
 		$app = new App([
 			'roles' => [
@@ -175,7 +175,7 @@ class AppUsersTest extends TestCase
 		$this->assertSame('editor', $app->role(null, false)->name());
 	}
 
-	public function testRoleFromImpersonatedUser()
+	public function testRoleFromImpersonatedUser(): void
 	{
 		$app = new App([
 			'roles' => [
@@ -198,7 +198,7 @@ class AppUsersTest extends TestCase
 		$this->assertNull($app->role(null, false));
 	}
 
-	public function testUsersLoad()
+	public function testUsersLoad(): void
 	{
 		$app = $this->app->clone([
 			'roots' => [
@@ -210,7 +210,7 @@ class AppUsersTest extends TestCase
 		$this->assertSame('user@getkirby.com', $app->users()->first()->email());
 	}
 
-	public function testUsersSet()
+	public function testUsersSet(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -244,7 +244,7 @@ class AppUsersTest extends TestCase
 		]);
 	}
 
-	public function testUserFromBasicAuth()
+	public function testUserFromBasicAuth(): void
 	{
 		$app  = $this->basicAuthApp();
 		$auth = new BasicAuth(base64_encode('test@getkirby.com:correct-horse-battery-staple'));
@@ -254,7 +254,7 @@ class AppUsersTest extends TestCase
 		$this->assertSame('test@getkirby.com', $user->email());
 	}
 
-	public function testUserFromBasicAuthDisabled()
+	public function testUserFromBasicAuthDisabled(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Basic authentication is not activated');
@@ -271,7 +271,7 @@ class AppUsersTest extends TestCase
 		$user = $app->auth()->currentUserFromBasicAuth($auth);
 	}
 
-	public function testUserFromBasicAuthOverHttp()
+	public function testUserFromBasicAuthOverHttp(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Basic authentication is only allowed over HTTPS');
@@ -286,7 +286,7 @@ class AppUsersTest extends TestCase
 		$user = $app->auth()->currentUserFromBasicAuth($auth);
 	}
 
-	public function testUserFromBasicAuthWithInvalidHeader()
+	public function testUserFromBasicAuthWithInvalidHeader(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid authorization header');

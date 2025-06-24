@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use stdClass;
 
 class MockPageForStatsSection extends Page
 {
@@ -51,7 +52,7 @@ class StatsSectionTest extends TestCase
 		$this->model = new MockPageForStatsSection(['slug' => 'test']);
 	}
 
-	public function testHeadline()
+	public function testHeadline(): void
 	{
 		// single headline
 		$section = new Section('stats', [
@@ -75,7 +76,7 @@ class StatsSectionTest extends TestCase
 		$this->assertSame('Stats', $section->headline());
 	}
 
-	public function testReports()
+	public function testReports(): void
 	{
 		$section = new Section('stats', [
 			'name'     => 'test',
@@ -86,7 +87,7 @@ class StatsSectionTest extends TestCase
 		$this->assertSame($reports, $section->reports());
 	}
 
-	public function testReportsFromQuery()
+	public function testReportsFromQuery(): void
 	{
 		$section = new Section('stats', [
 			'name'     => 'test',
@@ -97,19 +98,19 @@ class StatsSectionTest extends TestCase
 		$this->assertSame($this->model->reports(), $section->reports());
 	}
 
-	public function testReportsFromInvalidValue()
+	public function testReportsFromInvalidValue(): void
 	{
 		$section = new Section('stats', [
 			'name'     => 'test',
 			'model'    => $this->model,
-			'reports'  => new \stdClass()
+			'reports'  => new stdClass()
 		]);
 
 		$this->assertSame([], $section->reports());
 	}
 
 
-	public function testReportsWithQueries()
+	public function testReportsWithQueries(): void
 	{
 		$section = new Section('stats', [
 			'name'     => 'test',
@@ -122,7 +123,7 @@ class StatsSectionTest extends TestCase
 		$this->assertSame([$this->model->report()], $section->reports());
 	}
 
-	public function testReportsWithInvalidQueries()
+	public function testReportsWithInvalidQueries(): void
 	{
 		$section = new Section('stats', [
 			'name'     => 'test',
@@ -135,7 +136,7 @@ class StatsSectionTest extends TestCase
 		$this->assertSame([], $section->reports());
 	}
 
-	public function testReportsTranslatedInfo()
+	public function testReportsTranslatedInfo(): void
 	{
 		$section = new Section('stats', [
 			'name'     => 'test',

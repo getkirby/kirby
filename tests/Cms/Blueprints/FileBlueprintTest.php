@@ -60,7 +60,7 @@ class FileBlueprintTest extends TestCase
 	}
 
 	#[DataProvider('acceptAttributeProvider')]
-	public function testAcceptAttribute($accept, $expected, $notExpected)
+	public function testAcceptAttribute($accept, $expected, $notExpected): void
 	{
 		Blueprint::$loaded['files/acceptAttribute'] = [
 			'accept' => $accept
@@ -83,7 +83,7 @@ class FileBlueprintTest extends TestCase
 		}
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -109,7 +109,7 @@ class FileBlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->options());
 	}
 
-	public function testTemplateFromContent()
+	public function testTemplateFromContent(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -126,7 +126,7 @@ class FileBlueprintTest extends TestCase
 		$this->assertSame('gallery', $file->template());
 	}
 
-	public function testCustomTemplate()
+	public function testCustomTemplate(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -141,7 +141,7 @@ class FileBlueprintTest extends TestCase
 		$this->assertSame('gallery', $file->template());
 	}
 
-	public function testDefaultBlueprint()
+	public function testDefaultBlueprint(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -158,7 +158,7 @@ class FileBlueprintTest extends TestCase
 		$this->assertInstanceOf(FileBlueprint::class, $blueprint);
 	}
 
-	public function testCustomBlueprint()
+	public function testCustomBlueprint(): void
 	{
 		new App([
 			'blueprints' => [
@@ -185,7 +185,7 @@ class FileBlueprintTest extends TestCase
 		$this->assertSame('Gallery', $blueprint->title());
 	}
 
-	public function testAccept()
+	public function testAccept(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -344,7 +344,7 @@ class FileBlueprintTest extends TestCase
 		], $blueprint->accept());
 	}
 
-	public function testAcceptMime()
+	public function testAcceptMime(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -419,7 +419,7 @@ class FileBlueprintTest extends TestCase
 		$this->assertSame('image/jpeg, application/pdf', $blueprint->acceptMime());
 	}
 
-	public function testExtendAccept()
+	public function testExtendAccept(): void
 	{
 		new App([
 			'roots' => [
