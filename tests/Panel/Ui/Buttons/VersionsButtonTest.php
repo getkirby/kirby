@@ -5,16 +5,12 @@ namespace Kirby\Panel\Ui\Buttons;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\VersionsButton
- */
+#[CoversClass(VersionsButton::class)]
 class VersionsButtonTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testButton()
+	public function testButton(): void
 	{
 		// needed to load the translations
 		new App();

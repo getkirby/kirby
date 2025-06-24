@@ -10,6 +10,7 @@ use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class FileForceLocked extends ModelFile
 {
@@ -22,9 +23,8 @@ class FileForceLocked extends ModelFile
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Panel\File
- */
+#[CoversClass(\Kirby\Panel\File::class)]
+#[CoversClass(Model::class)]
 class FileTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.File';
@@ -56,9 +56,6 @@ class FileTest extends TestCase
 		return new File($page->file('test.jpg'));
 	}
 
-	/**
-	 * @covers ::breadcrumb
-	 */
 	public function testBreadcrumbForSiteFile(): void
 	{
 		$site = new ModelSite([
@@ -76,9 +73,6 @@ class FileTest extends TestCase
 		], $file->breadcrumb());
 	}
 
-	/**
-	 * @covers ::breadcrumb
-	 */
 	public function testBreadcrumbForPageFile(): void
 	{
 		$page = new ModelPage([
@@ -104,9 +98,6 @@ class FileTest extends TestCase
 		], $file->breadcrumb());
 	}
 
-	/**
-	 * @covers ::breadcrumb
-	 */
 	public function testBreadcrumbForUserFile(): void
 	{
 		$user = new ModelUser([
@@ -130,10 +121,7 @@ class FileTest extends TestCase
 		], $file->breadcrumb());
 	}
 
-	/**
-	 * @covers ::buttons
-	 */
-	public function testButtons()
+	public function testButtons(): void
 	{
 		$this->assertSame([
 			'k-open-view-button',
@@ -142,10 +130,7 @@ class FileTest extends TestCase
 		], array_column($this->panel()->buttons(), 'component'));
 	}
 
-	/**
-	 * @covers ::dragText
-	 */
-	public function testDragText()
+	public function testDragText(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -175,10 +160,7 @@ class FileTest extends TestCase
 		$this->assertSame('(image: file://test-jpg)', $panel->dragText());
 	}
 
-	/**
-	 * @covers ::dragText
-	 */
-	public function testDragTextMarkdown()
+	public function testDragTextMarkdown(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -219,10 +201,7 @@ class FileTest extends TestCase
 		$this->assertSame('[test.pdf](//@/file/test-pdf)', $file->panel()->dragText());
 	}
 
-	/**
-	 * @covers ::dragText
-	 */
-	public function testDragTextCustomMarkdown()
+	public function testDragTextCustomMarkdown(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -267,10 +246,7 @@ class FileTest extends TestCase
 		$this->assertSame('![](//@/file/test-heic)', $panel->dragText());
 	}
 
-	/**
-	 * @covers ::dragText
-	 */
-	public function testDragTextCustomKirbytext()
+	public function testDragTextCustomKirbytext(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -314,10 +290,7 @@ class FileTest extends TestCase
 		$this->assertSame('(image: file://test-heic)', $panel->dragText());
 	}
 
-	/**
-	 * @covers ::dropdownOption
-	 */
-	public function testDropdownOption()
+	public function testDropdownOption(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test',
@@ -334,13 +307,7 @@ class FileTest extends TestCase
 		$this->assertSame('/pages/test/files/test.jpg', $option['link']);
 	}
 
-	/**
-	 * @covers ::imageDefaults
-	 * @covers ::imageColor
-	 * @covers ::imageIcon
-	 * @covers ::imageSource
-	 */
-	public function testImage()
+	public function testImage(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test'
@@ -358,11 +325,7 @@ class FileTest extends TestCase
 		$this->assertArrayHasKey('url', $image);
 	}
 
-	/**
-	 * @covers ::imageSource
-	 * @covers ::imageSrcset
-	 */
-	public function testImageCover()
+	public function testImageCover(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -400,10 +363,7 @@ class FileTest extends TestCase
 		], $panel->image(['cover' => true]));
 	}
 
-	/**
-	 * @covers ::imageSource
-	 */
-	public function testImageStringQuery()
+	public function testImageStringQuery(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -418,10 +378,7 @@ class FileTest extends TestCase
 		$this->assertNotEmpty($image);
 	}
 
-	/**
-	 * @covers ::isFocusable
-	 */
-	public function testIsFocusable()
+	public function testIsFocusable(): void
 	{
 		$this->app->clone([
 			'blueprints' => [
@@ -497,10 +454,7 @@ class FileTest extends TestCase
 		$this->assertFalse((new File($file))->isFocusable());
 	}
 
-	/**
-	 * @covers ::options
-	 */
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test'
@@ -530,10 +484,7 @@ class FileTest extends TestCase
 		$this->assertSame($expected, $panel->options());
 	}
 
-	/**
-	 * @covers ::options
-	 */
-	public function testOptionsWithLockedFile()
+	public function testOptionsWithLockedFile(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test'
@@ -580,10 +531,7 @@ class FileTest extends TestCase
 		$this->assertSame($expected, $panel->options(['delete']));
 	}
 
-	/**
-	 * @covers ::options
-	 */
-	public function testOptionsDefaultReplaceOption()
+	public function testOptionsDefaultReplaceOption(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test'
@@ -612,10 +560,7 @@ class FileTest extends TestCase
 		$this->assertSame($expected, $panel->options());
 	}
 
-	/**
-	 * @covers ::options
-	 */
-	public function testOptionsAllowedReplaceOption()
+	public function testOptionsAllowedReplaceOption(): void
 	{
 		$this->app->clone([
 			'blueprints' => [
@@ -655,10 +600,7 @@ class FileTest extends TestCase
 		$this->assertSame($expected, $panel->options());
 	}
 
-	/**
-	 * @covers ::options
-	 */
-	public function testOptionsDisabledReplaceOption()
+	public function testOptionsDisabledReplaceOption(): void
 	{
 		$this->app->clone([
 			'blueprints' => [
@@ -700,10 +642,7 @@ class FileTest extends TestCase
 		$this->assertSame($expected, $panel->options());
 	}
 
-	/**
-	 * @covers ::path
-	 */
-	public function testPath()
+	public function testPath(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -716,11 +655,7 @@ class FileTest extends TestCase
 		$this->assertSame('files/test.jpg', $panel->path());
 	}
 
-	/**
-	 * @covers ::pickerData
-	 * @covers \Kirby\Panel\Model::pickerData
-	 */
-	public function testPickerDataDefault()
+	public function testPickerDataDefault(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -742,10 +677,7 @@ class FileTest extends TestCase
 		$this->assertSame('test.jpg', $data['text']);
 	}
 
-	/**
-	 * @covers ::pickerData
-	 */
-	public function testPickerDataWithParams()
+	public function testPickerDataWithParams(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -772,10 +704,7 @@ class FileTest extends TestCase
 		$this->assertSame('From foo to the bar', $data['text']);
 	}
 
-	/**
-	 * @covers ::pickerData
-	 */
-	public function testPickerDataSameModel()
+	public function testPickerDataSameModel(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -794,10 +723,7 @@ class FileTest extends TestCase
 		$this->assertSame('test.jpg', $data['id']);
 	}
 
-	/**
-	 * @covers ::pickerData
-	 */
-	public function testPickerDataDifferentModel()
+	public function testPickerDataDifferentModel(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -816,10 +742,7 @@ class FileTest extends TestCase
 		$this->assertSame('(image: file://test-file)', $data['dragText']);
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -853,11 +776,7 @@ class FileTest extends TestCase
 		$this->assertArrayHasKey('versions', $props);
 	}
 
-	/**
-	 * @covers ::props
-	 * @covers ::prevNext
-	 */
-	public function testPropsPrevNext()
+	public function testPropsPrevNext(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -881,11 +800,7 @@ class FileTest extends TestCase
 		$this->assertNull($props['next']());
 	}
 
-	/**
-	 * @covers ::props
-	 * @covers ::prevNext
-	 */
-	public function testPropsPrevNextWithSort()
+	public function testPropsPrevNextWithSort(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -909,11 +824,7 @@ class FileTest extends TestCase
 		$this->assertNull($props['next']());
 	}
 
-	/**
-	 * @covers ::prevNext
-	 * @covers ::toPrevNextLink
-	 */
-	public function testPropsPrevNextWithTab()
+	public function testPropsPrevNextWithTab(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -933,10 +844,7 @@ class FileTest extends TestCase
 		$_GET = [];
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -994,10 +902,7 @@ class FileTest extends TestCase
 		$this->assertSame('/users/test/files/user-file.jpg', $panel->url(true));
 	}
 
-	/**
-	 * @covers ::prevNext
-	 */
-	public function testPrevNext()
+	public function testPrevNext(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -1021,10 +926,7 @@ class FileTest extends TestCase
 		$this->assertNull($prevNext['next']());
 	}
 
-	/**
-	 * @covers ::view
-	 */
-	public function testView()
+	public function testView(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',

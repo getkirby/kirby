@@ -6,17 +6,12 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Panel\Ui\FilePreview;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\FilePreviews\DefaultFilePreview
- * @covers ::__construct
- */
+#[CoversClass(DefaultFilePreview::class)]
 class DefaultFilePreviewTest extends TestCase
 {
-	/**
-	 * @covers ::accepts
-	 */
-	public function testAccepts()
+	public function testAccepts(): void
 	{
 		$page = new Page(['slug' => 'test']);
 		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
@@ -24,10 +19,7 @@ class DefaultFilePreviewTest extends TestCase
 		$this->assertTrue(DefaultFilePreview::accepts($file));
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$page    = new Page(['slug' => 'test']);
 		$file    = new File(['filename' => 'test.zip', 'parent' => $page]);
@@ -37,11 +29,7 @@ class DefaultFilePreviewTest extends TestCase
 		$this->assertSame('k-default-file-preview', $preview->component);
 	}
 
-	/**
-	 * @covers ::image
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$page      = new Page(['slug' => 'test']);
 		$file      = new File(['filename' => 'test.jpg', 'parent' => $page]);
