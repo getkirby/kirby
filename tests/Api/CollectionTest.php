@@ -9,7 +9,7 @@ use Kirby\TestCase;
 
 class CollectionTest extends TestCase
 {
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$api = new Api([]);
 		$collection = new Collection($api, [], []);
@@ -17,7 +17,7 @@ class CollectionTest extends TestCase
 		$this->assertInstanceOf(Collection::class, $collection);
 	}
 
-	public function testSelect()
+	public function testSelect(): void
 	{
 		$api = new Api([
 			'models' => [
@@ -52,7 +52,7 @@ class CollectionTest extends TestCase
 		$collection->select(0)->toArray();
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$api = new Api([
 			'models' => [
@@ -79,7 +79,7 @@ class CollectionTest extends TestCase
 		$this->assertSame(['value' => 'C'], $result[2]);
 	}
 
-	public function testToResponse()
+	public function testToResponse(): void
 	{
 		$api = new Api([
 			'models' => [
