@@ -130,7 +130,7 @@ class File extends Model
 	{
 		$file     = $this->model;
 		$request  = $file->kirby()->request();
-		$defaults = $request->get(['view', 'delete']);
+		$defaults = $request->get(['delete', 'sort', 'view']);
 		$options  = [...$defaults, ...$options];
 
 		$permissions = $this->options(['preview']);

@@ -37,8 +37,9 @@ export default {
 					},
 					options: this.$dropdown(file.link, {
 						query: {
-							view: "list",
-							delete: deletable
+							delete: deletable,
+							sort: sortable,
+							view: "list"
 						}
 					}),
 					selectable: this.isSelecting && deletable,
