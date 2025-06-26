@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\TestCase;
 
 class BlueprintExtendAndUnsetTest extends TestCase
@@ -67,7 +68,7 @@ class BlueprintExtendAndUnsetTest extends TestCase
 		]);
 	}
 
-	public function testExtendAndUnsetTab()
+	public function testExtendAndUnsetTab(): void
 	{
 		$blueprint = new Blueprint([
 			'title'  => 'extended',
@@ -84,7 +85,7 @@ class BlueprintExtendAndUnsetTest extends TestCase
 		$this->assertIsNotArray($blueprint->tab('seo'));
 	}
 
-	public function testExtendAndUnsetSection()
+	public function testExtendAndUnsetSection(): void
 	{
 		$blueprint = new Blueprint([
 			'title'  => 'extended',
@@ -101,7 +102,7 @@ class BlueprintExtendAndUnsetTest extends TestCase
 
 		try {
 			$sections = $blueprint->tab('content')['columns'][0]['sections'];
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->assertNull($e->getMessage(), 'Failed to getg sections.');
 		}
 
@@ -112,7 +113,7 @@ class BlueprintExtendAndUnsetTest extends TestCase
 		$this->assertArrayNotHasKey('files', $sections);
 	}
 
-	public function testExtendAndUnsetFields()
+	public function testExtendAndUnsetFields(): void
 	{
 		$blueprint = new Blueprint([
 			'title'  => 'extended',
@@ -129,7 +130,7 @@ class BlueprintExtendAndUnsetTest extends TestCase
 
 		try {
 			$fields = $blueprint->tab('seo')['columns'][0]['sections']['seo-fields']['fields'];
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->assertNull($e->getMessage(), 'Failed to get fields.');
 		}
 
@@ -140,7 +141,7 @@ class BlueprintExtendAndUnsetTest extends TestCase
 		$this->assertArrayNotHasKey('seoDescription', $fields);
 	}
 
-	public function testExtendAndUnsetColumns()
+	public function testExtendAndUnsetColumns(): void
 	{
 		$blueprint = new Blueprint([
 			'title'   => 'extended',

@@ -27,7 +27,7 @@ class VirtualPageWithPlainTextFieldTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.VirtualPageWithPlainTextField';
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$page = new VirtualPageWithPlainTextField([
 			'slug'    => 'test',

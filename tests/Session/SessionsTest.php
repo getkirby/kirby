@@ -8,12 +8,11 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 use TypeError;
 
-/**
- * @coversDefaultClass \Kirby\Session\Sessions
- */
+#[CoversClass(Sessions::class)]
 class SessionsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/store';
@@ -35,11 +34,7 @@ class SessionsTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::store
-	 */
-	public function testConstructorStores()
+	public function testConstructorStores(): void
 	{
 		// mock store
 		$this->assertSame($this->store, $this->sessions->store());
@@ -59,20 +54,13 @@ class SessionsTest extends TestCase
 		$this->assertSame($path, $pathProperty->getValue($sessions->store()));
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructorInvalidStore()
+	public function testConstructorInvalidStore(): void
 	{
 		$this->expectException(TypeError::class);
 		new Sessions(new InvalidSessionStore());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::cookieName
-	 */
-	public function testConstructorOptions()
+	public function testConstructorOptions(): void
 	{
 		$sessions = new Sessions(static::FIXTURES, [
 			'mode'       => 'header',
@@ -87,30 +75,21 @@ class SessionsTest extends TestCase
 		$this->assertSame('header', $modeProperty->getValue($sessions));
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructorInvalidMode()
+	public function testConstructorInvalidMode(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 
 		new Sessions(static::FIXTURES, ['mode' => 'invalid']);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructorInvalidCookieName()
+	public function testConstructorInvalidCookieName(): void
 	{
 		$this->expectException(TypeError::class);
 
 		new Sessions(static::FIXTURES, ['cookieName' => ['foo']]);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructorGarbageCollector()
+	public function testConstructorGarbageCollector(): void
 	{
 		// collect garbage every time
 		$this->store->collectedGarbage = false;
@@ -123,20 +102,14 @@ class SessionsTest extends TestCase
 		$this->assertFalse($this->store->collectedGarbage);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructorInvalidGcInterval()
+	public function testConstructorInvalidGcInterval(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 
 		new Sessions(static::FIXTURES, ['gcInterval' => 0]);
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreate()
+	public function testCreate(): void
 	{
 		$sessions = new Sessions($this->store, ['mode' => 'header']);
 		$session = $sessions->create();
@@ -164,10 +137,7 @@ class SessionsTest extends TestCase
 		$this->assertFalse($session->renewable());
 	}
 
-	/**
-	 * @covers ::get
-	 */
-	public function testGet()
+	public function testGet(): void
 	{
 		$sessions = new Sessions($this->store, ['mode' => 'header']);
 		$session = $sessions->get('9999999999.valid.' . $this->store->validKey);
@@ -184,10 +154,7 @@ class SessionsTest extends TestCase
 		$this->assertSame('someValue', $session2->data()->get('someKey'));
 	}
 
-	/**
-	 * @covers ::get
-	 */
-	public function testGetInvalid()
+	public function testGetInvalid(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.notFound');
@@ -195,10 +162,7 @@ class SessionsTest extends TestCase
 		$this->sessions->get('9999999999.doesNotExist.' . $this->store->validKey);
 	}
 
-	/**
-	 * @covers ::current
-	 */
-	public function testCurrent()
+	public function testCurrent(): void
 	{
 		Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
 		$this->setAuthorization('Session 9999999999.valid2.' . $this->store->validKey);
@@ -226,10 +190,7 @@ class SessionsTest extends TestCase
 		$this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
 	}
 
-	/**
-	 * @covers ::current
-	 */
-	public function testCurrentManualMode()
+	public function testCurrentManualMode(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.sessions.manualMode');
@@ -238,10 +199,7 @@ class SessionsTest extends TestCase
 		$sessions->current();
 	}
 
-	/**
-	 * @covers ::currentDetected
-	 */
-	public function testCurrentDetected()
+	public function testCurrentDetected(): void
 	{
 		Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
 		$this->setAuthorization('Session 9999999999.valid2.' . $this->store->validKey);
@@ -269,20 +227,14 @@ class SessionsTest extends TestCase
 		$this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
 	}
 
-	/**
-	 * @covers ::collectGarbage
-	 */
-	public function testCollectGarbage()
+	public function testCollectGarbage(): void
 	{
 		$this->store->collectedGarbage = false;
 		$this->sessions->collectGarbage();
 		$this->assertTrue($this->store->collectedGarbage);
 	}
 
-	/**
-	 * @covers ::updateCache
-	 */
-	public function testUpdateCache()
+	public function testUpdateCache(): void
 	{
 		$sessionsReflector = new ReflectionClass(Sessions::class);
 		$cache = $sessionsReflector->getProperty('cache');
@@ -302,10 +254,7 @@ class SessionsTest extends TestCase
 		$this->assertSame($session, $cache->getValue($sessions)['9999999999.valid.new-key']);
 	}
 
-	/**
-	 * @covers ::tokenFromCookie
-	 */
-	public function testTokenFromCookie()
+	public function testTokenFromCookie(): void
 	{
 		$reflector = new ReflectionClass(Sessions::class);
 		$tokenFromCookie = $reflector->getMethod('tokenFromCookie');
@@ -320,10 +269,7 @@ class SessionsTest extends TestCase
 		Cookie::remove('kirby_session');
 	}
 
-	/**
-	 * @covers ::tokenFromHeader
-	 */
-	public function testTokenFromHeader()
+	public function testTokenFromHeader(): void
 	{
 		$reflector = new ReflectionClass(Sessions::class);
 		$tokenFromHeader = $reflector->getMethod('tokenFromHeader');

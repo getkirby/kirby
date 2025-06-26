@@ -5,11 +5,9 @@ namespace Kirby\Panel\Ui\Buttons;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Panel\Areas\AreaTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\ViewButton
- * @covers ::__construct
- */
+#[CoversClass(ViewButton::class)]
 class ViewButtonTest extends AreaTestCase
 {
 	public function setUp(): void
@@ -19,10 +17,7 @@ class ViewButtonTest extends AreaTestCase
 		$this->login();
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testAttrs()
+	public function testAttrs(): void
 	{
 		$button = new ViewButton(
 			text: 'Attrs',
@@ -39,10 +34,7 @@ class ViewButtonTest extends AreaTestCase
 		], array_filter($button->props()));
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryFromClosure()
+	public function testFactoryFromClosure(): void
 	{
 		$button = ViewButton::factory(
 			button: fn (string $name) => [
@@ -56,10 +48,7 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame('k-foo-view-button', $button->component);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryFromDefinition()
+	public function testFactoryFromDefinition(): void
 	{
 		$button = ViewButton::factory(
 			button: ['component' => 'k-test-view-button'],
@@ -70,10 +59,7 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame('k-test-view-button', $button->component);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryFromStringName()
+	public function testFactoryFromStringName(): void
 	{
 		$app = $this->app->clone([
 			'areas' => [
@@ -102,10 +88,7 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertNull($button);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryWithNameArg()
+	public function testFactoryWithNameArg(): void
 	{
 		$button = ViewButton::factory(
 			button: [],
@@ -117,10 +100,7 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame('k-foo-view-button', $button->component);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryFromBooleanButton()
+	public function testFactoryFromBooleanButton(): void
 	{
 		// Default
 		$button = ViewButton::factory(
@@ -140,9 +120,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertNull($button);
 	}
 
-	/**
-	 * @covers ::find
-	 */
 	public function testFind(): void
 	{
 		$app = $this->app->clone([
@@ -172,9 +149,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame(['component' => 'k-foo-view-button'], $result);
 	}
 
-	/**
-	 * @covers ::normalize
-	 */
 	public function testNormalize(): void
 	{
 		$result = ViewButton::normalize([
@@ -197,10 +171,7 @@ class ViewButtonTest extends AreaTestCase
 		], $result);
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$component = new ViewButton(
 			icon: 'smile',
@@ -234,10 +205,7 @@ class ViewButtonTest extends AreaTestCase
 		], $component->props());
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testPropsWithQueries()
+	public function testPropsWithQueries(): void
 	{
 		$model     = new Page(['slug' => 'test']);
 		$component = new ViewButton(
@@ -251,9 +219,6 @@ class ViewButtonTest extends AreaTestCase
 		$this->assertSame('https://getkirby.com/test', $props['link']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
 	public function testResolve(): void
 	{
 		$test   = $this;

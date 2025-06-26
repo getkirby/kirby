@@ -37,7 +37,7 @@ class FilesSectionTest extends TestCase
 		return $this->app;
 	}
 
-	public function testAccept()
+	public function testAccept(): void
 	{
 		$section = new Section('files', [
 			'name'     => 'test',
@@ -48,7 +48,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('*', $section->accept());
 	}
 
-	public function testBatchDefault()
+	public function testBatchDefault(): void
 	{
 		$section = new Section('files', [
 			'name'  => 'test',
@@ -59,7 +59,7 @@ class FilesSectionTest extends TestCase
 		$this->assertFalse($section->toArray()['options']['batch']);
 	}
 
-	public function testBatchDisabled()
+	public function testBatchDisabled(): void
 	{
 		$section = new Section('files', [
 			'name'  => 'test',
@@ -71,7 +71,7 @@ class FilesSectionTest extends TestCase
 		$this->assertFalse($section->toArray()['options']['batch']);
 	}
 
-	public function testBatchEnabled()
+	public function testBatchEnabled(): void
 	{
 		$section = new Section('files', [
 			'name'  => 'test',
@@ -83,7 +83,7 @@ class FilesSectionTest extends TestCase
 		$this->assertTrue($section->toArray()['options']['batch']);
 	}
 
-	public function testHeadline()
+	public function testHeadline(): void
 	{
 		// single headline
 		$section = new Section('files', [
@@ -107,7 +107,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('Files', $section->headline());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',
@@ -148,7 +148,7 @@ class FilesSectionTest extends TestCase
 		$this->assertTrue($section->upload()['multiple']);
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$app = new App([
 			'site' => [
@@ -186,7 +186,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('pages/b/files', $section->upload()['api']);
 	}
 
-	public function testParentCollectionFail()
+	public function testParentCollectionFail(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The parent for the section "files" has to be a page, site or user object');
@@ -211,7 +211,7 @@ class FilesSectionTest extends TestCase
 		$section->parentModel();
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$section = new Section('files', [
 			'name'  => 'test',
@@ -222,7 +222,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('Test', $section->empty());
 	}
 
-	public function testTranslatedEmpty()
+	public function testTranslatedEmpty(): void
 	{
 		$section = new Section('files', [
 			'name'  => 'test',
@@ -233,7 +233,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('Test', $section->empty());
 	}
 
-	public function testDragText()
+	public function testDragText(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',
@@ -259,7 +259,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('(image: file://test-a)', $data[0]['dragText']);
 	}
 
-	public function testDragTextWithDifferentParent()
+	public function testDragTextWithDifferentParent(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -295,7 +295,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('(image: file://test-file-a)', $data[0]['dragText']);
 	}
 
-	public function testHelp()
+	public function testHelp(): void
 	{
 		// single help
 		$section = new Section('files', [
@@ -319,7 +319,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('<p>Information</p>', $section->help());
 	}
 
-	public function testSortBy()
+	public function testSortBy(): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -383,7 +383,7 @@ class FilesSectionTest extends TestCase
 		setlocale(LC_ALL, $locale);
 	}
 
-	public function testSortable()
+	public function testSortable(): void
 	{
 		$section = new Section('files', [
 			'name'  => 'test',
@@ -393,7 +393,7 @@ class FilesSectionTest extends TestCase
 		$this->assertTrue($section->sortable());
 	}
 
-	public function testDisableSortable()
+	public function testDisableSortable(): void
 	{
 		$section = new Section('files', [
 			'name'     => 'test',
@@ -404,7 +404,7 @@ class FilesSectionTest extends TestCase
 		$this->assertFalse($section->sortable());
 	}
 
-	public function testDisableSortableWhenSortBy()
+	public function testDisableSortableWhenSortBy(): void
 	{
 		$section = new Section('files', [
 			'name'   => 'test',
@@ -415,7 +415,7 @@ class FilesSectionTest extends TestCase
 		$this->assertFalse($section->sortable());
 	}
 
-	public function testFlip()
+	public function testFlip(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',
@@ -443,7 +443,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('a.jpg', $section->data()[2]['filename']);
 	}
 
-	public function testTranslatedInfo()
+	public function testTranslatedInfo(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',
@@ -467,7 +467,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('en: test', $section->data()[1]['info']);
 	}
 
-	public function testTranslatedText()
+	public function testTranslatedText(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',
@@ -491,7 +491,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('en: b.jpg', $section->data()[1]['text']);
 	}
 
-	public function testSearchDefault()
+	public function testSearchDefault(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',
@@ -510,7 +510,7 @@ class FilesSectionTest extends TestCase
 		$this->assertCount(3, $section->data());
 	}
 
-	public function testSearchWithNoQuery()
+	public function testSearchWithNoQuery(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',
@@ -530,7 +530,7 @@ class FilesSectionTest extends TestCase
 		$this->assertCount(3, $section->data());
 	}
 
-	public function testSearchWithQuery1()
+	public function testSearchWithQuery1(): void
 	{
 		$app = $this->app->clone([
 			'request' => [
@@ -559,7 +559,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('mount-bike.jpg', $section->data()[1]['filename']);
 	}
 
-	public function testSearchWithQuery2()
+	public function testSearchWithQuery2(): void
 	{
 		$app = $this->app->clone([
 			'request' => [
@@ -588,7 +588,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('mountain.jpg', $section->data()[1]['filename']);
 	}
 
-	public function testSearchWithQuery3()
+	public function testSearchWithQuery3(): void
 	{
 		$app = $this->app->clone([
 			'request' => [
@@ -617,7 +617,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('mountain.jpg', $section->data()[0]['filename']);
 	}
 
-	public function testSearchWithFlip()
+	public function testSearchWithFlip(): void
 	{
 		$app = $this->app->clone([
 			'request' => [
@@ -647,7 +647,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('mount-bike.jpg', $section->data()[1]['filename']);
 	}
 
-	public function testSearchWithSortBy()
+	public function testSearchWithSortBy(): void
 	{
 		$app = $this->app->clone([
 			'request' => [
@@ -677,7 +677,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('mount-bike.jpg', $section->data()[1]['filename']);
 	}
 
-	public function testTableLayout()
+	public function testTableLayout(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',
@@ -704,7 +704,7 @@ class FilesSectionTest extends TestCase
 		], $item['title']);
 	}
 
-	public function testTableLayoutWithCustomColumns()
+	public function testTableLayoutWithCustomColumns(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',
@@ -731,7 +731,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('Alt test', $section->data()[0]['alt']);
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',
@@ -754,7 +754,7 @@ class FilesSectionTest extends TestCase
 		$this->assertNull($options['link']);
 	}
 
-	public function testSort()
+	public function testSort(): void
 	{
 		$model = new Page([
 			'slug'  => 'test',

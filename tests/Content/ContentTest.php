@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Content::class)]
 class ContentTest extends TestCase
 {
-	public function testCall()
+	public function testCall(): void
 	{
 		$content = new Content([
 			'a' => 'A',
@@ -25,7 +25,7 @@ class ContentTest extends TestCase
 		$this->assertSame('MIXED', $content->mIXEd()->value());
 	}
 
-	public function testData()
+	public function testData(): void
 	{
 		$content = new Content($data = [
 			'a' => 'A',
@@ -35,7 +35,7 @@ class ContentTest extends TestCase
 		$this->assertSame($data, $content->data());
 	}
 
-	public function testFields()
+	public function testFields(): void
 	{
 		$content = new Content([
 			'a' => 'A',
@@ -49,7 +49,7 @@ class ContentTest extends TestCase
 		$this->assertSame('B', $fields['b']->value());
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$content = new Content([
 			'a' => 'A',
@@ -64,7 +64,7 @@ class ContentTest extends TestCase
 		$this->assertSame(null, $content->get('C')->value(), 'Non-existing field should have a null value');
 	}
 
-	public function testGetWithoutKey()
+	public function testGetWithoutKey(): void
 	{
 		$content = new Content([
 			'a' => 'A',
@@ -78,7 +78,7 @@ class ContentTest extends TestCase
 		$this->assertSame('B', $fields['b']->value());
 	}
 
-	public function testHas()
+	public function testHas(): void
 	{
 		$content = new Content([
 			'a' => 'A',
@@ -93,7 +93,7 @@ class ContentTest extends TestCase
 		$this->assertFalse($content->has('C'));
 	}
 
-	public function testKeys()
+	public function testKeys(): void
 	{
 		$content = new Content([
 			'a' => 'A',
@@ -103,7 +103,7 @@ class ContentTest extends TestCase
 		$this->assertSame(['a', 'b'], $content->keys());
 	}
 
-	public function testKeysNormalized()
+	public function testKeysNormalized(): void
 	{
 		$content = new Content([
 			'a' => 'A',
@@ -113,7 +113,7 @@ class ContentTest extends TestCase
 		$this->assertSame(['a', 'b'], $content->keys());
 	}
 
-	public function testKeysNotNormalized()
+	public function testKeysNotNormalized(): void
 	{
 		$content = new Content(
 			data: [
@@ -126,7 +126,7 @@ class ContentTest extends TestCase
 		$this->assertSame(['a', 'B'], $content->keys());
 	}
 
-	public function testNot()
+	public function testNot(): void
 	{
 		$content = new Content([
 			'a' => 'A',
@@ -141,7 +141,7 @@ class ContentTest extends TestCase
 		$this->assertSame(['a'], $copy->keys());
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$parent  = new Page(['slug' => 'parent']);
 		$content = new Content([
@@ -152,7 +152,7 @@ class ContentTest extends TestCase
 		$this->assertSame($parent, $content->parent());
 	}
 
-	public function testParentWithoutValue()
+	public function testParentWithoutValue(): void
 	{
 		$content = new Content([
 			'a' => 'A',
@@ -162,7 +162,7 @@ class ContentTest extends TestCase
 		$this->assertNull($content->parent());
 	}
 
-	public function testSetParent()
+	public function testSetParent(): void
 	{
 		$parentA = new Page(['slug' => 'parent-a']);
 		$parentB = new Page(['slug' => 'parent-b']);
@@ -179,7 +179,7 @@ class ContentTest extends TestCase
 		$this->assertSame($parentB, $content->parent());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$content = new Content($data = [
 			'a' => 'A',
@@ -189,7 +189,7 @@ class ContentTest extends TestCase
 		$this->assertSame($data, $content->toArray());
 	}
 
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		$content = new Content([
 			'a' => 'A',

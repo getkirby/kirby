@@ -25,7 +25,7 @@ class UsersApiCollectionTest extends ApiCollectionTestCase
 		Dir::make(static::TMP);
 	}
 
-	public function testDefaultCollection()
+	public function testDefaultCollection(): void
 	{
 		$collection = $this->api->collection('users');
 		$result     = $collection->toArray();
@@ -35,7 +35,7 @@ class UsersApiCollectionTest extends ApiCollectionTestCase
 		$this->assertSame('b@getkirby.com', $result[1]['email']);
 	}
 
-	public function testPassedCollection()
+	public function testPassedCollection(): void
 	{
 		$collection = $this->api->collection('users', $this->app->users()->offset(1));
 		$result     = $collection->toArray();

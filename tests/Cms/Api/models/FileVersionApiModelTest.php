@@ -35,7 +35,7 @@ class FileVersionApiModelTest extends ApiModelTestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testExists()
+	public function testExists(): void
 	{
 		$version = new FileVersion([
 			'original' => $this->file,
@@ -45,7 +45,7 @@ class FileVersionApiModelTest extends ApiModelTestCase
 		$this->assertAttr($version, 'exists', false);
 	}
 
-	public function testType()
+	public function testType(): void
 	{
 		$version = new FileVersion([
 			'original' => $this->file,
@@ -55,7 +55,7 @@ class FileVersionApiModelTest extends ApiModelTestCase
 		$this->assertAttr($version, 'type', 'image');
 	}
 
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$version = new FileVersion([
 			'original' => $this->file,

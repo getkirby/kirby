@@ -98,7 +98,7 @@ class SiteDropdownsTest extends AreaTestCase
 		$this->assertSame('Open', $preview['text']);
 	}
 
-	public function testPageLanguageDropdown()
+	public function testPageLanguageDropdown(): void
 	{
 		$this->app([
 			'site' => [
@@ -122,7 +122,7 @@ class SiteDropdownsTest extends AreaTestCase
 		$this->assertLanguageDropdown('pages/test/languages');
 	}
 
-	public function testSiteLanguageDropdown()
+	public function testSiteLanguageDropdown(): void
 	{
 		$this->app([
 			'languages' => [

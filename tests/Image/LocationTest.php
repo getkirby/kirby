@@ -3,7 +3,9 @@
 namespace Kirby\Image;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Location::class)]
 class LocationTest extends TestCase
 {
 	protected function _exif(): array
@@ -16,14 +18,14 @@ class LocationTest extends TestCase
 		];
 	}
 
-	public function testLatLng()
+	public function testLatLng(): void
 	{
 		$camera = new Location($this->_exif());
 		$this->assertSame(50.819053333333336, $camera->lat());
 		$this->assertSame(-0.016666666666666666, $camera->lng());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$camera = new Location($this->_exif());
 		$array  = [
@@ -34,7 +36,7 @@ class LocationTest extends TestCase
 		$this->assertSame($array, $camera->__debugInfo());
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		$camera = new Location($this->_exif());
 		$this->assertStringContainsString('50.8190533333', (string)$camera);

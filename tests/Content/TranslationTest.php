@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Translation::class)]
 class TranslationTest extends TestCase
 {
-	public function testCodeAndId()
+	public function testCodeAndId(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -35,7 +35,7 @@ class TranslationTest extends TestCase
 		$this->assertSame('de', $translationDE->id());
 	}
 
-	public function testContentMultiLanguage()
+	public function testContentMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -57,7 +57,7 @@ class TranslationTest extends TestCase
 		$this->assertSame($expected['de']['content'], $translationDE->content());
 	}
 
-	public function testContentSingleLanguage()
+	public function testContentSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -72,7 +72,7 @@ class TranslationTest extends TestCase
 		$this->assertSame($expected['content'], $translation->content());
 	}
 
-	public function testContentFileMultiLanguage()
+	public function testContentFileMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -85,7 +85,7 @@ class TranslationTest extends TestCase
 		$this->assertSame($this->model->root() . '/article.en.txt', $translation->version()->contentFile());
 	}
 
-	public function testContentFileSingleLanguage()
+	public function testContentFileSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -98,7 +98,7 @@ class TranslationTest extends TestCase
 		$this->assertSame($this->model->root() . '/article.txt', $translation->version()->contentFile());
 	}
 
-	public function testCreate()
+	public function testCreate(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -118,7 +118,7 @@ class TranslationTest extends TestCase
 		$this->assertTrue($translation->exists());
 	}
 
-	public function testCreateWithSlug()
+	public function testCreateWithSlug(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -136,7 +136,7 @@ class TranslationTest extends TestCase
 		$this->assertSame('foo', $translation->slug());
 	}
 
-	public function testExistsMultiLanguage()
+	public function testExistsMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -166,7 +166,7 @@ class TranslationTest extends TestCase
 		$this->assertTrue($translationDE->exists());
 	}
 
-	public function testExistsSingleLanguage()
+	public function testExistsSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -180,7 +180,7 @@ class TranslationTest extends TestCase
 		$this->assertTrue($translation->exists());
 	}
 
-	public function testIsDefault()
+	public function testIsDefault(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -200,7 +200,7 @@ class TranslationTest extends TestCase
 		$this->assertFalse($de->language()->isDefault());
 	}
 
-	public function testLanguage()
+	public function testLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -220,7 +220,7 @@ class TranslationTest extends TestCase
 		$this->assertSame($languageDE, $translationDE->language());
 	}
 
-	public function testModel()
+	public function testModel(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -233,7 +233,7 @@ class TranslationTest extends TestCase
 		$this->assertSame($this->model, $translation->model());
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -249,7 +249,7 @@ class TranslationTest extends TestCase
 		$translation->parent();
 	}
 
-	public function testSlugExists()
+	public function testSlugExists(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -267,7 +267,7 @@ class TranslationTest extends TestCase
 		$this->assertSame('german-slug', $translation->slug());
 	}
 
-	public function testSlugNotExists()
+	public function testSlugNotExists(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -284,7 +284,7 @@ class TranslationTest extends TestCase
 		$this->assertNull($translation->slug());
 	}
 
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -300,7 +300,7 @@ class TranslationTest extends TestCase
 		$translation->update();
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -320,7 +320,7 @@ class TranslationTest extends TestCase
 		$this->assertSame($expected, $translation->toArray());
 	}
 
-	public function testVersion()
+	public function testVersion(): void
 	{
 		$this->setUpMultiLanguage();
 

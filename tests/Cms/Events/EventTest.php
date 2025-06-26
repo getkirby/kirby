@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Event::class)]
 class EventTest extends TestCase
 {
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$args = ['arg1' => 'Arg1', 'arg2' => 123];
 
@@ -62,7 +62,7 @@ class EventTest extends TestCase
 		$this->assertSame($args, $event->arguments());
 	}
 
-	public function testArgument()
+	public function testArgument(): void
 	{
 		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
 
@@ -75,7 +75,7 @@ class EventTest extends TestCase
 		$this->assertNull($event->arg3());
 	}
 
-	public function testCall()
+	public function testCall(): void
 	{
 		$self     = $this;
 		$eventObj = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
@@ -105,7 +105,7 @@ class EventTest extends TestCase
 		$this->assertSame('another value', $result);
 	}
 
-	public function testNameWildcards()
+	public function testNameWildcards(): void
 	{
 		// event with full name
 		$event = new Event('page.create:after', []);
@@ -174,7 +174,7 @@ class EventTest extends TestCase
 		$this->assertSame([], $event->nameWildcards());
 	}
 
-	public function testExport()
+	public function testExport(): void
 	{
 		$name       = 'page.create:after';
 		$arguments  = ['arg1' => 'Arg1', 'arg2' => 123];
@@ -187,7 +187,7 @@ class EventTest extends TestCase
 		$this->assertSame(compact('name', 'arguments'), $event->__debugInfo());
 	}
 
-	public function testUpdateArgument()
+	public function testUpdateArgument(): void
 	{
 		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
 
@@ -200,7 +200,7 @@ class EventTest extends TestCase
 		$this->assertSame(456, $event->arg2());
 	}
 
-	public function testUpdateArgumentDoesNotExist()
+	public function testUpdateArgumentDoesNotExist(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The argument arg3 does not exist');
@@ -210,7 +210,7 @@ class EventTest extends TestCase
 		$event->updateArgument('arg3', 'New Arg3');
 	}
 
-	public function testUpdateArgumentWithNullValue()
+	public function testUpdateArgumentWithNullValue(): void
 	{
 		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
 
@@ -219,7 +219,7 @@ class EventTest extends TestCase
 		$this->assertSame('Arg1', $event->argument('arg1'));
 	}
 
-	public function testUpdateArgumentWithNextModel()
+	public function testUpdateArgumentWithNextModel(): void
 	{
 		$mutablePage = new Page(['slug' => 'test']);
 

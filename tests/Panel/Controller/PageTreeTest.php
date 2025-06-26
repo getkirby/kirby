@@ -4,11 +4,9 @@ namespace Kirby\Panel\Controller;
 
 use Kirby\Cms\App;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Controller\PageTree
- * @covers ::__construct
- */
+#[CoversClass(PageTree::class)]
 class PageTreeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.PageTree';
@@ -78,9 +76,6 @@ class PageTreeTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::children
-	 */
 	public function testChildrenForSite(): void
 	{
 		$children = $this->tree->children(null);
@@ -89,9 +84,6 @@ class PageTreeTest extends TestCase
 		$this->assertSame('site://', $children[0]['value']);
 	}
 
-	/**
-	 * @covers ::children
-	 */
 	public function testChildrenForPage(): void
 	{
 		$children = $this->tree->children('/pages/articles');
@@ -105,9 +97,6 @@ class PageTreeTest extends TestCase
 		$this->assertFalse($children[2]['disabled']);
 	}
 
-	/**
-	 * @covers ::children
-	 */
 	public function testChildrenWithMoving(): void
 	{
 		$children = $this->tree->children(
@@ -124,9 +113,6 @@ class PageTreeTest extends TestCase
 		$this->assertTrue($children[2]['disabled']);
 	}
 
-	/**
-	 * @covers ::entry
-	 */
 	public function testEntryWithSite(): void
 	{
 		$entry = $this->tree->entry($this->app->site());
@@ -143,9 +129,6 @@ class PageTreeTest extends TestCase
 		$this->assertSame('site://', $entry['value']);
 	}
 
-	/**
-	 * @covers ::entry
-	 */
 	public function testEntryWithPage(): void
 	{
 		$entry = $this->tree->entry($this->app->page('articles'));
@@ -162,9 +145,6 @@ class PageTreeTest extends TestCase
 		$this->assertSame('page://articles', $entry['value']);
 	}
 
-	/**
-	 * @covers ::entry
-	 */
 	public function testEntryWithMoving(): void
 	{
 		$entry = $this->tree->entry(
@@ -182,9 +162,6 @@ class PageTreeTest extends TestCase
 		$this->assertTrue($entry['disabled']);
 	}
 
-	/**
-	 * @covers ::entry
-	 */
 	public function testEntryWhenUuidsDisabled(): void
 	{
 		$this->app = $this->app->clone([
@@ -202,9 +179,6 @@ class PageTreeTest extends TestCase
 		$this->assertSame('articles', $entry['value']);
 	}
 
-	/**
-	 * @covers ::parents
-	 */
 	public function testParents(): void
 	{
 		$parents = $this->tree->parents(
@@ -228,9 +202,6 @@ class PageTreeTest extends TestCase
 		], $parents['data']);
 	}
 
-	/**
-	 * @covers ::parents
-	 */
 	public function testParentsWhenUuidsDisabled(): void
 	{
 		$this->app = $this->app->clone([

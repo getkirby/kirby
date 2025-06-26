@@ -21,7 +21,7 @@ class BlueprintPresetsTest extends TestCase
 	/**
 	 * Page
 	 */
-	public function testPagePresetDefault()
+	public function testPagePresetDefault(): void
 	{
 		$preset = $this->load('page');
 
@@ -56,7 +56,7 @@ class BlueprintPresetsTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
-	public function testPagePresetNoFiles()
+	public function testPagePresetNoFiles(): void
 	{
 		$preset = $this->load('page');
 
@@ -88,7 +88,7 @@ class BlueprintPresetsTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
-	public function testPagePresetNoPages()
+	public function testPagePresetNoPages(): void
 	{
 		$preset = $this->load('page');
 
@@ -119,7 +119,7 @@ class BlueprintPresetsTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
-	public function testPagePresetNoSidebar()
+	public function testPagePresetNoSidebar(): void
 	{
 		$preset = $this->load('page');
 
@@ -136,7 +136,7 @@ class BlueprintPresetsTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
-	public function testPagePresetCustomSidebar()
+	public function testPagePresetCustomSidebar(): void
 	{
 		$preset = $this->load('page');
 
@@ -174,7 +174,7 @@ class BlueprintPresetsTest extends TestCase
 	/**
 	 * Pages
 	 */
-	public function testPagesPresetDefault()
+	public function testPagesPresetDefault(): void
 	{
 		$preset = $this->load('pages');
 
@@ -201,7 +201,7 @@ class BlueprintPresetsTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
-	public function testPagesPresetWithUnlisted()
+	public function testPagesPresetWithUnlisted(): void
 	{
 		$preset = $this->load('pages');
 
@@ -239,7 +239,7 @@ class BlueprintPresetsTest extends TestCase
 	/**
 	 * Files
 	 */
-	public function testFilesPresetDefault()
+	public function testFilesPresetDefault(): void
 	{
 		$preset = $this->load('files');
 
@@ -262,7 +262,7 @@ class BlueprintPresetsTest extends TestCase
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
-	public function testFilesPresetWithLabel()
+	public function testFilesPresetWithLabel(): void
 	{
 		$preset = $this->load('files');
 
@@ -287,7 +287,7 @@ class BlueprintPresetsTest extends TestCase
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
-	public function testFilesPresetWithLayout()
+	public function testFilesPresetWithLayout(): void
 	{
 		$preset = $this->load('files');
 
@@ -312,7 +312,7 @@ class BlueprintPresetsTest extends TestCase
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
-	public function testFilesPresetWithTemplate()
+	public function testFilesPresetWithTemplate(): void
 	{
 		$preset = $this->load('files');
 
@@ -337,7 +337,7 @@ class BlueprintPresetsTest extends TestCase
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
-	public function testFilesPresetWithImage()
+	public function testFilesPresetWithImage(): void
 	{
 		$preset = $this->load('files');
 

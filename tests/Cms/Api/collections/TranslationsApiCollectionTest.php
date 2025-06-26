@@ -6,7 +6,7 @@ use Kirby\Cms\Api\ApiCollectionTestCase;
 
 class TranslationsApiCollectionTest extends ApiCollectionTestCase
 {
-	public function testCollection()
+	public function testCollection(): void
 	{
 		$collection = $this->api->collection('translations', $this->app->translations()->filter('id', 'en'));
 		$result     = $collection->toArray();

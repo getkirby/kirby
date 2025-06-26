@@ -43,7 +43,7 @@ class PagesFieldTest extends TestCase
 		return $this->app->page('a');
 	}
 
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('pages', [
 			'model' => $this->model()
@@ -58,7 +58,7 @@ class PagesFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testValue()
+	public function testValue(): void
 	{
 		$field = $this->field('pages', [
 			'model' => $this->model(),
@@ -80,7 +80,7 @@ class PagesFieldTest extends TestCase
 		$this->assertSame($expected, $ids);
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('pages', [
 			'model' => $this->model(),
@@ -97,7 +97,7 @@ class PagesFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('pages', [
 			'model' => $this->model(),
@@ -113,7 +113,7 @@ class PagesFieldTest extends TestCase
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$field = $this->field('pages', [
 			'model' => new Page(['slug' => 'test']),
@@ -123,7 +123,7 @@ class PagesFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
-	public function testTranslatedEmpty()
+	public function testTranslatedEmpty(): void
 	{
 		$field = $this->field('pages', [
 			'model' => new Page(['slug' => 'test']),
@@ -133,7 +133,7 @@ class PagesFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
-	public function testRequiredProps()
+	public function testRequiredProps(): void
 	{
 		$field = $this->field('pages', [
 			'model'    => new Page(['slug' => 'test']),
@@ -144,7 +144,7 @@ class PagesFieldTest extends TestCase
 		$this->assertSame(1, $field->min());
 	}
 
-	public function testRequiredInvalid()
+	public function testRequiredInvalid(): void
 	{
 		$field = $this->field('pages', [
 			'model'    => new Page(['slug' => 'test']),
@@ -154,7 +154,7 @@ class PagesFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testRequiredValid()
+	public function testRequiredValid(): void
 	{
 		$field = $this->field('pages', [
 			'model'    => new Page(['slug' => 'test']),
@@ -167,7 +167,7 @@ class PagesFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testApi()
+	public function testApi(): void
 	{
 		$app = new App([
 			'roots' => [

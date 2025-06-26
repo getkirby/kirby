@@ -7,6 +7,7 @@ use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
 use Kirby\Filesystem\Dir;
 use Kirby\Session\Session;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class MockChallenge extends Challenge
 {
@@ -19,9 +20,7 @@ class MockChallenge extends Challenge
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth\Challenge
- */
+#[CoversClass(Challenge::class)]
 class ChallengeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth.Challenge';
@@ -50,10 +49,7 @@ class ChallengeTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::verify
-	 */
-	public function testVerify()
+	public function testVerify(): void
 	{
 		$user = $this->app->user('homer@simpsons.com');
 

@@ -61,7 +61,7 @@ class FilesFieldTest extends TestCase
 		return $this->app->page('test');
 	}
 
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('files', [
 			'model' => $this->model()
@@ -78,7 +78,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame('uuid', $field->store());
 	}
 
-	public function testValue()
+	public function testValue(): void
 	{
 		$field = $this->field('files', [
 			'model' => $this->model(),
@@ -100,7 +100,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame($expected, $ids);
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('files', [
 			'model' => $this->model(),
@@ -117,7 +117,7 @@ class FilesFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('files', [
 			'model' => $this->model(),
@@ -133,7 +133,7 @@ class FilesFieldTest extends TestCase
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
-	public function testFilesInDraft()
+	public function testFilesInDraft(): void
 	{
 		$field = $this->field('files', [
 			'model' => $this->app->page('test-draft'),
@@ -155,7 +155,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame($expected, $ids);
 	}
 
-	public function testQueryWithPageParent()
+	public function testQueryWithPageParent(): void
 	{
 		$field = $this->field('files', [
 			'model' => new Page(['slug' => 'test']),
@@ -164,7 +164,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame('page.files', $field->query());
 	}
 
-	public function testQueryWithSiteParent()
+	public function testQueryWithSiteParent(): void
 	{
 		$field = $this->field('files', [
 			'model' => new Site(),
@@ -173,7 +173,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame('site.files', $field->query());
 	}
 
-	public function testQueryWithUserParent()
+	public function testQueryWithUserParent(): void
 	{
 		$field = $this->field('files', [
 			'model' => new User(['email' => 'test@getkirby.com']),
@@ -182,7 +182,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame('user.files', $field->query());
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$field = $this->field('files', [
 			'model' => new Page(['slug' => 'test']),
@@ -192,7 +192,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
-	public function testTranslatedEmpty()
+	public function testTranslatedEmpty(): void
 	{
 		$field = $this->field('files', [
 			'model' => new Page(['slug' => 'test']),
@@ -202,7 +202,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
-	public function testRequiredProps()
+	public function testRequiredProps(): void
 	{
 		$field = $this->field('files', [
 			'model'    => $this->model(),
@@ -213,7 +213,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame(1, $field->min());
 	}
 
-	public function testRequiredInvalid()
+	public function testRequiredInvalid(): void
 	{
 		$field = $this->field('files', [
 			'model'    => $this->model(),
@@ -223,7 +223,7 @@ class FilesFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testRequiredValid()
+	public function testRequiredValid(): void
 	{
 		$field = $this->field('files', [
 			'model'    => $this->model(),
@@ -236,7 +236,7 @@ class FilesFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testApi()
+	public function testApi(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -278,7 +278,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame('c.jpg', $api['data'][2]['id']);
 	}
 
-	public function testParentModel()
+	public function testParentModel(): void
 	{
 		$field = $this->field('files', [
 			'model' => $this->model()
@@ -294,7 +294,7 @@ class FilesFieldTest extends TestCase
 		$this->assertSame($this->app->site(), $field->parentModel());
 	}
 
-	public function testStore()
+	public function testStore(): void
 	{
 		// Default
 		$field = $this->field('files', [

@@ -16,7 +16,7 @@ class SiteChangeTitleTest extends ModelTestCase
 		$this->assertSame('Test', $site->title()->value());
 	}
 
-	public function testChangeTitleWhenChangesExist()
+	public function testChangeTitleWhenChangesExist(): void
 	{
 		$site = new Site();
 

@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SiteBlueprint::class)]
 class SiteBlueprintTest extends TestCase
 {
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$blueprint = new SiteBlueprint([
 			'model' => new Site()

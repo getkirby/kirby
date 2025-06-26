@@ -449,7 +449,12 @@
 	"language.variables.empty": "Keine Übersetzung",
 
 	"language.variable.delete.confirm": "Willst du wirklich die Variable \"{key}\" entfernen?",
+	"language.variable.entries": "Werte",
+	"language.variable.entries.help": "Jeder Eintrag wird für die entsprechende Anzahl verwendet, z. B. werden drei Einträge in der Reihenfolge mit den Anzahlen <code>0</code>, <code>1</code>, <code>2 und mehr</code> übereinstimmen. Verwende den Platzhalter <code>{count}</code>, um die tatsächliche Anzahl einzufügen.",
 	"language.variable.key": "Schlüssel",
+	"language.variable.multiple": "Zählbar?",
+	"language.variable.multiple.text": "Benutze unterschiedliche Übersetzungen, abhängig von der Anzahl",
+	"language.variable.multiple.help": "Du kannst verschiedene Werte anlegen, die von einer Anzahl abhängen. Diese übergibst du zusammen mit der Sprachvariablen. So kannst du dynamische Übersetzungen erstellen, zum Beispiel für Singular und Plural.",
 	"language.variable.notFound": "Die Variable konnte nicht gefunden werden",
 	"language.variable.value": "Wert",
 

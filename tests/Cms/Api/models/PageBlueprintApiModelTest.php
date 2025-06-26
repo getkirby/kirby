@@ -12,7 +12,7 @@ class PageBlueprintApiModelTest extends ApiModelTestCase
 		$this->page = new Page(['slug' => 'test']);
 	}
 
-	public function testName()
+	public function testName(): void
 	{
 		$blueprint = new PageBlueprint([
 			'name'  => 'test',
@@ -22,7 +22,7 @@ class PageBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertAttr($blueprint, 'name', 'test');
 	}
 
-	public function testNum()
+	public function testNum(): void
 	{
 		$blueprint = new PageBlueprint([
 			'name'  => 'test',
@@ -33,7 +33,7 @@ class PageBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertAttr($blueprint, 'num', '{{ page.year }}');
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$blueprint = new PageBlueprint([
 			'name'  => 'test',
@@ -57,7 +57,7 @@ class PageBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertArrayHasKey('update', $options);
 	}
 
-	public function testPreview()
+	public function testPreview(): void
 	{
 		$blueprint = new PageBlueprint([
 			'name'    => 'test',
@@ -70,7 +70,7 @@ class PageBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertAttr($blueprint, 'preview', 'test');
 	}
 
-	public function testStatus()
+	public function testStatus(): void
 	{
 		$blueprint = new PageBlueprint([
 			'name'    => 'test',
@@ -86,7 +86,7 @@ class PageBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertAttr($blueprint, 'status', $status);
 	}
 
-	public function testTabs()
+	public function testTabs(): void
 	{
 		$blueprint = new PageBlueprint([
 			'name'  => 'test',
@@ -96,7 +96,7 @@ class PageBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertAttr($blueprint, 'tabs', []);
 	}
 
-	public function testTitle()
+	public function testTitle(): void
 	{
 		$blueprint = new PageBlueprint([
 			'name'  => 'test',

@@ -35,7 +35,7 @@ class LanguagesRoutesTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testList()
+	public function testList(): void
 	{
 		$app = $this->app;
 
@@ -45,7 +45,7 @@ class LanguagesRoutesTest extends TestCase
 		$this->assertSame('de', $response['data'][1]['code']);
 	}
 
-	public function testListDisabled()
+	public function testListDisabled(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -59,7 +59,7 @@ class LanguagesRoutesTest extends TestCase
 		$response = $app->api()->call('languages');
 	}
 
-	public function testCreateDisabled()
+	public function testCreateDisabled(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -73,7 +73,7 @@ class LanguagesRoutesTest extends TestCase
 		$response = $app->api()->call('languages', 'POST');
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$app = $this->app;
 
@@ -82,7 +82,7 @@ class LanguagesRoutesTest extends TestCase
 		$this->assertSame('de', $response['data']['code']);
 	}
 
-	public function testGetDisabled()
+	public function testGetDisabled(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -96,7 +96,7 @@ class LanguagesRoutesTest extends TestCase
 		$response = $app->api()->call('languages/de');
 	}
 
-	public function testUpdateDisabled()
+	public function testUpdateDisabled(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -110,7 +110,7 @@ class LanguagesRoutesTest extends TestCase
 		$response = $app->api()->call('languages/de', 'PATCH');
 	}
 
-	public function testDeleteDisabled()
+	public function testDeleteDisabled(): void
 	{
 		$app = $this->app->clone([
 			'options' => [

@@ -4,16 +4,12 @@ namespace Kirby\Parsley;
 
 use Kirby\TestCase;
 use Kirby\Toolkit\Dom;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Parsley\Element
- */
+#[CoversClass(Element::class)]
 class ElementTest extends TestCase
 {
-	/**
-	 * @covers ::attr
-	 */
-	public function testAttr()
+	public function testAttr(): void
 	{
 		$dom     = new Dom('<p class="test">test</p>');
 		$p       = $dom->query('//p')[0];
@@ -22,10 +18,7 @@ class ElementTest extends TestCase
 		$this->assertSame('test', $element->attr('class'));
 	}
 
-	/**
-	 * @covers ::children
-	 */
-	public function testChildren()
+	public function testChildren(): void
 	{
 		$dom     = new Dom('<p class="test"><span>A</span><span>B</span></p>');
 		$p       = $dom->query('//p')[0];
@@ -36,10 +29,7 @@ class ElementTest extends TestCase
 		$this->assertCount(2, $children);
 	}
 
-	/**
-	 * @covers ::classList
-	 */
-	public function testClassList()
+	public function testClassList(): void
 	{
 		$dom     = new Dom('<p class="a b">test</p>');
 		$p       = $dom->query('//p')[0];
@@ -48,10 +38,7 @@ class ElementTest extends TestCase
 		$this->assertSame(['a', 'b'], $element->classList());
 	}
 
-	/**
-	 * @covers ::className
-	 */
-	public function testClassName()
+	public function testClassName(): void
 	{
 		$dom     = new Dom('<p class="a b">test</p>');
 		$p       = $dom->query('//p')[0];
@@ -60,10 +47,7 @@ class ElementTest extends TestCase
 		$this->assertSame('a b', $element->className());
 	}
 
-	/**
-	 * @covers ::element
-	 */
-	public function testElement()
+	public function testElement(): void
 	{
 		$dom     = new Dom('test');
 		$body    = $dom->body();
@@ -72,10 +56,7 @@ class ElementTest extends TestCase
 		$this->assertSame($body, $element->element());
 	}
 
-	/**
-	 * @covers ::filter
-	 */
-	public function testFilter()
+	public function testFilter(): void
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
 		$p       = $dom->query('//p')[0];
@@ -86,10 +67,7 @@ class ElementTest extends TestCase
 		$this->assertSame('Bold', $children[0]->innerText());
 	}
 
-	/**
-	 * @covers ::find
-	 */
-	public function testFind()
+	public function testFind(): void
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
 		$p       = $dom->query('//p')[0];
@@ -99,10 +77,7 @@ class ElementTest extends TestCase
 		$this->assertSame('Bold', $child->innerText());
 	}
 
-	/**
-	 * @covers ::find
-	 */
-	public function testFindWithoutResult()
+	public function testFindWithoutResult(): void
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
 		$p       = $dom->query('//p')[0];
@@ -111,10 +86,7 @@ class ElementTest extends TestCase
 		$this->assertNull($element->find('//a'));
 	}
 
-	/**
-	 * @covers ::innerHtml
-	 */
-	public function testInnerHtml()
+	public function testInnerHtml(): void
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
 		$p       = $dom->query('//p')[0];
@@ -123,10 +95,7 @@ class ElementTest extends TestCase
 		$this->assertSame('ItalicBold', $element->innerHtml());
 	}
 
-	/**
-	 * @covers ::innerHtml
-	 */
-	public function testInnerHtmlWithMarks()
+	public function testInnerHtmlWithMarks(): void
 	{
 		$marks = [
 			['tag' => 'i'],
@@ -150,10 +119,7 @@ class ElementTest extends TestCase
 		$this->assertSame('<i>Italic</i><b>Bold</b>', $element->innerHtml());
 	}
 
-	/**
-	 * @covers ::innerText
-	 */
-	public function testInnerText()
+	public function testInnerText(): void
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
 		$p       = $dom->query('//p')[0];
@@ -162,10 +128,7 @@ class ElementTest extends TestCase
 		$this->assertSame('ItalicBold', $element->innerText());
 	}
 
-	/**
-	 * @covers ::outerHtml
-	 */
-	public function testOuterHtml()
+	public function testOuterHtml(): void
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
 		$p       = $dom->query('//p')[0];
@@ -174,10 +137,7 @@ class ElementTest extends TestCase
 		$this->assertSame('<p><i>Italic</i><b>Bold</b></p>', $element->outerHtml());
 	}
 
-	/**
-	 * @covers ::query
-	 */
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$dom = new Dom('<p><i>Italic</i><b>Bold</b></p>');
 
@@ -186,10 +146,7 @@ class ElementTest extends TestCase
 		$this->assertSame('b', $dom->query('//p/b')[0]->tagName);
 	}
 
-	/**
-	 * @covers ::remove
-	 */
-	public function testRemove()
+	public function testRemove(): void
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
 		$i       = $dom->query('//p/i')[0];
@@ -199,10 +156,7 @@ class ElementTest extends TestCase
 		$this->assertNull($dom->query('//p/i')[0]);
 	}
 
-	/**
-	 * @covers ::tagName
-	 */
-	public function testTagName()
+	public function testTagName(): void
 	{
 		$dom     = new Dom('<p>Test</p>');
 		$p       = $dom->query('//p')[0];

@@ -20,7 +20,7 @@ class VirtualPageWithChildrenTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.VirtualPageWithChildren';
 
-	public function testChildren()
+	public function testChildren(): void
 	{
 		$page = new VirtualPageWithChildren([
 			'slug' => 'mother'

@@ -449,7 +449,12 @@
 	"language.variables.empty": "尚未設定語言變數",
 
 	"language.variable.delete.confirm": "你確定要刪除「{key}」這個變數嗎？",
+	"language.variable.entries": "Values",
+	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "變數名稱",
+	"language.variable.multiple": "Countable?",
+	"language.variable.multiple.text": "Use different translation strings",
+	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "找不到指定的語言變數",
 	"language.variable.value": "變數內容",
 

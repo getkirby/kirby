@@ -10,7 +10,7 @@ class FileCopyTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileCopy';
 
-	public function testCopyRenewUuid()
+	public function testCopyRenewUuid(): void
 	{
 		// create dumy file
 		F::write($source = static::TMP . '/original.md', '# Foo');

@@ -8,7 +8,7 @@ class ChildrenApiCollectionTest extends ApiCollectionTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.ChildrenApiCollection';
 
-	public function testCollection()
+	public function testCollection(): void
 	{
 		$site = new Site([
 			'children' => [

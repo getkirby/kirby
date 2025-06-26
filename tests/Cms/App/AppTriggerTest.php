@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(App::class)]
 class AppTriggerTest extends TestCase
 {
-	public function testTriggerEvent()
+	public function testTriggerEvent(): void
 	{
 		$self = $this;
 
@@ -23,7 +23,7 @@ class AppTriggerTest extends TestCase
 		$this->app->trigger('test', ['value' => 10]);
 	}
 
-	public function testTriggerWithMultipleParameters()
+	public function testTriggerWithMultipleParameters(): void
 	{
 		$self = $this;
 
@@ -41,7 +41,7 @@ class AppTriggerTest extends TestCase
 		$this->app->trigger('test', ['a' => 5, 'b' => 6, 'c' => 4]);
 	}
 
-	public function testTriggerWithNestedTriggerCall()
+	public function testTriggerWithNestedTriggerCall(): void
 	{
 		$calls = 0;
 
@@ -62,7 +62,7 @@ class AppTriggerTest extends TestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function testTriggerWithNestedRecursiveTriggerCall()
+	public function testTriggerWithNestedRecursiveTriggerCall(): void
 	{
 		$calls = 0;
 
@@ -83,7 +83,7 @@ class AppTriggerTest extends TestCase
 		$this->assertSame(1, $calls);
 	}
 
-	public function testTriggerWithSingleParameter()
+	public function testTriggerWithSingleParameter(): void
 	{
 		$self = $this;
 
@@ -99,7 +99,7 @@ class AppTriggerTest extends TestCase
 		$this->app->trigger('test', ['value' => 5]);
 	}
 
-	public function testTriggerWithWildcard()
+	public function testTriggerWithWildcard(): void
 	{
 		$self = $this;
 		$calls = 0;
@@ -135,7 +135,7 @@ class AppTriggerTest extends TestCase
 		$this->assertSame(4, $calls);
 	}
 
-	public function testTriggerWithoutArguments()
+	public function testTriggerWithoutArguments(): void
 	{
 		$self = $this;
 
@@ -150,7 +150,7 @@ class AppTriggerTest extends TestCase
 		$this->app->trigger('test');
 	}
 
-	public function testTriggerWithoutHandler()
+	public function testTriggerWithoutHandler(): void
 	{
 		$this->assertNull($this->app->trigger('does-not-exist', ['value' => 10]));
 	}

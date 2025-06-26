@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 class TextareaFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('textarea');
 
@@ -22,7 +22,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testButtonsDisabled()
+	public function testButtonsDisabled(): void
 	{
 		$field = $this->field('textarea', [
 			'buttons' => false
@@ -31,7 +31,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertFalse($field->buttons());
 	}
 
-	public function testButtonsArray()
+	public function testButtonsArray(): void
 	{
 		$field = $this->field('textarea', [
 			'buttons' => [
@@ -43,7 +43,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame(['bold', 'italic'], $field->buttons());
 	}
 
-	public function testDefaultTrimmed()
+	public function testDefaultTrimmed(): void
 	{
 		$field = $this->field('textarea', [
 			'default' => 'test '
@@ -52,7 +52,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame('test', $field->default());
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test',
@@ -64,7 +64,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame(['query' => 'page.images'], $field->files());
 	}
 
-	public function testFilesQuery()
+	public function testFilesQuery(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test',
@@ -74,7 +74,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame(['query' => 'page.images'], $field->files());
 	}
 
-	public function testFilesWithInvalidInput()
+	public function testFilesWithInvalidInput(): void
 	{
 		$field = $this->field('textarea', [
 			'files' => 1
@@ -83,7 +83,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame([], $field->files());
 	}
 
-	public function testMaxLength()
+	public function testMaxLength(): void
 	{
 		$field = $this->field('textarea', [
 			'value'     => 'test',
@@ -94,7 +94,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertArrayHasKey('maxlength', $field->errors());
 	}
 
-	public function testMinLength()
+	public function testMinLength(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test',
@@ -105,7 +105,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
-	public function testUploads()
+	public function testUploads(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test',
@@ -117,7 +117,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame(['template' => 'test', 'accept' => '*'], $field->uploads());
 	}
 
-	public function testUploadsDisabled()
+	public function testUploadsDisabled(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test',
@@ -127,7 +127,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertFalse($field->uploads());
 	}
 
-	public function testUploadsParent()
+	public function testUploadsParent(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test',
@@ -139,7 +139,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame(['parent' => 'page.parent', 'accept' => '*'], $field->uploads());
 	}
 
-	public function testUploadsTemplate()
+	public function testUploadsTemplate(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test',
@@ -149,7 +149,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame(['template' => 'test', 'accept' => '*'], $field->uploads());
 	}
 
-	public function testUploadsWithInvalidInput()
+	public function testUploadsWithInvalidInput(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test',
@@ -159,7 +159,7 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame(['accept' => '*'], $field->uploads());
 	}
 
-	public function testValueTrimmed()
+	public function testValueTrimmed(): void
 	{
 		$field = $this->field('textarea', [
 			'value' => 'test '

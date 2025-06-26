@@ -2,15 +2,16 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\Attributes\CoversClass;
+use stdClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Blueprint
- */
+#[CoversClass(Blueprint::class)]
 class BlueprintTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Blueprint';
@@ -35,10 +36,7 @@ class BlueprintTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructWithoutModel()
+	public function testConstructWithoutModel(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('A blueprint model is required');
@@ -46,18 +44,15 @@ class BlueprintTest extends TestCase
 		new Blueprint([]);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructInvalidModel()
+	public function testConstructInvalidModel(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid blueprint model');
 
-		new Blueprint(['model' => new \stdClass()]);
+		new Blueprint(['model' => new stdClass()]);
 	}
 
-	public function testConvertColumnsToTabs()
+	public function testConvertColumnsToTabs(): void
 	{
 		$columns = [
 			[
@@ -112,10 +107,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame($expected['main'], $blueprint->tab());
 	}
 
-	/**
-	 * @covers ::acceptedFileTemplates
-	 */
-	public function testAcceptedFileTemplatesDefault()
+	public function testAcceptedFileTemplatesDefault(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model,
@@ -130,10 +122,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame(['default'], $blueprint->acceptedFileTemplates());
 	}
 
-	/**
-	 * @covers ::acceptedFileTemplates
-	 */
-	public function testAcceptedFileTemplatesFromFields()
+	public function testAcceptedFileTemplatesFromFields(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -217,10 +206,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame(['a', 'b', 'c', 'd', 'e'], $blueprint->acceptedFileTemplates());
 	}
 
-	/**
-	 * @covers ::acceptedFileTemplates
-	 */
-	public function testAcceptedFileTemplatesFromFieldsAndSections()
+	public function testAcceptedFileTemplatesFromFieldsAndSections(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -270,10 +256,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame(['a', 'b', 'c'], $blueprint->acceptedFileTemplates());
 	}
 
-	/**
-	 * @covers ::acceptedFileTemplates
-	 */
-	public function testAcceptedFileTemplatesFromSection()
+	public function testAcceptedFileTemplatesFromSection(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -300,10 +283,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame(['a'], $blueprint->acceptedFileTemplates('a'));
 	}
 
-	/**
-	 * @covers ::acceptedFileTemplates
-	 */
-	public function testAcceptedFileTemplatesFromSections()
+	public function testAcceptedFileTemplatesFromSections(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -337,10 +317,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame(['a', 'b'], $blueprint->acceptedFileTemplates());
 	}
 
-	/**
-	 * @covers ::buttons
-	 */
-	public function testButtons()
+	public function testButtons(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model,
@@ -351,10 +328,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame(['foo', 'bar'], $blueprint->buttons());
 	}
 
-	/**
-	 * @covers ::buttons
-	 */
-	public function testButtonsDisabled()
+	public function testButtonsDisabled(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model,
@@ -365,10 +339,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame(false, $blueprint->buttons());
 	}
 
-	/**
-	 * @covers ::__debugInfo
-	 */
-	public function testDebugInfo()
+	public function testDebugInfo(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model,
@@ -384,7 +355,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame($expected, $blueprint->__debugInfo());
 	}
 
-	public function testSectionsToColumns()
+	public function testSectionsToColumns(): void
 	{
 		$sections = [
 			'pages' => [
@@ -420,7 +391,7 @@ class BlueprintTest extends TestCase
 		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
 	}
 
-	public function testFieldsToSections()
+	public function testFieldsToSections(): void
 	{
 		$fields = [
 			'headline' => [
@@ -460,10 +431,7 @@ class BlueprintTest extends TestCase
 		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
 	}
 
-	/**
-	 * @covers ::title
-	 */
-	public function testTitle()
+	public function testTitle(): void
 	{
 		$blueprint = new Blueprint([
 			'title' => 'Test',
@@ -473,10 +441,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('Test', $blueprint->title());
 	}
 
-	/**
-	 * @covers ::title
-	 */
-	public function testTitleTranslated()
+	public function testTitleTranslated(): void
 	{
 		$blueprint = new Blueprint([
 			'title' => ['en' => 'Test'],
@@ -486,10 +451,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('Test', $blueprint->title());
 	}
 
-	/**
-	 * @covers ::title
-	 */
-	public function testTitleTranslatedFallback()
+	public function testTitleTranslatedFallback(): void
 	{
 		I18n::$locale       = 'de';
 		I18n::$translations = ['en' => ['my.i18n.string' => 'success']];
@@ -502,7 +464,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('success', $blueprint->title());
 	}
 
-	public function testTitleTranslatedFallbackForRoles()
+	public function testTitleTranslatedFallbackForRoles(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -536,10 +498,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('My custom role', $role);
 	}
 
-	/**
-	 * @covers ::title
-	 */
-	public function testTitleFromName()
+	public function testTitleFromName(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model
@@ -555,10 +514,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('Test', $blueprint->title());
 	}
 
-	/**
-	 * @covers ::extend
-	 */
-	public function testExtend()
+	public function testExtend(): void
 	{
 		new App([
 			'blueprints' => [
@@ -576,10 +532,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('Extension Test', $blueprint->title());
 	}
 
-	/**
-	 * @covers ::extend
-	 */
-	public function testExtendWithInvalidSnippet()
+	public function testExtendWithInvalidSnippet(): void
 	{
 		$blueprint = new Blueprint([
 			'extends' => 'notFound',
@@ -589,10 +542,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('Default', $blueprint->title());
 	}
 
-	/**
-	 * @covers ::extend
-	 */
-	public function testExtendMultiple()
+	public function testExtendMultiple(): void
 	{
 		new App([
 			'blueprints' => [
@@ -632,11 +582,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('1/3', $field['width']);
 	}
 
-	/**
-	 * @covers ::factory
-	 * @covers ::find
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		Blueprint::$loaded = [];
 
@@ -652,11 +598,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('pages/test', $blueprint->name());
 	}
 
-	/**
-	 * @covers ::factory
-	 * @covers ::find
-	 */
-	public function testFactoryWithCallbackArray()
+	public function testFactoryWithCallbackArray(): void
 	{
 		Blueprint::$loaded = [];
 
@@ -672,11 +614,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('pages/test', $blueprint->name());
 	}
 
-	/**
-	 * @covers ::factory
-	 * @covers ::find
-	 */
-	public function testFactoryWithCallbackString()
+	public function testFactoryWithCallbackString(): void
 	{
 		Blueprint::$loaded = [];
 
@@ -698,20 +636,13 @@ class BlueprintTest extends TestCase
 		$this->assertSame('pages/test', $blueprint->name());
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryForMissingBlueprint()
+	public function testFactoryForMissingBlueprint(): void
 	{
 		$blueprint = Blueprint::factory('notFound', null, new Page(['slug' => 'test']));
 		$this->assertNull($blueprint);
 	}
 
-	/**
-	 * @covers ::fields
-	 * @covers ::field
-	 */
-	public function testFields()
+	public function testFields(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model,
@@ -729,10 +660,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame($fields['test'], $blueprint->field('test'));
 	}
 
-	/**
-	 * @covers ::fields
-	 */
-	public function testNestedFields()
+	public function testNestedFields(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model,
@@ -753,7 +681,7 @@ class BlueprintTest extends TestCase
 		$this->assertArrayNotHasKey('child-field', $blueprint->fields());
 	}
 
-	public function testInvalidSectionType()
+	public function testInvalidSectionType(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model,
@@ -773,7 +701,7 @@ class BlueprintTest extends TestCase
 
 		try {
 			$sections = $blueprint->tab('main')['columns'][0]['sections'];
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->assertNull($e->getMessage(), 'Failed to get sections.');
 		}
 
@@ -784,10 +712,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('Invalid section type for section "main"', $sections['main']['label']);
 	}
 
-	/**
-	 * @covers ::isDefault
-	 */
-	public function testIsDefault()
+	public function testIsDefault(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model,
@@ -797,7 +722,7 @@ class BlueprintTest extends TestCase
 		$this->assertTrue($blueprint->isDefault());
 	}
 
-	public function testSectionTypeFromName()
+	public function testSectionTypeFromName(): void
 	{
 		// with options
 		$blueprint = new Blueprint([
@@ -821,10 +746,7 @@ class BlueprintTest extends TestCase
 		$this->assertSame('info', $blueprint->sections()['info']->type());
 	}
 
-	/**
-	 * @covers ::preset
-	 */
-	public function testPreset()
+	public function testPreset(): void
 	{
 		$blueprint = new Blueprint([
 			'model'  => $this->model,

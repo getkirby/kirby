@@ -28,12 +28,12 @@ class AppCachesTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testDisabledCache()
+	public function testDisabledCache(): void
 	{
 		$this->assertInstanceOf(NullCache::class, $this->app()->cache('pages'));
 	}
 
-	public function testEnabledCacheWithoutOptions()
+	public function testEnabledCacheWithoutOptions(): void
 	{
 		$kirby = $this->app([
 			'options' => [
@@ -45,7 +45,7 @@ class AppCachesTest extends TestCase
 		$this->assertSame($kirby->root('cache'), $kirby->cache('pages')->options()['root']);
 	}
 
-	public function testInvalidCacheType()
+	public function testInvalidCacheType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid cache type "not-exists"');
@@ -61,7 +61,7 @@ class AppCachesTest extends TestCase
 		$kirby->cache('pages');
 	}
 
-	public function testEnabledCacheWithOptions()
+	public function testEnabledCacheWithOptions(): void
 	{
 		$kirby = $this->app([
 			'urls' => [
@@ -82,7 +82,7 @@ class AppCachesTest extends TestCase
 		$this->assertFileExists($root . '/getkirby.com_test/pages/home.cache');
 	}
 
-	public function testEnabledCacheWithOptionsAndPortPrefix()
+	public function testEnabledCacheWithOptionsAndPortPrefix(): void
 	{
 		$kirby = $this->app([
 			'urls' => [
@@ -103,7 +103,7 @@ class AppCachesTest extends TestCase
 		$this->assertFileExists($root . '/127.0.0.1_8000/pages/home.cache');
 	}
 
-	public function testPluginDefaultCache()
+	public function testPluginDefaultCache(): void
 	{
 		App::plugin('developer/plugin', [
 			'options' => [
@@ -114,7 +114,7 @@ class AppCachesTest extends TestCase
 		$this->assertInstanceOf(FileCache::class, $this->app()->cache('developer.plugin'));
 	}
 
-	public function testPluginCustomCache()
+	public function testPluginCustomCache(): void
 	{
 		App::plugin('developer/plugin', [
 			'options' => [
@@ -125,7 +125,7 @@ class AppCachesTest extends TestCase
 		$this->assertInstanceOf(FileCache::class, $this->app()->cache('developer.plugin.api'));
 	}
 
-	public function testDefaultCacheTypeClasses()
+	public function testDefaultCacheTypeClasses(): void
 	{
 		$app = new App([
 			'roots' => [
