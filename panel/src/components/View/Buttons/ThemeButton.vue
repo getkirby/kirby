@@ -40,25 +40,22 @@ export default {
 				{
 					text: this.$t("theme.light"),
 					icon: "sun",
-					disabled: this.setting === "light",
+					disabled: this.current === "light",
 					click: () => this.$panel.theme.set("light")
 				},
 				{
 					text: this.$t("theme.dark"),
 					icon: "moon",
-					disabled: this.setting === "dark",
+					disabled: this.current === "dark",
 					click: () => this.$panel.theme.set("dark")
 				},
 				{
 					text: this.$t("theme.automatic"),
 					icon: "wand",
-					disabled: this.setting === null,
-					click: () => this.$panel.theme.reset()
+					disabled: this.current === "system",
+					click: () => this.$panel.theme.set("system")
 				}
 			];
-		},
-		setting() {
-			return this.$panel.theme.setting;
 		}
 	}
 };
