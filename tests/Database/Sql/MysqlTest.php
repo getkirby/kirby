@@ -4,10 +4,9 @@ namespace Kirby\Database\Sql;
 
 use Kirby\Database\Database;
 use Kirby\Toolkit\A;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Database\Sql\Mysql
- */
+#[CoversClass(Mysql::class)]
 class MysqlTest extends TestCase
 {
 	public function setUp(): void
@@ -22,30 +21,21 @@ class MysqlTest extends TestCase
 		$this->sql = new Mysql($this->database);
 	}
 
-	/**
-	 * @covers ::columns
-	 */
-	public function testColumns()
+	public function testColumns(): void
 	{
 		$result = $this->sql->columns('test');
 		$this->assertSame(':memory:', A::first($result['bindings']));
 		$this->assertSame('test', A::last($result['bindings']));
 	}
 
-	/**
-	 * @covers ::tables
-	 */
-	public function testTables()
+	public function testTables(): void
 	{
 		$result = $this->sql->tables();
 		$this->assertStringStartsWith('SELECT TABLE_NAME AS name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ', $result['query']);
 		$this->assertSame(':memory:', A::first($result['bindings']));
 	}
 
-	/**
-	 * @covers ::tables
-	 */
-	public function testValidateTable()
+	public function testValidateTable(): void
 	{
 		$this->assertTrue($this->database->validateTable('test'));
 		$this->assertTrue($this->database->validateTable('view_test'));

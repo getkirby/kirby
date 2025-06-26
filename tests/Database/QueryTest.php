@@ -6,10 +6,9 @@ use InvalidArgumentException;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Pagination;
 use PDOException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Database\Database
- */
+#[CoversClass(Query::class)]
 class QueryTest extends TestCase
 {
 	public function setUp(): void
@@ -111,7 +110,7 @@ class QueryTest extends TestCase
 		]);
 	}
 
-	public function testJoin()
+	public function testJoin(): void
 	{
 		$user = $this->database
 			->table('users')
@@ -124,7 +123,7 @@ class QueryTest extends TestCase
 		$this->assertSame('admin', $user->role());
 	}
 
-	public function testInnerJoin()
+	public function testInnerJoin(): void
 	{
 		$user = $this->database
 			->table('users')
@@ -137,7 +136,7 @@ class QueryTest extends TestCase
 		$this->assertSame('admin', $user->role());
 	}
 
-	public function testLeftJoin()
+	public function testLeftJoin(): void
 	{
 		$user = $this->database
 			->table('users')
@@ -150,7 +149,7 @@ class QueryTest extends TestCase
 		$this->assertSame('admin', $user->role());
 	}
 
-	public function testRightJoin()
+	public function testRightJoin(): void
 	{
 		$query = $this->database
 			->table('users')
@@ -165,7 +164,7 @@ class QueryTest extends TestCase
 		$this->assertSame($expected, $query['query']);
 	}
 
-	public function testOrder()
+	public function testOrder(): void
 	{
 		$user = $this->database
 			->table('users')
@@ -175,7 +174,7 @@ class QueryTest extends TestCase
 		$this->assertSame('paul', $user->username());
 	}
 
-	public function testGroup()
+	public function testGroup(): void
 	{
 		$sum = $this->database
 			->table('users')
@@ -188,7 +187,7 @@ class QueryTest extends TestCase
 		$this->assertSame((float)150, $sum);
 	}
 
-	public function testSum()
+	public function testSum(): void
 	{
 		$sum = $this->database
 			->table('users')
@@ -197,7 +196,7 @@ class QueryTest extends TestCase
 		$this->assertSame((float)470, $sum);
 	}
 
-	public function testAggregateAndDebug()
+	public function testAggregateAndDebug(): void
 	{
 		$result = $this->database
 			->table('users')
@@ -210,7 +209,7 @@ class QueryTest extends TestCase
 		$this->assertArrayHasKey('options', $result);
 	}
 
-	public function testAvg()
+	public function testAvg(): void
 	{
 		$balance = $this->database
 			->table('users')
@@ -223,7 +222,7 @@ class QueryTest extends TestCase
 		$this->assertSame((float)75, $balance);
 	}
 
-	public function testCount()
+	public function testCount(): void
 	{
 		$count = $this->database
 			->table('users')
@@ -235,7 +234,7 @@ class QueryTest extends TestCase
 		$this->assertSame(2, $count);
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$result = $this->database
 			->query('SELECT * FROM users WHERE role_id = :role', ['role' => 3]);
@@ -243,7 +242,7 @@ class QueryTest extends TestCase
 		$this->assertCount(2, $result->data());
 	}
 
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		// update
 		$update = $this->database
@@ -261,7 +260,7 @@ class QueryTest extends TestCase
 		$this->assertSame('250', $user->balance());
 	}
 
-	public function testDelete()
+	public function testDelete(): void
 	{
 		$delete = $this->database
 			->table('users')
@@ -276,7 +275,7 @@ class QueryTest extends TestCase
 		$this->assertCount(4, $users);
 	}
 
-	public function testMagicCall()
+	public function testMagicCall(): void
 	{
 		$user = $this->database
 			->table('users')
@@ -285,7 +284,7 @@ class QueryTest extends TestCase
 		$this->assertSame('george', $user->username());
 	}
 
-	public function testFail()
+	public function testFail(): void
 	{
 		// should not throw an exception
 		$this->database
@@ -305,7 +304,7 @@ class QueryTest extends TestCase
 			->one();
 	}
 
-	public function testFetch()
+	public function testFetch(): void
 	{
 		$query = $this->database
 			->table('users')
@@ -355,7 +354,7 @@ class QueryTest extends TestCase
 		return $row['fname'] . ' ' . $row['lname'];
 	}
 
-	public function testFind()
+	public function testFind(): void
 	{
 		$user = $this->database
 			->table('users')
@@ -364,7 +363,7 @@ class QueryTest extends TestCase
 		$this->assertSame('paul', $user->username());
 	}
 
-	public function testDistinct()
+	public function testDistinct(): void
 	{
 		$users = $this->database
 			->table('users')
@@ -376,7 +375,7 @@ class QueryTest extends TestCase
 		$this->assertCount(2, $users);
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$balance = $this->database
 			->table('users')
@@ -385,7 +384,7 @@ class QueryTest extends TestCase
 		$this->assertSame((float)-30, $balance);
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$balance = $this->database
 			->table('users')
@@ -394,7 +393,7 @@ class QueryTest extends TestCase
 		$this->assertSame((float)200, $balance);
 	}
 
-	public function testPrimaryKeyName()
+	public function testPrimaryKeyName(): void
 	{
 		$user = $this->database
 			->table('users')
@@ -404,7 +403,7 @@ class QueryTest extends TestCase
 		$this->assertSame('paul', $user->username());
 	}
 
-	public function testFirst()
+	public function testFirst(): void
 	{
 		$query = $this->database
 			->table('users')
@@ -417,7 +416,7 @@ class QueryTest extends TestCase
 		$this->assertSame('John', $query->One()->fname());
 	}
 
-	public function testColumn()
+	public function testColumn(): void
 	{
 		$users = $this->database
 			->table('users')
@@ -431,7 +430,7 @@ class QueryTest extends TestCase
 		$this->assertSame(['george', 'mark'], $users->data());
 	}
 
-	public function testBindings()
+	public function testBindings(): void
 	{
 		$query = $this->database
 			->table('users')
@@ -440,7 +439,7 @@ class QueryTest extends TestCase
 		$this->assertSame(['role' => 3], $query->bindings());
 	}
 
-	public function testHaving()
+	public function testHaving(): void
 	{
 		$users = $this->database
 			->table('users')
@@ -459,7 +458,7 @@ class QueryTest extends TestCase
 		$this->assertCount(2, $users);
 	}
 
-	public function testWhere()
+	public function testWhere(): void
 	{
 		// numeric comparison
 		$count = $this->database
@@ -558,7 +557,7 @@ class QueryTest extends TestCase
 		$this->assertSame(1, $count);
 	}
 
-	public function testWhereInvalidPredicate()
+	public function testWhereInvalidPredicate(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid predicate INV');
@@ -569,7 +568,7 @@ class QueryTest extends TestCase
 			->count();
 	}
 
-	public function testWhereInvalidPredicateOperator()
+	public function testWhereInvalidPredicateOperator(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid predicate/operator <!>');
@@ -580,7 +579,7 @@ class QueryTest extends TestCase
 			->count();
 	}
 
-	public function testAndWhere()
+	public function testAndWhere(): void
 	{
 		$count = $this->database
 			->table('users')
@@ -613,7 +612,7 @@ class QueryTest extends TestCase
 		$this->assertSame(1, $count);
 	}
 
-	public function testOrWhere()
+	public function testOrWhere(): void
 	{
 		$count = $this->database
 			->table('users')
@@ -646,7 +645,7 @@ class QueryTest extends TestCase
 		$this->assertSame(4, $count);
 	}
 
-	public function testWhereCallback()
+	public function testWhereCallback(): void
 	{
 		$count = $this->database
 			->table('users')
@@ -657,7 +656,7 @@ class QueryTest extends TestCase
 		$this->assertSame(1, $count);
 	}
 
-	public function testPage()
+	public function testPage(): void
 	{
 		$query = $this->database->table('users');
 
@@ -704,7 +703,7 @@ class QueryTest extends TestCase
 		$this->assertSame(3, $pagination->limit());
 	}
 
-	public function testTable()
+	public function testTable(): void
 	{
 		// should not throw an exception
 		$this->database->table('users');
