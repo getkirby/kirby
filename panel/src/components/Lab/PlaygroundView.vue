@@ -1,5 +1,9 @@
 <template>
 	<k-panel-inside class="k-lab-playground-view">
+		<template #topbar>
+			<k-theme-view-button :text="null" :variant="null" size="xs" />
+		</template>
+
 		<k-header class="k-lab-playground-header">
 			{{ title }}
 
