@@ -3,18 +3,14 @@
 namespace Kirby\Text;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Text\Markdown
- */
+#[CoversClass(Markdown::class)]
 class MarkdownTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	/**
-	 * @covers ::defaults
-	 */
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$markdown = new Markdown();
 
@@ -25,10 +21,7 @@ class MarkdownTest extends TestCase
 		], $markdown->defaults());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testWithOptions()
+	public function testWithOptions(): void
 	{
 		$markdown = new Markdown([
 			'extra'  => true,
@@ -38,10 +31,7 @@ class MarkdownTest extends TestCase
 		$this->assertInstanceOf(Markdown::class, $markdown);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testSafeModeDisabled()
+	public function testSafeModeDisabled(): void
 	{
 		$markdown = new Markdown([
 			'safe' => false
@@ -50,10 +40,7 @@ class MarkdownTest extends TestCase
 		$this->assertSame('<div>Custom HTML</div>', $markdown->parse('<div>Custom HTML</div>'));
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testSafeModeEnabled()
+	public function testSafeModeEnabled(): void
 	{
 		$markdown = new Markdown([
 			'safe' => true
@@ -62,10 +49,7 @@ class MarkdownTest extends TestCase
 		$this->assertSame('<p>&lt;div&gt;Custom HTML&lt;/div&gt;</p>', $markdown->parse('<div>Custom HTML</div>'));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
-	public function testParse()
+	public function testParse(): void
 	{
 		$markdown = new Markdown();
 		$md       = file_get_contents(static::FIXTURES . '/markdown.md');
@@ -73,10 +57,7 @@ class MarkdownTest extends TestCase
 		$this->assertSame($html, $markdown->parse($md));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
-	public function testParseInline()
+	public function testParseInline(): void
 	{
 		$markdown = new Markdown();
 		$md       = file_get_contents(static::FIXTURES . '/inline.md');
@@ -84,10 +65,7 @@ class MarkdownTest extends TestCase
 		$this->assertSame($html, $markdown->parse($md, true));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
-	public function testParseWithExtra()
+	public function testParseWithExtra(): void
 	{
 		$markdown = new Markdown(['extra' => true]);
 		$md       = file_get_contents(static::FIXTURES . '/markdown.md');
@@ -95,10 +73,7 @@ class MarkdownTest extends TestCase
 		$this->assertSame($html, $markdown->parse($md));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
-	public function testParseWithoutBreaks()
+	public function testParseWithoutBreaks(): void
 	{
 		$markdown = new Markdown(['breaks' => false]);
 		$md       = file_get_contents(static::FIXTURES . '/markdown.md');
