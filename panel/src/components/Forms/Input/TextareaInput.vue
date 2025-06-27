@@ -12,7 +12,7 @@
 				:buttons="buttons"
 				:disabled="disabled"
 				:uploads="uploads"
-				@mousedown.native.prevent
+				@mousedown.prevent
 				@command="onCommand"
 			/>
 			<textarea

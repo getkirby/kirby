@@ -1,7 +1,17 @@
+import { h, resolveComponent } from "vue";
+
 /**
  * @since 4.0.0
  */
 export default {
+	computed: {
+		component() {
+			return this.$panel.view.component;
+		},
+		view() {
+			return this.$panel.view.props;
+		}
+	},
 	created() {
 		/**
 		 * Delegate all required window events to the
@@ -30,14 +40,14 @@ export default {
 			this.$panel.drag.stop();
 		});
 	},
-	destroyed() {
+	unmounted() {
 		this.$panel.events.unsubscribe();
 	},
-	render(h) {
-		if (this.$panel.view.component) {
-			return h(this.$panel.view.component, {
-				key: this.$panel.view.component,
-				props: this.$panel.view.props
+	render() {
+		if (this.component) {
+			return h(resolveComponent(this.component), {
+				key: this.component,
+				...this.view
 			});
 		}
 	}

@@ -1,12 +1,7 @@
 <template>
-	<portal v-if="visible" to="dialog">
+	<Teleport v-if="visible" to=".k-dialog-portal">
 		<form
-			:class="[
-				'k-dialog',
-				$vnode.data.class,
-				$vnode.data.staticClass,
-				$attrs.class
-			]"
+			:class="['k-dialog', $attrs.class]"
 			:data-size="size"
 			method="dialog"
 			@click.stop
@@ -33,7 +28,7 @@
 				</k-dialog-footer>
 			</slot>
 		</form>
-	</portal>
+	</Teleport>
 </template>
 
 <script>

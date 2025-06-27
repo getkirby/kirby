@@ -20,7 +20,7 @@ use Kirby\Toolkit\Html;
 
   <title>Kirby Panel</title>
 
-	<script type="importmap">
+  <script type="importmap">
 	{
 	  "imports": <?= json_encode($assets['import-maps'] ?? []) ?>
 	}
@@ -45,7 +45,7 @@ use Kirby\Toolkit\Html;
   <?php endforeach ?>
 
   <?php foreach ($assets['js'] as $js): ?>
-  <?php if (($js['type'] ?? null) === 'module'): ?>
+  <?php if (($js['defer'] ?? null) !== true): ?>
   <link rel="modulepreload" href="<?= $js['src'] ?>">
   <?php endif ?>
   <?php endforeach ?>
@@ -69,8 +69,11 @@ use Kirby\Toolkit\Html;
 	<?php foreach ($assets['js'] as $key => $js): ?>
 		<?php if ($key === 'index'): ?>
 			<script type="module" nonce="<?= $nonce ?>" defer>
-				<?= $assets['plugin-imports'] ?>
-    		import('<?= $js['src'] ?>')
+				try {
+					await import("<?= $js['plugins'] ?>")
+				} finally {
+					import("<?= $js['src'] ?>")
+				}
 			</script>
 		<?php else: ?>
 			<?= Html::tag('script', '', $js) . PHP_EOL ?>

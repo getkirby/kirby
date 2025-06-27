@@ -1,4 +1,3 @@
-import Vue from "vue";
+import { createApp } from "vue";
 
-Vue.config.productionTip = false;
-Vue.config.devtools = false;
+globalThis.app ??= createApp();

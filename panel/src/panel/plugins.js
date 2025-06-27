@@ -18,9 +18,14 @@ import section from "@/mixins/section.js";
  */
 export const installComponent = (app, name, component) => {
 	// make sure component has something to show
-	if (!component.template && !component.render && !component.extends) {
+	if (
+		!component.template &&
+		!component.render &&
+		!component.setup &&
+		!component.extends
+	) {
 		throw new Error(
-			`Plugin component "${name}" is not providing any template or render method, neither is it extending a component. The component has not been registered.`
+			`Plugin component "${name}" is not providing any template, render or setup method, neither is it extending a component. The component has not been registered.`
 		);
 	}
 
@@ -34,7 +39,7 @@ export const installComponent = (app, name, component) => {
 	component = resolveComponentMixins(component);
 
 	// check if the component is replacing a core component
-	if (isComponent(name) === true) {
+	if (isComponent(name, app) === true) {
 		window.console.warn(`Plugin is replacing "${name}"`);
 	}
 
@@ -106,7 +111,7 @@ export const resolveComponentExtension = (app, name, component) => {
 	}
 
 	// only extend if referenced component exists
-	if (isComponent(component.extends) === false) {
+	if (isComponent(component.extends, app) === false) {
 		window.console.warn(
 			`Problem with plugin trying to register component "${name}": cannot extend non-existent component "${component.extends}"`
 		);
@@ -117,13 +122,7 @@ export const resolveComponentExtension = (app, name, component) => {
 		return component;
 	}
 
-	component.extends = app.options.components[component.extends].extend({
-		options: component,
-		components: {
-			...app.options.components,
-			...(component.components ?? {})
-		}
-	});
+	component.extends = app.component(component.extends);
 
 	return component;
 };
@@ -181,7 +180,7 @@ export const resolveComponentMixins = (component) => {
  */
 export const resolveComponentRender = (component) => {
 	if (component.template) {
-		component.render = null;
+		delete component.render;
 	}
 
 	return component;
