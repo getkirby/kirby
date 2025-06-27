@@ -489,6 +489,27 @@ class CollectionTest extends TestCase
 		$this->assertFalse(isset($this->collection->super));
 	}
 
+	public function testJoin(): void
+	{
+		$collection = new Collection([
+			'a' => 'd',
+			'b' => 'e',
+			'c' => 'f',
+		]);
+
+		$this->assertSame('def', $collection->join());
+		$this->assertSame('d-e-f', $collection->join('-'));
+
+		$collection = new Collection([
+			'a' => ['d'],
+			'b' => ['e'],
+			'c' => ['f'],
+		]);
+
+		$this->assertSame('def', $collection->join(as: fn($e) => $e[0]));
+		$this->assertSame('d-e-f', $collection->join('-', fn($e) => $e[0]));
+	}
+
 	public function testKeyOf(): void
 	{
 		$this->assertSame('second', $this->collection->keyOf('My second element'));
