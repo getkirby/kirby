@@ -619,7 +619,7 @@ class Panel
 		if (Url::isAbsolute($url) === false) {
 			$kirby = App::instance();
 			$slug  = $kirby->option('panel.slug', 'panel');
-			$path  = trim($url, '/');
+			$path  = trim($url ?? '', '/');
 
 			$baseUri  = new Uri($kirby->url());
 			$basePath = trim($baseUri->path()->toString(), '/');
