@@ -9,12 +9,24 @@ use Kirby\Image\QrCode;
 use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
 
-class QueryDefaultFunctionsTest extends TestCase
+class QueryInterpretedDefaultFunctionsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
 
-	public function tearDown(): void
+	protected function setUp(): void
 	{
+		new App([
+			'options' => [
+				'query' => [
+					'runner' => 'interpreted'
+				]
+			]
+		]);
+	}
+
+	protected function tearDown(): void
+	{
+		App::destroy();
 		Dir::remove(static::TMP);
 	}
 
