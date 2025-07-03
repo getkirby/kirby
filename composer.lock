@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c58253cf3916ea5d4bb114127ba8a6d3",
+    "content-hash": "085c69c5d57912362ce380d23eaa8fbc",
     "packages": [
         {
             "name": "christian-riesen/base32",
