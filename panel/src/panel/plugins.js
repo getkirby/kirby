@@ -1,4 +1,3 @@
-import Vue from "vue";
 import { isObject } from "@/helpers/object.js";
 import isComponent from "@/helpers/isComponent.js";
 
@@ -147,24 +146,30 @@ export const resolveComponentMixins = (component) => {
 
 	component.mixins = component.mixins
 		.map((mixin) => {
-			// mixin got referenced by name
-			if (typeof mixin === "string" && mixins[mixin] !== undefined) {
-				// component inherits from a parent component:
-				// make sure to only include the mixin if the parent component
-				// hasn't already included it (to avoid duplicate mixins)
-				if (component.extends) {
-					const extended = Vue.extend(component.extends);
-					const inherited = new extended().$options.mixins ?? [];
-
-					if (inherited.includes(mixins[mixin]) === true) {
-						return;
-					}
-				}
-
-				return mixins[mixin];
+			// mixin is already an object
+			if (typeof mixin !== "string") {
+				return mixin;
 			}
 
-			return mixin;
+			// referenced mixin doesn't exist
+			if (mixins[mixin] === undefined) {
+				window.console.warn(
+					`Plugin trying to register component "${component.name}": cannot extend non-existent mixin "${mixin}"`
+				);
+				return;
+			}
+
+			// component inherits from a parent component:
+			// make sure to only include the mixin if the parent component
+			// hasn't already included it (to avoid duplicate mixins)
+			if (component.extends) {
+				const inherited = component.extends.mixins ?? [];
+				if (inherited.includes(mixins[mixin]) === true) {
+					return;
+				}
+			}
+
+			return mixins[mixin];
 		})
 		.filter((mixin) => mixin !== undefined);
 
