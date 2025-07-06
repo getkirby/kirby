@@ -353,19 +353,21 @@ class StructureFieldTest extends TestCase
 		// that the fields are not disabled by default
 		$app->impersonate('kirby');
 
-		$field = $this->field('structure', [
-			'fields' => [
-				'a' => [
-					'type' => 'text'
-				],
-				'b' => [
-					'type' => 'text',
-					'translate' => false
-				]
+		$fields = [
+			'a' => [
+				'type' => 'text'
+			],
+			'b' => [
+				'type' => 'text',
+				'translate' => false
 			]
-		]);
+		];
 
 		$app->setCurrentLanguage('en');
+
+		$field = $this->field('structure', [
+			'fields' => $fields
+		]);
 
 		$props = $field->form()->fields()->toProps();
 
@@ -373,6 +375,10 @@ class StructureFieldTest extends TestCase
 		$this->assertFalse($props['b']['disabled']);
 
 		$app->setCurrentLanguage('de');
+
+		$field = $this->field('structure', [
+			'fields' => $fields
+		]);
 
 		$props = $field->form()->fields()->toProps();
 
