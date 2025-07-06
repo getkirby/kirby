@@ -449,12 +449,12 @@
 	"language.variables.empty": "Engar þýðingar enn",
 
 	"language.variable.delete.confirm": "Ertu viss um að þú viljir nú fjarlægja breytuna fyrir {key}?",
-	"language.variable.entries": "Values",
-	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
+	"language.variable.entries": "Gildi",
+	"language.variable.entries.help": "Hver strengur verður notaður fyrir samsvarandi fjölda, t.d. þrír strengir munu passa til að telja <code>0</code>, <code>1</code>, <code>2 og fleiri</code>. Notaðu <code>{count}</code> staðgengilinn fyrir raunverulegan fjölda.",
 	"language.variable.key": "Lykill",
-	"language.variable.multiple": "Countable?",
-	"language.variable.multiple.text": "Use different translation strings",
-	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
+	"language.variable.multiple": "Teljanlegt?",
+	"language.variable.multiple.text": "Notaðu annan textastreng fyrir þýðingu",
+	"language.variable.multiple.help": "Þú getur notað mismunandi gildi eftir því hvaða talningu þú sendir með tungumálabreytunni, sem gerir þér kleift að búa til breytilegar þýðingar, t.d. eintölu og fleirtölu.",
 	"language.variable.notFound": "Breytan fannst hreint ekki",
 	"language.variable.value": "Gildi",
 
