@@ -1,7 +1,7 @@
 /* eslint-env node */
 import path from "path";
 
-import { defineConfig, loadEnv, splitVendorChunkPlugin } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import { minify } from "terser";
 import vue from "@vitejs/plugin-vue2";
 import { viteStaticCopy } from "vite-plugin-static-copy";
@@ -59,7 +59,7 @@ function createCustomServer() {
  * depending on the mode (development or build)
  */
 function createPlugins(mode) {
-	const plugins = [vue(), splitVendorChunkPlugin(), kirby()];
+	const plugins = [vue(), kirby()];
 
 	// when building…
 	if (mode === "production") {
@@ -140,7 +140,18 @@ export default defineConfig(({ mode }) => {
 				output: {
 					entryFileNames: "js/[name].min.js",
 					chunkFileNames: "js/[name].min.js",
-					assetFileNames: "[ext]/[name].min.[ext]"
+					assetFileNames: "[ext]/[name].min.[ext]",
+					manualChunks(id) {
+						if (id.includes("sortablejs")) {
+							return "sortable";
+						}
+
+						if (id.includes("node_modules")) {
+							return "vendor";
+						}
+
+						return null;
+					}
 				}
 			}
 		},
