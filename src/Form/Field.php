@@ -137,6 +137,12 @@ class Field extends Component
 					return I18n::translate($label, $label);
 				},
 				/**
+				 * If `true`, the native browser validation will not be triggered for this field
+				 */
+				'novalidate' => function (bool $novalidate = false): bool {
+					return $novalidate;
+				},
+				/**
 				 * Optional placeholder value that will be shown when the field is empty
 				 */
 				'placeholder' => function ($placeholder = null) {

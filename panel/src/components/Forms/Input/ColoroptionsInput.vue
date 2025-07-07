@@ -12,6 +12,7 @@
 						:autofocus="autofocus && index === 0"
 						:checked="choice.value === value"
 						:disabled="disabled"
+						:formnovalidate="novalidate"
 						:name="name ?? id"
 						:required="required"
 						:value="choice.value"

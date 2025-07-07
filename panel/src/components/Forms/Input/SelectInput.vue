@@ -11,6 +11,7 @@
 			:autofocus="autofocus"
 			:aria-label="ariaLabel"
 			:disabled="disabled"
+			:formnovalidate="novalidate"
 			:name="name"
 			:required="required"
 			:value="value"

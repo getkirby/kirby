@@ -32,7 +32,7 @@
 		<template v-if="filteredOptions.length">
 			<div class="k-picklist-input-body">
 				<k-input-validator
-					v-bind="{ min, max, required }"
+					v-bind="{ min, max, novalidate, required }"
 					:value="JSON.stringify(value)"
 				>
 					<component
