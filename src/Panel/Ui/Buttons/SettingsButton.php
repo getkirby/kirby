@@ -24,6 +24,7 @@ class SettingsButton extends ViewButton
 		parent::__construct(
 			component: 'k-settings-view-button',
 			class: 'k-settings-view-button',
+			disabled: $model->lock()->isLocked(),
 			icon: 'cog',
 			options: $model->panel()->url(true),
 			title: I18n::translate('settings'),
