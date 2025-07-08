@@ -350,13 +350,12 @@ class FileRulesTest extends ModelTestCase
 
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
-			->onlyMethods(['permissions', 'blueprint', 'filename'])
-			->addMethods(['extension'])
+			->onlyMethods(['permissions', 'blueprint', 'filename', '__call'])
 			->getMock();
 		$file->method('blueprint')->willReturn($blueprint);
-		$file->method('extension')->willReturn('svg');
-		$file->method('filename')->willReturn('test.svg');
 		$file->method('permissions')->willReturn($permissions);
+		$file->method('filename')->willReturn('test.svg');
+		$file->method('__call')->with('extension')->willReturn('svg');
 
 		$upload = new BaseFile(static::FIXTURES . '/test.svg');
 
@@ -420,12 +419,13 @@ class FileRulesTest extends ModelTestCase
 
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
-			->onlyMethods(['permissions'])
-			->addMethods(['mime', 'extension'])
+			->onlyMethods(['permissions', '__call'])
 			->getMock();
 		$file->method('permissions')->willReturn($permissions);
-		$file->method('mime')->willReturn('image/jpeg');
-		$file->method('extension')->willReturn('jpg');
+		$file->method('__call')->willReturnCallback(fn ($method, $args = []) => match ($method) {
+			'mime'      => 'image/jpeg',
+			'extension' => 'jpg'
+		});
 
 		$upload = $this->createMock(BaseFile::class);
 		$upload->method('mime')->willReturn('image/png');
@@ -447,13 +447,14 @@ class FileRulesTest extends ModelTestCase
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
 			->onlyMethods(['__call', 'permissions', 'blueprint', 'filename'])
-			->addMethods(['extension'])
 			->getMock();
-		$file->method('__call')->with('mime')->willReturn('image/svg+xml');
-		$file->method('blueprint')->willReturn($blueprint);
-		$file->method('extension')->willReturn('svg');
-		$file->method('filename')->willReturn('test.svg');
-		$file->method('permissions')->willReturn($permissions);
+			$file->method('blueprint')->willReturn($blueprint);
+			$file->method('filename')->willReturn('test.svg');
+			$file->method('permissions')->willReturn($permissions);
+			$file->method('__call')->with('mime')->willReturnCallback(fn ($method, $args = []) => match ($method) {
+				'extension' => 'svg',
+				'mime'      => 'image/svg+xml'
+			});
 
 		$upload = new BaseFile(static::FIXTURES . '/test.svg');
 
@@ -569,12 +570,14 @@ class FileRulesTest extends ModelTestCase
 	): void {
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
-			->onlyMethods(['filename'])
-			->addMethods(['mime', 'extension'])
+			->onlyMethods(['filename', '__call'])
 			->getMock();
 		$file->method('filename')->willReturn($filename);
-		$file->method('extension')->willReturn($extension);
-		$file->method('mime')->willReturn($mime);
+		$file->method('__call')
+			->willReturnCallback(fn ($method, $args = []) => match ($method) {
+				'extension' => $extension,
+				'mime'      => $mime
+			});
 
 		if ($expected === false) {
 			$this->expectException(InvalidArgumentException::class);
@@ -590,12 +593,13 @@ class FileRulesTest extends ModelTestCase
 	{
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
-			->onlyMethods(['filename'])
-			->addMethods(['mime', 'extension'])
+			->onlyMethods(['filename', '__call'])
 			->getMock();
 		$file->method('filename')->willReturn('test.jpg');
-		$file->method('extension')->willReturn('jpg');
-		$file->method('mime')->willReturn('text/html');
+		$file->method('__call')->willReturnCallback(fn ($method, $args = []) => match ($method) {
+			'extension' => 'jpg',
+			'mime'      => 'text/html'
+		});
 
 		FileRules::validFile($file, false);
 
