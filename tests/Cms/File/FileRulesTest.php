@@ -448,13 +448,13 @@ class FileRulesTest extends ModelTestCase
 			->disableOriginalConstructor()
 			->onlyMethods(['__call', 'permissions', 'blueprint', 'filename'])
 			->getMock();
-			$file->method('blueprint')->willReturn($blueprint);
-			$file->method('filename')->willReturn('test.svg');
-			$file->method('permissions')->willReturn($permissions);
-			$file->method('__call')->with('mime')->willReturnCallback(fn ($method, $args = []) => match ($method) {
-				'extension' => 'svg',
-				'mime'      => 'image/svg+xml'
-			});
+		$file->method('blueprint')->willReturn($blueprint);
+		$file->method('filename')->willReturn('test.svg');
+		$file->method('permissions')->willReturn($permissions);
+		$file->method('__call')->with('mime')->willReturnCallback(fn ($method, $args = []) => match ($method) {
+			'extension' => 'svg',
+			'mime'      => 'image/svg+xml'
+		});
 
 		$upload = new BaseFile(static::FIXTURES . '/test.svg');
 
