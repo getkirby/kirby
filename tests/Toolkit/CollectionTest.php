@@ -506,8 +506,8 @@ class CollectionTest extends TestCase
 			'c' => ['f'],
 		]);
 
-		$this->assertSame('def', $collection->join(as: fn($e) => $e[0]));
-		$this->assertSame('d-e-f', $collection->join('-', fn($e) => $e[0]));
+		$this->assertSame('def', $collection->join(as: fn ($e) => $e[0]));
+		$this->assertSame('d-e-f', $collection->join('-', fn ($e) => $e[0]));
 	}
 
 	public function testKeyOf(): void
