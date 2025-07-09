@@ -3,11 +3,11 @@
 namespace Kirby\Database;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use ReflectionProperty;
 
-/**
- * @coversDefaultClass \Kirby\Database\Db
- */
+#[CoversClass(Db::class)]
 class DbTest extends TestCase
 {
 	public function setUp(): void
@@ -59,10 +59,7 @@ class DbTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::connect
-	 */
-	public function testConnect()
+	public function testConnect(): void
 	{
 		$db = Db::connect();
 		$this->assertInstanceOf(Database::class, $db);
@@ -88,18 +85,12 @@ class DbTest extends TestCase
 		$this->assertSame($db, Db::connect());
 	}
 
-	/**
-	 * @covers ::connection
-	 */
-	public function testConnection()
+	public function testConnection(): void
 	{
 		$this->assertInstanceOf(Database::class, Db::connection());
 	}
 
-	/**
-	 * @covers ::table
-	 */
-	public function testTable()
+	public function testTable(): void
 	{
 		$tableProp = new ReflectionProperty(Query::class, 'table');
 		$tableProp->setAccessible(true);
@@ -109,19 +100,13 @@ class DbTest extends TestCase
 		$this->assertSame('users', $tableProp->getValue($query));
 	}
 
-	/**
-	 * @covers ::query
-	 */
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$result = Db::query('SELECT * FROM users WHERE username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
 		$this->assertSame('paul', $result[0]['username']);
 	}
 
-	/**
-	 * @covers ::execute
-	 */
-	public function testExecute()
+	public function testExecute(): void
 	{
 		$result = Db::query('SELECT * FROM users WHERE username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
 		$this->assertSame('paul', $result[0]['username']);
@@ -133,10 +118,7 @@ class DbTest extends TestCase
 		$this->assertEmpty($result);
 	}
 
-	/**
-	 * @covers ::__callStatic
-	 */
-	public function testCallStatic()
+	public function testCallStatic(): void
 	{
 		Db::connect([
 			'database' => ':memory:',
@@ -152,10 +134,7 @@ class DbTest extends TestCase
 		$this->assertSame('myprefix_', Db::prefix());
 	}
 
-	/**
-	 * @covers ::__callStatic
-	 */
-	public function testCallStaticInvalid()
+	public function testCallStaticInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid static Db method: thisIsInvalid');
@@ -163,10 +142,8 @@ class DbTest extends TestCase
 		Db::thisIsInvalid();
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testSelect()
+	#[CoversNothing]
+	public function testSelect(): void
 	{
 		$result = Db::select('users');
 		$this->assertCount(3, $result);
@@ -184,10 +161,8 @@ class DbTest extends TestCase
 		$this->assertSame('george', $result->first()->username());
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testFirst()
+	#[CoversNothing]
+	public function testFirst(): void
 	{
 		$result = Db::first('users');
 		$this->assertSame('john', $result->username());
@@ -205,10 +180,8 @@ class DbTest extends TestCase
 		$this->assertSame('john', $result->username());
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testColumn()
+	#[CoversNothing]
+	public function testColumn(): void
 	{
 		$result = Db::column('users', 'username');
 		$this->assertSame(['john', 'paul', 'george'], $result->toArray());
@@ -223,10 +196,8 @@ class DbTest extends TestCase
 		$this->assertSame(['john'], $result->toArray());
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testInsert()
+	#[CoversNothing]
+	public function testInsert(): void
 	{
 		$result = Db::insert('users', [
 			'username' => 'ringo',
@@ -241,10 +212,8 @@ class DbTest extends TestCase
 		$this->assertSame('0', Db::row('users', '*', ['username' => 'ringo'])->active());
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testUpdate()
+	#[CoversNothing]
+	public function testUpdate(): void
 	{
 		$result = Db::update('users', ['email' => 'john@gmail.com'], ['username' => 'john']);
 		$this->assertTrue($result);
@@ -257,10 +226,8 @@ class DbTest extends TestCase
 		$this->assertSame('1', Db::row('users', '*', ['username' => 'paul'])->active());
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testDelete()
+	#[CoversNothing]
+	public function testDelete(): void
 	{
 		$result = Db::delete('users', ['username' => 'john']);
 		$this->assertTrue($result);
@@ -268,42 +235,32 @@ class DbTest extends TestCase
 		$this->assertSame(2, Db::count('users'));
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testCount()
+	#[CoversNothing]
+	public function testCount(): void
 	{
 		$this->assertSame(3, Db::count('users'));
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testMin()
+	#[CoversNothing]
+	public function testMin(): void
 	{
 		$this->assertSame(1.0, Db::min('users', 'id'));
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testMax()
+	#[CoversNothing]
+	public function testMax(): void
 	{
 		$this->assertSame(3.0, Db::max('users', 'id'));
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testAvg()
+	#[CoversNothing]
+	public function testAvg(): void
 	{
 		$this->assertSame(2.0, Db::avg('users', 'id'));
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testSum()
+	#[CoversNothing]
+	public function testSum(): void
 	{
 		$this->assertSame(6.0, Db::sum('users', 'id'));
 	}
