@@ -878,10 +878,13 @@ class HelperFunctionsTest extends HelpersTestCase
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
 			->onlyMethods(['__call'])
-			->addMethods(['extension'])
 			->getMock();
-		$file->method('__call')->willReturn('test');
-		$file->method('extension')->willReturn('svg');
+
+		$file->method('__call')
+			->willReturnCallback(fn ($method, $args = []) => match ($method) {
+				'extension' => 'svg',
+				default    => 'test'
+			});
 
 		$this->assertSame('test', svg($file));
 	}
