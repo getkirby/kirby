@@ -497,17 +497,10 @@ class CollectionTest extends TestCase
 			'c' => 'f',
 		]);
 
-		$this->assertSame('def', $collection->join());
+		$this->assertSame('d, e, f', $collection->join());
 		$this->assertSame('d-e-f', $collection->join('-'));
-
-		$collection = new Collection([
-			'a' => ['d'],
-			'b' => ['e'],
-			'c' => ['f'],
-		]);
-
-		$this->assertSame('def', $collection->join(as: fn ($e) => $e[0]));
-		$this->assertSame('d-e-f', $collection->join('-', fn ($e) => $e[0]));
+		$this->assertSame('D, E, F', $collection->join(as: Str::upper(...)));
+		$this->assertSame('DEF', $collection->join('', Str::upper(...)));
 	}
 
 	public function testKeyOf(): void
