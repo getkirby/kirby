@@ -146,4 +146,7 @@ export default {
 .k-number-input:focus {
 	outline: 0;
 }
+.k-number-input:disabled::placeholder {
+	opacity: 0;
+}
 </style>
