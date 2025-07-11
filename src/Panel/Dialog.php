@@ -18,7 +18,7 @@ use Kirby\Http\Response;
  */
 class Dialog extends Json
 {
-	protected static string $key = '$dialog';
+	protected static string $key = 'dialog';
 
 	/**
 	 * Renders dialogs

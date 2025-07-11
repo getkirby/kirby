@@ -19,7 +19,7 @@ use Kirby\Http\Response;
  */
 class Dropdown extends Json
 {
-	protected static string $key = '$dropdown';
+	protected static string $key = 'dropdown';
 
 	/**
 	 * Renders dropdowns
