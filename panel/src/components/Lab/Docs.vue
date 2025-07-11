@@ -7,7 +7,12 @@
 			title="Unstable"
 			text="This component has been marked as unstable and may change in the future."
 		/>
-		<k-lab-docs-description :description="description" :since="since" />
+
+		<section v-if="since" class="k-lab-docs-view-since">
+			Since <k-tag :text="since" theme="light" />
+		</section>
+
+		<k-lab-docs-description :description="description" />
 		<k-lab-docs-examples :examples="examples" />
 		<k-lab-docs-props :props="props" />
 		<k-lab-docs-slots :slots="slots" />
@@ -59,7 +64,8 @@ export default {
 	props: {
 		component: String,
 		deprecated: String,
-		isUnstable: Boolean
+		isUnstable: Boolean,
+		since: String
 	}
 };
 </script>
@@ -92,5 +98,16 @@ export default {
 	margin-top: var(--spacing-1);
 	font-size: var(--text-xs);
 	color: var(--color-gray-600);
+}
+
+.k-lab-docs-view-since {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-1);
+	margin-bottom: var(--spacing-8);
+}
+
+.k-lab-docs-view-since .k-tag {
+	--tag-color-back: var(--color-yellow-400);
 }
 </style>
