@@ -3,6 +3,9 @@
 		<k-lab-example label="cardlets">
 			<k-items :items="items" layout="cardlets" />
 		</k-lab-example>
+		<k-lab-example label="Sortable">
+			<k-items :items="items" :sortable="true" layout="cardlets" />
+		</k-lab-example>
 		<k-lab-example label="Selectable">
 			<k-items
 				:items="selectableItems"
