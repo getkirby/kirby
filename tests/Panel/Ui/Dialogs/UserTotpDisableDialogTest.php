@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserTotpDisableDialog::class)]
 class UserTotpDisableDialogTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.UserTotpDisableDialog';
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Ui.Dialogs.UserTotpDisableDialog';
 
 	protected function setUp(): void
 	{
