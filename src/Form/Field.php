@@ -359,14 +359,6 @@ class Field extends Component
 	}
 
 	/**
-	 * Parent collection with all fields of the current form
-	 */
-	public function siblings(): Fields
-	{
-		return $this->siblings;
-	}
-
-	/**
 	 * Returns all sibling fields for the HasSiblings trait
 	 */
 	protected function siblingsCollection(): Fields

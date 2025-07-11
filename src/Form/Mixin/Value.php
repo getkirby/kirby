@@ -106,7 +106,7 @@ trait Value
 	 * because it is disabled, not translatable into the given
 	 * language or not active due to a `when` rule.
 	 */
-	public function isSubmittable(Language $language): bool
+	public function isSubmittable(Language $language, array $input = []): bool
 	{
 		if ($this->hasValue() === false) {
 			return false;
@@ -120,7 +120,7 @@ trait Value
 			return false;
 		}
 
-		if ($this->isActive() === false) {
+		if ($this->isActive($input) === false) {
 			return false;
 		}
 
