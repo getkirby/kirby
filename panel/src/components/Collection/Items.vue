@@ -31,10 +31,10 @@
 		@change="$emit('change', $event)"
 		@end="$emit('sort', items, $event)"
 	>
-		<template v-for="(item, itemIndex) in items">
+		<template v-for="(item, itemIndex) in itemsWithIds">
 			<slot v-bind="{ item, itemIndex }">
 				<k-item
-					:key="item.id ?? itemIndex"
+					:key="item.id"
 					v-bind="item"
 					:class="{ 'k-draggable-item': sortable && item.sortable }"
 					:image="imageOptions(item)"
@@ -142,6 +142,16 @@ export default {
 				disabled: this.sortable === false,
 				draggable: ".k-draggable-item"
 			};
+		},
+		/**
+		 * Adds a unique id to each item if it doesn't have one
+		 * to be used for `:key` in the `v-for` loop
+		 */
+		itemsWithIds() {
+			return this.items.map((item) => ({
+				...item,
+				id: item.id ?? item.uuid ?? this.$helper.uuid()
+			}));
 		},
 		table() {
 			return {
