@@ -101,8 +101,14 @@ export default {
 	border-radius: var(--input-rounded);
 }
 
-:where(.k-checkboxes-field, .k-radio-field) .k-choice-input {
+:where(.k-checkboxes-field, .k-radio-field):not([data-disabled="true"])
+	.k-choice-input {
 	background: var(--item-color-back);
 	box-shadow: var(--shadow);
+}
+
+:where(.k-checkboxes-field, .k-radio-field)[data-disabled="true"]
+	.k-choice-input {
+	border: 1px solid var(--color-border);
 }
 </style>
