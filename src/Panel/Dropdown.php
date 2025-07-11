@@ -17,24 +17,8 @@ use Kirby\Http\Response;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Dropdown extends Json
+class Dropdown
 {
-	protected static string $key = '$dropdown';
-
-	/**
-	 * Renders dropdowns
-	 */
-	public static function response($data, array $options = []): Response
-	{
-		if (is_array($data) === true) {
-			$data = [
-				'options' => array_values($data)
-			];
-		}
-
-		return parent::response($data, $options);
-	}
-
 	/**
 	 * Routes for the dropdown
 	 */
@@ -55,13 +39,12 @@ class Dropdown extends Json
 
 		// create the full pattern with dialogs prefix
 		$pattern = trim($prefix . '/' . ($options['pattern'] ?? $id), '/');
-		$type    = str_replace('$', '', static::$key);
 
 		return [
 			// load event
 			[
 				'pattern' => $pattern,
-				'type'    => $type,
+				'type'    => 'dropdown',
 				'area'    => $areaId,
 				'method'  => 'GET|POST',
 				'action'  => $options['options'] ?? $options['action']

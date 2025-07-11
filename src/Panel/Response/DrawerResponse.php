@@ -1,8 +1,6 @@
 <?php
 
-namespace Kirby\Panel;
-
-use Kirby\Http\Response;
+namespace Kirby\Panel\Response;
 
 /**
  * The Drawer response class handles Fiber
@@ -15,7 +13,7 @@ use Kirby\Http\Response;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Drawer extends Dialog
+class DrawerResponse extends DialogResponse
 {
-	protected static string $key = '$drawer';
+	protected static string $key = 'drawer';
 }

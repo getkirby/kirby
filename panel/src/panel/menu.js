@@ -3,8 +3,8 @@ import State from "./state.js";
 
 export const defaults = () => {
 	return {
-		entries: [],
-		hover: false,
+		props: {},
+		isHovered: false,
 		isOpen: false
 	};
 };
@@ -100,8 +100,8 @@ export default (panel) => {
 		 *
 		 * @param {Array} entries
 		 */
-		set(entries) {
-			this.entries = entries;
+		set(menu) {
+			this.props = menu.props;
 			this.resize();
 			return this.state();
 		},
