@@ -169,10 +169,6 @@
 	text-align: start;
 }
 
-:where(svg) {
-	fill: currentColor;
-}
-
 body {
 	font-family: var(--font-sans, sans-serif);
 	font-size: var(--text-sm);
