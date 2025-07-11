@@ -9,7 +9,7 @@
 		<k-lab-example label="Selectable">
 			<k-items
 				:items="selectableItems"
-				:selectable="true"
+				:selecting="true"
 				layout="cards"
 				@select="onSelect"
 			/>
