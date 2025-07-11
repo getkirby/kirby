@@ -11,20 +11,18 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
 use Kirby\Http\Uri;
-use Kirby\Toolkit\Str;
 
 /**
  * The Version class handles all actions for a single
  * version and is identified by a VersionId instance
- *
- * @internal
- * @since 5.0.0
  *
  * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
+ * @unstable
  */
 class Version
 {
@@ -56,8 +54,8 @@ class Version
 			];
 		}
 
-		// prepare raw content file fields as fields for Content object
-		$fields = $this->prepareFieldsForContent($fields, $language);
+		// remove fields that should not be used for the Content object
+		unset($fields['lock']);
 
 		return new Content(
 			parent: $this->model,
@@ -101,20 +99,6 @@ class Version
 		Language|string $language = 'default'
 	): void {
 		$language = Language::ensure($language);
-		$latest   = $this->sibling('latest');
-
-		// if the latest version of the translation does not exist yet,
-		// we have to copy over the content from the default language first.
-		if (
-			$this->isLatest() === false &&
-			$language->isDefault() === false &&
-			$latest->exists($language) === false
-		) {
-			$latest->create(
-				fields: $latest->read(Language::ensure('default')),
-				language: $language
-			);
-		}
 
 		// check if creating is allowed
 		VersionRules::create($this, $fields, $language);
@@ -126,8 +110,8 @@ class Version
 
 		$this->model->storage()->create(
 			versionId: $this->id,
-			language: $language,
-			fields: $this->prepareFieldsBeforeWrite($fields, $language)
+			language:  $language,
+			fields:    $this->prepareFieldsBeforeWrite($fields, $language)
 		);
 
 		// make sure that an older version does not exist in the cache
@@ -238,13 +222,11 @@ class Version
 		$a = $this->read($language) ?? [];
 		$b = $version->read($language) ?? [];
 
-		// apply same preparation as for content
-		$a = $this->prepareFieldsForContent($a, $language);
-		$b = $this->prepareFieldsForContent($b, $language);
-
-		// remove additional fields that should not be
+		// remove fields that should not be
 		// considered in the comparison
 		unset(
+			$a['lock'],
+			$b['lock'],
 			$a['uuid'],
 			$b['uuid']
 		);
@@ -410,26 +392,9 @@ class Version
 	}
 
 	/**
-	 * Make sure that the Content object receives the right set of fields
-	 * filtering fields used for lower logic (e.g. lock)
-	 */
-	protected function prepareFieldsForContent(
-		array $fields,
-		Language $language
-	): array {
-		unset($fields['lock']);
-
-		if ($this->model instanceof Page) {
-			unset($fields['slug']);
-		}
-
-		return $fields;
-	}
-
-	/**
 	 * Returns a verification token for the authentication
 	 * of draft and version previews
-	 * @internal
+	 * @unstable
 	 */
 	public function previewToken(): string
 	{
@@ -448,29 +413,15 @@ class Version
 			throw new LogicException('Invalid model type');
 		}
 
-		return $this->previewTokenFromUrl($this->model->url())
-			?? throw new LogicException('Cannot produce local preview token for model');
+		return $this->previewTokenFromUrl($this->model->url());
 	}
 
 	/**
 	 * Returns a verification token for the authentication
 	 * of draft and version previews from a raw URL
-	 * if the URL comes from the same site
 	 */
-	protected function previewTokenFromUrl(string $url): string|null
+	protected function previewTokenFromUrl(string $url): string
 	{
-		$localPrefix = $this->model->kirby()->url('base') . '/';
-
-		// normalize homepage URLs to have a trailing slash
-		// to make the following logic work with those as well
-		if ($url . '/' === $localPrefix) {
-			$url .= '/';
-		}
-
-		if (Str::startsWith($url, $localPrefix) === false) {
-			return null;
-		}
-
 		// get rid of all modifiers after the path
 		$uri = new Uri($url);
 		$uri->fragment = null;
@@ -478,13 +429,13 @@ class Version
 		$uri->query    = null;
 
 		$data = [
-			'uri'       => Str::after($uri->toString(), $localPrefix),
+			'url'       => $uri->toString(),
 			'versionId' => $this->id->value()
 		];
 
 		$token = $this->model->kirby()->contentToken(
 			null,
-			json_encode($data)
+			json_encode($data, JSON_UNESCAPED_SLASHES)
 		);
 
 		return substr($token, 0, 10);
@@ -502,8 +453,8 @@ class Version
 		// check if publishing is allowed
 		VersionRules::publish($this, $language);
 
-		$latest  = $this->sibling('latest')->read($language);
-		$changes = $this->read($language);
+		$latest  = $this->sibling('latest')->read($language) ?? [];
+		$changes = $this->read($language) ?? [];
 
 		// overwrite all fields that are not in the `changes` version
 		// with a null value. The ModelWithContent::update method will merge
@@ -665,7 +616,7 @@ class Version
 
 	/**
 	 * Returns the preview URL with authentication for drafts and versions
-	 * @internal
+	 * @unstable
 	 */
 	public function url(): string|null
 	{

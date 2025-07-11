@@ -19,7 +19,7 @@ class MockCollectionEntry
 
 class CollectionFilterTest extends TestCase
 {
-	public function testFilterArray()
+	public function testFilterArray(): void
 	{
 		$collection = new Collection([
 			[
@@ -62,7 +62,7 @@ class CollectionFilterTest extends TestCase
 		$this->assertSame($expected, $result->data());
 	}
 
-	public function testFilterClosure()
+	public function testFilterClosure(): void
 	{
 		$collection = new Collection([
 			[
@@ -654,8 +654,13 @@ class CollectionFilterTest extends TestCase
 	}
 
 	#[DataProvider('filterDataProvider')]
-	public function testFilter(array $attributes, string $operator, string|bool|int|float|array $test, array $expected, bool|string $split)
-	{
+	public function testFilter(
+		array $attributes,
+		string $operator,
+		string|bool|int|float|array $test,
+		array $expected,
+		bool|string $split
+	): void {
 		$data = [];
 
 		foreach ($attributes as $attributeKey => $attributeValue) {
@@ -670,7 +675,7 @@ class CollectionFilterTest extends TestCase
 		$this->assertSame($expected, $result->keys(), $operator);
 	}
 
-	public function testNot()
+	public function testNot(): void
 	{
 		$collection = new Collection([
 			'one'   => 'eins',

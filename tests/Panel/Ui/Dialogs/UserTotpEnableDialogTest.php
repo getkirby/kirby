@@ -8,10 +8,9 @@ use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
 use Kirby\TestCase;
 use Kirby\Toolkit\Totp;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\UserTotpEnableDialog
- */
+#[CoversClass(UserTotpEnableDialog::class)]
 class UserTotpEnableDialogTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.UserTotpEnableDialog';
@@ -44,9 +43,6 @@ class UserTotpEnableDialogTest extends TestCase
 		$_GET = [];
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstruct(): void
 	{
 		$dialog = new UserTotpEnableDialog();
@@ -55,11 +51,6 @@ class UserTotpEnableDialogTest extends TestCase
 		$this->assertSame('test@getkirby.com', $dialog->user->email());
 	}
 
-	/**
-	 * @covers ::load
-	 * @covers ::secret
-	 * @covers ::totp
-	 */
 	public function testLoad(): void
 	{
 		$dialog = new UserTotpEnableDialog();
@@ -70,10 +61,6 @@ class UserTotpEnableDialogTest extends TestCase
 		$this->assertIsString($state['props']['qr']);
 	}
 
-	/**
-	 * @covers ::qr
-	 * @covers ::totp
-	 */
 	public function testQr(): void
 	{
 		$dialog = new UserTotpEnableDialog();
@@ -83,10 +70,6 @@ class UserTotpEnableDialogTest extends TestCase
 		$this->assertStringContainsString('otpauth://totp/:test%40getkirby.com?secret=', $qr->data);
 	}
 
-	/**
-	 * @covers ::submit
-	 * @covers ::totp
-	 */
 	public function testSubmit(): void
 	{
 		$totp            = new Totp();
@@ -102,9 +85,6 @@ class UserTotpEnableDialogTest extends TestCase
 		$this->assertIsString($state['message']);
 	}
 
-	/**
-	 * @covers ::submit
-	 */
 	public function testSubmitNoConfirmCode(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -117,9 +97,6 @@ class UserTotpEnableDialogTest extends TestCase
 		$dialog->submit();
 	}
 
-	/**
-	 * @covers ::submit
-	 */
 	public function testSubmitWrongConfirmCode(): void
 	{
 		$this->expectException(InvalidArgumentException::class);

@@ -28,6 +28,8 @@ use Throwable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
  */
 class Page extends ModelWithContent
 {
@@ -35,9 +37,6 @@ class Page extends ModelWithContent
 	use HasFiles;
 	use HasMethods;
 	use HasModels;
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
-	 */
 	use HasSiblings;
 	use PageActions;
 	use PageSiblings;
@@ -295,7 +294,6 @@ class Page extends ModelWithContent
 
 	/**
 	 * Call the page controller
-	 * @internal
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the controller returns invalid objects for `kirby`, `site`, `pages` or `page`
 	 */
@@ -409,7 +407,6 @@ class Page extends ModelWithContent
 	/**
 	 * Constructs a Page object and also
 	 * takes page models into account.
-	 * @internal
 	 */
 	public static function factory($props): static
 	{
@@ -472,9 +469,7 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Returns the inventory of files
-	 * children and content files
-	 * @internal
+	 * Returns the inventory of files children and content files
 	 */
 	public function inventory(): array
 	{
@@ -770,17 +765,23 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Returns the root to the media folder for the page
-	 * @internal
+	 * Returns the absolute path to the media folder for the page
 	 */
-	public function mediaRoot(): string
+	public function mediaDir(): string
 	{
 		return $this->kirby()->root('media') . '/pages/' . $this->id();
 	}
 
 	/**
+	 * @see `::mediaDir`
+	 */
+	public function mediaRoot(): string
+	{
+		return $this->mediaDir();
+	}
+
+	/**
 	 * The page's base URL for any files
-	 * @internal
 	 */
 	public function mediaUrl(): string
 	{
@@ -832,7 +833,6 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the parent id, if a parent exists
-	 * @internal
 	 */
 	public function parentId(): string|null
 	{
@@ -843,7 +843,6 @@ class Page extends ModelWithContent
 	 * Returns the parent model,
 	 * which can either be another Page
 	 * or the Site
-	 * @internal
 	 */
 	public function parentModel(): Page|Site
 	{
@@ -885,7 +884,7 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the preview URL with authentication for drafts and versions
-	 * @internal
+	 * @unstable
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
@@ -1001,7 +1000,7 @@ class Page extends ModelWithContent
 	/**
 	 * Determines which version (if any) can be rendered
 	 * based on the token authentication in the current request
-	 * @internal
+	 * @unstable
 	 */
 	public function renderVersionFromRequest(): VersionId|null
 	{
@@ -1035,7 +1034,6 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * @internal
 	 * @throws \Kirby\Exception\NotFoundException If the content representation cannot be found
 	 */
 	public function representation(mixed $type): Template

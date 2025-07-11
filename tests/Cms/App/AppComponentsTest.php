@@ -40,7 +40,7 @@ class AppComponentsTest extends TestCase
 		]);
 	}
 
-	public function testCssPlugin()
+	public function testCssPlugin(): void
 	{
 		$this->app->clone([
 			'components' => [
@@ -52,7 +52,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, css('something.css'));
 	}
 
-	public function testJsPlugin()
+	public function testJsPlugin(): void
 	{
 		$this->app->clone([
 			'components' => [
@@ -64,7 +64,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, js('something.js'));
 	}
 
-	public function testKirbyTag()
+	public function testKirbyTag(): void
 	{
 		$tag = $this->app->kirbytag('link', 'https://getkirby.com', ['text' => 'Kirby']);
 		$expected = '<a href="https://getkirby.com">Kirby</a>';
@@ -72,7 +72,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $tag);
 	}
 
-	public function testKirbyTags()
+	public function testKirbyTags(): void
 	{
 		$tag = $this->app->kirbytags('(link: https://getkirby.com text: Kirby)');
 		$expected = '<a href="https://getkirby.com">Kirby</a>';
@@ -80,7 +80,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $tag);
 	}
 
-	public function testKirbytext()
+	public function testKirbytext(): void
 	{
 		$text     = 'Test';
 		$expected = '<p>Test</p>';
@@ -88,7 +88,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->kirbytext($text));
 	}
 
-	public function testKirbytextWithSafeMode()
+	public function testKirbytextWithSafeMode(): void
 	{
 		$text     = '<h1>**Test**</h1>';
 		$expected = '&lt;h1&gt;<strong>Test</strong>&lt;/h1&gt;';
@@ -101,7 +101,7 @@ class AppComponentsTest extends TestCase
 		]));
 	}
 
-	public function testKirbytextInline()
+	public function testKirbytextInline(): void
 	{
 		$text     = 'Test';
 		$expected = 'Test';
@@ -113,7 +113,7 @@ class AppComponentsTest extends TestCase
 		], true));
 	}
 
-	public function testMarkdown()
+	public function testMarkdown(): void
 	{
 		$text     = 'Test';
 		$expected = '<p>Test</p>';
@@ -121,7 +121,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->markdown($text));
 	}
 
-	public function testMarkdownInline()
+	public function testMarkdownInline(): void
 	{
 		$text     = 'Test';
 		$expected = 'Test';
@@ -129,7 +129,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->markdown($text, ['inline' => true]));
 	}
 
-	public function testMarkdownWithSafeMode()
+	public function testMarkdownWithSafeMode(): void
 	{
 		$text     = '<div>Test</div>';
 		$expected = '<p>&lt;div&gt;Test&lt;/div&gt;</p>';
@@ -137,7 +137,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->markdown($text, ['safe' => true]));
 	}
 
-	public function testMarkdownCachedInstance()
+	public function testMarkdownCachedInstance(): void
 	{
 		$text     = '1st line
 2nd line';
@@ -151,7 +151,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->component('markdown')($this->app, $text, ['breaks' => false]));
 	}
 
-	public function testMarkdownPlugin()
+	public function testMarkdownPlugin(): void
 	{
 		$this->app = $this->app->clone([
 			'components' => [
@@ -176,7 +176,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->markdown($text, ['inline' => true]));
 	}
 
-	public function testSmartypants()
+	public function testSmartypants(): void
 	{
 		$text     = '"Test"';
 		$expected = '&#8220;Test&#8221;';
@@ -184,7 +184,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
-	public function testSmartypantsDisabled()
+	public function testSmartypantsDisabled(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -198,7 +198,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
-	public function testSmartypantsOptions()
+	public function testSmartypantsOptions(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -216,7 +216,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
-	public function testSmartypantsMultiLang()
+	public function testSmartypantsMultiLang(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -254,7 +254,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
-	public function testSmartypantsDefaultOptionsOnMultiLang()
+	public function testSmartypantsDefaultOptionsOnMultiLang(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -284,7 +284,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->smartypants($text));
 	}
 
-	public function testSmartypantsCachedInstance()
+	public function testSmartypantsCachedInstance(): void
 	{
 		$text     = '"Test"';
 		$expected = '&#8220;Test&#8221;';
@@ -295,7 +295,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, $this->app->component('smartypants')($this->app, $text, ['doublequote.open' => 'Test']));
 	}
 
-	public function testSnippet()
+	public function testSnippet(): void
 	{
 		$app = $this->app->clone([
 			'roots' => [
@@ -348,7 +348,7 @@ class AppComponentsTest extends TestCase
 		$app->snippet('variable', ['message' => 'test'], false);
 	}
 
-	public function testStorage()
+	public function testStorage(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -361,7 +361,7 @@ class AppComponentsTest extends TestCase
 		$this->assertInstanceOf(PlainTextStorage::class, $this->app->storage($this->app->page('test')));
 	}
 
-	public function testStorageWithModifiedComponent()
+	public function testStorageWithModifiedComponent(): void
 	{
 		$this->app = $this->app->clone([
 			'components' => [
@@ -379,12 +379,12 @@ class AppComponentsTest extends TestCase
 		$this->assertInstanceOf(MemoryStorage::class, $this->app->storage($this->app->page('test')));
 	}
 
-	public function testTemplate()
+	public function testTemplate(): void
 	{
 		$this->assertInstanceOf(Template::class, $this->app->template('default'));
 	}
 
-	public function testUrlPlugin()
+	public function testUrlPlugin(): void
 	{
 		$this->app->clone([
 			'components' => [
@@ -395,7 +395,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame('test', url('anything'));
 	}
 
-	public function testUrlPluginWithNativeComponent()
+	public function testUrlPluginWithNativeComponent(): void
 	{
 		$this->app->clone([
 			'components' => [
@@ -413,7 +413,7 @@ class AppComponentsTest extends TestCase
 		$this->assertSame('/any/page', url('any/page'));
 	}
 
-	public function testUrlInvalidUuid()
+	public function testUrlInvalidUuid(): void
 	{
 		$this->app->clone([
 			'roots' => [
@@ -427,7 +427,7 @@ class AppComponentsTest extends TestCase
 		url('page://invalid');
 	}
 
-	public function testEmail()
+	public function testEmail(): void
 	{
 		$app = $this->app->clone([
 			'components' => [

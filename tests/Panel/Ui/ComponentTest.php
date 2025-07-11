@@ -4,21 +4,16 @@ namespace Kirby\Panel\Ui;
 
 use Exception;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class UiComponent extends Component
 {
 }
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Component
- * @covers ::__construct
- */
+#[CoversClass(Component::class)]
 class ComponentTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testAttrs()
+	public function testAttrs(): void
 	{
 		$props = [
 			'component' => 'k-text',
@@ -35,10 +30,7 @@ class ComponentTest extends TestCase
 		], $component->props());
 	}
 
-	/**
-	 * @covers ::__call
-	 */
-	public function testGetterSetter()
+	public function testGetterSetter(): void
 	{
 		$component = new UiComponent(component: 'k-test');
 
@@ -49,10 +41,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('my-class', $component->class());
 	}
 
-	/**
-	 * @covers ::__call
-	 */
-	public function testGetterSetterInvalid()
+	public function testGetterSetterInvalid(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The property "foo" does not exist on the UI component "k-test"');
@@ -60,10 +49,7 @@ class ComponentTest extends TestCase
 		$component->foo('my-class');
 	}
 
-	/**
-	 * @covers ::key
-	 */
-	public function testKey()
+	public function testKey(): void
 	{
 		$component = new UiComponent(component: 'k-test');
 
@@ -71,10 +57,7 @@ class ComponentTest extends TestCase
 		$this->assertSame($component->render()['key'], $component->key());
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$component = new UiComponent(
 			component: 'k-test',
@@ -87,10 +70,7 @@ class ComponentTest extends TestCase
 		], $component->props());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		$component = new UiComponent(
 			component: 'k-test',

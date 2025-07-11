@@ -3,10 +3,11 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AppLanguagesTest extends TestCase
 {
-	public function testLanguages()
+	public function testLanguages(): void
 	{
 		$app = new App([
 			'languages' => [
@@ -27,7 +28,7 @@ class AppLanguagesTest extends TestCase
 		$this->assertSame('en', $app->languageCode());
 	}
 
-	public function testLanguageCode()
+	public function testLanguageCode(): void
 	{
 		$app = new App([
 			'languages' => [
@@ -64,10 +65,10 @@ class AppLanguagesTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider detectedLanguageProvider
 	 * @backupGlobals enabled
 	 */
-	public function testDetectedLanguage($accept, $expected)
+	#[DataProvider('detectedLanguageProvider')]
+	public function testDetectedLanguage($accept, $expected): void
 	{
 		// set the accepted visitor language
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;

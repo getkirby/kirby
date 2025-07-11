@@ -4,11 +4,10 @@ namespace Kirby\Cache;
 
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionMethod;
 
-/**
- * @coversDefaultClass \Kirby\Cache\FileCache
- */
+#[CoversClass(FileCache::class)]
 class FileCacheTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cache.FileCache';
@@ -18,11 +17,7 @@ class FileCacheTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::root
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$cache = new FileCache([
 			'root' => $root = static::TMP
@@ -32,11 +27,7 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryExists($root);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::root
-	 */
-	public function testConstructWithPrefix()
+	public function testConstructWithPrefix(): void
 	{
 		$cache = new FileCache([
 			'root'   => $root = static::TMP,
@@ -47,10 +38,7 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryExists($root . '/test');
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
-	public function testEnabled()
+	public function testEnabled(): void
 	{
 		$cache = new FileCache([
 			'root' => static::TMP
@@ -59,10 +47,7 @@ class FileCacheTest extends TestCase
 		$this->assertTrue($cache->enabled());
 	}
 
-	/**
-	 * @covers ::enabled
-	 */
-	public function testEnabledNotWritable()
+	public function testEnabledNotWritable(): void
 	{
 		$cache = new FileCache([
 			'root' => $root = static::TMP
@@ -73,10 +58,7 @@ class FileCacheTest extends TestCase
 		$this->assertFalse($cache->enabled());
 	}
 
-	/**
-	 * @covers ::file
-	 */
-	public function testFile()
+	public function testFile(): void
 	{
 		$method = new ReflectionMethod(FileCache::class, 'file');
 		$method->setAccessible(true);
@@ -208,13 +190,7 @@ class FileCacheTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::created
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
-	public function testOperations()
+	public function testOperations(): void
 	{
 		$cache = new FileCache([
 			'root' => $root = static::TMP
@@ -243,13 +219,7 @@ class FileCacheTest extends TestCase
 		$this->assertFalse($cache->remove('doesnotexist'));
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::created
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
-	public function testOperationsWithExtension()
+	public function testOperationsWithExtension(): void
 	{
 		$cache = new FileCache([
 			'root'      => $root = static::TMP,
@@ -277,13 +247,7 @@ class FileCacheTest extends TestCase
 		$this->assertNull($cache->retrieve('foo'));
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::created
-	 * @covers ::retrieve
-	 * @covers ::remove
-	 */
-	public function testOperationsWithPrefix()
+	public function testOperationsWithPrefix(): void
 	{
 		$cache1 = new FileCache([
 			'root' => $root = static::TMP,
@@ -323,10 +287,7 @@ class FileCacheTest extends TestCase
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
 	}
 
-	/**
-	 * @covers ::flush
-	 */
-	public function testFlush()
+	public function testFlush(): void
 	{
 		$cache = new FileCache([
 			'root' => $root = static::TMP
@@ -348,10 +309,7 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryDoesNotExist($root . '/d');
 	}
 
-	/**
-	 * @covers ::flush
-	 */
-	public function testFlushWithPrefix()
+	public function testFlushWithPrefix(): void
 	{
 		$cache1 = new FileCache([
 			'root' => $root = static::TMP,
@@ -384,10 +342,7 @@ class FileCacheTest extends TestCase
 		$this->assertFileExists($root . '/test2/c/a');
 	}
 
-	/**
-	 * @covers ::removeEmptyDirectories
-	 */
-	public function testRemoveEmptyDirectories()
+	public function testRemoveEmptyDirectories(): void
 	{
 		$cache = new FileCache([
 			'root'      => $root = static::TMP,
@@ -408,10 +363,7 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryExists($root);
 	}
 
-	/**
-	 * @covers ::removeEmptyDirectories
-	 */
-	public function testRemoveEmptyDirectoriesWithNotEmptyDirs()
+	public function testRemoveEmptyDirectoriesWithNotEmptyDirs(): void
 	{
 		$cache = new FileCache([
 			'root'      => $root = static::TMP,

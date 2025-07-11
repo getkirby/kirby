@@ -4,21 +4,15 @@ namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use stdClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\Txt
- */
+#[CoversClass(Txt::class)]
 class TxtTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 * @covers ::decode
-	 */
-	public function testEncodeDecode()
+	public function testEncodeDecode(): void
 	{
 		$array = [
 			'title' => 'Title',
@@ -41,13 +35,7 @@ class TxtTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Txt::decode(['this is' => 'an array']));
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 * @covers ::decode
-	 */
-	public function testEncodeDecodeMixedCase()
+	public function testEncodeDecodeMixedCase(): void
 	{
 		$array = [
 			'title' => 'Title',
@@ -69,12 +57,7 @@ class TxtTest extends TestCase
 		], $result);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
-	public function testEncodeMissingValues()
+	public function testEncodeMissingValues(): void
 	{
 		$array = [
 			'title' => 'Title',
@@ -90,12 +73,7 @@ class TxtTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
-	public function testEncodeMultiline()
+	public function testEncodeMultiline(): void
 	{
 		$array = [
 			'title' => 'Title',
@@ -109,12 +87,7 @@ class TxtTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
-	public function testEncodeDecodeDivider()
+	public function testEncodeDecodeDivider(): void
 	{
 		$array = [
 			'title' => 'Title',
@@ -131,12 +104,7 @@ class TxtTest extends TestCase
 		$this->assertSame($array, Txt::decode($data));
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
-	public function testEncodeArray()
+	public function testEncodeArray(): void
 	{
 		$array = [
 			'title' => 'Title',
@@ -148,12 +116,7 @@ class TxtTest extends TestCase
 		$this->assertSame(file_get_contents(static::FIXTURES . '/test.txt'), $data);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
-	public function testEncodeFloat()
+	public function testEncodeFloat(): void
 	{
 		$data = Txt::encode([
 			'number' => (float)3.2
@@ -162,12 +125,7 @@ class TxtTest extends TestCase
 		$this->assertSame('Number: 3.2', $data);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::encodeValue
-	 * @covers ::encodeResult
-	 */
-	public function testEncodeFloatWithLocaleSetting()
+	public function testEncodeFloatWithLocaleSetting(): void
 	{
 		$currentLocale = setlocale(LC_ALL, 0);
 		setlocale(LC_ALL, 'de_DE');
@@ -181,10 +139,7 @@ class TxtTest extends TestCase
 		setlocale(LC_ALL, $currentLocale);
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeFile()
+	public function testDecodeFile(): void
 	{
 		$array = [
 			'title_with_spaces' => 'Title',
@@ -195,10 +150,7 @@ class TxtTest extends TestCase
 		$this->assertSame($array, $data);
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeBom1()
+	public function testDecodeBom1(): void
 	{
 		$string = "\xEF\xBB\xBFTitle: title field with BOM \xEF\xBB\xBF\n----\nText: text field";
 		$array  = [
@@ -209,10 +161,7 @@ class TxtTest extends TestCase
 		$this->assertSame($array, Txt::decode($string));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeBom2()
+	public function testDecodeBom2(): void
 	{
 		$string = "\xEF\xBB\xBFTitle: title field with BOM\n--\xEF\xBB\xBF--\nand more text\n----\nText: text field";
 		$array  = [
@@ -223,21 +172,15 @@ class TxtTest extends TestCase
 		$this->assertSame($array, Txt::decode($string));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeInvalid1()
+	public function testDecodeInvalid1(): void
 	{
 		// pass invalid object
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid TXT data; please pass a string');
-		Txt::decode(new \stdClass());
+		Txt::decode(new stdClass());
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeInvalid2()
+	public function testDecodeInvalid2(): void
 	{
 		// pass invalid int
 		$this->expectException(InvalidArgumentException::class);

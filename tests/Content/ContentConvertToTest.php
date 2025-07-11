@@ -13,7 +13,7 @@ class ContentConvertToTest extends TestCase
 		$this->setUpSingleLanguage();
 	}
 
-	public function testConvertToForPage()
+	public function testConvertToForPage(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -77,7 +77,7 @@ class ContentConvertToTest extends TestCase
 		$this->assertSame('keep this', $new['removed']);
 	}
 
-	public function testConvertToForFile()
+	public function testConvertToForFile(): void
 	{
 		$app = $this->app->clone([
 			'site' => [

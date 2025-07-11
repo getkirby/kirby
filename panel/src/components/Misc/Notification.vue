@@ -12,7 +12,7 @@
 <script>
 /**
  * Displays notification from `panel.notification`
- * @internal
+ * @unstable
  * @since 4.0.0
  */
 export default {};

@@ -171,7 +171,6 @@ class User extends Model
 
 	/**
 	 * Returns the image file object based on provided query
-	 * @internal
 	 */
 	protected function imageSource(
 		string|null $query = null
@@ -213,8 +212,6 @@ class User extends Model
 	/**
 	 * Returns navigation array with
 	 * previous and next user
-	 *
-	 * @internal
 	 */
 	public function prevNext(): array
 	{
@@ -227,10 +224,7 @@ class User extends Model
 	}
 
 	/**
-	 * Returns the data array for the
-	 * view's component props
-	 *
-	 * @internal
+	 * Returns the data array for the view's component props
 	 */
 	public function props(): array
 	{
@@ -283,10 +277,7 @@ class User extends Model
 	}
 
 	/**
-	 * Returns the data array for
-	 * this model's Panel view
-	 *
-	 * @internal
+	 * Returns the data array for this model's Panel view
 	 */
 	public function view(): array
 	{

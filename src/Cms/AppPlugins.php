@@ -96,7 +96,6 @@ trait AppPlugins
 
 	/**
 	 * Register all given extensions
-	 * @internal
 	 *
 	 * @param \Kirby\Plugin\Plugin|null $plugin The plugin which defined those extensions
 	 */
@@ -709,7 +708,6 @@ trait AppPlugins
 	/**
 	 * Returns a given extension by type and name
 	 *
-	 * @internal
 	 * @param string $type i.e. `'hooks'`
 	 * @param string $name i.e. `'page.delete:before'`
 	 */
@@ -723,8 +721,6 @@ trait AppPlugins
 
 	/**
 	 * Returns the extensions registry
-	 *
-	 * @internal
 	 */
 	public function extensions(string|null $type = null): array
 	{
@@ -892,7 +888,6 @@ trait AppPlugins
 	 * Loads and returns all plugins in the site/plugins directory
 	 * Loading only happens on the first call.
 	 *
-	 * @internal
 	 * @param array|null $plugins Can be used to overwrite the plugins registry
 	 */
 	public function plugins(array|null $plugins = null): array

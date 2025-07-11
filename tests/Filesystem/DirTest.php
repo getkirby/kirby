@@ -8,10 +8,9 @@ use Kirby\Cms\Page;
 use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Filesystem\Dir
- */
+#[CoversClass(Dir::class)]
 class DirTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/dir';
@@ -37,10 +36,7 @@ class DirTest extends TestCase
 		return Dir::inventory(static::TMP, ...$args);
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopy()
+	public function testCopy(): void
 	{
 		$src    = static::FIXTURES . '/copy';
 		$target = static::TMP . '/copy';
@@ -54,10 +50,7 @@ class DirTest extends TestCase
 		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopyNonRecursive()
+	public function testCopyNonRecursive(): void
 	{
 		$src    = static::FIXTURES . '/copy';
 		$target = static::TMP . '/copy';
@@ -71,10 +64,7 @@ class DirTest extends TestCase
 		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopyIgnore()
+	public function testCopyIgnore(): void
 	{
 		$src    = static::FIXTURES . '/copy';
 		$target = static::TMP . '/copy';
@@ -89,10 +79,7 @@ class DirTest extends TestCase
 		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopyNoIgnore()
+	public function testCopyNoIgnore(): void
 	{
 		$src    = static::FIXTURES . '/copy';
 		$target = static::TMP . '/copy';
@@ -107,10 +94,7 @@ class DirTest extends TestCase
 		$this->assertFileExists($target . '/subfolder/.gitignore');
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopyMissingSource()
+	public function testCopyMissingSource(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The directory "/does-not-exist" does not exist');
@@ -121,10 +105,7 @@ class DirTest extends TestCase
 		Dir::copy($src, $target);
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopyExistingTarget()
+	public function testCopyExistingTarget(): void
 	{
 		$src    = static::FIXTURES . '/copy';
 		$target = static::FIXTURES . '/copy';
@@ -135,10 +116,7 @@ class DirTest extends TestCase
 		Dir::copy($src, $target);
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopyInvalidTarget()
+	public function testCopyInvalidTarget(): void
 	{
 		$src    = static::FIXTURES . '/copy';
 		$target = '';
@@ -149,20 +127,26 @@ class DirTest extends TestCase
 		Dir::copy($src, $target);
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExists()
+	public function testExists(): void
 	{
 		$this->assertFalse(Dir::exists(static::TMP));
 		Dir::make(static::TMP);
 		$this->assertTrue(Dir::exists(static::TMP));
 	}
 
-	/**
-	 * @covers ::index
-	 */
-	public function testIndex()
+	public function testExistsIn(): void
+	{
+		$test = static::TMP . '/test';
+
+		$this->assertFalse(Dir::exists($test, static::TMP));
+		Dir::make($test);
+		$this->assertTrue(Dir::exists($test, static::TMP));
+		$this->assertTrue(Dir::exists(static::TMP . '/../Filesystem.Dir/test', static::TMP));
+		$this->assertTrue(Dir::exists($test, dirname(static::TMP)));
+		$this->assertFalse(Dir::exists($test, static::FIXTURES));
+	}
+
+	public function testIndex(): void
 	{
 		Dir::make($dir = static::TMP);
 		Dir::make(static::TMP . '/sub');
@@ -179,10 +163,7 @@ class DirTest extends TestCase
 		$this->assertSame($expected, Dir::index($dir));
 	}
 
-	/**
-	 * @covers ::index
-	 */
-	public function testIndexRecursive()
+	public function testIndexRecursive(): void
 	{
 		Dir::make($dir = static::TMP);
 		Dir::make(static::TMP . '/sub');
@@ -203,10 +184,7 @@ class DirTest extends TestCase
 		$this->assertSame($expected, Dir::index($dir, true));
 	}
 
-	/**
-	 * @covers ::index
-	 */
-	public function testIndexIgnore()
+	public function testIndexIgnore(): void
 	{
 		Dir::$ignore = ['z.txt'];
 
@@ -261,20 +239,14 @@ class DirTest extends TestCase
 		]));
 	}
 
-	/**
-	 * @covers ::isWritable
-	 */
-	public function testIsWritable()
+	public function testIsWritable(): void
 	{
 		Dir::make(static::TMP);
 
 		$this->assertSame(is_writable(static::TMP), Dir::isWritable(static::TMP));
 	}
 
-	/**
-	 * @covers ::inventory
-	 */
-	public function testInventory()
+	public function testInventory(): void
 	{
 		$inventory = $this->create([
 			'1_project-a',
@@ -300,10 +272,7 @@ class DirTest extends TestCase
 		$this->assertSame('projects', $inventory['template']);
 	}
 
-	/**
-	 * @covers ::inventory
-	 */
-	public function testInventoryWithSkippedFiles()
+	public function testInventoryWithSkippedFiles(): void
 	{
 		$inventory = $this->create([
 			'valid.jpg',
@@ -319,10 +288,7 @@ class DirTest extends TestCase
 		$this->assertSame($expected, A::pluck($inventory['files'], 'filename'));
 	}
 
-	/**
-	 * @covers ::inventory
-	 */
-	public function testInventoryChildSorting()
+	public function testInventoryChildSorting(): void
 	{
 		$inventory = $this->create([
 			'1_project-c',
@@ -335,10 +301,7 @@ class DirTest extends TestCase
 		$this->assertSame('project-a', $inventory['children'][2]['slug']);
 	}
 
-	/**
-	 * @covers ::inventory
-	 */
-	public function testInventoryChildWithLeadingZero()
+	public function testInventoryChildWithLeadingZero(): void
 	{
 		$inventory = $this->create([
 			'01_project-c',
@@ -356,10 +319,7 @@ class DirTest extends TestCase
 		$this->assertSame(3, $inventory['children'][2]['num']);
 	}
 
-	/**
-	 * @covers ::inventory
-	 */
-	public function testInventoryFileSorting()
+	public function testInventoryFileSorting(): void
 	{
 		$inventory = $this->create([
 			'1-c.jpg',
@@ -374,11 +334,7 @@ class DirTest extends TestCase
 		$this->assertSame('11-a.jpg', $files[2]['filename']);
 	}
 
-	/**
-	 * @covers ::inventory
-	 * @covers ::inventoryTemplate
-	 */
-	public function testInventoryMissingTemplate()
+	public function testInventoryMissingTemplate(): void
 	{
 		$inventory = $this->create([
 			'cover.jpg',
@@ -389,11 +345,7 @@ class DirTest extends TestCase
 		$this->assertSame('default', $inventory['template']);
 	}
 
-	/**
-	 * @covers ::inventory
-	 * @covers ::inventoryTemplate
-	 */
-	public function testInventoryTemplateWithDotInFilename()
+	public function testInventoryTemplateWithDotInFilename(): void
 	{
 		$inventory = $this->create([
 			'cover.jpg',
@@ -405,11 +357,7 @@ class DirTest extends TestCase
 		$this->assertSame('article.video', $inventory['template']);
 	}
 
-	/**
-	 * @covers ::inventory
-	 * @covers ::inventoryTemplate
-	 */
-	public function testInventoryExtension()
+	public function testInventoryExtension(): void
 	{
 		$inventory = $this->create([
 			'cover.jpg',
@@ -421,11 +369,7 @@ class DirTest extends TestCase
 		$this->assertSame('article', $inventory['template']);
 	}
 
-	/**
-	 * @covers ::inventory
-	 * @covers ::inventoryTemplate
-	 */
-	public function testInventoryIgnore()
+	public function testInventoryIgnore(): void
 	{
 		$inventory = $this->create([
 			'cover.jpg',
@@ -436,11 +380,7 @@ class DirTest extends TestCase
 		$this->assertSame('article', $inventory['template']);
 	}
 
-	/**
-	 * @covers ::inventory
-	 * @covers ::inventoryTemplate
-	 */
-	public function testInventoryMultilang()
+	public function testInventoryMultilang(): void
 	{
 		$inventory = $this->create([
 			'cover.jpg',
@@ -453,11 +393,7 @@ class DirTest extends TestCase
 		$this->assertSame('article', $inventory['template']);
 	}
 
-	/**
-	 * @covers ::inventory
-	 * @covers ::inventoryChild
-	 */
-	public function testInventoryChildModels()
+	public function testInventoryChildModels(): void
 	{
 		Page::$models = [
 			'a' => 'A',
@@ -477,11 +413,7 @@ class DirTest extends TestCase
 		Page::$models = [];
 	}
 
-	/**
-	 * @covers ::inventory
-	 * @covers ::inventoryChild
-	 */
-	public function testInventoryChildMultilangModels()
+	public function testInventoryChildMultilangModels(): void
 	{
 		new App([
 			'roots' => [
@@ -521,19 +453,13 @@ class DirTest extends TestCase
 		Page::$models = [];
 	}
 
-	/**
-	 * @covers ::make
-	 */
-	public function testMake()
+	public function testMake(): void
 	{
 		$this->assertTrue(Dir::make(static::TMP));
 		$this->assertFalse(Dir::make(''));
 	}
 
-	/**
-	 * @covers ::make
-	 */
-	public function testMakeFileExists()
+	public function testMakeFileExists(): void
 	{
 		$test = static::TMP . '/test';
 
@@ -544,38 +470,26 @@ class DirTest extends TestCase
 		Dir::make($test);
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModified()
+	public function testModified(): void
 	{
 		Dir::make(static::TMP);
 
 		$this->assertIsInt(Dir::modified(static::TMP));
 	}
 
-	/**
-	 * @covers ::move
-	 */
-	public function testMove()
+	public function testMove(): void
 	{
 		Dir::make(static::TMP . '/1');
 
 		$this->assertTrue(Dir::move(static::TMP . '/1', static::TMP . '/2'));
 	}
 
-	/**
-	 * @covers ::move
-	 */
-	public function testMoveNonExisting()
+	public function testMoveNonExisting(): void
 	{
 		$this->assertFalse(Dir::move('/does-not-exist', static::TMP . '/2'));
 	}
 
-	/**
-	 * @covers ::link
-	 */
-	public function testLink()
+	public function testLink(): void
 	{
 		$source = static::TMP . '/source';
 		$link   = static::TMP . '/link';
@@ -586,10 +500,7 @@ class DirTest extends TestCase
 		$this->assertTrue(is_link($link));
 	}
 
-	/**
-	 * @covers ::link
-	 */
-	public function testLinkExistingLink()
+	public function testLinkExistingLink(): void
 	{
 		$source = static::TMP . '/source';
 		$link   = static::TMP . '/link';
@@ -600,10 +511,7 @@ class DirTest extends TestCase
 		$this->assertTrue(Dir::link($source, $link));
 	}
 
-	/**
-	 * @covers ::link
-	 */
-	public function testLinkWithoutSource()
+	public function testLinkWithoutSource(): void
 	{
 		$source = static::TMP . '/source';
 		$link   = static::TMP . '/link';
@@ -614,10 +522,7 @@ class DirTest extends TestCase
 		Dir::link($source, $link);
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testRead()
+	public function testRead(): void
 	{
 		Dir::make(static::TMP);
 
@@ -655,10 +560,54 @@ class DirTest extends TestCase
 		$this->assertSame($expected, $files);
 	}
 
-	/**
-	 * @covers ::remove
-	 */
-	public function testRemove()
+	public function testRealpath(): void
+	{
+		$path = Dir::realpath(__DIR__ . '/../Filesystem');
+		$this->assertSame(__DIR__, $path);
+	}
+
+	public function testRealpathToMissingFile(): void
+	{
+		$path = __DIR__ . '/../does-not-exist';
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The directory does not exist at the given path: "' . $path . '"');
+
+		Dir::realpath($path);
+	}
+
+	public function testRealpathToParent(): void
+	{
+		$parent = __DIR__ . '/..';
+		$dir    = $parent . '/Filesystem';
+		$path   = Dir::realpath($dir, $parent);
+
+		$this->assertSame(__DIR__, $path);
+	}
+
+	public function testRealpathToNonExistingParent(): void
+	{
+		$parent = __DIR__ . '/../does-not-exist';
+		$dir    = __DIR__ . '/../Filesystem';
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
+
+		Dir::realpath($dir, $parent);
+	}
+
+	public function testRealpathToInvalidParent(): void
+	{
+		$parent = __DIR__ . '/../Cms';
+		$dir    = __DIR__ . '/../Filesystem';
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The directory is not within the parent directory');
+
+		Dir::realpath($dir, $parent);
+	}
+
+	public function testRemove(): void
 	{
 		Dir::make(static::TMP);
 
@@ -667,21 +616,14 @@ class DirTest extends TestCase
 		$this->assertDirectoryDoesNotExist(static::TMP);
 	}
 
-	/**
-	 * @covers ::isReadable
-	 */
-	public function testIsReadable()
+	public function testIsReadable(): void
 	{
 		Dir::make(static::TMP);
 
 		$this->assertSame(is_readable(static::TMP), Dir::isReadable(static::TMP));
 	}
 
-	/**
-	 * @covers ::dirs
-	 * @covers ::files
-	 */
-	public function testReadDirsAndFiles()
+	public function testReadDirsAndFiles(): void
 	{
 		Dir::make(static::TMP);
 		Dir::make(static::TMP . '/a');
@@ -730,11 +672,7 @@ class DirTest extends TestCase
 		$this->assertSame($expected, $files);
 	}
 
-	/**
-	 * @covers ::size
-	 * @covers ::niceSize
-	 */
-	public function testSize()
+	public function testSize(): void
 	{
 		Dir::make(static::TMP);
 
@@ -749,10 +687,7 @@ class DirTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::size
-	 */
-	public function testSizeWithNestedFolders()
+	public function testSizeWithNestedFolders(): void
 	{
 		Dir::make(static::TMP);
 		Dir::make(static::TMP . '/sub');
@@ -769,18 +704,12 @@ class DirTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::size
-	 */
-	public function testSizeOfNonExistingDir()
+	public function testSizeOfNonExistingDir(): void
 	{
 		$this->assertFalse(Dir::size('/does-not-exist'));
 	}
 
-	/**
-	 * @covers ::wasModifiedAfter
-	 */
-	public function testWasModifiedAfter()
+	public function testWasModifiedAfter(): void
 	{
 		$time = time();
 

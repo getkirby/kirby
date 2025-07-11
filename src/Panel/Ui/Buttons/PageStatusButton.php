@@ -14,7 +14,7 @@ use Kirby\Toolkit\I18n;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
- * @internal
+ * @unstable
  */
 class PageStatusButton extends ViewButton
 {
@@ -23,9 +23,11 @@ class PageStatusButton extends ViewButton
 	) {
 		$status    = $page->status();
 		$blueprint = $page->blueprint()->status()[$status] ?? null;
-		$disabled  = $page->permissions()->cannot('changeStatus');
-		$text      = $blueprint['label'] ?? I18n::translate('page.status.' . $status);
-		$title     = I18n::translate('page.status') . ': ' . $text;
+		$disabled  = $page->permissions()->cannot('changeStatus') || $page->lock()->isLocked();
+
+		$text   = $blueprint['label'] ?? null;
+		$text ??= I18n::translate('page.status.' . $status);
+		$title  = I18n::translate('page.status') . ': ' . $text;
 
 		if ($disabled === true) {
 			$title .= ' (' . I18n::translate('disabled') . ')';
@@ -33,7 +35,6 @@ class PageStatusButton extends ViewButton
 
 		parent::__construct(
 			class: 'k-status-view-button k-page-status-button',
-			component: 'k-status-view-button',
 			dialog: $page->panel()->url(true) . '/changeStatus',
 			disabled: $disabled,
 			icon: 'status-' . $status,

@@ -26,12 +26,11 @@ use Stringable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>
  */
 class Language implements Stringable
 {
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>
-	 */
 	use HasSiblings;
 
 	/**
@@ -67,7 +66,7 @@ class Language implements Stringable
 		}
 
 		static::$kirby      = $props['kirby'] ?? null;
-		$this->code         = trim($props['code']);
+		$this->code         = basename(trim($props['code'])); // prevent path traversal
 		$this->default      = ($props['default'] ?? false) === true;
 		$this->direction    = ($props['direction'] ?? null) === 'rtl' ? 'rtl' : 'ltr';
 		$this->name         = trim($props['name'] ?? $this->code);
@@ -153,7 +152,6 @@ class Language implements Stringable
 
 	/**
 	 * Creates a new language object
-	 * @internal
 	 */
 	public static function create(array $props): static
 	{
@@ -215,7 +213,6 @@ class Language implements Stringable
 	/**
 	 * Delete the current language and
 	 * all its translation files
-	 * @internal
 	 *
 	 * @throws \Kirby\Exception\Exception
 	 */
@@ -272,7 +269,7 @@ class Language implements Stringable
 	 * Converts a "user-facing" language code to a `Language` object
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
-	 * @internal
+	 * @unstable
 	 */
 	public static function ensure(self|string|null $code = null): static
 	{
@@ -351,7 +348,6 @@ class Language implements Stringable
 
 	/**
 	 * Checks if this is the single language object
-	 * @internal
 	 */
 	public function isSingle(): bool
 	{
@@ -381,6 +377,7 @@ class Language implements Stringable
 	public static function loadRules(string $code): array
 	{
 		$kirby = App::instance();
+		$code  = basename($code); // prevent path traversal
 		$code  = Str::contains($code, '.') ? Str::before($code, '.') : $code;
 		$file  = $kirby->root('i18n:rules') . '/' . $code . '.json';
 
@@ -468,7 +465,6 @@ class Language implements Stringable
 
 	/**
 	 * Get slug rules for language
-	 * @internal
 	 */
 	public function rules(): array
 	{
@@ -482,7 +478,6 @@ class Language implements Stringable
 
 	/**
 	 * Saves the language settings in the languages folder
-	 * @internal
 	 *
 	 * @return $this
 	 */
@@ -582,7 +577,6 @@ class Language implements Stringable
 
 	/**
 	 * Update language properties and save them
-	 * @internal
 	 */
 	public function update(array|null $props = null): static
 	{

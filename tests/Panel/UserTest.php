@@ -9,6 +9,7 @@ use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class UserForceLocked extends ModelUser
 {
@@ -21,9 +22,8 @@ class UserForceLocked extends ModelUser
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Panel\User
- */
+#[CoversClass(\Kirby\Panel\User::class)]
+#[CoversClass(Model::class)]
 class UserTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.User';
@@ -53,9 +53,6 @@ class UserTest extends TestCase
 		return new User($user);
 	}
 
-	/**
-	 * @covers ::breadcrumb
-	 */
 	public function testBreadcrumb(): void
 	{
 		$model = new ModelUser([
@@ -67,10 +64,7 @@ class UserTest extends TestCase
 		$this->assertStringStartsWith('/users/', $breadcrumb[0]['link']);
 	}
 
-	/**
-	 * @covers ::buttons
-	 */
-	public function testButtons()
+	public function testButtons(): void
 	{
 		$this->assertSame([
 			'k-theme-view-button',
@@ -79,9 +73,6 @@ class UserTest extends TestCase
 		], array_column($this->panel()->buttons(), 'component'));
 	}
 
-	/**
-	 * @covers ::dropdown
-	 */
 	public function testDropdownTotp(): void
 	{
 		$this->app = new App([
@@ -110,9 +101,6 @@ class UserTest extends TestCase
 		$this->assertSame('/account/totp/disable', $dropdown[7]['dialog']);
 	}
 
-	/**
-	 * @covers ::dropdownOption
-	 */
 	public function testDropdownOption(): void
 	{
 		$model = new ModelUser([
@@ -126,10 +114,7 @@ class UserTest extends TestCase
 		$this->assertSame('/users/test', $option['link']);
 	}
 
-	/**
-	 * @covers ::home
-	 */
-	public function testHome()
+	public function testHome(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -139,10 +124,7 @@ class UserTest extends TestCase
 		$this->assertSame('/panel/site', $panel->home());
 	}
 
-	/**
-	 * @covers ::home
-	 */
-	public function testHomeWithCustomPath()
+	public function testHomeWithCustomPath(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -165,10 +147,7 @@ class UserTest extends TestCase
 		$this->assertSame('/blog', $panel->home());
 	}
 
-	/**
-	 * @covers ::home
-	 */
-	public function testHomeWithCustomPathQuery()
+	public function testHomeWithCustomPathQuery(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -196,11 +175,7 @@ class UserTest extends TestCase
 		$this->assertSame('/panel/pages/test', $panel->home());
 	}
 
-	/**
-	 * @covers ::imageDefaults
-	 * @covers ::imageSource
-	 */
-	public function testImage()
+	public function testImage(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -211,10 +186,7 @@ class UserTest extends TestCase
 		$this->assertFalse(isset($image['url']));
 	}
 
-	/**
-	 * @covers ::imageSource
-	 */
-	public function testImageStringQuery()
+	public function testImageStringQuery(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -225,13 +197,7 @@ class UserTest extends TestCase
 		$this->assertNotEmpty($image);
 	}
 
-	/**
-	 * @covers ::imageSource
-	 * @covers \Kirby\Panel\Model::image
-	 * @covers \Kirby\Panel\Model::imageSource
-	 * @covers \Kirby\Panel\Model::imageSrcset
-	 */
-	public function testImageCover()
+	public function testImageCover(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -278,10 +244,7 @@ class UserTest extends TestCase
 		], $panel->image(['cover' => true]));
 	}
 
-	/**
-	 * @covers \Kirby\Panel\Model::options
-	 */
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -304,10 +267,7 @@ class UserTest extends TestCase
 		$this->assertSame($expected, $panel->options());
 	}
 
-	/**
-	 * @covers \Kirby\Panel\Model::options
-	 */
-	public function testOptionsWithLockedUser()
+	public function testOptionsWithLockedUser(): void
 	{
 		$user = new UserForceLocked([
 			'email' => 'test@getkirby.com',
@@ -345,10 +305,7 @@ class UserTest extends TestCase
 		$this->assertSame($expected, $panel->options(['changeEmail']));
 	}
 
-	/**
-	 * @covers ::path
-	 */
-	public function testPath()
+	public function testPath(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -358,11 +315,7 @@ class UserTest extends TestCase
 		$this->assertTrue(Str::startsWith($panel->path(), 'users/'));
 	}
 
-	/**
-	 * @covers ::pickerData
-	 * @covers \Kirby\Panel\Model::pickerData
-	 */
-	public function testPickerDataDefault()
+	public function testPickerDataDefault(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -376,10 +329,7 @@ class UserTest extends TestCase
 		$this->assertSame('test@getkirby.com', $data['text']);
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$user = new ModelUser([
 			'email'    => 'test@getkirby.com',
@@ -410,10 +360,7 @@ class UserTest extends TestCase
 		$this->assertNull($props['prev']());
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testPropsPrevNext()
+	public function testPropsPrevNext(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -436,10 +383,7 @@ class UserTest extends TestCase
 		$this->assertNull($props['next']());
 	}
 
-	/**
-	 * @covers ::translation
-	 */
-	public function testTranslation()
+	public function testTranslation(): void
 	{
 		// existing
 		$user = new ModelUser([
@@ -464,10 +408,7 @@ class UserTest extends TestCase
 		$this->assertNull($translations->get('translation.name'));
 	}
 
-	/**
-	 * @covers ::prevNext
-	 */
-	public function testPrevNext()
+	public function testPrevNext(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -490,11 +431,7 @@ class UserTest extends TestCase
 		$this->assertNull($prevNext['next']());
 	}
 
-	/**
-	 * @covers ::prevNext
-	 * @covers ::toPrevNextLink
-	 */
-	public function testPrevNextWithTab()
+	public function testPrevNextWithTab(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -513,10 +450,7 @@ class UserTest extends TestCase
 		$_GET = [];
 	}
 
-	/**
-	 * @covers ::view
-	 */
-	public function testView()
+	public function testView(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',

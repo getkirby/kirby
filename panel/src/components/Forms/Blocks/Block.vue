@@ -60,7 +60,7 @@ export default {
 	inheritAttrs: false,
 	props: {
 		/**
-		 * @private
+		 * @internal
 		 */
 		attrs: {
 			default: () => ({}),

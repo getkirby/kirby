@@ -17,7 +17,7 @@ class PaginationTest extends TestCase
 		]);
 	}
 
-	public function testCustomAppUrl()
+	public function testCustomAppUrl(): void
 	{
 		$this->app->clone([
 			'options' => [
@@ -34,7 +34,7 @@ class PaginationTest extends TestCase
 		$this->assertSame('https://getkirby.com/page:2', $pagination->nextPageUrl());
 	}
 
-	public function testSubfolderUrl()
+	public function testSubfolderUrl(): void
 	{
 		$this->app->clone([
 			'options' => [
@@ -51,7 +51,7 @@ class PaginationTest extends TestCase
 		$this->assertSame('http://localhost/starterkit/page:2', $pagination->nextPageUrl());
 	}
 
-	public function testCurrentPageUrl()
+	public function testCurrentPageUrl(): void
 	{
 		$pagination = $this->pagination([
 			'page' => 2
@@ -60,7 +60,7 @@ class PaginationTest extends TestCase
 		$this->assertSame('https://getkirby.com/page:2', $pagination->pageUrl());
 	}
 
-	public function testCurrentPageUrlWithFirstPage()
+	public function testCurrentPageUrlWithFirstPage(): void
 	{
 		$pagination = $this->pagination([
 			'page' => 1
@@ -69,7 +69,7 @@ class PaginationTest extends TestCase
 		$this->assertSame('https://getkirby.com', $pagination->pageUrl());
 	}
 
-	public function testPageUrl()
+	public function testPageUrl(): void
 	{
 		$pagination = $this->pagination();
 
@@ -80,19 +80,19 @@ class PaginationTest extends TestCase
 		$this->assertNull($pagination->pageUrl(13));
 	}
 
-	public function testFirstPageUrl()
+	public function testFirstPageUrl(): void
 	{
 		$pagination = $this->pagination();
 		$this->assertSame('https://getkirby.com', $pagination->firstPageUrl());
 	}
 
-	public function testLastPageUrl()
+	public function testLastPageUrl(): void
 	{
 		$pagination = $this->pagination();
 		$this->assertSame('https://getkirby.com/page:12', $pagination->lastPageUrl());
 	}
 
-	public function testFirstLastPageUrlNull()
+	public function testFirstLastPageUrlNull(): void
 	{
 		$pagination = new Pagination([
 			'page'  => 1,
@@ -105,7 +105,7 @@ class PaginationTest extends TestCase
 		$this->assertNull($pagination->lastPageUrl());
 	}
 
-	public function testNextPageUrl()
+	public function testNextPageUrl(): void
 	{
 		$pagination = $this->pagination([
 			'page' => 2
@@ -114,13 +114,13 @@ class PaginationTest extends TestCase
 		$this->assertSame('https://getkirby.com/page:3', $pagination->nextPageUrl());
 	}
 
-	public function testNonExistingNextPage()
+	public function testNonExistingNextPage(): void
 	{
 		$pagination = $this->pagination(['page' => 12]);
 		$this->assertNull($pagination->nextPageUrl());
 	}
 
-	public function testPrevPageUrl()
+	public function testPrevPageUrl(): void
 	{
 		$pagination = $this->pagination([
 			'page' => 3
@@ -129,13 +129,13 @@ class PaginationTest extends TestCase
 		$this->assertSame('https://getkirby.com/page:2', $pagination->prevPageUrl());
 	}
 
-	public function testNonExistingPrevPage()
+	public function testNonExistingPrevPage(): void
 	{
 		$pagination = $this->pagination(['page' => 1]);
 		$this->assertNull($pagination->prevPageUrl());
 	}
 
-	public function testPrevPageUrlWithFirstPage()
+	public function testPrevPageUrlWithFirstPage(): void
 	{
 		$pagination = $this->pagination([
 			'page' => 2
@@ -144,7 +144,7 @@ class PaginationTest extends TestCase
 		$this->assertSame('https://getkirby.com', $pagination->prevPageUrl());
 	}
 
-	public function testMethod()
+	public function testMethod(): void
 	{
 		$pagination = $this->pagination([
 			'page' => 2

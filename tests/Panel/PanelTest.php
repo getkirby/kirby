@@ -6,11 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Panel
- * @covers ::__construct
- */
+#[CoversClass(Panel::class)]
 class PanelTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Panel';
@@ -50,18 +48,12 @@ class PanelTest extends TestCase
 		unset($_SERVER['SERVER_SOFTWARE']);
 	}
 
-	/**
-	 * @covers ::areas
-	 */
 	public function testAreas(): void
 	{
 		$this->assertInstanceOf(Areas::class, $this->app->panel()->areas());
 	}
 
-	/**
-	 * @covers ::go
-	 */
-	public function testGo()
+	public function testGo(): void
 	{
 		$thrown = false;
 		try {
@@ -74,10 +66,7 @@ class PanelTest extends TestCase
 		$this->assertTrue($thrown);
 	}
 
-	/**
-	 * @covers ::go
-	 */
-	public function testGoWithCustomCode()
+	public function testGoWithCustomCode(): void
 	{
 		try {
 			Panel::go('test', 301);
@@ -86,10 +75,7 @@ class PanelTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::go
-	 */
-	public function testGoWithCustomSlug()
+	public function testGoWithCustomSlug(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -107,9 +93,6 @@ class PanelTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::isFiberRequest
-	 */
 	public function testIsFiberRequest(): void
 	{
 		// standard request
@@ -151,9 +134,6 @@ class PanelTest extends TestCase
 		$this->assertFalse($result);
 	}
 
-	/**
-	 * @covers ::isPanelUrl
-	 */
 	public function testIsPanelUrl()
 	{
 		$this->assertTrue(Panel::isPanelUrl('/panel'));
@@ -161,9 +141,6 @@ class PanelTest extends TestCase
 		$this->assertFalse(Panel::isPanelUrl('test'));
 	}
 
-	/**
-	 * @covers ::json
-	 */
 	public function testJson(): void
 	{
 		$response = Panel::json($data = ['foo' => 'bar']);
@@ -173,10 +150,7 @@ class PanelTest extends TestCase
 		$this->assertSame($data, json_decode($response->body(), true));
 	}
 
-	/**
-	 * @covers ::multilang
-	 */
-	public function testMultilang()
+	public function testMultilang(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -187,10 +161,7 @@ class PanelTest extends TestCase
 		$this->assertTrue($this->app->panel()->multilang());
 	}
 
-	/**
-	 * @covers ::multilang
-	 */
-	public function testMultilangWithImplicitLanguageInstallation()
+	public function testMultilangWithImplicitLanguageInstallation(): void
 	{
 		$this->app = $this->app->clone([
 			'languages' => [
@@ -207,17 +178,11 @@ class PanelTest extends TestCase
 		$this->assertTrue($this->app->panel()->multilang());
 	}
 
-	/**
-	 * @covers ::multilang
-	 */
-	public function testMultilangDisabled()
+	public function testMultilangDisabled(): void
 	{
 		$this->assertFalse($this->app->panel()->multilang());
 	}
 
-	/**
-	 * @covers ::path
-	 */
 	public function testPath()
 	{
 		$this->assertSame('site', Panel::path('/panel/site'));
@@ -225,9 +190,6 @@ class PanelTest extends TestCase
 		$this->assertSame('', Panel::path('/test/page'));
 	}
 
-	/**
-	 * @covers ::router
-	 */
 	public function testRouterWithDisabledPanel(): void
 	{
 		$app = $this->app->clone([
@@ -241,9 +203,6 @@ class PanelTest extends TestCase
 		$this->assertNull($result);
 	}
 
-	/**
-	 * @covers ::setLanguage
-	 */
 	public function testSetLanguageWithoutRequest(): void
 	{
 		$this->app = $this->app->clone([
@@ -274,9 +233,6 @@ class PanelTest extends TestCase
 		$this->assertNull($this->app->session()->get('panel.language'));
 	}
 
-	/**
-	 * @covers ::setLanguage
-	 */
 	public function testSetLanguage(): void
 	{
 		$this->app = $this->app->clone([
@@ -312,9 +268,6 @@ class PanelTest extends TestCase
 		$this->assertSame('de', $this->app->session()->get('panel.language'));
 	}
 
-	/**
-	 * @covers ::setLanguage
-	 */
 	public function testSetLanguageWithCustomDefault(): void
 	{
 		$this->app = $this->app->clone([
@@ -342,9 +295,6 @@ class PanelTest extends TestCase
 		$this->assertSame('de', $this->app->language()->code());
 	}
 
-	/**
-	 * @covers ::setLanguage
-	 */
 	public function testSetLanguageViaGet(): void
 	{
 		// switch via get request
@@ -377,9 +327,6 @@ class PanelTest extends TestCase
 		$this->assertSame('de', $this->app->language()->code());
 	}
 
-	/**
-	 * @covers ::setLanguage
-	 */
 	public function testSetLanguageInSingleLanguageSite(): void
 	{
 		$panel    = $this->app->panel();
@@ -389,9 +336,6 @@ class PanelTest extends TestCase
 		$this->assertNull($this->app->language());
 	}
 
-	/**
-	 * @covers ::setTranslation
-	 */
 	public function testSetTranslation(): void
 	{
 		$panel       = $this->app->panel();

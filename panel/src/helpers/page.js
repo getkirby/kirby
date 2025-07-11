@@ -1,6 +1,6 @@
 /**
  * Returns props for a page status button
- * @internal
+ * @unstable
  *
  * @param {string} status
  * @param {boolean} disabled

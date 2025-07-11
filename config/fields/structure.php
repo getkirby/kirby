@@ -159,7 +159,6 @@ return [
 	'methods' => [
 		'rows' => function ($value) {
 			$rows  = Data::decode($value, 'yaml');
-			$form  = $this->form();
 			$value = [];
 
 			foreach ($rows as $index => $row) {
@@ -167,25 +166,37 @@ return [
 					continue;
 				}
 
-				$value[] = $form->reset()->fill(input: $row, passthrough: true)->toFormValues();
+				$value[] = $this->form()->fill(input: $row, passthrough: true)->toFormValues();
 			}
 
 			return $value;
 		},
 		'form' => function () {
-			return new Form(
+			$this->form ??= new Form(
 				fields: $this->attrs['fields'] ?? [],
 				model: $this->model,
 				language: 'current'
 			);
-		},
+
+			return $this->form->reset();
+		}
 	],
 	'save' => function ($value) {
-		$data = [];
-		$form = $this->form();
+		$data     = [];
+		$form     = $this->form();
+		$defaults = $form->defaults();
 
-		foreach ($value as $row) {
-			$row = $form->reset()->submit(input: $row, passthrough: true)->toStoredValues();
+		foreach ($value as $index => $row) {
+			$row = $form
+				->reset()
+				->fill(
+					input: $defaults,
+				)
+				->submit(
+					input: $row,
+					passthrough: true
+				)
+				->toStoredValues();
 
 			// remove frontend helper id
 			unset($row['_id']);
@@ -204,10 +215,10 @@ return [
 			}
 
 			$values = A::wrap($value);
-			$form   = $this->form();
 
 			foreach ($values as $index => $value) {
-				$form->reset()->submit(input: $value, passthrough: true);
+				$form = $this->form();
+				$form->fill(input: $value);
 
 				foreach ($form->fields() as $field) {
 					$errors = $field->errors();

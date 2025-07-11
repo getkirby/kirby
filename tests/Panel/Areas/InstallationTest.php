@@ -4,17 +4,17 @@ namespace Kirby\Panel\Areas;
 
 class InstallationTest extends AreaTestCase
 {
-	public function testInstallationRedirectFromHome()
+	public function testInstallationRedirectFromHome(): void
 	{
 		$this->assertRedirect('/', 'installation');
 	}
 
-	public function testInstallationRedirectFromAnywhere()
+	public function testInstallationRedirectFromAnywhere(): void
 	{
 		$this->assertRedirect('somewhere', 'installation');
 	}
 
-	public function testInstallation()
+	public function testInstallation(): void
 	{
 		$view = $this->view('installation');
 
@@ -42,7 +42,7 @@ class InstallationTest extends AreaTestCase
 		$this->assertArrayHasKey('value', $view['props']['translations'][0]);
 	}
 
-	public function testInstallationWhenReady()
+	public function testInstallationWhenReady(): void
 	{
 		$this->installable();
 
@@ -53,13 +53,13 @@ class InstallationTest extends AreaTestCase
 		$this->assertTrue($view['props']['isOk']);
 	}
 
-	public function testInstallationWhenInstalled()
+	public function testInstallationWhenInstalled(): void
 	{
 		$this->install();
 		$this->assertRedirect('installation', 'login');
 	}
 
-	public function testInstallationWhenAuthenticated()
+	public function testInstallationWhenAuthenticated(): void
 	{
 		$this->install();
 		$this->login();

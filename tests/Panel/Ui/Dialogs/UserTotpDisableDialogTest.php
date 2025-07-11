@@ -8,10 +8,9 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Totp;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\UserTotpDisableDialog
- */
+#[CoversClass(UserTotpDisableDialog::class)]
 class UserTotpDisableDialogTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.UserTotpDisableDialog';
@@ -50,9 +49,6 @@ class UserTotpDisableDialogTest extends TestCase
 		$_GET = [];
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstruct(): void
 	{
 		$dialog = new UserTotpDisableDialog();
@@ -63,9 +59,6 @@ class UserTotpDisableDialogTest extends TestCase
 		$this->assertSame('homer@simpson.com', $dialog->user->email());
 	}
 
-	/**
-	 * @covers ::load
-	 */
 	public function testLoad(): void
 	{
 		// current admin user for themselves
@@ -85,9 +78,6 @@ class UserTotpDisableDialogTest extends TestCase
 		$this->assertSame('k-form-dialog', $state['component']);
 	}
 
-	/**
-	 * @covers ::submit
-	 */
 	public function testSubmit(): void
 	{
 		$user     = $this->app->user();
@@ -106,9 +96,6 @@ class UserTotpDisableDialogTest extends TestCase
 		$this->assertIsString($state['message']);
 	}
 
-	/**
-	 * @covers ::submit
-	 */
 	public function testSubmitWrongPassword(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -124,9 +111,6 @@ class UserTotpDisableDialogTest extends TestCase
 		$dialog->submit();
 	}
 
-	/**
-	 * @covers ::submit
-	 */
 	public function testSubmitNonAdminAnotherUser(): void
 	{
 		$this->expectException(PermissionException::class);

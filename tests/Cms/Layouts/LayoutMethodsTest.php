@@ -18,7 +18,7 @@ class LayoutMethodsTest extends TestCase
 		]);
 	}
 
-	public function testLayoutMethod()
+	public function testLayoutMethod(): void
 	{
 		$layout = new Layout();
 		$this->assertSame('layout method', $layout->test());

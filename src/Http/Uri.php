@@ -472,7 +472,7 @@ class Uri implements Stringable
 
 		$path = $this->path->toString($slash) . $this->params->toString(true);
 
-		if ($this->slash && $slash === true) {
+		if ($this->slash && ($path !== '' || $slash === true)) {
 			$path .= '/';
 		}
 

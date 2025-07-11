@@ -18,7 +18,7 @@ class BlocksMethodsTest extends TestCase
 		]);
 	}
 
-	public function testBlocksMethod()
+	public function testBlocksMethod(): void
 	{
 		$input = [
 			['type' => 'heading']

@@ -10,11 +10,12 @@ use Kirby\Filesystem\F;
 use Kirby\Http\Route;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionMethod;
+use Whoops\Handler\PrettyPageHandler;
 
-/**
- * @coversDefaultClass \Kirby\Cms\App
- */
+#[CoversClass(App::class)]
 class AppTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -29,14 +30,12 @@ class AppTest extends TestCase
 
 	public function tearDown(): void
 	{
+		App::destroy();
 		Dir::remove(static::TMP);
 		$_SERVER = $this->_SERVER;
 	}
 
-	/**
-	 * @covers ::clone
-	 */
-	public function testClone()
+	public function testClone(): void
 	{
 		$app = new App();
 		$app->data['test'] = 'testtest';
@@ -59,10 +58,7 @@ class AppTest extends TestCase
 		$this->assertSame('testtest', $clone->data['test']);
 	}
 
-	/**
-	 * @covers ::collection
-	 */
-	public function testCollection()
+	public function testCollection(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -84,10 +80,7 @@ class AppTest extends TestCase
 		$this->assertSame('test', $collection->first()->slug());
 	}
 
-	/**
-	 * @covers ::collection
-	 */
-	public function testCollectionWithOptions()
+	public function testCollectionWithOptions(): void
 	{
 		$test = $this;
 		$app  = new App([
@@ -142,10 +135,7 @@ class AppTest extends TestCase
 		$app->collection('overwrites', ['kirby' => 'foo']);
 	}
 
-	/**
-	 * @covers ::contentToken
-	 */
-	public function testContentToken()
+	public function testContentToken(): void
 	{
 		$model = new class () {
 			public function id(): string
@@ -189,10 +179,7 @@ class AppTest extends TestCase
 		$this->assertSame(hash_hmac('sha1', 'test', ' salt'), $app->contentToken(null, 'test'));
 	}
 
-	/**
-	 * @covers ::csrf
-	 */
-	public function testCsrf()
+	public function testCsrf(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -240,7 +227,7 @@ class AppTest extends TestCase
 		$session->destroy();
 	}
 
-	public function testDebugInfo()
+	public function testDebugInfo(): void
 	{
 		$app = new App();
 		$debuginfo = $app->__debugInfo();
@@ -254,7 +241,7 @@ class AppTest extends TestCase
 		$this->assertArrayHasKey('version', $debuginfo);
 	}
 
-	public function testDefaultRoles()
+	public function testDefaultRoles(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -265,7 +252,7 @@ class AppTest extends TestCase
 		$this->assertInstanceOf(Roles::class, $app->roles());
 	}
 
-	public function testEmail()
+	public function testEmail(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -288,10 +275,7 @@ class AppTest extends TestCase
 		$this->assertInstanceOf(PHPMailer::class, $email);
 	}
 
-	/**
-	 * @covers ::environment
-	 */
-	public function testEnvironment()
+	public function testEnvironment(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -305,10 +289,7 @@ class AppTest extends TestCase
 		$this->assertSame($info, $app->environment()->info());
 	}
 
-	/**
-	 * @covers ::environment
-	 */
-	public function testEnvironmentBeforeInitialization()
+	public function testEnvironmentBeforeInitialization(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The environment is not allowed');
@@ -321,10 +302,7 @@ class AppTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::image
-	 */
-	public function testImage()
+	public function testImage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -363,10 +341,7 @@ class AppTest extends TestCase
 		$this->assertNull($image);
 	}
 
-	/**
-	 * @covers ::models
-	 */
-	public function testModels()
+	public function testModels(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -410,10 +385,7 @@ class AppTest extends TestCase
 		$this->assertSame('test@getkirby.com', $models->current()->email());
 	}
 
-	/**
-	 * @covers ::nonce
-	 */
-	public function testNonce()
+	public function testNonce(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -424,7 +396,7 @@ class AppTest extends TestCase
 		$this->assertIsString($nonce = $app->nonce());
 	}
 
-	public function testOption()
+	public function testOption(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -438,7 +410,7 @@ class AppTest extends TestCase
 		$this->assertSame('bar', $app->option('foo'));
 	}
 
-	public function testOptionWithDotNotation()
+	public function testOptionWithDotNotation(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -454,9 +426,8 @@ class AppTest extends TestCase
 		$this->assertSame('test', $app->option('mother.child'));
 	}
 
-	public function testOptionFromPlugin()
+	public function testOptionFromPlugin(): void
 	{
-		App::destroy();
 		App::plugin('namespace/plugin', [
 			'options' => [
 				'key' => 'A',
@@ -498,10 +469,8 @@ class AppTest extends TestCase
 		$this->assertSame('B1', $app->option('namespace.plugin.nested')['key']);
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null'
@@ -518,10 +487,8 @@ class AppTest extends TestCase
 		$this->assertSame($options, $app->options());
 	}
 
-	public function testOptionsFromFile()
+	public function testOptionsFromFile(): void
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
@@ -543,10 +510,8 @@ class AppTest extends TestCase
 		], $app->options());
 	}
 
-	public function testOptionsFromFileWithEnv1()
+	public function testOptionsFromFileWithEnv1(): void
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
@@ -569,10 +534,8 @@ class AppTest extends TestCase
 		], $app->options());
 	}
 
-	public function testOptionsFromFileWithEnv2()
+	public function testOptionsFromFileWithEnv2(): void
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
@@ -597,10 +560,8 @@ class AppTest extends TestCase
 		], $app->options());
 	}
 
-	public function testOptionsOnReady()
+	public function testOptionsOnReady(): void
 	{
-		App::destroy();
-
 		$app = new App([
 			'cli' => false,
 			'roots' => [
@@ -626,28 +587,34 @@ class AppTest extends TestCase
 		]);
 
 		$this->assertSame([
-			'ready' => $ready,
-			'whoops' => true,
-			'test' => '/dev/null',
+			'ready'        => $ready,
+			'whoops'       => true,
+			'test'         => '/dev/null',
 			'another.test' => 'foo',
-			'debug' => true,
-			'home' => 'test',
-			'error' => 'another-test',
-			'slugs' => 'de'
+			'debug'        => true,
+			'home'         => 'test',
+			'error'        => 'another-test',
+			'slugs'        => 'de'
 		], $app->options());
 
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
 		$whoopsMethod->setAccessible(true);
 		$whoopsHandler = $whoopsMethod->invoke($app)->getHandlers()[0];
-		$this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $whoopsHandler);
+		$this->assertInstanceOf(PrettyPageHandler::class, $whoopsHandler);
 
 		$this->assertSame('test', $app->site()->homePageId());
 		$this->assertSame('another-test', $app->site()->errorPageId());
 
 		$this->assertSame('ss', Str::$language['ß']);
+
+		// Suppresses PHPUnit warnings:
+		// Test code or tested code did not remove its own error handlers
+		// Test code or tested code did not remove its own exception handlers
+		restore_error_handler();
+		restore_exception_handler();
 	}
 
-	public function testRolesFromFixtures()
+	public function testRolesFromFixtures(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -673,7 +640,7 @@ class AppTest extends TestCase
 	//     $this->assertInstanceOf(\Kirby\Email\Email::class, $email);
 	// }
 
-	public function testRoute()
+	public function testRoute(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -698,7 +665,7 @@ class AppTest extends TestCase
 		$this->assertInstanceOf(Route::class, $route);
 	}
 
-	public function testSession()
+	public function testSession(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -728,9 +695,8 @@ class AppTest extends TestCase
 		$this->assertSame(['Vary' => 'Cookie', 'Cache-Control' => 'custom'], $app->response()->headers());
 	}
 
-	public function testInstance()
+	public function testInstance(): void
 	{
-		App::destroy();
 		$this->assertNull(App::instance(null, true));
 
 		$instance1 = new App();
@@ -746,7 +712,7 @@ class AppTest extends TestCase
 		$this->assertNotSame($instance3, App::instance());
 	}
 
-	public function testFindPageFile()
+	public function testFindPageFile(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -778,7 +744,7 @@ class AppTest extends TestCase
 		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
 	}
 
-	public function testFindSiteFile()
+	public function testFindSiteFile(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -822,7 +788,7 @@ class AppTest extends TestCase
 		$this->assertSame($fileC, $app->file('test-c.jpg', $fileC));
 	}
 
-	public function testFindUserFile()
+	public function testFindUserFile(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -850,10 +816,7 @@ class AppTest extends TestCase
 		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
 	}
 
-	/**
-	 * @covers ::file
-	 */
-	public function testFindFileByUUID()
+	public function testFindFileByUUID(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -880,7 +843,7 @@ class AppTest extends TestCase
 		$this->assertIsFile($file, $app->file('file://my-file'));
 	}
 
-	public function testBlueprints()
+	public function testBlueprints(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -928,10 +891,8 @@ class AppTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider urlProvider
-	 */
-	public function testUrl($url, $expected)
+	#[DataProvider('urlProvider')]
+	public function testUrl($url, $expected): void
 	{
 		$app = new App([
 			'roots' => [
@@ -949,10 +910,8 @@ class AppTest extends TestCase
 		$_SERVER['SERVER_ADDR'] = null;
 	}
 
-	public function testUrlFromEnvWithDetection()
+	public function testUrlFromEnvWithDetection(): void
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
@@ -969,10 +928,8 @@ class AppTest extends TestCase
 		$this->assertSame('https://trykirby.com/panel', $app->url('panel'));
 	}
 
-	public function testUrlFromEnvWithOverride()
+	public function testUrlFromEnvWithOverride(): void
 	{
-		App::destroy();
-
 		$app = new App([
 			'roots' => [
 				'index'  => '/dev/null',
@@ -989,12 +946,12 @@ class AppTest extends TestCase
 		$this->assertSame('https://getkirby.com/docs/panel', $app->url('panel'));
 	}
 
-	public function testVersionHash()
+	public function testVersionHash(): void
 	{
 		$this->assertSame(md5(App::version()), App::versionHash());
 	}
 
-	public function testSlugsOption()
+	public function testSlugsOption(): void
 	{
 		// string option
 		$app = new App([
@@ -1031,11 +988,7 @@ class AppTest extends TestCase
 		$this->assertSame('ss', Str::$language['ß']);
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
-	public function testController()
+	public function testController(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -1055,11 +1008,7 @@ class AppTest extends TestCase
 		], $app->controller('test'));
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
-	public function testControllerCallback()
+	public function testControllerCallback(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -1082,11 +1031,7 @@ class AppTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
-	public function testControllerRepresentation()
+	public function testControllerRepresentation(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -1106,11 +1051,7 @@ class AppTest extends TestCase
 		], $app->controller('another', contentType: 'json'));
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
-	public function testControllerHtmlForMissingRepresentation()
+	public function testControllerHtmlForMissingRepresentation(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -1130,11 +1071,7 @@ class AppTest extends TestCase
 		], $app->controller('test', contentType: 'json'));
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
-	public function testControllerMissing()
+	public function testControllerMissing(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -1154,11 +1091,7 @@ class AppTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::controller
-	 * @covers ::controllerLookup
-	 */
-	public function testControllerMissingRepresentation()
+	public function testControllerMissingRepresentation(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -1178,10 +1111,7 @@ class AppTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::path
-	 */
-	public function testPath()
+	public function testPath(): void
 	{
 		$app = new App();
 		$this->assertSame('', $app->path());
@@ -1218,10 +1148,7 @@ class AppTest extends TestCase
 		$this->assertSame('foo/bar', $app->path());
 	}
 
-	/**
-	 * @covers ::page
-	 */
-	public function testPageWithUUID()
+	public function testPageWithUUID(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -1241,10 +1168,7 @@ class AppTest extends TestCase
 		$this->assertIsPage($page, $app->page('page://my-page'));
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		$app = new App([
 			'roots' => [

@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Core
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Core::class)]
 class CoreTest extends TestCase
 {
 	protected Core $core;
@@ -15,20 +15,14 @@ class CoreTest extends TestCase
 		$this->core = new Core($this->app);
 	}
 
-	/**
-	 * @covers ::area
-	 */
-	public function testArea()
+	public function testArea(): void
 	{
 		$area = $this->core->area('site');
 
 		$this->assertSame('Site', $area['label']);
 	}
 
-	/**
-	 * @covers ::areas
-	 */
-	public function testAreas()
+	public function testAreas(): void
 	{
 		$areas = $this->core->areas();
 		$this->assertArrayHasKey('account', $areas);
@@ -39,19 +33,13 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('users', $areas);
 	}
 
-	/**
-	 * @covers ::authChallenges
-	 */
-	public function testAuthChallenges()
+	public function testAuthChallenges(): void
 	{
 		$authChallenges = $this->core->authChallenges();
 		$this->assertArrayHasKey('email', $authChallenges);
 	}
 
-	/**
-	 * @covers ::blueprintPresets
-	 */
-	public function testBlueprintPresets()
+	public function testBlueprintPresets(): void
 	{
 		$blueprintPresets = $this->core->blueprintPresets();
 		$this->assertArrayHasKey('pages', $blueprintPresets);
@@ -59,10 +47,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('files', $blueprintPresets);
 	}
 
-	/**
-	 * @covers ::blueprints
-	 */
-	public function testBlueprints()
+	public function testBlueprints(): void
 	{
 		$blueprints = $this->core->blueprints();
 
@@ -83,10 +68,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('site', $blueprints);
 	}
 
-	/**
-	 * @covers ::caches
-	 */
-	public function testCaches()
+	public function testCaches(): void
 	{
 		$caches = $this->core->caches();
 
@@ -94,10 +76,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('uuid', $caches);
 	}
 
-	/**
-	 * @covers ::cacheTypes
-	 */
-	public function testCacheTypes()
+	public function testCacheTypes(): void
 	{
 		$cacheTypes = $this->core->cacheTypes();
 
@@ -107,10 +86,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('memory', $cacheTypes);
 	}
 
-	/**
-	 * @covers ::components
-	 */
-	public function testComponents()
+	public function testComponents(): void
 	{
 		$components = $this->core->components();
 
@@ -127,10 +103,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('url', $components);
 	}
 
-	/**
-	 * @covers ::fieldMethodAliases
-	 */
-	public function testFieldMethodAliases()
+	public function testFieldMethodAliases(): void
 	{
 		$aliases = $this->core->fieldMethodAliases();
 
@@ -149,10 +122,7 @@ class CoreTest extends TestCase
 		$this->assertSame('xml', $aliases['x']);
 	}
 
-	/**
-	 * @covers ::fieldMethods
-	 */
-	public function testFieldMethods()
+	public function testFieldMethods(): void
 	{
 		$methods = $this->core->fieldMethods();
 
@@ -203,10 +173,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('yaml', $methods);
 	}
 
-	/**
-	 * @covers ::fieldMixins
-	 */
-	public function testFieldMixins()
+	public function testFieldMixins(): void
 	{
 		$mixins = $this->core->fieldMixins();
 
@@ -221,10 +188,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('userpicker', $mixins);
 	}
 
-	/**
-	 * @covers ::fields
-	 */
-	public function testFields()
+	public function testFields(): void
 	{
 		$fields = $this->core->fields();
 
@@ -259,19 +223,13 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('writer', $fields);
 	}
 
-	/**
-	 * @covers ::area
-	 */
-	public function testFilePreviews()
+	public function testFilePreviews(): void
 	{
 		$previews = $this->core->filePreviews();
 		$this->assertCount(4, $previews);
 	}
 
-	/**
-	 * @covers ::load
-	 */
-	public function testLoad()
+	public function testLoad(): void
 	{
 		$loader = $this->core->load();
 
@@ -279,10 +237,7 @@ class CoreTest extends TestCase
 		$this->assertFalse($loader->withPlugins());
 	}
 
-	/**
-	 * @covers ::roots
-	 */
-	public function testRoots()
+	public function testRoots(): void
 	{
 		$roots = $this->core->roots();
 
@@ -314,10 +269,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('roles', $roots);
 	}
 
-	/**
-	 * @covers ::routes
-	 */
-	public function testRoutes()
+	public function testRoutes(): void
 	{
 		$routes = $this->core->routes();
 
@@ -325,10 +277,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('after', $routes);
 	}
 
-	/**
-	 * @covers ::snippets
-	 */
-	public function testSnippets()
+	public function testSnippets(): void
 	{
 		$snippets = $this->core->snippets();
 
@@ -345,10 +294,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('blocks/video', $snippets);
 	}
 
-	/**
-	 * @covers ::kirbyTagAliases
-	 */
-	public function testKirbyTagAliases()
+	public function testKirbyTagAliases(): void
 	{
 		$aliases = $this->core->kirbyTagAliases();
 
@@ -356,10 +302,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('vimeo', $aliases);
 	}
 
-	/**
-	 * @covers ::kirbyTags
-	 */
-	public function testKirbyTags()
+	public function testKirbyTags(): void
 	{
 		$tags = $this->core->kirbyTags();
 
@@ -373,10 +316,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('video', $tags);
 	}
 
-	/**
-	 * @covers ::sectionMixins
-	 */
-	public function testSectionMixins()
+	public function testSectionMixins(): void
 	{
 		$mixins = $this->core->sectionMixins();
 
@@ -390,10 +330,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('parent', $mixins);
 	}
 
-	/**
-	 * @covers ::sections
-	 */
-	public function testSections()
+	public function testSections(): void
 	{
 		$sections = $this->core->sections();
 
@@ -403,10 +340,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('pages', $sections);
 	}
 
-	/**
-	 * @covers ::templates
-	 */
-	public function testTemplates()
+	public function testTemplates(): void
 	{
 		$templates = $this->core->templates();
 
@@ -414,10 +348,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('emails/auth/password-reset', $templates);
 	}
 
-	/**
-	 * @covers ::urls
-	 */
-	public function testUrls()
+	public function testUrls(): void
 	{
 		$urls = $this->core->urls();
 

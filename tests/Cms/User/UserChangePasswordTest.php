@@ -51,7 +51,7 @@ class UserChangePasswordTest extends ModelTestCase
 		$this->assertSame(3, $calls);
 	}
 
-	public function testChangePasswordHooksCurrentUser()
+	public function testChangePasswordHooksCurrentUser(): void
 	{
 		$calls = 0;
 		$phpunit = $this;

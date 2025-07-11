@@ -6,7 +6,7 @@ use Kirby\Cms\Page;
 
 class InfoFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('info');
 
@@ -18,7 +18,7 @@ class InfoFieldTest extends TestCase
 		$this->assertFalse($field->save());
 	}
 
-	public function testText()
+	public function testText(): void
 	{
 		// simple text
 		$field = $this->field('info', [

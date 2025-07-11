@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 class UrlFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('url');
 
@@ -18,7 +18,7 @@ class UrlFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testUrlValidation()
+	public function testUrlValidation(): void
 	{
 		$field = $this->field('url', [
 			'value' => 'https://getkirby.com'
@@ -33,7 +33,7 @@ class UrlFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testMinLength()
+	public function testMinLength(): void
 	{
 		$field = $this->field('url', [
 			'value' => 'https://test.com',
@@ -44,7 +44,7 @@ class UrlFieldTest extends TestCase
 		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
-	public function testMaxLength()
+	public function testMaxLength(): void
 	{
 		$field = $this->field('url', [
 			'value'     => 'https://test.com',

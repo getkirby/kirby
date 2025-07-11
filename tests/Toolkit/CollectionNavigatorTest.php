@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 class CollectionNavigatorTest extends TestCase
 {
-	public function testFirstLast()
+	public function testFirstLast(): void
 	{
 		$collection = new Collection([
 			'one'   => 'eins',
@@ -17,7 +17,7 @@ class CollectionNavigatorTest extends TestCase
 		$this->assertSame('vier', $collection->last());
 	}
 
-	public function testNth()
+	public function testNth(): void
 	{
 		$collection = new Collection([
 			'one'   => 'eins',

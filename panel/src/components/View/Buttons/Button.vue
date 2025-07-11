@@ -21,7 +21,6 @@ import Button from "@/components/Navigation/Button.vue";
 /**
  * @displayName ViewButton
  * @since 5.0.0
- * @internal
  */
 export default {
 	extends: Button,

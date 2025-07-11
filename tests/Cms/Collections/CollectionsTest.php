@@ -15,7 +15,7 @@ class CollectionsTest extends TestCase
 		]);
 	}
 
-	public function testGetAndCall()
+	public function testGetAndCall(): void
 	{
 		$app        = $this->_app();
 		$collection = new Collection();
@@ -29,7 +29,7 @@ class CollectionsTest extends TestCase
 		$this->assertEquals($collection, $result); // cannot use strict assertion (different object)
 	}
 
-	public function testGetWithData()
+	public function testGetWithData(): void
 	{
 		$app    = $this->_app();
 		$result = $app->collections()->get('string', [
@@ -40,7 +40,7 @@ class CollectionsTest extends TestCase
 		$this->assertSame('ab', $result);
 	}
 
-	public function testGetWithRearrangedData()
+	public function testGetWithRearrangedData(): void
 	{
 		$app    = $this->_app();
 		$result = $app->collections()->get('rearranged', [
@@ -51,7 +51,7 @@ class CollectionsTest extends TestCase
 		$this->assertSame('ab', $result);
 	}
 
-	public function testGetWithDifferentData()
+	public function testGetWithDifferentData(): void
 	{
 		$app = $this->_app();
 
@@ -68,7 +68,7 @@ class CollectionsTest extends TestCase
 		$this->assertSame('cd', $result);
 	}
 
-	public function testGetCloned()
+	public function testGetCloned(): void
 	{
 		$app         = $this->_app();
 		$collections = $app->collections();
@@ -83,7 +83,7 @@ class CollectionsTest extends TestCase
 		$this->assertCount(0, $b);
 	}
 
-	public function testHas()
+	public function testHas(): void
 	{
 		$app = $this->_app();
 		$this->assertTrue($app->collections()->has('test'));
@@ -91,7 +91,7 @@ class CollectionsTest extends TestCase
 		$this->assertTrue($app->collections()->has('test'));
 	}
 
-	public function testLoad()
+	public function testLoad(): void
 	{
 		$app = $this->_app();
 		$result = $app->collections()->load('test');
@@ -101,7 +101,7 @@ class CollectionsTest extends TestCase
 		$this->assertSame('a', $result());
 	}
 
-	public function testLoadNested()
+	public function testLoadNested(): void
 	{
 		$app = $this->_app();
 		$result = $app->collections()->load('nested/test');

@@ -18,7 +18,7 @@ class LayoutColumnMethodsTest extends TestCase
 		]);
 	}
 
-	public function testLayoutColumnMethod()
+	public function testLayoutColumnMethod(): void
 	{
 		$column = new LayoutColumn();
 		$this->assertSame('layout column method', $column->test());

@@ -81,7 +81,7 @@ trait FileActions
 
 			// hard reset for the version cache
 			// to avoid broken/overlapping file references
-			VersionCache::$cache = [];
+			VersionCache::reset();
 
 			// move the content storage versions
 			$oldFile->storage()->moveAll(to: $newFile->storage());
@@ -104,10 +104,23 @@ trait FileActions
 			return $this;
 		}
 
+		$arguments = [
+			'file'     => $this,
+			'position' => $sort
+		];
+
 		return $this->commit(
 			'changeSort',
-			['file' => $this, 'position' => $sort],
-			fn ($file, $sort) => $file->save(['sort' => $sort])
+			$arguments,
+			function ($file, $sort) {
+				// make sure to update the sort in the changes version as well
+				// otherwise the new sort would be lost as soon as the changes are saved
+				if ($file->version('changes')->exists() === true) {
+					$file->version('changes')->update(['sort' => $sort]);
+				}
+
+				return $file->save(['sort' => $sort]);
+			}
 		);
 	}
 
@@ -161,7 +174,6 @@ trait FileActions
 
 	/**
 	 * Copy the file to the given page
-	 * @internal
 	 */
 	public function copy(Page $page): static
 	{
@@ -203,7 +215,8 @@ trait FileActions
 			'translations' => null,
 		]);
 
-		$upload = $file->asset($props['source']);
+		$upload   = $file->assetFactory($props['source']);
+		$existing = null;
 
 		// merge the content with the defaults
 		$props['content'] = [
@@ -235,7 +248,14 @@ trait FileActions
 		$storage = $file->storage()::class;
 
 		// make sure that the temporary page is stored in memory
-		$file->changeStorage(MemoryStorage::class);
+		$file->changeStorage(
+			toStorage: MemoryStorage::class,
+			// when there’s already an existing file,
+			// we need to make sure that the content is
+			// copied to memory and the existing content
+			// storage entry is not deleted by this step
+			copy: $existing !== null
+		);
 
 		// inject the content
 		$file->setContent($props['content']);

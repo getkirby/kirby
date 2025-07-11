@@ -10,6 +10,7 @@ use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class PageForceLocked extends ModelPage
 {
@@ -22,9 +23,8 @@ class PageForceLocked extends ModelPage
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Panel\Page
- */
+#[CoversClass(\Kirby\Panel\Page::class)]
+#[CoversClass(Model::class)]
 class PageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Page';
@@ -51,9 +51,6 @@ class PageTest extends TestCase
 		return new Page($page);
 	}
 
-	/**
-	 * @covers ::breadcrumb
-	 */
 	public function testBreadcrumb(): void
 	{
 		$site = new ModelSite([
@@ -97,12 +94,10 @@ class PageTest extends TestCase
 		], $page->breadcrumb());
 	}
 
-	/**
-	 * @covers ::buttons
-	 */
-	public function testButtons()
+	public function testButtons(): void
 	{
 		$this->assertSame([
+			'k-open-view-button',
 			'k-preview-view-button',
 			'k-settings-view-button',
 			'k-languages-view-button',
@@ -110,10 +105,7 @@ class PageTest extends TestCase
 		], array_column($this->panel()->buttons(), 'component'));
 	}
 
-	/**
-	 * @covers ::dragText
-	 */
-	public function testDragText()
+	public function testDragText(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test',
@@ -136,10 +128,7 @@ class PageTest extends TestCase
 		$this->assertSame('(link: page://test-page text: Test Title)', $panel->dragText());
 	}
 
-	/**
-	 * @covers ::dragText
-	 */
-	public function testDragTextMarkdown()
+	public function testDragTextMarkdown(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -171,10 +160,7 @@ class PageTest extends TestCase
 		$this->assertSame('[Test Title](//@/page/my-b)', $panel->dragText());
 	}
 
-	/**
-	 * @covers ::dragText
-	 */
-	public function testDragTextCustomMarkdown()
+	public function testDragTextCustomMarkdown(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -203,10 +189,7 @@ class PageTest extends TestCase
 		$this->assertSame('Links sind toll: /test', $panel->dragText());
 	}
 
-	/**
-	 * @covers ::dragText
-	 */
-	public function testDragTextCustomKirbytext()
+	public function testDragTextCustomKirbytext(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -234,10 +217,7 @@ class PageTest extends TestCase
 		$this->assertSame('Links sind toll: /test', $panel->dragText());
 	}
 
-	/**
-	 * @covers ::dropdownOption
-	 */
-	public function testDropdownOption()
+	public function testDropdownOption(): void
 	{
 		$page = new ModelPage([
 			'slug'    => 'test',
@@ -254,10 +234,7 @@ class PageTest extends TestCase
 		$this->assertSame('/pages/test', $option['link']);
 	}
 
-	/**
-	 * @covers ::image
-	 */
-	public function testIconFromBlueprint()
+	public function testIconFromBlueprint(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test',
@@ -271,10 +248,7 @@ class PageTest extends TestCase
 		$this->assertSame('test', $image['icon']);
 	}
 
-	/**
-	 * @covers ::id
-	 */
-	public function testId()
+	public function testId(): void
 	{
 		$parent = new ModelPage(['slug' => 'foo']);
 		$page   = new ModelPage([
@@ -286,10 +260,7 @@ class PageTest extends TestCase
 		$this->assertSame('foo+bar', $id);
 	}
 
-	/**
-	 * @covers ::imageSource
-	 */
-	public function testImage()
+	public function testImage(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -303,11 +274,7 @@ class PageTest extends TestCase
 		$this->assertTrue(Str::endsWith($image['url'], '/test.jpg'));
 	}
 
-	/**
-	 * @covers ::image
-	 * @covers ::imageDefaults
-	 */
-	public function testImageBlueprintIconWithEmoji()
+	public function testImageBlueprintIconWithEmoji(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test',
@@ -321,11 +288,7 @@ class PageTest extends TestCase
 		$this->assertSame($emoji, $image['icon']);
 	}
 
-	/**
-	 * @covers ::imageSource
-	 * @covers \Kirby\Panel\Model::imageSrcset
-	 */
-	public function testImageCover()
+	public function testImageCover(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -369,10 +332,7 @@ class PageTest extends TestCase
 		], $panel->image(['cover' => true]));
 	}
 
-	/**
-	 * @covers \Kirby\Panel\Model::options
-	 */
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test',
@@ -401,10 +361,7 @@ class PageTest extends TestCase
 		$this->assertSame($expected, $panel->options());
 	}
 
-	/**
-	 * @covers \Kirby\Panel\Model::options
-	 */
-	public function testOptionsWithLockedPage()
+	public function testOptionsWithLockedPage(): void
 	{
 		$page = new PageForceLocked([
 			'slug' => 'test',
@@ -454,10 +411,7 @@ class PageTest extends TestCase
 		$this->assertSame($expected, $panel->options(['preview']));
 	}
 
-	/**
-	 * @covers ::path
-	 */
-	public function testPath()
+	public function testPath(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test'
@@ -467,11 +421,7 @@ class PageTest extends TestCase
 		$this->assertSame('pages/test', $panel->path());
 	}
 
-	/**
-	 * @covers ::pickerData
-	 * @covers \Kirby\Panel\Model::pickerData
-	 */
-	public function testPickerDataDefault()
+	public function testPickerDataDefault(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test',
@@ -490,10 +440,7 @@ class PageTest extends TestCase
 		$this->assertSame('Test Title', $data['text']);
 	}
 
-	/**
-	 * @covers ::position
-	 */
-	public function testPosition()
+	public function testPosition(): void
 	{
 		$page = new ModelPage([
 			'slug' => 'test',
@@ -517,10 +464,7 @@ class PageTest extends TestCase
 		$this->assertSame(4, $panel->position());
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test'
@@ -548,11 +492,7 @@ class PageTest extends TestCase
 		$this->assertNull($props['prev']());
 	}
 
-	/**
-	 * @covers ::props
-	 * @covers ::prevNext
-	 */
-	public function testPropsPrevNext()
+	public function testPropsPrevNext(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -578,11 +518,7 @@ class PageTest extends TestCase
 		$this->assertNull($props['next']());
 	}
 
-	/**
-	 * @covers ::props
-	 * @covers ::prevNext
-	 */
-	public function testPropsPrevNextWithSameTemplate()
+	public function testPropsPrevNextWithSameTemplate(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -606,11 +542,7 @@ class PageTest extends TestCase
 		$this->assertSame('/pages/foo', $props['prev']()['link']);
 	}
 
-	/**
-	 * @covers ::props
-	 * @covers ::prevNext
-	 */
-	public function testPropsPrevNextWithSameStatus()
+	public function testPropsPrevNextWithSameStatus(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -634,11 +566,7 @@ class PageTest extends TestCase
 		$this->assertSame('/pages/foo', $props['prev']()['link']);
 	}
 
-	/**
-	 * @covers ::prevNext
-	 * @covers ::toPrevNextLink
-	 */
-	public function testPropsPrevNextWithTab()
+	public function testPropsPrevNextWithTab(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -660,10 +588,7 @@ class PageTest extends TestCase
 		$_GET = [];
 	}
 
-	/**
-	 * @covers ::view
-	 */
-	public function testView()
+	public function testView(): void
 	{
 		$page = new ModelPage([
 			'slug'  => 'test',
@@ -678,10 +603,7 @@ class PageTest extends TestCase
 		$this->assertSame('test', $view['breadcrumb'][0]['label']);
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -708,10 +630,7 @@ class PageTest extends TestCase
 		$this->assertSame('/pages/mother+child', $panel->url(true));
 	}
 
-	/**
-	 * @covers ::prevNext
-	 */
-	public function testPrevNextOne()
+	public function testPrevNextOne(): void
 	{
 		$app = $this->app->clone([
 			'roots' => [
@@ -774,10 +693,7 @@ class PageTest extends TestCase
 		$this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
 	}
 
-	/**
-	 * @covers ::prevNext
-	 */
-	public function testPrevNextTwo()
+	public function testPrevNextTwo(): void
 	{
 		$app = $this->app->clone([
 			'roots' => [
@@ -853,10 +769,7 @@ class PageTest extends TestCase
 		$this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
 	}
 
-	/**
-	 * @covers ::prevNext
-	 */
-	public function testPrevNextThree()
+	public function testPrevNextThree(): void
 	{
 		$app = $this->app->clone([
 			'roots' => [
@@ -932,10 +845,7 @@ class PageTest extends TestCase
 		$this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
 	}
 
-	/**
-	 * @covers ::prevNext
-	 */
-	public function testPrevNextFour()
+	public function testPrevNextFour(): void
 	{
 		$app = $this->app->clone([
 			'roots' => [

@@ -6,7 +6,7 @@ class PermalinksTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.Permalinks';
 
-	public function testRoute()
+	public function testRoute(): void
 	{
 		$app = $this->app->clone([
 			'site' => [

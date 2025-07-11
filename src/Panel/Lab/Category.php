@@ -4,6 +4,7 @@ namespace Kirby\Panel\Lab;
 
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -11,15 +12,14 @@ use Kirby\Toolkit\Str;
  * Category of lab examples located in
  * `kirby/panel/lab` and `site/lab`.
  *
- * @internal
- * @since 4.0.0
- * @codeCoverageIgnore
- *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
+ * @internal
+ * @codeCoverageIgnore
  */
 class Category
 {
@@ -32,11 +32,11 @@ class Category
 	) {
 		$this->root = $root ?? static::base() . '/' . $this->id;
 
-		if (file_exists($this->root . '/index.php') === true) {
-			$this->props = [
-				...require $this->root . '/index.php',
-				...$this->props
-			];
+		if (F::exists($this->root . '/index.php', static::base()) === true) {
+			$this->props = array_merge(
+				require $this->root . '/index.php',
+				$this->props
+			);
 		}
 	}
 

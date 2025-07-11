@@ -29,15 +29,14 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Files>
  */
 class File extends ModelWithContent
 {
 	use FileActions;
 	use FileModifications;
 	use HasMethods;
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Files>
-	 */
 	use HasSiblings;
 	use IsFile;
 
@@ -234,7 +233,7 @@ class File extends ModelWithContent
 	/**
 	 * Store the template in addition to the
 	 * other content.
-	 * @internal
+	 * @unstable
 	 */
 	public function contentFileData(
 		array $data,
@@ -266,7 +265,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Constructs a File object
-	 * @internal
 	 */
 	public static function factory(array $props): static
 	{
@@ -372,8 +370,17 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the absolute path to the media folder
+	 * for the file and its versions
+	 * @since 5.0.0
+	 */
+	public function mediaDir(): string
+	{
+		return $this->parent()->mediaDir() . '/' . $this->mediaHash();
+	}
+
+	/**
 	 * Creates a unique media hash
-	 * @internal
 	 */
 	public function mediaHash(): string
 	{
@@ -382,16 +389,18 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the absolute path to the file in the public media folder
-	 * @internal
+	 *
+	 * @param string|null $filename Optional override for the filename
 	 */
-	public function mediaRoot(): string
+	public function mediaRoot(string|null $filename = null): string
 	{
-		return $this->parent()->mediaRoot() . '/' . $this->mediaHash() . '/' . $this->filename();
+		$filename ??= $this->filename();
+
+		return $this->mediaDir() . '/' . $filename;
 	}
 
 	/**
 	 * Creates a non-guessable token string for this file
-	 * @internal
 	 */
 	public function mediaToken(): string
 	{
@@ -401,11 +410,15 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the absolute Url to the file in the public media folder
-	 * @internal
+	 *
+	 * @param string|null $filename Optional override for the filename
 	 */
-	public function mediaUrl(): string
+	public function mediaUrl(string|null $filename = null): string
 	{
-		return $this->parent()->mediaUrl() . '/' . $this->mediaHash() . '/' . $this->filename();
+		$url        = $this->parent()->mediaUrl() . '/' . $this->mediaHash();
+		$filename ??= $this->filename();
+
+		return $url . '/' . $filename;
 	}
 
 	/**
@@ -473,7 +486,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the parent id if a parent exists
-	 * @internal
 	 */
 	public function parentId(): string
 	{
@@ -604,12 +616,20 @@ class File extends ModelWithContent
 	}
 
 	/**
-	 * Simplified File URL that uses the parent
-	 * Page URL and the filename as a more stable
-	 * alternative for the media URLs.
+	 * Clean file URL that uses the parent page URL
+	 * and the filename as a more stable alternative
+	 * for the media URLs if available. The `content.fileRedirects`
+	 * option is used to disable this behavior or enable it
+	 * on a per-file basis.
 	 */
 	public function previewUrl(): string|null
 	{
+		// check if the clean file URL is accessible,
+		// otherwise we need to fall back to the media URL
+		if ($this->kirby()->resolveFile($this) === null) {
+			return $this->url();
+		}
+
 		$parent = $this->parent();
 		$url    = Url::to($this->id());
 
@@ -638,6 +658,7 @@ class File extends ModelWithContent
 
 				return $url;
 			case 'user':
+				// there are no clean URL routes for user files
 				return $this->url();
 			default:
 				return $url;

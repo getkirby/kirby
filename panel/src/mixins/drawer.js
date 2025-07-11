@@ -36,7 +36,7 @@ export default {
 		 */
 		title: String,
 		/**
-		 * @private
+		 * @internal
 		 */
 		visible: {
 			default: false,

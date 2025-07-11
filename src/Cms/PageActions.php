@@ -10,7 +10,6 @@ use Kirby\Content\VersionId;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
@@ -88,13 +87,14 @@ trait PageActions
 		string|null $languageCode = null
 	): static {
 		// always sanitize the slug
-		$slug = Url::slug($slug);
+		$slug     = Url::slug($slug);
+		$language = Language::ensure($languageCode ?? 'current');
 
 		// in multi-language installations the slug for the non-default
 		// languages is stored in the text file. The changeSlugForLanguage
 		// method takes care of that.
-		if ($this->kirby()->language($languageCode)?->isDefault() === false) {
-			return $this->changeSlugForLanguage($slug, $languageCode);
+		if ($language->isDefault() === false) {
+			return $this->changeSlugForLanguage($slug, $language->code());
 		}
 
 		// if the slug stays exactly the same,
@@ -103,8 +103,14 @@ trait PageActions
 			return $this;
 		}
 
-		$arguments = ['page' => $this, 'slug' => $slug, 'languageCode' => null];
-		return $this->commit('changeSlug', $arguments, function ($oldPage, $slug) {
+		$arguments = [
+			'page'         => $this,
+			'slug'         => $slug,
+			'languageCode' => null,
+			'language'     => $language
+		];
+
+		return $this->commit('changeSlug', $arguments, function ($oldPage, $slug, $languageCode, $language) {
 			$newPage = $oldPage->clone([
 				'slug'     => $slug,
 				'dirname'  => null,
@@ -125,7 +131,7 @@ trait PageActions
 
 				// hard reset for the version cache
 				// to avoid broken/overlapping page references
-				VersionCache::$cache = [];
+				VersionCache::reset();
 
 				// remove from the siblings
 				ModelState::update(
@@ -150,13 +156,7 @@ trait PageActions
 		string $slug,
 		string|null $languageCode = null
 	): static {
-		$language = $this->kirby()->language($languageCode);
-
-		if (!$language) {
-			throw new NotFoundException(
-				message: 'The language: "' . $languageCode . '" does not exist'
-			);
-		}
+		$language = Language::ensure($languageCode ?? 'current');
 
 		if ($language->isDefault() === true) {
 			throw new InvalidArgumentException(
@@ -164,11 +164,23 @@ trait PageActions
 			);
 		}
 
-		$arguments = ['page' => $this, 'slug' => $slug, 'languageCode' => $language->code()];
-		return $this->commit('changeSlug', $arguments, function ($page, $slug, $languageCode) {
+		$arguments = [
+			'page'         => $this,
+			'slug'         => $slug,
+			'languageCode' => $language->code(),
+			'language'     => $language
+		];
+
+		return $this->commit('changeSlug', $arguments, function ($page, $slug, $languageCode, $language) {
 			// remove the slug if it's the same as the folder name
 			if ($slug === $page->uid()) {
 				$slug = null;
+			}
+
+			// make sure to update the slug in the changes version as well
+			// otherwise the new slug would be lost as soon as the changes are saved
+			if ($page->version('changes')->exists($language) === true) {
+				$page->version('changes')->update(['slug' => $slug], $language);
 			}
 
 			return $page->save(['slug' => $slug], $languageCode);
@@ -303,21 +315,24 @@ trait PageActions
 		string $title,
 		string|null $languageCode = null
 	): static {
-		// if the `$languageCode` argument is not set and is not the default language
-		// the `$languageCode` argument is sent as the current language
-		if (
-			$languageCode === null &&
-			$language = $this->kirby()->language()
-		) {
-			if ($language->isDefault() === false) {
-				$languageCode = $language->code();
+		$language = Language::ensure($languageCode ?? 'current');
+
+		$arguments = [
+			'page'         => $this,
+			'title'        => $title,
+			'languageCode' => $languageCode,
+			'language'     => $language
+		];
+
+		return $this->commit('changeTitle', $arguments, function ($page, $title, $languageCode, $language) {
+
+			// make sure to update the title in the changes version as well
+			// otherwise the new title would be lost as soon as the changes are saved
+			if ($page->version('changes')->exists($language) === true) {
+				$page->version('changes')->update(['title' => $title], $language);
 			}
-		}
 
-		$arguments = ['page' => $this, 'title' => $title, 'languageCode' => $languageCode];
-
-		return $this->commit('changeTitle', $arguments, function ($page, $title, $languageCode) {
-			return $page->save(['title' => $title], $languageCode);
+			return $page->save(['title' => $title], $language->code());
 		});
 	}
 
@@ -345,7 +360,6 @@ trait PageActions
 
 	/**
 	 * Copies the page to a new parent
-	 * @internal
 	 *
 	 * @throws \Kirby\Exception\DuplicateException If the page already exists
 	 */
@@ -684,7 +698,6 @@ trait PageActions
 	/**
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If the folder cannot be moved
-	 * @internal
 	 */
 	public function publish(): static
 	{
@@ -833,9 +846,7 @@ trait PageActions
 	}
 
 	/**
-	 * Convert a page from listed or
-	 * unlisted to draft.
-	 * @internal
+	 * Convert a page from listed or unlisted to draft
 	 *
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If the folder cannot be moved

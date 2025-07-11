@@ -116,6 +116,7 @@ class VersionTest extends TestCase
 		]);
 
 		$this->assertSame([
+			'slug' => 'foo',
 			'text' => 'Lorem ipsum'
 		], $version->content()->toArray());
 
@@ -194,41 +195,6 @@ class VersionTest extends TestCase
 
 		$this->assertContentFileExists('en');
 		$this->assertContentFileExists('de');
-	}
-
-	public function testCreateMultiLanguageWhenLatestTranslationIsMissing(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$latest = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$changes = new Version(
-			model: $this->model,
-			id: VersionId::changes()
-		);
-
-		$this->assertContentFileDoesNotExist('en', $latest->id());
-		$this->assertContentFileDoesNotExist('en', $changes->id());
-		$this->assertContentFileDoesNotExist('de', $latest->id());
-		$this->assertContentFileDoesNotExist('de', $changes->id());
-
-		// create the latest version for the default translation
-		$latest->save([
-			'title' => 'Test'
-		], $this->app->language('en'));
-
-		// create a changes version in the other language
-		$changes->save([
-			'title' => 'Translated Test',
-		], $this->app->language('de'));
-
-		$this->assertContentFileExists('en', $latest->id());
-		$this->assertContentFileDoesNotExist('en', $changes->id());
-		$this->assertContentFileExists('de', $latest->id());
-		$this->assertContentFileExists('de', $changes->id());
 	}
 
 	public function testCreateSingleLanguage(): void
@@ -517,7 +483,7 @@ class VersionTest extends TestCase
 		$this->assertSame($id, $version->id());
 	}
 
-	public function testIsIdenticalMultiLanguage()
+	public function testIsIdenticalMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -552,7 +518,7 @@ class VersionTest extends TestCase
 		$this->assertFalse($a->isIdentical(VersionId::changes(), 'de'));
 	}
 
-	public function testIsIdenticalSingleLanguage()
+	public function testIsIdenticalSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -579,7 +545,7 @@ class VersionTest extends TestCase
 		$this->assertFalse($a->isIdentical('changes'));
 	}
 
-	public function testIsIdenticalWithoutChanges()
+	public function testIsIdenticalWithoutChanges(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -606,7 +572,7 @@ class VersionTest extends TestCase
 		$this->assertTrue($a->isIdentical('changes'));
 	}
 
-	public function testIsIdenticalWithSameVersion()
+	public function testIsIdenticalWithSameVersion(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -812,7 +778,7 @@ class VersionTest extends TestCase
 	}
 
 	#[DataProvider('previewTokenIndexUrlProvider')]
-	public function testPreviewToken(string $indexUrl)
+	public function testPreviewToken(string $indexUrl): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -822,12 +788,15 @@ class VersionTest extends TestCase
 			]
 		]);
 
+		$siteUrl = $this->app->url();
+		$pageUrl = $this->app->page('a-page')->url();
+
 		// site
 		$version = new Version(
 			model: $this->app->site(),
 			id: VersionId::latest()
 		);
-		$expected = substr(hash_hmac('sha1', '{"uri":"","versionId":"latest"}', static::TMP . '/content'), 0, 10);
+		$expected = substr(hash_hmac('sha1', '{"url":"' . $siteUrl . '","versionId":"latest"}', static::TMP . '/content'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 
 		// homepage
@@ -835,7 +804,7 @@ class VersionTest extends TestCase
 			model: $this->app->site()->page('home'),
 			id: VersionId::latest()
 		);
-		$expected = substr(hash_hmac('sha1', '{"uri":"","versionId":"latest"}', static::TMP . '/content'), 0, 10);
+		$expected = substr(hash_hmac('sha1', '{"url":"' . $siteUrl . '","versionId":"latest"}', static::TMP . '/content'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 
 		// another page
@@ -843,11 +812,11 @@ class VersionTest extends TestCase
 			model: $this->model,
 			id: VersionId::latest()
 		);
-		$expected = substr(hash_hmac('sha1', '{"uri":"a-page","versionId":"latest"}', static::TMP . '/content'), 0, 10);
+		$expected = substr(hash_hmac('sha1', '{"url":"' . $pageUrl . '","versionId":"latest"}', static::TMP . '/content'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 	}
 
-	public function testPreviewTokenCustomSalt()
+	public function testPreviewTokenCustomSalt(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -864,11 +833,11 @@ class VersionTest extends TestCase
 			id: VersionId::latest()
 		);
 
-		$expected = substr(hash_hmac('sha1', '{"uri":"a-page","versionId":"latest"}', 'testsalt'), 0, 10);
+		$expected = substr(hash_hmac('sha1', '{"url":"/a-page","versionId":"latest"}', 'testsalt'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 	}
 
-	public function testPreviewTokenCustomSaltCallback()
+	public function testPreviewTokenCustomSaltCallback(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -889,11 +858,11 @@ class VersionTest extends TestCase
 			id: VersionId::latest()
 		);
 
-		$expected = substr(hash_hmac('sha1', '{"uri":"a-page","versionId":"latest"}', 'salt-lake-city'), 0, 10);
+		$expected = substr(hash_hmac('sha1', '{"url":"/a-page","versionId":"latest"}', 'salt-lake-city'), 0, 10);
 		$this->assertSame($expected, $version->previewToken());
 	}
 
-	public function testPreviewTokenInvalidModel()
+	public function testPreviewTokenInvalidModel(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Invalid model type');
@@ -908,7 +877,7 @@ class VersionTest extends TestCase
 		$version->previewToken();
 	}
 
-	public function testPreviewTokenMissingHomePage()
+	public function testPreviewTokenMissingHomePage(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The home page does not exist');
@@ -927,7 +896,7 @@ class VersionTest extends TestCase
 		$version->previewToken();
 	}
 
-	public function testPublish()
+	public function testPublish(): void
 	{
 		$this->setUpSingleLanguage();
 		$this->app->impersonate('kirby');
@@ -955,7 +924,7 @@ class VersionTest extends TestCase
 		$this->assertSame('Title changes', Data::read($fileLatest)['title']);
 	}
 
-	public function testPublishAlreadyLatestVersion()
+	public function testPublishAlreadyLatestVersion(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -1521,7 +1490,7 @@ class VersionTest extends TestCase
 		$this->assertArrayNotHasKey('date', $version->read('de'));
 	}
 
-	public function testUrlPage()
+	public function testUrlPage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -1536,7 +1505,7 @@ class VersionTest extends TestCase
 		$this->assertSame('/a-page', $version->url());
 	}
 
-	public function testUrlPageUnauthenticated()
+	public function testUrlPageUnauthenticated(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -1553,38 +1522,38 @@ class VersionTest extends TestCase
 		return [
 			// latest version
 			[null, '/test', null, false, 'latest'],
-			[null, '/test?{token}', 'test', true, 'latest'],
+			[null, '/test?{token}', '/test', true, 'latest'],
 			[true, '/test', null, false, 'latest'],
-			[true, '/test?{token}', 'test', true, 'latest'],
+			[true, '/test?{token}', '/test', true, 'latest'],
 			['https://test.com', 'https://test.com', null, false, 'latest'],
-			['https://test.com', 'https://test.com', null, true, 'latest'],
-			['/something/different', '/something/different', 'something\/different', false, 'latest'],
-			['/something/different', '/something/different?{token}', 'something\/different', true, 'latest'],
+			['https://test.com', 'https://test.com?{token}', 'https://test.com', true, 'latest'],
+			['/something/different', '/something/different', '/something/different', false, 'latest'],
+			['/something/different', '/something/different?{token}', '/something/different', true, 'latest'],
 			['{{ site.url }}#{{ page.slug }}', '/#test', null, false, 'latest'],
-			['{{ site.url }}#{{ page.slug }}', '/?{token}#test', '', true, 'latest'],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}#test', '/', true, 'latest'],
 			['{{ page.url }}?preview=true', '/test?preview=true', null, false, 'latest'],
-			['{{ page.url }}?preview=true', '/test?preview=true&{token}', 'test', true, 'latest'],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}', '/test', true, 'latest'],
 			['{{ page.url }}/param:something', '/test/param:something', null, false, 'latest'],
-			['{{ page.url }}/param:something', '/test/param:something?{token}', 'test', true, 'latest'],
+			['{{ page.url }}/param:something', '/test/param:something?{token}', '/test', true, 'latest'],
 			[false, null, null, false, 'latest'],
 			[false, null, null, true, 'latest'],
 			[null, null, null, false, 'latest', false],
 
 			// changes version
-			[null, '/test?{token}&_version=changes', 'test', false, 'changes'],
-			[null, '/test?{token}&_version=changes', 'test', true, 'changes'],
-			[true, '/test?{token}&_version=changes', 'test', false, 'changes'],
-			[true, '/test?{token}&_version=changes', 'test', true, 'changes'],
-			['https://test.com', 'https://test.com', null, false, 'changes'],
-			['https://test.com', 'https://test.com', null, true, 'changes'],
-			['/something/different', '/something/different?{token}&_version=changes', 'something\/different', false, 'changes'],
-			['/something/different', '/something/different?{token}&_version=changes', 'something\/different', true, 'changes'],
-			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', '', false, 'changes'],
-			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', '', true, 'changes'],
-			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', 'test', false, 'changes'],
-			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', 'test', true, 'changes'],
-			['{{ page.url }}/param:something', '/test/param:something?{token}&_version=changes', 'test', false, 'changes'],
-			['{{ page.url }}/param:something', '/test/param:something?{token}&_version=changes', 'test', true, 'changes'],
+			[null, '/test?{token}&_version=changes', '/test', false, 'changes'],
+			[null, '/test?{token}&_version=changes', '/test', true, 'changes'],
+			[true, '/test?{token}&_version=changes', '/test', false, 'changes'],
+			[true, '/test?{token}&_version=changes', '/test', true, 'changes'],
+			['https://test.com', 'https://test.com?{token}&_version=changes', 'https://test.com', false, 'changes'],
+			['https://test.com', 'https://test.com?{token}&_version=changes', 'https://test.com', true, 'changes'],
+			['/something/different', '/something/different?{token}&_version=changes', '/something/different', false, 'changes'],
+			['/something/different', '/something/different?{token}&_version=changes', '/something/different', true, 'changes'],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', '/', false, 'changes'],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}&_version=changes#test', '/', true, 'changes'],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', '/test', false, 'changes'],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}&_version=changes', '/test', true, 'changes'],
+			['{{ page.url }}/param:something', '/test/param:something?{token}&_version=changes', '/test', false, 'changes'],
+			['{{ page.url }}/param:something', '/test/param:something?{token}&_version=changes', '/test', true, 'changes'],
 			[false, null, null, false, 'changes'],
 			[false, null, null, true, 'changes'],
 			[null, null, null, false, 'changes', false],
@@ -1595,7 +1564,7 @@ class VersionTest extends TestCase
 	public function testUrlPageCustom(
 		$input,
 		$expected,
-		$expectedUri,
+		$expectedUrl,
 		bool $draft,
 		string $versionId,
 		bool $authenticated = true
@@ -1644,7 +1613,7 @@ class VersionTest extends TestCase
 			$expectedToken = substr(
 				hash_hmac(
 					'sha1',
-					'{"uri":"' . $expectedUri . '","versionId":"' . $versionId . '"}',
+					'{"url":"' . $expectedUrl . '","versionId":"' . $versionId . '"}',
 					$page->kirby()->root('content')
 				),
 				0,
@@ -1665,7 +1634,7 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->url());
 	}
 
-	public function testUrlSite()
+	public function testUrlSite(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -1680,7 +1649,7 @@ class VersionTest extends TestCase
 		$this->assertSame('/', $version->url());
 	}
 
-	public function testUrlSiteUnauthenticated()
+	public function testUrlSiteUnauthenticated(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -1696,18 +1665,18 @@ class VersionTest extends TestCase
 	{
 		return [
 			// latest version
-			[null, '/', 'latest'],
-			['https://test.com', 'https://test.com', 'latest'],
-			['{{ site.url }}#test', '/#test', 'latest'],
-			[false, null, 'latest'],
-			[null, null, 'latest', false],
+			[null, '/', '/', 'latest'],
+			['https://test.com', 'https://test.com', 'https://test.com', 'latest'],
+			['{{ site.url }}#test', '/#test', '/', 'latest'],
+			[false, null, null, 'latest'],
+			[null, null, null, 'latest', false],
 
 			// changes version
-			[null, '/?{token}&_version=changes', 'changes'],
-			['https://test.com', 'https://test.com', 'changes'],
-			['{{ site.url }}#test', '/?{token}&_version=changes#test', 'changes'],
-			[false, null, 'changes'],
-			[null, null, 'changes', false],
+			[null, '/?{token}&_version=changes', '/', 'changes'],
+			['https://test.com', 'https://test.com?{token}&_version=changes', 'https://test.com', 'changes'],
+			['{{ site.url }}#test', '/?{token}&_version=changes#test', '/', 'changes'],
+			[false, null, null, 'changes'],
+			[null, null, null, 'changes', false],
 		];
 	}
 
@@ -1715,6 +1684,7 @@ class VersionTest extends TestCase
 	public function testUrlSiteCustom(
 		$input,
 		$expected,
+		$expectedUrl,
 		string $versionId,
 		bool $authenticated = true
 	): void {
@@ -1761,7 +1731,7 @@ class VersionTest extends TestCase
 			$expectedToken = substr(
 				hash_hmac(
 					'sha1',
-					'{"uri":"","versionId":"' . $versionId . '"}',
+					'{"url":"' . $expectedUrl . '","versionId":"' . $versionId . '"}',
 					$site->kirby()->root('content')
 				),
 				0,
@@ -1782,7 +1752,7 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->url());
 	}
 
-	public function testUrlInvalidModel()
+	public function testUrlInvalidModel(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Only pages and the site have a content preview URL');

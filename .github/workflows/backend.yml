@@ -84,21 +84,21 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@bbc38874818912d705835e232803362e231134d0 # pin@v1
+        uses: shivammathur/cache-extensions@d814e887327271b6e290b018d51bba9f62590488 # pin@v1
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           key: php-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # pin@v4
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # pin@v2
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # pin@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
@@ -113,7 +113,7 @@ jobs:
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # pin@v4
         with:
           path: ~/.cache/psalm
           key: backend-analysis-${{ matrix.php }}
@@ -124,7 +124,7 @@ jobs:
 
       - name: Run tests
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: phpunit --fail-on-skipped --coverage-clover ${{ github.workspace }}/clover.xml
+        run: phpunit -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Statically analyze using Psalm
         if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.4'
@@ -135,7 +135,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           PHP: ${{ matrix.php }}
         if: env.token != ''
-        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # pin@v5
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # pin@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
           fail_ci_if_error: true
@@ -184,14 +184,14 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@bbc38874818912d705835e232803362e231134d0 # pin@v1
+        uses: shivammathur/cache-extensions@d814e887327271b6e290b018d51bba9f62590488 # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           key: php-analysis-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # pin@v4
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
@@ -199,7 +199,7 @@ jobs:
 
       - name: Setup PHP environment
         id: finishPrepare
-        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # pin@v2
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
@@ -260,7 +260,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # pin@v4
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # pin@v2
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # pin@v2
         with:
           php-version: ${{ env.php }}
           coverage: none
@@ -268,7 +268,7 @@ jobs:
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # pin@v4
         with:
           path: ~/.php-cs-fixer
           key: coding-style

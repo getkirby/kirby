@@ -3,10 +3,11 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class TextFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('text');
 
@@ -35,10 +36,8 @@ class TextFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider converterDataProvider
-	 */
-	public function testConverter($converter, $input, $expected)
+	#[DataProvider('converterDataProvider')]
+	public function testConverter($converter, $input, $expected): void
 	{
 		$field = $this->field('text', [
 			'converter' => $converter,
@@ -50,7 +49,7 @@ class TextFieldTest extends TestCase
 		$this->assertSame($expected, $field->default());
 	}
 
-	public function testInvalidConverter()
+	public function testInvalidConverter(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid converter "does-not-exist"');
@@ -60,7 +59,7 @@ class TextFieldTest extends TestCase
 		]);
 	}
 
-	public function testMinLength()
+	public function testMinLength(): void
 	{
 		$field = $this->field('text', [
 			'value' => 'test',
@@ -71,7 +70,7 @@ class TextFieldTest extends TestCase
 		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
-	public function testMaxLength()
+	public function testMaxLength(): void
 	{
 		$field = $this->field('text', [
 			'value'     => 'test',

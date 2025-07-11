@@ -69,7 +69,7 @@ class AssetsTest extends TestCase
 		]);
 	}
 
-	public function setDevMode()
+	public function setDevMode(): void
 	{
 		// dev mode
 		$app = $this->app->clone([
@@ -448,7 +448,7 @@ class AssetsTest extends TestCase
 		$this->assertFalse($link);
 	}
 
-	public function testVue()
+	public function testVue(): void
 	{
 		$assets = new Assets();
 		$vue    = $assets->vue();
@@ -456,7 +456,7 @@ class AssetsTest extends TestCase
 		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm.browser.min.js', $vue);
 	}
 
-	public function testVueInDevMode()
+	public function testVueInDevMode(): void
 	{
 		$this->setDevMode();
 
@@ -466,7 +466,7 @@ class AssetsTest extends TestCase
 		$this->assertSame('http://sandbox.test:3000/node_modules/vue/dist/vue.esm.browser.js', $vue);
 	}
 
-	public function testVueWithDisabledTemplateCompiler()
+	public function testVueWithDisabledTemplateCompiler(): void
 	{
 		$this->app->clone([
 			'options' => [

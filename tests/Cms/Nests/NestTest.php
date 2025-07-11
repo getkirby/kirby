@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class NestTest extends TestCase
 {
-	public function testCreateScalar()
+	public function testCreateScalar(): void
 	{
 		$n = Nest::create($expected = 'a');
 
@@ -14,14 +14,14 @@ class NestTest extends TestCase
 		$this->assertEquals($expected, $n); // cannot use strict assertion (string conversion)
 	}
 
-	public function testCreateEmptyCollection()
+	public function testCreateEmptyCollection(): void
 	{
 		$n = Nest::create([]);
 		$this->assertInstanceOf(NestCollection::class, $n);
 		$this->assertCount(0, $n);
 	}
 
-	public function testCreateObject()
+	public function testCreateObject(): void
 	{
 		$n = Nest::create($expected = [
 			'a' => 'A',
@@ -33,7 +33,7 @@ class NestTest extends TestCase
 		$this->assertSame($expected, $n->toArray());
 	}
 
-	public function testCreateCollection()
+	public function testCreateCollection(): void
 	{
 		$n = Nest::create($expected = ['A', 2, false]);
 

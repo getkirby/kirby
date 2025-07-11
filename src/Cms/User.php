@@ -24,15 +24,14 @@ use SensitiveParameter;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Users>
  */
 class User extends ModelWithContent
 {
 	use HasFiles;
 	use HasMethods;
 	use HasModels;
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Users>
-	 */
 	use HasSiblings;
 	use UserActions;
 
@@ -214,8 +213,7 @@ class User extends ModelWithContent
 
 	/**
 	 * Constructs a User object and also
-	 * takes User models into account.
-	 * @internal
+	 * takes User models into account
 	 */
 	public static function factory(mixed $props): static
 	{
@@ -223,9 +221,8 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Hashes the user's password unless it is `null`,
+	 * Hashes the provided password unless it is `null`,
 	 * which will leave it as `null`
-	 * @internal
 	 */
 	public static function hashPassword(
 		#[SensitiveParameter]
@@ -427,17 +424,23 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Returns the root to the media folder for the user
-	 * @internal
+	 * Returns the absolute path to the media folder for the user
 	 */
-	public function mediaRoot(): string
+	public function mediaDir(): string
 	{
 		return $this->kirby()->root('media') . '/users/' . $this->id();
 	}
 
 	/**
+	 * @see `::mediaDir`
+	 */
+	public function mediaRoot(): string
+	{
+		return $this->mediaDir();
+	}
+
+	/**
 	 * Returns the media url for the user object
-	 * @internal
 	 */
 	public function mediaUrl(): string
 	{
@@ -482,7 +485,6 @@ class User extends ModelWithContent
 
 	/**
 	 * Create a dummy nobody
-	 * @internal
 	 */
 	public static function nobody(): static
 	{

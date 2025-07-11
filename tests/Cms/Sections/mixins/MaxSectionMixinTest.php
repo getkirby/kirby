@@ -26,7 +26,7 @@ class MaxSectionMixinTest extends TestCase
 		];
 	}
 
-	public function testDefaultMax()
+	public function testDefaultMax(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -35,7 +35,7 @@ class MaxSectionMixinTest extends TestCase
 		$this->assertNull($section->max());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -45,7 +45,7 @@ class MaxSectionMixinTest extends TestCase
 		$this->assertSame(1, $section->max());
 	}
 
-	public function testIsNotFull()
+	public function testIsNotFull(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -56,7 +56,7 @@ class MaxSectionMixinTest extends TestCase
 		$this->assertTrue($section->validateMax());
 	}
 
-	public function testIsFull()
+	public function testIsFull(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -67,7 +67,7 @@ class MaxSectionMixinTest extends TestCase
 		$this->assertFalse($section->validateMax());
 	}
 
-	public function testIsExactlyFull()
+	public function testIsExactlyFull(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,

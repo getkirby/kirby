@@ -16,19 +16,19 @@ class IngredientsTest extends TestCase
 		]);
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$this->assertSame('A', $this->ingredients->a);
 		$this->assertSame('B', $this->ingredients->b);
 	}
 
-	public function testCall()
+	public function testCall(): void
 	{
 		$this->assertSame('A', $this->ingredients->a());
 		$this->assertSame('B', $this->ingredients->b());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$expected = [
 			'a' => 'A',

@@ -814,18 +814,24 @@ class Environment
 		}
 
 		// load the config for the host
-		if (empty($host) === false) {
+		if (
+			empty($host) === false &&
+			F::exists($path = $root . '/config.' . $host . '.php', $root) === true
+		) {
 			$configHost = F::load(
-				file: $root . '/config.' . $host . '.php',
+				file: $path,
 				fallback: [],
 				allowOutput: false
 			);
 		}
 
 		// load the config for the server IP
-		if (empty($addr) === false) {
+		if (
+			empty($addr) === false &&
+			F::exists($path = $root . '/config.' . $addr . '.php', $root) === true
+		) {
 			$configAddr = F::load(
-				file: $root . '/config.' . $addr . '.php',
+				file: $path,
 				fallback: [],
 				allowOutput: false
 			);

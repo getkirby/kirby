@@ -449,7 +449,12 @@
 	"language.variables.empty": "Nenhuma tradução ainda",
 
 	"language.variable.delete.confirm": "Tem a certeza que pretende eliminar a variável {key}?",
+	"language.variable.entries": "Valores",
+	"language.variable.entries.help": "Cada string será usada pela ordem correspondente à contagem. Isto é, três strings serão usadas, respetivamente, para as contagens <code>0</code>, <code>1</code> e <code>2 ou mais</code>. Utilize o marcador <code>{count}</code> para inserir o valor da contagem.",
 	"language.variable.key": "Chave",
+	"language.variable.multiple": "Contável?",
+	"language.variable.multiple.text": "Utilize strings de tradução diferentes",
+	"language.variable.multiple.help": "É possível utilizar valores diferentes consoante a contagem associada à variável de idioma, permitindo assim a criação de traduções dinâmicas, como, por exemplo, para formas singulares e plurais.",
 	"language.variable.notFound": "A variável não foi encontrada",
 	"language.variable.value": "Valor",
 

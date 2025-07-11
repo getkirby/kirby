@@ -3,10 +3,9 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Url
- */
+#[CoversClass(Url::class)]
 class UrlTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Url';
@@ -23,15 +22,12 @@ class UrlTest extends TestCase
 		]);
 	}
 
-	public function testHome()
+	public function testHome(): void
 	{
 		$this->assertSame('https://getkirby.com', Url::home());
 	}
 
-	/**
-	 * @covers ::slug
-	 */
-	public function testSlug()
+	public function testSlug(): void
 	{
 		// default length
 		$this->assertSame(
@@ -64,7 +60,7 @@ class UrlTest extends TestCase
 		);
 	}
 
-	public function testTo()
+	public function testTo(): void
 	{
 		$this->assertSame('https://getkirby.com', Url::to());
 		$this->assertSame('https://getkirby.com', Url::to(''));
@@ -72,7 +68,7 @@ class UrlTest extends TestCase
 		$this->assertSame('https://getkirby.com/projects', Url::to('projects'));
 	}
 
-	public function testToWithLanguage()
+	public function testToWithLanguage(): void
 	{
 		$this->app->clone([
 			'languages' => [
@@ -113,7 +109,7 @@ class UrlTest extends TestCase
 		$this->assertSame('https://getkirby.com/de/custom', Url::to('c', 'de'));
 	}
 
-	public function testToTemplateAsset()
+	public function testToTemplateAsset(): void
 	{
 		$app = new App([
 			'roots' => [

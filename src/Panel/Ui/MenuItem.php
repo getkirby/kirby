@@ -14,6 +14,8 @@ class MenuItem extends Button
 		bool $disabled = false,
 		string|null $drawer = null,
 		string|null $link = null,
+		string|null $target = null,
+		string|null $title = null,
 	) {
 		if (
 			$dialog === null &&
@@ -30,7 +32,9 @@ class MenuItem extends Button
 			drawer:   $drawer,
 			icon:     $icon,
 			link:     $link,
-			text:     $text
+			target:   $target,
+			text:     $text,
+			title:    $title
 		);
 	}
 

@@ -6,10 +6,10 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Form\Field
- */
+#[CoversClass(Field::class)]
 class FieldTest extends TestCase
 {
 	protected array $originalMixins;
@@ -35,9 +35,6 @@ class FieldTest extends TestCase
 		Field::$mixins = $this->originalMixins;
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
 	public function testConstructInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -49,7 +46,7 @@ class FieldTest extends TestCase
 		]);
 	}
 
-	public function testAfter()
+	public function testAfter(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -88,11 +85,7 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->after);
 	}
 
-	/**
-	 * @covers ::api
-	 * @covers ::routes
-	 */
-	public function testApi()
+	public function testApi(): void
 	{
 		// no defined as default
 		Field::$types = [
@@ -130,7 +123,7 @@ class FieldTest extends TestCase
 		$this->assertSame($routes, $field->api());
 	}
 
-	public function testAutofocus()
+	public function testAutofocus(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -156,7 +149,7 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->autofocus);
 	}
 
-	public function testBefore()
+	public function testBefore(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -195,7 +188,7 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->before);
 	}
 
-	public function testDefault()
+	public function testDefault(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -243,10 +236,7 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->data(true));
 	}
 
-	/**
-	 * @covers ::dialogs
-	 */
-	public function testDialogs()
+	public function testDialogs(): void
 	{
 		// no defined as default
 		Field::$types = [
@@ -286,10 +276,7 @@ class FieldTest extends TestCase
 		$this->assertSame($routes, $field->dialogs());
 	}
 
-	/**
-	 * @covers ::drawers
-	 */
-	public function testDrawers()
+	public function testDrawers(): void
 	{
 		// no defined as default
 		Field::$types = [
@@ -328,10 +315,7 @@ class FieldTest extends TestCase
 		$this->assertSame($routes, $field->drawers());
 	}
 
-	/**
-	 * @covers ::errors
-	 */
-	public function testErrors()
+	public function testErrors(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -359,10 +343,7 @@ class FieldTest extends TestCase
 		$this->assertSame($expected, $field->errors());
 	}
 
-	/**
-	 * @covers ::fill
-	 */
-	public function testFill()
+	public function testFill(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -388,7 +369,7 @@ class FieldTest extends TestCase
 		$this->assertSame('test2 computed', $field->computedValue());
 	}
 
-	public function testFillWithRestoredState()
+	public function testFillWithRestoredState(): void
 	{
 		Field::$types = [
 			'test' => $definition = [
@@ -419,7 +400,7 @@ class FieldTest extends TestCase
 		$this->assertEquals(Field::setup('test'), $field->optionsDebugger());
 	}
 
-	public function testHelp()
+	public function testHelp(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -449,7 +430,7 @@ class FieldTest extends TestCase
 		$this->assertSame('<p>en</p>', $field->help);
 	}
 
-	public function testIcon()
+	public function testIcon(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -502,10 +483,7 @@ class FieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::isDisabled
-	 */
-	public function testDisabled()
+	public function testDisabled(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -533,12 +511,8 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->isDisabled());
 	}
 
-	/**
-	 * @covers ::isEmpty
-	 * @covers ::isEmptyValue
-	 * @dataProvider emptyValuesProvider
-	 */
-	public function testIsEmpty($value, $expected)
+	#[DataProvider('emptyValuesProvider')]
+	public function testIsEmpty($value, $expected): void
 	{
 		Field::$types = [
 			'test' => []
@@ -555,10 +529,7 @@ class FieldTest extends TestCase
 		$this->assertSame($expected, $field->isEmptyValue($value));
 	}
 
-	/**
-	 * @covers ::isEmptyValue
-	 */
-	public function testIsEmptyValueFromOption()
+	public function testIsEmptyValueFromOption(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -578,10 +549,7 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->isEmptyValue('empty'));
 	}
 
-	/**
-	 * @covers ::isHidden
-	 */
-	public function testIsHidden()
+	public function testIsHidden(): void
 	{
 		// default
 		Field::$types = [
@@ -610,11 +578,7 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->isHidden());
 	}
 
-	/**
-	 * @covers ::isInvalid
-	 * @covers ::isValid
-	 */
-	public function testIsInvalidOrValid()
+	public function testIsInvalidOrValid(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -640,10 +604,7 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->isInvalid());
 	}
 
-	/**
-	 * @covers ::isRequired
-	 */
-	public function testIsRequired()
+	public function testIsRequired(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -665,11 +626,7 @@ class FieldTest extends TestCase
 		$this->assertTrue($field->isRequired());
 	}
 
-	/**
-	 * @covers ::hasValue
-	 * @covers ::save
-	 */
-	public function testHasValue()
+	public function testHasValue(): void
 	{
 		Field::$types = [
 			'store-me' => [
@@ -697,10 +654,7 @@ class FieldTest extends TestCase
 		$this->assertFalse($b->save());
 	}
 
-	/**
-	 * @covers ::kirby
-	 */
-	public function testKirby()
+	public function testKirby(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -713,7 +667,7 @@ class FieldTest extends TestCase
 		$this->assertSame($model->kirby(), $field->kirby());
 	}
 
-	public function testLabel()
+	public function testLabel(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -752,7 +706,7 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->label);
 	}
 
-	public function testMixinMin()
+	public function testMixinMin(): void
 	{
 		Field::$mixins['min'] = include kirby()->root('kirby') . '/config/fields/mixins/min.php';
 
@@ -795,10 +749,7 @@ class FieldTest extends TestCase
 		$this->assertSame(5, $field->min());
 	}
 
-	/**
-	 * @covers ::model
-	 */
-	public function testModel()
+	public function testModel(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -811,7 +762,7 @@ class FieldTest extends TestCase
 		$this->assertSame($model, $field->model());
 	}
 
-	public function testName()
+	public function testName(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -833,11 +784,21 @@ class FieldTest extends TestCase
 		$this->assertSame('mytest', $field->name());
 	}
 
-	/**
-	 * @covers ::needsValue
-	 * @covers ::errors
-	 */
-	public function testNeedsValue()
+	public function testNameCase(): void
+	{
+		Field::$types = [
+			'test' => []
+		];
+
+		$field = new Field('test', [
+			'model' => new Page(['slug' => 'test']),
+			'name'  => 'myTest'
+		]);
+
+		$this->assertSame('mytest', $field->name());
+	}
+
+	public function testNeedsValue(): void
 	{
 		$page = new Page(['slug' => 'test']);
 
@@ -940,7 +901,7 @@ class FieldTest extends TestCase
 		$this->assertSame($expected, $field->errors());
 	}
 
-	public function testPlaceholder()
+	public function testPlaceholder(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -979,12 +940,7 @@ class FieldTest extends TestCase
 		$this->assertSame('blog', $field->placeholder);
 	}
 
-	/**
-	 * @covers ::next
-	 * @covers ::prev
-	 * @covers ::siblingsCollection
-	 */
-	public function testPrevNext()
+	public function testPrevNext(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -1009,11 +965,7 @@ class FieldTest extends TestCase
 		$this->assertSame('a', $siblings->last()->prev()->name());
 	}
 
-	/**
-	 * @covers ::siblings
-	 * @covers ::formFields
-	 */
-	public function testSiblings()
+	public function testSiblings(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -1057,9 +1009,6 @@ class FieldTest extends TestCase
 		$this->assertSame('b', $field->formFields()->last()->name());
 	}
 
-	/**
-	 * @covers ::submit
-	 */
 	public function testSubmit(): void
 	{
 		Field::$types = [
@@ -1077,10 +1026,7 @@ class FieldTest extends TestCase
 		$this->assertSame('test2', $field->value());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
-	public function testToArray()
+	public function testToArray(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -1105,11 +1051,7 @@ class FieldTest extends TestCase
 		$this->assertArrayNotHasKey('model', $array);
 	}
 
-	/**
-	 * @covers ::toFormValue
-	 * @covers ::value
-	 */
-	public function testToFormValue()
+	public function testToFormValue(): void
 	{
 		Field::$types['test'] = [];
 
@@ -1137,11 +1079,7 @@ class FieldTest extends TestCase
 		$this->assertNull($field->value());
 	}
 
-	/**
-	 * @covers ::toStoredValue
-	 * @covers ::data
-	 */
-	public function testToStoredValue()
+	public function testToStoredValue(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -1163,11 +1101,7 @@ class FieldTest extends TestCase
 		$this->assertSame('a, b, c', $field->data());
 	}
 
-	/**
-	 * @covers ::toStoredValue
-	 * @covers ::data
-	 */
-	public function testToStoredValueWhenUnsaveable()
+	public function testToStoredValueWhenUnsaveable(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -1186,11 +1120,7 @@ class FieldTest extends TestCase
 		$this->assertNull($field->data());
 	}
 
-	/**
-	 * @covers ::validations
-	 * @covers ::errors
-	 */
-	public function testValidate()
+	public function testValidate(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -1240,11 +1170,7 @@ class FieldTest extends TestCase
 		$this->assertSame($expected, $field->errors());
 	}
 
-	/**
-	 * @covers ::validations
-	 * @covers ::isValid
-	 */
-	public function testValidateByAttr()
+	public function testValidateByAttr(): void
 	{
 		Field::$types = [
 			'test' => []
@@ -1299,12 +1225,7 @@ class FieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	/**
-	 * @covers ::validations
-	 * @covers ::errors
-	 * @covers ::isValid
-	 */
-	public function testValidateWithCustomValidator()
+	public function testValidateWithCustomValidator(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -1329,7 +1250,7 @@ class FieldTest extends TestCase
 		$this->assertSame(['test' => 'Invalid value: abc'], $field->errors());
 	}
 
-	public function testWidth()
+	public function testWidth(): void
 	{
 		Field::$types = [
 			'test' => []

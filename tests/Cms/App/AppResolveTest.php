@@ -3,19 +3,15 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\App
- */
+#[CoversClass(App::class)]
 class AppResolveTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppResolve';
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveHomePage()
+	public function testResolveHomePage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -36,10 +32,7 @@ class AppResolveTest extends TestCase
 		$this->assertTrue($result->isHomePage());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveMainPage()
+	public function testResolveMainPage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -60,10 +53,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test', $result->id());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveSubPage()
+	public function testResolveSubPage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -87,10 +77,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test/subpage', $result->id());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveDraft()
+	public function testResolveDraft(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -127,10 +114,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test/a-draft', $result->id());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolvePageRepresentation()
+	public function testResolvePageRepresentation(): void
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
 		F::write($template = static::TMP . '/test.xml.php', 'xml');
@@ -173,10 +157,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('png', $result->body());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolvePageHtmlRepresentation()
+	public function testResolvePageHtmlRepresentation(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -198,37 +179,7 @@ class AppResolveTest extends TestCase
 
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveSiteFile()
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
-			'site' => [
-				'files' => [
-					['filename' => 'test.jpg']
-				],
-			]
-		]);
-
-		// missing file
-		$result = $app->resolve('test.png');
-		$this->assertNull($result);
-
-		// existing file
-		$result = $app->resolve('test.jpg');
-
-		$this->assertIsFile($result);
-		$this->assertSame('test.jpg', $result->id());
-	}
-
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolvePageFile()
+	public function testResolveFileDefault(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -252,15 +203,202 @@ class AppResolveTest extends TestCase
 
 		// existing file
 		$result = $app->resolve('test/test.jpg');
+		$this->assertNull($result);
+	}
+
+	public function testResolveSiteFile(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'test.jpg']
+				],
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
+			]
+		]);
+
+		// missing file
+		$result = $app->resolve('test.png');
+		$this->assertNull($result);
+
+		// existing file
+		$result = $app->resolve('test.jpg');
+
+		$this->assertIsFile($result);
+		$this->assertSame('test.jpg', $result->id());
+	}
+
+	public function testResolvePageFile(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							['filename' => 'test.jpg']
+						],
+					]
+				],
+				'files' => [
+					['filename' => 'test-site.jpg']
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
+			]
+		]);
+
+		// missing file
+		$result = $app->resolve('test/test.png');
+		$this->assertNull($result);
+
+		// file that only exists on the site
+		$result = $app->resolve('another-page/test-site.jpg');
+		$this->assertNull($result);
+
+		// existing file
+		$result = $app->resolve('test/test.jpg');
 
 		$this->assertIsFile($result);
 		$this->assertSame('test/test.jpg', $result->id());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveMultilangPageRepresentation()
+	public function testResolveFileEnabled(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							['filename' => 'test.jpg']
+						],
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
+			]
+		]);
+
+		// missing file
+		$result1 = $app->resolve('test/test.png');
+		$result2 = $app->resolveFile($app->page('test')->file('test.png'));
+		$this->assertNull($result1);
+		$this->assertNull($result2);
+
+		// existing file
+		$result1 = $app->resolve('test/test.jpg');
+		$result2 = $app->resolveFile($app->page('test')->file('test.jpg'));
+		$this->assertSame($result1, $result2);
+		$this->assertIsFile($result1);
+		$this->assertSame('test/test.jpg', $result1->id());
+	}
+
+	public function testResolveFileDisabled(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							['filename' => 'test.jpg']
+						],
+					]
+				]
+			],
+		]);
+
+		// missing file
+		$result1 = $app->resolve('test/test.png');
+		$result2 = $app->resolveFile($app->page('test')->file('test.png'));
+		$this->assertNull($result1);
+		$this->assertNull($result2);
+
+		// existing file
+		$result1 = $app->resolve('test/test.jpg');
+		$result2 = $app->resolveFile($app->page('test')->file('test.jpg'));
+		$this->assertNull($result1);
+		$this->assertNull($result2);
+	}
+
+	public function testResolveFileClosure(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							[
+								'content'  => [
+									'public' => 'true'
+								],
+								'filename' => 'test-public.jpg'
+							],
+							[
+								'content'  => [
+									'public' => 'false'
+								],
+								'filename' => 'test-private.jpg'
+							]
+						],
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => fn (File $file): bool => $file->public()->toBool()
+				]
+			]
+		]);
+
+		// missing file
+		$result1 = $app->resolve('test/test.png');
+		$result2 = $app->resolveFile($app->page('test')->file('test.png'));
+		$this->assertNull($result1);
+		$this->assertNull($result2);
+
+		// existing file (allowed)
+		$result1 = $app->resolve('test/test-public.jpg');
+		$result2 = $app->resolveFile($app->page('test')->file('test-public.jpg'));
+		$this->assertSame($result1, $result2);
+		$this->assertIsFile($result1);
+		$this->assertSame('test/test-public.jpg', $result1->id());
+
+		// existing file (not allowed)
+		$result1 = $app->resolve('test/test-private.jpg');
+		$result2 = $app->resolveFile($app->page('test')->file('test-private.jpg'));
+		$this->assertNull($result1);
+		$this->assertNull($result2);
+	}
+
+	public function testResolveMultilangPageRepresentation(): void
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
 		F::write($template = static::TMP . '/test.xml.php', 'xml');
@@ -342,10 +480,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('en', $app->language()->code());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testRepresentationErrorType()
+	public function testRepresentationErrorType(): void
 	{
 		$this->app = new App([
 			'templates' => [

@@ -6,11 +6,9 @@ use Kirby\Cms\Pages;
 use Kirby\Content\Changes;
 use Kirby\Panel\Areas\AreaTestCase;
 use Kirby\Uuid\Uuids;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\ChangesDialog
- * @covers ::__construct
- */
+#[CoversClass(ChangesDialog::class)]
 class ChangesDialogTest extends AreaTestCase
 {
 	protected Changes $changes;
@@ -60,9 +58,6 @@ class ChangesDialogTest extends AreaTestCase
 		Uuids::populate();
 	}
 
-	/**
-	 * @covers ::files
-	 */
 	public function testFiles(): void
 	{
 		$this->setUpModels();
@@ -83,18 +78,12 @@ class ChangesDialogTest extends AreaTestCase
 		$this->assertSame('/pages/test/files/test.jpg', $files[0]['link']);
 	}
 
-	/**
-	 * @covers ::files
-	 */
 	public function testFilesWithoutChanges(): void
 	{
 		$dialog = new ChangesDialog();
 		$this->assertSame([], $dialog->files());
 	}
 
-	/**
-	 * @covers ::items
-	 */
 	public function testItems(): void
 	{
 		$this->setUpModels();
@@ -112,9 +101,6 @@ class ChangesDialogTest extends AreaTestCase
 		$this->assertSame('/pages/test', $items[0]['link']);
 	}
 
-	/**
-	 * @covers ::load
-	 */
 	public function testLoad(): void
 	{
 		$dialog = new ChangesDialog();
@@ -131,9 +117,6 @@ class ChangesDialogTest extends AreaTestCase
 		$this->assertSame($expected, $dialog->load());
 	}
 
-	/**
-	 * @covers ::pages
-	 */
 	public function testPages(): void
 	{
 		$this->setUpModels();
@@ -149,18 +132,12 @@ class ChangesDialogTest extends AreaTestCase
 		$this->assertSame('/pages/test', $pages[0]['link']);
 	}
 
-	/**
-	 * @covers ::pages
-	 */
 	public function testPagesWithoutChanges(): void
 	{
 		$dialog = new ChangesDialog();
 		$this->assertSame([], $dialog->pages());
 	}
 
-	/**
-	 * @covers ::users
-	 */
 	public function testUsers(): void
 	{
 		$this->setUpModels();
@@ -176,9 +153,6 @@ class ChangesDialogTest extends AreaTestCase
 		$this->assertSame('/users/test', $users[0]['link']);
 	}
 
-	/**
-	 * @covers ::users
-	 */
 	public function testUsersWithoutChanges(): void
 	{
 		$dialog = new ChangesDialog();

@@ -14,14 +14,14 @@ class PagePreviewUrlTest extends ModelTestCase
 	{
 		return [
 			[null, '/test', null, false],
-			[null, '/test?{token}', 'test', true],
+			[null, '/test?{token}', '/test', true],
 			[true, '/test', null, false],
-			[true, '/test?{token}', 'test', true],
+			[true, '/test?{token}', '/test', true],
 			['/something/different', '/something/different', null, false],
-			['/something/different', '/something/different?{token}', 'something\/different', true],
+			['/something/different', '/something/different?{token}', '/something/different', true],
 			['{{ site.url }}#{{ page.slug }}', '/#test', null, false],
-			['{{ site.url }}#{{ page.slug }}', '/?{token}#test', '', true],
-			['{{ page.url }}?preview=true', '/test?preview=true&{token}', 'test', true],
+			['{{ site.url }}#{{ page.slug }}', '/?{token}#test', '/', true],
+			['{{ page.url }}?preview=true', '/test?preview=true&{token}', '/test', true],
 			[false, null, null, false],
 			[false, null, null, true],
 			[null, null, null, false, false],
@@ -41,7 +41,7 @@ class PagePreviewUrlTest extends ModelTestCase
 	public function testPreviewUrlWithBlueprintSettings(
 		$input,
 		$expected,
-		$expectedUri,
+		$expectedUrl,
 		bool $draft,
 		bool $authenticated = true
 	): void {
@@ -85,7 +85,7 @@ class PagePreviewUrlTest extends ModelTestCase
 		]);
 
 		if ($draft === true && $expected !== null) {
-			$expectedToken = substr(hash_hmac('sha1', '{"uri":"' . $expectedUri . '","versionId":"latest"}', $page->kirby()->root('content')), 0, 10);
+			$expectedToken = substr(hash_hmac('sha1', '{"url":"' . $expectedUrl . '","versionId":"latest"}', $page->kirby()->root('content')), 0, 10);
 			$expected = str_replace(
 				'{token}',
 				'_token=' . $expectedToken,

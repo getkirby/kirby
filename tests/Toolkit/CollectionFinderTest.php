@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 class CollectionFinderTest extends TestCase
 {
-	public function testFindBy()
+	public function testFindBy(): void
 	{
 		$collection = new Collection([
 			[
@@ -23,7 +23,7 @@ class CollectionFinderTest extends TestCase
 		], $collection->findBy('email', 'bastian@getkirby.com'));
 	}
 
-	public function testFindKey()
+	public function testFindKey(): void
 	{
 		$collection = new Collection([
 			'one' => 'eins',

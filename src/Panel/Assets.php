@@ -158,27 +158,14 @@ class Assets
 
 		if (is_array($icons) === true) {
 			// normalize options
-			foreach ($icons as $rel => &$icon) {
-				// TODO: remove this backward compatibility check in v6
-				if (isset($icon['url']) === true) {
-					Helpers::deprecated('`panel.favicon` option: use `href` instead of `url` attribute');
-
-					$icon['href'] = $icon['url'];
-					unset($icon['url']);
-				}
-
-				// TODO: remove this backward compatibility check in v6
-				if (is_string($rel) === true && isset($icon['rel']) === false) {
-					Helpers::deprecated('`panel.favicon` option: use `rel` attribute instead of passing string as key');
-
-					$icon['rel'] = $rel;
-				}
-
-				$icon['href']  = Url::to($icon['href']);
-				$icon['nonce'] = $this->nonce;
-			}
-
-			return array_values($icons);
+			return array_values(A::map(
+				$icons,
+				fn ($icon) => [
+					...$icon,
+					'href'  => Url::to($icon['href']),
+					'nonce' => $this->nonce
+				]
+			));
 		}
 
 		// make sure to convert favicon string to array

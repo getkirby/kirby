@@ -8,7 +8,6 @@
 	colors="true"
 	controlGarbageCollector="true"
 	displayDetailsOnIncompleteTests="true"
-	displayDetailsOnSkippedTests="true"
 	displayDetailsOnTestsThatTriggerDeprecations="true"
 	displayDetailsOnTestsThatTriggerErrors="true"
 	displayDetailsOnTestsThatTriggerNotices="true"
@@ -51,6 +50,7 @@
 	</testsuites>
 
 	<php>
+		<ini name="date.timezone" value="UTC" />
 		<ini name="memory_limit" value="2048M" />
 	</php>
 

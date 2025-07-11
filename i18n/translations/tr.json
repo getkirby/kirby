@@ -449,7 +449,12 @@
 	"language.variables.empty": "Henüz çeviri yok",
 
 	"language.variable.delete.confirm": "Gerçekten {key} değişkenini silmek istiyor musunuz?",
+	"language.variable.entries": "Değerler",
+	"language.variable.entries.help": "Her dize, eşleşen sayısı için kullanılacaktır, örneğin üç dize <code>0</code>, <code>1</code>, <code>2 ve daha fazla</code> sayım için eşleşecektir. Gerçek sayıyı eklemek için <code>{count}</code> yer tutucusunu kullanın.",
 	"language.variable.key": "Anahtar",
+	"language.variable.multiple": "Sayılabilir mi?",
+	"language.variable.multiple.text": "Farklı çeviri dizeleri kullanın",
+	"language.variable.multiple.help": "Dil değişkeniyle birlikte ilettiğiniz sayıma bağlı olarak farklı değerler kullanabilir, böylece tekil ve çoğul gibi dinamik çeviriler oluşturabilirsiniz.",
 	"language.variable.notFound": "Değişken bulunamadı",
 	"language.variable.value": "Değer",
 

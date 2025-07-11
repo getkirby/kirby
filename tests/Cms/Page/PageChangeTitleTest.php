@@ -28,6 +28,32 @@ class PageChangeTitleTest extends ModelTestCase
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
 	}
 
+	public function testChangeTitleWhenChangesExist(): void
+	{
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
+		// save the original title
+		$page->version('latest')->save([
+			'title' => 'Old Title'
+		]);
+
+		// add some changes
+		$page->version('changes')->save([
+			'text' => 'Some additional text'
+		]);
+
+		$modified = $page->changeTitle('New Title');
+
+		$this->assertSame('New Title', $modified->title()->value());
+
+		$changes = $modified->version('changes')->content();
+
+		$this->assertSame('New Title', $changes->get('title')->value(), 'The title should be updated in the changes version');
+		$this->assertSame('Some additional text', $changes->get('text')->value(), 'Other changes should remain the same');
+	}
+
 	public function testChangeTitleHooks(): void
 	{
 		$calls = 0;

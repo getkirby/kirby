@@ -13,7 +13,7 @@ use Kirby\Toolkit\I18n;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
- * @internal
+ * @unstable
  */
 class PreviewButton extends ViewButton
 {
@@ -22,10 +22,9 @@ class PreviewButton extends ViewButton
 	) {
 		parent::__construct(
 			class: 'k-preview-view-button',
-			icon: 'open',
+			icon: 'window',
 			link: $link,
-			target: '_blank',
-			title: I18n::translate('open')
+			title: I18n::translate('preview')
 		);
 	}
 }

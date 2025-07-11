@@ -1,8 +1,8 @@
 <template>
 	<k-view-button
+		v-bind="$props"
 		:icon="current === 'light' ? 'sun' : 'moon'"
 		:options="options"
-		:text="$t('theme')"
 	/>
 </template>
 
@@ -11,9 +11,26 @@
  * View header button to toggle the Panel theme
  * @displayName ThemeViewButton
  * @since 5.0.0
- * @internal
+ * @unstable
  */
 export default {
+	props: {
+		/**
+		 * @since 5.0.1
+		 */
+		size: String,
+		/**
+		 * @since 5.0.1
+		 */
+		text: {
+			type: String,
+			default: () => window.panel.t("theme")
+		},
+		/**
+		 * @since 5.0.1
+		 */
+		variant: String
+	},
 	computed: {
 		current() {
 			return this.$panel.theme.current;

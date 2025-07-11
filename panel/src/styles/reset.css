@@ -85,7 +85,7 @@
 }
 
 :where(input:-webkit-autofill) {
-	-webkit-text-fill-color: var(--input-color-text) !important;
+	-webkit-text-fill-color: var(--color-text) !important;
 	-webkit-background-clip: text;
 }
 

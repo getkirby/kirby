@@ -119,7 +119,6 @@ class Dom
 
 	/**
 	 * Extracts all URLs wrapped in a url() wrapper. E.g. for style attributes.
-	 * @internal
 	 */
 	public static function extractUrls(string $value): array
 	{
@@ -142,7 +141,6 @@ class Dom
 
 	/**
 	 * Checks for allowed attributes according to the allowlist
-	 * @internal
 	 *
 	 * @return true|string If not allowed, an error message is returned
 	 */
@@ -237,7 +235,6 @@ class Dom
 
 	/**
 	 * Checks if the URL is acceptable for URL attributes
-	 * @internal
 	 *
 	 * @return true|string If not allowed, an error message is returned
 	 */

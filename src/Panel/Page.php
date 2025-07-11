@@ -47,6 +47,7 @@ class Page extends Model
 	public function buttons(): array
 	{
 		return ViewButtons::view($this)->defaults(
+			'open',
 			'preview',
 			'settings',
 			'languages',
@@ -60,7 +61,6 @@ class Page extends Model
 	 * used in the panel, when the page
 	 * gets dragged onto a textarea
 	 *
-	 * @internal
 	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
 	 */
 	public function dragText(string|null $type = null): string
@@ -109,7 +109,7 @@ class Page extends Model
 
 			$result['preview'] = [
 				'icon'     => 'window',
-				'link'     => $page->panel()->url(true) . '/preview/compare',
+				'link'     => $page->panel()->url(true) . '/preview/changes',
 				'text'     => I18n::translate('preview'),
 				'disabled' => $isPreviewDisabled
 			];
@@ -232,8 +232,6 @@ class Page extends Model
 
 	/**
 	 * Returns the image file object based on provided query
-	 *
-	 * @internal
 	 */
 	protected function imageSource(
 		string|null $query = null
@@ -244,8 +242,6 @@ class Page extends Model
 
 	/**
 	 * Returns the full path without leading slash
-	 *
-	 * @internal
 	 */
 	public function path(): string
 	{
@@ -283,8 +279,6 @@ class Page extends Model
 	 * Returns navigation array with
 	 * previous and next page
 	 * based on blueprint definition
-	 *
-	 * @internal
 	 */
 	public function prevNext(): array
 	{
@@ -343,10 +337,7 @@ class Page extends Model
 	}
 
 	/**
-	 * Returns the data array for the
-	 * view's component props
-	 *
-	 * @internal
+	 * Returns the data array for the view's component props
 	 */
 	public function props(): array
 	{
@@ -374,10 +365,7 @@ class Page extends Model
 	}
 
 	/**
-	 * Returns the data array for
-	 * this model's Panel view
-	 *
-	 * @internal
+	 * Returns the data array for this model's Panel view
 	 */
 	public function view(): array
 	{

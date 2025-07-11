@@ -12,14 +12,14 @@
 					<tr v-for="event in events" :key="event.name">
 						<td>
 							<k-text>
-								<code>{{ event.name }}</code>
+								<code>@{{ event.name }}</code>
 								<div v-if="event.since?.length" class="k-lab-docs-since">
 									since {{ event.since }}
 								</div>
 							</k-text>
 						</td>
 						<td>
-							<k-lab-docs-deprecated :deprecated="event.deprecated" />
+							<k-lab-docs-warning title="Deprecated" :text="event.deprecated" />
 							<k-text :html="event.description" />
 						</td>
 						<td v-if="hasProperties">

@@ -126,7 +126,6 @@ class Block extends Item implements Stringable
 
 	/**
 	 * Constructs a block object with registering blocks models
-	 * @internal
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */

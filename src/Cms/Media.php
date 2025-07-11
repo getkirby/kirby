@@ -95,23 +95,28 @@ class Media
 		string $filename
 	): Response|false {
 		$kirby = App::instance();
+		$index = $kirby->root('index');
+		$media = $kirby->root('media');
 
 		$root = match (true) {
 			// assets
 			is_string($model)
-				=> $kirby->root('media') . '/assets/' . $model . '/' . $hash,
+				=> $media . '/assets/' . $model . '/' . $hash,
 			// parent files for file model that already included hash
 			$model instanceof File
-				=> dirname($model->mediaRoot()),
+				=> $model->mediaDir(),
 			// model files
 			default
 			=> $model->mediaRoot() . '/' . $hash
 		};
 
-		$thumb = $root . '/' . $filename;
-		$job   = $root . '/.jobs/' . $filename . '.json';
-
 		try {
+			// prevent path traversal
+			$root = Dir::realpath($root, $media);
+
+			$thumb = $root . '/' . $filename;
+			$job   = $root . '/.jobs/' . $filename . '.json';
+
 			$options = Data::read($job);
 		} catch (Throwable) {
 			// send a customized error message to make clearer what happened here
@@ -131,7 +136,10 @@ class Media
 			// this adds support for custom assets
 			$source = match (true) {
 				is_string($model) === true
-					=> $kirby->root('index') . '/' . $model . '/' . $options['filename'],
+					=> F::realpath(
+						$index . '/' . $model . '/' . $options['filename'],
+						$index
+					),
 				$model instanceof File
 					=> $model->root(),
 				default

@@ -860,7 +860,7 @@ class F
 			false => pathinfo($file, PATHINFO_EXTENSION)
 		};
 
-		if (empty($extension) === true) {
+		if (empty($extension) === true || $extension === 'tmp') {
 			// detect the mime type first to get the most reliable extension
 			$mime      = static::mime($file);
 			$extension = static::mimeToExtension($mime);

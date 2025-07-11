@@ -43,8 +43,11 @@ Zepto(function($) {
     });
 
     var line = $activeFrame.find('.code-block .line-highlight').first()[0];
-    line.scrollIntoView();
-    line.parentElement.scrollTop -= 180;
+    // [internal] frames might not contain a code-block
+    if (line) {
+      line.scrollIntoView();
+      line.parentElement.scrollTop -= 180;
+    }
 
     $container.scrollTop(0);
   }
@@ -76,7 +79,7 @@ Zepto(function($) {
 
   });
 
-  var clipboard = new Clipboard('.clipboard');
+  var clipboard = new ClipboardJS('.clipboard');
   var showTooltip = function(elem, msg) {
     elem.classList.add('tooltipped', 'tooltipped-s');
     elem.setAttribute('aria-label', msg);

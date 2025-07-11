@@ -4,10 +4,9 @@ namespace Kirby\Panel\Ui\Dialogs;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Areas\AreaTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Dialogs\PageCreateDialog
- */
+#[CoversClass(PageCreateDialog::class)]
 class PageCreateDialogTest extends AreaTestCase
 {
 	public function setUp(): void
@@ -17,9 +16,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->login();
 	}
 
-	/**
-	 * @covers ::coreFields
-	 */
 	public function testCoreFields(): void
 	{
 		$dialog = new PageCreateDialog(
@@ -36,9 +32,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertSame('/', $fields['slug']['path']);
 	}
 
-	/**
-	 * @covers ::coreFields
-	 */
 	public function testCoreFieldWithoutTitleSlug(): void
 	{
 		$this->app([
@@ -65,9 +58,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertArrayNotHasKey('slug', $fields);
 	}
 
-	/**
-	 * @covers ::coreFields
-	 */
 	public function testCoreFieldInvalidTitleSlug(): void
 	{
 		$this->app([
@@ -93,9 +83,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$dialog->coreFields();
 	}
 
-	/**
-	 * @covers ::resolveFieldTemplates
-	 */
 	public function testResolveFieldTemplates(): void
 	{
 		$this->app([
@@ -129,9 +116,6 @@ class PageCreateDialogTest extends AreaTestCase
 		], $input);
 	}
 
-	/**
-	 * @covers ::sanitize
-	 */
 	public function testSanitize(): void
 	{
 		$this->app([
@@ -179,9 +163,6 @@ class PageCreateDialogTest extends AreaTestCase
 		], $input);
 	}
 
-	/**
-	 * @covers ::validate
-	 */
 	public function testValidateInvalidTitle(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -197,9 +178,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$dialog->validate(['content' => ['title' => '']]);
 	}
 
-	/**
-	 * @covers ::validate
-	 */
 	public function testValidateInvalidSlug(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -218,9 +196,6 @@ class PageCreateDialogTest extends AreaTestCase
 		]);
 	}
 
-	/**
-	 * @covers ::validate
-	 */
 	public function testValidateInvalidFields(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -253,9 +228,6 @@ class PageCreateDialogTest extends AreaTestCase
 		], 'listed');
 	}
 
-	/**
-	 * @covers ::validate
-	 */
 	public function testValidateValidFields(): void
 	{
 		$this->app([
@@ -286,9 +258,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertTrue($valid);
 	}
 
-	/**
-	 * @covers ::value
-	 */
 	public function testValue(): void
 	{
 		$this->app([

@@ -42,6 +42,15 @@ class Dumper
      */
     public function dump(mixed $input, int $inline = 0, int $indent = 0, int $flags = 0): string
     {
+        if ($flags & Yaml::DUMP_NULL_AS_EMPTY && $flags & Yaml::DUMP_NULL_AS_TILDE) {
+            throw new \InvalidArgumentException('The Yaml::DUMP_NULL_AS_EMPTY and Yaml::DUMP_NULL_AS_TILDE flags cannot be used together.');
+        }
+
+        return $this->doDump($input, $inline, $indent, $flags);
+    }
+
+    private function doDump(mixed $input, int $inline = 0, int $indent = 0, int $flags = 0, int $nestingLevel = 0): string
+    {
         $output = '';
         $prefix = $indent ? str_repeat(' ', $indent) : '';
         $dumpObjectAsInlineMap = true;
@@ -51,11 +60,12 @@ class Dumper
         }
 
         if ($inline <= 0 || (!\is_array($input) && !$input instanceof TaggedValue && $dumpObjectAsInlineMap) || !$input) {
-            $output .= $prefix.Inline::dump($input, $flags);
+            $output .= $prefix.Inline::dump($input, $flags, 0 === $nestingLevel);
         } elseif ($input instanceof TaggedValue) {
-            $output .= $this->dumpTaggedValue($input, $inline, $indent, $flags, $prefix);
+            $output .= $this->dumpTaggedValue($input, $inline, $indent, $flags, $prefix, $nestingLevel);
         } else {
             $dumpAsMap = Inline::isHash($input);
+            $compactNestedMapping = Yaml::DUMP_COMPACT_NESTED_MAPPING & $flags && !$dumpAsMap;
 
             foreach ($input as $key => $value) {
                 if ('' !== $output && "\n" !== $output[-1]) {
@@ -105,10 +115,10 @@ class Dumper
                     }
 
                     if ($inline - 1 <= 0 || null === $value->getValue() || \is_scalar($value->getValue())) {
-                        $output .= ' '.$this->dump($value->getValue(), $inline - 1, 0, $flags)."\n";
+                        $output .= ' '.$this->doDump($value->getValue(), $inline - 1, 0, $flags, $nestingLevel + 1)."\n";
                     } else {
                         $output .= "\n";
-                        $output .= $this->dump($value->getValue(), $inline - 1, $dumpAsMap ? $indent + $this->indentation : $indent + 2, $flags);
+                        $output .= $this->doDump($value->getValue(), $inline - 1, $dumpAsMap ? $indent + $this->indentation : $indent + 2, $flags, $nestingLevel + 1);
                     }
 
                     continue;
@@ -125,8 +135,8 @@ class Dumper
                 $output .= \sprintf('%s%s%s%s',
                     $prefix,
                     $dumpAsMap ? Inline::dump($key, $flags).':' : '-',
-                    $willBeInlined ? ' ' : "\n",
-                    $this->dump($value, $inline - 1, $willBeInlined ? 0 : $indent + $this->indentation, $flags)
+                    $willBeInlined || ($compactNestedMapping && \is_array($value) && Inline::isHash($value)) ? ' ' : "\n",
+                    $compactNestedMapping && \is_array($value) && Inline::isHash($value) ? substr($this->doDump($value, $inline - 1, $indent + 2, $flags, $nestingLevel + 1), $indent + 2) : $this->doDump($value, $inline - 1, $willBeInlined ? 0 : $indent + $this->indentation, $flags, $nestingLevel + 1)
                 ).($willBeInlined ? "\n" : '');
             }
         }
@@ -134,7 +144,7 @@ class Dumper
         return $output;
     }
 
-    private function dumpTaggedValue(TaggedValue $value, int $inline, int $indent, int $flags, string $prefix): string
+    private function dumpTaggedValue(TaggedValue $value, int $inline, int $indent, int $flags, string $prefix, int $nestingLevel): string
     {
         $output = \sprintf('%s!%s', $prefix ? $prefix.' ' : '', $value->getTag());
 
@@ -150,10 +160,10 @@ class Dumper
         }
 
         if ($inline - 1 <= 0 || null === $value->getValue() || \is_scalar($value->getValue())) {
-            return $output.' '.$this->dump($value->getValue(), $inline - 1, 0, $flags)."\n";
+            return $output.' '.$this->doDump($value->getValue(), $inline - 1, 0, $flags, $nestingLevel + 1)."\n";
         }
 
-        return $output."\n".$this->dump($value->getValue(), $inline - 1, $indent, $flags);
+        return $output."\n".$this->doDump($value->getValue(), $inline - 1, $indent, $flags, $nestingLevel + 1);
     }
 
     private function getBlockIndentationIndicator(string $value): string

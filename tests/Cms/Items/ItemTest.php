@@ -22,7 +22,7 @@ class ItemTest extends TestCase
 		$this->field = new Field($this->page, 'test', 'abcde');
 	}
 
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$item = new Item();
 
@@ -32,7 +32,7 @@ class ItemTest extends TestCase
 		$this->assertInstanceOf(Items::class, $item->siblings());
 	}
 
-	public function testField()
+	public function testField(): void
 	{
 		$item = new Item([
 			'parent' => $this->page,
@@ -42,7 +42,7 @@ class ItemTest extends TestCase
 		$this->assertSame($this->field, $item->field());
 	}
 
-	public function testIs()
+	public function testIs(): void
 	{
 		$a = new Item(['name' => 'a']);
 		$b = new Item(['name' => 'b']);
@@ -51,7 +51,7 @@ class ItemTest extends TestCase
 		$this->assertFalse($a->is($b));
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$item = new Item([
 			'parent' => $this->page,
@@ -60,7 +60,7 @@ class ItemTest extends TestCase
 		$this->assertSame($this->page, $item->parent());
 	}
 
-	public function testSiblings()
+	public function testSiblings(): void
 	{
 		$items = Items::factory([
 			['type' => 'a'],
@@ -75,7 +75,7 @@ class ItemTest extends TestCase
 		$this->assertSame($items, $item->siblings());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$item = new Item();
 		$this->assertSame([

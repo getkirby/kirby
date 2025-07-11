@@ -22,7 +22,7 @@ class ComponentTest extends TestCase
 		Component::$mixins = [];
 	}
 
-	public function testProp()
+	public function testProp(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -38,7 +38,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('prop value', $component->prop);
 	}
 
-	public function testPropWithDefaultValue()
+	public function testPropWithDefaultValue(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -54,7 +54,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('default value', $component->prop);
 	}
 
-	public function testPropWithFixedValue()
+	public function testPropWithFixedValue(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -70,7 +70,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('test', $component->prop);
 	}
 
-	public function testPropWithInvalidValue()
+	public function testPropWithInvalidValue(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -86,7 +86,7 @@ class ComponentTest extends TestCase
 		new Component('test', ['prop' => [1, 2, 3]]);
 	}
 
-	public function testPropWithMissingValue()
+	public function testPropWithMissingValue(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -102,7 +102,7 @@ class ComponentTest extends TestCase
 		new Component('test');
 	}
 
-	public function testPropUnsetting()
+	public function testPropUnsetting(): void
 	{
 		Component::$types = [
 			'a' => [
@@ -128,7 +128,7 @@ class ComponentTest extends TestCase
 		$this->assertNull($component->b());
 	}
 
-	public function testPropUnsettingWithCustomProperty()
+	public function testPropUnsettingWithCustomProperty(): void
 	{
 		TestComponentWithCustomProperty::$types = [
 			'a' => [
@@ -147,7 +147,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('custom property', $component->b());
 	}
 
-	public function testAttrs()
+	public function testAttrs(): void
 	{
 		Component::$types = [
 			'test' => []
@@ -159,7 +159,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('bar', $component->foo);
 	}
 
-	public function testComputed()
+	public function testComputed(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -175,7 +175,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('computed prop', $component->prop);
 	}
 
-	public function testComputedFromProp()
+	public function testComputedFromProp(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -193,7 +193,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('computed: prop value', $component->prop());
 	}
 
-	public function testMethod()
+	public function testMethod(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -208,7 +208,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('hello world', $component->say());
 	}
 
-	public function testPropsInMethods()
+	public function testPropsInMethods(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -226,7 +226,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('hello world', $component->say());
 	}
 
-	public function testComputedPropsInMethods()
+	public function testComputedPropsInMethods(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -247,7 +247,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('HELLO WORLD', $component->say());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -270,7 +270,7 @@ class ComponentTest extends TestCase
 		$this->assertSame($expected, $component->__debugInfo());
 	}
 
-	public function testCustomToArray()
+	public function testCustomToArray(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -285,7 +285,7 @@ class ComponentTest extends TestCase
 		$this->assertSame(['foo' => 'bar'], $component->toArray());
 	}
 
-	public function testInvalidType()
+	public function testInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Undefined component type: test');
@@ -293,7 +293,7 @@ class ComponentTest extends TestCase
 		new Component('test');
 	}
 
-	public function testLoadInvalidFile()
+	public function testLoadInvalidFile(): void
 	{
 		Component::$types = ['foo' => 'bar'];
 		$this->expectException(Exception::class);
@@ -302,7 +302,7 @@ class ComponentTest extends TestCase
 		Component::load('foo');
 	}
 
-	public function testMixins()
+	public function testMixins(): void
 	{
 		Component::$mixins = [
 			'test' => [
@@ -327,7 +327,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('HELLO WORLD', $component->message);
 	}
 
-	public function testGetInvalidProp()
+	public function testGetInvalidProp(): void
 	{
 		Component::$types = [
 			'test' => []
@@ -337,7 +337,7 @@ class ComponentTest extends TestCase
 		$this->assertNull($component->foo);
 	}
 
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		Component::$types = [
 			'test' => []

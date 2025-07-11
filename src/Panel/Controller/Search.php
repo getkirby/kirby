@@ -14,7 +14,7 @@ use Kirby\Toolkit\Escape;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
- * @internal
+ * @unstable
  */
 class Search
 {

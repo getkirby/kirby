@@ -30,7 +30,7 @@
 <script>
 /**
  * @since 4.0.0
- * @internal
+ * @unstable
  */
 export default {
 	props: {
@@ -57,7 +57,12 @@ export default {
 				url: this.$panel.urls.api + "/" + this.api + "/avatar",
 				accept: "image/*",
 				immediate: true,
-				multiple: false
+				multiple: false,
+				on: {
+					done: () => {
+						this.$panel.view.reload();
+					}
+				}
 			});
 		}
 	}

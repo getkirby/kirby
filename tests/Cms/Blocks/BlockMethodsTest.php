@@ -18,7 +18,7 @@ class BlockMethodsTest extends TestCase
 		]);
 	}
 
-	public function testBlockMethod()
+	public function testBlockMethod(): void
 	{
 		$block = new Block(['type' => 'test']);
 		$this->assertSame('block method', $block->test());

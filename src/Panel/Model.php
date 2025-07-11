@@ -100,7 +100,6 @@ abstract class Model
 
 	/**
 	 * Returns the Panel image definition
-	 * @internal
 	 */
 	public function image(
 		string|array|false|null $settings = [],
@@ -186,7 +185,6 @@ abstract class Model
 
 	/**
 	 * Data URI placeholder string for Panel image
-	 * @internal
 	 */
 	public static function imagePlaceholder(): string
 	{
@@ -195,7 +193,6 @@ abstract class Model
 
 	/**
 	 * Returns the image file object based on provided query
-	 * @internal
 	 */
 	protected function imageSource(
 		string|null $query = null
@@ -216,7 +213,6 @@ abstract class Model
 	/**
 	 * Provides the correct srcset string based on
 	 * the layout and settings
-	 * @internal
 	 */
 	protected function imageSrcset(
 		CmsFile|Asset $image,
@@ -357,9 +353,7 @@ abstract class Model
 	}
 
 	/**
-	 * Returns the data array for the
-	 * view's component props
-	 * @internal
+	 * Returns the data array for the view's component props
 	 */
 	public function props(): array
 	{
@@ -398,7 +392,6 @@ abstract class Model
 	/**
 	 * Returns link url and title
 	 * for model (e.g. used for prev/next navigation)
-	 * @internal
 	 */
 	public function toLink(string $title = 'title'): array
 	{
@@ -412,8 +405,6 @@ abstract class Model
 	 * Returns link url and title
 	 * for optional sibling model and
 	 * preserves tab selection
-	 *
-	 * @internal
 	 */
 	protected function toPrevNextLink(
 		ModelWithContent|null $model = null,
@@ -439,8 +430,6 @@ abstract class Model
 	/**
 	 * Returns the url to the editing view
 	 * in the Panel
-	 *
-	 * @internal
 	 */
 	public function url(bool $relative = false): string
 	{
@@ -482,10 +471,7 @@ abstract class Model
 	}
 
 	/**
-	 * Returns the data array for
-	 * this model's Panel view
-	 *
-	 * @internal
+	 * Returns the data array for this model's Panel view
 	 */
 	abstract public function view(): array;
 }

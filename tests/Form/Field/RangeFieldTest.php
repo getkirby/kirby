@@ -6,7 +6,7 @@ use Kirby\Toolkit\I18n;
 
 class RangeFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('range');
 
@@ -21,7 +21,7 @@ class RangeFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('range', [
 			'value' => 1,
@@ -32,7 +32,7 @@ class RangeFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('range', [
 			'value' => 1,
@@ -43,7 +43,7 @@ class RangeFieldTest extends TestCase
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
-	public function testTooltip()
+	public function testTooltip(): void
 	{
 		$field = $this->field('range', [
 			'tooltip' => [
@@ -58,7 +58,7 @@ class RangeFieldTest extends TestCase
 		$this->assertSame('months', $tooltip['after']);
 	}
 
-	public function testTooltipTranslation()
+	public function testTooltipTranslation(): void
 	{
 		$props = [
 			'tooltip' => [

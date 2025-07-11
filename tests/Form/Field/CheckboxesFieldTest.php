@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 class CheckboxesFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('checkboxes');
 
@@ -15,7 +15,7 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testValue()
+	public function testValue(): void
 	{
 		$field = $this->field('checkboxes', [
 			'value'   => 'a,b,c',
@@ -29,14 +29,14 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertSame($expected, $field->value());
 	}
 
-	public function testEmptyValue()
+	public function testEmptyValue(): void
 	{
 		$field = $this->field('checkboxes');
 
 		$this->assertSame([], $field->value());
 	}
 
-	public function testDefaultValueWithInvalidOptions()
+	public function testDefaultValueWithInvalidOptions(): void
 	{
 		$field = $this->field('checkboxes', [
 			'default' => 'a,b,d',
@@ -51,7 +51,7 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertSame('a, b', $field->data(true));
 	}
 
-	public function testStringConversion()
+	public function testStringConversion(): void
 	{
 		$field = $this->field('checkboxes', [
 			'options' => [
@@ -65,7 +65,7 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertSame('a, b, c', $field->data());
 	}
 
-	public function testIgnoreInvalidOptions()
+	public function testIgnoreInvalidOptions(): void
 	{
 		$field = $this->field('checkboxes', [
 			'options' => [
@@ -79,7 +79,7 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertSame(['a', 'b'], $field->value());
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('checkboxes', [
 			'value'   => 'a',
@@ -92,7 +92,7 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('checkboxes', [
 			'value'   => 'a, b',
@@ -104,7 +104,7 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
-	public function testRequiredProps()
+	public function testRequiredProps(): void
 	{
 		$field = $this->field('checkboxes', [
 			'options'  => ['a', 'b', 'c'],
@@ -115,7 +115,7 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertSame(1, $field->min());
 	}
 
-	public function testRequiredInvalid()
+	public function testRequiredInvalid(): void
 	{
 		$field = $this->field('checkboxes', [
 			'options'  => ['a', 'b', 'c'],
@@ -126,7 +126,7 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testRequiredValid()
+	public function testRequiredValid(): void
 	{
 		$field = $this->field('checkboxes', [
 			'options'  => ['a', 'b', 'c'],

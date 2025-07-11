@@ -28,7 +28,7 @@ class Segment
 
 	/**
 	 * Throws an exception for an access to an invalid method
-	 * @internal
+	 * @unstable
 	 *
 	 * @param mixed $data Variable on which the access was tried
 	 * @param string $name Name of the method/property that was accessed

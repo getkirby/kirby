@@ -229,6 +229,8 @@ export default {
 	watch: {
 		value: {
 			handler(entries) {
+				entries ??= [];
+
 				// no need to add ids again if the values are the same
 				if (entries === this.values) {
 					return;

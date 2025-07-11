@@ -5,7 +5,6 @@ namespace Kirby\Form;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Language;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\TestCase;
@@ -13,7 +12,6 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Fields::class)]
 class FieldsTest extends TestCase
@@ -33,7 +31,7 @@ class FieldsTest extends TestCase
 		$this->model = new Page(['slug' => 'test']);
 	}
 
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$fields = new Fields(
 			fields: [
@@ -53,7 +51,7 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->model, $fields->last()->model());
 	}
 
-	public function testConstructWithoutModel()
+	public function testConstructWithoutModel(): void
 	{
 		$fields = new Fields(
 			fields: [
@@ -70,7 +68,7 @@ class FieldsTest extends TestCase
 		$this->assertSame($this->app->site(), $fields->last()->model());
 	}
 
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -86,7 +84,7 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->defaults());
 	}
 
-	public function testErrors()
+	public function testErrors(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -131,7 +129,7 @@ class FieldsTest extends TestCase
 		], $fields->errors());
 	}
 
-	public function testErrorsWithoutErrors()
+	public function testErrorsWithoutErrors(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -145,7 +143,7 @@ class FieldsTest extends TestCase
 		$this->assertSame([], $fields->errors());
 	}
 
-	public function testField()
+	public function testField(): void
 	{
 		$fields = new Fields([
 			'test' => [
@@ -156,7 +154,7 @@ class FieldsTest extends TestCase
 		$this->assertSame('test', $fields->field('test')->name());
 	}
 
-	public function testFieldWithMissingField()
+	public function testFieldWithMissingField(): void
 	{
 		$fields = new Fields([
 			'test' => [
@@ -171,7 +169,7 @@ class FieldsTest extends TestCase
 	}
 
 
-	public function testFill()
+	public function testFill(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -272,7 +270,7 @@ class FieldsTest extends TestCase
 		], $fields->toFormValues(), 'Unknown fields are included');
 	}
 
-	public function testFind()
+	public function testFind(): void
 	{
 		Field::$types['test'] = [
 			'methods' => [
@@ -300,7 +298,7 @@ class FieldsTest extends TestCase
 		$this->assertNull($fields->find('mother+missing-child'));
 	}
 
-	public function testFindWhenFieldHasNoForm()
+	public function testFindWhenFieldHasNoForm(): void
 	{
 		$fields = new Fields([
 			'mother' => [
@@ -639,6 +637,66 @@ class FieldsTest extends TestCase
 		], $fields->toStoredValues());
 	}
 
+	public function testSubmitWithForceAndANoValueField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'  => 'info',
+					'value' => 'B',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(
+			input: [
+				'a' => 'A updated',
+				'b' => 'B updated',
+			],
+			force: true
+		);
+
+		$this->assertSame([
+			'a' => 'A updated',
+		], $fields->toStoredValues(), 'The info field can never be submitted. It has no value.');
+	}
+
+	public function testSubmitWithForceAndAComplexDisabledField(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'  => 'text',
+					'value' => 'A',
+				],
+				'b' => [
+					'type'     => 'date',
+					'disabled' => true,
+					'value'    => '2025-01-01',
+				],
+			],
+			model: $this->model
+		);
+
+		$fields->submit(
+			input: [
+				'a' => 'A updated',
+				'b' => '03.04.2025',
+			],
+			force: true
+		);
+
+		$this->assertSame([
+			'a' => 'A updated',
+			'b' => '2025-04-03',
+		], $fields->toStoredValues(), 'The date field should still be able to format the value correctly even if it was disabled.');
+	}
+
 	public function testSubmitWithClosureValues(): void
 	{
 		$fields = new Fields(
@@ -718,7 +776,7 @@ class FieldsTest extends TestCase
 		], $fields->toStoredValues(), 'Unknown fields are included');
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -732,7 +790,7 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->toArray(fn ($field) => $field->name()));
 	}
 
-	public function testToFormValues()
+	public function testToFormValues(): void
 	{
 		$fields = new Fields([
 			'a' => [
@@ -812,35 +870,6 @@ class FieldsTest extends TestCase
 		];
 	}
 
-	#[DataProvider('modelProvider')]
-	public function testToPropsWithSkippedTitleFieldForPage(ModelWithContent $model, bool $skip): void
-	{
-		$this->setUpSingleLanguage();
-
-		$fields = new Fields(
-			fields: [
-				'title' => [
-					'type' => 'text',
-				],
-				'subtitle' => [
-					'type' => 'text',
-				]
-			],
-			model: $model
-		);
-
-		$props = $fields->toProps();
-
-		if ($skip === false) {
-			$this->assertCount(2, $props);
-			$this->assertArrayHasKey('title', $props);
-			$this->assertArrayHasKey('subtitle', $props);
-		} else {
-			$this->assertCount(1, $props);
-			$this->assertArrayHasKey('subtitle', $props);
-		}
-	}
-
 	public function testToPropsWithoutUpdatePermission(): void
 	{
 		$this->setUpSingleLanguage();
@@ -888,7 +917,7 @@ class FieldsTest extends TestCase
 		$this->assertTrue($props['b']['translate']);
 	}
 
-	public function testToStoredValues()
+	public function testToStoredValues(): void
 	{
 		Field::$types['test'] = [
 			'save' => function ($value) {

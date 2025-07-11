@@ -87,7 +87,8 @@ class Menu extends Component
 					...$area
 				];
 
-				// merge the props with an existing area or create a new custom one
+				// merge the props with an existing area
+				// or create a new custom one
 				$areas[] = $this->area($id, $props) ?? new Area($id, ...$props);
 			}
 		}

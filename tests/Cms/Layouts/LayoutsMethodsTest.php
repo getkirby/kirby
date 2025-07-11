@@ -18,7 +18,7 @@ class LayoutsMethodsTest extends TestCase
 		]);
 	}
 
-	public function testLayoutsMethod()
+	public function testLayoutsMethod(): void
 	{
 		$layouts = Layouts::factory();
 		$this->assertSame('layouts method', $layouts->test());
