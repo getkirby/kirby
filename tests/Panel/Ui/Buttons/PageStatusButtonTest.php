@@ -16,7 +16,7 @@ class PageStatusButtonTest extends TestCase
 		$page   = new Page(['slug' => 'test', 'isDraft' => true]);
 		$button = new PageStatusButton($page);
 
-		$this->assertSame('k-status-view-button', $button->component);
+		$this->assertSame('k-view-button', $button->component);
 		$this->assertSame('k-status-view-button k-page-status-button', $button->class);
 		$this->assertSame('/pages/test/changeStatus', $button->dialog);
 		$this->assertTrue($button->disabled);
