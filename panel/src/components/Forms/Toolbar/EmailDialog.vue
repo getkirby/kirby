@@ -16,7 +16,7 @@ export default {
 			}
 		}
 	},
-	emits: ["submit"],
+	emits: ["cancel", "submit"],
 	methods: {
 		submit() {
 			const email = this.values.href ?? "";

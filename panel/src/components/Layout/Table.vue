@@ -243,8 +243,8 @@ export default {
 		"input",
 		"option",
 		"paginate",
-		"sort",
-		"select"
+		"select",
+		"sort"
 	],
 	data() {
 		return {

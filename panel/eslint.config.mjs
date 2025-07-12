@@ -42,10 +42,12 @@ export default [
 			"vue/html-indent": "off",
 			"vue/multi-word-component-names": "off",
 			"vue/require-default-prop": "off",
+			"vue/require-explicit-emits": "warn",
 			"vue/require-prop-types": "error"
 		},
 		languageOptions: {
 			sourceType: "module",
+			ecmaVersion: 2022,
 			globals: {
 				...globals.browser
 			}
