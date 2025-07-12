@@ -23,8 +23,8 @@
 					@prepend="select(index)"
 					@remove="remove(layout)"
 					@select="selected = layout.id"
-					@updateAttrs="updateAttrs(index, $event)"
-					@updateColumn="updateColumn({ layout, index, ...$event })"
+					@update-attrs="updateAttrs(index, $event)"
+					@update-column="updateColumn({ layout, index, ...$event })"
 				/>
 			</k-draggable>
 		</template>

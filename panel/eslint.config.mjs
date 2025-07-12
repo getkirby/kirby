@@ -1,10 +1,32 @@
+import globals from "globals";
 import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
+import vitest from "@vitest/eslint-plugin";
 import vue from "eslint-plugin-vue";
 
 export default [
 	js.configs.recommended,
-	...vue.configs["flat/vue2-recommended"],
+	...vue.configs["flat/recommended"],
+
+	// Vitest rules for test files
+	{
+		files: ["**/*.test.js", "**/*.test.ts", "**/*.spec.js", "**/*.spec.ts"],
+		plugins: {
+			vitest
+		},
+		rules: {
+			...vitest.configs.recommended.rules,
+			"vitest/valid-title": "off"
+		},
+		languageOptions: {
+			globals: {
+				...globals.browser,
+				...globals.node,
+				app: "readonly"
+			}
+		}
+	},
+
 	prettier,
 	{
 		rules: {
@@ -17,12 +39,16 @@ export default [
 					multiline: "always"
 				}
 			],
+			"vue/html-indent": "off",
 			"vue/multi-word-component-names": "off",
 			"vue/require-default-prop": "off",
 			"vue/require-prop-types": "error"
 		},
 		languageOptions: {
-			ecmaVersion: 2022
+			sourceType: "module",
+			globals: {
+				...globals.browser
+			}
 		}
 	}
 ];

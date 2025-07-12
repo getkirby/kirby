@@ -59,6 +59,7 @@ export const props = {
 
 export default {
 	mixins: [props],
+	emits: ["input", "submit"],
 	computed: {
 		inputProps() {
 			return {

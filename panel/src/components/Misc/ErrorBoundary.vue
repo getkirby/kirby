@@ -21,7 +21,7 @@ export default {
 	render() {
 		if (this.error) {
 			if (this.$slots.error) {
-				return this.$slots.error[0];
+				return this.$slots.error()[0];
 			}
 
 			if (this.$slots.error) {
@@ -35,9 +35,9 @@ export default {
 				{ attrs: { theme: "negative" } },
 				this.error.message ?? this.error
 			);
-		} else {
-			return this.$slots.default[0];
 		}
+
+		return this.$slots.default()[0];
 	}
 };
 </script>

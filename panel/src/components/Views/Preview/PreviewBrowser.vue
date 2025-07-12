@@ -51,7 +51,7 @@ export default {
 		this.$events.on("content.discard", this.reload);
 		this.$events.on("content.publish", this.reload);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("content.discard", this.reload);
 		this.$events.off("content.publish", this.reload);
 	},

@@ -111,6 +111,7 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		return {
 			/**

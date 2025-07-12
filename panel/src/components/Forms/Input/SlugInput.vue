@@ -48,6 +48,7 @@ export const props = {
 export default {
 	extends: StringInput,
 	mixins: [props],
+	emits: ["input"],
 	data() {
 		return {
 			slug: this.sluggify(this.value),

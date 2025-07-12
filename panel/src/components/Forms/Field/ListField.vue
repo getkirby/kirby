@@ -26,6 +26,7 @@ import { props as List } from "@/components/Forms/Input/ListInput.vue";
 export default {
 	mixins: [Field, Input, List],
 	inheritAttrs: false,
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

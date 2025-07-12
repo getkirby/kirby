@@ -35,7 +35,8 @@ export const props = {
  * @example <k-hue-input :value="value" @input="value = $event" />
  */
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	emits: ["input"]
 };
 </script>
 

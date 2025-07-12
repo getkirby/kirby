@@ -21,6 +21,7 @@ export default {
 			})
 		}
 	},
+	emits: ["submit"],
 	methods: {
 		submit() {
 			const url = this.values.href ?? "";

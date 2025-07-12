@@ -31,6 +31,7 @@ export default {
 			default: "angle-down"
 		}
 	},
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

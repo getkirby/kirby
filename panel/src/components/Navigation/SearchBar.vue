@@ -39,7 +39,7 @@
 				v-if="results.length"
 				ref="results"
 				:items="results"
-				@mouseout.native="select(-1)"
+				@mouseout="select(-1)"
 			/>
 
 			<footer class="k-search-bar-footer">

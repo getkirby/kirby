@@ -21,6 +21,7 @@ export default {
 			type: Boolean
 		}
 	},
+	emits: ["select"],
 	data() {
 		return {
 			state: []

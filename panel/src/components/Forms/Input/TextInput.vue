@@ -18,7 +18,8 @@ export const props = {
  * @example <k-text-input :value="text" @input="text = $event" name="text" />
  */
 export default {
-	mixins: [StringInput, props]
+	mixins: [StringInput, props],
+	emits: ["input"]
 };
 </script>
 

@@ -5,7 +5,7 @@
 				<k-page-tree
 					:current="page?.value ?? opened"
 					@select="selectPage"
-					@toggleBranch="togglePage"
+					@toggle-branch="togglePage"
 				/>
 			</aside>
 			<div ref="items" class="k-file-browser-items">

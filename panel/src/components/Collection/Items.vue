@@ -131,7 +131,7 @@ export default {
 			default: () => ({})
 		}
 	},
-	emits: ["change", "hover", "item", "option", "sort"],
+	emits: ["change", "hover", "item", "option", "select", "sort"],
 	computed: {
 		dragOptions() {
 			return {

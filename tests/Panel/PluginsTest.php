@@ -19,9 +19,6 @@ class PluginsTest extends TestCase
 	protected string $jsA;
 	protected string $jsB;
 	protected string $jsC;
-	protected string $mjsA;
-	protected string $mjsB;
-	protected string $mjsC;
 
 	public function setUp(): void
 	{
@@ -56,7 +53,6 @@ class PluginsTest extends TestCase
 		touch($this->cssC, $time);
 		F::write($this->jsC = static::TMP . '/site/plugins/c/index.js', 'c');
 		touch($this->jsC, $time);
-		$this->mjsC = static::TMP . '/site/plugins/c/index.dev.mjs';
 
 		return $time;
 	}
@@ -121,10 +117,6 @@ class PluginsTest extends TestCase
 		// js
 		$expected = "a;\n\nb;\n\nc;";
 		$this->assertSame($expected, $plugins->read('js'));
-
-		// mjs - must be completely empty and not include the loader code
-		$expected = '';
-		$this->assertSame($expected, $plugins->read('mjs'));
 	}
 
 	public function testUrl(): void

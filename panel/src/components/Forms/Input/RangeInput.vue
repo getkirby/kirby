@@ -81,6 +81,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	computed: {
 		baseline() {
 			// If the minimum is below 0, the baseline should be placed at .

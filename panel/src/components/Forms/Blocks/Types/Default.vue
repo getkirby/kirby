@@ -36,6 +36,7 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["open", "update"],
 	methods: {
 		field(name, fallback = null) {
 			let field = null;

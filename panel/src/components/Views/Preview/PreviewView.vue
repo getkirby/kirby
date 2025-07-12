@@ -58,7 +58,7 @@ export default {
 	mounted() {
 		this.$events.on("keydown.esc", this.exit);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("keydown.esc", this.exit);
 	},
 	methods: {

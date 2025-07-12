@@ -38,6 +38,7 @@ export default {
 	props: {
 		tabs: Object
 	},
+	emits: ["open", "update"],
 	data() {
 		return {
 			collapsed: this.state(),

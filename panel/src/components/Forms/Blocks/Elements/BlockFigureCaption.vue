@@ -17,7 +17,8 @@ export default {
 		disabled: Boolean,
 		marks: [Array, Boolean],
 		value: String
-	}
+	},
+	emits: ["input"]
 };
 </script>
 

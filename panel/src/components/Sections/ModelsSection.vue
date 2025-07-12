@@ -239,7 +239,7 @@ export default {
 		this.$events.on("model.update", this.reload);
 		this.$events.on("section.selecting", this.stopSelectingCollision);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("model.update", this.reload);
 		this.$events.off("section.selecting", this.stopSelectingCollision);
 	},

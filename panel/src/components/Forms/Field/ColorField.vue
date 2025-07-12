@@ -92,6 +92,7 @@ export default {
 			default: () => []
 		}
 	},
+	emits: ["input"],
 	computed: {
 		convertedOptions() {
 			return this.options.map((option) => ({

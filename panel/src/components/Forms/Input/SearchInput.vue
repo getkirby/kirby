@@ -32,6 +32,7 @@ export const props = {
  * @example <k-search-input :value="value" @input="value = $event" />
  */
 export default {
-	mixins: [StringInput, props]
+	mixins: [StringInput, props],
+	emits: ["input"]
 };
 </script>

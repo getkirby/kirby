@@ -236,7 +236,16 @@ export default {
 		 */
 		sortable: Boolean
 	},
-	emits: ["cell", "change", "header", "input", "option", "paginate", "sort"],
+	emits: [
+		"cell",
+		"change",
+		"header",
+		"input",
+		"option",
+		"paginate",
+		"sort",
+		"select"
+	],
 	data() {
 		return {
 			values: this.rows

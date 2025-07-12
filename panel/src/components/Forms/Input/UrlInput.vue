@@ -29,6 +29,7 @@ export const props = {
  */
 export default {
 	mixins: [StringInput, props],
+	emits: ["input"],
 	watch: {
 		value: {
 			handler() {

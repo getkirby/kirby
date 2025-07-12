@@ -26,6 +26,7 @@ import { props as RangeInput } from "../Input/RangeInput.vue";
 export default {
 	mixins: [Input, Field, RangeInput],
 	inheritAttrs: false,
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

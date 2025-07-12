@@ -59,7 +59,8 @@ export const props = {
 };
 
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	emits: ["input"]
 };
 </script>
 

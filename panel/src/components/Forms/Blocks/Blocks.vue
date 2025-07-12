@@ -31,9 +31,9 @@
 						prev: prevNext(index - 1)
 					}"
 					@append="add($event, index + 1)"
-					@chooseToAppend="choose(index + 1)"
-					@chooseToConvert="chooseToConvert(block)"
-					@chooseToPrepend="choose(index)"
+					@choose-to-append="choose(index + 1)"
+					@choose-to-convert="chooseToConvert(block)"
+					@choose-to-prepend="choose(index)"
 					@click="onClickBlock(block, $event)"
 					@close="isEditing = false"
 					@copy="copy()"
@@ -45,12 +45,12 @@
 					@paste="pasteboard()"
 					@prepend="add($event, index)"
 					@remove="remove(block)"
-					@removeSelected="removeSelected"
+					@remove-selected="removeSelected"
 					@show="show(block)"
-					@selectDown="selectDown"
-					@selectUp="selectUp"
-					@sortDown="sort(block, index, index + 1)"
-					@sortUp="sort(block, index, index - 1)"
+					@select-down="selectDown"
+					@select-up="selectUp"
+					@sort-down="sort(block, index, index + 1)"
+					@sort-up="sort(block, index, index - 1)"
 					@split="split(block, index, $event)"
 					@update="update(block, $event)"
 				/>
@@ -92,13 +92,13 @@ export const props = {
 			type: Array,
 			default: () => []
 		}
-	},
-	emits: ["input"]
+	}
 };
 
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		return {
 			blocks: this.value ?? [],

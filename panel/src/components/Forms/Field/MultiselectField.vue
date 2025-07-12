@@ -25,6 +25,7 @@ import TagsField from "./TagsField.vue";
  */
 export default {
 	extends: TagsField,
-	inheritAttrs: false
+	inheritAttrs: false,
+	emits: ["input"]
 };
 </script>
