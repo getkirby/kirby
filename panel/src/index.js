@@ -1,4 +1,4 @@
-import Vue, { h } from "vue";
+import { createApp } from "vue";
 
 import App from "./panel/app.js";
 import Components from "./components/index.js";
@@ -9,8 +9,7 @@ import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
 
-Vue.config.productionTip = false;
-Vue.config.devtools = true;
+import preserveListeners from "./mixins/preserveListeners.js";
 
 /**
  * Global styles need to be loaded before
@@ -20,12 +19,27 @@ import "./styles/config.css";
 import "./styles/reset.css";
 
 /**
+ * Create the Vue application
+ */
+const app = createApp(App);
+
+/**
  * Load all relevant Vue plugins
  * that do not depend on the Panel instance
  */
-Vue.use(Helpers);
-Vue.use(Libraries);
-Vue.use(Components);
+app.use(Helpers);
+app.use(Libraries);
+app.use(Components);
+
+/**
+ * Add global mixins
+ */
+app.mixin(preserveListeners);
+
+/**
+ * Create the Panel instance
+ */
+window.panel = Panel.create(app, window.panel.plugins);
 
 /**
  * Load CSS utilities after components
@@ -34,28 +48,22 @@ Vue.use(Components);
 import "./styles/utilities.css";
 
 /**
- * Create the Panel instance
- *
- * This is the single source of truth
- * for all Vue components.
- */
-window.panel = Vue.prototype.$panel = Panel.create(window.panel.plugins);
-
-/**
- * Create the Vue application
- */
-window.panel.app = new Vue({
-	render: () => h(App)
-});
-
-/**
  * Additional functionalities and app configuration
  */
-Vue.use(I18n);
-Vue.use(ErrorHandling);
-Vue.use(Legacy);
+app.use(I18n);
+app.use(ErrorHandling);
+app.use(Legacy);
+
+/**
+ * Restore some Vue 2 functionality
+ */
+app.mixin({
+	mounted() {
+		this.$el.__vue__ = this;
+	}
+});
 
 /**
  * Mount the Vue application
  */
-window.panel.app.$mount("#app");
+app.mount("#app");

@@ -1,5 +1,5 @@
 <template>
-	<k-box v-bind="attrs" class="k-empty" @click.native="$emit('click', $event)">
+	<k-box v-bind="attrs" class="k-empty" @click="$emit('click', $event)">
 		<slot>
 			{{ text }}
 		</slot>
@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { getCurrentInstance } from "vue";
 import { layout } from "@/mixins/props.js";
 
 /**
@@ -29,8 +30,9 @@ export default {
 	emits: ["click"],
 	computed: {
 		attrs() {
+			const instance = getCurrentInstance();
 			const attrs = {
-				button: this.$listeners["click"] !== undefined,
+				button: instance?.vnode?.props?.onClick !== undefined,
 				icon: this.icon,
 				theme: "empty"
 			};

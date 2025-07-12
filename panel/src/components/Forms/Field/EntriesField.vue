@@ -3,7 +3,7 @@
 		v-bind="$props"
 		:class="['k-entries-field', $attrs.class]"
 		:style="$attrs.style"
-		@click.native.stop
+		@click.stop
 	>
 		<!-- Options -->
 		<template v-if="!disabled" #options>
@@ -57,8 +57,8 @@
 						icon="sort"
 						class="k-sort-handle k-entries-field-item-sort-handle"
 						size="sm"
-						@keydown.up.native="sortUp(index)"
-						@keydown.down.native="sortDown(index)"
+						@keydown.up="sortUp(index)"
+						@keydown.down="sortDown(index)"
 					/>
 					<component
 						:is="`k-${field.type}-field`"

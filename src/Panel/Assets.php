@@ -27,11 +27,11 @@ use Kirby\Toolkit\A;
 class Assets
 {
 	protected bool $isDev;
+	protected bool $isPluginDev;
 	protected App $kirby;
 	protected string $nonce;
 	protected Plugins $plugins;
 	protected string $url;
-	protected bool $vite;
 
 	public function __construct()
 	{
@@ -39,15 +39,17 @@ class Assets
 		$this->nonce   = $this->kirby->nonce();
 		$this->plugins = new Plugins();
 
-		$vite       = $this->kirby->roots()->panel() . '/.vite-running';
-		$this->vite = is_file($vite) === true;
-
 		// Check if Panel is running in dev mode to
 		// get the assets from the Vite dev server;
 		// dev mode = explicitly enabled in the config AND Vite is running
 		$this->isDev =
 			$this->kirby->option('panel.dev', false) !== false &&
-			$this->vite === true;
+			is_file($this->kirby->root('panel') . '/.vite-running') === true;
+
+		// check if any plugin is running in dev mode to
+		// load the non-production version of Vue
+		$this->isPluginDev =
+			is_file($this->kirby->root('plugins') . '/.vite-running') === true;
 
 		// Get the base URL
 		$this->url = $this->url();
@@ -108,13 +110,10 @@ class Assets
 	public function external(): array
 	{
 		return [
-			'css'            => $this->css(),
-			'icons'          => $this->favicons(),
-			'import-maps'    => $this->importMaps(),
-			'js'             => $this->js(),
-			// loader for plugins' index.dev.mjs files – inlined,
-			// so we provide the code instead of the asset URL
-			'plugin-imports' => $this->plugins->read('mjs'),
+			'css'         => $this->css(),
+			'icons'       => $this->favicons(),
+			'import-maps' => $this->importMaps(),
+			'js'          => $this->js()
 		];
 	}
 
@@ -221,33 +220,27 @@ class Assets
 			],
 			'plugin-registry' => [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/plugins.js',
-				'type'  => 'module'
-			],
-			'plugins' => [
-				'nonce' => $this->nonce,
-				'src'   => $this->plugins->url('js'),
-				'defer' => true
+				'src'   => $this->url . '/js/plugins.js'
 			],
 			...A::map($this->custom('panel.js'), fn ($src) => [
 				'nonce' => $this->nonce,
 				'src'   => $src,
 				'type'  => 'module',
-				'defer' => true
+				'defer' => true,
 			]),
 			'index' => [
-				'src'  => $this->url . '/js/index.min.js',
-				'type' => 'module'
+				'nonce'   => $this->nonce,
+				'src'     => $this->url . '/js/index.min.js',
+				'plugins' => $this->plugins->url('js'),
 			],
 		];
-
 
 		// During dev mode, add vite client and adapt
 		// path to `index.js` - vendor does not need
 		// to be loaded in dev mode
 		if ($this->isDev === true) {
 			// Load the non-minified index.js, remove vendor script
-			$js['index']['src']  = $this->url . '/src/index.js';
+			$js['index']['src'] = $this->url . '/src/index.js';
 			$js['vendor'] = null;
 
 			// Add vite dev client
@@ -329,13 +322,19 @@ class Assets
 	{
 		// During dev mode, load the dev version of Vue
 		if ($this->isDev === true) {
-			return $this->url . '/node_modules/vue/dist/vue.esm.browser.js';
+			return $this->url . '/node_modules/vue/dist/vue.esm-browser.js';
+		}
+
+		// When any plugin is in dev mode, also load the dev version
+		// of Vue  but from the dist folder, not node_modules
+		if ($this->isPluginDev === true) {
+			return $this->url . '/js/vue.esm-browser.js';
 		}
 
 		if ($this->kirby->option('panel.vue.compiler', true) === true) {
-			return $this->url . '/js/vue.esm.browser.min.js';
+			return $this->url . '/js/vue.esm-browser.prod.js';
 		}
 
-		return $this->url . '/js/vue.runtime.esm.min.js';
+		return $this->url . '/js/vue.runtime.esm-browser.prod.js';
 	}
 }

@@ -21,11 +21,11 @@ export default {
 	render() {
 		if (this.error) {
 			if (this.$slots.error) {
-				return this.$slots.error[0];
+				return this.$slots.error()[0];
 			}
 
-			if (this.$scopedSlots.error) {
-				return this.$scopedSlots.error({
+			if (this.$slots.error) {
+				return this.$slots.error({
 					error: this.error
 				});
 			}
@@ -35,9 +35,9 @@ export default {
 				{ attrs: { theme: "negative" } },
 				this.error.message ?? this.error
 			);
-		} else {
-			return this.$slots.default[0];
 		}
+
+		return this.$slots.default()[0];
 	}
 };
 </script>

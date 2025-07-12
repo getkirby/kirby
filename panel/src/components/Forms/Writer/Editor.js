@@ -4,6 +4,7 @@ import { Schema, DOMParser, DOMSerializer } from "prosemirror-model";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { inputRules, undoInputRule } from "prosemirror-inputrules";
+import { toRaw } from "vue";
 
 // Prosemirror utils
 import utils from "./Utils";
@@ -520,7 +521,7 @@ export default class Editor extends Emitter {
 	}
 
 	setSelection(from = 0, to = 0) {
-		const { doc, tr } = this.state;
+		const { doc, tr } = toRaw(this.state);
 		const resolvedFrom = utils.minMax(from, 0, doc.content.size);
 		const resolvedEnd = utils.minMax(to, 0, doc.content.size);
 		const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);

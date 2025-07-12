@@ -1,4 +1,3 @@
-import Vue from "vue";
 import { isObject } from "@/helpers/object.js";
 import isComponent from "@/helpers/isComponent.js";
 
@@ -18,9 +17,14 @@ import section from "@/mixins/section.js";
  */
 export const installComponent = (app, name, component) => {
 	// make sure component has something to show
-	if (!component.template && !component.render && !component.extends) {
+	if (
+		!component.template &&
+		!component.render &&
+		!component.setup &&
+		!component.extends
+	) {
 		throw new Error(
-			`Plugin component "${name}" is not providing any template or render method, neither is it extending a component. The component has not been registered.`
+			`Plugin component "${name}" is not providing any template, render or setup method, neither is it extending a component. The component has not been registered.`
 		);
 	}
 
@@ -34,7 +38,7 @@ export const installComponent = (app, name, component) => {
 	component = resolveComponentMixins(component);
 
 	// check if the component is replacing a core component
-	if (isComponent(name) === true) {
+	if (isComponent(name, app) === true) {
 		window.console.warn(`Plugin is replacing "${name}"`);
 	}
 
@@ -106,7 +110,7 @@ export const resolveComponentExtension = (app, name, component) => {
 	}
 
 	// only extend if referenced component exists
-	if (isComponent(component.extends) === false) {
+	if (isComponent(component.extends, app) === false) {
 		window.console.warn(
 			`Problem with plugin trying to register component "${name}": cannot extend non-existent component "${component.extends}"`
 		);
@@ -117,13 +121,7 @@ export const resolveComponentExtension = (app, name, component) => {
 		return component;
 	}
 
-	component.extends = app.options.components[component.extends].extend({
-		options: component,
-		components: {
-			...app.options.components,
-			...(component.components ?? {})
-		}
-	});
+	component.extends = app.component(component.extends);
 
 	return component;
 };
@@ -148,24 +146,30 @@ export const resolveComponentMixins = (component) => {
 
 	component.mixins = component.mixins
 		.map((mixin) => {
-			// mixin got referenced by name
-			if (typeof mixin === "string" && mixins[mixin] !== undefined) {
-				// component inherits from a parent component:
-				// make sure to only include the mixin if the parent component
-				// hasn't already included it (to avoid duplicate mixins)
-				if (component.extends) {
-					const extended = Vue.extend(component.extends);
-					const inherited = new extended().$options.mixins ?? [];
-
-					if (inherited.includes(mixins[mixin]) === true) {
-						return;
-					}
-				}
-
-				return mixins[mixin];
+			// mixin is already an object
+			if (typeof mixin !== "string") {
+				return mixin;
 			}
 
-			return mixin;
+			// referenced mixin doesn't exist
+			if (mixins[mixin] === undefined) {
+				window.console.warn(
+					`Plugin trying to register component "${component.name}": cannot extend non-existent mixin "${mixin}"`
+				);
+				return;
+			}
+
+			// component inherits from a parent component:
+			// make sure to only include the mixin if the parent component
+			// hasn't already included it (to avoid duplicate mixins)
+			if (component.extends) {
+				const inherited = component.extends.mixins ?? [];
+				if (inherited.includes(mixins[mixin]) === true) {
+					return;
+				}
+			}
+
+			return mixins[mixin];
 		})
 		.filter((mixin) => mixin !== undefined);
 
@@ -181,7 +185,7 @@ export const resolveComponentMixins = (component) => {
  */
 export const resolveComponentRender = (component) => {
 	if (component.template) {
-		component.render = null;
+		delete component.render;
 	}
 
 	return component;

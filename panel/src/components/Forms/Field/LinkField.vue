@@ -193,7 +193,7 @@ export default {
 	mounted() {
 		this.$events.on("click", this.onOutsideClick);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("click", this.onOutsideClick);
 	},
 	methods: {

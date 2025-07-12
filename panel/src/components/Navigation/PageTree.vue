@@ -70,15 +70,15 @@ export default {
 				return false;
 			}
 
-			this.$set(item, "loading", true);
+			item.loading = true;
 
 			// children have not been loaded yet
 			if (typeof item.children === "string") {
 				item.children = await this.load(item.children);
 			}
 
-			this.$set(item, "open", true);
-			this.$set(item, "loading", false);
+			item.open = true;
+			item.loading = false;
 		},
 		async preselect(page) {
 			// get array of parent uuids/ids

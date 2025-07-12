@@ -6,7 +6,7 @@ import vue from "eslint-plugin-vue";
 
 export default [
 	js.configs.recommended,
-	...vue.configs["flat/vue2-recommended"],
+	...vue.configs["flat/recommended"],
 
 	// Vitest rules for test files
 	{
@@ -39,12 +39,14 @@ export default [
 					multiline: "always"
 				}
 			],
+			"vue/html-indent": "off",
 			"vue/multi-word-component-names": "off",
 			"vue/require-default-prop": "off",
 			"vue/require-explicit-emits": "warn",
 			"vue/require-prop-types": "error"
 		},
 		languageOptions: {
+			sourceType: "module",
 			ecmaVersion: 2022,
 			globals: {
 				...globals.browser

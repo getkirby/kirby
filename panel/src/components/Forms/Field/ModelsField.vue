@@ -24,7 +24,7 @@
 					v-bind="collection"
 					@empty="open"
 					@sort="onInput"
-					@sortChange="$emit('change', $event)"
+					@sort-change="$emit('change', $event)"
 				>
 					<template v-if="!disabled" #options="{ index }">
 						<k-button

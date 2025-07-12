@@ -70,7 +70,7 @@ export default {
 	mounted() {
 		this.$events.on("file.delete", this.removeById);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("file.delete", this.removeById);
 	},
 	methods: {
