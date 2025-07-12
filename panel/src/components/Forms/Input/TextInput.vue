@@ -22,19 +22,3 @@ export default {
 	emits: ["input"]
 };
 </script>
-
-<style>
-.k-text-input {
-	padding: var(--input-padding);
-	border-radius: var(--input-rounded);
-}
-.k-text-input:focus {
-	outline: 0;
-}
-.k-text-input[data-font="monospace"] {
-	font-family: var(--font-mono);
-}
-.k-text-input:disabled::placeholder {
-	opacity: 0;
-}
-</style>

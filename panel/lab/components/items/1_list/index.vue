@@ -3,8 +3,11 @@
 		<k-lab-example label="List">
 			<k-items :items="items" />
 		</k-lab-example>
+		<k-lab-example label="Sortable">
+			<k-items :items="items" :sortable="true" />
+		</k-lab-example>
 		<k-lab-example label="Selectable">
-			<k-items :items="selectableItems" :selectable="true" @select="onSelect" />
+			<k-items :items="selectableItems" :selecting="true" @select="onSelect" />
 			<br />
 			<k-code>Selected: {{ selected.join(", ") }}</k-code>
 		</k-lab-example>

@@ -61,6 +61,7 @@ export default {
 	height: var(--icon-size);
 	flex-shrink: 0;
 	color: var(--icon-color);
+	fill: currentColor;
 }
 
 .k-icon[data-type="loader"] {

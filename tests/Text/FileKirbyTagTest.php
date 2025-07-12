@@ -26,7 +26,7 @@ class FileKirbyTagTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testFile()
+	public function testFile(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [
@@ -54,7 +54,7 @@ class FileKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testFileWithUUID()
+	public function testFileWithUUID(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [
@@ -84,7 +84,7 @@ class FileKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testFileDoesNotExist()
+	public function testFileDoesNotExist(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [
@@ -105,7 +105,7 @@ class FileKirbyTagTest extends TestCase
 		$this->assertSame('<p>a.jpg b</p>', $page->text()->kt()->value());
 	}
 
-	public function testFileWithDisabledDownloadOption()
+	public function testFileWithDisabledDownloadOption(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [
@@ -133,7 +133,7 @@ class FileKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testFileWithinFile()
+	public function testFileWithinFile(): void
 	{
 		$kirby = $this->app->clone([
 			'site' => [

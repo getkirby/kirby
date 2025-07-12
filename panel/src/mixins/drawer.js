@@ -11,13 +11,6 @@ export default {
 	mixins: [Header],
 	props: {
 		/**
-		 * If `true`, the drawer form is disabled
-		 */
-		disabled: {
-			default: false,
-			type: Boolean
-		},
-		/**
 		 * The default icon for the drawer header
 		 */
 		icon: String,
