@@ -3,19 +3,20 @@
 		<k-header>
 			{{ $t("search") }}
 
-			<k-input
-				ref="input"
-				slot="buttons"
-				:aria-label="$t('search')"
-				:autofocus="true"
-				:icon="isLoading ? 'loader' : 'search'"
-				:placeholder="$t('search') + ' …'"
-				:spellcheck="false"
-				:value="query"
-				class="k-search-view-input"
-				type="text"
-				@input="query = $event"
-			/>
+			<template #buttons>
+				<k-input
+					ref="input"
+					:aria-label="$t('search')"
+					:autofocus="true"
+					:icon="isLoading ? 'loader' : 'search'"
+					:placeholder="$t('search') + ' …'"
+					:spellcheck="false"
+					:value="query"
+					class="k-search-view-input"
+					type="text"
+					@input="query = $event"
+				/>
+			</template>
 		</k-header>
 		<k-tabs :tab="currentType.id" :tabs="tabs" />
 
