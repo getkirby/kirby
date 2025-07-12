@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -83,6 +84,16 @@ class LicenseTest extends TestCase
 		$this->assertSame(strtotime($date), $license->date());
 		$this->assertSame($date, $license->date('Y-m-d'));
 		$this->assertSame('1/12/2023 00:00', $license->date('d/M/yyyy HH:mm', 'intl'));
+	}
+
+	public function testDelete(): void
+	{
+		$license = new License();
+		F::write($license->root(), 'test');
+
+		$this->assertFileExists($license->root());
+		$this->assertTrue($license->delete());
+		$this->assertFileDoesNotExist($license->root());
 	}
 
 	public function testDomain(): void
@@ -355,6 +366,14 @@ class LicenseTest extends TestCase
 		// not activated
 		$license = new License();
 		$this->assertNull($license->renewal('Y-m-d'));
+	}
+
+	public function testRoot(): void
+	{
+		$this->assertSame(
+			App::instance()->root('license'),
+			License::root()
+		);
 	}
 
 	public function testSaveWhenNotActivatable(): void
