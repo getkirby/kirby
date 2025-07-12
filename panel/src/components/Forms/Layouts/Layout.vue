@@ -73,6 +73,7 @@ export default {
 		"change",
 		"copy",
 		"duplicate",
+		"paste",
 		"prepend",
 		"remove",
 		"select",

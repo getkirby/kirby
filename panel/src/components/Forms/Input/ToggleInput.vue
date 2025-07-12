@@ -37,6 +37,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	computed: {
 		labelText() {
 			// Add fallback for text

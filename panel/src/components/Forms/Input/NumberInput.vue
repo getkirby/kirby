@@ -51,6 +51,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	data() {
 		return {
 			number: this.format(this.value),

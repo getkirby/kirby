@@ -32,6 +32,7 @@ import counter from "@/mixins/forms/counter.js";
 export default {
 	mixins: [Field, Input, TextInput, counter],
 	inheritAttrs: false,
+	emits: ["input"],
 	computed: {
 		inputType() {
 			if (this.$helper.isComponent(`k-${this.type}-input`)) {

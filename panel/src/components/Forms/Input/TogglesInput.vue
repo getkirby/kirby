@@ -57,6 +57,7 @@ export const props = {
 
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	mounted() {
 		if (this.$props.autofocus) {
 			this.focus();

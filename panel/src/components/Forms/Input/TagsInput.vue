@@ -77,6 +77,7 @@ export const props = {
 export default {
 	extends: Multiselect,
 	mixins: [props],
+	emits: ["input"],
 	data() {
 		return {
 			editing: null

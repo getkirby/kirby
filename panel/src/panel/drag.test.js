@@ -18,9 +18,7 @@ describe.concurrent("panel.drag", () => {
 		expect(drag.key()).toStrictEqual("drag");
 		expect(drag.state()).toStrictEqual(state);
 	});
-});
 
-describe.concurrent("panel.drag", () => {
 	it("should store drag info", async () => {
 		const panel = Panel.create();
 		const drag = Drag(panel);

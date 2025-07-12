@@ -33,6 +33,7 @@ export default {
 			default: "phone"
 		}
 	},
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

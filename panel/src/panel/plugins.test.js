@@ -37,7 +37,7 @@ describe.concurrent("panel.plugins", () => {
 		});
 
 		expect(plugins.components["k-test"]).toStrictEqual(component);
-		expect(isComponent("k-test")).true;
+		expect(isComponent("k-test")).toBe(true);
 	});
 
 	it("should install plugin", async () => {

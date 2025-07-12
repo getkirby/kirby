@@ -93,13 +93,13 @@ export const props = {
 			type: Array,
 			default: () => []
 		}
-	},
-	emits: ["input"]
+	}
 };
 
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		return {
 			blocks: this.value ?? [],

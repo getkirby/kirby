@@ -46,6 +46,7 @@ export const props = {
 
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	computed: {
 		choices() {
 			return this.options.map((option, index) => {

@@ -21,6 +21,7 @@ export default {
 			})
 		}
 	},
+	emits: ["cancel", "submit"],
 	methods: {
 		submit() {
 			const url = this.values.href ?? "";

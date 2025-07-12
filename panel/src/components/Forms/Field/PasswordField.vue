@@ -40,6 +40,7 @@ export default {
 			default: "key"
 		}
 	},
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

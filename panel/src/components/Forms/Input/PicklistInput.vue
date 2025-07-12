@@ -122,8 +122,7 @@ export const props = {
 			type: [Array, String],
 			default: () => []
 		}
-	},
-	emits: ["create", "escape", "input"]
+	}
 };
 
 /**
@@ -139,6 +138,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["create", "escape", "input"],
 	data() {
 		return {
 			display: this.search.display ?? true,

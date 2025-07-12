@@ -26,6 +26,7 @@ import { props as NumberInput } from "../Input/NumberInput.vue";
 export default {
 	mixins: [Field, Input, NumberInput],
 	inheritAttrs: false,
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

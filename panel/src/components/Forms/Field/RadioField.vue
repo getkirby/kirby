@@ -30,6 +30,7 @@ import { props as RadioInput } from "../Input/RadioInput.vue";
 export default {
 	mixins: [Field, Input, RadioInput],
 	inheritAttrs: false,
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

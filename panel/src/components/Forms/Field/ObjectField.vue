@@ -74,6 +74,7 @@ export default {
 		fields: [Object, Array],
 		value: [String, Object]
 	},
+	emits: ["input"],
 	data() {
 		return {
 			object: {}

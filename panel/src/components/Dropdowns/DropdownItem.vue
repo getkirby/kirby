@@ -27,7 +27,7 @@ export default {
 		link: String,
 		target: String
 	},
-	emit: ["click"],
+	emits: ["click"],
 	methods: {
 		focus() {
 			this.$refs.button.focus();

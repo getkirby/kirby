@@ -27,6 +27,7 @@ export default {
 		theme: {
 			default: "negative"
 		}
-	}
+	},
+	emits: ["cancel", "submit"]
 };
 </script>

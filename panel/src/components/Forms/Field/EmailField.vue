@@ -48,6 +48,7 @@ export default {
 			default: "email"
 		}
 	},
+	emits: ["input"],
 	computed: {
 		mailto() {
 			return this.value?.length > 0 ? "mailto:" + this.value : null;

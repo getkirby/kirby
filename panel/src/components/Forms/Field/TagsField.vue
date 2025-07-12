@@ -29,6 +29,7 @@ import counter from "@/mixins/forms/counter.js";
 export default {
 	mixins: [Field, Input, TagsInput, counter],
 	inheritAttrs: false,
+	emits: ["input"],
 	computed: {
 		hasNoOptions() {
 			return this.options.length === 0 && this.accept === "options";

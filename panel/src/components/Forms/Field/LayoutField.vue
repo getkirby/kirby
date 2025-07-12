@@ -56,6 +56,7 @@ import { autofocus } from "@/mixins/props.js";
 export default {
 	mixins: [FieldProps, LayoutsProps, autofocus],
 	inheritAttrs: false,
+	emits: ["input"],
 	computed: {
 		hasFieldsets() {
 			return this.$helper.object.length(this.fieldsets) > 0;
