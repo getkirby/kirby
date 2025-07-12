@@ -36,13 +36,14 @@ class View
 		$request = App::instance()->request();
 		$only    = $request->header('X-Fiber-Only') ?? $request->get('_only');
 
-		if (empty($only) === false) {
-			return static::applyOnly($data, $only);
-		}
-
 		$globals =
 			$request->header('X-Fiber-Globals') ??
 			$request->get('_globals');
+
+
+		if (empty($only) === false) {
+			return static::applyOnly($data, $only);
+		}
 
 		if (empty($globals) === false) {
 			return static::applyGlobals($data, $globals);
@@ -103,12 +104,16 @@ class View
 		}
 
 		// otherwise filter data based on
-		// dot notation, e.g. `$props.tab.columns`
+		// dot notation, e.g. `props.tab.columns`
 		$result = [];
 
-		// check if globals are requested and need to be merged
-		if (Str::contains($only, '$')) {
-			$data = array_merge_recursive(static::globals(), $data);
+		// take care of potentially requested globals
+		$globals     = static::globals();
+		$keysEntries = A::map($onlyKeys, fn ($key) => Str::split($key, '.')[0]);
+
+		// check if the keys from `_only` include any global id as entry
+		if (array_intersect($keysEntries, array_keys($globals)) !== []) {
+			$data = array_merge_recursive($globals, $data);
 		}
 
 		// make sure the data is already resolved to make
@@ -148,7 +153,7 @@ class View
 
 		// shared data for all requests
 		return [
-			'$direction' => function () use ($kirby, $multilang, $language, $user) {
+			'direction' => function () use ($kirby, $multilang, $language, $user) {
 				if ($multilang === true && $language && $user) {
 					$default = $kirby->defaultLanguage();
 
@@ -160,19 +165,19 @@ class View
 					}
 				}
 			},
-			'$dialog'   => null,
-			'$drawer'   => null,
-			'$language' => fn () => match ($multilang) {
+			'dialog'   => null,
+			'drawer'   => null,
+			'language' => fn () => match ($multilang) {
 				false => null,
 				true  => $language?->toArray()
 			},
-			'$languages' => fn (): array => match ($multilang) {
+			'languages' => fn (): array => match ($multilang) {
 				false => [],
 				true  => $kirby->languages()->values(
 					fn ($language) => $language->toArray()
 				)
 			},
-			'$menu'       => function () use ($options, $permissions) {
+			'menu'       => function () use ($options, $permissions) {
 				$menu = new Menu(
 					$options['areas'] ?? [],
 					$permissions,
@@ -180,12 +185,12 @@ class View
 				);
 				return $menu->entries();
 			},
-			'$permissions' => $permissions,
-			'$license'     => $kirby->system()->license()->status()->value(),
-			'$multilang'   => $multilang,
-			'$searches'    => static::searches($options['areas'] ?? [], $permissions),
-			'$url'         => $kirby->request()->url()->toString(),
-			'$user'        => fn () => match ($user) {
+			'permissions' => $permissions,
+			'license'     => $kirby->system()->license()->status()->value(),
+			'multilang'   => $multilang,
+			'searches'    => static::searches($options['areas'] ?? [], $permissions),
+			'url'         => $kirby->request()->url()->toString(),
+			'user'        => fn () => match ($user) {
 				null    => null,
 				default =>  [
 					'email'    => $user->email(),
@@ -195,7 +200,7 @@ class View
 					'username' => $user->username(),
 				]
 			},
-			'$view' => function () use ($kirby, $options, $view) {
+			'view' => function () use ($kirby, $options, $view) {
 				$defaults = [
 					'breadcrumb' => [],
 					'code'       => 200,
@@ -260,7 +265,7 @@ class View
 		$kirby = App::instance();
 
 		return [
-			'$config' => fn () => [
+			'config' => fn () => [
 				'api'         => [
 					'methodOverride' => $kirby->option('api.methodOverride', true)
 				],
@@ -270,7 +275,7 @@ class View
 				'translation' => $kirby->option('panel.language', 'en'),
 				'upload'      => Upload::chunkSize(),
 			],
-			'$system' => function () use ($kirby) {
+			'system' => function () use ($kirby) {
 				$locales = [];
 
 				foreach ($kirby->translations() as $translation) {
@@ -286,7 +291,7 @@ class View
 					'title'   => $kirby->site()->title()->or('Kirby Panel')->toString()
 				];
 			},
-			'$translation' => function () use ($kirby) {
+			'translation' => function () use ($kirby) {
 				$translation = match ($user = $kirby->user()) {
 					null    => $kirby->translation($kirby->panelLanguage()),
 					default => $kirby->translation($user->language())
@@ -300,7 +305,7 @@ class View
 					'weekday'   => Date::firstWeekday($translation->locale())
 				];
 			},
-			'$urls' => fn () => [
+			'urls' => fn () => [
 				'api'  => $kirby->url('api'),
 				'site' => $kirby->url('index')
 			]
@@ -341,7 +346,7 @@ class View
 			// query parameters are set
 			$fiber = static::apply($fiber);
 
-			return Panel::json($fiber, $fiber['$view']['code'] ?? 200);
+			return Panel::json($fiber, $fiber['view']['code'] ?? 200);
 		}
 
 		// load globals for the full document response

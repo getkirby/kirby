@@ -41,7 +41,7 @@ describe.concurrent("request headers", () => {
 			{},
 			{
 				csrf: "dev",
-				globals: ["$language"],
+				globals: ["language"],
 				referrer: "/test"
 			}
 		);
@@ -50,7 +50,7 @@ describe.concurrent("request headers", () => {
 			"content-type": "application/json",
 			"x-csrf": "dev",
 			"x-fiber": true,
-			"x-fiber-globals": "$language",
+			"x-fiber-globals": "language",
 			"x-fiber-referrer": "/test"
 		};
 

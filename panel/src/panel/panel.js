@@ -314,19 +314,7 @@ export default {
 	 * @param {Object} state
 	 */
 	set(state = {}) {
-		/**
-		 * Old fiber requests use $ as key prefix
-		 * This will remove the dollar sign in keys first
-		 * @todo remove this as soon as fiber requests
-		 * no longer use $ as prefix.
-		 */
-		state = Object.fromEntries(
-			Object.entries(state).map(([k, v]) => [k.replace("$", ""), v])
-		);
-
-		/**
-		 * Register all globals
-		 */
+		// Register all globals
 		for (const global in globals) {
 			// 1. check for a new state
 			// 2. jump back to the previous

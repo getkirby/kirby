@@ -46,7 +46,7 @@ class Document
 		$uri = new Uri($kirby->url('panel'));
 
 		// proper response code
-		$code = $fiber['$view']['code'] ?? 200;
+		$code = $fiber['view']['code'] ?? 200;
 
 		// load the main Panel view template
 		$body = Tpl::load($kirby->root('kirby') . '/views/panel.php', [

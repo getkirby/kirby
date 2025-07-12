@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Closure;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
@@ -60,31 +61,31 @@ class ViewTest extends TestCase
 	{
 		// not included
 		$data = View::apply([]);
-		$this->assertArrayNotHasKey('$translation', $data);
+		$this->assertArrayNotHasKey('translation', $data);
 
 		// via query
 		$this->app = $this->app->clone([
 			'request' => [
 				'query' => [
-					'_globals' => '$translation'
+					'_globals' => 'translation'
 				]
 			]
 		]);
 
 		$data = View::apply([]);
-		$this->assertArrayHasKey('$translation', $data);
+		$this->assertArrayHasKey('translation', $data);
 
 		// via header
 		$this->app = $this->app->clone([
 			'request' => [
 				'headers' => [
-					'X-Fiber-Globals' => '$translation'
+					'X-Fiber-Globals' => 'translation'
 				]
 			]
 		]);
 
 		$data = View::apply([]);
-		$this->assertArrayHasKey('$translation', $data);
+		$this->assertArrayHasKey('translation', $data);
 
 		// empty globals
 		$data = ['foo' => 'bar'];
@@ -140,7 +141,7 @@ class ViewTest extends TestCase
 		$this->app = $this->app->clone([
 			'request' => [
 				'query' => [
-					'_only' => 'a,$urls',
+					'_only' => 'a,urls',
 				]
 			]
 		]);
@@ -154,7 +155,7 @@ class ViewTest extends TestCase
 
 		$expected = [
 			'a' => 'A',
-			'$urls' => [
+			'urls' => [
 				'api' => '/api',
 				'site' => '/'
 			]
@@ -198,7 +199,7 @@ class ViewTest extends TestCase
 		$this->app = $this->app->clone([
 			'request' => [
 				'query' => [
-					'_only' => 'a,$urls.site',
+					'_only' => 'a,urls.site',
 				]
 			]
 		]);
@@ -212,7 +213,7 @@ class ViewTest extends TestCase
 
 		$expected = [
 			'a' => 'A',
-			'$urls' => [
+			'urls' => [
 				'site' => '/'
 			]
 		];
@@ -225,19 +226,19 @@ class ViewTest extends TestCase
 		// without custom data
 		$data = View::data();
 
-		$this->assertInstanceOf('Closure', $data['$menu']);
-		$this->assertInstanceOf('Closure', $data['$direction']);
-		$this->assertInstanceOf('Closure', $data['$language']);
-		$this->assertInstanceOf('Closure', $data['$languages']);
-		$this->assertSame([], $data['$permissions']);
-		$this->assertSame('missing', $data['$license']);
-		$this->assertFalse($data['$multilang']);
-		$this->assertSame('/', $data['$url']);
-		$this->assertInstanceOf('Closure', $data['$user']);
-		$this->assertInstanceOf('Closure', $data['$view']);
+		$this->assertInstanceOf('Closure', $data['menu']);
+		$this->assertInstanceOf('Closure', $data['direction']);
+		$this->assertInstanceOf('Closure', $data['language']);
+		$this->assertInstanceOf('Closure', $data['languages']);
+		$this->assertSame([], $data['permissions']);
+		$this->assertSame('missing', $data['license']);
+		$this->assertFalse($data['multilang']);
+		$this->assertSame('/', $data['url']);
+		$this->assertInstanceOf('Closure', $data['user']);
+		$this->assertInstanceOf('Closure', $data['view']);
 
 		// default view settings
-		$view = A::apply($data)['$view'];
+		$view = A::apply($data)['view'];
 
 		$this->assertSame([], $view['breadcrumb']);
 		$this->assertSame(200, $view['code']);
@@ -265,7 +266,7 @@ class ViewTest extends TestCase
 		// without custom data
 		$data = View::data();
 
-		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $data['$url']);
+		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $data['url']);
 	}
 
 	public function testDataWithCustomProps(): void
@@ -278,7 +279,7 @@ class ViewTest extends TestCase
 
 		$data = A::apply($data);
 
-		$this->assertSame($props, $data['$view']['props']);
+		$this->assertSame($props, $data['view']['props']);
 	}
 
 	public function testDataWithLanguages(): void
@@ -299,7 +300,7 @@ class ViewTest extends TestCase
 		// resolve lazy data
 		$data = A::apply($data);
 
-		$this->assertTrue($data['$multilang']);
+		$this->assertTrue($data['multilang']);
 
 		$expected = [
 			[
@@ -322,9 +323,9 @@ class ViewTest extends TestCase
 			]
 		];
 
-		$this->assertSame($expected, $data['$languages']);
-		$this->assertSame($expected[0], $data['$language']);
-		$this->assertNull($data['$direction']);
+		$this->assertSame($expected, $data['languages']);
+		$this->assertSame($expected[0], $data['language']);
+		$this->assertNull($data['direction']);
 	}
 
 	public function testDataWithDirection(): void
@@ -353,7 +354,7 @@ class ViewTest extends TestCase
 		$data = A::apply($data);
 
 
-		$this->assertSame('rtl', $data['$direction']);
+		$this->assertSame('rtl', $data['direction']);
 	}
 
 	public function testDataWithAuthenticatedUser(): void
@@ -376,8 +377,8 @@ class ViewTest extends TestCase
 			'username' => 'kirby@getkirby.com'
 		];
 
-		$this->assertSame($expected, $data['$user']);
-		$this->assertSame($this->app->user()->role()->permissions()->toArray(), $data['$permissions']);
+		$this->assertSame($expected, $data['user']);
+		$this->assertSame($this->app->user()->role()->permissions()->toArray(), $data['permissions']);
 	}
 
 	public function testError(): void
@@ -422,18 +423,18 @@ class ViewTest extends TestCase
 		// defaults
 		$globals = View::globals();
 
-		$this->assertInstanceOf('Closure', $globals['$config']);
-		$this->assertInstanceOf('Closure', $globals['$system']);
-		$this->assertInstanceOf('Closure', $globals['$system']);
-		$this->assertInstanceOf('Closure', $globals['$translation']);
-		$this->assertInstanceOf('Closure', $globals['$urls']);
+		$this->assertInstanceOf(Closure::class, $globals['config']);
+		$this->assertInstanceOf(Closure::class, $globals['system']);
+		$this->assertInstanceOf(Closure::class, $globals['system']);
+		$this->assertInstanceOf(Closure::class, $globals['translation']);
+		$this->assertInstanceOf(Closure::class, $globals['urls']);
 
 		// defaults after apply
 		$globals     = A::apply($globals);
-		$config      = $globals['$config'];
-		$system      = $globals['$system'];
-		$translation = $globals['$translation'];
-		$urls        = $globals['$urls'];
+		$config      = $globals['config'];
+		$system      = $globals['system'];
+		$translation = $globals['translation'];
+		$urls        = $globals['urls'];
 
 		// $config
 		$this->assertFalse($config['debug']);
@@ -475,7 +476,7 @@ class ViewTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 		$globals = View::globals();
 		$globals = A::apply($globals);
-		$this->assertSame('de', $globals['$translation']['code']);
+		$this->assertSame('de', $globals['translation']['code']);
 	}
 
 	public function testResponseAsHTML(): void
@@ -550,8 +551,8 @@ class ViewTest extends TestCase
 		$json      = json_decode($response->body(), true);
 
 		$this->assertSame(404, $response->code());
-		$this->assertSame('k-error-view', $json['$view']['component']);
-		$this->assertSame('Test', $json['$view']['props']['error']);
+		$this->assertSame('k-error-view', $json['view']['component']);
+		$this->assertSame('Test', $json['view']['props']['error']);
 	}
 
 	public function testResponseFromException(): void
@@ -570,8 +571,8 @@ class ViewTest extends TestCase
 		$json      = json_decode($response->body(), true);
 
 		$this->assertSame(500, $response->code());
-		$this->assertSame('k-error-view', $json['$view']['component']);
-		$this->assertSame('Test', $json['$view']['props']['error']);
+		$this->assertSame('k-error-view', $json['view']['component']);
+		$this->assertSame('Test', $json['view']['props']['error']);
 	}
 
 	public function testResponseFromUnsupportedResult(): void
@@ -589,8 +590,8 @@ class ViewTest extends TestCase
 		$json     = json_decode($response->body(), true);
 
 		$this->assertSame(500, $response->code());
-		$this->assertSame('k-error-view', $json['$view']['component']);
-		$this->assertSame('Invalid Panel response', $json['$view']['props']['error']);
+		$this->assertSame('k-error-view', $json['view']['component']);
+		$this->assertSame('Invalid Panel response', $json['view']['props']['error']);
 	}
 
 	public function testSearches(): void
