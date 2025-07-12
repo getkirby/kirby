@@ -4,17 +4,16 @@ namespace Kirby\Query;
 
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
- * @coversDefaultClass \Kirby\Query\Expression
+ * @todo Deprecate in v6
  */
+#[CoversClass(Expression::class)]
 class ExpressionTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 * @covers ::factory
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$expression = Expression::factory('a ? b : c');
 		$this->assertCount(5, $expression->parts);
@@ -25,10 +24,7 @@ class ExpressionTest extends TestCase
 		$this->assertInstanceOf(Argument::class, $expression->parts[4]);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryWithoutComparison()
+	public function testFactoryWithoutComparison(): void
 	{
 		$expression = Expression::factory('foo.bar(true).url');
 		$this->assertInstanceOf(Segments::class, $expression);
@@ -72,11 +68,8 @@ class ExpressionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::parse
-	 * @dataProvider parseProvider
-	 */
-	public function testParse(string $expression, array $result)
+	#[DataProvider('parseProvider')]
+	public function testParse(string $expression, array $result): void
 	{
 		$parts = Expression::parse($expression);
 		$this->assertSame($result, $parts);
@@ -96,30 +89,21 @@ class ExpressionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @dataProvider resolveProvider
-	 */
-	public function testResolve(string $input, mixed $result)
+	#[DataProvider('resolveProvider')]
+	public function testResolve(string $input, mixed $result): void
 	{
 		$expression = Expression::factory($input);
 		$this->assertSame($result, $expression->resolve());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObject()
+	public function testResolveWithObject(): void
 	{
 		$expression = Expression::factory('user.isYello(true) ? user.says("me") : "you"');
 		$data = ['user' => new TestUser()];
 		$this->assertSame('me', $expression->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveIncompleteTernary()
+	public function testResolveIncompleteTernary(): void
 	{
 		$expression = Expression::factory('"a" ? "b"');
 

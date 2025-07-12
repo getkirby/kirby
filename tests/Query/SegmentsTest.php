@@ -5,18 +5,17 @@ namespace Kirby\Query;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 /**
- * @coversDefaultClass \Kirby\Query\Segments
+ * @todo Deprecate in v6
  */
+#[CoversClass(Segments::class)]
 class SegmentsTest extends TestCase
 {
-	/**
-	 * @covers ::factory
-	 * @covers ::__construct
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$segments = Segments::factory('a.b.c');
 		$this->assertCount(5, $segments);
@@ -54,20 +53,14 @@ class SegmentsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::parse
-	 * @dataProvider parseProvider
-	 */
-	public function testParse(string $string, array $result)
+	#[DataProvider('parseProvider')]
+	public function testParse(string $string, array $result): void
 	{
 		$segments = Segments::parse($string);
 		$this->assertSame($result, $segments);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveNestedArray1Level()
+	public function testResolveNestedArray1Level(): void
 	{
 		$segments = Segments::factory('user.username');
 		$data  = [
@@ -79,10 +72,7 @@ class SegmentsTest extends TestCase
 		$this->assertSame('homer', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveNestedNumericKeys()
+	public function testResolveNestedNumericKeys(): void
 	{
 		$segments = Segments::factory('user.0');
 		$data  = [
@@ -98,10 +88,7 @@ class SegmentsTest extends TestCase
 		$this->assertSame('marge', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveNestedArrayWithNumericMethods()
+	public function testResolveNestedArrayWithNumericMethods(): void
 	{
 		$segments = Segments::factory('user0.profiles1.mastodon');
 		$data  = [
@@ -115,10 +102,7 @@ class SegmentsTest extends TestCase
 		$this->assertSame('@homer', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveNestedArray2Levels()
+	public function testResolveNestedArray2Levels(): void
 	{
 		$segments = Segments::factory('user.profiles.mastodon');
 		$data  = [
@@ -143,22 +127,16 @@ class SegmentsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @dataProvider scalarProvider
-	 */
-	public function testResolveWithArrayScalarValue($scalar)
+	#[DataProvider('scalarProvider')]
+	public function testResolveWithArrayScalarValue($scalar): void
 	{
 		$segments = Segments::factory('value');
 		$data     = ['value' => $scalar];
 		$this->assertSame($scalar, $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @dataProvider scalarProvider
-	 */
-	public function testResolveWithArrayScalarValue2Level($scalar)
+	#[DataProvider('scalarProvider')]
+	public function testResolveWithArrayScalarValue2Level($scalar): void
 	{
 		$segments = Segments::factory('parent.value');
 		$data     =  [
@@ -169,11 +147,8 @@ class SegmentsTest extends TestCase
 		$this->assertSame($scalar, $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @dataProvider scalarProvider
-	 */
-	public function testResolveWithArrayScalarValueError($scalar, $type)
+	#[DataProvider('scalarProvider')]
+	public function testResolveWithArrayScalarValueError($scalar, $type): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to method/property "method" on ' . $type);
@@ -183,20 +158,14 @@ class SegmentsTest extends TestCase
 		$segments->resolve($data);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithArrayNullValue()
+	public function testResolveWithArrayNullValue(): void
 	{
 		$segments = Segments::factory('value');
 		$data     = ['value' => null];
 		$this->assertNull($segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithArrayNullValueError()
+	public function testResolveWithArrayNullValueError(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to method/property "method" on null');
@@ -206,20 +175,14 @@ class SegmentsTest extends TestCase
 		$segments->resolve($data);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithArrayCallClosure()
+	public function testResolveWithArrayCallClosure(): void
 	{
 		$segments = Segments::factory('closure("test")');
 		$data     = ['closure' => fn ($arg) => strtoupper($arg)];
 		$this->assertSame('TEST', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithArrayCallError()
+	public function testResolveWithArrayCallError(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Cannot access array element "editor" with arguments');
@@ -229,10 +192,7 @@ class SegmentsTest extends TestCase
 		$segments->resolve($data);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithArrayMissingKey1()
+	public function testResolveWithArrayMissingKey1(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing property "editor" on array');
@@ -241,10 +201,7 @@ class SegmentsTest extends TestCase
 		$segments->resolve();
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithArrayMissingKey2()
+	public function testResolveWithArrayMissingKey2(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing property "editor" on array');
@@ -253,30 +210,21 @@ class SegmentsTest extends TestCase
 		$segments->resolve();
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObject1Level()
+	public function testResolveWithObject1Level(): void
 	{
 		$segments = Segments::factory('user.username');
 		$data     = ['user' => new TestUser()];
 		$this->assertSame('homer', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function tesResolvetWithObject2Level()
+	public function tesResolvetWithObject2Level(): void
 	{
 		$segments = Segments::factory('user.profiles.mastodon');
 		$data     = ['user' => new TestUser()];
 		$this->assertSame('@homer', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectProperty()
+	public function testResolveWithObjectProperty(): void
 	{
 		$obj = new stdClass();
 		$obj->test = 'testtest';
@@ -284,10 +232,7 @@ class SegmentsTest extends TestCase
 		$this->assertSame('testtest', $segments->resolve(compact('obj')));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectPropertyCallError()
+	public function testResolveWithObjectPropertyCallError(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing method "test" on object');
@@ -298,20 +243,14 @@ class SegmentsTest extends TestCase
 		$segments->resolve(compact('obj'));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithInteger()
+	public function testResolveWithObjectMethodWithInteger(): void
 	{
 		$segments = Segments::factory('user.age(12)');
 		$data     = ['user' => new TestUser()];
 		$this->assertSame(12, $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithBoolean()
+	public function testResolveWithObjectMethodWithBoolean(): void
 	{
 		// true
 		$segments = Segments::factory('user.isYello(true)');
@@ -324,20 +263,14 @@ class SegmentsTest extends TestCase
 		$this->assertFalse($segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithNull()
+	public function testResolveWithObjectMethodWithNull(): void
 	{
 		$segments = Segments::factory('user.brainDump(null)');
 		$data     = ['user' => new TestUser()];
 		$this->assertNull($segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithString()
+	public function testResolveWithObjectMethodWithString(): void
 	{
 		// double quotes
 		$segments = Segments::factory('user.says("hello world")');
@@ -350,10 +283,7 @@ class SegmentsTest extends TestCase
 		$this->assertSame('hello world', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithEmptyString()
+	public function testResolveWithObjectMethodWithEmptyString(): void
 	{
 		// double quotes
 		$segments = Segments::factory('user.says("")');
@@ -366,10 +296,7 @@ class SegmentsTest extends TestCase
 		$this->assertSame('', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithStringEscape()
+	public function testResolveWithObjectMethodWithStringEscape(): void
 	{
 		// double quotes
 		$segments = Segments::factory('user.says("hello \" world")');
@@ -382,10 +309,7 @@ class SegmentsTest extends TestCase
 		$this->assertSame("hello ' world", $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithMultipleArguments()
+	public function testResolveWithObjectMethodWithMultipleArguments(): void
 	{
 		$segments = Segments::factory('user.says("hello", "world")');
 		$data     = ['user' => new TestUser()];
@@ -402,10 +326,7 @@ class SegmentsTest extends TestCase
 		$this->assertSame('hello\' : world"', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithMultipleArgumentsAndComma()
+	public function testResolveWithObjectMethodWithMultipleArgumentsAndComma(): void
 	{
 		$segments = Segments::factory('user.says("hello,", "world")');
 		$data     = ['user' => new TestUser()];
@@ -417,10 +338,7 @@ class SegmentsTest extends TestCase
 		$this->assertSame('hello," : world', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithMultipleArgumentsAndDot()
+	public function testResolveWithObjectMethodWithMultipleArgumentsAndDot(): void
 	{
 		$segments = Segments::factory('user.says("I like", "love.jpg")');
 		$data     = ['user' => new TestUser()];
@@ -432,60 +350,42 @@ class SegmentsTest extends TestCase
 		$this->assertSame('I " like : love."jpg', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithTrickyCharacters()
+	public function testResolveWithObjectMethodWithTrickyCharacters(): void
 	{
 		$segments = Segments::factory("user.likes(['(', ',', ']', '[', ')']).self.brainDump('hello')");
 		$data     = ['user' => new TestUser()];
 		$this->assertSame('hello', $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithArray()
+	public function testResolveWithObjectMethodWithArray(): void
 	{
 		$segments = Segments::factory('user.self.check("gin", "tonic", ["gin", "tonic", "cucumber"])');
 		$data     = ['user' => new TestUser()];
 		$this->assertTrue($segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithObjectMethodAsParameter()
+	public function testResolveWithObjectMethodWithObjectMethodAsParameter(): void
 	{
 		$segments = Segments::factory('user.self.check("gin", "tonic", user.drink)');
 		$data     = ['user' => new TestUser()];
 		$this->assertTrue($segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithNestedMethodCall()
+	public function testResolveWithNestedMethodCall(): void
 	{
 		$segments = Segments::factory('user.check("gin", "tonic", user.array("gin", "tonic").args)');
 		$data     = ['user' => new TestUser()];
 		$this->assertTrue($segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMethodWithObjectMethodAsParameterAndMoreLevels()
+	public function testResolveWithObjectMethodWithObjectMethodAsParameterAndMoreLevels(): void
 	{
 		$segments = Segments::factory("user.likes([',']).likes(user.brainDump(['(', ',', ']', ')', '['])).self");
 		$data     = ['user' => $user = new TestUser()];
 		$this->assertSame($user, $segments->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMissingMethod1()
+	public function testResolveWithObjectMissingMethod1(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing method/property "username" on object');
@@ -495,10 +395,7 @@ class SegmentsTest extends TestCase
 		$segments->resolve($data);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithObjectMissingMethod2()
+	public function testResolveWithObjectMissingMethod2(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing method "username" on object');
@@ -508,10 +405,7 @@ class SegmentsTest extends TestCase
 		$segments->resolve($data);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithOptionalChaining()
+	public function testResolveWithOptionalChaining(): void
 	{
 		$segments = Segments::factory('user?.says("hi")');
 		$data     = ['user' => new TestUser()];
