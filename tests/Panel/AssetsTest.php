@@ -71,8 +71,7 @@ class AssetsTest extends TestCase
 
 	public function setDevMode(): void
 	{
-		// dev mode
-		$app = $this->app->clone([
+		$this->app->clone([
 			'request' => [
 				'url' => 'http://sandbox.test'
 			],
@@ -85,6 +84,12 @@ class AssetsTest extends TestCase
 
 		// add vite file
 		touch(static::VITE_RUNNING_PATH);
+	}
+
+	public function setPluginDevMode(): void
+	{
+		Dir::make($this->app->root('plugins'));
+		touch($this->app->root('plugins') . '/.vite-running');
 	}
 
 	public function testCss(): void
@@ -455,6 +460,16 @@ class AssetsTest extends TestCase
 		$vue    = $assets->vue();
 
 		$this->assertSame('http://sandbox.test:3000/node_modules/vue/dist/vue.esm-browser.js', $vue);
+	}
+
+	public function testVueInPluginDevMode(): void
+	{
+		$this->setPluginDevMode();
+
+		$assets = new Assets();
+		$vue    = $assets->vue();
+
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm-browser.js', $vue);
 	}
 
 	public function testVueWithDisabledTemplateCompiler(): void
