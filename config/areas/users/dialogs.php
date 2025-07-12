@@ -7,7 +7,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
-use Kirby\Panel\UserTotpDisableDialog;
+use Kirby\Panel\Ui\Dialogs\UserTotpDisableDialog;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
