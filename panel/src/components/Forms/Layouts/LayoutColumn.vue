@@ -9,6 +9,7 @@
 		<k-blocks
 			ref="blocks"
 			v-bind="{
+				disabled,
 				endpoints,
 				fieldsets,
 				fieldsetGroups,
@@ -22,7 +23,10 @@
 </template>
 
 <script>
+import { disabled } from "@/mixins/props.js";
+
 export const props = {
+	mixins: [disabled],
 	props: {
 		/**
 		 * API endpoints

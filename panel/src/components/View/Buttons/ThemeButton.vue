@@ -52,13 +52,13 @@ export default {
 				{
 					text: this.$t("theme.automatic"),
 					icon: "wand",
-					disabled: this.setting === null,
-					click: () => this.$panel.theme.reset()
+					disabled: this.setting === "system",
+					click: () => this.$panel.theme.set("system")
 				}
 			];
 		},
 		setting() {
-			return this.$panel.theme.setting;
+			return this.$panel.theme.setting ?? this.$panel.theme.config;
 		}
 	}
 };
