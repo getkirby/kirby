@@ -1,7 +1,6 @@
 <?php
 
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Panel\Ui\Stat;
+use Kirby\Panel\Ui\Stats;
 
 return [
 	'mixins' => [
@@ -11,20 +10,8 @@ return [
 		/**
 		 * Array or query string for reports. Each report needs a `label` and `value` and can have additional `info`, `link`, `icon` and `theme` settings.
 		 */
-		'reports' => function ($reports = null) {
-			if ($reports === null) {
-				return [];
-			}
-
-			if (is_string($reports) === true) {
-				$reports = $this->model()->query($reports);
-			}
-
-			if (is_array($reports) === false) {
-				return [];
-			}
-
-			return $reports;
+		'reports' => function (array|string|null $reports = null) {
+			return $reports ?? [];
 		},
 		/**
 		 * The size of the report cards. Available sizes: `tiny`, `small`, `medium`, `large`
@@ -34,24 +21,18 @@ return [
 		}
 	],
 	'computed' => [
-		'reports' => function () {
-			$reports = [];
-			$model   = $this->model();
-
-			foreach ($this->reports as $report) {
-				try {
-					$stat = Stat::from(
-						model: $model,
-						input: $report
-					);
-				} catch (InvalidArgumentException) {
-					continue;
-				}
-
-				$reports[] = $stat->props();
-			}
-
-			return $reports;
+		'stats' => function (): Stats {
+			return $this->stats ??= Stats::from(
+				model: $this->model(),
+				reports: $this->reports(),
+				size: $this->size()
+			);
+		},
+		'reports' => function (): array {
+			return $this->stats->reports();
+		},
+		'size' => function (): string {
+			return $this->stats->size();
 		}
 	]
 ];

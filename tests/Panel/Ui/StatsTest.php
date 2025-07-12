@@ -49,7 +49,11 @@ class StatsTest extends TestCase
 
 		$this->assertSame([
 			[
+				'icon'  => null,
+				'info'  => null,
 				'label' => 'test',
+				'link'  => null,
+				'theme' => null,
 				'value' => 'test',
 			],
 		], $stats->reports());
@@ -98,7 +102,11 @@ class StatsTest extends TestCase
 
 		$this->assertSame([
 			[
+				'icon'  => null,
+				'info'  => null,
 				'label' => 'test',
+				'link'  => null,
+				'theme' => null,
 				'value' => 'test',
 			],
 		], $stats->reports());

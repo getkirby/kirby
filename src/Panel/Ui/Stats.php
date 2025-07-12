@@ -77,7 +77,7 @@ class Stats extends Component
 				continue;
 			}
 
-			$reports[] = array_filter($stat->props());
+			$reports[] = $stat->props();
 		}
 
 		return $reports;
