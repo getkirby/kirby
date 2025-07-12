@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\TestCase;
 use stdClass;
+use TypeError;
 
 class MockPageForStatsSection extends Page
 {
@@ -100,13 +101,14 @@ class StatsSectionTest extends TestCase
 
 	public function testReportsFromInvalidValue(): void
 	{
+		$this->expectException(TypeError::class);
+		$this->expectExceptionMessage('Invalid value for "reports');
+
 		$section = new Section('stats', [
 			'name'     => 'test',
 			'model'    => $this->model,
 			'reports'  => new stdClass()
 		]);
-
-		$this->assertSame([], $section->reports());
 	}
 
 
