@@ -3,7 +3,7 @@
 		<!-- @slot Items to be sortable via drag and drop -->
 		<slot />
 
-		<template v-if="$slots.footer()">
+		<template v-if="$slots.footer">
 			<!-- @slot Non-sortable footer -->
 			<slot name="footer" />
 		</template>
@@ -186,7 +186,7 @@ export default {
 			});
 		},
 		disableFooter() {
-			if (this.$slots.footer()) {
+			if (this.$slots.footer) {
 				// get as many nodes from the back of the list
 				// as footer elements are present
 				const nodes = [...this.$el.childNodes].slice(
