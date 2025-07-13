@@ -29,7 +29,7 @@ export default {
 					for (const listener of listeners) {
 						this.$el.addEventListener(event, listener, {
 							// use an abort signal to ensure that all listeners
-							// are removed when the component is destroyed
+							// are removed when the component is unmounted
 							signal: this.__listenersController.signal
 						});
 					}
@@ -37,7 +37,7 @@ export default {
 			}
 		}
 	},
-	destroyed() {
+	unmounted() {
 		this.__listenersController.abort();
 	}
 };
