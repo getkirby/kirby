@@ -23,7 +23,7 @@ class MockChallenge extends Challenge
 #[CoversClass(Challenge::class)]
 class ChallengeTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth.Challenge';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Auth.Challenge';
 
 	protected Session $session;
 

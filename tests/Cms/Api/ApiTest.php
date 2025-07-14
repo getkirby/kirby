@@ -12,7 +12,7 @@ use Kirby\Toolkit\I18n;
 
 class ApiTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Api';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Api';
 
 	protected Api $api;
 	protected string $locale;

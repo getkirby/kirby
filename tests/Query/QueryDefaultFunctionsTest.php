@@ -12,7 +12,7 @@ use Kirby\Toolkit\I18n;
 
 class QueryDefaultFunctionsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
+	public const string TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
 
 	protected function setUp(): void
 	{

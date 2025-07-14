@@ -10,7 +10,7 @@ use ReflectionMethod;
 #[CoversClass(FileCache::class)]
 class FileCacheTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cache.FileCache';
+	public const string TMP = KIRBY_TMP_DIR . '/Cache.FileCache';
 
 	public function tearDown(): void
 	{

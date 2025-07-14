@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileChangeSortTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileChangeSort';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileChangeSort';
 
 	public function testChangeSortHooks(): void
 	{

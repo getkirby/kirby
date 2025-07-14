@@ -28,7 +28,7 @@ class Block extends Item implements Stringable
 	use HasMethods;
 	use HasModels;
 
-	public const ITEMS_CLASS = Blocks::class;
+	public const string ITEMS_CLASS = Blocks::class;
 
 	protected Content $content;
 	protected bool $isHidden;

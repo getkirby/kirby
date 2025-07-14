@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Handler::class)]
 class HandlerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Data.Handler';
+	public const string TMP = KIRBY_TMP_DIR . '/Data.Handler';
 
 	public function testReadWrite(): void
 	{

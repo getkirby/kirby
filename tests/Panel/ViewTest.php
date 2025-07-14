@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(View::class)]
 class ViewTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.View';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.View';
 
 	public function setUp(): void
 	{

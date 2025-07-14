@@ -40,13 +40,7 @@ class File extends ModelWithContent
 	use HasSiblings;
 	use IsFile;
 
-	public const CLASS_ALIAS = 'file';
-
-	/**
-	 * All registered file methods
-	 * @todo Remove when support for PHP 8.2 is dropped
-	 */
-	public static array $methods = [];
+	public const string CLASS_ALIAS = 'file';
 
 	/**
 	 * Cache for the initialized blueprint object

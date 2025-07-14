@@ -18,9 +18,6 @@ use TypeError;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
- *
- * @todo remove the following psalm suppress when PHP >= 8.2 required
- * @psalm-suppress UndefinedAttributeClass
  */
 #[AllowDynamicProperties]
 class Component
@@ -160,7 +157,7 @@ class Component
 			if (
 				isset($this->$name) === true &&
 				array_key_exists($name, get_object_vars($this)) === true &&
-				array_key_exists($name, get_class_vars(get_class($this))) === false
+				array_key_exists($name, get_class_vars($this::class)) === false
 			) {
 				unset($this->$name);
 			}

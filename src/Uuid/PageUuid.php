@@ -18,7 +18,7 @@ use Kirby\Cms\Page;
  */
 class PageUuid extends ModelUuid
 {
-	protected const TYPE = 'page';
+	protected const string TYPE = 'page';
 
 	/**
 	 * @var \Kirby\Cms\Page|null

@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageMoveTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageMove';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageMove';
 
 	public function testMove(): void
 	{

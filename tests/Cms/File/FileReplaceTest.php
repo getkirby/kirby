@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class FileReplaceTest extends ModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileReplace';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileReplace';
 
 	public function testReplace(): void
 	{

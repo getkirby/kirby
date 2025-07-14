@@ -10,7 +10,7 @@ use ReflectionProperty;
 #[CoversClass(PagePermissions::class)]
 class PagePermissionsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PagePermissions';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PagePermissions';
 
 	public function setUp(): void
 	{

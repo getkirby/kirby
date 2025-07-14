@@ -9,7 +9,7 @@ use Kirby\TestCase;
 
 class LinkKirbyTagTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Text.LinkKirbyTag';
+	public const string TMP = KIRBY_TMP_DIR . '/Text.LinkKirbyTag';
 
 	public function setUp(): void
 	{

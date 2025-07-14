@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileCopyTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileCopy';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileCopy';
 
 	public function testCopyRenewUuid(): void
 	{

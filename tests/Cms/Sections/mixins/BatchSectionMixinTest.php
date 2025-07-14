@@ -9,7 +9,7 @@ use Kirby\TestCase;
 
 class BatchSectionMixinTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.BatchSectionMixin';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.BatchSectionMixin';
 
 	protected Page $page;
 

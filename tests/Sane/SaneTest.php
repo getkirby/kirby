@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Sane::class)]
 class SaneTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Sane.Sane';
+	public const string TMP = KIRBY_TMP_DIR . '/Sane.Sane';
 
 	protected static string $type = 'sane';
 

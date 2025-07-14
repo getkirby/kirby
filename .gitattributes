@@ -6,6 +6,7 @@
 # tests
 .codecov.yml export-ignore
 .php-cs-fixer.dist.php export-ignore
+composer-unused.php export-ignore
 phpbench.json export-ignore
 phpmd.xml.dist export-ignore
 phpunit.ci.xml export-ignore

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Site::class)]
 class SitePreviewUrlTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.SitePreviewUrl';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.SitePreviewUrl';
 
 	public static function previewUrlProvider(): array
 	{

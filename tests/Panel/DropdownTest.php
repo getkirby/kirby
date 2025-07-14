@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Dropdown::class)]
 class DropdownTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Dropdown';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Dropdown';
 
 	public function setUp(): void
 	{

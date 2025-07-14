@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class PagesSectionTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PagesSection';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PagesSection';
 
 	public function setUp(): void
 	{

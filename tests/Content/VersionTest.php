@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Version::class)]
 class VersionTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Content.Version';
+	public const string TMP = KIRBY_TMP_DIR . '/Content.Version';
 
 	public function testContentMultiLanguage(): void
 	{

@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Search::class)]
 class SearchTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Search';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Search';
 
 	public function setUp(): void
 	{

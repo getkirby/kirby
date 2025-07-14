@@ -35,13 +35,7 @@ class User extends ModelWithContent
 	use HasSiblings;
 	use UserActions;
 
-	public const CLASS_ALIAS = 'user';
-
-	/**
-	 * All registered user methods
-	 * @todo Remove when support for PHP 8.2 is dropped
-	 */
-	public static array $methods = [];
+	public const string CLASS_ALIAS = 'user';
 
 	protected UserBlueprint|null $blueprint = null;
 	protected array $credentials;

@@ -6,7 +6,7 @@ use Kirby\Filesystem\Dir;
 
 class STest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.STest';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.STest';
 
 	public function setUp(): void
 	{

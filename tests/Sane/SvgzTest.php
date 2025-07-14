@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Svgz::class)]
 class SvgzTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Sane.Svgz';
+	public const string TMP = KIRBY_TMP_DIR . '/Sane.Svgz';
 
 	protected static string $type = 'svgz';
 

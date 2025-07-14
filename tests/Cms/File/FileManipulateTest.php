@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class FileManipulateTest extends ModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileManipulate';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileManipulate';
 
 	public function testManipulate(): void
 	{

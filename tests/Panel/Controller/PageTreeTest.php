@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PageTree::class)]
 class PageTreeTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.PageTree';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.PageTree';
 	public PageTree $tree;
 
 	public function setUp(): void

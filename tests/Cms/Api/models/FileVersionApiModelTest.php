@@ -7,7 +7,7 @@ use Kirby\Filesystem\Dir;
 
 class FileVersionApiModelTest extends ApiModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileVersionApiModel';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileVersionApiModel';
 
 	protected File $file;
 	protected Site|Page|User $parent;

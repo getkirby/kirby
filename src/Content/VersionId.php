@@ -25,12 +25,12 @@ class VersionId implements Stringable
 	/**
 	 * Latest stable version of the content
 	 */
-	public const LATEST = 'latest';
+	public const string LATEST = 'latest';
 
 	/**
 	 * Latest changes to the content (optional)
 	 */
-	public const CHANGES = 'changes';
+	public const string CHANGES = 'changes';
 
 	/**
 	 * A global store for a version id that should be

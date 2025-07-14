@@ -9,7 +9,7 @@ use Kirby\TestCase;
 
 class RemoteTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Http.Remote';
+	public const string TMP = KIRBY_TMP_DIR . '/Http.Remote';
 
 	protected string|false $cwd;
 	protected array $defaults;

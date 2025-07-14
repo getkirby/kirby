@@ -21,7 +21,7 @@ use Kirby\Toolkit\Str;
  */
 class Query
 {
-	public const ERROR_INVALID_QUERY_METHOD = 0;
+	public const int ERROR_INVALID_QUERY_METHOD = 0;
 
 	/**
 	 * The object which should be fetched for each row

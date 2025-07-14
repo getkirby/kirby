@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Html::class)]
 class HtmlTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Sane.Html';
+	public const string TMP = KIRBY_TMP_DIR . '/Sane.Html';
 
 	protected static string $type = 'html';
 
