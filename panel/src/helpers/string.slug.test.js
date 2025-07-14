@@ -71,7 +71,7 @@ describe.concurrent("$helper.string.slug()", () => {
 	});
 
 	it("should produces safe filenames", () => {
-		const result = slug("-what a_view@2x.png", [], "a-z0-9@._-");
+		const result = slug("-what a_view@2x.png-", [], "a-z0-9@._-");
 		expect(result).toBe("what-a_view@2x.png");
 	});
 
