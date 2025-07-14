@@ -25,6 +25,8 @@ class StatTest extends TestCase
 	): void {
 		$stat = new Stat(
 			...[
+				'label' => 'Test Label',
+				'value' => 'Test Value',
 				'model' => $this->model,
 				$prop => 'Test'
 			]
@@ -33,7 +35,11 @@ class StatTest extends TestCase
 		$this->assertSame('Test', $stat->$prop());
 
 		if ($nullable === true) {
-			$stat = new Stat(model: $this->model);
+			$stat = new Stat(
+				model: $this->model,
+				label: 'Test Label',
+				value: 'Test Value',
+			);
 			$this->assertNull($stat->$prop());
 		}
 
@@ -41,6 +47,8 @@ class StatTest extends TestCase
 			$stat = new Stat(
 				...[
 					'model' => $this->model,
+					'label' => 'Test Label',
+					'value' => 'Test Value',
 					$prop => [
 						'en' => 'Test'
 					]
@@ -54,6 +62,8 @@ class StatTest extends TestCase
 			$stat = new Stat(
 				...[
 					'model' => $this->model,
+					'label' => 'Test Label',
+					'value' => 'Test Value',
 					$prop => '{{ page.slug }}'
 				]
 			);
@@ -64,10 +74,20 @@ class StatTest extends TestCase
 
 	public function testComponent(): void
 	{
-		$stat = new Stat(model: $this->model);
+		$stat = new Stat(
+			model: $this->model,
+			label: 'Test Label',
+			value: 'Test Value'
+		);
 		$this->assertSame('k-stat', $stat->component());
 
-		$stat = new Stat(model: $this->model, component: 'k-stat-test');
+		$stat = new Stat(
+			model: $this->model,
+			label: 'Test Label',
+			value: 'Test Value',
+			component: 'k-stat-test'
+		);
+
 		$this->assertSame('k-stat-test', $stat->component());
 	}
 
@@ -95,7 +115,7 @@ class StatTest extends TestCase
 	{
 		$this->assertProp(
 			prop: 'label',
-			nullable: true,
+			nullable: false,
 			translatable: true,
 			queryable: true
 		);
@@ -125,9 +145,9 @@ class StatTest extends TestCase
 	{
 		$this->assertProp(
 			prop: 'value',
-			nullable: true,
+			nullable: false,
 			translatable: true,
-			queryable: true
+			queryable: true,
 		);
 	}
 }

@@ -18,13 +18,13 @@ class Stat extends Component
 {
 	public function __construct(
 		public ModelWithContent $model,
+		public array|string $label,
+		public array|string $value,
 		public string $component = 'k-stat',
 		public string|null $icon = null,
 		public array|string|null $info = null,
-		public array|string|null $label = null,
 		public array|string|null $link = null,
 		public string|null $theme = null,
-		public array|string|null $value = null,
 	) {
 	}
 
@@ -41,7 +41,9 @@ class Stat extends Component
 
 		return new static(...[
 			...$input,
-			'model' => $model
+			'model' => $model,
+			'label' => $input['label'],
+			'value' => $input['value'],
 		]);
 	}
 
@@ -59,7 +61,9 @@ class Stat extends Component
 
 		return new static(...[
 			...$stat,
-			'model' => $model
+			'model' => $model,
+			'label' => $stat['label'],
+			'value' => $stat['value'],
 		]);
 	}
 
@@ -75,7 +79,7 @@ class Stat extends Component
 		);
 	}
 
-	public function label(): string|null
+	public function label(): string
 	{
 		return $this->query(
 			$this->translate($this->label)
@@ -120,7 +124,7 @@ class Stat extends Component
 		return I18n::translate($prop, $prop);
 	}
 
-	public function value(): string|null
+	public function value(): string
 	{
 		return $this->query(
 			$this->translate($this->value)
