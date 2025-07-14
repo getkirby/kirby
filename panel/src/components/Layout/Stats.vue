@@ -6,12 +6,7 @@
 </template>
 
 <script>
-/**
- * Grid of reports which can be used to display multiple stats in a row  (e.g. as dashboard for a shop, analytics, etc.)
- *
- * @example <k-stats :reports="[{ value: 50, label: 'days' }, { value: 10, label: 'hours'}]" />
- */
-export default {
+export const props = {
 	props: {
 		/**
 		 * List of stat reports. See `k-stat` for all options of each report.
@@ -29,6 +24,15 @@ export default {
 			default: "large"
 		}
 	}
+};
+
+/**
+ * Grid of reports which can be used to display multiple stats in a row  (e.g. as dashboard for a shop, analytics, etc.)
+ *
+ * @example <k-stats :reports="[{ value: 50, label: 'days' }, { value: 10, label: 'hours'}]" />
+ */
+export default {
+	mixins: [props]
 };
 </script>
 
