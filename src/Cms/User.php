@@ -38,12 +38,6 @@ class User extends ModelWithContent
 
 	public const CLASS_ALIAS = 'user';
 
-	/**
-	 * All registered user methods
-	 * @todo Remove when support for PHP 8.2 is dropped
-	 */
-	public static array $methods = [];
-
 	protected UserBlueprint|null $blueprint = null;
 	protected array $credentials;
 	protected string|null $email;
