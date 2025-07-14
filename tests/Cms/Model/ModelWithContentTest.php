@@ -102,7 +102,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 #[CoversClass(ModelWithContent::class)]
 class ModelWithContentTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.ModelWithContent';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.ModelWithContent';
 
 	public static function modelsProvider(): array
 	{

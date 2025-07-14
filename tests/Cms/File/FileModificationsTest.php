@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FileModifications::class)]
 class FileModificationsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileModifications';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileModifications';
 
 	public function setUp(): void
 	{

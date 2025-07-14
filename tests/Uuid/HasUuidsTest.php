@@ -4,7 +4,7 @@ namespace Kirby\Uuid;
 
 class HasUuidsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Uuid.HasUuids';
+	public const string TMP = KIRBY_TMP_DIR . '/Uuid.HasUuids';
 
 	public function testfindByUuid(): void
 	{

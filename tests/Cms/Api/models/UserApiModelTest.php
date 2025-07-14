@@ -6,7 +6,7 @@ use Kirby\Cms\Api\ApiModelTestCase;
 
 class UserApiModelTest extends ApiModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.UserApiModel';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserApiModel';
 
 	protected User $user;
 

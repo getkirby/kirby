@@ -14,7 +14,7 @@ use stdClass;
 #[CoversClass(Blueprint::class)]
 class BlueprintTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Blueprint';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Blueprint';
 
 	protected ModelWithContent $model;
 

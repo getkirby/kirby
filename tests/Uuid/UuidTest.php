@@ -20,7 +20,7 @@ class TestUuid extends Uuid
 #[CoversClass(Uuid::class)]
 class UuidTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Uuid.Uuid';
+	public const string TMP = KIRBY_TMP_DIR . '/Uuid.Uuid';
 
 	public function testConstructUuidString(): void
 	{

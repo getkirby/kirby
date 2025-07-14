@@ -20,7 +20,7 @@ namespace Kirby\Cms;
  */
 class Structure extends Items
 {
-	public const ITEM_CLASS = StructureObject::class;
+	public const string ITEM_CLASS = StructureObject::class;
 
 	/**
 	 * All registered structure methods

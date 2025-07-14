@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Dialog::class)]
 class DialogTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Dialog';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Dialog';
 
 	public function setUp(): void
 	{

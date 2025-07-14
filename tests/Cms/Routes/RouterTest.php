@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class RouterTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Router';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Router';
 
 	public function testHomeRoute(): void
 	{

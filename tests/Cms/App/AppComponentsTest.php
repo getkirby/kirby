@@ -29,7 +29,7 @@ class CustomEmailProvider extends Email
 
 class AppComponentsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.AppComponents';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.AppComponents';
 
 	public function setUp(): void
 	{

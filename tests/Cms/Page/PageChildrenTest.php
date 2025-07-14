@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageChildrenTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChildren';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageChildren';
 
 	public function testChildren(): void
 	{

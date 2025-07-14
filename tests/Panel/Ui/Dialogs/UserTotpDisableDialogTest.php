@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserTotpDisableDialog::class)]
 class UserTotpDisableDialogTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Ui.Dialogs.UserTotpDisableDialog';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Ui.Dialogs.UserTotpDisableDialog';
 
 	protected function setUp(): void
 	{

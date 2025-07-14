@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.File';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.File';
 
 	public function testApiUrl(): void
 	{

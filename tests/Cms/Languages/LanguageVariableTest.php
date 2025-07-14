@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LanguageVariable::class)]
 class LanguageVariableTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageVariable';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.LanguageVariable';
 
 	public function setUp(): void
 	{

@@ -4,7 +4,7 @@ namespace Kirby\Uuid;
 
 class IdentifiableModelActionsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Uuid.IdentifiableModelActions';
+	public const string TMP = KIRBY_TMP_DIR . '/Uuid.IdentifiableModelActions';
 
 	public function testFileChangeName(): void
 	{

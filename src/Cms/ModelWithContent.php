@@ -40,7 +40,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * The CLASS_ALIAS is a short human-readable
 	 * version of the class name, i.e. page.
 	 */
-	public const CLASS_ALIAS = null;
+	public const string|null CLASS_ALIAS = null;
 
 	/**
 	 * Cached array of valid blueprints

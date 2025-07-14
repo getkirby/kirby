@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileContentFileDataTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileContentFileData';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileContentFileData';
 
 	public function testContentFileDataInMultiLanguageMode(): void
 	{

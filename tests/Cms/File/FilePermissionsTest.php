@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FilePermissions::class)]
 class FilePermissionsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePermissions';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FilePermissions';
 
 	public function setUp(): void
 	{

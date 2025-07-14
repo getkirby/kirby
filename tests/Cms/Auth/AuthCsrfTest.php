@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Auth::class)]
 class AuthCsrfTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthCsrf';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.AuthCsrf';
 
 	protected Auth $auth;
 

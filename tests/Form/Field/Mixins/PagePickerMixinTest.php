@@ -6,7 +6,7 @@ use Kirby\Cms\Page;
 
 class PagePickerMixinTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerMixin';
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerMixin';
 
 	public function testPagesWithoutParent(): void
 	{

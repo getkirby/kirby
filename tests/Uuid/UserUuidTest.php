@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserUuid::class)]
 class UserUuidTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Uuid.UserUuid';
+	public const string TMP = KIRBY_TMP_DIR . '/Uuid.UserUuid';
 
 	public function testIndex(): void
 	{

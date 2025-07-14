@@ -6,7 +6,7 @@ use Kirby\Cms\Api\ApiCollectionTestCase;
 
 class FilesApiCollectionTest extends ApiCollectionTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FilesApiCollection';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FilesApiCollection';
 
 	public function testCollection(): void
 	{

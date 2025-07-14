@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Versions::class)]
 class VersionsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Content.Versions';
+	public const string TMP = KIRBY_TMP_DIR . '/Content.Versions';
 
 	public function testDeleteMultiLanguage(): void
 	{

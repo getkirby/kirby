@@ -10,7 +10,7 @@ use TypeError;
 #[CoversClass(Page::class)]
 class PageContentTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageContent';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageContent';
 
 	public function testContent(): void
 	{

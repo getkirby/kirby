@@ -13,7 +13,7 @@ use stdClass;
 #[CoversClass(Data::class)]
 class DataTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Data.Data';
+	public const string TMP = KIRBY_TMP_DIR . '/Data.Data';
 
 	public function testDefaultHandlers(): void
 	{

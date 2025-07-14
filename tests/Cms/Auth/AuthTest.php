@@ -13,7 +13,7 @@ use Throwable;
 #[CoversClass(Auth::class)]
 class AuthTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Auth';
 
 	protected Auth $auth;
 

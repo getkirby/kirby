@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Changes::class)]
 class ChangesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Content.Changes';
+	public const string TMP = KIRBY_TMP_DIR . '/Content.Changes';
 
 	public function setUp(): void
 	{

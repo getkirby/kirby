@@ -26,7 +26,7 @@ class StructureObject extends Item
 {
 	use HasMethods;
 
-	public const ITEMS_CLASS = Structure::class;
+	public const string ITEMS_CLASS = Structure::class;
 
 	protected Content $content;
 

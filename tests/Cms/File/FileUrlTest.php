@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class FileUrlTest extends ModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileUrl';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileUrl';
 
 	public function setUp(): void
 	{

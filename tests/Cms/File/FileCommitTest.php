@@ -8,7 +8,7 @@ use ReflectionClass;
 #[CoversClass(File::class)]
 class FileCommitTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileCommit';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileCommit';
 
 	public function testCommit(): void
 	{

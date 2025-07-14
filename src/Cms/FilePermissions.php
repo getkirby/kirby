@@ -13,7 +13,7 @@ namespace Kirby\Cms;
  */
 class FilePermissions extends ModelPermissions
 {
-	protected const CATEGORY = 'files';
+	protected const string CATEGORY = 'files';
 
 	/**
 	 * Used to cache once determined permissions in memory

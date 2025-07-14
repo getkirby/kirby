@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(TotpChallenge::class)]
 class TotpChallengeTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth.TotpChallenge';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Auth.TotpChallenge';
 
 	public function setUp(): void
 	{

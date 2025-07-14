@@ -59,7 +59,7 @@ class App
 	use AppTranslations;
 	use AppUsers;
 
-	public const CLASS_ALIAS = 'kirby';
+	public const string CLASS_ALIAS = 'kirby';
 
 	protected static App|null $instance = null;
 	protected static string|null $version = null;

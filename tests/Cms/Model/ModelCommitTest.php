@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ModelCommit::class)]
 class ModelCommitTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.ModelCommit';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.ModelCommit';
 
 	public function setUp(): void
 	{

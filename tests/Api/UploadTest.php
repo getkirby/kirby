@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Upload::class)]
 class UploadTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.Upload';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.Upload';
 
 	public function setUp(): void
 	{

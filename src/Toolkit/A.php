@@ -469,9 +469,9 @@ class A
 		return array_map($map, $array);
 	}
 
-	public const MERGE_OVERWRITE = 0;
-	public const MERGE_APPEND    = 1;
-	public const MERGE_REPLACE   = 2;
+	public const int MERGE_OVERWRITE = 0;
+	public const int MERGE_APPEND    = 1;
+	public const int MERGE_REPLACE   = 2;
 
 	/**
 	 * Merges arrays recursively

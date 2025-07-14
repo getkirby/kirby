@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Document::class)]
 class DocumentTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Document';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Document';
 
 	public function setUp(): void
 	{

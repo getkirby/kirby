@@ -21,7 +21,7 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Items extends Collection
 {
-	public const ITEM_CLASS = Item::class;
+	public const string ITEM_CLASS = Item::class;
 
 	protected Field|null $field;
 

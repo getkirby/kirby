@@ -26,7 +26,7 @@ class UserForceLocked extends ModelUser
 #[CoversClass(Model::class)]
 class UserTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.User';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.User';
 
 	public function setUp(): void
 	{

@@ -9,7 +9,7 @@ use Kirby\TestCase;
 
 class LanguagesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Languages';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Languages';
 
 	protected Languages $languages;
 

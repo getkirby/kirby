@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class FileCreateTest extends ModelTestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileCreate';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileCreate';
 
 	public function testCreate(): void
 	{

@@ -8,7 +8,7 @@ use Kirby\Form\Field;
 
 class UserPickerMixinTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.UserPickerMixin';
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.UserPickerMixin';
 
 	public function setUp(): void
 	{

@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PagePurgeTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PagePurge';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PagePurge';
 
 	public function testPurge(): void
 	{

@@ -28,7 +28,7 @@ class Item
 {
 	use HasSiblings;
 
-	public const ITEMS_CLASS = Items::class;
+	public const string ITEMS_CLASS = Items::class;
 
 	protected Field|null $field;
 

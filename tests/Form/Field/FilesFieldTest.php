@@ -9,7 +9,7 @@ use Kirby\Cms\User;
 
 class FilesFieldTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.Languages';
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.Languages';
 
 	public function setUp(): void
 	{
