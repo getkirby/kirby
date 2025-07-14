@@ -157,7 +157,7 @@ class Component
 			if (
 				isset($this->$name) === true &&
 				array_key_exists($name, get_object_vars($this)) === true &&
-				array_key_exists($name, get_class_vars(get_class($this))) === false
+				array_key_exists($name, get_class_vars($this::class)) === false
 			) {
 				unset($this->$name);
 			}
