@@ -11,6 +11,7 @@ use Closure;
  * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ * @unstable
  *
  * Every visitor class must implement the following methods.
  * As PHP won't allow increasing the typing specificity, we

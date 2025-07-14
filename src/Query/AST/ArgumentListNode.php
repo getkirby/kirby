@@ -5,7 +5,7 @@ namespace Kirby\Query\AST;
 use Kirby\Query\Visitors\Visitor;
 
 /**
- * Represents a list of (method) arguments
+ * Represents a list of (method) arguments in the AST
  *
  * @package   Kirby Query
  * @author    Roman Steiner <roman@toastlab.ch>,
@@ -13,6 +13,7 @@ use Kirby\Query\Visitors\Visitor;
  * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ * @unstable
  */
 class ArgumentListNode extends Node
 {

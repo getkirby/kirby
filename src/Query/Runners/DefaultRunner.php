@@ -15,6 +15,7 @@ use Kirby\Query\Visitors\DefaultVisitor;
  * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ * @unstable
  */
 class DefaultRunner extends Runner
 {

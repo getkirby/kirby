@@ -29,6 +29,7 @@ use Kirby\Query\AST\VariableNode;
  * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ * @unstable
  */
 class Parser
 {

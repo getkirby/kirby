@@ -13,6 +13,7 @@ use Kirby\Query\Query;
  * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ * @unstable
  */
 abstract class Runner
 {
