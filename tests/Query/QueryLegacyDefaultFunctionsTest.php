@@ -6,28 +6,15 @@ use Kirby\Cms\App;
 use Kirby\Cms\Pages;
 use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
-use Kirby\Query\Runners\DefaultRunner;
 use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
 
-class QueryDefaultFunctionsTest extends TestCase
+class QueryLegacyDefaultFunctionsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
+	public const TMP = KIRBY_TMP_DIR . '/Query.QueryLegacyDefaultFunctions';
 
-	protected function setUp(): void
+	public function tearDown(): void
 	{
-		new App([
-			'options' => [
-				'query' => [
-					'runner' => DefaultRunner::class
-				]
-			]
-		]);
-	}
-
-	protected function tearDown(): void
-	{
-		App::destroy();
 		Dir::remove(static::TMP);
 	}
 
