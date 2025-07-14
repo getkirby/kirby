@@ -476,44 +476,38 @@ return [
 
 	// page field dialogs
 	'page.fields' => [
+		...$fields['model'],
 		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit']
 	],
 
 	// change filename
 	'page.file.changeName' => [
+		...$files['changeName'],
 		'pattern' => '(pages/.*?)/files/(:any)/changeName',
-		'load'    => $files['changeName']['load'],
-		'submit'  => $files['changeName']['submit'],
 	],
 
 	// change sort
 	'page.file.changeSort' => [
+		...$files['changeSort'],
 		'pattern' => '(pages/.*?)/files/(:any)/changeSort',
-		'load'    => $files['changeSort']['load'],
-		'submit'  => $files['changeSort']['submit'],
 	],
 
 	// change template
 	'page.file.changeTemplate' => [
+		...$files['changeTemplate'],
 		'pattern' => '(pages/.*?)/files/(:any)/changeTemplate',
-		'load'    => $files['changeTemplate']['load'],
-		'submit'  => $files['changeTemplate']['submit'],
 	],
 
 	// delete
 	'page.file.delete' => [
+		...$files['delete'],
 		'pattern' => '(pages/.*?)/files/(:any)/delete',
-		'load'    => $files['delete']['load'],
-		'submit'  => $files['delete']['submit'],
 	],
 
 	// page file field dialogs
 	'page.file.fields' => [
+		...$fields['file'],
 		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit'],
 	],
 
 	// move page
@@ -585,44 +579,38 @@ return [
 
 	// site field dialogs
 	'site.fields' => [
+		...$fields['model'],
 		'pattern' => '(site)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit'],
 	],
 
 	// change filename
 	'site.file.changeName' => [
+		...$files['changeName'],
 		'pattern' => '(site)/files/(:any)/changeName',
-		'load'    => $files['changeName']['load'],
-		'submit'  => $files['changeName']['submit'],
 	],
 
 	// change sort
 	'site.file.changeSort' => [
+		...$files['changeSort'],
 		'pattern' => '(site)/files/(:any)/changeSort',
-		'load'    => $files['changeSort']['load'],
-		'submit'  => $files['changeSort']['submit'],
 	],
 
 	// change template
 	'site.file.changeTemplate' => [
+		...$files['changeTemplate'],
 		'pattern' => '(site)/files/(:any)/changeTemplate',
-		'load'    => $files['changeTemplate']['load'],
-		'submit'  => $files['changeTemplate']['submit'],
 	],
 
 	// delete
 	'site.file.delete' => [
+		...$files['delete'],
 		'pattern' => '(site)/files/(:any)/delete',
-		'load'    => $files['delete']['load'],
-		'submit'  => $files['delete']['submit'],
 	],
 
 	// site file field dialogs
 	'site.file.fields' => [
+		...$fields['file'],
 		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit'],
 	],
 
 	// content changes
