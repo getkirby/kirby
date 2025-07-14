@@ -201,7 +201,7 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
 	string = string.replace(new RegExp("[^" + allowed + "]", "ig"), separator);
 
 	// replace slashes with dashes
-	string = string.replace("/", separator);
+	string = string.replaceAll("/", separator);
 
 	// remove groups of multiple separators
 	string = string.replace(
