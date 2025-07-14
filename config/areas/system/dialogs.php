@@ -73,8 +73,10 @@ return [
 			];
 		},
 		'submit' => function () {
+			// @codeCoverageIgnoreStart
 			App::instance()->system()->license()->delete();
 			return true;
+			// @codeCoverageIgnoreEnd
 		}
 	],
 	// license registration
