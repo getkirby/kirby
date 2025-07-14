@@ -8,7 +8,7 @@
 				{{ $t("login") }}
 			</h1>
 
-			<k-login-alert v-if="issue" @click.native="issue = null">
+			<k-login-alert v-if="issue" @click="issue = null">
 				{{ issue }}
 			</k-login-alert>
 

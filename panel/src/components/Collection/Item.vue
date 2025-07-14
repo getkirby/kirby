@@ -48,8 +48,8 @@
 		>
 			<!-- Buttons -->
 			<k-button
-				v-for="(button, buttonIndex) in buttons"
-				:key="'button-' + buttonIndex"
+				v-for="button in buttons"
+				:key="JSON.stringify(button)"
 				v-bind="button"
 			/>
 

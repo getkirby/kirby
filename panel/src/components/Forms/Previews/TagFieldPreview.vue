@@ -10,7 +10,7 @@
 		:style="$attrs.style"
 	>
 		<li>
-			<k-tag :html="html" :text="value" theme="light" @click.native.stop />
+			<k-tag :html="html" :text="value" theme="light" @click.stop />
 		</li>
 	</ul>
 </template>

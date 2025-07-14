@@ -263,7 +263,7 @@ export default {
 			this.focus();
 		}
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		this.editor.destroy();
 		this.$panel.events.off("click", this.onBlur);
 		this.$panel.events.off("focus", this.onBlur);

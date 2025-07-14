@@ -24,9 +24,9 @@
 				:removable="removable && !disabled"
 				:theme="theme"
 				name="tag"
-				@click.native.stop
-				@keypress.native.enter="edit(itemIndex, item, $event)"
-				@dblclick.native="edit(itemIndex, item, $event)"
+				@click.stop
+				@keypress.enter="edit(itemIndex, item, $event)"
+				@dblclick="edit(itemIndex, item, $event)"
 				@remove="remove(itemIndex, item)"
 			>
 				<!-- eslint-disable-next-line vue/no-v-html -->
@@ -153,7 +153,8 @@ export default {
 				// convert all values to tag objects and filter invalid tags
 				this.tags = tags.map(this.tag).filter((tag) => tag);
 			},
-			immediate: true
+			immediate: true,
+			deep: true
 		}
 	},
 	methods: {

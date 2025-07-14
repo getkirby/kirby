@@ -12,7 +12,7 @@
 				:title="button.label ?? button.title"
 				:class="['k-toolbar-button', button.class]"
 				tabindex="0"
-				@keydown.native="button.key?.($event)"
+				@keydown="button.key?.($event)"
 				@click="
 					button.dropdown?.length
 						? $refs[index + '-dropdown'][0].toggle()

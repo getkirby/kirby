@@ -1,6 +1,10 @@
-const IndexView = () => import("./IndexView.vue");
-const DocsView = () => import("./DocsView.vue");
-const PlaygroundView = () => import("./PlaygroundView.vue");
+import { defineAsyncComponent } from "vue";
+
+const IndexView = defineAsyncComponent(() => import("./IndexView.vue"));
+const DocsView = defineAsyncComponent(() => import("./DocsView.vue"));
+const PlaygroundView = defineAsyncComponent(
+	() => import("./PlaygroundView.vue")
+);
 
 export default {
 	install(app) {

@@ -5,11 +5,11 @@
 		autocomplete="off"
 		class="k-colorname-input"
 		type="text"
-		@blur.native="onBlur"
+		@blur="onBlur"
 		@input="$emit('input', $event)"
-		@paste.native="onPaste"
-		@keydown.native.meta.s.stop.prevent="onSave"
-		@keydown.native.enter="onSave"
+		@paste="onPaste"
+		@keydown.meta.s.stop.prevent="onSave"
+		@keydown.enter="onSave"
 	/>
 </template>
 

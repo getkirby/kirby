@@ -28,7 +28,7 @@
 					:text="fieldset.name"
 					size="lg"
 					@click="$emit('submit', fieldset.type)"
-					@focus.native="$emit('input', fieldset.type)"
+					@focus="$emit('input', fieldset.type)"
 				/>
 			</k-navigate>
 		</details>
@@ -116,7 +116,7 @@ export default {
 	mounted() {
 		this.$events.on("paste", this.paste);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("paste", this.paste);
 	},
 	methods: {
