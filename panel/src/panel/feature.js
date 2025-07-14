@@ -185,7 +185,7 @@ export default (panel, key, defaults) => {
 			options.url = options.url ?? this.url();
 
 			const response = await panel.get(options.url, options);
-			const state = response["$" + this.key()];
+			const state = response[this.key()];
 
 			// the state cannot be updated
 			if (!state || state.component !== this.component) {

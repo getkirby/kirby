@@ -37,18 +37,6 @@ describe.concurrent("panel", () => {
 		expect(state.user).toStrictEqual(panel.user.state());
 	});
 
-	it("should replace $ in state keys", async () => {
-		const panel = Panel.create(app);
-
-		expect(panel.license).toStrictEqual("missing");
-
-		panel.set({
-			$license: "valid"
-		});
-
-		expect(panel.license).toStrictEqual("valid");
-	});
-
 	it("should return the correct debug mode", async () => {
 		const panel = Panel.create(app);
 

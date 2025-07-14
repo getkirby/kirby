@@ -177,16 +177,16 @@ export default (panel, key, defaults) => {
 				return response;
 			}
 
-			// get details from the response object.
-			// I.e. { $dialog: { ... } }
+			// Get details from the response object,
+			// i.e. { dialog: { ... } }
 			// pass it forward to the success handler
 			// to react on elements in the response
-			return this.success(response["$" + this.key()] ?? {});
+			return this.success(response[this.key()] ?? {});
 		},
 
 		/**
 		 * This is rebuilding the previous
-		 * behaviours from the dialog mixin.
+		 * behaviors from the dialog mixin.
 		 * Most of the response handling should
 		 * be redone. But we keep it for compatibility
 		 *
