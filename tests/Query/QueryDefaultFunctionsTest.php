@@ -6,18 +6,32 @@ use Kirby\Cms\App;
 use Kirby\Cms\Pages;
 use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
+use Kirby\Query\Runners\DefaultRunner;
+use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
 
-class QueryDefaultFunctionsTest extends \Kirby\TestCase
+class QueryDefaultFunctionsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
 
-	public function tearDown(): void
+	protected function setUp(): void
 	{
+		new App([
+			'options' => [
+				'query' => [
+					'runner' => DefaultRunner::class
+				]
+			]
+		]);
+	}
+
+	protected function tearDown(): void
+	{
+		App::destroy();
 		Dir::remove(static::TMP);
 	}
 
-	public function testKirby()
+	public function testKirby(): void
 	{
 		$query = new Query('kirby');
 		$this->assertInstanceOf(App::class, $query->resolve());
@@ -26,7 +40,7 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		$this->assertIsSite($query->resolve());
 	}
 
-	public function testCollection()
+	public function testCollection(): void
 	{
 		new App([
 			'site' => [
@@ -45,7 +59,7 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		$this->assertCount(1, $collection);
 	}
 
-	public function testFile()
+	public function testFile(): void
 	{
 		new App([
 			'site' => [
@@ -73,7 +87,7 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		$this->assertNull($query->resolve());
 	}
 
-	public function testPage()
+	public function testPage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -108,7 +122,7 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		$this->assertNull($query->resolve());
 	}
 
-	public function testqr()
+	public function testqr(): void
 	{
 		$query = new Query('qr("https://getkirby.com")');
 		$qr = $query->resolve();
@@ -116,7 +130,7 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		$this->assertSame('https://getkirby.com', $qr->data);
 	}
 
-	public function testSite()
+	public function testSite(): void
 	{
 		new App([
 			'site' => [
@@ -133,7 +147,7 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		$this->assertIsPage($query->resolve());
 	}
 
-	public function testT()
+	public function testT(): void
 	{
 		I18n::$translations = [
 			'en' => ['add' => 'Add'],
@@ -152,7 +166,7 @@ class QueryDefaultFunctionsTest extends \Kirby\TestCase
 		I18n::$translations = [];
 	}
 
-	public function testUser()
+	public function testUser(): void
 	{
 		new App([
 			'users' => [

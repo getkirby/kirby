@@ -60,6 +60,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	data() {
 		return {
 			x: 0,

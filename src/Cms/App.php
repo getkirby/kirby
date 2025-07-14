@@ -445,15 +445,15 @@ class App
 		array $arguments = [],
 		string $contentType = 'html'
 	): array {
-		$name = basename(strtolower($name));
+		$name = strtolower($name);
 		$data = [];
 
 		// always use the site controller as defaults, if available
-		$site   = $this->controllerLookup('site', $contentType);
-		$site ??= $this->controllerLookup('site');
-
-		if ($site !== null) {
-			$data = (array)$site->call($this, $arguments);
+		// (unless the controller is a snippet controller)
+		if (strpos($name, '/') === false) {
+			$site   = $this->controllerLookup('site', $contentType);
+			$site ??= $this->controllerLookup('site');
+			$data   = (array)$site?->call($this, $arguments) ?? [];
 		}
 
 		// try to find a specific representation controller
@@ -462,14 +462,10 @@ class App
 		// let's try the html controller instead
 		$controller ??= $this->controllerLookup($name);
 
-		if ($controller !== null) {
-			return [
-				...$data,
-				...(array)$controller->call($this, $arguments)
-			];
-		}
-
-		return $data;
+		return [
+			...$data,
+			...(array)$controller?->call($this, $arguments) ?? []
+		];
 	}
 
 	/**
@@ -484,7 +480,11 @@ class App
 		}
 
 		// controller from site root
-		$controller   = Controller::load($this->root('controllers') . '/' . $name . '.php', $this->root('controllers'));
+		$controller = Controller::load(
+			file: $this->root('controllers') . '/' . $name . '.php',
+			in:   $this->root('controllers')
+		);
+
 		// controller from extension
 		$controller ??= $this->extension('controllers', $name);
 

@@ -15,7 +15,7 @@
 				<li v-for="(choice, index) in choices" :key="index">
 					<k-choice-input
 						v-bind="choice"
-						@click.native.stop="toggle(choice.value)"
+						@click.stop="toggle(choice.value)"
 						@input="$emit('input', choice.value)"
 					/>
 				</li>
@@ -46,6 +46,7 @@ export const props = {
 
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	computed: {
 		choices() {
 			return this.options.map((option, index) => {

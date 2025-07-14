@@ -46,6 +46,7 @@ export default {
 			type: String
 		}
 	},
+	emits: ["cancel", "input", "submit"],
 	computed: {
 		templates() {
 			return this.blueprints.map((blueprint) => {

@@ -1,12 +1,7 @@
 <template>
-	<portal v-if="visible" to="dialog">
+	<Teleport v-if="visible" to=".k-dialog-portal">
 		<form
-			:class="[
-				'k-dialog',
-				$vnode.data.class,
-				$vnode.data.staticClass,
-				$attrs.class
-			]"
+			:class="['k-dialog', $attrs.class]"
 			:data-size="size"
 			method="dialog"
 			@click.stop
@@ -33,7 +28,7 @@
 				</k-dialog-footer>
 			</slot>
 		</form>
-	</portal>
+	</Teleport>
 </template>
 
 <script>
@@ -43,7 +38,8 @@ import Dialog from "@/mixins/dialog.js";
  * Modal dialogs are used in Kirby's Panel in many places for quick actions like adding new pages, changing titles, etc. that don't necessarily need a full new view. You can create your own modals for your fields and other plugins or reuse our existing modals to invoke typical Panel actions.
  */
 export default {
-	mixins: [Dialog]
+	mixins: [Dialog],
+	emits: ["cancel", "submit"]
 };
 </script>
 

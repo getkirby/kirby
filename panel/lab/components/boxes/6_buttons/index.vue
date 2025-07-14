@@ -6,7 +6,7 @@
 				icon="add"
 				theme="empty"
 				text="Click to add something …"
-				@click.native="$panel.notification.success('Yay, you clicked the box')"
+				@click="$panel.notification.success('Yay, you clicked the box')"
 			/>
 		</k-lab-example>
 	</k-lab-examples>

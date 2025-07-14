@@ -10,10 +10,7 @@
 		@sort="$emit('sort', $event)"
 		@option="onOption"
 	>
-		<template
-			v-if="$scopedSlots.options"
-			#options="{ row: item, rowIndex: index }"
-		>
+		<template v-if="$slots.options" #options="{ row: item, rowIndex: index }">
 			<slot name="options" v-bind="{ item, index }" />
 		</template>
 	</k-table>
@@ -47,7 +44,7 @@
 					:width="item.column"
 					@click="$emit('item', item, itemIndex)"
 					@drag="onDragStart($event, item.dragText)"
-					@mouseover.native="$emit('hover', $event, item, itemIndex)"
+					@mouseover="$emit('hover', $event, item, itemIndex)"
 					@option="onOption($event, item, itemIndex)"
 					@select="onSelect(item, itemIndex)"
 				>
@@ -134,7 +131,7 @@ export default {
 			default: () => ({})
 		}
 	},
-	emits: ["change", "hover", "item", "option", "sort"],
+	emits: ["change", "hover", "item", "option", "select", "sort"],
 	computed: {
 		dragOptions() {
 			return {

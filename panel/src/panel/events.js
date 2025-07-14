@@ -362,7 +362,7 @@ export default (panel) => {
 		/**
 		 * Removes all global event listeners
 		 * from the events config. This is
-		 * used in the destroyed hook of the app
+		 * used in the unmounted hook of the app
 		 */
 		unsubscribe() {
 			for (const event in events.document) {

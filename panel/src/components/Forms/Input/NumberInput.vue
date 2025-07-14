@@ -51,6 +51,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	data() {
 		return {
 			number: this.format(this.value),
@@ -145,5 +146,8 @@ export default {
 }
 .k-number-input:focus {
 	outline: 0;
+}
+.k-number-input:disabled::placeholder {
+	opacity: 0;
 }
 </style>

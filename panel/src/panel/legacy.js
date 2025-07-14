@@ -12,14 +12,16 @@ export default {
 		/**
 		 * Some more shortcuts to the Panel's features
 		 */
-		app.prototype.$api = panel.api;
-		app.prototype.$dialog = panel.dialog.open.bind(panel.dialog);
-		app.prototype.$drawer = panel.drawer.open.bind(panel.drawer);
-		app.prototype.$dropdown = panel.dropdown.openAsync.bind(panel.dropdown);
-		app.prototype.$events = panel.events;
-		app.prototype.$go = panel.view.open.bind(panel.view);
-		app.prototype.$reload = panel.reload;
-		app.prototype.$t = panel.$t = panel.t;
-		app.prototype.$url = panel.url;
+		app.config.globalProperties.$api = panel.api;
+		app.config.globalProperties.$dialog = panel.dialog.open.bind(panel.dialog);
+		app.config.globalProperties.$drawer = panel.drawer.open.bind(panel.drawer);
+		app.config.globalProperties.$dropdown = panel.dropdown.openAsync.bind(
+			panel.dropdown
+		);
+		app.config.globalProperties.$events = panel.events;
+		app.config.globalProperties.$go = panel.view.open.bind(panel.view);
+		app.config.globalProperties.$reload = panel.reload;
+		app.config.globalProperties.$t = panel.$t = panel.t;
+		app.config.globalProperties.$url = panel.url;
 	}
 };

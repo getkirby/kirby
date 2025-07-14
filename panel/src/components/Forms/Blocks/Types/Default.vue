@@ -4,7 +4,7 @@
 		:content="content"
 		:fieldset="fieldset"
 		:style="$attrs.style"
-		@dblclick.native="$emit('open')"
+		@dblclick="$emit('open')"
 	/>
 </template>
 
@@ -36,6 +36,7 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["open", "update"],
 	methods: {
 		field(name, fallback = null) {
 			let field = null;

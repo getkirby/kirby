@@ -4,11 +4,7 @@
 		@dblclick="!fieldset.wysiwyg ? $emit('open') : null"
 	>
 		<header class="k-block-type-fields-header">
-			<k-block-title
-				:content="values"
-				:fieldset="fieldset"
-				@click.native="toggle"
-			/>
+			<k-block-title :content="values" :fieldset="fieldset" @click="toggle" />
 			<k-drawer-tabs
 				v-if="!collapsed"
 				:tab="tab"
@@ -42,6 +38,7 @@ export default {
 	props: {
 		tabs: Object
 	},
+	emits: ["open", "update"],
 	data() {
 		return {
 			collapsed: this.state(),

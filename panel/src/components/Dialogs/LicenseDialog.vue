@@ -58,7 +58,8 @@ export const props = {
  * the current state of the activated license.
  */
 export default {
-	mixins: [props]
+	mixins: [props],
+	emits: ["cancel", "submit"]
 };
 </script>
 

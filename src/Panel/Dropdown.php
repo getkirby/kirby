@@ -3,7 +3,6 @@
 namespace Kirby\Panel;
 
 use Closure;
-use Kirby\Http\Response;
 
 /**
  * The Dropdown response class handles Fiber

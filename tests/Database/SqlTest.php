@@ -5,10 +5,9 @@ namespace Kirby\Database;
 use Kirby\Database\Sql\Sqlite;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Database\Sql
- */
+#[CoversClass(Sql::class)]
 class SqlTest extends TestCase
 {
 	protected Sql $sql;
@@ -25,10 +24,7 @@ class SqlTest extends TestCase
 		$this->sql = new MockSql($this->database);
 	}
 
-	/**
-	 * @covers ::bindingName
-	 */
-	public function testBindingName()
+	public function testBindingName(): void
 	{
 		$result = $this->sql->bindingName('test_binding1');
 		$this->assertMatchesRegularExpression('/^:test_binding1_[a-zA-Z0-9]{8}$/', $result);
@@ -40,10 +36,7 @@ class SqlTest extends TestCase
 		$this->assertMatchesRegularExpression('/^:invalid_[a-zA-Z0-9]{8}$/', $result);
 	}
 
-	/**
-	 * @covers ::columnDefault
-	 */
-	public function testColumnDefault()
+	public function testColumnDefault(): void
 	{
 		$this->assertSame([
 			'query'    => null,
@@ -55,10 +48,7 @@ class SqlTest extends TestCase
 		$this->assertSame('amazing default', A::first($result['bindings']));
 	}
 
-	/**
-	 * @covers ::columnName
-	 */
-	public function testColumnName()
+	public function testColumnName(): void
 	{
 		// test with the SQLite class because of its more
 		// complex `combineIdentifier()` implementation
@@ -71,10 +61,7 @@ class SqlTest extends TestCase
 		$this->assertNull($sql->columnName('test', 'invalid.id', true));
 	}
 
-	/**
-	 * @covers ::combineIdentifier
-	 */
-	public function testCombineIdentifier()
+	public function testCombineIdentifier(): void
 	{
 		$this->assertSame('`test`.`id`', $this->sql->combineIdentifier('test', 'id'));
 		$this->assertSame('`test`.*', $this->sql->combineIdentifier('test', '*'));
@@ -82,10 +69,7 @@ class SqlTest extends TestCase
 		$this->assertSame('`test`.`id`', $this->sql->combineIdentifier('test', 'id', true));
 	}
 
-	/**
-	 * @covers ::createColumn
-	 */
-	public function testCreateColumn()
+	public function testCreateColumn(): void
 	{
 		// basic example
 		$column = $this->sql->createColumn('test', [
@@ -202,10 +186,7 @@ class SqlTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::createColumn
-	 */
-	public function testCreateColumnNoType()
+	public function testCreateColumnNoType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('No column type given for column test');
@@ -213,10 +194,7 @@ class SqlTest extends TestCase
 		$this->sql->createColumn('test', []);
 	}
 
-	/**
-	 * @covers ::createColumn
-	 */
-	public function testCreateColumnInvalidType()
+	public function testCreateColumnInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Unsupported column type: invalid');
@@ -224,7 +202,7 @@ class SqlTest extends TestCase
 		$this->sql->createColumn('test', ['type' => 'invalid']);
 	}
 
-	public function testCreateTableInner()
+	public function testCreateTableInner(): void
 	{
 		// basic example
 		$inner = $this->sql->createTableInner([
@@ -279,7 +257,7 @@ class SqlTest extends TestCase
 		$this->assertSame(['test' => true], $inner['unique']);
 	}
 
-	public function testCreateTable()
+	public function testCreateTable(): void
 	{
 		// basic example
 		$table = $this->sql->createTable('table', [
@@ -423,10 +401,7 @@ class SqlTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::quoteIdentifier
-	 */
-	public function testQuoteIdentifier()
+	public function testQuoteIdentifier(): void
 	{
 		$this->assertSame('*', $this->sql->quoteIdentifier('*'));
 		$this->assertSame('`test`', $this->sql->quoteIdentifier('test'));
@@ -435,10 +410,7 @@ class SqlTest extends TestCase
 		$this->assertSame("`another'test`", $this->sql->quoteIdentifier("another'test"));
 	}
 
-	/**
-	 * @covers ::splitIdentifier
-	 */
-	public function testSplitIdentifier()
+	public function testSplitIdentifier(): void
 	{
 		$result = $this->sql->splitIdentifier('table', 'table.column');
 		$this->assertSame(['table', 'column'], $result);
@@ -474,10 +446,7 @@ class SqlTest extends TestCase
 		$this->assertSame(['table.name', 'column.name'], $result);
 	}
 
-	/**
-	 * @covers ::splitIdentifier
-	 */
-	public function testSplitIdentifierInvalid()
+	public function testSplitIdentifierInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid identifier table.column.invalid');
@@ -485,7 +454,7 @@ class SqlTest extends TestCase
 		$this->sql->splitIdentifier('table', 'table.column.invalid');
 	}
 
-	public function testFrom()
+	public function testFrom(): void
 	{
 		$this->database->createTable('users', [
 			'test' => ['type' => 'varchar']
@@ -497,7 +466,7 @@ class SqlTest extends TestCase
 		], $this->sql->from('users'));
 	}
 
-	public function testGroup()
+	public function testGroup(): void
 	{
 		$this->database->createTable('users', [
 			'test' => ['type' => 'varchar']
@@ -509,7 +478,7 @@ class SqlTest extends TestCase
 		], $this->sql->group('test'));
 	}
 
-	public function testHaving()
+	public function testHaving(): void
 	{
 		$this->database->createTable('users', [
 			'test' => ['type' => 'varchar']
@@ -521,7 +490,7 @@ class SqlTest extends TestCase
 		], $this->sql->having('test < :value'));
 	}
 
-	public function testValueSet()
+	public function testValueSet(): void
 	{
 		$this->database->createTable('users', [
 			'name' => ['type' => 'varchar']
@@ -538,7 +507,7 @@ class SqlTest extends TestCase
 		$this->assertSame('John Doe', current($values['bindings']));
 	}
 
-	public function testValueList()
+	public function testValueList(): void
 	{
 		$this->database->createTable('users', [
 			'name' => ['type' => 'varchar']

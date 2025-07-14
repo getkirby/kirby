@@ -111,6 +111,7 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		return {
 			/**
@@ -192,7 +193,7 @@ export default {
 	mounted() {
 		this.$events.on("click", this.onOutsideClick);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("click", this.onOutsideClick);
 	},
 	methods: {

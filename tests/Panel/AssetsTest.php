@@ -71,8 +71,7 @@ class AssetsTest extends TestCase
 
 	public function setDevMode(): void
 	{
-		// dev mode
-		$app = $this->app->clone([
+		$this->app->clone([
 			'request' => [
 				'url' => 'http://sandbox.test'
 			],
@@ -85,6 +84,12 @@ class AssetsTest extends TestCase
 
 		// add vite file
 		touch(static::VITE_RUNNING_PATH);
+	}
+
+	public function setPluginDevMode(): void
+	{
+		Dir::make($this->app->root('plugins'));
+		touch($this->app->root('plugins') . '/.vite-running');
 	}
 
 	public function testCss(): void
@@ -326,7 +331,7 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$importMaps = $assets->importMaps();
 
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm.browser.min.js', $importMaps['vue']);
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm-browser.prod.js', $importMaps['vue']);
 	}
 
 	public function testJs(): void
@@ -341,14 +346,7 @@ class AssetsTest extends TestCase
 		$this->assertSame('module', $js['vendor']['type']);
 
 		$this->assertSame($base . '/js/plugins.js', $js['plugin-registry']['src']);
-		$this->assertSame('module', $js['plugin-registry']['type']);
-
-		$this->assertSame('/media/plugins/index.js?0', $js['plugins']['src']);
-		$this->assertTrue($js['plugins']['defer']);
-		$this->assertArrayNotHasKey('type', $js['plugins']);
-
 		$this->assertSame($base . '/js/index.min.js', $js['index']['src']);
-		$this->assertSame('module', $js['index']['type']);
 	}
 
 	public function testJsInDevMode(): void
@@ -361,7 +359,6 @@ class AssetsTest extends TestCase
 
 		$this->assertSame([
 			'plugin-registry' => $base . '/js/plugins.js',
-			'plugins'         => '/media/plugins/index.js?0',
 			'index'           => $base . '/src/index.js',
 			'vite'            => $base . '/@vite/client'
 		], array_map(fn ($js) => $js['src'], $js));
@@ -429,7 +426,6 @@ class AssetsTest extends TestCase
 		// js
 		$this->assertSame([
 			'plugin-registry' => $base . '/js/plugins.js',
-			'plugins'         => '/media/plugins/index.js?0',
 			'index'           => $base . '/src/index.js',
 			'vite'            => $base . '/@vite/client'
 		], array_map(fn ($js) => $js['src'], $js));
@@ -453,7 +449,7 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$vue    = $assets->vue();
 
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm.browser.min.js', $vue);
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm-browser.prod.js', $vue);
 	}
 
 	public function testVueInDevMode(): void
@@ -463,7 +459,17 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$vue    = $assets->vue();
 
-		$this->assertSame('http://sandbox.test:3000/node_modules/vue/dist/vue.esm.browser.js', $vue);
+		$this->assertSame('http://sandbox.test:3000/node_modules/vue/dist/vue.esm-browser.js', $vue);
+	}
+
+	public function testVueInPluginDevMode(): void
+	{
+		$this->setPluginDevMode();
+
+		$assets = new Assets();
+		$vue    = $assets->vue();
+
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm-browser.js', $vue);
 	}
 
 	public function testVueWithDisabledTemplateCompiler(): void
@@ -481,6 +487,6 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$vue    = $assets->vue();
 
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.runtime.esm.min.js', $vue);
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.runtime.esm-browser.prod.js', $vue);
 	}
 }

@@ -31,7 +31,8 @@ export default {
 			default: () => [],
 			type: Array
 		}
-	}
+	},
+	emits: ["action"]
 };
 </script>
 

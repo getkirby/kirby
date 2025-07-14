@@ -59,6 +59,7 @@ import { props as BlocksProps } from "@/components/Forms/Blocks/Blocks.vue";
 export default {
 	mixins: [FieldProps, BlocksProps],
 	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		return {
 			opened: []

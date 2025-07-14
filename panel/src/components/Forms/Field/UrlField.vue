@@ -49,6 +49,7 @@ export default {
 			default: "url"
 		}
 	},
+	emits: ["input"],
 	computed: {
 		isValidUrl() {
 			return (

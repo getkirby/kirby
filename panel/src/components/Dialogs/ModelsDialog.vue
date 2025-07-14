@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import { set, del } from "vue";
 import Dialog from "@/mixins/dialog.js";
 import Search from "@/mixins/search.js";
 
@@ -142,14 +141,14 @@ export default {
 			}
 
 			if (this.isSelected(item)) {
-				return del(this.selected, item.id);
+				return delete this.selected[item.id];
 			}
 
 			if (this.max && this.max <= this.$helper.object.length(this.selected)) {
 				return;
 			}
 
-			set(this.selected, item.id, item);
+			this.selected[item.id] = item;
 		}
 	}
 };

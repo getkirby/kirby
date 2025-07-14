@@ -68,6 +68,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	mounted() {
 		if (this.$props.autofocus) {
 			this.focus();
@@ -95,5 +96,8 @@ export default {
 }
 .k-string-input[data-font="monospace"] {
 	font-family: var(--font-mono);
+}
+.k-string-input:disabled::placeholder {
+	opacity: 0;
 }
 </style>

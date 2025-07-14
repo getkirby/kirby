@@ -16,8 +16,8 @@
 					:placeholder="placeholder"
 					:value="query"
 					@input="query = $event"
-					@keydown.escape.native.prevent="escape"
-					@keydown.enter.native.prevent="add"
+					@keydown.escape.prevent="escape"
+					@keydown.enter.prevent="add"
 				/>
 				<k-button
 					v-if="showCreate"
@@ -43,7 +43,7 @@
 						:value="value"
 						class="k-picklist-input-options"
 						@input="input"
-						@keydown.native.enter.prevent="enter"
+						@keydown.enter.prevent="enter"
 					/>
 				</k-input-validator>
 				<k-button
@@ -122,8 +122,7 @@ export const props = {
 			type: [Array, String],
 			default: () => []
 		}
-	},
-	emits: ["create", "escape", "input"]
+	}
 };
 
 /**
@@ -139,6 +138,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["create", "escape", "input"],
 	data() {
 		return {
 			display: this.search.display ?? true,

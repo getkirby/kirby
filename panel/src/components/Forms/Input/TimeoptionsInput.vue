@@ -76,6 +76,7 @@ export default {
 		},
 		value: String
 	},
+	emits: ["input"],
 	computed: {
 		day() {
 			return this.formatTimes([

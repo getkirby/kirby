@@ -38,22 +38,10 @@ class Snippet extends Tpl
 	protected array $capture = [];
 
 	/**
-	 * Associative array with variables that
-	 * will be set inside the snippet
-	 */
-	protected array $data;
-
-	/**
 	 * An empty dummy slots object used for snippets
 	 * that were loaded without passing slots
 	 */
 	protected static Slots|null $dummySlots = null;
-
-	/**
-	 * Full path to the PHP file of the snippet;
-	 * can be `null` for "dummy" snippets that don't exist
-	 */
-	protected string|null $file;
 
 	/**
 	 * Keeps track of the state of the snippet
@@ -73,11 +61,17 @@ class Snippet extends Tpl
 
 	/**
 	 * Creates a new snippet
+	 *
+	 * @param string|null $file Full path to the PHP file of the snippet;
+	 *                          can be `null` for "dummy" snippets
+	 *                          that don't exist
+	 * @param array $data Associative array with variables that
+	 *                    will be set inside the snippet
 	 */
-	public function __construct(string|null $file, array $data = [])
-	{
-		$this->file = $file;
-		$this->data = $data;
+	public function __construct(
+		protected string|null $file,
+		protected array $data = []
+	) {
 	}
 
 	/**
@@ -158,9 +152,9 @@ class Snippet extends Tpl
 		array $data = [],
 		bool $slots = false
 	): static|string {
-		// instead of returning empty string when `$name` is null
-		// allow rest of code to run, otherwise the wrong snippet would be closed
-		// and potential issues for nested snippets may occur
+		// instead of returning empty string when `$name` is null,
+		// allow rest of code to run, otherwise the wrong snippet would
+		// be closed and potential issues for nested snippets may occur
 		$file = $name !== null ? static::file($name) : null;
 
 		// for snippets with slots, make sure to open a new
@@ -171,7 +165,8 @@ class Snippet extends Tpl
 
 		// for snippets without slots, directly load and return
 		// the snippet's template file
-		return static::load($file, static::scope($data));
+		$data = static::scope($data);
+		return static::load($file, $data);
 	}
 
 	/**
@@ -244,10 +239,14 @@ class Snippet extends Tpl
 			$this->slots[$slotName] = new Slot($slotName, $slotContent);
 		}
 
-		// custom data overrides for the data that was passed to the snippet instance
+		// custom data overrides the data from the controller
+		// as well as the data passed to the Snippet instance
 		$data = array_replace_recursive($this->data, $data);
 
-		return static::load($this->file, static::scope($data, $this->slots()));
+		return static::load(
+			file: $this->file,
+			data: static::scope($data, $this->slots())
+		);
 	}
 
 	/**

@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { getCurrentInstance } from "vue";
 import { props as ItemsProps } from "./Items.vue";
 
 /**
@@ -77,7 +78,16 @@ export default {
 			default: false
 		}
 	},
-	emits: ["action", "change", "empty", "item", "option", "paginate", "sort"],
+	emits: [
+		"action",
+		"change",
+		"empty",
+		"item",
+		"option",
+		"paginate",
+		"select",
+		"sort"
+	],
 	computed: {
 		hasPagination() {
 			if (this.pagination === false) {
@@ -95,11 +105,14 @@ export default {
 			return true;
 		},
 		listeners() {
-			if (this.$listeners["empty"]) {
+			const instance = getCurrentInstance();
+
+			if (instance?.vnode?.props?.onEmpty !== undefined) {
 				return {
 					click: this.onEmpty
 				};
 			}
+
 			return {};
 		},
 		paginationOptions() {

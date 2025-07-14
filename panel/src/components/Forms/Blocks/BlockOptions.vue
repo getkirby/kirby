@@ -1,9 +1,5 @@
 <template>
-	<k-toolbar
-		:buttons="buttons"
-		class="k-block-options"
-		@mousedown.native.prevent
-	/>
+	<k-toolbar :buttons="buttons" class="k-block-options" @mousedown.prevent />
 </template>
 
 <script>

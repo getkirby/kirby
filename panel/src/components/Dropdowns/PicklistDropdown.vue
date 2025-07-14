@@ -5,11 +5,11 @@
 		:disabled="disabled"
 		:navigate="false"
 		class="k-picklist-dropdown"
-		@click.native.stop
+		@click.stop
 	>
 		<k-picklist-input
 			v-bind="$props"
-			@click.native.stop
+			@click.stop
 			@create="add"
 			@input="input"
 			@escape="$refs.dropdown.close()"

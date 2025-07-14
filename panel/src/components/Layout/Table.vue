@@ -116,7 +116,7 @@
 							:value="row[columnIndex]"
 							:style="{ width: width(column.width) }"
 							class="k-table-column"
-							@click.native="
+							@click="
 								onCell({
 									row,
 									rowIndex,
@@ -236,7 +236,16 @@ export default {
 		 */
 		sortable: Boolean
 	},
-	emits: ["cell", "change", "header", "input", "option", "paginate", "sort"],
+	emits: [
+		"cell",
+		"change",
+		"header",
+		"input",
+		"option",
+		"paginate",
+		"select",
+		"sort"
+	],
 	data() {
 		return {
 			values: this.rows
@@ -293,7 +302,7 @@ export default {
 		hasOptions() {
 			return (
 				this.selecting ||
-				this.$scopedSlots.options ||
+				this.$slots.options ||
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
 			);

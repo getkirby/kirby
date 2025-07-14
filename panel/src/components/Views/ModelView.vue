@@ -67,7 +67,7 @@ export default {
 		this.$events.on("model.reload", this.$reload);
 		this.$events.on("view.save", this.onViewSave);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("beforeunload", this.onBeforeUnload);
 		this.$events.off("content.save", this.onContentSave);
 		this.$events.off("keydown.left", this.toPrev);

@@ -74,6 +74,7 @@ export default {
 		fields: [Object, Array],
 		value: [String, Object]
 	},
+	emits: ["input"],
 	data() {
 		return {
 			object: {}
@@ -104,7 +105,7 @@ export default {
 			this.open();
 		},
 		cell(name, value) {
-			this.$set(this.object, name, value);
+			this.object[name] = value;
 			this.save();
 		},
 		/**
@@ -152,7 +153,7 @@ export default {
 						// sure to make them reactive if they don't
 						// exist yet
 						for (const field in value) {
-							this.$set(this.object, field, value[field]);
+							this.object[field] = value[field];
 						}
 
 						this.save();

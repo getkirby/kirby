@@ -27,6 +27,7 @@ import counter from "@/mixins/forms/counter.js";
 export default {
 	mixins: [Field, Input, WriterInput, counter],
 	inheritAttrs: false,
+	emits: ["input"],
 	computed: {
 		counterValue() {
 			const plain = this.$helper.string.stripHTML(this.value ?? "");

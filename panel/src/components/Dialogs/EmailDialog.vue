@@ -39,6 +39,7 @@ export default {
 			default: () => window.panel.t("insert")
 		}
 	},
+	emits: ["cancel", "submit"],
 	data() {
 		return {
 			values: {

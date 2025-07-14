@@ -53,12 +53,12 @@ export const props = {
 			type: [String, Boolean, Number, Object, Array],
 			default: null
 		}
-	},
-	emits: ["input", "submit"]
+	}
 };
 
 export default {
 	mixins: [props],
+	emits: ["input", "submit"],
 	computed: {
 		inputProps() {
 			return {

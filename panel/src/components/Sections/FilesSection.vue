@@ -60,7 +60,7 @@ export default {
 	mounted() {
 		this.$events.on("file.sort", this.reload);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("file.sort", this.reload);
 	},
 	methods: {

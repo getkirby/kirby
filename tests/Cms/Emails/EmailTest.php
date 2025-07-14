@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
 use PHPMailer\PHPMailer\PHPMailer as Mailer;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class EmailTest extends TestCase
 {
@@ -214,10 +216,8 @@ class EmailTest extends TestCase
 		], $email->toArray()['to']);
 	}
 
-	/**
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
+	#[RunInSeparateProcess]
+	#[PreserveGlobalState(false)]
 	public function testUserData(): void
 	{
 		$app = new App([

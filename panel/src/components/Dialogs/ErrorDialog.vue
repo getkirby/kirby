@@ -10,11 +10,11 @@
 	>
 		<k-text>{{ message }}</k-text>
 		<dl v-if="detailsList.length" class="k-error-details">
-			<template v-for="(detail, index) in detailsList">
-				<dt :key="'detail-label-' + index">
+			<template v-for="(detail, index) in detailsList" :key="'detail-' + index">
+				<dt>
 					{{ detail.label }}
 				</dt>
-				<dd :key="'detail-message-' + index">
+				<dd>
 					<template v-if="typeof detail.message === 'object'">
 						<ul>
 							<li v-for="(msg, msgIndex) in detail.message" :key="msgIndex">

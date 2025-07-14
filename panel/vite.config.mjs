@@ -2,8 +2,7 @@
 import path from "path";
 
 import { defineConfig, loadEnv } from "vite";
-import { minify } from "terser";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import kirby from "./scripts/vite-kirby.mjs";
 import postcssLightDarkFunction from "@csstools/postcss-light-dark-function";
@@ -19,7 +18,7 @@ function createAliases(proxy) {
 	if (!process.env.VITEST) {
 		// use absolute proxied url to avoid Vue being loaded twice
 		aliases.vue =
-			proxy.target + ":3000/node_modules/vue/dist/vue.esm.browser.js";
+			proxy.target + ":3000/node_modules/vue/dist/vue.esm-browser.js";
 	}
 
 	return aliases;
@@ -59,7 +58,16 @@ function createCustomServer() {
  * depending on the mode (development or build)
  */
 function createPlugins(mode) {
-	const plugins = [vue(), kirby()];
+	const plugins = [
+		vue({
+			template: {
+				compilerOptions: {
+					isCustomElement: (tag) => ["k-input-validator"].includes(tag)
+				}
+			}
+		}),
+		kirby()
+	];
 
 	// when building…
 	if (mode === "production") {
@@ -68,28 +76,15 @@ function createPlugins(mode) {
 			viteStaticCopy({
 				targets: [
 					{
-						src: "node_modules/vue/dist/vue.runtime.esm.js",
-						dest: "js",
-						rename: "vue.runtime.esm.min.js",
-						// TODO: we can simplify this in Vue 3 as a minified version
-						// is provided by Vue itself by default
-						transform: async (content) => {
-							content = content.replaceAll(
-								"process.env.NODE_ENV",
-								"'production'"
-							);
-							const minified = await minify(content);
-							return minified.code;
-						}
-					},
-					{
-						src: "node_modules/vue/dist/vue.esm.browser.min.js",
+						src: "node_modules/vue/dist/vue.esm-browser.js",
 						dest: "js"
 					},
-					// Also copy the non-minified version to the dist folder as
-					// we will expose this for plugins in dev mode with Vue 3
 					{
-						src: "node_modules/vue/dist/vue.esm.browser.js",
+						src: "node_modules/vue/dist/vue.esm-browser.prod.js",
+						dest: "js"
+					},
+					{
+						src: "node_modules/vue/dist/vue.runtime.esm-browser.prod.js",
 						dest: "js"
 					}
 				]

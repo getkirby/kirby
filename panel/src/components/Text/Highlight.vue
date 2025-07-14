@@ -26,7 +26,7 @@ export default {
 		Prism.highlightAll(this.$el);
 	},
 	render() {
-		return this.$scopedSlots.default({});
+		return this.$slots.default({});
 	}
 };
 </script>

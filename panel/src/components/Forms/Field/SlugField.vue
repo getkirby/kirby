@@ -50,6 +50,7 @@ export default {
 			default: false
 		}
 	},
+	emits: ["input"],
 	data() {
 		return {
 			slug: this.value

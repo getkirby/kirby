@@ -5,10 +5,9 @@ namespace Kirby\Database;
 use Kirby\Exception\InvalidArgumentException;
 use PDO;
 use PDOException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Database\Database
- */
+#[CoversClass(Database::class)]
 class DatabaseTest extends TestCase
 {
 	public function setUp(): void
@@ -61,12 +60,12 @@ class DatabaseTest extends TestCase
 		Database::$connections = [];
 	}
 
-	public function testInstance()
+	public function testInstance(): void
 	{
 		$this->assertSame($this->database, Database::instance());
 	}
 
-	public function testInstances()
+	public function testInstances(): void
 	{
 		// create another instance
 		$secondInstance = new Database([
@@ -80,19 +79,13 @@ class DatabaseTest extends TestCase
 		], array_values(Database::instances()));
 	}
 
-	/**
-	 * @covers ::affected
-	 */
-	public function testAffected()
+	public function testAffected(): void
 	{
 		$this->database->table('users')->delete();
 		$this->assertSame(3, $this->database->affected());
 	}
 
-	/**
-	 * @covers ::lastId
-	 */
-	public function testLastId()
+	public function testLastId(): void
 	{
 		$id = $this->database->table('users')->insert([
 			'username' => 'ringo',
@@ -106,26 +99,20 @@ class DatabaseTest extends TestCase
 		$this->assertSame($id, $this->database->lastId());
 	}
 
-	/**
-	 * @covers ::lastResult
-	 */
-	public function testLastResult()
+	public function testLastResult(): void
 	{
 		$result = $this->database->table('users')->select('*')->all();
 		$this->assertSame($result, $this->database->lastResult());
 	}
 
-	/**
-	 * @covers ::lastError
-	 */
-	public function testLastError()
+	public function testLastError(): void
 	{
 		$this->assertNull($this->database->lastError());
 		$this->database->table('users')->select('nonexisting')->all();
 		$this->assertInstanceOf(PDOException::class, $this->database->lastError());
 	}
 
-	public function testConnect()
+	public function testConnect(): void
 	{
 		$db = new Database([
 			'database' => ':memory:',
@@ -141,12 +128,12 @@ class DatabaseTest extends TestCase
 		]);
 	}
 
-	public function testConnectConnection()
+	public function testConnectConnection(): void
 	{
 		$this->assertInstanceOf(PDO::class, $this->database->connection());
 	}
 
-	public function testFail()
+	public function testFail(): void
 	{
 		$this->expectException(PDOException::class);
 
@@ -155,7 +142,7 @@ class DatabaseTest extends TestCase
 			->table('users')->select('nonexisting')->all();
 	}
 
-	public function testDropTable()
+	public function testDropTable(): void
 	{
 		$this->assertTrue($this->database->dropTable('users'));
 
@@ -163,39 +150,39 @@ class DatabaseTest extends TestCase
 		$this->database->fail()->dropTable('nonexisting');
 	}
 
-	public function testValidateTable()
+	public function testValidateTable(): void
 	{
 		$this->database->validateTable('users');
 		$this->assertTrue($this->database->dropTable('users'));
 	}
 
-	public function testMagicCall()
+	public function testMagicCall(): void
 	{
 		$this->assertCount(3, $this->database->users()->all());
 	}
 
-	public function testType()
+	public function testType(): void
 	{
 		$this->assertSame('sqlite', $this->database->type());
 	}
 
-	public function testEscape()
+	public function testEscape(): void
 	{
 		$this->assertSame("sql''inject", $this->database->escape("sql'inject"));
 	}
 
-	public function testLastQuery()
+	public function testLastQuery(): void
 	{
 		$this->database->users()->all();
 		$this->assertSame('SELECT * FROM "users"', $this->database->lastQuery());
 	}
 
-	public function testName()
+	public function testName(): void
 	{
 		$this->assertSame(':memory:', $this->database->name());
 	}
 
-	public function testCreateTable()
+	public function testCreateTable(): void
 	{
 		$this->assertFalse($this->database->createTable('test'));
 		$this->assertTrue($this->database->createTable('test', [
@@ -206,7 +193,7 @@ class DatabaseTest extends TestCase
 		]));
 	}
 
-	public function testMysqlConnector()
+	public function testMysqlConnector(): void
 	{
 		$dsn = Database::$types['mysql']['dsn'];
 		$this->assertInstanceOf('Closure', $dsn);
@@ -224,7 +211,7 @@ class DatabaseTest extends TestCase
 		$this->assertSame($expected, $connectionString);
 	}
 
-	public function testMysqlConnectorNoSocketHost()
+	public function testMysqlConnectorNoSocketHost(): void
 	{
 		$dsn = Database::$types['mysql']['dsn'];
 
@@ -234,7 +221,7 @@ class DatabaseTest extends TestCase
 		$dsn([]);
 	}
 
-	public function testMysqlConnectorNoDatabase()
+	public function testMysqlConnectorNoDatabase(): void
 	{
 		$dsn = Database::$types['mysql']['dsn'];
 
@@ -244,7 +231,7 @@ class DatabaseTest extends TestCase
 		$dsn(['host' => 'localhost']);
 	}
 
-	public function testSqliteConnector()
+	public function testSqliteConnector(): void
 	{
 		$dsn = Database::$types['sqlite']['dsn'];
 		$this->assertInstanceOf('Closure', $dsn);

@@ -7,7 +7,7 @@ import Events from "./events.js";
 import Panel from "./panel.js";
 
 describe.concurrent("panel.events.keydown", () => {
-	const panel = Panel.create();
+	const panel = Panel.create(app);
 	const events = Events(panel);
 
 	it("should fire keydown event with modifiers", async () => {

@@ -5,11 +5,8 @@
 import { describe, expect, it } from "vitest";
 import Notification from "./notification.js";
 import Panel from "./panel.js";
-import Vue from "vue";
 
 describe("panel.notification", () => {
-	window.Vue = Vue;
-
 	it("should have a default state", async () => {
 		const notification = Notification();
 
@@ -44,7 +41,7 @@ describe("panel.notification", () => {
 	});
 
 	it("should return the view context", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const notification = Notification(panel);
 
 		notification.open("test");
@@ -53,7 +50,7 @@ describe("panel.notification", () => {
 	});
 
 	it("should return the drawer context", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const notification = Notification(panel);
 
 		await panel.drawer.open({
@@ -66,7 +63,7 @@ describe("panel.notification", () => {
 	});
 
 	it("should return the dialog context", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const notification = Notification(panel);
 
 		await panel.dialog.open({
@@ -79,7 +76,7 @@ describe("panel.notification", () => {
 	});
 
 	it("should return the right icon", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const notification = Notification(panel);
 
 		notification.success("Test");
@@ -96,7 +93,7 @@ describe("panel.notification", () => {
 	});
 
 	it("should return the right theme", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const notification = Notification(panel);
 
 		notification.success("Test");
@@ -113,7 +110,7 @@ describe("panel.notification", () => {
 	});
 
 	it("should set a timer for success notifications", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const notification = Notification(panel);
 
 		notification.success("Test");
@@ -121,7 +118,7 @@ describe("panel.notification", () => {
 	});
 
 	it("should not set a timer for error notifications", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const notification = Notification(panel);
 
 		notification.error("Test");
@@ -129,7 +126,7 @@ describe("panel.notification", () => {
 	});
 
 	it("should reset the timer when closing notifications", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const notification = Notification(panel);
 
 		notification.success("Test");
@@ -140,7 +137,7 @@ describe("panel.notification", () => {
 	});
 
 	it("should convert Error objects", async () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const notification = Notification(panel);
 
 		notification.error(new Error("test"));

@@ -35,6 +35,7 @@ export default {
 	props: {
 		value: String
 	},
+	emits: ["input"],
 	computed: {
 		valueAdapted() {
 			if (this.value === "transparent") {

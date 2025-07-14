@@ -53,6 +53,7 @@ export const props = {
  */
 export default {
 	mixins: [RadioInput, props],
+	emits: ["input"],
 	computed: {
 		choices() {
 			return this.options.map((color) => ({

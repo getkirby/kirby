@@ -67,7 +67,10 @@ export const states = [
  * @since 4.0.0
  */
 export default {
-	create(plugins = {}) {
+	create(app, plugins = {}) {
+		// Vue instance
+		this.app = app;
+
 		// props
 		this.isLoading = false;
 		this.isOffline = false;
@@ -104,7 +107,7 @@ export default {
 		this.t = this.translation.translate.bind(this.translation);
 
 		// register all plugins
-		this.plugins = Plugins(window.Vue, plugins);
+		this.plugins = Plugins(this.app, plugins);
 
 		// set initial state
 		this.set(window.fiber);
@@ -116,7 +119,13 @@ export default {
 		// Turn the entire panel object
 		// reactive. This will only be applied
 		// to objects and arrays. Methods won't be touched.
-		return reactive(this);
+		const panel = reactive(this);
+
+		// register the single source of truth
+		// for all Vue components
+		this.app.config.globalProperties.$panel = panel;
+
+		return panel;
 	},
 
 	/**
@@ -314,9 +323,7 @@ export default {
 	 * @param {Object} state
 	 */
 	set(state = {}) {
-		/**
-		 * Register all globals
-		 */
+		// Register all globals
 		for (const global in globals) {
 			// 1. check for a new state
 			// 2. jump back to the previous

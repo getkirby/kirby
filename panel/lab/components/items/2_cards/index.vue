@@ -3,10 +3,13 @@
 		<k-lab-example label="cards">
 			<k-items :items="items" layout="cards" />
 		</k-lab-example>
+		<k-lab-example label="Sortable">
+			<k-items :items="items" :sortable="true" layout="cards" />
+		</k-lab-example>
 		<k-lab-example label="Selectable">
 			<k-items
 				:items="selectableItems"
-				:selectable="true"
+				:selecting="true"
 				layout="cards"
 				@select="onSelect"
 			/>

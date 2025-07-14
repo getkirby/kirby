@@ -1,8 +1,7 @@
 <template>
-	<portal v-if="visible" to="drawer">
+	<Teleport v-if="visible" to=".k-drawer-portal">
 		<form
-			:aria-disabled="disabled"
-			:class="$vnode.data.staticClass"
+			:class="$attrs.class"
 			class="k-drawer"
 			method="dialog"
 			@submit.prevent="$emit('submit')"
@@ -46,7 +45,7 @@
 				<slot />
 			</k-drawer-body>
 		</form>
-	</portal>
+	</Teleport>
 </template>
 
 <script>

@@ -28,6 +28,7 @@ export default {
 				info: item.info !== item.text ? item.info : null
 			})
 		}
-	}
+	},
+	emits: ["cancel", "submit"]
 };
 </script>

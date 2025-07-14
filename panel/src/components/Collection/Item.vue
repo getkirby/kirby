@@ -48,8 +48,8 @@
 		>
 			<!-- Buttons -->
 			<k-button
-				v-for="(button, buttonIndex) in buttons"
-				:key="'button-' + buttonIndex"
+				v-for="button in buttons"
+				:key="JSON.stringify(button)"
 				v-bind="button"
 			/>
 
@@ -140,7 +140,7 @@ export default {
 		 */
 		theme: String
 	},
-	emits: ["action", "click", "drag", "option"],
+	emits: ["action", "click", "drag", "option", "select"],
 	computed: {
 		hasFigure() {
 			return this.image !== false && this.$helper.object.length(this.image) > 0;
