@@ -2,6 +2,8 @@
 
 namespace Kirby\Query;
 
+use Exception;
+
 class TestUser
 {
 	public function username()
@@ -60,7 +62,7 @@ class TestUser
 	{
 		foreach ($arguments as $arg) {
 			if (in_array($arg, ['(', ')', ',', ']', '[']) === false) {
-				throw new \Exception();
+				throw new Exception();
 			}
 		}
 
