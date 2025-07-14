@@ -448,13 +448,11 @@ V::$validators = [
 	 * Checks for valid json
 	 */
 	'json' => function ($value): bool {
-		if (!is_string($value) || $value === '') {
+		if (is_string($value) === false) {
 			return false;
 		}
 
-		json_decode($value);
-
-		return json_last_error() === JSON_ERROR_NONE;
+		return json_validate($value);
 	},
 
 	/**
