@@ -28,43 +28,26 @@ class Stat extends Component
 	) {
 	}
 
+	/**
+	 * @psalm-suppress TooFewArguments
+	 */
 	public static function from(
 		ModelWithContent $model,
 		array|string $input
 	): static {
 		if (is_string($input) === true) {
-			return static::fromQuery(
-				model: $model,
-				query: $input
-			);
+			$input = $model->query($input);
+
+			if (is_array($input) === false) {
+				throw new InvalidArgumentException(
+					message: 'Invalid data from stat query. The query must return an array.'
+				);
+			}
 		}
 
-		return new static(...[
-			...$input,
-			'model' => $model,
-			'label' => $input['label'],
-			'value' => $input['value'],
-		]);
-	}
+		$input['model'] = $model;
 
-	public static function fromQuery(
-		ModelWithContent $model,
-		string $query
-	): static {
-		$stat = $model->query($query);
-
-		if (is_array($stat) === false) {
-			throw new InvalidArgumentException(
-				message: 'Invalid data from stat query. The query must return an array.'
-			);
-		}
-
-		return new static(...[
-			...$stat,
-			'model' => $model,
-			'label' => $stat['label'],
-			'value' => $stat['value'],
-		]);
+		return new static(...$input);
 	}
 
 	public function icon(): string|null
