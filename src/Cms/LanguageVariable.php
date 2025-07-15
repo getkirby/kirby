@@ -117,6 +117,15 @@ class LanguageVariable
 	}
 
 	/**
+	 * Returns the parent language
+	 * @since 5.1.0
+	 */
+	public function language(): Language
+	{
+		return $this->language;
+	}
+
+	/**
 	 * Sets a new value for the language variable
 	 */
 	public function update(string|array|null $value = null): static

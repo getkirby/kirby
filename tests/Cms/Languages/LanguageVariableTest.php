@@ -133,6 +133,13 @@ class LanguageVariableTest extends TestCase
 		$this->assertSame('foo', $variable->key());
 	}
 
+	public function testLanguage(): void
+	{
+		$language = new Language(['code' => 'test']);
+		$variable = new LanguageVariable($language, 'foo');
+		$this->assertSame($language, $variable->language());
+	}
+
 	public function testUpdate(): void
 	{
 		// impersonate kirby to allow updating the variable
