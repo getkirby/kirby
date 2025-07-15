@@ -326,44 +326,38 @@ return [
 
 	// user field dialogs
 	'user.fields' => [
+		...$fields['model'],
 		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit']
 	],
 
 	// change file name
 	'user.file.changeName' => [
+		...$files['changeName'],
 		'pattern' => '(users/.*?)/files/(:any)/changeName',
-		'load'    => $files['changeName']['load'],
-		'submit'  => $files['changeName']['submit'],
 	],
 
 	// change file sort
 	'user.file.changeSort' => [
+		...$files['changeSort'],
 		'pattern' => '(users/.*?)/files/(:any)/changeSort',
-		'load'    => $files['changeSort']['load'],
-		'submit'  => $files['changeSort']['submit'],
 	],
 
 	// change file template
 	'user.file.changeTemplate' => [
+		...$files['changeTemplate'],
 		'pattern' => '(users/.*?)/files/(:any)/changeTemplate',
-		'load'    => $files['changeTemplate']['load'],
-		'submit'  => $files['changeTemplate']['submit'],
 	],
 
 	// delete file
 	'user.file.delete' => [
+		...$files['delete'],
 		'pattern' => '(users/.*?)/files/(:any)/delete',
-		'load'    => $files['delete']['load'],
-		'submit'  => $files['delete']['submit'],
 	],
 
 	// user file fields dialogs
 	'user.file.fields' => [
+		...$fields['file'],
 		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit']
 	],
 
 	// user disable TOTP
