@@ -118,7 +118,7 @@ class LanguageVariable
 
 	/**
 	 * Returns the parent language
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 */
 	public function language(): Language
 	{

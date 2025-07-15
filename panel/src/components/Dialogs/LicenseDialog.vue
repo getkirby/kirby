@@ -10,6 +10,14 @@
 			<h2 class="k-headline">
 				{{ $t("license") }}
 			</h2>
+
+			<k-button
+				:text="$t('remove')"
+				icon="trash"
+				size="xs"
+				variant="filled"
+				dialog="license/remove"
+			/>
 		</k-bar>
 
 		<div class="k-table">
@@ -70,7 +78,7 @@ export default {
 	gap: var(--spacing-2);
 }
 
-.k-license-dialog .k-icon {
-	color: var(--theme-color-700);
+.k-license-dialog .k-license-dialog-status {
+	--icon-color: var(--theme-color-700);
 }
 </style>

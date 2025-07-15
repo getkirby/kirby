@@ -71,6 +71,44 @@ return [
 		'pattern' => 'pages/(:any)/duplicate',
 		'handler' => PageDuplicateDialog::for(...)
 	],
+
+	// page field dialogs
+	'page.fields' => [
+		...$fields['model'],
+		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
+	],
+
+	// change filename
+	'page.file.changeName' => [
+		...$files['changeName'],
+		'pattern' => '(pages/.*?)/files/(:any)/changeName',
+	],
+
+	// change sort
+	'page.file.changeSort' => [
+		...$files['changeSort'],
+		'pattern' => '(pages/.*?)/files/(:any)/changeSort',
+	],
+
+	// change template
+	'page.file.changeTemplate' => [
+		...$files['changeTemplate'],
+		'pattern' => '(pages/.*?)/files/(:any)/changeTemplate',
+	],
+
+	// delete
+	'page.file.delete' => [
+		...$files['delete'],
+		'pattern' => '(pages/.*?)/files/(:any)/delete',
+	],
+
+	// page file field dialogs
+	'page.file.fields' => [
+		...$fields['file'],
+		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
+	],
+
+	// move page
 	'page.move' => [
 		'pattern' => 'pages/(:any)/move',
 		'handler' => PageMoveDialog::for(...)
