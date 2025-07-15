@@ -28,6 +28,9 @@ class Stat extends Component
 	) {
 	}
 
+	/**
+ 	 * @psalm-suppress TooFewArguments
+	 */
 	public static function from(
 		ModelWithContent $model,
 		array|string $input
@@ -39,12 +42,9 @@ class Stat extends Component
 			);
 		}
 
-		return new static(...[
-			...$input,
-			'model' => $model,
-			'label' => $input['label'],
-			'value' => $input['value'],
-		]);
+		$input['model'] = $model;
+
+		return new static(...$input);
 	}
 
 	public static function fromQuery(
@@ -59,12 +59,10 @@ class Stat extends Component
 			);
 		}
 
-		return new static(...[
-			...$stat,
-			'model' => $model,
-			'label' => $stat['label'],
-			'value' => $stat['value'],
-		]);
+		return static::from(
+			model: $model,
+			input: $stat
+		);
 	}
 
 	public function icon(): string|null
