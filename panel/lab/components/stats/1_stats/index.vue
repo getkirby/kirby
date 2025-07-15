@@ -6,6 +6,9 @@
 		<k-lab-example label="themes">
 			<k-stats :reports="reports" />
 		</k-lab-example>
+		<k-lab-example label="empty">
+			<k-stats :reports="[]" />
+		</k-lab-example>
 	</k-lab-examples>
 </template>
 

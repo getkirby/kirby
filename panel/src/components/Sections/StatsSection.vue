@@ -4,8 +4,7 @@
 		:headline="headline"
 		class="k-stats-section"
 	>
-		<k-stats v-if="reports.length > 0" :reports="reports" :size="size" />
-		<k-empty v-else icon="chart"> {{ $t("stats.empty") }}</k-empty>
+		<k-stats :reports="reports" :size="size" />
 	</k-section>
 </template>
 
