@@ -93,7 +93,7 @@ export const props = {
 		},
 		nodes: {
 			type: [Array, Boolean],
-			default: () => ["heading", "bulletList", "orderedList"]
+			default: () => ["paragraph", "heading", "bulletList", "orderedList"]
 		},
 		paste: {
 			type: Function,
