@@ -69,27 +69,27 @@ class Stat extends Component
 
 	public function icon(): string|null
 	{
-		return $this->query($this->icon);
+		return $this->stringTemplate($this->icon);
 	}
 
 	public function info(): string|null
 	{
-		return $this->query(
-			$this->translate($this->info)
+		return $this->stringTemplate(
+			$this->i18n($this->info)
 		);
 	}
 
 	public function label(): string
 	{
-		return $this->query(
-			$this->translate($this->label)
+		return $this->stringTemplate(
+			$this->i18n($this->label)
 		);
 	}
 
 	public function link(): string|null
 	{
-		return $this->query(
-			$this->translate($this->link)
+		return $this->stringTemplate(
+			$this->i18n($this->link)
 		);
 	}
 
@@ -105,29 +105,29 @@ class Stat extends Component
 		];
 	}
 
-	protected function query(string|null $query): string|null
+	protected function stringTemplate(string|null $string = null): string|null
 	{
-		return $query === null ? null : $this->model->toString($query);
+		if ($string !== null) {
+			return $this->model->toString($string);
+		}
+
+		return null;
 	}
 
 	public function theme(): string|null
 	{
-		return $this->query($this->theme);
+		return $this->stringTemplate($this->theme);
 	}
 
-	protected function translate(array|string|null $prop): string|null
+	protected function i18n(string|array|null $param = null): string|null
 	{
-		if ($prop === null) {
-			return $prop;
-		}
-
-		return I18n::translate($prop, $prop);
+		return empty($param) === false ? I18n::translate($param, $param) : null;
 	}
 
 	public function value(): string
 	{
-		return $this->query(
-			$this->translate($this->value)
+		return $this->stringTemplate(
+			$this->i18n($this->value)
 		);
 	}
 }
