@@ -120,10 +120,6 @@ trait Value
 			return false;
 		}
 
-		if ($this->isActive() === false) {
-			return false;
-		}
-
 		return true;
 	}
 

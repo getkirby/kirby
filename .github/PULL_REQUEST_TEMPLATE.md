@@ -1,58 +1,67 @@
 ## Description
-<!--
-A clear and concise description of the PR.
-Use this section for review hints, explanations or discussion points/todos.
+<!-- 
+Add info about why this PR exists and the decisions that went into it.
+This info is meant for the reviewer of this PR.
+ 
+You may keep it short or omit it if it's a simple PR. Please add more
+context and a summary of changes if it's a more complex PR. 
 
 Make sure to point your PR to the relevant develop branches, e.g.
-`develop-patch`, `develop-minor` or `v5/develop`
+`develop-patch`, `develop-minor` or `v6/develop`.
 
 How to contribute: https://contribute.getkirby.com
 -->
 
-### Summary of changes
 
-
-
-### Reasoning
-
-
-
-### Additional context
-
-
-
-## Changelog
+## Changelog 
 <!--
-Add relevant release notes: Features, Enhancements, Fixes, Deprecated.
-Reference issues from the `kirby` repo or ideas from `feedback.getkirby.com`.
-Always mention whether your PR introduces breaking changes.
+Add relevant release notes. Keep the target audience (Kirby user) in mind.
+Reference issues from the `kirby` repo  or ideas from `feedback.getkirby.com`.
 -->
 
-### Fixes
+### 🎉 Features
+<!-- 
+e.g. New feature X which helps users to …
+-->
 
+### ✨ Enhancements
+<!-- 
+e.g. Improve a11y of feature X
+-->
 
+### 🐛 Bug fixes
+<!-- 
+e.g. Fix broken feature X. See issue #123
+-->
 
-### Breaking changes
+### ♻️ Refactored
+<!-- 
+e.g. Rename method X to method Y.
+-->
 
+### ☠️ Deprecated
+<!-- 
+e.g. Deprecate method X. Use method Y instead.
+-->
+
+### 🧹 Housekeeping
+<!-- 
+e.g. Update JS dependencies
+-->
+
+### 🚨 Breaking changes
+<!-- 
+e.g. Method X has been removed
+-->
 
 
 ## Docs
 <!--
 Add any notes that help to document the feature/changes. Doesn't need
 to be your best writing, just a few words and/or code snippets.
+If applicable, add links to existing docs pages where the docs can be placed.
 -->
 
-
-
-## Ready?
-<!--
-If you can help to check off the following tasks, that'd be great.
-If not, don't worry - we will take care of it.
--->
-
-- [ ] In-code documentation (wherever needed)
-- [ ] Unit tests for fixed bug/feature
-- [ ] Tests and CI checks all pass
 
 ### For review team
 <!--
