@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -32,7 +33,7 @@ class StatsTest extends TestCase
 
 	public function testFromQuery(): void
 	{
-		$stats = Stats::fromQuery(
+		$stats = Stats::from(
 			model: new Page([
 				'slug' => 'test',
 				'content' => [
@@ -44,7 +45,7 @@ class StatsTest extends TestCase
 					],
 				],
 			]),
-			query: 'page.reports.yaml'
+			reports: 'page.reports.yaml'
 		);
 
 		$this->assertSame([
@@ -57,6 +58,22 @@ class StatsTest extends TestCase
 				'value' => 'test',
 			],
 		], $stats->reports());
+	}
+
+	public function testFromQueryWithInvalidResult(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid data from stats query. The query must return an array.');
+
+		Stats::from(
+			model: new Page([
+				'slug' => 'test',
+				'content' => [
+					'reports' => 'foo'
+				],
+			]),
+			reports: 'page.reports'
+		);
 	}
 
 	public function testProps(): void

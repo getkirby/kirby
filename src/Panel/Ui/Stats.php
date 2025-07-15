@@ -29,28 +29,18 @@ class Stats extends Component
 		string $size = 'large'
 	): static {
 		if (is_string($reports) === true) {
-			return static::fromQuery(
-				model: $model,
-				query: $reports,
-				size: $size
-			);
+			$reports = $model->query($reports);
+
+			if (is_array($reports) === false) {
+				throw new InvalidArgumentException(
+					message: 'Invalid data from stats query. The query must return an array.'
+				);
+			}
 		}
 
 		return new static(
 			model: $model,
 			reports: $reports,
-			size: $size
-		);
-	}
-
-	public static function fromQuery(
-		ModelWithContent $model,
-		string $query,
-		string $size = 'large'
-	): static {
-		return new static(
-			model: $model,
-			reports: $model->query($query),
 			size: $size
 		);
 	}
