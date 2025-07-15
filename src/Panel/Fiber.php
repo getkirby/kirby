@@ -49,6 +49,7 @@ class Fiber
 			],
 			'debug'       => $this->kirby->option('debug', false),
 			'kirbytext'   => $this->kirby->option('panel.kirbytext', true),
+			'theme'       => $this->kirby->option('panel.theme', 'system'),
 			'translation' => $this->kirby->option('panel.language', 'en'),
 			'upload'      => Upload::chunkSize(),
 		];

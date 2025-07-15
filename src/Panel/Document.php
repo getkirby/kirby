@@ -25,7 +25,7 @@ class Document
 	/**
 	 * Renders the panel document
 	 */
-	public static function response(array $fiber): Response
+	public static function response(Fiber $fiber): Response
 	{
 		$kirby  = App::instance();
 		$assets = new Assets();
@@ -46,7 +46,8 @@ class Document
 		$uri = new Uri($kirby->url('panel'));
 
 		// proper response code
-		$code = $fiber['view']['code'] ?? 200;
+		$fiber = $fiber->toArray(globals: true);
+		$code  = $fiber['view']['code'] ?? 200;
 
 		// load the main Panel view template
 		$body = Tpl::load($kirby->root('kirby') . '/views/panel.php', [
