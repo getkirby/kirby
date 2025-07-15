@@ -9,6 +9,8 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
 use Kirby\Form\Form;
 use Kirby\Http\Router;
+use Kirby\Panel\Routes\DialogRoutes;
+use Kirby\Panel\Routes\DrawerRoutes;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -38,19 +40,7 @@ class Field
 		string $method = 'GET',
 	) {
 		$field  = Form::for($model)->field($fieldName);
-		$routes = [];
-
-		foreach ($field->dialogs() as $dialogId => $dialog) {
-			$routes = [
-				...$routes,
-				...Dialog::routes(
-					id: $dialogId,
-					areaId: 'site',
-					options: $dialog
-				)
-			];
-		}
-
+		$routes = (new DialogRoutes(['id' => 'site'], $field->dialogs()))->toArray();
 		return Router::execute($path, $method, $routes);
 	}
 
@@ -67,19 +57,7 @@ class Field
 		string $method = 'GET',
 	) {
 		$field  = Form::for($model)->field($fieldName);
-		$routes = [];
-
-		foreach ($field->drawers() as $drawerId => $drawer) {
-			$routes = [
-				...$routes,
-				...Drawer::routes(
-					id: $drawerId,
-					areaId: 'site',
-					options: $drawer
-				)
-			];
-		}
-
+		$routes = (new DrawerRoutes(['id' => 'site'], $field->drawers()))->toArray();
 		return Router::execute($path, $method, $routes);
 	}
 

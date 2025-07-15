@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Panel;
+namespace Kirby\Panel\Response;
 
 use Kirby\Http\Response;
 
@@ -15,12 +15,13 @@ use Kirby\Http\Response;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
-class Search extends Json
+class SearchResponse extends JsonResponse
 {
 	protected static string $key = 'search';
 
-	public static function response($data, array $options = []): Response
+	public static function from(mixed $data): Response
 	{
 		if (
 			is_array($data) === true &&
@@ -36,6 +37,6 @@ class Search extends Json
 			];
 		}
 
-		return parent::response($data, $options);
+		return parent::from($data);
 	}
 }
