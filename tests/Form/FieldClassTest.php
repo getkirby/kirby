@@ -360,7 +360,45 @@ class FieldClassTest extends TestCase
 			],
 		]);
 
-		$this->assertFalse($field->isSubmittable($language));
+		$this->assertTrue($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithWhenQueryAndTwoFields()
+	{
+		$language = Language::ensure('current');
+
+		$fields = new Fields([
+			new TestField([
+				'name'  => 'a',
+				'value' => 'a',
+				'when'  => [
+					'b' => 'b'
+				]
+			]),
+			new TestField([
+				'name'  => 'b',
+				'value' => 'b',
+				'when'  => [
+					'a' => 'a'
+				]
+			]),
+		]);
+
+		$a = $fields->get('a');
+		$b = $fields->get('b');
+
+		$this->assertTrue($a->isSubmittable($language));
+		$this->assertTrue($b->isSubmittable($language));
+
+		$fields->submit([
+			'a' => 'a submitted',
+			'b' => 'b submitted'
+		]);
+
+		$this->assertSame([
+			'a' => 'a submitted',
+			'b' => 'b submitted'
+		], $fields->toFormValues());
 	}
 
 	public function testHasValue(): void
