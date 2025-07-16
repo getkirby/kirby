@@ -24,7 +24,6 @@ use Kirby\Panel\Routes\DropdownRoutes;
 use Kirby\Panel\Routes\RequestRoutes;
 use Kirby\Panel\Routes\SearchRoutes;
 use Kirby\Panel\Routes\ViewRoutes;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl;
 use Throwable;
@@ -45,84 +44,11 @@ use Throwable;
 class Panel
 {
 	/**
-	 * Normalize a panel area
-	 */
-	public static function area(string $id, array $area): array
-	{
-		$area['id']                = $id;
-		$area['label']           ??= $id;
-		$area['breadcrumb']      ??= [];
-		$area['breadcrumbLabel'] ??= $area['label'];
-		$area['title']             = $area['label'];
-		$area['menu']            ??= false;
-		$area['link']            ??= $id;
-		$area['search']          ??= null;
-
-		return $area;
-	}
-
-	/**
 	 * Collect all registered areas
 	 */
-	public static function areas(): array
+	public static function areas(): Areas
 	{
-		$kirby  = App::instance();
-		$system = $kirby->system();
-		$user   = $kirby->user();
-		$areas  = $kirby->load()->areas();
-
-		// the system is not ready
-		if (
-			$system->isOk() === false ||
-			$system->isInstalled() === false
-		) {
-			return [
-				'installation' => static::area(
-					'installation',
-					$areas['installation']
-				),
-			];
-		}
-
-		// not yet authenticated
-		if (!$user) {
-			return [
-				'logout' => static::area('logout', $areas['logout']),
-				// login area last because it defines a fallback route
-				'login'  => static::area('login', $areas['login']),
-			];
-		}
-
-		unset($areas['installation'], $areas['login']);
-
-		// Disable the language area for single-language installations
-		// This does not check for installed languages. Otherwise you'd
-		// not be able to add the first language through the view
-		if (!$kirby->option('languages')) {
-			unset($areas['languages']);
-		}
-
-		$result = [];
-
-		foreach ($areas as $id => $area) {
-			$result[$id] = static::area($id, $area);
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Collect all registered buttons from areas
-	 * @since 5.0.0
-	 */
-	public static function buttons(): array
-	{
-		return array_merge(...array_values(
-			A::map(
-				Panel::areas(),
-				fn ($area) => $area['buttons'] ?? []
-			)
-		));
+		return new Areas();
 	}
 
 	/**
@@ -352,7 +278,7 @@ class Panel
 		// set the language in multi-lang installations
 		static::setLanguage();
 
-		$areas  = static::areas();
+		$areas  = static::areas()->toArray();
 		$routes = static::routes($areas);
 
 		// create a micro-router for the Panel
