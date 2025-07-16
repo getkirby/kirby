@@ -1,11 +1,11 @@
 <template>
 	<k-panel class="k-panel-inside">
 		<k-panel-menu
+			:has-search="$panel.hasSearch"
 			:items="$panel.menu.entries"
 			:is-hovered="$panel.menu.hover"
 			:is-open="$panel.menu.isOpen"
 			:license="$panel.license"
-			:searches="$panel.searches"
 			@hover="$panel.menu.hover = $event"
 			@search="$panel.search()"
 			@toggle="$panel.menu.toggle()"

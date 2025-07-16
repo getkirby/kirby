@@ -63,17 +63,14 @@
  */
 export default {
 	props: {
+		hasSearch: Boolean,
 		isHovered: Boolean,
 		isOpen: Boolean,
 		items: {
 			type: Array,
 			default: () => []
 		},
-		license: String,
-		searches: {
-			type: Object,
-			default: () => ({})
-		}
+		license: String
 	},
 	emits: ["hover", "search", "toggle"],
 	data() {
@@ -98,9 +95,6 @@ export default {
 			}
 
 			return false;
-		},
-		hasSearch() {
-			return this.$helper.object.length(this.searches) > 0;
 		},
 		menus() {
 			return this.$helper.array.split(this.items, "-");

@@ -9,7 +9,7 @@
 			<k-panel-menu :items="items" />
 		</k-lab-example>
 		<k-lab-example label="Has search">
-			<k-panel-menu :items="items" :searches="searches" />
+			<k-panel-menu :items="items" :has-search="true" />
 		</k-lab-example>
 		<k-lab-example label="Open/Close (and hovered)">
 			<div class="k-panel" :data-menu="isOpen">
@@ -69,11 +69,6 @@ export default {
 					icon: "logout"
 				}
 			];
-		},
-		searches() {
-			return {
-				shops: {}
-			};
 		}
 	}
 };
