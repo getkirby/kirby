@@ -2,9 +2,6 @@
 
 namespace Kirby\Panel\Ui;
 
-use Kirby\Exception\LogicException;
-use Kirby\Toolkit\Str;
-
 /**
  * Component that can be passed as component-props array
  * to the Vue Panel frontend
@@ -16,9 +13,8 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  * @since     5.0.0
  */
-abstract class Component
+abstract class Component extends Renderable
 {
-	protected string $key;
 	public array $attrs = [];
 
 	public function __construct(
@@ -28,40 +24,6 @@ abstract class Component
 		...$attrs
 	) {
 		$this->attrs = $attrs;
-	}
-
-	/**
-	 * Magic setter and getter for component properties
-	 *
-	 * ```php
-	 * $component->class('my-class')
-	 * ```
-	 */
-	public function __call(string $name, array $args = [])
-	{
-		if (property_exists($this, $name) === false) {
-			throw new LogicException(
-				message: 'The property "' . $name . '" does not exist on the UI component "' . $this->component . '"'
-			);
-		}
-
-		// getter
-		if ($args === []) {
-			return $this->$name;
-		}
-
-		// setter
-		$this->$name = $args[0];
-		return $this;
-	}
-
-	/**
-	 * Returns a (unique) key that can be used
-	 * for Vue's `:key` attribute
-	 */
-	public function key(): string
-	{
-		return $this->key ??= Str::random(10, 'alphaNum');
 	}
 
 	/**

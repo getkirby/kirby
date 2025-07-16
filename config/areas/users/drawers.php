@@ -1,14 +1,14 @@
 <?php
 
-$fields = require __DIR__ . '/../fields/drawers.php';
+use Kirby\Panel\Ui\Drawers\FieldDrawer;
 
 return [
 	'user.fields' => [
-		...$fields['model'],
-		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
+		'pattern'    => '(users/.*?)/fields/(:any)/(:all?)',
+		'controller' => FieldDrawer::forModel(...)
 	],
 	'user.file.fields' => [
-		...$fields['file'],
-		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
-	],
+		'pattern'    => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'controller' => FieldDrawer::forFile(...)
+	]
 ];

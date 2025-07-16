@@ -2,11 +2,9 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
-use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
-use Kirby\TestCase;
+use Kirby\Panel\Ui\TestCase;
 use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -15,50 +13,11 @@ class UserTotpEnableDialogTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Ui.Dialogs.UserTotpEnableDialog';
 
-	protected function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			],
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-				]
-			],
-			'user' => 'test@getkirby.com'
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-
-		// clear fake json requests
-		$_GET = [];
-	}
-
 	public function testConstruct(): void
 	{
 		$dialog = new UserTotpEnableDialog();
-
 		$this->assertSame($this->app->user(), $dialog->user);
 		$this->assertSame('test@getkirby.com', $dialog->user->email());
-	}
-
-	public function testLoad(): void
-	{
-		$dialog = new UserTotpEnableDialog();
-		$state  = $dialog->load();
-
-		$this->assertSame('k-totp-dialog', $state['component']);
-		$this->assertIsString($state['props']['value']['secret']);
-		$this->assertIsString($state['props']['qr']);
 	}
 
 	public function testQr(): void
@@ -68,6 +27,16 @@ class UserTotpEnableDialogTest extends TestCase
 
 		$this->assertInstanceOf(QrCode::class, $qr);
 		$this->assertStringContainsString('otpauth://totp/:test%40getkirby.com?secret=', $qr->data);
+	}
+
+	public function testRender(): void
+	{
+		$dialog = new UserTotpEnableDialog();
+		$state  = $dialog->render();
+
+		$this->assertSame('k-totp-dialog', $state['component']);
+		$this->assertIsString($state['props']['value']['secret']);
+		$this->assertIsString($state['props']['qr']);
 	}
 
 	public function testSubmit(): void
@@ -80,7 +49,7 @@ class UserTotpEnableDialogTest extends TestCase
 		$dialog = new UserTotpEnableDialog();
 		$this->assertNull($user->secret('totp'));
 
-		$state  = $dialog->submit();
+		$state = $dialog->submit();
 		$this->assertSame($secret, $user->secret('totp'));
 		$this->assertIsString($state['message']);
 	}
@@ -90,8 +59,14 @@ class UserTotpEnableDialogTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.login.totp.confirm.missing');
 
-		$_GET['secret']  = 'foo';
-		$_GET['confirm'] = null;
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'secret'  => 'foo',
+					'confirm' => null
+				]
+			]
+		]);
 
 		$dialog = new UserTotpEnableDialog();
 		$dialog->submit();
@@ -102,9 +77,15 @@ class UserTotpEnableDialogTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.login.totp.confirm.invalid');
 
-		$totp            = new Totp();
-		$_GET['secret']  = $totp->secret();
-		$_GET['confirm'] = 'bar';
+		$totp      = new Totp();
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'secret'  => $totp->secret(),
+					'confirm' => 'bar'
+				]
+			]
+		]);
 
 		$dialog = new UserTotpEnableDialog();
 		$dialog->submit();

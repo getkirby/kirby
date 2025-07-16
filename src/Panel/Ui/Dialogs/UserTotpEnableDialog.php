@@ -2,45 +2,45 @@
 
 namespace Kirby\Panel\Ui\Dialogs;
 
-use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
+use Kirby\Panel\Ui\Dialog;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Totp;
 
 /**
  * Manages the Panel dialog to enable TOTP auth for the current user
- * @since 4.0.0
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
+ * @internal
  */
-class UserTotpEnableDialog
+class UserTotpEnableDialog extends Dialog
 {
-	public App $kirby;
 	public Totp $totp;
 	public User $user;
 
 	public function __construct()
 	{
-		$this->kirby = App::instance();
-		$this->user  = $this->kirby->user();
+		parent::__construct(
+			component: 'k-totp-dialog'
+		);
+
+		$this->user = $this->kirby->user();
 	}
 
-	/**
-	 * Returns the Panel dialog state when opening the dialog
-	 */
-	public function load(): array
+	public function props(): array
 	{
 		return [
-			'component' => 'k-totp-dialog',
-			'props' => [
-				'qr'    => $this->qr()->toSvg(size: '100%'),
-				'value' => ['secret' => $this->secret()]
+			...parent::props(),
+			'qr'    => $this->qr()->toSvg(size: '100%'),
+			'value' => [
+				'secret' => $this->totp()->secret()
 			]
 		];
 	}
@@ -56,18 +56,13 @@ class UserTotpEnableDialog
 		return new QrCode($uri);
 	}
 
-	public function secret(): string
-	{
-		return $this->totp()->secret();
-	}
-
 	/**
 	 * Changes the user's TOTP secret when the dialog is submitted
 	 */
 	public function submit(): array
 	{
-		$secret  = $this->kirby->request()->get('secret');
-		$confirm = $this->kirby->request()->get('confirm');
+		$secret  = $this->request->get('secret');
+		$confirm = $this->request->get('confirm');
 
 		if ($confirm === null) {
 			throw new InvalidArgumentException(
