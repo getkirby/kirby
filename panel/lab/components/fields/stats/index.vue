@@ -4,8 +4,6 @@
 			<k-lab-example label="Default">
 				<k-stats-field :reports="reports" label="Stats" name="stats" />
 			</k-lab-example>
-		</k-lab-examples>
-		<k-lab-examples>
 			<k-lab-example label="Size (small)">
 				<k-stats-field
 					:reports="reports"
