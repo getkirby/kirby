@@ -16,7 +16,7 @@ use Kirby\Http\Request;
  *
  * @codeCoverageIgnore
  */
-abstract class Dialog
+abstract class DialogController
 {
 	protected App $kirby;
 	protected Request $request;

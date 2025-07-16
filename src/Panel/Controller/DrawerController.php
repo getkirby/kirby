@@ -13,6 +13,6 @@ namespace Kirby\Panel\Controller;
  *
  * @codeCoverageIgnore
  */
-abstract class Drawer extends Dialog
+abstract class DrawerController extends DialogController
 {
 }

@@ -6,11 +6,11 @@ use Kirby\Cms\App;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(PageTree::class)]
-class PageTreeTest extends TestCase
+#[CoversClass(PageTreeController::class)]
+class PageTreeControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.PageTree';
-	public PageTree $tree;
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.PageTreeController';
+	public PageTreeController $tree;
 
 	public function setUp(): void
 	{
@@ -67,7 +67,7 @@ class PageTreeTest extends TestCase
 		]);
 
 		$this->app->impersonate('kirby');
-		$this->tree = new PageTree($this->app->site());
+		$this->tree = new PageTreeController($this->app->site());
 	}
 
 	public function tearDown(): void
