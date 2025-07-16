@@ -2,7 +2,9 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Form\FieldClass;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Form\FieldAbstract\DisplayField;
+use Kirby\Form\Fields;
 use Kirby\Panel\Ui\Stats;
 
 /**
@@ -15,7 +17,7 @@ use Kirby\Panel\Ui\Stats;
  * @license   https://getkirby.com/license
  * @since     5.1.0
  */
-class StatsField extends FieldClass
+class StatsField extends DisplayField
 {
 	/**
 	 * Array or query string for reports. Each report needs a `label` and `value` and can have additional `info`, `link`, `icon` and `theme` settings.
@@ -32,17 +34,31 @@ class StatsField extends FieldClass
 	 */
 	protected Stats $stats;
 
-	public function __construct(array $params)
-	{
-		parent::__construct($params);
+	public function __construct(
+		bool $disabled = false,
+		array|string|null $label = null,
+		array|string|null $help = null,
+		ModelWithContent|null $model = null,
+		string|null $name = null,
+		array|string $reports = [],
+		Fields|null $siblings = null,
+		string $size = 'large',
+		array|null $when = null,
+		string|null $width = null,
+	) {
+		parent::__construct(
+			disabled: $disabled,
+			help: $help,
+			label: $label,
+			model: $model,
+			name: $name,
+			siblings: $siblings,
+			when: $when,
+			width: $width
+		);
 
-		$this->reports = $params['reports'] ?? [];
-		$this->size    = $params['size']    ?? 'large';
-	}
-
-	public function hasValue(): bool
-	{
-		return false;
+		$this->reports = $reports;
+		$this->size    = $size;
 	}
 
 	public function reports(): array
