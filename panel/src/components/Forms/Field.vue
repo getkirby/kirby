@@ -66,7 +66,7 @@ export const props = {
 		buttons: Array,
 		counter: [Boolean, Object],
 		endpoints: Object,
-		input: [String, Number],
+		input: [String, Number, Boolean],
 		translate: Boolean,
 		type: String
 	}
