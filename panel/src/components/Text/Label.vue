@@ -12,9 +12,16 @@
 		<span v-else class="k-label-text">
 			<slot />
 		</span>
-
-		<abbr v-if="required" :title="$t(type + '.required')">✶</abbr>
-		<abbr :title="$t(type + '.invalid')" data-theme="negative" class="k-label-invalid">&times;</abbr>
+		<template v-if="input !== false">
+			<abbr v-if="required" :title="$t(type + '.required')">✶</abbr>
+			<abbr
+				:title="$t(type + '.invalid')"
+				data-theme="negative"
+				class="k-label-invalid"
+			>
+				&times;
+			</abbr>
+		</template>
 	</component>
 </template>
 
@@ -28,7 +35,7 @@ export default {
 		 * ID of the input element to which the label belongs
 		 */
 		input: {
-			type: [String, Number]
+			type: [String, Number, Boolean]
 		},
 		/**
 		 * Whether the input value is currently invalid
@@ -60,7 +67,7 @@ export default {
 	},
 	computed: {
 		element() {
-			return this.type === "section" ? "h2" : "label";
+			return this.type === "section" || this.input === false ? "h2" : "label";
 		}
 	}
 };
