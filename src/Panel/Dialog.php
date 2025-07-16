@@ -50,6 +50,20 @@ class Dialog extends Json
 		$pattern = trim($prefix . '/' . ($options['pattern'] ?? $id), '/');
 		$type    = str_replace('$', '', static::$key);
 
+		// create load/submit events from controller class
+		if ($controller = $options['controller'] ?? null) {
+			if (is_string($controller) === true) {
+				if (method_exists($controller, 'for') === true) {
+					$controller = $controller::for(...);
+				} else {
+					$controller = fn (...$args) => new $controller(...$args);
+				}
+			}
+
+			$options['load']   ??= fn (...$args) => $controller(...$args)->load();
+			$options['submit'] ??= fn (...$args) => $controller(...$args)->submit();
+		}
+
 		// load event
 		$routes[] = [
 			'pattern' => $pattern,
