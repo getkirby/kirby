@@ -14,36 +14,36 @@ $files = require __DIR__ . '/../files/dialogs.php';
 
 return [
 	'user.create' => [
-		'pattern' => 'users/create',
-		'handler' => fn () => new UserCreateDialog()
+		'pattern'    => 'users/create',
+		'controller' => UserCreateDialog::class
 	],
 	'user.changeEmail' => [
-		'pattern' => 'users/(:any)/changeEmail',
-		'handler' => UserChangeEmailDialog::for(...)
+		'pattern'    => 'users/(:any)/changeEmail',
+		'controller' => UserChangeEmailDialog::class
 	],
 	'user.changeLanguage' => [
-		'pattern' => 'users/(:any)/changeLanguage',
-		'handler' => UserChangeLanguageDialog::for(...)
+		'pattern'    => 'users/(:any)/changeLanguage',
+		'controller' => UserChangeLanguageDialog::class
 	],
 	'user.changeName' => [
-		'pattern' => 'users/(:any)/changeName',
-		'handler' => UserChangeNameDialog::for(...)
+		'pattern'    => 'users/(:any)/changeName',
+		'controller' => UserChangeNameDialog::class
 	],
 	'user.changePassword' => [
-		'pattern' => 'users/(:any)/changePassword',
-		'handler' => UserChangePasswordDialog::for(...)
+		'pattern'    => 'users/(:any)/changePassword',
+		'controller' => UserChangePasswordDialog::class
 	],
 	'user.changeRole' => [
-		'pattern' => 'users/(:any)/changeRole',
-		'handler' => UserChangeRoleDialog::for(...)
+		'pattern'    => 'users/(:any)/changeRole',
+		'controller' => UserChangeRoleDialog::class
 	],
 	'user.delete' => [
-		'pattern' => 'users/(:any)/delete',
-		'handler' => UserDeleteDialog::for(...)
+		'pattern'    => 'users/(:any)/delete',
+		'controller' => UserDeleteDialog::class
 	],
 	'user.fields' => [
-		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
-		'handler' => FieldDialog::forModel(...)
+		'pattern'    => '(users/.*?)/fields/(:any)/(:all?)',
+		'controller' => FieldDialog::forModel(...)
 	],
 	'user.file.changeName' => [
 		...$files['changeName'],
@@ -66,7 +66,7 @@ return [
 		'handler' => FieldDialog::forFile(...)
 	],
 	'user.totp.disable' => [
-		'pattern' => 'users/(:any)/totp/disable',
-		'handler' => UserTotpDisableDialog::for(...)
+		'pattern'    => 'users/(:any)/totp/disable',
+		'controller' => UserTotpDisableDialog::class
 	],
 ];

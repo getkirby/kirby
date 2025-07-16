@@ -1,6 +1,16 @@
 <template>
 	<k-panel class="k-panel-inside">
-		<k-panel-menu />
+		<k-panel-menu
+			:has-search="$panel.hasSearch"
+			:items="$panel.menu.entries"
+			:is-hovered="$panel.menu.hover"
+			:is-open="$panel.menu.isOpen"
+			:license="$panel.license"
+			@hover="$panel.menu.hover = $event"
+			@search="$panel.search()"
+			@toggle="$panel.menu.toggle()"
+		/>
+
 		<main class="k-panel-main">
 			<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
 				<!-- @slot Additional content for the Topbar  -->

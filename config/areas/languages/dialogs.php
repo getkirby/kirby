@@ -9,27 +9,27 @@ use Kirby\Panel\Ui\Dialogs\LanguageUpdateDialog;
 
 return [
 	'language.create' => [
-		'pattern' => 'languages/create',
-		'handler' => fn () => new LanguageCreateDialog()
+		'pattern'    => 'languages/create',
+		'controller' => LanguageCreateDialog::class
 	],
 	'language.delete' => [
-		'pattern' => 'languages/(:any)/delete',
-		'handler' => LanguageDeleteDialog::for(...)
+		'pattern'    => 'languages/(:any)/delete',
+		'controller' => LanguageDeleteDialog::class
 	],
 	'language.update' => [
-		'pattern' => 'languages/(:any)/update',
-		'handler' => LanguageUpdateDialog::for(...)
+		'pattern'    => 'languages/(:any)/update',
+		'controller' => LanguageUpdateDialog::class
 	],
 	'language.translation.create' => [
-		'pattern' => 'languages/(:any)/translations/create',
-		'handler' => LanguageTranslationCreateDialog::for(...)
+		'pattern'    => 'languages/(:any)/translations/create',
+		'controller' => LanguageTranslationCreateDialog::class
 	],
 	'language.translation.delete' => [
-		'pattern' => 'languages/(:any)/translations/(:any)/delete',
-		'handler' => LanguageTranslationDeleteDialog::for(...)
+		'pattern'    => 'languages/(:any)/translations/(:any)/delete',
+		'controller' => LanguageTranslationDeleteDialog::class
 	],
 	'language.translation.update' => [
-		'pattern' => 'languages/(:any)/translations/(:any)/update',
-		'handler' => LanguageTranslationUpdateDialog::for(...)
+		'pattern'    => 'languages/(:any)/translations/(:any)/update',
+		'controller' => LanguageTranslationUpdateDialog::class
 	]
 ];

@@ -17,20 +17,20 @@ $files = require __DIR__ . '/../files/dialogs.php';
 
 return [
 	'page.changeSort' => [
-		'pattern' => 'pages/(:any)/changeSort',
-		'handler' => PageChangeSortDialog::for(...)
+		'pattern'    => 'pages/(:any)/changeSort',
+		'controller' => PageChangeSortDialog::class
 	],
 	'page.changeStatus' => [
-		'pattern' => 'pages/(:any)/changeStatus',
-		'handler' => PageChangeStatusDialog::for(...)
+		'pattern'    => 'pages/(:any)/changeStatus',
+		'controller' => PageChangeStatusDialog::class
 	],
 	'page.changeTemplate' => [
-		'pattern' => 'pages/(:any)/changeTemplate',
-		'handler' =>  PageChangeTemplateDialog::for(...)
+		'pattern'    => 'pages/(:any)/changeTemplate',
+		'controller' => PageChangeTemplateDialog::class
 	],
 	'page.changeTitle' => [
-		'pattern' => 'pages/(:any)/changeTitle',
-		'handler' => PageChangeTitleDialog::for(...)
+		'pattern'    => 'pages/(:any)/changeTitle',
+		'controller' => PageChangeTitleDialog::class
 	],
 	// create a new page
 	// @deprecated 5.0.0 Use dialog route from pages section instead
@@ -64,12 +64,12 @@ return [
 		}
 	],
 	'page.delete' => [
-		'pattern' => 'pages/(:any)/delete',
-		'handler' => PageDeleteDialog::for(...)
+		'pattern'    => 'pages/(:any)/delete',
+		'controller' => PageDeleteDialog::class
 	],
 	'page.duplicate' => [
-		'pattern' => 'pages/(:any)/duplicate',
-		'handler' => PageDuplicateDialog::for(...)
+		'pattern'    => 'pages/(:any)/duplicate',
+		'controller' => PageDuplicateDialog::class
 	],
 
 	// page field dialogs
@@ -110,12 +110,12 @@ return [
 
 	// move page
 	'page.move' => [
-		'pattern' => 'pages/(:any)/move',
-		'handler' => PageMoveDialog::for(...)
+		'pattern'    => 'pages/(:any)/move',
+		'controller' => PageMoveDialog::class
 	],
 	'page.fields' => [
-		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
-		'handler' => FieldDialog::forModel(...)
+		'pattern'    => '(pages/.*?)/fields/(:any)/(:all?)',
+		'controller' => FieldDialog::class
 	],
 	'page.file.changeName' => [
 		...$files['changeName'],
@@ -134,16 +134,16 @@ return [
 		'pattern' => '(pages/.*?)/files/(:any)/delete',
 	],
 	'page.file.fields' => [
-		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
-		'handler' => FieldDialog::forFile(...)
+		'pattern'    => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'controller' => FieldDialog::forFile(...)
 	],
 	'site.changeTitle' => [
-		'pattern' => 'site/changeTitle',
-		'handler' => fn () => new SiteChangeTitleDialog()
+		'pattern'    => 'site/changeTitle',
+		'controller' => SiteChangeTitleDialog::class
 	],
 	'site.fields' => [
-		'pattern' => '(site)/fields/(:any)/(:all?)',
-		'handler' => FieldDialog::forModel(...)
+		'pattern'    => '(site)/fields/(:any)/(:all?)',
+		'controller' => FieldDialog::forModel(...)
 	],
 	'site.file.changeName' => [
 		...$files['changeName'],
@@ -162,11 +162,11 @@ return [
 		'pattern' => '(site)/files/(:any)/delete',
 	],
 	'site.file.fields' => [
-		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
-		'handler' => FieldDialog::forFile(...)
+		'pattern'    => '(site)/files/(:any)/fields/(:any)/(:all?)',
+		'controller' => FieldDialog::forFile(...)
 	],
 	'changes' => [
-		'pattern' => 'changes',
-		'handler' => fn () => new ChangesDialog()
+		'pattern'    => 'changes',
+		'controller' => ChangesDialog::class
 	],
 ];

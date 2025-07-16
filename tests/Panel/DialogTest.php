@@ -9,6 +9,29 @@ use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+class TestDialog
+{
+	public function load()
+	{
+		return [
+			'component' => 'k-test-dialog',
+		];
+	}
+
+	public function submit()
+	{
+		return 'success';
+	}
+}
+
+class TestDialogWithFor extends TestDialog
+{
+	public static function for(): static
+	{
+		return new static();
+	}
+}
+
 #[CoversClass(Dialog::class)]
 class DialogTest extends TestCase
 {
@@ -177,12 +200,6 @@ class DialogTest extends TestCase
 
 	public function testRoutesWithoutHandlers(): void
 	{
-		$area = [
-			'dialogs' => [
-				'test' => []
-			]
-		];
-
 		$routes = Dialog::routes(
 			id: 'test',
 			areaId: 'test',
@@ -191,5 +208,52 @@ class DialogTest extends TestCase
 
 		$this->assertSame('The load handler is missing', $routes[0]['action']());
 		$this->assertSame('The submit handler is missing', $routes[1]['action']());
+	}
+
+	public function testRoutesWithController(): void
+	{
+		$routes = Dialog::routes(
+			id: 'test',
+			areaId: 'test',
+			options: [
+				'controller' => fn () => new TestDialog()
+			]
+		);
+
+		$this->assertCount(2, $routes);
+		$render = $routes[0]['action']();
+		$submit = $routes[1]['action']();
+		$this->assertSame('k-test-dialog', $render['component']);
+		$this->assertSame('success', $submit);
+
+		// with just the class name
+		$routes = Dialog::routes(
+			id: 'test',
+			areaId: 'test',
+			options: [
+				'controller' => TestDialog::class
+			]
+		);
+
+		$this->assertCount(2, $routes);
+		$render = $routes[0]['action']();
+		$submit = $routes[1]['action']();
+		$this->assertSame('k-test-dialog', $render['component']);
+		$this->assertSame('success', $submit);
+
+		// with just the class name and ::for() method
+		$routes = Dialog::routes(
+			id: 'test',
+			areaId: 'test',
+			options: [
+				'controller' => TestDialogWithFor::class
+			]
+		);
+
+		$this->assertCount(2, $routes);
+		$render = $routes[0]['action']();
+		$submit = $routes[1]['action']();
+		$this->assertSame('k-test-dialog', $render['component']);
+		$this->assertSame('success', $submit);
 	}
 }

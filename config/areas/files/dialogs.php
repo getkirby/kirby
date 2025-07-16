@@ -14,15 +14,15 @@ use Kirby\Panel\Ui\Dialogs\FileDeleteDialog;
  */
 return [
 	'changeName' => [
-		'handler' => FileChangeNameDialog::for(...)
+		'controller' => FileChangeNameDialog::class
 	],
 	'changeSort' => [
-		'handler' => FileChangeSortDialog::for(...)
+		'controller' => FileChangeSortDialog::class
 	],
 	'changeTemplate' => [
-		'handler' => FileChangeTemplateDialog::for(...)
+		'controller' => FileChangeTemplateDialog::class
 	],
 	'delete' => [
-		'handler' => FileDeleteDialog::for(...)
+		'controller' => FileDeleteDialog::class
 	]
 ];

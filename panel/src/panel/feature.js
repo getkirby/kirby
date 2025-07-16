@@ -34,7 +34,7 @@ export const defaults = () => {
  * @since 4.0.0
  *
  * @param {Object} panel The panel singleton
- * @param {String} key Sets the $key for the feature. Backend responses use this key for features.
+ * @param {String} key Sets the key for the feature. Backend responses use this key for features.
  * @param {Object} defaults Sets the default state of the feature
  */
 export default (panel, key, defaults) => {

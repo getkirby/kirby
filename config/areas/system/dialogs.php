@@ -7,7 +7,7 @@ use Kirby\Toolkit\I18n;
 
 return [
 	'license' => [
-		'handler' => fn () => new SystemLicenseDialog()
+		'controller' => SystemLicenseDialog::class
 	],
 	'license/remove' => [
 		'load' => function () {
@@ -33,6 +33,6 @@ return [
 	],
 	// license registration
 	'registration' => [
-		'handler' => fn () => new SystemActivateDialog()
+		'controller' => SystemActivateDialog::class
 	],
 ];

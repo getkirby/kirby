@@ -21,6 +21,7 @@ import RadioField from "./RadioField.vue";
 import RangeField from "./RangeField.vue";
 import SelectField from "./SelectField.vue";
 import SlugField from "./SlugField.vue";
+import StatsField from "./StatsField.vue";
 import StructureField from "./StructureField.vue";
 import TagsField from "./TagsField.vue";
 import TelField from "./TelField.vue";
@@ -58,6 +59,7 @@ export default {
 		app.component("k-range-field", RangeField);
 		app.component("k-select-field", SelectField);
 		app.component("k-slug-field", SlugField);
+		app.component("k-stats-field", StatsField);
 		app.component("k-structure-field", StructureField);
 		app.component("k-tags-field", TagsField);
 		app.component("k-text-field", TextField);

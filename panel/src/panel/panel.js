@@ -20,7 +20,7 @@ import { redirect, request } from "./request.js";
 import Upload from "./upload.js";
 import User from "./user.js";
 import View from "./view.js";
-import { isObject } from "@/helpers/object.js";
+import { isObject, length } from "@/helpers/object.js";
 import { isEmpty } from "@/helpers/string.js";
 
 /**
@@ -213,6 +213,10 @@ export default {
 		});
 
 		return response?.json ?? {};
+	},
+
+	get hasSearch() {
+		return length(this.searches) > 0;
 	},
 
 	/**

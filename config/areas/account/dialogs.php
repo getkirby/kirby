@@ -54,8 +54,8 @@ return [
 		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
 	],
 	'account.totp.enable' => [
-		'pattern' => '(account)/totp/enable',
-		'handler' => fn () => new UserTotpEnableDialog()
+		'pattern'    => '(account)/totp/enable',
+		'controller' => UserTotpEnableDialog::class
 	],
 	'account.totp.disable' => [
 		...$dialogs['user.totp.disable'],
