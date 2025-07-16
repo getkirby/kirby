@@ -268,6 +268,10 @@ class Fields extends Collection
 
 		// reset the values of each field
 		foreach ($this->data as $field) {
+			if ($field->hasValue() === false) {
+				continue;
+			}
+
 			$field->fill(null);
 		}
 
@@ -362,6 +366,10 @@ class Fields extends Collection
 
 		foreach ($fields as $name => $field) {
 			$props[$name] = $field->toArray();
+
+			if ($field->hasValue() === false) {
+				continue;
+			}
 
 			// the field should be disabled in the form if the user
 			// has no update permissions for the model or if the field
