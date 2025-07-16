@@ -15,7 +15,6 @@
 				<li v-for="(choice, index) in choices" :key="index">
 					<k-choice-input
 						v-bind="choice"
-						@click.stop="toggle(choice.value)"
 						@input="$emit('input', choice.value)"
 					/>
 				</li>
@@ -34,10 +33,6 @@ export const props = {
 		columns: {
 			default: 1,
 			type: Number
-		},
-		reset: {
-			default: true,
-			type: Boolean
 		},
 		theme: String,
 		value: [String, Number, Boolean]
@@ -70,11 +65,6 @@ export default {
 		},
 		select() {
 			this.focus();
-		},
-		toggle(value) {
-			if (value === this.value && this.reset && !this.required) {
-				this.$emit("input", "");
-			}
 		}
 	}
 };

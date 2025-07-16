@@ -23,14 +23,13 @@
 				:data-second-last="menuIndex === menus.length - 2"
 				class="k-panel-menu-buttons"
 			>
-				<template v-for="entry in menu">
-					<component
-						:is="entry.component"
-						:key="entry.key"
-						v-bind="entry.props"
-						class="k-panel-menu-button"
-					/>
-				</template>
+				<k-button
+					v-for="entry in menu"
+					:key="entry.id"
+					v-bind="entry"
+					:title="entry.title ?? entry.text"
+					class="k-panel-menu-button"
+				/>
 			</menu>
 
 			<menu v-if="activationButton">
@@ -58,24 +57,27 @@
 
 <script>
 /**
- * @since 4.0.0
+ * @displayName PanelMenu
+ * @since 6.0.0
  * @unstable
  */
 export default {
 	props: {
+		hasSearch: Boolean,
 		isHovered: Boolean,
 		isOpen: Boolean,
 		items: {
 			type: Array,
 			default: () => []
 		},
-		license: String,
-		searches: {
-			type: Object,
-			default: () => ({})
-		}
+		license: String
 	},
-	emits: ["search", "toggle"],
+	emits: ["hover", "search", "toggle"],
+	data() {
+		return {
+			over: false
+		};
+	},
 	computed: {
 		activationButton() {
 			if (this.license === "missing") {
@@ -93,9 +95,6 @@ export default {
 			}
 
 			return false;
-		},
-		hasSearch() {
-			return this.$helper.object.length(this.searches) > 0;
 		},
 		menus() {
 			return this.$helper.array.split(this.items, "-");

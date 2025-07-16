@@ -9,7 +9,7 @@
 			<k-panel-menu :items="items" />
 		</k-lab-example>
 		<k-lab-example label="Has search">
-			<k-panel-menu :items="items" :searches="searches" />
+			<k-panel-menu :items="items" :has-search="true" />
 		</k-lab-example>
 		<k-lab-example label="Open/Close (and hovered)">
 			<div class="k-panel" :data-menu="isOpen">
@@ -35,7 +35,7 @@
 export default {
 	data() {
 		return {
-			isHovered: false,
+			isHovered: true,
 			isOpen: true
 		};
 	},
@@ -43,42 +43,32 @@ export default {
 		items() {
 			return [
 				{
-					component: "k-button",
-					key: "a",
-					props: { text: "Site", icon: "home", current: true }
+					text: "Site",
+					icon: "home",
+					current: true
 				},
 				{
-					component: "k-button",
-					key: "b",
-					props: { text: "Users", icon: "users" }
+					text: "Users",
+					icon: "users"
 				},
 				{
-					component: "k-button",
-					key: "c",
-					props: { text: "Settings", icon: "settings" }
+					text: "Settings",
+					icon: "settings"
 				},
 				"-",
 				{
-					component: "k-button",
-					key: "d",
-					props: { text: "Changes", icon: "edit-line" }
+					text: "Changes",
+					icon: "edit-line"
 				},
 				{
-					component: "k-button",
-					key: "e",
-					props: { text: "Account", icon: "account" }
+					text: "Account",
+					icon: "account"
 				},
 				{
-					component: "k-button",
-					key: "f",
-					props: { text: "Sign out", icon: "logout" }
+					text: "Sign out",
+					icon: "logout"
 				}
 			];
-		},
-		searches() {
-			return {
-				shops: {}
-			};
 		}
 	}
 };
@@ -89,7 +79,6 @@ export default {
 	position: relative;
 	min-height: 20rem;
 }
-
 .k-lab-example-canvas .k-panel-menu {
 	position: absolute;
 	z-index: var(--z-content);
