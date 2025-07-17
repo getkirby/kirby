@@ -101,7 +101,7 @@ class Home
 	public function hasAccess(string $path): bool
 	{
 		$areas  = $this->panel->areas()->toArray();
-		$routes = $this->panel->routes($areas);
+		$routes = $this->panel->router()->routes($areas);
 
 		// Remove fallback routes. Otherwise a route
 		// would be found even if the view does

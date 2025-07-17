@@ -2,29 +2,13 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
-use Kirby\Exception\Exception;
-use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
-use Kirby\Http\Router;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
-use Kirby\Panel\Response\DialogResponse;
-use Kirby\Panel\Response\DrawerResponse;
-use Kirby\Panel\Response\DropdownResponse;
-use Kirby\Panel\Response\RequestResponse;
-use Kirby\Panel\Response\SearchResponse;
-use Kirby\Panel\Routes\DialogRoutes;
-use Kirby\Panel\Routes\DrawerRoutes;
-use Kirby\Panel\Routes\DropdownRoutes;
-use Kirby\Panel\Routes\RequestRoutes;
-use Kirby\Panel\Routes\SearchRoutes;
-use Kirby\Panel\Routes\ViewRoutes;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\Tpl;
-use Throwable;
 
 /**
  * The Panel class is only responsible to create
@@ -44,6 +28,7 @@ class Panel
 	protected Access $access;
 	protected Areas $areas;
 	protected Home $home;
+	protected Router $router;
 
 	public function __construct(
 		protected App $kirby
@@ -65,22 +50,6 @@ class Panel
 	public function areas(): Areas
 	{
 		return $this->areas ??= new Areas($this);
-	}
-
-	/**
-	 * Garbage collection which runs with a probability
-	 * of 10% on each Panel request
-	 *
-	 * @since 5.0.0
-	 * @codeCoverageIgnore
-	 */
-	protected static function garbage(): void
-	{
-		// run garbage collection with a chance of 10%;
-		if (mt_rand(1, 10000) <= 0.1 * 10000) {
-			// clean up leftover upload chunks
-			Upload::cleanTmpDir();
-		}
 	}
 
 	/**
@@ -187,220 +156,15 @@ class Panel
 	}
 
 	/**
-	 * Creates a Response object from the result of
-	 * a Panel route call
-	 */
-	public static function response($result, array $options = []): Response
-	{
-		// pass responses directly down to the Kirby router
-		if ($result instanceof Response) {
-			return $result;
-		}
-
-		// interpret missing/empty results as not found
-		if ($result === null || $result === false) {
-			$result = new NotFoundException(
-				message: 'The data could not be found'
-			);
-
-		// interpret strings as errors
-		} elseif (is_string($result) === true) {
-			$result = new Exception($result);
-		}
-
-		// handle different response types (view, dialog, ...)
-		return match ($options['type'] ?? null) {
-			'dialog'   => DialogResponse::from($result),
-			'drawer'   => DrawerResponse::from($result),
-			'dropdown' => DropdownResponse::from($result),
-			'request'  => RequestResponse::from($result),
-			'search'   => SearchResponse::from($result),
-			default    => View::response($result, $options)
-		};
-	}
-
-	/**
 	 * Router for the Panel views
 	 */
-	public static function router(string|null $path = null): Response|null
+	public function router(): Router|null
 	{
-		$kirby = App::instance();
-
-		if ($kirby->option('panel') === false) {
+		if ($this->kirby->option('panel') === false) {
 			return null;
 		}
 
-		// run garbage collection
-		static::garbage();
-
-		// set the translation for Panel UI before
-		// gathering areas and routes, so that the
-		// `t()` helper can already be used
-		static::setTranslation();
-
-		// set the language in multi-lang installations
-		static::setLanguage();
-
-		$areas  = $kirby->panel()->areas()->toArray();
-		$routes = static::routes($areas);
-
-		// create a micro-router for the Panel
-		return Router::execute($path, $method = $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $method, $path) {
-			// route needs authentication?
-			$auth   = $route->attributes()['auth'] ?? true;
-			$areaId = $route->attributes()['area'] ?? null;
-			$type   = $route->attributes()['type'] ?? 'view';
-			$area   = $areas[$areaId] ?? null;
-
-			// call the route action to check the result
-			try {
-				// trigger hook
-				$route = $kirby->apply(
-					'panel.route:before',
-					compact('route', 'path', 'method')
-				);
-
-				// check for access before executing area routes
-				if ($auth !== false) {
-					$kirby->panel()->access()->area($areaId, throws: true);
-				}
-
-				$result = $route->action()->call($route, ...$route->arguments());
-			} catch (Throwable $e) {
-				$result = $e;
-			}
-
-			$response = static::response($result, [
-				'area'  => $area,
-				'areas' => $areas,
-				'path'  => $path,
-				'type'  => $type
-			]);
-
-			return $kirby->apply(
-				'panel.route:after',
-				compact('route', 'path', 'method', 'response'),
-				'response'
-			);
-		});
-	}
-
-	/**
-	 * Extract the routes from the given array
-	 * of active areas.
-	 */
-	public static function routes(array $areas): array
-	{
-		$kirby = App::instance();
-
-		// the browser incompatibility
-		// warning is always needed
-		$routes = [
-			[
-				'pattern' => 'browser',
-				'auth'    => false,
-				'action'  => fn () => new Response(
-					Tpl::load($kirby->root('kirby') . '/views/browser.php')
-				),
-			]
-		];
-
-		// register all routes from areas
-		foreach ($areas as $area) {
-			$view     = new ViewRoutes($area, $area['views'] ?? []);
-			$search   = new SearchRoutes($area, $area['searches'] ?? []);
-			$dialog   = new DialogRoutes($area, $area['dialogs'] ?? []);
-			$drawer   = new DrawerRoutes($area, $area['drawers'] ?? []);
-			$dropdown = new DropdownRoutes($area, $area['dropdowns'] ?? []);
-			$request  = new RequestRoutes($area, $area['requests'] ?? []);
-
-			$routes = [
-				...$routes,
-				...$view->toArray(),
-				...$search->toArray(),
-				...$dialog->toArray(),
-				...$drawer->toArray(),
-				...$dropdown->toArray(),
-				...$request->toArray()
-			];
-		}
-
-		// if the Panel is already installed and/or the
-		// user is authenticated, those areas won't be
-		// included, which is why we add redirect routes
-		// to main Panel view as fallbacks
-		$routes[] = [
-			'pattern' => [
-				'/',
-				'installation',
-				'login',
-			],
-			'action' => fn () => $kirby->panel()->go(
-				url: $kirby->panel()->home()->url()
-			),
-			'auth' => false
-		];
-
-		// catch all route
-		$routes[] = [
-			'pattern' => '(:all)',
-			'action'  => fn (string $pattern) => 'Could not find Panel view for route: ' . $pattern
-		];
-
-		return $routes;
-	}
-
-	/**
-	 * Set the current language in multi-lang
-	 * installations based on the session or the
-	 * query language query parameter
-	 */
-	public static function setLanguage(): string|null
-	{
-		$kirby = App::instance();
-
-		// language switcher
-		if ($kirby->panel()->multilang() === true) {
-			$fallback = 'en';
-
-			if ($defaultLanguage = $kirby->defaultLanguage()) {
-				$fallback = $defaultLanguage->code();
-			}
-
-			$session         = $kirby->session();
-			$sessionLanguage = $session->get('panel.language', $fallback);
-			$language        = $kirby->request()->get('language') ?? $sessionLanguage;
-
-			// keep the language for the next visit
-			if ($language !== $sessionLanguage) {
-				$session->set('panel.language', $language);
-			}
-
-			// activate the current language in Kirby
-			$kirby->setCurrentLanguage($language);
-
-			return $language;
-		}
-
-		return null;
-	}
-
-	/**
-	 * Set the currently active Panel translation
-	 * based on the current user or config
-	 */
-	public static function setTranslation(): string
-	{
-		$kirby = App::instance();
-
-		// use the user language for the default translation or
-		// fall back to the language from the config
-		$translation = $kirby->user()?->language() ??
-						$kirby->panelLanguage();
-
-		$kirby->setCurrentTranslation($translation);
-
-		return $translation;
+		return $this->router ??= new Router($this);
 	}
 
 	/**

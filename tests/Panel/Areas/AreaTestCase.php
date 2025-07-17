@@ -7,7 +7,6 @@ use Kirby\Cms\Blueprint;
 use Kirby\Cms\User;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
-use Kirby\Panel\Panel;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
@@ -208,7 +207,8 @@ abstract class AreaTestCase extends TestCase
 		string|null $path = null,
 		bool $toJson = false
 	): Response|array|null {
-		$response = Panel::router($path);
+		$panel    = $this->app->panel();
+		$response = $panel->router()->call($path);
 
 		if ($toJson === true) {
 			return json_decode($response->body(), true);
