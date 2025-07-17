@@ -5,7 +5,7 @@ namespace Kirby\Panel\Response;
 use Kirby\Http\Response;
 
 /**
- * The Search response class handles Fiber
+ * The Search response class handles Panel
  * requests to render the JSON object for
  * search queries
  * @since 3.6.0

@@ -110,7 +110,7 @@ class ViewTest extends TestCase
 		]);
 
 		$this->assertSame('application/json', $response->type());
-		$this->assertSame('true', $response->header('X-Fiber'));
+		$this->assertSame('true', $response->header('X-Panel'));
 	}
 
 	public function testResponseFromRedirect(): void

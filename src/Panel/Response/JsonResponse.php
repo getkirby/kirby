@@ -10,7 +10,7 @@ use Throwable;
 
 /**
  * The Json abstract response class provides
- * common framework for Fiber requests
+ * common framework for Panel requests
  * to render the JSON object for, e.g.
  * Panel dialogs, dropdowns etc.
  *
@@ -142,7 +142,7 @@ class JsonResponse extends Response
 	public function headers(): array
 	{
 		return [
-			'X-Fiber'       => 'true',
+			'X-Panel'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		];
 	}

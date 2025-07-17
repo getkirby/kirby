@@ -160,7 +160,7 @@ class JsonResponseTest extends TestCase
 	{
 		$response = new JsonResponse();
 		$expected = [
-			'X-Fiber'       => 'true',
+			'X-Panel'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		];
 

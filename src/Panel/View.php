@@ -9,7 +9,7 @@ use Kirby\Toolkit\A;
 use Throwable;
 
 /**
- * The View response class handles Fiber
+ * The View response class handles Panel
  * requests to render either a JSON object
  * or a full HTML document for Panel views
  * @since 3.6.0
@@ -65,22 +65,22 @@ class View
 		}
 
 		// get all data for the request
-		$fiber = new Fiber(
+		$state = new State(
 			view: $data,
 			area: $options['area'] ?? [],
 			areas: $options['areas'] ?? []
 		);
 
-		// if requested, send $fiber data as JSON
-		if (Panel::isFiberRequest() === true) {
+		// if requested, send State data as JSON
+		if (Panel::isStateRequest() === true) {
 			// filter data, if only or globals headers or
 			// query parameters are set
-			$fiber = $fiber->toArray(globals: false);
+			$state = $state->toArray(globals: false);
 
-			return Panel::json($fiber, $fiber['view']['code'] ?? 200);
+			return Panel::json($state, $state['view']['code'] ?? 200);
 		}
 
 		// render the full HTML document
-		return Document::response($fiber);
+		return Document::response($state);
 	}
 }

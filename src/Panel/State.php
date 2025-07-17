@@ -11,7 +11,7 @@ use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 
 /**
- * Bundles all the Fiber data to be sent to the Panel
+ * Bundles all the data for the state to be sent to the Panel
  * in as much of a lazy manner than possible
  *
  * @package   Kirby Panel
@@ -21,7 +21,7 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class Fiber
+class State
 {
 	protected App $kirby;
 	protected bool $multilang;
@@ -58,7 +58,7 @@ class Fiber
 	/**
 	 * Creates the shared data array for the individual views
 	 * The full shared data is always sent on every JSON and
-	 * full document request unless the `X-Fiber-Only` header or
+	 * full document request unless the `X-Panel-Only` header or
 	 * the `_only` query parameter is set.
 	 */
 	public function data(): array
@@ -103,11 +103,11 @@ class Fiber
 	 * This way, JSON requests can tailor the returned data to
 	 * only include certain data fields.
 	 *
-	 * This can be activated with the `X-Fiber-Only` header or
+	 * This can be activated with the `X-Panel-Only` header or
 	 * the `_only` query parameter in a request.
 	 *
 	 * Globals are normally only loaded with the full document request.
-	 * In addition, they can be requested via the `X-Fiber-Globals` header
+	 * In addition, they can be requested via the `X-Panel-Globals` header
 	 * or the `_globals` query parameter.
 	 */
 	public function filter(array $data): array
@@ -116,7 +116,7 @@ class Fiber
 
 		// requested data ids
 		$request  = $this->kirby->request();
-		$filter   = $request->header('X-Fiber-Only');
+		$filter   = $request->header('X-Panel-Only');
 		$filter ??= $request->get('_only');
 
 		if (empty($filter) === false) {
@@ -145,7 +145,7 @@ class Fiber
 			return A::nest($result, ['translation']);
 		}
 
-		$filterGlobals   = $request->header('X-Fiber-Globals');
+		$filterGlobals   = $request->header('X-Panel-Globals');
 		$filterGlobals ??= $request->get('_globals');
 
 		if (empty($filterGlobals) === false) {
@@ -173,7 +173,7 @@ class Fiber
 	 * view via the script tag. Global data
 	 * is only requested once on the first page load.
 	 * It can be loaded partially later if needed,
-	 * but is otherwise not included in Fiber calls.
+	 * but is otherwise not included in Panel calls.
 	 */
 	public function globals(): array
 	{
