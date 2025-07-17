@@ -119,7 +119,7 @@ class ViewButton extends Button
 	): array|Closure {
 		// collect all buttons from areas and config
 		$buttons = [
-			...Panel::buttons(),
+			...Panel::areas()->buttons(),
 			...App::instance()->option('panel.viewButtons.' . $view, [])
 		];
 

@@ -57,7 +57,7 @@ class Home
 		}
 
 		// needed to create a proper menu
-		$areas = Panel::areas();
+		$areas = Panel::areas()->toArray();
 		$menu  = new Menu($areas, $permissions->toArray());
 		$menu  = $menu->entries();
 
@@ -101,9 +101,8 @@ class Home
 	 */
 	public function hasAccess(string $path): bool
 	{
-		$routes = Panel::routes(
-			areas: Panel::areas()
-		);
+		$areas  = Panel::areas()->toArray();
+		$routes = Panel::routes($areas);
 
 		// Remove fallback routes. Otherwise a route
 		// would be found even if the view does
