@@ -20,155 +20,63 @@ use Kirby\Toolkit\I18n;
  */
 class Menu
 {
+	public array $config;
+	protected array $items;
+	protected App $kirby;
+
 	public function __construct(
 		protected array $areas = [],
 		protected array $permissions = [],
-		protected string|null $current = null
+		protected string|null $current = null,
+		array|null $config = null,
 	) {
+		$this->kirby = App::instance();
+
+		$config ??= $this->kirby->option('panel.menu');
+
+		if ($config instanceof Closure) {
+			$config = $config($this->kirby);
+		}
+
+		$this->config = $config ?? $this->defaults();
 	}
 
 	/**
-	 * Returns all areas that are configured for the menu
+	 * Returns all Panel areas
+	 * @since 6.0.0
 	 */
 	public function areas(): array
 	{
-		// get from config option which areas should be listed in the menu
-		$kirby = App::instance();
-		$areas = $kirby->option('panel.menu');
-
-		if ($areas instanceof Closure) {
-			$areas = $areas($kirby);
-		}
-
-		// if no config is defined…
-		if ($areas === null) {
-			// ensure that some defaults are on top in the right order
-			$defaults    = ['site', 'languages', 'users', 'system'];
-			// add all other areas after that
-			$additionals = array_diff(array_keys($this->areas), $defaults);
-			$areas       = [...$defaults, ...$additionals];
-		}
-
-		$result = [];
-
-		foreach ($areas as $id => $area) {
-			// separator, keep as is in array
-			if ($area === '-') {
-				$result[] = '-';
-				continue;
-			}
-
-			// for a simple id, get global area definition
-			if (is_numeric($id) === true) {
-				$id   = $area;
-				$area = $this->areas[$id] ?? null;
-			}
-
-			// did not receive custom entry definition in config,
-			// but also is not a global area
-			if ($area === null) {
-				continue;
-			}
-
-			// merge area definition (e.g. from config)
-			// with global area definition
-			if (is_array($area) === true) {
-				$area = Areas::area($id, [
-					...$this->areas[$id] ?? [],
-					'menu' => true,
-					...$area
-				]);
-			}
-
-			$result[] = $area;
-		}
-
-		return $result;
+		return $this->areas;
 	}
 
 	/**
-	 * Transforms an area definition into a menu entry
+	 * Returns the current menu item id
+	 * @since 6.0.0
 	 */
-	public function entry(array $area): array|false
+	public function current(): string|null
 	{
-		// areas without access permissions get skipped entirely
-		if ($this->hasPermission($area['id']) === false) {
-			return false;
-		}
-
-		// check menu setting from the area definition
-		$menu = $area['menu'] ?? false;
-
-		// menu setting can be a callback
-		// that returns true, false or 'disabled'
-		if ($menu instanceof Closure) {
-			$menu = $menu($this->areas, $this->permissions, $this->current);
-		}
-
-		// false will remove the area/entry entirely
-		//just like with disabled permissions
-		if ($menu === false) {
-			return false;
-		}
-
-		$menu = match ($menu) {
-			'disabled' => ['disabled' => true],
-			true       => [],
-			default    => $menu
-		};
-
-		$entry = [
-			'current'  => $this->isCurrent(
-				$area['id'],
-				$area['current'] ?? null
-			),
-			'icon'     => $area['icon'] ?? null,
-			'link'     => $area['link'] ?? null,
-			'dialog'   => $area['dialog'] ?? null,
-			'drawer'   => $area['drawer'] ?? null,
-			'target'   => $area['target'] ?? null,
-			'text'     => I18n::translate($area['label'], $area['label']),
-			'title'    => I18n::translate($area['title'] ?? null, $area['title'] ?? null),
-			...$menu
-		];
-
-		// unset the link (which is always added by default to an area)
-		// if a dialog or drawer should be opened instead
-		if (isset($entry['dialog']) || isset($entry['drawer'])) {
-			unset($entry['link']);
-		}
-
-		return array_filter($entry);
+		return $this->current;
 	}
 
 	/**
-	 * Returns all menu entries
+	 * Returns a default menu config as fallback
+	 * @since 6.0.0
 	 */
-	public function entries(): array
+	public function defaults(): array
 	{
-		$entries = [];
-		$areas   = $this->areas();
+		// ensure that some defaults are on top in the right order
+		$defaults = ['site', 'languages', 'users', 'system'];
 
-		foreach ($areas as $area) {
-			if ($area === '-') {
-				$entries[] = '-';
-			} elseif ($entry = $this->entry($area)) {
-				$entries[] = $entry;
-			}
-		}
-
-		$entries[] = '-';
-
-		return [...$entries, ...$this->options()];
+		// add all other areas after that
+		$areas       = $this->areas();
+		$additionals = array_diff(array_keys($areas), $defaults);
+		return [...$defaults, ...$additionals];
 	}
 
-	/**
-	 * Checks if the access permission to a specific area is granted.
-	 * Defaults to allow access.
-	 */
 	public function hasPermission(string $id): bool
 	{
-		return $this->permissions['access'][$id] ?? true;
+		return $this->permissions()['access'][$id] ?? true;
 	}
 
 	/**
@@ -176,44 +84,98 @@ class Menu
 	 */
 	public function isCurrent(
 		string $id,
-		bool|Closure|null $callback = null
+		bool|Closure|null $callback = null,
 	): bool {
 		if ($callback !== null) {
 			if ($callback instanceof Closure) {
-				$callback = $callback($this->current);
+				$callback = $callback($this->current());
 			}
 
 			return $callback;
 		}
 
-		return $this->current === $id;
+		return $this->current() === $id;
+	}
+
+	public function item(string $id, array $props = []): MenuItem|null
+	{
+		return MenuItem::for($this, $id, $props);
 	}
 
 	/**
-	 * Default options entries for bottom of menu
+	 * Returns all menu items
+	 * @since 6.0.0
 	 */
-	public function options(): array
+	public function items(): array
 	{
-		$options = [
-			[
-				'icon'     => 'edit-line',
-				'dialog'   => 'changes',
-				'text'     => I18n::translate('changes'),
-			],
-			[
-				'current'  => $this->isCurrent('account'),
-				'icon'     => 'account',
-				'link'     => 'account',
-				'disabled' => $this->hasPermission('account') === false,
-				'text'     => I18n::translate('view.account'),
-			],
-			[
-				'icon' => 'logout',
-				'link' => 'logout',
-				'text' => I18n::translate('logout')
-			]
-		];
+		if (isset($this->items) === true) {
+			return $this->items;
+		}
 
-		return $options;
+		$items = [];
+
+		// add all menu items from the config
+		foreach ($this->config as $id => $config) {
+			// [0 => '-']
+			if ($config === '-') {
+				$items[] = '-';
+				continue;
+			}
+
+			// [0 => $id]
+			// simple string id references global area definition
+			if (is_numeric($id) === true) {
+				$items[] = $this->item($config);
+			}
+
+			// [$id => true]
+			if ($config === true) {
+				$items[] = $this->item($id);
+				continue;
+			}
+
+			// [$id => [ ... ] ]
+			if (is_array($config) === true) {
+				// force to be shown in the menu
+				$items[] = $this->item($id, ['menu' => true, ...$config]);
+			}
+		}
+
+		$items[] = '-';
+
+		// add additional menu items
+		$items[] = new MenuItem(
+			id: 'changes',
+			icon: 'edit-line',
+			text: I18n::translate('changes'),
+			dialog: 'changes'
+		);
+
+		$items[] = new MenuItem(
+			id: 'account',
+			icon: 'account',
+			text: I18n::translate('view.account'),
+			link: 'account',
+			current: $this->current === 'account',
+			disabled: $this->hasPermission('account') === false
+		);
+
+		$items[] = new MenuItem(
+			id: 'logout',
+			icon: 'logout',
+			text: I18n::translate('logout'),
+			link: 'logout'
+		);
+
+		return $this->items = array_filter($items);
+	}
+
+	/**
+	 * Returns the permissions for the current user
+	 * @since 6.0.0
+	 */
+	public function permissions(): array
+	{
+		return $this->permissions;
 	}
 }

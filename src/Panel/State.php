@@ -217,7 +217,7 @@ class State
 			$this->permissions,
 			$this->area['id'] ?? null
 		);
-		return $menu->entries();
+		return $menu->items();
 	}
 
 	public function multilang(): bool
