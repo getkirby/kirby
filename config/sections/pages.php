@@ -5,6 +5,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Ui\PagesCollection;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
@@ -167,42 +168,7 @@ return [
 			return $this->models()->count();
 		},
 		'data' => function () {
-			$data = [];
-
-			foreach ($this->modelsPaginated() as $page) {
-				$panel       = $page->panel();
-				$permissions = $page->permissions();
-
-				$item = [
-					'dragText'    => $panel->dragText(),
-					'id'          => $page->id(),
-					'image'       => $panel->image(
-						$this->image,
-						$this->layout === 'table' ? 'list' : $this->layout
-					),
-					'info'        => $page->toSafeString($this->info ?? false),
-					'link'        => $panel->url(true),
-					'parent'      => $page->parentId(),
-					'permissions' => [
-						'delete'       => $permissions->can('delete'),
-						'changeSlug'   => $permissions->can('changeSlug'),
-						'changeStatus' => $permissions->can('changeStatus'),
-						'changeTitle'  => $permissions->can('changeTitle'),
-						'sort'         => $permissions->can('sort'),
-					],
-					'status'      => $page->status(),
-					'template'    => $page->intendedTemplate()->name(),
-					'text'        => $page->toSafeString($this->text),
-				];
-
-				if ($this->layout === 'table') {
-					$item = $this->columnsValues($item, $page);
-				}
-
-				$data[] = $item;
-			}
-
-			return $data;
+			return $this->pagesCollection()->items();
 		},
 		'errors' => function () {
 			$errors = [];
@@ -317,6 +283,22 @@ return [
 
 			return $blueprints;
 		},
+		'pagesCollection' => function () {
+			return new PagesCollection(
+				pages: $this->modelsPaginated(),
+				columns: $this->columns(),
+				empty: $this->empty(),
+				help: $this->help(),
+				image: $this->image(),
+				info: $this->info(),
+				layout: $this->layout(),
+				link: $this->link(),
+				sortable: $this->sortable(),
+				size: $this->size(),
+				text: $this->text(),
+				theme: $this->theme(),
+			);
+		},
 	],
 	// @codeCoverageIgnoreStart
 	'api' => function () {
@@ -334,8 +316,13 @@ return [
 	},
 	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
+		// $pagesCollection = $this->pagesCollection();
+
+		// dump($pagesCollection);
+		exit;
+
 		return [
-			'data'    => $this->data,
+			'data'    => $pagesCollection->items(),
 			'errors'  => $this->errors,
 			'options' => [
 				'add'      => $this->add,
@@ -352,7 +339,7 @@ return [
 				'size'     => $this->size,
 				'sortable' => $this->sortable
 			],
-			'pagination' => $this->pagination,
+			'pagination' => $pagesCollection->pagination(),
 		];
 	}
 ];
