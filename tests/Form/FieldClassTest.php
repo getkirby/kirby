@@ -561,9 +561,11 @@ class FieldClassTest extends TestCase
 
 		$props['help'] = '<p>Help value</p>';
 
-		$array = $field->toArray();
+		$fieldProps = $field->props();
 
-		$this->assertSame($props, $field->props());
+		ksort($fieldProps);
+
+		$this->assertSame($props, $fieldProps);
 	}
 
 	public function testRoutes(): void

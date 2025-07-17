@@ -11,6 +11,11 @@ namespace Kirby\Form\Mixin;
  */
 trait When
 {
+	/**
+	 * Conditions when the field will be shown
+	 *
+	 * @since 3.1.0
+	 */
 	protected array|null $when = null;
 
 	/**
@@ -40,17 +45,11 @@ trait When
 		return true;
 	}
 
-	/**
-	 * Setter for the `when` condition
-	 */
 	protected function setWhen(array|null $when = null): void
 	{
 		$this->when = $when;
 	}
 
-	/**
-	 * Returns the `when` condition of the field
-	 */
 	public function when(): array|null
 	{
 		return $this->when;

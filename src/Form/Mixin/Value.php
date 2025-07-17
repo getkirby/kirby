@@ -13,7 +13,14 @@ use Kirby\Cms\Language;
  */
 trait Value
 {
+	/**
+	 * Default value for the field, which will be used when a page/file/user is created
+	 */
 	protected mixed $default = null;
+
+	/**
+	 * The value of the field
+	 */
 	protected mixed $value = null;
 
 	/**
