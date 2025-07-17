@@ -6,7 +6,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
-use Kirby\Http\Response;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -278,72 +277,16 @@ class PanelTest extends TestCase
 		$this->assertFalse(Panel::multilang());
 	}
 
-	public function testPanelPath(): void
+	public function testPath(): void
 	{
 		$this->assertSame('site', Panel::path('/panel/site'));
 		$this->assertSame('pages/test', Panel::path('/panel/pages/test'));
 		$this->assertSame('', Panel::path('/test/page'));
 	}
 
-	public function testResponse(): void
-	{
-		$response = new Response('Test');
-
-		// response objects should not be modified
-		$this->assertSame($response, Panel::response($response));
-	}
-
-	public function testResponseFromNullOrFalse(): void
-	{
-		// fake json request for easier assertions
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_json' => true,
-				]
-			]
-		]);
-
-		// null is interpreted as 404
-		$response = Panel::response(null);
-		$json     = json_decode($response->body(), true);
-
-		$this->assertSame(404, $response->code());
-		$this->assertSame('k-error-view', $json['view']['component']);
-		$this->assertSame('The data could not be found', $json['view']['props']['error']);
-
-		// false is interpreted as 404
-		$response = Panel::response(false);
-		$json     = json_decode($response->body(), true);
-
-		$this->assertSame(404, $response->code());
-		$this->assertSame('k-error-view', $json['view']['component']);
-		$this->assertSame('The data could not be found', $json['view']['props']['error']);
-	}
-
-	public function testResponseFromString(): void
-	{
-		// fake json request for easier assertions
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_json' => true,
-				]
-			]
-		]);
-
-		// strings are interpreted as errors
-		$response = Panel::response('Test');
-		$json     = json_decode($response->body(), true);
-
-		$this->assertSame(500, $response->code());
-		$this->assertSame('k-error-view', $json['view']['component']);
-		$this->assertSame('Test', $json['view']['props']['error']);
-	}
-
 	public function testRouterWithDisabledPanel(): void
 	{
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'options' => [
 				'panel' => false
 			]
@@ -352,16 +295,6 @@ class PanelTest extends TestCase
 		$result = Panel::router('/');
 
 		$this->assertNull($result);
-	}
-
-	public function testRoutes(): void
-	{
-		$routes = Panel::routes([]);
-
-		$this->assertSame('browser', $routes[0]['pattern']);
-		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
-		$this->assertSame('(:all)', $routes[2]['pattern']);
-		$this->assertSame('Could not find Panel view for route: foo', $routes[2]['action']('foo'));
 	}
 
 	public function testSetLanguageWithoutRequest(): void
