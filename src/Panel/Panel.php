@@ -213,6 +213,15 @@ class Panel
 	}
 
 	/**
+	 * Returns the Panel home instance
+	 * @since 6.0.0
+	 */
+	public static function home(): Home
+	{
+		return new Home();
+	}
+
+	/**
 	 * Checks for a Fiber request
 	 * via get parameters or headers
 	 */
@@ -227,6 +236,16 @@ class Panel
 		}
 
 		return false;
+	}
+
+	/**
+	 * Checks if the given URL is a Panel Url
+	 * @since 6.0.0
+	 */
+	public static function isPanelUrl(string $url): bool
+	{
+		$panel = App::instance()->url('panel');
+		return Str::startsWith($url, $panel);
 	}
 
 	/**
@@ -251,6 +270,17 @@ class Panel
 		// multilang setup check
 		$kirby = App::instance();
 		return $kirby->option('languages') || $kirby->multilang();
+	}
+
+	/**
+	 * Returns the path after /panel/ which can then
+	 * be used in the router or to find a matching view
+	 * @since 6.0.0
+	 */
+	public static function path(string $url): string|null
+	{
+		$after = Str::after($url, App::instance()->url('panel'));
+		return trim($after, '/');
 	}
 
 	/**
@@ -416,7 +446,7 @@ class Panel
 				'installation',
 				'login',
 			],
-			'action' => fn () => Panel::go(Home::url()),
+			'action' => fn () => Panel::go(Panel::home()->url()),
 			'auth' => false
 		];
 

@@ -283,6 +283,12 @@ class PanelTest extends TestCase
 		}
 	}
 
+	public function testHome(): void
+	{
+		$home = Panel::home();
+		$this->assertInstanceOf(Home::class, $home);
+	}
+
 	public function testIsFiberRequest(): void
 	{
 		// standard request
@@ -322,6 +328,13 @@ class PanelTest extends TestCase
 
 		$result = Panel::isFiberRequest($this->app->request());
 		$this->assertFalse($result);
+	}
+
+	public function testIsPanelUrl(): void
+	{
+		$this->assertTrue(Panel::isPanelUrl('/panel'));
+		$this->assertTrue(Panel::isPanelUrl('/panel/pages/test'));
+		$this->assertFalse(Panel::isPanelUrl('test'));
 	}
 
 	public function testJson(): void
@@ -364,6 +377,13 @@ class PanelTest extends TestCase
 	public function testMultilangDisabled(): void
 	{
 		$this->assertFalse(Panel::multilang());
+	}
+
+	public function testPanelPath(): void
+	{
+		$this->assertSame('site', Panel::path('/panel/site'));
+		$this->assertSame('pages/test', Panel::path('/panel/pages/test'));
+		$this->assertSame('', Panel::path('/test/page'));
 	}
 
 	public function testResponse(): void
