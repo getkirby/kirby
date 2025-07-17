@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel;
 
-use Closure;
 use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
@@ -14,6 +13,17 @@ use Kirby\Http\Response;
 use Kirby\Http\Router;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
+use Kirby\Panel\Response\DialogResponse;
+use Kirby\Panel\Response\DrawerResponse;
+use Kirby\Panel\Response\DropdownResponse;
+use Kirby\Panel\Response\RequestResponse;
+use Kirby\Panel\Response\SearchResponse;
+use Kirby\Panel\Routes\DialogRoutes;
+use Kirby\Panel\Routes\DrawerRoutes;
+use Kirby\Panel\Routes\DropdownRoutes;
+use Kirby\Panel\Routes\RequestRoutes;
+use Kirby\Panel\Routes\SearchRoutes;
+use Kirby\Panel\Routes\ViewRoutes;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl;
@@ -281,11 +291,11 @@ class Panel
 
 		// handle different response types (view, dialog, ...)
 		return match ($options['type'] ?? null) {
-			'dialog'   => Dialog::response($result, $options),
-			'drawer'   => Drawer::response($result, $options),
-			'dropdown' => Dropdown::response($result, $options),
-			'request'  => Request::response($result, $options),
-			'search'   => Search::response($result, $options),
+			'dialog'   => DialogResponse::from($result),
+			'drawer'   => DrawerResponse::from($result),
+			'dropdown' => DropdownResponse::from($result),
+			'request'  => RequestResponse::from($result),
+			'search'   => SearchResponse::from($result),
 			default    => View::response($result, $options)
 		};
 	}
@@ -377,15 +387,22 @@ class Panel
 		];
 
 		// register all routes from areas
-		foreach ($areas as $areaId => $area) {
+		foreach ($areas as $area) {
+			$view     = new ViewRoutes($area, $area['views'] ?? []);
+			$search   = new SearchRoutes($area, $area['searches'] ?? []);
+			$dialog   = new DialogRoutes($area, $area['dialogs'] ?? []);
+			$drawer   = new DrawerRoutes($area, $area['drawers'] ?? []);
+			$dropdown = new DropdownRoutes($area, $area['dropdowns'] ?? []);
+			$request  = new RequestRoutes($area, $area['requests'] ?? []);
+
 			$routes = [
 				...$routes,
-				...static::routesForViews($areaId, $area),
-				...static::routesForSearches($areaId, $area),
-				...static::routesForDialogs($areaId, $area),
-				...static::routesForDrawers($areaId, $area),
-				...static::routesForDropdowns($areaId, $area),
-				...static::routesForRequests($areaId, $area),
+				...$view->toArray(),
+				...$search->toArray(),
+				...$dialog->toArray(),
+				...$drawer->toArray(),
+				...$dropdown->toArray(),
+				...$request->toArray()
 			];
 		}
 
@@ -408,150 +425,6 @@ class Panel
 			'pattern' => '(:all)',
 			'action'  => fn (string $pattern) => 'Could not find Panel view for route: ' . $pattern
 		];
-
-		return $routes;
-	}
-
-	/**
-	 * Extract all routes from an area
-	 */
-	public static function routesForDialogs(string $areaId, array $area): array
-	{
-		$dialogs = $area['dialogs'] ?? [];
-		$routes  = [];
-
-		foreach ($dialogs as $dialogId => $dialog) {
-			$routes = [
-				...$routes,
-				...Dialog::routes(
-					id: $dialogId,
-					areaId: $areaId,
-					prefix: 'dialogs',
-					options: $dialog
-				)
-			];
-		}
-
-		return $routes;
-	}
-
-	/**
-	 * Extract all routes from an area
-	 */
-	public static function routesForDrawers(string $areaId, array $area): array
-	{
-		$drawers = $area['drawers'] ?? [];
-		$routes  = [];
-
-		foreach ($drawers as $drawerId => $drawer) {
-			$routes = [
-				...$routes,
-				...Drawer::routes(
-					id: $drawerId,
-					areaId: $areaId,
-					prefix: 'drawers',
-					options: $drawer
-				)
-			];
-		}
-
-		return $routes;
-	}
-
-	/**
-	 * Extract all routes for dropdowns
-	 */
-	public static function routesForDropdowns(string $areaId, array $area): array
-	{
-		$dropdowns = $area['dropdowns'] ?? [];
-		$routes    = [];
-
-		foreach ($dropdowns as $dropdownId => $dropdown) {
-			$routes = [
-				...$routes,
-				...Dropdown::routes(
-					id: $dropdownId,
-					areaId: $areaId,
-					prefix: 'dropdowns',
-					options: $dropdown
-				)
-			];
-		}
-
-		return $routes;
-	}
-
-	/**
-	 * Extract all routes from an area
-	 */
-	public static function routesForRequests(string $areaId, array $area): array
-	{
-		$routes = $area['requests'] ?? [];
-
-		foreach ($routes as $key => $route) {
-			$routes[$key]['area'] = $areaId;
-			$routes[$key]['type'] = 'request';
-		}
-
-		return $routes;
-	}
-
-	/**
-	 * Extract all routes for searches
-	 */
-	public static function routesForSearches(string $areaId, array $area): array
-	{
-		$searches = $area['searches'] ?? [];
-		$routes   = [];
-
-		foreach ($searches as $name => $params) {
-			// create the full routing pattern
-			$pattern = 'search/' . $name;
-
-			// load event
-			$routes[] = [
-				'pattern' => $pattern,
-				'type'    => 'search',
-				'area'    => $areaId,
-				'action'  => function () use ($params) {
-					$kirby   = App::instance();
-					$request = $kirby->request();
-					$query   = $request->get('query');
-					$limit   = (int)$request->get('limit', $kirby->option('panel.search.limit', 10));
-					$page    = (int)$request->get('page', 1);
-
-					return $params['query']($query, $limit, $page);
-				}
-			];
-		}
-
-		return $routes;
-	}
-
-	/**
-	 * Extract all views from an area
-	 */
-	public static function routesForViews(string $areaId, array $area): array
-	{
-		$views  = $area['views'] ?? [];
-		$routes = [];
-
-		foreach ($views as $view) {
-			$view['area'] = $areaId;
-			$view['type'] = 'view';
-
-			$when = $view['when'] ?? null;
-			unset($view['when']);
-
-			// enable the route by default, but if there is a
-			// when condition closure, it must return `true`
-			if (
-				$when instanceof Closure === false ||
-				$when($view, $area) === true
-			) {
-				$routes[] = $view;
-			}
-		}
 
 		return $routes;
 	}
