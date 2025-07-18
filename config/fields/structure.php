@@ -20,6 +20,13 @@ return [
 		'placeholder' => null,
 
 		/**
+		 * Whether to enable batch editing
+		 */
+		'batch' => function (bool $batch = false) {
+			return $batch;
+		},
+
+		/**
 		 * Optional columns definition to only show selected fields in the structure table.
 		 */
 		'columns' => function (array $columns = []) {
