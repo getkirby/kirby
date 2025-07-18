@@ -33,7 +33,7 @@ class LanguagesDropdown extends ViewButton
 			model: $model,
 			class: 'k-languages-dropdown',
 			icon: 'translate',
-			// Fiber dropdown endpoint to load options
+			// Panel dropdown endpoint to load options
 			// only when dropdown is opened
 			options: $model->panel()->url(true) . '/languages',
 			responsive: 'text',
@@ -74,7 +74,7 @@ class LanguagesDropdown extends ViewButton
 	}
 
 	/**
-	 * Options are used in the Fiber dropdown routes
+	 * Options are used in the Panel dropdown routes
 	 */
 	public function options(): array
 	{

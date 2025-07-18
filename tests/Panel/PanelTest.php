@@ -188,13 +188,13 @@ class PanelTest extends TestCase
 		$this->assertInstanceOf(Home::class, $home);
 	}
 
-	public function testIsFiberRequest(): void
+	public function testIsStateRequest(): void
 	{
 		// standard request
-		$result = Panel::isFiberRequest($this->app->request());
+		$result = Panel::isStateRequest($this->app->request());
 		$this->assertFalse($result);
 
-		// fiber request via get
+		// state request via get
 		$this->app = $this->app->clone([
 			'request' => [
 				'query' => [
@@ -203,19 +203,19 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$result = Panel::isFiberRequest($this->app->request());
+		$result = Panel::isStateRequest($this->app->request());
 		$this->assertTrue($result);
 
-		// fiber request via header
+		// state request via header
 		$this->app = $this->app->clone([
 			'request' => [
 				'headers' => [
-					'X-Fiber' => true
+					'X-Panel' => true
 				]
 			]
 		]);
 
-		$result = Panel::isFiberRequest($this->app->request());
+		$result = Panel::isStateRequest($this->app->request());
 		$this->assertTrue($result);
 
 		// other request than GET
@@ -225,7 +225,7 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$result = Panel::isFiberRequest($this->app->request());
+		$result = Panel::isStateRequest($this->app->request());
 		$this->assertFalse($result);
 	}
 
@@ -241,7 +241,7 @@ class PanelTest extends TestCase
 		$response = Panel::json($data = ['foo' => 'bar']);
 
 		$this->assertSame('application/json', $response->type());
-		$this->assertSame('true', $response->header('X-Fiber'));
+		$this->assertSame('true', $response->header('X-Panel'));
 		$this->assertSame($data, json_decode($response->body(), true));
 	}
 

@@ -45,9 +45,8 @@ class DocumentTest extends TestCase
 		(new Assets())->link();
 
 		// get panel response
-		$response = Document::response([
-			'test' => 'Test'
-		]);
+		$state    = new State(['test' => 'Test']);
+		$response = Document::response($state);
 
 		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame(200, $response->code());
@@ -73,9 +72,8 @@ class DocumentTest extends TestCase
 		$assets->link();
 
 		// get panel response
-		$response = Document::response([
-			'test' => 'Test'
-		]);
+		$state    = new State(['test' => 'Test']);
+		$response = Document::response($state);
 
 		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame(200, $response->code());
@@ -100,9 +98,8 @@ class DocumentTest extends TestCase
 		$assets->link();
 
 		// get panel response
-		$response = Document::response([
-			'test' => 'Test'
-		]);
+		$state    = new State(['test' => 'Test']);
+		$response = Document::response($state);
 
 		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame(200, $response->code());
@@ -130,9 +127,8 @@ class DocumentTest extends TestCase
 		$assets->link();
 
 		// get panel response
-		$response = Document::response([
-			'test' => 'Test'
-		]);
+		$state    = new State(['test' => 'Test']);
+		$response = Document::response($state);
 
 		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame(200, $response->code());

@@ -58,9 +58,9 @@ export const headers = (headers = {}, options = {}) => {
 	return {
 		"content-type": "application/json",
 		"x-csrf": options.csrf ?? false,
-		"x-fiber": true,
-		"x-fiber-globals": globals(options.globals),
-		"x-fiber-referrer": options.referrer ?? false,
+		"x-panel": true,
+		"x-panel-globals": globals(options.globals),
+		"x-panel-referrer": options.referrer ?? false,
 		...toLowerKeys(headers)
 	};
 };

@@ -5,7 +5,7 @@ namespace Kirby\Panel\Response;
 use Kirby\Http\Response;
 
 /**
- * The Dialog response class handles Fiber
+ * The Dialog response class handles Panel
  * requests to render the JSON object for
  * Panel dialogs and creates the routes
  *

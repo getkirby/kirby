@@ -6,7 +6,7 @@ use Kirby\Toolkit\Html;
  * @var \Kirby\Cms\App $kirby
  * @var string $icons
  * @var array<string, mixed> $assets
- * @var array<string, mixed> $fiber
+ * @var array<string, mixed> $state
  * @var string $panelUrl
  * @var string $nonce
  */ ?>
@@ -62,8 +62,8 @@ use Kirby\Toolkit\Html;
   <?= $icons ?>
 
   <script nonce="<?= $nonce ?>">
-    // Fiber setup
-    window.fiber = <?= json_encode($fiber) ?>;
+    // Panel state setup
+    window.panelState = <?= json_encode($state) ?>;
   </script>
 
 	<?php foreach ($assets['js'] as $key => $js): ?>

@@ -148,17 +148,17 @@ class Panel
 	}
 
 	/**
-	 * Checks for a Fiber request
+	 * Checks for a Panel request
 	 * via get parameters or headers
 	 */
-	public static function isFiberRequest(): bool
+	public static function isStateRequest(): bool
 	{
 		$request = App::instance()->request();
 
 		if ($request->method() === 'GET') {
 			return
 				(bool)($request->get('_json') ??
-				$request->header('X-Fiber'));
+				$request->header('X-Panel'));
 		}
 
 		return false;
@@ -176,14 +176,14 @@ class Panel
 
 	/**
 	 * Returns a JSON response
-	 * for Fiber calls
+	 * for State calls
 	 */
 	public static function json(array $data, int $code = 200): Response
 	{
 		$request = App::instance()->request();
 
 		return Response::json($data, $code, $request->get('_pretty'), [
-			'X-Fiber'       => 'true',
+			'X-Panel'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		]);
 	}
@@ -216,7 +216,7 @@ class Panel
 	{
 		$request = App::instance()->request();
 
-		$referrer = $request->header('X-Fiber-Referrer')
+		$referrer = $request->header('X-Panel-Referrer')
 				 ?? $request->get('_referrer')
 				 ?? '';
 

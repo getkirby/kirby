@@ -10,7 +10,7 @@ use Throwable;
 
 /**
  * The Document is used by the View class to render
- * the full Panel HTML document in Fiber calls that
+ * the full Panel HTML document in Panel calls that
  * should not return just JSON objects
  * @since 3.6.0
  *
@@ -25,7 +25,7 @@ class Document
 	/**
 	 * Renders the panel document
 	 */
-	public static function response(array $fiber): Response
+	public static function response(State $state): Response
 	{
 		$kirby  = App::instance();
 		$assets = new Assets();
@@ -46,14 +46,15 @@ class Document
 		$uri = new Uri($kirby->url('panel'));
 
 		// proper response code
-		$code = $fiber['view']['code'] ?? 200;
+		$state = $state->toArray(globals: true);
+		$code  = $state['view']['code'] ?? 200;
 
 		// load the main Panel view template
 		$body = Tpl::load($kirby->root('kirby') . '/views/panel.php', [
 			'assets'   => $assets->external(),
 			'icons'    => $assets->icons(),
 			'nonce'    => $kirby->nonce(),
-			'fiber'    => $fiber,
+			'state'    => $state,
 			'panelUrl' => $uri->path()->toString(true) . '/',
 		]);
 

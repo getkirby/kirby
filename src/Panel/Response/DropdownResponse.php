@@ -5,7 +5,7 @@ namespace Kirby\Panel\Response;
 use Kirby\Http\Response;
 
 /**
- * The Dropdown response class handles Fiber
+ * The Dropdown response class handles Panel
  * requests to render the JSON object for
  * dropdown menus
  *

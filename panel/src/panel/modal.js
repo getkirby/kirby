@@ -95,7 +95,7 @@ export default (panel, key, defaults) => {
 
 		/**
 		 * Define the default listeners
-		 * for the Fiber component
+		 * for the State component
 		 */
 		listeners() {
 			return {
