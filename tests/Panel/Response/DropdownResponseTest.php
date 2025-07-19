@@ -3,16 +3,12 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Response\DropdownResponse
- */
+#[CoversClass(DropdownResponse::class)]
 class DropdownResponseTest extends TestCase
 {
-	/**
-	 * @covers ::from
-	 */
-	public function testFrom()
+	public function testFrom(): void
 	{
 		$response = DropdownResponse::from($options = [
 			[
@@ -29,10 +25,7 @@ class DropdownResponseTest extends TestCase
 		$this->assertSame($options, $response->data()['options']);
 	}
 
-	/**
-	 * @covers ::key
-	 */
-	public function testKey()
+	public function testKey(): void
 	{
 		$response = new DropdownResponse();
 		$this->assertSame('dropdown', $response->key());

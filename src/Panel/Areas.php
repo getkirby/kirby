@@ -11,7 +11,7 @@ use Kirby\Toolkit\A;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
- * @since     5.0.0
+ * @since     6.0.0
  */
 class Areas
 {

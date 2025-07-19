@@ -3,7 +3,7 @@
 namespace Kirby\Panel\Response;
 
 /**
- * The Drawer response class handles Fiber
+ * The Drawer response class handles Panel
  * requests to render the JSON object for
  * Panel drawers
  *
@@ -12,6 +12,7 @@ namespace Kirby\Panel\Response;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class DrawerResponse extends DialogResponse
 {

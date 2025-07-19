@@ -82,17 +82,26 @@ class Panel
 	}
 
 	/**
-	 * Checks for a Fiber request
+	 * Returns the Panel home instance
+	 * @since 6.0.0
+	 */
+	public static function home(): Home
+	{
+		return new Home();
+	}
+
+	/**
+	 * Checks for a Panel request
 	 * via get parameters or headers
 	 */
-	public static function isFiberRequest(): bool
+	public static function isStateRequest(): bool
 	{
 		$request = App::instance()->request();
 
 		if ($request->method() === 'GET') {
 			return
 				(bool)($request->get('_json') ??
-				$request->header('X-Fiber'));
+				$request->header('X-Panel'));
 		}
 
 		return false;
@@ -100,6 +109,7 @@ class Panel
 
 	/**
 	 * Checks if the given URL is a Panel Url
+	 * @since 6.0.0
 	 */
 	public static function isPanelUrl(string $url): bool
 	{
@@ -109,14 +119,14 @@ class Panel
 
 	/**
 	 * Returns a JSON response
-	 * for Fiber calls
+	 * for State calls
 	 */
 	public static function json(array $data, int $code = 200): Response
 	{
 		$request = App::instance()->request();
 
 		return Response::json($data, $code, $request->get('_pretty'), [
-			'X-Fiber'       => 'true',
+			'X-Panel'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		]);
 	}
@@ -140,12 +150,23 @@ class Panel
 	}
 
 	/**
+	 * Returns the path after /panel/ which can then
+	 * be used in the router or to find a matching view
+	 * @since 6.0.0
+	 */
+	public static function path(string $url): string|null
+	{
+		$after = Str::after($url, App::instance()->url('panel'));
+		return trim($after, '/');
+	}
+
+	/**
 	 * Returns the referrer path if present
 	 */
 	public function referrer(): string
 	{
 		$request  = $this->kirby->request();
-		$referrer = $request->header('X-Fiber-Referrer')
+		$referrer = $request->header('X-Panel-Referrer')
 				 ?? $request->get('_referrer')
 				 ?? '';
 

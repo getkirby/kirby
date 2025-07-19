@@ -4,25 +4,18 @@ namespace Kirby\Panel\Response;
 
 use Kirby\Data\Json;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Response\RequestResponse
- */
+#[CoversClass(RequestResponse::class)]
 class RequestResponseTest extends TestCase
 {
-	/**
-	 * @covers ::body
-	 */
-	public function testBody()
+	public function testBody(): void
 	{
 		$response = new RequestResponse($data = ['foo' => 'bar']);
 		$this->assertSame(Json::encode($data), $response->body());
 	}
 
-	/**
-	 * @covers ::data
-	 */
-	public function testData()
+	public function testData(): void
 	{
 		$response = new RequestResponse($data = ['foo' => 'bar']);
 		$this->assertSame($data, $response->data());

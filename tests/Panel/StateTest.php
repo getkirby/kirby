@@ -8,14 +8,12 @@ use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Fiber
- * @covers ::__construct
- */
-class FiberTest extends TestCase
+#[CoversClass(State::class)]
+class StateTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Fiber';
+	public const TMP = KIRBY_TMP_DIR . '/Panel.State';
 
 	public function setUp(): void
 	{
@@ -36,14 +34,11 @@ class FiberTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::config
-	 */
 	public function testConfig(): void
 	{
 		// without custom data
-		$fiber = new Fiber();
-		$config  = $fiber->config();
+		$state = new State();
+		$config  = $state->config();
 		$config = A::apply($config);
 
 		$this->assertArrayHasKey('api', $config);
@@ -53,14 +48,11 @@ class FiberTest extends TestCase
 		$this->assertArrayHasKey('upload', $config);
 	}
 
-	/**
-	 * @covers ::data
-	 */
 	public function testData(): void
 	{
 		// without custom data
-		$fiber = new Fiber();
-		$data  = $fiber->data();
+		$state = new State();
+		$data  = $state->data();
 
 		$this->assertArrayHasKey('direction', $data);
 		$this->assertArrayHasKey('language', $data);
@@ -87,25 +79,19 @@ class FiberTest extends TestCase
 		$this->assertArrayNotHasKey('dialogs', $view);
 	}
 
-	/**
-	 * @covers ::data
-	 */
 	public function testDataWithCustomViewData(): void
 	{
-		$fiber = new Fiber([
+		$state = new State([
 			'props' => $props = [
 				'foo' => 'bar'
 			]
 		]);
-		$data = $fiber->data();
+		$data = $state->data();
 		$data = A::apply($data);
 
 		$this->assertSame($props, $data['view']['props']);
 	}
 
-	/**
-	 * @covers ::direction
-	 */
 	public function testDirection(): void
 	{
 		$this->app = $this->app->clone([
@@ -126,13 +112,10 @@ class FiberTest extends TestCase
 		$this->app->impersonate('kirby');
 
 		// without custom data
-		$fiber = new Fiber();
-		$this->assertSame('rtl', $fiber->direction());
+		$state = new State();
+		$this->assertSame('rtl', $state->direction());
 	}
 
-	/**
-	 * @covers ::filter
-	 */
 	public function testFilter()
 	{
 		$data = [
@@ -141,19 +124,16 @@ class FiberTest extends TestCase
 		];
 
 		// default (no special request)
-		$result = (new Fiber())->filter($data);
+		$result = (new State())->filter($data);
 
 		$this->assertSame($data, $result);
 	}
 
-	/**
-	 * @covers ::filter
-	 */
 	public function testFilterOnlyRequest(): void
 	{
 		// empty only
 		$data   = ['foo' => 'bar'];
-		$result = (new Fiber())->filter($data);
+		$result = (new State())->filter($data);
 		$this->assertSame($data, $result);
 
 		// via get
@@ -170,14 +150,14 @@ class FiberTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = (new Fiber())->filter($data);
+		$result = (new State())->filter($data);
 		$this->assertSame(['a' => 'A'], $result);
 
 		// via headers
 		$this->app = $this->app->clone([
 			'request' => [
 				'headers' => [
-					'X-Fiber-Only' => 'a',
+					'X-Panel-Only' => 'a',
 				]
 			]
 		]);
@@ -187,13 +167,10 @@ class FiberTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = (new Fiber())->filter($data);
+		$result = (new State())->filter($data);
 		$this->assertSame(['a' => 'A'], $result);
 	}
 
-	/**
-	 * @covers ::filter
-	 */
 	public function testFilterOnlyRequestWithGlobal(): void
 	{
 		// simulate a simple partial request
@@ -210,7 +187,7 @@ class FiberTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = (new Fiber())->filter($data);
+		$result = (new State())->filter($data);
 
 		$expected = [
 			'a' => 'A',
@@ -223,9 +200,6 @@ class FiberTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::filter
-	 */
 	public function testFilterOnlyRequestWithNestedData(): void
 	{
 		// simulate a simple partial request
@@ -244,7 +218,7 @@ class FiberTest extends TestCase
 			]
 		];
 
-		$result = (new Fiber())->filter($data);
+		$result = (new State())->filter($data);
 
 		$expected = [
 			'b' => [
@@ -255,9 +229,6 @@ class FiberTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::filter
-	 */
 	public function testFilterOnlyRequestWithNestedGlobal(): void
 	{
 		// simulate a simple partial request
@@ -274,7 +245,7 @@ class FiberTest extends TestCase
 			'b' => 'B'
 		];
 
-		$result = (new Fiber())->filter($data);
+		$result = (new State())->filter($data);
 
 		$expected = [
 			'a' => 'A',
@@ -286,18 +257,15 @@ class FiberTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::filter
-	 */
 	public function testFilterGlobalsRequest(): void
 	{
 		// not included
-		$data = (new Fiber())->filter([]);
+		$data = (new State())->filter([]);
 		$this->assertArrayNotHasKey('translation', $data);
 
 		// empty globals
 		$data = ['foo' => 'bar'];
-		$result = (new Fiber())->filter($data);
+		$result = (new State())->filter($data);
 		$this->assertSame($data, $result);
 
 		// via query
@@ -309,30 +277,27 @@ class FiberTest extends TestCase
 			]
 		]);
 
-		$data = (new Fiber())->filter([]);
+		$data = (new State())->filter([]);
 		$this->assertArrayHasKey('translation', $data);
 
 		// via header
 		$this->app = $this->app->clone([
 			'request' => [
 				'headers' => [
-					'X-Fiber-Globals' => 'translation'
+					'X-Panel-Globals' => 'translation'
 				]
 			]
 		]);
 
-		$data = (new Fiber())->filter([]);
+		$data = (new State())->filter([]);
 		$this->assertArrayHasKey('translation', $data);
 	}
 
-	/**
-	 * @covers ::globals
-	 */
 	public function testGlobals(): void
 	{
 		// defaults
-		$fiber   = new Fiber();
-		$globals = $fiber->globals();
+		$state   = new State();
+		$globals = $state->globals();
 
 		$this->assertInstanceOf('Closure', $globals['config']);
 		$this->assertInstanceOf('Closure', $globals['system']);
@@ -372,9 +337,6 @@ class FiberTest extends TestCase
 		$this->assertSame('/', $urls['site']);
 	}
 
-	/**
-	 * @covers ::globals
-	 */
 	public function testGlobalsWithUser(): void
 	{
 		$this->app = $this->app->clone([
@@ -388,18 +350,12 @@ class FiberTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$fiber   = new Fiber();
-		$globals = $fiber->globals();
+		$state   = new State();
+		$globals = $state->globals();
 		$globals = A::apply($globals);
 		$this->assertSame('de', $globals['translation']['code']);
 	}
 
-	/**
-	 * @covers ::direction
-	 * @covers ::language
-	 * @covers ::languages
-	 * @covers ::multilang
-	 */
 	public function testLanguages(): void
 	{
 		$this->app = $this->app->clone([
@@ -412,16 +368,16 @@ class FiberTest extends TestCase
 			]
 		]);
 
-		$fiber = new Fiber();
+		$state = new State();
 
 		// multilang
-		$multilang = $fiber->multilang();
+		$multilang = $state->multilang();
 		$this->assertTrue($multilang);
 
 		// languages
-		$languages = $fiber->languages();
-		$language  = $fiber->language();
-		$direction = $fiber->direction();
+		$languages = $state->languages();
+		$language  = $state->language();
+		$direction = $state->direction();
 		$expected = [
 			[
 				'code'      => 'en',
@@ -448,9 +404,6 @@ class FiberTest extends TestCase
 		$this->assertNull($direction);
 	}
 
-	/**
-	 * @covers ::searches
-	 */
 	public function testSearches()
 	{
 		$this->app = $this->app->clone([
@@ -473,42 +426,39 @@ class FiberTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 
 		$areas  = [
-			new Area(
-				id: 'a',
-				searches: [
+			[
+				'id' => 'a',
+				'searches' => [
 					'foo' => [],
 				]
-			),
-			new Area(
-				id: 'b',
-				searches: [
+			],
+			[
+				'id' => 'b',
+				'searches' => [
 					'bar' => [],
 				]
-			),
-			new Area(
-				id: 'c',
-				searches: [
+			],
+			[
+				'id' => 'c',
+				'searches' => [
 					'test' => [],
 				]
-			)
+			]
 		];
 
-		$fiber    = new Fiber(areas: $areas);
-		$searches = $fiber->searches();
+		$state    = new State(areas: $areas);
+		$searches = $state->searches();
 
 		$this->assertArrayHasKey('foo', $searches);
 		$this->assertArrayNotHasKey('bar', $searches);
 		$this->assertArrayHasKey('test', $searches);
 	}
 
-	/**
-	 * @covers ::system
-	 */
 	public function testSystem(): void
 	{
 		// without custom data
-		$fiber   = new Fiber();
-		$system  = $fiber->system();
+		$state   = new State();
+		$system  = $state->system();
 		$system = A::apply($system);
 
 		$this->assertArrayHasKey('ascii', $system);
@@ -519,28 +469,22 @@ class FiberTest extends TestCase
 		$this->assertArrayHasKey('title', $system);
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray(): void
 	{
-		$fiber = new Fiber();
-		$array = $fiber->toArray(globals: false);
+		$state = new State();
+		$array = $state->toArray(globals: false);
 		$this->assertArrayHasKey('user', $array);
 		$this->assertArrayNotHasKey('config', $array);
 
-		$array = $fiber->toArray(globals: true);
+		$array = $state->toArray(globals: true);
 		$this->assertArrayHasKey('user', $array);
 		$this->assertArrayHasKey('config', $array);
 	}
 
-	/**
-	 * @covers ::translation
-	 */
 	public function testTranslation(): void
 	{
-		$fiber       = new Fiber();
-		$translation = $fiber->translation();
+		$state       = new State();
+		$translation = $state->translation();
 		$translation = A::apply($translation);
 
 		$this->assertSame('en', $translation['code']);
@@ -550,9 +494,6 @@ class FiberTest extends TestCase
 		$this->assertSame(0, $translation['weekday']);
 	}
 
-	/**
-	 * @covers ::translation
-	 */
 	public function testTranslationWithUserLanguage(): void
 	{
 		$this->app = $this->app->clone([
@@ -567,8 +508,8 @@ class FiberTest extends TestCase
 
 		$this->app->impersonate('test@getkirby.com');
 
-		$fiber       = new Fiber();
-		$translation = $fiber->translation();
+		$state       = new State();
+		$translation = $state->translation();
 		$translation = A::apply($translation);
 
 		$this->assertSame('de', $translation['code']);
@@ -578,9 +519,6 @@ class FiberTest extends TestCase
 		$this->assertSame(1, $translation['weekday']);
 	}
 
-	/**
-	 * @covers ::url
-	 */
 	public function testUrl(): void
 	{
 		// custom request url
@@ -595,35 +533,28 @@ class FiberTest extends TestCase
 		]);
 
 		// without custom data
-		$fiber = new Fiber();
-		$url   = $fiber->url();
+		$state = new State();
+		$url   = $state->url();
 		$this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $url);
 	}
 
-	/**
-	 * @covers ::urls
-	 */
 	public function testUrls(): void
 	{
-		$fiber = new Fiber();
-		$urls  = $fiber->urls();
+		$state = new State();
+		$urls  = $state->urls();
 		$this->assertArrayHasKey('api', $urls);
 		$this->assertArrayHasKey('site', $urls);
 	}
 
-	/**
-	 * @covers ::permissions
-	 * @covers ::user
-	 */
 	public function testUserAuthenticated(): void
 	{
 		// authenticate pseudo user
 		$this->app->impersonate('kirby');
 
-		$fiber = new Fiber();
+		$state = new State();
 
 		// user
-		$user = $fiber->user();
+		$user = $state->user();
 		$user = A::apply($user);
 
 		$expected = [
@@ -638,7 +569,7 @@ class FiberTest extends TestCase
 
 
 		// permissions;
-		$permissions = $fiber->permissions();
+		$permissions = $state->permissions();
 		$permissions = A::apply($permissions);
 
 		$this->assertSame(

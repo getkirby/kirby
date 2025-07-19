@@ -4,10 +4,12 @@
 		<div class="k-table">
 			<table>
 				<thead>
-					<th style="width: 10rem">Name</th>
-					<th style="width: 10rem">Type</th>
-					<th style="width: 10rem">Default</th>
-					<th>Description</th>
+					<tr>
+						<th style="width: 10rem">Name</th>
+						<th style="width: 10rem">Type</th>
+						<th style="width: 10rem">Default</th>
+						<th>Description</th>
+					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="prop in props" :key="prop.name">

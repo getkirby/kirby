@@ -11,16 +11,16 @@ use Throwable;
 
 /**
  * The Json abstract response class provides
- * common framework for Fiber requests
+ * common framework for Panel requests
  * to render the JSON object for, e.g.
  * Panel dialogs, dropdowns etc.
- * @since 3.6.0
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class JsonResponse extends Response
 {
@@ -100,11 +100,6 @@ class JsonResponse extends Response
 			return $data;
 		}
 
-		// pass through JSON response objects
-		if ($data instanceof JsonResponse) {
-			return $data;
-		}
-
 		// handle redirects
 		if ($data instanceof Redirect) {
 			return new static([
@@ -148,7 +143,7 @@ class JsonResponse extends Response
 	public function headers(): array
 	{
 		return [
-			'X-Fiber'       => 'true',
+			'X-Panel'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		];
 	}

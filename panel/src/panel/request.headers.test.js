@@ -11,9 +11,9 @@ describe.concurrent("request headers", () => {
 		const expected = {
 			"content-type": "application/json",
 			"x-csrf": false,
-			"x-fiber": true,
-			"x-fiber-globals": false,
-			"x-fiber-referrer": false
+			"x-panel": true,
+			"x-panel-globals": false,
+			"x-panel-referrer": false
 		};
 
 		expect(result).toStrictEqual(expected);
@@ -27,9 +27,9 @@ describe.concurrent("request headers", () => {
 		const expected = {
 			"content-type": "application/json",
 			"x-csrf": false,
-			"x-fiber": true,
-			"x-fiber-globals": false,
-			"x-fiber-referrer": false,
+			"x-panel": true,
+			"x-panel-globals": false,
+			"x-panel-referrer": false,
 			"x-foo": "test"
 		};
 
@@ -49,9 +49,9 @@ describe.concurrent("request headers", () => {
 		const expected = {
 			"content-type": "application/json",
 			"x-csrf": "dev",
-			"x-fiber": true,
-			"x-fiber-globals": "language",
-			"x-fiber-referrer": "/test"
+			"x-panel": true,
+			"x-panel-globals": "language",
+			"x-panel-referrer": "/test"
 		};
 
 		expect(result).toStrictEqual(expected);

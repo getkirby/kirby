@@ -3,16 +3,12 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Response\SearchResponse
- */
+#[CoversClass(SearchResponse::class)]
 class SearchResponseTest extends TestCase
 {
-	/**
-	 * @covers ::from
-	 */
-	public function testFrom()
+	public function testFrom(): void
 	{
 		$response = SearchResponse::from($results = [
 			[
@@ -36,10 +32,7 @@ class SearchResponseTest extends TestCase
 		$this->assertSame($pagination, $response->data()['pagination']);
 	}
 
-	/**
-	 * @covers ::key
-	 */
-	public function testKey()
+	public function testKey(): void
 	{
 		$response = new SearchResponse();
 		$this->assertSame('search', $response->key());

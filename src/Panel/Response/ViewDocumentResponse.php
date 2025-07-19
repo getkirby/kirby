@@ -10,7 +10,7 @@ use Kirby\Toolkit\Tpl;
 use Throwable;
 
 /**
- * The View response class handles Fiber
+ * The View response class handles State
  * requests to render either a JSON object
  * or a full HTML document for Panel views
  * @since 3.6.0
@@ -59,20 +59,20 @@ class ViewDocumentResponse extends ViewResponse
 		$template = $this->kirby->root('kirby') . '/views/panel.php';
 
 		return Tpl::load($template, [
-			'assets'   => $this->assets->external(),
-			'icons'    => $this->assets->icons(),
-			'nonce'    => $this->kirby->nonce(),
-			'fiber'    => $this->data(),
-			'panelUrl' => $this->url(),
+			'assets'     => $this->assets->external(),
+			'icons'      => $this->assets->icons(),
+			'nonce'      => $this->kirby->nonce(),
+			'panelState' => $this->data(),
+			'panelUrl'   => $this->url(),
 		]);
 	}
 
 	/**
-	 * Returns the full fiber data object
+	 * Returns the full state data object
 	 */
 	public function data(): array
 	{
-		return $this->fiber()->toArray(globals: true);
+		return $this->state()->toArray(globals: true);
 	}
 
 	public function headers(): array

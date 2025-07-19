@@ -6,13 +6,12 @@ use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\User;
-use Kirby\Panel\Ui\Menu;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 
 /**
- * Bundles all the Fiber data to be sent to the Panel
+ * Bundles all the data for the state to be sent to the Panel
  * in as much of a lazy manner than possible
  *
  * @package   Kirby Panel
@@ -20,9 +19,9 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
- * @since     5.0.0
+ * @since     6.0.0
  */
-class Fiber
+class State
 {
 	protected App $kirby;
 	protected bool $multilang;
@@ -32,11 +31,11 @@ class Fiber
 
 	public function __construct(
 		protected array $view = [],
-		protected Area|null $area = null,
+		protected array|null $area = null,
 		protected array $areas = [],
 	) {
 		$this->kirby       = App::instance();
-		$this->multilang   = $this->kirby->panel()->multilang();
+		$this->multilang   = Panel::multilang();
 		$this->language    = $this->kirby->language();
 		$this->user        = $this->kirby->user();
 		$this->permissions = $this->user?->role()->permissions()->toArray() ?? [];
@@ -50,6 +49,7 @@ class Fiber
 			],
 			'debug'       => $this->kirby->option('debug', false),
 			'kirbytext'   => $this->kirby->option('panel.kirbytext', true),
+			'theme'       => $this->kirby->option('panel.theme', 'system'),
 			'translation' => $this->kirby->option('panel.language', 'en'),
 			'upload'      => Upload::chunkSize(),
 		];
@@ -58,7 +58,7 @@ class Fiber
 	/**
 	 * Creates the shared data array for the individual views
 	 * The full shared data is always sent on every JSON and
-	 * full document request unless the `X-Fiber-Only` header or
+	 * full document request unless the `X-Panel-Only` header or
 	 * the `_only` query parameter is set.
 	 */
 	public function data(): array
@@ -103,11 +103,11 @@ class Fiber
 	 * This way, JSON requests can tailor the returned data to
 	 * only include certain data fields.
 	 *
-	 * This can be activated with the `X-Fiber-Only` header or
+	 * This can be activated with the `X-Panel-Only` header or
 	 * the `_only` query parameter in a request.
 	 *
 	 * Globals are normally only loaded with the full document request.
-	 * In addition, they can be requested via the `X-Fiber-Globals` header
+	 * In addition, they can be requested via the `X-Panel-Globals` header
 	 * or the `_globals` query parameter.
 	 */
 	public function filter(array $data): array
@@ -116,7 +116,7 @@ class Fiber
 
 		// requested data ids
 		$request  = $this->kirby->request();
-		$filter   = $request->header('X-Fiber-Only');
+		$filter   = $request->header('X-Panel-Only');
 		$filter ??= $request->get('_only');
 
 		if (empty($filter) === false) {
@@ -145,7 +145,7 @@ class Fiber
 			return A::nest($result, ['translation']);
 		}
 
-		$filterGlobals   = $request->header('X-Fiber-Globals');
+		$filterGlobals   = $request->header('X-Panel-Globals');
 		$filterGlobals ??= $request->get('_globals');
 
 		if (empty($filterGlobals) === false) {
@@ -173,7 +173,7 @@ class Fiber
 	 * view via the script tag. Global data
 	 * is only requested once on the first page load.
 	 * It can be loaded partially later if needed,
-	 * but is otherwise not included in Fiber calls.
+	 * but is otherwise not included in Panel calls.
 	 */
 	public function globals(): array
 	{
@@ -213,13 +213,11 @@ class Fiber
 	public function menu(): array
 	{
 		$menu = new Menu(
-			areas:       $this->areas,
-			permissions: $this->permissions,
-			current:     $this->area?->id(),
-			config: 	 $this->kirby->option('panel.menu', null)
+			$this->areas,
+			$this->permissions,
+			$this->area['id'] ?? null
 		);
-
-		return $menu->render();
+		return $menu->entries();
 	}
 
 	public function multilang(): bool
@@ -242,8 +240,8 @@ class Fiber
 		foreach ($this->areas as $area) {
 			// by default, all areas are accessible unless
 			// the permissions are explicitly set to false
-			if ($area->isAccessible($this->permissions) !== false) {
-				foreach ($area->searches() as $id => $params) {
+			if (($this->permissions['access'][$area['id']] ?? true) !== false) {
+				foreach (($area['searches'] ?? []) as $id => $params) {
 					$searches[$id] = [
 						'icon'  => $params['icon'] ?? 'search',
 						'label' => $params['label'] ?? Str::ucfirst($id),
@@ -349,15 +347,26 @@ class Fiber
 			'path'       => Str::after($this->kirby->path(), '/'),
 			'props'      => [],
 			'query'      => $this->kirby->request()->query()->toArray(),
-			'referrer'   => $this->kirby->panel()->referrer(),
+			'referrer'   => Panel::referrer(),
 			'search'     => $this->kirby->option('panel.search.type', 'pages'),
 			'timestamp'  => (int)(microtime(true) * 1000),
 		];
 
 		$view = array_replace_recursive(
 			$defaults,
-			$this->area?->toView() ?? [],
+			$this->area ?? [],
 			$this->view
+		);
+
+		// make sure that views and dialogs are gone
+		unset(
+			$view['buttons'],
+			$view['dialogs'],
+			$view['drawers'],
+			$view['dropdowns'],
+			$view['requests'],
+			$view['searches'],
+			$view['views']
 		);
 
 		// resolve all callbacks in the view array

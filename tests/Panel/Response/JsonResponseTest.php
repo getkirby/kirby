@@ -3,21 +3,16 @@
 namespace Kirby\Panel\Response;
 
 use Exception;
-use Kirby\Cms\App;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception as KirbyException;
 use Kirby\Panel\Redirect;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Response\JsonResponse
- */
+#[CoversClass(JsonResponse::class)]
 class JsonResponseTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$response = new JsonResponse();
 
@@ -25,10 +20,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame('application/json', $response->type());
 	}
 
-	/**
-	 * @covers ::body
-	 */
-	public function testBody()
+	public function testBody(): void
 	{
 		$response = new JsonResponse(['foo' => 'bar']);
 		$expected = [
@@ -42,10 +34,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame(Json::encode(['response' => $expected]), $response->body());
 	}
 
-	/**
-	 * @covers ::body
-	 */
-	public function testBodyWithPrettyPrinting()
+	public function testBodyWithPrettyPrinting(): void
 	{
 		$response = new JsonResponse(
 			data: ['foo' => 'bar'],
@@ -63,10 +52,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame(Json::encode(['response' => $expected], true), $response->body());
 	}
 
-	/**
-	 * @covers ::data
-	 */
-	public function testData()
+	public function testData(): void
 	{
 		$response = new JsonResponse(['foo' => 'bar']);
 		$expected = [
@@ -80,10 +66,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame($expected, $response->data());
 	}
 
-	/**
-	 * @covers ::error
-	 */
-	public function testError()
+	public function testError(): void
 	{
 		$error = JsonResponse::error('Custom error');
 
@@ -91,10 +74,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame('Custom error', $error->data()['error']);
 	}
 
-	/**
-	 * @covers ::error
-	 */
-	public function testErrorWithCustomCode()
+	public function testErrorWithCustomCode(): void
 	{
 		$error = JsonResponse::error('Custom error', 403);
 
@@ -102,10 +82,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame('Custom error', $error->data()['error']);
 	}
 
-	/**
-	 * @covers ::from
-	 */
-	public function testFromJsonResponse()
+	public function testFromJsonResponse(): void
 	{
 		$input  = new JsonResponse(['foo' => 'bar']);
 		$output = JsonResponse::from($input);
@@ -113,10 +90,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame($input, $output);
 	}
 
-	/**
-	 * @covers ::from
-	 */
-	public function testFromRedirect()
+	public function testFromRedirect(): void
 	{
 		$input  = new Redirect('https://getkirby.com');
 		$output = JsonResponse::from($input);
@@ -124,10 +98,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame('https://getkirby.com', $output->data()['redirect']);
 	}
 
-	/**
-	 * @covers ::from
-	 */
-	public function testFromKirbyException()
+	public function testFromKirbyException(): void
 	{
 		$input  = new KirbyException('Error message');
 		$output = JsonResponse::from($input);
@@ -135,10 +106,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame('Error message', $output->data()['error']);
 	}
 
-	/**
-	 * @covers ::from
-	 */
-	public function testFromException()
+	public function testFromException(): void
 	{
 		$input  = new Exception('Error message');
 		$output = JsonResponse::from($input);
@@ -146,10 +114,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame('Error message', $output->data()['error']);
 	}
 
-	/**
-	 * @covers ::from
-	 */
-	public function testFromString()
+	public function testFromString(): void
 	{
 		$input  = 'test';
 		$output = JsonResponse::from($input);
@@ -158,10 +123,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame('test', $output->data()['error']);
 	}
 
-	/**
-	 * @covers ::from
-	 */
-	public function testFromArray()
+	public function testFromArray(): void
 	{
 		$input  = ['foo' => 'bar'];
 		$output = JsonResponse::from($input);
@@ -169,10 +131,7 @@ class JsonResponseTest extends TestCase
 		$this->assertSame('bar', $output->data()['foo']);
 	}
 
-	/**
-	 * @covers ::from
-	 */
-	public function testFromEmptyArray()
+	public function testFromEmptyArray(): void
 	{
 		$input  = [];
 		$output = JsonResponse::from($input);
@@ -181,53 +140,54 @@ class JsonResponseTest extends TestCase
 		$this->assertSame('The response is empty', $output->data()['error']);
 	}
 
-	/**
-	 * @covers ::headers
-	 */
-	public function testHeaders()
+	public function testFromNull(): void
+	{
+		$output = JsonResponse::from(null);
+
+		$this->assertSame(404, $output->code());
+		$this->assertSame('The data could not be found', $output->data()['error']);
+	}
+
+	public function testFromInvalid(): void
+	{
+		$output = JsonResponse::from(5);
+
+		$this->assertSame(500, $output->code());
+		$this->assertSame('Invalid response', $output->data()['error']);
+	}
+
+	public function testHeaders(): void
 	{
 		$response = new JsonResponse();
 		$expected = [
-			'X-Fiber'       => 'true',
+			'X-Panel'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		];
 
 		$this->assertSame($expected, $response->headers());
 	}
 
-	/**
-	 * @covers ::key
-	 */
-	public function testKey()
+	public function testKey(): void
 	{
 		$response = new JsonResponse();
 		$this->assertSame('response', $response->key());
 	}
 
-	/**
-	 * @covers ::pretty
-	 */
-	public function testPretty()
+	public function testPretty(): void
 	{
 		$response = new JsonResponse(pretty: true);
 
 		$this->assertTrue($response->pretty());
 	}
 
-	/**
-	 * @covers ::pretty
-	 */
-	public function testPrettyDefault()
+	public function testPrettyDefault(): void
 	{
 		$response = new JsonResponse();
 
 		$this->assertFalse($response->pretty());
 	}
 
-	/**
-	 * @covers ::pretty
-	 */
-	public function testPrettyFromQuery()
+	public function testPrettyFromQuery(): void
 	{
 		$response = new JsonResponse();
 
@@ -238,10 +198,7 @@ class JsonResponseTest extends TestCase
 		$this->assertTrue($response->pretty());
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testType()
+	public function testType(): void
 	{
 		$response = new JsonResponse();
 		$this->assertSame('application/json', $response->type());

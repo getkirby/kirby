@@ -3,16 +3,12 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Response\DrawerResponse
- */
+#[CoversClass(DrawerResponse::class)]
 class DrawerResponseTest extends TestCase
 {
-	/**
-	 * @covers ::key
-	 */
-	public function testKey()
+	public function testKey(): void
 	{
 		$response = new DrawerResponse();
 		$this->assertSame('drawer', $response->key());

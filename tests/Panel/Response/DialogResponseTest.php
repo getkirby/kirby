@@ -3,16 +3,12 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Response\DialogResponse
- */
+#[CoversClass(DialogResponse::class)]
 class DialogResponseTest extends TestCase
 {
-	/**
-	 * @covers ::from
-	 */
-	public function testFromTrue()
+	public function testFromTrue(): void
 	{
 		$response = DialogResponse::from(true);
 		$expected = [
@@ -26,10 +22,7 @@ class DialogResponseTest extends TestCase
 		$this->assertSame($expected, $response->data());
 	}
 
-	/**
-	 * @covers ::key
-	 */
-	public function testKey()
+	public function testKey(): void
 	{
 		$response = new DialogResponse();
 		$this->assertSame('dialog', $response->key());

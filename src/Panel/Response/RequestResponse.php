@@ -10,6 +10,7 @@ use Kirby\Data\Json;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class RequestResponse extends JsonResponse
 {

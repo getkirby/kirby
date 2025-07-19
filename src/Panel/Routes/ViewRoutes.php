@@ -2,6 +2,14 @@
 
 namespace Kirby\Panel\Routes;
 
+/**
+ * @package   Kirby Panel
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
 class ViewRoutes extends Routes
 {
 	protected static string $prefix = '';
@@ -31,10 +39,12 @@ class ViewRoutes extends Routes
 				continue;
 			}
 
-			$params['area'] = $this->area->id();
-			$params['type'] = 'view';
-
 			$routes[] = $params;
+			$routes[] = [
+				...$params,
+				'area' => $this->area->id(),
+				'type' => 'view'
+			];
 		}
 
 		return $routes;

@@ -61,7 +61,7 @@ class Home
 
 		// needed to create a proper menu
 		$areas = $this->kirby->panel()->areas()->toArray();
-		$menu  = new Menu(areas: $areas, permissions: $permissions->toArray());
+		$menu  = new Menu($areas, $permissions->toArray());
 		$menu  = $menu->items();
 
 		// go through the menu and search for the first

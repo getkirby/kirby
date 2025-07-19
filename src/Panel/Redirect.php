@@ -5,7 +5,7 @@ namespace Kirby\Panel;
 use Exception;
 
 /**
- * The Redirect exception can be thrown in all Fiber
+ * The Redirect exception can be thrown in all Panel
  * routes to send a redirect response. It is
  * primarily used in `Panel::go($location)`
  * @since 3.6.0

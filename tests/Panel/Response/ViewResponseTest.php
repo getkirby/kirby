@@ -5,13 +5,12 @@ namespace Kirby\Panel\Response;
 use Kirby\Cms\App;
 use Kirby\FileSystem\Dir;
 use Kirby\Http\Response;
-use Kirby\Panel\Fiber;
 use Kirby\Panel\Redirect;
+use Kirby\Panel\State;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Response\ViewResponse
- */
+#[CoversClass(ViewResponse::class)]
 class ViewResponseTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Response.ViewResponse';
@@ -35,10 +34,7 @@ class ViewResponseTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::error
-	 */
-	public function testError()
+	public function testError(): void
 	{
 		$error = ViewResponse::error('Error message');
 
@@ -48,28 +44,19 @@ class ViewResponseTest extends TestCase
 		$this->assertSame(404, $error->code());
 	}
 
-	/**
-	 * @covers ::error
-	 */
-	public function testErrorWithCustomCode()
+	public function testErrorWithCustomCode(): void
 	{
 		$error = ViewResponse::error('Error message', 403);
 		$this->assertSame(403, $error->code());
 	}
 
-	/**
-	 * @covers ::fiber
-	 */
-	public function testFiber()
+	public function testState(): void
 	{
 		$response = new ViewResponse();
-		$this->assertInstanceOf(Fiber::class, $response->fiber());
+		$this->assertInstanceOf(State::class, $response->state());
 	}
 
-	/**
-	 * @covers ::from
-	 */
-	public function testFrom()
+	public function testFrom(): void
 	{
 		$input    = new Redirect('https://getkirby.com');
 		$response = ViewResponse::from($input);
@@ -78,19 +65,13 @@ class ViewResponseTest extends TestCase
 		$this->assertSame('https://getkirby.com', $response->header('Location'));
 	}
 
-	/**
-	 * @covers ::key
-	 */
-	public function testKey()
+	public function testKey(): void
 	{
 		$response = new ViewResponse();
 		$this->assertSame('view', $response->key());
 	}
 
-	/**
-	 * @covers ::view
-	 */
-	public function testView()
+	public function testView(): void
 	{
 		$response = new ViewResponse(
 			view: $view = [

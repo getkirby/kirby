@@ -5,11 +5,9 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Areas
- * @covers ::__construct
- */
+#[CoversClass(Areas::class)]
 class AreasTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Areas';
@@ -31,9 +29,6 @@ class AreasTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::area
-	 */
 	public function testArea(): void
 	{
 		// defaults
@@ -49,9 +44,6 @@ class AreasTest extends TestCase
 		$this->assertNull($area->search());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray(): void
 	{
 		// unauthenticated / uninstalled
@@ -111,9 +103,6 @@ class AreasTest extends TestCase
 		$this->assertCount(8, $areas);
 	}
 
-	/**
-	 * @covers ::buttons
-	 */
 	public function testButtons(): void
 	{
 		$this->app = $this->app->clone([

@@ -110,7 +110,7 @@ export default {
 		this.plugins = Plugins(this.app, plugins);
 
 		// set initial state
-		this.set(window.fiber);
+		this.set(window.panelState);
 
 		// api needs the initial state
 		// for the endpoint config
