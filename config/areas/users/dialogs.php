@@ -6,7 +6,6 @@ use Kirby\Cms\UserRules;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
-use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Dialogs\UserTotpDisableDialog;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
@@ -293,7 +292,7 @@ return [
 		'submit' => function (string $id) {
 			$user     = Find::user($id);
 			$redirect = false;
-			$referrer = Panel::referrer();
+			$referrer = $user->kirby()->panel()->referrer();
 			$url      = $user->panel()->url(true);
 
 			$user->delete();

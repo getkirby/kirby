@@ -8,6 +8,8 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Router;
 use Kirby\Http\Uri;
+use Kirby\Panel\Router as PanelRouter;
+use Kirby\Panel\Ui\Menu;
 use Throwable;
 
 /**
@@ -33,8 +35,9 @@ class Home
 	protected App $kirby;
 	protected User|null $user;
 
-	public function __construct()
-	{
+	public function __construct(
+		protected Panel $panel
+	) {
 		$this->kirby = App::instance();
 		$this->user  = $this->kirby->user();
 	}
@@ -57,9 +60,9 @@ class Home
 		}
 
 		// needed to create a proper menu
-		$areas = Panel::areas()->toArray();
+		$areas = $this->kirby->panel()->areas()->toArray();
 		$menu  = new Menu($areas, $permissions->toArray());
-		$menu  = $menu->entries();
+		$menu  = $menu->items();
 
 		// go through the menu and search for the first
 		// available view we can go to
@@ -70,22 +73,22 @@ class Home
 			}
 
 			// skip disabled items
-			if (($menuItem['disabled'] ?? false) === true) {
+			if (($menuItem['props']['disabled'] ?? false) === true) {
 				continue;
 			}
 
 			// skip buttons that don't open a link
 			// (but e.g. a dialog)
-			if (isset($menuItem['link']) === false) {
+			if (isset($menuItem['props']['link']) === false) {
 				continue;
 			}
 
 			// skip the logout button
-			if ($menuItem['link'] === 'logout') {
+			if ($menuItem['props']['link'] === 'logout') {
 				continue;
 			}
 
-			return Panel::url($menuItem['link']);
+			return Panel::url($menuItem['props']['link']);
 		}
 
 		throw new NotFoundException(
@@ -101,8 +104,9 @@ class Home
 	 */
 	public function hasAccess(string $path): bool
 	{
-		$areas  = Panel::areas()->toArray();
-		$routes = Panel::routes($areas);
+		$routes = PanelRouter::routes(
+			areas: $this->panel->areas()->toArray()
+		);
 
 		// Remove fallback routes. Otherwise a route
 		// would be found even if the view does
@@ -132,7 +136,7 @@ class Home
 				}
 
 				// check the firewall
-				return Panel::hasAccess($this->user, $areaId);
+				return Access::has($this->user, $areaId);
 			});
 		} catch (Throwable) {
 			return false;

@@ -8,7 +8,6 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Field;
-use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Dialogs\ChangesDialog;
 use Kirby\Panel\Ui\Dialogs\PageCreateDialog;
 use Kirby\Toolkit\Escape;
@@ -263,12 +262,13 @@ return [
 			if ($page->slug() !== $slug) {
 				$response['event'][] = 'page.changeSlug';
 
-				$newPage = $page->changeSlug($slug);
-				$oldUrl  = $page->panel()->url(true);
-				$newUrl  = $newPage->panel()->url(true);
+				$newPage  = $page->changeSlug($slug);
+				$oldUrl   = $page->panel()->url(true);
+				$newUrl   = $newPage->panel()->url(true);
+				$referrer = $page->kirby()->panel()->referrer();
 
 				// check for a necessary redirect after the slug has changed
-				if (Panel::referrer() === $oldUrl && $oldUrl !== $newUrl) {
+				if ($referrer === $oldUrl && $oldUrl !== $newUrl) {
 					$response['redirect'] = $newUrl;
 				}
 			}
@@ -351,7 +351,7 @@ return [
 
 			$page     = Find::page($id);
 			$redirect = false;
-			$referrer = Panel::referrer();
+			$referrer = $page->kirby()->panel()->referrer();
 			$url      = $page->panel()->url(true);
 
 			if (

@@ -34,50 +34,14 @@ class AreasTest extends TestCase
 		// defaults
 		$area = Areas::area('test', []);
 
-		$this->assertSame('test', $area['id']);
-		$this->assertSame('test', $area['label']);
-		$this->assertSame([], $area['breadcrumb']);
-		$this->assertSame('test', $area['breadcrumbLabel']);
-		$this->assertSame('test', $area['title']);
-		$this->assertFalse($area['menu']);
-		$this->assertSame('test', $area['link']);
-		$this->assertNull($area['search']);
-	}
-
-	public function testButtons(): void
-	{
-		$this->app = $this->app->clone([
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin'
-				]
-			]
-		]);
-
-		$this->app->impersonate('test@getkirby.com');
-		$areas = new Areas();
-		$core  = $areas->buttons();
-
-		// add custom buttons
-		$this->app = $this->app->clone([
-			'areas' => [
-				'test' => fn () => [
-					'buttons' => [
-						'a' => ['component' => 'test-a'],
-						'b' => ['component' => 'test-b']
-					]
-				]
-			]
-		]);
-
-		$this->app->impersonate('test@getkirby.com');
-		$areas       = new Areas();
-		$withCustoms = $areas->buttons();
-
-		$this->assertSame(2, count($withCustoms) - count($core));
-		$this->assertSame(['component' => 'test-b'], array_pop($withCustoms));
-		$this->assertSame(['component' => 'test-a'], array_pop($withCustoms));
+		$this->assertSame('test', $area->id());
+		$this->assertSame('test', $area->label());
+		$this->assertSame([], $area->breadcrumb());
+		$this->assertSame('test', $area->breadcrumbLabel());
+		$this->assertSame('test', $area->title());
+		$this->assertFalse($area->menu());
+		$this->assertSame('test', $area->link());
+		$this->assertNull($area->search());
 	}
 
 	public function testToArray(): void
@@ -137,5 +101,41 @@ class AreasTest extends TestCase
 
 		$this->assertArrayHasKey('todos', $areas);
 		$this->assertCount(8, $areas);
+	}
+
+	public function testButtons(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$areas = new Areas();
+		$core  = $areas->buttons();
+
+		// add custom buttons
+		$this->app = $this->app->clone([
+			'areas' => [
+				'test' => fn () => [
+					'buttons' => [
+						'a' => ['component' => 'test-a'],
+						'b' => ['component' => 'test-b']
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$areas       = new Areas();
+		$withCustoms = $areas->buttons();
+
+		$this->assertSame(2, count($withCustoms) - count($core));
+		$this->assertSame(['component' => 'test-b'], array_pop($withCustoms));
+		$this->assertSame(['component' => 'test-a'], array_pop($withCustoms));
 	}
 }

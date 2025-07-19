@@ -2,7 +2,6 @@
 
 use Kirby\Cms\Find;
 use Kirby\Panel\Field;
-use Kirby\Panel\Panel;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
@@ -40,7 +39,9 @@ return [
 		},
 		'submit' => function (string $path, string $filename) {
 			$file     = Find::file($path, $filename);
-			$name     = $file->kirby()->request()->get('name');
+			$kirby    = $file->kirby();
+			$referrer = $kirby->panel()->referrer();
+			$name     = $kirby->request()->get('name');
 			$renamed  = $file->changeName($name);
 			$oldUrl   = $file->panel()->url(true);
 			$newUrl   = $renamed->panel()->url(true);
@@ -49,7 +50,7 @@ return [
 			];
 
 			// check for a necessary redirect after the filename has changed
-			if (Panel::referrer() === $oldUrl && $oldUrl !== $newUrl) {
+			if ($referrer === $oldUrl && $oldUrl !== $newUrl) {
 				$response['redirect'] = $newUrl;
 			}
 
@@ -144,7 +145,7 @@ return [
 		'submit' => function (string $path, string $filename) {
 			$file     = Find::file($path, $filename);
 			$redirect = false;
-			$referrer = Panel::referrer();
+			$referrer = $file->kirby()->panel()->referrer();
 			$url      = $file->panel()->url(true);
 
 			$file->delete();

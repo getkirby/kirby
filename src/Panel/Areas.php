@@ -27,18 +27,9 @@ class Areas
 	/**
 	 * Normalize a panel area
 	 */
-	public static function area(string $id, array $area): array
+	public static function area(string $id, array $area): Area
 	{
-		$area['id']                = $id;
-		$area['label']           ??= $id;
-		$area['breadcrumb']      ??= [];
-		$area['breadcrumbLabel'] ??= $area['label'];
-		$area['title']             = $area['label'];
-		$area['menu']            ??= false;
-		$area['link']            ??= $id;
-		$area['search']          ??= null;
-
-		return $area;
+		return new Area($id, ...$area);
 	}
 
 	/**
@@ -49,7 +40,7 @@ class Areas
 		return array_merge(...array_values(
 			A::map(
 				$this->areas,
-				fn (array $area) => $area['buttons'] ?? []
+				fn (Area $area) => $area->buttons()
 			)
 		));
 	}
