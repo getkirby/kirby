@@ -376,6 +376,7 @@
 
 	"field.structure.delete.confirm": "Do you really want to delete this row?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "No entries yet",
 
 	"field.users.empty": "No users selected yet",

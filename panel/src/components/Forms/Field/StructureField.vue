@@ -3,44 +3,56 @@
 		v-bind="$props"
 		:class="['k-structure-field', $attrs.class]"
 		:style="$attrs.style"
+		:buttons="buttons"
 		@click.native.stop
 	>
 		<template v-if="hasFields && !disabled" #options>
-			<k-button-group layout="collapsed">
-				<k-button
-					:autofocus="autofocus"
-					:disabled="!more"
-					:responsive="true"
-					:text="$t('add')"
-					icon="add"
-					variant="filled"
-					size="xs"
-					@click="add()"
-				/>
-				<k-button
-					icon="dots"
-					size="xs"
-					variant="filled"
-					@click="$refs.options.toggle()"
-				/>
-				<k-dropdown-content
-					ref="options"
-					:options="[
-						{
-							click: () => add(),
-							disabled: !more,
-							icon: 'add',
-							text: $t('add')
-						},
-						{
-							click: () => removeAll(),
-							disabled: items.length === 0 || disabled,
-							icon: 'trash',
-							text: $t('delete.all')
-						}
-					]"
-					align-x="end"
-				/>
+			<k-button-group
+				v-if="isSelecting"
+				:buttons="batchEditingButtons"
+				size="xs"
+				variant="filled"
+			/>
+			<k-button-group v-else>
+				<template v-if="canSelect">
+					<k-button v-bind="batchEditingToggle" size="xs" variant="filled" />
+				</template>
+				<k-button-group layout="collapsed">
+					<k-button
+						:autofocus="autofocus"
+						:disabled="!more"
+						:responsive="true"
+						:text="$t('add')"
+						icon="add"
+						variant="filled"
+						size="xs"
+						@click="add()"
+					/>
+					<k-button
+						icon="dots"
+						size="xs"
+						variant="filled"
+						@click="$refs.options.toggle()"
+					/>
+					<k-dropdown-content
+						ref="options"
+						:options="[
+							{
+								click: () => add(),
+								disabled: !more,
+								icon: 'add',
+								text: $t('add')
+							},
+							{
+								click: () => removeAll(),
+								disabled: items.length === 0 || disabled,
+								icon: 'trash',
+								text: $t('delete.all')
+							}
+						]"
+						align-x="end"
+					/>
+				</k-button-group>
 			</k-button-group>
 		</template>
 
@@ -63,13 +75,15 @@
 						:empty="$t('field.structure.empty')"
 						:index="index"
 						:options="options"
-						:pagination="limit ? pagination : false"
+						:pagination="limit && !isSelecting ? pagination : false"
 						:rows="paginatedItems"
+						:selecting="isSelecting"
 						:sortable="isSortable"
 						@cell="open($event.row, $event.columnIndex)"
 						@input="onTableInput"
 						@option="option"
 						@paginate="paginate"
+						@select="onSelect"
 					/>
 
 					<footer v-if="more">
@@ -92,12 +106,20 @@
 
 <script>
 import { props as Field } from "@/components/Forms/Field.vue";
+import batchEditing from "@/mixins/batchEditing";
 
 export default {
-	mixins: [Field],
+	mixins: [Field, batchEditing],
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
+		/**
+		 * Whether to enable batch editing
+		 */
+		batch: {
+			type: Boolean,
+			default: false
+		},
 		/**
 		 * What columns to show in the table
 		 */
@@ -160,6 +182,23 @@ export default {
 		};
 	},
 	computed: {
+		batchDeleteConfirmMessage() {
+			return this.$t(`field.structure.delete.confirm.selected`, {
+				count: this.selected.length
+			});
+		},
+
+		batchEditingEvent() {
+			return "structure.selecting";
+		},
+
+		batchEditingIdentifier() {
+			return "_id";
+		},
+
+		canSelect() {
+			return this.batch === true && this.items.length > 0;
+		},
 		/**
 		 * Index of first row that is displayed
 		 * @returns {number}
@@ -217,26 +256,6 @@ export default {
 			return true;
 		},
 		/**
-		 * Returns config for `k-pagination`
-		 * @returns {Obect}
-		 */
-		pagination() {
-			let offset = 0;
-
-			if (this.limit) {
-				offset = (this.page - 1) * this.limit;
-			}
-
-			return {
-				page: this.page,
-				offset: offset,
-				limit: this.limit,
-				total: this.items.length,
-				align: "center",
-				details: true
-			};
-		},
-		/**
 		 * Returns array of options for dropdown in rows
 		 * @returns {Array}
 		 */
@@ -278,11 +297,33 @@ export default {
 				this.pagination.offset,
 				this.pagination.offset + this.limit
 			);
+		},
+		/**
+		 * Returns config for `k-pagination`
+		 * @returns {Obect}
+		 */
+		pagination() {
+			let offset = 0;
+
+			if (this.limit) {
+				offset = (this.page - 1) * this.limit;
+			}
+
+			return {
+				page: this.page,
+				offset: offset,
+				limit: this.limit,
+				total: this.items.length,
+				align: "center",
+				details: true
+			};
 		}
 	},
 	watch: {
 		value: {
 			handler(value) {
+				this.stopSelecting();
+
 				if (value !== this.items) {
 					this.items = this.toItems(value);
 				}
@@ -438,6 +479,10 @@ export default {
 			}
 		},
 
+		onBatchDelete() {
+			this.removeSelected();
+		},
+
 		/**
 		 * Merges the updated values from the paginated table
 		 * into the original items array and saves them
@@ -461,6 +506,7 @@ export default {
 		 */
 		paginate({ page }) {
 			this.page = page;
+			this.stopSelecting();
 		},
 
 		/**
@@ -513,6 +559,12 @@ export default {
 				}
 			});
 		},
+
+		removeSelected() {
+			this.items = this.items.filter((item) => !this.selected.includes(item));
+			this.save();
+		},
+
 		/**
 		 * When the field's value changes
 		 * @param {array} values
