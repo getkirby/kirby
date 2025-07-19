@@ -1,13 +1,13 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Panel\Controller\PageTree;
+use Kirby\Panel\Controller\PageTreeController;
 
 return [
 	'tree' => [
 		'pattern' => 'site/tree',
 		'action'  => function () {
-			return (new PageTree())->children(
+			return (new PageTreeController())->children(
 				parent: App::instance()->request()->get('parent'),
 				moving: App::instance()->request()->get('move')
 			);
@@ -16,7 +16,7 @@ return [
 	'tree.parents' => [
 		'pattern' => 'site/tree/parents',
 		'action'  => function () {
-			return (new PageTree())->parents(
+			return (new PageTreeController())->parents(
 				page: App::instance()->request()->get('page'),
 				includeSite: App::instance()->request()->get('root') === 'true',
 			);

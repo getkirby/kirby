@@ -9,7 +9,7 @@ use Kirby\Cms\Site;
 use Kirby\Toolkit\I18n;
 
 /**
- * The PageTree controller takes care of the request logic
+ * The PageTreeController takes care of the request logic
  * for the `k-page-tree` component and similar
  *
  * @package   Kirby Panel
@@ -18,7 +18,7 @@ use Kirby\Toolkit\I18n;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PageTree
+class PageTreeController
 {
 	protected Site $site;
 

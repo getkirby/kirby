@@ -6,7 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Toolkit\Escape;
 
 /**
- * The Search controller takes care of the logic
+ * The SearchController takes care of the logic
  * for delivering Panel search results
  *
  * @package   Kirby Panel
@@ -16,7 +16,7 @@ use Kirby\Toolkit\Escape;
  * @license   https://getkirby.com/license
  * @unstable
  */
-class Search
+class SearchController
 {
 	public static function files(
 		string|null $query = null,

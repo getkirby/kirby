@@ -6,10 +6,10 @@ use Kirby\Cms\App;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(Search::class)]
-class SearchTest extends TestCase
+#[CoversClass(SearchController::class)]
+class SearchControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Search';
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.SearchController';
 
 	public function setUp(): void
 	{
@@ -62,7 +62,7 @@ class SearchTest extends TestCase
 
 	public function testFiles(): void
 	{
-		$result = Search::files('fish');
+		$result = SearchController::files('fish');
 
 		$this->assertCount(5, $result['results']);
 		$this->assertArrayHasKey('image', $result['results'][0]);
@@ -79,7 +79,7 @@ class SearchTest extends TestCase
 		$this->assertNull($result['pagination']);
 
 		// without query
-		$result = Search::files();
+		$result = SearchController::files();
 		$this->assertCount(0, $result['results']);
 	}
 
@@ -125,14 +125,14 @@ class SearchTest extends TestCase
 		]);
 
 		$this->app->impersonate('homer@simpson.com');
-		$result = Search::files('fish');
+		$result = SearchController::files('fish');
 		$this->assertCount(1, $result['results']);
 		$this->assertEqualsCanonicalizing([
 			'blue-fish.jpg'
 		], array_column($result['results'], 'text'));
 
 		$this->app->impersonate('kirby');
-		$result = Search::files('fish');
+		$result = SearchController::files('fish');
 		$this->assertCount(2, $result['results']);
 		$this->assertEqualsCanonicalizing([
 			'blue-fish.jpg',
@@ -142,7 +142,7 @@ class SearchTest extends TestCase
 
 	public function testFilesPaginated(): void
 	{
-		$result = Search::files('fish', limit: 1);
+		$result = SearchController::files('fish', limit: 1);
 		$this->assertCount(1, $result['results']);
 		$this->assertSame(1, $result['pagination']['page']);
 		$this->assertSame(5, $result['pagination']['pages']);
@@ -150,7 +150,7 @@ class SearchTest extends TestCase
 		$this->assertSame(1, $result['pagination']['limit']);
 		$this->assertSame(5, $result['pagination']['total']);
 
-		$result = Search::files('fish', limit: 1, page: 2);
+		$result = SearchController::files('fish', limit: 1, page: 2);
 		$this->assertCount(1, $result['results']);
 		$this->assertSame(2, $result['pagination']['page']);
 		$this->assertSame(5, $result['pagination']['pages']);
@@ -161,7 +161,7 @@ class SearchTest extends TestCase
 
 	public function testPages(): void
 	{
-		$result = Search::pages('beautiful');
+		$result = SearchController::pages('beautiful');
 
 		$this->assertCount(3, $result['results']);
 		$this->assertArrayHasKey('image', $result['results'][0]);
@@ -176,7 +176,7 @@ class SearchTest extends TestCase
 		$this->assertNull($result['pagination']);
 
 		// without query
-		$result = Search::pages();
+		$result = SearchController::pages();
 		$this->assertCount(0, $result['results']);
 	}
 
@@ -225,14 +225,14 @@ class SearchTest extends TestCase
 		]);
 
 		$this->app->impersonate('homer@simpson.com');
-		$result = Search::pages('friend');
+		$result = SearchController::pages('friend');
 		$this->assertCount(1, $result['results']);
 		$this->assertEqualsCanonicalizing([
 			'A friend'
 		], array_column($result['results'], 'text'));
 
 		$this->app->impersonate('kirby');
-		$result = Search::pages('friend');
+		$result = SearchController::pages('friend');
 		$this->assertCount(2, $result['results']);
 		$this->assertEqualsCanonicalizing([
 			'A friend',
@@ -242,7 +242,7 @@ class SearchTest extends TestCase
 
 	public function testPagesPaginated(): void
 	{
-		$result = Search::pages('beautiful', limit: 1);
+		$result = SearchController::pages('beautiful', limit: 1);
 		$this->assertCount(1, $result['results']);
 		$this->assertSame(1, $result['pagination']['page']);
 		$this->assertSame(3, $result['pagination']['pages']);
@@ -250,7 +250,7 @@ class SearchTest extends TestCase
 		$this->assertSame(1, $result['pagination']['limit']);
 		$this->assertSame(3, $result['pagination']['total']);
 
-		$result = Search::pages('beautiful', limit: 1, page: 2);
+		$result = SearchController::pages('beautiful', limit: 1, page: 2);
 		$this->assertCount(1, $result['results']);
 		$this->assertSame(2, $result['pagination']['page']);
 		$this->assertSame(3, $result['pagination']['pages']);
@@ -261,7 +261,7 @@ class SearchTest extends TestCase
 
 	public function testUsers(): void
 	{
-		$result = Search::users('simpson');
+		$result = SearchController::users('simpson');
 
 		$this->assertCount(2, $result['results']);
 		$this->assertArrayHasKey('image', $result['results'][0]);
@@ -275,13 +275,13 @@ class SearchTest extends TestCase
 		$this->assertNull($result['pagination']);
 
 		// without query
-		$result = Search::users();
+		$result = SearchController::users();
 		$this->assertCount(0, $result['results']);
 	}
 
 	public function testUsersPaginated(): void
 	{
-		$result = Search::users('simpson', limit: 1);
+		$result = SearchController::users('simpson', limit: 1);
 		$this->assertCount(1, $result['results']);
 		$this->assertSame(1, $result['pagination']['page']);
 		$this->assertSame(2, $result['pagination']['pages']);
@@ -289,7 +289,7 @@ class SearchTest extends TestCase
 		$this->assertSame(1, $result['pagination']['limit']);
 		$this->assertSame(2, $result['pagination']['total']);
 
-		$result = Search::users('simpson', limit: 1, page: 2);
+		$result = SearchController::users('simpson', limit: 1, page: 2);
 		$this->assertCount(1, $result['results']);
 		$this->assertSame(2, $result['pagination']['page']);
 		$this->assertSame(2, $result['pagination']['pages']);
