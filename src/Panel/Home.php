@@ -132,7 +132,7 @@ class Home
 				}
 
 				// check the firewall
-				return Panel::hasAccess($this->user, $areaId);
+				return Panel::access()->area($areaId);
 			});
 		} catch (Throwable) {
 			return false;
