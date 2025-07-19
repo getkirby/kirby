@@ -57,13 +57,11 @@ class Home
 		}
 
 		// needed to create a proper menu
-		$areas = Panel::areas()->toArray();
-		$menu  = new Menu($areas, $permissions->toArray());
-		$menu  = $menu->entries();
+		$menu = new Menu(Panel::areas()->toArray(), $permissions->toArray());
 
 		// go through the menu and search for the first
 		// available view we can go to
-		foreach ($menu as $menuItem) {
+		foreach ($menu->items() as $menuItem) {
 			// skip separators
 			if ($menuItem === '-') {
 				continue;
