@@ -493,5 +493,33 @@ class AppTranslationsTest extends TestCase
 			]
 		]);
 		$this->assertSame('it', $app->panelLanguage());
+
+		// override with the translation query parameter
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'request' => [
+				'query' => [
+					'translation' => 'it'
+				]
+			]
+		]);
+
+		$this->assertSame('it', $app->panelLanguage());
+
+		// override with invalid translation query parameter
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'request' => [
+				'query' => [
+					'translation' => 'does-not-exist'
+				]
+			]
+		]);
+
+		$this->assertSame('en', $app->panelLanguage());
 	}
 }
