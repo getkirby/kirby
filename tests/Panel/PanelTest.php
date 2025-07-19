@@ -4,7 +4,6 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
-use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\TestCase;
@@ -50,96 +49,16 @@ class PanelTest extends TestCase
 		unset($_SERVER['SERVER_SOFTWARE']);
 	}
 
+	public function testAccess(): void
+	{
+		$access = Panel::access();
+		$this->assertInstanceOf(Access::class, $access);
+	}
+
 	public function testAreas(): void
 	{
 		$areas = Panel::areas();
 		$this->assertInstanceOf(Areas::class, $areas);
-	}
-
-	public function testFirewallWithoutUser(): void
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to access the panel');
-
-		// no user
-		$this->assertFalse(Panel::hasAccess());
-		Panel::firewall();
-	}
-
-	public function testFirewallWithoutAcceptedUser(): void
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to access the panel');
-
-		// user without panel access
-		$this->app->impersonate('nobody');
-
-		$this->assertFalse(Panel::hasAccess($this->app->user()));
-		Panel::firewall($this->app->user());
-	}
-
-	public function testFirewallWithAcceptedUser(): void
-	{
-		// accepted user
-		$this->app->impersonate('kirby');
-
-		// general access
-		$result = Panel::firewall($this->app->user());
-		$this->assertTrue($result);
-
-		$result = Panel::hasAccess($this->app->user());
-		$this->assertTrue($result);
-
-		// area access
-		$result = Panel::firewall($this->app->user(), 'site');
-		$this->assertTrue($result);
-
-		$result = Panel::hasAccess($this->app->user(), 'site');
-		$this->assertTrue($result);
-	}
-
-	public function testFirewallAreaAccess(): void
-	{
-		$app = $this->app->clone([
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'editor'
-				]
-			],
-			'blueprints' => [
-				'users/editor' => [
-					'name' => 'editor',
-					'title' => 'Editor',
-					'permissions' => [
-						'access' => [
-							'system' => false
-						]
-					]
-				]
-			]
-		]);
-
-		// accepted user
-		$app->impersonate('test@getkirby.com');
-
-		// general access
-		$result = Panel::firewall($app->user());
-		$this->assertTrue($result);
-
-		$result = Panel::hasAccess($app->user());
-		$this->assertTrue($result);
-
-		// no defined area permissions means access
-		$this->assertTrue(Panel::hasAccess($app->user(), 'foo'));
-		Panel::firewall($app->user(), 'foo');
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to access this part of the panel');
-
-		// no area access
-		$this->assertFalse(Panel::hasAccess($app->user(), 'system'));
-		Panel::firewall($app->user(), 'system');
 	}
 
 	public function testGo(): void
