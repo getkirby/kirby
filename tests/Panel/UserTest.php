@@ -3,11 +3,8 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -22,30 +19,11 @@ class UserForceLocked extends ModelUser
 	}
 }
 
-#[CoversClass(\Kirby\Panel\User::class)]
+#[CoversClass(User::class)]
 #[CoversClass(Model::class)]
 class UserTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.User';
-
-	public function setUp(): void
-	{
-		Blueprint::$loaded = [];
-
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		Dir::remove(static::TMP);
-	}
 
 	protected function panel(array $props = [])
 	{

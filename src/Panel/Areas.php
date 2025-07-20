@@ -18,9 +18,10 @@ class Areas
 	protected array $areas;
 	protected App $kirby;
 
-	public function __construct()
-	{
-		$this->kirby = App::instance();
+	public function __construct(
+		protected Panel $panel
+	) {
+		$this->kirby = $this->panel->kirby();
 		$this->areas = $this->load();
 	}
 
@@ -74,7 +75,7 @@ class Areas
 		}
 
 		// not yet authenticated
-		if (!$user) {
+		if ($user === null) {
 			return [
 				'logout' => static::area('logout', $areas['logout']),
 				// login area last because it defines a fallback route
@@ -87,7 +88,7 @@ class Areas
 		// Disable the language area for single-language installations
 		// This does not check for installed languages. Otherwise you'd
 		// not be able to add the first language through the view
-		if (!$this->kirby->option('languages')) {
+		if ($this->kirby->option('languages') !== true) {
 			unset($areas['languages']);
 		}
 

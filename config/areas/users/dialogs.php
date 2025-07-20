@@ -293,7 +293,7 @@ return [
 		'submit' => function (string $id) {
 			$user     = Find::user($id);
 			$redirect = false;
-			$referrer = Panel::referrer();
+			$referrer = $user->kirby()->panel()->referrer();
 			$url      = $user->panel()->url(true);
 
 			$user->delete();

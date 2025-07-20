@@ -3,39 +3,12 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Menu::class)]
 class MenuTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Menu';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-
-		// clear fake json requests
-		$_GET = [];
-
-		// clean up $_SERVER
-		unset($_SERVER['SERVER_SOFTWARE']);
-	}
 
 	public function testAreas(): void
 	{

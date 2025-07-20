@@ -117,10 +117,12 @@ class ViewButton extends Button
 		string $name,
 		string|null $view = null
 	): array|Closure {
+		$kirby = App::instance();
+
 		// collect all buttons from areas and config
 		$buttons = [
-			...Panel::areas()->buttons(),
-			...App::instance()->option('panel.viewButtons.' . $view, [])
+			...$kirby->panel()->areas()->buttons(),
+			...$kirby->option('panel.viewButtons.' . $view, [])
 		];
 
 		// try to find by full name (view-prefixed)

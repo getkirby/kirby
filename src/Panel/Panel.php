@@ -43,12 +43,19 @@ use Throwable;
  */
 class Panel
 {
+	protected Areas $areas;
+
+	public function __construct(
+		protected App $kirby
+	) {
+	}
+
 	/**
 	 * Collect all registered areas
 	 */
-	public static function areas(): Areas
+	public function areas(): Areas
 	{
-		return new Areas();
+		return $this->areas ??= new Areas($this);
 	}
 
 	/**
@@ -119,7 +126,7 @@ class Panel
 	 */
 	public static function go(string|null $url = null, int $code = 302): void
 	{
-		throw new Redirect(static::url($url), $code);
+		throw new Redirect(App::instance()->panel()->url($url), $code);
 	}
 
 	/**
@@ -142,9 +149,9 @@ class Panel
 	 * Returns the Panel home instance
 	 * @since 6.0.0
 	 */
-	public static function home(): Home
+	public function home(): Home
 	{
-		return new Home();
+		return new Home($this);
 	}
 
 	/**
@@ -168,10 +175,9 @@ class Panel
 	 * Checks if the given URL is a Panel Url
 	 * @since 6.0.0
 	 */
-	public static function isPanelUrl(string $url): bool
+	public function isPanelUrl(string $url): bool
 	{
-		$panel = App::instance()->url('panel');
-		return Str::startsWith($url, $panel);
+		return Str::startsWith($url, $this->kirby->url('panel'));
 	}
 
 	/**
@@ -189,13 +195,20 @@ class Panel
 	}
 
 	/**
+	 * Returns the Kirby instance
+	 * @since 6.0.0
+	 */
+	public function kirby(): App
+	{
+		return $this->kirby;
+	}
+
+	/**
 	 * Checks for a multilanguage installation
 	 */
-	public static function multilang(): bool
+	public function multilang(): bool
 	{
-		// multilang setup check
-		$kirby = App::instance();
-		return $kirby->option('languages') || $kirby->multilang();
+		return $this->kirby->option('languages') || $this->kirby->multilang();
 	}
 
 	/**
@@ -203,18 +216,18 @@ class Panel
 	 * be used in the router or to find a matching view
 	 * @since 6.0.0
 	 */
-	public static function path(string $url): string|null
+	public function path(string $url): string|null
 	{
-		$after = Str::after($url, App::instance()->url('panel'));
+		$after = Str::after($url, $this->kirby->url('panel'));
 		return trim($after, '/');
 	}
 
 	/**
 	 * Returns the referrer path if present
 	 */
-	public static function referrer(): string
+	public function referrer(): string
 	{
-		$request = App::instance()->request();
+		$request = $this->kirby->request();
 
 		$referrer = $request->header('X-Panel-Referrer')
 				 ?? $request->get('_referrer')
@@ -278,7 +291,7 @@ class Panel
 		// set the language in multi-lang installations
 		static::setLanguage();
 
-		$areas  = static::areas()->toArray();
+		$areas  = $kirby->panel()->areas()->toArray();
 		$routes = static::routes($areas);
 
 		// create a micro-router for the Panel
@@ -372,7 +385,9 @@ class Panel
 				'installation',
 				'login',
 			],
-			'action' => fn () => Panel::go(Panel::home()->url()),
+			'action' => fn () => $kirby->panel()->go(
+				url: $kirby->panel()->home()->url()
+			),
 			'auth' => false
 		];
 
@@ -395,7 +410,7 @@ class Panel
 		$kirby = App::instance();
 
 		// language switcher
-		if (static::multilang()) {
+		if ($kirby->panel()->multilang() === true) {
 			$fallback = 'en';
 
 			if ($defaultLanguage = $kirby->defaultLanguage()) {
@@ -442,19 +457,21 @@ class Panel
 	 * Creates an absolute Panel URL
 	 * independent of the Panel slug config
 	 */
-	public static function url(string|null $url = null, array $options = []): string
+	public function url(string|null $url = null, array $options = []): string
 	{
 		// only touch relative paths
 		if (Url::isAbsolute($url) === false) {
-			$kirby = App::instance();
-			$slug  = $kirby->option('panel.slug', 'panel');
+			$slug  = $this->kirby->option('panel.slug', 'panel');
 			$path  = trim($url ?? '', '/');
 
-			$baseUri  = new Uri($kirby->url());
+			$baseUri  = new Uri($this->kirby->url());
 			$basePath = trim($baseUri->path()->toString(), '/');
 
 			// removes base path if relative path contains it
-			if (empty($basePath) === false && Str::startsWith($path, $basePath) === true) {
+			if (
+				empty($basePath) === false &&
+				Str::startsWith($path, $basePath) === true
+			) {
 				$path = Str::after($path, $basePath);
 			}
 			// add the panel slug prefix if it it's not

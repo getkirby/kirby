@@ -2,32 +2,12 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Areas::class)]
 class AreasTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Areas';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-	}
-
-	public function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-	}
 
 	public function testArea(): void
 	{
@@ -56,7 +36,8 @@ class AreasTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$areas = new Areas();
+		$panel = $this->app->panel();
+		$areas = new Areas($panel);
 		$core  = $areas->buttons();
 
 		// add custom buttons
@@ -72,7 +53,8 @@ class AreasTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$areas       = new Areas();
+		$panel       = $this->app->panel();
+		$areas       = new Areas($panel);
 		$withCustoms = $areas->buttons();
 
 		$this->assertSame(2, count($withCustoms) - count($core));
@@ -83,7 +65,8 @@ class AreasTest extends TestCase
 	public function testToArray(): void
 	{
 		// unauthenticated / uninstalled
-		$areas = new Areas();
+		$panel = $this->app->panel();
+		$areas = new Areas($panel);
 		$areas = $areas->toArray();
 
 		$this->assertArrayHasKey('installation', $areas);
@@ -100,7 +83,8 @@ class AreasTest extends TestCase
 		]);
 
 		// unauthenticated / installed
-		$areas = new Areas();
+		$panel = $this->app->panel();
+		$areas = new Areas($panel);
 		$areas = $areas->toArray();
 
 		$this->assertArrayHasKey('login', $areas);
@@ -111,7 +95,8 @@ class AreasTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 
 		// authenticated
-		$areas = new Areas();
+		$panel = $this->app->panel();
+		$areas = new Areas($panel);
 		$areas = $areas->toArray();
 
 		$this->assertArrayHasKey('search', $areas);
@@ -132,7 +117,8 @@ class AreasTest extends TestCase
 
 		$app->impersonate('test@getkirby.com');
 
-		$areas = new Areas();
+		$panel = $app->panel();
+		$areas = new Areas($panel);
 		$areas = $areas->toArray();
 
 		$this->assertArrayHasKey('todos', $areas);

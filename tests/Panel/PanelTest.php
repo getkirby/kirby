@@ -2,12 +2,9 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Panel::class)]
@@ -17,15 +14,8 @@ class PanelTest extends TestCase
 
 	public function setUp(): void
 	{
-		Blueprint::$loaded = [];
+		parent::setUp();
 
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
 		// fix installation issues by creating directories
 		Dir::make(static::TMP . '/content');
 		Dir::make(static::TMP . '/media');
@@ -36,24 +26,10 @@ class PanelTest extends TestCase
 		$_SERVER['SERVER_SOFTWARE'] = 'php';
 	}
 
-	public function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-
-		// clear fake json requests
-		$_GET = [];
-
-		// clean up $_SERVER
-		unset($_SERVER['SERVER_SOFTWARE']);
-	}
-
 	public function testAreas(): void
 	{
-		$areas = Panel::areas();
-		$this->assertInstanceOf(Areas::class, $areas);
+		$panel = $this->app->panel();
+		$this->assertInstanceOf(Areas::class, $panel->areas());
 	}
 
 	public function testFirewallWithoutUser(): void
@@ -184,8 +160,8 @@ class PanelTest extends TestCase
 
 	public function testHome(): void
 	{
-		$home = Panel::home();
-		$this->assertInstanceOf(Home::class, $home);
+		$panel = $this->app->panel();
+		$this->assertInstanceOf(Home::class, $panel->home());
 	}
 
 	public function testIsStateRequest(): void
@@ -231,9 +207,10 @@ class PanelTest extends TestCase
 
 	public function testIsPanelUrl(): void
 	{
-		$this->assertTrue(Panel::isPanelUrl('/panel'));
-		$this->assertTrue(Panel::isPanelUrl('/panel/pages/test'));
-		$this->assertFalse(Panel::isPanelUrl('test'));
+		$panel = $this->app->panel();
+		$this->assertTrue($panel->isPanelUrl('/panel'));
+		$this->assertTrue($panel->isPanelUrl('/panel/pages/test'));
+		$this->assertFalse($panel->isPanelUrl('test'));
 	}
 
 	public function testJson(): void
@@ -253,7 +230,8 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$this->assertTrue(Panel::multilang());
+		$panel = $this->app->panel();
+		$this->assertTrue($panel->multilang());
 	}
 
 	public function testMultilangWithImplicitLanguageInstallation(): void
@@ -270,19 +248,22 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$this->assertTrue(Panel::multilang());
+		$panel = $this->app->panel();
+		$this->assertTrue($panel->multilang());
 	}
 
 	public function testMultilangDisabled(): void
 	{
-		$this->assertFalse(Panel::multilang());
+		$panel = $this->app->panel();
+		$this->assertFalse($panel->multilang());
 	}
 
 	public function testPanelPath(): void
 	{
-		$this->assertSame('site', Panel::path('/panel/site'));
-		$this->assertSame('pages/test', Panel::path('/panel/pages/test'));
-		$this->assertSame('', Panel::path('/test/page'));
+		$panel = $this->app->panel();
+		$this->assertSame('site', $panel->path('/panel/site'));
+		$this->assertSame('pages/test', $panel->path('/panel/pages/test'));
+		$this->assertSame('', $panel->path('/test/page'));
 	}
 
 	public function testResponse(): void
