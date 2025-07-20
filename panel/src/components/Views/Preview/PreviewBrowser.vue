@@ -42,7 +42,7 @@ export default {
 	emits: ["discard", "submit"],
 	computed: {
 		srcWithPreviewParam() {
-			const uri = new URL(this.src);
+			const uri = new URL(this.src, this.$panel.urls.site);
 			uri.searchParams.append("_preview", true);
 			return uri.toString();
 		}

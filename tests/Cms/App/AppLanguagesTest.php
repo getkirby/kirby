@@ -103,4 +103,55 @@ class AppLanguagesTest extends TestCase
 
 		$this->assertSame($expected, $app->detectedLanguage()->code());
 	}
+
+	public static function detectedLanguageWithLocaleProvider(): array
+	{
+		return [
+			['en', 'en'],
+			['en-GB', 'en'],
+			['en-US', 'en-us'],
+			['de', 'de'],
+			['fr', 'en'],
+			['en-US, en;q=0.5', 'en-us'],
+			['en-US;q=0.5, de;q=0.8, fr;q=0.9', 'de'],
+		];
+	}
+
+	/**
+	 * @backupGlobals enabled
+	 */
+	#[DataProvider('detectedLanguageWithLocaleProvider')]
+	public function testDetectedLanguageWithLocale($accept, $expected): void
+	{
+		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
+
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true,
+					'locale'  => 'en_GB'
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch',
+					'default' => false,
+					'locale'  => 'de_DE'
+				],
+				[
+					'code'    => 'en-us',
+					'name'    => 'English',
+					'default' => false,
+					'locale'  => 'en_US'
+				]
+			],
+			'options' => [
+				'languages' => true,
+				'languages.detect' => true
+			]
+		]);
+
+		$this->assertSame($expected, $app->detectedLanguage()->code());
+	}
 }

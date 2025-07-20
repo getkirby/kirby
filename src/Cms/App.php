@@ -580,7 +580,16 @@ class App
 		$visitor   = $this->visitor();
 
 		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
-			$closure = static function ($language) use ($acceptedLang) {
+			// Find locale matches (e.g. en_GB => en_GB)
+			$matchLocale = function ($language) use ($acceptedLang) {
+				$languageLocale = $language->locale(LC_ALL);
+				$acceptedLocale = $acceptedLang->locale();
+
+				return Str::substr($languageLocale, 0, 5) === Str::substr($acceptedLocale, 0, 5);
+			};
+
+			// Find language matches (e.g. en_GB => en)
+			$matchLanguage = function ($language) use ($acceptedLang) {
 				$languageLocale = $language->locale(LC_ALL);
 				$acceptedLocale = $acceptedLang->locale();
 
@@ -589,7 +598,11 @@ class App
 					$acceptedLocale === Str::substr($languageLocale, 0, 2);
 			};
 
-			if ($language = $languages->filter($closure)?->first()) {
+			if ($language = $languages->filter($matchLocale)?->first()) {
+				return $language;
+			}
+
+			if ($language = $languages->filter($matchLanguage)?->first()) {
 				return $language;
 			}
 		}
