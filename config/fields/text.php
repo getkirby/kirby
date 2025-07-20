@@ -3,6 +3,9 @@
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
+/**
+ * @todo 8.0 Remove this config file when no longer supporting array-based component definitions
+ */
 return [
 	'props' => [
 
