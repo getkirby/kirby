@@ -105,7 +105,7 @@ export default {
 				if (this.mode === "password-reset") {
 					this.$go("reset-password");
 				} else {
-					this.$reload();
+					this.$panel.reload();
 				}
 			} catch (error) {
 				this.$emit("error", error);
