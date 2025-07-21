@@ -131,7 +131,7 @@ class Home
 				}
 
 				// check the firewall
-				return $this->panel->hasAccess($this->user(), $areaId);
+				return $this->panel->access()->area($areaId);
 			});
 		} catch (Throwable) {
 			return false;

@@ -5,10 +5,8 @@ namespace Kirby\Panel;
 use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
-use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
-use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
 use Kirby\Http\Uri;
@@ -43,11 +41,22 @@ use Throwable;
  */
 class Panel
 {
+	protected Access $access;
 	protected Areas $areas;
+	protected Home $home;
 
 	public function __construct(
 		protected App $kirby
 	) {
+	}
+
+	/**
+	 * Returns the Panel Access object
+	 * @since 6.0.0
+	 */
+	public function access(): Access
+	{
+		return $this->access ??= new Access($this);
 	}
 
 	/**
@@ -56,50 +65,6 @@ class Panel
 	public function areas(): Areas
 	{
 		return $this->areas ??= new Areas($this);
-	}
-
-	/**
-	 * Check for access permissions
-	 */
-	public static function firewall(
-		User|null $user = null,
-		string|null $areaId = null
-	): bool {
-		// a user has to be logged in
-		if ($user === null) {
-			throw new PermissionException(
-				key: 'access.panel'
-			);
-		}
-
-		// get all access permissions for the user role
-		$permissions = $user->role()->permissions()->toArray()['access'];
-
-		// check for general panel access
-		if (($permissions['panel'] ?? true) !== true) {
-			throw new PermissionException(
-				key: 'access.panel'
-			);
-		}
-
-		// don't check if the area is not defined
-		if (empty($areaId) === true) {
-			return true;
-		}
-
-		// undefined area permissions means access
-		if (isset($permissions[$areaId]) === false) {
-			return true;
-		}
-
-		// no access
-		if ($permissions[$areaId] !== true) {
-			throw new PermissionException(
-				key: 'access.view'
-			);
-		}
-
-		return true;
 	}
 
 	/**
@@ -129,21 +94,6 @@ class Panel
 		throw new Redirect(App::instance()->panel()->url($url), $code);
 	}
 
-	/**
-	 * Check if the given user has access to the panel
-	 * or to a given area
-	 */
-	public static function hasAccess(
-		User|null $user = null,
-		string|null $area = null
-	): bool {
-		try {
-			static::firewall($user, $area);
-			return true;
-		} catch (Throwable) {
-			return false;
-		}
-	}
 
 	/**
 	 * Returns the Panel home instance
@@ -151,7 +101,7 @@ class Panel
 	 */
 	public function home(): Home
 	{
-		return new Home($this);
+		return $this->home ??= new Home($this);
 	}
 
 	/**
@@ -312,7 +262,7 @@ class Panel
 
 				// check for access before executing area routes
 				if ($auth !== false) {
-					static::firewall($kirby->user(), $areaId);
+					$kirby->panel()->access()->area($areaId, throws: true);
 				}
 
 				$result = $route->action()->call($route, ...$route->arguments());

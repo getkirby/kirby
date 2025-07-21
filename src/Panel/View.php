@@ -5,7 +5,6 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
-use Kirby\Toolkit\A;
 use Throwable;
 
 /**
@@ -27,13 +26,15 @@ class View
 	 */
 	public static function error(string $message, int $code = 404)
 	{
+		$access = App::instance()->panel()->access()->area('*');
+
 		return [
 			'code'      => $code,
 			'component' => 'k-error-view',
 			'error'     => $message,
 			'props'     => [
 				'error'  => $message,
-				'layout' => Panel::hasAccess(App::instance()->user()) ? 'inside' : 'outside'
+				'layout' => $access ? 'inside' : 'outside'
 			],
 			'title' => 'Error'
 		];
