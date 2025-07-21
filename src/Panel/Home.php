@@ -31,12 +31,11 @@ use Throwable;
 class Home
 {
 	protected App $kirby;
-	protected User|null $user;
 
-	public function __construct()
-	{
-		$this->kirby = App::instance();
-		$this->user  = $this->kirby->user();
+	public function __construct(
+		protected Panel $panel
+	) {
+		$this->kirby = $this->panel->kirby();
 	}
 
 	/**
@@ -49,7 +48,7 @@ class Home
 	 */
 	public function alternative(): string
 	{
-		$permissions = $this->user->role()->permissions();
+		$permissions = $this->user()->role()->permissions();
 
 		// no access to the panel? The only good alternative is the main url
 		if ($permissions->for('access', 'panel') === false) {
@@ -57,7 +56,7 @@ class Home
 		}
 
 		// needed to create a proper menu
-		$areas = Panel::areas()->toArray();
+		$areas = $this->panel->areas()->toArray();
 		$menu  = new Menu($areas, $permissions->toArray());
 		$menu  = $menu->entries();
 
@@ -85,7 +84,7 @@ class Home
 				continue;
 			}
 
-			return Panel::url($menuItem['link']);
+			return $this->panel->url($menuItem['link']);
 		}
 
 		throw new NotFoundException(
@@ -101,8 +100,8 @@ class Home
 	 */
 	public function hasAccess(string $path): bool
 	{
-		$areas  = Panel::areas()->toArray();
-		$routes = Panel::routes($areas);
+		$areas  = $this->panel->areas()->toArray();
+		$routes = $this->panel->routes($areas);
 
 		// Remove fallback routes. Otherwise a route
 		// would be found even if the view does
@@ -132,7 +131,7 @@ class Home
 				}
 
 				// check the firewall
-				return Panel::hasAccess($this->user, $areaId);
+				return $this->panel->hasAccess($this->user(), $areaId);
 			});
 		} catch (Throwable) {
 			return false;
@@ -158,12 +157,12 @@ class Home
 	 * to redirect the user back to the last point where they
 	 * left before they got logged out.
 	 */
-	public static function remembered(): string|null
+	public function remembered(): string|null
 	{
 		// check for a stored path after login
-		if ($remembered = App::instance()->session()->pull('panel.path')) {
+		if ($remembered = $this->kirby->session()->pull('panel.path')) {
 			// convert the result to an absolute URL if available
-			return Panel::url($remembered);
+			return $this->panel->url($remembered);
 		}
 
 		return null;
@@ -196,12 +195,12 @@ class Home
 		// if there's no authenticated user, all internal
 		// redirects will be blocked and the user is redirected
 		// to the login instead
-		if ($this->user === null) {
-			return Panel::url('login');
+		if ($this->user() === null) {
+			return $this->panel->url('login');
 		}
 
 		// get the last visited url from the session or the custom home
-		$url = $this->remembered() ?? $this->user->panel()->home();
+		$url = $this->remembered() ?? $this->user()->panel()->home();
 
 		// inspect the given URL
 		$uri = new Uri($url);
@@ -222,12 +221,12 @@ class Home
 		$url = $uri->toString();
 
 		// Don't further inspect URLs outside of the Panel
-		if (Panel::isPanelUrl($url) === false) {
+		if ($this->panel->isPanelUrl($url) === false) {
 			return $url;
 		}
 
 		// get the plain panel path
-		$path = Panel::path($url);
+		$path = $this->panel->path($url);
 
 		// a redirect to login, logout or installation
 		// views would lead to an infinite redirect loop
@@ -239,10 +238,19 @@ class Home
 
 		// Check if the user can access the URL
 		if ($this->hasAccess($path) === true) {
-			return Panel::url($path);
+			return $this->panel->url($path);
 		}
 
 		// Try to find an alternative
 		return $this->alternative();
+	}
+
+	/**
+	 * Returns the current user
+	 * @since 6.0.0
+	 */
+	public function user(): User|null
+	{
+		return $this->kirby->user();
 	}
 }

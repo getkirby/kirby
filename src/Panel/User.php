@@ -153,7 +153,7 @@ class User extends Model
 			return Url::to($url);
 		}
 
-		return Panel::url('site');
+		return $this->model->kirby()->panel()->url('site');
 	}
 
 	/**

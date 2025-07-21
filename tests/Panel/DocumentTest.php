@@ -2,42 +2,13 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
-use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Document::class)]
 class DocumentTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Document';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-
-		// clear fake json requests
-		$_GET = [];
-
-		// clean up $_SERVER
-		unset($_SERVER['SERVER_SOFTWARE']);
-	}
-
 
 	public function testResponse(): void
 	{

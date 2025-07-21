@@ -2,13 +2,10 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -23,27 +20,11 @@ class PageForceLocked extends ModelPage
 	}
 }
 
-#[CoversClass(\Kirby\Panel\Page::class)]
+#[CoversClass(Page::class)]
 #[CoversClass(Model::class)]
 class PageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Page';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove(static::TMP);
-	}
 
 	protected function panel(array $props = [])
 	{

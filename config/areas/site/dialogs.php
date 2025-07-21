@@ -8,7 +8,6 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Field;
-use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Dialogs\ChangesDialog;
 use Kirby\Panel\Ui\Dialogs\PageCreateDialog;
 use Kirby\Toolkit\Escape;
@@ -233,11 +232,11 @@ return [
 			];
 		},
 		'submit' => function (string $id) {
-			$request = App::instance()->request();
-
-			$page  = Find::page($id);
-			$title = trim($request->get('title', ''));
-			$slug  = trim($request->get('slug', ''));
+			$page    = Find::page($id);
+			$kirby   = $page->kirby();
+			$request = $kirby->request();
+			$title   = trim($request->get('title', ''));
+			$slug    = trim($request->get('slug', ''));
 
 			// basic input validation before we move on
 			PageRules::validateTitleLength($title);
@@ -268,7 +267,10 @@ return [
 				$newUrl  = $newPage->panel()->url(true);
 
 				// check for a necessary redirect after the slug has changed
-				if (Panel::referrer() === $oldUrl && $oldUrl !== $newUrl) {
+				if (
+					$kirby->panel()->referrer() === $oldUrl &&
+					$oldUrl !== $newUrl
+				) {
 					$response['redirect'] = $newUrl;
 				}
 			}
@@ -347,11 +349,11 @@ return [
 			];
 		},
 		'submit' => function (string $id) {
-			$request = App::instance()->request();
-
 			$page     = Find::page($id);
+			$kirby    = $page->kirby();
 			$redirect = false;
-			$referrer = Panel::referrer();
+			$request  = $kirby->request();
+			$referrer = $kirby->panel()->referrer();
 			$url      = $page->panel()->url(true);
 
 			if (

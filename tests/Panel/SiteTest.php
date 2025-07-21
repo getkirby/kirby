@@ -2,10 +2,7 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Site as ModelSite;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -14,22 +11,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class SiteTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Site';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove(static::TMP);
-	}
 
 	protected function panel(array $props = [])
 	{

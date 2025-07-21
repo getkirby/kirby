@@ -2,34 +2,12 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Field::class)]
 class FieldTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Field';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-	}
 
 	public function testEmail(): void
 	{

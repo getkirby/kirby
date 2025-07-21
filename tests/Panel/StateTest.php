@@ -2,10 +2,7 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Language;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -14,25 +11,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class StateTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.State';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-	}
 
 	public function testConfig(): void
 	{

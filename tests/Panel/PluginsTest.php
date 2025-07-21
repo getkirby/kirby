@@ -2,10 +2,8 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Plugins::class)]
@@ -19,15 +17,6 @@ class PluginsTest extends TestCase
 	protected string $jsA;
 	protected string $jsB;
 	protected string $jsC;
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			]
-		]);
-	}
 
 	public function createPlugins()
 	{

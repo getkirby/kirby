@@ -2,14 +2,11 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
 use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class FileForceLocked extends ModelFile
@@ -23,27 +20,11 @@ class FileForceLocked extends ModelFile
 	}
 }
 
-#[CoversClass(\Kirby\Panel\File::class)]
+#[CoversClass(File::class)]
 #[CoversClass(Model::class)]
 class FileTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.File';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove(static::TMP);
-	}
 
 	protected function panel(array $props = [])
 	{

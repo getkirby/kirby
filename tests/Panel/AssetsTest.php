@@ -2,11 +2,9 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -20,11 +18,7 @@ class AssetsTest extends TestCase
 
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
+		parent::setUp();
 
 		// initialize development mode to a known state
 		$this->hadViteRunning = is_file(static::VITE_RUNNING_PATH);
@@ -35,8 +29,7 @@ class AssetsTest extends TestCase
 
 	public function tearDown(): void
 	{
-		// clear session file first
-		$this->app->session()->destroy();
+		parent::tearDown();
 
 		// reset development mode
 		if ($this->hadViteRunning === true) {
@@ -44,14 +37,6 @@ class AssetsTest extends TestCase
 		} else {
 			F::remove(static::VITE_RUNNING_PATH);
 		}
-
-		Dir::remove(static::TMP);
-
-		// clear fake json requests
-		$_GET = [];
-
-		// clean up $_SERVER
-		unset($_SERVER['SERVER_SOFTWARE']);
 	}
 
 	public function setCustomUrl()

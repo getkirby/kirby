@@ -35,7 +35,7 @@ class State
 		protected array $areas = [],
 	) {
 		$this->kirby       = App::instance();
-		$this->multilang   = Panel::multilang();
+		$this->multilang   = $this->kirby->panel()->multilang();
 		$this->language    = $this->kirby->language();
 		$this->user        = $this->kirby->user();
 		$this->permissions = $this->user?->role()->permissions()->toArray() ?? [];
@@ -347,7 +347,7 @@ class State
 			'path'       => Str::after($this->kirby->path(), '/'),
 			'props'      => [],
 			'query'      => $this->kirby->request()->query()->toArray(),
-			'referrer'   => Panel::referrer(),
+			'referrer'   => $this->kirby->panel()->referrer(),
 			'search'     => $this->kirby->option('panel.search.type', 'pages'),
 			'timestamp'  => (int)(microtime(true) * 1000),
 		];
