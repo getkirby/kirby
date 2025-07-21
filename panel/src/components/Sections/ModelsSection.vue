@@ -51,9 +51,10 @@
 <script>
 import debounce from "@/helpers/debounce";
 import section from "@/mixins/section";
+import batchEditing from "@/mixins/batchEditing";
 
 export default {
-	mixins: [section],
+	mixins: [section, batchEditing],
 	inheritAttrs: false,
 	props: {
 		column: String
@@ -64,7 +65,6 @@ export default {
 			error: null,
 			isLoading: false,
 			isProcessing: false,
-			isSelecting: false,
 			options: {
 				batch: false,
 				columns: {},
@@ -82,50 +82,26 @@ export default {
 				page: null
 			},
 			searchterm: null,
-			searching: false,
-			selected: []
+			searching: false
 		};
 	},
 	computed: {
 		addIcon() {
 			return "add";
 		},
+		batchDeleteConfirmMessage() {
+			return this.$t(`${this.type}.delete.confirm.selected`, {
+				count: this.selected.length
+			});
+		},
+		batchEditingEvent() {
+			return "section.selecting";
+		},
 		buttons() {
 			let buttons = [];
 
 			if (this.isSelecting) {
-				buttons.push({
-					disabled: this.selected.length === 0,
-					icon: "trash",
-					text: this.$t("delete") + ` (${this.selected.length})`,
-					theme: "negative",
-					click: () => {
-						this.$panel.dialog.open({
-							component: "k-remove-dialog",
-							props: {
-								text: this.$t(`${this.type}.delete.confirm.selected`, {
-									count: this.selected.length
-								})
-							},
-							on: {
-								submit: () => {
-									this.$panel.dialog.close();
-									this.deleteSelected();
-								}
-							}
-						});
-					},
-					responsive: true
-				});
-
-				buttons.push({
-					icon: "cancel",
-					text: this.$t("cancel"),
-					click: this.onSelectToggle,
-					responsive: true
-				});
-
-				return buttons;
+				return this.batchEditingButtons;
 			}
 
 			if (this.canSearch) {
@@ -138,12 +114,7 @@ export default {
 			}
 
 			if (this.canSelect) {
-				buttons.push({
-					icon: "checklist",
-					click: this.onSelectToggle,
-					title: this.$t("select"),
-					responsive: true
-				});
+				buttons.push(this.batchEditingToggle);
 			}
 
 			if (this.canAdd) {
@@ -237,11 +208,9 @@ export default {
 	},
 	created() {
 		this.$events.on("model.update", this.reload);
-		this.$events.on("section.selecting", this.stopSelectingCollision);
 	},
 	unmounted() {
 		this.$events.off("model.update", this.reload);
-		this.$events.off("section.selecting", this.stopSelectingCollision);
 	},
 	mounted() {
 		this.search = debounce(this.search, 200);
@@ -297,9 +266,11 @@ export default {
 				this.isLoading = false;
 			}
 		},
-
 		onAction() {},
 		onAdd() {},
+		onBatchDelete() {
+			this.deleteSelected();
+		},
 		onChange() {},
 		onDrop() {},
 		onPaginate(pagination) {
@@ -312,33 +283,7 @@ export default {
 			this.searching = !this.searching;
 			this.searchterm = null;
 		},
-		onSelect(item) {
-			if (this.selected.includes(item)) {
-				this.selected = this.selected.filter(
-					(selected) => selected.id !== item.id
-				);
-			} else {
-				this.selected.push(item);
-			}
-		},
-		onSelectToggle() {
-			this.isSelecting ? this.stopSelecting() : this.startSelecting();
-		},
 		onSort() {},
-		startSelecting() {
-			this.isSelecting = true;
-			this.selected = [];
-			this.$events.emit("section.selecting", this.name);
-		},
-		stopSelecting() {
-			this.isSelecting = false;
-			this.selected = [];
-		},
-		stopSelectingCollision(name) {
-			if (name !== this.name) {
-				this.stopSelecting();
-			}
-		},
 		async reload() {
 			// reset batch mode
 			this.stopSelecting();
