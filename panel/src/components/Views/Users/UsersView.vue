@@ -72,7 +72,7 @@ export default {
 			});
 		},
 		paginate(pagination) {
-			this.$reload({
+			this.$panel.reload({
 				query: {
 					page: pagination.page
 				}

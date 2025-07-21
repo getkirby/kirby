@@ -50,7 +50,7 @@ export default {
 		async remove() {
 			await this.$api.users.deleteAvatar(this.id);
 			this.$panel.notification.success();
-			this.$reload();
+			this.$panel.reload();
 		},
 		upload() {
 			this.$panel.upload.pick({

@@ -180,8 +180,8 @@ export default {
 			try {
 				await this.$api.auth.login(user);
 
-				this.$reload({
-					globals: ["$system", "$translation"]
+				this.$panel.reload({
+					globals: ["system", "translation"]
 				});
 
 				this.$panel.notification.success({

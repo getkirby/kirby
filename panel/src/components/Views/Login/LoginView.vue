@@ -78,8 +78,8 @@ export default {
 
 			if (error.details.challengeDestroyed === true) {
 				// reset from the LoginCode component back to Login
-				await this.$reload({
-					globals: ["$system"]
+				await this.$panel.reload({
+					globals: ["system"]
 				});
 			}
 

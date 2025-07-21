@@ -76,7 +76,7 @@ export default {
 	},
 	methods: {
 		change(language) {
-			this.$reload({
+			this.$panel.reload({
 				query: {
 					language: language.code
 				}
