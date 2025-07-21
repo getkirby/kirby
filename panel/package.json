@@ -21,7 +21,7 @@
 		"prosemirror-keymap": "^1.2.3",
 		"prosemirror-model": "^1.25.2",
 		"prosemirror-schema-list": "^1.5.1",
-		"prosemirror-view": "^1.40.0",
+		"prosemirror-view": "^1.40.1",
 		"sortablejs": "^1.15.6",
 		"vue": "^2.7.16"
 	},
@@ -29,7 +29,7 @@
 		"@csstools/postcss-light-dark-function": "^2.0.9",
 		"@vitejs/plugin-vue2": "^2.3.3",
 		"eslint": "^9.31.0",
-		"eslint-config-prettier": "^10.1.5",
+		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-vue": "^9.33.0",
 		"glob": "^11.0.3",
 		"jsdom": "^26.1.0",
