@@ -558,7 +558,7 @@ export default {
 	--table-color-hover: var(--table-color-back);
 }
 .k-table .k-table-select-checkbox {
-	height: 100%;
+	height: var(--table-row-height);
 	display: grid;
 	place-items: center;
 }
