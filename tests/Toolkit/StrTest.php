@@ -364,6 +364,35 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
+	public function testExcerptWithTagsPrecededByNonWordCharacters(): void
+	{
+		// Test cases for issue #7306: Extra space being inserted before link text
+		
+		// Bracket case
+		$string   = '[<a href="https://getkirby.com/">Get Kirby</a>]';
+		$expected = '[Get Kirby]';
+		$result   = Str::excerpt($string, 100);
+		$this->assertSame($expected, $result);
+
+		// Parenthesis case
+		$string   = '(<a href="https://example.com/">Link</a>)';
+		$expected = '(Link)';
+		$result   = Str::excerpt($string, 100);
+		$this->assertSame($expected, $result);
+
+		// Quote case
+		$string   = '"<a href="https://example.com/">Link</a>"';
+		$expected = '"Link"';
+		$result   = Str::excerpt($string, 100);
+		$this->assertSame($expected, $result);
+
+		// Word followed by tag should still get space (correct behavior)
+		$string   = 'Ultra<a href="https://example.com/">Link</a>Modern';
+		$expected = 'Ultra LinkModern';
+		$result   = Str::excerpt($string, 100);
+		$this->assertSame($expected, $result);
+	}
+
 	public function testFloat(): void
 	{
 		$this->assertSame('0', Str::float(false));
