@@ -477,7 +477,11 @@ class Str
 		if ($strip === true) {
 			// ensure that opening tags are preceded by a space, so that
 			// when tags are skipped we can be sure that words stay separate
-			$string = preg_replace('#\s*<([^\/])#', ' <${1}', $string);
+			// but only if there's a word character directly before it
+			$string = preg_replace('#(\w)<([^/][^>]*)>#', '${1} <${2}>', $string);
+
+			// add space after closing tag if there's a word character directly after it
+			$string = preg_replace('#</([^>]+)>(\w)#', '</${1}> ${2}', $string);
 
 			// in strip mode, we always return plain text
 			$string = strip_tags($string);
