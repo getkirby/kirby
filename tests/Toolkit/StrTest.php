@@ -364,6 +364,27 @@ class StrTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
+	public function testExcerptWithWordCharactersAroundTags(): void
+	{
+		// Test case from issue #7306: word characters directly adjacent to tags
+		$string   = 'A link in the middle of a word: Ultra<a href="/">Link</a>Modern.';
+		$expected = 'A link in the middle of a word: Ultra Link Modern.';
+		$result   = Str::excerpt($string, 200);
+		$this->assertSame($expected, $result);
+
+		// Test brackets around tags (should not add extra spaces)
+		$string   = '[<a href="/">Link</a>]';
+		$expected = '[Link]';
+		$result   = Str::excerpt($string, 200);
+		$this->assertSame($expected, $result);
+
+		// Test parentheses around tags (should not add extra spaces)
+		$string   = '(<a href="/">Link</a>)';
+		$expected = '(Link)';
+		$result   = Str::excerpt($string, 200);
+		$this->assertSame($expected, $result);
+	}
+
 	public function testFloat(): void
 	{
 		$this->assertSame('0', Str::float(false));
