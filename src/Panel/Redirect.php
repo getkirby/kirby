@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Exception;
+use Throwable;
 
 /**
  * The Redirect exception can be thrown in all Fiber
@@ -22,7 +23,7 @@ class Redirect extends Exception
 		string $location,
 		int $code = 302,
 		protected int|null $refresh = null,
-		Exception $previous = null
+		Throwable|null $previous = null
 	) {
 		parent::__construct($location, $code, $previous);
 	}
