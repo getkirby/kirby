@@ -143,6 +143,7 @@
 	"error.file.type.forbidden": "You are not allowed to upload {type} files",
 	"error.file.type.invalid": "Invalid file type: {type}",
 	"error.file.undefined": "The file cannot be found",
+	"error.file.unlock.permission": "You are not allowed to unlock the content of the file",
 
 	"error.form.incomplete": "Please fix all form errors…",
 	"error.form.notSaved": "The form could not be saved",
@@ -202,6 +203,7 @@
 	"error.page.sort.permission": "The page \"{slug}\" cannot be sorted",
 	"error.page.status.invalid": "Please set a valid page status",
 	"error.page.undefined": "The page cannot be found",
+	"error.page.unlock.permission": "You are not allowed to unlock the content for the page",
 	"error.page.update.permission": "You are not allowed to update \"{slug}\"",
 
 	"error.section.files.max.plural": "You must not add more than {max} files to the \"{section}\" section",
@@ -219,6 +221,7 @@
 
 	"error.site.changeTitle.empty": "The title must not be empty",
 	"error.site.changeTitle.permission": "You are not allowed to change the title of the site",
+	"error.site.unlock.permission": "You are not allowed to unlock the content of the site",
 	"error.site.update.permission": "You are not allowed to update the site",
 
 	"error.structure.validation": "There's an error on the \"{field}\" field in row {index}",
@@ -250,6 +253,7 @@
 	"error.user.password.wrong": "Wrong password",
 	"error.user.role.invalid": "Please enter a valid role",
 	"error.user.undefined": "The user cannot be found",
+	"error.user.unlock.permission": "You are not allowed to unlock the content of the user",
 	"error.user.update.permission": "You are not allowed to update the user \"{name}\"",
 
 	"error.validation.accepted": "Please confirm",
