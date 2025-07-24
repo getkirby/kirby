@@ -519,6 +519,7 @@
 	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Unlock",
+	"lock.unlock.confirm": "You will take over the changes from <strong>{{ email }}</strong>. They will then be unable to edit the content.",
 	"lock.unlock.submit": "Unlock and overwrite unsaved changes by <strong>{email}</strong>",
 	"lock.isUnlocked": "Was unlocked by another user",
 

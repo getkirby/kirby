@@ -47,6 +47,12 @@
 					{{ $t("form.preview") }}
 				</k-dropdown-item>
 			</template>
+			<template v-if="isLocked && isUnlockable">
+				<hr />
+				<k-dropdown-item icon="lock" @click="unlock">
+					{{ $t("lock.unlock") }}
+				</k-dropdown-item>
+			</template>
 		</k-dropdown-content>
 	</div>
 </template>
@@ -58,6 +64,7 @@ export const props = {
 		hasDiff: Boolean,
 		isLocked: Boolean,
 		isProcessing: Boolean,
+		isUnlockable: Boolean,
 		modified: [String, Date],
 		/**
 		 * Preview URL for changes
@@ -134,6 +141,28 @@ export default {
 				on: {
 					submit: () => {
 						this.$emit("discard");
+					}
+				}
+			});
+		},
+		unlock() {
+			this.$panel.dialog.open({
+				component: "k-text-dialog",
+				props: {
+					size: "small",
+					submitButton: {
+						icon: "lock",
+						theme: "negative",
+						text: this.$t("lock.unlock")
+					},
+					text: this.$t("lock.unlock.confirm", {
+						email: this.editor
+					})
+				},
+				on: {
+					submit: () => {
+						this.$panel.dialog.close();
+						this.$emit("unlock");
 					}
 				}
 			});
