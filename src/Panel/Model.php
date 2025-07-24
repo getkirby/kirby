@@ -110,6 +110,11 @@ abstract class Model
 			return null;
 		}
 
+		// use the list layout images in tables
+		if ($layout === 'table') {
+			$layout = 'list';
+		}
+
 		// switched off from blueprint,
 		// only if not overwritten by $settings
 		$blueprint = $this->model->blueprint()->image();

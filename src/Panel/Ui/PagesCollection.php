@@ -51,7 +51,7 @@ class PagesCollection extends ModelsCollection
 		return [
 			'dragText' => $panel->dragText(),
 			'id'       => $model->id(),
-			'image'    => $panel->image($image, $layout === 'table' ? 'list' : $layout),
+			'image'    => $panel->image($image, $layout),
 			'info'     => $model->toSafeString($info ?? false),
 			'link'     => $panel->url(true),
 			'parent'   => $model->parentId(),
