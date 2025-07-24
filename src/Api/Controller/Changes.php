@@ -153,4 +153,16 @@ class Changes
 			'status' => 'ok'
 		];
 	}
+
+	/**
+	 * Unlocks the content for the current user
+	 */
+	public static function unlock(ModelWithContent $model): array
+	{
+		$model->version('changes')->unlock();
+
+		return [
+			'status' => 'ok'
+		];
+	}
 }
