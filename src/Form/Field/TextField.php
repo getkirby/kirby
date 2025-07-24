@@ -184,15 +184,4 @@ class TextField extends FieldClass
 			'pattern'
 		];
 	}
-
-	/**
-	 * Returns the config file path for backward compatibility
-	 * Used when plugins extend this field using 'extends' => 'text'
-	 *
-	 * @todo 8.0 Remove this method when no longer supporting array-based component definitions
-	 */
-	public static function getConfigFilePath(): string
-	{
-		return dirname(__DIR__, 3) . '/config/fields/text.php';
-	}
 }

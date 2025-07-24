@@ -224,15 +224,6 @@ class Component
 
 		// load definitions from string
 		if (is_string($definition) === true) {
-			// if the definition is a class, we try to load the config file
-			// TODO: 8.0 Remove this check when no longer supporting array-based component definitions
-			if (
-				class_exists($definition) === true &&
-				method_exists($definition, 'getConfigFilePath') === true
-			) {
-				$definition = $definition::getConfigFilePath();
-			}
-
 			if (is_file($definition) !== true) {
 				throw new Exception(
 					'Component definition ' . $definition . ' does not exist'
@@ -259,10 +250,8 @@ class Component
 		// load component definition
 		$definition = static::load($type);
 
-		// TODO: 8.0 Remove this check when no longer supporting array-based component definitions
 		if (isset($definition['extends']) === true) {
 			// extend other definitions
-			// TODO: 7.0 Deprecate array based component extends
 			$options = array_replace_recursive(
 				static::defaults(),
 				static::load($definition['extends']),
@@ -274,8 +263,6 @@ class Component
 		}
 
 		// inject mixins
-		// TODO: 7.0 Deprecate array based component mixins
-		// TODO: 8.0 Remove this loop when no longer supporting array-based component definitions
 		foreach ($options['mixins'] ?? [] as $mixin) {
 			if (isset(static::$mixins[$mixin]) === true) {
 				if (is_string(static::$mixins[$mixin]) === true) {
