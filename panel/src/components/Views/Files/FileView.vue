@@ -23,9 +23,11 @@
 					:has-diff="hasDiff"
 					:is-locked="isLocked"
 					:is-processing="isSaving"
+					:is-unlockable="permissions.unlock"
 					:modified="modified"
 					@discard="onDiscard"
 					@submit="onSubmit"
+					@unlock="onUnlock"
 				/>
 			</template>
 		</k-header>
