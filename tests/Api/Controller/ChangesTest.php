@@ -36,6 +36,24 @@ class ChangesTest extends TestCase
 		$this->page = $this->app->page('article');
 	}
 
+	public function setUpUsers(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				'admin' => [
+					'id'    => 'admin',
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				'editor' => [
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+	}
+
 	public function tearDown(): void
 	{
 		$this->tearDownTmp();
@@ -169,6 +187,40 @@ class ChangesTest extends TestCase
 			'text'      => 'Test',
 			'uuid'      => 'test',
 			'undefined' => 'This should be passed through'
+		], $changes);
+	}
+
+	public function testUnlock(): void
+	{
+		$this->setUpUsers();
+
+		// latest version
+		Data::write($this->page->root() . '/article.txt', [
+			// title and uuid should be passed through
+			'title' => 'Test',
+			'uuid'  => 'test'
+		]);
+
+		// locked changes version
+		Data::write($this->page->root() . '/_changes/article.txt', [
+			'title' => 'Test',
+			'uuid'  => 'test',
+			'lock'  => 'editor'
+		]);
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$response = Changes::unlock($this->page);
+
+		$this->assertSame(['status' => 'ok'], $response);
+
+		// the changes file should have the changes
+		$changes = Data::read($this->page->root() . '/_changes/article.txt');
+
+		$this->assertSame([
+			'title' => 'Test',
+			'uuid'  => 'test',
+			'lock'  => 'admin'
 		], $changes);
 	}
 }
