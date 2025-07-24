@@ -2,9 +2,14 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\FieldClass;
-use Kirby\Toolkit\Str;
+use Kirby\Form\Mixin\Converter;
+use Kirby\Form\Mixin\Counter;
+use Kirby\Form\Mixin\Font;
+use Kirby\Form\Mixin\Maxlength;
+use Kirby\Form\Mixin\Minlength;
+use Kirby\Form\Mixin\Pattern;
+use Kirby\Form\Mixin\Spellcheck;
 
 /**
  * Main class file of the text field
@@ -18,13 +23,13 @@ use Kirby\Toolkit\Str;
  */
 class TextField extends FieldClass
 {
-	protected string|null $converter;
-	protected bool        $counter;
-	protected string      $font;
-	protected int|null    $maxlength;
-	protected int|null    $minlength;
-	protected string|null $pattern;
-	protected bool        $spellcheck;
+	use Counter;
+	use Converter;
+	use Font;
+	use Maxlength;
+	use Minlength;
+	use Pattern;
+	use Spellcheck;
 
 	public function __construct(array $params = [])
 	{
@@ -39,72 +44,9 @@ class TextField extends FieldClass
 		$this->setSpellcheck($params['spellcheck'] ?? false);
 	}
 
-	public function converter(): string|null
-	{
-		return $this->converter;
-	}
-
-	public function converters(): array
-	{
-		return [
-			'lower'   => function ($value) {
-				return Str::lower($value);
-			},
-			'slug'    => function ($value) {
-				return Str::slug($value);
-			},
-			'ucfirst' => function ($value) {
-				return Str::ucfirst($value);
-			},
-			'upper'   => function ($value) {
-				return Str::upper($value);
-			},
-		];
-	}
-
-	public function convert(mixed $value): mixed
-	{
-		if ($this->converter() === null) {
-			return $value;
-		}
-
-		$converter = $this->converters()[$this->converter()];
-
-		if (is_array($value) === true) {
-			return array_map($converter, $value);
-		}
-
-		return $converter(trim($value ?? ''));
-	}
-
-	public function counter(): bool
-	{
-		return $this->counter;
-	}
-
 	public function default(): mixed
 	{
 		return $this->convert(parent::default());
-	}
-
-	public function font(): string
-	{
-		return $this->font;
-	}
-
-	public function maxlength(): int|null
-	{
-		return $this->maxlength;
-	}
-
-	public function minlength(): int|null
-	{
-		return $this->minlength;
-	}
-
-	public function pattern(): string|null
-	{
-		return $this->pattern;
 	}
 
 	public function props(): array
@@ -119,56 +61,6 @@ class TextField extends FieldClass
 			'pattern'    => $this->pattern(),
 			'spellcheck' => $this->spellcheck(),
 		];
-	}
-
-	protected function setConverter(string|null $converter = null): void
-	{
-		if (
-			$converter !== null &&
-			array_key_exists($converter, $this->converters()) === false
-		) {
-			throw new InvalidArgumentException(
-				key: 'field.converter.invalid',
-				data: ['converter' => $converter]
-			);
-		}
-
-		$this->converter = $converter;
-	}
-
-	protected function setCounter(bool $counter = true): void
-	{
-		$this->counter = $counter;
-	}
-
-	protected function setFont(string|null $font = null): void
-	{
-		$this->font = $font === 'monospace' ? 'monospace' : 'sans-serif';
-	}
-
-	protected function setMaxlength(int|null $maxlength = null): void
-	{
-		$this->maxlength = $maxlength;
-	}
-
-	protected function setMinlength(int|null $minlength = null): void
-	{
-		$this->minlength = $minlength;
-	}
-
-	protected function setPattern(string|null $pattern = null): void
-	{
-		$this->pattern = $pattern;
-	}
-
-	protected function setSpellcheck(bool $spellcheck = false): void
-	{
-		$this->spellcheck = $spellcheck;
-	}
-
-	public function spellcheck(): bool
-	{
-		return $this->spellcheck;
 	}
 
 	public function toFormValue(): mixed
