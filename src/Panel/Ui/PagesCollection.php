@@ -24,7 +24,6 @@ class PagesCollection extends ModelsCollection
 		public array|null|bool $image = null,
 		public string|null $info = null,
 		public string $layout = 'list',
-		public bool $link = true,
 		public array|bool $pagination = false,
 		public bool $selecting = false,
 		public bool $sortable = false,
