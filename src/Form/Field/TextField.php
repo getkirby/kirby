@@ -74,7 +74,7 @@ class TextField extends FieldClass
 			return array_map($converter, $value);
 		}
 
-		return call_user_func($converter, trim($value ?? ''));
+		return $converter(trim($value ?? ''));
 	}
 
 	public function counter(): bool
