@@ -2,6 +2,7 @@
 
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
+use Kirby\Panel\Ui\FilesCollection;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -105,46 +106,7 @@ return [
 			return $this->models;
 		},
 		'data' => function () {
-			$data = [];
-
-			foreach ($this->modelsPaginated() as $file) {
-				$panel       = $file->panel();
-				$permissions = $file->permissions();
-
-				$item = [
-					'dragText'  => $panel->dragText(
-						// the drag text needs to be absolute
-						// when the files come from a different parent model
-						absolute: $this->model->is($this->parent) === false
-					),
-					'extension' => $file->extension(),
-					'filename'  => $file->filename(),
-					'id'        => $file->id(),
-					'image'     => $panel->image(
-						$this->image,
-						$this->layout === 'table' ? 'list' : $this->layout
-					),
-					'info'      => $file->toSafeString($this->info ?? false),
-					'link'      => $panel->url(true),
-					'mime'      => $file->mime(),
-					'parent'    => $file->parent()->panel()->path(),
-					'permissions' => [
-						'delete' => $permissions->can('delete'),
-						'sort'   => $permissions->can('sort'),
-					],
-					'template'  => $file->template(),
-					'text'      => $file->toSafeString($this->text),
-					'url'       => $file->url(),
-				];
-
-				if ($this->layout === 'table') {
-					$item = $this->columnsValues($item, $file);
-				}
-
-				$data[] = $item;
-			}
-
-			return $data;
+			return $this->filesCollection()->items();
 		},
 		'total' => function () {
 			return $this->models()->count();
@@ -207,6 +169,23 @@ return [
 			];
 		}
 	],
+	'methods' => [
+		'filesCollection' => function () {
+			return $this->filesCollection ??= new FilesCollection(
+				files: $this->modelsPaginated(),
+				columns: $this->columns(),
+				empty: $this->empty(),
+				help: $this->help(),
+				image: $this->image(),
+				info: $this->info(),
+				layout: $this->layout(),
+				sortable: $this->sortable(),
+				size: $this->size(),
+				text: $this->text(),
+				theme: $this->theme(),
+			);
+		},
+	],
 	// @codeCoverageIgnoreStart
 	'api' => function () {
 		return [
@@ -235,8 +214,10 @@ return [
 	},
 	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
+		$filesCollection = $this->filesCollection();
+
 		return [
-			'data'    => $this->data,
+			'data'    => $filesCollection->items(),
 			'errors'  => $this->errors,
 			'options' => [
 				'accept'   => $this->accept,
@@ -255,7 +236,7 @@ return [
 				'sortable' => $this->sortable,
 				'upload'   => $this->upload
 			],
-			'pagination' => $this->pagination
+			'pagination' => $filesCollection->pagination()
 		];
 	}
 ];
