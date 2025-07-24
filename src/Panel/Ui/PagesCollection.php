@@ -40,7 +40,7 @@ class PagesCollection extends ModelsCollection
 	 */
 	public function item(
 		ModelWithContent $model,
-		array|null $image,
+		array|null|bool $image,
 		string|null $info,
 		string $layout,
 		string $text,
