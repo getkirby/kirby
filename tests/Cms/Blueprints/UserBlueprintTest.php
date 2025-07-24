@@ -39,6 +39,7 @@ class UserBlueprintTest extends TestCase
 			'changePassword' => null,
 			'changeRole'     => null,
 			'delete'         => null,
+			'unlock'         => null,
 			'update'         => null,
 		];
 

@@ -39,6 +39,7 @@ class PageBlueprint extends Blueprint
 				'preview'        => null,
 				'read'           => null,
 				'sort'           => null,
+				'unlock'         => null,
 				'update'         => null,
 			],
 			// aliases (from v2)

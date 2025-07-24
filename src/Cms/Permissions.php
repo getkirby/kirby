@@ -38,6 +38,7 @@ class Permissions
 			'read'           => true,
 			'replace'        => true,
 			'sort'           => true,
+			'unlock'         => true,
 			'update'         => true
 		],
 		'languages' => [
@@ -59,10 +60,12 @@ class Permissions
 			'preview'        => true,
 			'read'           => true,
 			'sort'           => true,
+			'unlock'         => true,
 			'update'         => true
 		],
 		'site' => [
 			'changeTitle' => true,
+			'unlock'      => true,
 			'update'      => true
 		],
 		'users' => [
@@ -73,6 +76,7 @@ class Permissions
 			'changeRole'     => true,
 			'create'         => true,
 			'delete'         => true,
+			'unlock'         => true,
 			'update'         => true
 		],
 		'user' => [
@@ -82,6 +86,7 @@ class Permissions
 			'changePassword' => true,
 			'changeRole'     => true,
 			'delete'         => true,
+			'unlock'         => true,
 			'update'         => true
 		]
 	];

@@ -39,6 +39,7 @@ class UserBlueprint extends Blueprint
 				'changePassword' => null,
 				'changeRole'     => null,
 				'delete'         => null,
+				'unlock'         => null,
 				'update'         => null,
 			]
 		);
