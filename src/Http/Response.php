@@ -281,7 +281,7 @@ class Response implements Stringable
 	 *
 	 * @since 5.0.3
 	 */
-	public static function refresh(int $refresh = 0, string $location = '/', int $code = 302): static
+	public static function refresh(string $location = '/', int $code = 302, int $refresh = 0): static
 	{
 		return new static([
 			'code'    => $code,

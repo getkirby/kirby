@@ -318,7 +318,7 @@ class View
 		if ($data instanceof Redirect) {
 			// if the redirect is a refresh, return a refresh response
 			if ($data->refresh() !== null) {
-				return Response::refresh($data->refresh(), $data->location(), $data->code());
+				return Response::refresh($data->location(), $data->code(), $data->refresh());
 			}
 
 			return Response::redirect($data->location(), $data->code());
