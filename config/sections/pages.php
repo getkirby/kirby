@@ -284,7 +284,7 @@ return [
 			return $blueprints;
 		},
 		'pagesCollection' => function () {
-			return new PagesCollection(
+			return $this->pagesCollection ??= new PagesCollection(
 				pages: $this->modelsPaginated(),
 				columns: $this->columns(),
 				empty: $this->empty(),
@@ -292,7 +292,6 @@ return [
 				image: $this->image(),
 				info: $this->info(),
 				layout: $this->layout(),
-				link: $this->link(),
 				sortable: $this->sortable(),
 				size: $this->size(),
 				text: $this->text(),
@@ -316,10 +315,7 @@ return [
 	},
 	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
-		// $pagesCollection = $this->pagesCollection();
-
-		// dump($pagesCollection);
-		exit;
+		$pagesCollection = $this->pagesCollection();
 
 		return [
 			'data'    => $pagesCollection->items(),
