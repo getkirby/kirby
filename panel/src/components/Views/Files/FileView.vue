@@ -27,6 +27,7 @@
 							:modified="modified"
 							@discard="onDiscard"
 							@submit="onSubmit"
+							@unlock="onUnlock"
 						/>
 					</template>
 				</k-view-buttons>
