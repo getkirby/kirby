@@ -37,7 +37,8 @@ class MenuTest extends TestCase
 		$this->assertSame(['account', 'lab', 'logout', 'search', 'site', 'system', 'users'], $menu->areas->keys());
 
 		// provided areas
-		$menu = new Menu(areas: new Areas(['foo' => [], 'bar' => []]));
+		$areas = new Areas([new Area('foo'), new Area('bar')]);
+		$menu = new Menu(areas: $areas);
 		$this->assertSame(['foo', 'bar'], $menu->areas->keys());
 	}
 
@@ -81,7 +82,8 @@ class MenuTest extends TestCase
 
 	public function testDefaultsWithCustomAreas(): void
 	{
-		$menu = new Menu(areas: new Areas(['foo' => [], 'bar' => []]));
+		$areas = new Areas([new Area('foo'), new Area('bar')]);
+		$menu = new Menu(areas: $areas);
 		$this->assertSame(['foo', 'bar'], $menu->defaults());
 
 		$this->app = $this->app->clone([

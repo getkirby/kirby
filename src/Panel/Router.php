@@ -14,12 +14,6 @@ use Kirby\Panel\Response\RequestResponse;
 use Kirby\Panel\Response\SearchResponse;
 use Kirby\Panel\Response\ViewDocumentResponse;
 use Kirby\Panel\Response\ViewResponse;
-use Kirby\Panel\Routes\DialogRoutes;
-use Kirby\Panel\Routes\DrawerRoutes;
-use Kirby\Panel\Routes\DropdownRoutes;
-use Kirby\Panel\Routes\RequestRoutes;
-use Kirby\Panel\Routes\SearchRoutes;
-use Kirby\Panel\Routes\ViewRoutes;
 use Kirby\Toolkit\Tpl;
 use Throwable;
 
@@ -126,7 +120,7 @@ class Router
 	 */
 	public function response(
 		mixed $data,
-		array|null $area = null,
+		Area|null $area = null,
 		string|null $path = null,
 		string $type = 'view'
 	): Response {
@@ -179,22 +173,7 @@ class Router
 
 		// register all routes from areas
 		foreach ($areas as $area) {
-			$view     = new ViewRoutes($area, $area['views'] ?? []);
-			$search   = new SearchRoutes($area, $area['searches'] ?? []);
-			$dialog   = new DialogRoutes($area, $area['dialogs'] ?? []);
-			$drawer   = new DrawerRoutes($area, $area['drawers'] ?? []);
-			$dropdown = new DropdownRoutes($area, $area['dropdowns'] ?? []);
-			$request  = new RequestRoutes($area, $area['requests'] ?? []);
-
-			$routes = [
-				...$routes,
-				...$view->toArray(),
-				...$search->toArray(),
-				...$dialog->toArray(),
-				...$drawer->toArray(),
-				...$dropdown->toArray(),
-				...$request->toArray()
-			];
+			$routes = [...$routes, ...$area->routes()];
 		}
 
 		// if the Panel is already installed and/or the

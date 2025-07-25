@@ -3,8 +3,8 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Collection;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Collection;
 
 /**
  * @package   Kirby Panel
@@ -14,24 +14,17 @@ use Kirby\Toolkit\Collection;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  *
- * @extends \Kirby\Toolkit\Collection<array>
+ * @extends \Kirby\Cms\Collection<\Kirby\Panel\Area>
  */
 class Areas extends Collection
 {
 	/**
 	 * Normalize a panel area
 	 */
-	public static function area(string $id, array $area): array
+	public static function area(string $id, array $area): Area
 	{
-		$area['id']                = $id;
-		$area['label']           ??= $id;
-		$area['breadcrumb']      ??= [];
-		$area['breadcrumbLabel'] ??= $area['label'];
-		$area['title']             = $area['label'];
-		$area['menu']            ??= false;
-		$area['search']          ??= null;
-
-		return $area;
+		$area['id'] = $id;
+		return new Area(...$area);
 	}
 
 	/**
@@ -42,7 +35,7 @@ class Areas extends Collection
 		return array_merge(...array_values(
 			A::map(
 				$this->data,
-				fn (array $area) => $area['buttons'] ?? []
+				fn (Area $area) => $area->buttons()
 			)
 		));
 	}

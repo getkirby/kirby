@@ -106,7 +106,8 @@ class Menu
 			return null;
 		}
 
-		$area = $this->areas->get($id, []);
+		// If item is derived from an area, get the relevant properties
+		$area = $this->areas->get($id)?->menuItem() ?? [];
 
 		// Check menu setting:
 		// menu setting can be a callback

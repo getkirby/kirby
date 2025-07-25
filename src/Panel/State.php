@@ -32,7 +32,7 @@ class State
 
 	public function __construct(
 		protected array $view = [],
-		protected array|null $area = null
+		protected Area|null $area = null
 	) {
 		$this->kirby       = App::instance();
 		$this->panel       = $this->kirby->panel();
@@ -213,7 +213,7 @@ class State
 
 	public function menu(): array
 	{
-		return $this->panel->menu($this->area['id'] ?? null)->items();
+		return $this->panel->menu($this->area?->id())->items();
 	}
 
 	public function multilang(): bool
@@ -236,8 +236,8 @@ class State
 		foreach ($this->panel->areas() as $area) {
 			// by default, all areas are accessible unless
 			// the permissions are explicitly set to false
-			if (($this->permissions['access'][$area['id']] ?? true) !== false) {
-				foreach (($area['searches'] ?? []) as $id => $params) {
+			if (($this->permissions['access'][$area->id()] ?? true) !== false) {
+				foreach ($area->searches() as $id => $params) {
 					$searches[$id] = [
 						'icon'  => $params['icon'] ?? 'search',
 						'label' => $params['label'] ?? Str::ucfirst($id),
@@ -350,7 +350,7 @@ class State
 
 		$view = array_replace_recursive(
 			$defaults,
-			$this->area ?? [],
+			$this->area?->view() ?? [],
 			$this->view
 		);
 

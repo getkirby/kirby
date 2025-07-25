@@ -14,13 +14,14 @@ class AreasTest extends TestCase
 		// defaults
 		$area = Areas::area('test', []);
 
-		$this->assertSame('test', $area['id']);
-		$this->assertSame('test', $area['label']);
-		$this->assertSame([], $area['breadcrumb']);
-		$this->assertSame('test', $area['breadcrumbLabel']);
-		$this->assertSame('test', $area['title']);
-		$this->assertFalse($area['menu']);
-		$this->assertNull($area['search']);
+		$this->assertInstanceOf(Area::class, $area);
+		$this->assertSame('test', $area->id());
+		$this->assertSame('test', $area->label());
+		$this->assertSame([], $area->breadcrumb());
+		$this->assertSame('test', $area->breadcrumbLabel());
+		$this->assertSame('test', $area->title());
+		$this->assertFalse($area->menu());
+		$this->assertNull($area->search());
 	}
 
 	public function testButtons(): void
@@ -63,9 +64,8 @@ class AreasTest extends TestCase
 	{
 		// unauthenticated / uninstalled
 		$areas = Areas::for($this->app);
-		$areas = $areas->toArray();
 
-		$this->assertArrayHasKey('installation', $areas);
+		$this->assertTrue($areas->has('installation'));
 		$this->assertCount(1, $areas);
 
 		// create the first admin
@@ -80,10 +80,9 @@ class AreasTest extends TestCase
 
 		// unauthenticated / installed
 		$areas = Areas::for($this->app);
-		$areas = $areas->toArray();
 
-		$this->assertArrayHasKey('login', $areas);
-		$this->assertArrayHasKey('logout', $areas);
+		$this->assertTrue($areas->has('login'));
+		$this->assertTrue($areas->has('logout'));
 		$this->assertCount(2, $areas);
 
 		// simulate a logged in user
@@ -91,15 +90,14 @@ class AreasTest extends TestCase
 
 		// authenticated
 		$areas = Areas::for($this->app);
-		$areas = $areas->toArray();
 
-		$this->assertArrayHasKey('search', $areas);
-		$this->assertArrayHasKey('site', $areas);
-		$this->assertArrayHasKey('system', $areas);
-		$this->assertArrayHasKey('users', $areas);
-		$this->assertArrayHasKey('account', $areas);
-		$this->assertArrayHasKey('logout', $areas);
-		$this->assertArrayHasKey('lab', $areas);
+		$this->assertTrue($areas->has('search'));
+		$this->assertTrue($areas->has('site'));
+		$this->assertTrue($areas->has('system'));
+		$this->assertTrue($areas->has('users'));
+		$this->assertTrue($areas->has('account'));
+		$this->assertTrue($areas->has('logout'));
+		$this->assertTrue($areas->has('lab'));
 		$this->assertCount(7, $areas);
 
 		// authenticated with plugins
@@ -112,9 +110,8 @@ class AreasTest extends TestCase
 		$app->impersonate('test@getkirby.com');
 
 		$areas = Areas::for($app);
-		$areas = $areas->toArray();
 
-		$this->assertArrayHasKey('todos', $areas);
+		$this->assertTrue($areas->has('todos'));
 		$this->assertCount(8, $areas);
 	}
 }
