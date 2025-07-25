@@ -171,6 +171,7 @@ class Menu
 			// simple string id references global area definition
 			if (is_numeric($id) === true) {
 				$items[] = $this->item($config);
+				continue;
 			}
 
 			// [$id => true]
@@ -183,6 +184,13 @@ class Menu
 			if (is_array($config) === true) {
 				// force to be shown in the menu
 				$items[] = $this->item($id, ['menu' => true, ...$config]);
+				continue;
+			}
+
+			// [$id => MenuItem() ]
+			if ($config instanceof MenuItem) {
+				$items[] = $config;
+				continue;
 			}
 		}
 
