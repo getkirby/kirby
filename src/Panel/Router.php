@@ -159,10 +159,11 @@ class Router
 	 * Extract the routes from the given array
 	 * of active areas.
 	 */
-	public function routes(Areas $areas): array
+	public function routes(Areas|null $areas = null): array
 	{
-		$kirby = $this->kirby;
-		$panel = $this->panel;
+		$kirby   = $this->kirby;
+		$panel   = $this->panel;
+		$areas ??= $panel->areas();
 
 		// the browser incompatibility
 		// warning is always needed
