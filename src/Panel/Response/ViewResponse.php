@@ -59,8 +59,8 @@ class ViewResponse extends JsonResponse
 	 */
 	public static function error(string $message, int $code = 404): static
 	{
-		$panel  = App::instance()->panel();
-		$access = $panel->access()->area($panel->kirby()->user());
+		$kirby  = App::instance();
+		$access = $kirby->panel()->access()->area($kirby->user());
 
 		return new static(
 			view: [
