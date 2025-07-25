@@ -55,7 +55,7 @@ class Router
 		$this->garbage();
 
 		// collect areas
-		$areas = $this->panel->areas()->toArray();
+		$areas = $this->panel->areas();
 
 		// create a micro-router for the Panel
 		return BaseRouter::execute(
@@ -67,7 +67,7 @@ class Router
 				$auth   = $route->attributes()['auth'] ?? true;
 				$areaId = $route->attributes()['area'] ?? null;
 				$type   = $route->attributes()['type'] ?? 'view';
-				$area   = $areas[$areaId] ?? null;
+				$area   = $areaId ? $areas->get($areaId) : null;
 
 				// call the route action to check the result
 				try {
@@ -128,7 +128,7 @@ class Router
 	public function response(
 		mixed $data,
 		array|null $area = null,
-		array $areas = [],
+		Areas $areas = new Areas(),
 		string|null $path = null,
 		string $type = 'view'
 	): Response {
@@ -162,7 +162,7 @@ class Router
 	 * Extract the routes from the given array
 	 * of active areas.
 	 */
-	public function routes(array $areas): array
+	public function routes(Areas $areas): array
 	{
 		$kirby = $this->kirby;
 		$panel = $this->panel;

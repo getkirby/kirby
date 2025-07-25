@@ -32,7 +32,7 @@ class State
 	public function __construct(
 		protected array $view = [],
 		protected array|null $area = null,
-		protected array $areas = [],
+		protected Areas $areas = new Areas(),
 	) {
 		$this->kirby       = App::instance();
 		$this->multilang   = $this->kirby->panel()->multilang();
@@ -213,7 +213,7 @@ class State
 	public function menu(): array
 	{
 		$menu = new Menu(
-			$this->areas,
+			$this->areas->toArray(),
 			$this->permissions,
 			$this->area['id'] ?? null
 		);

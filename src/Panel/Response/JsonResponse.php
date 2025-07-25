@@ -5,6 +5,7 @@ namespace Kirby\Panel\Response;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
+use Kirby\Panel\Areas;
 use Kirby\Panel\Redirect;
 use Throwable;
 
@@ -27,7 +28,7 @@ class JsonResponse extends Response
 
 	// context properties can be set with the context method
 	protected array|null $area = null;
-	protected array $areas = [];
+	protected Areas $areas;
 	protected string|null $path = null;
 	protected array $query = [];
 	protected string $referrer = '/';
@@ -37,6 +38,16 @@ class JsonResponse extends Response
 		protected int $code = 200,
 		protected bool $pretty = false
 	) {
+	}
+
+	public function area(): array|null
+	{
+		return $this->area;
+	}
+
+	public function areas(): Areas
+	{
+		return $this->areas ??= new Areas();
 	}
 
 	/**
@@ -52,7 +63,7 @@ class JsonResponse extends Response
 	 */
 	public function context(
 		array|null $area = null,
-		array $areas = [],
+		Areas $areas = new Areas(),
 		string|null $path = null,
 		array $query = [],
 		string $referrer = '/'

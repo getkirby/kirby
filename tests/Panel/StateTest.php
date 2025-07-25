@@ -403,7 +403,7 @@ class StateTest extends TestCase
 
 		$this->app->impersonate('test@getkirby.com');
 
-		$areas  = [
+		$areas = new Areas([
 			[
 				'id' => 'a',
 				'searches' => [
@@ -422,7 +422,7 @@ class StateTest extends TestCase
 					'test' => [],
 				]
 			]
-		];
+		]);
 
 		$state    = new State(areas: $areas);
 		$searches = $state->searches();

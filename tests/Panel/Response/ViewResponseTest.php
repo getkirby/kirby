@@ -2,12 +2,11 @@
 
 namespace Kirby\Panel\Response;
 
-use Kirby\Cms\App;
-use Kirby\FileSystem\Dir;
 use Kirby\Http\Response;
+use Kirby\Panel\Areas;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\State;
-use Kirby\TestCase;
+use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ViewResponse::class)]
@@ -15,23 +14,16 @@ class ViewResponseTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Response.ViewResponse';
 
-	public function setUp(): void
+	public function testArea(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
+		$response = new ViewResponse();
+		$this->assertNull($response->area());
 	}
 
-	public function tearDown(): void
+	public function testAreas(): void
 	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
+		$response = new ViewResponse();
+		$this->assertInstanceOf(Areas::class, $response->areas());
 	}
 
 	public function testError(): void
