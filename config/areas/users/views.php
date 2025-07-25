@@ -4,6 +4,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Panel\Collector\UsersCollector;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\UsersCollection;
 use Kirby\Toolkit\Escape;
 
 return [
@@ -32,7 +33,6 @@ return [
 					},
 					'roles' => array_values($roles),
 					'users' => function () use ($kirby, $role) {
-
 						$users = new UsersCollector(
 							role: $role,
 							sortBy: 'username asc',
@@ -40,15 +40,13 @@ return [
 							limit: 20
 						);
 
+						$collection = new UsersCollection(
+							users: $users->all()
+						);
+
 						return [
-							'data' => $users->paginated()->values(fn ($user) => [
-								'id'    => $user->id(),
-								'image' => $user->panel()->image(),
-								'info'  => Escape::html($user->role()->title()),
-								'link'  => $user->panel()->url(true),
-								'text'  => Escape::html($user->username())
-							]),
-							'pagination' => $users->pagination()->toArray()
+							'data'       => $collection->items(),
+							'pagination' => $collection->pagination()
 						];
 					},
 				]
