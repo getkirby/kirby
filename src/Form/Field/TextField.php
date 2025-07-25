@@ -2,7 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\ModelWithContent;
 use Kirby\Form\FieldClass;
+use Kirby\Form\Fields;
 use Kirby\Form\Mixin\Converter;
 use Kirby\Form\Mixin\Counter;
 use Kirby\Form\Mixin\Font;
@@ -32,16 +34,39 @@ class TextField extends FieldClass
 	use Spellcheck;
 
 	public function __construct(
+		string|null $after = null,
+		bool $autofocus = false,
+		string|null $before = null,
 		mixed $converter = null,
 		bool $counter = true,
+		mixed $default = null,
+		bool $disabled = false,
 		string|null $font = null,
+		string|null $help = null,
+		string|null $icon = null,
+		string|null $label = null,
 		int|null $maxlength = null,
 		int|null $minlength = null,
+		ModelWithContent|null $model = null,
+		string|null $name = null,
 		string|null $pattern = null,
+		array|string|null $placeholder = null,
+		bool $required = false,
+		Fields|null $siblings = null,
 		bool $spellcheck = false,
-		...$parentParams
+		bool $translate = true,
+		array|null $when = null,
+		string|null $width = null,
+		mixed $value = null
 	) {
-		parent::__construct(...$parentParams);
+		// send parent props to the parent constructor
+		parent::__construct(
+			compact(
+				'after', 'autofocus', 'before', 'default', 'disabled',
+				'help', 'icon', 'label', 'model', 'name', 'placeholder',
+				'required', 'siblings', 'translate', 'when', 'width', 'value'
+			)
+		);
 
 		$this->setConverter($converter);
 		$this->setCounter($counter);
