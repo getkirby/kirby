@@ -122,6 +122,18 @@ class Panel
 	}
 
 	/**
+	 * Returns the Panel menu object
+	 * @since 6.0.0
+	 */
+	public function menu(string|null $current = null): Menu
+	{
+		$areas       = $this->areas()->toArray();
+		$user        = $this->kirby->user();
+		$permissions = $user?->role()->permissions()->toArray() ?? [];
+		return new Menu($areas, $permissions, $current);
+	}
+
+	/**
 	 * Checks for a multilanguage installation
 	 */
 	public function multilang(): bool

@@ -56,9 +56,7 @@ class Home
 		}
 
 		// needed to create a proper menu
-		$areas = $this->panel->areas()->toArray();
-		$menu  = new Menu($areas, $permissions->toArray());
-		$menu  = $menu->entries();
+		$menu = $this->panel->menu()->entries();
 
 		// go through the menu and search for the first
 		// available view we can go to
