@@ -213,7 +213,7 @@ class State
 
 	public function menu(): array
 	{
-		return $this->panel->menu($this->area['id'] ?? null)->entries();
+		return $this->panel->menu($this->area['id'] ?? null)->items();
 	}
 
 	public function multilang(): bool

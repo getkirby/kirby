@@ -56,33 +56,17 @@ class Home
 		}
 
 		// needed to create a proper menu
-		$menu = $this->panel->menu()->entries();
+		$menu = $this->panel->menu()->items();
 
 		// go through the menu and search for the first
 		// available view we can go to
 		foreach ($menu as $menuItem) {
-			// skip separators
-			if ($menuItem === '-') {
+			// skip separators and non-alternative items
+			if ($menuItem === '-' || $menuItem->isAlternative() === false) {
 				continue;
 			}
 
-			// skip disabled items
-			if (($menuItem['disabled'] ?? false) === true) {
-				continue;
-			}
-
-			// skip buttons that don't open a link
-			// (but e.g. a dialog)
-			if (isset($menuItem['link']) === false) {
-				continue;
-			}
-
-			// skip the logout button
-			if ($menuItem['link'] === 'logout') {
-				continue;
-			}
-
-			return $this->panel->url($menuItem['link']);
+			return $this->panel->url($menuItem->link());
 		}
 
 		throw new NotFoundException(

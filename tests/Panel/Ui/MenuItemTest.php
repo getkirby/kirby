@@ -29,16 +29,29 @@ class MenuItemTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function test__ConstructUnsetLinkWhenDialogOrDrawer(): void
+	public function test__ConstructLinkFallback(): void
 	{
 		$item = new MenuItem(
 			id: 'account',
-			link: 'account',
 			dialog: 'account',
 		);
 
 		$this->assertNull($item->link());
 		$this->assertSame('account', $item->dialog());
+
+		$item = new MenuItem(
+			id: 'account',
+			drawer: 'account',
+		);
+
+		$this->assertNull($item->link());
+		$this->assertSame('account', $item->drawer());
+
+		$item = new MenuItem(
+			id: 'account'
+		);
+
+		$this->assertSame('account', $item->link());
 	}
 
 	public function testIsAlternative(): void
@@ -52,7 +65,6 @@ class MenuItemTest extends TestCase
 
 		$item = new MenuItem(
 			id: 'foo',
-			link: 'foo',
 			dialog: 'foo',
 		);
 
@@ -77,7 +89,10 @@ class MenuItemTest extends TestCase
 		$item = new MenuItem(
 			id: 'page',
 			icon: 'page',
-			text: 'page'
+			text: [
+				'en' => 'Page',
+				'de' => 'Seite'
+			]
 		);
 
 		$this->assertSame([
@@ -90,7 +105,7 @@ class MenuItemTest extends TestCase
 			'drawer'     => null,
 			'dropdown'   => null,
 			'icon'       => 'page',
-			'link'       => null,
+			'link'       => 'page',
 			'responsive' => true,
 			'size'       => null,
 			'target'     => null,

@@ -25,10 +25,9 @@ class MenuItem extends Button
 		string|array|null $text = null,
 		string|array|null $title = null
 	) {
-		// unset the link (which is always added by default to an area)
-		// if a dialog or drawer should be opened instead
-		if ($dialog !== null || $drawer !== null) {
-			$link = null;
+		// fallback for the link if no dialog or drawer is set
+		if ($dialog === null && $drawer === null) {
+			$link ??= $id;
 		}
 
 		parent::__construct(

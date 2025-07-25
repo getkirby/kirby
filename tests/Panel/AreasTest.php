@@ -20,7 +20,6 @@ class AreasTest extends TestCase
 		$this->assertSame('test', $area['breadcrumbLabel']);
 		$this->assertSame('test', $area['title']);
 		$this->assertFalse($area['menu']);
-		$this->assertSame('test', $area['link']);
 		$this->assertNull($area['search']);
 	}
 

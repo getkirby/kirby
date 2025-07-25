@@ -127,10 +127,11 @@ class Panel
 	 */
 	public function menu(string|null $current = null): Menu
 	{
-		$areas       = $this->areas()->toArray();
-		$user        = $this->kirby->user();
-		$permissions = $user?->role()->permissions()->toArray() ?? [];
-		return new Menu($areas, $permissions, $current);
+		return new Menu(
+			areas: $this->areas(),
+			permissions: $this->kirby->user()?->role()->permissions()->toArray() ?? [],
+			current: $current
+		);
 	}
 
 	/**

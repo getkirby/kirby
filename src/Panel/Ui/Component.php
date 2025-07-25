@@ -60,7 +60,7 @@ abstract class Component
 	 * Translates a key to a string
 	 * @since 6.0.0
 	 */
-	protected function i18n(string|null $key): string|null
+	protected function i18n(string|array|null $key): string|null
 	{
 		return $key !== null ? I18n::translate($key, $key) : null;
 	}
