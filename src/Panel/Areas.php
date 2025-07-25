@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Collection;
 
 /**
  * @package   Kirby Panel
@@ -12,19 +13,11 @@ use Kirby\Toolkit\A;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
+ * @extends \Kirby\Toolkit\Collection<array>
  */
-class Areas
+class Areas extends Collection
 {
-	protected array $areas;
-	protected App $kirby;
-
-	public function __construct(
-		protected Panel $panel
-	) {
-		$this->kirby = $this->panel->kirby();
-		$this->areas = $this->load();
-	}
-
 	/**
 	 * Normalize a panel area
 	 */
@@ -49,38 +42,38 @@ class Areas
 	{
 		return array_merge(...array_values(
 			A::map(
-				$this->areas,
+				$this->data,
 				fn (array $area) => $area['buttons'] ?? []
 			)
 		));
 	}
 
-	public function load(): array
+	public static function for(App $kirby): static
 	{
-		$system = $this->kirby->system();
-		$user   = $this->kirby->user();
-		$areas  = $this->kirby->load()->areas();
+		$system = $kirby->system();
+		$user   = $kirby->user();
+		$areas  = $kirby->load()->areas();
 
 		// the system is not ready
 		if (
 			$system->isOk() === false ||
 			$system->isInstalled() === false
 		) {
-			return [
+			return new static([
 				'installation' => static::area(
 					'installation',
 					$areas['installation']
 				),
-			];
+			]);
 		}
 
 		// not yet authenticated
 		if ($user === null) {
-			return [
+			return new static([
 				'logout' => static::area('logout', $areas['logout']),
 				// login area last because it defines a fallback route
 				'login'  => static::area('login', $areas['login']),
-			];
+			]);
 		}
 
 		unset($areas['installation'], $areas['login']);
@@ -88,7 +81,7 @@ class Areas
 		// Disable the language area for single-language installations
 		// This does not check for installed languages. Otherwise you'd
 		// not be able to add the first language through the view
-		if ($this->kirby->option('languages') !== true) {
+		if ($kirby->option('languages') !== true) {
 			unset($areas['languages']);
 		}
 
@@ -98,11 +91,6 @@ class Areas
 			$result[$id] = static::area($id, $area);
 		}
 
-		return $result;
-	}
-
-	public function toArray(): array
-	{
-		return $this->areas;
+		return new static($result);
 	}
 }

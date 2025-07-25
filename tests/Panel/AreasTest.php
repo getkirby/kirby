@@ -36,8 +36,7 @@ class AreasTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$panel = $this->app->panel();
-		$areas = new Areas($panel);
+		$areas = Areas::for($this->app);
 		$core  = $areas->buttons();
 
 		// add custom buttons
@@ -53,8 +52,7 @@ class AreasTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$panel       = $this->app->panel();
-		$areas       = new Areas($panel);
+		$areas       = Areas::for($this->app);
 		$withCustoms = $areas->buttons();
 
 		$this->assertSame(2, count($withCustoms) - count($core));
@@ -62,11 +60,10 @@ class AreasTest extends TestCase
 		$this->assertSame(['component' => 'test-a'], array_pop($withCustoms));
 	}
 
-	public function testToArray(): void
+	public function testFor(): void
 	{
 		// unauthenticated / uninstalled
-		$panel = $this->app->panel();
-		$areas = new Areas($panel);
+		$areas = Areas::for($this->app);
 		$areas = $areas->toArray();
 
 		$this->assertArrayHasKey('installation', $areas);
@@ -83,8 +80,7 @@ class AreasTest extends TestCase
 		]);
 
 		// unauthenticated / installed
-		$panel = $this->app->panel();
-		$areas = new Areas($panel);
+		$areas = Areas::for($this->app);
 		$areas = $areas->toArray();
 
 		$this->assertArrayHasKey('login', $areas);
@@ -95,8 +91,7 @@ class AreasTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 
 		// authenticated
-		$panel = $this->app->panel();
-		$areas = new Areas($panel);
+		$areas = Areas::for($this->app);
 		$areas = $areas->toArray();
 
 		$this->assertArrayHasKey('search', $areas);
@@ -117,8 +112,7 @@ class AreasTest extends TestCase
 
 		$app->impersonate('test@getkirby.com');
 
-		$panel = $app->panel();
-		$areas = new Areas($panel);
+		$areas = Areas::for($app);
 		$areas = $areas->toArray();
 
 		$this->assertArrayHasKey('todos', $areas);
