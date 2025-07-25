@@ -31,22 +31,35 @@ class TextField extends FieldClass
 	use Pattern;
 	use Spellcheck;
 
-	public function __construct(array $params = [])
-	{
-		parent::__construct($params);
+	public function __construct(
+		mixed $converter = null,
+		bool $counter = true,
+		string|null $font = null,
+		int|null $maxlength = null,
+		int|null $minlength = null,
+		string|null $pattern = null,
+		bool $spellcheck = false,
+		...$parentParams
+	) {
+		parent::__construct(...$parentParams);
 
-		$this->setConverter($params['converter'] ?? null);
-		$this->setCounter($params['counter'] ?? true);
-		$this->setFont($params['font'] ?? null);
-		$this->setMaxlength($params['maxlength'] ?? null);
-		$this->setMinlength($params['minlength'] ?? null);
-		$this->setPattern($params['pattern'] ?? null);
-		$this->setSpellcheck($params['spellcheck'] ?? false);
+		$this->setConverter($converter);
+		$this->setCounter($counter);
+		$this->setFont($font);
+		$this->setMaxlength($maxlength);
+		$this->setMinlength($minlength);
+		$this->setPattern($pattern);
+		$this->setSpellcheck($spellcheck);
 	}
 
 	public function default(): mixed
 	{
 		return $this->convert(parent::default());
+	}
+
+	public static function factory(array $props = []): static
+	{
+		return new static(...$props);
 	}
 
 	public function props(): array
