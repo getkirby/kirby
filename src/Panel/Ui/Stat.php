@@ -4,7 +4,6 @@ namespace Kirby\Panel\Ui;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\I18n;
 
 /**
  * @package   Kirby Panel
@@ -100,11 +99,6 @@ class Stat extends Component
 	public function theme(): string|null
 	{
 		return $this->stringTemplate($this->theme);
-	}
-
-	protected function i18n(string|array|null $param = null): string|null
-	{
-		return empty($param) === false ? I18n::translate($param, $param) : null;
 	}
 
 	public function value(): string
