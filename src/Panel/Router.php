@@ -91,7 +91,6 @@ class Router
 				$response = $this->response(
 					data: $result,
 					area: $area,
-					areas: $areas,
 					path: $path,
 					type: $type
 				);
@@ -128,7 +127,6 @@ class Router
 	public function response(
 		mixed $data,
 		array|null $area = null,
-		Areas $areas = new Areas(),
 		string|null $path = null,
 		string $type = 'view'
 	): Response {
@@ -149,7 +147,6 @@ class Router
 
 		$response->context(
 			area: $area,
-			areas: $areas,
 			path: $path,
 			query: $this->kirby->request()->query()->toArray(),
 			referrer: $this->panel->referrer()

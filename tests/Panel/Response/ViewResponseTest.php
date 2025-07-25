@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\Http\Response;
-use Kirby\Panel\Areas;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\State;
 use Kirby\Panel\TestCase;
@@ -13,18 +12,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 class ViewResponseTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Response.ViewResponse';
-
-	public function testArea(): void
-	{
-		$response = new ViewResponse();
-		$this->assertNull($response->area());
-	}
-
-	public function testAreas(): void
-	{
-		$response = new ViewResponse();
-		$this->assertInstanceOf(Areas::class, $response->areas());
-	}
 
 	public function testError(): void
 	{

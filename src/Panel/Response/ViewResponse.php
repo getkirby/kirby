@@ -59,8 +59,8 @@ class ViewResponse extends JsonResponse
 	 */
 	public static function error(string $message, int $code = 404): static
 	{
-		$kirby  = App::instance();
-		$access = $kirby->panel()->access()->area($kirby->user());
+		$panel  = App::instance()->panel();
+		$access = $panel->access()->area($panel->kirby()->user());
 
 		return new static(
 			view: [
@@ -82,9 +82,8 @@ class ViewResponse extends JsonResponse
 	public function state(): State
 	{
 		return new State(
-			area: $this->area(),
-			areas: $this->areas(),
-			view: $this->view(),
+			area: $this->area,
+			view: $this->view,
 		);
 	}
 

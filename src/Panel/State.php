@@ -32,8 +32,7 @@ class State
 
 	public function __construct(
 		protected array $view = [],
-		protected array|null $area = null,
-		protected Areas $areas = new Areas(),
+		protected array|null $area = null
 	) {
 		$this->kirby       = App::instance();
 		$this->panel       = $this->kirby->panel();
@@ -234,7 +233,7 @@ class State
 	{
 		$searches = [];
 
-		foreach ($this->areas as $area) {
+		foreach ($this->panel->areas() as $area) {
 			// by default, all areas are accessible unless
 			// the permissions are explicitly set to false
 			if (($this->permissions['access'][$area['id']] ?? true) !== false) {
