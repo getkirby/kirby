@@ -15,7 +15,7 @@ class Collection extends Items
 	public function __construct(
 		public array $columns = [],
 		public string $component = 'k-collection',
-		public array|null $empty = null,
+		public array|string|null $empty = null,
 		public string|null $help = null,
 		public array $items = [],
 		public string $layout = 'list',

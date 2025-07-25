@@ -2,8 +2,8 @@
 
 namespace Kirby\Panel\Ui;
 
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Files;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Users;
 use Kirby\Toolkit\I18n;
@@ -18,22 +18,34 @@ use Kirby\Toolkit\I18n;
  */
 abstract class ModelsCollection extends Collection
 {
+	protected ModelsTable $table;
+
 	public function __construct(
 		public Files|Pages|Users $models,
 		public array $columns = [],
 		public string $component = 'k-collection',
-		public array|null $empty = null,
+		public array|string|null $empty = null,
 		public string|null $help = null,
-		public array|null|bool $image = null,
+		public array|string|bool|null $image = null,
 		public string|null $info = null,
 		public string $layout = 'list',
 		public array|bool $pagination = false,
+		public bool $rawValues = false,
 		public bool $selecting = false,
 		public bool $sortable = false,
-		public string $size = 'medium',
+		public string $size = 'auto',
 		public string|null $text = '{{ model.title }}',
 		public string|null $theme = null,
 	) {
+	}
+
+	public function columns(): array
+	{
+		if ($this->layout !== 'table') {
+			return [];
+		}
+
+		return $this->table()->columns();
 	}
 
 	public function info(): string|null
@@ -43,7 +55,7 @@ abstract class ModelsCollection extends Collection
 
 	abstract public function item(
 		ModelWithContent $model,
-		array|null|bool $image,
+		array|string|bool|null $image,
 		string|null $info,
 		string $layout,
 		string $text,
@@ -57,6 +69,10 @@ abstract class ModelsCollection extends Collection
 		$info   = $this->info();
 		$layout = $this->layout();
 		$text   = $this->text();
+
+		if ($layout === 'table') {
+			return $this->table()->rows();
+		}
 
 		foreach ($this->models() as $model) {
 			$items[] = $this->item(
@@ -101,6 +117,18 @@ abstract class ModelsCollection extends Collection
 			'info'       => $this->info(),
 			'text'       => $this->text(),
 		];
+	}
+
+	public function table(): ModelsTable
+	{
+		return $this->table ??= new ModelsTable(
+			models: $this->models(),
+			columns: $this->columns,
+			text: $this->text,
+			image: $this->image,
+			info: $this->info,
+			rawValues: $this->rawValues
+		);
 	}
 
 	public function text(): string

@@ -15,7 +15,6 @@ class Items extends Component
 	public function __construct(
 		public string $component = 'k-items',
 		public array $columns = [],
-		public array $fields = [],
 		public array $items = [],
 		public string $layout = 'list',
 		public bool $link = true,
@@ -30,7 +29,6 @@ class Items extends Component
 	{
 		return [
 			'columns'   => $this->columns(),
-			'fields'    => $this->fields(),
 			'items'     => $this->items(),
 			'layout'    => $this->layout(),
 			'link'      => $this->link(),

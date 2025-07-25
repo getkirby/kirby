@@ -19,15 +19,17 @@ class PagesCollection extends ModelsCollection
 		public Pages $pages,
 		public array $columns = [],
 		public string $component = 'k-collection',
-		public array|null $empty = null,
+		public array|string|null $empty = null,
 		public string|null $help = null,
-		public array|null|bool $image = null,
+		public array|string|bool|null $image = null,
 		public string|null $info = null,
 		public string $layout = 'list',
+		public bool $link = true,
 		public array|bool $pagination = false,
+		public bool $rawValues = false,
 		public bool $selecting = false,
 		public bool $sortable = false,
-		public string $size = 'medium',
+		public string $size = 'auto',
 		public string|null $text = '{{ model.title }}',
 		public string|null $theme = null,
 	) {
@@ -39,12 +41,11 @@ class PagesCollection extends ModelsCollection
 	 */
 	public function item(
 		ModelWithContent $model,
-		array|null|bool $image,
+		array|string|bool|null $image,
 		string|null $info,
 		string $layout,
 		string $text,
-	): array
-	{
+	): array {
 		$panel       = $model->panel();
 		$permissions = $model->permissions();
 
@@ -66,5 +67,17 @@ class PagesCollection extends ModelsCollection
 			'template'   => $model->intendedTemplate()->name(),
 			'text'       => $model->toSafeString($text),
 		];
+	}
+
+	public function table(): PagesTable
+	{
+		return $this->table ??= new PagesTable(
+			models: $this->models(),
+			columns: $this->columns,
+			image: $this->image,
+			info: $this->info,
+			rawValues: $this->rawValues,
+			text: $this->text,
+		);
 	}
 }
