@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui;
 
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 /**
@@ -53,6 +54,15 @@ abstract class Component
 		// setter
 		$this->$name = $args[0];
 		return $this;
+	}
+
+	/**
+	 * Translates a key to a string
+	 * @since 6.0.0
+	 */
+	protected function i18n(string|null $key): string|null
+	{
+		return $key !== null ? I18n::translate($key, $key) : null;
 	}
 
 	/**
