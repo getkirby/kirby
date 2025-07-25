@@ -48,25 +48,16 @@ class Home
 	 */
 	public function alternative(): string
 	{
-		$permissions = $this->user()->role()->permissions();
-
-		// no access to the panel? The only good alternative is the main url
-		if ($permissions->for('access', 'panel') === false) {
+		// No access to the Panel? The only good alternative is the main url
+		if ($this->user()?->role()->permissions()->for('access', 'panel') !== true) {
 			return $this->kirby->site()->url();
 		}
 
-		// needed to create a proper menu
-		$menu = $this->panel->menu()->items();
-
-		// go through the menu and search for the first
-		// available view we can go to
-		foreach ($menu as $menuItem) {
-			// skip separators and non-alternative items
-			if ($menuItem === '-' || $menuItem->isAlternative() === false) {
-				continue;
+		// Go through the menu and search for the first available item
+		foreach ($this->panel->menu()->items() as $menuItem) {
+			if ($menuItem !== '-' && $menuItem->isAlternative() === true) {
+				return $this->panel->url($menuItem->link());
 			}
-
-			return $this->panel->url($menuItem->link());
 		}
 
 		throw new NotFoundException(
