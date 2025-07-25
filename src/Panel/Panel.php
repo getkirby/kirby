@@ -74,12 +74,11 @@ class Panel
 	}
 
 	/**
-	 * Checks for a Panel request
-	 * via get parameters or headers
+	 * Checks for a Panel request via get parameters or headers
 	 */
-	public static function isStateRequest(): bool
+	public function isStateRequest(): bool
 	{
-		$request = App::instance()->request();
+		$request = $this->kirby->request();
 
 		if ($request->method() === 'GET') {
 			return

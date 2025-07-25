@@ -85,7 +85,7 @@ class PanelTest extends TestCase
 	public function testIsStateRequest(): void
 	{
 		// standard request
-		$result = Panel::isStateRequest($this->app->request());
+		$result = $this->app->panel()->isStateRequest();
 		$this->assertFalse($result);
 
 		// state request via get
@@ -97,7 +97,7 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$result = Panel::isStateRequest($this->app->request());
+		$result = $this->app->panel()->isStateRequest();
 		$this->assertTrue($result);
 
 		// state request via header
@@ -109,7 +109,7 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$result = Panel::isStateRequest($this->app->request());
+		$result = $this->app->panel()->isStateRequest();
 		$this->assertTrue($result);
 
 		// other request than GET
@@ -119,7 +119,7 @@ class PanelTest extends TestCase
 			]
 		]);
 
-		$result = Panel::isStateRequest($this->app->request());
+		$result = $this->app->panel()->isStateRequest();
 		$this->assertFalse($result);
 	}
 

@@ -270,7 +270,7 @@ class Router
 	public function view(mixed $data): ViewResponse|ViewDocumentResponse|Response
 	{
 		// if requested, send state data as JSON
-		if (Panel::isStateRequest() === true) {
+		if ($this->panel->isStateRequest() === true) {
 			return ViewResponse::from($data);
 		}
 
