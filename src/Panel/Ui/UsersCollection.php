@@ -2,8 +2,8 @@
 
 namespace Kirby\Panel\Ui;
 
-use Kirby\Cms\Users;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Users;
 
 /**
  * @package   Kirby Panel

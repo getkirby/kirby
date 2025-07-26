@@ -5,7 +5,6 @@ use Kirby\Cms\Find;
 use Kirby\Panel\Collector\UsersCollector;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Panel\Ui\UsersCollection;
-use Kirby\Toolkit\Escape;
 
 return [
 	'users' => [
