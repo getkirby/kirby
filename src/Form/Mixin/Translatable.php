@@ -5,6 +5,10 @@ namespace Kirby\Form\Mixin;
 use Kirby\Cms\Language;
 
 /**
+ * Translatable functionality for fields
+ *
+ * @mixin \Kirby\Form\FieldClass
+ *
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com

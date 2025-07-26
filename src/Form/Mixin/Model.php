@@ -5,6 +5,17 @@ namespace Kirby\Form\Mixin;
 use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 
+/**
+ * Model functionality for fields
+ *
+ * @mixin \Kirby\Form\FieldClass
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 trait Model
 {
 	protected ModelWithContent $model;
