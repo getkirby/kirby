@@ -22,7 +22,7 @@ class Redirect extends Exception
 	public function __construct(
 		string $location,
 		int $code = 302,
-		protected int|null $refresh = null,
+		protected int|false $refresh = false,
 		Throwable|null $previous = null
 	) {
 		parent::__construct($location, $code, $previous);
@@ -53,7 +53,7 @@ class Redirect extends Exception
 	/**
 	 * Returns the refresh time in seconds
 	 */
-	public function refresh(): int|null
+	public function refresh(): int|false
 	{
 		return $this->refresh;
 	}

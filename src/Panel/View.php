@@ -317,7 +317,7 @@ class View
 		// handle redirects
 		if ($data instanceof Redirect) {
 			// if the redirect is a refresh, return a refresh response
-			if ($data->refresh() !== null) {
+			if ($data->refresh() !== false) {
 				return Response::refresh($data->location(), $data->code(), $data->refresh());
 			}
 
