@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Kirby\Form\Mixin;
 
 use Kirby\Cms\UserPicker as CmsUserPicker;
