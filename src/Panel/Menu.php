@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Panel\Ui\Button;
 use Kirby\Panel\Ui\Component;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -142,17 +143,18 @@ class Menu
 
 		return new Button(
 			id: $id,
-			icon: $props['icon'] ?? null,
-			text: $props['text'] ?? $props['label'] ?? null,
-			link: $props['link'] ?? null,
-			dialog: $props['dialog'] ?? null,
-			drawer: $props['drawer'] ?? null,
-			target: $props['target'] ?? null,
 			current: $this->isCurrent(
 				$id,
 				$props['current'] ?? null
 			),
-			disabled: $props['disabled'] ?? false
+			dialog: $props['dialog'] ?? null,
+			disabled: $props['disabled'] ?? false,
+			drawer: $props['drawer'] ?? null,
+			icon: $props['icon'] ?? null,
+			link: $props['link'] ?? null,
+			target: $props['target'] ?? null,
+			text: $text = $props['text'] ?? $props['label'] ?? null,
+			title: $props['title'] ?? $text,
 		);
 	}
 
@@ -230,5 +232,19 @@ class Menu
 		);
 
 		return $this->items = array_values(array_filter($items));
+	}
+
+	/**
+	 * Returns an array of all rendered menu items (component-props arrays)
+	 */
+	public function render(): array
+	{
+		return A::map(
+			$this->items(),
+			fn (Component|string $item) => match ($item) {
+				'-'     => $item,
+				default => $item->render()
+			}
+		);
 	}
 }

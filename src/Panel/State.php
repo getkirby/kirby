@@ -6,6 +6,7 @@ use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\User;
+use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
@@ -213,7 +214,7 @@ class State
 
 	public function menu(): array
 	{
-		return $this->panel->menu($this->area?->id())->items();
+		return $this->panel->menu($this->area?->id())->render();
 	}
 
 	public function multilang(): bool

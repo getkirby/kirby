@@ -248,4 +248,14 @@ class MenuTest extends TestCase
 		$this->assertSame('account', $items[8]->props()['link']);
 		$this->assertSame('logout', $items[9]->props()['link']);
 	}
+
+	public function testRender(): void
+	{
+		$menu = new Menu();
+		$items = $menu->render();
+		$this->assertCount(7, $items);
+		$this->assertSame('k-button', $items[0]['component']);
+		$this->assertSame('site', $items[0]['props']['link']);
+		$this->assertSame('Site', $items[0]['props']['text']);
+	}
 }

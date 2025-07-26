@@ -23,11 +23,11 @@
 				:data-second-last="menuIndex === menus.length - 2"
 				class="k-panel-menu-buttons"
 			>
-				<k-button
-					v-for="entry in menu"
-					:key="entry.id"
-					v-bind="entry"
-					:title="entry.title ?? entry.text"
+				<component
+					v-for="item in menu"
+					:is="item.component"
+					:key="item.key"
+					v-bind="item.props"
 					class="k-panel-menu-button"
 				/>
 			</menu>
