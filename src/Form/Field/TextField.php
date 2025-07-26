@@ -37,7 +37,7 @@ class TextField extends FieldClass
 		string|null $after = null,
 		bool $autofocus = false,
 		string|null $before = null,
-		mixed $converter = null,
+		string|null $converter = null,
 		bool $counter = true,
 		mixed $default = null,
 		bool $disabled = false,
