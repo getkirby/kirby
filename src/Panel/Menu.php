@@ -4,7 +4,8 @@ namespace Kirby\Panel;
 
 use Closure;
 use Kirby\Cms\App;
-use Kirby\Panel\Ui\MenuItem;
+use Kirby\Panel\Ui\Button;
+use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -99,7 +100,7 @@ class Menu
 	 * Returns a menu item object for the given props
 	 * @since 6.0.0
 	 */
-	public function item(string $id, array $props = []): MenuItem|null
+	public function item(string $id, array $props = []): Button|null
 	{
 		// Check if the user has access to the area
 		if ($this->hasPermission($id) === false) {
@@ -131,7 +132,15 @@ class Menu
 
 		$props = [...$area, ...$menu, ...$props];
 
-		return new MenuItem(
+		// if neither link, dialog or drawer are set, use id as fallback
+		if (
+			($props['dialog'] ?? null) === null &&
+			($props['drawer'] ?? null) === null
+		) {
+			$props['link'] ??= $id;
+		}
+
+		return new Button(
 			id: $id,
 			icon: $props['icon'] ?? null,
 			text: $props['text'] ?? $props['label'] ?? null,
@@ -187,8 +196,8 @@ class Menu
 				continue;
 			}
 
-			// [$id => MenuItem() ]
-			if ($config instanceof MenuItem) {
+			// [$id => UiComponent() ]
+			if ($config instanceof Component) {
 				$items[] = $config;
 				continue;
 			}
@@ -197,14 +206,14 @@ class Menu
 		$items[] = '-';
 
 		// add additional menu items
-		$items[] = new MenuItem(
+		$items[] = new Button(
 			id: 'changes',
 			icon: 'edit-line',
 			text: I18n::translate('changes'),
 			dialog: 'changes'
 		);
 
-		$items[] = new MenuItem(
+		$items[] = new Button(
 			id: 'account',
 			icon: 'account',
 			text: I18n::translate('view.account'),
@@ -213,7 +222,7 @@ class Menu
 			disabled: $this->hasPermission('account') === false
 		);
 
-		$items[] = new MenuItem(
+		$items[] = new Button(
 			id: 'logout',
 			icon: 'logout',
 			text: I18n::translate('logout'),

@@ -3,7 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Panel\Ui\MenuItem;
+use Kirby\Panel\Ui\Button;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Menu::class)]
@@ -135,7 +135,7 @@ class MenuTest extends TestCase
 	{
 		$menu = new Menu();
 		$item = $menu->item('users');
-		$this->assertInstanceOf(MenuItem::class, $item);
+		$this->assertInstanceOf(Button::class, $item);
 		$this->assertSame('users', $item->props()['link']);
 		$this->assertSame('Users', $item->props()['text']);
 		$this->assertFalse($item->props()['disabled']);
@@ -145,7 +145,7 @@ class MenuTest extends TestCase
 	{
 		$menu = new Menu();
 		$item = $menu->item('users', ['text' => 'Buddies']);
-		$this->assertInstanceOf(MenuItem::class, $item);
+		$this->assertInstanceOf(Button::class, $item);
 		$this->assertSame('users', $item->props()['link']);
 		$this->assertSame('Buddies', $item->props()['text']);
 	}
@@ -159,7 +159,7 @@ class MenuTest extends TestCase
 			$this->assertNull($current);
 			return 'disabled';
 		}]);
-		$this->assertInstanceOf(MenuItem::class, $item);
+		$this->assertInstanceOf(Button::class, $item);
 		$this->assertSame('users', $item->props()['link']);
 		$this->assertSame('Users', $item->props()['text']);
 		$this->assertTrue($item->props()['disabled']);
@@ -223,7 +223,7 @@ class MenuTest extends TestCase
 						],
 						'users',
 						'system' => true,
-						'magic'  => new MenuItem(id: 'magic')
+						'magic'  => new Button(link: 'magic')
 					]
 				]
 			]

@@ -55,9 +55,27 @@ class Home
 
 		// Go through the menu and search for the first available item
 		foreach ($this->panel->menu()->items() as $menuItem) {
-			if ($menuItem !== '-' && $menuItem->isAlternative() === true) {
-				return $this->panel->url($menuItem->link());
+			// skip separators
+			if ($menuItem === '-') {
+				continue;
 			}
+
+			// skip disabled items
+			if ($menuItem->disabled() === true) {
+				continue;
+			}
+
+			// skip items without a link
+			if ($menuItem->link() === null) {
+				continue;
+			}
+
+			// skip the logout button
+			if ($menuItem->link() === 'logout') {
+				continue;
+			}
+
+			return $this->panel->url($menuItem->link());
 		}
 
 		throw new NotFoundException(
