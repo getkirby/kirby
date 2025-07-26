@@ -62,9 +62,23 @@ class TextField extends FieldClass
 		// send parent props to the parent constructor
 		parent::__construct(
 			compact(
-				'after', 'autofocus', 'before', 'default', 'disabled',
-				'help', 'icon', 'label', 'model', 'name', 'placeholder',
-				'required', 'siblings', 'translate', 'when', 'width', 'value'
+				'after',
+				'autofocus',
+				'before',
+				'default',
+				'disabled',
+				'help',
+				'icon',
+				'label',
+				'model',
+				'name',
+				'placeholder',
+				'required',
+				'siblings',
+				'translate',
+				'when',
+				'width',
+				'value'
 			)
 		);
 
