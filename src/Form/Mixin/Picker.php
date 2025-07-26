@@ -2,7 +2,6 @@
 
 namespace Kirby\Form\Mixin;
 
-use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuids;
 
@@ -13,10 +12,9 @@ use Kirby\Uuid\Uuids;
  */
 trait Picker
 {
-	/**
-	 * The placeholder text if none have been selected yet
-	 */
-	protected string|null $empty;
+	use EmptyState;
+	use Max;
+	use Min;
 
 	/**
 	 * Image settings for each item
@@ -32,16 +30,6 @@ trait Picker
 	 * Whether each item should be clickable
 	 */
 	protected bool $link;
-
-	/**
-	 * The minimum number of required to be selected
-	 */
-	protected int|null $min;
-
-	/**
-	 * The maximum number of allowed selected
-	 */
-	protected int|null $max;
 
 	/**
 	 * If `false`, only a single one can be selected
@@ -68,11 +56,6 @@ trait Picker
 	 */
 	protected string|null $text;
 
-	public function empty(): string|null
-	{
-		return $this->empty;
-	}
-
 	public function image(): mixed
 	{
 		return $this->image;
@@ -86,16 +69,6 @@ trait Picker
 	public function link(): bool
 	{
 		return $this->link;
-	}
-
-	public function min(): int|null
-	{
-		return $this->min;
-	}
-
-	public function max(): int|null
-	{
-		return $this->max;
 	}
 
 	public function multiple(): bool
@@ -123,11 +96,6 @@ trait Picker
 		return $this->text;
 	}
 
-	protected function setEmpty(mixed $empty = null): void
-	{
-		$this->empty = I18n::translate($empty, $empty);
-	}
-
 	protected function setImage(mixed $image = null): void
 	{
 		$this->image = $image;
@@ -141,16 +109,6 @@ trait Picker
 	protected function setLink(bool $link = true): void
 	{
 		$this->link = $link;
-	}
-
-	protected function setMin(int|null $min = null): void
-	{
-		$this->min = $min;
-	}
-
-	protected function setMax(int|null $max = null): void
-	{
-		$this->max = $max;
 	}
 
 	protected function setMultiple(bool $multiple = true): void
