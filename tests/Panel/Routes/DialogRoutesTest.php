@@ -2,11 +2,14 @@
 
 namespace Kirby\Panel\Routes;
 
+use Closure;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Controller\DialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-class TestDialog
+class TestDialogController extends DialogController
 {
-	public function load()
+	public function load(): array
 	{
 		return [
 			'component' => 'k-test-dialog',
@@ -19,9 +22,9 @@ class TestDialog
 	}
 }
 
-class TestDialogWithFor extends TestDialog
+class TestDialogControllerWithFactory extends TestDialogController
 {
-	public static function for(): static
+	public static function factory(): static
 	{
 		return new static();
 	}
@@ -30,6 +33,27 @@ class TestDialogWithFor extends TestDialog
 #[CoversClass(DialogRoutes::class)]
 class DialogRoutesTest extends TestCase
 {
+	public function testControllerWithInvalidClass(): void
+	{
+		$routes = new DialogRoutes($this->area, []);
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\DialogController"');
+		$routes->controller(Closure::class);
+	}
+
+	public function testParamsWithController(): void
+	{
+		$routes = new DialogRoutes($this->area, []);
+		$params = $routes->params([
+			'action' => TestDialogController::class
+		]);
+
+		$render = $params['load']();
+		$submit = $params['submit']();
+		$this->assertSame('k-test-dialog', $render['component']);
+		$this->assertSame('success', $submit);
+	}
+
 	public function testToArray(): void
 	{
 		$routes = new DialogRoutes($this->area, []);
@@ -66,50 +90,6 @@ class DialogRoutesTest extends TestCase
 		$this->assertCount(2, $routes);
 		$this->assertSame('dialogs/foo/(:any)', $routes[0]['pattern']);
 		$this->assertSame('dialogs/foo/(:any)', $routes[1]['pattern']);
-	}
-
-	public function testToArrayWithController(): void
-	{
-		$routes = new DialogRoutes($this->area, [
-			'test' => [
-				'controller' => fn () => new TestDialog()
-			]
-		]);
-
-		$routes = $routes->toArray();
-		$this->assertCount(2, $routes);
-		$render = $routes[0]['action']();
-		$submit = $routes[1]['action']();
-		$this->assertSame('k-test-dialog', $render['component']);
-		$this->assertSame('success', $submit);
-
-		// with just the class name
-		$routes = new DialogRoutes($this->area, [
-			'test' => [
-				'controller' => TestDialog::class
-			]
-		]);
-
-		$routes = $routes->toArray();
-		$this->assertCount(2, $routes);
-		$render = $routes[0]['action']();
-		$submit = $routes[1]['action']();
-		$this->assertSame('k-test-dialog', $render['component']);
-		$this->assertSame('success', $submit);
-
-		// with just the class name and ::for() method
-		$routes = new DialogRoutes($this->area, [
-			'test' => [
-				'controller' => TestDialogWithFor::class
-			]
-		]);
-
-		$routes = $routes->toArray();
-		$this->assertCount(2, $routes);
-		$render = $routes[0]['action']();
-		$submit = $routes[1]['action']();
-		$this->assertSame('k-test-dialog', $render['component']);
-		$this->assertSame('success', $submit);
 	}
 
 	public function testToArrayMissingCallbacks(): void

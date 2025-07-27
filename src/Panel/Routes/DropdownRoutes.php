@@ -19,16 +19,16 @@ class DropdownRoutes extends Routes
 
 	public function params(Closure|array $params): array
 	{
-		// support direct handler
-		if ($params instanceof Closure) {
-			$params = [
-				'action' => $params
-			];
-		}
+		$params = parent::params($params);
 
 		// support old options handler
 		if (isset($params['options']) === true) {
-			$params['action'] = $params['options'];
+			$params['action'] ??= $params['options'];
+		}
+
+		// create from controller class
+		if ($controller = $this->controller($params['action'] ?? null)) {
+			$params['action'] = fn (...$args) => $controller(...$args)->options();
 		}
 
 		return $params;
@@ -44,7 +44,7 @@ class DropdownRoutes extends Routes
 
 			$routes[] = $this->route(
 				pattern: $pattern,
-				action:  $params['action'],
+				action:  $params['action'] ?? fn () => 'The dropdown action handler is missing',
 				method: 'GET|POST'
 			);
 		}
