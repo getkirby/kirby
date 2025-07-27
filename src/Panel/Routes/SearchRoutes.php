@@ -22,13 +22,12 @@ class SearchRoutes extends Routes
 	 * Wraps the given query action with additional
 	 * controller code to fetch arguments from the request
 	 */
-	public function action(
-		Closure $action
-	): Closure {
+	public function action(Closure $action): Closure
+	{
 		return function () use ($action) {
 			$kirby   = App::instance();
 			$request = $kirby->request();
-			$query   = $request->get('query');
+			$query   = $request->get('query', '');
 			$limit   = (int)$request->get('limit', $kirby->option('panel.search.limit', 10));
 			$page    = (int)$request->get('page', 1);
 
@@ -36,14 +35,36 @@ class SearchRoutes extends Routes
 		};
 	}
 
+	public function params(Closure|array $params): array
+	{
+		$params = parent::params($params);
+
+		// support old handler
+		if (isset($params['query']) === true) {
+			$params['action'] ??= $params['query'];
+		}
+
+		// create from controller class
+		if ($controller = $this->controller($params['action'] ?? null)) {
+			$params['action'] = fn (...$args) => $controller(...$args)->results();
+		} else {
+			// inject query, limit and page from request
+			$params['action'] = $this->action($params['action']);
+		}
+
+
+		return $params;
+	}
+
 	public function toArray(): array
 	{
 		$routes = [];
 
 		foreach ($this->routes as $name => $params) {
+			$params   = $this->params($params);
 			$routes[] = $this->route(
 				pattern: $this->pattern($name),
-				action:  $this->action($params['query'])
+				action:  $params['action']
 			);
 		}
 

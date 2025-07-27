@@ -2,11 +2,31 @@
 
 namespace Kirby\Panel\Routes;
 
+use Kirby\Panel\Controller\RequestController;
 use PHPUnit\Framework\Attributes\CoversClass;
+
+class TestRequestController extends RequestController
+{
+	public function data(): array
+	{
+		return ['a', 'b', 'c'];
+	}
+}
 
 #[CoversClass(RequestRoutes::class)]
 class RequestRoutesTest extends TestCase
 {
+	public function testParamsWithController(): void
+	{
+		$routes = new RequestRoutes($this->area, []);
+		$params = $routes->params([
+			'action' => TestRequestController::class
+		]);
+
+		$options = $params['action']();
+		$this->assertSame(['a', 'b', 'c'], $options);
+	}
+
 	public function testToArray(): void
 	{
 		$routes = new RequestRoutes($this->area, []);

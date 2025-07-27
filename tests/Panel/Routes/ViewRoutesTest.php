@@ -2,7 +2,16 @@
 
 namespace Kirby\Panel\Routes;
 
+use Kirby\Panel\Controller\ViewController;
 use PHPUnit\Framework\Attributes\CoversClass;
+
+class TestViewController extends ViewController
+{
+	public function view(): array
+	{
+		return ['test'];
+	}
+}
 
 #[CoversClass(ViewRoutes::class)]
 class ViewRoutesTest extends TestCase
@@ -14,6 +23,17 @@ class ViewRoutesTest extends TestCase
 		$this->assertFalse($routes->isAccessible([
 			'when' => fn ($view, $area) => false
 		]));
+	}
+
+	public function testParamsWithController(): void
+	{
+		$routes = new ViewRoutes($this->area, []);
+		$params = $routes->params([
+			'action' => TestViewController::class
+		]);
+
+		$view = $params['action']();
+		$this->assertSame(['test'], $view);
 	}
 
 	public function testToArray(): void
