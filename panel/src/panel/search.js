@@ -55,11 +55,11 @@ export default (panel) => {
 			this.requests++;
 
 			try {
-				const { $search } = await panel.get(`/search/${type}`, {
+				const { search } = await panel.get(`/search/${type}`, {
 					query: { query, ...options },
 					signal: this.controller.signal
 				});
-				return $search;
+				return search;
 			} catch (error) {
 				// if fails and not because request was aborted by subsequent request,
 				// return empty response
