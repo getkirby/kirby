@@ -37,6 +37,7 @@ class PageCreateDialog
 	protected string|null $slug;
 	protected string|null $template;
 	protected string|null $title;
+	protected string|null $uuid;
 	protected Page|Site|User|File $view;
 	protected string|null $viewId;
 
@@ -72,6 +73,7 @@ class PageCreateDialog
 		// optional
 		string|null $slug = null,
 		string|null $title = null,
+		string|null $uuid = null,
 	) {
 		$this->parentId  = $parentId ?? 'site';
 		$this->parent    = Find::parent($this->parentId);
@@ -79,6 +81,7 @@ class PageCreateDialog
 		$this->slug      = $slug;
 		$this->template  = $template;
 		$this->title     = $title;
+		$this->uuid      = $uuid;
 		$this->viewId    = $viewId;
 		$this->view      = Find::parent($this->viewId ?? $this->parentId);
 	}
@@ -164,7 +167,7 @@ class PageCreateDialog
 	public function customFields(): array
 	{
 		$custom    = [];
-		$ignore    = ['title', 'slug', 'parent', 'template'];
+		$ignore    = ['title', 'slug', 'parent', 'template', 'uuid'];
 		$blueprint = $this->blueprint();
 		$fields    = $blueprint->fields();
 
@@ -280,7 +283,7 @@ class PageCreateDialog
 		// and added to content right away
 		if (Uuids::enabled() === true) {
 			$props['content'] = [
-				'uuid' => Uuid::generate()
+				'uuid' => $this->uuid = Uuid::generate()
 			];
 		}
 
@@ -325,9 +328,14 @@ class PageCreateDialog
 	{
 		$input['title'] ??= $this->title ?? '';
 		$input['slug']  ??= $this->slug  ?? '';
+		$input['uuid']  ??= $this->uuid  ?? null;
 
 		$input   = $this->resolveFieldTemplates($input);
 		$content = ['title' => trim($input['title'])];
+
+		if ($uuid = $input['uuid'] ?? null) {
+			$content['uuid'] = $uuid;
+		}
 
 		foreach ($this->customFields() as $name => $field) {
 			$content[$name] = $input[$name] ?? null;
@@ -408,6 +416,7 @@ class PageCreateDialog
 			'slug'     => $this->slug ?? '',
 			'template' => $this->template,
 			'title'    => $this->title ?? '',
+			'uuid'     => $this->uuid,
 			'view'     => $this->viewId,
 		];
 

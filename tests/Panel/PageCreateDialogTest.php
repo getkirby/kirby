@@ -320,6 +320,7 @@ class PageCreateDialogTest extends AreaTestCase
 			'slug'     => '',
 			'template' => 'test',
 			'title'    => '',
+			'uuid'     => null,
 			'view'     => null,
 			'foo'      => 'bar'
 		], $value);
