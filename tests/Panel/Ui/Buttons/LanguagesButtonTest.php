@@ -2,13 +2,12 @@
 
 namespace Kirby\Panel\Ui\Buttons;
 
-use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Panel\Areas\AreaTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(LanguagesDropdown::class)]
-class LanguagesDropdownTest extends AreaTestCase
+#[CoversClass(LanguagesButton::class)]
+class LanguagesButtonTest extends AreaTestCase
 {
 	public function testHasDiff(): void
 	{
@@ -16,7 +15,7 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->installLanguages();
 
 		$page = new Page(['slug' => 'test']);
-		$button = new LanguagesDropdown($page);
+		$button = new LanguagesButton($page);
 
 		// no changes
 		$this->assertFalse($button->hasDiff());
@@ -32,60 +31,10 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertTrue($button->hasDiff());
 	}
 
-	public function testOption(): void
-	{
-		$page     = new Page(['slug' => 'test']);
-		$button   = new LanguagesDropdown($page);
-		$language = new Language(['name' => 'Deutsch', 'code' => 'de']);
-		$this->assertSame([
-			'text'    => 'Deutsch',
-			'code'    => 'de',
-			'current' => false,
-			'default' => false,
-			'changes' => false,
-			'lock'    => false
-		], $button->option($language));
-	}
-
-	public function testOptionsSingleLang(): void
-	{
-		$page   = new Page(['slug' => 'test']);
-		$button = new LanguagesDropdown($page);
-		$this->assertSame([], $button->options());
-	}
-
-	public function testOptionsMultiLang(): void
-	{
-		$this->enableMultilang();
-		$this->installLanguages();
-
-		$page   = new Page(['slug' => 'test']);
-		$button = new LanguagesDropdown($page);
-		$this->assertSame([
-			[
-				'text'    => 'English',
-				'code'    => 'en',
-				'current' => true,
-				'default' => true,
-				'changes' => false,
-				'lock'    => false
-			],
-			'-',
-			[
-				'text'    => 'Deutsch',
-				'code'    => 'de',
-				'current' => false,
-				'default' => false,
-				'changes' => false,
-				'lock'    => false
-			]
-		], $button->options());
-	}
-
 	public function testProps(): void
 	{
 		$page   = new Page(['slug' => 'test']);
-		$button = new LanguagesDropdown($page);
+		$button = new LanguagesButton($page);
 		$props  = $button->props();
 		$this->assertFalse($props['hasDiff']);
 	}
@@ -93,7 +42,7 @@ class LanguagesDropdownTest extends AreaTestCase
 	public function testRenderDefault(): void
 	{
 		$page   = new Page(['slug' => 'test']);
-		$button = new LanguagesDropdown($page);
+		$button = new LanguagesButton($page);
 		$this->assertNull($button->render());
 	}
 
@@ -111,7 +60,7 @@ class LanguagesDropdownTest extends AreaTestCase
 		]);
 
 		$page   = new Page(['slug' => 'test']);
-		$button = new LanguagesDropdown($page);
+		$button = new LanguagesButton($page);
 		$this->assertNull($button->render());
 	}
 
@@ -121,7 +70,7 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->installLanguages();
 
 		$page   = new Page(['slug' => 'test']);
-		$button = new LanguagesDropdown($page);
+		$button = new LanguagesButton($page);
 		$this->assertSame('k-languages-dropdown', $button->component);
 		$this->assertSame('k-languages-dropdown', $button->class);
 		$this->assertSame('translate', $button->icon);

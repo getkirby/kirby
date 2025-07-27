@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Language;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\Str;
@@ -19,7 +18,7 @@ use Kirby\Toolkit\Str;
  * @since     5.0.0
  * @unstable
  */
-class LanguagesDropdown extends ViewButton
+class LanguagesButton extends ViewButton
 {
 	protected App $kirby;
 
@@ -57,47 +56,6 @@ class LanguagesDropdown extends ViewButton
 		}
 
 		return false;
-	}
-
-	public function option(Language $language): array
-	{
-		$changes = $this->model->version('changes');
-
-		return [
-			'text'    => $language->name(),
-			'code'    => $language->code(),
-			'current' => $language->code() === $this->kirby->language()?->code(),
-			'default' => $language->isDefault(),
-			'changes' => $changes->exists($language),
-			'lock'    => $changes->isLocked('*')
-		];
-	}
-
-	/**
-	 * Options are used in the Panel dropdown routes
-	 */
-	public function options(): array
-	{
-		$languages = $this->kirby->languages();
-		$options   = [];
-
-		if ($this->kirby->multilang() === false) {
-			return $options;
-		}
-
-		// add the primary/default language first
-		if ($default = $languages->default()) {
-			$options[] = $this->option($default);
-			$options[] = '-';
-			$languages = $languages->not($default);
-		}
-
-		// add all secondary languages after the separator
-		foreach ($languages as $language) {
-			$options[] = $this->option($language);
-		}
-
-		return $options;
 	}
 
 	public function props(): array

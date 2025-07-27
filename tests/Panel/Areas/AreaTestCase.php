@@ -68,15 +68,6 @@ abstract class AreaTestCase extends TestCase
 		$this->assertSame('k-form-dialog', $dialog['component']);
 	}
 
-	protected function assertLanguageDropdown(string $path): void
-	{
-		$options = $this->dropdown($path)['options'];
-
-		$this->assertSame('English', $options[0]['text']);
-		$this->assertSame('-', $options[1]);
-		$this->assertSame('Deutsch', $options[2]['text']);
-	}
-
 	protected function assertRedirect(
 		string $source,
 		string $dest = '/',

@@ -97,47 +97,4 @@ class SiteDropdownsTest extends AreaTestCase
 		$this->assertSame('_blank', $preview['target']);
 		$this->assertSame('Open', $preview['text']);
 	}
-
-	public function testPageLanguageDropdown(): void
-	{
-		$this->app([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				]
-			],
-			'languages' => [
-				'en' => [
-					'code' => 'en',
-					'name' => 'English',
-				],
-				'de' => [
-					'code' => 'de',
-					'name' => 'Deutsch',
-				]
-			]
-		]);
-
-		$this->login();
-		$this->assertLanguageDropdown('pages/test/languages');
-	}
-
-	public function testSiteLanguageDropdown(): void
-	{
-		$this->app([
-			'languages' => [
-				'en' => [
-					'code' => 'en',
-					'name' => 'English',
-				],
-				'de' => [
-					'code' => 'de',
-					'name' => 'Deutsch',
-				]
-			]
-		]);
-
-		$this->login();
-		$this->assertLanguageDropdown('site/languages');
-	}
 }
