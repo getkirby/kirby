@@ -19,11 +19,7 @@
 				>
 					{{ title }}
 				</k-button>
-				<k-dropdown-content
-					ref="tree"
-					theme="light"
-					class="k-preview-view-tree"
-				>
+				<k-dropdown-content ref="tree" theme="dark" class="k-preview-view-tree">
 					<k-page-tree :current="id" @click.native.stop @select="navigate" />
 				</k-dropdown-content>
 			</k-button-group>
@@ -128,7 +124,10 @@ export default {
 }
 .k-preview-view-tree {
 	--tree-branch-color-back: transparent;
-	--tree-branch-hover-color-back: var(--color-blue-250);
+	--tree-branch-hover-color-back: var(--color-gray-800);
+	--tree-branch-selected-color-back: var(--color-blue-800);
+
+	width: 20rem;
 }
 
 .k-preview-view-grid {
