@@ -35,11 +35,10 @@
 			<file>./config/areas/files/buttons.php</file>
 			<file>./config/areas/languages/buttons.php</file>
 			<file>./config/areas/site/buttons.php</file>
+			<file>./config/areas/site/requests.php</file>
 			<file>./config/areas/users/buttons.php</file>
 			<file>./config/aliases.php</file>
 			<file>./config/setup.php</file>
-			<file>./config/areas/files/requests.php</file>
-			<file>./config/areas/site/requests.php</file>
 		</exclude>
 	</source>
 
