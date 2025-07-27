@@ -142,6 +142,13 @@ class PageCreateDialog
 			]);
 		}
 
+		// pass uuid field to the dialog if uuids are enabled
+		// to use the same uuid and prevent generating a new one
+		// when the page is created
+		if (Uuids::enabled() === true) {
+			$fields['uuid'] = Field::hidden();
+		}
+
 		return [
 			...$fields,
 			'parent'   => Field::hidden(),
