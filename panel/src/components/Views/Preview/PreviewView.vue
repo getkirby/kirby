@@ -13,7 +13,7 @@
 				</k-button>
 				<k-button
 					class="k-preview-view-title"
-					icon="title"
+					:icon="$panel.isLoading ? 'loader' : 'title'"
 					:dropdown="true"
 					@click="$refs.tree.toggle()"
 				>
