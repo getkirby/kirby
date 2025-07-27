@@ -16,9 +16,9 @@ use Kirby\Cms\App;
 abstract class SearchController extends Controller
 {
 	public function __construct(
-		public string $query,
-		public int $limit,
-		public int $page
+		public string $query = '',
+		public int|null $limit = null,
+		public int $page = 1
 	) {
 		parent::__construct();
 	}
