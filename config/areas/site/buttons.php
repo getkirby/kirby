@@ -57,7 +57,7 @@ return [
 			versionId: $versionId
 		);
 	},
-	'page.settings' => fn (Page $page) => new SettingsButton(model: $page),
+	'page.settings' => fn (Page $page) => new SettingsButton($page),
 	'page.status'   => fn (Page $page) => new PageStatusButton($page),
 
 	// `languages` button needs to be in site area,

@@ -14,7 +14,5 @@ return [
 			text: I18n::translate('user.create'),
 		);
 	},
-	'user.settings' => function (User $user) {
-		return new SettingsButton(model: $user);
-	}
+	'user.settings' => fn (User $user) => new SettingsButton($user)
 ];

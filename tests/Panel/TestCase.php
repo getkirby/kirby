@@ -13,6 +13,8 @@ class TestCase extends BaseTestCase
 
 	public function setUp(): void
 	{
+		Dir::make(static::TMP);
+
 		$this->app = new App([
 			'roots' => [
 				'index' => static::TMP,

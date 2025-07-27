@@ -5,9 +5,9 @@ namespace Kirby\Panel;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
+use Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Panel\Ui\FilePreview;
-use Kirby\Toolkit\I18n;
 use Throwable;
 
 /**
@@ -126,69 +126,9 @@ class File extends Model
 	/**
 	 * Provides options for the file dropdown
 	 */
-	public function dropdown(array $options = []): array
+	public function dropdown(): array
 	{
-		$file     = $this->model;
-		$request  = $file->kirby()->request();
-		$defaults = $request->get(['delete', 'sort', 'view']);
-		$options  = [...$defaults, ...$options];
-
-		$permissions = $this->options(['preview']);
-		$view        = $options['view'] ?? 'view';
-		$url         = $this->url(true);
-		$result      = [];
-
-		if ($view === 'list') {
-			$result[] = [
-				'link'   => $file->previewUrl(),
-				'target' => '_blank',
-				'icon'   => 'open',
-				'text'   => I18n::translate('open')
-			];
-			$result[] = '-';
-		}
-
-		$result[] = [
-			'dialog'   => $url . '/changeName',
-			'icon'     => 'title',
-			'text'     => I18n::translate('rename'),
-			'disabled' => $this->isDisabledDropdownOption('changeName', $options, $permissions)
-		];
-
-		if ($view === 'list') {
-			$result[] = [
-				'dialog'   => $url . '/changeSort',
-				'icon'     => 'sort',
-				'text'     => I18n::translate('file.sort'),
-				'disabled' => $this->isDisabledDropdownOption('sort', $options, $permissions)
-			];
-		}
-
-		$result[] = [
-			'dialog'   => $url . '/changeTemplate',
-			'icon'     => 'template',
-			'text'     => I18n::translate('file.changeTemplate'),
-			'disabled' => $this->isDisabledDropdownOption('changeTemplate', $options, $permissions)
-		];
-
-		$result[] = '-';
-
-		$result[] = [
-			'click'    => 'replace',
-			'icon'     => 'upload',
-			'text'     => I18n::translate('replace'),
-			'disabled' => $this->isDisabledDropdownOption('replace', $options, $permissions)
-		];
-
-		$result[] = '-';
-		$result[] = [
-			'dialog'   => $url . '/delete',
-			'icon'     => 'trash',
-			'text'     => I18n::translate('delete'),
-			'disabled' => $this->isDisabledDropdownOption('delete', $options, $permissions)
-		];
-
-		return $result;
+		return (new FileSettingsDropdownController($this->model))->load();
 	}
 
 	/**
