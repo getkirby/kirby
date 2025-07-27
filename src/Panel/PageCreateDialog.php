@@ -9,10 +9,13 @@ use Kirby\Cms\PageBlueprint;
 use Kirby\Cms\PageRules;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
+use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 
 /**
  * Manages the Panel dialog to create new pages
@@ -255,12 +258,33 @@ class PageCreateDialog
 	 */
 	public function model(): Page
 	{
-		return $this->model ??= Page::factory([
+		if (isset($this->model) === true) {
+			return $this->model;
+		}
+
+		$props = [
 			'slug'     => '__new__',
 			'template' => $this->template,
 			'model'    => $this->template,
 			'parent'   => $this->parent instanceof Page ? $this->parent : null
-		]);
+		];
+
+		// make sure that a UUID gets generated
+		// and added to content right away
+		if (Uuids::enabled() === true) {
+			$props['content'] = [
+				'uuid' => Uuid::generate()
+			];
+		}
+
+		$this->model = Page::factory($props);
+
+		// change the storage to memory immediately
+		// since this is a temporary model
+		// so that the model does not write to disk
+		$this->model->changeStorage(MemoryStorage::class);
+
+		return $this->model;
 	}
 
 	/**

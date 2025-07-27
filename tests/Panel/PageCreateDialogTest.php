@@ -2,8 +2,11 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\Page;
+use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Areas\AreaTestCase;
+use Kirby\Uuid\PageUuid;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(PageCreateDialog::class)]
@@ -119,6 +122,9 @@ class PageCreateDialogTest extends AreaTestCase
 	public function testSanitize(): void
 	{
 		$this->app([
+			'options' => [
+				'content.uuid' => false
+			],
 			'blueprints' => [
 				'pages/test' => [
 					'create' => [
@@ -295,5 +301,82 @@ class PageCreateDialogTest extends AreaTestCase
 			'view'     => null,
 			'foo'      => 'bar'
 		], $value);
+	}
+
+	public function testModel(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo', 'bar']
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true
+						],
+						'bar' => [
+							'type'     => 'text',
+							'required' => true,
+							'default'  => 'bar'
+						]
+					]
+				]
+			]
+		]);
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null
+		);
+
+		$model = $dialog->model();
+
+		$this->assertInstanceOf(Page::class, $model);
+		$this->assertInstanceOf(MemoryStorage::class, $model->storage());
+		$this->assertInstanceOf(PageUuid::class, $model->uuid());
+	}
+
+	public function testModelUuidDisabled(): void
+	{
+		$this->app([
+			'options' => [
+				'content.uuid' => false
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo', 'bar']
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true
+						],
+						'bar' => [
+							'type'     => 'text',
+							'required' => true,
+							'default'  => 'bar'
+						]
+					]
+				]
+			]
+		]);
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null
+		);
+
+		$model = $dialog->model();
+
+		$this->assertInstanceOf(Page::class, $model);
+		$this->assertInstanceOf(MemoryStorage::class, $model->storage());
+		$this->assertNull($model->uuid());
 	}
 }
