@@ -893,7 +893,8 @@ class AppPluginsTest extends TestCase
 							'kirby/manual2' => new Plugin('kirby/manual2', [])
 						], $this->plugins());
 					} else {
-						// cannot use strict assertion (test for object contents)
+						// cannot use strict assertion
+						// (test for object contents)
 						$phpUnit->assertEquals([
 							'kirby/test1' => new Plugin('kirby/test1', [
 								'hooks' => [

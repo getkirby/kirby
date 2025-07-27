@@ -137,8 +137,10 @@ class ParserTest extends TestCase
 	}
 
 	#[DataProvider('operatorProvider')]
-	public function testComparison(string $operator): void
-	{
+	public function testComparison(
+		string $operator,
+		string $token
+	): void {
 		$parser = new Parser("a $operator b");
 		$ast    = $parser->parse();
 

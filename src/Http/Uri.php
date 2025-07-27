@@ -320,6 +320,15 @@ class Uri implements Stringable
 	}
 
 	/**
+	 * Returns the Uri's query object
+	 * @since 6.0.0
+	 */
+	public function query(): Query
+	{
+		return $this->query;
+	}
+
+	/**
 	 * @return $this
 	 */
 	public function setFragment(string|null $fragment = null): static

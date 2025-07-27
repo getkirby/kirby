@@ -38,15 +38,23 @@ class UriTest extends TestCase
 	}
 
 	#[DataProvider('provider')]
-	public function testDomain(string $input, string $scheme, string|null $domain): void
-	{
+	public function testDomain(
+		string $input,
+		string $scheme,
+		string|null $domain,
+		string|null $path
+	): void {
 		$uri = new Uri($input);
 		$this->assertSame($domain, $uri->domain());
 	}
 
 	#[DataProvider('provider')]
-	public function testHost(string $input, string $scheme, string|null $domain, string|null $path): void
-	{
+	public function testHost(
+		string $input,
+		string $scheme,
+		string|null $domain,
+		string|null $path
+	): void {
 		$uri = new Uri($input);
 		$this->assertSame($domain ?? '', $uri->host());
 	}
@@ -61,22 +69,34 @@ class UriTest extends TestCase
 	}
 
 	#[DataProvider('provider')]
-	public function testPath(string $input, string $scheme, string|null $domain, string|null $path): void
-	{
+	public function testPath(
+		string $input,
+		string $scheme,
+		string|null $domain,
+		string|null $path
+	): void {
 		$uri = new Uri($input);
 		$this->assertSame($path ?? '', $uri->path()->toString());
 	}
 
 	#[DataProvider('provider')]
-	public function testToString(string $input): void
-	{
+	public function testToString(
+		string $input,
+		string $scheme,
+		string|null $domain,
+		string|null $path
+	): void {
 		$uri = new Uri($input);
 		$this->assertSame($input, $uri->toString());
 	}
 
 	#[DataProvider('provider')]
-	public function testType(string $input, string $scheme): void
-	{
+	public function testType(
+		string $input,
+		string $scheme,
+		string|null $domain,
+		string|null $path
+	): void {
 		$uri = new Uri($input);
 		$this->assertSame($scheme, $uri->type());
 	}

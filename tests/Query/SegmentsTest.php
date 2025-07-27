@@ -128,16 +128,20 @@ class SegmentsTest extends TestCase
 	}
 
 	#[DataProvider('scalarProvider')]
-	public function testResolveWithArrayScalarValue($scalar): void
-	{
+	public function testResolveWithArrayScalarValue(
+		$scalar,
+		$type
+	): void {
 		$segments = Segments::factory('value');
 		$data     = ['value' => $scalar];
 		$this->assertSame($scalar, $segments->resolve($data));
 	}
 
 	#[DataProvider('scalarProvider')]
-	public function testResolveWithArrayScalarValue2Level($scalar): void
-	{
+	public function testResolveWithArrayScalarValue2Level(
+		$scalar,
+		$type
+	): void {
 		$segments = Segments::factory('parent.value');
 		$data     =  [
 			'parent' => [

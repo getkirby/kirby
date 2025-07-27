@@ -7,7 +7,6 @@ use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Field\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversNothing;
 
 class MyPage extends Page
 {
@@ -46,7 +45,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertNull($options->value);
 	}
 
-	#[CoversNothing]
 	public function testDefaults(): void
 	{
 		$options = new OptionsQuery($query = 'site.children');

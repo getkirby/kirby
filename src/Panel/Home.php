@@ -204,8 +204,8 @@ class Home
 
 		// remove all params to avoid
 		// possible attack vectors
-		$uri->params = '';
-		$uri->query  = '';
+		$uri->setParams(null);
+		$uri->setQuery(null);
 
 		// get a clean version of the URL
 		$url = $uri->toString();

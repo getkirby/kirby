@@ -25,18 +25,24 @@
 			</errorLevel>
 		</InvalidScope>
 
-		<!-- TODO: This check gets flagged by Psalm for unknown reasons in PHP 8.2 -->
-		<MethodSignatureMismatch>
-			<errorLevel type="suppress">
-				<file name="src/Toolkit/Date.php" />
-			</errorLevel>
-		</MethodSignatureMismatch>
-
 		<!-- Don't warn about duplicate array keys as Psalm will throw false positive when unpacking arrays -->
 		<DuplicateArrayKey errorLevel="suppress" />
 
+		<!-- Don't warn about missing overrides attributes - we do not want to use them so far -->
+		<MissingOverrideAttribute errorLevel="suppress" />
+
 		<!-- Don't warn about missing template params as Psalm does not recognize this correctly when using `@uses` for traits in class docblock -->
 		<MissingTemplateParam errorLevel="suppress" />
+
+		<!-- Don't warn about unused code as Psalm does not know whether code will be used by developers using Kirby or not -->
+		<PossiblyUnusedMethod errorLevel="suppress" />
+		<PossiblyUnusedParam errorLevel="suppress" />
+		<PossiblyUnusedProperty errorLevel="suppress" />
+		<PossiblyUnusedReturnValue errorLevel="suppress" />
+		<UnusedClass errorLevel="suppress" />
+		<UnusedClosureParam errorLevel="suppress" />
+		<UnusedFunctionCall errorLevel="suppress" />
+		<UnusedVariable errorLevel="suppress" />
 	</issueHandlers>
 
 	<plugins>

@@ -162,7 +162,8 @@ class PageRenderTest extends ModelTestCase
 
 	#[DataProvider('requestMethodProvider')]
 	public function testIsCacheableRequestData(
-		string $method
+		string $method,
+		bool $expected
 	): void {
 		$app = $this->app->clone([
 			'request' => [

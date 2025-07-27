@@ -4,7 +4,6 @@ namespace Kirby\Database;
 
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use ReflectionProperty;
 
 #[CoversClass(Db::class)]
@@ -142,7 +141,6 @@ class DbTest extends TestCase
 		Db::thisIsInvalid();
 	}
 
-	#[CoversNothing]
 	public function testSelect(): void
 	{
 		$result = Db::select('users');
@@ -161,7 +159,6 @@ class DbTest extends TestCase
 		$this->assertSame('george', $result->first()->username());
 	}
 
-	#[CoversNothing]
 	public function testFirst(): void
 	{
 		$result = Db::first('users');
@@ -180,7 +177,6 @@ class DbTest extends TestCase
 		$this->assertSame('john', $result->username());
 	}
 
-	#[CoversNothing]
 	public function testColumn(): void
 	{
 		$result = Db::column('users', 'username');
@@ -196,7 +192,6 @@ class DbTest extends TestCase
 		$this->assertSame(['john'], $result->toArray());
 	}
 
-	#[CoversNothing]
 	public function testInsert(): void
 	{
 		$result = Db::insert('users', [
@@ -212,7 +207,6 @@ class DbTest extends TestCase
 		$this->assertSame('0', Db::row('users', '*', ['username' => 'ringo'])->active());
 	}
 
-	#[CoversNothing]
 	public function testUpdate(): void
 	{
 		$result = Db::update('users', ['email' => 'john@gmail.com'], ['username' => 'john']);
@@ -226,7 +220,6 @@ class DbTest extends TestCase
 		$this->assertSame('1', Db::row('users', '*', ['username' => 'paul'])->active());
 	}
 
-	#[CoversNothing]
 	public function testDelete(): void
 	{
 		$result = Db::delete('users', ['username' => 'john']);
@@ -235,31 +228,26 @@ class DbTest extends TestCase
 		$this->assertSame(2, Db::count('users'));
 	}
 
-	#[CoversNothing]
 	public function testCount(): void
 	{
 		$this->assertSame(3, Db::count('users'));
 	}
 
-	#[CoversNothing]
 	public function testMin(): void
 	{
 		$this->assertSame(1.0, Db::min('users', 'id'));
 	}
 
-	#[CoversNothing]
 	public function testMax(): void
 	{
 		$this->assertSame(3.0, Db::max('users', 'id'));
 	}
 
-	#[CoversNothing]
 	public function testAvg(): void
 	{
 		$this->assertSame(2.0, Db::avg('users', 'id'));
 	}
 
-	#[CoversNothing]
 	public function testSum(): void
 	{
 		$this->assertSame(6.0, Db::sum('users', 'id'));
