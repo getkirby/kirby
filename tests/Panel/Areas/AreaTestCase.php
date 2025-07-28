@@ -84,7 +84,13 @@ abstract class AreaTestCase extends TestCase
 		int $code = 302
 	): void {
 		$response = $this->response($source);
-		$location = $response->header('Location');
+
+		if ($refresh = $response->header('Refresh')) {
+			preg_match('/url=(.+)/', $refresh, $matches);
+			$location = $matches[1] ?? null;
+		}
+
+		$location ??= $response->header('Location');
 
 		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame($code, $response->code());

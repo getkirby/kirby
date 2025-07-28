@@ -36,7 +36,7 @@ return function ($kirby) {
 					 * be used to redirect to that view again
 					 */
 					$kirby->session()->set('panel.path', $path);
-					Panel::go('login');
+					Panel::go(url: 'login', refresh: 0);
 				}
 			]
 		]
