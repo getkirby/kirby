@@ -6,7 +6,6 @@ use Kirby\Api\Upload;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\User;
-use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
