@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\User;
 use Kirby\Exception\PermissionException;
 use Throwable;
 

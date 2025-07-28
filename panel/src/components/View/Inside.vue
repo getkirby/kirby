@@ -2,7 +2,7 @@
 	<k-panel class="k-panel-inside">
 		<k-panel-menu
 			:has-search="$panel.hasSearch"
-			:items="$panel.menu.entries"
+			:items="$panel.menu.items"
 			:is-hovered="$panel.menu.hover"
 			:is-open="$panel.menu.isOpen"
 			:license="$panel.license"

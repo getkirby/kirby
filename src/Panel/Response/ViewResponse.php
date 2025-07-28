@@ -5,7 +5,6 @@ namespace Kirby\Panel\Response;
 use Kirby\Cms\App;
 use Kirby\Data\Json;
 use Kirby\Http\Response;
-use Kirby\Panel\Panel;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\State;
 
@@ -84,7 +83,6 @@ class ViewResponse extends JsonResponse
 	{
 		return new State(
 			area: $this->area,
-			areas: $this->areas,
 			view: $this->view,
 		);
 	}

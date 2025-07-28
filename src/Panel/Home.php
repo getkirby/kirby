@@ -48,43 +48,34 @@ class Home
 	 */
 	public function alternative(): string
 	{
-		$permissions = $this->user()->role()->permissions();
-
-		// no access to the panel? The only good alternative is the main url
-		if ($permissions->for('access', 'panel') === false) {
+		// No access to the Panel? The only good alternative is the main url
+		if ($this->user()?->role()->permissions()->for('access', 'panel') !== true) {
 			return $this->kirby->site()->url();
 		}
 
-		// needed to create a proper menu
-		$areas = $this->panel->areas()->toArray();
-		$menu  = new Menu($areas, $permissions->toArray());
-		$menu  = $menu->entries();
-
-		// go through the menu and search for the first
-		// available view we can go to
-		foreach ($menu as $menuItem) {
+		// Go through the menu and search for the first available item
+		foreach ($this->panel->menu()->items() as $menuItem) {
 			// skip separators
 			if ($menuItem === '-') {
 				continue;
 			}
 
 			// skip disabled items
-			if (($menuItem['disabled'] ?? false) === true) {
+			if ($menuItem->disabled() === true) {
 				continue;
 			}
 
-			// skip buttons that don't open a link
-			// (but e.g. a dialog)
-			if (isset($menuItem['link']) === false) {
+			// skip items without a link
+			if ($menuItem->link() === null) {
 				continue;
 			}
 
 			// skip the logout button
-			if ($menuItem['link'] === 'logout') {
+			if ($menuItem->link() === 'logout') {
 				continue;
 			}
 
-			return $this->panel->url($menuItem['link']);
+			return $this->panel->url($menuItem->link());
 		}
 
 		throw new NotFoundException(
@@ -100,8 +91,7 @@ class Home
 	 */
 	public function hasAccess(string $path): bool
 	{
-		$areas  = $this->panel->areas()->toArray();
-		$routes = $this->panel->router()->routes($areas);
+		$routes = $this->panel->router()->routes();
 
 		// Remove fallback routes. Otherwise a route
 		// would be found even if the view does

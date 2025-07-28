@@ -2,8 +2,6 @@
 
 namespace Kirby\Panel\Ui;
 
-use Kirby\Toolkit\I18n;
-
 /**
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -54,11 +52,21 @@ class Button extends Component
 			'responsive' => $this->responsive,
 			'size'       => $this->size,
 			'target'     => $this->target,
-			'text'       => I18n::translate($this->text, $this->text),
+			'text'       => $this->text(),
 			'theme'      => $this->theme,
-			'title'      => I18n::translate($this->title, $this->title),
+			'title'      => $this->title(),
 			'type'       => $this->type,
 			'variant'    => $this->variant,
 		];
+	}
+
+	public function text(): string|null
+	{
+		return $this->i18n($this->text);
+	}
+
+	public function title(): string|null
+	{
+		return $this->i18n($this->title);
 	}
 }

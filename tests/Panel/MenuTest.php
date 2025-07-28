@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Panel\Ui\Button;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Menu::class)]
@@ -10,234 +11,111 @@ class MenuTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Menu';
 
-	public function testAreas(): void
+	public function setUp(): void
 	{
-		$menu  = new Menu(
-			[
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site'
-				]
-			]
-		);
-		$areas = $menu->areas();
-		$this->assertSame('site', $areas[0]['id']);
-	}
-
-	public function testAreasDefaultOrder(): void
-	{
-		$menu  = new Menu(
-			[
-				'foo' => [
-					'label' => 'Bar',
-					'link'  => 'heart'
-				],
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site'
-				]
-			]
-		);
-		$areas = $menu->areas();
-		$this->assertSame(['site', 'foo'], array_column($areas, 'id'));
-	}
-
-	public function testAreasConfigOption(): void
-	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => [
-						'site',
-						'-',
-						'todos' => [
-							'label' => 'todos',
-							'link'  => 'todos'
-						],
-						'gone',
-						'users' => [
-							'label' => 'Buddies'
-						]
-					]
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP,
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin',
 				]
 			]
 		]);
 
-		$menu  = new Menu(
-			[
-				'license' => [
-					'label' => 'Register',
-					'link'  => 'key'
-				],
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site'
-				],
-				'users' => [
-					'icon'  => 'users',
-					'label' => 'Users',
-					'link'  => 'users'
-				]
-			]
-		);
-		$areas = $menu->areas();
-		$this->assertSame('site', $areas[0]['id']);
-		$this->assertSame('home', $areas[0]['icon']);
-		$this->assertSame('-', $areas[1]);
-		$this->assertSame('todos', $areas[2]['id']);
-		$this->assertTrue($areas[2]['menu']);
-		$this->assertSame('users', $areas[3]['id']);
-		$this->assertSame('users', $areas[3]['icon']);
-		$this->assertSame('Buddies', $areas[3]['label']);
+		$this->app->impersonate('test@getkirby.com');
 	}
 
-	public function testAreasConfigOptionClosure(): void
+	public function testAreas(): void
 	{
-		$test = $this;
+		// areas from Panel object
+		$menu = new Menu();
+		$this->assertInstanceOf(Areas::class, $menu->areas);
+		$this->assertSame(['account', 'lab', 'logout', 'search', 'site', 'system', 'users'], $menu->areas->keys());
 
-		$this->app->clone([
+		// provided areas
+		$areas = new Areas([new Area('foo'), new Area('bar')]);
+		$menu = new Menu(areas: $areas);
+		$this->assertSame(['foo', 'bar'], $menu->areas->keys());
+	}
+
+	public function testConfig(): void
+	{
+		// default config
+		$menu = new Menu();
+		$this->assertSame(['site', 'users', 'system', 'account', 'lab', 'logout', 'search'], $menu->config);
+
+		// global config
+		$this->app = $this->app->clone([
 			'options' => [
 				'panel' => [
-					'menu' => function ($kirby) use ($test) {
-						$test->assertInstanceOf(App::class, $kirby);
-						return [];
+					'menu' => function ($kirby) {
+						$this->assertInstanceOf(App::class, $kirby);
+						return ['fox', 'baz'];
 					}
 				]
 			]
 		]);
 
-		$menu  = new Menu();
-		$areas = $menu->areas();
-		$this->assertCount(0, $areas);
+		$menu = new Menu();
+		$this->assertSame(['fox', 'baz'], $menu->config);
+
+		// provided config
+		$menu = new Menu(config: ['foo', 'bar']);
+		$this->assertSame(['foo', 'bar'], $menu->config);
 	}
 
-	public function testEntry(): void
+	public function testCurrent(): void
 	{
-		$menu = new Menu([], [], 'account');
-		$this->assertTrue($menu->hasPermission('account'));
-
-		$entry = $menu->entry([
-			'id'    => 'account',
-			'link'  => 'foo',
-			'label' => 'Foo',
-			'menu'  => true
-		]);
-		$this->assertSame([
-			'current' => true,
-			'link'    => 'foo',
-			'text'    => 'Foo'
-		], $entry);
+		$menu = new Menu(current: 'account');
+		$this->assertSame('account', $menu->current);
 	}
 
-	public function testEntryDialog(): void
+	public function testDefaults(): void
 	{
-		$menu = new Menu([], [], 'account');
-
-		$entry = $menu->entry([
-			'id'    => 'account',
-			'link'  => 'foo',
-			'label' => 'Foo',
-			'menu'  => ['dialog' => 'foo']
-		]);
-
-		$this->assertSame([
-			'current' => true,
-			'dialog'  => 'foo',
-			'text'    => 'Foo'
-		], $entry);
+		$menu = new Menu();
+		$this->assertSame(['site', 'users', 'system', 'account', 'lab', 'logout', 'search'], $menu->defaults());
 	}
 
-	public function testEntryMenu(): void
+	public function testDefaultsWithCustomAreas(): void
 	{
-		$menu = new Menu([], [], 'account');
-		$this->assertFalse($menu->entry(['id' => 'account']));
-		$this->assertFalse($menu->entry(['id' => 'account', 'menu' => false]));
-		$this->assertFalse($menu->entry(['id' => 'account', 'menu' => fn () => false]));
+		$areas = new Areas([new Area('foo'), new Area('bar')]);
+		$menu = new Menu(areas: $areas);
+		$this->assertSame(['foo', 'bar'], $menu->defaults());
 
-		$test = $this;
-		$menu->entry(['id' => 'account', 'menu' => function ($areas, $permissions, $current) use ($test) {
-			$test->assertSame([], $areas);
-			$test->assertSame([], $permissions);
-			$test->assertSame('account', $current);
-			return false;
-		}]);
-
-		$entry = $menu->entry([
-			'id' => 'account',
-			'link'  => 'foo',
-			'label' => 'Foo',
-			'menu'  => 'disabled'
-		]);
-		$this->assertTrue($entry['disabled']);
-	}
-
-	public function testEntryNoPermission(): void
-	{
-		$menu = new Menu([], ['access' => ['account' => false]]);
-		$this->assertFalse($menu->entry(['id' => 'account']));
-	}
-
-	public function testEntryMultiLanguage(): void
-	{
-		$menu = new Menu([], [], 'account');
-
-		$entry = $menu->entry([
-			'id'    => 'account',
-			'link'  => 'foo',
-			'label' => [
-				'en' => 'My account',
-				'de' => 'Mein Account'
-			],
-			'menu'  => true
-		]);
-		$this->assertSame([
-			'current' => true,
-			'link'    => 'foo',
-			'text'    => 'My account'
-		], $entry);
-	}
-
-	public function testEntries(): void
-	{
-		$menu = new Menu(
-			[
-				'site' => [
-					'icon'  => 'home',
-					'label' => 'Site',
-					'link'  => 'site'
+		$this->app = $this->app->clone([
+			'areas' => [
+				'fox' => [
+					'label' => 'Fox',
+					'link'  => 'fox'
 				]
-			],
-			[],
-			'site'
-		);
+			]
+		]);
 
-		$entries = $menu->entries();
-		$this->assertSame('site', $entries[0]['link']);
-		$this->assertTrue($entries[0]['current']);
-		$this->assertSame('-', $entries[1]);
-		$this->assertSame('changes', $entries[2]['dialog']);
-		$this->assertSame('account', $entries[3]['link']);
-		$this->assertSame('logout', $entries[4]['link']);
+		$this->app->impersonate('test@getkirby.com');
+
+		$menu = new Menu();
+		$this->assertSame(['site', 'users', 'system', 'account', 'lab', 'logout', 'search', 'fox'], $menu->defaults());
 	}
 
 	public function testHasPermission(): void
 	{
-		$menu = new Menu([], []);
+		$menu = new Menu(permissions: []);
 		$this->assertTrue($menu->hasPermission('account'));
 
-		$menu = new Menu([], ['access' => ['account' => true]]);
+		$menu = new Menu(permissions: ['access' => ['account' => true]]);
 		$this->assertTrue($menu->hasPermission('account'));
 
-		$menu = new Menu([], ['access' => ['account' => false]]);
+		$menu = new Menu(permissions: ['access' => ['account' => false]]);
 		$this->assertFalse($menu->hasPermission('account'));
 	}
 
 	public function testIsCurrent(): void
 	{
-		$menu = new Menu([], [], 'account');
+		$menu = new Menu(current:'account');
 
 		$this->assertTrue($menu->isCurrent('account'));
 		$this->assertTrue($menu->isCurrent('foo', true));
@@ -253,33 +131,131 @@ class MenuTest extends TestCase
 		});
 	}
 
-
-	public function testOptions(): void
+	public function testItem(): void
 	{
-		$changes = [
-			'icon'     => 'edit-line',
-			'dialog'   => 'changes',
-			'text'     => 'Changes'
-		];
+		$menu = new Menu();
+		$item = $menu->item('users');
+		$this->assertInstanceOf(Button::class, $item);
+		$this->assertSame('users', $item->props()['link']);
+		$this->assertSame('Users', $item->props()['text']);
+		$this->assertFalse($item->props()['disabled']);
+	}
 
-		$account = [
-			'current'  => false,
-			'icon'     => 'account',
-			'link'     => 'account',
-			'disabled' => false,
-			'text'     => 'Your account'
-		];
+	public function testItemWithExtraProps(): void
+	{
+		$menu = new Menu();
+		$item = $menu->item('users', ['text' => 'Buddies']);
+		$this->assertInstanceOf(Button::class, $item);
+		$this->assertSame('users', $item->props()['link']);
+		$this->assertSame('Buddies', $item->props()['text']);
+	}
 
-		$logout = [
-			'icon' => 'logout',
-			'link' => 'logout',
-			'text' => 'Log out'
-		];
+	public function testItemWithMenu(): void
+	{
+		$menu = new Menu();
+		$item = $menu->item('users', ['menu' => function ($areas, $permissions, $current) {
+			$this->assertInstanceOf(Areas::class, $areas);
+			$this->assertIsArray($permissions);
+			$this->assertNull($current);
+			return 'disabled';
+		}]);
+		$this->assertInstanceOf(Button::class, $item);
+		$this->assertSame('users', $item->props()['link']);
+		$this->assertSame('Users', $item->props()['text']);
+		$this->assertTrue($item->props()['disabled']);
+	}
 
-		$menu    = new Menu();
-		$options = $menu->options();
-		$this->assertSame($changes, $options[0]);
-		$this->assertSame($account, $options[1]);
-		$this->assertSame($logout, $options[2]);
+	public function testItemWithMenuFalse(): void
+	{
+		$menu = new Menu();
+		$item = $menu->item('users', ['menu' => false]);
+		$this->assertNull($item);
+	}
+
+	public function testItemWithNoPermission(): void
+	{
+		$menu = new Menu(permissions: ['access' => ['users' => false]]);
+		$item = $menu->item('users');
+		$this->assertNull($item);
+	}
+
+	public function testItemCurrent(): void
+	{
+		$menu = new Menu();
+		$item = $menu->item('users');
+		$this->assertFalse($item->props()['current']);
+
+		$menu = new Menu(current: 'users');
+		$item = $menu->item('users');
+		$this->assertTrue($item->props()['current']);
+	}
+
+	public function testItems(): void
+	{
+		$menu = new Menu();
+		$items = $menu->items();
+
+		$this->assertCount(7, $items);
+		$this->assertSame('site', $items[0]->props()['link']);
+		$this->assertSame('users', $items[1]->props()['link']);
+		$this->assertSame('system', $items[2]->props()['link']);
+		$this->assertSame('-', $items[3]);
+		$this->assertSame('changes', $items[4]->props()['dialog']);
+		$this->assertSame('account', $items[5]->props()['link']);
+		$this->assertSame('logout', $items[6]->props()['link']);
+	}
+
+	public function testItemsWithCustomConfig(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'menu' => [
+						'foo' => [
+							'label' => 'Heart',
+							'link'  => 'heart'
+						],
+						'-',
+						'nothing',
+						'site' => [
+							'icon' => 'home',
+							'link' => 'site'
+						],
+						'users',
+						'system' => true,
+						'magic'  => new Button(link: 'magic')
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$menu = new Menu();
+		$items = $menu->items();
+
+		$this->assertCount(10, $items);
+		$this->assertSame('heart', $items[0]->props()['link']);
+		$this->assertSame('-', $items[1]);
+		$this->assertSame('home', $items[2]->props()['icon']);
+		$this->assertSame('Site', $items[2]->props()['text']);
+		$this->assertSame('site', $items[2]->props()['link']);
+		$this->assertSame('users', $items[3]->props()['link']);
+		$this->assertSame('system', $items[4]->props()['link']);
+		$this->assertSame('magic', $items[5]->props()['link']);
+		$this->assertSame('-', $items[6]);
+		$this->assertSame('changes', $items[7]->props()['dialog']);
+		$this->assertSame('account', $items[8]->props()['link']);
+		$this->assertSame('logout', $items[9]->props()['link']);
+	}
+
+	public function testRender(): void
+	{
+		$menu = new Menu();
+		$items = $menu->render();
+		$this->assertCount(7, $items);
+		$this->assertSame('k-button', $items[0]['component']);
+		$this->assertSame('site', $items[0]['props']['link']);
+		$this->assertSame('Site', $items[0]['props']['text']);
 	}
 }

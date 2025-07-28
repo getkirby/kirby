@@ -26,16 +26,17 @@ class State
 	protected App $kirby;
 	protected bool $multilang;
 	protected Language|null $language;
+	protected Panel $panel;
 	protected array $permissions;
 	protected User|null $user;
 
 	public function __construct(
 		protected array $view = [],
-		protected array|null $area = null,
-		protected array $areas = [],
+		protected Area|null $area = null
 	) {
 		$this->kirby       = App::instance();
-		$this->multilang   = $this->kirby->panel()->multilang();
+		$this->panel       = $this->kirby->panel();
+		$this->multilang   = $this->panel->multilang();
 		$this->language    = $this->kirby->language();
 		$this->user        = $this->kirby->user();
 		$this->permissions = $this->user?->role()->permissions()->toArray() ?? [];
@@ -212,12 +213,7 @@ class State
 
 	public function menu(): array
 	{
-		$menu = new Menu(
-			$this->areas,
-			$this->permissions,
-			$this->area['id'] ?? null
-		);
-		return $menu->entries();
+		return $this->panel->menu($this->area?->id())->render();
 	}
 
 	public function multilang(): bool
@@ -237,11 +233,11 @@ class State
 	{
 		$searches = [];
 
-		foreach ($this->areas as $area) {
+		foreach ($this->panel->areas() as $area) {
 			// by default, all areas are accessible unless
 			// the permissions are explicitly set to false
-			if (($this->permissions['access'][$area['id']] ?? true) !== false) {
-				foreach (($area['searches'] ?? []) as $id => $params) {
+			if (($this->permissions['access'][$area->id()] ?? true) !== false) {
+				foreach ($area->searches() as $id => $params) {
 					$searches[$id] = [
 						'icon'  => $params['icon'] ?? 'search',
 						'label' => $params['label'] ?? Str::ucfirst($id),
@@ -347,14 +343,14 @@ class State
 			'path'       => Str::after($this->kirby->path(), '/'),
 			'props'      => [],
 			'query'      => $this->kirby->request()->query()->toArray(),
-			'referrer'   => $this->kirby->panel()->referrer(),
+			'referrer'   => $this->panel->referrer(),
 			'search'     => $this->kirby->option('panel.search.type', 'pages'),
 			'timestamp'  => (int)(microtime(true) * 1000),
 		];
 
 		$view = array_replace_recursive(
 			$defaults,
-			$this->area ?? [],
+			$this->area?->view() ?? [],
 			$this->view
 		);
 

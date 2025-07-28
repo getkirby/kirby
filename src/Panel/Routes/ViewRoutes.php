@@ -41,7 +41,7 @@ class ViewRoutes extends Routes
 
 			$routes[] = [
 				...$params,
-				'area' => $this->area['id'],
+				'area' => $this->area->id(),
 				'type' => 'view'
 			];
 		}

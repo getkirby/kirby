@@ -155,6 +155,12 @@ class PanelTest extends TestCase
 		$this->assertSame($data, json_decode($response->body(), true));
 	}
 
+	public function testMenu(): void
+	{
+		$panel = $this->app->panel();
+		$this->assertInstanceOf(Menu::class, $panel->menu());
+	}
+
 	public function testMultilang(): void
 	{
 		$this->app = $this->app->clone([

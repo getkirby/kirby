@@ -7,7 +7,6 @@ use Kirby\Cms\Url as CmsUrl;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -49,7 +48,7 @@ class Panel
 	 */
 	public function areas(): Areas
 	{
-		return $this->areas ??= new Areas($this);
+		return $this->areas ??= Areas::for($this->kirby);
 	}
 
 	/**
@@ -118,6 +117,19 @@ class Panel
 	public function kirby(): App
 	{
 		return $this->kirby;
+	}
+
+	/**
+	 * Returns the Panel menu object
+	 * @since 6.0.0
+	 */
+	public function menu(string|null $current = null): Menu
+	{
+		return new Menu(
+			areas: $this->areas(),
+			permissions: $this->kirby->user()?->role()->permissions()->toArray() ?? [],
+			current: $current
+		);
 	}
 
 	/**
