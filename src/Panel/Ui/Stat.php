@@ -17,13 +17,13 @@ use Kirby\Toolkit\I18n;
 class Stat extends Component
 {
 	public function __construct(
-		public ModelWithContent $model,
 		public array|string $label,
 		public array|string $value,
 		public string $component = 'k-stat',
 		public string|null $icon = null,
 		public array|string|null $info = null,
 		public array|string|null $link = null,
+		public ModelWithContent|null $model = null,
 		public string|null $theme = null,
 	) {
 	}
@@ -90,6 +90,10 @@ class Stat extends Component
 
 	protected function stringTemplate(string|null $string = null): string|null
 	{
+		if ($this->model === null) {
+			return $string;
+		}
+
 		if ($string !== null) {
 			return $this->model->toString($string);
 		}
