@@ -2,10 +2,10 @@
 	<k-string-input
 		v-bind="$props"
 		:spellcheck="false"
-		:value="slug"
+		:value="displayValue"
 		autocomplete="off"
 		class="k-slug-input"
-		@input="$emit('input', $event)"
+		@input="onInput"
 	/>
 </template>
 
@@ -50,9 +50,10 @@ export default {
 	mixins: [props],
 	data() {
 		return {
-			slug: this.sluggify(this.value),
+			displayValue: this.value,
 			slugs: this.$panel.language.rules ?? this.$panel.system.slugs,
-			syncValue: null
+			syncValue: null,
+			slugifyTimeout: null
 		};
 	},
 	watch: {
@@ -71,18 +72,20 @@ export default {
 				}
 
 				this.syncValue = newValue[this.sync];
-				this.onInput(this.sluggify(this.syncValue));
+				this.onInput(this.syncValue, true);
 			},
 			deep: true,
 			immediate: true
 		},
 		value(newValue) {
-			newValue = this.sluggify(newValue);
-
-			if (newValue !== this.slug) {
-				this.slug = newValue;
-				this.$emit("input", this.slug);
+			if (newValue !== this.displayValue) {
+				this.displayValue = newValue;
 			}
+		}
+	},
+	beforeDestroy() {
+		if (this.slugifyTimeout) {
+			clearTimeout(this.slugifyTimeout);
 		}
 	},
 	methods: {
@@ -93,9 +96,28 @@ export default {
 				this.allow
 			);
 		},
-		onInput(value) {
-			this.slug = this.sluggify(value);
-			this.$emit("input", this.slug);
+		onInput(value, immediate = false) {
+			// Update display value immediately to prevent UI lag
+			this.displayValue = value;
+			
+			// Clear any existing timeout
+			if (this.slugifyTimeout) {
+				clearTimeout(this.slugifyTimeout);
+			}
+			
+			// Debounce the slugification to prevent premature character stripping
+			const delay = immediate ? 0 : 300;
+			
+			this.slugifyTimeout = setTimeout(() => {
+				const sluggified = this.sluggify(value);
+				
+				// Only update if the sluggified value is different
+				if (sluggified !== value) {
+					this.displayValue = sluggified;
+				}
+				
+				this.$emit("input", sluggified);
+			}, delay);
 		}
 	}
 };

@@ -175,43 +175,56 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
 		return "";
 	}
 
-	if (!allowed || allowed.length === 0) {
-		allowed = "a-z0-9";
-	}
-
 	string = string.trim().toLowerCase();
 
 	// replace according to language and ascii rules
 	for (const ruleset of rules) {
 		for (const rule in ruleset) {
-			const isTrimmed = rule.slice(0, 1) !== "/";
-			const trimmed = rule.slice(1, rule.length - 1);
-			const regex = isTrimmed ? rule : trimmed;
+			const isRegex = rule.startsWith("/") && rule.endsWith("/");
+			const pattern = isRegex ? rule.slice(1, -1) : rule;
+
 			string = string.replace(
-				new RegExp(RegExp.escape(regex), "g"),
+				new RegExp(RegExp.escape(pattern), "g"),
 				ruleset[rule]
 			);
 		}
 	}
 
-	// remove all other non-ASCII characters
-	string = string.replace("/[^\x09\x0A\x0D\x20-\x7E]/", "");
+	// remove all other non-ASCII characters (keep tab, newline, carriage return, and printable ASCII)
+	string = string.replace(/[^\t\n\r\x20-\x7E]/g, "");
+
+	// build the allowed character set - include a-z0-9 and separator by default
+	const allowedChars = "a-z0-9" + RegExp.escape(separator) + (allowed ? RegExp.escape(allowed) : "");
 
 	// replace non-allowed characters (e.g. spaces) with separator
-	string = string.replace(new RegExp("[^" + allowed + "]", "ig"), separator);
+	string = string.replace(new RegExp("[^" + allowedChars + "]", "ig"), separator);
 
-	// remove double separators
+	// replace slashes with dashes
+	string = string.replaceAll("/", separator);
+
+	// remove groups of multiple separators
 	string = string.replace(
 		new RegExp("[" + RegExp.escape(separator) + "]{2,}", "g"),
 		separator
 	);
 
-	// replace slashes with dashes
-	string = string.replace("/", separator);
-
-	// trim leading and trailing non-word-chars
-	string = string.replace(new RegExp("^[^a-z0-9]+", "g"), "");
-	string = string.replace(new RegExp("[^a-z0-9]+$", "g"), "");
+	// trim leading and trailing separators and non-word chars, but respect allowed characters
+	// First trim separators from edges
+	const separatorPattern = RegExp.escape(separator);
+	string = string.replace(new RegExp("^[" + separatorPattern + "]+", "g"), "");
+	string = string.replace(new RegExp("[" + separatorPattern + "]+$", "g"), "");
+	
+	// Then trim non-alphanumeric chars that aren't in the allowed set
+	if (allowed) {
+		const allowedPattern = RegExp.escape(allowed);
+		const trimPattern = "[^a-z0-9" + allowedPattern + "]";
+		string = string.replace(new RegExp("^" + trimPattern + "+", "g"), "");
+		string = string.replace(new RegExp(trimPattern + "+$", "g"), "");
+	} else {
+		// Default behavior - trim non-word chars
+		string = string.replace(/^\W+/g, "");
+		string = string.replace(/\W+$/g, "");
+	}
 
 	return string;
 }

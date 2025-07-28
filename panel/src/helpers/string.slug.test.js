@@ -71,8 +71,18 @@ describe.concurrent("$helper.string.slug()", () => {
 	});
 
 	it("should produces safe filenames", () => {
-		const result = slug("-what a view@2x.png_", [], "a-z0-9@._-");
-		expect(result).toBe("what-a-view@2x.png");
+		const result = slug("-what a_view@2x.png-", [], "a-z0-9@._-");
+		expect(result).toBe("what-a_view@2x.png");
+	});
+
+	it("should handle underscores with custom allow", () => {
+		const result = slug("test_slug_with_underscores", [], "_");
+		expect(result).toBe("test_slug_with_underscores");
+	});
+
+	it("should handle mixed characters with underscore allow", () => {
+		const result = slug("hello world_test", [], "_");
+		expect(result).toBe("hello-world_test");
 	});
 
 	it("should return empty string when no param sent", () => {
