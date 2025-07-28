@@ -14,8 +14,8 @@ return [
 		/**
 		 * Sets the default page for the pagination.
 		 */
-		'page' => function (int|null $page = null) {
-			return App::instance()->request()->get('page', $page ?? 1);
+		'page' => function (int $page = 1) {
+			return App::instance()->request()->get('page', $page);
 		},
 	],
 	'methods' => [
