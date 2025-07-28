@@ -275,6 +275,23 @@ class Response implements Stringable
 	}
 
 	/**
+	 * Creates a refresh response, which will
+	 * send the visitor to the given location
+	 * after the specified number of seconds.
+	 *
+	 * @since 5.0.3
+	 */
+	public static function refresh(string $location = '/', int $code = 302, int $refresh = 0): static
+	{
+		return new static([
+			'code'    => $code,
+			'headers' => [
+				'Refresh' => $refresh . '; url=' . Url::unIdn($location)
+			]
+		]);
+	}
+
+	/**
 	 * Sends all registered headers and
 	 * returns the response body
 	 */

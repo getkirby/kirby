@@ -596,6 +596,26 @@ class ViewTest extends TestCase
 		$this->assertSame('https://getkirby.com', $response->header('Location'));
 	}
 
+	public function testResponseFromRedirectRefresh(): void
+	{
+		// fake json request for easier assertions
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'_json' => true,
+				]
+			]
+		]);
+
+		$redirect = new Redirect('https://getkirby.com', refresh: 5);
+		$response = View::response($redirect);
+
+		$this->assertInstanceOf(Response::class, $response);
+
+		$this->assertSame(302, $response->code());
+		$this->assertSame('5; url=https://getkirby.com', $response->header('Refresh'));
+	}
+
 	/**
 	 * @covers ::response
 	 */
