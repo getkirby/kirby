@@ -58,11 +58,10 @@ class Panel
 	 * @throws \Kirby\Panel\Redirect
 	 * @codeCoverageIgnore
 	 */
-	public static function go(string|null $url = null, int $code = 302): void
+	public static function go(string|null $url = null, int $code = 302, int|false $refresh = false): void
 	{
-		throw new Redirect(App::instance()->panel()->url($url), $code);
+		throw new Redirect(App::instance()->panel()->url($url), $code, $refresh);
 	}
-
 
 	/**
 	 * Returns the Panel home instance

@@ -134,7 +134,7 @@ export default {
 	--toolbar-text: var(--color-gray-400);
 	--toolbar-border: var(--panel-color-back);
 }
-.k-toolbar:not([data-inline="true"]):has(~ :focus-within) {
+.k-toolbar:not([data-inline="true"]):has(~ :focus-within, :focus) {
 	position: sticky;
 	top: var(--header-sticky-offset);
 	inset-inline: 0;
