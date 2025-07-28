@@ -2,37 +2,16 @@
 
 namespace Kirby\Panel\Response;
 
-use Kirby\Cms\App;
-use Kirby\FileSystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\State;
-use Kirby\TestCase;
+use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ViewResponse::class)]
 class ViewResponseTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Response.ViewResponse';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-	}
 
 	public function testError(): void
 	{
@@ -63,6 +42,15 @@ class ViewResponseTest extends TestCase
 
 		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame('https://getkirby.com', $response->header('Location'));
+	}
+
+	public function testFromRedirectRefresh(): void
+	{
+		$input    = new Redirect('https://getkirby.com', refresh: 5);
+		$response = ViewResponse::from($input);
+
+		$this->assertSame(302, $response->code());
+		$this->assertSame('5; url=https://getkirby.com', $response->header('Refresh'));
 	}
 
 	public function testKey(): void

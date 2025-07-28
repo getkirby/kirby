@@ -4,7 +4,7 @@ namespace Kirby\Panel\Routes;
 
 use Closure;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Panel\Controller\Controller;
+use Kirby\Panel\Area;
 
 /**
  * @package   Kirby Panel
@@ -20,7 +20,7 @@ abstract class Routes
 	protected static string $type = '';
 
 	public function __construct(
-		protected array $area,
+		protected Area $area,
 		protected array $routes,
 	) {
 	}
@@ -85,7 +85,7 @@ abstract class Routes
 			'auth'    => $auth,
 			'pattern' => $pattern,
 			'type'    => static::$type,
-			'area'    => $this->area['id'],
+			'area'    => $this->area->id(),
 			'method'  => $method,
 			'action'  => $action
 		];

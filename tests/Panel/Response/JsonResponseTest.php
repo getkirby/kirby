@@ -6,7 +6,7 @@ use Exception;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception as KirbyException;
 use Kirby\Panel\Redirect;
-use Kirby\TestCase;
+use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(JsonResponse::class)]

@@ -71,8 +71,10 @@ class RouterTest extends TestCase
 
 	public function testRoutes(): void
 	{
-		$router = new Router($this->app->panel());
-		$routes = $router->routes([]);
+		$areas  = new Areas([]);
+		$panel  = $this->app->panel();
+		$router = new Router($panel);
+		$routes = $router->routes($areas);
 
 		$this->assertSame('browser', $routes[0]['pattern']);
 		$this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);

@@ -2,7 +2,7 @@
 
 namespace Kirby\Panel\Response;
 
-use Kirby\TestCase;
+use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(DrawerResponse::class)]

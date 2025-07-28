@@ -3,7 +3,7 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\Data\Json;
-use Kirby\TestCase;
+use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(RequestResponse::class)]

@@ -45,6 +45,21 @@ class PanelTest extends TestCase
 			$thrown = true;
 			$this->assertSame('/panel/test', $r->getMessage());
 			$this->assertSame(302, $r->getCode());
+			$this->assertFalse($r->refresh());
+		}
+		$this->assertTrue($thrown);
+	}
+
+	public function testGoRefresh(): void
+	{
+		$thrown = false;
+		try {
+			Panel::go('test', 302, 5);
+		} catch (Redirect $r) {
+			$thrown = true;
+			$this->assertSame('/panel/test', $r->getMessage());
+			$this->assertSame(302, $r->getCode());
+			$this->assertSame(5, $r->refresh());
 		}
 		$this->assertTrue($thrown);
 	}
@@ -138,6 +153,12 @@ class PanelTest extends TestCase
 		$this->assertSame('application/json', $response->type());
 		$this->assertSame('true', $response->header('X-Panel'));
 		$this->assertSame($data, json_decode($response->body(), true));
+	}
+
+	public function testMenu(): void
+	{
+		$panel = $this->app->panel();
+		$this->assertInstanceOf(Menu::class, $panel->menu());
 	}
 
 	public function testMultilang(): void

@@ -385,6 +385,23 @@ class StateTest extends TestCase
 	public function testSearches()
 	{
 		$this->app = $this->app->clone([
+			'areas' => [
+				'a' => [
+					'searches' => [
+						'foo' => [],
+					]
+				],
+				'b' => [
+					'searches' => [
+						'bar' => [],
+					]
+				],
+				'c' => [
+					'searches' => [
+						'test' => [],
+					]
+				]
+			],
 			'blueprints' => [
 				'users/editor' => [
 					'name' => 'editor',
@@ -403,28 +420,7 @@ class StateTest extends TestCase
 
 		$this->app->impersonate('test@getkirby.com');
 
-		$areas  = [
-			[
-				'id' => 'a',
-				'searches' => [
-					'foo' => [],
-				]
-			],
-			[
-				'id' => 'b',
-				'searches' => [
-					'bar' => [],
-				]
-			],
-			[
-				'id' => 'c',
-				'searches' => [
-					'test' => [],
-				]
-			]
-		];
-
-		$state    = new State(areas: $areas);
+		$state    = new State();
 		$searches = $state->searches();
 
 		$this->assertArrayHasKey('foo', $searches);

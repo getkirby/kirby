@@ -67,4 +67,37 @@ class ButtonTest extends TestCase
 		$props = $component->props();
 		$this->assertSame('Congrats', $props['text']);
 	}
+
+	public function testText(): void
+	{
+		$button = new Button(
+			text: 'Congrats',
+		);
+
+		$this->assertSame('Congrats', $button->text());
+
+		$button = new Button(
+			text: [
+				'en' => 'Congrats',
+				'de' => 'Glückwunsch'
+			],
+		);
+		$this->assertSame('Congrats', $button->text());
+	}
+
+	public function testTitle(): void
+	{
+		$button = new Button(
+			title: 'Congrats',
+		);
+
+		$this->assertSame('Congrats', $button->title());
+
+		$button = new Button(
+			title: [
+				'en' => 'Congrats',
+				'de' => 'Glückwunsch'
+			],
+		);
+	}
 }

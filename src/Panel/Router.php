@@ -14,12 +14,6 @@ use Kirby\Panel\Response\RequestResponse;
 use Kirby\Panel\Response\SearchResponse;
 use Kirby\Panel\Response\ViewDocumentResponse;
 use Kirby\Panel\Response\ViewResponse;
-use Kirby\Panel\Routes\DialogRoutes;
-use Kirby\Panel\Routes\DrawerRoutes;
-use Kirby\Panel\Routes\DropdownRoutes;
-use Kirby\Panel\Routes\RequestRoutes;
-use Kirby\Panel\Routes\SearchRoutes;
-use Kirby\Panel\Routes\ViewRoutes;
 use Kirby\Toolkit\Tpl;
 use Throwable;
 
@@ -55,7 +49,7 @@ class Router
 		$this->garbage();
 
 		// collect areas
-		$areas = $this->panel->areas()->toArray();
+		$areas = $this->panel->areas();
 
 		// create a micro-router for the Panel
 		return BaseRouter::execute(
@@ -67,7 +61,7 @@ class Router
 				$auth   = $route->attributes()['auth'] ?? true;
 				$areaId = $route->attributes()['area'] ?? null;
 				$type   = $route->attributes()['type'] ?? 'view';
-				$area   = $areas[$areaId] ?? null;
+				$area   = $areaId ? $areas->get($areaId) : null;
 
 				// call the route action to check the result
 				try {
@@ -91,7 +85,6 @@ class Router
 				$response = $this->response(
 					data: $result,
 					area: $area,
-					areas: $areas,
 					path: $path,
 					type: $type
 				);
@@ -127,8 +120,7 @@ class Router
 	 */
 	public function response(
 		mixed $data,
-		array|null $area = null,
-		array $areas = [],
+		Area|null $area = null,
 		string|null $path = null,
 		string $type = 'view'
 	): Response {
@@ -149,7 +141,6 @@ class Router
 
 		$response->context(
 			area: $area,
-			areas: $areas,
 			path: $path,
 			query: $this->kirby->request()->query()->toArray(),
 			referrer: $this->panel->referrer()
@@ -162,10 +153,11 @@ class Router
 	 * Extract the routes from the given array
 	 * of active areas.
 	 */
-	public function routes(array $areas): array
+	public function routes(Areas|null $areas = null): array
 	{
-		$kirby = $this->kirby;
-		$panel = $this->panel;
+		$kirby   = $this->kirby;
+		$panel   = $this->panel;
+		$areas ??= $panel->areas();
 
 		// the browser incompatibility
 		// warning is always needed
@@ -181,22 +173,7 @@ class Router
 
 		// register all routes from areas
 		foreach ($areas as $area) {
-			$view     = new ViewRoutes($area, $area['views'] ?? []);
-			$search   = new SearchRoutes($area, $area['searches'] ?? []);
-			$dialog   = new DialogRoutes($area, $area['dialogs'] ?? []);
-			$drawer   = new DrawerRoutes($area, $area['drawers'] ?? []);
-			$dropdown = new DropdownRoutes($area, $area['dropdowns'] ?? []);
-			$request  = new RequestRoutes($area, $area['requests'] ?? []);
-
-			$routes = [
-				...$routes,
-				...$view->toArray(),
-				...$search->toArray(),
-				...$dialog->toArray(),
-				...$drawer->toArray(),
-				...$dropdown->toArray(),
-				...$request->toArray()
-			];
+			$routes = [...$routes, ...$area->routes()];
 		}
 
 		// if the Panel is already installed and/or the

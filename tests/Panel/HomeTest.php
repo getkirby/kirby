@@ -42,8 +42,7 @@ class HomeTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/site', $home->alternative());
 	}
 
@@ -71,8 +70,7 @@ class HomeTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/users', $home->alternative());
 	}
 
@@ -102,8 +100,7 @@ class HomeTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/account', $home->alternative());
 	}
 
@@ -126,8 +123,7 @@ class HomeTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/', $home->alternative());
 	}
 
@@ -158,8 +154,7 @@ class HomeTest extends TestCase
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('There’s no available Panel page to redirect to');
 
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$home->alternative();
 	}
 
@@ -177,8 +172,7 @@ class HomeTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 
 		$this->assertTrue($home->hasAccess('site'));
 		$this->assertTrue($home->hasAccess('pages/test'));
@@ -220,8 +214,7 @@ class HomeTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertFalse($home->hasAccess('site'));
 		$this->assertFalse($home->hasAccess('pages/test'));
 		$this->assertTrue($home->hasAccess('users/test@getkirby.com'));
@@ -230,9 +223,8 @@ class HomeTest extends TestCase
 
 	public function testHasValidDomain(): void
 	{
-		$panel = $this->app->panel();
-		$home  = $panel->home();
-		$uri   = Uri::current();
+		$home = $this->app->panel()->home();
+		$uri  = Uri::current();
 		$this->assertTrue($home->hasValidDomain($uri));
 
 		$uri = new Uri('/');
@@ -244,16 +236,14 @@ class HomeTest extends TestCase
 
 	public function testRemembered(): void
 	{
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertNull($home->remembered());
 	}
 
 	public function testRememberedFromSession(): void
 	{
 		$this->app->session()->set('panel.path', 'users');
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/users', $home->remembered());
 	}
 
@@ -267,8 +257,7 @@ class HomeTest extends TestCase
 
 		$this->app->impersonate('test@getkirby.com');
 
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/site', $home->url());
 	}
 
@@ -315,8 +304,7 @@ class HomeTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame($expected, $home->url());
 	}
 
@@ -347,8 +335,7 @@ class HomeTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('External URLs are not allowed for Panel redirects');
 
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$home->url();
 	}
 
@@ -363,8 +350,7 @@ class HomeTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 		$this->app->session()->set('panel.path', 'users');
 
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/users', $home->url());
 	}
 
@@ -379,8 +365,7 @@ class HomeTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 		$this->app->session()->set('panel.path', 'login');
 
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/site', $home->url());
 	}
 
@@ -404,8 +389,7 @@ class HomeTest extends TestCase
 
 		$this->app->impersonate('editor@getkirby.com');
 
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/users', $home->url());
 	}
 
@@ -431,15 +415,13 @@ class HomeTest extends TestCase
 
 		$this->app->impersonate('editor@getkirby.com');
 
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/account', $home->url());
 	}
 
 	public function testUrlWithoutUser(): void
 	{
-		$panel = $this->app->panel();
-		$home  = $panel->home();
+		$home = $this->app->panel()->home();
 		$this->assertSame('/panel/login', $home->url());
 	}
 }
