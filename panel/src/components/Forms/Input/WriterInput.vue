@@ -93,7 +93,7 @@ export const props = {
 		},
 		nodes: {
 			type: [Array, Boolean],
-			default: () => ["heading", "bulletList", "orderedList"]
+			default: () => ["paragraph", "heading", "bulletList", "orderedList"]
 		},
 		paste: {
 			type: Function,
@@ -143,6 +143,11 @@ export default {
 				marks:
 					Array.isArray(this.marks) || this.marks === false
 						? this.marks
+						: undefined,
+				// if custom set of nodes is enabled, use as toolbar default as well
+				nodes:
+					Array.isArray(this.nodes) || this.nodes === false
+						? this.nodes
 						: undefined,
 				...this.toolbar,
 				editor: this.editor
