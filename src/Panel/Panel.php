@@ -181,9 +181,9 @@ class Panel
 	 * @throws \Kirby\Panel\Redirect
 	 * @codeCoverageIgnore
 	 */
-	public static function go(string|null $url = null, int $code = 302): void
+	public static function go(string|null $url = null, int $code = 302, int|false $refresh = false): void
 	{
-		throw new Redirect(static::url($url), $code);
+		throw new Redirect(static::url($url), $code, $refresh);
 	}
 
 	/**

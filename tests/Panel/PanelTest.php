@@ -271,7 +271,7 @@ class PanelTest extends TestCase
 	/**
 	 * @covers ::go
 	 */
-	public function testGo()
+	public function testGo(): void
 	{
 		$thrown = false;
 		try {
@@ -280,6 +280,21 @@ class PanelTest extends TestCase
 			$thrown = true;
 			$this->assertSame('/panel/test', $r->getMessage());
 			$this->assertSame(302, $r->getCode());
+			$this->assertFalse($r->refresh());
+		}
+		$this->assertTrue($thrown);
+	}
+
+	public function testGoRefresh(): void
+	{
+		$thrown = false;
+		try {
+			Panel::go('test', 302, 5);
+		} catch (Redirect $r) {
+			$thrown = true;
+			$this->assertSame('/panel/test', $r->getMessage());
+			$this->assertSame(302, $r->getCode());
+			$this->assertSame(5, $r->refresh());
 		}
 		$this->assertTrue($thrown);
 	}
