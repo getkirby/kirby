@@ -39,13 +39,13 @@ return [
 							limit: 20
 						);
 
-						$collection = new UsersCollection(
+						$component = new UsersCollection(
 							users: $users->all()
 						);
 
 						return [
-							'data'       => $collection->items(),
-							'pagination' => $collection->pagination()
+							'data'       => $component->items(),
+							'pagination' => $component->pagination()
 						];
 					},
 				]

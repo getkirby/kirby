@@ -76,8 +76,8 @@ return [
 		'modelsPaginated' => function (): Files {
 			return $this->collector()->paginated();
 		},
-		'collection' => function (): FilesCollection {
-			return $this->collection ??= new FilesCollection(
+		'component' => function (): FilesCollection {
+			return $this->component ??= new FilesCollection(
 				files: $this->modelsPaginated(),
 				columns: $this->columns(),
 				empty: $this->empty(),
@@ -96,7 +96,7 @@ return [
 			return $this->models();
 		},
 		'data' => function (): array {
-			return $this->collection()->items();
+			return $this->component()->items();
 		},
 		'total' => function (): int {
 			return $this->models()->count();
@@ -130,7 +130,7 @@ return [
 			];
 		},
 		'pagination' => function () {
-			return $this->collection()->pagination();
+			return $this->component()->pagination();
 		},
 		'upload' => function () {
 			if ($this->isFull() === true) {
@@ -187,7 +187,7 @@ return [
 	},
 	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
-		$props      = $this->collection()->props();
+		$props      = $this->component()->props();
 		$items      = $props['items'];
 		$pagination = $props['pagination'];
 

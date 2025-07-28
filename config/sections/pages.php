@@ -107,8 +107,8 @@ return [
 		'modelsPaginated' => function (): Pages {
 			return $this->collector()->paginated();
 		},
-		'collection' => function (): PagesCollection {
-			return $this->collection ??= new PagesCollection(
+		'component' => function (): PagesCollection {
+			return $this->component ??= new PagesCollection(
 				pages: $this->modelsPaginated(),
 				columns: $this->columns(),
 				empty: $this->empty(),
@@ -127,7 +127,7 @@ return [
 			return $this->models();
 		},
 		'data' => function (): array {
-			return $this->collection()->items();
+			return $this->component()->items();
 		},
 		'total' => function (): int {
 			return $this->models()->count();
@@ -204,7 +204,7 @@ return [
 			return true;
 		},
 		'pagination' => function () {
-			return $this->collection()->pagination();
+			return $this->component()->pagination();
 		},
 	],
 	'methods' => [
@@ -262,7 +262,7 @@ return [
 	},
 	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
-		$props      = $this->collection()->props();
+		$props      = $this->component()->props();
 		$items      = $props['items'];
 		$pagination = $props['pagination'];
 
