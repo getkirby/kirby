@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Controller;
 
+use Kirby\Cms\App;
+
 /**
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -10,22 +12,28 @@ namespace Kirby\Panel\Controller;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  * @unstable
- *
- * @codeCoverageIgnore
  */
 abstract class SearchController extends Controller
 {
-	protected string $query;
-	protected int $limit;
-	protected int $page;
-
-	public function __construct()
-	{
+	public function __construct(
+		public string $query,
+		public int $limit,
+		public int $page
+	) {
 		parent::__construct();
+	}
 
-		$this->query = $this->request->get('query', '');
-		$this->limit = (int)$this->request->get('limit', $this->kirby->option('panel.search.limit', 10));
-		$this->page  = (int)$this->request->get('page', 1);
+	public static function factory(): static
+	{
+		$kirby   = App::instance();
+		$request = $kirby->request();
+		$limit   = $kirby->option('panel.search.limit', 10);
+
+		return new static(
+			query: $request->get('query', ''),
+			limit: (int)$request->get('limit', $limit),
+			page:  (int)$request->get('page', 1)
+		);
 	}
 
 	abstract public function results(): array;
