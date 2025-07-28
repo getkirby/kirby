@@ -27,7 +27,7 @@ class UsersCollector extends ModelsCollector
 
 	protected function collectByQuery(): Users
 	{
-		return $this->parent->query($this->query, Users::class) ?? new Users([]);
+		return App::instance()->site()->query($this->query, Users::class) ?? new Users([]);
 	}
 
 	protected function filter(Files|Pages|Users $models): Users
