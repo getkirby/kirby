@@ -65,6 +65,15 @@ class ViewResponseTest extends TestCase
 		$this->assertSame('https://getkirby.com', $response->header('Location'));
 	}
 
+	public function testFromRedirectRefresh(): void
+	{
+		$input    = new Redirect('https://getkirby.com', refresh: 5);
+		$response = ViewResponse::from($input);
+
+		$this->assertSame(302, $response->code());
+		$this->assertSame('5; url=https://getkirby.com', $response->header('Refresh'));
+	}
+
 	public function testKey(): void
 	{
 		$response = new ViewResponse();
