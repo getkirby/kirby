@@ -2,8 +2,9 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Panel\Collector\UsersCollector;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
-use Kirby\Toolkit\Escape;
+use Kirby\Panel\Ui\UsersCollection;
 
 return [
 	'users' => [
@@ -31,30 +32,20 @@ return [
 					},
 					'roles' => array_values($roles),
 					'users' => function () use ($kirby, $role) {
-						$users = $kirby->users();
+						$users = new UsersCollector(
+							role: $role,
+							sortBy: 'username asc',
+							page: $kirby->request()->get('page', 1),
+							limit: 20
+						);
 
-						if (empty($role) === false) {
-							$users = $users->role($role);
-						}
-
-						// sort users alphabetically
-						$users = $users->sortBy('username', 'asc');
-
-						// paginate
-						$users = $users->paginate([
-							'limit' => 20,
-							'page'  => $kirby->request()->get('page')
-						]);
+						$component = new UsersCollection(
+							users: $users->all()
+						);
 
 						return [
-							'data' => $users->values(fn ($user) => [
-								'id'    => $user->id(),
-								'image' => $user->panel()->image(),
-								'info'  => Escape::html($user->role()->title()),
-								'link'  => $user->panel()->url(true),
-								'text'  => Escape::html($user->username())
-							]),
-							'pagination' => $users->pagination()->toArray()
+							'data'       => $component->items(),
+							'pagination' => $component->pagination()
 						];
 					},
 				]

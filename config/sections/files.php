@@ -2,6 +2,8 @@
 
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
+use Kirby\Panel\Collector\FilesCollector;
+use Kirby\Panel\Ui\FilesCollection;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -56,100 +58,50 @@ return [
 		'parent' => function () {
 			return $this->parentModel();
 		},
-		'models' => function () {
-			if ($this->query !== null) {
-				$files = $this->parent->query($this->query, Files::class) ?? new Files([]);
-			} else {
-				$files = $this->parent->files();
-			}
-
-			// filter files by template
-			$files = $files->template($this->template);
-
-			// filter out all protected and hidden files
-			$files = $files->filter('isListable', true);
-
-			// search
-			if ($this->search === true && empty($this->searchterm()) === false) {
-				$files = $files->search($this->searchterm());
-
-				// disable flip and sortBy while searching
-				// to show most relevant results
-				$this->flip = false;
-				$this->sortBy = null;
-			}
-
-			// sort
-			if ($this->sortBy) {
-				$files = $files->sort(...$files::sortArgs($this->sortBy));
-			} else {
-				$files = $files->sorted();
-			}
-
-			// flip
-			if ($this->flip === true) {
-				$files = $files->flip();
-			}
-
-			return $files;
+		'collector' => function (): FilesCollector {
+			return $this->collector ??= new FilesCollector(
+				flip: $this->flip(),
+				limit: $this->limit(),
+				page: $this->page(),
+				parent: $this->parent(),
+				query: $this->query(),
+				search: $this->searchterm(),
+				sortBy: $this->sortBy(),
+				template: $this->templates(),
+			);
 		},
-		'modelsPaginated' => function () {
-			// apply the default pagination
-			return $this->models()->paginate([
-				'page'   => $this->page,
-				'limit'  => $this->limit,
-				'method' => 'none' // the page is manually provided
-			]);
+		'models' => function (): Files {
+			return $this->collector()->all();
 		},
-		'files' => function () {
-			return $this->models;
+		'modelsPaginated' => function (): Files {
+			return $this->collector()->paginated();
 		},
-		'data' => function () {
-			$data = [];
-
-			foreach ($this->modelsPaginated() as $file) {
-				$panel       = $file->panel();
-				$permissions = $file->permissions();
-
-				$item = [
-					'dragText'  => $panel->dragText(
-						// the drag text needs to be absolute
-						// when the files come from a different parent model
-						absolute: $this->model->is($this->parent) === false
-					),
-					'extension' => $file->extension(),
-					'filename'  => $file->filename(),
-					'id'        => $file->id(),
-					'image'     => $panel->image(
-						$this->image,
-						$this->layout === 'table' ? 'list' : $this->layout
-					),
-					'info'      => $file->toSafeString($this->info ?? false),
-					'link'      => $panel->url(true),
-					'mime'      => $file->mime(),
-					'parent'    => $file->parent()->panel()->path(),
-					'permissions' => [
-						'delete' => $permissions->can('delete'),
-						'sort'   => $permissions->can('sort'),
-					],
-					'template'  => $file->template(),
-					'text'      => $file->toSafeString($this->text),
-					'url'       => $file->url(),
-				];
-
-				if ($this->layout === 'table') {
-					$item = $this->columnsValues($item, $file);
-				}
-
-				$data[] = $item;
-			}
-
-			return $data;
+		'component' => function (): FilesCollection {
+			return $this->component ??= new FilesCollection(
+				files: $this->modelsPaginated(),
+				columns: $this->columns(),
+				empty: $this->empty(),
+				help: $this->help(),
+				image: $this->image(),
+				info: $this->info(),
+				layout: $this->layout(),
+				rawValues: $this->rawvalues(),
+				sortable: $this->sortable(),
+				size: $this->size(),
+				text: $this->text(),
+				theme: $this->theme(),
+			);
 		},
-		'total' => function () {
+		'files' => function (): Files {
+			return $this->models();
+		},
+		'data' => function (): array {
+			return $this->component()->items();
+		},
+		'total' => function (): int {
 			return $this->models()->count();
 		},
-		'errors' => function () {
+		'errors' => function (): array {
 			$errors = [];
 
 			if ($this->validateMax() === false) {
@@ -178,7 +130,7 @@ return [
 			];
 		},
 		'pagination' => function () {
-			return $this->pagination();
+			return $this->component()->pagination();
 		},
 		'upload' => function () {
 			if ($this->isFull() === true) {
@@ -235,27 +187,28 @@ return [
 	},
 	// @codeCoverageIgnoreEnd
 	'toArray' => function () {
+		$props      = $this->component()->props();
+		$items      = $props['items'];
+		$pagination = $props['pagination'];
+
+		unset($props['items'], $props['pagination']);
+
 		return [
-			'data'    => $this->data,
+			'data'    => $items,
 			'errors'  => $this->errors,
 			'options' => [
+				...$props,
 				'accept'   => $this->accept,
 				'apiUrl'   => $this->parent->apiUrl(true) . '/sections/' . $this->name,
 				'batch'    => $this->batch,
-				'columns'  => $this->columnsWithTypes(),
-				'empty'    => $this->empty,
 				'headline' => $this->headline,
-				'help'     => $this->help,
-				'layout'   => $this->layout,
 				'link'     => $this->link(),
 				'max'      => $this->max,
 				'min'      => $this->min,
 				'search'   => $this->search,
-				'size'     => $this->size,
-				'sortable' => $this->sortable,
 				'upload'   => $this->upload
 			],
-			'pagination' => $this->pagination
+			'pagination' => $pagination
 		];
 	}
 ];
