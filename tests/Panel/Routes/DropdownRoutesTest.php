@@ -41,7 +41,7 @@ class DropdownRoutesTest extends TestCase
 			'action' => TestDropdownController::class
 		]);
 
-		$options = $params['action']();
+		$options = $params['load']();
 		$this->assertSame(['a', 'b', 'c'], $options);
 	}
 

@@ -25,7 +25,7 @@ class DropdownRoutes extends Routes
 
 			$routes[] = $this->route(
 				pattern: $pattern,
-				action:  $params['action'] ?? fn () => 'The dropdown action handler is missing',
+				action:  $params['load'] ?? fn () => 'The dropdown action handler is missing',
 				method: 'GET|POST'
 			);
 		}

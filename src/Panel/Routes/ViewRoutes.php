@@ -2,8 +2,6 @@
 
 namespace Kirby\Panel\Routes;
 
-use Closure;
-
 /**
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -45,8 +43,9 @@ class ViewRoutes extends Routes
 
 			$routes[] = [
 				...$params,
-				'area' => $this->area->id(),
-				'type' => 'view'
+				'action' => $params['load'] ?? fn () => 'The view action handler is missing',
+				'area'   => $this->area->id(),
+				'type'   => 'view'
 			];
 		}
 

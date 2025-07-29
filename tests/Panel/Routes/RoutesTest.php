@@ -58,12 +58,12 @@ class RoutesTest extends TestCase
 		$params = $routes->controller([
 			'action' => TestController::class
 		]);
-		$this->assertSame('bar', $params['action']());
+		$this->assertSame('bar', $params['load']());
 
 		$params = $routes->controller([
 			'action' => TestControllerWithFactory::class
 		]);
-		$this->assertSame('factory', $params['action']());
+		$this->assertSame('factory', $params['load']());
 	}
 
 	public function testControllerWithInvalidClass(): void

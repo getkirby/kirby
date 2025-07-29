@@ -49,8 +49,7 @@ abstract class Routes
 				}
 
 				// Add controller closures to params
-				$params['action']   = fn (...$args) => $controller(...$args)->load();
-				$params['load']   ??= $params['action'];
+				$params['load']   ??= fn (...$args) => $controller(...$args)->load();
 				$params['submit'] ??= fn (...$args) => $controller(...$args)->submit();
 			}
 		}
@@ -76,6 +75,9 @@ abstract class Routes
 
 		// add controller from class name
 		$params = $this->controller($params);
+
+		// map action to load handler
+		$params['load'] ??= $params['action'] ?? null;
 
 		return $params;
 	}

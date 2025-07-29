@@ -32,7 +32,7 @@ class ViewRoutesTest extends TestCase
 			'action' => TestViewController::class
 		]);
 
-		$view = $params['action']();
+		$view = $params['load']();
 		$this->assertSame(['test'], $view);
 	}
 

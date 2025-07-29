@@ -23,7 +23,7 @@ class RequestRoutesTest extends TestCase
 			'action' => TestRequestController::class
 		]);
 
-		$options = $params['action']();
+		$options = $params['load']();
 		$this->assertSame(['a', 'b', 'c'], $options);
 	}
 

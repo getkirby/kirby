@@ -43,7 +43,7 @@ class SearchRoutes extends Routes
 			$params   = $this->params($params, 'query');
 			$routes[] = $this->route(
 				pattern: $this->pattern($name),
-				action:  $this->action($params['action'])
+				action:  $this->action($params['load'])
 			);
 		}
 

@@ -23,7 +23,7 @@ class SearchRoutesTest extends TestCase
 			'action' => TestSearchController::class
 		]);
 
-		$options = $params['action']();
+		$options = $params['load']();
 		$this->assertSame(['a', 'b', 'c'], $options);
 	}
 
