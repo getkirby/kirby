@@ -178,7 +178,8 @@ class PageCreateDialogTest extends AreaTestCase
 		$input = $dialog->sanitize([
 			'slug'  => 'foo',
 			'title' => 'Foo',
-			'foo'   => 'bar'
+			'foo'   => 'bar',
+			'uuid'  => 'test-uuid'
 		]);
 
 		$this->assertSame([
@@ -186,6 +187,7 @@ class PageCreateDialogTest extends AreaTestCase
 				'foo'   => 'bar',
 				'bar'   => 'bar',
 				'title' => 'Foo',
+				'uuid'  => 'test-uuid',
 			],
 			'slug'     => 'foo',
 			'template' => 'test',
