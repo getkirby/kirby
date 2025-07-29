@@ -9,12 +9,15 @@ use Kirby\Cms\PageBlueprint;
 use Kirby\Cms\PageRules;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
+use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 
 /**
  * Manages the Panel dialog to create new pages
@@ -36,6 +39,7 @@ class PageCreateDialog
 	protected string|null $slug;
 	protected string|null $template;
 	protected string|null $title;
+	protected string|null $uuid;
 	protected Page|Site|User|File $view;
 	protected string|null $viewId;
 
@@ -71,6 +75,7 @@ class PageCreateDialog
 		// optional
 		string|null $slug = null,
 		string|null $title = null,
+		string|null $uuid = null,
 	) {
 		$this->parentId  = $parentId ?? 'site';
 		$this->parent    = Find::parent($this->parentId);
@@ -78,6 +83,7 @@ class PageCreateDialog
 		$this->slug      = $slug;
 		$this->template  = $template;
 		$this->title     = $title;
+		$this->uuid      = $uuid;
 		$this->viewId    = $viewId;
 		$this->view      = Find::parent($this->viewId ?? $this->parentId);
 	}
@@ -141,6 +147,13 @@ class PageCreateDialog
 			]);
 		}
 
+		// pass uuid field to the dialog if uuids are enabled
+		// to use the same uuid and prevent generating a new one
+		// when the page is created
+		if (Uuids::enabled() === true) {
+			$fields['uuid'] = Field::hidden();
+		}
+
 		return [
 			...$fields,
 			'parent'   => Field::hidden(),
@@ -156,7 +169,7 @@ class PageCreateDialog
 	public function customFields(): array
 	{
 		$custom    = [];
-		$ignore    = ['title', 'slug', 'parent', 'template'];
+		$ignore    = ['title', 'slug', 'parent', 'template', 'uuid'];
 		$blueprint = $this->blueprint();
 		$fields    = $blueprint->fields();
 
@@ -257,12 +270,33 @@ class PageCreateDialog
 	 */
 	public function model(): Page
 	{
-		return $this->model ??= Page::factory([
+		if (isset($this->model) === true) {
+			return $this->model;
+		}
+
+		$props = [
 			'slug'     => '__new__',
 			'template' => $this->template,
 			'model'    => $this->template,
 			'parent'   => $this->parent instanceof Page ? $this->parent : null
-		]);
+		];
+
+		// make sure that a UUID gets generated
+		// and added to content right away
+		if (Uuids::enabled() === true) {
+			$props['content'] = [
+				'uuid' => $this->uuid = Uuid::generate()
+			];
+		}
+
+		$this->model = Page::factory($props);
+
+		// change the storage to memory immediately
+		// since this is a temporary model
+		// so that the model does not write to disk
+		$this->model->changeStorage(MemoryStorage::class);
+
+		return $this->model;
 	}
 
 	/**
@@ -296,9 +330,14 @@ class PageCreateDialog
 	{
 		$input['title'] ??= $this->title ?? '';
 		$input['slug']  ??= $this->slug  ?? '';
+		$input['uuid']  ??= $this->uuid  ?? null;
 
 		$input   = $this->resolveFieldTemplates($input);
 		$content = ['title' => trim($input['title'])];
+
+		if ($uuid = $input['uuid'] ?? null) {
+			$content['uuid'] = $uuid;
+		}
 
 		foreach ($this->customFields() as $name => $field) {
 			$content[$name] = $input[$name] ?? null;
@@ -379,6 +418,7 @@ class PageCreateDialog
 			'slug'     => $this->slug ?? '',
 			'template' => $this->template,
 			'title'    => $this->title ?? '',
+			'uuid'     => $this->uuid,
 			'view'     => $this->viewId,
 		];
 
