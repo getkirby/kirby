@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class TestDropdownController extends DropdownController
 {
-	public function options(): array
+	public function load(): array
 	{
 		return ['a', 'b', 'c'];
 	}
@@ -27,7 +27,7 @@ class DropdownRoutesTest extends TestCase
 
 		$params = $routes->params([
 			'options' => fn () => 'b'
-		]);
+		], 'options');
 		$this->assertSame('b', $params['action']());
 
 		$params = $routes->params(fn () => 'c');

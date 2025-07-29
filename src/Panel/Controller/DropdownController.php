@@ -15,5 +15,4 @@ namespace Kirby\Panel\Controller;
  */
 abstract class DropdownController extends Controller
 {
-	abstract public function options(): array;
 }

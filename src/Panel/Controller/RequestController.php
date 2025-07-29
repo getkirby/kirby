@@ -15,5 +15,4 @@ namespace Kirby\Panel\Controller;
  */
 abstract class RequestController extends Controller
 {
-	abstract public function data(): array;
 }

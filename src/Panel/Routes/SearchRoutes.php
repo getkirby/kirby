@@ -35,36 +35,15 @@ class SearchRoutes extends Routes
 		};
 	}
 
-	public function params(Closure|array $params): array
-	{
-		$params = parent::params($params);
-
-		// support old handler
-		if (isset($params['query']) === true) {
-			$params['action'] ??= $params['query'];
-		}
-
-		// create from controller class
-		if ($controller = $this->controller($params['action'] ?? null)) {
-			$params['action'] = fn (...$args) => $controller(...$args)->results();
-		} else {
-			// inject query, limit and page from request
-			$params['action'] = $this->action($params['action']);
-		}
-
-
-		return $params;
-	}
-
 	public function toArray(): array
 	{
 		$routes = [];
 
 		foreach ($this->routes as $name => $params) {
-			$params   = $this->params($params);
+			$params   = $this->params($params, 'query');
 			$routes[] = $this->route(
 				pattern: $this->pattern($name),
-				action:  $params['action']
+				action:  $this->action($params['action'])
 			);
 		}
 

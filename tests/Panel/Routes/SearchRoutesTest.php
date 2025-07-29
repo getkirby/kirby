@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class TestSearchController extends SearchController
 {
-	public function results(): array
+	public function load(): array
 	{
 		return ['a', 'b', 'c'];
 	}

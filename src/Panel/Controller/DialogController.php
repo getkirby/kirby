@@ -15,13 +15,4 @@ namespace Kirby\Panel\Controller;
  */
 abstract class DialogController extends Controller
 {
-	abstract public function load(): array;
-
-	/**
-	 * Submit successfully by default to allow for submit-less dialogs
-	 */
-	public function submit()
-	{
-		return true;
-	}
 }

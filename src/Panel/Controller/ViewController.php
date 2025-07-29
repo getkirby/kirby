@@ -15,5 +15,4 @@ namespace Kirby\Panel\Controller;
  */
 abstract class ViewController extends Controller
 {
-	abstract public function view(): array;
 }

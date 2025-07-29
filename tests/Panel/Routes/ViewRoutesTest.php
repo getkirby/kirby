@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class TestViewController extends ViewController
 {
-	public function view(): array
+	public function load(): array
 	{
 		return ['test'];
 	}

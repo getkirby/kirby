@@ -27,7 +27,7 @@ class TestRoutesWithPrefix extends Routes
 
 class TestController extends Controller
 {
-	public function foo(): string
+	public function load(): string
 	{
 		return 'bar';
 	}
@@ -35,9 +35,14 @@ class TestController extends Controller
 
 class TestControllerWithFactory extends Controller
 {
-	public static function factory(): string
+	public function load(): string
 	{
 		return 'factory';
+	}
+
+	public static function factory(): static
+	{
+		return new static();
 	}
 }
 
@@ -47,27 +52,42 @@ class RoutesTest extends TestCase
 	public function testController(): void
 	{
 		$routes = new TestRoutes($this->area, []);
-		$this->assertNull($routes->controller(null));
+		$params = $routes->controller([]);
+		$this->assertNull($params['action'] ?? null);
 
-		$controller = $routes->controller(TestController::class);
-		$this->assertSame('bar', $controller()->foo());
+		$params = $routes->controller([
+			'action' => TestController::class
+		]);
+		$this->assertSame('bar', $params['action']());
 
-		$controller = $routes->controller(TestControllerWithFactory::class);
-		$this->assertSame('factory', $controller());
+		$params = $routes->controller([
+			'action' => TestControllerWithFactory::class
+		]);
+		$this->assertSame('factory', $params['action']());
 	}
 
 	public function testControllerWithInvalidClass(): void
 	{
 		$routes = new TestRoutes($this->area, []);
+
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\Controller"');
-		$routes->controller(Closure::class);
+
+		$params = $routes->controller([
+			'action' => Closure::class
+		]);
 	}
 
 	public function testParams(): void
 	{
 		$routes = new TestRoutes($this->area, []);
 		$params = $routes->params(fn () => 'test');
+		$this->assertSame('test', $params['action']());
+
+		$params = $routes->params(
+			params: ['query' => fn () => 'test'],
+			action: 'query'
+		);
 		$this->assertSame('test', $params['action']());
 	}
 

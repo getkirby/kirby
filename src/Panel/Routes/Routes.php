@@ -28,35 +28,54 @@ abstract class Routes
 	/**
 	 * Creates a controller closure from a class name
 	 */
-	public function controller(string|Closure|null $controller): Closure|null
+	public function controller(array $params): array
 	{
-		if (is_string($controller) === true) {
-			$expect = 'Kirby\Panel\Controller\\' . ucfirst(static::$type) . 'Controller';
+		if ($controller = $params['action'] ?? null) {
+			if (is_string($controller) === true) {
+				// Ensure controller uses the correct interface
+				$expect = 'Kirby\Panel\Controller\\' . ucfirst(static::$type) . 'Controller';
 
-			if (is_subclass_of($controller, $expect) === false) {
-				throw new InvalidArgumentException(
-					message: 'Invalid controller class "' . $controller . '" expected child of"' . $expect . '"'
-				);
+				if (is_subclass_of($controller, $expect) === false) {
+					throw new InvalidArgumentException(
+						message: 'Invalid controller class "' . $controller . '" expected child of"' . $expect . '"'
+					);
+				}
+
+				// Use factory method if available
+				if (method_exists($controller, 'factory') === true) {
+					$controller = $controller::factory(...);
+				} else {
+					$controller = fn (...$args) => new $controller(...$args);
+				}
+
+				// Add controller closures to params
+				$params['action']   = fn (...$args) => $controller(...$args)->load();
+				$params['load']   ??= $params['action'];
+				$params['submit'] ??= fn (...$args) => $controller(...$args)->submit();
 			}
-
-			if (method_exists($controller, 'factory') === true) {
-				return $controller::factory(...);
-			}
-
-			return fn (...$args) => new $controller(...$args);
 		}
 
-		return null;
+		return $params;
 	}
 
-	public function params(Closure|array $params): array
-	{
+	public function params(
+		Closure|array $params,
+		string|null $action = null
+	): array {
 		// support direct handler
 		if ($params instanceof Closure) {
 			$params = [
 				'action' => $params
 			];
 		}
+
+		// support old action handler
+		if ($action && isset($params[$action]) === true) {
+			$params['action'] ??= $params[$action];
+		}
+
+		// add controller from class name
+		$params = $this->controller($params);
 
 		return $params;
 	}

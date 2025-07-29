@@ -26,4 +26,14 @@ abstract class Controller
 		$this->kirby   = App::instance();
 		$this->request = $this->kirby->request();
 	}
+
+	abstract public function load();
+
+	/**
+	 * Submit successfully by default to allow for submit-less controllers
+	 */
+	public function submit()
+	{
+		return true;
+	}
 }

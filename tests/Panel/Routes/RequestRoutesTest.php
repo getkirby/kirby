@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class TestRequestController extends RequestController
 {
-	public function data(): array
+	public function load(): array
 	{
 		return ['a', 'b', 'c'];
 	}

@@ -35,6 +35,4 @@ abstract class SearchController extends Controller
 			page:  (int)$request->get('page', 1)
 		);
 	}
-
-	abstract public function results(): array;
 }
