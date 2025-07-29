@@ -33,6 +33,7 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertCount(7, $fields);
 		$this->assertSame('Title', $fields['title']['label']);
 		$this->assertSame('/', $fields['slug']['path']);
+		$this->assertTrue($fields['uuid']['hidden']);
 	}
 
 	public function testCoreFieldsUuidDisabled(): void
