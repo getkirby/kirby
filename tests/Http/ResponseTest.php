@@ -322,6 +322,30 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Location' => '/'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
+	public function testRefresh(): void
+	{
+		$response = Response::refresh();
+		$this->assertSame('', $response->body());
+		$this->assertSame(302, $response->code());
+		$this->assertEquals(['Refresh' => '0; url=/'], $response->headers());
+	}
+
+	public function testRefreshWithLocation(): void
+	{
+		$response = Response::refresh('https://getkirby.com');
+		$this->assertSame('', $response->body());
+		$this->assertSame(302, $response->code());
+		$this->assertEquals(['Refresh' => '0; url=https://getkirby.com'], $response->headers());
+	}
+
+	public function testRefreshWithTime(): void
+	{
+		$response = Response::refresh('https://getkirby.com', 302, 5);
+		$this->assertSame('', $response->body());
+		$this->assertSame(302, $response->code());
+		$this->assertEquals(['Refresh' => '5; url=https://getkirby.com'], $response->headers());
+	}
+
 	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
