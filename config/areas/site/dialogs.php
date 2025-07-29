@@ -287,6 +287,7 @@ return [
 				slug: $request->get('slug'),
 				template: $request->get('template'),
 				title: $request->get('title'),
+				uuid: $request->get('uuid'),
 				viewId: $request->get('view'),
 			);
 
@@ -300,6 +301,7 @@ return [
 				slug: $request->get('slug'),
 				template: $request->get('template'),
 				title: $request->get('title'),
+				uuid: $request->get('uuid'),
 				viewId: $request->get('view'),
 			);
 
