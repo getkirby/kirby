@@ -7,6 +7,7 @@ use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Kirby\Panel\Area;
 use Kirby\Panel\Redirect;
+use Kirby\Panel\Ui\Component;
 use Throwable;
 
 /**
@@ -102,6 +103,11 @@ class JsonResponse extends Response
 			return new static([
 				'redirect' => $data->location(),
 			]);
+		}
+
+		// handle UI components
+		if ($data instanceof Component) {
+			return static::from($data->render());
 		}
 
 		// interpret strings as errors

@@ -7,6 +7,7 @@ use Kirby\Data\Json;
 use Kirby\Exception\Exception as KirbyException;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\TestCase;
+use Kirby\Panel\Ui\Button;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(JsonResponse::class)]
@@ -112,6 +113,14 @@ class JsonResponseTest extends TestCase
 		$output = JsonResponse::from($input);
 
 		$this->assertSame('Error message', $output->data()['error']);
+	}
+
+	public function testFromUiComponent(): void
+	{
+		$input  = new Button('k-my-button');
+		$output = JsonResponse::from($input);
+
+		$this->assertSame('k-my-button', $output->data()['component']);
 	}
 
 	public function testFromString(): void
