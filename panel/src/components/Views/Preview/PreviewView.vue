@@ -20,7 +20,7 @@
 					{{ title }}
 				</k-button>
 				<k-dropdown-content ref="tree" theme="dark" class="k-preview-view-tree">
-					<k-page-tree :current="id" @click.native.stop @select="navigate" />
+					<k-page-tree :current="id" @click.stop @select="navigate" />
 				</k-dropdown-content>
 			</k-button-group>
 
