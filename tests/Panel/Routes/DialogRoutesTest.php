@@ -16,9 +16,9 @@ class TestDialogController extends DialogController
 		];
 	}
 
-	public function submit()
+	public function submit(): array
 	{
-		return 'success';
+		return ['success'];
 	}
 }
 
@@ -55,7 +55,7 @@ class DialogRoutesTest extends TestCase
 		$render = $params['load']();
 		$submit = $params['submit']();
 		$this->assertSame('k-test-dialog', $render['component']);
-		$this->assertSame('success', $submit);
+		$this->assertSame(['success'], $submit);
 	}
 
 	public function testToArray(): void

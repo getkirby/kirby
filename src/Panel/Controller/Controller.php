@@ -27,12 +27,12 @@ abstract class Controller
 		$this->request = $this->kirby->request();
 	}
 
-	abstract public function load();
+	abstract public function load(): mixed;
 
 	/**
 	 * Submit successfully by default to allow for submit-less controllers
 	 */
-	public function submit()
+	public function submit(): mixed
 	{
 		return true;
 	}

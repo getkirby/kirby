@@ -27,17 +27,17 @@ class TestRoutesWithPrefix extends Routes
 
 class TestController extends Controller
 {
-	public function load(): string
+	public function load(): array
 	{
-		return 'bar';
+		return ['bar'];
 	}
 }
 
 class TestControllerWithFactory extends Controller
 {
-	public function load(): string
+	public function load(): array
 	{
-		return 'factory';
+		return ['factory'];
 	}
 
 	public static function factory(): static
@@ -58,12 +58,12 @@ class RoutesTest extends TestCase
 		$params = $routes->controller([
 			'action' => TestController::class
 		]);
-		$this->assertSame('bar', $params['load']());
+		$this->assertSame(['bar'], $params['load']());
 
 		$params = $routes->controller([
 			'action' => TestControllerWithFactory::class
 		]);
-		$this->assertSame('factory', $params['load']());
+		$this->assertSame(['factory'], $params['load']());
 	}
 
 	public function testControllerWithInvalidClass(): void
