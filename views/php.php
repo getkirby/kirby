@@ -5,7 +5,7 @@
   </p>
   <p class="admin-advice">
     Advice for developers and administrators:<br>
-    Change the PHP version to one supported by your version of Kirby
+    Change the PHP version to one <a href="https://getkirby.com/fatal/php">supported by your version of Kirby</a>
   </p>
 
 <?php include __DIR__ . '/snippets/footer.php' ?>
