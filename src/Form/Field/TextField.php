@@ -43,6 +43,7 @@ class TextField extends FieldClass
 		bool $disabled = false,
 		string|null $font = null,
 		string|null $help = null,
+		bool $hidden = false,
 		string|null $icon = null,
 		string|null $label = null,
 		int|null $maxlength = null,
@@ -57,29 +58,31 @@ class TextField extends FieldClass
 		bool $translate = true,
 		array|null $when = null,
 		string|null $width = null,
-		mixed $value = null
+		mixed $value = null,
+		// additional parameters can be passed to the field
+		...$params
 	) {
 		// send parent props to the parent constructor
 		parent::__construct(
-			...compact(
-				'after',
-				'autofocus',
-				'before',
-				'default',
-				'disabled',
-				'help',
-				'icon',
-				'label',
-				'model',
-				'name',
-				'placeholder',
-				'required',
-				'siblings',
-				'translate',
-				'when',
-				'width',
-				'value'
-			)
+			...$params,
+			after: $after,
+			autofocus: $autofocus,
+			before: $before,
+			default: $default,
+			disabled: $disabled,
+			help: $help,
+			hidden: $hidden,
+			icon: $icon,
+			label: $label,
+			model: $model,
+			name: $name,
+			placeholder: $placeholder,
+			required: $required,
+			siblings: $siblings,
+			translate: $translate,
+			when: $when,
+			width: $width,
+			value: $value
 		);
 
 		$this->setConverter($converter);

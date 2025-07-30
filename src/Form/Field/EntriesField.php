@@ -43,6 +43,7 @@ class EntriesField extends FieldClass
 		string|array|null $empty = null,
 		array|string|null $field = null,
 		array|string|null $help = null,
+		bool $hidden = false,
 		string|null $icon = null,
 		string|null $label = null,
 		int|null $max = null,
@@ -56,28 +57,30 @@ class EntriesField extends FieldClass
 		bool $translate = true,
 		array|null $when = null,
 		string|null $width = null,
-		mixed $value = null
+		mixed $value = null,
+		// additional parameters can be passed to the field
+		...$params
 	) {
 		parent::__construct(
-			...compact(
-				'after',
-				'autofocus',
-				'before',
-				'default',
-				'disabled',
-				'help',
-				'icon',
-				'label',
-				'model',
-				'name',
-				'placeholder',
-				'required',
-				'siblings',
-				'translate',
-				'when',
-				'width',
-				'value'
-			)
+			...$params,
+			after: $after,
+			autofocus: $autofocus,
+			before: $before,
+			default: $default,
+			disabled: $disabled,
+			help: $help,
+			hidden: $hidden,
+			icon: $icon,
+			label: $label,
+			model: $model,
+			name: $name,
+			placeholder: $placeholder,
+			required: $required,
+			siblings: $siblings,
+			translate: $translate,
+			when: $when,
+			width: $width,
+			value: $value
 		);
 
 		$this->setEmpty($empty);
