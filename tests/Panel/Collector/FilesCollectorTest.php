@@ -101,7 +101,25 @@ class FilesCollectorTest extends TestCase
 
 	public function testIsSorting(): void
 	{
-		$this->assertIsSorting(FilesCollector::class);
+		$collector = new FilesCollector();
+
+		// The files collector is always sorting.
+		// Either by the sortBy parameter or by the default sort order.
+		$this->assertTrue($collector->isSorting());
+
+		$collector = new FilesCollector(
+			sortBy: 'filename desc'
+		);
+
+		$this->assertTrue($collector->isSorting());
+
+		// the collector is even sorting when the search is active
+		$collector = new FilesCollector(
+			sortBy: 'filename desc',
+			search: 'test'
+		);
+
+		$this->assertTrue($collector->isSorting());
 	}
 
 	public function testModels(): void
