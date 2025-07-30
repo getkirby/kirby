@@ -7,9 +7,11 @@ use Kirby\Cms\Blueprint;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Layout;
 use Kirby\Cms\Layouts;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Fields;
 use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -20,14 +22,68 @@ class LayoutField extends BlocksField
 	protected array|null $selector;
 	protected Fieldset|null $settings;
 
-	public function __construct(array $params)
-	{
-		$this->setModel($params['model'] ?? App::instance()->site());
-		$this->setLayouts($params['layouts'] ?? ['1/1']);
-		$this->setSelector($params['selector'] ?? null);
-		$this->setSettings($params['settings'] ?? null);
+	public function __construct(
+		array|string|null $after = null,
+		bool $autofocus = false,
+		array|string|null $before = null,
+		mixed $default = null,
+		bool $disabled = false,
+		string|array|null $empty = null,
+		string|array|null $fieldsets = null,
+		string|null $group = 'blocks',
+		array|string|null $help = null,
+		bool $hidden = false,
+		string|null $icon = null,
+		string|null $label = null,
+		array $layouts = ['1/1'],
+		int|null $max = null,
+		int|null $min = null,
+		ModelWithContent|null $model = null,
+		string|null $name = null,
+		array|string|null $placeholder = null,
+		bool $pretty = false,
+		bool $required = false,
+		array|null $selector = null,
+		array|string|null $settings = null,
+		Fields|null $siblings = null,
+		bool $translate = true,
+		array|null $when = null,
+		string|null $width = null,
+		mixed $value = null,
+		// additional parameters can be passed to the field
+		...$params
+	) {
+		$this->setModel($model ?? App::instance()->site());
+		$this->setLayouts($layouts);
+		$this->setSelector($selector);
+		$this->setSettings($settings);
 
-		parent::__construct($params);
+		parent::__construct(
+			...$params,
+			after: $after,
+			autofocus: $autofocus,
+			before: $before,
+			default: $default,
+			disabled: $disabled,
+			empty: $empty,
+			fieldsets: $fieldsets,
+			group: $group,
+			help: $help,
+			hidden: $hidden,
+			icon: $icon,
+			label: $label,
+			max: $max,
+			min: $min,
+			name: $name,
+			placeholder: $placeholder,
+			pretty: $pretty,
+			required: $required,
+			siblings: $siblings,
+			translate: $translate,
+			when: $when,
+			width: $width,
+			value: $value
+		);
 	}
 
 	/**
