@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Form\Field;
+namespace Kirby\Form\ArrayField;
 
 class ObjectFieldTest extends TestCase
 {

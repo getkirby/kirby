@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Form\Field;
+namespace Kirby\Form\ArrayField;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;

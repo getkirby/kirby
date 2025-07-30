@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Form\Field;
+namespace Kirby\Form\ArrayField;
 
 use Kirby\Toolkit\I18n;
 
