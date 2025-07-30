@@ -2,7 +2,6 @@
 
 namespace Kirby\Form;
 
-use Error;
 use Exception;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
