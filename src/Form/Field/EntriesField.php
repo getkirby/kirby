@@ -2,9 +2,11 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\FieldClass;
+use Kirby\Form\Fields;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
@@ -32,15 +34,57 @@ class EntriesField extends FieldClass
 	protected Form $form;
 	protected bool  $sortable = true;
 
-	public function __construct(array $params = [])
-	{
-		parent::__construct($params);
+	public function __construct(
+		array|string|null $after = null,
+		bool $autofocus = false,
+		array|string|null $before = null,
+		mixed $default = null,
+		bool $disabled = false,
+		string|array|null $empty = null,
+		array|string|null $field = null,
+		array|string|null $help = null,
+		string|null $icon = null,
+		string|null $label = null,
+		int|null $max = null,
+		int|null $min = null,
+		ModelWithContent|null $model = null,
+		string|null $name = null,
+		array|string|null $placeholder = null,
+		bool $required = false,
+		Fields|null $siblings = null,
+		bool $sortable = true,
+		bool $translate = true,
+		array|null $when = null,
+		string|null $width = null,
+		mixed $value = null
+	) {
+		parent::__construct(
+			...compact(
+				'after',
+				'autofocus',
+				'before',
+				'default',
+				'disabled',
+				'help',
+				'icon',
+				'label',
+				'model',
+				'name',
+				'placeholder',
+				'required',
+				'siblings',
+				'translate',
+				'when',
+				'width',
+				'value'
+			)
+		);
 
-		$this->setEmpty($params['empty'] ?? null);
-		$this->setField($params['field'] ?? null);
-		$this->setMax($params['max'] ?? null);
-		$this->setMin($params['min'] ?? null);
-		$this->setSortable($params['sortable'] ?? true);
+		$this->setEmpty($empty);
+		$this->setField($field);
+		$this->setMax($max);
+		$this->setMin($min);
+		$this->setSortable($sortable);
 	}
 
 	public function field(): array
