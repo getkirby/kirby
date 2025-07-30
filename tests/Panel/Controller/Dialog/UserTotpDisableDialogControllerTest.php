@@ -1,26 +1,24 @@
 <?php
 
-namespace Kirby\Panel\Ui\Dialogs;
+namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
+use Kirby\Panel\TestCase;
+use Kirby\Panel\Ui\Dialogs\FormDialog;
 use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(UserTotpDisableDialog::class)]
-class UserTotpDisableDialogTest extends TestCase
+#[CoversClass(UserTotpDisableDialogController::class)]
+class UserTotpDisableDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Ui.Dialogs.UserTotpDisableDialog';
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserTotpDisableDialogController';
 
-	protected function setUp(): void
+	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			],
+		parent::setUp();
+
+		$this->app = $this->app->clone([
 			'users' => [
 				[
 					'id'    => 'test',
@@ -34,48 +32,37 @@ class UserTotpDisableDialogTest extends TestCase
 			],
 			'user' => 'test@getkirby.com'
 		]);
-
-		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	public function testFactory(): void
 	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-
-		// clear fake json requests
-		$_GET = [];
-	}
-
-	public function testConstruct(): void
-	{
-		$dialog = new UserTotpDisableDialog();
+		$dialog = UserTotpDisableDialogController::factory();
+		$this->assertInstanceOf(UserTotpDisableDialogController::class, $dialog);
 		$this->assertSame($this->app->user(), $dialog->user);
 		$this->assertSame('test@getkirby.com', $dialog->user->email());
 
-		$dialog = new UserTotpDisableDialog('homer');
+		$dialog = UserTotpDisableDialogController::factory('homer');
+		$this->assertInstanceOf(UserTotpDisableDialogController::class, $dialog);
 		$this->assertSame('homer@simpson.com', $dialog->user->email());
 	}
 
 	public function testLoad(): void
 	{
 		// current admin user for themselves
-		$dialog = new UserTotpDisableDialog();
-		$state  = $dialog->load();
-		$this->assertSame('k-form-dialog', $state['component']);
+		$controller = UserTotpDisableDialogController::factory();
+		$dialog     = $controller->load();
+		$this->assertInstanceOf(FormDialog::class, $dialog);
 
 		// current admin user for another user
-		$dialog = new UserTotpDisableDialog('homer');
-		$state  = $dialog->load();
-		$this->assertSame('k-remove-dialog', $state['component']);
+		$controller = UserTotpDisableDialogController::factory('homer');
+		$dialog     = $controller->load();
+		$this->assertInstanceOf(FormDialog::class, $dialog);
 
 		// non-admin admin user for themselves
 		$this->app->clone(['user' => 'homer']);
-		$dialog = new UserTotpDisableDialog();
-		$state  = $dialog->load();
-		$this->assertSame('k-form-dialog', $state['component']);
+		$controller = UserTotpDisableDialogController::factory();
+		$dialog     = $controller->load();
+		$this->assertInstanceOf(FormDialog::class, $dialog);
 	}
 
 	public function testSubmit(): void
@@ -90,8 +77,8 @@ class UserTotpDisableDialogTest extends TestCase
 		$_GET['password'] = $password;
 		$this->assertSame($secret, $user->secret('totp'));
 
-		$dialog = new UserTotpDisableDialog();
-		$state  = $dialog->submit();
+		$controller = UserTotpDisableDialogController::factory();
+		$state      = $controller->submit();
 		$this->assertNull($user->secret('totp'));
 		$this->assertIsString($state['message']);
 	}
@@ -107,8 +94,8 @@ class UserTotpDisableDialogTest extends TestCase
 
 		$_GET['password'] = 'nonono123';
 
-		$dialog = new UserTotpDisableDialog();
-		$dialog->submit();
+		$controller = UserTotpDisableDialogController::factory();
+		$controller->submit();
 	}
 
 	public function testSubmitNonAdminAnotherUser(): void
@@ -116,7 +103,7 @@ class UserTotpDisableDialogTest extends TestCase
 		$this->expectException(PermissionException::class);
 
 		$this->app->clone(['user' => 'homer']);
-		$dialog = new UserTotpDisableDialog('test');
-		$dialog->submit();
+		$controller = UserTotpDisableDialogController::factory('test');
+		$controller->submit();
 	}
 }

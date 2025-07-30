@@ -1,41 +1,42 @@
 <?php
 
-namespace Kirby\Panel\Ui\Dialogs;
+namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use Kirby\Panel\Controller\DialogController;
+use Kirby\Panel\Ui\Dialog;
+use Kirby\Panel\Ui\Dialogs\FormDialog;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
 /**
  * Manages the Panel dialog to disable TOTP auth for a user
- * @since 4.0.0
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
-class UserTotpDisableDialog
+class UserTotpDisableDialogController extends DialogController
 {
-	public App $kirby;
-	public User $user;
-
 	public function __construct(
-		string|null $id = null
+		public User $user
 	) {
-		$this->kirby = App::instance();
-		$this->user  = $id ? Find::user($id) : $this->kirby->user();
+		parent::__construct();
 	}
 
-	/**
-	 * Returns the Panel dialog state when opening the dialog
-	 */
-	public function load(): array
+	public static function factory(string|null $id = null): static
+	{
+		return new static($id ? Find::user($id) : App::instance()->user());
+	}
+
+	public function load(): Dialog
 	{
 		$currentUser = $this->kirby->user();
 		$submitBtn   = [
@@ -52,31 +53,27 @@ class UserTotpDisableDialog
 		) {
 			$name = $this->user->name()->or($this->user->email());
 
-			return [
-				'component' => 'k-remove-dialog',
-				'props' => [
-					'text' => I18n::template('login.totp.disable.admin', ['user' => Escape::html($name)]),
-					'submitButton' => $submitBtn,
-				]
-			];
+			return new FormDialog(
+				text: I18n::template('login.totp.disable.admin', [
+					'user' => Escape::html($name)
+				]),
+				submitButton: $submitBtn,
+			);
 		}
 
 		// everybody else
-		return [
-			'component' => 'k-form-dialog',
-			'props' => [
-				'fields' => [
-					'password' => [
-						'type'     => 'password',
-						'required' => true,
-						'counter'  => false,
-						'label'    => I18n::translate('login.totp.disable.label'),
-						'help'     => I18n::translate('login.totp.disable.help'),
-					]
-				],
-				'submitButton' => $submitBtn,
-			]
-		];
+		return new FormDialog(
+			fields: [
+				'password' => [
+					'type'     => 'password',
+					'required' => true,
+					'counter'  => false,
+					'label'    => I18n::translate('login.totp.disable.label'),
+					'help'     => I18n::translate('login.totp.disable.help'),
+				]
+			],
+			submitButton: $submitBtn
+		);
 	}
 
 	/**
@@ -84,7 +81,7 @@ class UserTotpDisableDialog
 	 */
 	public function submit(): array
 	{
-		$password = $this->kirby->request()->get('password');
+		$password = $this->request->get('password');
 
 		try {
 			if ($this->kirby->user()->is($this->user) === true) {

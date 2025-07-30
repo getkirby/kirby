@@ -1,48 +1,43 @@
 <?php
 
-namespace Kirby\Panel\Ui\Dialogs;
+namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
+use Kirby\Panel\Controller\DialogController;
+use Kirby\Panel\Ui\Dialog;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Totp;
 
 /**
  * Manages the Panel dialog to enable TOTP auth for the current user
- * @since 4.0.0
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
-class UserTotpEnableDialog
+class UserTotpEnableDialogController extends DialogController
 {
-	public App $kirby;
 	public Totp $totp;
 	public User $user;
 
 	public function __construct()
 	{
-		$this->kirby = App::instance();
+		parent::__construct();
 		$this->user  = $this->kirby->user();
 	}
 
-	/**
-	 * Returns the Panel dialog state when opening the dialog
-	 */
-	public function load(): array
+	public function load(): Dialog
 	{
-		return [
-			'component' => 'k-totp-dialog',
-			'props' => [
-				'qr'    => $this->qr()->toSvg(size: '100%'),
-				'value' => ['secret' => $this->secret()]
-			]
-		];
+		return new Dialog(
+			component: 'k-totp-dialog',
+			qr: $this->qr()->toSvg(size: '100%'),
+			value: ['secret' => $this->secret()]
+		);
 	}
 
 	/**
@@ -66,8 +61,8 @@ class UserTotpEnableDialog
 	 */
 	public function submit(): array
 	{
-		$secret  = $this->kirby->request()->get('secret');
-		$confirm = $this->kirby->request()->get('confirm');
+		$secret  = $this->request->get('secret');
+		$confirm = $this->request->get('confirm');
 
 		if ($confirm === null) {
 			throw new InvalidArgumentException(
