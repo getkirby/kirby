@@ -1,8 +1,8 @@
 <?php
 
 use Kirby\Cms\File;
-use Kirby\Cms\Files;
 use Kirby\Panel\Collector\FilesCollector;
+use Kirby\Panel\Ui\Upload;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -159,26 +159,17 @@ return [
 				return false;
 			}
 
-			// count all uploaded files
-			$max      = $this->max ? $this->max - $this->total : null;
-			$multiple = !$max || $max > 1;
-			$template = $this->template === 'default' ? null : $this->template;
+			$settings = new Upload(
+				api: $this->parent->apiUrl(true) . '/files',
+				accept: $this->accept,
+				multiple: true,
+				max: $this->max ? $this->max - $this->total : null,
+				preview: $this->image,
+				sort: $this->sortable === true ? $this->total + 1 : null,
+				template: $this->template,
+			);
 
-			return [
-				'accept'     => $this->accept,
-				'multiple'   => $multiple,
-				'max'        => $max,
-				'api'        => $this->parent->apiUrl(true) . '/files',
-				'preview'    => $this->image,
-				'attributes' => [
-					// TODO: an edge issue that needs to be solved:
-					//		 if multiple users load the same section
-					//       at the same time and upload a file,
-					//       uploaded files have the same sort number
-					'sort'     => $this->sortable === true ? $this->total + 1 : null,
-					'template' => $template
-				]
-			];
+			return $settings->props();
 		}
 	],
 	// @codeCoverageIgnoreStart
