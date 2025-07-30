@@ -12,6 +12,7 @@ use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\FieldClass;
+use Kirby\Form\Fields;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
@@ -30,20 +31,60 @@ class BlocksField extends FieldClass
 	protected bool $pretty;
 	protected mixed $value = [];
 
-	public function __construct(array $params = [])
-	{
-		$this->setFieldsets(
-			$params['fieldsets'] ?? null,
-			$params['model'] ?? App::instance()->site()
+	public function __construct(
+		array|string|null $after = null,
+		bool $autofocus = false,
+		array|string|null $before = null,
+		mixed $default = null,
+		bool $disabled = false,
+		string|array|null $empty = null,
+		string|array|null $fieldsets = null,
+		string|null $group = 'blocks',
+		array|string|null $help = null,
+		string|null $icon = null,
+		string|null $label = null,
+		int|null $max = null,
+		int|null $min = null,
+		ModelWithContent|null $model = null,
+		string|null $name = null,
+		array|string|null $placeholder = null,
+		bool $pretty = false,
+		bool $required = false,
+		Fields|null $siblings = null,
+		bool $translate = true,
+		array|null $when = null,
+		string|null $width = null,
+		mixed $value = null
+	) {
+		$this->setFieldsets($fieldsets, $model ?? App::instance()->site());
+
+		parent::__construct(
+			...compact(
+				'after',
+				'autofocus',
+				'before',
+				'default',
+				'disabled',
+				'help',
+				'icon',
+				'label',
+				'model',
+				'name',
+				'placeholder',
+				'required',
+				'siblings',
+				'translate',
+				'when',
+				'width',
+				'value'
+			)
 		);
 
-		parent::__construct($params);
-
-		$this->setEmpty($params['empty'] ?? null);
-		$this->setGroup($params['group'] ?? 'blocks');
-		$this->setMax($params['max'] ?? null);
-		$this->setMin($params['min'] ?? null);
-		$this->setPretty($params['pretty'] ?? false);
+		$this->setEmpty($empty);
+		$this->setGroup($group);
+		$this->setMax($max);
+		$this->setMin($min);
+		$this->setPretty($pretty);
 	}
 
 	public function blocksToValues(
