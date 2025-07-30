@@ -162,7 +162,6 @@ return [
 			$settings = new Upload(
 				api: $this->parent->apiUrl(true) . '/files',
 				accept: $this->accept,
-				multiple: true,
 				max: $this->max ? $this->max - $this->total : null,
 				preview: $this->image,
 				sort: $this->sortable === true ? $this->total + 1 : null,
