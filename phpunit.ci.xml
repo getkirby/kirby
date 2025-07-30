@@ -41,6 +41,7 @@
 			<file>./config/areas/site/buttons.php</file>
 			<file>./config/areas/site/requests.php</file>
 			<file>./config/areas/site/searches.php</file>
+			<file>./config/areas/system/dialogs.php</file>
 			<file>./config/areas/users/buttons.php</file>
 			<file>./config/areas/users/searches.php</file>
 			<file>./config/aliases.php</file>

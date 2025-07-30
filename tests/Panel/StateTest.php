@@ -115,13 +115,7 @@ class StateTest extends TestCase
 		$this->assertSame($data, $result);
 
 		// via get
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_only' => 'a',
-				]
-			]
-		]);
+		$this->setRequest(['_only' => 'a']);
 
 		$data = [
 			'a' => 'A',
@@ -152,13 +146,7 @@ class StateTest extends TestCase
 	public function testFilterOnlyRequestWithGlobal(): void
 	{
 		// simulate a simple partial request
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_only' => 'a,urls',
-				]
-			]
-		]);
+		$this->setRequest(['_only' => 'a,urls']);
 
 		$data = [
 			'a' => 'A',
@@ -181,13 +169,7 @@ class StateTest extends TestCase
 	public function testFilterOnlyRequestWithNestedData(): void
 	{
 		// simulate a simple partial request
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_only' => 'b.c',
-				]
-			]
-		]);
+		$this->setRequest(['_only' => 'b.c']);
 
 		$data = [
 			'a' => 'A',
@@ -210,13 +192,7 @@ class StateTest extends TestCase
 	public function testFilterOnlyRequestWithNestedGlobal(): void
 	{
 		// simulate a simple partial request
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_only' => 'a,urls.site',
-				]
-			]
-		]);
+		$this->setRequest(['_only' => 'a,urls.site']);
 
 		$data = [
 			'a' => 'A',
@@ -247,13 +223,7 @@ class StateTest extends TestCase
 		$this->assertSame($data, $result);
 
 		// via query
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_globals' => 'translation'
-				]
-			]
-		]);
+		$this->setRequest(['_globals' => 'translation']);
 
 		$data = (new State())->filter([]);
 		$this->assertArrayHasKey('translation', $data);
