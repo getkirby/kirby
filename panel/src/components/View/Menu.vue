@@ -24,8 +24,8 @@
 				class="k-panel-menu-buttons"
 			>
 				<component
-					v-for="item in menu"
 					:is="item.component"
+					v-for="item in menu"
 					:key="item.key"
 					v-bind="item.props"
 					class="k-panel-menu-button"

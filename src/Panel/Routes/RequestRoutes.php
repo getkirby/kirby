@@ -20,9 +20,10 @@ class RequestRoutes extends Routes
 		$routes = [];
 
 		foreach ($this->routes as $params) {
+			$params   = $this->params($params);
 			$routes[] = $this->route(
 				pattern: $params['pattern'],
-				action:  $params['action'],
+				action:  $params['load'] ?? fn () => 'The request action handler is missing',
 				method: $params['method'] ?? 'GET'
 			);
 		}

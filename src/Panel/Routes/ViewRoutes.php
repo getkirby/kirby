@@ -35,14 +35,17 @@ class ViewRoutes extends Routes
 		$routes = [];
 
 		foreach ($this->routes as $params) {
+			$params = $this->params($params);
+
 			if ($this->isAccessible($params) === false) {
 				continue;
 			}
 
 			$routes[] = [
 				...$params,
-				'area' => $this->area->id(),
-				'type' => 'view'
+				'action' => $params['load'] ?? fn () => 'The view action handler is missing',
+				'area'   => $this->area->id(),
+				'type'   => 'view'
 			];
 		}
 

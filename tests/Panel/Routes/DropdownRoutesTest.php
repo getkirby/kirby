@@ -2,7 +2,16 @@
 
 namespace Kirby\Panel\Routes;
 
+use Kirby\Panel\Controller\DropdownController;
 use PHPUnit\Framework\Attributes\CoversClass;
+
+class TestDropdownController extends DropdownController
+{
+	public function load(): array
+	{
+		return ['a', 'b', 'c'];
+	}
+}
 
 #[CoversClass(DropdownRoutes::class)]
 class DropdownRoutesTest extends TestCase
@@ -18,11 +27,22 @@ class DropdownRoutesTest extends TestCase
 
 		$params = $routes->params([
 			'options' => fn () => 'b'
-		]);
+		], 'options');
 		$this->assertSame('b', $params['action']());
 
 		$params = $routes->params(fn () => 'c');
 		$this->assertSame('c', $params['action']());
+	}
+
+	public function testParamsWithController(): void
+	{
+		$routes = new DropdownRoutes($this->area, []);
+		$params = $routes->params([
+			'action' => TestDropdownController::class
+		]);
+
+		$options = $params['load']();
+		$this->assertSame(['a', 'b', 'c'], $options);
 	}
 
 	public function testToArray(): void

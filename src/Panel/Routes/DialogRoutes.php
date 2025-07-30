@@ -20,21 +20,8 @@ class DialogRoutes extends Routes
 		$routes = [];
 
 		foreach ($this->routes as $name => $params) {
+			$params  = $this->params($params);
 			$pattern = $this->pattern($params['pattern'] ?? $name);
-
-			// create load/submit events from controller class
-			if ($controller = $params['controller'] ?? null) {
-				if (is_string($controller) === true) {
-					if (method_exists($controller, 'for') === true) {
-						$controller = $controller::for(...);
-					} else {
-						$controller = fn (...$args) => new $controller(...$args);
-					}
-				}
-
-				$params['load']   ??= fn (...$args) => $controller(...$args)->load();
-				$params['submit'] ??= fn (...$args) => $controller(...$args)->submit();
-			}
 
 			// load handler
 			$routes[] = $this->route(
