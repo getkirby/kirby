@@ -13,7 +13,11 @@ return [
 	],
 	'methods' => [
 		'searchterm' => function (): string|null {
-			return App::instance()->request()->get('searchterm');
+			if ($this->search() === true) {
+				return App::instance()->request()->get('searchterm') ?? null;
+			}
+
+			return null;
 		}
 	]
 ];

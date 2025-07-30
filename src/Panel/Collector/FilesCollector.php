@@ -32,7 +32,7 @@ class FilesCollector extends ModelsCollector
 
 	protected function collect(): Files
 	{
-		return $this->parent()->files()->sorted();
+		return $this->parent()->files();
 	}
 
 	protected function collectByQuery(): Files
@@ -55,5 +55,19 @@ class FilesCollector extends ModelsCollector
 
 			return true;
 		});
+	}
+
+	public function isSorting(): bool
+	{
+		return true;
+	}
+
+	protected function sort(Files|Pages|Users $models): Files
+	{
+		if ($this->sortBy === null || $this->isSearching() === true) {
+			return $models->sorted();
+		}
+
+		return parent::sort($models);
 	}
 }
