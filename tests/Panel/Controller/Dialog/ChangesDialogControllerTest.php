@@ -1,23 +1,38 @@
 <?php
 
-namespace Kirby\Panel\Ui\Dialogs;
+namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Cms\App;
 use Kirby\Cms\Pages;
+use Kirby\Cms\User;
 use Kirby\Content\Changes;
-use Kirby\Panel\Areas\AreaTestCase;
+use Kirby\Panel\TestCase;
+use Kirby\Panel\Ui\Dialog;
 use Kirby\Uuid\Uuids;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(ChangesDialog::class)]
-class ChangesDialogTest extends AreaTestCase
+#[CoversClass(ChangesDialogController::class)]
+class ChangesDialogControllerTest extends TestCase
 {
 	protected Changes $changes;
 
 	public function setUp(): void
 	{
-		parent::setUp();
-		$this->install();
-		$this->login();
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP,
+			],
+			'users' => [
+				[
+					'id'       => 'test',
+					'email'    => 'test@getkirby.com',
+					'role'     => 'admin',
+					'password' => User::hashPassword('12345678')
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
 
 		$this->changes = new Changes();
 	}
@@ -25,9 +40,6 @@ class ChangesDialogTest extends AreaTestCase
 	public function setUpModels(): void
 	{
 		$this->app = $this->app->clone([
-			'roots' => [
-				'index' => static::TMP
-			],
 			'site' => [
 				'children' => [
 					[
@@ -70,8 +82,8 @@ class ChangesDialogTest extends AreaTestCase
 			'alt' => 'Test'
 		]);
 
-		$dialog = new ChangesDialog();
-		$files  = $dialog->files();
+		$controller = new ChangesDialogController();
+		$files      = $controller->files();
 
 		$this->assertCount(1, $files);
 		$this->assertSame('test.jpg', $files[0]['text']);
@@ -80,8 +92,8 @@ class ChangesDialogTest extends AreaTestCase
 
 	public function testFilesWithoutChanges(): void
 	{
-		$dialog = new ChangesDialog();
-		$this->assertSame([], $dialog->files());
+		$controller = new ChangesDialogController();
+		$this->assertSame([], $controller->files());
 	}
 
 	public function testItems(): void
@@ -91,9 +103,9 @@ class ChangesDialogTest extends AreaTestCase
 		$page->version('latest')->save([]);
 		$page->version('changes')->save([]);
 
-		$dialog = new ChangesDialog();
-		$pages  = new Pages([$page]);
-		$items  = $dialog->items($pages);
+		$controller = new ChangesDialogController();
+		$pages      = new Pages([$page]);
+		$items      = $controller->items($pages);
 
 		$this->assertCount(1, $items);
 
@@ -103,18 +115,16 @@ class ChangesDialogTest extends AreaTestCase
 
 	public function testLoad(): void
 	{
-		$dialog = new ChangesDialog();
+		$controller = new ChangesDialogController();
+		$dialog     = $controller->load();
 
-		$expected = [
-			'component' => 'k-changes-dialog',
-			'props' => [
-				'files' => [],
-				'pages' => [],
-				'users' => [],
-			]
-		];
+		$this->assertInstanceOf(Dialog::class, $dialog);
+		$this->assertSame('k-changes-dialog', $dialog->component);
 
-		$this->assertSame($expected, $dialog->load());
+		$props = $dialog->props();
+		$this->assertSame([], $props['files']);
+		$this->assertSame([], $props['pages']);
+		$this->assertSame([], $props['users']);
 	}
 
 	public function testPages(): void
@@ -124,8 +134,8 @@ class ChangesDialogTest extends AreaTestCase
 		$this->app->page('page://test')->version('latest')->save([]);
 		$this->app->page('page://test')->version('changes')->save([]);
 
-		$dialog = new ChangesDialog();
-		$pages  = $dialog->pages();
+		$controller = new ChangesDialogController();
+		$pages      = $controller->pages();
 
 		$this->assertCount(1, $pages);
 		$this->assertSame('test', $pages[0]['text']);
@@ -134,8 +144,8 @@ class ChangesDialogTest extends AreaTestCase
 
 	public function testPagesWithoutChanges(): void
 	{
-		$dialog = new ChangesDialog();
-		$this->assertSame([], $dialog->pages());
+		$controller = new ChangesDialogController();
+		$this->assertSame([], $controller->pages());
 	}
 
 	public function testUsers(): void
@@ -145,8 +155,8 @@ class ChangesDialogTest extends AreaTestCase
 		$this->app->user('user://test')->version('latest')->save([]);
 		$this->app->user('user://test')->version('changes')->save([]);
 
-		$dialog = new ChangesDialog();
-		$users  = $dialog->users();
+		$controller = new ChangesDialogController();
+		$users      = $controller->users();
 
 		$this->assertCount(1, $users);
 		$this->assertSame('test@getkirby.com', $users[0]['text']);
@@ -155,7 +165,7 @@ class ChangesDialogTest extends AreaTestCase
 
 	public function testUsersWithoutChanges(): void
 	{
-		$dialog = new ChangesDialog();
-		$this->assertSame([], $dialog->users());
+		$controller = new ChangesDialogController();
+		$this->assertSame([], $controller->users());
 	}
 }
