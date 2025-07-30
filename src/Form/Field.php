@@ -261,7 +261,8 @@ class Field extends Component
 
 		if (is_string($field) && class_exists($field) === true) {
 			$attrs['siblings'] = $siblings;
-			return new $field($attrs);
+			unset($attrs['type']);
+			return new $field(...$attrs);
 		}
 
 		return new static($type, $attrs, $siblings);
