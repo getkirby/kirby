@@ -6,6 +6,8 @@ use Kirby\Cms\Collection;
 use Kirby\Panel\Controller\SearchController;
 
 /**
+ * Controls the search requests for a model type
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

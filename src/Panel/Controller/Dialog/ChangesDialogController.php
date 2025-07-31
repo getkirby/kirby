@@ -8,8 +8,8 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 
 /**
- * Manages the Panel dialog for content changes in
- * pages, users and files
+ * Controls the Panel dialog for displaying
+ * content changes in pages, users and files
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>

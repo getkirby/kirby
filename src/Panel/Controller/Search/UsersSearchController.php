@@ -6,6 +6,8 @@ use Kirby\Cms\Users;
 use Kirby\Toolkit\Escape;
 
 /**
+ * Controls the search requests for users
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

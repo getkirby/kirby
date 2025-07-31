@@ -14,7 +14,7 @@ use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
 /**
- * Manages the Panel dialog to disable TOTP auth for a user
+ * Controls the Panel dialog to disable TOTP auth for a user
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>

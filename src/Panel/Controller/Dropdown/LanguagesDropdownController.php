@@ -10,6 +10,8 @@ use Kirby\Content\Version;
 use Kirby\Panel\Controller\DropdownController;
 
 /**
+ * Controls the dropdown for switching content translations
+ *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
