@@ -660,9 +660,7 @@ trait PageActions
 
 			// try to move the page directory on disk
 			if (Dir::move($page->root(), $newRoot) !== true) {
-				throw new LogicException(
-					key: 'page.move.directory'
-				);
+				throw new LogicException(key: 'page.move.directory');
 			}
 
 			// flush all collection caches to be sure that
