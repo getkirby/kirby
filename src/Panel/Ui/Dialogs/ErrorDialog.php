@@ -22,14 +22,16 @@ class ErrorDialog extends Dialog
 		string|null $component = 'k-error-dialog',
 		public array|null $details = null,
 		public string|null $message = null,
-		string|null $size = 'medium'
+		string|null $size = 'medium',
+		...$attrs
 	) {
-		parent::__construct(
-			component: $component,
-			cancelButton: false,
-			size: $size,
-			submitButton: false
-		);
+		parent::__construct(...[
+			...$attrs,
+			'component'    => $component,
+			'cancelButton' => false,
+			'size'         => $size,
+			'submitButton' => false
+		]);
 	}
 
 	public function props(): array

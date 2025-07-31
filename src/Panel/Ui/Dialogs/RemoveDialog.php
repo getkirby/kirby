@@ -20,17 +20,19 @@ class RemoveDialog extends TextDialog
 		string|array|bool|null $cancelButton = null,
 		string|null $size = 'medium',
 		string|array|bool|null $submitButton = null,
-		string|null $text = null
+		string|null $text = null,
+		...$attrs
 	) {
-		parent::__construct(
-			component: $component,
-			cancelButton: $cancelButton,
-			size: $size,
-			submitButton: $submitButton ?? [
+		parent::__construct(...[
+			...$attrs,
+			'component'    => $component,
+			'cancelButton' => $cancelButton,
+			'size'         => $size,
+			'submitButton' => $submitButton ?? [
 				'icon'  => 'trash',
 				'theme' => 'negative'
 			],
-			text: $text
-		);
+			'text'         => $text
+		]);
 	}
 }

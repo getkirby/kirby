@@ -24,15 +24,17 @@ class FormDialog extends TextDialog
 		string|null $size = 'medium',
 		string|array|bool|null $submitButton = null,
 		string|null $text = null,
-		public array $value = []
+		public array $value = [],
+		...$attrs
 	) {
-		parent::__construct(
-			component: $component,
-			cancelButton: $cancelButton,
-			size: $size,
-			submitButton: $submitButton,
-			text: $text
-		);
+		parent::__construct(...[
+			...$attrs,
+			'component'    => $component,
+			'cancelButton' => $cancelButton,
+			'size'         => $size,
+			'submitButton' => $submitButton,
+			'text'         => $text
+		]);
 	}
 
 	public function props(): array

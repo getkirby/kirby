@@ -22,14 +22,16 @@ class TextDialog extends Dialog
 		string|array|bool|null $cancelButton = null,
 		string|null $size = 'medium',
 		string|array|bool|null $submitButton = null,
-		public string|null $text = null
+		public string|null $text = null,
+		...$attrs
 	) {
-		parent::__construct(
-			component: $component,
-			cancelButton: $cancelButton,
-			size: $size,
-			submitButton: $submitButton
-		);
+		parent::__construct(...[
+			...$attrs,
+			'component'    => $component,
+			'cancelButton' => $cancelButton,
+			'size'         => $size,
+			'submitButton' => $submitButton
+		]);
 	}
 
 	public function props(): array
