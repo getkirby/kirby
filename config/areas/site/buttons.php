@@ -3,7 +3,7 @@
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
-use Kirby\Panel\Ui\Buttons\LanguagesDropdown;
+use Kirby\Panel\Ui\Buttons\LanguagesButton;
 use Kirby\Panel\Ui\Buttons\OpenButton;
 use Kirby\Panel\Ui\Buttons\PageStatusButton;
 use Kirby\Panel\Ui\Buttons\PreviewButton;
@@ -64,8 +64,7 @@ return [
 	// as the  languages might be not loaded even in
 	// multilang mode when the `languages` option is deactivated
 	// (but content languages to switch between still can exist)
-	'languages' => fn (ModelWithContent $model) =>
-		new LanguagesDropdown($model),
+	'languages' => fn (ModelWithContent $model) => new LanguagesButton($model),
 
 	// file buttons
 	...require __DIR__ . '/../files/buttons.php'
