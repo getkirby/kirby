@@ -5,9 +5,8 @@ use Kirby\Cms\Find;
 use Kirby\Cms\UserRules;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Controller\Dialog\UserTotpDisableDialogController;
 use Kirby\Panel\Field;
-use Kirby\Panel\Panel;
-use Kirby\Panel\Ui\Dialogs\UserTotpDisableDialog;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
@@ -348,7 +347,6 @@ return [
 
 	'user.totp.disable' => [
 		'pattern' => 'users/(:any)/totp/disable',
-		'load'    => fn (string $id) => (new UserTotpDisableDialog($id))->load(),
-		'submit'  => fn (string $id) => (new UserTotpDisableDialog($id))->submit()
+		'action'  => UserTotpDisableDialogController::class
 	],
 ];

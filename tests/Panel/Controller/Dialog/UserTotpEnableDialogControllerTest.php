@@ -1,26 +1,24 @@
 <?php
 
-namespace Kirby\Panel\Ui\Dialogs;
+namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
-use Kirby\TestCase;
+use Kirby\Panel\TestCase;
+use Kirby\Panel\Ui\Dialog;
 use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(UserTotpEnableDialog::class)]
-class UserTotpEnableDialogTest extends TestCase
+#[CoversClass(UserTotpEnableDialogController::class)]
+class UserTotpEnableDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Ui.Dialogs.UserTotpEnableDialog';
+	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserTotpEnableDialogController';
 
-	protected function setUp(): void
+	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			],
+		parent::setUp();
+
+		$this->app = $this->app->clone([
 			'users' => [
 				[
 					'email' => 'test@getkirby.com',
@@ -28,43 +26,32 @@ class UserTotpEnableDialogTest extends TestCase
 			],
 			'user' => 'test@getkirby.com'
 		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-
-		// clear fake json requests
-		$_GET = [];
 	}
 
 	public function testConstruct(): void
 	{
-		$dialog = new UserTotpEnableDialog();
-
+		$dialog = new UserTotpEnableDialogController();
 		$this->assertSame($this->app->user(), $dialog->user);
 		$this->assertSame('test@getkirby.com', $dialog->user->email());
 	}
 
 	public function testLoad(): void
 	{
-		$dialog = new UserTotpEnableDialog();
-		$state  = $dialog->load();
+		$controller = new UserTotpEnableDialogController();
+		$dialog     = $controller->load();
 
-		$this->assertSame('k-totp-dialog', $state['component']);
-		$this->assertIsString($state['props']['value']['secret']);
-		$this->assertIsString($state['props']['qr']);
+		$this->assertInstanceOf(Dialog::class, $dialog);
+		$this->assertSame('k-totp-dialog', $dialog->component);
+
+		$props = $dialog->props();
+		$this->assertIsString($props['value']['secret']);
+		$this->assertIsString($props['qr']);
 	}
 
 	public function testQr(): void
 	{
-		$dialog = new UserTotpEnableDialog();
-		$qr     = $dialog->qr();
+		$controller = new UserTotpEnableDialogController();
+		$qr         = $controller->qr();
 
 		$this->assertInstanceOf(QrCode::class, $qr);
 		$this->assertStringContainsString('otpauth://totp/:test%40getkirby.com?secret=', $qr->data);
@@ -76,11 +63,11 @@ class UserTotpEnableDialogTest extends TestCase
 		$_GET['secret']  = $secret = $totp->secret();
 		$_GET['confirm'] = $totp->generate();
 
-		$user   = $this->app->user();
-		$dialog = new UserTotpEnableDialog();
+		$user       = $this->app->user();
+		$controller = new UserTotpEnableDialogController();
 		$this->assertNull($user->secret('totp'));
 
-		$state  = $dialog->submit();
+		$state  = $controller->submit();
 		$this->assertSame($secret, $user->secret('totp'));
 		$this->assertIsString($state['message']);
 	}
@@ -93,8 +80,8 @@ class UserTotpEnableDialogTest extends TestCase
 		$_GET['secret']  = 'foo';
 		$_GET['confirm'] = null;
 
-		$dialog = new UserTotpEnableDialog();
-		$dialog->submit();
+		$controller = new UserTotpEnableDialogController();
+		$controller->submit();
 	}
 
 	public function testSubmitWrongConfirmCode(): void
@@ -106,7 +93,7 @@ class UserTotpEnableDialogTest extends TestCase
 		$_GET['secret']  = $totp->secret();
 		$_GET['confirm'] = 'bar';
 
-		$dialog = new UserTotpEnableDialog();
-		$dialog->submit();
+		$controller = new UserTotpEnableDialogController();
+		$controller->submit();
 	}
 }
