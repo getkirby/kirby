@@ -122,10 +122,7 @@ return [
 				$item = [
 					'dragText'    => $panel->dragText(),
 					'id'          => $page->id(),
-					'image'       => $panel->image(
-						$this->image,
-						$this->layout === 'table' ? 'list' : $this->layout
-					),
+					'image'       => $panel->image($this->image, $this->layout),
 					'info'        => $page->toSafeString($this->info ?? false),
 					'link'        => $panel->url(true),
 					'parent'      => $page->parentId(),
