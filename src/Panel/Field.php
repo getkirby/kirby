@@ -4,13 +4,8 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
-use Kirby\Form\Form;
-use Kirby\Http\Router;
-use Kirby\Panel\Routes\DialogRoutes;
-use Kirby\Panel\Routes\DrawerRoutes;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -27,40 +22,6 @@ use Kirby\Toolkit\Str;
  */
 class Field
 {
-	/**
-	 * Creates the routes for a field dialog
-	 * This is most definitely not a good place for this
-	 * method, but as long as the other classes are
-	 * not fully refactored, it still feels appropriate
-	 */
-	public static function dialog(
-		ModelWithContent $model,
-		string $fieldName,
-		string|null $path = null,
-		string $method = 'GET',
-	) {
-		$field  = Form::for($model)->field($fieldName);
-		$routes = (new DialogRoutes(['id' => 'site'], $field->dialogs()))->toArray();
-		return Router::execute($path, $method, $routes);
-	}
-
-	/**
-	 * Creates the routes for a field drawer
-	 * This is most definitely not a good place for this
-	 * method, but as long as the other classes are
-	 * not fully refactored, it still feels appropriate
-	 */
-	public static function drawer(
-		ModelWithContent $model,
-		string $fieldName,
-		string|null $path = null,
-		string $method = 'GET',
-	) {
-		$field  = Form::for($model)->field($fieldName);
-		$routes = (new DrawerRoutes(['id' => 'site'], $field->drawers()))->toArray();
-		return Router::execute($path, $method, $routes);
-	}
-
 	/**
 	 * A standard email field
 	 */

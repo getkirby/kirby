@@ -8,6 +8,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Controller\Dialog\ChangesDialogController;
+use Kirby\Panel\Controller\Dialog\FieldDialogController;
 use Kirby\Panel\Controller\Dialog\FileChangeNameDialogController;
 use Kirby\Panel\Controller\Dialog\FileChangeSortDialogController;
 use Kirby\Panel\Controller\Dialog\FileChangeTemplateDialogController;
@@ -19,8 +20,6 @@ use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuids;
-
-$fields = require __DIR__ . '/../fields/dialogs.php';
 
 return [
 	'page.changeSort' => [
@@ -475,8 +474,8 @@ return [
 	],
 
 	'page.fields' => [
-		...$fields['model'],
 		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
+		'action'  => FieldDialogController::class
 	],
 	'page.file.changeName' => [
 		'pattern' => '(pages/.*?)/files/(:any)/changeName',
@@ -495,8 +494,8 @@ return [
 		'action' => FileDeleteDialogController::class
 	],
 	'page.file.fields' => [
-		...$fields['file'],
 		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'action'  => FieldDialogController::class
 	],
 
 	'page.move' => [
@@ -541,8 +540,8 @@ return [
 	],
 
 	'site.fields' => [
-		...$fields['model'],
 		'pattern' => '(site)/fields/(:any)/(:all?)',
+		'action'  => FieldDialogController::class
 	],
 	'site.file.changeName' => [
 		'pattern' => '(site)/files/(:any)/changeName',
@@ -561,8 +560,8 @@ return [
 		'action' => FileDeleteDialogController::class
 	],
 	'site.file.fields' => [
-		...$fields['file'],
 		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
+		'action'  => FieldDialogController::class
 	],
 
 	'changes' => [
