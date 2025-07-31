@@ -94,10 +94,7 @@ return [
 					'extension' => $file->extension(),
 					'filename'  => $file->filename(),
 					'id'        => $file->id(),
-					'image'     => $panel->image(
-						$this->image,
-						$this->layout === 'table' ? 'list' : $this->layout
-					),
+					'image'     => $panel->image($this->image, $this->layout),
 					'info'      => $file->toSafeString($this->info ?? false),
 					'link'      => $panel->url(true),
 					'mime'      => $file->mime(),
