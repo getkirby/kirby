@@ -116,8 +116,7 @@ export default {
 		// for the endpoint config
 		this.api = Api(this);
 
-		// Turn the entire panel object
-		// reactive. This will only be applied
+		// Turn the entire panel object  reactive. This will only be applied
 		// to objects and arrays. Methods won't be touched.
 		const panel = reactive(this);
 

@@ -140,6 +140,7 @@ class Area
 			'icon'            => $this->icon(),
 			'id'              => $this->id(),
 			'label'           => $this->label(),
+			'link'            => $this->link() ?? $this->id(),
 			'search'          => $this->search(),
 			'title'           => $this->title(),
 		];
