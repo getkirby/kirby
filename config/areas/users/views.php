@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Panel\Collector\UsersCollector;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
 use Kirby\Toolkit\Escape;
 
@@ -31,20 +32,14 @@ return [
 					},
 					'roles' => array_values($roles),
 					'users' => function () use ($kirby, $role) {
-						$users = $kirby->users();
+						$collector = new UsersCollector(
+							limit: 20,
+							page: $kirby->request()->get('page', 1),
+							role: $role,
+							sortBy: 'username asc',
+						);
 
-						if (empty($role) === false) {
-							$users = $users->role($role);
-						}
-
-						// sort users alphabetically
-						$users = $users->sortBy('username', 'asc');
-
-						// paginate
-						$users = $users->paginate([
-							'limit' => 20,
-							'page'  => $kirby->request()->get('page')
-						]);
+						$users = $collector->models(paginated: true);
 
 						return [
 							'data' => $users->values(fn ($user) => [

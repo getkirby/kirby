@@ -89,6 +89,7 @@ class AreaTest extends TestCase
 			'icon'            => null,
 			'id'              => 'test',
 			'label'           => 'Test',
+			'link'            => 'test',
 			'search'          => null,
 			'title'           => 'Test',
 		], $area->view());

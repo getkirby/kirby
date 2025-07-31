@@ -1,7 +1,8 @@
 <?php
 
 use Kirby\Cms\File;
-use Kirby\Cms\Files;
+use Kirby\Panel\Collector\FilesCollector;
+use Kirby\Panel\Ui\Upload;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -56,50 +57,23 @@ return [
 		'parent' => function () {
 			return $this->parentModel();
 		},
+		'collector' => function () {
+			return $this->collector ??= new FilesCollector(
+				flip: $this->flip(),
+				limit: $this->limit(),
+				page: $this->page() ?? 1,
+				parent: $this->parent(),
+				query: $this->query(),
+				search: $this->searchterm(),
+				sortBy: $this->sortBy(),
+				template: $this->template(),
+			);
+		},
 		'models' => function () {
-			if ($this->query !== null) {
-				$files = $this->parent->query($this->query, Files::class) ?? new Files([]);
-			} else {
-				$files = $this->parent->files();
-			}
-
-			// filter files by template
-			$files = $files->template($this->template);
-
-			// filter out all protected and hidden files
-			$files = $files->filter('isListable', true);
-
-			// search
-			if ($this->search === true && empty($this->searchterm()) === false) {
-				$files = $files->search($this->searchterm());
-
-				// disable flip and sortBy while searching
-				// to show most relevant results
-				$this->flip = false;
-				$this->sortBy = null;
-			}
-
-			// sort
-			if ($this->sortBy) {
-				$files = $files->sort(...$files::sortArgs($this->sortBy));
-			} else {
-				$files = $files->sorted();
-			}
-
-			// flip
-			if ($this->flip === true) {
-				$files = $files->flip();
-			}
-
-			return $files;
+			return $this->collector()->models();
 		},
 		'modelsPaginated' => function () {
-			// apply the default pagination
-			return $this->models()->paginate([
-				'page'   => $this->page,
-				'limit'  => $this->limit,
-				'method' => 'none' // the page is manually provided
-			]);
+			return $this->collector()->models(paginated: true);
 		},
 		'files' => function () {
 			return $this->models;
@@ -185,26 +159,16 @@ return [
 				return false;
 			}
 
-			// count all uploaded files
-			$max      = $this->max ? $this->max - $this->total : null;
-			$multiple = !$max || $max > 1;
-			$template = $this->template === 'default' ? null : $this->template;
+			$settings = new Upload(
+				api: $this->parent->apiUrl(true) . '/files',
+				accept: $this->accept,
+				max: $this->max ? $this->max - $this->total : null,
+				preview: $this->image,
+				sort: $this->sortable === true ? $this->total + 1 : null,
+				template: $this->template,
+			);
 
-			return [
-				'accept'     => $this->accept,
-				'multiple'   => $multiple,
-				'max'        => $max,
-				'api'        => $this->parent->apiUrl(true) . '/files',
-				'preview'    => $this->image,
-				'attributes' => [
-					// TODO: an edge issue that needs to be solved:
-					//		 if multiple users load the same section
-					//       at the same time and upload a file,
-					//       uploaded files have the same sort number
-					'sort'     => $this->sortable === true ? $this->total + 1 : null,
-					'template' => $template
-				]
-			];
+			return $settings->props();
 		}
 	],
 	// @codeCoverageIgnoreStart

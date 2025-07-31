@@ -58,11 +58,11 @@ abstract class Routes
 	}
 
 	public function params(
-		Closure|array $params,
+		Closure|string|array $params,
 		string|null $action = null
 	): array {
 		// support direct handler
-		if ($params instanceof Closure) {
+		if ($params instanceof Closure || is_string($params) === true) {
 			$params = [
 				'action' => $params
 			];
