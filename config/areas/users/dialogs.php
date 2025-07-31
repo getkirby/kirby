@@ -5,13 +5,16 @@ use Kirby\Cms\Find;
 use Kirby\Cms\UserRules;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Controller\Dialog\FileChangeNameDialogController;
+use Kirby\Panel\Controller\Dialog\FileChangeSortDialogController;
+use Kirby\Panel\Controller\Dialog\FileChangeTemplateDialogController;
+use Kirby\Panel\Controller\Dialog\FileDeleteDialogController;
 use Kirby\Panel\Controller\Dialog\UserTotpDisableDialogController;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
 $fields = require __DIR__ . '/../fields/dialogs.php';
-$files = require __DIR__ . '/../files/dialogs.php';
 
 return [
 	'user.create' => [
@@ -321,23 +324,20 @@ return [
 	],
 
 	'user.file.changeName' => [
-		...$files['changeName'],
 		'pattern' => '(users/.*?)/files/(:any)/changeName',
+		'action' => FileChangeNameDialogController::class
 	],
-
 	'user.file.changeSort' => [
-		...$files['changeSort'],
 		'pattern' => '(users/.*?)/files/(:any)/changeSort',
+		'action' => FileChangeSortDialogController::class
 	],
-
 	'user.file.changeTemplate' => [
-		...$files['changeTemplate'],
 		'pattern' => '(users/.*?)/files/(:any)/changeTemplate',
+		'action' => FileChangeTemplateDialogController::class
 	],
-
 	'user.file.delete' => [
-		...$files['delete'],
 		'pattern' => '(users/.*?)/files/(:any)/delete',
+		'action' => FileDeleteDialogController::class
 	],
 
 	'user.file.fields' => [
