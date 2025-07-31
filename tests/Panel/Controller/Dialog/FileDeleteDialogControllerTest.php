@@ -40,7 +40,7 @@ class FileDeleteDialogControllerTest extends FileDialogControllerTestCase
 		$this->assertSame('file.delete', $response['event']);
 
 		if ($redirect === false) {
-			$this->assertFalse($response['redirect']);
+			$this->assertNull($response['redirect']);
 		} else {
 			$this->assertSame($redirect, $response['redirect']);
 		}
