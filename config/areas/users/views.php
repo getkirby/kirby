@@ -4,7 +4,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Panel\Collector\UsersCollector;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
-use Kirby\Toolkit\Escape;
+use Kirby\Panel\Ui\Item\UserItem;
 
 return [
 	'users' => [
@@ -42,13 +42,7 @@ return [
 						$users = $collector->models(paginated: true);
 
 						return [
-							'data' => $users->values(fn ($user) => [
-								'id'    => $user->id(),
-								'image' => $user->panel()->image(),
-								'info'  => Escape::html($user->role()->title()),
-								'link'  => $user->panel()->url(true),
-								'text'  => Escape::html($user->username())
-							]),
+							'data'       => $users->values(fn ($user) => (new UserItem(user: $user))->props()),
 							'pagination' => $users->pagination()->toArray()
 						];
 					},
