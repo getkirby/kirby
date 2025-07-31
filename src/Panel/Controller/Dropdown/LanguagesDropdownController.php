@@ -38,7 +38,7 @@ class LanguagesDropdownController extends DropdownController
 		}
 
 		if ($parent !== null) {
-			return new static(model: Find::page($parent));
+			return new static(model: Find::parent($parent));
 		}
 
 		return new static(model: App::instance()->site());

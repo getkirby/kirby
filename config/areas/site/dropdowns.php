@@ -13,7 +13,7 @@ return [
 		}
 	],
 	'page.languages' => [
-		'pattern' => 'pages/(:any)/languages',
+		'pattern' => '(pages/.*?)/languages',
 		'options' => LanguagesDropdownController::class
 	],
 	'page.file' => [
@@ -25,7 +25,7 @@ return [
 		'options' => LanguagesDropdownController::class
 	],
 	'site.languages' => [
-		'pattern' => 'site/languages',
+		'pattern' => '(site)/languages',
 		'options' => LanguagesDropdownController::class
 
 	],

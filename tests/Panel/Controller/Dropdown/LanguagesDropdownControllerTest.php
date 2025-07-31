@@ -82,7 +82,7 @@ class LanguagesDropdownControllerTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		$dropdown = LanguagesDropdownController::factory('test');
+		$dropdown = LanguagesDropdownController::factory('pages/test');
 		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
 		$this->assertSame($app->page('test'), $dropdown->model);
 	}
@@ -91,9 +91,30 @@ class LanguagesDropdownControllerTest extends TestCase
 	{
 		$app = new App();
 		$app->impersonate('kirby');
+		$dropdown = LanguagesDropdownController::factory('site');
+		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
+		$this->assertSame($app->site(), $dropdown->model);
+
 		$dropdown = LanguagesDropdownController::factory();
 		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
 		$this->assertSame($app->site(), $dropdown->model);
+	}
+
+	public function testFactoryForUser(): void
+	{
+		$app = new App([
+			'users' => [
+				[
+					'id' => 'test'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$dropdown = LanguagesDropdownController::factory('users/test');
+		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
+		$this->assertSame($app->user('test'), $dropdown->model);
 	}
 
 	public function testLoadSingleLang(): void

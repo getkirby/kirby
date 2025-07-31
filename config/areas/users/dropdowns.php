@@ -12,7 +12,7 @@ return [
 			Find::user($id)->panel()->dropdown()
 	],
 	'user.languages' => [
-		'pattern' => 'users/(:any)/languages',
+		'pattern' => '(users/.*?)/languages',
 		'options' => LanguagesDropdownController::class
 	],
 	'user.file' => [
