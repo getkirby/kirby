@@ -8,6 +8,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Controller\Dialog\ChangesDialogController;
+use Kirby\Panel\Controller\Dialog\SiteChangeTitleDialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialogs\PageCreateDialog;
 use Kirby\Toolkit\Escape;
@@ -533,31 +534,7 @@ return [
 
 	'site.changeTitle' => [
 		'pattern' => 'site/changeTitle',
-		'load' => function () {
-			return [
-				'component' => 'k-form-dialog',
-				'props' => [
-					'fields' => [
-						'title' => Field::title([
-							'required'  => true,
-							'preselect' => true
-						])
-					],
-					'submitButton' => I18n::translate('rename'),
-					'value' => [
-						'title' => App::instance()->site()->title()->value()
-					]
-				]
-			];
-		},
-		'submit' => function () {
-			$kirby = App::instance();
-			$kirby->site()->changeTitle($kirby->request()->get('title'));
-
-			return [
-				'event' => 'site.changeTitle',
-			];
-		}
+		'action'  => SiteChangeTitleDialogController::class,
 	],
 
 	'site.fields' => [
