@@ -1,22 +1,25 @@
 <?php
 
-namespace Kirby\Panel\Ui\Dialogs;
+namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Cms\Collection;
 use Kirby\Content\Changes;
+use Kirby\Panel\Controller\DialogController;
+use Kirby\Panel\Ui\Dialog;
 
 /**
  * Manages the Panel dialog for content changes in
  * pages, users and files
- * @since 5.0.0
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
+ * @unstable
  */
-class ChangesDialog
+class ChangesDialogController extends DialogController
 {
 	public function __construct(
 		protected Changes $changes = new Changes()
@@ -44,20 +47,18 @@ class ChangesDialog
 	/**
 	 * Returns the backend full definition for dialog
 	 */
-	public function load(): array
+	public function load(): Dialog
 	{
 		if ($this->changes->cacheExists() === false) {
 			$this->changes->generateCache();
 		}
 
-		return [
-			'component' => 'k-changes-dialog',
-			'props'     => [
-				'files' => $this->files(),
-				'pages' => $this->pages(),
-				'users' => $this->users(),
-			]
-		];
+		return new Dialog(
+			component: 'k-changes-dialog',
+			files: $this->files(),
+			pages: $this->pages(),
+			users: $this->users(),
+		);
 	}
 
 	/**

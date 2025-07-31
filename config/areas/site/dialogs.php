@@ -7,8 +7,8 @@ use Kirby\Cms\Url;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use Kirby\Panel\Controller\Dialog\ChangesDialogController;
 use Kirby\Panel\Field;
-use Kirby\Panel\Ui\Dialogs\ChangesDialog;
 use Kirby\Panel\Ui\Dialogs\PageCreateDialog;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
@@ -587,8 +587,6 @@ return [
 
 	'changes' => [
 		'pattern' => 'changes',
-		'load'    => function () {
-			return (new ChangesDialog())->load();
-		},
+		'action'  => ChangesDialogController::class,
 	],
 ];
