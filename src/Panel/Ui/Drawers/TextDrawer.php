@@ -25,16 +25,18 @@ class TextDrawer extends Drawer
 		array|null $options = null,
 		string|null $style = null,
 		string|null $title = null,
-		public string|null $text = null
+		public string|null $text = null,
+		...$attrs
 	) {
-		parent::__construct(
-			component: $component,
-			class: $class,
-			icon: $icon,
-			options: $options,
-			style: $style,
-			title: $title,
-		);
+		parent::__construct(...[
+			...$attrs,
+			'component' => $component,
+			'class'     => $class,
+			'icon'      => $icon,
+			'options'   => $options,
+			'style'     => $style,
+			'title'     => $title,
+		]);
 	}
 
 	public function props(): array

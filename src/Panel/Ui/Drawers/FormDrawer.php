@@ -27,16 +27,18 @@ class FormDrawer extends Drawer
 		array|null $options = null,
 		string|null $style = null,
 		string|null $title = null,
-		public array $value = []
+		public array $value = [],
+		...$attrs
 	) {
-		parent::__construct(
-			component: $component,
-			class: $class,
-			icon: $icon,
-			options: $options,
-			style: $style,
-			title: $title
-		);
+		parent::__construct(...[
+			...$attrs,
+			'component' => $component,
+			'class'     => $class,
+			'icon'      => $icon,
+			'options'   => $options,
+			'style'     => $style,
+			'title'     => $title
+		]);
 	}
 
 	public function props(): array
