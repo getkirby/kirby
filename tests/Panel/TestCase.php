@@ -35,4 +35,13 @@ class TestCase extends BaseTestCase
 		// clean up $_SERVER
 		unset($_SERVER['SERVER_SOFTWARE']);
 	}
+
+	public function setRequest(array $data = []): App
+	{
+		return $this->app = $this->app->clone([
+			'request' => [
+				'query' => $data
+			]
+		]);
+	}
 }

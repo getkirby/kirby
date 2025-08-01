@@ -104,13 +104,7 @@ class PanelTest extends TestCase
 		$this->assertFalse($result);
 
 		// state request via get
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_json' => true
-				]
-			]
-		]);
+		$this->setRequest(['_json' => true]);
 
 		$result = $this->app->panel()->isStateRequest();
 		$this->assertTrue($result);

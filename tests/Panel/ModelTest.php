@@ -437,12 +437,8 @@ class ModelTest extends TestCase
 		$this->assertSame('main', $props['tab']['name']);
 		$this->assertTrue($props['permissions']['update']);
 
-		$app = $this->app->clone([
-			'request' => [
-				'query' => 'tab=foo'
-			]
-		]);
-		$app->impersonate('kirby');
+		$this->setRequest(['tab' => 'foo']);
+		$this->app->impersonate('kirby');
 
 		$props = $this->panel($site)->props();
 		$this->assertSame('foo', get('tab'));

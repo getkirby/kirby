@@ -22,13 +22,7 @@ class RouterTest extends TestCase
 	public function testResponseFromNullOrFalse(): void
 	{
 		// fake json request for easier assertions
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_json' => true,
-				]
-			]
-		]);
+		$this->setRequest(['_json' => true]);
 
 		// null is interpreted as 404
 		$router   = new Router($this->app->panel());
@@ -51,13 +45,7 @@ class RouterTest extends TestCase
 	public function testResponseFromString(): void
 	{
 		// fake json request for easier assertions
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'_json' => true,
-				]
-			]
-		]);
+		$this->setRequest(['_json' => true]);
 
 		// strings are interpreted as errors
 		$router   = new Router($this->app->panel());
