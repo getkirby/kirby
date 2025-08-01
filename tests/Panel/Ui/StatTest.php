@@ -75,6 +75,12 @@ class StatTest extends TestCase
 	public function testComponent(): void
 	{
 		$stat = new Stat(
+			label: 'Test Label',
+			value: 'Test Value'
+		);
+		$this->assertSame('k-stat', $stat->component());
+
+		$stat = new Stat(
 			model: $this->model,
 			label: 'Test Label',
 			value: 'Test Value'

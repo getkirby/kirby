@@ -16,8 +16,8 @@ use Kirby\Exception\InvalidArgumentException;
 class Stats extends Component
 {
 	public function __construct(
-		public ModelWithContent $model,
 		public string $component = 'k-stats',
+		public ModelWithContent|null $model = null,
 		public array $reports = [],
 		public string $size = 'large',
 	) {
@@ -59,10 +59,15 @@ class Stats extends Component
 
 		foreach ($this->reports as $report) {
 			try {
-				$stat = Stat::from(
-					model: $this->model,
-					input: $report
-				);
+				if ($this->model === null) {
+					$stat = new Stat(...$report);
+				} else {
+					$stat = Stat::from(
+						model: $this->model,
+						input: $report
+					);
+				}
+
 			} catch (InvalidArgumentException) {
 				continue;
 			}
