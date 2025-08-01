@@ -2,6 +2,7 @@
 
 use Kirby\Cms\File;
 use Kirby\Panel\Collector\FilesCollector;
+use Kirby\Panel\Ui\Item\FileItem;
 use Kirby\Panel\Ui\Upload;
 use Kirby\Toolkit\I18n;
 
@@ -79,34 +80,18 @@ return [
 			return $this->models;
 		},
 		'data' => function () {
-			$data = [];
+			$data               = [];
+			$dragTextIsAbsolute = $this->model->is($this->parent) === false;
 
 			foreach ($this->modelsPaginated() as $file) {
-				$panel       = $file->panel();
-				$permissions = $file->permissions();
-
-				$item = [
-					'dragText'  => $panel->dragText(
-						// the drag text needs to be absolute
-						// when the files come from a different parent model
-						absolute: $this->model->is($this->parent) === false
-					),
-					'extension' => $file->extension(),
-					'filename'  => $file->filename(),
-					'id'        => $file->id(),
-					'image'     => $panel->image($this->image, $this->layout),
-					'info'      => $file->toSafeString($this->info ?? false),
-					'link'      => $panel->url(true),
-					'mime'      => $file->mime(),
-					'parent'    => $file->parent()->panel()->path(),
-					'permissions' => [
-						'delete' => $permissions->can('delete'),
-						'sort'   => $permissions->can('sort'),
-					],
-					'template'  => $file->template(),
-					'text'      => $file->toSafeString($this->text),
-					'url'       => $file->url(),
-				];
+				$item = (new FileItem(
+					file: $file,
+					dragTextIsAbsolute: $dragTextIsAbsolute,
+					image: $this->image,
+					layout: $this->layout,
+					info: $this->info,
+					text: $this->text,
+				))->props();
 
 				if ($this->layout === 'table') {
 					$item = $this->columnsValues($item, $file);

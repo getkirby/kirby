@@ -6,6 +6,7 @@ use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Collector\PagesCollector;
+use Kirby\Panel\Ui\Item\PageItem;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
@@ -116,27 +117,13 @@ return [
 			$data = [];
 
 			foreach ($this->modelsPaginated() as $page) {
-				$panel       = $page->panel();
-				$permissions = $page->permissions();
-
-				$item = [
-					'dragText'    => $panel->dragText(),
-					'id'          => $page->id(),
-					'image'       => $panel->image($this->image, $this->layout),
-					'info'        => $page->toSafeString($this->info ?? false),
-					'link'        => $panel->url(true),
-					'parent'      => $page->parentId(),
-					'permissions' => [
-						'delete'       => $permissions->can('delete'),
-						'changeSlug'   => $permissions->can('changeSlug'),
-						'changeStatus' => $permissions->can('changeStatus'),
-						'changeTitle'  => $permissions->can('changeTitle'),
-						'sort'         => $permissions->can('sort'),
-					],
-					'status'      => $page->status(),
-					'template'    => $page->intendedTemplate()->name(),
-					'text'        => $page->toSafeString($this->text),
-				];
+				$item = (new PageItem(
+					page: $page,
+					image: $this->image,
+					layout: $this->layout,
+					info: $this->info,
+					text: $this->text,
+				))->props();
 
 				if ($this->layout === 'table') {
 					$item = $this->columnsValues($item, $page);
