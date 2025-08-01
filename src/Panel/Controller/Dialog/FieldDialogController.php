@@ -21,7 +21,11 @@ class FieldDialogController extends DialogController
 
 	public function routes(): array
 	{
-		$routes = new DialogRoutes($this->area(), $this->field->dialogs());
+		$routes = new class ($this->area(), $this->field->dialogs()) extends DialogRoutes {
+			// ensure field dialog routes are not prefixed again with /dialogs
+			protected static string $prefix = '';
+		};
+
 		return $routes->toArray();
 	}
 }

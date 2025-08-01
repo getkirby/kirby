@@ -21,7 +21,11 @@ class FieldDrawerController extends DrawerController
 
 	public function routes(): array
 	{
-		$routes = new DrawerRoutes($this->area(), $this->field->drawers());
+		$routes = new class ($this->area(), $this->field->drawers()) extends DrawerRoutes {
+			// ensure field drawer routes are not prefixed again with /drawers
+			protected static string $prefix = '';
+		};
+
 		return $routes->toArray();
 	}
 }

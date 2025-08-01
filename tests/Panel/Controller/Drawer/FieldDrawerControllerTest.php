@@ -110,18 +110,18 @@ class FieldDrawerControllerTest extends TestCase
 	{
 		$field = $this->field();
 
-		$controller = new FieldDrawerController($field, 'drawers/a');
+		$controller = new FieldDrawerController($field, 'a');
 		$response   = $controller->load();
 		$this->assertSame(['drawer-a' => 'load'], $response);
 
-		$controller = new FieldDrawerController($field, 'drawers/b');
+		$controller = new FieldDrawerController($field, 'b');
 		$response   = $controller->load();
 		$this->assertSame(['drawer-b' => 'load'], $response);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No route found for path: "drawers/c" and request method: "GET"');
+		$this->expectExceptionMessage('No route found for path: "c" and request method: "GET"');
 
-		$controller = new FieldDrawerController($field, 'drawers/c');
+		$controller = new FieldDrawerController($field, 'c');
 		$controller->load();
 	}
 
@@ -146,18 +146,18 @@ class FieldDrawerControllerTest extends TestCase
 	{
 		$field = $this->field();
 
-		$controller = new FieldDrawerController($field, 'drawers/a');
+		$controller = new FieldDrawerController($field, 'a');
 		$response   = $controller->submit();
 		$this->assertSame(['drawer-a' => 'submit'], $response);
 
-		$controller = new FieldDrawerController($field, 'drawers/b');
+		$controller = new FieldDrawerController($field, 'b');
 		$response   = $controller->submit();
 		$this->assertSame(['drawer-b' => 'submit'], $response);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No route found for path: "drawers/c" and request method: "POST"');
+		$this->expectExceptionMessage('No route found for path: "c" and request method: "POST"');
 
-		$controller = new FieldDrawerController($field, 'drawers/c');
+		$controller = new FieldDrawerController($field, 'c');
 		$controller->submit();
 	}
 }

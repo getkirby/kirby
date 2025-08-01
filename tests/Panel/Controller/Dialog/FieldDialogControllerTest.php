@@ -110,18 +110,18 @@ class FieldDialogControllerTest extends TestCase
 	{
 		$field = $this->field();
 
-		$controller = new FieldDialogController($field, 'dialogs/a');
+		$controller = new FieldDialogController($field, 'a');
 		$response   = $controller->load();
 		$this->assertSame(['dialog-a' => 'load'], $response);
 
-		$controller = new FieldDialogController($field, 'dialogs/b');
+		$controller = new FieldDialogController($field, 'b');
 		$response   = $controller->load();
 		$this->assertSame(['dialog-b' => 'load'], $response);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No route found for path: "dialogs/c" and request method: "GET"');
+		$this->expectExceptionMessage('No route found for path: "c" and request method: "GET"');
 
-		$controller = new FieldDialogController($field, 'dialogs/c');
+		$controller = new FieldDialogController($field, 'c');
 		$controller->load();
 	}
 
@@ -145,18 +145,18 @@ class FieldDialogControllerTest extends TestCase
 	{
 		$field = $this->field();
 
-		$controller = new FieldDialogController($field, 'dialogs/a');
+		$controller = new FieldDialogController($field, 'a');
 		$response   = $controller->submit();
 		$this->assertSame(['dialog-a' => 'submit'], $response);
 
-		$controller = new FieldDialogController($field, 'dialogs/b');
+		$controller = new FieldDialogController($field, 'b');
 		$response   = $controller->submit();
 		$this->assertSame(['dialog-b' => 'submit'], $response);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No route found for path: "dialogs/c" and request method: "POST"');
+		$this->expectExceptionMessage('No route found for path: "c" and request method: "POST"');
 
-		$controller = new FieldDialogController($field, 'dialogs/c');
+		$controller = new FieldDialogController($field, 'c');
 		$controller->submit();
 	}
 }
