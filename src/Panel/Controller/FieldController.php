@@ -56,12 +56,12 @@ trait FieldController
 		);
 	}
 
-	public function load(): array
+	public function load(): mixed
 	{
 		return Router::execute($this->path, 'GET', $this->routes());
 	}
 
-	public function submit(): array
+	public function submit(): mixed
 	{
 		return Router::execute($this->path, 'POST', $this->routes());
 	}
