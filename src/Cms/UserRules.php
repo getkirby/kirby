@@ -174,7 +174,10 @@ class UserRules
 		static::validLanguage($user, $user->language());
 
 		// the first user must have a password
-		if ($user->kirby()->users()->count() === 0 && empty($props['password'])) {
+		if (
+			$user->kirby()->users()->count() === 0 &&
+			empty($props['password'])
+		) {
 			// trigger invalid password error
 			static::validPassword($user, ' ');
 		}

@@ -7,7 +7,6 @@ use Kirby\Cms\Find;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
-use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialogs\FormDialog;
 use Kirby\Toolkit\Escape;
@@ -23,14 +22,8 @@ use Kirby\Toolkit\I18n;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class UserTotpDisableDialogController extends DialogController
+class UserTotpDisableDialogController extends UserDialogController
 {
-	public function __construct(
-		public User $user
-	) {
-		parent::__construct();
-	}
-
 	public static function factory(string|null $id = null): static
 	{
 		return new static($id ? Find::user($id) : App::instance()->user());

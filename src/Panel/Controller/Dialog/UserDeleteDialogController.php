@@ -8,7 +8,7 @@ use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
 /**
- * Controls the Panel dialog for deleting a file
+ * Controls the Panel dialog for deleting a user
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -18,13 +18,15 @@ use Kirby\Toolkit\I18n;
  * @since     6.0.0
  * @unstable
  */
-class FileDeleteDialogController extends FileDialogController
+class UserDeleteDialogController extends UserDialogController
 {
 	public function load(): Dialog
 	{
+		$i18nPrefix = $this->user->isLoggedIn() ? 'account' : 'user';
+
 		return new RemoveDialog(
-			text: I18n::template('file.delete.confirm', [
-				'filename' => Escape::html($this->file->filename())
+			text: I18n::template($i18nPrefix . '.delete.confirm', [
+				'email' => Escape::html($this->user->email())
 			])
 		);
 	}
@@ -32,18 +34,23 @@ class FileDeleteDialogController extends FileDialogController
 	public function submit(): array
 	{
 		$referrer = $this->kirby->panel()->referrer();
-		$url      = $this->file->panel()->url(true);
+		$url      = $this->user->panel()->url(true);
 
-		$this->file->delete();
+		$this->user->delete();
 
-		// Redirect to the parent model URL
-		// if the dialog has been opened in the file view
+		// redirect to the users view
+		// if the dialog has been opened in the user view
 		if ($referrer === $url) {
-			$redirect = $this->file->parent()->panel()->url(true);
+			$redirect = '/users';
+		}
+
+		// logout the user if they deleted themselves
+		if ($this->user->isLoggedIn()) {
+			$redirect = '/logout';
 		}
 
 		return [
-			'event'    => 'file.delete',
+			'event'    => 'user.delete',
 			'redirect' => $redirect ?? null
 		];
 	}
