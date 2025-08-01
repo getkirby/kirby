@@ -58,6 +58,113 @@ class SectionTest extends TestCase
 		$this->assertSame('Hello World', $section->api());
 	}
 
+	public function testDialogs(): void
+	{
+		// no defined as default
+		Section::$types = [
+			'test' => []
+		];
+
+		$model = new Page(['slug' => 'test']);
+
+		$section = new Section('test', [
+			'model' => $model,
+		]);
+
+		$this->assertSame([], $section->dialogs());
+
+		// test dialogs
+		$routes = [
+			[
+				'pattern' => 'foo',
+				'load'    => function () {},
+				'submit'  => function () {}
+			]
+		];
+
+		// return routes
+		Section::$types = [
+			'test' => [
+				'dialogs' => fn () => $routes
+			]
+		];
+
+		$section = new Section('test', [
+			'model' => $model,
+		]);
+
+		$this->assertSame($routes, $section->dialogs());
+	}
+
+	public function testDialogsInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Dialogs of section "test" must be defined as a closure');
+
+		Section::$types = [
+			'test' => [
+				'dialogs' => 'foo'
+			]
+		];
+
+		$model = new Page(['slug' => 'test']);
+		$section = new Section('test', ['model' => $model]);
+		$section->dialogs();
+	}
+
+	public function testDrawers(): void
+	{
+		// no defined as default
+		Section::$types = [
+			'test' => []
+		];
+
+		$model = new Page(['slug' => 'test']);
+		$section = new Section('test', [
+			'model' => $model,
+		]);
+
+		$this->assertSame([], $section->drawers());
+
+		// test drawers
+		$routes = [
+			[
+				'pattern' => 'foo',
+				'load'    => function () {},
+				'submit'  => function () {}
+			]
+		];
+
+		// return routes
+		Section::$types = [
+			'test' => [
+				'drawers' => fn () => $routes
+			]
+		];
+
+		$section = new Section('test', [
+			'model' => $model,
+		]);
+
+		$this->assertSame($routes, $section->drawers());
+	}
+
+	public function testDrawersInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Drawers of section "test" must be defined as a closure');
+
+		Section::$types = [
+			'test' => [
+				'drawers' => 'foo'
+			]
+		];
+
+		$model = new Page(['slug' => 'test']);
+		$section = new Section('test', ['model' => $model]);
+		$section->drawers();
+	}
+
 	public function testMissingModel(): void
 	{
 		Section::$types['test'] = [];
