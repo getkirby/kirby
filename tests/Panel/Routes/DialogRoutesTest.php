@@ -105,6 +105,6 @@ class DialogRoutesTest extends TestCase
 		$routes = $routes->toArray();
 		$this->assertCount(2, $routes);
 		$this->assertSame('The load handler is missing', $routes[0]['action']());
-		$this->assertSame('The submit handler is missing', $routes[1]['action']());
+		$this->assertTrue($routes[1]['action']());
 	}
 }
