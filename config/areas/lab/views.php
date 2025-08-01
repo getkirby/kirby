@@ -13,7 +13,7 @@ return [
 				'component' => 'k-lab-index-view',
 				'props' => [
 					'categories' => Category::all(),
-					'info'       => Category::isInstalled() ? null : 'The default Lab examples are not installed.',
+					'info'       => Category::isInstalled() === false ? 'The default Lab examples are not installed.' : null,
 					'tab'        => 'examples',
 				],
 			];
@@ -22,7 +22,7 @@ return [
 	'lab.docs' => [
 		'pattern' => 'lab/docs',
 		'action'  => function () {
-			$view = [
+			return [
 				'component' => 'k-lab-index-view',
 				'title'     => 'Docs',
 				'breadcrumb' => [
@@ -30,27 +30,11 @@ return [
 						'label' => 'Docs',
 						'link'  => 'lab/docs'
 					]
-				]
-			];
-
-			// if docs are not installed, show info message
-			if (Docs::isInstalled() === false) {
-				return [
-					...$view,
-					'props' => [
-						'info' => 'The UI docs are not installed.',
-						'tab'  => 'docs',
-					],
-				];
-			}
-
-			return [
-				...$view,
+				],
 				'props' => [
-					'categories' => [
-						['examples' => Docs::all()]
-					],
-					'tab'        => 'docs',
+					'tab' => 'docs',
+					'categories' => [['examples' => Docs::all()]],
+					'info' => Docs::isInstalled() === false ? 'The UI docs are not installed.' : null,
 				],
 			];
 		}
