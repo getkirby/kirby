@@ -125,6 +125,7 @@ class File extends Model
 
 	/**
 	 * Provides options for the file dropdown
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController` instead
 	 */
 	public function dropdown(): array
 	{

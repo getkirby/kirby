@@ -55,6 +55,7 @@ class User extends Model
 
 	/**
 	 * Provides options for the user dropdown
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController` instead
 	 */
 	public function dropdown(): array
 	{

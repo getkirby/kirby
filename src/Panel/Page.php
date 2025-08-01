@@ -86,6 +86,7 @@ class Page extends Model
 
 	/**
 	 * Provides options for the page dropdown
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dropdown\PageSettingsDropdownController` instead
 	 */
 	public function dropdown(): array
 	{
