@@ -4,7 +4,7 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Exception\NotFoundException;
 use Kirby\Panel\TestCase;
-use Kirby\Panel\Ui\Dialogs\RemoveDialog;
+use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(LanguageVariableDeleteDialogController::class)]

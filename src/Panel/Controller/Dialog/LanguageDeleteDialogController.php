@@ -6,7 +6,7 @@ use Kirby\Cms\Find;
 use Kirby\Cms\Language;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Panel\Ui\Dialogs\RemoveDialog;
+use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 

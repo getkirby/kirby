@@ -6,7 +6,7 @@ use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController;
-use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\FilePreview;
 use Throwable;
 

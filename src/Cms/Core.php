@@ -13,10 +13,10 @@ use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Field\StatsField;
-use Kirby\Panel\Ui\FilePreviews\AudioFilePreview;
-use Kirby\Panel\Ui\FilePreviews\ImageFilePreview;
-use Kirby\Panel\Ui\FilePreviews\PdfFilePreview;
-use Kirby\Panel\Ui\FilePreviews\VideoFilePreview;
+use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
+use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
+use Kirby\Panel\Ui\FilePreview\PdfFilePreview;
+use Kirby\Panel\Ui\FilePreview\VideoFilePreview;
 
 /**
  * The Core class lists all parts of Kirby

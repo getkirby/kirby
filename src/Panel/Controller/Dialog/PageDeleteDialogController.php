@@ -4,8 +4,8 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Panel\Ui\Dialogs\FormDialog;
-use Kirby\Panel\Ui\Dialogs\RemoveDialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
+use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 

@@ -3,7 +3,7 @@
 namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Panel\Ui\Dialogs\FormDialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\I18n;
 
 /**

@@ -4,8 +4,8 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Panel\Ui\Dialogs\ErrorDialog;
-use Kirby\Panel\Ui\Dialogs\FormDialog;
+use Kirby\Panel\Ui\Dialog\ErrorDialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\I18n;
 
 /**

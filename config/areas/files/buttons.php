@@ -1,8 +1,8 @@
 <?php
 
 use Kirby\Cms\File;
-use Kirby\Panel\Ui\Buttons\OpenButton;
-use Kirby\Panel\Ui\Buttons\SettingsButton;
+use Kirby\Panel\Ui\Button\OpenButton;
+use Kirby\Panel\Ui\Button\SettingsButton;
 
 return [
 	'file.open'     => fn (File $file) => new OpenButton($file->previewUrl()),

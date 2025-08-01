@@ -15,7 +15,7 @@ use Kirby\Panel\Controller\Dialog\PageDeleteDialogController;
 use Kirby\Panel\Controller\Dialog\PageDuplicateDialogController;
 use Kirby\Panel\Controller\Dialog\PageMoveDialogController;
 use Kirby\Panel\Controller\Dialog\SiteChangeTitleDialogController;
-use Kirby\Panel\Ui\Dialogs\PageCreateDialog;
+use Kirby\Panel\Ui\Dialog\PageCreateDialog;
 
 return [
 	'page.changeSort' => [
