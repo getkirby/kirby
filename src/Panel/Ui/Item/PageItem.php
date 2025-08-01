@@ -30,15 +30,15 @@ class PageItem extends ModelItem
 		Page $page,
 		string|array|false|null $image = [],
 		string|null $info = null,
-		string $layout = 'list',
-		string $text = '{{ page.title }}',
+		string|null $layout = null,
+		string|null $text = null,
 	) {
 		parent::__construct(
 			model: $page,
 			image: $image,
 			info: $info,
 			layout: $layout,
-			text: $text,
+			text: $text ?? '{{ page.title }}',
 		);
 	}
 

@@ -31,15 +31,15 @@ class FileItem extends ModelItem
 		protected bool $dragTextIsAbsolute = false,
 		string|array|false|null $image = [],
 		string|null $info = null,
-		string $layout = 'list',
-		string $text = '{{ file.filename }}',
+		string|null $layout = null,
+		string|null $text = null,
 	) {
 		parent::__construct(
 			model: $file,
 			image: $image,
 			info: $info,
 			layout: $layout,
-			text: $text,
+			text: $text ?? '{{ file.filename }}',
 		);
 	}
 

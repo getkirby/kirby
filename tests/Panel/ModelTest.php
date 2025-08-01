@@ -434,6 +434,32 @@ class ModelTest extends TestCase
 		$this->assertInstanceOf(ModelSite::class, $panel->model());
 	}
 
+	public function testPickerData(): void
+	{
+		$panel = $this->panel();
+		$data = $panel->pickerData();
+
+		$this->assertSame([
+			'id' => null,
+			'image' => [
+				'back' => 'pattern',
+				'color' => 'gray-500',
+				'cover' => false,
+				'icon' => 'page',
+			],
+			'info' => '',
+			'link' => '/site',
+			'permissions' => [
+				'changeTitle' => false,
+				'update' => false,
+			],
+			'text' => '',
+			'uuid' => 'site://',
+			'sortable' => true,
+			'url' => '/custom',
+		], $data);
+	}
+
 	public function testProps(): void
 	{
 		$site = [
