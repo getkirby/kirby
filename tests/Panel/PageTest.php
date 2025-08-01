@@ -459,12 +459,8 @@ class PageTest extends TestCase
 		$panel = new Page($page);
 		$props = $panel->props();
 
-		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('id', $props['model']);
-		$this->assertArrayHasKey('parent', $props['model']);
-		$this->assertArrayHasKey('previewUrl', $props['model']);
-		$this->assertArrayHasKey('status', $props['model']);
-		$this->assertArrayHasKey('title', $props['model']);
+		$this->assertArrayHasKey('id', $props);
+		$this->assertArrayHasKey('title', $props);
 
 		// inherited props
 		$this->assertArrayHasKey('blueprint', $props);

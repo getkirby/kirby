@@ -294,14 +294,13 @@ class UserTest extends TestCase
 		$panel = new User($user);
 		$props = $panel->props();
 
-		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('avatar', $props['model']);
-		$this->assertArrayHasKey('email', $props['model']);
-		$this->assertArrayHasKey('id', $props['model']);
-		$this->assertArrayHasKey('language', $props['model']);
-		$this->assertArrayHasKey('name', $props['model']);
-		$this->assertArrayHasKey('role', $props['model']);
-		$this->assertArrayHasKey('username', $props['model']);
+		$this->assertArrayHasKey('avatar', $props);
+		$this->assertArrayHasKey('email', $props);
+		$this->assertArrayHasKey('id', $props);
+		$this->assertArrayHasKey('language', $props);
+		$this->assertArrayHasKey('name', $props);
+		$this->assertArrayHasKey('role', $props);
+		$this->assertArrayHasKey('username', $props);
 
 		// inherited props
 		$this->assertArrayHasKey('blueprint', $props);

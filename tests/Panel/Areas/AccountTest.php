@@ -23,7 +23,7 @@ class AccountTest extends AreaTestCase
 		$view = $this->view('account');
 		$this->assertSame('account', $view['id']);
 		$this->assertSame('k-account-view', $view['component']);
-		$this->assertSame('test@getkirby.com', $view['props']['model']['email']);
+		$this->assertSame('test@getkirby.com', $view['props']['email']);
 	}
 
 	public function testAccountFiles(): void

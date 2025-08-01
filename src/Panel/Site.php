@@ -75,21 +75,11 @@ class Site extends Model
 	{
 		$props = parent::props();
 
-		// Additional model information
-		// @deprecated Use the top-level props instead
-		$model = [
-			'link'       => $props['link'],
-			'previewUrl' => $this->model->previewUrl(),
-			'title'      => $this->model->title()->toString(),
-			'uuid'       => $props['uuid'],
-		];
-
 		return [
 			...$props,
 			'blueprint'   => 'site',
 			'id'          => '/',
-			'model'       => $model,
-			'title'       => $model['title'],
+			'title'       => $this->model->title()->toString(),
 			'permissions' => [
 				...$props['permissions'],
 				'preview' => $this->model->homePage()?->permissions()->can('preview') === true,
