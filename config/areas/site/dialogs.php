@@ -8,6 +8,10 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Controller\Dialog\ChangesDialogController;
+use Kirby\Panel\Controller\Dialog\FileChangeNameDialogController;
+use Kirby\Panel\Controller\Dialog\FileChangeSortDialogController;
+use Kirby\Panel\Controller\Dialog\FileChangeTemplateDialogController;
+use Kirby\Panel\Controller\Dialog\FileDeleteDialogController;
 use Kirby\Panel\Controller\Dialog\SiteChangeTitleDialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialogs\PageCreateDialog;
@@ -17,7 +21,6 @@ use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuids;
 
 $fields = require __DIR__ . '/../fields/dialogs.php';
-$files = require __DIR__ . '/../files/dialogs.php';
 
 return [
 	'page.changeSort' => [
@@ -476,20 +479,20 @@ return [
 		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
 	],
 	'page.file.changeName' => [
-		...$files['changeName'],
 		'pattern' => '(pages/.*?)/files/(:any)/changeName',
+		'action' => FileChangeNameDialogController::class
 	],
 	'page.file.changeSort' => [
-		...$files['changeSort'],
 		'pattern' => '(pages/.*?)/files/(:any)/changeSort',
+		'action' => FileChangeSortDialogController::class
 	],
 	'page.file.changeTemplate' => [
-		...$files['changeTemplate'],
 		'pattern' => '(pages/.*?)/files/(:any)/changeTemplate',
+		'action' => FileChangeTemplateDialogController::class
 	],
 	'page.file.delete' => [
-		...$files['delete'],
 		'pattern' => '(pages/.*?)/files/(:any)/delete',
+		'action' => FileDeleteDialogController::class
 	],
 	'page.file.fields' => [
 		...$fields['file'],
@@ -542,20 +545,20 @@ return [
 		'pattern' => '(site)/fields/(:any)/(:all?)',
 	],
 	'site.file.changeName' => [
-		...$files['changeName'],
 		'pattern' => '(site)/files/(:any)/changeName',
+		'action' => FileChangeNameDialogController::class
 	],
 	'site.file.changeSort' => [
-		...$files['changeSort'],
 		'pattern' => '(site)/files/(:any)/changeSort',
+		'action' => FileChangeSortDialogController::class
 	],
 	'site.file.changeTemplate' => [
-		...$files['changeTemplate'],
 		'pattern' => '(site)/files/(:any)/changeTemplate',
+		'action' => FileChangeTemplateDialogController::class
 	],
 	'site.file.delete' => [
-		...$files['delete'],
 		'pattern' => '(site)/files/(:any)/delete',
+		'action' => FileDeleteDialogController::class
 	],
 	'site.file.fields' => [
 		...$fields['file'],
