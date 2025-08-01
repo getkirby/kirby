@@ -127,6 +127,30 @@ class StatsTest extends TestCase
 		], $stats->reports());
 	}
 
+	public function testReportsWithStatObject(): void
+	{
+		$stats = new Stats(
+			reports: [
+				new Stat(
+					label: 'test',
+					value: 'test',
+				),
+			],
+			size: 'medium'
+		);
+
+		$this->assertSame([
+			[
+				'icon'  => null,
+				'info'  => null,
+				'label' => 'test',
+				'link'  => null,
+				'theme' => null,
+				'value' => 'test',
+			],
+		], $stats->reports());
+	}
+
 	public function testReportsWithModel(): void
 	{
 		$stats = new Stats(
