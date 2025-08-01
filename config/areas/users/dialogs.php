@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Panel\Controller\Dialog\FieldDialogController;
 use Kirby\Panel\Controller\Dialog\FileChangeNameDialogController;
 use Kirby\Panel\Controller\Dialog\FileChangeSortDialogController;
 use Kirby\Panel\Controller\Dialog\FileChangeTemplateDialogController;
@@ -12,8 +13,6 @@ use Kirby\Panel\Controller\Dialog\UserChangeRoleDialogController;
 use Kirby\Panel\Controller\Dialog\UserCreateDialogController;
 use Kirby\Panel\Controller\Dialog\UserDeleteDialogController;
 use Kirby\Panel\Controller\Dialog\UserTotpDisableDialogController;
-
-$fields = require __DIR__ . '/../fields/dialogs.php';
 
 return [
 	'user.create' => [
@@ -50,8 +49,8 @@ return [
 	],
 
 	'user.fields' => [
-		...$fields['model'],
 		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
+		'action'  => FieldDialogController::class
 	],
 
 	'user.file.changeName' => [
@@ -72,7 +71,7 @@ return [
 	],
 
 	'user.file.fields' => [
-		...$fields['file'],
 		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'action'  => FieldDialogController::class
 	],
 ];

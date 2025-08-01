@@ -32,7 +32,7 @@ class DialogRoutes extends Routes
 			// submit handler
 			$routes[] = $this->route(
 				pattern: $pattern,
-				action:  $params['submit'] ?? fn () => 'The submit handler is missing',
+				action:  $params['submit'] ?? fn () => true,
 				method:  'POST',
 			);
 		}
