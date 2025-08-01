@@ -271,6 +271,11 @@ class FileTest extends TestCase
 		$this->assertSame('(image: file://test-heic)', $panel->dragText());
 	}
 
+	public function testDropdown(): void
+	{
+		$this->assertCount(6, $this->panel()->dropdown());
+	}
+
 	public function testDropdownOption(): void
 	{
 		$page = new ModelPage([
@@ -368,7 +373,6 @@ class FileTest extends TestCase
 				]
 			]
 		]);
-
 
 		$page = new ModelPage(['slug' => 'test']);
 
@@ -625,14 +629,7 @@ class FileTest extends TestCase
 
 	public function testPath(): void
 	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'test.jpg']
-			]
-		]);
-
-		$panel = new File($page->file('test.jpg'));
+		$panel = $this->panel();
 		$this->assertSame('files/test.jpg', $panel->path());
 	}
 
@@ -713,10 +710,7 @@ class FileTest extends TestCase
 			]
 		]);
 
-		$model = new ModelPage([
-			'slug'  => 'foo'
-		]);
-
+		$model = new ModelPage(['slug'  => 'foo']);
 		$panel = new File($page->file('test.jpg'));
 		$data  = $panel->pickerData(['model' => $model]);
 
@@ -725,15 +719,7 @@ class FileTest extends TestCase
 
 	public function testProps(): void
 	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'test.jpg']
-			]
-		]);
-
-		$panel = new File($page->file('test.jpg'));
-		$props = $panel->props();
+		$props = $this->panel()->props();
 
 		$this->assertArrayHasKey('model', $props);
 		$this->assertArrayHasKey('dimensions', $props['model']);
@@ -768,15 +754,18 @@ class FileTest extends TestCase
 			]
 		]);
 
-		$props = (new File($page->file('a.jpg')))->props();
+		$panel = new File($page->file('a.jpg'));
+		$props = $panel->props();
 		$this->assertNull($props['prev']());
 		$this->assertSame('/pages/test/files/b.jpg', $props['next']()['link']);
 
+		$panel = new File($page->file('b.jpg'));
 		$props = (new File($page->file('b.jpg')))->props();
 		$this->assertSame('/pages/test/files/a.jpg', $props['prev']()['link']);
 		$this->assertSame('/pages/test/files/c.jpg', $props['next']()['link']);
 
-		$props = (new File($page->file('c.jpg')))->props();
+		$panel = new File($page->file('c.jpg'));
+		$props = $panel->props();
 		$this->assertSame('/pages/test/files/b.jpg', $props['prev']()['link']);
 		$this->assertNull($props['next']());
 	}
@@ -792,15 +781,18 @@ class FileTest extends TestCase
 			]
 		]);
 
-		$props = (new File($page->file('a.jpg')))->props();
+		$panel = new File($page->file('a.jpg'));
+		$props = $panel->props();
 		$this->assertSame('/pages/test/files/b.jpg', $props['prev']()['link']);
 		$this->assertSame('/pages/test/files/c.jpg', $props['next']()['link']);
 
-		$props = (new File($page->file('b.jpg')))->props();
+		$panel = new File($page->file('b.jpg'));
+		$props = $panel->props();
 		$this->assertNull($props['prev']());
 		$this->assertSame('/pages/test/files/a.jpg', $props['next']()['link']);
 
-		$props = (new File($page->file('c.jpg')))->props();
+		$panel = new File($page->file('c.jpg'));
+		$props = $panel->props();
 		$this->assertSame('/pages/test/files/a.jpg', $props['prev']()['link']);
 		$this->assertNull($props['next']());
 	}
@@ -818,7 +810,8 @@ class FileTest extends TestCase
 
 		$_GET['tab'] = 'test';
 
-		$prevNext = (new File($page->file('b.jpg')))->prevNext();
+		$panel    = new File($page->file('b.jpg'));
+		$prevNext = $panel->prevNext();
 		$this->assertSame('/pages/test/files/a.jpg?tab=test', $prevNext['prev']()['link']);
 		$this->assertSame('/pages/test/files/c.jpg?tab=test', $prevNext['next']()['link']);
 
@@ -894,30 +887,25 @@ class FileTest extends TestCase
 			]
 		]);
 
-		$prevNext = (new File($page->file('a.jpg')))->prevNext();
+		$panel    = new File($page->file('a.jpg'));
+		$prevNext = $panel->prevNext();
 		$this->assertNull($prevNext['prev']());
 		$this->assertSame('/pages/test/files/b.jpg', $prevNext['next']()['link']);
 
-		$prevNext = (new File($page->file('b.jpg')))->prevNext();
+		$panel    = new File($page->file('b.jpg'));
+		$prevNext = $panel->prevNext();
 		$this->assertSame('/pages/test/files/a.jpg', $prevNext['prev']()['link']);
 		$this->assertSame('/pages/test/files/c.jpg', $prevNext['next']()['link']);
 
-		$prevNext = (new File($page->file('c.jpg')))->prevNext();
+		$panel    = new File($page->file('c.jpg'));
+		$prevNext = $panel->prevNext();
 		$this->assertSame('/pages/test/files/b.jpg', $prevNext['prev']()['link']);
 		$this->assertNull($prevNext['next']());
 	}
 
 	public function testView(): void
 	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'test.jpg']
-			]
-		]);
-
-		$panel = new File($page->file('test.jpg'));
-		$view  = $panel->view();
+		$view = $this->panel()->view();
 
 		$this->assertArrayHasKey('props', $view);
 		$this->assertSame('k-file-view', $view['component']);

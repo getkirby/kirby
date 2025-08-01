@@ -278,23 +278,6 @@ abstract class Model
 	}
 
 	/**
-	 * Checks for disabled dropdown options according
-	 * to the given permissions
-	 */
-	public function isDisabledDropdownOption(
-		string $action,
-		array $options,
-		array $permissions
-	): bool {
-		$option = $options[$action] ?? true;
-
-		return
-			$permissions[$action] === false ||
-			$option === false ||
-			$option === 'false';
-	}
-
-	/**
 	 * Returns the corresponding model object
 	 * @since 5.0.0
 	 */

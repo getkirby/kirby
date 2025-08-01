@@ -7,8 +7,8 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Translation;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
+use Kirby\Panel\Controller\Dropdown\UserSettingsDropdownController;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
-use Kirby\Toolkit\I18n;
 
 /**
  * Provides information about the user model for the Panel
@@ -55,82 +55,11 @@ class User extends Model
 
 	/**
 	 * Provides options for the user dropdown
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController` instead
 	 */
-	public function dropdown(array $options = []): array
+	public function dropdown(): array
 	{
-		$account     = $this->model->isLoggedIn();
-		$i18nPrefix  = $account ? 'account' : 'user';
-		$permissions = $this->options(['preview']);
-		$url         = $this->url(true);
-		$result      = [];
-
-		$result[] = [
-			'dialog'   => $url . '/changeName',
-			'icon'     => 'title',
-			'text'     => I18n::translate($i18nPrefix . '.changeName'),
-			'disabled' => $this->isDisabledDropdownOption('changeName', $options, $permissions)
-		];
-
-		$result[] = '-';
-
-		$result[] = [
-			'dialog'   => $url . '/changeEmail',
-			'icon'     => 'email',
-			'text'     => I18n::translate('user.changeEmail'),
-			'disabled' => $this->isDisabledDropdownOption('changeEmail', $options, $permissions)
-		];
-
-		$result[] = [
-			'dialog'   => $url . '/changeRole',
-			'icon'     => 'bolt',
-			'text'     => I18n::translate('user.changeRole'),
-			'disabled' => $this->isDisabledDropdownOption('changeRole', $options, $permissions) || $this->model->roles()->count() < 2
-		];
-
-		$result[] = [
-			'dialog'   => $url . '/changeLanguage',
-			'icon'     => 'translate',
-			'text'     => I18n::translate('user.changeLanguage'),
-			'disabled' => $this->isDisabledDropdownOption('changeLanguage', $options, $permissions)
-		];
-
-		$result[] = '-';
-
-		$result[] = [
-			'dialog'   => $url . '/changePassword',
-			'icon'     => 'key',
-			'text'     => I18n::translate('user.changePassword'),
-			'disabled' => $this->isDisabledDropdownOption('changePassword', $options, $permissions)
-		];
-
-		if ($this->model->kirby()->system()->is2FAWithTOTP() === true) {
-			if ($account || $this->model->kirby()->user()->isAdmin()) {
-				if ($this->model->secret('totp') !== null) {
-					$result[] = [
-						'dialog'   => $url . '/totp/disable',
-						'icon'     => 'qr-code',
-						'text'     => I18n::translate('login.totp.disable.option'),
-					];
-				} elseif ($account) {
-					$result[] = [
-						'dialog'   => $url . '/totp/enable',
-						'icon'     => 'qr-code',
-						'text'     => I18n::translate('login.totp.enable.option')
-					];
-				}
-			}
-		}
-
-		$result[] = '-';
-
-		$result[] = [
-			'dialog'   => $url . '/delete',
-			'icon'     => 'trash',
-			'text'     => I18n::translate($i18nPrefix . '.delete'),
-			'disabled' => $this->isDisabledDropdownOption('delete', $options, $permissions)
-		];
-
-		return $result;
+		return (new UserSettingsDropdownController($this->model))->load();
 	}
 
 	/**

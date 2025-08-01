@@ -1,16 +1,13 @@
 <?php
 
-use Kirby\Cms\Find;
+use Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController;
 use Kirby\Panel\Controller\Dropdown\LanguagesDropdownController;
-
-$files = require __DIR__ . '/../files/dropdowns.php';
+use Kirby\Panel\Controller\Dropdown\PageSettingsDropdownController;
 
 return [
 	'page' => [
 		'pattern' => 'pages/(:any)',
-		'options' => function (string $path) {
-			return Find::page($path)->panel()->dropdown();
-		}
+		'options' => PageSettingsDropdownController::class
 	],
 	'page.languages' => [
 		'pattern' => '(pages/.*?)/languages',
@@ -18,7 +15,7 @@ return [
 	],
 	'page.file' => [
 		'pattern' => '(pages/.*?)/files/(:any)',
-		'options' => $files['file']
+		'options' => FileSettingsDropdownController::class
 	],
 	'page.file.languages' => [
 		'pattern' => '(pages/.*?)/files/(:any)/languages',
@@ -27,11 +24,10 @@ return [
 	'site.languages' => [
 		'pattern' => '(site)/languages',
 		'options' => LanguagesDropdownController::class
-
 	],
 	'site.file' => [
 		'pattern' => '(site)/files/(:any)',
-		'options' => $files['file']
+		'options' => FileSettingsDropdownController::class
 	],
 	'site.file.languages' => [
 		'pattern' => '(site)/files/(:any)/languages',

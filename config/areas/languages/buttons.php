@@ -10,7 +10,7 @@ return [
 	'languages.create' => fn () =>
 		new LanguageCreateButton(),
 	'language.open' => fn (Language $language) =>
-		new OpenButton(link: $language->url()),
+		new OpenButton($language->url()),
 	'language.settings' => fn (Language $language) =>
 		new LanguageSettingsButton($language),
 	'language.delete' => function (Language $language) {

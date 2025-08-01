@@ -5,8 +5,8 @@ namespace Kirby\Panel;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
+use Kirby\Panel\Controller\Dropdown\PageSettingsDropdownController;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
-use Kirby\Toolkit\I18n;
 
 /**
  * Provides information about the page model for the Panel
@@ -86,110 +86,11 @@ class Page extends Model
 
 	/**
 	 * Provides options for the page dropdown
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dropdown\PageSettingsDropdownController` instead
 	 */
-	public function dropdown(array $options = []): array
+	public function dropdown(): array
 	{
-		$page        = $this->model;
-		$request     = $page->kirby()->request();
-		$defaults    = $request->get(['view', 'sort', 'delete']);
-		$options     = [...$defaults, ...$options];
-		$permissions = $this->options(['preview']);
-		$view        = $options['view'] ?? 'view';
-		$url         = $this->url(true);
-		$result      = [];
-
-		if ($view === 'list') {
-			$result['open'] = [
-				'link'     => $page->previewUrl(),
-				'target'   => '_blank',
-				'icon'     => 'open',
-				'text'     => I18n::translate('open'),
-				'disabled' => $isPreviewDisabled = $this->isDisabledDropdownOption('preview', $options, $permissions)
-			];
-
-			$result['preview'] = [
-				'icon'     => 'window',
-				'link'     => $page->panel()->url(true) . '/preview/changes',
-				'text'     => I18n::translate('preview'),
-				'disabled' => $isPreviewDisabled
-			];
-
-			$result[] = '-';
-		}
-
-		$result['changeTitle'] = [
-			'dialog' => [
-				'url'   => $url . '/changeTitle',
-				'query' => [
-					'select' => 'title'
-				]
-			],
-			'icon'     => 'title',
-			'text'     => I18n::translate('rename'),
-			'disabled' => $this->isDisabledDropdownOption('changeTitle', $options, $permissions)
-		];
-
-		$result['changeSlug'] = [
-			'dialog' => [
-				'url'   => $url . '/changeTitle',
-				'query' => [
-					'select' => 'slug'
-				]
-			],
-			'icon'     => 'url',
-			'text'     => I18n::translate('page.changeSlug'),
-			'disabled' => $this->isDisabledDropdownOption('changeSlug', $options, $permissions)
-		];
-
-		$result['changeStatus'] = [
-			'dialog'   => $url . '/changeStatus',
-			'icon'     => 'preview',
-			'text'     => I18n::translate('page.changeStatus'),
-			'disabled' => $this->isDisabledDropdownOption('changeStatus', $options, $permissions)
-		];
-
-		$siblings = $page->parentModel()->children()->listed()->not($page);
-
-		$result['changeSort'] = [
-			'dialog'   => $url . '/changeSort',
-			'icon'     => 'sort',
-			'text'     => I18n::translate('page.sort'),
-			'disabled' => $siblings->count() === 0 || $this->isDisabledDropdownOption('sort', $options, $permissions)
-		];
-
-		$result['changeTemplate'] = [
-			'dialog'   => $url . '/changeTemplate',
-			'icon'     => 'template',
-			'text'     => I18n::translate('page.changeTemplate'),
-			'disabled' => $this->isDisabledDropdownOption('changeTemplate', $options, $permissions)
-		];
-
-		$result[] = '-';
-
-		$result['move'] = [
-			'dialog'   => $url . '/move',
-			'icon'     => 'parent',
-			'text'     => I18n::translate('page.move'),
-			'disabled' => $this->isDisabledDropdownOption('move', $options, $permissions)
-		];
-
-		$result['duplicate'] = [
-			'dialog'   => $url . '/duplicate',
-			'icon'     => 'copy',
-			'text'     => I18n::translate('duplicate'),
-			'disabled' => $this->isDisabledDropdownOption('duplicate', $options, $permissions)
-		];
-
-		$result[] = '-';
-
-		$result['delete'] = [
-			'dialog'   => $url . '/delete',
-			'icon'     => 'trash',
-			'text'     => I18n::translate('delete'),
-			'disabled' => $this->isDisabledDropdownOption('delete', $options, $permissions)
-		];
-
-		return $result;
+		return (new PageSettingsDropdownController($this->model))->load();
 	}
 
 	/**

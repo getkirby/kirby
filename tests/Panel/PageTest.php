@@ -198,6 +198,11 @@ class PageTest extends TestCase
 		$this->assertSame('Links sind toll: /test', $panel->dragText());
 	}
 
+	public function testDropdown(): void
+	{
+		$this->assertCount(10, $this->panel()->dropdown());
+	}
+
 	public function testDropdownOption(): void
 	{
 		$page = new ModelPage([
