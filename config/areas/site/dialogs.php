@@ -470,27 +470,27 @@ return [
 
 	'page.fields' => [
 		...$fields['model'],
-		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
+		'pattern' => '(pages/[^/]+)/fields/(:any)/(:all?)',
 	],
 	'page.file.changeName' => [
 		...$files['changeName'],
-		'pattern' => '(pages/.*?)/files/(:any)/changeName',
+		'pattern' => '(pages/[^/]+)/files/(:any)/changeName',
 	],
 	'page.file.changeSort' => [
 		...$files['changeSort'],
-		'pattern' => '(pages/.*?)/files/(:any)/changeSort',
+		'pattern' => '(pages/[^/]+)/files/(:any)/changeSort',
 	],
 	'page.file.changeTemplate' => [
 		...$files['changeTemplate'],
-		'pattern' => '(pages/.*?)/files/(:any)/changeTemplate',
+		'pattern' => '(pages/[^/]+)/files/(:any)/changeTemplate',
 	],
 	'page.file.delete' => [
 		...$files['delete'],
-		'pattern' => '(pages/.*?)/files/(:any)/delete',
+		'pattern' => '(pages/[^/]+)/files/(:any)/delete',
 	],
 	'page.file.fields' => [
 		...$fields['file'],
-		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'pattern' => '(pages/[^/]+)/files/(:any)/fields/(:any)/(:all?)',
 	],
 
 	'page.move' => [

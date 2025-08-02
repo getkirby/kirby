@@ -19,11 +19,11 @@ return [
 		}
 	],
 	'user.file' => [
-		'pattern' => '(users/.*?)/files/(:any)',
+		'pattern' => '(users/[^/]+)/files/(:any)',
 		'options' => $files['file']
 	],
 	'user.file.languages' => [
-		'pattern' => '(users/.*?)/files/(:any)/languages',
+		'pattern' => '(users/[^/]+)/files/(:any)/languages',
 		'options' => $files['language']
 	]
 ];
