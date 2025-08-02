@@ -242,26 +242,11 @@ class Page extends Model
 	 */
 	public function props(): array
 	{
-		$props = parent::props();
-
-		// Additional model information
-		// @deprecated Use the top-level props instead
-		$model = [
-			'id'         => $props['id'],
-			'link'       => $props['link'],
-			'parent'     => $this->model->parentModel()->panel()->url(true),
-			'previewUrl' => $this->model->previewUrl(),
-			'status'     => $this->model->status(),
-			'title'      => $this->model->title()->toString(),
-			'uuid'       => $props['uuid'],
-		];
-
 		return [
-			...$props,
+			...parent::props(),
 			...$this->prevNext(),
-			'blueprint'  => $this->model->intendedTemplate()->name(),
-			'model'      => $model,
-			'title'      => $model['title'],
+			'blueprint' => $this->model->intendedTemplate()->name(),
+			'title'     => $this->model->title()->toString(),
 		];
 	}
 
@@ -273,8 +258,8 @@ class Page extends Model
 		return [
 			'breadcrumb' => $this->model->panel()->breadcrumb(),
 			'component'  => 'k-page-view',
-			'props'      => $props = $this->props(),
-			'title'      => $props['title'],
+			'props'      => $this->props(),
+			'title'      => $this->model->title()->toString()
 		];
 	}
 }

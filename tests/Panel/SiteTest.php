@@ -103,9 +103,7 @@ class SiteTest extends TestCase
 	{
 		$props = $this->panel()->props();
 
-		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('previewUrl', $props['model']);
-		$this->assertArrayHasKey('title', $props['model']);
+		$this->assertArrayHasKey('title', $props);
 
 		// inherited props
 		$this->assertArrayHasKey('blueprint', $props);
