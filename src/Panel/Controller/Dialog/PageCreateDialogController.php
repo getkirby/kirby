@@ -146,7 +146,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 	/**
 	 * @deprecated 6.0.0
 	 */
-	public static function fromQuery(): static
+	public static function factory(): static
 	{
 		$kirby   = App::instance();
 		$request = $kirby->request();

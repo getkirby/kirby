@@ -182,7 +182,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller->customFields();
 	}
 
-	public function testFromQuery(): void
+	public function testfactory(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -199,7 +199,7 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$controller = PageCreateDialogController::fromQuery();
+		$controller = PageCreateDialogController::factory();
 		$this->assertSame('test', $controller->parent->id());
 	}
 
@@ -568,7 +568,7 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$controller = PageCreateDialogController::fromQuery();
+		$controller = PageCreateDialogController::factory();
 		$response   = $controller->submit();
 
 		$this->assertSame('/pages/test', $response['redirect']);
@@ -591,7 +591,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.changeTitle.empty');
 
-		$controller = PageCreateDialogController::fromQuery();
+		$controller = PageCreateDialogController::factory();
 		$controller->submit();
 	}
 
@@ -615,7 +615,7 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$controller = PageCreateDialogController::fromQuery();
+		$controller = PageCreateDialogController::factory();
 		$response   = $controller->submit();
 
 		$this->assertSame('page.create', $response['event']);

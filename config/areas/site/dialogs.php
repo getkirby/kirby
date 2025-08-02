@@ -39,8 +39,7 @@ return [
 	 */
 	'page.create' => [
 		'pattern' => 'pages/create',
-		'load'    => fn () => PageCreateDialogController::fromQuery()->load(),
-		'submit'  => fn () => PageCreateDialogController::fromQuery()->submit(),
+		'action'  => PageCreateDialogController::class,
 	],
 	'page.delete' => [
 		'pattern' => 'pages/(:any)/delete',

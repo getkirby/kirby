@@ -267,7 +267,7 @@ return [
 		return [
 			'create' => [
 				'action' => fn () => new PageCreateDialogController(
-					parent: $this->parentModel(),
+					parent:  $this->parentModel(),
 					section: $this
 				),
 			]
