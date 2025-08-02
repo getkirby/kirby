@@ -49,29 +49,29 @@ return [
 	],
 
 	'user.fields' => [
-		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
+		'pattern' => '(users/[^/]+)/fields/(:any)/(:all?)',
 		'action'  => FieldDialogController::class
 	],
 
 	'user.file.changeName' => [
-		'pattern' => '(users/.*?)/files/(:any)/changeName',
+		'pattern' => '(users/[^/]+)/files/(:any)/changeName',
 		'action' => FileChangeNameDialogController::class
 	],
 	'user.file.changeSort' => [
-		'pattern' => '(users/.*?)/files/(:any)/changeSort',
+		'pattern' => '(users/[^/]+)/files/(:any)/changeSort',
 		'action' => FileChangeSortDialogController::class
 	],
 	'user.file.changeTemplate' => [
-		'pattern' => '(users/.*?)/files/(:any)/changeTemplate',
+		'pattern' => '(users/[^/]+)/files/(:any)/changeTemplate',
 		'action' => FileChangeTemplateDialogController::class
 	],
 	'user.file.delete' => [
-		'pattern' => '(users/.*?)/files/(:any)/delete',
+		'pattern' => '(users/[^/]+)/files/(:any)/delete',
 		'action' => FileDeleteDialogController::class
 	],
 
 	'user.file.fields' => [
-		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'pattern' => '(users/[^/]+)/files/(:any)/fields/(:any)/(:all?)',
 		'action'  => FieldDialogController::class
 	],
 ];

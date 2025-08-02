@@ -51,27 +51,27 @@ return [
 	],
 
 	'page.fields' => [
-		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
+		'pattern' => '(pages/[^/]+)/fields/(:any)/(:all?)',
 		'action'  => FieldDialogController::class
 	],
 	'page.file.changeName' => [
-		'pattern' => '(pages/.*?)/files/(:any)/changeName',
+		'pattern' => '(pages/[^/]+)/files/(:any)/changeName',
 		'action' => FileChangeNameDialogController::class
 	],
 	'page.file.changeSort' => [
-		'pattern' => '(pages/.*?)/files/(:any)/changeSort',
+		'pattern' => '(pages/[^/]+)/files/(:any)/changeSort',
 		'action' => FileChangeSortDialogController::class
 	],
 	'page.file.changeTemplate' => [
-		'pattern' => '(pages/.*?)/files/(:any)/changeTemplate',
+		'pattern' => '(pages/[^/]+)/files/(:any)/changeTemplate',
 		'action' => FileChangeTemplateDialogController::class
 	],
 	'page.file.delete' => [
-		'pattern' => '(pages/.*?)/files/(:any)/delete',
+		'pattern' => '(pages/[^/]+)/files/(:any)/delete',
 		'action' => FileDeleteDialogController::class
 	],
 	'page.file.fields' => [
-		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'pattern' => '(pages/[^/]+)/files/(:any)/fields/(:any)/(:all?)',
 		'action'  => FieldDialogController::class
 	],
 

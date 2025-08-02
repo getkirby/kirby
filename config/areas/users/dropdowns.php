@@ -10,15 +10,15 @@ return [
 		'options' => UserSettingsDropdownController::class
 	],
 	'user.languages' => [
-		'pattern' => '(users/.*?)/languages',
+		'pattern' => '(users/[^/]+)/languages',
 		'options' => LanguagesDropdownController::class
 	],
 	'user.file' => [
-		'pattern' => '(users/.*?)/files/(:any)',
+		'pattern' => '(users/[^/]+)/files/(:any)',
 		'options' => FileSettingsDropdownController::class
 	],
 	'user.file.languages' => [
-		'pattern' => '(users/.*?)/files/(:any)/languages',
+		'pattern' => '(users/[^/]+)/files/(:any)/languages',
 		'options' => LanguagesDropdownController::class
 	]
 ];

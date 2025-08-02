@@ -10,15 +10,15 @@ return [
 		'options' => PageSettingsDropdownController::class
 	],
 	'page.languages' => [
-		'pattern' => '(pages/.*?)/languages',
+		'pattern' => '(pages/[^/]+)/languages',
 		'options' => LanguagesDropdownController::class
 	],
 	'page.file' => [
-		'pattern' => '(pages/.*?)/files/(:any)',
+		'pattern' => '(pages/[^/]+)/files/(:any)',
 		'options' => FileSettingsDropdownController::class
 	],
 	'page.file.languages' => [
-		'pattern' => '(pages/.*?)/files/(:any)/languages',
+		'pattern' => '(pages/[^/]+)/files/(:any)/languages',
 		'options' => LanguagesDropdownController::class
 	],
 	'site.languages' => [
