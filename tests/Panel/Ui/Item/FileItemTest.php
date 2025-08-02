@@ -30,15 +30,16 @@ class FileItemTest extends TestCase
 		$item = new FileItem(file: $this->model);
 
 		$expected = [
-			'id'       => 'test.jpg',
 			'image'    => $this->model->panel()->image(),
 			'info'     => '',
+			'layout'   => 'list',
+			'text'     => 'test.jpg',
+			'id'       => 'test.jpg',
 			'link'     => '/site/files/test.jpg',
 			'permissions' => [
 				'delete'       => false,
 				'sort'         => false,
 			],
-			'text'      => 'test.jpg',
 			'uuid'      => $this->model->uuid()?->toString(),
 			'dragText'  => '(image: ' . $this->model->uuid() . ')',
 			'extension' => 'jpg',

@@ -209,7 +209,6 @@ class PagesFieldTest extends TestCase
 		$this->assertCount(4, $api['data']);
 		$this->assertSame('test', $api['data'][0]['id']);
 		$this->assertSame([
-			'id' => 'test',
 			'image' => [
 				'back' => 'pattern',
 				'color' => 'gray-500',
@@ -217,6 +216,9 @@ class PagesFieldTest extends TestCase
 				'icon' => 'page'
 			],
 			'info' => '',
+			'layout' => 'list',
+			'text' => 'Test Title',
+			'id' => 'test',
 			'link' => '/pages/test',
 			'permissions' => [
 				'changeSlug' => true,
@@ -225,7 +227,6 @@ class PagesFieldTest extends TestCase
 				'delete' => true,
 				'sort' => false,
 			],
-			'text' => 'Test Title',
 			'uuid' => 'page://my-test-uuid',
 			'dragText' => '(link: page://my-test-uuid text: Test Title)',
 			'parent' => null,
