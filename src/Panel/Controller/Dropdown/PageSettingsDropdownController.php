@@ -4,7 +4,6 @@ namespace Kirby\Panel\Controller\Dropdown;
 
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Toolkit\I18n;
 
 /**
  * @package   Kirby Panel
@@ -46,14 +45,14 @@ class PageSettingsDropdownController extends ModelSettingsDropdownController
 				'link'     => $this->model->previewUrl(),
 				'target'   => '_blank',
 				'icon'     => 'open',
-				'text'     => I18n::translate('open'),
+				'text'     => $this->i18n('open'),
 				'disabled' => $isPreviewDisabled = $this->isDisabledOption('preview')
 			];
 
 			$options['preview'] = [
 				'icon'     => 'window',
 				'link'     => $url . '/preview/compare',
-				'text'     => I18n::translate('preview'),
+				'text'     => $this->i18n('preview'),
 				'disabled' => $isPreviewDisabled
 			];
 
@@ -66,7 +65,7 @@ class PageSettingsDropdownController extends ModelSettingsDropdownController
 				'query' => ['select' => 'title']
 			],
 			'icon'     => 'title',
-			'text'     => I18n::translate('rename'),
+			'text'     => $this->i18n('rename'),
 			'disabled' => $this->isDisabledOption('changeTitle')
 		];
 
@@ -76,14 +75,14 @@ class PageSettingsDropdownController extends ModelSettingsDropdownController
 				'query' => ['select' => 'slug']
 			],
 			'icon'     => 'url',
-			'text'     => I18n::translate('page.changeSlug'),
+			'text'     => $this->i18n('page.changeSlug'),
 			'disabled' => $this->isDisabledOption('changeSlug')
 		];
 
 		$options['changeStatus'] = [
 			'dialog'   => $url . '/changeStatus',
 			'icon'     => 'preview',
-			'text'     => I18n::translate('page.changeStatus'),
+			'text'     => $this->i18n('page.changeStatus'),
 			'disabled' => $this->isDisabledOption('changeStatus')
 		];
 
@@ -92,14 +91,14 @@ class PageSettingsDropdownController extends ModelSettingsDropdownController
 		$options['changeSort'] = [
 			'dialog'   => $url . '/changeSort',
 			'icon'     => 'sort',
-			'text'     => I18n::translate('page.sort'),
+			'text'     => $this->i18n('page.sort'),
 			'disabled' => $siblings->count() === 0 || $this->isDisabledOption('sort')
 		];
 
 		$options['changeTemplate'] = [
 			'dialog'   => $url . '/changeTemplate',
 			'icon'     => 'template',
-			'text'     => I18n::translate('page.changeTemplate'),
+			'text'     => $this->i18n('page.changeTemplate'),
 			'disabled' => $this->isDisabledOption('changeTemplate')
 		];
 
@@ -108,14 +107,14 @@ class PageSettingsDropdownController extends ModelSettingsDropdownController
 		$options['move'] = [
 			'dialog'   => $url . '/move',
 			'icon'     => 'parent',
-			'text'     => I18n::translate('page.move'),
+			'text'     => $this->i18n('page.move'),
 			'disabled' => $this->isDisabledOption('move')
 		];
 
 		$options['duplicate'] = [
 			'dialog'   => $url . '/duplicate',
 			'icon'     => 'copy',
-			'text'     => I18n::translate('duplicate'),
+			'text'     => $this->i18n('duplicate'),
 			'disabled' => $this->isDisabledOption('duplicate')
 		];
 
@@ -124,7 +123,7 @@ class PageSettingsDropdownController extends ModelSettingsDropdownController
 		$options['delete'] = [
 			'dialog'   => $url . '/delete',
 			'icon'     => 'trash',
-			'text'     => I18n::translate('delete'),
+			'text'     => $this->i18n('delete'),
 			'disabled' => $this->isDisabledOption('delete')
 		];
 

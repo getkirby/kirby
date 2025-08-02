@@ -5,7 +5,6 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\Escape;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for deleting a file
@@ -23,7 +22,7 @@ class FileDeleteDialogController extends FileDialogController
 	public function load(): Dialog
 	{
 		return new RemoveDialog(
-			text: I18n::template('file.delete.confirm', [
+			text: $this->i18n('file.delete.confirm', [
 				'filename' => Escape::html($this->file->filename())
 			])
 		);

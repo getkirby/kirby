@@ -5,7 +5,6 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the role of a user
@@ -27,12 +26,12 @@ class UserChangeRoleDialogController extends UserDialogController
 				'role' => Field::role(
 					roles: $this->user->roles(),
 					props: [
-						'label'    => I18n::translate('user.changeRole.select'),
+						'label'    => $this->i18n('user.changeRole.select'),
 						'required' => true,
 					]
 				)
 			],
-			submitButton: I18n::translate('user.changeRole'),
+			submitButton: $this->i18n('user.changeRole'),
 			value: [
 				'role' => $this->user->role()->name()
 			]

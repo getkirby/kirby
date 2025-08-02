@@ -4,7 +4,6 @@ namespace Kirby\Panel\Controller\Dropdown;
 
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Toolkit\I18n;
 
 /**
  * @package   Kirby Panel
@@ -46,7 +45,7 @@ class FileSettingsDropdownController extends ModelSettingsDropdownController
 				'link'   => $this->model->previewUrl(),
 				'target' => '_blank',
 				'icon'   => 'open',
-				'text'   => I18n::translate('open')
+				'text'   => $this->i18n('open')
 			];
 			$options[] = '-';
 		}
@@ -54,7 +53,7 @@ class FileSettingsDropdownController extends ModelSettingsDropdownController
 		$options[] = [
 			'dialog'   => $url . '/changeName',
 			'icon'     => 'title',
-			'text'     => I18n::translate('rename'),
+			'text'     => $this->i18n('rename'),
 			'disabled' => $this->isDisabledOption('changeName')
 		];
 
@@ -62,7 +61,7 @@ class FileSettingsDropdownController extends ModelSettingsDropdownController
 			$options[] = [
 				'dialog'   => $url . '/changeSort',
 				'icon'     => 'sort',
-				'text'     => I18n::translate('file.sort'),
+				'text'     => $this->i18n('file.sort'),
 				'disabled' => $this->isDisabledOption('sort')
 			];
 		}
@@ -70,7 +69,7 @@ class FileSettingsDropdownController extends ModelSettingsDropdownController
 		$options[] = [
 			'dialog'   => $url . '/changeTemplate',
 			'icon'     => 'template',
-			'text'     => I18n::translate('file.changeTemplate'),
+			'text'     => $this->i18n('file.changeTemplate'),
 			'disabled' => $this->isDisabledOption('changeTemplate')
 		];
 
@@ -79,7 +78,7 @@ class FileSettingsDropdownController extends ModelSettingsDropdownController
 		$options[] = [
 			'click'    => 'replace',
 			'icon'     => 'upload',
-			'text'     => I18n::translate('replace'),
+			'text'     => $this->i18n('replace'),
 			'disabled' => $this->isDisabledOption('replace')
 		];
 
@@ -87,7 +86,7 @@ class FileSettingsDropdownController extends ModelSettingsDropdownController
 		$options[] = [
 			'dialog'   => $url . '/delete',
 			'icon'     => 'trash',
-			'text'     => I18n::translate('delete'),
+			'text'     => $this->i18n('delete'),
 			'disabled' => $this->isDisabledOption('delete')
 		];
 

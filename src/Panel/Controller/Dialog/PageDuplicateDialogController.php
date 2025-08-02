@@ -6,7 +6,6 @@ use Kirby\Cms\Url;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for duplicating a page
@@ -36,7 +35,7 @@ class PageDuplicateDialogController extends PageDialogController
 				'required' => true,
 				'path'     => $this->path(),
 				'wizard'   => [
-					'text'  => I18n::translate('page.changeSlug.fromTitle'),
+					'text'  => $this->i18n('page.changeSlug.fromTitle'),
 					'field' => 'title'
 				]
 			])
@@ -44,7 +43,7 @@ class PageDuplicateDialogController extends PageDialogController
 
 		if ($this->page->hasFiles() === true) {
 			$fields['files'] = [
-				'label' => I18n::translate('page.duplicate.files'),
+				'label' => $this->i18n('page.duplicate.files'),
 				'type'  => 'toggle',
 				'width' => $width
 			];
@@ -52,7 +51,7 @@ class PageDuplicateDialogController extends PageDialogController
 
 		if ($this->page->hasChildren() === true) {
 			$fields['children'] = [
-				'label' => I18n::translate('page.duplicate.pages'),
+				'label' => $this->i18n('page.duplicate.pages'),
 				'type'  => 'toggle',
 				'width' => $width
 			];
@@ -65,7 +64,7 @@ class PageDuplicateDialogController extends PageDialogController
 	{
 		return new FormDialog(
 			fields: $this->fields(),
-			submitButton: I18n::translate('duplicate'),
+			submitButton: $this->i18n('duplicate'),
 			value: [
 				'children' => false,
 				'files'    => false,
@@ -91,7 +90,7 @@ class PageDuplicateDialogController extends PageDialogController
 
 	protected function slugAppendix(): string
 	{
-		return Url::slug(I18n::translate('page.duplicate.appendix'));
+		return Url::slug($this->i18n('page.duplicate.appendix'));
 	}
 
 	public function submit(): array
@@ -129,7 +128,7 @@ class PageDuplicateDialogController extends PageDialogController
 
 	public function title(): string
 	{
-		$appendix = I18n::translate('page.duplicate.appendix');
+		$appendix = $this->i18n('page.duplicate.appendix');
 		$title    = $this->page->title() . ' ' . $appendix;
 
 		if ($count = $this->suffixCount()) {

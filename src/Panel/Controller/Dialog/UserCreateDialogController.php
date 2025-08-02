@@ -6,7 +6,6 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the email of a user
@@ -51,7 +50,7 @@ class UserCreateDialogController extends DialogController
 				]),
 				'role' => $roles
 			],
-			submitButton: I18n::translate('create'),
+			submitButton: $this->i18n('create'),
 			value: [
 				'name'        => '',
 				'email'       => '',

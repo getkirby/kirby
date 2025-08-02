@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller;
 use Kirby\Cms\App;
 use Kirby\Cms\Site;
 use Kirby\Http\Request;
+use Kirby\Toolkit\I18n;
 
 /**
  * @package   Kirby Panel
@@ -28,6 +29,22 @@ abstract class Controller
 		$this->kirby   = App::instance();
 		$this->request = $this->kirby->request();
 		$this->site    = $this->kirby->site();
+	}
+
+	protected function i18n(
+		string|array|null $key,
+		array|null $data = null
+	): string|null {
+
+		if ($key === null) {
+			return null;
+		}
+
+		if ($data === null) {
+			return I18n::translate($key, $key);
+		}
+
+		return I18n::template($key, $data);
 	}
 
 	abstract public function load(): mixed;

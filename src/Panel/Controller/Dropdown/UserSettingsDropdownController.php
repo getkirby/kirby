@@ -4,7 +4,6 @@ namespace Kirby\Panel\Controller\Dropdown;
 
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Toolkit\I18n;
 
 /**
  * @package   Kirby Panel
@@ -45,7 +44,7 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 		$options[] = [
 			'dialog'   => $url . '/changeName',
 			'icon'     => 'title',
-			'text'     => I18n::translate($i18nPrefix . '.changeName'),
+			'text'     => $this->i18n($i18nPrefix . '.changeName'),
 			'disabled' => $this->isDisabledOption('changeName')
 		];
 
@@ -54,21 +53,21 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 		$options[] = [
 			'dialog'   => $url . '/changeEmail',
 			'icon'     => 'email',
-			'text'     => I18n::translate('user.changeEmail'),
+			'text'     => $this->i18n('user.changeEmail'),
 			'disabled' => $this->isDisabledOption('changeEmail')
 		];
 
 		$options[] = [
 			'dialog'   => $url . '/changeRole',
 			'icon'     => 'bolt',
-			'text'     => I18n::translate('user.changeRole'),
+			'text'     => $this->i18n('user.changeRole'),
 			'disabled' => $this->isDisabledOption('changeRole') || $this->model->roles()->count() < 2
 		];
 
 		$options[] = [
 			'dialog'   => $url . '/changeLanguage',
 			'icon'     => 'translate',
-			'text'     => I18n::translate('user.changeLanguage'),
+			'text'     => $this->i18n('user.changeLanguage'),
 			'disabled' => $this->isDisabledOption('changeLanguage')
 		];
 
@@ -77,7 +76,7 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 		$options[] = [
 			'dialog'   => $url . '/changePassword',
 			'icon'     => 'key',
-			'text'     => I18n::translate('user.changePassword'),
+			'text'     => $this->i18n('user.changePassword'),
 			'disabled' => $this->isDisabledOption('changePassword')
 		];
 
@@ -85,7 +84,7 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 			$options[] = [
 				'dialog'   => $url . '/totp/enable',
 				'icon'     => 'qr-code',
-				'text'     => I18n::translate('login.totp.enable.option')
+				'text'     => $this->i18n('login.totp.enable.option')
 			];
 		}
 
@@ -93,7 +92,7 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 			$options[] = [
 				'dialog'   => $url . '/totp/disable',
 				'icon'     => 'qr-code',
-				'text'     => I18n::translate('login.totp.disable.option')
+				'text'     => $this->i18n('login.totp.disable.option')
 			];
 		}
 
@@ -102,7 +101,7 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 		$options[] = [
 			'dialog'   => $url . '/delete',
 			'icon'     => 'trash',
-			'text'     => I18n::translate($i18nPrefix . '.delete'),
+			'text'     => $this->i18n($i18nPrefix . '.delete'),
 			'disabled' => $this->isDisabledOption('delete')
 		];
 

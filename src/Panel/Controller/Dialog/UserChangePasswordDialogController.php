@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the password of a user
@@ -28,19 +27,19 @@ class UserChangePasswordDialogController extends UserDialogController
 		return new FormDialog(
 			fields: [
 				'currentPassword' => Field::password([
-					'label'        => I18n::translate('user.changePassword.current'),
+					'label'        => $this->i18n('user.changePassword.current'),
 					'autocomplete' => 'current-password'
 				]),
 				'password' => Field::password([
-					'label'        => I18n::translate('user.changePassword.new'),
+					'label'        => $this->i18n('user.changePassword.new'),
 					'autocomplete' => 'new-password'
 				]),
 				'passwordConfirmation' => Field::password([
-					'label'        => I18n::translate('user.changePassword.new.confirm'),
+					'label'        => $this->i18n('user.changePassword.new.confirm'),
 					'autocomplete' => 'new-password'
 				])
 			],
-			submitButton: I18n::translate('change')
+			submitButton: $this->i18n('change')
 		);
 	}
 

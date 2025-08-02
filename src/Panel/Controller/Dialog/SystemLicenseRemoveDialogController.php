@@ -5,7 +5,6 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Dialog to remove the site's license
@@ -23,11 +22,11 @@ class SystemLicenseRemoveDialogController extends DialogController
 	public function load(): Dialog
 	{
 		return new RemoveDialog(
-			text: I18n::translate('license.remove.text'),
+			text: $this->i18n('license.remove.text'),
 			size: 'medium',
 			submitButton: [
 				'icon'  => 'trash',
-				'text'  => I18n::translate('remove'),
+				'text'  => $this->i18n('remove'),
 				'theme' => 'negative',
 			]
 		);

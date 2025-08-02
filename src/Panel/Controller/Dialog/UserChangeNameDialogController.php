@@ -5,7 +5,6 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the name of a user
@@ -28,7 +27,7 @@ class UserChangeNameDialogController extends UserDialogController
 					'preselect' => true
 				])
 			],
-			submitButton: I18n::translate('rename'),
+			submitButton: $this->i18n('rename'),
 			value: [
 				'name' => $this->user->name()->value()
 			]

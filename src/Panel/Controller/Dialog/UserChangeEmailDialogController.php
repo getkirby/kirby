@@ -4,7 +4,6 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the email of a user
@@ -24,13 +23,13 @@ class UserChangeEmailDialogController extends UserDialogController
 		return new FormDialog(
 			fields: [
 				'email' => [
-					'label'     => I18n::translate('email'),
+					'label'     => $this->i18n('email'),
 					'required'  => true,
 					'type'      => 'email',
 					'preselect' => true
 				]
 			],
-			submitButton: I18n::translate('change'),
+			submitButton: $this->i18n('change'),
 			value: [
 				'email' => $this->user->email()
 			]

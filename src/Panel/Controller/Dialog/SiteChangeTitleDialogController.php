@@ -6,7 +6,6 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog to change the title of the site
@@ -30,7 +29,7 @@ class SiteChangeTitleDialogController extends DialogController
 					'preselect' => true
 				])
 			],
-			submitButton: I18n::translate('rename'),
+			submitButton: $this->i18n('rename'),
 			value: [
 				'title' => $this->site->title()->value(),
 			]

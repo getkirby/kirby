@@ -5,7 +5,6 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the language of a user
@@ -26,7 +25,7 @@ class UserChangeLanguageDialogController extends UserDialogController
 			fields: [
 				'translation' => Field::translation(['required' => true])
 			],
-			submitButton: I18n::translate('change'),
+			submitButton: $this->i18n('change'),
 			value: [
 				'translation' => $this->user->language()
 			]

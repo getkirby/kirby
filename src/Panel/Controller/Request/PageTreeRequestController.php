@@ -6,7 +6,6 @@ use Kirby\Cms\Find;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Panel\Controller\RequestController;
-use Kirby\Toolkit\I18n;
 
 /**
  * Returns children for the parent as entries
@@ -60,7 +59,7 @@ class PageTreeRequestController extends RequestController
 			'id'          => $id,
 			'open'        => false,
 			'label'       => match (true) {
-				$entry instanceof Site => I18n::translate('view.site'),
+				$entry instanceof Site => $this->i18n('view.site'),
 				default                => $entry->title()->value()
 			},
 			'url'         => $url,

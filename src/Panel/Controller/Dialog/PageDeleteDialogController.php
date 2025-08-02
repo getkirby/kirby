@@ -7,7 +7,6 @@ use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\Escape;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for deleting a page
@@ -24,7 +23,7 @@ class PageDeleteDialogController extends PageDialogController
 {
 	public function load(): Dialog
 	{
-		$text = I18n::template('page.delete.confirm', [
+		$text = $this->i18n('page.delete.confirm', [
 			'title' => Escape::html($this->page->title()->value())
 		]);
 
@@ -37,17 +36,17 @@ class PageDeleteDialogController extends PageDialogController
 				'info' => [
 					'type'  => 'info',
 					'theme' => 'negative',
-					'text'  => I18n::translate('page.delete.confirm.subpages')
+					'text'  => $this->i18n('page.delete.confirm.subpages')
 				],
 				'check' => [
-					'label'   => I18n::translate('page.delete.confirm.title'),
+					'label'   => $this->i18n('page.delete.confirm.title'),
 					'type'    => 'text',
 					'counter' => false
 				]
 			],
 			size: 'medium',
 			submitButton: [
-				'text'  => I18n::translate('delete'),
+				'text'  => $this->i18n('delete'),
 				'theme' => 'negative'
 			],
 			text: $text

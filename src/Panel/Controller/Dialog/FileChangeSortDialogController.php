@@ -5,7 +5,6 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the sorting number of a file
@@ -26,7 +25,7 @@ class FileChangeSortDialogController extends FileDialogController
 			fields: [
 				'position' => Field::filePosition($this->file)
 			],
-			submitButton: I18n::translate('change'),
+			submitButton: $this->i18n('change'),
 			value: [
 				'position' => $this->file->sort()->isEmpty() ?
 					$this->file->siblings(false)->count() + 1 :
