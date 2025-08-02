@@ -159,13 +159,14 @@ class PageCreateDialogController extends DialogController
 	 */
 	public function customFields(): array
 	{
-		$custom    = [];
-		$ignore    = ['title', 'slug', 'parent', 'template', 'uuid'];
-		$blueprint = $this->blueprint();
-		$fields    = $blueprint->fields();
+		$custom = [];
+		$fields = $this->blueprint()->fields();
+		$ignore = [...array_keys($this->coreFields()), 'title', 'slug'];
 
-		foreach ($blueprint->create()['fields'] ?? [] as $name) {
-			if (!$field = ($fields[$name] ?? null)) {
+		foreach ($this->blueprint()->create()['fields'] ?? [] as $name) {
+			$field = $fields[$name] ?? null;
+
+			if ($field === null) {
 				throw new InvalidArgumentException(
 					message: 'Unknown field  "' . $name . '" in create dialog'
 				);
