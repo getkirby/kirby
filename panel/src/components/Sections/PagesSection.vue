@@ -62,12 +62,12 @@ export default {
 	methods: {
 		onAdd() {
 			if (this.canAdd) {
-				this.$dialog("pages/create", {
-					query: {
-						view: this.parent,
-						section: this.name
-					}
-				});
+				this.$panel.dialog.open(
+					(this.options.link ?? this.parent) +
+						"/sections/" +
+						this.name +
+						"/create"
+				);
 			}
 		},
 		async onChange(event) {

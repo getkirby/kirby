@@ -139,13 +139,14 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 		return [
 			...$fields,
-			'section'  => Field::hidden(),
 			'template' => Field::hidden(),
-			'view'     => Field::hidden(),
 		];
 	}
 
-	public static function factory(): static
+	/**
+	 * @deprecated 6.0.0
+	 */
+	public static function fromQuery(): static
 	{
 		$kirby   = App::instance();
 		$request = $kirby->request();
@@ -160,7 +161,6 @@ class PageCreateDialogController extends ModelCreateDialogController
 			section: $section
 		);
 	}
-
 	/**
 	 * Provides all the props for the
 	 * dialog, including the fields and
@@ -328,12 +328,10 @@ class PageCreateDialogController extends ModelCreateDialogController
 	{
 		return [
 			...parent::value(),
-			'section'  => $this->section?->name(),
 			'slug'     => $this->request->get('slug', ''),
 			'template' => $this->template(),
 			'title'    => $this->request->get('title', ''),
 			'uuid'     => $this->model()->uuid()->toString(),
-			'view'     => $this->section?->parent()->panel()->path(),
 		];
 	}
 }

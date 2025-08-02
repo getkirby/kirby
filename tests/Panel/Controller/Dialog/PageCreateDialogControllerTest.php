@@ -26,7 +26,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
-		$this->assertCount(6, $fields);
+		$this->assertCount(4, $fields);
 		$this->assertSame('Title', $fields['title']['label']);
 		$this->assertSame('/', $fields['slug']['path']);
 		$this->assertTrue($fields['uuid']['hidden']);
@@ -48,7 +48,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
-		$this->assertCount(5, $fields);
+		$this->assertCount(3, $fields);
 		$this->assertSame('Title', $fields['title']['label']);
 		$this->assertSame('/', $fields['slug']['path']);
 	}
@@ -182,7 +182,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller->customFields();
 	}
 
-	public function testFactory(): void
+	public function testFromQuery(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -199,7 +199,7 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$controller = PageCreateDialogController::factory();
+		$controller = PageCreateDialogController::fromQuery();
 		$this->assertSame('test', $controller->parent->id());
 	}
 
@@ -568,7 +568,7 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$controller = PageCreateDialogController::factory();
+		$controller = PageCreateDialogController::fromQuery();
 		$response   = $controller->submit();
 
 		$this->assertSame('/pages/test', $response['redirect']);
@@ -591,7 +591,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.changeTitle.empty');
 
-		$controller = PageCreateDialogController::factory();
+		$controller = PageCreateDialogController::fromQuery();
 		$controller->submit();
 	}
 
@@ -615,7 +615,7 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$controller = PageCreateDialogController::factory();
+		$controller = PageCreateDialogController::fromQuery();
 		$response   = $controller->submit();
 
 		$this->assertSame('page.create', $response['event']);
@@ -744,12 +744,10 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller = new PageCreateDialogController();
 		$value      = $controller->value();
 
-		$this->assertNull($value['section']);
 		$this->assertSame('', $value['slug']);
 		$this->assertSame('test', $value['template']);
 		$this->assertSame('', $value['title']);
 		$this->assertNotNull($value['uuid']);
-		$this->assertNull($value['view']);
 		$this->assertSame('bar', $value['foo']);
 	}
 }

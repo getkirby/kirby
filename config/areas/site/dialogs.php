@@ -34,9 +34,13 @@ return [
 		'pattern' => 'pages/(:any)/changeTitle',
 		'action' => PageChangeTitleDialogController::class
 	],
+	/**
+	 * @deprecated 6.0.0 Use section dialog route instead
+	 */
 	'page.create' => [
 		'pattern' => 'pages/create',
-		'action'  => PageCreateDialogController::class
+		'load'    => fn () => PageCreateDialogController::fromQuery()->load(),
+		'submit'  => fn () => PageCreateDialogController::fromQuery()->submit(),
 	],
 	'page.delete' => [
 		'pattern' => 'pages/(:any)/delete',
