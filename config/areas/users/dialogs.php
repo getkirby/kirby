@@ -318,32 +318,32 @@ return [
 
 	'user.fields' => [
 		...$fields['model'],
-		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
+		'pattern' => '(users/[^/]+)/fields/(:any)/(:all?)',
 	],
 
 	'user.file.changeName' => [
 		...$files['changeName'],
-		'pattern' => '(users/.*?)/files/(:any)/changeName',
+		'pattern' => '(users/[^/]+)/files/(:any)/changeName',
 	],
 
 	'user.file.changeSort' => [
 		...$files['changeSort'],
-		'pattern' => '(users/.*?)/files/(:any)/changeSort',
+		'pattern' => '(users/[^/]+)/files/(:any)/changeSort',
 	],
 
 	'user.file.changeTemplate' => [
 		...$files['changeTemplate'],
-		'pattern' => '(users/.*?)/files/(:any)/changeTemplate',
+		'pattern' => '(users/[^/]+)/files/(:any)/changeTemplate',
 	],
 
 	'user.file.delete' => [
 		...$files['delete'],
-		'pattern' => '(users/.*?)/files/(:any)/delete',
+		'pattern' => '(users/[^/]+)/files/(:any)/delete',
 	],
 
 	'user.file.fields' => [
 		...$fields['file'],
-		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'pattern' => '(users/[^/]+)/files/(:any)/fields/(:any)/(:all?)',
 	],
 
 	'user.totp.disable' => [
