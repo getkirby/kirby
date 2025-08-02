@@ -350,8 +350,8 @@ class State
 
 		$view = array_replace_recursive(
 			$defaults,
-			$this->area?->view() ?? [],
-			$this->view
+			array_filter($this->area?->view() ?? [], fn ($x) => $x !== null),
+			array_filter($this->view, fn ($x) => $x !== null)
 		);
 
 		// make sure that views and dialogs are gone
