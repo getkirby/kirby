@@ -218,11 +218,21 @@ class PagesFieldTest extends TestCase
 			],
 			'info' => '',
 			'link' => '/pages/test',
-			'sortable' => true,
+			'permissions' => [
+				'changeSlug' => true,
+				'changeStatus' => true,
+				'changeTitle' => true,
+				'delete' => true,
+				'sort' => false,
+			],
 			'text' => 'Test Title',
 			'uuid' => 'page://my-test-uuid',
 			'dragText' => '(link: page://my-test-uuid text: Test Title)',
+			'parent' => null,
+			'status' => 'unlisted',
+			'template' => 'default',
 			'hasChildren' => false,
+			'sortable' => true,
 			'url' => '/test',
 		], $api['data'][0]);
 		$this->assertSame('a', $api['data'][1]['id']);

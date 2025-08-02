@@ -24,15 +24,15 @@ class UserItem extends ModelItem
 		User $user,
 		string|array|false|null $image = [],
 		string|null $info = '{{ user.role.title }}',
-		string $layout = 'list',
-		string $text = '{{ user.username }}',
+		string|null $layout = null,
+		string|null $text = null,
 	) {
 		parent::__construct(
 			model: $user,
 			image: $image,
 			info: $info,
 			layout: $layout,
-			text: $text,
+			text: $text ?? '{{ user.username }}',
 		);
 	}
 

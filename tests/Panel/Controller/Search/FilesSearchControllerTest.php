@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Controller\Search;
 
 use Kirby\Cms\App;
+use Kirby\Panel\Ui\Item\FileItem;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -54,6 +55,13 @@ class FilesSearchControllerTest extends TestCase
 	{
 		$this->tearDownTmp();
 		App::destroy();
+	}
+
+	public function testItem(): void
+	{
+		$controller = new FilesSearchController(query:'fish');
+		$item       = $controller->item($controller->models()->first());
+		$this->assertInstanceOf(FileItem::class, $item);
 	}
 
 	public function testLoad(): void
@@ -166,27 +174,5 @@ class FilesSearchControllerTest extends TestCase
 			'blue-fish.jpg',
 			'red-fish.jpg'
 		], $models->values(fn ($model) => $model->filename()));
-	}
-
-	public function testResult(): void
-	{
-		$controller = new FilesSearchController(query:'fish');
-		$result     = $controller->result($controller->models()->first());
-
-		$image = [
-			'back'  => 'pattern',
-			'color' => 'orange-500',
-			'cover' => false,
-			'icon'  => 'image'
-		];
-
-		$this->assertSame($image['back'], $result['image']['back']);
-		$this->assertSame($image['color'], $result['image']['color']);
-		$this->assertSame($image['cover'], $result['image']['cover']);
-		$this->assertSame($image['icon'], $result['image']['icon']);
-		$this->assertSame('red-fish.jpg', $result['text']);
-		$this->assertSame('articles/red-fish.jpg', $result['info']);
-		$this->assertArrayHasKey('link', $result);
-		$this->assertArrayHasKey('uuid', $result);
 	}
 }
