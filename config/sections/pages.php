@@ -266,7 +266,7 @@ return [
 	'dialogs' => function () {
 		return [
 			'create' => [
-				'action' => new PageCreateDialogController(
+				'action' => fn () => new PageCreateDialogController(
 					parent: $this->parentModel(),
 					section: $this
 				),
