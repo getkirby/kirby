@@ -8,6 +8,7 @@ use Kirby\Cms\Find;
 use Kirby\Cms\Page;
 use Kirby\Cms\PageBlueprint;
 use Kirby\Cms\PageRules;
+use Kirby\Cms\Section;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Content\MemoryStorage;
@@ -34,11 +35,6 @@ use Kirby\Uuid\Uuids;
  */
 class PageCreateDialogController extends DialogController
 {
-	public PageBlueprint $blueprint;
-	public Page $model;
-	public Page|Site $parent;
-	public Page|Site|User|File $view;
-
 	public static array $fieldTypes = [
 		'checkboxes',
 		'date',
@@ -62,21 +58,18 @@ class PageCreateDialogController extends DialogController
 		'url'
 	];
 
-	public function __construct(
-		public string $parentId = 'site',
-		public string|null $template = null,
-		public string|null $sectionId = null,
-		public string|null $viewId = null,
+	public PageBlueprint $blueprint;
+	public array $blueprints;
+	public Page $model;
+	public Page|Site $parent;
 
-		// optional
-		public string|null $slug = null,
-		public string|null $title = null,
-		public string|null $uuid = null
+	public function __construct(
+		Page|Site|null $parent = null,
+		public Section|null $section = null
 	) {
 		parent::__construct();
 
-		$this->parent = Find::parent($this->parentId);
-		$this->view   = Find::parent($this->viewId ?? $this->parentId);
+		$this->parent = $parent ?? $this->site;
 	}
 
 	/**
@@ -93,8 +86,10 @@ class PageCreateDialogController extends DialogController
 	 */
 	public function blueprints(): array
 	{
-		return A::map(
-			$this->view->blueprints($this->sectionId),
+		$model = $this->section?->parent() ?? $this->parent;
+
+		return $this->blueprints ??= A::map(
+			$model->blueprints($this->section?->name()),
 			function ($blueprint) {
 				$blueprint['name'] ??= $blueprint['value'] ?? null;
 				return $blueprint;
@@ -147,7 +142,6 @@ class PageCreateDialogController extends DialogController
 
 		return [
 			...$fields,
-			'parent'   => Field::hidden(),
 			'section'  => Field::hidden(),
 			'template' => Field::hidden(),
 			'view'     => Field::hidden(),
@@ -202,15 +196,17 @@ class PageCreateDialogController extends DialogController
 
 	public static function factory(): static
 	{
-		$request = App::instance()->request();
+		$kirby   = App::instance();
+		$request = $kirby->request();
+		$view    = $request->get('view');
+		$view    = $view ? Find::parent($view) : $kirby->site();
+		$section = $request->get('section');
+		$section = $section ? $view->blueprint()->section($section) : null;
+		$parent  = $section ? Find::parent($section->link()) : $view;
+
 		return new static(
-			parentId: $request->get('parent', 'site'),
-			sectionId: $request->get('section'),
-			slug: $request->get('slug'),
-			template: $request->get('template'),
-			title: $request->get('title'),
-			uuid: $request->get('uuid'),
-			viewId: $request->get('view'),
+			parent: $parent,
+			section: $section
 		);
 	}
 
@@ -233,8 +229,6 @@ class PageCreateDialogController extends DialogController
 	public function load(): Dialog
 	{
 		$blueprints = $this->blueprints();
-
-		$this->template ??= $blueprints[0]['name'];
 
 		$status   = $this->blueprint()->create()['status'] ?? 'draft';
 		$status   = $this->blueprint()->status()[$status]['label'] ?? null;
@@ -259,7 +253,7 @@ class PageCreateDialogController extends DialogController
 			blueprints: $blueprints,
 			fields: $fields,
 			submitButton: $this->i18n('page.create', ['status' => $status]),
-			template: $this->template,
+			template: $this->template(),
 			value: $this->value()
 		);
 	}
@@ -277,8 +271,8 @@ class PageCreateDialogController extends DialogController
 
 		$props = [
 			'slug'     => '__new__',
-			'template' => $this->template,
-			'model'    => $this->template,
+			'template' => $this->template(),
+			'model'    => $this->template(),
 			'parent'   => $this->parent instanceof Page ? $this->parent : null
 		];
 
@@ -286,7 +280,7 @@ class PageCreateDialogController extends DialogController
 		// and added to content right away
 		if (Uuids::enabled() === true) {
 			$props['content'] = [
-				'uuid' => $this->uuid = Uuid::generate()
+				'uuid' => $this->request->get('uuid', Uuid::generate())
 			];
 		}
 
@@ -329,9 +323,8 @@ class PageCreateDialogController extends DialogController
 	 */
 	public function sanitize(array $input): array
 	{
-		$input['title'] ??= $this->title ?? '';
-		$input['slug']  ??= $this->slug  ?? '';
-		$input['uuid']  ??= $this->uuid  ?? null;
+		$input['title'] ??= '';
+		$input['slug']  ??= '';
 
 		$input   = $this->resolveFieldTemplates($input);
 		$content = ['title' => trim($input['title'])];
@@ -351,7 +344,7 @@ class PageCreateDialogController extends DialogController
 		return [
 			'content'  => $form->strings(true),
 			'slug'     => $input['slug'],
-			'template' => $this->template,
+			'template' => $this->template()
 		];
 	}
 
@@ -390,6 +383,11 @@ class PageCreateDialogController extends DialogController
 		return $payload;
 	}
 
+	public function template(): string
+	{
+		return $this->request->get('template', $this->blueprints()[0]['name']);
+	}
+
 	public function validate(array $input, string $status = 'draft'): bool
 	{
 		// basic validation
@@ -415,13 +413,12 @@ class PageCreateDialogController extends DialogController
 	public function value(): array
 	{
 		$value = [
-			'parent'   => $this->parentId,
-			'section'  => $this->sectionId,
-			'slug'     => $this->slug ?? '',
-			'template' => $this->template,
-			'title'    => $this->title ?? '',
-			'uuid'     => $this->uuid,
-			'view'     => $this->viewId,
+			'section'  => $this->section?->name(),
+			'slug'     => $this->request->get('slug', ''),
+			'template' => $this->template(),
+			'title'    => $this->request->get('title', ''),
+			'uuid'     => $this->model()->uuid()->toString(),
+			'view'     => $this->section?->parent()->panel()->path(),
 		];
 
 		// add default values for custom fields

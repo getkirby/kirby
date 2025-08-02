@@ -14,10 +14,18 @@ class PageCreateDialogControllerTest extends TestCase
 {
 	public function testCoreFields(): void
 	{
-		$controller = new PageCreateDialogController(template: 'test');
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
-		$this->assertCount(7, $fields);
+		$this->assertCount(6, $fields);
 		$this->assertSame('Title', $fields['title']['label']);
 		$this->assertSame('/', $fields['slug']['path']);
 		$this->assertTrue($fields['uuid']['hidden']);
@@ -28,13 +36,18 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->app = $this->app->clone([
 			'options' => [
 				'content.uuid' => false
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
 			]
 		]);
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
-		$this->assertCount(6, $fields);
+		$this->assertCount(5, $fields);
 		$this->assertSame('Title', $fields['title']['label']);
 		$this->assertSame('/', $fields['slug']['path']);
 	}
@@ -49,10 +62,15 @@ class PageCreateDialogControllerTest extends TestCase
 						'slug'  => 'a-simple-slug'
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
 			]
 		]);
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$fields     = $controller->coreFields();
 
 		$this->assertArrayNotHasKey('title', $fields);
@@ -68,10 +86,15 @@ class PageCreateDialogControllerTest extends TestCase
 						'title' => false
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
 			]
 		]);
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Page create dialog: title and slug must not be false');
@@ -168,7 +191,7 @@ class PageCreateDialogControllerTest extends TestCase
 			],
 			'request' => [
 				'query' => [
-					'parent' => 'pages/test'
+					'view' => 'pages/test'
 				]
 			]
 		]);
@@ -189,34 +212,15 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->assertSame('Title', $props['fields']['title']['label']);
 		$this->assertSame('URL appendix', $props['fields']['slug']['label']);
 		$this->assertSame('title', $props['fields']['slug']['sync']);
-		$this->assertTrue($props['fields']['parent']['hidden']);
 
 		// there's only the default template for now
 		$this->assertTrue($props['fields']['template']['hidden']);
 
 		$this->assertSame('Create as Draft', $props['submitButton']);
 
-		$this->assertSame('site', $props['value']['parent']);
 		$this->assertSame('', $props['value']['slug']);
 		$this->assertSame('default', $props['value']['template']);
 		$this->assertSame('', $props['value']['title']);
-	}
-
-	public function testLoadWithParent(): void
-	{
-		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$controller = new PageCreateDialogController(parentId: 'pages/test');
-		$props      = $controller->load()->props();
-		$this->assertSame('pages/test', $props['value']['parent']);
 	}
 
 	public function testLoadWithMultipleBlueprints(): void
@@ -340,10 +344,15 @@ class PageCreateDialogControllerTest extends TestCase
 						]
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
 			]
 		]);
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$model      = $controller->model();
 
 		$this->assertInstanceOf(Page::class, $model);
@@ -374,10 +383,15 @@ class PageCreateDialogControllerTest extends TestCase
 						]
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
 			]
 		]);
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$model      = $controller->model();
 
 		$this->assertInstanceOf(Page::class, $model);
@@ -395,10 +409,15 @@ class PageCreateDialogControllerTest extends TestCase
 						'slug'  => 'page-{{ page.bar }}'
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
 			]
 		]);
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$input      = $controller->resolveFieldTemplates([
 			'foo' => 'Foo',
 			'bar' => 'foo',
@@ -435,10 +454,15 @@ class PageCreateDialogControllerTest extends TestCase
 						]
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
 			]
 		]);
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$input      = $controller->sanitize([
 			'slug'  => 'foo',
 			'title' => 'Foo',
@@ -500,14 +524,18 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$this->assertNull($this->app->page('test/test-child'));
+		$page = $this->app->page('test/test-child');
+		$this->assertNull($page);
 
-		$controller = new PageCreateDialogController(parentId: 'pages/test');
+		$parent = $this->app->page('test');
+		$controller = new PageCreateDialogController(parent: $parent);
 		$response   = $controller->submit();
 
 		$this->assertSame('page.create', $response['event']);
-		$this->assertSame('test-child', $this->app->page('test/test-child')->slug());
-		$this->assertSame('Test', $this->app->page('test/test-child')->title()->value());
+
+		$page = $this->app->page('test/test-child');
+		$this->assertSame('test-child', $page->slug());
+		$this->assertSame('Test', $page->title()->value());
 	}
 
 	public function testSubmitWithCustomField(): void
@@ -595,19 +623,34 @@ class PageCreateDialogControllerTest extends TestCase
 
 	public function testValidateInvalidTitle(): void
 	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.changeTitle.empty');
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$controller->validate(['content' => ['title' => '']]);
 	}
 
 	public function testValidateInvalidSlug(): void
 	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.slug.invalid');
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$controller->validate([
 			'slug'    => '',
 			'content' => ['title' => 'Foo']
@@ -629,10 +672,15 @@ class PageCreateDialogControllerTest extends TestCase
 						]
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
 			]
 		]);
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$controller->validate([
 			'slug'    => 'foo',
 			'content' => ['title' => 'Foo']
@@ -651,10 +699,15 @@ class PageCreateDialogControllerTest extends TestCase
 						]
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
 			]
 		]);
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$valid      = $controller->validate([
 			'slug'    => 'foo',
 			'content' => ['title' => 'Foo', 'foo' => 'bar']
@@ -679,21 +732,23 @@ class PageCreateDialogControllerTest extends TestCase
 						]
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
 			]
 		]);
 
-		$controller = new PageCreateDialogController(template: 'test');
+		$controller = new PageCreateDialogController();
 		$value      = $controller->value();
 
-		$this->assertSame([
-			'parent'   => 'site',
-			'section'  => null,
-			'slug'     => '',
-			'template' => 'test',
-			'title'    => '',
-			'uuid'     => null,
-			'view'     => null,
-			'foo'      => 'bar'
-		], $value);
+		$this->assertNull($value['section']);
+		$this->assertSame('', $value['slug']);
+		$this->assertSame('test', $value['template']);
+		$this->assertSame('', $value['title']);
+		$this->assertNotNull($value['uuid']);
+		$this->assertNull($value['view']);
+		$this->assertSame('bar', $value['foo']);
 	}
 }

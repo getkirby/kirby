@@ -64,7 +64,6 @@ export default {
 			if (this.canAdd) {
 				this.$dialog("pages/create", {
 					query: {
-						parent: this.options.link ?? this.parent,
 						view: this.parent,
 						section: this.name
 					}
