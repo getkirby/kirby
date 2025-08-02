@@ -1,7 +1,8 @@
 <?php
 
-namespace Kirby\Panel\Ui\Dialogs;
+namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Find;
 use Kirby\Cms\Page;
@@ -12,8 +13,11 @@ use Kirby\Cms\User;
 use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
+use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
+use Kirby\Panel\Ui\Dialog;
+use Kirby\Panel\Ui\Dialogs\FormDialog;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Uuid\Uuid;
@@ -21,27 +25,20 @@ use Kirby\Uuid\Uuids;
 
 /**
  * Manages the Panel dialog to create new pages
- * @since 4.0.0
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
-class PageCreateDialog
+class PageCreateDialogController extends DialogController
 {
-	protected PageBlueprint $blueprint;
-	protected Page $model;
-	protected Page|Site $parent;
-	protected string $parentId;
-	protected string|null $sectionId;
-	protected string|null $slug;
-	protected string|null $template;
-	protected string|null $title;
-	protected string|null $uuid;
-	protected Page|Site|User|File $view;
-	protected string|null $viewId;
+	public PageBlueprint $blueprint;
+	public Page $model;
+	public Page|Site $parent;
+	public Page|Site|User|File $view;
 
 	public static array $fieldTypes = [
 		'checkboxes',
@@ -67,25 +64,20 @@ class PageCreateDialog
 	];
 
 	public function __construct(
-		string|null $parentId,
-		string|null $sectionId,
-		string|null $template,
-		string|null $viewId,
+		public string $parentId = 'site',
+		public string|null $template = null,
+		public string|null $sectionId = null,
+		public string|null $viewId = null,
 
 		// optional
-		string|null $slug = null,
-		string|null $title = null,
-		string|null $uuid = null,
+		public string|null $slug = null,
+		public string|null $title = null,
+		public string|null $uuid = null
 	) {
-		$this->parentId  = $parentId ?? 'site';
-		$this->parent    = Find::parent($this->parentId);
-		$this->sectionId = $sectionId;
-		$this->slug      = $slug;
-		$this->template  = $template;
-		$this->title     = $title;
-		$this->uuid      = $uuid;
-		$this->viewId    = $viewId;
-		$this->view      = Find::parent($this->viewId ?? $this->parentId);
+		parent::__construct();
+
+		$this->parent = Find::parent($this->parentId);
+		$this->view   = Find::parent($this->viewId ?? $this->parentId);
 	}
 
 	/**
@@ -209,6 +201,20 @@ class PageCreateDialog
 		return $form->fields()->toProps();
 	}
 
+	public static function factory(): static
+	{
+		$request = App::instance()->request();
+		return new static(
+			parentId: $request->get('parent', 'site'),
+			sectionId: $request->get('section'),
+			slug: $request->get('slug'),
+			template: $request->get('template'),
+			title: $request->get('title'),
+			uuid: $request->get('uuid'),
+			viewId: $request->get('view'),
+		);
+	}
+
 	/**
 	 * Loads all the fields for the dialog
 	 */
@@ -225,7 +231,7 @@ class PageCreateDialog
 	 * dialog, including the fields and
 	 * initial values
 	 */
-	public function load(): array
+	public function load(): Dialog
 	{
 		$blueprints = $this->blueprints();
 
@@ -249,18 +255,16 @@ class PageCreateDialog
 			Panel::go($response['redirect']);
 		}
 
-		return [
-			'component' => 'k-page-create-dialog',
-			'props' => [
-				'blueprints'   => $blueprints,
-				'fields'       => $fields,
-				'submitButton' => I18n::template('page.create', [
-					'status' => $status
-				]),
-				'template'     => $this->template,
-				'value'        => $this->value()
-			]
-		];
+		return new FormDialog(
+			component: 'k-page-create-dialog',
+			blueprints: $blueprints,
+			fields: $fields,
+			submitButton: I18n::template('page.create', [
+				'status' => $status
+			]),
+			template: $this->template,
+			value: $this->value()
+		);
 	}
 
 	/**
@@ -357,8 +361,9 @@ class PageCreateDialog
 	/**
 	 * Submits the dialog form and creates the new page
 	 */
-	public function submit(array $input): array
+	public function submit(): array
 	{
+		$input  = $this->request->get();
 		$input  = $this->sanitize($input);
 		$status = $this->blueprint()->create()['status'] ?? 'draft';
 
