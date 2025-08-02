@@ -5,7 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Cms\PageRules;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Panel\Ui\DialogsFormDialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\Str;
 
 /**

@@ -3,7 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\HasSiblings;
-use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\HasI18n;
 
 /**
  * Abstract field class to be used instead
@@ -20,6 +20,7 @@ use Kirby\Toolkit\I18n;
  */
 abstract class FieldClass
 {
+	use HasI18n;
 	use HasSiblings;
 	use Mixin\After;
 	use Mixin\Api;
@@ -96,11 +97,6 @@ abstract class FieldClass
 	public function drawers(): array
 	{
 		return [];
-	}
-
-	protected function i18n(string|array|null $param = null): string|null
-	{
-		return empty($param) === false ? I18n::translate($param, $param) : null;
 	}
 
 	public function id(): string
