@@ -9,6 +9,7 @@ use Kirby\Panel\TestCase;
 use Kirby\Uuid\PageUuid;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(ModelCreateDialogController::class)]
 #[CoversClass(PageCreateDialogController::class)]
 class PageCreateDialogControllerTest extends TestCase
 {
@@ -421,7 +422,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$input      = $controller->resolveFieldTemplates([
 			'foo' => 'Foo',
 			'bar' => 'foo',
-		]);
+		], ['title', 'slug']);
 
 		$this->assertSame([
 			'foo'   => 'Foo',

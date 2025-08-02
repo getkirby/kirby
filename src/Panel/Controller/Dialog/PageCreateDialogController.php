@@ -3,10 +3,9 @@
 namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Cms\App;
-use Kirby\Cms\File;
 use Kirby\Cms\Find;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
-use Kirby\Cms\PageBlueprint;
 use Kirby\Cms\PageRules;
 use Kirby\Cms\Section;
 use Kirby\Cms\Site;
@@ -14,7 +13,6 @@ use Kirby\Cms\User;
 use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
-use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Dialog;
@@ -24,7 +22,7 @@ use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
 
 /**
- * Manages the Panel dialog to create new pages
+ * Controls the Panel dialog to create a new page
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -33,7 +31,7 @@ use Kirby\Uuid\Uuids;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class PageCreateDialogController extends DialogController
+class PageCreateDialogController extends ModelCreateDialogController
 {
 	public static array $fieldTypes = [
 		'checkboxes',
@@ -58,31 +56,30 @@ class PageCreateDialogController extends DialogController
 		'url'
 	];
 
-	public PageBlueprint $blueprint;
 	public array $blueprints;
-	public Page $model;
-	public Page|Site $parent;
+
+	/**
+	 * @var \Kirby\Cms\Page
+	 */
+	public ModelWithContent $model;
+
+	/**
+	 * @var \Kirby\Cms\Page|\Kirby\Cms\Site
+	 */
+	public Page|Site|User $parent;
 
 	public function __construct(
 		Page|Site|null $parent = null,
-		public Section|null $section = null
+		Section|null $section = null
 	) {
-		parent::__construct();
-
-		$this->parent = $parent ?? $this->site;
+		parent::__construct(
+			parent: $parent,
+			section: $section
+		);
 	}
 
 	/**
-	 * Get the blueprint settings for the new page
-	 */
-	public function blueprint(): PageBlueprint
-	{
-		// create a temporary page object
-		return $this->blueprint ??= $this->model()->blueprint();
-	}
-
-	/**
-	 * Get an array of all blueprints for the parent view
+	 * Get an array of all available blueprints
 	 */
 	public function blueprints(): array
 	{
@@ -109,7 +106,7 @@ class PageCreateDialogController extends DialogController
 
 		if ($title === false || $slug === false) {
 			throw new InvalidArgumentException(
-				message: 'Page create dialog: title and slug must not be false'
+				message: 'Page create dialog: title and slug must not be false at the same time'
 			);
 		}
 
@@ -148,53 +145,6 @@ class PageCreateDialogController extends DialogController
 		];
 	}
 
-	/**
-	 * Loads custom fields for the page type
-	 */
-	public function customFields(): array
-	{
-		$custom = [];
-		$fields = $this->blueprint()->fields();
-		$ignore = array_keys($this->coreFields());
-
-		foreach ($this->blueprint()->create()['fields'] ?? [] as $name) {
-			$field = $fields[$name] ?? null;
-
-			if ($field === null) {
-				throw new InvalidArgumentException(
-					message: 'Unknown field  "' . $name . '" in create dialog'
-				);
-			}
-
-			if (in_array($field['type'], static::$fieldTypes, true) === false) {
-				throw new InvalidArgumentException(
-					message: 'Field type "' . $field['type'] . '" not supported in create dialog'
-				);
-			}
-
-			if (in_array($name, $ignore, true) === true) {
-				throw new InvalidArgumentException(
-					message: 'Field name "' . $name . '" not allowed as custom field in create dialog'
-				);
-			}
-
-			// switch all fields to 1/1
-			$field['width'] = '1/1';
-
-			// add the field to the form
-			$custom[$name] = $field;
-		}
-
-		// create form so that field props, options etc.
-		// can be properly resolved
-		$form = new Form(
-			fields: $custom,
-			model: $this->model()
-		);
-
-		return $form->fields()->toProps();
-	}
-
 	public static function factory(): static
 	{
 		$kirby   = App::instance();
@@ -212,17 +162,6 @@ class PageCreateDialogController extends DialogController
 	}
 
 	/**
-	 * Loads all the fields for the dialog
-	 */
-	public function fields(): array
-	{
-		return [
-			...$this->coreFields(),
-			...$this->customFields()
-		];
-	}
-
-	/**
 	 * Provides all the props for the
 	 * dialog, including the fields and
 	 * initial values
@@ -235,6 +174,7 @@ class PageCreateDialogController extends DialogController
 		$status   = $this->blueprint()->status()[$status]['label'] ?? null;
 		$status ??= $this->i18n('page.status.' . $status);
 
+		$value   = $this->value();
 		$fields  = $this->fields();
 		$visible = array_filter(
 			$fields,
@@ -243,10 +183,11 @@ class PageCreateDialogController extends DialogController
 
 		// immediately submit the dialog if there is no editable field
 		if ($visible === [] && count($blueprints) < 2) {
-			$input    = $this->value();
-			$response = $this->submit($input);
-			$response['redirect'] ??= $this->parent->panel()->url(true);
-			Panel::go($response['redirect']);
+			$response = $this->submit($value);
+
+			Panel::go(
+				url: $response['redirect'] ?? $this->parent->panel()->url(true)
+			);
 		}
 
 		return new FormDialog(
@@ -255,13 +196,12 @@ class PageCreateDialogController extends DialogController
 			fields: $fields,
 			submitButton: $this->i18n('page.create', ['status' => $status]),
 			template: $this->template(),
-			value: $this->value()
+			value: $value
 		);
 	}
 
 	/**
-	 * Temporary model for the page to
-	 * be created, used to properly render
+	 * Temporary model be created, used to properly render
 	 * the blueprint for fields
 	 */
 	public function model(): Page
@@ -271,7 +211,7 @@ class PageCreateDialogController extends DialogController
 		}
 
 		$props = [
-			'slug'     => '__new__',
+			'slug'     => '__temp__',
 			'template' => $this->template(),
 			'model'    => $this->template(),
 			'parent'   => $this->parent instanceof Page ? $this->parent : null
@@ -296,43 +236,15 @@ class PageCreateDialogController extends DialogController
 	}
 
 	/**
-	 * Generates values for title and slug
-	 * from template strings from the blueprint
-	 */
-	public function resolveFieldTemplates(array $input): array
-	{
-		$title = $this->blueprint()->create()['title'] ?? null;
-		$slug  = $this->blueprint()->create()['slug'] ?? null;
-
-		// create temporary page object
-		// to resolve the template strings
-		$page = $this->model()->clone(['content' => $input]);
-
-		if (is_string($title)) {
-			$input['title'] = $page->toSafeString($title);
-		}
-
-		if (is_string($slug)) {
-			$input['slug'] = $page->toSafeString($slug);
-		}
-
-		return $input;
-	}
-
-	/**
 	 * Prepares and cleans up the input data
 	 */
 	public function sanitize(array $input): array
 	{
-		$input['title'] ??= '';
-		$input['slug']  ??= '';
-
-		$input   = $this->resolveFieldTemplates($input);
-		$content = ['title' => trim($input['title'])];
-
-		if ($uuid = $input['uuid'] ?? null) {
-			$content['uuid'] = $uuid;
-		}
+		$input   = $this->resolveFieldTemplates($input, ['title', 'slug']);
+		$content = [
+			'title' => trim($input['title'] ?? ''),
+			'uuid'  => $input['uuid'] ?? null
+		];
 
 		foreach ($this->customFields() as $name => $field) {
 			$content[$name] = $input[$name] ?? null;
@@ -354,8 +266,7 @@ class PageCreateDialogController extends DialogController
 	 */
 	public function submit(): array
 	{
-		$input  = $this->request->get();
-		$input  = $this->sanitize($input);
+		$input  = $this->sanitize(input: $this->request->get());
 		$status = $this->blueprint()->create()['status'] ?? 'draft';
 
 		// validate the input before creating the page
@@ -377,7 +288,9 @@ class PageCreateDialogController extends DialogController
 		];
 
 		// add redirect, if not explicitly disabled
-		if (($this->blueprint()->create()['redirect'] ?? null) !== false) {
+		$redirect = $this->blueprint()->create()['redirect'] ?? null;
+
+		if ($redirect !== false) {
 			$payload['redirect'] = $page->panel()->url(true);
 		}
 
@@ -413,7 +326,8 @@ class PageCreateDialogController extends DialogController
 
 	public function value(): array
 	{
-		$value = [
+		return [
+			...parent::value(),
 			'section'  => $this->section?->name(),
 			'slug'     => $this->request->get('slug', ''),
 			'template' => $this->template(),
@@ -421,14 +335,5 @@ class PageCreateDialogController extends DialogController
 			'uuid'     => $this->model()->uuid()->toString(),
 			'view'     => $this->section?->parent()->panel()->path(),
 		];
-
-		// add default values for custom fields
-		foreach ($this->customFields() as $name => $field) {
-			if ($default = $field['default'] ?? null) {
-				$value[$name] = $default;
-			}
-		}
-
-		return $value;
 	}
 }
