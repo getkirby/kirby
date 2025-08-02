@@ -31,20 +31,22 @@ class Stat extends Component
 	 * @psalm-suppress TooFewArguments
 	 */
 	public static function from(
-		ModelWithContent $model,
-		array|string $input
+		array|string $input,
+		ModelWithContent|null $model = null,
 	): static {
-		if (is_string($input) === true) {
-			$input = $model->query($input);
+		if ($model !== null) {
+			if (is_string($input) === true) {
+				$input = $model->query($input);
 
-			if (is_array($input) === false) {
-				throw new InvalidArgumentException(
-					message: 'Invalid data from stat query. The query must return an array.'
-				);
+				if (is_array($input) === false) {
+					throw new InvalidArgumentException(
+						message: 'Invalid data from stat query. The query must return an array.'
+					);
+				}
 			}
-		}
 
-		$input['model'] = $model;
+			$input['model'] = $model;
+		}
 
 		return new static(...$input);
 	}

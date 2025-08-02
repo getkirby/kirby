@@ -31,7 +31,7 @@ return [
 	],
 	'account.fields' => [
 		...$dialogs['user.fields'],
-		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
+		'pattern' => '(account)/fields/(:any)/(:all?)',
 	],
 	'account.file.changeName' => [
 		...$dialogs['user.file.changeName'],

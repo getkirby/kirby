@@ -251,6 +251,11 @@ class ModelTest extends TestCase
 		$this->assertStringContainsString('test-96x.jpg 96w', $image['srcset']);
 		$this->assertStringContainsString('test-192x.jpg 192w', $image['srcset']);
 
+		// table
+		$image = $panel->image('site.image', 'table');
+		$this->assertStringContainsString('test-38x.jpg 38w', $image['srcset']);
+		$this->assertStringContainsString('test-76x.jpg 76w', $image['srcset']);
+
 		// full options
 		$image = $panel->image([
 			'cover' => true,

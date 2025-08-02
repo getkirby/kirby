@@ -16,8 +16,8 @@ use Kirby\Exception\InvalidArgumentException;
 class Stats extends Component
 {
 	public function __construct(
-		public ModelWithContent $model,
 		public string $component = 'k-stats',
+		public ModelWithContent|null $model = null,
 		public array $reports = [],
 		public string $size = 'large',
 	) {
@@ -57,14 +57,17 @@ class Stats extends Component
 	{
 		$reports = [];
 
-		foreach ($this->reports as $report) {
-			try {
-				$stat = Stat::from(
-					model: $this->model,
-					input: $report
-				);
-			} catch (InvalidArgumentException) {
-				continue;
+		foreach ($this->reports as $stat) {
+			// if not already a Stat object, convert it
+			if ($stat instanceof Stat === false) {
+				try {
+					$stat = Stat::from(
+						input: $stat,
+						model: $this->model
+					);
+				} catch (InvalidArgumentException) {
+					continue;
+				}
 			}
 
 			$reports[] = $stat->props();
