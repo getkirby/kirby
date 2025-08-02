@@ -39,12 +39,13 @@
 			<file>./config/areas/languages/buttons.php</file>
 			<file>./config/areas/site/buttons.php</file>
 			<file>./config/areas/site/dropdowns.php</file>
+			<file>./config/areas/site/dialogs.php</file>
 			<file>./config/areas/site/requests.php</file>
 			<file>./config/areas/site/searches.php</file>
 			<file>./config/areas/system/dialogs.php</file>
+			<file>./config/areas/users/dropdowns.php</file>
 			<file>./config/areas/users/buttons.php</file>
 			<file>./config/areas/users/dialogs.php</file>
-			<file>./config/areas/users/dropdowns.php</file>
 			<file>./config/areas/users/searches.php</file>
 			<file>./config/aliases.php</file>
 			<file>./config/setup.php</file>
