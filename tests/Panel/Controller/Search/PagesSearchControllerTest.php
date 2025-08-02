@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Controller\Search;
 
 use Kirby\Cms\App;
+use Kirby\Panel\Ui\Item\PageItem;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -46,6 +47,12 @@ class PagesSearchControllerTest extends TestCase
 	{
 		$this->tearDownTmp();
 		App::destroy();
+	}
+	public function testItem(): void
+	{
+		$controller = new PagesSearchController(query: 'beautiful');
+		$item       = $controller->item($controller->models()->first());
+		$this->assertInstanceOf(PageItem::class, $item);
 	}
 
 	public function testLoad(): void
@@ -159,13 +166,5 @@ class PagesSearchControllerTest extends TestCase
 			'A friend',
 			'A secret friend'
 		], $models->values(fn ($model) => $model->title()->value()));
-	}
-
-	public function testResult(): void
-	{
-		$controller = new PagesSearchController(query: 'beautiful');
-		$result     = $controller->result($controller->models()->first());
-		$this->assertSame('Beautiful animals', $result['text']);
-		$this->assertSame('articles/beautiful-animals', $result['info']);
 	}
 }

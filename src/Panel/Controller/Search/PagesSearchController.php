@@ -3,7 +3,7 @@
 namespace Kirby\Panel\Controller\Search;
 
 use Kirby\Cms\Pages;
-use Kirby\Toolkit\Escape;
+use Kirby\Panel\Ui\Item\PageItem;
 
 /**
  * Controls the search requests for pages
@@ -17,25 +17,19 @@ use Kirby\Toolkit\Escape;
  */
 class PagesSearchController extends ModelsSearchController
 {
+	/**
+	 * @param \Kirby\Cms\Page $model
+	 */
+	public function item($model): PageItem
+	{
+		return new PageItem(page: $model, info: '{{ page.id }}');
+	}
+
 	public function models(): Pages
 	{
 		return $this->kirby->site()
 			->index(true)
 			->search($this->query)
 			->filter('isListable', true);
-	}
-
-	/**
-	 * @param \Kirby\Cms\Page $model
-	 */
-	public function result($model): array
-	{
-		return [
-			'image' => $model->panel()->image(),
-			'text'  => Escape::html($model->title()->value()),
-			'link'  => $model->panel()->url(true),
-			'info'  => Escape::html($model->id()),
-			'uuid'  => $model->uuid()?->toString(),
-		];
 	}
 }

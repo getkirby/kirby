@@ -33,34 +33,44 @@ class ViewButtonsTest extends AreaTestCase
 	public function testConstruct(): void
 	{
 		// no buttons
-		$buttons = new ViewButtons('test', buttons: []);
+		$buttons = new ViewButtons([]);
 		$this->assertCount(0, $buttons->buttons);
 
-		// passed directly
-		$buttons = new ViewButtons('test', buttons: ['a', 'b']);
+		// passed directly as array
+		$buttons = new ViewButtons(['a', 'b']);
+		$this->assertCount(2, $buttons->buttons);
+
+		$buttons = new ViewButtons(['a', 'b'], view: 'test');
+		$this->assertCount(2, $buttons->buttons);
+
+		// passed directly as ViewButton
+		$buttons = new ViewButtons([
+			new ViewButton(text: 'Button A'),
+			new ViewButton(text: 'Button B'),
+		]);
 		$this->assertCount(2, $buttons->buttons);
 
 		// from options
-		$buttons = new ViewButtons('test');
+		$buttons = new ViewButtons(view: 'test');
 		$this->assertCount(4, $buttons->buttons);
 	}
 
 	public function testBind(): void
 	{
-		$buttons = new ViewButtons('foo');
+		$buttons = new ViewButtons();
 		$this->assertSame([], $buttons->data);
 
-		$buttons = new ViewButtons('foo', data: ['foo' => 'bar']);
+		$buttons = new ViewButtons(data: ['foo' => 'bar']);
 		$this->assertSame(['foo' => 'bar'], $buttons->data);
 
-		$buttons = new ViewButtons('foo', data: ['foo' => 'bar']);
+		$buttons = new ViewButtons(data: ['foo' => 'bar']);
 		$buttons->bind(['homer' => 'simpson']);
 		$this->assertSame(['foo' => 'bar', 'homer' => 'simpson'], $buttons->data);
 	}
 
 	public function testDefaults(): void
 	{
-		$buttons = new ViewButtons('foo');
+		$buttons = new ViewButtons();
 		$this->assertCount(0, $buttons->buttons ?? []);
 
 		$buttons->defaults('a', 'b');
@@ -69,7 +79,7 @@ class ViewButtonsTest extends AreaTestCase
 
 	public function testRender(): void
 	{
-		$buttons = new ViewButtons('test', buttons: ['a', 'y']);
+		$buttons = new ViewButtons(buttons: ['a', 'y'], view: 'test');
 		$result  = $buttons->render();
 
 		$this->assertCount(2, $result);
@@ -79,7 +89,7 @@ class ViewButtonsTest extends AreaTestCase
 
 	public function testRenderFromConfig(): void
 	{
-		$buttons = new ViewButtons('test');
+		$buttons = new ViewButtons(view: 'test');
 		$result  = $buttons->render();
 
 		$this->assertCount(3, $result);
@@ -88,9 +98,22 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertSame('result-c', $result[2]['component']);
 	}
 
+	public function testRenderWithViewButtonObjects(): void
+	{
+		$buttons = new ViewButtons([
+			new ViewButton(text: 'Button A'),
+			new ViewButton(text: 'Button B'),
+		]);
+
+		$result = $buttons->render();
+		$this->assertCount(2, $result);
+		$this->assertSame('Button A', $result[0]['props']['text']);
+		$this->assertSame('Button B', $result[1]['props']['text']);
+	}
+
 	public function testRenderNoButtons(): void
 	{
-		$buttons = new ViewButtons('test', buttons: false);
+		$buttons = new ViewButtons(buttons: false);
 		$this->assertSame([], $buttons->render());
 	}
 

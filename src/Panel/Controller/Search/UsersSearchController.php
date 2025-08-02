@@ -3,7 +3,7 @@
 namespace Kirby\Panel\Controller\Search;
 
 use Kirby\Cms\Users;
-use Kirby\Toolkit\Escape;
+use Kirby\Panel\Ui\Item\UserItem;
 
 /**
  * Controls the search requests for users
@@ -17,22 +17,16 @@ use Kirby\Toolkit\Escape;
  */
 class UsersSearchController extends ModelsSearchController
 {
-	public function models(): Users
-	{
-		return $this->kirby->users()->search($this->query);
-	}
-
 	/**
 	 * @param \Kirby\Cms\User $model
 	 */
-	public function result($model): array
+	public function item($model): UserItem
 	{
-		return [
-			'image' => $model->panel()->image(),
-			'text'  => Escape::html($model->username()),
-			'link'  => $model->panel()->url(true),
-			'info'  => Escape::html($model->role()->title()),
-			'uuid'  => $model->uuid()->toString(),
-		];
+		return new UserItem(user: $model);
+	}
+
+	public function models(): Users
+	{
+		return $this->kirby->users()->search($this->query);
 	}
 }

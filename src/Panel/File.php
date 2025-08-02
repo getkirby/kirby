@@ -8,6 +8,7 @@ use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\FilePreview;
+use Kirby\Panel\Ui\Item\FileItem;
 use Throwable;
 
 /**
@@ -300,8 +301,9 @@ class File extends Model
 	 */
 	public function pickerData(array $params = []): array
 	{
-		$name = $this->model->filename();
-		$id   = $this->model->id();
+		$name     = $this->model->filename();
+		$id       = $this->model->id();
+		$absolute = false;
 
 		if (empty($params['model']) === false) {
 			$parent   = $this->model->parent();
@@ -315,13 +317,19 @@ class File extends Model
 			};
 		}
 
-		$params['text'] ??= '{{ file.filename }}';
+		$item = new FileItem(
+			file: $this->model,
+			dragTextIsAbsolute: $absolute,
+			image: $params['image'] ?? null,
+			info: $params['info'] ?? null,
+			layout: $params['layout'] ?? null,
+			text: $params['text'] ?? null,
+		);
 
 		return [
-			...parent::pickerData($params),
-			'dragText' => $this->dragText('auto', absolute: $absolute ?? false),
-			'filename' => $name,
-			'id'	   => $id,
+			...$item->props(),
+			'id'       => $id,
+			'sortable' => true,
 			'type'     => $this->model->type(),
 			'url'      => $this->model->url()
 		];

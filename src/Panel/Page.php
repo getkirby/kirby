@@ -7,6 +7,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\PageSettingsDropdownController;
 use Kirby\Panel\Ui\Button\ViewButtons;
+use Kirby\Panel\Ui\Item\PageItem;
 
 /**
  * Provides information about the page model for the Panel
@@ -155,12 +156,18 @@ class Page extends Model
 	 */
 	public function pickerData(array $params = []): array
 	{
-		$params['text'] ??= '{{ page.title }}';
+		$item = new PageItem(
+			page: $this->model,
+			image: $params['image'] ?? null,
+			info: $params['info'] ?? null,
+			layout: $params['layout'] ?? null,
+			text: $params['text'] ?? null,
+		);
 
 		return [
-			...parent::pickerData($params),
-			'dragText'    => $this->dragText(),
+			...$item->props(),
 			'hasChildren' => $this->model->hasChildren(),
+			'sortable'    => true,
 			'url'         => $this->model->url()
 		];
 	}

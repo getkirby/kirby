@@ -21,9 +21,9 @@ use Kirby\Panel\Model;
 class ViewButtons
 {
 	public function __construct(
-		public readonly string $view,
-		public readonly ModelWithContent|Language|null $model = null,
 		public array|false|null $buttons = null,
+		public readonly string|null $view = null,
+		public readonly ModelWithContent|Language|null $model = null,
 		public array $data = []
 	) {
 		// if no specific buttons are passed,
@@ -69,16 +69,22 @@ class ViewButtons
 		$buttons = [];
 
 		foreach ($this->buttons ?? [] as $name => $button) {
-			$buttons[] = ViewButton::factory(
-				button: $button,
-				name: $name,
-				view: $this->view,
-				model: $this->model,
-				data: $this->data
-			)?->render();
+			if ($button instanceof ViewButton === false) {
+				$button = ViewButton::factory(
+					button: $button,
+					name: $name,
+					view: $this->view,
+					model: $this->model,
+					data: $this->data
+				);
+			}
+
+			if ($button !== null) {
+				$buttons[] = $button->render();
+			}
 		}
 
-		return array_values(array_filter($buttons));
+		return array_values($buttons);
 	}
 
 	/**

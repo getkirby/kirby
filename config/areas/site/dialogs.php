@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\App;
 use Kirby\Panel\Controller\Dialog\ChangesDialogController;
 use Kirby\Panel\Controller\Dialog\FieldDialogController;
 use Kirby\Panel\Controller\Dialog\FileChangeNameDialogController;
@@ -11,11 +10,11 @@ use Kirby\Panel\Controller\Dialog\PageChangeSortDialogController;
 use Kirby\Panel\Controller\Dialog\PageChangeStatusDialogController;
 use Kirby\Panel\Controller\Dialog\PageChangeTemplateDialogController;
 use Kirby\Panel\Controller\Dialog\PageChangeTitleDialogController;
+use Kirby\Panel\Controller\Dialog\PageCreateDialogController;
 use Kirby\Panel\Controller\Dialog\PageDeleteDialogController;
 use Kirby\Panel\Controller\Dialog\PageDuplicateDialogController;
 use Kirby\Panel\Controller\Dialog\PageMoveDialogController;
 use Kirby\Panel\Controller\Dialog\SiteChangeTitleDialogController;
-use Kirby\Panel\Ui\Dialog\PageCreateDialog;
 
 return [
 	'page.changeSort' => [
@@ -36,34 +35,7 @@ return [
 	],
 	'page.create' => [
 		'pattern' => 'pages/create',
-		'load' => function () {
-			$request = App::instance()->request();
-			$dialog  = new PageCreateDialog(
-				parentId: $request->get('parent'),
-				sectionId: $request->get('section'),
-				slug: $request->get('slug'),
-				template: $request->get('template'),
-				title: $request->get('title'),
-				uuid: $request->get('uuid'),
-				viewId: $request->get('view'),
-			);
-
-			return $dialog->load();
-		},
-		'submit' => function () {
-			$request = App::instance()->request();
-			$dialog  = new PageCreateDialog(
-				parentId: $request->get('parent'),
-				sectionId: $request->get('section'),
-				slug: $request->get('slug'),
-				template: $request->get('template'),
-				title: $request->get('title'),
-				uuid: $request->get('uuid'),
-				viewId: $request->get('view'),
-			);
-
-			return $dialog->submit($request->get());
-		}
+		'action'  => PageCreateDialogController::class
 	],
 	'page.delete' => [
 		'pattern' => 'pages/(:any)/delete',

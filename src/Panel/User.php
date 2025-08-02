@@ -9,6 +9,7 @@ use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\UserSettingsDropdownController;
 use Kirby\Panel\Ui\Button\ViewButtons;
+use Kirby\Panel\Ui\Item\UserItem;
 
 /**
  * Provides information about the user model for the Panel
@@ -129,11 +130,19 @@ class User extends Model
 	 */
 	public function pickerData(array $params = []): array
 	{
-		$params['text'] ??= '{{ user.username }}';
+		$item = new UserItem(
+			user: $this->model,
+			image: $params['image'] ?? null,
+			info: $params['info'] ?? null,
+			layout: $params['layout'] ?? null,
+			text: $params['text'] ?? null,
+		);
 
 		return [
-			...parent::pickerData($params),
+			...$item->props(),
 			'email'    => $this->model->email(),
+			'sortable' => true,
+			'url'      => $this->model->url(),
 			'username' => $this->model->username(),
 		];
 	}

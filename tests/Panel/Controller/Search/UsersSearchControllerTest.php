@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Controller\Search;
 
 use Kirby\Cms\App;
+use Kirby\Panel\Ui\Item\UserItem;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -34,6 +35,13 @@ class UsersSearchControllerTest extends TestCase
 	{
 		$this->tearDownTmp();
 		App::destroy();
+	}
+
+	public function testItem(): void
+	{
+		$controller = new UsersSearchController(query: 'simpson');
+		$item       = $controller->item($controller->models()->first());
+		$this->assertInstanceOf(UserItem::class, $item);
 	}
 
 	public function testLoad(): void
@@ -84,25 +92,5 @@ class UsersSearchControllerTest extends TestCase
 		$controller = new UsersSearchController();
 		$models     = $controller->models();
 		$this->assertCount(0, $models);
-	}
-
-	public function testResult(): void
-	{
-		$controller = new UsersSearchController(query: 'simpson');
-		$result     = $controller->result($controller->models()->first());
-
-		$image = [
-			'back' => 'black',
-			'color' => 'gray-500',
-			'cover' => false,
-			'icon'  => 'user',
-			'ratio' => '1/1'
-		];
-
-		$this->assertSame($image, $result['image']);
-		$this->assertStringEndsWith('@simpson.com', $result['text']);
-		$this->assertSame('Nobody', $result['info']);
-		$this->assertArrayHasKey('link', $result);
-		$this->assertArrayHasKey('uuid', $result);
 	}
 }

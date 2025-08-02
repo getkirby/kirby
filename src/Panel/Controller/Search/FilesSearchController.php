@@ -3,7 +3,7 @@
 namespace Kirby\Panel\Controller\Search;
 
 use Kirby\Cms\Files;
-use Kirby\Toolkit\Escape;
+use Kirby\Panel\Ui\Item\FileItem;
 
 /**
  * Controls the search requests for files
@@ -17,6 +17,14 @@ use Kirby\Toolkit\Escape;
  */
 class FilesSearchController extends ModelsSearchController
 {
+	/**
+	 * @param \Kirby\Cms\File $model
+	 */
+	public function item($model): FileItem
+	{
+		return new FileItem(file: $model, info: '{{ file.id }}');
+	}
+
 	public function models(): Files
 	{
 		$files = $this->kirby->site()
@@ -31,19 +39,5 @@ class FilesSearchController extends ModelsSearchController
 		$files = $files->filter('isListable', true)->search($this->query);
 
 		return $files;
-	}
-
-	/**
-	 * @param \Kirby\Cms\File $model
-	 */
-	public function result($model): array
-	{
-		return [
-			'image' => $model->panel()->image(),
-			'text'  => Escape::html($model->filename()),
-			'link'  => $model->panel()->url(true),
-			'info'  => Escape::html($model->id()),
-			'uuid'  => $model->uuid()->toString(),
-		];
 	}
 }

@@ -16,17 +16,22 @@ use Kirby\Panel\Ui\Component;
  */
 class ModelItem extends Component
 {
+	protected string $layout;
 	protected Panel $panel;
+	protected string $text;
 
 	public function __construct(
 		protected ModelWithContent $model,
 		protected string|array|false|null $image = [],
 		protected string|null $info = null,
-		protected string $layout = 'list',
-		protected string $text = '{{ model.title }}',
+		string|null $layout = null,
+		string|null $text = null,
 	) {
 		parent::__construct(component: 'k-item');
-		$this->panel = $this->model->panel();
+
+		$this->layout = $layout ?? 'list';
+		$this->panel  = $this->model->panel();
+		$this->text   = $text ?? '{{ model.title }}';
 	}
 
 	protected function info(): string|null
