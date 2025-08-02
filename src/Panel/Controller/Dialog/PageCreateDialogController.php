@@ -17,7 +17,7 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Panel\Ui\Dialogs\FormDialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Uuid\Uuid;

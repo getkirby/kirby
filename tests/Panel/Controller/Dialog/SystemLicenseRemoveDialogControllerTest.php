@@ -3,7 +3,7 @@
 namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Panel\TestCase;
-use Kirby\Panel\Ui\Dialogs\RemoveDialog;
+use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
 

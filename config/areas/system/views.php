@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Toolkit\I18n;
 
 return [

@@ -6,7 +6,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
-use Kirby\Panel\Ui\Dialogs\RemoveDialog;
+use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FileDialogController::class)]

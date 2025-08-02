@@ -8,7 +8,7 @@ use Kirby\Cms\LanguageVariable;
 use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Panel\Ui\Dialogs\FormDialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\I18n;
 
 /**

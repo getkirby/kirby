@@ -3,12 +3,12 @@
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
-use Kirby\Panel\Ui\Buttons\LanguagesButton;
-use Kirby\Panel\Ui\Buttons\OpenButton;
-use Kirby\Panel\Ui\Buttons\PageStatusButton;
-use Kirby\Panel\Ui\Buttons\PreviewButton;
-use Kirby\Panel\Ui\Buttons\SettingsButton;
-use Kirby\Panel\Ui\Buttons\VersionsButton;
+use Kirby\Panel\Ui\Button\LanguagesButton;
+use Kirby\Panel\Ui\Button\OpenButton;
+use Kirby\Panel\Ui\Button\PageStatusButton;
+use Kirby\Panel\Ui\Button\PreviewButton;
+use Kirby\Panel\Ui\Button\SettingsButton;
+use Kirby\Panel\Ui\Button\VersionsButton;
 
 return [
 	'site.open' => function (Site $site, string $versionId = 'latest') {

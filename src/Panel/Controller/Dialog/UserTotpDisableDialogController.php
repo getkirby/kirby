@@ -8,7 +8,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Panel\Ui\Dialogs\FormDialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 

@@ -4,8 +4,8 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Cms\Page;
 use Kirby\Panel\TestCase;
-use Kirby\Panel\Ui\Dialogs\ErrorDialog;
-use Kirby\Panel\Ui\Dialogs\FormDialog;
+use Kirby\Panel\Ui\Dialog\ErrorDialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class PageWithErrors extends Page

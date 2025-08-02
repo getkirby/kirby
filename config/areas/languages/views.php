@@ -2,7 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
-use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 

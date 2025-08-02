@@ -4,7 +4,7 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Panel\Ui\Dialogs\RemoveDialog;
+use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\I18n;
 
 /**

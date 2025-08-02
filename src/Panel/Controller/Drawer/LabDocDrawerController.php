@@ -6,7 +6,7 @@ use Kirby\Panel\Controller\DrawerController;
 use Kirby\Panel\Lab\Doc;
 use Kirby\Panel\Lab\Docs;
 use Kirby\Panel\Ui\Drawer;
-use Kirby\Panel\Ui\Drawers\TextDrawer;
+use Kirby\Panel\Ui\Drawer\TextDrawer;
 
 /**
  * @package   Kirby Panel

@@ -5,7 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\TestCase;
-use Kirby\Panel\Ui\Dialogs\FormDialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\Attributes\CoversClass;
 

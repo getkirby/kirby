@@ -6,7 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Panel\Ui\FilePreviews\DefaultFilePreview;
+use Kirby\Panel\Ui\FilePreview\DefaultFilePreview;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 

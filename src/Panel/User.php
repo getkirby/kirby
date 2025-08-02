@@ -8,7 +8,7 @@ use Kirby\Cms\Translation;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\UserSettingsDropdownController;
-use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\Item\UserItem;
 
 /**

@@ -3,7 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Panel\Collector\UsersCollector;
-use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\Item\UserItem;
 
 return [

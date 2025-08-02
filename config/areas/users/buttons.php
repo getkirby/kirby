@@ -1,8 +1,8 @@
 <?php
 
 use Kirby\Cms\User;
-use Kirby\Panel\Ui\Buttons\SettingsButton;
-use Kirby\Panel\Ui\Buttons\ViewButton;
+use Kirby\Panel\Ui\Button\SettingsButton;
+use Kirby\Panel\Ui\Button\ViewButton;
 use Kirby\Toolkit\I18n;
 
 return [

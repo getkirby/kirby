@@ -4,8 +4,8 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\TestCase;
-use Kirby\Panel\Ui\Dialogs\FormDialog;
-use Kirby\Panel\Ui\Dialogs\RemoveDialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
+use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(PageDialogController::class)]
