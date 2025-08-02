@@ -57,19 +57,17 @@ class Stats extends Component
 	{
 		$reports = [];
 
-		foreach ($this->reports as $report) {
-			try {
-				if ($this->model === null) {
-					$stat = new Stat(...$report);
-				} else {
+		foreach ($this->reports as $stat) {
+			// if not already a Stat object, convert it
+			if ($stat instanceof Stat === false) {
+				try {
 					$stat = Stat::from(
-						model: $this->model,
-						input: $report
+						input: $stat,
+						model: $this->model
 					);
+				} catch (InvalidArgumentException) {
+					continue;
 				}
-
-			} catch (InvalidArgumentException) {
-				continue;
 			}
 
 			$reports[] = $stat->props();
