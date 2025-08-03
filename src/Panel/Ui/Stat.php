@@ -20,12 +20,28 @@ class Stat extends Component
 		public array|string $label,
 		public array|string $value,
 		public string $component = 'k-stat',
+		public array|string|null $dialog = null,
+		public array|string|null $drawer = null,
 		public string|null $icon = null,
 		public array|string|null $info = null,
 		public array|string|null $link = null,
 		public ModelWithContent|null $model = null,
 		public string|null $theme = null,
 	) {
+	}
+
+	public function dialog(): string|null
+	{
+		return $this->stringTemplate(
+			$this->i18n($this->dialog)
+		);
+	}
+
+	public function drawer(): string|null
+	{
+		return $this->stringTemplate(
+			$this->i18n($this->drawer)
+		);
 	}
 
 	/**
@@ -81,12 +97,14 @@ class Stat extends Component
 	public function props(): array
 	{
 		return [
-			'icon'  => $this->icon(),
-			'info'  => $this->info(),
-			'label' => $this->label(),
-			'link'  => $this->link(),
-			'theme' => $this->theme(),
-			'value' => $this->value(),
+			'dialog' => $this->dialog(),
+			'drawer' => $this->drawer(),
+			'icon'   => $this->icon(),
+			'info'   => $this->info(),
+			'label'  => $this->label(),
+			'link'   => $this->link(),
+			'theme'  => $this->theme(),
+			'value'  => $this->value(),
 		];
 	}
 

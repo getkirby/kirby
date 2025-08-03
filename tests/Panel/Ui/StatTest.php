@@ -106,6 +106,26 @@ class StatTest extends TestCase
 		$this->assertSame('k-stat-test', $stat->component());
 	}
 
+	public function testDialog(): void
+	{
+		$this->assertProp(
+			prop: 'dialog',
+			nullable: true,
+			translatable: true,
+			queryable: true
+		);
+	}
+
+	public function testDrawer(): void
+	{
+		$this->assertProp(
+			prop: 'drawer',
+			nullable: true,
+			translatable: true,
+			queryable: true
+		);
+	}
+
 	public function testFrom(): void
 	{
 		// from array with model
