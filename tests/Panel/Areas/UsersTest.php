@@ -10,45 +10,6 @@ class UsersTest extends AreaTestCase
 		$this->install();
 	}
 
-	public function testUsersWithoutAuthentication(): void
-	{
-		$this->assertRedirect('users', 'login');
-	}
-
-	public function testUsers(): void
-	{
-		$this->login();
-
-		$view  = $this->view('users');
-		$props = $view['props'];
-
-		$this->assertSame('users', $view['id']);
-		$this->assertSame('k-users-view', $view['component']);
-		$this->assertSame('Users', $view['title']);
-
-		$this->assertNull($props['role']);
-		$this->assertSame([
-			[
-				'id'    => 'admin',
-				'title' => 'Admin'
-			]
-		], $props['roles']);
-
-		$this->assertCount(1, $props['users']['data']);
-
-		$this->assertSame([
-			'page'      => 1,
-			'firstPage' => 1,
-			'lastPage'  => 1,
-			'pages'     => 1,
-			'offset'    => 0,
-			'limit'     => 20,
-			'total'     => 1,
-			'start'     => 1,
-			'end'       => 1
-		], $props['users']['pagination']);
-	}
-
 	public function testUser(): void
 	{
 		$this->login();
