@@ -8,7 +8,7 @@ use Kirby\Cms\Translation;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\UserSettingsDropdownController;
-use Kirby\Panel\Ui\Button\ViewButtons;
+use Kirby\Panel\Controller\View\UserViewController;
 use Kirby\Panel\Ui\Item\UserItem;
 
 /**
@@ -27,32 +27,6 @@ class User extends Model
 	 * @var \Kirby\Cms\User
 	 */
 	protected ModelWithContent $model;
-
-	/**
-	 * Breadcrumb array
-	 */
-	public function breadcrumb(): array
-	{
-		return [
-			[
-				'label' => $this->model->username(),
-				'link'  => $this->url(true),
-			]
-		];
-	}
-
-	/**
-	 * Returns header buttons which should be displayed
-	 * on the user view
-	 */
-	public function buttons(): array
-	{
-		return ViewButtons::view($this)->defaults(
-			'theme',
-			'settings',
-			'languages'
-		)->render();
-	}
 
 	/**
 	 * Provides options for the user dropdown
@@ -148,44 +122,6 @@ class User extends Model
 	}
 
 	/**
-	 * Returns navigation array with
-	 * previous and next user
-	 */
-	public function prevNext(): array
-	{
-		$user = $this->model;
-
-		return [
-			'next' => fn () => $this->toPrevNextLink($user->next(), 'username'),
-			'prev' => fn () => $this->toPrevNextLink($user->prev(), 'username')
-		];
-	}
-
-	/**
-	 * Returns the data array for the view's component props
-	 */
-	public function props(): array
-	{
-		$permissions = $this->options();
-
-		return [
-			...parent::props(),
-			...$this->prevNext(),
-			'avatar'            => $this->model->avatar()?->url(),
-			'blueprint'         => $this->model->role()->name(),
-			'canChangeEmail'    => $permissions['changeEmail'],
-			'canChangeLanguage' => $permissions['changeLanguage'],
-			'canChangeName'     => $permissions['changeName'],
-			'canChangeRole'     => $this->model->roles()->count() > 1,
-			'email'             => $this->model->email(),
-			'language'          => $this->translation()->name(),
-			'name'              => $this->model->name()->toString(),
-			'role'              => $this->model->role()->title(),
-			'username'          => $this->model->username(),
-		];
-	}
-
-	/**
 	 * Returns the Translation object
 	 * for the selected Panel language
 	 */
@@ -197,15 +133,10 @@ class User extends Model
 	}
 
 	/**
-	 * Returns the data array for this model's Panel view
+	 * @codeCoverageIgnore
 	 */
-	public function view(): array
+	protected function viewController(): UserViewController
 	{
-		return [
-			'breadcrumb' => $this->breadcrumb(),
-			'component'  => 'k-user-view',
-			'props'      => $this->props(),
-			'title'      => $this->model->username(),
-		];
+		return new UserViewController($this->model);
 	}
 }

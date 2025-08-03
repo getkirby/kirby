@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui\Button;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Panel\Controller\View\ModelViewController;
 use Kirby\Panel\Model;
 
 /**
@@ -92,10 +93,10 @@ class ViewButtons
 	 * with special support for model views
 	 */
 	public static function view(
-		string|Model $view,
+		string|ModelViewController $view,
 		ModelWithContent|Language|null $model = null
 	): static {
-		if ($view instanceof Model) {
+		if ($view instanceof ModelViewController) {
 			$model     = $view->model();
 			$blueprint = $model->blueprint()->buttons();
 			$view      = $model::CLASS_ALIAS;

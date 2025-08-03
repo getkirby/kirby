@@ -1,23 +1,20 @@
 <?php
 
-use Kirby\Cms\Find;
+use Kirby\Panel\Controller\View\FileViewController;
 use Kirby\Panel\Controller\View\UsersViewController;
+use Kirby\Panel\Controller\View\UserViewController;
 
 return [
 	'users' => [
 		'pattern' => 'users',
-		'action'  => UsersViewController::class
+		'action'  => UsersViewController::class,
 	],
 	'user' => [
 		'pattern' => 'users/(:any)',
-		'action'  => function (string $id) {
-			return Find::user($id)->panel()->view();
-		}
+		'action'  => UserViewController::class,
 	],
 	'user.file' => [
-		'pattern' => 'users/(:any)/files/(:any)',
-		'action'  => function (string $id, string $filename) {
-			return Find::file('users/' . $id, $filename)->panel()->view();
-		}
+		'pattern' => '(users/.*?)/files/(:any)',
+		'action'  => FileViewController::class
 	],
 ];
