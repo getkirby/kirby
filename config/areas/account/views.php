@@ -2,7 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
-use Kirby\Toolkit\I18n;
+use Kirby\Panel\Controller\View\ResetPasswordViewController;
 
 return [
 	'account' => [
@@ -20,16 +20,6 @@ return [
 	],
 	'account.password' => [
 		'pattern' => 'reset-password',
-		'action'  => fn () => [
-			'component' => 'k-reset-password-view',
-			'breadcrumb' => [
-				[
-					'label' => I18n::translate('view.resetPassword')
-				]
-			],
-			'props' => [
-				'requirePassword' => App::instance()->session()->get('kirby.resetPassword') !== true
-			]
-		]
+		'action'  => ResetPasswordViewController::class
 	]
 ];
