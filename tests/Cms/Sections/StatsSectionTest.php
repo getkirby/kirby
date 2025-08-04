@@ -17,20 +17,24 @@ class MockPageForStatsSection extends Page
 	{
 		return [
 			[
-				'icon'  => 'heart',
-				'info'  => 'Info A',
-				'label' => 'A',
-				'link'  => 'https://getkirby.com',
-				'theme' => null,
-				'value' => 'Value A',
+				'dialog' => null,
+				'drawer' => null,
+				'icon'   => 'heart',
+				'info'   => 'Info A',
+				'label'  => 'A',
+				'link'   => 'https://getkirby.com',
+				'theme'  => null,
+				'value'  => 'Value A',
 			],
 			[
-				'icon'  => null,
-				'info'  => null,
-				'label' => 'B',
-				'link'  => null,
-				'theme' => null,
-				'value' => 'Value B',
+				'dialog' => null,
+				'drawer' => null,
+				'icon'   => null,
+				'info'   => null,
+				'label'  => 'B',
+				'link'   => null,
+				'theme'  => null,
+				'value'  => 'Value B',
 			]
 		];
 	}
