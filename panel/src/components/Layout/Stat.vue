@@ -20,13 +20,24 @@
 export default {
 	props: {
 		/**
-		 * Label text of the stat (2nd line)
+		 * Function to be called when clicked
 		 */
-		label: String,
+		click: Function,
 		/**
-		 * Main text of the stat (1st line)
+		 * Dialog endpoint or options to be passed to `this.$panel.dialog.open()`.
+		 * Use instead of `link` or `drawer`.
 		 */
-		value: String,
+		dialog: {
+			type: [String, Object]
+		},
+		/**
+		 * Drawer endpoint or options to be passed to `this.$panel.drawer.open()`.
+		 * Use instead of `link` or `dialog`.
+		 * @since 5.1.0
+		 */
+		drawer: {
+			type: [String, Object]
+		},
 		/**
 		 * Additional icon for the stat
 		 * @since 4.0.0
@@ -37,21 +48,22 @@ export default {
 		 */
 		info: String,
 		/**
+		 * Label text of the stat (2nd line)
+		 */
+		label: String,
+		/**
+		 * Absolute or relative URL.
+		 * Use instead of `dialog` or `drawer`.
+		 */
+		link: String,
+		/**
 		 * @values "negative", "positive", "warning", "info"
 		 */
 		theme: String,
-		/** Absolute or relative URL */
-		link: String,
 		/**
-		 * Function to be called when clicked
+		 * Main text of the stat (1st line)
 		 */
-		click: Function,
-		/**
-		 * Dialog endpoint or options to be passed to `this.$dialog`
-		 */
-		dialog: {
-			type: [String, Object]
-		}
+		value: String
 	},
 	computed: {
 		component() {
@@ -71,7 +83,11 @@ export default {
 			}
 
 			if (this.dialog) {
-				return () => this.$dialog(this.dialog);
+				return () => this.$panel.dialog.open(this.dialog);
+			}
+
+			if (this.drawer) {
+				return () => this.$panel.drawer.open(this.drawer);
 			}
 
 			return null;
