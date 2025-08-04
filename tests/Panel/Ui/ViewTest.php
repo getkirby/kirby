@@ -77,4 +77,15 @@ class ViewTest extends TestCase
 		$this->assertSame('users', $result['search']);
 		$this->assertSame('My View', $result['title']);
 	}
+
+	public function testRenderOmitSearchAndTitle(): void
+	{
+		$view = new View(
+			component: 'k-my-view',
+		);
+
+		$result = $view->render();
+		$this->assertArrayNotHasKey('search', $result);
+		$this->assertArrayNotHasKey('title', $result);
+	}
 }
