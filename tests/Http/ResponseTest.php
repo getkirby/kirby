@@ -338,6 +338,15 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Refresh' => '5; url=https://getkirby.com'], $response->headers());
 	}
 
+	public function testSetHeaderFallbacks(): void
+	{
+		$response = new Response([
+			'headers' => ['a' => 'b']
+		]);
+		$response->setHeaderFallbacks(['a' => 'z', 'c' => 'd']);
+		$this->assertEquals(['a' => 'b', 'c' => 'd'], $response->headers());
+	}
+
 	#[RunInSeparateProcess]
 	#[PreserveGlobalState(false)]
 	public function testSend(): void

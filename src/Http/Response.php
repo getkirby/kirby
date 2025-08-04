@@ -313,6 +313,19 @@ class Response implements Stringable
 	}
 
 	/**
+	 * Sets the provided headers in case they are not already set
+	 * @internal
+	 * @return $this
+	 */
+	public function setHeaderFallbacks(array $headers): static
+	{
+		// the case-insensitive nature of headers will be
+		// handled by PHP's `header()` functions
+		$this->headers = [...$headers, ...$this->headers];
+		return $this;
+	}
+
+	/**
 	 * Converts all relevant response attributes
 	 * to an associative array for debugging,
 	 * testing or whatever.

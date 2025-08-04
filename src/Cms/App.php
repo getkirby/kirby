@@ -781,15 +781,7 @@ class App
 
 		// Responses
 		if ($input instanceof Response) {
-			$data = $input->toArray();
-
-			// inject headers from the global response configuration
-			// lazily (only if they are not already set);
-			// the case-insensitive nature of headers will be
-			// handled by PHP's `header()` function
-			$data['headers'] = [...$response->headers(), ...$data['headers']];
-
-			return new Response($data);
+			return $response->send($input);
 		}
 
 		// Pages
