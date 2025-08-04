@@ -8,7 +8,6 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\Escape;
-use Kirby\Toolkit\I18n;
 
 /**
  * Dialog controller for deleting a language
@@ -36,7 +35,7 @@ class LanguageDeleteDialogController extends DialogController
 	public function load(): Dialog
 	{
 		return new RemoveDialog(
-			text: I18n::template('language.delete.confirm', [
+			text: $this->i18n('language.delete.confirm', [
 				'name' => Escape::html($this->language->name())
 			])
 		);

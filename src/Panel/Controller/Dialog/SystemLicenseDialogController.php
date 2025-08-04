@@ -6,7 +6,6 @@ use Kirby\Cms\License;
 use Kirby\Exception\LogicException;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Toolkit\I18n;
 
 /**
  *  Dialog to display (and potentially renew) the license
@@ -56,7 +55,7 @@ class SystemLicenseDialogController extends DialogController
 			cancelButton: $this->isRenewable(),
 			submitButton: $this->isRenewable() ? [
 				'icon'  => 'refresh',
-				'text'  => I18n::translate('renew'),
+				'text'  => $this->i18n('renew'),
 				'theme' => 'love',
 			] : false,
 			license: $this->license()
@@ -81,7 +80,7 @@ class SystemLicenseDialogController extends DialogController
 		if ($response['status'] === 'complete') {
 			return [
 				'event'   => 'system.renew',
-				'message' => I18n::translate('license.success')
+				'message' => $this->i18n('license.success')
 			];
 		}
 

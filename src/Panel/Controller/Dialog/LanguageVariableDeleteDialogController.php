@@ -9,7 +9,6 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\Escape;
-use Kirby\Toolkit\I18n;
 
 /**
  * Dialog controller for deleting a language variable
@@ -43,7 +42,7 @@ class LanguageVariableDeleteDialogController extends DialogController
 	public function load(): Dialog
 	{
 		return new RemoveDialog(
-			text: I18n::template('language.variable.delete.confirm', [
+			text: $this->i18n('language.variable.delete.confirm', [
 				'key' => Escape::html($this->variable->key())
 			])
 		);

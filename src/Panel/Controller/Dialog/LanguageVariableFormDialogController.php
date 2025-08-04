@@ -9,7 +9,6 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Dialog controller for creating a new language variable
@@ -54,29 +53,29 @@ class LanguageVariableFormDialogController extends DialogController
 			'key' => [
 				'counter'  => false,
 				'icon'     => null,
-				'label'    => I18n::translate('language.variable.key'),
+				'label'    => $this->i18n('language.variable.key'),
 				'type'     => 'text',
 				// the key field cannot be changed
 				'disabled' => $this->variable !== null
 			],
 			'multiple' => [
-				'label'   => I18n::translate('language.variable.multiple'),
-				'text'    => I18n::translate('language.variable.multiple.text'),
-				'help'    => I18n::translate('language.variable.multiple.help'),
+				'label'   => $this->i18n('language.variable.multiple'),
+				'text'    => $this->i18n('language.variable.multiple.text'),
+				'help'    => $this->i18n('language.variable.multiple.help'),
 				'type'    => $this->variable ? 'hidden' : 'toggle'
 			],
 			'value' => [
 				'buttons'   => false,
 				'counter'   => false,
-				'label'     => I18n::translate('language.variable.value'),
+				'label'     => $this->i18n('language.variable.value'),
 				'type'      => 'textarea',
 				'when'      => ['multiple' => false],
 				'autofocus' => $this->hasMultipleValues() === false
 			],
 			'entries' => [
 				'field'     => ['type' => 'text'],
-				'label'     => I18n::translate('language.variable.entries'),
-				'help'      => I18n::translate('language.variable.entries.help'),
+				'label'     => $this->i18n('language.variable.entries'),
+				'help'      => $this->i18n('language.variable.entries.help'),
 				'type'      => 'entries',
 				'min'       => 1,
 				'when'      => ['multiple' => true],

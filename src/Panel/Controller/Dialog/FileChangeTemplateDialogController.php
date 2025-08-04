@@ -5,7 +5,6 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the template of a file
@@ -29,14 +28,14 @@ class FileChangeTemplateDialogController extends FileDialogController
 				'warning' => [
 					'type'  => 'info',
 					'theme' => 'notice',
-					'text'  => I18n::translate('file.changeTemplate.notice')
+					'text'  => $this->i18n('file.changeTemplate.notice')
 				],
 				'template' => Field::template($blueprints, [
 					'required' => true
 				])
 			],
 			submitButton: [
-				'text' => I18n::translate('change'),
+				'text' => $this->i18n('change'),
 				'theme' => 'notice'
 			],
 			value: [

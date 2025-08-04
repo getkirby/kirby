@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller;
 use Kirby\Cms\App;
 use Kirby\Cms\Site;
 use Kirby\Http\Request;
+use Kirby\Toolkit\HasI18n;
 
 /**
  * @package   Kirby Panel
@@ -19,6 +20,8 @@ use Kirby\Http\Request;
  */
 abstract class Controller
 {
+	use HasI18n;
+
 	protected App $kirby;
 	protected Request $request;
 	protected Site $site;

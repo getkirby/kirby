@@ -6,7 +6,6 @@ use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\ErrorDialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the status of a page
@@ -36,7 +35,7 @@ class PageChangeStatusDialogController extends PageDialogController
 
 		$fields = [
 			'status' => [
-				'label'    => I18n::translate('page.changeStatus.select'),
+				'label'    => $this->i18n('page.changeStatus.select'),
 				'type'     => 'radio',
 				'required' => true,
 				'options'  => $states
@@ -61,7 +60,7 @@ class PageChangeStatusDialogController extends PageDialogController
 			// errors and the draft cannot be published
 			if (count($errors) > 0) {
 				return new ErrorDialog(
-					message: I18n::translate('error.page.changeStatus.incomplete'),
+					message: $this->i18n('error.page.changeStatus.incomplete'),
 					details: $errors,
 				);
 			}
@@ -69,7 +68,7 @@ class PageChangeStatusDialogController extends PageDialogController
 
 		return new FormDialog(
 			fields: $this->fields(),
-			submitButton: I18n::translate('change'),
+			submitButton: $this->i18n('change'),
 			value: [
 				'status'   => $this->page->status(),
 				'position' => $this->position()

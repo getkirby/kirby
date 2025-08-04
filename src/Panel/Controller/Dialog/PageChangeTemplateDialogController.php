@@ -6,7 +6,6 @@ use Kirby\Exception\Exception;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the template of a page
@@ -37,14 +36,14 @@ class PageChangeTemplateDialogController extends PageDialogController
 				'notice' => [
 					'type'  => 'info',
 					'theme' => 'notice',
-					'text'  => I18n::translate('page.changeTemplate.notice')
+					'text'  => $this->i18n('page.changeTemplate.notice')
 				],
 				'template' => Field::template($blueprints, [
 					'required' => true
 				])
 			],
 			submitButton: [
-				'text'  => I18n::translate('change'),
+				'text'  => $this->i18n('change'),
 				'theme' => 'notice'
 			],
 			value: [

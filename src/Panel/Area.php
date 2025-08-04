@@ -9,7 +9,7 @@ use Kirby\Panel\Routes\DropdownRoutes;
 use Kirby\Panel\Routes\RequestRoutes;
 use Kirby\Panel\Routes\SearchRoutes;
 use Kirby\Panel\Routes\ViewRoutes;
-use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\HasI18n;
 
 /**
  * @package   Kirby Panel
@@ -21,6 +21,8 @@ use Kirby\Toolkit\I18n;
  */
 class Area
 {
+	use HasI18n;
+
 	public function __construct(
 		protected string $id,
 		protected array $breadcrumb = [],
@@ -53,22 +55,6 @@ class Area
 	public function breadcrumbLabel(): string
 	{
 		return $this->i18n($this->breadcrumbLabel ?? $this->label());
-	}
-
-	/**
-	 * Translator for breadcrumbLabel, label & title
-	 */
-	protected function i18n(Closure|array|string|null $value): string|null
-	{
-		if ($value instanceof Closure) {
-			$value = $value();
-		}
-
-		if ($value === null) {
-			return null;
-		}
-
-		return I18n::translate($value, $value);
 	}
 
 	/**

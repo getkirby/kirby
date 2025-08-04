@@ -7,7 +7,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
-use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Totp;
 
 /**
@@ -79,7 +78,7 @@ class UserTotpEnableDialogController extends DialogController
 		$this->user->changeTotp($secret);
 
 		return [
-			'message' => I18n::translate('login.totp.enable.success')
+			'message' => $this->i18n('login.totp.enable.success')
 		];
 	}
 

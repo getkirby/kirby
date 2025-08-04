@@ -6,7 +6,6 @@ use Kirby\Cms\PageRules;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 /**
@@ -40,12 +39,12 @@ class PageChangeTitleDialogController extends PageDialogController
 					'path'      => $this->path(),
 					'disabled'  => $permissions->can('changeSlug') === false,
 					'wizard'    => [
-						'text'  => I18n::translate('page.changeSlug.fromTitle'),
+						'text'  => $this->i18n('page.changeSlug.fromTitle'),
 						'field' => 'title'
 					]
 				])
 			],
-			submitButton: I18n::translate('change'),
+			submitButton: $this->i18n('change'),
 			value: [
 				'title' => $this->page->title()->value(),
 				'slug'  => $this->page->slug(),

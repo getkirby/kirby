@@ -19,7 +19,6 @@ use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\I18n;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
 
@@ -124,7 +123,7 @@ class PageCreateDialogController extends DialogController
 			$label = $title['label'] ?? 'title';
 			$fields['title'] = Field::title([
 				...$title ?? [],
-				'label'     => I18n::translate($label, $label),
+				'label'     => $this->i18n($label),
 				'required'  => true,
 				'preselect' => true
 			]);
@@ -239,7 +238,7 @@ class PageCreateDialogController extends DialogController
 
 		$status   = $this->blueprint()->create()['status'] ?? 'draft';
 		$status   = $this->blueprint()->status()[$status]['label'] ?? null;
-		$status ??= I18n::translate('page.status.' . $status);
+		$status ??= $this->i18n('page.status.' . $status);
 
 		$fields  = $this->fields();
 		$visible = array_filter(
@@ -259,9 +258,7 @@ class PageCreateDialogController extends DialogController
 			component: 'k-page-create-dialog',
 			blueprints: $blueprints,
 			fields: $fields,
-			submitButton: I18n::template('page.create', [
-				'status' => $status
-			]),
+			submitButton: $this->i18n('page.create', ['status' => $status]),
 			template: $this->template,
 			value: $this->value()
 		);

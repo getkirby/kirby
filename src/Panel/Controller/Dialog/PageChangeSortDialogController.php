@@ -6,7 +6,6 @@ use Kirby\Exception\PermissionException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog for changing the sorting position of a page
@@ -34,7 +33,7 @@ class PageChangeSortDialogController extends PageDialogController
 			fields: [
 				'position' => Field::pagePosition($this->page),
 			],
-			submitButton: I18n::translate('change'),
+			submitButton: $this->i18n('change'),
 			value: [
 				'position' => $this->page->panel()->position()
 			]

@@ -6,7 +6,6 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
-use Kirby\Toolkit\I18n;
 
 /**
  * Dialog to activate/register the site with a license
@@ -28,18 +27,18 @@ class SystemLicenseActivateDialogController extends DialogController
 
 		return [
 			'domain' => [
-				'label' => I18n::translate('license.activate.label'),
+				'label' => $this->i18n('license.activate.label'),
 				'type'  => 'info',
 				'theme' => $local ? 'warning' : 'info',
-				'text'  => I18n::template('license.activate.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
+				'text'  => $this->i18n('license.activate.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
 			],
 			'license' => [
-				'label'       => I18n::translate('license.code.label'),
+				'label'       => $this->i18n('license.code.label'),
 				'type'        => 'text',
 				'required'    => true,
 				'counter'     => false,
 				'placeholder' => 'K-',
-				'help'        => I18n::translate('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
+				'help'        => $this->i18n('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . $this->i18n('license.buy') . ' &rarr;</a>'
 			],
 			'email' => Field::email(['required' => true])
 		];
@@ -51,7 +50,7 @@ class SystemLicenseActivateDialogController extends DialogController
 			fields: $this->fields(),
 			submitButton: [
 				'icon'  => 'key',
-				'text'  => I18n::translate('activate'),
+				'text'  => $this->i18n('activate'),
 				'theme' => 'love',
 			],
 			value: [
@@ -73,7 +72,7 @@ class SystemLicenseActivateDialogController extends DialogController
 
 		return [
 			'event'   => 'system.register',
-			'message' => I18n::translate('license.success')
+			'message' => $this->i18n('license.success')
 		];
 	}
 }

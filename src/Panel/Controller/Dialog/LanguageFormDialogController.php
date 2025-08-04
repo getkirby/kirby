@@ -8,7 +8,6 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\I18n;
 
 /**
  * Dialog controller for creating a new language
@@ -43,13 +42,13 @@ class LanguageFormDialogController extends DialogController
 		return [
 			'name' => [
 				'counter'  => false,
-				'label'    => I18n::translate('language.name'),
+				'label'    => $this->i18n('language.name'),
 				'type'     => 'text',
 				'required' => true,
 				'icon'     => 'title'
 			],
 			'code' => [
-				'label'    => I18n::translate('language.code'),
+				'label'    => $this->i18n('language.code'),
 				'type'     => 'text',
 				// the code of an existing language cannot be changed
 				'disabled' => $this->language !== null,
@@ -59,18 +58,18 @@ class LanguageFormDialogController extends DialogController
 				'width'    => '1/2'
 			],
 			'direction' => [
-				'label'    => I18n::translate('language.direction'),
+				'label'    => $this->i18n('language.direction'),
 				'type'     => 'select',
 				'required' => true,
 				'empty'    => false,
 				'options'  => [
 					[
 						'value' => 'ltr',
-						'text' => I18n::translate('language.direction.ltr')
+						'text' => $this->i18n('language.direction.ltr')
 					],
 					[
 						'value' => 'rtl',
-						'text' => I18n::translate('language.direction.rtl')
+						'text' => $this->i18n('language.direction.rtl')
 					]
 				],
 				'width'    => '1/2'
@@ -81,8 +80,8 @@ class LanguageFormDialogController extends DialogController
 			// we display a warning box instead.
 			'locale' => [
 				'counter' => false,
-				'label'   => I18n::translate('language.locale'),
-				'text'    => I18n::translate('language.locale.warning'),
+				'label'   => $this->i18n('language.locale'),
+				'text'    => $this->i18n('language.locale.warning'),
 				'type'    => is_array($this->locale()) ? 'info' : 'text',
 			],
 		];
@@ -93,7 +92,7 @@ class LanguageFormDialogController extends DialogController
 		return new FormDialog(
 			component: 'k-language-dialog',
 			fields: $this->fields(),
-			submitButton: I18n::translate(
+			submitButton: $this->i18n(
 				$this->language ? 'save' : 'language.create'
 			),
 			value: $this->value()

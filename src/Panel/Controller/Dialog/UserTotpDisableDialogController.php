@@ -10,7 +10,6 @@ use Kirby\Exception\PermissionException;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\Escape;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the Panel dialog to disable TOTP auth for a user
@@ -33,7 +32,7 @@ class UserTotpDisableDialogController extends UserDialogController
 	{
 		$currentUser = $this->kirby->user();
 		$submitBtn   = [
-			'text'  => I18n::translate('disable'),
+			'text'  => $this->i18n('disable'),
 			'icon'  => 'protected',
 			'theme' => 'negative'
 		];
@@ -47,7 +46,7 @@ class UserTotpDisableDialogController extends UserDialogController
 			$name = $this->user->name()->or($this->user->email());
 
 			return new FormDialog(
-				text: I18n::template('login.totp.disable.admin', [
+				text: $this->i18n('login.totp.disable.admin', [
 					'user' => Escape::html($name)
 				]),
 				submitButton: $submitBtn,
@@ -61,8 +60,8 @@ class UserTotpDisableDialogController extends UserDialogController
 					'type'     => 'password',
 					'required' => true,
 					'counter'  => false,
-					'label'    => I18n::translate('login.totp.disable.label'),
-					'help'     => I18n::translate('login.totp.disable.help'),
+					'label'    => $this->i18n('login.totp.disable.label'),
+					'help'     => $this->i18n('login.totp.disable.help'),
 				]
 			],
 			submitButton: $submitBtn
@@ -89,7 +88,7 @@ class UserTotpDisableDialogController extends UserDialogController
 			$this->user->changeTotp(null);
 
 			return [
-				'message' => I18n::translate('login.totp.disable.success')
+				'message' => $this->i18n('login.totp.disable.success')
 			];
 		} catch (InvalidArgumentException $e) {
 			// Catch and re-throw exception so that any
