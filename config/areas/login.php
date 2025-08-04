@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Panel\Controller\View\LoginViewController;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 
@@ -11,20 +12,7 @@ return function ($kirby) {
 			'login' => [
 				'pattern' => 'login',
 				'auth'    => false,
-				'action'  => function () use ($kirby) {
-					$system = $kirby->system();
-					$status = $kirby->auth()->status();
-					return [
-						'component' => 'k-login-view',
-						'props'     => [
-							'methods' => array_keys($system->loginMethods()),
-							'pending' => [
-								'email'     => $status->email(),
-								'challenge' => $status->challenge()
-							]
-						],
-					];
-				}
+				'action'  => LoginViewController::class
 			],
 			'login.fallback' => [
 				'pattern' => '(:all)',

@@ -25,17 +25,4 @@ class LoginTest extends AreaTestCase
 		// last path gets remembered
 		$this->assertSame('somewhere', $this->app->session()->get('panel.path'));
 	}
-
-	public function testLogin(): void
-	{
-		$view  = $this->view('login');
-		$props = $view['props'];
-
-		$this->assertSame('login', $view['id']);
-		$this->assertSame('Log in', $view['title']);
-		$this->assertSame('k-login-view', $view['component']);
-		$this->assertSame(['password'], $props['methods']);
-		$this->assertNull($props['pending']['email']);
-		$this->assertNull($props['pending']['challenge']);
-	}
 }
