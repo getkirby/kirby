@@ -36,6 +36,8 @@ class TestCase extends BaseTestCase
 
 		// clean up $_SERVER
 		unset($_SERVER['SERVER_SOFTWARE']);
+
+		App::destroy();
 	}
 
 	public function setRequest(array $data = []): App
