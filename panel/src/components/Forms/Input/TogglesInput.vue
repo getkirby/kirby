@@ -127,7 +127,7 @@ export default {
 	color: var(--color-white);
 }
 .k-toggles-input input:focus:not(:checked) + label {
-	background: light-dark(var(--color-blue-200), var(--color-blue-800));
+	background: light-dark(var(--color-blue-300), var(--color-blue-800));
 }
 .k-toggles-input input[disabled]:checked + label {
 	background: light-dark(var(--color-gray-600), var(--color-gray-850));
