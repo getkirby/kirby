@@ -38,10 +38,12 @@
  * @example <k-header>
  * 	Headline
  *
- * 	<k-button-group slot="buttons">
- * 		<k-button icon="open" variant="filled" />
- * 		<k-button icon="cog" variant="filled" />
- * 	</k-button-group>
+ * 	<template #buttons>
+ * 		<k-button-group>
+ * 			<k-button icon="open" variant="filled" />
+ * 			<k-button icon="cog" variant="filled" />
+ * 		</k-button-group>
+ * 	</template>
  * </k-header>
  */
 export default {
