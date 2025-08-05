@@ -47,7 +47,7 @@ class SystemViewController extends ViewController
 
 	public function exceptions(): array
 	{
-		if ($this->isDebug() === false) {
+		if ($this->isDebugging() === false) {
 			return [];
 		}
 
@@ -57,7 +57,7 @@ class SystemViewController extends ViewController
 		return $this->exceptions;
 	}
 
-	protected function isDebug(): bool
+	protected function isDebugging(): bool
 	{
 		return $this->kirby->option('debug', false) === true;
 	}
@@ -120,7 +120,7 @@ class SystemViewController extends ViewController
 			];
 		}
 
-		if ($this->isDebug() === true) {
+		if ($this->isDebugging() === true) {
 			$security[] = [
 				'id'    => 'debug',
 				'icon'  => $this->isLocal() ? 'info' : 'alert',
