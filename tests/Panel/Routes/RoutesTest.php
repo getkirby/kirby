@@ -53,29 +53,91 @@ class RoutesTest extends TestCase
 	{
 		$routes = new TestRoutes($this->area, []);
 		$params = $routes->controller([]);
-		$this->assertNull($params['action'] ?? null);
-
-		$params = $routes->controller([
-			'action' => TestController::class
-		]);
-		$this->assertSame(['bar'], $params['load']());
-
-		$params = $routes->controller([
-			'action' => TestControllerWithFactory::class
-		]);
-		$this->assertSame(['factory'], $params['load']());
+		$this->assertArrayNotHasKey('action', $params);
+		$this->assertArrayNotHasKey('load', $params);
+		$this->assertArrayNotHasKey('submit', $params);
 	}
 
-	public function testControllerWithInvalidClass(): void
+	public function testControllerWithArray()
+	{
+		$routes = new TestRoutes($this->area, []);
+		$params = $routes->controller([
+			'action' => [
+				'component' => 'k-test',
+			],
+		]);
+
+		$this->assertSame('k-test', $params['action']['component']);
+		$this->assertSame('k-test', $params['load']()['component']);
+		$this->assertTrue($params['submit']());
+	}
+
+	public function testControllerWithArrayFromClosure(): void
+	{
+		$routes = new TestRoutes($this->area, []);
+		$params = $routes->controller([
+			'action' => fn () => ['component' => 'k-test'],
+		]);
+
+		$this->assertSame('k-test', $params['action']()['component']);
+		$this->assertSame('k-test', $params['load']()['component']);
+		$this->assertTrue($params['submit']());
+	}
+
+	public function testControllerWithClassname(): void
+	{
+		$routes = new TestRoutes($this->area, []);
+		$params = $routes->controller([
+			'action' => TestController::class,
+		]);
+
+		$this->assertSame(['bar'], $params['load']());
+		$this->assertTrue($params['submit']());
+	}
+
+	public function testControllerWithClassnameFactory(): void
+	{
+		$routes = new TestRoutes($this->area, []);
+		$params = $routes->controller([
+			'action' => TestControllerWithFactory::class,
+		]);
+
+		$this->assertSame(['factory'], $params['load']());
+		$this->assertTrue($params['submit']());
+	}
+
+	public function testControllerWithInvalidClassname(): void
 	{
 		$routes = new TestRoutes($this->area, []);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\Controller"');
 
-		$params = $routes->controller([
+		$routes->controller([
 			'action' => Closure::class
 		]);
+	}
+
+	public function testControllerWithControllerObject(): void
+	{
+		$routes = new TestRoutes($this->area, []);
+		$params = $routes->controller([
+			'action' => new TestController(),
+		]);
+
+		$this->assertSame(['bar'], $params['load']());
+		$this->assertTrue($params['submit']());
+	}
+
+	public function testControllerWithControllerObjectFromClosure(): void
+	{
+		$routes = new TestRoutes($this->area, []);
+		$params = $routes->controller([
+			'action' => fn () => new TestController(),
+		]);
+
+		$this->assertSame(['bar'], $params['load']());
+		$this->assertTrue($params['submit']());
 	}
 
 	public function testParams(): void

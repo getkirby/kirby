@@ -5,6 +5,7 @@ namespace Kirby\Panel\Routes;
 use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Area;
+use Kirby\Panel\Controller\Controller;
 
 /**
  * @package   Kirby Panel
@@ -26,35 +27,68 @@ abstract class Routes
 	}
 
 	/**
-	 * Creates a controller closure from a class name
+	 * Resolves a route's action controller
 	 */
 	public function controller(array $params): array
 	{
 		if ($controller = $params['action'] ?? null) {
 			if (is_string($controller) === true) {
-				// Ensure controller uses the correct interface
-				$expect = 'Kirby\Panel\Controller\\' . ucfirst(static::$type) . 'Controller';
-
-				if (is_subclass_of($controller, $expect) === false) {
-					throw new InvalidArgumentException(
-						message: 'Invalid controller class "' . $controller . '" expected child of"' . $expect . '"'
-					);
-				}
-
-				// Use factory method if available
-				if (method_exists($controller, 'factory') === true) {
-					$controller = $controller::factory(...);
-				} else {
-					$controller = fn (...$args) => new $controller(...$args);
-				}
-
-				// Add controller closures to params
-				$params['load']   ??= fn (...$args) => $controller(...$args)->load();
-				$params['submit'] ??= fn (...$args) => $controller(...$args)->submit();
+				$controller = $this->controllerFromClass($controller);
 			}
+
+			$params['load']   ??= $this->controllerHandler($controller, 'load');
+			$params['submit'] ??= $this->controllerHandler($controller, 'submit', false);
 		}
 
 		return $params;
+	}
+
+	/**
+	 * Creates a route handler closure which handles
+	 * array results as well as resolving a controller object
+	 */
+	protected function controllerHandler(
+		Closure|Controller|array $controller,
+		string $method,
+		bool $preserve = true
+	): Closure {
+		return function (...$args) use ($controller, $method, $preserve) {
+			if ($controller instanceof Closure) {
+				$controller = $controller(...$args);
+			}
+
+			if ($controller instanceof Controller) {
+				return $controller->$method();
+			}
+
+			if ($preserve === true) {
+				return $controller;
+			}
+
+			return true;
+		};
+	}
+
+	/**
+	 * Creates a controller closure from a Controller class name
+	 */
+	protected function controllerFromClass(string $class): Closure
+	{
+		// Ensure controller uses the correct interface
+		$expect = 'Kirby\Panel\Controller\\' . ucfirst(static::$type) . 'Controller';
+
+		if (is_subclass_of($class, $expect) === false) {
+			throw new InvalidArgumentException(
+				message: 'Invalid controller class "' . $class . '" expected child of"' . $expect . '"'
+			);
+		}
+
+		// Use factory method if available
+		if (method_exists($class, 'factory') === true) {
+			return $class::factory(...);
+		}
+
+		return fn (...$args) => new $class(...$args);
 	}
 
 	public function params(
