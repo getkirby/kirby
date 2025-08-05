@@ -72,7 +72,6 @@ class ModelItemTest extends TestCase
 		$item = new ModelItem(model: $this->model);
 
 		$expected = [
-			'id'       => 'test',
 			'image'    => [
 				'back'  => 'pattern',
 				'color' => 'gray-500',
@@ -80,10 +79,12 @@ class ModelItemTest extends TestCase
 				'icon'  => 'page',
 			],
 			'info'        => '',
+			'layout'      => 'list',
+			'text'        => 'test',
+			'id'          => 'test',
 			'link'        => '/pages/test',
 			'permissions' => $this->model->permissions()->toArray(),
-			'text'        => 'test',
-			'uuid'        => $this->model->uuid()?->toString(),
+			'uuid'        => $this->model->uuid()?->toString()
 		];
 
 		$this->assertSame($expected, $item->props());

@@ -4,7 +4,7 @@ namespace Kirby\Panel\Ui\Item;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Model as Panel;
-use Kirby\Panel\Ui\Component;
+use Kirby\Panel\Ui\Item;
 
 /**
  * @package   Kirby Panel
@@ -14,24 +14,25 @@ use Kirby\Panel\Ui\Component;
  * @license   https://getkirby.com/license
  * @since     5.1.0
  */
-class ModelItem extends Component
+class ModelItem extends Item
 {
-	protected string $layout;
 	protected Panel $panel;
-	protected string $text;
 
 	public function __construct(
 		protected ModelWithContent $model,
-		protected string|array|false|null $image = [],
-		protected string|null $info = null,
+		string|array|false|null $image = [],
+		string|null $info = null,
 		string|null $layout = null,
 		string|null $text = null,
 	) {
-		parent::__construct(component: 'k-item');
+		parent::__construct(
+			text: $text ?? '{{ model.title }}',
+			image: $image,
+			info: $info,
+			layout: $layout
+		);
 
-		$this->layout = $layout ?? 'list';
-		$this->panel  = $this->model->panel();
-		$this->text   = $text ?? '{{ model.title }}';
+		$this->panel = $this->model->panel();
 	}
 
 	protected function info(): string|null
@@ -57,12 +58,10 @@ class ModelItem extends Component
 	public function props(): array
 	{
 		return [
+			...parent::props(),
 			'id'          => $this->model->id(),
-			'image'       => $this->image(),
-			'info'        => $this->info(),
 			'link'        => $this->link(),
 			'permissions' => $this->permissions(),
-			'text'        => $this->text(),
 			'uuid'        => $this->model->uuid()?->toString(),
 		];
 	}

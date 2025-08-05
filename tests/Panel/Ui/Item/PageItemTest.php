@@ -30,7 +30,6 @@ class PageItemTest extends TestCase
 		$item = new PageItem(page: $this->model);
 
 		$expected = [
-			'id'       => 'test',
 			'image'    => [
 				'back'  => 'pattern',
 				'color' => 'gray-500',
@@ -38,6 +37,9 @@ class PageItemTest extends TestCase
 				'icon'  => 'page',
 			],
 			'info'     => '',
+			'layout'   => 'list',
+			'text'     => 'test',
+			'id'       => 'test',
 			'link'     => '/pages/test',
 			'permissions' => [
 				'changeSlug'   => false,
@@ -46,7 +48,6 @@ class PageItemTest extends TestCase
 				'delete'       => false,
 				'sort'         => false,
 			],
-			'text'     => 'test',
 			'uuid'     => $this->model->uuid()?->toString(),
 			'dragText' => '(link: ' . $this->model->uuid() . ' text: test)',
 			'parent'   => null,

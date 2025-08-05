@@ -422,7 +422,6 @@ class ModelTest extends TestCase
 		$data = $panel->pickerData();
 
 		$this->assertSame([
-			'id' => null,
 			'image' => [
 				'back' => 'pattern',
 				'color' => 'gray-500',
@@ -430,12 +429,14 @@ class ModelTest extends TestCase
 				'icon' => 'page',
 			],
 			'info' => '',
+			'layout' => 'list',
+			'text' => '',
+			'id' => null,
 			'link' => '/site',
 			'permissions' => [
 				'changeTitle' => false,
 				'update' => false,
 			],
-			'text' => '',
 			'uuid' => 'site://',
 			'sortable' => true,
 			'url' => '/custom',
