@@ -5,6 +5,10 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+class TestResponse extends Response
+{
+}
+
 #[CoversClass(Responder::class)]
 class ResponderTest extends TestCase
 {
@@ -254,6 +258,38 @@ class ResponderTest extends TestCase
 		$this->assertTrue($responder->isPrivate(false, ['foo', 'bar']));
 		$this->assertFalse($responder->isPrivate(false, ['bar']));
 		$this->assertFalse($responder->isPrivate(false, []));
+	}
+
+	public function testSend(): void
+	{
+		$responder = new Responder();
+		$responder->header('a', 'b');
+		$response = $responder->send();
+		$this->assertInstanceOf(Response::class, $response);
+		$this->assertSame('', $response->body());
+		$this->assertSame(['a' => 'b'], $response->headers());
+	}
+
+	public function testSendWithBody(): void
+	{
+		$responder = new Responder();
+		$responder->header('a', 'b');
+		$response = $responder->send('foo');
+		$this->assertInstanceOf(Response::class, $response);
+		$this->assertSame('foo', $response->body());
+		$this->assertSame(['a' => 'b'], $response->headers());
+	}
+
+	public function testSendWithResponse(): void
+	{
+		$responder = new Responder();
+		$responder->header('a', 'b');
+		$response = new TestResponse([
+			'headers' => ['a' => 'c']
+		]);
+		$response = $responder->send($response);
+		$this->assertInstanceOf(TestResponse::class, $response);
+		$this->assertSame(['a' => 'c'], $response->headers());
 	}
 
 	public function testToArray(): void
