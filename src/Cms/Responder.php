@@ -341,7 +341,7 @@ class Responder implements Stringable
 	public function send(HttpResponse|string|null $body = null): HttpResponse
 	{
 		if ($body instanceof HttpResponse) {
-			// inject headers from the responser into the response
+			// inject headers from the responder into the response
 			// (only if they are not already set);
 			$body->setHeaderFallbacks($this->headers());
 			return $body;
