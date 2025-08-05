@@ -6,7 +6,7 @@
 		:input="id"
 		:style="$attrs.style"
 	>
-		<template #options>
+		<template v-if="$slots.options" #options>
 			<slot name="options" />
 		</template>
 		<k-input

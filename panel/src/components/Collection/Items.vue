@@ -48,7 +48,7 @@
 					@option="onOption($event, item, itemIndex)"
 					@select="onSelect(item, itemIndex)"
 				>
-					<template #options>
+					<template v-if="$slots.options" #options>
 						<slot name="options" v-bind="{ item, index: itemIndex }" />
 					</template>
 				</k-item>

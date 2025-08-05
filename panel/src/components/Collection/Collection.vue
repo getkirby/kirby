@@ -26,7 +26,7 @@
 			@select="onSelect"
 			@sort="$emit('sort', $event)"
 		>
-			<template #options="{ item, index }">
+			<template v-if="$slots.options" #options="{ item, index }">
 				<slot name="options" v-bind="{ item, index }" />
 			</template>
 		</k-items>

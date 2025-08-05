@@ -8,7 +8,7 @@
 		@submit="$emit('submit', value)"
 		@tab="$emit('tab', $event)"
 	>
-		<template #options>
+		<template v-if="$slots.options" #options>
 			<slot name="options" />
 		</template>
 
