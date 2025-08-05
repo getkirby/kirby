@@ -80,6 +80,7 @@ class LanguageViewControllerTest extends TestCase
 		$view       = $controller->load();
 		$this->assertInstanceOf(View::class, $view);
 		$this->assertSame('k-language-view', $view->component);
+		$this->assertSame('English', $view->title);
 
 		$props = $view->props();
 		$this->assertSame('en', $props['code']);

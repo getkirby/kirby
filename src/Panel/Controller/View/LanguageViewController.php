@@ -89,6 +89,7 @@ class LanguageViewController extends ViewController
 			name:         $this->language->name(),
 			next:         $this->next(),
 			prev:         $this->prev(),
+			title:        $this->language->name(),
 			translations: $this->translations(),
 			url:          $this->language->url(),
 		);
