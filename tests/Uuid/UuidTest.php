@@ -371,6 +371,26 @@ class UuidTest extends TestCase
 		Uuid::for('page://something')->model();
 	}
 
+	public function testModelUrl(): void
+	{
+		$uuid = Uuid::for('page://my-page');
+		$this->assertSame('https://getkirby.com/page-a', $uuid->modelUrl());
+
+		$uuid = Uuid::for('page://my-page?foo=bar');
+		$this->assertSame('https://getkirby.com/page-a?foo=bar', $uuid->modelUrl());
+
+		$uuid = Uuid::for('page://my-page#fragment');
+		$this->assertSame('https://getkirby.com/page-a#fragment', $uuid->modelUrl());
+
+		$uuid = Uuid::for('page://does-not-exist');
+		$this->assertNull($uuid->modelUrl());
+
+		$uuid = Uuid::for('file://my-id');
+		$this->assertNull($uuid->modelUrl());
+
+
+	}
+
 	public function testPopulateGenerate(): void
 	{
 		$page = $this->app->page('page-b');

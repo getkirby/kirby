@@ -210,7 +210,7 @@ return [
 				Uuid::is($tag->value, 'page') === true ||
 				Uuid::is($tag->value, 'file') === true
 			) {
-				$tag->value = Uuid::for($tag->value)->model()?->url();
+				$tag->value = Uuid::for($tag->value)?->modelUrl();
 			}
 
 			// if url is empty, throw exception or link to the error page
