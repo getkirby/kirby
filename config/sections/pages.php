@@ -2,7 +2,6 @@
 
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\Page;
-use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Collector\PagesCollector;
@@ -272,6 +271,7 @@ return [
 				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
+				'fields'   => (object)$this->fields(),
 				'headline' => $this->headline,
 				'help'     => $this->help,
 				'layout'   => $this->layout,

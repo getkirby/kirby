@@ -2,6 +2,7 @@
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Form;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -112,16 +113,8 @@ return [
 
 			// add the type to the columns for the table layout
 			if ($this->layout === 'table') {
-				$blueprint = $this->models->first()?->blueprint();
-
-				if ($blueprint === null) {
-					return $columns;
-				}
-
-				foreach ($columns as $columnName => $column) {
-					if ($id = $column['id'] ?? null) {
-						$columns[$columnName]['type'] ??= $blueprint->field($id)['type'] ?? null;
-					}
+				foreach ($this->fields() as $columnName => $field) {
+					$columns[$columnName]['type'] ??= $field['type'] ?? null;
 				}
 			}
 
@@ -173,6 +166,33 @@ return [
 			}
 
 			return $item;
-		}
+		},
+		'fields' => function () {
+			if (isset($this->fields)) {
+				return $this->fields;
+			}
+
+			$blueprint = $this->models->first()?->blueprint();
+
+			if ($blueprint === null) {
+				return [];
+			}
+
+			$this->fields = [];
+
+			foreach ($this->columns as $columnName => $column) {
+				if ($id = $column['id'] ?? null) {
+					if ($field = $blueprint->field($id)) {
+						$this->fields[$columnName] = [
+							...$field,
+							'disabled' => true
+						];
+					}
+				}
+			}
+
+			return $this->fields;
+
+		},
 	],
 ];

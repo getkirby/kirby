@@ -190,6 +190,7 @@ return [
 				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
+				'fields'   => (object)$this->fields(),
 				'headline' => $this->headline,
 				'help'     => $this->help,
 				'layout'   => $this->layout,
