@@ -1,30 +1,29 @@
 <template>
-	<div v-if="buttons.length" class="k-form-controls">
-		<k-button-group layout="collapsed">
-			<k-button
-				v-for="button in buttons"
-				:key="button.text"
-				class="k-form-controls-button"
-				v-bind="button"
-				variant="filled"
-				:size="size"
-			/>
-		</k-button-group>
+	<k-button-group
+		v-if="buttons.length"
+		layout="collapsed"
+		class="k-form-controls"
+	>
+		<k-button
+			v-for="button in buttons"
+			:key="button.text"
+			class="k-form-controls-button"
+			v-bind="button"
+			variant="filled"
+			:size="size"
+		/>
 		<k-dropdown-content
 			ref="dropdown"
 			align-x="end"
 			class="k-form-controls-dropdown"
 		>
-			<template v-if="isLocked">
-				<p>
-					{{ $t("form.locked") }}
-				</p>
-			</template>
-			<template v-else>
-				<p>
-					{{ $t("form.unsaved") }}
-				</p>
-			</template>
+			<p v-if="isLocked">
+				{{ $t("form.locked") }}
+			</p>
+			<p v-else>
+				{{ $t("form.unsaved") }}
+			</p>
+
 			<template v-if="editor || modified">
 				<hr />
 				<dl>
@@ -40,6 +39,7 @@
 					</div>
 				</dl>
 			</template>
+
 			<template v-if="preview">
 				<hr />
 				<k-dropdown-item :link="preview" icon="window">
@@ -47,7 +47,7 @@
 				</k-dropdown-item>
 			</template>
 		</k-dropdown-content>
-	</div>
+	</k-button-group>
 </template>
 
 <script>
