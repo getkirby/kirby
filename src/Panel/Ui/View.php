@@ -53,11 +53,22 @@ class View extends Component
 
 	public function render(): array|null
 	{
-		return [
+		$view = [
 			...parent::render(),
-			'breadcrumb' => $this->breadcrumb,
-			'search'     => $this->search,
-			'title'      => $this->title
+			'breadcrumb' => $this->breadcrumb
 		];
+
+		// only set search and title if they exist;
+		// this will let the vue component define
+		// a proper default values
+		if ($this->search) {
+			$view['search'] = $this->search;
+		}
+
+		if ($this->title) {
+			$view['title'] = $this->title;
+		}
+
+		return $view;
 	}
 }
