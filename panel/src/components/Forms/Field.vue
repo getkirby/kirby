@@ -19,6 +19,7 @@
 			>
 				<slot name="label">
 					<k-label
+						v-if="label"
 						:input="input"
 						:required="required"
 						:title="label"
