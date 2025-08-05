@@ -5,7 +5,7 @@
 		:input="id"
 		:style="$attrs.style"
 	>
-		<k-input
+		<k-toggle-input
 			v-bind="$props"
 			ref="input"
 			type="toggle"

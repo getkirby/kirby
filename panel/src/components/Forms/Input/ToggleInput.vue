@@ -78,12 +78,6 @@ export default {
 	--input-color-border: transparent;
 	--input-shadow: var(--shadow);
 }
-.k-input[data-type="toggle"] .k-input-before {
-	padding-inline-end: calc(var(--input-padding) / 2);
-}
-.k-input[data-type="toggle"] .k-toggle-input {
-	padding-inline-start: var(--input-padding);
-}
 .k-input[data-type="toggle"][data-disabled="true"] {
 	box-shadow: none;
 	border: 1px solid var(--color-border);
