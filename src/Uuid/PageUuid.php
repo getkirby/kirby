@@ -70,7 +70,7 @@ class PageUuid extends ModelUuid
 		$url   = $kirby->url();
 
 		if ($language = $kirby->language('current')) {
-			$url .= '/' . $language->code();
+			$url = $language->url();
 		}
 
 		return $url . '/@/' . static::TYPE . '/' . $this->id();
