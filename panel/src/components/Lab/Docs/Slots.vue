@@ -4,9 +4,11 @@
 		<div class="k-table">
 			<table>
 				<thead>
-					<th style="width: 10rem">Slot</th>
-					<th>Description</th>
-					<th v-if="hasBindings">Bindings</th>
+					<tr>
+						<th style="width: 10rem">Slot</th>
+						<th>Description</th>
+						<th v-if="hasBindings">Bindings</th>
+					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="slot in slots" :key="slot.name">
