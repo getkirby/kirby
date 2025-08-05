@@ -63,15 +63,16 @@
 					<component
 						:is="`k-${field.type}-field`"
 						:ref="'entry-' + index + '-input'"
+						v-bind="field"
 						:disabled="disabled"
 						:value="entry.value"
-						v-bind="field"
 						:counter="false"
 						:label="false"
 						class="k-entries-field-item-input"
 						@input="onInput(index, $event)"
 					/>
 					<k-button-group
+						v-if="more || !disabled"
 						class="k-entries-field-item-options"
 						layout="collapsed"
 					>
