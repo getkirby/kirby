@@ -1,8 +1,10 @@
 <?php
 
-use Kirby\Panel\Controller\View\FileViewController;
-use Kirby\Panel\Controller\View\ModelPreviewViewController;
+use Kirby\Panel\Controller\View\PageFileViewController;
+use Kirby\Panel\Controller\View\PagePreviewViewController;
 use Kirby\Panel\Controller\View\PageViewController;
+use Kirby\Panel\Controller\View\SiteFileViewController;
+use Kirby\Panel\Controller\View\SitePreviewViewController;
 use Kirby\Panel\Controller\View\SiteViewController;
 
 return [
@@ -12,11 +14,11 @@ return [
 	],
 	'page.file' => [
 		'pattern' => '(pages/.*?)/files/(:any)',
-		'action'  => FileViewController::class
+		'action'  => PageFileViewController::class
 	],
 	'page.preview' => [
 		'pattern' => '(pages/.*?)/preview/(changes|latest|compare)',
-		'action'  => ModelPreviewViewController::class
+		'action'  => PagePreviewViewController::class
 	],
 	'site' => [
 		'pattern' => 'site',
@@ -24,10 +26,10 @@ return [
 	],
 	'site.file' => [
 		'pattern' => '(site)/files/(:any)',
-		'action'  => FileViewController::class
+		'action'  => SiteFileViewController::class
 	],
 	'site.preview' => [
 		'pattern' => '(site)/preview/(changes|latest|compare)',
-		'action'  => ModelPreviewViewController::class
+		'action'  => SitePreviewViewController::class
 	],
 ];

@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\View;
 
-use Kirby\Cms\File;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\View;
@@ -20,34 +19,17 @@ class FileViewControllerTest extends TestCase
 
 		$this->app = $this->app->clone([
 			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'files' => [
-							['filename' => 'test.jpg']
-						]
-					]
-				],
 				'files' => [
 					['filename' => 'test.jpg'],
 					['filename' => 'test2.png']
 				]
-			],
-			'users' => [
-				[
-					'id'    => 'test',
-					'email' => 'test@getkirby.com',
-					'files' => [
-						['filename' => 'test.jpg']
-					]
-				]
-			],
+			]
 		]);
 
 		$this->app->impersonate('kirby');
 	}
 
-	public function testBreadcrumbForSiteFile(): void
+	public function testBreadcrumb(): void
 	{
 		$file       = $this->app->file('test.jpg');
 		$controller = new FileViewController($file);
@@ -57,40 +39,6 @@ class FileViewControllerTest extends TestCase
 				'label' => 'test.jpg',
 				'link'  => '/site/files/test.jpg',
 			]
-		], $breadcrumb);
-	}
-
-	public function testBreadcrumbForPageFile(): void
-	{
-		$file       = $this->app->page('test')->file('test.jpg');
-		$controller = new FileViewController($file);
-		$breadcrumb = $controller->breadcrumb();
-		$this->assertSame([
-			[
-				'label' => 'test',
-				'link'  => '/pages/test',
-			],
-			[
-				'label' => 'test.jpg',
-				'link'  => '/pages/test/files/test.jpg',
-			],
-		], $breadcrumb);
-	}
-
-	public function testBreadcrumbForUserFile(): void
-	{
-		$file       = $this->app->user('test')->file('test.jpg');
-		$controller = new FileViewController($file);
-		$breadcrumb = $controller->breadcrumb();
-		$this->assertSame([
-			[
-				'label' => 'test@getkirby.com',
-				'link'  => '/users/test',
-			],
-			[
-				'label' => 'test.jpg',
-				'link'  => '/users/test/files/test.jpg',
-			],
 		], $breadcrumb);
 	}
 
@@ -105,33 +53,16 @@ class FileViewControllerTest extends TestCase
 
 	public function testComponent(): void
 	{
-		$file       = $this->app->page('test')->file('test.jpg');
+		$file       = $this->app->file('test.jpg');
 		$controller = new FileViewController($file);
 		$this->assertSame('k-file-view', $controller->component());
 	}
 
-	public function assertFactory(
-		File $file,
-		string $parent
-	): void {
-		$controller = FileViewController::factory($parent, 'test.jpg');
-		$this->assertInstanceOf(FileViewController::class, $controller);
-		$this->assertSame($file, $controller->model());
-	}
-
 	public function testFactoryForSiteFile(): void
 	{
-		$this->assertFactory($this->app->file('test.jpg'), 'site');
-	}
-
-	public function testFactoryForPageFile(): void
-	{
-		$this->assertFactory($this->app->page('test')->file('test.jpg'), 'pages/test');
-	}
-
-	public function testFactoryForUserFile(): void
-	{
-		$this->assertFactory($this->app->user('test')->file('test.jpg'), 'users/test');
+		$controller = FileViewController::factory('site', 'test.jpg');
+		$this->assertInstanceOf(FileViewController::class, $controller);
+		$this->assertSame($this->app->file('test.jpg'), $controller->model());
 	}
 
 	public function testIndex(): void

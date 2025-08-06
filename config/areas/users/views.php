@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Panel\Controller\View\FileViewController;
+use Kirby\Panel\Controller\View\UserFileViewController;
 use Kirby\Panel\Controller\View\UsersViewController;
 use Kirby\Panel\Controller\View\UserViewController;
 
@@ -15,6 +15,6 @@ return [
 	],
 	'user.file' => [
 		'pattern' => '(users/.*?)/files/(:any)',
-		'action'  => FileViewController::class
+		'action'  => UserFileViewController::class
 	],
 ];

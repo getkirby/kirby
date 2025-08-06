@@ -9,7 +9,6 @@ use Kirby\Exception\PermissionException;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\View;
-use Kirby\Toolkit\I18n;
 
 /**
  * Controls the preview view
@@ -21,7 +20,7 @@ use Kirby\Toolkit\I18n;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class ModelPreviewViewController extends ViewController
+abstract class ModelPreviewViewController extends ViewController
 {
 	public function __construct(
 		public Page|Site $model,
@@ -62,26 +61,11 @@ class ModelPreviewViewController extends ViewController
 
 	public function props(): array
 	{
-		$controller = match (true) {
-			$this->model instanceof Page => PageViewController::class,
-			$this->model instanceof Site => SiteViewController::class,
-		};
-
-		$props = (new $controller($this->model))->props();
-
-		$title = match (true) {
-			$this->model instanceof Page => $props['title'],
-			$this->model instanceof Site => I18n::translate('view.site'),
-		};
-
 		return [
-			...$props,
 			'component' => 'k-preview-view',
-			'back'      => $props['link'],
 			'buttons'   => $this->buttons(),
 			'id'        => $this->id(),
 			'src'       => $this->src(),
-			'title'     => $title . ' | ' . I18n::translate('preview'),
 			'versionId' => $this->versionId,
 		];
 	}

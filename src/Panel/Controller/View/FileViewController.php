@@ -11,7 +11,7 @@ use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\FilePreview;
 
 /**
- * Controls the file view
+ * Controls a file view
  *
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -42,38 +42,12 @@ class FileViewController extends ModelViewController
 
 	public function breadcrumb(): array
 	{
-		$breadcrumb = [];
-		$parent     = $this->model->parent();
-
-		switch ($parent::CLASS_ALIAS) {
-			case 'user':
-				/** @var \Kirby\Cms\User $parent */
-				// The breadcrumb is not necessary
-				// on the account view
-				if ($parent->isLoggedIn() === false) {
-					$breadcrumb[] = [
-						'label' => $parent->username(),
-						'link'  => $parent->panel()->url(true)
-					];
-				}
-				break;
-			case 'page':
-				/** @var \Kirby\Cms\Page $parent */
-				$breadcrumb = $this->model->parents()->flip()->values(
-					fn ($parent) => [
-						'label' => $parent->title()->toString(),
-						'link'  => $parent->panel()->url(true),
-					]
-				);
-		}
-
-		// add the file
-		$breadcrumb[] = [
-			'label' => $this->model->filename(),
-			'link'  => $this->panel->url(true),
+		return [
+			[
+				'label' => $this->model->filename(),
+				'link'  => $this->panel->url(true),
+			]
 		];
-
-		return $breadcrumb;
 	}
 
 	public function buttons(): ViewButtons
