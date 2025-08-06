@@ -82,10 +82,11 @@ class FileUuidTest extends TestCase
 		$this->assertSame('my-file', ModelUuid::retrieveId($file));
 	}
 
-	public function testUrl(): void
+	public function testToPermalink(): void
 	{
 		$file = $this->app->file('page-a/test.pdf');
 		$url  = 'https://getkirby.com/@/file/my-file';
+		$this->assertSame($url, $file->uuid()->toPermalink());
 		$this->assertSame($url, $file->uuid()->url());
 	}
 

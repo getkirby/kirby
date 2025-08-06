@@ -872,7 +872,7 @@ class Page extends ModelWithContent
 	 */
 	public function permalink(): string|null
 	{
-		return $this->uuid()?->url();
+		return $this->uuid()?->toPermalink();
 	}
 
 	/**

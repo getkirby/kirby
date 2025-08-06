@@ -58,7 +58,7 @@ class PageUuid extends ModelUuid
 	/**
 	 * Returns permalink url
 	 */
-	public function url(): string
+	public function toPermalink(): string
 	{
 		// make sure UUID is cached because the permalink
 		// route only looks up UUIDs from cache
@@ -74,5 +74,13 @@ class PageUuid extends ModelUuid
 		}
 
 		return $url . '/@/' . static::TYPE . '/' . $this->id();
+	}
+
+	/**
+	 * @deprecated 5.1.0 Use `::toPermalink()` instead
+	 */
+	public function url(): string
+	{
+		return $this->toPermalink();
 	}
 }

@@ -371,26 +371,6 @@ class UuidTest extends TestCase
 		Uuid::for('page://something')->model();
 	}
 
-	public function testModelUrl(): void
-	{
-		$uuid = Uuid::for('page://my-page');
-		$this->assertSame('https://getkirby.com/page-a', $uuid->modelUrl());
-
-		$uuid = Uuid::for('page://my-page?foo=bar');
-		$this->assertSame('https://getkirby.com/page-a?foo=bar', $uuid->modelUrl());
-
-		$uuid = Uuid::for('page://my-page#fragment');
-		$this->assertSame('https://getkirby.com/page-a#fragment', $uuid->modelUrl());
-
-		$uuid = Uuid::for('page://does-not-exist');
-		$this->assertNull($uuid->modelUrl());
-
-		$uuid = Uuid::for('file://my-id');
-		$this->assertNull($uuid->modelUrl());
-
-
-	}
-
 	public function testPopulateGenerate(): void
 	{
 		$page = $this->app->page('page-b');
@@ -418,6 +398,24 @@ class UuidTest extends TestCase
 		$this->assertIsString($id = $uuid->toString());
 		$this->assertSame($id, (string)$uuid);
 		$this->assertSame(Str::after($id, '://'), $this->app->page('page-b')->content()->get('uuid')->value());
+	}
+
+	public function testToUrl(): void
+	{
+		$uuid = Uuid::for('page://my-page');
+		$this->assertSame('https://getkirby.com/page-a', $uuid->toUrl());
+
+		$uuid = Uuid::for('page://my-page?foo=bar');
+		$this->assertSame('https://getkirby.com/page-a?foo=bar', $uuid->toUrl());
+
+		$uuid = Uuid::for('page://my-page#fragment');
+		$this->assertSame('https://getkirby.com/page-a#fragment', $uuid->toUrl());
+
+		$uuid = Uuid::for('page://does-not-exist');
+		$this->assertNull($uuid->toUrl());
+
+		$uuid = Uuid::for('file://my-id');
+		$this->assertNull($uuid->toUrl());
 	}
 
 	public function testValue(): void

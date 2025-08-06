@@ -82,10 +82,11 @@ class PageUuidTest extends TestCase
 		$this->assertSame('my-page', ModelUuid::retrieveId($page));
 	}
 
-	public function testUrl(): void
+	public function testToPermalink(): void
 	{
 		$page = $this->app->page('page-a');
 		$url  = 'https://getkirby.com/@/page/my-page';
+		$this->assertSame($url, $page->uuid()->toPermalink());
 		$this->assertSame($url, $page->uuid()->url());
 	}
 
