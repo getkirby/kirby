@@ -198,9 +198,6 @@ return [
 				)
 				->toStoredValues();
 
-			// remove frontend helper id
-			unset($row['_id']);
-
 			$data[] = $row;
 		}
 

@@ -517,7 +517,12 @@ export default {
 		 * @param {array} values
 		 */
 		save(values = this.items) {
-			this.$emit("input", values);
+			this.$emit(
+				"input",
+				// strip _id from values
+				// eslint-disable-next-line no-unused-vars
+				values.map(({ _id, ...value }) => value)
+			);
 		},
 		/**
 		 * Sort items according to `sortBy` prop
