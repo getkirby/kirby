@@ -30,6 +30,7 @@ use Throwable;
  * @license   https://getkirby.com/license
  *
  * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
+ * @method \Kirby\Uuid\PageUuid uuid()
  */
 class Page extends ModelWithContent
 {
