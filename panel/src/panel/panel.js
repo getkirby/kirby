@@ -122,7 +122,14 @@ export default {
 
 		// register the single source of truth
 		// for all Vue components
-		this.app.config.globalProperties.$panel = panel;
+		window.panel = this.app.config.globalProperties.$panel = panel;
+
+		// Bind all methods to use the reactive proxy
+		for (const key in this) {
+			if (typeof this[key] === "function") {
+				this[key] = this[key].bind(panel);
+			}
+		}
 
 		return panel;
 	},
