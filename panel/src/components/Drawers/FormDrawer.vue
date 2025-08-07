@@ -8,8 +8,12 @@
 		@submit="$emit('submit', value)"
 		@tab="$emit('tab', $event)"
 	>
-		<slot slot="options" name="options" />
+		<template v-if="$slots.options" #options>
+			<slot name="options" />
+		</template>
+
 		<k-drawer-fields
+			:disabled="disabled"
 			:fields="fields"
 			:value="value"
 			@input="$emit('input', $event)"

@@ -4,12 +4,14 @@
 			<pre
 				class="k-code"
 				:data-language="language"
-			><code :key="$slots.default[0].text + '-' + language" :class="language ? `language-${language}` : null"><slot /></code></pre>
+			><code :key="$slots.default()[0].children + '-' + language" :class="language ? `language-${language}` : null"><slot /></code></pre>
 		</div>
 	</k-highlight>
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
+
 /**
  * A code block with syntax highlighting
  * @since 4.0.0
@@ -17,7 +19,7 @@
  */
 export default {
 	components: {
-		"k-highlight": () => import("./Highlight.vue")
+		"k-highlight": defineAsyncComponent(() => import("./Highlight.vue"))
 	},
 	props: {
 		/**

@@ -1,30 +1,10 @@
 <?php
 
-use Kirby\Panel\Lab\Docs;
+use Kirby\Panel\Controller\Drawer\LabDocDrawerController;
 
 return [
 	'lab.docs' => [
 		'pattern' => 'lab/docs/(:any)',
-		'load'    => function (string $component) {
-			if (Docs::isInstalled() === false) {
-				return [
-					'component' => 'k-text-drawer',
-					'props' => [
-						'text' => 'The UI docs are not installed.'
-					]
-				];
-			}
-
-			$docs = new Docs($component);
-
-			return [
-				'component' => 'k-lab-docs-drawer',
-				'props' => [
-					'icon' => 'book',
-					'title' => $component,
-					'docs'  => $docs->toArray()
-				]
-			];
-		},
-	],
+		'action'  => LabDocDrawerController::class
+	]
 ];

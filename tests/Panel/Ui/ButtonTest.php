@@ -3,17 +3,27 @@
 namespace Kirby\Panel\Ui;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Button
- * @covers ::__construct
- */
+#[CoversClass(Button::class)]
 class ButtonTest extends TestCase
 {
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testAttrs(): void
+	{
+		$button = new Button(
+			text: 'Attrs',
+			foo: 'bar'
+		);
+
+		$this->assertSame([
+			'foo'        => 'bar',
+			'responsive' => true,
+			'text'       => 'Attrs',
+			'type'       => 'button',
+		], array_filter($button->props()));
+	}
+
+	public function testProps(): void
 	{
 		$component = new Button(
 			icon: 'smile',
@@ -45,10 +55,7 @@ class ButtonTest extends TestCase
 		], $component->props());
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testPropsWithI18n()
+	public function testPropsWithI18n(): void
 	{
 		$component = new Button(
 			text: [
@@ -59,5 +66,38 @@ class ButtonTest extends TestCase
 
 		$props = $component->props();
 		$this->assertSame('Congrats', $props['text']);
+	}
+
+	public function testText(): void
+	{
+		$button = new Button(
+			text: 'Congrats',
+		);
+
+		$this->assertSame('Congrats', $button->text());
+
+		$button = new Button(
+			text: [
+				'en' => 'Congrats',
+				'de' => 'Glückwunsch'
+			],
+		);
+		$this->assertSame('Congrats', $button->text());
+	}
+
+	public function testTitle(): void
+	{
+		$button = new Button(
+			title: 'Congrats',
+		);
+
+		$this->assertSame('Congrats', $button->title());
+
+		$button = new Button(
+			title: [
+				'en' => 'Congrats',
+				'de' => 'Glückwunsch'
+			],
+		);
 	}
 }

@@ -1,6 +1,4 @@
 <script>
-import { length } from "@/helpers/object";
-
 /**
  * @internal
  */
@@ -9,15 +7,12 @@ export default {
 		api: String,
 		blueprint: String,
 		buttons: Array,
-		content: Object,
 		id: String,
 		link: String,
 		lock: {
 			type: [Boolean, Object]
 		},
-		model: Object,
 		next: Object,
-		originals: Object,
 		prev: Object,
 		permissions: {
 			type: Object,
@@ -35,7 +30,8 @@ export default {
 			type: Array,
 			default: () => []
 		},
-		uuid: String
+		uuid: String,
+		versions: Object
 	},
 	data() {
 		return {
@@ -43,20 +39,17 @@ export default {
 		};
 	},
 	computed: {
-		changes() {
-			return this.$panel.content.changes({
-				api: this.api,
-				language: this.$panel.language.code
-			});
+		content() {
+			return this.versions.changes;
+		},
+		diff() {
+			return this.$panel.content.diff();
 		},
 		editor() {
 			return this.lock.user.email;
 		},
-		hasChanges() {
-			return length(this.changes) > 0;
-		},
-		hasTabs() {
-			return this.tabs.length > 1;
+		hasDiff() {
+			return this.$panel.content.hasDiff();
 		},
 		isLocked() {
 			return this.lock.isLocked;
@@ -73,7 +66,7 @@ export default {
 		this.$events.on("model.reload", this.$reload);
 		this.$events.on("view.save", this.onViewSave);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("beforeunload", this.onBeforeUnload);
 		this.$events.off("content.save", this.onContentSave);
 		this.$events.off("keydown.left", this.toPrev);

@@ -16,14 +16,14 @@ use Kirby\Filesystem\F;
 /**
  * Content storage handler using plain text files
  * stored in the content folder
- * @internal
- * @since 4.0.0
  *
  * @package   Kirby Content
  * @author    Lukas Bestle <lukas@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
+ * @unstable
  */
 class PlainTextStorage extends Storage
 {
@@ -39,7 +39,7 @@ class PlainTextStorage extends Storage
 			=> $this->model->root()
 		};
 
-		if ($versionId->is(VersionId::CHANGES)) {
+		if ($versionId->is('changes')) {
 			$directory .= '/_changes';
 		}
 
@@ -144,9 +144,18 @@ class PlainTextStorage extends Storage
 		}
 		// @codeCoverageIgnoreEnd
 
-		// clean up empty _changes directories
-		if ($versionId->is(VersionId::changes()) === true) {
-			$this->deleteEmptyDirectory(dirname($contentFile));
+		$contentDirectory = $this->contentDirectory($versionId);
+
+		// clean up empty content directories (_changes or the page/user directory)
+		$this->deleteEmptyDirectory($contentDirectory);
+
+		// delete empty _drafts directories for pages
+		if (
+			$versionId->is('latest') === true &&
+			$this->model instanceof Page &&
+			$this->model->isDraft() === true
+		) {
+			$this->deleteEmptyDirectory(dirname($contentDirectory));
 		}
 	}
 
@@ -186,7 +195,10 @@ class PlainTextStorage extends Storage
 
 		// A changed version or non-default language version does not exist
 		// if the content file was not found
-		if (VersionId::latest()->is($versionId) === false || $language->isDefault() === false) {
+		if (
+			$versionId->is('latest') === false ||
+			$language->isDefault() === false
+		) {
 			return false;
 		}
 
@@ -205,6 +217,33 @@ class PlainTextStorage extends Storage
 			)
 			// @codeCoverageIgnoreEnd
 		};
+	}
+
+	/**
+	 * Compare two version-language-storage combinations
+	 */
+	public function isSameStorageLocation(
+		VersionId $fromVersionId,
+		Language $fromLanguage,
+		VersionId|null $toVersionId = null,
+		Language|null $toLanguage = null,
+		Storage|null $toStorage = null
+	) {
+		// fallbacks to allow keeping the method call lean
+		$toVersionId ??= $fromVersionId;
+		$toLanguage  ??= $fromLanguage;
+		$toStorage   ??= $this;
+
+		// no need to compare content files if the new
+		// storage type is different
+		if ($toStorage instanceof self === false) {
+			return false;
+		}
+
+		$contentFileA = $this->contentFile($fromVersionId, $fromLanguage);
+		$contentFileB = $toStorage->contentFile($toVersionId, $toLanguage);
+
+		return $contentFileA === $contentFileB;
 	}
 
 	/**
@@ -269,6 +308,17 @@ class PlainTextStorage extends Storage
 	 */
 	protected function write(VersionId $versionId, Language $language, array $fields): void
 	{
+		// only store non-null value fields
+		$fields = array_filter($fields, fn ($field) => $field !== null);
+
+		// Content for files is only stored when there are any fields.
+		// Otherwise, the storage handler will take care here of cleaning up
+		// unnecessary content files.
+		if ($this->model instanceof File && $fields === []) {
+			$this->delete($versionId, $language);
+			return;
+		}
+
 		$success = Data::write($this->contentFile($versionId, $language), $fields);
 
 		// @codeCoverageIgnoreStart

@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class KirbyTextTest extends TestCase
 {
-	public function testBeforeHook()
+	public function testBeforeHook(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -22,7 +22,7 @@ class KirbyTextTest extends TestCase
 		$this->assertSame('<p>test</p>', $app->kirbytext('Test'));
 	}
 
-	public function testAfterHook()
+	public function testAfterHook(): void
 	{
 		$app = new App([
 			'roots' => [

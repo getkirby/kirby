@@ -5,11 +5,15 @@ namespace Kirby\Toolkit;
 use ArgumentCountError;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Component
- */
+class TestComponentWithCustomProperty extends Component
+{
+	public string $b = 'custom property';
+}
+
+#[CoversClass(Component::class)]
 class ComponentTest extends TestCase
 {
 	public function tearDown(): void
@@ -18,13 +22,7 @@ class ComponentTest extends TestCase
 		Component::$mixins = [];
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::__call
-	 * @covers ::applyProp
-	 * @covers ::applyProps
-	 */
-	public function testProp()
+	public function testProp(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -40,11 +38,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('prop value', $component->prop);
 	}
 
-	/**
-	 * @covers ::applyProp
-	 * @covers ::applyProps
-	 */
-	public function testPropWithDefaultValue()
+	public function testPropWithDefaultValue(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -60,11 +54,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('default value', $component->prop);
 	}
 
-	/**
-	 * @covers ::applyProp
-	 * @covers ::applyProps
-	 */
-	public function testPropWithFixedValue()
+	public function testPropWithFixedValue(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -80,11 +70,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('test', $component->prop);
 	}
 
-	/**
-	 * @covers ::applyProp
-	 * @covers ::applyProps
-	 */
-	public function testPropWithInvalidValue()
+	public function testPropWithInvalidValue(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -100,11 +86,7 @@ class ComponentTest extends TestCase
 		new Component('test', ['prop' => [1, 2, 3]]);
 	}
 
-	/**
-	 * @covers ::applyProp
-	 * @covers ::applyProps
-	 */
-	public function testPropWithMissingValue()
+	public function testPropWithMissingValue(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -120,10 +102,52 @@ class ComponentTest extends TestCase
 		new Component('test');
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testAttrs()
+	public function testPropUnsetting(): void
+	{
+		Component::$types = [
+			'a' => [
+				'props' => [
+					'a' => fn ($prop) => $prop,
+					'b' => fn ($prop) => $prop
+				]
+			],
+			'b' => [
+				'extends' => 'a',
+				'props' => [
+					'b' => null
+				]
+			]
+		];
+
+		$component = new Component('b', [
+			'a' => 'a',
+			'b' => 'b'
+		]);
+
+		$this->assertSame('a', $component->a());
+		$this->assertNull($component->b());
+	}
+
+	public function testPropUnsettingWithCustomProperty(): void
+	{
+		TestComponentWithCustomProperty::$types = [
+			'a' => [
+				'props' => [
+					'a' => fn ($prop) => $prop,
+					'b' => null // this should not have any effect on the custom property
+				]
+			]
+		];
+
+		$component = new TestComponentWithCustomProperty('a', [
+			'a' => 'a'
+		]);
+
+		$this->assertSame('a', $component->a());
+		$this->assertSame('custom property', $component->b());
+	}
+
+	public function testAttrs(): void
 	{
 		Component::$types = [
 			'test' => []
@@ -135,12 +159,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('bar', $component->foo);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::__call
-	 * @covers ::applyComputed
-	 */
-	public function testComputed()
+	public function testComputed(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -156,12 +175,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('computed prop', $component->prop);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::__call
-	 * @covers ::applyComputed
-	 */
-	public function testComputedFromProp()
+	public function testComputedFromProp(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -179,11 +193,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('computed: prop value', $component->prop());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::__call
-	 */
-	public function testMethod()
+	public function testMethod(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -198,11 +208,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('hello world', $component->say());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::__call
-	 */
-	public function testPropsInMethods()
+	public function testPropsInMethods(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -220,11 +226,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('hello world', $component->say());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::__call
-	 */
-	public function testComputedPropsInMethods()
+	public function testComputedPropsInMethods(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -245,11 +247,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('HELLO WORLD', $component->say());
 	}
 
-	/**
-	 * @covers ::toArray
-	 * @covers ::__debugInfo
-	 */
-	public function testToArray()
+	public function testToArray(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -272,11 +270,7 @@ class ComponentTest extends TestCase
 		$this->assertSame($expected, $component->__debugInfo());
 	}
 
-	/**
-	 * @covers ::toArray
-	 * @covers ::__debugInfo
-	 */
-	public function testCustomToArray()
+	public function testCustomToArray(): void
 	{
 		Component::$types = [
 			'test' => [
@@ -291,10 +285,7 @@ class ComponentTest extends TestCase
 		$this->assertSame(['foo' => 'bar'], $component->toArray());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testInvalidType()
+	public function testInvalidType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Undefined component type: test');
@@ -302,10 +293,7 @@ class ComponentTest extends TestCase
 		new Component('test');
 	}
 
-	/**
-	 * @covers ::load
-	 */
-	public function testLoadInvalidFile()
+	public function testLoadInvalidFile(): void
 	{
 		Component::$types = ['foo' => 'bar'];
 		$this->expectException(Exception::class);
@@ -314,11 +302,7 @@ class ComponentTest extends TestCase
 		Component::load('foo');
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::setup
-	 */
-	public function testMixins()
+	public function testMixins(): void
 	{
 		Component::$mixins = [
 			'test' => [
@@ -343,10 +327,7 @@ class ComponentTest extends TestCase
 		$this->assertSame('HELLO WORLD', $component->message);
 	}
 
-	/**
-	 * @covers ::__get
-	 */
-	public function testGetInvalidProp()
+	public function testGetInvalidProp(): void
 	{
 		Component::$types = [
 			'test' => []
@@ -356,10 +337,7 @@ class ComponentTest extends TestCase
 		$this->assertNull($component->foo);
 	}
 
-	/**
-	 * @covers ::defaults
-	 */
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		Component::$types = [
 			'test' => []

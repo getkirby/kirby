@@ -1,26 +1,37 @@
 <template>
-	<div
-		:class="['k-tags-field-preview', $options.class, $attrs.class]"
+	<ul
+		:class="['k-tags-field-preview', 'k-tags', $options.class, $attrs.class]"
 		:style="$attrs.style"
 	>
-		<k-tags
-			:draggable="false"
-			:html="html"
-			:value="tags"
-			element="ul"
-			element-tag="li"
-			theme="light"
-		/>
-	</div>
+		<li
+			v-for="(tag, tagIndex) in tags"
+			:key="tag.id ?? tag.value ?? tag.text ?? tagIndex"
+		>
+			<k-tag
+				:html="html"
+				:image="tag.image"
+				:link="tag.link"
+				:text="tag.text"
+				element="div"
+				theme="light"
+			/>
+		</li>
+	</ul>
 </template>
 
 <script>
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
-import { props as TagsProps } from "@/components/Navigation/Tags.vue";
 
 export default {
-	mixins: [FieldPreview, TagsProps],
+	mixins: [FieldPreview],
 	props: {
+		/**
+		 * If set to `true`, the `text` is rendered as HTML code,
+		 * otherwise as plain text
+		 */
+		html: {
+			type: Boolean
+		},
 		value: {
 			default: () => [],
 			type: [Array, String]

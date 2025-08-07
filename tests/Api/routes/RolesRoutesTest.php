@@ -31,7 +31,7 @@ class RolesRoutesTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testList()
+	public function testList(): void
 	{
 		$app = $this->app;
 
@@ -41,7 +41,7 @@ class RolesRoutesTest extends TestCase
 		$this->assertSame('editor', $response['data'][1]['name']);
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$app = $this->app;
 

@@ -255,7 +255,7 @@ class Uri implements Stringable
 
 	public function hasFragment(): bool
 	{
-		return empty($this->fragment) === false;
+		return $this->fragment !== null && $this->fragment !== '';
 	}
 
 	public function hasPath(): bool
@@ -308,6 +308,15 @@ class Uri implements Stringable
 	public function isAbsolute(): bool
 	{
 		return empty($this->host) === false;
+	}
+
+	/**
+	 * Returns the fragment after the hash
+	 * @since 5.1.0
+	 */
+	public function fragment(): string|null
+	{
+		return $this->fragment;
 	}
 
 	/**
@@ -472,15 +481,15 @@ class Uri implements Stringable
 
 		$path = $this->path->toString($slash) . $this->params->toString(true);
 
-		if ($this->slash && $slash === true) {
+		if ($this->slash && ($path !== '' || $slash === true)) {
 			$path .= '/';
 		}
 
 		$url .= $path;
 		$url .= $this->query->toString(true);
 
-		if (empty($this->fragment) === false) {
-			$url .= '#' . $this->fragment;
+		if ($this->hasFragment() === true) {
+			$url .= '#' . $this->fragment();
 		}
 
 		return $url;

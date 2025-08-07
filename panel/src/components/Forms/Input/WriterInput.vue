@@ -6,7 +6,6 @@
 		:data-disabled="disabled"
 		:data-empty="isEmpty"
 		:data-placeholder="placeholder"
-		:data-toolbar-inline="Boolean(toolbar.inline ?? true)"
 		:spellcheck="spellcheck"
 		:style="$attrs.style"
 	>
@@ -141,7 +140,10 @@ export default {
 		toolbarOptions() {
 			return {
 				// if custom set of marks is enabled, use as toolbar default as well
-				marks: Array.isArray(this.marks) ? this.marks : undefined,
+				marks:
+					Array.isArray(this.marks) || this.marks === false
+						? this.marks
+						: undefined,
 				...this.toolbar,
 				editor: this.editor
 			};
@@ -152,6 +154,7 @@ export default {
 			if (newValue !== oldValue && newValue !== this.html) {
 				this.html = newValue;
 				this.editor.setContent(this.html);
+				this.isEmpty = this.editor.isEmpty();
 			}
 		}
 	},
@@ -260,7 +263,7 @@ export default {
 			this.focus();
 		}
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		this.editor.destroy();
 		this.$panel.events.off("click", this.onBlur);
 		this.$panel.events.off("focus", this.onBlur);

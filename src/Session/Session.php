@@ -514,7 +514,7 @@ class Session
 	/**
 	 * Puts the session into write mode by acquiring a lock
 	 * and reloading the data
-	 * @internal
+	 * @unstable
 	 */
 	public function prepareForWriting(): void
 	{

@@ -1,11 +1,14 @@
 <?php
 
 use Kirby\Cms\File;
-use Kirby\Cms\Files;
+use Kirby\Panel\Collector\FilesCollector;
+use Kirby\Panel\Ui\Item\FileItem;
+use Kirby\Panel\Ui\Upload;
 use Kirby\Toolkit\I18n;
 
 return [
 	'mixins' => [
+		'batch',
 		'details',
 		'empty',
 		'headline',
@@ -55,84 +58,40 @@ return [
 		'parent' => function () {
 			return $this->parentModel();
 		},
+		'collector' => function () {
+			return $this->collector ??= new FilesCollector(
+				flip: $this->flip(),
+				limit: $this->limit(),
+				page: $this->page() ?? 1,
+				parent: $this->parent(),
+				query: $this->query(),
+				search: $this->searchterm(),
+				sortBy: $this->sortBy(),
+				template: $this->template(),
+			);
+		},
 		'models' => function () {
-			if ($this->query !== null) {
-				$files = $this->parent->query($this->query, Files::class) ?? new Files([]);
-			} else {
-				$files = $this->parent->files();
-			}
-
-			// filter files by template
-			$files = $files->template($this->template);
-
-			// filter out all protected and hidden files
-			$files = $files->filter('isListable', true);
-
-			// search
-			if ($this->search === true && empty($this->searchterm()) === false) {
-				$files = $files->search($this->searchterm());
-
-				// disable flip and sortBy while searching
-				// to show most relevant results
-				$this->flip = false;
-				$this->sortBy = null;
-			}
-
-			// sort
-			if ($this->sortBy) {
-				$files = $files->sort(...$files::sortArgs($this->sortBy));
-			} else {
-				$files = $files->sorted();
-			}
-
-			// flip
-			if ($this->flip === true) {
-				$files = $files->flip();
-			}
-
-			// apply the default pagination
-			$files = $files->paginate([
-				'page'   => $this->page,
-				'limit'  => $this->limit,
-				'method' => 'none' // the page is manually provided
-			]);
-
-			return $files;
+			return $this->collector()->models();
+		},
+		'modelsPaginated' => function () {
+			return $this->collector()->models(paginated: true);
 		},
 		'files' => function () {
 			return $this->models;
 		},
 		'data' => function () {
-			$data = [];
+			$data               = [];
+			$dragTextIsAbsolute = $this->model->is($this->parent) === false;
 
-			// the drag text needs to be absolute when the files come from
-			// a different parent model
-			$dragTextAbsolute = $this->model->is($this->parent) === false;
-
-			foreach ($this->models as $file) {
-				$panel       = $file->panel();
-				$permissions = $file->permissions();
-
-				$item = [
-					'dragText'  => $panel->dragText('auto', $dragTextAbsolute),
-					'extension' => $file->extension(),
-					'filename'  => $file->filename(),
-					'id'        => $file->id(),
-					'image'     => $panel->image(
-						$this->image,
-						$this->layout === 'table' ? 'list' : $this->layout
-					),
-					'info'      => $file->toSafeString($this->info ?? false),
-					'link'      => $panel->url(true),
-					'mime'      => $file->mime(),
-					'parent'    => $file->parent()->panel()->path(),
-					'permissions' => [
-						'sort' => $permissions->can('sort'),
-					],
-					'template'  => $file->template(),
-					'text'      => $file->toSafeString($this->text),
-					'url'       => $file->url(),
-				];
+			foreach ($this->modelsPaginated() as $file) {
+				$item = (new FileItem(
+					file: $file,
+					dragTextIsAbsolute: $dragTextIsAbsolute,
+					image: $this->image,
+					layout: $this->layout,
+					info: $this->info,
+					text: $this->text,
+				))->props();
 
 				if ($this->layout === 'table') {
 					$item = $this->columnsValues($item, $file);
@@ -144,7 +103,7 @@ return [
 			return $data;
 		},
 		'total' => function () {
-			return $this->models->pagination()->total();
+			return $this->models()->count();
 		},
 		'errors' => function () {
 			$errors = [];
@@ -182,26 +141,16 @@ return [
 				return false;
 			}
 
-			// count all uploaded files
-			$max      = $this->max ? $this->max - $this->total : null;
-			$multiple = !$max || $max > 1;
-			$template = $this->template === 'default' ? null : $this->template;
+			$settings = new Upload(
+				api: $this->parent->apiUrl(true) . '/files',
+				accept: $this->accept,
+				max: $this->max ? $this->max - $this->total : null,
+				preview: $this->image,
+				sort: $this->sortable === true ? $this->total + 1 : null,
+				template: $this->template,
+			);
 
-			return [
-				'accept'     => $this->accept,
-				'multiple'   => $multiple,
-				'max'        => $max,
-				'api'        => $this->parent->apiUrl(true) . '/files',
-				'preview'    => $this->image,
-				'attributes' => [
-					// TODO: an edge issue that needs to be solved:
-					//		 if multiple users load the same section
-					//       at the same time and upload a file,
-					//       uploaded files have the same sort number
-					'sort'     => $this->sortable === true ? $this->total + 1 : null,
-					'template' => $template
-				]
-			];
+			return $settings->props();
 		}
 	],
 	// @codeCoverageIgnoreStart
@@ -218,6 +167,15 @@ return [
 
 					return true;
 				}
+			],
+			[
+				'pattern' => 'delete',
+				'method'  => 'DELETE',
+				'action'  => function () {
+					return $this->section()->deleteSelected(
+						ids: $this->requestBody('ids'),
+					);
+				}
 			]
 		];
 	},
@@ -229,6 +187,7 @@ return [
 			'options' => [
 				'accept'   => $this->accept,
 				'apiUrl'   => $this->parent->apiUrl(true) . '/sections/' . $this->name,
+				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
 				'headline' => $this->headline,

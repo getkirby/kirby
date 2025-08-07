@@ -112,7 +112,7 @@ class Environment
 
 	/**
 	 * Returns the server's IP address
-	 * @see ::ip
+	 * @see self::ip()
 	 */
 	public function address(): string|null
 	{
@@ -638,13 +638,13 @@ class Environment
 	/**
 	 * Gets a value from the server environment array
 	 *
-	 * <code>
-	 * $server->get('document_root');
+	 * ```php
 	 * // sample output: /var/www/kirby
+	 * $server->get('document_root');
 	 *
-	 * $server->get();
 	 * // returns the whole server array
-	 * </code>
+	 * $server->get();
+	 * ```
 	 *
 	 * @param string|false|null $key The key to look for. Pass `false` or `null`
 	 *                               to return the entire server array.
@@ -814,18 +814,24 @@ class Environment
 		}
 
 		// load the config for the host
-		if (empty($host) === false) {
+		if (
+			empty($host) === false &&
+			F::exists($path = $root . '/config.' . $host . '.php', $root) === true
+		) {
 			$configHost = F::load(
-				file: $root . '/config.' . $host . '.php',
+				file: $path,
 				fallback: [],
 				allowOutput: false
 			);
 		}
 
 		// load the config for the server IP
-		if (empty($addr) === false) {
+		if (
+			empty($addr) === false &&
+			F::exists($path = $root . '/config.' . $addr . '.php', $root) === true
+		) {
 			$configAddr = F::load(
-				file: $root . '/config.' . $addr . '.php',
+				file: $path,
 				fallback: [],
 				allowOutput: false
 			);

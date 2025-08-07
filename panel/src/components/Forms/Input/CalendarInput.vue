@@ -104,6 +104,7 @@ const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
  */
 export default {
 	mixins: [InputProps, IsoDateProps],
+	emits: ["input"],
 	data() {
 		const today = this.$library.dayjs();
 

@@ -86,6 +86,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	data() {
 		return {
 			color: {
@@ -202,7 +203,8 @@ export default {
 .k-colorpicker-input .k-coords-input {
 	border-radius: var(--rounded-sm);
 	aspect-ratio: 1/1;
-	background: linear-gradient(to bottom, transparent, #000),
+	background:
+		linear-gradient(to bottom, transparent, #000),
 		linear-gradient(to right, #fff, hsl(var(--h), 100%, 50%));
 }
 .k-colorpicker-input .k-alpha-input {

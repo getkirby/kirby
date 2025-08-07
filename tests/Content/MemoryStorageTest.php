@@ -3,12 +3,9 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Language;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass Kirby\Content\MemoryStorage
- * @covers ::__construct
- * @covers ::cacheId
- */
+#[CoversClass(MemoryStorage::class)]
 class MemoryStorageTest extends TestCase
 {
 	protected MemoryStorage $storage;
@@ -70,12 +67,7 @@ class MemoryStorageTest extends TestCase
 		$this->storage = new MemoryStorage($this->model);
 	}
 
-	/**
-	 * @covers ::create
-	 * @covers ::read
-	 * @covers ::write
-	 */
-	public function testCreateAndReadChangesMultiLang()
+	public function testCreateAndReadChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -85,12 +77,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndRead($versionId, $language);
 	}
 
-	/**
-	 * @covers ::create
-	 * @covers ::read
-	 * @covers ::write
-	 */
-	public function testCreateAndReadChangesSingleLang()
+	public function testCreateAndReadChangesSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -100,12 +87,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndRead($versionId, $language);
 	}
 
-	/**
-	 * @covers ::create
-	 * @covers ::read
-	 * @covers ::write
-	 */
-	public function testCreateAndReadLatestMultiLang()
+	public function testCreateAndReadLatestMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -115,12 +97,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndRead($versionId, $language);
 	}
 
-	/**
-	 * @covers ::create
-	 * @covers ::read
-	 * @covers ::write
-	 */
-	public function testCreateAndReadLatestSingleLang()
+	public function testCreateAndReadLatestSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -130,11 +107,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndRead($versionId, $language);
 	}
 
-	/**
-	 * @covers ::delete
-	 * @covers ::exists
-	 */
-	public function testDeleteNonExisting()
+	public function testDeleteNonExisting(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -149,10 +122,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertFalse($this->storage->exists($versionId, $language));
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteChangesMultiLang()
+	public function testDeleteChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -162,10 +132,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndDelete($versionId, $language);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteChangesSingleLang()
+	public function testDeleteChangesSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -175,10 +142,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndDelete($versionId, $language);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteLatestMultiLang()
+	public function testDeleteLatestMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -188,10 +152,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndDelete($versionId, $language);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteLatestSingleLang()
+	public function testDeleteLatestSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -201,10 +162,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndDelete($versionId, $language);
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExistsMultiLanguage()
+	public function testExistsMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -220,10 +178,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertTrue($this->storage->exists($versionId, $this->app->language('de')));
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExistsSingleLanguage()
+	public function testExistsSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -237,10 +192,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertTrue($this->storage->exists($versionId, $language));
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExistsNoneExistingMultiLanguage()
+	public function testExistsNoneExistingMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -248,20 +200,14 @@ class MemoryStorageTest extends TestCase
 		$this->assertFalse($this->storage->exists(VersionId::changes(), $this->app->language('de')));
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExistsNoneExistingSingleLanguage()
+	public function testExistsNoneExistingSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
 		$this->assertFalse($this->storage->exists(VersionId::changes(), Language::single()));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModifiedNoneExistingMultiLanguage()
+	public function testModifiedNoneExistingMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -269,10 +215,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertNull($this->storage->modified(VersionId::latest(), $this->app->language('en')));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModifiedNoneExistingSingleLanguage()
+	public function testModifiedNoneExistingSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -280,10 +223,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertNull($this->storage->modified(VersionId::latest(), Language::single()));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModifiedSomeExistingMultiLanguage()
+	public function testModifiedSomeExistingMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -296,10 +236,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertNull($this->storage->modified(VersionId::latest(), $language));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModifiedSomeExistingSingleLanguage()
+	public function testModifiedSomeExistingSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -312,10 +249,61 @@ class MemoryStorageTest extends TestCase
 		$this->assertNull($this->storage->modified(VersionId::latest(), $language));
 	}
 
-	/**
-	 * @covers ::touch
-	 */
-	public function testTouchMultiLang()
+	public function testMoveToTheSameStorageLocation(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$content   = ['title' => 'Test'];
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+
+		// create some content to move
+		$this->storage->create($versionId, $language, $content);
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language));
+
+		$this->storage->move(
+			$versionId,
+			$language,
+			$versionId,
+			$language
+		);
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language), 'The content should still be the same');
+	}
+
+	public function testMoveToTheSameStorageLocationWithAnotherStorageInstance(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$content   = ['title' => 'Test'];
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+		$storage   = new MemoryStorage($this->model);
+
+		// create some content to move
+		$this->storage->create($versionId, $language, $content);
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language));
+
+		$this->storage->move(
+			$versionId,
+			$language,
+			$versionId,
+			$language,
+			$storage
+		);
+
+		$this->assertFalse($this->storage->exists($versionId, $language), 'The old storage entry should be gone now');
+
+		$this->assertTrue($storage->exists($versionId, $language));
+		$this->assertSame($content, $storage->read($versionId, $language));
+	}
+
+	public function testTouchMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -330,10 +318,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertGreaterThanOrEqual($time, $this->storage->modified($versionId, $language));
 	}
 
-	/**
-	 * @covers ::touch
-	 */
-	public function testTouchSingleLang()
+	public function testTouchSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -348,11 +333,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertGreaterThanOrEqual($time, $this->storage->modified($versionId, $language));
 	}
 
-	/**
-	 * @covers ::update
-	 * @covers ::write
-	 */
-	public function testUpdateMultiLang()
+	public function testUpdateMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -362,11 +343,7 @@ class MemoryStorageTest extends TestCase
 		$this->assertCreateAndUpdate($versionId, $language);
 	}
 
-	/**
-	 * @covers ::update
-	 * @covers ::write
-	 */
-	public function testUpdateSingleLang()
+	public function testUpdateSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 

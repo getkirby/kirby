@@ -8,7 +8,7 @@
 				target="_blank"
 			/>
 		</k-lab-example>
-		<k-lab-example label="Dropdown: Fiber route">
+		<k-lab-example label="Dropdown: State route">
 			<k-view-button text="A dropdown" options="pages/sections+files" />
 		</k-lab-example>
 		<k-lab-example label="Dropdown: Options array">

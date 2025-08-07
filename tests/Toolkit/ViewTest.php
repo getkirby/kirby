@@ -4,24 +4,19 @@ namespace Kirby\Toolkit;
 
 use Exception;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\View
- */
+#[CoversClass(View::class)]
 class ViewTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/view';
 
-	protected function view(array $data = [])
+	protected function view(array $data = []): View
 	{
 		return new View(static::FIXTURES . '/view.php', $data);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::data
-	 */
-	public function testData()
+	public function testData(): void
 	{
 		$view = $this->view();
 		$this->assertSame([], $view->data());
@@ -30,10 +25,7 @@ class ViewTest extends TestCase
 		$this->assertSame(['test'], $view->data());
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExists()
+	public function testExists(): void
 	{
 		$view = $this->view();
 		$this->assertTrue($view->exists());
@@ -42,29 +34,19 @@ class ViewTest extends TestCase
 		$this->assertFalse($view->exists());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::file
-	 */
-	public function testFile()
+	public function testFile(): void
 	{
 		$view = $this->view();
 		$this->assertSame(static::FIXTURES . '/view.php', $view->file());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		$view = $this->view(['name' => 'Homer']);
 		$this->assertSame('Hello Homer', $view->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderWithMissingFile()
+	public function testRenderWithMissingFile(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The view does not exist: invalid-file.php');
@@ -73,10 +55,7 @@ class ViewTest extends TestCase
 		$view->render();
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderWithException()
+	public function testRenderWithException(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('View exception');
@@ -85,11 +64,7 @@ class ViewTest extends TestCase
 		$view->render();
 	}
 
-	/**
-	 * @covers ::toString
-	 * @covers ::__toString
-	 */
-	public function testToString()
+	public function testToString(): void
 	{
 		$view = $this->view(['name' => 'Tester']);
 		$this->assertSame('Hello Tester', $view->toString());

@@ -4,36 +4,27 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 use TypeError;
 
-/**
- * @coversDefaultClass Kirby\Content\Field
- */
+#[CoversClass(Field::class)]
 class FieldTest extends TestCase
 {
-	/**
-	 * @covers ::__debugInfo
-	 */
-	public function test__debugInfo()
+	public function test__debugInfo(): void
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame(['title' => 'Title'], $field->__debugInfo());
 	}
 
-	/**
-	 * @covers ::key
-	 */
-	public function testKey()
+	public function testKey(): void
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame('title', $field->key());
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExists()
+	public function testExists(): void
 	{
 		$parent = new Page([
 			'slug' => 'test',
@@ -46,10 +37,7 @@ class FieldTest extends TestCase
 		$this->assertFalse($parent->b()->exists());
 	}
 
-	/**
-	 * @covers ::model
-	 */
-	public function testModel()
+	public function testModel(): void
 	{
 		$model = new Page(['slug' => 'test']);
 		$field = new Field($model, 'title', 'Title');
@@ -57,10 +45,7 @@ class FieldTest extends TestCase
 		$this->assertSame($model, $field->model());
 	}
 
-	/**
-	 * @covers ::parent
-	 */
-	public function testParent()
+	public function testParent(): void
 	{
 		$parent = new Page(['slug' => 'test']);
 		$field  = new Field($parent, 'title', 'Title');
@@ -68,12 +53,7 @@ class FieldTest extends TestCase
 		$this->assertSame($parent, $field->parent());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::__toString
-	 * @covers ::toString
-	 */
-	public function testToString()
+	public function testToString(): void
 	{
 		$field = new Field(null, 'title', 'Title');
 
@@ -82,28 +62,19 @@ class FieldTest extends TestCase
 		$this->assertSame('Title', (string)$field);
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame(['title' => 'Title'], $field->toArray());
 	}
 
-	/**
-	 * @covers ::value
-	 */
-	public function testValue()
+	public function testValue(): void
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame('Title', $field->value());
 	}
 
-	/**
-	 * @covers ::value
-	 */
-	public function testValueSetter()
+	public function testValueSetter(): void
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame('Title', $field->value());
@@ -111,10 +82,7 @@ class FieldTest extends TestCase
 		$this->assertSame('Modified', $field->value());
 	}
 
-	/**
-	 * @covers ::value
-	 */
-	public function testValueCallbackSetter()
+	public function testValueCallbackSetter(): void
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame('Title', $field->value());
@@ -122,10 +90,7 @@ class FieldTest extends TestCase
 		$this->assertSame('Modified', $field->value());
 	}
 
-	/**
-	 * @covers ::value
-	 */
-	public function testInvalidValueSetter()
+	public function testInvalidValueSetter(): void
 	{
 		$this->expectException(TypeError::class);
 		$this->expectExceptionMessage('Argument #1 ($value) must be of type Closure|string|null, stdClass given');
@@ -135,10 +100,7 @@ class FieldTest extends TestCase
 		$field->value(new stdClass());
 	}
 
-	/**
-	 * @covers ::__call
-	 */
-	public function testCloningInMethods()
+	public function testCloningInMethods(): void
 	{
 		Field::$methods = [
 			'test' => function ($field) {
@@ -174,30 +136,21 @@ class FieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::isEmpty
-	 * @dataProvider emptyDataProvider
-	 */
-	public function testIsEmpty($input, $expected)
+	#[DataProvider('emptyDataProvider')]
+	public function testIsEmpty($input, $expected): void
 	{
 		$field = new Field(null, 'test', $input);
 		$this->assertSame($expected, $field->isEmpty());
 	}
 
-	/**
-	 * @covers ::isNotEmpty
-	 * @dataProvider emptyDataProvider
-	 */
-	public function testIsNotEmpty($input, $expected)
+	#[DataProvider('emptyDataProvider')]
+	public function testIsNotEmpty($input, $expected): void
 	{
 		$field = new Field(null, 'test', $input);
 		$this->assertSame(!$expected, $field->isNotEmpty());
 	}
 
-	/**
-	 * @covers ::__call
-	 */
-	public function testCallNonExistingMethod()
+	public function testCallNonExistingMethod(): void
 	{
 		$field  = new Field(null, 'test', 'value');
 		$result = $field->methodDoesNotExist();
@@ -205,10 +158,7 @@ class FieldTest extends TestCase
 		$this->assertSame($field, $result);
 	}
 
-	/**
-	 * @covers ::or
-	 */
-	public function testOrWithFieldFallback()
+	public function testOrWithFieldFallback(): void
 	{
 		$fallback = new Field(null, 'fallback', 'fallback value');
 		$field    = new Field(null, 'test', '');
@@ -217,10 +167,7 @@ class FieldTest extends TestCase
 		$this->assertSame($fallback, $field->or($fallback));
 	}
 
-	/**
-	 * @covers ::or
-	 */
-	public function testOrWithStringFallback()
+	public function testOrWithStringFallback(): void
 	{
 		$fallback = 'fallback value';
 		$field    = new Field(null, 'test', '');

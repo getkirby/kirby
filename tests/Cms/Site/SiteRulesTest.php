@@ -3,13 +3,17 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\PermissionException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class SiteRulesTest extends TestCase
+#[CoversClass(SiteRules::class)]
+class SiteRulesTest extends ModelTestCase
 {
-	public function testChangeTitleWithoutPermissions()
+	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteRules';
+
+	public function testChangeTitleWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(SitePermissions::class);
-		$permissions->method('__call')->with('changeTitle')->willReturn(false);
+		$permissions->method('can')->with('changeTitle')->willReturn(false);
 
 		$site = $this->createMock(Site::class);
 		$site->method('permissions')->willReturn($permissions);
@@ -20,7 +24,7 @@ class SiteRulesTest extends TestCase
 		SiteRules::changeTitle($site, 'test');
 	}
 
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		$app = new App();
 		$app->impersonate('kirby');
@@ -31,10 +35,10 @@ class SiteRulesTest extends TestCase
 		SiteRules::update($site, ['copyright' => '2018']);
 	}
 
-	public function testUpdateWithoutPermissions()
+	public function testUpdateWithoutPermissions(): void
 	{
 		$permissions = $this->createMock(SitePermissions::class);
-		$permissions->method('__call')->with('update')->willReturn(false);
+		$permissions->method('can')->with('update')->willReturn(false);
 
 		$site = $this->createMock(Site::class);
 		$site->method('permissions')->willReturn($permissions);

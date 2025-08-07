@@ -1,6 +1,5 @@
 <template>
 	<k-panel-inside
-		:data-has-tabs="hasTabs"
 		:data-id="id"
 		:data-locked="isLocked"
 		:data-template="blueprint"
@@ -21,7 +20,7 @@
 				<k-view-buttons :buttons="buttons" @action="onAction" />
 				<k-form-controls
 					:editor="editor"
-					:has-changes="hasChanges"
+					:has-diff="hasDiff"
 					:is-locked="isLocked"
 					:modified="modified"
 					@discard="onDiscard"
@@ -38,7 +37,7 @@
 			@submit="onSubmit"
 		/>
 
-		<k-model-tabs :changes="changes" :tab="tab.name" :tabs="tabs" />
+		<k-model-tabs :diff="diff" :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"
@@ -88,10 +87,5 @@ export default {
 .k-file-view-header {
 	margin-bottom: 0;
 	border-bottom: 0;
-}
-
-/** TODO: .k-file-view:has(.k-tabs) .k-file-preview  */
-.k-file-view[data-has-tabs="true"] .k-file-preview {
-	margin-bottom: 0;
 }
 </style>

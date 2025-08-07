@@ -29,7 +29,7 @@ class UserRules
 	 */
 	public static function changeEmail(User $user, string $email): void
 	{
-		if ($user->permissions()->changeEmail() !== true) {
+		if ($user->permissions()->can('changeEmail') !== true) {
 			throw new PermissionException(
 				key: 'user.changeEmail.permission',
 				data: ['name' => $user->username()]
@@ -46,7 +46,7 @@ class UserRules
 	 */
 	public static function changeLanguage(User $user, string $language): void
 	{
-		if ($user->permissions()->changeLanguage() !== true) {
+		if ($user->permissions()->can('changeLanguage') !== true) {
 			throw new PermissionException(
 				key: 'user.changeLanguage.permission',
 				data: ['name' => $user->username()]
@@ -63,7 +63,7 @@ class UserRules
 	 */
 	public static function changeName(User $user, string $name): void
 	{
-		if ($user->permissions()->changeName() !== true) {
+		if ($user->permissions()->can('changeName') !== true) {
 			throw new PermissionException(
 				key: 'user.changeName.permission',
 				data: ['name' => $user->username()]
@@ -81,7 +81,7 @@ class UserRules
 		#[SensitiveParameter]
 		string $password
 	): void {
-		if ($user->permissions()->changePassword() !== true) {
+		if ($user->permissions()->can('changePassword') !== true) {
 			throw new PermissionException(
 				key: 'user.changePassword.permission',
 				data: ['name' => $user->username()]
@@ -118,7 +118,7 @@ class UserRules
 		}
 
 		// check permissions
-		if ($user->permissions()->changeRole() !== true) {
+		if ($user->permissions()->can('changeRole') !== true) {
 			throw new PermissionException(
 				key: 'user.changeRole.permission',
 				data: ['name' => $user->username()]
@@ -174,7 +174,10 @@ class UserRules
 		static::validLanguage($user, $user->language());
 
 		// the first user must have a password
-		if ($user->kirby()->users()->count() === 0 && empty($props['password'])) {
+		if (
+			$user->kirby()->users()->count() === 0 &&
+			empty($props['password'])
+		) {
 			// trigger invalid password error
 			static::validPassword($user, ' ');
 		}
@@ -197,7 +200,7 @@ class UserRules
 		}
 
 		// check user permissions
-		if ($user->permissions()->create() !== true) {
+		if ($user->permissions()->can('create') !== true) {
 			throw new PermissionException([
 				'key' => 'user.create.permission'
 			]);
@@ -236,7 +239,7 @@ class UserRules
 			);
 		}
 
-		if ($user->permissions()->delete() !== true) {
+		if ($user->permissions()->can('delete') !== true) {
 			throw new PermissionException(
 				key: 'user.delete.permission',
 				data: ['name' => $user->username()]
@@ -254,7 +257,7 @@ class UserRules
 		array $values = [],
 		array $strings = []
 	): void {
-		if ($user->permissions()->update() !== true) {
+		if ($user->permissions()->can('update') !== true) {
 			throw new PermissionException(
 				key: 'user.update.permission',
 				data: ['name' => $user->username()]

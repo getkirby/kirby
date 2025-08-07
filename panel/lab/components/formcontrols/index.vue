@@ -3,27 +3,30 @@
 		<k-lab-example>
 			<k-header :editable="true">
 				Title
-				<k-button-group slot="buttons">
-					<k-button icon="open" size="sm" variant="filled" />
-					<k-button icon="cog" size="sm" variant="filled" />
-					<k-button
-						icon="circle-filled"
-						size="sm"
-						text="Public"
-						theme="positive-icon"
-						variant="filled"
-					/>
 
-					<k-form-controls
-						:has-changes="hasChanges"
-						:is-locked="isLocked"
-						editor="editor@getkirby.com"
-						modified="2024-10-01T17:00:00"
-						preview="https://getkirby.com"
-						@discard="log('discard')"
-						@submit="log('submit')"
-					/>
-				</k-button-group>
+				<template #buttons>
+					<k-button-group>
+						<k-button icon="open" size="sm" variant="filled" />
+						<k-button icon="cog" size="sm" variant="filled" />
+						<k-button
+							icon="circle-filled"
+							size="sm"
+							text="Public"
+							theme="positive-icon"
+							variant="filled"
+						/>
+
+						<k-form-controls
+							:has-changes="hasChanges"
+							:is-locked="isLocked"
+							editor="editor@getkirby.com"
+							modified="2024-10-01T17:00:00"
+							preview="https://getkirby.com"
+							@discard="log('discard')"
+							@submit="log('submit')"
+						/>
+					</k-button-group>
+				</template>
 			</k-header>
 
 			<k-grid
@@ -50,7 +53,7 @@
 
 		<k-lab-example label="Changes">
 			<k-form-controls
-				:has-changes="true"
+				:has-diff="true"
 				editor="editor@getkirby.com"
 				modified="2024-10-01T17:00:00"
 				preview="https://getkirby.com"

@@ -75,7 +75,6 @@ return [
 	// Any of these might be removed at any point in the future
 	'kirby\cms\asset'              => 'Kirby\Filesystem\Asset',
 	'kirby\cms\content'            => 'Kirby\Content\Content',
-	'kirby\cms\contenttranslation' => 'Kirby\Content\ContentTranslation',
 	'kirby\cms\dir'                => 'Kirby\Filesystem\Dir',
 	'kirby\cms\filename'           => 'Kirby\Filesystem\Filename',
 	'kirby\cms\filefoundation'     => 'Kirby\Filesystem\IsFile',
@@ -95,4 +94,19 @@ return [
 	'kirby\toolkit\file'           => 'Kirby\Filesystem\File',
 	'kirby\toolkit\mime'           => 'Kirby\Filesystem\Mime',
 	'kirby\toolkit\query'          => 'Kirby\Query\Query',
+
+	'kirby\panel\ui\buttons\languagecreatebutton' => 'Kirby\Panel\Ui\Button\LanguageCreateButton',
+	'kirby\panel\ui\buttons\languagedeletebutton' => 'Kirby\Panel\Ui\Button\LanguageDeleteButton',
+	'kirby\panel\ui\buttons\languagesettingsbutton' => 'Kirby\Panel\Ui\Button\LanguageSettingsButton',
+	'kirby\panel\ui\buttons\openbutton' => 'Kirby\Panel\Ui\Button\OpenButton',
+	'kirby\panel\ui\buttons\pagestatusbutton' => 'Kirby\Panel\Ui\Button\PageStatusButton',
+	'kirby\panel\ui\buttons\previewbutton' => 'Kirby\Panel\Ui\Button\PreviewButton',
+	'kirby\panel\ui\buttons\versionsbutton' => 'Kirby\Panel\Ui\Button\VersionsButton',
+	'kirby\panel\ui\buttons\viewbutton' => 'Kirby\Panel\Ui\Button\ViewButton',
+	'kirby\panel\ui\buttons\viewbuttons' => 'Kirby\Panel\Ui\Button\ViewButtons',
+	'kirby\panel\ui\filewpreviews\audiofilepreview' => 'Kirby\Panel\Ui\FilePreview\AudioFilePreview',
+	'kirby\panel\ui\filewpreviews\defaultfilepreview' => 'Kirby\Panel\Ui\FilePreview\DefaultFilePreview',
+	'kirby\panel\ui\filewpreviews\imagefilepreview' => 'Kirby\Panel\Ui\FilePreview\ImageFilePreview',
+	'kirby\panel\ui\filewpreviews\pdfpreview' => 'Kirby\Panel\Ui\FilePreview\PdfPreview',
+	'kirby\panel\ui\filewpreviews\videofilepreview' => 'Kirby\Panel\Ui\FilePreview\VideoFilePreview',
 ];

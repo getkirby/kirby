@@ -1,8 +1,8 @@
 export default {
 	props: {
 		blueprint: String,
-		lock: [Boolean, Object],
 		help: String,
+		lock: [Boolean, Object],
 		name: String,
 		parent: String,
 		timestamp: Number

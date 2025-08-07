@@ -6,6 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Panel\Model;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PagesSectionTest extends TestCase
 {
@@ -30,7 +31,42 @@ class PagesSectionTest extends TestCase
 		App::destroy();
 	}
 
-	public function testHeadline()
+	public function testBatchDefault(): void
+	{
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertFalse($section->batch());
+		$this->assertFalse($section->toArray()['options']['batch']);
+	}
+
+	public function testBatchDisabled(): void
+	{
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'batch' => false
+		]);
+
+		$this->assertFalse($section->batch());
+		$this->assertFalse($section->toArray()['options']['batch']);
+	}
+
+	public function testBatchEnabled(): void
+	{
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'batch' => true
+		]);
+
+		$this->assertTrue($section->batch());
+		$this->assertTrue($section->toArray()['options']['batch']);
+	}
+
+	public function testHeadline(): void
 	{
 		// single headline
 		$section = new Section('pages', [
@@ -54,7 +90,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('Pages', $section->headline());
 	}
 
-	public function testHeadlineFromLabel()
+	public function testHeadlineFromLabel(): void
 	{
 		// single label
 		$section = new Section('pages', [
@@ -79,7 +115,7 @@ class PagesSectionTest extends TestCase
 	}
 
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$parent = new Page([
 			'slug' => 'test',
@@ -106,7 +142,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('test/a', $section->parent()->id());
 	}
 
-	public function testParentWithInvalidOption()
+	public function testParentWithInvalidOption(): void
 	{
 		$parent = new Page([
 			'slug' => 'test',
@@ -139,10 +175,8 @@ class PagesSectionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider statusProvider
-	 */
-	public function testStatus($input, $expected)
+	#[DataProvider('statusProvider')]
+	public function testStatus($input, $expected): void
 	{
 		$section = new Section('pages', [
 			'name'   => 'test',
@@ -153,7 +187,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame($expected, $section->status());
 	}
 
-	public function testAdd()
+	public function testAdd(): void
 	{
 		$section = new Section('pages', [
 			'name'  => 'test',
@@ -174,10 +208,8 @@ class PagesSectionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider addableStatusProvider
-	 */
-	public function testAddWhenStatusIs($input, $expected)
+	#[DataProvider('addableStatusProvider')]
+	public function testAddWhenStatusIs($input, $expected): void
 	{
 		$section = new Section('pages', [
 			'name'   => 'test',
@@ -206,10 +238,8 @@ class PagesSectionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider addableStatusCreateProvider
-	 */
-	public function testAddWhenStatusCreatedMatchesStatusShown($create, $shown, $expected)
+	#[DataProvider('addableStatusCreateProvider')]
+	public function testAddWhenStatusCreatedMatchesStatusShown($create, $shown, $expected): void
 	{
 		$this->app->clone([
 			'blueprints' => [
@@ -230,7 +260,7 @@ class PagesSectionTest extends TestCase
 		Blueprint::$loaded = [];
 	}
 
-	public function testAddWhenMultipleStatusCreated()
+	public function testAddWhenMultipleStatusCreated(): void
 	{
 		$this->app->clone([
 			'blueprints' => [
@@ -253,7 +283,7 @@ class PagesSectionTest extends TestCase
 		$this->assertFalse($section->add());
 	}
 
-	public function testAddWhenSectionIsFull()
+	public function testAddWhenSectionIsFull(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -271,7 +301,7 @@ class PagesSectionTest extends TestCase
 		$this->assertFalse($section->add());
 	}
 
-	public function testSortBy()
+	public function testSortBy(): void
 	{
 		$locale = setlocale(LC_ALL, 0);
 		setlocale(LC_ALL, ['de_DE.ISO8859-1', 'de_DE']);
@@ -337,7 +367,7 @@ class PagesSectionTest extends TestCase
 		setlocale(LC_ALL, $locale);
 	}
 
-	public function testSortByMultiple()
+	public function testSortByMultiple(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -374,7 +404,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('test/subpage-4', $section->data()[3]['id']);
 	}
 
-	public function testSortable()
+	public function testSortable(): void
 	{
 		$section = new Section('pages', [
 			'name'  => 'test',
@@ -384,7 +414,7 @@ class PagesSectionTest extends TestCase
 		$this->assertTrue($section->sortable());
 	}
 
-	public function testDisableSortable()
+	public function testDisableSortable(): void
 	{
 		$section = new Section('pages', [
 			'name'     => 'test',
@@ -395,7 +425,7 @@ class PagesSectionTest extends TestCase
 		$this->assertFalse($section->sortable());
 	}
 
-	public function testFlip()
+	public function testFlip(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -428,10 +458,8 @@ class PagesSectionTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider sortableStatusProvider
-	 */
-	public function testSortableStatus($input, $expected)
+	#[DataProvider('sortableStatusProvider')]
+	public function testSortableStatus($input, $expected): void
 	{
 		$section = new Section('pages', [
 			'name'     => 'test',
@@ -442,7 +470,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame($expected, $section->sortable());
 	}
 
-	public function testImageString()
+	public function testImageString(): void
 	{
 		$model = new Page([
 			'slug' => 'test',
@@ -480,7 +508,7 @@ class PagesSectionTest extends TestCase
 		$this->assertArrayNotHasKey('src', $data[2]['image']);
 	}
 
-	public function testTemplates()
+	public function testTemplates(): void
 	{
 		// single template
 		$section = new Section('pages', [
@@ -510,7 +538,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame(['blog'], $section->templates());
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$section = new Section('pages', [
 			'name'  => 'test',
@@ -521,7 +549,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('Test', $section->empty());
 	}
 
-	public function testTranslatedEmpty()
+	public function testTranslatedEmpty(): void
 	{
 		$section = new Section('pages', [
 			'name'  => 'test',
@@ -532,7 +560,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('Test', $section->empty());
 	}
 
-	public function testHelp()
+	public function testHelp(): void
 	{
 		// single help
 		$section = new Section('pages', [
@@ -556,7 +584,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('<p>Information</p>', $section->help());
 	}
 
-	public function testTranslatedInfo()
+	public function testTranslatedInfo(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -582,7 +610,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('en: subpage-3', $section->data()[2]['info']);
 	}
 
-	public function testTranslatedText()
+	public function testTranslatedText(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -608,7 +636,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('en: B', $section->data()[2]['text']);
 	}
 
-	public function testUnreadable()
+	public function testUnreadable(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -640,7 +668,7 @@ class PagesSectionTest extends TestCase
 		$this->assertCount(2, $section->data());
 	}
 
-	public function testSearchDefault()
+	public function testSearchDefault(): void
 	{
 		$model = new Page([
 			'slug'     => 'test',
@@ -659,7 +687,7 @@ class PagesSectionTest extends TestCase
 		$this->assertCount(3, $section->data());
 	}
 
-	public function testSearchWithNoQuery()
+	public function testSearchWithNoQuery(): void
 	{
 		$model = new Page([
 			'slug'     => 'test',
@@ -679,7 +707,7 @@ class PagesSectionTest extends TestCase
 		$this->assertCount(3, $section->data());
 	}
 
-	public function testSearchWithQuery1()
+	public function testSearchWithQuery1(): void
 	{
 		$_GET['searchterm'] = 'bike';
 
@@ -705,7 +733,7 @@ class PagesSectionTest extends TestCase
 		$_GET = [];
 	}
 
-	public function testSearchWithQuery2()
+	public function testSearchWithQuery2(): void
 	{
 		$_GET['searchterm'] = 'mount';
 
@@ -731,7 +759,7 @@ class PagesSectionTest extends TestCase
 		$_GET = [];
 	}
 
-	public function testSearchWithQuery3()
+	public function testSearchWithQuery3(): void
 	{
 		$_GET['searchterm'] = 'mountain';
 
@@ -757,7 +785,7 @@ class PagesSectionTest extends TestCase
 		$_GET = [];
 	}
 
-	public function testSearchWithFlip()
+	public function testSearchWithFlip(): void
 	{
 		$_GET['searchterm'] = 'bike';
 
@@ -784,7 +812,7 @@ class PagesSectionTest extends TestCase
 		$_GET = [];
 	}
 
-	public function testSearchWithSortBy()
+	public function testSearchWithSortBy(): void
 	{
 		$_GET['searchterm'] = 'bike';
 
@@ -811,7 +839,7 @@ class PagesSectionTest extends TestCase
 		$_GET = [];
 	}
 
-	public function testTableLayout()
+	public function testTableLayout(): void
 	{
 		$model = new Page([
 			'slug' => 'test',
@@ -838,7 +866,7 @@ class PagesSectionTest extends TestCase
 		], $item['title']);
 	}
 
-	public function testTableLayoutWithCustomColumns()
+	public function testTableLayoutWithCustomColumns(): void
 	{
 		$model = new Page([
 			'slug' => 'test',
@@ -867,7 +895,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('2012-12-12', $section->data()[0]['date']);
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$model = new Page([
 			'slug' => 'test',
@@ -892,7 +920,7 @@ class PagesSectionTest extends TestCase
 		$this->assertNull($options['link']);
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$section = new Section('pages', [
 			'name'  => 'test',
@@ -918,7 +946,7 @@ class PagesSectionTest extends TestCase
 		$this->assertCount(1, $section->pages());
 	}
 
-	public function testTemplatesIgnore()
+	public function testTemplatesIgnore(): void
 	{
 		$parent = new Page([
 			'slug' => 'test',
@@ -967,7 +995,7 @@ class PagesSectionTest extends TestCase
 		$this->assertCount(3, $section->pages());
 	}
 
-	public function testBlueprints()
+	public function testBlueprints(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [

@@ -1,10 +1,9 @@
 // @ts-check
 
+import { reactive } from "vue";
 import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 import focus from "@/helpers/focus.js";
-import "@/helpers/array.js";
-import { reactive, set } from "vue";
 import { wrap } from "@/helpers/array.js";
 
 /**
@@ -88,9 +87,7 @@ export default (panel, key, defaults) => {
 				return;
 			}
 
-			// make sure that value is reactive
-			set(this.props, "value", value);
-
+			this.props.value = value;
 			this.emit("input", value);
 		},
 
@@ -98,7 +95,7 @@ export default (panel, key, defaults) => {
 
 		/**
 		 * Define the default listeners
-		 * for the Fiber component
+		 * for the State component
 		 */
 		listeners() {
 			return {
@@ -149,14 +146,18 @@ export default (panel, key, defaults) => {
 		/**
 		 * Custom submitter for the dialog/drawer
 		 * It will automatically close the modal
-		 * if there's no submit listner or backend route.
+		 * if there's no submit listener or backend route.
 		 *
 		 * @param {Object} value
 		 * @param {Object} options
 		 * @returns {Promise} The new state or false if the request failed
 		 */
 		async submit(value, options = {}) {
-			value = value ?? this.props.value;
+			if (this.isLoading === true) {
+				return;
+			}
+
+			value ??= this.props.value;
 
 			if (this.hasEventListener("submit")) {
 				return this.emit("submit", value, options);
@@ -176,16 +177,16 @@ export default (panel, key, defaults) => {
 				return response;
 			}
 
-			// get details from the response object.
-			// I.e. { $dialog: { ... } }
+			// Get details from the response object,
+			// i.e. { dialog: { ... } }
 			// pass it forward to the success handler
 			// to react on elements in the response
-			return this.success(response["$" + this.key()] ?? {});
+			return this.success(response[this.key()] ?? {});
 		},
 
 		/**
 		 * This is rebuilding the previous
-		 * behaviours from the dialog mixin.
+		 * behaviors from the dialog mixin.
 		 * Most of the response handling should
 		 * be redone. But we keep it for compatibility
 		 *

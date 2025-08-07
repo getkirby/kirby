@@ -13,7 +13,13 @@ export default class Bold extends Mark {
 	}
 
 	inputRules({ type, utils }) {
-		return [utils.markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, type)];
+		return [
+			utils.markInputRule(
+				/(?:^|\s)(\*\*(?!\s+\*\*)((?:[^*]+))\*\*(?!\s+\*\*))$/,
+				type
+			),
+			utils.markInputRule(/(?:^|\s)(__(?!\s+__)((?:[^_]+))__(?!\s+__))$/, type)
+		];
 	}
 
 	keys() {
@@ -27,7 +33,13 @@ export default class Bold extends Mark {
 	}
 
 	pasteRules({ type, utils }) {
-		return [utils.markPasteRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)/g, type)];
+		return [
+			utils.markPasteRule(
+				/(?:^|\s)(\*\*(?!\s+\*\*)((?:[^*]+))\*\*(?!\s+\*\*))/g,
+				type
+			),
+			utils.markPasteRule(/(?:^|\s)(__(?!\s+__)((?:[^_]+))__(?!\s+__))/g, type)
+		];
 	}
 
 	get schema() {

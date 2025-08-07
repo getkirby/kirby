@@ -3,10 +3,9 @@
 namespace Kirby\Plugin;
 
 use Kirby\Cms\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Plugin\LicenseStatus
- */
+#[CoversClass(LicenseStatus::class)]
 class LicenseStatusTest extends TestCase
 {
 	public function test__toString(): void
@@ -33,9 +32,30 @@ class LicenseStatusTest extends TestCase
 		$this->assertSame('active', $status->value());
 	}
 
-	/**
-	 * @covers ::from
-	 */
+	public function testDialog(): void
+	{
+		$status = new LicenseStatus(
+			value: 'missing',
+			icon: 'alert',
+			label: 'Enter license',
+			dialog: $dialog = 'my/dialog'
+		);
+
+		$this->assertSame($dialog, $status->dialog());
+	}
+
+	public function testDrawer(): void
+	{
+		$status = new LicenseStatus(
+			value: 'missing',
+			icon: 'alert',
+			label: 'Enter license',
+			drawer: $drawer = 'my/drawer'
+		);
+
+		$this->assertSame($drawer, $status->drawer());
+	}
+
 	public function testFromInstance(): void
 	{
 		$status = LicenseStatus::from(new LicenseStatus(
@@ -48,9 +68,6 @@ class LicenseStatusTest extends TestCase
 		$this->assertSame('active', $status->value());
 	}
 
-	/**
-	 * @covers ::from
-	 */
 	public function testFromNull(): void
 	{
 		$status = LicenseStatus::from(null);
@@ -59,9 +76,6 @@ class LicenseStatusTest extends TestCase
 		$this->assertSame('unknown', $status->value());
 	}
 
-	/**
-	 * @covers ::from
-	 */
 	public function testFromString(): void
 	{
 		$status = LicenseStatus::from('active');
@@ -84,9 +98,6 @@ class LicenseStatusTest extends TestCase
 		$this->assertSame('unknown', $status->value());
 	}
 
-	/**
-	 * @covers ::icon
-	 */
 	public function testIcon(): void
 	{
 		$status = new LicenseStatus(
@@ -98,9 +109,6 @@ class LicenseStatusTest extends TestCase
 		$this->assertSame('check', $status->icon());
 	}
 
-	/**
-	 * @covers ::label
-	 */
 	public function testLabel(): void
 	{
 		$status = new LicenseStatus(
@@ -112,9 +120,18 @@ class LicenseStatusTest extends TestCase
 		$this->assertSame('Valid license', $status->label());
 	}
 
-	/**
-	 * @covers ::theme
-	 */
+	public function testLink(): void
+	{
+		$status = new LicenseStatus(
+			value: 'missing',
+			icon: 'alert',
+			label: 'Buy license',
+			link: $url = 'https://getkirby.com/buy'
+		);
+
+		$this->assertSame($url, $status->link());
+	}
+
 	public function testTheme(): void
 	{
 		$status = new LicenseStatus(
@@ -127,9 +144,6 @@ class LicenseStatusTest extends TestCase
 		$this->assertSame('success', $status->theme());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray(): void
 	{
 		$status = new LicenseStatus(
@@ -139,16 +153,16 @@ class LicenseStatusTest extends TestCase
 		);
 
 		$this->assertSame([
-			'icon'  => 'check',
-			'label' => 'Valid license',
-			'theme' => null,
-			'value' => 'active'
+			'dialog' => null,
+			'drawer' => null,
+			'icon'   => 'check',
+			'label'  => 'Valid license',
+			'link'   => null,
+			'theme'  => null,
+			'value'  => 'active'
 		], $status->toArray());
 	}
 
-	/**
-	 * @covers ::value
-	 */
 	public function testValue(): void
 	{
 		$status = new LicenseStatus(

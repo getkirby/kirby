@@ -2,9 +2,10 @@
 
 namespace Kirby\Toolkit;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Escape
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+
+#[CoversClass(Escape::class)]
 class EscapeTest extends TestCase
 {
 	/**
@@ -160,10 +161,7 @@ class EscapeTest extends TestCase
 	];
 
 
-	/**
-	 * @covers ::html
-	 */
-	public function testHtmlEscapingConvertsSpecialChars()
+	public function testHtmlEscapingConvertsSpecialChars(): void
 	{
 		foreach ($this->htmlSpecialChars as $key => $value) {
 			$this->assertSame(
@@ -174,10 +172,7 @@ class EscapeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::attr
-	 */
-	public function testHtmlAttributeEscapingConvertsSpecialChars()
+	public function testHtmlAttributeEscapingConvertsSpecialChars(): void
 	{
 		foreach ($this->htmlAttrSpecialChars as $key => $value) {
 			$this->assertSame(
@@ -188,10 +183,7 @@ class EscapeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::js
-	 */
-	public function testJavascriptEscapingConvertsSpecialChars()
+	public function testJavascriptEscapingConvertsSpecialChars(): void
 	{
 		foreach ($this->jsSpecialChars as $key => $value) {
 			$this->assertSame(
@@ -202,26 +194,17 @@ class EscapeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::js
-	 */
-	public function testJavascriptEscapingReturnsStringIfZeroLength()
+	public function testJavascriptEscapingReturnsStringIfZeroLength(): void
 	{
 		$this->assertSame('', Escape::js(''));
 	}
 
-	/**
-	 * @covers ::js
-	 */
-	public function testJavascriptEscapingReturnsStringIfContainsOnlyDigits()
+	public function testJavascriptEscapingReturnsStringIfContainsOnlyDigits(): void
 	{
 		$this->assertSame('123', Escape::js('123'));
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssEscapingConvertsSpecialChars()
+	public function testCssEscapingConvertsSpecialChars(): void
 	{
 		foreach ($this->cssSpecialChars as $key => $value) {
 			$this->assertSame(
@@ -232,26 +215,17 @@ class EscapeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssEscapingReturnsStringIfZeroLength()
+	public function testCssEscapingReturnsStringIfZeroLength(): void
 	{
 		$this->assertSame('', Escape::css(''));
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssEscapingReturnsStringIfContainsOnlyDigits()
+	public function testCssEscapingReturnsStringIfContainsOnlyDigits(): void
 	{
 		$this->assertSame('123', Escape::css('123'));
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlEscapingConvertsSpecialChars()
+	public function testUrlEscapingConvertsSpecialChars(): void
 	{
 		foreach ($this->urlSpecialChars as $key => $value) {
 			$this->assertSame(
@@ -270,7 +244,7 @@ class EscapeTest extends TestCase
 	 * Only testing the first few 2 ranges on this prot. function
 	 * as that's all these other range tests require
 	 */
-	public function testUnicodeCodepointConversionToUtf8()
+	public function testUnicodeCodepointConversionToUtf8(): void
 	{
 		$expected = ' ~ޙ';
 		$codepoints = [0x20, 0x7e, 0x799];
@@ -287,33 +261,34 @@ class EscapeTest extends TestCase
 	 * @param int $codepoint Unicode codepoint in hex notation
 	 * @return string UTF-8 literal string
 	 */
-	protected function codepointToUtf8($codepoint)
+	protected function codepointToUtf8(int $codepoint): string
 	{
 		if ($codepoint < 0x80) {
 			return chr($codepoint);
 		}
+
 		if ($codepoint < 0x800) {
 			return chr($codepoint >> 6 & 0x3f | 0xc0)
 				. chr($codepoint & 0x3f | 0x80);
 		}
+
 		if ($codepoint < 0x10000) {
 			return chr($codepoint >> 12 & 0x0f | 0xe0)
 				. chr($codepoint >> 6 & 0x3f | 0x80)
 				. chr($codepoint & 0x3f | 0x80);
 		}
+
 		if ($codepoint < 0x110000) {
 			return chr($codepoint >> 18 & 0x07 | 0xf0)
 				. chr($codepoint >> 12 & 0x3f | 0x80)
 				. chr($codepoint >> 6 & 0x3f | 0x80)
 				. chr($codepoint & 0x3f | 0x80);
 		}
+
 		throw new \Exception('Codepoint requested outside of Unicode range');
 	}
 
-	/**
-	 * @covers ::js
-	 */
-	public function testJavascriptEscapingEscapesOwaspRecommendedRanges()
+	public function testJavascriptEscapingEscapesOwaspRecommendedRanges(): void
 	{
 		$immune = [',', '.', '_']; // Exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
@@ -339,10 +314,7 @@ class EscapeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::attr
-	 */
-	public function testHtmlAttributeEscapingEscapesOwaspRecommendedRanges()
+	public function testHtmlAttributeEscapingEscapesOwaspRecommendedRanges(): void
 	{
 		$immune = [',', '.', '-', '_']; // Exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
@@ -368,10 +340,7 @@ class EscapeTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::css
-	 */
-	public function testCssEscapingEscapesOwaspRecommendedRanges()
+	public function testCssEscapingEscapesOwaspRecommendedRanges(): void
 	{
 		$immune = []; // CSS has no exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
@@ -404,11 +373,8 @@ class EscapeTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::xml
-	 * @dataProvider xmlStringProvider
-	 */
-	public function testXml($input, $expected)
+	#[DataProvider('xmlStringProvider')]
+	public function testXml(string $input, string $expected): void
 	{
 		$this->assertSame($expected, Escape::xml($input));
 	}

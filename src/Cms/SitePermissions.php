@@ -13,5 +13,5 @@ namespace Kirby\Cms;
  */
 class SitePermissions extends ModelPermissions
 {
-	protected string $category = 'site';
+	protected const CATEGORY = 'site';
 }

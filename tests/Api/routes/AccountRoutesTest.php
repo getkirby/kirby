@@ -5,6 +5,7 @@ namespace Kirby\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\Section;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
 use Kirby\TestCase;
@@ -35,8 +36,9 @@ class AccountRoutesTest extends TestCase
 			],
 			'users' => [
 				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin'
+					'email'    => 'test@getkirby.com',
+					'role'     => 'admin',
+					'password' => password_hash('12345678', PASSWORD_DEFAULT)
 				],
 				[
 					'email' => 'editor@getkirby.com',
@@ -58,7 +60,7 @@ class AccountRoutesTest extends TestCase
 		App::destroy();
 	}
 
-	public function testAvatar()
+	public function testAvatar(): void
 	{
 		// create an avatar for the user
 		$this->app->user()->createFile([
@@ -72,7 +74,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('profile.jpg', $response['data']['filename']);
 	}
 
-	public function testAvatarDelete()
+	public function testAvatarDelete(): void
 	{
 		// create an avatar for the user
 		$this->app->user()->createFile([
@@ -86,7 +88,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertTrue($response);
 	}
 
-	public function testBlueprint()
+	public function testBlueprint(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -106,7 +108,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('admin', $response['data']['name']);
 	}
 
-	public function testBlueprints()
+	public function testBlueprints(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -140,7 +142,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('Bar', $response[1]['title']);
 	}
 
-	public function testChangeEmail()
+	public function testChangeEmail(): void
 	{
 		$response = $this->app->api()->call('account/email', 'PATCH', [
 			'body' => [
@@ -152,7 +154,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('admin@getkirby.de', $response['data']['email']);
 	}
 
-	public function testChangeLanguage()
+	public function testChangeLanguage(): void
 	{
 		$response = $this->app->api()->call('account/language', 'PATCH', [
 			'body' => [
@@ -164,7 +166,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('de', $response['data']['language']);
 	}
 
-	public function testChangeName()
+	public function testChangeName(): void
 	{
 		$response = $this->app->api()->call('account/name', 'PATCH', [
 			'body' => [
@@ -176,8 +178,48 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('Test user', $response['data']['name']);
 	}
 
-	public function testChangePassword()
+	public function testChangePassword(): void
 	{
+		$response = $this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'currentPassword' => '12345678',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertTrue($this->app->user()->validatePassword('super-secure-new-password'));
+	}
+
+	public function testChangePasswordMissingCurrentPassword(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'password' => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordWrongCurrentPassword(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Wrong password');
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'currentPassword' => 'definitely-not-correct',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordReset(): void
+	{
+		$this->app->session()->set('kirby.resetPassword', true);
+
 		$response = $this->app->api()->call('account/password', 'PATCH', [
 			'body' => [
 				'password' => 'super-secure-new-password'
@@ -185,9 +227,11 @@ class AccountRoutesTest extends TestCase
 		]);
 
 		$this->assertSame('ok', $response['status']);
+		$this->assertTrue($this->app->user()->validatePassword('super-secure-new-password'));
+		$this->assertNull($this->app->session()->get('kirby.resetPassword'));
 	}
 
-	public function testChangeRole()
+	public function testChangeRole(): void
 	{
 		$response = $this->app->api()->call('account/role', 'PATCH', [
 			'body' => [
@@ -199,13 +243,13 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('editor', $response['data']['role']['name']);
 	}
 
-	public function testDelete()
+	public function testDelete(): void
 	{
 		$response = $this->app->api()->call('account', 'DELETE');
 		$this->assertTrue($response);
 	}
 
-	public function testFields()
+	public function testFields(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -244,7 +288,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('Test nested route', $response);
 	}
 
-	public function testFile()
+	public function testFile(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -267,7 +311,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('a.jpg', $response['data']['filename']);
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -299,7 +343,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('c.jpg', $response['data'][2]['filename']);
 	}
 
-	public function testFilesSorted()
+	public function testFilesSorted(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -332,7 +376,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('a.jpg', $response['data'][1]['filename']);
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$app = $this->app;
 
@@ -341,7 +385,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('test@getkirby.com', $response['data']['email']);
 	}
 
-	public function testRoles()
+	public function testRoles(): void
 	{
 		$response = $this->app->api()->call('account/roles');
 
@@ -352,7 +396,7 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame('editor', $response['data'][1]['name']);
 	}
 
-	public function testSections()
+	public function testSections(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -387,15 +431,15 @@ class AccountRoutesTest extends TestCase
 		$this->assertSame($expected, $response);
 	}
 
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		$response = $this->app->api()->call('account', 'PATCH', [
 			'body' => [
-				'name' => 'Test User'
+				'position' => 'Admin'
 			]
 		]);
 
 		$this->assertSame('ok', $response['status']);
-		$this->assertSame('Test User', $response['data']['content']['name']);
+		$this->assertSame('Admin', $response['data']['content']['position']);
 	}
 }

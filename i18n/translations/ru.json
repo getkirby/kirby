@@ -22,7 +22,7 @@
 	"copy.all": "Копировать все",
 	"copy.success": "{count} скопировано",
 	"copy.success.multiple": "{count} скопировано",
-	"copy.url": "Copy URL",
+	"copy.url": "Скопировать ссылку",
 	"create": "Создать",
 	"custom": "Другое",
 
@@ -92,15 +92,23 @@
 
 	"error.cache.type.invalid": "Неверный тип кэша: \"{type}\"",
 
-	"error.content.lock.delete": "The version is locked and cannot be deleted",
-	"error.content.lock.move": "The source version is locked and cannot be moved",
-	"error.content.lock.publish": "This version is already published",
-	"error.content.lock.replace": "The version is locked and cannot be replaced",
-	"error.content.lock.update": "The version is locked and cannot be updated",
+	"error.content.lock.delete": "Версия заблокирована и не может быть удалена",
+	"error.content.lock.move": "Исходная версия заблокирована и не может быть перемещена",
+	"error.content.lock.publish": "Эта версия уже опубликована",
+	"error.content.lock.replace": "Версия заблокирована и не может быть заменена",
+	"error.content.lock.update": "Версия заблокирована и не может быть обновлена",
+
+	"error.entries.max.plural": "Вы не должны добавлять более {max} записей",
+	"error.entries.max.singular": "Вы должны добавить не более одной записи",
+	"error.entries.min.plural": "Вы должны добавить не менее {min} записей",
+	"error.entries.min.singular": "Вы должны добавить хотя бы одну запись",
+	"error.entries.supports": "\"{type}\" тип поля не поддерживается для поля записи",
+	"error.entries.validation": "Ошибка в поле \"{field}\" в строке {index}",
 
 	"error.email.preset.notFound": "Email-шаблон \"{name}\" не найден",
 
 	"error.field.converter.invalid": "Неверный конвертер \"{converter}\"",
+	"error.field.link.options": "Недопустимые параметры: {options}",
 	"error.field.type.missing": "Поле \"{ name }\": тип поля \"{ type }\" не существует",
 
 	"error.file.changeName.empty": "Название не может быть пустым",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Шаблон для файла \"{id}\" не может быть изменен на \"{template}\" (допускается: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "У вас нет права изменять шаблон для файла \"{id}\"",
 
+	"error.file.delete.multiple": "Не все файлы удалось удалить. Попробуйте удалить каждый оставшийся файл по отдельности, чтобы увидеть конкретную ошибку, которая мешает удалению.",
 	"error.file.duplicate": "Файл с названием \"{filename}\" уже есть",
 	"error.file.extension.forbidden": "Расширение файла \"{extension}\" неразрешено",
 	"error.file.extension.invalid": "Неверное разрешение:  {extension}",
@@ -126,7 +135,7 @@
 	"error.file.name.missing": "Название файла не может быть пустым",
 	"error.file.notFound": "\u0424\u0430\u0439\u043b \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
 	"error.file.orientation": "Ориентация изображения должна быть \"{orientation}\"",
-	"error.file.sort.permission": "You are not allowed to change the sorting of \"{filename}\"",
+	"error.file.sort.permission": "Вам не разрешается изменять сортировку \"{filename}\"",
 	"error.file.type.forbidden": "У вас нет права загружать файлы {type}",
 	"error.file.type.invalid": "Неверный тип файла: {type}",
 	"error.file.undefined": "\u0424\u0430\u0439\u043b \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Невозможно удалить страницу \"{slug}\"",
 	"error.page.delete.confirm": "Впишите название страницы чтобы подтвердить",
 	"error.page.delete.hasChildren": "У страницы есть внутренние страницы, поэтому ее невозможно удалить",
+	"error.page.delete.multiple": "Не все страницы удалось удалить. Попробуйте удалить каждую оставшуюся страницу по отдельности, чтобы увидеть конкретную ошибку, которая мешает удалению.",
 	"error.page.delete.permission": "У вас нет права удалить \"{slug}\"",
 	"error.page.draft.duplicate": "Черновик страницы с URL \"{slug}\" уже есть",
 	"error.page.duplicate": "Страница с URL \"{slug}\" уже есть",
@@ -177,7 +187,7 @@
 	"error.page.move.ancestor": "Невозможно переместить страницу саму в себя",
 	"error.page.move.directory": "Невозможно перенести каталог страницы",
 	"error.page.move.duplicate": "Подстраница с URL \"{slug}\" уже существует",
-	"error.page.move.noSections": "The page \"{parent}\" cannot be a parent of any page because it lacks any pages sections in its blueprint",
+	"error.page.move.noSections": "Страница \"{parent}\" не может быть родительской для какой-либо страницы, поскольку в ее разметке отсутствуют какие-либо разделы страниц",
 	"error.page.move.notFound": "Перемещенная страница не найдена",
 	"error.page.move.permission": "У вас нет права переместить \"{slug}\"",
 	"error.page.move.template": "Шаблон \"{template}\" не разрешен для подстраниц \"{parent}\"",
@@ -307,9 +317,9 @@
 	"field.blocks.heading.name": "Заголовок",
 	"field.blocks.heading.text": "Текст",
 	"field.blocks.heading.placeholder": "Заголовок …",
-	"field.blocks.figure.back.plain": "Plain",
-	"field.blocks.figure.back.pattern.light": "Pattern (light)",
-	"field.blocks.figure.back.pattern.dark": "Pattern (dark)",
+	"field.blocks.figure.back.plain": "Неформатированный",
+	"field.blocks.figure.back.pattern.light": "Паттерн (светлый)",
+	"field.blocks.figure.back.pattern.dark": "Паттерн (темный)",
 	"field.blocks.image.alt": "Альтернативный текст",
 	"field.blocks.image.caption": "Подпись",
 	"field.blocks.image.crop": "Обрезать",
@@ -346,8 +356,11 @@
 	"field.blocks.video.url.label": "Ссылка на видео",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Вы действительно хотите удалить все значения?",
+	"field.entries.empty": "Записей нет",
+
 	"field.files.empty": "Файлы не выбраны",
-	"field.files.empty.single": "No file selected yet",
+	"field.files.empty.single": "Файл не выбран",
 
 	"field.layout.change": "Изменить разметку",
 	"field.layout.delete": "Удалить разметку",
@@ -359,14 +372,14 @@
 	"field.object.empty": "Пока нет информации",
 
 	"field.pages.empty": "Страницы не выбраны",
-	"field.pages.empty.single": "No page selected yet",
+	"field.pages.empty.single": "Страница не выбрана",
 
 	"field.structure.delete.confirm": "Вы точно хотите удалить эту запись?",
 	"field.structure.delete.confirm.all": "Вы действительно хотите удалить все значения?",
 	"field.structure.empty": "Записей нет",
 
 	"field.users.empty": "Пользователей нет",
-	"field.users.empty.single": "No user selected yet",
+	"field.users.empty.single": "Пользователь не выбран",
 
 	"fields.empty": "Ещё нет полей",
 
@@ -381,16 +394,17 @@
 	"file.sort": "Изменить позицию",
 
 	"files": "Файлы",
+	"files.delete.confirm.selected": "Вы действительно хотите удалить выбранные файлы? Это действие невозможно отменить.",
 	"files.empty": "Еще нет файлов",
 
 	"filter": "Фильтр",
 
-	"form.discard": "Discard changes",
-	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
-	"form.locked": "This content is disabled for you as it is currently edited by another user",
-	"form.unsaved": "The current changes have not yet been saved",
-	"form.preview": "Preview changes",
-	"form.preview.draft": "Preview draft",
+	"form.discard": " Отменить изменения",
+	"form.discard.confirm": " Вы действительно хотите <strong>отменить все свои изменения</strong>?",
+	"form.locked": "Этот контент для вас недоступен, так как в сейчас он редактируется другим пользователем",
+	"form.unsaved": "Текущие изменения не сохранены",
+	"form.preview": "Предпросмотр",
+	"form.preview.draft": "Посмотреть черновик",
 
 	"hide": "Скрыть",
 	"hour": "Час",
@@ -435,7 +449,12 @@
 	"language.variables.empty": "Пока нет переводов",
 
 	"language.variable.delete.confirm": "Вы действительно хотите удалить переменную для {key}?",
+	"language.variable.entries": "Values",
+	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Ключ",
+	"language.variable.multiple": "Countable?",
+	"language.variable.multiple.text": "Use different translation strings",
+	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "Переменная не найдена",
 	"language.variable.value": "Значение",
 
@@ -467,8 +486,8 @@
 	"license.status.missing.bubble": "Готовы запустить Ваш сайт?",
 	"license.status.missing.info": "Нет действительной лицензии",
 	"license.status.missing.label": "Пожалуйста, активируйте Вашу лицензию",
-	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.info": "Статус лицензии неизвестен",
+	"license.status.unknown.label": "Неизвестно",
 	"license.manage": "Управление лицензиями",
 	"license.purchased": "Приобретено",
 	"license.success": "Спасибо за поддержку Kirby",
@@ -481,9 +500,9 @@
 
 	"lock.unsaved": "Несохраненные изменения",
 	"lock.unsaved.empty": "Несохраненных изменений нет",
-	"lock.unsaved.files": "Unsaved files",
-	"lock.unsaved.pages": "Unsaved pages",
-	"lock.unsaved.users": "Unsaved accounts",
+	"lock.unsaved.files": "Несохраненные файлы",
+	"lock.unsaved.pages": "Несохраненные страницы",
+	"lock.unsaved.users": "Несохраненные аккаунты",
 	"lock.isLocked": "Несохраненные изменения {email}",
 	"lock.unlock": "Разблокировать",
 	"lock.unlock.submit": "Разблокируйте и перезапишите несохраненные изменения <strong>{email}</strong>",
@@ -590,6 +609,7 @@
 	"page.status.unlisted.description": "Страница доступна только по URL",
 
 	"pages": "Страницы",
+	"pages.delete.confirm.selected": "Вы действительно хотите удалить выбранные страницы? Это действие невозможно отменить.",
 	"pages.empty": "Страниц нет",
 	"pages.status.draft": "Черновики",
 	"pages.status.listed": "Опубликовано",
@@ -607,7 +627,7 @@
 	"prev": "Предыдущий",
 	"preview": "Предпросмотр",
 
-	"publish": "Publish",
+	"publish": "Опубликовать",
 	"published": "Опубликовано",
 
 	"remove": "Удалить",
@@ -629,9 +649,9 @@
 	"role.nobody.title": "Никто",
 
 	"save": "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c",
-	"saved": "Saved",
+	"saved": "Сохранено",
 	"search": "Поиск",
-	"searching": "Searching",
+	"searching": "Поиск",
 	"search.min": "Введите хотя бы {min} символов для поиска",
 	"search.all": "Показать все результаты ({count})",
 	"search.results.none": "Нет результатов",
@@ -656,7 +676,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Похоже, к папке content есть несанкционированный доступ",
 	"system.issues.eol.kirby": "Срок службы установленной вами версии Kirby истек, и она больше не будет получать обновления для системы безопасности",
 	"system.issues.eol.plugin": "Срок службы установленной вами версии плагина { plugin } истек, и он не будет получать дальнейших обновлений для системы безопасности",
@@ -665,7 +684,9 @@
 	"system.issues.git": "Похоже, к папке .git есть несанкционированный доступ",
 	"system.issues.https": "Рекомендуется использовать HTTPS на всех сайтах",
 	"system.issues.kirby": "Похоже, к папке kirby есть несанкционированный доступ",
+	"system.issues.local": "Сайт работает локально, с ослабленными проверками безопасности",
 	"system.issues.site": "Похоже, к папке site есть несанкционированный доступ",
+	"system.issues.vue.compiler": "Включен компилятор шаблонов Vue",
 	"system.issues.vulnerability.kirby": "Обнаружена уязвимость уровня \"{ severity }\": { description }",
 	"system.issues.vulnerability.plugin": "В плагине { plugin } обнаружена уязвимость уровня \"{ severity }\": { description }",
 	"system.updateStatus": "Обновить статус",
@@ -682,10 +703,10 @@
 	"tel.placeholder": "+79123456789",
 	"template": "\u0428\u0430\u0431\u043b\u043e\u043d",
 
-	"theme": "Theme",
-	"theme.light": "Lights on",
-	"theme.dark": "Lights off",
-	"theme.automatic": "Match system default",
+	"theme": "Тема",
+	"theme.light": "Светлая тема",
+	"theme.dark": "Темная тема",
+	"theme.automatic": "Как в системе",
 
 	"title": "Название",
 	"today": "Сегодня",
@@ -745,6 +766,7 @@
 	"user.changeLanguage": "Изменить язык",
 	"user.changeName": "Переименовать пользователя",
 	"user.changePassword": "Изменить пароль",
+	"user.changePassword.current": "Ваш текущий пароль",
 	"user.changePassword.new": "Новый пароль",
 	"user.changePassword.new.confirm": "Подтвердить новый пароль…",
 	"user.changeRole": "Изменить роль",
@@ -756,13 +778,13 @@
 	"users": "Пользователи",
 
 	"version": "Версия",
-	"version.changes": "Changed version",
-	"version.compare": "Compare versions",
+	"version.changes": "Измененная версия",
+	"version.compare": "Сравнить версии",
 	"version.current": "Текущая версия",
 	"version.latest": "Последняя версия",
 	"versionInformation": "Информация о версии",
 
-	"view": "View",
+	"view": "Посмотреть",
 	"view.account": "Ваш аккаунт",
 	"view.installation": "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430",
 	"view.languages": "Языки",

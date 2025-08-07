@@ -18,7 +18,7 @@ class TranslationsRoutesTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testList()
+	public function testList(): void
 	{
 		$app      = $this->app;
 		$response = $app->api()->call('translations');
@@ -27,7 +27,7 @@ class TranslationsRoutesTest extends TestCase
 		$this->assertCount(count($files), $response['data']);
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$app = $this->app;
 

@@ -38,6 +38,10 @@ export default (panel) => {
 		...parent,
 		...listeners(),
 		input: null,
+		announce() {
+			panel.notification.success({ context: "view" });
+			panel.events.emit("model.update");
+		},
 		/**
 		 * Called when dialog's cancel button was clicked
 		 */
@@ -53,7 +57,7 @@ export default (panel) => {
 			// been completely uploaded
 			if (this.completed.length > 0) {
 				await this.emit("complete", this.completed);
-				panel.view.reload();
+				this.announce();
 			}
 
 			this.reset();
@@ -74,12 +78,9 @@ export default (panel) => {
 			panel.dialog.close();
 
 			if (this.completed.length > 0) {
+				await this.emit("complete", this.completed);
 				await this.emit("done", this.completed);
-
-				if (panel.drawer.isOpen === false) {
-					panel.notification.success({ context: "view" });
-					panel.view.reload();
-				}
+				this.announce();
 			}
 
 			this.reset();
@@ -343,6 +344,8 @@ export default (panel) => {
 
 				file.completed = true;
 				file.model = response.data;
+
+				panel.events.emit("file.upload", file);
 			} catch (error) {
 				panel.error(error, false);
 
@@ -352,6 +355,8 @@ export default (panel) => {
 
 				// reset the progress bar on error
 				file.progress = 0;
+
+				panel.events.emit("file.upload.error", file);
 			}
 		}
 	});

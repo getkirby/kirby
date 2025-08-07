@@ -5,10 +5,12 @@
 		<div class="k-table">
 			<table>
 				<thead>
-					<th style="width: 10rem">Method</th>
-					<th>Description</th>
-					<th style="width: 16rem">Params</th>
-					<th style="width: 10rem">Returns</th>
+					<tr>
+						<th style="width: 10rem">Method</th>
+						<th>Description</th>
+						<th style="width: 16rem">Params</th>
+						<th style="width: 10rem">Returns</th>
+					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="method in methods" :key="method.name">
@@ -21,7 +23,10 @@
 							</k-text>
 						</td>
 						<td>
-							<k-lab-docs-deprecated :deprecated="method.deprecated" />
+							<k-lab-docs-warning
+								title="Deprecated"
+								:text="method.deprecated"
+							/>
 							<k-text :html="method.description" />
 						</td>
 						<td>

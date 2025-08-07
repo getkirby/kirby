@@ -41,7 +41,7 @@ class Collections
 	 * `$collections->myCollection()`
 	 *
 	 * @return \Kirby\Toolkit\Collection|null
-	 * @todo 5.0 Add return type declaration
+	 * @todo 6.0 Add return type declaration
 	 */
 	public function __call(string $name, array $arguments = [])
 	{
@@ -52,8 +52,8 @@ class Collections
 	 * Loads a collection by name if registered
 	 *
 	 * @return \Kirby\Toolkit\Collection|null
-	 * @todo 5.0 Add deprecation warning when anything else than a Collection is returned
-	 * @todo 6.0 Add PHP return type declaration for `Toolkit\Collection`
+	 * @todo 6.0 Add deprecation warning when anything else than a Collection is returned
+	 * @todo 7.0 Add PHP return type declaration for `Toolkit\Collection`
 	 */
 	public function get(string $name, array $data = [])
 	{
@@ -105,10 +105,11 @@ class Collections
 	{
 		$kirby = App::instance();
 
-		// first check for collection file
-		$file = $kirby->root('collections') . '/' . $name . '.php';
+		// first check for collection file in the `collections` root
+		$root = $kirby->root('collections');
+		$file = $root . '/' . $name . '.php';
 
-		if (is_file($file) === true) {
+		if (F::exists($file, $root) === true) {
 			$collection = F::load($file, allowOutput: false);
 
 			if ($collection instanceof Closure) {

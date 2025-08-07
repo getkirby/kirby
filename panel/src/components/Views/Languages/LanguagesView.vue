@@ -61,18 +61,9 @@ export default {
 		languagesCollection() {
 			return this.languages.map((language) => ({
 				...language,
-				image: {
-					back: "black",
-					color: "gray",
-					icon: "translate"
-				},
-				link: () => {
-					if (this.variables === false) {
-						return null;
-					}
-
-					this.$go(`languages/${language.id}`);
-				},
+				link: this.variables
+					? () => this.$go(`languages/${language.id}`)
+					: null,
 				options: [
 					{
 						icon: "edit",

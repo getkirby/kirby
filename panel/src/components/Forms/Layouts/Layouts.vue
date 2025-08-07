@@ -23,8 +23,8 @@
 					@prepend="select(index)"
 					@remove="remove(layout)"
 					@select="selected = layout.id"
-					@updateAttrs="updateAttrs(index, $event)"
-					@updateColumn="updateColumn({ layout, index, ...$event })"
+					@update-attrs="updateAttrs(index, $event)"
+					@update-column="updateColumn({ layout, index, ...$event })"
 				/>
 			</k-draggable>
 		</template>
@@ -62,7 +62,7 @@ export const props = {
 };
 
 /**
- * @internal
+ * @unstable
  */
 export default {
 	mixins: [props],
@@ -251,7 +251,7 @@ export default {
 			const index = this.rows.findIndex((element) => element.id === layout.id);
 
 			if (index !== -1) {
-				this.$delete(this.rows, index);
+				this.rows.splice(index, 1);
 			}
 
 			this.save();

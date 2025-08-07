@@ -23,7 +23,7 @@ export default (api) => {
 
 		// adapt headers for all non-GET and non-POST methods
 		if (
-			api.methodOverwrite &&
+			api.methodOverride &&
 			options.method !== "GET" &&
 			options.method !== "POST"
 		) {

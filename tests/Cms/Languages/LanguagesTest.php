@@ -44,7 +44,7 @@ class LanguagesTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testCodes()
+	public function testCodes(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -78,7 +78,7 @@ class LanguagesTest extends TestCase
 		$this->assertSame(['default'], $app->languages()->codes());
 	}
 
-	public function testEnsureInMultiLanguageMode()
+	public function testEnsureInMultiLanguageMode(): void
 	{
 		$languages = Languages::ensure();
 
@@ -87,7 +87,7 @@ class LanguagesTest extends TestCase
 		$this->assertSame('de', $languages->last()->code());
 	}
 
-	public function testEnsureInSingleLanguageMode()
+	public function testEnsureInSingleLanguageMode(): void
 	{
 		new App([
 			'roots' => [
@@ -101,14 +101,14 @@ class LanguagesTest extends TestCase
 		$this->assertSame('en', $languages->first()->code());
 	}
 
-	public function testLoad()
+	public function testLoad(): void
 	{
 		$this->assertCount(2, $this->languages);
 		$this->assertSame(['en', 'de'], $this->languages->codes());
 		$this->assertSame('en', $this->languages->default()->code());
 	}
 
-	public function testLoadFromFiles()
+	public function testLoadFromFiles(): void
 	{
 		$this->app->clone([
 			'roots' => [
@@ -134,12 +134,12 @@ class LanguagesTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testDefault()
+	public function testDefault(): void
 	{
 		$this->assertSame('en', $this->languages->default()->code());
 	}
 
-	public function testMultipleDefault()
+	public function testMultipleDefault(): void
 	{
 		$this->expectException(DuplicateException::class);
 
@@ -163,7 +163,7 @@ class LanguagesTest extends TestCase
 		]);
 	}
 
-	public function testCreate()
+	public function testCreate(): void
 	{
 		$this->app->impersonate('kirby');
 

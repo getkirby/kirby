@@ -1,7 +1,7 @@
 <template>
 	<nav v-if="buttons.length" class="k-toolbar" :data-theme="theme">
 		<template v-for="(button, index) in buttons">
-			<hr v-if="button === '|'" :key="index" />
+			<hr v-if="button === '|'" :key="'separator-' + index" />
 
 			<k-button
 				v-else-if="button.when ?? true"
@@ -9,10 +9,10 @@
 				:current="button.current"
 				:disabled="button.disabled"
 				:icon="button.icon"
-				:title="button.label"
+				:title="button.label ?? button.title"
 				:class="['k-toolbar-button', button.class]"
 				tabindex="0"
-				@keydown.native="button.key?.($event)"
+				@keydown="button.key?.($event)"
 				@click="
 					button.dropdown?.length
 						? $refs[index + '-dropdown'][0].toggle()
@@ -130,9 +130,11 @@ export default {
 	border-end-end-radius: var(--rounded);
 }
 
-/** TODO: .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */
-:where(.k-textarea-input, .k-writer-input):focus-within
-	.k-toolbar:not([data-inline="true"]) {
+:where(.k-textarea-input, .k-writer-input):not(:focus-within) {
+	--toolbar-text: var(--color-gray-400);
+	--toolbar-border: var(--panel-color-back);
+}
+.k-toolbar:not([data-inline="true"]):has(~ :focus-within, :focus) {
 	position: sticky;
 	top: var(--header-sticky-offset);
 	inset-inline: 0;

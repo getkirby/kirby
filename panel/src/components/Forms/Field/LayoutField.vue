@@ -56,6 +56,7 @@ import { autofocus } from "@/mixins/props.js";
 export default {
 	mixins: [FieldProps, LayoutsProps, autofocus],
 	inheritAttrs: false,
+	emits: ["input"],
 	computed: {
 		hasFieldsets() {
 			return this.$helper.object.length(this.fieldsets) > 0;
@@ -90,7 +91,6 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-layout-field > :has(+ footer) { margin-bottom: var(--spacing-3);} */
 .k-layout-field > footer {
 	display: flex;
 	justify-content: center;

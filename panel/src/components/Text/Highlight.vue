@@ -16,7 +16,7 @@ Prism.manual = true;
 
 /**
  * @since 4.0.0
- * @internal
+ * @unstable
  */
 export default {
 	mounted() {
@@ -26,7 +26,7 @@ export default {
 		Prism.highlightAll(this.$el);
 	},
 	render() {
-		return this.$scopedSlots.default({});
+		return this.$slots.default({});
 	}
 };
 </script>

@@ -29,6 +29,7 @@ import { props as TogglesInput } from "../Input/TogglesInput.vue";
 export default {
 	mixins: [Field, Input, TogglesInput],
 	inheritAttrs: false,
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

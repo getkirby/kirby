@@ -6,7 +6,7 @@
 		:input="id"
 		:style="$attrs.style"
 	>
-		<template #options>
+		<template v-if="$slots.options" #options>
 			<slot name="options" />
 		</template>
 		<k-input
@@ -32,6 +32,7 @@ import counter from "@/mixins/forms/counter.js";
 export default {
 	mixins: [Field, Input, TextInput, counter],
 	inheritAttrs: false,
+	emits: ["input"],
 	computed: {
 		inputType() {
 			if (this.$helper.isComponent(`k-${this.type}-input`)) {

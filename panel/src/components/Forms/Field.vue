@@ -13,9 +13,13 @@
 		@focusout="$emit('blur', $event)"
 	>
 		<slot name="header">
-			<header class="k-field-header">
+			<header
+				v-if="label || $slots.label || $slots.options || $slots.counter"
+				class="k-field-header"
+			>
 				<slot name="label">
 					<k-label
+						v-if="label"
 						:input="input"
 						:required="required"
 						:title="label"
@@ -24,7 +28,15 @@
 						{{ label }}
 					</k-label>
 				</slot>
-				<slot name="options" />
+				<slot name="options">
+					<k-button-group
+						v-if="buttons"
+						:buttons="buttons"
+						size="xs"
+						variant="filled"
+						class="k-field-buttons"
+					/>
+				</slot>
 				<slot name="counter">
 					<k-counter
 						v-if="counter"
@@ -52,9 +64,10 @@ import { disabled, help, id, label, name, required } from "@/mixins/props.js";
 export const props = {
 	mixins: [disabled, help, id, label, name, required],
 	props: {
+		buttons: Array,
 		counter: [Boolean, Object],
 		endpoints: Object,
-		input: [String, Number],
+		input: [String, Number, Boolean],
 		translate: Boolean,
 		type: String
 	}
@@ -86,6 +99,9 @@ export default {
 	margin-bottom: var(--spacing-2);
 }
 .k-field-options {
+	flex-shrink: 0;
+}
+.k-field-buttons {
 	flex-shrink: 0;
 }
 .k-field-counter {

@@ -5,10 +5,9 @@ namespace Kirby\Toolkit;
 use Exception;
 use InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\A
- */
+#[CoversClass(A::class)]
 class ATest extends TestCase
 {
 	protected function _array(): array
@@ -20,10 +19,7 @@ class ATest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::append
-	 */
-	public function testAppend()
+	public function testAppend(): void
 	{
 		// associative
 		$one      = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
@@ -47,10 +43,7 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::apply
-	 */
-	public function testApply()
+	public function testApply(): void
 	{
 		$array = [
 			'level' => [
@@ -76,20 +69,14 @@ class ATest extends TestCase
 		$this->assertSame($expected, A::apply($array, 'b', 'c'));
 	}
 
-	/**
-	 * @covers ::count
-	 */
-	public function testCount()
+	public function testCount(): void
 	{
 		$this->assertSame(3, A::count($this->_array()));
 		$this->assertSame(2, A::count(['cat', 'dog']));
 		$this->assertSame(0, A::count([]));
 	}
 
-	/**
-	 * @covers ::every
-	 */
-	public function testEvery()
+	public function testEvery(): void
 	{
 		// The value should be passed to the callback
 		A::every(['foo', 'bar'], function ($value) {
@@ -148,10 +135,7 @@ class ATest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::find
-	 */
-	public function testFind()
+	public function testFind(): void
 	{
 		$array = $this->_array();
 
@@ -218,15 +202,9 @@ class ATest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::get
-	 */
-	public function testGet()
+	public function testGet(): void
 	{
 		$array = $this->_array();
-
-		// non-array
-		$this->assertSame('test', A::get('test', 'test'));
 
 		// single key
 		$this->assertSame('miao', A::get($array, 'cat'));
@@ -255,10 +233,7 @@ class ATest extends TestCase
 		], A::get($array, ['cat', 'elephant'], 'toot'));
 	}
 
-	/**
-	 * @covers ::get
-	 */
-	public function testGetWithDotNotation()
+	public function testGetWithDotNotation(): void
 	{
 		$data = [
 			'grand.ma' => $grandma = [
@@ -294,10 +269,7 @@ class ATest extends TestCase
 		$this->assertSame('default', A::get($data, 'grand.ma.cousins.4.name', 'default'));
 	}
 
-	/**
-	 * @covers ::get
-	 */
-	public function testGetWithNonexistingOptions()
+	public function testGetWithNonexistingOptions(): void
 	{
 		$data = [
 			// 'alexander.the.great' => 'should not be fetched',
@@ -308,10 +280,7 @@ class ATest extends TestCase
 		$this->assertSame('not great yet', A::get($data, 'alexander'));
 	}
 
-	/**
-	 * @covers ::has
-	 */
-	public function testHas()
+	public function testHas(): void
 	{
 		$array = $this->_array();
 
@@ -321,10 +290,7 @@ class ATest extends TestCase
 		$this->assertFalse(A::has($array, ['miao']));
 	}
 
-	/**
-	 * @covers ::implode
-	 */
-	public function testImplode()
+	public function testImplode(): void
 	{
 		$array = ['a', 'b', 'c'];
 		$this->assertSame('abc', A::implode($array));
@@ -337,10 +303,7 @@ class ATest extends TestCase
 		$this->assertSame('ABCD', A::implode($array));
 	}
 
-	/**
-	 * @covers ::map
-	 */
-	public function testMap()
+	public function testMap(): void
 	{
 		$array = [
 			'Peter', 'Bob', 'Mary'
@@ -358,7 +321,7 @@ class ATest extends TestCase
 		);
 	}
 
-	public function testMapWithFunction()
+	public function testMapWithFunction(): void
 	{
 		$array    = [' A ', 'B ', ' C'];
 		$expected = ['A', 'B', 'C'];
@@ -366,7 +329,7 @@ class ATest extends TestCase
 		$this->assertSame($expected, A::map($array, 'trim'));
 	}
 
-	public function testMapWithClassMethod()
+	public function testMapWithClassMethod(): void
 	{
 		$array    = ['a', 'b', 'c'];
 		$expected = ['A', 'B', 'C'];
@@ -374,10 +337,7 @@ class ATest extends TestCase
 		$this->assertSame($expected, A::map($array, 'Str::upper'));
 	}
 
-	/**
-	 * @covers ::merge
-	 */
-	public function testMerge()
+	public function testMerge(): void
 	{
 		// simple non-associative arrays
 		$a        = ['a', 'b'];
@@ -431,10 +391,7 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::merge
-	 */
-	public function testMergeMultiples()
+	public function testMergeMultiples(): void
 	{
 		// simple non-associative arrays
 		$a        = ['a', 'b'];
@@ -461,10 +418,7 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::merge
-	 */
-	public function testMergeModes()
+	public function testMergeModes(): void
 	{
 		// simple non-associative arrays
 		$a        = [1 => 'a', 4 => 'b'];
@@ -516,10 +470,7 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	/**
-	 * @covers ::prepend
-	 */
-	public function testPrepend()
+	public function testPrepend(): void
 	{
 		// associative
 		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
@@ -540,10 +491,7 @@ class ATest extends TestCase
 		$this->assertSame(['d', 'e', 'f', 'a' => 'A', 'b' => 'B', 'c' => 'C'], $result);
 	}
 
-	/**
-	 * @covers ::pluck
-	 */
-	public function testPluck()
+	public function testPluck(): void
 	{
 		$array = [
 			['id' => 1, 'username' => 'bastian'],
@@ -558,10 +506,7 @@ class ATest extends TestCase
 		], A::pluck($array, 'username'));
 	}
 
-	/**
-	 * @covers ::shuffle
-	 */
-	public function testShuffle()
+	public function testShuffle(): void
 	{
 		$array = $this->_array();
 		$shuffled = A::shuffle($array);
@@ -571,10 +516,7 @@ class ATest extends TestCase
 		$this->assertSame($array['bird'], $shuffled['bird']);
 	}
 
-	/**
-	 * @covers ::reduce
-	 */
-	public function testReduce()
+	public function testReduce(): void
 	{
 		$array = $this->_array();
 
@@ -592,10 +534,7 @@ class ATest extends TestCase
 		$this->assertSame(null, $reduced);
 	}
 
-	/**
-	 * @covers ::slice
-	 */
-	public function testSlice()
+	public function testSlice(): void
 	{
 		$array = $this->_array();
 
@@ -606,10 +545,7 @@ class ATest extends TestCase
 		$this->assertSame($array, A::slice($array, 0));
 	}
 
-	/**
-	 * @covers ::some
-	 */
-	public function testSome()
+	public function testSome(): void
 	{
 		// The value should be passed to the callback
 		A::some(['foo', 'bar'], function ($value = null) {
@@ -660,10 +596,7 @@ class ATest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::sum
-	 */
-	public function testSum()
+	public function testSum(): void
 	{
 		$array = $this->_array();
 
@@ -673,26 +606,17 @@ class ATest extends TestCase
 		$this->assertSame(6.0, A::sum([1.2, 2.4, 2.4]));
 	}
 
-	/**
-	 * @covers ::first
-	 */
-	public function testFirst()
+	public function testFirst(): void
 	{
 		$this->assertSame('miao', A::first($this->_array()));
 	}
 
-	/**
-	 * @covers ::last
-	 */
-	public function testLast()
+	public function testLast(): void
 	{
 		$this->assertSame('tweet', A::last($this->_array()));
 	}
 
-	/**
-	 * @covers ::random
-	 */
-	public function testRandom()
+	public function testRandom(): void
 	{
 		$array       = $this->_array();
 		$arrayKeys   = array_flip(array_keys($array));
@@ -717,20 +641,14 @@ class ATest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::random
-	 */
-	public function testRandomInvalidCount()
+	public function testRandomInvalidCount(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('$count is larger than available array items');
 		A::random([1, 2, 3], 4);
 	}
 
-	/**
-	 * @covers ::fill
-	 */
-	public function testFill()
+	public function testFill(): void
 	{
 		$array = [
 			'miao',
@@ -772,10 +690,7 @@ class ATest extends TestCase
 		$this->assertSame([false, true, false], A::fill([], 3, [V::class, 'accepted']));
 	}
 
-	/**
-	 * @covers ::move
-	 */
-	public function testMove()
+	public function testMove(): void
 	{
 		$input = [
 			'a',
@@ -794,10 +709,7 @@ class ATest extends TestCase
 		$this->assertSame(['b', 'a', 'c', 'd'], A::move($input, 1, 0));
 	}
 
-	/**
-	 * @covers ::move
-	 */
-	public function testMoveWithInvalidFrom()
+	public function testMoveWithInvalidFrom(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid "from" index');
@@ -805,10 +717,7 @@ class ATest extends TestCase
 		A::move(['a', 'b', 'c'], -1, 2);
 	}
 
-	/**
-	 * @covers ::move
-	 */
-	public function testMoveWithInvalidTo()
+	public function testMoveWithInvalidTo(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid "to" index');
@@ -816,10 +725,7 @@ class ATest extends TestCase
 		A::move(['a', 'b', 'c'], 0, 4);
 	}
 
-	/**
-	 * @covers ::missing
-	 */
-	public function testMissing()
+	public function testMissing(): void
 	{
 		$required = ['cat', 'elephant'];
 
@@ -827,10 +733,7 @@ class ATest extends TestCase
 		$this->assertSame([], A::missing($this->_array(), ['cat']));
 	}
 
-	/**
-	 * @covers ::nest
-	 */
-	public function testNest()
+	public function testNest(): void
 	{
 		// simple example
 		$input = [
@@ -1003,20 +906,14 @@ class ATest extends TestCase
 		$this->assertSame($expected, A::nest($input));
 	}
 
-	/**
-	 * @covers ::nestByKeys
-	 */
-	public function testNestByKeys()
+	public function testNestByKeys(): void
 	{
 		$this->assertSame('test', A::nestByKeys('test', []));
 		$this->assertSame(['a' => 'test'], A::nestByKeys('test', ['a']));
 		$this->assertSame(['a' => ['b' => 'test']], A::nestByKeys('test', ['a', 'b']));
 	}
 
-	/**
-	 * @covers ::sort
-	 */
-	public function testSort()
+	public function testSort(): void
 	{
 		$array = [
 			['id' => 1, 'username' => 'bastian'],
@@ -1060,10 +957,7 @@ class ATest extends TestCase
 		$this->assertSame(3, array_search('img12.png', array_column($natural, 'file')));
 	}
 
-	/**
-	 * @covers ::isAssociative
-	 */
-	public function testIsAssociative()
+	public function testIsAssociative(): void
 	{
 		$yes = $this->_array();
 		$no = ['cat', 'dog', 'bird'];
@@ -1072,10 +966,7 @@ class ATest extends TestCase
 		$this->assertFalse(A::isAssociative($no));
 	}
 
-	/**
-	 * @covers ::average
-	 */
-	public function testAverage()
+	public function testAverage(): void
 	{
 		$array = [5, 2, 4, 7, 9.7];
 
@@ -1085,10 +976,7 @@ class ATest extends TestCase
 		$this->assertNull(A::average([]));
 	}
 
-	/**
-	 * @covers ::extend
-	 */
-	public function testExtend()
+	public function testExtend(): void
 	{
 		// simple
 		$a = $this->_array();
@@ -1128,10 +1016,7 @@ class ATest extends TestCase
 		$this->assertSame($merged, A::extend($a, $b));
 	}
 
-	/**
-	 * @covers ::join
-	 */
-	public function testJoin()
+	public function testJoin(): void
 	{
 		$array = ['a', 'b', 'c'];
 		$this->assertSame('a, b, c', A::join($array));
@@ -1142,10 +1027,7 @@ class ATest extends TestCase
 		$this->assertSame('a/b/c', A::join('a/b/c'));
 	}
 
-	/**
-	 * @covers ::keyBy
-	 */
-	public function testKeyBy()
+	public function testKeyBy(): void
 	{
 		$array = [
 			['id' => 1, 'username' => 'bastian'],
@@ -1182,10 +1064,7 @@ class ATest extends TestCase
 		$this->assertSame($array_by_id, A::keyBy($array_by_cb, 'id'));
 	}
 
-	/**
-	 * @covers ::keyBy
-	 */
-	public function testKeyByWithNonexistentKeys()
+	public function testKeyByWithNonexistentKeys(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "key by" argument must be a valid key or a callable');
@@ -1199,10 +1078,7 @@ class ATest extends TestCase
 		A::keyBy($array, 'nonexistent');
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		$array = $this->_array();
 		$updated = [
@@ -1221,10 +1097,7 @@ class ATest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::wrap
-	 */
-	public function testWrap()
+	public function testWrap(): void
 	{
 		$result = A::wrap($expected = ['a', 'b']);
 		$this->assertSame($expected, $result);
@@ -1237,10 +1110,7 @@ class ATest extends TestCase
 	}
 
 
-	/**
-	 * @covers ::filter
-	 */
-	public function testFilter()
+	public function testFilter(): void
 	{
 		$associativeArray = $this->_array();
 		$indexedArray = array_keys($associativeArray);
@@ -1267,10 +1137,7 @@ class ATest extends TestCase
 		$this->assertSame([1 => 'dog', 2 => 'bird'], $result);
 	}
 
-	/**
-	 * @covers ::without
-	 */
-	public function testWithout()
+	public function testWithout(): void
 	{
 		$associativeArray = $this->_array();
 		$indexedArray = [...array_keys($associativeArray), ...array_keys($associativeArray)];

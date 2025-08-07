@@ -13,11 +13,11 @@
 		<k-items
 			:items="
 				issues.map((issue) => ({
-					// give each message an image prop unless it already has one
+					theme: 'negative',
 					image: {
-						back: 'light-dark(var(--color-red-200), var(--color-red-900))',
+						back: 'light-dark(var(--theme-color-200), var(--theme-color-900))',
 						icon: issue.icon ?? 'alert',
-						color: 'var(--color-red)'
+						color: 'var(--theme-color-icon)'
 					},
 					target: '_blank',
 					...issue
@@ -43,7 +43,7 @@ export default {
 			default: () => []
 		},
 		urls: {
-			type: Object,
+			type: [Object, Array],
 			default: () => ({})
 		}
 	},
@@ -61,9 +61,9 @@ export default {
 		const promiseAll = (Promise.allSettled ?? Promise.all).bind(Promise);
 
 		// call the check method on every URL in the `urls` object
-		const promises = Object.entries(this.urls).map(this.check);
+		const promises = Object.entries(this.urls ?? {}).map(this.check);
 
-		await promiseAll([...promises, this.testPatchRequests()]);
+		await promiseAll(promises);
 
 		console.info(
 			`System health checks ended. ${
@@ -90,22 +90,6 @@ export default {
 		},
 		retry() {
 			this.$go(window.location.href);
-		},
-		/**
-		 * Checks if server supports PATH request or if
-		 * the `api.methodOverwrite` option needs to be activated
-		 */
-		async testPatchRequests() {
-			const { status } = await this.$api.patch("system/method-test");
-
-			if (status !== "ok") {
-				this.issues.push({
-					id: "method-overwrite-text",
-					text: this.$t("system.issues.api.methods"),
-					link: "https://getkirby.com/docs/reference/system/options/api#methods-overwrite",
-					icon: "protected"
-				});
-			}
 		}
 	}
 };

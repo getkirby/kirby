@@ -16,7 +16,7 @@ use Kirby\Uuid\Uuids;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
- * @internal
+ * @unstable
  */
 class PageCopy
 {
@@ -27,18 +27,6 @@ class PageCopy
 		public bool $withChildren = false,
 		public array $uuids = []
 	) {
-	}
-
-	/**
-	 * Returns the pages collection for children to adapt
-	 */
-	public function children(): Pages
-	{
-		if ($this->withChildren === true) {
-			return $this->copy->index(drafts: true);
-		}
-
-		return new Pages();
 	}
 
 	/**
@@ -71,7 +59,6 @@ class PageCopy
 		// track UUID change
 		$this->uuids[$old] = $this->copy->uuid()->toString();
 
-
 		$this->convertFileUuids($language);
 		$this->convertChildrenUuids($language);
 	}
@@ -83,13 +70,19 @@ class PageCopy
 	protected function convertChildrenUuids(Language|null $language): void
 	{
 		// re-generate UUIDs and track changes
-		foreach ($this->children() as $child) {
-			// always adapt files of subpages as they are
-			// currently always copied; but don't adapt
-			// children because we already operate on the index
-			$child = new PageCopy($child, withFiles: true, uuids: $this->uuids);
-			$child->convertUuids($language);
-			$this->uuids = [...$this->uuids, ...$child->uuids];
+		if ($this->withChildren === true) {
+			foreach ($this->copy->childrenAndDrafts() as $child) {
+				// always adapt files of subpages as they are
+				// currently always copied; adapt children recursively
+				$child = new PageCopy(
+					$child,
+					withChildren: true,
+					withFiles: true,
+					uuids: $this->uuids
+				);
+				$child->convertUuids($language);
+				$this->uuids = [...$this->uuids, ...$child->uuids];
+			}
 		}
 
 		// if children have not been copied over,
@@ -112,18 +105,20 @@ class PageCopy
 	protected function convertFileUuids(Language|null $language): void
 	{
 		// re-generate UUIDs and track changes
-		foreach ($this->files() as $file) {
-			// store old file UUID
-			$old = $file->uuid()->toString();
+		if ($this->withFiles === true) {
+			foreach ($this->copy->files() as $file) {
+				// store old file UUID
+				$old = $file->uuid()->toString();
 
-			// re-generate UUID for the file
-			$file = $file->save(
-				['uuid' => Uuid::generate()],
-				$language?->code()
-			);
+				// re-generate UUID for the file
+				$file = $file->save(
+					['uuid' => Uuid::generate()],
+					$language?->code()
+				);
 
-			// track UUID change
-			$this->uuids[$old] = $file->uuid()->toString();
+				// track UUID change
+				$this->uuids[$old] = $file->uuid()->toString();
+			}
 		}
 
 		// if files have not been copied over,
@@ -134,18 +129,6 @@ class PageCopy
 				$this->uuids[$file->uuid()->toString()] = '';
 			}
 		}
-	}
-
-	/**
-	 * Returns the files collection for files to adapt
-	 */
-	public function files(): Files
-	{
-		if ($this->withFiles === true) {
-			return $this->copy->files();
-		}
-
-		return new Files();
 	}
 
 	/**
@@ -231,20 +214,23 @@ class PageCopy
 			);
 		}
 
-
-		foreach ($this->files() as $file) {
-			foreach ($file->storage()->all() as $versionId => $language) {
-				$file->storage()->replaceStrings(
-					$versionId,
-					$language,
-					$this->uuids
-				);
+		if ($this->withFiles === true) {
+			foreach ($this->copy->files() as $file) {
+				foreach ($file->storage()->all() as $versionId => $language) {
+					$file->storage()->replaceStrings(
+						$versionId,
+						$language,
+						$this->uuids
+					);
+				}
 			}
 		}
 
-		foreach ($this->children() as $child) {
-			$child = new PageCopy($child, withFiles: true, uuids: $this->uuids);
-			$child->replaceUuids();
+		if ($this->withChildren === true) {
+			foreach ($this->copy->childrenAndDrafts() as $child) {
+				$child = new PageCopy($child, withFiles: true, withChildren: true, uuids: $this->uuids);
+				$child->replaceUuids();
+			}
 		}
 	}
 }

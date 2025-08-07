@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class FieldsetsTest extends TestCase
 {
-	public function testExtendGroups()
+	public function testExtendGroups(): void
 	{
 		new App([
 			'roots' => [
@@ -38,7 +38,7 @@ class FieldsetsTest extends TestCase
 		$this->assertSame(['heading', 'text'], $fieldsets->groups()['test']['sets']);
 	}
 
-	public function testExtendsTabsOverwrite()
+	public function testExtendsTabsOverwrite(): void
 	{
 		new App([
 			'roots' => [

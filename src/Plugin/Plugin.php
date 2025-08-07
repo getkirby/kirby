@@ -4,7 +4,6 @@ namespace Kirby\Plugin;
 
 use Closure;
 use Composer\InstalledVersions;
-use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\Helpers;
 use Kirby\Cms\System\UpdateStatus;

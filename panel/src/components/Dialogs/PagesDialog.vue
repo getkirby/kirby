@@ -45,6 +45,7 @@ export default {
 			})
 		}
 	},
+	emits: ["cancel", "submit"],
 	data() {
 		return {
 			model: null,

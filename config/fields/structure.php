@@ -20,6 +20,13 @@ return [
 		'placeholder' => null,
 
 		/**
+		 * Whether to enable batch editing
+		 */
+		'batch' => function (bool $batch = false) {
+			return $batch;
+		},
+
+		/**
 		 * Optional columns definition to only show selected fields in the structure table.
 		 */
 		'columns' => function (array $columns = []) {
@@ -166,24 +173,37 @@ return [
 					continue;
 				}
 
-				$value[] = $this->form($row)->values();
+				$value[] = $this->form()->fill(input: $row, passthrough: true)->toFormValues();
 			}
 
 			return $value;
 		},
-		'form' => function (array $values = []) {
-			return new Form([
-				'fields' => $this->attrs['fields'] ?? [],
-				'values' => $values,
-				'model'  => $this->model
-			]);
-		},
+		'form' => function () {
+			$this->form ??= new Form(
+				fields: $this->attrs['fields'] ?? [],
+				model: $this->model,
+				language: 'current'
+			);
+
+			return $this->form->reset();
+		}
 	],
 	'save' => function ($value) {
-		$data = [];
+		$data     = [];
+		$form     = $this->form();
+		$defaults = $form->defaults();
 
-		foreach ($value as $row) {
-			$row = $this->form($row)->content();
+		foreach ($value as $index => $row) {
+			$row = $form
+				->reset()
+				->fill(
+					input: $defaults,
+				)
+				->submit(
+					input: $row,
+					passthrough: true
+				)
+				->toStoredValues();
 
 			// remove frontend helper id
 			unset($row['_id']);
@@ -204,7 +224,8 @@ return [
 			$values = A::wrap($value);
 
 			foreach ($values as $index => $value) {
-				$form = $this->form($value);
+				$form = $this->form();
+				$form->fill(input: $value);
 
 				foreach ($form->fields() as $field) {
 					$errors = $field->errors();

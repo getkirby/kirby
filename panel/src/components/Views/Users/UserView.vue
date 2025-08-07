@@ -1,6 +1,5 @@
 <template>
 	<k-panel-inside
-		:data-has-tabs="hasTabs"
 		:data-id="id"
 		:data-locked="isLocked"
 		:data-template="blueprint"
@@ -26,7 +25,7 @@
 				<k-view-buttons :buttons="buttons" />
 				<k-form-controls
 					:editor="editor"
-					:has-changes="hasChanges"
+					:has-diff="hasDiff"
 					:is-locked="isLocked"
 					:modified="modified"
 					@discard="onDiscard"
@@ -49,7 +48,7 @@
 			:role="role"
 		/>
 
-		<k-model-tabs :changes="changes" :tab="tab.name" :tabs="tabs" />
+		<k-model-tabs :diff="diff" :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"
@@ -98,7 +97,6 @@ export default {
 .k-user-view .k-user-profile {
 	margin-bottom: var(--spacing-12);
 }
-/** .k-user-view:has(.k-tabs) .k-user-profile */
 .k-user-view[data-has-tabs="true"] .k-user-profile {
 	margin-bottom: 0;
 }

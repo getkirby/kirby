@@ -80,7 +80,7 @@ class SymmetricCrypto
 	/**
 	 * Decrypts JSON data encrypted by `SymmetricCrypto::encrypt()` using the secret key or password
 	 *
-	 * <code>
+	 * ```php
 	 * // decryption with a password
 	 * $crypto    = new SymmetricCrypto(password: 'super secure');
 	 * $plaintext = $crypto->decrypt('a very confidential string');
@@ -88,7 +88,7 @@ class SymmetricCrypto
 	 * // decryption with a previously generated key
 	 * $crypto    = new SymmetricCrypto(secretKey: $secretKey);
 	 * $plaintext = $crypto->decrypt('{"mode":"secretbox"...}');
-	 * </code>
+	 * ```
 	 */
 	public function decrypt(string $json): string
 	{
@@ -130,7 +130,7 @@ class SymmetricCrypto
 	/**
 	 * Encrypts a string using the secret key or password
 	 *
-	 * <code>
+	 * ```php
 	 * // encryption with a password
 	 * $crypto     = new SymmetricCrypto(password: 'super secure');
 	 * $ciphertext = $crypto->encrypt('a very confidential string');
@@ -139,7 +139,7 @@ class SymmetricCrypto
 	 * $crypto     = new SymmetricCrypto();
 	 * $ciphertext = $crypto->encrypt('a very confidential string');
 	 * $secretKey  = $crypto->secretKey();
-	 * </code>
+	 * ```
 	 */
 	public function encrypt(
 		#[SensitiveParameter]

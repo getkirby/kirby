@@ -1,10 +1,9 @@
 <template>
 	<component
-		:is="element"
+		:is="element ?? (link ? 'k-link' : 'button')"
 		:aria-disabled="disabled"
-		:data-has-image="Boolean(image)"
-		:data-has-toggle="isRemovable"
 		:data-theme="theme"
+		:to="link"
 		class="k-tag"
 		type="button"
 		@keydown.delete.prevent="remove"
@@ -31,7 +30,7 @@
 			v-if="isRemovable"
 			class="k-tag-toggle"
 			icon="cancel-small"
-			@click.native.stop="remove"
+			@click.stop="remove"
 		/>
 	</component>
 </template>
@@ -76,16 +75,17 @@ export default {
 		/**
 		 * HTML element to use
 		 */
-		element: {
-			type: String,
-			default: "button"
-		},
+		element: String,
 		/**
 		 * See `k-image-frame` or `k-icon-frame` for available options
 		 */
 		image: {
 			type: Object
 		},
+		/**
+		 * Sets a link on the tag. Link can be absolute or relative.
+		 */
+		link: String,
 		/**
 		 * Text to display in the bubble
 		 */
@@ -136,6 +136,7 @@ export default {
 .k-tag {
 	position: relative;
 	height: var(--tag-height);
+	max-width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -169,8 +170,7 @@ button.k-tag:not([aria-disabled="true"]) {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
-/** TODO: .k-tag:has(.k-tag-toggle) .k-tag-text  */
-.k-tag[data-has-toggle="true"] .k-tag-text {
+.k-tag:has(.k-tag-toggle) .k-tag-text {
 	padding-inline-end: 0;
 }
 .k-tag-toggle {

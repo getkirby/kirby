@@ -15,7 +15,7 @@ class UserBlueprintModelTest extends ModelTestCase
 		$this->user = new User(['email' => 'test@getkirby.com']);
 	}
 
-	public function testName()
+	public function testName(): void
 	{
 		$blueprint = new UserBlueprint([
 			'name'  => 'test',
@@ -25,7 +25,7 @@ class UserBlueprintModelTest extends ModelTestCase
 		$this->assertAttr($blueprint, 'name', 'test');
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$blueprint = new UserBlueprint([
 			'name'  => 'test',
@@ -44,7 +44,7 @@ class UserBlueprintModelTest extends ModelTestCase
 		$this->assertArrayHasKey('update', $options);
 	}
 
-	public function testTabs()
+	public function testTabs(): void
 	{
 		$blueprint = new UserBlueprint([
 			'name'  => 'test',
@@ -54,7 +54,7 @@ class UserBlueprintModelTest extends ModelTestCase
 		$this->assertAttr($blueprint, 'tabs', []);
 	}
 
-	public function testTitle()
+	public function testTitle(): void
 	{
 		$blueprint = new UserBlueprint([
 			'name'  => 'test',

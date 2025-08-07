@@ -4,11 +4,7 @@
 		@dblclick="!fieldset.wysiwyg ? $emit('open') : null"
 	>
 		<header class="k-block-type-fields-header">
-			<k-block-title
-				:content="values"
-				:fieldset="fieldset"
-				@click.native="toggle"
-			/>
+			<k-block-title :content="values" :fieldset="fieldset" @click="toggle" />
 			<k-drawer-tabs
 				v-if="!collapsed"
 				:tab="tab"
@@ -42,6 +38,7 @@ export default {
 	props: {
 		tabs: Object
 	},
+	emits: ["open", "update"],
 	data() {
 		return {
 			collapsed: this.state(),
@@ -78,13 +75,10 @@ export default {
 </script>
 
 <style>
-/** TODO: .k-block-container:has(.k-block-type-fields) */
 .k-block-container.k-block-container-type-fields {
 	padding-block: 0;
 }
 
-/** TODO: .k-block-container:not([data-hidden="true"])
-	.k-block-type-fields:has(.k-block-type-fields-form) */
 .k-block-container:not([data-hidden="true"])
 	.k-block-type-fields
 	> :not([data-collapsed="true"]) {
@@ -93,6 +87,7 @@ export default {
 
 .k-block-type-fields-header {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 }
 .k-block-type-fields-header .k-block-title {
@@ -107,10 +102,11 @@ export default {
 	border-radius: var(--rounded-sm);
 	container: column / inline-size;
 }
-/** TODO: .k-block-container[data-hidden="true"]:has(.k-block-type-fields)
-	:where(.k-drawer-tabs, .k-block-type-fields-form) */
 .k-block-container-type-fields[data-hidden="true"]
 	:where(.k-drawer-tabs, .k-block-type-fields-form) {
 	display: none;
+}
+.k-block-type-fields-header .k-drawer-tabs.k-tabs .k-tabs-button {
+	bottom: -2px;
 }
 </style>

@@ -9,10 +9,7 @@
 			:aria-expanded="item.open"
 			:aria-current="isItem(item, current)"
 		>
-			<p
-				class="k-tree-branch"
-				:data-has-subtree="item.hasChildren && item.open"
-			>
+			<p class="k-tree-branch">
 				<button
 					:disabled="!item.hasChildren"
 					class="k-tree-toggle"
@@ -88,14 +85,14 @@ export default {
 			return item.open ? "angle-down" : "angle-right";
 		},
 		close(item) {
-			this.$set(item, "open", false);
+			item.open = false;
 			this.$emit("close", item);
 		},
 		isItem(item, target) {
 			return item.value === target;
 		},
 		open(item) {
-			this.$set(item, "open", true);
+			item.open = true;
 			this.$emit("open", item);
 		},
 		select(item) {
@@ -135,8 +132,7 @@ export default {
 	margin-bottom: 1px;
 	background: var(--tree-branch-color-back);
 }
-/** TODO: .k-tree-branch:has(+ .k-tree)  */
-.k-tree-branch[data-has-subtree="true"] {
+.k-tree-branch:has(+ .k-tree) {
 	inset-block-start: calc(var(--tree-level) * 1.5rem);
 	z-index: calc(100 - var(--tree-level));
 }

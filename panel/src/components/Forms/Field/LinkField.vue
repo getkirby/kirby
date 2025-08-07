@@ -111,6 +111,7 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		return {
 			/**
@@ -192,7 +193,7 @@ export default {
 	mounted() {
 		this.$events.on("click", this.onOutsideClick);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("click", this.onOutsideClick);
 	},
 	methods: {
@@ -334,7 +335,7 @@ export default {
 	container-type: inline-size;
 	overflow: auto;
 }
-.k-link-field .k-bubbles-field-preview {
+.k-link-field .k-tags-field-preview {
 	--tag-rounded: var(--rounded-sm);
 	--tag-size: var(--height-sm);
 	padding-inline: 0;

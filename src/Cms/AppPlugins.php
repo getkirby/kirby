@@ -96,7 +96,6 @@ trait AppPlugins
 
 	/**
 	 * Register all given extensions
-	 * @internal
 	 *
 	 * @param \Kirby\Plugin\Plugin|null $plugin The plugin which defined those extensions
 	 */
@@ -184,10 +183,7 @@ trait AppPlugins
 	 */
 	protected function extendBlockModels(array $models): array
 	{
-		return $this->extensions['blockModels'] = Block::$models = [
-			...Block::$models,
-			...$models
-		];
+		return $this->extensions['blockModels'] = Block::extendModels($models);
 	}
 
 	/**
@@ -513,10 +509,7 @@ trait AppPlugins
 	 */
 	protected function extendPageModels(array $models): array
 	{
-		return $this->extensions['pageModels'] = Page::$models = [
-			...Page::$models,
-			...$models
-		];
+		return $this->extensions['pageModels'] = Page::extendModels($models);
 	}
 
 	/**
@@ -687,10 +680,7 @@ trait AppPlugins
 	 */
 	protected function extendUserModels(array $models): array
 	{
-		return $this->extensions['userModels'] = User::$models = [
-			...User::$models,
-			...$models
-		];
+		return $this->extensions['userModels'] = User::extendModels($models);
 	}
 
 	/**
@@ -718,7 +708,6 @@ trait AppPlugins
 	/**
 	 * Returns a given extension by type and name
 	 *
-	 * @internal
 	 * @param string $type i.e. `'hooks'`
 	 * @param string $name i.e. `'page.delete:before'`
 	 */
@@ -732,8 +721,6 @@ trait AppPlugins
 
 	/**
 	 * Returns the extensions registry
-	 *
-	 * @internal
 	 */
 	public function extensions(string|null $type = null): array
 	{
@@ -901,7 +888,6 @@ trait AppPlugins
 	 * Loads and returns all plugins in the site/plugins directory
 	 * Loading only happens on the first call.
 	 *
-	 * @internal
 	 * @param array|null $plugins Can be used to overwrite the plugins registry
 	 */
 	public function plugins(array|null $plugins = null): array

@@ -2,15 +2,12 @@
 
 namespace Kirby\Toolkit;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Iterator
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Iterator::class)]
 class IteratorTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$iterator = new Iterator($expected = [
 			'one' => 'eins',
@@ -20,10 +17,7 @@ class IteratorTest extends TestCase
 		$this->assertSame($expected, $iterator->data);
 	}
 
-	/**
-	 * @covers ::key
-	 */
-	public function testKey()
+	public function testKey(): void
 	{
 		$iterator = new Iterator([
 			'one' => 'eins',
@@ -33,10 +27,7 @@ class IteratorTest extends TestCase
 		$this->assertSame('one', $iterator->key());
 	}
 
-	/**
-	 * @covers ::keys
-	 */
-	public function testKeys()
+	public function testKeys(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -51,10 +42,7 @@ class IteratorTest extends TestCase
 		], $iterator->keys());
 	}
 
-	/**
-	 * @covers ::current
-	 */
-	public function testCurrent()
+	public function testCurrent(): void
 	{
 		$iterator = new Iterator([
 			'one' => 'eins',
@@ -64,12 +52,7 @@ class IteratorTest extends TestCase
 		$this->assertSame('eins', $iterator->current());
 	}
 
-	/**
-	 * @covers ::current
-	 * @covers ::next
-	 * @covers ::prev
-	 */
-	public function testPrevNext()
+	public function testPrevNext(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -92,10 +75,7 @@ class IteratorTest extends TestCase
 		$this->assertSame('eins', $iterator->current());
 	}
 
-	/**
-	 * @covers ::rewind
-	 */
-	public function testRewind()
+	public function testRewind(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -111,10 +91,7 @@ class IteratorTest extends TestCase
 		$this->assertSame('eins', $iterator->current());
 	}
 
-	/**
-	 * @covers ::valid
-	 */
-	public function testValid()
+	public function testValid(): void
 	{
 		$iterator = new Iterator([]);
 		$this->assertFalse($iterator->valid());
@@ -123,10 +100,7 @@ class IteratorTest extends TestCase
 		$this->assertTrue($iterator->valid());
 	}
 
-	/**
-	 * @covers ::count
-	 */
-	public function testCount()
+	public function testCount(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -142,10 +116,7 @@ class IteratorTest extends TestCase
 		$this->assertSame(0, $iterator->count());
 	}
 
-	/**
-	 * @covers ::indexOf
-	 */
-	public function testIndexOf()
+	public function testIndexOf(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -158,10 +129,7 @@ class IteratorTest extends TestCase
 		$this->assertSame(2, $iterator->indexOf('drei'));
 	}
 
-	/**
-	 * @covers ::keyOf
-	 */
-	public function testKeyOf()
+	public function testKeyOf(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -174,10 +142,7 @@ class IteratorTest extends TestCase
 		$this->assertSame('three', $iterator->keyOf('drei'));
 	}
 
-	/**
-	 * @covers ::has
-	 */
-	public function testHas()
+	public function testHas(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -189,10 +154,7 @@ class IteratorTest extends TestCase
 		$this->assertFalse($iterator->has('three'));
 	}
 
-	/**
-	 * @covers ::__isset
-	 */
-	public function testIsset()
+	public function testIsset(): void
 	{
 		$iterator = new Iterator([
 			'one'   => 'eins',
@@ -204,10 +166,7 @@ class IteratorTest extends TestCase
 		$this->assertFalse(isset($iterator->three));
 	}
 
-	/**
-	 * @covers ::__debugInfo
-	 */
-	public function testDebugInfo()
+	public function testDebugInfo(): void
 	{
 		$array = [
 			'one'   => 'eins',

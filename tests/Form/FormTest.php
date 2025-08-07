@@ -2,16 +2,16 @@
 
 namespace Kirby\Form;
 
-use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Form\Form
- */
+#[CoversClass(Form::class)]
 class FormTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Form.Form';
@@ -38,10 +38,7 @@ class FormTest extends TestCase
 		$this->tearDownTmp();
 	}
 
-	/**
-	 * @covers ::content
-	 */
-	public function testContent()
+	public function testContent(): void
 	{
 		$form = new Form([
 			'fields' => [],
@@ -54,11 +51,7 @@ class FormTest extends TestCase
 		$this->assertSame($values, $form->content());
 	}
 
-	/**
-	 * @covers ::content
-	 * @covers ::data
-	 */
-	public function testContentAndDataFromUnsaveableFields()
+	public function testContentAndDataFromUnsaveableFields(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -78,10 +71,7 @@ class FormTest extends TestCase
 		$this->assertArrayHasKey('info', $form->data());
 	}
 
-	/**
-	 * @covers ::data
-	 */
-	public function testDataWithoutFields()
+	public function testDataWithoutFields(): void
 	{
 		$form = new Form([
 			'fields' => [],
@@ -94,10 +84,7 @@ class FormTest extends TestCase
 		$this->assertSame($values, $form->data());
 	}
 
-	/**
-	 * @covers ::data
-	 */
-	public function testDataFromUnsaveableFields()
+	public function testDataFromUnsaveableFields(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -114,10 +101,7 @@ class FormTest extends TestCase
 		$this->assertNull($form->data()['info']);
 	}
 
-	/**
-	 * @covers ::data
-	 */
-	public function testDataFromNestedFields()
+	public function testDataFromNestedFields(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -143,11 +127,7 @@ class FormTest extends TestCase
 		$this->assertSame('a, b', $form->data()['structure'][0]['tags']);
 	}
 
-	/**
-	 * @covers ::data
-	 * @covers ::values
-	 */
-	public function testDataWithCorrectFieldOrder()
+	public function testDataWithCorrectFieldOrder(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -173,11 +153,7 @@ class FormTest extends TestCase
 		$this->assertTrue(['a' => 'A', 'b' => 'B modified', 'c' => 'C'] === $form->values());
 	}
 
-	/**
-	 * @covers ::data
-	 * @covers ::values
-	 */
-	public function testDataWithStrictMode()
+	public function testDataWithStrictMode(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -203,11 +179,7 @@ class FormTest extends TestCase
 		$this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->values());
 	}
 
-	/**
-	 * @covers ::data
-	 * @covers ::values
-	 */
-	public function testDataWithUntranslatedFields()
+	public function testDataWithUntranslatedFields(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -258,12 +230,21 @@ class FormTest extends TestCase
 		$this->assertSame($expected, $form->values());
 	}
 
-	/**
-	 * @covers ::errors
-	 * @covers ::isInvalid
-	 * @covers ::isValid
-	 */
-	public function testErrors()
+	public function testDefaults(): void
+	{
+		$form = new Form([
+			'fields' => [
+				'test' => [
+					'type' => 'text',
+					'default' => 'Test Value'
+				]
+			]
+		]);
+
+		$this->assertSame(['test' => 'Test Value'], $form->defaults());
+	}
+
+	public function testErrors(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -307,12 +288,12 @@ class FormTest extends TestCase
 		$this->assertSame($expected, $form->errors());
 	}
 
-	/**
-	 * @covers ::exceptionField
-	 */
-	public function testExceptionField()
+	public function testFieldException(): void
 	{
-		$form = new Form([
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Field "test": The field type "does-not-exist" does not exist');
+
+		new Form([
 			'fields' => [
 				'test' => [
 					'type'  => 'does-not-exist',
@@ -320,54 +301,27 @@ class FormTest extends TestCase
 				]
 			]
 		]);
-
-		$field = $form->fields()->first();
-
-		$this->assertSame('info', $field->type());
-		$this->assertSame('negative', $field->theme());
-		$this->assertSame('Error in "test" field.', $field->label());
-		$this->assertSame('<p>Field "test": The field type "does-not-exist" does not exist</p>', $field->text());
 	}
 
-	/**
-	 * @covers ::exceptionField
-	 */
-	public function testExceptionFieldInDebugMode()
+	public function testFill(): void
 	{
-		$exception = new Exception('This is an error');
+		$form = new Form([
+			'fields' => [
+				'test' => [
+					'type' => 'text',
+				]
+			],
+		]);
 
-		// debug mode off
-		$props = [
-			'name'  => 'test',
-			'model' => $this->app->site()
-		];
+		$response = $form->fill([
+			'test' => 'Test Value'
+		]);
 
-		$field = Form::exceptionField($exception, $props)->toArray();
-		$this->assertSame('info', $field['type']);
-		$this->assertSame('Error in "test" field.', $field['label']);
-		$this->assertSame('<p>This is an error</p>', $field['text']);
-		$this->assertSame('negative', $field['theme']);
-
-		// debug mode on
-		$this->app->clone(['options' => ['debug' => true]]);
-
-		$props = [
-			'name'  => 'test',
-			'model' => $this->app->site()
-		];
-
-		$field = Form::exceptionField($exception, $props)->toArray();
-		$this->assertSame('info', $field['type']);
-		$this->assertSame('Error in "test" field.', $field['label']);
-		$this->assertStringContainsString('<p>This is an error in file:', $field['text']);
-		$this->assertStringContainsString('tests/Form/FormTest.php line:', $field['text']);
-		$this->assertSame('negative', $field['theme']);
+		$this->assertSame($form, $response);
+		$this->assertSame(['test' => 'Test Value'], $response->toFormValues());
 	}
 
-	/**
-	 * @covers ::for
-	 */
-	public function testForFileWithoutBlueprint()
+	public function testForFileWithoutBlueprint(): void
 	{
 		$file = new File([
 			'filename' => 'test.jpg',
@@ -382,10 +336,7 @@ class FormTest extends TestCase
 		$this->assertSame(['a' => 'A', 'b' => 'B'], $form->data());
 	}
 
-	/**
-	 * @covers ::for
-	 */
-	public function testForPage()
+	public function testForPage(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -420,10 +371,7 @@ class FormTest extends TestCase
 		$this->assertSame('', $values['date']);
 	}
 
-	/**
-	 * @covers ::for
-	 */
-	public function testForPageWithClosureValues()
+	public function testForPageWithClosureValues(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -445,10 +393,57 @@ class FormTest extends TestCase
 		$this->assertSame('B', $values['b']);
 	}
 
-	/**
-	 * @covers ::strings
-	 */
-	public function testStrings()
+	public function testLanguage(): void
+	{
+		$form = new Form([
+			'fields' => [
+				'test' => [
+					'type' => 'text',
+				]
+			],
+		]);
+
+		$this->assertInstanceOf(Language::class, $form->language());
+	}
+
+	public function testPassthrough(): void
+	{
+		$form = new Form([]);
+
+		$response = $form->passthrough([
+			'test' => 'Test Value'
+		]);
+
+		$this->assertSame($form, $response);
+		$this->assertSame(['test' => 'Test Value'], $response->passthrough());
+		$this->assertSame(['test' => 'Test Value'], $response->toFormValues());
+	}
+
+	public function testReset(): void
+	{
+		$form = new Form([
+			'fields' => [
+				'test' => [
+					'type' => 'text',
+				]
+			],
+		]);
+
+		$this->assertSame(['test' => ''], $form->toFormValues());
+
+		$form->fill([
+			'test' => 'Test Value'
+		]);
+
+		$this->assertSame(['test' => 'Test Value'], $form->toFormValues());
+
+		$response = $form->reset();
+
+		$this->assertSame($form, $response);
+		$this->assertSame(['test' => ''], $form->toFormValues());
+	}
+
+	public function testStrings(): void
 	{
 		$form = new Form([
 			'fields' => [],
@@ -469,10 +464,25 @@ class FormTest extends TestCase
 		], $form->strings());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
-	public function testToArray()
+	public function testSubmit(): void
+	{
+		$form = new Form([
+			'fields' => [
+				'test' => [
+					'type' => 'text',
+				]
+			],
+		]);
+
+		$response = $form->submit([
+			'test' => 'Test Value'
+		]);
+
+		$this->assertSame($form, $response);
+		$this->assertSame(['test' => 'Test Value'], $response->toFormValues());
+	}
+
+	public function testToArray(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -499,10 +509,7 @@ class FormTest extends TestCase
 		$this->assertFalse($form->toArray()['invalid']);
 	}
 
-	/**
-	 * @covers ::toFormValues
-	 */
-	public function testToFormValues()
+	public function testToFormValues(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -522,10 +529,21 @@ class FormTest extends TestCase
 		$this->assertSame($values, $form->toFormValues());
 	}
 
-	/**
-	 * @covers ::toStoredValues
-	 */
-	public function testToStoredValues()
+	public function testToProps(): void
+	{
+		$form = new Form([
+			'fields' => [
+				'test' => [
+					'label' => 'Test',
+					'type'  => 'text',
+				],
+			]
+		]);
+
+		$this->assertSame($form->fields()->toProps(), $form->toProps());
+	}
+
+	public function testToStoredValues(): void
 	{
 		Field::$types['test'] = [
 			'save' => function ($value) {
@@ -556,10 +574,7 @@ class FormTest extends TestCase
 		$this->assertSame($expected, $form->toStoredValues());
 	}
 
-	/**
-	 * @covers ::values
-	 */
-	public function testValuesWithoutFields()
+	public function testValuesWithoutFields(): void
 	{
 		$form = new Form([
 			'fields' => [],

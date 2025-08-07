@@ -47,6 +47,7 @@ import Block from "./Default.vue";
  */
 export default {
 	extends: Block,
+	emits: ["update"],
 	data() {
 		return {
 			back: this.onBack() ?? "var(--block-color-back)"

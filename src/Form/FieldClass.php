@@ -3,8 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\HasSiblings;
-use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
+use Kirby\Toolkit\HasI18n;
 
 /**
  * Abstract field class to be used instead
@@ -16,34 +15,31 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
  */
 abstract class FieldClass
 {
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
-	 */
+	use HasI18n;
 	use HasSiblings;
+	use Mixin\After;
 	use Mixin\Api;
+	use Mixin\Autofocus;
+	use Mixin\Before;
+	use Mixin\Help;
+	use Mixin\Icon;
+	use Mixin\Label;
 	use Mixin\Model;
+	use Mixin\Placeholder;
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\Value;
 	use Mixin\When;
+	use Mixin\Width;
 
-	protected string|null $after;
-	protected bool $autofocus;
-	protected string|null $before;
-	protected mixed $default;
 	protected bool $disabled;
-	protected string|null $help;
-	protected string|null $icon;
-	protected string|null $label;
 	protected string|null $name;
-	protected string|null $placeholder;
-	protected bool $required;
 	protected Fields $siblings;
-	protected mixed $value = null;
-	protected string|null $width;
 
 	public function __construct(
 		protected array $params = []
@@ -79,21 +75,6 @@ abstract class FieldClass
 		return $this->params[$param] ?? null;
 	}
 
-	public function after(): string|null
-	{
-		return $this->stringTemplate($this->after);
-	}
-
-	public function autofocus(): bool
-	{
-		return $this->autofocus;
-	}
-
-	public function before(): string|null
-	{
-		return $this->stringTemplate($this->before);
-	}
-
 	/**
 	 * Returns optional dialog routes for the field
 	 */
@@ -118,42 +99,6 @@ abstract class FieldClass
 		return [];
 	}
 
-	/**
-	 * Sets a new value for the field
-	 */
-	public function fill(mixed $value = null): void
-	{
-		$this->value = $value;
-		$this->errors = null;
-	}
-
-	/**
-	 * Optional help text below the field
-	 */
-	public function help(): string|null
-	{
-		if (empty($this->help) === false) {
-			$help = $this->stringTemplate($this->help);
-			$help = $this->kirby()->kirbytext($help);
-			return $help;
-		}
-
-		return null;
-	}
-
-	protected function i18n(string|array|null $param = null): string|null
-	{
-		return empty($param) === false ? I18n::translate($param, $param) : null;
-	}
-
-	/**
-	 * Optional icon that will be shown at the end of the field
-	 */
-	public function icon(): string|null
-	{
-		return $this->icon;
-	}
-
 	public function id(): string
 	{
 		return $this->name();
@@ -167,26 +112,6 @@ abstract class FieldClass
 	public function isHidden(): bool
 	{
 		return false;
-	}
-
-	public function isRequired(): bool
-	{
-		return $this->required;
-	}
-
-	public function isSaveable(): bool
-	{
-		return true;
-	}
-
-	/**
-	 * The field label can be set as string or associative array with translations
-	 */
-	public function label(): string
-	{
-		return $this->stringTemplate(
-			$this->label ?? Str::ucfirst($this->name())
-		);
 	}
 
 	/**
@@ -203,14 +128,6 @@ abstract class FieldClass
 	public function params(): array
 	{
 		return $this->params;
-	}
-
-	/**
-	 * Optional placeholder value that will be shown when the field is empty
-	 */
-	public function placeholder(): string|null
-	{
-		return $this->stringTemplate($this->placeholder);
 	}
 
 	/**
@@ -232,7 +149,7 @@ abstract class FieldClass
 			'name'        => $this->name(),
 			'placeholder' => $this->placeholder(),
 			'required'    => $this->isRequired(),
-			'saveable'    => $this->isSaveable(),
+			'saveable'    => $this->hasValue(),
 			'translate'   => $this->translate(),
 			'type'        => $this->type(),
 			'when'        => $this->when(),
@@ -240,76 +157,14 @@ abstract class FieldClass
 		];
 	}
 
-	/**
-	 * If `true`, the field has to be filled in correctly to be saved.
-	 */
-	public function required(): bool
-	{
-		return $this->required;
-	}
-
-	/**
-	 * Checks if the field is saveable
-	 * @deprecated 5.0.0 Use `::isSaveable()` instead
-	 */
-	public function save(): bool
-	{
-		return $this->isSaveable();
-	}
-
-	protected function setAfter(array|string|null $after = null): void
-	{
-		$this->after = $this->i18n($after);
-	}
-
-	protected function setAutofocus(bool $autofocus = false): void
-	{
-		$this->autofocus = $autofocus;
-	}
-
-	protected function setBefore(array|string|null $before = null): void
-	{
-		$this->before = $this->i18n($before);
-	}
-
-	protected function setDefault(mixed $default = null): void
-	{
-		$this->default = $default;
-	}
-
 	protected function setDisabled(bool $disabled = false): void
 	{
 		$this->disabled = $disabled;
 	}
 
-	protected function setHelp(array|string|null $help = null): void
-	{
-		$this->help = $this->i18n($help);
-	}
-
-	protected function setIcon(string|null $icon = null): void
-	{
-		$this->icon = $icon;
-	}
-
-	protected function setLabel(array|string|null $label = null): void
-	{
-		$this->label = $this->i18n($label);
-	}
-
 	protected function setName(string|null $name = null): void
 	{
-		$this->name = $name;
-	}
-
-	protected function setPlaceholder(array|string|null $placeholder = null): void
-	{
-		$this->placeholder = $this->i18n($placeholder);
-	}
-
-	protected function setRequired(bool $required = false): void
-	{
-		$this->required = $required;
+		$this->name = strtolower($name ?? $this->type());
 	}
 
 	protected function setSiblings(Fields|null $siblings = null): void
@@ -317,17 +172,6 @@ abstract class FieldClass
 		$this->siblings = $siblings ?? new Fields([$this]);
 	}
 
-	/**
-	 * Setter for the field width
-	 */
-	protected function setWidth(string|null $width = null): void
-	{
-		$this->width = $width;
-	}
-
-	/**
-	 * Returns all sibling fields for the HasSiblings trait
-	 */
 	protected function siblingsCollection(): Fields
 	{
 		return $this->siblings;
@@ -363,14 +207,5 @@ abstract class FieldClass
 	public function type(): string
 	{
 		return lcfirst(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
-	}
-
-	/**
-	 * Returns the width of the field in
-	 * the Panel grid
-	 */
-	public function width(): string
-	{
-		return $this->width ?? '1/1';
 	}
 }

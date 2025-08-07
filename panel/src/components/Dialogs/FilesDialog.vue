@@ -20,6 +20,7 @@ export default {
 				text: window.panel.t("dialog.files.empty")
 			})
 		}
-	}
+	},
+	emits: ["cancel", "submit"]
 };
 </script>

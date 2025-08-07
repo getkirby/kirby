@@ -16,7 +16,7 @@ class UserModelTest extends ModelTestCase
 		$this->user = new User(['email' => 'test@getkirby.com']);
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$user = new User([
 			'email' => 'test@getkirby.com',
@@ -32,7 +32,7 @@ class UserModelTest extends ModelTestCase
 		$this->assertSame('b.jpg', $model['files'][1]['filename']);
 	}
 
-	public function testImage()
+	public function testImage(): void
 	{
 		$image = $this->attr($this->user, 'panelImage');
 		$expected = [

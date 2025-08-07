@@ -7,7 +7,7 @@ import Dialog from "./Dialog.vue";
 import ChangesDialog from "./ChangesDialog.vue";
 import EmailDialog from "./EmailDialog.vue";
 import ErrorDialog from "./ErrorDialog.vue";
-import FiberDialog from "./FiberDialog.vue";
+import StateDialog from "./StateDialog.vue";
 import FilesDialog from "./FilesDialog.vue";
 import FormDialog from "./FormDialog.vue";
 import LanguageDialog from "./LanguageDialog.vue";
@@ -34,7 +34,7 @@ export default {
 		app.component("k-changes-dialog", ChangesDialog);
 		app.component("k-email-dialog", EmailDialog);
 		app.component("k-error-dialog", ErrorDialog);
-		app.component("k-fiber-dialog", FiberDialog);
+		app.component("k-state-dialog", StateDialog);
 		app.component("k-files-dialog", FilesDialog);
 		app.component("k-form-dialog", FormDialog);
 		app.component("k-license-dialog", LicenseDialog);

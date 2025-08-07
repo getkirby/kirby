@@ -16,8 +16,8 @@
 					:placeholder="placeholder"
 					:value="query"
 					@input="query = $event"
-					@keydown.escape.native.prevent="escape"
-					@keydown.enter.native.prevent="add"
+					@keydown.escape.prevent="escape"
+					@keydown.enter.prevent="add"
 				/>
 				<k-button
 					v-if="showCreate"
@@ -43,7 +43,7 @@
 						:value="value"
 						class="k-picklist-input-options"
 						@input="input"
-						@keydown.native.enter.prevent="enter"
+						@keydown.enter.prevent="enter"
 					/>
 				</k-input-validator>
 				<k-button
@@ -91,7 +91,7 @@ export const picklist = {
 		min: Number,
 		/**
 		 * Whether to show the search input
-		 * @value false | true | { min, placeholder }
+		 * @value false | true | { infofield, min, placeholder }
 		 */
 		search: {
 			default: true,
@@ -122,8 +122,7 @@ export const props = {
 			type: [Array, String],
 			default: () => []
 		}
-	},
-	emits: ["create", "escape", "input"]
+	}
 };
 
 /**
@@ -139,6 +138,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["create", "escape", "input"],
 	data() {
 		return {
 			display: this.search.display ?? true,
@@ -160,7 +160,10 @@ export default {
 				disabled:
 					option.disabled ||
 					(this.isFull && this.value.includes(option.value) === false),
-				text: this.highlight(option.text)
+				text: this.highlight(option.text),
+				...(this.search.info && option.info
+					? { info: this.highlight(option.info) }
+					: {})
 			}));
 		},
 		filteredOptions() {
@@ -168,7 +171,25 @@ export default {
 			if (this.query.length < (this.search.min ?? 0)) {
 				return;
 			}
+			// include the info field in the search if the user has set the option to true...
+			if (this.search.info) {
+				// check if the query matches any of the fields and return as one matches
+				let results = this.$helper.array.search(this.options, this.query, {
+					field: "text"
+				});
 
+				results = results.concat(
+					this.$helper.array.search(this.options, this.query, { field: "info" })
+				);
+
+				// remove duplicates
+				results = results.filter(
+					(item, index, self) => index === self.findIndex((t) => t === item)
+				);
+
+				return results;
+			}
+			// ...otherwise just search the text field
 			return this.$helper.array.search(this.options, this.query, {
 				field: "text"
 			});

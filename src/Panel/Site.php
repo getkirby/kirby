@@ -5,7 +5,7 @@ namespace Kirby\Panel;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
-use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Controller\View\SiteViewController;
 
 /**
  * Provides information about the site model for the Panel
@@ -25,18 +25,6 @@ class Site extends Model
 	protected ModelWithContent $model;
 
 	/**
-	 * Returns header buttons which should be displayed
-	 * on the site view
-	 */
-	public function buttons(): array
-	{
-		return ViewButtons::view($this)->defaults(
-			'preview',
-			'languages'
-		)->render();
-	}
-
-	/**
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example.
@@ -51,8 +39,6 @@ class Site extends Model
 
 	/**
 	 * Returns the image file object based on provided query
-	 *
-	 * @internal
 	 */
 	protected function imageSource(
 		string|null $query = null
@@ -70,45 +56,10 @@ class Site extends Model
 	}
 
 	/**
-	 * Returns the data array for the
-	 * view's component props
-	 *
-	 * @internal
+	 * @codeCoverageIgnore
 	 */
-	public function props(): array
+	protected function viewController(): SiteViewController
 	{
-		$props = parent::props();
-
-		// Additional model information
-		// @deprecated Use the top-level props instead
-		$model = [
-			'content'    => $props['content'],
-			'link'       => $props['link'],
-			'previewUrl' => $this->model->previewUrl(),
-			'title'      => $this->model->title()->toString(),
-			'uuid'       => $props['uuid'],
-		];
-
-		return [
-			...$props,
-			'blueprint'  => 'site',
-			'id'         => '/',
-			'model'      => $model,
-			'title'      => $model['title'],
-		];
-	}
-
-	/**
-	 * Returns the data array for
-	 * this model's Panel view
-	 *
-	 * @internal
-	 */
-	public function view(): array
-	{
-		return [
-			'component' => 'k-site-view',
-			'props'     => $this->props()
-		];
+		return new SiteViewController($this->model);
 	}
 }

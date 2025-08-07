@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Blueprint;
+use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Form;
 
@@ -96,14 +97,15 @@ class Content
 		);
 
 		// forms
-		$oldForm = new Form([
-			'fields' => $old->fields(),
-			'model'  => $this->parent
-		]);
-		$newForm = new Form([
-			'fields' => $new->fields(),
-			'model'  => $this->parent
-		]);
+		$oldForm = new Form(
+			fields: $old->fields(),
+			model: $this->parent
+		);
+
+		$newForm = new Form(
+			fields: $new->fields(),
+			model: $this->parent
+		);
 
 		// fields
 		$oldFields = $oldForm->fields();
@@ -120,6 +122,12 @@ class Content
 			} else {
 				$data[$name] = $newField->default();
 			}
+		}
+
+		// if the parent is a file, overwrite the template
+		// with the new template name
+		if ($this->parent instanceof File) {
+			$data['template'] = $to;
 		}
 
 		// preserve existing fields
@@ -228,20 +236,14 @@ class Content
 	}
 
 	/**
-	 * Updates the content and returns
-	 * a cloned object
-	 *
-	 * @return $this
+	 * Updates the content in memory.
 	 */
 	public function update(
 		array|null $content = null,
 		bool $overwrite = false
 	): static {
-		$content    = array_change_key_case((array)$content, CASE_LOWER);
-		$this->data = match($overwrite) {
-			true  => $content,
-			false => [...$this->data, ...$content]
-		};
+		$content = array_change_key_case((array)$content, CASE_LOWER);
+		$this->data = $overwrite === true ? $content : array_merge($this->data, $content);
 
 		// clear cache of Field objects
 		$this->fields = [];

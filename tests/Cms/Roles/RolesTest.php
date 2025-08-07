@@ -9,7 +9,7 @@ class RolesTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.Roles';
 
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$roles = Roles::factory([
 			[
@@ -26,19 +26,20 @@ class RolesTest extends TestCase
 		$this->assertSame('editor', $roles->last()->name());
 	}
 
-	public function testLoad()
+	public function testLoad(): void
 	{
 		$roles = Roles::load(static::FIXTURES . '/blueprints/users');
 
 		$this->assertInstanceOf(Roles::class, $roles);
 
-		// should contain the editor role from fixtures and the default admin role
-		$this->assertCount(2, $roles);
+		// should contain the base and editor role from fixtures
+		// and the default admin role
+		$this->assertCount(3, $roles);
 		$this->assertSame('admin', $roles->first()->name());
 		$this->assertSame('editor', $roles->last()->name());
 	}
 
-	public function testLoadFromPlugins()
+	public function testLoadFromPlugins(): void
 	{
 		$app = new App([
 			'blueprints' => [
@@ -60,7 +61,7 @@ class RolesTest extends TestCase
 		$this->assertSame('editor', $roles->last()->name());
 	}
 
-	public function testLoadFromPluginsCallbackString()
+	public function testLoadFromPluginsCallbackString(): void
 	{
 		new App([
 			'roots' => [
@@ -94,7 +95,7 @@ class RolesTest extends TestCase
 		$this->assertSame('editor', $roles->last()->name());
 	}
 
-	public function testLoadFromPluginsCallbackArray()
+	public function testLoadFromPluginsCallbackArray(): void
 	{
 		new App([
 			'blueprints' => [
@@ -120,7 +121,7 @@ class RolesTest extends TestCase
 		$this->assertSame('editor', $roles->last()->name());
 	}
 
-	public function testCanBeChanged()
+	public function testCanBeChanged(): void
 	{
 		$app = new App([
 			'users' => [
@@ -158,7 +159,7 @@ class RolesTest extends TestCase
 		$this->assertCount(2, $canBeChanged);
 	}
 
-	public function testCanBeCreated()
+	public function testCanBeCreated(): void
 	{
 		$app = new App([
 			'users' => [

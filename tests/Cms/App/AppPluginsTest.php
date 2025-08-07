@@ -12,6 +12,7 @@ use Kirby\Image\Image;
 use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class DummyAuthChallenge extends Challenge
 {
@@ -51,9 +52,7 @@ class DummyFilePreview
 {
 }
 
-/**
- * @coversDefaultClass \Kirby\Cms\AppPlugins
- */
+#[CoversClass(AppPlugins::class)]
 class AppPluginsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -62,7 +61,7 @@ class AppPluginsTest extends TestCase
 	// used for testPluginLoader()
 	public static bool $calledPluginsLoadedHook = false;
 
-	public function testApi()
+	public function testApi(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -83,7 +82,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('nice', $kirby->call('api/awesome'));
 	}
 
-	public function testApiRoutePlugins()
+	public function testApiRoutePlugins(): void
 	{
 		App::plugin('test/a', [
 			'api' => [
@@ -134,7 +133,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('c', $app->api()->call('c'));
 	}
 
-	public function testApiRouteCallbackPlugins()
+	public function testApiRouteCallbackPlugins(): void
 	{
 		App::plugin('test/a', [
 			'api' => [
@@ -185,7 +184,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('c', $app->api()->call('c'));
 	}
 
-	public function testApiRouteCallbackPluginWithOptionAccess()
+	public function testApiRouteCallbackPluginWithOptionAccess(): void
 	{
 		App::plugin('your/plugin', [
 			'options' => [
@@ -214,7 +213,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('Test', $app->api()->call('test'));
 	}
 
-	public function testAuthChallenge()
+	public function testAuthChallenge(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -239,10 +238,12 @@ class AppPluginsTest extends TestCase
 		$this->assertSame([
 			'challenge' => 'dummy',
 			'email'     => 'homer@simpsons.com',
+			'mode'      => 'login',
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertSame('dummy', $status->challenge(false));
 		$this->assertSame('homer@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertSame('dummy', $session->get('kirby.challenge.type'));
 		$this->assertTrue(password_verify('test', $session->get('kirby.challenge.code')));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
@@ -255,7 +256,7 @@ class AppPluginsTest extends TestCase
 		$kirby->session()->destroy();
 	}
 
-	public function testBlueprint()
+	public function testBlueprint(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -269,7 +270,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame($file, $kirby->extension('blueprints', 'pages/test'));
 	}
 
-	public function testCacheType()
+	public function testCacheType(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -288,7 +289,7 @@ class AppPluginsTest extends TestCase
 		$this->assertInstanceOf(DummyCache::class, $kirby->cache('pages'));
 	}
 
-	public function testCollection()
+	public function testCollection(): void
 	{
 		$pages = new Pages([
 			$page = new Page(['slug' => 'a', 'num' => 1])
@@ -306,7 +307,7 @@ class AppPluginsTest extends TestCase
 		$this->assertIsPage($page, $kirby->collection('test')->first());
 	}
 
-	public function testCollectionFilters()
+	public function testCollectionFilters(): void
 	{
 		// fetch all previous filters
 		$prevFilters = Collection::$filters;
@@ -330,7 +331,7 @@ class AppPluginsTest extends TestCase
 		Collection::$filters = $prevFilters;
 	}
 
-	public function testCommands()
+	public function testCommands(): void
 	{
 		$pages = new Pages([]);
 		$kirby = new App([
@@ -348,7 +349,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame($command, $kirby->extension('commands', 'test'));
 	}
 
-	public function testController()
+	public function testController(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -362,7 +363,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame(['foo' => 'bar'], $kirby->controller('test'));
 	}
 
-	public function testFieldMethod()
+	public function testFieldMethod(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -380,7 +381,7 @@ class AppPluginsTest extends TestCase
 		Field::$methods = [];
 	}
 
-	public function testField()
+	public function testField(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -403,10 +404,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('shaw', $field->peter());
 	}
 
-	/**
-	 * @covers ::extendFilePreviews
-	 */
-	public function testFilePreviews()
+	public function testFilePreviews(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -417,10 +415,10 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertCount(4, $app->extensions('filePreviews'));
+		$this->assertCount(5, $app->extensions('filePreviews'));
 	}
 
-	public function testKirbyTag()
+	public function testKirbyTag(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -443,7 +441,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('test', $kirby->kirbytags('(FOO: bar)'));
 	}
 
-	public function testPageMethod()
+	public function testPageMethod(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -461,7 +459,7 @@ class AppPluginsTest extends TestCase
 		Page::$methods = [];
 	}
 
-	public function testPagesMethod()
+	public function testPagesMethod(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -479,7 +477,7 @@ class AppPluginsTest extends TestCase
 		Pages::$methods = [];
 	}
 
-	public function testPageModel()
+	public function testPageModel(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -498,7 +496,7 @@ class AppPluginsTest extends TestCase
 		$this->assertInstanceOf(DummyPage::class, $page);
 	}
 
-	public function testPageModelFromFolder()
+	public function testPageModelFromFolder(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -515,7 +513,7 @@ class AppPluginsTest extends TestCase
 		$this->assertInstanceOf('TestPage', $page);
 	}
 
-	public function testPermission()
+	public function testPermission(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -537,7 +535,7 @@ class AppPluginsTest extends TestCase
 		Permissions::$extendedActions = [];
 	}
 
-	public function testPermissionPlugin()
+	public function testPermissionPlugin(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -562,7 +560,7 @@ class AppPluginsTest extends TestCase
 		Permissions::$extendedActions = [];
 	}
 
-	public function testOption()
+	public function testOption(): void
 	{
 		// simple
 		$kirby = new App([
@@ -577,7 +575,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('testValue', $kirby->option('testOption'));
 	}
 
-	public function testExtensionsFromFolders()
+	public function testExtensionsFromFolders(): void
 	{
 		Page::$models = [];
 		Dir::copy(static::FIXTURES . '/AppPluginsTest', static::TMP);
@@ -598,7 +596,7 @@ class AppPluginsTest extends TestCase
 		$this->assertEquals($expected, Page::$models); // cannot use strict assertion (filesystem sorting)
 	}
 
-	public function testExtensionsFromOptions()
+	public function testExtensionsFromOptions(): void
 	{
 		$calledRoute = false;
 		$calledHook  = false;
@@ -627,7 +625,7 @@ class AppPluginsTest extends TestCase
 		$this->assertTrue($calledHook);
 	}
 
-	public function testPluginOptions()
+	public function testPluginOptions(): void
 	{
 		App::plugin('test/plugin', [
 			'options' => [
@@ -651,7 +649,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame(['foo' => 'another-bar'], $kirby->option('test.plugin'));
 	}
 
-	public function testPluginOptionsWithNonAssociativeArray()
+	public function testPluginOptionsWithNonAssociativeArray(): void
 	{
 		// non-associative
 		App::plugin('test/plugin', [
@@ -674,7 +672,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame(['three'], $kirby->option('test.plugin.foo'));
 	}
 
-	public function testPluginOptionsWithAssociativeArray()
+	public function testPluginOptionsWithAssociativeArray(): void
 	{
 		// associative
 		App::plugin('test/plugin', [
@@ -702,7 +700,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame(['a' => 'Custom A', 'b' => 'B'], $kirby->option('test.plugin.foo'));
 	}
 
-	public function testRoutes()
+	public function testRoutes(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -719,7 +717,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('test', $kirby->call('test'));
 	}
 
-	public function testRoutesCallback()
+	public function testRoutesCallback(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -736,7 +734,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('test', $kirby->call('test'));
 	}
 
-	public function testSnippet()
+	public function testSnippet(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -750,7 +748,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame($file, $kirby->extension('snippets', 'header'));
 	}
 
-	public function testTemplate()
+	public function testTemplate(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -764,7 +762,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame($file, $kirby->extension('templates', 'project'));
 	}
 
-	public function testTranslation()
+	public function testTranslation(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -789,7 +787,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('Deutscher Test', I18n::translate('test'));
 	}
 
-	public function testTranslationsInPlugin()
+	public function testTranslationsInPlugin(): void
 	{
 		App::plugin('test/test', [
 			'translations' => [
@@ -817,7 +815,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('Deutscher Test', I18n::translate('test'));
 	}
 
-	public function testUserMethod()
+	public function testUserMethod(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -838,7 +836,7 @@ class AppPluginsTest extends TestCase
 		User::$methods = [];
 	}
 
-	public function testUserModel()
+	public function testUserModel(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -857,7 +855,7 @@ class AppPluginsTest extends TestCase
 		$this->assertInstanceOf(DummyUser::class, $user);
 	}
 
-	public function testUsersMethod()
+	public function testUsersMethod(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -875,7 +873,7 @@ class AppPluginsTest extends TestCase
 		Users::$methods = [];
 	}
 
-	public function testPluginLoader()
+	public function testPluginLoader(): void
 	{
 		$phpUnit  = $this;
 		$executed = 0;
@@ -930,7 +928,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame(1, $executed);
 	}
 
-	public function testPluginLoaderAnonymous()
+	public function testPluginLoaderAnonymous(): void
 	{
 		Dir::copy(static::FIXTURES . '/AppPluginsTest', static::TMP);
 
@@ -949,7 +947,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame($dir . '/test5', $plugin->root());
 	}
 
-	public function testThirdPartyExtensions()
+	public function testThirdPartyExtensions(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -971,7 +969,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame($testBlock, $kirby->extensions('thirdParty')['blocks']['test']);
 	}
 
-	public function testNativeComponents()
+	public function testNativeComponents(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -991,10 +989,7 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
 	}
 
-	/**
-	 * @covers ::extendAreas
-	 */
-	public function testAreas()
+	public function testAreas(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -1012,10 +1007,7 @@ class AppPluginsTest extends TestCase
 		$this->assertInstanceOf('Closure', $areas['todos'][0]);
 	}
 
-	/**
-	 * @covers ::extendFileTypes
-	 */
-	public function testFileTypes()
+	public function testFileTypes(): void
 	{
 		$kirby = new App([
 			'roots' => [

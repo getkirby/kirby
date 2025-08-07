@@ -50,6 +50,7 @@ export default {
 			}
 		}
 	},
+	emits: ["cancel", "submit"],
 	computed: {
 		file() {
 			return this.$panel.upload.files[0];

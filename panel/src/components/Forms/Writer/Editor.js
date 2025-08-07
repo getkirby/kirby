@@ -4,6 +4,7 @@ import { Schema, DOMParser, DOMSerializer } from "prosemirror-model";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { inputRules, undoInputRule } from "prosemirror-inputrules";
+import { toRaw } from "vue";
 
 // Prosemirror utils
 import utils from "./Utils";
@@ -285,7 +286,11 @@ export default class Editor extends Emitter {
 
 		// Only emit an update if the doc has changed and
 		// an update has not been actively prevented
-		if (transaction.docChanged || !transaction.getMeta("preventUpdate")) {
+		if (
+			transaction.docChanged &&
+			!transaction.getMeta("preventUpdate") &&
+			transaction.steps.length > 0
+		) {
 			this.emit("update", payload);
 		}
 
@@ -396,7 +401,7 @@ export default class Editor extends Emitter {
 		// give extensions access to our view
 		this.extensions.view = this.view;
 
-		this.setContent(this.options.content, true);
+		this.setContent(this.options.content);
 	}
 
 	insertText(text, selected = false) {
@@ -516,7 +521,7 @@ export default class Editor extends Emitter {
 	}
 
 	setSelection(from = 0, to = 0) {
-		const { doc, tr } = this.state;
+		const { doc, tr } = toRaw(this.state);
 		const resolvedFrom = utils.minMax(from, 0, doc.content.size);
 		const resolvedEnd = utils.minMax(to, 0, doc.content.size);
 		const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);

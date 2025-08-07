@@ -6,10 +6,9 @@ use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\SymmetricCrypto
- */
+#[CoversClass(SymmetricCrypto::class)]
 class SymmetricCryptoTest extends TestCase
 {
 	public function setUp(): void
@@ -19,10 +18,7 @@ class SymmetricCryptoTest extends TestCase
 		}
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructKeyAndPassword()
+	public function testConstructKeyAndPassword(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Passing both a secret key and a password is not supported');
@@ -30,10 +26,7 @@ class SymmetricCryptoTest extends TestCase
 		new SymmetricCrypto(secretKey: 'abcdefghijklmnopabcdefghijklmnop', password: 'super secure');
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructKeyLength()
+	public function testConstructKeyLength(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid secret key length');
@@ -41,10 +34,7 @@ class SymmetricCryptoTest extends TestCase
 		new SymmetricCrypto(secretKey: 'not secure');
 	}
 
-	/**
-	 * @covers ::__debugInfo
-	 */
-	public function testDebugInfo()
+	public function testDebugInfo(): void
 	{
 		$crypto = new SymmetricCrypto();
 		$this->assertSame([
@@ -70,10 +60,7 @@ class SymmetricCryptoTest extends TestCase
 		], $crypto->__debugInfo());
 	}
 
-	/**
-	 * @covers ::__destruct
-	 */
-	public function testDestruct()
+	public function testDestruct(): void
 	{
 		// helper to access protected props by reference
 		$reader = fn () => [
@@ -105,10 +92,7 @@ class SymmetricCryptoTest extends TestCase
 		$this->assertSame(['password' => '', 'secretKey' => null, 'secretKeysByOptions' => []], $values);
 	}
 
-	/**
-	 * @covers ::decrypt
-	 */
-	public function testDecrypt()
+	public function testDecrypt(): void
 	{
 		$crypto = new SymmetricCrypto(secretKey: 'abcdefghijklmnopabcdefghijklmnop');
 
@@ -118,10 +102,7 @@ class SymmetricCryptoTest extends TestCase
 		$this->assertSame('a very confidential message', $crypto->decrypt($input));
 	}
 
-	/**
-	 * @covers ::decrypt
-	 */
-	public function testDecryptInvalidJson()
+	public function testDecryptInvalidJson(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('JSON string is invalid');
@@ -130,10 +111,7 @@ class SymmetricCryptoTest extends TestCase
 		$crypto->decrypt('not JSON!');
 	}
 
-	/**
-	 * @covers ::decrypt
-	 */
-	public function testDecryptInvalidMode()
+	public function testDecryptInvalidMode(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Unsupported encryption mode "box"');
@@ -146,10 +124,7 @@ class SymmetricCryptoTest extends TestCase
 		$crypto->decrypt($input);
 	}
 
-	/**
-	 * @covers ::decrypt
-	 */
-	public function testDecryptMissingProps()
+	public function testDecryptMissingProps(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Input data does not contain all required props');
@@ -158,10 +133,7 @@ class SymmetricCryptoTest extends TestCase
 		$crypto->decrypt('{"mode":"secretbox","data":"this is set","nonce":"this is also set"}');
 	}
 
-	/**
-	 * @covers ::decrypt
-	 */
-	public function testDecryptTampered1()
+	public function testDecryptTampered1(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Encrypted string was tampered with');
@@ -175,10 +147,7 @@ class SymmetricCryptoTest extends TestCase
 		$crypto->decrypt($input);
 	}
 
-	/**
-	 * @covers ::decrypt
-	 */
-	public function testDecryptTampered2()
+	public function testDecryptTampered2(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Encrypted string was tampered with');
@@ -192,10 +161,7 @@ class SymmetricCryptoTest extends TestCase
 		$crypto->decrypt($input);
 	}
 
-	/**
-	 * @covers ::decrypt
-	 */
-	public function testDecryptTampered3()
+	public function testDecryptTampered3(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Encrypted string was tampered with');
@@ -209,10 +175,7 @@ class SymmetricCryptoTest extends TestCase
 		$crypto->decrypt($input);
 	}
 
-	/**
-	 * @covers ::decrypt
-	 */
-	public function testDecryptTampered4()
+	public function testDecryptTampered4(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Encrypted string was tampered with');
@@ -226,10 +189,7 @@ class SymmetricCryptoTest extends TestCase
 		$crypto->decrypt($input);
 	}
 
-	/**
-	 * @covers ::encrypt
-	 */
-	public function testEncrypt()
+	public function testEncrypt(): void
 	{
 		$crypto1    = new SymmetricCrypto(secretKey: 'abcdefghijklmnopabcdefghijklmnop');
 		$encrypted1 = $crypto1->encrypt($message = 'a very confidential message');
@@ -258,27 +218,18 @@ class SymmetricCryptoTest extends TestCase
 		$this->assertNotSame($props1['salt'], $props2['salt']);
 	}
 
-	/**
-	 * @covers ::isAvailable
-	 */
-	public function testIsAvailable()
+	public function testIsAvailable(): void
 	{
 		$this->assertTrue(SymmetricCrypto::isAvailable());
 	}
 
-	/**
-	 * @covers ::secretKey
-	 */
-	public function testSecretKeyFromKey()
+	public function testSecretKeyFromKey(): void
 	{
 		$crypto = new SymmetricCrypto(secretKey: $key = 'abcdefghijklmnopabcdefghijklmnop');
 		$this->assertSame($key, $crypto->secretKey());
 	}
 
-	/**
-	 * @covers ::secretKey
-	 */
-	public function testSecretKeyFromPassword()
+	public function testSecretKeyFromPassword(): void
 	{
 		$crypto = new SymmetricCrypto(password: 'super secure');
 		$this->assertSame(
@@ -293,10 +244,7 @@ class SymmetricCryptoTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::secretKey
-	 */
-	public function testSecretKeyFromPasswordNoSalt()
+	public function testSecretKeyFromPasswordNoSalt(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Salt and limits are required when deriving a secret key from a password');
@@ -305,10 +253,7 @@ class SymmetricCryptoTest extends TestCase
 		$crypto->secretKey();
 	}
 
-	/**
-	 * @covers ::secretKey
-	 */
-	public function testSecretKeyRandom()
+	public function testSecretKeyRandom(): void
 	{
 		$crypto1 = new SymmetricCrypto();
 		$key1   = $crypto1->secretKey();

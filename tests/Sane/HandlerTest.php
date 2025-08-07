@@ -4,21 +4,16 @@ namespace Kirby\Sane;
 
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Sane\Handler
- */
+#[CoversClass(Handler::class)]
 class HandlerTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Handler';
 
 	protected static string $type = 'sane';
 
-	/**
-	 * @covers ::sanitizeFile
-	 * @covers ::readFile
-	 */
-	public function testSanitizeFile()
+	public function testSanitizeFile(): void
 	{
 		$expected = $this->fixture('doctype-valid.svg');
 		$tmp      = $this->fixture('doctype-valid.svg', true);
@@ -42,11 +37,7 @@ class HandlerTest extends TestCase
 		$this->assertFileEquals($expected, $tmp);
 	}
 
-	/**
-	 * @covers ::sanitizeFile
-	 * @covers ::readFile
-	 */
-	public function testSanitizeFileMissing()
+	public function testSanitizeFileMissing(): void
 	{
 		$file = $this->fixture('does-not-exist.svg');
 
@@ -56,22 +47,14 @@ class HandlerTest extends TestCase
 		CustomHandler::sanitizeFile($file);
 	}
 
-	/**
-	 * @covers ::validateFile
-	 * @covers ::readFile
-	 */
-	public function testValidateFile()
+	public function testValidateFile(): void
 	{
 		$this->assertNull(
 			CustomHandler::validateFile($this->fixture('doctype-valid.svg'))
 		);
 	}
 
-	/**
-	 * @covers ::validateFile
-	 * @covers ::readFile
-	 */
-	public function testValidateFileError()
+	public function testValidateFileError(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "style"');
@@ -79,11 +62,7 @@ class HandlerTest extends TestCase
 		CustomHandler::validateFile($this->fixture('external-source-1.svg'));
 	}
 
-	/**
-	 * @covers ::validateFile
-	 * @covers ::readFile
-	 */
-	public function testValidateFileErrorExternalFile()
+	public function testValidateFileErrorExternalFile(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL points outside of the site index URL');
@@ -91,11 +70,7 @@ class HandlerTest extends TestCase
 		CustomHandler::validateFile($this->fixture('xlink-subfolder.svg'));
 	}
 
-	/**
-	 * @covers ::validateFile
-	 * @covers ::readFile
-	 */
-	public function testValidateFileMissing()
+	public function testValidateFileMissing(): void
 	{
 		$file = $this->fixture('does-not-exist.svg');
 

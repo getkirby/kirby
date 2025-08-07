@@ -27,7 +27,7 @@ class LayoutMixinTest extends TestCase
 		];
 	}
 
-	public function testColumns()
+	public function testColumns(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -36,7 +36,7 @@ class LayoutMixinTest extends TestCase
 		$this->assertSame([], $section->columns());
 	}
 
-	public function testColumnsWithTableLayout()
+	public function testColumnsWithTableLayout(): void
 	{
 		$section = new Section('test', [
 			'model'  => $this->page,
@@ -55,7 +55,7 @@ class LayoutMixinTest extends TestCase
 		$this->assertSame($expected, $section->columns());
 	}
 
-	public function testColumnsWithText()
+	public function testColumnsWithText(): void
 	{
 		$section = new Section('test', [
 			'model'  => $this->page,
@@ -80,7 +80,7 @@ class LayoutMixinTest extends TestCase
 		$this->assertSame($expected, $section->columns());
 	}
 
-	public function testColumnsWithTextAndInfo()
+	public function testColumnsWithTextAndInfo(): void
 	{
 		$section = new Section('test', [
 			'model'  => $this->page,
@@ -110,7 +110,7 @@ class LayoutMixinTest extends TestCase
 		$this->assertSame($expected, $section->columns());
 	}
 
-	public function testColumnsWithFlag()
+	public function testColumnsWithFlag(): void
 	{
 		$section = new Section('pages', [
 			'model'  => $this->page,
@@ -135,7 +135,7 @@ class LayoutMixinTest extends TestCase
 		$this->assertSame($expected, $section->columns());
 	}
 
-	public function testColumnsWithCustomColumns()
+	public function testColumnsWithCustomColumns(): void
 	{
 		$section = new Section('test', [
 			'model'   => $this->page,
@@ -181,7 +181,7 @@ class LayoutMixinTest extends TestCase
 		$this->assertSame($expected, $section->columns());
 	}
 
-	public function testColumnsValues()
+	public function testColumnsValues(): void
 	{
 		$model = new Page([
 			'slug' => 'test',
@@ -232,7 +232,7 @@ class LayoutMixinTest extends TestCase
 	}
 
 
-	public function testLayout()
+	public function testLayout(): void
 	{
 		// default
 		$section = new Section('test', [
@@ -258,7 +258,7 @@ class LayoutMixinTest extends TestCase
 		$this->assertSame('list', $section->layout());
 	}
 
-	public function testSize()
+	public function testSize(): void
 	{
 		// default
 		$section = new Section('test', [

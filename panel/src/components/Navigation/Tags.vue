@@ -17,15 +17,16 @@
 				v-for="(item, itemIndex) in tags"
 				:key="item.id ?? item.value ?? item.text"
 				:disabled="disabled"
-				:element="elementTag"
+				:element="element"
 				:html="html"
 				:image="item.image"
+				:link="item.link"
 				:removable="removable && !disabled"
 				:theme="theme"
 				name="tag"
-				@click.native.stop
-				@keypress.native.enter="edit(itemIndex, item, $event)"
-				@dblclick.native="edit(itemIndex, item, $event)"
+				@click.stop
+				@keypress.enter="edit(itemIndex, item, $event)"
+				@dblclick="edit(itemIndex, item, $event)"
 				@remove="remove(itemIndex, item)"
 			>
 				<!-- eslint-disable-next-line vue/no-v-html -->
@@ -48,16 +49,12 @@ export const props = {
 	inheritAttrs: false,
 	props: {
 		/**
-		 * HTML element to use for the tags list
+		 * HTML element to use for each tag
 		 */
 		element: {
 			type: String,
 			default: "div"
 		},
-		/**
-		 * HTML element to use for each tag
-		 */
-		elementTag: String,
 		/**
 		 * You can set the layout to `"list"` to extend the width of each tag
 		 * to 100% and show them in a list. This is handy in narrow columns
@@ -156,7 +153,8 @@ export default {
 				// convert all values to tag objects and filter invalid tags
 				this.tags = tags.map(this.tag).filter((tag) => tag);
 			},
-			immediate: true
+			immediate: true,
+			deep: true
 		}
 	},
 	methods: {
@@ -237,7 +235,7 @@ export default {
 				// can't be matched with any defined option
 				// to avoid XSS when displaying via `v-html`
 				text: this.$helper.string.escapeHTML(tag.text ?? tag.value),
-				value: tag.value
+				...tag
 			};
 		}
 	}
@@ -251,6 +249,7 @@ export default {
 
 .k-tags {
 	display: inline-flex;
+	max-width: 100%;
 	gap: var(--tags-gap);
 	align-items: center;
 	flex-wrap: wrap;

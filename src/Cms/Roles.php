@@ -91,7 +91,7 @@ class Roles extends Collection
 
 		// always include the admin role
 		if ($collection->find('admin') === null) {
-			$collection->set('admin', Role::admin());
+			$collection->set('admin', Role::defaultAdmin());
 		}
 
 		// return the collection sorted by name
@@ -138,7 +138,7 @@ class Roles extends Collection
 
 		// always include the admin role
 		if ($roles->find('admin') === null) {
-			$roles->set('admin', Role::admin($inject));
+			$roles->set('admin', Role::defaultAdmin($inject));
 		}
 
 		// return the collection sorted by name

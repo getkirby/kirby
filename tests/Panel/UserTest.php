@@ -3,12 +3,10 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class UserForceLocked extends ModelUser
 {
@@ -21,31 +19,11 @@ class UserForceLocked extends ModelUser
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Panel\User
- */
+#[CoversClass(User::class)]
+#[CoversClass(Model::class)]
 class UserTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.User';
-
-	public function setUp(): void
-	{
-		Blueprint::$loaded = [];
-
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		Dir::remove(static::TMP);
-	}
 
 	protected function panel(array $props = [])
 	{
@@ -53,66 +31,6 @@ class UserTest extends TestCase
 		return new User($user);
 	}
 
-	/**
-	 * @covers ::breadcrumb
-	 */
-	public function testBreadcrumb(): void
-	{
-		$model = new ModelUser([
-			'email' => 'test@getkirby.com',
-		]);
-
-		$breadcrumb = (new User($model))->breadcrumb();
-		$this->assertSame('test@getkirby.com', $breadcrumb[0]['label']);
-		$this->assertStringStartsWith('/users/', $breadcrumb[0]['link']);
-	}
-
-	/**
-	 * @covers ::buttons
-	 */
-	public function testButtons()
-	{
-		$this->assertSame([
-			'k-theme-view-button',
-			'k-settings-view-button',
-			'k-languages-view-button',
-		], array_column($this->panel()->buttons(), 'component'));
-	}
-
-	/**
-	 * @covers ::dropdown
-	 */
-	public function testDropdownTotp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'options' => [
-				'auth' => [
-					'methods' => ['password' => ['2fa' => true]]
-				]
-			],
-			'users' => [
-				['email' => 'test@getkirby.com'],
-				['email' => 'foo@getkirby.com']
-			],
-			'user' => 'test@getkirby.com'
-		]);
-
-		$user = $this->app->user();
-		$dropdown = $user->panel()->dropdown();
-		$this->assertSame('/account/totp/enable', $dropdown[7]['dialog']);
-		$this->assertSame('qr-code', $dropdown[7]['icon']);
-
-		$user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
-		$dropdown = $user->panel()->dropdown();
-		$this->assertSame('/account/totp/disable', $dropdown[7]['dialog']);
-	}
-
-	/**
-	 * @covers ::dropdownOption
-	 */
 	public function testDropdownOption(): void
 	{
 		$model = new ModelUser([
@@ -126,10 +44,7 @@ class UserTest extends TestCase
 		$this->assertSame('/users/test', $option['link']);
 	}
 
-	/**
-	 * @covers ::home
-	 */
-	public function testHome()
+	public function testHome(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -139,10 +54,7 @@ class UserTest extends TestCase
 		$this->assertSame('/panel/site', $panel->home());
 	}
 
-	/**
-	 * @covers ::home
-	 */
-	public function testHomeWithCustomPath()
+	public function testHomeWithCustomPath(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -165,10 +77,7 @@ class UserTest extends TestCase
 		$this->assertSame('/blog', $panel->home());
 	}
 
-	/**
-	 * @covers ::home
-	 */
-	public function testHomeWithCustomPathQuery()
+	public function testHomeWithCustomPathQuery(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -196,11 +105,7 @@ class UserTest extends TestCase
 		$this->assertSame('/panel/pages/test', $panel->home());
 	}
 
-	/**
-	 * @covers ::imageDefaults
-	 * @covers ::imageSource
-	 */
-	public function testImage()
+	public function testImage(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -211,10 +116,7 @@ class UserTest extends TestCase
 		$this->assertFalse(isset($image['url']));
 	}
 
-	/**
-	 * @covers ::imageSource
-	 */
-	public function testImageStringQuery()
+	public function testImageStringQuery(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -225,13 +127,7 @@ class UserTest extends TestCase
 		$this->assertNotEmpty($image);
 	}
 
-	/**
-	 * @covers ::imageSource
-	 * @covers \Kirby\Panel\Model::image
-	 * @covers \Kirby\Panel\Model::imageSource
-	 * @covers \Kirby\Panel\Model::imageSrcset
-	 */
-	public function testImageCover()
+	public function testImageCover(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -278,10 +174,7 @@ class UserTest extends TestCase
 		], $panel->image(['cover' => true]));
 	}
 
-	/**
-	 * @covers \Kirby\Panel\Model::options
-	 */
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -304,10 +197,7 @@ class UserTest extends TestCase
 		$this->assertSame($expected, $panel->options());
 	}
 
-	/**
-	 * @covers \Kirby\Panel\Model::options
-	 */
-	public function testOptionsWithLockedUser()
+	public function testOptionsWithLockedUser(): void
 	{
 		$user = new UserForceLocked([
 			'email' => 'test@getkirby.com',
@@ -345,10 +235,7 @@ class UserTest extends TestCase
 		$this->assertSame($expected, $panel->options(['changeEmail']));
 	}
 
-	/**
-	 * @covers ::path
-	 */
-	public function testPath()
+	public function testPath(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -358,11 +245,7 @@ class UserTest extends TestCase
 		$this->assertTrue(Str::startsWith($panel->path(), 'users/'));
 	}
 
-	/**
-	 * @covers ::pickerData
-	 * @covers \Kirby\Panel\Model::pickerData
-	 */
-	public function testPickerDataDefault()
+	public function testPickerDataDefault(): void
 	{
 		$user = new ModelUser([
 			'email' => 'test@getkirby.com',
@@ -376,70 +259,7 @@ class UserTest extends TestCase
 		$this->assertSame('test@getkirby.com', $data['text']);
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
-	{
-		$user = new ModelUser([
-			'email'    => 'test@getkirby.com',
-			'language' => 'de'
-		]);
-
-		$panel = new User($user);
-		$props = $panel->props();
-
-		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('avatar', $props['model']);
-		$this->assertArrayHasKey('content', $props['model']);
-		$this->assertArrayHasKey('email', $props['model']);
-		$this->assertArrayHasKey('id', $props['model']);
-		$this->assertArrayHasKey('language', $props['model']);
-		$this->assertArrayHasKey('name', $props['model']);
-		$this->assertArrayHasKey('role', $props['model']);
-		$this->assertArrayHasKey('username', $props['model']);
-
-		// inherited props
-		$this->assertArrayHasKey('blueprint', $props);
-		$this->assertArrayHasKey('lock', $props);
-		$this->assertArrayHasKey('permissions', $props);
-		$this->assertArrayNotHasKey('tab', $props);
-		$this->assertArrayHasKey('tabs', $props);
-
-		$this->assertNull($props['next']());
-		$this->assertNull($props['prev']());
-	}
-
-	/**
-	 * @covers ::props
-	 */
-	public function testPropsPrevNext()
-	{
-		$app = $this->app->clone([
-			'users' => [
-				['email' => 'a@getkirby.com'],
-				['email' => 'b@getkirby.com'],
-				['email' => 'c@getkirby.com']
-			]
-		]);
-
-		$props = (new User($app->user('a@getkirby.com')))->props();
-		$this->assertNull($props['prev']());
-		$this->assertSame('b@getkirby.com', $props['next']()['title']);
-
-		$props = (new User($app->user('b@getkirby.com')))->props();
-		$this->assertSame('a@getkirby.com', $props['prev']()['title']);
-		$this->assertSame('c@getkirby.com', $props['next']()['title']);
-
-		$props = (new User($app->user('c@getkirby.com')))->props();
-		$this->assertSame('b@getkirby.com', $props['prev']()['title']);
-		$this->assertNull($props['next']());
-	}
-
-	/**
-	 * @covers ::translation
-	 */
-	public function testTranslation()
+	public function testTranslation(): void
 	{
 		// existing
 		$user = new ModelUser([
@@ -462,72 +282,5 @@ class UserTest extends TestCase
 		$translations = $panel->translation();
 		$this->assertSame('foo', $translations->code());
 		$this->assertNull($translations->get('translation.name'));
-	}
-
-	/**
-	 * @covers ::prevNext
-	 */
-	public function testPrevNext()
-	{
-		$app = $this->app->clone([
-			'users' => [
-				['email' => 'a@getkirby.com'],
-				['email' => 'b@getkirby.com'],
-				['email' => 'c@getkirby.com']
-			]
-		]);
-
-		$prevNext = (new User($app->user('a@getkirby.com')))->prevNext();
-		$this->assertNull($prevNext['prev']());
-		$this->assertSame('b@getkirby.com', $prevNext['next']()['title']);
-
-		$prevNext = (new User($app->user('b@getkirby.com')))->prevNext();
-		$this->assertSame('a@getkirby.com', $prevNext['prev']()['title']);
-		$this->assertSame('c@getkirby.com', $prevNext['next']()['title']);
-
-		$prevNext = (new User($app->user('c@getkirby.com')))->prevNext();
-		$this->assertSame('b@getkirby.com', $prevNext['prev']()['title']);
-		$this->assertNull($prevNext['next']());
-	}
-
-	/**
-	 * @covers ::prevNext
-	 * @covers ::toPrevNextLink
-	 */
-	public function testPrevNextWithTab()
-	{
-		$app = $this->app->clone([
-			'users' => [
-				['id' => 'a', 'email' => 'a@getkirby.com'],
-				['id' => 'b', 'email' => 'b@getkirby.com'],
-				['id' => 'c', 'email' => 'c@getkirby.com']
-			]
-		]);
-
-		$_GET['tab'] = 'test';
-
-		$prevNext = (new User($app->user('b@getkirby.com')))->prevNext();
-		$this->assertSame('/users/a?tab=test', $prevNext['prev']()['link']);
-		$this->assertSame('/users/c?tab=test', $prevNext['next']()['link']);
-
-		$_GET = [];
-	}
-
-	/**
-	 * @covers ::view
-	 */
-	public function testView()
-	{
-		$user = new ModelUser([
-			'email' => 'test@getkirby.com',
-		]);
-
-		$panel = new User($user);
-		$view = $panel->view();
-
-		$this->assertArrayHasKey('props', $view);
-		$this->assertSame('k-user-view', $view['component']);
-		$this->assertSame('test@getkirby.com', $view['title']);
-		$this->assertSame('test@getkirby.com', $view['breadcrumb'][0]['label']);
 	}
 }

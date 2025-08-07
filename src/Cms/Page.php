@@ -28,15 +28,16 @@ use Throwable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
+ * @method \Kirby\Uuid\PageUuid uuid()
  */
 class Page extends ModelWithContent
 {
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Pages>
-	 */
+	use HasModels;
 	use HasSiblings;
 	use PageActions;
 	use PageSiblings;
@@ -48,11 +49,6 @@ class Page extends ModelWithContent
 	 * @todo Remove when support for PHP 8.2 is dropped
 	 */
 	public static array $methods = [];
-
-	/**
-	 * Registry with all Page models
-	 */
-	public static array $models = [];
 
 	/**
 	 * The PageBlueprint object
@@ -143,9 +139,15 @@ class Page extends ModelWithContent
 		$this->parent  = $props['parent'] ?? null;
 		$this->root    = $props['root'] ?? null;
 
+		// Set blueprint before setting content
+		// or translations in the parent constructor.
+		// Otherwise, the blueprint definition cannot be
+		// used when creating the right field values
+		// for the content.
+		$this->setBlueprint($props['blueprint'] ?? null);
+
 		parent::__construct($props);
 
-		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setChildren($props['children'] ?? null);
 		$this->setDrafts($props['drafts'] ?? null);
 		$this->setFiles($props['files'] ?? null);
@@ -293,7 +295,6 @@ class Page extends ModelWithContent
 
 	/**
 	 * Call the page controller
-	 * @internal
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the controller returns invalid objects for `kirby`, `site`, `pages` or `page`
 	 */
@@ -359,7 +360,7 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Sorting number + Slug
+	 * Returns the directory name (UID with optional sorting number)
 	 */
 	public function dirname(): string
 	{
@@ -375,7 +376,8 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Sorting number + Slug
+	 * Returns the directory path relative to the `content` root
+	 * (including optional sorting numbers and draft directories)
 	 */
 	public function diruri(): string
 	{
@@ -406,11 +408,10 @@ class Page extends ModelWithContent
 	/**
 	 * Constructs a Page object and also
 	 * takes page models into account.
-	 * @internal
 	 */
 	public static function factory($props): static
 	{
-		return static::model($props['model'] ?? 'default', $props);
+		return static::model($props['model'] ?? $props['template'] ?? 'default', $props);
 	}
 
 	/**
@@ -469,9 +470,7 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Returns the inventory of files
-	 * children and content files
-	 * @internal
+	 * Returns the inventory of files children and content files
 	 */
 	public function inventory(): array
 	{
@@ -513,21 +512,16 @@ class Page extends ModelWithContent
 
 	/**
 	 * Checks if the page is accessible to the current user
-	 * This permission depends on the `read` option until v5
+	 * This permission depends on the `read` option until v6
 	 */
 	public function isAccessible(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v5
+		// TODO: remove this check when `read` option deprecated in v6
 		if ($this->isReadable() === false) {
 			return false;
 		}
 
-		static $accessible   = [];
-		$role                = $this->kirby()->role()?->id() ?? '__none__';
-		$template            = $this->intendedTemplate()->name();
-		$accessible[$role] ??= [];
-
-		return $accessible[$role][$template] ??= $this->permissions()->can('access');
+		return PagePermissions::canFromCache($this, 'access');
 	}
 
 	/**
@@ -680,11 +674,11 @@ class Page extends ModelWithContent
 
 	/**
 	 * Check if the page can be listable by the current user
-	 * This permission depends on the `read` option until v5
+	 * This permission depends on the `read` option until v6
 	 */
 	public function isListable(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v5
+		// TODO: remove this check when `read` option deprecated in v6
 		if ($this->isReadable() === false) {
 			return false;
 		}
@@ -694,12 +688,7 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		static $listable   = [];
-		$role              = $this->kirby()->role()?->id() ?? '__none__';
-		$template          = $this->intendedTemplate()->name();
-		$listable[$role] ??= [];
-
-		return $listable[$role][$template] ??= $this->permissions()->can('list');
+		return PagePermissions::canFromCache($this, 'list');
 	}
 
 	/**
@@ -748,7 +737,7 @@ class Page extends ModelWithContent
 
 	/**
 	 * Check if the page can be read by the current user
-	 * @todo Deprecate `read` option in v5 and make the necessary changes for `access` and `list` options.
+	 * @todo Deprecate `read` option in v6 and make the necessary changes for `access` and `list` options.
 	 */
 	public function isReadable(): bool
 	{
@@ -777,41 +766,27 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Returns the root to the media folder for the page
-	 * @internal
+	 * Returns the absolute path to the media folder for the page
 	 */
-	public function mediaRoot(): string
+	public function mediaDir(): string
 	{
 		return $this->kirby()->root('media') . '/pages/' . $this->id();
 	}
 
 	/**
+	 * @see `::mediaDir`
+	 */
+	public function mediaRoot(): string
+	{
+		return $this->mediaDir();
+	}
+
+	/**
 	 * The page's base URL for any files
-	 * @internal
 	 */
 	public function mediaUrl(): string
 	{
 		return $this->kirby()->url('media') . '/pages/' . $this->id();
-	}
-
-	/**
-	 * Creates a page model if it has been registered
-	 * @internal
-	 */
-	public static function model(string $name, array $props = []): static
-	{
-		$class   = static::$models[$name] ?? null;
-		$class ??= static::$models['default'] ?? null;
-
-		if ($class !== null) {
-			$object = new $class($props);
-
-			if ($object instanceof self) {
-				return $object;
-			}
-		}
-
-		return new static($props);
 	}
 
 	/**
@@ -859,7 +834,6 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the parent id, if a parent exists
-	 * @internal
 	 */
 	public function parentId(): string|null
 	{
@@ -870,7 +844,6 @@ class Page extends ModelWithContent
 	 * Returns the parent model,
 	 * which can either be another Page
 	 * or the Site
-	 * @internal
 	 */
 	public function parentModel(): Page|Site
 	{
@@ -899,7 +872,7 @@ class Page extends ModelWithContent
 	 */
 	public function permalink(): string|null
 	{
-		return $this->uuid()?->url();
+		return $this->uuid()?->toPermalink();
 	}
 
 	/**
@@ -912,10 +885,14 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the preview URL with authentication for drafts and versions
-	 * @internal
+	 * @unstable
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
+		if ($this->permissions()->can('preview') !== true) {
+			return null;
+		}
+
 		return $this->version($versionId)->url();
 	}
 
@@ -945,7 +922,7 @@ class Page extends ModelWithContent
 		// make sure to convert it to an object no matter what happened
 		$versionId ??= VersionId::$render;
 		$versionId ??= $this->renderVersionFromRequest();
-		$versionId ??= VersionId::latest();
+		$versionId ??= 'latest';
 		$versionId   = VersionId::from($versionId);
 
 		// try to get the page from cache
@@ -1024,7 +1001,7 @@ class Page extends ModelWithContent
 	/**
 	 * Determines which version (if any) can be rendered
 	 * based on the token authentication in the current request
-	 * @internal
+	 * @unstable
 	 */
 	public function renderVersionFromRequest(): VersionId|null
 	{
@@ -1058,7 +1035,6 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * @internal
 	 * @throws \Kirby\Exception\NotFoundException If the content representation cannot be found
 	 */
 	public function representation(mixed $type): Template
@@ -1126,7 +1102,7 @@ class Page extends ModelWithContent
 	protected function setTemplate(string|null $template = null): static
 	{
 		if ($template !== null) {
-			$this->intendedTemplate = $this->kirby()->template($template);
+			$this->intendedTemplate = $this->kirby()->template(strtolower($template));
 		}
 
 		return $this;

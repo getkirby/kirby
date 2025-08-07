@@ -3,12 +3,11 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\Language;
+use Kirby\Cms\Page;
 use Kirby\Exception\LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\ImmutableMemoryStorage
- * @covers ::__construct
- */
+#[CoversClass(ImmutableMemoryStorage::class)]
 class ImmutableMemoryStorageTest extends TestCase
 {
 	protected $storage;
@@ -21,11 +20,7 @@ class ImmutableMemoryStorageTest extends TestCase
 		$this->storage = new ImmutableMemoryStorage($this->model);
 	}
 
-	/**
-	 * @covers ::delete
-	 * @covers ::preventMutation
-	 */
-	public function testDelete()
+	public function testDelete(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
@@ -33,14 +28,10 @@ class ImmutableMemoryStorageTest extends TestCase
 		$this->storage->delete(VersionId::latest(), Language::ensure());
 	}
 
-	/**
-	 * @covers ::move
-	 * @covers ::preventMutation
-	 */
-	public function testMove()
+	public function testMove(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		$this->expectExceptionMessage('Storage for the page is immutable and cannot be moved. Make sure to use the last alteration of the object.');
 
 		$this->storage->move(
 			fromVersionId: VersionId::latest(),
@@ -49,28 +40,43 @@ class ImmutableMemoryStorageTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::touch
-	 * @covers ::preventMutation
-	 */
-	public function testTouch()
+	public function testNextModel(): void
+	{
+		$model      = new Page(['slug' => 'test']);
+		$nextModel = $model->clone();
+
+		$storage = new ImmutableMemoryStorage(
+			model: $model,
+			nextModel: $nextModel
+		);
+
+		$this->assertSame($nextModel, $storage->nextModel());
+	}
+
+	public function testNextModelWithoutClone(): void
+	{
+		$model   = new Page(['slug' => 'test']);
+		$storage = new ImmutableMemoryStorage(
+			model: $model,
+		);
+
+		$this->assertNull($storage->nextModel());
+	}
+
+	public function testTouch(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		$this->expectExceptionMessage('Storage for the page is immutable and cannot be touched. Make sure to use the last alteration of the object.');
 
 		$this->storage->touch(VersionId::latest(), Language::ensure());
 	}
 
-	/**
-	 * @covers ::update
-	 * @covers ::preventMutation
-	 */
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		$this->storage->create(VersionId::latest(), Language::ensure(), []);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Storage for the page is immutable and cannot be deleted. Make sure to use the last alteration of the object.');
+		$this->expectExceptionMessage('Storage for the page is immutable and cannot be updated. Make sure to use the last alteration of the object.');
 
 		$this->storage->update(VersionId::latest(), Language::ensure(), []);
 	}

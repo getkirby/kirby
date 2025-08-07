@@ -26,12 +26,12 @@ use Kirby\Toolkit\A;
  */
 class Assets
 {
-	protected bool $dev;
+	protected bool $isDev;
+	protected bool $isPluginDev;
 	protected App $kirby;
 	protected string $nonce;
 	protected Plugins $plugins;
 	protected string $url;
-	protected bool $vite;
 
 	public function __construct()
 	{
@@ -39,15 +39,19 @@ class Assets
 		$this->nonce   = $this->kirby->nonce();
 		$this->plugins = new Plugins();
 
-		$vite       = $this->kirby->roots()->panel() . '/.vite-running';
-		$this->vite = is_file($vite) === true;
-
-		// get the assets from the Vite dev server in dev mode;
+		// Check if Panel is running in dev mode to
+		// get the assets from the Vite dev server;
 		// dev mode = explicitly enabled in the config AND Vite is running
-		$dev       = $this->kirby->option('panel.dev', false);
-		$this->dev = $dev !== false && $this->vite === true;
+		$this->isDev =
+			$this->kirby->option('panel.dev', false) !== false &&
+			is_file($this->kirby->root('panel') . '/.vite-running') === true;
 
-		// get the base URL
+		// check if any plugin is running in dev mode to
+		// load the non-production version of Vue
+		$this->isPluginDev =
+			is_file($this->kirby->root('plugins') . '/.vite-running') === true;
+
+		// Get the base URL
 		$this->url = $this->url();
 	}
 
@@ -64,7 +68,7 @@ class Assets
 
 		// during dev mode we do not need to load
 		// the general stylesheet (as styling will be inlined)
-		if ($this->dev === true) {
+		if ($this->isDev === true) {
 			$css['index'] = null;
 		}
 
@@ -106,21 +110,15 @@ class Assets
 	public function external(): array
 	{
 		return [
-			'css'            => $this->css(),
-			'icons'          => $this->favicons(),
-			// loader for plugins' index.dev.mjs files – inlined,
-			// so we provide the code instead of the asset URL
-			'plugin-imports' => $this->plugins->read('mjs'),
-			'js'             => $this->js()
+			'css'         => $this->css(),
+			'icons'       => $this->favicons(),
+			'import-maps' => $this->importMaps(),
+			'js'          => $this->js()
 		];
 	}
 
 	/**
-	 * Returns array of favicon icons
-	 * based on config option
-	 *
-	 * @todo Deprecate `url` option in v5, use `href` option instead
-	 * @todo Deprecate `rel` usage as array key in v5, use `rel` option instead
+	 * Returns array of favicon icons based on config option
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
@@ -158,23 +156,14 @@ class Assets
 
 		if (is_array($icons) === true) {
 			// normalize options
-			foreach ($icons as $rel => &$icon) {
-				// TODO: remove this backward compatibility check in v6
-				if (isset($icon['url']) === true) {
-					$icon['href'] = $icon['url'];
-					unset($icon['url']);
-				}
-
-				// TODO: remove this backward compatibility check in v6
-				if (is_string($rel) === true && isset($icon['rel']) === false) {
-					$icon['rel'] = $rel;
-				}
-
-				$icon['href']  = Url::to($icon['href']);
-				$icon['nonce'] = $this->nonce;
-			}
-
-			return array_values($icons);
+			return array_values(A::map(
+				$icons,
+				fn ($icon) => [
+					...$icon,
+					'href'  => Url::to($icon['href']),
+					'nonce' => $this->nonce
+				]
+			));
 		}
 
 		// make sure to convert favicon string to array
@@ -202,10 +191,20 @@ class Assets
 	public function icons(): string
 	{
 		$dir   = $this->kirby->root('panel') . '/';
-		$dir  .= $this->dev ? 'public' : 'dist';
+		$dir  .= $this->isDev ? 'public' : 'dist';
 		$icons = F::read($dir . '/img/icons.svg');
 		$icons = preg_replace('/<!--(.|\s)*?-->/', '', $icons);
 		return $icons;
+	}
+
+	/**
+	 * Get all import maps
+	 */
+	public function importMaps(): array
+	{
+		return array_filter([
+			'vue' => $this->vue()
+		]);
 	}
 
 	/**
@@ -214,49 +213,37 @@ class Assets
 	public function js(): array
 	{
 		$js = [
-			'vue' => [
-				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/vue.min.js'
-			],
 			'vendor' => [
 				'nonce' => $this->nonce,
 				'src'   => $this->url . '/js/vendor.min.js',
 				'type'  => 'module'
 			],
-			'pluginloader' => [
+			'plugin-registry' => [
 				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/plugins.js',
-				'type'  => 'module'
-			],
-			'plugins' => [
-				'nonce' => $this->nonce,
-				'src'   => $this->plugins->url('js'),
-				'defer' => true
+				'src'   => $this->url . '/js/plugins.js'
 			],
 			...A::map($this->custom('panel.js'), fn ($src) => [
 				'nonce' => $this->nonce,
 				'src'   => $src,
-				'type'  => 'module'
+				'type'  => 'module',
+				'defer' => true,
 			]),
 			'index' => [
-				'nonce' => $this->nonce,
-				'src'   => $this->url . '/js/index.min.js',
-				'type'  => 'module'
+				'nonce'   => $this->nonce,
+				'src'     => $this->url . '/js/index.min.js',
+				'plugins' => $this->plugins->url('js'),
 			],
 		];
 
-
-		// during dev mode, add vite client and adapt
+		// During dev mode, add vite client and adapt
 		// path to `index.js` - vendor does not need
 		// to be loaded in dev mode
-		if ($this->dev === true) {
-			// load the non-minified index.js, remove vendor script and
-			//  development version of Vue
-			$js['vendor']['src'] = null;
-			$js['index']['src']  = $this->url . '/src/index.js';
-			$js['vue']['src']    = $this->url . '/node_modules/vue/dist/vue.js';
+		if ($this->isDev === true) {
+			// Load the non-minified index.js, remove vendor script
+			$js['index']['src'] = $this->url . '/src/index.js';
+			$js['vendor'] = null;
 
-			// add vite dev client
+			// Add vite dev client
 			$js['vite'] = [
 				'nonce' => $this->nonce,
 				'src'   => $this->url . '/@vite/client',
@@ -264,7 +251,7 @@ class Assets
 			];
 		}
 
-		return array_filter($js, fn ($js) => empty($js['src']) === false);
+		return array_filter($js);
 	}
 
 	/**
@@ -307,12 +294,13 @@ class Assets
 	public function url(): string
 	{
 		// vite is not running, use production assets
-		if ($this->dev === false) {
+		if ($this->isDev === false) {
 			return $this->kirby->url('media') . '/panel/' . $this->kirby->versionHash();
 		}
 
 		// explicitly configured base URL
 		$dev = $this->kirby->option('panel.dev');
+
 		if (is_string($dev) === true) {
 			return $dev;
 		}
@@ -324,5 +312,29 @@ class Assets
 			'params' => null,
 			'query'  => null
 		])->toString(), '/');
+	}
+
+	/**
+	 * Get the correct Vue script URL depending on dev mode
+	 * and the enabled/disabled template compiler
+	 */
+	public function vue(): string
+	{
+		// During dev mode, load the dev version of Vue
+		if ($this->isDev === true) {
+			return $this->url . '/node_modules/vue/dist/vue.esm-browser.js';
+		}
+
+		// When any plugin is in dev mode, also load the dev version
+		// of Vue  but from the dist folder, not node_modules
+		if ($this->isPluginDev === true) {
+			return $this->url . '/js/vue.esm-browser.js';
+		}
+
+		if ($this->kirby->option('panel.vue.compiler', true) === true) {
+			return $this->url . '/js/vue.esm-browser.prod.js';
+		}
+
+		return $this->url . '/js/vue.runtime.esm-browser.prod.js';
 	}
 }

@@ -23,7 +23,7 @@ export default (panel) => {
 	const api = {
 		csrf: panel.system.csrf,
 		endpoint: rtrim(panel.urls.api, "/"),
-		methodOverwrite: panel.config.api?.methodOverwrite ?? false,
+		methodOverride: panel.config.api?.methodOverride ?? false,
 		ping: null,
 		requests: [],
 		running: 0
@@ -32,7 +32,14 @@ export default (panel) => {
 	// clear and restart the auth beacon
 	const ping = () => {
 		clearInterval(api.ping);
-		api.ping = setInterval(api.auth.ping, 5 * 60 * 1000);
+		api.ping = setInterval(
+			() => {
+				if (panel.isOffline === false) {
+					api.auth.ping();
+				}
+			},
+			5 * 60 * 1000
+		);
 	};
 
 	// setup the main request method

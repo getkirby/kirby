@@ -129,10 +129,10 @@
 						}"
 						element="tbody"
 					>
-						<tr v-for="i in 2" :key="i">
+						<tr v-for="i in 2" :key="i" class="k-table-sortable-row">
 							<td class="k-table-index-column" data-sortable="true">
 								<span class="k-table-index">{{ i }}</span>
-								<k-sort-handle />
+								<k-sort-handle class="k-table-sort-handle" />
 							</td>
 							<td>Kirby</td>
 							<td>mail@getkirby.com</td>

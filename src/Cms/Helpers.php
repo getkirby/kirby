@@ -117,6 +117,18 @@ class Helpers
 	) {
 		$override = null;
 
+		// check if the LC_MESSAGES constant is defined
+		// some environments do not support LC_MESSAGES especially on Windows
+		// LC_MESSAGES constant is available if PHP was compiled with libintl
+		if (defined('LC_MESSAGES') === true) {
+			// backup current locale
+			$locale = setlocale(LC_MESSAGES, 0);
+
+			// set locale to C so that errors and warning messages are
+			// printed in English for robust comparisons in the handler
+			setlocale(LC_MESSAGES, 'C');
+		}
+
 		/**
 		 * @psalm-suppress UndefinedVariable
 		 */
@@ -152,6 +164,12 @@ class Helpers
 			// action or the standard error handler threw an
 			// exception; this avoids modifying global state
 			restore_error_handler();
+
+			// check if the LC_MESSAGES constant is defined
+			if (defined('LC_MESSAGES') === true) {
+				// reset to original locale
+				setlocale(LC_MESSAGES, $locale);
+			}
 		}
 
 		return $override ?? $result;
@@ -160,7 +178,6 @@ class Helpers
 	/**
 	 * Checks if a helper was overridden by the user
 	 * by setting the `KIRBY_HELPER_*` constant
-	 * @internal
 	 *
 	 * @param string $name Name of the helper
 	 */

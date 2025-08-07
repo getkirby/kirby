@@ -37,6 +37,8 @@
 	<!-- <rule ref="rulesets/controversial.xml/Superglobals"> -->
 
 	<rule ref="rulesets/design.xml">
+		<exclude name="NumberOfChildren" />
+
 		<!-- Temporarily disabled for step-by-step refactoring/suppression -->
 		<exclude name="ExitExpression" />
 		<exclude name="CouplingBetweenObjects" />

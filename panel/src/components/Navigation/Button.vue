@@ -327,7 +327,6 @@ export default {
 }
 
 /** Icon Buttons **/
-/** TODO: .k-button:not(:has(.k-button-text)) */
 .k-button:not([data-has-text="true"]) {
 	--button-padding: 0;
 	aspect-ratio: 1/1;
@@ -335,7 +334,6 @@ export default {
 
 /** Responsive buttons **/
 @container (max-width: 30rem) {
-	/** TODO: .k-button:is([data-responsive]:has(.k-button-icon)) */
 	.k-button[data-responsive="true"][data-has-icon="true"] {
 		--button-padding: 0;
 		aspect-ratio: 1/1;
@@ -344,7 +342,6 @@ export default {
 	.k-button[data-responsive="text"][data-has-text="true"] {
 		--button-icon-display: none;
 	}
-	/** TODO: .k-button:is([data-responsive]:has(.k-button-icon)) .k-button-arrow */
 	.k-button[data-responsive="true"][data-has-icon="true"] .k-button-arrow {
 		display: none;
 	}

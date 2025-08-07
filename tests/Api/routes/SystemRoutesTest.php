@@ -18,14 +18,14 @@ class SystemRoutesTest extends TestCase
 		]);
 	}
 
-	public function testGetWithoutUser()
+	public function testGetWithoutUser(): void
 	{
 		$response = $this->app->api()->call('system', 'GET');
 
 		$this->assertArrayNotHasKey('user', $response['data']);
 	}
 
-	public function testGetWithUser()
+	public function testGetWithUser(): void
 	{
 		$this->app->impersonate('kirby');
 

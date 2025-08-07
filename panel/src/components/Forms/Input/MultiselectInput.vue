@@ -8,8 +8,9 @@
 			<k-tags
 				ref="tags"
 				v-bind="$props"
+				:removable="true"
 				@input="$emit('input', $event)"
-				@click.native.stop="open"
+				@click.stop="open"
 			>
 				<k-button
 					v-if="!max || value.length < max"
@@ -20,8 +21,8 @@
 					class="k-multiselect-input-toggle k-tags-navigatable"
 					size="xs"
 					icon="angle-down"
-					@keydown.native.delete="$refs.tags.focus('prev')"
-					@focus.native="open"
+					@keydown.delete="$refs.tags.focus('prev')"
+					@focus="open"
 				/>
 			</k-tags>
 		</k-input-validator>
@@ -58,7 +59,8 @@ export const props = {
 };
 
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	emits: ["input"]
 };
 </script>
 

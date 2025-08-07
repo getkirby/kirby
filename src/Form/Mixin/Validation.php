@@ -19,39 +19,15 @@ use Kirby\Toolkit\V;
 trait Validation
 {
 	/**
-	 * An array of all found errors
+	 * If `true`, the field has to be filled in correctly to be saved.
 	 */
-	protected array|null $errors = null;
+	protected bool $required;
 
 	/**
 	 * Runs all validations and returns an array of
 	 * error messages
 	 */
 	public function errors(): array
-	{
-		return $this->errors ??= $this->validate();
-	}
-
-	/**
-	 * Checks if the field is invalid
-	 */
-	public function isInvalid(): bool
-	{
-		return $this->isValid() === false;
-	}
-
-	/**
-	 * Checks if the field is valid
-	 */
-	public function isValid(): bool
-	{
-		return $this->errors() === [];
-	}
-
-	/**
-	 * Runs the validations defined for the field
-	 */
-	protected function validate(): array
 	{
 		$validations = $this->validations();
 		$value       = $this->value();
@@ -95,6 +71,40 @@ trait Validation
 		}
 
 		return $errors;
+	}
+
+	/**
+	 * Checks if the field is required
+	 */
+	public function isRequired(): bool
+	{
+		return $this->required;
+	}
+
+	/**
+	 * Checks if the field is invalid
+	 */
+	public function isInvalid(): bool
+	{
+		return $this->errors() !== [];
+	}
+
+	/**
+	 * Checks if the field is valid
+	 */
+	public function isValid(): bool
+	{
+		return $this->errors() === [];
+	}
+
+	public function required(): bool
+	{
+		return $this->required;
+	}
+
+	protected function setRequired(bool $required = false): void
+	{
+		$this->required = $required;
 	}
 
 	/**

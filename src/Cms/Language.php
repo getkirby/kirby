@@ -26,12 +26,11 @@ use Stringable;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>
  */
 class Language implements Stringable
 {
-	/**
-	 * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Languages>
-	 */
 	use HasSiblings;
 
 	/**
@@ -67,7 +66,7 @@ class Language implements Stringable
 		}
 
 		static::$kirby      = $props['kirby'] ?? null;
-		$this->code         = trim($props['code']);
+		$this->code         = basename(trim($props['code'])); // prevent path traversal
 		$this->default      = ($props['default'] ?? false) === true;
 		$this->direction    = ($props['direction'] ?? null) === 'rtl' ? 'rtl' : 'ltr';
 		$this->name         = trim($props['name'] ?? $this->code);
@@ -153,7 +152,6 @@ class Language implements Stringable
 
 	/**
 	 * Creates a new language object
-	 * @internal
 	 */
 	public static function create(array $props): static
 	{
@@ -215,7 +213,6 @@ class Language implements Stringable
 	/**
 	 * Delete the current language and
 	 * all its translation files
-	 * @internal
 	 *
 	 * @throws \Kirby\Exception\Exception
 	 */
@@ -230,8 +227,7 @@ class Language implements Stringable
 		// apply before hook
 		$language = $kirby->apply(
 			'language.delete:before',
-			['language' => $this],
-			'language'
+			['language' => $this]
 		);
 
 		// re-validate the language rules after before hook was applied
@@ -273,7 +269,7 @@ class Language implements Stringable
 	 * Converts a "user-facing" language code to a `Language` object
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
-	 * @internal
+	 * @unstable
 	 */
 	public static function ensure(self|string|null $code = null): static
 	{
@@ -303,6 +299,16 @@ class Language implements Stringable
 	public function exists(): bool
 	{
 		return file_exists($this->root());
+	}
+
+	/**
+	 * Checks if the language is the same
+	 * as the given language or language code
+	 * @since 5.0.0
+	 */
+	public function is(self|string $language): bool
+	{
+		return $this->code() === static::ensure($language)->code();
 	}
 
 	/**
@@ -342,7 +348,6 @@ class Language implements Stringable
 
 	/**
 	 * Checks if this is the single language object
-	 * @internal
 	 */
 	public function isSingle(): bool
 	{
@@ -372,6 +377,7 @@ class Language implements Stringable
 	public static function loadRules(string $code): array
 	{
 		$kirby = App::instance();
+		$code  = basename($code); // prevent path traversal
 		$code  = Str::contains($code, '.') ? Str::before($code, '.') : $code;
 		$file  = $kirby->root('i18n:rules') . '/' . $code . '.json';
 
@@ -459,7 +465,6 @@ class Language implements Stringable
 
 	/**
 	 * Get slug rules for language
-	 * @internal
 	 */
 	public function rules(): array
 	{
@@ -473,7 +478,6 @@ class Language implements Stringable
 
 	/**
 	 * Saves the language settings in the languages folder
-	 * @internal
 	 *
 	 * @return $this
 	 */
@@ -573,7 +577,6 @@ class Language implements Stringable
 
 	/**
 	 * Update language properties and save them
-	 * @internal
 	 */
 	public function update(array|null $props = null): static
 	{
@@ -591,8 +594,7 @@ class Language implements Stringable
 			[
 				'language' => $this,
 				'input'    => $props
-			],
-			'language'
+			]
 		);
 
 		// updated language object
@@ -628,8 +630,7 @@ class Language implements Stringable
 				'newLanguage' => $language,
 				'oldLanguage' => $this,
 				'input'       => $props
-			],
-			'newLanguage'
+			]
 		);
 
 		return $language;
@@ -639,14 +640,19 @@ class Language implements Stringable
 	 * Returns a language variable object
 	 * for the key in the translations array
 	 */
-	public function variable(string $key, bool $decode = false): LanguageVariable
-	{
+	public function variable(
+		string $key,
+		bool $decode = false
+	): LanguageVariable {
 		// allows decoding if base64-url encoded url is sent
 		// for compatibility of different environments
 		if ($decode === true) {
 			$key = rawurldecode(base64_decode($key));
 		}
 
-		return new LanguageVariable($this, $key);
+		return new LanguageVariable(
+			language: $this,
+			key:      $key
+		);
 	}
 }

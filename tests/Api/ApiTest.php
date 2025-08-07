@@ -85,7 +85,7 @@ class ApiTest extends TestCase
 		setlocale(LC_ALL, $this->locale);
 	}
 
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$api = new Api(['kirby' => $this->app]);
 
@@ -99,7 +99,7 @@ class ApiTest extends TestCase
 		$this->assertSame([], $api->routes());
 	}
 
-	public function test__call()
+	public function test__call(): void
 	{
 		$api = new Api([
 			'data' => [
@@ -110,7 +110,7 @@ class ApiTest extends TestCase
 		$this->assertSame('bar', $api->foo());
 	}
 
-	public function testAuthentication()
+	public function testAuthentication(): void
 	{
 		$phpunit = $this;
 
@@ -127,7 +127,7 @@ class ApiTest extends TestCase
 		$api->authenticate();
 	}
 
-	public function testAuthenticationWithoutCsrf()
+	public function testAuthenticationWithoutCsrf(): void
 	{
 		$auth = $this->createMock(Auth::class);
 		$auth->method('type')->willReturn('session');
@@ -148,7 +148,7 @@ class ApiTest extends TestCase
 		$function->call($api);
 	}
 
-	public function testAuthenticationWithoutUser()
+	public function testAuthenticationWithoutUser(): void
 	{
 		$auth = $this->createMock(Auth::class);
 		$auth->method('user')->willReturn(null);
@@ -168,7 +168,7 @@ class ApiTest extends TestCase
 		$function->call($api);
 	}
 
-	public function testCall()
+	public function testCall(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -216,7 +216,7 @@ class ApiTest extends TestCase
 		$this->assertEquals(new Response('test', 'text/plain', 201), $result); // cannot use strict assertion (test for object contents)
 	}
 
-	public function testCallLocale()
+	public function testCallLocale(): void
 	{
 		$originalLocale = setlocale(LC_CTYPE, 0);
 		$language       = 'de';
@@ -250,7 +250,7 @@ class ApiTest extends TestCase
 		$this->assertSame($originalLocale, setlocale(LC_CTYPE, 0));
 	}
 
-	public function testCallLocaleSingleLang1()
+	public function testCallLocaleSingleLang1(): void
 	{
 		setlocale(LC_ALL, 'C');
 		$this->assertSame('C', setlocale(LC_ALL, 0));
@@ -259,7 +259,7 @@ class ApiTest extends TestCase
 		$this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
 	}
 
-	public function testCallLocaleSingleLang2()
+	public function testCallLocaleSingleLang2(): void
 	{
 		setlocale(LC_ALL, 'C');
 		$this->assertSame('C', setlocale(LC_ALL, 0));
@@ -272,7 +272,7 @@ class ApiTest extends TestCase
 		$_GET = [];
 	}
 
-	public function testCallLocaleMultiLang1()
+	public function testCallLocaleMultiLang1(): void
 	{
 		setlocale(LC_ALL, 'C');
 		$this->assertSame('C', setlocale(LC_ALL, 0));
@@ -300,7 +300,7 @@ class ApiTest extends TestCase
 		$this->assertSame('en_US.UTF-8', setlocale(LC_ALL, 0));
 	}
 
-	public function testCallLocaleMultiLang2()
+	public function testCallLocaleMultiLang2(): void
 	{
 		setlocale(LC_ALL, 'C');
 		$this->assertSame('C', setlocale(LC_ALL, 0));
@@ -332,7 +332,7 @@ class ApiTest extends TestCase
 		$_GET = [];
 	}
 
-	public function testCallTranslation()
+	public function testCallTranslation(): void
 	{
 		// with logged in user with language
 		$app = $this->app->clone([
@@ -444,7 +444,7 @@ class ApiTest extends TestCase
 		$this->assertSame('en', I18n::$locale);
 	}
 
-	public function testCollections()
+	public function testCollections(): void
 	{
 		$api = new Api([
 			'models' => [
@@ -484,7 +484,7 @@ class ApiTest extends TestCase
 		$api->collection('not-available', $instance);
 	}
 
-	public function testData()
+	public function testData(): void
 	{
 		$api = new Api([
 			'data' => $data = [
@@ -505,7 +505,7 @@ class ApiTest extends TestCase
 		$api->data('d');
 	}
 
-	public function testDebug()
+	public function testDebug(): void
 	{
 		$api = new Api([
 			'debug' => true
@@ -514,7 +514,7 @@ class ApiTest extends TestCase
 		$this->assertTrue($api->debug());
 	}
 
-	public function testFieldApi()
+	public function testFieldApi(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -557,7 +557,7 @@ class ApiTest extends TestCase
 		$this->assertSame('b.jpg', $response['data'][1]['filename']);
 	}
 
-	public function testFieldApiInvalidField()
+	public function testFieldApiInvalidField(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -574,7 +574,7 @@ class ApiTest extends TestCase
 		$app->api()->fieldApi($page, 'nonexists');
 	}
 
-	public function testFieldApiEmptyField()
+	public function testFieldApiEmptyField(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -591,7 +591,7 @@ class ApiTest extends TestCase
 		$app->api()->fieldApi($page, '');
 	}
 
-	public function testFile()
+	public function testFile(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -634,7 +634,7 @@ class ApiTest extends TestCase
 		$this->assertSame('test.jpg', $api->file('users/test@getkirby.com', 'test.jpg')->filename());
 	}
 
-	public function testFileNotFound()
+	public function testFileNotFound(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "nope.jpg" cannot be found');
@@ -642,7 +642,7 @@ class ApiTest extends TestCase
 		$this->api->file('site', 'nope.jpg');
 	}
 
-	public function testFileNotReadable()
+	public function testFileNotReadable(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "protected.jpg" cannot be found');
@@ -663,7 +663,7 @@ class ApiTest extends TestCase
 		$this->api->file('site', 'protected.jpg');
 	}
 
-	public function testFileGetRoute()
+	public function testFileGetRoute(): void
 	{
 		// regular
 		$result = $this->api->call('pages/a/files/a-regular-file.jpg', 'GET');
@@ -678,7 +678,7 @@ class ApiTest extends TestCase
 		$this->assertSame('a filename with spaces.jpg', $result['data']['filename']);
 	}
 
-	public function testLanguage()
+	public function testLanguage(): void
 	{
 		$api = $this->api->clone([
 			'requestData' => [
@@ -691,7 +691,7 @@ class ApiTest extends TestCase
 		$this->assertSame('de', $api->language());
 	}
 
-	public function testModels()
+	public function testModels(): void
 	{
 		$api = new Api([
 			'models' => [
@@ -718,7 +718,7 @@ class ApiTest extends TestCase
 		$api->model('not-available', $instance);
 	}
 
-	public function testModelResolver()
+	public function testModelResolver(): void
 	{
 		$api = new Api([
 			'models' => [
@@ -744,7 +744,7 @@ class ApiTest extends TestCase
 		$this->assertInstanceOf(Model::class, $result);
 	}
 
-	public function testModelResolverWithMissingModel()
+	public function testModelResolverWithMissingModel(): void
 	{
 		$this->expectException(NotFoundException::class);
 
@@ -752,7 +752,7 @@ class ApiTest extends TestCase
 		$api->resolve(new MockModel());
 	}
 
-	public function testPage()
+	public function testPage(): void
 	{
 		$a  = $this->app->page('a');
 		$aa = $this->app->page('a/aa');
@@ -765,12 +765,12 @@ class ApiTest extends TestCase
 		$this->api->page('does-not-exist');
 	}
 
-	public function testPages()
+	public function testPages(): void
 	{
 		$this->assertSame(['a/aa', 'a/ab'], $this->api->pages('a')->keys());
 	}
 
-	public function testPagesNotAccessible()
+	public function testPagesNotAccessible(): void
 	{
 		$app = $this->app->clone([
 			'blueprints' => [
@@ -802,7 +802,7 @@ class ApiTest extends TestCase
 		$this->assertSame(['a', 'c'], $app->api()->pages()->keys());
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -847,7 +847,7 @@ class ApiTest extends TestCase
 		$this->assertNull($api->parent('pages/does-not-exist'));
 	}
 
-	public function testRenderExceptionWithDebugging()
+	public function testRenderExceptionWithDebugging(): void
 	{
 		// simulate the document root to test relative file paths
 		$app = $this->app->clone([
@@ -889,7 +889,7 @@ class ApiTest extends TestCase
 	}
 
 
-	public function testRequestData()
+	public function testRequestData(): void
 	{
 		$api = new Api([
 			'requestData' => $requestData = [
@@ -931,7 +931,7 @@ class ApiTest extends TestCase
 		$this->assertSame('fallback', $api->requestHeaders('x', 'fallback'));
 	}
 
-	public function testRenderString()
+	public function testRenderString(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -946,7 +946,7 @@ class ApiTest extends TestCase
 		$this->assertSame('test', $api->render('test', 'POST'));
 	}
 
-	public function testRenderArray()
+	public function testRenderArray(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -964,7 +964,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode(['a' => 'A']), $result->body());
 	}
 
-	public function testRenderTrue()
+	public function testRenderTrue(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -988,7 +988,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderFalse()
+	public function testRenderFalse(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -1012,7 +1012,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderNull()
+	public function testRenderNull(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -1036,7 +1036,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderException()
+	public function testRenderException(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -1064,7 +1064,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderExceptionWithDebugging2()
+	public function testRenderExceptionWithDebugging2(): void
 	{
 		$api = new Api([
 			'debug' => true,
@@ -1102,7 +1102,7 @@ class ApiTest extends TestCase
 		unset($_SERVER['DOCUMENT_ROOT']);
 	}
 
-	public function testRenderKirbyException()
+	public function testRenderKirbyException(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -1134,7 +1134,7 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderKirbyExceptionWithDebugging()
+	public function testRenderKirbyExceptionWithDebugging(): void
 	{
 		$api = new Api([
 			'debug' => true,
@@ -1176,7 +1176,7 @@ class ApiTest extends TestCase
 		unset($_SERVER['DOCUMENT_ROOT']);
 	}
 
-	public function testRenderWithSanitizedErrorCode()
+	public function testRenderWithSanitizedErrorCode(): void
 	{
 		$api = new Api([
 			'routes' => [
@@ -1195,7 +1195,7 @@ class ApiTest extends TestCase
 		$this->assertSame(500, $result->code());
 	}
 
-	public function testRequestMethod()
+	public function testRequestMethod(): void
 	{
 		$api = new Api([
 			'requestMethod' => 'POST',
@@ -1204,7 +1204,7 @@ class ApiTest extends TestCase
 		$this->assertSame('POST', $api->requestMethod());
 	}
 
-	public function testRoutes()
+	public function testRoutes(): void
 	{
 		$api = new Api([
 			'routes' => $routes = [
@@ -1218,7 +1218,7 @@ class ApiTest extends TestCase
 		$this->assertSame($routes, $api->routes());
 	}
 
-	public function testSectionApi()
+	public function testSectionApi(): void
 	{
 		$app = $this->app->clone([
 			'sections' => [
@@ -1265,7 +1265,7 @@ class ApiTest extends TestCase
 		$this->assertSame('Test', $response['message']);
 	}
 
-	public function testSectionApiWithInvalidSection()
+	public function testSectionApiWithInvalidSection(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -1282,7 +1282,7 @@ class ApiTest extends TestCase
 		$app->api()->sectionApi($page, 'nonexists');
 	}
 
-	public function testUpload()
+	public function testUpload(): void
 	{
 		$api = new Api([
 			'requestMethod' => 'POST',

@@ -4,13 +4,12 @@
 
 import { describe, expect, it } from "vitest";
 import Panel from "./panel.js";
-import Vue from "vue";
 
 describe.concurrent("panel", () => {
 	window.location = new URL("https://getkirby.com");
 
 	it("should have a default state", async () => {
-		const panel = Panel.create(Vue);
+		const panel = Panel.create(app);
 
 		expect(panel.debug).toStrictEqual(false);
 		expect(panel.direction).toStrictEqual("ltr");
@@ -20,7 +19,7 @@ describe.concurrent("panel", () => {
 	});
 
 	it("should get a full state", async () => {
-		const panel = Panel.create(Vue);
+		const panel = Panel.create(app);
 		const state = panel.state();
 
 		expect(state.config).toStrictEqual({});
@@ -38,20 +37,8 @@ describe.concurrent("panel", () => {
 		expect(state.user).toStrictEqual(panel.user.state());
 	});
 
-	it("should replace $ in state keys", async () => {
-		const panel = Panel.create(Vue);
-
-		expect(panel.license).toStrictEqual("missing");
-
-		panel.set({
-			$license: "valid"
-		});
-
-		expect(panel.license).toStrictEqual("valid");
-	});
-
 	it("should return the correct debug mode", async () => {
-		const panel = Panel.create(Vue);
+		const panel = Panel.create(app);
 
 		expect(panel.debug).toStrictEqual(false);
 
@@ -65,7 +52,7 @@ describe.concurrent("panel", () => {
 	});
 
 	it("should return the correct direction", async () => {
-		const panel = Panel.create(Vue);
+		const panel = Panel.create(app);
 
 		expect(panel.direction).toStrictEqual("ltr");
 
@@ -79,7 +66,7 @@ describe.concurrent("panel", () => {
 	});
 
 	it("should set the correct title without system title", async () => {
-		const panel = Panel.create(Vue);
+		const panel = Panel.create(app);
 
 		// // when the sytem title is empty
 		panel.title = "Site";
@@ -88,7 +75,7 @@ describe.concurrent("panel", () => {
 	});
 
 	it("should set the correct title with system title", async () => {
-		const panel = Panel.create(Vue);
+		const panel = Panel.create(app);
 
 		// set a system title
 		panel.system.title = "Kirby";
@@ -98,7 +85,7 @@ describe.concurrent("panel", () => {
 	});
 
 	it("should build a URL", async () => {
-		const panel = Panel.create(Vue);
+		const panel = Panel.create(app);
 		expect(panel.url("/path")).toStrictEqual(
 			new URL("https://getkirby.com/path")
 		);

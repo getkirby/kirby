@@ -4,9 +4,9 @@ namespace Kirby\Panel\Areas;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
+use Kirby\Cms\User;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
-use Kirby\Panel\Panel;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 
@@ -68,22 +68,19 @@ abstract class AreaTestCase extends TestCase
 		$this->assertSame('k-form-dialog', $dialog['component']);
 	}
 
-	protected function assertLanguageDropdown(string $path): void
-	{
-		$options = $this->dropdown($path)['options'];
-
-		$this->assertSame('English', $options[0]['text']);
-		$this->assertSame('-', $options[1]);
-		$this->assertSame('Deutsch', $options[2]['text']);
-	}
-
 	protected function assertRedirect(
 		string $source,
 		string $dest = '/',
 		int $code = 302
 	): void {
 		$response = $this->response($source);
-		$location = $response->header('Location');
+
+		if ($refresh = $response->header('Refresh')) {
+			preg_match('/url=(.+)/', $refresh, $matches);
+			$location = $matches[1] ?? null;
+		}
+
+		$location ??= $response->header('Location');
 
 		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame($code, $response->code());
@@ -102,12 +99,7 @@ abstract class AreaTestCase extends TestCase
 
 	protected function dialog(string $path): array
 	{
-		return $this->response('dialogs/' . $path, true)['$dialog'];
-	}
-
-	protected function dropdown(string $path): array
-	{
-		return $this->response('dropdowns/' . $path, true)['$dropdown'];
+		return $this->response('dialogs/' . $path, true)['dialog'];
 	}
 
 	protected function enableMultilang(): void
@@ -129,9 +121,10 @@ abstract class AreaTestCase extends TestCase
 		$this->app([
 			'users' => [
 				[
-					'id'    => 'test',
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin',
+					'id'       => 'test',
+					'email'    => 'test@getkirby.com',
+					'role'     => 'admin',
+					'password' => User::hashPassword('12345678')
 				]
 			]
 		]);
@@ -206,7 +199,8 @@ abstract class AreaTestCase extends TestCase
 		string|null $path = null,
 		bool $toJson = false
 	): Response|array|null {
-		$response = Panel::router($path);
+		$panel    = $this->app->panel();
+		$response = $panel->router()->call($path);
 
 		if ($toJson === true) {
 			return json_decode($response->body(), true);
@@ -217,7 +211,7 @@ abstract class AreaTestCase extends TestCase
 
 	protected function search(string $path): array
 	{
-		return $this->response('search/' . $path, true)['$search'];
+		return $this->response('search/' . $path, true)['search'];
 	}
 
 	protected function submit(array $data): void
@@ -235,6 +229,6 @@ abstract class AreaTestCase extends TestCase
 
 	protected function view(string|null $path = null): array
 	{
-		return $this->response($path, true)['$view'];
+		return $this->response($path, true)['view'];
 	}
 }

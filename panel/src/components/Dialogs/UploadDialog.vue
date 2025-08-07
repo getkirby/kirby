@@ -55,7 +55,8 @@ export default {
 				};
 			}
 		}
-	}
+	},
+	emits: ["cancel", "submit"]
 };
 </script>
 

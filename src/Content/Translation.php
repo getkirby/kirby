@@ -18,7 +18,7 @@ use Kirby\Exception\Exception;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Translation extends ContentTranslation
+class Translation
 {
 	/**
 	 * Creates a new translation object
@@ -42,24 +42,18 @@ class Translation extends ContentTranslation
 	/**
 	 * Returns the language code of the
 	 * translation
-	 *
-	 * @deprecated 5.0.0 Use `::language()->code()` instead
 	 */
 	public function code(): string
 	{
-		Helpers::deprecated('`$translation->code()` has been deprecated. Use `$translation->language()->code()` instead.', 'translation-methods');
 		return $this->language->code();
 	}
 
 	/**
 	 * Returns the translation content
 	 * as plain array
-	 *
-	 * @deprecated 5.0.0 Use `::version()->content()->toArray()` instead
 	 */
 	public function content(): array
 	{
-		Helpers::deprecated('`$translation->content()->toArray()` has been deprecated. Use `$translation->version()->content()` instead.', 'translation-methods');
 		return $this->version->content($this->language)->toArray();
 	}
 
@@ -103,12 +97,9 @@ class Translation extends ContentTranslation
 
 	/**
 	 * Checks if the translation file exists
-	 *
-	 * @deprecated 5.0.0 Use `::version()->exists()` instead
 	 */
 	public function exists(): bool
 	{
-		Helpers::deprecated('`$translation->exists()` has been deprecated. Use `$translation->version()->exists()` instead.', 'translation-methods');
 		return $this->version->exists($this->language);
 	}
 
@@ -174,8 +165,8 @@ class Translation extends ContentTranslation
 	{
 		return [
 			'code'    => $this->language->code(),
-			'content' => $this->version->content($this->language)->toArray(),
-			'exists'  => $this->version->exists($this->language),
+			'content' => $this->content(),
+			'exists'  => $this->exists(),
 			'slug'    => $this->slug(),
 		];
 	}

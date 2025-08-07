@@ -9,6 +9,7 @@
 		<k-blocks
 			ref="blocks"
 			v-bind="{
+				disabled,
 				endpoints,
 				fieldsets,
 				fieldsetGroups,
@@ -16,13 +17,16 @@
 				value: blocks
 			}"
 			@input="$emit('input', $event)"
-			@dblclick.native.stop
+			@dblclick.stop
 		/>
 	</div>
 </template>
 
 <script>
+import { disabled } from "@/mixins/props.js";
+
 export const props = {
+	mixins: [disabled],
 	props: {
 		/**
 		 * API endpoints
@@ -40,7 +44,7 @@ export const props = {
 };
 
 /**
- * @internal
+ * @unstable
  */
 export default {
 	mixins: [props],
@@ -88,7 +92,7 @@ export default {
 	> .k-block-container:last-of-type {
 	flex-grow: 1;
 }
-.k-layout-column > .k-blocks > .k-blocks-list > .k-blocks-empty.k-box {
+.k-layout-column > .k-blocks > .k-blocks-list + .k-blocks-empty.k-box {
 	--box-color-back: transparent;
 	position: absolute;
 	inset: 0;
@@ -97,7 +101,7 @@ export default {
 	transition: opacity 0.3s;
 	border: 0;
 }
-.k-layout-column > .k-blocks > .k-blocks-list > .k-blocks-empty:hover {
+.k-layout-column > .k-blocks > .k-blocks-list + .k-blocks-empty:hover {
 	opacity: 1;
 }
 </style>

@@ -48,7 +48,7 @@ export default {
 	mounted() {
 		this.$el.addEventListener("keydown", this.keydown);
 	},
-	destroyed() {
+	unmounted() {
 		this.$el.removeEventListener("keydown", this.keydown);
 	},
 	methods: {

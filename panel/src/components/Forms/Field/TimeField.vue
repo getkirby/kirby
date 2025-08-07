@@ -63,6 +63,7 @@ export default {
 			default: true
 		}
 	},
+	emits: ["input"],
 	methods: {
 		/**
 		 * Focuses the input element

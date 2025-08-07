@@ -8,11 +8,10 @@ use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass Kirby\Content\PlainTextStorage
- * @covers ::__construct
- */
+#[CoversClass(PlainTextStorage::class)]
 class PlainTextStorageTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.PlainTextStorage';
@@ -35,10 +34,7 @@ class PlainTextStorageTest extends TestCase
 		$this->storage = new PlainTextStorage($this->model);
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateChangesMultiLang()
+	public function testCreateChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -51,10 +47,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, Data::read($this->model->root() . '/_changes/article.en.txt'));
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateChangesSingleLang()
+	public function testCreateChangesSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -67,10 +60,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, Data::read($this->model->root() . '/_changes/article.txt'));
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateLatestMultiLang()
+	public function testCreateLatestMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -83,10 +73,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, Data::read($this->model->root() . '/article.en.txt'));
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateLatestSingleLang()
+	public function testCreateLatestSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -99,10 +86,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, Data::read($this->model->root() . '/article.txt'));
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteNonExisting()
+	public function testDeleteNonExisting(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -115,15 +99,9 @@ class PlainTextStorageTest extends TestCase
 		$this->storage->delete($versionId, $language);
 
 		$this->assertContentFileDoesNotExist($language, $versionId);
-
-		// The page directory should not be deleted
-		$this->assertDirectoryExists($this->model->root());
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteChangesMultiLang()
+	public function testDeleteChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -137,10 +115,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertDirectoryExists($this->model->root());
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteChangesSingleLang()
+	public function testDeleteChangesSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -153,10 +128,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertDirectoryDoesNotExist($this->model->root() . '/_changes');
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteLatestMultiLang()
+	public function testDeleteLatestMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -169,10 +141,44 @@ class PlainTextStorageTest extends TestCase
 		$this->assertDirectoryExists($this->model->root());
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteLatestSingleLang()
+	public function testDeleteLatestMultiLangAndCleanUp(): void
+	{
+		$this->setUpMultiLanguage();
+
+		Dir::make($this->model->root());
+		touch($this->model->root() . '/article.en.txt');
+		touch($this->model->root() . '/article.de.txt');
+
+		$this->storage->delete(VersionId::latest(), $this->app->language('en'));
+		$this->assertFileDoesNotExist($this->model->root() . '/article.en.txt');
+		$this->assertDirectoryExists($this->model->root());
+
+		$this->storage->delete(VersionId::latest(), $this->app->language('de'));
+		$this->assertDirectoryDoesNotExist($this->model->root());
+	}
+
+	public function testDeleteDraftMultiLangAndCleanUp(): void
+	{
+		$this->setUpMultiLanguage([
+			'children' => [
+				[
+					'slug'     => 'a-page',
+					'template' => 'article',
+					'draft'    => true
+				]
+			]
+		]);
+
+		Dir::make($this->model->root());
+		touch($this->model->root() . '/article.en.txt');
+
+		$this->model->storage()->delete(VersionId::latest(), $this->app->language('en'));
+
+		$this->assertDirectoryDoesNotExist($this->model->root());
+		$this->assertDirectoryDoesNotExist(dirname($this->model->root()));
+	}
+
+	public function testDeleteLatestSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -185,10 +191,40 @@ class PlainTextStorageTest extends TestCase
 		$this->assertDirectoryExists($this->model->root());
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExistsNoneExistingMultiLanguage()
+	public function testDeleteLatestSingleLangAndCleanUp(): void
+	{
+		$this->setUpSingleLanguage();
+
+		Dir::make($this->model->root());
+		touch($this->model->root() . '/article.txt');
+
+		$this->storage->delete(VersionId::latest(), Language::single());
+		$this->assertDirectoryDoesNotExist($this->model->root());
+	}
+
+	public function testDeleteDraftSingleLangAndCleanUp(): void
+	{
+		$this->setUpSingleLanguage([
+			'children' => [
+				[
+					'slug'     => 'a-page',
+					'template' => 'article',
+					'draft'    => true
+				]
+			]
+		]);
+
+		Dir::make($this->model->root());
+
+		touch($this->model->root() . '/article.txt');
+
+		$this->model->storage()->delete(VersionId::latest(), Language::single());
+
+		$this->assertDirectoryDoesNotExist($this->model->root());
+		$this->assertDirectoryDoesNotExist(dirname($this->model->root()));
+	}
+
+	public function testExistsNoneExistingMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -196,20 +232,14 @@ class PlainTextStorageTest extends TestCase
 		$this->assertFalse($this->storage->exists(VersionId::changes(), $this->app->language('de')));
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExistsNoneExistingSingleLanguage()
+	public function testExistsNoneExistingSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
 		$this->assertFalse($this->storage->exists(VersionId::changes(), Language::single()));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModifiedNoneExistingMultiLanguage()
+	public function testModifiedNoneExistingMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -217,10 +247,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertNull($this->storage->modified(VersionId::latest(), $this->app->language('en')));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModifiedNoneExistingSingleLanguage()
+	public function testModifiedNoneExistingSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -228,10 +255,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertNull($this->storage->modified(VersionId::latest(), Language::single()));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModifiedSomeExistingMultiLanguage()
+	public function testModifiedSomeExistingMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -242,10 +266,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertNull($this->storage->modified(VersionId::latest(), $this->app->language('en')));
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModifiedSomeExistingSingleLanguage()
+	public function testModifiedSomeExistingSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -256,10 +277,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertNull($this->storage->modified(VersionId::latest(), Language::single()));
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testMove()
+	public function testMove(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -285,10 +303,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertFileExists($this->model->root() . '/_changes/article.txt');
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testMoveNonExistingContentFile()
+	public function testMoveNonExistingContentFile(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -307,10 +322,76 @@ class PlainTextStorageTest extends TestCase
 		$this->assertFileExists($this->model->root() . '/_changes/article.txt');
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testReadChangesMultiLang()
+	public function testMoveToTheSameStorageLocation(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$content   = ['title' => 'Test'];
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+
+		// create some content to move
+		$this->storage->create($versionId, $language, $content);
+
+		$this->assertFileExists($this->model->root() . '/article.txt', 'The source file should exist now');
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language));
+
+		$this->storage->move(
+			$versionId,
+			$language,
+			$versionId,
+			$language
+		);
+
+		$this->assertFileExists($this->model->root() . '/article.txt', 'The source file should still exist');
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language), 'The content should still be the same');
+	}
+
+	public function testMoveToTheSameStorageLocationWithAnotherStorageInstance(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$content   = ['title' => 'Test'];
+		$versionId = VersionId::latest();
+		$language  = Language::single();
+		$storage   = new PlainTextStorage($this->model);
+
+		// create some content to move
+		$this->storage->create($versionId, $language, $content);
+
+		$this->assertFileExists($this->model->root() . '/article.txt', 'The source file should exist now');
+
+		$this->assertTrue($this->storage->exists($versionId, $language));
+		$this->assertSame($content, $this->storage->read($versionId, $language));
+
+		$this->storage->move(
+			$versionId,
+			$language,
+			$versionId,
+			$language,
+			$storage
+		);
+
+		$this->assertFileExists($this->model->root() . '/article.txt', 'The source file should still exist at the same location');
+
+		// The old storage entry still points to the same file.
+		// This is different to the memory handler for example, where
+		// entries are always stored with unique cache keys for each
+		// handler instance. We can't do the same on the file system.
+		// A database handler would also still point to the same row
+		// in this case.
+		$this->assertTrue($this->storage->exists($versionId, $language), 'The old storage entry still exists, since the location did not change');
+		$this->assertSame($content, $this->storage->read($versionId, $language), 'The old entry also still points to the same content');
+
+		$this->assertTrue($storage->exists($versionId, $language));
+		$this->assertSame($content, $storage->read($versionId, $language));
+	}
+
+	public function testReadChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -325,10 +406,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, $this->storage->read(VersionId::changes(), $this->app->language('en')));
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testReadChangesSingleLang()
+	public function testReadChangesSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -343,10 +421,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, $this->storage->read(VersionId::changes(), Language::single()));
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testReadLatestMultiLang()
+	public function testReadLatestMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -360,10 +435,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, $this->storage->read(VersionId::latest(), $this->app->language('en')));
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testReadLatestSingleLang()
+	public function testReadLatestSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -377,10 +449,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, $this->storage->read(VersionId::latest(), Language::single()));
 	}
 
-	/**
-	 * @covers ::touch
-	 */
-	public function testTouchChangesMultiLang()
+	public function testTouchChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -398,10 +467,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertGreaterThanOrEqual($minTime, filemtime($root . '/article.en.txt'));
 	}
 
-	/**
-	 * @covers ::touch
-	 */
-	public function testTouchChangesSingleLang()
+	public function testTouchChangesSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -419,10 +485,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertGreaterThanOrEqual($minTime, filemtime($root . '/article.txt'));
 	}
 
-	/**
-	 * @covers ::touch
-	 */
-	public function testTouchLatestMultiLang()
+	public function testTouchLatestMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -439,10 +502,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertGreaterThanOrEqual($minTime, filemtime($root));
 	}
 
-	/**
-	 * @covers ::touch
-	 */
-	public function testTouchLatestSingleLang()
+	public function testTouchLatestSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -459,10 +519,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertGreaterThanOrEqual($minTime, filemtime($root));
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdateChangesMultiLang()
+	public function testUpdateChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -478,10 +535,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, Data::read($this->model->root() . '/_changes/article.en.txt'));
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdateChangesSingleLang()
+	public function testUpdateChangesSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -497,10 +551,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, Data::read($this->model->root() . '/_changes/article.txt'));
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdateLatestMultiLang()
+	public function testUpdateLatestMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -515,10 +566,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, Data::read($this->model->root() . '/article.en.txt'));
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdateLatestSingleLang()
+	public function testUpdateLatestSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -533,11 +581,81 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame($fields, Data::read($this->model->root() . '/article.txt'));
 	}
 
-	/**
-	 * @covers ::contentFile
-	 * @dataProvider contentFileProviderMultiLang
-	 */
-	public function testContentFileMultiLang(string $type, VersionId $id, string $language, string $expected)
+	public function testUpdateForFileWithMetaData(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$file = new File([
+			'parent'   => $this->app->site(),
+			'filename' => 'image.jpg'
+		]);
+
+		$storage = new PlainTextStorage($file);
+
+		$storage->update(VersionId::latest(), Language::single(), $content = [
+			'alt' => 'Test'
+		]);
+
+		$this->assertSame($content, Data::read($file->parent()->root() . '/image.jpg.txt'));
+	}
+
+	public function testUpdateForFileWithoutMetaData(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$file = new File([
+			'parent'   => $this->app->site(),
+			'filename' => 'image.jpg'
+		]);
+
+		$storage = new PlainTextStorage($file);
+		$storage->update(VersionId::latest(), Language::single(), []);
+
+		$this->assertFileDoesNotExist($file->parent()->root() . '/image.jpg.txt');
+	}
+
+	public function testUpdateForFileWithoutMetaDataAndFilteredNullValues(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$file = new File([
+			'parent'   => $this->app->site(),
+			'filename' => 'image.jpg'
+		]);
+
+		$storage = new PlainTextStorage($file);
+		$storage->update(VersionId::latest(), Language::single(), [
+			'a' => null,
+			'b' => null
+		]);
+
+		$this->assertFileDoesNotExist($file->parent()->root() . '/image.jpg.txt');
+	}
+
+	public function testUpdateForFileWithRemovedMetaFile(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$file = new File([
+			'parent'   => $this->app->site(),
+			'filename' => 'image.jpg'
+		]);
+
+		$storage = new PlainTextStorage($file);
+
+		$storage->update(VersionId::latest(), Language::single(), [
+			'alt' => 'Test'
+		]);
+
+		$this->assertFileExists($file->parent()->root() . '/image.jpg.txt');
+
+		$storage->update(VersionId::latest(), Language::single(), []);
+
+		$this->assertFileDoesNotExist($file->parent()->root() . '/image.jpg.txt');
+	}
+
+	#[DataProvider('contentFileProviderMultiLang')]
+	public function testContentFileMultiLang(string $type, VersionId $id, string $language, string $expected): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -578,11 +696,8 @@ class PlainTextStorageTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::contentFile
-	 * @dataProvider contentFileProviderSingleLang
-	 */
-	public function testContentFileSingleLang(string $type, VersionId $id, string $expected)
+	#[DataProvider('contentFileProviderSingleLang')]
+	public function testContentFileSingleLang(string $type, VersionId $id, string $expected): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -623,10 +738,7 @@ class PlainTextStorageTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::contentFile
-	 */
-	public function testContentFileDraft()
+	public function testContentFileDraft(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -641,10 +753,7 @@ class PlainTextStorageTest extends TestCase
 		$this->assertSame(static::TMP . '/content/_drafts/a-page/_changes/article.txt', $storage->contentFile(VersionId::changes(), Language::single()));
 	}
 
-	/**
-	 * @covers ::contentFiles
-	 */
-	public function testContentFilesChangesMultiLang()
+	public function testContentFilesChangesMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -654,10 +763,7 @@ class PlainTextStorageTest extends TestCase
 		], $this->storage->contentFiles(VersionId::changes()));
 	}
 
-	/**
-	 * @covers ::contentFiles
-	 */
-	public function testContentFilesChangesSingleLang()
+	public function testContentFilesChangesSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -666,10 +772,7 @@ class PlainTextStorageTest extends TestCase
 		], $this->storage->contentFiles(VersionId::changes()));
 	}
 
-	/**
-	 * @covers ::contentFiles
-	 */
-	public function testContentFilesLatestMultiLang()
+	public function testContentFilesLatestMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -679,10 +782,7 @@ class PlainTextStorageTest extends TestCase
 		], $this->storage->contentFiles(VersionId::latest()));
 	}
 
-	/**
-	 * @covers ::contentFiles
-	 */
-	public function testContentFilesLatestSingleLang()
+	public function testContentFilesLatestSingleLang(): void
 	{
 		$this->setUpSingleLanguage();
 

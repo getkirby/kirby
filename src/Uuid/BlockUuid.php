@@ -30,7 +30,7 @@ class BlockUuid extends FieldUuid
 
 	/**
 	 * Converts content field to a Blocks collection
-	 * @internal
+	 * @unstable
 	 */
 	public static function fieldToCollection(Field $field): Blocks
 	{

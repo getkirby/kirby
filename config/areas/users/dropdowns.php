@@ -1,29 +1,24 @@
 <?php
 
-use Kirby\Cms\Find;
-use Kirby\Panel\Ui\Buttons\LanguagesDropdown;
-
-$files = require __DIR__ . '/../files/dropdowns.php';
+use Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController;
+use Kirby\Panel\Controller\Dropdown\LanguagesDropdownController;
+use Kirby\Panel\Controller\Dropdown\UserSettingsDropdownController;
 
 return [
 	'user' => [
 		'pattern' => 'users/(:any)',
-		'options' => fn (string $id) =>
-			Find::user($id)->panel()->dropdown()
+		'options' => UserSettingsDropdownController::class
 	],
 	'user.languages' => [
-		'pattern' => 'users/(:any)/languages',
-		'options' => function (string $id) {
-			$user = Find::user($id);
-			return (new LanguagesDropdown($user))->options();
-		}
+		'pattern' => '(users/[^/]+)/languages',
+		'options' => LanguagesDropdownController::class
 	],
 	'user.file' => [
-		'pattern' => '(users/.*?)/files/(:any)',
-		'options' => $files['file']
+		'pattern' => '(users/[^/]+)/files/(:any)',
+		'options' => FileSettingsDropdownController::class
 	],
 	'user.file.languages' => [
-		'pattern' => '(users/.*?)/files/(:any)/languages',
-		'options' => $files['language']
+		'pattern' => '(users/[^/]+)/files/(:any)/languages',
+		'options' => LanguagesDropdownController::class
 	]
 ];

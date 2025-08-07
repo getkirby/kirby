@@ -36,14 +36,14 @@ class SiteRoutesTest extends TestCase
 		App::destroy();
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$response = $this->app->api()->call('site', 'GET');
 
 		$this->assertSame('Test Site', $response['data']['title']);
 	}
 
-	public function testChildren()
+	public function testChildren(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -67,7 +67,7 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('b', $response['data'][1]['id']);
 	}
 
-	public function testChildrenWithStatusFilter()
+	public function testChildrenWithStatusFilter(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -134,7 +134,7 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('draft-a', $response['data'][0]['id']);
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -162,7 +162,7 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('c.jpg', $response['data'][2]['filename']);
 	}
 
-	public function testFilesSorted()
+	public function testFilesSorted(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -191,7 +191,7 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('a.jpg', $response['data'][1]['filename']);
 	}
 
-	public function testFile()
+	public function testFile(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -210,7 +210,7 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('a.jpg', $response['data']['filename']);
 	}
 
-	public function testFind()
+	public function testFind(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -261,7 +261,7 @@ class SiteRoutesTest extends TestCase
 	}
 
 
-	public function testSearchWithGetRequest()
+	public function testSearchWithGetRequest(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -296,7 +296,7 @@ class SiteRoutesTest extends TestCase
 		$this->assertSame('parent/child', $response['data'][0]['id']);
 	}
 
-	public function testSearchWithPostRequest()
+	public function testSearchWithPostRequest(): void
 	{
 		$app = $this->app->clone([
 			'site' => [

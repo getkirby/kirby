@@ -30,7 +30,7 @@
 					type="text"
 					class="k-models-section-search"
 					@input="searchterm = $event"
-					@keydown.native.esc="onSearchToggle"
+					@keydown.esc="onSearchToggle"
 				/>
 
 				<!-- Models collection -->
@@ -39,6 +39,7 @@
 					v-on="canAdd ? { empty: onAdd } : {}"
 					@action="onAction"
 					@change="onChange"
+					@select="onSelect"
 					@sort="onSort"
 					@paginate="onPaginate"
 				/>
@@ -49,15 +50,14 @@
 
 <script>
 import debounce from "@/helpers/debounce";
+import section from "@/mixins/section";
+import batchEditing from "@/mixins/batchEditing";
 
 export default {
+	mixins: [section, batchEditing],
 	inheritAttrs: false,
 	props: {
-		blueprint: String,
-		column: String,
-		parent: String,
-		name: String,
-		timestamp: Number
+		column: String
 	},
 	data() {
 		return {
@@ -66,6 +66,7 @@ export default {
 			isLoading: false,
 			isProcessing: false,
 			options: {
+				batch: false,
 				columns: {},
 				empty: null,
 				headline: null,
@@ -88,8 +89,20 @@ export default {
 		addIcon() {
 			return "add";
 		},
+		batchDeleteConfirmMessage() {
+			return this.$t(`${this.type}.delete.confirm.selected`, {
+				count: this.selected.length
+			});
+		},
+		batchEditingEvent() {
+			return "section.selecting";
+		},
 		buttons() {
 			let buttons = [];
+
+			if (this.isSelecting) {
+				return this.batchEditingButtons;
+			}
 
 			if (this.canSearch) {
 				buttons.push({
@@ -98,6 +111,10 @@ export default {
 					click: this.onSearchToggle,
 					responsive: true
 				});
+			}
+
+			if (this.canSelect) {
+				buttons.push(this.batchEditingToggle);
 			}
 
 			if (this.canAdd) {
@@ -120,6 +137,9 @@ export default {
 		canSearch() {
 			return this.options.search;
 		},
+		canSelect() {
+			return this.options.batch && this.items.length > 0;
+		},
 		collection() {
 			return {
 				columns: this.options.columns,
@@ -129,6 +149,7 @@ export default {
 				help: this.options.help,
 				items: this.items,
 				pagination: this.pagination,
+				selecting: !this.isProcessing && this.isSelecting,
 				sortable: !this.isProcessing && this.options.sortable,
 				size: this.options.size
 			};
@@ -185,11 +206,38 @@ export default {
 			this.reload();
 		}
 	},
+	created() {
+		this.$events.on("model.update", this.reload);
+	},
+	unmounted() {
+		this.$events.off("model.update", this.reload);
+	},
 	mounted() {
 		this.search = debounce(this.search, 200);
 		this.load();
 	},
 	methods: {
+		async deleteSelected() {
+			if (this.selected.length === 0) {
+				return;
+			}
+
+			this.isProcessing = true;
+
+			try {
+				await this.$api.delete(
+					this.parent + "/sections/" + this.name + "/delete",
+					{
+						ids: this.selected.map((item) => item.id)
+					}
+				);
+			} catch (error) {
+				this.$panel.notification.error(error);
+			} finally {
+				this.$panel.events.emit("model.update");
+				this.isProcessing = false;
+			}
+		},
 		async load(reload) {
 			this.isProcessing = true;
 
@@ -198,7 +246,9 @@ export default {
 			}
 
 			const page =
-				this.pagination.page ?? localStorage.getItem(this.paginationId) ?? 1;
+				this.pagination.page ??
+				sessionStorage.getItem(this.paginationId) ??
+				null;
 
 			try {
 				const response = await this.$api.get(
@@ -216,14 +266,16 @@ export default {
 				this.isLoading = false;
 			}
 		},
-
 		onAction() {},
 		onAdd() {},
+		onBatchDelete() {
+			this.deleteSelected();
+		},
 		onChange() {},
 		onDrop() {},
-		onSort() {},
 		onPaginate(pagination) {
-			localStorage.setItem(this.paginationId, pagination.page);
+			// update pagination page
+			sessionStorage.setItem(this.paginationId, pagination.page);
 			this.pagination = pagination;
 			this.reload();
 		},
@@ -231,7 +283,10 @@ export default {
 			this.searching = !this.searching;
 			this.searchterm = null;
 		},
+		onSort() {},
 		async reload() {
+			// reset batch mode
+			this.stopSelecting();
 			await this.load(true);
 		},
 		async search() {

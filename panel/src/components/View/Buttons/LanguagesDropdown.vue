@@ -10,13 +10,13 @@
 			ref="dropdown"
 			:options="$dropdown(options)"
 			align-x="end"
-			@action="$emit('action', $event)"
 		>
 			<template #item="{ item: language, index }">
 				<k-button
 					:key="'item-' + index"
 					v-bind="language"
 					class="k-dropdown-item k-languages-dropdown-item"
+					@click="change(language)"
 				>
 					{{ language.text }}
 
@@ -47,7 +47,7 @@ import { props as ButtonProps } from "@/components/Navigation/Button.vue";
  * View header button to switch between content languages
  * @displayName LanguagesViewButton
  * @since 4.0.0
- * @internal
+ * @unstable
  */
 export default {
 	mixins: [ButtonProps],
@@ -56,22 +56,31 @@ export default {
 		 * If translations other than the currently-viewed one
 		 * have any unsaved changes
 		 */
-		hasChanges: Boolean,
+		hasDiff: Boolean,
 		options: String
 	},
 	computed: {
 		changesBadge() {
-			// `hasChanges` provides the state for all other than the current
+			// `hasDiff` provides the state for all other than the current
 			// translation from the backend; for the current translation we need to
-			// check `content.hasChanges` as this state can change dynamically without
-			// any other backend request that would update `hasChanges`
-			if (this.hasChanges || this.$panel.content.hasChanges) {
+			// check `content.diff` as this state can change dynamically without
+			// any other backend request that would update `hasDiff`
+			if (this.hasDiff || this.$panel.content.hasDiff()) {
 				return {
 					theme: this.$panel.content.isLocked() ? "red" : "orange"
 				};
 			}
 
 			return null;
+		}
+	},
+	methods: {
+		change(language) {
+			this.$panel.reload({
+				query: {
+					language: language.code
+				}
+			});
 		}
 	}
 };

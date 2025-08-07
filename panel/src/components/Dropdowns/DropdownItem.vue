@@ -15,7 +15,7 @@
 /**
  * Item to be used within `<k-dropdown-content>`
  * @example <k-dropdown-item>Option A</k-dropdown-item>
- * @internal
+ * @unstable
  */
 export default {
 	inheritAttrs: false,
@@ -27,7 +27,7 @@ export default {
 		link: String,
 		target: String
 	},
-	emit: ["click"],
+	emits: ["click"],
 	methods: {
 		focus() {
 			this.$refs.button.focus();

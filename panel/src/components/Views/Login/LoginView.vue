@@ -8,7 +8,7 @@
 				{{ $t("login") }}
 			</h1>
 
-			<k-login-alert v-if="issue" @click.native="issue = null">
+			<k-login-alert v-if="issue" @click="issue = null">
 				{{ issue }}
 			</k-login-alert>
 
@@ -78,8 +78,8 @@ export default {
 
 			if (error.details.challengeDestroyed === true) {
 				// reset from the LoginCode component back to Login
-				await this.$reload({
-					globals: ["$system"]
+				await this.$panel.reload({
+					globals: ["system"]
 				});
 			}
 

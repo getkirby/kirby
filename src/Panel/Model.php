@@ -6,8 +6,8 @@ use Closure;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
-use Kirby\Form\Form;
-use Kirby\Http\Uri;
+use Kirby\Panel\Controller\View\ModelViewController;
+use Kirby\Panel\Ui\Item\ModelItem;
 use Kirby\Toolkit\A;
 
 /**
@@ -28,30 +28,30 @@ abstract class Model
 	}
 
 	/**
-	 * Returns header button names which should be displayed
+	 * Breadcrumb array
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\View\ModelViewController::breadcrumb()` instead
 	 */
-	abstract public function buttons(): array;
+	public function breadcrumb(): array
+	{
+		return $this->viewController()->breadcrumb();
+	}
 
 	/**
-	 * Get the content values for the model
+	 * Returns header buttons which should be displayed
+	 * on the site view
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\View\ModelViewController::buttons()` instead
+	 */
+	public function buttons(): array
+	{
+		return $this->viewController()->buttons()->render();
+	}
+
+	/**
+	 * @deprecated 5.0.0 Use `Kirby\Panel\Controller\View\ModelViewController::versions()` instead
 	 */
 	public function content(): array
 	{
-		$version = $this->model->version('changes');
-		$changes = [];
-
-		if ($version->exists('current') === true) {
-			$changes = $version->content('current')->toArray();
-		}
-
-		// create a form which will collect the latest values for the model,
-		// but also pass along unpublished changes as overwrites
-		return Form::for(
-			model: $this->model,
-			props: [
-				'values' => $changes
-			]
-		)->values();
+		return $this->versions()['changes'];
 	}
 
 	/**
@@ -82,7 +82,7 @@ abstract class Model
 	 *
 	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
 	 */
-	public function dragTextType(string|null $type = null): string
+	public function dragTextType(string|null $type = 'auto'): string
 	{
 		$type ??= 'auto';
 
@@ -111,7 +111,6 @@ abstract class Model
 
 	/**
 	 * Returns the Panel image definition
-	 * @internal
 	 */
 	public function image(
 		string|array|false|null $settings = [],
@@ -134,12 +133,19 @@ abstract class Model
 			$blueprint = null;
 		}
 
+		// convert string blueprint settings to proper array
+		if (is_string($blueprint) === true) {
+			$blueprint = ['query' => $blueprint];
+		}
+
 		// skip image thumbnail if option
 		// is explicitly set to show the icon
 		if ($settings === 'icon') {
 			$settings = ['query' => false];
-		} elseif (is_string($settings) === true) {
-			// convert string settings to proper array
+		}
+
+		// convert string settings to proper array
+		if (is_string($settings) === true) {
 			$settings = ['query' => $settings];
 		}
 
@@ -190,7 +196,6 @@ abstract class Model
 
 	/**
 	 * Data URI placeholder string for Panel image
-	 * @internal
 	 */
 	public static function imagePlaceholder(): string
 	{
@@ -199,7 +204,6 @@ abstract class Model
 
 	/**
 	 * Returns the image file object based on provided query
-	 * @internal
 	 */
 	protected function imageSource(
 		string|null $query = null
@@ -220,7 +224,6 @@ abstract class Model
 	/**
 	 * Provides the correct srcset string based on
 	 * the layout and settings
-	 * @internal
 	 */
 	protected function imageSrcset(
 		CmsFile|Asset $image,
@@ -243,8 +246,12 @@ abstract class Model
 		// for card layouts with `cover: true` provide
 		// crops based on the card ratio
 		if ($layout === 'cards') {
-			$ratio = explode('/', $settings['ratio'] ?? '1/1');
-			$ratio = $ratio[0] / $ratio[1];
+			$ratio = $settings['ratio'] ?? '1/1';
+
+			if (is_numeric($ratio) === false) {
+				$ratio = explode('/', $ratio);
+				$ratio = $ratio[0] / $ratio[1];
+			}
 
 			return $image->srcset([
 				$sizes[0] . 'w' => [
@@ -282,23 +289,6 @@ abstract class Model
 	}
 
 	/**
-	 * Checks for disabled dropdown options according
-	 * to the given permissions
-	 */
-	public function isDisabledDropdownOption(
-		string $action,
-		array $options,
-		array $permissions
-	): bool {
-		$option = $options[$action] ?? true;
-
-		return
-			$permissions[$action] === false ||
-			$option === false ||
-			$option === 'false';
-	}
-
-	/**
 	 * Returns the corresponding model object
 	 * @since 5.0.0
 	 */
@@ -332,14 +322,6 @@ abstract class Model
 	}
 
 	/**
-	 * Get the original content values for the model
-	 */
-	public function originals(): array
-	{
-		return Form::for(model: $this->model)->values();
-	}
-
-	/**
 	 * Returns the full path without leading slash
 	 */
 	abstract public function path(): string;
@@ -350,60 +332,46 @@ abstract class Model
 	 */
 	public function pickerData(array $params = []): array
 	{
+		$item = new ModelItem(
+			model: $this->model,
+			image: $params['image'] ?? null,
+			info: $params['info'] ?? null,
+			layout: $params['layout'] ?? null,
+			text: $params['text'] ?? null,
+		);
+
 		return [
-			'id'       => $this->model->id(),
-			'image'    => $this->image(
-				$params['image'] ?? [],
-				$params['layout'] ?? 'list'
-			),
-			'info'     => $this->model->toSafeString($params['info'] ?? false),
-			'link'     => $this->url(true),
+			...$item->props(),
 			'sortable' => true,
-			'text'     => $this->model->toSafeString($params['text'] ?? false),
-			'uuid'     => $this->model->uuid()?->toString()
+			'url'      => $this->url(true)
 		];
 	}
 
 	/**
-	 * Returns the data array for the
-	 * view's component props
-	 * @internal
+	 * Returns navigation array with
+	 * previous and next user
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\View\ModelViewController::prev()` and `Kirby\Panel\Controller\View\ModelViewController::next()` instead
+	 */
+	public function prevNext(): array
+	{
+		return [
+			'next' => $this->viewController()->next(...),
+			'prev' => $this->viewController()->prev(...),
+		];
+	}
+
+	/**
+	 * Returns the data array for the view's component props
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\View\ModelViewController::props()` instead
 	 */
 	public function props(): array
 	{
-		$blueprint = $this->model->blueprint();
-		$link      = $this->url(true);
-		$request   = $this->model->kirby()->request();
-		$tabs      = $blueprint->tabs();
-		$tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
-
-		$props = [
-			'api'         => $link,
-			'buttons'     => fn () => $this->buttons(),
-			'content'     => (object)$this->content(),
-			'id'          => $this->model->id(),
-			'link'        => $link,
-			'lock'        => $this->model->lock()->toArray(),
-			'originals'   => (object)$this->originals(),
-			'permissions' => $this->model->permissions()->toArray(),
-			'tabs'        => $tabs,
-			'uuid'        => fn () => $this->model->uuid()?->toString()
-		];
-
-		// only send the tab if it exists
-		// this will let the vue component define
-		// a proper default value
-		if ($tab) {
-			$props['tab'] = $tab;
-		}
-
-		return $props;
+		return $this->viewController()->props();
 	}
 
 	/**
 	 * Returns link url and title
 	 * for model (e.g. used for prev/next navigation)
-	 * @internal
 	 */
 	public function toLink(string $title = 'title'): array
 	{
@@ -414,38 +382,8 @@ abstract class Model
 	}
 
 	/**
-	 * Returns link url and title
-	 * for optional sibling model and
-	 * preserves tab selection
-	 *
-	 * @internal
-	 */
-	protected function toPrevNextLink(
-		ModelWithContent|null $model = null,
-		string $title = 'title'
-	): array|null {
-		if ($model === null) {
-			return null;
-		}
-
-		$data = $model->panel()->toLink($title);
-
-		if ($tab = $model->kirby()->request()->get('tab')) {
-			$uri = new Uri($data['link'], [
-				'query' => ['tab' => $tab]
-			]);
-
-			$data['link'] = $uri->toString();
-		}
-
-		return $data;
-	}
-
-	/**
 	 * Returns the url to the editing view
 	 * in the Panel
-	 *
-	 * @internal
 	 */
 	public function url(bool $relative = false): string
 	{
@@ -457,10 +395,24 @@ abstract class Model
 	}
 
 	/**
-	 * Returns the data array for
-	 * this model's Panel view
-	 *
-	 * @internal
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\View\ModelViewController::versions()` instead
 	 */
-	abstract public function view(): array;
+	public function versions(): array
+	{
+		return $this->viewController()->versions();
+	}
+
+	/**
+	 * Returns the data array for this model's Panel view
+	 * @deprecated 6.0.0 Use `Kirby\Panel\Controller\View\ModelViewController::load()` instead
+	 */
+	public function view(): array
+	{
+		return $this->viewController()->load()->render();
+	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	abstract protected function viewController(): ModelViewController;
 }

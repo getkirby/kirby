@@ -5,7 +5,7 @@
 			:text="text"
 			:value="value"
 			@input="$emit('input', $event)"
-			@click.native="isEditable ? $event.stopPropagation() : null"
+			@click="isEditable ? $event.stopPropagation() : null"
 		/>
 	</div>
 </template>

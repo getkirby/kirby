@@ -20,6 +20,7 @@
 					v-bind="inputProps"
 					:value="value"
 					@input="$emit('input', $event)"
+					@submit="$emit('submit', $event)"
 				/>
 			</slot>
 		</span>
@@ -52,12 +53,12 @@ export const props = {
 			type: [String, Boolean, Number, Object, Array],
 			default: null
 		}
-	},
-	emits: ["input"]
+	}
 };
 
 export default {
 	mixins: [props],
+	emits: ["input", "submit"],
 	computed: {
 		inputProps() {
 			return {
@@ -153,6 +154,7 @@ export default {
 /* Element container */
 .k-input-element {
 	flex-grow: 1;
+	min-width: 0;
 }
 
 /* Icon */

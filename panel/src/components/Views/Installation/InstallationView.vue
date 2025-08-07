@@ -94,7 +94,7 @@
 						size="lg"
 						theme="positive"
 						variant="filled"
-						@click="$reload"
+						@click="$panel.reload"
 					/>
 				</div>
 			</k-dialog-body>
@@ -162,8 +162,8 @@ export default {
 		async install() {
 			try {
 				await this.$api.system.install(this.user);
-				await this.$reload({
-					globals: ["$system", "$translation"]
+				await this.$panel.reload({
+					globals: ["system", "translation"]
 				});
 
 				this.$panel.notification.success({

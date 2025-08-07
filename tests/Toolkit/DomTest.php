@@ -11,10 +11,10 @@ use Exception;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Dom
- */
+#[CoversClass(Dom::class)]
 class DomTest extends TestCase
 {
 	protected static array $testClosures = [];
@@ -223,15 +223,12 @@ class DomTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider parseSaveProvider
-	 * @covers ::__construct
-	 * @covers ::toString
-	 * @covers ::exportHtml
-	 * @covers ::exportXml
-	 */
-	public function testParseSave(string $type, string $code, string|null $expected = null)
-	{
+	#[DataProvider('parseSaveProvider')]
+	public function testParseSave(
+		string $type,
+		string $code,
+		string|null $expected = null
+	): void {
 		$dom = new Dom($code, $type);
 		$this->assertSame($expected ?? $code, $dom->toString());
 	}
@@ -360,23 +357,17 @@ class DomTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider parseSaveNormalizeProvider
-	 * @covers ::__construct
-	 * @covers ::toString
-	 * @covers ::exportHtml
-	 * @covers ::exportXml
-	 */
-	public function testParseSaveNormalize(string $type, string $code, string|null $expected = null)
-	{
+	#[DataProvider('parseSaveNormalizeProvider')]
+	public function testParseSaveNormalize(
+		string $type,
+		string $code,
+		string|null $expected = null
+	): void {
 		$dom = new Dom($code, $type);
 		$this->assertSame($expected ?? $code, $dom->toString(true));
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testParseInvalid()
+	public function testParseInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage("The markup could not be parsed: Start tag expected, '<' not found");
@@ -384,10 +375,7 @@ class DomTest extends TestCase
 		new Dom('{"this": "is not XML"}', 'XML');
 	}
 
-	/**
-	 * @covers ::body
-	 */
-	public function testBody()
+	public function testBody(): void
 	{
 		// with full document input
 		$dom = new Dom('<html><body class="test"><p>This is a test</p></body></html>', 'HTML');
@@ -409,10 +397,7 @@ class DomTest extends TestCase
 		$this->assertNull($dom->body());
 	}
 
-	/**
-	 * @covers ::document
-	 */
-	public function testDocument()
+	public function testDocument(): void
 	{
 		$dom = new Dom('<p>This is a test</p>', 'HTML');
 		$this->assertSame("<html><body><p>This is a test</p></body></html>\n", $dom->document()->saveHtml());
@@ -495,11 +480,8 @@ class DomTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider extractUrlsProvider
-	 * @covers ::extractUrls
-	 */
-	public function testExtractUrls(string $url, array $expected)
+	#[DataProvider('extractUrlsProvider')]
+	public function testExtractUrls(string $url, array $expected): void
 	{
 		$this->assertSame($expected, Dom::extractUrls($url));
 	}
@@ -639,13 +621,15 @@ class DomTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider isAllowedAttrProvider
-	 * @covers ::isAllowedAttr
-	 * @covers ::normalizeSanitizeOptions
-	 */
-	public function testIsAllowedAttr(string $tag, string $attr, $allowedAttrs, $allowedAttrPrefixes, $allowedTags, $expected)
-	{
+	#[DataProvider('isAllowedAttrProvider')]
+	public function testIsAllowedAttr(
+		string $tag,
+		string $attr,
+		array $allowedAttrs,
+		array $allowedAttrPrefixes,
+		bool|array $allowedTags,
+		bool|string $expected
+	): void {
 		$doc = new DOMDocument();
 		$element = $doc->createElement($tag);
 		$element->setAttributeNode($attr = new DOMAttr($attr));
@@ -799,13 +783,13 @@ class DomTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider isAllowedGlobalAttrProvider
-	 * @covers ::isAllowedGlobalAttr
-	 * @covers ::normalizeSanitizeOptions
-	 */
-	public function testIsAllowedGlobalAttr(string $name, $allowedAttrs, $allowedAttrPrefixes, $expected)
-	{
+	#[DataProvider('isAllowedGlobalAttrProvider')]
+	public function testIsAllowedGlobalAttr(
+		string $name,
+		bool|array $allowedAttrs,
+		array $allowedAttrPrefixes,
+		bool|string $expected
+	): void {
 		$attr    = new DOMAttr($name);
 		$options = [
 			'allowedAttrs'        => $allowedAttrs,
@@ -951,13 +935,12 @@ class DomTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider isAllowedUrlProvider
-	 * @covers ::isAllowedUrl
-	 * @covers ::normalizeSanitizeOptions
-	 */
-	public function testIsAllowedUrl(string $url, $expected, array $options = [])
-	{
+	#[DataProvider('isAllowedUrlProvider')]
+	public function testIsAllowedUrl(
+		string $url,
+		bool|string $expected,
+		array $options = []
+	): void {
 		$this->assertSame($expected, Dom::isAllowedUrl($url, $options));
 	}
 
@@ -996,12 +979,13 @@ class DomTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider isAllowedUrlCmsProvider
-	 * @covers ::isAllowedUrl
-	 */
-	public function testIsAllowedUrlCms(string $indexUrl, string $url, bool $allowHostRelativeUrls, string|bool $expected)
-	{
+	#[DataProvider('isAllowedUrlCmsProvider')]
+	public function testIsAllowedUrlCms(
+		string $indexUrl,
+		string $url,
+		bool $allowHostRelativeUrls,
+		string|bool $expected
+	): void {
 		new App([
 			'urls' => [
 				'index' => $indexUrl
@@ -1011,10 +995,7 @@ class DomTest extends TestCase
 		$this->assertSame($expected, Dom::isAllowedUrl($url, compact('allowHostRelativeUrls')));
 	}
 
-	/**
-	 * @covers ::innerMarkup
-	 */
-	public function testInnerMarkup()
+	public function testInnerMarkup(): void
 	{
 		// XML markup
 		$dom  = new Dom('<xml><test>Test <testtest>Test test</testtest>!</test></xml>', 'XML');
@@ -1264,13 +1245,14 @@ class DomTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider listContainsNameProvider
-	 * @covers ::listContainsName
-	 * @covers ::normalizeSanitizeOptions
-	 */
-	public function testListContainsName(array $list, array $node, $allowedNamespaces, string|null $compare, $expected)
-	{
+	#[DataProvider('listContainsNameProvider')]
+	public function testListContainsName(
+		array $list,
+		array $node,
+		bool|array $allowedNamespaces,
+		string|null $compare,
+		string|bool $expected
+	): void {
 		if ($compare !== null) {
 			$compare = static::$testClosures[$compare];
 		}
@@ -1287,10 +1269,7 @@ class DomTest extends TestCase
 		$this->assertSame($expected, Dom::listContainsName($list, $element, $options, $compare));
 	}
 
-	/**
-	 * @covers ::remove
-	 */
-	public function testRemove()
+	public function testRemove(): void
 	{
 		$dom = new Dom('<p>Test <strong id="strong">Test test</strong>!</p>', 'HTML');
 
@@ -1298,10 +1277,7 @@ class DomTest extends TestCase
 		$this->assertSame('<p>Test !</p>', $dom->toString());
 	}
 
-	/**
-	 * @covers ::query
-	 */
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$dom = new Dom('<span>Test <span>Test test</span>!</span>', 'HTML');
 
@@ -1839,17 +1815,13 @@ class DomTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider sanitizeProvider
-	 * @covers ::sanitize
-	 * @covers ::sanitizeAttr
-	 * @covers ::sanitizeDoctype
-	 * @covers ::sanitizeElement
-	 * @covers ::sanitizePI
-	 * @covers ::validateDoctype
-	 */
-	public function testSanitize(string $code, array $options, string $expectedCode, array $expectedErrors)
-	{
+	#[DataProvider('sanitizeProvider')]
+	public function testSanitize(
+		string $code,
+		array $options,
+		string $expectedCode,
+		array $expectedErrors
+	): void {
 		// hydrate the closures in the options from the static closures
 		foreach (['attrCallback', 'doctypeCallback', 'elementCallback'] as $name) {
 			if (isset($options[$name]) === true) {
@@ -1867,12 +1839,7 @@ class DomTest extends TestCase
 		$this->assertSame($expectedCode, $dom->toString());
 	}
 
-	/**
-	 * @covers ::sanitize
-	 * @covers ::sanitizeDoctype
-	 * @covers ::validateDoctype
-	 */
-	public function testSanitizeDoctypeCallbackException()
+	public function testSanitizeDoctypeCallbackException(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('This exception is not caught as validation error');
@@ -1887,10 +1854,7 @@ class DomTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::unwrap
-	 */
-	public function testUnwrap()
+	public function testUnwrap(): void
 	{
 		$dom = new Dom('<body><p>This is a test</p><invalid>And this is <p>Awesome<strong>!</strong></p> but contains text</invalid></body>', 'HTML');
 

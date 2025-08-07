@@ -7,11 +7,12 @@ use Kirby\Data\Json;
 use Kirby\Filesystem\Dir;
 use Kirby\Plugin\Plugin;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
-/**
- * @coversDefaultClass \Kirby\Cms\System\UpdateStatus
- */
+#[CoversClass(UpdateStatus::class)]
+#[CoversClass(UpdateStatus::class)]
 class UpdateStatusTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/UpdateStatusTest';
@@ -36,10 +37,7 @@ class UpdateStatusTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
-	public function testLoadData()
+	public function testLoadData(): void
 	{
 		$app = $this->app('88888.8.5');
 
@@ -80,10 +78,7 @@ class UpdateStatusTest extends TestCase
 		], $app->cache('updates')->get('security'));
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
-	public function testLoadDataCacheKirby()
+	public function testLoadDataCacheKirby(): void
 	{
 		$app = $this->app('88888.8.5');
 		$app->cache('updates')->set('security', [
@@ -152,10 +147,7 @@ class UpdateStatusTest extends TestCase
 		], $app->cache('updates')->get('security'));
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
-	public function testLoadDataCachePlugin()
+	public function testLoadDataCachePlugin(): void
 	{
 		$app = $this->app('88888.8.5');
 		$app->cache('updates')->set('plugins/getkirby/public', [
@@ -227,10 +219,7 @@ class UpdateStatusTest extends TestCase
 		], $app->cache('updates')->get('plugins/getkirby/public'));
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
-	public function testLoadDataCacheInvalid()
+	public function testLoadDataCacheInvalid(): void
 	{
 		$app = $this->app('88888.8.5');
 		$app->cache('updates')->set('security', 12345);
@@ -272,10 +261,7 @@ class UpdateStatusTest extends TestCase
 		], $app->cache('updates')->get('security'));
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
-	public function testLoadDataCacheDisabled()
+	public function testLoadDataCacheDisabled(): void
 	{
 		$app = $this->app('88888.8.5')->clone([
 			'options' => [
@@ -292,10 +278,7 @@ class UpdateStatusTest extends TestCase
 		], $updateStatus->exceptionMessages());
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
-	public function testLoadDataNotFound()
+	public function testLoadDataNotFound(): void
 	{
 		$app    = $this->app('88888.8.8');
 		$plugin = new Plugin('getkirby/test', [
@@ -326,10 +309,7 @@ class UpdateStatusTest extends TestCase
 		], $updateStatus->exceptionMessages());
 	}
 
-	/**
-	 * @covers ::loadData
-	 */
-	public function testLoadDataNotJson()
+	public function testLoadDataNotJson(): void
 	{
 		$app    = $this->app('88888.8.8');
 		$plugin = new Plugin('getkirby/invalid-json', [
@@ -357,17 +337,14 @@ class UpdateStatusTest extends TestCase
 		], $updateStatus->exceptionMessages());
 	}
 
-	/**
-	 * @covers \Kirby\Cms\System\UpdateStatus
-	 * @dataProvider logicProvider
-	 */
+	#[DataProvider('logicProvider')]
 	public function testLogic(
 		string $packageType,
 		array $packageData,
 		bool $securityOnly,
 		array|null $data,
 		array $expected
-	) {
+	): void {
 		$package      = $this->$packageType(...$packageData);
 		$updateStatus = new UpdateStatus($package, $securityOnly, $data);
 
@@ -412,7 +389,7 @@ class UpdateStatusTest extends TestCase
 					'messages' => [],
 					'status' => 'unreleased',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null,
 					'vulnerabilities' => [],
 					'exceptionMessages' => []
@@ -675,7 +652,7 @@ class UpdateStatusTest extends TestCase
 						'label' => 'Unreleased version',
 						'latestVersion' => '88888.8.8',
 						'pluginName' => 'getkirby/test',
-						'theme' => 'notice',
+						'theme' => 'passive',
 						'url' => null
 					],
 					'vulnerabilities' => [],
@@ -841,7 +818,7 @@ class UpdateStatusTest extends TestCase
 						'label' => 'Could not check for updates',
 						'latestVersion' => '88888.8.8',
 						'pluginName' => 'getkirby/test',
-						'theme' => 'notice',
+						'theme' => 'passive',
 						'url' => 'https://getkirby.com/releases/88888.8.8',
 					],
 					'vulnerabilities' => null,
@@ -863,7 +840,7 @@ class UpdateStatusTest extends TestCase
 						'label' => 'Could not check for updates',
 						'latestVersion' => '88888.8.8',
 						'pluginName' => 'getkirby/test',
-						'theme' => 'notice',
+						'theme' => 'passive',
 						'url' => 'https://getkirby.com/releases/88888.8.8',
 					],
 					'vulnerabilities' => null,
@@ -1235,7 +1212,7 @@ class UpdateStatusTest extends TestCase
 					'messages' => null,
 					'status' => 'error',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null,
 					'vulnerabilities' => null,
 					'exceptionMessages' => [
@@ -1257,7 +1234,7 @@ class UpdateStatusTest extends TestCase
 					'messages' => [],
 					'status' => 'error',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => null,
 					'vulnerabilities' => [],
 					'exceptionMessages' => [
@@ -1317,7 +1294,7 @@ class UpdateStatusTest extends TestCase
 					'messages' => [],
 					'status' => 'error',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => 'https://getkirby.com/releases/77777.7.7',
 					'vulnerabilities' => [],
 					'exceptionMessages' => [
@@ -1458,7 +1435,7 @@ class UpdateStatusTest extends TestCase
 					'messages' => [],
 					'status' => 'error',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => 'https://getkirby.com/releases/77777.7.7',
 					'vulnerabilities' => [],
 					'exceptionMessages' => [
@@ -1485,7 +1462,7 @@ class UpdateStatusTest extends TestCase
 					],
 					'status' => 'error',
 					'targetVersion' => null,
-					'theme' => 'notice',
+					'theme' => 'passive',
 					'url' => 'https://getkirby.com/releases/77777.4.3',
 					'vulnerabilities' => [
 						[
@@ -1656,10 +1633,7 @@ class UpdateStatusTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::messages
-	 */
-	public function testMessagesCache()
+	public function testMessagesCache(): void
 	{
 		$updateStatus = new UpdateStatus($this->app('77777.6.0'), false, static::data('basic'));
 

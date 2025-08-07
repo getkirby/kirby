@@ -4,16 +4,12 @@ namespace Kirby\Option;
 
 use Kirby\Cms\Page;
 use Kirby\Field\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Option\Options
- */
+#[CoversClass(Options::class)]
 class OptionsTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$options = new Options([
 			new Option('a'),
@@ -21,30 +17,24 @@ class OptionsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('a', $options->first()->text->translations['en']);
+		$this->assertSame('a', $options->first()->text['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('b', $options->last()->text->translations['en']);
+		$this->assertSame('b', $options->last()->text['en']);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$options = Options::factory(['a', 'b']);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('a', $options->first()->text->translations['en']);
+		$this->assertSame('a', $options->first()->text['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('b', $options->last()->text->translations['en']);
+		$this->assertSame('b', $options->last()->text['en']);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryWithAssocArray()
+	public function testFactoryWithAssocArray(): void
 	{
 		$options = Options::factory([
 			'a' => 'Option A',
@@ -52,16 +42,13 @@ class OptionsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('Option A', $options->first()->text->translations['en']);
+		$this->assertSame('Option A', $options->first()->text['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('Option B', $options->last()->text->translations['en']);
+		$this->assertSame('Option B', $options->last()->text['en']);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryWithOptionArray()
+	public function testFactoryWithOptionArray(): void
 	{
 		$options = Options::factory([
 			['value' => 'a', 'text' => 'Option A'],
@@ -69,16 +56,13 @@ class OptionsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('Option A', $options->first()->text->translations['en']);
+		$this->assertSame('Option A', $options->first()->text['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('Option B', $options->last()->text->translations['en']);
+		$this->assertSame('Option B', $options->last()->text['en']);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactoryWithTranslatedOptions()
+	public function testFactoryWithTranslatedOptions(): void
 	{
 		$options = Options::factory([
 			'a' => ['en' => 'Option A', 'de' => 'Variante A'],
@@ -86,18 +70,15 @@ class OptionsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('Option A', $options->first()->text->translations['en']);
-		$this->assertSame('Variante A', $options->first()->text->translations['de']);
+		$this->assertSame('Option A', $options->first()->text['en']);
+		$this->assertSame('Variante A', $options->first()->text['de']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('Option B', $options->last()->text->translations['en']);
-		$this->assertSame('Variante B', $options->last()->text->translations['de']);
+		$this->assertSame('Option B', $options->last()->text['en']);
+		$this->assertSame('Variante B', $options->last()->text['de']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		$model = new Page(['slug' => 'test']);
 

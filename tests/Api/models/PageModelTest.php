@@ -8,7 +8,7 @@ class PageModelTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PageApiModel';
 
-	public function testChildren()
+	public function testChildren(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -24,7 +24,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertSame('test/b', $model['children'][1]['id']);
 	}
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -37,7 +37,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertAttr($page, 'content', $content);
 	}
 
-	public function testDrafts()
+	public function testDrafts(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -53,7 +53,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertSame('test/b', $model['drafts'][1]['id']);
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -69,7 +69,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertSame('b.jpg', $model['files'][1]['filename']);
 	}
 
-	public function testHasDrafts()
+	public function testHasDrafts(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -88,7 +88,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertAttr($page, 'hasDrafts', true);
 	}
 
-	public function testHasChildren()
+	public function testHasChildren(): void
 	{
 		$page = new Page([
 			'slug' => 'test'
@@ -107,7 +107,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertAttr($page, 'hasChildren', true);
 	}
 
-	public function testId()
+	public function testId(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -116,7 +116,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertAttr($page, 'id', 'test');
 	}
 
-	public function testIsSortable()
+	public function testIsSortable(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -125,7 +125,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertAttr($page, 'isSortable', $page->isSortable());
 	}
 
-	public function testNum()
+	public function testNum(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -135,7 +135,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertAttr($page, 'num', 2);
 	}
 
-	public function testSlug()
+	public function testSlug(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -144,7 +144,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertAttr($page, 'slug', 'test');
 	}
 
-	public function testStatus()
+	public function testStatus(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -153,7 +153,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertAttr($page, 'status', 'unlisted');
 	}
 
-	public function testTemplate()
+	public function testTemplate(): void
 	{
 		$page = new Page([
 			'slug'     => 'test',
@@ -163,7 +163,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertAttr($page, 'template', 'test');
 	}
 
-	public function testTitle()
+	public function testTitle(): void
 	{
 		$page = new Page([
 			'slug'    => 'test',
@@ -175,7 +175,7 @@ class PageModelTest extends ModelTestCase
 		$this->assertAttr($page, 'title', 'Test');
 	}
 
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$page = new Page([
 			'slug' => 'test',

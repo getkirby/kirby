@@ -20,7 +20,7 @@ import { redirect, request } from "./request.js";
 import Upload from "./upload.js";
 import User from "./user.js";
 import View from "./view.js";
-import { isObject } from "@/helpers/object.js";
+import { isObject, length } from "@/helpers/object.js";
 import { isEmpty } from "@/helpers/string.js";
 
 /**
@@ -67,7 +67,10 @@ export const states = [
  * @since 4.0.0
  */
 export default {
-	create(plugins = {}) {
+	create(app, plugins = {}) {
+		// Vue instance
+		this.app = app;
+
 		// props
 		this.isLoading = false;
 		this.isOffline = false;
@@ -104,19 +107,31 @@ export default {
 		this.t = this.translation.translate.bind(this.translation);
 
 		// register all plugins
-		this.plugins = Plugins(window.Vue, plugins);
+		this.plugins = Plugins(this.app, plugins);
 
 		// set initial state
-		this.set(window.fiber);
+		this.set(window.panelState);
 
 		// api needs the initial state
 		// for the endpoint config
 		this.api = Api(this);
 
-		// Turn the entire panel object
-		// reactive. This will only be applied
+		// Turn the entire panel object  reactive. This will only be applied
 		// to objects and arrays. Methods won't be touched.
-		return reactive(this);
+		const panel = reactive(this);
+
+		// register the single source of truth
+		// for all Vue components
+		window.panel = this.app.config.globalProperties.$panel = panel;
+
+		// Bind all methods to use the reactive proxy
+		for (const key in this) {
+			if (typeof this[key] === "function") {
+				this[key] = this[key].bind(panel);
+			}
+		}
+
+		return panel;
 	},
 
 	/**
@@ -204,6 +219,10 @@ export default {
 		});
 
 		return response?.json ?? {};
+	},
+
+	get hasSearch() {
+		return length(this.searches) > 0;
 	},
 
 	/**
@@ -314,19 +333,7 @@ export default {
 	 * @param {Object} state
 	 */
 	set(state = {}) {
-		/**
-		 * Old fiber requests use $ as key prefix
-		 * This will remove the dollar sign in keys first
-		 * @todo remove this as soon as fiber requests
-		 * no longer use $ as prefix.
-		 */
-		state = Object.fromEntries(
-			Object.entries(state).map(([k, v]) => [k.replace("$", ""), v])
-		);
-
-		/**
-		 * Register all globals
-		 */
+		// Register all globals
 		for (const global in globals) {
 			// 1. check for a new state
 			// 2. jump back to the previous

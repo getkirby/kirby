@@ -33,7 +33,7 @@ class SortMixinTest extends TestCase
 		];
 	}
 
-	public function testFlip()
+	public function testFlip(): void
 	{
 		// default
 		$section = new Section('test', [
@@ -59,7 +59,7 @@ class SortMixinTest extends TestCase
 		$this->assertFalse($section->flip());
 	}
 
-	public function testSortable()
+	public function testSortable(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -68,7 +68,7 @@ class SortMixinTest extends TestCase
 		$this->assertTrue($section->sortable());
 	}
 
-	public function testSortableWhileFlipped()
+	public function testSortableWhileFlipped(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -78,7 +78,7 @@ class SortMixinTest extends TestCase
 		$this->assertFalse($section->sortable());
 	}
 
-	public function testSortableWhileSearching()
+	public function testSortableWhileSearching(): void
 	{
 		$section = new Section('test', [
 			'model'      => $this->page,
@@ -88,7 +88,7 @@ class SortMixinTest extends TestCase
 		$this->assertFalse($section->sortable());
 	}
 
-	public function testSortableWhileSorted()
+	public function testSortableWhileSorted(): void
 	{
 		$section = new Section('test', [
 			'model'  => $this->page,
@@ -98,7 +98,7 @@ class SortMixinTest extends TestCase
 		$this->assertFalse($section->sortable());
 	}
 
-	public function testSortableWithUnsortableStatus()
+	public function testSortableWithUnsortableStatus(): void
 	{
 		$section = new Section('pages', [
 			'model'  => $this->page,
@@ -108,7 +108,7 @@ class SortMixinTest extends TestCase
 		$this->assertFalse($section->sortable());
 	}
 
-	public function testSortBy()
+	public function testSortBy(): void
 	{
 		// default
 		$section = new Section('test', [

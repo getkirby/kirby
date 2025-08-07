@@ -28,7 +28,7 @@ abstract class FieldUuid extends Uuid
 	/**
 	 * Converts a content field to a related
 	 * models collection (e.g. Blocks or Structure)
-	 * @internal
+	 * @unstable
 	 */
 	abstract public static function fieldToCollection(Field $field): Collection;
 

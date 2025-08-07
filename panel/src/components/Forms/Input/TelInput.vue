@@ -26,6 +26,7 @@ export const props = {
  * @example <k-input :value="tel" @input="tel = $event" name="tel" type="tel" />
  */
 export default {
-	mixins: [StringInput, props]
+	mixins: [StringInput, props],
+	emits: ["input"]
 };
 </script>

@@ -28,7 +28,7 @@
 					:text="fieldset.name"
 					size="lg"
 					@click="$emit('submit', fieldset.type)"
-					@focus.native="$emit('input', fieldset.type)"
+					@focus="$emit('input', fieldset.type)"
 				/>
 			</k-navigate>
 		</details>
@@ -67,7 +67,7 @@ export default {
 			type: String
 		}
 	},
-	emits: ["cancel", "input", "paste", "submit"],
+	emits: ["cancel", "close", "input", "paste", "submit"],
 	data() {
 		return {
 			selected: null
@@ -116,13 +116,13 @@ export default {
 	mounted() {
 		this.$events.on("paste", this.paste);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("paste", this.paste);
 	},
 	methods: {
 		paste(e) {
 			this.$emit("paste", e);
-			this.close();
+			this.$emit("close");
 		}
 	}
 };

@@ -1,9 +1,19 @@
 :root {
 	--choice-color-back: light-dark(var(--color-white), var(--color-gray-800));
-	--choice-color-border: light-dark(var(--color-gray-500), var(--color-gray-600));
-	--choice-color-checked: var(--color-black);
-	--choice-color-disabled: var(--color-gray-400);
-	--choice-color-icon: var(--color-light);
+	--choice-color-border: light-dark(
+		var(--color-gray-500),
+		var(--color-gray-300)
+	);
+	--choice-color-checked: light-dark(var(--color-black), var(--color-gray-200));
+	--choice-color-disabled: light-dark(
+		var(--color-gray-400),
+		var(--color-gray-700)
+	);
+	--choice-color-border-disabled: light-dark(
+		var(--color-gray-300),
+		var(--color-gray-750)
+	);
+	--choice-color-icon: light-dark(var(--color-light), var(--color-dark));
 	--choice-color-info: var(--color-text-dimmed);
 	--choice-color-text: var(--color-text);
 	--choice-color-toggle: var(--choice-color-disabled);
@@ -61,7 +71,7 @@ input:where([type="checkbox"], [type="radio"]):checked:focus {
 /** Disabled state **/
 input:where([type="checkbox"], [type="radio"])[disabled] {
 	--choice-color-back: none;
-	--choice-color-border: var(--color-gray-300);
+	--choice-color-border: var(--choice-color-border-disabled);
 	--choice-color-checked: var(--choice-color-disabled);
 	box-shadow: none;
 	cursor: not-allowed;

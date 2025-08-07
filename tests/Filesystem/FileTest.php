@@ -11,15 +11,14 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class InvalidFileModel
 {
 	public string $foo = 'bar';
 }
 
-/**
- * @coversDefaultClass \Kirby\Filesystem\File
- */
+#[CoversClass(\Kirby\Filesystem\File::class)]
 class FileTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/files';
@@ -53,12 +52,7 @@ class FileTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::root
-	 * @covers ::url
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$file = new File([
 			'root' => '/dev/null/test.pdf',
@@ -73,12 +67,7 @@ class FileTest extends TestCase
 		$this->assertNull($file->url());
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::root
-	 * @covers ::url
-	 */
-	public function testLegacyConstruct()
+	public function testLegacyConstruct(): void
 	{
 		$file = new File(
 			'/dev/null/test.pdf',
@@ -88,20 +77,14 @@ class FileTest extends TestCase
 		$this->assertSame('https://home.io/test.pdf', $file->url());
 	}
 
-	/**
-	 * @covers ::base64
-	 */
-	public function testBase64()
+	public function testBase64(): void
 	{
 		$file   = $this->_file('real.svg');
 		$base64 = file_get_contents(static::TMP . '/real.svg.base64');
 		$this->assertSame($base64, $file->base64());
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopy()
+	public function testCopy(): void
 	{
 		$oldRoot = static::TMP . '/test.txt';
 		$newRoot = static::TMP . '/awesome.txt';
@@ -121,10 +104,7 @@ class FileTest extends TestCase
 		$this->assertSame($newRoot, $new->root());
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopyToExisting()
+	public function testCopyToExisting(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be copied');
@@ -133,10 +113,7 @@ class FileTest extends TestCase
 		$file->copy(static::TMP . '/folder/b.txt');
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopyNonExisting()
+	public function testCopyNonExisting(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be copied');
@@ -145,10 +122,7 @@ class FileTest extends TestCase
 		$file->copy(static::TMP . '/b.txt');
 	}
 
-	/**
-	 * @covers ::copy
-	 */
-	public function testCopyFail()
+	public function testCopyFail(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be copied');
@@ -158,30 +132,21 @@ class FileTest extends TestCase
 		$file->copy(static::TMP . '/copied.txt');
 	}
 
-	/**
-	 * @covers ::dataUri
-	 */
-	public function testDataUri()
+	public function testDataUri(): void
 	{
 		$file = $this->_file('real.svg');
 		$base64 = file_get_contents(static::TMP . '/real.svg.base64');
 		$this->assertSame('data:image/svg+xml;base64,' . $base64, $file->dataUri());
 	}
 
-	/**
-	 * @covers ::dataUri
-	 */
-	public function testDataUriRaw()
+	public function testDataUriRaw(): void
 	{
 		$file = $this->_file('real.svg');
 		$encoded = rawurlencode($file->read());
 		$this->assertSame('data:image/svg+xml,' . $encoded, $file->dataUri(false));
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDelete()
+	public function testDelete(): void
 	{
 		$file = new File(static::TMP . '/test.txt');
 
@@ -192,20 +157,14 @@ class FileTest extends TestCase
 		$this->assertFalse($file->exists());
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteNotExisting()
+	public function testDeleteNotExisting(): void
 	{
 		$file = new File('test.txt');
 		$this->assertFalse($file->exists());
 		$this->assertTrue($file->delete());
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteFail()
+	public function testDeleteFail(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be deleted');
@@ -215,20 +174,14 @@ class FileTest extends TestCase
 		$file->delete();
 	}
 
-	/**
-	 * @covers ::download
-	 */
-	public function testDownload()
+	public function testDownload(): void
 	{
 		$file = $this->_file();
 		$this->assertIsString($file->download());
 		$this->assertIsString($file->download('meow.jpg'));
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExists()
+	public function testExists(): void
 	{
 		$file = $this->_file();
 		$this->assertTrue($file->exists());
@@ -237,55 +190,37 @@ class FileTest extends TestCase
 		$this->assertFalse($file->exists());
 	}
 
-	/**
-	 * @covers ::extension
-	 */
-	public function testExtension()
+	public function testExtension(): void
 	{
 		$file = $this->_file();
 		$this->assertSame('js', $file->extension());
 	}
 
-	/**
-	 * @covers ::filename
-	 */
-	public function testFilename()
+	public function testFilename(): void
 	{
 		$file = $this->_file();
 		$this->assertSame('test.js', $file->filename());
 	}
 
-	/**
-	 * @covers ::hash
-	 */
-	public function testHash()
+	public function testHash(): void
 	{
 		$file = $this->_file();
 		$this->assertIsString($file->hash());
 	}
 
-	/**
-	 * @covers ::header
-	 */
-	public function testHeader()
+	public function testHeader(): void
 	{
 		$file = $this->_file();
 		$this->assertInstanceOf(Response::class, $file->header(false));
 	}
 
-	/**
-	 * @covers ::header
-	 */
-	public function testHeaderSend()
+	public function testHeaderSend(): void
 	{
 		$file = $this->_file();
 		$this->assertNull($file->header());
 	}
 
-	/**
-	 * @covers ::html
-	 */
-	public function testHtml()
+	public function testHtml(): void
 	{
 		$file = new File([
 			'root' => static::TMP . '/blank.pdf',
@@ -294,10 +229,7 @@ class FileTest extends TestCase
 		$this->assertSame('<a href="https://foo.bar/blank.pdf">foo.bar/blank.pdf</a>', $file->html());
 	}
 
-	/**
-	 * @covers ::is
-	 */
-	public function testIs()
+	public function testIs(): void
 	{
 		$file = $this->_file();
 		$this->assertTrue($file->is('text/plain'));
@@ -307,37 +239,25 @@ class FileTest extends TestCase
 		$this->assertFalse($file->is('jpg'));
 	}
 
-	/**
-	 * @covers ::isReadable
-	 */
-	public function testIsReadable()
+	public function testIsReadable(): void
 	{
 		$file = $this->_file();
 		$this->assertSame(is_readable($file->root()), $file->isReadable());
 	}
 
-	/**
-	 * @covers ::isResizable
-	 */
-	public function testIsResizable()
+	public function testIsResizable(): void
 	{
 		$file = $this->_file();
 		$this->assertFalse($file->isResizable());
 	}
 
-	/**
-	 * @covers ::isViewable
-	 */
-	public function testIsViewable()
+	public function testIsViewable(): void
 	{
 		$file = $this->_file();
 		$this->assertFalse($file->isViewable());
 	}
 
-	/**
-	 * @covers ::isWritable
-	 */
-	public function testIsWritable()
+	public function testIsWritable(): void
 	{
 		$file = $this->_file();
 		$this->assertTrue($file->isWritable());
@@ -349,10 +269,7 @@ class FileTest extends TestCase
 		$this->assertFalse($file->isWritable());
 	}
 
-	/**
-	 * @covers ::kirby
-	 */
-	public function testKirby()
+	public function testKirby(): void
 	{
 		$file = $this->_file();
 
@@ -362,10 +279,7 @@ class FileTest extends TestCase
 		$this->assertInstanceOf(App::class, $file->kirby());
 	}
 
-	/**
-	 * @covers ::match
-	 */
-	public function testMatch()
+	public function testMatch(): void
 	{
 		$rules = [
 			'miMe'        => ['image/png', 'image/jpeg', 'application/pdf'],
@@ -378,10 +292,7 @@ class FileTest extends TestCase
 		$this->assertTrue($this->_file('cat.jpg')->match($rules));
 	}
 
-	/**
-	 * @covers ::match
-	 */
-	public function testMatchMimeMissing()
+	public function testMatchMimeMissing(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The media type for "doesnotexist.invalid" cannot be detected');
@@ -389,10 +300,7 @@ class FileTest extends TestCase
 		$this->_file('doesnotexist.invalid')->match(['mime' => ['image/png', 'application/pdf']]);
 	}
 
-	/**
-	 * @covers ::match
-	 */
-	public function testMatchMimeInvalid()
+	public function testMatchMimeInvalid(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid mime type: text/plain');
@@ -403,10 +311,7 @@ class FileTest extends TestCase
 		$this->_file()->match(['mime' => ['image/png', 'application/pdf']]);
 	}
 
-	/**
-	 * @covers ::match
-	 */
-	public function testMatchExtensionException()
+	public function testMatchExtensionException(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid extension: js');
@@ -417,10 +322,7 @@ class FileTest extends TestCase
 		$this->_file()->match(['extension' => ['png', 'pdf']]);
 	}
 
-	/**
-	 * @covers ::match
-	 */
-	public function testMatchTypeException()
+	public function testMatchTypeException(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid file type: code');
@@ -431,19 +333,13 @@ class FileTest extends TestCase
 		$this->_file()->match(['type' => ['document', 'video']]);
 	}
 
-	/**
-	 * @covers ::mime
-	 */
-	public function testMime()
+	public function testMime(): void
 	{
 		$file = $this->_file();
 		$this->assertSame('text/plain', $file->mime());
 	}
 
-	/**
-	 * @covers ::model
-	 */
-	public function testModel()
+	public function testModel(): void
 	{
 		$parent = Page::factory(['slug' => 'test']);
 		$model = CmsFile::factory([
@@ -460,10 +356,7 @@ class FileTest extends TestCase
 		$this->assertSame($model, $file->model());
 	}
 
-	/**
-	 * @covers ::model
-	 */
-	public function testParentModel()
+	public function testParentModel(): void
 	{
 		$parent = Page::factory([
 			'slug' => 'test',
@@ -483,10 +376,7 @@ class FileTest extends TestCase
 		$this->assertSame($file->root(), $asset->root());
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testInvalidModel()
+	public function testInvalidModel(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The model object must use the "Kirby\Filesystem\IsFile" trait');
@@ -497,10 +387,7 @@ class FileTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModified()
+	public function testModified(): void
 	{
 		// existing file
 		$file = $this->_file();
@@ -513,10 +400,7 @@ class FileTest extends TestCase
 		$this->assertFalse($file->modified());
 	}
 
-	/**
-	 * @covers ::move
-	 */
-	public function testMove()
+	public function testMove(): void
 	{
 		$oldRoot = static::TMP . '/test.txt';
 		$newRoot = static::TMP . '/awesome.txt';
@@ -535,10 +419,7 @@ class FileTest extends TestCase
 		$this->assertSame($newRoot, $moved->root());
 	}
 
-	/**
-	 * @covers ::move
-	 */
-	public function testMoveToExisting()
+	public function testMoveToExisting(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be moved');
@@ -547,10 +428,7 @@ class FileTest extends TestCase
 		$file->move(static::TMP . '/folder/b.txt');
 	}
 
-	/**
-	 * @covers ::move
-	 */
-	public function testMoveNonExisting()
+	public function testMoveNonExisting(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be moved');
@@ -559,10 +437,7 @@ class FileTest extends TestCase
 		$file->move(static::TMP . '/b.txt');
 	}
 
-	/**
-	 * @covers ::move
-	 */
-	public function testMoveFail()
+	public function testMoveFail(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be moved');
@@ -572,19 +447,13 @@ class FileTest extends TestCase
 		$file->move(static::TMP . '/moved.txt');
 	}
 
-	/**
-	 * @covers ::name
-	 */
-	public function testName()
+	public function testName(): void
 	{
 		$file = $this->_file();
 		$this->assertSame('test', $file->name());
 	}
 
-	/**
-	 * @covers ::niceSize
-	 */
-	public function testNiceSize()
+	public function testNiceSize(): void
 	{
 		// existing file
 		$file = $this->_file('test.js');
@@ -595,39 +464,19 @@ class FileTest extends TestCase
 		$this->assertSame('0 KB', $file->niceSize());
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testRead()
+	public function testRead(): void
 	{
 		$file = $this->_file();
 		$this->assertSame(file_get_contents($file->root()), $file->read());
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testReadNotExist()
+	public function testReadNotExist(): void
 	{
 		$file = $this->_file('missing.txt');
 		$this->assertFalse($file->read());
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testReadUnreadble()
-	{
-		$file = new File(static::TMP . '/unreadable.txt');
-		$file->write('test');
-		chmod($file->root(), 0o000);
-		$this->assertFalse($file->read());
-	}
-
-	/**
-	 * @covers ::rename
-	 */
-	public function testRename()
+	public function testRename(): void
 	{
 		$file = new File(static::TMP . '/test.js');
 		$file->write('test');
@@ -637,10 +486,7 @@ class FileTest extends TestCase
 		$this->assertSame('awesome', $renamed->name());
 	}
 
-	/**
-	 * @covers ::rename
-	 */
-	public function testRenameFail()
+	public function testRenameFail(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('The file: "' . static::TMP . '/test.js" could not be renamed to: "awesome"');
@@ -650,10 +496,7 @@ class FileTest extends TestCase
 		$renamed = $file->rename('awesome');
 	}
 
-	/**
-	 * @covers ::rename
-	 */
-	public function testRenameSameRoot()
+	public function testRenameSameRoot(): void
 	{
 		$file = new File(static::TMP . '/test.txt');
 		$file->write('test');
@@ -663,21 +506,14 @@ class FileTest extends TestCase
 		$this->assertSame(static::TMP . '/test.txt', $file->root());
 	}
 
-	/**
-	 * @covers ::root
-	 * @covers ::realpath
-	 */
-	public function testRoot()
+	public function testRoot(): void
 	{
 		$file = $this->_file();
 		$this->assertSame(static::TMP . '/test.js', $file->root());
 		$this->assertSame(static::TMP . '/test.js', $file->realpath());
 	}
 
-	/**
-	 * @covers ::sanitizeContents
-	 */
-	public function testSanitizeContentsValid()
+	public function testSanitizeContentsValid(): void
 	{
 		$fixture = static::TMP . '/clean.svg';
 		$tmp     = static::TMP . '/clean.svg';
@@ -691,10 +527,7 @@ class FileTest extends TestCase
 		$this->assertFileEquals($fixture, $tmp);
 	}
 
-	/**
-	 * @covers ::sanitizeContents
-	 */
-	public function testSanitizeContentsWrongType()
+	public function testSanitizeContentsWrongType(): void
 	{
 		$fixture = static::TMP . '/real.svg';
 		$tmp     = static::TMP . '/real.svg';
@@ -706,10 +539,7 @@ class FileTest extends TestCase
 		$this->assertFileEquals(static::TMP . '/real.sanitized.svg', $tmp);
 	}
 
-	/**
-	 * @covers ::sanitizeContents
-	 */
-	public function testSanitizeContentsMissingHandler()
+	public function testSanitizeContentsMissingHandler(): void
 	{
 		$file = new File(static::TMP . '/test.js');
 
@@ -723,29 +553,19 @@ class FileTest extends TestCase
 		$file->sanitizeContents();
 	}
 
-	/**
-	 * @covers ::size
-	 */
-	public function testSize()
+	public function testSize(): void
 	{
 		$file = $this->_file('test.js');
 		$this->assertSame(14, $file->size());
 	}
 
-	/**
-	 * @covers ::sha1
-	 */
-	public function testSha1()
+	public function testSha1(): void
 	{
 		$file = $this->_file('test.js');
 		$this->assertSame('25f2d6df4f2a30f29f6f80da1e95011044b0b8f7', $file->sha1());
 	}
 
-	/**
-	 * @covers ::toArray
-	 * @covers ::__debugInfo
-	 */
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$file = $this->_file('blank.pdf');
 		$this->assertSame('blank.pdf', $file->toArray()['filename']);
@@ -755,20 +575,14 @@ class FileTest extends TestCase
 		$this->assertSame($file->toArray(), $file->__debugInfo());
 	}
 
-	/**
-	 * @covers ::toJson
-	 */
-	public function testToJson()
+	public function testToJson(): void
 	{
 		$file = $this->_file();
 		$this->assertIsString($json = $file->toJson());
 		$this->assertSame('test.js', json_decode($json)->filename);
 	}
 
-	/**
-	 * @covers ::__toString
-	 */
-	public function testToString()
+	public function testToString(): void
 	{
 		$file = new File([
 			'root' => static::TMP . '/blank.pdf',
@@ -791,28 +605,19 @@ class FileTest extends TestCase
 		$this->assertSame('', $file->__toString());
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testType()
+	public function testType(): void
 	{
 		$file = $this->_file();
 		$this->assertSame('code', $file->type());
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testTypeUnknown()
+	public function testTypeUnknown(): void
 	{
 		$file = $this->_file('test.kirby');
 		$this->assertNull($file->type());
 	}
 
-	/**
-	 * @covers ::validateContents
-	 */
-	public function testValidateContentsValid()
+	public function testValidateContentsValid(): void
 	{
 		$file = new File(static::TMP . '/real.svg');
 		$this->assertNull($file->validateContents());
@@ -820,10 +625,7 @@ class FileTest extends TestCase
 		$this->assertNull($file->validateContents(false));
 	}
 
-	/**
-	 * @covers ::validateContents
-	 */
-	public function testValidateContentsWrongType()
+	public function testValidateContentsWrongType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 2)');
@@ -832,10 +634,7 @@ class FileTest extends TestCase
 		$file->validateContents('xml');
 	}
 
-	/**
-	 * @covers ::validateContents
-	 */
-	public function testValidateContentsMissingHandler()
+	public function testValidateContentsMissingHandler(): void
 	{
 		$file = new File(static::TMP . '/test.js');
 
@@ -849,10 +648,7 @@ class FileTest extends TestCase
 		$file->validateContents();
 	}
 
-	/**
-	 * @covers ::write
-	 */
-	public function testWrite()
+	public function testWrite(): void
 	{
 		$root = static::TMP . '/test.txt';
 
@@ -864,10 +660,7 @@ class FileTest extends TestCase
 		$this->assertSame('test', file_get_contents($file->root()));
 	}
 
-	/**
-	 * @covers ::write
-	 */
-	public function testWriteUnwritable()
+	public function testWriteUnwritable(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('is not writable');
@@ -878,10 +671,7 @@ class FileTest extends TestCase
 		$file->write('kirby');
 	}
 
-	/**
-	 * @covers ::write
-	 */
-	public function testWriteFail()
+	public function testWriteFail(): void
 	{
 		$this->expectException(GlobalException::class);
 		$this->expectExceptionMessage('could not be written');

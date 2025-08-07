@@ -1,46 +1,36 @@
 <?php
 
-use Kirby\Cms\App;
-use Kirby\Cms\Find;
-use Kirby\Panel\Ui\Buttons\LanguagesDropdown;
-
-$files = require __DIR__ . '/../files/dropdowns.php';
+use Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController;
+use Kirby\Panel\Controller\Dropdown\LanguagesDropdownController;
+use Kirby\Panel\Controller\Dropdown\PageSettingsDropdownController;
 
 return [
 	'page' => [
 		'pattern' => 'pages/(:any)',
-		'options' => function (string $path) {
-			return Find::page($path)->panel()->dropdown();
-		}
+		'options' => PageSettingsDropdownController::class
 	],
 	'page.languages' => [
-		'pattern' => 'pages/(:any)/languages',
-		'options' => function (string $path) {
-			$page = Find::page($path);
-			return (new LanguagesDropdown($page))->options();
-		}
+		'pattern' => '(pages/[^/]+)/languages',
+		'options' => LanguagesDropdownController::class
 	],
 	'page.file' => [
-		'pattern' => '(pages/.*?)/files/(:any)',
-		'options' => $files['file']
+		'pattern' => '(pages/[^/]+)/files/(:any)',
+		'options' => FileSettingsDropdownController::class
 	],
 	'page.file.languages' => [
-		'pattern' => '(pages/.*?)/files/(:any)/languages',
-		'options' => $files['language']
+		'pattern' => '(pages/[^/]+)/files/(:any)/languages',
+		'options' => LanguagesDropdownController::class
 	],
 	'site.languages' => [
-		'pattern' => 'site/languages',
-		'options' => function () {
-			$site = App::instance()->site();
-			return (new LanguagesDropdown($site))->options();
-		}
+		'pattern' => '(site)/languages',
+		'options' => LanguagesDropdownController::class
 	],
 	'site.file' => [
 		'pattern' => '(site)/files/(:any)',
-		'options' => $files['file']
+		'options' => FileSettingsDropdownController::class
 	],
 	'site.file.languages' => [
 		'pattern' => '(site)/files/(:any)/languages',
-		'options' => $files['language']
+		'options' => LanguagesDropdownController::class
 	]
 ];

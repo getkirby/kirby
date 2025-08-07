@@ -7,11 +7,10 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Session\AutoSession;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Throwable;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth
- */
+#[CoversClass(Auth::class)]
 class AuthTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Auth';
@@ -65,13 +64,7 @@ class AuthTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::currentUserFromImpersonation
-	 * @covers ::impersonate
-	 * @covers ::status
-	 * @covers ::user
-	 */
-	public function testImpersonate()
+	public function testImpersonate(): void
 	{
 		$this->assertNull($this->auth->user());
 
@@ -79,6 +72,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'kirby@getkirby.com',
+			'mode'      => null,
 			'status'    => 'impersonated'
 		], $this->auth->status()->toArray());
 		$this->assertIsUser($user, $this->auth->user());
@@ -92,6 +86,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'homer@simpsons.com',
+			'mode'      => null,
 			'status'    => 'impersonated'
 		], $this->auth->status()->toArray());
 		$this->assertSame('homer@simpsons.com', $user->email());
@@ -103,6 +98,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => null,
+			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
 		$this->assertNull($this->auth->user());
@@ -113,6 +109,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'marge@simpsons.com',
+			'mode'      => null,
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
 		$this->assertSame('marge@simpsons.com', $this->auth->user()->email());
@@ -120,6 +117,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'nobody@getkirby.com',
+			'mode'      => null,
 			'status'    => 'impersonated'
 		], $this->auth->status()->toArray());
 		$this->assertSame($impersonated, $this->auth->user());
@@ -133,6 +131,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => null,
+			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
 		$this->assertNull($this->auth->impersonate());
@@ -141,10 +140,7 @@ class AuthTest extends TestCase
 		$this->assertNull($this->auth->user(null, false));
 	}
 
-	/**
-	 * @covers ::impersonate
-	 */
-	public function testImpersonateInvalidUser()
+	public function testImpersonateInvalidUser(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
@@ -152,10 +148,7 @@ class AuthTest extends TestCase
 		$this->auth->impersonate('lisa@simpsons.com');
 	}
 
-	/**
-	 * @covers ::login
-	 */
-	public function testLogin()
+	public function testLogin(): void
 	{
 		// set the status cache
 		$this->auth->status();
@@ -171,10 +164,7 @@ class AuthTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
 	}
 
-	/**
-	 * @covers ::login
-	 */
-	public function testLoginLong()
+	public function testLoginLong(): void
 	{
 		// set the status cache
 		$this->auth->status();
@@ -190,10 +180,7 @@ class AuthTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
 	}
 
-	/**
-	 * @covers ::login
-	 */
-	public function testLoginInvalidUser()
+	public function testLoginInvalidUser(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Invalid login');
@@ -201,10 +188,7 @@ class AuthTest extends TestCase
 		$this->auth->login('lisa@simpsons.com', 'springfield123');
 	}
 
-	/**
-	 * @covers ::login
-	 */
-	public function testLoginInvalidPassword()
+	public function testLoginInvalidPassword(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Invalid login');
@@ -212,10 +196,7 @@ class AuthTest extends TestCase
 		$this->auth->login('marge@simpsons.com', 'springfield456');
 	}
 
-	/**
-	 * @covers ::login
-	 */
-	public function testLoginKirby()
+	public function testLoginKirby(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage(
@@ -226,10 +207,50 @@ class AuthTest extends TestCase
 		$this->auth->login('kirby@getkirby.com', 'somewhere-in-japan');
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testTypeBasic1()
+	public function testLogoutActive(): void
+	{
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$this->app->impersonate('homer@simpsons.com');
+
+		$this->assertSame('marge', $session->get('kirby.userId'));
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.userId'));
+
+		$this->assertSame([
+			'challenge' => null,
+			'email'     => null,
+			'mode'      => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
+	}
+
+	public function testLogoutPending(): void
+	{
+		$session = $this->app->session();
+
+		$this->auth->createChallenge('marge@simpsons.com');
+
+		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.userId'));
+		$this->assertNull($session->get('kirby.challenge.mode'));
+
+		$this->assertSame([
+			'challenge' => null,
+			'email'     => null,
+			'mode'      => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
+	}
+
+	public function testTypeBasic1(): void
 	{
 		$app = $this->app->clone([
 			'server' => [
@@ -247,10 +268,7 @@ class AuthTest extends TestCase
 		$this->assertTrue($app->response()->usesAuth());
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testTypeBasic2()
+	public function testTypeBasic2(): void
 	{
 		// non-existing basic auth should
 		// fall back to impersonation
@@ -262,10 +280,7 @@ class AuthTest extends TestCase
 		$this->assertTrue($this->app->response()->usesAuth());
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testTypeBasic3()
+	public function testTypeBasic3(): void
 	{
 		// non-existing basic auth without
 		// impersonation should fall back to session
@@ -275,10 +290,7 @@ class AuthTest extends TestCase
 		$this->assertTrue($this->app->response()->usesAuth());
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testTypeBasic4()
+	public function testTypeBasic4(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -298,10 +310,7 @@ class AuthTest extends TestCase
 		$this->assertFalse($app->response()->usesAuth());
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testTypeImpersonate()
+	public function testTypeImpersonate(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -316,10 +325,7 @@ class AuthTest extends TestCase
 		$this->assertSame('impersonate', $app->auth()->type());
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testTypeSession()
+	public function testTypeSession(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -332,11 +338,7 @@ class AuthTest extends TestCase
 		$this->assertSame('session', $app->auth()->type());
 	}
 
-	/**
-	 * @covers ::status
-	 * @covers ::user
-	 */
-	public function testUserSession()
+	public function testUserSession(): void
 	{
 		$session = $this->app->session();
 		$session->set('kirby.userId', 'marge');
@@ -347,6 +349,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'marge@simpsons.com',
+			'mode'      => null,
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
 
@@ -360,15 +363,12 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'marge@simpsons.com',
+			'mode'      => null,
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
 	}
 
-	/**
-	 * @covers ::status
-	 * @covers ::user
-	 */
-	public function testUserSessionManualSession()
+	public function testUserSessionManualSession(): void
 	{
 		$session = (new AutoSession($this->app->root('sessions')))->createManually();
 		$session->set('kirby.userId', 'homer');
@@ -379,14 +379,12 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'homer@simpsons.com',
+			'mode'      => null,
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
 	}
 
-	/**
-	 * @covers ::currentUserFromSession
-	 */
-	public function testUserSessionOldTimestamp()
+	public function testUserSessionOldTimestamp(): void
 	{
 		$session = $this->app->session();
 		$session->set('kirby.userId', 'homer');
@@ -396,6 +394,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => null,
+			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
 
@@ -403,10 +402,7 @@ class AuthTest extends TestCase
 		$this->assertSame([], $session->data()->get());
 	}
 
-	/**
-	 * @covers ::currentUserFromSession
-	 */
-	public function testUserSessionNoTimestamp()
+	public function testUserSessionNoTimestamp(): void
 	{
 		$session = $this->app->session();
 		$session->set('kirby.userId', 'homer');
@@ -415,6 +411,7 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => null,
+			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
 
@@ -422,11 +419,7 @@ class AuthTest extends TestCase
 		$this->assertSame([], $session->data()->get());
 	}
 
-	/**
-	 * @covers ::status
-	 * @covers ::user
-	 */
-	public function testUserBasicAuth()
+	public function testUserBasicAuth(): void
 	{
 		$this->app->clone([
 			'server' => [
@@ -440,14 +433,12 @@ class AuthTest extends TestCase
 		$this->assertSame([
 			'challenge' => null,
 			'email'     => 'homer@simpsons.com',
+			'mode'      => null,
 			'status'    => 'active'
 		], $this->auth->status()->toArray());
 	}
 
-	/**
-	 * @covers ::user
-	 */
-	public function testUserBasicAuthInvalid1()
+	public function testUserBasicAuthInvalid1(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Invalid login');
@@ -461,10 +452,7 @@ class AuthTest extends TestCase
 		$this->auth->user();
 	}
 
-	/**
-	 * @covers ::user
-	 */
-	public function testUserBasicAuthInvalid2()
+	public function testUserBasicAuthInvalid2(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Invalid login');

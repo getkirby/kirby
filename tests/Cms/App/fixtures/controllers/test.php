@@ -1,5 +1,5 @@
 <?php
 
 return function () {
-	return ['foo' => 'bar'];
+	return ['test' => 'html'];
 };

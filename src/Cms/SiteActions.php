@@ -29,42 +29,12 @@ trait SiteActions
 		array $arguments,
 		Closure $callback
 	): mixed {
-		$kirby = $this->kirby();
-
-		// store copy of the model to be passed
-		// to the `after` hook for comparison
-		$old = $this->hardcopy();
-
-		// check site rules
-		$this->rules()->$action(...array_values($arguments));
-
-		// run `before` hook and pass all arguments;
-		// the very first argument (which should be the model)
-		// is modified by the return value from the hook (if any returned)
-		$appliedTo = array_key_first($arguments);
-		$arguments[$appliedTo] = $kirby->apply(
-			'site.' . $action . ':before',
-			$arguments,
-			$appliedTo
+		$commit = new ModelCommit(
+			model: $this,
+			action: $action
 		);
 
-		// check site rules again, after the hook got applied
-		$this->rules()->$action(...array_values($arguments));
-
-		// run the main action closure
-		$result = $callback(...array_values($arguments));
-
-		// run `after` hook and apply return to action result
-		// (first argument, usually the new model) if anything returned
-		$result = $kirby->apply(
-			'site.' . $action . ':after',
-			['newSite' => $result, 'oldSite' => $old],
-			'newSite'
-		);
-
-		$kirby->cache('pages')->flush();
-
-		return $result;
+		return $commit->call($arguments, $callback);
 	}
 
 	/**
@@ -74,24 +44,25 @@ trait SiteActions
 		string $title,
 		string|null $languageCode = null
 	): static {
-		// if the `$languageCode` argument is not set and is not the default language
-		// the `$languageCode` argument is sent as the current language
-		if (
-			$languageCode === null &&
-			$language = $this->kirby()->language()
-		) {
-			if ($language->isDefault() === false) {
-				$languageCode = $language->code();
+		$language = Language::ensure($languageCode ?? 'current');
+
+		$arguments = [
+			'site'         => $this,
+			'title'        => trim($title),
+			'languageCode' => $languageCode,
+			'language'     => $language
+		];
+
+		return $this->commit('changeTitle', $arguments, function ($site, $title, $languageCode, $language) {
+
+			// make sure to update the title in the changes version as well
+			// otherwise the new title would be lost as soon as the changes are saved
+			if ($site->version('changes')->exists($language) === true) {
+				$site->version('changes')->update(['title' => $title], $language);
 			}
-		}
 
-		$arguments = ['site' => $this, 'title' => trim($title), 'languageCode' => $languageCode];
-
-		return $this->commit(
-			'changeTitle',
-			$arguments,
-			fn ($site, $title, $languageCode) => $site->save(['title' => $title], $languageCode)
-		);
+			return $site->save(['title' => $title], $language->code());
+		});
 	}
 
 	/**

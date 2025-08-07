@@ -6,10 +6,9 @@ use GdImage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Image\QrCode
- */
+#[CoversClass(QrCode::class)]
 class QrCodeTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/qr';
@@ -20,7 +19,7 @@ class QrCodeTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testToDataUri()
+	public function testToDataUri(): void
 	{
 		$qr = new QrCode('12345678');
 		$expected = F::read(static::FIXTURES . '/num.txt');
@@ -43,7 +42,7 @@ class QrCodeTest extends TestCase
 		$this->assertSame($expected, $qr->toDataUri());
 	}
 
-	public function testToImage()
+	public function testToImage(): void
 	{
 		$qr       = new QrCode('https://getkirby.com');
 		$image    = $qr->toImage();
@@ -54,7 +53,7 @@ class QrCodeTest extends TestCase
 		$this->assertSame($expected, $data);
 	}
 
-	public function testToImageSize()
+	public function testToImageSize(): void
 	{
 		$qr       = new QrCode('https://getkirby.com');
 		$image    = $qr->toImage(750);
@@ -63,7 +62,7 @@ class QrCodeTest extends TestCase
 		$this->assertSame($expected, $data);
 	}
 
-	public function testToImageColors()
+	public function testToImageColors(): void
 	{
 		$qr       = new QrCode('https://getkirby.com');
 		$image    = $qr->toImage(null, '#00ff00', '#0000ff');
@@ -72,7 +71,7 @@ class QrCodeTest extends TestCase
 		$this->assertSame($expected, $data);
 	}
 
-	public function testToImageBorder()
+	public function testToImageBorder(): void
 	{
 		$qr       = new QrCode('https://getkirby.com');
 		$image    = $qr->toImage(null, '#000000', '#ffffff', 0);
@@ -81,7 +80,7 @@ class QrCodeTest extends TestCase
 		$this->assertSame($expected, $data);
 	}
 
-	public function testToSvg()
+	public function testToSvg(): void
 	{
 		$qr = new QrCode('12345678');
 		$expected = F::read(static::FIXTURES . '/num.svg');
@@ -104,7 +103,7 @@ class QrCodeTest extends TestCase
 		$this->assertSame($expected, $qr->toSvg());
 	}
 
-	public function testToSvgColors()
+	public function testToSvgColors(): void
 	{
 		$qr = new QrCode('https://getkirby.com');
 		$svg = $qr->toSvg(
@@ -116,19 +115,13 @@ class QrCodeTest extends TestCase
 		$this->assertStringContainsString('<rect width="100%" height="100%" fill="#00ff00"/>', $svg);
 	}
 
-	/**
-	 * @covers ::__toString
-	 */
-	public function testToString()
+	public function testToString(): void
 	{
 		$qr = new QrCode('https://getkirby.com');
 		$this->assertSame($qr->toSvg(), (string)$qr);
 	}
 
-	/**
-	 * @covers ::write
-	 */
-	public function testWrite()
+	public function testWrite(): void
 	{
 		Dir::make(static::TMP);
 
@@ -171,10 +164,7 @@ class QrCodeTest extends TestCase
 		$this->assertSame($expectedJpeg, $actualJpeg);
 	}
 
-	/**
-	 * @covers ::write
-	 */
-	public function testWriteInvalidFormat()
+	public function testWriteInvalidFormat(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Cannot write QR code as docx');

@@ -19,7 +19,6 @@ export default {};
 	background: var(--drawer-color-back);
 }
 /* Sticky elements inside drawer */
-/** TODO: .k-drawer-body .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */
 .k-drawer-body
 	.k-writer-input:focus-within
 	.k-toolbar:not([data-inline="true"]),

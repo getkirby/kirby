@@ -115,7 +115,7 @@ export const clickGlobalHandler = {
 	created() {
 		this.$panel.events.on("dropdown:action", this.onGlobalAction);
 	},
-	destroyed() {
+	unmounted() {
 		this.$panel.events.off("dropdown:action", this.onGlobalAction);
 	},
 	computed: {

@@ -20,9 +20,9 @@
 	"coordinates": "Współrzędne",
 	"copy": "Kopiuj",
 	"copy.all": "Skopiuj wszystko",
-	"copy.success": "{count} skopiowanych!",
+	"copy.success": "Skopiowane",
 	"copy.success.multiple": "{count} skopiowanych!",
-	"copy.url": "Copy URL",
+	"copy.url": "Skopiuj URL",
 	"create": "Utwórz",
 	"custom": "Niestandardowe",
 
@@ -92,15 +92,23 @@
 
 	"error.cache.type.invalid": "Nieprawidłowy typ pamięci podręcznej „{type}”",
 
-	"error.content.lock.delete": "The version is locked and cannot be deleted",
-	"error.content.lock.move": "The source version is locked and cannot be moved",
-	"error.content.lock.publish": "This version is already published",
-	"error.content.lock.replace": "The version is locked and cannot be replaced",
-	"error.content.lock.update": "The version is locked and cannot be updated",
+	"error.content.lock.delete": "Ta wersja jest zablokowana i nie można jej usunąć",
+	"error.content.lock.move": "Ta wersja jest zablokowana i nie można jej przenieść",
+	"error.content.lock.publish": "Ta wersja jest już opublikowana",
+	"error.content.lock.replace": "Ta wersja jest zablokowana i nie można jej zastąpić",
+	"error.content.lock.update": "Ta wersja jest zablokowana i nie można jej zaktualizować",
+
+	"error.entries.max.plural": "Nie można dodać więcej niż {max} elementy/-ów",
+	"error.entries.max.singular": "Nie można dodać więcej niż jednego elementu",
+	"error.entries.min.plural": "Musisz dodać co najmniej {min} elementy/-ów",
+	"error.entries.min.singular": "Musisz dodać co najmniej jeden element",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "Wystąpił błąd w polu \"{field}\" w wierszu {index}",
 
 	"error.email.preset.notFound": "Nie udało się załadować wzorca wiadomości e-mail \"{name}\"",
 
 	"error.field.converter.invalid": "Nieprawidłowy konwerter \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Pole „{ name }”: Typ pola „{ type }” nie istnieje",
 
 	"error.file.changeName.empty": "Imię nie może być puste",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "Szablonu pliku \"{id}\" nie można zmienić na \"{template}\" (poprawne: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "Nie masz uprawnień, by zmieniać szablon pliku \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "Istnieje już plik o nazwie \"{filename}\"",
 	"error.file.extension.forbidden": "Rozszerzenie \"{extension}\" jest niedozwolone",
 	"error.file.extension.invalid": "Nieprawidłowe rozszerzenie: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "Strony \"{slug}\" nie można usunąć",
 	"error.page.delete.confirm": "Wprowadź tytuł strony, aby potwierdzić",
 	"error.page.delete.hasChildren": "Strona zawiera podstrony i nie można jej usunąć",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "Nie masz uprawnień, by usunąć \"{slug}\"",
 	"error.page.draft.duplicate": "Istnieje już szkic z końcówką URL \"{slug}\"",
 	"error.page.duplicate": "Istnieje już strona z końcówką URL \"{slug}\"",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "URL video",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Czy na pewno chcesz usunąć wszystkie wpisy?",
+	"field.entries.empty": "Nie ma jeszcze żadnych wpisów.",
+
 	"field.files.empty": "Nie wybrano jeszcze żadnych plików",
 	"field.files.empty.single": "No file selected yet",
 
@@ -381,16 +394,17 @@
 	"file.sort": "Zmień pozycję",
 
 	"files": "Pliki",
+	"files.delete.confirm.selected": "Czy na pewno chcesz usunąć wybrane pliki? Tej czynności nie można cofnąć.",
 	"files.empty": "Nie ma jeszcze żadnych plików",
 
 	"filter": "Filtr",
 
-	"form.discard": "Discard changes",
+	"form.discard": "Odrzuć zmiany",
 	"form.discard.confirm": "Do you really want to <strong>discard all your changes</strong>?",
 	"form.locked": "This content is disabled for you as it is currently edited by another user",
-	"form.unsaved": "The current changes have not yet been saved",
-	"form.preview": "Preview changes",
-	"form.preview.draft": "Preview draft",
+	"form.unsaved": "Bieżące zmiany nie zostały jeszcze zapisane",
+	"form.preview": "Podejrzyj zmiany",
+	"form.preview.draft": "Podejrzyj szkic",
 
 	"hide": "Ukryj",
 	"hour": "Godzina",
@@ -435,7 +449,12 @@
 	"language.variables.empty": "Nie ma jeszcze żadnych tłumaczeń",
 
 	"language.variable.delete.confirm": "Czy na pewno chcesz usunąć zmienną przypisaną do klucza {key}?",
+	"language.variable.entries": "Values",
+	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Klucz",
+	"language.variable.multiple": "Countable?",
+	"language.variable.multiple.text": "Use different translation strings",
+	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "Nie udało się odnaleźć zmiennej",
 	"language.variable.value": "Wartość",
 
@@ -467,8 +486,8 @@
 	"license.status.missing.bubble": "Gotowy/-a do uruchomienia strony?",
 	"license.status.missing.info": "Brak ważnej licencji",
 	"license.status.missing.label": "Aktywuj swoją licencję",
-	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.info": "Status licencji jest nieznany",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Zarządzaj swoimi licencjami",
 	"license.purchased": "Zakupiona",
 	"license.success": "Dziękujemy za wspieranie Kirby",
@@ -481,9 +500,9 @@
 
 	"lock.unsaved": "Niezapisane zmiany",
 	"lock.unsaved.empty": "Nie ma już żadnych niezapisanych zmian",
-	"lock.unsaved.files": "Unsaved files",
-	"lock.unsaved.pages": "Unsaved pages",
-	"lock.unsaved.users": "Unsaved accounts",
+	"lock.unsaved.files": "Niezapisane pliki",
+	"lock.unsaved.pages": "Niezapisane strony",
+	"lock.unsaved.users": "Niezapisane konta",
 	"lock.isLocked": "Niezapisane zmiany autorstwa {email}",
 	"lock.unlock": "Odblokuj",
 	"lock.unlock.submit": "Odblokuj i nadpisz niezapisane zmiany autorstwa <strong>{email}</strong>",
@@ -590,6 +609,7 @@
 	"page.status.unlisted.description": "Strona jest dostępna tylko za pośrednictwem adresu URL",
 
 	"pages": "Strony",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "Nie ma jeszcze żadnych stron",
 	"pages.status.draft": "Szkice",
 	"pages.status.listed": "Opublikowane",
@@ -607,7 +627,7 @@
 	"prev": "Poprzednie",
 	"preview": "Podgląd",
 
-	"publish": "Publish",
+	"publish": "Opublikuj",
 	"published": "Opublikowane",
 
 	"remove": "Usuń",
@@ -629,7 +649,7 @@
 	"role.nobody.title": "Nikt",
 
 	"save": "Zapisz",
-	"saved": "Saved",
+	"saved": "Zapisane",
 	"search": "Szukaj",
 	"searching": "Searching",
 	"search.min": "Aby wyszukać, wprowadź co najmniej {min} znaków",
@@ -656,7 +676,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "Zdaje się, że folder „content” jest wystawiony na publiczny dostęp",
 	"system.issues.eol.kirby": "Twoja zainstalowana wersja Kirby osiągnęła koniec okresu wsparcia i nie będzie otrzymywać dalszych aktualizacji zabezpieczeń",
 	"system.issues.eol.plugin": "Twoja zainstalowana wersja wtyczki { plugin } osiągnęła koniec okresu wsparcia i nie będzie otrzymywać dalszych aktualizacji zabezpieczeń",
@@ -665,7 +684,9 @@
 	"system.issues.git": "Zdaje się, że folder „.git” jest wystawiony na publiczny dostęp",
 	"system.issues.https": "Zalecamy HTTPS dla wszystkich Twoich witryn",
 	"system.issues.kirby": "Zdaje się, że folder „kirby” jest wystawiony na publiczny dostęp",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "Zdaje się, że folder „site” jest wystawiony na publiczny dostęp",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Twojej instalacji może zagrażać następująca luka w zabezpieczeniach ({ severity } stopień): { description }",
 	"system.issues.vulnerability.plugin": "Twojej instalacji może zagrażać następująca luka w zabezpieczeniach we wtyczce { plugin } ({ severity } poziom): { description }",
 	"system.updateStatus": "Stan aktualizacji",
@@ -682,10 +703,10 @@
 	"tel.placeholder": "+48123456789",
 	"template": "Szablon",
 
-	"theme": "Theme",
-	"theme.light": "Lights on",
-	"theme.dark": "Lights off",
-	"theme.automatic": "Match system default",
+	"theme": "Wygląd",
+	"theme.light": "Jasny",
+	"theme.dark": "Ciemny",
+	"theme.automatic": "Zgodny z ustawieniami systemu",
 
 	"title": "Tytuł",
 	"today": "Dzisiaj",
@@ -745,6 +766,7 @@
 	"user.changeLanguage": "Zmień język",
 	"user.changeName": "Zmień nazwę tego użytkownika",
 	"user.changePassword": "Zmień hasło",
+	"user.changePassword.current": "Twoje aktualne hasło",
 	"user.changePassword.new": "Nowe hasło",
 	"user.changePassword.new.confirm": "Potwierdź nowe hasło…",
 	"user.changeRole": "Zmień rolę",
@@ -756,13 +778,13 @@
 	"users": "Użytkownicy",
 
 	"version": "Wersja",
-	"version.changes": "Changed version",
-	"version.compare": "Compare versions",
+	"version.changes": "Zmieniona wersja",
+	"version.compare": "Porównaj wersje",
 	"version.current": "Obecna wersja",
 	"version.latest": "Ostatnia wersja",
 	"versionInformation": "Informacje o wersji",
 
-	"view": "View",
+	"view": "Pokaż",
 	"view.account": "Twoje konto",
 	"view.installation": "Instalacja",
 	"view.languages": "Języki",

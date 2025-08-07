@@ -29,7 +29,7 @@ class AuthRoutesTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$this->app->impersonate('kirby');
 
@@ -38,7 +38,7 @@ class AuthRoutesTest extends TestCase
 		$this->assertSame('kirby@getkirby.com', $response['data']['email']);
 	}
 
-	public function testLoginWithoutCSRF()
+	public function testLoginWithoutCSRF(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid CSRF token');

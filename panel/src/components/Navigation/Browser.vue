@@ -109,7 +109,6 @@ export default {
 	box-shadow: var(--shadow);
 	flex-shrink: 0;
 }
-/** TODO: .k-browser-item-image:has(svg) */
 .k-browser-item-image.k-icon-frame {
 	box-shadow: none;
 	background: light-dark(var(--color-white), var(--color-black));
@@ -124,7 +123,7 @@ export default {
 	opacity: 0;
 	width: 0;
 }
-.k-browser-item[aria-selected] {
+.k-browser-item[aria-selected="true"] {
 	background: var(--browser-item-selected-color-back);
 	color: var(--browser-item-selected-color-text);
 }

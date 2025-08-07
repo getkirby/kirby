@@ -31,10 +31,10 @@
 						prev: prevNext(index - 1)
 					}"
 					@append="add($event, index + 1)"
-					@chooseToAppend="choose(index + 1)"
-					@chooseToConvert="chooseToConvert(block)"
-					@chooseToPrepend="choose(index)"
-					@click.native="onClickBlock(block, $event)"
+					@choose-to-append="choose(index + 1)"
+					@choose-to-convert="chooseToConvert(block)"
+					@choose-to-prepend="choose(index)"
+					@click="onClickBlock(block, $event)"
 					@close="isEditing = false"
 					@copy="copy()"
 					@duplicate="duplicate(block, index)"
@@ -45,27 +45,21 @@
 					@paste="pasteboard()"
 					@prepend="add($event, index)"
 					@remove="remove(block)"
-					@removeSelected="removeSelected"
+					@remove-selected="removeSelected"
 					@show="show(block)"
-					@selectDown="selectDown"
-					@selectUp="selectUp"
-					@sortDown="sort(block, index, index + 1)"
-					@sortUp="sort(block, index, index - 1)"
+					@select-down="selectDown"
+					@select-up="selectUp"
+					@sort-down="sort(block, index, index + 1)"
+					@sort-up="sort(block, index, index - 1)"
 					@split="split(block, index, $event)"
 					@update="update(block, $event)"
 				/>
-
-				<!-- No blocks -->
-				<template v-if="blocks.length === 0" #footer>
-					<k-empty
-						class="k-blocks-empty"
-						icon="box"
-						@click="choose(blocks.length)"
-					>
-						{{ empty ?? $t("field.blocks.empty") }}
-					</k-empty>
-				</template>
 			</k-draggable>
+
+			<!-- No blocks -->
+			<k-empty class="k-blocks-empty" icon="box" @click="choose(blocks.length)">
+				{{ empty ?? $t("field.blocks.empty") }}
+			</k-empty>
 		</template>
 
 		<!-- No fieldsets -->
@@ -76,7 +70,6 @@
 </template>
 
 <script>
-import { set } from "vue";
 import { autofocus, disabled, id } from "@/mixins/props.js";
 
 export const props = {
@@ -99,13 +92,13 @@ export const props = {
 			type: Array,
 			default: () => []
 		}
-	},
-	emits: ["input"]
+	}
 };
 
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		return {
 			blocks: this.value ?? [],
@@ -173,7 +166,7 @@ export default {
 		this.$events.on("keyup", this.onKey);
 		this.$events.on("paste", this.onPaste);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("blur", this.onBlur);
 		this.$events.off("click", this.onClickGlobal);
 		this.$events.off("copy", this.onCopy);
@@ -377,7 +370,7 @@ export default {
 			}
 		},
 		hide(block) {
-			set(block, "isHidden", true);
+			block.isHidden = true;
 			this.save();
 		},
 		isInputEvent() {
@@ -598,7 +591,7 @@ export default {
 
 			if (index !== -1) {
 				this.deselect(block);
-				this.$delete(this.blocks, index);
+				this.blocks.splice(index, 1);
 				this.save();
 			}
 		},
@@ -630,7 +623,7 @@ export default {
 						for (const id of this.selected) {
 							const index = this.findIndex(id);
 							if (index !== -1) {
-								this.$delete(this.blocks, index);
+								this.blocks.splice(index, 1);
 							}
 						}
 
@@ -670,7 +663,7 @@ export default {
 			this.selected = Object.values(this.blocks).map((block) => block.id);
 		},
 		show(block) {
-			set(block, "isHidden", false);
+			block.isHidden = false;
 			this.save();
 		},
 		async sort(block, from, to) {
@@ -711,7 +704,7 @@ export default {
 			const index = this.findIndex(block.id);
 			if (index !== -1) {
 				for (const key in content) {
-					set(this.blocks[index].content, key, content[key]);
+					this.blocks[index].content[key] = content[key];
 				}
 			}
 			this.save();
@@ -728,7 +721,7 @@ export default {
 .k-blocks {
 	border-radius: var(--rounded);
 }
-.k-blocks:not([data-empty="true"], [data-disabled="true"]) {
+.k-blocks:not(:has(> .k-blocks-list:empty), [data-disabled="true"]) {
 	background: var(--block-color-back);
 	box-shadow: var(--shadow);
 }
@@ -749,8 +742,12 @@ export default {
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
 }
-.k-blocks-list > .k-blocks-empty {
+
+.k-blocks > .k-blocks-empty {
 	display: flex;
 	align-items: center;
+}
+.k-blocks > .k-blocks-list:not(:empty) + .k-blocks-empty {
+	display: none;
 }
 </style>

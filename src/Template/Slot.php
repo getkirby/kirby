@@ -21,7 +21,6 @@ class Slot implements Stringable
 {
 	/**
 	 * The captured slot content
-	 * @internal
 	 */
 	public string|null $content;
 

@@ -14,11 +14,11 @@
 	>
 		<slot />
 
-		<!-- Fiber dialogs -->
-		<k-fiber-dialog v-if="$panel.dialog.isOpen && !$panel.dialog.legacy" />
+		<!-- State dialogs -->
+		<k-state-dialog v-if="$panel.dialog.isOpen && !$panel.dialog.legacy" />
 
-		<!-- Fiber drawers -->
-		<k-fiber-drawer v-if="$panel.drawer.isOpen && !$panel.drawer.legacy" />
+		<!-- State drawers -->
+		<k-state-drawer v-if="$panel.drawer.isOpen && !$panel.drawer.legacy" />
 
 		<!-- Fatal iframe -->
 		<k-fatal
@@ -38,7 +38,7 @@
 			type="drawer"
 			@close="$panel.drawer.close()"
 		>
-			<portal-target class="k-drawer-portal k-portal" name="drawer" multiple />
+			<div class="k-drawer-portal k-portal" multiple />
 		</k-overlay>
 
 		<k-overlay
@@ -46,10 +46,8 @@
 			type="dialog"
 			@close="$panel.dialog.close()"
 		>
-			<portal-target class="k-dialog-portal k-portal" name="dialog" multiple />
+			<div class="k-dialog-portal k-portal" multiple />
 		</k-overlay>
-
-		<portal-target class="k-overlay-portal k-portal" name="overlay" multiple />
 	</div>
 </template>
 

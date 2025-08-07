@@ -21,7 +21,7 @@ class FileBlueprintModelTest extends ModelTestCase
 		$this->file = new File(['filename' => 'test.jpg', 'parent' => $page]);
 	}
 
-	public function testName()
+	public function testName(): void
 	{
 		$blueprint = new FileBlueprint([
 			'name'  => 'test',
@@ -31,7 +31,7 @@ class FileBlueprintModelTest extends ModelTestCase
 		$this->assertAttr($blueprint, 'name', 'test');
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		$blueprint = new FileBlueprint([
 			'name'  => 'test',
@@ -47,7 +47,7 @@ class FileBlueprintModelTest extends ModelTestCase
 		$this->assertArrayHasKey('update', $options);
 	}
 
-	public function testTabs()
+	public function testTabs(): void
 	{
 		$blueprint = new FileBlueprint([
 			'name'  => 'test',
@@ -57,7 +57,7 @@ class FileBlueprintModelTest extends ModelTestCase
 		$this->assertAttr($blueprint, 'tabs', []);
 	}
 
-	public function testTitle()
+	public function testTitle(): void
 	{
 		$blueprint = new FileBlueprint([
 			'name'  => 'test',

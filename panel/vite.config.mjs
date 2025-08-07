@@ -1,20 +1,27 @@
 /* eslint-env node */
 import path from "path";
 
-import { defineConfig, loadEnv, splitVendorChunkPlugin } from "vite";
-import vue from "@vitejs/plugin-vue2";
+import { defineConfig, loadEnv } from "vite";
+import vue from "@vitejs/plugin-vue";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import externalize from "rollup-plugin-external-globals";
 import kirby from "./scripts/vite-kirby.mjs";
 import postcssLightDarkFunction from "@csstools/postcss-light-dark-function";
 
 /**
  * Returns all aliases used in the project
  */
-function createAliases() {
-	return {
+function createAliases(proxy) {
+	const aliases = {
 		"@": path.resolve(__dirname, "src")
 	};
+
+	if (!process.env.VITEST) {
+		// use absolute proxied url to avoid Vue being loaded twice
+		aliases.vue =
+			proxy.target + ":3000/node_modules/vue/dist/vue.esm-browser.js";
+	}
+
+	return aliases;
 }
 
 /**
@@ -22,6 +29,8 @@ function createAliases() {
  */
 function createServer(proxy) {
 	return {
+		allowedHosts: [proxy.target.substring(8)],
+		cors: { origin: proxy.target },
 		proxy: {
 			"/api": proxy,
 			"/env": proxy,
@@ -49,7 +58,16 @@ function createCustomServer() {
  * depending on the mode (development or build)
  */
 function createPlugins(mode) {
-	const plugins = [vue(), splitVendorChunkPlugin(), kirby()];
+	const plugins = [
+		vue({
+			template: {
+				compilerOptions: {
+					isCustomElement: (tag) => ["k-input-validator"].includes(tag)
+				}
+			}
+		}),
+		kirby()
+	];
 
 	// when building…
 	if (mode === "production") {
@@ -58,22 +76,19 @@ function createPlugins(mode) {
 			viteStaticCopy({
 				targets: [
 					{
-						src: "node_modules/vue/dist/vue.min.js",
+						src: "node_modules/vue/dist/vue.esm-browser.js",
+						dest: "js"
+					},
+					{
+						src: "node_modules/vue/dist/vue.esm-browser.prod.js",
+						dest: "js"
+					},
+					{
+						src: "node_modules/vue/dist/vue.runtime.esm-browser.prod.js",
 						dest: "js"
 					}
 				]
 			})
-		);
-	}
-
-	if (!process.env.VITEST) {
-		plugins.push(
-			// Externalize Vue so it's not loaded from node_modules
-			// but accessed via window.Vue
-			{
-				...externalize({ vue: "Vue" }),
-				enforce: "post"
-			}
 		);
 	}
 
@@ -115,11 +130,23 @@ export default defineConfig(({ mode }) => {
 			minify: "terser",
 			cssCodeSplit: false,
 			rollupOptions: {
+				external: ["vue"],
 				input: "./src/index.js",
 				output: {
 					entryFileNames: "js/[name].min.js",
 					chunkFileNames: "js/[name].min.js",
-					assetFileNames: "[ext]/[name].min.[ext]"
+					assetFileNames: "[ext]/[name].min.[ext]",
+					manualChunks(id) {
+						if (id.includes("sortablejs")) {
+							return "sortable";
+						}
+
+						if (id.includes("node_modules")) {
+							return "vendor";
+						}
+
+						return null;
+					}
 				}
 			}
 		},
@@ -134,7 +161,7 @@ export default defineConfig(({ mode }) => {
 			holdUntilCrawlEnd: false
 		},
 		resolve: {
-			alias: createAliases()
+			alias: createAliases(proxy)
 		},
 		server: createServer(proxy),
 		test: createTest()

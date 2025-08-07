@@ -20,6 +20,8 @@ use Kirby\Toolkit\A;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @method \Kirby\Uuid\SiteUuid uuid()
  */
 class Site extends ModelWithContent
 {
@@ -87,9 +89,15 @@ class Site extends ModelWithContent
 		$this->page        = $props['page'] ?? null;
 		$this->url         = $props['url'] ?? null;
 
+		// Set blueprint before setting content
+		// or translations in the parent constructor.
+		// Otherwise, the blueprint definition cannot be
+		// used when creating the right field values
+		// for the content.
+		$this->setBlueprint($props['blueprint'] ?? null);
+
 		parent::__construct($props);
 
-		$this->setBlueprint($props['blueprint'] ?? null);
 		$this->setChildren($props['children'] ?? null);
 		$this->setDrafts($props['drafts'] ?? null);
 		$this->setFiles($props['files'] ?? null);
@@ -188,7 +196,9 @@ class Site extends ModelWithContent
 		array $data,
 		string|null $languageCode = null
 	): array {
-		return A::prepend($data, ['title' => $data['title'] ?? null]);
+		return A::prepend($data, [
+			'title' => $data['title'] ?? null
+		]);
 	}
 
 	/**
@@ -201,7 +211,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the global error page id
-	 * @internal
 	 */
 	public function errorPageId(): string
 	{
@@ -226,7 +235,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the global home page id
-	 * @internal
 	 */
 	public function homePageId(): string
 	{
@@ -236,7 +244,6 @@ class Site extends ModelWithContent
 	/**
 	 * Creates an inventory of all files
 	 * and children in the site directory
-	 * @internal
 	 */
 	public function inventory(): array
 	{
@@ -267,17 +274,23 @@ class Site extends ModelWithContent
 	}
 
 	/**
-	 * Returns the root to the media folder for the site
-	 * @internal
+	 * Returns the absolute path to the media folder for the page
 	 */
-	public function mediaRoot(): string
+	public function mediaDir(): string
 	{
 		return $this->kirby()->root('media') . '/site';
 	}
 
 	/**
+	 * @see `::mediaDir`
+	 */
+	public function mediaRoot(): string
+	{
+		return $this->mediaDir();
+	}
+
+	/**
 	 * The site's base url for any files
-	 * @internal
 	 */
 	public function mediaUrl(): string
 	{
@@ -350,10 +363,15 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the preview URL with authentication for drafts and versions
-	 * @internal
+	 * @unstable
 	 */
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
+		// the site previews the home page and thus needs to check permissions for it
+		if ($this->homePage()?->permissions()->can('preview') !== true) {
+			return null;
+		}
+
 		return $this->version($versionId)->url();
 	}
 
@@ -446,10 +464,8 @@ class Site extends ModelWithContent
 	}
 
 	/**
-	 * Sets the current page by
-	 * id or page object and
+	 * Sets the current page by id or page object and
 	 * returns the current page
-	 * @internal
 	 */
 	public function visit(
 		string|Page $page,

@@ -37,7 +37,7 @@ class FileVersionModelTest extends ModelTestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testExists()
+	public function testExists(): void
 	{
 		$version = new FileVersion([
 			'original' => $this->file,
@@ -47,7 +47,7 @@ class FileVersionModelTest extends ModelTestCase
 		$this->assertAttr($version, 'exists', false);
 	}
 
-	public function testType()
+	public function testType(): void
 	{
 		$version = new FileVersion([
 			'original' => $this->file,
@@ -57,7 +57,7 @@ class FileVersionModelTest extends ModelTestCase
 		$this->assertAttr($version, 'type', 'image');
 	}
 
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$version = new FileVersion([
 			'original' => $this->file,

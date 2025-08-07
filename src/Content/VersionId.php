@@ -12,14 +12,13 @@ use Stringable;
  * to the content. In the future, we also plan to use this
  * for older revisions of the content.
  *
- * @internal
- * @since 5.0.0
- *
  * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
+ * @unstable
  */
 class VersionId implements Stringable
 {
@@ -59,17 +58,6 @@ class VersionId implements Stringable
 	}
 
 	/**
-	 * List of available version ids
-	 */
-	public static function all(): array
-	{
-		return [
-			static::latest(),
-			static::changes(),
-		];
-	}
-
-	/**
 	 * Creates a VersionId instance for the latest content changes
 	 */
 	public static function changes(): static
@@ -90,11 +78,11 @@ class VersionId implements Stringable
 	}
 
 	/**
-	 * Compares a string value with the id value
+	 * Compares a VersionId object or string value with this id
 	 */
-	public function is(string $value): bool
+	public function is(VersionId|string $id): bool
 	{
-		return $value === $this->value;
+		return static::from($id)->value === $this->value;
 	}
 
 	/**

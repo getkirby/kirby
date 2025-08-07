@@ -30,7 +30,7 @@ class LanguagesCollectionTest extends CollectionTestCase
 		Dir::make(static::TMP);
 	}
 
-	public function testCollection()
+	public function testCollection(): void
 	{
 		$collection = $this->api->collection('languages', $this->app->languages());
 		$result     = $collection->toArray();

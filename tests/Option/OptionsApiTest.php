@@ -5,18 +5,14 @@ namespace Kirby\Option;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
 use Kirby\Field\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Option\OptionsApi
- */
+#[CoversClass(OptionsApi::class)]
 class OptionsApiTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$options = new OptionsApi($url = 'https://api.example.com');
 		$this->assertSame($url, $options->url);
@@ -25,10 +21,7 @@ class OptionsApiTest extends TestCase
 		$this->assertNull($options->value);
 	}
 
-	/**
-	 * @covers ::defaults
-	 */
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$options = new OptionsApi($url = 'https://api.example.com');
 		$this->assertSame($url, $options->url);
@@ -42,10 +35,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('{{ item.key }}', $options->value);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$options = OptionsApi::factory([
 			'url'   => $url = 'https://api.example.com',
@@ -66,10 +56,7 @@ class OptionsApiTest extends TestCase
 		$this->assertNull($options->value);
 	}
 
-	/**
-	 * @covers ::load
-	 */
-	public function testLoadNoJson()
+	public function testLoadNoJson(): void
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(url: 'https://example.com');
@@ -78,10 +65,7 @@ class OptionsApiTest extends TestCase
 		$options->resolve($model);
 	}
 
-	/**
-	 * @covers ::polyfill
-	 */
-	public function testPolyfill()
+	public function testPolyfill(): void
 	{
 		$api = 'https://api.example.com';
 		$this->assertSame(['url' => $api], OptionsApi::polyfill($api));
@@ -93,12 +77,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame(['query' => 'Companies'], OptionsApi::polyfill($api));
 	}
 
-	/**
-	 * @covers ::load
-	 * @covers ::render
-	 * @covers ::resolve
-	 */
-	public function testResolve()
+	public function testResolve(): void
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(static::FIXTURES . '/data.json');
@@ -110,10 +89,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('b', $result[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveSimple()
+	public function testResolveSimple(): void
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(static::FIXTURES . '/data-simple.json');
@@ -125,10 +101,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('b', $result[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveCustomKeys()
+	public function testResolveCustomKeys(): void
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
@@ -144,10 +117,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('info@company-b.com', $result[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveQuery()
+	public function testResolveQuery(): void
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
@@ -162,10 +132,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('b', $result[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveCustomKeysAndQuery()
+	public function testResolveCustomKeysAndQuery(): void
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
@@ -182,10 +149,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('info@company-b.com', $result[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveHtmlEscape()
+	public function testResolveHtmlEscape(): void
 	{
 		$model = new Page(['slug' => 'test']);
 
@@ -262,10 +226,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveApplyFieldMethods()
+	public function testResolveApplyFieldMethods(): void
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
@@ -281,10 +242,7 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('company-b', $result[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveSimpleArrays()
+	public function testResolveSimpleArrays(): void
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(

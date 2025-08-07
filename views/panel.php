@@ -6,7 +6,7 @@ use Kirby\Toolkit\Html;
  * @var \Kirby\Cms\App $kirby
  * @var string $icons
  * @var array<string, mixed> $assets
- * @var array<string, mixed> $fiber
+ * @var array<string, mixed> $state
  * @var string $panelUrl
  * @var string $nonce
  */ ?>
@@ -19,6 +19,12 @@ use Kirby\Toolkit\Html;
   <meta name="referrer" content="same-origin">
 
   <title>Kirby Panel</title>
+
+  <script type="importmap">
+	{
+	  "imports": <?= json_encode($assets['import-maps'] ?? []) ?>
+	}
+	</script>
 
   <script nonce="<?= $nonce ?>">
     if (
@@ -39,7 +45,7 @@ use Kirby\Toolkit\Html;
   <?php endforeach ?>
 
   <?php foreach ($assets['js'] as $js): ?>
-  <?php if (($js['type'] ?? null) === 'module'): ?>
+  <?php if (($js['defer'] ?? null) !== true): ?>
   <link rel="modulepreload" href="<?= $js['src'] ?>">
   <?php endif ?>
   <?php endforeach ?>
@@ -56,20 +62,23 @@ use Kirby\Toolkit\Html;
   <?= $icons ?>
 
   <script nonce="<?= $nonce ?>">
-    // Fiber setup
-    window.fiber = <?= json_encode($fiber) ?>;
+    // Panel state setup
+    window.panelState = <?= json_encode($state) ?>;
   </script>
 
-  <?php foreach ($assets['js'] as $key => $js): ?>
-  <?php if ($key === 'index'): ?>
-  <script type="module" nonce="<?= $nonce ?>">
-    <?= $assets['plugin-imports'] ?>
-    import('<?= $js['src'] ?>')
-  </script>
-  <?php else: ?>
-  <?= Html::tag('script', '', $js) . PHP_EOL ?>
-  <?php endif ?>
-  <?php endforeach ?>
+	<?php foreach ($assets['js'] as $key => $js): ?>
+		<?php if ($key === 'index'): ?>
+			<script type="module" nonce="<?= $nonce ?>" defer>
+				try {
+					await import("<?= $js['plugins'] ?>")
+				} finally {
+					import("<?= $js['src'] ?>")
+				}
+			</script>
+		<?php else: ?>
+			<?= Html::tag('script', '', $js) . PHP_EOL ?>
+		<?php endif ?>
+	<?php endforeach ?>
 
 </body>
 </html>

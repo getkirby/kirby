@@ -40,7 +40,8 @@ export const props = {
 };
 
 export default {
-	mixins: [props]
+	mixins: [props],
+	emits: ["cancel", "submit"]
 };
 </script>
 

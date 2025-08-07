@@ -6,13 +6,11 @@
 		:class="$attrs.class"
 		:style="$attrs.style"
 		@change="$emit('change', $event)"
+		@select="onSelect"
 		@sort="$emit('sort', $event)"
 		@option="onOption"
 	>
-		<template
-			v-if="$scopedSlots.options"
-			#options="{ row: item, rowIndex: index }"
-		>
+		<template v-if="$slots.options" #options="{ row: item, rowIndex: index }">
 			<slot name="options" v-bind="{ item, index }" />
 		</template>
 	</k-table>
@@ -30,24 +28,27 @@
 		@change="$emit('change', $event)"
 		@end="$emit('sort', items, $event)"
 	>
-		<template v-for="(item, itemIndex) in items">
+		<template v-for="(item, itemIndex) in itemsWithIds">
 			<slot v-bind="{ item, itemIndex }">
 				<k-item
-					:key="item.id ?? itemIndex"
+					:key="item.id"
 					v-bind="item"
-					:class="{ 'k-draggable-item': sortable && item.sortable }"
+					:class="{ 'k-draggable-item': sortable && item.sortable !== false }"
 					:image="imageOptions(item)"
 					:layout="layout"
 					:link="link ? item.link : false"
-					:sortable="sortable && item.sortable"
-					:theme="theme"
+					:selecting="selecting"
+					:selectable="item.selectable"
+					:sortable="sortable && item.sortable !== false"
+					:theme="item.theme ?? theme"
 					:width="item.column"
 					@click="$emit('item', item, itemIndex)"
 					@drag="onDragStart($event, item.dragText)"
-					@mouseover.native="$emit('hover', $event, item, itemIndex)"
+					@mouseover="$emit('hover', $event, item, itemIndex)"
 					@option="onOption($event, item, itemIndex)"
+					@select="onSelect(item, itemIndex)"
 				>
-					<template #options>
+					<template v-if="$slots.options" #options>
 						<slot name="options" v-bind="{ item, index: itemIndex }" />
 					</template>
 				</k-item>
@@ -74,7 +75,7 @@ export const props = {
 		},
 		/**
 		 * Optional fields configuration that is used for table layout
-		 * @internal
+		 * @unstable
 		 */
 		fields: {
 			type: Object,
@@ -94,6 +95,10 @@ export const props = {
 			type: Boolean,
 			default: true
 		},
+		/**
+		 * Whether items are in selecting mode
+		 */
+		selecting: Boolean,
 		/**
 		 * Whether items are generally sortable.
 		 * Each item can disable this individually.
@@ -126,7 +131,7 @@ export default {
 			default: () => ({})
 		}
 	},
-	emits: ["change", "hover", "item", "option", "sort"],
+	emits: ["change", "hover", "item", "option", "select", "sort"],
 	computed: {
 		dragOptions() {
 			return {
@@ -135,11 +140,22 @@ export default {
 				draggable: ".k-draggable-item"
 			};
 		},
+		/**
+		 * Adds a unique id to each item if it doesn't have one
+		 * to be used for `:key` in the `v-for` loop
+		 */
+		itemsWithIds() {
+			return this.items.map((item) => ({
+				...item,
+				id: item.id ?? item.uuid ?? this.$helper.uuid()
+			}));
+		},
 		table() {
 			return {
 				columns: this.columns,
 				fields: this.fields,
 				rows: this.items,
+				selecting: this.selecting,
 				sortable: this.sortable
 			};
 		}
@@ -150,6 +166,9 @@ export default {
 		},
 		onOption(option, item, itemIndex) {
 			this.$emit("option", option, item, itemIndex);
+		},
+		onSelect(event, item, itemIndex) {
+			this.$emit("select", event, item, itemIndex);
 		},
 		imageOptions(item) {
 			let globalOptions = this.image;

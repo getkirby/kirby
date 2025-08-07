@@ -10,10 +10,13 @@ use Kirby\Cache\RedisCache;
 use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
+use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\LayoutField;
-use Kirby\Panel\Ui\FilePreviews\AudioFilePreview;
-use Kirby\Panel\Ui\FilePreviews\ImageFilePreview;
-use Kirby\Panel\Ui\FilePreviews\VideoFilePreview;
+use Kirby\Form\Field\StatsField;
+use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
+use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
+use Kirby\Panel\Ui\FilePreview\PdfFilePreview;
+use Kirby\Panel\Ui\FilePreview\VideoFilePreview;
 
 /**
  * The Core class lists all parts of Kirby
@@ -250,6 +253,7 @@ class Core
 			'color'       => $this->root . '/fields/color.php',
 			'date'        => $this->root . '/fields/date.php',
 			'email'       => $this->root . '/fields/email.php',
+			'entries'     => EntriesField::class,
 			'files'       => $this->root . '/fields/files.php',
 			'gap'         => $this->root . '/fields/gap.php',
 			'headline'    => $this->root . '/fields/headline.php',
@@ -267,6 +271,7 @@ class Core
 			'range'       => $this->root . '/fields/range.php',
 			'select'      => $this->root . '/fields/select.php',
 			'slug'        => $this->root . '/fields/slug.php',
+			'stats'       => StatsField::class,
 			'structure'   => $this->root . '/fields/structure.php',
 			'tags'        => $this->root . '/fields/tags.php',
 			'tel'         => $this->root . '/fields/tel.php',
@@ -289,7 +294,8 @@ class Core
 		return [
 			AudioFilePreview::class,
 			ImageFilePreview::class,
-			VideoFilePreview::class
+			PdfFilePreview::class,
+			VideoFilePreview::class,
 		];
 	}
 
@@ -334,33 +340,33 @@ class Core
 	public function roots(): array
 	{
 		return $this->cache['roots'] ??= [
-			'kirby'       => fn (array $roots) => dirname(__DIR__, 2),
-			'i18n'        => fn (array $roots) => $roots['kirby'] . '/i18n',
+			'kirby'             => fn (array $roots) => dirname(__DIR__, 2),
+			'i18n'              => fn (array $roots) => $roots['kirby'] . '/i18n',
 			'i18n:translations' => fn (array $roots) => $roots['i18n'] . '/translations',
-			'i18n:rules'  => fn (array $roots) => $roots['i18n'] . '/rules',
-
-			'index'       => fn (array $roots) => static::$indexRoot ?? dirname(__DIR__, 3),
-			'assets'      => fn (array $roots) => $roots['index'] . '/assets',
-			'content'     => fn (array $roots) => $roots['index'] . '/content',
-			'media'       => fn (array $roots) => $roots['index'] . '/media',
-			'panel'       => fn (array $roots) => $roots['kirby'] . '/panel',
-			'site'        => fn (array $roots) => $roots['index'] . '/site',
-			'accounts'    => fn (array $roots) => $roots['site'] . '/accounts',
-			'blueprints'  => fn (array $roots) => $roots['site'] . '/blueprints',
-			'cache'       => fn (array $roots) => $roots['site'] . '/cache',
-			'collections' => fn (array $roots) => $roots['site'] . '/collections',
-			'commands'    => fn (array $roots) => $roots['site'] . '/commands',
-			'config'      => fn (array $roots) => $roots['site'] . '/config',
-			'controllers' => fn (array $roots) => $roots['site'] . '/controllers',
-			'languages'   => fn (array $roots) => $roots['site'] . '/languages',
-			'license'     => fn (array $roots) => $roots['config'] . '/.license',
-			'logs'        => fn (array $roots) => $roots['site'] . '/logs',
-			'models'      => fn (array $roots) => $roots['site'] . '/models',
-			'plugins'     => fn (array $roots) => $roots['site'] . '/plugins',
-			'sessions'    => fn (array $roots) => $roots['site'] . '/sessions',
-			'snippets'    => fn (array $roots) => $roots['site'] . '/snippets',
-			'templates'   => fn (array $roots) => $roots['site'] . '/templates',
-			'roles'       => fn (array $roots) => $roots['blueprints'] . '/users',
+			'i18n:rules'        => fn (array $roots) => $roots['i18n'] . '/rules',
+			'index'             => fn (array $roots) => static::$indexRoot ?? dirname(__DIR__, 3),
+			'assets'            => fn (array $roots) => $roots['index'] . '/assets',
+			'content'           => fn (array $roots) => $roots['index'] . '/content',
+			'media'             => fn (array $roots) => $roots['index'] . '/media',
+			'panel'             => fn (array $roots) => $roots['kirby'] . '/panel',
+			'site'              => fn (array $roots) => $roots['index'] . '/site',
+			'accounts'          => fn (array $roots) => $roots['site'] . '/accounts',
+			'blueprints'        => fn (array $roots) => $roots['site'] . '/blueprints',
+			'cache'             => fn (array $roots) => $roots['site'] . '/cache',
+			'collections'       => fn (array $roots) => $roots['site'] . '/collections',
+			'commands'          => fn (array $roots) => $roots['site'] . '/commands',
+			'config'            => fn (array $roots) => $roots['site'] . '/config',
+			'controllers'       => fn (array $roots) => $roots['site'] . '/controllers',
+			'languages'         => fn (array $roots) => $roots['site'] . '/languages',
+			'licenses'          => fn (array $roots) => $roots['site'] . '/licenses',
+			'license'           => fn (array $roots) => $roots['config'] . '/.license',
+			'logs'              => fn (array $roots) => $roots['site'] . '/logs',
+			'models'            => fn (array $roots) => $roots['site'] . '/models',
+			'plugins'           => fn (array $roots) => $roots['site'] . '/plugins',
+			'sessions'          => fn (array $roots) => $roots['site'] . '/sessions',
+			'snippets'          => fn (array $roots) => $roots['site'] . '/snippets',
+			'templates'         => fn (array $roots) => $roots['site'] . '/templates',
+			'roles'             => fn (array $roots) => $roots['blueprints'] . '/users',
 		];
 	}
 
@@ -406,6 +412,7 @@ class Core
 	public function sectionMixins(): array
 	{
 		return [
+			'batch'      => $this->root . '/sections/mixins/batch.php',
 			'details'    => $this->root . '/sections/mixins/details.php',
 			'empty'      => $this->root . '/sections/mixins/empty.php',
 			'headline'   => $this->root . '/sections/mixins/headline.php',

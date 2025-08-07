@@ -18,7 +18,7 @@ class StructureObjectMethodsTest extends TestCase
 		]);
 	}
 
-	public function testBlockMethod()
+	public function testBlockMethod(): void
 	{
 		$structure = new StructureObject();
 		$this->assertSame('structure object method', $structure->test());

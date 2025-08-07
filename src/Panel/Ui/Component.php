@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui;
 
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\HasI18n;
 use Kirby\Toolkit\Str;
 
 /**
@@ -15,17 +16,21 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
- * @internal
  */
 abstract class Component
 {
+	use HasI18n;
+
 	protected string $key;
+	public array $attrs = [];
 
 	public function __construct(
 		public string $component,
 		public string|null $class = null,
-		public string|null $style = null
+		public string|null $style = null,
+		...$attrs
 	) {
+		$this->attrs = $attrs;
 	}
 
 	/**
@@ -70,6 +75,7 @@ abstract class Component
 		return [
 			'class' => $this->class,
 			'style' => $this->style,
+			...$this->attrs
 		];
 	}
 
@@ -81,7 +87,10 @@ abstract class Component
 		return [
 			'component' => $this->component,
 			'key'       => $this->key(),
-			'props'     => array_filter($this->props())
+			'props'     => array_filter(
+				$this->props(),
+				fn ($prop) => $prop !== null
+			)
 		];
 	}
 }

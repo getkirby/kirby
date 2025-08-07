@@ -26,7 +26,7 @@ class MinSectionMixinTest extends TestCase
 		];
 	}
 
-	public function testDefaultMin()
+	public function testDefaultMin(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -35,7 +35,7 @@ class MinSectionMixinTest extends TestCase
 		$this->assertNull($section->min());
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -45,7 +45,7 @@ class MinSectionMixinTest extends TestCase
 		$this->assertSame(1, $section->min());
 	}
 
-	public function testIsInvalid()
+	public function testIsInvalid(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -55,7 +55,7 @@ class MinSectionMixinTest extends TestCase
 		$this->assertFalse($section->validateMin());
 	}
 
-	public function testIsValid()
+	public function testIsValid(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -65,7 +65,7 @@ class MinSectionMixinTest extends TestCase
 		$this->assertTrue($section->validateMin());
 	}
 
-	public function testIsExactlyValid()
+	public function testIsExactlyValid(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,

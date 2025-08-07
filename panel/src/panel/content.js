@@ -1,4 +1,4 @@
-import { isObject } from "@/helpers/object";
+import { isObject, length } from "@/helpers/object";
 import { reactive } from "vue";
 import throttle from "@/helpers/throttle.js";
 
@@ -8,31 +8,52 @@ import throttle from "@/helpers/throttle.js";
 export default (panel) => {
 	const content = reactive({
 		/**
+		 * Cancel any scheduled or ongoing save requests
+		 */
+		cancelSaving() {
+			// cancel any scheduled save requests
+			this.saveLazy.cancel();
+
+			// ensure to abort unfinished previous save request
+			// to avoid race conditions with older content
+			this.saveAbortController?.abort();
+		},
+
+		dialog: null,
+
+		/**
 		 * Returns an object with all changed fields
 		 * @param {Object} env
 		 * @returns {Object}
 		 */
-		changes(env = {}) {
+		diff(env = {}) {
 			// changes can only be computed for the current view
 			if (this.isCurrent(env) === false) {
 				throw new Error("Cannot get changes for another view");
 			}
 
-			const changes = {};
+			const versions = this.versions();
+			const diff = {};
 
-			for (const field in panel.view.props.content) {
-				const changed = JSON.stringify(panel.view.props.content[field]);
-				const original = JSON.stringify(panel.view.props.originals[field]);
+			for (const field in versions.changes) {
+				const changed = JSON.stringify(versions.changes[field]);
+				const original = JSON.stringify(versions.latest[field]);
 
 				if (changed !== original) {
-					changes[field] = panel.view.props.content[field];
+					diff[field] = versions.changes[field];
 				}
 			}
 
-			return changes;
-		},
+			// find all fields that have been present in the original content
+			// but have been removed from the current content
+			for (const field in versions.latest) {
+				if (versions.changes[field] === undefined) {
+					diff[field] = null;
+				}
+			}
 
-		dialog: null,
+			return diff;
+		},
 
 		/**
 		 * Removes all unpublished changes
@@ -42,21 +63,29 @@ export default (panel) => {
 				return;
 			}
 
-			// In the current view, we can use the existing
-			// lock state to determine if we can discard
-			if (this.isCurrent(env) === true && this.isLocked(env) === true) {
+			// Only discard changes from the current view
+			if (this.isCurrent(env) === false) {
+				throw new Error("Cannot discard content from another view");
+			}
+
+			// Check the lock state to determine if we can discard
+			if (this.isLocked(env) === true) {
 				throw new Error("Cannot discard locked changes");
 			}
 
+			// Cancel any ongoing save requests.
+			// The discard request will throw those
+			// changes away anyway.
+			this.cancelSaving();
+
+			// Start processing the request
 			this.isProcessing = true;
 
 			try {
 				await this.request("discard", {}, env);
 
 				// update the props for the current view
-				if (this.isCurrent(env)) {
-					panel.view.props.content = panel.view.props.originals;
-				}
+				panel.view.props.versions.changes = this.version("latest");
 
 				this.emit("discard", {}, env);
 			} catch (error) {
@@ -96,12 +125,20 @@ export default (panel) => {
 		},
 
 		/**
+		 * Whether there are any changes
+		 */
+		hasDiff(env = {}) {
+			return length(this.diff(env)) > 0;
+		},
+
+		/**
 		 * Whether the api endpoint belongs to the current view
 		 * @var {String} api
 		 */
 		isCurrent(env = {}) {
-			const { api, language } = this.env(env);
-			return panel.view.props.api === api && panel.language.code === language;
+			const given = this.env(env);
+			const current = this.env();
+			return current.api === given.api && current.language === given.language;
 		},
 
 		/**
@@ -165,12 +202,12 @@ export default (panel) => {
 				values = {};
 			}
 
-			panel.view.props.content = {
-				...panel.view.props.originals,
+			panel.view.props.versions.changes = {
+				...this.version("changes"),
 				...values
 			};
 
-			return panel.view.props.content;
+			return panel.view.props.versions.changes;
 		},
 
 		/**
@@ -181,19 +218,27 @@ export default (panel) => {
 				return;
 			}
 
+			if (this.isCurrent(env) === false) {
+				throw new Error("Cannot publish content from another view");
+			}
+
+			// Cancel any ongoing save requests.
+			// The publish request will submit the
+			// latest state of the form again.
+			this.cancelSaving();
+
+			// Start processing the request
 			this.isProcessing = true;
 
 			// Send updated values to API
 			try {
-				await this.request("publish", values, env);
+				await this.request("publish", this.merge(values, env), env);
 
 				// close the dialog if it is still open
 				this.dialog?.close();
 
 				// update the props for the current view
-				if (this.isCurrent(env) === true) {
-					panel.view.props.originals = panel.view.props.content;
-				}
+				panel.view.props.versions.latest = this.version("changes");
 
 				this.emit("publish", { values }, env);
 			} catch (error) {
@@ -232,24 +277,22 @@ export default (panel) => {
 		 * Saves any changes
 		 */
 		async save(values = {}, env = {}) {
-			this.isProcessing = true;
-
 			// ensure to abort unfinished previous save request
 			// to avoid race conditions with older content
-			this.saveAbortController?.abort();
+			this.cancelSaving();
+
+			// create a new abort controller
 			this.saveAbortController = new AbortController();
 
 			try {
 				await this.request("save", values, env);
-
-				this.isProcessing = false;
 
 				// close the dialog if it is still open
 				this.dialog?.close();
 
 				// update the lock timestamp
 				if (this.isCurrent(env) === true) {
-					panel.view.props.lock.modified = new Date();
+					this.lock(env).modified = new Date();
 				}
 
 				this.emit("save", { values }, env);
@@ -292,6 +335,23 @@ export default (panel) => {
 		 */
 		updateLazy(values = {}, env = {}) {
 			this.saveLazy(this.merge(values, env), env);
+		},
+
+		/**
+		 * Returns a specific version of the content
+		 * @param {String} versionId
+		 * @returns {Object|undefined}
+		 */
+		version(versionId) {
+			return this.versions()[versionId];
+		},
+
+		/**
+		 * Returns all versions of the content
+		 * @returns {Object}
+		 */
+		versions() {
+			return panel.view.props.versions;
 		}
 	});
 
@@ -299,7 +359,8 @@ export default (panel) => {
 	// that we can use in the input event
 	content.saveLazy = throttle(content.save, 1000, {
 		leading: true,
-		trailing: true
+		trailing: true,
+		timer: content.timer
 	});
 
 	return content;

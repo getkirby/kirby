@@ -16,8 +16,7 @@ export default {};
 .k-dialog-body {
 	padding: var(--dialog-padding);
 }
-/** TODO: .k-dialog:has(.k-dialog-footer) .k-dialog-body */
-.k-dialog[data-has-footer="true"] .k-dialog-body {
+.k-dialog:has(.k-dialog-footer) .k-dialog-body {
 	padding-bottom: 0;
 }
 </style>

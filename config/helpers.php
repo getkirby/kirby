@@ -7,6 +7,8 @@ use Kirby\Cms\Html;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
+use Kirby\Cms\Plugin;
+use Kirby\Cms\PluginAssets;
 use Kirby\Cms\Response;
 use Kirby\Cms\Site;
 use Kirby\Cms\Url;
@@ -53,7 +55,7 @@ if (Helpers::hasOverride('collection') === false) { // @codeCoverageIgnore
 	 * Returns the result of a collection by name
 	 *
 	 * @return \Kirby\Toolkit\Collection|null
-	 * @todo 5.0 Add return type declaration
+	 * @todo 6.0 Add return type declaration
 	 */
 	function collection(string $name, array $options = [])
 	{
@@ -89,7 +91,7 @@ if (Helpers::hasOverride('css') === false) { // @codeCoverageIgnore
 	 * @param string|array|null $options Pass an array of attributes for the link tag or a media attribute string
 	 */
 	function css(
-		string|array $url,
+		string|array|Plugin|PluginAssets $url,
 		string|array|null $options = null
 	): string|null {
 		return Html::css($url, $options);
@@ -260,7 +262,7 @@ if (Helpers::hasOverride('js') === false) { // @codeCoverageIgnore
 	 * Creates a script tag to load a javascript file
 	 */
 	function js(
-		string|array $url,
+		string|array|Plugin|PluginAssets $url,
 		string|array|bool|null $options = null
 	): string|null {
 		return Html::js($url, $options);
@@ -638,7 +640,7 @@ if (Helpers::hasOverride('uuid') === false) { // @codeCoverageIgnore
 
 if (Helpers::hasOverride('video') === false) { // @codeCoverageIgnore
 	/**
-	 * Creates a video embed via iframe for Youtube or Vimeo
+	 * Creates a video embed via iframe for YouTube or Vimeo
 	 * videos. The embed Urls are automatically detected from
 	 * the given Url.
 	 */
@@ -678,7 +680,7 @@ if (Helpers::hasOverride('widont') === false) { // @codeCoverageIgnore
 
 if (Helpers::hasOverride('youtube') === false) { // @codeCoverageIgnore
 	/**
-	 * Embeds a Youtube video by URL in an iframe
+	 * Embeds a YouTube video by URL in an iframe
 	 */
 	function youtube(
 		string $url,

@@ -1,8 +1,5 @@
 <template>
-	<header
-		class="k-header"
-		:data-has-buttons="Boolean($slots.buttons || $slots.left || $slots.right)"
-	>
+	<header class="k-header">
 		<h1 class="k-header-title">
 			<!--
 				Edit button has been clicked
@@ -41,10 +38,12 @@
  * @example <k-header>
  * 	Headline
  *
- * 	<k-button-group slot="buttons">
- * 		<k-button icon="open" variant="filled" />
- * 		<k-button icon="cog" variant="filled" />
- * 	</k-button-group>
+ * 	<template #buttons>
+ * 		<k-button-group>
+ * 			<k-button icon="open" variant="filled" />
+ * 			<k-button icon="cog" variant="filled" />
+ * 		</k-button-group>
+ * 	</template>
  * </k-header>
  */
 export default {
@@ -79,6 +78,11 @@ export default {
 	box-shadow:
 		2px 0 0 0 var(--header-color-back),
 		-2px 0 0 0 var(--header-color-back);
+}
+
+/** Remove the bottom margin from the header if it is followed by tabs */
+.k-header:has(+ .k-tabs) {
+	margin-bottom: 0;
 }
 
 .k-header-title {
@@ -128,13 +132,12 @@ export default {
 	margin-bottom: var(--header-padding-block);
 }
 
-/** TODO: .k-header:has(.k-header-buttons) */
-.k-header[data-has-buttons="true"] {
+.k-header:has(.k-header-buttons) {
 	position: sticky;
 	top: var(--scroll-top);
 	z-index: var(--z-toolbar);
 }
-:root:has(.k-header[data-has-buttons="true"]) {
+:root:has(.k-header .k-header-buttons) {
 	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
 }
 </style>

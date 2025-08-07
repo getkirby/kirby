@@ -1,0 +1,1 @@
+{"description":"","tags":{"unstable":[{"description":true,"title":"unstable"}]},"displayName":"Topbar","props":[{"name":"breadcrumb","type":{"name":"array"}},{"name":"view","type":{"name":"object"}}],"slots":[{"name":"default"}],"component":"k-topbar","sourceFile":"src/components/View/Topbar.vue"}

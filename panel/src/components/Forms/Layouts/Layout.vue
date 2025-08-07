@@ -1,5 +1,6 @@
 <template>
 	<section
+		:data-disabled="disabled"
 		:data-selected="isSelected"
 		class="k-layout"
 		tabindex="0"
@@ -11,6 +12,7 @@
 				:key="column.id"
 				v-bind="{
 					...column,
+					disabled,
 					endpoints,
 					fieldsetGroups,
 					fieldsets
@@ -46,10 +48,9 @@
 
 <script>
 import { props as LayoutColumnProps } from "./LayoutColumn.vue";
-import { disabled } from "@/mixins/props.js";
 
 export const props = {
-	mixins: [LayoutColumnProps, disabled],
+	mixins: [LayoutColumnProps],
 	props: {
 		columns: Array,
 		layouts: {
@@ -61,7 +62,7 @@ export const props = {
 };
 
 /**
- * @internal
+ * @unstable
  */
 export default {
 	mixins: [props],
@@ -73,6 +74,7 @@ export default {
 		"change",
 		"copy",
 		"duplicate",
+		"paste",
 		"prepend",
 		"remove",
 		"select",
@@ -183,11 +185,10 @@ export default {
 	--layout-border-color: var(--color-gray-300);
 	--layout-toolbar-width: 2rem;
 	position: relative;
+}
+.k-layout:not([data-disabled="true"]) {
 	padding-inline-end: var(--layout-toolbar-width);
 	box-shadow: var(--shadow);
-}
-[data-disabled="true"] .k-layout {
-	padding-inline-end: 0;
 }
 .k-layout:not(:last-of-type) {
 	margin-bottom: var(--spacing-2);

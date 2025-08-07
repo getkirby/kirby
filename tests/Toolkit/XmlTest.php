@@ -3,20 +3,20 @@
 namespace Kirby\Toolkit;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Toolkit\Xml
- */
+#[CoversClass(Xml::class)]
 class XmlTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/xml';
 
-	/**
-	 * @covers       ::attr
-	 * @dataProvider attrProvider
-	 */
-	public function testAttr($input, $value, $expected)
-	{
+	#[DataProvider('attrProvider')]
+	public function testAttr(
+		array $input,
+		bool|null $value,
+		string $expected
+	): void {
 		$this->assertSame($expected, Xml::attr($input, $value));
 	}
 
@@ -36,10 +36,7 @@ class XmlTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::attr
-	 */
-	public function testAttrArrayValue()
+	public function testAttrArrayValue(): void
 	{
 		$result = Xml::attr('a', ['a', 'b']);
 		$this->assertSame('a="a b"', $result);
@@ -57,12 +54,7 @@ class XmlTest extends TestCase
 		$this->assertSame('a="&"', $result);
 	}
 
-	/**
-	 * @covers ::parse
-	 * @covers ::simplify
-	 * @covers ::create
-	 */
-	public function testParseSimplifyCreate()
+	public function testParseSimplifyCreate(): void
 	{
 		$this->assertSame('<name>Homer</name>', Xml::create('Homer', 'name', false));
 		$this->assertSame('<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . '<name>Homer</name>', Xml::create('Homer', 'name', true));
@@ -130,6 +122,7 @@ class XmlTest extends TestCase
 				]
 			]
 		];
+
 		$this->assertSame($data, Xml::parse(file_get_contents(static::FIXTURES . '/simpsons.xml')));
 		$this->assertStringEqualsFile(static::FIXTURES . '/simpsons.xml', Xml::create($data, 'invalid'));
 		$this->assertStringEqualsFile(static::FIXTURES . '/simpsons_4spaces.xml', Xml::create($data, 'invalid', true, '    '));
@@ -140,33 +133,24 @@ class XmlTest extends TestCase
 		$this->assertNull(Xml::parse('<this>is invalid</that>'));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
-	public function testParseEntities()
+	public function testParseEntities(): void
 	{
 		$xml   = '<!DOCTYPE d [<!ENTITY e "bar">]><x>this is a file: foo &e; (with entities)</x>';
 		$array = Xml::parse($xml);
 
 		$this->assertSame([
-			'@name' => 'x',
+			'@name'  => 'x',
 			'@value' => 'this is a file: foo bar (with entities)'
 		], $array);
 	}
 
-	/**
-	 * @covers ::parse
-	 */
-	public function testParseRecursiveEntities()
+	public function testParseRecursiveEntities(): void
 	{
 		$xml = file_get_contents(static::FIXTURES . '/billion-laughs.xml');
 		$this->assertNull(Xml::parse($xml));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
-	public function testParseXXE()
+	public function testParseXXE(): void
 	{
 		$xml   = '<!DOCTYPE d [<!ENTITY e SYSTEM "' . __FILE__ . '">]><x>this is a file: &e; with an XXE vulnerability</x>';
 		$array = Xml::parse($xml);
@@ -177,11 +161,7 @@ class XmlTest extends TestCase
 		], $array);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers ::decode
-	 */
-	public function testEncodeDecode()
+	public function testEncodeDecode(): void
 	{
 		$expected = 'S&#252;per &#214;nenc&#339;ded &#223;tring';
 		$this->assertSame($expected, Xml::encode('Süper Önencœded ßtring'));
@@ -195,18 +175,12 @@ class XmlTest extends TestCase
 		$this->assertSame('', Xml::encode(null));
 	}
 
-	/**
-	 * @covers ::entities
-	 */
-	public function testEntities()
+	public function testEntities(): void
 	{
 		$this->assertSame(Xml::$entities, Xml::entities());
 	}
 
-	/**
-	 * @covers ::tag
-	 */
-	public function testTag()
+	public function testTag(): void
 	{
 		$tag = Xml::tag('name', 'content');
 		$this->assertSame('<name>content</name>', $tag);
@@ -233,12 +207,11 @@ class XmlTest extends TestCase
 		$this->assertSame('  <name foo="bar">' . PHP_EOL . '   Test' . PHP_EOL . '   Test2' . PHP_EOL . '  </name>', $tag);
 	}
 
-	/**
-	 * @covers       ::value
-	 * @dataProvider valueProvider
-	 */
-	public function testValue($input, $expected)
-	{
+	#[DataProvider('valueProvider')]
+	public function testValue(
+		bool|int|string|null $input,
+		string|null $expected
+	): void {
 		$this->assertSame($expected, Xml::value($input));
 	}
 

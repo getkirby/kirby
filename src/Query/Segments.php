@@ -15,6 +15,8 @@ use Kirby\Toolkit\Collection;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
+ * @todo Deprecate in v6
+ *
  * @extends \Kirby\Toolkit\Collection<\Kirby\Query\Segment>
  */
 class Segments extends Collection
@@ -56,7 +58,7 @@ class Segments extends Collection
 	/**
 	 * Splits the string of a segment chaing into an
 	 * array of segments as well as conenctors (`.` or `?.`)
-	 * @internal
+	 * @unstable
 	 */
 	public static function parse(string $string): array
 	{

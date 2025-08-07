@@ -14,6 +14,8 @@ use Kirby\Toolkit\A;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @todo Deprecate in v6
  */
 class Expression
 {
@@ -53,7 +55,7 @@ class Expression
 	/**
 	 * Splits a comparison string into an array
 	 * of expressions and operators
-	 * @internal
+	 * @unstable
 	 */
 	public static function parse(string $string): array
 	{

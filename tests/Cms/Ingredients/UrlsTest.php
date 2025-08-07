@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class UrlsTest extends TestCase
 {
 	public static function defaultUrlProvider(): array
@@ -13,10 +15,8 @@ class UrlsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider defaultUrlProvider
-	 */
-	public function testDefaulUrl($url, $method)
+	#[DataProvider('defaultUrlProvider')]
+	public function testDefaulUrl($url, $method): void
 	{
 		$app  = new App([
 			'roots' => [
@@ -37,10 +37,8 @@ class UrlsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider customBaseUrlProvider
-	 */
-	public function testWithCustomBaseUrl($url, $method)
+	#[DataProvider('customBaseUrlProvider')]
+	public function testWithCustomBaseUrl($url, $method): void
 	{
 		$app = new App([
 			'roots' => [
@@ -63,10 +61,8 @@ class UrlsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider customUrlProvider
-	 */
-	public function testWithCustomUrl($url, $method)
+	#[DataProvider('customUrlProvider')]
+	public function testWithCustomUrl($url, $method): void
 	{
 		$app = new App([
 			'roots' => [
@@ -82,7 +78,7 @@ class UrlsTest extends TestCase
 		$this->assertSame($url, $urls->$method());
 	}
 
-	public function testCurrent()
+	public function testCurrent(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -93,7 +89,7 @@ class UrlsTest extends TestCase
 		$this->assertSame('/', $app->url('current'));
 	}
 
-	public function testCurrentInSubfolderSetup()
+	public function testCurrentInSubfolderSetup(): void
 	{
 		$app = $this->app->clone([
 			'cli' => false,
@@ -119,7 +115,7 @@ class UrlsTest extends TestCase
 		$this->assertSame('http://localhost/starterkit/sub/folder', $app->url('current'));
 	}
 
-	public function testCurrentWithCustomIndex()
+	public function testCurrentWithCustomIndex(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -133,7 +129,7 @@ class UrlsTest extends TestCase
 		$this->assertSame('http://getkirby.com', $app->url('current'));
 	}
 
-	public function testCurrentWithCustomPath()
+	public function testCurrentWithCustomPath(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -145,7 +141,7 @@ class UrlsTest extends TestCase
 		$this->assertSame('/test/path', $app->url('current'));
 	}
 
-	public function testCurrentWithCustomPathAndCustomIndex()
+	public function testCurrentWithCustomPathAndCustomIndex(): void
 	{
 		$app = new App([
 			'roots' => [

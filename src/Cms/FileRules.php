@@ -29,7 +29,7 @@ class FileRules
 	 */
 	public static function changeName(File $file, string $name): void
 	{
-		if ($file->permissions()->changeName() !== true) {
+		if ($file->permissions()->can('changeName') !== true) {
 			throw new PermissionException(
 				key: 'file.changeName.permission',
 				data: ['filename' => $file->filename()]
@@ -58,7 +58,7 @@ class FileRules
 	 */
 	public static function changeSort(File $file, int $sort): void
 	{
-		if ($file->permissions()->sort() !== true) {
+		if ($file->permissions()->can('sort') !== true) {
 			throw new PermissionException(
 				key: 'file.sort.permission',
 				data: ['filename' => $file->filename()]
@@ -74,7 +74,7 @@ class FileRules
 	 */
 	public static function changeTemplate(File $file, string $template): void
 	{
-		if ($file->permissions()->changeTemplate() !== true) {
+		if ($file->permissions()->can('changeTemplate') !== true) {
 			throw new PermissionException(
 				key: 'file.changeTemplate.permission',
 				data: ['id' => $file->id()]
@@ -134,7 +134,7 @@ class FileRules
 			);
 		}
 
-		if ($file->permissions()->create() !== true) {
+		if ($file->permissions()->can('create') !== true) {
 			throw new PermissionException(
 				message: 'The file cannot be created'
 			);
@@ -153,7 +153,7 @@ class FileRules
 	 */
 	public static function delete(File $file): void
 	{
-		if ($file->permissions()->delete() !== true) {
+		if ($file->permissions()->can('delete') !== true) {
 			throw new PermissionException(
 				message: 'The file cannot be deleted'
 			);
@@ -168,7 +168,7 @@ class FileRules
 	 */
 	public static function replace(File $file, BaseFile $upload): void
 	{
-		if ($file->permissions()->replace() !== true) {
+		if ($file->permissions()->can('replace') !== true) {
 			throw new PermissionException(
 				message: 'The file cannot be replaced'
 			);
@@ -197,7 +197,7 @@ class FileRules
 	 */
 	public static function update(File $file, array $content = []): void
 	{
-		if ($file->permissions()->update() !== true) {
+		if ($file->permissions()->can('update') !== true) {
 			throw new PermissionException(
 				message: 'The file cannot be updated'
 			);

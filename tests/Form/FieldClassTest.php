@@ -3,8 +3,10 @@
 namespace Kirby\Form;
 
 use Exception;
+use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class TestField extends FieldClass
 {
@@ -18,9 +20,9 @@ class HiddenField extends FieldClass
 	}
 }
 
-class UnsaveableField extends FieldClass
+class NoValueField extends FieldClass
 {
-	public function isSaveable(): bool
+	public function hasValue(): bool
 	{
 		return false;
 	}
@@ -41,15 +43,10 @@ class ValidatedField extends FieldClass
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Form\FieldClass
- */
+#[CoversClass(FieldClass::class)]
 class FieldClassTest extends TestCase
 {
-	/**
-	 * @covers ::__call
-	 */
-	public function test__call()
+	public function test__call(): void
 	{
 		$field = new TestField([
 			'foo' => 'bar'
@@ -58,10 +55,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame('bar', $field->foo());
 	}
 
-	/**
-	 * @covers ::after
-	 */
-	public function testAfter()
+	public function testAfter(): void
 	{
 		$field = new TestField();
 		$this->assertNull($field->after());
@@ -73,19 +67,13 @@ class FieldClassTest extends TestCase
 		$this->assertSame('Test', $field->after());
 	}
 
-	/**
-	 * @covers ::api
-	 */
-	public function testApi()
+	public function testApi(): void
 	{
 		$field = new TestField();
 		$this->assertSame([], $field->api());
 	}
 
-	/**
-	 * @covers ::autofocus
-	 */
-	public function testAutofocus()
+	public function testAutofocus(): void
 	{
 		$field = new TestField();
 		$this->assertFalse($field->autofocus());
@@ -94,10 +82,7 @@ class FieldClassTest extends TestCase
 		$this->assertTrue($field->autofocus());
 	}
 
-	/**
-	 * @covers ::before
-	 */
-	public function testBefore()
+	public function testBefore(): void
 	{
 		$field = new TestField();
 		$this->assertNull($field->before());
@@ -109,10 +94,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame('Test', $field->before());
 	}
 
-	/**
-	 * @covers ::data
-	 */
-	public function testData()
+	public function testData(): void
 	{
 		$field = new TestField();
 		$this->assertNull($field->data());
@@ -130,10 +112,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame('test', $field->data());
 	}
 
-	/**
-	 * @covers ::default
-	 */
-	public function testDefault()
+	public function testDefault(): void
 	{
 		$field = new TestField();
 		$this->assertNull($field->default());
@@ -156,20 +135,13 @@ class FieldClassTest extends TestCase
 		$this->assertSame('Test title', $field->default());
 	}
 
-	/**
-	 * @covers ::dialogs
-	 */
-	public function testDialogs()
+	public function testDialogs(): void
 	{
 		$field = new TestField();
 		$this->assertSame([], $field->dialogs());
 	}
 
-	/**
-	 * @covers ::disabled
-	 * @covers ::isDisabled
-	 */
-	public function testDisabled()
+	public function testDisabled(): void
 	{
 		$field = new TestField();
 		$this->assertFalse($field->disabled());
@@ -180,21 +152,13 @@ class FieldClassTest extends TestCase
 		$this->assertTrue($field->isDisabled());
 	}
 
-	/**
-	 * @covers ::drawers
-	 */
-	public function testDrawers()
+	public function testDrawers(): void
 	{
 		$field = new TestField();
 		$this->assertSame([], $field->drawers());
 	}
 
-	/**
-	 * @covers ::errors
-	 * @covers ::validate
-	 * @covers ::validations
-	 */
-	public function testErrors()
+	public function testErrors(): void
 	{
 		$field = new TestField();
 		$this->assertSame([], $field->errors());
@@ -212,10 +176,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame(['custom' => 'Please enter an a'], $field->errors());
 	}
 
-	/**
-	 * @covers ::fill
-	 */
-	public function testFill()
+	public function testFill(): void
 	{
 		$field = new TestField();
 		$this->assertNull($field->value());
@@ -223,11 +184,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame('Test value', $field->value());
 	}
 
-	/**
-	 * @covers ::isEmpty
-	 * @covers ::isEmptyValue
-	 */
-	public function testIsEmpty()
+	public function testIsEmpty(): void
 	{
 		$field = new TestField();
 		$this->assertTrue($field->isEmpty());
@@ -236,10 +193,7 @@ class FieldClassTest extends TestCase
 		$this->assertFalse($field->isEmpty());
 	}
 
-	/**
-	 * @covers ::isEmptyValue
-	 */
-	public function testIsEmptyValue()
+	public function testIsEmptyValue(): void
 	{
 		$field = new TestField();
 
@@ -253,10 +207,7 @@ class FieldClassTest extends TestCase
 		$this->assertFalse($field->isEmptyValue('0'));
 	}
 
-	/**
-	 * @covers ::isHidden
-	 */
-	public function testIsHidden()
+	public function testIsHidden(): void
 	{
 		$field = new TestField();
 		$this->assertFalse($field->isHidden());
@@ -265,11 +216,29 @@ class FieldClassTest extends TestCase
 		$this->assertTrue($field->isHidden());
 	}
 
-	/**
-	 * @covers ::isInvalid
-	 * @covers ::isValid
-	 */
-	public function testInvalid()
+	public function testIsTranslatable(): void
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField();
+		$this->assertTrue($field->isTranslatable($language));
+	}
+
+	public function testIsTranslatableWithNonDefaultLanguage(): void
+	{
+		$language = new Language([
+			'code'    => 'de',
+			'default' => false
+		]);
+
+		$field = new TestField(['translate' => true]);
+		$this->assertTrue($field->isTranslatable($language));
+
+		$field = new TestField(['translate' => false]);
+		$this->assertFalse($field->isTranslatable($language));
+	}
+
+	public function testInvalid(): void
 	{
 		$field = new TestField();
 		$this->assertFalse($field->isInvalid());
@@ -281,11 +250,7 @@ class FieldClassTest extends TestCase
 		$this->assertFalse($field->isInvalid());
 	}
 
-	/**
-	 * @covers ::isRequired
-	 * @covers ::required
-	 */
-	public function testIsRequired()
+	public function testIsRequired(): void
 	{
 		$field = new TestField();
 		$this->assertFalse($field->isRequired());
@@ -296,22 +261,156 @@ class FieldClassTest extends TestCase
 		$this->assertTrue($field->required());
 	}
 
-	/**
-	 * @covers ::isSaveable
-	 */
-	public function testIsSaveable()
+	public function testIsStorable(): void
 	{
-		$field = new TestField();
-		$this->assertTrue($field->isSaveable());
+		$language = Language::ensure('current');
 
-		$field = new UnsaveableField();
-		$this->assertFalse($field->isSaveable());
+		$field = new TestField();
+		$this->assertTrue($field->isStorable($language));
+
+		$field = new NoValueField();
+		$this->assertFalse($field->isStorable($language));
 	}
 
-	/**
-	 * @covers ::help
-	 */
-	public function testHelp()
+	public function testIsStorableWithDisabledField(): void
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField(['disabled' => true]);
+		$this->assertTrue($field->isStorable($language), 'The value of a storable field must not be changed on submit, but can still be stored.');
+	}
+
+	public function testIsStorableWithNonDefaultLanguage(): void
+	{
+		$language = new Language([
+			'code'    => 'de',
+			'default' => false
+		]);
+
+		$field = new TestField(['translate' => true]);
+		$this->assertTrue($field->isStorable($language));
+
+		$field = new TestField(['translate' => false]);
+		$this->assertFalse($field->isStorable($language));
+	}
+
+	public function testIsSubmittable(): void
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField();
+		$this->assertTrue($field->isSubmittable($language));
+
+		$field = new NoValueField();
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithDisabledField(): void
+	{
+		$language = Language::ensure('current');
+
+		$field = new TestField(['disabled' => true]);
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithNonDefaultLanguage(): void
+	{
+		$language = new Language([
+			'code'    => 'de',
+			'default' => false
+		]);
+
+		$field = new TestField(['translate' => true]);
+		$this->assertTrue($field->isSubmittable($language));
+
+		$field = new TestField(['translate' => false]);
+		$this->assertFalse($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithWhenQueryAndMatchingValue(): void
+	{
+		$language = Language::ensure('current');
+
+		$siblings = new Fields([
+			new TestField(['name' => 'a', 'value' => 'b']),
+		]);
+
+		$field = new TestField([
+			'siblings' => $siblings,
+			'when'     => [
+				'a' => 'b'
+			],
+		]);
+
+		$this->assertTrue($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithWhenQueryAndNonMatchingValue(): void
+	{
+		$language = Language::ensure('current');
+
+		$siblings = new Fields([
+			new TestField(['name' => 'a', 'value' => 'something-else']),
+		]);
+
+		$field = new TestField([
+			'siblings' => $siblings,
+			'when'     => [
+				'a' => 'b'
+			],
+		]);
+
+		$this->assertTrue($field->isSubmittable($language));
+	}
+
+	public function testIsSubmittableWithWhenQueryAndTwoFields()
+	{
+		$language = Language::ensure('current');
+
+		$fields = new Fields([
+			new TestField([
+				'name'  => 'a',
+				'value' => 'a',
+				'when'  => [
+					'b' => 'b'
+				]
+			]),
+			new TestField([
+				'name'  => 'b',
+				'value' => 'b',
+				'when'  => [
+					'a' => 'a'
+				]
+			]),
+		]);
+
+		$a = $fields->get('a');
+		$b = $fields->get('b');
+
+		$this->assertTrue($a->isSubmittable($language));
+		$this->assertTrue($b->isSubmittable($language));
+
+		$fields->submit([
+			'a' => 'a submitted',
+			'b' => 'b submitted'
+		]);
+
+		$this->assertSame([
+			'a' => 'a submitted',
+			'b' => 'b submitted'
+		], $fields->toFormValues());
+	}
+
+	public function testHasValue(): void
+	{
+		$field = new TestField();
+		$this->assertTrue($field->hasValue());
+
+		$field = new NoValueField();
+		$this->assertFalse($field->hasValue());
+	}
+
+	public function testHelp(): void
 	{
 		$field = new TestField();
 		$this->assertNull($field->help());
@@ -338,10 +437,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame('<p>A field for Test title</p>', $field->help());
 	}
 
-	/**
-	 * @covers ::icon
-	 */
-	public function testIcon()
+	public function testIcon(): void
 	{
 		$field = new TestField();
 		$this->assertNull($field->icon());
@@ -350,10 +446,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame('Test', $field->icon());
 	}
 
-	/**
-	 * @covers ::id
-	 */
-	public function testId()
+	public function testId(): void
 	{
 		$field = new TestField();
 		$this->assertSame('test', $field->id());
@@ -362,19 +455,13 @@ class FieldClassTest extends TestCase
 		$this->assertSame('test-id', $field->id());
 	}
 
-	/**
-	 * @covers ::kirby
-	 */
-	public function testKirby()
+	public function testKirby(): void
 	{
 		$field = new TestField();
 		$this->assertSame(kirby(), $field->kirby());
 	}
 
-	/**
-	 * @covers ::label
-	 */
-	public function testLabel()
+	public function testLabel(): void
 	{
 		$field = new TestField();
 		$this->assertSame('Test', $field->label());
@@ -386,10 +473,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame('Test', $field->label());
 	}
 
-	/**
-	 * @covers ::model
-	 */
-	public function testModel()
+	public function testModel(): void
 	{
 		$field = new TestField();
 		$site  = site();
@@ -400,10 +484,7 @@ class FieldClassTest extends TestCase
 		$this->assertIsPage($page, $field->model());
 	}
 
-	/**
-	 * @covers ::name
-	 */
-	public function testName()
+	public function testName(): void
 	{
 		$field = new TestField();
 		$this->assertSame('test', $field->name());
@@ -412,10 +493,13 @@ class FieldClassTest extends TestCase
 		$this->assertSame('test-name', $field->name());
 	}
 
-	/**
-	 * @covers ::params
-	 */
-	public function testParams()
+	public function testNameCase(): void
+	{
+		$field = new TestField(['name' => 'myTest']);
+		$this->assertSame('mytest', $field->name());
+	}
+
+	public function testParams(): void
 	{
 		$field = new TestField($params = [
 			'foo'      => 'bar',
@@ -426,10 +510,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame($params, $field->params());
 	}
 
-	/**
-	 * @covers ::placeholder
-	 */
-	public function testPlaceholder()
+	public function testPlaceholder(): void
 	{
 		$field = new TestField();
 		$this->assertNull($field->placeholder());
@@ -456,11 +537,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame('Placeholder for Test title', $field->placeholder());
 	}
 
-	/**
-	 * @covers ::props
-	 * @covers ::toArray
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$field = new TestField($props = [
 			'after'       => 'After value',
@@ -489,28 +566,19 @@ class FieldClassTest extends TestCase
 		$this->assertSame($props, $field->props());
 	}
 
-	/**
-	 * @covers ::routes
-	 */
-	public function testRoutes()
+	public function testRoutes(): void
 	{
 		$field = new TestField();
 		$this->assertSame([], $field->routes());
 	}
 
-	/**
-	 * @covers ::save
-	 */
-	public function testSave()
+	public function testSave(): void
 	{
 		$field = new TestField();
 		$this->assertTrue($field->save());
 	}
 
-	/**
-	 * @covers ::siblings
-	 */
-	public function testSiblings()
+	public function testSiblings(): void
 	{
 		$field = new TestField();
 		$this->assertInstanceOf(Fields::class, $field->siblings());
@@ -529,10 +597,15 @@ class FieldClassTest extends TestCase
 		$this->assertSame('b', $field->siblings()->last()->name());
 	}
 
-	/**
-	 * @covers ::toStoredValue
-	 */
-	public function testToStoredValue()
+	public function testSubmit(): void
+	{
+		$field = new TestField();
+		$this->assertNull($field->value());
+		$field->submit('Test value');
+		$this->assertSame('Test value', $field->value());
+	}
+
+	public function testToStoredValue(): void
 	{
 		$field = new TestField();
 		$field->fill('test');
@@ -540,10 +613,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame('test', $field->toStoredValue());
 	}
 
-	/**
-	 * @covers ::translate
-	 */
-	public function testTranslate()
+	public function testTranslate(): void
 	{
 		$field = new TestField();
 		$this->assertTrue($field->translate());
@@ -552,19 +622,13 @@ class FieldClassTest extends TestCase
 		$this->assertFalse($field->translate());
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testType()
+	public function testType(): void
 	{
 		$field = new TestField();
 		$this->assertSame('test', $field->type());
 	}
 
-	/**
-	 * @covers ::value
-	 */
-	public function testValue()
+	public function testValue(): void
 	{
 		$field = new TestField();
 		$this->assertNull($field->value());
@@ -578,14 +642,11 @@ class FieldClassTest extends TestCase
 		$field = new TestField(['default' => 'Default value']);
 		$this->assertSame('Default value', $field->value(true));
 
-		$field = new UnsaveableField(['value' => 'Test']);
+		$field = new NoValueField(['value' => 'Test']);
 		$this->assertNull($field->value());
 	}
 
-	/**
-	 * @covers ::when
-	 */
-	public function testWhen()
+	public function testWhen(): void
 	{
 		$field = new TestField();
 		$this->assertNull($field->when());
@@ -594,10 +655,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame(['a' => 'test'], $field->when());
 	}
 
-	/**
-	 * @covers ::width
-	 */
-	public function testWidth()
+	public function testWidth(): void
 	{
 		$field = new TestField();
 		$this->assertSame('1/1', $field->width());

@@ -10,14 +10,13 @@ use Kirby\Exception\NotFoundException;
  * The VersionRules class handles the validation for all
  * modification actions on a single version
  *
- * @internal
- * @since 5.0.0
- *
  * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
+ * @unstable
  */
 class VersionRules
 {
@@ -29,16 +28,6 @@ class VersionRules
 		if ($version->exists($language) === true) {
 			throw new LogicException(
 				message: 'The version already exists'
-			);
-		}
-
-		if ($version->isLatest() === true) {
-			return;
-		}
-
-		if ($version->model()->version(VersionId::latest())->exists($language) === false) {
-			throw new LogicException(
-				message: 'A matching latest version for the changes does not exist'
 			);
 		}
 	}

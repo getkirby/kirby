@@ -8,7 +8,7 @@ class FileModelTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileApiModel';
 
-	public function testNextWithTemplate()
+	public function testNextWithTemplate(): void
 	{
 		$page = new Page([
 			'slug'  => 'test',
@@ -22,7 +22,7 @@ class FileModelTest extends ModelTestCase
 		$this->assertSame('b.jpg', $next['filename']);
 	}
 
-	public function testPrevWithTemplate()
+	public function testPrevWithTemplate(): void
 	{
 		$page = new Page([
 			'slug'  => 'test',

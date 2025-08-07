@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"4.0.0","title":"since"}],"unstable":[{"description":true,"title":"unstable"}]},"displayName":"Highlight","slots":[{"name":"default"}],"component":"k-highlight","sourceFile":"src/components/Text/Highlight.vue"}

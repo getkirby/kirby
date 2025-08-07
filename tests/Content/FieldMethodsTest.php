@@ -4,12 +4,14 @@ namespace Kirby\Content;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blocks;
+use Kirby\Cms\Collection;
 use Kirby\Cms\Files;
 use Kirby\Cms\Layouts;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Cms\Users;
+use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
@@ -43,69 +45,69 @@ class FieldMethodsTest extends TestCase
 		App::destroy();
 	}
 
-	public function testFieldMethodCaseInsensitivity()
+	public function testFieldMethodCaseInsensitivity(): void
 	{
 		$field = $this->field('test');
 		$this->assertSame('TEST', $field->upper()->value());
 		$this->assertSame('TEST', $field->UPPER()->value());
 	}
 
-	public function testFieldMethodAliasCaseInsensitivity()
+	public function testFieldMethodAliasCaseInsensitivity(): void
 	{
 		$field = $this->field('1');
 		$this->assertSame(1, $field->toInt());
 		$this->assertSame(1, $field->int());
 	}
 
-	public function testFieldMethodCombination()
+	public function testFieldMethodCombination(): void
 	{
 		$field = $this->field('test')->upper()->short(3);
 		$this->assertSame('TES…', $field->value());
 	}
 
-	public function testIsFalse()
+	public function testIsFalse(): void
 	{
 		$this->assertTrue($this->field('false')->isFalse());
 		$this->assertTrue($this->field(false)->isFalse());
 	}
 
-	public function testIsTrue()
+	public function testIsTrue(): void
 	{
 		$this->assertTrue($this->field('true')->isTrue());
 		$this->assertTrue($this->field(true)->isTrue());
 	}
 
-	public function testIsValid()
+	public function testIsValid(): void
 	{
 		$this->assertTrue($this->field('mail@example.com')->isValid('email'));
 		$this->assertTrue($this->field('https://example.com')->isValid('url'));
 	}
 
-	public function testToDataSplit()
+	public function testToDataSplit(): void
 	{
 		$this->assertSame(['a', 'b'], $this->field('a, b')->toData());
 	}
 
-	public function testToDataSplitWithDifferentSeparator()
+	public function testToDataSplitWithDifferentSeparator(): void
 	{
 		$this->assertSame(['a', 'b'], $this->field('a; b')->toData(';'));
 	}
 
-	public function testToDataYaml()
+	public function testToDataYaml(): void
 	{
 		$data = ['a', 'b'];
 
 		$this->assertSame(['a', 'b'], $this->field(Yaml::encode($data))->toData('yaml'));
 	}
 
-	public function testToDataJson()
+	public function testToDataJson(): void
 	{
 		$data = ['a', 'b'];
 
 		$this->assertSame(['a', 'b'], $this->field(json_encode($data))->toData('json'));
 	}
 
-	public function testToBool()
+	public function testToBool(): void
 	{
 		$this->assertTrue($this->field('1')->toBool());
 		$this->assertTrue($this->field('true')->toBool());
@@ -113,7 +115,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertFalse($this->field('false')->toBool());
 	}
 
-	public function testToDate()
+	public function testToDate(): void
 	{
 		$field = $this->field('2012-12-12');
 		$ts    = strtotime('2012-12-12');
@@ -123,7 +125,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($date, $field->toDate('d.m.Y'));
 	}
 
-	public function testToDateWithDateHandler()
+	public function testToDateWithDateHandler(): void
 	{
 		new App([
 			'roots' => [
@@ -142,7 +144,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($date, $field->toDate('%d.%m.%Y'));
 	}
 
-	public function testToDateWithFallback()
+	public function testToDateWithFallback(): void
 	{
 		$field = $this->field(null);
 		$date  = '12.12.2012';
@@ -151,13 +153,58 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame(date('d.m.Y'), $field->toDate('d.m.Y', 'today'));
 	}
 
-	public function testToDateWithEmptyValueAndNoFallback()
+	public function testToDateWithEmptyValueAndNoFallback(): void
 	{
 		$field = $this->field(null);
 		$this->assertNull($field->toDate('d.m.Y'));
 	}
 
-	public function testToFile()
+	public function testToEntries(): void
+	{
+		$value   = [
+			'Text',
+			'Some text',
+			'Another text',
+		];
+		$page    = new Page(['slug' => 'test']);
+		$field   = $this->field(Data::encode($value, 'yaml'), $page);
+		$entries = $field->toEntries();
+
+		$this->assertInstanceOf(Collection::class, $entries);
+		$this->assertSame($page, $entries->parent());
+		$this->assertCount(3, $entries);
+		$this->assertInstanceOf(Field::class, $entries->first());
+		$this->assertSame('Text', $entries->first()->value());
+		$this->assertSame('TEXT', $entries->first()->upper()->value());
+		$this->assertSame('Some text', $entries->nth(1)->value());
+		$this->assertSame('Another text', $entries->nth(2)->value());
+	}
+
+	public function testToEntriesDateMethod(): void
+	{
+		$value   = ['2012-12-12'];
+		$page    = new Page(['slug' => 'test']);
+		$field   = $this->field(Data::encode($value, 'yaml'), $page);
+		$entries = $field->toEntries();
+
+		$this->assertInstanceOf(Collection::class, $entries);
+		$this->assertSame($page, $entries->parent());
+		$this->assertCount(1, $entries);
+		$this->assertInstanceOf(Field::class, $entries->first());
+		$this->assertSame('2012-12-12', $entries->first()->value());
+		$this->assertSame('12.12.2012', $entries->first()->toDate('d.m.Y'));
+	}
+
+	public function testToEntriesEmptyValue(): void
+	{
+		$field   = $this->field();
+		$entries = $field->toEntries();
+
+		$this->assertInstanceOf(Collection::class, $entries);
+		$this->assertCount(0, $entries);
+	}
+
+	public function testToFile(): void
 	{
 		new App([
 			'roots' => [
@@ -183,7 +230,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('cover.jpg', $page->coverid()->toFile()->filename());
 	}
 
-	public function testToFiles()
+	public function testToFiles(): void
 	{
 		$page = new Page([
 			'content' => [
@@ -199,7 +246,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($page->files()->pluck('filename'), $page->gallery()->toFiles()->pluck('filename'));
 	}
 
-	public function testToFilesFromDifferentPage()
+	public function testToFilesFromDifferentPage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -231,7 +278,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame(['b.jpg', 'a.jpg'], $page->gallery()->toFiles()->pluck('filename'));
 	}
 
-	public function testToFilesWithoutResults()
+	public function testToFilesWithoutResults(): void
 	{
 		$page = new Page([
 			'content' => [
@@ -245,7 +292,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertInstanceOf(Files::class, $page->gallery()->toFiles());
 	}
 
-	public function testToFloat()
+	public function testToFloat(): void
 	{
 		$field    = $this->field('1.2');
 		$expected = 1.2;
@@ -253,13 +300,13 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $field->toFloat());
 	}
 
-	public function testToInt()
+	public function testToInt(): void
 	{
 		$this->assertSame(1, $this->field('1')->toInt());
 		$this->assertIsInt($this->field('1')->toInt());
 	}
 
-	public function testToLink()
+	public function testToLink(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -273,7 +320,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $page->title()->toLink());
 	}
 
-	public function testToLinkWithHref()
+	public function testToLinkWithHref(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -287,7 +334,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $page->title()->toLink('https://getkirby.com', ['class' => 'test']));
 	}
 
-	public function testToLinkWithActivePage()
+	public function testToLinkWithActivePage(): void
 	{
 		$site = new Site([
 			'children' => [
@@ -306,7 +353,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $page->title()->toLink());
 	}
 
-	public function testToPage()
+	public function testToPage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -334,7 +381,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($c, $this->field(Yaml::encode(['page://uuid-c', 'b', 'a']))->toPage());
 	}
 
-	public function testToPages()
+	public function testToPages(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -385,7 +432,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame([], $result->data());
 	}
 
-	public function testToQrCode()
+	public function testToQrCode(): void
 	{
 		$field = $this->field($url = 'https://getkirby.com');
 		$qr    = $field->toQrCode();
@@ -396,7 +443,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertNull($this->field()->toQrCode());
 	}
 
-	public function testPermalinksToUrls()
+	public function testPermalinksToUrls(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -429,7 +476,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('<p>This is a <a href="/a">test</a><img src="/media/pages/a/' . $hash . '/test.jpg"></p>. This should not be <a href="https://getkirby.com">affected</a>.', (string)$result);
 	}
 
-	public function testPermalinksToUrlsWithMissingUUID()
+	public function testPermalinksToUrlsWithMissingUUID(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -443,7 +490,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('<p>This is a <a href="/@/page/my-page">test</a></p>.', (string)$result);
 	}
 
-	public function testToStructure()
+	public function testToStructure(): void
 	{
 		$data = [
 			['title' => 'a', 'field' => 'c'],
@@ -466,7 +513,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('d', $structure->last()->content()->field()->value());
 	}
 
-	public function testToStructureWithInvalidData()
+	public function testToStructureWithInvalidData(): void
 	{
 		$data = [
 			['title' => 'a'],
@@ -483,7 +530,7 @@ class FieldMethodsTest extends TestCase
 		$field->toStructure();
 	}
 
-	public function testToTimestamp()
+	public function testToTimestamp(): void
 	{
 		$field = $this->field('2012-12-12');
 		$ts    = strtotime('2012-12-12');
@@ -492,7 +539,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertFalse($this->field(null)->toTimestamp());
 	}
 
-	public function testToDefaultUrl()
+	public function testToDefaultUrl(): void
 	{
 		$field    = $this->field('super/cool');
 		$expected = '/super/cool';
@@ -500,7 +547,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $field->toUrl());
 	}
 
-	public function testToUrlCustom()
+	public function testToUrlCustom(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -517,13 +564,13 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $field->toUrl());
 	}
 
-	public function testToUrlEmpty()
+	public function testToUrlEmpty(): void
 	{
 		$field = $this->field();
 		$this->assertNull($field->toUrl());
 	}
 
-	public function testToUuidUrl()
+	public function testToUuidUrl(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -561,7 +608,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($file->url(), $field->toUrl());
 	}
 
-	public function testToInvalidUuidUrl()
+	public function testToInvalidUuidUrl(): void
 	{
 		$field = $this->field('page://invalid');
 		$this->assertNull($field->toUrl());
@@ -570,7 +617,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertNull($field->toUrl());
 	}
 
-	public function testToUser()
+	public function testToUser(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -595,7 +642,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($b, $this->field(Yaml::encode(['b@company.com', 'a@company.com']))->toUser());
 	}
 
-	public function testToUsers()
+	public function testToUsers(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -624,12 +671,12 @@ class FieldMethodsTest extends TestCase
 		$this->assertInstanceOf(Users::class, $this->field($content)->toUsers());
 	}
 
-	public function testLength()
+	public function testLength(): void
 	{
 		$this->assertSame(3, $this->field('abc')->length());
 	}
 
-	public function testCallback()
+	public function testCallback(): void
 	{
 		$field  = $this->field('Hello world');
 		$result = $field->callback(function ($field) {
@@ -639,12 +686,12 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('foo', $result->toString());
 	}
 
-	public function testEscape()
+	public function testEscape(): void
 	{
 		$this->assertSame('&lt;script&gt;alert(&quot;hello&quot;)&lt;/script&gt;', $this->field('<script>alert("hello")</script>')->escape()->value());
 	}
 
-	public function testExcerpt()
+	public function testExcerpt(): void
 	{
 		// html
 		$string   = 'This is a long text<br>with some html';
@@ -659,12 +706,12 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($string)->excerpt(27)->value());
 	}
 
-	public function testHtml()
+	public function testHtml(): void
 	{
 		$this->assertSame('&ouml;', $this->field('ö')->html()->value());
 	}
 
-	public function testInline()
+	public function testInline(): void
 	{
 		$html = '<div><h1>Headline</h1> <p>Subtitle with <a href="#">link</a>.</p></div>';
 		$expected = 'Headline Subtitle with <a href="#">link</a>.';
@@ -673,7 +720,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('', $this->field(null)->inline()->value());
 	}
 
-	public function testNl2br()
+	public function testNl2br(): void
 	{
 		$input = 'Multiline' . PHP_EOL . 'test' . PHP_EOL . 'string';
 		$expected = 'Multiline<br>' . PHP_EOL . 'test<br>' . PHP_EOL . 'string';
@@ -682,7 +729,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('', $this->field(null)->nl2br()->value());
 	}
 
-	public function testKirbytext()
+	public function testKirbytext(): void
 	{
 		$kirbytext = '(link: # text: Test)';
 		$expected  = '<p><a href="#">Test</a></p>';
@@ -691,7 +738,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($kirbytext)->kt()->value());
 	}
 
-	public function testKirbytextWithSafeMode()
+	public function testKirbytextWithSafeMode(): void
 	{
 		$kirbytext = '<h1>Test</h1>';
 		$expected  = '<p>&lt;h1&gt;Test&lt;/h1&gt;</p>';
@@ -699,7 +746,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($kirbytext)->kirbytext(['markdown' => ['safe' => true]])->value());
 	}
 
-	public function testKirbytextInline()
+	public function testKirbytextInline(): void
 	{
 		$kirbytext = '(link: # text: Test)';
 		$expected  = '<a href="#">Test</a>';
@@ -708,7 +755,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($kirbytext)->kti()->value());
 	}
 
-	public function testKirbytextInlineWithSafeMode()
+	public function testKirbytextInlineWithSafeMode(): void
 	{
 		$kirbytext = '<b>Test</b>';
 		$expected  = '&lt;b&gt;Test&lt;/b&gt;';
@@ -716,7 +763,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($kirbytext)->kirbytextInline(['markdown' => ['safe' => true]])->value());
 	}
 
-	public function testKirbytags()
+	public function testKirbytags(): void
 	{
 		$kirbytext = '(link: # text: Test)';
 		$expected  = '<a href="#">Test</a>';
@@ -724,12 +771,12 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($kirbytext)->kirbytags()->value());
 	}
 
-	public function testLower()
+	public function testLower(): void
 	{
 		$this->assertSame('abc', $this->field('ABC')->lower()->value());
 	}
 
-	public function testMarkdown()
+	public function testMarkdown(): void
 	{
 		$markdown = '**Test**';
 		$expected = '<p><strong>Test</strong></p>';
@@ -737,7 +784,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($markdown)->markdown()->value());
 	}
 
-	public function testMarkdownWithSafeMode()
+	public function testMarkdownWithSafeMode(): void
 	{
 		$markdown = '<h1>Test</h1>';
 		$expected = '<p>&lt;h1&gt;Test&lt;/h1&gt;</p>';
@@ -745,13 +792,13 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($markdown)->markdown(['safe' => true])->value());
 	}
 
-	public function testOr()
+	public function testOr(): void
 	{
 		$this->assertSame('field value', $this->field('field value')->or('fallback')->value());
 		$this->assertSame('fallback', $this->field()->or('fallback')->value());
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		// with page
 		$page = new Page([
@@ -765,7 +812,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('Hello world', $page->text()->query()->value());
 	}
 
-	public function testReplace()
+	public function testReplace(): void
 	{
 		// simple replacement
 		$this->assertSame('Hello world', $this->field('Hello {{ message }}')->replace(['message' => 'world'])->value());
@@ -808,12 +855,12 @@ class FieldMethodsTest extends TestCase
 		);
 	}
 
-	public function testShort()
+	public function testShort(): void
 	{
 		$this->assertSame('abc…', $this->field('abcd')->short(3)->value());
 	}
 
-	public function testSmartypants()
+	public function testSmartypants(): void
 	{
 		$text     = '"Test"';
 		$expected = '&#8220;Test&#8221;';
@@ -821,7 +868,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($text)->smartypants()->value());
 	}
 
-	public function testSmartypantsWithKirbytext()
+	public function testSmartypantsWithKirbytext(): void
 	{
 		new App([
 			'roots' => [
@@ -838,7 +885,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($text)->kti()->value());
 	}
 
-	public function testSlug()
+	public function testSlug(): void
 	{
 		$text     = 'Ä--Ö--Ü';
 		$expected = 'a-o-u';
@@ -846,7 +893,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($text)->slug()->value());
 	}
 
-	public function testSplit()
+	public function testSplit(): void
 	{
 		$text = 'a, b, c';
 		$expected = ['a', 'b', 'c'];
@@ -854,30 +901,30 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $this->field($text)->split());
 	}
 
-	public function testUpper()
+	public function testUpper(): void
 	{
 		$this->assertSame('ABC', $this->field('abc')->upper()->value());
 	}
 
-	public function testWidont()
+	public function testWidont(): void
 	{
 		$this->assertSame('Test&nbsp;Headline', $this->field('Test Headline')->widont()->value());
 		$this->assertSame('Test Headline&nbsp;With&#8209;Dash', $this->field('Test Headline With-Dash')->widont()->value());
 	}
 
-	public function testWords()
+	public function testWords(): void
 	{
 		$text = 'this is an example text';
 		$this->assertSame(5, $this->field($text)->words());
 		$this->assertSame(0, $this->field(null)->words());
 	}
 
-	public function testXml()
+	public function testXml(): void
 	{
 		$this->assertSame('&#246;&#228;&#252;', $this->field('öäü')->xml()->value());
 	}
 
-	public function testYaml()
+	public function testYaml(): void
 	{
 		$data = [
 			'a',
@@ -889,7 +936,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($data, $this->field($yaml)->yaml());
 	}
 
-	public function testToBlocks()
+	public function testToBlocks(): void
 	{
 		$data = [
 			[
@@ -986,7 +1033,7 @@ class FieldMethodsTest extends TestCase
 		}
 	}
 
-	public function testToBlocksWithInvalidData()
+	public function testToBlocksWithInvalidData(): void
 	{
 		$data = [
 			[
@@ -1005,7 +1052,7 @@ class FieldMethodsTest extends TestCase
 		$field->toBlocks();
 	}
 
-	public function testToLayouts()
+	public function testToLayouts(): void
 	{
 		$data = [
 			[
@@ -1041,7 +1088,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertEquals($field, $block->field());
 	}
 
-	public function testToObject()
+	public function testToObject(): void
 	{
 		$data = [
 			'heading' => 'Heading',

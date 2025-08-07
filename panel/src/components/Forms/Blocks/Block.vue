@@ -60,7 +60,7 @@ export default {
 	inheritAttrs: false,
 	props: {
 		/**
-		 * @private
+		 * @internal
 		 */
 		attrs: {
 			default: () => ({}),
@@ -106,6 +106,7 @@ export default {
 		"paste",
 		"prepend",
 		"remove",
+		"removeSelected",
 		"selectDown",
 		"selectUp",
 		"show",

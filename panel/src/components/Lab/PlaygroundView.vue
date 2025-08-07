@@ -1,8 +1,9 @@
 <template>
-	<k-panel-inside
-		:data-has-tabs="tabs.length > 1"
-		class="k-lab-playground-view"
-	>
+	<k-panel-inside class="k-lab-playground-view">
+		<template #topbar>
+			<k-theme-view-button :text="null" :variant="null" size="xs" />
+		</template>
+
 		<k-header class="k-lab-playground-header">
 			{{ title }}
 
@@ -12,14 +13,19 @@
 		</k-header>
 		<k-tabs :tab="tab" :tabs="tabs" />
 
-		<component :is="component" v-if="component" v-bind="props" />
-		<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
-		<component :is="'style'" v-if="styles" v-html="styles" />
+		<k-box v-if="compiler === false" theme="info">
+			The Vue template compiler must be enabled to show lab examples
+		</k-box>
+		<template v-else>
+			<component :is="component" v-if="component" v-bind="props" />
+			<!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
+			<component :is="'style'" v-if="styles" v-html="styles" />
+		</template>
 	</k-panel-inside>
 </template>
 
 <script>
-import Vue from "vue";
+import { markRaw } from "vue";
 
 import Docs from "./Docs.vue";
 import DocsDrawer from "./DocsDrawer.vue";
@@ -29,17 +35,10 @@ import Form from "./Form.vue";
 import OutputDialog from "./OutputDialog.vue";
 import TableCell from "./TableCell.vue";
 
-Vue.component("k-lab-docs", Docs);
-Vue.component("k-lab-docs-drawer", DocsDrawer);
-Vue.component("k-lab-example", Example);
-Vue.component("k-lab-examples", Examples);
-Vue.component("k-lab-form", Form);
-Vue.component("k-lab-output-dialog", OutputDialog);
-Vue.component("k-lab-table-cell", TableCell);
-
 export default {
 	props: {
 		buttons: Array,
+		compiler: Boolean,
 		docs: String,
 		examples: [Object, Array],
 		file: String,
@@ -68,6 +67,16 @@ export default {
 		}
 	},
 	mounted() {
+		if (this.$helper.isComponent("k-lab-docs") === false) {
+			window.panel.app.component("k-lab-docs", Docs);
+			window.panel.app.component("k-lab-docs-drawer", DocsDrawer);
+			window.panel.app.component("k-lab-example", Example);
+			window.panel.app.component("k-lab-examples", Examples);
+			window.panel.app.component("k-lab-form", Form);
+			window.panel.app.component("k-lab-output-dialog", OutputDialog);
+			window.panel.app.component("k-lab-table-cell", TableCell);
+		}
+
 		const path = this.$panel.view.path.replace(/lab\//, "");
 		import.meta.hot?.on("kirby:example:" + path, this.reloadComponent);
 		import.meta.hot?.on("kirby:docs:" + this.docs, this.reloadDocs);
@@ -87,7 +96,7 @@ export default {
 			component.template = this.template;
 
 			// unwrap to be recognized as new component
-			this.component = { ...component };
+			this.component = markRaw({ ...component });
 
 			// update the code strings for each example
 			window.UiExamples = this.examples;
@@ -106,14 +115,10 @@ export default {
 </script>
 
 <style>
-.k-lab-playground-view[data-has-tabs="true"] .k-lab-playground-header {
-	margin-bottom: 0;
-}
-
-.k-lab-examples h2 {
+.k-lab-examples > h2 {
 	margin-bottom: var(--spacing-6);
 }
-.k-lab-examples * + h2 {
+.k-lab-examples > * + h2 {
 	margin-top: var(--spacing-12);
 }
 

@@ -5,7 +5,7 @@
 				<k-page-tree
 					:current="page?.value ?? opened"
 					@select="selectPage"
-					@toggleBranch="togglePage"
+					@toggle-branch="togglePage"
 				/>
 			</aside>
 			<div ref="items" class="k-file-browser-items">
@@ -113,7 +113,10 @@ export default {
 
 <style>
 :root {
-	--file-browser-items-color-back: light-dark(var(--color-gray-100), var(--panel-color-back));
+	--file-browser-items-color-back: light-dark(
+		var(--color-gray-100),
+		var(--panel-color-back)
+	);
 }
 
 .k-file-browser {
@@ -164,7 +167,7 @@ export default {
 		justify-content: flex-start;
 		padding-inline: 0.25rem;
 		margin-bottom: 0.5rem;
-		background: var(--color-gray-200);
+		background: light-dark(var(--color-gray-200), var(--color-gray-800));
 		border-radius: var(--rounded);
 	}
 	.k-file-browser-tree {

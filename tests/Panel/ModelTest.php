@@ -7,24 +7,21 @@ use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
+use Kirby\Panel\Controller\View\ModelViewController;
+use Kirby\Panel\Controller\View\PageViewController;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 class CustomPanelModel extends Model
 {
-	public function buttons(): array
-	{
-		return [];
-	}
-
 	public function path(): string
 	{
 		return 'custom';
 	}
 
-	public function view(): array
+	protected function viewController(): ModelViewController
 	{
-		return [];
+		$page = new ModelPage(['slug' => 'test']);
+		return new PageViewController($page);
 	}
 }
 
@@ -41,28 +38,10 @@ class ModelSiteWithImageMethod extends ModelSite
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Panel\Model
- */
+#[CoversClass(Model::class)]
 class ModelTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Model';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove(static::TMP);
-	}
 
 	protected function panel(array $props = [])
 	{
@@ -70,50 +49,7 @@ class ModelTest extends TestCase
 		return new CustomPanelModel($site);
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::content
-	 */
-	public function testContent()
-	{
-		$panel = $this->panel([
-			'content' => $content = [
-				'foo' => 'bar'
-			]
-		]);
-
-		$this->assertSame($content, $panel->content());
-	}
-
-	/**
-	 * @covers ::__construct
-	 * @covers ::content
-	 */
-	public function testContentWithChanges()
-	{
-		$panel = new CustomPanelModel(
-			new ModelPage(['slug' => 'test'])
-		);
-
-		$panel->model()->version('latest')->save([
-			'foo'  => 'foo',
-			'uuid' => 'test'
-		]);
-
-		$panel->model()->version('changes')->save([
-			'foo' => 'foobar'
-		]);
-
-		$this->assertSame([
-			'foo'  => 'foobar',
-			'uuid' => 'test'
-		], $panel->content());
-	}
-
-	/**
-	 * @covers ::dragTextFromCallback
-	 */
-	public function testDragTextFromCallbackMarkdown()
+	public function testDragTextFromCallbackMarkdown(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -153,10 +89,7 @@ class ModelTest extends TestCase
 		$this->assertSame('![](test/test.heic)', $panel->dragTextFromCallback('markdown', $file, $file->filename()));
 	}
 
-	/**
-	 * @covers ::dragTextFromCallback
-	 */
-	public function testDragTextFromCallbackKirbytext()
+	public function testDragTextFromCallbackKirbytext(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -196,10 +129,7 @@ class ModelTest extends TestCase
 		$this->assertSame('(image: test/test.heic)', $panel->dragTextFromCallback('kirbytext', $file, $file->filename()));
 	}
 
-	/**
-	 * @covers ::dragTextType
-	 */
-	public function testDragTextType()
+	public function testDragTextType(): void
 	{
 		$panel = $this->panel();
 
@@ -220,7 +150,7 @@ class ModelTest extends TestCase
 		new App();
 	}
 
-	public function testDropdown()
+	public function testDropdownOption(): void
 	{
 		$model  = new CustomPanelModel(new ModelSite());
 		$option = $model->dropdownOption();
@@ -239,13 +169,7 @@ class ModelTest extends TestCase
 		$this->assertSame($expected, $option);
 	}
 
-	/**
-	 * @covers ::image
-	 * @covers ::imageDefaults
-	 * @covers ::imageSource
-	 * @covers ::imageSrcset
-	 */
-	public function testImage()
+	public function testImage(): void
 	{
 		$panel = $this->panel([
 			'files' => [
@@ -295,6 +219,11 @@ class ModelTest extends TestCase
 		$this->assertStringContainsString('test-96x.jpg 96w', $image['srcset']);
 		$this->assertStringContainsString('test-192x.jpg 192w', $image['srcset']);
 
+		// table
+		$image = $panel->image('site.image', 'table');
+		$this->assertStringContainsString('test-38x.jpg 38w', $image['srcset']);
+		$this->assertStringContainsString('test-76x.jpg 76w', $image['srcset']);
+
 		// full options
 		$image = $panel->image([
 			'cover' => true,
@@ -309,12 +238,37 @@ class ModelTest extends TestCase
 		$this->assertSame($ratio, $image['ratio']);
 		$this->assertStringContainsString('test-38x38-crop.jpg 1x', $image['srcset']);
 		$this->assertStringContainsString('test-76x76-crop.jpg 2x', $image['srcset']);
+
+		// string ratio
+		$image = $panel->image([
+			'cover' => true,
+			'query' => 'site.image',
+			'ratio' => $ratio = '3/2'
+		], 'cards');
+		$this->assertArrayHasKey('url', $image);
+		$this->assertArrayHasKey('src', $image);
+		$this->assertArrayHasKey('srcset', $image);
+		$this->assertSame($ratio, $image['ratio']);
+		$this->assertStringContainsString('test-352x235-crop.jpg 352w', $image['srcset']);
+		$this->assertStringContainsString('test-864x576-crop.jpg 864w', $image['srcset']);
+		$this->assertStringContainsString('test-1408x939-crop.jpg 1408w', $image['srcset']);
+
+		// numeric ratio
+		$image = $panel->image([
+			'cover' => true,
+			'query' => 'site.image',
+			'ratio' => $ratio = 1.5
+		], 'cards');
+		$this->assertArrayHasKey('url', $image);
+		$this->assertArrayHasKey('src', $image);
+		$this->assertArrayHasKey('srcset', $image);
+		$this->assertSame($ratio, $image['ratio']);
+		$this->assertStringContainsString('test-352x235-crop.jpg 352w', $image['srcset']);
+		$this->assertStringContainsString('test-864x576-crop.jpg 864w', $image['srcset']);
+		$this->assertStringContainsString('test-1408x939-crop.jpg 1408w', $image['srcset']);
 	}
 
-	/**
-	 * @covers ::image
-	 */
-	public function testImageWithNonResizableAsset()
+	public function testImageWithNonResizableAsset(): void
 	{
 		$site  = new ModelSiteWithImageMethod([]);
 		$panel = new CustomPanelModel($site);
@@ -323,10 +277,7 @@ class ModelTest extends TestCase
 		$this->assertSame('/tmp/test.svg', $image['src']);
 	}
 
-	/**
-	 * @covers ::image
-	 */
-	public function testImageWithBlueprint()
+	public function testImageWithBlueprint(): void
 	{
 		$app  = $this->app->clone([
 			'blueprints' => [
@@ -358,10 +309,7 @@ class ModelTest extends TestCase
 		$this->assertArrayNotHasKey('url', $image);
 	}
 
-	/**
-	 * @covers ::image
-	 */
-	public function testImageWithBlueprintFalse()
+	public function testImageWithBlueprintFalse(): void
 	{
 		$app  = $this->app->clone([
 			'blueprints' => [
@@ -390,10 +338,33 @@ class ModelTest extends TestCase
 		$this->assertNull($image);
 	}
 
-	/**
-	 * @covers ::image
-	 */
-	public function testImageWithQuery()
+	public function testImageWithBlueprintString(): void
+	{
+		$app  = $this->app->clone([
+			'blueprints' => [
+				'pages/fox' => [
+					'image' => 'site.page("test").image'
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'template' => 'fox',
+						'files' => [
+							['filename' => 'test.jpg']
+						]
+					]
+				]
+			]
+		]);
+
+		$panel = $app->page('test')->panel();
+		$image = $panel->image([]);
+		$this->assertStringEndsWith('test.jpg', $image['url']);
+	}
+
+	public function testImageWithQuery(): void
 	{
 		$site  = new ModelSiteWithImageMethod();
 		$panel = new CustomPanelModel($site);
@@ -401,69 +372,46 @@ class ModelTest extends TestCase
 		$this->assertSame('blue', $image['back']);
 	}
 
-	/**
-	 * @covers ::imagePlaceholder
-	 */
-	public function testImagePlaceholder()
+	public function testImagePlaceholder(): void
 	{
 		$this->assertIsString(Model::imagePlaceholder());
 		$this->assertStringStartsWith('data:image/gif;base64,', Model::imagePlaceholder());
 	}
 
-	/**
-	 * @covers ::model
-	 */
-	public function testModel()
+	public function testModel(): void
 	{
 		$panel  = $this->panel();
 		$this->assertInstanceOf(ModelSite::class, $panel->model());
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testPickerData(): void
 	{
-		$site = [
-			'blueprint' => [
-				'name'    => 'site',
-				'columns' => [
-					[
-						'width'    => '1/3',
-						'sections' => []
-					],
-					[
-						'width'    => '2/3',
-						'sections' => []
-					]
-				]
-			]
-		];
+		$panel = $this->panel();
+		$data = $panel->pickerData();
 
-		$app = $this->app->clone();
-		$app->impersonate('kirby');
-
-		$props = $this->panel($site)->props();
-		$this->assertSame('main', $props['tabs'][0]['name']);
-		$this->assertSame('main', $props['tab']['name']);
-		$this->assertTrue($props['permissions']['update']);
-
-		$app = $this->app->clone([
-			'request' => [
-				'query' => 'tab=foo'
-			]
-		]);
-		$app->impersonate('kirby');
-
-		$props = $this->panel($site)->props();
-		$this->assertSame('foo', get('tab'));
-		$this->assertSame('main', $props['tab']['name']);
+		$this->assertSame([
+			'image' => [
+				'back' => 'pattern',
+				'color' => 'gray-500',
+				'cover' => false,
+				'icon' => 'page',
+			],
+			'info' => '',
+			'layout' => 'list',
+			'text' => '',
+			'id' => null,
+			'link' => '/site',
+			'permissions' => [
+				'changeTitle' => false,
+				'update' => false,
+			],
+			'uuid' => 'site://',
+			'sortable' => true,
+			'url' => '/custom',
+		], $data);
 	}
 
-	/**
-	 * @covers ::toLink
-	 */
-	public function testToLink()
+	public function testToLink(): void
 	{
 		$panel = $this->panel([
 			'content' => [
@@ -481,10 +429,7 @@ class ModelTest extends TestCase
 		$this->assertSame($author, $toLink['title']);
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$this->assertSame('/panel/custom', $this->panel()->url());
 		$this->assertSame('/custom', $this->panel()->url(true));

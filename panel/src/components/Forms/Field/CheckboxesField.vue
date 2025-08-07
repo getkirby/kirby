@@ -32,6 +32,7 @@ import counter from "@/mixins/forms/counter.js";
 export default {
 	mixins: [Field, Input, CheckboxesInput, counter],
 	inheritAttrs: false,
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

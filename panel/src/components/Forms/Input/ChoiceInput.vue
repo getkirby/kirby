@@ -61,7 +61,8 @@ export const props = {
  * @example <k-choice-input :value="value" @input="value = $event" />
  */
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	emits: ["input"]
 };
 </script>
 
@@ -101,14 +102,14 @@ export default {
 	border-radius: var(--input-rounded);
 }
 
-:where(.k-checkboxes-field, .k-radio-field)
-	.k-choice-input:not([aria-disabled="true"]) {
+:where(.k-checkboxes-field, .k-radio-field):not([data-disabled="true"])
+	.k-choice-input {
 	background: var(--item-color-back);
 	box-shadow: var(--shadow);
 }
 
-:where(.k-checkboxes-field, .k-radio-field)
-	.k-choice-input[aria-disabled="true"] {
-	outline: 1px solid var(--input-color-border);
+:where(.k-checkboxes-field, .k-radio-field)[data-disabled="true"]
+	.k-choice-input {
+	border: 1px solid var(--color-border);
 }
 </style>

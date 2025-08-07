@@ -38,7 +38,7 @@
 import Dialog from "@/mixins/dialog.js";
 
 /**
- * @internal
+ * @unstable
  */
 export default {
 	mixins: [Dialog],
@@ -49,9 +49,7 @@ export default {
 			default: false
 		},
 		label: {
-			default() {
-				return this.$t("field.layout.select");
-			},
+			default: () => window.panel.t("field.layout.select"),
 			type: String
 		},
 		layouts: {

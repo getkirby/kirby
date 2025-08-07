@@ -477,7 +477,11 @@ class Str
 		if ($strip === true) {
 			// ensure that opening tags are preceded by a space, so that
 			// when tags are skipped we can be sure that words stay separate
-			$string = preg_replace('#\s*<([^\/])#', ' <${1}', $string);
+			// but only if there's a word character directly before it
+			$string = preg_replace('#(\w)<([^/][^>]*)>#', '${1} <${2}>', $string);
+
+			// add space after closing tag if there's a word character directly after it
+			$string = preg_replace('#</([^>]+)>(\w)#', '</${1}> ${2}', $string);
 
 			// in strip mode, we always return plain text
 			$string = strip_tags($string);
@@ -1023,15 +1027,13 @@ class Str
 	/**
 	 * Shortens a string and adds an ellipsis if the string is too long
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * echo Str::short('This is a very, very, very long string', 10);
 	 * // output: This is a…
 	 *
 	 * echo Str::short('This is a very, very, very long string', 10, '####');
 	 * // output: This i####
-	 *
-	 * </code>
+	 * ```
 	 *
 	 * @param string $string The string to be shortened
 	 * @param int $length The final number of characters the
@@ -1285,12 +1287,10 @@ class Str
 	/**
 	 * Replaces placeholders in string with values from the data array
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * echo Str::template('From {{ b }} to {{ a }}', ['a' => 'there', 'b' => 'here']);
 	 * // output: From here to there
-	 *
-	 * </code>
+	 * ```
 	 *
 	 * @param string|null $string The string with placeholders
 	 * @param array $data Associative array with placeholders as
@@ -1419,12 +1419,10 @@ class Str
 	/**
 	 * Removes all html tags and encoded chars from a string
 	 *
-	 * <code>
-	 *
+	 * ```php
 	 * echo str::unhtml('some <em>crazy</em> stuff');
 	 * // output: some uber crazy stuff
-	 *
-	 * </code>
+	 * ```
 	 */
 	public static function unhtml(string|null $string): string
 	{

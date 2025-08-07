@@ -15,6 +15,7 @@
 				items,
 				layout,
 				link,
+				selecting,
 				size,
 				sortable,
 				theme
@@ -22,9 +23,10 @@
 			@change="$emit('change', $event)"
 			@item="$emit('item', $event)"
 			@option="onOption"
+			@select="onSelect"
 			@sort="$emit('sort', $event)"
 		>
-			<template #options="{ item, index }">
+			<template v-if="$slots.options" #options="{ item, index }">
 				<slot name="options" v-bind="{ item, index }" />
 			</template>
 		</k-items>
@@ -46,6 +48,7 @@
 </template>
 
 <script>
+import { getCurrentInstance } from "vue";
 import { props as ItemsProps } from "./Items.vue";
 
 /**
@@ -75,7 +78,16 @@ export default {
 			default: false
 		}
 	},
-	emits: ["action", "change", "empty", "item", "option", "paginate", "sort"],
+	emits: [
+		"action",
+		"change",
+		"empty",
+		"item",
+		"option",
+		"paginate",
+		"select",
+		"sort"
+	],
 	computed: {
 		hasPagination() {
 			if (this.pagination === false) {
@@ -93,11 +105,14 @@ export default {
 			return true;
 		},
 		listeners() {
-			if (this.$listeners["empty"]) {
+			const instance = getCurrentInstance();
+
+			if (instance?.vnode?.props?.onEmpty !== undefined) {
 				return {
 					click: this.onEmpty
 				};
 			}
+
 			return {};
 		},
 		paginationOptions() {
@@ -126,6 +141,9 @@ export default {
 		onOption(...args) {
 			this.$emit("action", ...args);
 			this.$emit("option", ...args);
+		},
+		onSelect(...args) {
+			this.$emit("select", ...args);
 		}
 	}
 };

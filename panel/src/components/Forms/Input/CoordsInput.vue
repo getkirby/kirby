@@ -60,6 +60,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	data() {
 		return {
 			x: 0,
@@ -186,9 +187,6 @@ export default {
 .k-coords-input {
 	position: relative;
 	display: block !important;
-}
-.k-coords-input img {
-	width: 100%;
 }
 .k-coords-input-thumb {
 	position: absolute;

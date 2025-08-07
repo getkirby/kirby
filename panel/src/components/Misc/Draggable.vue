@@ -190,7 +190,7 @@ export default {
 				// get as many nodes from the back of the list
 				// as footer elements are present
 				const nodes = [...this.$el.childNodes].slice(
-					-1 * this.$slots.footer.length
+					-1 * this.$slots.footer().length
 				);
 
 				// add class to any node in the footer slot

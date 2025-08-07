@@ -4,19 +4,14 @@ namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use stdClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\Yaml
- */
+#[CoversClass(Yaml::class)]
+#[CoversClass(YamlSpyc::class)]
 class YamlTest extends TestCase
 {
-	/**
-	 * @covers ::encode
-	 * @covers ::decode
-	 * @covers \Kirby\Data\YamlSpyc::encode
-	 * @covers \Kirby\Data\YamlSpyc::decode
-	 */
-	public function testEncodeDecode()
+	public function testEncodeDecode(): void
 	{
 		$array = [
 			'name'     => 'Homer',
@@ -39,23 +34,15 @@ class YamlTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Yaml::decode(['this is' => 'an array']));
 	}
 
-	/**
-	 * @covers ::decode
-	 * @covers \Kirby\Data\YamlSpyc::decode
-	 */
-	public function testDecodeInvalid1()
+	public function testDecodeInvalid1(): void
 	{
 		// pass invalid object
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
-		Yaml::decode(new \stdClass());
+		Yaml::decode(new stdClass());
 	}
 
-	/**
-	 * @covers ::decode
-	 * @covers \Kirby\Data\YamlSpyc::decode
-	 */
-	public function testDecodeInvalid2()
+	public function testDecodeInvalid2(): void
 	{
 		// pass invalid int
 		$this->expectException(InvalidArgumentException::class);
@@ -63,11 +50,7 @@ class YamlTest extends TestCase
 		Yaml::decode(1);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers \Kirby\Data\YamlSpyc::encode
-	 */
-	public function testEncodeFloat()
+	public function testEncodeFloat(): void
 	{
 		$data = Yaml::encode([
 			'number' => 3.2
@@ -76,11 +59,7 @@ class YamlTest extends TestCase
 		$this->assertSame('number: 3.2' . PHP_EOL, $data);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers \Kirby\Data\YamlSpyc::encode
-	 */
-	public function testEncodeFloatWithNonUSLocale()
+	public function testEncodeFloatWithNonUSLocale(): void
 	{
 		$locale = setlocale(LC_ALL, 0);
 
@@ -95,11 +74,7 @@ class YamlTest extends TestCase
 		setlocale(LC_ALL, $locale);
 	}
 
-	/**
-	 * @covers ::encode
-	 * @covers \Kirby\Data\YamlSpyc::encode
-	 */
-	public function testEncodeNodeTypes()
+	public function testEncodeNodeTypes(): void
 	{
 		$data = Yaml::encode(['test' => '']);
 		$this->assertSame('test: ""' . PHP_EOL, $data);

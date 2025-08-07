@@ -88,6 +88,12 @@ trait AppTranslations
 	 */
 	public function panelLanguage(): string
 	{
+		$translation = $this->request()->get('translation');
+
+		if ($translation !== null && $this->translations()->find($translation)) {
+			return $translation;
+		}
+
 		if ($this->multilang() === true) {
 			$defaultCode = $this->defaultLanguage()->code();
 
@@ -105,8 +111,6 @@ trait AppTranslations
 
 	/**
 	 * Set the current translation
-	 *
-	 * @internal
 	 */
 	public function setCurrentTranslation(string|null $translationCode = null): void
 	{

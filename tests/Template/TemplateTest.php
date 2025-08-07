@@ -3,23 +3,14 @@
 namespace Kirby\Template;
 
 use Kirby\Cms\App;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass Kirby\Template\Template
- */
+#[CoversClass(Template::class)]
 class TemplateTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::name
-	 * @covers ::type
-	 * @covers ::defaultType
-	 * @covers ::extension
-	 * @covers ::__toString
-	 */
-	public function testTemplate()
+	public function testTemplate(): void
 	{
 		$template = new Template('Test', 'foo', 'bar');
 		$this->assertSame('test', $template->name());
@@ -30,10 +21,7 @@ class TemplateTest extends TestCase
 		$this->assertSame('php', $template->extension());
 	}
 
-	/**
-	 * @covers ::exists
-	 */
-	public function testExists()
+	public function testExists(): void
 	{
 		new App([
 			'roots' => [
@@ -54,10 +42,7 @@ class TemplateTest extends TestCase
 		$this->assertFalse($template->exists());
 	}
 
-	/**
-	 * @covers ::file
-	 */
-	public function testFile()
+	public function testFile(): void
 	{
 		App::plugin('test/c', [
 			'templates' => [
@@ -84,10 +69,7 @@ class TemplateTest extends TestCase
 		$this->assertSame('plugin.php', $template->file());
 	}
 
-	/**
-	 * @covers ::hasDefaultType
-	 */
-	public function testHasDefaultType()
+	public function testHasDefaultType(): void
 	{
 		$template = new Template('test');
 		$this->assertTrue($template->hasDefaultType());
@@ -99,11 +81,7 @@ class TemplateTest extends TestCase
 		$this->assertFalse($template->hasDefaultType());
 	}
 
-	/**
-	 * @covers ::store
-	 * @covers ::root
-	 */
-	public function testRoot()
+	public function testRoot(): void
 	{
 		new App([
 			'roots' => [
@@ -116,10 +94,7 @@ class TemplateTest extends TestCase
 		$this->assertSame($root, $template->root());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		new App([
 			'roots' => [
@@ -131,10 +106,7 @@ class TemplateTest extends TestCase
 		$this->assertSame('Test', $template->render(['slot' => 'Test']));
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderOpenLayoutSnippet()
+	public function testRenderOpenLayoutSnippet(): void
 	{
 		new App([
 			'roots' => [
@@ -147,10 +119,7 @@ class TemplateTest extends TestCase
 		$this->assertSame("<h1>Layout</h1>\nMy content\n<footer>with other stuff</footer>\n", $template->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderOpenParentSnippet1()
+	public function testRenderOpenParentSnippet1(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -167,10 +136,7 @@ class TemplateTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderOpenParentSnippet2()
+	public function testRenderOpenParentSnippet2(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -190,10 +156,7 @@ class TemplateTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderOpenParentSnippet3()
+	public function testRenderOpenParentSnippet3(): void
 	{
 		$app = new App([
 			'roots' => [

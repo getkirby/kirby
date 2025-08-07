@@ -2,18 +2,18 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Uuid\Uuids;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Files
- */
+#[CoversClass(Files::class)]
 class FilesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Files';
 
-	public function testAddFile()
+	public function testAddFile(): void
 	{
 		$parent = new Page(['slug' => 'test']);
 
@@ -33,7 +33,7 @@ class FilesTest extends TestCase
 		$this->assertSame('b.jpg', $result->nth(1)->filename());
 	}
 
-	public function testAddCollection()
+	public function testAddCollection(): void
 	{
 		$parent = new Page(['slug' => 'test']);
 
@@ -54,7 +54,7 @@ class FilesTest extends TestCase
 		$this->assertSame('c.jpg', $c->nth(2)->filename());
 	}
 
-	public function testAddById()
+	public function testAddById(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -87,7 +87,7 @@ class FilesTest extends TestCase
 		$this->assertSame('b/a.jpg', $files->nth(2)->id());
 	}
 
-	public function testAddNull()
+	public function testAddNull(): void
 	{
 		$files = new Files();
 		$this->assertCount(0, $files);
@@ -97,7 +97,7 @@ class FilesTest extends TestCase
 		$this->assertCount(0, $files);
 	}
 
-	public function testAddFalse()
+	public function testAddFalse(): void
 	{
 		$files = new Files();
 		$this->assertCount(0, $files);
@@ -107,7 +107,7 @@ class FilesTest extends TestCase
 		$this->assertCount(0, $files);
 	}
 
-	public function testAddInvalidObject()
+	public function testAddInvalidObject(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('You must pass a Files or File object or an ID of an existing file to the Files collection');
@@ -117,11 +117,94 @@ class FilesTest extends TestCase
 		$files->add($site);
 	}
 
-	/**
-	 * @covers ::findByKey
-	 * @covers ::findByUuid
-	 */
-	public function testFindByUuid()
+	public function testDelete(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'b.jpg'],
+					['filename' => 'a.jpg']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$files = $app->site()->files();
+
+		$this->assertCount(2, $files);
+
+		$a = $files->get('a.jpg')->root();
+		$b = $files->get('b.jpg')->root();
+
+		// pretend the files exist
+		F::write($a, '');
+		F::write($b, '');
+
+		$this->assertFileExists($a);
+		$this->assertFileExists($b);
+
+		$files->delete([
+			'a.jpg',
+			'b.jpg',
+		]);
+
+		$this->assertCount(0, $files);
+
+		$this->assertFileDoesNotExist($a);
+		$this->assertFileDoesNotExist($b);
+	}
+
+	public function testDeleteWithInvalidIds(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'b.jpg'],
+					['filename' => 'a.jpg']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$files = $app->site()->files();
+
+		$this->assertCount(2, $files);
+
+		$a = $files->get('a.jpg')->root();
+		$b = $files->get('b.jpg')->root();
+
+		// pretend the files exist
+		F::write($a, '');
+		F::write($b, '');
+
+		$this->assertFileExists($a);
+		$this->assertFileExists($b);
+
+		try {
+			$files->delete([
+				'a.jpg',
+				'c.jpg',
+			]);
+		} catch (Exception $e) {
+			$this->assertSame('Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.', $e->getMessage());
+		}
+
+		$this->assertCount(1, $files);
+		$this->assertSame('b.jpg', $files->first()->filename());
+
+		$this->assertFileDoesNotExist($a);
+		$this->assertFileExists($b);
+	}
+
+	public function testFindByUuid(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -148,11 +231,7 @@ class FilesTest extends TestCase
 		Uuids::cache()->flush();
 	}
 
-	/**
-	 * @covers ::niceSize
-	 * @covers ::size
-	 */
-	public function testSize()
+	public function testSize(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -178,10 +257,7 @@ class FilesTest extends TestCase
 		$this->assertSame('6 B', $files->niceSize());
 	}
 
-	/**
-	 * @covers ::sorted
-	 */
-	public function testSortedByFilename()
+	public function testSortedByFilename(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -201,10 +277,7 @@ class FilesTest extends TestCase
 		$this->assertSame('b.jpg', $files->last()->filename());
 	}
 
-	/**
-	 * @covers ::sorted
-	 */
-	public function testSortedBySort()
+	public function testSortedBySort(): void
 	{
 		$app = new App([
 			'roots' => [

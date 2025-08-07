@@ -15,7 +15,7 @@ export default (
 	let last = null;
 	let trailing = null;
 
-	return function (...args) {
+	function throttled(...args) {
 		if (timer) {
 			last = this;
 			trailing = args;
@@ -42,5 +42,17 @@ export default (
 		};
 
 		timer = setTimeout(cooled, delay);
+	}
+
+	// Add cancel method to clear the timeout
+	throttled.cancel = () => {
+		if (timer) {
+			clearTimeout(timer);
+			timer = null;
+			last = null;
+			trailing = null;
+		}
 	};
+
+	return throttled;
 };

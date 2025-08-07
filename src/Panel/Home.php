@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Router;
 use Kirby\Http\Uri;
-use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -31,6 +30,14 @@ use Throwable;
  */
 class Home
 {
+	protected App $kirby;
+
+	public function __construct(
+		protected Panel $panel
+	) {
+		$this->kirby = $this->panel->kirby();
+	}
+
 	/**
 	 * Returns an alternative URL if access
 	 * to the first choice is blocked.
@@ -39,45 +46,36 @@ class Home
 	 * take the first area which is not disabled
 	 * or locked in other ways
 	 */
-	public static function alternative(User $user): string
+	public function alternative(): string
 	{
-		$permissions = $user->role()->permissions();
-
-		// no access to the panel? The only good alternative is the main url
-		if ($permissions->for('access', 'panel') === false) {
-			return App::instance()->site()->url();
+		// No access to the Panel? The only good alternative is the main url
+		if ($this->user()?->role()->permissions()->for('access', 'panel') !== true) {
+			return $this->kirby->site()->url();
 		}
 
-		// needed to create a proper menu
-		$areas = Panel::areas();
-		$menu  = new Menu($areas, $permissions->toArray());
-		$menu  = $menu->entries();
-
-		// go through the menu and search for the first
-		// available view we can go to
-		foreach ($menu as $menuItem) {
+		// Go through the menu and search for the first available item
+		foreach ($this->panel->menu()->items() as $menuItem) {
 			// skip separators
 			if ($menuItem === '-') {
 				continue;
 			}
 
 			// skip disabled items
-			if (($menuItem['disabled'] ?? false) === true) {
+			if ($menuItem->disabled() === true) {
 				continue;
 			}
 
-			// skip buttons that don't open a link
-			// (but e.g. a dialog)
-			if (isset($menuItem['link']) === false) {
+			// skip items without a link
+			if ($menuItem->link() === null) {
 				continue;
 			}
 
 			// skip the logout button
-			if ($menuItem['link'] === 'logout') {
+			if ($menuItem->link() === 'logout') {
 				continue;
 			}
 
-			return Panel::url($menuItem['link']);
+			return $this->panel->url($menuItem->link());
 		}
 
 		throw new NotFoundException(
@@ -86,15 +84,14 @@ class Home
 	}
 
 	/**
-	 * Checks if the user has access to the given
-	 * panel path. This is quite tricky, because we
+	 * Checks if the current user has access to the given
+	 * Panel path. This is quite tricky, because we
 	 * need to call a trimmed down router to check
 	 * for available routes and their firewall status.
 	 */
-	public static function hasAccess(User $user, string $path): bool
+	public function hasAccess(string $path): bool
 	{
-		$areas  = Panel::areas();
-		$routes = Panel::routes($areas);
+		$routes = $this->panel->router()->routes();
 
 		// Remove fallback routes. Otherwise a route
 		// would be found even if the view does
@@ -107,7 +104,7 @@ class Home
 
 		// create a dummy router to check if we can access this route at all
 		try {
-			return Router::execute($path, 'GET', $routes, function ($route) use ($user) {
+			return Router::execute($path, 'GET', $routes, function ($route) {
 				$attrs  = $route->attributes();
 				$auth   = $attrs['auth'] ?? true;
 				$areaId = $attrs['area'] ?? null;
@@ -124,7 +121,7 @@ class Home
 				}
 
 				// check the firewall
-				return Panel::hasAccess($user, $areaId);
+				return $this->panel->access()->area($areaId);
 			});
 		} catch (Throwable) {
 			return false;
@@ -137,30 +134,11 @@ class Home
 	 * This is used to block external URLs to third-party
 	 * domains as redirect options.
 	 */
-	public static function hasValidDomain(Uri $uri): bool
+	public function hasValidDomain(Uri $uri): bool
 	{
-		$rootUrl = App::instance()->site()->url();
+		$rootUrl = $this->kirby->site()->url();
 		$rootUri = new Uri($rootUrl);
 		return $uri->domain() === $rootUri->domain();
-	}
-
-	/**
-	 * Checks if the given URL is a Panel Url
-	 */
-	public static function isPanelUrl(string $url): bool
-	{
-		$panel = App::instance()->url('panel');
-		return Str::startsWith($url, $panel);
-	}
-
-	/**
-	 * Returns the path after /panel/ which can then
-	 * be used in the router or to find a matching view
-	 */
-	public static function panelPath(string $url): string|null
-	{
-		$after = Str::after($url, App::instance()->url('panel'));
-		return trim($after, '/');
 	}
 
 	/**
@@ -169,12 +147,12 @@ class Home
 	 * to redirect the user back to the last point where they
 	 * left before they got logged out.
 	 */
-	public static function remembered(): string|null
+	public function remembered(): string|null
 	{
 		// check for a stored path after login
-		if ($remembered = App::instance()->session()->pull('panel.path')) {
+		if ($remembered = $this->kirby->session()->pull('panel.path')) {
 			// convert the result to an absolute URL if available
-			return Panel::url($remembered);
+			return $this->panel->url($remembered);
 		}
 
 		return null;
@@ -202,25 +180,23 @@ class Home
 	 * to avoid redirects to inaccessible Panel views. In such a case
 	 * the next best accessible view is picked from the menu.
 	 */
-	public static function url(): string
+	public function url(): string
 	{
-		$user = App::instance()->user();
-
 		// if there's no authenticated user, all internal
 		// redirects will be blocked and the user is redirected
 		// to the login instead
-		if (!$user) {
-			return Panel::url('login');
+		if ($this->user() === null) {
+			return $this->panel->url('login');
 		}
 
 		// get the last visited url from the session or the custom home
-		$url = static::remembered() ?? $user->panel()->home();
+		$url = $this->remembered() ?? $this->user()->panel()->home();
 
 		// inspect the given URL
 		$uri = new Uri($url);
 
 		// compare domains to avoid external redirects
-		if (static::hasValidDomain($uri) !== true) {
+		if ($this->hasValidDomain($uri) !== true) {
 			throw new InvalidArgumentException(
 				message: 'External URLs are not allowed for Panel redirects'
 			);
@@ -235,25 +211,36 @@ class Home
 		$url = $uri->toString();
 
 		// Don't further inspect URLs outside of the Panel
-		if (static::isPanelUrl($url) === false) {
+		if ($this->panel->isPanelUrl($url) === false) {
 			return $url;
 		}
 
 		// get the plain panel path
-		$path = static::panelPath($url);
+		$path = $this->panel->path($url);
 
 		// a redirect to login, logout or installation
 		// views would lead to an infinite redirect loop
-		if (in_array($path, ['', 'login', 'logout', 'installation'], true) === true) {
+		$loops = ['', 'login', 'logout', 'installation'];
+
+		if (in_array($path, $loops, true) === true) {
 			$path = 'site';
 		}
 
 		// Check if the user can access the URL
-		if (static::hasAccess($user, $path) === true) {
-			return Panel::url($path);
+		if ($this->hasAccess($path) === true) {
+			return $this->panel->url($path);
 		}
 
 		// Try to find an alternative
-		return static::alternative($user);
+		return $this->alternative();
+	}
+
+	/**
+	 * Returns the current user
+	 * @since 6.0.0
+	 */
+	public function user(): User|null
+	{
+		return $this->kirby->user();
 	}
 }

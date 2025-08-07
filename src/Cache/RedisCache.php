@@ -141,10 +141,10 @@ class RedisCache extends Cache
 	 * Writes an item to the cache for a given number of minutes
 	 * and returns whether the operation was successful
 	 *
-	 * <code>
-	 *   // put an item in the cache for 15 minutes
-	 *   $cache->set('value', 'my value', 15);
-	 * </code>
+	 * ```php
+	 * // put an item in the cache for 15 minutes
+	 * $cache->set('value', 'my value', 15);
+	 * ```
 	 */
 	public function set(string $key, $value, int $minutes = 0): bool
 	{

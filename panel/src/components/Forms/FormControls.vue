@@ -1,30 +1,29 @@
 <template>
-	<div v-if="buttons.length" class="k-form-controls">
-		<k-button-group layout="collapsed">
-			<k-button
-				v-for="button in buttons"
-				:key="button.text"
-				:responsive="true"
-				v-bind="button"
-				size="sm"
-				variant="filled"
-			/>
-		</k-button-group>
+	<k-button-group
+		v-if="buttons.length"
+		layout="collapsed"
+		class="k-form-controls"
+	>
+		<k-button
+			v-for="button in buttons"
+			:key="button.text"
+			class="k-form-controls-button"
+			v-bind="button"
+			variant="filled"
+			:size="size"
+		/>
 		<k-dropdown-content
 			ref="dropdown"
 			align-x="end"
 			class="k-form-controls-dropdown"
 		>
-			<template v-if="isLocked">
-				<p>
-					{{ $t("form.locked") }}
-				</p>
-			</template>
-			<template v-else>
-				<p>
-					{{ $t("form.unsaved") }}
-				</p>
-			</template>
+			<p v-if="isLocked">
+				{{ $t("form.locked") }}
+			</p>
+			<p v-else>
+				{{ $t("form.unsaved") }}
+			</p>
+
 			<template v-if="editor || modified">
 				<hr />
 				<dl>
@@ -40,6 +39,7 @@
 					</div>
 				</dl>
 			</template>
+
 			<template v-if="preview">
 				<hr />
 				<k-dropdown-item :link="preview" icon="window">
@@ -47,25 +47,33 @@
 				</k-dropdown-item>
 			</template>
 		</k-dropdown-content>
-	</div>
+	</k-button-group>
 </template>
 
 <script>
-/**
- * @displayName FormControls
- * @since 5.0.0
- */
-export default {
+export const props = {
 	props: {
 		editor: String,
-		hasChanges: Boolean,
+		hasDiff: Boolean,
 		isLocked: Boolean,
 		modified: [String, Date],
 		/**
 		 * Preview URL for changes
 		 */
-		preview: [String, Boolean]
-	},
+		preview: [String, Boolean],
+		size: {
+			type: String,
+			default: "sm"
+		}
+	}
+};
+
+/**
+ * @displayName FormControls
+ * @since 5.0.0
+ */
+export default {
+	mixins: [props],
 	emits: ["discard", "submit"],
 	computed: {
 		buttons() {
@@ -76,17 +84,19 @@ export default {
 						dropdown: true,
 						text: this.editor,
 						icon: "lock",
+						responsive: true,
 						click: () => this.$refs.dropdown.toggle()
 					}
 				];
 			}
 
-			if (this.hasChanges === true) {
+			if (this.hasDiff === true) {
 				return [
 					{
 						theme: "notice",
 						text: this.$t("discard"),
 						icon: "undo",
+						responsive: true,
 						click: () => this.discard()
 					},
 					{

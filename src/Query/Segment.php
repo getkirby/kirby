@@ -16,6 +16,8 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @todo Deprecate in v6
  */
 class Segment
 {
@@ -28,7 +30,7 @@ class Segment
 
 	/**
 	 * Throws an exception for an access to an invalid method
-	 * @internal
+	 * @unstable
 	 *
 	 * @param mixed $data Variable on which the access was tried
 	 * @param string $name Name of the method/property that was accessed

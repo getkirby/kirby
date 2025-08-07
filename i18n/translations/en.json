@@ -98,9 +98,17 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.entries.max.plural": "You must not add more than {max} entries",
+	"error.entries.max.singular": "You must not add more than one entry",
+	"error.entries.min.plural": "You must add at least {min} entries",
+	"error.entries.min.singular": "You must add at least one entry",
+	"error.entries.supports": "\"{type}\" field type is not supported for the entries field",
+	"error.entries.validation": "There's an error on the \"{field}\" field in row {index}",
+
 	"error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
 	"error.field.converter.invalid": "Invalid converter \"{converter}\"",
+	"error.field.link.options": "Invalid options: {options}",
 	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "The name must not be empty",
@@ -108,6 +116,7 @@
 	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
 	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
 
+	"error.file.delete.multiple": "Not all files could be deleted. Try each remaining file individually to see the specific error that prevents deletion.",
 	"error.file.duplicate": "A file with the name \"{filename}\" already exists",
 	"error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
 	"error.file.extension.invalid": "Invalid extension: {extension}",
@@ -170,6 +179,7 @@
 	"error.page.delete": "The page \"{slug}\" cannot be deleted",
 	"error.page.delete.confirm": "Please enter the page title to confirm",
 	"error.page.delete.hasChildren": "The page has subpages and cannot be deleted",
+	"error.page.delete.multiple": "Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.",
 	"error.page.delete.permission": "You are not allowed to delete \"{slug}\"",
 	"error.page.draft.duplicate": "A page draft with the URL appendix \"{slug}\" already exists",
 	"error.page.duplicate": "A page with the URL appendix \"{slug}\" already exists",
@@ -346,6 +356,9 @@
 	"field.blocks.video.url.label": "Video-URL",
 	"field.blocks.video.url.placeholder": "https://youtube.com/?v=",
 
+	"field.entries.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.entries.empty": "No entries yet",
+
 	"field.files.empty": "No files selected yet",
 	"field.files.empty.single": "No file selected yet",
 
@@ -363,6 +376,7 @@
 
 	"field.structure.delete.confirm": "Do you really want to delete this row?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "No entries yet",
 
 	"field.users.empty": "No users selected yet",
@@ -381,6 +395,7 @@
 	"file.sort": "Change position",
 
 	"files": "Files",
+	"files.delete.confirm.selected": "Do you really want to delete the selected files? This action cannot be undone.",
 	"files.empty": "No files yet",
 
 	"filter": "Filter",
@@ -435,7 +450,12 @@
 	"language.variables.empty": "No translations yet",
 
 	"language.variable.delete.confirm": "Do you really want to delete the variable for {key}?",
+	"language.variable.entries": "Values",
+	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Key",
+	"language.variable.multiple": "Countable?",
+	"language.variable.multiple.text": "Use different translation strings",
+	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "The variable could not be found",
 	"language.variable.value": "Value",
 
@@ -455,6 +475,7 @@
 	"license.code": "Code",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Please enter your license code",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.demo.info": "This is a demo installation",
@@ -468,7 +489,7 @@
 	"license.status.missing.info": "No valid license",
 	"license.status.missing.label": "Please activate your license",
 	"license.status.unknown.info": "The license status is unknown",
-	"license.status.unknown.label": "Unknown license",
+	"license.status.unknown.label": "Unknown",
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Thank you for supporting Kirby",
@@ -590,6 +611,7 @@
 	"page.status.unlisted.description": "The page is only accessible via URL",
 
 	"pages": "Pages",
+	"pages.delete.confirm.selected": "Do you really want to delete the selected pages? This action cannot be undone.",
 	"pages.empty": "No pages yet",
 	"pages.status.draft": "Drafts",
 	"pages.status.listed": "Published",
@@ -656,7 +678,6 @@
 
 	"system.info.copy": "Copy info",
 	"system.info.copied": "System info copied",
-	"system.issues.api.methods": "Your server does not support PATCH requests",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -665,7 +686,9 @@
 	"system.issues.git": "The .git folder seems to be exposed",
 	"system.issues.https": "We recommend HTTPS for all your sites",
 	"system.issues.kirby": "The kirby folder seems to be exposed",
+	"system.issues.local": "The site is running locally with relaxed security checks",
 	"system.issues.site": "The site folder seems to be exposed",
+	"system.issues.vue.compiler": "The Vue template compiler is enabled",
 	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
 	"system.updateStatus": "Update status",
@@ -745,6 +768,7 @@
 	"user.changeLanguage": "Change language",
 	"user.changeName": "Rename this user",
 	"user.changePassword": "Change password",
+	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "New password",
 	"user.changePassword.new.confirm": "Confirm the new password…",
 	"user.changeRole": "Change role",

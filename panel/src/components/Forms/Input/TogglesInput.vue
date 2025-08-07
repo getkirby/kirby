@@ -11,11 +11,7 @@
 				:data-labels="labels"
 				:style="{ '--options': columns ?? options.length }"
 			>
-				<li
-					v-for="(option, index) in options"
-					:key="index"
-					:data-disabled="disabled"
-				>
+				<li v-for="(option, index) in options" :key="index">
 					<input
 						:id="id + '-' + index"
 						:aria-label="option.text"
@@ -61,6 +57,7 @@ export const props = {
 
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	mounted() {
 		if (this.$props.autofocus) {
 			this.focus();
@@ -124,20 +121,23 @@ export default {
 	padding: 0 var(--spacing-3);
 	height: 100%;
 }
-/** TODO: .k-toggles-input li:has(input[disabled]) label */
-.k-toggles-input li[data-disabled="true"] label {
-	color: var(--color-text-dimmed);
-	background: var(--panel-color-back);
-}
-.k-toggles-input .k-icon + .k-toggles-text {
-	margin-inline-start: var(--spacing-2);
-}
-.k-toggles-input input:focus:not(:checked) + label {
-	background: light-dark(var(--color-blue-200), var(--color-blue-800));
-}
 
 .k-toggles-input input:checked + label {
 	background: light-dark(var(--color-black), var(--color-gray-950));
 	color: var(--color-white);
+}
+.k-toggles-input input:focus:not(:checked) + label {
+	background: light-dark(var(--color-blue-200), var(--color-blue-800));
+}
+.k-toggles-input input[disabled]:checked + label {
+	background: light-dark(var(--color-gray-600), var(--color-gray-850));
+}
+.k-toggles-input input[disabled]:not(:checked) + label {
+	color: var(--color-text-dimmed);
+	background: var(--panel-color-back);
+}
+
+.k-toggles-input .k-icon + .k-toggles-text {
+	margin-inline-start: var(--spacing-2);
 }
 </style>

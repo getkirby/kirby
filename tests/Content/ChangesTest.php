@@ -6,10 +6,9 @@ use Kirby\Cache\Cache;
 use Kirby\Cms\App;
 use Kirby\TestCase;
 use Kirby\Uuid\Uuids;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Content\Changes
- */
+#[CoversClass(Changes::class)]
 class ChangesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.Changes';
@@ -57,21 +56,14 @@ class ChangesTest extends TestCase
 		parent::tearDownTmp();
 	}
 
-	/**
-	 * @covers ::cache
-	 */
-	public function testCache()
+	public function testCache(): void
 	{
 		$cache = $this->app->cache('changes');
 
 		$this->assertInstanceOf(Cache::class, $cache);
 	}
 
-	/**
-	 * @covers ::files
-	 * @covers ::ensure
-	 */
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$this->app->cache('changes')->set('files', $cache = [
 			'file://test'
@@ -83,19 +75,23 @@ class ChangesTest extends TestCase
 		$this->assertCount(0, $changes->files());
 		$this->assertSame([], $this->app->cache('changes')->get('files'));
 
-		// in cache and changes exist in reality
-		$this->app->file('test/test.jpg')->version(VersionId::latest())->save([]);
-		$this->app->file('test/test.jpg')->version(VersionId::changes())->save([]);
+		// in cache and changes exist in reality. We need to save
+		// at least a single field here. Otherwise, the content file
+		// is not going to be created and the changes will not be detected.
+		$this->app->file('test/test.jpg')->version('latest')->save([
+			'alt' => 'Test'
+		]);
+
+		$this->app->file('test/test.jpg')->version('changes')->save([
+			'alt' => 'Test'
+		]);
 
 		$this->assertSame($cache, $this->app->cache('changes')->get('files'));
 		$this->assertCount(1, $changes->files());
 		$this->assertSame('test/test.jpg', $changes->files()->first()->id());
 	}
 
-	/**
-	 * @covers ::cacheKey
-	 */
-	public function testCacheKey()
+	public function testCacheKey(): void
 	{
 		$changes = new Changes();
 
@@ -108,25 +104,21 @@ class ChangesTest extends TestCase
 		$this->assertSame('users', $changes->cacheKey($user));
 	}
 
-	/**
-	 * @covers ::cacheExists
-	 * @covers ::generateCache
-	 */
-	public function testGenerateCache()
+	public function testGenerateCache(): void
 	{
 		$changes = new Changes();
 
 		$file = $this->app->file('test/test.jpg');
-		$file->version(VersionId::latest())->save(['foo' => 'bar']);
-		$file->version(VersionId::changes())->save(['foo' => 'bar']);
+		$file->version('latest')->save(['foo' => 'bar']);
+		$file->version('changes')->save(['foo' => 'bar']);
 
 		$page = $this->app->page('test');
-		$page->version(VersionId::latest())->save(['foo' => 'bar']);
-		$page->version(VersionId::changes())->save(['foo' => 'bar']);
+		$page->version('latest')->save(['foo' => 'bar']);
+		$page->version('changes')->save(['foo' => 'bar']);
 
 		$user = $this->app->user('test');
-		$user->version(VersionId::latest())->save(['foo' => 'bar']);
-		$user->version(VersionId::changes())->save(['foo' => 'bar']);
+		$user->version('latest')->save(['foo' => 'bar']);
+		$user->version('changes')->save(['foo' => 'bar']);
 
 		$this->app->cache('changes')->flush();
 
@@ -143,11 +135,7 @@ class ChangesTest extends TestCase
 		$this->assertSame(['user://test'], $changes->read('users'));
 	}
 
-	/**
-	 * @covers ::pages
-	 * @covers ::ensure
-	 */
-	public function testPages()
+	public function testPages(): void
 	{
 		$this->app->cache('changes')->set('pages', $cache = [
 			'page://test'
@@ -160,18 +148,15 @@ class ChangesTest extends TestCase
 		$this->assertSame([], $this->app->cache('changes')->get('pages'));
 
 		// in cache and changes exist in reality
-		$this->app->page('test')->version(VersionId::latest())->save([]);
-		$this->app->page('test')->version(VersionId::changes())->save([]);
+		$this->app->page('test')->version('latest')->save([]);
+		$this->app->page('test')->version('changes')->save([]);
 
 		$this->assertSame($cache, $this->app->cache('changes')->get('pages'));
 		$this->assertCount(1, $changes->pages());
 		$this->assertSame('test', $changes->pages()->first()->id());
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testRead()
+	public function testRead(): void
 	{
 		$this->app->cache('changes')->set('files', [
 			'file://test'
@@ -192,10 +177,7 @@ class ChangesTest extends TestCase
 		$this->assertSame(['user://test'], $changes->read('users'));
 	}
 
-	/**
-	 * @covers ::track
-	 */
-	public function testTrack()
+	public function testTrack(): void
 	{
 		$changes = new Changes();
 
@@ -216,10 +198,7 @@ class ChangesTest extends TestCase
 		$this->assertSame('user://test', $users[0]);
 	}
 
-	/**
-	 * @covers ::track
-	 */
-	public function testTrackDisabledUuids()
+	public function testTrackDisabledUuids(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -248,10 +227,7 @@ class ChangesTest extends TestCase
 		$this->assertSame('test', $users[0]);
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		$changes = new Changes();
 
@@ -280,10 +256,7 @@ class ChangesTest extends TestCase
 		$this->assertCount(0, $changes->read('users'));
 	}
 
-	/**
-	 * @covers ::untrack
-	 */
-	public function testUntrack()
+	public function testUntrack(): void
 	{
 		$changes = new Changes();
 
@@ -304,10 +277,7 @@ class ChangesTest extends TestCase
 		$this->assertCount(0, $changes->read('users'));
 	}
 
-	/**
-	 * @covers ::untrack
-	 */
-	public function testUntrackDisabledUuids()
+	public function testUntrackDisabledUuids(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -336,11 +306,7 @@ class ChangesTest extends TestCase
 		$this->assertCount(0, $changes->read('users'));
 	}
 
-	/**
-	 * @covers ::users
-	 * @covers ::ensure
-	 */
-	public function testUsers()
+	public function testUsers(): void
 	{
 		$this->app->cache('changes')->set('users', $cache = [
 			'user://test'
@@ -353,8 +319,8 @@ class ChangesTest extends TestCase
 		$this->assertSame([], $this->app->cache('changes')->get('users'));
 
 		// in cache and changes exist in reality
-		$this->app->user('test')->version(VersionId::latest())->save([]);
-		$this->app->user('test')->version(VersionId::changes())->save([]);
+		$this->app->user('test')->version('latest')->save([]);
+		$this->app->user('test')->version('changes')->save([]);
 
 		$this->assertSame($cache, $this->app->cache('changes')->get('users'));
 		$this->assertCount(1, $changes->users());

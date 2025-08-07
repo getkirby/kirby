@@ -24,7 +24,12 @@
 			<span v-if="tooltip.before" class="k-range-input-tooltip-before">{{
 				tooltip.before
 			}}</span>
-			<span class="k-range-input-tooltip-text">{{ label }}</span>
+			<span
+				:style="`--digits: ${maxLength}ch`"
+				class="k-range-input-tooltip-text"
+			>
+				{{ label }}
+			</span>
 			<span v-if="tooltip.after" class="k-range-input-tooltip-after">{{
 				tooltip.after
 			}}</span>
@@ -81,6 +86,7 @@ export const props = {
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	computed: {
 		baseline() {
 			// If the minimum is below 0, the baseline should be placed at .
@@ -96,6 +102,9 @@ export default {
 			return this.required || this.value || this.value === 0
 				? this.format(this.position)
 				: "–";
+		},
+		maxLength() {
+			return Math.floor(Math.abs(this.max)).toString().length;
 		},
 		position() {
 			return this.value || this.value === 0
@@ -192,6 +201,11 @@ export default {
 }
 .k-range-input-tooltip > * {
 	padding: var(--spacing-1);
+}
+.k-range-input-tooltip-text {
+	font-family: var(--font-mono);
+	width: calc(var(--digits) + var(--spacing-1) * 2);
+	text-align: center;
 }
 
 .k-range-input[data-disabled="true"] {

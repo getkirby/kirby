@@ -18,6 +18,7 @@ use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
+use Kirby\Session\SessionStore;
 use Kirby\Template\Snippet;
 use Kirby\Template\Template;
 use Kirby\Text\Markdown;
@@ -75,7 +76,7 @@ return [
 		}
 
 		// create url and root
-		$mediaRoot = dirname($file->mediaRoot());
+		$mediaRoot = $file->mediaDir();
 		$template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
 		$thumbRoot = (new Filename($file->root(), $template, $options))->toString();
 		$thumbName = basename($thumbRoot);
@@ -101,7 +102,7 @@ return [
 			'modifications' => $options,
 			'original'      => $file,
 			'root'          => $thumbRoot,
-			'url'           => dirname($file->mediaUrl()) . '/' . $thumbName,
+			'url'           => $file->mediaUrl($thumbName),
 		]);
 	},
 
@@ -263,6 +264,13 @@ return [
 			fn ($item) => $scores[$item->id()]['score'],
 			'desc'
 		);
+	},
+
+	/**
+	 * Add your own session store
+	 */
+	'session::store' => function (App $kirby): string|SessionStore {
+		return $kirby->root('sessions');
 	},
 
 	/**
