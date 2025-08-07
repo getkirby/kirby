@@ -15,6 +15,7 @@ describe.concurrent("panel/modal.js", () => {
 		const modal = Modal(panel, "test", defaults());
 
 		const state = {
+			abortController: null,
 			component: null,
 			isLoading: false,
 			on: {},
