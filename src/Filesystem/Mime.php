@@ -57,6 +57,7 @@ class Mime
 		'log'   => ['text/plain', 'text/x-log'],
 		'm4a'   => 'audio/mp4',
 		'm4v'   => 'video/mp4',
+		'md'    => 'text/markdown',
 		'mid'   => 'audio/midi',
 		'midi'  => 'audio/midi',
 		'mif'   => 'application/vnd.mif',
