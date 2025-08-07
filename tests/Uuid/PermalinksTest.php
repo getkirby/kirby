@@ -34,7 +34,7 @@ class PermalinksTest extends TestCase
 		$uuid->clear();
 		$response = $app->call('/@/page/my-id');
 		$this->assertFalse($response);
-		$uuid->url();
+		$uuid->toPermalink();
 		$response = $app->call('/@/page/my-id')->send();
 		$this->assertSame(302, $response->code());
 		$this->assertSame('https://getkirby.com/a', $response->header('Location'));

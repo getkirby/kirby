@@ -116,6 +116,15 @@ class UriTest extends TestCase
 		$this->assertSame('/a/b/ktest.loc', $uri->toString());
 	}
 
+	public function testFragment(): void
+	{
+		$uri = new Uri('https://getkirby.com#top');
+		$this->assertSame('top', $uri->fragment());
+
+		$uri = new Uri('https://getkirby.com');
+		$this->assertNull($uri->fragment());
+	}
+
 	public function testValidScheme(): void
 	{
 		$url = new Uri();
