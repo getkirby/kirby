@@ -123,7 +123,7 @@ export default {
 	opacity: 0;
 	width: 0;
 }
-.k-browser-item[aria-selected] {
+.k-browser-item[aria-selected="true"] {
 	background: var(--browser-item-selected-color-back);
 	color: var(--browser-item-selected-color-text);
 }
