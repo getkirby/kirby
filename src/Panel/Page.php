@@ -6,7 +6,7 @@ use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\PageSettingsDropdownController;
-use Kirby\Panel\Ui\Button\ViewButtons;
+use Kirby\Panel\Controller\View\PageViewController;
 use Kirby\Panel\Ui\Item\PageItem;
 
 /**
@@ -25,36 +25,6 @@ class Page extends Model
 	 * @var \Kirby\Cms\Page
 	 */
 	protected ModelWithContent $model;
-
-	/**
-	 * Breadcrumb array
-	 */
-	public function breadcrumb(): array
-	{
-		$parents = $this->model->parents()->flip()->merge($this->model);
-
-		return $parents->values(
-			fn ($parent) => [
-				'label' => $parent->title()->toString(),
-				'link'  => $parent->panel()->url(true),
-			]
-		);
-	}
-
-	/**
-	 * Returns header buttons which should be displayed
-	 * on the page view
-	 */
-	public function buttons(): array
-	{
-		return ViewButtons::view($this)->defaults(
-			'open',
-			'preview',
-			'settings',
-			'languages',
-			'status'
-		)->render();
-	}
 
 	/**
 	 * Provides a kirbytag or markdown
@@ -184,89 +154,10 @@ class Page extends Model
 	}
 
 	/**
-	 * Returns navigation array with
-	 * previous and next page
-	 * based on blueprint definition
+	 * @codeCoverageIgnore
 	 */
-	public function prevNext(): array
+	protected function viewController(): PageViewController
 	{
-		$page = $this->model;
-
-		// create siblings collection based on
-		// blueprint navigation
-		$siblings = static function (string $direction) use ($page) {
-			$navigation = $page->blueprint()->navigation();
-			$sortBy     = $navigation['sortBy'] ?? null;
-			$status     = $navigation['status'] ?? null;
-			$template   = $navigation['template'] ?? null;
-			$direction  = $direction === 'prev' ? 'prev' : 'next';
-
-			// if status is defined in navigation,
-			// all items in the collection are used
-			// (drafts, listed and unlisted) otherwise
-			// it depends on the status of the page
-			$siblings = $status !== null ? $page->parentModel()->childrenAndDrafts() : $page->siblings();
-
-			// sort the collection if custom sortBy
-			// defined in navigation otherwise
-			// default sorting will apply
-			if ($sortBy !== null) {
-				$siblings = $siblings->sort(...$siblings::sortArgs($sortBy));
-			}
-
-			$siblings = $page->{$direction . 'All'}($siblings);
-
-			if (empty($navigation) === false) {
-				$statuses  = (array)($status ?? $page->status());
-				$templates = (array)($template ?? $page->intendedTemplate());
-
-				// do not filter if template navigation is all
-				if (in_array('all', $templates, true) === false) {
-					$siblings = $siblings->filter('intendedTemplate', 'in', $templates);
-				}
-
-				// do not filter if status navigation is all
-				if (in_array('all', $statuses, true) === false) {
-					$siblings = $siblings->filter('status', 'in', $statuses);
-				}
-			} else {
-				$siblings = $siblings
-					->filter('intendedTemplate', $page->intendedTemplate())
-					->filter('status', $page->status());
-			}
-
-			return $siblings->filter('isListable', true);
-		};
-
-		return [
-			'next' => fn () => $this->toPrevNextLink($siblings('next')->first()),
-			'prev' => fn () => $this->toPrevNextLink($siblings('prev')->last())
-		];
-	}
-
-	/**
-	 * Returns the data array for the view's component props
-	 */
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			...$this->prevNext(),
-			'blueprint' => $this->model->intendedTemplate()->name(),
-			'title'     => $this->model->title()->toString(),
-		];
-	}
-
-	/**
-	 * Returns the data array for this model's Panel view
-	 */
-	public function view(): array
-	{
-		return [
-			'breadcrumb' => $this->model->panel()->breadcrumb(),
-			'component'  => 'k-page-view',
-			'props'      => $this->props(),
-			'title'      => $this->model->title()->toString()
-		];
+		return new PageViewController($this->model);
 	}
 }

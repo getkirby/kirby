@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\Button;
 
 use Kirby\Cms\Page;
 use Kirby\Panel\Areas\AreaTestCase;
+use Kirby\Panel\Controller\View\PageViewController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ViewButtons::class)]
@@ -132,7 +133,8 @@ class ViewButtonsTest extends AreaTestCase
 			]
 		]);
 
-		$buttons = ViewButtons::view($page->panel());
+		$controller = new PageViewController($page);
+		$buttons = ViewButtons::view($controller);
 		$this->assertCount(2, $buttons->buttons);
 		$this->assertSame($page, $buttons->model);
 	}

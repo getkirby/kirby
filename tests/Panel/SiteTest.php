@@ -18,15 +18,6 @@ class SiteTest extends TestCase
 		return new Site($site);
 	}
 
-	public function testButtons(): void
-	{
-		$this->assertSame([
-			'k-open-view-button',
-			'k-preview-view-button',
-			'k-languages-view-button',
-		], array_column($this->panel()->buttons(), 'component'));
-	}
-
 	public function testDropdownOption(): void
 	{
 		$model = $this->panel([
@@ -99,21 +90,6 @@ class SiteTest extends TestCase
 		$this->assertSame('site', $this->panel()->path());
 	}
 
-	public function testProps(): void
-	{
-		$props = $this->panel()->props();
-
-		$this->assertArrayHasKey('title', $props);
-
-		// inherited props
-		$this->assertArrayHasKey('blueprint', $props);
-		$this->assertArrayHasKey('lock', $props);
-		$this->assertArrayHasKey('permissions', $props);
-		$this->assertArrayHasKey('tab', $props);
-		$this->assertArrayHasKey('tabs', $props);
-		$this->assertArrayHasKey('versions', $props);
-	}
-
 	public function testPreviewPermissionsWithoutHomePage(): void
 	{
 		$props = $this->panel()->props();
@@ -142,12 +118,5 @@ class SiteTest extends TestCase
 		$props = $this->app->site()->panel()->props();
 
 		$this->assertTrue($props['permissions']['preview']);
-	}
-
-	public function testView(): void
-	{
-		$view = $this->panel()->view();
-		$this->assertArrayHasKey('props', $view);
-		$this->assertSame('k-site-view', $view['component']);
 	}
 }

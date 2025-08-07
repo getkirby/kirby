@@ -6,8 +6,7 @@ use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController;
-use Kirby\Panel\Ui\Button\ViewButtons;
-use Kirby\Panel\Ui\FilePreview;
+use Kirby\Panel\Controller\View\FileViewController;
 use Kirby\Panel\Ui\Item\FileItem;
 use Throwable;
 
@@ -27,58 +26,6 @@ class File extends Model
 	 * @var \Kirby\Cms\File
 	 */
 	protected ModelWithContent $model;
-
-	/**
-	 * Breadcrumb array
-	 */
-	public function breadcrumb(): array
-	{
-		$breadcrumb = [];
-		$parent     = $this->model->parent();
-
-		switch ($parent::CLASS_ALIAS) {
-			case 'user':
-				/** @var \Kirby\Cms\User $parent */
-				// The breadcrumb is not necessary
-				// on the account view
-				if ($parent->isLoggedIn() === false) {
-					$breadcrumb[] = [
-						'label' => $parent->username(),
-						'link'  => $parent->panel()->url(true)
-					];
-				}
-				break;
-			case 'page':
-				/** @var \Kirby\Cms\Page $parent */
-				$breadcrumb = $this->model->parents()->flip()->values(
-					fn ($parent) => [
-						'label' => $parent->title()->toString(),
-						'link'  => $parent->panel()->url(true),
-					]
-				);
-		}
-
-		// add the file
-		$breadcrumb[] = [
-			'label' => $this->model->filename(),
-			'link'  => $this->url(true),
-		];
-
-		return $breadcrumb;
-	}
-
-	/**
-	 * Returns header button names which should be displayed
-	 * on the file view
-	 */
-	public function buttons(): array
-	{
-		return ViewButtons::view($this)->defaults(
-			'open',
-			'settings',
-			'languages'
-		)->render();
-	}
 
 	/**
 	 * Provides a kirbytag or markdown
@@ -336,48 +283,6 @@ class File extends Model
 	}
 
 	/**
-	 * Returns the data array for the view's component props
-	 */
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			...$this->prevNext(),
-			'blueprint' => $this->model->template() ?? 'default',
-			'extension' => $this->model->extension(),
-			'filename'  => $this->model->filename(),
-			'mime'      => $this->model->mime(),
-			'preview'   => FilePreview::factory($this->model)->render(),
-			'type'      => $this->model->type(),
-			'url'       => $this->model->url(),
-		];
-	}
-
-	/**
-	 * Returns navigation array with previous and next file
-	 */
-	public function prevNext(): array
-	{
-		$file     = $this->model;
-		$siblings = $file->templateSiblings()->sortBy(
-			'sort',
-			'asc',
-			'filename',
-			'asc'
-		);
-
-		return [
-			'next' => function () use ($file, $siblings): array|null {
-				$next = $siblings->nth($siblings->indexOf($file) + 1);
-				return $this->toPrevNextLink($next, 'filename');
-			},
-			'prev' => function () use ($file, $siblings): array|null {
-				$prev = $siblings->nth($siblings->indexOf($file) - 1);
-				return $this->toPrevNextLink($prev, 'filename');
-			}
-		];
-	}
-	/**
 	 * Returns the url to the editing view
 	 * in the panel
 	 */
@@ -388,16 +293,10 @@ class File extends Model
 	}
 
 	/**
-	 * Returns the data array for this model's Panel view
+	 * @codeCoverageIgnore
 	 */
-	public function view(): array
+	protected function viewController(): FileViewController
 	{
-		return [
-			'breadcrumb' => fn (): array => $this->model->panel()->breadcrumb(),
-			'component'  => 'k-file-view',
-			'props'      => $this->props(),
-			'search'     => 'files',
-			'title'      => $this->model->filename(),
-		];
+		return new FileViewController($this->model);
 	}
 }

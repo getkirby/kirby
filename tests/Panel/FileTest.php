@@ -4,7 +4,6 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
-use Kirby\Cms\Site as ModelSite;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -35,80 +34,6 @@ class FileTest extends TestCase
 			]
 		]);
 		return new File($page->file('test.jpg'));
-	}
-
-	public function testBreadcrumbForSiteFile(): void
-	{
-		$site = new ModelSite([
-			'files' => [
-				['filename' => 'test.jpg'],
-			]
-		]);
-
-		$file = new File($site->file('test.jpg'));
-		$this->assertSame([
-			[
-				'label' => 'test.jpg',
-				'link'  => '/site/files/test.jpg'
-			]
-		], $file->breadcrumb());
-	}
-
-	public function testBreadcrumbForPageFile(): void
-	{
-		$page = new ModelPage([
-			'slug' => 'test',
-			'content' => [
-				'title' => 'Test'
-			],
-			'files' => [
-				['filename' => 'test.jpg'],
-			]
-		]);
-
-		$file = new File($page->file('test.jpg'));
-		$this->assertSame([
-			[
-				'label' => 'Test',
-				'link'  => '/pages/test'
-			],
-			[
-				'label' => 'test.jpg',
-				'link'  => '/pages/test/files/test.jpg'
-			]
-		], $file->breadcrumb());
-	}
-
-	public function testBreadcrumbForUserFile(): void
-	{
-		$user = new ModelUser([
-			'id'    => 'test',
-			'email' => 'test@getkirby.com',
-			'files' => [
-				['filename' => 'test.jpg'],
-			]
-		]);
-
-		$file = new File($user->file('test.jpg'));
-		$this->assertSame([
-			[
-				'label' => 'test@getkirby.com',
-				'link'  => '/users/test'
-			],
-			[
-				'label' => 'test.jpg',
-				'link'  => '/users/test/files/test.jpg'
-			]
-		], $file->breadcrumb());
-	}
-
-	public function testButtons(): void
-	{
-		$this->assertSame([
-			'k-open-view-button',
-			'k-settings-view-button',
-			'k-languages-view-button',
-		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	public function testDragText(): void
@@ -269,11 +194,6 @@ class FileTest extends TestCase
 		// Custom function should return image tag for heic
 		$panel = new File($app->page('test')->file('test.heic'));
 		$this->assertSame('(image: file://test-heic)', $panel->dragText());
-	}
-
-	public function testDropdown(): void
-	{
-		$this->assertCount(6, $this->panel()->dropdown());
 	}
 
 	public function testDropdownOption(): void
@@ -717,102 +637,6 @@ class FileTest extends TestCase
 		$this->assertSame('(image: file://test-file)', $data['dragText']);
 	}
 
-	public function testProps(): void
-	{
-		$props = $this->panel()->props();
-
-		$this->assertArrayHasKey('extension', $props);
-		$this->assertArrayHasKey('filename', $props);
-		$this->assertArrayHasKey('id', $props);
-		$this->assertArrayHasKey('mime', $props);
-		$this->assertArrayHasKey('url', $props);
-		$this->assertArrayHasKey('type', $props);
-		$this->assertArrayHasKey('preview', $props);
-
-		// inherited props
-		$this->assertArrayHasKey('blueprint', $props);
-		$this->assertArrayHasKey('lock', $props);
-		$this->assertArrayHasKey('permissions', $props);
-		$this->assertArrayNotHasKey('tab', $props);
-		$this->assertArrayHasKey('tabs', $props);
-		$this->assertArrayHasKey('versions', $props);
-	}
-
-	public function testPropsPrevNext(): void
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'a.jpg'],
-				['filename' => 'b.jpg'],
-				['filename' => 'c.jpg']
-			]
-		]);
-
-		$panel = new File($page->file('a.jpg'));
-		$props = $panel->props();
-		$this->assertNull($props['prev']());
-		$this->assertSame('/pages/test/files/b.jpg', $props['next']()['link']);
-
-		$panel = new File($page->file('b.jpg'));
-		$props = (new File($page->file('b.jpg')))->props();
-		$this->assertSame('/pages/test/files/a.jpg', $props['prev']()['link']);
-		$this->assertSame('/pages/test/files/c.jpg', $props['next']()['link']);
-
-		$panel = new File($page->file('c.jpg'));
-		$props = $panel->props();
-		$this->assertSame('/pages/test/files/b.jpg', $props['prev']()['link']);
-		$this->assertNull($props['next']());
-	}
-
-	public function testPropsPrevNextWithSort(): void
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'a.jpg', 'content' => ['sort' => 2]],
-				['filename' => 'b.jpg', 'content' => ['sort' => 1]],
-				['filename' => 'c.jpg', 'content' => ['sort' => 3]]
-			]
-		]);
-
-		$panel = new File($page->file('a.jpg'));
-		$props = $panel->props();
-		$this->assertSame('/pages/test/files/b.jpg', $props['prev']()['link']);
-		$this->assertSame('/pages/test/files/c.jpg', $props['next']()['link']);
-
-		$panel = new File($page->file('b.jpg'));
-		$props = $panel->props();
-		$this->assertNull($props['prev']());
-		$this->assertSame('/pages/test/files/a.jpg', $props['next']()['link']);
-
-		$panel = new File($page->file('c.jpg'));
-		$props = $panel->props();
-		$this->assertSame('/pages/test/files/a.jpg', $props['prev']()['link']);
-		$this->assertNull($props['next']());
-	}
-
-	public function testPropsPrevNextWithTab(): void
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'a.jpg'],
-				['filename' => 'b.jpg'],
-				['filename' => 'c.jpg']
-			]
-		]);
-
-		$_GET['tab'] = 'test';
-
-		$panel    = new File($page->file('b.jpg'));
-		$prevNext = $panel->prevNext();
-		$this->assertSame('/pages/test/files/a.jpg?tab=test', $prevNext['prev']()['link']);
-		$this->assertSame('/pages/test/files/c.jpg?tab=test', $prevNext['next']()['link']);
-
-		$_GET = [];
-	}
-
 	public function testUrl(): void
 	{
 		$app = $this->app->clone([
@@ -869,45 +693,5 @@ class FileTest extends TestCase
 
 		$this->assertSame('https://getkirby.com/panel/users/test/files/user-file.jpg', $panel->url());
 		$this->assertSame('/users/test/files/user-file.jpg', $panel->url(true));
-	}
-
-	public function testPrevNext(): void
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'a.jpg'],
-				['filename' => 'b.jpg'],
-				['filename' => 'c.jpg']
-			]
-		]);
-
-		$panel    = new File($page->file('a.jpg'));
-		$prevNext = $panel->prevNext();
-		$this->assertNull($prevNext['prev']());
-		$this->assertSame('/pages/test/files/b.jpg', $prevNext['next']()['link']);
-
-		$panel    = new File($page->file('b.jpg'));
-		$prevNext = $panel->prevNext();
-		$this->assertSame('/pages/test/files/a.jpg', $prevNext['prev']()['link']);
-		$this->assertSame('/pages/test/files/c.jpg', $prevNext['next']()['link']);
-
-		$panel    = new File($page->file('c.jpg'));
-		$prevNext = $panel->prevNext();
-		$this->assertSame('/pages/test/files/b.jpg', $prevNext['prev']()['link']);
-		$this->assertNull($prevNext['next']());
-	}
-
-	public function testView(): void
-	{
-		$view = $this->panel()->view();
-
-		$this->assertArrayHasKey('props', $view);
-		$this->assertSame('k-file-view', $view['component']);
-		$this->assertSame('test.jpg', $view['title']);
-		$this->assertSame('files', $view['search']);
-		$breadcrumb = $view['breadcrumb']();
-		$this->assertSame('test', $breadcrumb[0]['label']);
-		$this->assertSame('test.jpg', $breadcrumb[1]['label']);
 	}
 }

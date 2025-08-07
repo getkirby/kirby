@@ -31,31 +31,6 @@ class UserTest extends TestCase
 		return new User($user);
 	}
 
-	public function testBreadcrumb(): void
-	{
-		$model = new ModelUser([
-			'email' => 'test@getkirby.com',
-		]);
-
-		$breadcrumb = (new User($model))->breadcrumb();
-		$this->assertSame('test@getkirby.com', $breadcrumb[0]['label']);
-		$this->assertStringStartsWith('/users/', $breadcrumb[0]['link']);
-	}
-
-	public function testButtons(): void
-	{
-		$this->assertSame([
-			'k-theme-view-button',
-			'k-settings-view-button',
-			'k-languages-view-button',
-		], array_column($this->panel()->buttons(), 'component'));
-	}
-
-	public function testDropdown(): void
-	{
-		$this->assertCount(9, $this->panel()->dropdown());
-	}
-
 	public function testDropdownOption(): void
 	{
 		$model = new ModelUser([
@@ -284,59 +259,6 @@ class UserTest extends TestCase
 		$this->assertSame('test@getkirby.com', $data['text']);
 	}
 
-	public function testProps(): void
-	{
-		$user = new ModelUser([
-			'email'    => 'test@getkirby.com',
-			'language' => 'de'
-		]);
-
-		$panel = new User($user);
-		$props = $panel->props();
-
-		$this->assertArrayHasKey('avatar', $props);
-		$this->assertArrayHasKey('email', $props);
-		$this->assertArrayHasKey('id', $props);
-		$this->assertArrayHasKey('language', $props);
-		$this->assertArrayHasKey('name', $props);
-		$this->assertArrayHasKey('role', $props);
-		$this->assertArrayHasKey('username', $props);
-
-		// inherited props
-		$this->assertArrayHasKey('blueprint', $props);
-		$this->assertArrayHasKey('lock', $props);
-		$this->assertArrayHasKey('permissions', $props);
-		$this->assertArrayNotHasKey('tab', $props);
-		$this->assertArrayHasKey('tabs', $props);
-		$this->assertArrayHasKey('versions', $props);
-
-		$this->assertNull($props['next']());
-		$this->assertNull($props['prev']());
-	}
-
-	public function testPropsPrevNext(): void
-	{
-		$app = $this->app->clone([
-			'users' => [
-				['email' => 'a@getkirby.com'],
-				['email' => 'b@getkirby.com'],
-				['email' => 'c@getkirby.com']
-			]
-		]);
-
-		$props = (new User($app->user('a@getkirby.com')))->props();
-		$this->assertNull($props['prev']());
-		$this->assertSame('b@getkirby.com', $props['next']()['title']);
-
-		$props = (new User($app->user('b@getkirby.com')))->props();
-		$this->assertSame('a@getkirby.com', $props['prev']()['title']);
-		$this->assertSame('c@getkirby.com', $props['next']()['title']);
-
-		$props = (new User($app->user('c@getkirby.com')))->props();
-		$this->assertSame('b@getkirby.com', $props['prev']()['title']);
-		$this->assertNull($props['next']());
-	}
-
 	public function testTranslation(): void
 	{
 		// existing
@@ -360,62 +282,5 @@ class UserTest extends TestCase
 		$translations = $panel->translation();
 		$this->assertSame('foo', $translations->code());
 		$this->assertNull($translations->get('translation.name'));
-	}
-
-	public function testPrevNext(): void
-	{
-		$app = $this->app->clone([
-			'users' => [
-				['email' => 'a@getkirby.com'],
-				['email' => 'b@getkirby.com'],
-				['email' => 'c@getkirby.com']
-			]
-		]);
-
-		$prevNext = (new User($app->user('a@getkirby.com')))->prevNext();
-		$this->assertNull($prevNext['prev']());
-		$this->assertSame('b@getkirby.com', $prevNext['next']()['title']);
-
-		$prevNext = (new User($app->user('b@getkirby.com')))->prevNext();
-		$this->assertSame('a@getkirby.com', $prevNext['prev']()['title']);
-		$this->assertSame('c@getkirby.com', $prevNext['next']()['title']);
-
-		$prevNext = (new User($app->user('c@getkirby.com')))->prevNext();
-		$this->assertSame('b@getkirby.com', $prevNext['prev']()['title']);
-		$this->assertNull($prevNext['next']());
-	}
-
-	public function testPrevNextWithTab(): void
-	{
-		$app = $this->app->clone([
-			'users' => [
-				['id' => 'a', 'email' => 'a@getkirby.com'],
-				['id' => 'b', 'email' => 'b@getkirby.com'],
-				['id' => 'c', 'email' => 'c@getkirby.com']
-			]
-		]);
-
-		$_GET['tab'] = 'test';
-
-		$prevNext = (new User($app->user('b@getkirby.com')))->prevNext();
-		$this->assertSame('/users/a?tab=test', $prevNext['prev']()['link']);
-		$this->assertSame('/users/c?tab=test', $prevNext['next']()['link']);
-
-		$_GET = [];
-	}
-
-	public function testView(): void
-	{
-		$user = new ModelUser([
-			'email' => 'test@getkirby.com',
-		]);
-
-		$panel = new User($user);
-		$view = $panel->view();
-
-		$this->assertArrayHasKey('props', $view);
-		$this->assertSame('k-user-view', $view['component']);
-		$this->assertSame('test@getkirby.com', $view['title']);
-		$this->assertSame('test@getkirby.com', $view['breadcrumb'][0]['label']);
 	}
 }

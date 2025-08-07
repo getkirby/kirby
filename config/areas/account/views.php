@@ -1,22 +1,17 @@
 <?php
 
-use Kirby\Cms\App;
-use Kirby\Cms\Find;
+use Kirby\Panel\Controller\View\AccountViewController;
+use Kirby\Panel\Controller\View\FileViewController;
 use Kirby\Panel\Controller\View\ResetPasswordViewController;
 
 return [
 	'account' => [
-		'pattern' => 'account',
-		'action'  => fn () => [
-			'component' => 'k-account-view',
-			'props'     => App::instance()->user()->panel()->props(),
-		],
+		'pattern' => '(account)',
+		'action'  => AccountViewController::class
 	],
 	'account.file' => [
-		'pattern' => 'account/files/(:any)',
-		'action'  => function (string $filename) {
-			return Find::file('account', $filename)->panel()->view();
-		}
+		'pattern' => '(account)/files/(:any)',
+		'action'  => FileViewController::class
 	],
 	'account.password' => [
 		'pattern' => 'reset-password',
