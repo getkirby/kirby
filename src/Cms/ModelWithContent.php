@@ -462,7 +462,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		// update the clone
 		$clone->version()->save(
 			$data ?? [],
-			$languageCode ?? 'default',
+			$languageCode ?? 'current',
 			$overwrite
 		);
 
