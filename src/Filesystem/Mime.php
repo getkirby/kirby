@@ -100,7 +100,7 @@ class Mime
 		'tiff'  => 'image/tiff',
 		'wav'   => 'audio/x-wav',
 		'wbxml' => 'application/wbxml',
-		'webm'  => ['video/webm', 'audio/webm],
+		'webm'  => ['video/webm', 'audio/webm'],
 		'webp'  => 'image/webp',
 		'word'  => ['application/msword', 'application/octet-stream'],
 		'xhtml' => 'application/xhtml+xml',
