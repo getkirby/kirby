@@ -118,13 +118,21 @@ class Home
 					return false;
 				}
 
-				// if auth is not required the redirect is allowed
-				if ($auth === false) {
-					return true;
+				// check the firewall, if auth is required
+				if (
+					$auth !== false &&
+					Panel::hasAccess($user, $areaId) === false
+				) {
+					return false;
 				}
 
-				// check the firewall
-				return Panel::hasAccess($user, $areaId);
+				// check if the route yields a valid result
+				$result = $route->action()->call(
+					$route,
+					...$route->arguments()
+				);
+
+				return $result !== false;
 			});
 		} catch (Throwable) {
 			return false;

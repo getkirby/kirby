@@ -179,6 +179,11 @@ class HomeTest extends TestCase
 			],
 			'users' => [
 				['email' => 'test@getkirby.com', 'role' => 'admin']
+			],
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true
+				]
 			]
 		]);
 
@@ -220,6 +225,11 @@ class HomeTest extends TestCase
 			],
 			'users' => [
 				['email' => 'test@getkirby.com', 'role' => 'editor']
+			],
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true
+				]
 			]
 		]);
 
@@ -229,6 +239,28 @@ class HomeTest extends TestCase
 		$this->assertFalse(Home::hasAccess($user, 'pages/test'));
 		$this->assertTrue(Home::hasAccess($user, 'users/test@getkirby.com'));
 		$this->assertTrue(Home::hasAccess($user, 'account'));
+	}
+
+	public function testHasAccessWithInvalidPath(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			],
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true
+				]
+			]
+		]);
+
+		$user = $this->app->impersonate('test@getkirby.com');
+		$this->assertFalse(Home::hasAccess($user, 'pages/foo+bar'));
 	}
 
 	public function testHasValidDomain(): void
