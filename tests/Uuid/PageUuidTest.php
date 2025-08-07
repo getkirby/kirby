@@ -82,9 +82,44 @@ class PageUuidTest extends TestCase
 		$this->assertSame('my-page', ModelUuid::retrieveId($page));
 	}
 
-	public function testUrl(): void
+	public function testToPermalink(): void
 	{
 		$page = $this->app->page('page-a');
+		$url  = 'https://getkirby.com/@/page/my-page';
+		$this->assertSame($url, $page->uuid()->toPermalink());
+		$this->assertSame($url, $page->uuid()->url());
+	}
+
+	public function testUrlWithLanguageWithCustomUrl(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+					'url'     => '/'
+				],
+				[
+					'code'    => 'de',
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'foo', 'content' => ['uuid' => 'my-page']]
+				]
+			]
+		]);
+
+		$page = $app->page('foo');
 		$url  = 'https://getkirby.com/@/page/my-page';
 		$this->assertSame($url, $page->uuid()->url());
 	}

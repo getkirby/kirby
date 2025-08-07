@@ -410,6 +410,32 @@ abstract class Uuid implements Stringable
 	}
 
 	/**
+	 * Returns the URL of the model, including the query and fragment
+	 * @since 5.1.0
+	 */
+	public function toUrl(): string|null
+	{
+		$model = $this->model();
+
+		if ($model === null) {
+			return null;
+		}
+
+		if (method_exists($model, 'url') === false) {
+			return null;
+		}
+
+		$url  = $model->url();
+		$url .= $this->uri->query->toString(true);
+
+		if ($this->uri->hasFragment() === true) {
+			$url .= '#' . $this->uri->fragment();
+		}
+
+		return $url;
+	}
+
+	/**
 	 * Returns value to be stored in cache
 	 */
 	public function value(): string|array

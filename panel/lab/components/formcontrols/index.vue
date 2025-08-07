@@ -53,7 +53,7 @@
 
 		<k-lab-example label="Changes">
 			<k-form-controls
-				:has-changes="true"
+				:has-diff="true"
 				editor="editor@getkirby.com"
 				modified="2024-10-01T17:00:00"
 				preview="https://getkirby.com"

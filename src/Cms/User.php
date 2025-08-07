@@ -26,6 +26,7 @@ use SensitiveParameter;
  * @license   https://getkirby.com/license
  *
  * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Users>
+ * @method \Kirby\Uuid\UserUuid uuid()
  */
 class User extends ModelWithContent
 {
