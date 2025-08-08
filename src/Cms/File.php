@@ -44,12 +44,6 @@ class File extends ModelWithContent
 	public const CLASS_ALIAS = 'file';
 
 	/**
-	 * All registered file methods
-	 * @todo Remove when support for PHP 8.2 is dropped
-	 */
-	public static array $methods = [];
-
-	/**
 	 * Cache for the initialized blueprint object
 	 */
 	protected FileBlueprint|null $blueprint = null;

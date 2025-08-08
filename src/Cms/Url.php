@@ -41,7 +41,6 @@ class Url extends BaseUrl
 	 * @param string $separator To be used instead of space and
 	 *                          other non-word characters.
 	 * @param string $allowed List of all allowed characters (regex)
-	 * @param int $maxlength The maximum length of the slug
 	 * @return string The safe string
 	 */
 	public static function slug(

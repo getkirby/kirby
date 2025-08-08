@@ -45,12 +45,6 @@ class Page extends ModelWithContent
 	public const CLASS_ALIAS = 'page';
 
 	/**
-	 * All registered page methods
-	 * @todo Remove when support for PHP 8.2 is dropped
-	 */
-	public static array $methods = [];
-
-	/**
 	 * The PageBlueprint object
 	 */
 	protected PageBlueprint|null $blueprint = null;

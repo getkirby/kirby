@@ -24,8 +24,7 @@
 		"source": "https://github.com/getkirby/kirby"
 	},
 	"require": {
-		"php": "~8.2.0 || ~8.3.0 || ~8.4.0",
-		"ext-SimpleXML": "*",
+		"php": "~8.3.0 || ~8.4.0",
 		"ext-ctype": "*",
 		"ext-curl": "*",
 		"ext-dom": "*",
@@ -36,6 +35,7 @@
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
+		"ext-simplexml": "*",
 		"christian-riesen/base32": "1.6.0",
 		"claviska/simpleimage": "4.2.1",
 		"composer/semver": "3.4.3",
@@ -52,12 +52,12 @@
 		"symfony/polyfill-php72": "*"
 	},
 	"suggest": {
-		"ext-PDO": "Support for using databases",
 		"ext-apcu": "Support for the Apcu cache driver",
 		"ext-exif": "Support for exif information from images",
 		"ext-fileinfo": "Improved mime type detection for files",
 		"ext-intl": "Improved i18n number formatting",
 		"ext-memcached": "Support for the Memcached cache driver",
+		"ext-pdo": "Support for using databases",
 		"ext-redis": "Support for the Redis cache driver",
 		"ext-sodium": "Support for the crypto class and more robust session handling",
 		"ext-zip": "Support for ZIP archive file functions",
@@ -81,14 +81,9 @@
 		},
 		"optimize-autoloader": true,
 		"platform": {
-			"php": "8.2.0"
+			"php": "8.3.0"
 		},
 		"platform-check": false
-	},
-	"extra": {
-		"unused": [
-			"symfony/polyfill-intl-idn"
-		]
 	},
 	"scripts": {
 		"post-update-cmd": "curl -o cacert.pem https://curl.se/ca/cacert.pem",

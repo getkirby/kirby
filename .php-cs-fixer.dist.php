@@ -1,12 +1,17 @@
 <?php
 
-$finder = PhpCsFixer\Finder::create()
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
+
+$config = new Config();
+$finder = Finder::create()
 	->exclude('dependencies')
 	->exclude('panel/node_modules')
 	->in(__DIR__);
 
-$config = new PhpCsFixer\Config();
 return $config
+	->setParallelConfig(ParallelConfigFactory::detect())
 	->setRules([
 		'@PSR12' => true,
 		'align_multiline_comment' => ['comment_type' => 'all_multiline'],

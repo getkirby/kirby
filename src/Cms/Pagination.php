@@ -140,8 +140,8 @@ class Pagination extends BasePagination
 		}
 
 		match ($this->method) {
-			'query' => $url->query->$variable  = $page,
-			'param' => $url->params->$variable = $page
+			'query' => $url->query()->$variable  = $page,
+			'param' => $url->params()->$variable = $page
 		};
 
 		return $url->toString();

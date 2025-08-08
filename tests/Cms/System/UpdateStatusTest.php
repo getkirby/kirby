@@ -12,7 +12,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
 #[CoversClass(UpdateStatus::class)]
-#[CoversClass(UpdateStatus::class)]
 class UpdateStatusTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/UpdateStatusTest';
