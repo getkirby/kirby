@@ -39,19 +39,18 @@ export default (panel) => {
 				return;
 			}
 
-			// Force close all drawers
-			if (id === true) {
-				this.history.clear();
-			}
-
 			// Compare the drawer id to avoid closing
 			// the wrong drawer. This is particularly useful
 			// in nested drawers.
-			if (id !== undefined && id !== this.id) {
+			if (id !== undefined && id !== true && id !== this.id) {
 				return;
 			}
 
-			this.history.removeLast();
+			if (id === true) {
+				this.history.clear();
+			} else {
+				this.history.removeLast();
+			}
 
 			// no more items in the history
 			if (this.history.isEmpty() === true) {
