@@ -224,14 +224,17 @@ class Field extends Component
 	 */
 	public function dialogs(): array
 	{
-		if (
-			isset($this->options['dialogs']) === true &&
-			$this->options['dialogs'] instanceof Closure
-		) {
+		if (isset($this->options['dialogs']) === false) {
+			return [];
+		}
+
+		if ($this->options['dialogs'] instanceof Closure) {
 			return $this->options['dialogs']->call($this);
 		}
 
-		return [];
+		throw new InvalidArgumentException(
+			message: 'Dialogs of field "' . $this->name() . '" must be define as a closure'
+		);
 	}
 
 	/**
@@ -239,14 +242,17 @@ class Field extends Component
 	 */
 	public function drawers(): array
 	{
-		if (
-			isset($this->options['drawers']) === true &&
-			$this->options['drawers'] instanceof Closure
-		) {
+		if (isset($this->options['drawers']) === false) {
+			return [];
+		}
+
+		if ($this->options['drawers'] instanceof Closure) {
 			return $this->options['drawers']->call($this);
 		}
 
-		return [];
+		throw new InvalidArgumentException(
+			message: 'Drawers of field "' . $this->name() . '" must be define as a closure'
+		);
 	}
 
 	/**
