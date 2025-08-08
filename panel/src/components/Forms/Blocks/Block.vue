@@ -266,7 +266,6 @@ export default {
 				this.$refs.container?.focus();
 			}
 		},
-
 		goTo(block) {
 			if (block) {
 				block.$refs.container?.focus();
