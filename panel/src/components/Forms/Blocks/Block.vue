@@ -158,9 +158,6 @@ export default {
 
 			return "k-block-type-default";
 		},
-		isCollapsable() {
-			return this.fieldset.preview === "fields";
-		},
 		isDisabled() {
 			return this.disabled === true || this.fieldset.disabled === true;
 		},
@@ -250,14 +247,10 @@ export default {
 			this.$panel.drawer.close(this.id);
 		},
 		collapse() {
-			if (this.isCollapsable) {
-				this.$refs.editor?.collapse();
-			}
+			this.$refs.editor?.collapse?.();
 		},
 		expand() {
-			if (this.isCollapsable) {
-				this.$refs.editor?.expand();
-			}
+			this.$refs.editor?.expand?.();
 		},
 		focus() {
 			if (typeof this.$refs.editor?.focus === "function") {
