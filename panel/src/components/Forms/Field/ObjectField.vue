@@ -1,9 +1,10 @@
 <template>
-	<k-field v-bind="$props" class="k-object-field">
+	<k-field v-bind="$props" :input="id" class="k-object-field">
 		<!-- Remove button -->
 		<template v-if="!disabled && hasFields" #options>
 			<k-button
 				v-if="isEmpty"
+				:id="id"
 				icon="add"
 				size="xs"
 				variant="filled"
@@ -21,6 +22,7 @@
 		<template v-if="hasFields">
 			<table
 				v-if="!isEmpty"
+				:id="id"
 				:aria-disabled="disabled"
 				class="k-table k-object-field-table"
 			>

@@ -97,6 +97,7 @@ return [
 			'multiple'  => $this->multiple,
 			'query'     => $this->query,
 			'text'      => $this->text,
+			'uploads'   => $this->uploads,
 			...$this->picker
 		])
 	],

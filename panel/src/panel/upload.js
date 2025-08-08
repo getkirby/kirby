@@ -149,6 +149,7 @@ export default (panel) => {
 					preview: this.preview
 				},
 				on: {
+					...this.on,
 					open: (dialog) => this.emit("open", dialog),
 					cancel: () => this.cancel(),
 					submit: async () => {

@@ -34,7 +34,8 @@ class FilesPickerDialogController extends ModelsPickerDialogController
 		bool $multiple = true,
 		public string|null $query = null,
 		string|null $size = null,
-		string|null $text = null
+		string|null $text = null,
+		public array|false $uploads = false,
 	) {
 		parent::__construct(
 			model:     $model,
@@ -65,6 +66,14 @@ class FilesPickerDialogController extends ModelsPickerDialogController
 		return $this->kirby->file($id, $this->model);
 	}
 
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'uploads' => $this->uploads(),
+		];
+	}
+
 	public function query(): string
 	{
 		if ($this->query !== null) {
@@ -76,5 +85,18 @@ class FilesPickerDialogController extends ModelsPickerDialogController
 		}
 
 		return $this->model::CLASS_ALIAS . '.files';
+	}
+
+	public function uploads(): array|false
+	{
+		if ($this->uploads === false) {
+			return false;
+		}
+
+		return [
+			'multiple' => $this->multiple,
+			'max'      => $this->max,
+			...$this->uploads,
+		];
 	}
 }

@@ -2,6 +2,7 @@
 	<k-field
 		v-bind="$props"
 		:class="['k-structure-field', $attrs.class]"
+		:input="id"
 		:style="$attrs.style"
 		@click.stop
 	>
@@ -56,7 +57,7 @@
 		</template>
 
 		<k-input-validator
-			v-bind="{ min, max, required }"
+			v-bind="{ id, min, max, required }"
 			:value="JSON.stringify(items)"
 		>
 			<template v-if="hasFields">
@@ -77,6 +78,7 @@
 						:pagination="limit && !isSelecting ? pagination : false"
 						:rows="paginatedItems"
 						:selecting="isSelecting"
+						:selected="selected"
 						:sortable="isSortable"
 						@cell="open($event.row, $event.columnIndex)"
 						@input="onTableInput"
@@ -190,10 +192,6 @@ export default {
 
 		batchEditingEvent() {
 			return "structure.selecting";
-		},
-
-		batchEditingIdentifier() {
-			return "_id";
 		},
 
 		canSelect() {

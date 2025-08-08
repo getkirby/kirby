@@ -53,7 +53,7 @@ export default {
 <style>
 /** Dialog search field **/
 .k-dialog-search {
-	margin-bottom: 0.75rem;
+	margin-bottom: var(--spacing-3);
 	--input-color-border: transparent;
 	--input-color-back: light-dark(var(--color-gray-300), var(--color-gray-950));
 }

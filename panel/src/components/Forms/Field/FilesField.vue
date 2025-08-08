@@ -8,21 +8,6 @@ export default {
 		uploads: [Boolean, Object, Array]
 	},
 	computed: {
-		buttons() {
-			const buttons = ModelsField.computed.buttons.call(this);
-
-			if (this.hasDropzone) {
-				buttons.unshift({
-					autofocus: this.autofocus,
-					text: this.$t("upload"),
-					responsive: true,
-					icon: "upload",
-					click: () => this.$panel.upload.pick(this.uploadOptions)
-				});
-			}
-
-			return buttons;
-		},
 		emptyProps() {
 			return {
 				icon: "image",

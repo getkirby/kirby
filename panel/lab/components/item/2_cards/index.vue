@@ -82,11 +82,72 @@
 				text="This is a nice item"
 			/>
 		</k-lab-example>
-		<k-lab-example label="Selecting & no selectable">
+		<k-lab-example label="Selecting & selected">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:selecting="true"
+				:selected="true"
+				layout="cards"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting & not selectable">
 			<k-item
 				:image="{ src: 'https://picsum.photos/800/600' }"
 				:selecting="true"
 				:selectable="false"
+				layout="cards"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting & not selectable, but selected">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:selecting="true"
+				:selectable="false"
+				:selected="true"
+				layout="cards"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting: single">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				selecting="single"
+				layout="cards"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting: single & selected">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				selecting="single"
+				:selected="true"
+				layout="cards"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting: single & not selectable">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				selecting="single"
+				:selectable="false"
+				layout="cards"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting: single & not selectable, but selected">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				selecting="single"
+				:selectable="false"
+				:selected="true"
 				layout="cards"
 				info="With some info"
 				text="This is a nice item"

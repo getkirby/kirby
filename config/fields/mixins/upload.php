@@ -48,6 +48,8 @@ return [
 				$uploads['accept'] = $file->blueprint()->acceptAttribute();
 			}
 
+			$uploads['url'] ??= $this->model()->panel()->url(true) . '/fields/' . $this->name() . '/upload';
+
 			return $uploads;
 		},
 	],
