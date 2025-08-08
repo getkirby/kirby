@@ -3,7 +3,6 @@
 		v-bind="$props"
 		:class="['k-structure-field', $attrs.class]"
 		:style="$attrs.style"
-		:buttons="buttons"
 		@click.native.stop
 	>
 		<template v-if="hasFields && !disabled" #options>
