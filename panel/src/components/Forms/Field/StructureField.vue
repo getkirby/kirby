@@ -2,6 +2,7 @@
 	<k-field
 		v-bind="$props"
 		:class="['k-structure-field', $attrs.class]"
+		:input="id"
 		:style="$attrs.style"
 		:buttons="buttons"
 		@click.native.stop
@@ -57,7 +58,7 @@
 		</template>
 
 		<k-input-validator
-			v-bind="{ min, max, required }"
+			v-bind="{ id, min, max, required }"
 			:value="JSON.stringify(items)"
 		>
 			<template v-if="hasFields">

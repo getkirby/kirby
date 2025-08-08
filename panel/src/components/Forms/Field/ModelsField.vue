@@ -1,6 +1,7 @@
 <template>
 	<k-field
 		v-bind="$props"
+		:input="id"
 		:class="['k-models-field', `k-${$options.type}-field`, $attrs.class]"
 		:style="$attrs.style"
 	>
@@ -17,7 +18,7 @@
 
 		<k-dropzone :disabled="!hasDropzone" @drop="drop">
 			<k-input-validator
-				v-bind="{ min, max, required }"
+				v-bind="{ id, min, max, required }"
 				:value="JSON.stringify(value)"
 			>
 				<k-collection
