@@ -74,6 +74,9 @@ export default {
 		isFull() {
 			return this.max && this.value.length >= this.max;
 		},
+		isCollapsable() {
+			return Object.values(this.fieldsets).some(fieldset => fieldset.preview === "fields");
+		},
 		options() {
 			return [
 				{
@@ -88,6 +91,21 @@ export default {
 					icon: "download",
 					text: this.$t("paste")
 				},
+				...(this.isCollapsable ? [
+					"-",
+					{
+						click: () => this.$refs.blocks.collapseAll(),
+						disabled: this.isEmpty,
+						icon: "collapse",
+						text: this.$t("collapse.all")
+					},
+					{
+						click: () => this.$refs.blocks.expandAll(),
+						disabled: this.isEmpty,
+						icon: "expand",
+						text: this.$t("expand.all")
+					},
+					]: [])				,
 				"-",
 				{
 					click: () => this.$refs.blocks.removeAll(),

@@ -226,6 +226,15 @@ export default {
 				}
 			});
 		},
+		collapse(block) {
+			const ref = this.ref(block);
+			ref?.collapse();
+		},
+		collapseAll() {
+			for (const block of this.blocks) {
+				this.collapse(block);
+			}
+		},
 		copy(e) {
 			// don't copy when there are no blocks yet
 			if (this.blocks.length === 0) {
@@ -336,6 +345,15 @@ export default {
 			};
 			this.blocks.splice(index + 1, 0, copy);
 			this.save();
+		},
+		expand(block) {
+			const ref = this.ref(block);
+			ref?.expand();
+		},
+		expandAll() {
+			for (const block of this.blocks) {
+				this.expand(block);
+			}
 		},
 		fieldset(block) {
 			return (

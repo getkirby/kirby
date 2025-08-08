@@ -72,6 +72,14 @@ export default {
 		toggle() {
 			this.collapsed = !this.collapsed;
 			this.state(this.collapsed);
+		},
+		collapse() {
+			this.collapsed = true;
+			this.state(this.collapsed);
+		},
+		expand() {
+			this.collapsed = false;
+			this.state(this.collapsed);
 		}
 	}
 };

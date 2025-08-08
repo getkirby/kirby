@@ -158,6 +158,9 @@ export default {
 
 			return "k-block-type-default";
 		},
+		isCollapsable() {
+			return this.fieldset.preview === "fields";
+		},
 		isDisabled() {
 			return this.disabled === true || this.fieldset.disabled === true;
 		},
@@ -246,6 +249,16 @@ export default {
 		close() {
 			this.$panel.drawer.close(this.id);
 		},
+		collapse() {
+			if (this.isCollapsable) {
+				this.$refs.editor?.collapse();
+			}
+		},
+		expand() {
+			if (this.isCollapsable) {
+				this.$refs.editor?.expand();
+			}
+		},
 		focus() {
 			if (typeof this.$refs.editor?.focus === "function") {
 				this.$refs.editor.focus();
@@ -253,6 +266,7 @@ export default {
 				this.$refs.container?.focus();
 			}
 		},
+
 		goTo(block) {
 			if (block) {
 				block.$refs.container?.focus();
