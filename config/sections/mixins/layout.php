@@ -145,30 +145,25 @@ return [
 			// TODO: remove once Form classes have been refactored
 			// @codeCoverageIgnoreStart
 			if ($this->rawvalues === true) {
-				foreach ($this->columns as $columnName => $column) {
-					$item[$columnName] = match (empty($column['value'])) {
-						// if column value defined, resolve the query
-						false   => $model->toString($column['value']),
-						// otherwise use the form value,
-						// but don't overwrite columns
-						default => $item[$columnName] ?? $model->content()->get($column['id'] ?? $columnName)->value()
-					};
-				}
-
-				return $item;
+				$row = [
+					...$model->content()->toArray(),
+					...$item,
+				];
+			} else {
+				$row = [
+					...Form::for($model)->toFormValues(),
+					...$item,
+				];
 			}
 			// @codeCoverageIgnoreEnd
 
-			// Use form to get the proper values for the columns
-			$form = Form::for($model)->values();
-
+			// get the values for the columns
 			foreach ($this->columns as $columnName => $column) {
 				$item[$columnName] = match (empty($column['value'])) {
 					// if column value defined, resolve the query
 					false   => $model->toString($column['value']),
-					// otherwise use the form value,
-					// but don't overwrite columns
-					default => $item[$columnName] ?? $form[$column['id'] ?? $columnName] ?? null
+					// otherwise use the value in the row array
+					default => $row[$columnName] ?? null
 				};
 			}
 
