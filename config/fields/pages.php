@@ -53,7 +53,7 @@ return [
 		'default' => null
 	],
 	'methods' => [
-		'pageResponse' => function ($page) {
+		'toPage' => function ($page) {
 			return $page->panel()->pickerData([
 				'image'  => $this->image,
 				'info'   => $this->info,
@@ -71,7 +71,7 @@ return [
 				}
 
 				if ($id !== null && ($page = $kirby->page($id))) {
-					$pages[] = $this->pageResponse($page);
+					$pages[] = $this->toPage($page);
 				}
 			}
 

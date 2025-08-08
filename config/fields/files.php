@@ -61,7 +61,7 @@ return [
 		},
 	],
 	'methods' => [
-		'fileResponse' => function ($file) {
+		'toFile' => function ($file) {
 			return $file->panel()->pickerData([
 				'image'  => $this->image,
 				'info'   => $this->info ?? false,
@@ -82,7 +82,7 @@ return [
 					$id !== null &&
 					($file = $this->kirby()->file($id, $this->model()))
 				) {
-					$files[] = $this->fileResponse($file);
+					$files[] = $this->toFile($file);
 				}
 			}
 

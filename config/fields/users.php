@@ -43,7 +43,7 @@ return [
 				$user = $this->kirby()->user()
 			) {
 				return [
-					$this->userResponse($user)
+					$this->toUser($user)
 				];
 			}
 
@@ -51,7 +51,7 @@ return [
 		}
 	],
 	'methods' => [
-		'userResponse' => function ($user) {
+		'toUser' => function ($user) {
 			return $user->panel()->pickerData([
 				'info'   => $this->info,
 				'image'  => $this->image,
@@ -69,7 +69,7 @@ return [
 				}
 
 				if ($email !== null && ($user = $kirby->user($email))) {
-					$users[] = $this->userResponse($user);
+					$users[] = $this->toUser($user);
 				}
 			}
 
