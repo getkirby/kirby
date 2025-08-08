@@ -9,18 +9,17 @@ describe.concurrent("$helper.field.form()", () => {
 	// mock the app with the component setup
 	window.panel = {
 		app: {
-			$options: {
-				components: {
+			component(name) {
+				const components = {
 					"k-custom-field": {
-						options: {
-							props: {
-								value: {
-									default: "test"
-								}
+						props: {
+							value: {
+								default: "test"
 							}
 						}
 					}
-				}
+				};
+				return components[name];
 			}
 		}
 	};

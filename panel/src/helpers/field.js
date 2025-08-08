@@ -12,10 +12,8 @@ export function defaultValue(field) {
 		return clone(field.default);
 	}
 
-	const component =
-		window.panel.app.$options.components[`k-${field.type}-field`];
-
-	const valueProp = component?.options.props?.value;
+	const component = window.panel.app.component(`k-${field.type}-field`);
+	const valueProp = component?.props?.value;
 
 	// if the field has no value prop,
 	// it will be completely skipped
