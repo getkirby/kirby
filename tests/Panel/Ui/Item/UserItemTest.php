@@ -30,17 +30,28 @@ class UserItemTest extends TestCase
 		$item = new UserItem(user: $this->model);
 
 		$expected = [
-			'id'       => 'test',
-			'image'    => [
+			'id'          => 'test',
+			'image'       => [
 				'back'  => 'black',
 				'color' => 'gray-500',
 				'cover' => false,
 				'icon'  => 'user',
 				'ratio' => '1/1'
 			],
-			'info'     => 'Nobody',
-			'link'     => '/users/test',
-			'text'     => 'test@getkirby.com',
+			'info'        => 'Nobody',
+			'link'        => '/users/test',
+			'permissions' => [
+				'create'         => false,
+				'changeEmail'    => false,
+				'changeLanguage' => false,
+				'changeName'     => false,
+				'changePassword' => false,
+				'changeRole'     => false,
+				'delete'         => false,
+				'update'         => false,
+			],
+			'text'         => 'test@getkirby.com',
+			'uuid'         => 'user://test',
 		];
 
 		$this->assertSame($expected, $item->props());

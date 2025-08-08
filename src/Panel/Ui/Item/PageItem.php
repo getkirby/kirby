@@ -68,6 +68,7 @@ class PageItem extends ModelItem
 			'parent'      => $this->model->parentId(),
 			'status'      => $this->model->status(),
 			'template'    => $this->model->intendedTemplate()->name(),
+			'url'         => $this->model->url(),
 		];
 	}
 }

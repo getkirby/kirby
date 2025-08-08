@@ -266,8 +266,7 @@ class Page extends Model
 		return [
 			...$item->props(),
 			'hasChildren' => $this->model->hasChildren(),
-			'sortable'    => true,
-			'url'         => $this->model->url()
+			'sortable'    => true
 		];
 	}
 
