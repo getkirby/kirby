@@ -170,14 +170,14 @@ export default (panel) => {
 			parent.set.call(this, state);
 
 			// create a unique ID for the drawer if it does not have one
-			this.id = this.id ?? uuid();
+			this.id ??= uuid();
 
 			return this.state();
 		},
 
 		tab(tab) {
 			const tabs = this.props.tabs ?? {};
-			tab = tab ?? Object.keys(tabs ?? {})[0];
+			tab ??= Object.keys(tabs ?? {})[0];
 
 			if (!tab) {
 				return false;

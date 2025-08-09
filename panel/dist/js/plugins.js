@@ -109,7 +109,7 @@ Object.assign(Vue, {
 	watchSyncEffect
 });
 
-window.panel = window.panel ?? {};
+window.panel ??= {};
 window.panel.plugins = {
 	components: {},
 	created: [],

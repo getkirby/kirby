@@ -5,8 +5,8 @@
  * @returns {Object}
  */
 export function detect(value, _types) {
-	value = value ?? "";
-	_types = _types ?? types();
+	value ??= "";
+	_types ??= types();
 
 	if (value.length === 0) {
 		return {
