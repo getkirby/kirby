@@ -19,6 +19,12 @@ use Kirby\Image\Focus;
  */
 class Imagick extends Darkroom
 {
+	/**
+	 * Image profiles that will not be removed
+	 * when stripping metadata
+	 */
+	public static array $profiles = ['icc', 'icm'];
+
 	protected function autoOrient(Image $image): Image
 	{
 		switch ($image->getImageOrientation()) {
@@ -253,7 +259,7 @@ class Imagick extends Darkroom
 		$profiles = $image->getImageProfiles('*', false);
 
 		foreach ($profiles as $profile) {
-			if ($profile !== 'icc') {
+			if (in_array($profile, static::$profiles, true) === false) {
 				$image->removeImageProfile($profile);
 			}
 		}
