@@ -53,19 +53,24 @@
 				v-bind="button"
 			/>
 
-			<label v-if="selecting" class="k-item-options-checkbox" @click.stop>
+			<label
+				v-if="selecting !== false"
+				class="k-item-options-checkbox"
+				@click.stop
+			>
 				<input
 					ref="selector"
-					type="checkbox"
+					:checked="selected"
 					:disabled="!selectable"
+					:type="selecting === 'single' ? 'radio' : 'checkbox'"
 					@change="$emit('select', $event)"
 				/>
 			</label>
 
 			<!-- Options -->
-			<slot v-else name="options">
+			<slot name="options">
 				<k-options-dropdown
-					v-if="options"
+					v-if="options && selecting === false"
 					:options="options"
 					class="k-item-options-dropdown"
 					@option="onOption"
@@ -115,13 +120,25 @@ export default {
 		/**
 		 * If `true`, the item will be selectable via a checkbox
 		 * @since 5.0.0
+		 * @values "single", "multiple", false
 		 */
-		selecting: Boolean,
+		selecting: {
+			type: [Boolean, String],
+			default: false
+		},
 		/**
 		 * If `false`, the select checkbox will be disabled
 		 * @since 5.0.0
 		 */
-		selectable: Boolean,
+		selectable: {
+			type: Boolean,
+			default: true
+		},
+		/**
+		 * Whether the item is selected
+		 * @since 6.0.0
+		 */
+		selected: Boolean,
 		/**
 		 * If `true`, the sort handle will be shown on hover
 		 */

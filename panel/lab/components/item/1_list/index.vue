@@ -73,7 +73,15 @@
 			<k-item
 				:image="{ src: 'https://picsum.photos/800/600' }"
 				:selecting="true"
-				:selectable="true"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting & selected">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:selecting="true"
+				:selected="true"
 				info="With some info"
 				text="This is a nice item"
 			/>
@@ -83,6 +91,52 @@
 				:image="{ src: 'https://picsum.photos/800/600' }"
 				:selecting="true"
 				:selectable="false"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting & not selectable, but selected">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				:selecting="true"
+				:selectable="false"
+				:selected="true"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting: single">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				selecting="single"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting: single & selected">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				selecting="single"
+				:selected="true"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting: single & not selectable">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				selecting="single"
+				:selectable="false"
+				info="With some info"
+				text="This is a nice item"
+			/>
+		</k-lab-example>
+		<k-lab-example label="Selecting: single & not selectable, but selected">
+			<k-item
+				:image="{ src: 'https://picsum.photos/800/600' }"
+				selecting="single"
+				:selectable="false"
+				:selected="true"
 				info="With some info"
 				text="This is a nice item"
 			/>

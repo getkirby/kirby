@@ -78,6 +78,7 @@
 						:pagination="limit && !isSelecting ? pagination : false"
 						:rows="paginatedItems"
 						:selecting="isSelecting"
+						:selected="selected"
 						:sortable="isSortable"
 						@cell="open($event.row, $event.columnIndex)"
 						@input="onTableInput"
@@ -191,10 +192,6 @@ export default {
 
 		batchEditingEvent() {
 			return "structure.selecting";
-		},
-
-		batchEditingIdentifier() {
-			return "_id";
 		},
 
 		canSelect() {
