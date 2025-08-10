@@ -1,13 +1,12 @@
 <?php
 
-use Kirby\Toolkit\A;
+use Kirby\Panel\Controller\Dialog\UsersPickerDialogController;
 
 return [
 	'mixins' => [
 		'layout',
 		'min',
-		'picker',
-		'userpicker'
+		'picker'
 	],
 	'props' => [
 		/**
@@ -40,7 +39,7 @@ return [
 				$this->default === true &&
 				$user = $this->kirby()->user()
 			) {
-				return [$this->toItem($user)];
+				return [$user->id()];
 			}
 
 			return $this->toFormValues($this->default);
@@ -57,24 +56,26 @@ return [
 	'api' => function () {
 		return [
 			[
-				'pattern' => '/',
-				'action' => function () {
-					$field = $this->field();
-
-					return $field->userpicker([
-						'image'  => $field->image(),
-						'info'   => $field->info(),
-						'layout' => $field->layout(),
-						'limit'  => $field->limit(),
-						'page'   => $this->requestQuery('page'),
-						'query'  => $field->query(),
-						'search' => $this->requestQuery('search'),
-						'text'   => $field->text()
-					]);
-				}
-			]
+				'pattern' => 'items',
+				'method'  => 'GET',
+				'action'  => fn () => $this->field()->itemsFromRequest()
+			],
 		];
 	},
+	'dialogs' => fn () =>  [
+		'picker' => fn () => new UsersPickerDialogController(...[
+			'model'     => $this->model(),
+			'hasSearch' => $this->search,
+			'image'     => $this->image,
+			'info'      => $this->info ?? false,
+			'limit'     => $this->limit,
+			'max'       => $this->max,
+			'multiple'  => $this->multiple,
+			'query'     => $this->query,
+			'text'      => $this->text,
+			...$this->picker
+		])
+	],
 	'save' => function ($value = null) {
 		return $this->toStoredValues($value);
 	},
