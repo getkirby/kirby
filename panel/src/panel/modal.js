@@ -59,9 +59,8 @@ export default (panel, key, defaults) => {
 				return;
 			}
 
-			// Compare the modal id to avoid closing
-			// the wrong modal. This is particularly useful
-			// in nested modals.
+			// Compare the modal id to avoid closing the wrong modal.
+			// This is particularly useful in nested modals.
 			if (id !== undefined && id !== true && id !== this.id) {
 				return;
 			}
@@ -72,21 +71,28 @@ export default (panel, key, defaults) => {
 				this.history.removeLast();
 			}
 
-			// no more items in the history
-			if (this.history.isEmpty() === true) {
-				this.isOpen = false;
-				this.emit("close");
-				this.reset();
+			// store the closed listener
+			const closed = this.on.closed ?? (() => {});
 
-				if (panel.overlays().length === 0) {
-					// unblock the overflow until we can use :has for this.
-					document.documentElement.removeAttribute("data-overlay");
-					document.documentElement.style.removeProperty("--scroll-top");
-				}
-				return;
+			// history not empty, open previous modal
+			if (this.history.isEmpty() === false) {
+				const state = this.open(this.history.last());
+				closed();
+				return state;
 			}
 
-			return this.open(this.history.last());
+			// no more items in the history,
+			// all modals shall be closed
+			this.isOpen = false;
+			this.emit("close");
+			this.reset();
+			closed();
+
+			if (panel.overlays().length === 0) {
+				// unblock the overflow until we can use :has for this.
+				document.documentElement.removeAttribute("data-overlay");
+				document.documentElement.style.removeProperty("--scroll-top");
+			}
 		},
 
 		/**
