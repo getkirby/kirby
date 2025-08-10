@@ -172,6 +172,8 @@ export default {
 	--item-button-height: var(--height-md);
 	--item-button-width: var(--height-md);
 	--item-color-back: light-dark(var(--color-white), var(--color-gray-850));
+	--item-color-icon: light-dark(var(--color-gray-800), var(--color-gray-400));
+	--item-color-image: light-dark(var(--color-gray-300), var(--color-gray-950));
 	--item-height: auto;
 	--item-height-cardlet: calc(var(--height-md) * 3);
 	--item-shadow: var(--shadow-sm);
@@ -187,10 +189,6 @@ export default {
 }
 .k-item:has(a:focus) {
 	outline: 2px solid var(--color-focus);
-}
-
-.k-item .k-icon-frame {
-	--back: var(--color-gray-300);
 }
 
 .k-item-content {
@@ -351,14 +349,6 @@ export default {
 	margin-top: 0.125em;
 }
 
-/** Theme: disabled */
-.k-item[data-theme="disabled"] {
-	background: transparent;
-	box-shadow: none;
-	outline: 1px solid var(--color-border);
-	outline-offset: -1px;
-}
-
 /** Selectable state */
 .k-item[data-selecting="true"][data-selectable="true"] {
 	cursor: pointer;
@@ -374,5 +364,25 @@ export default {
 .k-item[data-selectable="true"]:has(.k-item-options-checkbox input:checked) {
 	--item-color-back: light-dark(var(--color-blue-250), var(--color-blue-800));
 	--item-shadow: 0 1px 3px 0 rgba(0 0 0 / 0.25), 0 1px 2px 0 rgba(0 0 0 / 0.05);
+}
+
+/** Theme: disabled */
+.k-item[data-theme="disabled"] {
+	background: transparent;
+	box-shadow: none;
+	outline: 1px solid var(--color-border);
+	outline-offset: -1px;
+}
+
+/** Theme: skeleton */
+.k-item[data-theme="skeleton"] {
+	--item-color-icon: light-dark(var(--color-gray-500), var(--color-gray-650));
+	--item-color-image: light-dark(var(--color-gray-250), var(--color-gray-800));
+}
+.k-item[data-theme="skeleton"] .k-item-content {
+	opacity: 0.4;
+}
+.k-item[data-theme="skeleton"] .k-item-options {
+	visibility: hidden;
 }
 </style>
