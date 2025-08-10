@@ -13,6 +13,7 @@ describe.concurrent("panel.dialog", () => {
 		const state = {
 			abortController: null,
 			component: null,
+			id: null,
 			isLoading: false,
 			legacy: false,
 			on: {},

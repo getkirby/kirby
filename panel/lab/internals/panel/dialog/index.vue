@@ -27,6 +27,12 @@
 				<p>Closes the current dialog</p>
 			</k-text>
 		</k-lab-example>
+		<k-lab-example label="goTo" :code="false">
+			<k-text>
+				<k-code language="js">window.panel.dialog.goTo(id);</k-code>
+				<p>Opens one of the dialogs in the history by ID</p>
+			</k-text>
+		</k-lab-example>
 		<k-lab-example label="input" :code="false">
 			<k-text>
 				<k-code language="js">window.panel.dialog.input(value);</k-code>

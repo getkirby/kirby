@@ -1,12 +1,9 @@
 import Modal, { defaults as modalDefaults } from "./modal.js";
-import History from "./history.js";
 import { reactive, set } from "vue";
-import { uuid } from "@/helpers/string.js";
 
 export const defaults = () => {
 	return {
-		...modalDefaults(),
-		id: null
+		...modalDefaults()
 	};
 };
 
@@ -29,68 +26,14 @@ export default (panel) => {
 			return this.history.milestones;
 		},
 
-		/**
-		 * Closes the drawer and goes back to the
-		 * parent one if it has been stored
-		 * @param {String|true} id Which drawer to close, true for all
-		 */
-		async close(id) {
-			if (this.isOpen === false) {
-				return;
-			}
-
-			// Compare the drawer id to avoid closing
-			// the wrong drawer. This is particularly useful
-			// in nested drawers.
-			if (id !== undefined && id !== true && id !== this.id) {
-				return;
-			}
-
-			if (id === true) {
-				this.history.clear();
-			} else {
-				this.history.removeLast();
-			}
-
-			// no more items in the history
-			if (this.history.isEmpty() === true) {
-				parent.close.call(this);
-				return;
-			}
-
-			return this.open(this.history.last());
-		},
-
-		goTo(id) {
-			const state = this.history.goto(id);
-
-			if (state !== undefined) {
-				this.open(state);
-			}
-		},
-
-		history: History(),
-
 		get icon() {
 			return this.props.icon ?? "box";
 		},
 
-		input(value) {
-			// make sure that value is reactive
-			set(this.props, "value", value);
-
-			this.emit("input", this.props.value);
-		},
-
 		listeners() {
 			return {
-				...this.on,
-				cancel: this.cancel.bind(this),
-				close: this.close.bind(this),
+				...parent.listeners.call(this),
 				crumb: this.goTo.bind(this),
-				input: this.input.bind(this),
-				submit: this.submit.bind(this),
-				success: this.success.bind(this),
 				tab: this.tab.bind(this)
 			};
 		},
@@ -144,35 +87,13 @@ export default (panel) => {
 			// open the provided or first tab
 			this.tab(drawer.tab);
 
-			// get the current state and add it to the list of parents
+			// get the current state and add it to the history
 			const state = this.state();
-
-			// add the drawer to the history
-			if (drawer.replace === true) {
-				this.history.replace(-1, state);
-			} else {
-				this.history.add(state);
-			}
+			this.history.add(state, drawer.replace);
 
 			this.focus();
 
 			return state;
-		},
-
-		/**
-		 * Sets a new active state for the feature
-		 * This is done whenever the state is an object
-		 * and not undefined or null
-		 *
-		 * @param {Object} state
-		 */
-		set(state) {
-			parent.set.call(this, state);
-
-			// create a unique ID for the drawer if it does not have one
-			this.id ??= uuid();
-
-			return this.state();
 		},
 
 		tab(tab) {
