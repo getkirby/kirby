@@ -5,7 +5,6 @@
 		:placeholder="placeholder"
 		:value="value"
 		class="k-dialog-search"
-		icon="search"
 		type="search"
 		@input="$emit('search', $event)"
 	>
