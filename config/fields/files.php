@@ -1,10 +1,10 @@
 <?php
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Panel\Controller\Dialog\FilesPickerDialogController;
 
 return [
 	'mixins' => [
-		'filepicker',
 		'layout',
 		'min',
 		'picker',
@@ -21,7 +21,8 @@ return [
 		'placeholder' => null,
 
 		/**
-		 * Sets the file(s), which are selected by default when a new page is created
+		 * Sets the file(s), which are selected by default
+		 * when a new page is created
 		 */
 		'default' => function ($default = null) {
 			return $default;
@@ -48,9 +49,6 @@ return [
 		'parent' => function () {
 			return $this->parentModel->apiUrl(true);
 		},
-		'query' => function () {
-			return $this->query ?? $this->parentModel::CLASS_ALIAS . '.files';
-		},
 		'default' => function () {
 			return $this->toFormValues($this->default);
 		},
@@ -60,51 +58,48 @@ return [
 	],
 	'methods' => [
 		'toModel' => function (string $id) {
-			return $this->kirby()->file($id, $this->model());
+			return $this->kirby()->file($id, $this->model);
 		}
 	],
 	'api' => function () {
 		return [
 			[
-				'pattern' => '/',
-				'action'  => function () {
-					$field = $this->field();
-
-					return $field->filepicker([
-						'image'  => $field->image(),
-						'info'   => $field->info(),
-						'layout' => $field->layout(),
-						'limit'  => $field->limit(),
-						'page'   => $this->requestQuery('page'),
-						'query'  => $field->query(),
-						'search' => $this->requestQuery('search'),
-						'text'   => $field->text()
-					]);
-				}
+				'pattern' => 'items',
+				'method'  => 'GET',
+				'action'  => fn () => $this->field()->itemsFromRequest()
 			],
 			[
 				'pattern' => 'upload',
 				'method'  => 'POST',
 				'action'  => function () {
-					$field   = $this->field();
-					$uploads = $field->uploads();
+					$field = $this->field();
 
 					// move_uploaded_file() not working with unit test
 					// @codeCoverageIgnoreStart
-					return $field->upload($this, $uploads, function ($file, $parent) use ($field) {
-						return $file->panel()->pickerData([
-							'image'  => $field->image(),
-							'info'   => $field->info(),
-							'layout' => $field->layout(),
-							'model'  => $field->model(),
-							'text'   => $field->text(),
-						]);
-					});
+					return $field->upload(
+						$this,
+						$field->uploads(),
+						fn ($file, $parent) => $field->toItem($file)
+					);
 					// @codeCoverageIgnoreEnd
 				}
 			]
 		];
 	},
+	'dialogs' => fn () =>  [
+		'picker' => fn () => new FilesPickerDialogController(...[
+			'model'     => $this->model(),
+			'hasSearch' => $this->search,
+			'image'     => $this->image,
+			'info'      => $this->info ?? false,
+			'limit'     => $this->limit,
+			'max'       => $this->max,
+			'multiple'  => $this->multiple,
+			'query'     => $this->query,
+			'text'      => $this->text,
+			...$this->picker
+		])
+	],
 	'save' => function ($value = null) {
 		return $this->toStoredValues($value);
 	},

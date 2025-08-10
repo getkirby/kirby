@@ -1,0 +1,201 @@
+<template>
+	<k-dialog
+		v-bind="$props"
+		class="k-models-picker-dialog"
+		@cancel="$emit('cancel')"
+		@drop="$emit('drop', $event)"
+		@submit="submit"
+	>
+		<slot name="header" />
+
+		<slot name="search">
+			<header class="k-models-picker-dialog-header">
+				<k-dialog-search
+					v-if="hasSearch"
+					:value="query"
+					class="k-models-picker-dialog-search"
+					@search="query = $event"
+				/>
+				<slot name="buttons" />
+			</header>
+		</slot>
+
+		<k-collection v-bind="collection">
+			<template #options="{ item }">
+				<slot name="options" v-bind="{ item }" />
+			</template>
+		</k-collection>
+	</k-dialog>
+</template>
+
+<script>
+import Dialog from "@/mixins/dialog.js";
+import Search from "@/mixins/search.js";
+
+export const props = {
+	mixins: [Dialog, Search],
+	props: {
+		/**
+		 * Empty state for the collection
+		 * @value { icon, text}
+		 */
+		empty: {
+			type: Object,
+			default: () => ({})
+		},
+		help: {
+			type: String
+		},
+		/**
+		 * Selectable models
+		 */
+		items: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * Layout of the collection
+		 * @values "list"|"cardlets"|"cards"
+		 */
+		layout: {
+			type: String,
+			default: "list"
+		},
+		/**
+		 * Maximum number of selectable models
+		 */
+		max: Number,
+		/**
+		 * Whether multiple models can be selected
+		 */
+		multiple: {
+			type: Boolean,
+			default: true
+		},
+		/**
+		 * Current pagination state
+		 */
+		pagination: {
+			type: Object,
+			default: () => ({})
+		},
+		size: {
+			default: "medium"
+		},
+		/**
+		 * Selected models
+		 */
+		value: {
+			type: Array,
+			default: () => []
+		}
+	}
+};
+
+export default {
+	mixins: [props],
+	props: {
+		/**
+		 * Payload to send along dialog refreshes
+		 */
+		payload: {
+			type: Object,
+			default: () => ({})
+		}
+	},
+	emits: ["cancel", "drop", "submit"],
+	data() {
+		return {
+			selected: this.value
+		};
+	},
+	computed: {
+		collection() {
+			return {
+				empty: {
+					...this.empty,
+					text: this.$panel.dialog.isLoading
+						? this.$t("loading")
+						: this.empty.text
+				},
+				help: this.help,
+				items: this.items,
+				layout: this.layout,
+				link: false,
+				pagination: {
+					details: true,
+					dropdown: false,
+					align: "center",
+					...this.pagination
+				},
+				selecting: this.multiple && this.max !== 1 ? true : "single",
+				selected: this.selectedItems,
+				sortable: false,
+				onPaginate: this.paginate,
+				onSelected: this.select
+			};
+		},
+		selectedItems() {
+			return this.selected
+				.map((id) => this.items.find((item) => item.id === id))
+				.filter(Boolean);
+		}
+	},
+	watch: {
+		value(value) {
+			this.selected = value;
+		}
+	},
+	methods: {
+		paginate({ page }) {
+			this.refresh({ page });
+		},
+		/**
+		 * Refresh the dialog with new options
+		 * while retaining the payload and selected models
+		 */
+		refresh(options = {}) {
+			this.$panel.dialog.refresh({
+				query: {
+					...this.payload,
+					value: this.selected,
+					...options
+				}
+			});
+		},
+		search() {
+			this.refresh({ search: this.query });
+		},
+		select(items) {
+			// isolate selected that aren't an item in the current parent
+			const orphans = this.selected.filter(
+				(id) => this.items.some((item) => item.id === id) === false
+			);
+
+			// merge orphans with new selected
+			this.selected = [...orphans, ...items.map((item) => item.id)];
+		},
+		submit() {
+			this.$emit("submit", { ids: this.selected, items: this.selectedItems });
+		}
+	}
+};
+</script>
+
+<style>
+.k-models-picker-dialog-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--spacing-2);
+	margin-bottom: var(--spacing-3);
+}
+.k-models-picker-dialog-search {
+	flex-grow: 1;
+	margin-bottom: 0;
+}
+
+.k-models-picker-dialog .k-collection-footer .k-pagination {
+	margin-bottom: 0;
+}
+</style>

@@ -18,15 +18,19 @@ class UsersFieldTest extends TestCase
 			],
 			'users' => [
 				[
+					'id'    => 'leonardo',
 					'email' => 'leonardo@getkirby.com'
 				],
 				[
+					'id'    => 'raphael',
 					'email' => 'raphael@getkirby.com'
 				],
 				[
+					'id'    => 'michelangelo',
 					'email' => 'michelangelo@getkirby.com'
 				],
 				[
+					'id'    => 'donatello',
 					'email' => 'donatello@getkirby.com'
 				]
 			]
@@ -68,7 +72,7 @@ class UsersFieldTest extends TestCase
 			'default' => true
 		]);
 
-		$this->assertSame('raphael@getkirby.com', $field->default()[0]['email']);
+		$this->assertSame('raphael', $field->default()[0]);
 	}
 
 	public function testMultipleDefaultUsers(): void
@@ -76,15 +80,15 @@ class UsersFieldTest extends TestCase
 		$this->app->impersonate('raphael@getkirby.com');
 
 		$field = $this->field('users', [
-			'model' => new Page(['slug' => 'test']),
+			'model'   => new Page(['slug' => 'test']),
 			'default' => [
 				'raphael@getkirby.com',
 				'donatello@getkirby.com'
 			]
 		]);
 
-		$this->assertSame('raphael@getkirby.com', $field->default()[0]['email']);
-		$this->assertSame('donatello@getkirby.com', $field->default()[1]['email']);
+		$this->assertSame('raphael', $field->default()[0]);
+		$this->assertSame('donatello', $field->default()[1]);
 	}
 
 	public function testDefaultUserDisabled(): void
@@ -92,7 +96,7 @@ class UsersFieldTest extends TestCase
 		$this->app->impersonate('raphael@getkirby.com');
 
 		$field = $this->field('users', [
-			'model' => new Page(['slug' => 'test']),
+			'model'   => new Page(['slug' => 'test']),
 			'default' => false
 		]);
 
@@ -210,7 +214,7 @@ class UsersFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testApi(): void
+	public function testApiItems(): void
 	{
 		$app = $this->app->clone([
 			'options' => ['api.allowImpersonation' => true],
@@ -233,16 +237,15 @@ class UsersFieldTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/authors');
+		$api = $app->api()->call('pages/test/fields/authors/items', requestData: [
+			'query' => [
+				'items' => 'leonardo@getkirby.com,raphael@getkirby.com'
+			]
+		]);
 
 		$this->assertCount(2, $api);
-		$this->assertArrayHasKey('data', $api);
-		$this->assertArrayHasKey('pagination', $api);
-		$this->assertCount(4, $api['data']);
-		$this->assertSame('donatello@getkirby.com', $api['data'][0]['email']);
-		$this->assertSame('leonardo@getkirby.com', $api['data'][1]['email']);
-		$this->assertSame('michelangelo@getkirby.com', $api['data'][2]['email']);
-		$this->assertSame('raphael@getkirby.com', $api['data'][3]['email']);
+		$this->assertSame('leonardo', $api[0]['id']);
+		$this->assertSame('raphael', $api[1]['id']);
 	}
 
 	public function testToModel(): void

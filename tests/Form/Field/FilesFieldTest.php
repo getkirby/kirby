@@ -5,8 +5,6 @@ namespace Kirby\Form\Field;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
-use Kirby\Cms\Site;
-use Kirby\Cms\User;
 
 class FilesFieldTest extends TestCase
 {
@@ -25,15 +23,9 @@ class FilesFieldTest extends TestCase
 					[
 						'slug' => 'test',
 						'files' => [
-							[
-								'filename' => 'a.jpg'
-							],
-							[
-								'filename' => 'b.jpg'
-							],
-							[
-								'filename' => 'c.jpg'
-							]
+							['filename' => 'a.jpg'],
+							['filename' => 'b.jpg'],
+							['filename' => 'c.jpg']
 						]
 					]
 				],
@@ -41,15 +33,9 @@ class FilesFieldTest extends TestCase
 					[
 						'slug'  => 'test-draft',
 						'files' => [
-							[
-								'filename' => 'a.jpg'
-							],
-							[
-								'filename' => 'b.jpg'
-							],
-							[
-								'filename' => 'c.jpg'
-							]
+							['filename' => 'a.jpg'],
+							['filename' => 'b.jpg'],
+							['filename' => 'c.jpg']
 						]
 					]
 				]
@@ -156,33 +142,6 @@ class FilesFieldTest extends TestCase
 		$this->assertSame($expected, $ids);
 	}
 
-	public function testQueryWithPageParent(): void
-	{
-		$field = $this->field('files', [
-			'model' => new Page(['slug' => 'test']),
-		]);
-
-		$this->assertSame('page.files', $field->query());
-	}
-
-	public function testQueryWithSiteParent(): void
-	{
-		$field = $this->field('files', [
-			'model' => new Site(),
-		]);
-
-		$this->assertSame('site.files', $field->query());
-	}
-
-	public function testQueryWithUserParent(): void
-	{
-		$field = $this->field('files', [
-			'model' => new User(['email' => 'test@getkirby.com']),
-		]);
-
-		$this->assertSame('user.files', $field->query());
-	}
-
 	public function testEmpty(): void
 	{
 		$field = $this->field('files', [
@@ -229,15 +188,13 @@ class FilesFieldTest extends TestCase
 		$field = $this->field('files', [
 			'model'    => $this->model(),
 			'required' => true,
-			'value' => [
-				'a.jpg',
-			],
+			'value'    => ['a.jpg'],
 		]);
 
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testApi(): void
+	public function testApiItems(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -268,15 +225,15 @@ class FilesFieldTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/gallery');
+		$api = $app->api()->call('pages/test/fields/gallery/items', requestData: [
+			'query' => [
+				'items' => 'test/a.jpg,test/b.jpg'
+			]
+		]);
 
 		$this->assertCount(2, $api);
-		$this->assertArrayHasKey('data', $api);
-		$this->assertArrayHasKey('pagination', $api);
-		$this->assertCount(3, $api['data']);
-		$this->assertSame('a.jpg', $api['data'][0]['id']);
-		$this->assertSame('b.jpg', $api['data'][1]['id']);
-		$this->assertSame('c.jpg', $api['data'][2]['id']);
+		$this->assertSame('test/a.jpg', $api[0]['id']);
+		$this->assertSame('test/b.jpg', $api[1]['id']);
 	}
 
 	public function testParentModel(): void

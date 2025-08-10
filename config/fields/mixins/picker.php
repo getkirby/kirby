@@ -60,6 +60,15 @@ return [
 		},
 
 		/**
+		 * Additional picker dialog props
+		 * @since 6.0.0
+		 * @values { image, layout, size }
+		 */
+		'picker' => function (array $picker = []) {
+			return $picker;
+		},
+
+		/**
 		 * Query for the items to be included in the picker
 		 */
 		'query' => function (string|null $query = null) {
@@ -98,6 +107,12 @@ return [
 		'getIdFromArray' => function (array $array) {
 			return $array['uuid'] ?? $array['id'] ?? null;
 		},
+		'itemsFromRequest' => function () {
+			$ids    = $this->kirby()->request()->get('items', '');
+			$ids    = Str::split($ids);
+			$models = $this->toModels($ids);
+			return $this->toItems($models);
+		},
 		'toItem' => function (ModelWithContent $model) {
 			return $model->panel()->pickerData([
 				'image'  => $this->image,
@@ -107,7 +122,7 @@ return [
 				'text'   => $this->text,
 			]);
 		},
-		'toItems' => function (array $models) {
+		'toItems' => function (array $models = []) {
 			return A::map(
 				$models,
 				fn ($model) => $this->toItem($model)
@@ -115,6 +130,12 @@ return [
 		},
 		'toModel' => function (string $id) {
 			throw new Exception(message: 'toModel() is not implemented on ' . $this->type() . ' field');
+		},
+		'toModels' => function (array $ids = []) {
+			return A::map(
+				$ids,
+				fn ($id) => $this->toModel($id)
+			);
 		},
 		'toFormValues' => function ($value = null) {
 			$items = [];
@@ -125,7 +146,7 @@ return [
 				}
 
 				if ($id !== null && ($model = $this->toModel($id))) {
-					$items[] = $this->toItem($model);
+					$ids[] = $model->id();
 				}
 			}
 

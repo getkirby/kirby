@@ -167,7 +167,7 @@ class PagesFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testApi(): void
+	public function testApiItems(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -200,45 +200,16 @@ class PagesFieldTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/related');
+		$api = $app->api()->call('pages/test/fields/related/items', requestData: [
+			'query' => [
+				'items' => 'test,a,b'
+			]
+		]);
 
 		$this->assertCount(3, $api);
-		$this->assertArrayHasKey('data', $api);
-		$this->assertArrayHasKey('pagination', $api);
-		$this->assertArrayHasKey('model', $api);
-		$this->assertCount(4, $api['data']);
-		$this->assertSame('test', $api['data'][0]['id']);
-		$this->assertSame([
-			'image' => [
-				'back' => 'pattern',
-				'color' => 'gray-500',
-				'cover' => false,
-				'icon' => 'page'
-			],
-			'info' => '',
-			'layout' => 'list',
-			'text' => 'Test Title',
-			'id' => 'test',
-			'link' => '/pages/test',
-			'permissions' => [
-				'changeSlug' => true,
-				'changeStatus' => true,
-				'changeTitle' => true,
-				'delete' => true,
-				'sort' => false,
-			],
-			'uuid' => 'page://my-test-uuid',
-			'dragText' => '(link: page://my-test-uuid text: Test Title)',
-			'parent' => null,
-			'status' => 'unlisted',
-			'template' => 'default',
-			'url' => '/test',
-			'hasChildren' => false,
-			'sortable' => true,
-		], $api['data'][0]);
-		$this->assertSame('a', $api['data'][1]['id']);
-		$this->assertSame('b', $api['data'][2]['id']);
-		$this->assertSame('c', $api['data'][3]['id']);
+		$this->assertSame('test', $api[0]['id']);
+		$this->assertSame('a', $api[1]['id']);
+		$this->assertSame('b', $api[2]['id']);
 	}
 
 	public function testToModel(): void

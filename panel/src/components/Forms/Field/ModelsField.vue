@@ -1,6 +1,7 @@
 <template>
 	<k-field
 		v-bind="$props"
+		:input="id"
 		:class="['k-models-field', `k-${$options.type}-field`, $attrs.class]"
 		:style="$attrs.style"
 	>
@@ -17,13 +18,13 @@
 
 		<k-dropzone :disabled="!hasDropzone" @drop="drop">
 			<k-input-validator
-				v-bind="{ min, max, required }"
+				v-bind="{ id, min, max, required }"
 				:value="JSON.stringify(value)"
 			>
 				<k-collection
 					v-bind="collection"
 					@empty="open"
-					@sort="onInput"
+					@sort="$emit('input', $event)"
 					@sort-change="$emit('change', $event)"
 				>
 					<template v-if="!disabled" #options="{ index }">
@@ -69,7 +70,7 @@ export default {
 	emits: ["change", "input"],
 	data() {
 		return {
-			selected: this.value
+			items: []
 		};
 	},
 	computed: {
@@ -87,11 +88,11 @@ export default {
 		collection() {
 			return {
 				empty: this.emptyProps,
-				items: this.selected,
+				items: this.items,
 				layout: this.layout,
 				link: this.link,
 				size: this.size,
-				sortable: !this.disabled && this.selected.length > 1,
+				sortable: !this.disabled && this.items?.length > 1,
 				theme: this.disabled ? "disabled" : null
 			};
 		},
@@ -99,70 +100,88 @@ export default {
 			return false;
 		},
 		more() {
-			return !this.max || this.max > this.selected.length;
+			return !this.max || this.max > this.items?.length;
 		}
 	},
 	watch: {
-		value(value) {
-			this.selected = value;
+		value() {
+			this.fetch();
 		}
 	},
+	mounted() {
+		this.fetch();
+	},
 	methods: {
+		async fetch() {
+			const items = [];
+			const missing = [];
+
+			// Loop through IDs to find out
+			// which new items we need to fetch data for
+			for (const id of this.value) {
+				const item = this.items.find((item) => item.id === id);
+
+				if (item) {
+					// If we already have the item, add it to the list to recycle
+					items.push(item);
+				} else {
+					// If we don't have the item, add it to the list to fetch
+					// and add a placeholder item to the list (with the same ID
+					// so we can later replace it with the actual item)
+					missing.push(id);
+					items.push({
+						id,
+						theme: "skeleton",
+						image: {
+							icon: "loader"
+						}
+					});
+				}
+			}
+
+			// Replace the items with recycled items and placeholders
+			this.items = items;
+
+			// If we have any missing items, fetch them
+			if (missing.length) {
+				const newItems = await this.$panel.api.get(
+					this.endpoints.field + "/items",
+					{ items: missing }
+				);
+
+				// Combine existing and new items in the correct order
+				this.items = this.items.map(
+					(item) => newItems.find((newItem) => newItem.id === item.id) ?? item
+				);
+			}
+		},
 		drop() {},
 		focus() {},
-		onInput() {
-			this.$emit("input", this.selected);
-		},
 		open() {
 			if (this.disabled) {
 				return false;
 			}
 
-			this.$panel.dialog.open({
-				component: `k-${this.$options.type}-dialog`,
-				props: {
-					endpoint: this.endpoints.field,
-					hasSearch: this.search,
-					max: this.max,
-					multiple: this.multiple,
-					value: this.selected.map((model) => model.id)
+			this.$panel.dialog.open(this.endpoints.field + "/picker", {
+				query: {
+					value: this.value
 				},
 				on: {
-					submit: (models) => {
-						this.select(models);
+					submit: ({ ids }) => {
+						this.$emit("input", ids);
 						this.$panel.dialog.close();
 					}
 				}
 			});
 		},
 		remove(index) {
-			this.selected.splice(index, 1);
-			this.onInput();
+			this.$emit("input", this.value.toSpliced(index, 1));
 		},
 		removeById(id) {
-			this.selected = this.selected.filter((item) => item.id !== id);
-			this.onInput();
-		},
-		select(items) {
-			if (items.length === 0) {
-				this.selected = [];
-				this.onInput();
-				return;
-			}
-
-			// remove all items that are no longer selected
-			this.selected = this.selected.filter((selected) =>
-				items.find((item) => item.id === selected.id)
+			this.$emit(
+				"input",
+				this.value.filter((item) => item !== id)
 			);
-
-			// add items that are not yet in the selected list
-			for (const item of items) {
-				if (!this.selected.find((selected) => item.id === selected.id)) {
-					this.selected.push(item);
-				}
-			}
-
-			this.onInput();
 		}
 	}
 };

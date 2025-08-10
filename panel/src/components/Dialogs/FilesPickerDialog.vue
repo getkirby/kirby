@@ -1,5 +1,6 @@
 <template>
-	<k-models-dialog
+	<k-models-picker-dialog
+		ref="dialog"
 		v-bind="$props"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', $event)"
@@ -7,14 +8,10 @@
 </template>
 
 <script>
-import Dialog from "@/mixins/dialog.js";
-import { props as ModelsDialogProps } from "./ModelsDialog.vue";
+import { props as ModelsPickerDialog } from "./ModelsPickerDialog.vue";
 
-/**
- * @deprecated 6.0.0 Use `k-files-picker-dialog` instead
- */
 export default {
-	mixins: [Dialog, ModelsDialogProps],
+	mixins: [ModelsPickerDialog],
 	props: {
 		empty: {
 			type: Object,
