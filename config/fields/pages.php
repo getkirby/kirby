@@ -1,12 +1,11 @@
 <?php
 
-use Kirby\Toolkit\A;
+use Kirby\Panel\Controller\Dialog\PagesPickerDialogController;
 
 return [
 	'mixins' => [
 		'layout',
 		'min',
-		'pagepicker',
 		'picker',
 	],
 	'props' => [
@@ -58,26 +57,27 @@ return [
 	'api' => function () {
 		return [
 			[
-				'pattern' => '/',
-				'action' => function () {
-					$field = $this->field();
-
-					return $field->pagepicker([
-						'image'    => $field->image(),
-						'info'     => $field->info(),
-						'layout'   => $field->layout(),
-						'limit'    => $field->limit(),
-						'page'     => $this->requestQuery('page'),
-						'parent'   => $this->requestQuery('parent'),
-						'query'    => $field->query(),
-						'search'   => $this->requestQuery('search'),
-						'subpages' => $field->subpages(),
-						'text'     => $field->text()
-					]);
-				}
+				'pattern' => 'items',
+				'method'  => 'GET',
+				'action'  => fn () => $this->field()->itemsFromRequest()
 			]
 		];
 	},
+	'dialogs' => fn () =>  [
+		'picker' => fn () => new PagesPickerDialogController(...[
+			'model'     => $this->model(),
+			'hasSearch' => $this->search,
+			'image'     => $this->image,
+			'info'      => $this->info ?? false,
+			'limit'     => $this->limit,
+			'max'       => $this->max,
+			'multiple'  => $this->multiple,
+			'query'     => $this->query,
+			'subpages'  => $this->subpages,
+			'text'      => $this->text,
+			...$this->picker
+		])
+	],
 	'save' => function ($value = null) {
 		return $this->toStoredValues($value);
 	},

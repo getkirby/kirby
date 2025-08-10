@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\User;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
