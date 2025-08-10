@@ -266,12 +266,12 @@ class File extends Model
 		}
 
 		$item = new FileItem(
-			file: $this->model,
+			file:               $this->model,
 			dragTextIsAbsolute: $absolute,
-			image: $params['image'] ?? null,
-			info: $params['info'] ?? null,
-			layout: $params['layout'] ?? null,
-			text: $params['text'] ?? null,
+			image:              $params['image'] ?? null,
+			info:               $params['info'] ?? null,
+			layout:             $params['layout'] ?? null,
+			text:               $params['text'] ?? null,
 		);
 
 		return [
