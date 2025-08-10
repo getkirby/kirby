@@ -15,6 +15,7 @@ use Kirby\Exception\InvalidArgumentException;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dialog\PagesPickerDialogController` instead
  */
 class PagePicker extends Picker
 {

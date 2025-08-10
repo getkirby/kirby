@@ -21,17 +21,7 @@ class PickerMixinTest extends TestCase
 			]
 		]);
 
-		Field::$types = [
-			'test' => [
-				'mixins' => ['picker']
-			]
-		];
-
 		$kirby->impersonate('kirby');
-
-		$this->field = $this->field('test', [
-			'model' => new Page(['slug' => 'test']),
-		]);
 	}
 
 	public function tearDown(): void
@@ -41,21 +31,41 @@ class PickerMixinTest extends TestCase
 
 	public function testGetIdFromArray(): void
 	{
-		$this->assertSame('page://aa', $this->field->getIdFromArray([
+		Field::$types = [
+			'test' => [
+				'mixins' => ['picker']
+			]
+		];
+
+		$field = $this->field('test', [
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertSame('page://aa', $field->getIdFromArray([
 			'id'    => 'a/aa',
 			'uuid'  => 'page://aa'
 		]));
 
-		$this->assertSame('a/aa', $this->field->getIdFromArray([
+		$this->assertSame('a/aa', $field->getIdFromArray([
 			'id'    => 'a/aa'
 		]));
 
-		$this->assertNull($this->field->getIdFromArray([]));
+		$this->assertNull($field->getIdFromArray([]));
 	}
 
 	public function testToItem(): void
 	{
-		$item = $this->field->toItem(new Page([
+		Field::$types = [
+			'test' => [
+				'mixins' => ['picker']
+			]
+		];
+
+		$field = $this->field('test', [
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$item = $field->toItem(new Page([
 			'slug'    => 'test',
 			'content' => [
 				'title' => 'Test Title'
@@ -70,7 +80,17 @@ class PickerMixinTest extends TestCase
 
 	public function testToItems(): void
 	{
-		$items = $this->field->toItems([
+		Field::$types = [
+			'test' => [
+				'mixins' => ['picker']
+			]
+		];
+
+		$field = $this->field('test', [
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$items = $field->toItems([
 			new Page(['slug' => 'test']),
 			new Page(['slug' => 'test2'])
 		]);
@@ -84,18 +104,47 @@ class PickerMixinTest extends TestCase
 
 	public function testToModel(): void
 	{
+		Field::$types = [
+			'test' => [
+				'mixins' => ['picker']
+			]
+		];
+
+		$field = $this->field('test', [
+			'model' => new Page(['slug' => 'test']),
+		]);
+
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('toModel() is not implemented on test field');
-		$this->field->toModel('a/aa');
+		$field->toModel('a/aa');
 	}
 
 	public function testToStoredValues(): void
 	{
-		$values = $this->field->toStoredValues([
-			['uuid' => 'page://aa'],
-			['uuid' => 'page://bb']
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'aa', 'content' => ['uuid' => 'aa']],
+					['slug' => 'bb', 'content' => ['uuid' => 'bb']]
+				]
+			]
 		]);
 
-		$this->assertSame(['page://aa', 'page://bb'], $values);
+		$app->impersonate('kirby');
+
+		$field = $this->field('pages', [
+			'model' => new Page(['slug' => 'test']),
+			'store' => 'id'
+		]);
+
+		$values = $field->toStoredValues([
+			'page://aa',
+			'page://bb'
+		]);
+
+		$this->assertSame(['aa', 'bb'], $values);
 	}
 }

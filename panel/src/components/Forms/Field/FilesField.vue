@@ -7,6 +7,7 @@ export default {
 	props: {
 		uploads: [Boolean, Object, Array]
 	},
+	emits: ["change", "input"],
 	computed: {
 		buttons() {
 			const buttons = ModelsField.computed.buttons.call(this);
@@ -57,7 +58,7 @@ export default {
 
 						// send the input event
 						// the content object gets updated
-						this.onInput();
+						this.$emit("input", this.selected);
 
 						// the `$panel.content.update()` event sends
 						// the updated form value object to the server

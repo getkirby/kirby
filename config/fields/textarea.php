@@ -1,7 +1,9 @@
 <?php
 
+use Kirby\Panel\Controller\Dialog\FilesPickerDialogController;
+
 return [
-	'mixins' => ['filepicker', 'upload'],
+	'mixins' => ['upload'],
 	'props' => [
 		/**
 		 * Unset inherited props
@@ -87,32 +89,33 @@ return [
 	'api' => function () {
 		return [
 			[
-				'pattern' => 'files',
-				'action' => function () {
-					return $this->field()->filepicker([
-						...$this->field()->files(),
-						'page'   => $this->requestQuery('page'),
-						'search' => $this->requestQuery('search')
-					]);
-				}
-			],
-			[
 				'pattern' => 'upload',
 				'method' => 'POST',
 				'action' => function () {
-					$field   = $this->field();
-					$uploads = $field->uploads();
+					$field = $this->field();
 
-					return $this->field()->upload($this, $uploads, fn ($file, $parent) => [
-						'filename' => $file->filename(),
-						'dragText' => $file->panel()->dragText(
-							absolute: $field->model()->is($parent) === false
-						),
-					]);
+					return $field->upload(
+						$this,
+						$field->uploads(),
+						fn ($file, $parent) => [
+							'filename' => $file->filename(),
+							'dragText' => $file->panel()->dragText(
+								absolute: $field->model()->is($parent) === false
+							),
+						]
+					);
 				}
 			]
 		];
 	},
+	'dialogs' => fn () => [
+		'files' => fn () => new FilesPickerDialogController(...[
+			'multiple' => false,
+			...$this->files(),
+			'model'    => $this->model(),
+			'uploads'  => $this->uploads,
+		])
+	],
 	'methods' => [
 		'emptyValue' => function () {
 			return '';

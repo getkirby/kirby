@@ -333,11 +333,11 @@ abstract class Model
 	public function pickerData(array $params = []): array
 	{
 		$item = new ModelItem(
-			model: $this->model,
-			image: $params['image'] ?? null,
-			info: $params['info'] ?? null,
+			model:  $this->model,
+			image:  $params['image'] ?? null,
+			info:   $params['info'] ?? null,
 			layout: $params['layout'] ?? null,
-			text: $params['text'] ?? null,
+			text:   $params['text'] ?? null,
 		);
 
 		return [
