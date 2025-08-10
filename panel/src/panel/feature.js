@@ -8,6 +8,8 @@ import State from "./state.js";
  */
 export const defaults = () => {
 	return {
+		// request abort controller
+		abortController: null,
 		// the feature component
 		component: null,
 		// loading state
@@ -80,6 +82,11 @@ export default (panel, key, defaults) => {
 			if (options.silent !== true) {
 				this.isLoading = true;
 			}
+
+			// create a new abort controller
+			// and add to the options
+			this.abortController = new AbortController();
+			options.signal = this.abortController.signal;
 
 			// the global open method is used to make sure
 			// that a response can also trigger other features.
@@ -164,7 +171,7 @@ export default (panel, key, defaults) => {
 
 			// if no value has been passed to the submit method,
 			// take the value object from the props
-			value = value ?? this.props?.value ?? {};
+			value ??= this.props?.value ?? {};
 
 			try {
 				return await panel.post(this.path, value, options);
@@ -182,7 +189,7 @@ export default (panel, key, defaults) => {
 		 * Reloads the properties for the feature
 		 */
 		async refresh(options = {}) {
-			options.url = options.url ?? this.url();
+			options.url ??= this.url();
 
 			const response = await panel.get(options.url, options);
 			const state = response[this.key()];

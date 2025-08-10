@@ -24,6 +24,21 @@ export default (panel) => {
 		...parent,
 
 		/**
+		 * Load a view from the server and
+		 * cancel any previous request
+		 *
+		 * @param {String|URL} url
+		 * @param {Object|Function} options
+		 * @returns {Object} Returns the current state
+		 */
+		async load(url, options = {}) {
+			// cancel any previous request
+			this.abortController?.abort();
+
+			return parent.load.call(this, url, options);
+		},
+
+		/**
 		 * Setting the active view state
 		 * will also change the document title
 		 * and the browser URL

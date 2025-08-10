@@ -1,5 +1,6 @@
 <template>
 	<k-input
+		ref="input"
 		:autofocus="autofocus"
 		:placeholder="placeholder"
 		:value="value"
@@ -7,7 +8,11 @@
 		icon="search"
 		type="search"
 		@input="$emit('search', $event)"
-	/>
+	>
+		<template #icon>
+			<k-button :icon="icon" tabindex="-1" @click="onIconClick" />
+		</template>
+	</k-input>
 </template>
 
 <script>
@@ -28,7 +33,21 @@ export default {
 			type: String
 		}
 	},
-	emits: ["search"]
+	emits: ["search"],
+	computed: {
+		icon() {
+			return this.value ? "cancel-small" : "search";
+		}
+	},
+	methods: {
+		onIconClick() {
+			if (this.value) {
+				this.$emit("search", null);
+			} else {
+				this.$refs.input.focus();
+			}
+		}
+	}
 };
 </script>
 

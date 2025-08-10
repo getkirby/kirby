@@ -342,10 +342,10 @@ export default {
 				return false;
 			}
 
-			value = value ?? this.$helper.field.form(this.fields);
+			value ??= this.$helper.field.form(this.fields);
 
 			// add a unique id, if it's not already defined
-			value._id = value._id ?? this.$helper.uuid();
+			value._id ??= this.$helper.uuid();
 
 			if (this.prepend === true) {
 				this.items.unshift(value);
