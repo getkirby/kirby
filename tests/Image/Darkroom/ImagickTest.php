@@ -204,6 +204,7 @@ class ImagickTest extends TestCase
 			'sharpen'      => null,
 			'width'        => 500,
 			'interlace'    => false,
+			'profiles'     => ['icc', 'icm'],
 			'threads'      => 1,
 			'sourceWidth'  => 500,
 			'sourceHeight' => 500
@@ -370,12 +371,18 @@ class ImagickTest extends TestCase
 		$imagick = new Imagick();
 		$image   = new Image($file);
 		$before  = $image->getImageProfiles();
-		$result  = $this->call($imagick, 'strip', $image, []);
+		$result  = $this->call($imagick, 'strip', $image, ['profiles' => ['icc']]);
 		$after   = $result->getImageProfiles();
 
 		if (isset($before['icc']) === true) {
 			$this->assertSame($before['icc'], $after['icc']);
 			$this->assertSame(['icc'], array_keys($after));
+
+			// if all profiles are to be removed
+			$result  = $this->call($imagick, 'strip', $image, []);
+			$after   = $result->getImageProfiles();
+			$this->assertSame([], array_keys($after));
+
 		} else {
 			$this->assertSame([], array_keys($after));
 		}
