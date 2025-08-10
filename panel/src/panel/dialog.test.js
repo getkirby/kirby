@@ -13,12 +13,10 @@ describe.concurrent("panel.dialog", () => {
 		const state = {
 			component: null,
 			isLoading: false,
-			legacy: false,
 			on: {},
 			path: null,
 			props: {},
 			query: {},
-			ref: null,
 			referrer: null,
 			timestamp: null
 		};
