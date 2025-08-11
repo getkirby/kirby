@@ -238,81 +238,94 @@ class FieldTest extends TestCase
 
 	public function testDialogs(): void
 	{
-		// no defined as default
-		Field::$types = [
-			'test' => []
-		];
-
-		$model = new Page(['slug' => 'test']);
-
-		$field = new Field('test', [
-			'model' => $model,
-		]);
-
-		$this->assertSame([], $field->dialogs());
-
-		// test dialogs
+		$model  = new Page(['slug' => 'test']);
 		$routes = [
 			[
 				'pattern' => 'foo',
-				'load'    => function () {
-				},
-				'submit'  => function () {
-				}
+				'load'    => function () {},
+				'submit'  => function () {}
 			]
 		];
 
-		// return routes
+		// return routes via Closure
 		Field::$types = [
 			'test' => [
 				'dialogs' => fn () => $routes
 			]
 		];
 
-		$field = new Field('test', [
-			'model' => $model,
-		]);
-
+		$field = new Field('test', ['model' => $model]);
 		$this->assertSame($routes, $field->dialogs());
-	}
 
-	public function testDrawers(): void
-	{
-		// no defined as default
+		// none defined
 		Field::$types = [
 			'test' => []
 		];
 
-		$model = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'model' => $model,
-		]);
+		$field = new Field('test', ['model' => $model]);
+		$this->assertSame([], $field->dialogs());
+	}
 
-		$this->assertSame([], $field->drawers());
+	public function testDialogsInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Dialogs of field "test" must be defined as a closure');
 
-		// test drawers
-		$routes = [
-			[
-				'pattern' => 'foo',
-				'load'    => function () {
-				},
-				'submit'  => function () {
-				}
+		Field::$types = [
+			'test' => [
+				'dialogs' => 'foo'
 			]
 		];
 
-		// return routes
+		$model = new Page(['slug' => 'test']);
+		$field = new Field('test', ['model' => $model]);
+		$field->dialogs();
+	}
+
+	public function testDrawers(): void
+	{
+		$model  = new Page(['slug' => 'test']);
+		$routes = [
+			[
+				'pattern' => 'foo',
+				'load'    => function () {},
+				'submit'  => function () {}
+			]
+		];
+
+		// return routes via Closure
 		Field::$types = [
 			'test' => [
 				'drawers' => fn () => $routes
 			]
 		];
 
-		$field = new Field('test', [
-			'model' => $model,
-		]);
-
+		$field = new Field('test', ['model' => $model]);
 		$this->assertSame($routes, $field->drawers());
+
+		// none defined
+		Field::$types = [
+			'test' => []
+		];
+
+		$field = new Field('test', ['model' => $model]);
+		$this->assertSame([], $field->drawers());
+	}
+
+	public function testDrawersInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Drawers of field "test" must be defined as a closure');
+
+		Field::$types = [
+			'test' => [
+				'drawers' => 'foo'
+			]
+		];
+
+		$model = new Page(['slug' => 'test']);
+		$field = new Field('test', ['model' => $model]);
+		$field->drawers();
 	}
 
 	public function testErrors(): void
