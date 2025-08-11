@@ -28,15 +28,7 @@
 						{{ label }}
 					</k-label>
 				</slot>
-				<slot name="options">
-					<k-button-group
-						v-if="buttons"
-						:buttons="buttons"
-						size="xs"
-						variant="filled"
-						class="k-field-buttons"
-					/>
-				</slot>
+				<slot name="options" />
 				<slot name="counter">
 					<k-counter
 						v-if="counter"
@@ -64,7 +56,6 @@ import { disabled, help, id, label, name, required } from "@/mixins/props.js";
 export const props = {
 	mixins: [disabled, help, id, label, name, required],
 	props: {
-		buttons: Array,
 		counter: [Boolean, Object],
 		endpoints: Object,
 		input: [String, Number, Boolean],
