@@ -14,12 +14,10 @@ describe.concurrent("panel.dialog", () => {
 			abortController: null,
 			component: null,
 			isLoading: false,
-			legacy: false,
 			on: {},
 			path: null,
 			props: {},
 			query: {},
-			ref: null,
 			referrer: null,
 			timestamp: null
 		};
