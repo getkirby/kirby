@@ -269,7 +269,7 @@ class FieldTest extends TestCase
 	public function testDialogsInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Dialogs of field "test" must be define as a closure');
+		$this->expectExceptionMessage('Dialogs of field "test" must be defined as a closure');
 
 		Field::$types = [
 			'test' => [
@@ -315,7 +315,7 @@ class FieldTest extends TestCase
 	public function testDrawersInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Drawers of field "test" must be define as a closure');
+		$this->expectExceptionMessage('Drawers of field "test" must be defined as a closure');
 
 		Field::$types = [
 			'test' => [

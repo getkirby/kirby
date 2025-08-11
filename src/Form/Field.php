@@ -233,7 +233,7 @@ class Field extends Component
 		}
 
 		throw new InvalidArgumentException(
-			message: 'Dialogs of field "' . $this->name() . '" must be define as a closure'
+			message: 'Dialogs of field "' . $this->name() . '" must be defined as a closure'
 		);
 	}
 
@@ -251,7 +251,7 @@ class Field extends Component
 		}
 
 		throw new InvalidArgumentException(
-			message: 'Drawers of field "' . $this->name() . '" must be define as a closure'
+			message: 'Drawers of field "' . $this->name() . '" must be defined as a closure'
 		);
 	}
 
