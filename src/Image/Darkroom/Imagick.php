@@ -213,11 +213,14 @@ class Imagick extends Darkroom
 			default        => Image::GRAVITY_CENTER
 		};
 
+		$landscape = $options['width'] >= $options['height'];
+
 		$image->thumbnailImage(
-			$options['width'],
-			$options['height'],
+			$landscape ? $options['width'] : $image->getImageWidth(),
+			$landscape ? $image->getImageHeight() : $options['height'],
 			true
 		);
+
 		$image->setGravity($gravity);
 		$image->cropImage($options['width'], $options['height'], 0, 0);
 
