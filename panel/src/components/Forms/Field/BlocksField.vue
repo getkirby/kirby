@@ -75,10 +75,15 @@ export default {
 			return this.max && this.value.length >= this.max;
 		},
 		isCollapsable() {
-			return Object.values(this.fieldsets).some(
-				(fieldset) => fieldset.preview === "fields"
-			);
+			var hasPreviewFields = false;
+			this.value.forEach((item) => {
+				if (this.fieldsets[item.type]?.preview === "fields") {
+					hasPreviewFields = true;
+				}
+			});
+			return hasPreviewFields;
 		},
+
 		options() {
 			return [
 				{
