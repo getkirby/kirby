@@ -413,6 +413,8 @@ export default {
 				return false;
 			}
 
+			this.stopSelecting();
+
 			this.$panel.drawer.open({
 				component: "k-structure-drawer",
 				id: this.id,
