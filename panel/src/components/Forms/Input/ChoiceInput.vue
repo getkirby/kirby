@@ -1,9 +1,5 @@
 <template>
-	<label
-		:aria-disabled="disabled"
-		:class="['k-choice-input', $attrs.class]"
-		:style="$attrs.style"
-	>
+	<label :aria-disabled="disabled" class="k-choice-input">
 		<input
 			v-bind="{
 				autofocus,
@@ -17,6 +13,7 @@
 			}"
 			:class="[variant === 'invisible' ? 'sr-only' : null, $attrs.class]"
 			:data-variant="variant"
+			:style="$attrs.style"
 			@input="$emit('input', $event.target.checked)"
 		/>
 		<span v-if="label || info" class="k-choice-input-label">
@@ -95,20 +92,26 @@ export default {
 }
 
 /* Field context */
-:where(.k-checkboxes-field, .k-radio-field) .k-choice-input {
+:where(.k-checkboxes-field, .k-radio-field, .k-toggle-field) .k-choice-input {
 	min-height: var(--input-height);
 	padding-block: var(--spacing-2);
 	padding-inline: var(--spacing-3);
 	border-radius: var(--input-rounded);
 }
 
-:where(.k-checkboxes-field, .k-radio-field):not([data-disabled="true"])
+:where(.k-checkboxes-field, .k-radio-field, .k-toggle-field):not(
+		[data-disabled="true"]
+	)
 	.k-choice-input {
 	background: var(--item-color-back);
 	box-shadow: var(--shadow);
 }
 
-:where(.k-checkboxes-field, .k-radio-field)[data-disabled="true"]
+:where(
+		.k-checkboxes-field,
+		.k-radio-field,
+		.k-toggle-field
+	)[data-disabled="true"]
 	.k-choice-input {
 	border: 1px solid var(--color-border);
 }

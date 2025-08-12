@@ -17,7 +17,7 @@
 						/>
 
 						<k-form-controls
-							:has-changes="hasChanges"
+							:has-diff="hasDiff"
 							:is-locked="isLocked"
 							editor="editor@getkirby.com"
 							modified="2024-10-01T17:00:00"
@@ -36,14 +36,12 @@
 					--grid-block-gap: var(--spacing-1);
 				"
 			>
-				<k-input
-					type="toggle"
-					:value="hasChanges"
+				<k-toggle-field
+					:value="hasDiff"
 					text="has-changes"
-					@input="hasChanges = $event"
+					@input="hasDiff = $event"
 				/>
-				<k-input
-					type="toggle"
+				<k-toggle-field
 					:value="isLocked"
 					text="is-locked"
 					@input="isLocked = $event"
@@ -78,7 +76,7 @@
 export default {
 	data() {
 		return {
-			hasChanges: false,
+			hasDiff: false,
 			isLocked: false
 		};
 	},
@@ -93,5 +91,8 @@ export default {
 <style>
 .k-lab-example .k-header {
 	margin-bottom: 2rem;
+}
+.k-lab-example .k-toggle-input {
+	background: var(--input-color-back);
 }
 </style>
