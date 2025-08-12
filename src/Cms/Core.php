@@ -13,6 +13,7 @@ use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Field\StatsField;
+use Kirby\Form\Field\TextField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
 use Kirby\Panel\Ui\FilePreview\PdfFilePreview;
@@ -275,7 +276,7 @@ class Core
 			'structure'   => $this->root . '/fields/structure.php',
 			'tags'        => $this->root . '/fields/tags.php',
 			'tel'         => $this->root . '/fields/tel.php',
-			'text'        => $this->root . '/fields/text.php',
+			'text'        => TextField::class,
 			'textarea'    => $this->root . '/fields/textarea.php',
 			'time'        => $this->root . '/fields/time.php',
 			'toggle'      => $this->root . '/fields/toggle.php',

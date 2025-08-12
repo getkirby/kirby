@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\HasSiblings;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\HasI18n;
 
 /**
@@ -26,7 +27,9 @@ abstract class FieldClass
 	use Mixin\Api;
 	use Mixin\Autofocus;
 	use Mixin\Before;
+	use Mixin\Disabled;
 	use Mixin\Help;
+	use Mixin\Hidden;
 	use Mixin\Icon;
 	use Mixin\Label;
 	use Mixin\Model;
@@ -37,33 +40,53 @@ abstract class FieldClass
 	use Mixin\When;
 	use Mixin\Width;
 
-	protected bool $disabled;
 	protected string|null $name;
+	protected array $params = [];
 	protected Fields $siblings;
 
 	public function __construct(
-		protected array $params = []
+		array|string|null $after = null,
+		bool $autofocus = false,
+		array|string|null $before = null,
+		mixed $default = null,
+		bool $disabled = false,
+		array|string|null $help = null,
+		bool $hidden = false,
+		string|null $icon = null,
+		array|string|null $label = null,
+		ModelWithContent|null $model = null,
+		string|null $name = null,
+		array|string|null $placeholder = null,
+		bool $required = false,
+		Fields|null $siblings = null,
+		bool $translate = true,
+		array|null $when = null,
+		string|null $width = null,
+		mixed $value = null,
+		// additional parameters can be passed to the field
+		...$params
 	) {
-		$this->setAfter($params['after'] ?? null);
-		$this->setAutofocus($params['autofocus'] ?? false);
-		$this->setBefore($params['before'] ?? null);
-		$this->setDefault($params['default'] ?? null);
-		$this->setDisabled($params['disabled'] ?? false);
-		$this->setHelp($params['help'] ?? null);
-		$this->setIcon($params['icon'] ?? null);
-		$this->setLabel($params['label'] ?? null);
-		$this->setModel($params['model'] ?? null);
-		$this->setName($params['name'] ?? null);
-		$this->setPlaceholder($params['placeholder'] ?? null);
-		$this->setRequired($params['required'] ?? false);
-		$this->setSiblings($params['siblings'] ?? null);
-		$this->setTranslate($params['translate'] ?? true);
-		$this->setWhen($params['when'] ?? null);
-		$this->setWidth($params['width'] ?? null);
+		$this->setAfter($after);
+		$this->setAutofocus($autofocus);
+		$this->setBefore($before);
+		$this->setDefault($default);
+		$this->setDisabled($disabled);
+		$this->setHelp($help);
+		$this->setHidden($hidden);
+		$this->setIcon($icon);
+		$this->setLabel($label);
+		$this->setModel($model);
+		$this->setName($name);
+		$this->setPlaceholder($placeholder);
+		$this->setRequired($required);
+		$this->setSiblings($siblings);
+		$this->setTranslate($translate);
+		$this->setWhen($when);
+		$this->setWidth($width);
+		$this->fill($value);
 
-		if (array_key_exists('value', $params) === true) {
-			$this->fill($params['value']);
-		}
+		// set additional parameters
+		$this->params = $params;
 	}
 
 	public function __call(string $param, array $args): mixed
@@ -84,14 +107,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * If `true`, the field is no longer editable and will not be saved
-	 */
-	public function disabled(): bool
-	{
-		return $this->disabled;
-	}
-
-	/**
 	 * Returns optional drawer routes for the field
 	 */
 	public function drawers(): array
@@ -102,16 +117,6 @@ abstract class FieldClass
 	public function id(): string
 	{
 		return $this->name();
-	}
-
-	public function isDisabled(): bool
-	{
-		return $this->disabled;
-	}
-
-	public function isHidden(): bool
-	{
-		return false;
 	}
 
 	/**
@@ -143,7 +148,7 @@ abstract class FieldClass
 			'default'     => $this->default(),
 			'disabled'    => $this->isDisabled(),
 			'help'        => $this->help(),
-			'hidden'      => $this->isHidden(),
+			'hidden'      => $this->hidden(),
 			'icon'        => $this->icon(),
 			'label'       => $this->label(),
 			'name'        => $this->name(),
@@ -155,11 +160,6 @@ abstract class FieldClass
 			'when'        => $this->when(),
 			'width'       => $this->width(),
 		];
-	}
-
-	protected function setDisabled(bool $disabled = false): void
-	{
-		$this->disabled = $disabled;
 	}
 
 	protected function setName(string|null $name = null): void

@@ -12,6 +12,7 @@ use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\FieldClass;
+use Kirby\Form\Fields;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
@@ -30,20 +31,63 @@ class BlocksField extends FieldClass
 	protected bool $pretty;
 	protected mixed $value = [];
 
-	public function __construct(array $params = [])
-	{
-		$this->setFieldsets(
-			$params['fieldsets'] ?? null,
-			$params['model'] ?? App::instance()->site()
+	public function __construct(
+		array|string|null $after = null,
+		bool $autofocus = false,
+		array|string|null $before = null,
+		mixed $default = null,
+		bool $disabled = false,
+		string|array|null $empty = null,
+		string|array|null $fieldsets = null,
+		string|null $group = 'blocks',
+		array|string|null $help = null,
+		bool $hidden = false,
+		string|null $icon = null,
+		string|null $label = null,
+		int|null $max = null,
+		int|null $min = null,
+		ModelWithContent|null $model = null,
+		string|null $name = null,
+		array|string|null $placeholder = null,
+		bool $pretty = false,
+		bool $required = false,
+		Fields|null $siblings = null,
+		bool $translate = true,
+		array|null $when = null,
+		string|null $width = null,
+		mixed $value = null,
+		// additional parameters can be passed to the field
+		...$params
+	) {
+		$this->setFieldsets($fieldsets, $model ?? App::instance()->site());
+
+		parent::__construct(
+			...$params,
+			after: $after,
+			autofocus: $autofocus,
+			before: $before,
+			default: $default,
+			disabled: $disabled,
+			help: $help,
+			hidden: $hidden,
+			icon: $icon,
+			label: $label,
+			model: $model,
+			name: $name,
+			placeholder: $placeholder,
+			required: $required,
+			siblings: $siblings,
+			translate: $translate,
+			when: $when,
+			width: $width,
+			value: $value
 		);
 
-		parent::__construct($params);
-
-		$this->setEmpty($params['empty'] ?? null);
-		$this->setGroup($params['group'] ?? 'blocks');
-		$this->setMax($params['max'] ?? null);
-		$this->setMin($params['min'] ?? null);
-		$this->setPretty($params['pretty'] ?? false);
+		$this->setEmpty($empty);
+		$this->setGroup($group);
+		$this->setMax($max);
+		$this->setMin($min);
+		$this->setPretty($pretty);
 	}
 
 	public function blocksToValues(

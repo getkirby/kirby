@@ -10,6 +10,10 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\V;
 
 /**
+ * Validation functionality for fields
+ *
+ * @mixin \Kirby\Form\FieldClass
+ *
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com

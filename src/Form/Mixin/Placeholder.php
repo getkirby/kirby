@@ -3,6 +3,10 @@
 namespace Kirby\Form\Mixin;
 
 /**
+ * Placeholder functionality for fields
+ *
+ * @mixin \Kirby\Form\FieldClass
+ *
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com

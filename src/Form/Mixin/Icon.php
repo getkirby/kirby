@@ -3,6 +3,10 @@
 namespace Kirby\Form\Mixin;
 
 /**
+ * Icon functionality for fields
+ *
+ * @mixin \Kirby\Form\FieldClass
+ *
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
