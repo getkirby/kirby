@@ -167,7 +167,8 @@ class Imagick extends Darkroom
 		if ($options['crop'] === false) {
 			$image->thumbnailImage(
 				$options['width'],
-				$options['height']
+				$options['height'],
+				true
 			);
 
 			return $image;
@@ -191,7 +192,8 @@ class Imagick extends Darkroom
 
 				$image->thumbnailImage(
 					$options['width'],
-					$options['height']
+					$options['height'],
+					true
 				);
 
 				return $image;
@@ -211,7 +213,11 @@ class Imagick extends Darkroom
 			default        => Image::GRAVITY_CENTER
 		};
 
-		$image->thumbnailImage($options['width'], $options['height']);
+		$image->thumbnailImage(
+			$options['width'],
+			$options['height'],
+			true
+		);
 		$image->setGravity($gravity);
 		$image->cropImage($options['width'], $options['height'], 0, 0);
 
