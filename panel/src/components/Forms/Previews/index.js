@@ -1,5 +1,4 @@
 import ArrayFieldPreview from "./ArrayFieldPreview.vue";
-import BubblesFieldPreview from "./BubblesFieldPreview.vue";
 import ColorFieldPreview from "./ColorFieldPreview.vue";
 import DateFieldPreview from "./DateFieldPreview.vue";
 import EmailFieldPreview from "./EmailFieldPreview.vue";
@@ -21,7 +20,6 @@ import UsersFieldPreview from "./UsersFieldPreview.vue";
 export default {
 	install(app) {
 		app.component("k-array-field-preview", ArrayFieldPreview);
-		app.component("k-bubbles-field-preview", BubblesFieldPreview);
 		app.component("k-color-field-preview", ColorFieldPreview);
 		app.component("k-date-field-preview", DateFieldPreview);
 		app.component("k-email-field-preview", EmailFieldPreview);
