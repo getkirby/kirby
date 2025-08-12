@@ -66,7 +66,12 @@ export default (panel) => {
 				dialog = `/dialogs/${dialog}`;
 			}
 
-			return parent.open.call(this, dialog, options);
+			const state = await parent.open.call(this, dialog, options);
+
+			// add it to the history
+			this.history.add(state, dialog.replace);
+
+			return state;
 		}
 	});
 };

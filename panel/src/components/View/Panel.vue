@@ -42,6 +42,7 @@
 		</k-overlay>
 
 		<k-overlay
+			:nested="$panel.dialog.history.milestones.length > 1"
 			:visible="$panel.dialog.isOpen"
 			type="dialog"
 			@close="$panel.dialog.close()"

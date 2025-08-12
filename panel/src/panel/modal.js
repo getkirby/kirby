@@ -3,7 +3,9 @@
 import { reactive } from "vue";
 import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
+import History from "./history.js";
 import focus from "@/helpers/focus.js";
+import { uuid } from "@/helpers/string.js";
 import { wrap } from "@/helpers/array.js";
 
 /**
@@ -11,7 +13,8 @@ import { wrap } from "@/helpers/array.js";
  */
 export const defaults = () => {
 	return {
-		...featureDefaults()
+		...featureDefaults(),
+		id: null
 	};
 };
 
@@ -46,16 +49,43 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
-		 * Closes the modal
+		 * Closes the modal and goes back to the
+		 * parent one if it has been stored
+		 * @param {String|true} id Which modal to close, true for all
 		 */
-		async close() {
+		async close(id) {
 			if (this.isOpen === false) {
 				return;
 			}
 
+			// Compare the modal id to avoid closing the wrong modal.
+			// This is particularly useful in nested modals.
+			if (id !== undefined && id !== true && id !== this.id) {
+				return;
+			}
+
+			if (id === true) {
+				this.history.clear();
+			} else {
+				this.history.removeLast();
+			}
+
+			// store the closed listener
+			const closed = this.on.closed ?? (() => {});
+
+			// history not empty, open previous modal
+			if (this.history.isEmpty() === false) {
+				const state = this.open(this.history.last());
+				closed();
+				return state;
+			}
+
+			// no more items in the history,
+			// all modals shall be closed
 			this.isOpen = false;
 			this.emit("close");
 			this.reset();
+			closed();
 
 			if (panel.overlays().length === 0) {
 				// unblock the overflow until we can use :has for this.
@@ -74,6 +104,16 @@ export default (panel, key, defaults) => {
 		focus(input) {
 			focus(`.k-${this.key()}-portal`, input);
 		},
+
+		goTo(id) {
+			const state = this.history.goto(id);
+
+			if (state !== undefined) {
+				this.open(state);
+			}
+		},
+
+		history: History(),
 
 		/**
 		 * Form drawers and dialogs can use this
@@ -139,6 +179,22 @@ export default (panel, key, defaults) => {
 				// mark the modal as open
 				this.isOpen = true;
 			}
+
+			return this.state();
+		},
+
+		/**
+		 * Sets a new active state for the modal
+		 * This is done whenever the state is an object
+		 * and not undefined or null
+		 *
+		 * @param {Object} state
+		 */
+		set(state) {
+			parent.set.call(this, state);
+
+			// create a unique ID for the drawer if it does not have one
+			this.id ??= uuid();
 
 			return this.state();
 		},
