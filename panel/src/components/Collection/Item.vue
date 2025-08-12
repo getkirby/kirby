@@ -33,10 +33,10 @@
 					:to="link"
 				>
 					<!-- eslint-disable-next-line vue/no-v-html -->
-					<span v-html="text ?? '–'" />
+					<span v-html="text ?? '&nbsp;'" />
 				</k-link>
 				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-else v-html="text ?? '–'" />
+				<span v-else v-html="text ?? '&nbsp;'" />
 			</h3>
 			<!-- eslint-disable-next-line vue/no-v-html -->
 			<p v-if="info" :title="title(info)" class="k-item-info" v-html="info" />
@@ -379,9 +379,7 @@ export default {
 	--item-color-icon: light-dark(var(--color-gray-500), var(--color-gray-650));
 	--item-color-image: light-dark(var(--color-gray-250), var(--color-gray-800));
 }
-.k-item[data-theme="skeleton"] .k-item-content {
-	opacity: 0.4;
-}
+
 .k-item[data-theme="skeleton"] .k-item-options {
 	visibility: hidden;
 }
