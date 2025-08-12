@@ -184,8 +184,8 @@ class Imagick extends Darkroom
 				$options['height']
 			)) {
 				$image->cropImage(
-					$options['width'],
-					$options['height'],
+					$focus['width'],
+					$focus['height'],
 					$focus['x1'],
 					$focus['y1']
 				);
