@@ -75,7 +75,7 @@ export default {
 			return this.max && this.value.length >= this.max;
 		},
 		isCollapsable() {
-			var hasPreviewFields = false;
+			let hasPreviewFields = false;
 			this.value.forEach((item) => {
 				if (this.fieldsets[item.type]?.preview === "fields") {
 					hasPreviewFields = true;
