@@ -33,7 +33,7 @@
 						variant="filled"
 						@click="$refs.options.toggle()"
 					/>
-					<k-dropdown-content
+					<k-dropdown
 						ref="options"
 						:options="[
 							{

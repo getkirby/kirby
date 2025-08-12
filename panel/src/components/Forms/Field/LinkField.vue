@@ -20,7 +20,7 @@
 				>
 					{{ currentType.label }}
 				</k-button>
-				<k-dropdown-content ref="types" :options="activeTypesOptions" />
+				<k-dropdown ref="types" :options="activeTypesOptions" />
 
 				<!-- Input -->
 				<div

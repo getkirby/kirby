@@ -26,7 +26,7 @@
 					>
 						<k-color-frame :color="value" />
 					</button>
-					<k-dropdown-content ref="picker" class="k-color-field-picker">
+					<k-dropdown ref="picker" class="k-color-field-picker">
 						<k-colorpicker-input
 							ref="color"
 							v-bind="$props"
@@ -34,7 +34,7 @@
 							@input="$emit('input', $event)"
 							@click.stop
 						/>
-					</k-dropdown-content>
+					</k-dropdown>
 				</template>
 				<k-color-frame v-else :color="value" />
 			</template>

@@ -10,7 +10,7 @@
 					class="k-file-preview-frame-dropdown-toggle"
 					@click="$refs.dropdown.toggle()"
 				/>
-				<k-dropdown-content
+				<k-dropdown
 					ref="dropdown"
 					:options="options"
 					theme="light"

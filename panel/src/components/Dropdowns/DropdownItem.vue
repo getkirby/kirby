@@ -13,7 +13,7 @@
 
 <script>
 /**
- * Item to be used within `<k-dropdown-content>`
+ * Item to be used within `<k-dropdown>`
  * @example <k-dropdown-item>Option A</k-dropdown-item>
  * @unstable
  */

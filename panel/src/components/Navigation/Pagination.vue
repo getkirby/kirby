@@ -28,7 +28,7 @@
 				@click="$refs.dropdown.toggle()"
 			/>
 
-			<k-dropdown-content
+			<k-dropdown
 				ref="dropdown"
 				align-x="end"
 				class="k-pagination-selector"
@@ -51,7 +51,7 @@
 					</label>
 					<k-button type="submit" icon="check" />
 				</form>
-			</k-dropdown-content>
+			</k-dropdown>
 		</template>
 
 		<!-- next -->

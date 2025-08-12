@@ -23,7 +23,7 @@
 								class="k-drawer-option"
 								@click="$refs['dropdown-' + index][0].toggle()"
 							/>
-							<k-dropdown-content
+							<k-dropdown
 								:ref="'dropdown-' + index"
 								:key="'dropdown-' + index"
 								:options="option.dropdown"

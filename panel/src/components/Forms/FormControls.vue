@@ -12,11 +12,7 @@
 			variant="filled"
 			:size="size"
 		/>
-		<k-dropdown-content
-			ref="dropdown"
-			align-x="end"
-			class="k-form-controls-dropdown"
-		>
+		<k-dropdown ref="dropdown" align-x="end" class="k-form-controls-dropdown">
 			<p v-if="isLocked">
 				{{ $t("form.locked") }}
 			</p>
@@ -46,7 +42,7 @@
 					{{ $t("form.preview") }}
 				</k-dropdown-item>
 			</template>
-		</k-dropdown-content>
+		</k-dropdown>
 	</k-button-group>
 </template>
 

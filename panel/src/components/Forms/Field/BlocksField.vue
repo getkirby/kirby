@@ -23,7 +23,7 @@
 					size="xs"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" :options="options" align-x="end" />
+				<k-dropdown ref="options" :options="options" align-x="end" />
 			</k-button-group>
 		</template>
 

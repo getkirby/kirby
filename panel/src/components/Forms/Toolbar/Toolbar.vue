@@ -19,7 +19,7 @@
 						: button.click?.($event)
 				"
 			/>
-			<k-dropdown-content
+			<k-dropdown
 				v-if="(button.when ?? true) && button.dropdown?.length"
 				:key="index + '-dropdown'"
 				:ref="index + '-dropdown'"

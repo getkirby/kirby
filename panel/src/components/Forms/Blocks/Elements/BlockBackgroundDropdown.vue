@@ -8,7 +8,7 @@
 		>
 			<k-color-frame :color="valueAdapted" ratio="1/1" />
 		</k-button>
-		<k-dropdown-content
+		<k-dropdown
 			ref="dropdown"
 			align-x="end"
 			:options="[

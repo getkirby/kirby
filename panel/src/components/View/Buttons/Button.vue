@@ -5,7 +5,7 @@
 			:dropdown="dropdown || hasDropdown"
 			@click="onClick"
 		/>
-		<k-dropdown-content
+		<k-dropdown
 			v-if="hasDropdown"
 			ref="dropdown"
 			:options="Array.isArray(options) ? options : $dropdown(options)"

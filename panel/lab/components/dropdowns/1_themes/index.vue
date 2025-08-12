@@ -8,7 +8,7 @@
 			>
 				Dropdown
 			</k-button>
-			<k-dropdown-content ref="dropdownA" :options="options" />
+			<k-dropdown ref="dropdownA" :options="options" />
 		</k-lab-example>
 		<k-lab-example :flex="true" label="light">
 			<k-button
@@ -18,7 +18,7 @@
 			>
 				Dropdown
 			</k-button>
-			<k-dropdown-content ref="dropdownB" :options="options" theme="light" />
+			<k-dropdown ref="dropdownB" :options="options" theme="light" />
 		</k-lab-example>
 	</k-lab-examples>
 </template>

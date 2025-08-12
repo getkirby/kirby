@@ -6,11 +6,7 @@
 			:dropdown="true"
 			@click="$refs.dropdown.toggle()"
 		/>
-		<k-dropdown-content
-			ref="dropdown"
-			:options="$dropdown(options)"
-			align-x="end"
-		>
+		<k-dropdown ref="dropdown" :options="$dropdown(options)" align-x="end">
 			<template #item="{ item: language, index }">
 				<k-button
 					:key="'item-' + index"
@@ -36,7 +32,7 @@
 					</span>
 				</k-button>
 			</template>
-		</k-dropdown-content>
+		</k-dropdown>
 	</div>
 </template>
 

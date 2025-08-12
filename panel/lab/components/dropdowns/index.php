@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'docs' => 'k-dropdown-content',
+	'docs' => 'k-dropdown',
 ];

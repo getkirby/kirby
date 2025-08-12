@@ -9,7 +9,7 @@
 						variant="filled"
 						@click="$refs.dropdown.toggle()"
 					/>
-					<k-dropdown-content
+					<k-dropdown
 						ref="dropdown"
 						:options="options"
 						:align-x="x"
@@ -42,7 +42,7 @@ export default {
 	data() {
 		return {
 			x: "start",
-			y: "start",
+			y: "start"
 		};
 	},
 	computed: {
@@ -50,47 +50,47 @@ export default {
 			return [
 				{
 					text: "start (default)",
-					value: "start",
+					value: "start"
 				},
 				{
 					text: "center",
-					value: "center",
+					value: "center"
 				},
 				{
 					text: "end",
-					value: "end",
-				},
+					value: "end"
+				}
 			];
 		},
 		yOptions() {
 			return [
 				{
 					text: "top",
-					value: "top",
+					value: "top"
 				},
 				{
 					text: "bottom",
-					value: "bottom",
-				},
+					value: "bottom"
+				}
 			];
 		},
 		options() {
 			return [
 				{
 					text: "Edit",
-					icon: "edit",
+					icon: "edit"
 				},
 				{
 					text: "Duplicate",
-					icon: "copy",
+					icon: "copy"
 				},
 				"-",
 				{
 					text: "Delete",
-					icon: "trash",
-				},
+					icon: "trash"
+				}
 			];
-		},
-	},
+		}
+	}
 };
 </script>
