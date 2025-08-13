@@ -8,7 +8,7 @@ use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
 
 /**
- * GdLib
+ * GdLib darkroom driver
  *
  * @package   Kirby Image
  * @author    Bastian Allgeier <bastian@getkirby.com>

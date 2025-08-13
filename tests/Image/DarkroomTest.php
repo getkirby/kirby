@@ -5,6 +5,7 @@ namespace Kirby\Image;
 use Exception;
 use Kirby\Image\Darkroom\GdLib;
 use Kirby\Image\Darkroom\ImageMagick;
+use Kirby\Image\Darkroom\Imagick;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -27,6 +28,10 @@ class DarkroomTest extends TestCase
 		$instance = Darkroom::factory('gd');
 		$this->assertInstanceOf(GdLib::class, $instance);
 
+		$instance = Darkroom::factory('imagick');
+		$this->assertInstanceOf(Imagick::class, $instance);
+
+		// TODO: remove in v7
 		$instance = Darkroom::factory('im');
 		$this->assertInstanceOf(ImageMagick::class, $instance);
 	}
