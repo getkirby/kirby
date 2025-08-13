@@ -240,4 +240,15 @@ class PagesFieldTest extends TestCase
 		$this->assertSame('b', $api['data'][2]['id']);
 		$this->assertSame('c', $api['data'][3]['id']);
 	}
+
+	public function testToModel(): void
+	{
+		$field = $this->field('pages', [
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$model = $field->toModel('a/aa');
+		$this->assertInstanceOf(Page::class, $model);
+		$this->assertSame('a/aa', $model->id());
+	}
 }

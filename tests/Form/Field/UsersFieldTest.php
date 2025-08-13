@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Cms\User;
 
 class UsersFieldTest extends TestCase
 {
@@ -98,26 +99,28 @@ class UsersFieldTest extends TestCase
 		$this->assertSame([], $field->default());
 	}
 
-	public function testValue(): void
+	public function testGetIdFromArray(): void
 	{
 		$field = $this->field('users', [
 			'model' => new Page(['slug' => 'test']),
-			'value' => [
-				'leonardo@getkirby.com', // exists
-				'raphael@getkirby.com', // exists
-				'homer@getkirby.com'  // does not exist
-			]
 		]);
 
-		$value = $field->value();
-		$ids   = array_column($value, 'email');
+		$this->assertSame('user://leonardo', $field->getIdFromArray([
+			'email' => 'leonardo@getkirby.com',
+			'id'    => 'leonardo',
+			'uuid'  => 'user://leonardo'
+		]));
 
-		$expected = [
-			'leonardo@getkirby.com',
-			'raphael@getkirby.com'
-		];
+		$this->assertSame('leonardo', $field->getIdFromArray([
+			'email' => 'leonardo@getkirby.com',
+			'id'    => 'leonardo'
+		]));
 
-		$this->assertSame($expected, $ids);
+		$this->assertSame('leonardo@getkirby.com', $field->getIdFromArray([
+			'email' => 'leonardo@getkirby.com'
+		]));
+
+		$this->assertNull($field->getIdFromArray([]));
 	}
 
 	public function testMin(): void
@@ -240,5 +243,38 @@ class UsersFieldTest extends TestCase
 		$this->assertSame('leonardo@getkirby.com', $api['data'][1]['email']);
 		$this->assertSame('michelangelo@getkirby.com', $api['data'][2]['email']);
 		$this->assertSame('raphael@getkirby.com', $api['data'][3]['email']);
+	}
+
+	public function testToModel(): void
+	{
+		$field = $this->field('users', [
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$model = $field->toModel('leonardo@getkirby.com');
+		$this->assertInstanceOf(User::class, $model);
+		$this->assertSame('leonardo@getkirby.com', $model->email());
+	}
+
+	public function testValue(): void
+	{
+		$field = $this->field('users', [
+			'model' => new Page(['slug' => 'test']),
+			'value' => [
+				'leonardo@getkirby.com', // exists
+				'raphael@getkirby.com', // exists
+				'homer@getkirby.com'  // does not exist
+			]
+		]);
+
+		$value = $field->value();
+		$ids   = array_column($value, 'email');
+
+		$expected = [
+			'leonardo@getkirby.com',
+			'raphael@getkirby.com'
+		];
+
+		$this->assertSame($expected, $ids);
 	}
 }
