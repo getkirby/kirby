@@ -30,7 +30,6 @@ class UserItemTest extends TestCase
 		$item = new UserItem(user: $this->model);
 
 		$expected = [
-			'id'          => 'test',
 			'image'       => [
 				'back'  => 'black',
 				'color' => 'gray-500',
@@ -39,6 +38,9 @@ class UserItemTest extends TestCase
 				'ratio' => '1/1'
 			],
 			'info'        => 'Nobody',
+			'layout'      => 'list',
+			'text'        => 'test@getkirby.com',
+			'id'          => 'test',
 			'link'        => '/users/test',
 			'permissions' => [
 				'create'         => false,
@@ -50,7 +52,6 @@ class UserItemTest extends TestCase
 				'delete'         => false,
 				'update'         => false,
 			],
-			'text'         => 'test@getkirby.com',
 			'uuid'         => 'user://test',
 		];
 
