@@ -58,7 +58,10 @@ export const props = {
 	props: {
 		counter: [Boolean, Object],
 		endpoints: Object,
-		input: [String, Number, Boolean],
+		input: {
+			type: [String, Number, Boolean],
+			default: null
+		},
 		translate: Boolean,
 		type: String
 	}
