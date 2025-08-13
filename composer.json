@@ -55,6 +55,7 @@
 		"ext-apcu": "Support for the Apcu cache driver",
 		"ext-exif": "Support for exif information from images",
 		"ext-fileinfo": "Improved mime type detection for files",
+		"ext-imagick": "Improved thumbnail generation",
 		"ext-intl": "Improved i18n number formatting",
 		"ext-memcached": "Support for the Memcached cache driver",
 		"ext-pdo": "Support for using databases",
