@@ -138,7 +138,7 @@ return [
 			);
 		},
 		'toFormValues' => function ($value = null) {
-			$items = [];
+			$ids = [];
 
 			foreach (Data::decode($value, 'yaml') as $id) {
 				if (is_array($id) === true) {
@@ -150,13 +150,13 @@ return [
 				}
 			}
 
-			return $items;
+			return $ids;
 		},
 		'toStoredValues' => function ($value = null) {
 			return A::map(
 				$value ?? [],
-				fn (array $item) => $item[$this->store]
+				fn (string $id) => (string)$this->toModel($id)?->{$this->store}()
 			);
-		},
+		}
 	]
 ];

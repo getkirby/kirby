@@ -38,7 +38,8 @@
 					:layout="layout"
 					:link="link ? item.link : false"
 					:selecting="selecting"
-					:selectable="item.selectable"
+					:selectable="item.selectable !== false"
+					:selected="isSelected(item)"
 					:sortable="sortable && item.sortable !== false"
 					:theme="item.theme ?? theme"
 					:width="item.column"
@@ -59,6 +60,27 @@
 
 <script>
 import { layout } from "@/mixins/props.js";
+
+export function findSelectedIndex(items, needle) {
+	return items.findIndex((item) =>
+		Object.hasOwn(item, "_id") ? item._id === needle._id : item.id === needle.id
+	);
+}
+
+export function updateSelection(items, item, mode = "multiple") {
+	if (mode === "single") {
+		return [item];
+	}
+
+	const index = findSelectedIndex(items, item);
+
+	if (index !== -1) {
+		return items.toSpliced(index, 1);
+	}
+
+	return [...items, item];
+}
+
 /**
  * Collection items that can be displayed in various layouts
  */
@@ -97,8 +119,21 @@ export const props = {
 		},
 		/**
 		 * Whether items are in selecting mode
+		 * @since 5.0.0
+		 * @values "single", "multiple", false
 		 */
-		selecting: Boolean,
+		selecting: {
+			type: [String, Boolean],
+			default: false
+		},
+		/**
+		 * Array of selected items
+		 * @since 6.0.0
+		 */
+		selected: {
+			type: Array,
+			default: () => []
+		},
 		/**
 		 * Whether items are generally sortable.
 		 * Each item can disable this individually.
@@ -131,7 +166,7 @@ export default {
 			default: () => ({})
 		}
 	},
-	emits: ["change", "hover", "item", "option", "select", "sort"],
+	emits: ["change", "hover", "item", "option", "select", "selected", "sort"],
 	computed: {
 		dragOptions() {
 			return {
@@ -156,19 +191,30 @@ export default {
 				fields: this.fields,
 				rows: this.items,
 				selecting: this.selecting,
+				selected: this.selected,
 				sortable: this.sortable
 			};
 		}
 	},
 	methods: {
+		isSelected(item) {
+			return findSelectedIndex(this.selected, item) !== -1;
+		},
 		onDragStart($event, dragText) {
 			this.$panel.drag.start("text", dragText);
 		},
 		onOption(option, item, itemIndex) {
 			this.$emit("option", option, item, itemIndex);
 		},
-		onSelect(event, item, itemIndex) {
-			this.$emit("select", event, item, itemIndex);
+		onSelect(item, itemIndex) {
+			this.$emit("select", item, itemIndex);
+			this.onSelected(item);
+		},
+		onSelected(item) {
+			this.$emit(
+				"selected",
+				updateSelection(this.selected, item, this.selecting)
+			);
 		},
 		imageOptions(item) {
 			let globalOptions = this.image;

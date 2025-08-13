@@ -16,6 +16,7 @@
 				layout,
 				link,
 				selecting,
+				selected,
 				size,
 				sortable,
 				theme
@@ -24,6 +25,7 @@
 			@item="$emit('item', $event)"
 			@option="onOption"
 			@select="onSelect"
+			@selected="onSelected"
 			@sort="$emit('sort', $event)"
 		>
 			<template v-if="$slots.options" #options="{ item, index }">
@@ -86,6 +88,7 @@ export default {
 		"option",
 		"paginate",
 		"select",
+		"selected",
 		"sort"
 	],
 	computed: {
@@ -144,6 +147,9 @@ export default {
 		},
 		onSelect(...args) {
 			this.$emit("select", ...args);
+		},
+		onSelected(...args) {
+			this.$emit("selected", ...args);
 		}
 	}
 };

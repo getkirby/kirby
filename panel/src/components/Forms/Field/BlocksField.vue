@@ -1,6 +1,7 @@
 <template>
 	<k-field
 		v-bind="$props"
+		:input="id"
 		:class="['k-blocks-field', $attrs.class]"
 		:style="$attrs.style"
 	>
@@ -28,7 +29,7 @@
 		</template>
 
 		<k-input-validator
-			v-bind="{ min, max, required }"
+			v-bind="{ id, min, max, required }"
 			:value="JSON.stringify(value)"
 		>
 			<k-blocks

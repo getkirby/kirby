@@ -150,6 +150,7 @@ export default {
 				items: this.items,
 				pagination: this.pagination,
 				selecting: !this.isProcessing && this.isSelecting,
+				selected: this.selected,
 				sortable: !this.isProcessing && this.options.sortable,
 				size: this.options.size
 			};

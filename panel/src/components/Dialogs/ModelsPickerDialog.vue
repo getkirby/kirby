@@ -109,6 +109,11 @@ export default {
 			selected: this.value
 		};
 	},
+	watch: {
+		value(value) {
+			this.selected = value;
+		}
+	},
 	computed: {
 		collection() {
 			return {
@@ -131,6 +136,7 @@ export default {
 				selecting: this.multiple && this.max !== 1 ? true : "single",
 				selected: this.selectedItems,
 				sortable: false,
+				layout: this.layout,
 				onPaginate: this.paginate,
 				onSelected: this.select
 			};
@@ -139,11 +145,6 @@ export default {
 			return this.selected
 				.map((id) => this.items.find((item) => item.id === id))
 				.filter(Boolean);
-		}
-	},
-	watch: {
-		value(value) {
-			this.selected = value;
 		}
 	},
 	methods: {

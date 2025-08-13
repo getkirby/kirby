@@ -7,31 +7,34 @@
 			@click.stop
 			@submit.prevent="$emit('submit')"
 		>
-			<slot name="header">
-				<k-dialog-notification />
-			</slot>
+			<k-dropzone :disabled="!hasDropzone" @drop="$emit('drop', $event)">
+				<slot name="header">
+					<k-dialog-notification />
+				</slot>
 
-			<k-dialog-body v-if="$slots.default">
-				<slot />
-			</k-dialog-body>
+				<k-dialog-body v-if="$slots.default">
+					<slot />
+				</k-dialog-body>
 
-			<slot name="footer">
-				<k-dialog-footer v-if="cancelButton || submitButton">
-					<k-dialog-buttons
-						:cancel-button="cancelButton"
-						:disabled="disabled"
-						:icon="icon"
-						:submit-button="submitButton"
-						:theme="theme"
-						@cancel="$emit('cancel')"
-					/>
-				</k-dialog-footer>
-			</slot>
+				<slot name="footer">
+					<k-dialog-footer v-if="cancelButton || submitButton">
+						<k-dialog-buttons
+							:cancel-button="cancelButton"
+							:disabled="disabled"
+							:icon="icon"
+							:submit-button="submitButton"
+							:theme="theme"
+							@cancel="$emit('cancel')"
+						/>
+					</k-dialog-footer>
+				</slot>
+			</k-dropzone>
 		</form>
 	</Teleport>
 </template>
 
 <script>
+import { getCurrentInstance } from "vue";
 import Dialog from "@/mixins/dialog.js";
 
 /**
@@ -39,7 +42,13 @@ import Dialog from "@/mixins/dialog.js";
  */
 export default {
 	mixins: [Dialog],
-	emits: ["cancel", "submit"]
+	emits: ["cancel", "drop", "submit"],
+	computed: {
+		hasDropzone() {
+			const instance = getCurrentInstance();
+			return instance?.vnode?.props?.onDrop !== undefined;
+		}
+	}
 };
 </script>
 

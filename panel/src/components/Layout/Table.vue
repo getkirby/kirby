@@ -7,7 +7,7 @@
 		<table
 			:data-disabled="disabled"
 			:data-indexed="hasIndexColumn"
-			:data-selecting="selecting"
+			:data-selecting="Boolean(selecting)"
 		>
 			<!-- Header row -->
 			<thead>
@@ -139,25 +139,25 @@
 							data-mobile="true"
 							class="k-table-options-column"
 						>
-							<template v-if="selecting">
+							<template v-if="selecting !== false">
 								<label class="k-table-select-checkbox">
 									<input
 										:disabled="row.selectable === false"
-										type="checkbox"
+										:type="selecting === 'single' ? 'radio' : 'checkbox'"
+										:checked="isSelected(row)"
 										@change="$emit('select', row, rowIndex)"
 									/>
 								</label>
 							</template>
 
-							<template v-else>
-								<slot name="options" v-bind="{ row, rowIndex }">
-									<k-options-dropdown
-										:options="row.options ?? options"
-										:text="(row.options ?? options).length > 1"
-										@option="onOption($event, row, rowIndex)"
-									/>
-								</slot>
-							</template>
+							<slot name="options" v-bind="{ row, rowIndex }">
+								<k-options-dropdown
+									v-if="selecting === false"
+									:options="row.options ?? options"
+									:text="(row.options ?? options).length > 1"
+									@option="onOption($event, row, rowIndex)"
+								/>
+							</slot>
 						</td>
 					</tr>
 				</template>
@@ -174,6 +174,8 @@
 </template>
 
 <script>
+import { findSelectedIndex } from "@/components/Collection/Items.vue";
+
 /**
  * A simple table component with columns and rows
  */
@@ -229,8 +231,21 @@ export default {
 		pagination: [Object, Boolean],
 		/**
 		 * Whether the table is in select mode
+		 * @since 5.0.0
+		 * @values "single", "multiple", false
 		 */
-		selecting: Boolean,
+		selecting: {
+			type: [String, Boolean],
+			default: false
+		},
+		/**
+		 * Selected items
+		 * @since 6.0.0
+		 */
+		selected: {
+			type: Array,
+			default: () => []
+		},
 		/**
 		 * Whether table is sortable
 		 */
@@ -301,7 +316,7 @@ export default {
 		 */
 		hasOptions() {
 			return (
-				this.selecting ||
+				this.selecting !== false ||
 				this.$slots.options ||
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
@@ -325,6 +340,9 @@ export default {
 					(row) => this.$helper.object.isEmpty(row[columnIndex]) === false
 				).length === 0
 			);
+		},
+		isSelected(row) {
+			return findSelectedIndex(this.selected, row) !== -1;
 		},
 		/**
 		 * Returns label for a column

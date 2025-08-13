@@ -120,7 +120,7 @@ abstract class ModelsCollector
 
 	protected function search(Files|Pages|Users $models): Files|Pages|Users
 	{
-		return $models->search($this->search);
+		return $models->search($this->search, ['minlength' => 0]);
 	}
 
 	protected function sort(Files|Pages|Users $models): Files|Pages|Users
