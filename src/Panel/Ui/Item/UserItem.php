@@ -35,15 +35,4 @@ class UserItem extends ModelItem
 			text: $text ?? '{{ user.username }}',
 		);
 	}
-
-	public function props(): array
-	{
-		return [
-			'id'       => $this->model->id(),
-			'image'    => $this->image(),
-			'info'     => $this->info(),
-			'link'     => $this->link(),
-			'text'     => $this->text(),
-		];
-	}
 }

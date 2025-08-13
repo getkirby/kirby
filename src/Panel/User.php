@@ -202,18 +202,17 @@ class User extends Model
 	public function pickerData(array $params = []): array
 	{
 		$item = new UserItem(
-			user: $this->model,
-			image: $params['image'] ?? null,
-			info: $params['info'] ?? null,
+			user:   $this->model,
+			image:  $params['image'] ?? null,
+			info:   $params['info'] ?? null,
 			layout: $params['layout'] ?? null,
-			text: $params['text'] ?? null,
+			text:   $params['text'] ?? null,
 		);
 
 		return [
 			...$item->props(),
 			'email'    => $this->model->email(),
 			'sortable' => true,
-			'url'      => $this->model->url(),
 			'username' => $this->model->username(),
 		];
 	}

@@ -231,9 +231,9 @@ class PagesFieldTest extends TestCase
 			'parent' => null,
 			'status' => 'unlisted',
 			'template' => 'default',
+			'url' => '/test',
 			'hasChildren' => false,
 			'sortable' => true,
-			'url' => '/test',
 		], $api['data'][0]);
 		$this->assertSame('a', $api['data'][1]['id']);
 		$this->assertSame('b', $api['data'][2]['id']);

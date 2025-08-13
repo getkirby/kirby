@@ -52,6 +52,7 @@ class PageItemTest extends TestCase
 			'parent'   => null,
 			'status'   => 'unlisted',
 			'template' => 'default',
+			'url'      => '/test',
 		];
 
 		$this->assertSame($expected, $item->props());

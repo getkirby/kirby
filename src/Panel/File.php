@@ -390,7 +390,6 @@ class File extends Model
 			'id'       => $id,
 			'sortable' => true,
 			'type'     => $this->model->type(),
-			'url'      => $this->model->url()
 		];
 	}
 
