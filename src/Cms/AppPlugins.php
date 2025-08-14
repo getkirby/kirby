@@ -809,7 +809,6 @@ trait AppPlugins
 
 		// aliases
 		KirbyTag::$aliases = $this->core->kirbyTagAliases();
-		Field::$aliases    = $this->core->fieldMethodAliases();
 
 		// blueprint presets
 		PageBlueprint::$presets = $this->core->blueprintPresets();
@@ -818,7 +817,6 @@ trait AppPlugins
 		$this->extendCacheTypes($this->core->cacheTypes());
 		$this->extendComponents($this->core->components());
 		$this->extendBlueprints($this->core->blueprints());
-		$this->extendFieldMethods($this->core->fieldMethods());
 		$this->extendFields($this->core->fields());
 		$this->extendFilePreviews($this->core->filePreviews());
 		$this->extendSections($this->core->sections());
