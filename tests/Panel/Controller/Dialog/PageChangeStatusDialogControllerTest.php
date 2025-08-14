@@ -23,7 +23,7 @@ class PageWithErrors extends Page
 #[CoversClass(PageChangeStatusDialogController::class)]
 class PageChangeStatusDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PageChangeStatusDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PageChangeStatusDialogController';
 
 	public function setUp(): void
 	{

@@ -11,8 +11,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Assets::class)]
 class AssetsTest extends TestCase
 {
-	public const TMP               = KIRBY_TMP_DIR . '/Panel.Assets';
-	public const VITE_RUNNING_PATH = KIRBY_DIR . '/panel/.vite-running';
+	public const string TMP               = KIRBY_TMP_DIR . '/Panel.Assets';
+	public const string VITE_RUNNING_PATH = KIRBY_DIR . '/panel/.vite-running';
 
 	protected bool $hadViteRunning;
 

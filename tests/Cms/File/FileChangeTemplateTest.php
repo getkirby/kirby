@@ -10,8 +10,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileChangeTemplateTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileChangeTemplate';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileChangeTemplate';
 
 	public function testChangeTemplate(): void
 	{

@@ -43,7 +43,7 @@ class MockObject
 #[CoversClass(Collection::class)]
 class CollectionTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Collection';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Collection';
 
 	public function testCollectionMethods(): void
 	{

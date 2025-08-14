@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SiteViewController::class)]
 class SiteViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.SiteViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.SiteViewController';
 
 	protected Site $site;
 

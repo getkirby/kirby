@@ -11,7 +11,7 @@ use Kirby\Toolkit\I18n;
 
 class QueryLegacyDefaultFunctionsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Query.QueryLegacyDefaultFunctions';
+	public const string TMP = KIRBY_TMP_DIR . '/Query.QueryLegacyDefaultFunctions';
 
 	public function tearDown(): void
 	{

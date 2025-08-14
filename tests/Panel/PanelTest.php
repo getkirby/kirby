@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Panel::class)]
 class PanelTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Panel';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Panel';
 
 	public function setUp(): void
 	{

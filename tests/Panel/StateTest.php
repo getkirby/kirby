@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(State::class)]
 class StateTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.State';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.State';
 
 	public function testConfig(): void
 	{

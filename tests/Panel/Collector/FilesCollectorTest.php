@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FilesCollector::class)]
 class FilesCollectorTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Collector.FilesCollector';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Collector.FilesCollector';
 
 	public function setUpFiles()
 	{

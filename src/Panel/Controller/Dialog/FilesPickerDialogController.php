@@ -19,7 +19,7 @@ use Kirby\Panel\Collector\FilesCollector;
  */
 class FilesPickerDialogController extends ModelsPickerDialogController
 {
-	protected const TYPE = 'files';
+	protected const string TYPE = 'files';
 
 	protected FilesCollector $collector;
 

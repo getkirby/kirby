@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Router::class)]
 class RouterTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Panel';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Panel';
 
 	public function testResponse(): void
 	{

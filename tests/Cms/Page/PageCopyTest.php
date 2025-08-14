@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PageCopy::class)]
 class PageCopyTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageCopy';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageCopy';
 
 	public function testConvertUuids(): void
 	{

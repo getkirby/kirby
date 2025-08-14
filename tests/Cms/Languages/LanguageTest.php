@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Language::class)]
 class LanguageTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Language';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Language';
 
 	public function setUp(): void
 	{

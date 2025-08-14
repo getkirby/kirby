@@ -14,8 +14,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(KirbyTags::class)]
 class KirbyTagsTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Text.KirbyTags';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Text.KirbyTags';
 
 	public function setUp(): void
 	{

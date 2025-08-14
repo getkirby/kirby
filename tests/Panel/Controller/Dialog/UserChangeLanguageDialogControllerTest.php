@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserChangeLanguageDialogController::class)]
 class UserChangeLanguageDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserChangeLanguageDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserChangeLanguageDialogController';
 
 	public function setUp(): void
 	{

@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PagePreviewViewController::class)]
 class PagePreviewViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.PagePreviewViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.PagePreviewViewController';
 
 	public function setUp(): void
 	{

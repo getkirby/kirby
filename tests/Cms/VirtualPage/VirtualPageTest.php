@@ -12,7 +12,7 @@ class VirtualPage extends Page
 #[CoversClass(Page::class)]
 class VirtualPageTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.VirtualPage';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.VirtualPage';
 
 	public function testContent(): void
 	{

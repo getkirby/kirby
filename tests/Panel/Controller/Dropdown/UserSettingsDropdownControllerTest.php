@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ModelSettingsDropdownController::class)]
 class UserSettingsDropdownControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dropdown.UserSettingsDropdownController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dropdown.UserSettingsDropdownController';
 
 	public function setUp(): void
 	{

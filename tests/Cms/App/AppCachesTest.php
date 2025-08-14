@@ -9,7 +9,7 @@ use Kirby\Filesystem\Dir;
 
 class AppCachesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.AppCaches';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.AppCaches';
 
 	public function app(array $props = [])
 	{

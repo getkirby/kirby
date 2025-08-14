@@ -16,7 +16,7 @@ use Kirby\Toolkit\A;
  */
 abstract class ModelPermissions
 {
-	protected const CATEGORY = 'model';
+	protected const string CATEGORY = 'model';
 	protected array $options;
 
 	protected static array $cache = [];

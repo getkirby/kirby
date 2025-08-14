@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class EmailTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/emails';
+	public const string FIXTURES = __DIR__ . '/fixtures/emails';
 
 	public function testToArray(): void
 	{

@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FieldDialogController::class)]
 class FieldDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FieldDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FieldDialogController';
 
 	protected function field(): FieldClass
 	{

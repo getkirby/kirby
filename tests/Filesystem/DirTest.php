@@ -13,8 +13,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Dir::class)]
 class DirTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/dir';
-	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.Dir';
+	public const string FIXTURES = __DIR__ . '/fixtures/dir';
+	public const string TMP      = KIRBY_TMP_DIR . '/Filesystem.Dir';
 
 	public function tearDown(): void
 	{

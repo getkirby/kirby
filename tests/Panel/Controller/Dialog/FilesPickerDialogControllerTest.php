@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FilesPickerDialogController::class)]
 class FilesPickerDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FilesPickerDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FilesPickerDialogController';
 
 	public function setUp(): void
 	{

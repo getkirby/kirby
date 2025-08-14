@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LabExampleVueViewController::class)]
 class LabExampleVueViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.LabExampleVueViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.LabExampleVueViewController';
 
 	protected Example $example;
 

@@ -12,7 +12,7 @@ use Kirby\Toolkit\Str;
 
 abstract class AreaTestCase extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Areas.AreaTestCase';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Areas.AreaTestCase';
 
 	public function setUp(): void
 	{

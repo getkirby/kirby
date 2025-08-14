@@ -12,7 +12,7 @@ use RecursiveIteratorIterator;
 
 class TestCase extends BaseTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	protected static string $type;
 

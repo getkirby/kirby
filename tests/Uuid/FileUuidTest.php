@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FileUuid::class)]
 class FileUuidTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Uuid.FileUuid';
+	public const string TMP = KIRBY_TMP_DIR . '/Uuid.FileUuid';
 
 	public function testFindByCache(): void
 	{

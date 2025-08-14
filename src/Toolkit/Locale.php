@@ -20,7 +20,7 @@ class Locale
 	/**
 	 * List of all locale constants supported by PHP
 	 */
-	public const LOCALE_CONSTANTS = [
+	public const array LOCALE_CONSTANTS = [
 		'LC_COLLATE',
 		'LC_CTYPE',
 		'LC_MONETARY',

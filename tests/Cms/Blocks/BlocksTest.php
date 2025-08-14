@@ -7,7 +7,7 @@ use Kirby\TestCase;
 
 class BlocksTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	protected Page $page;
 

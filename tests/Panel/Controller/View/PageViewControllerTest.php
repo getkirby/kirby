@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PageViewController::class)]
 class PageViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.PageViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.PageViewController';
 
 	protected Page $page;
 

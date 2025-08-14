@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Model::class)]
 class SiteTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Site';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Site';
 
 	protected function panel(array $props = [])
 	{

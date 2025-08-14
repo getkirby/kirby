@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserViewController::class)]
 class UserViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.UserViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.UserViewController';
 
 	protected User $user;
 

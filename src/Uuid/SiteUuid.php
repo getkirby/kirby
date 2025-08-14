@@ -18,7 +18,7 @@ use Kirby\Cms\Site;
  */
 class SiteUuid extends Uuid
 {
-	protected const TYPE = 'site';
+	protected const string TYPE = 'site';
 
 	/**
 	 * @var \Kirby\Cms\Site|null

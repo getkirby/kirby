@@ -6,7 +6,7 @@ use Kirby\Cms\Site;
 
 class SiteModelTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.SiteModel';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.SiteModel';
 
 	public function testBlueprint(): void
 	{

@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 #[CoversClass(Response::class)]
 class ResponseTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function tearDown(): void
 	{

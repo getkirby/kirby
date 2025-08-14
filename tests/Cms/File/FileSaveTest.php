@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileSaveTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileSave';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileSave';
 
 	public function testSave(): void
 	{

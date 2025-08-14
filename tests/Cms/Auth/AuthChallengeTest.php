@@ -16,7 +16,7 @@ use Throwable;
 #[CoversClass(Auth::class)]
 class AuthChallengeTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthChallenge';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.AuthChallenge';
 
 	protected Auth $auth;
 	public string|null $failedEmail = null;

@@ -11,7 +11,7 @@ use ReflectionClass;
 #[CoversClass(AutoSession::class)]
 class AutoSessionTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/store';
+	public const string FIXTURES = __DIR__ . '/fixtures/store';
 
 	protected SessionStore $store;
 

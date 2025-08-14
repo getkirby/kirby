@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class CollectionsTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/collections';
+	public const string FIXTURES = __DIR__ . '/fixtures/collections';
 
 	protected function _app()
 	{

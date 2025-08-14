@@ -30,7 +30,7 @@ class Site extends ModelWithContent
 	use HasMethods;
 	use SiteActions;
 
-	public const CLASS_ALIAS = 'site';
+	public const string CLASS_ALIAS = 'site';
 
 	/**
 	 * The SiteBlueprint object

@@ -21,7 +21,7 @@ class Layout extends Item
 {
 	use HasMethods;
 
-	public const ITEMS_CLASS = Layouts::class;
+	public const string ITEMS_CLASS = Layouts::class;
 
 	protected Content $attrs;
 	protected LayoutColumns $columns;

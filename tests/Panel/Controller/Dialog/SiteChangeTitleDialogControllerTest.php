@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SiteChangeTitleDialogController::class)]
 class SiteChangeTitleDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.SiteChangeTitleDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.SiteChangeTitleDialogController';
 
 	public function setUp(): void
 	{

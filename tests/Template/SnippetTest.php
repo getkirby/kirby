@@ -12,7 +12,7 @@ use ReflectionProperty;
 #[CoversClass(Snippet::class)]
 class SnippetTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function testCloseWhenNotOpen(): void
 	{

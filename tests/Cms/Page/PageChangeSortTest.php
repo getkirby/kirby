@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Page::class)]
 class PageChangeSortTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChangeSort';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageChangeSort';
 
 	public function site(): Site
 	{

@@ -7,7 +7,7 @@ use Kirby\Filesystem\Dir;
 
 class LanguagesCollectionTest extends CollectionTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.LanguagesCollection';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.LanguagesCollection';
 
 	public function setUp(): void
 	{

@@ -10,7 +10,7 @@ use Kirby\Form\Field;
 
 class FilePickerMixinTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.FilePickerMixin';
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.FilePickerMixin';
 
 	public function setUp(): void
 	{

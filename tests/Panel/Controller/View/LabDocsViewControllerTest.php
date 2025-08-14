@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LabDocsViewController::class)]
 class LabDocsViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.LabDocsViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.LabDocsViewController';
 
 	public function testBreadcrumb(): void
 	{

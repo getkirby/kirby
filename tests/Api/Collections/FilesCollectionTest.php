@@ -8,7 +8,7 @@ use Kirby\Cms\Page;
 
 class FilesCollectionTest extends CollectionTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.FilesCollection';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.FilesCollection';
 
 	public function testCollection(): void
 	{

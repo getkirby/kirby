@@ -13,8 +13,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FileDeleteDialogController::class)]
 class FileDeleteDialogControllerTest extends FileDialogControllerTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FileDeleteDialogController';
-	public const CONTROLLER = FileDeleteDialogController::class;
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FileDeleteDialogController';
+	public const string CONTROLLER = FileDeleteDialogController::class;
 
 	protected function assertLoad(File $file): void
 	{

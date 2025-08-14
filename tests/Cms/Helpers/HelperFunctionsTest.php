@@ -11,8 +11,8 @@ use Kirby\Toolkit\Obj;
 
 class HelperFunctionsTest extends HelpersTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/HelpersTest';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.HelperFunctions';
+	public const string FIXTURES = __DIR__ . '/fixtures/HelpersTest';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.HelperFunctions';
 
 	public function setUp(): void
 	{

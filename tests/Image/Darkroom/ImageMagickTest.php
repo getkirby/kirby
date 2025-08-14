@@ -12,8 +12,8 @@ use ReflectionMethod;
 #[CoversClass(ImageMagick::class)]
 class ImageMagickTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/../fixtures/image';
-	public const TMP      = KIRBY_TMP_DIR . '/Image.Darkroom.ImageMagick';
+	public const string FIXTURES = __DIR__ . '/../fixtures/image';
+	public const string TMP      = KIRBY_TMP_DIR . '/Image.Darkroom.ImageMagick';
 
 	public function setUp(): void
 	{

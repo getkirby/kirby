@@ -6,8 +6,8 @@ use Kirby\Data\Data;
 
 class RolesTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.Roles';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.Roles';
 
 	public function testFactory(): void
 	{

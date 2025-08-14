@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Url::class)]
 class UrlTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Url';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Url';
 
 	public function setUp(): void
 	{

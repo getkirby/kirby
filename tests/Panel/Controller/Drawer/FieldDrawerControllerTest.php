@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FieldDrawerController::class)]
 class FieldDrawerControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.FieldDrawerController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.FieldDrawerController';
 
 	protected function field(): FieldClass
 	{

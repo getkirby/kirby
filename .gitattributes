@@ -7,7 +7,6 @@
 .codecov.yml export-ignore
 .php-cs-fixer.dist.php export-ignore
 phpbench.json export-ignore
-phpmd.xml.dist export-ignore
 phpunit.ci.xml export-ignore
 phpunit.dist.xml export-ignore
 psalm.xml.dist export-ignore

@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LanguageVariableDeleteDialogController::class)]
 class LanguageVariableDeleteDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.LanguageVariableDeleteDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.LanguageVariableDeleteDialogController';
 
 	public function setUp(): void
 	{

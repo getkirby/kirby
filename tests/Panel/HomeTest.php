@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Home::class)]
 class HomeTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Home';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Home';
 
 	public function setUp(): void
 	{

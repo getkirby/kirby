@@ -14,8 +14,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FileChangeSortDialogController::class)]
 class FileChangeSortDialogControllerTest extends FileDialogControllerTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FileChangeSortDialogController';
-	public const CONTROLLER = FileChangeSortDialogController::class;
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FileChangeSortDialogController';
+	public const string CONTROLLER = FileChangeSortDialogController::class;
 
 	protected function assertLoad(File $file): void
 	{

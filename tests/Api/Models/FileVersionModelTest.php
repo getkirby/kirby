@@ -11,7 +11,7 @@ use Kirby\Filesystem\Dir;
 
 class FileVersionModelTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.FileVersionModel';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.FileVersionModel';
 
 	protected File $file;
 	protected Site|Page|User $parent;

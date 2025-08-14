@@ -23,7 +23,7 @@ use Kirby\Toolkit\A;
  */
 abstract class FieldUuid extends Uuid
 {
-	protected const FIELD = 'field';
+	protected const string FIELD = 'field';
 
 	/**
 	 * Converts a content field to a related

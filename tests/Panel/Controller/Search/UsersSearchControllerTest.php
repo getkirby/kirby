@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ModelsSearchController::class)]
 class UsersSearchControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Search.UsersSearchController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Search.UsersSearchController';
 
 	public function setUp(): void
 	{

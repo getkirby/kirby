@@ -6,7 +6,7 @@ use Kirby\Cms\Site;
 
 class ChildrenCollectionTest extends CollectionTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.ChildrenCollection';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.ChildrenCollection';
 
 	public function testCollection(): void
 	{

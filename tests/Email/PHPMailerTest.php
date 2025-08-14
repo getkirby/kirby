@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PHPMailer::class)]
 class PHPMailerTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
 
 	protected function _email($props = [], $mailer = PHPMailer::class)
 	{

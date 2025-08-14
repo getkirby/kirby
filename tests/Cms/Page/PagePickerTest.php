@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PagePickerTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PagePicker';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PagePicker';
 
 	public function setUp(): void
 	{

@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageTitleTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageTitle';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageTitle';
 
 	public function testTitleFromSlug(): void
 	{

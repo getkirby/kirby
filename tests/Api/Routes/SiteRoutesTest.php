@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class SiteRoutesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteRoutes';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.SiteRoutes';
 
 	public function setUp(): void
 	{

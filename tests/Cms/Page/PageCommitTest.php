@@ -8,7 +8,7 @@ use ReflectionClass;
 #[CoversClass(Page::class)]
 class PageCommitTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageCommit';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageCommit';
 
 	public function testCommit(): void
 	{

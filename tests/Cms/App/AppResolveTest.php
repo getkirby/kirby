@@ -8,8 +8,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(App::class)]
 class AppResolveTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppResolve';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.AppResolve';
 
 	public function testResolveHomePage(): void
 	{

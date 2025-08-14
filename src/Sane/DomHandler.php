@@ -16,8 +16,6 @@ use Kirby\Toolkit\Dom;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
- *
- * @SuppressWarnings(PHPMD.LongVariable)
  */
 class DomHandler extends Handler
 {

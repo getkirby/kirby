@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LanguageVariableFormDialogController::class)]
 class LanguageVariableFormDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.LanguageVariableFormDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.LanguageVariableFormDialogController';
 
 	protected Language $language;
 

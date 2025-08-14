@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Xml::class)]
 class XmlTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Sane.Xml';
+	public const string TMP = KIRBY_TMP_DIR . '/Sane.Xml';
 
 	protected static string $type = 'xml';
 

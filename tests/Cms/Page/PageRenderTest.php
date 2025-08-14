@@ -12,8 +12,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Page::class)]
 class PageRenderTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/PageRenderTest';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.PageRender';
+	public const string FIXTURES = __DIR__ . '/fixtures/PageRenderTest';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.PageRender';
 
 	public function setUp(): void
 	{

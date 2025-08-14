@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ModelItem::class)]
 class ModelItemTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Ui.ModelItem';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Ui.ModelItem';
 
 	protected Page $model;
 

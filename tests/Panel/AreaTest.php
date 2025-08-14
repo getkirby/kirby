@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Area::class)]
 class AreaTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Area';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Area';
 
 	public function testBreadcrumbLabel(): void
 	{

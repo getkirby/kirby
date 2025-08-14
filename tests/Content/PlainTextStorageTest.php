@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(PlainTextStorage::class)]
 class PlainTextStorageTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Content.PlainTextStorage';
+	public const string TMP = KIRBY_TMP_DIR . '/Content.PlainTextStorage';
 
 	protected $storage;
 

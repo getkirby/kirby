@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UsersCollector::class)]
 class UsersCollectorTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Collector.UsersCollector';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Collector.UsersCollector';
 
 	public function setUpUsers()
 	{

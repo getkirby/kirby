@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Site::class)]
 class SitePermissionsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.SitePermissions';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.SitePermissions';
 
 	public static function actionProvider(): array
 	{

@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Areas::class)]
 class AreasTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Areas';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Areas';
 
 	public function testArea(): void
 	{

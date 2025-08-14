@@ -13,8 +13,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(System::class)]
 class SystemTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/SystemTest';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.System';
+	public const string FIXTURES = __DIR__ . '/fixtures/SystemTest';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.System';
 
 	protected static string $updateStatusHost;
 	protected string|null $subTmp = null;

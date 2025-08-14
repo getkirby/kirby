@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class ChangesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.Controller.Changes';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.Controller.Changes';
 	public Page $page;
 
 	public function setUp(): void

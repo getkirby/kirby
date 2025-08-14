@@ -7,8 +7,8 @@ use Kirby\TestCase;
 
 class BlockTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.Block';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.Block';
 
 	protected Page $page;
 

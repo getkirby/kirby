@@ -21,8 +21,8 @@ class InvalidFileModel
 #[CoversClass(\Kirby\Filesystem\File::class)]
 class FileTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.File';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP      = KIRBY_TMP_DIR . '/Filesystem.File';
 
 	// used for the mocks
 	public static array $block = [];
