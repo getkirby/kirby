@@ -13,7 +13,7 @@ use stdClass;
 #[CoversClass(Environment::class)]
 class EnvironmentTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/EnvironmentTest';
+	public const string FIXTURES = __DIR__ . '/fixtures/EnvironmentTest';
 
 	public function tearDown(): void
 	{

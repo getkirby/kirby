@@ -10,7 +10,7 @@ use stdClass;
 #[CoversClass(Txt::class)]
 class TxtTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function testEncodeDecode(): void
 	{

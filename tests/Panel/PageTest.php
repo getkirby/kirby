@@ -23,7 +23,7 @@ class PageForceLocked extends ModelPage
 #[CoversClass(Model::class)]
 class PageTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Page';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Page';
 
 	protected function panel(array $props = [])
 	{

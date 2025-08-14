@@ -9,8 +9,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Html::class)]
 class HtmlTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.Html';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.Html';
 
 	public function setUp(): void
 	{

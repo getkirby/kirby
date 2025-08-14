@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PageChangeTitleDialogController::class)]
 class PageChangeTitleDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PageChangeTitleDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PageChangeTitleDialogController';
 
 	public function setUp(): void
 	{

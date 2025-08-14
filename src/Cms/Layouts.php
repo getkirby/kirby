@@ -20,7 +20,7 @@ use Throwable;
  */
 class Layouts extends Items
 {
-	public const ITEM_CLASS = Layout::class;
+	public const string ITEM_CLASS = Layout::class;
 
 	/**
 	 * All registered layouts methods

@@ -20,8 +20,8 @@ use Kirby\Content\Field;
  */
 class StructureUuid extends FieldUuid
 {
-	protected const TYPE  = 'struct';
-	protected const FIELD = 'structure';
+	protected const string TYPE  = 'struct';
+	protected const string FIELD = 'structure';
 
 	/**
 	 * @var \Kirby\Cms\StructureObject|null

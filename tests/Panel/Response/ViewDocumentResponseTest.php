@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ViewDocumentResponse::class)]
 class ViewDocumentResponseTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Response.ViewDocumentResponse';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Response.ViewDocumentResponse';
 
 	public function testCors(): void
 	{

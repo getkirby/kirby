@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Form::class)]
 class FormTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Form.Form';
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Form';
 
 	protected ModelWithContent $model;
 

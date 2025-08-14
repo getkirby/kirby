@@ -21,7 +21,7 @@ use Kirby\Toolkit\Str;
  */
 class Fieldsets extends Items
 {
-	public const ITEM_CLASS = Fieldset::class;
+	public const string ITEM_CLASS = Fieldset::class;
 
 	/**
 	 * All registered fieldsets methods

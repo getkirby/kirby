@@ -13,8 +13,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FileChangeTemplateDialogController::class)]
 class FileChangeTemplateDialogControllerTest extends FileDialogControllerTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FileChangeTemplateDialogController';
-	public const CONTROLLER = FileChangeTemplateDialogController::class;
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FileChangeTemplateDialogController';
+	public const string CONTROLLER = FileChangeTemplateDialogController::class;
 
 	protected function assertLoad(File $file): void
 	{

@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Dimensions::class)]
 class DimensionsTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function testDimensions(): void
 	{

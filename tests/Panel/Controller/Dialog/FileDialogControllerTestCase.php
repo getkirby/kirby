@@ -10,7 +10,7 @@ use Kirby\Panel\TestCase;
 
 abstract class FileDialogControllerTestCase extends TestCase
 {
-	public const CONTROLLER = FileDialogController::class;
+	public const string CONTROLLER = FileDialogController::class;
 
 	public function setUp(): void
 	{

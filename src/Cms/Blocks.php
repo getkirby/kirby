@@ -25,7 +25,7 @@ use Throwable;
  */
 class Blocks extends Items
 {
-	public const ITEM_CLASS = Block::class;
+	public const string ITEM_CLASS = Block::class;
 
 	/**
 	 * All registered blocks methods

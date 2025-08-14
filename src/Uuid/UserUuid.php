@@ -18,7 +18,7 @@ use Kirby\Cms\User;
  */
 class UserUuid extends Uuid
 {
-	protected const TYPE = 'user';
+	protected const string TYPE = 'user';
 
 	/**
 	 * @var \Kirby\Cms\User|null

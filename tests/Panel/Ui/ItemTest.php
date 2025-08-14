@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Item::class)]
 class ItemTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Item';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Item';
 
 	public function testImage(): void
 	{

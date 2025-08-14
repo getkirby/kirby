@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SitePreviewViewController::class)]
 class SitePreviewViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.SitePreviewViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.SitePreviewViewController';
 
 	public function testButtons(): void
 	{

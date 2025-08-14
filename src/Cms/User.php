@@ -36,7 +36,7 @@ class User extends ModelWithContent
 	use HasSiblings;
 	use UserActions;
 
-	public const CLASS_ALIAS = 'user';
+	public const string CLASS_ALIAS = 'user';
 
 	protected UserBlueprint|null $blueprint = null;
 	protected array $credentials;

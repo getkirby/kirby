@@ -18,7 +18,7 @@ use Kirby\Cms\File;
  */
 class FileUuid extends ModelUuid
 {
-	protected const TYPE = 'file';
+	protected const string TYPE = 'file';
 
 	/**
 	 * @var \Kirby\Cms\File|null

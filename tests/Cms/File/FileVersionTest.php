@@ -7,8 +7,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FileVersion::class)]
 class FileVersionTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileVersion';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.FileVersion';
 
 	public function testConstruct(): void
 	{

@@ -11,8 +11,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Assets::class)]
 class AssetsTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
-	public const TMP      = KIRBY_TMP_DIR . '/Plugin.Assets';
+	public const string FIXTURES = __DIR__ . '/fixtures/plugin-assets';
+	public const string TMP      = KIRBY_TMP_DIR . '/Plugin.Assets';
 
 	public function setUp(): void
 	{

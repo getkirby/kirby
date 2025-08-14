@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class LanguageRouterTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageRouter';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.LanguageRouter';
 
 	public function setUp(): void
 	{

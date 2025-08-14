@@ -11,8 +11,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(QrCode::class)]
 class QrCodeTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/qr';
-	public const TMP      = KIRBY_TMP_DIR . '/Image.QrCode';
+	public const string FIXTURES = __DIR__ . '/fixtures/qr';
+	public const string TMP      = KIRBY_TMP_DIR . '/Image.QrCode';
 
 	public function tearDown(): void
 	{

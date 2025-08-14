@@ -19,7 +19,7 @@ use Kirby\Panel\Collector\UsersCollector;
  */
 class UsersPickerDialogController extends ModelsPickerDialogController
 {
-	protected const TYPE = 'users';
+	protected const string TYPE = 'users';
 
 	protected UsersCollector $collector;
 

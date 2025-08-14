@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Field::class)]
 class FieldTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Field';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Field';
 
 	public function testEmail(): void
 	{

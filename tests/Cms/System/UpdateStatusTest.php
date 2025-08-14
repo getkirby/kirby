@@ -14,8 +14,8 @@ use ReflectionProperty;
 #[CoversClass(UpdateStatus::class)]
 class UpdateStatusTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/UpdateStatusTest';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.System.UpdateStatus';
+	public const string FIXTURES = __DIR__ . '/fixtures/UpdateStatusTest';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.System.UpdateStatus';
 
 	protected static string $host;
 	protected static array $data = [];

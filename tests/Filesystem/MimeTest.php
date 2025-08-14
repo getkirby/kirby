@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Mime::class)]
 class MimeTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/mime';
+	public const string FIXTURES = __DIR__ . '/fixtures/mime';
 
 	public function testFixCss(): void
 	{

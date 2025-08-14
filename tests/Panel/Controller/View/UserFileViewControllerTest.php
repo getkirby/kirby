@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserFileViewController::class)]
 class UserFileViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.UserFileViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.UserFileViewController';
 
 	public function setUp(): void
 	{

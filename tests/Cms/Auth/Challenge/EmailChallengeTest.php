@@ -11,8 +11,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(EmailChallenge::class)]
 class EmailChallengeTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/../fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.Auth.EmailChallenge';
+	public const string FIXTURES = __DIR__ . '/../fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.Auth.EmailChallenge';
 
 	public function setUp(): void
 	{

@@ -42,7 +42,7 @@ class Page extends ModelWithContent
 	use PageActions;
 	use PageSiblings;
 
-	public const CLASS_ALIAS = 'page';
+	public const string CLASS_ALIAS = 'page';
 
 	/**
 	 * The PageBlueprint object

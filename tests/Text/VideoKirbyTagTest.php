@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class VideoKirbyTagTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Text.VideoKirbyTag';
+	public const string TMP = KIRBY_TMP_DIR . '/Text.VideoKirbyTag';
 
 	public function setUp(): void
 	{

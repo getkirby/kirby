@@ -60,8 +60,8 @@ class SystemMock
 #[CoversClass(SystemViewController::class)]
 class SystemViewControllerTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/system';
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.SystemViewController';
+	public const string FIXTURES = __DIR__ . '/fixtures/system';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.SystemViewController';
 
 	protected static string $host;
 

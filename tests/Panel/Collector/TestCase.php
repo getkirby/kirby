@@ -8,7 +8,7 @@ use Kirby\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Collector.ModelsCollector';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Collector.ModelsCollector';
 
 	public function setUp(): void
 	{

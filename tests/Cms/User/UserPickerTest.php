@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserPicker::class)]
 class UserPickerTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.UserPicker';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserPicker';
 
 	public function setUp(): void
 	{

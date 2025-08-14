@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PagesPickerDialogController::class)]
 class PagesPickerDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PagesPickerDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PagesPickerDialogController';
 
 	public function setUp(): void
 	{

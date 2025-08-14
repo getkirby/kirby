@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SiteRules::class)]
 class SiteRulesTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteRules';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.SiteRules';
 
 	public function testChangeTitleWithoutPermissions(): void
 	{

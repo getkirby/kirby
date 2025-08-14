@@ -10,8 +10,8 @@ use Kirby\Filesystem\F;
 
 class MediaTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.Media';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.Media';
 
 	public function testLinkSiteFile(): void
 	{

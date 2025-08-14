@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PageDeleteDialogController::class)]
 class PageDeleteDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PageDeleteDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PageDeleteDialogController';
 
 	public function setUp(): void
 	{

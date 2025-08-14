@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Xml::class)]
 class XmlTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/xml';
+	public const string FIXTURES = __DIR__ . '/fixtures/xml';
 
 	#[DataProvider('attrProvider')]
 	public function testAttr(

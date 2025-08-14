@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Menu::class)]
 class MenuTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Menu';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Menu';
 
 	public function setUp(): void
 	{

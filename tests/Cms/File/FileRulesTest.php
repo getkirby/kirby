@@ -14,8 +14,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FileRules::class)]
 class FileRulesTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileRules';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.FileRules';
 
 	public function testChangeName(): void
 	{

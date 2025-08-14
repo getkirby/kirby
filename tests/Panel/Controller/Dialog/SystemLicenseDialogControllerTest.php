@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SystemLicenseDialogController::class)]
 class SystemLicenseDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.SystemLicenseDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.SystemLicenseDialogController';
 
 	public function testLoad(): void
 	{

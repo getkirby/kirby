@@ -44,7 +44,7 @@ use Stringable;
  */
 abstract class Uuid implements Stringable
 {
-	protected const TYPE = 'uuid';
+	protected const string TYPE = 'uuid';
 
 	/**
 	 * Customizable callback function for generating new ID strings instead

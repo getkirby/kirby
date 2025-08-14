@@ -23,7 +23,7 @@ class FileForceLocked extends ModelFile
 #[CoversClass(Model::class)]
 class FileTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.File';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.File';
 
 	protected function panel(array $props = [])
 	{

@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LanguageItem::class)]
 class LanguageItemTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Item.Language';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Item.Language';
 
 	protected Language $language;
 

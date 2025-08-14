@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserCreateDialogController::class)]
 class UserCreateDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserCreateDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserCreateDialogController';
 
 	public function setUp(): void
 	{

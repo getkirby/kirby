@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Handler::class)]
 class HandlerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Sane.Handler';
+	public const string TMP = KIRBY_TMP_DIR . '/Sane.Handler';
 
 	protected static string $type = 'sane';
 

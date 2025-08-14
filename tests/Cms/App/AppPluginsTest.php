@@ -55,8 +55,8 @@ class DummyFilePreview
 #[CoversClass(AppPlugins::class)]
 class AppPluginsTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppPlugins';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.AppPlugins';
 
 	// used for testPluginLoader()
 	public static bool $calledPluginsLoadedHook = false;

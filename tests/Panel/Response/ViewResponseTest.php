@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ViewResponse::class)]
 class ViewResponseTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Response.ViewResponse';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Response.ViewResponse';
 
 	public function testError(): void
 	{

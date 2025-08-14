@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Access::class)]
 class AccessTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Access';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Access';
 
 	public function setUp(): void
 	{

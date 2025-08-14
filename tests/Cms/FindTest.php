@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Find::class)]
 class FindTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Find';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Find';
 
 	public function setUp(): void
 	{

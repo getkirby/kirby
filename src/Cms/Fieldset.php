@@ -21,7 +21,7 @@ use Kirby\Toolkit\Str;
  */
 class Fieldset extends Item
 {
-	public const ITEMS_CLASS = Fieldsets::class;
+	public const string ITEMS_CLASS = Fieldsets::class;
 
 	protected bool $disabled;
 	protected bool $editable;

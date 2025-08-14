@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(DomHandler::class)]
 class DomHandlerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Sane.DomHandler';
+	public const string TMP = KIRBY_TMP_DIR . '/Sane.DomHandler';
 
 	protected static string $type = 'sane';
 

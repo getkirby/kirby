@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(View::class)]
 class ViewTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/view';
+	public const string FIXTURES = __DIR__ . '/fixtures/view';
 
 	protected function view(array $data = []): View
 	{

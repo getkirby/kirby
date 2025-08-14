@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Plugins::class)]
 class PluginsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Plugins';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Plugins';
 
 	protected string $cssA;
 	protected string $cssB;

@@ -8,7 +8,7 @@ use TypeError;
 #[CoversClass(Page::class)]
 class PageNumTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageNum';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageNum';
 
 	public function testNum(): void
 	{

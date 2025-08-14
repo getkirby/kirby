@@ -22,7 +22,7 @@ class TestableParsley extends Parsley
 #[CoversClass(Parsley::class)]
 class ParsleyTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	protected function parser(string $html = 'Test')
 	{

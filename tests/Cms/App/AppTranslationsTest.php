@@ -10,8 +10,8 @@ use Kirby\Toolkit\Str;
 
 class AppTranslationsTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppTranslations';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.AppTranslations';
 
 	protected array $locale = [];
 	protected string|null $localeSuffix = null;

@@ -7,7 +7,7 @@ use Kirby\Cms\Page;
 
 class PagesFieldTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.PagesField';
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PagesField';
 
 	public function setUp(): void
 	{

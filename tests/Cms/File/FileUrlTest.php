@@ -8,8 +8,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileUrlTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileUrl';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileUrl';
 
 	public function setUp(): void
 	{

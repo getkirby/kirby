@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Page::class)]
 class PageUpdateTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageUpdate';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageUpdate';
 
 	public function assertCorrectlyUpdatedPage(
 		Page $modified,

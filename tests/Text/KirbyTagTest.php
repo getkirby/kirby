@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(KirbyTag::class)]
 class KirbyTagTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Text.KirbyTag';
+	public const string TMP = KIRBY_TMP_DIR . '/Text.KirbyTag';
 
 	public function setUp(): void
 	{

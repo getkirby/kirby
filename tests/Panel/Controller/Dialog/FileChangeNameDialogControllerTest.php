@@ -13,8 +13,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FileChangeNameDialogController::class)]
 class FileChangeNameDialogControllerTest extends FileDialogControllerTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FileChangeNameDialogController';
-	public const CONTROLLER = FileChangeNameDialogController::class;
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FileChangeNameDialogController';
+	public const string CONTROLLER = FileChangeNameDialogController::class;
 
 	protected function assertLoad(File $file): void
 	{

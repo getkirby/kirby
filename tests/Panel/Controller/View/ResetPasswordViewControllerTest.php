@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ResetPasswordViewController::class)]
 class ResetPasswordViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.ResetPasswordViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.ResetPasswordViewController';
 
 	public function testLoad(): void
 	{

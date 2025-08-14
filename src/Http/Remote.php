@@ -22,8 +22,8 @@ use stdClass;
  */
 class Remote
 {
-	public const CA_INTERNAL = 1;
-	public const CA_SYSTEM   = 2;
+	public const int CA_INTERNAL = 1;
+	public const int CA_SYSTEM   = 2;
 
 	public static array $defaults = [
 		'agent'     => null,

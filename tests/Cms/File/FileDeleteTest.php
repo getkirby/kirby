@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileDeleteTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileDelete';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileDelete';
 
 	protected function createDummyFile(): File
 	{

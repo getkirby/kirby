@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LanguageFormDialogController::class)]
 class LanguageFormDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.LanguageFormDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.LanguageFormDialogController';
 
 	public function setUp(): void
 	{

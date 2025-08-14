@@ -7,7 +7,7 @@ use Kirby\Filesystem\Dir;
 
 class RolesCollectionTest extends CollectionTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.RolesCollection';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.RolesCollection';
 
 	public function setUp(): void
 	{

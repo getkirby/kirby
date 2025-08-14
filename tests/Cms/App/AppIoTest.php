@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class AppIoTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function app()
 	{

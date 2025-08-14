@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PageChangeSortDialogController::class)]
 class PageChangeSortDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PageChangeSortDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PageChangeSortDialogController';
 
 	public function setUp(): void
 	{

@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class FileKirbyTagTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Text.FileKirbyTag';
+	public const string TMP = KIRBY_TMP_DIR . '/Text.FileKirbyTag';
 
 	public function setUp(): void
 	{

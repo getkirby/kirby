@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FieldOptions::class)]
 class FieldOptionsTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/../Option/fixtures';
+	public const string FIXTURES = __DIR__ . '/../Option/fixtures';
 
 	public function testFactory(): void
 	{

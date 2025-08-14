@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LanguageViewController::class)]
 class LanguageViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.LanguageViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.LanguageViewController';
 
 	protected Language $language;
 

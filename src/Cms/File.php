@@ -41,7 +41,7 @@ class File extends ModelWithContent
 	use HasSiblings;
 	use IsFile;
 
-	public const CLASS_ALIAS = 'file';
+	public const string CLASS_ALIAS = 'file';
 
 	/**
 	 * Cache for the initialized blueprint object

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(AccountViewController::class)]
 class AccountViewControllerTest extends UserViewControllerTest
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.AccountViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.AccountViewController';
 
 	public function testComponent(): void
 	{

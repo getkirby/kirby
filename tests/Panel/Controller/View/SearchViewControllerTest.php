@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SearchViewController::class)]
 class SearchViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.SearchViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.SearchViewController';
 
 	public function testLoad(): void
 	{

@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserChangePasswordDialogController::class)]
 class UserChangePasswordDialogControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserChangePasswordDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserChangePasswordDialogController';
 
 
 	public function setUp(): void

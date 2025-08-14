@@ -15,7 +15,7 @@ use ReflectionProperty;
 #[CoversClass(FileSessionStore::class)]
 class FileSessionStoreTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Session.FileSessionStore';
+	public const string TMP = KIRBY_TMP_DIR . '/Session.FileSessionStore';
 
 	protected SessionStore$store;
 	protected ReflectionProperty $storeHandles;

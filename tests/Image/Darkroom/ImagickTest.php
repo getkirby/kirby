@@ -13,8 +13,8 @@ use ReflectionClass;
 #[CoversClass(Imagick::class)]
 class ImagickTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/../fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Image.Darkroom.Imagick';
+	public const string FIXTURES = __DIR__ . '/../fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Image.Darkroom.Imagick';
 
 	public function setUp(): void
 	{

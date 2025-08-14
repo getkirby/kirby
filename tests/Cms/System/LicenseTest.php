@@ -12,8 +12,8 @@ use ReflectionClass;
 #[CoversClass(License::class)]
 class LicenseTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/LicenseTest';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.License';
+	public const string FIXTURES = __DIR__ . '/fixtures/LicenseTest';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.License';
 
 	public function code(LicenseType $type = LicenseType::Basic): string
 	{

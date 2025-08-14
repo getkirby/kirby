@@ -22,7 +22,7 @@ use Kirby\Toolkit\Str;
  */
 abstract class ModelsPickerDialogController extends DialogController
 {
-	protected const TYPE = 'models';
+	protected const string TYPE = 'models';
 
 	public int $page = 1;
 	public string|null $search = null;

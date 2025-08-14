@@ -6,7 +6,7 @@ use Error;
 
 class TplTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function testLoadWithGoodTemplate(): void
 	{

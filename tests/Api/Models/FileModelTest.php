@@ -6,7 +6,7 @@ use Kirby\Cms\Page;
 
 class FileModelTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.FileModel';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.FileModel';
 
 	public function testNextWithTemplate(): void
 	{

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PagesCollector::class)]
 class PagesCollectorTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Collector.PagesCollector';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Collector.PagesCollector';
 
 	public function setUpPages()
 	{

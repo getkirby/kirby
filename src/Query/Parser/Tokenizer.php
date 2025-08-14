@@ -30,15 +30,15 @@ class Tokenizer
 	 * For more complex identifier strings, subscript member access
 	 * should be used. With `this` to access the global context.
 	 */
-	private const IDENTIFIER_REGEX = <<<'REGEX'
+	private const string IDENTIFIER_REGEX = <<<'REGEX'
 	(?:[\p{L}\p{N}_])*
 	REGEX;
 
-	private const SINGLEQUOTE_STRING_REGEX = <<<'REGEX'
+	private const string SINGLEQUOTE_STRING_REGEX = <<<'REGEX'
 	'([^'\\]*(?:\\.[^'\\]*)*)'
 	REGEX;
 
-	private const DOUBLEQUOTE_STRING_REGEX = <<<'REGEX'
+	private const string DOUBLEQUOTE_STRING_REGEX = <<<'REGEX'
 	"([^"\\]*(?:\\.[^"\\]*)*)"
 	REGEX;
 

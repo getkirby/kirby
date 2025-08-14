@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Page::class)]
 class PagePreviewUrlTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PagePreviewUrl';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PagePreviewUrl';
 
 	public static function providerForBlueprintSettings(): array
 	{

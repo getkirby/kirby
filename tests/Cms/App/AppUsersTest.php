@@ -10,8 +10,8 @@ use Kirby\Http\Request\Auth\BasicAuth;
 
 class AppUsersTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppUsers';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.AppUsers';
 
 	public function setUp(): void
 	{

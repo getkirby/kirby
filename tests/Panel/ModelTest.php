@@ -41,7 +41,7 @@ class ModelSiteWithImageMethod extends ModelSite
 #[CoversClass(Model::class)]
 class ModelTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Model';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Model';
 
 	protected function panel(array $props = [])
 	{

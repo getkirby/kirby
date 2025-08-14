@@ -12,8 +12,8 @@ use Kirby\TestCase;
 
 class AccountRoutesTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.AccountRoutes';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.AccountRoutes';
 
 	public function setUp(): void
 	{

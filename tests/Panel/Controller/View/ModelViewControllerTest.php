@@ -18,7 +18,7 @@ class TestModelViewController extends ModelViewController
 #[CoversClass(ModelViewController::class)]
 class ModelViewControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.ModelViewController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.ModelViewController';
 
 	protected ModelWithContent $model;
 

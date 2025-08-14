@@ -14,8 +14,8 @@ use stdClass;
 #[CoversClass(F::class)]
 class FTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/f';
-	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.F';
+	public const string FIXTURES = __DIR__ . '/fixtures/f';
+	public const string TMP      = KIRBY_TMP_DIR . '/Filesystem.F';
 
 	protected bool $hasErrorHandler = false;
 	protected string $sample;

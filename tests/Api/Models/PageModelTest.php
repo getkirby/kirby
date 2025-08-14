@@ -6,7 +6,7 @@ use Kirby\Cms\Page;
 
 class PageModelTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.PageModel';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.PageModel';
 
 	public function testChildren(): void
 	{

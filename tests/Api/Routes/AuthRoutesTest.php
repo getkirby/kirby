@@ -9,7 +9,7 @@ use Kirby\TestCase;
 
 class AuthRoutesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthRoutes';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.AuthRoutes';
 
 	public function setUp(): void
 	{

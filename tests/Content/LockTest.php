@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Lock::class)]
 class LockTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Content.LockTest';
+	public const string TMP = KIRBY_TMP_DIR . '/Content.LockTest';
 
 	protected function createChangesVersion(
 		Language|string $language = 'default'

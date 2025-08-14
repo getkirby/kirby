@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Language::class)]
 class LanguageConversionTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageConversion';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.LanguageConversion';
 
 	public function setUp(): void
 	{

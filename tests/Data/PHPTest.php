@@ -11,8 +11,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PHP::class)]
 class PHPTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/php';
-	public const TMP      = KIRBY_TMP_DIR . '/Data.PHP';
+	public const string FIXTURES = __DIR__ . '/fixtures/php';
+	public const string TMP      = KIRBY_TMP_DIR . '/Data.PHP';
 
 	public function testEncode(): void
 	{

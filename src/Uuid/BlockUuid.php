@@ -20,8 +20,8 @@ use Kirby\Content\Field;
  */
 class BlockUuid extends FieldUuid
 {
-	protected const TYPE  = 'block';
-	protected const FIELD = 'blocks';
+	protected const string TYPE  = 'block';
+	protected const string FIELD = 'blocks';
 
 	/**
 	 * @var \Kirby\Cms\Block|null

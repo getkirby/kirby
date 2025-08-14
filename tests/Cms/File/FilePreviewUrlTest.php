@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FilePreviewUrlTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePreviewUrl';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FilePreviewUrl';
 
 	public function testPreviewUrlRedirects(): void
 	{

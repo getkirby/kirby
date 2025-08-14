@@ -27,7 +27,7 @@ class LockedVersion extends Version
 #[CoversClass(VersionRules::class)]
 class VersionRulesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Content.VersionRules';
+	public const string TMP = KIRBY_TMP_DIR . '/Content.VersionRules';
 
 	public function testCreateWhenTheVersionAlreadyExists(): void
 	{

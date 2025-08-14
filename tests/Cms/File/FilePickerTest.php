@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FilePicker::class)]
 class FilePickerTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePicker';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FilePicker';
 
 	public function setUp(): void
 	{

@@ -17,7 +17,7 @@ class TestSearchController extends SearchController
 #[CoversClass(SearchController::class)]
 class SearchControllerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.SearchController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.SearchController';
 
 	public function testFactory(): void
 	{

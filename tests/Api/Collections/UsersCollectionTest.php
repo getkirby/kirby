@@ -7,7 +7,7 @@ use Kirby\Filesystem\Dir;
 
 class UsersCollectionTest extends CollectionTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.UsersCollection';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.UsersCollection';
 
 	public function setUp(): void
 	{
