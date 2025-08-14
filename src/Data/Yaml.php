@@ -57,6 +57,6 @@ class Yaml extends Handler
 	 */
 	public static function handler(): string|null
 	{
-		return App::instance(null, true)?->option('yaml.handler');
+		return App::instance(lazy: true)?->option('yaml.handler');
 	}
 }

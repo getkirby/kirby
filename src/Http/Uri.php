@@ -214,7 +214,7 @@ class Uri implements Stringable
 			return static::$current;
 		}
 
-		if ($app = App::instance(null, true)) {
+		if ($app = App::instance(lazy: true)) {
 			$environment = $app->environment();
 		} else {
 			$environment = new Environment();
@@ -293,7 +293,7 @@ class Uri implements Stringable
 	 */
 	public static function index(array $props = []): static
 	{
-		if ($app = App::instance(null, true)) {
+		if ($app = App::instance(lazy: true)) {
 			$url = $app->url('index');
 		} else {
 			$url = (new Environment())->baseUrl();

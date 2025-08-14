@@ -67,7 +67,7 @@ class Remote
 
 		// update the defaults with App config if set;
 		// request the App instance lazily
-		if ($app = App::instance(null, true)) {
+		if ($app = App::instance(lazy: true)) {
 			$defaults = [...$defaults, ...$app->option('remote', [])];
 		}
 

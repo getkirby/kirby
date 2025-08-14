@@ -155,7 +155,7 @@ class Request
 		}
 
 		// lazily request the instance for non-CMS use cases
-		$kirby = App::instance(null, true);
+		$kirby = App::instance(lazy: true);
 
 		// tell the CMS responder that the response relies on
 		// the `Authorization` header and its value (even if

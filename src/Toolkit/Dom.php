@@ -268,7 +268,7 @@ class Dom
 		) {
 			// if a CMS instance is active, only allow the URL
 			// if it doesn't point outside of the index URL
-			if ($kirby = App::instance(null, true)) {
+			if ($kirby = App::instance(lazy: true)) {
 				$indexUrl = $kirby->url('index', true)->path()->toString(true);
 
 				if (Str::startsWith($url, $indexUrl) !== true) {

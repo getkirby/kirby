@@ -338,7 +338,7 @@ class Str
 		// if an app instance is already running; otherwise fall back to
 		// `date` for backwards-compatibility
 		if ($handler === null) {
-			$handler = App::instance(null, true)?->option('date.handler') ?? 'date';
+			$handler = App::instance(lazy: true)?->option('date.handler') ?? 'date';
 		}
 
 		// `intl` handler
