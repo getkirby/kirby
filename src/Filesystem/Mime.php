@@ -98,7 +98,7 @@ class Mime
 		'tgz'   => ['application/x-tar', 'application/x-gzip-compressed'],
 		'tif'   => 'image/tiff',
 		'tiff'  => 'image/tiff',
-		'wav'   => ['audio/wav', 'audio/x-wav'],
+		'wav'   => ['audio/wav', 'audio/x-wav', 'audio/vnd.wave', 'audio/wave'],
 		'wbxml' => 'application/wbxml',
 		'webm'  => 'video/webm',
 		'webp'  => 'image/webp',
