@@ -1,10 +1,8 @@
 <?php
 
-use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Field\FieldOptions;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Str;
 
 return [
@@ -84,17 +82,6 @@ return [
 					'value' => $option['text']
 				]);
 
-			} elseif ($this->isColor($options[0]['text'])) {
-				// @deprecated 4.0.0
-				// TODO: Remove in Kirby 6
-
-				Helpers::deprecated('Color field "' . $this->name . '": the text => value notation for options has been deprecated and will be removed in Kirby 6. Please rewrite your options as value => text.');
-
-				$options = A::map($options, fn ($option) => [
-					'value' => $option['text'],
-					// ensure that any HTML in the new text is escaped
-					'text'  => Escape::html($option['value'])
-				]);
 			} else {
 				$options = A::map($options, fn ($option) => [
 					'value' => $option['value'],
