@@ -2,7 +2,7 @@
 	<nav :aria-label="label" class="k-breadcrumb">
 		<div v-if="crumbs.length > 1" class="k-breadcrumb-dropdown">
 			<k-button icon="home" @click="$refs.dropdown.toggle()" />
-			<k-dropdown-content ref="dropdown" :options="dropdown" />
+			<k-dropdown ref="dropdown" :options="dropdown" />
 		</div>
 
 		<ol>
@@ -104,7 +104,7 @@ export default {
 .k-breadcrumb-dropdown {
 	display: grid;
 }
-.k-breadcrumb-dropdown .k-dropdown-content {
+.k-breadcrumb-dropdown .k-dropdown {
 	width: 15rem;
 }
 

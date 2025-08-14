@@ -2,18 +2,18 @@
 	<dialog
 		v-if="isOpen"
 		ref="dropdown"
-		:data-align-x="axis.x"
-		:data-align-y="axis.y"
+		:data-align-x="align.x"
+		:data-align-y="align.y"
 		:data-theme="theme"
 		:style="{
 			top: position.y + 'px',
 			left: position.x + 'px'
 		}"
-		class="k-dropdown-content"
+		class="k-dropdown k-dropdown-content"
 		@close="onClose"
 		@click="onClick"
 	>
-		<k-navigate ref="navigate" :disabled="navigate === false" axis="y">
+		<k-navigate ref="navigate" :disabled="navigate === false" align="y">
 			<!-- @slot Content of the dropdown which overrides passed `options` prop -->
 			<slot v-bind="{ items }">
 				<template v-for="(option, index) in items">
@@ -41,19 +41,10 @@
 let OpenDropdown = null;
 
 /**
- * Dropdowns are constructed with two elements: `<k-dropdown-content>` holds any content shown when opening the dropdown: any number of `<k-dropdown-item>` elements or any other HTML; typically a `<k-button>` then is used to call the `toggle()` method on `<k-dropdown-content>`.
- *
- * @todo rename to `k-dropdown` in v6 (with alias to old name)
+ * Dropdowns are constructed with two elements: `<k-dropdown>` holds any content shown when opening the dropdown: any number of `<k-dropdown-item>` elements or any other HTML; typically a `<k-button>` then is used to call the `toggle()` method on `<k-dropdown>`.
  */
 export default {
 	props: {
-		/**
-		 * @deprecated 4.0.0 Use `align-x` instead
-		 * @todo rename `axis` data to `align` when removed
-		 */
-		align: {
-			type: String
-		},
 		/**
 		 * Default horizontal alignment of the dropdown
 		 * @since 4.0.0
@@ -111,7 +102,7 @@ export default {
 	],
 	data() {
 		return {
-			axis: {
+			align: {
 				x: this.alignX,
 				y: this.alignY
 			},
@@ -123,13 +114,6 @@ export default {
 			items: [],
 			opener: null
 		};
-	},
-	mounted() {
-		if (this.align) {
-			window.panel.deprecated(
-				"<k-dropdown-content>: `align` prop will be removed in a future version. Use the `alignX` prop instead."
-			);
-		}
 	},
 	methods: {
 		/**
@@ -248,23 +232,23 @@ export default {
 		async setPosition() {
 			// reset to the alignment defaults
 			// before running position calculation
-			this.axis = {
+			this.align = {
 				x: this.alignX ?? this.align,
 				y: this.alignY
 			};
 
-			if (this.axis.x === "right") {
-				this.axis.x = "end";
-			} else if (this.axis.x === "left") {
-				this.axis.x = "start";
+			if (this.align.x === "right") {
+				this.align.x = "end";
+			} else if (this.align.x === "left") {
+				this.align.x = "start";
 			}
 
-			// flip x axis for RTL languages
+			// flip x align for RTL languages
 			if (this.$panel.direction === "rtl") {
-				if (this.axis.x === "start") {
-					this.axis.x = "end";
-				} else if (this.axis.x === "end") {
-					this.axis.x = "start";
+				if (this.align.x === "start") {
+					this.align.x = "end";
+				} else if (this.align.x === "end") {
+					this.align.x = "start";
 				}
 			}
 
@@ -295,35 +279,35 @@ export default {
 
 			// Horizontal: check if dropdown is outside of viewport
 			// and adapt alignment if necessary
-			if (this.axis.x === "end") {
+			if (this.align.x === "end") {
 				if (opener.left - rect.width < safeSpace) {
-					this.axis.x = "start";
+					this.align.x = "start";
 				}
 			} else if (
 				opener.left + rect.width > window.innerWidth - safeSpace &&
 				rect.width + safeSpace < rect.left
 			) {
-				this.axis.x = "end";
+				this.align.x = "end";
 			}
 
-			if (this.axis.x === "start") {
+			if (this.align.x === "start") {
 				this.position.x = this.position.x - opener.width;
 			}
 
 			// Vertical: check if dropdown is outside of viewport
 			// and adapt alignment if necessary
-			if (this.axis.y === "top") {
+			if (this.align.y === "top") {
 				if (rect.height + safeSpace > rect.top) {
-					this.axis.y = "bottom";
+					this.align.y = "bottom";
 				}
 			} else if (
 				opener.top + rect.height > window.innerHeight - safeSpace &&
 				rect.height + safeSpace < rect.top
 			) {
-				this.axis.y = "top";
+				this.align.y = "top";
 			}
 
-			if (this.axis.y === "top") {
+			if (this.align.y === "top") {
 				this.position.y = this.position.y - opener.height;
 			}
 		},
@@ -352,7 +336,7 @@ export default {
 	--dropdown-shadow: var(--shadow-xl);
 }
 
-.k-dropdown-content {
+.k-dropdown {
 	--dropdown-x: 0;
 	--dropdown-y: 0;
 	position: absolute;
@@ -368,27 +352,27 @@ export default {
 	text-align: start;
 	transform: translate(var(--dropdown-x), var(--dropdown-y));
 }
-.k-dropdown-content::backdrop {
+.k-dropdown::backdrop {
 	background: none;
 }
 
-.k-dropdown-content[data-align-x="end"] {
+.k-dropdown[data-align-x="end"] {
 	--dropdown-x: -100%;
 }
-.k-dropdown-content[data-align-x="center"] {
+.k-dropdown[data-align-x="center"] {
 	--dropdown-x: -50%;
 }
-.k-dropdown-content[data-align-y="top"] {
+.k-dropdown[data-align-y="top"] {
 	--dropdown-y: -100%;
 }
 
-.k-dropdown-content hr {
+.k-dropdown hr {
 	margin: 0.5rem 0;
 	height: 1px;
 	background: var(--dropdown-color-hr);
 }
 
-.k-dropdown-content[data-theme="light"] {
+.k-dropdown[data-theme="light"] {
 	--dropdown-color-bg: var(--color-white);
 	--dropdown-color-current: var(--color-blue-800);
 	--dropdown-color-hr: var(--color-gray-250);

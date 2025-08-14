@@ -22,14 +22,14 @@
 						class="k-input-icon-button"
 						@click="$refs.calendar.toggle()"
 					/>
-					<k-dropdown-content ref="calendar" align-x="end">
+					<k-dropdown ref="calendar" align-x="end">
 						<k-calendar
 							:value="iso.date"
 							:min="min"
 							:max="max"
 							@input="onDateInput"
 						/>
-					</k-dropdown-content>
+					</k-dropdown>
 				</template>
 			</k-input>
 
@@ -55,13 +55,13 @@
 						class="k-input-icon-button"
 						@click="$refs.times.toggle()"
 					/>
-					<k-dropdown-content ref="times" align-x="end">
+					<k-dropdown ref="times" align-x="end">
 						<k-timeoptions-input
 							:display="time.display"
 							:value="value"
 							@input="onTimesInput"
 						/>
-					</k-dropdown-content>
+					</k-dropdown>
 				</template>
 			</k-input>
 		</div>

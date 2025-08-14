@@ -18,7 +18,7 @@
 				variant="filled"
 				@click.stop="$refs.dropdown.toggle()"
 			/>
-			<k-dropdown-content ref="dropdown" align-x="end">
+			<k-dropdown ref="dropdown" align-x="end">
 				<dl class="k-plugin-info">
 					<dt>{{ $t("plugin") }}</dt>
 					<dd>{{ value.pluginName }}</dd>
@@ -35,7 +35,7 @@
 						{{ $t("versionInformation") }}
 					</k-button>
 				</template>
-			</k-dropdown-content>
+			</k-dropdown>
 		</template>
 	</div>
 </template>

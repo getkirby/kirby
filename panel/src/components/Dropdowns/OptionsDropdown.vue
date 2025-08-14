@@ -32,7 +32,7 @@
 			class="k-options-dropdown-toggle"
 			@click="$refs.options.toggle()"
 		/>
-		<k-dropdown-content
+		<k-dropdown
 			ref="options"
 			:align-x="align"
 			:options="options"

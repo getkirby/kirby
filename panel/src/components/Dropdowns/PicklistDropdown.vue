@@ -1,5 +1,5 @@
 <template>
-	<k-dropdown-content
+	<k-dropdown
 		ref="dropdown"
 		align-x="start"
 		:disabled="disabled"
@@ -14,7 +14,7 @@
 			@input="input"
 			@escape="$refs.dropdown.close()"
 		/>
-	</k-dropdown-content>
+	</k-dropdown>
 </template>
 
 <script>

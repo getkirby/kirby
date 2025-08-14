@@ -7,7 +7,7 @@
 	>
 		<template v-if="avatar">
 			<k-image-frame :cover="true" :src="avatar" />
-			<k-dropdown-content
+			<k-dropdown
 				ref="dropdown"
 				:options="[
 					{

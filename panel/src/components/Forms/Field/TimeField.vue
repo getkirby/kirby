@@ -19,13 +19,13 @@
 					class="k-input-icon-button"
 					@click="$refs.times.toggle()"
 				/>
-				<k-dropdown-content ref="times" align-x="end">
+				<k-dropdown ref="times" align-x="end">
 					<k-timeoptions-input
 						:display="display"
 						:value="value"
 						@input="select"
 					/>
-				</k-dropdown-content>
+				</k-dropdown>
 			</template>
 		</k-input>
 	</k-field>

@@ -11,7 +11,7 @@
 					class="k-search-bar-types"
 					@click="$refs.types.toggle()"
 				/>
-				<k-dropdown-content ref="types" :options="typesDropdown" />
+				<k-dropdown ref="types" :options="typesDropdown" />
 			</template>
 
 			<!-- Input -->

@@ -20,7 +20,7 @@
 				variant="dimmed"
 				@click.stop="$refs.more.toggle()"
 			/>
-			<k-dropdown-content
+			<k-dropdown
 				ref="more"
 				:options="dropdown"
 				align-x="end"
