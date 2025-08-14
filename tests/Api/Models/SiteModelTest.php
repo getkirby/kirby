@@ -1,12 +1,12 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api\ApiModelTestCase;
+use Kirby\Cms\Site;
 
-class SiteApiModelTest extends ApiModelTestCase
+class SiteModelTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteApiModel';
+	public const TMP = KIRBY_TMP_DIR . '/Api.SiteModel';
 
 	public function testBlueprint(): void
 	{

@@ -1,10 +1,8 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api\ApiCollectionTestCase;
-
-class TranslationsApiCollectionTest extends ApiCollectionTestCase
+class TranslationsCollectionTest extends CollectionTestCase
 {
 	public function testCollection(): void
 	{

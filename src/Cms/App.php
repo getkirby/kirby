@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Exception as GlobalException;
 use Generator;
+use Kirby\Api\Api;
 use Kirby\Content\Storage;
 use Kirby\Content\VersionCache;
 use Kirby\Data\Data;

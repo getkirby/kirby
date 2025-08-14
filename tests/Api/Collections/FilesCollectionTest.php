@@ -1,12 +1,14 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api\ApiCollectionTestCase;
+use Kirby\Cms\File;
+use Kirby\Cms\Files;
+use Kirby\Cms\Page;
 
-class FilesApiCollectionTest extends ApiCollectionTestCase
+class FilesCollectionTest extends CollectionTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FilesApiCollection';
+	public const TMP = KIRBY_TMP_DIR . '/Api.FilesCollection';
 
 	public function testCollection(): void
 	{

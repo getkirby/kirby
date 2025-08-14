@@ -1,13 +1,13 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api\ApiCollectionTestCase;
+use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 
-class RolesApiCollectionTest extends ApiCollectionTestCase
+class RolesCollectionTest extends CollectionTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.RolesApiCollection';
+	public const TMP = KIRBY_TMP_DIR . '/Api.RolesCollection';
 
 	public function setUp(): void
 	{
