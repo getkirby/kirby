@@ -35,10 +35,6 @@ git diff-index --cached --name-only HEAD | while read -r file; do
                 echo "### Psalm on $file"
                 psalm "$file"
                 echo
-
-                echo "### PHPMD on $file"
-                phpmd "$file" ansi phpmd.xml.dist
-                echo
             fi
         ;;
 

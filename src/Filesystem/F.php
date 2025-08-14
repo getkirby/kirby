@@ -686,8 +686,6 @@ class F
 	/**
 	 * Returns the relative path of the file
 	 * starting after $in
-	 *
-	 * @SuppressWarnings(PHPMD.CountInLoopExpression)
 	 */
 	public static function relativepath(
 		string $file,

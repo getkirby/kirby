@@ -179,9 +179,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - name: Preparations
-        run: mkdir sarif
-
       - name: Setup PHP cache environment
         id: ext-cache
         uses: shivammathur/cache-extensions@270463ea3e30925f5661b16e508feab532dbf309 # v1
@@ -206,7 +203,7 @@ jobs:
           coverage: none
           tools: |
             composer:2.8.10, composer-normalize:2.47.0, composer-require-checker:4.16.1,
-            composer-unused:0.9.3, phpmd:2.15.0
+            composer-unused:0.9.3
 
       - name: Validate composer.json/composer.lock
         if: always() && steps.finishPrepare.outcome == 'success'
@@ -219,16 +216,6 @@ jobs:
       - name: Check for unused Composer dependencies
         if: always() && steps.finishPrepare.outcome == 'success'
         run: composer-unused --no-progress
-
-      - name: Statically analyze using PHPMD
-        if: always() && steps.finishPrepare.outcome == 'success'
-        run: phpmd . github phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*' --reportfile-sarif sarif/phpmd.sarif
-
-      - name: Upload code scanning results to GitHub
-        if: always() && steps.finishPrepare.outcome == 'success' && github.repository == 'getkirby/kirby'
-        uses: github/codeql-action/upload-sarif@a4e1a019f5e24960714ff6296aee04b736cbc3cf # v3
-        with:
-          sarif_file: sarif
 
   coding-style:
     name: "Coding Style"

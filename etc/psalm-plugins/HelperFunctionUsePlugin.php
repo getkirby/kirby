@@ -9,9 +9,6 @@ use Psalm\Plugin\EventHandler\Event\AfterFunctionCallAnalysisEvent;
 
 class HelperFunctionUsePlugin implements \Psalm\Plugin\EventHandler\AfterFunctionCallAnalysisInterface
 {
-	/**
-	 * @SuppressWarnings(PHPMD.MissingImport)
-	 */
 	public static function afterFunctionCallAnalysis(AfterFunctionCallAnalysisEvent $event): void
 	{
 		$expr = $event->getExpr();
