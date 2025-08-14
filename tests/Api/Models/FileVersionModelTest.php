@@ -1,13 +1,17 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api\ApiModelTestCase;
+use Kirby\Cms\File;
+use Kirby\Cms\FileVersion;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Cms\User;
 use Kirby\Filesystem\Dir;
 
-class FileVersionApiModelTest extends ApiModelTestCase
+class FileVersionModelTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileVersionApiModel';
+	public const TMP = KIRBY_TMP_DIR . '/Api.FileVersionModel';
 
 	protected File $file;
 	protected Site|Page|User $parent;

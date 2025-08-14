@@ -1,12 +1,12 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-use Kirby\Cms\Api\ApiModelTestCase;
+use Kirby\Cms\User;
 
-class UserApiModelTest extends ApiModelTestCase
+class UserModelTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.UserApiModel';
+	public const TMP = KIRBY_TMP_DIR . '/Api.UserModel';
 
 	protected User $user;
 

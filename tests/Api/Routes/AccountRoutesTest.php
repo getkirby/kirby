@@ -1,7 +1,10 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
+use Kirby\Cms\App;
+use Kirby\Cms\Blueprint;
+use Kirby\Cms\Section;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;

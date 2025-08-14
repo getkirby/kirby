@@ -73,6 +73,7 @@ return [
 
 	// Deprecated aliases:
 	// Any of these might be removed at any point in the future
+	'kirby\cms\api'                => 'Kirby\Api\Api',
 	'kirby\cms\asset'              => 'Kirby\Filesystem\Asset',
 	'kirby\cms\content'            => 'Kirby\Content\Content',
 	'kirby\cms\dir'                => 'Kirby\Filesystem\Dir',
