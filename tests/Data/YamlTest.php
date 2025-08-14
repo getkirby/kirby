@@ -27,8 +27,8 @@ class YamlTest extends TestCase
 		$result = Yaml::decode($data);
 		$this->assertSame($array, $result);
 
-		$this->assertSame('', Yaml::encode([]));
-		$this->assertSame([], Yaml::decode(''));
+		$this->assertSame('[]', Yaml::encode([]));
+		$this->assertSame([], Yaml::decode('[]'));
 
 		$this->assertSame([], Yaml::decode(null));
 		$this->assertSame(['this is' => 'an array'], Yaml::decode(['this is' => 'an array']));
@@ -77,7 +77,7 @@ class YamlTest extends TestCase
 	public function testEncodeNodeTypes(): void
 	{
 		$data = Yaml::encode(['test' => '']);
-		$this->assertSame('test: ""' . PHP_EOL, $data);
+		$this->assertSame('test: \'\'' . PHP_EOL, $data);
 
 		$data = Yaml::encode(['test' => null]);
 		$this->assertSame('test: null' . PHP_EOL, $data);
@@ -95,6 +95,6 @@ class YamlTest extends TestCase
 		$this->assertSame('test: string' . PHP_EOL, $data);
 
 		$data = Yaml::encode(['test' => '"string"']);
-		$this->assertSame('test: "string"' . PHP_EOL, $data);
+		$this->assertSame('test: \'"string"\'' . PHP_EOL, $data);
 	}
 }

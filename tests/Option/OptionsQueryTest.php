@@ -127,8 +127,7 @@ class OptionsQueryTest extends TestCase
 -
   name: foo
 -
-  name: bar
-				'
+  name: bar'
 			]
 		]);
 
