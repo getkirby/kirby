@@ -106,7 +106,7 @@ class Date extends DateTime implements Stringable
 	public static function firstWeekday(string $locale): int
 	{
 		// config option, if available
-		$weekday = App::instance(null, true)?->option('date.weekday');
+		$weekday = App::instance(lazy: true)?->option('date.weekday');
 
 		if (is_int($weekday) === true) {
 			return $weekday;

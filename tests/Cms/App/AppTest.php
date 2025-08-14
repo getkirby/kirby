@@ -697,7 +697,7 @@ class AppTest extends TestCase
 
 	public function testInstance(): void
 	{
-		$this->assertNull(App::instance(null, true));
+		$this->assertNull(App::instance(lazy: true));
 
 		$instance1 = new App();
 		$this->assertSame($instance1, App::instance());

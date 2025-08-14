@@ -22,7 +22,7 @@ class YamlSymfony
 	 */
 	public static function encode($data): string
 	{
-		$kirby  = App::instance(null, true);
+		$kirby  = App::instance(lazy: true);
 
 		return Symfony::dump(
 			$data,

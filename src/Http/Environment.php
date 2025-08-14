@@ -679,7 +679,7 @@ class Environment
 		$default = null
 	) {
 		// first try the global `Environment` object if the CMS is running
-		if ($app = App::instance(null, true)) {
+		if ($app = App::instance(lazy: true)) {
 			return $app->environment()->get($key, $default);
 		}
 

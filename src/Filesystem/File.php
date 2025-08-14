@@ -270,7 +270,7 @@ class File implements Stringable
 	 */
 	public function kirby(): App|null
 	{
-		return App::instance(null, true);
+		return App::instance(lazy: true);
 	}
 
 	/**
