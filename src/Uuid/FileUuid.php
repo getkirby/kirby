@@ -39,7 +39,7 @@ class FileUuid extends ModelUuid
 			if ($value = Uuids::cache()->get($key)) {
 				// value is an array containing
 				// the UUID for the parent and the filename
-				$parent = Uuid::for($value['parent'])->model();
+				$parent = Uuid::from($value['parent'])->model();
 				return $parent?->file($value['filename']);
 			}
 		}

@@ -26,10 +26,10 @@ trait HasUuids
 			$uuid = $scheme . '://' . substr($uuid, 1);
 		}
 
-		if (Uuid::is($uuid, $scheme) === true) {
-			// look up model by UUID while prioritizing
-			// $this collection when searching
-			return Uuid::for($uuid, $this)->model();
+		// look up model by UUID while prioritizing
+		// $this collection when searching
+		if ($uuid = Uuid::from($uuid, $scheme, $this)) {
+			return $uuid->model();
 		}
 
 		return null;
