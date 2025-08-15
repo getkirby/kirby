@@ -25,6 +25,11 @@ export default class InputValidator extends HTMLElement {
 
 	connectedCallback() {
 		this.tabIndex = 0;
+
+		// pass-through the id attribute
+		this.input.setAttribute("id", this.getAttribute("id"));
+		this.removeAttribute("id");
+
 		this.validate();
 	}
 
@@ -38,6 +43,14 @@ export default class InputValidator extends HTMLElement {
 
 	has(value) {
 		return this.entries.includes(value);
+	}
+
+	get input() {
+		return (
+			this.querySelector(this.getAttribute("anchor")) ??
+			this.querySelector("input, textarea, select, button") ??
+			this.querySelector(":scope > *")
+		);
 	}
 
 	get isEmpty() {
@@ -57,10 +70,6 @@ export default class InputValidator extends HTMLElement {
 	}
 
 	validate() {
-		const anchor =
-			this.querySelector(this.getAttribute("anchor")) ??
-			this.querySelector("input, textarea, select, button") ??
-			this.querySelector(":scope > *");
 		const max = parseInt(this.getAttribute("max"));
 		const min = parseInt(this.getAttribute("min"));
 
@@ -72,19 +81,19 @@ export default class InputValidator extends HTMLElement {
 			this.internals.setValidity(
 				{ valueMissing: true },
 				window.panel.$t("error.validation.required"),
-				anchor
+				this.input
 			);
 		} else if (this.hasAttribute("min") && this.entries.length < min) {
 			this.internals.setValidity(
 				{ rangeUnderflow: true },
 				window.panel.$t("error.validation.min", { min }),
-				anchor
+				this.input
 			);
 		} else if (this.hasAttribute("max") && this.entries.length > max) {
 			this.internals.setValidity(
 				{ rangeOverflow: true },
 				window.panel.$t("error.validation.max", { max }),
-				anchor
+				this.input
 			);
 		} else {
 			this.internals.setValidity({});

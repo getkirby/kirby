@@ -1,6 +1,7 @@
 <template>
 	<k-field
 		v-bind="$props"
+		:input="id"
 		:class="['k-entries-field', $attrs.class]"
 		:style="$attrs.style"
 		@click.native.stop
@@ -30,7 +31,7 @@
 		</template>
 
 		<k-input-validator
-			v-bind="{ min, max, required }"
+			v-bind="{ id, min, max, required }"
 			:value="JSON.stringify(entries)"
 		>
 			<!-- Empty State -->
