@@ -13,6 +13,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Stringable;
 
@@ -282,14 +283,16 @@ abstract class Uuid implements Stringable
 	 */
 	final public static function is(
 		string $string,
-		string|null $type = null
+		string|array|null $type = null
 	): bool {
 		// always return false when UUIDs have been disabled
 		if (Uuids::enabled() === false) {
 			return false;
 		}
 
-		$type  ??= implode('|', Uri::$schemes);
+		// use all available schemes by default
+		$type  ??= Uri::$schemes;
+		$type    = implode('|', A::wrap($type));
 		$pattern = sprintf('!^(%s)://(.*)!', $type);
 
 		if (preg_match($pattern, $string, $matches) !== 1) {
