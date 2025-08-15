@@ -393,7 +393,7 @@ class FileBlueprintTest extends TestCase
 		]);
 		$this->assertSame(
 			'application/x-gzip, application/x-tar, application/x-zip, ' .
-			'audio/x-aiff, audio/mp4, audio/midi, audio/mpeg, audio/x-wav',
+			'audio/x-aiff, audio/mp4, audio/midi, audio/mpeg, audio/wav',
 			$blueprint->acceptMime()
 		);
 
