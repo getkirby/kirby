@@ -264,6 +264,7 @@ class UuidTest extends TestCase
 
 	public function testIs(): void
 	{
+		// correct UUIDs
 		$this->assertTrue(Uuid::is('site://'));
 		$this->assertTrue(Uuid::is('page://something'));
 		$this->assertTrue(Uuid::is('user://something'));
@@ -278,7 +279,10 @@ class UuidTest extends TestCase
 		$this->assertTrue(Uuid::is('page://something', 'page'));
 		$this->assertTrue(Uuid::is('user://something', 'user'));
 		$this->assertTrue(Uuid::is('file://something', 'file'));
+		$this->assertTrue(Uuid::is('page://something', ['page', 'file']));
+		$this->assertTrue(Uuid::is('file://something', ['page', 'file']));
 
+		// invalid UUIDs
 		$this->assertFalse(Uuid::is('page://'));
 		$this->assertFalse(Uuid::is('file://'));
 		$this->assertFalse(Uuid::is('user://'));
@@ -294,6 +298,8 @@ class UuidTest extends TestCase
 		$this->assertFalse(Uuid::is('foo://something'));
 		$this->assertFalse(Uuid::is('page//something'));
 		$this->assertFalse(Uuid::is('page//something', 'page'));
+		$this->assertFalse(Uuid::is('file://something', ['page']));
+		$this->assertFalse(Uuid::is('file://something', ['page', 'user']));
 		$this->assertFalse(Uuid::is('not a page://something'));
 	}
 

@@ -638,7 +638,7 @@ V::$validators = [
 	/**
 	 * Checks for a valid Uuid, optionally for specific model type
 	 */
-	'uuid' => function (string $value, string|null $type = null): bool {
+	'uuid' => function (string $value, string|array|null $type = null): bool {
 		return Uuid::is($value, $type);
 	}
 ];
