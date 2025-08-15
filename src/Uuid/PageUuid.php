@@ -16,7 +16,7 @@ use Kirby\Cms\Page;
  * @license   https://getkirby.com/license
  * @since     3.8.0
  *
- * @method \Kirby\Cms\Page|null model()
+ * @method \Kirby\Cms\Page|null model(bool $lazy = false)
  */
 class PageUuid extends ModelUuid
 {

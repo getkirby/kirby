@@ -13,7 +13,7 @@ namespace Kirby\Uuid;
  * @license   https://getkirby.com/license
  * @since     3.8.0
  *
- * @method \Kirby\Cms\ModelWithContent|null model()
+ * @method \Kirby\Cms\ModelWithContent|null model(bool $lazy = false)
  */
 abstract class ModelUuid extends Uuid
 {

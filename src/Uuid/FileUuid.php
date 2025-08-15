@@ -16,7 +16,7 @@ use Kirby\Cms\File;
  * @license   https://getkirby.com/license
  * @since     3.8.0
  *
- * @method \Kirby\Cms\File|null model()
+ * @method \Kirby\Cms\File|null model(bool $lazy = false)
  */
 class FileUuid extends ModelUuid
 {
