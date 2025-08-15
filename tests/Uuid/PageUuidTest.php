@@ -87,7 +87,6 @@ class PageUuidTest extends TestCase
 		$page = $this->app->page('page-a');
 		$url  = 'https://getkirby.com/@/page/my-page';
 		$this->assertSame($url, $page->uuid()->toPermalink());
-		$this->assertSame($url, $page->uuid()->url());
 	}
 
 	public function testUrlWithLanguageWithCustomUrl(): void
@@ -121,7 +120,7 @@ class PageUuidTest extends TestCase
 
 		$page = $app->page('foo');
 		$url  = 'https://getkirby.com/@/page/my-page';
-		$this->assertSame($url, $page->uuid()->url());
+		$this->assertSame($url, $page->uuid()->toPermalink());
 	}
 
 	public static function multilangProvider(): array
@@ -200,6 +199,6 @@ class PageUuidTest extends TestCase
 		// the secondary language must not have the uuid in the content file
 		$this->assertNull($page->version()->read('de')['uuid'] ?? null);
 
-		$this->assertStringStartsWith('https://getkirby.com/' . $language . '/@/page/', $page->uuid()->url());
+		$this->assertStringStartsWith('https://getkirby.com/' . $language . '/@/page/', $page->uuid()->toPermalink());
 	}
 }

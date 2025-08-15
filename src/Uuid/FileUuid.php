@@ -8,13 +8,15 @@ use Kirby\Cms\File;
 
 /**
  * UUID for \Kirby\Cms\File
- * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.8.0
+ *
+ * @method \Kirby\Cms\File|null model()
  */
 class FileUuid extends ModelUuid
 {
@@ -97,13 +99,5 @@ class FileUuid extends ModelUuid
 		}
 
 		return App::instance()->url() . '/@/' . static::TYPE . '/' . $this->id();
-	}
-
-	/**
-	 * @deprecated 5.1.0 Use `::toPermalink()` instead
-	 */
-	public function url(): string
-	{
-		return $this->toPermalink();
 	}
 }

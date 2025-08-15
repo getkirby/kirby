@@ -8,13 +8,15 @@ use Kirby\Cms\Page;
 
 /**
  * UUID for \Kirby\Cms\Page
- * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.8.0
+ *
+ * @method \Kirby\Cms\Page|null model()
  */
 class PageUuid extends ModelUuid
 {
@@ -74,13 +76,5 @@ class PageUuid extends ModelUuid
 		}
 
 		return $url . '/@/' . static::TYPE . '/' . $this->id();
-	}
-
-	/**
-	 * @deprecated 5.1.0 Use `::toPermalink()` instead
-	 */
-	public function url(): string
-	{
-		return $this->toPermalink();
 	}
 }
