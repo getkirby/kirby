@@ -6,7 +6,7 @@ use Kirby\Cms\Media;
 use Kirby\Panel\Plugins;
 use Kirby\Plugin\Assets;
 use Kirby\Toolkit\Str;
-use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Permalink;
 
 return function (App $kirby) {
 	$api   = $kirby->option('api.slug', 'api');
@@ -134,17 +134,16 @@ return function (App $kirby) {
 			'method'  => 'ALL',
 			'env'     => 'site',
 			'action'  => function (string $type, string $id) use ($kirby) {
+				$permalink = Permalink::from($type . '://' . $id);
+
 				// try to resolve to model, but only from UUID cache;
 				// this ensures that only existing UUIDs can be queried
 				// and attackers can't force Kirby to go through the whole
 				// site index with a non-existing UUID
-				if ($model = Uuid::for($type . '://' . $id)?->model(true)) {
-					return $kirby
-						->response()
-						->redirect($model->url());
+				if ($url = $permalink?->model(true)?->url()) {
+					return $kirby->response()->redirect($url);
 				}
 
-				// render the error page
 				return false;
 			}
 		],

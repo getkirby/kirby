@@ -3,7 +3,6 @@
 namespace Kirby\Uuid;
 
 use Generator;
-use Kirby\Cms\App;
 use Kirby\Cms\File;
 
 /**
@@ -92,12 +91,6 @@ class FileUuid extends ModelUuid
 	 */
 	public function toPermalink(): string
 	{
-		// make sure UUID is cached because the permalink
-		// route only looks up UUIDs from cache
-		if ($this->isCached() === false) {
-			$this->populate();
-		}
-
-		return App::instance()->url() . '/@/' . static::TYPE . '/' . $this->id();
+		return (new Permalink($this))->url();
 	}
 }
