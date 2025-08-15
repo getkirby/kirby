@@ -41,10 +41,12 @@ abstract class FieldUuid extends Uuid
 		// get mixed Uri from cache
 		if ($key = $this->key()) {
 			if ($value = Uuids::cache()->get($key)) {
-				// value is an array containing
-				// the UUID for the parent, the field name
-				// and the specific ID
-				$parent = Uuid::for($value['parent'])->model();
+				/**
+				 * $value is an array containing the UUID for the parent,
+				 * the field name and the specific ID
+				 * @var \Kirby\Cms\ModelWithContent|null $parent
+				 */
+				$parent = Uuid::from($value['parent'])->model();
 
 				if ($field = $parent?->content()->get($value['field'])) {
 					return static::fieldToCollection($field)->get($value['id']);
@@ -108,13 +110,16 @@ abstract class FieldUuid extends Uuid
 
 	/**
 	 * Returns value to be stored in cache,
-	 * constisting of three parts:
+	 * consisting of three parts:
 	 * - parent UUID including scheme
 	 * - field name
 	 * - UUID id string for model
 	 */
 	public function value(): array
 	{
+		/**
+		 * @var \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\User $model
+		 */
 		$model  = $this->model();
 		$parent = Uuid::for($model->parent());
 

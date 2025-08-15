@@ -27,7 +27,7 @@ class SiteUuidTest extends TestCase
 	public function testModel(): void
 	{
 		$site = $this->app->site();
-		$this->assertIsSite($site, Uuid::for('site://')->model());
+		$this->assertIsSite($site, Uuid::from('site://')->model());
 	}
 
 	public function testPopulate(): void
