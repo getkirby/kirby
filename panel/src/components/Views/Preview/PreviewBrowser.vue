@@ -22,11 +22,12 @@
 						@submit="$emit('submit', $event)"
 					/>
 				</template>
+
 				<k-button :link="src" icon="open" size="xs" target="_blank" />
 			</k-button-group>
 		</header>
 
-		<iframe ref="browser" :src="srcWithPreviewParam" />
+		<iframe ref="browser" :src="src" @load="onLoad" />
 	</div>
 </template>
 
@@ -40,12 +41,10 @@ export default {
 		src: String,
 		versionId: String
 	},
-	emits: ["discard", "submit"],
+	emits: ["discard", "navigate", "submit"],
 	computed: {
-		srcWithPreviewParam() {
-			const uri = new URL(this.src, this.$panel.urls.site);
-			uri.searchParams.append("_preview", true);
-			return uri.toString();
+		window() {
+			return this.$refs.browser.contentWindow;
 		}
 	},
 	mounted() {
@@ -57,8 +56,25 @@ export default {
 		this.$events.off("content.publish", this.reload);
 	},
 	methods: {
+		onLoad() {
+			for (const link of this.window.document.querySelectorAll("a")) {
+				if (!link.href || link.onclick) {
+					continue;
+				}
+
+				if (link.href.startsWith(location.origin) === false) {
+					link.target = "_blank";
+					continue;
+				}
+
+				link.addEventListener("click", (e) => {
+					e.preventDefault();
+					this.$emit("navigate", link.href);
+				});
+			}
+		},
 		reload() {
-			this.$refs.browser.contentWindow.location.reload();
+			this.window.location.reload();
 		}
 	}
 };
