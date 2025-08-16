@@ -29,7 +29,7 @@ class Query extends Obj implements Stringable
 
 	public function isEmpty(): bool
 	{
-		return empty((array)$this) === true;
+		return (array)$this === [];
 	}
 
 	public function isNotEmpty(): bool
@@ -41,7 +41,7 @@ class Query extends Obj implements Stringable
 	{
 		$query = http_build_query($this, '', '&', PHP_QUERY_RFC3986);
 
-		if (empty($query) === true) {
+		if ($query === '') {
 			return '';
 		}
 
