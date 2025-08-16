@@ -64,7 +64,6 @@ abstract class ModelPreviewViewController extends ViewController
 		return [
 			'component' => 'k-preview-view',
 			'buttons'   => $this->buttons(),
-			'id'        => $this->id(),
 			'src'       => $this->src(),
 			'versionId' => $this->versionId,
 		];

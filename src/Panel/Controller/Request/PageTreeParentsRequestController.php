@@ -18,7 +18,7 @@ use Kirby\Panel\Controller\RequestController;
  */
 class PageTreeParentsRequestController extends RequestController
 {
-	protected Page $page;
+	protected Page|null $page;
 	protected bool $root;
 
 	public function __construct()
