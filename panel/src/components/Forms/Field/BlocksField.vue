@@ -37,6 +37,7 @@
 				@close="opened = $event"
 				@open="opened = $event"
 				@input="$emit('input', $event)"
+				@collapsible-change="onCollapsibleChange"
 			/>
 		</k-input-validator>
 
@@ -61,7 +62,8 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
-			opened: []
+			opened: [],
+			isCollapsible: false
 		};
 	},
 	computed: {
@@ -74,12 +76,6 @@ export default {
 		isFull() {
 			return this.max && this.value.length >= this.max;
 		},
-		isCollapsable() {
-			return this.value.some(
-				(item) => this.fieldsets[item.type]?.preview === "fields"
-			);
-		},
-
 		options() {
 			return [
 				{
@@ -94,7 +90,7 @@ export default {
 					icon: "download",
 					text: this.$t("paste")
 				},
-				...(this.isCollapsable
+				...(this.isCollapsible
 					? [
 							"-",
 							{
@@ -124,6 +120,9 @@ export default {
 	methods: {
 		focus() {
 			this.$refs.blocks.focus();
+		},
+		onCollapsibleChange(value) {
+			this.isCollapsible = value;
 		}
 	}
 };

@@ -265,6 +265,12 @@ export default {
 				block.open(null, true);
 			}
 		},
+		isCollapsible() {
+			if (this.$refs.editor) {
+				return typeof this.$refs.editor.collapse === "function";
+			}
+			return false;
+		},
 		isSplitable() {
 			if (this.isFull === true) {
 				return false;

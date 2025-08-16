@@ -103,6 +103,7 @@ export default {
 	data() {
 		return {
 			blocks: this.value ?? [],
+			isCollapsible: false,
 			isEditing: false,
 			isMultiSelectKey: false,
 			selected: []
@@ -150,8 +151,17 @@ export default {
 		}
 	},
 	watch: {
-		value() {
-			this.blocks = this.value;
+		value: {
+			handler() {
+				this.blocks = this.value;
+				this.checkCollapsibility();
+			},
+			immediate: true
+		},
+		isCollapsible: {
+			handler(newVal) {
+				this.$emit("collapsible-change", newVal);
+			}
 		}
 	},
 	mounted() {
@@ -185,6 +195,12 @@ export default {
 
 			await this.$nextTick();
 			this.focusOrOpen(block);
+		},
+		async checkCollapsibility() {
+			await this.$nextTick();
+			this.isCollapsible = this.blocks.some((block) => {
+				return this.ref(block).isCollapsible();
+			});
 		},
 		choose(index) {
 			if (this.$helper.object.length(this.fieldsets) === 1) {
