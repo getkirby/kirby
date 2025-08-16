@@ -80,8 +80,8 @@ class ViewButtons
 				);
 			}
 
-			if ($button !== null) {
-				$buttons[] = $button->render();
+			if ($button = $button?->render()) {
+				$buttons[] = $button;
 			}
 		}
 
