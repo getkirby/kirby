@@ -5,9 +5,11 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
+#[CoversClass(Uri::class)]
 class UriTest extends TestCase
 {
 	protected static string $example1 = 'https://getkirby.com';

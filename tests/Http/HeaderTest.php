@@ -3,7 +3,9 @@
 namespace Kirby\Http;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Header::class)]
 class HeaderTest extends TestCase
 {
 	// incomplete list compared to Header::$codes, mostly for

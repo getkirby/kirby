@@ -3,7 +3,9 @@
 namespace Kirby\Http;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Params::class)]
 class ParamsTest extends TestCase
 {
 	public function testConstructWithArray(): void

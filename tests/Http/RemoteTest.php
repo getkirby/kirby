@@ -6,7 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Remote::class)]
 class RemoteTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Http.Remote';

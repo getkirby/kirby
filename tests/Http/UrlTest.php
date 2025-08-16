@@ -4,8 +4,10 @@ namespace Kirby\Http;
 
 use Kirby\Cms\App;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(Url::class)]
 class UrlTest extends TestCase
 {
 	protected string $_yt   = 'http://www.youtube.com/watch?v=9q_aXttJduk';

@@ -3,14 +3,15 @@
 namespace Kirby\Http;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(Route::class)]
 class RouteTest extends TestCase
 {
 	public function _route()
 	{
-		$route = new Route('a', 'GET', function () {
-		});
+		$route = new Route('a', 'GET', function () {});
 		return $route;
 	}
 

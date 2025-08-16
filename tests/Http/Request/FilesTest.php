@@ -3,7 +3,9 @@
 namespace Kirby\Http\Request;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Files::class)]
 class FilesTest extends TestCase
 {
 	public function testMultipleUploads(): void
