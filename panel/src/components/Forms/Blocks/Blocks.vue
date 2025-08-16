@@ -94,7 +94,7 @@ export const props = {
 			default: () => []
 		}
 	},
-	emits: ["input"]
+	emits: ["input", "collapsible-change"]
 };
 
 export default {
