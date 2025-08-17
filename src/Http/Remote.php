@@ -47,13 +47,14 @@ class Remote
 	public string $errorMessage;
 	public array $headers = [];
 	public array $info = [];
-	public array $options = [];
 
 	/**
 	 * @throws \Exception when the curl request failed
 	 */
-	public function __construct(string $url, array $options = [])
-	{
+	public function __construct(
+		string $url,
+		public array $options = []
+	) {
 		$defaults = static::$defaults;
 
 		// use the system CA store by default if
@@ -71,11 +72,8 @@ class Remote
 			$defaults = [...$defaults, ...$app->option('remote', [])];
 		}
 
-		// set all options
-		$this->options = [...$defaults, ...$options];
-
-		// add the url
-		$this->options['url'] = $url;
+		// set all options, incl. url
+		$this->options = [...$defaults, ...$options, 'url' => $url];
 
 		// send the request
 		$this->fetch();
@@ -277,7 +275,7 @@ class Remote
 
 		$query = http_build_query($options['data']);
 
-		if (empty($query) === false) {
+		if ($query !== '') {
 			$url = match (Url::hasQuery($url)) {
 				true    => $url . '&' . $query,
 				default => $url . '?' . $query
@@ -339,7 +337,7 @@ class Remote
 	 */
 	protected function postfields($data)
 	{
-		if (is_object($data) || is_array($data)) {
+		if (is_object($data) === true || is_array($data) === true) {
 			return http_build_query($data);
 		}
 

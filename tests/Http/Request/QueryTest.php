@@ -3,7 +3,9 @@
 namespace Kirby\Http\Request;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Query::class)]
 class QueryTest extends TestCase
 {
 	public function testData(): void

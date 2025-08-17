@@ -5,9 +5,11 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
+#[CoversClass(Uri::class)]
 class UriTest extends TestCase
 {
 	protected static string $example1 = 'https://getkirby.com';
@@ -134,6 +136,13 @@ class UriTest extends TestCase
 
 		$url->setScheme('https');
 		$this->assertSame('https', $url->scheme());
+	}
+
+	public function testIdn(): void
+	{
+		$url = new Uri('https://xn--bcher-kva.ch');
+		$this->assertSame('xn--bcher-kva.ch', $url->host());
+		$this->assertSame('bücher.ch', $url->idn()->host());
 	}
 
 	public function testIndex(): void
@@ -516,5 +525,12 @@ class UriTest extends TestCase
 
 		$uri = new Uri('https://getkirby.com');
 		$this->assertFalse($uri->hasQuery());
+	}
+
+	public function testUnIdn(): void
+	{
+		$url = new Uri('https://bücher.ch');
+		$this->assertSame('bücher.ch', $url->host());
+		$this->assertSame('xn--bcher-kva.ch', $url->unIdn()->host());
 	}
 }

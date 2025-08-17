@@ -3,7 +3,9 @@
 namespace Kirby\Http;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Params::class)]
 class ParamsTest extends TestCase
 {
 	public function testConstructWithArray(): void
@@ -86,6 +88,24 @@ class ParamsTest extends TestCase
 		];
 
 		$this->assertSame($expected, $params);
+	}
+
+	public function testIsEmpty(): void
+	{
+		$params = new Params([]);
+		$this->assertTrue($params->isEmpty());
+
+		$params = new Params(['a' => 'value-a']);
+		$this->assertFalse($params->isEmpty());
+	}
+
+	public function testIsNotEmpty(): void
+	{
+		$params = new Params(['a' => 'value-a']);
+		$this->assertTrue($params->isNotEmpty());
+
+		$params = new Params([]);
+		$this->assertFalse($params->isNotEmpty());
 	}
 
 	public function testToString(): void

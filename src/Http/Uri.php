@@ -216,9 +216,9 @@ class Uri implements Stringable
 
 		if ($app = App::instance(null, true)) {
 			$environment = $app->environment();
-		} else {
-			$environment = new Environment();
 		}
+
+		$environment ??= new Environment();
 
 		return new static($environment->requestUrl(), $props);
 	}
@@ -230,7 +230,7 @@ class Uri implements Stringable
 	 */
 	public function domain(): string|null
 	{
-		if (empty($this->host) === true || $this->host === '/') {
+		if ($this->host === null || $this->host === '' || $this->host === '/') {
 			return null;
 		}
 
@@ -281,8 +281,9 @@ class Uri implements Stringable
 	 */
 	public function idn(): static
 	{
-		if (empty($this->host) === false) {
-			$this->setHost(Idn::decode($this->host));
+		if ($this->isAbsolute() === true) {
+			$host = Idn::decode($this->host);
+			$this->setHost($host);
 		}
 		return $this;
 	}
@@ -295,9 +296,9 @@ class Uri implements Stringable
 	{
 		if ($app = App::instance(null, true)) {
 			$url = $app->url('index');
-		} else {
-			$url = (new Environment())->baseUrl();
 		}
+
+		$url ??= (new Environment())->baseUrl();
 
 		return new static($url, $props);
 	}
@@ -307,7 +308,7 @@ class Uri implements Stringable
 	 */
 	public function isAbsolute(): bool
 	{
-		return empty($this->host) === false;
+		return $this->host !== null && $this->host !== '';
 	}
 
 	/**
@@ -474,7 +475,7 @@ class Uri implements Stringable
 		$url   = $this->base();
 		$slash = true;
 
-		if (empty($url) === true) {
+		if ($url === null || $url === '') {
 			$url   = '/';
 			$slash = false;
 		}
@@ -503,8 +504,9 @@ class Uri implements Stringable
 	 */
 	public function unIdn(): static
 	{
-		if (empty($this->host) === false) {
-			$this->setHost(Idn::encode($this->host));
+		if ($this->isAbsolute() === true) {
+			$host = Idn::encode($this->host);
+			$this->setHost($host);
 		}
 		return $this;
 	}
