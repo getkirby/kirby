@@ -129,9 +129,9 @@ class Autoloader
     {
         $classes = [];
         $this->_dirWalker($root, function ($path, $file) use (&$classes) {
-            $classname = $this->name . '/' . $path;
-            $uc_classname = implode('\\', array_map('ucfirst', explode('/', $classname)));
-            $classes[$uc_classname] = $file;
+            $prefix = array_map('ucfirst', explode('/', $this->name));
+            $classname = A::merge($prefix, explode('/', $path));
+            $classes[implode('\\', $classname)] = $file;
         });
 
         F::loadClasses($classes);
