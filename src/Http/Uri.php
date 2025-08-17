@@ -281,7 +281,7 @@ class Uri implements Stringable
 	 */
 	public function idn(): static
 	{
-		if ($this->host !== null && $this->host !== '') {
+		if ($this->isAbsolute() === true) {
 			$host = Idn::decode($this->host);
 			$this->setHost($host);
 		}
@@ -504,7 +504,7 @@ class Uri implements Stringable
 	 */
 	public function unIdn(): static
 	{
-		if ($this->host !== null && $this->host !== '') {
+		if ($this->isAbsolute() === true) {
 			$host = Idn::encode($this->host);
 			$this->setHost($host);
 		}
