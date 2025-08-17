@@ -875,6 +875,11 @@ trait AppPlugins
 		bool|string $autoloader = false
 	): Plugin|null {
 
+
+		if ($extends === null && $autoloader === false) {
+			return static::$plugins[$name] ?? null;
+		}
+		
 		$root ??= $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
 
 		if ($autoloader) {
@@ -887,10 +892,6 @@ trait AppPlugins
 				root: $root,
 				data: $extends ?? []
 			);
-		}
-
-		if ($extends === null) {
-			return static::$plugins[$name] ?? null;
 		}
 
 		$plugin = new Plugin(
