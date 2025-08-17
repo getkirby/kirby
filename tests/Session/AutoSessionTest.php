@@ -45,6 +45,14 @@ class AutoSessionTest extends TestCase
 		$autoSession = new AutoSession(static::FIXTURES);
 		$this->assertSame(static::FIXTURES, $pathProperty->getValue($sessionsProperty->getValue($autoSession)->store()));
 
+		// default cookie domain
+		$autoSession = new AutoSession($this->store);
+		$this->assertNull($sessionsProperty->getValue($autoSession)->cookieDomain());
+
+		// custom cookie domain
+		$autoSession = new AutoSession($this->store, ['cookieDomain' => 'getkirby.com']);
+		$this->assertSame('getkirby.com', $sessionsProperty->getValue($autoSession)->cookieDomain());
+
 		// default cookie name
 		$autoSession = new AutoSession($this->store);
 		$this->assertSame('kirby_session', $sessionsProperty->getValue($autoSession)->cookieName());

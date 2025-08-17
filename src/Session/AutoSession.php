@@ -26,6 +26,7 @@ class AutoSession
 	 *                       - `durationNormal`: Duration of normal sessions in seconds; defaults to 2 hours
 	 *                       - `durationLong`: Duration of "remember me" sessions in seconds; defaults to 2 weeks
 	 *                       - `timeout`: Activity timeout in seconds (integer or false for none); *only* used for normal sessions; defaults to `1800` (half an hour)
+	 *                       - `cookieDomain`: Domain to set the cookie to (this disables the cookie path restriction); defaults to none (default browser behavior)
 	 *                       - `cookieName`: Name to use for the session cookie; defaults to `kirby_session`
 	 *                       - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
 	 */
@@ -38,6 +39,7 @@ class AutoSession
 			'durationNormal' => 7200,
 			'durationLong'   => 1209600,
 			'timeout'        => 1800,
+			'cookieDomain'   => null,
 			'cookieName'     => 'kirby_session',
 			'gcInterval'     => 100,
 			...$options
@@ -45,8 +47,9 @@ class AutoSession
 
 		// create an internal instance of the low-level Sessions class
 		$this->sessions = new Sessions($store, [
-			'cookieName' => $this->options['cookieName'],
-			'gcInterval' => $this->options['gcInterval']
+			'cookieDomain' => $this->options['cookieDomain'],
+			'cookieName'   => $this->options['cookieName'],
+			'gcInterval'   => $this->options['gcInterval']
 		]);
 	}
 
