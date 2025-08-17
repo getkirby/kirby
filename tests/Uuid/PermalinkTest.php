@@ -11,37 +11,37 @@ class PermalinkTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Uuid.Permalink';
 
-	public function testFrom(): void
+	public function testFor(): void
 	{
-		$permalink = Permalink::from('page://my-page');
+		$permalink = Permalink::for('page://my-page');
+		$this->assertInstanceOf(Permalink::class, $permalink);
+		$this->assertInstanceOf(PageUuid::class, $permalink->uuid());
+	}
+
+	public function testParse(): void
+	{
+		$permalink = Permalink::from('https://getkirby.com/@/page/my-page');
 		$this->assertInstanceOf(Permalink::class, $permalink);
 		$this->assertInstanceOf(PageUuid::class, $permalink->uuid());
 	}
 
 	public function testModel(): void
 	{
-		$permalink = Permalink::from('page://my-page');
+		$permalink = Permalink::for('page://my-page');
 		$this->assertInstanceOf(Page::class, $permalink->model());
 
-		$permalink = Permalink::from('file://my-file');
+		$permalink = Permalink::for('file://my-file');
 		$this->assertInstanceOf(File::class, $permalink->model());
 
 		Uuids::cache()->flush();
 
-		$permalink = Permalink::from('page://my-page');
+		$permalink = Permalink::for('page://my-page');
 		$this->assertNull($permalink->model(true));
-	}
-
-	public function testParse(): void
-	{
-		$permalink = Permalink::parse('https://getkirby.com/@/page/my-page');
-		$this->assertInstanceOf(Permalink::class, $permalink);
-		$this->assertInstanceOf(PageUuid::class, $permalink->uuid());
 	}
 
 	public function testUrl(): void
 	{
-		$permalink = Permalink::from('page://my-page');
+		$permalink = Permalink::for('page://my-page');
 		$this->assertSame('https://getkirby.com/@/page/my-page', $permalink->url());
 	}
 

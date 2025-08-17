@@ -24,7 +24,7 @@ class Permalink
 	) {
 	}
 
-	public static function from(string $uuid): static|null
+	public static function for(string $uuid): static|null
 	{
 		if ($uuid = Uuid::for($uuid)) {
 			return new static($uuid);
@@ -33,22 +33,20 @@ class Permalink
 		return null;
 	}
 
-	public function model(bool $lazy = false): Page|File|null
-	{
-		return $this->uuid->model($lazy);
-	}
-
-	public static function parse(string $url): static|null
+	public static function from(string $url): static|null
 	{
 		if ($path = Str::after($url, '/@/')) {
 			$path = explode('/', $path);
 
-			if ($uuid = Uuid::for($path[0] . '://' . $path[1])) {
-				return new static($uuid);
-			}
+			return static::for($path[0] . '://' . $path[1]);
 		}
 
 		return null;
+	}
+
+	public function model(bool $lazy = false): Page|File|null
+	{
+		return $this->uuid->model($lazy);
 	}
 
 	public function url(): string

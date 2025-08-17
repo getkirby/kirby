@@ -503,7 +503,7 @@ return function (App $app) {
 							$url = $element->getAttribute($attribute)
 						) {
 							try {
-								$permalink = Permalink::parse($url);
+								$permalink = Permalink::from($url);
 
 								if ($url = $permalink?->model()?->url()) {
 									$element->setAttribute($attribute, $url);

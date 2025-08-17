@@ -93,7 +93,7 @@ class LanguageRouter
 			'method'  => 'ALL',
 			'env'     => 'site',
 			'action'  => function (string $languageCode, string $type, string $id) use ($kirby, $language) {
-				$permalink = Permalink::from($type . '://' . $id);
+				$permalink = Permalink::for($type . '://' . $id);
 
 				// try to resolve to model, but only from UUID cache;
 				// this ensures that only existing UUIDs can be queried

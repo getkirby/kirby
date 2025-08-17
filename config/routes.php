@@ -134,7 +134,7 @@ return function (App $kirby) {
 			'method'  => 'ALL',
 			'env'     => 'site',
 			'action'  => function (string $type, string $id) use ($kirby) {
-				$permalink = Permalink::from($type . '://' . $id);
+				$permalink = Permalink::for($type . '://' . $id);
 
 				// try to resolve to model, but only from UUID cache;
 				// this ensures that only existing UUIDs can be queried
