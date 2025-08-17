@@ -417,17 +417,16 @@ class Request
 		// both variants need to be checked separately
 		// because empty strings are treated as invalid
 		// but the `??` operator wouldn't do the fallback
+		$option = $this->options['auth'] ?? null;
 
-		if ($option = $this->options['auth'] ?? null) {
-			if ($option !== '') {
-				return $option;
-			}
+		if (is_string($option) === true && $option !== '') {
+			return $option;
 		}
 
-		if ($header = $this->header('authorization')) {
-			if ($header !== '') {
-				return $header;
-			}
+		$header = $this->header('authorization');
+
+		if (is_string($header) === true && $header !== '') {
+			return $header;
 		}
 
 		return null;
