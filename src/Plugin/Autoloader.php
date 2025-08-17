@@ -19,7 +19,7 @@ use Throwable;
 class Autoloader
 {
 
-    public array $extends = [];
+    public array $data = [];
 
     /**
      * @param string $name Plugin name
@@ -29,14 +29,13 @@ class Autoloader
      */
     public function __construct(
         public string $name,
-        public string $root,
-        public array $data = []
+        public string $root
     ) {
 
         //Load classes before everything else
         $classfolder = $root . '/classes/';
         if (Dir::exists($classfolder)) {
-            $this->_classes($classfolder);
+            $this->loadClasses($classfolder);
         }
 
         foreach (Dir::dirs($this->root) as $dir) {
@@ -101,7 +100,7 @@ class Autoloader
     public function autoload(string $root)
     {
         $this->_dirWalker($root, function ($path, $file) {
-            $this->extends[$path] = $this->_read($file);
+            $this->data[$path] = $this->_read($file);
         });
     }
 
@@ -116,7 +115,7 @@ class Autoloader
 
             $name = F::relativepath($file);
             //Set YAML-File or they content
-            $this->extends['blueprints'][$path] = (F::extension($file) === 'yml') ? $file : $this->_read($file);
+            $this->data['blueprints'][$path] = (F::extension($file) === 'yml') ? $file : $this->_read($file);
         });
     }
 
@@ -125,7 +124,7 @@ class Autoloader
      * @param string $root 
      * @return void 
      */
-    public function _classes(string $root)
+    public function loadClasses(string $root)
     {
         $classes = [];
         $this->_dirWalker($root, function ($path, $file) use (&$classes) {
@@ -146,7 +145,7 @@ class Autoloader
     public function i18n(string $root)
     {
         $this->_dirWalker($root, function ($path, $file) {
-            $this->extends['translations'][$path] = $this->_read($file);
+            $this->data['translations'][$path] = $this->_read($file);
         });
     }
 
@@ -158,7 +157,7 @@ class Autoloader
     public function fields(string $root)
     {
         $this->_dirWalker($root, function ($path, $file) {
-            $this->extends['fields'][$path] = $this->_read($file);
+            $this->data['fields'][$path] = $this->_read($file);
         });
     }
 
@@ -170,7 +169,7 @@ class Autoloader
     public function sections(string $root)
     {
         $this->_dirWalker($root, function ($path, $file) {
-            $this->extends['sections'][$path] = $this->_read($file);
+            $this->data['sections'][$path] = $this->_read($file);
         });
     }
 
@@ -182,7 +181,7 @@ class Autoloader
     public function snippets(string $root)
     {
         $this->_dirWalker($root, function ($path, $file) {
-            $this->extends['snippets'][$path] = $file;
+            $this->data['snippets'][$path] = $file;
         });
     }
 
@@ -194,7 +193,7 @@ class Autoloader
     public function templates(string $root)
     {
         $this->_dirWalker($root, function ($path, $file) {
-            $this->extends['templates'][$path] = $file;
+            $this->data['templates'][$path] = $file;
         });
     }
 
@@ -210,10 +209,10 @@ class Autoloader
     }
 
     /**
-     * Returns the extension data
+     * Returns the autoloaded data
      *  @return array  */
     public function toArray(): array
     {
-        return A::merge($this->extends, $this->data);
+        return $this->data;
     }
 }

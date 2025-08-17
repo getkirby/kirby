@@ -887,11 +887,11 @@ trait AppPlugins
 			//Allow to apply custom Autoloader
 			$autolader_class = is_bool($autoloader) ? Autoloader::class : $autoloader;
 
-			$extends = $autolader_class::load(
+			$extends = A::merge($autolader_class::load(
 				name: $name,
 				root: $root,
 				data: $extends ?? []
-			);
+			), $extends);
 		}
 
 		$plugin = new Plugin(
