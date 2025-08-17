@@ -13,6 +13,7 @@ use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
 use Kirby\Plugin\License;
 use Kirby\Plugin\Plugin;
+use Kirby\Plugin\Autoloader;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection as ToolkitCollection;
@@ -871,8 +872,23 @@ trait AppPlugins
 		string|null $root = null,
 		string|null $version = null,
 		Closure|string|array|null $license = null,
-		bool|array $autoloader = false
+		bool|string $autoloader = false
 	): Plugin|null {
+
+		$root ??= $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
+
+		if ($autoloader) {
+
+			//Allow to apply custom Autoloader
+			$autolader_class = is_bool($autoloader) ? Autoloader::class : $autoloader;
+
+			$extends = $autolader_class::load(
+				name: $name,
+				root: $root,
+				data: $extends ?? []
+			);
+		}
+
 		if ($extends === null) {
 			return static::$plugins[$name] ?? null;
 		}
@@ -883,9 +899,8 @@ trait AppPlugins
 			info:    $info,
 			license: $license,
 			// TODO: Remove fallback to $extends in v7
-			root:    $root ?? $extends['root'] ?? dirname(debug_backtrace()[0]['file']),
-			version: $version,
-			autoloader: $autoloader
+			root:    $root,
+			version: $version
 		);
 
 		$name = $plugin->name();

@@ -44,7 +44,6 @@ class Plugin
 		Closure|string|array|null $license = null,
 		protected string|null $root = null,
 		protected string|null $version = null,
-		protected bool|array $autoloader = false,
 	) {
 		static::validateName($name);
 
@@ -72,15 +71,7 @@ class Plugin
 		$info          = Data::read($this->manifest(), fail: false);
 		$this->info    = [...$info, ...$this->info];
 		$this->license = $license ?? $this->info['license'] ?? '-';
-
-		if ($autoloader) {
-			$this->extends = Autoloader::load(
-				name:   $this->name,
-				root:   $this->root,
-				data:   $this->extends,
-				tasks:  $autoloader
-			);
-		} 
+		
 	}
 
 	/**
