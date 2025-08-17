@@ -37,6 +37,23 @@ class Query extends Obj implements Stringable
 		return $this->isEmpty() === false;
 	}
 
+	/**
+	 * Merges the current query with the given query
+	 * @since 5.1.0
+	 *
+	 * @return $this
+	 */
+	public function merge(string|array|null $query): static
+	{
+		$query = new static($query);
+
+		foreach ($query as $key => $value) {
+			$this->$key = $value;
+		}
+
+		return $this;
+	}
+
 	public function toString(bool $questionMark = false): string
 	{
 		$query = http_build_query($this, '', '&', PHP_QUERY_RFC3986);

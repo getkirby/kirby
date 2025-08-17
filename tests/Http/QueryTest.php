@@ -53,6 +53,15 @@ class QueryTest extends TestCase
 		$this->assertFalse($query->isNotEmpty());
 	}
 
+	public function testMerge(): void
+	{
+		$params = new Query(['foo' => 'bar', 'bar' => 'baz']);
+		$params->merge(['bar' => 'foo', 'baz' => 'qux']);
+		$this->assertSame('bar', $params->foo);
+		$this->assertSame('foo', $params->bar);
+		$this->assertSame('qux', $params->baz);
+	}
+
 	public function testToString(): void
 	{
 		$query = new Query([
