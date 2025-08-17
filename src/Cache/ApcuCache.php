@@ -16,8 +16,7 @@ use APCUIterator;
 class ApcuCache extends Cache
 {
 	/**
-	 * Returns whether the cache is ready to
-	 * store values
+	 * Returns whether the cache is ready to store values
 	 */
 	public function enabled(): bool
 	{
@@ -76,8 +75,8 @@ class ApcuCache extends Cache
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		$key     = $this->key($key);
-		$value   = (new Value($value, $minutes))->toJson();
+		$value   = new Value($value, $minutes);
 		$expires = $this->expiration($minutes);
-		return apcu_store($key, $value, $expires);
+		return apcu_store($key, $value->toJson(), $expires);
 	}
 }

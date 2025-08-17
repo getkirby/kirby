@@ -59,7 +59,10 @@ class RedisCache extends Cache
 
 		// sets the prefix if defined
 		if ($prefix = $options['prefix'] ?? null) {
-			$this->connection->setOption(Redis::OPT_PREFIX, rtrim($prefix, '/') . '/');
+			$this->connection->setOption(
+				Redis::OPT_PREFIX,
+				rtrim($prefix, '/') . '/'
+			);
 		}
 
 		// selects the database if defined

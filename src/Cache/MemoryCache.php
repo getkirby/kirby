@@ -19,8 +19,7 @@ class MemoryCache extends Cache
 	protected array $store = [];
 
 	/**
-	 * Returns whether the cache is ready to
-	 * store values
+	 * Returns whether the cache is ready to store values
 	 */
 	public function enabled(): bool
 	{

@@ -14,8 +14,7 @@ namespace Kirby\Cache;
 class NullCache extends Cache
 {
 	/**
-	 * Returns whether the cache is ready to
-	 * store values
+	 * Returns whether the cache is ready to store values
 	 */
 	public function enabled(): bool
 	{

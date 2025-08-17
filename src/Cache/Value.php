@@ -17,21 +17,6 @@ use Throwable;
  */
 class Value
 {
-	/**
-	 * Cached value
-	 */
-	protected mixed $value;
-
-	/**
-	 * the number of minutes until the value expires
-	 * @todo Rename this property to $expiry to reflect
-	 *       both minutes and absolute timestamps
-	 */
-	protected int $minutes;
-
-	/**
-	 * Creation timestamp
-	 */
 	protected int $created;
 
 	/**
@@ -39,13 +24,16 @@ class Value
 	 *
 	 * @param int $minutes the number of minutes until the value expires
 	 *                     or an absolute UNIX timestamp
-	 * @param int|null $created the UNIX timestamp when the value has been created
-	 *                          (defaults to the current time)
+	 * @param int|null $created the UNIX timestamp when the value has been created  (defaults to the current time)
+	 *
+	 * @todo Rename $minutes property to $expiry to reflect
+	 *       both minutes and absolute timestamps
 	 */
-	public function __construct($value, int $minutes = 0, int|null $created = null)
-	{
-		$this->value   = $value;
-		$this->minutes = $minutes;
+	public function __construct(
+		protected mixed $value,
+		protected int $minutes = 0,
+		int|null $created = null
+	) {
 		$this->created = $created ?? time();
 	}
 

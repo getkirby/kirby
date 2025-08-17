@@ -51,8 +51,7 @@ class FileCache extends Cache
 	}
 
 	/**
-	 * Returns whether the cache is ready to
-	 * store values
+	 * Returns whether the cache is ready to store values
 	 */
 	public function enabled(): bool
 	{
@@ -126,9 +125,9 @@ class FileCache extends Cache
 	 */
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
-		$file = $this->file($key);
-
-		return F::write($file, (new Value($value, $minutes))->toJson());
+		$file  = $this->file($key);
+		$value = new Value($value, $minutes);
+		return F::write($file, $value->toJson());
 	}
 
 	/**
@@ -137,10 +136,13 @@ class FileCache extends Cache
 	 */
 	public function retrieve(string $key): Value|null
 	{
-		$file  = $this->file($key);
-		$value = F::read($file);
+		$file = $this->file($key);
 
-		return $value ? Value::fromJson($value) : null;
+		if ($value = F::read($file)) {
+			return Value::fromJson($value);
+		}
+
+		return null;
 	}
 
 	/**
@@ -186,7 +188,10 @@ class FileCache extends Cache
 			$dir = rtrim($dir, '/\/');
 
 			// checks all directory segments until reaching the root directory
-			while (Str::startsWith($dir, $this->root()) === true && $dir !== $this->root()) {
+			while (
+				Str::startsWith($dir, $this->root()) === true &&
+				$dir !== $this->root()
+			) {
 				$files = scandir($dir);
 
 				if ($files === false) {
@@ -199,7 +204,8 @@ class FileCache extends Cache
 					// continue with the next level up
 					$dir = dirname($dir);
 				} else {
-					// no need to continue with the next level up as `$dir` was not deleted
+					// no need to continue with the next level up
+					// as `$dir` was not deleted
 					break;
 				}
 			}
