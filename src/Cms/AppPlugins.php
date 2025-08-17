@@ -879,7 +879,7 @@ trait AppPlugins
 		if ($extends === null && $autoloader === false) {
 			return static::$plugins[$name] ?? null;
 		}
-		
+
 		$root ??= $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
 
 		if ($autoloader) {
@@ -895,12 +895,12 @@ trait AppPlugins
 		}
 
 		$plugin = new Plugin(
-			name:    $name,
+			name: $name,
 			extends: $extends,
-			info:    $info,
+			info: $info,
 			license: $license,
 			// TODO: Remove fallback to $extends in v7
-			root:    $root,
+			root: $root,
 			version: $version
 		);
 

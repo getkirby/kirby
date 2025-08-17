@@ -20,7 +20,7 @@ class Autoloader
 {
 
     public array $extends = [];
-    
+
     /**
      * @param string $name Plugin name
      * @param string $root The root path of the plugin
@@ -39,14 +39,11 @@ class Autoloader
             $this->_classes($classfolder);
         }
 
-        foreach (Dir::dirs($this->root) as $dir)
-        {
+        foreach (Dir::dirs($this->root) as $dir) {
             if (method_exists($this, $dir)) {
                 $this->$dir($this->root . '/' . $dir . '/');
             }
-            
         }
-
     }
 
     /**
@@ -55,7 +52,8 @@ class Autoloader
      * @param Closure $fnc Callback for each file
      * @return void 
      */
-    public function _dirWalker(string $root, Closure $fnc) {
+    public function _dirWalker(string $root, Closure $fnc)
+    {
 
         foreach (Dir::index($root, true) as $path) {
 
@@ -91,7 +89,7 @@ class Autoloader
             $name = F::relativepath($file, $this->root);
             throw new Exception("The content for '$name' cannot be resolved by the autoloader");
         }
-        
+
         return $content;
     }
 
@@ -218,5 +216,4 @@ class Autoloader
     {
         return A::merge($this->extends, $this->data);
     }
-
 }
