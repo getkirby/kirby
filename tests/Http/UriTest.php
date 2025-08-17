@@ -138,6 +138,13 @@ class UriTest extends TestCase
 		$this->assertSame('https', $url->scheme());
 	}
 
+	public function testIdn(): void
+	{
+		$url = new Uri('https://xn--bcher-kva.ch');
+		$this->assertSame('xn--bcher-kva.ch', $url->host());
+		$this->assertSame('bücher.ch', $url->idn()->host());
+	}
+
 	public function testIndex(): void
 	{
 		new App([
@@ -518,5 +525,12 @@ class UriTest extends TestCase
 
 		$uri = new Uri('https://getkirby.com');
 		$this->assertFalse($uri->hasQuery());
+	}
+
+	public function testUnIdn(): void
+	{
+		$url = new Uri('https://bücher.ch');
+		$this->assertSame('bücher.ch', $url->host());
+		$this->assertSame('xn--bcher-kva.ch', $url->unIdn()->host());
 	}
 }
