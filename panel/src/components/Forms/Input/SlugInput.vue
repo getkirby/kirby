@@ -2,10 +2,10 @@
 	<k-string-input
 		v-bind="$props"
 		:spellcheck="false"
-		:value="slug"
+		:value="value"
 		autocomplete="off"
 		class="k-slug-input"
-		@input="$emit('input', $event)"
+		@input="onInput"
 	/>
 </template>
 
@@ -50,7 +50,6 @@ export default {
 	mixins: [props],
 	data() {
 		return {
-			slug: this.sluggify(this.value),
 			slugs: this.$panel.language.rules ?? this.$panel.system.slugs,
 			syncValue: null
 		};
@@ -71,19 +70,14 @@ export default {
 				}
 
 				this.syncValue = newValue[this.sync];
-				this.onInput(this.sluggify(this.syncValue));
+				this.onInput(this.syncValue);
 			},
 			deep: true,
 			immediate: true
-		},
-		value(newValue) {
-			newValue = this.sluggify(newValue);
-
-			if (newValue !== this.slug) {
-				this.slug = newValue;
-				this.$emit("input", this.slug);
-			}
 		}
+	},
+	mounted() {
+		this.onInput(this.value);
 	},
 	methods: {
 		sluggify(value) {
@@ -94,8 +88,7 @@ export default {
 			);
 		},
 		onInput(value) {
-			this.slug = this.sluggify(value);
-			this.$emit("input", this.slug);
+			this.$emit("input", this.sluggify(value));
 		}
 	}
 };
