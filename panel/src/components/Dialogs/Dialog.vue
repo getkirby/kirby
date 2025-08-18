@@ -118,4 +118,10 @@ export default {
 	justify-content: center;
 	align-items: center;
 }
+
+/* Dropzone */
+.k-dialog > .k-dropzone::after {
+	border-radius: var(--dialog-rounded);
+	outline-offset: -2px;
+}
 </style>

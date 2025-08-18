@@ -59,6 +59,7 @@ export default {
 	emits: ["cancel", "crumb", "drop", "submit", "tab"],
 	computed: {
 		hasDropzone() {
+			return true;
 			const instance = getCurrentInstance();
 			return instance?.vnode?.props?.onDrop !== undefined;
 		}
@@ -98,7 +99,12 @@ export default {
 	container-type: inline-size;
 }
 
+/* Dropzone */
 .k-drawer > .k-dropzone {
 	min-height: 100%;
+}
+.k-drawer > .k-dropzone::after {
+	border-radius: 0;
+	outline-offset: -2px;
 }
 </style>
