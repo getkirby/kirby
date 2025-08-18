@@ -66,6 +66,44 @@ class Section extends Component
 		return null;
 	}
 
+	/**
+	 * Returns optional dialog routes for the field
+	 * @since 6.0.0
+	 */
+	public function dialogs(): array
+	{
+		if (isset($this->options['dialogs']) === false) {
+			return [];
+		}
+
+		if ($this->options['dialogs'] instanceof Closure) {
+			return $this->options['dialogs']->call($this);
+		}
+
+		throw new InvalidArgumentException(
+			message: 'Dialogs of section "' . $this->name() . '" must be defined as a closure'
+		);
+	}
+
+	/**
+	 * Returns optional drawer routes for the field
+	 * @since 6.0.0
+	 */
+	public function drawers(): array
+	{
+		if (isset($this->options['drawers']) === false) {
+			return [];
+		}
+
+		if ($this->options['drawers'] instanceof Closure) {
+			return $this->options['drawers']->call($this);
+		}
+
+		throw new InvalidArgumentException(
+			message: 'Drawers of section "' . $this->name() . '" must be defined as a closure'
+		);
+	}
+
 	public function errors(): array
 	{
 		if (array_key_exists('errors', $this->methods) === true) {

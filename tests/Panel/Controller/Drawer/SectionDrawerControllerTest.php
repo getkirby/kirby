@@ -3,18 +3,21 @@
 namespace Kirby\Panel\Controller\Drawer;
 
 use Exception;
-use Kirby\Form\FieldClass;
+use Kirby\Cms\Page;
+use Kirby\Cms\Section;
 use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(FieldDrawerController::class)]
-class FieldDrawerControllerTest extends TestCase
+#[CoversClass(SectionDrawerController::class)]
+class SectionDrawerControllerTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.FieldDrawerController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Drawer.SectionDrawerController';
 
-	protected function field(): FieldClass
+	protected function section(): Section
 	{
-		return new class ([]) extends FieldClass {
+		$model = new Page(['slug' => 'test']);
+
+		return new class ('info', ['model' => $model]) extends Section {
 			public function drawers(): array
 			{
 				return [
@@ -43,8 +46,8 @@ class FieldDrawerControllerTest extends TestCase
 			],
 			'blueprints' => [
 				'pages/default' => [
-					'fields' => [
-						'test' => 'text'
+					'sections' => [
+						'test' => 'info'
 					]
 				]
 			]
@@ -52,17 +55,17 @@ class FieldDrawerControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$controller = FieldDrawerController::factory(
+		$controller = SectionDrawerController::factory(
 			model: 'pages/test',
 			filename: 'test',
-			field: 'test'
+			section: 'test'
 		);
 
-		$this->assertInstanceOf(FieldDrawerController::class, $controller);
+		$this->assertInstanceOf(SectionDrawerController::class, $controller);
 		$page = $this->app->page('test');
 
-		$this->assertSame($page, $controller->field->model());
-		$this->assertSame('test', $controller->field->name());
+		$this->assertSame($page, $controller->section->model());
+		$this->assertSame('test', $controller->section->name());
 		$this->assertSame('test', $controller->path);
 	}
 
@@ -81,8 +84,8 @@ class FieldDrawerControllerTest extends TestCase
 			],
 			'blueprints' => [
 				'files/default' => [
-					'fields' => [
-						'test' => 'text'
+					'sections' => [
+						'test' => 'info'
 					]
 				]
 			]
@@ -90,43 +93,43 @@ class FieldDrawerControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$controller = FieldDrawerController::factory(
+		$controller = SectionDrawerController::factory(
 			model: 'pages/test',
 			filename: 'test.jpg',
-			field: 'test',
+			section: 'test',
 			path: 'test'
 		);
 
-		$this->assertInstanceOf(FieldDrawerController::class, $controller);
+		$this->assertInstanceOf(SectionDrawerController::class, $controller);
 		$file = $this->app->page('test')->file('test.jpg');
-		$this->assertSame($file, $controller->field->model());
-		$this->assertSame('test', $controller->field->name());
+		$this->assertSame($file, $controller->section->model());
+		$this->assertSame('test', $controller->section->name());
 		$this->assertSame('test', $controller->path);
 	}
 
 	public function testLoad(): void
 	{
-		$field = $this->field();
+		$section = $this->section();
 
-		$controller = new FieldDrawerController($field, 'a');
+		$controller = new SectionDrawerController($section, 'a');
 		$response   = $controller->load();
 		$this->assertSame(['drawer-a' => 'load'], $response);
 
-		$controller = new FieldDrawerController($field, 'b');
+		$controller = new SectionDrawerController($section, 'b');
 		$response   = $controller->load();
 		$this->assertSame(['drawer-b' => 'load'], $response);
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "c" and request method: "GET"');
 
-		$controller = new FieldDrawerController($field, 'c');
+		$controller = new SectionDrawerController($section, 'c');
 		$controller->load();
 	}
 
 	public function testRoutes(): void
 	{
-		$field      = $this->field();
-		$controller = new FieldDrawerController($field);
+		$section    = $this->section();
+		$controller = new SectionDrawerController($section);
 		$routes     = $controller->routes();
 
 		$this->assertCount(4, $routes);
@@ -142,20 +145,20 @@ class FieldDrawerControllerTest extends TestCase
 
 	public function testSubmit(): void
 	{
-		$field = $this->field();
+		$section = $this->section();
 
-		$controller = new FieldDrawerController($field, 'a');
+		$controller = new SectionDrawerController($section, 'a');
 		$response   = $controller->submit();
 		$this->assertSame(['drawer-a' => 'submit'], $response);
 
-		$controller = new FieldDrawerController($field, 'b');
+		$controller = new SectionDrawerController($section, 'b');
 		$response   = $controller->submit();
 		$this->assertSame(['drawer-b' => 'submit'], $response);
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "c" and request method: "POST"');
 
-		$controller = new FieldDrawerController($field, 'c');
+		$controller = new SectionDrawerController($section, 'c');
 		$controller->submit();
 	}
 }

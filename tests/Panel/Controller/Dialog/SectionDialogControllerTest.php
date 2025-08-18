@@ -3,18 +3,21 @@
 namespace Kirby\Panel\Controller\Dialog;
 
 use Exception;
-use Kirby\Form\FieldClass;
+use Kirby\Cms\Page;
+use Kirby\Cms\Section;
 use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(FieldDialogController::class)]
-class FieldDialogControllerTest extends TestCase
+#[CoversClass(SectionDialogController::class)]
+class SectionDialogControllerTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FieldDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.SectionDialogController';
 
-	protected function field(): FieldClass
+	protected function section(): Section
 	{
-		return new class ([]) extends FieldClass {
+		$model = new Page(['slug' => 'test']);
+
+		return new class ('info', ['model' => $model]) extends Section {
 			public function dialogs(): array
 			{
 				return [
@@ -43,8 +46,8 @@ class FieldDialogControllerTest extends TestCase
 			],
 			'blueprints' => [
 				'pages/default' => [
-					'fields' => [
-						'test' => 'text'
+					'sections' => [
+						'test' => 'info'
 					]
 				]
 			]
@@ -52,17 +55,17 @@ class FieldDialogControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$controller = FieldDialogController::factory(
+		$controller = SectionDialogController::factory(
 			model: 'pages/test',
 			filename: 'test',
-			field: 'test'
+			section: 'test'
 		);
 
-		$this->assertInstanceOf(FieldDialogController::class, $controller);
+		$this->assertInstanceOf(SectionDialogController::class, $controller);
 		$page = $this->app->page('test');
 
-		$this->assertSame($page, $controller->field->model());
-		$this->assertSame('test', $controller->field->name());
+		$this->assertSame($page, $controller->section->model());
+		$this->assertSame('test', $controller->section->name());
 		$this->assertSame('test', $controller->path);
 	}
 
@@ -81,8 +84,8 @@ class FieldDialogControllerTest extends TestCase
 			],
 			'blueprints' => [
 				'files/default' => [
-					'fields' => [
-						'test' => 'text'
+					'sections' => [
+						'test' => 'info'
 					]
 				]
 			]
@@ -90,43 +93,43 @@ class FieldDialogControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$controller = FieldDialogController::factory(
+		$controller = SectionDialogController::factory(
 			model: 'pages/test',
 			filename: 'test.jpg',
-			field: 'test',
+			section: 'test',
 			path: 'test'
 		);
 
-		$this->assertInstanceOf(FieldDialogController::class, $controller);
+		$this->assertInstanceOf(SectionDialogController::class, $controller);
 		$file = $this->app->page('test')->file('test.jpg');
-		$this->assertSame($file, $controller->field->model());
-		$this->assertSame('test', $controller->field->name());
+		$this->assertSame($file, $controller->section->model());
+		$this->assertSame('test', $controller->section->name());
 		$this->assertSame('test', $controller->path);
 	}
 
 	public function testLoad(): void
 	{
-		$field = $this->field();
+		$section = $this->section();
 
-		$controller = new FieldDialogController($field, 'a');
+		$controller = new SectionDialogController($section, 'a');
 		$response   = $controller->load();
 		$this->assertSame(['dialog-a' => 'load'], $response);
 
-		$controller = new FieldDialogController($field, 'b');
+		$controller = new SectionDialogController($section, 'b');
 		$response   = $controller->load();
 		$this->assertSame(['dialog-b' => 'load'], $response);
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "c" and request method: "GET"');
 
-		$controller = new FieldDialogController($field, 'c');
+		$controller = new SectionDialogController($section, 'c');
 		$controller->load();
 	}
 
 	public function testRoutes(): void
 	{
-		$field      = $this->field();
-		$controller = new FieldDialogController($field);
+		$section    = $this->section();
+		$controller = new SectionDialogController($section);
 		$routes     = $controller->routes();
 
 		$this->assertCount(4, $routes);
@@ -142,20 +145,20 @@ class FieldDialogControllerTest extends TestCase
 
 	public function testSubmit(): void
 	{
-		$field = $this->field();
+		$section = $this->section();
 
-		$controller = new FieldDialogController($field, 'a');
+		$controller = new SectionDialogController($section, 'a');
 		$response   = $controller->submit();
 		$this->assertSame(['dialog-a' => 'submit'], $response);
 
-		$controller = new FieldDialogController($field, 'b');
+		$controller = new SectionDialogController($section, 'b');
 		$response   = $controller->submit();
 		$this->assertSame(['dialog-b' => 'submit'], $response);
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "c" and request method: "POST"');
 
-		$controller = new FieldDialogController($field, 'c');
+		$controller = new SectionDialogController($section, 'c');
 		$controller->submit();
 	}
 }
