@@ -102,6 +102,8 @@
 	"error.content.lock.replace": "The version is locked and cannot be replaced",
 	"error.content.lock.update": "The version is locked and cannot be updated",
 
+	"error.content.unlock.invalidVersion": "Only the changes version can be unlocked",
+
 	"error.entries.max.plural": "You must not add more than {max} entries",
 	"error.entries.max.singular": "You must not add more than one entry",
 	"error.entries.min.plural": "You must add at least {min} entries",
