@@ -346,7 +346,7 @@ export default {
 		 */
 		onCellUpdate({ columnIndex, rowIndex, value }) {
 			this.values[rowIndex][columnIndex] = value;
-			this.$emit("input", this.values);
+			this.$emit("input", this.values, rowIndex, columnIndex);
 		},
 		/**
 		 * When a header cell is clicked

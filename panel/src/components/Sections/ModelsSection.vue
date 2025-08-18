@@ -39,6 +39,7 @@
 					v-on="canAdd ? { empty: onAdd } : {}"
 					@action="onAction"
 					@change="onChange"
+					@input="onInput"
 					@select="onSelect"
 					@sort="onSort"
 					@paginate="onPaginate"
@@ -273,6 +274,15 @@ export default {
 		},
 		onChange() {},
 		onDrop() {},
+		onInput(values, rowIndex, columnIndex) {
+			const row = values[rowIndex];
+
+			this.$api.post(this.options.apiUrl + "/update", {
+				model: row.id,
+				field: columnIndex,
+				value: row[columnIndex]
+			});
+		},
 		onPaginate(pagination) {
 			// update pagination page
 			sessionStorage.setItem(this.paginationId, pagination.page);
