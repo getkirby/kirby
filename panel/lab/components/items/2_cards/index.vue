@@ -10,7 +10,6 @@
 			<k-items
 				:items="selectableItems"
 				:selecting="true"
-				:selected="selected"
 				layout="cards"
 				@selected="selected = $event"
 			/>
@@ -20,7 +19,8 @@
 		<k-lab-example label="Selected">
 			<k-items
 				:items="selectableItems"
-				selecting="single"
+				:selecting="true"
+				selectmode="single"
 				:selected="selected"
 				layout="cards"
 				@selected="selected = $event"

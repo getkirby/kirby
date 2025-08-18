@@ -7,7 +7,7 @@
 		<table
 			:data-disabled="disabled"
 			:data-indexed="hasIndexColumn"
-			:data-selecting="Boolean(selecting)"
+			:data-selecting="selecting"
 		>
 			<!-- Header row -->
 			<thead>
@@ -139,11 +139,11 @@
 							data-mobile="true"
 							class="k-table-options-column"
 						>
-							<template v-if="selecting !== false">
+							<template v-if="selecting">
 								<label class="k-table-select-checkbox">
 									<input
 										:disabled="row.selectable === false"
-										:type="selecting === 'single' ? 'radio' : 'checkbox'"
+										:type="selectmode === 'single' ? 'radio' : 'checkbox'"
 										:checked="isSelected(row)"
 										@change="$emit('select', row, rowIndex)"
 									/>
@@ -152,7 +152,7 @@
 
 							<slot name="options" v-bind="{ row, rowIndex }">
 								<k-options-dropdown
-									v-if="selecting === false"
+									v-if="!selecting"
 									:options="row.options ?? options"
 									:text="(row.options ?? options).length > 1"
 									@option="onOption($event, row, rowIndex)"
@@ -234,10 +234,7 @@ export default {
 		 * @since 5.0.0
 		 * @values "single", "multiple", false
 		 */
-		selecting: {
-			type: [String, Boolean],
-			default: false
-		},
+		selecting: Boolean,
 		/**
 		 * Selected items
 		 * @since 6.0.0
@@ -245,6 +242,14 @@ export default {
 		selected: {
 			type: Array,
 			default: () => []
+		},
+		/**
+		 * @since 6.0.0
+		 * @values "single", "multiple"
+		 */
+		selectmode: {
+			type: String,
+			default: "multiple"
 		},
 		/**
 		 * Whether table is sortable

@@ -37,9 +37,10 @@
 					:image="imageOptions(item)"
 					:layout="layout"
 					:link="link ? item.link : false"
-					:selecting="selecting"
 					:selectable="item.selectable !== false"
+					:selecting="selecting"
 					:selected="isSelected(item)"
+					:selectmode="selectmode"
 					:sortable="sortable && item.sortable !== false"
 					:theme="item.theme ?? theme"
 					:width="item.column"
@@ -122,12 +123,8 @@ export const props = {
 		/**
 		 * Whether items are in selecting mode
 		 * @since 5.0.0
-		 * @values "single", "multiple", false
 		 */
-		selecting: {
-			type: [String, Boolean],
-			default: false
-		},
+		selecting: Boolean,
 		/**
 		 * Array of selected items
 		 * @since 6.0.0
@@ -135,6 +132,14 @@ export const props = {
 		selected: {
 			type: Array,
 			default: () => []
+		},
+		/**
+		 * @since 6.0.0
+		 * @values "single", "multiple"
+		 */
+		selectmode: {
+			type: String,
+			default: "multiple"
 		},
 		/**
 		 * Whether items are generally sortable.
@@ -194,6 +199,7 @@ export default {
 				rows: this.items,
 				selecting: this.selecting,
 				selected: this.selected,
+				selectmode: this.selectmode,
 				sortable: this.sortable
 			};
 		}
@@ -215,7 +221,7 @@ export default {
 		onSelected(item) {
 			this.$emit(
 				"selected",
-				updateSelection(this.selected, item, this.selecting)
+				updateSelection(this.selected, item, this.selectmode)
 			);
 		},
 		imageOptions(item) {

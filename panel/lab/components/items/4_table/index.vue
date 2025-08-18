@@ -13,7 +13,6 @@
 				:columns="columns"
 				:items="selectableItems"
 				:selecting="true"
-				:selected="selected"
 				layout="table"
 				@selected="selected = $event"
 			/>
@@ -24,7 +23,8 @@
 			<k-items
 				:columns="columns"
 				:items="selectableItems"
-				selecting="single"
+				:selecting="true"
+				selectmode="single"
 				:selected="selected"
 				layout="table"
 				@selected="selected = $event"

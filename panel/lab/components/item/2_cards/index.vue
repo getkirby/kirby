@@ -113,39 +113,43 @@
 				text="This is a nice item"
 			/>
 		</k-lab-example>
-		<k-lab-example label="Selecting: single">
+		<k-lab-example label="Selectmode: single">
 			<k-item
 				:image="{ src: 'https://picsum.photos/800/600' }"
-				selecting="single"
+				:selecting="true"
+				selectmode="single"
 				layout="cards"
 				info="With some info"
 				text="This is a nice item"
 			/>
 		</k-lab-example>
-		<k-lab-example label="Selecting: single & selected">
+		<k-lab-example label="Selectmode: single & selected">
 			<k-item
 				:image="{ src: 'https://picsum.photos/800/600' }"
-				selecting="single"
+				:selecting="true"
+				selectmode="single"
 				:selected="true"
 				layout="cards"
 				info="With some info"
 				text="This is a nice item"
 			/>
 		</k-lab-example>
-		<k-lab-example label="Selecting: single & not selectable">
+		<k-lab-example label="Selectmode: single & not selectable">
 			<k-item
 				:image="{ src: 'https://picsum.photos/800/600' }"
-				selecting="single"
+				:selecting="true"
+				selectmode="single"
 				:selectable="false"
 				layout="cards"
 				info="With some info"
 				text="This is a nice item"
 			/>
 		</k-lab-example>
-		<k-lab-example label="Selecting: single & not selectable, but selected">
+		<k-lab-example label="Selectmode: single & not selectable, but selected">
 			<k-item
 				:image="{ src: 'https://picsum.photos/800/600' }"
-				selecting="single"
+				:selecting="true"
+				selectmode="single"
 				:selectable="false"
 				:selected="true"
 				layout="cards"

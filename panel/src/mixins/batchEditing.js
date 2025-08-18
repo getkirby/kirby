@@ -83,7 +83,7 @@ export default {
 			throw new Error("Not implemented");
 		},
 		onSelect(item) {
-			this.selected = updateSelection(this.selected, item, this.selecting);
+			this.selected = updateSelection(this.selected, item);
 		},
 		onSelectToggle() {
 			this.isSelecting ? this.stopSelecting() : this.startSelecting();
