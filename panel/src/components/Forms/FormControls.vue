@@ -83,7 +83,7 @@ export const props = {
  */
 export default {
 	mixins: [props],
-	emits: ["discard", "submit"],
+	emits: ["discard", "submit", "unlock"],
 	computed: {
 		buttons() {
 			if (this.isLocked === true) {
