@@ -96,7 +96,7 @@ export default {
 }
 .k-dropzone[data-over="true"]::after {
 	display: block;
-	background: hsla(var(--color-blue-hs), var(--color-blue-l-300), 0.6);
+	background: hsla(var(--color-blue-hs), var(--color-blue-l-300), 0.65);
 	outline: var(--outline);
 }
 </style>

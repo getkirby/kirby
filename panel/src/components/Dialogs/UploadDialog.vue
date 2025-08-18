@@ -5,35 +5,34 @@
 		v-bind="$props"
 		:disabled="disabled || $panel.upload.files.length === 0"
 		@cancel="$emit('cancel')"
+		@drop="$panel.upload.select($event)"
 		@submit="$emit('submit')"
 	>
-		<k-dropzone @drop="$panel.upload.select($event)">
-			<!-- No files yet -->
-			<k-empty
-				v-if="$panel.upload.files.length === 0"
-				icon="upload"
-				layout="cards"
-				@click="$panel.upload.pick()"
-			>
-				{{ $t("files.empty") }}
-			</k-empty>
+		<!-- No files yet -->
+		<k-empty
+			v-if="$panel.upload.files.length === 0"
+			icon="upload"
+			layout="cards"
+			@click="$panel.upload.pick()"
+		>
+			{{ $t("files.empty") }}
+		</k-empty>
 
-			<!-- Files list -->
-			<k-upload-items
-				v-else
-				:items="$panel.upload.files"
-				@remove="
-					(file) => {
-						$panel.upload.remove(file.id);
-					}
-				"
-				@rename="
-					(file, name) => {
-						file.name = name;
-					}
-				"
-			/>
-		</k-dropzone>
+		<!-- Files list -->
+		<k-upload-items
+			v-else
+			:items="$panel.upload.files"
+			@remove="
+				(file) => {
+					$panel.upload.remove(file.id);
+				}
+			"
+			@rename="
+				(file, name) => {
+					file.name = name;
+				}
+			"
+		/>
 	</k-dialog>
 </template>
 
