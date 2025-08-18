@@ -5,8 +5,10 @@ namespace Kirby\Http;
 use Exception;
 use InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
+#[CoversClass(Router::class)]
 class RouterTest extends TestCase
 {
 	public function testRegisterSingleRoute(): void

@@ -4,7 +4,9 @@ namespace Kirby\Http;
 
 use Kirby\Cms\App;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Cookie::class)]
 class CookieTest extends TestCase
 {
 	protected string $cookieKey;

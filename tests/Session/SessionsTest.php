@@ -63,10 +63,12 @@ class SessionsTest extends TestCase
 	public function testConstructorOptions(): void
 	{
 		$sessions = new Sessions(static::FIXTURES, [
-			'mode'       => 'header',
-			'cookieName' => 'my_cookie_name'
+			'mode'         => 'header',
+			'cookieDomain' => 'getkirby.com',
+			'cookieName'   => 'my_cookie_name'
 		]);
 
+		$this->assertSame('getkirby.com', $sessions->cookieDomain());
 		$this->assertSame('my_cookie_name', $sessions->cookieName());
 
 		$reflector = new ReflectionClass(Sessions::class);
@@ -80,6 +82,13 @@ class SessionsTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 
 		new Sessions(static::FIXTURES, ['mode' => 'invalid']);
+	}
+
+	public function testConstructorInvalidCookieDomain(): void
+	{
+		$this->expectException(TypeError::class);
+
+		new Sessions(static::FIXTURES, ['cookieDomain' => ['foo']]);
 	}
 
 	public function testConstructorInvalidCookieName(): void

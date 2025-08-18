@@ -5,7 +5,9 @@ namespace Kirby\Http;
 use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Visitor::class)]
 class VisitorTest extends TestCase
 {
 	public function testVisitorDefaults(): void

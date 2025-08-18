@@ -3,7 +3,9 @@
 namespace Kirby\Http;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Idn::class)]
 class IdnTest extends TestCase
 {
 	public function testDecodeEmail(): void
