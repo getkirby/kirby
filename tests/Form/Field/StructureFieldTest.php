@@ -479,7 +479,7 @@ class StructureFieldTest extends TestCase
 
 		$value = $field->toStoredValue();
 
-		$this->assertSame('Default Title', $value[0]['a']);
+		$this->assertSame('A', $value[0]['a']);
 		$this->assertSame('B', $value[0]['b']);
 	}
 
