@@ -153,7 +153,7 @@ class VersionRules
 
 		if ($version->id()->is('changes') === false) {
 			throw new LogicException(
-				message: 'Only the changes version can be unlocked'
+				key: 'content.unlock.invalidVersion'
 			);
 		}
 
