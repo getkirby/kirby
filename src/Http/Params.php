@@ -102,6 +102,23 @@ class Params extends Obj implements Stringable
 	}
 
 	/**
+	 * Merges the current params with the given params
+	 * @since 5.1.0
+	 *
+	 * @return $this
+	 */
+	public function merge(array|string|null $params): static
+	{
+		$params = new static($params);
+
+		foreach ($params as $key => $value) {
+			$this->$key = $value;
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Returns the param separator according
 	 * to the operating system.
 	 *

@@ -108,6 +108,15 @@ class ParamsTest extends TestCase
 		$this->assertFalse($params->isNotEmpty());
 	}
 
+	public function testMerge(): void
+	{
+		$params = new Params(['foo' => 'bar', 'bar' => 'baz']);
+		$params->merge(['bar' => 'foo', 'baz' => 'qux']);
+		$this->assertSame('bar', $params->foo);
+		$this->assertSame('foo', $params->bar);
+		$this->assertSame('qux', $params->baz);
+	}
+
 	public function testToString(): void
 	{
 		$params = new Params([
