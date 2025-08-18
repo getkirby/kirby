@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Cms\App;
-use Kirby\Data\Data;
 use Kirby\Toolkit\A;
 
 return [
@@ -29,7 +27,7 @@ return [
 		},
 
 		'value' => function ($value = null) {
-			return $this->toUsers($value);
+			return $this->toFormValues($value);
 		},
 	],
 	'computed' => [
@@ -42,38 +40,18 @@ return [
 				$this->default === true &&
 				$user = $this->kirby()->user()
 			) {
-				return [
-					$this->userResponse($user)
-				];
+				return [$this->toItem($user)];
 			}
 
-			return $this->toUsers($this->default);
+			return $this->toFormValues($this->default);
 		}
 	],
 	'methods' => [
-		'userResponse' => function ($user) {
-			return $user->panel()->pickerData([
-				'info'   => $this->info,
-				'image'  => $this->image,
-				'layout' => $this->layout,
-				'text'   => $this->text,
-			]);
+		'getIdFromArray' => function (array $array) {
+			return $array['uuid'] ?? $array['id'] ?? $array['email'] ?? null;
 		},
-		'toUsers' => function ($value = null): array {
-			$users = [];
-			$kirby = App::instance();
-
-			foreach (Data::decode($value, 'yaml') as $id) {
-				if (is_array($id) === true) {
-					$id =  $id['uuid'] ?? $id['id'] ?? $id['email'] ?? null;
-				}
-
-				if ($id !== null && ($user = $kirby->user($id))) {
-					$users[] = $this->userResponse($user);
-				}
-			}
-
-			return $users;
+		'toModel' => function (string $id) {
+			return $this->kirby()->user($id);
 		}
 	],
 	'api' => function () {
@@ -98,7 +76,7 @@ return [
 		];
 	},
 	'save' => function ($value = null) {
-		return A::pluck($value, $this->store);
+		return $this->toStoredValues($value);
 	},
 	'validations' => [
 		'max',

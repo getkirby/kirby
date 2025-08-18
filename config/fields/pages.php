@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Cms\App;
-use Kirby\Data\Data;
 use Kirby\Toolkit\A;
 
 return [
@@ -25,7 +23,7 @@ return [
 		 * Default selected page(s) when a new page/file/user is created
 		 */
 		'default' => function ($default = null) {
-			return $this->toPages($default);
+			return $this->toFormValues($default);
 		},
 
 		/**
@@ -43,7 +41,7 @@ return [
 		},
 
 		'value' => function ($value = null) {
-			return $this->toPages($value);
+			return $this->toFormValues($value);
 		},
 	],
 	'computed' => [
@@ -53,29 +51,8 @@ return [
 		'default' => null
 	],
 	'methods' => [
-		'pageResponse' => function ($page) {
-			return $page->panel()->pickerData([
-				'image'  => $this->image,
-				'info'   => $this->info,
-				'layout' => $this->layout,
-				'text'   => $this->text,
-			]);
-		},
-		'toPages' => function ($value = null) {
-			$pages = [];
-			$kirby = App::instance();
-
-			foreach (Data::decode($value, 'yaml') as $id) {
-				if (is_array($id) === true) {
-					$id =  $id['uuid'] ?? $id['id'] ?? null;
-				}
-
-				if ($id !== null && ($page = $kirby->page($id))) {
-					$pages[] = $this->pageResponse($page);
-				}
-			}
-
-			return $pages;
+		'toModel' => function (string $id) {
+			return $this->kirby()->page($id);
 		}
 	],
 	'api' => function () {
@@ -102,7 +79,7 @@ return [
 		];
 	},
 	'save' => function ($value = null) {
-		return A::pluck($value, $this->store);
+		return $this->toStoredValues($value);
 	},
 	'validations' => [
 		'max',

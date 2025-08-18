@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
+use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
@@ -325,5 +326,16 @@ class FilesFieldTest extends TestCase
 		]);
 
 		$this->assertSame('id', $field->store());
+	}
+
+	public function testToModel(): void
+	{
+		$field = $this->field('files', [
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$model = $field->toModel('test/a.jpg');
+		$this->assertInstanceOf(File::class, $model);
+		$this->assertSame('test/a.jpg', $model->id());
 	}
 }

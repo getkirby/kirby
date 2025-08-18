@@ -1,8 +1,6 @@
 <?php
 
 use Kirby\Cms\ModelWithContent;
-use Kirby\Data\Data;
-use Kirby\Toolkit\A;
 
 return [
 	'mixins' => [
@@ -54,39 +52,15 @@ return [
 			return $this->query ?? $this->parentModel::CLASS_ALIAS . '.files';
 		},
 		'default' => function () {
-			return $this->toFiles($this->default);
+			return $this->toFormValues($this->default);
 		},
 		'value' => function () {
-			return $this->toFiles($this->value);
+			return $this->toFormValues($this->value);
 		},
 	],
 	'methods' => [
-		'fileResponse' => function ($file) {
-			return $file->panel()->pickerData([
-				'image'  => $this->image,
-				'info'   => $this->info ?? false,
-				'layout' => $this->layout,
-				'model'  => $this->model(),
-				'text'   => $this->text,
-			]);
-		},
-		'toFiles' => function ($value = null) {
-			$files = [];
-
-			foreach (Data::decode($value, 'yaml') as $id) {
-				if (is_array($id) === true) {
-					$id = $id['uuid'] ?? $id['id'] ?? null;
-				}
-
-				if (
-					$id !== null &&
-					($file = $this->kirby()->file($id, $this->model()))
-				) {
-					$files[] = $this->fileResponse($file);
-				}
-			}
-
-			return $files;
+		'toModel' => function (string $id) {
+			return $this->kirby()->file($id, $this->model());
 		}
 	],
 	'api' => function () {
@@ -132,7 +106,7 @@ return [
 		];
 	},
 	'save' => function ($value = null) {
-		return A::pluck($value, $this->store);
+		return $this->toStoredValues($value);
 	},
 	'validations' => [
 		'max',
