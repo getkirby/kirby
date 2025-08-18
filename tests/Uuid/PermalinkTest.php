@@ -16,6 +16,17 @@ class PermalinkTest extends TestCase
 		$permalink = Permalink::for('page://my-page');
 		$this->assertInstanceOf(Permalink::class, $permalink);
 		$this->assertInstanceOf(PageUuid::class, $permalink->uuid());
+
+		$this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => false
+				],
+			]
+		]);
+
+		$permalink = Permalink::for('page://my-page');
+		$this->assertNull($permalink);
 	}
 
 	public function testParse(): void
@@ -42,31 +53,46 @@ class PermalinkTest extends TestCase
 	public function testUrl(): void
 	{
 		$permalink = Permalink::for('page://my-page');
-		$this->assertSame('https://getkirby.com/@/page/my-page', $permalink->url());
+		$url       = 'https://getkirby.com/@/page/my-page';
+		$this->assertSame($url, $permalink->url());
+		$this->assertSame($url, (string)$permalink);
+
+
+		$permalink = Permalink::for('file://my-file');
+		$url       = 'https://getkirby.com/@/file/my-file';
+		$this->assertSame($url, $permalink->url());
+		$this->assertSame($url, (string)$permalink);
 	}
 
-	public function testUrlRouting(): void
+	public function testUrlWithLanguage(): void
 	{
-		// not cached, should fail (redirect to error)
-		$response = $this->app->call('/@/page/my-page');
-		$this->assertFalse($response);
+		$this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'de',
+					'default' => true,
+				]
+			]
+		]);
 
-		// cached, should redirect to page A
-		$this->app->page('page-a')->uuid()->populate();
-		$response = $this->app->call('/@/page/my-page')->send();
-		$this->assertSame(302, $response->code());
-		$this->assertSame('https://getkirby.com/page-a', $response->header('Location'));
+		$permalink = Permalink::for('page://my-page');
+		$url       = 'https://getkirby.com/de/@/page/my-page';
+		$this->assertSame($url, $permalink->url());
+		$this->assertSame($url, (string)$permalink);
 
-		// check if ->url() populates cache
-		$uuid = $this->app->page('page-a')->uuid();
-		$uuid->clear();
-		$response = $this->app->call('/@/page/my-page');
-		$this->assertFalse($response);
+		$this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'de',
+					'url'     => '/',
+					'default' => true,
+				]
+			]
+		]);
 
-		$permalink = new Permalink($uuid);
-		$permalink->url();
-		$response = $this->app->call('/@/page/my-page')->send();
-		$this->assertSame(302, $response->code());
-		$this->assertSame('https://getkirby.com/page-a', $response->header('Location'));
+		$permalink = Permalink::for('page://my-page');
+		$url       = 'https://getkirby.com/@/page/my-page';
+		$this->assertSame($url, $permalink->url());
+		$this->assertSame($url, (string)$permalink);
 	}
 }
