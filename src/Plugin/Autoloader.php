@@ -34,62 +34,27 @@ class Autoloader
 
         //Load classes before everything else
         $classfolder = $root . '/classes/';
+
         if (Dir::exists($classfolder)) {
             $this->loadClasses($classfolder);
         }
 
+        $folders = [
+            'autoload'      => 'loadAutoload',
+            'blueprints'    => 'loadBlueprints',
+            'i18n'          => 'loadTranslations',
+            'fields'        => 'loadFields',
+            'sections'      => 'loadSections',
+            'snippets'      => 'loadSnippets',
+            'templates'     => 'loadTemplates'
+        ];
+
         foreach (Dir::dirs($this->root) as $dir) {
-            if (method_exists($this, $dir)) {
-                $this->$dir($this->root . '/' . $dir . '/');
+            if (array_key_exists($dir, $folders)) {
+                $method = $folders[$dir];
+                $this->$method($this->root . '/' . $dir . '/');
             }
         }
-    }
-
-    /**
-     * Walk throuh the given path
-     * @param string $root Absolute path to walk
-     * @param Closure $fnc Callback for each file
-     * @return void 
-     */
-    public function _dirWalker(string $root, Closure $fnc)
-    {
-
-        foreach (Dir::index($root, true) as $path) {
-
-            //Check if the path is active
-            if (Str::contains($path, '/_')) {
-                continue;
-            }
-
-            $file = $root . $path;
-            if (F::exists($file)) {
-                $dirname = F::dirname($path);
-                $dirname = $dirname === '.' ? '' : $dirname . '/';
-                $fnc($dirname . F::name($path), $file);
-            }
-        }
-    }
-
-    /**
-     * Read file by given name and check if available
-     * @param string $file 
-     * @return array 
-     * @throws Throwable 
-     * @throws InvalidArgumentException 
-     * @throws Exception 
-     */
-    public function _read(string $file): array
-    {
-
-        $content = Data::read($file);
-
-        //Value may be a closure
-        if (is_array($content) && count($content) === 0) {
-            $name = F::relativepath($file, $this->root);
-            throw new Exception("The content for '$name' cannot be resolved by the autoloader");
-        }
-
-        return $content;
     }
 
     /**
@@ -97,11 +62,14 @@ class Autoloader
      * @param string $root 
      * @return void 
      */
-    public function autoload(string $root)
+    public function loadAutoload(string $root): void
     {
-        $this->_dirWalker($root, function ($path, $file) {
-            $this->data[$path] = $this->_read($file);
-        });
+        foreach (Dir::files($root) as $path) {
+
+            $key = F::name($path);
+            $file = $root . $path;
+            $this->data[$key] = Data::read($file);
+        };
     }
 
     /**
@@ -109,14 +77,26 @@ class Autoloader
      * @param string $root 
      * @return void 
      */
-    public function blueprints(string $root)
+    public function loadBlueprints(string $root): void
     {
-        $this->_dirWalker($root, function ($path, $file) {
+        foreach (Dir::index($root) as $path) {
 
-            $name = F::relativepath($file);
-            //Set YAML-File or they content
-            $this->data['blueprints'][$path] = (F::extension($file) === 'yml') ? $file : $this->_read($file);
-        });
+            $file = $root . $path;
+
+            //Skip folder and file/folder thats starts with '_'
+            if (F::exists($file) === false || Str::contains($path, '/_')) {
+                continue;
+            }
+
+            //Has no Subfolder
+            if (($dirname = F::dirname($path)) === '.') {
+                $key = F::name($path);
+            }
+
+            $key ??= $dirname . '/' . F::name($path);
+
+            $this->data['blueprints'][$key] = Data::read($file);
+        };
     }
 
     /**
@@ -124,14 +104,31 @@ class Autoloader
      * @param string $root 
      * @return void 
      */
-    public function loadClasses(string $root)
+    public function loadClasses(string $root): void
     {
+
         $classes = [];
-        $this->_dirWalker($root, function ($path, $file) use (&$classes) {
+
+        foreach (Dir::index($root) as $path) {
+
+            $file = $root . $path;
+
+            //Skip folder and file/folder thats starts with '_'
+            if (F::exists($file) === false || Str::contains($path, '/_')) {
+                continue;
+            }
+
+            //Has no Subfolder
+            if (($dirname = F::dirname($path)) === '.') {
+                $key = F::name($path);
+            }
+
+            $key ??= $dirname . '/' . F::name($path);
+
             $prefix = array_map('ucfirst', explode('/', $this->name));
-            $classname = A::merge($prefix, explode('/', $path));
+            $classname = A::merge($prefix, explode('/', $key));
             $classes[implode('\\', $classname)] = $file;
-        });
+        };
 
         F::loadClasses($classes);
     }
@@ -142,11 +139,26 @@ class Autoloader
      * @param string $root 
      * @return void 
      */
-    public function i18n(string $root)
+    public function loadTranslations(string $root): void
     {
-        $this->_dirWalker($root, function ($path, $file) {
-            $this->data['translations'][$path] = $this->_read($file);
-        });
+        foreach (Dir::index($root) as $path) {
+
+            $file = $root . $path;
+
+            //Skip folder and file/folder thats starts with '_'
+            if (F::exists($file) === false || Str::contains($path, '/_')) {
+                continue;
+            }
+
+            //Has no Subfolder
+            if (($dirname = F::dirname($path)) === '.') {
+                $key = F::name($path);
+            }
+
+            $key ??= $dirname . '/' . F::name($path);
+
+            $this->data['translations'][$key] = Data::read($file);
+        };
     }
 
     /**
@@ -154,11 +166,26 @@ class Autoloader
      * @param string $root 
      * @return void 
      */
-    public function fields(string $root)
+    public function loadFields(string $root): void
     {
-        $this->_dirWalker($root, function ($path, $file) {
-            $this->data['fields'][$path] = $this->_read($file);
-        });
+        foreach (Dir::index($root) as $path) {
+
+            $file = $root . $path;
+
+            //Skip folder and file/folder thats starts with '_'
+            if (F::exists($file) === false || Str::contains($path, '/_')) {
+                continue;
+            }
+
+            //Has no Subfolder
+            if (($dirname = F::dirname($path)) === '.') {
+                $key = F::name($path);
+            }
+
+            $key ??= $dirname . '/' . F::name($path);
+
+            $this->data['fields'][$key] = Data::read($file);
+        };
     }
 
     /**
@@ -166,11 +193,26 @@ class Autoloader
      * @param string $root 
      * @return void 
      */
-    public function sections(string $root)
+    public function loadSections(string $root): void
     {
-        $this->_dirWalker($root, function ($path, $file) {
-            $this->data['sections'][$path] = $this->_read($file);
-        });
+        foreach (Dir::index($root) as $path) {
+
+            $file = $root . $path;
+
+            //Skip folder and file/folder thats starts with '_'
+            if (F::exists($file) === false || Str::contains($path, '/_')) {
+                continue;
+            }
+
+            //Has no Subfolder
+            if (($dirname = F::dirname($path)) === '.') {
+                $key = F::name($path);
+            }
+
+            $key ??= $dirname . '/' . F::name($path);
+
+            $this->data['sections'][$key] = Data::read($file);
+        };
     }
 
     /**
@@ -178,11 +220,26 @@ class Autoloader
      * @param string $root 
      * @return void 
      */
-    public function snippets(string $root)
+    public function loadSnippets(string $root): void
     {
-        $this->_dirWalker($root, function ($path, $file) {
-            $this->data['snippets'][$path] = $file;
-        });
+        foreach (Dir::index($root) as $path) {
+
+            $file = $root . $path;
+
+            //Skip folder and file/folder thats starts with '_'
+            if (F::exists($file) === false || Str::contains($path, '/_')) {
+                continue;
+            }
+
+            //Has no Subfolder
+            if (($dirname = F::dirname($path)) === '.') {
+                $key = F::name($path);
+            }
+
+            $key ??= $dirname . '/' . F::name($path);
+
+            $this->data['snippets'][$key] = $file;
+        };
     }
 
     /**
@@ -190,11 +247,26 @@ class Autoloader
      * @param string $root 
      * @return void 
      */
-    public function templates(string $root)
+    public function loadTemplates(string $root): void
     {
-        $this->_dirWalker($root, function ($path, $file) {
-            $this->data['templates'][$path] = $file;
-        });
+        foreach (Dir::index($root) as $path) {
+
+            $file = $root . $path;
+
+            //Skip folder and file/folder thats starts with '_'
+            if (F::exists($file) === false || Str::contains($path, '/_')) {
+                continue;
+            }
+
+            //Has no Subfolder
+            if (($dirname = F::dirname($path)) === '.') {
+                $key = F::name($path);
+            }
+
+            $key ??= $dirname . '/' . F::name($path);
+
+            $this->data['templates'][$key] = $file;
+        };
     }
 
     /**

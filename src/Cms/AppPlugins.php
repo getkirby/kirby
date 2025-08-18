@@ -889,9 +889,8 @@ trait AppPlugins
 
 			$extends = A::merge($autolader_class::load(
 				name: $name,
-				root: $root,
-				data: $extends ?? []
-			), $extends);
+				root: $root
+			), $extends ?? []);
 		}
 
 		$plugin = new Plugin(
