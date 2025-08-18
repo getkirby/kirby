@@ -341,26 +341,12 @@ export default (panel) => {
 				throw new Error("The content is not locked");
 			}
 
-			// Cancel any ongoing save requests.
-			// The discard request will throw those
-			// changes away anyway.
-			this.cancelSaving();
-
 			// Start processing the request
 			this.isProcessing = true;
 
 			try {
 				await this.request("unlock", {}, env);
-
 				this.emit("unlock", {}, env);
-			} catch (error) {
-				// handle locked states
-				if (error.key?.startsWith("error.content.lock")) {
-					return this.lockDialog(error.details);
-				}
-
-				// let our regular error handler take over
-				throw error;
 			} finally {
 				this.isProcessing = false;
 			}
