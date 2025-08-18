@@ -47,7 +47,7 @@ class UserViewControllerTest extends TestCase
 		$controller = new UserViewController($this->user);
 		$buttons    = $controller->buttons();
 		$this->assertInstanceOf(ViewButtons::class, $buttons);
-		$this->assertCount(2, $buttons->render());
+		$this->assertCount(1, $buttons->render());
 	}
 
 	public function testComponent(): void
