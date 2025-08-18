@@ -59,7 +59,6 @@ export default {
 	emits: ["cancel", "crumb", "drop", "submit", "tab"],
 	computed: {
 		hasDropzone() {
-			return true;
 			const instance = getCurrentInstance();
 			return instance?.vnode?.props?.onDrop !== undefined;
 		}
