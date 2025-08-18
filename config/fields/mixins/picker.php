@@ -98,6 +98,21 @@ return [
 		'getIdFromArray' => function (array $array) {
 			return $array['uuid'] ?? $array['id'] ?? null;
 		},
+		'toFormValues' => function ($value = null) {
+			$items = [];
+
+			foreach (Data::decode($value, 'yaml') as $id) {
+				if (is_array($id) === true) {
+					$id = $this->getIdFromArray($id);
+				}
+
+				if ($id !== null && ($model = $this->toModel($id))) {
+					$items[] = $this->toItem($model);
+				}
+			}
+
+			return $items;
+		},
 		'toItem' => function (ModelWithContent $model) {
 			return $model->panel()->pickerData([
 				'image'  => $this->image,
@@ -115,21 +130,6 @@ return [
 		},
 		'toModel' => function (string $id) {
 			throw new Exception(message: 'toModel() is not implemented on ' . $this->type() . ' field');
-		},
-		'toFormValues' => function ($value = null) {
-			$items = [];
-
-			foreach (Data::decode($value, 'yaml') as $id) {
-				if (is_array($id) === true) {
-					$id = $this->getIdFromArray($id);
-				}
-
-				if ($id !== null && ($model = $this->toModel($id))) {
-					$items[] = $this->toItem($model);
-				}
-			}
-
-			return $items;
 		},
 		'toStoredValues' => function ($value = null) {
 			return A::map(
