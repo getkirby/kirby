@@ -597,8 +597,7 @@ class AppTest extends TestCase
 			'slugs'        => 'de'
 		], $app->options());
 
-		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
+		$whoopsMethod  = new ReflectionMethod(App::class, 'whoops');
 		$whoopsHandler = $whoopsMethod->invoke($app)->getHandlers()[0];
 		$this->assertInstanceOf(PrettyPageHandler::class, $whoopsHandler);
 

@@ -36,7 +36,6 @@ class SnippetTest extends TestCase
 		]);
 
 		$openProp = new ReflectionProperty(Snippet::class, 'open');
-		$openProp->setAccessible(true);
 
 		$snippet = Snippet::factory('data', ['message' => 'hello']);
 		$this->assertSame('hello', $snippet);
@@ -315,7 +314,6 @@ class SnippetTest extends TestCase
 		]);
 
 		$slotsProp = new ReflectionProperty($snippet, 'slots');
-		$slotsProp->setAccessible(true);
 
 		$slotsProp->setValue($snippet, [
 			'default' => $slot = new Slot('test')
