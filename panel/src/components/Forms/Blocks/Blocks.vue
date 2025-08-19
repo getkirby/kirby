@@ -226,6 +226,14 @@ export default {
 				}
 			});
 		},
+		collapse(block) {
+			this.ref(block)?.collapse?.();
+		},
+		collapseAll() {
+			for (const block of this.blocks) {
+				this.collapse(block);
+			}
+		},
 		copy(e) {
 			// don't copy when there are no blocks yet
 			if (this.blocks.length === 0) {
@@ -337,6 +345,14 @@ export default {
 			this.blocks.splice(index + 1, 0, copy);
 			this.save();
 		},
+		expand(block) {
+			this.ref(block)?.expand?.();
+		},
+		expandAll() {
+			for (const block of this.blocks) {
+				this.expand(block);
+			}
+		},
 		fieldset(block) {
 			return (
 				this.fieldsets[block.type] ?? {
@@ -373,6 +389,24 @@ export default {
 		hide(block) {
 			set(block, "isHidden", true);
 			this.save();
+		},
+		isFullyCollapsed() {
+			return this.blocks.every((block) => {
+				block = this.ref(block);
+				return block.isCollapsible() === false || block.isCollapsed() === true;
+			});
+		},
+		isCollapsible() {
+			return this.blocks.some((block) => this.ref(block).isCollapsible());
+		},
+		isFullyExpanded() {
+			return this.blocks.every((block) => {
+				block = this.ref(block);
+				return block.isCollapsible() === false || block.isCollapsed() === false;
+			});
+		},
+		isExpandable() {
+			return this.blocks.some((block) => this.ref(block).isExpandable());
 		},
 		isInputEvent() {
 			const focused = document.querySelector(":focus");

@@ -246,6 +246,12 @@ export default {
 		close() {
 			this.$panel.drawer.close(this.id);
 		},
+		collapse() {
+			this.$refs.editor?.collapse?.();
+		},
+		expand() {
+			this.$refs.editor?.expand?.();
+		},
 		focus() {
 			if (typeof this.$refs.editor?.focus === "function") {
 				this.$refs.editor.focus();
@@ -258,6 +264,15 @@ export default {
 				block.$refs.container?.focus();
 				block.open(null, true);
 			}
+		},
+		isCollapsed() {
+			return (this.$refs.editor?.collapsed ?? false) === true;
+		},
+		isCollapsible() {
+			return typeof this.$refs.editor?.collapse === "function";
+		},
+		isExpandable() {
+			return typeof this.$refs.editor?.expand === "function";
 		},
 		isSplitable() {
 			if (this.isFull === true) {

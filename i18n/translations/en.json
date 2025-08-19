@@ -15,7 +15,7 @@
 	"changes": "Changes",
 	"confirm": "Ok",
 	"collapse": "Collapse",
-	"collapse.all": "Collapse All",
+	"collapse.all": "Collapse all",
 	"color": "Color",
 	"coordinates": "Coordinates",
 	"copy": "Copy",
@@ -295,7 +295,7 @@
 	"error.validation.url": "Please enter a valid URL",
 
 	"expand": "Expand",
-	"expand.all": "Expand All",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "The field is required",
