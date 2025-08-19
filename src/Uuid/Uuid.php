@@ -188,16 +188,6 @@ abstract class Uuid implements Stringable
 				};
 			}
 
-			// permalinks
-			if ($url = Str::after($seed, '/@/')) {
-				$parts = explode('/', $url);
-
-				return static::for(
-					$parts[0] . '://' . $parts[1],
-					$context
-				);
-			}
-
 			throw new InvalidArgumentException(
 				message: 'Invalid UUID string: ' . $seed
 			);
@@ -439,18 +429,27 @@ abstract class Uuid implements Stringable
 	}
 
 	/**
-	 * Returns value to be stored in cache
-	 */
-	public function value(): string|array
-	{
-		return $this->model()->id();
-	}
-
-	/**
 	 * @see self::render()
 	 */
 	public function __toString(): string
 	{
 		return $this->toString();
+	}
+
+	/**
+	 * Returns the type of the UUID
+	 * @since 6.0.0
+	 */
+	public function type(): string
+	{
+		return static::TYPE;
+	}
+
+	/**
+	 * Returns value to be stored in cache
+	 */
+	public function value(): string|array
+	{
+		return $this->model()->id();
 	}
 }

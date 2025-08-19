@@ -25,7 +25,7 @@ use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Kirby\Toolkit\Xml;
-use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Permalink;
 
 /**
  * Field method setup
@@ -498,9 +498,14 @@ return function (App $app) {
 
 				foreach ($elements as $element) {
 					foreach ($attributes as $attribute) {
-						if ($element->hasAttribute($attribute) && $uuid = $element->getAttribute($attribute)) {
+						if (
+							$element->hasAttribute($attribute) &&
+							$url = $element->getAttribute($attribute)
+						) {
 							try {
-								if ($url = Uuid::for($uuid)?->model()?->url()) {
+								$permalink = Permalink::from($url);
+
+								if ($url = $permalink?->model()?->url()) {
 									$element->setAttribute($attribute, $url);
 								}
 							} catch (InvalidArgumentException) {
