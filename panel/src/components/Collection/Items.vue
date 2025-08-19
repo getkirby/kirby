@@ -6,6 +6,7 @@
 		:class="$attrs.class"
 		:style="$attrs.style"
 		@change="$emit('change', $event)"
+		@input="(...args) => $emit('input', ...args)"
 		@select="onSelect"
 		@sort="$emit('sort', $event)"
 		@option="onOption"
