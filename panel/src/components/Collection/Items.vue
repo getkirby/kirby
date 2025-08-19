@@ -205,7 +205,7 @@ export default {
 			const index = this.findSelectedIndex(item);
 
 			if (index !== -1) {
-				return this.selected.toSpliced(index, 1);
+				return this.$emit("select", this.selected.toSpliced(index, 1));
 			}
 
 			return this.$emit("select", [...this.selected, item._id ?? item.id]);
