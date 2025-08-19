@@ -32,10 +32,8 @@ class AutoSessionTest extends TestCase
 	{
 		$autoSessionReflector = new ReflectionClass(AutoSession::class);
 		$sessionsProperty = $autoSessionReflector->getProperty('sessions');
-		$sessionsProperty->setAccessible(true);
 		$fileSessionStoreReflector = new ReflectionClass(FileSessionStore::class);
 		$pathProperty = $fileSessionStoreReflector->getProperty('path');
-		$pathProperty->setAccessible(true);
 
 		// store object as store
 		$autoSession = new AutoSession($this->store);

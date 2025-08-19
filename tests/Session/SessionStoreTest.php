@@ -14,7 +14,6 @@ class SessionStoreTest extends TestCase
 		// get a reference to the protected method
 		$reflector = new ReflectionClass(SessionStore::class);
 		$generateId = $reflector->getMethod('generateId');
-		$generateId->setAccessible(true);
 
 		$id1 = $generateId->invoke(null);
 		$this->assertStringMatchesFormat('%x', $id1);

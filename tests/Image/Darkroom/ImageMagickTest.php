@@ -55,7 +55,6 @@ class ImageMagickTest extends TestCase
 		$im = new ImageMagick();
 
 		$method = new ReflectionMethod($im::class, 'sharpen');
-		$method->setAccessible(true);
 
 		$result = $method->invoke($im, '', [
 			'sharpen' => 50
@@ -69,7 +68,6 @@ class ImageMagickTest extends TestCase
 		$im = new ImageMagick();
 
 		$method = new ReflectionMethod($im::class, 'sharpen');
-		$method->setAccessible(true);
 
 		$result = $method->invoke($im, '', [
 			'sharpen' => null

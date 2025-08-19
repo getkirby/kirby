@@ -255,8 +255,6 @@ class Remote
 			throw new Exception($this->errorMessage, $this->errorCode);
 		}
 
-		curl_close($this->curl);
-
 		return $this;
 	}
 

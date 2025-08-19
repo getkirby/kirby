@@ -33,7 +33,6 @@ class AppErrorsTest extends TestCase
 	public function tearDown(): void
 	{
 		$unsetMethod = new ReflectionMethod(App::class, 'unsetWhoopsHandler');
-		$unsetMethod->setAccessible(true);
 
 		$app = App::instance();
 		$unsetMethod->invoke($app);
@@ -60,7 +59,6 @@ class AppErrorsTest extends TestCase
 		]);
 
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
 
 		$whoops  = $whoopsMethod->invoke($app);
 		$handler = $whoops->getHandlers()[1];
@@ -90,7 +88,6 @@ class AppErrorsTest extends TestCase
 		]);
 
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
 
 		$whoops  = $whoopsMethod->invoke($app);
 		$handler = $whoops->getHandlers()[1];
@@ -109,10 +106,7 @@ class AppErrorsTest extends TestCase
 	public function testHandleCliErrors(): void
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
-
-		$testMethod = new ReflectionMethod(App::class, 'handleCliErrors');
-		$testMethod->setAccessible(true);
+		$testMethod   = new ReflectionMethod(App::class, 'handleCliErrors');
 
 		$app    = App::instance();
 		$whoops = $whoopsMethod->invoke($app);
@@ -127,10 +121,7 @@ class AppErrorsTest extends TestCase
 	public function testHandleErrors1(): void
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
-
-		$testMethod = new ReflectionMethod(App::class, 'handleErrors');
-		$testMethod->setAccessible(true);
+		$testMethod   = new ReflectionMethod(App::class, 'handleErrors');
 
 		$app = $this->app->clone([
 			'cli' => true
@@ -148,10 +139,7 @@ class AppErrorsTest extends TestCase
 	public function testHandleErrors2(): void
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
-
-		$testMethod = new ReflectionMethod(App::class, 'handleErrors');
-		$testMethod->setAccessible(true);
+		$testMethod   = new ReflectionMethod(App::class, 'handleErrors');
 
 		$app = $this->app->clone([
 			'cli' => false,
@@ -172,10 +160,7 @@ class AppErrorsTest extends TestCase
 	public function testHandleErrors3(): void
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
-
-		$testMethod = new ReflectionMethod(App::class, 'handleErrors');
-		$testMethod->setAccessible(true);
+		$testMethod   = new ReflectionMethod(App::class, 'handleErrors');
 
 		$app = $this->app->clone([
 			'cli' => false,
@@ -201,10 +186,7 @@ class AppErrorsTest extends TestCase
 	public function testHandleErrorsGlobalSetting(): void
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
-
-		$testMethod = new ReflectionMethod(App::class, 'handleErrors');
-		$testMethod->setAccessible(true);
+		$testMethod   = new ReflectionMethod(App::class, 'handleErrors');
 
 		$whoopsEnabled  = $whoopsMethod->invoke($this->app);
 		$whoopsDisabled = $whoopsMethod->invoke($this->originalApp);
@@ -230,14 +212,9 @@ class AppErrorsTest extends TestCase
 
 	public function testHandleHtmlErrors(): void
 	{
-		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
-
+		$whoopsMethod  = new ReflectionMethod(App::class, 'whoops');
 		$optionsMethod = new ReflectionMethod(App::class, 'optionsFromProps');
-		$optionsMethod->setAccessible(true);
-
-		$testMethod = new ReflectionMethod(App::class, 'handleHtmlErrors');
-		$testMethod->setAccessible(true);
+		$testMethod    = new ReflectionMethod(App::class, 'handleHtmlErrors');
 
 		$app    = App::instance();
 		$whoops = $whoopsMethod->invoke($app);
@@ -304,14 +281,9 @@ class AppErrorsTest extends TestCase
 
 	public function testHandleJsonErrors(): void
 	{
-		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
-
+		$whoopsMethod  = new ReflectionMethod(App::class, 'whoops');
 		$optionsMethod = new ReflectionMethod(App::class, 'optionsFromProps');
-		$optionsMethod->setAccessible(true);
-
-		$testMethod = new ReflectionMethod(App::class, 'handleJsonErrors');
-		$testMethod->setAccessible(true);
+		$testMethod    = new ReflectionMethod(App::class, 'handleJsonErrors');
 
 		$app    = App::instance();
 		$whoops = $whoopsMethod->invoke($app);
@@ -381,13 +353,8 @@ class AppErrorsTest extends TestCase
 	public function testSetUnsetWhoopsHandler(): void
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
-
-		$setMethod = new ReflectionMethod(App::class, 'setWhoopsHandler');
-		$setMethod->setAccessible(true);
-
-		$unsetMethod = new ReflectionMethod(App::class, 'unsetWhoopsHandler');
-		$unsetMethod->setAccessible(true);
+		$setMethod    = new ReflectionMethod(App::class, 'setWhoopsHandler');
+		$unsetMethod  = new ReflectionMethod(App::class, 'unsetWhoopsHandler');
 
 		$app    = App::instance();
 		$whoops = $whoopsMethod->invoke($app);
@@ -414,7 +381,6 @@ class AppErrorsTest extends TestCase
 	public function testWhoops(): void
 	{
 		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-		$whoopsMethod->setAccessible(true);
 
 		$app = App::instance();
 

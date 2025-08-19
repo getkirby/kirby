@@ -50,7 +50,6 @@ class SessionsTest extends TestCase
 
 		$reflector = new ReflectionClass(FileSessionStore::class);
 		$pathProperty = $reflector->getProperty('path');
-		$pathProperty->setAccessible(true);
 		$this->assertSame($path, $pathProperty->getValue($sessions->store()));
 	}
 
@@ -73,7 +72,6 @@ class SessionsTest extends TestCase
 
 		$reflector = new ReflectionClass(Sessions::class);
 		$modeProperty = $reflector->getProperty('mode');
-		$modeProperty->setAccessible(true);
 		$this->assertSame('header', $modeProperty->getValue($sessions));
 	}
 
@@ -247,11 +245,9 @@ class SessionsTest extends TestCase
 	{
 		$sessionsReflector = new ReflectionClass(Sessions::class);
 		$cache = $sessionsReflector->getProperty('cache');
-		$cache->setAccessible(true);
 
 		$sessionReflector = new ReflectionClass(Session::class);
 		$tokenKey = $sessionReflector->getProperty('tokenKey');
-		$tokenKey->setAccessible(true);
 
 		$sessions = new Sessions($this->store, ['mode' => 'header']);
 		$session = $sessions->get('9999999999.valid.' . $this->store->validKey);
@@ -267,7 +263,6 @@ class SessionsTest extends TestCase
 	{
 		$reflector = new ReflectionClass(Sessions::class);
 		$tokenFromCookie = $reflector->getMethod('tokenFromCookie');
-		$tokenFromCookie->setAccessible(true);
 
 		Cookie::remove('kirby_session');
 		$this->assertNull($tokenFromCookie->invoke($this->sessions));
@@ -282,7 +277,6 @@ class SessionsTest extends TestCase
 	{
 		$reflector = new ReflectionClass(Sessions::class);
 		$tokenFromHeader = $reflector->getMethod('tokenFromHeader');
-		$tokenFromHeader->setAccessible(true);
 
 		$this->assertNull($tokenFromHeader->invoke($this->sessions));
 

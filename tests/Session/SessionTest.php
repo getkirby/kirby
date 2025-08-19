@@ -45,7 +45,6 @@ class SessionTest extends TestCase
 	{
 		$reflector = new ReflectionClass(Session::class);
 		$activityProperty = $reflector->getProperty('lastActivity');
-		$activityProperty->setAccessible(true);
 
 		// defaults
 		$session = new Session($this->sessions, null, []);
@@ -283,7 +282,6 @@ class SessionTest extends TestCase
 	{
 		$reflector = new ReflectionClass(Session::class);
 		$activityProperty = $reflector->getProperty('lastActivity');
-		$activityProperty->setAccessible(true);
 
 		$session = new Session($this->sessions, null, [
 			'timeout' => 1234
@@ -572,7 +570,6 @@ class SessionTest extends TestCase
 	{
 		$sessionsReflector = new ReflectionClass(Sessions::class);
 		$cache = $sessionsReflector->getProperty('cache');
-		$cache->setAccessible(true);
 
 		$token = '9999999999.valid.' . $this->store->validKey;
 		$session = new Session($this->sessions, $token, []);
@@ -619,7 +616,6 @@ class SessionTest extends TestCase
 	{
 		$sessionsReflector = new ReflectionClass(Sessions::class);
 		$cache = $sessionsReflector->getProperty('cache');
-		$cache->setAccessible(true);
 
 		$token = '9999999999.valid.' . $this->store->validKey;
 		$session = new Session($this->sessions, $token, ['mode' => 'header']);
@@ -687,9 +683,7 @@ class SessionTest extends TestCase
 	{
 		$reflector = new ReflectionClass(Session::class);
 		$parseToken = $reflector->getMethod('parseToken');
-		$parseToken->setAccessible(true);
 		$tokenKey = $reflector->getProperty('tokenKey');
-		$tokenKey->setAccessible(true);
 
 		$session = new Session($this->sessions, null, []);
 		$this->assertNull($session->token());
@@ -727,7 +721,6 @@ class SessionTest extends TestCase
 
 		$reflector = new ReflectionClass(Session::class);
 		$parseToken = $reflector->getMethod('parseToken');
-		$parseToken->setAccessible(true);
 
 		$session = new Session($this->sessions, null, []);
 		$this->assertNull($session->token());
@@ -739,7 +732,6 @@ class SessionTest extends TestCase
 	{
 		$reflector = new ReflectionClass(Session::class);
 		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
-		$timeToTimestamp->setAccessible(true);
 
 		$this->assertSame(1234567890, $timeToTimestamp->invoke(null, 1234567890));
 		$this->assertSame(1234567890, $timeToTimestamp->invoke(null, 1234567890, 1357924680));
@@ -754,7 +746,6 @@ class SessionTest extends TestCase
 
 		$reflector = new ReflectionClass(Session::class);
 		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
-		$timeToTimestamp->setAccessible(true);
 
 		$timeToTimestamp->invoke(null, ['tomorrow']);
 	}
@@ -765,7 +756,6 @@ class SessionTest extends TestCase
 
 		$reflector = new ReflectionClass(Session::class);
 		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
-		$timeToTimestamp->setAccessible(true);
 
 		$timeToTimestamp->invoke(null, ['some gibberish that is definitely no valid time']);
 	}
@@ -1027,7 +1017,6 @@ class SessionTest extends TestCase
 
 		$reflector = new ReflectionClass(Session::class);
 		$activityProperty = $reflector->getProperty('lastActivity');
-		$activityProperty->setAccessible(true);
 		$this->assertSame($session->data()->get('expectedActivity'), $activityProperty->getValue($session));
 	}
 
@@ -1046,7 +1035,6 @@ class SessionTest extends TestCase
 
 		$reflector = new ReflectionClass(Session::class);
 		$activityProperty = $reflector->getProperty('lastActivity');
-		$activityProperty->setAccessible(true);
 		$newActivity = $activityProperty->getValue($session);
 		$this->assertGreaterThan($session->data()->get('expectedActivity') - 5, $newActivity);
 		$this->assertLessThan($session->data()->get('expectedActivity') + 5, $newActivity);
@@ -1092,7 +1080,6 @@ class SessionTest extends TestCase
 	{
 		$reflector = new ReflectionClass(Session::class);
 		$writeModeProperty = $reflector->getProperty('writeMode');
-		$writeModeProperty->setAccessible(true);
 
 		$this->assertSame($expected, $writeModeProperty->getValue($session));
 	}

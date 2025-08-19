@@ -109,14 +109,12 @@ class ExifTest extends TestCase
 		// changing protected property $data via Reflection class
 		$ref = new ReflectionClass($exif);
 		$data = $ref->getProperty('data');
-		$data->setAccessible(true);
 		$options = $data->getValue($exif);
 		$options['DateTimeOriginal'] = '11.12.2016 11:13:14';
 		$data->setValue($exif, $options);
 
 		// setting protected method public
 		$parse = $ref->getMethod('parseTimestamp');
-		$parse->setAccessible(true);
 
 		$this->assertSame((string)strtotime('11.12.2016 11:13:14'), $parse->invoke($exif));
 	}
