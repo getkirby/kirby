@@ -16,6 +16,7 @@
 				layout,
 				link,
 				selecting,
+				selected,
 				size,
 				sortable,
 				theme
@@ -86,6 +87,7 @@ export default {
 		"option",
 		"paginate",
 		"select",
+		"selected",
 		"sort"
 	],
 	computed: {

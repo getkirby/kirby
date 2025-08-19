@@ -13,8 +13,22 @@
 				:columns="columns"
 				:items="selectableItems"
 				:selecting="true"
+				:selected="selected"
 				layout="table"
-				@select="onSelect"
+				@select="selected = $event"
+			/>
+			<br />
+			<k-code>Selected: {{ selected.join(", ") }}</k-code>
+		</k-lab-example>
+		<k-lab-example label="Selectable: single">
+			<k-items
+				:columns="columns"
+				:items="selectableItems"
+				:selecting="true"
+				selectmode="single"
+				:selected="selected"
+				layout="table"
+				@select="selected = $event"
 			/>
 			<br />
 			<k-code>Selected: {{ selected.join(", ") }}</k-code>
@@ -57,15 +71,9 @@ export default {
 					selectable: true
 				};
 			});
-		}
-	},
-	methods: {
-		onSelect(item, index) {
-			if (this.selected.includes(index)) {
-				this.selected = this.selected.filter((i) => i !== index);
-			} else {
-				this.selected.push(index);
-			}
+		},
+		selectedIds() {
+			return this.selected.map((item) => item.id).join(", ");
 		}
 	}
 };

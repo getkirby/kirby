@@ -6,7 +6,7 @@
 		:class="$attrs.class"
 		:style="$attrs.style"
 		@change="$emit('change', $event)"
-		@select="onSelect"
+		@select="$emit('select', $event)"
 		@sort="$emit('sort', $event)"
 		@option="onOption"
 	>
@@ -37,8 +37,10 @@
 					:image="imageOptions(item)"
 					:layout="layout"
 					:link="link ? item.link : false"
+					:selectable="item.selectable !== false"
 					:selecting="selecting"
-					:selectable="item.selectable"
+					:selected="isSelected(item)"
+					:selectmode="selectmode"
 					:sortable="sortable && item.sortable !== false"
 					:theme="item.theme ?? theme"
 					:width="item.column"
@@ -46,7 +48,7 @@
 					@drag="onDragStart($event, item.dragText)"
 					@mouseover="$emit('hover', $event, item, itemIndex)"
 					@option="onOption($event, item, itemIndex)"
-					@select="onSelect(item, itemIndex)"
+					@select="onSelect(item)"
 				>
 					<template v-if="$slots.options" #options>
 						<slot name="options" v-bind="{ item, index: itemIndex }" />
@@ -59,6 +61,7 @@
 
 <script>
 import { layout } from "@/mixins/props.js";
+
 /**
  * Collection items that can be displayed in various layouts
  */
@@ -97,8 +100,25 @@ export const props = {
 		},
 		/**
 		 * Whether items are in selecting mode
+		 * @since 5.0.0
 		 */
 		selecting: Boolean,
+		/**
+		 * Array of selected items
+		 * @since 6.0.0
+		 */
+		selected: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * @since 6.0.0
+		 * @values "single", "multiple"
+		 */
+		selectmode: {
+			type: String,
+			default: "multiple"
+		},
 		/**
 		 * Whether items are generally sortable.
 		 * Each item can disable this individually.
@@ -156,19 +176,39 @@ export default {
 				fields: this.fields,
 				rows: this.items,
 				selecting: this.selecting,
+				selected: this.selected,
+				selectmode: this.selectmode,
 				sortable: this.sortable
 			};
 		}
 	},
 	methods: {
+		findSelectedIndex(item) {
+			return this.selected.findIndex(
+				(selected) => selected === (item._id ?? item.id)
+			);
+		},
+		isSelected(item) {
+			return this.findSelectedIndex(item) !== -1;
+		},
 		onDragStart($event, dragText) {
 			this.$panel.drag.start("text", dragText);
 		},
 		onOption(option, item, itemIndex) {
 			this.$emit("option", option, item, itemIndex);
 		},
-		onSelect(event, item, itemIndex) {
-			this.$emit("select", event, item, itemIndex);
+		onSelect(item) {
+			if (this.selectmode === "single") {
+				return this.$emit("select", [item._id ?? item.id]);
+			}
+
+			const index = this.findSelectedIndex(item);
+
+			if (index !== -1) {
+				return this.selected.toSpliced(index, 1);
+			}
+
+			return this.$emit("select", [...this.selected, item._id ?? item.id]);
 		},
 		imageOptions(item) {
 			let globalOptions = this.image;

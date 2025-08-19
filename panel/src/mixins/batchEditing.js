@@ -64,9 +64,6 @@ export default {
 		batchEditingEvent() {
 			return "selecting";
 		},
-		batchEditingIdentifier() {
-			return "id";
-		},
 		batchEditingToggle() {
 			return {
 				icon: "checklist",
@@ -83,16 +80,8 @@ export default {
 		onBatchDelete() {
 			throw new Error("Not implemented");
 		},
-		onSelect(item) {
-			if (this.selected.includes(item)) {
-				this.selected = this.selected.filter(
-					(selected) =>
-						selected[this.batchEditingIdentifier] !==
-						item[this.batchEditingIdentifier]
-				);
-			} else {
-				this.selected.push(item);
-			}
+		onSelect(ids) {
+			this.selected = ids;
 		},
 		onSelectToggle() {
 			this.isSelecting ? this.stopSelecting() : this.startSelecting();

@@ -1,6 +1,6 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="cardlets">
+		<k-lab-example label="Cardlets">
 			<k-items :items="items" layout="cardlets" />
 		</k-lab-example>
 		<k-lab-example label="Sortable">
@@ -10,8 +10,21 @@
 			<k-items
 				:items="selectableItems"
 				:selecting="true"
+				:selected="selected"
 				layout="cardlets"
-				@select="onSelect"
+				@select="selected = $event"
+			/>
+			<br />
+			<k-code>Selected: {{ selected.join(", ") }}</k-code>
+		</k-lab-example>
+		<k-lab-example label="Selected">
+			<k-items
+				:items="selectableItems"
+				:selecting="true"
+				selectmode="single"
+				:selected="selected"
+				layout="cardlets"
+				@select="selected = $event"
 			/>
 			<br />
 			<k-code>Selected: {{ selected.join(", ") }}</k-code>
@@ -37,15 +50,6 @@ export default {
 					selectable: true
 				};
 			});
-		}
-	},
-	methods: {
-		onSelect(item, index) {
-			if (this.selected.includes(index)) {
-				this.selected = this.selected.filter((i) => i !== index);
-			} else {
-				this.selected.push(index);
-			}
 		}
 	}
 };

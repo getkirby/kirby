@@ -78,6 +78,7 @@
 						:pagination="limit && !isSelecting ? pagination : false"
 						:rows="paginatedItems"
 						:selecting="isSelecting"
+						:selected="selected"
 						:sortable="isSortable"
 						@cell="open($event.row, $event.columnIndex)"
 						@input="onTableInput"
@@ -191,10 +192,6 @@ export default {
 
 		batchEditingEvent() {
 			return "structure.selecting";
-		},
-
-		batchEditingIdentifier() {
-			return "_id";
 		},
 
 		canSelect() {
@@ -564,7 +561,9 @@ export default {
 		},
 
 		removeSelected() {
-			this.items = this.items.filter((item) => !this.selected.includes(item));
+			this.items = this.items.filter(
+				(item) => this.selected.includes(item._id) === false
+			);
 			this.save();
 		},
 

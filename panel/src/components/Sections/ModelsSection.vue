@@ -150,6 +150,7 @@ export default {
 				items: this.items,
 				pagination: this.pagination,
 				selecting: !this.isProcessing && this.isSelecting,
+				selected: this.selected,
 				sortable: !this.isProcessing && this.options.sortable,
 				size: this.options.size
 			};
@@ -228,7 +229,7 @@ export default {
 				await this.$api.delete(
 					this.parent + "/sections/" + this.name + "/delete",
 					{
-						ids: this.selected.map((item) => item.id)
+						ids: this.selected
 					}
 				);
 			} catch (error) {

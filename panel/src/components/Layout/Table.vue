@@ -143,21 +143,21 @@
 								<label class="k-table-select-checkbox">
 									<input
 										:disabled="row.selectable === false"
-										type="checkbox"
-										@change="$emit('select', row, rowIndex)"
+										:type="selectmode === 'single' ? 'radio' : 'checkbox'"
+										:checked="isSelected(row)"
+										@change="onSelect(row)"
 									/>
 								</label>
 							</template>
 
-							<template v-else>
-								<slot name="options" v-bind="{ row, rowIndex }">
-									<k-options-dropdown
-										:options="row.options ?? options"
-										:text="(row.options ?? options).length > 1"
-										@option="onOption($event, row, rowIndex)"
-									/>
-								</slot>
-							</template>
+							<slot name="options" v-bind="{ row, rowIndex }">
+								<k-options-dropdown
+									v-if="!selecting"
+									:options="row.options ?? options"
+									:text="(row.options ?? options).length > 1"
+									@option="onOption($event, row, rowIndex)"
+								/>
+							</slot>
 						</td>
 					</tr>
 				</template>
@@ -229,8 +229,26 @@ export default {
 		pagination: [Object, Boolean],
 		/**
 		 * Whether the table is in select mode
+		 * @since 5.0.0
+		 * @values "single", "multiple", false
 		 */
 		selecting: Boolean,
+		/**
+		 * Selected items
+		 * @since 6.0.0
+		 */
+		selected: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * @since 6.0.0
+		 * @values "single", "multiple"
+		 */
+		selectmode: {
+			type: String,
+			default: "multiple"
+		},
 		/**
 		 * Whether table is sortable
 		 */
@@ -301,7 +319,7 @@ export default {
 		 */
 		hasOptions() {
 			return (
-				this.selecting ||
+				this.selecting !== false ||
 				this.$slots.options ||
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
@@ -314,6 +332,11 @@ export default {
 		}
 	},
 	methods: {
+		findSelectedIndex(row) {
+			return this.selected.findIndex(
+				(selected) => selected === (row._id ?? row.id)
+			);
+		},
 		/**
 		 * Checks if specific column is fully empty
 		 * @param {number} columnIndex
@@ -325,6 +348,9 @@ export default {
 					(row) => this.$helper.object.isEmpty(row[columnIndex]) === false
 				).length === 0
 			);
+		},
+		isSelected(row) {
+			return this.findSelectedIndex(row) !== -1;
 		},
 		/**
 		 * Returns label for a column
@@ -372,6 +398,19 @@ export default {
 		 */
 		onOption(option, row, rowIndex) {
 			this.$emit("option", option, row, rowIndex);
+		},
+		onSelect(row) {
+			if (this.selectmode === "single") {
+				return this.$emit("select", [row._id ?? row.id]);
+			}
+
+			const index = this.findSelectedIndex(row);
+
+			if (index !== -1) {
+				return this.selected.toSpliced(index, 1);
+			}
+
+			return this.$emit("select", [...this.selected, row._id ?? row.id]);
 		},
 		/**
 		 * When the table has been sorted,
