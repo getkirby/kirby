@@ -29,9 +29,7 @@ class FileSessionStoreTest extends TestCase
 		// make internal data accessible
 		$reflector = new ReflectionClass(FileSessionStore::class);
 		$this->storeHandles = $reflector->getProperty('handles');
-		$this->storeHandles->setAccessible(true);
 		$this->storeIsLocked = $reflector->getProperty('isLocked');
-		$this->storeIsLocked->setAccessible(true);
 
 		// demo files
 		F::write(static::TMP . '/.gitignore', "*\n!.gitignore");
