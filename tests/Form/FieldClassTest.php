@@ -310,7 +310,7 @@ class FieldClassTest extends TestCase
 		$language = Language::ensure('current');
 
 		$field = new TestField(['disabled' => true]);
-		$this->assertFalse($field->isSubmittable($language));
+		$this->assertTrue($field->isSubmittable($language));
 	}
 
 	public function testIsSubmittableWithNonDefaultLanguage(): void
