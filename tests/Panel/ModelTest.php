@@ -451,6 +451,7 @@ class ModelTest extends TestCase
 			'link' => '/site',
 			'permissions' => [
 				'changeTitle' => false,
+				'unlock' => false,
 				'update' => false,
 			],
 			'text' => '',

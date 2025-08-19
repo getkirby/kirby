@@ -27,9 +27,11 @@
 					:editor="editor"
 					:has-diff="hasDiff"
 					:is-locked="isLocked"
+					:is-unlockable="permissions.unlock"
 					:modified="modified"
 					@discard="onDiscard"
 					@submit="onSubmit"
+					@unlock="onUnlock"
 				/>
 			</template>
 		</k-header>
