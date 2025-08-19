@@ -26,7 +26,7 @@ class Permalink
 
 	public static function for(string $uuid): static|null
 	{
-		if ($uuid = Uuid::for($uuid)) {
+		if ($uuid = Uuid::from($uuid, ['page', 'file'])) {
 			return new static($uuid);
 		}
 
