@@ -18,7 +18,6 @@ class CacheTest extends TestCase
 	public function testKey(): void
 	{
 		$method = new ReflectionMethod(Cache::class, 'key');
-		$method->setAccessible(true);
 
 		$cache = new TestCache();
 		$this->assertSame('foo', $method->invoke($cache, 'foo'));
@@ -83,7 +82,6 @@ class CacheTest extends TestCase
 	public function testExpiration(): void
 	{
 		$method = new ReflectionMethod(Cache::class, 'expiration');
-		$method->setAccessible(true);
 
 		$cache = new TestCache();
 		$this->assertSame(0, $method->invoke($cache));

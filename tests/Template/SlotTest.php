@@ -28,8 +28,6 @@ class SlotTest extends TestCase
 
 		$captureProp = new ReflectionProperty($snippet, 'capture');
 		$slotsProp   = new ReflectionProperty($snippet, 'slots');
-		$captureProp->setAccessible(true);
-		$slotsProp->setAccessible(true);
 
 		$this->assertCount(0, $captureProp->getValue($snippet));
 		$this->assertCount(0, $slotsProp->getValue($snippet));
