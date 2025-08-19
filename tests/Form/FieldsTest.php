@@ -742,7 +742,7 @@ class FieldsTest extends TestCase
 
 		$this->assertSame([
 			'a' => 'A updated',
-			'b' => 'B'
+			'b' => 'B updated'
 		], $fields->toStoredValues());
 	}
 

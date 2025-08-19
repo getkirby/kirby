@@ -119,10 +119,6 @@ trait Value
 			return false;
 		}
 
-		if ($this->isDisabled() === true) {
-			return false;
-		}
-
 		if ($this->isTranslatable($language) === false) {
 			return false;
 		}
