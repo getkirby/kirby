@@ -3,9 +3,13 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class LanguageRoutesTest extends TestCase
 {
+	protected $app;
+	public const FIXTURES = __DIR__ . '/fixtures';
+
 	public function setUp(): void
 	{
 		App::destroy();
@@ -35,6 +39,19 @@ class LanguageRoutesTest extends TestCase
 	public function testFallback(): void
 	{
 		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'fr',
+					'name'    => 'French',
+					'default' => true,
+					'url'     => '/',
+				],
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'url'     => '/en',
+				],
+			],
 			'site' => [
 				'children' => [
 					[
@@ -46,10 +63,54 @@ class LanguageRoutesTest extends TestCase
 		]);
 
 		$app->call('notes');
-		$this->assertSame($app->language()->code(), 'en');
+		$this->assertSame($app->language()->code(), 'fr');
 
-		$app->call('de/notes');
-		$this->assertSame($app->language()->code(), 'de');
+		$app->call('en/notes');
+		$this->assertSame($app->language()->code(), 'en');
+	}
+
+	public static function languagePrefixProvider(): array {
+		return [
+			['not-exists', 'Erreur'],
+			['en/not-exists', 'Error']
+		];
+	}
+
+	#[DataProvider('languagePrefixProvider')]
+	public function testLanguagePrefix(string $path, string $body): void
+	{
+		$app = new App([
+			'roots' => [
+				'index'     => static::FIXTURES,
+				'languages' => static::FIXTURES . '/languages',
+				'templates' => static::FIXTURES . '/templates'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     	   => 'error',
+						'template' 	   => 'error',
+						'translations' => [
+							[
+								'code'    => 'fr',
+								'content' => [
+									'title' => 'Erreur'
+								]
+							],
+							[
+								'code'    => 'en',
+								'content' => [
+									'title' => 'Error'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+
+		$this->assertSame($body, $app->render($path)->body());
 	}
 
 	public function testNotNextWhenFalsyReturn(): void

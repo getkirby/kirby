@@ -585,6 +585,30 @@ class LanguageTest extends TestCase
 		$this->assertSame($expected, $language->pattern());
 	}
 
+	public function testPatternWithNoPathPrefixButOtherLanguages(): void
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true,
+					'url'     => '/'
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				],
+				[
+					'code' => 'fr',
+					'name' => 'Frances',
+				]
+			]
+		]);
+
+		$this->assertSame('^(?!(?:de|fr)\/)(:all)', $app->language('en')->pattern());
+	}
+
 	public function testRoot(): void
 	{
 		$app = new App([

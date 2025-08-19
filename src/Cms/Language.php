@@ -7,6 +7,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 use Stringable;
@@ -218,7 +219,7 @@ class Language implements Stringable
 	 */
 	public function delete(): bool
 	{
-		$kirby = App::instance();
+		$kirby = $this->kirby();
 		$code  = $this->code();
 
 		// validate the language rules
@@ -431,7 +432,20 @@ class Language implements Stringable
 		$path = $this->path();
 
 		if (empty($path) === true) {
-			return '(:all)';
+			$pattern = '(:all)';
+
+			// match anything except paths that begin with the prefix
+			// of any other language
+			$languages = $this->kirby()->languages()->not($this)->values(
+				fn ($language) => $language->path()
+			);
+
+			if (count($languages) > 0) {
+				$pattern = '^(?!(?:' . A::join($languages, '|') . ')\/)' . $pattern;
+			}
+
+
+			return $pattern;
 		}
 
 		return $path . '/(:all?)';
