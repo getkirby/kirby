@@ -6,37 +6,28 @@ class PermalinksTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Uuid.Permalinks';
 
-	public function testRoute(): void
+	public function testRouting(): void
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'    => 'a',
-						'content' => ['uuid' => 'my-id']
-					]
-				]
-			]
-		]);
-
 		// not cached, should fail (redirect to error)
-		$response = $app->call('/@/page/my-id');
+		$response = $this->app->call('/@/page/my-page');
 		$this->assertFalse($response);
 
 		// cached, should redirect to page A
-		$app->page('a')->uuid()->populate();
-		$response = $app->call('/@/page/my-id')->send();
+		$this->app->page('page-a')->uuid()->populate();
+		$response = $this->app->call('/@/page/my-page')->send();
 		$this->assertSame(302, $response->code());
-		$this->assertSame('https://getkirby.com/a', $response->header('Location'));
+		$this->assertSame('https://getkirby.com/page-a', $response->header('Location'));
 
 		// check if ->url() populates cache
-		$uuid = $app->page('a')->uuid();
+		$uuid = $this->app->page('page-a')->uuid();
 		$uuid->clear();
-		$response = $app->call('/@/page/my-id');
+		$response = $this->app->call('/@/page/my-page');
 		$this->assertFalse($response);
-		$uuid->toPermalink();
-		$response = $app->call('/@/page/my-id')->send();
+
+		$permalink = new Permalink($uuid);
+		$permalink->url();
+		$response = $this->app->call('/@/page/my-page')->send();
 		$this->assertSame(302, $response->code());
-		$this->assertSame('https://getkirby.com/a', $response->header('Location'));
+		$this->assertSame('https://getkirby.com/page-a', $response->header('Location'));
 	}
 }

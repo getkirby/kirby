@@ -145,19 +145,6 @@ class UuidTest extends TestCase
 		Uuid::for('foo://my-id');
 	}
 
-	public function testForPermalinkString(): void
-	{
-		$this->assertInstanceOf(PageUuid::class, Uuid::for('/@/page/my-id'));
-		$this->assertInstanceOf(FileUuid::class, Uuid::for('/@/file/my-id'));
-	}
-
-	public function testForPermalinkStringInvalid(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid UUID URI: foo://my-id');
-		Uuid::for('/@/foo/my-id');
-	}
-
 	public function testForStringInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -422,6 +409,14 @@ class UuidTest extends TestCase
 
 		$uuid = Uuid::for('file://my-id');
 		$this->assertNull($uuid->toUrl());
+	}
+
+	public function testType(): void
+	{
+		$this->assertSame('page', Uuid::for('page://my-page')->type());
+		$this->assertSame('file', Uuid::for('file://my-page')->type());
+		$this->assertSame('site', Uuid::for('site://my-page')->type());
+		$this->assertSame('user', Uuid::for('user://my-page')->type());
 	}
 
 	public function testValue(): void
