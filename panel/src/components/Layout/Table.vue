@@ -145,7 +145,7 @@
 										:disabled="row.selectable === false"
 										:type="selectmode === 'single' ? 'radio' : 'checkbox'"
 										:checked="isSelected(row)"
-										@change="$emit('select', row, rowIndex)"
+										@change="onSelect(row)"
 									/>
 								</label>
 							</template>
@@ -174,8 +174,6 @@
 </template>
 
 <script>
-import { findSelectedIndex } from "@/components/Collection/Items.vue";
-
 /**
  * A simple table component with columns and rows
  */
@@ -334,6 +332,11 @@ export default {
 		}
 	},
 	methods: {
+		findSelectedIndex(row) {
+			return this.selected.findIndex(
+				(selected) => selected === (row._id ?? row.id)
+			);
+		},
 		/**
 		 * Checks if specific column is fully empty
 		 * @param {number} columnIndex
@@ -347,7 +350,7 @@ export default {
 			);
 		},
 		isSelected(row) {
-			return findSelectedIndex(this.selected, row) !== -1;
+			return this.findSelectedIndex(row) !== -1;
 		},
 		/**
 		 * Returns label for a column
@@ -395,6 +398,19 @@ export default {
 		 */
 		onOption(option, row, rowIndex) {
 			this.$emit("option", option, row, rowIndex);
+		},
+		onSelect(row) {
+			if (this.selectmode === "single") {
+				return this.$emit("select", [row._id ?? row.id]);
+			}
+
+			const index = this.findSelectedIndex(row);
+
+			if (index !== -1) {
+				return this.selected.toSpliced(index, 1);
+			}
+
+			return this.$emit("select", [...this.selected, row._id ?? row.id]);
 		},
 		/**
 		 * When the table has been sorted,

@@ -561,7 +561,9 @@ export default {
 		},
 
 		removeSelected() {
-			this.items = this.items.filter((item) => !this.selected.includes(item));
+			this.items = this.items.filter(
+				(item) => this.selected.includes(item._id) === false
+			);
 			this.save();
 		},
 

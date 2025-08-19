@@ -13,13 +13,14 @@
 				:columns="columns"
 				:items="selectableItems"
 				:selecting="true"
+				:selected="selected"
 				layout="table"
-				@selected="selected = $event"
+				@select="selected = $event"
 			/>
 			<br />
-			<k-code>Selected: {{ selectedIds }}</k-code>
+			<k-code>Selected: {{ selected.join(", ") }}</k-code>
 		</k-lab-example>
-		<k-lab-example label="Selected">
+		<k-lab-example label="Selectable: single">
 			<k-items
 				:columns="columns"
 				:items="selectableItems"
@@ -27,10 +28,10 @@
 				selectmode="single"
 				:selected="selected"
 				layout="table"
-				@selected="selected = $event"
+				@select="selected = $event"
 			/>
 			<br />
-			<k-code>Selected: {{ selectedIds }}</k-code>
+			<k-code>Selected: {{ selected.join(", ") }}</k-code>
 		</k-lab-example>
 	</k-lab-examples>
 </template>

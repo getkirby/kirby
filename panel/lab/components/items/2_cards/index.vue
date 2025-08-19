@@ -10,23 +10,24 @@
 			<k-items
 				:items="selectableItems"
 				:selecting="true"
+				:selected="selected"
 				layout="cards"
-				@selected="selected = $event"
+				@select="selected = $event"
 			/>
 			<br />
 			<k-code>Selected: {{ selectedIds }}</k-code>
 		</k-lab-example>
-		<k-lab-example label="Selected">
+		<k-lab-example label="Selectable: single">
 			<k-items
 				:items="selectableItems"
 				:selecting="true"
 				selectmode="single"
 				:selected="selected"
 				layout="cards"
-				@selected="selected = $event"
+				@select="selected = $event"
 			/>
 			<br />
-			<k-code>Selected: {{ selectedIds }}</k-code>
+			<k-code>Selected: {{ selected.join(", ") }}</k-code>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
@@ -49,9 +50,6 @@ export default {
 					selectable: true
 				};
 			});
-		},
-		selectedIds() {
-			return this.selected.map((item) => item.id).join(", ");
 		}
 	}
 };

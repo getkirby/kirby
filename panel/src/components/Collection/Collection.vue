@@ -25,7 +25,6 @@
 			@item="$emit('item', $event)"
 			@option="onOption"
 			@select="onSelect"
-			@selected="onSelected"
 			@sort="$emit('sort', $event)"
 		>
 			<template v-if="$slots.options" #options="{ item, index }">
@@ -147,9 +146,6 @@ export default {
 		},
 		onSelect(...args) {
 			this.$emit("select", ...args);
-		},
-		onSelected(...args) {
-			this.$emit("selected", ...args);
 		}
 	}
 };

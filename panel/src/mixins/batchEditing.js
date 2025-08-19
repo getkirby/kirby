@@ -1,5 +1,3 @@
-import { updateSelection } from "@/components/Collection/Items.vue";
-
 /**
  * The Batch Editing mixin is intended for all components
  * that want to introduce batch editing capabilities. It provides the
@@ -82,8 +80,8 @@ export default {
 		onBatchDelete() {
 			throw new Error("Not implemented");
 		},
-		onSelect(item) {
-			this.selected = updateSelection(this.selected, item);
+		onSelect(ids) {
+			this.selected = ids;
 		},
 		onSelectToggle() {
 			this.isSelecting ? this.stopSelecting() : this.startSelecting();
