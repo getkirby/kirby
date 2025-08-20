@@ -553,7 +553,7 @@ class Collection extends Iterator implements Stringable
 				}
 			}
 
-			return new self($groups);
+			return new self($groups, !$caseInsensitive);
 		}
 
 		throw new Exception(
