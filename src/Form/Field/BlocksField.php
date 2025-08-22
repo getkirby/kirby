@@ -108,6 +108,7 @@ class BlocksField extends FieldClass
 	 * @psalm-suppress MethodSignatureMismatch
 	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
 	 */
+	#[\Override]
 	public function fill(mixed $value): static
 	{
 		$value  = BlocksCollection::parse($value);
@@ -165,6 +166,7 @@ class BlocksField extends FieldClass
 		return array_values($blocks);
 	}
 
+	#[\Override]
 	public function props(): array
 	{
 		return [

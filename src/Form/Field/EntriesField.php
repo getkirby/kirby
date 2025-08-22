@@ -57,6 +57,7 @@ class EntriesField extends FieldClass
 	 * @psalm-suppress MethodSignatureMismatch
 	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
 	 */
+	#[\Override]
 	public function fill(mixed $value): static
 	{
 		$this->value = Data::decode($value ?? '', 'yaml');
@@ -71,6 +72,7 @@ class EntriesField extends FieldClass
 		);
 	}
 
+	#[\Override]
 	public function props(): array
 	{
 		return [
@@ -130,6 +132,7 @@ class EntriesField extends FieldClass
 		];
 	}
 
+	#[\Override]
 	public function toFormValue(): mixed
 	{
 		$form  = $this->form();
@@ -146,6 +149,7 @@ class EntriesField extends FieldClass
 		);
 	}
 
+	#[\Override]
 	public function toStoredValue(): mixed
 	{
 		$form  = $this->form();

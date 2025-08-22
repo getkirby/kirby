@@ -64,6 +64,7 @@ class StatsField extends FieldClass
 		);
 	}
 
+	#[\Override]
 	public function props(): array
 	{
 		return [
