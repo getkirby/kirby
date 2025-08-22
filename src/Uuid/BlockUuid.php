@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Kirby\Cms\Blocks;
 use Kirby\Content\Field;
+use Override;
 
 /**
  * UUID for \Kirby\Cms\Block
@@ -32,6 +33,7 @@ class BlockUuid extends FieldUuid
 	 * Converts content field to a Blocks collection
 	 * @unstable
 	 */
+	#[Override]
 	public static function fieldToCollection(Field $field): Blocks
 	{
 		return $field->toBlocks();

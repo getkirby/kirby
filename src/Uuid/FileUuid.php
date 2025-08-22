@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\File;
+use Override;
 
 /**
  * UUID for \Kirby\Cms\File
@@ -32,6 +33,7 @@ class FileUuid extends ModelUuid
 	 * a hybrid URI from the parent's UUID and filename; needs
 	 * to resolve parent UUID and then get file by filename
 	 */
+	#[Override]
 	protected function findByCache(): File|null
 	{
 		// get mixed Uri from cache
@@ -53,6 +55,7 @@ class FileUuid extends ModelUuid
 	 *
 	 * @return \Generator|\Kirby\Cms\File[]
 	 */
+	#[Override]
 	public static function index(): Generator
 	{
 		foreach (SiteUuid::index() as $site) {
@@ -71,6 +74,7 @@ class FileUuid extends ModelUuid
 	/**
 	 * Returns value to be stored in cache
 	 */
+	#[Override]
 	public function value(): array
 	{
 		$model  = $this->model();

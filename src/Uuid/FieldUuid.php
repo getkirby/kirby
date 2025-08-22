@@ -6,6 +6,7 @@ use Generator;
 use Kirby\Cms\Collection;
 use Kirby\Content\Field;
 use Kirby\Toolkit\A;
+use Override;
 
 /**
  * Base for UUIDs for models from content fields,
@@ -36,6 +37,7 @@ abstract class FieldUuid extends Uuid
 	 * Looks up UUID in cache and resolves
 	 * to identifiable model object
 	 */
+	#[Override]
 	protected function findByCache(): Identifiable|null
 	{
 		// get mixed Uri from cache
@@ -59,6 +61,7 @@ abstract class FieldUuid extends Uuid
 	 * Looks up UUID in local and global index
 	 * and returns the identifiable model object
 	 */
+	#[Override]
 	protected function findByIndex(): Identifiable|null
 	{
 		foreach ($this->indexes() as $collection) {
@@ -75,6 +78,7 @@ abstract class FieldUuid extends Uuid
 	 * (we can rely in this case that the Uri was filled  on initiation)
 	 * @todo needs to be ensured for structure field once refactoring
 	 */
+	#[Override]
 	public function id(): string
 	{
 		return $this->uri->host();
@@ -86,6 +90,7 @@ abstract class FieldUuid extends Uuid
 	 *
 	 * @return \Generator|\Kirby\Cms\Collection[]
 	 */
+	#[Override]
 	public static function index(): Generator
 	{
 		$generate = static function (Generator $models): Generator {
@@ -113,6 +118,7 @@ abstract class FieldUuid extends Uuid
 	 * - field name
 	 * - UUID id string for model
 	 */
+	#[Override]
 	public function value(): array
 	{
 		$model  = $this->model();

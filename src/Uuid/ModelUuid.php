@@ -2,6 +2,8 @@
 
 namespace Kirby\Uuid;
 
+use Override;
+
 /**
  * Base for UUIDs for models where id string
  * is stored in the content, such as pages and files
@@ -26,6 +28,7 @@ abstract class ModelUuid extends Uuid
 	 * Looks up UUID in local and global index
 	 * and returns the identifiable model object
 	 */
+	#[Override]
 	protected function findByIndex(): Identifiable|null
 	{
 		foreach ($this->indexes() as $model) {
@@ -41,6 +44,7 @@ abstract class ModelUuid extends Uuid
 	 * Returns the UUID's id string; if not set yet,
 	 * creates a new unique ID and writes it to content file
 	 */
+	#[Override]
 	public function id(): string
 	{
 		if ($id = $this->uri->host()) {
@@ -65,6 +69,7 @@ abstract class ModelUuid extends Uuid
 	 *
 	 * @param \Kirby\Cms\ModelWithContent $model
 	 */
+	#[Override]
 	public static function retrieveId(Identifiable $model): string|null
 	{
 		return $model->content('default')->get('uuid')->value();

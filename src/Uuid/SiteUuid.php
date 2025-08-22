@@ -5,6 +5,7 @@ namespace Kirby\Uuid;
 use Generator;
 use Kirby\Cms\App;
 use Kirby\Cms\Site;
+use Override;
 
 /**
  * UUID for \Kirby\Cms\Site
@@ -29,6 +30,7 @@ class SiteUuid extends Uuid
 	 * Returns empty string since
 	 * site doesn't really need an ID
 	 */
+	#[Override]
 	public function id(): string
 	{
 		return '';
@@ -39,6 +41,7 @@ class SiteUuid extends Uuid
 	 *
 	 * @return \Generator|\Kirby\Cms\Site[]
 	 */
+	#[Override]
 	public static function index(): Generator
 	{
 		yield App::instance()->site();
@@ -47,6 +50,7 @@ class SiteUuid extends Uuid
 	/**
 	 * Returns the site object
 	 */
+	#[Override]
 	public function model(bool $lazy = false): Site
 	{
 		return $this->model ??= App::instance()->site();
@@ -55,6 +59,7 @@ class SiteUuid extends Uuid
 	/**
 	 * Pretends to fill cache - we don't need it in cache
 	 */
+	#[Override]
 	public function populate(bool $force = false): bool
 	{
 		return true;
@@ -64,6 +69,7 @@ class SiteUuid extends Uuid
 	 * Returns empty string since
 	 * site doesn't really need an ID
 	 */
+	#[Override]
 	public static function retrieveId(Identifiable $model): string
 	{
 		return '';
@@ -72,6 +78,7 @@ class SiteUuid extends Uuid
 	/**
 	 * Returns the full UUID string including scheme
 	 */
+	#[Override]
 	public function toString(): string
 	{
 		return 'site://';

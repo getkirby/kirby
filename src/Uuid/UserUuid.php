@@ -5,6 +5,7 @@ namespace Kirby\Uuid;
 use Generator;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
+use Override;
 
 /**
  * UUID for \Kirby\Cms\User
@@ -30,6 +31,7 @@ class UserUuid extends Uuid
 	 * (we can rely in this case that the Uri was filled
 	 * with the model ID on initiation)
 	 */
+	#[Override]
 	public function id(): string
 	{
 		return $this->uri->host();
@@ -40,6 +42,7 @@ class UserUuid extends Uuid
 	 *
 	 * @return \Generator|\Kirby\Cms\User[]
 	 */
+	#[Override]
 	public static function index(): Generator
 	{
 		yield from App::instance()->users();
@@ -48,6 +51,7 @@ class UserUuid extends Uuid
 	/**
 	 * Returns the user object
 	 */
+	#[Override]
 	public function model(bool $lazy = false): User|null
 	{
 		return $this->model ??= App::instance()->user($this->id());
@@ -56,6 +60,7 @@ class UserUuid extends Uuid
 	/**
 	 * Pretends to fill cache - we don't need it in cache
 	 */
+	#[Override]
 	public function populate(bool $force = false): bool
 	{
 		return true;

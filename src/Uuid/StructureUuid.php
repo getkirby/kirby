@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Kirby\Cms\Structure;
 use Kirby\Content\Field;
+use Override;
 
 /**
  * UUID for \Kirby\Cms\StructureObject
@@ -32,6 +33,7 @@ class StructureUuid extends FieldUuid
 	 * Converts content field to a Structure collection
 	 * @unstable
 	 */
+	#[Override]
 	public static function fieldToCollection(Field $field): Structure
 	{
 		return $field->toStructure();

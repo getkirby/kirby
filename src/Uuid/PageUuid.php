@@ -5,6 +5,7 @@ namespace Kirby\Uuid;
 use Generator;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Override;
 
 /**
  * UUID for \Kirby\Cms\Page
@@ -31,6 +32,7 @@ class PageUuid extends ModelUuid
 	 * Looks up UUID in cache and resolves
 	 * to page object
 	 */
+	#[Override]
 	protected function findByCache(): Page|null
 	{
 		if ($key = $this->key()) {
@@ -47,6 +49,7 @@ class PageUuid extends ModelUuid
 	 *
 	 * @return \Generator|\Kirby\Cms\Page[]
 	 */
+	#[Override]
 	public static function index(Page|null $entry = null): Generator
 	{
 		$entry ??= App::instance()->site();

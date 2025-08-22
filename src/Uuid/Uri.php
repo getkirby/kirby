@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Kirby\Http\Uri as BaseUri;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * Uri protocol for UUIDs
@@ -52,6 +53,7 @@ class Uri extends BaseUri
 	 * Custom base method to ensure that
 	 * scheme is always included
 	 */
+	#[Override]
 	public function base(): string|null
 	{
 		return $this->scheme . '://' . $this->host;
@@ -73,6 +75,7 @@ class Uri extends BaseUri
 	/**
 	 * Return the full UUID string
 	 */
+	#[Override]
 	public function toString(): string
 	{
 		$url = parent::toString();
