@@ -21,6 +21,7 @@ class Mysql extends Sql
 	 *
 	 * @param string $table Table name
 	 */
+	#[\Override]
 	public function columns(string $table): array
 	{
 		$databaseBinding = $this->bindingName('database');
@@ -42,6 +43,7 @@ class Mysql extends Sql
 	 * Returns a query to list the tables of the current database;
 	 * the query needs to return rows with a column `name`
 	 */
+	#[\Override]
 	public function tables(): array
 	{
 		$binding = $this->bindingName('database');

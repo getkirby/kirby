@@ -21,6 +21,7 @@ class Sqlite extends Sql
 	 *
 	 * @param string $table Table name
 	 */
+	#[\Override]
 	public function columns(string $table): array
 	{
 		return [
@@ -34,6 +35,7 @@ class Sqlite extends Sql
 	 * creation for multiple database drivers
 	 * @codeCoverageIgnore
 	 */
+	#[\Override]
 	public function columnTypes(): array
 	{
 		return [
@@ -55,6 +57,7 @@ class Sqlite extends Sql
 	 *                     used for a VALUES clause; only relevant
 	 *                     for SQLite
 	 */
+	#[\Override]
 	public function combineIdentifier(
 		string $table,
 		string $column,
@@ -75,6 +78,7 @@ class Sqlite extends Sql
 	 * @param array $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
 	 * @return array Array with a `query` string and a `bindings` array
 	 */
+	#[\Override]
 	public function createTable(
 		string $table,
 		array $columns = []
@@ -116,6 +120,7 @@ class Sqlite extends Sql
 	/**
 	 * Quotes an identifier (table *or* column)
 	 */
+	#[\Override]
 	public function quoteIdentifier(string $identifier): string
 	{
 		// * is special
@@ -134,6 +139,7 @@ class Sqlite extends Sql
 	 * Returns a query to list the tables of the current database;
 	 * the query needs to return rows with a column `name`
 	 */
+	#[\Override]
 	public function tables(): array
 	{
 		return [
