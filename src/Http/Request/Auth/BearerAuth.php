@@ -26,6 +26,7 @@ class BearerAuth extends Auth
 	/**
 	 * Returns the auth type
 	 */
+	#[\Override]
 	public function type(): string
 	{
 		return 'bearer';

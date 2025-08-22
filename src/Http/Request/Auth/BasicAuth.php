@@ -51,6 +51,7 @@ class BasicAuth extends Auth
 	/**
 	 * Returns the authentication type
 	 */
+	#[\Override]
 	public function type(): string
 	{
 		return 'basic';

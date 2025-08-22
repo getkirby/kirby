@@ -36,6 +36,7 @@ class SessionAuth extends Auth
 	/**
 	 * Returns the authentication type
 	 */
+	#[\Override]
 	public function type(): string
 	{
 		return 'session';
