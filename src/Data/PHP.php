@@ -22,6 +22,7 @@ class PHP extends Handler
 	 *
 	 * @param string $indent For internal use only
 	 */
+	#[\Override]
 	public static function encode($data, string $indent = ''): string
 	{
 		return match (gettype($data)) {
@@ -59,6 +60,7 @@ class PHP extends Handler
 	/**
 	 * PHP strings shouldn't be decoded manually
 	 */
+	#[\Override]
 	public static function decode($string): array
 	{
 		throw new BadMethodCallException(
@@ -69,6 +71,7 @@ class PHP extends Handler
 	/**
 	 * Reads data from a file
 	 */
+	#[\Override]
 	public static function read(string $file): array
 	{
 		if (is_file($file) !== true) {
@@ -83,6 +86,7 @@ class PHP extends Handler
 	/**
 	 * Creates a PHP file with the given data
 	 */
+	#[\Override]
 	public static function write(string $file, $data = []): bool
 	{
 		$php = static::encode($data);

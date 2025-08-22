@@ -18,6 +18,7 @@ class Json extends Handler
 	/**
 	 * Converts an array to an encoded JSON string
 	 */
+	#[\Override]
 	public static function encode($data, bool $pretty = false): string
 	{
 		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
@@ -32,6 +33,7 @@ class Json extends Handler
 	/**
 	 * Parses an encoded JSON string and returns a multi-dimensional array
 	 */
+	#[\Override]
 	public static function decode($string): array
 	{
 		if ($string === null || $string === '') {
