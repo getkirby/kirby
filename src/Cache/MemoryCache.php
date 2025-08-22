@@ -2,6 +2,8 @@
 
 namespace Kirby\Cache;
 
+use Override;
+
 /**
  * Memory Cache Driver (cache in memory for current request only)
  *
@@ -21,6 +23,7 @@ class MemoryCache extends Cache
 	/**
 	 * Returns whether the cache is ready to store values
 	 */
+	#[Override]
 	public function enabled(): bool
 	{
 		return true;
@@ -35,6 +38,7 @@ class MemoryCache extends Cache
 	 * $cache->set('value', 'my value', 15);
 	 * ```
 	 */
+	#[Override]
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		$this->store[$key] = new Value($value, $minutes);
@@ -45,6 +49,7 @@ class MemoryCache extends Cache
 	 * Internal method to retrieve the raw cache value;
 	 * needs to return a Value object or null if not found
 	 */
+	#[Override]
 	public function retrieve(string $key): Value|null
 	{
 		return $this->store[$key] ?? null;
@@ -54,6 +59,7 @@ class MemoryCache extends Cache
 	 * Removes an item from the cache and returns
 	 * whether the operation was successful
 	 */
+	#[Override]
 	public function remove(string $key): bool
 	{
 		if (isset($this->store[$key])) {
@@ -68,6 +74,7 @@ class MemoryCache extends Cache
 	 * Flushes the entire cache and returns
 	 * whether the operation was successful
 	 */
+	#[Override]
 	public function flush(): bool
 	{
 		$this->store = [];

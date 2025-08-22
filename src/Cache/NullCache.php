@@ -2,6 +2,8 @@
 
 namespace Kirby\Cache;
 
+use Override;
+
 /**
  * Dummy Cache Driver (does not do any caching)
  *
@@ -16,6 +18,7 @@ class NullCache extends Cache
 	/**
 	 * Returns whether the cache is ready to store values
 	 */
+	#[Override]
 	public function enabled(): bool
 	{
 		return false;
@@ -30,6 +33,7 @@ class NullCache extends Cache
 	 * $cache->set('value', 'my value', 15);
 	 * ```
 	 */
+	#[Override]
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		return true;
@@ -39,6 +43,7 @@ class NullCache extends Cache
 	 * Internal method to retrieve the raw cache value;
 	 * needs to return a Value object or null if not found
 	 */
+	#[Override]
 	public function retrieve(string $key): Value|null
 	{
 		return null;
@@ -48,6 +53,7 @@ class NullCache extends Cache
 	 * Removes an item from the cache and returns
 	 * whether the operation was successful
 	 */
+	#[Override]
 	public function remove(string $key): bool
 	{
 		return true;
@@ -57,6 +63,7 @@ class NullCache extends Cache
 	 * Flushes the entire cache and returns
 	 * whether the operation was successful
 	 */
+	#[Override]
 	public function flush(): bool
 	{
 		return true;

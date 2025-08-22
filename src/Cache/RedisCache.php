@@ -3,6 +3,7 @@
 namespace Kirby\Cache;
 
 use Kirby\Cms\Helpers;
+use Override;
 use Redis;
 use Throwable;
 
@@ -83,6 +84,7 @@ class RedisCache extends Cache
 	/**
 	 * Returns whether the cache is ready to store values
 	 */
+	#[Override]
 	public function enabled(): bool
 	{
 		try {
@@ -99,6 +101,7 @@ class RedisCache extends Cache
 	/**
 	 * Determines if an item exists in the cache
 	 */
+	#[Override]
 	public function exists(string $key): bool
 	{
 		return $this->connection->exists($this->key($key)) !== 0;
@@ -108,6 +111,7 @@ class RedisCache extends Cache
 	 * Removes keys from the database
 	 * and returns whether the operation was successful
 	 */
+	#[Override]
 	public function flush(): bool
 	{
 		return $this->connection->flushDB();
@@ -116,6 +120,7 @@ class RedisCache extends Cache
 	/**
 	 * The key is not modified, because the prefix is added by the redis driver itself
 	 */
+	#[Override]
 	protected function key(string $key): string
 	{
 		return $key;
@@ -125,6 +130,7 @@ class RedisCache extends Cache
 	 * Removes an item from the cache
 	 * and returns whether the operation was successful
 	 */
+	#[Override]
 	public function remove(string $key): bool
 	{
 		return $this->connection->del($this->key($key));
@@ -134,6 +140,7 @@ class RedisCache extends Cache
 	 * Internal method to retrieve the raw cache value;
 	 * needs to return a Value object or null if not found
 	 */
+	#[Override]
 	public function retrieve(string $key): Value|null
 	{
 		$value = $this->connection->get($this->key($key));
@@ -149,6 +156,7 @@ class RedisCache extends Cache
 	 * $cache->set('value', 'my value', 15);
 	 * ```
 	 */
+	#[Override]
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		$key   = $this->key($key);

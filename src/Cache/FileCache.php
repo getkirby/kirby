@@ -6,6 +6,7 @@ use Kirby\Exception\Exception;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * File System Cache Driver
@@ -53,6 +54,7 @@ class FileCache extends Cache
 	/**
 	 * Returns whether the cache is ready to store values
 	 */
+	#[Override]
 	public function enabled(): bool
 	{
 		return is_writable($this->root) === true;
@@ -123,6 +125,7 @@ class FileCache extends Cache
 	 * $cache->set('value', 'my value', 15);
 	 * ```
 	 */
+	#[Override]
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		$file  = $this->file($key);
@@ -134,6 +137,7 @@ class FileCache extends Cache
 	 * Internal method to retrieve the raw cache value;
 	 * needs to return a Value object or null if not found
 	 */
+	#[Override]
 	public function retrieve(string $key): Value|null
 	{
 		$file = $this->file($key);
@@ -150,6 +154,7 @@ class FileCache extends Cache
 	 * returns the creation timestamp on success
 	 * and false if the item does not exist
 	 */
+	#[Override]
 	public function created(string $key): int|false
 	{
 		// use the modification timestamp
@@ -165,6 +170,7 @@ class FileCache extends Cache
 	 * Removes an item from the cache and returns
 	 * whether the operation was successful
 	 */
+	#[Override]
 	public function remove(string $key): bool
 	{
 		$file = $this->file($key);
@@ -218,6 +224,7 @@ class FileCache extends Cache
 	 * Flushes the entire cache and returns
 	 * whether the operation was successful
 	 */
+	#[Override]
 	public function flush(): bool
 	{
 		if (

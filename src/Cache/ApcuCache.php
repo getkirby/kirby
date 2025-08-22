@@ -3,6 +3,7 @@
 namespace Kirby\Cache;
 
 use APCUIterator;
+use Override;
 
 /**
  * APCu Cache Driver
@@ -18,6 +19,7 @@ class ApcuCache extends Cache
 	/**
 	 * Returns whether the cache is ready to store values
 	 */
+	#[Override]
 	public function enabled(): bool
 	{
 		return apcu_enabled();
@@ -26,6 +28,7 @@ class ApcuCache extends Cache
 	/**
 	 * Determines if an item exists in the cache
 	 */
+	#[Override]
 	public function exists(string $key): bool
 	{
 		return apcu_exists($this->key($key));
@@ -35,6 +38,7 @@ class ApcuCache extends Cache
 	 * Flushes the entire cache and returns
 	 * whether the operation was successful
 	 */
+	#[Override]
 	public function flush(): bool
 	{
 		if (empty($this->options['prefix']) === false) {
@@ -48,6 +52,7 @@ class ApcuCache extends Cache
 	 * Removes an item from the cache and returns
 	 * whether the operation was successful
 	 */
+	#[Override]
 	public function remove(string $key): bool
 	{
 		return apcu_delete($this->key($key));
@@ -57,6 +62,7 @@ class ApcuCache extends Cache
 	 * Internal method to retrieve the raw cache value;
 	 * needs to return a Value object or null if not found
 	 */
+	#[Override]
 	public function retrieve(string $key): Value|null
 	{
 		$value = apcu_fetch($this->key($key));
@@ -72,6 +78,7 @@ class ApcuCache extends Cache
 	 * $cache->set('value', 'my value', 15);
 	 * ```
 	 */
+	#[Override]
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		$key     = $this->key($key);

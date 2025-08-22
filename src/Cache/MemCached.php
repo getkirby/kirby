@@ -3,6 +3,7 @@
 namespace Kirby\Cache;
 
 use Memcached as MemcachedExt;
+use Override;
 
 /**
  * Memcached Driver
@@ -52,6 +53,7 @@ class MemCached extends Cache
 	 * Returns whether the cache is ready to
 	 * store values
 	 */
+	#[Override]
 	public function enabled(): bool
 	{
 		return $this->enabled;
@@ -66,6 +68,7 @@ class MemCached extends Cache
 	 * $cache->set('value', 'my value', 15);
 	 * ```
 	 */
+	#[Override]
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		$key     = $this->key($key);
@@ -78,6 +81,7 @@ class MemCached extends Cache
 	 * Internal method to retrieve the raw cache value;
 	 * needs to return a Value object or null if not found
 	 */
+	#[Override]
 	public function retrieve(string $key): Value|null
 	{
 		$value = $this->connection->get($this->key($key));
@@ -88,6 +92,7 @@ class MemCached extends Cache
 	 * Removes an item from the cache and returns
 	 * whether the operation was successful
 	 */
+	#[Override]
 	public function remove(string $key): bool
 	{
 		return $this->connection->delete($this->key($key));
@@ -98,6 +103,7 @@ class MemCached extends Cache
 	 * whether the operation was successful;
 	 * WARNING: Memcached only supports flushing the whole cache at once!
 	 */
+	#[Override]
 	public function flush(): bool
 	{
 		return $this->connection->flush();
