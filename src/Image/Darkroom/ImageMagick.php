@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Filesystem\F;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
+use Override;
 
 /**
  * Legacy ImageMagick driver using the convert CLI
@@ -115,6 +116,7 @@ class ImageMagick extends Darkroom
 	 *
 	 * @throws \Exception
 	 */
+	#[Override]
 	public function process(string $file, array $options = []): array
 	{
 		$options = $this->preprocess($file, $options);

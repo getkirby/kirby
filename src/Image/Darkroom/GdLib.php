@@ -6,6 +6,7 @@ use claviska\SimpleImage;
 use Kirby\Filesystem\Mime;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
+use Override;
 
 /**
  * GdLib darkroom driver
@@ -21,6 +22,7 @@ class GdLib extends Darkroom
 	/**
 	 * Processes the image with the SimpleImage library
 	 */
+	#[Override]
 	public function process(string $file, array $options = []): array
 	{
 		$options = $this->preprocess($file, $options);

@@ -6,6 +6,7 @@ use Exception;
 use Imagick as Image;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
+use Override;
 
 /**
  * Imagick darkroom driver
@@ -123,6 +124,7 @@ class Imagick extends Darkroom
 	 *
 	 * @throws \Exception
 	 */
+	#[Override]
 	public function process(string $file, array $options = []): array
 	{
 		$options = $this->preprocess($file, $options);
