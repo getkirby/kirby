@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Dropdown;
 
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -34,6 +35,7 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 	/**
 	 * Provides options for the page dropdown
 	 */
+	#[Override]
 	public function load(): array
 	{
 		$account     = $this->model->isLoggedIn();

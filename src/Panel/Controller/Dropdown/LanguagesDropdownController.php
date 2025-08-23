@@ -8,6 +8,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\Version;
 use Kirby\Panel\Controller\DropdownController;
+use Override;
 
 /**
  * Controls the dropdown for switching content translations
@@ -49,6 +50,7 @@ class LanguagesDropdownController extends DropdownController
 	/**
 	 * Options are used in the Fiber dropdown routes
 	 */
+	#[Override]
 	public function load(): array
 	{
 		$languages = $this->kirby->languages();

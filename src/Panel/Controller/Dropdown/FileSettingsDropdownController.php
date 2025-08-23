@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Dropdown;
 
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -35,6 +36,7 @@ class FileSettingsDropdownController extends ModelSettingsDropdownController
 	/**
 	 * Provides options for the page dropdown
 	 */
+	#[Override]
 	public function load(): array
 	{
 		$url     = $this->model->panel()->url(true);
