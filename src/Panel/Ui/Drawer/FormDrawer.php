@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Drawer;
 
 use Kirby\Panel\Ui\Drawer;
+use Override;
 
 /**
  * Drawer that contains a set of fields
@@ -41,6 +42,7 @@ class FormDrawer extends Drawer
 		]);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Drawer;
 
 use Kirby\Panel\Ui\Drawer;
+use Override;
 
 /**
  * Drawer that displays some text
@@ -39,6 +40,7 @@ class TextDrawer extends Drawer
 		]);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
