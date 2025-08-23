@@ -7,6 +7,7 @@ use Kirby\Panel\Lab\Doc;
 use Kirby\Panel\Lab\Docs;
 use Kirby\Panel\Ui\Drawer;
 use Kirby\Panel\Ui\Drawer\TextDrawer;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -29,6 +30,7 @@ class LabDocDrawerController extends DrawerController
 		}
 	}
 
+	#[Override]
 	public function load(): Drawer
 	{
 		// @codeCoverageIgnoreStart
