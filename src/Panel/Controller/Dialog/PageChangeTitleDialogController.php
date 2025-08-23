@@ -7,6 +7,7 @@ use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * Controls the Panel dialog for changing the title of a page
@@ -21,6 +22,7 @@ use Kirby\Toolkit\Str;
  */
 class PageChangeTitleDialogController extends PageDialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		$permissions = $this->page->permissions();
@@ -72,6 +74,7 @@ class PageChangeTitleDialogController extends PageDialogController
 		return $path;
 	}
 
+	#[Override]
 	public function submit(): array|true
 	{
 		$title   = trim($this->request->get('title', ''));

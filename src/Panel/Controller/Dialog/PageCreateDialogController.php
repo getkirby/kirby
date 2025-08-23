@@ -21,6 +21,7 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\A;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
+use Override;
 
 /**
  * Manages the Panel dialog to create new pages
@@ -359,6 +360,7 @@ class PageCreateDialogController extends DialogController
 	/**
 	 * Submits the dialog form and creates the new page
 	 */
+	#[Override]
 	public function submit(): array
 	{
 		$input  = $this->request->get();

@@ -8,6 +8,7 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\A;
+use Override;
 
 /**
  * Dialog controller for creating a new language
@@ -87,6 +88,7 @@ class LanguageFormDialogController extends DialogController
 		];
 	}
 
+	#[Override]
 	public function load(): Dialog
 	{
 		return new FormDialog(
@@ -115,6 +117,7 @@ class LanguageFormDialogController extends DialogController
 		return $locale;
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$data = $this->request->get([

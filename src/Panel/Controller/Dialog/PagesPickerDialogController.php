@@ -7,6 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Panel\Collector\PagesCollector;
+use Override;
 
 /**
  * Controls the Panel dialog for selecting pages
@@ -52,6 +53,7 @@ class PagesPickerDialogController extends ModelsPickerDialogController
 		);
 	}
 
+	#[Override]
 	public function collector(): PagesCollector
 	{
 		return $this->collector ??= new class (
@@ -76,6 +78,7 @@ class PagesPickerDialogController extends ModelsPickerDialogController
 		};
 	}
 
+	#[Override]
 	public function find(string $id): Page|null
 	{
 		return $this->kirby->page($id);
@@ -126,6 +129,7 @@ class PagesPickerDialogController extends ModelsPickerDialogController
 		];
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

@@ -6,6 +6,7 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Controls the Panel dialog for changing the email of a user
@@ -20,6 +21,7 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  */
 class UserCreateDialogController extends DialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		$roles = $this->kirby->roles()->canBeCreated();
@@ -61,6 +63,7 @@ class UserCreateDialogController extends DialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$this->kirby->users()->create([

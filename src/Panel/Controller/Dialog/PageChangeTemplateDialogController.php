@@ -6,6 +6,7 @@ use Kirby\Exception\Exception;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Controls the Panel dialog for changing the template of a page
@@ -20,6 +21,7 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  */
 class PageChangeTemplateDialogController extends PageDialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		$blueprints = $this->page->blueprints();
@@ -52,6 +54,7 @@ class PageChangeTemplateDialogController extends PageDialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array|true
 	{
 		$template   = $this->request->get('template');

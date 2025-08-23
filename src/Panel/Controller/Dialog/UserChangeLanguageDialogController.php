@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Controls the Panel dialog for changing the language of a user
@@ -19,6 +20,7 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  */
 class UserChangeLanguageDialogController extends UserDialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		return new FormDialog(
@@ -32,6 +34,7 @@ class UserChangeLanguageDialogController extends UserDialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$this->user = $this->user->changeLanguage(

@@ -7,6 +7,7 @@ use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\Escape;
+use Override;
 
 /**
  * Controls the Panel dialog for deleting a page
@@ -21,6 +22,7 @@ use Kirby\Toolkit\Escape;
  */
 class PageDeleteDialogController extends PageDialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		$text = $this->i18n('page.delete.confirm', [
@@ -53,6 +55,7 @@ class PageDeleteDialogController extends PageDialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$referrer = $this->kirby->panel()->referrer();

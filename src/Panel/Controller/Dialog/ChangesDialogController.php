@@ -6,6 +6,7 @@ use Kirby\Cms\Collection;
 use Kirby\Content\Changes;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
+use Override;
 
 /**
  * Controls the Panel dialog for displaying
@@ -47,6 +48,7 @@ class ChangesDialogController extends DialogController
 	/**
 	 * Returns the backend full definition for dialog
 	 */
+	#[Override]
 	public function load(): Dialog
 	{
 		if ($this->changes->cacheExists() === false) {

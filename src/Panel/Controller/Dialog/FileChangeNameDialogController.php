@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Controls the Panel dialog for changing the name of a file
@@ -18,6 +19,7 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  */
 class FileChangeNameDialogController extends FileDialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		return new FormDialog(
@@ -39,6 +41,7 @@ class FileChangeNameDialogController extends FileDialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$name       = $this->request->get('name');

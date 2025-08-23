@@ -6,6 +6,7 @@ use Kirby\Cms\License;
 use Kirby\Exception\LogicException;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
+use Override;
 
 /**
  *  Dialog to display (and potentially renew) the license
@@ -48,6 +49,7 @@ class SystemLicenseDialogController extends DialogController
 		];
 	}
 
+	#[Override]
 	public function load(): Dialog
 	{
 		return new Dialog(
@@ -65,6 +67,7 @@ class SystemLicenseDialogController extends DialogController
 	/**
 	 * @codeCoverageIgnore
 	 */
+	#[Override]
 	public function submit(): array
 	{
 		$response = $this->kirby->system()->license()->upgrade();

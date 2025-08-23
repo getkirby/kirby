@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\Escape;
+use Override;
 
 /**
  * Controls the Panel dialog for deleting a file
@@ -19,6 +20,7 @@ use Kirby\Toolkit\Escape;
  */
 class FileDeleteDialogController extends FileDialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		return new RemoveDialog(
@@ -28,6 +30,7 @@ class FileDeleteDialogController extends FileDialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$referrer = $this->kirby->panel()->referrer();

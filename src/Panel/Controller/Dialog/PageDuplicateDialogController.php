@@ -6,6 +6,7 @@ use Kirby\Cms\Url;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Controls the Panel dialog for duplicating a page
@@ -60,6 +61,7 @@ class PageDuplicateDialogController extends PageDialogController
 		return $fields;
 	}
 
+	#[Override]
 	public function load(): Dialog
 	{
 		return new FormDialog(
@@ -93,6 +95,7 @@ class PageDuplicateDialogController extends PageDialogController
 		return Url::slug($this->i18n('page.duplicate.appendix'));
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$newPage = $this->page->duplicate($this->request->get('slug'), [

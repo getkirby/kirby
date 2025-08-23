@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
 use Kirby\Panel\Collector\UsersCollector;
+use Override;
 
 /**
  * Controls the Panel dialog for selecting users
@@ -49,6 +50,7 @@ class UsersPickerDialogController extends ModelsPickerDialogController
 		);
 	}
 
+	#[Override]
 	public function collector(): UsersCollector
 	{
 		return $this->collector ??= new UsersCollector(
@@ -61,6 +63,7 @@ class UsersPickerDialogController extends ModelsPickerDialogController
 		);
 	}
 
+	#[Override]
 	public function find(string $id): User|null
 	{
 		return $this->kirby->user($id);

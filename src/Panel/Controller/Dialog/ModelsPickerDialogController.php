@@ -7,6 +7,7 @@ use Kirby\Panel\Collector\ModelsCollector;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * Controls a Panel dialog for selecting
@@ -81,6 +82,7 @@ abstract class ModelsPickerDialogController extends DialogController
 	/**
 	 * Load the picker dialog
 	 */
+	#[Override]
 	public function load(): Dialog
 	{
 		return new Dialog(...$this->props());

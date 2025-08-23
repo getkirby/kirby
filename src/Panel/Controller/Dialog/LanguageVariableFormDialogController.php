@@ -9,6 +9,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Dialog controller for creating a new language variable
@@ -101,6 +102,7 @@ class LanguageVariableFormDialogController extends DialogController
 		return $variable->hasMultipleValues();
 	}
 
+	#[Override]
 	public function load(): Dialog
 	{
 		return new FormDialog(
@@ -110,6 +112,7 @@ class LanguageVariableFormDialogController extends DialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): bool
 	{
 		$key      = $this->request->get('key', '');

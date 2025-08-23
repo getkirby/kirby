@@ -6,6 +6,7 @@ use Kirby\Cms\Find;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Uuid\Uuids;
+use Override;
 
 /**
  * Controls the Panel dialog for moving a page
@@ -20,6 +21,7 @@ use Kirby\Uuid\Uuids;
  */
 class PageMoveDialogController extends PageDialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		return new FormDialog(
@@ -42,6 +44,7 @@ class PageMoveDialogController extends PageDialogController
 		return $parent?->uuid()->toString() ?? 'site://';
 	}
 
+	#[Override]
 	public function submit(): array|true
 	{
 		$parent = $this->request->get('parent');

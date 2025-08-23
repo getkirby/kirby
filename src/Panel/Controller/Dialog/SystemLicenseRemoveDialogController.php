@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
+use Override;
 
 /**
  * Dialog to remove the site's license
@@ -19,6 +20,7 @@ use Kirby\Panel\Ui\Dialog\RemoveDialog;
  */
 class SystemLicenseRemoveDialogController extends DialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		return new RemoveDialog(
@@ -35,6 +37,7 @@ class SystemLicenseRemoveDialogController extends DialogController
 	/**
 	 * @codeCoverageIgnore
 	 */
+	#[Override]
 	public function submit(): bool
 	{
 		return $this->kirby->system()->license()->delete();

@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\Escape;
+use Override;
 
 /**
  * Controls the Panel dialog for deleting a user
@@ -19,6 +20,7 @@ use Kirby\Toolkit\Escape;
  */
 class UserDeleteDialogController extends UserDialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		$i18nPrefix = $this->user->isLoggedIn() ? 'account' : 'user';
@@ -30,6 +32,7 @@ class UserDeleteDialogController extends UserDialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$referrer = $this->kirby->panel()->referrer();

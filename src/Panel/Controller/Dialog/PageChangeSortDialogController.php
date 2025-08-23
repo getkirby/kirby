@@ -6,6 +6,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Controls the Panel dialog for changing the sorting position of a page
@@ -20,6 +21,7 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  */
 class PageChangeSortDialogController extends PageDialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		if ($this->page->blueprint()->num() !== 'default') {
@@ -40,6 +42,7 @@ class PageChangeSortDialogController extends PageDialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array|true
 	{
 		$this->page = $this->page->changeStatus(

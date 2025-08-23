@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Controls the Panel dialog for changing the password of a user
@@ -22,6 +23,7 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  */
 class UserChangePasswordDialogController extends UserDialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		return new FormDialog(
@@ -43,6 +45,7 @@ class UserChangePasswordDialogController extends UserDialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$currentPassword      = $this->request->get('currentPassword');

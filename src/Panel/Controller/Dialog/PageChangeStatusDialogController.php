@@ -6,6 +6,7 @@ use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\ErrorDialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Controls the Panel dialog for changing the status of a page
@@ -51,6 +52,7 @@ class PageChangeStatusDialogController extends PageDialogController
 		return $fields;
 	}
 
+	#[Override]
 	public function load(): Dialog
 	{
 		if ($this->page->status() === 'draft') {
@@ -85,6 +87,7 @@ class PageChangeStatusDialogController extends PageDialogController
 		return null;
 	}
 
+	#[Override]
 	public function submit(): array|true
 	{
 		$this->page = $this->page->changeStatus(

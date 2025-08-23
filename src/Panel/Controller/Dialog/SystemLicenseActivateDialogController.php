@@ -6,6 +6,7 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Dialog to activate/register the site with a license
@@ -44,6 +45,7 @@ class SystemLicenseActivateDialogController extends DialogController
 		];
 	}
 
+	#[Override]
 	public function load(): Dialog
 	{
 		return new FormDialog(
@@ -63,6 +65,7 @@ class SystemLicenseActivateDialogController extends DialogController
 	/**
 	 * @codeCoverageIgnore
 	 */
+	#[Override]
 	public function submit(): array
 	{
 		$this->kirby->system()->register(

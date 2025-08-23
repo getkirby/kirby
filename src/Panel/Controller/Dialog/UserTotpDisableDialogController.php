@@ -10,6 +10,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
 use Kirby\Toolkit\Escape;
+use Override;
 
 /**
  * Controls the Panel dialog to disable TOTP auth for a user
@@ -23,11 +24,13 @@ use Kirby\Toolkit\Escape;
  */
 class UserTotpDisableDialogController extends UserDialogController
 {
+	#[Override]
 	public static function factory(string|null $id = null): static
 	{
 		return new static($id ? Find::user($id) : App::instance()->user());
 	}
 
+	#[Override]
 	public function load(): Dialog
 	{
 		$currentUser = $this->kirby->user();
@@ -71,6 +74,7 @@ class UserTotpDisableDialogController extends UserDialogController
 	/**
 	 * Removes the user's TOTP secret when the dialog is submitted
 	 */
+	#[Override]
 	public function submit(): array
 	{
 		$password = $this->request->get('password');

@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Collector\FilesCollector;
+use Override;
 
 /**
  * Controls the Panel dialog for selecting files
@@ -49,6 +50,7 @@ class FilesPickerDialogController extends ModelsPickerDialogController
 		);
 	}
 
+	#[Override]
 	public function collector(): FilesCollector
 	{
 		return $this->collector ??= new FilesCollector(
@@ -60,6 +62,7 @@ class FilesPickerDialogController extends ModelsPickerDialogController
 		);
 	}
 
+	#[Override]
 	public function find(string $id): File|null
 	{
 		return $this->kirby->file($id, $this->model);

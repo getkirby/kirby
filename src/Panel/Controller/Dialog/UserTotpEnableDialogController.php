@@ -8,6 +8,7 @@ use Kirby\Image\QrCode;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Toolkit\Totp;
+use Override;
 
 /**
  * Controls the Panel dialog to enable TOTP auth for the current user
@@ -30,6 +31,7 @@ class UserTotpEnableDialogController extends DialogController
 		$this->user  = $this->kirby->user();
 	}
 
+	#[Override]
 	public function load(): Dialog
 	{
 		return new Dialog(
@@ -58,6 +60,7 @@ class UserTotpEnableDialogController extends DialogController
 	/**
 	 * Changes the user's TOTP secret when the dialog is submitted
 	 */
+	#[Override]
 	public function submit(): array
 	{
 		$secret  = $this->request->get('secret');

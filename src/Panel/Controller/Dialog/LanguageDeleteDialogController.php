@@ -8,6 +8,7 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\RemoveDialog;
 use Kirby\Toolkit\Escape;
+use Override;
 
 /**
  * Dialog controller for deleting a language
@@ -32,6 +33,7 @@ class LanguageDeleteDialogController extends DialogController
 		return new static(language: Find::language($language));
 	}
 
+	#[Override]
 	public function load(): Dialog
 	{
 		return new RemoveDialog(
@@ -41,6 +43,7 @@ class LanguageDeleteDialogController extends DialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$this->language->delete();

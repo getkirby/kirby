@@ -6,6 +6,7 @@ use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
+use Override;
 
 /**
  * Controls the Panel dialog to change the title of the site
@@ -20,6 +21,7 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  */
 class SiteChangeTitleDialogController extends DialogController
 {
+	#[Override]
 	public function load(): Dialog
 	{
 		return new FormDialog(
@@ -36,6 +38,7 @@ class SiteChangeTitleDialogController extends DialogController
 		);
 	}
 
+	#[Override]
 	public function submit(): array
 	{
 		$title      = $this->request->get('title');
