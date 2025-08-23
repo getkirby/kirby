@@ -8,6 +8,7 @@ use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Cms\Users;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -30,16 +31,19 @@ class FilesCollector extends ModelsCollector
 	) {
 	}
 
+	#[Override]
 	protected function collect(): Files
 	{
 		return $this->parent()->files();
 	}
 
+	#[Override]
 	protected function collectByQuery(): Files
 	{
 		return $this->parent()->query($this->query, Files::class) ?? new Files([]);
 	}
 
+	#[Override]
 	protected function filter(Files|Pages|Users $models): Files
 	{
 		return $models->filter(function ($file) {
@@ -57,11 +61,13 @@ class FilesCollector extends ModelsCollector
 		});
 	}
 
+	#[Override]
 	public function isSorting(): bool
 	{
 		return true;
 	}
 
+	#[Override]
 	protected function sort(Files|Pages|Users $models): Files
 	{
 		if ($this->sortBy === null || $this->isSearching() === true) {

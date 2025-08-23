@@ -9,6 +9,7 @@ use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Cms\Users;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -31,16 +32,19 @@ class UsersCollector extends ModelsCollector
 	) {
 	}
 
+	#[Override]
 	protected function collect(): Users
 	{
 		return App::instance()->users();
 	}
 
+	#[Override]
 	protected function collectByQuery(): Users
 	{
 		return $this->parent()->query($this->query, Users::class) ?? new Users([]);
 	}
 
+	#[Override]
 	protected function filter(Files|Pages|Users $models): Users
 	{
 		$user = App::instance()->user();

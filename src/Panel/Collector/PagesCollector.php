@@ -8,6 +8,7 @@ use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Cms\Users;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -32,6 +33,7 @@ class PagesCollector extends ModelsCollector
 	) {
 	}
 
+	#[Override]
 	protected function collect(): Pages
 	{
 		return match ($this->status) {
@@ -43,11 +45,13 @@ class PagesCollector extends ModelsCollector
 		};
 	}
 
+	#[Override]
 	protected function collectByQuery(): Pages
 	{
 		return $this->parent()->query($this->query, Pages::class) ?? new Pages([]);
 	}
 
+	#[Override]
 	protected function filter(Files|Pages|Users $models): Pages
 	{
 		// filters pages that are protected and not in the templates list
