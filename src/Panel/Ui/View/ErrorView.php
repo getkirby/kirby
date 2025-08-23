@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\View;
 
 use Kirby\Panel\Ui\View;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -26,6 +27,7 @@ class ErrorView extends View
 		);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
@@ -35,6 +37,7 @@ class ErrorView extends View
 		];
 	}
 
+	#[Override]
 	public function render(): array|null
 	{
 		return [
