@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Request;
 
 use Kirby\Cms\Page;
 use Kirby\Panel\Controller\RequestController;
+use Override;
 
 /**
  * Returns the UUIDs/ids for all parents of the page
@@ -28,6 +29,7 @@ class PageTreeParentsRequestController extends RequestController
 		$this->root = $this->request->get('root') === 'true';
 	}
 
+	#[Override]
 	public function load(): array
 	{
 		$parents   = $this->page?->parents()->flip();

@@ -6,6 +6,7 @@ use Kirby\Cms\Find;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Panel\Controller\RequestController;
+use Override;
 
 /**
  * Returns children for the parent as entries
@@ -68,6 +69,7 @@ class PageTreeRequestController extends RequestController
 		];
 	}
 
+	#[Override]
 	public function load(): array
 	{
 		if ($this->parent === null) {
