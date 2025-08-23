@@ -4,6 +4,7 @@ namespace Kirby\Panel\Routes;
 
 use Closure;
 use Kirby\Cms\App;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -35,6 +36,7 @@ class SearchRoutes extends Routes
 		};
 	}
 
+	#[Override]
 	public function toArray(): array
 	{
 		$routes = [];

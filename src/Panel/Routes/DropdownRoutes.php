@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Routes;
 
+use Override;
+
 /**
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -15,6 +17,7 @@ class DropdownRoutes extends Routes
 	protected static string $prefix = 'dropdowns';
 	protected static string $type = 'dropdown';
 
+	#[Override]
 	public function toArray(): array
 	{
 		$routes = [];

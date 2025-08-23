@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Routes;
 
+use Override;
+
 /**
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -15,6 +17,7 @@ class RequestRoutes extends Routes
 	protected static string $prefix = '';
 	protected static string $type = 'request';
 
+	#[Override]
 	public function toArray(): array
 	{
 		$routes = [];

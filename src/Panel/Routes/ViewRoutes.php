@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Routes;
 
+use Override;
+
 /**
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -30,6 +32,7 @@ class ViewRoutes extends Routes
 		return $when($view, $this->area) === true;
 	}
 
+	#[Override]
 	public function toArray(): array
 	{
 		$routes = [];

@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Routes;
 
+use Override;
+
 /**
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -15,6 +17,7 @@ class DialogRoutes extends Routes
 	protected static string $prefix = 'dialogs';
 	protected static string $type = 'dialog';
 
+	#[Override]
 	public function toArray(): array
 	{
 		$routes = [];
