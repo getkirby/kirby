@@ -67,6 +67,7 @@ class DomHandler extends Handler
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 */
+	#[\Override]
 	public static function sanitize(
 		string $string,
 		bool $isExternal = false
@@ -85,6 +86,7 @@ class DomHandler extends Handler
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
 	 */
+	#[\Override]
 	public static function validate(
 		string $string,
 		bool $isExternal = false

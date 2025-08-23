@@ -9,6 +9,7 @@ use DOMXPath;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * Sane handler for SVG files
@@ -390,6 +391,7 @@ class Svg extends Xml
 	 *
 	 * @return array Array with exception objects for each modification
 	 */
+	#[Override]
 	public static function sanitizeAttr(DOMAttr $attr, array $options): array
 	{
 		$element = $attr->ownerElement;
@@ -430,6 +432,7 @@ class Svg extends Xml
 	 *
 	 * @return array Array with exception objects for each modification
 	 */
+	#[Override]
 	public static function sanitizeElement(
 		DOMElement $element,
 		array $options
@@ -456,6 +459,7 @@ class Svg extends Xml
 	 * Custom callback for additional doctype validation
 	 * @internal
 	 */
+	#[Override]
 	public static function validateDoctype(
 		DOMDocumentType $doctype,
 		array $options
@@ -471,6 +475,7 @@ class Svg extends Xml
 	 * @param bool $isExternal Whether the string is from an external file
 	 *                         that may be accessed directly
 	 */
+	#[Override]
 	protected static function options(bool $isExternal): array
 	{
 		return [
@@ -488,6 +493,7 @@ class Svg extends Xml
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 */
+	#[Override]
 	protected static function parse(string $string): Dom
 	{
 		$svg  = parent::parse($string);

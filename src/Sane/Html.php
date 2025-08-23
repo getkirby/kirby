@@ -2,6 +2,8 @@
 
 namespace Kirby\Sane;
 
+use Override;
+
 /**
  * Sane handler for HTML files
  * @since 3.5.8
@@ -111,6 +113,7 @@ class Html extends DomHandler
 	 * @param bool $isExternal Whether the string is from an external file
 	 *                         that may be accessed directly
 	 */
+	#[Override]
 	protected static function options(bool $isExternal): array
 	{
 		return [

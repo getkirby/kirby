@@ -3,6 +3,7 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
+use Override;
 
 /**
  * Sane handler for gzip-compressed SVGZ files
@@ -24,6 +25,7 @@ class Svgz extends Svg
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed or recompressed
 	 */
+	#[Override]
 	public static function sanitize(
 		string $string,
 		bool $isExternal = false
@@ -48,6 +50,7 @@ class Svgz extends Svg
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
 	 */
+	#[Override]
 	public static function validate(
 		string $string,
 		bool $isExternal = false

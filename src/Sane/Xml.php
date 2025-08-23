@@ -6,6 +6,7 @@ use DOMDocumentType;
 use DOMElement;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * Sane handler for XML files
@@ -26,6 +27,7 @@ class Xml extends DomHandler
 	 *
 	 * @return array Array with exception objects for each modification
 	 */
+	#[Override]
 	public static function sanitizeElement(
 		DOMElement $element,
 		array $options
@@ -58,6 +60,7 @@ class Xml extends DomHandler
 	 * Custom callback for additional doctype validation
 	 * @internal
 	 */
+	#[Override]
 	public static function validateDoctype(
 		DOMDocumentType $doctype,
 		array $options
