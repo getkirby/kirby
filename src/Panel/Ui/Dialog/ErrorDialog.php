@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Dialog;
 
 use Kirby\Panel\Ui\Dialog;
+use Override;
 
 /**
  * Dialog to display an error message
@@ -34,6 +35,7 @@ class ErrorDialog extends Dialog
 		]);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

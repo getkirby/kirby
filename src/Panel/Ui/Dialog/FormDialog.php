@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Dialog;
 
 use Kirby\Panel\Ui\Dialog;
+use Override;
 
 /**
  * Dialog that contains a set of fields
@@ -37,6 +38,7 @@ class FormDialog extends TextDialog
 		]);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

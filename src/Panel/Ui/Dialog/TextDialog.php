@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui\Dialog;
 
 use Kirby\Panel\Ui\Dialog;
+use Override;
 
 /**
  * Dialog that displays some text
@@ -34,6 +35,7 @@ class TextDialog extends Dialog
 		]);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
