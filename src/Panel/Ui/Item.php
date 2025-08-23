@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Ui;
 
+use Override;
+
 /**
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -35,6 +37,7 @@ class Item extends Component
 		return $this->image;
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

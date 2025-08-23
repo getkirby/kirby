@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Ui;
 
+use Override;
+
 /**
  * @package   Kirby Panel
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -30,6 +32,7 @@ class Dialog extends Component
 		]);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

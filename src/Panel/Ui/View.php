@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Ui;
 
 use Kirby\Panel\Ui\Button\ViewButtons;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -42,6 +43,7 @@ class View extends Component
 		return $this->buttons;
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
@@ -51,6 +53,7 @@ class View extends Component
 		];
 	}
 
+	#[Override]
 	public function render(): array|null
 	{
 		$view = [

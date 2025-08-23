@@ -7,6 +7,7 @@ use Kirby\Cms\File;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Ui\FilePreview\DefaultFilePreview;
 use Kirby\Toolkit\I18n;
+use Override;
 
 /**
  * Defines a component that implements a file preview
@@ -94,6 +95,7 @@ abstract class FilePreview extends Component
 		], 'cards');
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

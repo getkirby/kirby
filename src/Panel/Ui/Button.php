@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Ui;
 
+use Override;
+
 /**
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -37,6 +39,7 @@ class Button extends Component
 		$this->attrs = $attrs;
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

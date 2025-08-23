@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -45,6 +46,7 @@ class Stats extends Component
 		);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
