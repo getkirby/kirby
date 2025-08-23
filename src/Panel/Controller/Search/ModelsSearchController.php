@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Search;
 use Kirby\Cms\Collection;
 use Kirby\Panel\Controller\SearchController;
 use Kirby\Panel\Ui\Item\ModelItem;
+use Override;
 
 /**
  * Controls the search requests for a model type
@@ -18,6 +19,7 @@ use Kirby\Panel\Ui\Item\ModelItem;
  */
 abstract class ModelsSearchController extends SearchController
 {
+	#[Override]
 	public function load(): array
 	{
 		$models = $this->models();

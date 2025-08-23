@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Search;
 
 use Kirby\Cms\Pages;
 use Kirby\Panel\Ui\Item\PageItem;
+use Override;
 
 /**
  * Controls the search requests for pages
@@ -20,11 +21,13 @@ class PagesSearchController extends ModelsSearchController
 	/**
 	 * @param \Kirby\Cms\Page $model
 	 */
+	#[Override]
 	public function item($model): PageItem
 	{
 		return new PageItem(page: $model, info: '{{ page.id }}');
 	}
 
+	#[Override]
 	public function models(): Pages
 	{
 		return $this->kirby->site()

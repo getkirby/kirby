@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Search;
 
 use Kirby\Cms\Files;
 use Kirby\Panel\Ui\Item\FileItem;
+use Override;
 
 /**
  * Controls the search requests for files
@@ -20,11 +21,13 @@ class FilesSearchController extends ModelsSearchController
 	/**
 	 * @param \Kirby\Cms\File $model
 	 */
+	#[Override]
 	public function item($model): FileItem
 	{
 		return new FileItem(file: $model, info: '{{ file.id }}');
 	}
 
+	#[Override]
 	public function models(): Files
 	{
 		$files = $this->kirby->site()
