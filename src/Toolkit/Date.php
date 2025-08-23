@@ -11,6 +11,7 @@ use IntlCalendar;
 use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Override;
 use Stringable;
 
 /**
@@ -50,6 +51,7 @@ class Date extends DateTime implements Stringable
 	/**
 	 * Returns the datetime in `YYYY-MM-DD hh:mm:ss` format with timezone
 	 */
+	#[Override]
 	public function __toString(): string
 	{
 		return $this->toString('datetime');
