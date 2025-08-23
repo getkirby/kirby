@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Controller;
+use Override;
 use Stringable;
 
 /**
@@ -85,6 +86,7 @@ class Event implements Stringable
 	 * Makes it possible to simply echo
 	 * or stringify the entire object
 	 */
+	#[Override]
 	public function __toString(): string
 	{
 		return $this->toString();

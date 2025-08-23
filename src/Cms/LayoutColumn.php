@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * Represents a single layout column with
@@ -103,6 +104,7 @@ class LayoutColumn extends Item
 	 * The result is being sent to the editor
 	 * via the API in the panel
 	 */
+	#[Override]
 	public function toArray(): array
 	{
 		return [

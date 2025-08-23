@@ -9,6 +9,7 @@ use Kirby\Parsley\Parsley;
 use Kirby\Parsley\Schema\Blocks as BlockSchema;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use Override;
 use Throwable;
 
 /**
@@ -36,6 +37,7 @@ class Blocks extends Items
 	 * Return HTML when the collection is
 	 * converted to a string
 	 */
+	#[Override]
 	public function __toString(): string
 	{
 		return $this->toHtml();
@@ -55,6 +57,7 @@ class Blocks extends Items
 	 * Wrapper around the factory to
 	 * catch blocks from layouts
 	 */
+	#[Override]
 	public static function factory(
 		array|null $items = null,
 		array $params = []

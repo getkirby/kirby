@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
+use Override;
 
 /**
  * A collection of items
@@ -98,6 +99,7 @@ class Items extends Collection
 	/**
 	 * Convert the items to an array
 	 */
+	#[Override]
 	public function toArray(Closure|null $map = null): array
 	{
 		return array_values(parent::toArray($map));

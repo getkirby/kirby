@@ -7,6 +7,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\HasUuids;
+use Override;
 
 /**
  * The `$users` object refers to a collection
@@ -45,6 +46,7 @@ class Users extends Collection
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `User` or `Users` object or an ID of an existing user is passed
 	 */
+	#[Override]
 	public function add($object): static
 	{
 		// add a users collection
@@ -110,6 +112,7 @@ class Users extends Collection
 	 * Finds a user in the collection by ID or email address
 	 * @internal Use `$users->find()` instead
 	 */
+	#[Override]
 	public function findByKey(string $key): User|null
 	{
 		if ($user = $this->findByUuid($key, 'user')) {

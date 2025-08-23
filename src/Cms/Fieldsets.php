@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * A collection of fieldsets
@@ -75,6 +76,7 @@ class Fieldsets extends Items
 		];
 	}
 
+	#[Override]
 	public static function factory(
 		array|null $items = null,
 		array $params = []
@@ -105,6 +107,7 @@ class Fieldsets extends Items
 		return $this->options['groups'] ?? [];
 	}
 
+	#[Override]
 	public function toArray(Closure|null $map = null): array
 	{
 		return A::map(

@@ -6,6 +6,7 @@ use Kirby\Content\Content;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
+use Override;
 use Stringable;
 use Throwable;
 
@@ -85,6 +86,7 @@ class Block extends Item implements Stringable
 	/**
 	 * Converts the object to a string
 	 */
+	#[Override]
 	public function __toString(): string
 	{
 		return $this->toHtml();
@@ -129,6 +131,7 @@ class Block extends Item implements Stringable
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
+	#[Override]
 	public static function factory(array $params): static
 	{
 		return static::model($params['type'] ?? 'default', $params);
@@ -179,6 +182,7 @@ class Block extends Item implements Stringable
 	 * The result is being sent to the editor
 	 * via the API in the panel
 	 */
+	#[Override]
 	public function toArray(): array
 	{
 		return [

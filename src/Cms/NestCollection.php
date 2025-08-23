@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Toolkit\Collection as BaseCollection;
+use Override;
 
 /**
  * NestCollection
@@ -23,6 +24,7 @@ class NestCollection extends BaseCollection
 	 * to an array. This can also take a callback
 	 * function to further modify the array result.
 	 */
+	#[Override]
 	public function toArray(Closure|null $map = null): array
 	{
 		return parent::toArray(

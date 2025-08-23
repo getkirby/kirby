@@ -6,6 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Mime;
 use Kirby\Http\Response as HttpResponse;
 use Kirby\Toolkit\Str;
+use Override;
 use Stringable;
 
 /**
@@ -67,6 +68,7 @@ class Responder implements Stringable
 	/**
 	 * Creates and sends the response
 	 */
+	#[Override]
 	public function __toString(): string
 	{
 		return (string)$this->send();

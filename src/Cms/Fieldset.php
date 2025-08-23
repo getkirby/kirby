@@ -6,6 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * Represents a single Fieldset
@@ -210,6 +211,7 @@ class Fieldset extends Item
 		return $this->type;
 	}
 
+	#[Override]
 	public function toArray(): array
 	{
 		return [

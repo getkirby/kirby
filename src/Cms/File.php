@@ -9,6 +9,7 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * The `$file` object provides a set
@@ -147,6 +148,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the FileBlueprint object for the file
 	 */
+	#[Override]
 	public function blueprint(): FileBlueprint
 	{
 		return $this->blueprint ??= FileBlueprint::factory(
@@ -160,6 +162,7 @@ class File extends ModelWithContent
 	 * Returns an array with all blueprints that are available for the file
 	 * by comparing files sections and files fields of the parent model
 	 */
+	#[Override]
 	public function blueprints(string|null $inSection = null): array
 	{
 		// get cached results for the current file model
@@ -230,6 +233,7 @@ class File extends ModelWithContent
 	 * other content.
 	 * @unstable
 	 */
+	#[Override]
 	public function contentFileData(
 		array $data,
 		string|null $languageCode = null
@@ -296,6 +300,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the id
 	 */
+	#[Override]
 	public function id(): string
 	{
 		if (
@@ -466,6 +471,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the panel info object
 	 */
+	#[Override]
 	public function panel(): Panel
 	{
 		return new Panel($this);
@@ -522,6 +528,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute root to the file
 	 */
+	#[Override]
 	public function root(): string|null
 	{
 		return $this->root ??= $this->parent()->root() . '/' . $this->filename();
@@ -562,6 +569,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the parent Site object
 	 */
+	#[Override]
 	public function site(): Site
 	{
 		if ($this->parent() instanceof Site) {
@@ -592,6 +600,7 @@ class File extends ModelWithContent
 	 * by injecting the information from
 	 * the asset.
 	 */
+	#[Override]
 	public function toArray(): array
 	{
 		return [

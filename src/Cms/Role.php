@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
+use Override;
 use Stringable;
 
 /**
@@ -43,6 +44,7 @@ class Role implements Stringable
 		return $this->toArray();
 	}
 
+	#[Override]
 	public function __toString(): string
 	{
 		return $this->name();

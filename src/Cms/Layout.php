@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\Content;
+use Override;
 
 /**
  * Represents a single Layout with
@@ -96,6 +97,7 @@ class Layout extends Item
 	 * The result is being sent to the editor
 	 * via the API in the panel
 	 */
+	#[Override]
 	public function toArray(): array
 	{
 		return [

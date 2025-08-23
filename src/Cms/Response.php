@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Override;
+
 /**
  * Custom response object with an optimized
  * redirect method to build correct Urls
@@ -19,6 +21,7 @@ class Response extends \Kirby\Http\Response
 	 * parses locations with the Url::to method
 	 * first.
 	 */
+	#[Override]
 	public static function redirect(
 		string $location = '/',
 		int $code = 302

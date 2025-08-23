@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Override;
+
 /**
  * The Structure class wraps
  * array data into a nicely chainable
@@ -31,6 +33,7 @@ class Structure extends Items
 	 * Creates a new structure collection from a
 	 * an array of item props
 	 */
+	#[Override]
 	public static function factory(
 		array|null $items = null,
 		array $params = []

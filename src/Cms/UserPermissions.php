@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Override;
+
 /**
  * UserPermissions
  *
@@ -16,6 +18,7 @@ class UserPermissions extends ModelPermissions
 	/**
 	 * Used to cache once determined permissions in memory
 	 */
+	#[Override]
 	protected static function cacheKey(ModelWithContent|Language $model): string
 	{
 		return $model->role()->id();
@@ -59,6 +62,7 @@ class UserPermissions extends ModelPermissions
 		return $this->model->isLastAdmin() !== true;
 	}
 
+	#[Override]
 	protected static function category(ModelWithContent|Language $model): string
 	{
 		// change the scope of the permissions,

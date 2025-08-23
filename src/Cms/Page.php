@@ -15,6 +15,7 @@ use Kirby\Template\Template;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\LazyValue;
 use Kirby\Toolkit\Str;
+use Override;
 use Throwable;
 
 /**
@@ -200,6 +201,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the blueprint object
 	 */
+	#[Override]
 	public function blueprint(): PageBlueprint
 	{
 		return $this->blueprint ??= PageBlueprint::factory(
@@ -212,6 +214,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns an array with all blueprints that are available for the page
 	 */
+	#[Override]
 	public function blueprints(string|null $inSection = null): array
 	{
 		if ($inSection !== null) {
@@ -277,6 +280,7 @@ class Page extends ModelWithContent
 	 * Prepares the content for the write method
 	 * @internal
 	 */
+	#[Override]
 	public function contentFileData(
 		array $data,
 		string|null $languageCode = null
@@ -434,6 +438,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the Page Id
 	 */
+	#[Override]
 	public function id(): string
 	{
 		if ($this->id !== null) {
@@ -813,6 +818,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the panel info object
 	 */
+	#[Override]
 	public function panel(): Panel
 	{
 		return new Panel($this);
@@ -872,6 +878,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the permissions object for this page
 	 */
+	#[Override]
 	public function permissions(): PagePermissions
 	{
 		return new PagePermissions($this);
@@ -1050,6 +1057,7 @@ class Page extends ModelWithContent
 	 * Returns the absolute root to the page directory
 	 * No matter if it exists or not.
 	 */
+	#[Override]
 	public function root(): string
 	{
 		return $this->root ??= $this->kirby()->root('content') . '/' . $this->diruri();
@@ -1184,6 +1192,7 @@ class Page extends ModelWithContent
 	 * Converts the most important
 	 * properties to array
 	 */
+	#[Override]
 	public function toArray(): array
 	{
 		return [

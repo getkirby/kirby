@@ -6,6 +6,7 @@ use Kirby\Filesystem\F;
 use Kirby\Plugin\Assets;
 use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\A;
+use Override;
 
 /**
  * The `Html` class provides methods for building
@@ -79,6 +80,7 @@ class Html extends \Kirby\Toolkit\Html
 	 * @param string|array|null $text If `null`, the link will be used as link text. If an array is passed, each element will be added unencoded
 	 * @param array $attr Additional attributes for the a tag.
 	 */
+	#[Override]
 	public static function link(
 		string|null $href = null,
 		string|array|null $text = null,

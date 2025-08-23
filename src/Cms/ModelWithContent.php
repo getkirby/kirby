@@ -20,6 +20,7 @@ use Kirby\Panel\Model;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
+use Override;
 use Stringable;
 use Throwable;
 
@@ -316,6 +317,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Each model must return a unique id
 	 */
+	#[Override]
 	public function id(): string|null
 	{
 		return null;
@@ -691,6 +693,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Returns the model's UUID
 	 * @since 3.8.0
 	 */
+	#[Override]
 	public function uuid(): Uuid|null
 	{
 		return Uuid::for($this);

@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Http\Request;
 use Kirby\Toolkit\Facade;
+use Override;
 
 /**
  * Shortcut to the request object
@@ -16,6 +17,7 @@ use Kirby\Toolkit\Facade;
  */
 class R extends Facade
 {
+	#[Override]
 	public static function instance(): Request
 	{
 		return App::instance()->request();

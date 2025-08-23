@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
+use Override;
 
 /**
  * The Collection class serves as foundation
@@ -51,6 +52,7 @@ class Collection extends BaseCollection
 		}
 	}
 
+	#[Override]
 	public function __call(string $key, $arguments)
 	{
 		// collection methods
@@ -68,6 +70,7 @@ class Collection extends BaseCollection
 	 *
 	 * @param TValue $object
 	 */
+	#[Override]
 	public function __set(string $id, $object): void
 	{
 		$this->data[$id] = $object;
@@ -78,6 +81,7 @@ class Collection extends BaseCollection
 	 * override from the Toolkit Collection is needed to
 	 * make the CMS collections case-sensitive
 	 */
+	#[Override]
 	public function __unset(string $id)
 	{
 		unset($this->data[$id]);
@@ -118,6 +122,7 @@ class Collection extends BaseCollection
 	 * @param string|TValue ...$args
 	 * @return $this
 	 */
+	#[Override]
 	public function append(...$args): static
 	{
 		if (count($args) === 1) {
@@ -140,6 +145,7 @@ class Collection extends BaseCollection
 	 *
 	 * @return TValue|null
 	 */
+	#[Override]
 	public function findBy(string $attribute, $value)
 	{
 		// $value: cast UUID object to string to allow uses
@@ -159,6 +165,7 @@ class Collection extends BaseCollection
 	 * @param bool $caseInsensitive Ignore upper/lowercase for group names
 	 * @throws \Kirby\Exception\Exception
 	 */
+	#[Override]
 	public function group(
 		$field,
 		bool $caseInsensitive = true
@@ -207,6 +214,7 @@ class Collection extends BaseCollection
 	 *
 	 * @param string|TValue $key
 	 */
+	#[Override]
 	public function has($key): bool
 	{
 		if (is_object($key) === true) {
@@ -223,6 +231,7 @@ class Collection extends BaseCollection
 	 *
 	 * @param string|TValue $needle
 	 */
+	#[Override]
 	public function indexOf($needle): int|false
 	{
 		if (is_string($needle) === true) {
@@ -264,6 +273,7 @@ class Collection extends BaseCollection
 	 *
 	 * @return $this|static
 	 */
+	#[Override]
 	public function paginate(...$arguments): static
 	{
 		$this->pagination = Pagination::for($this, ...$arguments);
@@ -278,6 +288,7 @@ class Collection extends BaseCollection
 	/**
 	 * Get the previously added pagination object
 	 */
+	#[Override]
 	public function pagination(): Pagination|null
 	{
 		return $this->pagination;
@@ -302,6 +313,7 @@ class Collection extends BaseCollection
 	 * @param string|TValue ...$args
 	 * @return $this
 	 */
+	#[Override]
 	public function prepend(...$args): static
 	{
 		if (count($args) === 1) {
@@ -324,6 +336,7 @@ class Collection extends BaseCollection
 	 * offset, limit, search and paginate on the collection.
 	 * Any part of the query is optional.
 	 */
+	#[Override]
 	public function query(array $arguments = []): static
 	{
 		$paginate = $arguments['paginate'] ?? null;
@@ -355,6 +368,7 @@ class Collection extends BaseCollection
 	 *
 	 * @param string|TValue $key the name of the key
 	 */
+	#[Override]
 	public function remove(string|object $key): static
 	{
 		if (is_object($key) === true) {
@@ -379,6 +393,7 @@ class Collection extends BaseCollection
 	 * to an array. This can also take a callback
 	 * function to further modify the array result.
 	 */
+	#[Override]
 	public function toArray(Closure|null $map = null): array
 	{
 		return parent::toArray(

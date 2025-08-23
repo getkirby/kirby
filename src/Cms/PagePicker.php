@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Override;
 
 /**
  * The PagePicker class helps to
@@ -27,6 +28,7 @@ class PagePicker extends Picker
 	/**
 	 * Extends the basic defaults
 	 */
+	#[Override]
 	public function defaults(): array
 	{
 		return [
@@ -116,6 +118,7 @@ class PagePicker extends Picker
 	/**
 	 * Search all pages for the picker
 	 */
+	#[Override]
 	public function items(): Pages|null
 	{
 		// cache

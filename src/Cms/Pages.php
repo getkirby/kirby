@@ -6,6 +6,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Uuid\HasUuids;
+use Override;
 use Throwable;
 
 /**
@@ -59,6 +60,7 @@ class Pages extends Collection
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `Page` or `Pages` object or an ID of an existing page is passed
 	 */
+	#[Override]
 	public function add($object): static
 	{
 		$site = App::instance()->site();

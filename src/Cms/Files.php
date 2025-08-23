@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Uuid\HasUuids;
+use Override;
 use Throwable;
 
 /**
@@ -48,6 +49,7 @@ class Files extends Collection
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `File` or `Files` object or an ID of an existing file is passed
 	 */
+	#[Override]
 	public function add($object): static
 	{
 		// add a files collection

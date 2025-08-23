@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Session\Session;
 use Kirby\Toolkit\Facade;
+use Override;
 
 /**
  * Shortcut to the session object
@@ -16,6 +17,7 @@ use Kirby\Toolkit\Facade;
  */
 class S extends Facade
 {
+	#[Override]
 	public static function instance(): Session
 	{
 		return App::instance()->session();

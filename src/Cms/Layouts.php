@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Json;
 use Kirby\Toolkit\Str;
+use Override;
 use Throwable;
 
 /**
@@ -27,6 +28,7 @@ class Layouts extends Items
 	 */
 	public static array $methods = [];
 
+	#[Override]
 	public static function factory(
 		array|null $items = null,
 		array $params = []

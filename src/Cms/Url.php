@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\F;
 use Kirby\Http\Url as BaseUrl;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * The `Url` class extends the
@@ -28,6 +29,7 @@ class Url extends BaseUrl
 	/**
 	 * Returns the Url to the homepage
 	 */
+	#[Override]
 	public static function home(): string
 	{
 		return App::instance()->url();
@@ -75,6 +77,7 @@ class Url extends BaseUrl
 	 *
 	 * @param array|string|null $options Either an array of options for the Uri class or a language string
 	 */
+	#[Override]
 	public static function to(
 		string|null $path = null,
 		array|string|null $options = null

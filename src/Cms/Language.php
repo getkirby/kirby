@@ -9,6 +9,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
+use Override;
 use Stringable;
 
 /**
@@ -96,6 +97,7 @@ class Language implements Stringable
 	 * Returns the language code
 	 * when the language is converted to a string
 	 */
+	#[Override]
 	public function __toString(): string
 	{
 		return $this->code();

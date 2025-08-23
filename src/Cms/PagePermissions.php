@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Override;
+
 /**
  * PagePermissions
  *
@@ -18,6 +20,7 @@ class PagePermissions extends ModelPermissions
 	/**
 	 * Used to cache once determined permissions in memory
 	 */
+	#[Override]
 	protected static function cacheKey(ModelWithContent|Language $model): string
 	{
 		return $model->intendedTemplate()->name();

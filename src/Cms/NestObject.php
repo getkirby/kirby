@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Content\Field;
 use Kirby\Toolkit\Obj;
+use Override;
 
 /**
  * NestObject
@@ -19,6 +20,7 @@ class NestObject extends Obj
 	/**
 	 * Converts the object to an array
 	 */
+	#[Override]
 	public function toArray(): array
 	{
 		$result = [];

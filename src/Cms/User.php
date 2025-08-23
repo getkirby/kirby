@@ -13,6 +13,7 @@ use Kirby\Filesystem\F;
 use Kirby\Panel\User as Panel;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
+use Override;
 use SensitiveParameter;
 
 /**
@@ -146,6 +147,7 @@ class User extends ModelWithContent
 	/**
 	 * Returns the UserBlueprint object
 	 */
+	#[Override]
 	public function blueprint(): UserBlueprint
 	{
 		try {
@@ -169,6 +171,7 @@ class User extends ModelWithContent
 	 *
 	 * @param string|null $languageCode Not used so far
 	 */
+	#[Override]
 	public function contentFileData(
 		array $data,
 		string|null $languageCode = null
@@ -233,6 +236,7 @@ class User extends ModelWithContent
 	/**
 	 * Returns the user id
 	 */
+	#[Override]
 	public function id(): string
 	{
 		return $this->id;
@@ -492,6 +496,7 @@ class User extends ModelWithContent
 	/**
 	 * Returns the panel info object
 	 */
+	#[Override]
 	public function panel(): Panel
 	{
 		return new Panel($this);
@@ -525,6 +530,7 @@ class User extends ModelWithContent
 		return filemtime($file);
 	}
 
+	#[Override]
 	public function permissions(): UserPermissions
 	{
 		return new UserPermissions($this);
@@ -570,6 +576,7 @@ class User extends ModelWithContent
 	/**
 	 * The absolute path to the user directory
 	 */
+	#[Override]
 	public function root(): string
 	{
 		return $this->kirby()->root('accounts') . '/' . $this->id();
@@ -639,6 +646,7 @@ class User extends ModelWithContent
 	 * Converts the most important user properties
 	 * to an array
 	 */
+	#[Override]
 	public function toArray(): array
 	{
 		return [
@@ -658,6 +666,7 @@ class User extends ModelWithContent
 	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
 	 *                              (`null` to keep the original token)
 	 */
+	#[Override]
 	public function toString(
 		string|null $template = null,
 		array $data = [],

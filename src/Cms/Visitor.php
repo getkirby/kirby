@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Http\Visitor as BaseVisitor;
 use Kirby\Toolkit\Facade;
+use Override;
 
 /**
  * Shortcut to the visitor object
@@ -16,6 +17,7 @@ use Kirby\Toolkit\Facade;
  */
 class Visitor extends Facade
 {
+	#[Override]
 	public static function instance(): BaseVisitor
 	{
 		return App::instance()->visitor();

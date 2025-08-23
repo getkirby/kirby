@@ -8,6 +8,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Panel\Site as Panel;
 use Kirby\Toolkit\A;
+use Override;
 
 /**
  * The `$site` object is the root element
@@ -141,6 +142,7 @@ class Site extends ModelWithContent
 	 * Makes it possible to convert the site model
 	 * to a string. Mostly useful for debugging.
 	 */
+	#[Override]
 	public function __toString(): string
 	{
 		return $this->url();
@@ -162,6 +164,7 @@ class Site extends ModelWithContent
 	/**
 	 * Returns the blueprint object
 	 */
+	#[Override]
 	public function blueprint(): SiteBlueprint
 	{
 		if ($this->blueprint instanceof SiteBlueprint) {
@@ -192,6 +195,7 @@ class Site extends ModelWithContent
 	 * Prepares the content for the write method
 	 * @internal
 	 */
+	#[Override]
 	public function contentFileData(
 		array $data,
 		string|null $languageCode = null
@@ -348,6 +352,7 @@ class Site extends ModelWithContent
 	/**
 	 * Returns the panel info object
 	 */
+	#[Override]
 	public function panel(): Panel
 	{
 		return new Panel($this);
@@ -356,6 +361,7 @@ class Site extends ModelWithContent
 	/**
 	 * Returns the permissions object for this site
 	 */
+	#[Override]
 	public function permissions(): SitePermissions
 	{
 		return new SitePermissions($this);
@@ -378,6 +384,7 @@ class Site extends ModelWithContent
 	/**
 	 * Returns the absolute path to the content directory
 	 */
+	#[Override]
 	public function root(): string
 	{
 		return $this->root ??= $this->kirby()->root('content');
@@ -424,6 +431,7 @@ class Site extends ModelWithContent
 	 * Converts the most important site
 	 * properties to an array
 	 */
+	#[Override]
 	public function toArray(): array
 	{
 		return [

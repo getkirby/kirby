@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Override;
 
 /**
  * The UserPicker class helps to
@@ -20,6 +21,7 @@ class UserPicker extends Picker
 	/**
 	 * Extends the basic defaults
 	 */
+	#[Override]
 	public function defaults(): array
 	{
 		return [
@@ -33,6 +35,7 @@ class UserPicker extends Picker
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
+	#[Override]
 	public function items(): Users|null
 	{
 		$model = $this->options['model'];

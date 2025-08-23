@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Component;
+use Override;
 
 /**
  * Section
@@ -123,6 +124,7 @@ class Section extends Component
 		return $this->model;
 	}
 
+	#[Override]
 	public function toArray(): array
 	{
 		$array = parent::toArray();
