@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\Http\Response;
+use Override;
 
 /**
  * The Dialog response class handles Panel
@@ -20,6 +21,7 @@ class DialogResponse extends JsonResponse
 {
 	protected static string $key = 'dialog';
 
+	#[Override]
 	public static function from(mixed $data): Response
 	{
 		if ($data === true) {

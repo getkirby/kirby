@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\Http\Response;
+use Override;
 
 /**
  * The Dropdown response class handles Panel
@@ -20,6 +21,7 @@ class DropdownResponse extends JsonResponse
 {
 	protected static string $key = 'dropdown';
 
+	#[Override]
 	public static function from(mixed $data): Response
 	{
 		if (

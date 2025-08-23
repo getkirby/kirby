@@ -8,6 +8,7 @@ use Kirby\Http\Response;
 use Kirby\Panel\Area;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\Ui\Component;
+use Override;
 use Throwable;
 
 /**
@@ -43,6 +44,7 @@ class JsonResponse extends Response
 	/**
 	 * Returns the data as JSON
 	 */
+	#[Override]
 	public function body(): string
 	{
 		return Json::encode([static::$key => $this->data()], $this->pretty());
@@ -143,6 +145,7 @@ class JsonResponse extends Response
 		return new static($data);
 	}
 
+	#[Override]
 	public function headers(): array
 	{
 		return [
@@ -191,6 +194,7 @@ class JsonResponse extends Response
 		return $this->referrer;
 	}
 
+	#[Override]
 	public function type(): string
 	{
 		return 'application/json';

@@ -7,6 +7,7 @@ use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Panel\Assets;
 use Kirby\Toolkit\Tpl;
+use Override;
 use Throwable;
 
 /**
@@ -54,6 +55,7 @@ class ViewDocumentResponse extends ViewResponse
 		};
 	}
 
+	#[Override]
 	public function body(): string
 	{
 		$template = $this->kirby->root('kirby') . '/views/panel.php';
@@ -70,11 +72,13 @@ class ViewDocumentResponse extends ViewResponse
 	/**
 	 * Returns the full state data object
 	 */
+	#[Override]
 	public function data(): array
 	{
 		return $this->state()->toArray(globals: true);
 	}
 
+	#[Override]
 	public function headers(): array
 	{
 		return [
@@ -86,6 +90,7 @@ class ViewDocumentResponse extends ViewResponse
 	 * Full HTML response
 	 * @codeCoverageIgnore
 	 */
+	#[Override]
 	public function send(): string
 	{
 		try {
@@ -105,6 +110,7 @@ class ViewDocumentResponse extends ViewResponse
 		return parent::send();
 	}
 
+	#[Override]
 	public function type(): string
 	{
 		return 'text/html';

@@ -7,6 +7,7 @@ use Kirby\Data\Json;
 use Kirby\Http\Response;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\State;
+use Override;
 
 /**
  * The View response class handles state
@@ -41,6 +42,7 @@ class ViewResponse extends JsonResponse
 	 * Returns the data as JSON
 	 * Request responses are not wrapped in a custom namespace
 	 */
+	#[Override]
 	public function body(): string
 	{
 		return Json::encode($this->data(), $this->pretty());
@@ -49,6 +51,7 @@ class ViewResponse extends JsonResponse
 	/**
 	 * Returns the full state data object
 	 */
+	#[Override]
 	public function data(): array
 	{
 		return $this->state()->toArray(globals: false);
@@ -57,6 +60,7 @@ class ViewResponse extends JsonResponse
 	/**
 	 * Renders the error view with provided message
 	 */
+	#[Override]
 	public static function error(string $message, int $code = 404): static
 	{
 		$kirby  = App::instance();
@@ -92,6 +96,7 @@ class ViewResponse extends JsonResponse
 	 * JSON response or full HTML document based
 	 * on the request header or query params
 	 */
+	#[Override]
 	public static function from(mixed $data): Response
 	{
 		// handle redirects

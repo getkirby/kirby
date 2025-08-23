@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\Data\Json;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -18,6 +19,7 @@ class RequestResponse extends JsonResponse
 	 * Returns the data as JSON
 	 * Request responses are not wrapped in a custom namespace
 	 */
+	#[Override]
 	public function body(): string
 	{
 		return Json::encode($this->data(), $this->pretty());
@@ -27,6 +29,7 @@ class RequestResponse extends JsonResponse
 	 * Returns the full data array
 	 * without additional information
 	 */
+	#[Override]
 	public function data(): array
 	{
 		return $this->data;

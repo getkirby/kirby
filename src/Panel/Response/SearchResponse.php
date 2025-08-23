@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\Http\Response;
+use Override;
 
 /**
  * The Search response class handles Panel
@@ -21,6 +22,7 @@ class SearchResponse extends JsonResponse
 {
 	protected static string $key = 'search';
 
+	#[Override]
 	public static function from(mixed $data): Response
 	{
 		if (
