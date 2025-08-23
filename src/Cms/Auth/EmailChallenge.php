@@ -5,6 +5,7 @@ namespace Kirby\Cms\Auth;
 use Kirby\Cms\User;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * Creates and verifies one-time auth codes
@@ -25,6 +26,7 @@ class EmailChallenge extends Challenge
 	 * @param \Kirby\Cms\User $user User the code will be generated for
 	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 */
+	#[Override]
 	public static function isAvailable(User $user, string $mode): bool
 	{
 		return true;
@@ -40,6 +42,7 @@ class EmailChallenge extends Challenge
 	 *                       - 'timeout': Number of seconds the code will be valid for
 	 * @return string The generated and sent code
 	 */
+	#[Override]
 	public static function create(User $user, array $options): string
 	{
 		$code = Str::random(6, 'num');

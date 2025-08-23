@@ -5,6 +5,7 @@ namespace Kirby\Cms\Auth;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Override;
 use Stringable;
 
 /**
@@ -78,6 +79,7 @@ class Status implements Stringable
 	/**
 	 * Returns the authentication status
 	 */
+	#[Override]
 	public function __toString(): string
 	{
 		return $this->status();

@@ -4,6 +4,7 @@ namespace Kirby\Cms\Auth;
 
 use Kirby\Cms\User;
 use Kirby\Toolkit\Totp;
+use Override;
 
 /**
  * Verifies one-time time-based auth codes
@@ -27,6 +28,7 @@ class TotpChallenge extends Challenge
 	 * @param \Kirby\Cms\User $user User the code will be generated for
 	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 */
+	#[Override]
 	public static function isAvailable(User $user, string $mode): bool
 	{
 		// user needs to have a TOTP secret set up
@@ -43,6 +45,7 @@ class TotpChallenge extends Challenge
 	 *                       - 'timeout': Number of seconds the code will be valid for
 	 * @todo set return type to `null` once support for PHP 8.1 is dropped
 	 */
+	#[Override]
 	public static function create(User $user, array $options): string|null
 	{
 		// the user's app will generate the code, we only verify it
@@ -55,6 +58,7 @@ class TotpChallenge extends Challenge
 	 * @param \Kirby\Cms\User $user User to check the code for
 	 * @param string $code Code to verify
 	 */
+	#[Override]
 	public static function verify(User $user, string $code): bool
 	{
 		// verify if code is current, previous or next TOTP code
