@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * View button to switch content translation languages
@@ -58,6 +59,7 @@ class LanguagesButton extends ViewButton
 		return false;
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
@@ -66,6 +68,7 @@ class LanguagesButton extends ViewButton
 		];
 	}
 
+	#[Override]
 	public function render(): array|null
 	{
 		// hides the language selector when there are less than 2 languages

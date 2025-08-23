@@ -9,6 +9,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Button;
 use Kirby\Toolkit\Controller;
+use Override;
 
 /**
  * A view button is a UI button, by default small in size and filles,
@@ -164,6 +165,7 @@ class ViewButton extends Button
 		return $button;
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		// helper for props that support Kirby queries
