@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Lab;
 
 use Kirby\Template\Snippet as BaseSnippet;
+use Override;
 
 /**
  * Custom snippet class for lab examples
@@ -18,6 +19,7 @@ use Kirby\Template\Snippet as BaseSnippet;
  */
 class Snippet extends BaseSnippet
 {
+	#[Override]
 	public static function root(): string
 	{
 		return __DIR__ . '/snippets';

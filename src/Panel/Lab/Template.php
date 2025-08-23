@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Lab;
 
 use Kirby\Template\Template as BaseTemplate;
+use Override;
 
 /**
  * Custom template class for lab examples
@@ -26,6 +27,7 @@ class Template extends BaseTemplate
 		);
 	}
 
+	#[Override]
 	public function file(): string|null
 	{
 		return $this->file;
