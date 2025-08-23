@@ -9,6 +9,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * @package   Kirby Session
@@ -59,6 +60,7 @@ class FileSessionStore extends SessionStore
 	 * @param int $expiryTime Timestamp
 	 * @return string Randomly generated session ID (without timestamp)
 	 */
+	#[Override]
 	public function createId(int $expiryTime): string
 	{
 		clearstatcache();
@@ -95,6 +97,7 @@ class FileSessionStore extends SessionStore
 	 * @return bool true:  session exists,
 	 *              false: session doesn't exist
 	 */
+	#[Override]
 	public function exists(int $expiryTime, string $id): bool
 	{
 		$name = $this->name($expiryTime, $id);
@@ -112,6 +115,7 @@ class FileSessionStore extends SessionStore
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
 	 */
+	#[Override]
 	public function lock(int $expiryTime, string $id): void
 	{
 		$name = $this->name($expiryTime, $id);
@@ -148,6 +152,7 @@ class FileSessionStore extends SessionStore
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
 	 */
+	#[Override]
 	public function unlock(int $expiryTime, string $id): void
 	{
 		$name = $this->name($expiryTime, $id);
@@ -189,6 +194,7 @@ class FileSessionStore extends SessionStore
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
 	 */
+	#[Override]
 	public function get(int $expiryTime, string $id): string
 	{
 		$name   = $this->name($expiryTime, $id);
@@ -253,6 +259,7 @@ class FileSessionStore extends SessionStore
 	 * @param string $id Session ID
 	 * @param string $data Session data to write
 	 */
+	#[Override]
 	public function set(int $expiryTime, string $id, string $data): void
 	{
 		$name   = $this->name($expiryTime, $id);
@@ -304,6 +311,7 @@ class FileSessionStore extends SessionStore
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
 	 */
+	#[Override]
 	public function destroy(int $expiryTime, string $id): void
 	{
 		$name = $this->name($expiryTime, $id);
@@ -339,6 +347,7 @@ class FileSessionStore extends SessionStore
 	 *
 	 * Needs to throw an Exception on error.
 	 */
+	#[Override]
 	public function collectGarbage(): void
 	{
 		$iterator = new FilesystemIterator($this->path);
