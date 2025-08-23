@@ -10,6 +10,7 @@ use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\UserSettingsDropdownController;
 use Kirby\Panel\Controller\View\UserViewController;
 use Kirby\Panel\Ui\Item\UserItem;
+use Override;
 
 /**
  * Provides information about the user model for the Panel
@@ -42,6 +43,7 @@ class User extends Model
 	 * which is used in the changes dropdown
 	 * for example.
 	 */
+	#[Override]
 	public function dropdownOption(): array
 	{
 		return [
@@ -63,6 +65,7 @@ class User extends Model
 	/**
 	 * Default settings for the user's Panel image
 	 */
+	#[Override]
 	protected function imageDefaults(): array
 	{
 		return [
@@ -76,6 +79,7 @@ class User extends Model
 	/**
 	 * Returns the image file object based on provided query
 	 */
+	#[Override]
 	protected function imageSource(
 		string|null $query = null
 	): CmsFile|Asset|null {
@@ -89,6 +93,7 @@ class User extends Model
 	/**
 	 * Returns the full path without leading slash
 	 */
+	#[Override]
 	public function path(): string
 	{
 		// path to your own account
@@ -134,6 +139,7 @@ class User extends Model
 	/**
 	 * @codeCoverageIgnore
 	 */
+	#[Override]
 	protected function viewController(): UserViewController
 	{
 		return new UserViewController($this->model);

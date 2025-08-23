@@ -8,6 +8,7 @@ use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\FileSettingsDropdownController;
 use Kirby\Panel\Controller\View\FileViewController;
 use Kirby\Panel\Ui\Item\FileItem;
+use Override;
 use Throwable;
 
 /**
@@ -85,6 +86,7 @@ class File extends Model
 	 * which is used in the changes dropdown
 	 * for example
 	 */
+	#[Override]
 	public function dropdownOption(): array
 	{
 		return [
@@ -126,6 +128,7 @@ class File extends Model
 	/**
 	 * Default settings for the file's Panel image
 	 */
+	#[Override]
 	protected function imageDefaults(): array
 	{
 		return [
@@ -169,6 +172,7 @@ class File extends Model
 	/**
 	 * Returns the image file object based on provided query
 	 */
+	#[Override]
 	protected function imageSource(
 		string|null $query = null
 	): CmsFile|Asset|null {
@@ -219,6 +223,7 @@ class File extends Model
 	 *
 	 * @param array $unlock An array of options that will be force-unlocked
 	 */
+	#[Override]
 	public function options(array $unlock = []): array
 	{
 		$options = parent::options($unlock);
@@ -237,6 +242,7 @@ class File extends Model
 	/**
 	 * Returns the full path without leading slash
 	 */
+	#[Override]
 	public function path(): string
 	{
 		return 'files/' . $this->model->filename();
@@ -246,6 +252,7 @@ class File extends Model
 	 * Prepares the response data for file pickers
 	 * and file fields
 	 */
+	#[Override]
 	public function pickerData(array $params = []): array
 	{
 		$name     = $this->model->filename();
@@ -285,6 +292,7 @@ class File extends Model
 	 * Returns the url to the editing view
 	 * in the panel
 	 */
+	#[Override]
 	public function url(bool $relative = false): string
 	{
 		$parent = $this->model->parent()->panel()->url($relative);
@@ -294,6 +302,7 @@ class File extends Model
 	/**
 	 * @codeCoverageIgnore
 	 */
+	#[Override]
 	protected function viewController(): FileViewController
 	{
 		return new FileViewController($this->model);

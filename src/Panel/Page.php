@@ -8,6 +8,7 @@ use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\Dropdown\PageSettingsDropdownController;
 use Kirby\Panel\Controller\View\PageViewController;
 use Kirby\Panel\Ui\Item\PageItem;
+use Override;
 
 /**
  * Provides information about the page model for the Panel
@@ -69,6 +70,7 @@ class Page extends Model
 	 * which is used in the changes dropdown
 	 * for example.
 	 */
+	#[Override]
 	public function dropdownOption(): array
 	{
 		return [
@@ -88,6 +90,7 @@ class Page extends Model
 	/**
 	 * Default settings for the page's Panel image
 	 */
+	#[Override]
 	protected function imageDefaults(): array
 	{
 		$defaults = [];
@@ -105,6 +108,7 @@ class Page extends Model
 	/**
 	 * Returns the image file object based on provided query
 	 */
+	#[Override]
 	protected function imageSource(
 		string|null $query = null
 	): CmsFile|Asset|null {
@@ -115,6 +119,7 @@ class Page extends Model
 	/**
 	 * Returns the full path without leading slash
 	 */
+	#[Override]
 	public function path(): string
 	{
 		return 'pages/' . $this->id();
@@ -124,6 +129,7 @@ class Page extends Model
 	 * Prepares the response data for page pickers
 	 * and page fields
 	 */
+	#[Override]
 	public function pickerData(array $params = []): array
 	{
 		$item = new PageItem(
@@ -155,6 +161,7 @@ class Page extends Model
 	/**
 	 * @codeCoverageIgnore
 	 */
+	#[Override]
 	protected function viewController(): PageViewController
 	{
 		return new PageViewController($this->model);

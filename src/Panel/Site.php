@@ -6,6 +6,7 @@ use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Controller\View\SiteViewController;
+use Override;
 
 /**
  * Provides information about the site model for the Panel
@@ -29,6 +30,7 @@ class Site extends Model
 	 * which is used in the changes dropdown
 	 * for example.
 	 */
+	#[Override]
 	public function dropdownOption(): array
 	{
 		return [
@@ -40,6 +42,7 @@ class Site extends Model
 	/**
 	 * Returns the image file object based on provided query
 	 */
+	#[Override]
 	protected function imageSource(
 		string|null $query = null
 	): CmsFile|Asset|null {
@@ -50,6 +53,7 @@ class Site extends Model
 	/**
 	 * Returns the full path without leading slash
 	 */
+	#[Override]
 	public function path(): string
 	{
 		return 'site';
@@ -58,6 +62,7 @@ class Site extends Model
 	/**
 	 * @codeCoverageIgnore
 	 */
+	#[Override]
 	protected function viewController(): SiteViewController
 	{
 		return new SiteViewController($this->model);
