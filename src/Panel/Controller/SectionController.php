@@ -6,6 +6,7 @@ use Kirby\Cms\Find;
 use Kirby\Cms\Section;
 use Kirby\Http\Router;
 use Kirby\Panel\Area;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -50,11 +51,13 @@ trait SectionController
 		);
 	}
 
+	#[Override]
 	public function load(): mixed
 	{
 		return Router::execute($this->path, 'GET', $this->routes());
 	}
 
+	#[Override]
 	public function submit(): mixed
 	{
 		return Router::execute($this->path, 'POST', $this->routes());
