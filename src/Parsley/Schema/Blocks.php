@@ -6,6 +6,7 @@ use DOMElement;
 use DOMText;
 use Kirby\Parsley\Element;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * The blocks schema definition converts
@@ -58,6 +59,7 @@ class Blocks extends Plain
 	 * Creates the fallback block type
 	 * if no other block can be found
 	 */
+	#[Override]
 	public function fallback(Element|string $element): array|null
 	{
 		if ($element instanceof Element) {
@@ -206,6 +208,7 @@ class Blocks extends Plain
 	 * Returns a list of allowed inline marks
 	 * and their parsing rules
 	 */
+	#[Override]
 	public function marks(): array
 	{
 		return [
@@ -264,6 +267,7 @@ class Blocks extends Plain
 	 *
 	 * @codeCoverageIgnore
 	 */
+	#[Override]
 	public function nodes(): array
 	{
 		return [

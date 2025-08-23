@@ -5,6 +5,7 @@ namespace Kirby\Parsley\Schema;
 use Kirby\Parsley\Element;
 use Kirby\Parsley\Schema;
 use Kirby\Toolkit\Str;
+use Override;
 
 /**
  * The plain schema definition converts
@@ -23,6 +24,7 @@ class Plain extends Schema
 	 * Creates the fallback block type
 	 * if no other block can be found
 	 */
+	#[Override]
 	public function fallback(Element|string $element): array|null
 	{
 		if ($element instanceof Element) {
@@ -49,6 +51,7 @@ class Plain extends Schema
 	 * Returns a list of all elements that
 	 * should be skipped during parsing
 	 */
+	#[Override]
 	public function skip(): array
 	{
 		return [
