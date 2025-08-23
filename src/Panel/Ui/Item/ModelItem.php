@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui\Item;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Model as Panel;
 use Kirby\Panel\Ui\Item;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -35,11 +36,13 @@ class ModelItem extends Item
 		$this->panel = $this->model->panel();
 	}
 
+	#[Override]
 	protected function info(): string|null
 	{
 		return $this->model->toSafeString($this->info ?? false);
 	}
 
+	#[Override]
 	protected function image(): array|null
 	{
 		return $this->panel->image($this->image, $this->layout);
@@ -55,6 +58,7 @@ class ModelItem extends Item
 		return $this->model->permissions()->toArray();
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
@@ -66,6 +70,7 @@ class ModelItem extends Item
 		];
 	}
 
+	#[Override]
 	protected function text(): string
 	{
 		return $this->model->toSafeString($this->text);

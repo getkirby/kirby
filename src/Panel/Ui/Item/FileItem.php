@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui\Item;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Model;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -48,6 +49,7 @@ class FileItem extends ModelItem
 		return $this->panel->dragText(absolute: $this->dragTextIsAbsolute);
 	}
 
+	#[Override]
 	protected function permissions(): array
 	{
 		$permissions = $this->model->permissions();
@@ -58,6 +60,7 @@ class FileItem extends ModelItem
 		];
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

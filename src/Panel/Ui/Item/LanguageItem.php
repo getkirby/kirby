@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui\Item;
 use Kirby\Cms\Language;
 use Kirby\Panel\Ui\Item;
 use Kirby\Toolkit\Escape;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -30,6 +31,7 @@ class LanguageItem extends Item
 		);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

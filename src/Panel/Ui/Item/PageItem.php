@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui\Item;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Panel\Model;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -47,6 +48,7 @@ class PageItem extends ModelItem
 		return $this->panel->dragText();
 	}
 
+	#[Override]
 	protected function permissions(): array
 	{
 		$permissions = $this->model->permissions();
@@ -60,6 +62,7 @@ class PageItem extends ModelItem
 		];
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
