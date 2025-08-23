@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Page;
 use Kirby\Toolkit\I18n;
+use Override;
 
 /**
  * Controls the preview view for a page
@@ -24,6 +25,7 @@ class PagePreviewViewController extends ModelPreviewViewController
 		parent::__construct($model, $versionId);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

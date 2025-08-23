@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Site;
 use Kirby\Toolkit\I18n;
+use Override;
 
 /**
  * Controls the preview view for the site
@@ -24,6 +25,7 @@ class SitePreviewViewController extends ModelPreviewViewController
 		parent::__construct($model, $versionId);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

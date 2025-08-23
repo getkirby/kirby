@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\View;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Lab\Category;
 use Kirby\Panel\Ui\View;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -27,6 +28,7 @@ class LabExamplesViewController extends ViewController
 		return null;
 	}
 
+	#[Override]
 	public function load(): View
 	{
 		return new View(

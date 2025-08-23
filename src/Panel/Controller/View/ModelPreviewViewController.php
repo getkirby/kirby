@@ -9,6 +9,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\View;
+use Override;
 
 /**
  * Controls the preview view
@@ -48,6 +49,7 @@ abstract class ModelPreviewViewController extends ViewController
 		return $this->model::CLASS_ALIAS . '.preview';
 	}
 
+	#[Override]
 	public function load(): View
 	{
 		$props = $this->props();

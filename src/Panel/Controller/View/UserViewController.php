@@ -7,6 +7,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
 use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
+use Override;
 
 /**
  * Controls the user view
@@ -36,6 +37,7 @@ class UserViewController extends ModelViewController
 		parent::__construct($model);
 	}
 
+	#[Override]
 	public function breadcrumb(): array
 	{
 		return [
@@ -46,6 +48,7 @@ class UserViewController extends ModelViewController
 		];
 	}
 
+	#[Override]
 	public function buttons(): ViewButtons
 	{
 		return parent::buttons()->defaults(
@@ -60,16 +63,19 @@ class UserViewController extends ModelViewController
 		return new static(model: Find::user($id));
 	}
 
+	#[Override]
 	public function next(): array|null
 	{
 		return static::prevNext($this->model->next(), 'username');
 	}
 
+	#[Override]
 	public function prev(): array|null
 	{
 		return static::prevNext($this->model->prev(), 'username');
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		$permissions = $this->model->panel()->options();
@@ -91,6 +97,7 @@ class UserViewController extends ModelViewController
 		];
 	}
 
+	#[Override]
 	public function title(): string
 	{
 		return $this->model->username();

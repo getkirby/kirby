@@ -6,6 +6,7 @@ use Kirby\Http\Response;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Lab\Category;
 use Kirby\Panel\Lab\Example;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -32,6 +33,7 @@ class LabExampleVueViewController extends ViewController
 		return new static($example);
 	}
 
+	#[Override]
 	public function load(): Response
 	{
 		return $this->example->serve();

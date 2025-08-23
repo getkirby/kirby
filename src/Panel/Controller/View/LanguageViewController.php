@@ -10,6 +10,7 @@ use Kirby\Panel\Ui\Stat;
 use Kirby\Panel\Ui\Stats;
 use Kirby\Panel\Ui\View;
 use Kirby\Toolkit\Escape;
+use Override;
 
 /**
  * Controls the language view
@@ -75,6 +76,7 @@ class LanguageViewController extends ViewController
 		]);
 	}
 
+	#[Override]
 	public function load(): View
 	{
 		return new View(

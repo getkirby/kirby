@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\View;
 use Kirby\Cms\System;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\View;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -24,6 +25,7 @@ class InstallationViewController extends ViewController
 		$this->system = $this->kirby->system();
 	}
 
+	#[Override]
 	public function load(): View
 	{
 		return new View(

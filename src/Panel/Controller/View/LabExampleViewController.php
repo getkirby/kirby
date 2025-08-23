@@ -9,6 +9,7 @@ use Kirby\Panel\Lab\Example;
 use Kirby\Panel\Ui\Button\ViewButton;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\View;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -95,6 +96,7 @@ class LabExampleViewController extends ViewController
 		return $github;
 	}
 
+	#[Override]
 	public function load(): View
 	{
 		return new View(

@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\View;
+use Override;
 
 /**
  * Controls the search view
@@ -17,6 +18,7 @@ use Kirby\Panel\Ui\View;
  */
 class SearchViewController extends ViewController
 {
+	#[Override]
 	public function load(): View
 	{
 		return new View(

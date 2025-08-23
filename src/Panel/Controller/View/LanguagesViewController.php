@@ -7,6 +7,7 @@ use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\Item\LanguageItem;
 use Kirby\Panel\Ui\View;
+use Override;
 
 /**
  * Controls the languages view
@@ -32,6 +33,7 @@ class LanguagesViewController extends ViewController
 		);
 	}
 
+	#[Override]
 	public function load(): View
 	{
 		return new View(

@@ -10,6 +10,7 @@ use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\Item\UserItem;
 use Kirby\Panel\Ui\View;
+use Override;
 
 /**
  * Controls the users view
@@ -43,6 +44,7 @@ class UsersViewController extends ViewController
 		return new static(role: App::instance()->request()->get('role'));
 	}
 
+	#[Override]
 	public function load(): View
 	{
 		return new View(

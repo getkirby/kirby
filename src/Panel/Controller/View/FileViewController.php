@@ -9,6 +9,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\FilePreview;
+use Override;
 
 /**
  * Controls a file view
@@ -40,6 +41,7 @@ class FileViewController extends ModelViewController
 		parent::__construct($model);
 	}
 
+	#[Override]
 	public function breadcrumb(): array
 	{
 		return [
@@ -50,6 +52,7 @@ class FileViewController extends ModelViewController
 		];
 	}
 
+	#[Override]
 	public function buttons(): ViewButtons
 	{
 		return parent::buttons()->defaults(
@@ -69,6 +72,7 @@ class FileViewController extends ModelViewController
 		return $this->siblings()->indexOf($this->model);
 	}
 
+	#[Override]
 	public function next(): array|null
 	{
 		return static::prevNext(
@@ -77,6 +81,7 @@ class FileViewController extends ModelViewController
 		);
 	}
 
+	#[Override]
 	public function prev(): array|null
 	{
 		return static::prevNext(
@@ -85,6 +90,7 @@ class FileViewController extends ModelViewController
 		);
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
@@ -110,6 +116,7 @@ class FileViewController extends ModelViewController
 		);
 	}
 
+	#[Override]
 	public function title(): string
 	{
 		return $this->model->filename();

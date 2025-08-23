@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Override;
+
 /**
  * Controls the view for a user file
  *
@@ -14,6 +16,7 @@ namespace Kirby\Panel\Controller\View;
  */
 class UserFileViewController extends FileViewController
 {
+	#[Override]
 	public function breadcrumb(): array
 	{
 		/** @var \Kirby\Cms\User $parent */

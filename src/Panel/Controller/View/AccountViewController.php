@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Override;
+
 /**
  * Controls the account view
  *
@@ -14,6 +16,7 @@ namespace Kirby\Panel\Controller\View;
  */
 class AccountViewController extends UserViewController
 {
+	#[Override]
 	public function component(): string
 	{
 		return 'k-account-view';

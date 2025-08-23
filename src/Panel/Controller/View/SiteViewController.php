@@ -7,6 +7,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Site;
 use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
+use Override;
 
 /**
  * Controls the site view
@@ -36,6 +37,7 @@ class SiteViewController extends ModelViewController
 		parent::__construct($model);
 	}
 
+	#[Override]
 	public function buttons(): ViewButtons
 	{
 		return parent::buttons()->defaults(
@@ -50,6 +52,7 @@ class SiteViewController extends ModelViewController
 		return new static(model: App::instance()->site());
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		$props = parent::props();
@@ -65,6 +68,7 @@ class SiteViewController extends ModelViewController
 		];
 	}
 
+	#[Override]
 	public function title(): string
 	{
 		$title = $this->model->title();

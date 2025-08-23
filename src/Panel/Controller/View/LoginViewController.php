@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\View;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -15,6 +16,7 @@ use Kirby\Panel\Ui\View;
  */
 class LoginViewController extends ViewController
 {
+	#[Override]
 	public function load(): View
 	{
 		return new View(

@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Override;
+
 /**
  * Controls the view for a page file
  *
@@ -14,6 +16,7 @@ namespace Kirby\Panel\Controller\View;
  */
 class PageFileViewController extends FileViewController
 {
+	#[Override]
 	public function breadcrumb(): array
 	{
 		$breadcrumb = $this->model->parents()->flip()->values(

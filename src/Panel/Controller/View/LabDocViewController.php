@@ -9,6 +9,7 @@ use Kirby\Panel\Ui\Button\ViewButton;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\View;
 use Kirby\Panel\Ui\View\ErrorView;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -63,6 +64,7 @@ class LabDocViewController extends ViewController
 		return new ViewButtons($buttons);
 	}
 
+	#[Override]
 	public function load(): View
 	{
 		// @codeCoverageIgnoreStart

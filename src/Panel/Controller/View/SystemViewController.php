@@ -11,6 +11,7 @@ use Kirby\Panel\Ui\Stat;
 use Kirby\Panel\Ui\Stats;
 use Kirby\Panel\Ui\View;
 use Kirby\Plugin\Plugin;
+use Override;
 
 /**
  * Controls the system view
@@ -67,6 +68,7 @@ class SystemViewController extends ViewController
 		return $this->system->isLocal();
 	}
 
+	#[Override]
 	public function load(): View
 	{
 		return new View(

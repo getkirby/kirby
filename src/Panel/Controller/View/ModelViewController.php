@@ -10,6 +10,7 @@ use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\View;
+use Override;
 
 /**
  * Controls a model view
@@ -47,6 +48,7 @@ abstract class ModelViewController extends ViewController
 		return 'k-' . ($this->model::CLASS_ALIAS ?? 'model') . '-view';
 	}
 
+	#[Override]
 	public function load(): View
 	{
 		return new View(...$this->props());

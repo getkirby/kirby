@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Panel\Model;
 use Kirby\Panel\Ui\Button\ViewButtons;
+use Override;
 
 /**
  * Controls the page view
@@ -37,6 +38,7 @@ class PageViewController extends ModelViewController
 		parent::__construct($model);
 	}
 
+	#[Override]
 	public function breadcrumb(): array
 	{
 		$parents = $this->model->parents()->flip()->merge($this->model);
@@ -49,6 +51,7 @@ class PageViewController extends ModelViewController
 		);
 	}
 
+	#[Override]
 	public function buttons(): ViewButtons
 	{
 		return parent::buttons()->defaults(
@@ -65,16 +68,19 @@ class PageViewController extends ModelViewController
 		return new static(model: Find::page($id));
 	}
 
+	#[Override]
 	public function next(): array|null
 	{
 		return static::prevNext($this->siblings('next')->first());
 	}
 
+	#[Override]
 	public function prev(): array|null
 	{
 		return static::prevNext($this->siblings('prev')->last());
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
@@ -131,6 +137,7 @@ class PageViewController extends ModelViewController
 		return $siblings->filter('isListable', true);
 	}
 
+	#[Override]
 	public function title(): string
 	{
 		return $this->model->title()->toString();
