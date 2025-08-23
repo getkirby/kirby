@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\FilePreview;
 
 use Kirby\Cms\File;
 use Kirby\Panel\Ui\FilePreview;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -22,6 +23,7 @@ class VideoFilePreview extends FilePreview
 	) {
 	}
 
+	#[Override]
 	public static function accepts(File $file): bool
 	{
 		return $file->type() === 'video';

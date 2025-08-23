@@ -4,6 +4,7 @@ namespace Kirby\Panel\Ui\FilePreview;
 
 use Kirby\Cms\File;
 use Kirby\Panel\Ui\FilePreview;
+use Override;
 
 /**
  * Fallback file preview component
@@ -27,11 +28,13 @@ class DefaultFilePreview extends FilePreview
 	/**
 	 * Accepts any file as last resort
 	 */
+	#[Override]
 	public static function accepts(File $file): bool
 	{
 		return true;
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [

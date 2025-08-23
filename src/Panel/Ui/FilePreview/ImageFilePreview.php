@@ -5,6 +5,7 @@ namespace Kirby\Panel\Ui\FilePreview;
 use Kirby\Cms\File;
 use Kirby\Panel\Ui\FilePreview;
 use Kirby\Toolkit\I18n;
+use Override;
 
 /**
  * @package   Kirby Panel
@@ -23,11 +24,13 @@ class ImageFilePreview extends FilePreview
 	) {
 	}
 
+	#[Override]
 	public static function accepts(File $file): bool
 	{
 		return $file->type() === 'image';
 	}
 
+	#[Override]
 	public function details(): array
 	{
 		return [
@@ -43,6 +46,7 @@ class ImageFilePreview extends FilePreview
 		];
 	}
 
+	#[Override]
 	public function props(): array
 	{
 		return [
