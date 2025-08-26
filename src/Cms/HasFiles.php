@@ -72,8 +72,8 @@ trait HasFiles
 		}
 
 		// find by global UUID
-		if (Uuid::is($filename, 'file') === true) {
-			return Uuid::for($filename, $this->$in())->model();
+		if ($uuid = Uuid::from($filename, 'file', $this->$in())) {
+			return $uuid->model();
 		}
 
 		if (str_contains($filename, '/') === true) {

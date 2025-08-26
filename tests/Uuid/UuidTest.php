@@ -127,39 +127,14 @@ class UuidTest extends TestCase
 		$this->assertSame(2, iterator_count($uuid->context()));
 	}
 
-	public function testForUuidString(): void
-	{
-		$this->assertInstanceOf(PageUuid::class, Uuid::for('page://my-id'));
-		$this->assertInstanceOf(FileUuid::class, Uuid::for('file://my-id'));
-		$this->assertInstanceOf(SiteUuid::class, Uuid::for('site://'));
-		$this->assertInstanceOf(UserUuid::class, Uuid::for('user://my-id'));
-		// TODO: activate for  uuid-block-structure-support
-		// $this->assertInstanceOf(BlockUuid::class, Uuid::for('block://my-id'));
-		// $this->assertInstanceOf(StructureUuid::class, Uuid::for('struct://my-id'));
-	}
-
-	public function testForUuidStringInvalid(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid UUID URI: foo://my-id');
-		Uuid::for('foo://my-id');
-	}
-
-	public function testForStringInvalid(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid UUID string: foo˜bar');
-		Uuid::for('foo˜bar');
-	}
-
-	public function testForObject(): void
+	public function testFor(): void
 	{
 		$site   = $this->app->site();
 		$page   = $site->find('page-a');
 		$file   = $page->file('test.pdf');
 		$user   = $this->app->user('my-user');
-		$block  = $page->notes()->toBlocks()->first();
-		$struct = $page->authors()->toStructure()->first();
+		// $block  = $page->notes()->toBlocks()->first();
+		// $struct = $page->authors()->toStructure()->first();
 
 		$this->assertInstanceOf(PageUuid::class, Uuid::for($page));
 		$this->assertInstanceOf(FileUuid::class, Uuid::for($file));
@@ -170,10 +145,41 @@ class UuidTest extends TestCase
 		// $this->assertInstanceOf(StructureUuid::class, Uuid::for($struct));
 	}
 
-	public function testForConfigDisabled(): void
+	public function testForDisabled(): void
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
-		$this->assertNull(Uuid::for('page://my-page-uuid'));
+		$this->assertNull(Uuid::for($this->app->site()));
+	}
+
+	public function testFrom(): void
+	{
+		$this->assertInstanceOf(PageUuid::class, Uuid::from('page://my-id'));
+		$this->assertInstanceOf(FileUuid::class, Uuid::from('file://my-id'));
+		$this->assertInstanceOf(SiteUuid::class, Uuid::from('site://'));
+		$this->assertInstanceOf(UserUuid::class, Uuid::from('user://my-id'));
+		// TODO: activate for  uuid-block-structure-support
+		// $this->assertInstanceOf(BlockUuid::class, Uuid::from('block://my-id'));
+		// $this->assertInstanceOf(StructureUuid::class, Uuid::from('struct://my-id'));
+	}
+
+	public function testFromUuidInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid UUID URI "foo" in foo://my-id');
+		Uuid::from('foo://my-id');
+	}
+
+	public function testFromInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid UUID string: foo˜bar');
+		Uuid::from('foo˜bar');
+	}
+
+	public function testFromDisabled(): void
+	{
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+		$this->assertNull(Uuid::from('page://my-page-uuid'));
 	}
 
 	public function testGenerate(): void
@@ -351,9 +357,9 @@ class UuidTest extends TestCase
 
 	public function testModelNotFound(): void
 	{
-		$this->assertNull(Uuid::for('page://something')->model());
-		$this->assertNull(Uuid::for('user://something')->model());
-		$this->assertNull(Uuid::for('file://something')->model());
+		$this->assertNull(Uuid::from('page://something')->model());
+		$this->assertNull(Uuid::from('user://something')->model());
+		$this->assertNull(Uuid::from('file://something')->model());
 	}
 
 	public function testModelNotFoundIndexLookupDisabled(): void
@@ -361,7 +367,7 @@ class UuidTest extends TestCase
 		$this->app->clone(['options' => ['content' => ['uuid' => ['index' => false]]]]);
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Model for UUID page://something could not be found without searching in the site index');
-		Uuid::for('page://something')->model();
+		Uuid::from('page://something')->model();
 	}
 
 	public function testPopulateGenerate(): void
@@ -395,19 +401,19 @@ class UuidTest extends TestCase
 
 	public function testToUrl(): void
 	{
-		$uuid = Uuid::for('page://my-page');
+		$uuid = Uuid::from('page://my-page');
 		$this->assertSame('https://getkirby.com/page-a', $uuid->toUrl());
 
-		$uuid = Uuid::for('page://my-page?foo=bar');
+		$uuid = Uuid::from('page://my-page?foo=bar');
 		$this->assertSame('https://getkirby.com/page-a?foo=bar', $uuid->toUrl());
 
-		$uuid = Uuid::for('page://my-page#fragment');
+		$uuid = Uuid::from('page://my-page#fragment');
 		$this->assertSame('https://getkirby.com/page-a#fragment', $uuid->toUrl());
 
-		$uuid = Uuid::for('page://does-not-exist');
+		$uuid = Uuid::from('page://does-not-exist');
 		$this->assertNull($uuid->toUrl());
 
-		$uuid = Uuid::for('file://my-id');
+		$uuid = Uuid::from('file://my-id');
 		$this->assertNull($uuid->toUrl());
 	}
 
@@ -430,7 +436,7 @@ class UuidTest extends TestCase
 		$page = $this->app->page('page-a');
 		$key  = 'page/my/-page';
 		$id   = 'page://my-page';
-		$uuid = Uuid::for($id);
+		$uuid = Uuid::from($id);
 
 		$this->assertFalse($uuid->isCached());
 		$this->assertSame($key, $uuid->key());
@@ -442,7 +448,7 @@ class UuidTest extends TestCase
 		// modify cache data manually to something invalid
 		Uuids::cache()->set($key, 'invalid-id');
 
-		$uuid = Uuid::for($id);
+		$uuid = Uuid::from($id);
 		$this->assertSame(Uuids::cache()->get($key), 'invalid-id');
 		$this->assertNull($uuid->model(true));
 		$this->assertSame(Uuids::cache()->get($key), 'invalid-id');

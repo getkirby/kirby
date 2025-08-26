@@ -159,41 +159,16 @@ abstract class Uuid implements Stringable
 	}
 
 	/**
-	 * Shorthand to create instance
-	 * by passing either UUID or model
+	 * Creates a UUID object for a model object
 	 */
 	final public static function for(
-		string|Identifiable $seed,
+		Identifiable $seed,
 		Collection|null $context = null
 	): static|null {
-		// if globally disabled, return null
 		if (Uuids::enabled() === false) {
 			return null;
 		}
 
-		// for UUID string
-		if (is_string($seed) === true) {
-			if ($uri = Str::before($seed, '://')) {
-				return match ($uri) {
-					'page'   => new PageUuid(uuid: $seed, context: $context),
-					'file'   => new FileUuid(uuid: $seed, context: $context),
-					'site'   => new SiteUuid(uuid: $seed, context: $context),
-					'user'   => new UserUuid(uuid: $seed, context: $context),
-					// TODO: activate for uuid-block-structure-support
-					// 'block'  => new BlockUuid(uuid: $seed, context: $context),
-					// 'struct' => new StructureUuid(uuid: $seed, context: $context),
-					default  => throw new InvalidArgumentException(
-						message: 'Invalid UUID URI: ' . $seed
-					)
-				};
-			}
-
-			throw new InvalidArgumentException(
-				message: 'Invalid UUID string: ' . $seed
-			);
-		}
-
-		// for model object
 		return match (true) {
 			$seed instanceof Page
 				=> new PageUuid(model: $seed, context: $context),
@@ -212,6 +187,43 @@ abstract class Uuid implements Stringable
 				message: 'UUID not supported for: ' . $seed::class
 			)
 		};
+	}
+
+	/**
+	 * Creates a UUID object from a UUID string
+	 * @since 6.0.0
+	 */
+	final public static function from(
+		string $uuid,
+		string|array|null $scheme = null,
+		Collection|null $context = null
+	): static|null {
+		if (Uuids::enabled() === false) {
+			return null;
+		}
+
+		if ($scheme !== null && static::is($uuid, $scheme) === false) {
+			return null;
+		}
+
+		if ($uri = Str::before($uuid, '://')) {
+			return match ($uri) {
+				'page'   => new PageUuid(uuid: $uuid, context: $context),
+				'file'   => new FileUuid(uuid: $uuid, context: $context),
+				'site'   => new SiteUuid(uuid: $uuid, context: $context),
+				'user'   => new UserUuid(uuid: $uuid, context: $context),
+				// TODO: activate for uuid-block-structure-support
+				// 'block'  => new BlockUuid(uuid: $seed, context: $context),
+				// 'struct' => new StructureUuid(uuid: $seed, context: $context),
+				default  => throw new InvalidArgumentException(
+					message: 'Invalid UUID URI "' . $uri . '" in ' . $uuid
+				)
+			};
+		}
+
+		throw new InvalidArgumentException(
+			message: 'Invalid UUID string: ' . $uuid
+		);
 	}
 
 	/**
