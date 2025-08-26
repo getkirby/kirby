@@ -276,7 +276,7 @@ class CollectionTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid grouping value for key: a');
 
-		$collection->group(fn($item) => false);
+		$collection->group(fn ($item) => false);
 	}
 
 	public function testGroupArray(): void
@@ -286,7 +286,7 @@ class CollectionTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('You cannot group by arrays or objects');
 
-		$collection->group(fn($item) => ['a' => 'b']);
+		$collection->group(fn ($item) => ['a' => 'b']);
 	}
 
 	public function testGroupObject(): void
@@ -296,7 +296,7 @@ class CollectionTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('You cannot group by arrays or objects');
 
-		$collection->group(fn($item) => new Obj(['a' => 'b']));
+		$collection->group(fn ($item) => new Obj(['a' => 'b']));
 	}
 
 	public function testGroupStringObject(): void
@@ -318,7 +318,7 @@ class CollectionTest extends TestCase
 			'group'    => new StringObject('client')
 		];
 
-		$groups = $collection->group(fn($item) => $item['group']);
+		$groups = $collection->group(fn ($item) => $item['group']);
 		$this->assertCount(2, $groups->admin());
 		$this->assertCount(1, $groups->client());
 
@@ -537,7 +537,7 @@ class CollectionTest extends TestCase
 	public function testMap(): void
 	{
 		$collection = new Collection(['a' => 1, 'b' => 2]);
-		$collection->map(fn($item) => $item * 2);
+		$collection->map(fn ($item) => $item * 2);
 		$this->assertSame(['a' => 2, 'b' => 4], $collection->data());
 	}
 
@@ -833,9 +833,9 @@ class CollectionTest extends TestCase
 
 	public function testValuesMap(): void
 	{
-	       $values = $this->collection->values(
-		       fn ($item) => Str::after($item, 'My ')
-	       );
+		$values = $this->collection->values(
+			fn ($item) => Str::after($item, 'My ')
+		);
 
 		$this->assertSame([
 			'first element',
