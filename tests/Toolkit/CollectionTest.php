@@ -7,10 +7,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class StringObject
 {
-       public function __construct(
-	       protected string $value
-       ) {
-       }
+	public function __construct(
+		protected string $value
+	) {
+	}
 
 	public function __toString(): string
 	{
@@ -154,9 +154,9 @@ class CollectionTest extends TestCase
 
 	public function testFilter(): void
 	{
-	       $filtered = $this->collection->filter(
-		       fn ($element) => $element === 'My second element'
-	       );
+		$filtered = $this->collection->filter(
+			fn ($element) => $element === 'My second element'
+		);
 
 		$this->assertSame('My second element', $filtered->first());
 		$this->assertSame('My second element', $filtered->last());
@@ -256,7 +256,7 @@ class CollectionTest extends TestCase
 			'group'    => 'client'
 		];
 
-			   $groups = $collection->group(fn ($item) => $item['group']);
+		$groups = $collection->group(fn ($item) => $item['group']);
 		$this->assertCount(2, $groups->admin());
 		$this->assertCount(1, $groups->client());
 
@@ -264,7 +264,7 @@ class CollectionTest extends TestCase
 		$this->assertSame('peter', $firstAdmin['username']);
 
 		// alias
-			   $groups = $collection->groupBy(fn ($item) => $item['group']);
+		$groups = $collection->groupBy(fn ($item) => $item['group']);
 		$this->assertCount(2, $groups->admin());
 		$this->assertCount(1, $groups->client());
 	}
@@ -797,7 +797,7 @@ class CollectionTest extends TestCase
 
 		// with mapping
 		$collection = new Collection(['a' => 1, 'b' => 2]);
-			   $this->assertSame(['a' => 2, 'b' => 4], $collection->toArray(fn ($item) => $item * 2));
+		$this->assertSame(['a' => 2, 'b' => 4], $collection->toArray(fn ($item) => $item * 2));
 	}
 
 	public function testToJson(): void
