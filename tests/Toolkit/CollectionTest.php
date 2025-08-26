@@ -383,12 +383,12 @@ class CollectionTest extends TestCase
 			'genre' => 'Hip-Hop',
 		];
 
-		$groupsCaseInsensitive = $collection->group(fn(array $item) => $item['genre'], true);
+		$groupsCaseInsensitive = $collection->group(fn (array $item) => $item['genre'], true);
 
 		$this->assertTrue($groupsCaseInsensitive->has('pop'));
 		$this->assertTrue($groupsCaseInsensitive->has('hip-hop'));
 
-		$groupsCaseSensitive = $collection->group(fn(array $item) => $item['genre'], false);
+		$groupsCaseSensitive = $collection->group(fn (array $item) => $item['genre'], false);
 
 		$this->assertTrue($groupsCaseSensitive->has('Pop'));
 		$this->assertTrue($groupsCaseSensitive->has('Hip-Hop'));
