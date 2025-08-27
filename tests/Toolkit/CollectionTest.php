@@ -383,15 +383,23 @@ class CollectionTest extends TestCase
 			'genre' => 'Hip-Hop',
 		];
 
+		$collection->kayne = [
+			'name' => 'kayne',
+			'genre' => 'hip-hop',
+		];
+
 		$groupsCaseInsensitive = $collection->group(fn (array $item) => $item['genre'], true);
 
+		$this->assertCount(2, $groupsCaseInsensitive);
 		$this->assertTrue($groupsCaseInsensitive->has('pop'));
 		$this->assertTrue($groupsCaseInsensitive->has('hip-hop'));
 
 		$groupsCaseSensitive = $collection->group(fn (array $item) => $item['genre'], false);
 
+		$this->assertCount(3, $groupsCaseSensitive);
 		$this->assertTrue($groupsCaseSensitive->has('Pop'));
 		$this->assertTrue($groupsCaseSensitive->has('Hip-Hop'));
+		$this->assertTrue($groupsCaseSensitive->has('hip-hop'));
 	}
 
 	public function testIndexOf(): void
