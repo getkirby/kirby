@@ -259,6 +259,24 @@ class SnippetTest extends TestCase
 	/**
 	 * @covers ::render
 	 */
+	public function testRenderOpenLayoutSnippet()
+	{
+		// all output must be captured
+		$this->expectOutputString('');
+
+		new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES
+			]
+		]);
+
+		$snippet = new Snippet(static::FIXTURES . '/with-layout.php');
+		$this->assertSame("<h1>Layout</h1>\nMy content\n<footer>with other stuff</footer>\n", $snippet->render());
+	}
+
+	/**
+	 * @covers ::render
+	 */
 	public function testRenderWithLazySlots()
 	{
 		$snippet = new Snippet(static::FIXTURES . '/slots.php');

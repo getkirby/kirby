@@ -135,6 +135,48 @@ class Snippet extends Tpl
 	}
 
 	/**
+	 * Closes any potentially open layout snippet.
+	 *
+	 * @param Snippet|null $outsideSnippet The expected value for `Snippet::$current`.
+	 * @param string|null $template The content of the currently processed template or snippet.
+	 * @param array $data Additional data provided to any potential layout snippet.
+	 * @return string|null The new adjusted content of the template if `$template` was given.
+	 */
+	public static function endlayout(Snippet|null $outsideSnippet, string|null $template = null, array $data = []): string|null
+	{
+		// if last `endsnippet()` inside the current template
+		// has been omitted (= snippet was used as layout snippet),
+		// `Snippet::$current` will point to a snippet that was
+		// opened inside the template; if that snippet is the direct
+		// child of the snippet that was open before the template was
+		// rendered (which could be `null` if no snippet was open),
+		// take the buffer output from the template as default slot
+		// and render the snippet as final template output
+		if (
+			Snippet::$current === null ||
+			Snippet::$current->parent() !== $outsideSnippet
+		) {
+			return $template;
+		}
+
+		if (!isset($template)) {
+			// let the snippet close and render natively
+			echo static::$current?->render($data);
+			return null;
+		}
+		if (Snippet::$current->slots()->count() === 0) {
+			// no slots have been defined, but the template code
+			// should be used as default slot
+			return Snippet::$current->render($data, [
+				'default' => $template
+			]);
+		}
+		// swallow any "unslotted" content
+		// between start and end
+		return Snippet::$current->render($data);
+	}
+
+	/**
 	 * Closes the last openend slot
 	 */
 	public function endslot(): void
@@ -247,7 +289,16 @@ class Snippet extends Tpl
 		// custom data overrides for the data that was passed to the snippet instance
 		$data = array_replace_recursive($this->data, $data);
 
-		return static::load($this->file, static::scope($data, $this->slots()));
+		// if the template is rendered inside a snippet,
+		// we need to keep the "outside" snippet object
+		// to compare it later
+		$snippet = Snippet::$current;
+
+		// load the template representing this snippet
+		$template = static::load($this->file, static::scope($data, $this->slots()));
+
+		// handle any potentially open layout snippet
+		return static::endlayout($snippet, $template);
 	}
 
 	/**
