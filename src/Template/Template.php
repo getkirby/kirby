@@ -163,31 +163,8 @@ class Template implements Stringable
 		// load the template
 		$template = Tpl::load($this->file(), $data);
 
-		// if last `endsnippet()` inside the current template
-		// has been omitted (= snippet was used as layout snippet),
-		// `Snippet::$current` will point to a snippet that was
-		// opened inside the template; if that snippet is the direct
-		// child of the snippet that was open before the template was
-		// rendered (which could be `null` if no snippet was open),
-		// take the buffer output from the template as default slot
-		// and render the snippet as final template output
-		if (
-			Snippet::$current === null ||
-			Snippet::$current->parent() !== $snippet
-		) {
-			return $template;
-		}
-
-		// no slots have been defined, but the template code
-		// should be used as default slot
-		if (Snippet::$current->slots()->count() === 0) {
-			return Snippet::$current->render($data, [
-				'default' => $template
-			]);
-		}
-
-		// let the snippet close and render natively
-		return Snippet::$current->render($data);
+		// handle any potentially open layout snippet
+		return Snippet::endlayout($snippet, $template, $data);
 	}
 
 	/**
