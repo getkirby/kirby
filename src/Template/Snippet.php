@@ -135,6 +135,58 @@ class Snippet extends Tpl
 	}
 
 	/**
+	 * Renders the given template.
+	 * This method supports the use of layout snippets inside the template.
+	 *
+	 * @param string|null $file Path to the template file.
+	 * @param array $data Data available inside the template.
+	 * @param array $layoutData Data available inside any potential layout snippet.
+	 * @return string The rendered content of the given template file.
+	 * @throws Throwable
+	 *
+	 * @see Tpl::load() Base implementation without support for layout snippets.
+	 */
+	public static function load(
+		string|null $file = null,
+		array $data = [],
+		array $layoutData = [],
+	): string {
+		// if the template is rendered inside a snippet,
+		// we need to keep the "outside" snippet object
+		// to compare it later
+		$outsideSnippet = Snippet::$current;
+
+		// load the template
+		$template = parent::load($file, $data);
+
+		// if last `endsnippet()` inside the current template
+		// has been omitted (= snippet was used as layout snippet),
+		// `Snippet::$current` will point to a snippet that was
+		// opened inside the template; if that snippet is the direct
+		// child of the snippet that was open before the template was
+		// rendered (which could be `null` if no snippet was open),
+		// take the buffer output from the template as default slot
+		// and render the snippet as final template output
+		if (
+			Snippet::$current === null ||
+			Snippet::$current->parent() !== $outsideSnippet
+		) {
+			return $template;
+		}
+
+		if (Snippet::$current->slots()->count() === 0) {
+			// no slots have been defined, but the template code
+			// should be used as default slot
+			return Snippet::$current->render($layoutData, [
+				'default' => $template
+			]);
+		}
+		// swallow any "unslotted" content
+		// between start and end
+		return Snippet::$current->render($layoutData);
+	}
+
+	/**
 	 * Closes the last openend slot
 	 */
 	public function endslot(): void
@@ -247,6 +299,7 @@ class Snippet extends Tpl
 		// custom data overrides for the data that was passed to the snippet instance
 		$data = array_replace_recursive($this->data, $data);
 
+		// load the template representing this snippet
 		return static::load($this->file, static::scope($data, $this->slots()));
 	}
 
