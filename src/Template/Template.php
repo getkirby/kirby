@@ -5,7 +5,6 @@ namespace Kirby\Template;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Filesystem\F;
-use Kirby\Toolkit\Tpl;
 use Stringable;
 
 /**
@@ -155,16 +154,7 @@ class Template implements Stringable
 	 */
 	public function render(array $data = []): string
 	{
-		// if the template is rendered inside a snippet,
-		// we need to keep the "outside" snippet object
-		// to compare it later
-		$snippet = Snippet::$current;
-
-		// load the template
-		$template = Tpl::load($this->file(), $data);
-
-		// handle any potentially open layout snippet
-		return Snippet::endlayout($snippet, $template, $data);
+		return Snippet::load($this->file(), $data, $data);
 	}
 
 	/**
