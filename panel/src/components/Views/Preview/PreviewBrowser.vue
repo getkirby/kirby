@@ -56,21 +56,30 @@ export default {
 		this.$events.off("content.publish", this.reload);
 	},
 	methods: {
+		onClick(e) {
+			const link = e.target.closest("a");
+
+			if (!link) {
+				return;
+			}
+
+			if (!link.href || link.onclick) {
+				return;
+			}
+
+			e.preventDefault();
+
+			if (link.href.startsWith(location.origin) === false) {
+				return window.open(link.href, "_blank");
+			}
+
+			this.$emit("navigate", link.href);
+		},
 		onLoad() {
+			this.window.document.addEventListener("click", this.onClick);
+
 			for (const link of this.window.document.querySelectorAll("a")) {
-				if (!link.href || link.onclick) {
-					continue;
-				}
-
-				if (link.href.startsWith(location.origin) === false) {
-					link.target = "_blank";
-					continue;
-				}
-
-				link.addEventListener("click", (e) => {
-					e.preventDefault();
-					this.$emit("navigate", link.href);
-				});
+				link.addEventListener("click", this.onClick);
 			}
 		},
 		reload() {
