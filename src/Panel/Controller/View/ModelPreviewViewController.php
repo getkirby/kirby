@@ -45,9 +45,9 @@ class ModelPreviewViewController
 				// Preserve the redirect URL's query and params
 				// and inject them into the new URL
 				unset(
-					$redirect->query()->_token,
-					$redirect->query()->_version,
-					$redirect->query()->_preview
+					$redirect->query->_token,
+					$redirect->query->_version,
+					$redirect->query->_preview
 				);
 
 				if ($redirect->query->isNotEmpty() === true) {
@@ -82,7 +82,7 @@ class ModelPreviewViewController
 				$uri = new Uri($url);
 
 				// set the preview flag
-				$uri->query()->_preview = 'true';
+				$uri->query->_preview = 'true';
 
 				// inject params and query from a redirect
 				$uri->params->merge($model->kirby()->request()->get('_params'));
