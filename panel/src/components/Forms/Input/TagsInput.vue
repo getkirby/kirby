@@ -1,5 +1,5 @@
 <template>
-	<div :data-can-add="canAdd" class="k-tags-input">
+	<div :data-can-add="canAdd" :data-disabled="disabled" class="k-tags-input">
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(value)"
@@ -238,7 +238,7 @@ export default {
 .k-tags-input {
 	padding: var(--tags-gap);
 }
-.k-tags-input[data-can-add="true"] {
+.k-tags-input[data-can-add="true"]:not([data-disabled="true"]) {
 	cursor: pointer;
 }
 

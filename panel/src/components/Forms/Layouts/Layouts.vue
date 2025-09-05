@@ -37,7 +37,12 @@
 			{{ $t("field.blocks.fieldsets.empty") }}
 		</k-empty>
 
-		<k-empty v-else icon="dashboard" class="k-layout-empty" @click="select(0)">
+		<k-empty
+			v-else
+			icon="dashboard"
+			class="k-layout-empty"
+			v-on="!disabled ? { click: () => select(0) } : {}"
+		>
 			{{ empty ?? $t("field.layout.empty") }}
 		</k-empty>
 	</div>

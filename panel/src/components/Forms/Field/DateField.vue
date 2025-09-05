@@ -14,9 +14,8 @@
 				@input="onDateInput"
 				@submit="$emit('submit')"
 			>
-				<template v-if="calendar" #icon>
+				<template v-if="calendar && !disabled" #icon>
 					<k-button
-						:disabled="disabled"
 						:icon="icon"
 						:title="$t('date.select')"
 						class="k-input-icon-button"
@@ -47,9 +46,8 @@
 				@input="onTimeInput"
 				@submit="$emit('submit')"
 			>
-				<template v-if="times" #icon>
+				<template v-if="times && !disabled" #icon>
 					<k-button
-						:disabled="disabled"
 						:icon="time.icon ?? 'clock'"
 						:title="$t('time.select')"
 						class="k-input-icon-button"

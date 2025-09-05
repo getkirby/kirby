@@ -23,7 +23,7 @@
 			>
 				<k-collection
 					v-bind="collection"
-					@empty="open"
+					v-on="!disabled ? { empty: open } : {}"
 					@sort="onInput"
 					@sort-change="$emit('change', $event)"
 				>
@@ -168,9 +168,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-models-field[data-disabled="true"] .k-item * {
-	pointer-events: all !important;
-}
-</style>

@@ -13,7 +13,7 @@
 		>
 			<template #icon>
 				<k-button
-					v-if="link"
+					v-if="link && mailto"
 					:icon="icon"
 					:link="mailto"
 					:title="$t('open')"

@@ -78,12 +78,6 @@ export default {
 .k-field[data-disabled="true"] {
 	cursor: not-allowed;
 }
-.k-field[data-disabled="true"] * {
-	pointer-events: none;
-}
-.k-field[data-disabled="true"] .k-text[data-theme="help"] * {
-	pointer-events: initial;
-}
 .k-field-header {
 	display: flex;
 	justify-content: space-between;
