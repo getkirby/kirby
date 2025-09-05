@@ -84,9 +84,9 @@ class SystemViewController extends ViewController
 	public function plugins(): array
 	{
 		return $this->plugins ??= $this->system->plugins()->values(function (Plugin $plugin) {
-			$authors   = $plugin->authorsNames();
-			$update    = $plugin->updateStatus();
-			$version   = $update?->toArray() ?? $plugin->version() ?? '–';
+			$authors = $plugin->authorsNames();
+			$update  = $plugin->updateStatus();
+			$version = $update?->toArray() ?? $plugin->version() ?? '–';
 
 			// Inject exceptions from plugin to global exceptions
 			$this->exceptions = [
@@ -99,7 +99,7 @@ class SystemViewController extends ViewController
 				'license' => $plugin->license()->toArray(),
 				'name'    => [
 					'text' => $plugin->name() ?? '–',
-					'href' => $plugin->link(),
+					'href' => $plugin->link()
 				],
 				'status'  => $plugin->license()->status()->toArray(),
 				'version' => $version,

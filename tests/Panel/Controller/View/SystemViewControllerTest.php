@@ -223,7 +223,7 @@ class SystemViewControllerTest extends TestCase
 				'license' => SystemMock::unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/public',
-					'href' => 'https://getkirby.com'
+					'href' => 'https://plugins.getkirby.com/getkirby/public'
 				],
 				'status'  => SystemMock::unknownLicenseStatus(),
 				'version' => [
