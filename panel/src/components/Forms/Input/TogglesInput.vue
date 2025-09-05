@@ -121,6 +121,9 @@ export default {
 	padding: 0 var(--spacing-3);
 	height: 100%;
 }
+.k-toggles-input[disabled] label {
+	cursor: not-allowed;
+}
 
 .k-toggles-input input:checked + label {
 	background: light-dark(var(--color-black), var(--color-gray-950));

@@ -49,15 +49,4 @@ export default {
 	top: calc(var(--header-sticky-offset) + 2vh);
 	z-index: 2;
 }
-
-.k-column[data-disabled="true"] {
-	cursor: not-allowed;
-	opacity: 0.4;
-}
-.k-column[data-disabled="true"] * {
-	pointer-events: none;
-}
-.k-column[data-disabled="true"] .k-text[data-theme="help"] * {
-	pointer-events: initial;
-}
 </style>

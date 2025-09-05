@@ -1,5 +1,9 @@
 <template>
-	<div :class="['k-multiselect-input', $attrs.class]" :style="$attrs.style">
+	<div
+		:class="['k-multiselect-input', $attrs.class]"
+		:data-disabled="disabled"
+		:style="$attrs.style"
+	>
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(value)"
@@ -67,6 +71,9 @@ export default {
 <style>
 .k-multiselect-input {
 	padding: var(--tags-gap);
+}
+
+.k-multiselect-input:not([data-disabled="true"]) {
 	cursor: pointer;
 }
 
