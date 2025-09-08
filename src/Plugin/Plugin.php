@@ -158,12 +158,18 @@ class Plugin
 	 */
 	public function link(): string|null
 	{
-		$info     = $this->info();
-		$homepage = $info['homepage'] ?? null;
-		$docs     = $info['support']['docs'] ?? null;
-		$source   = $info['support']['source'] ?? null;
+		// Prefer link to plugin directory
+		$status = $this->updateStatus()?->status();
 
-		$link = $homepage ?? $docs ?? $source;
+		if ($status !== 'error' && $status !== null) {
+			return 'https://plugins.getkirby.com/' . $this->name();
+		}
+
+		// Fallback to plugin info
+		$info   = $this->info();
+		$link   = $info['homepage'] ?? null;
+		$link ??= $info['support']['docs'] ?? null;
+		$link ??= $info['support']['source'] ?? null;
 
 		return V::url($link) ? $link : null;
 	}
