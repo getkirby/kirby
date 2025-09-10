@@ -69,6 +69,7 @@ export default {
 				batch: false,
 				columns: {},
 				empty: null,
+				fields: {},
 				headline: null,
 				help: null,
 				layout: "list",
@@ -144,7 +145,7 @@ export default {
 			return {
 				columns: this.options.columns,
 				empty: this.emptyPropsWithSearch,
-				fields: this.options.fields,
+				fields: this.fields,
 				layout: this.options.layout,
 				help: this.options.help,
 				items: this.items,
@@ -167,6 +168,18 @@ export default {
 					? this.$t("search.results.none")
 					: (this.options.empty ?? this.emptyProps.text)
 			};
+		},
+		fields() {
+			const fields = {};
+
+			for (const field in this.options.columns ?? {}) {
+				fields[field] = {
+					...(this.options.fields?.[field] ?? this.options.columns[field]),
+					disabled: true
+				};
+			}
+
+			return fields;
 		},
 		items() {
 			return this.data;
