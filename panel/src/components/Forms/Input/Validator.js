@@ -27,8 +27,12 @@ export default class InputValidator extends HTMLElement {
 		this.tabIndex = 0;
 
 		// pass-through the id attribute
-		this.input.setAttribute("id", this.getAttribute("id"));
-		this.removeAttribute("id");
+		const id = this.getAttribute("id");
+
+		if (id) {
+			this.input.setAttribute("id", id);
+			this.removeAttribute("id");
+		}
 
 		this.validate();
 	}
