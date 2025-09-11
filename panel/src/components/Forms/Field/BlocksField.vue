@@ -74,9 +74,14 @@ export default {
 		},
 		isFull() {
 			return this.max && this.value.length >= this.max;
+		}
+	},
+	methods: {
+		focus() {
+			this.$refs.blocks.focus();
 		},
-		options() {
-			return [
+		options(ready) {
+			const options = [
 				{
 					click: () => this.$refs.blocks.copyAll(),
 					disabled: this.isEmpty,
@@ -88,20 +93,43 @@ export default {
 					disabled: this.isFull,
 					icon: "download",
 					text: this.$t("paste")
-				},
-				"-",
-				{
-					click: () => this.$refs.blocks.removeAll(),
-					disabled: this.isEmpty,
-					icon: "trash",
-					text: this.$t("delete.all")
 				}
 			];
-		}
-	},
-	methods: {
-		focus() {
-			this.$refs.blocks.focus();
+
+			if (
+				this.$refs.blocks.isCollapsible() === true ||
+				this.$refs.blocks.isExpandable() === true
+			) {
+				options.push("-");
+			}
+
+			if (this.$refs.blocks.isCollapsible() === true) {
+				options.push({
+					click: () => this.$refs.blocks.collapseAll(),
+					disabled: this.isEmpty || this.$refs.blocks.isFullyCollapsed(),
+					icon: "collapse",
+					text: this.$t("collapse.all")
+				});
+			}
+
+			if (this.$refs.blocks.isExpandable() === true) {
+				options.push({
+					click: () => this.$refs.blocks.expandAll(),
+					disabled: this.isEmpty || this.$refs.blocks.isFullyExpanded(),
+					icon: "expand",
+					text: this.$t("expand.all")
+				});
+			}
+
+			options.push("-");
+			options.push({
+				click: () => this.$refs.blocks.removeAll(),
+				disabled: this.isEmpty,
+				icon: "trash",
+				text: this.$t("delete.all")
+			});
+
+			return ready(options);
 		}
 	}
 };
