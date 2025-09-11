@@ -25,7 +25,7 @@ class Exif
 	protected string|null $exposure = null;
 	protected string|null $focalLength = null;
 	protected bool|null $isColor = null;
-	protected string|null $iso = null;
+	protected string|array|null $iso = null;
 	protected Location|null $location = null;
 	protected string|null $timestamp = null;
 	protected int $orientation;
@@ -94,7 +94,7 @@ class Exif
 	/**
 	 * Returns the iso value
 	 */
-	public function iso(): string|null
+	public function iso(): string|array|null
 	{
 		return $this->iso;
 	}
