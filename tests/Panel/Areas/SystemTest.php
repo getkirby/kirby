@@ -297,7 +297,7 @@ class SystemTest extends AreaTestCase
 				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/public',
-					'href' => 'https://getkirby.com'
+					'href' => 'https://plugins.getkirby.com/getkirby/public'
 				],
 				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
@@ -394,7 +394,7 @@ class SystemTest extends AreaTestCase
 				'license' => $this->unknownLicense(),
 				'name'    => [
 					'text' => 'getkirby/public',
-					'href' => 'https://getkirby.com'
+					'href' => 'https://plugins.getkirby.com/getkirby/public'
 				],
 				'status'  => $this->unknownLicenseStatus(),
 				'version' => [
