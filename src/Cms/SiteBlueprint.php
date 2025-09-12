@@ -28,6 +28,7 @@ class SiteBlueprint extends Blueprint
 			// defaults
 			[
 				'changeTitle' => null,
+				'unlock'      => null,
 				'update'      => null,
 			],
 			// aliases

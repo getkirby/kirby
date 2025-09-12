@@ -18,10 +18,12 @@
 					:editor="editor"
 					:has-diff="hasDiff"
 					:is-locked="isLocked"
+					:is-unlockable="permissions.unlock"
 					:modified="modified"
 					:preview="permissions.preview ? api + '/preview/changes' : false"
 					@discard="onDiscard"
 					@submit="onSubmit"
+					@unlock="onUnlock"
 				/>
 			</template>
 		</k-header>

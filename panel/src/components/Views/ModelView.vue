@@ -95,6 +95,14 @@ export default {
 
 			this.$panel.view.refresh();
 		},
+		async onUnlock() {
+			await this.$panel.content.unlock({
+				api: this.api,
+				language: this.$panel.language.code
+			});
+
+			this.$panel.view.refresh();
+		},
 		onInput(values) {
 			// update the content for the current view
 			// this will also refresh the content prop
