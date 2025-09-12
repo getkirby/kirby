@@ -21,6 +21,7 @@
 				theme
 			}"
 			@change="$emit('change', $event)"
+			@input="(...args) => $emit('input', ...args)"
 			@item="$emit('item', $event)"
 			@option="onOption"
 			@select="onSelect"

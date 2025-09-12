@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
@@ -259,6 +260,23 @@ return [
 						ids: $this->requestBody('ids'),
 					);
 				}
+			],
+			[
+				'pattern' => 'update',
+				'method'  => 'POST',
+				'action'  => function () {
+					$modelId = $this->requestBody('model');
+					$field   = $this->requestBody('field');
+					$value   = $this->requestBody('value');
+
+					if ($model = App::instance()->page($modelId)) {
+						$model->update([
+							$field => $value
+						]);
+					}
+
+					return true;
+				}
 			]
 		];
 	},
@@ -269,6 +287,7 @@ return [
 			'errors'  => $this->errors,
 			'options' => [
 				'add'      => $this->add,
+				'apiUrl'   => $this->parent->apiUrl(true) . '/sections/' . $this->name,
 				'batch'    => $this->batch,
 				'columns'  => $this->columnsWithTypes(),
 				'empty'    => $this->empty,
