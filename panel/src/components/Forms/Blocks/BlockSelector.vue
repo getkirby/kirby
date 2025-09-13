@@ -166,7 +166,7 @@ export default {
 }
 .k-block-types .k-button[aria-disabled="true"] {
 	opacity: var(--opacity-disabled);
-	--button-color-back: var(--color-gray-200);
+	--button-color-back: transparent;
 	box-shadow: none;
 }
 .k-clipboard-hint {
