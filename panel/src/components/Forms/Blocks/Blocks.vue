@@ -390,6 +390,9 @@ export default {
 			set(block, "isHidden", true);
 			this.save();
 		},
+		isEventTarget(e) {
+			return e.target.closest(".k-blocks") === this.$el;
+		},
 		isFullyCollapsed() {
 			return this.blocks.every((block) => {
 				block = this.ref(block);
@@ -491,8 +494,8 @@ export default {
 		onClickGlobal(event) {
 			// ignore focus in dialogs or drawers to keep the current selection
 			if (
-				typeof event.target.closest === "function" &&
-				(event.target.closest(".k-dialog") || event.target.closest(".k-drawer"))
+				event.target.closest(".k-dialog") ||
+				event.target.closest(".k-drawer")
 			) {
 				return;
 			}
@@ -554,14 +557,13 @@ export default {
 				return false;
 			}
 
-			// not when any dialogs or drawers are open
-			if (this.isEditing === true || this.$panel.dialog.isOpen === true) {
+			// not when event doesn't belong to this blocks component
+			if (this.isEventTarget(e) === false) {
 				return false;
 			}
 
-			// not when nothing is selected and the paste event
-			// doesn't target something in the block component
-			if (this.selected.length === 0 && this.$el.contains(e.target) === false) {
+			// not when any dialogs or drawers are open
+			if (this.isEditing === true || this.$panel.dialog.isOpen === true) {
 				return false;
 			}
 
