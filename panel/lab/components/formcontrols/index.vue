@@ -15,7 +15,7 @@
 					/>
 
 					<k-form-controls
-						:has-changes="hasChanges"
+						:has-diff="hasDiff"
 						:is-locked="isLocked"
 						editor="editor@getkirby.com"
 						modified="2024-10-01T17:00:00"
@@ -35,9 +35,9 @@
 			>
 				<k-input
 					type="toggle"
-					:value="hasChanges"
-					text="has-changes"
-					@input="hasChanges = $event"
+					:value="hasDiff"
+					text="has-diff"
+					@input="hasDiff = $event"
 				/>
 				<k-input
 					type="toggle"
@@ -75,7 +75,7 @@
 export default {
 	data() {
 		return {
-			hasChanges: false,
+			hasDiff: false,
 			isLocked: false
 		};
 	},
