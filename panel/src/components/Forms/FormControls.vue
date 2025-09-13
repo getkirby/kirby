@@ -6,6 +6,7 @@
 				:key="button.text"
 				class="k-form-controls-button"
 				v-bind="button"
+				:disabled="$panel.content.isProcessing"
 				variant="filled"
 				:size="size"
 			/>
@@ -102,7 +103,7 @@ export default {
 					{
 						theme: "notice",
 						text: this.$t("save"),
-						icon: "check",
+						icon: this.$panel.content.isProcessing ? "loader" : "check",
 						click: () => this.$emit("submit")
 					},
 					{
