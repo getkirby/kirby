@@ -70,7 +70,6 @@ class GdLibTest extends TestCase
 		$gd = new GdLib();
 
 		$method = new ReflectionMethod($gd::class, 'sharpen');
-		$method->setAccessible(true);
 
 		$simpleImage = new SimpleImageMock();
 
@@ -86,7 +85,6 @@ class GdLibTest extends TestCase
 		$gd = new GdLib();
 
 		$method = new ReflectionMethod($gd::class, 'sharpen');
-		$method->setAccessible(true);
 
 		$simpleImage = new SimpleImageMock();
 

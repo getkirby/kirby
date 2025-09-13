@@ -93,7 +93,6 @@ class DbTest extends TestCase
 	public function testTable(): void
 	{
 		$tableProp = new ReflectionProperty(Query::class, 'table');
-		$tableProp->setAccessible(true);
 
 		$query = Db::table('users');
 		$this->assertInstanceOf(Query::class, $query);

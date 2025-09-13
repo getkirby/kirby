@@ -61,7 +61,6 @@ class FileCacheTest extends TestCase
 	public function testFile(): void
 	{
 		$method = new ReflectionMethod(FileCache::class, 'file');
-		$method->setAccessible(true);
 
 		$cache = new FileCache([
 			'root' => $root = static::TMP
