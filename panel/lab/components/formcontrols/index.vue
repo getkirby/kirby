@@ -38,7 +38,7 @@
 			>
 				<k-toggle-field
 					:value="hasDiff"
-					text="has-changes"
+					text="has-diff"
 					@input="hasDiff = $event"
 				/>
 				<k-toggle-field

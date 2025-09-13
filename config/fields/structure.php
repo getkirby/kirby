@@ -112,7 +112,7 @@ return [
 				return [];
 			}
 
-			return $this->form()->fields()->toArray();
+			return $this->form()->fields()->toProps();
 		},
 		'columns' => function () {
 			$columns   = [];

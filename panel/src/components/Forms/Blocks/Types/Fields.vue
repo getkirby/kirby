@@ -67,8 +67,13 @@ export default {
 			}
 		},
 		toggle() {
-			this.collapsed = !this.collapsed;
-			this.state(this.collapsed);
+			this.state((this.collapsed = !this.collapsed));
+		},
+		collapse() {
+			this.state((this.collapsed = true));
+		},
+		expand() {
+			this.state((this.collapsed = false));
 		}
 	}
 };

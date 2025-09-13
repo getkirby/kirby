@@ -212,11 +212,13 @@ class ViewButtonTest extends AreaTestCase
 			model: $model,
 			text: 'Page: {{ page.url }}',
 			link: 'https://getkirby.com/{{ page.slug }}',
+			options: 'my/options/{{ page.slug }}'
 		);
 
 		$props = $component->props();
 		$this->assertSame('Page: /test', $props['text']);
 		$this->assertSame('https://getkirby.com/test', $props['link']);
+		$this->assertSame('my/options/test', $props['options']);
 	}
 
 	public function testResolve(): void
