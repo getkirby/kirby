@@ -58,6 +58,9 @@
 				@submit="log('submit')"
 			/>
 		</k-lab-example>
+		<k-lab-example label="Saving">
+			<k-form-controls :has-diff="true" :is-processing="true" />
+		</k-lab-example>
 		<k-lab-example label="Locked">
 			<k-form-controls
 				:is-locked="true"
