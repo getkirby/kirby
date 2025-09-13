@@ -64,11 +64,11 @@ export const props = {
 		/**
 		 * Name/path of a dialog to open on click
 		 */
-		dialog: String,
+		dialog: [String, Object],
 		/**
 		 * Name/path of a drawer to open on click
 		 */
-		drawer: String,
+		drawer: [String, Object],
 		/**
 		 * Whether the button opens a dropdown
 		 */
@@ -209,11 +209,11 @@ export default {
 			}
 
 			if (this.dialog) {
-				return this.$dialog(this.dialog);
+				return this.$panel.dialog.open(this.dialog);
 			}
 
 			if (this.drawer) {
-				return this.$drawer(this.drawer);
+				return this.$panel.drawer.open(this.drawer);
 			}
 
 			this.click?.(e);
