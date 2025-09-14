@@ -6,6 +6,7 @@
 				:key="button.text"
 				class="k-form-controls-button"
 				v-bind="button"
+				:disabled="isProcessing"
 				variant="filled"
 				:size="size"
 			/>
@@ -56,6 +57,7 @@ export const props = {
 		editor: String,
 		hasDiff: Boolean,
 		isLocked: Boolean,
+		isProcessing: Boolean,
 		modified: [String, Date],
 		/**
 		 * Preview URL for changes
@@ -102,7 +104,7 @@ export default {
 					{
 						theme: "notice",
 						text: this.$t("save"),
-						icon: "check",
+						icon: this.isProcessing ? "loader" : "check",
 						click: () => this.$emit("submit")
 					},
 					{

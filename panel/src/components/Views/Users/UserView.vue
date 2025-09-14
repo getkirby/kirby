@@ -27,6 +27,7 @@
 					:editor="editor"
 					:has-diff="hasDiff"
 					:is-locked="isLocked"
+					:is-processing="isSaving"
 					:modified="modified"
 					@discard="onDiscard"
 					@submit="onSubmit"
