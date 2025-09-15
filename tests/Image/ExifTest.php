@@ -8,9 +8,14 @@ use ReflectionClass;
 #[CoversClass(Exif::class)]
 class ExifTest extends TestCase
 {
+	protected function _image($filename = 'image/cat.jpg')
+	{
+		return new Image(static::FIXTURES . '/' . $filename);
+	}
+
 	protected function _exif($filename = 'image/cat.jpg')
 	{
-		$image = new Image(static::FIXTURES . '/' . $filename);
+		$image = $this->_image($filename);
 		return new Exif($image);
 	}
 
@@ -70,6 +75,38 @@ class ExifTest extends TestCase
 	}
 
 	public function testIso(): void
+	{
+		$image = $this->_image();
+		$exif = new class ($image) extends Exif {
+			public static function read(string $root): array
+			{
+				return [
+					...parent::read($root),
+					'ISOSpeedRatings' => 100
+				];
+			}
+		};
+
+		$this->assertSame('100', $exif->iso());
+	}
+
+	public function testIsoWithArrayValue(): void
+	{
+		$image = $this->_image();
+		$exif = new class ($image) extends Exif {
+			public static function read(string $root): array
+			{
+				return [
+					...parent::read($root),
+					'ISOSpeedRatings' => [100, 200]
+				];
+			}
+		};
+
+		$this->assertSame('100', $exif->iso());
+	}
+
+	public function testIsoWithoutValue(): void
 	{
 		$exif  = $this->_exif();
 		$this->assertNull($exif->iso());
