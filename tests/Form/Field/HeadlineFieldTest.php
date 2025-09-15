@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 class HeadlineFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('headline');
 

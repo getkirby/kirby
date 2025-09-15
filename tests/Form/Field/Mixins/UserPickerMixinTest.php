@@ -30,7 +30,7 @@ class UserPickerMixinTest extends TestCase
 		]);
 	}
 
-	public function testUsersWithoutQuery()
+	public function testUsersWithoutQuery(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -57,7 +57,7 @@ class UserPickerMixinTest extends TestCase
 		$this->assertSame('c@getkirby.com', $users[2]['email']);
 	}
 
-	public function testUsersWithQuery()
+	public function testUsersWithQuery(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -85,7 +85,7 @@ class UserPickerMixinTest extends TestCase
 		$this->assertSame('c@getkirby.com', $users[1]['email']);
 	}
 
-	public function testMap()
+	public function testMap(): void
 	{
 		Field::$types = [
 			'test' => [

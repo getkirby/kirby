@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "5.0.4",
+	"version": "5.1.0",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -38,15 +38,15 @@
 		"ext-openssl": "*",
 		"christian-riesen/base32": "1.6.0",
 		"claviska/simpleimage": "4.2.1",
-		"composer/semver": "3.4.3",
+		"composer/semver": "3.4.4",
 		"filp/whoops": "2.18.4",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.17.0",
 		"michelf/php-smartypants": "1.8.1",
 		"phpmailer/phpmailer": "6.10.0",
-		"symfony/polyfill-intl-idn": "1.32.0",
-		"symfony/polyfill-mbstring": "1.32.0",
-		"symfony/yaml": "7.3.2"
+		"symfony/polyfill-intl-idn": "1.33.0",
+		"symfony/polyfill-mbstring": "1.33.0",
+		"symfony/yaml": "7.3.3"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"
@@ -56,6 +56,7 @@
 		"ext-apcu": "Support for the Apcu cache driver",
 		"ext-exif": "Support for exif information from images",
 		"ext-fileinfo": "Improved mime type detection for files",
+		"ext-imagick": "Improved thumbnail generation",
 		"ext-intl": "Improved i18n number formatting",
 		"ext-memcached": "Support for the Memcached cache driver",
 		"ext-redis": "Support for the Redis cache driver",

@@ -3,10 +3,13 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Responder
- */
+class TestResponse extends Response
+{
+}
+
+#[CoversClass(Responder::class)]
 class ResponderTest extends TestCase
 {
 	public function setUp(): void
@@ -23,10 +26,7 @@ class ResponderTest extends TestCase
 		unset($_COOKIE['foo'], $_SERVER['HTTP_AUTHORIZATION']);
 	}
 
-	/**
-	 * @covers ::cache
-	 */
-	public function testCache()
+	public function testCache(): void
 	{
 		$responder = new Responder();
 		$this->assertTrue($responder->cache());
@@ -38,10 +38,7 @@ class ResponderTest extends TestCase
 		$this->assertTrue($responder->cache());
 	}
 
-	/**
-	 * @covers ::cache
-	 */
-	public function testCacheUsesCookies()
+	public function testCacheUsesCookies(): void
 	{
 		$_COOKIE['foo'] = 'bar';
 
@@ -52,10 +49,7 @@ class ResponderTest extends TestCase
 		$this->assertFalse($responder->cache());
 	}
 
-	/**
-	 * @covers ::cache
-	 */
-	public function testCacheUsesAuth()
+	public function testCacheUsesAuth(): void
 	{
 		$this->kirby([
 			'server' => [
@@ -70,10 +64,7 @@ class ResponderTest extends TestCase
 		$this->assertFalse($responder->cache());
 	}
 
-	/**
-	 * @covers ::expires
-	 */
-	public function testExpires()
+	public function testExpires(): void
 	{
 		$responder = new Responder();
 		$this->assertNull($responder->expires());
@@ -118,10 +109,7 @@ class ResponderTest extends TestCase
 		$this->assertSame(1609459200, $responder->expires());
 	}
 
-	/**
-	 * @covers ::expires
-	 */
-	public function testExpiresInvalidString()
+	public function testExpiresInvalidString(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid time string "abcde"');
@@ -130,10 +118,7 @@ class ResponderTest extends TestCase
 		$responder->expires('abcde');
 	}
 
-	/**
-	 * @covers ::fromArray
-	 */
-	public function testFromArray()
+	public function testFromArray(): void
 	{
 		$responder = new Responder();
 		$responder->fromArray([
@@ -160,10 +145,7 @@ class ResponderTest extends TestCase
 		$this->assertSame(['foo'], $responder->usesCookies());
 	}
 
-	/**
-	 * @covers ::header
-	 */
-	public function testHeader()
+	public function testHeader(): void
 	{
 		$responder = new Responder();
 
@@ -205,10 +187,7 @@ class ResponderTest extends TestCase
 		$this->assertSame('private', $responder->header('Cache-Control'));
 	}
 
-	/**
-	 * @covers ::headers
-	 */
-	public function testHeaders()
+	public function testHeaders(): void
 	{
 		$responder = new Responder();
 		$this->assertSame([], $responder->headers());
@@ -220,10 +199,7 @@ class ResponderTest extends TestCase
 		$this->assertSame($headers, $responder->headers());
 	}
 
-	/**
-	 * @covers ::headers
-	 */
-	public function testHeadersCacheBehavior()
+	public function testHeadersCacheBehavior(): void
 	{
 		$responder = new Responder();
 		$this->assertSame([], $responder->headers());
@@ -252,10 +228,7 @@ class ResponderTest extends TestCase
 		$this->assertSame(['Cache-Control' => 'private'], $responder->headers());
 	}
 
-	/**
-	 * @covers ::isPrivate
-	 */
-	public function testIsPrivate()
+	public function testIsPrivate(): void
 	{
 		$responder = new Responder();
 
@@ -287,10 +260,39 @@ class ResponderTest extends TestCase
 		$this->assertFalse($responder->isPrivate(false, []));
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
-	public function testToArray()
+	public function testSend(): void
+	{
+		$responder = new Responder();
+		$responder->header('a', 'b');
+		$response = $responder->send();
+		$this->assertInstanceOf(Response::class, $response);
+		$this->assertSame('', $response->body());
+		$this->assertSame(['a' => 'b'], $response->headers());
+	}
+
+	public function testSendWithBody(): void
+	{
+		$responder = new Responder();
+		$responder->header('a', 'b');
+		$response = $responder->send('foo');
+		$this->assertInstanceOf(Response::class, $response);
+		$this->assertSame('foo', $response->body());
+		$this->assertSame(['a' => 'b'], $response->headers());
+	}
+
+	public function testSendWithResponse(): void
+	{
+		$responder = new Responder();
+		$responder->header('a', 'b');
+		$response = new TestResponse([
+			'headers' => ['a' => 'c']
+		]);
+		$response = $responder->send($response);
+		$this->assertInstanceOf(TestResponse::class, $response);
+		$this->assertSame(['a' => 'c'], $response->headers());
+	}
+
+	public function testToArray(): void
 	{
 		$responder = new Responder();
 		$responder->fromArray([
@@ -315,10 +317,7 @@ class ResponderTest extends TestCase
 		], $responder->toArray());
 	}
 
-	/**
-	 * @covers ::usesAuth
-	 */
-	public function testUsesAuth()
+	public function testUsesAuth(): void
 	{
 		$responder = new Responder();
 		$this->assertFalse($responder->usesAuth());
@@ -330,10 +329,7 @@ class ResponderTest extends TestCase
 		$this->assertFalse($responder->usesAuth());
 	}
 
-	/**
-	 * @covers ::usesCookie
-	 */
-	public function testUsesCookie()
+	public function testUsesCookie(): void
 	{
 		$responder = new Responder();
 		$this->assertSame([], $responder->usesCookies());
@@ -349,10 +345,7 @@ class ResponderTest extends TestCase
 		$this->assertSame(['foo', 'bar'], $responder->usesCookies());
 	}
 
-	/**
-	 * @covers ::usesCookies
-	 */
-	public function testUsesCookies()
+	public function testUsesCookies(): void
 	{
 		$responder = new Responder();
 		$this->assertSame([], $responder->usesCookies());

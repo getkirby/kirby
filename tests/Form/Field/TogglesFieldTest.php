@@ -2,9 +2,11 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class TogglesFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('toggles');
 
@@ -18,7 +20,7 @@ class TogglesFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testGrow()
+	public function testGrow(): void
 	{
 		$field = $this->field('toggles', [
 			'grow' => false
@@ -33,7 +35,7 @@ class TogglesFieldTest extends TestCase
 		$this->assertTrue($field->grow());
 	}
 
-	public function testLabels()
+	public function testLabels(): void
 	{
 		$field = $this->field('toggles', [
 			'labels' => false
@@ -48,7 +50,7 @@ class TogglesFieldTest extends TestCase
 		$this->assertTrue($field->labels());
 	}
 
-	public function testReset()
+	public function testReset(): void
 	{
 		$field = $this->field('toggles', [
 			'reset' => false
@@ -73,10 +75,8 @@ class TogglesFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider valueInputProvider
-	 */
-	public function testValue($input, $expected)
+	#[DataProvider('valueInputProvider')]
+	public function testValue($input, $expected): void
 	{
 		$field = $this->field('toggles', [
 			'options' => [

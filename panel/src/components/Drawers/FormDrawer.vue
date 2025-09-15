@@ -13,6 +13,7 @@
 		</template>
 
 		<k-drawer-fields
+			:disabled="disabled"
 			:fields="fields"
 			:value="value"
 			@input="$emit('input', $event)"

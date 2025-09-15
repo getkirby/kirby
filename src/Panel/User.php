@@ -8,6 +8,7 @@ use Kirby\Cms\Translation;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Panel\Ui\Item\UserItem;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -200,11 +201,18 @@ class User extends Model
 	 */
 	public function pickerData(array $params = []): array
 	{
-		$params['text'] ??= '{{ user.username }}';
+		$item = new UserItem(
+			user:   $this->model,
+			image:  $params['image'] ?? null,
+			info:   $params['info'] ?? null,
+			layout: $params['layout'] ?? null,
+			text:   $params['text'] ?? null,
+		);
 
 		return [
-			...parent::pickerData($params),
+			...$item->props(),
 			'email'    => $this->model->email(),
+			'sortable' => true,
 			'username' => $this->model->username(),
 		];
 	}

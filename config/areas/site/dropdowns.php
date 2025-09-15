@@ -21,11 +21,11 @@ return [
 		}
 	],
 	'page.file' => [
-		'pattern' => '(pages/.*?)/files/(:any)',
+		'pattern' => '(pages/[^/]+)/files/(:any)',
 		'options' => $files['file']
 	],
 	'page.file.languages' => [
-		'pattern' => '(pages/.*?)/files/(:any)/languages',
+		'pattern' => '(pages/[^/]+)/files/(:any)/languages',
 		'options' => $files['language']
 	],
 	'site.languages' => [

@@ -20,6 +20,8 @@ use Kirby\Toolkit\A;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @method \Kirby\Uuid\SiteUuid uuid()
  */
 class Site extends ModelWithContent
 {

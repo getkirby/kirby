@@ -8,7 +8,7 @@ use Kirby\Toolkit\Html;
 
 class EmailKirbyTagTest extends TestCase
 {
-	public function testEmail()
+	public function testEmail(): void
 	{
 		$app      = App::instance();
 		$html     = $app->kirbytags('(email: mail@company.com?subject=Test class: email)');

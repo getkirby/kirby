@@ -281,8 +281,11 @@ class Response implements Stringable
 	 *
 	 * @since 5.0.3
 	 */
-	public static function refresh(string $location = '/', int $code = 302, int $refresh = 0): static
-	{
+	public static function refresh(
+		string $location = '/',
+		int $code = 302,
+		int $refresh = 0
+	): static {
 		return new static([
 			'code'    => $code,
 			'headers' => [
@@ -310,6 +313,19 @@ class Response implements Stringable
 
 		// print the response body
 		return $this->body();
+	}
+
+	/**
+	 * Sets the provided headers in case they are not already set
+	 * @internal
+	 * @return $this
+	 */
+	public function setHeaderFallbacks(array $headers): static
+	{
+		// the case-insensitive nature of headers will be
+		// handled by PHP's `header()` functions
+		$this->headers = [...$headers, ...$this->headers];
+		return $this;
 	}
 
 	/**

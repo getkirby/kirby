@@ -57,6 +57,28 @@ return [
 			// @codeCoverageIgnoreEnd
 		}
 	],
+	'license/remove' => [
+		'load' => function () {
+			return [
+				'component' => 'k-remove-dialog',
+				'props' => [
+					'text' => I18n::translate('license.remove.text'),
+					'size' => 'medium',
+					'submitButton' => [
+						'icon'  => 'trash',
+						'text'  => I18n::translate('remove'),
+						'theme' => 'negative',
+					],
+				]
+			];
+		},
+		'submit' => function () {
+			// @codeCoverageIgnoreStart
+			App::instance()->system()->license()->delete();
+			return true;
+			// @codeCoverageIgnoreEnd
+		}
+	],
 	// license registration
 	'registration' => [
 		'load' => function () {

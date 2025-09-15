@@ -5,6 +5,8 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Collector\PagesCollector;
+use Kirby\Panel\Ui\Item\PageItem;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
@@ -85,83 +87,28 @@ return [
 
 			return $parent;
 		},
+		'collector' => function () {
+			return $this->collector ??= new PagesCollector(
+				limit: $this->limit(),
+				page: $this->page() ?? 1,
+				parent: $this->parent(),
+				query: $this->query(),
+				status: $this->status(),
+				templates: $this->templates(),
+				templatesIgnore: $this->templatesIgnore(),
+				search: $this->searchterm(),
+				sortBy: $this->sortBy(),
+				flip: $this->flip()
+			);
+		},
 		'models' => function () {
-			if ($this->query !== null) {
-				$pages = $this->parent->query($this->query, Pages::class) ?? new Pages([]);
-			} else {
-				$pages = match ($this->status) {
-					'draft'     => $this->parent->drafts(),
-					'listed'    => $this->parent->children()->listed(),
-					'published' => $this->parent->children(),
-					'unlisted'  => $this->parent->children()->unlisted(),
-					default     => $this->parent->childrenAndDrafts()
-				};
-			}
-
-			// filters pages that are protected and not in the templates list
-			// internal `filter()` method used instead of foreach loop that previously included `unset()`
-			// because `unset()` is updating the original data, `filter()` is just filtering
-			// also it has been tested that there is no performance difference
-			// even in 0.1 seconds on 100k virtual pages
-			$pages = $pages->filter(function ($page) {
-				// remove all protected and hidden pages
-				if ($page->isListable() === false) {
-					return false;
-				}
-
-				$intendedTemplate = $page->intendedTemplate()->name();
-
-				// filter by all set templates
-				if (
-					$this->templates &&
-					in_array($intendedTemplate, $this->templates, true) === false
-				) {
-					return false;
-				}
-
-				// exclude by all ignored templates
-				if (
-					$this->templatesIgnore &&
-					in_array($intendedTemplate, $this->templatesIgnore, true) === true
-				) {
-					return false;
-				}
-
-				return true;
-			});
-
-			// search
-			if ($this->search === true && empty($this->searchterm()) === false) {
-				$pages = $pages->search($this->searchterm());
-
-				// disable flip and sortBy while searching
-				// to show most relevant results
-				$this->flip = false;
-				$this->sortBy = null;
-			}
-
-			// sort
-			if ($this->sortBy) {
-				$pages = $pages->sort(...$pages::sortArgs($this->sortBy));
-			}
-
-			// flip
-			if ($this->flip === true) {
-				$pages = $pages->flip();
-			}
-
-			return $pages;
+			return $this->collector()->models();
 		},
 		'modelsPaginated' => function () {
-			// pagination
-			return $this->models()->paginate([
-				'page'   => $this->page,
-				'limit'  => $this->limit,
-				'method' => 'none' // the page is manually provided
-			]);
+			return $this->collector()->models(paginated: true);
 		},
 		'pages' => function () {
-			return $this->models;
+			return $this->models();
 		},
 		'total' => function () {
 			return $this->models()->count();
@@ -170,30 +117,13 @@ return [
 			$data = [];
 
 			foreach ($this->modelsPaginated() as $page) {
-				$panel       = $page->panel();
-				$permissions = $page->permissions();
-
-				$item = [
-					'dragText'    => $panel->dragText(),
-					'id'          => $page->id(),
-					'image'       => $panel->image(
-						$this->image,
-						$this->layout === 'table' ? 'list' : $this->layout
-					),
-					'info'        => $page->toSafeString($this->info ?? false),
-					'link'        => $panel->url(true),
-					'parent'      => $page->parentId(),
-					'permissions' => [
-						'delete'       => $permissions->can('delete'),
-						'changeSlug'   => $permissions->can('changeSlug'),
-						'changeStatus' => $permissions->can('changeStatus'),
-						'changeTitle'  => $permissions->can('changeTitle'),
-						'sort'         => $permissions->can('sort'),
-					],
-					'status'      => $page->status(),
-					'template'    => $page->intendedTemplate()->name(),
-					'text'        => $page->toSafeString($this->text),
-				];
+				$item = (new PageItem(
+					page: $page,
+					image: $this->image,
+					layout: $this->layout,
+					info: $this->info,
+					text: $this->text,
+				))->props();
 
 				if ($this->layout === 'table') {
 					$item = $this->columnsValues($item, $page);

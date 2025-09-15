@@ -9,7 +9,7 @@ class FilesMethodsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FilesMethodsTest';
 
-	public function testFilesMethod()
+	public function testFilesMethod(): void
 	{
 		$this->app = $this->app->clone([
 			'filesMethods' => [

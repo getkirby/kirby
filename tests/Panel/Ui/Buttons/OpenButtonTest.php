@@ -3,16 +3,12 @@
 namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\OpenButton
- */
+#[CoversClass(OpenButton::class)]
 class OpenButtonTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testButton()
+	public function testButton(): void
 	{
 		$button = new OpenButton(link: 'https://getkirby.com');
 

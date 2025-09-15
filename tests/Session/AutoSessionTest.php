@@ -5,11 +5,10 @@ namespace Kirby\Session;
 use Kirby\Cms\App;
 use Kirby\Http\Cookie;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 
-/**
- * @coversDefaultClass \Kirby\Session\AutoSession
- */
+#[CoversClass(AutoSession::class)]
 class AutoSessionTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/store';
@@ -29,10 +28,7 @@ class AutoSessionTest extends TestCase
 		App::destroy();
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testSessionsOptions()
+	public function testSessionsOptions(): void
 	{
 		$autoSessionReflector = new ReflectionClass(AutoSession::class);
 		$sessionsProperty = $autoSessionReflector->getProperty('sessions');
@@ -48,6 +44,14 @@ class AutoSessionTest extends TestCase
 		// path string as store
 		$autoSession = new AutoSession(static::FIXTURES);
 		$this->assertSame(static::FIXTURES, $pathProperty->getValue($sessionsProperty->getValue($autoSession)->store()));
+
+		// default cookie domain
+		$autoSession = new AutoSession($this->store);
+		$this->assertNull($sessionsProperty->getValue($autoSession)->cookieDomain());
+
+		// custom cookie domain
+		$autoSession = new AutoSession($this->store, ['cookieDomain' => 'getkirby.com']);
+		$this->assertSame('getkirby.com', $sessionsProperty->getValue($autoSession)->cookieDomain());
 
 		// default cookie name
 		$autoSession = new AutoSession($this->store);
@@ -68,10 +72,7 @@ class AutoSessionTest extends TestCase
 		$this->assertFalse($this->store->collectedGarbage);
 	}
 
-	/**
-	 * @covers ::get
-	 */
-	public function testGet()
+	public function testGet(): void
 	{
 		Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
 		$this->setAuthorization('Session 9999999999.valid2.' . $this->store->validKey);
@@ -229,10 +230,7 @@ class AutoSessionTest extends TestCase
 		$session->commit();
 	}
 
-	/**
-	 * @covers ::createManually
-	 */
-	public function testCreateManually()
+	public function testCreateManually(): void
 	{
 		$autoSession = new AutoSession($this->store);
 		$session = $autoSession->createManually(['expiryTime' => 9999999999, 'mode' => 'cookie']);
@@ -242,10 +240,7 @@ class AutoSessionTest extends TestCase
 		$this->assertSame('manual', $session->mode());
 	}
 
-	/**
-	 * @covers ::getManually
-	 */
-	public function testGetManually()
+	public function testGetManually(): void
 	{
 		$autoSession = new AutoSession($this->store);
 
@@ -254,10 +249,7 @@ class AutoSessionTest extends TestCase
 		$this->assertSame('9999999999.valid.' . $this->store->validKey, $session->token());
 	}
 
-	/**
-	 * @covers ::collectGarbage
-	 */
-	public function testCollectGarbage()
+	public function testCollectGarbage(): void
 	{
 		$this->store->collectedGarbage = false;
 		$autoSession = new AutoSession($this->store, ['gcInterval' => false]);

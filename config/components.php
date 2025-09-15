@@ -421,10 +421,7 @@ return [
 		// support UUIDs
 		if (
 			$path !== null &&
-			(
-				Uuid::is($path, 'page') === true ||
-				Uuid::is($path, 'file') === true
-			)
+			Uuid::is($path, ['page', 'file']) === true
 		) {
 			$model = Uuid::for($path)->model();
 

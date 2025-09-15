@@ -7,10 +7,10 @@ use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Site
- */
+#[CoversClass(\Kirby\Panel\Site::class)]
+#[CoversClass(Model::class)]
 class SiteTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Site';
@@ -37,10 +37,7 @@ class SiteTest extends TestCase
 		return new Site($site);
 	}
 
-	/**
-	 * @covers ::buttons
-	 */
-	public function testButtons()
+	public function testButtons(): void
 	{
 		$this->assertSame([
 			'k-open-view-button',
@@ -49,9 +46,6 @@ class SiteTest extends TestCase
 		], array_column($this->panel()->buttons(), 'component'));
 	}
 
-	/**
-	 * @covers ::dropdownOption
-	 */
 	public function testDropdownOption(): void
 	{
 		$model = $this->panel([
@@ -67,10 +61,7 @@ class SiteTest extends TestCase
 		$this->assertSame('/site', $option['link']);
 	}
 
-	/**
-	 * @covers ::imageSource
-	 */
-	public function testImage()
+	public function testImage(): void
 	{
 		$panel = $this->panel([
 			'files' => [
@@ -83,13 +74,7 @@ class SiteTest extends TestCase
 		$this->assertTrue(Str::endsWith($image['url'], '/test.jpg'));
 	}
 
-	/**
-	 * @covers ::imageSource
-	 * @covers \Kirby\Panel\Model::image
-	 * @covers \Kirby\Panel\Model::imageSource
-	 * @covers \Kirby\Panel\Model::imageSrcset
-	 */
-	public function testImageCover()
+	public function testImageCover(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -128,18 +113,12 @@ class SiteTest extends TestCase
 		], $panel->image(['cover' => true]));
 	}
 
-	/**
-	 * @covers ::path
-	 */
-	public function testPath()
+	public function testPath(): void
 	{
 		$this->assertSame('site', $this->panel()->path());
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$props = $this->panel()->props();
 
@@ -156,14 +135,14 @@ class SiteTest extends TestCase
 		$this->assertArrayHasKey('versions', $props);
 	}
 
-	public function testPreviewPermissionsWithoutHomePage()
+	public function testPreviewPermissionsWithoutHomePage(): void
 	{
 		$props = $this->panel()->props();
 
 		$this->assertFalse($props['permissions']['preview']);
 	}
 
-	public function testPreviewPermissionsWithHomePage()
+	public function testPreviewPermissionsWithHomePage(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -186,10 +165,7 @@ class SiteTest extends TestCase
 		$this->assertTrue($props['permissions']['preview']);
 	}
 
-	/**
-	 * @covers ::view
-	 */
-	public function testView()
+	public function testView(): void
 	{
 		$view = $this->panel()->view();
 		$this->assertArrayHasKey('props', $view);

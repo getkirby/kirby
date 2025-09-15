@@ -15,8 +15,6 @@ $fields = require __DIR__ . '/../fields/dialogs.php';
 $files = require __DIR__ . '/../files/dialogs.php';
 
 return [
-
-	// create
 	'user.create' => [
 		'pattern' => 'users/create',
 		'load' => function () {
@@ -79,7 +77,6 @@ return [
 		}
 	],
 
-	// change email
 	'user.changeEmail' => [
 		'pattern' => 'users/(:any)/changeEmail',
 		'load' => function (string $id) {
@@ -114,7 +111,6 @@ return [
 		}
 	],
 
-	// change language
 	'user.changeLanguage' => [
 		'pattern' => 'users/(:any)/changeLanguage',
 		'load' => function (string $id) {
@@ -147,7 +143,6 @@ return [
 		}
 	],
 
-	// change name
 	'user.changeName' => [
 		'pattern' => 'users/(:any)/changeName',
 		'load' => function (string $id) {
@@ -179,7 +174,6 @@ return [
 		}
 	],
 
-	// change password
 	'user.changePassword' => [
 		'pattern' => 'users/(:any)/changePassword',
 		'load' => function (string $id) {
@@ -245,7 +239,6 @@ return [
 		}
 	],
 
-	// change role
 	'user.changeRole' => [
 		'pattern' => 'users/(:any)/changeRole',
 		'load' => function (string $id) {
@@ -282,7 +275,6 @@ return [
 		}
 	],
 
-	// delete
 	'user.delete' => [
 		'pattern' => 'users/(:any)/delete',
 		'load' => function (string $id) {
@@ -324,49 +316,36 @@ return [
 		}
 	],
 
-	// user field dialogs
 	'user.fields' => [
-		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit']
+		...$fields['model'],
+		'pattern' => '(users/[^/]+)/fields/(:any)/(:all?)',
 	],
 
-	// change file name
 	'user.file.changeName' => [
-		'pattern' => '(users/.*?)/files/(:any)/changeName',
-		'load'    => $files['changeName']['load'],
-		'submit'  => $files['changeName']['submit'],
+		...$files['changeName'],
+		'pattern' => '(users/[^/]+)/files/(:any)/changeName',
 	],
 
-	// change file sort
 	'user.file.changeSort' => [
-		'pattern' => '(users/.*?)/files/(:any)/changeSort',
-		'load'    => $files['changeSort']['load'],
-		'submit'  => $files['changeSort']['submit'],
+		...$files['changeSort'],
+		'pattern' => '(users/[^/]+)/files/(:any)/changeSort',
 	],
 
-	// change file template
 	'user.file.changeTemplate' => [
-		'pattern' => '(users/.*?)/files/(:any)/changeTemplate',
-		'load'    => $files['changeTemplate']['load'],
-		'submit'  => $files['changeTemplate']['submit'],
+		...$files['changeTemplate'],
+		'pattern' => '(users/[^/]+)/files/(:any)/changeTemplate',
 	],
 
-	// delete file
 	'user.file.delete' => [
-		'pattern' => '(users/.*?)/files/(:any)/delete',
-		'load'    => $files['delete']['load'],
-		'submit'  => $files['delete']['submit'],
+		...$files['delete'],
+		'pattern' => '(users/[^/]+)/files/(:any)/delete',
 	],
 
-	// user file fields dialogs
 	'user.file.fields' => [
-		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit']
+		...$fields['file'],
+		'pattern' => '(users/[^/]+)/files/(:any)/fields/(:any)/(:all?)',
 	],
 
-	// user disable TOTP
 	'user.totp.disable' => [
 		'pattern' => 'users/(:any)/totp/disable',
 		'load'    => fn (string $id) => (new UserTotpDisableDialog($id))->load(),

@@ -31,6 +31,7 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  *
  * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Files>
+ * @method \Kirby\Uuid\FileUuid uuid()
  */
 class File extends ModelWithContent
 {
@@ -513,7 +514,7 @@ class File extends ModelWithContent
 	 */
 	public function permalink(): string|null
 	{
-		return $this->uuid()?->url();
+		return $this->uuid()?->toPermalink();
 	}
 
 	/**

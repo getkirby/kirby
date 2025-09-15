@@ -7,7 +7,7 @@ use Kirby\Cms\Layouts;
 
 class LayoutFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('layout', []);
 
@@ -21,7 +21,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testExtends()
+	public function testExtends(): void
 	{
 		$this->app->clone([
 			'blueprints' => [
@@ -71,7 +71,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertArrayHasKey('background-color', $fields);
 	}
 
-	public function testLayouts()
+	public function testLayouts(): void
 	{
 		$field = $this->field('layout', [
 			'layouts' => $layouts = [
@@ -84,7 +84,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame($layouts, $field->layouts());
 	}
 
-	public function testProps()
+	public function testProps(): void
 	{
 		$field = $this->field('layout');
 
@@ -119,7 +119,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame([['1/1']], $props['layouts']);
 	}
 
-	public function testRoutes()
+	public function testRoutes(): void
 	{
 		$field = $this->field('layout');
 
@@ -129,7 +129,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertCount(7, $routes);
 	}
 
-	public function testToStoredValue()
+	public function testToStoredValue(): void
 	{
 		$value = [
 			[
@@ -185,7 +185,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('', $field->toStoredValue());
 	}
 
-	public function testValidations()
+	public function testValidations(): void
 	{
 		$field = $this->field('layout', [
 			'value' => [
@@ -208,7 +208,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testValidationsInvalid()
+	public function testValidationsInvalid(): void
 	{
 		$field = $this->field('layout', [
 			'value' => [
@@ -234,7 +234,7 @@ class LayoutFieldTest extends TestCase
 		], $field->errors());
 	}
 
-	public function testValidationsWithInvalidBlockType()
+	public function testValidationsWithInvalidBlockType(): void
 	{
 		$field = $this->field('layout', [
 			'value' => [
@@ -248,7 +248,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame([], $field->errors());
 	}
 
-	public function testValidationsSettings()
+	public function testValidationsSettings(): void
 	{
 		$field = $this->field('layout', [
 			'settings' => [
@@ -274,7 +274,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame(['layout' => 'There\'s an error in layout 1 settings'], $field->errors());
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$field = $this->field('layout', [
 			'empty' => $value = 'Custom empty text'
@@ -283,7 +283,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame($value, $field->empty());
 	}
 
-	public function testDefault()
+	public function testDefault(): void
 	{
 		$field = $this->field('layout', [
 			'default' => [
@@ -317,7 +317,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('Some title', $block['text']);
 	}
 
-	public function testToValues()
+	public function testToValues(): void
 	{
 		$value = [
 			[
@@ -350,7 +350,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertArrayHasKey('id', $form[0]['columns'][0]['blocks'][0]);
 	}
 
-	public function testPaste()
+	public function testPaste(): void
 	{
 		$value = [
 			[
@@ -394,7 +394,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame($original[0]['columns'][0]['blocks'][0]['content'], $pasted[0]['columns'][0]['blocks'][0]['content']);
 	}
 
-	public function testRouteCreate()
+	public function testRouteCreate(): void
 	{
 		$this->app = $this->app->clone([
 			'request' => [
@@ -432,7 +432,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame([], $response['columns'][1]['blocks']);
 	}
 
-	public function testRoutePaste()
+	public function testRoutePaste(): void
 	{
 		$value = [
 			[

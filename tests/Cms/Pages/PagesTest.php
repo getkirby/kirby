@@ -5,10 +5,9 @@ namespace Kirby\Cms;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Pages
- */
+#[CoversClass(Pages::class)]
 class PagesTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Pages';
@@ -22,7 +21,7 @@ class PagesTest extends TestCase
 		]);
 	}
 
-	public function testAddPage()
+	public function testAddPage(): void
 	{
 		$pages = Pages::factory([
 			['slug' => 'a']
@@ -39,7 +38,7 @@ class PagesTest extends TestCase
 		$this->assertSame('b', $result->nth(1)->slug());
 	}
 
-	public function testAddCollection()
+	public function testAddCollection(): void
 	{
 		$a = Pages::factory([
 			['slug' => 'a']
@@ -58,7 +57,7 @@ class PagesTest extends TestCase
 		$this->assertSame('c', $c->nth(2)->slug());
 	}
 
-	public function testAddById()
+	public function testAddById(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -87,7 +86,7 @@ class PagesTest extends TestCase
 		$this->assertSame('a/aa', $pages->nth(2)->id());
 	}
 
-	public function testAddNull()
+	public function testAddNull(): void
 	{
 		$pages = new Pages();
 		$this->assertCount(0, $pages);
@@ -97,7 +96,7 @@ class PagesTest extends TestCase
 		$this->assertCount(0, $pages);
 	}
 
-	public function testAddFalse()
+	public function testAddFalse(): void
 	{
 		$pages = new Pages();
 		$this->assertCount(0, $pages);
@@ -107,7 +106,7 @@ class PagesTest extends TestCase
 		$this->assertCount(0, $pages);
 	}
 
-	public function testAddInvalidObject()
+	public function testAddInvalidObject(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('You must pass a Pages or Page object or an ID of an existing page to the Pages collection');
@@ -117,7 +116,7 @@ class PagesTest extends TestCase
 		$pages->add($site);
 	}
 
-	public function testAudio()
+	public function testAudio(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -138,7 +137,7 @@ class PagesTest extends TestCase
 		$this->assertSame(['a.mp3', 'b.mp3'], $pages->audio()->pluck('filename'));
 	}
 
-	public function testCode()
+	public function testCode(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -159,14 +158,14 @@ class PagesTest extends TestCase
 		$this->assertSame(['a.js', 'b.js'], $pages->code()->pluck('filename'));
 	}
 
-	public function testConstructWithCollection()
+	public function testConstructWithCollection(): void
 	{
 		$pages = new Pages($this->pages()->not('a'));
 
 		$this->assertCount(2, $pages);
 	}
 
-	public function testChildren()
+	public function testChildren(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -195,10 +194,7 @@ class PagesTest extends TestCase
 		$this->assertSame($expected, $pages->children()->keys());
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDelete()
+	public function testDelete(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -239,10 +235,7 @@ class PagesTest extends TestCase
 		$this->assertDirectoryDoesNotExist($b);
 	}
 
-	/**
-	 * @covers ::delete
-	 */
-	public function testDeleteWithInvalidIds()
+	public function testDeleteWithInvalidIds(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -288,7 +281,7 @@ class PagesTest extends TestCase
 		$this->assertDirectoryExists($b);
 	}
 
-	public function testDocuments()
+	public function testDocuments(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -309,7 +302,7 @@ class PagesTest extends TestCase
 		$this->assertSame(['a.pdf', 'b.pdf'], $pages->documents()->pluck('filename'));
 	}
 
-	public function testDrafts()
+	public function testDrafts(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -338,7 +331,7 @@ class PagesTest extends TestCase
 		$this->assertSame($expected, $pages->drafts()->keys());
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -358,20 +351,20 @@ class PagesTest extends TestCase
 		$this->assertSame(['a.jpg', 'b.pdf'], $pages->files()->pluck('filename'));
 	}
 
-	public function testFind()
+	public function testFind(): void
 	{
 		$this->assertIsPage('a', $this->pages()->find('a'));
 		$this->assertIsPage('b', $this->pages()->find('b'));
 		$this->assertIsPage('c', $this->pages()->find('c'));
 	}
 
-	public function testFindWithExtension()
+	public function testFindWithExtension(): void
 	{
 		$this->assertIsPage('a', $this->pages()->find('a.xml'));
 		$this->assertIsPage('b', $this->pages()->find('b.json'));
 	}
 
-	public function testFindByUuid()
+	public function testFindByUuid(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -400,7 +393,7 @@ class PagesTest extends TestCase
 		$this->assertIsPage('c/d', $app->page('page://test-d'));
 	}
 
-	public function testFindChildren()
+	public function testFindChildren(): void
 	{
 		$site = new Site([
 			'children' => [
@@ -453,7 +446,7 @@ class PagesTest extends TestCase
 		$this->assertNull($pages->find(null));
 	}
 
-	public function testFindChildrenTranslated()
+	public function testFindChildrenTranslated(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -612,7 +605,7 @@ class PagesTest extends TestCase
 		$this->assertNull($pages->find('kind'));
 	}
 
-	public function testFindChildrenWithSwappedSlugsTranslated()
+	public function testFindChildrenWithSwappedSlugsTranslated(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -728,7 +721,7 @@ class PagesTest extends TestCase
 		$this->assertIsPage('zzz/yyy', $pages->find('zzz/yyy'));
 	}
 
-	public function testFindMultiple()
+	public function testFindMultiple(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -747,7 +740,7 @@ class PagesTest extends TestCase
 		$this->assertTrue($collection->has($page));
 	}
 
-	public function testImages()
+	public function testImages(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -768,7 +761,7 @@ class PagesTest extends TestCase
 		$this->assertSame(['a.jpg', 'b.png'], $pages->images()->pluck('filename'));
 	}
 
-	public function testIndex()
+	public function testIndex(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -807,7 +800,7 @@ class PagesTest extends TestCase
 		$this->assertSame($expected, $pages->index()->keys());
 	}
 
-	public function testIndexWithDrafts()
+	public function testIndexWithDrafts(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -854,7 +847,7 @@ class PagesTest extends TestCase
 		$this->assertSame($expected, $pages->index(true)->keys());
 	}
 
-	public function testIndexCacheMode()
+	public function testIndexCacheMode(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -923,7 +916,7 @@ class PagesTest extends TestCase
 		$this->assertSame($expectedIndexWithDrafts, $pages->index(true)->keys());
 	}
 
-	public function testNotTemplate()
+	public function testNotTemplate(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -951,7 +944,7 @@ class PagesTest extends TestCase
 		$this->assertSame([], $pages->notTemplate(['a', 'b', 'c'])->pluck('slug'));
 	}
 
-	public function testNums()
+	public function testNums(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -967,22 +960,22 @@ class PagesTest extends TestCase
 		$this->assertSame([1, 2], $pages->nums());
 	}
 
-	public function testListed()
+	public function testListed(): void
 	{
 		$this->assertCount(2, $this->pages()->listed());
 	}
 
-	public function testUnlisted()
+	public function testUnlisted(): void
 	{
 		$this->assertCount(1, $this->pages()->unlisted());
 	}
 
-	public function testPublished()
+	public function testPublished(): void
 	{
 		$this->assertCount(3, $this->pages()->published());
 	}
 
-	public function testSearch()
+	public function testSearch(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -1015,7 +1008,7 @@ class PagesTest extends TestCase
 		$this->assertCount(0, $result);
 	}
 
-	public function testSearchWords()
+	public function testSearchWords(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -1057,7 +1050,7 @@ class PagesTest extends TestCase
 		$this->assertCount(4, $result);
 	}
 
-	public function testCustomMethods()
+	public function testCustomMethods(): void
 	{
 		Pages::$methods = [
 			'test' => function () {
@@ -1085,7 +1078,7 @@ class PagesTest extends TestCase
 		Pages::$methods = [];
 	}
 
-	public function testTemplate()
+	public function testTemplate(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -1107,7 +1100,7 @@ class PagesTest extends TestCase
 		$this->assertSame(['a', 'b', 'c'], $pages->template(['a', 'b'])->pluck('slug'));
 	}
 
-	public function testVideos()
+	public function testVideos(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -1128,7 +1121,7 @@ class PagesTest extends TestCase
 		$this->assertSame(['a.mov', 'b.mp4'], $pages->videos()->pluck('filename'));
 	}
 
-	public function testFactoryIsDraftProp()
+	public function testFactoryIsDraftProp(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -1147,7 +1140,7 @@ class PagesTest extends TestCase
 		$this->assertSame([true, false, false], $pages->pluck('isDraft'));
 	}
 
-	public function testFactoryDraftParameter()
+	public function testFactoryDraftParameter(): void
 	{
 		$pages = Pages::factory([
 			[
@@ -1166,7 +1159,7 @@ class PagesTest extends TestCase
 		$this->assertSame([true, true, true], $pages->pluck('isDraft'));
 	}
 
-	public function testIsReadable()
+	public function testIsReadable(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -1212,7 +1205,7 @@ class PagesTest extends TestCase
 		$this->assertFalse($page->isReadable());
 	}
 
-	public function testIsListable()
+	public function testIsListable(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -1268,7 +1261,7 @@ class PagesTest extends TestCase
 		$this->assertFalse($page->isListable());
 	}
 
-	public function testIsAccessible()
+	public function testIsAccessible(): void
 	{
 		$app = new App([
 			'roots' => [

@@ -3,16 +3,12 @@
 namespace Kirby\Image;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Image\Focus
- */
+#[CoversClass(Focus::class)]
 class FocusTest extends TestCase
 {
-	/**
-	 * @covers ::coords
-	 */
-	public function testCoords()
+	public function testCoords(): void
 	{
 		$options = [
 			'sourceWidth'  => 1200,
@@ -99,10 +95,7 @@ class FocusTest extends TestCase
 		$this->assertSame(906, $focus['y2']);
 	}
 
-	/**
-	 * @covers ::coords
-	 */
-	public function testCoordsSameRatio()
+	public function testCoordsSameRatio(): void
 	{
 		$options = [
 			'sourceWidth'  => 1200,
@@ -115,10 +108,7 @@ class FocusTest extends TestCase
 		$this->assertNull(Focus::coords(...$options));
 	}
 
-	/**
-	 * @covers ::parse
-	 */
-	public function testParse()
+	public function testParse(): void
 	{
 		$this->assertSame([0.7, 0.3], Focus::parse('70%, 30%'));
 		$this->assertSame([0.7, 0.3], Focus::parse('70%,30%'));
@@ -129,10 +119,7 @@ class FocusTest extends TestCase
 		$this->assertSame([0.7, 0.3], Focus::parse('{"x":0.7,"y":0.3}'));
 	}
 
-	/**
-	 * @covers ::ratio
-	 */
-	public function testRatio()
+	public function testRatio(): void
 	{
 		$this->assertSame(0.5, Focus::ratio(200, 400));
 		$this->assertSame(2.0, Focus::ratio(400, 200));

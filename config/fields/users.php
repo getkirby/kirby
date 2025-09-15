@@ -63,12 +63,12 @@ return [
 			$users = [];
 			$kirby = App::instance();
 
-			foreach (Data::decode($value, 'yaml') as $email) {
-				if (is_array($email) === true) {
-					$email = $email['email'] ?? null;
+			foreach (Data::decode($value, 'yaml') as $id) {
+				if (is_array($id) === true) {
+					$id =  $id['uuid'] ?? $id['id'] ?? $id['email'] ?? null;
 				}
 
-				if ($email !== null && ($user = $kirby->user($email))) {
+				if ($id !== null && ($user = $kirby->user($id))) {
 					$users[] = $this->userResponse($user);
 				}
 			}

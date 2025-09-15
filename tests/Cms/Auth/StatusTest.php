@@ -5,11 +5,9 @@ namespace Kirby\Cms\Auth;
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth\Status
- * @covers ::__construct
- */
+#[CoversClass(Status::class)]
 class StatusTest extends TestCase
 {
 	public function setUp(): void
@@ -27,10 +25,7 @@ class StatusTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::__toString
-	 */
-	public function testToString()
+	public function testToString(): void
 	{
 		$status = new Status([
 			'kirby'  => $this->app,
@@ -40,10 +35,7 @@ class StatusTest extends TestCase
 		$this->assertSame('active', (string)$status);
 	}
 
-	/**
-	 * @covers ::challenge
-	 */
-	public function testChallenge()
+	public function testChallenge(): void
 	{
 		// no challenge when not in pending status
 		$status = new Status([
@@ -82,10 +74,7 @@ class StatusTest extends TestCase
 		$this->assertNull($status->challenge(false));
 	}
 
-	/**
-	 * @covers ::email
-	 */
-	public function testEmail()
+	public function testEmail(): void
 	{
 		$status = new Status([
 			'kirby'  => $this->app,
@@ -101,10 +90,7 @@ class StatusTest extends TestCase
 		$this->assertSame('homer@simpsons.com', $status->email());
 	}
 
-	/**
-	 * @covers ::mode
-	 */
-	public function testMode()
+	public function testMode(): void
 	{
 		$status = new Status([
 			'kirby'  => $this->app,
@@ -120,10 +106,7 @@ class StatusTest extends TestCase
 		$this->assertSame('password-reset', $status->mode());
 	}
 
-	/**
-	 * @covers ::status
-	 */
-	public function testStatus()
+	public function testStatus(): void
 	{
 		$status = new Status([
 			'kirby'  => $this->app,
@@ -157,10 +140,7 @@ class StatusTest extends TestCase
 		]);
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$status = new Status([
 			'kirby'             => $this->app,
@@ -179,10 +159,7 @@ class StatusTest extends TestCase
 		], $status->toArray());
 	}
 
-	/**
-	 * @covers ::user
-	 */
-	public function testUser()
+	public function testUser(): void
 	{
 		// only return active users
 		$status = new Status([

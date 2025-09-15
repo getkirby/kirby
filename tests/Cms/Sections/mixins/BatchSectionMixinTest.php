@@ -65,7 +65,7 @@ class BatchSectionMixinTest extends TestCase
 		App::destroy();
 	}
 
-	public function testBatchDisabled()
+	public function testBatchDisabled(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -74,7 +74,7 @@ class BatchSectionMixinTest extends TestCase
 		$this->assertFalse($section->batch());
 	}
 
-	public function testBatchEnabled()
+	public function testBatchEnabled(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -84,7 +84,7 @@ class BatchSectionMixinTest extends TestCase
 		$this->assertTrue($section->batch());
 	}
 
-	public function testDeleteSelectedWithoutIds()
+	public function testDeleteSelectedWithoutIds(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -94,7 +94,7 @@ class BatchSectionMixinTest extends TestCase
 		$this->assertTrue($section->deleteSelected([]));
 	}
 
-	public function testDeleteSelectedWhenDisabled()
+	public function testDeleteSelectedWhenDisabled(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -107,7 +107,7 @@ class BatchSectionMixinTest extends TestCase
 		$section->deleteSelected(['test/a', 'test/b']);
 	}
 
-	public function testDeleteSelectedWhenExceedingMin()
+	public function testDeleteSelectedWhenExceedingMin(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,
@@ -123,7 +123,7 @@ class BatchSectionMixinTest extends TestCase
 		]);
 	}
 
-	public function testDeleteSelected()
+	public function testDeleteSelected(): void
 	{
 		$section = new Section('test', [
 			'model' => $this->page,

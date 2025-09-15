@@ -7,10 +7,9 @@ use Kirby\Cms\App;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Dropdown
- */
+#[CoversClass(Dropdown::class)]
 class DropdownTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Dropdown';
@@ -40,9 +39,6 @@ class DropdownTest extends TestCase
 		unset($_SERVER['SERVER_SOFTWARE']);
 	}
 
-	/**
-	 * @covers ::error
-	 */
 	public function testError(): void
 	{
 		// default
@@ -58,9 +54,6 @@ class DropdownTest extends TestCase
 		$this->assertSame('Test', $error['error']);
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponse(): void
 	{
 		$response = Dropdown::response([
@@ -82,9 +75,6 @@ class DropdownTest extends TestCase
 		$this->assertSame($expected, json_decode($response->body(), true));
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromInvalidData(): void
 	{
 		$response = Dropdown::response(1234);
@@ -101,9 +91,6 @@ class DropdownTest extends TestCase
 		$this->assertSame($expected, json_decode($response->body(), true));
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromException(): void
 	{
 		$exception = new Exception('Test');
@@ -121,9 +108,6 @@ class DropdownTest extends TestCase
 		$this->assertSame($expected, json_decode($response->body(), true));
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFromKirbyException(): void
 	{
 		$exception = new NotFoundException(message: 'Test');
@@ -141,9 +125,6 @@ class DropdownTest extends TestCase
 		$this->assertSame($expected, json_decode($response->body(), true));
 	}
 
-	/**
-	 * @covers ::routes
-	 */
 	public function testRoutes(): void
 	{
 		$dropdown = [
@@ -176,9 +157,6 @@ class DropdownTest extends TestCase
 		$this->assertSame($expected, $routes);
 	}
 
-	/**
-	 * @covers ::routes
-	 */
 	public function testRoutesForDropdownsWithOptions(): void
 	{
 		$area = [
@@ -210,9 +188,6 @@ class DropdownTest extends TestCase
 		$this->assertSame($expected, $routes);
 	}
 
-	/**
-	 * @covers ::routes
-	 */
 	public function testRoutesForDropdownsWithShortcut(): void
 	{
 		$area = [

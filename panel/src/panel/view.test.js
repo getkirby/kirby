@@ -28,6 +28,7 @@ describe.concurrent("panel.view", () => {
 		const view = View(Panel());
 
 		const state = {
+			abortController: null,
 			breadcrumb: [],
 			breadcrumbLabel: null,
 			component: null,

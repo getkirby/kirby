@@ -85,7 +85,7 @@ class FileChangeNameTest extends ModelTestCase
 		$this->assertFileExists($result->version('latest')->contentFile('de'));
 	}
 
-	public function testChangeNameHooks()
+	public function testChangeNameHooks(): void
 	{
 		$calls = 0;
 		$phpunit = $this;

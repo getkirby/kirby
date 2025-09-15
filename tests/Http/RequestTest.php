@@ -9,7 +9,10 @@ use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(Request::class)]
 class RequestTest extends TestCase
 {
 	public function tearDown(): void
@@ -17,7 +20,7 @@ class RequestTest extends TestCase
 		App::destroy();
 	}
 
-	public function testCustomProps()
+	public function testCustomProps(): void
 	{
 		$file = [
 			'name'     => 'test.txt',
@@ -44,9 +47,9 @@ class RequestTest extends TestCase
 		// with instances
 		$request = new Request([
 			'method' => 'POST',
-			'body'   => new Request\Body(['a' => 'a']),
-			'query'  => new Request\Query(['b' => 'b']),
-			'files'  => new Request\Files(['upload' => $file]),
+			'body'   => new Body(['a' => 'a']),
+			'query'  => new Query(['b' => 'b']),
+			'files'  => new Files(['upload' => $file]),
 			'url'    => new Uri('https://getkirby.com')
 		]);
 
@@ -57,7 +60,7 @@ class RequestTest extends TestCase
 		$this->assertSame('https://getkirby.com', $request->url()->toString());
 	}
 
-	public function testData()
+	public function testData(): void
 	{
 		$request = new Request([
 			'body'   => ['a' => 'a'],
@@ -70,7 +73,7 @@ class RequestTest extends TestCase
 		$this->assertNull($request->get('c'));
 	}
 
-	public function testDataNumeric()
+	public function testDataNumeric(): void
 	{
 		$request = new Request([
 			'body'   => [1 => 'a'],
@@ -89,7 +92,7 @@ class RequestTest extends TestCase
 		$this->assertSame('c', $request->get('2'));
 	}
 
-	public function test__debuginfo()
+	public function test__debuginfo(): void
 	{
 		$request = new Request();
 		$info    = $request->__debugInfo();
@@ -101,13 +104,13 @@ class RequestTest extends TestCase
 		$this->assertArrayHasKey('url', $info);
 	}
 
-	public function testAuthMissing()
+	public function testAuthMissing(): void
 	{
 		$request = new Request();
 		$this->assertFalse($request->auth());
 	}
 
-	public function testBasicAuth()
+	public function testBasicAuth(): void
 	{
 		new App([
 			'server' => [
@@ -122,7 +125,7 @@ class RequestTest extends TestCase
 		$this->assertSame('testpass', $request->auth()->password());
 	}
 
-	public function testBearerAuth()
+	public function testBearerAuth(): void
 	{
 		new App([
 			'server' => [
@@ -136,7 +139,7 @@ class RequestTest extends TestCase
 		$this->assertSame('abcd', $request->auth()->token());
 	}
 
-	public function testCli()
+	public function testCli(): void
 	{
 		$request = new Request();
 		$this->assertTrue($request->cli());
@@ -149,7 +152,7 @@ class RequestTest extends TestCase
 	}
 
 
-	public function testUnknownAuth()
+	public function testUnknownAuth(): void
 	{
 		new App([
 			'server' => [
@@ -162,7 +165,7 @@ class RequestTest extends TestCase
 		$this->assertFalse($request->auth());
 	}
 
-	public function testAuthTrack()
+	public function testAuthTrack(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -178,10 +181,8 @@ class RequestTest extends TestCase
 		$this->assertTrue($app->response()->usesAuth());
 	}
 
-	/**
-	 * @dataProvider hasAuthProvider
-	 */
-	public function testHasAuth($option, $header, $expected)
+	#[DataProvider('hasAuthProvider')]
+	public function testHasAuth($option, $header, $expected): void
 	{
 		new App([
 			'server' => [
@@ -211,7 +212,7 @@ class RequestTest extends TestCase
 		];
 	}
 
-	public function testMethod()
+	public function testMethod(): void
 	{
 		$request = new Request();
 
@@ -220,49 +221,49 @@ class RequestTest extends TestCase
 		$this->assertInstanceOf(Files::class, $request->files());
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$request = new Request();
 		$this->assertInstanceOf(Query::class, $request->query());
 	}
 
-	public function testBody()
+	public function testBody(): void
 	{
 		$request = new Request();
 		$this->assertInstanceOf(Body::class, $request->body());
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$request = new Request();
 		$this->assertInstanceOf(Files::class, $request->files());
 	}
 
-	public function testFile()
+	public function testFile(): void
 	{
 		$request = new Request();
 		$this->assertNull($request->file('test'));
 	}
 
-	public function testIs()
+	public function testIs(): void
 	{
 		$request = new Request();
 		$this->assertTrue($request->is('GET'));
 	}
 
-	public function testIsWithLowerCaseInput()
+	public function testIsWithLowerCaseInput(): void
 	{
 		$request = new Request();
 		$this->assertTrue($request->is('get'));
 	}
 
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$request = new Request();
 		$this->assertInstanceOf(Uri::class, $request->url());
 	}
 
-	public function testUrlUpdates()
+	public function testUrlUpdates(): void
 	{
 		$request = new Request();
 
@@ -282,13 +283,13 @@ class RequestTest extends TestCase
 		$this->assertSame('http://getkirby.com/yay?foo=bar', $clone->toString());
 	}
 
-	public function testPath()
+	public function testPath(): void
 	{
 		$request = new Request();
 		$this->assertInstanceOf(Path::class, $request->path());
 	}
 
-	public function testDomain()
+	public function testDomain(): void
 	{
 		$request = new Request([
 			'url' => 'https://getkirby.com/a/b'

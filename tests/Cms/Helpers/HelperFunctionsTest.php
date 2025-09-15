@@ -36,31 +36,31 @@ class HelperFunctionsTest extends HelpersTestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testAttrWithBeforeValue()
+	public function testAttrWithBeforeValue(): void
 	{
 		$attr = attr(['test' => 'test'], ' ');
 		$this->assertSame(' test="test"', $attr);
 	}
 
-	public function testAttrWithAfterValue()
+	public function testAttrWithAfterValue(): void
 	{
 		$attr = attr(['test' => 'test'], null, ' ');
 		$this->assertSame('test="test" ', $attr);
 	}
 
-	public function testAttrWithoutValues()
+	public function testAttrWithoutValues(): void
 	{
 		$attr = attr([]);
 		$this->assertNull($attr);
 	}
 
-	public function testAsset()
+	public function testAsset(): void
 	{
 		$asset = asset('something.jpg');
 		$this->assertInstanceOf(Asset::class, $asset);
 	}
 
-	public function testCollection()
+	public function testCollection(): void
 	{
 		$this->app->clone([
 			'site' => [
@@ -82,7 +82,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame(8, $collection);
 	}
 
-	public function testCsrf()
+	public function testCsrf(): void
 	{
 		$session = $this->app->session();
 
@@ -123,7 +123,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$session->destroy();
 	}
 
-	public function testCss()
+	public function testCss(): void
 	{
 		$result   = css('assets/css/index.css');
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
@@ -131,7 +131,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testCssWithMediaOption()
+	public function testCssWithMediaOption(): void
 	{
 		$result   = css('assets/css/index.css', 'print');
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" media="print" rel="stylesheet">';
@@ -139,7 +139,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testCssWithAttrs()
+	public function testCssWithAttrs(): void
 	{
 		$result   = css('assets/css/index.css', ['integrity' => 'nope']);
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" integrity="nope" rel="stylesheet">';
@@ -147,7 +147,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testCssWithValidRelAttr()
+	public function testCssWithValidRelAttr(): void
 	{
 		$result   = css('assets/css/index.css', ['rel' => 'alternate stylesheet', 'title' => 'High contrast']);
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="alternate stylesheet" title="High contrast">';
@@ -155,7 +155,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testCssWithInvalidRelAttr()
+	public function testCssWithInvalidRelAttr(): void
 	{
 		$result   = css('assets/css/index.css', ['rel' => 'alternate', 'title' => 'High contrast']);
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet" title="High contrast">';
@@ -163,7 +163,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testCssWithRelAttrButNoTitle()
+	public function testCssWithRelAttrButNoTitle(): void
 	{
 		$result   = css('assets/css/index.css', ['rel' => 'alternate stylesheet']);
 		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
@@ -171,7 +171,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testCssWithArray()
+	public function testCssWithArray(): void
 	{
 		$result = css([
 			'assets/css/a.css',
@@ -184,7 +184,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testDeprecated()
+	public function testDeprecated(): void
 	{
 		$this->assertError(
 			E_USER_DEPRECATED,
@@ -193,7 +193,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		);
 	}
 
-	public function testDumpOnCli()
+	public function testDumpOnCli(): void
 	{
 		if (KIRBY_DUMP_OVERRIDDEN === true) {
 			$this->markTestSkipped('The dump() helper was externally overridden.');
@@ -206,7 +206,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		dump('test2', true);
 	}
 
-	public function testDumpOnServer()
+	public function testDumpOnServer(): void
 	{
 		if (KIRBY_DUMP_OVERRIDDEN === true) {
 			$this->markTestSkipped('The dump() helper was externally overridden.');
@@ -223,7 +223,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		dump('test2', true);
 	}
 
-	public function testE()
+	public function testE(): void
 	{
 		$this->expectOutputString('ad');
 
@@ -232,13 +232,13 @@ class HelperFunctionsTest extends HelpersTestCase
 		e(1 === 2, 'e');
 	}
 
-	public function testEscWithInvalidContext()
+	public function testEscWithInvalidContext(): void
 	{
 		$escaped = esc('test', 'does-not-exist');
 		$this->assertSame('test', $escaped);
 	}
 
-	public function testGist()
+	public function testGist(): void
 	{
 		$gist     = gist('https://gist.github.com/bastianallgeier/d61ab782cd5c2cc02b6f6fec54fd1985', 'static.php');
 		$expected = '<script src="https://gist.github.com/bastianallgeier/d61ab782cd5c2cc02b6f6fec54fd1985.js?file=static.php"></script>';
@@ -246,19 +246,19 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($gist, $expected);
 	}
 
-	public function testH()
+	public function testH(): void
 	{
 		$html = h('Guns & Roses');
 		$this->assertSame('Guns &amp; Roses', $html);
 	}
 
-	public function testHtml()
+	public function testHtml(): void
 	{
 		$html = html('Guns & Roses');
 		$this->assertSame('Guns &amp; Roses', $html);
 	}
 
-	public function testImage()
+	public function testImage(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -294,7 +294,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertNull($image);
 	}
 
-	public function testInvalid()
+	public function testInvalid(): void
 	{
 		$data = [
 			'username' => 123,
@@ -334,7 +334,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testInvalidSimple()
+	public function testInvalidSimple(): void
 	{
 		$data   = ['homer', null];
 		$rules  = [['alpha'], ['required']];
@@ -342,7 +342,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame(1, $result[1]);
 	}
 
-	public function testInvalidRequired()
+	public function testInvalidRequired(): void
 	{
 		$rules    = ['email' => ['required']];
 		$messages = ['email' => ''];
@@ -372,7 +372,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testInvalidOptions()
+	public function testInvalidOptions(): void
 	{
 		$rules = [
 			'username' => ['min' => 6]
@@ -402,7 +402,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testInvalidWithMultipleMessages()
+	public function testInvalidWithMultipleMessages(): void
 	{
 		$data     = ['username' => ''];
 		$rules    = ['username' => ['required', 'alpha', 'min' => 4]];
@@ -441,7 +441,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testJs()
+	public function testJs(): void
 	{
 		$result   = js('assets/js/index.js');
 		$expected = '<script src="https://getkirby.com/assets/js/index.js"></script>';
@@ -449,7 +449,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testJsWithAsyncOption()
+	public function testJsWithAsyncOption(): void
 	{
 		$result   = js('assets/js/index.js', true);
 		$expected = '<script async src="https://getkirby.com/assets/js/index.js"></script>';
@@ -457,7 +457,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testJsWithAttrs()
+	public function testJsWithAttrs(): void
 	{
 		$result   = js('assets/js/index.js', ['integrity' => 'nope']);
 		$expected = '<script integrity="nope" src="https://getkirby.com/assets/js/index.js"></script>';
@@ -465,7 +465,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testJsWithArray()
+	public function testJsWithArray(): void
 	{
 		$result = js([
 			'assets/js/a.js',
@@ -478,12 +478,12 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testKirby()
+	public function testKirby(): void
 	{
 		$this->assertSame($this->app, kirby());
 	}
 
-	public function testKirbyTag()
+	public function testKirbyTag(): void
 	{
 		$tag = kirbytag('link', 'https://getkirby.com', ['text' => 'Kirby']);
 		$expected = '<a href="https://getkirby.com">Kirby</a>';
@@ -491,7 +491,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $tag);
 	}
 
-	public function testKirbyTags()
+	public function testKirbyTags(): void
 	{
 		$tag = kirbytags('(link: https://getkirby.com text: Kirby)');
 		$expected = '<a href="https://getkirby.com">Kirby</a>';
@@ -499,7 +499,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $tag);
 	}
 
-	public function testKirbyText()
+	public function testKirbyText(): void
 	{
 		$text     = 'This is **just** a text.';
 		$expected = '<p>This is <strong>just</strong> a text.</p>';
@@ -508,7 +508,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, kt($text));
 	}
 
-	public function testKirbyTextWithSafeMode()
+	public function testKirbyTextWithSafeMode(): void
 	{
 		$text     = '<h1>Kirby</h1>';
 		$expected = '<p>&lt;h1&gt;Kirby&lt;/h1&gt;</p>';
@@ -517,7 +517,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, kt($text, ['markdown' => ['safe' => true]]));
 	}
 
-	public function testKirbyTextInline()
+	public function testKirbyTextInline(): void
 	{
 		$text     = 'This is **just** a text.';
 		$expected = 'This is <strong>just</strong> a text.';
@@ -526,7 +526,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, kti($text));
 	}
 
-	public function testKirbyTextInlineWithSafeMode()
+	public function testKirbyTextInlineWithSafeMode(): void
 	{
 		$text     = 'This is <b>just</b> a text.';
 		$expected = 'This is &lt;b&gt;just&lt;/b&gt; a text.';
@@ -535,7 +535,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, kti($text, ['markdown' => ['safe' => true]]));
 	}
 
-	public function testLoad()
+	public function testLoad(): void
 	{
 		load([
 			'helperstest\\a' => static::FIXTURES . '/load/a/a.php',
@@ -550,7 +550,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertFalse(class_exists('HelpersTest\\C'));
 	}
 
-	public function testMarkdown()
+	public function testMarkdown(): void
 	{
 		$tag = markdown('# Kirby');
 		$expected = '<h1>Kirby</h1>';
@@ -558,7 +558,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $tag);
 	}
 
-	public function testMarkdownWithSafeMode()
+	public function testMarkdownWithSafeMode(): void
 	{
 		$tag = markdown('<h1>Kirby</h1>', ['safe' => true]);
 		$expected = '<p>&lt;h1&gt;Kirby&lt;/h1&gt;</p>';
@@ -566,7 +566,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $tag);
 	}
 
-	public function testOption()
+	public function testOption(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -578,7 +578,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('fallback', option('does-not-exist', 'fallback'));
 	}
 
-	public function testPage()
+	public function testPage(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -607,7 +607,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('test', $page->slug());
 	}
 
-	public function testPages()
+	public function testPages(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -626,7 +626,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertCount(2, $pages);
 	}
 
-	public function testParam()
+	public function testParam(): void
 	{
 		$this->app->clone([
 			'server' => [
@@ -638,7 +638,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('value-B/B:', param('b/b:'));
 	}
 
-	public function testParams()
+	public function testParams(): void
 	{
 		$this->app->clone([
 			'server' => [
@@ -649,7 +649,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame(['a' => 'value-a', 'b/b:' => 'value-B/B:'], params());
 	}
 
-	public function testQr()
+	public function testQr(): void
 	{
 		$url = 'https://getkirby.com';
 		$qr    = qr($url);
@@ -673,14 +673,14 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($page->url(), $qr->data);
 	}
 
-	public function testR()
+	public function testR(): void
 	{
 		$this->assertSame('a', r(1 === 1, 'a', 'b'));
 		$this->assertSame('b', r(1 === 2, 'a', 'b'));
 		$this->assertNull(r(1 === 2, 'a'));
 	}
 
-	public function testRouter()
+	public function testRouter(): void
 	{
 		$routes = [
 			[
@@ -704,12 +704,12 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('yes: foo', $result);
 	}
 
-	public function testSite()
+	public function testSite(): void
 	{
 		$this->assertSame($this->app->site(), site());
 	}
 
-	public function testSize()
+	public function testSize(): void
 	{
 		// number
 		$this->assertSame(3, size(3));
@@ -724,7 +724,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame(3, size(new Collection(['a', 'b', 'c'])));
 	}
 
-	public function testSmartypants()
+	public function testSmartypants(): void
 	{
 		$text     = smartypants('"Test"');
 		$expected = '&#8220;Test&#8221;';
@@ -732,7 +732,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $text);
 	}
 
-	public function testSmartypantsWithKirbytext()
+	public function testSmartypantsWithKirbytext(): void
 	{
 		$this->app->clone([
 			'roots' => [
@@ -749,7 +749,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $text);
 	}
 
-	public function testSnippet()
+	public function testSnippet(): void
 	{
 		$this->app->clone([
 			'roots' => [
@@ -762,7 +762,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('Hello world', $result);
 	}
 
-	public function testSnippetNullArgument()
+	public function testSnippetNullArgument(): void
 	{
 		$this->app->clone([
 			'roots' => [
@@ -775,7 +775,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('', $result);
 	}
 
-	public function testSnippetNotExists()
+	public function testSnippetNotExists(): void
 	{
 		$this->app->clone([
 			'roots' => [
@@ -788,7 +788,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('', $result);
 	}
 
-	public function testSnippetAlternatives()
+	public function testSnippetAlternatives(): void
 	{
 		$this->app->clone([
 			'roots' => [
@@ -805,7 +805,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('Hello world', $result);
 	}
 
-	public function testSnippetObject()
+	public function testSnippetObject(): void
 	{
 		$this->app->clone([
 			'roots' => [
@@ -818,7 +818,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('Hello another world', $result);
 	}
 
-	public function testSnippetEcho()
+	public function testSnippetEcho(): void
 	{
 		$this->expectOutputString('Hello world');
 
@@ -832,7 +832,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		snippet('snippet', ['message' => 'world']);
 	}
 
-	public function testSnippetWithSlots()
+	public function testSnippetWithSlots(): void
 	{
 		$this->app->clone([
 			'roots' => [
@@ -851,48 +851,51 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('Test', ob_get_clean());
 	}
 
-	public function testSvg()
+	public function testSvg(): void
 	{
 		$result = svg('test.svg');
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 
-	public function testSvgWithAbsolutePath()
+	public function testSvgWithAbsolutePath(): void
 	{
 		$result = svg(static::FIXTURES . '/test.svg');
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 
-	public function testSvgWithInvalidFileType()
+	public function testSvgWithInvalidFileType(): void
 	{
 		$this->assertFalse(svg(123));
 	}
 
-	public function testSvgWithMissingFile()
+	public function testSvgWithMissingFile(): void
 	{
 		$this->assertFalse(svg('somefile.svg'));
 	}
 
-	public function testSvgWithFileObject()
+	public function testSvgWithFileObject(): void
 	{
 		$file = $this->getMockBuilder(File::class)
 			->disableOriginalConstructor()
 			->onlyMethods(['__call'])
-			->addMethods(['extension'])
 			->getMock();
-		$file->method('__call')->willReturn('test');
-		$file->method('extension')->willReturn('svg');
+
+		$file->method('__call')
+			->willReturnCallback(fn ($method, $args = []) => match ($method) {
+				'extension' => 'svg',
+				default    => 'test'
+			});
 
 		$this->assertSame('test', svg($file));
 	}
 
-	public function testTimestamp()
+	public function testTimestamp(): void
 	{
 		$result = timestamp('2021-12-12 12:12:12');
 		$this->assertSame('2021-12-12 12:12:12', date('Y-m-d H:i:s', $result));
 	}
 
-	public function testTimestampWithStep()
+	public function testTimestampWithStep(): void
 	{
 		$result = timestamp('2021-12-12 12:12:12', [
 			'unit' => 'minute',
@@ -902,13 +905,13 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('2021-12-12 12:10:00', date('Y-m-d H:i:s', $result));
 	}
 
-	public function testTimestampWithInvalidDate()
+	public function testTimestampWithInvalidDate(): void
 	{
 		$result = timestamp('invalid date');
 		$this->assertNull($result);
 	}
 
-	public function testTc()
+	public function testTc(): void
 	{
 		$this->app->clone([
 			'translations' => [
@@ -925,7 +928,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('Many cars', tc('car', 4));
 	}
 
-	public function testTcWithPlaceholders()
+	public function testTcWithPlaceholders(): void
 	{
 		$this->app->clone([
 			'translations' => [
@@ -949,7 +952,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame('1234567 Autos', tc('car', 1234567, 'de', false));
 	}
 
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$this->app->clone([
 			'options' => [
@@ -961,7 +964,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($url . '/test', u('test'));
 	}
 
-	public function testUrlWithOptions()
+	public function testUrlWithOptions(): void
 	{
 		$this->app->clone([
 			'options' => [
@@ -980,7 +983,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, u('test', $options));
 	}
 
-	public function testVideo()
+	public function testVideo(): void
 	{
 		$video    = video('https://youtube.com/watch?v=xB3s_f7PzYk');
 		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk"></iframe>';
@@ -988,7 +991,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $video);
 	}
 
-	public function testYoutubeVideoWithOptions()
+	public function testYoutubeVideoWithOptions(): void
 	{
 		$video = video('https://youtube.com/watch?v=xB3s_f7PzYk', [
 			'youtube' => [
@@ -1001,7 +1004,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $video);
 	}
 
-	public function testVimeoVideoWithOptions()
+	public function testVimeoVideoWithOptions(): void
 	{
 		$video = video('https://vimeo.com/335292911', [
 			'vimeo' => [
@@ -1014,7 +1017,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $video);
 	}
 
-	public function testVimeo()
+	public function testVimeo(): void
 	{
 		$video    = vimeo('https://vimeo.com/335292911');
 		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://player.vimeo.com/video/335292911"></iframe>';
@@ -1022,7 +1025,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $video);
 	}
 
-	public function testVimeoWithOptions()
+	public function testVimeoWithOptions(): void
 	{
 		$video    = vimeo('https://vimeo.com/335292911', ['controls' => 0]);
 		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://player.vimeo.com/video/335292911?controls=0"></iframe>';
@@ -1030,7 +1033,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $video);
 	}
 
-	public function testWidont()
+	public function testWidont(): void
 	{
 		$result   = widont('This is a headline');
 		$expected = 'This is a&nbsp;headline';
@@ -1038,7 +1041,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testYoutube()
+	public function testYoutube(): void
 	{
 		$video    = youtube('https://youtube.com/watch?v=xB3s_f7PzYk');
 		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk"></iframe>';
@@ -1046,7 +1049,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		$this->assertSame($expected, $video);
 	}
 
-	public function testYoutubeWithOptions()
+	public function testYoutubeWithOptions(): void
 	{
 		$video    = youtube('https://youtube.com/watch?v=xB3s_f7PzYk', ['controls' => 0]);
 		$expected = '<iframe allow="fullscreen" allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';

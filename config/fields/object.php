@@ -50,7 +50,7 @@ return [
 				return [];
 			}
 
-			return $this->form()->fields()->toArray();
+			return $this->form()->fields()->toProps();
 		},
 		'value' => function () {
 			$data = Data::decode($this->value, 'yaml');

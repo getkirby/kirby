@@ -28,7 +28,7 @@ class FilePickerMixinTest extends TestCase
 		App::destroy();
 	}
 
-	public function testPageFiles()
+	public function testPageFiles(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -60,7 +60,7 @@ class FilePickerMixinTest extends TestCase
 		$this->assertSame('c.jpg', $files[2]['id']);
 	}
 
-	public function testFileFiles()
+	public function testFileFiles(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -92,7 +92,7 @@ class FilePickerMixinTest extends TestCase
 		$this->assertSame('test/c.jpg', $files[2]['id']);
 	}
 
-	public function testUserFiles()
+	public function testUserFiles(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -124,7 +124,7 @@ class FilePickerMixinTest extends TestCase
 		$this->assertSame('c.jpg', $files[2]['id']);
 	}
 
-	public function testSiteFiles()
+	public function testSiteFiles(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -155,7 +155,7 @@ class FilePickerMixinTest extends TestCase
 		$this->assertSame('c.jpg', $files[2]['id']);
 	}
 
-	public function testCustomQuery()
+	public function testCustomQuery(): void
 	{
 		Field::$types = [
 			'test' => [
@@ -195,7 +195,7 @@ class FilePickerMixinTest extends TestCase
 		$this->assertSame('c.jpg', $files[2]['id']);
 	}
 
-	public function testMap()
+	public function testMap(): void
 	{
 		Field::$types = [
 			'test' => [

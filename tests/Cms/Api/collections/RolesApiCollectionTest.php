@@ -29,7 +29,7 @@ class RolesApiCollectionTest extends ApiCollectionTestCase
 		Dir::make(static::TMP);
 	}
 
-	public function testCollection()
+	public function testCollection(): void
 	{
 		$collection = $this->api->collection('roles', $this->app->roles());
 		$result     = $collection->toArray();

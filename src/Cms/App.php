@@ -443,15 +443,15 @@ class App
 		array $arguments = [],
 		string $contentType = 'html'
 	): array {
-		$name = basename(strtolower($name));
+		$name = strtolower($name);
 		$data = [];
 
 		// always use the site controller as defaults, if available
-		$site   = $this->controllerLookup('site', $contentType);
-		$site ??= $this->controllerLookup('site');
-
-		if ($site !== null) {
-			$data = (array)$site->call($this, $arguments);
+		// (unless the controller is a snippet controller)
+		if (strpos($name, '/') === false) {
+			$site   = $this->controllerLookup('site', $contentType);
+			$site ??= $this->controllerLookup('site');
+			$data   = (array)$site?->call($this, $arguments) ?? [];
 		}
 
 		// try to find a specific representation controller
@@ -460,14 +460,10 @@ class App
 		// let's try the html controller instead
 		$controller ??= $this->controllerLookup($name);
 
-		if ($controller !== null) {
-			return [
-				...$data,
-				...(array)$controller->call($this, $arguments)
-			];
-		}
-
-		return $data;
+		return [
+			...$data,
+			...(array)$controller?->call($this, $arguments) ?? []
+		];
 	}
 
 	/**
@@ -482,7 +478,11 @@ class App
 		}
 
 		// controller from site root
-		$controller   = Controller::load($this->root('controllers') . '/' . $name . '.php', $this->root('controllers'));
+		$controller = Controller::load(
+			file: $this->root('controllers') . '/' . $name . '.php',
+			in:   $this->root('controllers')
+		);
+
 		// controller from extension
 		$controller ??= $this->extension('controllers', $name);
 
@@ -580,7 +580,16 @@ class App
 		$visitor   = $this->visitor();
 
 		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
-			$closure = static function ($language) use ($acceptedLang) {
+			// Find locale matches (e.g. en_GB => en_GB)
+			$matchLocale = function ($language) use ($acceptedLang) {
+				$languageLocale = $language->locale(LC_ALL);
+				$acceptedLocale = $acceptedLang->locale();
+
+				return Str::substr($languageLocale, 0, 5) === Str::substr($acceptedLocale, 0, 5);
+			};
+
+			// Find language matches (e.g. en_GB => en)
+			$matchLanguage = function ($language) use ($acceptedLang) {
 				$languageLocale = $language->locale(LC_ALL);
 				$acceptedLocale = $acceptedLang->locale();
 
@@ -589,7 +598,11 @@ class App
 					$acceptedLocale === Str::substr($languageLocale, 0, 2);
 			};
 
-			if ($language = $languages->filter($closure)?->first()) {
+			if ($language = $languages->filter($matchLocale)?->first()) {
+				return $language;
+			}
+
+			if ($language = $languages->filter($matchLanguage)?->first()) {
 				return $language;
 			}
 		}
@@ -768,15 +781,7 @@ class App
 
 		// Responses
 		if ($input instanceof Response) {
-			$data = $input->toArray();
-
-			// inject headers from the global response configuration
-			// lazily (only if they are not already set);
-			// the case-insensitive nature of headers will be
-			// handled by PHP's `header()` function
-			$data['headers'] = [...$response->headers(), ...$data['headers']];
-
-			return new Response($data);
+			return $response->send($input);
 		}
 
 		// Pages

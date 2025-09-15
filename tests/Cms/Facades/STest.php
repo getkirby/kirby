@@ -24,7 +24,7 @@ class STest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testInstance()
+	public function testInstance(): void
 	{
 		$this->assertSame($this->app->session(), S::instance());
 	}

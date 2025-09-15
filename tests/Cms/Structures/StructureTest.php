@@ -6,7 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 
 class StructureTest extends TestCase
 {
-	public function testCreate()
+	public function testCreate(): void
 	{
 		$structure = Structure::factory([
 			['test' => 'Test']
@@ -16,7 +16,7 @@ class StructureTest extends TestCase
 		$this->assertSame(1, $structure->count());
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$parent    = new Page(['slug' => 'test']);
 		$structure = Structure::factory([
@@ -26,7 +26,7 @@ class StructureTest extends TestCase
 		$this->assertSame($parent, $structure->first()->parent());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$data = [
 			['name' => 'A', 'field' => 'C'],
@@ -42,7 +42,7 @@ class StructureTest extends TestCase
 		$this->assertArrayHasKey('id', $structure[1]);
 	}
 
-	public function testGroup()
+	public function testGroup(): void
 	{
 		$structure = Structure::factory([
 			[
@@ -74,7 +74,7 @@ class StructureTest extends TestCase
 		$this->assertSame('B', $grouped->last()->first()->name()->value());
 	}
 
-	public function testSiblings()
+	public function testSiblings(): void
 	{
 		$structure = Structure::factory([
 			['name' => 'A'],
@@ -102,7 +102,7 @@ class StructureTest extends TestCase
 		$this->assertFalse($structure->first()->isLast());
 	}
 
-	public function testWithInvalidData()
+	public function testWithInvalidData(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid data for Kirby\Cms\StructureObject');

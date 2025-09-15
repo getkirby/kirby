@@ -5,17 +5,12 @@ namespace Kirby\Panel\Ui\Buttons;
 use Kirby\Cms\Language;
 use Kirby\Cms\Page;
 use Kirby\Panel\Areas\AreaTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\LanguagesDropdown
- * @covers ::__construct
- */
+#[CoversClass(LanguagesDropdown::class)]
 class LanguagesDropdownTest extends AreaTestCase
 {
-	/**
-	 * @covers ::hasDiff
-	 */
-	public function testHasDiff()
+	public function testHasDiff(): void
 	{
 		$this->install();
 		$this->installLanguages();
@@ -37,10 +32,7 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertTrue($button->hasDiff());
 	}
 
-	/**
-	 * @covers ::option
-	 */
-	public function testOption()
+	public function testOption(): void
 	{
 		$page     = new Page(['slug' => 'test']);
 		$button   = new LanguagesDropdown($page);
@@ -55,21 +47,14 @@ class LanguagesDropdownTest extends AreaTestCase
 		], $button->option($language));
 	}
 
-	/**
-	 * @covers ::options
-	 * @
-	 */
-	public function testOptionsSingleLang()
+	public function testOptionsSingleLang(): void
 	{
 		$page   = new Page(['slug' => 'test']);
 		$button = new LanguagesDropdown($page);
 		$this->assertSame([], $button->options());
 	}
 
-	/**
-	 * @covers ::options
-	 */
-	public function testOptionsMultiLang()
+	public function testOptionsMultiLang(): void
 	{
 		$this->enableMultilang();
 		$this->installLanguages();
@@ -97,10 +82,7 @@ class LanguagesDropdownTest extends AreaTestCase
 		], $button->options());
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$page   = new Page(['slug' => 'test']);
 		$button = new LanguagesDropdown($page);
@@ -108,20 +90,14 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertFalse($props['hasDiff']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderDefault()
+	public function testRenderDefault(): void
 	{
 		$page   = new Page(['slug' => 'test']);
 		$button = new LanguagesDropdown($page);
 		$this->assertNull($button->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderSingleLang()
+	public function testRenderSingleLang(): void
 	{
 		$this->enableMultilang();
 		$this->app([
@@ -139,11 +115,7 @@ class LanguagesDropdownTest extends AreaTestCase
 		$this->assertNull($button->render());
 	}
 
-	/**
-	 * @covers ::props
-	 * @covers ::render
-	 */
-	public function testRenderMultiLang()
+	public function testRenderMultiLang(): void
 	{
 		$this->enableMultilang();
 		$this->installLanguages();

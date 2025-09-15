@@ -125,7 +125,7 @@ export function makeAbsolute(path, origin) {
 		return path;
 	}
 
-	origin = origin ?? base();
+	origin ??= base();
 	origin = String(origin).replaceAll(/\/$/g, "");
 	path = String(path).replaceAll(/^\//g, "");
 

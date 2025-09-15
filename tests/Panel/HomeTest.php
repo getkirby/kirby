@@ -9,10 +9,10 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Uri;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Home
- */
+#[CoversClass(Home::class)]
 class HomeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Home';
@@ -45,10 +45,7 @@ class HomeTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::alternative
-	 */
-	public function testAlternative()
+	public function testAlternative(): void
 	{
 		$this->app = $this->app->clone([
 			'users' => [
@@ -61,10 +58,7 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/site', Home::alternative($user));
 	}
 
-	/**
-	 * @covers ::alternative
-	 */
-	public function testAlternativeWithLimitedAccess()
+	public function testAlternativeWithLimitedAccess(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -92,10 +86,7 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/users', Home::alternative($user));
 	}
 
-	/**
-	 * @covers ::alternative
-	 */
-	public function testAlternativeWithOnlyAccessToAccounts()
+	public function testAlternativeWithOnlyAccessToAccounts(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -125,10 +116,7 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/account', Home::alternative($user));
 	}
 
-	/**
-	 * @covers ::alternative
-	 */
-	public function testAlternativeWithoutPanelAccess()
+	public function testAlternativeWithoutPanelAccess(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -151,10 +139,7 @@ class HomeTest extends TestCase
 		$this->assertSame('/', Home::alternative($user));
 	}
 
-	/**
-	 * @covers ::alternative
-	 */
-	public function testAlternativeWithoutViewAccess()
+	public function testAlternativeWithoutViewAccess(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -184,10 +169,7 @@ class HomeTest extends TestCase
 		Home::alternative($user);
 	}
 
-	/**
-	 * @covers ::hasAccess
-	 */
-	public function testHasAccess()
+	public function testHasAccess(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -218,10 +200,7 @@ class HomeTest extends TestCase
 		$this->assertTrue(Home::hasAccess($user, 'browser'));
 	}
 
-	/**
-	 * @covers ::hasAccess
-	 */
-	public function testHasAccessWithLimitedAccess()
+	public function testHasAccessWithLimitedAccess(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -252,10 +231,7 @@ class HomeTest extends TestCase
 		$this->assertTrue(Home::hasAccess($user, 'account'));
 	}
 
-	/**
-	 * @covers ::hasValidDomain
-	 */
-	public function testHasValidDomain()
+	public function testHasValidDomain(): void
 	{
 		$uri = Uri::current();
 		$this->assertTrue(Home::hasValidDomain($uri));
@@ -267,47 +243,32 @@ class HomeTest extends TestCase
 		$this->assertFalse(Home::hasValidDomain($uri));
 	}
 
-	/**
-	 * @covers ::isPanelUrl
-	 */
-	public function testIsPanelUrl()
+	public function testIsPanelUrl(): void
 	{
 		$this->assertTrue(Home::isPanelUrl('/panel'));
 		$this->assertTrue(Home::isPanelUrl('/panel/pages/test'));
 		$this->assertFalse(Home::isPanelUrl('test'));
 	}
 
-	/**
-	 * @covers ::panelPath
-	 */
-	public function testPanelPath()
+	public function testPanelPath(): void
 	{
 		$this->assertSame('site', Home::panelPath('/panel/site'));
 		$this->assertSame('pages/test', Home::panelPath('/panel/pages/test'));
 		$this->assertSame('', Home::panelPath('/test/page'));
 	}
 
-	/**
-	 * @covers ::remembered
-	 */
-	public function testRemembered()
+	public function testRemembered(): void
 	{
 		$this->assertNull(Home::remembered());
 	}
 
-	/**
-	 * @covers ::remembered
-	 */
-	public function testRememberedFromSession()
+	public function testRememberedFromSession(): void
 	{
 		$this->app->session()->set('panel.path', 'users');
 		$this->assertSame('/panel/users', Home::remembered());
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrl()
+	public function testUrl(): void
 	{
 		$this->app = $this->app->clone([
 			'users' => [
@@ -339,10 +300,8 @@ class HomeTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider customHomeProvider
-	 */
-	public function testUrlWithCustomHome($url, $expected, $index = '/')
+	#[DataProvider('customHomeProvider')]
+	public function testUrlWithCustomHome($url, $expected, $index = '/'): void
 	{
 		$this->app = $this->app->clone([
 			'urls' => [
@@ -369,10 +328,7 @@ class HomeTest extends TestCase
 		$this->assertSame($expected, Home::url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlWithInvalidCustomHome()
+	public function testUrlWithInvalidCustomHome(): void
 	{
 		$this->app = $this->app->clone([
 			'urls' => [
@@ -402,10 +358,7 @@ class HomeTest extends TestCase
 		Home::url();
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlWithRememberedPath()
+	public function testUrlWithRememberedPath(): void
 	{
 		$this->app = $this->app->clone([
 			'users' => [
@@ -419,10 +372,7 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/users', Home::url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlWithInvalidRememberedPath()
+	public function testUrlWithInvalidRememberedPath(): void
 	{
 		$this->app = $this->app->clone([
 			'users' => [
@@ -436,10 +386,7 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/site', Home::url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlWithMissingSiteAccess()
+	public function testUrlWithMissingSiteAccess(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -461,10 +408,7 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/users', Home::url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlWithAccountAccessOnly()
+	public function testUrlWithAccountAccessOnly(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -489,10 +433,7 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/account', Home::url());
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrlWithoutUser()
+	public function testUrlWithoutUser(): void
 	{
 		$this->assertSame('/panel/login', Home::url());
 	}

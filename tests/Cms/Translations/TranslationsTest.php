@@ -6,7 +6,7 @@ class TranslationsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$translations = Translations::factory([
 			'de' => [
@@ -22,7 +22,7 @@ class TranslationsTest extends TestCase
 		$this->assertTrue($translations->has('en'));
 	}
 
-	public function testLoad()
+	public function testLoad(): void
 	{
 		$translations = Translations::load(static::FIXTURES . '/translations');
 

@@ -11,7 +11,9 @@ describe.concurrent("panel.dialog", () => {
 		const panel = Panel.create();
 		const dialog = Dialog(panel);
 		const state = {
+			abortController: null,
 			component: null,
+			id: null,
 			isLoading: false,
 			legacy: false,
 			on: {},

@@ -8,13 +8,16 @@ use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
 
 /**
- * ImageMagick
+ * Legacy ImageMagick driver using the convert CLI
  *
  * @package   Kirby Image
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @deprecated 5.1.0 Use `imagick` in the `thumbs.driver` config option instead
+ * @todo Remove in 7.0.0
  */
 class ImageMagick extends Darkroom
 {

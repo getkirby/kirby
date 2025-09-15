@@ -38,7 +38,7 @@ class Params extends Obj implements Stringable
 	 */
 	public static function extract(string|array|null $path = null): array
 	{
-		if (empty($path) === true) {
+		if ($path === null || $path === '' || $path === []) {
 			return [
 				'path'   => null,
 				'params' => null,
@@ -62,12 +62,16 @@ class Params extends Obj implements Stringable
 					continue;
 				}
 
-				$paramParts = Str::split($p, $separator);
-				$paramKey   = $paramParts[0] ?? null;
-				$paramValue = $paramParts[1] ?? null;
+				$parts = Str::split($p, $separator);
 
-				if ($paramKey !== null) {
-					$params[rawurldecode($paramKey)] = $paramValue !== null ? rawurldecode($paramValue) : null;
+				if ($key = $parts[0] ?? null) {
+					$key = rawurldecode($key);
+
+					if ($value = $parts[1] ?? null) {
+						$value = rawurldecode($value);
+					}
+
+					$params[$key] = $value;
 				}
 
 				unset($path[$index]);
@@ -89,12 +93,29 @@ class Params extends Obj implements Stringable
 
 	public function isEmpty(): bool
 	{
-		return empty((array)$this) === true;
+		return (array)$this === [];
 	}
 
 	public function isNotEmpty(): bool
 	{
 		return $this->isEmpty() === false;
+	}
+
+	/**
+	 * Merges the current params with the given params
+	 * @since 5.1.0
+	 *
+	 * @return $this
+	 */
+	public function merge(array|string|null $params): static
+	{
+		$params = new static($params);
+
+		foreach ($params as $key => $value) {
+			$this->$key = $value;
+		}
+
+		return $this;
 	}
 
 	/**
@@ -106,15 +127,7 @@ class Params extends Obj implements Stringable
 	 */
 	public static function separator(): string
 	{
-		if (static::$separator !== null) {
-			return static::$separator;
-		}
-
-		if (DIRECTORY_SEPARATOR === '/') {
-			return static::$separator = ':';
-		}
-
-		return static::$separator = ';';
+		return static::$separator ??= DIRECTORY_SEPARATOR === '/' ? ':' : ';';
 	}
 
 	/**
@@ -134,7 +147,9 @@ class Params extends Obj implements Stringable
 
 		foreach ($this as $key => $value) {
 			if ($value !== null && $value !== '') {
-				$params[] = rawurlencode($key) . $separator . rawurlencode($value);
+				$key      = rawurlencode($key);
+				$value    = rawurlencode($value);
+				$params[] = $key . $separator . $value;
 			}
 		}
 

@@ -8,13 +8,13 @@ use stdClass;
 
 class ModelTest extends TestCase
 {
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$model = new Model(new Api([]), [], []);
 
 		$this->assertInstanceOf(Model::class, $model);
 	}
-	public function testConstructInvalidModel()
+	public function testConstructInvalidModel(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid model type "stdClass" expected: "nonexists"');
@@ -22,7 +22,7 @@ class ModelTest extends TestCase
 		new Model(new Api([]), new stdClass(), ['type' => 'nonexists']);
 	}
 
-	public function testConstructMissingModel()
+	public function testConstructMissingModel(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Missing model data');
@@ -30,7 +30,7 @@ class ModelTest extends TestCase
 		new Model(new Api([]), null, []);
 	}
 
-	public function testSelectInvalidKeys()
+	public function testSelectInvalidKeys(): void
 	{
 		$model = new Model(new Api([]), [], []);
 
@@ -39,7 +39,7 @@ class ModelTest extends TestCase
 		$model->select(0);
 	}
 
-	public function testSelection()
+	public function testSelection(): void
 	{
 		$api = new Api([
 			'models' => [

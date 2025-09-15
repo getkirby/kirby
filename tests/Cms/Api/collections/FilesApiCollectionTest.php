@@ -8,7 +8,7 @@ class FilesApiCollectionTest extends ApiCollectionTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FilesApiCollection';
 
-	public function testCollection()
+	public function testCollection(): void
 	{
 		$page = new Page([
 			'slug' => 'test'

@@ -206,11 +206,8 @@ return [
 
 			// if value is a UUID, resolve to page/file model
 			// and use the URL as value
-			if (
-				Uuid::is($tag->value, 'page') === true ||
-				Uuid::is($tag->value, 'file') === true
-			) {
-				$tag->value = Uuid::for($tag->value)->model()?->url();
+			if (Uuid::is($tag->value, ['page', 'file']) === true) {
+				$tag->value = Uuid::for($tag->value)?->toUrl();
 			}
 
 			// if url is empty, throw exception or link to the error page

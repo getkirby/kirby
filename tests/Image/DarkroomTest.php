@@ -3,8 +3,13 @@
 namespace Kirby\Image;
 
 use Exception;
+use Kirby\Image\Darkroom\GdLib;
+use Kirby\Image\Darkroom\ImageMagick;
+use Kirby\Image\Darkroom\Imagick;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Darkroom::class)]
 class DarkroomTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -18,16 +23,20 @@ class DarkroomTest extends TestCase
 		return static::FIXTURES . '/image/cat.jpg';
 	}
 
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$instance = Darkroom::factory('gd');
-		$this->assertInstanceOf(Darkroom\GdLib::class, $instance);
+		$this->assertInstanceOf(GdLib::class, $instance);
 
+		$instance = Darkroom::factory('imagick');
+		$this->assertInstanceOf(Imagick::class, $instance);
+
+		// TODO: remove in v7
 		$instance = Darkroom::factory('im');
-		$this->assertInstanceOf(Darkroom\ImageMagick::class, $instance);
+		$this->assertInstanceOf(ImageMagick::class, $instance);
 	}
 
-	public function testFactoryWithInvalidType()
+	public function testFactoryWithInvalidType(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid Darkroom type');
@@ -35,7 +44,7 @@ class DarkroomTest extends TestCase
 		Darkroom::factory('does-not-exist');
 	}
 
-	public function testCropWithoutPosition()
+	public function testCropWithoutPosition(): void
 	{
 		$darkroom = new Darkroom();
 		$options  = $darkroom->preprocess($this->file(), [
@@ -46,7 +55,7 @@ class DarkroomTest extends TestCase
 		$this->assertSame('center', $options['crop']);
 	}
 
-	public function testBlurWithoutPosition()
+	public function testBlurWithoutPosition(): void
 	{
 		$darkroom = new Darkroom();
 		$options  = $darkroom->preprocess($this->file(), [
@@ -56,7 +65,7 @@ class DarkroomTest extends TestCase
 		$this->assertSame(10, $options['blur']);
 	}
 
-	public function testQualityWithoutValue()
+	public function testQualityWithoutValue(): void
 	{
 		$darkroom = new Darkroom();
 		$options  = $darkroom->preprocess($this->file(), [
@@ -66,7 +75,7 @@ class DarkroomTest extends TestCase
 		$this->assertSame(90, $options['quality']);
 	}
 
-	public function testSharpenWithoutValue()
+	public function testSharpenWithoutValue(): void
 	{
 		$darkroom = new Darkroom();
 		$options  = $darkroom->preprocess($this->file(), [
@@ -77,7 +86,7 @@ class DarkroomTest extends TestCase
 		$this->assertSame(50, $options['sharpen']);
 	}
 
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$darkroom = new Darkroom();
 		$options  = $darkroom->preprocess('/dev/null');
@@ -90,7 +99,7 @@ class DarkroomTest extends TestCase
 		$this->assertSame(0, $options['width']);
 	}
 
-	public function testGlobalOptions()
+	public function testGlobalOptions(): void
 	{
 		$darkroom = new Darkroom([
 			'quality' => 20
@@ -101,7 +110,7 @@ class DarkroomTest extends TestCase
 		$this->assertSame(20, $options['quality']);
 	}
 
-	public function testPassedOptions()
+	public function testPassedOptions(): void
 	{
 		$darkroom = new Darkroom([
 			'quality' => 20
@@ -114,7 +123,7 @@ class DarkroomTest extends TestCase
 		$this->assertSame(30, $options['quality']);
 	}
 
-	public function testProcess()
+	public function testProcess(): void
 	{
 		$darkroom = new Darkroom([
 			'quality' => 20
@@ -127,7 +136,7 @@ class DarkroomTest extends TestCase
 		$this->assertSame(30, $options['quality']);
 	}
 
-	public function testGrayscaleFixes()
+	public function testGrayscaleFixes(): void
 	{
 		$darkroom = new Darkroom();
 

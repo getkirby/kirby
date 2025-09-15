@@ -20,8 +20,6 @@ $fields = require __DIR__ . '/../fields/dialogs.php';
 $files = require __DIR__ . '/../files/dialogs.php';
 
 return [
-
-	// change page position
 	'page.changeSort' => [
 		'pattern' => 'pages/(:any)/changeSort',
 		'load' => function (string $id) {
@@ -61,7 +59,6 @@ return [
 		}
 	],
 
-	// change page status
 	'page.changeStatus' => [
 		'pattern' => 'pages/(:any)/changeStatus',
 		'load' => function (string $id) {
@@ -140,7 +137,6 @@ return [
 		}
 	],
 
-	// change template
 	'page.changeTemplate' => [
 		'pattern' => 'pages/(:any)/changeTemplate',
 		'load' => function (string $id) {
@@ -187,7 +183,6 @@ return [
 		}
 	],
 
-	// change title
 	'page.changeTitle' => [
 		'pattern' => 'pages/(:any)/changeTitle',
 		'load' => function (string $id) {
@@ -282,7 +277,6 @@ return [
 		}
 	],
 
-	// create a new page
 	'page.create' => [
 		'pattern' => 'pages/create',
 		'load' => function () {
@@ -293,6 +287,7 @@ return [
 				slug: $request->get('slug'),
 				template: $request->get('template'),
 				title: $request->get('title'),
+				uuid: $request->get('uuid'),
 				viewId: $request->get('view'),
 			);
 
@@ -306,6 +301,7 @@ return [
 				slug: $request->get('slug'),
 				template: $request->get('template'),
 				title: $request->get('title'),
+				uuid: $request->get('uuid'),
 				viewId: $request->get('view'),
 			);
 
@@ -313,7 +309,6 @@ return [
 		}
 	],
 
-	// delete page
 	'page.delete' => [
 		'pattern' => 'pages/(:any)/delete',
 		'load' => function (string $id) {
@@ -385,7 +380,6 @@ return [
 		}
 	],
 
-	// duplicate page
 	'page.duplicate' => [
 		'pattern' => 'pages/(:any)/duplicate',
 		'load' => function (string $id) {
@@ -474,49 +468,31 @@ return [
 		}
 	],
 
-	// page field dialogs
 	'page.fields' => [
-		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit']
+		...$fields['model'],
+		'pattern' => '(pages/[^/]+)/fields/(:any)/(:all?)',
 	],
-
-	// change filename
 	'page.file.changeName' => [
-		'pattern' => '(pages/.*?)/files/(:any)/changeName',
-		'load'    => $files['changeName']['load'],
-		'submit'  => $files['changeName']['submit'],
+		...$files['changeName'],
+		'pattern' => '(pages/[^/]+)/files/(:any)/changeName',
 	],
-
-	// change sort
 	'page.file.changeSort' => [
-		'pattern' => '(pages/.*?)/files/(:any)/changeSort',
-		'load'    => $files['changeSort']['load'],
-		'submit'  => $files['changeSort']['submit'],
+		...$files['changeSort'],
+		'pattern' => '(pages/[^/]+)/files/(:any)/changeSort',
 	],
-
-	// change template
 	'page.file.changeTemplate' => [
-		'pattern' => '(pages/.*?)/files/(:any)/changeTemplate',
-		'load'    => $files['changeTemplate']['load'],
-		'submit'  => $files['changeTemplate']['submit'],
+		...$files['changeTemplate'],
+		'pattern' => '(pages/[^/]+)/files/(:any)/changeTemplate',
 	],
-
-	// delete
 	'page.file.delete' => [
-		'pattern' => '(pages/.*?)/files/(:any)/delete',
-		'load'    => $files['delete']['load'],
-		'submit'  => $files['delete']['submit'],
+		...$files['delete'],
+		'pattern' => '(pages/[^/]+)/files/(:any)/delete',
 	],
-
-	// page file field dialogs
 	'page.file.fields' => [
-		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit'],
+		...$fields['file'],
+		'pattern' => '(pages/[^/]+)/files/(:any)/fields/(:any)/(:all?)',
 	],
 
-	// move page
 	'page.move' => [
 		'pattern' => 'pages/(:any)/move',
 		'load'    => function (string $id) {
@@ -553,7 +529,6 @@ return [
 		}
 	],
 
-	// change site title
 	'site.changeTitle' => [
 		'pattern' => 'site/changeTitle',
 		'load' => function () {
@@ -583,49 +558,31 @@ return [
 		}
 	],
 
-	// site field dialogs
 	'site.fields' => [
+		...$fields['model'],
 		'pattern' => '(site)/fields/(:any)/(:all?)',
-		'load'    => $fields['model']['load'],
-		'submit'  => $fields['model']['submit'],
 	],
-
-	// change filename
 	'site.file.changeName' => [
+		...$files['changeName'],
 		'pattern' => '(site)/files/(:any)/changeName',
-		'load'    => $files['changeName']['load'],
-		'submit'  => $files['changeName']['submit'],
 	],
-
-	// change sort
 	'site.file.changeSort' => [
+		...$files['changeSort'],
 		'pattern' => '(site)/files/(:any)/changeSort',
-		'load'    => $files['changeSort']['load'],
-		'submit'  => $files['changeSort']['submit'],
 	],
-
-	// change template
 	'site.file.changeTemplate' => [
+		...$files['changeTemplate'],
 		'pattern' => '(site)/files/(:any)/changeTemplate',
-		'load'    => $files['changeTemplate']['load'],
-		'submit'  => $files['changeTemplate']['submit'],
 	],
-
-	// delete
 	'site.file.delete' => [
+		...$files['delete'],
 		'pattern' => '(site)/files/(:any)/delete',
-		'load'    => $files['delete']['load'],
-		'submit'  => $files['delete']['submit'],
 	],
-
-	// site file field dialogs
 	'site.file.fields' => [
+		...$fields['file'],
 		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
-		'load'    => $fields['file']['load'],
-		'submit'  => $fields['file']['submit'],
 	],
 
-	// content changes
 	'changes' => [
 		'pattern' => 'changes',
 		'load'    => function () {

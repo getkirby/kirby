@@ -3,10 +3,9 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth
- */
+#[CoversClass(Auth::class)]
 class AuthCsrfTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.AuthCsrf';
@@ -31,10 +30,7 @@ class AuthCsrfTest extends TestCase
 		$_GET = [];
 	}
 
-	/**
-	 * @covers ::csrf
-	 */
-	public function testCsrfFromSession1()
+	public function testCsrfFromSession1(): void
 	{
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
 
@@ -42,10 +38,7 @@ class AuthCsrfTest extends TestCase
 		$this->assertFalse($this->auth->csrf());
 	}
 
-	/**
-	 * @covers ::csrf
-	 */
-	public function testCsrfFromSession2()
+	public function testCsrfFromSession2(): void
 	{
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
 
@@ -53,10 +46,7 @@ class AuthCsrfTest extends TestCase
 		$this->assertFalse($this->auth->csrf());
 	}
 
-	/**
-	 * @covers ::csrf
-	 */
-	public function testCsrfFromSession3()
+	public function testCsrfFromSession3(): void
 	{
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
 
@@ -64,10 +54,7 @@ class AuthCsrfTest extends TestCase
 		$this->assertSame('session-csrf', $this->auth->csrf());
 	}
 
-	/**
-	 * @covers ::csrf
-	 */
-	public function testCsrfFromSession4()
+	public function testCsrfFromSession4(): void
 	{
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
 
@@ -75,10 +62,7 @@ class AuthCsrfTest extends TestCase
 		$this->assertFalse($this->auth->csrf());
 	}
 
-	/**
-	 * @covers ::csrf
-	 */
-	public function testCsrfFromOption1()
+	public function testCsrfFromOption1(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -93,10 +77,7 @@ class AuthCsrfTest extends TestCase
 		$this->assertFalse($this->auth->csrf());
 	}
 
-	/**
-	 * @covers ::csrf
-	 */
-	public function testCsrfFromOption2()
+	public function testCsrfFromOption2(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -111,11 +92,7 @@ class AuthCsrfTest extends TestCase
 		$this->assertSame('option-csrf', $this->auth->csrf());
 	}
 
-	/**
-	 * @covers ::csrf
-	 * @covers ::csrfFromSession
-	 */
-	public function testCsrfFromOption3()
+	public function testCsrfFromOption3(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -130,11 +107,7 @@ class AuthCsrfTest extends TestCase
 		$this->assertFalse($this->auth->csrf());
 	}
 
-	/**
-	 * @covers ::csrf
-	 * @covers ::csrfFromSession
-	 */
-	public function testCsrfFromOption4()
+	public function testCsrfFromOption4(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -149,10 +122,7 @@ class AuthCsrfTest extends TestCase
 		$this->assertFalse($this->auth->csrf());
 	}
 
-	/**
-	 * @covers ::csrfFromSession
-	 */
-	public function testCsrfFromSessionPanelDevOption()
+	public function testCsrfFromSessionPanelDevOption(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [

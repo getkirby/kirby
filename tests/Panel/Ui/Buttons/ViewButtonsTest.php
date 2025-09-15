@@ -4,10 +4,9 @@ namespace Kirby\Panel\Ui\Buttons;
 
 use Kirby\Cms\Page;
 use Kirby\Panel\Areas\AreaTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\ViewButtons
- */
+#[CoversClass(ViewButtons::class)]
 class ViewButtonsTest extends AreaTestCase
 {
 	public function setUp(): void
@@ -31,10 +30,7 @@ class ViewButtonsTest extends AreaTestCase
 		]);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		// no buttons
 		$buttons = new ViewButtons('test', buttons: []);
@@ -49,10 +45,7 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertCount(4, $buttons->buttons);
 	}
 
-	/**
-	 * @covers ::bind
-	 */
-	public function testBind()
+	public function testBind(): void
 	{
 		$buttons = new ViewButtons('foo');
 		$this->assertSame([], $buttons->data);
@@ -65,10 +58,7 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertSame(['foo' => 'bar', 'homer' => 'simpson'], $buttons->data);
 	}
 
-	/**
-	 * @covers ::defaults
-	 */
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$buttons = new ViewButtons('foo');
 		$this->assertCount(0, $buttons->buttons ?? []);
@@ -77,10 +67,7 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertCount(2, $buttons->buttons);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRender()
+	public function testRender(): void
 	{
 		$buttons = new ViewButtons('test', buttons: ['a', 'y']);
 		$result  = $buttons->render();
@@ -90,10 +77,7 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertSame('k-y-view-button', $result[1]['component']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderFromConfig()
+	public function testRenderFromConfig(): void
 	{
 		$buttons = new ViewButtons('test');
 		$result  = $buttons->render();
@@ -104,19 +88,13 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertSame('result-c', $result[2]['component']);
 	}
 
-	/**
-	 * @covers ::render
-	 */
-	public function testRenderNoButtons()
+	public function testRenderNoButtons(): void
 	{
 		$buttons = new ViewButtons('test', buttons: false);
 		$this->assertSame([], $buttons->render());
 	}
 
-	/**
-	 * @covers ::view
-	 */
-	public function testView()
+	public function testView(): void
 	{
 		// view name
 		$buttons = ViewButtons::view('page');

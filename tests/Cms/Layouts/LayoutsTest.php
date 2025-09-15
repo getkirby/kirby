@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class LayoutsTest extends TestCase
 {
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$layouts = Layouts::factory([
 			[
@@ -25,7 +25,7 @@ class LayoutsTest extends TestCase
 		$this->assertSame('1/2', $layouts->first()->columns()->first()->width());
 	}
 
-	public function testFactoryIsWrappingBlocks()
+	public function testFactoryIsWrappingBlocks(): void
 	{
 		$layouts = Layouts::factory([
 			[
@@ -51,7 +51,7 @@ class LayoutsTest extends TestCase
 		$this->assertSame('Text', $blocks->last()->text()->value());
 	}
 
-	public function testHasBlockType()
+	public function testHasBlockType(): void
 	{
 		$layouts = Layouts::factory([
 			[
@@ -68,7 +68,7 @@ class LayoutsTest extends TestCase
 		$this->assertFalse($layouts->hasBlockType('code'));
 	}
 
-	public function testParse()
+	public function testParse(): void
 	{
 		$data = [
 			[
@@ -86,7 +86,7 @@ class LayoutsTest extends TestCase
 		$this->assertSame($data, $result);
 	}
 
-	public function testParseArray()
+	public function testParseArray(): void
 	{
 		$data = [
 			[
@@ -103,7 +103,7 @@ class LayoutsTest extends TestCase
 		$this->assertSame($data, $result);
 	}
 
-	public function testParseEmpty()
+	public function testParseEmpty(): void
 	{
 		$result = Layouts::parse(null);
 		$this->assertSame([], $result);
@@ -121,7 +121,7 @@ class LayoutsTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testToBlocks()
+	public function testToBlocks(): void
 	{
 		$data = [
 			[
@@ -140,7 +140,7 @@ class LayoutsTest extends TestCase
 		$this->assertInstanceOf(Blocks::class, $blocks);
 	}
 
-	public function testHiddenBlocks()
+	public function testHiddenBlocks(): void
 	{
 		$data = [
 			[

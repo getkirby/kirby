@@ -7,7 +7,7 @@ use Kirby\Cms\Page;
 
 class StructureFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -25,7 +25,7 @@ class StructureFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testTagsFieldInStructure()
+	public function testTagsFieldInStructure(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -52,7 +52,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame(['a', 'b'], $field->value()[0]['tags']);
 	}
 
-	public function testColumnsFromFields()
+	public function testColumnsFromFields(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -80,7 +80,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame($expected, $field->columns());
 	}
 
-	public function testColumnsWithCustomMobileSetup()
+	public function testColumnsWithCustomMobileSetup(): void
 	{
 		$field = $this->field('structure', [
 			'columns' => [
@@ -109,7 +109,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame($expected, $field->columns());
 	}
 
-	public function testColumnsWithI18nLabel()
+	public function testColumnsWithI18nLabel(): void
 	{
 		$field = $this->field('structure', [
 			'columns' => [
@@ -138,7 +138,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame($expected, $field->columns());
 	}
 
-	public function testLowerCaseColumnsNames()
+	public function testLowerCaseColumnsNames(): void
 	{
 		$field = $this->field('structure', [
 			'columns' => [
@@ -154,7 +154,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame(['camelcase'], array_keys($field->columns()));
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -174,7 +174,7 @@ class StructureFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -194,7 +194,7 @@ class StructureFieldTest extends TestCase
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
-	public function testNestedStructures()
+	public function testNestedStructures(): void
 	{
 		$model = new Page([
 			'slug' => 'test'
@@ -283,7 +283,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame('', $childrenNameField->data());
 	}
 
-	public function testFloatsWithNonUsLocale()
+	public function testFloatsWithNonUsLocale(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -301,7 +301,7 @@ class StructureFieldTest extends TestCase
 		$this->assertIsFloat($field->data()[0]['number']);
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -315,7 +315,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
-	public function testTranslatedEmpty()
+	public function testTranslatedEmpty(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -329,7 +329,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
-	public function testTranslate()
+	public function testTranslate(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -386,7 +386,7 @@ class StructureFieldTest extends TestCase
 		$this->assertTrue($props['b']['disabled']);
 	}
 
-	public function testDefault()
+	public function testDefault(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -409,7 +409,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame('B', $field->data(true)[0]['b']);
 	}
 
-	public function testRequiredProps()
+	public function testRequiredProps(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -424,7 +424,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame(1, $field->min());
 	}
 
-	public function testRequiredInvalid()
+	public function testRequiredInvalid(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -438,7 +438,7 @@ class StructureFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testRequiredValid()
+	public function testRequiredValid(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -455,7 +455,7 @@ class StructureFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testSubmitWithDisabledFieldAndDefaultValue()
+	public function testSubmitWithDisabledFieldAndDefaultValue(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -483,7 +483,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame('B', $value[0]['b']);
 	}
 
-	public function testValidationsInvalid()
+	public function testValidationsInvalid(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [

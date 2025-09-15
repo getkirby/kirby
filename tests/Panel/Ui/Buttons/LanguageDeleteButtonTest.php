@@ -5,16 +5,12 @@ namespace Kirby\Panel\Ui\Buttons;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Buttons\LanguageDeleteButton
- */
+#[CoversClass(LanguageDeleteButton::class)]
 class LanguageDeleteButtonTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testButton()
+	public function testButton(): void
 	{
 		$language = new Language(['code' => 'en']);
 		$button   = new LanguageDeleteButton($language);
@@ -22,10 +18,7 @@ class LanguageDeleteButtonTest extends TestCase
 		$this->assertSame('languages/en/delete', $button->dialog);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testDisabled()
+	public function testDisabled(): void
 	{
 		$app = new App([
 			'blueprints' => [

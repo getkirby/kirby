@@ -3,10 +3,12 @@
 namespace Kirby\Http\Request;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Files::class)]
 class FilesTest extends TestCase
 {
-	public function testMultipleUploads()
+	public function testMultipleUploads(): void
 	{
 		$upload = [
 			'upload' => [
@@ -30,7 +32,7 @@ class FilesTest extends TestCase
 		$this->assertSame(0, $files->get('upload')[1]['error']);
 	}
 
-	public function testData()
+	public function testData(): void
 	{
 		// default
 		$files = new Files();
@@ -50,7 +52,7 @@ class FilesTest extends TestCase
 		$this->assertSame($upload, $files->data());
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		// test with default data
 		$files = new Files();
@@ -69,7 +71,7 @@ class FilesTest extends TestCase
 		$this->assertSame(123, $files->get('upload')['size']);
 	}
 
-	public function testToArrayAndDebuginfo()
+	public function testToArrayAndDebuginfo(): void
 	{
 		$data  = [
 			'upload' => [
@@ -85,7 +87,7 @@ class FilesTest extends TestCase
 		$this->assertSame($data, $files->__debugInfo());
 	}
 
-	public function testToJson()
+	public function testToJson(): void
 	{
 		$data  = [
 			'upload' => [

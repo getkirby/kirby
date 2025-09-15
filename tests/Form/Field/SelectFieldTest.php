@@ -2,9 +2,11 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class SelectFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('select');
 
@@ -16,7 +18,7 @@ class SelectFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testOptionsQuery()
+	public function testOptionsQuery(): void
 	{
 		$app = $this->app()->clone([
 			'site' => [
@@ -112,7 +114,7 @@ class SelectFieldTest extends TestCase
 		$this->assertSame($expected, $field->options());
 	}
 
-	public function testOptionsQueryAdditionalData()
+	public function testOptionsQueryAdditionalData(): void
 	{
 		$this->app()->clone([
 			'site' => [
@@ -196,10 +198,8 @@ class SelectFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider valueInputProvider
-	 */
-	public function testValue($input, $expected)
+	#[DataProvider('valueInputProvider')]
+	public function testValue($input, $expected): void
 	{
 		$field = $this->field('select', [
 			'options' => [

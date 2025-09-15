@@ -9,6 +9,7 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
 use Kirby\Form\Fields;
 use Kirby\Http\Uri;
+use Kirby\Panel\Ui\Item\ModelItem;
 use Kirby\Toolkit\A;
 
 /**
@@ -338,17 +339,18 @@ abstract class Model
 	 */
 	public function pickerData(array $params = []): array
 	{
+		$item = new ModelItem(
+			model: $this->model,
+			image: $params['image'] ?? null,
+			info: $params['info'] ?? null,
+			layout: $params['layout'] ?? null,
+			text: $params['text'] ?? null,
+		);
+
 		return [
-			'id'       => $this->model->id(),
-			'image'    => $this->image(
-				$params['image'] ?? [],
-				$params['layout'] ?? 'list'
-			),
-			'info'     => $this->model->toSafeString($params['info'] ?? false),
-			'link'     => $this->url(true),
+			...$item->props(),
 			'sortable' => true,
-			'text'     => $this->model->toSafeString($params['text'] ?? false),
-			'uuid'     => $this->model->uuid()?->toString()
+			'url'      => $this->url(true)
 		];
 	}
 

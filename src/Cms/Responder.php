@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Mime;
+use Kirby\Http\Response as HttpResponse;
 use Kirby\Toolkit\Str;
 use Stringable;
 
@@ -337,8 +338,15 @@ class Responder implements Stringable
 	/**
 	 * Creates and returns the response object from the config
 	 */
-	public function send(string|null $body = null): Response
+	public function send(HttpResponse|string|null $body = null): HttpResponse
 	{
+		if ($body instanceof HttpResponse) {
+			// inject headers from the responder into the response
+			// (only if they are not already set);
+			$body->setHeaderFallbacks($this->headers());
+			return $body;
+		}
+
 		if ($body !== null) {
 			$this->body($body);
 		}

@@ -68,7 +68,7 @@ class Header
 
 		$header = 'Content-type: ' . $mime;
 
-		if (empty($charset) === false) {
+		if ($charset !== '') {
 			$header .= '; charset=' . $charset;
 		}
 

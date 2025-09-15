@@ -865,6 +865,9 @@ trait PageActions
 			'template' => $this->intendedTemplate()->name(),
 		]);
 
+		// remove the media directory
+		Dir::remove($this->mediaRoot());
+
 		// actually do it on disk
 		if ($this->exists() === true) {
 			if (Dir::move($this->root(), $page->root()) !== true) {

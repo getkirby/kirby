@@ -31,14 +31,14 @@ class ValidationsTest extends TestCase
 		Field::$types = [];
 	}
 
-	public function testBooleanValid()
+	public function testBooleanValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', ['model' => $page]);
 		$this->assertTrue(Validations::boolean($field, true));
 	}
 
-	public function testBooleanInvalid()
+	public function testBooleanInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please confirm or deny');
@@ -48,14 +48,14 @@ class ValidationsTest extends TestCase
 		Validations::boolean($field, 'nope');
 	}
 
-	public function testDateValid()
+	public function testDateValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', ['model' => $page]);
 		$this->assertTrue(Validations::date($field, '2012-12-12'));
 	}
 
-	public function testDateInvalid()
+	public function testDateInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid date');
@@ -65,14 +65,14 @@ class ValidationsTest extends TestCase
 		Validations::date($field, 'somewhen');
 	}
 
-	public function testEmailValid()
+	public function testEmailValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', ['model' => $page]);
 		$this->assertTrue(Validations::email($field, 'test@getkirby.com'));
 	}
 
-	public function testEmailInvalid()
+	public function testEmailInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid email address');
@@ -82,7 +82,7 @@ class ValidationsTest extends TestCase
 		Validations::email($field, 'test[at]getkirby.com');
 	}
 
-	public function testMaxValid()
+	public function testMaxValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', [
@@ -93,7 +93,7 @@ class ValidationsTest extends TestCase
 		$this->assertTrue(Validations::max($field, 4));
 	}
 
-	public function testMaxInvalid()
+	public function testMaxInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a value equal to or lower than 5');
@@ -107,7 +107,7 @@ class ValidationsTest extends TestCase
 		Validations::max($field, 6);
 	}
 
-	public function testMaxLengthValid()
+	public function testMaxLengthValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', [
@@ -118,7 +118,7 @@ class ValidationsTest extends TestCase
 		$this->assertTrue(Validations::maxlength($field, 'test'));
 	}
 
-	public function testMaxLengthInvalid()
+	public function testMaxLengthInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a shorter value. (max. 5 characters)');
@@ -132,7 +132,7 @@ class ValidationsTest extends TestCase
 		Validations::maxlength($field, 'testest');
 	}
 
-	public function testMinValid()
+	public function testMinValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', [
@@ -143,7 +143,7 @@ class ValidationsTest extends TestCase
 		$this->assertTrue(Validations::min($field, 6));
 	}
 
-	public function testMinInvalid()
+	public function testMinInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a value equal to or greater than 5');
@@ -157,7 +157,7 @@ class ValidationsTest extends TestCase
 		Validations::min($field, 4);
 	}
 
-	public function testMinLengthValid()
+	public function testMinLengthValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', [
@@ -168,7 +168,7 @@ class ValidationsTest extends TestCase
 		$this->assertTrue(Validations::minlength($field, 'testest'));
 	}
 
-	public function testMinLengthInvalid()
+	public function testMinLengthInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a longer value. (min. 5 characters)');
@@ -182,7 +182,7 @@ class ValidationsTest extends TestCase
 		Validations::minlength($field, 'test');
 	}
 
-	public function testPatternValid()
+	public function testPatternValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', [
@@ -196,7 +196,7 @@ class ValidationsTest extends TestCase
 		$this->assertTrue(Validations::pattern($field, '#34b3cd'));
 	}
 
-	public function testPatternInvalid()
+	public function testPatternInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The value does not match the expected pattern');
@@ -210,7 +210,7 @@ class ValidationsTest extends TestCase
 		Validations::pattern($field, '#MMM');
 	}
 
-	public function testPatternInvalidMatchButMore()
+	public function testPatternInvalidMatchButMore(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', [
@@ -227,7 +227,7 @@ class ValidationsTest extends TestCase
 		Validations::pattern($field, '12345');
 	}
 
-	public function testRequiredValid()
+	public function testRequiredValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', [
@@ -238,7 +238,7 @@ class ValidationsTest extends TestCase
 		$this->assertTrue(Validations::required($field, 'something'));
 	}
 
-	public function testRequiredInvalid()
+	public function testRequiredInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter something');
@@ -252,7 +252,7 @@ class ValidationsTest extends TestCase
 		Validations::required($field, '');
 	}
 
-	public function testOptionValid()
+	public function testOptionValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', [
@@ -266,7 +266,7 @@ class ValidationsTest extends TestCase
 		$this->assertTrue(Validations::option($field, 'a'));
 	}
 
-	public function testOptionInvalid()
+	public function testOptionInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please select a valid option');
@@ -283,7 +283,7 @@ class ValidationsTest extends TestCase
 		Validations::option($field, 'c');
 	}
 
-	public function testOptionsValid()
+	public function testOptionsValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', [
@@ -297,7 +297,7 @@ class ValidationsTest extends TestCase
 		$this->assertTrue(Validations::options($field, ['a', 'b']));
 	}
 
-	public function testOptionsInvalid()
+	public function testOptionsInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please select a valid option');
@@ -314,14 +314,14 @@ class ValidationsTest extends TestCase
 		Validations::options($field, ['a', 'c']);
 	}
 
-	public function testTimeValid()
+	public function testTimeValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
 		$field = new Field('test', ['model' => $page]);
 		$this->assertTrue(Validations::time($field, '10:12'));
 	}
 
-	public function testTimeInvalid()
+	public function testTimeInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid time');

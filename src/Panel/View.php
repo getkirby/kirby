@@ -266,6 +266,7 @@ class View
 				],
 				'debug'       => $kirby->option('debug', false),
 				'kirbytext'   => $kirby->option('panel.kirbytext', true),
+				'theme'       => $kirby->option('panel.theme', 'system'),
 				'translation' => $kirby->option('panel.language', 'en'),
 				'upload'      => Upload::chunkSize(),
 			],

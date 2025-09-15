@@ -16,7 +16,7 @@ class VersionCacheTest extends TestCase
 		$this->setUpMultiLanguage();
 	}
 
-	public function testGetSetAndRemove()
+	public function testGetSetAndRemove(): void
 	{
 		$model    = new Page(['slug' => 'test']);
 		$version  = $model->version();
@@ -44,7 +44,7 @@ class VersionCacheTest extends TestCase
 		$this->assertNull(VersionCache::get($version, $language));
 	}
 
-	public function testGetSetAndRemoveWithDifferentModels()
+	public function testGetSetAndRemoveWithDifferentModels(): void
 	{
 		$page = new Page(['slug' => 'test1']);
 		$file = new File(['filename' => 'test2.jpg', 'parent' => $page]);
@@ -79,7 +79,7 @@ class VersionCacheTest extends TestCase
 		$this->assertNull(VersionCache::get($versionFile, $language));
 	}
 
-	public function testGetSetAndRemoveWithDifferentStorage()
+	public function testGetSetAndRemoveWithDifferentStorage(): void
 	{
 		$model    = new Page(['slug' => 'test']);
 		$version  = $model->version();
@@ -103,7 +103,7 @@ class VersionCacheTest extends TestCase
 		$this->assertNull(VersionCache::get($version, $language));
 	}
 
-	public function testGetSetAndRemoveWithClonedModel()
+	public function testGetSetAndRemoveWithClonedModel(): void
 	{
 		$model    = new Page(['slug' => 'test']);
 		$version  = $model->version();
@@ -133,7 +133,7 @@ class VersionCacheTest extends TestCase
 		$this->assertNull(VersionCache::get($clonedVersion, $language));
 	}
 
-	public function testGetSetAndRemoveWithDifferentLanguages()
+	public function testGetSetAndRemoveWithDifferentLanguages(): void
 	{
 		$model    = new Page(['slug' => 'test']);
 		$version  = $model->version();
@@ -166,7 +166,7 @@ class VersionCacheTest extends TestCase
 		$this->assertNull(VersionCache::get($version, $de));
 	}
 
-	public function testGetSetAndRemoveWithDifferentVersions()
+	public function testGetSetAndRemoveWithDifferentVersions(): void
 	{
 		$model        = new Page(['slug' => 'test']);
 		$latest       = $model->version('latest');
@@ -199,7 +199,7 @@ class VersionCacheTest extends TestCase
 		$this->assertNull(VersionCache::get($changes, $language));
 	}
 
-	public function testReset()
+	public function testReset(): void
 	{
 		$model    = new Page(['slug' => 'test']);
 		$version  = $model->version();
@@ -216,5 +216,4 @@ class VersionCacheTest extends TestCase
 
 		$this->assertNull(VersionCache::get($version, $language));
 	}
-
 }

@@ -6,6 +6,8 @@ use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 class MyObj
@@ -35,8 +37,9 @@ class MyGetObj
 }
 
 /**
- * @coversDefaultClass \Kirby\Query\Segment
+ * @todo Deprecate in v6
  */
+#[CoversClass(Segment::class)]
 class SegmentTest extends TestCase
 {
 	public static function scalarProvider(): array
@@ -51,11 +54,8 @@ class SegmentTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::error
-	 * @dataProvider scalarProvider
-	 */
-	public function testErrorWithScalars($scalar, $label)
+	#[DataProvider('scalarProvider')]
+	public function testErrorWithScalars($scalar, $label): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to method "foo" on ' . $label);
@@ -63,10 +63,7 @@ class SegmentTest extends TestCase
 		Segment::error($scalar, 'foo', 'method');
 	}
 
-	/**
-	 * @covers ::error
-	 */
-	public function testErrorWithObject()
+	public function testErrorWithObject(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing method "foo" on object');
@@ -74,11 +71,7 @@ class SegmentTest extends TestCase
 		Segment::error(new stdClass(), 'foo', 'method');
 	}
 
-	/**
-	 * @covers ::factory
-	 * @covers ::__construct
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$segment = Segment::factory('foo');
 		$this->assertSame('foo', $segment->method);
@@ -93,10 +86,7 @@ class SegmentTest extends TestCase
 		$this->assertCount(2, $segment->arguments);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveFirst()
+	public function testResolveFirst(): void
 	{
 		// without parameters
 		$segment = Segment::factory('foo');
@@ -107,11 +97,7 @@ class SegmentTest extends TestCase
 		$this->assertSame('2bar', $segment->resolve(null, ['foo' => fn (int $a, string $b) => $a . $b]));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveObject
-	 */
-	public function testResolveFirstWithDataObject()
+	public function testResolveFirstWithDataObject(): void
 	{
 		$obj      = new stdClass();
 		$obj->foo = 'bar';
@@ -120,33 +106,21 @@ class SegmentTest extends TestCase
 	}
 
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveArray
-	 */
-	public function testResolveArray()
+	public function testResolveArray(): void
 	{
 		$segment = Segment::factory('foo', 1);
 		$data    = ['foo' => $expected = [1, 2]];
 		$this->assertSame($expected, $segment->resolve($data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveArray
-	 */
-	public function testResolveArrayClosure()
+	public function testResolveArrayClosure(): void
 	{
 		$segment = Segment::factory('foo', 0);
 		$data    = ['foo' => fn () => 'bar'];
 		$this->assertSame('bar', $segment->resolve(null, $data));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveArray
-	 */
-	public function testResolveArrayInvalidKey()
+	public function testResolveArrayInvalidKey(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing property "foo" on array');
@@ -155,11 +129,7 @@ class SegmentTest extends TestCase
 		$segment->resolve(['bar' => 2]);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveArray
-	 */
-	public function testResolveArrayArgOnNonClosure()
+	public function testResolveArrayArgOnNonClosure(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Cannot access array element "foo" with arguments');
@@ -168,21 +138,13 @@ class SegmentTest extends TestCase
 		$segment->resolve(['foo' => 'bar']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveArray
-	 */
-	public function testResolveArrayFromGlobalEntry()
+	public function testResolveArrayFromGlobalEntry(): void
 	{
 		$segment = Segment::factory('kirby');
 		$this->assertSame(App::instance(), $segment->resolve(null, []));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveObject
-	 */
-	public function testResolveObject()
+	public function testResolveObject(): void
 	{
 		$obj     = new MyObj();
 		$segment = Segment::factory('foo(2)', 1);
@@ -201,11 +163,7 @@ class SegmentTest extends TestCase
 		$this->assertSame('simpson', $segment->resolve($obj));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveObject
-	 */
-	public function testResolveObjectInvalid()
+	public function testResolveObjectInvalid(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to method/property "foo" on string');
@@ -214,11 +172,7 @@ class SegmentTest extends TestCase
 		$segment->resolve('bar');
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveObject
-	 */
-	public function testResolveObjectInvalidMethod()
+	public function testResolveObjectInvalidMethod(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing method/property "notfound" on object');
@@ -228,11 +182,7 @@ class SegmentTest extends TestCase
 		$segment->resolve($obj);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveObject
-	 */
-	public function testResolveObjectMethodWithoutArgs()
+	public function testResolveObjectMethodWithoutArgs(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing method "notfound" on object');
@@ -242,10 +192,7 @@ class SegmentTest extends TestCase
 		$segment->resolve($obj);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveWithArrayNullValueError()
+	public function testResolveWithArrayNullValueError(): void
 	{
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to method/property "method" on null');

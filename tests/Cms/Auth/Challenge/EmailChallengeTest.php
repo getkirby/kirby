@@ -6,10 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 use Kirby\Email\Email;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Auth\EmailChallenge
- */
+#[CoversClass(EmailChallenge::class)]
 class EmailChallengeTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/../fixtures';
@@ -57,19 +56,13 @@ class EmailChallengeTest extends TestCase
 		unset($_SERVER['SERVER_NAME']);
 	}
 
-	/**
-	 * @covers ::isAvailable
-	 */
-	public function testIsAvailable()
+	public function testIsAvailable(): void
 	{
 		$user = $this->app->user('homer@simpsons.com');
 		$this->assertTrue(EmailChallenge::isAvailable($user, 'login'));
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateLogin()
+	public function testCreateLogin(): void
 	{
 		$user = $this->app->user('homer@simpsons.com');
 		$options = ['mode' => 'login', 'timeout' => 7.3 * 60];
@@ -95,10 +88,7 @@ class EmailChallengeTest extends TestCase
 		$this->assertNotSame($code1, $code2);
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreatePathUrl()
+	public function testCreatePathUrl(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -126,10 +116,7 @@ class EmailChallengeTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreate2FA()
+	public function testCreate2FA(): void
 	{
 		$user = $this->app->user('homer@simpsons.com');
 		$options = ['mode' => '2fa', 'timeout' => 7.3 * 60];
@@ -155,10 +142,7 @@ class EmailChallengeTest extends TestCase
 		$this->assertNotSame($code1, $code2);
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateReset()
+	public function testCreateReset(): void
 	{
 		$user = $this->app->user('marge@simpsons.com');
 		$options = ['mode' => 'password-reset', 'timeout' => 7.3 * 60];
@@ -184,10 +168,7 @@ class EmailChallengeTest extends TestCase
 		$this->assertNotSame($code1, $code2);
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateResetUserLanguage()
+	public function testCreateResetUserLanguage(): void
 	{
 		$user = $this->app->user('bart@simpsons.com');
 		$options = ['mode' => 'password-reset', 'timeout' => 7.3 * 60];
@@ -213,10 +194,7 @@ class EmailChallengeTest extends TestCase
 		$this->assertNotSame($code1, $code2);
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateCustom()
+	public function testCreateCustom(): void
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -247,10 +225,7 @@ class EmailChallengeTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::create
-	 */
-	public function testCreateCustomHtml()
+	public function testCreateCustomHtml(): void
 	{
 		$this->app = $this->app->clone([
 			'templates' => [

@@ -6,7 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 
 class LinkFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('link');
 
@@ -30,7 +30,7 @@ class LinkFieldTest extends TestCase
 		], $field->options());
 	}
 
-	public function testOptionsInvalid()
+	public function testOptionsInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid options: foo, bar');

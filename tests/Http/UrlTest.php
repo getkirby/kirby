@@ -4,7 +4,10 @@ namespace Kirby\Http;
 
 use Kirby\Cms\App;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(Url::class)]
 class UrlTest extends TestCase
 {
 	protected string $_yt   = 'http://www.youtube.com/watch?v=9q_aXttJduk';
@@ -19,7 +22,7 @@ class UrlTest extends TestCase
 		Url::$home    = '/';
 	}
 
-	public function testCurrent()
+	public function testCurrent(): void
 	{
 		$this->assertSame('/', Url::current());
 
@@ -27,18 +30,18 @@ class UrlTest extends TestCase
 		$this->assertSame($this->_yts, Url::current());
 	}
 
-	public function testCurrentDir()
+	public function testCurrentDir(): void
 	{
 		Url::$current = $this->_yts;
 		$this->assertSame('https://www.youtube.com', Url::currentDir());
 	}
 
-	public function testHome()
+	public function testHome(): void
 	{
 		$this->assertSame('/', Url::home());
 	}
 
-	public function testTo()
+	public function testTo(): void
 	{
 		$this->assertSame('/', Url::to());
 		$this->assertSame($this->_yt, Url::to($this->_yt));
@@ -47,12 +50,12 @@ class UrlTest extends TestCase
 		$this->assertSame('../something', Url::to('../something'));
 	}
 
-	public function testLast()
+	public function testLast(): void
 	{
 		$this->assertSame('', Url::last());
 	}
 
-	public function testBuild()
+	public function testBuild(): void
 	{
 		$this->assertSame('/', Url::build());
 
@@ -74,7 +77,7 @@ class UrlTest extends TestCase
 		$this->assertSame($result, Url::build($parts, 'http://getkirby.com'));
 	}
 
-	public function testIsAbsolute()
+	public function testIsAbsolute(): void
 	{
 		$this->assertTrue(Url::isAbsolute('http://getkirby.com/docs'));
 		$this->assertTrue(Url::isAbsolute('https://getkirby.com/docs'));
@@ -86,7 +89,7 @@ class UrlTest extends TestCase
 		$this->assertFalse(Url::isAbsolute('javascript:alert("XSS")'));
 	}
 
-	public function testMakeAbsolute()
+	public function testMakeAbsolute(): void
 	{
 		$this->assertSame('http://getkirby.com', Url::makeAbsolute('http://getkirby.com'));
 		$this->assertSame('/docs/cheatsheet', Url::makeAbsolute('docs/cheatsheet'));
@@ -94,7 +97,7 @@ class UrlTest extends TestCase
 		$this->assertSame('http://getkirby.com', Url::makeAbsolute('', 'http://getkirby.com'));
 	}
 
-	public function testFix()
+	public function testFix(): void
 	{
 		$this->assertSame('http://', Url::fix());
 		$this->assertSame('http://', Url::fix(''));
@@ -102,13 +105,13 @@ class UrlTest extends TestCase
 		$this->assertSame('ftp://getkirby.com', Url::fix('ftp://getkirby.com'));
 	}
 
-	public function testBase()
+	public function testBase(): void
 	{
 		$this->assertNull(Url::base());
 		$this->assertSame('http://getkirby.com', Url::base('http://getkirby.com/docs/cheatsheet'));
 	}
 
-	public function testPath()
+	public function testPath(): void
 	{
 		// stripped
 		$this->assertSame('', Url::path('https://getkirby.com'));
@@ -139,25 +142,25 @@ class UrlTest extends TestCase
 		$this->assertSame('/a/b/', Url::path('https://getkirby.com/a/b/', true, true));
 	}
 
-	public function testStripPath()
+	public function testStripPath(): void
 	{
 		$this->assertSame('https://getkirby.com', Url::stripPath('https://getkirby.com/a/b'));
 		$this->assertSame('https://getkirby.com/', Url::stripPath('https://getkirby.com/a/b/'));
 	}
 
-	public function testStripQuery()
+	public function testStripQuery(): void
 	{
 		$this->assertSame('https://getkirby.com', Url::stripQuery('https://getkirby.com?a=b'));
 		$this->assertSame('https://getkirby.com/', Url::stripQuery('https://getkirby.com/?a=b'));
 	}
 
-	public function testStripFragment()
+	public function testStripFragment(): void
 	{
 		$this->assertSame('https://getkirby.com', Url::stripFragment('https://getkirby.com#a/b'));
 		$this->assertSame('https://getkirby.com/', Url::stripFragment('https://getkirby.com/#a/b'));
 	}
 
-	public function testQuery()
+	public function testQuery(): void
 	{
 		$this->assertSame('', Url::query('https://getkirby.com'));
 		$this->assertSame('a=b', Url::query('?a=b'));
@@ -165,7 +168,7 @@ class UrlTest extends TestCase
 		$this->assertSame('a=b', Url::query('https://getkirby.com/?a=b'));
 	}
 
-	public function testShort()
+	public function testShort(): void
 	{
 		$this->assertSame('getkirby.com/docs', Url::short($this->_docs));
 		$this->assertSame('getkirby.com/docs', Url::short($this->_docs, 100));
@@ -174,7 +177,7 @@ class UrlTest extends TestCase
 		$this->assertSame('getkirby.com###', Url::short($this->_docs, 12, false, '###'));
 	}
 
-	public function testIdn()
+	public function testIdn(): void
 	{
 		$object = Url::idn('https://xn--tst-qla.de');
 		$this->assertInstanceOf(Uri::class, $object);
@@ -206,10 +209,8 @@ class UrlTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider scriptNameProvider
-	 */
-	public function testIndex($host, $scriptName, $expected)
+	#[DataProvider('scriptNameProvider')]
+	public function testIndex($host, $scriptName, $expected): void
 	{
 		new App([
 			'cli' => false,

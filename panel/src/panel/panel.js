@@ -171,6 +171,10 @@ export default {
 	 * @param {Boolean} openNotification
 	 */
 	error(error, openNotification = true) {
+		if (error.name === "AbortError") {
+			return;
+		}
+
 		if (this.debug === true) {
 			console.error(error);
 		}

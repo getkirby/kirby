@@ -6,7 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Remote::class)]
 class RemoteTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Http.Remote';
@@ -40,7 +42,7 @@ class RemoteTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testOptionsHeaders()
+	public function testOptionsHeaders(): void
 	{
 		$request = Remote::get('https://getkirby.com', [
 			'headers' => [
@@ -54,7 +56,7 @@ class RemoteTest extends TestCase
 		], $request->curlopt[CURLOPT_HTTPHEADER]);
 	}
 
-	public function testOptionsBasicAuth()
+	public function testOptionsBasicAuth(): void
 	{
 		$request = Remote::get('https://getkirby.com', [
 			'basicAuth' => 'user:pw'
@@ -62,7 +64,7 @@ class RemoteTest extends TestCase
 		$this->assertSame('user:pw', $request->curlopt[CURLOPT_USERPWD]);
 	}
 
-	public function testOptionsCa()
+	public function testOptionsCa(): void
 	{
 		// default: internal CA
 		$request = Remote::get('https://getkirby.com');
@@ -162,7 +164,7 @@ class RemoteTest extends TestCase
 		]);
 	}
 
-	public function testOptionsFromApp()
+	public function testOptionsFromApp(): void
 	{
 		new App([
 			'options' => [
@@ -180,25 +182,25 @@ class RemoteTest extends TestCase
 		$this->assertFalse($options['body']);
 	}
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$request = Remote::put('https://getkirby.com');
 		$this->assertNull($request->content());
 	}
 
-	public function testCode()
+	public function testCode(): void
 	{
 		$request = Remote::put('https://getkirby.com');
 		$this->assertNull($request->code());
 	}
 
-	public function testDelete()
+	public function testDelete(): void
 	{
 		$request = Remote::delete('https://getkirby.com');
 		$this->assertSame('DELETE', $request->method());
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		// default
 		$request = Remote::get('https://getkirby.com');
@@ -215,43 +217,43 @@ class RemoteTest extends TestCase
 		$this->assertSame('https://getkirby.com/a?b=c&d=foo', $request->url());
 	}
 
-	public function testHead()
+	public function testHead(): void
 	{
 		$request = Remote::head('https://getkirby.com');
 		$this->assertSame('HEAD', $request->method());
 	}
 
-	public function testHeaders()
+	public function testHeaders(): void
 	{
 		$request = new Remote('https://getkirby.com');
 		$this->assertSame([], $request->headers());
 	}
 
-	public function testInfo()
+	public function testInfo(): void
 	{
 		$request = new Remote('https://getkirby.com');
 		$this->assertSame([], $request->info());
 	}
 
-	public function testPatch()
+	public function testPatch(): void
 	{
 		$request = Remote::patch('https://getkirby.com');
 		$this->assertSame('PATCH', $request->method());
 	}
 
-	public function testPost()
+	public function testPost(): void
 	{
 		$request = Remote::post('https://getkirby.com');
 		$this->assertSame('POST', $request->method());
 	}
 
-	public function testPut()
+	public function testPut(): void
 	{
 		$request = Remote::put('https://getkirby.com');
 		$this->assertSame('PUT', $request->method());
 	}
 
-	public function testRequest()
+	public function testRequest(): void
 	{
 		$request = new Remote($url = 'https://getkirby.com');
 

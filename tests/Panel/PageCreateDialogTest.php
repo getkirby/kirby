@@ -2,12 +2,14 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\Page;
+use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Areas\AreaTestCase;
+use Kirby\Uuid\PageUuid;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\PageCreateDialog
- */
+#[CoversClass(PageCreateDialog::class)]
 class PageCreateDialogTest extends AreaTestCase
 {
 	public function setUp(): void
@@ -17,11 +19,31 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->login();
 	}
 
-	/**
-	 * @covers ::coreFields
-	 */
 	public function testCoreFields(): void
 	{
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null
+		);
+
+		$fields = $dialog->coreFields();
+
+		$this->assertCount(7, $fields);
+		$this->assertSame('Title', $fields['title']['label']);
+		$this->assertSame('/', $fields['slug']['path']);
+		$this->assertTrue($fields['uuid']['hidden']);
+	}
+
+	public function testCoreFieldsUuidDisabled(): void
+	{
+		$this->app([
+			'options' => [
+				'content.uuid' => false
+			]
+		]);
+
 		$dialog = new PageCreateDialog(
 			null,
 			null,
@@ -36,9 +58,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertSame('/', $fields['slug']['path']);
 	}
 
-	/**
-	 * @covers ::coreFields
-	 */
 	public function testCoreFieldWithoutTitleSlug(): void
 	{
 		$this->app([
@@ -65,9 +84,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertArrayNotHasKey('slug', $fields);
 	}
 
-	/**
-	 * @covers ::coreFields
-	 */
 	public function testCoreFieldInvalidTitleSlug(): void
 	{
 		$this->app([
@@ -93,9 +109,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$dialog->coreFields();
 	}
 
-	/**
-	 * @covers ::resolveFieldTemplates
-	 */
 	public function testResolveFieldTemplates(): void
 	{
 		$this->app([
@@ -129,12 +142,12 @@ class PageCreateDialogTest extends AreaTestCase
 		], $input);
 	}
 
-	/**
-	 * @covers ::sanitize
-	 */
 	public function testSanitize(): void
 	{
 		$this->app([
+			'options' => [
+				'content.uuid' => false
+			],
 			'blueprints' => [
 				'pages/test' => [
 					'create' => [
@@ -165,7 +178,8 @@ class PageCreateDialogTest extends AreaTestCase
 		$input = $dialog->sanitize([
 			'slug'  => 'foo',
 			'title' => 'Foo',
-			'foo'   => 'bar'
+			'foo'   => 'bar',
+			'uuid'  => 'test-uuid'
 		]);
 
 		$this->assertSame([
@@ -173,15 +187,13 @@ class PageCreateDialogTest extends AreaTestCase
 				'foo'   => 'bar',
 				'bar'   => 'bar',
 				'title' => 'Foo',
+				'uuid'  => 'test-uuid',
 			],
 			'slug'     => 'foo',
 			'template' => 'test',
 		], $input);
 	}
 
-	/**
-	 * @covers ::validate
-	 */
 	public function testValidateInvalidTitle(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -197,9 +209,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$dialog->validate(['content' => ['title' => '']]);
 	}
 
-	/**
-	 * @covers ::validate
-	 */
 	public function testValidateInvalidSlug(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -218,9 +227,6 @@ class PageCreateDialogTest extends AreaTestCase
 		]);
 	}
 
-	/**
-	 * @covers ::validate
-	 */
 	public function testValidateInvalidFields(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -253,9 +259,6 @@ class PageCreateDialogTest extends AreaTestCase
 		], 'listed');
 	}
 
-	/**
-	 * @covers ::validate
-	 */
 	public function testValidateValidFields(): void
 	{
 		$this->app([
@@ -286,9 +289,6 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertTrue($valid);
 	}
 
-	/**
-	 * @covers ::value
-	 */
 	public function testValue(): void
 	{
 		$this->app([
@@ -323,8 +323,86 @@ class PageCreateDialogTest extends AreaTestCase
 			'slug'     => '',
 			'template' => 'test',
 			'title'    => '',
+			'uuid'     => null,
 			'view'     => null,
 			'foo'      => 'bar'
 		], $value);
+	}
+
+	public function testModel(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo', 'bar']
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true
+						],
+						'bar' => [
+							'type'     => 'text',
+							'required' => true,
+							'default'  => 'bar'
+						]
+					]
+				]
+			]
+		]);
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null
+		);
+
+		$model = $dialog->model();
+
+		$this->assertInstanceOf(Page::class, $model);
+		$this->assertInstanceOf(MemoryStorage::class, $model->storage());
+		$this->assertInstanceOf(PageUuid::class, $model->uuid());
+	}
+
+	public function testModelUuidDisabled(): void
+	{
+		$this->app([
+			'options' => [
+				'content.uuid' => false
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo', 'bar']
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true
+						],
+						'bar' => [
+							'type'     => 'text',
+							'required' => true,
+							'default'  => 'bar'
+						]
+					]
+				]
+			]
+		]);
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null
+		);
+
+		$model = $dialog->model();
+
+		$this->assertInstanceOf(Page::class, $model);
+		$this->assertInstanceOf(MemoryStorage::class, $model->storage());
+		$this->assertNull($model->uuid());
 	}
 }

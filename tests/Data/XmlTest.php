@@ -5,17 +5,13 @@ namespace Kirby\Data;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use stdClass;
 
-/**
- * @coversDefaultClass \Kirby\Data\Xml
- */
+#[CoversClass(Xml::class)]
 class XmlTest extends TestCase
 {
-	/**
-	 * @covers ::encode
-	 * @covers ::decode
-	 */
-	public function testEncodeDecode()
+	public function testEncodeDecode(): void
 	{
 		$array = [
 			'name'     => 'Homer',
@@ -46,21 +42,15 @@ class XmlTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Xml::decode(['this is' => 'an array']));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeInvalid1()
+	public function testDecodeInvalid1(): void
 	{
 		// pass invalid object
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid XML data; please pass a string');
-		Xml::decode(new \stdClass());
+		Xml::decode(new stdClass());
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeInvalid2()
+	public function testDecodeInvalid2(): void
 	{
 		// pass invalid int
 		$this->expectException(InvalidArgumentException::class);
@@ -68,19 +58,13 @@ class XmlTest extends TestCase
 		Xml::decode(1);
 	}
 
-	/**
-	 * @covers ::encode
-	 */
-	public function testEncodeScalar()
+	public function testEncodeScalar(): void
 	{
 		$expected = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<data>test</data>';
 		$this->assertSame($expected, Xml::encode('test'));
 	}
 
-	/**
-	 * @covers ::decode
-	 */
-	public function testDecodeCorrupted()
+	public function testDecodeCorrupted(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('XML string is invalid');

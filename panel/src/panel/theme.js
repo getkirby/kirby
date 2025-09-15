@@ -13,14 +13,24 @@ export const defaults = () => {
 /**
  * @since 5.0.0
  */
-export default () => {
+export default (panel) => {
 	const parent = State("theme", defaults());
 
 	const theme = reactive({
 		...parent,
 
+		get config() {
+			return panel.config.theme;
+		},
+
 		get current() {
-			return this.setting ?? this.system;
+			const setting = this.setting ?? this.config;
+
+			if (setting === "system") {
+				return this.system;
+			}
+
+			return setting ?? this.system;
 		},
 
 		reset() {

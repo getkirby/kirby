@@ -21,13 +21,13 @@ class BlueprintFieldsTest extends TestCase
 		]);
 	}
 
-	public function testEmptyFields()
+	public function testEmptyFields(): void
 	{
 		$fields = Blueprint::fieldsProps(false);
 		$this->assertSame([], $fields);
 	}
 
-	public function testNameOnlyField()
+	public function testNameOnlyField(): void
 	{
 		$fields = Blueprint::fieldsProps([
 			'text' => true
@@ -45,7 +45,7 @@ class BlueprintFieldsTest extends TestCase
 		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
 	}
 
-	public function testFieldFromString()
+	public function testFieldFromString(): void
 	{
 		$fields = Blueprint::fieldsProps([
 			'hello' => 'fields/test'
@@ -63,7 +63,7 @@ class BlueprintFieldsTest extends TestCase
 		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
 	}
 
-	public function testFieldGroup()
+	public function testFieldGroup(): void
 	{
 		$fields = Blueprint::fieldsProps([
 			'header' => [
@@ -106,7 +106,7 @@ class BlueprintFieldsTest extends TestCase
 		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
 	}
 
-	public function testMultipleFieldGroups()
+	public function testMultipleFieldGroups(): void
 	{
 		$fields = Blueprint::fieldsProps([
 			'header' => [
@@ -163,7 +163,7 @@ class BlueprintFieldsTest extends TestCase
 		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
 	}
 
-	public function testFieldError()
+	public function testFieldError(): void
 	{
 		$props = Blueprint::fieldsProps([
 			'test' => [

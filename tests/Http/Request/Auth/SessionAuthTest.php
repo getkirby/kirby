@@ -4,12 +4,12 @@ namespace Kirby\Http\Request\Auth;
 
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
+use Kirby\Http\Request\Auth;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \Kirby\Http\Request\Auth
- * @covers \Kirby\Http\Request\Auth\SessionAuth
- */
+#[CoversClass(Auth::class)]
+#[CoversClass(SessionAuth::class)]
 class SessionAuthTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Http.Request.Auth.SessionAuth';
@@ -31,7 +31,7 @@ class SessionAuthTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testInstance()
+	public function testInstance(): void
 	{
 		$session = $this->app->session();
 		$session->ensureToken();
