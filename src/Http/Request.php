@@ -68,12 +68,6 @@ class Request
 	protected string $method;
 
 	/**
-	 * All options that have been passed to
-	 * the request in the constructor
-	 */
-	protected array $options;
-
-	/**
 	 * The Query object is a wrapper around
 	 * the URL query string, which parses the
 	 * string and provides a clean API to fetch
@@ -96,9 +90,9 @@ class Request
 	 * data via the $options array or use
 	 * the data from the incoming request.
 	 */
-	public function __construct(array $options = [])
-	{
-		$this->options = $options;
+	public function __construct(
+		protected array $options = []
+	) {
 		$this->method  = $this->detectRequestMethod($options['method'] ?? null);
 
 		if (isset($options['body']) === true) {
@@ -155,7 +149,7 @@ class Request
 		}
 
 		// lazily request the instance for non-CMS use cases
-		$kirby = App::instance(null, true);
+		$kirby = App::instance(lazy: true);
 
 		// tell the CMS responder that the response relies on
 		// the `Authorization` header and its value (even if
@@ -224,13 +218,26 @@ class Request
 	public function detectRequestMethod(string|null $method = null): string
 	{
 		// all possible methods
-		$methods = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'];
+		$methods = [
+			'CONNECT',
+			'DELETE',
+			'GET',
+			'HEAD',
+			'OPTIONS',
+			'PATCH',
+			'POST',
+			'PUT',
+			'TRACE',
+		];
 
 		// the request method can be overwritten with a header
-		$methodOverride = strtoupper(Environment::getGlobally('HTTP_X_HTTP_METHOD_OVERRIDE', ''));
+		if ($method === null) {
+			$override = Environment::getGlobally('HTTP_X_HTTP_METHOD_OVERRIDE', '');
+			$override = strtoupper($override);
 
-		if (in_array($methodOverride, $methods, true) === true) {
-			$method ??= $methodOverride;
+			if (in_array($override, $methods, true) === true) {
+				$method = $override;
+			}
 		}
 
 		// final chain of options to detect the method
@@ -410,14 +417,15 @@ class Request
 		// both variants need to be checked separately
 		// because empty strings are treated as invalid
 		// but the `??` operator wouldn't do the fallback
-
 		$option = $this->options['auth'] ?? null;
-		if (empty($option) === false) {
+
+		if (is_string($option) === true && $option !== '') {
 			return $option;
 		}
 
 		$header = $this->header('authorization');
-		if (empty($header) === false) {
+
+		if (is_string($header) === true && $header !== '') {
 			return $header;
 		}
 

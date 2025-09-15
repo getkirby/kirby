@@ -27,7 +27,7 @@ class PagesRoutesTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -55,7 +55,7 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('a/b', $response['data']['id']);
 	}
 
-	public function testChildren()
+	public function testChildren(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -83,7 +83,7 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('parent/child-b', $response['data'][1]['id']);
 	}
 
-	public function testChildrenWithStatusFilter()
+	public function testChildrenWithStatusFilter(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -156,7 +156,7 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('parent/draft-a', $response['data'][0]['id']);
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -189,7 +189,7 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('c.jpg', $response['data'][2]['filename']);
 	}
 
-	public function testFilesOfAPageWithTheSlugFiles()
+	public function testFilesOfAPageWithTheSlugFiles(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -222,7 +222,7 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('c.jpg', $response['data'][2]['filename']);
 	}
 
-	public function testFilesSorted()
+	public function testFilesSorted(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -256,7 +256,7 @@ class PagesRoutesTest extends TestCase
 		$this->assertSame('a.jpg', $response['data'][1]['filename']);
 	}
 
-	public function testFile()
+	public function testFile(): void
 	{
 		$app = $this->app->clone([
 			'site' => [

@@ -483,7 +483,7 @@ class VersionTest extends TestCase
 		$this->assertSame($id, $version->id());
 	}
 
-	public function testIsIdenticalMultiLanguage()
+	public function testIsIdenticalMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -518,7 +518,7 @@ class VersionTest extends TestCase
 		$this->assertFalse($a->isIdentical(VersionId::changes(), 'de'));
 	}
 
-	public function testIsIdenticalSingleLanguage()
+	public function testIsIdenticalSingleLanguage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -545,7 +545,7 @@ class VersionTest extends TestCase
 		$this->assertFalse($a->isIdentical('changes'));
 	}
 
-	public function testIsIdenticalWithoutChanges()
+	public function testIsIdenticalWithoutChanges(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -572,7 +572,7 @@ class VersionTest extends TestCase
 		$this->assertTrue($a->isIdentical('changes'));
 	}
 
-	public function testIsIdenticalWithSameVersion()
+	public function testIsIdenticalWithSameVersion(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -778,7 +778,7 @@ class VersionTest extends TestCase
 	}
 
 	#[DataProvider('previewTokenIndexUrlProvider')]
-	public function testPreviewToken(string $indexUrl)
+	public function testPreviewToken(string $indexUrl): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -816,7 +816,7 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->previewToken());
 	}
 
-	public function testPreviewTokenCustomSalt()
+	public function testPreviewTokenCustomSalt(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -837,7 +837,7 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->previewToken());
 	}
 
-	public function testPreviewTokenCustomSaltCallback()
+	public function testPreviewTokenCustomSaltCallback(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -862,7 +862,7 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->previewToken());
 	}
 
-	public function testPreviewTokenInvalidModel()
+	public function testPreviewTokenInvalidModel(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Invalid model type');
@@ -877,7 +877,7 @@ class VersionTest extends TestCase
 		$version->previewToken();
 	}
 
-	public function testPreviewTokenMissingHomePage()
+	public function testPreviewTokenMissingHomePage(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The home page does not exist');
@@ -896,7 +896,7 @@ class VersionTest extends TestCase
 		$version->previewToken();
 	}
 
-	public function testPublish()
+	public function testPublish(): void
 	{
 		$this->setUpSingleLanguage();
 		$this->app->impersonate('kirby');
@@ -924,7 +924,7 @@ class VersionTest extends TestCase
 		$this->assertSame('Title changes', Data::read($fileLatest)['title']);
 	}
 
-	public function testPublishAlreadyLatestVersion()
+	public function testPublishAlreadyLatestVersion(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -1490,7 +1490,7 @@ class VersionTest extends TestCase
 		$this->assertArrayNotHasKey('date', $version->read('de'));
 	}
 
-	public function testUrlPage()
+	public function testUrlPage(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -1505,7 +1505,7 @@ class VersionTest extends TestCase
 		$this->assertSame('/a-page', $version->url());
 	}
 
-	public function testUrlPageUnauthenticated()
+	public function testUrlPageUnauthenticated(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -1634,7 +1634,7 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->url());
 	}
 
-	public function testUrlSite()
+	public function testUrlSite(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -1649,7 +1649,7 @@ class VersionTest extends TestCase
 		$this->assertSame('/', $version->url());
 	}
 
-	public function testUrlSiteUnauthenticated()
+	public function testUrlSiteUnauthenticated(): void
 	{
 		$this->setUpSingleLanguage();
 
@@ -1752,7 +1752,7 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->url());
 	}
 
-	public function testUrlInvalidModel()
+	public function testUrlInvalidModel(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Only pages and the site have a content preview URL');

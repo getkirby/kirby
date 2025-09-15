@@ -23,7 +23,7 @@ class BlockTest extends TestCase
 		$this->page = new Page(['slug' => 'test']);
 	}
 
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$block = new Block(['type' => 'test']);
 
@@ -33,7 +33,7 @@ class BlockTest extends TestCase
 		$this->assertSame('test', $block->type());
 	}
 
-	public function testConstructWithoutType()
+	public function testConstructWithoutType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The block type is missing');
@@ -41,7 +41,7 @@ class BlockTest extends TestCase
 		$block = new Block([]);
 	}
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$block = new Block([
 			'type'    => 'heading',
@@ -65,7 +65,7 @@ class BlockTest extends TestCase
 	/**
 	 * @todo block.converter remove eventually
 	 */
-	public function testContentWhenNotArrayConvertedAsEditorBlock()
+	public function testContentWhenNotArrayConvertedAsEditorBlock(): void
 	{
 		$block = new Block([
 			'type'    => 'heading',
@@ -75,7 +75,7 @@ class BlockTest extends TestCase
 		$this->assertSame($content, $block->content()->toArray()['text']);
 	}
 
-	public function testController()
+	public function testController(): void
 	{
 		$block = new Block([
 			'type' => 'heading',
@@ -92,7 +92,7 @@ class BlockTest extends TestCase
 		$this->assertNull($block->controller()['next']);
 	}
 
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$block = Block::factory([
 			'type' => 'heading'
@@ -101,7 +101,7 @@ class BlockTest extends TestCase
 		$this->assertInstanceOf(Block::class, $block);
 	}
 
-	public function testIsEmpty()
+	public function testIsEmpty(): void
 	{
 		$block = new Block([
 			'type' => 'heading'
@@ -121,7 +121,7 @@ class BlockTest extends TestCase
 		$this->assertTrue($block->isNotEmpty());
 	}
 
-	public function testIsHidden()
+	public function testIsHidden(): void
 	{
 		$block = new Block([
 			'type' => 'heading',
@@ -131,7 +131,7 @@ class BlockTest extends TestCase
 		$this->assertTrue($block->isHidden());
 	}
 
-	public function testParent()
+	public function testParent(): void
 	{
 		$block = new Block([
 			'parent' => $page = new Page(['slug' => 'test']),
@@ -141,7 +141,7 @@ class BlockTest extends TestCase
 		$this->assertIsPage($page, $block->content()->parent());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$block = new Block([
 			'type' => 'heading',
@@ -159,7 +159,7 @@ class BlockTest extends TestCase
 		], $block->toArray());
 	}
 
-	public function testToField()
+	public function testToField(): void
 	{
 		$block = new Block([
 			'content' => [
@@ -176,7 +176,7 @@ class BlockTest extends TestCase
 		$this->assertSame($expected, $block->toField()->value());
 	}
 
-	public function testToHtml()
+	public function testToHtml(): void
 	{
 		$block = new Block([
 			'content' => [
@@ -192,7 +192,7 @@ class BlockTest extends TestCase
 		$this->assertSame($expected, (string)$block);
 	}
 
-	public function testToHtmlInvalid()
+	public function testToHtmlInvalid(): void
 	{
 		new App([
 			'roots' => [
@@ -211,7 +211,7 @@ class BlockTest extends TestCase
 		$this->assertSame('', $block->toHtml());
 	}
 
-	public function testToHtmlInvalidWithDebugMode()
+	public function testToHtmlInvalidWithDebugMode(): void
 	{
 		new App([
 			'roots' => [
@@ -234,7 +234,7 @@ class BlockTest extends TestCase
 		$this->assertSame($expected, $block->toHtml());
 	}
 
-	public function testToHtmlWithCustomSnippets()
+	public function testToHtmlWithCustomSnippets(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -257,7 +257,7 @@ class BlockTest extends TestCase
 		$this->assertSame($expected, (string)$block);
 	}
 
-	public function testExcerpt()
+	public function testExcerpt(): void
 	{
 		$block = new Block([
 			'content' => [
@@ -322,7 +322,7 @@ class BlockTest extends TestCase
 		]);
 	}
 
-	public function testHiddenSiblings()
+	public function testHiddenSiblings(): void
 	{
 		$blocks = $this->samplePrevNextBlocks();
 		$block = $blocks->first();
@@ -331,7 +331,7 @@ class BlockTest extends TestCase
 		$this->assertNull($block->prev());
 	}
 
-	public function testVisibleSiblings()
+	public function testVisibleSiblings(): void
 	{
 		$blocks = $this->samplePrevNextBlocks();
 		$block = $blocks->last();
@@ -340,7 +340,7 @@ class BlockTest extends TestCase
 		$this->assertNull($block->next());
 	}
 
-	public function testPrevNextVisible()
+	public function testPrevNextVisible(): void
 	{
 		$blocks = $this->samplePrevNextBlocks();
 		$block = $blocks->nth(4);
@@ -351,7 +351,7 @@ class BlockTest extends TestCase
 		$this->assertSame('markdown', $block->next()->type());
 	}
 
-	public function testPrevNextHidden()
+	public function testPrevNextHidden(): void
 	{
 		$blocks = $this->samplePrevNextBlocks();
 		$block = $blocks->nth(5);
@@ -362,7 +362,7 @@ class BlockTest extends TestCase
 		$this->assertSame('quote', $block->next()->type());
 	}
 
-	public function testImageBlock()
+	public function testImageBlock(): void
 	{
 		$this->app = new App([
 			'roots' => [

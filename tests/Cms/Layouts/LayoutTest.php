@@ -6,13 +6,13 @@ use Kirby\TestCase;
 
 class LayoutTest extends TestCase
 {
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$layout = new Layout();
 		$this->assertInstanceOf(LayoutColumns::class, $layout->columns());
 	}
 
-	public function testIsEmpty()
+	public function testIsEmpty(): void
 	{
 		$layout = new Layout([
 			'columns' => []
@@ -22,7 +22,7 @@ class LayoutTest extends TestCase
 		$this->assertFalse($layout->isNotEmpty());
 	}
 
-	public function testIsNotEmpty()
+	public function testIsNotEmpty(): void
 	{
 		$layout = new Layout([
 			'columns' => [
@@ -45,7 +45,7 @@ class LayoutTest extends TestCase
 		$this->assertTrue($layout->isNotEmpty());
 	}
 
-	public function testIsEmptyWithHidden()
+	public function testIsEmptyWithHidden(): void
 	{
 		$layout = new Layout([
 			'columns' => [

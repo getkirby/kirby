@@ -38,7 +38,7 @@ class FormTest extends TestCase
 		$this->tearDownTmp();
 	}
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$form = new Form([
 			'fields' => [],
@@ -51,7 +51,7 @@ class FormTest extends TestCase
 		$this->assertSame($values, $form->content());
 	}
 
-	public function testContentAndDataFromUnsaveableFields()
+	public function testContentAndDataFromUnsaveableFields(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -71,7 +71,7 @@ class FormTest extends TestCase
 		$this->assertArrayHasKey('info', $form->data());
 	}
 
-	public function testDataWithoutFields()
+	public function testDataWithoutFields(): void
 	{
 		$form = new Form([
 			'fields' => [],
@@ -84,7 +84,7 @@ class FormTest extends TestCase
 		$this->assertSame($values, $form->data());
 	}
 
-	public function testDataFromUnsaveableFields()
+	public function testDataFromUnsaveableFields(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -101,7 +101,7 @@ class FormTest extends TestCase
 		$this->assertNull($form->data()['info']);
 	}
 
-	public function testDataFromNestedFields()
+	public function testDataFromNestedFields(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -127,7 +127,7 @@ class FormTest extends TestCase
 		$this->assertSame('a, b', $form->data()['structure'][0]['tags']);
 	}
 
-	public function testDataWithCorrectFieldOrder()
+	public function testDataWithCorrectFieldOrder(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -153,7 +153,7 @@ class FormTest extends TestCase
 		$this->assertTrue(['a' => 'A', 'b' => 'B modified', 'c' => 'C'] === $form->values());
 	}
 
-	public function testDataWithStrictMode()
+	public function testDataWithStrictMode(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -179,7 +179,7 @@ class FormTest extends TestCase
 		$this->assertTrue(['a' => 'A', 'b' => 'B'] === $form->values());
 	}
 
-	public function testDataWithUntranslatedFields()
+	public function testDataWithUntranslatedFields(): void
 	{
 		$this->setUpMultiLanguage();
 
@@ -230,7 +230,7 @@ class FormTest extends TestCase
 		$this->assertSame($expected, $form->values());
 	}
 
-	public function testDefaults()
+	public function testDefaults(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -244,7 +244,7 @@ class FormTest extends TestCase
 		$this->assertSame(['test' => 'Test Value'], $form->defaults());
 	}
 
-	public function testErrors()
+	public function testErrors(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -288,7 +288,7 @@ class FormTest extends TestCase
 		$this->assertSame($expected, $form->errors());
 	}
 
-	public function testFieldException()
+	public function testFieldException(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Field "test": The field type "does-not-exist" does not exist');
@@ -303,7 +303,7 @@ class FormTest extends TestCase
 		]);
 	}
 
-	public function testFill()
+	public function testFill(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -321,7 +321,7 @@ class FormTest extends TestCase
 		$this->assertSame(['test' => 'Test Value'], $response->toFormValues());
 	}
 
-	public function testForFileWithoutBlueprint()
+	public function testForFileWithoutBlueprint(): void
 	{
 		$file = new File([
 			'filename' => 'test.jpg',
@@ -336,7 +336,7 @@ class FormTest extends TestCase
 		$this->assertSame(['a' => 'A', 'b' => 'B'], $form->data());
 	}
 
-	public function testForPage()
+	public function testForPage(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -371,7 +371,7 @@ class FormTest extends TestCase
 		$this->assertSame('', $values['date']);
 	}
 
-	public function testForPageWithClosureValues()
+	public function testForPageWithClosureValues(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
@@ -393,7 +393,7 @@ class FormTest extends TestCase
 		$this->assertSame('B', $values['b']);
 	}
 
-	public function testLanguage()
+	public function testLanguage(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -406,7 +406,7 @@ class FormTest extends TestCase
 		$this->assertInstanceOf(Language::class, $form->language());
 	}
 
-	public function testPassthrough()
+	public function testPassthrough(): void
 	{
 		$form = new Form([]);
 
@@ -419,7 +419,7 @@ class FormTest extends TestCase
 		$this->assertSame(['test' => 'Test Value'], $response->toFormValues());
 	}
 
-	public function testReset()
+	public function testReset(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -443,7 +443,7 @@ class FormTest extends TestCase
 		$this->assertSame(['test' => ''], $form->toFormValues());
 	}
 
-	public function testStrings()
+	public function testStrings(): void
 	{
 		$form = new Form([
 			'fields' => [],
@@ -464,7 +464,7 @@ class FormTest extends TestCase
 		], $form->strings());
 	}
 
-	public function testSubmit()
+	public function testSubmit(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -482,7 +482,7 @@ class FormTest extends TestCase
 		$this->assertSame(['test' => 'Test Value'], $response->toFormValues());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -509,7 +509,7 @@ class FormTest extends TestCase
 		$this->assertFalse($form->toArray()['invalid']);
 	}
 
-	public function testToFormValues()
+	public function testToFormValues(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -529,7 +529,7 @@ class FormTest extends TestCase
 		$this->assertSame($values, $form->toFormValues());
 	}
 
-	public function testToProps()
+	public function testToProps(): void
 	{
 		$form = new Form([
 			'fields' => [
@@ -543,7 +543,7 @@ class FormTest extends TestCase
 		$this->assertSame($form->fields()->toProps(), $form->toProps());
 	}
 
-	public function testToStoredValues()
+	public function testToStoredValues(): void
 	{
 		Field::$types['test'] = [
 			'save' => function ($value) {
@@ -574,7 +574,7 @@ class FormTest extends TestCase
 		$this->assertSame($expected, $form->toStoredValues());
 	}
 
-	public function testValuesWithoutFields()
+	public function testValuesWithoutFields(): void
 	{
 		$form = new Form([
 			'fields' => [],

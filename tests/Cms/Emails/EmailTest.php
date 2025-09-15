@@ -4,12 +4,14 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
 use PHPMailer\PHPMailer\PHPMailer as Mailer;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class EmailTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/emails';
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$props = [
 			'one' => 'eins',
@@ -35,7 +37,7 @@ class EmailTest extends TestCase
 		$this->assertSame($expected, $email->toArray());
 	}
 
-	public function testPresets()
+	public function testPresets(): void
 	{
 		$app = new App([
 			'options' => [
@@ -57,7 +59,7 @@ class EmailTest extends TestCase
 		$this->assertSame([$cc], $email->toArray()['cc']);
 	}
 
-	public function testInvalidPreset()
+	public function testInvalidPreset(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.email.preset.notFound');
@@ -65,7 +67,7 @@ class EmailTest extends TestCase
 		$email = new Email('not-a-preset', []);
 	}
 
-	public function testTemplate()
+	public function testTemplate(): void
 	{
 		$app = new App([
 			'templates' => [
@@ -81,7 +83,7 @@ class EmailTest extends TestCase
 		$this->assertSame('Cheers, Alex!', $email->toArray()['body']);
 	}
 
-	public function testTemplateHtml()
+	public function testTemplateHtml(): void
 	{
 		$app = new App([
 			'templates' => [
@@ -94,7 +96,7 @@ class EmailTest extends TestCase
 		], $email->toArray()['body']);
 	}
 
-	public function testTemplateHtmlText()
+	public function testTemplateHtmlText(): void
 	{
 		$app = new App([
 			'templates' => [
@@ -109,7 +111,7 @@ class EmailTest extends TestCase
 		], $email->toArray()['body']);
 	}
 
-	public function testInvalidTemplate()
+	public function testInvalidTemplate(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The email template "subscription" cannot be found');
@@ -119,7 +121,7 @@ class EmailTest extends TestCase
 		]);
 	}
 
-	public function testTransformSimple()
+	public function testTransformSimple(): void
 	{
 		$email = new Email([
 			'from'     => 'sales@company.com',
@@ -146,7 +148,7 @@ class EmailTest extends TestCase
 		], $email->toArray()['attachments']);
 	}
 
-	public function testTransformComplex()
+	public function testTransformComplex(): void
 	{
 		$app = new App([
 			'site' => new Site(),
@@ -199,7 +201,7 @@ class EmailTest extends TestCase
 		], $email->toArray()['attachments']);
 	}
 
-	public function testTransformCollection()
+	public function testTransformCollection(): void
 	{
 		$to = new Users([
 			new User(['email' => 'ceo@company.com', 'name' => 'Company CEO']),
@@ -214,11 +216,9 @@ class EmailTest extends TestCase
 		], $email->toArray()['to']);
 	}
 
-	/**
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
-	public function testUserData()
+	#[RunInSeparateProcess]
+	#[PreserveGlobalState(false)]
+	public function testUserData(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -246,7 +246,7 @@ class EmailTest extends TestCase
 		$this->assertSame('Welcome, Mario!', trim($email->toArray()['body']));
 	}
 
-	public function testBeforeSend()
+	public function testBeforeSend(): void
 	{
 		new App([
 			'options' => [

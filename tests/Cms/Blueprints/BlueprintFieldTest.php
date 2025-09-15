@@ -23,7 +23,7 @@ class BlueprintFieldTest extends TestCase
 		]);
 	}
 
-	public function testFieldPropsDefaults()
+	public function testFieldPropsDefaults(): void
 	{
 		$props = Blueprint::fieldProps([
 			'name' => 'test',
@@ -36,7 +36,7 @@ class BlueprintFieldTest extends TestCase
 		$this->assertSame('1/1', $props['width']);
 	}
 
-	public function testFieldTypeFromName()
+	public function testFieldTypeFromName(): void
 	{
 		$props = Blueprint::fieldProps([
 			'name' => 'text',
@@ -47,7 +47,7 @@ class BlueprintFieldTest extends TestCase
 		$this->assertSame('Text', $props['label']);
 	}
 
-	public function testMissingFieldName()
+	public function testMissingFieldName(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The field name is missing');
@@ -55,7 +55,7 @@ class BlueprintFieldTest extends TestCase
 		$props = Blueprint::fieldProps([]);
 	}
 
-	public function testInvalidFieldType()
+	public function testInvalidFieldType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid field type ("test")');
@@ -66,7 +66,7 @@ class BlueprintFieldTest extends TestCase
 		]);
 	}
 
-	public function testFieldError()
+	public function testFieldError(): void
 	{
 		$props = Blueprint::fieldError('test', 'something went wrong');
 		$expected = [
@@ -80,7 +80,7 @@ class BlueprintFieldTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
-	public function testExtendField()
+	public function testExtendField(): void
 	{
 		$props = Blueprint::fieldProps([
 			'name'    => 'test',
@@ -97,7 +97,7 @@ class BlueprintFieldTest extends TestCase
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
-	public function testExtendFieldFromString()
+	public function testExtendFieldFromString(): void
 	{
 		$props = Blueprint::fieldProps('fields/test');
 
@@ -106,7 +106,7 @@ class BlueprintFieldTest extends TestCase
 		$this->assertSame('text', $props['type']);
 	}
 
-	public function testExtendFieldWithNonAssociativeOptions()
+	public function testExtendFieldWithNonAssociativeOptions(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -143,7 +143,7 @@ class BlueprintFieldTest extends TestCase
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
-	public function testNestedFields()
+	public function testNestedFields(): void
 	{
 		$props = Blueprint::fieldProps([
 			'name'   => 'test',
@@ -161,7 +161,7 @@ class BlueprintFieldTest extends TestCase
 		$this->assertSame('1/1', $props['fields']['headline']['width']);
 	}
 
-	public function testFieldGroup()
+	public function testFieldGroup(): void
 	{
 		$props = Blueprint::fieldProps([
 			'name'   => 'test',
@@ -189,7 +189,7 @@ class BlueprintFieldTest extends TestCase
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
-	public function testFieldGroupWhen()
+	public function testFieldGroupWhen(): void
 	{
 		$props = Blueprint::fieldProps([
 			'name'   => 'test',
@@ -223,7 +223,7 @@ class BlueprintFieldTest extends TestCase
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
-	public function testFieldGroupWhenMerge()
+	public function testFieldGroupWhenMerge(): void
 	{
 		$props = Blueprint::fieldProps([
 			'name'   => 'test',

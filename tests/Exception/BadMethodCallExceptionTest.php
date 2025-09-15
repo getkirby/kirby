@@ -3,13 +3,12 @@
 namespace Kirby\Exception;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
 class BadMethodCallExceptionTest extends TestCase
 {
-	/**
-	 * @coversNothing
-	 */
-	public function testDefaults()
+	#[CoversNothing]
+	public function testDefaults(): void
 	{
 		$exception = new BadMethodCallException();
 		$this->assertSame('error.invalidMethod', $exception->getKey());
@@ -18,10 +17,8 @@ class BadMethodCallExceptionTest extends TestCase
 		$this->assertSame(['method' => null], $exception->getData());
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testPlaceholders()
+	#[CoversNothing]
+	public function testPlaceholders(): void
 	{
 		$exception = new BadMethodCallException(data: [
 			'method' => 'get'
@@ -30,10 +27,8 @@ class BadMethodCallExceptionTest extends TestCase
 		$this->assertSame(['method' => 'get'], $exception->getData());
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testPlaceholdersWithNamedArguments()
+	#[CoversNothing]
+	public function testPlaceholdersWithNamedArguments(): void
 	{
 		$exception = new BadMethodCallException(
 			data: ['method' => 'get']

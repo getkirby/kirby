@@ -22,7 +22,7 @@ class Query implements Stringable
 	/**
 	 * The Query data array
 	 */
-	protected array|null $data = null;
+	protected array $data;
 
 	/**
 	 * Creates a new Query object.
@@ -56,7 +56,7 @@ class Query implements Stringable
 	 */
 	public function isEmpty(): bool
 	{
-		return empty($this->data) === true;
+		return $this->data === [];
 	}
 
 	/**
@@ -64,7 +64,7 @@ class Query implements Stringable
 	 */
 	public function isNotEmpty(): bool
 	{
-		return empty($this->data) === false;
+		return $this->data !== [];
 	}
 
 	/**

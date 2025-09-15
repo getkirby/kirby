@@ -6,10 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Document
- */
+#[CoversClass(Document::class)]
 class DocumentTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Document';
@@ -40,9 +39,6 @@ class DocumentTest extends TestCase
 	}
 
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponse(): void
 	{
 		// create panel dist files first to avoid redirect
@@ -61,9 +57,6 @@ class DocumentTest extends TestCase
 		$this->assertNotNull($response->body());
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFrameAncestorsSelf(): void
 	{
 		$this->app = $this->app->clone([
@@ -92,9 +85,6 @@ class DocumentTest extends TestCase
 		$this->assertNotNull($response->body());
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFrameAncestorsArray(): void
 	{
 		$this->app = $this->app->clone([
@@ -125,9 +115,6 @@ class DocumentTest extends TestCase
 		$this->assertNotNull($response->body());
 	}
 
-	/**
-	 * @covers ::response
-	 */
 	public function testResponseFrameAncestorsString(): void
 	{
 		$this->app = $this->app->clone([

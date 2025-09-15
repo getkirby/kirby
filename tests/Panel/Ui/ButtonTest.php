@@ -3,17 +3,12 @@
 namespace Kirby\Panel\Ui;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Ui\Button
- * @covers ::__construct
- */
+#[CoversClass(Button::class)]
 class ButtonTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testAttrs()
+	public function testAttrs(): void
 	{
 		$button = new Button(
 			text: 'Attrs',
@@ -28,10 +23,7 @@ class ButtonTest extends TestCase
 		], array_filter($button->props()));
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testProps()
+	public function testProps(): void
 	{
 		$component = new Button(
 			icon: 'smile',
@@ -63,10 +55,7 @@ class ButtonTest extends TestCase
 		], $component->props());
 	}
 
-	/**
-	 * @covers ::props
-	 */
-	public function testPropsWithI18n()
+	public function testPropsWithI18n(): void
 	{
 		$component = new Button(
 			text: [

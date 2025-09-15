@@ -8,12 +8,11 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClass;
 use ReflectionProperty;
 
-/**
- * @coversDefaultClass \Kirby\Session\FileSessionStore
- */
+#[CoversClass(FileSessionStore::class)]
 class FileSessionStoreTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Session.FileSessionStore';
@@ -60,10 +59,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertDirectoryDoesNotExist(static::TMP);
 	}
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstructorNotWritable()
+	public function testConstructorNotWritable(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionCode('error.session.filestore.dirNotWritable');
@@ -74,12 +70,7 @@ class FileSessionStoreTest extends TestCase
 		new FileSessionStore(static::TMP);
 	}
 
-	/**
-	 * @covers ::createId
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testCreateId()
+	public function testCreateId(): void
 	{
 		$id = $this->store->createId(1234567890);
 
@@ -90,12 +81,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertLocked('1234567890.' . $id);
 	}
 
-	/**
-	 * @covers ::exists
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testExists()
+	public function testExists(): void
 	{
 		$this->assertTrue($this->store->exists(1234567890, 'abcdefghijabcdefghij'));
 		$this->assertTrue($this->store->exists(1357913579, 'abcdefghijabcdefghij'));
@@ -111,12 +97,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertHandleNotExists('9999999999.abcdefghijabcdefghij');
 	}
 
-	/**
-	 * @covers ::lock
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testLock()
+	public function testLock(): void
 	{
 		$this->store->lock(1234567890, 'abcdefghijabcdefghij');
 		$this->assertLocked('1234567890.abcdefghijabcdefghij');
@@ -128,12 +109,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
 	}
 
-	/**
-	 * @covers ::lock
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testLockNonExistingFile()
+	public function testLockNonExistingFile(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.filestore.notFound');
@@ -141,12 +117,7 @@ class FileSessionStoreTest extends TestCase
 		$this->store->lock(1234567890, 'someotherid');
 	}
 
-	/**
-	 * @covers ::unlock
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testUnlock()
+	public function testUnlock(): void
 	{
 		// unlock an unlocked file
 		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
@@ -171,12 +142,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertNotLocked('1357913579.abcdefghijabcdefghij');
 	}
 
-	/**
-	 * @covers ::get
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testGet()
+	public function testGet(): void
 	{
 		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
 		$this->assertHandleExists('1234567890.abcdefghijabcdefghij');
@@ -184,12 +150,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertSame('', $this->store->get(8888888888, 'abcdefghijabcdefghij'));
 	}
 
-	/**
-	 * @covers ::get
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testGetNonExistingFile()
+	public function testGetNonExistingFile(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.filestore.notFound');
@@ -197,13 +158,7 @@ class FileSessionStoreTest extends TestCase
 		$this->store->get(1234567890, 'someotherid');
 	}
 
-	/**
-	 * @covers ::get
-	 * @covers ::name
-	 * @covers ::path
-	 * @covers ::handle
-	 */
-	public function testGetUnreadableFile()
+	public function testGetUnreadableFile(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionCode('error.session.filestore.notOpened');
@@ -213,12 +168,7 @@ class FileSessionStoreTest extends TestCase
 		$this->store->get(1234567890, 'abcdefghijabcdefghij');
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testSet()
+	public function testSet(): void
 	{
 		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
 
@@ -231,12 +181,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertSame('some other data', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testSetNonExistingFile()
+	public function testSetNonExistingFile(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.filestore.notFound');
@@ -244,12 +189,7 @@ class FileSessionStoreTest extends TestCase
 		$this->store->set(1234567890, 'someotherid', 'some other data');
 	}
 
-	/**
-	 * @covers ::set
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testSetWithoutLock()
+	public function testSetWithoutLock(): void
 	{
 		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.filestore.notLocked');
@@ -259,13 +199,7 @@ class FileSessionStoreTest extends TestCase
 		$this->store->set(1234567890, 'abcdefghijabcdefghij', 'some other data');
 	}
 
-	/**
-	 * @covers ::destroy
-	 * @covers ::name
-	 * @covers ::path
-	 * @covers ::closeHandle
-	 */
-	public function testDestroy()
+	public function testDestroy(): void
 	{
 		$this->assertFileExists(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');
 		$this->assertNotLocked('1234567890.abcdefghijabcdefghij');
@@ -278,13 +212,7 @@ class FileSessionStoreTest extends TestCase
 		$this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
 	}
 
-	/**
-	 * @covers ::destroy
-	 * @covers ::name
-	 * @covers ::path
-	 * @covers ::closeHandle
-	 */
-	public function testDestroyAlreadyDestroyed()
+	public function testDestroyAlreadyDestroyed(): void
 	{
 		// make sure we get a handle
 		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
@@ -297,12 +225,7 @@ class FileSessionStoreTest extends TestCase
 		$this->store->destroy(1234567890, 'abcdefghijabcdefghij');
 	}
 
-	/**
-	 * @covers ::handle
-	 * @covers ::name
-	 * @covers ::path
-	 */
-	public function testAccessAfterDestroy()
+	public function testAccessAfterDestroy(): void
 	{
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.filestore.notFound');
@@ -319,10 +242,7 @@ class FileSessionStoreTest extends TestCase
 		$this->store->set(1234567890, 'abcdefghijabcdefghij', 'something else');
 	}
 
-	/**
-	 * @covers ::collectGarbage
-	 */
-	public function testCollectGarbage()
+	public function testCollectGarbage(): void
 	{
 		$this->assertFileExists(static::TMP . '/.gitignore');
 		$this->assertFileExists(static::TMP . '/1234567890.abcdefghijabcdefghij.sess');

@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 class MultiselectFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('multiselect');
 
@@ -23,7 +23,7 @@ class MultiselectFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('multiselect', [
 			'value'   => 'a',
@@ -35,7 +35,7 @@ class MultiselectFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('multiselect', [
 			'value'   => 'a, b',
@@ -47,7 +47,7 @@ class MultiselectFieldTest extends TestCase
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
-	public function testSanitizeOptions()
+	public function testSanitizeOptions(): void
 	{
 		$field = $this->field('multiselect', [
 			'value'   => 'a, b',

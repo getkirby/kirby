@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class SearchTest extends TestCase
 {
-	public function testCollection()
+	public function testCollection(): void
 	{
 		$collection = Pages::factory([
 			[
@@ -48,7 +48,7 @@ class SearchTest extends TestCase
 	}
 
 
-	public function testIgnoreFieldCase()
+	public function testIgnoreFieldCase(): void
 	{
 		$collection = Pages::factory([
 			[
@@ -83,7 +83,7 @@ class SearchTest extends TestCase
 		$this->assertCount(3, $search);
 	}
 
-	public function testIgnoreCaseI18n()
+	public function testIgnoreCaseI18n(): void
 	{
 		$collection = Pages::factory([
 			[
@@ -157,21 +157,21 @@ class SearchTest extends TestCase
 		]);
 	}
 
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$this->assertCount(5, $this->app()->site()->index()->files());
 		$this->assertInstanceOf(Files::class, $files = Search::files('phone'));
 		$this->assertCount(2, $files);
 	}
 
-	public function testPages()
+	public function testPages(): void
 	{
 		$this->assertCount(3, $this->app()->site()->index());
 		$this->assertInstanceOf(Pages::class, $pages = Search::pages('products'));
 		$this->assertCount(1, $pages);
 	}
 
-	public function testUsers()
+	public function testUsers(): void
 	{
 		$this->assertCount(5, $this->app()->users());
 		$this->assertInstanceOf(Users::class, $users = Search::users('user'));

@@ -3,13 +3,13 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Form\Field\EntriesField
- */
+#[CoversClass(EntriesField::class)]
 class EntriesFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('entries');
 
@@ -20,7 +20,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame([], $field->value());
 	}
 
-	public function testProps()
+	public function testProps(): void
 	{
 		$field = $this->field('entries');
 		$props = $field->props();
@@ -62,13 +62,13 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame('1/1', $fieldProps['width']);
 	}
 
-	public function testField()
+	public function testField(): void
 	{
 		$field = $this->field('entries');
 		$this->assertSame(['type' => 'text'], $field->field());
 	}
 
-	public function testFieldString()
+	public function testFieldString(): void
 	{
 		$field = $this->field('entries', [
 			'field' => 'url'
@@ -77,7 +77,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame(['type' => 'url'], $field->field());
 	}
 
-	public function testFieldArrayOne()
+	public function testFieldArrayOne(): void
 	{
 		$field = $this->field('entries', [
 			'field' => $props = [
@@ -89,7 +89,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($props, $field->field());
 	}
 
-	public function testFieldArrayTwo()
+	public function testFieldArrayTwo(): void
 	{
 		$field = $this->field('entries', [
 			'field' => $props = [
@@ -102,7 +102,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($props, $field->field());
 	}
 
-	public function testFieldLabel()
+	public function testFieldLabel(): void
 	{
 		$field = $this->field('entries', [
 			'field' => [
@@ -114,7 +114,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertArrayNotHasKey('label', $field->field());
 	}
 
-	public function testFieldCounter()
+	public function testFieldCounter(): void
 	{
 		$field = $this->field('entries', [
 			'field' => [
@@ -126,7 +126,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertArrayNotHasKey('counter', $field->field());
 	}
 
-	public function testDefaultValue()
+	public function testDefaultValue(): void
 	{
 		$field = $this->field('entries', [
 			'default' => $defaults = [
@@ -139,7 +139,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($defaults, $field->default());
 	}
 
-	public function testSortable()
+	public function testSortable(): void
 	{
 		$field = $this->field('entries', [
 			'sortable' => false
@@ -148,7 +148,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertFalse($field->sortable());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('entries', [
 			'max'   => 3,
@@ -159,7 +159,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testMaxValid()
+	public function testMaxValid(): void
 	{
 		$field = $this->field('entries', [
 			'max'   => 3,
@@ -174,7 +174,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testMaxInvalid()
+	public function testMaxInvalid(): void
 	{
 		$field = $this->field('entries', [
 			'max'   => 1,
@@ -190,7 +190,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($field->errors()['entries'], 'You must not add more than one entry');
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('entries', [
 			'min'   => 3,
@@ -203,7 +203,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
 	}
 
-	public function testMinValid()
+	public function testMinValid(): void
 	{
 		$field = $this->field('entries', [
 			'min'   => 2,
@@ -218,7 +218,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testMinInvalid()
+	public function testMinInvalid(): void
 	{
 		$field = $this->field('entries', [
 			'min'   => 3,
@@ -233,7 +233,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
 	}
 
-	public function testRequiredValid()
+	public function testRequiredValid(): void
 	{
 		$field = $this->field('entries', [
 			'value'    => [
@@ -246,7 +246,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame(1, $field->min());
 	}
 
-	public function testRequiredInvalid()
+	public function testRequiredInvalid(): void
 	{
 		$field = $this->field('entries', [
 			'required' => true
@@ -295,10 +295,8 @@ class EntriesFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider supportsProvider
-	 */
-	public function testSupportedFields($type, $expected)
+	#[DataProvider('supportsProvider')]
+	public function testSupportedFields($type, $expected): void
 	{
 		if ($expected === false) {
 			$this->expectException(InvalidArgumentException::class);
@@ -342,10 +340,8 @@ class EntriesFieldTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider validationsProvider
-	 */
-	public function testValidations($type, $value, $expected)
+	#[DataProvider('validationsProvider')]
+	public function testValidations($type, $value, $expected): void
 	{
 		$field = $this->field('entries', [
 			'value'    => [
@@ -365,7 +361,7 @@ class EntriesFieldTest extends TestCase
 		}
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$field = $this->field('entries', [
 			'empty' => $value = 'Custom empty text'
@@ -374,7 +370,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($value, $field->empty());
 	}
 
-	public function testToStoredValue()
+	public function testToStoredValue(): void
 	{
 		$value = [
 			'Text',

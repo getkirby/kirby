@@ -57,7 +57,10 @@ export const props = {
 	props: {
 		counter: [Boolean, Object],
 		endpoints: Object,
-		input: [String, Number],
+		input: {
+			type: [String, Number, Boolean],
+			default: null
+		},
 		translate: Boolean,
 		type: String
 	}
@@ -89,6 +92,9 @@ export default {
 	margin-bottom: var(--spacing-2);
 }
 .k-field-options {
+	flex-shrink: 0;
+}
+.k-field-buttons {
 	flex-shrink: 0;
 }
 .k-field-counter {

@@ -3,10 +3,12 @@
 namespace Kirby\Http\Request;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Query::class)]
 class QueryTest extends TestCase
 {
-	public function testData()
+	public function testData(): void
 	{
 		// default
 		$query = new Query();
@@ -24,7 +26,7 @@ class QueryTest extends TestCase
 		$this->assertSame($data, $query->data());
 	}
 
-	public function testIsEmpty()
+	public function testIsEmpty(): void
 	{
 		// without data
 		$query = new Query();
@@ -37,7 +39,7 @@ class QueryTest extends TestCase
 		$this->assertTrue($query->isNotEmpty());
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		// default
 		$query = new Query();
@@ -52,7 +54,7 @@ class QueryTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b', 'c' => null], $query->get(['a', 'b', 'c']));
 	}
 
-	public function testToString()
+	public function testToString(): void
 	{
 		// default
 		$query = new Query();
@@ -67,7 +69,7 @@ class QueryTest extends TestCase
 		$this->assertEquals('foo=bar', $query); // cannot use strict assertion (string conversion)
 	}
 
-	public function testToArrayAndDebuginfo()
+	public function testToArrayAndDebuginfo(): void
 	{
 		$data  = ['a' => 'a'];
 		$query = new Query($data);
@@ -75,7 +77,7 @@ class QueryTest extends TestCase
 		$this->assertSame($data, $query->__debugInfo());
 	}
 
-	public function testToJson()
+	public function testToJson(): void
 	{
 		$data  = ['a' => 'a'];
 		$query = new Query($data);

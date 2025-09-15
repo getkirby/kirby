@@ -3,7 +3,7 @@
 		:id="id"
 		v-direction
 		:autofocus="autofocus"
-		:class="['k-text-input', `k-${type}-input`, $attrs.class]"
+		:class="['k-string-input', `k-${type}-input`, $attrs.class]"
 		:disabled="disabled"
 		:placeholder="display"
 		:required="required"

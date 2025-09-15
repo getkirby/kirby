@@ -12,6 +12,7 @@ use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\LayoutField;
+use Kirby\Form\Field\StatsField;
 use Kirby\Panel\Ui\FilePreviews\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreviews\ImageFilePreview;
 use Kirby\Panel\Ui\FilePreviews\PdfFilePreview;
@@ -270,6 +271,7 @@ class Core
 			'range'       => $this->root . '/fields/range.php',
 			'select'      => $this->root . '/fields/select.php',
 			'slug'        => $this->root . '/fields/slug.php',
+			'stats'       => StatsField::class,
 			'structure'   => $this->root . '/fields/structure.php',
 			'tags'        => $this->root . '/fields/tags.php',
 			'tel'         => $this->root . '/fields/tel.php',

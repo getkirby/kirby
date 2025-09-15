@@ -2,14 +2,14 @@
 
 namespace Kirby\Cms;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Translation
- */
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Translation::class)]
 class TranslationTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 
-	public function testProps()
+	public function testProps(): void
 	{
 		$translation = new Translation('en', [
 			'translation.author'    => 'Kirby',
@@ -26,7 +26,7 @@ class TranslationTest extends TestCase
 		$this->assertSame('Test', $translation->get('test'));
 	}
 
-	public function testLoad()
+	public function testLoad(): void
 	{
 		$translation = Translation::load('de', static::FIXTURES . '/translations/de.json');
 
@@ -40,7 +40,7 @@ class TranslationTest extends TestCase
 		$this->assertSame([], $translation->data());
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$translation = Translation::load('de', static::FIXTURES . '/translations/de.json');
 

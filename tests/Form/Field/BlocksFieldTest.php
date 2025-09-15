@@ -10,7 +10,7 @@ use Kirby\Form\Fields;
 
 class BlocksFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('blocks', []);
 
@@ -22,7 +22,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testGroups()
+	public function testGroups(): void
 	{
 		$field = $this->field('blocks', [
 			'group'     => 'test',
@@ -58,7 +58,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame(['image', 'video'], $groups['media']['sets']);
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('blocks', [
 			'value' => [
@@ -83,7 +83,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame($field->errors()['blocks'], 'You must not add more than one block');
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('blocks', [
 			'value' => [
@@ -100,7 +100,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame($field->errors()['blocks'], 'You must add at least 2 blocks');
 	}
 
-	public function testPretty()
+	public function testPretty(): void
 	{
 		$value = [
 			[
@@ -135,7 +135,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame($pretty, $field->toStoredValue());
 	}
 
-	public function testProps()
+	public function testProps(): void
 	{
 		$field = $this->field('blocks');
 
@@ -168,7 +168,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('1/1', $props['width']);
 	}
 
-	public function testRequired()
+	public function testRequired(): void
 	{
 		$field = $this->field('blocks', [
 			'required' => true
@@ -177,7 +177,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertTrue($field->required());
 	}
 
-	public function testRequiredInvalid()
+	public function testRequiredInvalid(): void
 	{
 		$field = $this->field('blocks', [
 			'required' => true
@@ -186,7 +186,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testRequiredValid()
+	public function testRequiredValid(): void
 	{
 		$field = $this->field('blocks', [
 			'value' => [
@@ -203,7 +203,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testRoutes()
+	public function testRoutes(): void
 	{
 		$field = $this->field('blocks');
 
@@ -213,7 +213,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertCount(4, $routes);
 	}
 
-	public function testRouteUUID()
+	public function testRouteUUID(): void
 	{
 		$field = $this->field('blocks');
 		$route = $field->routes()[0];
@@ -224,7 +224,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertArrayHasKey('uuid', $response);
 	}
 
-	public function testRoutePaste()
+	public function testRoutePaste(): void
 	{
 		$this->app = $this->app->clone([
 			'request' => [
@@ -245,7 +245,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('text', $response[0]['type']);
 	}
 
-	public function testRoutePasteFieldsets()
+	public function testRoutePasteFieldsets(): void
 	{
 		$this->app = $this->app->clone([
 			'request' => [
@@ -267,7 +267,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('heading', $response[1]['type']);
 	}
 
-	public function testRouteFieldset()
+	public function testRouteFieldset(): void
 	{
 		$field = $this->field('blocks');
 		$route = $field->routes()[2];
@@ -280,7 +280,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('text', $response['type']);
 	}
 
-	public function testToStoredValue()
+	public function testToStoredValue(): void
 	{
 		$value = [
 			[
@@ -321,7 +321,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('', $field->toStoredValue());
 	}
 
-	public function testTranslateField()
+	public function testTranslateField(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -374,7 +374,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertTrue($field->fields('heading')['text']['disabled']);
 	}
 
-	public function testTranslateFieldset()
+	public function testTranslateFieldset(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -429,7 +429,7 @@ class BlocksFieldTest extends TestCase
 		$field->fieldset('not-exists');
 	}
 
-	public function testValidations()
+	public function testValidations(): void
 	{
 		$field = $this->field('blocks', [
 			'value' => [
@@ -452,7 +452,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testValidationsInvalid()
+	public function testValidationsInvalid(): void
 	{
 		$field = $this->field('blocks', [
 			'value' => [
@@ -478,7 +478,7 @@ class BlocksFieldTest extends TestCase
 		], $field->errors());
 	}
 
-	public function testValidationsWithInvalidBlockType()
+	public function testValidationsWithInvalidBlockType(): void
 	{
 		$field = $this->field('blocks', [
 			'value' => [
@@ -492,7 +492,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame([], $field->errors());
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$field = $this->field('blocks', [
 			'empty' => $value = 'Custom empty text'
@@ -501,7 +501,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame($value, $field->empty());
 	}
 
-	public function testWhen()
+	public function testWhen(): void
 	{
 		$page = new Page(['slug' => 'test']);
 
@@ -552,7 +552,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame($expected, $field->errors());
 	}
 
-	public function testDefault()
+	public function testDefault(): void
 	{
 		$field = $this->field('blocks', [
 			'default' => [
@@ -571,7 +571,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertArrayHasKey('id', $default[0]);
 	}
 
-	public function testInvalidType()
+	public function testInvalidType(): void
 	{
 		$field = $this->field('blocks', [
 			'value' => [

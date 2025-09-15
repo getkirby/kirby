@@ -3,10 +3,10 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Permissions
- */
+#[CoversClass(Permissions::class)]
 class PermissionsTest extends TestCase
 {
 	public function tearDown(): void
@@ -68,12 +68,8 @@ class PermissionsTest extends TestCase
 		];
 	}
 
-	/**
-	 * @covers ::__construct
-	 * @covers ::for
-	 * @dataProvider actionsProvider
-	 */
-	public function testActions(string $category, $action)
+	#[DataProvider('actionsProvider')]
+	public function testActions(string $category, $action): void
 	{
 		// default
 		$p = new Permissions();
@@ -110,7 +106,7 @@ class PermissionsTest extends TestCase
 		$this->assertTrue($p->for($category, $action));
 	}
 
-	public function testExtendActions()
+	public function testExtendActions(): void
 	{
 		Permissions::$extendedActions = [
 			'test-category' => [
@@ -137,7 +133,7 @@ class PermissionsTest extends TestCase
 		$this->assertFalse($permissions->for('test-category', 'does-not-exist'));
 	}
 
-	public function testExtendActionsCoreOverride()
+	public function testExtendActionsCoreOverride(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The action pages is already a core action');
@@ -151,10 +147,7 @@ class PermissionsTest extends TestCase
 		new Permissions();
 	}
 
-	/**
-	 * @covers ::for
-	 */
-	public function testForDefault()
+	public function testForDefault(): void
 	{
 		// exists
 		$p = new Permissions();

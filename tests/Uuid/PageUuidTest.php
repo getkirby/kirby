@@ -4,18 +4,15 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\App;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Uuid\PageUuid
- */
+#[CoversClass(PageUuid::class)]
 class PageUuidTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.PageUuid';
 
-	/**
-	 * @covers ::findByCache
-	 */
-	public function testFindByCache()
+	public function testFindByCache(): void
 	{
 		$page = $this->app->page('page-a');
 
@@ -32,10 +29,7 @@ class PageUuidTest extends TestCase
 		$this->assertIsPage($page, $uuid->model(true));
 	}
 
-	/**
-	 * @covers ::findByIndex
-	 */
-	public function testFindByIndex()
+	public function testFindByIndex(): void
 	{
 		$page = $this->app->page('page-a');
 		$uuid  = new PageUuid('page://my-page');
@@ -49,19 +43,13 @@ class PageUuidTest extends TestCase
 		$this->assertNull($uuid->model());
 	}
 
-	/**
-	 * @covers ::id
-	 */
-	public function testId()
+	public function testId(): void
 	{
 		$uuid = new PageUuid('page://just-a-file');
 		$this->assertSame('just-a-file', $uuid->id());
 	}
 
-	/**
-	 * @covers ::id
-	 */
-	public function testIdGenerate()
+	public function testIdGenerate(): void
 	{
 		$page = $this->app->page('page-b');
 
@@ -70,10 +58,7 @@ class PageUuidTest extends TestCase
 		$this->assertSame($uuid->id(), $page->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::id
-	 */
-	public function testIdGenerateExistingButEmpty()
+	public function testIdGenerateExistingButEmpty(): void
 	{
 		$page = $this->app->page('page-b');
 		$page->version()->save(['uuid' => '']);
@@ -83,10 +68,7 @@ class PageUuidTest extends TestCase
 		$this->assertSame($uuid->id(), $page->content()->get('uuid')->value());
 	}
 
-	/**
-	 * @covers ::index
-	 */
-	public function testIndex()
+	public function testIndex(): void
 	{
 		$index = PageUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
@@ -94,21 +76,50 @@ class PageUuidTest extends TestCase
 		$this->assertSame(3, iterator_count($index));
 	}
 
-	/**
-	 * @covers ::retrieveId
-	 */
-	public function testRetrieveId()
+	public function testRetrieveId(): void
 	{
 		$page = $this->app->page('page-a');
 		$this->assertSame('my-page', ModelUuid::retrieveId($page));
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrl()
+	public function testToPermalink(): void
 	{
 		$page = $this->app->page('page-a');
+		$url  = 'https://getkirby.com/@/page/my-page';
+		$this->assertSame($url, $page->uuid()->toPermalink());
+		$this->assertSame($url, $page->uuid()->url());
+	}
+
+	public function testUrlWithLanguageWithCustomUrl(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+					'url'     => '/'
+				],
+				[
+					'code'    => 'de',
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'foo', 'content' => ['uuid' => 'my-page']]
+				]
+			]
+		]);
+
+		$page = $app->page('foo');
 		$url  = 'https://getkirby.com/@/page/my-page';
 		$this->assertSame($url, $page->uuid()->url());
 	}
@@ -121,12 +132,8 @@ class PageUuidTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider multilangProvider
-	 * @covers ::id
-	 * @covers ::url
-	 */
-	public function testMultilang(string $language, string $title)
+	#[DataProvider('multilangProvider')]
+	public function testMultilang(string $language, string $title): void
 	{
 		$app = new App([
 			'roots' => [

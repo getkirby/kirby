@@ -9,6 +9,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Query\TestUser as QueryTestUser;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 #[CoversClass(Str::class)]
@@ -360,6 +361,27 @@ class StrTest extends TestCase
 		$expected = 'Why not Get Kirby?';
 		$result   = Str::excerpt($string, 100);
 
+		$this->assertSame($expected, $result);
+	}
+
+	public function testExcerptWithWordCharactersAroundTags(): void
+	{
+		// Test case from issue #7306: word characters directly adjacent to tags
+		$string   = 'A link in the middle of a word: Ultra<a href="/">Link</a>Modern.';
+		$expected = 'A link in the middle of a word: Ultra Link Modern.';
+		$result   = Str::excerpt($string, 200);
+		$this->assertSame($expected, $result);
+
+		// Test brackets around tags (should not add extra spaces)
+		$string   = '[<a href="/">Link</a>]';
+		$expected = '[Link]';
+		$result   = Str::excerpt($string, 200);
+		$this->assertSame($expected, $result);
+
+		// Test parentheses around tags (should not add extra spaces)
+		$string   = '(<a href="/">Link</a>)';
+		$expected = '(Link)';
+		$result   = Str::excerpt($string, 200);
 		$this->assertSame($expected, $result);
 	}
 
@@ -1143,89 +1165,144 @@ class StrTest extends TestCase
 		$this->assertSame('ü', Str::substr($string, -1));
 	}
 
-	public function testTemplate(): void
+	public static function templateProvider(): array
 	{
-		// query with a string
-		$string = 'From {{ b }} to {{ a }}';
-		$this->assertSame('From here to there', Str::template($string, ['a' => 'there', 'b' => 'here']));
-		$this->assertSame('From {{ b }} to {{ a }}', Str::template($string, []));
-		$this->assertSame('From here to {{ a }}', Str::template($string, ['b' => 'here']));
-		$this->assertSame('From here to {{ a }}', Str::template($string, ['a' => null, 'b' => 'here']));
-		$this->assertSame('From - to -', Str::template($string, [], ['fallback' => '-']));
-		$this->assertSame('From  to ', Str::template($string, [], ['fallback' => '']));
-		$this->assertSame('From here to -', Str::template($string, ['b' => 'here'], ['fallback' => '-']));
-
-		// query with an array
-		$template = Str::template('Hello {{ user.username }}', [
-			'user' => [
-				'username' => 'homer'
+		return [
+			// query with a string
+			[
+				'From {{ b }} to {{ a }}',
+				['a' => 'there', 'b' => 'here'],
+				'From here to there'
+			],
+			[
+				'From {{ b }} to {{ a }}',
+				[],
+				'From {{ b }} to {{ a }}'
+			],
+			[
+				'From {{ b }} to {{ a }}',
+				['b' => 'here'],
+				'From here to {{ a }}'
+			],
+			[
+				'From {{ b }} to {{ a }}',
+				['a' => null, 'b' => 'here'],
+				'From here to {{ a }}'
+			],
+			[
+				'From {{ b }} to {{ a }}',
+				[],
+				'From - to -',
+				['fallback' => '-']
+			],
+			[
+				'From {{ b }} to {{ a }}',
+				[],
+				'From  to ',
+				['fallback' => '']
+			],
+			[
+				'From {{ b }} to {{ a }}',
+				['b' => 'here'],
+				'From here to -',
+				['fallback' => '-']
+			],
+			// query with an array
+			[
+				'Hello {{ user.username }}',
+				['user' => ['username' => 'homer']],
+				'Hello homer'
+			],
+			[
+				'{{ user.greeting }} {{ user.username }}',
+				['user' => ['username' => 'homer']],
+				'{{ user.greeting }} homer'
+			],
+			// query with an array and callback
+			[
+				'Hello {{ user.username }}',
+				['user' => ['username' => 'homer']],
+				'Hello Homer',
+				['callback' => fn ($result) => Str::ucfirst($result)]
+			],
+			// query with an object
+			[
+				'Hello {{ user.username }}',
+				['user' => new QueryTestUser()],
+				'Hello homer'
+			],
+			[
+				'{{ user.greeting }} {{ user.username }}',
+				['user' => new QueryTestUser()],
+				'{{ user.greeting }} homer'
+			],
+			// query with an object method
+			[
+				'{{ user.username }} says: {{ user.says("hi") }}',
+				['user' => new QueryTestUser()],
+				'homer says: hi'
+			],
+			[
+				'{{ user.username }} says: {{ user.greeting("hi") }}',
+				['user' => new QueryTestUser()],
+				'homer says: {{ user.greeting("hi") }}'
+			],
+			// placeholder syntax
+			[
+				'From {{ b }} to {{ a }}',
+				['a' => 'b', 'b' => 'a'],
+				'From a to b',
+			],
+			[
+				'From { b } to { a }',
+				['a' => 'b', 'b' => 'a'],
+				'From a to b',
+			],
+			[
+				'From dbf to daf',
+				['a' => 'b', 'b' => 'a'],
+				'From a to b',
+				['start' => 'd', 'end' => 'f']
+			],
+			// prevent arbitrary code execution attacks
+			// from query placeholders in the untrusted data
+			[
+				'{{ malicious1 }},{ malicious2 },{{ malicious3 }}',
+				[
+					'malicious1' => '{{ dangerous }}',
+					'malicious2' => '{ dangerous }',
+					'malicious3' => '{< dangerous >}',
+					'dangerous' => '*deleting all of the content or something*'
+				],
+				'{{ dangerous }},{ dangerous },{< dangerous >}',
+			],
+			// SQL query template replacements
+			[
+				'{{ name }} varchar({{ size }}) {{ null }} {{ default }} {{ unique }}',
+				[
+					'name'          => '`another`',
+					'unsigned'      => 'UNSIGNED',
+					'size'          => 255,
+					'precision'     => 14,
+					'decimalPlaces' => 4,
+					'null'          => 'NOT NULL',
+					'default'       => null,
+					'unique'        => null,
+				],
+				'`another` varchar(255) NOT NULL  ',
+				['fallback'  => '']
 			]
-		]);
-		$this->assertSame('Hello homer', $template);
+		];
+	}
 
-		$template = Str::template('{{ user.greeting }} {{ user.username }}', [
-			'user' => [
-				'username' => 'homer'
-			]
-		]);
-		$this->assertSame('{{ user.greeting }} homer', $template);
-
-		// query with an array and callback
-		$template = Str::template('Hello {{ user.username }}', [
-			'user' => [
-				'username' => 'homer'
-			]
-		], [
-			'callback' => fn ($result) => Str::ucfirst($result)
-		]);
-		$this->assertSame('Hello Homer', $template);
-
-		// query with an object
-		$template = Str::template('Hello {{ user.username }}', [
-			'user' => new QueryTestUser()
-		]);
-		$this->assertSame('Hello homer', $template);
-
-		$template = Str::template('{{ user.greeting }} {{ user.username }}', [
-			'user' => new QueryTestUser()
-		]);
-		$this->assertSame('{{ user.greeting }} homer', $template);
-
-		// query with an object method
-		$template = Str::template('{{ user.username }} says: {{ user.says("hi") }}', [
-			'user' => new QueryTestUser()
-		]);
-		$this->assertSame('homer says: hi', $template);
-
-		$template = Str::template('{{ user.username }} says: {{ user.greeting("hi") }}', [
-			'user' => new QueryTestUser()
-		]);
-		$this->assertSame('homer says: {{ user.greeting("hi") }}', $template);
-
-		// placeholder syntax
-		$this->assertSame(
-			'From a to b',
-			Str::template('From {{ b }} to {{ a }}', ['a' => 'b', 'b' => 'a'])
-		);
-		$this->assertSame(
-			'From a to b',
-			Str::template('From { b } to { a }', ['a' => 'b', 'b' => 'a'])
-		);
-		$this->assertSame(
-			'From a to b',
-			Str::template('From dbf to daf', ['a' => 'b', 'b' => 'a'], ['start' => 'd', 'end' => 'f'])
-		);
-
-		// prevent arbitrary code execution attacks from query placeholders in the untrusted data
-		$this->assertSame(
-			'{{ dangerous }},{ dangerous },{< dangerous >}',
-			Str::template('{{ malicious1 }},{ malicious2 },{{ malicious3 }}', [
-				'malicious1' => '{{ dangerous }}',
-				'malicious2' => '{ dangerous }',
-				'malicious3' => '{< dangerous >}',
-				'dangerous' => '*deleting all of the content or something*'
-			])
-		);
+	#[DataProvider('templateProvider')]
+	public function testTemplate(
+		string $input,
+		array $data,
+		string $expected,
+		array $options = []
+	): void {
+		$this->assertSame($expected, Str::template($input, $data, $options));
 	}
 
 	public function testToBytes(): void

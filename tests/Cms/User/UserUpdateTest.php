@@ -9,7 +9,7 @@ class UserUpdateTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserUpdate';
 
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		$user = new User(['email' => 'editor@domain.com']);
 		$user = $user->update([

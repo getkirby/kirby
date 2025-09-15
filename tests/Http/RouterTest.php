@@ -5,11 +5,13 @@ namespace Kirby\Http;
 use Exception;
 use InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
 
+#[CoversClass(Router::class)]
 class RouterTest extends TestCase
 {
-	public function testRegisterSingleRoute()
+	public function testRegisterSingleRoute(): void
 	{
 		$router = new Router([
 			[
@@ -27,7 +29,7 @@ class RouterTest extends TestCase
 		$this->assertSame('GET', $result->method());
 	}
 
-	public function testRegisterMultipleRoutes()
+	public function testRegisterMultipleRoutes(): void
 	{
 		$router = new Router([
 			[
@@ -56,7 +58,7 @@ class RouterTest extends TestCase
 		$this->assertSame('POST', $resultB->method());
 	}
 
-	public function testRegisterInvalidRoute()
+	public function testRegisterInvalidRoute(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid route parameters');
@@ -66,14 +68,14 @@ class RouterTest extends TestCase
 		]);
 	}
 
-	public function testRegisterInvalidData()
+	public function testRegisterInvalidData(): void
 	{
 		$this->expectException(TypeError::class);
 
 		new Router('route');
 	}
 
-	public function testFindWithNonexistingMethod()
+	public function testFindWithNonexistingMethod(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid routing method: KIRBY');
@@ -83,7 +85,7 @@ class RouterTest extends TestCase
 		$router->find('a', 'KIRBY');
 	}
 
-	public function testFindNonexistingRoute()
+	public function testFindNonexistingRoute(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No route found for path: "a" and request method: "GET"');
@@ -93,7 +95,7 @@ class RouterTest extends TestCase
 		$router->find('a', 'GET');
 	}
 
-	public function testBeforeEach()
+	public function testBeforeEach(): void
 	{
 		$hooks = [
 			'beforeEach' => function ($route, $path, $method) {
@@ -117,7 +119,7 @@ class RouterTest extends TestCase
 		$router->call('/', 'GET');
 	}
 
-	public function testAfterEach()
+	public function testAfterEach(): void
 	{
 		$hooks = [
 			'afterEach' => function ($route, $path, $method, $result, $final) {
@@ -144,7 +146,7 @@ class RouterTest extends TestCase
 		$this->assertSame('test:after', $router->call('/', 'GET'));
 	}
 
-	public function testNext()
+	public function testNext(): void
 	{
 		$router = new Router([
 			[
@@ -197,7 +199,7 @@ class RouterTest extends TestCase
 		$result = $router->call('d');
 	}
 
-	public function testNextAfterEach()
+	public function testNextAfterEach(): void
 	{
 		$numTotal = 0;
 		$numFinal = 0;
@@ -234,7 +236,7 @@ class RouterTest extends TestCase
 		$this->assertSame(1, $numFinal);
 	}
 
-	public function testCallWithCallback()
+	public function testCallWithCallback(): void
 	{
 		$router = new Router([
 			[

@@ -7,7 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 
 class ColorFieldTest extends TestCase
 {
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('color');
 
@@ -20,7 +20,7 @@ class ColorFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testEmptyColor()
+	public function testEmptyColor(): void
 	{
 		$field = $this->field('color', [
 			'value' => null
@@ -30,7 +30,7 @@ class ColorFieldTest extends TestCase
 		$this->assertNull($field->toString());
 	}
 
-	public function testDefault()
+	public function testDefault(): void
 	{
 		$field = $this->field('color', [
 			'default' => '#fff',
@@ -39,19 +39,19 @@ class ColorFieldTest extends TestCase
 		$this->assertSame('#fff', $field->default());
 	}
 
-	public function testFormatInvalid()
+	public function testFormatInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->field('color', ['format' => 'foo']);
 	}
 
-	public function testModeInvalid()
+	public function testModeInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->field('color', ['mode' => 'foo']);
 	}
 
-	public function testOptions()
+	public function testOptions(): void
 	{
 		// Only values
 		$field = $this->field('color', [
@@ -80,7 +80,7 @@ class ColorFieldTest extends TestCase
 		], $field->options());
 	}
 
-	public function testOptionsFromQuery()
+	public function testOptionsFromQuery(): void
 	{
 		// Only values
 		$this->app = new App([

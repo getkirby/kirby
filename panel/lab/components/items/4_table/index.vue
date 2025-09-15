@@ -12,7 +12,7 @@
 			<k-items
 				:columns="columns"
 				:items="selectableItems"
-				:selectable="true"
+				:selecting="true"
 				layout="table"
 				@select="onSelect"
 			/>

@@ -4,25 +4,18 @@ namespace Kirby\Panel;
 
 use Exception;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Json
- */
+#[CoversClass(Json::class)]
 class JsonTest extends TestCase
 {
-	/**
-	 * @covers ::response
-	 */
-	public function testResponseEmptyArray()
+	public function testResponseEmptyArray(): void
 	{
 		$response = Json::response([]);
 		$this->assertSame(404, $response->code());
 	}
 
-	/**
-	 * @covers ::response
-	 */
-	public function testResponseRedirect()
+	public function testResponseRedirect(): void
 	{
 		$redirect = new Redirect('https://getkirby.com');
 		$response = Json::response($redirect);
@@ -33,20 +26,14 @@ class JsonTest extends TestCase
 		$this->assertSame('https://getkirby.com', $body['$response']['redirect']);
 	}
 
-	/**
-	 * @covers ::response
-	 */
-	public function testResponseThrowable()
+	public function testResponseThrowable(): void
 	{
 		$data     = new Exception();
 		$response = Json::response($data);
 		$this->assertSame(500, $response->code());
 	}
 
-	/**
-	 * @covers ::response
-	 */
-	public function testResponseNoArray()
+	public function testResponseNoArray(): void
 	{
 		$data     = 'foo';
 		$response = Json::response($data);

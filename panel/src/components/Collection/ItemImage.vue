@@ -37,7 +37,7 @@ export default {
 	computed: {
 		attrs() {
 			return {
-				back: this.image.back ?? "gray-500",
+				back: this.image.back,
 				cover: true,
 				...this.image,
 				ratio: this.layout === "list" ? "auto" : this.image.ratio,
@@ -67,3 +67,10 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-item-image {
+	--back: var(--item-color-image);
+	--icon-color: var(--item-color-icon);
+}
+</style>

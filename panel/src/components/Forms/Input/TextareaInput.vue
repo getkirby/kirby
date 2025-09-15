@@ -390,6 +390,9 @@ export default {
 .k-textarea-input-native[data-font="monospace"] {
 	font-family: var(--font-mono);
 }
+.k-textarea-input-native:disabled::placeholder {
+	opacity: 0;
+}
 
 /* Input Context */
 .k-input[data-type="textarea"] .k-input-element {

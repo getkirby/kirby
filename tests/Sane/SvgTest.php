@@ -3,20 +3,18 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \Kirby\Sane\Svg
- */
+#[CoversClass(Svg::class)]
 class SvgTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Sane.Svg';
 
 	protected static string $type = 'svg';
 
-	/**
-	 * @dataProvider allowedProvider
-	 */
-	public function testAllowed(string $file)
+	#[DataProvider('allowedProvider')]
+	public function testAllowed(string $file): void
 	{
 		$fixture = $this->fixture($file);
 		$cleaned = $this->fixture(str_replace('allowed', 'cleaned', $file));
@@ -27,12 +25,12 @@ class SvgTest extends TestCase
 		$this->assertStringEqualsFile(is_file($cleaned) ? $cleaned : $fixture, $sanitized);
 	}
 
-	public static function allowedProvider()
+	public static function allowedProvider(): array
 	{
 		return static::fixtureList('allowed', 'svg');
 	}
 
-	public function testAllowedAriaAttr()
+	public function testAllowedAriaAttr(): void
 	{
 		$fixture = '<svg><path aria-label="Test" /></svg>';
 		$cleaned = '<svg><path aria-label="Test"/></svg>';
@@ -41,7 +39,7 @@ class SvgTest extends TestCase
 		$this->assertSame($cleaned, Svg::sanitize($fixture));
 	}
 
-	public function testAllowedAriaData()
+	public function testAllowedAriaData(): void
 	{
 		$fixture = '<svg><path data-color="test" /></svg>';
 		$cleaned = '<svg><path data-color="test"/></svg>';
@@ -50,10 +48,8 @@ class SvgTest extends TestCase
 		$this->assertSame($cleaned, Svg::sanitize($fixture));
 	}
 
-	/**
-	 * @dataProvider invalidProvider
-	 */
-	public function testInvalid(string $file)
+	#[DataProvider('invalidProvider')]
+	public function testInvalid(string $file): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The markup could not be parsed');
@@ -61,12 +57,12 @@ class SvgTest extends TestCase
 		Svg::validateFile($this->fixture($file));
 	}
 
-	public static function invalidProvider()
+	public static function invalidProvider(): array
 	{
 		return static::fixtureList('invalid', 'svg');
 	}
 
-	public function testDisallowedJavascriptUrl()
+	public function testDisallowedJavascriptUrl(): void
 	{
 		$fixture   = "<svg>\n<a href='javascript:alert(1)'><path /></a>\n</svg>";
 		$sanitized = "<svg>\n<a><path/></a>\n</svg>";
@@ -78,7 +74,7 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
-	public function testDisallowedJavascriptUrlWithUnicodeLS()
+	public function testDisallowedJavascriptUrlWithUnicodeLS(): void
 	{
 		/**
 		 * Test fixture inspired by DOMPurify
@@ -96,7 +92,7 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
-	public function testDisallowedXlinkAttack()
+	public function testDisallowedXlinkAttack(): void
 	{
 		$fixture   = $this->fixture('disallowed/xlink-attack.svg');
 		$sanitized = $this->fixture('sanitized/xlink-attack.svg');
@@ -108,7 +104,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedExternalFile()
+	public function testDisallowedExternalFile(): void
 	{
 		$fixture   = $this->fixture('disallowed/xlink-subfolder.svg');
 		$sanitized = $this->fixture('sanitized/xlink-subfolder.svg');
@@ -121,7 +117,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedExternalXmlns1()
+	public function testDisallowedExternalXmlns1(): void
 	{
 		$fixture   = $this->fixture('disallowed/external-xmlns-1.svg');
 		$sanitized = $this->fixture('sanitized/external-xmlns-1.svg');
@@ -133,7 +129,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedExternalXmlns2()
+	public function testDisallowedExternalXmlns2(): void
 	{
 		$fixture   = $this->fixture('disallowed/external-xmlns-2.svg');
 		$sanitized = $this->fixture('sanitized/external-xmlns-2.svg');
@@ -145,7 +141,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedDataUriSvg1()
+	public function testDisallowedDataUriSvg1(): void
 	{
 		$fixture   = $this->fixture('disallowed/data-uri-svg-1.svg');
 		$sanitized = $this->fixture('sanitized/data-uri-svg-1.svg');
@@ -157,7 +153,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedDataUriSvg2()
+	public function testDisallowedDataUriSvg2(): void
 	{
 		$fixture   = $this->fixture('disallowed/data-uri-svg-2.svg');
 		$sanitized = $this->fixture('sanitized/data-uri-svg-2.svg');
@@ -169,7 +165,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedExternalSource1()
+	public function testDisallowedExternalSource1(): void
 	{
 		$fixture   = $this->fixture('disallowed/external-source-1.svg');
 		$sanitized = $this->fixture('sanitized/external-source-1.svg');
@@ -181,7 +177,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedExternalSource2()
+	public function testDisallowedExternalSource2(): void
 	{
 		$fixture   = $this->fixture('disallowed/external-source-2.svg');
 		$sanitized = $this->fixture('sanitized/external-source-2.svg');
@@ -193,7 +189,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedOnclickAttr()
+	public function testDisallowedOnclickAttr(): void
 	{
 		$fixture   = "<svg>\n<path onclick='alert(1)' />\n</svg>";
 		$sanitized = "<svg>\n<path/>\n</svg>";
@@ -205,7 +201,7 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
-	public function testDisallowedOnloadAttr()
+	public function testDisallowedOnloadAttr(): void
 	{
 		$fixture   = '<svg onload="alert(1)"></svg>';
 		$sanitized = '<svg/>';
@@ -217,7 +213,7 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
-	public function testDisallowedUseAttack1()
+	public function testDisallowedUseAttack1(): void
 	{
 		$fixture   = $this->fixture('disallowed/use-attack-1.svg');
 		$sanitized = $this->fixture('sanitized/use-attack-1.svg');
@@ -229,7 +225,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedUseAttack2()
+	public function testDisallowedUseAttack2(): void
 	{
 		$fixture   = $this->fixture('disallowed/use-attack-2.svg');
 		$sanitized = $this->fixture('sanitized/use-attack-2.svg');
@@ -241,7 +237,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedUseAttack3()
+	public function testDisallowedUseAttack3(): void
 	{
 		$fixture   = $this->fixture('disallowed/use-attack-3.svg');
 		$sanitized = $this->fixture('sanitized/use-attack-3.svg');
@@ -253,7 +249,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedDoctypeExternal1()
+	public function testDisallowedDoctypeExternal1(): void
 	{
 		$fixture   = $this->fixture('disallowed/doctype-external-1.svg');
 		$sanitized = $this->fixture('sanitized/doctype-external-1.svg');
@@ -265,7 +261,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedDoctypeExternal2()
+	public function testDisallowedDoctypeExternal2(): void
 	{
 		$fixture   = $this->fixture('disallowed/doctype-external-2.svg');
 		$sanitized = $this->fixture('sanitized/doctype-external-2.svg');
@@ -277,7 +273,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedDoctypeEntityAttack()
+	public function testDisallowedDoctypeEntityAttack(): void
 	{
 		$fixture   = $this->fixture('disallowed/doctype-entity-attack.svg');
 		$sanitized = $this->fixture('sanitized/doctype-entity-attack.svg');
@@ -289,7 +285,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedDoctypeWrong()
+	public function testDisallowedDoctypeWrong(): void
 	{
 		$fixture   = $this->fixture('disallowed/doctype-wrong.svg');
 		$sanitized = $this->fixture('sanitized/doctype-wrong.svg');
@@ -301,7 +297,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedCaseSensitive()
+	public function testDisallowedCaseSensitive(): void
 	{
 		$fixture   = "<svg>\n<Text x='0' y='20'>Hello</Text>\n</svg>";
 		$sanitized = "<svg>\n\n</svg>";
@@ -313,7 +309,7 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
-	public function testDisallowedForeignobject()
+	public function testDisallowedForeignobject(): void
 	{
 		$fixture   = '<svg><foreignobject><iframe onload="alert(1)" /></foreignobject></svg>';
 		$sanitized = '<svg/>';
@@ -325,7 +321,7 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
-	public function testDisallowedSet()
+	public function testDisallowedSet(): void
 	{
 		$fixture   = $this->fixture('disallowed/set.svg');
 		$sanitized = $this->fixture('sanitized/set.svg');
@@ -337,7 +333,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedScript()
+	public function testDisallowedScript(): void
 	{
 		$fixture   = '<svg><script>alert(1)</script></svg>';
 		$sanitized = '<svg/>';
@@ -349,7 +345,7 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
-	public function testDisallowedBlockquote()
+	public function testDisallowedBlockquote(): void
 	{
 		$fixture   = '<svg><blockquote>SVGs are SVGs are SVGs</blockquote></svg>';
 		$sanitized = '<svg/>';
@@ -361,7 +357,7 @@ class SvgTest extends TestCase
 		Svg::validate($fixture);
 	}
 
-	public function testDisallowedStyleUrlExternal()
+	public function testDisallowedStyleUrlExternal(): void
 	{
 		$fixture   = $this->fixture('disallowed/style-url-external.svg');
 		$sanitized = $this->fixture('sanitized/style-url-external.svg');
@@ -373,7 +369,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testDisallowedStylesheet()
+	public function testDisallowedStylesheet(): void
 	{
 		$fixture   = $this->fixture('disallowed/stylesheet.svg');
 		$sanitized = $this->fixture('sanitized/stylesheet.svg');
@@ -385,7 +381,7 @@ class SvgTest extends TestCase
 		Svg::validateFile($fixture);
 	}
 
-	public function testParseNonSvg()
+	public function testParseNonSvg(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The file is not a SVG (got <html>)');

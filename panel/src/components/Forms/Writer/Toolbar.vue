@@ -168,14 +168,14 @@ export default {
 		 * @returns {Boolean}
 		 */
 		hasDropdownEntries() {
-			return this.$helper.object.length(this.dropdownEntries) > 0;
+			return this.$helper.object.length(this.dropdownEntries) > 1;
 		},
 		/**
 		 * Whether there are any inline buttons to show in the toolbar
 		 * @returns {Boolean}
 		 */
 		hasInlineEntries() {
-			return this.$helper.object.length(this.inlineEntries) > 1;
+			return this.$helper.object.length(this.inlineEntries) > 0;
 		},
 		/**
 		 * All inline entries that are available and requested

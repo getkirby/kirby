@@ -32,7 +32,7 @@ class UsersFieldTest extends TestCase
 		]);
 	}
 
-	public function testDefaultProps()
+	public function testDefaultProps(): void
 	{
 		$field = $this->field('users', [
 			'model' => new Page(['slug' => 'test'])
@@ -47,7 +47,7 @@ class UsersFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testDefaultUser()
+	public function testDefaultUser(): void
 	{
 		$this->app->impersonate('raphael@getkirby.com');
 
@@ -58,7 +58,7 @@ class UsersFieldTest extends TestCase
 		$this->assertSame([], $field->default());
 	}
 
-	public function testCurrentDefaultUser()
+	public function testCurrentDefaultUser(): void
 	{
 		$this->app->impersonate('raphael@getkirby.com');
 
@@ -70,7 +70,7 @@ class UsersFieldTest extends TestCase
 		$this->assertSame('raphael@getkirby.com', $field->default()[0]['email']);
 	}
 
-	public function testMultipleDefaultUsers()
+	public function testMultipleDefaultUsers(): void
 	{
 		$this->app->impersonate('raphael@getkirby.com');
 
@@ -86,7 +86,7 @@ class UsersFieldTest extends TestCase
 		$this->assertSame('donatello@getkirby.com', $field->default()[1]['email']);
 	}
 
-	public function testDefaultUserDisabled()
+	public function testDefaultUserDisabled(): void
 	{
 		$this->app->impersonate('raphael@getkirby.com');
 
@@ -98,7 +98,7 @@ class UsersFieldTest extends TestCase
 		$this->assertSame([], $field->default());
 	}
 
-	public function testValue()
+	public function testValue(): void
 	{
 		$field = $this->field('users', [
 			'model' => new Page(['slug' => 'test']),
@@ -120,7 +120,7 @@ class UsersFieldTest extends TestCase
 		$this->assertSame($expected, $ids);
 	}
 
-	public function testMin()
+	public function testMin(): void
 	{
 		$field = $this->field('users', [
 			'model' => new Page(['slug' => 'test']),
@@ -137,7 +137,7 @@ class UsersFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
-	public function testMax()
+	public function testMax(): void
 	{
 		$field = $this->field('users', [
 			'model' => new Page(['slug' => 'test']),
@@ -153,7 +153,7 @@ class UsersFieldTest extends TestCase
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
-	public function testEmpty()
+	public function testEmpty(): void
 	{
 		$field = $this->field('users', [
 			'model' => new Page(['slug' => 'test']),
@@ -163,7 +163,7 @@ class UsersFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
-	public function testTranslatedEmpty()
+	public function testTranslatedEmpty(): void
 	{
 		$field = $this->field('users', [
 			'model' => new Page(['slug' => 'test']),
@@ -173,7 +173,7 @@ class UsersFieldTest extends TestCase
 		$this->assertSame('Test', $field->empty());
 	}
 
-	public function testRequiredProps()
+	public function testRequiredProps(): void
 	{
 		$field = $this->field('users', [
 			'model'    => new Page(['slug' => 'test']),
@@ -184,7 +184,7 @@ class UsersFieldTest extends TestCase
 		$this->assertSame(1, $field->min());
 	}
 
-	public function testRequiredInvalid()
+	public function testRequiredInvalid(): void
 	{
 		$field = $this->field('users', [
 			'model'    => new Page(['slug' => 'test']),
@@ -194,7 +194,7 @@ class UsersFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testRequiredValid()
+	public function testRequiredValid(): void
 	{
 		$field = $this->field('tags', [
 			'model'    => new Page(['slug' => 'test']),
@@ -207,7 +207,7 @@ class UsersFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testApi()
+	public function testApi(): void
 	{
 		$app = $this->app->clone([
 			'options' => ['api.allowImpersonation' => true],

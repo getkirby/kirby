@@ -34,7 +34,7 @@ class Files
 		$files ??= $_FILES;
 
 		foreach ($files as $key => $file) {
-			if (is_array($file['name'])) {
+			if (is_array($file['name']) === true) {
 				foreach ($file['name'] as $i => $name) {
 					$this->files[$key][] = [
 						'name'     => $file['name'][$i]      ?? null,

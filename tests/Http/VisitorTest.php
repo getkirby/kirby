@@ -5,10 +5,12 @@ namespace Kirby\Http;
 use Kirby\TestCase;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Visitor::class)]
 class VisitorTest extends TestCase
 {
-	public function testVisitorDefaults()
+	public function testVisitorDefaults(): void
 	{
 		$visitor = new Visitor();
 
@@ -20,7 +22,7 @@ class VisitorTest extends TestCase
 		$this->assertInstanceOf(Collection::class, $visitor->acceptedMimeTypes());
 	}
 
-	public function testVisitorWithArguments()
+	public function testVisitorWithArguments(): void
 	{
 		$visitor = new Visitor([
 			'ip'               => '192.168.1.1',
@@ -37,7 +39,7 @@ class VisitorTest extends TestCase
 		$this->assertSame('text/html', $visitor->acceptedMimeType()->type());
 	}
 
-	public function testIp()
+	public function testIp(): void
 	{
 		$visitor = new Visitor();
 		$this->assertSame('', $visitor->ip());
@@ -45,14 +47,14 @@ class VisitorTest extends TestCase
 		$this->assertSame('192.168.1.1', $visitor->ip());
 	}
 
-	public function testUserAgent()
+	public function testUserAgent(): void
 	{
 		$visitor = new Visitor();
 		$this->assertInstanceOf(Visitor::class, $visitor->userAgent('Kirby'));
 		$this->assertSame('Kirby', $visitor->userAgent());
 	}
 
-	public function testAcceptsMimeType()
+	public function testAcceptsMimeType(): void
 	{
 		$visitor = new Visitor();
 		$this->assertFalse($visitor->acceptsMimeType('text/html'));
@@ -62,7 +64,7 @@ class VisitorTest extends TestCase
 		$this->assertFalse($visitor->acceptsMimeType('application/json'));
 	}
 
-	public function testPreferredMimeType()
+	public function testPreferredMimeType(): void
 	{
 		$visitor = new Visitor(['acceptedMimeType' => 'text/html;q=0.8,application/json,text/plain;q=0.9,text/*;q=0.7']);
 
@@ -84,7 +86,7 @@ class VisitorTest extends TestCase
 		$this->assertSame('application/json', $visitor->preferredMimeType('application/yaml', 'application/json'));
 	}
 
-	public function testPrefersJson()
+	public function testPrefersJson(): void
 	{
 		$visitor = new Visitor(['acceptedMimeType' => 'text/html;q=0.8,application/json']);
 		$this->assertTrue($visitor->prefersJson());
@@ -102,7 +104,7 @@ class VisitorTest extends TestCase
 		$this->assertFalse($visitor->prefersJson());
 	}
 
-	public function testAcceptsLanguage()
+	public function testAcceptsLanguage(): void
 	{
 		$visitor = new Visitor(['acceptedLanguage' => 'en-US']);
 		$this->assertTrue($visitor->acceptsLanguage('en_US'));

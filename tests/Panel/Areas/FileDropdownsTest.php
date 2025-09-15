@@ -183,28 +183,28 @@ class FileDropdownsTest extends AreaTestCase
 		$this->assertSame('Delete', $options[5]['text']);
 	}
 
-	public function testFileLanguageDropdownForAccountFile()
+	public function testFileLanguageDropdownForAccountFile(): void
 	{
 		$this->createUserFile();
 		$this->login();
 		$this->assertLanguageDropdown('account/files/test.jpg/languages');
 	}
 
-	public function testFileLanguageDropdownForPageFile()
+	public function testFileLanguageDropdownForPageFile(): void
 	{
 		$this->createPageFile();
 		$this->login();
 		$this->assertLanguageDropdown('pages/test/files/test.jpg/languages');
 	}
 
-	public function testFileLanguageDropdownForSiteFile()
+	public function testFileLanguageDropdownForSiteFile(): void
 	{
 		$this->createSiteFile();
 		$this->login();
 		$this->assertLanguageDropdown('site/files/test.jpg/languages');
 	}
 
-	public function testFileLanguageDropdownForUserFile()
+	public function testFileLanguageDropdownForUserFile(): void
 	{
 		$this->createUserFile();
 		$this->login();

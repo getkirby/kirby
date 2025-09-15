@@ -3,10 +3,9 @@
 namespace Kirby\Plugin;
 
 use Kirby\Cms\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Plugin\License
- */
+#[CoversClass(License::class)]
 class LicenseTest extends TestCase
 {
 	protected function plugin(): Plugin
@@ -16,9 +15,6 @@ class LicenseTest extends TestCase
 		);
 	}
 
-	/**
-	 * @covers ::__toString
-	 */
 	public function test__toString(): void
 	{
 		$license = new License(
@@ -29,9 +25,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('Custom license', (string)$license);
 	}
 
-	/**
-	 * @covers ::from
-	 */
 	public function testFromArray(): void
 	{
 		$license = License::from($this->plugin(), [
@@ -44,9 +37,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('missing', $license->status()->value());
 	}
 
-	/**
-	 * @covers ::from
-	 */
 	public function testFromClosure(): void
 	{
 		$license = License::from($this->plugin(), function ($plugin) {
@@ -61,9 +51,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('active', $license->status()->value());
 	}
 
-	/**
-	 * @covers ::from
-	 */
 	public function testFromString(): void
 	{
 		$license = License::from($this->plugin(), 'Custom license');
@@ -71,9 +58,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('active', $license->status()->value());
 	}
 
-	/**
-	 * @covers ::from
-	 */
 	public function testFromNull(): void
 	{
 		$license = License::from($this->plugin(), null);
@@ -81,9 +65,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('unknown', $license->status()->value());
 	}
 
-	/**
-	 * @covers ::link
-	 */
 	public function testLink(): void
 	{
 		$license = new License(
@@ -95,9 +76,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('https://getkirby.com', $license->link());
 	}
 
-	/**
-	 * @covers ::name
-	 */
 	public function testName(): void
 	{
 		$license = new License(
@@ -108,9 +86,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('Custom license', $license->name());
 	}
 
-	/**
-	 * @covers ::status
-	 */
 	public function testStatus(): void
 	{
 		$license = new License(
@@ -123,9 +98,6 @@ class LicenseTest extends TestCase
 		$this->assertSame('missing', $license->status()->value());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
 	public function testToArray(): void
 	{
 		$license = new License(

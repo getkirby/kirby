@@ -6,10 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Panel\Plugins
- */
+#[CoversClass(Plugins::class)]
 class PluginsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Plugins';
@@ -74,10 +73,7 @@ class PluginsTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	/**
-	 * @covers ::files
-	 */
-	public function testFiles()
+	public function testFiles(): void
 	{
 		$this->createPlugins();
 
@@ -102,19 +98,13 @@ class PluginsTest extends TestCase
 		$this->assertSame($expected, $plugins->files());
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModifiedWithoutFiles()
+	public function testModifiedWithoutFiles(): void
 	{
 		$plugins = new Plugins();
 		$this->assertSame(0, $plugins->modified());
 	}
 
-	/**
-	 * @covers ::modified
-	 */
-	public function testModifiedWithFiles()
+	public function testModifiedWithFiles(): void
 	{
 		$time = $this->createPlugins();
 
@@ -125,10 +115,7 @@ class PluginsTest extends TestCase
 		$this->assertSame($time, $plugins->modified());
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testRead()
+	public function testRead(): void
 	{
 		$this->createPlugins();
 
@@ -150,10 +137,7 @@ class PluginsTest extends TestCase
 		$this->assertSame($expected, $plugins->read('mjs'));
 	}
 
-	/**
-	 * @covers ::read
-	 */
-	public function testReadWithDevMjs()
+	public function testReadWithDevMjs(): void
 	{
 		$this->createPlugins(true);
 
@@ -175,10 +159,7 @@ class PluginsTest extends TestCase
 		$this->assertSame($expected, $plugins->read('mjs'));
 	}
 
-	/**
-	 * @covers ::url
-	 */
-	public function testUrl()
+	public function testUrl(): void
 	{
 		// css
 		$plugins  = new Plugins();

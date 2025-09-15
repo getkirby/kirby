@@ -4,9 +4,11 @@
 		<div class="k-table">
 			<table>
 				<thead>
-					<th style="width: 10rem">Event</th>
-					<th>Description</th>
-					<th v-if="hasProperties">Properties</th>
+					<tr>
+						<th style="width: 10rem">Event</th>
+						<th>Description</th>
+						<th v-if="hasProperties">Properties</th>
+					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="event in events" :key="event.name">

@@ -110,8 +110,11 @@ export default {
 <style>
 .k-button-group.k-dialog-buttons {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr;
 	gap: var(--spacing-3);
 	--button-height: var(--height-lg);
+}
+.k-button-group.k-dialog-buttons:has(> .k-button:nth-child(2)) {
+	grid-template-columns: 1fr 1fr;
 }
 </style>

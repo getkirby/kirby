@@ -3,18 +3,14 @@
 namespace Kirby\Uuid;
 
 use Generator;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Uuid\UserUuid
- */
+#[CoversClass(UserUuid::class)]
 class UserUuidTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.UserUuid';
 
-	/**
-	 * @covers ::index
-	 */
-	public function testIndex()
+	public function testIndex(): void
 	{
 		$index = UserUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
@@ -22,19 +18,13 @@ class UserUuidTest extends TestCase
 		$this->assertSame(1, iterator_count($index));
 	}
 
-	/**
-	 * @covers ::model
-	 */
-	public function testModel()
+	public function testModel(): void
 	{
 		$user = $this->app->user('my-user');
 		$this->assertIsUser($user, Uuid::for('user://my-user')->model());
 	}
 
-	/**
-	 * @covers ::populate
-	 */
-	public function testPopulate()
+	public function testPopulate(): void
 	{
 		$uuid = $this->app->user('my-user')->uuid();
 		$this->assertTrue($uuid->populate());

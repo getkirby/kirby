@@ -6,6 +6,7 @@ use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(FileModifications::class)]
 class FileModificationsTest extends ModelTestCase
@@ -272,9 +273,7 @@ class FileModificationsTest extends ModelTestCase
 		];
 	}
 
-	/**
-	 * @dataProvider cropOptionsProvider
-	 */
+	#[DataProvider('cropOptionsProvider')]
 	public function testCrop($args, $expected): void
 	{
 		$app = $this->app->clone([

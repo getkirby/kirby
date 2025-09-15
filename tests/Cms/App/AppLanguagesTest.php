@@ -3,10 +3,11 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AppLanguagesTest extends TestCase
 {
-	public function testLanguages()
+	public function testLanguages(): void
 	{
 		$app = new App([
 			'languages' => [
@@ -27,7 +28,7 @@ class AppLanguagesTest extends TestCase
 		$this->assertSame('en', $app->languageCode());
 	}
 
-	public function testLanguageCode()
+	public function testLanguageCode(): void
 	{
 		$app = new App([
 			'languages' => [
@@ -64,10 +65,10 @@ class AppLanguagesTest extends TestCase
 	}
 
 	/**
-	 * @dataProvider detectedLanguageProvider
 	 * @backupGlobals enabled
 	 */
-	public function testDetectedLanguage($accept, $expected)
+	#[DataProvider('detectedLanguageProvider')]
+	public function testDetectedLanguage($accept, $expected): void
 	{
 		// set the accepted visitor language
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
@@ -92,6 +93,57 @@ class AppLanguagesTest extends TestCase
 					'code'    => 'tr',
 					'name'    => 'Turkish (TR)',
 					'locale'  => 'tr_TR.utf-8'
+				]
+			],
+			'options' => [
+				'languages' => true,
+				'languages.detect' => true
+			]
+		]);
+
+		$this->assertSame($expected, $app->detectedLanguage()->code());
+	}
+
+	public static function detectedLanguageWithLocaleProvider(): array
+	{
+		return [
+			['en', 'en'],
+			['en-GB', 'en'],
+			['en-US', 'en-us'],
+			['de', 'de'],
+			['fr', 'en'],
+			['en-US, en;q=0.5', 'en-us'],
+			['en-US;q=0.5, de;q=0.8, fr;q=0.9', 'de'],
+		];
+	}
+
+	/**
+	 * @backupGlobals enabled
+	 */
+	#[DataProvider('detectedLanguageWithLocaleProvider')]
+	public function testDetectedLanguageWithLocale($accept, $expected): void
+	{
+		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
+
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true,
+					'locale'  => 'en_GB'
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch',
+					'default' => false,
+					'locale'  => 'de_DE'
+				],
+				[
+					'code'    => 'en-us',
+					'name'    => 'English',
+					'default' => false,
+					'locale'  => 'en_US'
 				]
 			],
 			'options' => [

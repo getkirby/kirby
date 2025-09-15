@@ -32,7 +32,7 @@
 						{{ $t("installation.issues.headline") }}
 					</k-headline>
 
-					<ul class="k-installation-issues">
+					<ul class="k-installation-issues" data-theme="negative">
 						<li v-if="isInstallable === false">
 							<k-icon type="alert" />
 							<!-- eslint-disable-next-line vue/no-v-html -->
@@ -204,7 +204,8 @@ export default {
 .k-installation-issues li {
 	position: relative;
 	padding: var(--spacing-6);
-	background: var(--color-red-300);
+	background: var(--theme-color-back);
+	color: var(--theme-color-text-highlight);
 	padding-inline-start: 3.5rem;
 	border-radius: var(--rounded);
 }
@@ -214,13 +215,13 @@ export default {
 	inset-inline-start: 1.5rem;
 }
 .k-installation-issues .k-icon {
-	color: var(--color-red-700);
+	color: var(--theme-color-icon-highlight);
 }
 .k-installation-issues li:not(:last-child) {
 	margin-bottom: 2px;
 }
 .k-installation-issues li code {
 	font: inherit;
-	color: var(--color-red-700);
+	color: var(--theme-color-icon-highlight);
 }
 </style>

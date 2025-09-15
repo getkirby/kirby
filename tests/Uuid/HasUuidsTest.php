@@ -6,7 +6,7 @@ class HasUuidsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Uuid.HasUuids';
 
-	public function testfindByUuid()
+	public function testfindByUuid(): void
 	{
 		$app = $this->app->clone([
 			'site' => [

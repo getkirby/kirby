@@ -15,7 +15,7 @@ class PageUpdateTest extends ModelTestCase
 		Page $original,
 		Pages $drafts,
 		Pages $childrenAndDrafts
-	) {
+	): void {
 		$this->assertSame('Test', $modified->headline()->value());
 
 		// assert that the page status didn't change with the update

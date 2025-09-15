@@ -3,19 +3,15 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\App
- */
+#[CoversClass(App::class)]
 class AppResolveTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.AppResolve';
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveHomePage()
+	public function testResolveHomePage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -36,10 +32,7 @@ class AppResolveTest extends TestCase
 		$this->assertTrue($result->isHomePage());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveMainPage()
+	public function testResolveMainPage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -60,10 +53,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test', $result->id());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveSubPage()
+	public function testResolveSubPage(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -87,10 +77,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test/subpage', $result->id());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveDraft()
+	public function testResolveDraft(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -127,10 +114,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test/a-draft', $result->id());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolvePageRepresentation()
+	public function testResolvePageRepresentation(): void
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
 		F::write($template = static::TMP . '/test.xml.php', 'xml');
@@ -173,10 +157,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('png', $result->body());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolvePageHtmlRepresentation()
+	public function testResolvePageHtmlRepresentation(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -198,10 +179,7 @@ class AppResolveTest extends TestCase
 
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveFileDefault()
+	public function testResolveFileDefault(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -228,11 +206,7 @@ class AppResolveTest extends TestCase
 		$this->assertNull($result);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveFile
-	 */
-	public function testResolveSiteFile()
+	public function testResolveSiteFile(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -261,10 +235,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test.jpg', $result->id());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolvePageFile()
+	public function testResolvePageFile(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -305,11 +276,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test/test.jpg', $result->id());
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveFile
-	 */
-	public function testResolveFileEnabled()
+	public function testResolveFileEnabled(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -346,11 +313,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test/test.jpg', $result1->id());
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveFile
-	 */
-	public function testResolveFileDisabled()
+	public function testResolveFileDisabled(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -381,11 +344,7 @@ class AppResolveTest extends TestCase
 		$this->assertNull($result2);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::resolveFile
-	 */
-	public function testResolveFileClosure()
+	public function testResolveFileClosure(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -439,10 +398,7 @@ class AppResolveTest extends TestCase
 		$this->assertNull($result2);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveMultilangPageRepresentation()
+	public function testResolveMultilangPageRepresentation(): void
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
 		F::write($template = static::TMP . '/test.xml.php', 'xml');
@@ -524,10 +480,7 @@ class AppResolveTest extends TestCase
 		$this->assertSame('en', $app->language()->code());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testRepresentationErrorType()
+	public function testRepresentationErrorType(): void
 	{
 		$this->app = new App([
 			'templates' => [

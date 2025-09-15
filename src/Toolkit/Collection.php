@@ -626,6 +626,17 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
+	 * Joins the collection elements into a string,
+	 * optionally using a Closure to transform the elements
+	 */
+	public function join(
+		string $separator = ', ',
+		Closure|null $as = null
+	): string {
+		return implode($separator, $this->toArray($as));
+	}
+
+	/**
 	 * Returns the last element
 	 *
 	 * @return TValue

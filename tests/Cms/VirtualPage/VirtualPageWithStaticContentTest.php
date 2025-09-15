@@ -25,7 +25,7 @@ class VirtualPageWithStaticContentTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.VirtualPageWithStaticContent';
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$page = new VirtualPageWithStaticContent();
 

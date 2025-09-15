@@ -6,6 +6,8 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Field\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
 
 class MyPage extends Page
 {
@@ -33,15 +35,10 @@ class MyPage extends Page
 	}
 }
 
-/**
- * @coversDefaultClass \Kirby\Option\OptionsQuery
- */
+#[CoversClass(OptionsQuery::class)]
 class OptionsQueryTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$options = new OptionsQuery($query = 'site.children', '{{ page.slug }}');
 		$this->assertSame($query, $options->query);
@@ -49,10 +46,8 @@ class OptionsQueryTest extends TestCase
 		$this->assertNull($options->value);
 	}
 
-	/**
-	 * @coversNothing
-	 */
-	public function testDefaults()
+	#[CoversNothing]
+	public function testDefaults(): void
 	{
 		$options = new OptionsQuery($query = 'site.children');
 		$this->assertSame($query, $options->query);
@@ -60,10 +55,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertNull($options->value);
 	}
 
-	/**
-	 * @covers ::factory
-	 */
-	public function testFactory()
+	public function testFactory(): void
 	{
 		$options = OptionsQuery::factory([
 			'query' => $query = 'site.children',
@@ -78,10 +70,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame($query, $options->query);
 	}
 
-	/**
-	 * @covers ::polyfill
-	 */
-	public function testPolyfill()
+	public function testPolyfill(): void
 	{
 		$query = 'site.children';
 		$this->assertSame(['query' => $query], OptionsQuery::polyfill($query));
@@ -93,11 +82,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame(['query' => 'site.children'], OptionsQuery::polyfill($query));
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
-	public function testResolveForArray()
+	public function testResolveForArray(): void
 	{
 		$model   = new MyPage(['slug' => 'a']);
 		$options = (new OptionsQuery(
@@ -135,11 +120,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('tag3', $options[2]['text']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
-	public function testResolveForStructure()
+	public function testResolveForStructure(): void
 	{
 		$model = new Page([
 			'slug' => 'a',
@@ -171,11 +152,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
-	public function testResolveForBlock()
+	public function testResolveForBlock(): void
 	{
 		$model = new Page([
 			'slug' => 'a',
@@ -199,11 +176,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
-	public function testResolveForPages()
+	public function testResolveForPages(): void
 	{
 		$app = new App([
 			'site' => [
@@ -228,11 +201,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('c', $options[2]['text']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
-	public function testResolveForFile()
+	public function testResolveForFile(): void
 	{
 		$app = new App([
 			'site' => [
@@ -253,11 +222,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('b.pdf', $options[1]['text']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
-	public function testResolveForUser()
+	public function testResolveForUser(): void
 	{
 		$app = new App([
 			'users' => [
@@ -275,11 +240,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('homer', $options[0]['text']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 * @covers ::itemToDefaults
-	 */
-	public function testResolveForOptions()
+	public function testResolveForOptions(): void
 	{
 		$model   = new MyPage(['slug' => 'a']);
 		$options = new OptionsQuery('page.myOptions');
@@ -291,10 +252,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveInvalid()
+	public function testResolveInvalid(): void
 	{
 		$app = new App([
 			'site' => [
@@ -310,10 +268,7 @@ class OptionsQueryTest extends TestCase
 		$options = (new OptionsQuery('site.foo'))->render($app->site());
 	}
 
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveHtmlEscape()
+	public function testResolveHtmlEscape(): void
 	{
 		$model   = new MyPage(['slug' => 'a']);
 

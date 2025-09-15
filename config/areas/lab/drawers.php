@@ -16,12 +16,14 @@ return [
 				];
 			}
 
+			$doc = Doc::factory($component);
+
 			return [
 				'component' => 'k-lab-docs-drawer',
 				'props' => [
 					'icon' => 'book',
 					'title' => $component,
-					'docs'  => Doc::factory($component)->toArray()
+					'docs'  => $doc->toArray()
 				]
 			];
 		},

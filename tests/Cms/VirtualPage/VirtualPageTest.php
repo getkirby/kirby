@@ -14,7 +14,7 @@ class VirtualPageTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.VirtualPage';
 
-	public function testContent()
+	public function testContent(): void
 	{
 		$page = new VirtualPage([
 			'slug'    => 'test',
@@ -26,7 +26,7 @@ class VirtualPageTest extends ModelTestCase
 		$this->assertSame('Title', $page->title()->value());
 	}
 
-	public function testContentWithIgnoredTextFile()
+	public function testContentWithIgnoredTextFile(): void
 	{
 		$page = new VirtualPage([
 			'slug'    => 'test',
@@ -42,7 +42,7 @@ class VirtualPageTest extends ModelTestCase
 		$this->assertSame('Title (virtual)', $page->title()->value());
 	}
 
-	public function testUpdate()
+	public function testUpdate(): void
 	{
 		$page = new VirtualPage([
 			'slug'    => 'test',

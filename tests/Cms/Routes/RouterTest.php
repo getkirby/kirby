@@ -6,12 +6,13 @@ use InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RouterTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Router';
 
-	public function testHomeRoute()
+	public function testHomeRoute(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -26,7 +27,7 @@ class RouterTest extends TestCase
 		$this->assertSame('home', $page->id());
 	}
 
-	public function testHomeFolderRoute()
+	public function testHomeFolderRoute(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -41,7 +42,7 @@ class RouterTest extends TestCase
 		$this->assertSame(302, $response->code());
 	}
 
-	public function testHomeCustomFolderRoute()
+	public function testHomeCustomFolderRoute(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -61,7 +62,7 @@ class RouterTest extends TestCase
 		$this->assertSame(302, $response->code());
 	}
 
-	public function testHomeRouteWithoutHomePage()
+	public function testHomeRouteWithoutHomePage(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -75,7 +76,7 @@ class RouterTest extends TestCase
 		$app->call('/');
 	}
 
-	public function testPageRoute()
+	public function testPageRoute(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -92,7 +93,7 @@ class RouterTest extends TestCase
 		$this->assertSame('projects', $page->id());
 	}
 
-	public function testPageRepresentationRoute()
+	public function testPageRepresentationRoute(): void
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
 		F::write($template = static::TMP . '/test.xml.php', 'xml');
@@ -123,7 +124,7 @@ class RouterTest extends TestCase
 		$this->assertSame('xml', $result->body());
 	}
 
-	public function testPageFileRouteDefault()
+	public function testPageFileRouteDefault(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -144,7 +145,7 @@ class RouterTest extends TestCase
 		$this->assertNull($file);
 	}
 
-	public function testPageFileRouteEnabled()
+	public function testPageFileRouteEnabled(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -171,7 +172,7 @@ class RouterTest extends TestCase
 		$this->assertSame('projects/cover.jpg', $file->id());
 	}
 
-	public function testSiteFileRouteDefault()
+	public function testSiteFileRouteDefault(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -187,7 +188,7 @@ class RouterTest extends TestCase
 		$this->assertNull($file);
 	}
 
-	public function testSiteFileRouteEnabled()
+	public function testSiteFileRouteEnabled(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -209,7 +210,7 @@ class RouterTest extends TestCase
 		$this->assertSame('background.jpg', $file->id());
 	}
 
-	public function testNestedPageRoute()
+	public function testNestedPageRoute(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -231,13 +232,13 @@ class RouterTest extends TestCase
 		$this->assertSame('projects/project-a', $page->id());
 	}
 
-	public function testNotFoundRoute()
+	public function testNotFoundRoute(): void
 	{
 		$page = $this->app->call('not-found');
 		$this->assertNull($page);
 	}
 
-	public function testPageMediaRoute()
+	public function testPageMediaRoute(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -260,7 +261,7 @@ class RouterTest extends TestCase
 		$this->assertInstanceOf(Response::class, $response);
 	}
 
-	public function testSiteMediaRoute()
+	public function testSiteMediaRoute(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -278,7 +279,7 @@ class RouterTest extends TestCase
 		$this->assertInstanceOf(Response::class, $response);
 	}
 
-	public function testUserMediaRoute()
+	public function testUserMediaRoute(): void
 	{
 		$app = $this->app->clone([
 			'users' => [
@@ -300,7 +301,7 @@ class RouterTest extends TestCase
 		$this->assertInstanceOf(Response::class, $response);
 	}
 
-	public function testDisabledApi()
+	public function testDisabledApi(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -316,7 +317,7 @@ class RouterTest extends TestCase
 		$this->assertSame('api/(:all)', $patterns[0]);
 	}
 
-	public function testDisabledPanel()
+	public function testDisabledPanel(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -351,10 +352,8 @@ class RouterTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider customRouteProvider
-	 */
-	public function testCustomRoute($pattern, $path)
+	#[DataProvider('customRouteProvider')]
+	public function testCustomRoute($pattern, $path): void
 	{
 		$app = $this->app->clone([
 			'routes' => [
@@ -368,7 +367,7 @@ class RouterTest extends TestCase
 		$this->assertSame('test', $app->call($path));
 	}
 
-	public function testBadMethodRoute()
+	public function testBadMethodRoute(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid routing method: WURST');
@@ -377,7 +376,7 @@ class RouterTest extends TestCase
 		$this->app->call('/', 'WURST');
 	}
 
-	public function testMultiLangHomeRoute()
+	public function testMultiLangHomeRoute(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -424,7 +423,7 @@ class RouterTest extends TestCase
 		$this->assertInstanceOf(Responder::class, $result);
 	}
 
-	public function testMultiLangHomeRouteWithoutLanguageCode()
+	public function testMultiLangHomeRouteWithoutLanguageCode(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -475,10 +474,8 @@ class RouterTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider multiDomainProvider
-	 */
-	public function testMultiLangHomeWithDifferentDomains($domain, $language)
+	#[DataProvider('multiDomainProvider')]
+	public function testMultiLangHomeWithDifferentDomains($domain, $language): void
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -516,10 +513,8 @@ class RouterTest extends TestCase
 		$this->assertSame($language, I18n::locale());
 	}
 
-	/**
-	 * @dataProvider multiDomainProvider
-	 */
-	public function testMultiLangHomeWithDifferentDomainsAndPath($domain, $language)
+	#[DataProvider('multiDomainProvider')]
+	public function testMultiLangHomeWithDifferentDomainsAndPath($domain, $language): void
 	{
 		$app = $this->app->clone([
 			'urls' => [
@@ -570,10 +565,8 @@ class RouterTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider acceptedLanguageProvider
-	 */
-	public function testMultiLangHomeRouteWithoutLanguageCodeAndLanguageDetection($accept, $redirect)
+	#[DataProvider('acceptedLanguageProvider')]
+	public function testMultiLangHomeRouteWithoutLanguageCodeAndLanguageDetection($accept, $redirect): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -613,7 +606,7 @@ class RouterTest extends TestCase
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
 	}
 
-	public function testMultiLangHomeRouteWithoutHomePage()
+	public function testMultiLangHomeRouteWithoutHomePage(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -640,7 +633,7 @@ class RouterTest extends TestCase
 		$app->call('/');
 	}
 
-	public function testMultiLangPageRoute()
+	public function testMultiLangPageRoute(): void
 	{
 		$app = $this->app->clone([
 			'site' => [
@@ -681,7 +674,7 @@ class RouterTest extends TestCase
 		$this->assertSame('fr', I18n::locale());
 	}
 
-	public function testMultilangPageRepresentationRoute()
+	public function testMultilangPageRepresentationRoute(): void
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
 		F::write($template = static::TMP . '/test.xml.php', 'xml');
@@ -739,7 +732,7 @@ class RouterTest extends TestCase
 		$this->assertSame('en', I18n::locale());
 	}
 
-	public function testMultilangPageRepresentationRouteWithoutLanguageCode()
+	public function testMultilangPageRepresentationRouteWithoutLanguageCode(): void
 	{
 		F::write($template = static::TMP . '/test.php', 'html');
 		F::write($template = static::TMP . '/test.xml.php', 'xml');
@@ -798,7 +791,7 @@ class RouterTest extends TestCase
 		$this->assertSame('en', I18n::locale());
 	}
 
-	public function testCustomMediaFolder()
+	public function testCustomMediaFolder(): void
 	{
 		$app = new App([
 			'roots' => [

@@ -5,13 +5,12 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @coversDefaultClass \Kirby\Cms\Fieldset
- */
+#[CoversClass(Fieldset::class)]
 class FieldsetTest extends TestCase
 {
-	public function testConstruct()
+	public function testConstruct(): void
 	{
 		$fieldset = new Fieldset([
 			'type' => 'test'
@@ -25,17 +24,14 @@ class FieldsetTest extends TestCase
 		$this->assertTrue($fieldset->translate());
 	}
 
-	public function testConstructWithMissingType()
+	public function testConstructWithMissingType(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The fieldset type is missing');
 		$fieldset = new Fieldset();
 	}
 
-	/**
-	 * @covers ::disabled
-	 */
-	public function testDisabled()
+	public function testDisabled(): void
 	{
 		$fieldset = new Fieldset([
 			'type'     => 'test',
@@ -45,10 +41,7 @@ class FieldsetTest extends TestCase
 		$this->assertTrue($fieldset->disabled());
 	}
 
-	/**
-	 * @covers ::editable
-	 */
-	public function testEditable()
+	public function testEditable(): void
 	{
 		$fieldset = new Fieldset([
 			'type'   => 'test',
@@ -62,10 +55,7 @@ class FieldsetTest extends TestCase
 		$this->assertTrue($fieldset->editable());
 	}
 
-	/**
-	 * @covers ::editable
-	 */
-	public function testEditableWhenDisabled()
+	public function testEditableWhenDisabled(): void
 	{
 		$fieldset = new Fieldset([
 			'type'     => 'test',
@@ -80,10 +70,7 @@ class FieldsetTest extends TestCase
 		$this->assertFalse($fieldset->editable());
 	}
 
-	/**
-	 * @covers ::fields
-	 */
-	public function testFields()
+	public function testFields(): void
 	{
 		$fieldset = new Fieldset([
 			'type'   => 'test',
@@ -97,10 +84,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('text', $fieldset->fields()['text']['type']);
 	}
 
-	/**
-	 * @covers ::fields
-	 */
-	public function testFieldsInTabs()
+	public function testFieldsInTabs(): void
 	{
 		$fieldset = new Fieldset([
 			'type'   => 'test',
@@ -118,10 +102,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('text', $fieldset->fields()['text']['type']);
 	}
 
-	/**
-	 * @covers ::form
-	 */
-	public function testForm()
+	public function testForm(): void
 	{
 		$fieldset = new Fieldset([
 			'type' => 'test',
@@ -136,10 +117,7 @@ class FieldsetTest extends TestCase
 		$this->assertInstanceOf(Form::class, $form);
 	}
 
-	/**
-	 * @covers ::icon
-	 */
-	public function testIcon()
+	public function testIcon(): void
 	{
 		$fieldset = new Fieldset([
 			'type' => 'test',
@@ -149,10 +127,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('test', $fieldset->icon());
 	}
 
-	/**
-	 * @covers ::label
-	 */
-	public function testLabel()
+	public function testLabel(): void
 	{
 		$fieldset = new Fieldset([
 			'type'  => 'test',
@@ -162,10 +137,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('Test', $fieldset->label());
 	}
 
-	/**
-	 * @covers ::label
-	 */
-	public function testLabelWithTranslation()
+	public function testLabelWithTranslation(): void
 	{
 		$fieldset = new Fieldset([
 			'type'  => 'test',
@@ -178,10 +150,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('English', $fieldset->label());
 	}
 
-	/**
-	 * @covers ::model
-	 */
-	public function testModel()
+	public function testModel(): void
 	{
 		$fieldset = new Fieldset([
 			'type'   => 'test',
@@ -191,10 +160,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame($model, $fieldset->model());
 	}
 
-	/**
-	 * @covers ::name
-	 */
-	public function testName()
+	public function testName(): void
 	{
 		$fieldset = new Fieldset([
 			'type'  => 'test',
@@ -204,10 +170,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('test', $fieldset->name());
 	}
 
-	/**
-	 * @covers ::name
-	 */
-	public function testNameTranslated()
+	public function testNameTranslated(): void
 	{
 		$fieldset = new Fieldset([
 			'type'  => 'test',
@@ -220,10 +183,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('English name', $fieldset->name());
 	}
 
-	/**
-	 * @covers ::name
-	 */
-	public function testNameFromTitle()
+	public function testNameFromTitle(): void
 	{
 		$fieldset = new Fieldset([
 			'type'  => 'test',
@@ -233,10 +193,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('Test Title', $fieldset->name());
 	}
 
-	/**
-	 * @covers ::name
-	 */
-	public function testNameFromTitleTranslated()
+	public function testNameFromTitleTranslated(): void
 	{
 		$fieldset = new Fieldset([
 			'type'  => 'test',
@@ -249,10 +206,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('English name', $fieldset->name());
 	}
 
-	/**
-	 * @covers ::preview
-	 */
-	public function testPreview()
+	public function testPreview(): void
 	{
 		$fieldset = new Fieldset([
 			'type'    => 'test',
@@ -262,10 +216,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('test', $fieldset->preview());
 	}
 
-	/**
-	 * @covers ::tabs
-	 */
-	public function testTabs()
+	public function testTabs(): void
 	{
 		$fieldset = new Fieldset([
 			'type' => 'test',
@@ -282,10 +233,7 @@ class FieldsetTest extends TestCase
 		$this->assertCount(2, $fieldset->tabs()['content']['fields']);
 	}
 
-	/**
-	 * @covers ::translate
-	 */
-	public function testTranslate()
+	public function testTranslate(): void
 	{
 		$fieldset = new Fieldset([
 			'type'      => 'test',
@@ -295,10 +243,7 @@ class FieldsetTest extends TestCase
 		$this->assertFalse($fieldset->translate());
 	}
 
-	/**
-	 * @covers ::type
-	 */
-	public function testType()
+	public function testType(): void
 	{
 		$fieldset = new Fieldset([
 			'type' => 'test',
@@ -307,10 +252,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame('test', $fieldset->type());
 	}
 
-	/**
-	 * @covers ::toArray
-	 */
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$fieldset = new Fieldset([
 			'type' => 'test',
@@ -337,10 +279,7 @@ class FieldsetTest extends TestCase
 		$this->assertSame($expected, $fieldset->toArray());
 	}
 
-	/**
-	 * @covers ::unset
-	 */
-	public function testUnset()
+	public function testUnset(): void
 	{
 		$fieldset = new Fieldset([
 			'type'  => 'test',
@@ -350,10 +289,7 @@ class FieldsetTest extends TestCase
 		$this->assertTrue($fieldset->unset());
 	}
 
-	/**
-	 * @covers ::wysiwyg
-	 */
-	public function testWysiwyg()
+	public function testWysiwyg(): void
 	{
 		$fieldset = new Fieldset([
 			'type'    => 'test',

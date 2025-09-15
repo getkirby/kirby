@@ -3,26 +3,30 @@
 namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
+use Kirby\Parsley\Schema;
 use Kirby\Toolkit\Dom;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @coversDefaultClass \Kirby\Parsley\Schema\Blocks
- */
+#[CoversClass(Blocks::class)]
 class BlocksTest extends TestCase
 {
+	/** @var \Kirby\Parsley\Schema\Blocks */
+	protected Schema $schema;
+
 	public function setUp(): void
 	{
 		$this->schema = new Blocks();
 	}
 
-	protected function element($html, $query)
+	protected function element($html, $query): Element
 	{
 		$dom  = new Dom($html);
 		$node = $dom->query($query)[0];
 		return new Element($node);
 	}
 
-	public function testBlockquote()
+	public function testBlockquote(): void
 	{
 		$html = <<<HTML
 			<blockquote>
@@ -39,10 +43,10 @@ class BlocksTest extends TestCase
 			'type' => 'quote',
 		];
 
-		return $this->assertSame($expected, $this->schema->blockquote($element));
+		$this->assertSame($expected, $this->schema->blockquote($element));
 	}
 
-	public function testBlockquoteWithMarks()
+	public function testBlockquoteWithMarks(): void
 	{
 		$html = <<<HTML
 			<blockquote>
@@ -59,10 +63,10 @@ class BlocksTest extends TestCase
 			'type' => 'quote',
 		];
 
-		return $this->assertSame($expected, $this->schema->blockquote($element));
+		$this->assertSame($expected, $this->schema->blockquote($element));
 	}
 
-	public function testBlockquoteWithParagraphs()
+	public function testBlockquoteWithParagraphs(): void
 	{
 		$html = <<<HTML
 			<blockquote>
@@ -80,10 +84,10 @@ class BlocksTest extends TestCase
 			'type' => 'quote',
 		];
 
-		return $this->assertSame($expected, $this->schema->blockquote($element));
+		$this->assertSame($expected, $this->schema->blockquote($element));
 	}
 
-	public function testBlockquoteWithFooter()
+	public function testBlockquoteWithFooter(): void
 	{
 		$html = <<<HTML
 			<blockquote>
@@ -101,13 +105,10 @@ class BlocksTest extends TestCase
 			'type' => 'quote',
 		];
 
-		return $this->assertSame($expected, $this->schema->blockquote($element));
+		$this->assertSame($expected, $this->schema->blockquote($element));
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
-	public function testFallback()
+	public function testFallback(): void
 	{
 		$expected = [
 			'content' => [
@@ -116,13 +117,10 @@ class BlocksTest extends TestCase
 			'type' => 'text',
 		];
 
-		return $this->assertSame($expected, $this->schema->fallback('Test'));
+		$this->assertSame($expected, $this->schema->fallback('Test'));
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
-	public function testFallbackForDomElement()
+	public function testFallbackForDomElement(): void
 	{
 		$dom = new Dom('<p><b>Bold</b> <i>Italic</i></p>');
 		$p        = $dom->query('//p')[0];
@@ -143,10 +141,7 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $fallback);
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
-	public function testFallbackForDomElementWithParagraphs()
+	public function testFallbackForDomElementWithParagraphs(): void
 	{
 		$dom = new Dom('<div><p>A</p><p>B</p></div>');
 		$p        = $dom->query('//div')[0];
@@ -167,23 +162,17 @@ class BlocksTest extends TestCase
 		$this->assertSame($expected, $fallback);
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
-	public function testFallbackForEmptyContent()
+	public function testFallbackForEmptyContent(): void
 	{
-		return $this->assertNull($this->schema->fallback(''));
+		$this->assertNull($this->schema->fallback(''));
 	}
 
-	/**
-	 * @covers ::fallback
-	 */
-	public function testFallbackForInvalidContent()
+	public function testFallbackForInvalidContent(): void
 	{
-		return $this->assertNull($this->schema->fallback(''));
+		$this->assertNull($this->schema->fallback(''));
 	}
 
-	public function testHeading()
+	public function testHeading(): void
 	{
 		$html = <<<HTML
 			<h1>
@@ -200,7 +189,7 @@ class BlocksTest extends TestCase
 			'type' => 'heading',
 		];
 
-		return $this->assertSame($expected, $this->schema->heading($element));
+		$this->assertSame($expected, $this->schema->heading($element));
 	}
 
 	public static function headingLevelProvider(): array
@@ -210,10 +199,8 @@ class BlocksTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider headingLevelProvider
-	 */
-	public function testHeadingLevel($level)
+	#[DataProvider('headingLevelProvider')]
+	public function testHeadingLevel($level): void
 	{
 		$html = <<<HTML
 			<$level>
@@ -230,10 +217,10 @@ class BlocksTest extends TestCase
 			'type' => 'heading',
 		];
 
-		return $this->assertSame($expected, $this->schema->heading($element));
+		$this->assertSame($expected, $this->schema->heading($element));
 	}
 
-	public function testHeadingId()
+	public function testHeadingId(): void
 	{
 		$html = <<<HTML
 			<h1 id="test">
@@ -251,10 +238,10 @@ class BlocksTest extends TestCase
 			'type' => 'heading',
 		];
 
-		return $this->assertSame($expected, $this->schema->heading($element));
+		$this->assertSame($expected, $this->schema->heading($element));
 	}
 
-	public function testIframe()
+	public function testIframe(): void
 	{
 		$html = <<<HTML
 			<iframe src="https://getkirby.com"></iframe>
@@ -268,10 +255,10 @@ class BlocksTest extends TestCase
 			'type' => 'markdown',
 		];
 
-		return $this->assertSame($expected, $this->schema->iframe($element));
+		$this->assertSame($expected, $this->schema->iframe($element));
 	}
 
-	public function testIframeWithVimeoVideo()
+	public function testIframeWithVimeoVideo(): void
 	{
 		$html = <<<HTML
 			<iframe src="https://player.vimeo.com/video/1"></iframe>
@@ -286,10 +273,10 @@ class BlocksTest extends TestCase
 			'type' => 'video',
 		];
 
-		return $this->assertSame($expected, $this->schema->iframe($element));
+		$this->assertSame($expected, $this->schema->iframe($element));
 	}
 
-	public function testIframeWithYoutubeVideo()
+	public function testIframeWithYoutubeVideo(): void
 	{
 		$html = <<<HTML
 			<iframe src="https://youtube.com/embed/1"></iframe>
@@ -304,10 +291,10 @@ class BlocksTest extends TestCase
 			'type' => 'video',
 		];
 
-		return $this->assertSame($expected, $this->schema->iframe($element));
+		$this->assertSame($expected, $this->schema->iframe($element));
 	}
 
-	public function testIframeWithYoutubeNoCookieVideo()
+	public function testIframeWithYoutubeNoCookieVideo(): void
 	{
 		$html = <<<HTML
 			<iframe src="https://youtube-nocookie.com/embed/1"></iframe>
@@ -322,10 +309,10 @@ class BlocksTest extends TestCase
 			'type' => 'video',
 		];
 
-		return $this->assertSame($expected, $this->schema->iframe($element));
+		$this->assertSame($expected, $this->schema->iframe($element));
 	}
 
-	public function testIframeWithCaption()
+	public function testIframeWithCaption(): void
 	{
 		$html = <<<HTML
 			<figure>
@@ -343,10 +330,10 @@ class BlocksTest extends TestCase
 			'type' => 'video',
 		];
 
-		return $this->assertSame($expected, $this->schema->iframe($element));
+		$this->assertSame($expected, $this->schema->iframe($element));
 	}
 
-	public function testIframeWithCaptionAndMarks()
+	public function testIframeWithCaptionAndMarks(): void
 	{
 		$html = <<<HTML
 			<figure>
@@ -364,10 +351,10 @@ class BlocksTest extends TestCase
 			'type' => 'video',
 		];
 
-		return $this->assertSame($expected, $this->schema->iframe($element));
+		$this->assertSame($expected, $this->schema->iframe($element));
 	}
 
-	public function testImg()
+	public function testImg(): void
 	{
 		$html = <<<HTML
 			<img src="https://getkirby.com/image.jpg">
@@ -385,10 +372,10 @@ class BlocksTest extends TestCase
 			'type' => 'image',
 		];
 
-		return $this->assertSame($expected, $this->schema->img($element));
+		$this->assertSame($expected, $this->schema->img($element));
 	}
 
-	public function testImgWithAlt()
+	public function testImgWithAlt(): void
 	{
 		$html = <<<HTML
 			<img src="https://getkirby.com/image.jpg" alt="Test">
@@ -406,10 +393,10 @@ class BlocksTest extends TestCase
 			'type' => 'image',
 		];
 
-		return $this->assertSame($expected, $this->schema->img($element));
+		$this->assertSame($expected, $this->schema->img($element));
 	}
 
-	public function testImgWithLink()
+	public function testImgWithLink(): void
 	{
 		$html = <<<HTML
 			<a href="https://getkirby.com">
@@ -429,10 +416,10 @@ class BlocksTest extends TestCase
 			'type' => 'image',
 		];
 
-		return $this->assertSame($expected, $this->schema->img($element));
+		$this->assertSame($expected, $this->schema->img($element));
 	}
 
-	public function testImgWithCaption()
+	public function testImgWithCaption(): void
 	{
 		$html = <<<HTML
 			<figure>
@@ -453,10 +440,10 @@ class BlocksTest extends TestCase
 			'type' => 'image',
 		];
 
-		return $this->assertSame($expected, $this->schema->img($element));
+		$this->assertSame($expected, $this->schema->img($element));
 	}
 
-	public function testImgWithLinkAndCaption()
+	public function testImgWithLinkAndCaption(): void
 	{
 		$html = <<<HTML
 			<figure>
@@ -479,10 +466,10 @@ class BlocksTest extends TestCase
 			'type' => 'image',
 		];
 
-		return $this->assertSame($expected, $this->schema->img($element));
+		$this->assertSame($expected, $this->schema->img($element));
 	}
 
-	public function testList()
+	public function testList(): void
 	{
 		$html = <<<HTML
 			<ul>
@@ -495,10 +482,10 @@ class BlocksTest extends TestCase
 		$element  = $this->element($html, '//ul');
 		$expected = '<ul><li>A</li><li>B</li><li>C</li></ul>';
 
-		return $this->assertSame($expected, $this->schema->list($element));
+		$this->assertSame($expected, $this->schema->list($element));
 	}
 
-	public function testListWithMarks()
+	public function testListWithMarks(): void
 	{
 		$html = <<<HTML
 			<ul>
@@ -509,10 +496,10 @@ class BlocksTest extends TestCase
 		$element  = $this->element($html, '//ul');
 		$expected = '<ul><li><b>Bold</b><i>Italic</i></li></ul>';
 
-		return $this->assertSame($expected, $this->schema->list($element));
+		$this->assertSame($expected, $this->schema->list($element));
 	}
 
-	public function testListNested()
+	public function testListNested(): void
 	{
 		$html = <<<HTML
 			<ul>
@@ -531,10 +518,10 @@ class BlocksTest extends TestCase
 		$element  = $this->element($html, '//ul');
 		$expected = '<ul><li>A</li><li><ol><li>1</li><li>2</li><li>3</li></ol></li><li>C</li></ul>';
 
-		return $this->assertSame($expected, $this->schema->list($element));
+		$this->assertSame($expected, $this->schema->list($element));
 	}
 
-	public function testPre()
+	public function testPre(): void
 	{
 		$html = <<<HTML
 			<pre>Code</pre>
@@ -549,10 +536,10 @@ class BlocksTest extends TestCase
 			'type' => 'code',
 		];
 
-		return $this->assertSame($expected, $this->schema->pre($element));
+		$this->assertSame($expected, $this->schema->pre($element));
 	}
 
-	public function testPreWithCode()
+	public function testPreWithCode(): void
 	{
 		$html = <<<HTML
 			<pre><code>Code</code></pre>
@@ -567,10 +554,10 @@ class BlocksTest extends TestCase
 			'type' => 'code',
 		];
 
-		return $this->assertSame($expected, $this->schema->pre($element));
+		$this->assertSame($expected, $this->schema->pre($element));
 	}
 
-	public function testPreWithLanguage()
+	public function testPreWithLanguage(): void
 	{
 		$html = <<<HTML
 			<pre><code class="language-php">Code</code></pre>
@@ -585,15 +572,12 @@ class BlocksTest extends TestCase
 			'type' => 'code',
 		];
 
-		return $this->assertSame($expected, $this->schema->pre($element));
+		$this->assertSame($expected, $this->schema->pre($element));
 	}
 
-	/**
-	 * @covers ::skip
-	 */
-	public function testSkip()
+	public function testSkip(): void
 	{
-		return $this->assertSame([
+		$this->assertSame([
 			'base',
 			'link',
 			'meta',
@@ -603,7 +587,7 @@ class BlocksTest extends TestCase
 		], $this->schema->skip());
 	}
 
-	public function testTable()
+	public function testTable(): void
 	{
 		$html = <<<HTML
 			<table></table>
@@ -617,6 +601,6 @@ class BlocksTest extends TestCase
 			'type' => 'markdown',
 		];
 
-		return $this->assertSame($expected, $this->schema->table($element));
+		$this->assertSame($expected, $this->schema->table($element));
 	}
 }

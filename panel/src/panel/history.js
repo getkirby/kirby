@@ -5,9 +5,13 @@ import { reactive, set } from "vue";
  */
 export default () => {
 	return reactive({
-		add(state) {
+		add(state, replace = false) {
 			if (!state.id) {
 				throw new Error("The state needs an ID");
+			}
+
+			if (replace === true) {
+				return this.replace(-1, state);
 			}
 
 			// the state is already in the history
