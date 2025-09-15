@@ -2,6 +2,7 @@
 
 namespace Kirby\Image;
 
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\V;
 
 /**
@@ -25,7 +26,7 @@ class Exif
 	protected string|null $exposure = null;
 	protected string|null $focalLength = null;
 	protected bool|null $isColor = null;
-	protected string|null $iso = null;
+	protected array|string|null $iso = null;
 	protected Location|null $location = null;
 	protected string|null $timestamp = null;
 	protected int $orientation;
@@ -96,6 +97,10 @@ class Exif
 	 */
 	public function iso(): string|null
 	{
+		if (is_array($this->iso) === true) {
+			return A::first($this->iso);
+		}
+
 		return $this->iso;
 	}
 
