@@ -55,6 +55,9 @@ export default {
 		isLocked() {
 			return this.lock.isLocked;
 		},
+		isSaving() {
+			return this.$panel.content.isProcessing;
+		},
 		modified() {
 			return this.lock.modified;
 		}

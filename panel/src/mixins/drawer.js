@@ -11,6 +11,13 @@ export default {
 	mixins: [Header],
 	props: {
 		/**
+		 * @internal
+		 */
+		current: {
+			default: true,
+			type: Boolean
+		},
+		/**
 		 * The default icon for the drawer header
 		 */
 		icon: String,
