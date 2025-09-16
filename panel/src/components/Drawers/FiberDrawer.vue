@@ -6,7 +6,8 @@
 			:key="drawer.id"
 			v-bind="isCurrent(drawer.id) ? $panel.drawer.props : drawer.props"
 			:breadcrumb="$panel.drawer.breadcrumb"
-			:visible="isCurrent(drawer.id) === true"
+			:current="isCurrent(drawer.id) === true"
+			:visible="true"
 			v-on="isCurrent(drawer.id) ? $panel.drawer.listeners() : drawer.on"
 		/>
 	</div>
