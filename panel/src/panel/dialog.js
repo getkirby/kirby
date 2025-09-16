@@ -1,5 +1,6 @@
-import { reactive } from "vue";
 import Modal, { defaults as modalDefaults } from "./modal.js";
+import { isObject } from "@/helpers/object.js";
+import { reactive } from "vue";
 
 export const defaults = () => {
 	return {
@@ -86,6 +87,13 @@ export default (panel) => {
 			// check for legacy Vue components
 			if (dialog instanceof window.Vue) {
 				return this.openComponent(dialog);
+			}
+
+			// handle drawer object with url property
+			if (isObject(dialog) && dialog.url) {
+				options = dialog;
+				dialog = dialog.url;
+				delete options.url;
 			}
 
 			// prefix URLs

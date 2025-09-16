@@ -83,15 +83,15 @@ export default {
 					{
 						icon: "cog",
 						text: this.$t("settings"),
-						disabled: !this.$panel.permissions.languages.update,
-						click: () => this.$dialog(`languages/${language.id}/update`)
+						dialog: `languages/${language.id}/update`,
+						disabled: !this.$panel.permissions.languages.update
 					},
 					{
 						when: language.deletable,
 						icon: "trash",
 						text: this.$t("delete"),
-						disabled: !this.$panel.permissions.languages.delete,
-						click: () => this.$dialog(`languages/${language.id}/delete`)
+						dialog: `languages/${language.id}/delete`,
+						disabled: !this.$panel.permissions.languages.delete
 					}
 				]
 			}));

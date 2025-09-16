@@ -19,7 +19,7 @@ export default {
 						page.status,
 						page.permissions.changeStatus === false
 					),
-					click: () => this.$dialog(page.link + "/changeStatus")
+					dialog: page.link + "/changeStatus"
 				};
 
 				return {

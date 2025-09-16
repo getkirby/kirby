@@ -70,14 +70,14 @@ export default {
 		activationButton() {
 			if (this.$panel.license === "missing") {
 				return {
-					click: () => this.$dialog("registration"),
+					dialog: "registration",
 					text: this.$t("activate")
 				};
 			}
 
 			if (this.$panel.license === "legacy") {
 				return {
-					click: () => this.$dialog("license"),
+					dialog: "license",
 					text: this.$t("renew")
 				};
 			}
