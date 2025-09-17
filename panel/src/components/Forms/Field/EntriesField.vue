@@ -35,7 +35,11 @@
 			:value="JSON.stringify(entries)"
 		>
 			<!-- Empty State -->
-			<k-empty v-if="entries.length === 0" icon="list-bullet" @click="add()">
+			<k-empty
+				v-if="entries.length === 0"
+				icon="list-bullet"
+				v-on="!disabled ? { click: add } : {}"
+			>
 				{{ empty ?? $t("field.entries.empty") }}
 			</k-empty>
 

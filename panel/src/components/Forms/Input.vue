@@ -147,7 +147,7 @@ export default {
 	font-family: var(--input-font-family);
 	font-size: var(--input-font-size);
 }
-.k-input:focus-within {
+.k-input:not([data-disabled="true"]):focus-within {
 	outline: var(--input-outline-focus);
 }
 
@@ -198,6 +198,5 @@ export default {
 .k-input[data-disabled="true"] {
 	--input-color-back: var(--panel-color-back);
 	--input-color-icon: var(--color-gray-600);
-	pointer-events: none;
 }
 </style>

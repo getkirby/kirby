@@ -46,13 +46,13 @@
 					</template>
 				</tbody>
 			</table>
-			<k-empty v-else icon="box" @click="add">
+
+			<k-empty v-else icon="box" v-on="!disabled ? { click: add } : {}">
 				{{ empty ?? $t("field.object.empty") }}
 			</k-empty>
 		</template>
-		<template v-else>
-			<k-empty icon="box">{{ $t("fields.empty") }}</k-empty>
-		</template>
+
+		<k-empty v-else icon="box">{{ $t("fields.empty") }}</k-empty>
 
 		<!-- Validation -->
 		<input

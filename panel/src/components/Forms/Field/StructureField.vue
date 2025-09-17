@@ -14,9 +14,13 @@
 				variant="filled"
 			/>
 			<k-button-group v-else>
-				<template v-if="canSelect">
-					<k-button v-bind="batchEditingToggle" size="xs" variant="filled" />
-				</template>
+				<k-button
+					v-if="canSelect"
+					v-bind="batchEditingToggle"
+					size="xs"
+					variant="filled"
+				/>
+
 				<k-button-group layout="collapsed">
 					<k-button
 						:autofocus="autofocus"
@@ -62,7 +66,11 @@
 		>
 			<template v-if="hasFields">
 				<!-- Empty State -->
-				<k-empty v-if="items.length === 0" icon="list-bullet" @click="add()">
+				<k-empty
+					v-if="items.length === 0"
+					icon="list-bullet"
+					v-on="!disabled ? { click: add } : {}"
+				>
 					{{ empty ?? $t("field.structure.empty") }}
 				</k-empty>
 
@@ -80,6 +88,7 @@
 						:selecting="isSelecting"
 						:selected="selected"
 						:sortable="isSortable"
+						class="k-structure-field-table"
 						@cell="open($event.row, $event.columnIndex)"
 						@input="onTableInput"
 						@option="option"
@@ -620,11 +629,8 @@ export default {
 	margin-top: var(--spacing-3);
 }
 
-/* Allow interaction with disabled structure field to open the drawer */
-.k-structure-field[data-disabled="true"] {
+/* Restore cursor for disabled structure field content */
+.k-structure-field-table[aria-disabled="true"] {
 	cursor: initial;
-}
-.k-structure-field[data-disabled="true"] * {
-	pointer-events: initial;
 }
 </style>

@@ -57,7 +57,11 @@
 			</k-draggable>
 
 			<!-- No blocks -->
-			<k-empty class="k-blocks-empty" icon="box" @click="choose(blocks.length)">
+			<k-empty
+				class="k-blocks-empty"
+				icon="box"
+				v-on="!disabled ? { click: () => choose(blocks.length) } : {}"
+			>
 				{{ empty ?? $t("field.blocks.empty") }}
 			</k-empty>
 		</template>
