@@ -19,7 +19,7 @@ export default {
 						page.status,
 						page.permissions.changeStatus === false
 					),
-					class: "k-page-status-button",
+					class: "k-page-status-icon-option",
 					click: () => this.$dialog(page.link + "/changeStatus")
 				};
 
