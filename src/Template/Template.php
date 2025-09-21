@@ -154,7 +154,8 @@ class Template implements Stringable
 	 */
 	public function render(array $data = []): string
 	{
-		return Snippet::load($this->file(), $data, $data);
+		// Treat the template file as snippet and load it accordingly
+		return Snippet::load($this->file(), $data);
 	}
 
 	/**

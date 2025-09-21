@@ -102,8 +102,8 @@ class TemplateTest extends TestCase
 			]
 		]);
 
-		$template = new Template('simple');
-		$this->assertSame('Test', $template->render(['slot' => 'Test']));
+		$template = new Template('template');
+		$this->assertSame('Test', $template->render(['foo' => 'Test']));
 	}
 
 	public function testRenderOpenLayoutSnippet(): void
