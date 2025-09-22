@@ -234,7 +234,11 @@ class SnippetTest extends TestCase
 		]);
 
 		$snippet = new Snippet(static::FIXTURES . '/with-layout.php');
-		$this->assertSame("<h1>Layout</h1>\nMy content\n<footer>with other stuff</footer>\n", $snippet->render());
+		$this->assertSame(
+			"<h1>Layout</h1>\nMy content\n\nSimple output\n" .
+			"<footer>with other stuff</footer>\n",
+			$snippet->render()
+		);
 	}
 
 	public function testRenderWithLazySlots(): void
