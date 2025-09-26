@@ -15,6 +15,7 @@
 						:editor="editor"
 						:has-diff="hasDiff"
 						:is-locked="isLocked"
+						:is-processing="isSaving"
 						:modified="modified"
 						size="xs"
 						@discard="$emit('discard', $event)"

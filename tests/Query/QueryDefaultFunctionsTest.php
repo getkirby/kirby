@@ -183,4 +183,17 @@ class QueryDefaultFunctionsTest extends TestCase
 		$query = new Query('user("user-b")');
 		$this->assertNull($query->resolve());
 	}
+
+	public function testUsers(): void
+	{
+		new App([
+			'users' => [
+				['id' => 'user-a', 'email' => 'foo@getkirby.com'],
+				['id' => 'user-b', 'email' => 'bar@getkirby.com']
+			]
+		]);
+
+		$query = new Query('users()');
+		$this->assertCount(2, $query->resolve());
+	}
 }

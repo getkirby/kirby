@@ -18,6 +18,7 @@
 					:editor="editor"
 					:has-diff="hasDiff"
 					:is-locked="isLocked"
+					:is-processing="isSaving"
 					:modified="modified"
 					:preview="permissions.preview ? api + '/preview/changes' : false"
 					@discard="onDiscard"
