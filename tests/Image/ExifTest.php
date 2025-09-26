@@ -103,7 +103,7 @@ class ExifTest extends TestCase
 			}
 		};
 
-		$this->assertSame('100', $exif->iso());
+		$this->assertSame([100, 200], $exif->iso());
 	}
 
 	public function testIsoWithoutValue(): void
