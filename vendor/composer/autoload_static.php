@@ -646,6 +646,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Uuid\\Identifiable' => __DIR__ . '/../..' . '/src/Uuid/Identifiable.php',
         'Kirby\\Uuid\\ModelUuid' => __DIR__ . '/../..' . '/src/Uuid/ModelUuid.php',
         'Kirby\\Uuid\\PageUuid' => __DIR__ . '/../..' . '/src/Uuid/PageUuid.php',
+        'Kirby\\Uuid\\Permalink' => __DIR__ . '/../..' . '/src/Uuid/Permalink.php',
         'Kirby\\Uuid\\SiteUuid' => __DIR__ . '/../..' . '/src/Uuid/SiteUuid.php',
         'Kirby\\Uuid\\StructureUuid' => __DIR__ . '/../..' . '/src/Uuid/StructureUuid.php',
         'Kirby\\Uuid\\Uri' => __DIR__ . '/../..' . '/src/Uuid/Uri.php',

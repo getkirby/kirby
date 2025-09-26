@@ -525,6 +525,7 @@ return array(
     'Kirby\\Uuid\\Identifiable' => $baseDir . '/src/Uuid/Identifiable.php',
     'Kirby\\Uuid\\ModelUuid' => $baseDir . '/src/Uuid/ModelUuid.php',
     'Kirby\\Uuid\\PageUuid' => $baseDir . '/src/Uuid/PageUuid.php',
+    'Kirby\\Uuid\\Permalink' => $baseDir . '/src/Uuid/Permalink.php',
     'Kirby\\Uuid\\SiteUuid' => $baseDir . '/src/Uuid/SiteUuid.php',
     'Kirby\\Uuid\\StructureUuid' => $baseDir . '/src/Uuid/StructureUuid.php',
     'Kirby\\Uuid\\Uri' => $baseDir . '/src/Uuid/Uri.php',
