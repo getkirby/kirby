@@ -211,4 +211,17 @@ class QueryTest extends TestCase
 		$bar = $query->resolve($data);
 		$this->assertSame('homer simpson', $bar);
 	}
+
+	public function testDefaultEntries(): void
+	{
+		$expectedEntries = [
+			'kirby', 'collection', 'file', 'page', 'qr',
+			'site', 't', 'user', 'users'
+		];
+
+		foreach ($expectedEntries as $entryName) {
+			$this->assertArrayHasKey($entryName, Query::$entries);
+			$this->assertInstanceOf(Closure::class, Query::$entries[$entryName]);
+		}
+	}
 }
