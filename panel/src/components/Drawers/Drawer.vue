@@ -2,6 +2,7 @@
 	<portal v-if="visible" to="drawer">
 		<form
 			:class="$vnode.data.staticClass"
+			:aria-current="current"
 			class="k-drawer"
 			method="dialog"
 			@submit.prevent="$emit('submit')"
@@ -87,5 +88,10 @@ export default {
 	background: var(--drawer-color-back);
 	box-shadow: var(--drawer-shadow);
 	container-type: inline-size;
+}
+
+.k-drawer:not([aria-current="true"]) {
+	display: none;
+	pointer-events: none;
 }
 </style>

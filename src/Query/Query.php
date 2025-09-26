@@ -9,6 +9,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Cms\Users;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
 use Kirby\Query\Runners\Runner;
@@ -163,4 +164,8 @@ Query::$entries['t'] = function (
 
 Query::$entries['user'] = function (string|null $id = null): User|null {
 	return App::instance()->user($id);
+};
+
+Query::$entries['users'] = function (): Users {
+	return App::instance()->users();
 };
