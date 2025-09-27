@@ -146,7 +146,7 @@ export default (panel) => {
 		 * @param {String} api
 		 */
 		isLocked(env = {}) {
-			return this.lock(env).isLocked;
+			return this.lock(env)?.isLocked ?? false;
 		},
 
 		/**
