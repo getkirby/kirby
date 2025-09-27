@@ -421,12 +421,12 @@ return [
 		// support UUIDs
 		if (
 			$path !== null &&
-			$uuid = Uuid::from($path, ['page', 'file'])
+			Uuid::is($path, ['page', 'file']) === true
 		) {
 			/**
 			 * @var \Kirby\Cms\Page|\Kirby\Cms\File|null $model
 			 */
-			$model = $uuid->model();
+			$model = Uuid::from($path)?->model();
 
 			if ($model === null) {
 				throw new NotFoundException(

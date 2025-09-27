@@ -165,7 +165,7 @@ class UuidTest extends TestCase
 	public function testFromUuidInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid UUID URI "foo" in foo://my-id');
+		$this->expectExceptionMessage('Invalid UUID type "foo" in foo://my-id');
 		Uuid::from('foo://my-id');
 	}
 
@@ -419,10 +419,10 @@ class UuidTest extends TestCase
 
 	public function testType(): void
 	{
-		$this->assertSame('page', Uuid::for('page://my-page')->type());
-		$this->assertSame('file', Uuid::for('file://my-page')->type());
-		$this->assertSame('site', Uuid::for('site://my-page')->type());
-		$this->assertSame('user', Uuid::for('user://my-page')->type());
+		$this->assertSame('page', Uuid::from('page://my-page')->type());
+		$this->assertSame('file', Uuid::from('file://my-page')->type());
+		$this->assertSame('site', Uuid::from('site://my-page')->type());
+		$this->assertSame('user', Uuid::from('user://my-page')->type());
 	}
 
 	public function testValue(): void

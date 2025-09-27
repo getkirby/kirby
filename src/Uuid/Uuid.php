@@ -195,19 +195,19 @@ abstract class Uuid implements Stringable
 	 */
 	final public static function from(
 		string $uuid,
-		string|array|null $scheme = null,
+		string|array|null $type = null,
 		Collection|null $context = null
 	): static|null {
 		if (Uuids::enabled() === false) {
 			return null;
 		}
 
-		if ($scheme !== null && static::is($uuid, $scheme) === false) {
+		if ($type !== null && static::is($uuid, $type) === false) {
 			return null;
 		}
 
-		if ($uri = Str::before($uuid, '://')) {
-			return match ($uri) {
+		if ($type = Str::before($uuid, '://')) {
+			return match ($type) {
 				'page'   => new PageUuid(uuid: $uuid, context: $context),
 				'file'   => new FileUuid(uuid: $uuid, context: $context),
 				'site'   => new SiteUuid(uuid: $uuid, context: $context),
@@ -216,7 +216,7 @@ abstract class Uuid implements Stringable
 				// 'block'  => new BlockUuid(uuid: $seed, context: $context),
 				// 'struct' => new StructureUuid(uuid: $seed, context: $context),
 				default  => throw new InvalidArgumentException(
-					message: 'Invalid UUID URI "' . $uri . '" in ' . $uuid
+					message: 'Invalid UUID type "' . $type . '" in ' . $uuid
 				)
 			};
 		}

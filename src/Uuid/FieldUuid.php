@@ -118,7 +118,7 @@ abstract class FieldUuid extends Uuid
 	public function value(): array
 	{
 		/**
-		 * @var \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\User $model
+		 * @var \Kirby\Cms\ModelWithContent $model
 		 */
 		$model  = $this->model();
 		$parent = Uuid::for($model->parent());

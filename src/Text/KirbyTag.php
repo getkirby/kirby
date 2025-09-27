@@ -116,28 +116,31 @@ class KirbyTag
 	 */
 	public function file(string $path): File|null
 	{
-		if ($parent = $this->parent()) {
-			// check first for UUID
-			if (method_exists($parent, 'files') === true) {
+		$parent = $this->parent();
+
+		// check first for UUID
+		if (Uuid::is($path, 'file') === true) {
+			if ($parent && method_exists($parent, 'files') === true) {
 				$context = $parent->files();
 			}
 
-			if ($uuid = Uuid::from($path, 'file', $context ?? null)) {
-				return $uuid->model();
-			}
-
-			if (method_exists($parent, 'file') === true) {
-				return $parent->file($path);
-			}
-
-			if (
-				$parent instanceof File &&
-				$file = $parent->page()?->file($path)
-			) {
-				return $file;
-			}
+			return Uuid::from($path, context: $context ?? null)->model();
 		}
 
+		if (
+			$parent &&
+			method_exists($parent, 'file') === true &&
+			$file = $parent->file($path)
+		) {
+			return $file;
+		}
+
+		if (
+			$parent instanceof File &&
+			$file = $parent->page()?->file($path)
+		) {
+			return $file;
+		}
 
 		return $this->kirby()->file($path, null, true);
 	}
