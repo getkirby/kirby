@@ -123,6 +123,25 @@ class TemplateTest extends TestCase
 		);
 	}
 
+	public function testRenderOpenLayoutSnippetWithSlots(): void
+	{
+		new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('with-layout-multiple-slots');
+
+		$this->assertSame(
+			"<h1>Layout</h1>\n" .
+			"<header>Header content</header>\n" .
+			"<main>Body content</main>\n",
+			$template->render()
+		);
+	}
+
 	public function testRenderOpenParentSnippet1(): void
 	{
 		$app = new App([
