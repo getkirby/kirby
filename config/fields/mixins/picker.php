@@ -133,16 +133,21 @@ return [
 			return $ids;
 		},
 		'toId' => function (ModelWithContent $model) {
-			return $model->id();
+			return $model->uuid()?->toString() ?? $model->id();
 		},
 		'toItem' => function (ModelWithContent $model) {
-			return $model->panel()->pickerData([
+			$item = $model->panel()->pickerData([
 				'image'  => $this->image,
 				'info'   => $this->info ?? false,
 				'layout' => $this->layout,
 				'model'  => $this->model(),
 				'text'   => $this->text,
 			]);
+
+			return [
+				...$item,
+				'id' => $item['uuid'] ?? $item['id']
+			];
 		},
 		'toItems' => function (array $models = []) {
 			return A::map(

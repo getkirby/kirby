@@ -60,13 +60,18 @@ abstract class ModelsPickerDialogController extends DialogController
 	 */
 	public function item(ModelWithContent $model): array
 	{
-		return $model->panel()->pickerData([
+		$item = $model->panel()->pickerData([
 			'model'  => $this->model,
 			'image'  => $this->image,
 			'info'   => $this->info,
 			'layout' => $this->layout,
 			'text'   => $this->text,
 		]);
+
+		return [
+			...$item,
+			'id' => $item['uuid'] ?? $item['id']
+		];
 	}
 
 	/**
