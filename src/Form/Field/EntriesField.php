@@ -34,15 +34,21 @@ class EntriesField extends FieldClass
 	protected Form $form;
 	protected mixed $value = [];
 
-	public function __construct(array $params = [])
-	{
-		parent::__construct($params);
+	public function __construct(
+		array|string|null $empty = null,
+		array|string|null $field = null,
+		int|null $max = null,
+		int|null $min = null,
+		bool|null $sortable = null,
+		...$props
+	) {
+		parent::__construct(...$props);
 
-		$this->setEmpty($params['empty'] ?? null);
-		$this->setField($params['field'] ?? null);
-		$this->setMax($params['max'] ?? null);
-		$this->setMin($params['min'] ?? null);
-		$this->setSortable($params['sortable'] ?? null);
+		$this->setEmpty($empty);
+		$this->setField($field);
+		$this->setMax($max);
+		$this->setMin($min);
+		$this->setSortable($sortable);
 	}
 
 	public function field(): array

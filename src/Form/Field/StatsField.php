@@ -20,7 +20,7 @@ class StatsField extends FieldClass
 	/**
 	 * Array or query string for reports. Each report needs a `label` and `value` and can have additional `info`, `link`, `icon` and `theme` settings.
 	 */
-	protected array|string $reports;
+	protected array|string|null $reports;
 
 	/**
 	 * The size of the report cards. Available sizes: `tiny`, `small`, `medium`, `large`
@@ -32,12 +32,15 @@ class StatsField extends FieldClass
 	 */
 	protected Stats $stats;
 
-	public function __construct(array $params)
-	{
-		parent::__construct($params);
+	public function __construct(
+		array|string|null $reports = null,
+		string|null $size = null,
+		...$props
+	) {
+		parent::__construct(...$props);
 
-		$this->reports = $params['reports'] ?? [];
-		$this->size    = $params['size']    ?? null;
+		$this->reports = $reports;
+		$this->size    = $size;
 	}
 
 	public function hasValue(): bool
@@ -59,7 +62,7 @@ class StatsField extends FieldClass
 	{
 		return $this->stats ??= Stats::from(
 			model:   $this->model,
-			reports: $this->reports,
+			reports: $this->reports ?? [],
 			size:    $this->size ?? 'large'
 		);
 	}
