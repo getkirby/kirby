@@ -7,6 +7,7 @@ use Kirby\Cms\Blueprint;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Layout;
 use Kirby\Cms\Layouts;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
@@ -16,18 +17,21 @@ use Throwable;
 
 class LayoutField extends BlocksField
 {
-	protected array|null $layouts;
-	protected array|null $selector;
 	protected Fieldset|null $settings;
 
-	public function __construct(array $params)
-	{
-		$this->setModel($params['model'] ?? App::instance()->site());
-		$this->setLayouts($params['layouts'] ?? ['1/1']);
-		$this->setSelector($params['selector'] ?? null);
-		$this->setSettings($params['settings'] ?? null);
+	public function __construct(
+		protected array $layouts = ['1/1'],
+		ModelWithContent|null $model = null,
+		protected array|null $selector = null,
+		array|string|null $settings = null,
+		...$props
+	) {
+		$this->setModel($model ?? App::instance()->site());
+		$this->setLayouts($layouts);
+		$this->setSelector($selector);
+		$this->setSettings($settings);
 
-		parent::__construct($params);
+		parent::__construct(...$props);
 	}
 
 	/**
