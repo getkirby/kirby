@@ -281,10 +281,11 @@ class Field extends Component
 	): static|FieldClass {
 		$field = static::$types[$type] ?? null;
 
-		if (is_string($field) && class_exists($field) === true) {
-			$attrs['siblings'] = $siblings;
-			unset($attrs['type']);
-			return new $field(...$attrs);
+		if (
+			is_string($field) &&
+			is_subclass_of($field, FieldClass::class) === true
+		) {
+			return $field::factory($attrs, $siblings);
 		}
 
 		return new static($type, $attrs, $siblings);
