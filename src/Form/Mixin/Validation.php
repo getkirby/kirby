@@ -78,6 +78,15 @@ trait Validation
 	}
 
 	/**
+	 * Runs all validations
+	 * @since 6.0.0
+	 */
+	public function validate(): void
+	{
+		$this->errors();
+	}
+
+	/**
 	 * Defines all validation rules
 	 */
 	protected function validations(): array

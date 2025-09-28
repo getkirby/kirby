@@ -3,6 +3,8 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\HasSiblings;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\HasI18n;
 
 /**
@@ -41,40 +43,54 @@ abstract class FieldClass
 	use Mixin\When;
 	use Mixin\Width;
 
-	protected Fields $siblings;
-
 	public function __construct(
-		protected array $params = []
+		array|string|null $after = null,
+		bool $autofocus = false,
+		array|string|null $before = null,
+		mixed $default = null,
+		bool|null $disabled = null,
+		array|string|null $help = null,
+		string|null $icon = null,
+		array|string|null $label = null,
+		ModelWithContent|null $model = null,
+		string|null $name = null,
+		array|string|null $placeholder = null,
+		bool|null $required = null,
+		protected Fields|null $siblings = null,
+		bool|null $translate = null,
+		$value = null,
+		array|null $when = null,
+		string|null $width = null
 	) {
-		$this->setAfter($params['after'] ?? null);
-		$this->setAutofocus($params['autofocus'] ?? null);
-		$this->setBefore($params['before'] ?? null);
-		$this->setDefault($params['default'] ?? null);
-		$this->setDisabled($params['disabled'] ?? null);
-		$this->setHelp($params['help'] ?? null);
-		$this->setIcon($params['icon'] ?? null);
-		$this->setLabel($params['label'] ?? null);
-		$this->setModel($params['model'] ?? null);
-		$this->setName($params['name'] ?? null);
-		$this->setPlaceholder($params['placeholder'] ?? null);
-		$this->setRequired($params['required'] ?? null);
-		$this->setSiblings($params['siblings'] ?? null);
-		$this->setTranslate($params['translate'] ?? null);
-		$this->setWhen($params['when'] ?? null);
-		$this->setWidth($params['width'] ?? null);
+		$this->setAfter($after);
+		$this->setAutofocus($autofocus);
+		$this->setBefore($before);
+		$this->setDefault($default);
+		$this->setDisabled($disabled);
+		$this->setHelp($help);
+		$this->setIcon($icon);
+		$this->setLabel($label);
+		$this->setModel($model);
+		$this->setName($name);
+		$this->setPlaceholder($placeholder);
+		$this->setRequired($required);
+		$this->setSiblings($siblings);
+		$this->setTranslate($translate);
+		$this->setWhen($when);
+		$this->setWidth($width);
 
-		if (array_key_exists('value', $params) === true) {
-			$this->fill($params['value']);
+		if ($value !== null) {
+			$this->fill($value);
 		}
 	}
 
 	public function __call(string $param, array $args): mixed
 	{
-		if (isset($this->$param) === true) {
+		if (property_exists($this, $param) === true) {
 			return $this->$param;
 		}
 
-		return $this->params[$param] ?? null;
+		throw new NotFoundException(message: 'Method or option "' . $param . '" does not exist for field type "' . $this->type() . '"');
 	}
 
 	/**
@@ -101,14 +117,6 @@ abstract class FieldClass
 	public function isHidden(): bool
 	{
 		return false;
-	}
-
-	/**
-	 * Returns all original params for the field
-	 */
-	public function params(): array
-	{
-		return $this->params;
 	}
 
 	/**
