@@ -16,18 +16,20 @@ use Throwable;
 
 class LayoutField extends BlocksField
 {
-	protected array|null $layouts;
-	protected array|null $selector;
 	protected Fieldset|null $settings;
 
-	public function __construct(array $params)
-	{
-		$this->setModel($params['model'] ?? null);
-		$this->setLayouts($params['layouts'] ?? null);
-		$this->setSelector($params['selector'] ?? null);
-		$this->setSettings($params['settings'] ?? null);
+	public function __construct(
+		protected array|null $layouts = null,
+		protected array|null $selector = null,
+		array|string|null $settings = null,
+		...$props
+	) {
+		$this->setModel($props['model'] ?? null);
+		$this->setLayouts($layouts);
+		$this->setSelector($selector);
+		$this->setSettings($settings);
 
-		parent::__construct($params);
+		parent::__construct(...$props);
 	}
 
 	/**

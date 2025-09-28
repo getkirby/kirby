@@ -363,9 +363,7 @@ class EntriesFieldTest extends TestCase
 	public function testValidations($type, $value, $expected): void
 	{
 		$field = $this->field('entries', [
-			'value'    => [
-				$value
-			],
+			'value'    => [$value],
 			'field'    => $type,
 			'required' => true
 		]);
