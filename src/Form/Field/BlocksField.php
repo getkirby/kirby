@@ -32,20 +32,27 @@ class BlocksField extends FieldClass
 	protected string|null $group;
 	protected mixed $value = [];
 
-	public function __construct(array $params = [])
-	{
+	public function __construct(
+		array|string|null $empty = null,
+		array|string|null $fieldsets = null,
+		string|null $group = null,
+		int|null $max = null,
+		int|null $min = null,
+		bool $pretty = false,
+		...$props
+	) {
 		$this->setFieldsets(
-			$params['fieldsets'] ?? null,
-			$params['model'] ?? App::instance()->site()
+			$fieldsets,
+			$props['model'] ?? App::instance()->site()
 		);
 
-		parent::__construct($params);
+		parent::__construct(...$props);
 
-		$this->setEmpty($params['empty'] ?? null);
-		$this->setGroup($params['group'] ?? 'blocks');
-		$this->setMax($params['max'] ?? null);
-		$this->setMin($params['min'] ?? null);
-		$this->setPretty($params['pretty'] ?? false);
+		$this->setEmpty($empty);
+		$this->setGroup($group);
+		$this->setMax($max);
+		$this->setMin($min);
+		$this->setPretty($pretty);
 	}
 
 	public function blocksToValues(
@@ -134,7 +141,7 @@ class BlocksField extends FieldClass
 
 	public function group(): string
 	{
-		return $this->group;
+		return $this->group ?? 'blocks';
 	}
 
 	/**
