@@ -554,7 +554,7 @@ class FieldClassTest extends TestCase
 			icon:        $icon = 'Icon value',
 			label:       $label = 'Label value',
 			name:        $name = 'name-value',
-			placeholder: $placeholder ='Placeholder value',
+			placeholder: $placeholder = 'Placeholder value',
 			required:    true,
 			translate:   false,
 			when:        $when = ['a' => 'b'],
