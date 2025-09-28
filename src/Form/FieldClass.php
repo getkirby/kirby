@@ -109,6 +109,19 @@ abstract class FieldClass
 		return [];
 	}
 
+	/**
+	 * Creates a new field instance from a $props array
+	 * @since 6.0.0
+	 */
+	public static function factory(
+		array $props,
+		Fields|null $siblings = null
+	): static {
+		$props['siblings'] = $siblings;
+		unset($props['type']);
+		return new static(...$props);
+	}
+
 	public function id(): string
 	{
 		return $this->name();
