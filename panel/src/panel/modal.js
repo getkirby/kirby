@@ -187,6 +187,26 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
+		 * If the feature has a path, it can be reloaded
+		 * with this method to replace the current modal
+		 *
+		 * @example
+		 * panel.view.reload();
+		 *
+		 * @param {Object, Boolean} options
+		 */
+		async reload(options = {}) {
+			if (!this.path) {
+				return false;
+			}
+
+			const url = this.url();
+
+			await this.close();
+			this.open(url, options);
+		},
+
+		/**
 		 * Sets a new active state for the modal
 		 * This is done whenever the state is an object
 		 * and not undefined or null
