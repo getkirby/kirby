@@ -580,35 +580,25 @@ class App
 		$visitor   = $this->visitor();
 
 		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
-			// Find locale matches (e.g. en_GB => en_GB)
-			$matchLocale = function ($language) use ($acceptedLang) {
-				$languageLocale = $language->locale(LC_ALL);
-				$acceptedLocale = $acceptedLang->locale();
+			$acceptedCode   = $acceptedLang->code();
+			$acceptedLocale = $acceptedLang->locale();
 
-				return Str::substr($languageLocale, 0, 5) === Str::substr($acceptedLocale, 0, 5);
-			};
+			$match = fn (Language $language, int $precision) =>
+				Str::substr($language->locale(LC_ALL), 0, $precision) ===
+				Str::substr($acceptedLocale, 0, $precision);
 
-			// Find language matches (e.g. en_GB => en)
-			$matchLanguage = function ($language) use ($acceptedLang) {
-				$languageLocale = $language->locale(LC_ALL);
-				$acceptedLocale = $acceptedLang->locale();
-
-				return
-					$languageLocale === $acceptedLocale ||
-					$acceptedLocale === Str::substr($languageLocale, 0, 2);
-			};
-
-			if ($language = $languages->filter($matchLocale)?->first()) {
+			// Find exact locale matches (e.g. en_GB => en_GB)
+			if ($language = $languages->filter(fn ($language) => $match($language, 5))?->first()) {
 				return $language;
 			}
 
-			if ($language = $languages->filter($matchLanguage)?->first()) {
+			// Find exact code matches
+			if ($language = $languages->findBy('code', $acceptedCode)) {
 				return $language;
 			}
-		}
 
-		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
-			if ($language = $languages->findBy('code', $acceptedLang->code())) {
+			// Find broad locale matches (e.g. en_GB => en)
+			if ($language = $languages->filter(fn ($language) => $match($language, 2))?->first()) {
 				return $language;
 			}
 		}
