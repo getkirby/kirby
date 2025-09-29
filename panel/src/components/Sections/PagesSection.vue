@@ -19,6 +19,7 @@ export default {
 						page.status,
 						page.permissions.changeStatus === false
 					),
+					class: "k-page-status-icon-option",
 					dialog: page.link + "/changeStatus"
 				};
 

@@ -628,6 +628,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Joins the collection elements into a string,
 	 * optionally using a Closure to transform the elements
+	 * @since 5.1.0
 	 */
 	public function join(
 		string $separator = ', ',

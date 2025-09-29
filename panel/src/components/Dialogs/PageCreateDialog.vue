@@ -58,7 +58,7 @@ export default {
 	},
 	methods: {
 		pick(template) {
-			this.$panel.dialog.reload({
+			this.$panel.dialog.refresh({
 				query: {
 					...this.$panel.dialog.query,
 					slug: this.value.slug,
