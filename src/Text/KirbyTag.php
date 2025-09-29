@@ -120,18 +120,15 @@ class KirbyTag
 
 		// check first for UUID
 		if (Uuid::is($path, 'file') === true) {
-			if (
-				is_object($parent) === true &&
-				method_exists($parent, 'files') === true
-			) {
+			if ($parent && method_exists($parent, 'files') === true) {
 				$context = $parent->files();
 			}
 
-			return Uuid::for($path, $context ?? null)->model();
+			return Uuid::from($path, context: $context ?? null)->model();
 		}
 
 		if (
-			is_object($parent) === true &&
+			$parent &&
 			method_exists($parent, 'file') === true &&
 			$file = $parent->file($path)
 		) {

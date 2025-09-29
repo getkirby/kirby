@@ -423,7 +423,10 @@ return [
 			$path !== null &&
 			Uuid::is($path, ['page', 'file']) === true
 		) {
-			$model = Uuid::for($path)->model();
+			/**
+			 * @var \Kirby\Cms\Page|\Kirby\Cms\File|null $model
+			 */
+			$model = Uuid::from($path)?->model();
 
 			if ($model === null) {
 				throw new NotFoundException(

@@ -648,9 +648,9 @@ class App
 		bool $drafts = true
 	): File|null {
 		// find by global UUID
-		if (Uuid::is($path, 'file') === true) {
-			// prefer files of parent, when parent given
-			return Uuid::for($path, $parent?->files())->model();
+		// and prefer files of parent, when parent given
+		if ($uuid = Uuid::from($path, 'file', $parent?->files())) {
+			return $uuid->model();
 		}
 
 		$parent ??= $this->site();
