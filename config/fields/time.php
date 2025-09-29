@@ -67,15 +67,21 @@ return [
 		}
 	],
 	'computed' => [
+		'default' => function (): string {
+			$default = $this->default;
+
+			if (is_string($default) === true) {
+				$default = $this->model()->toString($default);
+			}
+
+			return $this->toDatetime($default, 'H:i:s') ?? '';
+		},
 		'display' => function () {
 			if ($this->display) {
 				return $this->display;
 			}
 
 			return $this->notation === 24 ? 'HH:mm' : 'hh:mm a';
-		},
-		'default' => function (): string {
-			return $this->toDatetime($this->default, 'H:i:s') ?? '';
 		},
 		'format' => function () {
 			return $this->props['format'] ?? 'H:i:s';
