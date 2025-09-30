@@ -209,6 +209,7 @@ export default (panel, key, defaults) => {
 
 		/**
 		 * Reloads the properties for the feature
+		 * to refresh its state
 		 */
 		async refresh(options = {}) {
 			options.url ??= this.url();
@@ -228,7 +229,7 @@ export default (panel, key, defaults) => {
 
 		/**
 		 * If the feature has a path, it can be reloaded
-		 * with this method to replace/refresh its state
+		 * with this method to replace its state
 		 *
 		 * @example
 		 * panel.view.reload();
