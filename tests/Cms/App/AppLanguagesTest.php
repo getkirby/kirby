@@ -134,6 +134,12 @@ class AppLanguagesTest extends TestCase
 					'locale'  => 'en_GB'
 				],
 				[
+					'code'    => 'at',
+					'name'    => 'Deutsch (Österreich)',
+					'default' => false,
+					'locale'  => 'de_AT'
+				],
+				[
 					'code'    => 'de',
 					'name'    => 'Deutsch',
 					'default' => false,

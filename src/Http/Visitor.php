@@ -70,6 +70,8 @@ class Visitor
 	/**
 	 * Returns an array of all accepted languages
 	 * including their quality and locale
+	 *
+	 * @return \Kirby\Toolkit\Collection<\Kirby\Toolkit\Obj>
 	 */
 	public function acceptedLanguages(): Collection
 	{
