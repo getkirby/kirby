@@ -450,11 +450,11 @@
 
 	"language.variable.delete.confirm": "변수({key})를 삭제할까요?",
 	"language.variable.entries": "값",
-	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
+	"language.variable.entries.help": "각 문자열은 해당하는 개수에 맞게 사용됩니다. 예를 들어 세 개의 문자열은 <code>0</code>, <code>1</code>, <code>2 및 그 이상</code>의 개수에 순서대로 대응합니다. 실제 개수를 표시하려면 <code>{Count}</code>를 사용하세요.",
 	"language.variable.key": "키",
-	"language.variable.multiple": "Countable?",
+	"language.variable.multiple": "셀 수 있나요?",
 	"language.variable.multiple.text": "다른 번역 문자열을 사용하세요.",
-	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
+	"language.variable.multiple.help": "언어 변수와 함께 전달하는 개수에 따라 다른 값을 사용할 수 있으므로 단수형이나 복수형 같은 동적 번역을 구현할 수 있습니다.",
 	"language.variable.notFound": "변수를 찾을 수 없습니다.",
 	"language.variable.value": "값",
 
