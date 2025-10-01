@@ -48,7 +48,7 @@
 				<span v-html="currentOption.text" />
 			</template>
 
-			<template v-if="mode === 'picker'" #icon>
+			<template v-if="mode === 'picker' && !disabled" #icon>
 				<k-button
 					:icon="icon"
 					class="k-input-icon-button"

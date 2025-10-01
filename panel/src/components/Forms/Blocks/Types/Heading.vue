@@ -14,9 +14,8 @@
 			@input="update({ text: $event })"
 		/>
 		<k-input
-			v-if="levels.length > 1"
+			v-if="levels.length > 1 && !disabled"
 			ref="level"
-			:disabled="disabled"
 			:empty="false"
 			:options="levels"
 			:value="content.level"
