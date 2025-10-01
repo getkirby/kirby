@@ -13,7 +13,7 @@
 				@click.stop="$refs.toggle?.$el?.click()"
 			>
 				<k-button
-					v-if="!max || value.length < max"
+					v-if="!disabled && (!max || value.length < max)"
 					:id="id"
 					ref="toggle"
 					:autofocus="autofocus"
