@@ -38,6 +38,7 @@ class Collection extends BaseCollection
 	/**
 	 * Creates a new Collection with the given objects
 	 *
+	 * @param iterable<TValue> $objects
 	 * @param object|null $parent Stores the parent object,
 	 *                            which is needed in some collections
 	 *                            to get the finder methods right
@@ -88,7 +89,7 @@ class Collection extends BaseCollection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param static|TValue|array $object
+	 * @param \Kirby\Cms\Collection<TValue>|array<TValue>|TValue $object
 	 * @return $this
 	 */
 	public function add($object): static
