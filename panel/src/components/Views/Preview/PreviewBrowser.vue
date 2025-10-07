@@ -67,12 +67,12 @@ export default {
 				return;
 			}
 
-			e.preventDefault();
-
 			if (link.href.startsWith(location.origin) === false) {
-				return window.open(link.href, "_blank");
+				link.target = "_blank";
+				return true;
 			}
 
+			e.preventDefault(e);
 			this.$emit("navigate", link.href);
 		},
 		onLoad() {
