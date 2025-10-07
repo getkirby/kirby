@@ -24,7 +24,8 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Cms\Page>
+ * @template TPage of \Kirby\Cms\Page
+ * @extends \Kirby\Cms\Collection<TPage>
  */
 class Pages extends Collection
 {
@@ -55,7 +56,7 @@ class Pages extends Collection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param \Kirby\Cms\Pages|\Kirby\Cms\Page|string $object
+	 * @param \Kirby\Cms\Pages<TPage>|TPage|string $object
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `Page` or `Pages` object or an ID of an existing page is passed
 	 */
@@ -99,6 +100,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all children for each page in the array
+	 * @return \Kirby\Cms\Pages<TPage>
 	 */
 	public function children(): static
 	{
@@ -166,6 +168,7 @@ class Pages extends Collection
 
 	/**
 	 * Fetch all drafts for all pages in the collection
+	 * @return \Kirby\Cms\Pages<TPage>
 	 */
 	public function drafts(): static
 	{
@@ -231,6 +234,7 @@ class Pages extends Collection
 	/**
 	 * Finds a page by its ID or URI
 	 * @internal Use `$pages->find()` instead
+	 * @return TPage|null
 	 */
 	public function findByKey(string|null $key = null): Page|null
 	{
@@ -286,6 +290,7 @@ class Pages extends Collection
 
 	/**
 	 * Finds a child or child of a child recursively
+	 * @return TPage|null
 	 */
 	protected function findByKeyRecursive(
 		string $id,
@@ -326,6 +331,7 @@ class Pages extends Collection
 
 	/**
 	 * Finds the currently open page
+	 * @return TPage|null
 	 */
 	public function findOpen(): Page|null
 	{
@@ -335,6 +341,7 @@ class Pages extends Collection
 	/**
 	 * Custom getter that is able to find
 	 * extension pages
+	 * @return TPage|null
 	 */
 	public function get(string $key, mixed $default = null): Page|null
 	{
@@ -392,6 +399,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all listed pages in the collection
+	 * @return \Kirby\Cms\Pages<TPage>
 	 */
 	public function listed(): static
 	{
@@ -400,6 +408,7 @@ class Pages extends Collection
 
 	/**
 	 * Returns all unlisted pages in the collection
+	 * @return \Kirby\Cms\Pages<TPage>
 	 */
 	public function unlisted(): static
 	{
@@ -489,7 +498,10 @@ class Pages extends Collection
 		return $this->pluck('num');
 	}
 
-	// Returns all listed and unlisted pages in the collection
+	/**
+	 * Returns all listed and unlisted pages in the collection
+	 * @return \Kirby\Cms\Pages<TPage>
+	 */
 	public function published(): static
 	{
 		return $this->filter('isDraft', '==', false);
