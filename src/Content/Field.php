@@ -82,7 +82,7 @@ class Field implements Stringable
 
 	/**
 	 * Returns the Kirby instance
-	 * @since 5.1.0
+	 * @since 6.0.0
 	 */
 	public function kirby(): App
 	{
