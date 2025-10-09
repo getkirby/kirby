@@ -2,7 +2,7 @@
 
 namespace Kirby\Permissions;
 
-use Kirby\Toolkit\Reflection;
+use Kirby\Reflection\Constructor;
 
 class ModelPermissions
 {
@@ -33,7 +33,7 @@ class ModelPermissions
 			$instance = new static();
 		}
 
-		$props = Reflection::extractProps($permissions, static::class);
+		$props = (new Constructor(static::class))->getAcceptedArguments($permissions);
 
 		foreach ($props as $key => $value) {
 			$instance->$key = static::resolve($value, $role);
@@ -45,16 +45,19 @@ class ModelPermissions
 	public static function fromWildcard(array|bool $wildcard, string $role = '*'): static
 	{
 		$permission = static::resolve($wildcard, $role);
-		$props      = array_fill_keys(Reflection::paramsNames(static::class), $permission);
+		$props      = array_fill_keys(static::keys(), $permission);
 
 		return new static(...$props);
 	}
 
+	public static function keys(): array
+	{
+		return (new Constructor(static::class))->getParameterNames(static::class);
+	}
+
 	public function merge(self $permissions): static
 	{
-		$props = Reflection::paramsNames(static::class);
-
-		foreach ($props as $key) {
+		foreach (static::keys() as $key) {
 			if ($permissions->$key !== null) {
 				$this->$key = $permissions->$key;
 			}
@@ -80,7 +83,7 @@ class ModelPermissions
 	{
 		$props = [];
 
-		foreach (Reflection::paramsNames(static::class) as $param) {
+		foreach (static::keys() as $param) {
 			$props[$param] = $this->$param;
 		}
 
