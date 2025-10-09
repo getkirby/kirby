@@ -2,7 +2,7 @@
 
 namespace Kirby\Permissions;
 
-use Kirby\Toolkit\Reflection;
+use Kirby\Reflection\Constructor;
 
 class Permissions
 {
@@ -49,7 +49,7 @@ class Permissions
 			$instance = new static();
 		}
 
-		$props = Reflection::extractProps($permissions, static::class);
+		$props = (new Constructor(static::class))->getAcceptedArguments($permissions);
 
 		foreach ($props as $key => $value) {
 			$class = __NAMESPACE__ . '\\' . ucfirst($key) . 'Permissions';
@@ -63,7 +63,7 @@ class Permissions
 	{
 		$instance = new static();
 
-		foreach (Reflection::paramsNames(static::class) as $key) {
+		foreach (static::keys() as $key) {
 			$class = __NAMESPACE__ . '\\' . ucfirst($key) . 'Permissions';
 			$instance->$key = $class::fromWildcard($wildcard);
 		}
@@ -71,11 +71,16 @@ class Permissions
 		return $instance;
 	}
 
+	public static function keys(): array
+	{
+		return (new Constructor(static::class))->getParameterNames();
+	}
+
 	public function toArray(): array
 	{
 		$array = [];
 
-		foreach (Reflection::paramsNames(static::class) as $key) {
+		foreach (static::keys() as $key) {
 			$array[$key] = $this->$key->toArray();
 		}
 
