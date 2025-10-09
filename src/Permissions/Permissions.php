@@ -4,7 +4,7 @@ namespace Kirby\Permissions;
 
 use Kirby\Reflection\Constructor;
 
-class Permissions
+class Permissions extends Foundation
 {
 	public function __construct(
 		public AccountPermissions $account = new AccountPermissions(),
@@ -22,36 +22,17 @@ class Permissions
 	) {
 	}
 
-	public function __call(string $permissions, array $arguments = []): mixed
+	public static function fromArgs(array $args, string $role = '*'): static
 	{
-		return $this->$permissions;
-	}
-
-	public static function forAdmin(): static
-	{
-		return static::fromWildcard(true);
-	}
-
-	public static function forNobody(): static
-	{
-		return static::fromWildcard(false);
-	}
-
-	public static function from(array|bool $permissions, string $role = '*'): static
-	{
-		if (is_bool($permissions) === true) {
-			return static::fromWildcard($permissions);
-		}
-
-		if (isset($permissions['*']) === true) {
-			$instance = static::fromWildcard($permissions['*']);
+		if (isset($args['*']) === true) {
+			$instance = static::fromWildcard($args['*']);
 		} else {
 			$instance = new static();
 		}
 
-		$props = (new Constructor(static::class))->getAcceptedArguments($permissions);
+		$args = (new Constructor(static::class))->getAcceptedArguments($args);
 
-		foreach ($props as $key => $value) {
+		foreach ($args as $key => $value) {
 			$class = __NAMESPACE__ . '\\' . ucfirst($key) . 'Permissions';
 			$instance->$key = $class::from($value, $role);
 		}
@@ -69,21 +50,5 @@ class Permissions
 		}
 
 		return $instance;
-	}
-
-	public static function keys(): array
-	{
-		return (new Constructor(static::class))->getParameterNames();
-	}
-
-	public function toArray(): array
-	{
-		$array = [];
-
-		foreach (static::keys() as $key) {
-			$array[$key] = $this->$key->toArray();
-		}
-
-		return $array;
 	}
 }
