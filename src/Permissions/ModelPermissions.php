@@ -4,7 +4,7 @@ namespace Kirby\Permissions;
 
 use Kirby\Reflection\Constructor;
 
-class ModelPermissions
+class ModelPermissions extends Foundation
 {
 	public function __construct(
 		public bool|null $access = null,
@@ -16,26 +16,17 @@ class ModelPermissions
 	) {
 	}
 
-	public function __call(string $capability, array $arguments = []): mixed
+	public static function fromArgs(array $args, string $role = '*'): static
 	{
-		return $this->$capability;
-	}
-
-	public static function from(array|bool $permissions, string $role = '*'): static
-	{
-		if (is_bool($permissions) === true) {
-			return static::fromWildcard($permissions);
-		}
-
-		if (isset($permissions['*']) === true) {
-			$instance = static::fromWildcard($permissions['*'], $role);
+		if (isset($args['*']) === true) {
+			$instance = static::fromWildcard($args['*']);
 		} else {
 			$instance = new static();
 		}
 
-		$props = (new Constructor(static::class))->getAcceptedArguments($permissions);
+		$args = (new Constructor(static::class))->getAcceptedArguments($args);
 
-		foreach ($props as $key => $value) {
+		foreach ($args as $key => $value) {
 			$instance->$key = static::resolve($value, $role);
 		}
 
@@ -50,22 +41,6 @@ class ModelPermissions
 		return new static(...$props);
 	}
 
-	public static function keys(): array
-	{
-		return (new Constructor(static::class))->getParameterNames(static::class);
-	}
-
-	public function merge(self $permissions): static
-	{
-		foreach (static::keys() as $key) {
-			if ($permissions->$key !== null) {
-				$this->$key = $permissions->$key;
-			}
-		}
-
-		return $this;
-	}
-
 	public static function resolve(array|bool $matrix, string $role = '*'): bool
 	{
 		if (is_bool($matrix) === true) {
@@ -77,16 +52,5 @@ class ModelPermissions
 		}
 
 		return $matrix['*'] ?? false;
-	}
-
-	public function toArray(): array
-	{
-		$props = [];
-
-		foreach (static::keys() as $param) {
-			$props[$param] = $this->$param;
-		}
-
-		return $props;
 	}
 }
