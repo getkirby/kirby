@@ -1658,6 +1658,14 @@ class App
 	}
 
 	/**
+	 * Returns a registered folder handler
+	 */
+	public function folder(string $name): Closure|null
+	{
+		return $this->extensions['folders'][$name] ?? null;
+	}
+
+	/**
 	 * Returns a system url
 	 *
 	 * @param bool $object If set to `true`, the URL is converted to an object

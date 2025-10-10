@@ -82,6 +82,7 @@ trait AppPlugins
 		'templates' => [],
 		'thirdParty' => [],
 		'translations' => [],
+		'folders' => [],
 		'userMethods' => [],
 		'userModels' => [],
 		'usersMethods' => [],
@@ -665,6 +666,20 @@ trait AppPlugins
 	}
 
 	/**
+	 * Registers folder handlers
+	 */
+	protected function extendFolders(array $handlers): array
+	{
+		// prevent overriding existing handlers
+		$handlers = array_diff_key($handlers, $this->extensions['folders']);
+
+		return $this->extensions['folders'] = [
+			...$this->extensions['folders'],
+			...$handlers
+		];
+	}
+
+	/**
 	 * Registers additional user methods
 	 */
 	protected function extendUserMethods(array $methods): array
@@ -825,6 +840,30 @@ trait AppPlugins
 		$this->extendSnippets($this->core->snippets());
 		$this->extendTags($this->core->kirbyTags());
 		$this->extendTemplates($this->core->templates());
+		$this->extendFolders([
+			'drafts' => function ($parent) {
+				$draftsPath = $parent->inventory()['folders']['drafts'] ?? null;
+
+				if ($draftsPath === null) {
+					return new Pages([], $parent);
+				}
+
+				$kirby = $parent->kirby();
+
+				$inventory = Dir::inventory(
+					$draftsPath,
+					$kirby->contentExtension(),
+					$kirby->contentIgnore(),
+					$kirby->multilang()
+				);
+
+				return Pages::factory($inventory['children'], $parent, true);
+			},
+			'changes' => function ($parent) {
+				// reserved for content versioning
+				return null;
+			}
+		]);
 	}
 
 	/**
