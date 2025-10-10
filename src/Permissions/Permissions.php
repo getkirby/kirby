@@ -35,8 +35,7 @@ class Permissions extends Foundation
 		$args = (new Constructor(static::class))->getAcceptedArguments($args);
 
 		foreach ($args as $key => $value) {
-			$class = __NAMESPACE__ . '\\' . ucfirst($key) . 'Permissions';
-			$instance->$key = $class::from($value, $role);
+			$instance->$key = ($instance->$key)::from($value, $role);
 		}
 
 		return $instance;
@@ -45,10 +44,10 @@ class Permissions extends Foundation
 	public static function fromWildcard(bool $wildcard): static
 	{
 		$instance = new static();
+		$args     = array_fill_keys(static::keys(), $wildcard);
 
-		foreach (static::keys() as $key) {
-			$class = __NAMESPACE__ . '\\' . ucfirst($key) . 'Permissions';
-			$instance->$key = $class::fromWildcard($wildcard);
+		foreach ($args as $key => $value) {
+			$instance->$key = ($instance->$key)::fromWildcard($value);
 		}
 
 		return $instance;
