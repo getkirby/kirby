@@ -1,14 +1,19 @@
 <?php
 
-namespace Kirby\Permissions;
+namespace Kirby\Permissions\Abstracts;
 
 use Kirby\Reflection\Constructor;
 
-abstract class Foundation
+abstract class PermissionsFoundation
 {
 	public function __call(string $key, array $arguments = []): mixed
 	{
 		return $this->$key;
+	}
+
+	protected static function acceptedArguments(array $arguments): array
+	{
+		return (new Constructor(static::class))->getAcceptedArguments($arguments);
 	}
 
 	public static function forAdmin(): static
@@ -34,9 +39,23 @@ abstract class Foundation
 
 	abstract public static function fromWildcard(bool $wildcard): static;
 
+	protected static function instanceFromArray(array $array): static
+	{
+		if (isset($array['*']) === true) {
+			return static::fromWildcard($array['*']);
+		}
+
+		return new static();
+	}
+
 	public static function keys(): array
 	{
 		return (new Constructor(static::class))->getParameterNames(static::class);
+	}
+
+	protected static function prefilledArguments(bool $value): array
+	{
+		return array_fill_keys(static::keys(), $value);
 	}
 
 	public function merge(self $permissions): static
@@ -48,16 +67,5 @@ abstract class Foundation
 		}
 
 		return $this;
-	}
-
-	public function toArray(): array
-	{
-		$props = [];
-
-		foreach (static::keys() as $param) {
-			$props[$param] = $this->$param;
-		}
-
-		return $props;
 	}
 }

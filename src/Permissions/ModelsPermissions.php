@@ -2,7 +2,9 @@
 
 namespace Kirby\Permissions;
 
-class PagesPermissions extends ModelsPermissions
+use Kirby\Permissions\Abstracts\PermissionsGroup;
+
+class ModelsPermissions extends PermissionsGroup
 {
 	public function __construct(
 		public bool|null $access = null,

@@ -2,9 +2,9 @@
 
 namespace Kirby\Permissions;
 
-use Kirby\Reflection\Constructor;
+use Kirby\Permissions\Abstracts\PermissionsGroups;
 
-class Permissions extends Foundation
+class Permissions extends PermissionsGroups
 {
 	public function __construct(
 		public AccountPermissions $account = new AccountPermissions(),
@@ -22,45 +22,5 @@ class Permissions extends Foundation
 		public UserPermissions $user = new UserPermissions(),
 		public UsersPermissions $users = new UsersPermissions(),
 	) {
-	}
-
-	public static function fromArray(array $args, string $role = '*'): static
-	{
-		if (isset($args['*']) === true) {
-			$instance = static::fromWildcard($args['*']);
-		} else {
-			$instance = new static();
-		}
-
-		$args = (new Constructor(static::class))->getAcceptedArguments($args);
-
-		foreach ($args as $key => $value) {
-			$instance->$key = ($instance->$key)::from($value, $role);
-		}
-
-		return $instance;
-	}
-
-	public static function fromWildcard(bool $wildcard): static
-	{
-		$instance = new static();
-		$args     = array_fill_keys(static::keys(), $wildcard);
-
-		foreach ($args as $key => $value) {
-			$instance->$key = ($instance->$key)::fromWildcard($value);
-		}
-
-		return $instance;
-	}
-
-	public function toArray(): array
-	{
-		$props = [];
-
-		foreach (static::keys() as $param) {
-			$props[$param] = $this->$param->toArray();
-		}
-
-		return $props;
 	}
 }

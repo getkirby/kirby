@@ -2,11 +2,6 @@
 
 namespace Kirby\Permissions;
 
-class LanguageVariablesPermissions extends ModelPermissions
+class LanguageVariablesPermissions extends ModelsPermissions
 {
-	public function __construct(
-		public bool|null $access = null,
-		public bool|null $create = null,
-	) {
-	}
 }
