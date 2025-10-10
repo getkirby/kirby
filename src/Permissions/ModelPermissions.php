@@ -2,32 +2,17 @@
 
 namespace Kirby\Permissions;
 
-use Kirby\Reflection\Constructor;
+use Kirby\Permissions\Abstracts\PermissionsGroup;
 
-abstract class ModelPermissions extends Foundation
+class ModelPermissions extends PermissionsGroup
 {
-	public static function fromArray(array $args, string $role = '*'): static
-	{
-		if (isset($args['*']) === true) {
-			$instance = static::fromWildcard($args['*']);
-		} else {
-			$instance = new static();
-		}
-
-		$args = (new Constructor(static::class))->getAcceptedArguments($args);
-
-		foreach ($args as $key => $matrix) {
-			$instance->$key = RoleMatrix::toPermission($matrix, $role);
-		}
-
-		return $instance;
-	}
-
-	public static function fromWildcard(array|bool $wildcard, string $role = '*'): static
-	{
-		$permission = RoleMatrix::toPermission($wildcard, $role);
-		$props      = array_fill_keys(static::keys(), $permission);
-
-		return new static(...$props);
+	public function __construct(
+		public bool|null $access = null,
+		public bool|null $create = null,
+		public bool|null $delete = null,
+		public bool|null $list = null,
+		public bool|null $read = null,
+		public bool|null $update = null,
+	) {
 	}
 }

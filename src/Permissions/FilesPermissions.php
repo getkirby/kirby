@@ -2,11 +2,6 @@
 
 namespace Kirby\Permissions;
 
-class FilesPermissions extends ModelPermissions
+class FilesPermissions extends ModelsPermissions
 {
-	public function __construct(
-		public bool|null $access = null,
-		public bool|null $create = null,
-	) {
-	}
 }

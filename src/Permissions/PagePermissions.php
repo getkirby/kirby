@@ -20,5 +20,4 @@ class PagePermissions extends ModelPermissions
 		public bool|null $update = null,
 	) {
 	}
-
 }
