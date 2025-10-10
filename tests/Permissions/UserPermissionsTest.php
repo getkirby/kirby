@@ -7,6 +7,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserPermissions::class)]
 class UserPermissionsTest extends PermissionsGroupTestCase
 {
+	public function testConstruct(): void
+	{
+		$permissions = new UserPermissions();
+		$this->assertAllPermissionsAre($permissions, null);
+	}
+
 	public function testKeys(): void
 	{
 		$this->assertPermissionsKeys(UserPermissions::class, [

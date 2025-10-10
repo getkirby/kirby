@@ -7,6 +7,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ModelPermissions::class)]
 class ModelPermissionsTest extends PermissionsGroupTestCase
 {
+	public function testConstruct(): void
+	{
+		$permissions = new ModelPermissions();
+		$this->assertAllPermissionsAre($permissions, null);
+	}
+
 	public function testForAdmin(): void
 	{
 		$permissions = ModelPermissions::forAdmin();
