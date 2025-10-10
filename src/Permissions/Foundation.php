@@ -27,10 +27,10 @@ abstract class Foundation
 			return static::fromWildcard($permissions);
 		}
 
-		return static::fromArgs($permissions, $role);
+		return static::fromArray($permissions, $role);
 	}
 
-	abstract public static function fromArgs(array $args, string $role = '*'): static;
+	abstract public static function fromArray(array $args, string $role = '*'): static;
 
 	abstract public static function fromWildcard(bool $wildcard): static;
 

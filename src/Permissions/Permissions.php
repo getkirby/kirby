@@ -24,7 +24,7 @@ class Permissions extends Foundation
 	) {
 	}
 
-	public static function fromArgs(array $args, string $role = '*'): static
+	public static function fromArray(array $args, string $role = '*'): static
 	{
 		if (isset($args['*']) === true) {
 			$instance = static::fromWildcard($args['*']);
@@ -51,5 +51,16 @@ class Permissions extends Foundation
 		}
 
 		return $instance;
+	}
+
+	public function toArray(): array
+	{
+		$props = [];
+
+		foreach (static::keys() as $param) {
+			$props[$param] = $this->$param->toArray();
+		}
+
+		return $props;
 	}
 }
