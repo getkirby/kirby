@@ -4,9 +4,4 @@ namespace Kirby\Permissions;
 
 class PagesPermissions extends ModelsPermissions
 {
-	public function __construct(
-		public bool|null $access = null,
-		public bool|null $create = null,
-	) {
-	}
 }
