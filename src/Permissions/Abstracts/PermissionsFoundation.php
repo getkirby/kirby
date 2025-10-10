@@ -35,7 +35,7 @@ abstract class PermissionsFoundation
 		return static::fromArray($permissions, $role);
 	}
 
-	abstract public static function fromArray(array $args, string $role = '*'): static;
+	abstract public static function fromArray(array $array, string $role = '*'): static;
 
 	abstract public static function fromWildcard(bool $wildcard): static;
 
