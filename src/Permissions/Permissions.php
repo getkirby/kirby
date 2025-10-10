@@ -12,6 +12,8 @@ class Permissions extends Foundation
 		public FilesPermissions $files = new FilesPermissions(),
 		public LanguagePermissions $language = new LanguagePermissions(),
 		public LanguagesPermissions $languages = new LanguagesPermissions(),
+		public LanguageVariablePermissions $languageVariable = new LanguageVariablePermissions(),
+		public LanguageVariablesPermissions $languageVariables = new LanguageVariablesPermissions(),
 		public PagePermissions $page = new PagePermissions(),
 		public PagesPermissions $pages = new PagesPermissions(),
 		public PanelPermissions $panel = new PanelPermissions(),
