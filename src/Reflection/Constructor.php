@@ -14,6 +14,7 @@ use ReflectionParameter;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     5.2.0
  */
 class Constructor extends ReflectionMethod
 {
