@@ -67,6 +67,10 @@ class ConstructorTest extends TestCase
 		$result = $this->reflection()->getAcceptedArguments([]);
 
 		$this->assertSame([], $result);
+
+		$result = $this->reflection()->getAcceptedArguments($ignored);
+
+		$this->assertSame([], $result);
 	}
 
 	public function testGetIgnoredArguments(): void
@@ -92,6 +96,10 @@ class ConstructorTest extends TestCase
 		$this->assertSame($ignored, $result);
 
 		$result = $this->reflection()->getIgnoredArguments([]);
+
+		$this->assertSame([], $result);
+
+		$result = $this->reflection()->getIgnoredArguments($accepted);
 
 		$this->assertSame([], $result);
 	}
