@@ -33,7 +33,7 @@ class Constructor extends ReflectionMethod
 		$ignored  = [];
 
 		foreach ($arguments as $argumentName => $argumentValue) {
-			if (in_array($argumentName, $parameterNames) === true) {
+			if (in_array($argumentName, $parameterNames, true) === true) {
 				$accepted[$argumentName] = $argumentValue;
 			} else {
 				$ignored[$argumentName] = $argumentValue;
