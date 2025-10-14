@@ -177,7 +177,7 @@ return [
 	'user.changePassword' => [
 		'pattern' => 'users/(:any)/changePassword',
 		'load' => function (string $id) {
-			Find::user($id);
+			$user = Find::user($id);
 
 			return [
 				'component' => 'k-form-dialog',
@@ -185,11 +185,16 @@ return [
 					'fields'       => [
 						'currentPassword' => Field::password([
 							'label'        => I18n::translate('user.changePassword.current'),
-							'autocomplete' => 'current-password'
+							'autocomplete' => 'current-password',
+							'help'         => I18n::translate('account') . ': ' . App::instance()->user()->email(),
 						]),
+						'line' => [
+							'type' => 'line',
+						],
 						'password' => Field::password([
 							'label'        => I18n::translate('user.changePassword.new'),
-							'autocomplete' => 'new-password'
+							'autocomplete' => 'new-password',
+							'help'         => I18n::translate('account') . ': ' . $user->email(),
 						]),
 						'passwordConfirmation' => Field::password([
 							'label'        => I18n::translate('user.changePassword.new.confirm'),
