@@ -132,19 +132,18 @@ class Pages extends Collection
 	public function delete(array $ids): void
 	{
 		$exceptions = [];
+		$kirby      = App::instance();
 
 		// delete all pages and collect errors
 		foreach ($ids as $id) {
 			try {
-				$model = $this->get($id);
-
-				if ($model instanceof Page === false) {
+				if ($this->get($id) instanceof Page === false || !$page = $kirby->page($id)) {
 					throw new NotFoundException(
 						key: 'page.undefined',
 					);
 				}
 
-				$model->delete();
+				$page->delete();
 			} catch (Throwable $e) {
 				$exceptions[$id] = $e;
 			}
