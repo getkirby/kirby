@@ -546,8 +546,6 @@ class App
 	/**
 	 * Checks if CORS support is enabled
 	 * @since 5.2.0
-	 *
-	 * @return bool
 	 */
 	public function cors(): bool
 	{
