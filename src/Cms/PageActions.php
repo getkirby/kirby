@@ -579,7 +579,9 @@ trait PageActions
 			// outdated collections when deleting nested pages.
 			// When we use a foreach loop to go through those collections,
 			// we encounter outdated objects. Using a while loop
-			// fixes this issue. We can remove this part as soon
+			// fixes this issue.
+			//
+			// TODO: We can remove this part as soon
 			// as we move away from our immutable object architecture.
 
 			// delete all files individually
