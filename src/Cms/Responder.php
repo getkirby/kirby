@@ -296,6 +296,12 @@ class Responder implements Stringable
 				}
 			}
 
+			// inject CORS headers if enabled
+			$corsHeaders = static::corsHeaders();
+			if ($corsHeaders !== []) {
+				$injectedHeaders = [...$injectedHeaders, ...$corsHeaders];
+			}
+
 			// lazily inject (never override custom headers)
 			return [...$injectedHeaders, ...$this->headers];
 		}
@@ -414,5 +420,52 @@ class Responder implements Stringable
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns CORS headers based on configuration
+	 * @since 5.2.0
+	 */
+	public static function corsHeaders(): array
+	{
+		$kirby = App::instance();
+
+		if ($kirby->cors() === false) {
+			return [];
+		}
+
+		$headers = [];
+		$origin  = $kirby->option('cors.allowOrigin');
+
+		if ($origin !== null) {
+			$headers['Access-Control-Allow-Origin'] = $origin;
+		}
+
+		$methods = $kirby->option('cors.allowMethods');
+		if ($methods !== null) {
+			$headers['Access-Control-Allow-Methods'] = is_array($methods) ? implode(', ', $methods) : $methods;
+		}
+
+		$allowHeaders = $kirby->option('cors.allowHeaders');
+		if ($allowHeaders !== null) {
+			$headers['Access-Control-Allow-Headers'] = $allowHeaders;
+		}
+
+		$maxAge = $kirby->option('cors.maxAge');
+		if ($maxAge !== null) {
+			$headers['Access-Control-Max-Age'] = (string)$maxAge;
+		}
+
+		$allowCredentials = $kirby->option('cors.allowCredentials');
+		if ($allowCredentials === true) {
+			$headers['Access-Control-Allow-Credentials'] = 'true';
+		}
+
+		$exposeHeaders = $kirby->option('cors.exposeHeaders');
+		if ($exposeHeaders !== null && $exposeHeaders !== '') {
+			$headers['Access-Control-Expose-Headers'] = is_array($exposeHeaders) ? implode(', ', $exposeHeaders) : $exposeHeaders;
+		}
+
+		return $headers;
 	}
 }

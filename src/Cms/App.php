@@ -544,6 +544,17 @@ class App
 	}
 
 	/**
+	 * Checks if CORS support is enabled
+	 * @since 5.2.0
+	 *
+	 * @return bool
+	 */
+	public function cors(): bool
+	{
+		return $this->option('cors.enabled', false) === true;
+	}
+
+	/**
 	 * Returns the current language, if set by `static::setCurrentLanguage`
 	 */
 	public function currentLanguage(): Language|null

@@ -356,4 +356,160 @@ class ResponderTest extends TestCase
 		$this->assertSame($responder, $responder->usesCookies($cookies = ['bar']));
 		$this->assertSame($cookies, $responder->usesCookies());
 	}
+
+	public function testHeadersCorsDisabled(): void
+	{
+		$responder = new Responder();
+		$headers = $responder->headers();
+
+		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $headers);
+		$this->assertArrayNotHasKey('Access-Control-Allow-Methods', $headers);
+		$this->assertArrayNotHasKey('Access-Control-Allow-Headers', $headers);
+	}
+
+	public function testHeadersCorsBasic(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled' => true,
+					'allowOrigin' => 'https://example.com'
+				]
+			]
+		]);
+
+		$responder = new Responder();
+		$headers = $responder->headers();
+
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
+	}
+
+	public function testHeadersCorsComplete(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'          => true,
+					'allowOrigin'      => 'https://example.com',
+					'allowMethods'     => 'GET, POST, PUT, DELETE',
+					'allowHeaders'     => 'Content-Type, Authorization',
+					'maxAge'           => 3600,
+					'allowCredentials' => true,
+					'exposeHeaders'    => 'X-Custom-Header'
+				]
+			]
+		]);
+
+		$responder = new Responder();
+		$headers = $responder->headers();
+
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('GET, POST, PUT, DELETE', $headers['Access-Control-Allow-Methods']);
+		$this->assertSame('Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
+		$this->assertSame('3600', $headers['Access-Control-Max-Age']);
+		$this->assertSame('true', $headers['Access-Control-Allow-Credentials']);
+		$this->assertSame('X-Custom-Header', $headers['Access-Control-Expose-Headers']);
+	}
+
+	public function testHeadersCorsCustomNotOverridden(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled' => true,
+					'allowOrigin' => 'https://example.com'
+				]
+			]
+		]);
+
+		$responder = new Responder();
+		$responder->header('Access-Control-Allow-Origin', 'https://custom.com');
+		$headers = $responder->headers();
+
+		// Custom header should win (lazy injection)
+		$this->assertSame('https://custom.com', $headers['Access-Control-Allow-Origin']);
+	}
+
+	public function testHeadersCorsWithCacheBehavior(): void
+	{
+		$_COOKIE['foo'] = 'bar';
+
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled' => true,
+					'allowOrigin' => 'https://example.com'
+				]
+			]
+		]);
+
+		$responder = new Responder();
+		$responder->usesCookie('foo');
+		$headers = $responder->headers();
+
+		// Both CORS and cache control headers should be present
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('no-store, private', $headers['Cache-Control']);
+	}
+
+	public function testHeadersCorsAllowMethodsArray(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled' => true,
+					'allowOrigin' => '*',
+					'allowMethods' => ['GET', 'POST', 'PUT', 'DELETE']
+				]
+			]
+		]);
+
+		$responder = new Responder();
+		$headers = $responder->headers();
+
+		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('GET, POST, PUT, DELETE', $headers['Access-Control-Allow-Methods']);
+	}
+
+	public function testHeadersCorsExposeHeadersArray(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled' => true,
+					'allowOrigin' => '*',
+					'exposeHeaders' => ['X-Custom-Header', 'X-Another-Header']
+				]
+			]
+		]);
+
+		$responder = new Responder();
+		$headers = $responder->headers();
+
+		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('X-Custom-Header, X-Another-Header', $headers['Access-Control-Expose-Headers']);
+	}
+
+	public function testHeadersCorsWithArrayOptions(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled' => true,
+					'allowOrigin' => 'https://example.com',
+					'allowMethods' => ['GET', 'POST', 'PATCH'],
+					'allowHeaders' => 'Content-Type, Authorization',
+					'exposeHeaders' => ['X-Total-Count', 'X-Page-Number']
+				]
+			]
+		]);
+
+		$responder = new Responder();
+		$headers = $responder->headers();
+
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('GET, POST, PATCH', $headers['Access-Control-Allow-Methods']);
+		$this->assertSame('Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
+		$this->assertSame('X-Total-Count, X-Page-Number', $headers['Access-Control-Expose-Headers']);
+	}
 }
