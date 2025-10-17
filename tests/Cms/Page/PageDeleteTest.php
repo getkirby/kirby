@@ -145,6 +145,31 @@ class PageDeleteTest extends ModelTestCase
 		$this->assertFalse($page->exists());
 	}
 
+	public function testDeletePageWithSortedChildren(): void
+	{
+		$page = Page::create([
+			'slug'  => 'test',
+			'draft' => false
+		]);
+
+		$num = 1;
+
+		foreach (['a', 'b', 'c', 'd'] as $slug) {
+			$child = $page->createChild([
+				'slug'  => 'child-' . $slug,
+				'draft' => false
+			]);
+
+			$child->changeNum($num);
+			$num++;
+		}
+
+		$page->delete(force: true);
+
+		$this->assertFalse($page->exists());
+		$this->assertDirectoryDoesNotExist($page->root());
+	}
+
 	public function testDeleteHookWithUUIDAccess(): void
 	{
 		$phpunit = $this;
