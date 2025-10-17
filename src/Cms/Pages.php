@@ -145,6 +145,7 @@ class Pages extends Collection
 				}
 
 				$model->delete();
+				$this->remove($id);
 			} catch (Throwable $e) {
 				$exceptions[$id] = $e;
 			}
