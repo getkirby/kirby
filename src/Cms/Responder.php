@@ -435,28 +435,20 @@ class Responder implements Stringable
 		}
 
 		$headers = [];
-		$origin  = $kirby->option('cors.allowOrigin');
+		$origin  = $kirby->option('cors.allowOrigin', '*');
 
-		if ($origin !== null) {
-			$headers['Access-Control-Allow-Origin'] = $origin;
-		}
+		$headers['Access-Control-Allow-Origin'] = $origin;
 
-		$methods = $kirby->option('cors.allowMethods');
-		if ($methods !== null) {
-			$headers['Access-Control-Allow-Methods'] = is_array($methods) ? implode(', ', $methods) : $methods;
-		}
+		$methods = $kirby->option('cors.allowMethods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+		$headers['Access-Control-Allow-Methods'] = is_array($methods) ? implode(', ', $methods) : $methods;
 
-		$allowHeaders = $kirby->option('cors.allowHeaders');
-		if ($allowHeaders !== null) {
-			$headers['Access-Control-Allow-Headers'] = $allowHeaders;
-		}
+		$allowHeaders = $kirby->option('cors.allowHeaders', 'Accept, Content-Type, Authorization');
+		$headers['Access-Control-Allow-Headers'] = $allowHeaders;
 
-		$maxAge = $kirby->option('cors.maxAge');
-		if ($maxAge !== null) {
-			$headers['Access-Control-Max-Age'] = (string)$maxAge;
-		}
+		$maxAge = $kirby->option('cors.maxAge', 86400);
+		$headers['Access-Control-Max-Age'] = (string)$maxAge;
 
-		$allowCredentials = $kirby->option('cors.allowCredentials');
+		$allowCredentials = $kirby->option('cors.allowCredentials', false);
 		if ($allowCredentials === true) {
 			$headers['Access-Control-Allow-Credentials'] = 'true';
 		}

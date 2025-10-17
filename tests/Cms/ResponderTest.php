@@ -372,8 +372,7 @@ class ResponderTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled' => true,
-					'allowOrigin' => 'https://example.com'
+					'enabled' => true
 				]
 			]
 		]);
@@ -381,7 +380,11 @@ class ResponderTest extends TestCase
 		$responder = new Responder();
 		$headers = $responder->headers();
 
-		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
+		// Check defaults are applied
+		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('GET, POST, PUT, PATCH, DELETE, OPTIONS', $headers['Access-Control-Allow-Methods']);
+		$this->assertSame('Accept, Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
+		$this->assertSame('86400', $headers['Access-Control-Max-Age']);
 	}
 
 	public function testHeadersCorsComplete(): void
@@ -458,7 +461,7 @@ class ResponderTest extends TestCase
 			'options' => [
 				'cors' => [
 					'enabled' => true,
-					'allowOrigin' => '*',
+					'allowOrigin' => 'https://example.com',
 					'allowMethods' => ['GET', 'POST', 'PUT', 'DELETE']
 				]
 			]
@@ -467,7 +470,7 @@ class ResponderTest extends TestCase
 		$responder = new Responder();
 		$headers = $responder->headers();
 
-		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('GET, POST, PUT, DELETE', $headers['Access-Control-Allow-Methods']);
 	}
 
@@ -477,7 +480,7 @@ class ResponderTest extends TestCase
 			'options' => [
 				'cors' => [
 					'enabled' => true,
-					'allowOrigin' => '*',
+					'allowOrigin' => 'https://example.com',
 					'exposeHeaders' => ['X-Custom-Header', 'X-Another-Header']
 				]
 			]
@@ -486,7 +489,7 @@ class ResponderTest extends TestCase
 		$responder = new Responder();
 		$headers = $responder->headers();
 
-		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('X-Custom-Header, X-Another-Header', $headers['Access-Control-Expose-Headers']);
 	}
 

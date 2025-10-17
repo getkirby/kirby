@@ -35,15 +35,19 @@ class AppCorsTest extends TestCase
 		$this->app->clone([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
-					'allowOrigin' => '*'
+					'enabled' => true
 				]
 			]
 		]);
 
 		$headers = Responder::corsHeaders();
 
+		// Check defaults are applied
 		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('GET, POST, PUT, PATCH, DELETE, OPTIONS', $headers['Access-Control-Allow-Methods']);
+		$this->assertSame('Accept, Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
+		$this->assertSame('86400', $headers['Access-Control-Max-Age']);
+		$this->assertArrayNotHasKey('Access-Control-Allow-Credentials', $headers);
 	}
 
 	public function testCorsHeadersComplete(): void
@@ -78,7 +82,7 @@ class AppCorsTest extends TestCase
 			'options' => [
 				'cors' => [
 					'enabled'      => true,
-					'allowOrigin'  => '*',
+					'allowOrigin'  => 'https://example.com',
 					'allowMethods' => 'GET, POST'
 				]
 			]
@@ -86,10 +90,11 @@ class AppCorsTest extends TestCase
 
 		$headers = Responder::corsHeaders();
 
-		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('GET, POST', $headers['Access-Control-Allow-Methods']);
-		$this->assertArrayNotHasKey('Access-Control-Allow-Headers', $headers);
-		$this->assertArrayNotHasKey('Access-Control-Max-Age', $headers);
+		// These should still use defaults
+		$this->assertSame('Accept, Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
+		$this->assertSame('86400', $headers['Access-Control-Max-Age']);
 		$this->assertArrayNotHasKey('Access-Control-Allow-Credentials', $headers);
 	}
 
@@ -99,7 +104,7 @@ class AppCorsTest extends TestCase
 			'options' => [
 				'cors' => [
 					'enabled'          => true,
-					'allowOrigin'      => '*',
+					'allowOrigin'      => 'https://example.com',
 					'allowCredentials' => false
 				]
 			]
@@ -107,6 +112,7 @@ class AppCorsTest extends TestCase
 
 		$headers = Responder::corsHeaders();
 
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertArrayNotHasKey('Access-Control-Allow-Credentials', $headers);
 	}
 
@@ -116,7 +122,7 @@ class AppCorsTest extends TestCase
 			'options' => [
 				'cors' => [
 					'enabled'       => true,
-					'allowOrigin'   => '*',
+					'allowOrigin'   => 'https://example.com',
 					'exposeHeaders' => ''
 				]
 			]
@@ -124,6 +130,7 @@ class AppCorsTest extends TestCase
 
 		$headers = Responder::corsHeaders();
 
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertArrayNotHasKey('Access-Control-Expose-Headers', $headers);
 	}
 
@@ -133,7 +140,7 @@ class AppCorsTest extends TestCase
 			'options' => [
 				'cors' => [
 					'enabled'      => true,
-					'allowOrigin'  => '*',
+					'allowOrigin'  => 'https://example.com',
 					'allowMethods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 				]
 			]
@@ -141,7 +148,7 @@ class AppCorsTest extends TestCase
 
 		$headers = Responder::corsHeaders();
 
-		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('GET, POST, PUT, PATCH, DELETE', $headers['Access-Control-Allow-Methods']);
 	}
 
@@ -151,7 +158,7 @@ class AppCorsTest extends TestCase
 			'options' => [
 				'cors' => [
 					'enabled'       => true,
-					'allowOrigin'   => '*',
+					'allowOrigin'   => 'https://example.com',
 					'exposeHeaders' => ['X-Custom-Header', 'X-Total-Count', 'X-Page-Number']
 				]
 			]
@@ -159,7 +166,7 @@ class AppCorsTest extends TestCase
 
 		$headers = Responder::corsHeaders();
 
-		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('X-Custom-Header, X-Total-Count, X-Page-Number', $headers['Access-Control-Expose-Headers']);
 	}
 
@@ -183,5 +190,28 @@ class AppCorsTest extends TestCase
 		$this->assertSame('GET, POST', $headers['Access-Control-Allow-Methods']);
 		$this->assertSame('Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
 		$this->assertSame('X-Custom-Header', $headers['Access-Control-Expose-Headers']);
+	}
+
+	public function testCorsHeadersDefaultsCanBeOverridden(): void
+	{
+		$this->app->clone([
+			'options' => [
+				'cors' => [
+					'enabled'      => true,
+					'allowOrigin'  => 'https://custom.com',
+					'allowMethods' => 'GET',
+					'allowHeaders' => 'X-Custom-Header',
+					'maxAge'       => 3600
+				]
+			]
+		]);
+
+		$headers = Responder::corsHeaders();
+
+		// All defaults should be overridden
+		$this->assertSame('https://custom.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('GET', $headers['Access-Control-Allow-Methods']);
+		$this->assertSame('X-Custom-Header', $headers['Access-Control-Allow-Headers']);
+		$this->assertSame('3600', $headers['Access-Control-Max-Age']);
 	}
 }
