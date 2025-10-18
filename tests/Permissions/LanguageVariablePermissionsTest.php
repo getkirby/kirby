@@ -5,7 +5,7 @@ namespace Kirby\Permissions;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(LanguageVariablePermissions::class)]
-class LanguageVariablePermissionsTest extends PermissionsGroupTestCase
+class LanguageVariablePermissionsTest extends PermissionsTestCase
 {
 	public function testConstruct(): void
 	{

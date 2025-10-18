@@ -4,29 +4,62 @@ namespace Kirby\Permissions;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 
+class TestPermissions extends Permissions
+{
+	public function __construct(
+		public bool|null $access = null,
+		public bool|null $create = null,
+		public bool|null $delete = null,
+		public bool|null $list = null,
+		public bool|null $read = null,
+		public bool|null $update = null,
+	) {
+	}
+
+}
+
 #[CoversClass(Permissions::class)]
 class PermissionsTest extends PermissionsTestCase
 {
-	protected function assertAllPermissionsAre(Permissions $permissions, bool $expected): void
+	public function testConstruct(): void
 	{
-		foreach ($permissions::keys() as $key) {
-			$subset = $permissions->$key;
+		$permissions = new TestPermissions();
+		$this->assertAllPermissionsAre($permissions, null);
+	}
 
-			foreach ($subset::keys() as $capability) {
-				$this->assertSame($expected, $subset->$capability);
-			}
-		}
+	public function testForAdmin(): void
+	{
+		$permissions = TestPermissions::forAdmin();
+		$this->assertAllPermissionsAre($permissions, true);
+	}
+
+	public function testForNobody(): void
+	{
+		$permissions = TestPermissions::forNobody();
+		$this->assertAllPermissionsAre($permissions, false);
+	}
+
+	public function testFromArray(): void
+	{
+		$permissions = TestPermissions::from([
+			'*'      => false,
+			'delete' => true
+		]);
+
+		$this->assertFalse($permissions->access);
+		$this->assertFalse($permissions->list);
+		$this->assertTrue($permissions->delete);
 	}
 
 	public function testFromArrayWithWildcardKey(): void
 	{
-		$permissions = Permissions::fromArray([
+		$permissions = TestPermissions::from([
 			'*' => true
 		]);
 
 		$this->assertAllPermissionsAre($permissions, true);
 
-		$permissions = Permissions::fromArray([
+		$permissions = TestPermissions::from([
 			'*' => false
 		]);
 
@@ -35,142 +68,83 @@ class PermissionsTest extends PermissionsTestCase
 
 	public function testFromWildcard(): void
 	{
-		$permissions = Permissions::fromWildcard(true);
+		$permissions = TestPermissions::from(true);
 
 		$this->assertAllPermissionsAre($permissions, true);
 
-		$permissions = Permissions::fromWildcard(false);
+		$permissions = TestPermissions::from(false);
 
 		$this->assertAllPermissionsAre($permissions, false);
+
+		$permissions = TestPermissions::from(null);
+
+		$this->assertAllPermissionsAre($permissions, null);
 	}
 
 	public function testKeys(): void
 	{
-		$this->assertPermissionsKeys(Permissions::class, [
-			'account',
-			'file',
-			'files',
-			'language',
-			'languages',
-			'languageVariable',
-			'languageVariables',
-			'page',
-			'pages',
-			'panel',
-			'site',
-			'system',
-			'user',
-			'users'
+		$this->assertPermissionsKeys(TestPermissions::class, [
+			'access',
+			'create',
+			'delete',
+			'list',
+			'read',
+			'update',
 		]);
+	}
+
+	public function testMerge(): void
+	{
+		$defaultPermissions = new TestPermissions(
+			list: true
+		);
+
+		$customPermissions = new TestPermissions(
+			access: true,
+			delete: false
+		);
+
+		$mergedPermissions = $defaultPermissions->merge($customPermissions);
+
+		$this->assertTrue($mergedPermissions->access);
+		$this->assertNull($mergedPermissions->create);
+		$this->assertFalse($mergedPermissions->delete);
+		$this->assertTrue($mergedPermissions->list);
+		$this->assertNull($mergedPermissions->read);
+		$this->assertNull($mergedPermissions->update);
 	}
 
 	public function testToArray(): void
 	{
-		$permissions = new Permissions();
-		$result      = $permissions->toArray();
+		$permissions = new TestPermissions();
 
-		$expected = [
-			'account' => [
-				'access'         => null,
-				'changeEmail'    => null,
-				'changeLanguage' => null,
-				'changePassword' => null,
-				'changeRole'     => null,
-				'delete'         => null,
-				'list'           => null,
-				'read'           => null,
-				'update'         => null,
-			],
-			'file' => [
-				'access'         => null,
-				'changeName'     => null,
-				'changeTemplate' => null,
-				'create'         => null,
-				'delete'         => null,
-				'list'           => null,
-				'read'           => null,
-				'replace'        => null,
-				'sort'           => null,
-				'update'         => null,
-			],
-			'files' => [
-				'access' => null,
-				'create' => null,
-			],
-			'language' => [
-				'access' => null,
-				'create' => null,
-				'delete' => null,
-				'list'   => null,
-				'read'   => null,
-				'update' => null,
-			],
-			'languages' => [
-				'access' => null,
-				'create' => null,
-			],
-			'languageVariable' => [
-				'access' => null,
-				'create' => null,
-				'delete' => null,
-				'list'   => null,
-				'read'   => null,
-				'update' => null,
-			],
-			'languageVariables' => [
-				'access' => null,
-				'create' => null,
-			],
-			'page' => [
-				'access'         => null,
-				'changeSlug'     => null,
-				'changeStatus'   => null,
-				'changeTemplate' => null,
-				'changeTitle'    => null,
-				'create'         => null,
-				'delete'         => null,
-				'duplicate'      => null,
-				'list'           => null,
-				'move'           => null,
-				'read'           => null,
-				'sort'           => null,
-				'update'         => null,
-			],
-			'pages' => [
-				'access' => null,
-				'create' => null,
-			],
-			'panel' => [
-				'access' => null,
-			],
-			'site' => [
-				'access'      => null,
-				'changeTitle' => null,
-				'read'        => null,
-				'update'      => null,
-			],
-			'system' => [
-				'access' => null,
-			],
-			'user' => [
-				'access' => null,
-				'changeEmail' => null,
-				'changeLanguage' => null,
-				'changePassword' => null,
-				'changeRole' => null,
-				'create' => null,
-				'delete' => null,
-				'list' => null,
-				'read' => null,
-				'update' => null,
-			],
-			'users' => [
-				'access' => null,
-				'create' => null,
-			]
-		];
+		$this->assertSame([
+			'access' => null,
+			'create' => null,
+			'delete' => null,
+			'list'   => null,
+			'read'   => null,
+			'update' => null
+		], $permissions->toArray());
+	}
 
-		$this->assertSame($expected, $result);
+	public function testWildcard(): void
+	{
+		$permissions = new TestPermissions();
+
+		$this->assertAllPermissionsAre($permissions, null);
+
+		$permissions->wildcard(true);
+
+		$this->assertAllPermissionsAre($permissions, true);
+
+		$permissions->wildcard(false);
+
+		$this->assertAllPermissionsAre($permissions, false);
+
+		$permissions->wildcard(null);
+
+		$this->assertAllPermissionsAre($permissions, null);
 	}
 
 }

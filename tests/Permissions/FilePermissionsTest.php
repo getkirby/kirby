@@ -5,7 +5,7 @@ namespace Kirby\Permissions;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FilePermissions::class)]
-class FilePermissionsTest extends PermissionsGroupTestCase
+class FilePermissionsTest extends PermissionsTestCase
 {
 	public function testConstruct(): void
 	{

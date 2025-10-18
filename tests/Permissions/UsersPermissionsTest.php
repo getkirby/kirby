@@ -5,7 +5,7 @@ namespace Kirby\Permissions;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(UsersPermissions::class)]
-class UsersPermissionsTest extends PermissionsGroupTestCase
+class UsersPermissionsTest extends PermissionsTestCase
 {
 	public function testConstruct(): void
 	{
@@ -17,7 +17,6 @@ class UsersPermissionsTest extends PermissionsGroupTestCase
 	{
 		$this->assertPermissionsKeys(UsersPermissions::class, [
 			'access',
-			'create'
 		]);
 	}
 }

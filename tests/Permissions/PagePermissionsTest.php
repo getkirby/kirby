@@ -5,7 +5,7 @@ namespace Kirby\Permissions;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(PagePermissions::class)]
-class PagePermissionsTest extends PermissionsGroupTestCase
+class PagePermissionsTest extends PermissionsTestCase
 {
 	public function testConstruct(): void
 	{
@@ -26,6 +26,7 @@ class PagePermissionsTest extends PermissionsGroupTestCase
 			'duplicate',
 			'list',
 			'move',
+			'preview',
 			'read',
 			'sort',
 			'update'

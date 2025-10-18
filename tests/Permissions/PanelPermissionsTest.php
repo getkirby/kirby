@@ -5,7 +5,7 @@ namespace Kirby\Permissions;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(PanelPermissions::class)]
-class PanelPermissionsTest extends PermissionsGroupTestCase
+class PanelPermissionsTest extends PermissionsTestCase
 {
 	public function testConstruct(): void
 	{
