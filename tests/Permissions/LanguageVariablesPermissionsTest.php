@@ -5,7 +5,7 @@ namespace Kirby\Permissions;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(LanguageVariablesPermissions::class)]
-class LanguageVariablesPermissionsTest extends PermissionsGroupTestCase
+class LanguageVariablesPermissionsTest extends PermissionsTestCase
 {
 	public function testConstruct(): void
 	{
@@ -17,7 +17,6 @@ class LanguageVariablesPermissionsTest extends PermissionsGroupTestCase
 	{
 		$this->assertPermissionsKeys(LanguageVariablesPermissions::class, [
 			'access',
-			'create'
 		]);
 	}
 }

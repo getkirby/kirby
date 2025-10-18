@@ -2,7 +2,7 @@
 
 namespace Kirby\Permissions;
 
-class AccountPermissions extends ModelPermissions
+class AccountPermissions extends Permissions
 {
 	public function __construct(
 		public bool|null $access = null,

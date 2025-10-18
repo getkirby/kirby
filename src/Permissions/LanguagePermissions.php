@@ -2,7 +2,9 @@
 
 namespace Kirby\Permissions;
 
-class LanguagePermissions extends ModelPermissions
+use Kirby\Cms\Language;
+
+class LanguagePermissions extends Permissions
 {
 	public function __construct(
 		public bool|null $access = null,
@@ -12,5 +14,33 @@ class LanguagePermissions extends ModelPermissions
 		public bool|null $read = null,
 		public bool|null $update = null,
 	) {
+	}
+
+	public static function for(Language $language): static
+	{
+		return match (true) {
+			$language->isSingle()  => static::forSingleLanguage(),
+			$language->isDefault() => static::forDefaultLanguage($language),
+			default                => new static()
+		};
+	}
+
+	public static function forDefaultLanguage(Language $language): static
+	{
+		if ($language->isLast() === false) {
+			return new static(
+				delete: false
+			);
+		}
+
+		return new static();
+	}
+
+	public static function forSingleLanguage(): static
+	{
+		return new static(
+			create: false,
+			delete: false
+		);
 	}
 }
