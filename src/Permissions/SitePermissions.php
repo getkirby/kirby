@@ -2,7 +2,7 @@
 
 namespace Kirby\Permissions;
 
-class SitePermissions extends ModelPermissions
+class SitePermissions extends Permissions
 {
 	public function __construct(
 		public bool|null $access = null,
