@@ -1,5 +1,5 @@
 <template>
-	<header class="k-header">
+	<header :data-editable="editable" class="k-header">
 		<h1 class="k-header-title">
 			<!--
 				Edit button has been clicked

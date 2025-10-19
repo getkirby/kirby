@@ -10,7 +10,15 @@
 			class="k-site-view-header"
 			@edit="$dialog(api + '/changeTitle')"
 		>
-			{{ title }}
+			<span
+				v-if="!title || title.length === 0"
+				class="k-site-title-placeholder"
+			>
+				{{ $t("view.site") }} …
+			</span>
+			<template v-else>
+				{{ title }}
+			</template>
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />
@@ -54,6 +62,13 @@ export default {
 </script>
 
 <style>
+.k-site-title-placeholder {
+	color: var(--color-gray-500);
+	transition: color 0.3s;
+}
+.k-site-view-header[data-editable="true"] .k-site-title-placeholder:hover {
+	color: var(--color-gray-900);
+}
 .k-site-view[data-has-tabs="true"] .k-site-view-header {
 	margin-bottom: 0;
 }
