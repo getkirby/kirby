@@ -24,16 +24,12 @@ class Page
 	public function permissions(User|null $user = null): PagePermissions
 	{
 		// get the default page permissions for the user
-		$permissions = User::ensure($user)->role()->permissions()->page();
+		$role        = User::ensure($user)->role();
+		$permissions = $role->permissions()->page();
 
-		// the unauthenticated user must not get any additional positive permissions later by accident
-		if ($user->role()->isNobody() === true) {
-			return $permissions::from(false);
-		}
-
-		// the kirby superuser will always get full access
-		if ($user->role()->isKirby() === true) {
-			return $permissions::from(true);
+		// the permissions for the generic power or weak users cannot be adjusted
+		if ($role->isNobody() === true || $role->isKirby() === true) {
+			return $permissions;
 		}
 
 		// apply page-specific rules and permissions
