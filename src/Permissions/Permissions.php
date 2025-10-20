@@ -18,16 +18,6 @@ abstract class Permissions
 		return (new Constructor(static::class))->getAcceptedArguments($arguments);
 	}
 
-	public static function forAdmin(): static
-	{
-		return (new static())->wildcard(true);
-	}
-
-	public static function forNobody(): static
-	{
-		return (new static())->wildcard(false);
-	}
-
 	/**
 	 * Creates a new instance from array, boolean or null. This is mainly
 	 * useful to translate blueprint options to permission settings.
