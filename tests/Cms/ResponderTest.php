@@ -357,17 +357,12 @@ class ResponderTest extends TestCase
 		$this->assertSame($cookies, $responder->usesCookies());
 	}
 
-	public function testHeadersCorsDisabled(): void
+	public function testCorsHeadersDisabled(): void
 	{
-		$responder = new Responder();
-		$headers = $responder->headers();
-
-		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $headers);
-		$this->assertArrayNotHasKey('Access-Control-Allow-Methods', $headers);
-		$this->assertArrayNotHasKey('Access-Control-Allow-Headers', $headers);
+		$this->assertSame([], Responder::corsHeaders());
 	}
 
-	public function testHeadersCorsBasic(): void
+	public function testCorsHeadersBasic(): void
 	{
 		$this->kirby([
 			'options' => [
@@ -377,17 +372,17 @@ class ResponderTest extends TestCase
 			]
 		]);
 
-		$responder = new Responder();
-		$headers = $responder->headers();
+		$headers = Responder::corsHeaders();
 
-		// Check defaults are applied
+		// defaults are applied
 		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('GET, POST, PUT, PATCH, DELETE, OPTIONS', $headers['Access-Control-Allow-Methods']);
 		$this->assertSame('Accept, Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
 		$this->assertSame('86400', $headers['Access-Control-Max-Age']);
+		$this->assertArrayNotHasKey('Access-Control-Allow-Credentials', $headers);
 	}
 
-	public function testHeadersCorsComplete(): void
+	public function testCorsHeadersComplete(): void
 	{
 		$this->kirby([
 			'options' => [
@@ -403,8 +398,7 @@ class ResponderTest extends TestCase
 			]
 		]);
 
-		$responder = new Responder();
-		$headers = $responder->headers();
+		$headers = Responder::corsHeaders();
 
 		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('GET, POST, PUT, DELETE', $headers['Access-Control-Allow-Methods']);
@@ -414,12 +408,237 @@ class ResponderTest extends TestCase
 		$this->assertSame('X-Custom-Header', $headers['Access-Control-Expose-Headers']);
 	}
 
+	public function testCorsHeadersPartial(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'      => true,
+					'allowOrigin'  => 'https://example.com',
+					'allowMethods' => 'GET, POST'
+				]
+			]
+		]);
+
+		$headers = Responder::corsHeaders();
+
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('GET, POST', $headers['Access-Control-Allow-Methods']);
+		// these should still use defaults
+		$this->assertSame('Accept, Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
+		$this->assertSame('86400', $headers['Access-Control-Max-Age']);
+		$this->assertArrayNotHasKey('Access-Control-Allow-Credentials', $headers);
+	}
+
+	public function testCorsHeadersEmptyValues(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'          => true,
+					'allowOrigin'      => 'https://example.com',
+					'allowCredentials' => false,
+					'exposeHeaders'    => ''
+				]
+			]
+		]);
+
+		$headers = Responder::corsHeaders();
+
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertArrayNotHasKey('Access-Control-Allow-Credentials', $headers);
+		$this->assertArrayNotHasKey('Access-Control-Expose-Headers', $headers);
+	}
+
+	public function testCorsHeadersArrayFormats(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'       => true,
+					'allowOrigin'   => 'https://example.com',
+					'allowMethods'  => ['GET', 'POST', 'PUT', 'DELETE'],
+					'allowHeaders'  => ['Content-Type', 'Authorization', 'X-Custom-Header'],
+					'exposeHeaders' => ['X-Total-Count', 'X-Page-Number']
+				]
+			]
+		]);
+
+		$headers = Responder::corsHeaders();
+
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('GET, POST, PUT, DELETE', $headers['Access-Control-Allow-Methods']);
+		$this->assertSame('Content-Type, Authorization, X-Custom-Header', $headers['Access-Control-Allow-Headers']);
+		$this->assertSame('X-Total-Count, X-Page-Number', $headers['Access-Control-Expose-Headers']);
+	}
+
+	public function testCorsHeadersWithCredentials(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'          => true,
+					'allowOrigin'      => 'https://example.com',
+					'allowCredentials' => true
+				]
+			]
+		]);
+
+		$headers = Responder::corsHeaders();
+
+		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('true', $headers['Access-Control-Allow-Credentials']);
+	}
+
+	public function testCorsHeadersWildcardWithCredentials(): void
+	{
+		$this->expectException(\Kirby\Exception\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Cannot use wildcard origin (*) with credentials');
+
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'          => true,
+					'allowOrigin'      => '*',
+					'allowCredentials' => true
+				]
+			]
+		]);
+
+		Responder::corsHeaders();
+	}
+
+	public function testCorsHeadersMultipleOriginsWithMatch(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'     => true,
+					'allowOrigin' => ['https://app1.com', 'https://app2.com', 'https://staging.com']
+				]
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app2.com'
+			]
+		]);
+
+		$headers = Responder::corsHeaders();
+
+		// should echo back the matched origin
+		$this->assertSame('https://app2.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('Origin', $headers['Vary']);
+		$this->assertSame('GET, POST, PUT, PATCH, DELETE, OPTIONS', $headers['Access-Control-Allow-Methods']);
+	}
+
+	public function testCorsHeadersMultipleOriginsNoMatch(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'     => true,
+					'allowOrigin' => ['https://app1.com', 'https://app2.com']
+				]
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://evil.com'
+			]
+		]);
+
+		$headers = Responder::corsHeaders();
+
+		// no CORS headers should be returned for non-whitelisted origin
+		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $headers);
+		$this->assertSame([], $headers);
+	}
+
+	public function testCorsHeadersMultipleOriginsNoOriginHeader(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'     => true,
+					'allowOrigin' => ['https://app1.com', 'https://app2.com']
+				]
+			]
+		]);
+
+		$headers = Responder::corsHeaders();
+
+		// no CORS headers when Origin header is missing
+		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $headers);
+		$this->assertSame([], $headers);
+	}
+
+	public function testCorsHeadersMultipleOriginsCaseInsensitive(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'     => true,
+					'allowOrigin' => ['https://app1.com', 'https://App2.COM', 'https://staging.com']
+				]
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app2.com'
+			]
+		]);
+
+		$headers = Responder::corsHeaders();
+
+		// should match case-insensitively and echo back the actual request origin
+		$this->assertSame('https://app2.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('Origin', $headers['Vary']);
+	}
+
+	public function testCorsHeadersMultipleOriginsWithCredentials(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled'          => true,
+					'allowOrigin'      => ['https://app1.com', 'https://app2.com'],
+					'allowCredentials' => true
+				]
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app1.com'
+			]
+		]);
+
+		$headers = Responder::corsHeaders();
+
+		// should work fine with array origins and credentials
+		$this->assertSame('https://app1.com', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('true', $headers['Access-Control-Allow-Credentials']);
+		$this->assertSame('Origin', $headers['Vary']);
+	}
+
+	public function testHeadersCorsInjection(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'enabled' => true
+				]
+			]
+		]);
+
+		$responder = new Responder();
+		$headers = $responder->headers();
+
+		// CORS headers are injected
+		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+		$this->assertSame('GET, POST, PUT, PATCH, DELETE, OPTIONS', $headers['Access-Control-Allow-Methods']);
+		$this->assertSame('Accept, Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
+		$this->assertSame('86400', $headers['Access-Control-Max-Age']);
+	}
+
 	public function testHeadersCorsCustomNotOverridden(): void
 	{
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled' => true,
+					'enabled'     => true,
 					'allowOrigin' => 'https://example.com'
 				]
 			]
@@ -429,7 +648,7 @@ class ResponderTest extends TestCase
 		$responder->header('Access-Control-Allow-Origin', 'https://custom.com');
 		$headers = $responder->headers();
 
-		// Custom header should win (lazy injection)
+		// custom header should win (lazy injection)
 		$this->assertSame('https://custom.com', $headers['Access-Control-Allow-Origin']);
 	}
 
@@ -440,7 +659,7 @@ class ResponderTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled' => true,
+					'enabled'     => true,
 					'allowOrigin' => 'https://example.com'
 				]
 			]
@@ -450,69 +669,32 @@ class ResponderTest extends TestCase
 		$responder->usesCookie('foo');
 		$headers = $responder->headers();
 
-		// Both CORS and cache control headers should be present
+		// both CORS and cache control headers should be present
 		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('no-store, private', $headers['Cache-Control']);
 	}
 
-	public function testHeadersCorsAllowMethodsArray(): void
+	public function testHeadersCorsVaryMerging(): void
 	{
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled' => true,
-					'allowOrigin' => 'https://example.com',
-					'allowMethods' => ['GET', 'POST', 'PUT', 'DELETE']
+					'enabled'     => true,
+					'allowOrigin' => ['https://app1.com', 'https://app2.com']
 				]
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app1.com'
 			]
 		]);
 
 		$responder = new Responder();
+		$responder->usesAuth(true);
+		$responder->usesCookies(['session']);
 		$headers = $responder->headers();
 
-		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
-		$this->assertSame('GET, POST, PUT, DELETE', $headers['Access-Control-Allow-Methods']);
-	}
-
-	public function testHeadersCorsExposeHeadersArray(): void
-	{
-		$this->kirby([
-			'options' => [
-				'cors' => [
-					'enabled' => true,
-					'allowOrigin' => 'https://example.com',
-					'exposeHeaders' => ['X-Custom-Header', 'X-Another-Header']
-				]
-			]
-		]);
-
-		$responder = new Responder();
-		$headers = $responder->headers();
-
-		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
-		$this->assertSame('X-Custom-Header, X-Another-Header', $headers['Access-Control-Expose-Headers']);
-	}
-
-	public function testHeadersCorsWithArrayOptions(): void
-	{
-		$this->kirby([
-			'options' => [
-				'cors' => [
-					'enabled' => true,
-					'allowOrigin' => 'https://example.com',
-					'allowMethods' => ['GET', 'POST', 'PATCH'],
-					'allowHeaders' => 'Content-Type, Authorization',
-					'exposeHeaders' => ['X-Total-Count', 'X-Page-Number']
-				]
-			]
-		]);
-
-		$responder = new Responder();
-		$headers = $responder->headers();
-
-		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
-		$this->assertSame('GET, POST, PATCH', $headers['Access-Control-Allow-Methods']);
-		$this->assertSame('Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
-		$this->assertSame('X-Total-Count, X-Page-Number', $headers['Access-Control-Expose-Headers']);
+		// Vary header should merge Authorization, Cookie, and Origin
+		$this->assertSame('Authorization, Cookie, Origin', $headers['Vary']);
+		$this->assertSame('https://app1.com', $headers['Access-Control-Allow-Origin']);
 	}
 }
