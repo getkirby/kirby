@@ -36,7 +36,7 @@ return function (App $kirby) {
 			'pattern' => '(:all)',
 			'method'  => 'OPTIONS',
 			'action'  => function () use ($kirby) {
-				if ($kirby->cors() === false) {
+				if ($kirby->isCorsEnabled() === false) {
 					return null;
 				}
 

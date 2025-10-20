@@ -547,7 +547,7 @@ class App
 	 * Checks if CORS support is enabled
 	 * @since 5.2.0
 	 */
-	public function cors(): bool
+	public function isCorsEnabled(): bool
 	{
 		return $this->option('cors.enabled', false) === true;
 	}

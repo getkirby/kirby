@@ -442,7 +442,7 @@ class Responder implements Stringable
 	{
 		$kirby = App::instance();
 
-		if ($kirby->cors() === false) {
+		if ($kirby->isCorsEnabled() === false) {
 			return [];
 		}
 

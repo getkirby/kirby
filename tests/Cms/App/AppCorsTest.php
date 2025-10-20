@@ -7,12 +7,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(App::class)]
 class AppCorsTest extends TestCase
 {
-	public function testCorsDefault(): void
+	public function testIsCorsEnabledByDefault(): void
 	{
-		$this->assertFalse($this->app->cors());
+		$this->assertFalse($this->app->isCorsEnabled());
 	}
 
-	public function testCorsWhenEnabled(): void
+	public function testIsCorsEnabledWhenConfigured(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -22,7 +22,7 @@ class AppCorsTest extends TestCase
 			]
 		]);
 
-		$this->assertTrue($app->cors());
+		$this->assertTrue($app->isCorsEnabled());
 	}
 
 	public function testPreflightRouteWithCompleteConfiguration(): void
