@@ -132,19 +132,29 @@ class Pages extends Collection
 	public function delete(array $ids): void
 	{
 		$exceptions = [];
+		$kirby      = App::instance();
 
 		// delete all pages and collect errors
 		foreach ($ids as $id) {
 			try {
-				$model = $this->get($id);
+				// Explanation: We get the page object from the global context
+				// as the objects in the pages collection itself could have rendered
+				// outdated from a sibling delete action in this loop (e.g. resorting
+				// after deleting a sibling page and leaving the object in this collection
+				// with an old root path).
+				//
+				// TODO: We can remove this part as soon
+				// as we move away from our immutable object architecture.
+				$page = $kirby->page($id);
 
-				if ($model instanceof Page === false) {
+				if ($page === null || $this->get($id) instanceof Page === false) {
 					throw new NotFoundException(
 						key: 'page.undefined',
 					);
 				}
 
-				$model->delete();
+				$page->delete();
+				$this->remove($id);
 			} catch (Throwable $e) {
 				$exceptions[$id] = $e;
 			}
