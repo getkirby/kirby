@@ -287,7 +287,6 @@ class Responder implements Stringable
 				$injectedHeaders = [...$injectedHeaders, ...$corsHeaders];
 			}
 
-			// set merged Vary header if not private
 			if ($isPrivate === false) {
 				// the response is public, but it may
 				// vary based on request headers
@@ -303,7 +302,9 @@ class Responder implements Stringable
 
 				// merge Vary from CORS if present
 				if (isset($injectedHeaders['Vary']) === true) {
-					$vary[] = $injectedHeaders['Vary'];
+					// split CORS Vary into individual values to avoid duplication
+					$corsVaryValues = array_map('trim', explode(',', $injectedHeaders['Vary']));
+					$vary = [...$vary, ...$corsVaryValues];
 				}
 
 				if ($vary !== []) {
@@ -434,8 +435,10 @@ class Responder implements Stringable
 	/**
 	 * Returns CORS headers based on configuration
 	 * @since 5.2.0
+	 *
+	 * @param bool $preflight Whether this is a preflight request
 	 */
-	public static function corsHeaders(): array
+	public static function corsHeaders(bool $preflight = false): array
 	{
 		$kirby = App::instance();
 
@@ -443,38 +446,45 @@ class Responder implements Stringable
 			return [];
 		}
 
-		$headers = [];
-		$origin  = $kirby->option('cors.allowOrigin', '*');
+		$headers       = [];
+		$request       = $kirby->request();
+		$requestOrigin = $request->header('Origin');
+		$configOrigin  = $kirby->option('cors.allowOrigin', '*');
 
-		if (is_array($origin)) {
-			$requestOrigin = $kirby->request()->header('Origin');
+		// find allowed origin based on config and request
+		$allowOrigin = match (true) {
+			$configOrigin === '*' => '*',
+			$requestOrigin === null => null,
+			is_string($configOrigin) => strcasecmp($configOrigin, $requestOrigin) === 0 ? $requestOrigin : null,
+			default => (function () use ($configOrigin, $requestOrigin) {
+				foreach ($configOrigin as $origin) {
+					if (strcasecmp($origin, $requestOrigin) === 0) {
+						return $requestOrigin;
+					}
+				}
+				return null;
+			})()
+		};
 
-			if ($requestOrigin !== null && in_array(strtolower($requestOrigin), array_map('strtolower', $origin), true) === true) {
-				$headers['Access-Control-Allow-Origin'] = $requestOrigin;
-				$headers['Vary'] = 'Origin';
-			}
-		} else {
-			$headers['Access-Control-Allow-Origin'] = $origin;
-		}
-
-		// only add CORS headers if an origin is set
-		if (isset($headers['Access-Control-Allow-Origin']) === false) {
+		// no origin match found
+		if ($allowOrigin === null) {
 			return [];
 		}
 
-		$methods = $kirby->option('cors.allowMethods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-		$headers['Access-Control-Allow-Methods'] = is_array($methods) ? implode(', ', $methods) : $methods;
+		$headers['Access-Control-Allow-Origin'] = $allowOrigin;
 
-		$allowHeaders = $kirby->option('cors.allowHeaders', 'Accept, Content-Type, Authorization');
-		$headers['Access-Control-Allow-Headers'] = is_array($allowHeaders) ? implode(', ', $allowHeaders) : $allowHeaders;
+		// tell caches that the response varies by origin
+		// when not using a wildcard origin
+		if ($configOrigin !== '*') {
+			$currentVary = $request->header('Vary');
+			$headers['Vary'] = $currentVary ?? 'Origin';
+		}
 
-		$maxAge = $kirby->option('cors.maxAge', 86400);
-		$headers['Access-Control-Max-Age'] = (string)$maxAge;
-
+		// allow credentials if configured
 		$allowCredentials = $kirby->option('cors.allowCredentials', false);
 		if ($allowCredentials === true) {
-			// prevent wildcard origin with credentials (browsers will reject this)
-			if ($headers['Access-Control-Allow-Origin'] === '*') {
+			// wildcard origins cannot be used with credentials
+			if ($allowOrigin === '*') {
 				throw new InvalidArgumentException(
 					message: 'Cannot use wildcard origin (*) with credentials'
 				);
@@ -483,9 +493,50 @@ class Responder implements Stringable
 			$headers['Access-Control-Allow-Credentials'] = 'true';
 		}
 
-		$exposeHeaders = $kirby->option('cors.exposeHeaders');
-		if ($exposeHeaders !== null && $exposeHeaders !== '') {
-			$headers['Access-Control-Expose-Headers'] = is_array($exposeHeaders) ? implode(', ', $exposeHeaders) : $exposeHeaders;
+		// expose custom headers to the client
+		$exposeHeaders = $kirby->option('cors.exposeHeaders', []);
+		if (empty($exposeHeaders) === false) {
+			$headers['Access-Control-Expose-Headers'] = is_array($exposeHeaders)
+				? implode(', ', $exposeHeaders)
+				: $exposeHeaders;
+		}
+
+		// add preflight-specific headers
+		if ($preflight === true) {
+			$maxAge = $kirby->option('cors.maxAge');
+			if ($maxAge !== null) {
+				$headers['Access-Control-Max-Age'] = (string)$maxAge;
+			}
+
+			$methods = $kirby->option('cors.allowMethods', ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH']);
+			if (empty($methods) === false) {
+				$headers['Access-Control-Allow-Methods'] = is_array($methods)
+					? implode(', ', $methods)
+					: $methods;
+			}
+
+			$allowHeaders = $kirby->option('cors.allowHeaders', []);
+
+			// reflect request headers if not explicitly configured
+			if (empty($allowHeaders) === true) {
+				$requestHeaders = $request->header('Access-Control-Request-Headers');
+				if ($requestHeaders !== null) {
+					$allowHeaders = Str::split($requestHeaders, ',');
+				}
+			}
+
+			if (empty($allowHeaders) === false) {
+				$headers['Access-Control-Allow-Headers'] = is_array($allowHeaders)
+					? implode(', ', $allowHeaders)
+					: $allowHeaders;
+
+				// tell caches that preflight varies by requested headers
+				if (isset($headers['Vary']) === true) {
+					$headers['Vary'] .= ', Access-Control-Request-Headers';
+				} else {
+					$headers['Vary'] = 'Access-Control-Request-Headers';
+				}
+			}
 		}
 
 		return $headers;

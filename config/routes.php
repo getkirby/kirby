@@ -40,7 +40,13 @@ return function (App $kirby) {
 					return null;
 				}
 
-				return new Response('', null, 204, Responder::corsHeaders());
+				$headers = Responder::corsHeaders(preflight: true);
+
+				if ($headers === []) {
+					return null;
+				}
+
+				return new Response('', null, 204, $headers);
 			}
 		],
 		[
