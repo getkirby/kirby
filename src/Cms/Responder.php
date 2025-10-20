@@ -486,7 +486,7 @@ class Responder implements Stringable
 			// wildcard origins cannot be used with credentials
 			if ($allowOrigin === '*') {
 				throw new InvalidArgumentException(
-					message: 'Cannot use wildcard origin (*) with credentials'
+					message: 'Cannot allow credentials when using wildcard origin (*)'
 				);
 			}
 

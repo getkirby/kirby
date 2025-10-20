@@ -48,7 +48,7 @@ class ResponderCorsTest extends TestCase
 	public function testWildcardOriginWithCredentials(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Cannot use wildcard origin (*) with credentials');
+		$this->expectExceptionMessage('Cannot allow credentials when using wildcard origin (*)');
 
 		$this->kirby([
 			'options' => [
