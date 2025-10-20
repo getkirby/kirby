@@ -137,7 +137,17 @@ class Pages extends Collection
 		// delete all pages and collect errors
 		foreach ($ids as $id) {
 			try {
-				if ($this->get($id) instanceof Page === false || !$page = $kirby->page($id)) {
+				// Explanation: We get the page object from the global context
+				// as the objects in the pages collection itself could have rendered
+				// outdated from a sibling delete action in this loop (e.g. resorting
+				// after deleting a sibling page and leaving the object in this collection
+				// with an old root path).
+				//
+				// TODO: We can remove this part as soon
+				// as we move away from our immutable object architecture.
+				$page = $kirby->page($id);
+
+				if ($page === null || $this->get($id) instanceof Page === false) {
 					throw new NotFoundException(
 						key: 'page.undefined',
 					);
