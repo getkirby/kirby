@@ -1,90 +1,87 @@
 <?php
 
-namespace Kirby\Modules;
+namespace Kirby\Nodes;
 
 use Closure;
-use Kirby\Cms\Blocks;
 use Kirby\Cms\Collection;
-use Kirby\Cms\Structure;
-use Kirby\Content\Field;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Toolkit\Str;
 
-class Modules extends Collection
+class Nodes extends Collection
 {
 	public function __construct(
 		protected string $id = '/',
-		array $modules = [],
+		array $nodes = [],
 		protected object|null $parent = null,
 	) {
-		foreach ($modules as $name => $module) {
-			$this->__set($name, $module);
+		foreach ($nodes as $name => $node) {
+			$this->__set($name, $node);
 		}
 	}
 
 	public function changeSort(array $ids): static
 	{
-		$modules = [];
+		$nodes = [];
 
 		if (count($ids) === 0) {
 			return $this;
 		}
 
 		foreach ($ids as $id) {
-			if ($module = $this->findByKey($id)) {
-				$modules[] = $module;
+			if ($node = $this->findByKey($id)) {
+				$nodes[] = $node;
 			}
 		}
 
-		if (count($modules) === 0) {
+		if (count($nodes) === 0) {
 			return $this;
 		}
 
-		foreach ($this as $module) {
-			if (in_array($module, $modules) === false) {
-				$modules[] = $module;
+		foreach ($this as $node) {
+			if (in_array($node, $nodes) === false) {
+				$nodes[] = $node;
 			}
 		}
 
-		$this->data = $modules;
+		$this->data = $nodes;
 
 		return $this;
 	}
 
-	public function findByKey(string $key): Modules|Module|null
+	public function findByKey(string $key): Nodes|Node|null
 	{
 		if (str_contains($key, '/')) {
 			return $this->findByKeyRecursive($key);
 		}
 
-		if ($module = parent::findByKey($key)) {
-			return $module;
+		if ($node = parent::findByKey($key)) {
+			return $node;
 		}
 
 		return $this->findBy('uuid', $key);
 	}
 
-	public function findByKeyRecursive(string $key): Modules|Module|null
+	public function findByKeyRecursive(string $key): Nodes|Node|null
 	{
 		$ids = Str::split($key, '/');
 
 		// search for the module by id
-		$module = $this->findByKey($ids[0]);
+		$node = $this->findByKey($ids[0]);
 
 		// no module found
-		if ($module === null) {
+		if ($node === null) {
 			return null;
 		}
 
-		return $module->find(implode('/', array_slice($ids, 1)));
+		return $node->find(implode('/', array_slice($ids, 1)));
 	}
 
 	public static function from(
 		array|string|null $data,
 		string $id = '/',
 		string $format = 'auto',
-		Module|null $parent = null,
+		Node|null $parent = null,
 	): static {
 		if (is_string($data) === true) {
 			if ($format === 'auto') {
@@ -98,25 +95,25 @@ class Modules extends Collection
 			$data = Data::decode($data, $format);
 		}
 
-		$modules = new static(
+		$nodes = new static(
 			id: $id,
 			parent: $parent,
 		);
 
 		if ($data === null) {
-			return $modules;
+			return $nodes;
 		}
 
-		foreach ($data as $id => $module) {
-			$modules->add(Module::from(
-				data: $module,
+		foreach ($data as $id => $node) {
+			$nodes->add(Node::from(
+				data: $node,
 				id: $id,
 				parent: $parent,
-				siblings: $modules,
+				siblings: $nodes,
 			));
 		}
 
-		return $modules;
+		return $nodes;
 	}
 
 	public function id(): string
@@ -124,7 +121,7 @@ class Modules extends Collection
 		return $this->id;
 	}
 
-	public function parent(): Module|null
+	public function parent(): Node|null
 	{
 		return $this->parent;
 	}
@@ -142,37 +139,15 @@ class Modules extends Collection
 
 		$array = [];
 
-		foreach ($this as $module) {
-			$array[$module->id()] = $module->toArray();
+		foreach ($this as $node) {
+			$array[$node->id()] = $node->toArray();
 		}
 
 		return $array;
 	}
 
-	public function toBlocks(Field $field): Blocks
-	{
-		return new Blocks(
-			$this->map(fn (Module $module) => $module->toBlockObject($field)),
-			[
-				'field'  => $field,
-				'parent' => $field->model(),
-			]
-		);
-	}
-
 	public function toJson(bool $pretty = true): string
 	{
 		return Json::encode($this->toArray(), pretty: $pretty);
-	}
-
-	public function toStructure(Field $field): Structure
-	{
-		return new Structure(
-			$this->map(fn (Module $module) => $module->toStructureObject($field)),
-			[
-				'field'  => $field,
-				'parent' => $field->model(),
-			]
-		);
 	}
 }
