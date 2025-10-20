@@ -45,7 +45,7 @@ class ResponderCorsTest extends TestCase
 		$this->assertArrayNotHasKey('Access-Control-Expose-Headers', $headers);
 	}
 
-	public function testWildcardOriginWithCredentialsThrowsException(): void
+	public function testWildcardOriginWithCredentials(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Cannot use wildcard origin (*) with credentials');
