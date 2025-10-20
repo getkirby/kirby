@@ -34,8 +34,9 @@ class Role
 	public function permissions(): KirbyPermissions
 	{
 		return match (true) {
-			$this->isAdmin()  => KirbyPermissions::forAdmin(),
-			$this->isNobody() => KirbyPermissions::forNobody(),
+			$this->isAdmin()  => (new KirbyPermissions())->wildcard(true),
+			$this->isKirby()  => (new KirbyPermissions())->wildcard(true),
+			$this->isNobody() => (new KirbyPermissions())->wildcard(false),
 
 			// load permissions from role/user blueprint here
 			default           => new KirbyPermissions()
