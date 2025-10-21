@@ -25,8 +25,10 @@ class BlockConverter
 			return $params;
 		}
 
+		$ignore = array_flip(['field', 'options', 'parent', 'siblings', 'params', '_key', '_uid']);
+		$params['content'] = array_diff_key($params, $ignore);
 		$params['type']    = $params['_key'];
-		$params['content'] = $params;
+
 		unset($params['_uid']);
 
 		return $params;

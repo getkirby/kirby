@@ -20,7 +20,8 @@ use Kirby\Uuid\HasUuids;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Cms\User>
+ * @template TUser of \Kirby\Cms\User
+ * @extends \Kirby\Cms\Collection<TUser>
  */
 class Users extends Collection
 {
@@ -41,7 +42,7 @@ class Users extends Collection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param \Kirby\Cms\Users|\Kirby\Cms\User|string $object
+	 * @param \Kirby\Cms\Users<TUser>|TUser|string $object
 	 * @return $this
 	 * @throws \Kirby\Exception\InvalidArgumentException When no `User` or `Users` object or an ID of an existing user is passed
 	 */
@@ -109,6 +110,7 @@ class Users extends Collection
 	/**
 	 * Finds a user in the collection by ID or email address
 	 * @internal Use `$users->find()` instead
+	 * @return TUser|null
 	 */
 	public function findByKey(string $key): User|null
 	{

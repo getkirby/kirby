@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Pages::class)]
@@ -196,43 +197,108 @@ class PagesTest extends TestCase
 
 	public function testDelete(): void
 	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					['slug' => 'a'],
-					['slug' => 'b']
-				]
-			]
+		$this->app->impersonate('kirby');
+
+		$a = Page::create([
+			'slug'  => 'a',
+			'draft' => false
 		]);
 
-		$app->impersonate('kirby');
+		$b = Page::create([
+			'slug'  => 'b',
+			'draft' => false
+		]);
 
-		$pages = $app->site()->children();
+		$c = Page::create([
+			'slug'  => 'c',
+			'draft' => false
+		]);
 
-		$this->assertCount(2, $pages);
+		$pages = $this->app->site()->children();
 
-		$a = $pages->get('a')->root();
-		$b = $pages->get('b')->root();
+		$this->assertCount(3, $pages);
 
-		// pretend the files exist
-		Dir::make($a);
-		Dir::make($b);
-
-		$this->assertDirectoryExists($a);
-		$this->assertDirectoryExists($b);
+		$this->assertDirectoryExists($a->root());
+		$this->assertDirectoryExists($b->root());
+		$this->assertDirectoryExists($c->root());
 
 		$pages->delete([
 			'a',
 			'b',
 		]);
 
-		$this->assertCount(0, $pages);
+		$this->assertCount(1, $pages);
 
-		$this->assertDirectoryDoesNotExist($a);
-		$this->assertDirectoryDoesNotExist($b);
+		$this->assertDirectoryDoesNotExist($a->root());
+		$this->assertDirectoryDoesNotExist($b->root());
+		$this->assertDirectoryExists($c->root());
+	}
+
+	public function testDeleteSortedAndFiltered(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$a = Page::create([
+			'slug'  => 'a',
+			'draft' => false
+		]);
+
+		$a = $a->changeNum(1);
+
+		$b = Page::create([
+			'slug'  => 'b',
+			'draft' => false
+		]);
+
+		$b = $b->changeNum(2);
+
+		$c = Page::create([
+			'slug'  => 'c',
+			'draft' => false
+		]);
+
+		$c = $c->changeNum(3);
+
+		$d = Page::create([
+			'slug'  => 'd',
+			'draft' => false
+		]);
+
+		$d = $d->changeNum(4);
+
+		$pages = $this->app->site()->children();
+
+		$this->assertCount(4, $pages);
+
+		$this->assertDirectoryExists($a->root());
+		$this->assertDirectoryExists($b->root());
+		$this->assertDirectoryExists($c->root());
+		$this->assertDirectoryExists($d->root());
+
+		// Files should not interfer with deleting the pages
+		F::write($a->root() . '/test.md', '');
+		F::write($b->root() . '/test.md', '');
+
+		$filtered = $pages->filter('slug', 'in', ['a', 'b', 'c']);
+
+		$this->assertCount(3, $filtered);
+
+		$filtered->delete([
+			'a',
+			'b',
+		]);
+
+		$this->assertCount(1, $filtered);
+
+		// removed
+		$this->assertDirectoryDoesNotExist($a->root());
+		$this->assertDirectoryDoesNotExist($b->root());
+
+		// Still existing. We need to fetch those fresh from the
+		// Pages collection because they have been resorted in the
+		// meantime and the root has changed.
+		$this->assertDirectoryExists($pages->get('c')->root());
+		$this->assertDirectoryExists($pages->get('d')->root());
 	}
 
 	public function testDeleteWithInvalidIds(): void

@@ -104,7 +104,10 @@ export default {
 				: "–";
 		},
 		maxLength() {
-			return Math.floor(Math.abs(this.max)).toString().length;
+			return Math.max(
+				this.format(this.min).length,
+				this.format(this.max).length
+			);
 		},
 		position() {
 			return this.value || this.value === 0
@@ -205,7 +208,7 @@ export default {
 .k-range-input-tooltip-text {
 	font-family: var(--font-mono);
 	width: calc(var(--digits) + var(--spacing-1) * 2);
-	text-align: center;
+	text-align: right;
 }
 
 .k-range-input[data-disabled="true"] {

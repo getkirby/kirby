@@ -1,5 +1,5 @@
 <template>
-	<header class="k-header">
+	<header :data-editable="editable" class="k-header">
 		<h1 class="k-header-title">
 			<!--
 				Edit button has been clicked
@@ -139,5 +139,13 @@ export default {
 }
 :root:has(.k-header .k-header-buttons) {
 	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
+}
+
+.k-header .k-header-title-placeholder {
+	color: var(--color-gray-500);
+	transition: color 0.3s;
+}
+.k-header[data-editable="true"] .k-header-title-placeholder:hover {
+	color: var(--color-text-dimmed);
 }
 </style>

@@ -105,7 +105,7 @@ class FieldTest extends TestCase
 
 		$this->assertSame('Please select a position', $field['label']);
 		$this->assertSame('select', $field['type']);
-		$this->assertFalse($field['empty']);
+		$this->assertTrue($field['required']);
 
 		// check options
 		$this->assertCount(5, $field['options']);
