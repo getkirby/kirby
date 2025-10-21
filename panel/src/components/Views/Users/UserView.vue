@@ -14,7 +14,10 @@
 			class="k-user-view-header"
 			@edit="$dialog(api + '/changeName')"
 		>
-			<span v-if="!name || name.length === 0" class="k-user-name-placeholder">
+			<span
+				v-if="!name || name.length === 0"
+				class="k-header-title-placeholder k-user-name-placeholder"
+			>
 				{{ $t("name") }} …
 			</span>
 			<template v-else>
@@ -84,13 +87,6 @@ export default {
 </script>
 
 <style>
-.k-user-name-placeholder {
-	color: var(--color-gray-500);
-	transition: color 0.3s;
-}
-.k-user-view-header[data-editable="true"] .k-user-name-placeholder:hover {
-	color: var(--color-gray-900);
-}
 .k-user-view-header {
 	margin-bottom: 0;
 	border-bottom: 0;

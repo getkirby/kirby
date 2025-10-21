@@ -12,12 +12,12 @@
 	},
 	"dependencies": {
 		"autosize": "^6.0.1",
-		"dayjs": "^1.11.13",
+		"dayjs": "^1.11.18",
 		"mitt": "^3.0.1",
 		"portal-vue": "^2.1.7",
 		"prosemirror-commands": "^1.7.1",
 		"prosemirror-history": "^1.4.1",
-		"prosemirror-inputrules": "^1.5.0",
+		"prosemirror-inputrules": "^1.5.1",
 		"prosemirror-keymap": "^1.2.3",
 		"prosemirror-model": "^1.25.3",
 		"prosemirror-schema-list": "^1.5.1",
@@ -26,8 +26,8 @@
 		"vue": "^2.7.16"
 	},
 	"devDependencies": {
-		"@csstools/postcss-light-dark-function": "^2.0.9",
-		"@vitejs/plugin-vue2": "^2.3.3",
+		"@csstools/postcss-light-dark-function": "^2.0.11",
+		"@vitejs/plugin-vue2": "^2.3.4",
 		"eslint": "^9.33.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-vue": "^9.33.0",
@@ -35,8 +35,8 @@
 		"jsdom": "^26.1.0",
 		"prettier": "^3.6.2",
 		"terser": "^5.43.1",
-		"vite": "^6.3.5",
-		"vite-plugin-static-copy": "^2.3.1",
+		"vite": "^6.4.1",
+		"vite-plugin-static-copy": "^2.3.2",
 		"vitest": "^3.2.4",
 		"vue-docgen-api": "^4.79.2"
 	},
