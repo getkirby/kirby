@@ -31,9 +31,7 @@ class CorsTest extends TestCase
 	{
 		$this->kirby([
 			'options' => [
-				'cors' => [
-					'enabled' => true
-				]
+				'cors' => true
 			]
 		]);
 
@@ -53,7 +51,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'          => true,
 					'allowOrigin'      => '*',
 					'allowCredentials' => true
 				]
@@ -68,7 +65,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => 'https://example.com'
 				]
 			],
@@ -88,7 +84,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => 'https://example.com'
 				]
 			],
@@ -107,7 +102,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => ['https://app1.com', 'https://app2.com', 'https://staging.com']
 				]
 			],
@@ -127,7 +121,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => ['https://app1.com', 'https://app2.com']
 				]
 			],
@@ -146,7 +139,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => ['https://app1.com', 'https://App2.COM']
 				]
 			],
@@ -166,7 +158,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => ['https://app1.com']
 				]
 			],
@@ -185,7 +176,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => ['https://app1.com']
 				]
 			],
@@ -204,7 +194,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => ['https://app1.com']
 				]
 			]
@@ -219,9 +208,7 @@ class CorsTest extends TestCase
 	{
 		$this->kirby([
 			'options' => [
-				'cors' => [
-					'enabled' => true
-				]
+				'cors' => true
 			]
 		]);
 
@@ -235,7 +222,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'      => true,
 					'allowOrigin'  => 'https://example.com',
 					'allowMethods' => 'GET, POST'
 				]
@@ -254,9 +240,7 @@ class CorsTest extends TestCase
 	{
 		$this->kirby([
 			'options' => [
-				'cors' => [
-					'enabled' => true
-				]
+				'cors' => true
 			],
 			'server' => [
 				'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'Accept, Content-Type, Authorization'
@@ -274,7 +258,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'      => true,
 					'allowOrigin'  => 'https://example.com',
 					'allowHeaders' => 'Content-Type, Authorization'
 				]
@@ -294,9 +277,7 @@ class CorsTest extends TestCase
 	{
 		$this->kirby([
 			'options' => [
-				'cors' => [
-					'enabled' => true
-				]
+				'cors' => true
 			]
 		]);
 
@@ -310,7 +291,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => 'https://example.com',
 					'maxAge'      => 3600
 				]
@@ -330,7 +310,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'      => true,
 					'allowMethods' => 'GET, POST',
 					'allowHeaders' => 'Content-Type'
 				]
@@ -349,7 +328,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'          => true,
 					'allowOrigin'      => 'https://example.com',
 					'allowCredentials' => true
 				]
@@ -370,7 +348,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'          => true,
 					'allowOrigin'      => ['https://app1.com', 'https://app2.com'],
 					'allowCredentials' => true
 				]
@@ -392,7 +369,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'       => true,
 					'allowOrigin'   => 'https://example.com',
 					'exposeHeaders' => 'X-Custom-Header'
 				]
@@ -412,7 +388,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'       => true,
 					'allowOrigin'   => 'https://example.com',
 					'allowMethods'  => ['GET', 'POST', 'PUT', 'DELETE'],
 					'allowHeaders'  => ['Content-Type', 'Authorization', 'X-Custom-Header'],
@@ -436,7 +411,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'          => true,
 					'allowOrigin'      => 'https://example.com',
 					'allowCredentials' => false,
 					'exposeHeaders'    => ''
@@ -459,7 +433,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'          => true,
 					'allowOrigin'      => 'https://example.com',
 					'allowMethods'     => 'GET, POST, PUT, DELETE',
 					'allowHeaders'     => 'Content-Type, Authorization',
@@ -487,9 +460,7 @@ class CorsTest extends TestCase
 	{
 		$this->kirby([
 			'options' => [
-				'cors' => [
-					'enabled' => true
-				]
+				'cors' => true
 			]
 		]);
 
@@ -504,7 +475,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => 'https://example.com'
 				]
 			]
@@ -524,7 +494,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => 'https://example.com'
 				]
 			],
@@ -546,7 +515,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => ['https://app1.com', 'https://app2.com']
 				]
 			],
@@ -569,7 +537,6 @@ class CorsTest extends TestCase
 		$this->kirby([
 			'options' => [
 				'cors' => [
-					'enabled'     => true,
 					'allowOrigin' => ['https://app1.com']
 				]
 			],
@@ -584,5 +551,18 @@ class CorsTest extends TestCase
 
 		$this->assertSame('Accept-Encoding', $headers['Vary']);
 		$this->assertSame('https://app1.com', $headers['Access-Control-Allow-Origin']);
+	}
+
+	public function testEmptyArrayEquivalentToTrue(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => []
+			]
+		]);
+
+		$headers = Cors::headers();
+
+		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
 	}
 }

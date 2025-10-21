@@ -549,7 +549,7 @@ class App
 	 */
 	public function isCorsEnabled(): bool
 	{
-		return $this->option('cors.enabled', false) === true;
+		return $this->option('cors', false) !== false;
 	}
 
 	/**
