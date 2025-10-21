@@ -10,7 +10,15 @@
 			class="k-site-view-header"
 			@edit="$dialog(api + '/changeTitle')"
 		>
-			{{ title }}
+			<span
+				v-if="!title || title.length === 0"
+				class="k-header-title-placeholder"
+			>
+				{{ $t("view.site") }} …
+			</span>
+			<template v-else>
+				{{ title }}
+			</template>
 
 			<template #buttons>
 				<k-view-buttons :buttons="buttons" />

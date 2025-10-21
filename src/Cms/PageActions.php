@@ -574,13 +574,23 @@ trait PageActions
 			// clear UUID cache
 			$page->uuid()?->clear();
 
+			// Explanation: The two while loops below are only
+			// necessary because our property caches result in
+			// outdated collections when deleting nested pages.
+			// When we use a foreach loop to go through those collections,
+			// we encounter outdated objects. Using a while loop
+			// fixes this issue.
+			//
+			// TODO: We can remove this part as soon
+			// as we move away from our immutable object architecture.
+
 			// delete all files individually
-			foreach ($old->files() as $file) {
+			while ($file = $page->files()->first()) {
 				$file->delete();
 			}
 
 			// delete all children individually
-			foreach ($old->childrenAndDrafts() as $child) {
+			while ($child = $page->childrenAndDrafts()->first()) {
 				$child->delete(true);
 			}
 
@@ -590,10 +600,10 @@ trait PageActions
 			$old->versions()->delete();
 
 			if (
-				$old->isListed() === true &&
-				$old->blueprint()->num() === 'default'
+				$page->isListed() === true &&
+				$page->blueprint()->num() === 'default'
 			) {
-				$old->resortSiblingsAfterUnlisting();
+				$page->resortSiblingsAfterUnlisting();
 			}
 
 			return true;
