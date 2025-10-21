@@ -1,9 +1,9 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\Cors;
 use Kirby\Cms\LanguageRoutes;
 use Kirby\Cms\Media;
-use Kirby\Cms\Responder;
 use Kirby\Http\Response;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Plugins;
@@ -40,7 +40,7 @@ return function (App $kirby) {
 					return null;
 				}
 
-				$headers = Responder::corsHeaders(preflight: true);
+				$headers = Cors::headers(preflight: true);
 
 				if ($headers === []) {
 					return null;

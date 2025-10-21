@@ -5,8 +5,8 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(Responder::class)]
-class ResponderCorsTest extends TestCase
+#[CoversClass(Cors::class)]
+class CorsTest extends TestCase
 {
 	public function setUp(): void
 	{
@@ -24,7 +24,7 @@ class ResponderCorsTest extends TestCase
 
 	public function testDisabled(): void
 	{
-		$this->assertSame([], Responder::corsHeaders());
+		$this->assertSame([], Cors::headers());
 	}
 
 	public function testWildcardOrigin(): void
@@ -37,7 +37,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
 		$this->assertArrayNotHasKey('Vary', $headers);
@@ -60,7 +60,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		Responder::corsHeaders();
+		Cors::headers();
 	}
 
 	public function testSingleOriginMatch(): void
@@ -77,7 +77,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('Origin', $headers['Vary']);
@@ -97,7 +97,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame([], $headers);
 	}
@@ -116,7 +116,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame('https://app2.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('Origin', $headers['Vary']);
@@ -136,7 +136,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame([], $headers);
 	}
@@ -155,7 +155,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame('https://app2.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('Origin', $headers['Vary']);
@@ -175,7 +175,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame([], $headers);
 	}
@@ -194,7 +194,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame([], $headers);
 	}
@@ -210,7 +210,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame([], $headers);
 	}
@@ -225,7 +225,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders(preflight: true);
+		$headers = Cors::headers(preflight: true);
 
 		$this->assertSame('GET, HEAD, PUT, POST, DELETE, PATCH', $headers['Access-Control-Allow-Methods']);
 	}
@@ -245,7 +245,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders(preflight: true);
+		$headers = Cors::headers(preflight: true);
 
 		$this->assertSame('GET, POST', $headers['Access-Control-Allow-Methods']);
 	}
@@ -263,7 +263,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders(preflight: true);
+		$headers = Cors::headers(preflight: true);
 
 		$this->assertSame('Accept, Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
 		$this->assertSame('Access-Control-Request-Headers', $headers['Vary']);
@@ -284,7 +284,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders(preflight: true);
+		$headers = Cors::headers(preflight: true);
 
 		$this->assertSame('Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
 		$this->assertSame('Origin, Access-Control-Request-Headers', $headers['Vary']);
@@ -300,7 +300,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders(preflight: true);
+		$headers = Cors::headers(preflight: true);
 
 		$this->assertArrayNotHasKey('Access-Control-Max-Age', $headers);
 	}
@@ -320,7 +320,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders(preflight: true);
+		$headers = Cors::headers(preflight: true);
 
 		$this->assertSame('3600', $headers['Access-Control-Max-Age']);
 	}
@@ -337,7 +337,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertArrayNotHasKey('Access-Control-Allow-Methods', $headers);
 		$this->assertArrayNotHasKey('Access-Control-Allow-Headers', $headers);
@@ -359,7 +359,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('true', $headers['Access-Control-Allow-Credentials']);
@@ -380,7 +380,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame('https://app1.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('true', $headers['Access-Control-Allow-Credentials']);
@@ -402,7 +402,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame('X-Custom-Header', $headers['Access-Control-Expose-Headers']);
 	}
@@ -424,7 +424,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders(preflight: true);
+		$headers = Cors::headers(preflight: true);
 
 		$this->assertSame('GET, POST, PUT, DELETE', $headers['Access-Control-Allow-Methods']);
 		$this->assertSame('Content-Type, Authorization, X-Custom-Header', $headers['Access-Control-Allow-Headers']);
@@ -447,7 +447,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders();
+		$headers = Cors::headers();
 
 		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertArrayNotHasKey('Access-Control-Allow-Credentials', $headers);
@@ -473,7 +473,7 @@ class ResponderCorsTest extends TestCase
 			]
 		]);
 
-		$headers = Responder::corsHeaders(preflight: true);
+		$headers = Cors::headers(preflight: true);
 
 		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('GET, POST, PUT, DELETE', $headers['Access-Control-Allow-Methods']);
