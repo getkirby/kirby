@@ -36,12 +36,23 @@ return function (App $kirby) {
 			'pattern' => '(:all)',
 			'method'  => 'OPTIONS',
 			'action'  => function () use ($kirby) {
+				$request = $kirby->request();
+
+				// skip if no CORS request
+				if ($request->header('Access-Control-Request-Method') === null) {
+					/** @var \Kirby\Http\Route $this */
+					$this->next();
+				}
+
+				// skip if CORS is disabled
 				if ($kirby->isCorsEnabled() === false) {
-					return null;
+					/** @var \Kirby\Http\Route $this */
+					$this->next();
 				}
 
 				$headers = Cors::headers(preflight: true);
 
+				// block if origin doesn't match
 				if ($headers === []) {
 					return null;
 				}

@@ -26,7 +26,8 @@ class AppCorsTest extends TestCase
 				]
 			],
 			'server' => [
-				'HTTP_ORIGIN' => 'https://example.com'
+				'HTTP_ORIGIN' => 'https://example.com',
+				'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
 			]
 		]);
 
@@ -54,13 +55,14 @@ class AppCorsTest extends TestCase
 				]
 			],
 			'server' => [
-				'HTTP_ORIGIN' => 'https://evil.com'
+				'HTTP_ORIGIN' => 'https://evil.com',
+				'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
 			]
 		]);
 
 		$response = $app->call('api/test', 'OPTIONS');
 
-		// origin doesn't match, route returns null
+		// origin doesn't match, preflight request is blocked
 		$this->assertNull($response);
 	}
 
@@ -71,7 +73,8 @@ class AppCorsTest extends TestCase
 				'cors' => true
 			],
 			'server' => [
-				'HTTP_ORIGIN' => 'https://anywhere.com'
+				'HTTP_ORIGIN' => 'https://anywhere.com',
+				'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
 			]
 		]);
 
@@ -90,12 +93,33 @@ class AppCorsTest extends TestCase
 		$app = $this->app->clone([
 			'options' => [
 				'cors' => false
+			],
+			'server' => [
+				'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'
 			]
 		]);
 
 		$response = $app->call('any/route', 'OPTIONS');
 
-		// cors disabled, route returns null
+		// cors disabled, route calls next() and falls through
+		$this->assertNull($response);
+	}
+
+	public function testNonPreflightOptionsRequest(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'cors' => true
+			],
+			'server' => [
+				// no Access-Control-Request-Method header
+				'HTTP_ORIGIN' => 'https://example.com'
+			]
+		]);
+
+		$response = $app->call('any/route', 'OPTIONS');
+
+		// falls through to other routes
 		$this->assertNull($response);
 	}
 
