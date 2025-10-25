@@ -22,9 +22,9 @@ class PagePickerTest extends ModelTestCase
 							[
 								'slug' => 'mother',
 								'children' => [
-									['slug' => 'child-a'],
-									['slug' => 'child-b'],
-									['slug' => 'child-c']
+									['slug' => 'child-a', 'template' => 'child-a'],
+									['slug' => 'child-b', 'template' => 'child-b'],
+									['slug' => 'child-c', 'template' => 'child-c']
 								]
 							]
 						]
@@ -96,5 +96,17 @@ class PagePickerTest extends ModelTestCase
 		]);
 
 		$this->assertSame('grandmother', $picker->start()->id());
+	}
+
+	public function testSameQueryAndParent(): void
+	{
+		$picker = new PagePicker([
+			'query'  => 'site.find("grandmother/mother").children.filterBy("intendedTemplate", "in", ["child-a", "child-c"])',
+			'parent' => 'grandmother/mother'
+		]);
+
+		$this->assertCount(2, $picker->items());
+		$this->assertSame('grandmother/mother/child-a', $picker->items()->first()->id());
+		$this->assertSame('grandmother/mother/child-c', $picker->items()->last()->id());
 	}
 }
