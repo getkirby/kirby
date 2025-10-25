@@ -160,7 +160,7 @@ class UsersDialogsTest extends AreaTestCase
 
 		$this->assertFormDialog($dialog);
 
-		$this->assertSame('Your own password', $props['fields']['currentPassword']['label']);
+		$this->assertSame('Your current password', $props['fields']['currentPassword']['label']);
 		$this->assertSame('New password', $props['fields']['password']['label']);
 		$this->assertSame('Confirm the new password…', $props['fields']['passwordConfirmation']['label']);
 		$this->assertSame('Change', $props['submitButton']);

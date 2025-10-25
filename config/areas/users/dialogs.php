@@ -177,14 +177,15 @@ return [
 	'user.changePassword' => [
 		'pattern' => 'users/(:any)/changePassword',
 		'load' => function (string $id) {
-			$user = Find::user($id);
+			$kirby = App::instance();
+			$user  = Find::user($id);
 
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields'       => [
 						'currentPassword' => Field::password([
-							'label'        => I18n::translate('user.changePassword.current'),
+							'label'        => I18n::translate('user.changePassword.' . ($kirby->user()->is($user) ? 'current' : 'own')),
 							'autocomplete' => 'current-password',
 							'help'         => I18n::translate('account') . ': ' . App::instance()->user()->email(),
 						]),
