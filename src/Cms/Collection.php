@@ -121,22 +121,22 @@ class Collection extends BaseCollection
 	 */
 	public function append(...$args): static
 	{
-		if (count($args) === 1) {
-			// try to determine the key from the provided item
-			if (
-				is_object($args[0]) === true &&
-				is_callable([$args[0], 'id']) === true
-			) {
-				try {
-					return parent::append($args[0]->id(), $args[0]);
-				} catch (Throwable) {
-					// is_callable might be true when the object implements
-					// the magic __call method, but __call can still throw
-					// an exception
-				}
+		// try to determine the key from the provided item
+		if (
+			count($args) === 1 &&
+			is_object($args[0]) === true &&
+			is_callable([$args[0], 'id']) === true
+		) {
+			try {
+				$id = $args[0]->id();
+			} catch (Throwable) {
+				// is_callable might be true when the object implements
+				// the magic __call method, but __call can still throw
+				// an exception
+				return parent::append($args[0]);
 			}
 
-			return parent::append($args[0]);
+			return parent::append($id, $args[0]);
 		}
 
 		return parent::append(...$args);
