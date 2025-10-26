@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Ui\FilePreview;
 
 use Kirby\Cms\File;
-use Kirby\Image\Dimensions;
 use Kirby\Panel\Ui\FilePreview;
 use Kirby\Toolkit\I18n;
 
@@ -31,22 +30,19 @@ class ImageFilePreview extends FilePreview
 
 	public function details(): array
 	{
-		$details    = parent::details();
 		$dimensions = $this->file->dimensions();
 
-		if ($dimensions instanceof Dimensions) {
-			$details[] = [
+		return [
+			...parent::details(),
+			[
 				'title' => I18n::translate('dimensions'),
 				'text'  => $dimensions . ' ' . I18n::translate('pixel')
-			];
-
-			$details[] = [
+			],
+			[
 				'title' => I18n::translate('orientation'),
 				'text'  => I18n::translate('orientation.' . $dimensions->orientation())
-			];
-		}
-
-		return $details;
+			]
+		];
 	}
 
 	public function props(): array
