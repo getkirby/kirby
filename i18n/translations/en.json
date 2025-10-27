@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Change your name",
 	"account.delete": "Delete your account",
 	"account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
@@ -771,6 +772,7 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "New password",
 	"user.changePassword.new.confirm": "Confirm the new password…",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Change role",
 	"user.changeRole.select": "Select a new role",
 	"user.create": "Add a new user",
