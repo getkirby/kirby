@@ -30,15 +30,17 @@ class ImageFilePreview extends FilePreview
 
 	public function details(): array
 	{
+		$dimensions = $this->file->dimensions();
+
 		return [
 			...parent::details(),
 			[
 				'title' => I18n::translate('dimensions'),
-				'text'  => $this->file->dimensions() . ' ' . I18n::translate('pixel')
+				'text'  => $dimensions . ' ' . I18n::translate('pixel')
 			],
 			[
 				'title' => I18n::translate('orientation'),
-				'text'  => I18n::translate('orientation.' . $this->file->dimensions()->orientation())
+				'text'  => I18n::translate('orientation.' . $dimensions->orientation())
 			]
 		];
 	}

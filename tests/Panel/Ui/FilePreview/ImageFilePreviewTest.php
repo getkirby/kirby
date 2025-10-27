@@ -49,7 +49,7 @@ class ImageFilePreviewTest extends TestCase
 	public function testProps(): void
 	{
 		$page    = new Page(['slug' => 'test']);
-		$file    = new File(['filename' => 'test.xls', 'parent' => $page]);
+		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
 		$preview = new ImageFilePreview($file);
 		$props   = $preview->props();
 		$this->assertFalse($props['focusable']);

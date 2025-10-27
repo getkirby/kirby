@@ -186,38 +186,6 @@ class Core
 	}
 
 	/**
-	 * Returns a map of all field method aliases
-	 */
-	public function fieldMethodAliases(): array
-	{
-		return [
-			'bool'    => 'toBool',
-			'esc'     => 'escape',
-			'excerpt' => 'toExcerpt',
-			'float'   => 'toFloat',
-			'h'       => 'html',
-			'int'     => 'toInt',
-			'kt'      => 'kirbytext',
-			'kti'     => 'kirbytextinline',
-			'link'    => 'toLink',
-			'md'      => 'markdown',
-			'sp'      => 'smartypants',
-			'v'       => 'isValid',
-			'x'       => 'xml'
-		];
-	}
-
-	/**
-	 * Returns an array of all field method functions
-	 *
-	 * Field methods are stored in `/kirby/config/methods.php`
-	 */
-	public function fieldMethods(): array
-	{
-		return $this->cache['fieldMethods'] ??= (include $this->root . '/methods.php')($this->kirby);
-	}
-
-	/**
 	 * Returns an array of paths for field mixins
 	 *
 	 * They are located in `/kirby/config/fields/mixins`

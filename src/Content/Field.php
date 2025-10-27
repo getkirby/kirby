@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Closure;
+use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Stringable;
 
@@ -10,9 +11,7 @@ use Stringable;
  * Every field in a Kirby content text file
  * is being converted into such a Field object.
  *
- * Field methods can be registered for those Field
- * objects, which can then be used to transform or
- * convert the field value. This enables our
+ * The FieldMethods trait is used for methods that enable our
  * daisy-chaining API for templates and other components
  *
  * ```php
@@ -28,15 +27,7 @@ use Stringable;
  */
 class Field implements Stringable
 {
-	/**
-	 * Field method aliases
-	 */
-	public static array $aliases = [];
-
-	/**
-	 * Registered field methods
-	 */
-	public static array $methods = [];
+	use FieldMethods;
 
 	/**
 	 * Creates a new field object
@@ -49,28 +40,6 @@ class Field implements Stringable
 		protected string $key,
 		public mixed $value
 	) {
-	}
-
-	/**
-	 * Magic caller for field methods
-	 */
-	public function __call(string $method, array $arguments = []): mixed
-	{
-		$method = strtolower($method);
-
-		if (isset(static::$methods[$method]) === true) {
-			return (static::$methods[$method])(clone $this, ...$arguments);
-		}
-
-		if (isset(static::$aliases[$method]) === true) {
-			$method = strtolower(static::$aliases[$method]);
-
-			if (isset(static::$methods[$method]) === true) {
-				return (static::$methods[$method])(clone $this, ...$arguments);
-			}
-		}
-
-		return $this;
 	}
 
 	/**
@@ -104,32 +73,6 @@ class Field implements Stringable
 	}
 
 	/**
-	 * Checks if the field content is empty
-	 */
-	public function isEmpty(): bool
-	{
-		$value = $this->value;
-
-		if (is_string($value) === true) {
-			$value = trim($value);
-		}
-
-		return
-			$value === null ||
-			$value === '' ||
-			$value === [] ||
-			$value === '[]';
-	}
-
-	/**
-	 * Checks if the field content is not empty
-	 */
-	public function isNotEmpty(): bool
-	{
-		return $this->isEmpty() === false;
-	}
-
-	/**
 	 * Returns the name of the field
 	 */
 	public function key(): string
@@ -138,31 +81,20 @@ class Field implements Stringable
 	}
 
 	/**
+	 * Returns the Kirby instance
+	 * @since 6.0.0
+	 */
+	public function kirby(): App
+	{
+		return $this->parent?->kirby() ?? App::instance();
+	}
+
+	/**
 	 * @see self::parent()
 	 */
 	public function model(): ModelWithContent|null
 	{
 		return $this->parent;
-	}
-
-	/**
-	 * Provides a fallback if the field value is empty
-	 *
-	 * @return $this|static
-	 */
-	public function or(mixed $fallback = null): static
-	{
-		if ($this->isNotEmpty() === true) {
-			return $this;
-		}
-
-		if ($fallback instanceof self) {
-			return $fallback;
-		}
-
-		$field = clone $this;
-		$field->value = $fallback;
-		return $field;
 	}
 
 	/**
@@ -200,11 +132,12 @@ class Field implements Stringable
 			return $this->value;
 		}
 
+		$clone = clone $this;
+
 		if ($value instanceof Closure) {
-			$value = $value->call($this, $this->value);
+			$value = $value->call($clone, $clone->value);
 		}
 
-		$clone = clone $this;
 		$clone->value = (string)$value;
 
 		return $clone;

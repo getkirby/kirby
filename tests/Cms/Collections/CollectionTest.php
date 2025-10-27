@@ -40,6 +40,14 @@ class MockObject
 	}
 }
 
+class MockObjectWith__CallException
+{
+	public function __call($name, $arguments)
+	{
+		throw new Exception('Test exception');
+	}
+}
+
 #[CoversClass(Collection::class)]
 class CollectionTest extends TestCase
 {
@@ -143,6 +151,14 @@ class CollectionTest extends TestCase
 
 		$this->assertSame(['a', 'b', 'c', 0, 1], $collection->keys());
 		$this->assertSame([$a, $b, $c, $d, 'a simple string'], $collection->values());
+	}
+
+	public function testAppendWith__CallException(): void
+	{
+		$collection = new Collection();
+		$obj        = new MockObjectWith__CallException();
+		$collection = $collection->append($obj);
+		$this->assertSame([0], $collection->keys());
 	}
 
 	public function testFindByUuid(): void
