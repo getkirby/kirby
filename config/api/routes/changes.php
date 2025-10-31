@@ -6,6 +6,20 @@ use Kirby\Cms\Find;
 
 return [
 	[
+		'pattern' => '/changes/discard/(site|pages|files|users)',
+		'method'  => 'POST',
+		'action'  => function (string $type) {
+			return Changes::discardAll($type);
+		}
+	],
+	[
+		'pattern' => '/changes/publish/(site|pages|files|users)',
+		'method'  => 'POST',
+		'action'  => function (string $type) {
+			return Changes::publishAll($type);
+		}
+	],
+	[
 		'pattern' => '(:all)/changes/discard',
 		'method'  => 'POST',
 		'action'  => function (string $path) {

@@ -4,10 +4,10 @@ namespace Kirby\Api\Controller;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Content\Changes as ChangesTracker;
 use Kirby\Content\Lock;
 use Kirby\Filesystem\F;
 use Kirby\Form\Fields;
-use Kirby\Form\Form;
 
 /**
  * The Changes controller takes care of the request logic
@@ -52,9 +52,39 @@ class Changes
 	}
 
 	/**
+	 * Discards any changes
+	 */
+	public static function discardAll(string $type): array
+	{
+		$changes = new ChangesTracker();
+
+		if ($type === 'pages') {
+			foreach ($changes->pages() as $page) {
+				static::discard($page);
+			}
+		}
+
+		if ($type === 'files') {
+			foreach ($changes->files() as $file) {
+				static::discard($file);
+			}
+		}
+
+		if ($type === 'users') {
+			foreach ($changes->users() as $user) {
+				static::discard($user);
+			}
+		}
+
+		return [
+			'status' => 'ok'
+		];
+	}
+
+	/**
 	 * Saves the lastest state of changes first and then publishes them
 	 */
-	public static function publish(ModelWithContent $model, array $input): array
+	public static function publish(ModelWithContent $model, array $input = []): array
 	{
 		// save the given changes first
 		static::save(
@@ -80,6 +110,36 @@ class Changes
 		$changes->publish(
 			language: 'current'
 		);
+
+		return [
+			'status' => 'ok'
+		];
+	}
+
+	/**
+	 * Publishes any changes
+	 */
+	public static function publishAll(string $type): array
+	{
+		$changes = new ChangesTracker();
+
+		if ($type === 'pages') {
+			foreach ($changes->pages() as $page) {
+				static::publish($page);
+			}
+		}
+
+		if ($type === 'files') {
+			foreach ($changes->files() as $file) {
+				static::publish($file);
+			}
+		}
+
+		if ($type === 'users') {
+			foreach ($changes->users() as $user) {
+				static::publish($user);
+			}
+		}
 
 		return [
 			'status' => 'ok'
