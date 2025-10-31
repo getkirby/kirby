@@ -783,4 +783,37 @@ class FilesSectionTest extends TestCase
 
 		$this->assertSame(4, $section->upload()['attributes']['sort']);
 	}
+
+	public function testUpload(): void
+	{
+		$section = new Section('files', [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$expected = [
+			'accept' => null,
+			'api' => 'pages/test/files',
+			'attributes' => [
+				'sort' => 1,
+				'template' => null,
+			],
+			'max' => null,
+			'multiple' => true,
+			'preview' => []
+		];
+
+		$this->assertSame($expected, $section->upload());
+	}
+
+	public function testUploadSwitchedOff(): void
+	{
+		$section = new Section('files', [
+			'name'   => 'test',
+			'model'  => new Page(['slug' => 'test']),
+			'create' => false
+		]);
+
+		$this->assertFalse($section->upload());
+	}
 }
