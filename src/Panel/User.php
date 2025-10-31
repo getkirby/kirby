@@ -141,10 +141,13 @@ class User extends Model
 	 */
 	public function dropdownOption(): array
 	{
-		return [
-			'icon' => 'user',
-			'text' => $this->model->username(),
-		] + parent::dropdownOption();
+		return (new UserItem(
+			user: $this->model,
+			text: '{{ user.username }}'
+		))->props() + [
+			// TODO: This part can be removed in 6.0.0
+			'icon' => 'user'
+		];
 	}
 
 	public function home(): string|null

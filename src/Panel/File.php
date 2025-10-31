@@ -199,10 +199,13 @@ class File extends Model
 	 */
 	public function dropdownOption(): array
 	{
-		return [
-			'icon' => 'image',
-			'text' => $this->model->filename(),
-		] + parent::dropdownOption();
+		return (new FileItem(
+			file: $this->model,
+			text: '{{ file.filename }}'
+		))->props() + [
+			// Todo: This part can be removed in 6.0.0
+			'icon' => 'image'
+		];
 	}
 
 	/**

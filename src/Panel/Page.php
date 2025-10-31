@@ -200,9 +200,13 @@ class Page extends Model
 	 */
 	public function dropdownOption(): array
 	{
-		return [
-			'text' => $this->model->title()->value(),
-		] + parent::dropdownOption();
+		return (new PageItem(
+			page: $this->model,
+			text: '{{ page.title }}'
+		))->props() + [
+			// TODO: This part can be removed in 6.0.0
+			'icon' => 'page'
+		];
 	}
 
 	/**
