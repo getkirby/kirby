@@ -5,7 +5,7 @@
 			:buttons="buttons('pages')"
 			:label="$t('lock.unsaved.pages')"
 		>
-			<k-items :items="pages" layout="list" />
+			<k-items :items="items(pages)" layout="list" />
 		</k-section>
 
 		<k-section
@@ -13,7 +13,7 @@
 			:buttons="buttons('files')"
 			:label="$t('lock.unsaved.files')"
 		>
-			<k-items :items="files" layout="list" />
+			<k-items :items="items(files)" layout="list" />
 		</k-section>
 
 		<k-section
@@ -21,7 +21,7 @@
 			:buttons="buttons('users')"
 			:label="$t('lock.unsaved.users')"
 		>
-			<k-items :items="users" layout="list" />
+			<k-items :items="items(users)" layout="list" />
 		</k-section>
 
 		<k-section
@@ -113,10 +113,54 @@ export default {
 				}
 			];
 		},
+		async discard(model) {
+			try {
+				await this.$panel.api.post(model.link + "/changes/discard");
+				this.$panel.dialog.refresh();
+			} catch (e) {
+				this.$panel.notification.error(e);
+			}
+		},
 		async discardAll(type) {
 			try {
 				await this.$panel.api.post("/changes/discard/" + type);
 				this.$panel.dialog.close();
+				this.$panel.dialog.refresh();
+			} catch (e) {
+				this.$panel.notification.error(e);
+			}
+		},
+		items(items) {
+			return items.map((item) => {
+				item.options = [
+					{
+						icon: "undo",
+						text: "Discard",
+						click: () => this.discard(item)
+					},
+					{
+						icon: "check",
+						text: "Save",
+						click: () => this.save(item)
+					},
+					"-",
+					{
+						icon: "window",
+						text: "Preview changes",
+						link: this.$panel.url(item.link + "/preview/changes").toString(),
+						target: "_blank"
+					}
+				];
+
+				return item;
+			});
+		},
+		preview(model) {
+			this.$panel.view.open(model.link + "/preview/changes");
+		},
+		async save(model) {
+			try {
+				await this.$panel.api.post(model.link + "/changes/publish");
 				this.$panel.dialog.refresh();
 			} catch (e) {
 				this.$panel.notification.error(e);
