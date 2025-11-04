@@ -4,6 +4,7 @@ namespace Kirby\Content;
 
 use Kirby\Cache\Cache;
 use Kirby\Cms\App;
+use Kirby\Cms\Collection;
 use Kirby\Cms\Files;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Pages;
