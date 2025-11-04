@@ -1,28 +1,29 @@
 <template>
 	<k-dialog v-bind="$props" class="k-changes-dialog">
-		<k-section
-			v-if="pages.length"
-			:buttons="buttons('pages')"
-			:label="$t('lock.unsaved.pages')"
-		>
+		<header slot="header" class="k-changes-dialog-header">
+			<nav class="k-tabs">
+				<k-button class="k-tabs-button" :current="true">
+					Your changes
+				</k-button>
+				<k-button class="k-tabs-button"> Team changes </k-button>
+			</nav>
+
+			<k-button-group :buttons="buttons()" size="xs" />
+		</header>
+
+		<k-table :index="false" :columns="columns" :rows="rows" />
+
+		<!-- <k-section v-if="pages.length" :label="$t('lock.unsaved.pages')">
 			<k-items :items="items(pages)" layout="list" />
 		</k-section>
 
-		<k-section
-			v-if="files.length"
-			:buttons="buttons('files')"
-			:label="$t('lock.unsaved.files')"
-		>
+		<k-section v-if="files.length" :label="$t('lock.unsaved.files')">
 			<k-items :items="items(files)" layout="list" />
 		</k-section>
 
-		<k-section
-			v-if="users.length"
-			:buttons="buttons('users')"
-			:label="$t('lock.unsaved.users')"
-		>
+		<k-section v-if="users.length" :label="$t('lock.unsaved.users')">
 			<k-items :items="items(users)" layout="list" />
-		</k-section>
+		</k-section> -->
 
 		<k-section
 			v-if="!pages.length && !files.length && !users.length"
@@ -56,7 +57,7 @@ export default {
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		size: {
-			default: "large"
+			default: "huge"
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		submitButton: {
@@ -67,8 +68,41 @@ export default {
 			default: () => []
 		}
 	},
+	computed: {
+		columns() {
+			return {
+				image: {
+					label: "",
+					width: "var(--table-row-height)",
+					type: "image",
+					mobile: true
+				},
+				text: {
+					label: "Title",
+					type: "url",
+					mobile: true
+				},
+				type: {
+					type: "tags",
+					width: "6rem",
+					mobile: true
+				},
+				when: {
+					type: "text",
+					width: "10rem"
+				},
+				user: {
+					width: "12rem",
+					type: "text"
+				}
+			};
+		},
+		rows() {
+			return this.items([...this.pages, ...this.files, ...this.users]);
+		}
+	},
 	methods: {
-		buttons(type) {
+		buttons() {
 			return [
 				{
 					icon: "undo",
@@ -83,10 +117,10 @@ export default {
 									icon: "undo",
 									text: this.$t("form.discard")
 								},
-								text: `Do you really want to discard all unsaved changes for ${type}?`
+								text: `Do you really want to discard all unsaved changes?`
 							},
 							on: {
-								submit: () => this.discardAll(type)
+								submit: () => this.discardAll()
 							}
 						});
 					}
@@ -103,10 +137,10 @@ export default {
 									theme: "notice",
 									text: "Save changes"
 								},
-								text: `Do you really want to save all unsaved changes for ${type}?`
+								text: `Do you really want to save all unsaved changes?`
 							},
 							on: {
-								submit: () => this.saveAll(type)
+								submit: () => this.saveAll()
 							}
 						});
 					}
@@ -121,9 +155,9 @@ export default {
 				this.$panel.notification.error(e);
 			}
 		},
-		async discardAll(type) {
+		async discardAll() {
 			try {
-				await this.$panel.api.post("/changes/discard/" + type);
+				await this.$panel.api.post("/changes/discard");
 				this.$panel.dialog.close();
 				this.$panel.dialog.refresh();
 			} catch (e) {
@@ -131,7 +165,12 @@ export default {
 			}
 		},
 		items(items) {
-			return items.map((item) => {
+			items = items.map((item) => {
+				item.text = {
+					text: item.text,
+					href: item.link
+				};
+
 				item.options = [
 					{
 						icon: "undo",
@@ -154,6 +193,8 @@ export default {
 
 				return item;
 			});
+
+			return this.$helper.array.sortBy(items, "modified desc");
 		},
 		preview(model) {
 			this.$panel.view.open(model.link + "/preview/changes");
@@ -166,9 +207,9 @@ export default {
 				this.$panel.notification.error(e);
 			}
 		},
-		async saveAll(type) {
+		async saveAll() {
 			try {
-				await this.$panel.api.post("/changes/publish/" + type);
+				await this.$panel.api.post("/changes/publish");
 				this.$panel.dialog.close();
 				this.$panel.dialog.refresh();
 			} catch (e) {
@@ -178,3 +219,33 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-changes-dialog {
+	--dialog-padding: 0;
+	max-height: 100%;
+}
+.k-changes-dialog-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: var(--height-xl);
+	flex-shrink: 0;
+	padding-inline: var(--spacing-3);
+	border-bottom: 1px solid var(--color-gray-900);
+	z-index: 1;
+}
+.k-changes-dialog-header .k-tabs {
+	margin-bottom: 0px;
+}
+
+.k-changes-dialog .k-dialog-body {
+	--header-sticky-offset: 0;
+	flex-grow: 1;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.k-changes-dialog .k-dialog-body .k-table th {
+	border-radius: 0;
+}
+</style>

@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use DateTimeImmutable;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
@@ -48,7 +49,32 @@ class ChangesDialog
 			$model instanceof User => new UserItem(user: $model),
 		};
 
-		return $item->props();
+		$changes  = $model->version('changes');
+		$lock     = $changes->lock();
+		$modified = $lock->modified('Y-m-d H:i:s');
+
+
+		$origin = new DateTimeImmutable('now');
+		$target = new DateTimeImmutable($modified);
+		$interval = $origin->diff($target);
+
+		if ($interval->d > 0) {
+			$when = $interval->format('%a days ago');
+		} else if ($interval->h > 0) {
+			$when = $interval->format('%h hours ago');
+		} else if ($interval->i > 0) {
+			$when = $interval->format('%i minutes ago');
+		} else {
+			$when = $interval->format('%s seconds ago');
+		}
+
+		return [
+			...$item->props(),
+			'user'     => $lock->user()->email(),
+			'type'     => $model::CLASS_ALIAS,
+			'modified' => $modified,
+			'when'     => $when
+		];
 	}
 
 	/**
