@@ -135,8 +135,7 @@ class Cors
 	{
 		// response varies by origin for non-wildcard origins
 		if ($allowOrigin !== '*') {
-			$currentVary = $this->kirby->request()->header('Vary');
-			$headers['Vary'] = $currentVary ?? 'Origin';
+			$headers['Vary'] = 'Origin';
 		}
 	}
 
