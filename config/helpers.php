@@ -528,9 +528,10 @@ if (Helpers::hasOverride('snippet') === false) { // @codeCoverageIgnore
 		$name,
 		$data = [],
 		bool $return = false,
-		bool $slots = false
+		bool $slots = false,
+		bool|string $cache = false
 	): Snippet|string|null {
-		return App::instance()->snippet($name, $data, $return, $slots);
+		return App::instance()->snippet($name, $data, $return, $slots, $cache);
 	}
 }
 
