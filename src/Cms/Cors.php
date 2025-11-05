@@ -170,7 +170,7 @@ class Cors
 	{
 		$exposeHeaders = $this->config['exposeHeaders'] ?? [];
 
-		if (empty($exposeHeaders) === false) {
+		if ($this->hasConfigValue($exposeHeaders) === true) {
 			$headers['Access-Control-Expose-Headers'] = is_array($exposeHeaders)
 				? implode(', ', $exposeHeaders)
 				: $exposeHeaders;
@@ -192,7 +192,7 @@ class Cors
 
 		// allowed methods
 		$methods = $this->config['allowMethods'] ?? ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH'];
-		if (empty($methods) === false) {
+		if ($this->hasConfigValue($methods) === true) {
 			$headers['Access-Control-Allow-Methods'] = is_array($methods)
 				? implode(', ', $methods)
 				: $methods;
@@ -212,14 +212,14 @@ class Cors
 		$allowHeaders = $this->config['allowHeaders'] ?? [];
 
 		// reflect request headers if not explicitly configured
-		if (empty($allowHeaders) === true) {
+		if ($this->hasConfigValue($allowHeaders) === false) {
 			$requestHeaders = $this->kirby->request()->header('Access-Control-Request-Headers');
 			if ($requestHeaders !== null) {
 				$allowHeaders = Str::split($requestHeaders, ',');
 			}
 		}
 
-		if (empty($allowHeaders) === false) {
+		if ($this->hasConfigValue($allowHeaders) === true) {
 			$headers['Access-Control-Allow-Headers'] = is_array($allowHeaders)
 				? implode(', ', $allowHeaders)
 				: $allowHeaders;
@@ -231,5 +231,21 @@ class Cors
 				$headers['Vary'] = 'Access-Control-Request-Headers';
 			}
 		}
+	}
+
+	/**
+	 * Checks whether a config value contains meaningful data
+	 */
+	protected function hasConfigValue(mixed $input): bool
+	{
+		if (is_array($input) === true) {
+			return $input !== [];
+		}
+
+		if (is_string($input) === true) {
+			return $input !== '';
+		}
+
+		return false;
 	}
 }
