@@ -238,6 +238,15 @@ return [
 	],
 
 	/**
+	 * Query
+	 */
+	'query' => [
+		'html' => function (KirbyTag $tag): string {
+			return $tag->parent()->query($tag->value);
+		}
+	],
+
+	/**
 	 * Tel
 	 */
 	'tel' => [
