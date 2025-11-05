@@ -240,7 +240,9 @@ class CorsTest extends TestCase
 	{
 		$this->kirby([
 			'options' => [
-				'cors' => true
+				'cors' => [
+					'allowHeaders' => true
+				]
 			],
 			'server' => [
 				'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'Accept, Content-Type, Authorization'
@@ -251,6 +253,23 @@ class CorsTest extends TestCase
 
 		$this->assertSame('Accept, Content-Type, Authorization', $headers['Access-Control-Allow-Headers']);
 		$this->assertSame('Access-Control-Request-Headers', $headers['Vary']);
+	}
+
+	public function testPreflightDoesNotReflectRequestHeadersByDefault(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => true
+			],
+			'server' => [
+				'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'Accept, Content-Type, Authorization'
+			]
+		]);
+
+		$headers = Cors::headers(preflight: true);
+
+		$this->assertArrayNotHasKey('Access-Control-Allow-Headers', $headers);
+		$this->assertArrayNotHasKey('Vary', $headers);
 	}
 
 	public function testPreflightCustomAllowHeaders(): void

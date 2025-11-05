@@ -209,14 +209,12 @@ class Cors
 	 */
 	protected function addAllowHeaders(array &$headers): void
 	{
-		$allowHeaders = $this->config['allowHeaders'] ?? [];
+		$allowHeaders = $this->config['allowHeaders'] ?? null;
 
-		// reflect request headers if not explicitly configured
-		if ($this->hasConfigValue($allowHeaders) === false) {
+		// reflect request headers only when explicitly enabled via `true`
+		if ($allowHeaders === true) {
 			$requestHeaders = $this->kirby->request()->header('Access-Control-Request-Headers');
-			if ($requestHeaders !== null) {
-				$allowHeaders = Str::split($requestHeaders, ',');
-			}
+			$allowHeaders    = $requestHeaders !== null ? Str::split($requestHeaders, ',') : [];
 		}
 
 		if ($this->hasConfigValue($allowHeaders) === true) {
