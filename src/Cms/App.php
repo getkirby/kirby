@@ -1601,18 +1601,37 @@ class App
 		string|array|null $name,
 		array|object $data = [],
 		bool $return = true,
-		bool $slots = false
+		bool $slots = false,
+		string|bool $cache = false
 	): Snippet|string|null {
-		if (is_object($data) === true) {
-			$data = ['item' => $data];
+		$cacheDriver  = $this->cache('snippets');
+
+		if ($cache === true || $cache === false) {
+			$cacheId = $name;
+		} else {
+			$cacheId = $cache;
 		}
 
-		$snippet = ($this->component('snippet'))(
-			$this,
-			$name,
-			[...$this->data, ...$data],
-			$slots
-		);
+		$snippet = $cache === false ? null : $cacheDriver->get($cacheId);
+
+		if (!$snippet) {
+
+			if (is_object($data) === true) {
+				$data = ['item' => $data];
+			}
+
+			$snippet = ($this->component('snippet'))(
+				$this,
+				$name,
+				[...$this->data, ...$data],
+				$slots
+			);
+
+			if ($cache !== false) {
+				$cacheDriver->set($cacheId, $snippet);
+			}
+		}
+
 
 		if ($return === true || $slots === true) {
 			return $snippet;
