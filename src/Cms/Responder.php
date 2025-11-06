@@ -274,11 +274,20 @@ class Responder implements Stringable
 	{
 		if ($headers === null) {
 			$injectedHeaders = [];
+			$isPrivate = static::isPrivate($this->usesAuth(), $this->usesCookies());
 
-			if (static::isPrivate($this->usesAuth(), $this->usesCookies()) === true) {
+			if ($isPrivate === true) {
 				// never ever cache private responses
 				$injectedHeaders['Cache-Control'] = 'no-store, private';
-			} else {
+			}
+
+			// inject CORS headers if enabled
+			$corsHeaders = Cors::headers();
+			if ($corsHeaders !== []) {
+				$injectedHeaders = [...$injectedHeaders, ...$corsHeaders];
+			}
+
+			if ($isPrivate === false) {
 				// the response is public, but it may
 				// vary based on request headers
 				$vary = [];
@@ -289,6 +298,13 @@ class Responder implements Stringable
 
 				if ($this->usesCookies() !== []) {
 					$vary[] = 'Cookie';
+				}
+
+				// merge Vary from CORS if present
+				if (isset($injectedHeaders['Vary']) === true) {
+					// split CORS Vary into individual values to avoid duplication
+					$corsVaryValues = array_map('trim', explode(',', $injectedHeaders['Vary']));
+					$vary = [...$vary, ...$corsVaryValues];
 				}
 
 				if ($vary !== []) {

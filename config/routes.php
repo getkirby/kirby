@@ -1,8 +1,10 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\Cors;
 use Kirby\Cms\LanguageRoutes;
 use Kirby\Cms\Media;
+use Kirby\Http\Response;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Plugins;
 use Kirby\Plugin\Assets;
@@ -29,6 +31,35 @@ return function (App $kirby) {
 	 * plugins.
 	 */
 	$before = [
+		// handle CORS preflight requests
+		[
+			'pattern' => '(:all)',
+			'method'  => 'OPTIONS',
+			'action'  => function () use ($kirby) {
+				$request = $kirby->request();
+
+				// skip if no CORS request
+				if ($request->header('Access-Control-Request-Method') === null) {
+					/** @var \Kirby\Http\Route $this */
+					$this->next();
+				}
+
+				// skip if CORS is disabled
+				if ($kirby->isCorsEnabled() === false) {
+					/** @var \Kirby\Http\Route $this */
+					$this->next();
+				}
+
+				$headers = Cors::headers(preflight: true);
+
+				// block if origin doesn't match
+				if ($headers === []) {
+					return null;
+				}
+
+				return new Response('', null, 204, $headers);
+			}
+		],
 		[
 			'pattern' => $api . '/(:all)',
 			'method'  => 'ALL',
