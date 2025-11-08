@@ -601,6 +601,40 @@ class Str
 	}
 
 	/**
+	 * Converts keys or ids into human-readable labels by
+	 * normalizing punctuation, splitting camel- or kebab-case,
+	 * and title-casing the result.
+	 *
+	 * Example: `workEmailAddress` will turn into `Work email address`
+	 *
+	 * @since 5.2.0
+	 */
+	public static function label(string $value): string
+	{
+		// replace punctuation with spaces
+		$value = str_replace(['_', '-', '.'], ' ', $value);
+
+		// add a space before every uppercase character by matching
+		// all characters that are not Unicode lowercase or numbers
+		$value = preg_replace_callback('/[^\p{Ll}\p{Nd}]/u', fn ($match) => ' ' . $match[0], $value);
+
+		// add a space before every first number
+		$value = preg_replace('/([^\d])(\d)/', '$1 $2', $value);
+
+		// remove duplicate spaces
+		$value = preg_replace('/[\s]{2,}+/', ' ', $value);
+
+		// trim leading or trailing spaces
+		$value = trim($value);
+
+		// convert the entire string into lowercase
+		$value = static::lower($value);
+
+		// turn the first character into uppercase
+		return static::ucfirst($value);
+	}
+
+	/**
 	 * A UTF-8 safe version of strlen()
 	 */
 	public static function length(string|null $string): int
