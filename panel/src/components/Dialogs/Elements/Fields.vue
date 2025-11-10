@@ -57,4 +57,8 @@ export default {
 	padding-bottom: 0.5rem;
 	container-type: inline-size;
 }
+/** The line field is creating a huge gap, which is too much in dialogs **/
+.k-dialog-fields .k-line-field {
+	height: 2px;
+}
 </style>

@@ -1,5 +1,6 @@
-import { reactive } from "vue";
 import Modal, { defaults as modalDefaults } from "./modal.js";
+import { isObject } from "@/helpers/object.js";
+import { reactive } from "vue";
 
 export const defaults = () => {
 	return {
@@ -61,6 +62,13 @@ export default (panel) => {
 		 * @returns {Object}
 		 */
 		async open(dialog, options = {}) {
+			// handle drawer object with url property
+			if (isObject(dialog) && dialog.url) {
+				options = dialog;
+				dialog = dialog.url;
+				delete options.url;
+			}
+
 			// prefix URLs
 			if (typeof dialog === "string") {
 				dialog = `/dialogs/${dialog}`;

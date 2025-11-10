@@ -4,7 +4,7 @@
 		v-bind="$props"
 		:class="['k-dropdown-item', $attrs.class]"
 		:style="$attrs.style"
-		@click="onClick"
+		@click="$emit('click', $event)"
 	>
 		<!-- @slot The item's content/text -->
 		<slot />
@@ -12,28 +12,20 @@
 </template>
 
 <script>
+import { props as Button } from "@/components/Navigation/Button.vue";
+
 /**
  * Item to be used within `<k-dropdown>`
  * @example <k-dropdown-item>Option A</k-dropdown-item>
  * @unstable
  */
 export default {
+	mixins: [Button],
 	inheritAttrs: false,
-	props: {
-		current: [Boolean, String],
-		disabled: Boolean,
-		download: Boolean,
-		icon: String,
-		link: String,
-		target: String
-	},
 	emits: ["click"],
 	methods: {
 		focus() {
 			this.$refs.button.focus();
-		},
-		onClick(event) {
-			this.$emit("click", event);
 		},
 		tab() {
 			this.$refs.button.tab();

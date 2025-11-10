@@ -26,7 +26,7 @@
 						<k-dropdown-item
 							:key="'item-' + index"
 							v-bind="option"
-							@click="onOptionClick(option)"
+							:click="() => onOptionClick(option)"
 						>
 							{{ option.label ?? option.text }}
 						</k-dropdown-item>

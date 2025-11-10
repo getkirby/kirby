@@ -22,17 +22,27 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  */
 class UserChangePasswordDialogController extends UserDialogController
 {
+	protected function isCurrentUser(): bool
+	{
+		return $this->kirby->user()->is($this->user);
+	}
+
 	public function load(): Dialog
 	{
 		return new FormDialog(
 			fields: [
 				'currentPassword' => Field::password([
-					'label'        => $this->i18n('user.changePassword.current'),
-					'autocomplete' => 'current-password'
+					'label'        => $this->i18n('user.changePassword.' . ($this->isCurrentUser() ? 'current' : 'own')),
+					'autocomplete' => 'current-password',
+					'help'         => $this->i18n('account') . ': ' . $this->kirby->user()->email(),
 				]),
+				'line' => [
+					'type' => 'line',
+				],
 				'password' => Field::password([
 					'label'        => $this->i18n('user.changePassword.new'),
-					'autocomplete' => 'new-password'
+					'autocomplete' => 'new-password',
+					'help'         => $this->i18n('account') . ': ' . $this->user->email(),
 				]),
 				'passwordConfirmation' => Field::password([
 					'label'        => $this->i18n('user.changePassword.new.confirm'),

@@ -312,9 +312,9 @@ class RouterTest extends TestCase
 		$this->assertNull($app->call('api'));
 		$this->assertNull($app->call('api/something'));
 
-		// the api route should still be there
+		// the api route should still be there (after CORS preflight route)
 		$patterns = array_column($app->routes(), 'pattern');
-		$this->assertSame('api/(:all)', $patterns[0]);
+		$this->assertSame('api/(:all)', $patterns[1]);
 	}
 
 	public function testDisabledPanel(): void

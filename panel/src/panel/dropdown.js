@@ -1,5 +1,5 @@
-import { reactive } from "vue";
 import Feature, { defaults } from "./feature.js";
+import { reactive } from "vue";
 
 /**
  * @since 4.0.0
@@ -53,23 +53,7 @@ export default (panel) => {
 				return [];
 			}
 
-			return this.props.options.map((option) => {
-				if (!option.dialog) {
-					return option;
-				}
-
-				option.click = () => {
-					const url =
-						typeof option.dialog === "string"
-							? option.dialog
-							: option.dialog.url;
-					const options =
-						typeof option.dialog === "object" ? option.dialog : {};
-					return panel.dialog.open(url, options);
-				};
-
-				return option;
-			});
+			return this.props.options;
 		},
 
 		set(state) {

@@ -5,10 +5,11 @@ use Kirby\Toolkit\Str;
 return [
 	'props' => [
 		/**
-		 * Default number that will be saved when a new page/user/file is created
+		 * Default number that will be saved
+		 * when a new page/user/file is created
 		 */
 		'default' => function ($default = null) {
-			return $this->toNumber($default) ?? '';
+			return $default;
 		},
 		/**
 		 * The lowest allowed number
@@ -34,6 +35,17 @@ return [
 		},
 		'value' => function ($value = null) {
 			return $this->toNumber($value) ?? '';
+		}
+	],
+	'computed' => [
+		'default' => function () {
+			$default = $this->default;
+
+			if (is_string($default) === true) {
+				$default = $this->model()->toString($default);
+			}
+
+			return $this->toNumber($default) ?? '';
 		}
 	],
 	'methods' => [

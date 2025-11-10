@@ -48,7 +48,7 @@ class UserChangePasswordDialogControllerTest extends TestCase
 		$this->assertInstanceOf(FormDialog::class, $dialog);
 
 		$props = $dialog->props();
-		$this->assertSame('Your current password', $props['fields']['currentPassword']['label']);
+		$this->assertSame('Your own password', $props['fields']['currentPassword']['label']);
 		$this->assertSame('New password', $props['fields']['password']['label']);
 		$this->assertSame('Confirm the new password…', $props['fields']['passwordConfirmation']['label']);
 		$this->assertSame('Change', $props['submitButton']);
