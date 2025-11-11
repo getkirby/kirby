@@ -99,7 +99,7 @@ class Category
 
 	public function name(): string
 	{
-		return $this->props['name'] ?? ucfirst($this->id);
+		return $this->props['name'] ?? Str::label($this->id);
 	}
 
 	public function root(): string
