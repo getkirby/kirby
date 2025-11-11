@@ -138,13 +138,14 @@ class User extends Model
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example.
+	 *
+	 * @deprecated 5.1.4 Use the Kirby\Panel\Ui\Item\UserItem class instead
 	 */
 	public function dropdownOption(): array
 	{
-		return [
-			'icon' => 'user',
-			'text' => $this->model->username(),
-		] + parent::dropdownOption();
+		return (new UserItem(user: $this->model))->props() + [
+			'icon' => 'user'
+		];
 	}
 
 	public function home(): string|null

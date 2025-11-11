@@ -41,12 +41,14 @@ class Site extends Model
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example.
+	 *
+	 * @deprecated 5.1.4
 	 */
 	public function dropdownOption(): array
 	{
 		return [
 			'icon' => 'home',
-			'text' => $this->model->title()->value(),
+			'text' => $this->model->toSafeString('{{ site.title }}'),
 		] + parent::dropdownOption();
 	}
 
