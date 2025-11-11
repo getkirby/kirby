@@ -119,7 +119,7 @@ class Fieldset extends Item
 			$tab = Blueprint::extend($tab);
 
 			$tab['fields']  = $this->createFields($tab['fields'] ?? []);
-			$tab['label'] ??= Str::ucfirst($name);
+			$tab['label'] ??= Str::label($name);
 			$tab['label']   = $this->createLabel($tab['label']);
 			$tab['name']    = $name;
 

@@ -242,6 +242,20 @@ class FieldsetTest extends TestCase
 		$this->assertCount(2, $fieldset->tabs()['content']['fields']);
 	}
 
+	public function testTabsWithAutoLabels(): void
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+			'tabs' => [
+				'contentTab' => [],
+				'settingsTab' => []
+			]
+		]);
+
+		$this->assertSame('Content tab', $fieldset->tabs()['contentTab']['label']);
+		$this->assertSame('Settings tab', $fieldset->tabs()['settingsTab']['label']);
+	}
+
 	public function testTranslate(): void
 	{
 		$fieldset = new Fieldset([
