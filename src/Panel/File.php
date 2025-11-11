@@ -196,13 +196,14 @@ class File extends Model
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example
+	 *
+	 * @deprecated 5.1.4 Use the Kirby\Panel\Ui\Item\FileItem class instead
 	 */
 	public function dropdownOption(): array
 	{
-		return [
-			'icon' => 'image',
-			'text' => $this->model->filename(),
-		] + parent::dropdownOption();
+		return (new FileItem(file: $this->model))->props() + [
+			'icon' => 'image'
+		];
 	}
 
 	/**

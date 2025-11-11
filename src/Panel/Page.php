@@ -197,12 +197,14 @@ class Page extends Model
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example.
+	 *
+	 * @deprecated 5.1.4 Use the Kirby\Panel\Ui\Item\PageItem class instead
 	 */
 	public function dropdownOption(): array
 	{
-		return [
-			'text' => $this->model->title()->value(),
-		] + parent::dropdownOption();
+		return (new PageItem(page: $this->model))->props() + [
+			'icon' => 'page'
+		];
 	}
 
 	/**
