@@ -79,4 +79,19 @@ class FieldsetsTest extends TestCase
 		$this->assertArrayHasKey('content', $fieldset->tabs());
 		$this->assertArrayNotHasKey('seo', $fieldset->tabs());
 	}
+
+	public function testGroupsWithAutoLabels()
+	{
+		$fieldsets = Fieldsets::factory([
+			'mediaBlocks' => [
+				'type' => 'group',
+				'fieldsets' => [
+					'image'
+				]
+			]
+		]);
+
+		$this->assertSame('Media blocks', $fieldsets->groups()['mediaBlocks']['label']);
+	}
+
 }
