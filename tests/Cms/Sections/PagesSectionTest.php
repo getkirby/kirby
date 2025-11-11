@@ -114,6 +114,16 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('Pages', $section->headline());
 	}
 
+	public function testHeadlineFromName(): void
+	{
+		// single label
+		$section = new Section('pages', [
+			'name'  => 'blogArticles',
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertSame('Blog articles', $section->headline());
+	}
 
 	public function testParent(): void
 	{
