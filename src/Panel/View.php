@@ -370,7 +370,7 @@ class View
 				foreach ($area['searches'] ?? [] as $id => $params) {
 					$searches[$id] = [
 						'icon'  => $params['icon'] ?? 'search',
-						'label' => $params['label'] ?? Str::ucfirst($id),
+						'label' => $params['label'] ?? Str::label($id),
 						'id'    => $id
 					];
 				}

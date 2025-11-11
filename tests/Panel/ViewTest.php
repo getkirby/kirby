@@ -646,4 +646,23 @@ class ViewTest extends TestCase
 		$this->assertArrayNotHasKey('bar', $searches);
 		$this->assertArrayHasKey('test', $searches);
 	}
+
+	public function testSearchesWithAutoLabel(): void
+	{
+		$areas = [
+			'a' => [
+				'searches' => [
+					'fooBar' => [],
+				]
+			],
+		];
+
+		$searches = View::searches($areas, [
+			'access' => [
+				'a' => true
+			]
+		]);
+
+		$this->assertSame('Foo bar', $searches['fooBar']['label']);
+	}
 }
