@@ -206,6 +206,15 @@ class FieldsetTest extends TestCase
 		$this->assertSame('English name', $fieldset->name());
 	}
 
+	public function testNameFromType(): void
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'testFieldset',
+		]);
+
+		$this->assertSame('Test fieldset', $fieldset->name());
+	}
+
 	public function testPreview(): void
 	{
 		$fieldset = new Fieldset([
