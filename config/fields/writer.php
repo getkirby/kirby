@@ -73,6 +73,10 @@ return [
 			return $value;
 		}
 	],
+	'fillWithEmptyValue' => function (): static {
+		$this->value = '';
+		return $this;
+	},
 	'validations' => [
 		'minlength' => function ($value) {
 			if (

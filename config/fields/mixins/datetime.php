@@ -11,6 +11,10 @@ return [
 			return $format;
 		}
 	],
+	'fillWithEmptyValue' => function (): static {
+		$this->value = '';
+		return $this;
+	},
 	'methods' => [
 		'toDatetime' => function ($value, string $format = 'Y-m-d H:i:s') {
 			if ($date = Date::optional($value)) {

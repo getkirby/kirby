@@ -113,6 +113,10 @@ return [
 			]
 		];
 	},
+	'fillWithEmptyValue' => function (): static {
+		$this->value = '';
+		return $this;
+	},
 	'validations' => [
 		'minlength',
 		'maxlength'

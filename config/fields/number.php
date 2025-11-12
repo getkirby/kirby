@@ -48,6 +48,10 @@ return [
 			return $this->toNumber($default) ?? '';
 		}
 	],
+	'fillWithEmptyValue' => function (): static {
+		$this->value = '';
+		return $this;
+	},
 	'methods' => [
 		'toNumber' => function ($value): float|null {
 			if ($this->isEmptyValue($value) === true) {
