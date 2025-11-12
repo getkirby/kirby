@@ -7,7 +7,7 @@ use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
-use Kirby\Form\Fields;
+use Kirby\Form\Form;
 use Kirby\Http\Uri;
 use Kirby\Panel\Ui\Item\ModelItem;
 use Kirby\Toolkit\A;
@@ -454,7 +454,7 @@ abstract class Model
 	public function versions(): array
 	{
 		$language = Language::ensure('current');
-		$fields   = Fields::for($this->model, $language);
+		$form     = Form::for(model: $this->model, language: $language);
 
 		$latestVersion  = $this->model->version('latest');
 		$changesVersion = $this->model->version('changes');
@@ -467,8 +467,8 @@ abstract class Model
 		}
 
 		return [
-			'latest'  => $fields->reset()->fill($latestContent)->toFormValues(),
-			'changes' => $fields->reset()->fill($changesContent)->toFormValues()
+			'latest'  => $form->fill($latestContent)->toFormValues(),
+			'changes' => $form->reset()->fill($changesContent)->toFormValues()
 		];
 	}
 
