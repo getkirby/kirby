@@ -224,11 +224,8 @@ class Field extends Component
 	 */
 	public function dialogs(): array
 	{
-		if (
-			isset($this->options['dialogs']) === true &&
-			$this->options['dialogs'] instanceof Closure
-		) {
-			return $this->options['dialogs']->call($this);
+		if ($this->handlerExists('dialogs') === true) {
+			return $this->handlerCall('dialogs');
 		}
 
 		return [];
@@ -239,11 +236,8 @@ class Field extends Component
 	 */
 	public function drawers(): array
 	{
-		if (
-			isset($this->options['drawers']) === true &&
-			$this->options['drawers'] instanceof Closure
-		) {
-			return $this->options['drawers']->call($this);
+		if ($this->handlerExists('drawers') === true) {
+			return $this->handlerCall('drawers');
 		}
 
 		return [];
@@ -319,6 +313,16 @@ class Field extends Component
 		return $this->siblings;
 	}
 
+	protected function handlerCall(string $handler, ...$args): mixed
+	{
+		return $this->options[$handler]->call($this, ...$args);
+	}
+
+	protected function handlerExists(string $handler): bool
+	{
+		return isset($this->options[$handler]) === true && $this->options[$handler] instanceof Closure;
+	}
+
 	/**
 	 * Checks if the field has a value
 	 */
@@ -340,11 +344,8 @@ class Field extends Component
 	 */
 	public function isEmptyValue(mixed $value = null): bool
 	{
-		if (
-			isset($this->options['isEmpty']) === true &&
-			$this->options['isEmpty'] instanceof Closure
-		) {
-			return $this->options['isEmpty']->call($this, $value);
+		if ($this->handlerExists('isEmpty') === true) {
+			return $this->handlerCall('isEmpty', $value);
 		}
 
 		return $this->isEmptyValueFromMixin($value);
@@ -363,11 +364,8 @@ class Field extends Component
 	 */
 	public function routes(): array
 	{
-		if (
-			isset($this->options['api']) === true &&
-			$this->options['api'] instanceof Closure
-		) {
-			return $this->options['api']->call($this);
+		if ($this->handlerExists('api') === true) {
+			return $this->handlerCall('api');
 		}
 
 		return [];
