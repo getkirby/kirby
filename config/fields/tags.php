@@ -76,8 +76,12 @@ return [
 			return $this->toValues($this->value);
 		}
 	],
+	'fillWithEmptyValue' => function (): static {
+		$this->value = [];
+		return $this;
+	},
 	'methods' => [
-		'toValues' => function ($value) {
+		'toValues' => function ($value): array {
 			if (is_null($value) === true) {
 				return [];
 			}

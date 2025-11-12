@@ -20,7 +20,7 @@ return [
 		},
 	],
 	'methods' => [
-		'toValues' => function ($value) {
+		'toValues' => function ($value): array {
 			if (is_null($value) === true) {
 				return [];
 			}

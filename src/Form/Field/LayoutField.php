@@ -36,6 +36,10 @@ class LayoutField extends BlocksField
 	 */
 	public function fill(mixed $value): static
 	{
+		if ($this->isEmptyValue($value) === true) {
+			return $this->fillWithEmptyValue();
+		}
+
 		$attrs   = $this->attrsForm();
 		$value   = Data::decode($value, type: 'json', fail: false);
 		$layouts = Layouts::factory($value, ['parent' => $this->model])->toArray();
@@ -52,6 +56,12 @@ class LayoutField extends BlocksField
 
 		$this->value = $layouts;
 
+		return $this;
+	}
+
+	public function fillWithEmptyValue(): static
+	{
+		$this->value = [];
 		return $this;
 	}
 

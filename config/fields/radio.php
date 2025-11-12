@@ -26,5 +26,9 @@ return [
 		'value' => function () {
 			return $this->sanitizeOption($this->value) ?? '';
 		}
-	]
+	],
+	'fillWithEmptyValue' => function (): static {
+		$this->value = '';
+		return $this;
+	},
 ];

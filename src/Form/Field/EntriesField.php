@@ -59,7 +59,17 @@ class EntriesField extends FieldClass
 	 */
 	public function fill(mixed $value): static
 	{
+		if ($this->isEmptyValue($value) === true) {
+			return $this->fillWithEmptyValue();
+		}
+
 		$this->value = Data::decode($value ?? '', 'yaml');
+		return $this;
+	}
+
+	public function fillWithEmptyValue(): static
+	{
+		$this->value = [];
 		return $this;
 	}
 

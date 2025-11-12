@@ -170,6 +170,10 @@ return [
 			return $this->columnsCache ??= $columns;
 		}
 	],
+	'fillWithEmptyValue' => function (): static {
+		$this->value = [];
+		return $this;
+	},
 	'methods' => [
 		'rows' => function ($value) {
 			$rows  = Data::decode($value, 'yaml');

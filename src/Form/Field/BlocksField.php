@@ -110,10 +110,20 @@ class BlocksField extends FieldClass
 	 */
 	public function fill(mixed $value): static
 	{
+		if ($this->isEmptyValue($value) === true) {
+			return $this->fillWithEmptyValue();
+		}
+
 		$value  = BlocksCollection::parse($value);
 		$blocks = BlocksCollection::factory($value)->toArray();
 		$this->value = $this->blocksToValues($blocks);
 
+		return $this;
+	}
+
+	public function fillWithEmptyValue(): static
+	{
+		$this->value = [];
 		return $this;
 	}
 

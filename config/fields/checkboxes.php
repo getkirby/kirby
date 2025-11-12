@@ -50,6 +50,10 @@ return [
 			return $this->sanitizeOptions($this->value);
 		},
 	],
+	'fillWithEmptyValue' => function (): static {
+		$this->value = [];
+		return $this;
+	},
 	'save' => function ($value): string {
 		return A::join($value, ', ');
 	},
