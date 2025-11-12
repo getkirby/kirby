@@ -59,6 +59,10 @@ class LayoutField extends BlocksField
 		return $this;
 	}
 
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
+	 */
 	public function fillWithEmptyValue(): static
 	{
 		$this->value = [];

@@ -48,7 +48,7 @@ return [
 			return $this->toNumber($default) ?? '';
 		}
 	],
-	'fillWithEmptyValue' => function (): static {
+	'fillWithEmptyValue' => function () {
 		$this->value = '';
 		return $this;
 	},

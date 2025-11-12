@@ -170,7 +170,7 @@ return [
 			return $this->columnsCache ??= $columns;
 		}
 	],
-	'fillWithEmptyValue' => function (): static {
+	'fillWithEmptyValue' => function () {
 		$this->value = [];
 		return $this;
 	},

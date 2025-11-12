@@ -11,7 +11,7 @@ return [
 			return $format;
 		}
 	],
-	'fillWithEmptyValue' => function (): static {
+	'fillWithEmptyValue' => function () {
 		$this->value = '';
 		return $this;
 	},
