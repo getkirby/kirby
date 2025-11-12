@@ -19,7 +19,7 @@ return [
 		/**
 		 * Set the default values for the object
 		 */
-		'default' => function ($default = null) {
+		'default' => function (array|null $default = null) {
 			return $default;
 		},
 
@@ -43,10 +43,10 @@ return [
 				return '';
 			}
 
-			return $this->form($this->default)->values();
+			return $this->form($this->default)->toFormValues();
 		},
 		'fields' => function () {
-			if (empty($this->fields) === true) {
+			if ($this->fields === []) {
 				return [];
 			}
 
@@ -55,28 +55,39 @@ return [
 		'value' => function () {
 			$data = Data::decode($this->value, 'yaml');
 
-			if (empty($data) === true) {
+			if ($data === []) {
 				return '';
 			}
 
-			return $this->form($data)->values();
+			return $this->form($data)->toFormValues();
 		}
 	],
 	'methods' => [
-		'form' => function (array $values = []) {
-			return new Form([
-				'fields' => $this->attrs['fields'],
-				'values' => $values,
-				'model'  => $this->model
-			]);
+		'form' => function (array $values = []): Form {
+			$this->form ??= new Form(
+				fields: $this->attrs['fields'],
+				model: $this->model,
+				language: 'current'
+			);
+
+			$this->form->reset();
+
+			if ($values !== []) {
+				$this->form->fill(
+					input: $values,
+					passthrough: true
+				);
+			}
+
+			return $this->form;
 		},
 	],
 	'save' => function ($value) {
-		if (empty($value) === true) {
+		if ($this->isEmptyValue($value) === true) {
 			return '';
 		}
 
-		return $this->form($value)->content();
+		return $this->form($value)->toStoredValues();
 	},
 	'validations' => [
 		'object' => function ($value) {
@@ -86,7 +97,7 @@ return [
 
 			$errors = $this->form($value)->errors();
 
-			if (empty($errors) === false) {
+			if ($errors !== []) {
 				// use the first error for details
 				$name  = array_key_first($errors);
 				$error = $errors[$name];
