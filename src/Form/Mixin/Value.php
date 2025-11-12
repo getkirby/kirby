@@ -61,6 +61,17 @@ trait Value
 	}
 
 	/**
+	 * Preferred name would be `::reset` but this is
+	 * taken by options in other fields.
+	 *
+	 * @since 5.2.0
+	 */
+	public function fillWithEmptyValue(): static
+	{
+		return $this->fill(null);
+	}
+
+	/**
 	 * Checks if the field has a value
 	 */
 	public function hasValue(): bool
