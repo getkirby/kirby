@@ -32,7 +32,7 @@ return [
 		}
 	],
 	'methods' => [
-		'getOptions' => function () {
+		'getOptions' => function (): array {
 			$props   = FieldOptions::polyfill($this->props);
 			$options = FieldOptions::factory($props['options']);
 			return $options->render($this->model());
@@ -41,7 +41,7 @@ return [
 			$options = array_column($this->options(), 'value');
 			return in_array($value, $options) ? $value : null;
 		},
-		'sanitizeOptions' => function ($values) {
+		'sanitizeOptions' => function ($values): array {
 			$options = array_column($this->options(), 'value');
 			$options = array_intersect($values, $options);
 			return array_values($options);
