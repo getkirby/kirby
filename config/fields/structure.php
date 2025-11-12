@@ -30,6 +30,9 @@ return [
 		 * Optional columns definition to only show selected fields in the structure table.
 		 */
 		'columns' => function (array $columns = []) {
+			// flush the columns cache
+			$this->columnsCache = null;
+
 			// lower case all keys, because field names will
 			// be lowercase as well.
 			return array_change_key_case($columns);
@@ -115,6 +118,10 @@ return [
 			return $this->form()->fields()->toProps();
 		},
 		'columns' => function () {
+			if (is_array($this->columnsCache) === true) {
+				return $this->columnsCache;
+			}
+
 			$columns   = [];
 			$blueprint = $this->columns;
 
@@ -160,7 +167,7 @@ return [
 				$columns[array_key_first($columns)]['mobile'] = true;
 			}
 
-			return $columns;
+			return $this->columnsCache ??= $columns;
 		}
 	],
 	'methods' => [
