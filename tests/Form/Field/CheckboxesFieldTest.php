@@ -136,4 +136,18 @@ class CheckboxesFieldTest extends TestCase
 
 		$this->assertTrue($field->isValid());
 	}
+
+	public function testBatch(): void
+	{
+		$field = $this->field('checkboxes');
+
+		$this->assertFalse($field->batch());
+
+		$field = $this->field('checkboxes', [
+			'batch' => true
+		]);
+
+		$this->assertTrue($field->batch());
+	}
+
 }

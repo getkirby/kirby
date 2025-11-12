@@ -58,7 +58,8 @@ input:where([type="checkbox"]):checked {
 }
 
 /** Checked state **/
-input:where([type="checkbox"], [type="radio"]):checked::after {
+input:where([type="checkbox"], [type="radio"]):checked::after,
+input:where([type="checkbox"]):indeterminate::after {
 	background: var(--choice-color-checked);
 	display: grid;
 }
@@ -78,12 +79,31 @@ input:where([type="checkbox"], [type="radio"])[disabled] {
 }
 
 /** Checkbox & Toggle **/
-input[type="checkbox"]:checked::after {
+input[type="checkbox"]:checked::after,
+input[type="checkbox"]:indeterminate::after {
 	content: "✓";
 	inset: 0;
+	place-items: center;
 	font-weight: 700;
 	color: var(--choice-color-icon);
 	line-height: 1;
+}
+
+/** Checkbox indeterminate **/
+input[type="checkbox"]:indeterminate::after {
+	content: "";
+}
+input[type="checkbox"]:indeterminate::before {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	content: "";
+	margin-top: -1px;
+	margin-left: -4px;
+	width: calc(var(--choice-height) - 8px);
+	height: 2px;
+	background: var(--choice-color-icon);
+	z-index: 1;
 }
 
 /** Radio **/
