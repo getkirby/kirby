@@ -76,9 +76,8 @@ return [
 			return $this->toValues($this->value);
 		}
 	],
-	'fillWithEmptyValue' => function () {
-		$this->value = [];
-		return $this;
+	'emptyValue' => function () {
+		return [];
 	},
 	'methods' => [
 		'toValues' => function ($value): array {

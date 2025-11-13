@@ -73,9 +73,8 @@ return [
 			return $value;
 		}
 	],
-	'fillWithEmptyValue' => function () {
-		$this->value = '';
-		return $this;
+	'emptyValue' => function () {
+		return '';
 	},
 	'validations' => [
 		'minlength' => function ($value) {

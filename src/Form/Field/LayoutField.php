@@ -30,6 +30,11 @@ class LayoutField extends BlocksField
 		parent::__construct($params);
 	}
 
+	public function emptyValue(): mixed
+	{
+		return [];
+	}
+
 	/**
 	 * @psalm-suppress MethodSignatureMismatch
 	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
@@ -56,16 +61,6 @@ class LayoutField extends BlocksField
 
 		$this->value = $layouts;
 
-		return $this;
-	}
-
-	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
-	 */
-	public function fillWithEmptyValue(): static
-	{
-		$this->value = [];
 		return $this;
 	}
 

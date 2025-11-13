@@ -43,6 +43,11 @@ class EntriesField extends FieldClass
 		$this->setSortable($params['sortable'] ?? true);
 	}
 
+	public function emptyValue(): mixed
+	{
+		return [];
+	}
+
 	public function field(): array
 	{
 		return $this->field;
@@ -64,16 +69,6 @@ class EntriesField extends FieldClass
 		}
 
 		$this->value = Data::decode($value ?? '', 'yaml');
-		return $this;
-	}
-
-	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
-	 */
-	public function fillWithEmptyValue(): static
-	{
-		$this->value = [];
 		return $this;
 	}
 
@@ -147,7 +142,7 @@ class EntriesField extends FieldClass
 	public function toFormValue(): mixed
 	{
 		$form  = $this->form();
-		$value = parent::toFormValue() ?? [];
+		$value = parent::toFormValue() ?? $this->emptyValue();
 
 		return A::map(
 			$value,

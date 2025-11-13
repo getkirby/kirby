@@ -113,9 +113,8 @@ return [
 			]
 		];
 	},
-	'fillWithEmptyValue' => function () {
-		$this->value = '';
-		return $this;
+	'emptyValue' => function () {
+		return '';
 	},
 	'validations' => [
 		'minlength',

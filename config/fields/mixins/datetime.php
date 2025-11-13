@@ -11,9 +11,8 @@ return [
 			return $format;
 		}
 	],
-	'fillWithEmptyValue' => function () {
-		$this->value = '';
-		return $this;
+	'emptyValue' => function () {
+		return '';
 	},
 	'methods' => [
 		'toDatetime' => function ($value, string $format = 'Y-m-d H:i:s') {

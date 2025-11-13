@@ -65,9 +65,8 @@ return [
 			return $this->optionsCache ??= $this->getOptions();
 		}
 	],
-	'fillWithEmptyValue' => function () {
-		$this->value = '';
-		return $this;
+	'emptyValue' => function () {
+		return '';
 	},
 	'methods' => [
 		'getOptions' => function () {

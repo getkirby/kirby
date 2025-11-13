@@ -243,6 +243,15 @@ class Field extends Component
 		return [];
 	}
 
+	public function emptyValue(): mixed
+	{
+		if ($this->handlerExists('emptyValue') === true) {
+			return $this->handlerCall('emptyValue');
+		}
+
+		return null;
+	}
+
 	/**
 	 * Creates a new field instance
 	 */
@@ -302,7 +311,8 @@ class Field extends Component
 			return $this->handlerCall('fillWithEmptyValue');
 		}
 
-		return $this->fill(null);
+		$this->value = $this->emptyValue();
+		return $this;
 	}
 
 	/**

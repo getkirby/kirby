@@ -72,6 +72,11 @@ class BlocksField extends FieldClass
 		return $result;
 	}
 
+	public function emptyValue(): mixed
+	{
+		return [];
+	}
+
 	public function fields(string $type): array
 	{
 		return $this->fieldset($type)->fields();
@@ -118,16 +123,6 @@ class BlocksField extends FieldClass
 		$blocks = BlocksCollection::factory($value)->toArray();
 		$this->value = $this->blocksToValues($blocks);
 
-		return $this;
-	}
-
-	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
-	 */
-	public function fillWithEmptyValue(): static
-	{
-		$this->value = [];
 		return $this;
 	}
 

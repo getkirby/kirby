@@ -73,9 +73,8 @@ return [
 			return (string)$this->convert($this->value);
 		}
 	],
-	'fillWithEmptyValue' => function () {
-		$this->value = '';
-		return $this;
+	'emptyValue' => function () {
+		return '';
 	},
 	'methods' => [
 		'convert' => function ($value) {

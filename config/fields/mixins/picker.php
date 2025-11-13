@@ -90,8 +90,7 @@ return [
 			return $text;
 		},
 	],
-	'fillWithEmptyValue' => function () {
-		$this->value = [];
-		return $this;
+	'emptyValue' => function () {
+		return [];
 	},
 ];
