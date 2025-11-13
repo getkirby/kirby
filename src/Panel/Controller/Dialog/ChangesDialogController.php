@@ -3,9 +3,15 @@
 namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Cms\Collection;
+use Kirby\Cms\File;
+use Kirby\Cms\Page;
+use Kirby\Cms\User;
 use Kirby\Content\Changes;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
+use Kirby\Panel\Ui\Item\FileItem;
+use Kirby\Panel\Ui\Item\PageItem;
+use Kirby\Panel\Ui\Item\UserItem;
 
 /**
  * Controls the Panel dialog for displaying
@@ -35,13 +41,25 @@ class ChangesDialogController extends DialogController
 	}
 
 	/**
+	 * Helper method to return item props for a single given model
+	 */
+	public function item(File|Page|User $model): array
+	{
+		$item = match (true) {
+			$model instanceof File => new FileItem(file: $model),
+			$model instanceof Page => new PageItem(page: $model),
+			$model instanceof User => new UserItem(user: $model),
+		};
+
+		return $item->props();
+	}
+
+	/**
 	 * Helper method to return item props for the given models
 	 */
 	public function items(Collection $models): array
 	{
-		return $models->values(
-			fn ($model) => $model->panel()->dropdownOption()
-		);
+		return $models->values($this->item(...));
 	}
 
 	/**

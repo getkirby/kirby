@@ -12,16 +12,14 @@
 		<span v-else class="k-label-text">
 			<slot />
 		</span>
-		<template v-if="input !== false">
-			<abbr v-if="required" :title="$t(type + '.required')">✶</abbr>
-			<abbr
-				:title="$t(type + '.invalid')"
-				data-theme="negative"
-				class="k-label-invalid"
-			>
-				&times;
-			</abbr>
-		</template>
+		<abbr v-if="required" :title="$t(type + '.required')">✶</abbr>
+		<abbr
+			:title="$t(type + '.invalid')"
+			data-theme="negative"
+			class="k-label-invalid"
+		>
+			&times;
+		</abbr>
 	</component>
 </template>
 
