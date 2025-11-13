@@ -200,6 +200,42 @@ class TemplateTest extends TestCase
 		);
 	}
 
+	public function testRenderWithMultipleSlotsLayout(): void
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('template-with-layout-with-multiple-slots');
+		$this->assertSame(
+			"<h1>Layout</h1>\n" .
+			"<header>Content for the header slot</header>\n" .
+			"<main>Content for the default slot</main>\n",
+			$template->render()
+		);
+	}
+
+	public function testRenderWithMultipleSlotsLayoutAndSwallowedContent(): void
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('template-with-layout-with-multiple-slots-and-swallowed-content');
+		$this->assertSame(
+			"<h1>Layout</h1>\n" .
+			"<header>Content for the header slot</header>\n" .
+			"<main></main>\n",
+			$template->render()
+		);
+	}
+
 	public function testRenderWithNestedSnippets(): void
 	{
 		$app = new App([
