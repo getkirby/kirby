@@ -400,6 +400,32 @@ class FieldTest extends TestCase
 		$this->assertEquals(Field::setup('test'), $field->optionsDebugger());
 	}
 
+	public function testFillWithEmptyValueCustomHandler(): void
+	{
+		Field::$types = [
+			'test' => [
+				'fillWithEmptyValue' => function () {
+					$this->value = 'foo';
+					return $this;
+				}
+			]
+		];
+
+		$page = new Page(['slug' => 'test']);
+
+		$field = new Field('test', [
+			'model' => $page,
+		]);
+
+		$field->fill('test');
+
+		$this->assertSame('test', $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame('foo', $field->toFormValue());
+	}
+
 	public function testHelp(): void
 	{
 		Field::$types = [
