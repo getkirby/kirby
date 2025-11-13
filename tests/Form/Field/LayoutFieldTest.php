@@ -71,6 +71,33 @@ class LayoutFieldTest extends TestCase
 		$this->assertArrayHasKey('background-color', $fields);
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$value = [
+			[
+				'columns' => [
+					[
+						'blocks' => [
+							[
+								'type' => 'heading',
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$field = $this->field('layout');
+
+		$field->fill($value);
+
+		$this->assertCount(1, $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame([], $field->toFormValue());
+	}
+
 	public function testLayouts(): void
 	{
 		$field = $this->field('layout', [

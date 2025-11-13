@@ -17,6 +17,18 @@ class WriterFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$field = $this->field('writer');
+		$field->fill('test');
+
+		$this->assertSame('test', $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame('', $field->toFormValue());
+	}
+
 	public function testValueSanitized(): void
 	{
 		$field = $this->field('writer', [

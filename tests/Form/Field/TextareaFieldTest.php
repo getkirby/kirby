@@ -83,6 +83,18 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame([], $field->files());
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$field = $this->field('textarea');
+		$field->fill('test');
+
+		$this->assertSame('test', $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame('', $field->toFormValue());
+	}
+
 	public function testMaxLength(): void
 	{
 		$field = $this->field('textarea', [

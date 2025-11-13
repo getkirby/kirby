@@ -22,6 +22,32 @@ class BlocksFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$field = $this->field('blocks');
+
+		$field->fill([
+			[
+				'type'    => 'heading',
+				'content' => [
+					'text' => 'a'
+				]
+			],
+			[
+				'type'    => 'heading',
+				'content' => [
+					'text' => 'b'
+				]
+			],
+		]);
+
+		$this->assertCount(2, $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame([], $field->toFormValue());
+	}
+
 	public function testGroups(): void
 	{
 		$field = $this->field('blocks', [
