@@ -102,8 +102,8 @@ class TemplateTest extends TestCase
 			]
 		]);
 
-		$template = new Template('simple');
-		$this->assertSame('Test', $template->render(['slot' => 'Test']));
+		$template = new Template('template');
+		$this->assertSame('Test', $template->render(['foo' => 'Test']));
 	}
 
 	public function testRenderOpenLayoutSnippet(): void
@@ -116,7 +116,30 @@ class TemplateTest extends TestCase
 		]);
 
 		$template = new Template('with-layout');
-		$this->assertSame("<h1>Layout</h1>\nMy content\n<footer>with other stuff</footer>\n", $template->render());
+		$this->assertSame(
+			"<h1>Layout</h1>\nMy content\n\nSimple output\n" .
+			"<footer>with other stuff</footer>\n",
+			$template->render()
+		);
+	}
+
+	public function testRenderOpenLayoutSnippetWithSlots(): void
+	{
+		new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('with-layout-multiple-slots');
+
+		$this->assertSame(
+			"<h1>Layout</h1>\n" .
+			"<header>Header content</header>\n" .
+			"<main>Body content</main>\n",
+			$template->render()
+		);
 	}
 
 	public function testRenderOpenParentSnippet1(): void
@@ -169,9 +192,69 @@ class TemplateTest extends TestCase
 		$this->assertSame(
 			"Before snippet\n" .
 			"Before rendering\n" .
-			"<h1>Layout</h1>\nMy content\n<footer>with other stuff</footer>\n" .
+			"<h1>Layout</h1>\nMy content\n\nSimple output\n" .
+			"<footer>with other stuff</footer>\n" .
 			"After rendering\n" .
 			"After snippet\n",
+			$template->render()
+		);
+	}
+
+	public function testRenderWithMultipleSlotsLayout(): void
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('template-with-layout-with-multiple-slots');
+		$this->assertSame(
+			"<h1>Layout</h1>\n" .
+			"<header>Content for the header slot</header>\n" .
+			"<main>Content for the default slot</main>\n",
+			$template->render()
+		);
+	}
+
+	public function testRenderWithMultipleSlotsLayoutAndSwallowedContent(): void
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('template-with-layout-with-multiple-slots-and-swallowed-content');
+		$this->assertSame(
+			"<h1>Layout</h1>\n" .
+			"<header>Content for the header slot</header>\n" .
+			"<main></main>\n",
+			$template->render()
+		);
+	}
+
+	public function testRenderWithNestedSnippets(): void
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('template-with-nested-snippets');
+		$this->assertSame(
+			"<h1>Layout</h1>\n\n" .
+			"Some content from the template.\n\n" .
+			"Simple output\n\n\n" .
+			"Content from the template in the default slot of the snippet.\n\n" .
+			"Content from the template in the footer slot of the snippet.\n\n" .
+			"<h1>Layout</h1>\nMy content\n\nSimple output\n" .
+			"<footer>with other stuff</footer>\n" .
+			"<footer>with other stuff</footer>\n",
 			$template->render()
 		);
 	}
