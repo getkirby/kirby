@@ -158,6 +158,12 @@ class FieldClassTest extends TestCase
 		$this->assertSame([], $field->drawers());
 	}
 
+	public function testEmptyValue(): void
+	{
+		$field = new TestField();
+		$this->assertNull($field->emptyValue());
+	}
+
 	public function testErrors(): void
 	{
 		$field = new TestField();

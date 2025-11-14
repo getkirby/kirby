@@ -52,11 +52,31 @@ trait Value
 	}
 
 	/**
+	 * Returns the fallback value when the field should be empty
+	 */
+	public function emptyValue(): mixed
+	{
+		return null;
+	}
+
+	/**
 	 * Sets a new value for the field
 	 */
 	public function fill(mixed $value): static
 	{
 		$this->value = $value;
+		return $this;
+	}
+
+	/**
+	 * Preferred name would be `::reset` but this is
+	 * taken by options in other fields.
+	 *
+	 * @since 5.2.0
+	 */
+	public function fillWithEmptyValue(): static
+	{
+		$this->value = $this->emptyValue();
 		return $this;
 	}
 

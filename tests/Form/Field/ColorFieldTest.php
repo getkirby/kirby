@@ -39,6 +39,18 @@ class ColorFieldTest extends TestCase
 		$this->assertSame('#fff', $field->default());
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$field = $this->field('color');
+		$field->fill('#efefef');
+
+		$this->assertSame('#efefef', $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame('', $field->toFormValue());
+	}
+
 	public function testFormatInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);

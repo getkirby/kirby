@@ -30,11 +30,11 @@ return [
 		'step' => function ($step = null): float|string {
 			return match ($step) {
 				'any'   => 'any',
-				default => $this->toNumber($step) ?? ''
+				default => $this->toNumber($step) ?? $this->emptyValue()
 			};
 		},
 		'value' => function ($value = null) {
-			return $this->toNumber($value) ?? '';
+			return $this->toNumber($value) ?? $this->emptyValue();
 		}
 	],
 	'computed' => [
@@ -45,10 +45,13 @@ return [
 				$default = $this->model()->toString($default);
 			}
 
-			return $this->toNumber($default) ?? '';
+			return $this->toNumber($default) ?? $this->emptyValue();
 		}
 	],
 	'methods' => [
+		'emptyValue' => function () {
+			return '';
+		},
 		'toNumber' => function ($value): float|null {
 			if ($this->isEmptyValue($value) === true) {
 				return null;

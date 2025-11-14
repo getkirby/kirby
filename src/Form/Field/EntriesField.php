@@ -43,6 +43,11 @@ class EntriesField extends FieldClass
 		$this->setSortable($params['sortable'] ?? true);
 	}
 
+	public function emptyValue(): mixed
+	{
+		return [];
+	}
+
 	public function field(): array
 	{
 		return $this->field;
@@ -133,7 +138,7 @@ class EntriesField extends FieldClass
 	public function toFormValue(): mixed
 	{
 		$form  = $this->form();
-		$value = parent::toFormValue() ?? [];
+		$value = parent::toFormValue() ?? $this->emptyValue();
 
 		return A::map(
 			$value,

@@ -26,5 +26,10 @@ return [
 		'value' => function () {
 			return $this->sanitizeOption($this->value) ?? '';
 		}
+	],
+	'methods' => [
+		'emptyValue' => function () {
+			return '';
+		}
 	]
 ];

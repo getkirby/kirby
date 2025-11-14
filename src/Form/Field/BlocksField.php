@@ -77,6 +77,11 @@ class BlocksField extends FieldClass
 		return $result;
 	}
 
+	public function emptyValue(): mixed
+	{
+		return [];
+	}
+
 	public function fields(string $type): array
 	{
 		return $this->fieldset($type)->fields();

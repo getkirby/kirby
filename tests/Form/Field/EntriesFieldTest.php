@@ -126,6 +126,25 @@ class EntriesFieldTest extends TestCase
 		$this->assertArrayNotHasKey('counter', $field->field());
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$value = [
+			'https://getkirby.com',
+			'https://forum.getkirby.com',
+			'https://plugins.getkirby.com',
+		];
+
+		$field = $this->field('entries');
+
+		$field->fill($value);
+
+		$this->assertSame($value, $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame([], $field->toFormValue());
+	}
+
 	public function testDefaultValue(): void
 	{
 		$field = $this->field('entries', [
