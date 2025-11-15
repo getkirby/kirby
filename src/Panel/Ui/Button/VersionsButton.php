@@ -33,9 +33,9 @@ class VersionsButton extends ViewButton
 
 	/**
 	 * Returns the button icon based on the view's mode
-	 * @since 5.1.0
+	 * @since 6.0.0
 	 */
-	public function icon(): string
+	protected function icon(): string
 	{
 		return match ($this->mode) {
 			'compare' => 'layout-columns',
@@ -45,7 +45,7 @@ class VersionsButton extends ViewButton
 
 	/**
 	 * Whether the given mode is the current mode
-	 * @since 5.1.0
+	 * @since 6.0.0
 	 */
 	public function isCurrent(string $mode): bool
 	{
@@ -55,7 +55,7 @@ class VersionsButton extends ViewButton
 	/**
 	 * Returns the view's mode using the proper
 	 * values for version IDs
-	 * @since 5.1.0
+	 * @since 6.0.0
 	 */
 	public function mode(): string
 	{
@@ -67,7 +67,7 @@ class VersionsButton extends ViewButton
 
 	/**
 	 * Returns the options for the dropdown
-	 * @since 5.1.0
+	 * @since 6.0.0
 	 */
 	public function options(): array
 	{
@@ -105,7 +105,7 @@ class VersionsButton extends ViewButton
 
 	/**
 	 * Returns the preview view URL for the given version ID
-	 * @since 5.1.0
+	 * @since 6.0.0
 	 */
 	public function url(string $versionId): string
 	{
