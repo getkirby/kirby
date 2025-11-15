@@ -103,8 +103,8 @@ class ChangesDialogControllerTest extends TestCase
 		$page->version('latest')->save([]);
 		$page->version('changes')->save([]);
 
-		$dialog = new ChangesDialog();
-		$item   = $dialog->item($page);
+		$controller = new ChangesDialogController();
+		$item       = $controller->item($page);
 
 		$this->assertSame('test', $item['text']);
 		$this->assertSame('/pages/test', $item['link']);
