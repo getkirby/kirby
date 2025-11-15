@@ -163,13 +163,7 @@ export default {
 			this.refresh({ search: this.query });
 		},
 		select(ids) {
-			// isolate selected that aren't an item in the current parent
-			const orphans = this.selected.filter(
-				(id) => this.items.some((item) => item.id === id) === false
-			);
-
-			// merge orphans with new selected
-			this.selected = [...orphans, ...ids];
+			this.selected = ids;
 		},
 		submit() {
 			this.$emit("submit", {
