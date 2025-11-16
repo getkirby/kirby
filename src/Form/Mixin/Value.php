@@ -3,6 +3,7 @@
 namespace Kirby\Form\Mixin;
 
 use Kirby\Cms\Language;
+use ReflectionProperty;
 
 /**
  * @package   Kirby Form
@@ -56,7 +57,7 @@ trait Value
 	 */
 	public function emptyValue(): mixed
 	{
-		return null;
+		return (new ReflectionProperty($this, 'value'))->getDefaultValue();
 	}
 
 	/**
@@ -65,18 +66,6 @@ trait Value
 	public function fill(mixed $value): static
 	{
 		$this->value = $value;
-		return $this;
-	}
-
-	/**
-	 * Preferred name would be `::reset` but this is
-	 * taken by options in other fields.
-	 *
-	 * @since 5.2.0
-	 */
-	public function fillWithEmptyValue(): static
-	{
-		$this->value = $this->emptyValue();
 		return $this;
 	}
 
