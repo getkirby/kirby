@@ -2,6 +2,7 @@
 
 use Kirby\Cms\Find;
 use Kirby\Form\Form;
+use Kirby\Panel\Ui\FilePreview;
 
 /**
  * Shared file drawers
@@ -31,7 +32,7 @@ return [
 						'id'        => $file->panel()->url(true),
 						'mime'      => $file->mime(),
 					],
-					'preview' => $file->panel()->preview(),
+					'preview' => FilePreview::factory($file)->render(),
 					'title' => $file->filename(),
 					'tabs'  => [
 						'form' => [
