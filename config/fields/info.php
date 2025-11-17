@@ -1,8 +1,11 @@
 <?php
 
-use Kirby\Toolkit\I18n;
+use Kirby\Form\Field\InfoField;
 
 return [
+	'proxy' => function (...$attrs) {
+		return InfoField::factory($attrs);
+	},
 	'props' => [
 		/**
 		 * Unset inherited props
@@ -20,7 +23,7 @@ return [
 		 * Text to be displayed
 		 */
 		'text' => function ($value = null) {
-			return I18n::translate($value, $value);
+			return $value;
 		},
 
 		/**
@@ -28,15 +31,6 @@ return [
 		 */
 		'theme' => function (string|null $theme = null) {
 			return $theme;
-		}
-	],
-	'computed' => [
-		'text' => function () {
-			if ($text = $this->text) {
-				$text = $this->model()->toSafeString($text);
-				$text = $this->kirby()->kirbytext($text);
-				return $text;
-			}
 		}
 	],
 	'save' => false,

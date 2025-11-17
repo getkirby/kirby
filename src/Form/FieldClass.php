@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\HasSiblings;
+use Kirby\Reflection\Constructor;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -37,8 +38,8 @@ abstract class FieldClass
 	use Mixin\Width;
 
 	protected bool $disabled;
-	protected string|null $name;
-	protected Fields $siblings;
+	protected string $name;
+	public Fields|null $siblings = null;
 
 	public function __construct(
 		protected array $params = []
@@ -96,6 +97,21 @@ abstract class FieldClass
 	public function drawers(): array
 	{
 		return [];
+	}
+
+	public static function factory(array $props = []): static
+	{
+		$constructor = new Constructor(static::class);
+		$parameters  = $constructor->getParameterNames();
+
+		// array definition
+		if (count($parameters) === 1) {
+			return new static($props);
+		}
+
+		$props = $constructor->getAcceptedArguments($props);
+
+		return new static(...$props);
 	}
 
 	protected function i18n(string|array|null $param = null): string|null
@@ -171,14 +187,14 @@ abstract class FieldClass
 		$this->name = strtolower($name ?? $this->type());
 	}
 
-	protected function setSiblings(Fields|null $siblings = null): void
+	public function setSiblings(Fields|null $siblings = null): void
 	{
-		$this->siblings = $siblings ?? new Fields([$this]);
+		$this->siblings = $siblings;
 	}
 
 	protected function siblingsCollection(): Fields
 	{
-		return $this->siblings;
+		return $this->siblings ?? new Fields([$this]);
 	}
 
 	/**
@@ -187,7 +203,7 @@ abstract class FieldClass
 	protected function stringTemplate(string|null $string = null): string|null
 	{
 		if ($string !== null) {
-			return $this->model->toString($string);
+			return $this->model()->toString($string);
 		}
 
 		return null;

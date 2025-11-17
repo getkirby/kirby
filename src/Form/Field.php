@@ -43,10 +43,21 @@ class Field extends Component
 	 */
 	public static array $mixins = [];
 
+	public FieldClass $proxy;
+
 	/**
 	 * Registry for all component types
 	 */
 	public static array $types = [];
+
+	public function __call(string $method, array $args = [])
+	{
+		if (isset($this->proxy) && method_exists($this->proxy, $method)) {
+			return $this->proxy->$method(...$args);
+		}
+
+		return parent::__call($method, $args);
+	}
 
 	/**
 	 * @throws \Kirby\Exception\InvalidArgumentException
@@ -73,12 +84,21 @@ class Field extends Component
 		// set the name to lowercase
 		$attrs['name'] = strtolower($attrs['name']);
 
+		$options = static::setup($type);
+
+		if (isset($options['proxy']) === true && is_callable($options['proxy']) === true) {
+			$this->proxy = $options['proxy']->call($this, ...$attrs);
+			$this->proxy->model    = $attrs['model'] ?? null;
+			$this->proxy->siblings = $siblings;
+		}
+
 		$this->setModel($attrs['model'] ?? null);
 
 		parent::__construct($type, $attrs);
 
 		// set the siblings collection
 		$this->siblings = $siblings ?? new Fields([$this]);
+
 	}
 
 	/**
@@ -185,7 +205,7 @@ class Field extends Component
 				},
 				'default' => function () {
 					/** @var \Kirby\Form\Field $this */
-					if ($this->default === null) {
+					if (isset($this->default) === false || $this->default === null) {
 						return;
 					}
 
@@ -261,7 +281,7 @@ class Field extends Component
 
 		if (is_string($field) && class_exists($field) === true) {
 			$attrs['siblings'] = $siblings;
-			return new $field($attrs);
+			return $field::factory($attrs);
 		}
 
 		return new static($type, $attrs, $siblings);
@@ -379,6 +399,10 @@ class Field extends Component
 	 */
 	public function toArray(): array
 	{
+		if (isset($this->proxy) === true) {
+			return $this->proxy->props();
+		}
+
 		$array = parent::toArray();
 
 		unset($array['model']);
@@ -411,6 +435,11 @@ class Field extends Component
 		}
 
 		return $value;
+	}
+
+	public function type(): string
+	{
+		return $this->type;
 	}
 
 	/**

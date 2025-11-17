@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class TestField extends FieldClass
 {
+	protected mixed $value = null;
 }
 
 class HiddenField extends FieldClass

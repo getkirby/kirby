@@ -1,0 +1,43 @@
+<?php
+
+namespace Kirby\Form\Field;
+
+class TelField extends TextField
+{
+	public function __construct(
+		protected string $name,
+		protected array|string|null $after = null,
+		protected string|null $autocomplete = 'tel',
+		protected bool $autofocus = false,
+		protected array|string|null $before = null,
+		protected mixed $default = null,
+		protected bool $disabled = false,
+		protected string|null $font = null,
+		protected array|string|null $help = null,
+		protected string|null $icon = 'phone',
+		protected array|string|null $label = null,
+		protected int|null $maxlength = null,
+		protected int|null $minlength = null,
+		protected array|string|null $placeholder = null,
+		protected bool $required = false,
+		protected bool $translate = true,
+		protected array|null $when = null,
+		protected string|null $width = null,
+		protected mixed $value = ''
+	) {
+		$this->fill($value);
+	}
+
+	public function type(): string
+	{
+		return 'tel';
+	}
+
+	protected function validations(): array
+	{
+		return [
+			'minlength',
+			'maxlength'
+		];
+	}
+}

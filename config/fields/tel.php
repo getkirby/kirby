@@ -1,7 +1,10 @@
 <?php
 
+use Kirby\Form\Field\TelField;
+
 return [
 	'extends' => 'text',
+	'proxy' => fn(...$args) => TelField::factory($args),
 	'props' => [
 		/**
 		 * Unset inherited props

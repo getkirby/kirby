@@ -16,12 +16,12 @@ trait Value
 	/**
 	 * Default value for the field, which will be used when a page/file/user is created
 	 */
-	protected mixed $default = null;
+	protected mixed $default;
 
 	/**
 	 * The value of the field
 	 */
-	protected mixed $value = null;
+	protected mixed $value;
 
 	/**
 	 * @deprecated 5.0.0 Use `::toStoredValue()` instead to receive
@@ -44,11 +44,15 @@ trait Value
 	 */
 	public function default(): mixed
 	{
+		if (isset($this->default) === false) {
+			return null;
+		}
+
 		if (is_string($this->default) === false) {
 			return $this->default;
 		}
 
-		return $this->model->toString($this->default);
+		return $this->model()->toString($this->default);
 	}
 
 	/**

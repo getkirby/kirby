@@ -1,8 +1,9 @@
 <?php
 
-use Kirby\Toolkit\I18n;
+use Kirby\Form\Field\UrlField;
 
 return [
+	'proxy' => fn(...$args) => UrlField::factory($args),
 	'extends' => 'text',
 	'props' => [
 		/**
@@ -31,7 +32,7 @@ return [
 		 * Sets custom placeholder text, when the field is empty
 		 */
 		'placeholder'  => function ($value = null) {
-			return I18n::translate($value, $value) ?? 'https://example.com';
+			return $value;
 		}
 	],
 	'validations' => [

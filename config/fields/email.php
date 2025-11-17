@@ -1,9 +1,11 @@
 <?php
 
 use Kirby\Toolkit\I18n;
+use Kirby\Form\Field\EmailField;
 
 return [
 	'extends' => 'text',
+	'proxy' => fn(...$args) => EmailField::factory($args),
 	'props' => [
 		/**
 		 * Unset inherited props
@@ -29,7 +31,7 @@ return [
 		 * Custom placeholder text, when the field is empty.
 		 */
 		'placeholder' => function ($value = null) {
-			return I18n::translate($value, $value) ?? I18n::translate('email.placeholder');
+			return $value;
 		}
 	],
 	'validations' => [

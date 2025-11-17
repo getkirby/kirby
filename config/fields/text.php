@@ -1,9 +1,10 @@
 <?php
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\Str;
+use Kirby\Form\Field\TextField;
 
 return [
+	'proxy' => fn(...$args) => TextField::factory($args),
 	'props' => [
 
 		/**
@@ -34,7 +35,7 @@ return [
 		 * Sets the font family (sans or monospace)
 		 */
 		'font' => function (string|null $font = null) {
-			return $font === 'monospace' ? 'monospace' : 'sans-serif';
+			return $font;
 		},
 
 		/**
@@ -66,43 +67,9 @@ return [
 		},
 	],
 	'computed' => [
-		'default' => function () {
-			return $this->convert($this->default);
-		},
 		'value' => function () {
 			return (string)$this->convert($this->value);
 		}
-	],
-	'methods' => [
-		'convert' => function ($value) {
-			if ($this->converter() === null) {
-				return $value;
-			}
-
-			$converter = $this->converters()[$this->converter()];
-
-			if (is_array($value) === true) {
-				return array_map($converter, $value);
-			}
-
-			return call_user_func($converter, trim($value ?? ''));
-		},
-		'converters' => function (): array {
-			return [
-				'lower' => function ($value) {
-					return Str::lower($value);
-				},
-				'slug' => function ($value) {
-					return Str::slug($value);
-				},
-				'ucfirst' => function ($value) {
-					return Str::ucfirst($value);
-				},
-				'upper' => function ($value) {
-					return Str::upper($value);
-				},
-			];
-		},
 	],
 	'validations' => [
 		'minlength',
