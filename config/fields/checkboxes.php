@@ -50,6 +50,11 @@ return [
 			return $this->sanitizeOptions($this->value);
 		},
 	],
+	'methods' => [
+		'emptyValue' => function () {
+			return [];
+		}
+	],
 	'save' => function ($value): string {
 		return A::join($value, ', ');
 	},

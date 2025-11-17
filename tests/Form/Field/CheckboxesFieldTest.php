@@ -51,6 +51,25 @@ class CheckboxesFieldTest extends TestCase
 		$this->assertSame('a, b', $field->data(true));
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$field = $this->field('checkboxes', [
+			'options' => [
+				'a',
+				'b',
+				'c'
+			],
+		]);
+
+		$field->fill(['a', 'b']);
+
+		$this->assertSame(['a', 'b'], $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame([], $field->toFormValue());
+	}
+
 	public function testStringConversion(): void
 	{
 		$field = $this->field('checkboxes', [

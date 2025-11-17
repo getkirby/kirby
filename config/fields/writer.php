@@ -73,6 +73,11 @@ return [
 			return $value;
 		}
 	],
+	'methods' => [
+		'emptyValue' => function () {
+			return '';
+		},
+	],
 	'validations' => [
 		'minlength' => function ($value) {
 			if (

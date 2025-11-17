@@ -49,6 +49,18 @@ class TextFieldTest extends TestCase
 		$this->assertSame($expected, $field->default());
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$field = $this->field('text');
+		$field->fill('test');
+
+		$this->assertSame('test', $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame('', $field->toFormValue());
+	}
+
 	public function testInvalidConverter(): void
 	{
 		$this->expectException(InvalidArgumentException::class);

@@ -106,6 +106,9 @@ return [
 		}
 	],
 	'methods' => [
+		'emptyValue' => function () {
+			return '';
+		},
 		'isColor' => function (string $value): bool {
 			return
 				$this->isHex($value) ||
