@@ -41,6 +41,17 @@ class InfoSectionTest extends TestCase
 		$this->assertSame('Information', $section->headline());
 	}
 
+	public function testHeadlineFromName(): void
+	{
+		// single label
+		$section = new Section('info', [
+			'name'  => 'helpSection',
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertSame('Help section', $section->headline());
+	}
+
 	public function testText(): void
 	{
 		// single language text

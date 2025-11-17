@@ -56,7 +56,7 @@ class Fieldsets extends Items
 			if ($fieldset['type'] === 'group') {
 				$result    = static::createFieldsets($fieldset['fieldsets'] ?? []);
 				$fieldsets = [...$fieldsets, ...$result['fieldsets']];
-				$label     = $fieldset['label'] ?? Str::ucfirst($type);
+				$label     = $fieldset['label'] ?? Str::label($type);
 
 				$groups[$type] = [
 					'label'     => I18n::translate($label, $label),
