@@ -534,16 +534,21 @@ class FieldsTest extends TestCase
 			'b' => [
 				'type'  => 'text',
 			],
+			'c' => [
+				'type' => 'entries'
+			]
 		], $this->model);
 
 		$fields->fill([
 			'a' => 'A',
 			'b' => 'B',
+			'c' => ['a', 'b', 'c']
 		]);
 
 		$this->assertSame([
 			'a' => 'A',
 			'b' => 'B',
+			'c' => ['a', 'b', 'c']
 		], $fields->toFormValues());
 
 		$fields->reset();
@@ -551,6 +556,7 @@ class FieldsTest extends TestCase
 		$this->assertSame([
 			'a' => '',
 			'b' => '',
+			'c' => []
 		], $fields->toFormValues());
 	}
 

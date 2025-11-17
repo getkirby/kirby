@@ -31,6 +31,7 @@ class EntriesField extends FieldClass
 	protected array $field;
 	protected Form $form;
 	protected bool  $sortable = true;
+	protected mixed $value = [];
 
 	public function __construct(array $params = [])
 	{
@@ -41,11 +42,6 @@ class EntriesField extends FieldClass
 		$this->setMax($params['max'] ?? null);
 		$this->setMin($params['min'] ?? null);
 		$this->setSortable($params['sortable'] ?? true);
-	}
-
-	public function emptyValue(): mixed
-	{
-		return [];
 	}
 
 	public function field(): array

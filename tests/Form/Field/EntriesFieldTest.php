@@ -126,25 +126,6 @@ class EntriesFieldTest extends TestCase
 		$this->assertArrayNotHasKey('counter', $field->field());
 	}
 
-	public function testFillWithEmptyValue(): void
-	{
-		$value = [
-			'https://getkirby.com',
-			'https://forum.getkirby.com',
-			'https://plugins.getkirby.com',
-		];
-
-		$field = $this->field('entries');
-
-		$field->fill($value);
-
-		$this->assertSame($value, $field->toFormValue());
-
-		$field->fillWithEmptyValue();
-
-		$this->assertSame([], $field->toFormValue());
-	}
-
 	public function testDefaultValue(): void
 	{
 		$field = $this->field('entries', [
@@ -273,6 +254,25 @@ class EntriesFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertSame(1, $field->min());
+	}
+
+	public function testReset(): void
+	{
+		$value = [
+			'https://getkirby.com',
+			'https://forum.getkirby.com',
+			'https://plugins.getkirby.com',
+		];
+
+		$field = $this->field('entries');
+
+		$field->fill($value);
+
+		$this->assertSame($value, $field->toFormValue());
+
+		$field->reset();
+
+		$this->assertSame([], $field->toFormValue());
 	}
 
 	public static function supportsProvider(): array
