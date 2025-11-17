@@ -14,10 +14,28 @@
 				class="k-field-counter"
 			/>
 
-			<label v-if="batch">
-				<input ref="batch" type="checkbox" @input="batchSelect" />
-				<span class="sr-only">select/deselect all</span>
-			</label>
+			<k-button-group v-if="batch" layout="collapsed">
+				<k-button
+					:disabled="value.length === 0"
+					:responsive="true"
+					icon="deselect-all"
+					size="xs"
+					variant="filled"
+					@click="deselectAll"
+				>
+					{{ $t("deselect.all") }}
+				</k-button>
+				<k-button
+					:disabled="value.length === options.length"
+					:responsive="true"
+					icon="select-all"
+					size="xs"
+					variant="filled"
+					@click="selectAll"
+				>
+					{{ $t("select.all") }}
+				</k-button>
+			</k-button-group>
 		</template>
 
 		<k-empty
@@ -49,29 +67,12 @@ export default {
 	props: {
 		batch: Boolean
 	},
-	watch: {
-		value() {
-			this.checkBatchToggleState();
-		}
-	},
-	mounted() {
-		this.checkBatchToggleState();
-	},
 	methods: {
-		batchSelect(e) {
-			if (e.target.checked) {
-				this.$refs.input.selectAll();
-			} else {
-				this.$refs.input.deselectAll();
-			}
+		deselectAll() {
+			this.$refs.input.deselectAll();
 		},
-		checkBatchToggleState() {
-			// indeterminate state
-			this.$refs.batch.indeterminate =
-				this.value.length > 0 && this.value.length !== this.options.length;
-
-			// checked state
-			this.$refs.batch.checked = this.value.length === this.options.length;
+		selectAll() {
+			this.$refs.input.selectAll();
 		},
 		focus() {
 			this.$refs.input.focus();
