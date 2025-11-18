@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'getkirby/cms',
-        'pretty_version' => '5.1.3',
-        'version' => '5.1.3.0',
+        'pretty_version' => '5.1.4',
+        'version' => '5.1.4.0',
         'reference' => null,
         'type' => 'kirby-cms',
         'install_path' => __DIR__ . '/../../',
@@ -47,8 +47,8 @@
             'dev_requirement' => false,
         ),
         'getkirby/cms' => array(
-            'pretty_version' => '5.1.3',
-            'version' => '5.1.3.0',
+            'pretty_version' => '5.1.4',
+            'version' => '5.1.4.0',
             'reference' => null,
             'type' => 'kirby-cms',
             'install_path' => __DIR__ . '/../../',
@@ -65,9 +65,9 @@
             'dev_requirement' => false,
         ),
         'laminas/laminas-escaper' => array(
-            'pretty_version' => '2.17.0',
-            'version' => '2.17.0.0',
-            'reference' => 'df1ef9503299a8e3920079a16263b578eaf7c3ba',
+            'pretty_version' => '2.18.0',
+            'version' => '2.18.0.0',
+            'reference' => '06f211dfffff18d91844c1f55250d5d13c007e18',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laminas/laminas-escaper',
             'aliases' => array(),
@@ -167,9 +167,9 @@
             ),
         ),
         'symfony/yaml' => array(
-            'pretty_version' => 'v7.3.3',
-            'version' => '7.3.3.0',
-            'reference' => 'd4f4a66866fe2451f61296924767280ab5732d9d',
+            'pretty_version' => 'v7.3.5',
+            'version' => '7.3.5.0',
+            'reference' => '90208e2fc6f68f613eae7ca25a2458a931b1bacc',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/yaml',
             'aliases' => array(),
