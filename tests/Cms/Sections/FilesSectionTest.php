@@ -107,6 +107,17 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('Files', $section->headline());
 	}
 
+	public function testHeadlineFromName(): void
+	{
+		// single label
+		$section = new Section('files', [
+			'name'  => 'photoGallery',
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertSame('Photo gallery', $section->headline());
+	}
+
 	public function testMax(): void
 	{
 		$model = new Page([

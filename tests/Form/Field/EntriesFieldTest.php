@@ -256,6 +256,25 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame(1, $field->min());
 	}
 
+	public function testReset(): void
+	{
+		$value = [
+			'https://getkirby.com',
+			'https://forum.getkirby.com',
+			'https://plugins.getkirby.com',
+		];
+
+		$field = $this->field('entries');
+
+		$field->fill($value);
+
+		$this->assertSame($value, $field->toFormValue());
+
+		$field->reset();
+
+		$this->assertSame([], $field->toFormValue());
+	}
+
 	public static function supportsProvider(): array
 	{
 		return [

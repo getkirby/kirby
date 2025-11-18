@@ -67,6 +67,15 @@ class RoleTest extends TestCase
 		$this->assertTrue($role->isNobody());
 	}
 
+	public function testTitleFromName(): void
+	{
+		$role = new Role([
+			'name' => 'editorInChief',
+		]);
+
+		$this->assertSame('Editor in chief', $role->title());
+	}
+
 	public function testTranslateTitle(): void
 	{
 		$role = new Role([

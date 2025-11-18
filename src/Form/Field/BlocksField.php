@@ -26,6 +26,7 @@ class BlocksField extends FieldClass
 	use Min;
 
 	protected Fieldsets $fieldsets;
+	protected array $forms;
 	protected string|null $group;
 	protected bool $pretty;
 	protected mixed $value = [];
@@ -51,19 +52,13 @@ class BlocksField extends FieldClass
 		string $to = 'toFormValues'
 	): array {
 		$result = [];
-		$fields = [];
-		$forms  = [];
 
 		foreach ($blocks as $block) {
 			try {
-				$type = $block['type'];
-
-				// get and cache fields at the same time
-				$fields[$type] ??= $this->fields($block['type']);
-				$forms[$type]  ??= $this->form($fields[$type]);
+				$form = $this->fieldsetForm($block['type']);
 
 				// overwrite the block content with form values
-				$block['content'] = $forms[$type]->reset()->fill(input: $block['content'])->$to();
+				$block['content'] = $form->reset()->fill(input: $block['content'])->$to();
 
 				// create id if not exists
 				$block['id'] ??= Str::uuid();
@@ -91,6 +86,11 @@ class BlocksField extends FieldClass
 		throw new NotFoundException(
 			'The fieldset ' . $type . ' could not be found'
 		);
+	}
+
+	protected function fieldsetForm(string $type): Form
+	{
+		return $this->forms[$type] ??= $this->form($this->fields($type));
 	}
 
 	public function fieldsets(): Fieldsets

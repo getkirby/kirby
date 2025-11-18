@@ -484,6 +484,19 @@ class StrTest extends TestCase
 		$this->assertSame('king-cobra', Str::kebab($string));
 	}
 
+	public function testLabel(): void
+	{
+		$this->assertSame('Foo bar', Str::label('fooBar'));
+		$this->assertSame('Foo bar', Str::label('foo_bar'));
+		$this->assertSame('Foo bar', Str::label('foo-bar'));
+		$this->assertSame('Foo bar', Str::label('foo.bar'));
+		$this->assertSame('Foo a bar', Str::label('fooABar'));
+		$this->assertSame('Foo bar 42', Str::label('fooBar42'));
+		$this->assertSame('Foo bar 42', Str::label('fooBar_42'));
+		$this->assertSame('Foo bar 42', Str::label('fooBar-42'));
+		$this->assertSame('Foo bar 42', Str::label('fooBar.42'));
+	}
+
 	public function testLength(): void
 	{
 		$this->assertSame(0, Str::length(''));

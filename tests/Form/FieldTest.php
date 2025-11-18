@@ -382,6 +382,34 @@ class FieldTest extends TestCase
 		$this->assertSame('test2 computed', $field->computedValue());
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		Field::$types = [
+			'test' => [
+				'methods' => [
+					'emptyValue' => function () {
+						return 'foo';
+					}
+				]
+			]
+		];
+
+		$page = new Page(['slug' => 'test']);
+
+		// default state
+		$field = new Field('test', [
+			'model'  => $page
+		]);
+
+		$field->fill('test');
+
+		$this->assertSame('test', $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame('foo', $field->toFormValue());
+	}
+
 	public function testFillWithRestoredState(): void
 	{
 		Field::$types = [

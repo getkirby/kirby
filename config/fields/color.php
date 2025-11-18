@@ -49,6 +49,9 @@ return [
 		 * to directly select them
 		 */
 		'options' => function (array $options = []): array {
+			// make sure to flush the options cache when
+			// new options are being passed
+			$this->optionsCache = null;
 			return $options;
 		}
 	],
@@ -57,6 +60,14 @@ return [
 			return Str::lower($this->default);
 		},
 		'options' => function (): array {
+			return $this->optionsCache ??= $this->getOptions();
+		}
+	],
+	'methods' => [
+		'emptyValue' => function () {
+			return '';
+		},
+		'getOptions' => function () {
 			// resolve options to support manual arrays
 			// alongside api and query options
 			$props   = FieldOptions::polyfill($this->props);
@@ -90,9 +101,7 @@ return [
 			}
 
 			return $options;
-		}
-	],
-	'methods' => [
+		},
 		'isColor' => function (string $value): bool {
 			return
 				$this->isHex($value) ||

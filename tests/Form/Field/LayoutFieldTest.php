@@ -119,6 +119,33 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame([['1/1']], $props['layouts']);
 	}
 
+	public function testReset(): void
+	{
+		$value = [
+			[
+				'columns' => [
+					[
+						'blocks' => [
+							[
+								'type' => 'heading',
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$field = $this->field('layout');
+
+		$field->fill($value);
+
+		$this->assertCount(1, $field->toFormValue());
+
+		$field->reset();
+
+		$this->assertSame([], $field->toFormValue());
+	}
+
 	public function testRoutes(): void
 	{
 		$field = $this->field('layout');

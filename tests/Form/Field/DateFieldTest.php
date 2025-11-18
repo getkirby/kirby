@@ -128,6 +128,18 @@ class DateFieldTest extends TestCase
 		], $field->errors());
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$field = $this->field('date');
+		$field->fill('2012-12-12');
+
+		$this->assertSame('2012-12-12 00:00:00', $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame('', $field->toFormValue());
+	}
+
 	public static function valueProvider(): array
 	{
 		return [

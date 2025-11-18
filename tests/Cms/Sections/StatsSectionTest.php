@@ -81,6 +81,17 @@ class StatsSectionTest extends TestCase
 		$this->assertSame('Stats', $section->headline());
 	}
 
+	public function testHeadlineFromName(): void
+	{
+		// single label
+		$section = new Section('stats', [
+			'name'  => 'shopStats',
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertSame('Shop stats', $section->headline());
+	}
+
 	public function testReports(): void
 	{
 		$section = new Section('stats', [

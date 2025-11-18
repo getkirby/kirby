@@ -95,6 +95,9 @@ return [
 		},
 	],
 	'methods' => [
+		'emptyValue' => function () {
+			return [];
+		},
 		'getIdFromArray' => function (array $array) {
 			return $array['uuid'] ?? $array['id'] ?? null;
 		},
@@ -136,6 +139,6 @@ return [
 				$value ?? [],
 				fn (array $item) => $item[$this->store]
 			);
-		},
+		}
 	]
 ];

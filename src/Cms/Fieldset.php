@@ -54,7 +54,7 @@ class Fieldset extends Item
 		$this->disabled    = $params['disabled'] ?? false;
 		$this->editable    = $params['editable'] ?? true;
 		$this->icon        = $params['icon'] ?? null;
-		$params['title'] ??= $params['name'] ?? Str::ucfirst($this->type);
+		$params['title'] ??= $params['name'] ?? Str::label($this->type);
 		$this->name        = $this->createName($params['title']);
 		$this->label       = $this->createLabel($params['label'] ?? null);
 		$this->preview     = $params['preview'] ?? null;
@@ -119,7 +119,7 @@ class Fieldset extends Item
 			$tab = Blueprint::extend($tab);
 
 			$tab['fields']  = $this->createFields($tab['fields'] ?? []);
-			$tab['label'] ??= Str::ucfirst($name);
+			$tab['label'] ??= Str::label($name);
 			$tab['label']   = $this->createLabel($tab['label']);
 			$tab['name']    = $name;
 

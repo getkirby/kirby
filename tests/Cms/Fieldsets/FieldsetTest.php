@@ -206,6 +206,15 @@ class FieldsetTest extends TestCase
 		$this->assertSame('English name', $fieldset->name());
 	}
 
+	public function testNameFromType(): void
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'testFieldset',
+		]);
+
+		$this->assertSame('Test fieldset', $fieldset->name());
+	}
+
 	public function testPreview(): void
 	{
 		$fieldset = new Fieldset([
@@ -231,6 +240,20 @@ class FieldsetTest extends TestCase
 		$this->assertArrayHasKey('fields', $fieldset->tabs()['content']);
 		$this->assertIsArray($fieldset->tabs()['content']['fields']);
 		$this->assertCount(2, $fieldset->tabs()['content']['fields']);
+	}
+
+	public function testTabsWithAutoLabels(): void
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+			'tabs' => [
+				'contentTab' => [],
+				'settingsTab' => []
+			]
+		]);
+
+		$this->assertSame('Content tab', $fieldset->tabs()['contentTab']['label']);
+		$this->assertSame('Settings tab', $fieldset->tabs()['settingsTab']['label']);
 	}
 
 	public function testTranslate(): void

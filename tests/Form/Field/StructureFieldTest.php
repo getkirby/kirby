@@ -25,6 +25,33 @@ class StructureFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'test' => [
+					'type' => 'text'
+				],
+			],
+		]);
+
+		$field->fill($value = [
+			[
+				'test' => 'Test A'
+			],
+			[
+				'test' => 'Test B'
+			]
+		]);
+
+		$this->assertSame($value, $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame([], $field->toFormValue());
+	}
+
+
 	public function testTagsFieldInStructure(): void
 	{
 		$field = $this->field('structure', [
