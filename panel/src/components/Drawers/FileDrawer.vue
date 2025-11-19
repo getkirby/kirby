@@ -9,13 +9,16 @@
 	>
 		<slot name="options" slot="options" />
 		<k-file-preview v-bind="preview" />
-		<k-drawer-fields
-			:fields="$panel.drawer.tab?.fields"
-			:value="value"
-			@input="input"
-			@submit="submit"
-		/>
-		<k-upload ref="upload" @success="uploaded" />
+
+		<div class="k-file-drawer-body">
+			<k-drawer-fields
+				:fields="fields"
+				:value="value"
+				@input="input"
+				@submit="submit"
+			/>
+			<k-upload ref="upload" @success="uploaded" />
+		</div>
 	</k-drawer>
 </template>
 
@@ -26,6 +29,9 @@ export default {
 	mixins: [FormDrawer],
 	props: {
 		model: {
+			type: Object
+		},
+		fields: {
 			type: Object
 		},
 		preview: {
@@ -55,23 +61,14 @@ export default {
 .k-file-drawer .k-drawer-body {
 	padding: 0;
 }
-.k-file-drawer .k-drawer-fields {
-	padding: var(--spacing-6);
-}
-.k-file-drawer .k-file-preview .k-view {
-	padding: 0;
-}
-.k-file-drawer .k-file-preview-details dt {
-	margin-bottom: 0;
-}
-.k-file-drawer .k-file-preview-layout {
-	grid-template-columns: 33% auto;
-}
 .k-file-drawer .k-drawer-header {
-	background: var(--color-gray-900);
-	color: var(--color-white);
+	background: var(--drawer-color-back);
 }
-.k-file-drawer .k-file-preview .k-dropdown {
-	display: none;
+.k-file-drawer .k-file-preview {
+	margin-bottom: 0;
+	border-radius: 0;
+}
+.k-file-drawer-body {
+	padding: var(--drawer-body-padding);
 }
 </style>

@@ -34,12 +34,8 @@ return [
 					],
 					'preview' => FilePreview::factory($file)->render(),
 					'title' => $file->filename(),
-					'tabs'  => [
-						'form' => [
-							'fields' => $form->fields()->toArray(),
-						]
-					],
-					'value' => $form->values(),
+					'fields' => $form->fields()->toProps(),
+					'value' => $form->toFormValues(),
 				]
 			];
 		},
