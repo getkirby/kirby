@@ -22,7 +22,7 @@
 		"prosemirror-schema-list": "^1.5.1",
 		"prosemirror-view": "^1.41.2",
 		"sortablejs": "^1.15.6",
-		"vue": "^3.5.22"
+		"vue": "^3.5.24"
 	},
 	"devDependencies": {
 		"@csstools/postcss-light-dark-function": "^2.0.11",
@@ -36,10 +36,10 @@
 		"globals": "^16.4.0",
 		"jsdom": "^27.0.0",
 		"prettier": "^3.6.2",
-		"terser": "^5.44.0",
-		"vite": "^7.1.7",
-		"vite-plugin-static-copy": "^3.1.3",
-		"vitest": "^3.2.4",
+		"terser": "^5.44.1",
+		"vite": "^7.2.2",
+		"vite-plugin-static-copy": "^3.1.4",
+		"vitest": "^4.0.10",
 		"vue-docgen-api": "^4.79.2"
 	},
 	"browserslist": [
