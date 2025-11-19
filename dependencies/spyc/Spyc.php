@@ -7,7 +7,7 @@
  * into a PHP array.  It currently supports a very limited subsection of
  * the YAML spec.
  *
- * @version 0.6.3 (Kirby fork for PHP 8.1+)
+ * @version 0.6.4 (Kirby fork for PHP 8.5+)
  * @author Vlad Andersen <vlad.andersen@gmail.com>
  * @author Chris Wanstrath <chris@ozmm.org>
  * @link https://github.com/mustangostang/spyc/
@@ -877,7 +877,7 @@ class Spyc
             return $this->addArrayInline($incoming_data, $incoming_indent);
 
         $key = key($incoming_data);
-        $value = isset($incoming_data[$key]) ? $incoming_data[$key] : null;
+        $value = $key !== null && isset($incoming_data[$key]) ? $incoming_data[$key] : null;
         if ($key === '__!YAMLZero') $key = '0';
 
         if ($incoming_indent == 0 && !$this->_containsGroupAlias && !$this->_containsGroupAnchor) { // Shortcut for root-level values.

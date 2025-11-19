@@ -330,7 +330,7 @@ class Plugin
 		try {
 			// try to get version from "vendor/composer/installed.php",
 			// this is the most reliable source for the version
-			$version = InstalledVersions::getPrettyVersion($name);
+			$version = $name !== null ? InstalledVersions::getPrettyVersion($name) : null;
 		} catch (Throwable) {
 			$version = null;
 		}
