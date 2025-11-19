@@ -181,15 +181,15 @@ class Url
 	): string {
 		$uri = static::toObject($url);
 
-		$uri->fragment = null;
-		$uri->query    = null;
-		$uri->password = null;
-		$uri->port     = null;
-		$uri->scheme   = null;
-		$uri->username = null;
+		$uri->setFragment(null);
+		$uri->setQuery(null);
+		$uri->setPassword(null);
+		$uri->setPort(null);
+		$uri->setScheme(null);
+		$uri->setUsername(null);
 
 		// remove the trailing slash from the path
-		$uri->slash = false;
+		$uri->setSlash(false);
 
 		$url = $base ? $uri->base() : $uri->toString();
 		$url = str_replace('www.', '', $url ?? '');

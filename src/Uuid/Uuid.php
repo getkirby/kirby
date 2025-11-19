@@ -429,7 +429,7 @@ abstract class Uuid implements Stringable
 		}
 
 		$url  = $model->url();
-		$url .= $this->uri->query->toString(true);
+		$url .= $this->uri->query()->toString(true);
 
 		if ($this->uri->hasFragment() === true) {
 			$url .= '#' . $this->uri->fragment();
