@@ -27,12 +27,18 @@ abstract class Json
 	/**
 	 * Renders the error response with the provided message
 	 */
-	public static function error(string $message, int $code = 404): array
+	public static function error(string $message, int $code = 404, array $details = []): array
 	{
-		return [
+		$response = [
 			'code'  => $code,
-			'error' => $message
+			'error' => $message,
 		];
+
+		if ($details !== []) {
+			$response['details'] = $details;
+		}
+
+		return $response;
 	}
 
 	/**
@@ -62,7 +68,7 @@ abstract class Json
 
 		// handle Kirby exceptions
 		if ($data instanceof Exception) {
-			return static::error($data->getMessage(), $data->getHttpCode());
+			return static::error($data->getMessage(), $data->getHttpCode(), $data->getDetails());
 		}
 
 		// handle exceptions
