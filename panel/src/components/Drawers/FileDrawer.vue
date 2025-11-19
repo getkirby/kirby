@@ -8,7 +8,7 @@
 		@submit="submit"
 	>
 		<slot name="options" slot="options" />
-		<k-file-preview v-bind="preview" />
+		<k-file-preview v-bind="preview" @input="onInput" @submit="onSubmit" />
 
 		<div class="k-file-drawer-body">
 			<k-drawer-fields
@@ -39,6 +39,8 @@ export default {
 		}
 	},
 	methods: {
+		onInput() {},
+		onSubmit() {},
 		option(option) {
 			switch (option) {
 				case "replace":
