@@ -123,8 +123,13 @@ export default defineConfig(({ mode }) => {
 		secure: false
 	};
 
+	const alias = createAliases(proxy);
+	const plugins = createPlugins(mode);
+	const server = createServer(proxy);
+	const test = createTest();
+
 	return {
-		plugins: createPlugins(mode),
+		plugins,
 		base: "./",
 		build: {
 			minify: "terser",
@@ -161,9 +166,9 @@ export default defineConfig(({ mode }) => {
 			holdUntilCrawlEnd: false
 		},
 		resolve: {
-			alias: createAliases(proxy)
+			alias
 		},
-		server: createServer(proxy),
-		test: createTest()
+		server,
+		test
 	};
 });
