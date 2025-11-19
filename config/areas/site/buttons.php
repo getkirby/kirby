@@ -28,12 +28,10 @@ return [
 			);
 		}
 	},
-	'site.versions' => function (Site $site, string $versionId = 'latest') {
-		return new VersionsButton(
-			model: $site,
-			versionId: $versionId
-		);
-	},
+	'site.versions' => fn (Site $site, string $versionId = 'latest') => new VersionsButton(
+		model: $site,
+		mode: $versionId
+	),
 	'page.open' => function (Page $page, string $versionId = 'latest') {
 		$versionId = $versionId === 'compare' ? 'changes' : $versionId;
 		$link      = $page->previewUrl($versionId);
@@ -51,12 +49,10 @@ return [
 			);
 		}
 	},
-	'page.versions' => function (Page $page, string $versionId = 'latest') {
-		return new VersionsButton(
-			model: $page,
-			versionId: $versionId
-		);
-	},
+	'page.versions' => fn (Page $page, string $versionId = 'latest') => new VersionsButton(
+		model: $page,
+		mode: $versionId
+	),
 	'page.settings' => fn (Page $page) => new SettingsButton($page),
 	'page.status'   => fn (Page $page) => new PageStatusButton($page),
 
