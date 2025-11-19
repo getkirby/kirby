@@ -111,12 +111,12 @@ export default {
 				text: tab.label ?? tab.text ?? tab.name
 			};
 
-			if (tab.badge) {
+			if (typeof tab.badge === "string") {
 				button.badge = {
 					theme: this.theme,
 					text: tab.badge
 				};
-			} else {
+			} else if (tab.badge === false) {
 				delete button.badge;
 			}
 
