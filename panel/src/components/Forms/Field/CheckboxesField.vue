@@ -26,7 +26,7 @@
 					{{ $t("deselect.all") }}
 				</k-button>
 				<k-button
-					:disabled="value.length === options.length"
+					:disabled="value.length >= options.length"
 					:responsive="true"
 					icon="select-all"
 					size="xs"
