@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Countable;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Content\Field;
@@ -11,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
-class CanBeCounted implements \Countable
+class CanBeCounted implements Countable
 {
 	public function count(): int
 	{
@@ -37,8 +38,8 @@ class VTest extends TestCase
 
 	public function testValidators(): void
 	{
-		$this->assertNotEmpty(V::$validators);
-		$this->assertNotEmpty(V::validators());
+		$this->assertSame([], V::$validators);
+		$this->assertSame([], V::validators());
 	}
 
 	public function testCustomValidator(): void
