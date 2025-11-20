@@ -44,6 +44,9 @@
 	"delete": "Delete",
 	"delete.all": "Delete all",
 
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
+
 	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "No files to select",
 	"dialog.pages.empty": "No pages to select",
@@ -664,6 +667,7 @@
 
 	"security": "Security",
 	"select": "Select",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Settings",
 	"show": "Show",

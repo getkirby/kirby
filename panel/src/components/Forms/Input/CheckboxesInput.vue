@@ -89,6 +89,10 @@ export default {
 		}
 	},
 	methods: {
+		deselectAll() {
+			this.selected = [];
+			this.$emit("input", this.selected);
+		},
 		focus() {
 			this.$el.querySelector("input")?.focus();
 		},
@@ -105,6 +109,10 @@ export default {
 		},
 		select() {
 			this.focus();
+		},
+		selectAll() {
+			this.selected = this.choices.map((choice) => choice.value);
+			this.$emit("input", this.selected);
 		}
 	}
 };
