@@ -38,8 +38,11 @@ class Segment
 	 *
 	 * @throws \Kirby\Exception\BadMethodCallException
 	 */
-	public static function error(mixed $data, string $name, string $label): void
-	{
+	public static function error(
+		mixed $data,
+		string $name,
+		string $label
+	): never {
 		$type = strtolower(gettype($data));
 
 		if ($type === 'double') {
