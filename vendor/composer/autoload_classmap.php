@@ -209,6 +209,7 @@ return array(
     'Kirby\\Form\\Mixin\\Api' => $baseDir . '/src/Form/Mixin/Api.php',
     'Kirby\\Form\\Mixin\\Autofocus' => $baseDir . '/src/Form/Mixin/Autofocus.php',
     'Kirby\\Form\\Mixin\\Before' => $baseDir . '/src/Form/Mixin/Before.php',
+    'Kirby\\Form\\Mixin\\Disabled' => $baseDir . '/src/Form/Mixin/Disabled.php',
     'Kirby\\Form\\Mixin\\EmptyState' => $baseDir . '/src/Form/Mixin/EmptyState.php',
     'Kirby\\Form\\Mixin\\Help' => $baseDir . '/src/Form/Mixin/Help.php',
     'Kirby\\Form\\Mixin\\Icon' => $baseDir . '/src/Form/Mixin/Icon.php',
