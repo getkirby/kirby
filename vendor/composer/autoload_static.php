@@ -330,6 +330,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Form\\Mixin\\Api' => __DIR__ . '/../..' . '/src/Form/Mixin/Api.php',
         'Kirby\\Form\\Mixin\\Autofocus' => __DIR__ . '/../..' . '/src/Form/Mixin/Autofocus.php',
         'Kirby\\Form\\Mixin\\Before' => __DIR__ . '/../..' . '/src/Form/Mixin/Before.php',
+        'Kirby\\Form\\Mixin\\Disabled' => __DIR__ . '/../..' . '/src/Form/Mixin/Disabled.php',
         'Kirby\\Form\\Mixin\\EmptyState' => __DIR__ . '/../..' . '/src/Form/Mixin/EmptyState.php',
         'Kirby\\Form\\Mixin\\Help' => __DIR__ . '/../..' . '/src/Form/Mixin/Help.php',
         'Kirby\\Form\\Mixin\\Icon' => __DIR__ . '/../..' . '/src/Form/Mixin/Icon.php',
