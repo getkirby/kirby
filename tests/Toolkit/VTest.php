@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Countable;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Content\Field;
@@ -11,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
-class CanBeCounted implements \Countable
+class CanBeCounted implements Countable
 {
 	public function count(): int
 	{
@@ -32,20 +33,14 @@ class VTest extends TestCase
 {
 	public function tearDown(): void
 	{
+		V::$validators = [];
 		App::destroy();
 	}
 
-	public function testValidators(): void
+	public function testCallCustomValidator(): void
 	{
-		$this->assertNotEmpty(V::$validators);
-		$this->assertNotEmpty(V::validators());
-	}
-
-	public function testCustomValidator(): void
-	{
-		V::$validators['me'] = function ($name): bool {
-			return V::in($name, ['I', 'me', 'myself']);
-		};
+		V::$validators['me'] =
+			fn ($name): bool => V::in($name, ['I', 'me', 'myself']);
 
 		$this->assertTrue(V::me('I'));
 		$this->assertTrue(V::me('me'));
@@ -57,7 +52,6 @@ class VTest extends TestCase
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The validator does not exist: fool');
-
 		V::fool('me');
 	}
 
@@ -78,37 +72,6 @@ class VTest extends TestCase
 		$this->assertFalse(V::accepted('0'));
 		$this->assertFalse(V::accepted(null));
 		$this->assertFalse(V::accepted('off'));
-	}
-
-	public function testCallback(): void
-	{
-		$this->assertTrue(V::callback('foo', fn ($value) => $value === 'foo'));
-		$this->assertFalse(V::callback('bar', fn ($value) => $value === 'foo'));
-	}
-
-	public function testContains(): void
-	{
-		$this->assertTrue(V::contains('word', 'or'));
-		$this->assertFalse(V::contains('word', 'test'));
-	}
-
-	public function testDenied(): void
-	{
-		$this->assertTrue(V::denied(false));
-		$this->assertTrue(V::denied('false'));
-		$this->assertTrue(V::denied(0));
-		$this->assertTrue(V::denied('0'));
-		$this->assertTrue(V::denied('no'));
-		$this->assertTrue(V::denied('off'));
-
-		$this->assertFalse(V::denied('word'));
-		$this->assertFalse(V::denied(true));
-		$this->assertFalse(V::denied('true'));
-		$this->assertFalse(V::denied(5));
-		$this->assertFalse(V::denied(1));
-		$this->assertFalse(V::denied('1'));
-		$this->assertFalse(V::denied('on'));
-		$this->assertFalse(V::denied(null));
 	}
 
 	public function testAlpha(): void
@@ -156,6 +119,18 @@ class VTest extends TestCase
 		$this->assertFalse(V::between('kirby', 2, 4));
 	}
 
+	public function testCallback(): void
+	{
+		$this->assertTrue(V::callback('foo', fn ($value) => $value === 'foo'));
+		$this->assertFalse(V::callback('bar', fn ($value) => $value === 'foo'));
+	}
+
+	public function testContains(): void
+	{
+		$this->assertTrue(V::contains('word', 'or'));
+		$this->assertFalse(V::contains('word', 'test'));
+	}
+
 	public function testDate(): void
 	{
 		$this->assertTrue(V::date('2017-12-24'));
@@ -165,81 +140,6 @@ class VTest extends TestCase
 		$this->assertFalse(V::date('äöüß'));
 		$this->assertFalse(V::date('2017-02-31'));
 		$this->assertFalse(V::date('January 32, 1989'));
-	}
-
-	public function testDifferent(): void
-	{
-		$this->assertTrue(V::different('foo', 'bar'));
-		$this->assertTrue(V::different('bar', 'foo'));
-		$this->assertTrue(V::different(1, 2));
-		$this->assertTrue(V::different(null, 'bar'));
-
-		$this->assertFalse(V::different('foo', 'foo'));
-		$this->assertFalse(V::different('bar', 'bar'));
-		$this->assertFalse(V::different(1, 1));
-		$this->assertFalse(V::different('true', 'true'));
-		$this->assertFalse(V::different(null, null));
-
-		// non-strict
-		$this->assertFalse(V::different('true', true));
-
-		// strict
-		$this->assertTrue(V::different('true', true, true));
-	}
-
-	public function testEndsWith(): void
-	{
-		$this->assertTrue(V::endsWith('test', 'st'));
-		$this->assertFalse(V::endsWith('test', 'te'));
-	}
-
-	public function testSame(): void
-	{
-		$this->assertTrue(V::same('foo', 'foo'));
-		$this->assertTrue(V::same('bar', 'bar'));
-		$this->assertTrue(V::same(1, 1));
-		$this->assertTrue(V::same('true', 'true'));
-		$this->assertTrue(V::same(null, null));
-
-		$this->assertFalse(V::same('foo', 'bar'));
-		$this->assertFalse(V::same('bar', 'foo'));
-		$this->assertFalse(V::same(1, 2));
-		$this->assertFalse(V::same(null, 'bar'));
-
-		// non-strict
-		$this->assertTrue(V::same('true', true));
-
-		// strict
-		$this->assertFalse(V::same('true', true, true));
-	}
-
-	public function testEmail(): void
-	{
-		$this->assertTrue(V::email('bastian@getkirby.com'));
-		$this->assertTrue(V::email('bastian-v3@getkirby.com'));
-		$this->assertTrue(V::email('bastian.allgeier@getkirby.com'));
-		$this->assertTrue(V::email('bastian@getkürby.com'));
-
-		$this->assertFalse(V::email('bastian@getkirby'));
-		$this->assertFalse(V::email('bastiangetkirby.com'));
-		$this->assertFalse(V::email('bastian[at]getkirby.com'));
-		$this->assertFalse(V::email('bastian@getkürby'));
-		$this->assertFalse(V::email('@getkirby.com'));
-	}
-
-	public function testEmpty(): void
-	{
-		$this->assertTrue(V::empty(''));
-		$this->assertTrue(V::empty(null));
-		$this->assertTrue(V::empty([]));
-		$this->assertTrue(V::empty(new Collection()));
-
-		$this->assertFalse(V::empty(0));
-		$this->assertFalse(V::empty('0'));
-		$this->assertFalse(V::empty(false));
-		$this->assertFalse(V::empty(true));
-		$this->assertFalse(V::empty(['']));
-		$this->assertFalse(V::empty(new Collection(['a'])));
 	}
 
 	public function testDateComparison(): void
@@ -272,6 +172,100 @@ class VTest extends TestCase
 		V::date('2345-01-01', '<>', '2345-01-01');
 	}
 
+	public function testDenied(): void
+	{
+		$this->assertTrue(V::denied(false));
+		$this->assertTrue(V::denied('false'));
+		$this->assertTrue(V::denied(0));
+		$this->assertTrue(V::denied('0'));
+		$this->assertTrue(V::denied('no'));
+		$this->assertTrue(V::denied('off'));
+
+		$this->assertFalse(V::denied('word'));
+		$this->assertFalse(V::denied(true));
+		$this->assertFalse(V::denied('true'));
+		$this->assertFalse(V::denied(5));
+		$this->assertFalse(V::denied(1));
+		$this->assertFalse(V::denied('1'));
+		$this->assertFalse(V::denied('on'));
+		$this->assertFalse(V::denied(null));
+	}
+
+	public function testDifferent(): void
+	{
+		$this->assertTrue(V::different('foo', 'bar'));
+		$this->assertTrue(V::different('bar', 'foo'));
+		$this->assertTrue(V::different(1, 2));
+		$this->assertTrue(V::different(null, 'bar'));
+
+		$this->assertFalse(V::different('foo', 'foo'));
+		$this->assertFalse(V::different('bar', 'bar'));
+		$this->assertFalse(V::different(1, 1));
+		$this->assertFalse(V::different('true', 'true'));
+		$this->assertFalse(V::different(null, null));
+
+		// non-strict
+		$this->assertFalse(V::different('true', true));
+
+		// strict
+		$this->assertTrue(V::different('true', true, true));
+	}
+
+
+	public function testEmail(): void
+	{
+		$this->assertTrue(V::email('bastian@getkirby.com'));
+		$this->assertTrue(V::email('bastian-v3@getkirby.com'));
+		$this->assertTrue(V::email('bastian.allgeier@getkirby.com'));
+		$this->assertTrue(V::email('bastian@getkürby.com'));
+
+		$this->assertFalse(V::email('bastian@getkirby'));
+		$this->assertFalse(V::email('bastiangetkirby.com'));
+		$this->assertFalse(V::email('bastian[at]getkirby.com'));
+		$this->assertFalse(V::email('bastian@getkürby'));
+		$this->assertFalse(V::email('@getkirby.com'));
+	}
+
+	public function testEmpty(): void
+	{
+		$this->assertTrue(V::empty(''));
+		$this->assertTrue(V::empty(null));
+		$this->assertTrue(V::empty([]));
+		$this->assertTrue(V::empty(new Collection()));
+
+		$this->assertFalse(V::empty(0));
+		$this->assertFalse(V::empty('0'));
+		$this->assertFalse(V::empty(false));
+		$this->assertFalse(V::empty(true));
+		$this->assertFalse(V::empty(['']));
+		$this->assertFalse(V::empty(new Collection(['a'])));
+	}
+
+	public function testEndsWith(): void
+	{
+		$this->assertTrue(V::endsWith('test', 'st'));
+		$this->assertFalse(V::endsWith('test', 'te'));
+	}
+
+	public function testErrors(): void
+	{
+		$result = V::errors('test@getkirby.com', [
+			'email',
+			'maxLength' => 17,
+			'minLength' => 17
+		]);
+
+		$this->assertSame([], $result);
+
+		$result = V::errors('a', [
+			'same' => 'b'
+		]);
+
+		$this->assertSame([
+			'same' => 'Please enter "b"',
+		], $result);
+	}
+
 	public function testFilename(): void
 	{
 		$this->assertTrue(V::filename('size.txt'));
@@ -287,6 +281,94 @@ class VTest extends TestCase
 
 		$this->assertFalse(V::in('bastian', ['lukas', 'nico', 'sonja']));
 		$this->assertFalse(V::in('bastian', []));
+	}
+
+	public static function inputProvider(): array
+	{
+		return [
+			// everything alright
+			[
+				[
+					'a' => 'a',
+					'b' => 'b'
+				],
+				[],
+				true
+			],
+			// invalid email
+			[
+				[
+					'email' => 'test'
+				],
+				[
+					'email' => [
+						'email'
+					]
+				],
+				false,
+				'Please enter a valid email address for field "email"',
+			],
+			// missing required field
+			[
+				[
+				],
+				[
+					'email' => [
+						'required' => true
+					]
+				],
+				false,
+				'The "email" field is missing',
+			],
+			// skipping missing non-required field
+			[
+				[
+				],
+				[
+					'email' => [
+						'email'
+					],
+					'name' => [
+						'required' => true
+					]
+				],
+				false,
+				'The "name" field is missing',
+			],
+		];
+	}
+
+	#[DataProvider('inputProvider')]
+	public function testInput(
+		array $input,
+		array $rules,
+		bool $result,
+		string|null $message = null
+	): void {
+		// load the translation strings
+		new App();
+
+		if ($result === false) {
+			$this->expectException(Exception::class);
+			$this->expectExceptionMessage($message);
+		}
+
+		$this->assertTrue(V::input($input, $rules));
+	}
+
+	public function testInteger(): void
+	{
+		$this->assertTrue(V::integer(5));
+		$this->assertTrue(V::integer(0));
+		$this->assertTrue(V::integer('5'));
+		$this->assertTrue(V::integer(5, true));
+		$this->assertTrue(V::integer(0, true));
+
+		$this->assertFalse(V::integer(5.1));
+		$this->assertFalse(V::integer([5]));
+		$this->assertFalse(V::integer(5.1, true));
+		$this->assertFalse(V::integer('5', true));
+		$this->assertFalse(V::integer(null, true));
 	}
 
 	public function testInvalid(): void
@@ -436,35 +518,6 @@ class VTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testNotEmpty(): void
-	{
-		$this->assertFalse(V::notEmpty(''));
-		$this->assertTrue(V::notEmpty(0));
-	}
-
-	public function testNotIn(): void
-	{
-		$this->assertFalse(V::notIn('bastian', ['bastian', 'nico', 'sonja']));
-
-		$this->assertTrue(V::notIn('bastian', ['lukas', 'nico', 'sonja']));
-		$this->assertTrue(V::notIn('bastian', []));
-	}
-
-	public function testInteger(): void
-	{
-		$this->assertTrue(V::integer(5));
-		$this->assertTrue(V::integer(0));
-		$this->assertTrue(V::integer('5'));
-		$this->assertTrue(V::integer(5, true));
-		$this->assertTrue(V::integer(0, true));
-
-		$this->assertFalse(V::integer(5.1));
-		$this->assertFalse(V::integer([5]));
-		$this->assertFalse(V::integer(5.1, true));
-		$this->assertFalse(V::integer('5', true));
-		$this->assertFalse(V::integer(null, true));
-	}
-
 	public function testIp(): void
 	{
 		$this->assertTrue(V::ip('192.168.255.1'));
@@ -504,15 +557,6 @@ class VTest extends TestCase
 		$this->assertFalse(V::maxLength('Kirby', 3));
 	}
 
-	public function testMinLength(): void
-	{
-		$this->assertTrue(V::minLength('Kirby', 2));
-		$this->assertTrue(V::minLength('Kirby', 5));
-
-		$this->assertFalse(V::minLength('Kirby', 6));
-		$this->assertFalse(V::minLength(' Kirby ', 6));
-	}
-
 	public function testMaxWords(): void
 	{
 		$this->assertTrue(V::maxWords('This is Kirby', 10));
@@ -520,6 +564,35 @@ class VTest extends TestCase
 		$this->assertTrue(V::maxWords('This is Kirby ', 3));
 
 		$this->assertFalse(V::maxWords('This is Kirby', 2));
+	}
+
+	public function testMessage(): void
+	{
+		$message = V::message('same', 'a', 'b');
+		$this->assertSame('Please enter "b"', $message);
+	}
+
+	public function testMessageInvalidValidator(): void
+	{
+		$message = V::message('foo', 'a', 'b');
+		$this->assertNull($message);
+	}
+
+	public function testMessageCustomValidator(): void
+	{
+		V::$validators['foo'] = fn (string $bar) => false;
+
+		$message = V::message('foo', 'bar');
+		$this->assertSame('The "foo" validation failed', $message);
+	}
+
+	public function testMinLength(): void
+	{
+		$this->assertTrue(V::minLength('Kirby', 2));
+		$this->assertTrue(V::minLength('Kirby', 5));
+
+		$this->assertFalse(V::minLength('Kirby', 6));
+		$this->assertFalse(V::minLength(' Kirby ', 6));
 	}
 
 	public function testMinWords(): void
@@ -541,6 +614,20 @@ class VTest extends TestCase
 	{
 		$this->assertFalse(V::notContains('word', 'or'));
 		$this->assertTrue(V::notContains('word', 'test'));
+	}
+
+	public function testNotEmpty(): void
+	{
+		$this->assertFalse(V::notEmpty(''));
+		$this->assertTrue(V::notEmpty(0));
+	}
+
+	public function testNotIn(): void
+	{
+		$this->assertFalse(V::notIn('bastian', ['bastian', 'nico', 'sonja']));
+
+		$this->assertTrue(V::notIn('bastian', ['lukas', 'nico', 'sonja']));
+		$this->assertTrue(V::notIn('bastian', []));
 	}
 
 	public function testNum(): void
@@ -573,6 +660,26 @@ class VTest extends TestCase
 		$this->assertFalse(V::required('a', ['a' => '']));
 		$this->assertFalse(V::required('a', ['a' => null]));
 		$this->assertFalse(V::required('a', ['a' => []]));
+	}
+
+	public function testSame(): void
+	{
+		$this->assertTrue(V::same('foo', 'foo'));
+		$this->assertTrue(V::same('bar', 'bar'));
+		$this->assertTrue(V::same(1, 1));
+		$this->assertTrue(V::same('true', 'true'));
+		$this->assertTrue(V::same(null, null));
+
+		$this->assertFalse(V::same('foo', 'bar'));
+		$this->assertFalse(V::same('bar', 'foo'));
+		$this->assertFalse(V::same(1, 2));
+		$this->assertFalse(V::same(null, 'bar'));
+
+		// non-strict
+		$this->assertTrue(V::same('true', true));
+
+		// strict
+		$this->assertFalse(V::same('true', true, true));
 	}
 
 	public function testSize(): void
@@ -769,77 +876,17 @@ class VTest extends TestCase
 		$this->assertFalse(V::url('http://.www.foo.bar./'));
 	}
 
-	public static function inputProvider(): array
+	public function testValidators(): void
 	{
-		return [
-			// everything alright
-			[
-				[
-					'a' => 'a',
-					'b' => 'b'
-				],
-				[],
-				true
-			],
-			// invalid email
-			[
-				[
-					'email' => 'test'
-				],
-				[
-					'email' => [
-						'email'
-					]
-				],
-				false,
-				'Please enter a valid email address for field "email"',
-			],
-			// missing required field
-			[
-				[
-				],
-				[
-					'email' => [
-						'required' => true
-					]
-				],
-				false,
-				'The "email" field is missing',
-			],
-			// skipping missing non-required field
-			[
-				[
-				],
-				[
-					'email' => [
-						'email'
-					],
-					'name' => [
-						'required' => true
-					]
-				],
-				false,
-				'The "name" field is missing',
-			],
-		];
+		$this->assertSame([], V::$validators);
+		$this->assertSame([], V::validators());
 	}
 
-	#[DataProvider('inputProvider')]
-	public function testInput(
-		array $input,
-		array $rules,
-		bool $result,
-		string|null $message = null
-	): void {
-		// load the translation strings
-		new App();
-
-		if ($result === false) {
-			$this->expectException(Exception::class);
-			$this->expectExceptionMessage($message);
-		}
-
-		$this->assertTrue(V::input($input, $rules));
+	public function testValidatorsCustomValidator(): void
+	{
+		$this->assertCount(0, V::validators());
+		V::$validators['foo'] = fn (): bool => true;
+		$this->assertCount(1, V::validators());
 	}
 
 	public function testValue(): void
@@ -864,5 +911,13 @@ class VTest extends TestCase
 		V::value('a', [
 			'same' => 'b'
 		]);
+	}
+
+	public function testValueFailsNotThrowing(): void
+	{
+		$result = V::value('a', ['same' => 'b'], fail: false);
+		$this->assertSame([
+			'same' => 'Please enter "b"'
+		], $result);
 	}
 }
