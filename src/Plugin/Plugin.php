@@ -71,6 +71,7 @@ class Plugin
 		$info          = Data::read($this->manifest(), fail: false);
 		$this->info    = [...$info, ...$this->info];
 		$this->license = $license ?? $this->info['license'] ?? '-';
+		
 	}
 
 	/**
