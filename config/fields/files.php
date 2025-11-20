@@ -3,6 +3,7 @@
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Controller\Dialog\FilesPickerDialogController;
+use Kirby\Toolkit\A;
 
 return [
 	'mixins' => [
@@ -58,14 +59,20 @@ return [
 		},
 	],
 	'methods' => [
-		'toId' => function (File $file) {
-			return match ($file->parent() !== $this->model()) {
-				true  => $file->id(),
-				false => $file->filename()
-			};
-		},
 		'toModel' => function (string $id) {
 			return $this->kirby()->file($id, $this->model);
+		},
+		'toStoredValues' => function ($value = null) {
+			return A::map(
+				$value ?? [],
+				function (string $id) {
+					$file = $this->toModel($id);
+					return match ($file->parent() !== $this->model()) {
+						true  => (string)$file->{$this->store}(),
+						false => $file->filename()
+					};
+				}
+			);
 		}
 	],
 	'api' => function () {
