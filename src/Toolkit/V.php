@@ -434,7 +434,7 @@ class V
 
 		if (method_exists(static::class, $validatorName) === true) {
 			$reflection = new ReflectionMethod(static::class, $validatorName);
-		} else if ($validator  = $validators[$validatorName] ?? null) {
+		} elseif ($validator  = $validators[$validatorName] ?? null) {
 			$reflection = new ReflectionFunction($validator);
 		}
 
