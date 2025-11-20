@@ -247,6 +247,25 @@ class VTest extends TestCase
 		$this->assertFalse(V::endsWith('test', 'te'));
 	}
 
+	public function testErrors(): void
+	{
+		$result = V::errors('test@getkirby.com', [
+			'email',
+			'maxLength' => 17,
+			'minLength' => 17
+		]);
+
+		$this->assertSame([], $result);
+
+		$result = V::errors('a', [
+			'same' => 'b'
+		]);
+
+		$this->assertSame([
+			'same' => 'Please enter "b"',
+		], $result);
+	}
+
 	public function testFilename(): void
 	{
 		$this->assertTrue(V::filename('size.txt'));
@@ -545,6 +564,26 @@ class VTest extends TestCase
 		$this->assertTrue(V::maxWords('This is Kirby ', 3));
 
 		$this->assertFalse(V::maxWords('This is Kirby', 2));
+	}
+
+	public function testMessage(): void
+	{
+		$message = V::message('same', 'a', 'b');
+		$this->assertSame('Please enter "b"', $message);
+	}
+
+	public function testMessageInvalidValidator(): void
+	{
+		$message = V::message('foo', 'a', 'b');
+		$this->assertNull($message);
+	}
+
+	public function testMessageCustomValidator(): void
+	{
+		V::$validators['foo'] = fn (string $bar) => false;
+
+		$message = V::message('foo', 'bar');
+		$this->assertSame('The "foo" validation failed', $message);
 	}
 
 	public function testMinLength(): void
@@ -872,5 +911,13 @@ class VTest extends TestCase
 		V::value('a', [
 			'same' => 'b'
 		]);
+	}
+
+	public function testValueFailsNotThrowing(): void
+	{
+		$result = V::value('a', ['same' => 'b'], fail: false);
+		$this->assertSame([
+			'same' => 'Please enter "b"'
+		], $result);
 	}
 }

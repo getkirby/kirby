@@ -218,10 +218,11 @@ class V
 	): array {
 		$errors = static::value($input, $rules, $messages, false);
 
-		return match ($errors) {
-			true    => [],
-			default => $errors
-		};
+		if ($errors === true) {
+			return [];
+		}
+
+		return $errors;
 	}
 
 	/**
