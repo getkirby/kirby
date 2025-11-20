@@ -12,6 +12,7 @@ use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\FieldClass;
+use Kirby\Form\Fields;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
@@ -25,29 +26,60 @@ class BlocksField extends FieldClass
 	use Max;
 	use Min;
 
+	/**
+	 * Defines the allowed block types in the blocks field. See below.
+	 */
 	protected Fieldsets $fieldsets;
 	protected array $forms;
+
+	/**
+	 * Group name to identify all block fields that can share blocks via drag & drop
+	 */
 	protected string|null $group;
+
+	/**
+	 * Saves pretty printed JSON in text files
+	 */
 	protected bool $pretty;
 	protected mixed $value = [];
 
 	public function __construct(
-		string|array|null $empty = null,
-		string|array|null $fieldsets = null,
+		bool $autofocus = false,
+		array $default = [],
+		bool $disabled = false,
+		array|string|null $empty = null,
+		array|string|null $fieldsets = null,
+		array|string|null $help = null,
 		string|null $group = null,
+		array|string|null $label = null,
+		ModelWithContent|null $model = null,
+		string|null $name = null,
 		int|null $max = null,
 		int|null $min = null,
 		bool $pretty = false,
-		...$props
+		bool $required = false,
+		Fields|null $siblings = null,
+		bool $translate = true,
+		array $when = [],
+		string|null $width = '1/1',
 	) {
-		$this->setFieldsets(
-			$fieldsets,
-			$props['model'] ?? App::instance()->site()
+		parent::__construct(
+			autofocus: $autofocus,
+			default: $default,
+			disabled: $disabled,
+			help: $help,
+			label: $label,
+			model: $model,
+			name: $name,
+			required: $required,
+			siblings: $siblings,
+			translate: $translate,
+			when: $when,
+			width: $width
 		);
 
-		parent::__construct(...$props);
-
 		$this->setEmpty($empty);
+		$this->setFieldsets($fieldsets);
 		$this->setGroup($group);
 		$this->setMax($max);
 		$this->setMin($min);
@@ -262,17 +294,15 @@ class BlocksField extends FieldClass
 		parent::setDefault($default);
 	}
 
-	protected function setFieldsets(
-		string|array|null $fieldsets,
-		ModelWithContent $model
-	): void {
+	protected function setFieldsets(string|array|null $fieldsets): void
+	{
 		if (is_string($fieldsets) === true) {
 			$fieldsets = [];
 		}
 
 		$this->fieldsets = Fieldsets::factory(
 			$fieldsets,
-			['parent' => $model]
+			['parent' => $this->model]
 		);
 	}
 
