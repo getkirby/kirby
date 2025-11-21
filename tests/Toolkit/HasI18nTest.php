@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Cms\App;
 use Kirby\TestCase;
 
 class HasI18nTest extends TestCase
@@ -25,6 +26,9 @@ class HasI18nTest extends TestCase
 
 	public function testI18n(): void
 	{
+		// load the translation strings
+		new App();
+
 		$class = $this->object();
 
 		$this->assertNull($class->translate(null));
@@ -35,5 +39,7 @@ class HasI18nTest extends TestCase
 
 		$this->assertSame('Copy all', $class->translate('copy.all'));
 		$this->assertSame('3 copied!', $class->translate('copy.success.multiple', ['count' => 3]));
+
+		App::destroy();
 	}
 }

@@ -71,6 +71,7 @@ class AppLanguagesTest extends TestCase
 	public function testDetectedLanguage($accept, $expected): void
 	{
 		// set the accepted visitor language
+		$acceptedLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
 
 		$app = new App([
@@ -102,6 +103,9 @@ class AppLanguagesTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $app->detectedLanguage()->code());
+
+		// reset the accepted visitor language
+		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
 	}
 
 	public static function detectedLanguageWithLocaleProvider(): array
@@ -123,6 +127,7 @@ class AppLanguagesTest extends TestCase
 	#[DataProvider('detectedLanguageWithLocaleProvider')]
 	public function testDetectedLanguageWithLocale($accept, $expected): void
 	{
+		$acceptedLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
 
 		$app = new App([
@@ -159,5 +164,8 @@ class AppLanguagesTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $app->detectedLanguage()->code());
+
+		// reset the accepted visitor language
+		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
 	}
 }

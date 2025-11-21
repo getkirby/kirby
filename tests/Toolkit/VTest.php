@@ -254,6 +254,9 @@ class VTest extends TestCase
 
 	public function testErrors(): void
 	{
+		// load the translation strings
+		new App();
+
 		$result = V::errors('test@getkirby.com', [
 			'email',
 			'maxLength' => 17,
@@ -920,7 +923,11 @@ class VTest extends TestCase
 
 	public function testValueFailsNotThrowing(): void
 	{
+		// load the translation strings
+		new App();
+
 		$result = V::value('a', ['same' => 'b'], fail: false);
+
 		$this->assertSame([
 			'same' => 'Please enter "b"'
 		], $result);
