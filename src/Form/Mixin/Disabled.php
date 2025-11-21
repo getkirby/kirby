@@ -19,7 +19,7 @@ trait Disabled
 		return $this->disabled;
 	}
 
-	protected function setDisabled(bool $disabled = false): void
+	protected function setDisabled(bool $disabled): void
 	{
 		$this->disabled = $disabled;
 	}
