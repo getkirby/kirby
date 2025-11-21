@@ -51,7 +51,7 @@ class Access
 			}
 
 			// don't check if the area is not defined
-			if ($area === true || $area === '*') {
+			if ($area === true || $area === '*' || $area === null) {
 				return true;
 			}
 
