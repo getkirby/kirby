@@ -66,7 +66,7 @@ class ViewResponse extends JsonResponse
 		$access = $kirby->panel()->access()->area($kirby->user());
 
 		$view = [
-			...JsonResponse::error($message, $code, $details)->toArray(),
+			...JsonResponse::error($message, $code, $details)->data(),
 			'component' => 'k-error-view',
 			'props'     => [
 				'error'  => $message,
