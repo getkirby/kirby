@@ -32,7 +32,7 @@ trait Translatable
 		return true;
 	}
 
-	protected function setTranslate(bool $translate = true): void
+	protected function setTranslate(bool $translate): void
 	{
 		$this->translate = $translate;
 	}
