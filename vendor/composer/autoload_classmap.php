@@ -288,6 +288,7 @@ return array(
     'Kirby\\Panel\\Lab\\Doc\\Slot' => $baseDir . '/src/Panel/Lab/Doc/Slot.php',
     'Kirby\\Panel\\Lab\\Docs' => $baseDir . '/src/Panel/Lab/Docs.php',
     'Kirby\\Panel\\Lab\\Example' => $baseDir . '/src/Panel/Lab/Example.php',
+    'Kirby\\Panel\\Lab\\Responses' => $baseDir . '/src/Panel/Lab/Responses.php',
     'Kirby\\Panel\\Lab\\Snippet' => $baseDir . '/src/Panel/Lab/Snippet.php',
     'Kirby\\Panel\\Lab\\Template' => $baseDir . '/src/Panel/Lab/Template.php',
     'Kirby\\Panel\\Menu' => $baseDir . '/src/Panel/Menu.php',
