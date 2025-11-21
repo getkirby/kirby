@@ -321,7 +321,7 @@ class Panel
 			$auth   = $route->attributes()['auth'] ?? true;
 			$areaId = $route->attributes()['area'] ?? null;
 			$type   = $route->attributes()['type'] ?? 'view';
-			$area   = $areas[$areaId] ?? null;
+			$area   = $areas[$areaId ?? ''] ?? null;
 
 			// call the route action to check the result
 			try {

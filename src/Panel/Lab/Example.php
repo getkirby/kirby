@@ -44,7 +44,7 @@ class Example
 
 	public function collectTab(string|null $tab): string|null
 	{
-		if ($this->tabs === []) {
+		if ($this->tabs === [] || $tab === null) {
 			return null;
 		}
 

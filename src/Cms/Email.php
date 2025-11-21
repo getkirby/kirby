@@ -213,7 +213,7 @@ class Email
 		$result = $this->transformModel($addressProp, User::class, 'name', 'email');
 
 		$address = array_keys($result)[0] ?? null;
-		$name    = $result[$address] ?? null;
+		$name    = $result[$address ?? ''] ?? null;
 
 		// if the array is non-associative, the value is the address
 		if (is_int($address) === true) {
