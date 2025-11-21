@@ -31,6 +31,7 @@ abstract class FieldClass
 	use Mixin\Icon;
 	use Mixin\Label;
 	use Mixin\Model;
+	use Mixin\Name;
 	use Mixin\Placeholder;
 	use Mixin\Translatable;
 	use Mixin\Validation;
@@ -38,7 +39,6 @@ abstract class FieldClass
 	use Mixin\When;
 	use Mixin\Width;
 
-	protected string|null $name;
 	protected Fields $siblings;
 
 	public function __construct(
@@ -102,14 +102,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * Returns the field name
-	 */
-	public function name(): string
-	{
-		return $this->name ?? $this->type();
-	}
-
-	/**
 	 * Returns all original params for the field
 	 */
 	public function params(): array
@@ -152,11 +144,6 @@ abstract class FieldClass
 	{
 		$this->value = $this->emptyValue();
 		return $this;
-	}
-
-	protected function setName(string|null $name = null): void
-	{
-		$this->name = strtolower($name ?? $this->type());
 	}
 
 	protected function setSiblings(Fields|null $siblings = null): void
