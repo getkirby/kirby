@@ -166,7 +166,7 @@ trait Value
 		return $this->hasValue();
 	}
 
-	protected function setDefault(mixed $default = null): void
+	protected function setDefault(mixed $default): void
 	{
 		$this->default = $default;
 	}
