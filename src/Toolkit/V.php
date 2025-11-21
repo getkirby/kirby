@@ -446,6 +446,7 @@ V::$validators = [
 
 	/**
 	 * Checks for valid json
+	 * @psalm-suppress UnusedFunctionCall
 	 */
 	'json' => function ($value): bool {
 		if (!is_string($value) || $value === '') {
