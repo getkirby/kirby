@@ -7,15 +7,15 @@ trait EmptyState
 	/**
 	 * Sets the text for the empty state box
 	 */
-	protected string|null $empty;
-
-	protected function setEmpty(string|array|null $empty = null): void
-	{
-		$this->empty = $this->i18n($empty);
-	}
+	protected array|string|null $empty = null;
 
 	public function empty(): string|null
 	{
-		return $this->stringTemplate($this->empty);
+		return $this->stringTemplate($this->i18n($this->empty));
+	}
+
+	protected function setEmpty(string|array|null $empty): void
+	{
+		$this->empty = $empty;
 	}
 }
