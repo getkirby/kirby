@@ -16,17 +16,19 @@ trait Label
 	/**
 	 * The field label can be set as string or associative array with translations
 	 */
-	protected string|null $label;
+	protected array|string|null $label = null;
 
 	public function label(): string|null
 	{
-		return $this->stringTemplate(
-			$this->label ?? Str::ucfirst($this->name())
-		);
+		if ($this->label === null || $this->label === []) {
+			return Str::ucfirst($this->name());
+		}
+
+		return $this->stringTemplate($this->i18n($this->label));
 	}
 
-	protected function setLabel(array|string|null $label = null): void
+	protected function setLabel(array|string|null $label): void
 	{
-		$this->label = $this->i18n($label);
+		$this->label = $label;
 	}
 }
