@@ -4,13 +4,6 @@ namespace Kirby\Form\Mixin;
 
 use Kirby\Toolkit\Str;
 
-/**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
 trait Label
 {
 	/**
