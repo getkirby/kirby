@@ -24,7 +24,7 @@
 		"source": "https://github.com/getkirby/kirby"
 	},
 	"require": {
-		"php": "~8.3.0 || ~8.4.0",
+		"php": "~8.3.0 || ~8.4.0 || ~8.5.0",
 		"ext-ctype": "*",
 		"ext-curl": "*",
 		"ext-dom": "*",
@@ -37,7 +37,7 @@
 		"ext-openssl": "*",
 		"ext-simplexml": "*",
 		"christian-riesen/base32": "1.6.0",
-		"claviska/simpleimage": "4.2.1",
+		"claviska/simpleimage": "4.4.0",
 		"composer/semver": "3.4.4",
 		"filp/whoops": "2.18.4",
 		"getkirby/composer-installer": "^1.2.1",

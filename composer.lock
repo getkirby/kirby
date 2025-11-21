@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e89ac035adbb7b2ccfe85fea041d255c",
+    "content-hash": "2012de6c9b76ba032f326182f9d4e399",
     "packages": [
         {
             "name": "christian-riesen/base32",
@@ -67,16 +67,16 @@
         },
         {
             "name": "claviska/simpleimage",
-            "version": "4.2.1",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claviska/SimpleImage.git",
-                "reference": "ec6d5021e5a7153a2520d64c59b86b6f3c4157c5"
+                "reference": "6d928c779e343100cef40f75bac3e301c32c3741"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/ec6d5021e5a7153a2520d64c59b86b6f3c4157c5",
-                "reference": "ec6d5021e5a7153a2520d64c59b86b6f3c4157c5",
+                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/6d928c779e343100cef40f75bac3e301c32c3741",
+                "reference": "6d928c779e343100cef40f75bac3e301c32c3741",
                 "shasum": ""
             },
             "require": {
@@ -108,7 +108,7 @@
             "description": "A PHP class that makes working with images as simple as possible.",
             "support": {
                 "issues": "https://github.com/claviska/SimpleImage/issues",
-                "source": "https://github.com/claviska/SimpleImage/tree/4.2.1"
+                "source": "https://github.com/claviska/SimpleImage/tree/4.4.0"
             },
             "funding": [
                 {
@@ -116,7 +116,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-22T13:25:03+00:00"
+            "time": "2025-11-20T16:58:37+00:00"
         },
         {
             "name": "composer/semver",
@@ -1111,7 +1111,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~8.3.0 || ~8.4.0",
+        "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-dom": "*",

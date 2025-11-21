@@ -967,6 +967,8 @@ class Collection extends Iterator implements Stringable
 	 * @param string|null $direction asc or desc
 	 * @param int|null $method The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
 	 * @return $this|static
+	 *
+	 * @psalm-suppress UnusedVariable
 	 */
 	public function sort(...$args): static
 	{

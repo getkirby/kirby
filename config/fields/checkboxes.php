@@ -15,6 +15,13 @@ return [
 		'placeholder' => null,
 
 		/**
+		 * Show/hide the batch select toggle
+		 */
+		'batch' => function (bool $batch = false) {
+			return $batch;
+		},
+
+		/**
 		 * Arranges the checkboxes in the given number of columns
 		 */
 		'columns' => function (int $columns = 1) {

@@ -41,8 +41,10 @@
 		<PossiblyUnusedReturnValue errorLevel="suppress" />
 		<UnusedClass errorLevel="suppress" />
 		<UnusedClosureParam errorLevel="suppress" />
+		<UnusedForeachValue errorLevel="suppress" />
 		<UnusedFunctionCall errorLevel="suppress" />
 		<UnusedVariable errorLevel="suppress" />
+		<UndefinedClass errorLevel="suppress" />
 	</issueHandlers>
 
 	<plugins>

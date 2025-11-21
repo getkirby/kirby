@@ -125,6 +125,10 @@ class Mime
 		string|null $mime = null,
 		string|null $extension = null
 	): string|null {
+		if ($mime === null || $extension === null) {
+			return $mime;
+		}
+
 		// fixing map
 		$map = [
 			'text/html' => [

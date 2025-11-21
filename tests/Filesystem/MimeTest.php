@@ -29,6 +29,12 @@ class MimeTest extends TestCase
 		$this->assertSame('image/svg+xml', Mime::fix(static::FIXTURES . '/unoptimized.svg', 'text/html', 'svg'));
 	}
 
+	public function testFixNull(): void
+	{
+		$this->assertSame('text/css', Mime::fix('something.css', 'text/css', null));
+		$this->assertSame(null, Mime::fix('something.css', null, null));
+	}
+
 	public function testFromExtension(): void
 	{
 		$mime = Mime::fromExtension('jpg');

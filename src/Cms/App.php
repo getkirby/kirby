@@ -105,7 +105,8 @@ class App
 		$this->core   = new Core($this);
 		$this->events = new Events($this);
 
-		// start with a fresh version cache
+		// start with a fresh snippet and version cache
+		Snippet::$cache = [];
 		VersionCache::reset();
 
 		// register all roots to be able to load stuff afterwards
