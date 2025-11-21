@@ -26,6 +26,7 @@ abstract class FieldClass
 	use Mixin\Api;
 	use Mixin\Autofocus;
 	use Mixin\Before;
+	use Mixin\Disabled;
 	use Mixin\Help;
 	use Mixin\Icon;
 	use Mixin\Label;
@@ -37,7 +38,6 @@ abstract class FieldClass
 	use Mixin\When;
 	use Mixin\Width;
 
-	protected bool $disabled;
 	protected string|null $name;
 	protected Fields $siblings;
 
@@ -84,14 +84,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * If `true`, the field is no longer editable and will not be saved
-	 */
-	public function disabled(): bool
-	{
-		return $this->disabled;
-	}
-
-	/**
 	 * Returns optional drawer routes for the field
 	 */
 	public function drawers(): array
@@ -102,11 +94,6 @@ abstract class FieldClass
 	public function id(): string
 	{
 		return $this->name();
-	}
-
-	public function isDisabled(): bool
-	{
-		return $this->disabled;
 	}
 
 	public function isHidden(): bool
@@ -165,11 +152,6 @@ abstract class FieldClass
 	{
 		$this->value = $this->emptyValue();
 		return $this;
-	}
-
-	protected function setDisabled(bool $disabled = false): void
-	{
-		$this->disabled = $disabled;
 	}
 
 	protected function setName(string|null $name = null): void
