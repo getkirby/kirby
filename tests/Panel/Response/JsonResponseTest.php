@@ -83,6 +83,20 @@ class JsonResponseTest extends TestCase
 		$this->assertSame('Custom error', $error->data()['error']);
 	}
 
+	public function testErrorWithDetails(): void
+	{
+		$response = JsonResponse::error('Test', 404, $details = [
+			'test' => [
+				'label'   => 'Label',
+				'message' => 'Message'
+			]
+		]);
+
+		$this->assertSame(404, $response->code());
+		$this->assertSame('Test', $response->data()['error']);
+		$this->assertSame($details, $response->data()['details']);
+	}
+
 	public function testFromJsonResponse(): void
 	{
 		$input  = new JsonResponse(['foo' => 'bar']);

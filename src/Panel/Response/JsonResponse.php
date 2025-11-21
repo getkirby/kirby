@@ -83,9 +83,18 @@ class JsonResponse extends Response
 	/**
 	 * Renders the error response with the provided message
 	 */
-	public static function error(string $message, int $code = 404): static
-	{
-		return new static(['error' => $message], $code);
+	public static function error(
+		string $message,
+		int $code = 404,
+		array $details = []
+	): static {
+		$data = ['error' => $message];
+
+		if ($details !== []) {
+			$data['details'] = $details;
+		}
+
+		return new static($data, $code);
 	}
 
 	/**
@@ -122,7 +131,11 @@ class JsonResponse extends Response
 
 		// handle Kirby exceptions
 		if ($data instanceof Exception) {
-			return static::error($data->getMessage(), $data->getHttpCode());
+			return static::error(
+				message: $data->getMessage(),
+				code:    $data->getHttpCode(),
+				details: $data->getDetails()
+			);
 		}
 
 		// handle Throwables

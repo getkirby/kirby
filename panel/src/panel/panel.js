@@ -249,12 +249,13 @@ export default {
 				this.isLoading = true;
 				const state = await this.get(url, options);
 				this.set(state);
-				this.isLoading = false;
 			}
 
 			return this.state();
 		} catch (error) {
 			return this.error(error);
+		} finally {
+			this.isLoading = false;
 		}
 	},
 

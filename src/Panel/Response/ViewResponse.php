@@ -57,21 +57,28 @@ class ViewResponse extends JsonResponse
 	/**
 	 * Renders the error view with provided message
 	 */
-	public static function error(string $message, int $code = 404): static
-	{
+	public static function error(
+		string $message,
+		int $code = 404,
+		array $details = []
+	): static {
 		$kirby  = App::instance();
 		$access = $kirby->panel()->access()->area($kirby->user());
 
-		return new static(
-			view: [
-				'component' => 'k-error-view',
-				'error'     => $message,
-				'props'     => [
-					'error'  => $message,
-					'layout' => $access ? 'inside' : 'outside'
-				],
-				'title' => 'Error'
+		$view = [
+			...JsonResponse::error($message, $code, $details)->toArray(),
+			'component' => 'k-error-view',
+			'props'     => [
+				'error'  => $message,
+				'layout' => $access ? 'inside' : 'outside'
 			],
+			'title' => 'Error'
+		];
+
+		ksort($view);
+
+		return new static(
+			view: $view,
 			code: $code
 		);
 	}

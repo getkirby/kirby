@@ -5,6 +5,7 @@ use Kirby\Panel\Controller\View\LabDocViewController;
 use Kirby\Panel\Controller\View\LabExamplesViewController;
 use Kirby\Panel\Controller\View\LabExampleViewController;
 use Kirby\Panel\Controller\View\LabExampleVueViewController;
+use Kirby\Panel\Lab\Responses;
 
 return [
 	'lab' => [
@@ -18,6 +19,10 @@ return [
 	'lab.doc' => [
 		'pattern' => 'lab/docs/(:any)',
 		'action'  => LabDocViewController::class
+	],
+	'lab.errors' => [
+		'pattern' => 'lab/errors/(:any?)',
+		'action'  => fn (string|null $type = null) => Responses::errorResponseByType($type)
 	],
 	'lab.vue' => [
 		'pattern' => [

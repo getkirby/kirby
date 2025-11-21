@@ -90,13 +90,12 @@ export default (panel) => {
 				drawer = `/drawers/${drawer}`;
 			}
 
-			await parent.open.call(this, drawer, options);
+			const state = await parent.open.call(this, drawer, options);
 
 			// open the provided or first tab
 			this.tab(drawer.tab);
 
 			// get the current state and add it to the history
-			const state = this.state();
 			this.history.add(state, drawer.replace);
 
 			this.focus();
