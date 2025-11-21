@@ -4,11 +4,11 @@ namespace Kirby\Form\Mixin;
 
 trait Disabled
 {
-	protected bool $disabled = false;
-
 	/**
 	 * If `true`, the field is no longer editable and will not be saved
 	 */
+	protected bool $disabled = false;
+
 	public function disabled(): bool
 	{
 		return $this->disabled;
