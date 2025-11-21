@@ -104,7 +104,7 @@ jobs:
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.ini }}
           coverage: pcov
-          tools: phpunit:11.5.44, psalm:6.13.1
+          tools: phpunit:11.5.44, brianium/paratest:7.8.4, psalm:6.13.1
 
       - name: Setup problem matchers
         run: |
@@ -124,7 +124,7 @@ jobs:
 
       - name: Run tests
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: phpunit -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
+        run: paratest -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Statically analyze using Psalm
         if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.5'
