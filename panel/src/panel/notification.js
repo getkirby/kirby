@@ -85,6 +85,7 @@ export default (panel = {}) => {
 
 				if (broken) {
 					error.message = broken.error;
+					error.details = broken.details;
 				}
 			}
 
