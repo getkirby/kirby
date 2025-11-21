@@ -14,12 +14,13 @@ trait Help
 	/**
 	 * Optional help text below the field
 	 */
-	protected string|null $help;
+	protected array|string|null $help = null;
 
 	public function help(): string|null
 	{
-		if (empty($this->help) === false) {
-			$help = $this->stringTemplate($this->help);
+		if ($this->help !== null && $this->help !== []) {
+			$help = $this->i18n($this->help);
+			$help = $this->stringTemplate($help);
 			$help = $this->kirby()->kirbytext($help);
 			return $help;
 		}
@@ -27,8 +28,8 @@ trait Help
 		return null;
 	}
 
-	protected function setHelp(array|string|null $help = null): void
+	protected function setHelp(array|string|null $help): void
 	{
-		$this->help = $this->i18n($help);
+		$this->help = $help;
 	}
 }
