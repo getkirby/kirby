@@ -21,7 +21,7 @@ trait Validation
 	/**
 	 * If `true`, the field has to be filled in correctly to be saved.
 	 */
-	protected bool $required;
+	protected bool $required = false;
 
 	/**
 	 * Runs all validations and returns an array of
@@ -102,7 +102,7 @@ trait Validation
 		return $this->required;
 	}
 
-	protected function setRequired(bool $required = false): void
+	protected function setRequired(bool $required): void
 	{
 		$this->required = $required;
 	}
