@@ -24,6 +24,11 @@ use Kirby\Toolkit\Tpl;
 class Snippet extends Tpl
 {
 	/**
+	 * Cache for the snippet files
+	 */
+	public static array $cache = [];
+
+	/**
 	 * Cache for the currently active
 	 * snippet. This is used to start
 	 * and end slots within this snippet
@@ -182,6 +187,12 @@ class Snippet extends Tpl
 
 		foreach ($names as $name) {
 			$name = (string)$name;
+
+			// retrieve the file from the cache if it exists
+			if (isset(static::$cache[$name]) === true) {
+				return static::$cache[$name];
+			}
+
 			$file = $root . '/' . $name . '.php';
 
 			if (F::exists($file, $root) === false) {
@@ -189,11 +200,12 @@ class Snippet extends Tpl
 			}
 
 			if ($file) {
-				break;
+				// cache the file for future use
+				return static::$cache[$name] = $file;
 			}
 		}
 
-		return $file;
+		return null;
 	}
 
 	/**
