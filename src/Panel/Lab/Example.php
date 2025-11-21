@@ -44,11 +44,11 @@ class Example
 
 	public function collectTab(string|null $tab): string|null
 	{
-		if ($this->tabs === [] || $tab === null) {
+		if ($this->tabs === []) {
 			return null;
 		}
 
-		if (array_key_exists($tab, $this->tabs) === true) {
+		if ($tab !== null && array_key_exists($tab, $this->tabs) === true) {
 			return $tab;
 		}
 
