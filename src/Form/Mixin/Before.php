@@ -7,15 +7,15 @@ trait Before
 	/**
 	 * Optional text that will be shown before the input
 	 */
-	protected string|null $before;
+	protected array|string|null $before = null;
 
 	public function before(): string|null
 	{
-		return $this->stringTemplate($this->before);
+		return $this->stringTemplate($this->i18n($this->before));
 	}
 
-	protected function setBefore(array|string|null $before = null): void
+	protected function setBefore(array|string|null $before): void
 	{
-		$this->before = $this->i18n($before);
+		$this->before = $before;
 	}
 }
