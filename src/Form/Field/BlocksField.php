@@ -27,9 +27,17 @@ class BlocksField extends FieldClass
 	use Min;
 	use Pretty;
 
+	/**
+	 * Defines the allowed block types in the blocks field. See below.
+	 */
 	protected Fieldsets $fieldsets;
 	protected array $forms;
+
+	/**
+	 * Group name to identify all block fields that can share blocks via drag & drop
+	 */
 	protected string|null $group;
+
 	protected mixed $value = [];
 
 	public function __construct(
