@@ -100,7 +100,7 @@ class Blueprint
 	 */
 	public function __debugInfo(): array
 	{
-		return $this->props ?? [];
+		return $this->props;
 	}
 
 	/**

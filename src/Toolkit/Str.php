@@ -853,7 +853,7 @@ class Str
 
 		// without a limit we might as well use the built-in function
 		if ($limit === -1) {
-			return str_replace($search, $replace, $string ?? '');
+			return str_replace($search, $replace, $string);
 		}
 
 		// if the limit is zero, the result will be no replacements at all

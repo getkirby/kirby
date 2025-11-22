@@ -214,7 +214,7 @@ class Site extends ModelWithContent
 	 */
 	public function errorPageId(): string
 	{
-		return $this->errorPageId ?? 'error';
+		return $this->errorPageId;
 	}
 
 	/**
@@ -238,7 +238,7 @@ class Site extends ModelWithContent
 	 */
 	public function homePageId(): string
 	{
-		return $this->homePageId ?? 'home';
+		return $this->homePageId;
 	}
 
 	/**

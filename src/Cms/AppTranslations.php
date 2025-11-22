@@ -75,9 +75,7 @@ trait AppTranslations
 		if ($slugs = $this->option('slugs')) {
 			// two ways that the option can be defined:
 			// "slugs" => "de" or "slugs" => ["language" => "de"]
-			if ($slugs = $slugs['language'] ?? $slugs ?? null) {
-				Str::$language = Language::loadRules($slugs);
-			}
+			Str::$language = Language::loadRules($slugs['language'] ?? $slugs);
 		}
 	}
 
