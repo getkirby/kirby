@@ -5,13 +5,6 @@ namespace Kirby\Form\Mixin;
 use Kirby\Cms\Language;
 use ReflectionProperty;
 
-/**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
 trait Value
 {
 	/**
@@ -166,7 +159,7 @@ trait Value
 		return $this->hasValue();
 	}
 
-	protected function setDefault(mixed $default = null): void
+	protected function setDefault(mixed $default): void
 	{
 		$this->default = $default;
 	}

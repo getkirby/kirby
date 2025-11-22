@@ -2,29 +2,20 @@
 
 namespace Kirby\Form\Mixin;
 
-/**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
 trait Placeholder
 {
 	/**
 	 * Optional placeholder value that will be shown when the field is empty
 	 */
-	protected array|string|null $placeholder;
+	protected array|string|null $placeholder = null;
 
 	public function placeholder(): string|null
 	{
-		return $this->stringTemplate(
-			$this->placeholder
-		);
+		return $this->stringTemplate($this->i18n($this->placeholder));
 	}
 
-	protected function setPlaceholder(array|string|null $placeholder = null): void
+	protected function setPlaceholder(array|string|null $placeholder): void
 	{
-		$this->placeholder = $this->i18n($placeholder);
+		$this->placeholder = $placeholder;
 	}
 }
