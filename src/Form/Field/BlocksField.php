@@ -49,16 +49,35 @@ class BlocksField extends FieldClass
 	protected mixed $value = [];
 
 	public function __construct(
+		bool|null $autofocus = null,
+		array|null $default = null,
+		bool|null $disabled = null,
 		array|string|null $empty = null,
 		array|string|null $fieldsets = null,
+		array|string|null $help = null,
 		string|null $group = null,
+		array|string|null $label = null,
+		string|null $name = null,
 		int|null $max = null,
 		int|null $min = null,
 		bool|null $pretty = null,
-		...$props
+		bool|null $required = null,
+		bool|null $translate = null,
+		array|null $when = null,
+		string|null $width = null,
 	) {
-
-		parent::__construct(...$props);
+		parent::__construct(
+			autofocus: $autofocus,
+			default: $default,
+			disabled: $disabled,
+			help: $help,
+			label: $label,
+			name: $name,
+			required: $required,
+			translate: $translate,
+			when: $when,
+			width: $width
+		);
 
 		$this->setEmpty($empty);
 		$this->setFieldsets($fieldsets);
