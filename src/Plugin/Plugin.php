@@ -60,7 +60,7 @@ class Plugin
 		if ($info = $extends['info'] ?? null) {
 			Helpers::deprecated('Plugin "' . $name . '": Passing an `info` array inside the `extends` array has been deprecated. Pass the individual entries directly as named `info` argument.', 'plugin-extends-root');
 
-			if (empty($info) === false && is_array($info) === true) {
+			if (is_array($info) === true && $info !== []) {
 				$this->info = [...$info, ...$this->info];
 			}
 

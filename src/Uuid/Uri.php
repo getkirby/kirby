@@ -38,14 +38,14 @@ class Uri extends BaseUri
 			is_string($props) === true &&
 			Str::startsWith($props, 'site://') === true
 		) {
-			return parent::__construct([
+			parent::__construct([
 				'scheme' => 'site',
 				'host'   => '',
 				'path' 	 => Str::after($props, 'site://')
 			]);
+		} else {
+			parent::__construct($props, $inject);
 		}
-
-		return parent::__construct($props, $inject);
 	}
 
 	/**
