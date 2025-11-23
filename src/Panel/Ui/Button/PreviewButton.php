@@ -2,8 +2,6 @@
 
 namespace Kirby\Panel\Ui\Button;
 
-use Kirby\Toolkit\I18n;
-
 /**
  * Preview view button
  *
