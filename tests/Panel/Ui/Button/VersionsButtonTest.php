@@ -3,7 +3,7 @@
 namespace Kirby\Panel\Ui\Button;
 
 use Kirby\Cms\Page;
-use Kirby\TestCase;
+use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(VersionsButton::class)]
