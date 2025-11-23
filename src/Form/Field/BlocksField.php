@@ -281,7 +281,7 @@ class BlocksField extends FieldClass
 		];
 	}
 
-	protected function setDefault(mixed $default = null): void
+	protected function setDefault(mixed $default): void
 	{
 		// set id for blocks if not exists
 		if (is_array($default) === true) {
