@@ -31,6 +31,11 @@ class HasCount
 #[CoversClass(V::class)]
 class VTest extends TestCase
 {
+	public function setUp(): void
+	{
+		$this->setUpI18nLoader();
+	}
+
 	public function tearDown(): void
 	{
 		V::$validators = [];
