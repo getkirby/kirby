@@ -7,6 +7,7 @@ use Kirby\PhpUnitExtension;
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 ini_set('display_startup_errors', 'on');
+setlocale(LC_ALL, 'C');
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/PhpUnitExtension.php';
