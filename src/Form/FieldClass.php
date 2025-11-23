@@ -2,7 +2,6 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\HasSiblings;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\HasI18n;
@@ -23,7 +22,6 @@ use Kirby\Toolkit\HasI18n;
 abstract class FieldClass
 {
 	use HasI18n;
-	use HasSiblings;
 	use Mixin\After;
 	use Mixin\Api;
 	use Mixin\Autofocus;
@@ -37,6 +35,7 @@ abstract class FieldClass
 	use Mixin\Name;
 	use Mixin\Placeholder;
 	use Mixin\Required;
+	use Mixin\Siblings;
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\Value;
@@ -56,7 +55,6 @@ abstract class FieldClass
 		string|null $name = null,
 		array|string|null $placeholder = null,
 		bool|null $required = null,
-		protected Fields|null $siblings = null,
 		bool|null $translate = null,
 		array|null $when = null,
 		string|null $width = null
@@ -73,7 +71,6 @@ abstract class FieldClass
 		$this->setName($name);
 		$this->setPlaceholder($placeholder);
 		$this->setRequired($required);
-		$this->setSiblings($siblings);
 		$this->setTranslate($translate);
 		$this->setWhen($when);
 		$this->setWidth($width);
@@ -174,16 +171,6 @@ abstract class FieldClass
 	{
 		$this->value = $this->emptyValue();
 		return $this;
-	}
-
-	protected function setSiblings(Fields|null $siblings = null): void
-	{
-		$this->siblings = $siblings ?? new Fields([$this]);
-	}
-
-	protected function siblingsCollection(): Fields
-	{
-		return $this->siblings;
 	}
 
 	/**
