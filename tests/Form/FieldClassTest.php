@@ -142,14 +142,15 @@ class FieldClassTest extends TestCase
 
 		// default value from string template
 		$field = new TestField(
-			model: new Page([
-				'slug'    => 'test',
-				'content' => [
-					'title' => 'Test title'
-				]
-			]),
 			default: '{{ page.title }}'
 		);
+
+		$field->setModel(new Page([
+			'slug'    => 'test',
+			'content' => [
+				'title' => 'Test title'
+			]
+		]));
 
 		$this->assertSame('Test title', $field->default());
 	}
@@ -447,14 +448,15 @@ class FieldClassTest extends TestCase
 
 		// help from string template
 		$field = new TestField(
-			model: new Page([
-				'slug'    => 'test',
-				'content' => [
-					'title' => 'Test title'
-				]
-			]),
 			help: 'A field for {{ page.title }}'
 		);
+
+		$field->setModel(new Page([
+			'slug'    => 'test',
+			'content' => [
+				'title' => 'Test title'
+			]
+		]));
 
 		$this->assertSame('<p>A field for Test title</p>', $field->help());
 	}
@@ -502,7 +504,7 @@ class FieldClassTest extends TestCase
 		$this->assertIsSite($site, $field->model());
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new TestField(model: $page);
+		$field = (new TestField())->setModel($page);
 		$this->assertIsPage($page, $field->model());
 	}
 
@@ -536,13 +538,16 @@ class FieldClassTest extends TestCase
 
 		// placeholder from string template
 		$field = new TestField(
-			model: new Page([
+			placeholder: 'Placeholder for {{ page.title }}'
+		);
+
+		$field->setModel(
+			new Page([
 				'slug'    => 'test',
 				'content' => [
 					'title' => 'Test title'
 				]
 			]),
-			placeholder: 'Placeholder for {{ page.title }}'
 		);
 
 		$this->assertSame('Placeholder for Test title', $field->placeholder());

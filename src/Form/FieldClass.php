@@ -2,7 +2,6 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\HasI18n;
 
@@ -51,7 +50,6 @@ abstract class FieldClass
 		array|string|null $help = null,
 		string|null $icon = null,
 		array|string|null $label = null,
-		ModelWithContent|null $model = null,
 		string|null $name = null,
 		array|string|null $placeholder = null,
 		bool|null $required = null,
@@ -67,7 +65,6 @@ abstract class FieldClass
 		$this->setHelp($help);
 		$this->setIcon($icon);
 		$this->setLabel($label);
-		$this->setModel($model);
 		$this->setName($name);
 		$this->setPlaceholder($placeholder);
 		$this->setRequired($required);
@@ -112,12 +109,17 @@ abstract class FieldClass
 		$args = $props;
 
 		unset(
+			$args['model'],
 			$args['type'],
 			$args['value']
 		);
 
 		$field = new static(...$args);
 		$field->setSiblings($siblings);
+
+		if (array_key_exists('model', $props) === true) {
+			$field->setModel($props['model']);
+		}
 
 		if (array_key_exists('value', $props) === true) {
 			$field->fill($props['value']);

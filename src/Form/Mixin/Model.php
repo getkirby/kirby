@@ -28,8 +28,9 @@ trait Model
 	/**
 	 * Sets the parent model
 	 */
-	protected function setModel(ModelWithContent|null $model): void
+	public function setModel(ModelWithContent|null $model): static
 	{
 		$this->model = $model;
+		return $this;
 	}
 }
