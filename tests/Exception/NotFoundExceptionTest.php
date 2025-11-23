@@ -5,9 +5,9 @@ namespace Kirby\Exception;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
+#[CoversNothing]
 class NotFoundExceptionTest extends TestCase
 {
-	#[CoversNothing]
 	public function testDefaults(): void
 	{
 		$exception = new NotFoundException();
