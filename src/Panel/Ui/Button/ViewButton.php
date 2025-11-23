@@ -6,7 +6,6 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Button;
 use Kirby\Toolkit\Controller;
 
