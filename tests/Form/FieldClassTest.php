@@ -366,9 +366,10 @@ class FieldClassTest extends TestCase
 		]);
 
 		$field = new TestField(
-			siblings: $siblings,
-			when:     ['a' => 'b']
+			when: ['a' => 'b']
 		);
+
+		$field->setSiblings($siblings);
 
 		$this->assertTrue($field->isSubmittable($language));
 	}
@@ -382,9 +383,10 @@ class FieldClassTest extends TestCase
 		]);
 
 		$field = new TestField(
-			siblings: $siblings,
-			when:     ['a' => 'b']
+			when: ['a' => 'b']
 		);
+
+		$field->setSiblings($siblings);
 
 		$this->assertTrue($field->isSubmittable($language));
 	}
@@ -607,12 +609,11 @@ class FieldClassTest extends TestCase
 		$this->assertCount(1, $field->siblings());
 		$this->assertSame($field, $field->siblings()->first());
 
-		$field = new TestField(
-			siblings: new Fields([
-				new TestField(name: 'a'),
-				new TestField(name: 'b'),
-			])
-		);
+		$field = new TestField();
+		$field->setSiblings(new Fields([
+			new TestField(name: 'a'),
+			new TestField(name: 'b'),
+		]));
 
 		$this->assertCount(2, $field->siblings());
 		$this->assertSame('a', $field->siblings()->first()->name());
