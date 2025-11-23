@@ -126,7 +126,8 @@ class FieldClassTest extends TestCase
 		$this->assertNull($field->data());
 
 		// use existing value
-		$field = new TestField(value: 'test');
+		$field = new TestField();
+		$field->fill('test');
 		$this->assertSame('test', $field->data());
 	}
 
@@ -190,13 +191,16 @@ class FieldClassTest extends TestCase
 		$field = new TestField(required: true);
 		$this->assertSame(['required' => 'Please enter something'], $field->errors());
 
-		$field = new ValidatedField(value: 'a');
+		$field = new ValidatedField();
+		$field->fill('a');
 		$this->assertSame([], $field->errors());
 
-		$field = new ValidatedField(value: 'a', minlength: 4);
+		$field = new ValidatedField(minlength: 4);
+		$field->fill('a');
 		$this->assertSame(['minlength' => 'Please enter a longer value. (min. 4 characters)'], $field->errors());
 
-		$field = new ValidatedField(value: 'b');
+		$field = new ValidatedField();
+		$field->fill('b');
 		$this->assertSame(['custom' => 'Please enter an a'], $field->errors());
 	}
 
@@ -213,7 +217,8 @@ class FieldClassTest extends TestCase
 		$field = new TestField();
 		$this->assertTrue($field->isEmpty());
 
-		$field = new TestField(value: 'Test');
+		$field = new TestField();
+		$field->fill('Test');
 		$this->assertFalse($field->isEmpty());
 	}
 
@@ -270,7 +275,8 @@ class FieldClassTest extends TestCase
 		$field = new TestField(required: true);
 		$this->assertTrue($field->isInvalid());
 
-		$field = new TestField(required: true, value: 'Test');
+		$field = new TestField(required: true);
+		$field->fill('Test');
 		$this->assertFalse($field->isInvalid());
 	}
 
@@ -356,7 +362,7 @@ class FieldClassTest extends TestCase
 		$language = Language::ensure('current');
 
 		$siblings = new Fields([
-			new TestField(name: 'a', value: 'b'),
+			(new TestField(name: 'a'))->fill('b'),
 		]);
 
 		$field = new TestField(
@@ -372,7 +378,7 @@ class FieldClassTest extends TestCase
 		$language = Language::ensure('current');
 
 		$siblings = new Fields([
-			new TestField(name: 'a', value: 'something-else'),
+			(new TestField(name: 'a'))->fill('something else'),
 		]);
 
 		$field = new TestField(
@@ -390,12 +396,10 @@ class FieldClassTest extends TestCase
 		$fields = new Fields([
 			new TestField(
 				name:  'a',
-				value: 'a',
 				when:  ['b' => 'b']
 			),
 			new TestField(
 				name:  'b',
-				value: 'b',
 				when:  ['a' => 'a']
 			),
 		]);
@@ -651,7 +655,8 @@ class FieldClassTest extends TestCase
 		$field = new TestField();
 		$this->assertNull($field->value());
 
-		$field = new TestField(value: 'Test');
+		$field = new TestField();
+		$field->fill('Test');
 		$this->assertSame('Test', $field->value());
 
 		$field = new TestField(default: 'Default value');
@@ -660,7 +665,8 @@ class FieldClassTest extends TestCase
 		$field = new TestField(default: 'Default value');
 		$this->assertSame('Default value', $field->value(true));
 
-		$field = new NoValueField(value: 'Test');
+		$field = new NoValueField();
+		$field->fill('Test');
 		$this->assertNull($field->value());
 	}
 

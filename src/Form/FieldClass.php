@@ -58,7 +58,6 @@ abstract class FieldClass
 		bool|null $required = null,
 		protected Fields|null $siblings = null,
 		bool|null $translate = null,
-		$value = null,
 		array|null $when = null,
 		string|null $width = null
 	) {
@@ -78,10 +77,6 @@ abstract class FieldClass
 		$this->setTranslate($translate);
 		$this->setWhen($when);
 		$this->setWidth($width);
-
-		if ($value !== null) {
-			$this->fill($value);
-		}
 	}
 
 	public function __call(string $param, array $args): mixed
@@ -117,9 +112,21 @@ abstract class FieldClass
 		array $props,
 		Fields|null $siblings = null
 	): static {
-		$props['siblings'] = $siblings;
-		unset($props['type']);
-		return new static(...$props);
+		$args = [
+			'siblings' => $siblings,
+			...$props
+		];
+
+		unset($args['type'], $args['value']);
+
+
+		$field = new static(...$args);
+
+		if (array_key_exists('value', $props) === true) {
+			$field->fill($props['value']);
+		}
+
+		return $field;
 	}
 
 	public function id(): string
