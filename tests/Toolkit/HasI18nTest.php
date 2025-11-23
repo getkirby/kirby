@@ -6,6 +6,11 @@ use Kirby\TestCase;
 
 class HasI18nTest extends TestCase
 {
+	public function setUp(): void
+	{
+		$this->setUpI18nLoader();
+	}
+
 	protected function object(): object
 	{
 		return new class () {
