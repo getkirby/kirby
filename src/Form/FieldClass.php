@@ -109,15 +109,15 @@ abstract class FieldClass
 		array $props,
 		Fields|null $siblings = null
 	): static {
-		$args = [
-			'siblings' => $siblings,
-			...$props
-		];
+		$args = $props;
 
-		unset($args['type'], $args['value']);
-
+		unset(
+			$args['type'],
+			$args['value']
+		);
 
 		$field = new static(...$args);
+		$field->setSiblings($siblings);
 
 		if (array_key_exists('value', $props) === true) {
 			$field->fill($props['value']);

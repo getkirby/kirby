@@ -16,7 +16,7 @@ trait Siblings
 		return $this->siblings ?? new Fields([$this]);
 	}
 
-	protected function setSiblings(Fields|null $siblings = null): void
+	public function setSiblings(Fields|null $siblings = null): void
 	{
 		$this->siblings = $siblings;
 	}
