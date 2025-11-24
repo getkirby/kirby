@@ -31,6 +31,6 @@ trait Min
 			return true;
 		}
 
-		return $this->required;
+		return $this->required();
 	}
 }
