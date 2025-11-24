@@ -33,6 +33,7 @@ abstract class FieldClass
 	use Mixin\Model;
 	use Mixin\Name;
 	use Mixin\Placeholder;
+	use Mixin\Required;
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\Value;
