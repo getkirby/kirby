@@ -7,7 +7,6 @@ use Kirby\Cms\Block;
 use Kirby\Cms\Blocks as BlocksCollection;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Fieldsets;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -27,28 +26,61 @@ class BlocksField extends FieldClass
 	use Min;
 	use Pretty;
 
-	protected Fieldsets $fieldsets;
+	/**
+	 * Defines the allowed block types in the blocks field. See below.
+	 */
+	protected array|null $fieldsets;
+
+	/**
+	 * Cache for the Fieldsets collection
+	 */
+	protected Fieldsets $fieldsetsCollection;
+
+	/**
+	 * Cache for all Form instances for each fieldset
+	 */
 	protected array $forms;
+
+	/**
+	 * Group name to identify all block fields that can share blocks via drag & drop
+	 */
 	protected string|null $group;
+
 	protected mixed $value = [];
 
 	public function __construct(
+		bool|null $autofocus = null,
+		array|null $default = null,
+		bool|null $disabled = null,
 		array|string|null $empty = null,
-		array|string|null $fieldsets = null,
+		array|null $fieldsets = null,
+		array|string|null $help = null,
 		string|null $group = null,
+		array|string|null $label = null,
+		string|null $name = null,
 		int|null $max = null,
 		int|null $min = null,
 		bool|null $pretty = null,
-		...$props
+		bool|null $required = null,
+		bool|null $translate = null,
+		array|null $when = null,
+		string|null $width = null,
 	) {
-		$this->setFieldsets(
-			$fieldsets,
-			$props['model'] ?? App::instance()->site()
+		parent::__construct(
+			autofocus: $autofocus,
+			default:   $default,
+			disabled:  $disabled,
+			help:      $help,
+			label:     $label,
+			name:      $name,
+			required:  $required,
+			translate: $translate,
+			when:      $when,
+			width:     $width
 		);
 
-		parent::__construct(...$props);
-
 		$this->setEmpty($empty);
+		$this->setFieldsets($fieldsets);
 		$this->setGroup($group);
 		$this->setMax($max);
 		$this->setMin($min);
@@ -87,7 +119,7 @@ class BlocksField extends FieldClass
 
 	public function fieldset(string $type): Fieldset
 	{
-		if ($fieldset = $this->fieldsets->find($type)) {
+		if ($fieldset = $this->fieldsets()->find($type)) {
 			return $fieldset;
 		}
 
@@ -103,7 +135,10 @@ class BlocksField extends FieldClass
 
 	public function fieldsets(): Fieldsets
 	{
-		return $this->fieldsets;
+		return $this->fieldsetsCollection ??= Fieldsets::factory(
+			$this->fieldsets,
+			['parent' => $this->model()]
+		);
 	}
 
 	public function fieldsetGroups(): array|null
@@ -246,7 +281,7 @@ class BlocksField extends FieldClass
 		];
 	}
 
-	protected function setDefault(mixed $default = null): void
+	protected function setDefault(mixed $default): void
 	{
 		// set id for blocks if not exists
 		if (is_array($default) === true) {
@@ -258,18 +293,9 @@ class BlocksField extends FieldClass
 		parent::setDefault($default);
 	}
 
-	protected function setFieldsets(
-		string|array|null $fieldsets,
-		ModelWithContent $model
-	): void {
-		if (is_string($fieldsets) === true) {
-			$fieldsets = [];
-		}
-
-		$this->fieldsets = Fieldsets::factory(
-			$fieldsets,
-			['parent' => $model]
-		);
+	protected function setFieldsets(array|null $fieldsets): void
+	{
+		$this->fieldsets = $fieldsets;
 	}
 
 	protected function setGroup(string|null $group): void
