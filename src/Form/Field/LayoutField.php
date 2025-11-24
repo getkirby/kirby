@@ -42,7 +42,6 @@ class LayoutField extends BlocksField
 		array|string|null $settings = null,
 		...$props
 	) {
-		$this->setModel($props['model'] ?? null);
 		$this->setLayouts($layouts);
 		$this->setSelector($selector);
 		$this->setSettings($settings);
