@@ -260,7 +260,7 @@ class LayoutField extends BlocksField
 		return $this->selector;
 	}
 
-	protected function setDefault(mixed $default = null): void
+	protected function setDefault(mixed $default): void
 	{
 		// set id for layouts, columns and blocks within layout if not exists
 		if (is_array($default) === true) {
@@ -301,12 +301,12 @@ class LayoutField extends BlocksField
 	/**
 	 * Layout selector's styles such as size (`small`, `medium`, `large` or `huge`) and columns
 	 */
-	protected function setSelector(array|null $selector = null): void
+	protected function setSelector(array|null $selector): void
 	{
 		$this->selector = $selector;
 	}
 
-	protected function setSettings(array|string|null $settings = null): void
+	protected function setSettings(array|string|null $settings): void
 	{
 		$this->settings = $settings;
 	}
