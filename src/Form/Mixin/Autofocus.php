@@ -7,14 +7,14 @@ trait Autofocus
 	/**
 	 * Sets the focus on this field when the form loads. Only the first field with this label gets
 	 */
-	protected bool $autofocus;
+	protected bool|null $autofocus;
 
 	public function autofocus(): bool
 	{
-		return $this->autofocus;
+		return $this->autofocus ?? false;
 	}
 
-	protected function setAutofocus(bool $autofocus = false): void
+	protected function setAutofocus(bool|null $autofocus): void
 	{
 		$this->autofocus = $autofocus;
 	}

@@ -2,13 +2,6 @@
 
 namespace Kirby\Form\Mixin;
 
-/**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
 trait Icon
 {
 	/**
@@ -21,7 +14,7 @@ trait Icon
 		return $this->icon;
 	}
 
-	protected function setIcon(string|null $icon = null): void
+	protected function setIcon(string|null $icon): void
 	{
 		$this->icon = $icon;
 	}

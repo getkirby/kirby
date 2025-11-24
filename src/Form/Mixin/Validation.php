@@ -9,20 +9,8 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\V;
 
-/**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
 trait Validation
 {
-	/**
-	 * If `true`, the field has to be filled in correctly to be saved.
-	 */
-	protected bool $required;
-
 	/**
 	 * Runs all validations and returns an array of
 	 * error messages
@@ -74,14 +62,6 @@ trait Validation
 	}
 
 	/**
-	 * Checks if the field is required
-	 */
-	public function isRequired(): bool
-	{
-		return $this->required;
-	}
-
-	/**
 	 * Checks if the field is invalid
 	 */
 	public function isInvalid(): bool
@@ -95,16 +75,6 @@ trait Validation
 	public function isValid(): bool
 	{
 		return $this->errors() === [];
-	}
-
-	public function required(): bool
-	{
-		return $this->required;
-	}
-
-	protected function setRequired(bool $required = false): void
-	{
-		$this->required = $required;
 	}
 
 	/**

@@ -16,6 +16,7 @@ use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Form\Mixin\Pretty;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -24,11 +25,11 @@ class BlocksField extends FieldClass
 	use EmptyState;
 	use Max;
 	use Min;
+	use Pretty;
 
 	protected Fieldsets $fieldsets;
 	protected array $forms;
 	protected string|null $group;
-	protected bool $pretty;
 	protected mixed $value = [];
 
 	public function __construct(array $params = [])
@@ -41,10 +42,10 @@ class BlocksField extends FieldClass
 		parent::__construct($params);
 
 		$this->setEmpty($params['empty'] ?? null);
-		$this->setGroup($params['group'] ?? 'blocks');
+		$this->setGroup($params['group'] ?? null);
 		$this->setMax($params['max'] ?? null);
 		$this->setMin($params['min'] ?? null);
-		$this->setPretty($params['pretty'] ?? false);
+		$this->setPretty($params['pretty'] ?? null);
 	}
 
 	public function blocksToValues(
@@ -133,12 +134,7 @@ class BlocksField extends FieldClass
 
 	public function group(): string
 	{
-		return $this->group;
-	}
-
-	public function pretty(): bool
-	{
-		return $this->pretty;
+		return $this->group ?? 'blocks';
 	}
 
 	/**
@@ -269,14 +265,9 @@ class BlocksField extends FieldClass
 		);
 	}
 
-	protected function setGroup(string|null $group = null): void
+	protected function setGroup(string|null $group): void
 	{
 		$this->group = $group;
-	}
-
-	protected function setPretty(bool $pretty = false): void
-	{
-		$this->pretty = $pretty;
 	}
 
 	public function toStoredValue(bool $default = false): mixed

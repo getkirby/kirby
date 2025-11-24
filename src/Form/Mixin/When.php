@@ -2,13 +2,6 @@
 
 namespace Kirby\Form\Mixin;
 
-/**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
 trait When
 {
 	/**
@@ -16,7 +9,7 @@ trait When
 	 *
 	 * @since 3.1.0
 	 */
-	protected array|null $when = null;
+	protected array|null $when;
 
 	/**
 	 * Checks if the field is currently active
@@ -24,13 +17,15 @@ trait When
 	 */
 	public function isActive(): bool
 	{
-		if ($this->when === null || $this->when === []) {
+		$when = $this->when();
+
+		if ($when === null || $when === []) {
 			return true;
 		}
 
 		$siblings = $this->siblings();
 
-		foreach ($this->when as $field => $value) {
+		foreach ($when as $field => $value) {
 			$field = $siblings->get($field);
 			$input = $field?->value() ?? '';
 
@@ -45,7 +40,7 @@ trait When
 		return true;
 	}
 
-	protected function setWhen(array|null $when = null): void
+	protected function setWhen(array|null $when): void
 	{
 		$this->when = $when;
 	}

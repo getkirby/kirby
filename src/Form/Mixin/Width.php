@@ -2,13 +2,6 @@
 
 namespace Kirby\Form\Mixin;
 
-/**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
 trait Width
 {
 	/**
@@ -17,7 +10,7 @@ trait Width
 	 */
 	protected string|null $width;
 
-	protected function setWidth(string|null $width = null): void
+	protected function setWidth(string|null $width): void
 	{
 		$this->width = $width;
 	}

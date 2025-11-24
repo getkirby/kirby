@@ -9,6 +9,7 @@ use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Form\Mixin\Sortable;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -27,10 +28,10 @@ class EntriesField extends FieldClass
 	use EmptyState;
 	use Max;
 	use Min;
+	use Sortable;
 
 	protected array $field;
 	protected Form $form;
-	protected bool  $sortable = true;
 	protected mixed $value = [];
 
 	public function __construct(array $params = [])
@@ -41,7 +42,7 @@ class EntriesField extends FieldClass
 		$this->setField($params['field'] ?? null);
 		$this->setMax($params['max'] ?? null);
 		$this->setMin($params['min'] ?? null);
-		$this->setSortable($params['sortable'] ?? true);
+		$this->setSortable($params['sortable'] ?? null);
 	}
 
 	public function field(): array
@@ -103,16 +104,6 @@ class EntriesField extends FieldClass
 		unset($attrs['counter'], $attrs['label']);
 
 		$this->field = $attrs;
-	}
-
-	protected function setSortable(bool|null $sortable = true): void
-	{
-		$this->sortable = $sortable;
-	}
-
-	public function sortable(): bool
-	{
-		return $this->sortable;
 	}
 
 	public function supports(): array

@@ -25,7 +25,7 @@ class StatsField extends FieldClass
 	/**
 	 * The size of the report cards. Available sizes: `tiny`, `small`, `medium`, `large`
 	 */
-	protected string $size;
+	protected string|null $size;
 
 	/**
 	 * Cache for the Stats UI component
@@ -37,7 +37,7 @@ class StatsField extends FieldClass
 		parent::__construct($params);
 
 		$this->reports = $params['reports'] ?? [];
-		$this->size    = $params['size']    ?? 'large';
+		$this->size    = $params['size']    ?? null;
 	}
 
 	public function hasValue(): bool
@@ -58,9 +58,9 @@ class StatsField extends FieldClass
 	public function stats(): Stats
 	{
 		return $this->stats ??= Stats::from(
-			model: $this->model,
+			model:   $this->model,
 			reports: $this->reports,
-			size: $this->size
+			size:    $this->size ?? 'large'
 		);
 	}
 

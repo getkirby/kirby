@@ -26,38 +26,40 @@ abstract class FieldClass
 	use Mixin\Api;
 	use Mixin\Autofocus;
 	use Mixin\Before;
+	use Mixin\DefaultValue;
+	use Mixin\Disabled;
 	use Mixin\Help;
 	use Mixin\Icon;
 	use Mixin\Label;
 	use Mixin\Model;
+	use Mixin\Name;
 	use Mixin\Placeholder;
+	use Mixin\Required;
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\Value;
 	use Mixin\When;
 	use Mixin\Width;
 
-	protected bool $disabled;
-	protected string|null $name;
 	protected Fields $siblings;
 
 	public function __construct(
 		protected array $params = []
 	) {
 		$this->setAfter($params['after'] ?? null);
-		$this->setAutofocus($params['autofocus'] ?? false);
+		$this->setAutofocus($params['autofocus'] ?? null);
 		$this->setBefore($params['before'] ?? null);
 		$this->setDefault($params['default'] ?? null);
-		$this->setDisabled($params['disabled'] ?? false);
+		$this->setDisabled($params['disabled'] ?? null);
 		$this->setHelp($params['help'] ?? null);
 		$this->setIcon($params['icon'] ?? null);
 		$this->setLabel($params['label'] ?? null);
 		$this->setModel($params['model'] ?? null);
 		$this->setName($params['name'] ?? null);
 		$this->setPlaceholder($params['placeholder'] ?? null);
-		$this->setRequired($params['required'] ?? false);
+		$this->setRequired($params['required'] ?? null);
 		$this->setSiblings($params['siblings'] ?? null);
-		$this->setTranslate($params['translate'] ?? true);
+		$this->setTranslate($params['translate'] ?? null);
 		$this->setWhen($params['when'] ?? null);
 		$this->setWidth($params['width'] ?? null);
 
@@ -84,14 +86,6 @@ abstract class FieldClass
 	}
 
 	/**
-	 * If `true`, the field is no longer editable and will not be saved
-	 */
-	public function disabled(): bool
-	{
-		return $this->disabled;
-	}
-
-	/**
 	 * Returns optional drawer routes for the field
 	 */
 	public function drawers(): array
@@ -104,22 +98,9 @@ abstract class FieldClass
 		return $this->name();
 	}
 
-	public function isDisabled(): bool
-	{
-		return $this->disabled;
-	}
-
 	public function isHidden(): bool
 	{
 		return false;
-	}
-
-	/**
-	 * Returns the field name
-	 */
-	public function name(): string
-	{
-		return $this->name ?? $this->type();
 	}
 
 	/**
@@ -167,16 +148,6 @@ abstract class FieldClass
 		return $this;
 	}
 
-	protected function setDisabled(bool $disabled = false): void
-	{
-		$this->disabled = $disabled;
-	}
-
-	protected function setName(string|null $name = null): void
-	{
-		$this->name = strtolower($name ?? $this->type());
-	}
-
 	protected function setSiblings(Fields|null $siblings = null): void
 	{
 		$this->siblings = $siblings ?? new Fields([$this]);
@@ -193,7 +164,7 @@ abstract class FieldClass
 	protected function stringTemplate(string|null $string = null): string|null
 	{
 		if ($string !== null) {
-			return $this->model->toString($string);
+			return $this->model()->toString($string);
 		}
 
 		return null;
