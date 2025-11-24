@@ -37,16 +37,48 @@ class LayoutField extends BlocksField
 	protected Fieldset|null $settingsFieldset;
 
 	public function __construct(
+		bool|null $autofocus = null,
+		array|null $default = null,
+		bool|null $disabled = null,
+		array|string|null $empty = null,
+		array|string|null $fieldsets = null,
+		array|string|null $help = null,
+		string|null $group = null,
+		array|string|null $label = null,
 		array|null $layouts = null,
+		int|null $max = null,
+		int|null $min = null,
+		string|null $name = null,
+		bool|null $pretty = null,
+		bool|null $required = null,
 		array|null $selector = null,
 		array|string|null $settings = null,
-		...$props
+		bool|null $translate = null,
+		array|null $when = null,
+		string|null $width = null,
 	) {
+		parent::__construct(
+			autofocus: $autofocus,
+			disabled: $disabled,
+			empty: $empty,
+			fieldsets: $fieldsets,
+			help: $help,
+			group: $group,
+			label: $label,
+			name: $name,
+			max: $max,
+			min: $min,
+			pretty: $pretty,
+			required: $required,
+			translate: $translate,
+			when: $when,
+			width: $width
+		);
+
+		$this->setDefault($default);
 		$this->setLayouts($layouts);
 		$this->setSelector($selector);
 		$this->setSettings($settings);
-
-		parent::__construct(...$props);
 	}
 
 	/**
