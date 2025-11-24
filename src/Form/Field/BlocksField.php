@@ -42,10 +42,10 @@ class BlocksField extends FieldClass
 		parent::__construct($params);
 
 		$this->setEmpty($params['empty'] ?? null);
-		$this->setGroup($params['group'] ?? 'blocks');
+		$this->setGroup($params['group'] ?? null);
 		$this->setMax($params['max'] ?? null);
 		$this->setMin($params['min'] ?? null);
-		$this->setPretty($params['pretty'] ?? false);
+		$this->setPretty($params['pretty'] ?? null);
 	}
 
 	public function blocksToValues(
@@ -134,7 +134,7 @@ class BlocksField extends FieldClass
 
 	public function group(): string
 	{
-		return $this->group;
+		return $this->group ?? 'blocks';
 	}
 
 	/**
@@ -265,7 +265,7 @@ class BlocksField extends FieldClass
 		);
 	}
 
-	protected function setGroup(string|null $group = null): void
+	protected function setGroup(string|null $group): void
 	{
 		$this->group = $group;
 	}
