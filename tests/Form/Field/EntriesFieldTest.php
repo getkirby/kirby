@@ -368,7 +368,6 @@ class EntriesFieldTest extends TestCase
 			'required' => true
 		]);
 
-		$field->validate();
 		$this->assertSame($expected, $field->isValid());
 
 		if ($expected === false) {
