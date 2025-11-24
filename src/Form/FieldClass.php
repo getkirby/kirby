@@ -50,14 +50,14 @@ abstract class FieldClass
 		$this->setAutofocus($params['autofocus'] ?? null);
 		$this->setBefore($params['before'] ?? null);
 		$this->setDefault($params['default'] ?? null);
-		$this->setDisabled($params['disabled'] ?? false);
+		$this->setDisabled($params['disabled'] ?? null);
 		$this->setHelp($params['help'] ?? null);
 		$this->setIcon($params['icon'] ?? null);
 		$this->setLabel($params['label'] ?? null);
 		$this->setModel($params['model'] ?? null);
 		$this->setName($params['name'] ?? null);
 		$this->setPlaceholder($params['placeholder'] ?? null);
-		$this->setRequired($params['required'] ?? false);
+		$this->setRequired($params['required'] ?? null);
 		$this->setSiblings($params['siblings'] ?? null);
 		$this->setTranslate($params['translate'] ?? null);
 		$this->setWhen($params['when'] ?? null);
