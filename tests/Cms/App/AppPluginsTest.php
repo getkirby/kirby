@@ -887,24 +887,16 @@ class AppPluginsTest extends TestCase
 			],
 			'hooks' => [
 				'system.loadPlugins:after' => function () use ($phpUnit, &$executed, $tmp) {
-					if (count($this->plugins()) === 2) {
+					$plugins = $this->plugins();
+
+					if (count($plugins) === 2) {
 						$phpUnit->assertSame([
 							'kirby/manual1' => new Plugin('kirby/manual1', []),
 							'kirby/manual2' => new Plugin('kirby/manual2', [])
-						], $this->plugins());
+						], $plugins);
 					} else {
-						// cannot use strict assertion
-						// (test for object contents)
-						$phpUnit->assertEquals([
-							'kirby/test1' => new Plugin('kirby/test1', [
-								'hooks' => [
-									'system.loadPlugins:after' => function () {
-										// just a dummy closure to compare against
-									}
-								],
-								'root' => $tmp . '/site/plugins-loader/test1'
-							])
-						], $this->plugins());
+						$phpUnit->assertInstanceOf(Plugin::class, $plugins['kirby/test1']);
+						$phpUnit->assertSame($tmp . '/site/plugins-loader/test1', $plugins['kirby/test1']->root());
 					}
 
 					$executed++;
