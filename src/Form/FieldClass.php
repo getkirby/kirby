@@ -57,7 +57,7 @@ abstract class FieldClass
 		$this->setPlaceholder($params['placeholder'] ?? null);
 		$this->setRequired($params['required'] ?? false);
 		$this->setSiblings($params['siblings'] ?? null);
-		$this->setTranslate($params['translate'] ?? true);
+		$this->setTranslate($params['translate'] ?? null);
 		$this->setWhen($params['when'] ?? null);
 		$this->setWidth($params['width'] ?? null);
 
