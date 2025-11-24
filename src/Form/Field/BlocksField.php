@@ -53,7 +53,7 @@ class BlocksField extends FieldClass
 		array|null $default = null,
 		bool|null $disabled = null,
 		array|string|null $empty = null,
-		array|string|null $fieldsets = null,
+		array|null $fieldsets = null,
 		array|string|null $help = null,
 		string|null $group = null,
 		array|string|null $label = null,
@@ -293,9 +293,8 @@ class BlocksField extends FieldClass
 		parent::setDefault($default);
 	}
 
-	protected function setFieldsets(
-		array|null $fieldsets,
-	): void {
+	protected function setFieldsets(array|null $fieldsets): void
+	{
 		$this->fieldsets = $fieldsets;
 	}
 
