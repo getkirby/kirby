@@ -43,9 +43,9 @@ class StatsField extends FieldClass
 	) {
 		parent::__construct(
 			label: $label,
-			help: $help,
-			name: $name,
-			when: $when,
+			help:  $help,
+			name:  $name,
+			when:  $when,
 			width: $width
 		);
 
