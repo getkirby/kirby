@@ -59,20 +59,20 @@ class LayoutField extends BlocksField
 	) {
 		parent::__construct(
 			autofocus: $autofocus,
-			disabled: $disabled,
-			empty: $empty,
+			disabled:  $disabled,
+			empty:     $empty,
 			fieldsets: $fieldsets,
-			help: $help,
-			group: $group,
-			label: $label,
-			name: $name,
-			max: $max,
-			min: $min,
-			pretty: $pretty,
-			required: $required,
+			help:      $help,
+			group:     $group,
+			label:     $label,
+			name:      $name,
+			max:       $max,
+			min:       $min,
+			pretty:    $pretty,
+			required:  $required,
 			translate: $translate,
-			when: $when,
-			width: $width
+			when:      $when,
+			width:     $width
 		);
 
 		$this->setDefault($default);
