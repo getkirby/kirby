@@ -45,7 +45,7 @@ abstract class FieldClass
 		protected array $params = []
 	) {
 		$this->setAfter($params['after'] ?? null);
-		$this->setAutofocus($params['autofocus'] ?? false);
+		$this->setAutofocus($params['autofocus'] ?? null);
 		$this->setBefore($params['before'] ?? null);
 		$this->setDefault($params['default'] ?? null);
 		$this->setDisabled($params['disabled'] ?? false);
