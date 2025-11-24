@@ -42,7 +42,7 @@ class EntriesField extends FieldClass
 		$this->setField($params['field'] ?? null);
 		$this->setMax($params['max'] ?? null);
 		$this->setMin($params['min'] ?? null);
-		$this->setSortable($params['sortable'] ?? true);
+		$this->setSortable($params['sortable'] ?? null);
 	}
 
 	public function field(): array
