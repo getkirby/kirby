@@ -16,20 +16,97 @@ use Throwable;
 
 class LayoutField extends BlocksField
 {
-	protected Fieldset|null $settings;
+	/**
+	 * Define available layouts. Each layout is list of column widths. (e.g. 1/2, 1/2 or 1/4, 3/4)
+	 */
+	protected array|null $layouts;
+
+	/**
+	 * Customize the `size` and `columns` in the layout selector to account for the number of different layouts you have defined via the layouts property. Available sizes: `small`, `medium` (default), `large`, `huge`. Default columns: `3`
+	 */
+	protected array|null $selector;
+
+	/**
+	 * Define tabs and fields for the layout settings. Layout settings are defined globally. Each layout will then get a "Settings" button in its dropdown and open a settings drawer with the configured fields.
+	 */
+	protected array|string|null $settings;
+
+	/**
+	 * Cache for the settings Fieldset instance
+	 */
+	protected Fieldset|null $settingsFieldset;
 
 	public function __construct(
-		protected array|null $layouts = null,
-		protected array|null $selector = null,
+		bool|null $autofocus = null,
+		array|null $default = null,
+		bool|null $disabled = null,
+		array|string|null $empty = null,
+		array|string|null $fieldsets = null,
+		array|string|null $help = null,
+		string|null $group = null,
+		array|string|null $label = null,
+		array|null $layouts = null,
+		int|null $max = null,
+		int|null $min = null,
+		string|null $name = null,
+		bool|null $pretty = null,
+		bool|null $required = null,
+		array|null $selector = null,
 		array|string|null $settings = null,
-		...$props
+		bool|null $translate = null,
+		array|null $when = null,
+		string|null $width = null,
 	) {
-		$this->setModel($props['model'] ?? null);
+		parent::__construct(
+			autofocus: $autofocus,
+			disabled:  $disabled,
+			empty:     $empty,
+			fieldsets: $fieldsets,
+			help:      $help,
+			group:     $group,
+			label:     $label,
+			name:      $name,
+			max:       $max,
+			min:       $min,
+			pretty:    $pretty,
+			required:  $required,
+			translate: $translate,
+			when:      $when,
+			width:     $width
+		);
+
+		$this->setDefault($default);
 		$this->setLayouts($layouts);
 		$this->setSelector($selector);
 		$this->setSettings($settings);
+	}
 
-		parent::__construct(...$props);
+	public function default(): mixed
+	{
+		$default = parent::default();
+
+		// set id for layouts, columns and blocks within layout if not exists
+		if (is_array($default) === true) {
+			array_walk($default, function (&$layout) {
+				$layout['id'] ??= Str::uuid();
+
+				// set columns id within layout
+				if (isset($layout['columns']) === true) {
+					array_walk($layout['columns'], function (&$column) {
+						$column['id'] ??= Str::uuid();
+
+						// set blocks id within column
+						if (isset($column['blocks']) === true) {
+							array_walk($column['blocks'], function (&$block) {
+								$block['id'] ??= Str::uuid();
+							});
+						}
+					});
+				}
+			});
+		}
+
+		return $default;
 	}
 
 	/**
@@ -40,10 +117,10 @@ class LayoutField extends BlocksField
 	{
 		$attrs   = $this->attrsForm();
 		$value   = Data::decode($value, type: 'json', fail: false);
-		$layouts = Layouts::factory($value, ['parent' => $this->model])->toArray();
+		$layouts = Layouts::factory($value, ['parent' => $this->model()])->toArray();
 
 		foreach ($layouts as $layoutIndex => $layout) {
-			if ($this->settings !== null) {
+			if ($this->settings() !== null) {
 				$layouts[$layoutIndex]['attrs'] = $attrs->reset()->fill($layout['attrs'])->toFormValues();
 			}
 
@@ -61,13 +138,13 @@ class LayoutField extends BlocksField
 	{
 		return new Form(
 			fields: $this->settings()?->fields() ?? [],
-			model:  $this->model
+			model:  $this->model()
 		);
 	}
 
 	public function layouts(): array
 	{
-		return $this->layouts ?? [['1/1']];
+		return array_map(Str::split(...), $this->layouts ?? ['1/1']);
 	}
 
 	/**
@@ -211,78 +288,48 @@ class LayoutField extends BlocksField
 		return $this->selector;
 	}
 
-	protected function setDefault(mixed $default = null): void
-	{
-		// set id for layouts, columns and blocks within layout if not exists
-		if (is_array($default) === true) {
-			array_walk($default, function (&$layout) {
-				$layout['id'] ??= Str::uuid();
-
-				// set columns id within layout
-				if (isset($layout['columns']) === true) {
-					array_walk($layout['columns'], function (&$column) {
-						$column['id'] ??= Str::uuid();
-
-						// set blocks id within column
-						if (isset($column['blocks']) === true) {
-							array_walk($column['blocks'], function (&$block) {
-								$block['id'] ??= Str::uuid();
-							});
-						}
-					});
-				}
-			});
-		}
-
-		parent::setDefault($default);
-	}
-
 	protected function setLayouts(array|null $layouts): void
 	{
-		if ($layouts) {
-			$layouts = array_map(
-				fn ($layout) => Str::split($layout),
-				$layouts
-			);
-		}
-
 		$this->layouts = $layouts;
 	}
 
 	/**
 	 * Layout selector's styles such as size (`small`, `medium`, `large` or `huge`) and columns
 	 */
-	protected function setSelector(array|null $selector = null): void
+	protected function setSelector(array|null $selector): void
 	{
 		$this->selector = $selector;
 	}
 
-	protected function setSettings(array|string|null $settings = null): void
+	protected function setSettings(array|string|null $settings): void
 	{
-		if (empty($settings) === true) {
-			$this->settings = null;
-			return;
+		$this->settings = $settings;
+	}
+
+	public function settings(): Fieldset|null
+	{
+		if (isset($this->settingsFieldset) === true) {
+			return $this->settingsFieldset;
 		}
 
-		$settings = Blueprint::extend($settings);
+		if ($this->settings === null || $this->settings === [] || $this->settings === '') {
+			return $this->settingsFieldset = null;
+		}
+
+		$settings = Blueprint::extend($this->settings ?? []);
 
 		$settings['icon']   = 'dashboard';
 		$settings['type']   = 'layout';
 		$settings['parent'] = $this->model();
 
-		$this->settings = Fieldset::factory($settings);
-	}
-
-	public function settings(): Fieldset|null
-	{
-		return $this->settings;
+		return $this->settingsFieldset ??= Fieldset::factory($settings);
 	}
 
 	public function toStoredValue(bool $default = false): mixed
 	{
 		$attrs = $this->attrsForm();
 		$value = $this->toFormValue($default);
-		$value = Layouts::factory($value, ['parent' => $this->model])->toArray();
+		$value = Layouts::factory($value, ['parent' => $this->model()])->toArray();
 
 		// returns empty string to avoid storing empty array as string `[]`
 		// and to consistency work with `$field->isEmpty()`
@@ -291,7 +338,7 @@ class LayoutField extends BlocksField
 		}
 
 		foreach ($value as $layoutIndex => $layout) {
-			if ($this->settings !== null) {
+			if ($this->settings() !== null) {
 				$value[$layoutIndex]['attrs'] = $attrs->reset()->fill($layout['attrs'])->toStoredValues();
 			}
 
