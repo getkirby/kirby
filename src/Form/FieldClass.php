@@ -2,7 +2,7 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\HasSiblings;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\HasI18n;
 
 /**
@@ -21,7 +21,6 @@ use Kirby\Toolkit\HasI18n;
 abstract class FieldClass
 {
 	use HasI18n;
-	use HasSiblings;
 	use Mixin\After;
 	use Mixin\Api;
 	use Mixin\Autofocus;
@@ -35,46 +34,52 @@ abstract class FieldClass
 	use Mixin\Name;
 	use Mixin\Placeholder;
 	use Mixin\Required;
+	use Mixin\Siblings;
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\Value;
 	use Mixin\When;
 	use Mixin\Width;
 
-	protected Fields $siblings;
-
 	public function __construct(
-		protected array $params = []
+		array|string|null $after = null,
+		bool|null $autofocus = null,
+		array|string|null $before = null,
+		mixed $default = null,
+		bool|null $disabled = null,
+		array|string|null $help = null,
+		string|null $icon = null,
+		array|string|null $label = null,
+		string|null $name = null,
+		array|string|null $placeholder = null,
+		bool|null $required = null,
+		bool|null $translate = null,
+		array|null $when = null,
+		string|null $width = null
 	) {
-		$this->setAfter($params['after'] ?? null);
-		$this->setAutofocus($params['autofocus'] ?? null);
-		$this->setBefore($params['before'] ?? null);
-		$this->setDefault($params['default'] ?? null);
-		$this->setDisabled($params['disabled'] ?? null);
-		$this->setHelp($params['help'] ?? null);
-		$this->setIcon($params['icon'] ?? null);
-		$this->setLabel($params['label'] ?? null);
-		$this->setModel($params['model'] ?? null);
-		$this->setName($params['name'] ?? null);
-		$this->setPlaceholder($params['placeholder'] ?? null);
-		$this->setRequired($params['required'] ?? null);
-		$this->setSiblings($params['siblings'] ?? null);
-		$this->setTranslate($params['translate'] ?? null);
-		$this->setWhen($params['when'] ?? null);
-		$this->setWidth($params['width'] ?? null);
-
-		if (array_key_exists('value', $params) === true) {
-			$this->fill($params['value']);
-		}
+		$this->setAfter($after);
+		$this->setAutofocus($autofocus);
+		$this->setBefore($before);
+		$this->setDefault($default);
+		$this->setDisabled($disabled);
+		$this->setHelp($help);
+		$this->setIcon($icon);
+		$this->setLabel($label);
+		$this->setName($name);
+		$this->setPlaceholder($placeholder);
+		$this->setRequired($required);
+		$this->setTranslate($translate);
+		$this->setWhen($when);
+		$this->setWidth($width);
 	}
 
 	public function __call(string $param, array $args): mixed
 	{
-		if (isset($this->$param) === true) {
+		if (property_exists($this, $param) === true) {
 			return $this->$param;
 		}
 
-		return $this->params[$param] ?? null;
+		throw new NotFoundException(message: 'Method or option "' . $param . '" does not exist for field type "' . $this->type() . '"');
 	}
 
 	/**
@@ -93,6 +98,36 @@ abstract class FieldClass
 		return [];
 	}
 
+	/**
+	 * Creates a new field instance from a $props array
+	 * @since 6.0.0
+	 */
+	public static function factory(
+		array $props,
+		Fields|null $siblings = null
+	): static {
+		$args = $props;
+
+		unset(
+			$args['model'],
+			$args['type'],
+			$args['value']
+		);
+
+		$field = new static(...$args);
+		$field->setSiblings($siblings);
+
+		if (array_key_exists('model', $props) === true) {
+			$field->setModel($props['model']);
+		}
+
+		if (array_key_exists('value', $props) === true) {
+			$field->fill($props['value']);
+		}
+
+		return $field;
+	}
+
 	public function id(): string
 	{
 		return $this->name();
@@ -101,14 +136,6 @@ abstract class FieldClass
 	public function isHidden(): bool
 	{
 		return false;
-	}
-
-	/**
-	 * Returns all original params for the field
-	 */
-	public function params(): array
-	{
-		return $this->params;
 	}
 
 	/**
@@ -146,16 +173,6 @@ abstract class FieldClass
 	{
 		$this->value = $this->emptyValue();
 		return $this;
-	}
-
-	protected function setSiblings(Fields|null $siblings = null): void
-	{
-		$this->siblings = $siblings ?? new Fields([$this]);
-	}
-
-	protected function siblingsCollection(): Fields
-	{
-		return $this->siblings;
 	}
 
 	/**
