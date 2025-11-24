@@ -16,8 +16,19 @@ use Throwable;
 
 class LayoutField extends BlocksField
 {
+	/**
+	 * Define available layouts. Each layout is list of column widths. (e.g. 1/2, 1/2 or 1/4, 3/4)
+	 */
 	protected array|null $layouts;
+
+	/**
+	 * Customize the `size` and `columns` in the layout selector to account for the number of different layouts you have defined via the layouts property. Available sizes: `small`, `medium` (default), `large`, `huge`. Default columns: `3`
+	 */
 	protected array|null $selector;
+
+	/**
+	 * Define tabs and fields for the layout settings. Layout settings are defined globally. Each layout will then get a "Settings" button in its dropdown and open a settings drawer with the configured fields.
+	 */
 	protected array|string|null $settings;
 
 	/**
