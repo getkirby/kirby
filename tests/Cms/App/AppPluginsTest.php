@@ -52,7 +52,7 @@ class DummyFilePreview
 {
 }
 
-#[CoversClass(AppPlugins::class)]
+#[CoversClass(App::class)]
 class AppPluginsTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';

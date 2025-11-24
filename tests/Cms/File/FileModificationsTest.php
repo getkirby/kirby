@@ -8,7 +8,7 @@ use Kirby\Filesystem\Asset;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-#[CoversClass(FileModifications::class)]
+#[CoversClass(File::class)]
 class FileModificationsTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileModifications';

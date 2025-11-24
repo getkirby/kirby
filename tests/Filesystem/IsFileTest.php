@@ -3,6 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
+use Kirby\Cms\File as CmsFile;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
 use Kirby\TestCase;
@@ -15,7 +16,7 @@ class AFile
 	public string $foo = 'bar';
 }
 
-#[CoversClass(IsFile::class)]
+#[CoversClass(CmsFile::class)]
 class IsFileTest extends TestCase
 {
 	protected function _asset($file = 'blank.pdf')
