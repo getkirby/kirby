@@ -25,7 +25,9 @@ class Field extends Component
 {
 	use HasSiblings;
 	use Mixin\Api;
+	use Mixin\DefaultValue;
 	use Mixin\Model;
+	use Mixin\Required;
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\When;
@@ -185,7 +187,7 @@ class Field extends Component
 				},
 				'default' => function () {
 					/** @var \Kirby\Form\Field $this */
-					if ($this->default === null) {
+					if (isset($this->default) === false) {
 						return;
 					}
 

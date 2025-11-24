@@ -26,6 +26,7 @@ abstract class FieldClass
 	use Mixin\Api;
 	use Mixin\Autofocus;
 	use Mixin\Before;
+	use Mixin\DefaultValue;
 	use Mixin\Disabled;
 	use Mixin\Help;
 	use Mixin\Icon;
@@ -33,6 +34,7 @@ abstract class FieldClass
 	use Mixin\Model;
 	use Mixin\Name;
 	use Mixin\Placeholder;
+	use Mixin\Required;
 	use Mixin\Translatable;
 	use Mixin\Validation;
 	use Mixin\Value;
@@ -45,7 +47,7 @@ abstract class FieldClass
 		protected array $params = []
 	) {
 		$this->setAfter($params['after'] ?? null);
-		$this->setAutofocus($params['autofocus'] ?? false);
+		$this->setAutofocus($params['autofocus'] ?? null);
 		$this->setBefore($params['before'] ?? null);
 		$this->setDefault($params['default'] ?? null);
 		$this->setDisabled($params['disabled'] ?? false);
@@ -57,7 +59,7 @@ abstract class FieldClass
 		$this->setPlaceholder($params['placeholder'] ?? null);
 		$this->setRequired($params['required'] ?? false);
 		$this->setSiblings($params['siblings'] ?? null);
-		$this->setTranslate($params['translate'] ?? true);
+		$this->setTranslate($params['translate'] ?? null);
 		$this->setWhen($params['when'] ?? null);
 		$this->setWidth($params['width'] ?? null);
 

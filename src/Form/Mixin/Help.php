@@ -7,7 +7,7 @@ trait Help
 	/**
 	 * Optional help text below the field
 	 */
-	protected array|string|null $help = null;
+	protected array|string|null $help;
 
 	public function help(): string|null
 	{

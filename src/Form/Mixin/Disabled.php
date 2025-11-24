@@ -7,19 +7,19 @@ trait Disabled
 	/**
 	 * If `true`, the field is no longer editable and will not be saved
 	 */
-	protected bool $disabled = false;
+	protected bool|null $disabled;
 
 	public function disabled(): bool
 	{
-		return $this->disabled;
+		return $this->disabled ?? false;
 	}
 
 	public function isDisabled(): bool
 	{
-		return $this->disabled;
+		return $this->disabled();
 	}
 
-	protected function setDisabled(bool $disabled): void
+	protected function setDisabled(bool|null $disabled): void
 	{
 		$this->disabled = $disabled;
 	}

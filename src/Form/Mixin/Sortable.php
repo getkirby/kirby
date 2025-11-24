@@ -7,14 +7,14 @@ trait Sortable
 	/**
 	 * If `true`, entries are sortable via drag & drop
 	 */
-	protected bool $sortable = true;
+	protected bool|null $sortable;
 
 	public function sortable(): bool
 	{
-		return $this->sortable;
+		return $this->sortable ?? true;
 	}
 
-	protected function setSortable(bool $sortable): void
+	protected function setSortable(bool|null $sortable): void
 	{
 		$this->sortable = $sortable;
 	}

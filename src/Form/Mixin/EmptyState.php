@@ -7,7 +7,7 @@ trait EmptyState
 	/**
 	 * Sets the text for the empty state box
 	 */
-	protected array|string|null $empty = null;
+	protected array|string|null $empty;
 
 	public function empty(): string|null
 	{
