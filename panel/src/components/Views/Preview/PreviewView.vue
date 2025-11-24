@@ -33,11 +33,13 @@
 				<k-preview-browser
 					v-bind="browserProps('latest')"
 					@discard="onDiscard"
+					@navigate="onNavigate"
 					@submit="onSubmit"
 				/>
 				<k-preview-browser
 					v-bind="browserProps('changes')"
 					@discard="onDiscard"
+					@navigate="onNavigate"
 					@submit="onSubmit"
 				/>
 			</template>
@@ -45,6 +47,7 @@
 				<k-preview-browser
 					v-bind="browserProps(versionId)"
 					@discard="onDiscard"
+					@navigate="onNavigate"
 					@submit="onSubmit"
 				/>
 			</template>
@@ -101,6 +104,9 @@ export default {
 
 			const url = this.$api.pages.url(page.id, "preview/" + this.versionId);
 			this.$panel.view.open(url);
+		},
+		onNavigate(redirect) {
+			this.$panel.view.reload({ query: { redirect } });
 		}
 	}
 };
