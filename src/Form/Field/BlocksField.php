@@ -7,7 +7,6 @@ use Kirby\Cms\Block;
 use Kirby\Cms\Blocks as BlocksCollection;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Fieldsets;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -30,7 +29,16 @@ class BlocksField extends FieldClass
 	/**
 	 * Defines the allowed block types in the blocks field. See below.
 	 */
-	protected Fieldsets $fieldsets;
+	protected array|null $fieldsets;
+
+	/**
+	 * Cache for the Fieldsets collection
+	 */
+	protected Fieldsets $fieldsetsCollection;
+
+	/**
+	 * Cache for all Form instances for each fieldset
+	 */
 	protected array $forms;
 
 	/**
@@ -49,14 +57,11 @@ class BlocksField extends FieldClass
 		bool|null $pretty = null,
 		...$props
 	) {
-		$this->setFieldsets(
-			$fieldsets,
-			$props['model'] ?? App::instance()->site()
-		);
 
 		parent::__construct(...$props);
 
 		$this->setEmpty($empty);
+		$this->setFieldsets($fieldsets);
 		$this->setGroup($group);
 		$this->setMax($max);
 		$this->setMin($min);
@@ -95,7 +100,7 @@ class BlocksField extends FieldClass
 
 	public function fieldset(string $type): Fieldset
 	{
-		if ($fieldset = $this->fieldsets->find($type)) {
+		if ($fieldset = $this->fieldsets()->find($type)) {
 			return $fieldset;
 		}
 
@@ -111,7 +116,10 @@ class BlocksField extends FieldClass
 
 	public function fieldsets(): Fieldsets
 	{
-		return $this->fieldsets;
+		return $this->fieldsetsCollection ??= Fieldsets::factory(
+			$this->fieldsets,
+			['parent' => $this->model()]
+		);
 	}
 
 	public function fieldsetGroups(): array|null
@@ -267,17 +275,9 @@ class BlocksField extends FieldClass
 	}
 
 	protected function setFieldsets(
-		string|array|null $fieldsets,
-		ModelWithContent $model
+		array|null $fieldsets,
 	): void {
-		if (is_string($fieldsets) === true) {
-			$fieldsets = [];
-		}
-
-		$this->fieldsets = Fieldsets::factory(
-			$fieldsets,
-			['parent' => $model]
-		);
+		$this->fieldsets = $fieldsets;
 	}
 
 	protected function setGroup(string|null $group): void
