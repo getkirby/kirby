@@ -26,6 +26,7 @@ abstract class FieldClass
 	use Mixin\Api;
 	use Mixin\Autofocus;
 	use Mixin\Before;
+	use Mixin\DefaultValue;
 	use Mixin\Disabled;
 	use Mixin\Help;
 	use Mixin\Icon;
