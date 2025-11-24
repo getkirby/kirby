@@ -22,8 +22,8 @@ class LayoutField extends BlocksField
 
 	public function __construct(array $params)
 	{
-		$this->setModel($params['model'] ?? App::instance()->site());
-		$this->setLayouts($params['layouts'] ?? ['1/1']);
+		$this->setModel($params['model'] ?? null);
+		$this->setLayouts($params['layouts'] ?? null);
 		$this->setSelector($params['selector'] ?? null);
 		$this->setSettings($params['settings'] ?? null);
 
@@ -63,9 +63,9 @@ class LayoutField extends BlocksField
 		);
 	}
 
-	public function layouts(): array|null
+	public function layouts(): array
 	{
-		return $this->layouts;
+		return $this->layouts ?? [['1/1']];
 	}
 
 	/**
@@ -235,12 +235,16 @@ class LayoutField extends BlocksField
 		parent::setDefault($default);
 	}
 
-	protected function setLayouts(array $layouts = []): void
+	protected function setLayouts(array|null $layouts): void
 	{
-		$this->layouts = array_map(
-			fn ($layout) => Str::split($layout),
-			$layouts
-		);
+		if ($layouts) {
+			$layouts = array_map(
+				fn ($layout) => Str::split($layout),
+				$layouts
+			);
+		}
+
+		$this->layouts = $layouts;
 	}
 
 	/**
