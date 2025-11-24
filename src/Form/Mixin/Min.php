@@ -7,7 +7,7 @@ trait Min
 	/**
 	 * Sets the minimum number of required items in the field
 	 */
-	protected int|null $min = null;
+	protected int|null $min;
 
 	public function min(): int|null
 	{
@@ -16,7 +16,7 @@ trait Min
 			return $this->min ?? 1;
 		}
 
-		return $this->min;
+		return $this->min ?? null;
 	}
 
 	protected function setMin(int|null $min): void
