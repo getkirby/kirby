@@ -68,15 +68,15 @@ class BlocksField extends FieldClass
 	) {
 		parent::__construct(
 			autofocus: $autofocus,
-			default: $default,
-			disabled: $disabled,
-			help: $help,
-			label: $label,
-			name: $name,
-			required: $required,
+			default:   $default,
+			disabled:  $disabled,
+			help:      $help,
+			label:     $label,
+			name:      $name,
+			required:  $required,
 			translate: $translate,
-			when: $when,
-			width: $width
+			when:      $when,
+			width:     $width
 		);
 
 		$this->setEmpty($empty);
