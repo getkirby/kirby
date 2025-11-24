@@ -12,11 +12,6 @@ use Kirby\Toolkit\V;
 trait Validation
 {
 	/**
-	 * If `true`, the field has to be filled in correctly to be saved.
-	 */
-	protected bool $required = false;
-
-	/**
 	 * Runs all validations and returns an array of
 	 * error messages
 	 */
@@ -67,14 +62,6 @@ trait Validation
 	}
 
 	/**
-	 * Checks if the field is required
-	 */
-	public function isRequired(): bool
-	{
-		return $this->required;
-	}
-
-	/**
 	 * Checks if the field is invalid
 	 */
 	public function isInvalid(): bool
@@ -88,16 +75,6 @@ trait Validation
 	public function isValid(): bool
 	{
 		return $this->errors() === [];
-	}
-
-	public function required(): bool
-	{
-		return $this->required;
-	}
-
-	protected function setRequired(bool $required): void
-	{
-		$this->required = $required;
 	}
 
 	/**
