@@ -7,7 +7,7 @@ trait Before
 	/**
 	 * Optional text that will be shown before the input
 	 */
-	protected array|string|null $before = null;
+	protected array|string|null $before;
 
 	public function before(): string|null
 	{
