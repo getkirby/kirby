@@ -9,7 +9,7 @@ trait Translatable
 	/**
 	 * Should the field be translatable?
 	 */
-	protected bool $translate = true;
+	protected bool|null $translate;
 
 	/**
 	 * Should the field be translatable into the given language?
@@ -25,13 +25,13 @@ trait Translatable
 		return true;
 	}
 
-	protected function setTranslate(bool $translate): void
+	protected function setTranslate(bool|null $translate): void
 	{
 		$this->translate = $translate;
 	}
 
 	public function translate(): bool
 	{
-		return $this->translate;
+		return $this->translate ?? true;
 	}
 }
