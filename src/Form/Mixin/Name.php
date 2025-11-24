@@ -4,7 +4,7 @@ namespace Kirby\Form\Mixin;
 
 trait Name
 {
-	protected string|null $name = null;
+	protected string|null $name;
 
 	public function name(): string
 	{
