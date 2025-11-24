@@ -43,7 +43,7 @@ abstract class FieldClass
 
 	public function __construct(
 		array|string|null $after = null,
-		bool $autofocus = false,
+		bool|null $autofocus = null,
 		array|string|null $before = null,
 		mixed $default = null,
 		bool|null $disabled = null,
