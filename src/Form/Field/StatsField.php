@@ -33,11 +33,21 @@ class StatsField extends FieldClass
 	protected Stats $stats;
 
 	public function __construct(
+		array|string|null $label = null,
+		array|string|null $help = null,
+		string|null $name = null,
 		array|string|null $reports = null,
 		string|null $size = null,
-		...$props
+		array|null $when = null,
+		string|null $width = null
 	) {
-		parent::__construct(...$props);
+		parent::__construct(
+			label: $label,
+			help:  $help,
+			name:  $name,
+			when:  $when,
+			width: $width
+		);
 
 		$this->reports = $reports;
 		$this->size    = $size;
