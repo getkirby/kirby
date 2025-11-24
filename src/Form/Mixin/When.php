@@ -47,6 +47,6 @@ trait When
 
 	public function when(): array|null
 	{
-		return $this->when ?? null;
+		return $this->when;
 	}
 }
