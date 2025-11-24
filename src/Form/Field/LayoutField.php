@@ -81,6 +81,34 @@ class LayoutField extends BlocksField
 		$this->setSettings($settings);
 	}
 
+	public function default(): mixed
+	{
+		$default = parent::default();
+
+		// set id for layouts, columns and blocks within layout if not exists
+		if (is_array($default) === true) {
+			array_walk($default, function (&$layout) {
+				$layout['id'] ??= Str::uuid();
+
+				// set columns id within layout
+				if (isset($layout['columns']) === true) {
+					array_walk($layout['columns'], function (&$column) {
+						$column['id'] ??= Str::uuid();
+
+						// set blocks id within column
+						if (isset($column['blocks']) === true) {
+							array_walk($column['blocks'], function (&$block) {
+								$block['id'] ??= Str::uuid();
+							});
+						}
+					});
+				}
+			});
+		}
+
+		return $default;
+	}
+
 	/**
 	 * @psalm-suppress MethodSignatureMismatch
 	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
@@ -258,32 +286,6 @@ class LayoutField extends BlocksField
 	public function selector(): array|null
 	{
 		return $this->selector;
-	}
-
-	protected function setDefault(mixed $default): void
-	{
-		// set id for layouts, columns and blocks within layout if not exists
-		if (is_array($default) === true) {
-			array_walk($default, function (&$layout) {
-				$layout['id'] ??= Str::uuid();
-
-				// set columns id within layout
-				if (isset($layout['columns']) === true) {
-					array_walk($layout['columns'], function (&$column) {
-						$column['id'] ??= Str::uuid();
-
-						// set blocks id within column
-						if (isset($column['blocks']) === true) {
-							array_walk($column['blocks'], function (&$block) {
-								$block['id'] ??= Str::uuid();
-							});
-						}
-					});
-				}
-			});
-		}
-
-		parent::setDefault($default);
 	}
 
 	protected function setLayouts(array|null $layouts): void
