@@ -7,11 +7,11 @@ trait Max
 	/**
 	 * Sets the maximum number of allowed items in the field
 	 */
-	protected int|null $max = null;
+	protected int|null $max;
 
 	public function max(): int|null
 	{
-		return $this->max;
+		return $this->max ?? null;
 	}
 
 	protected function setMax(int|null $max): void
