@@ -57,10 +57,10 @@ class LayoutField extends BlocksField
 	{
 		$attrs   = $this->attrsForm();
 		$value   = Data::decode($value, type: 'json', fail: false);
-		$layouts = Layouts::factory($value, ['parent' => $this->model])->toArray();
+		$layouts = Layouts::factory($value, ['parent' => $this->model()])->toArray();
 
 		foreach ($layouts as $layoutIndex => $layout) {
-			if ($this->settings !== null) {
+			if ($this->settings() !== null) {
 				$layouts[$layoutIndex]['attrs'] = $attrs->reset()->fill($layout['attrs'])->toFormValues();
 			}
 
@@ -78,7 +78,7 @@ class LayoutField extends BlocksField
 	{
 		return new Form(
 			fields: $this->settings()?->fields() ?? [],
-			model:  $this->model
+			model:  $this->model()
 		);
 	}
 
@@ -302,7 +302,7 @@ class LayoutField extends BlocksField
 	{
 		$attrs = $this->attrsForm();
 		$value = $this->toFormValue($default);
-		$value = Layouts::factory($value, ['parent' => $this->model])->toArray();
+		$value = Layouts::factory($value, ['parent' => $this->model()])->toArray();
 
 		// returns empty string to avoid storing empty array as string `[]`
 		// and to consistency work with `$field->isEmpty()`
@@ -311,7 +311,7 @@ class LayoutField extends BlocksField
 		}
 
 		foreach ($value as $layoutIndex => $layout) {
-			if ($this->settings !== null) {
+			if ($this->settings() !== null) {
 				$value[$layoutIndex]['attrs'] = $attrs->reset()->fill($layout['attrs'])->toStoredValues();
 			}
 
