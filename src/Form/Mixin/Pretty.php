@@ -7,14 +7,14 @@ trait Pretty
 	/**
 	 * Saves pretty printed JSON in text files
 	 */
-	protected bool $pretty = false;
+	protected bool|null $pretty;
 
 	public function pretty(): bool
 	{
-		return $this->pretty;
+		return $this->pretty ?? false;
 	}
 
-	protected function setPretty(bool $pretty): void
+	protected function setPretty(bool|null $pretty): void
 	{
 		$this->pretty = $pretty;
 	}
