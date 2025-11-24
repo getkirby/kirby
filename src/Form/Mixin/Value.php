@@ -10,7 +10,7 @@ trait Value
 	/**
 	 * The value of the field
 	 */
-	protected mixed $value;
+	protected mixed $value = null;
 
 	/**
 	 * @deprecated 5.0.0 Use `::toStoredValue()` instead to receive
