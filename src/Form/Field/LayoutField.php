@@ -144,7 +144,7 @@ class LayoutField extends BlocksField
 
 	public function layouts(): array
 	{
-		return $this->layouts ?? [['1/1']];
+		return array_map(Str::split(...), $this->layouts ?? [['1/1']]);
 	}
 
 	/**
@@ -290,13 +290,6 @@ class LayoutField extends BlocksField
 
 	protected function setLayouts(array|null $layouts): void
 	{
-		if ($layouts) {
-			$layouts = array_map(
-				fn ($layout) => Str::split($layout),
-				$layouts
-			);
-		}
-
 		$this->layouts = $layouts;
 	}
 
