@@ -16,7 +16,7 @@ trait Min
 			return $this->min ?? 1;
 		}
 
-		return $this->min ?? null;
+		return $this->min;
 	}
 
 	protected function setMin(int|null $min): void
