@@ -16,11 +16,18 @@ use Throwable;
 
 class LayoutField extends BlocksField
 {
-	protected Fieldset|null $settings;
+	protected array|null $layouts;
+	protected array|null $selector;
+	protected array|string|null $settings;
+
+	/**
+	 * Cache for the settings Fieldset instance
+	 */
+	protected Fieldset|null $settingsFieldset;
 
 	public function __construct(
-		protected array|null $layouts = null,
-		protected array|null $selector = null,
+		array|null $layouts = null,
+		array|null $selector = null,
 		array|string|null $settings = null,
 		...$props
 	) {
@@ -259,23 +266,26 @@ class LayoutField extends BlocksField
 
 	protected function setSettings(array|string|null $settings = null): void
 	{
-		if (empty($settings) === true) {
-			$this->settings = null;
-			return;
+		$this->settings = $settings;
+	}
+
+	public function settings(): Fieldset|null
+	{
+		if (isset($this->settingsFieldset) === true) {
+			return $this->settingsFieldset;
 		}
 
-		$settings = Blueprint::extend($settings);
+		if ($this->settings === null || $this->settings === [] || $this->settings === '') {
+			return $this->settingsFieldset = null;
+		}
+
+		$settings = Blueprint::extend($this->settings ?? []);
 
 		$settings['icon']   = 'dashboard';
 		$settings['type']   = 'layout';
 		$settings['parent'] = $this->model();
 
-		$this->settings = Fieldset::factory($settings);
-	}
-
-	public function settings(): Fieldset|null
-	{
-		return $this->settings;
+		return $this->settingsFieldset ??= Fieldset::factory($settings);
 	}
 
 	public function toStoredValue(bool $default = false): mixed
