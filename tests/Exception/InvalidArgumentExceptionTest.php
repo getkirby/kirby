@@ -5,9 +5,9 @@ namespace Kirby\Exception;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
+#[CoversNothing]
 class InvalidArgumentExceptionTest extends TestCase
 {
-	#[CoversNothing]
 	public function testDefaults(): void
 	{
 		$exception = new InvalidArgumentException();
@@ -17,7 +17,6 @@ class InvalidArgumentExceptionTest extends TestCase
 		$this->assertSame(['argument' => null, 'method' => null], $exception->getData());
 	}
 
-	#[CoversNothing]
 	public function testPlaceholders(): void
 	{
 		$exception = new InvalidArgumentException(data: [
@@ -31,7 +30,6 @@ class InvalidArgumentExceptionTest extends TestCase
 		], $exception->getData());
 	}
 
-	#[CoversNothing]
 	public function testPlaceholdersWithNamedArguments(): void
 	{
 		$exception = new InvalidArgumentException(

@@ -22,7 +22,7 @@ class NewHasFileTraitUser
 	}
 }
 
-#[CoversClass(HasFiles::class)]
+#[CoversClass(Page::class)]
 class NewHasFilesTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.NewHasFiles';

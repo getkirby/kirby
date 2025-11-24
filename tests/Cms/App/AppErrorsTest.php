@@ -9,7 +9,7 @@ use ReflectionMethod;
 use Whoops\Handler\CallbackHandler;
 use Whoops\Handler\PlainTextHandler;
 
-#[CoversClass(AppErrors::class)]
+#[CoversClass(App::class)]
 class AppErrorsTest extends TestCase
 {
 	protected App|null $originalApp;

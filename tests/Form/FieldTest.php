@@ -413,7 +413,7 @@ class FieldTest extends TestCase
 	public function testFillWithRestoredState(): void
 	{
 		Field::$types = [
-			'test' => $definition = [
+			'test' => [
 				'computed' => [
 					'options' => fn () => ['a', 'b', 'c']
 				],
@@ -430,15 +430,17 @@ class FieldTest extends TestCase
 			'value' => 'test'
 		]);
 
+		$originalOptions = $field->optionsDebugger();
+
 		$this->assertSame(['a', 'b', 'c'], $field->options());
-		$this->assertEquals(Field::setup('test'), $field->optionsDebugger());
+		$this->assertEquals($originalOptions, $field->optionsDebugger());
 
 		// filling a new value must not break the mandatory
 		// component definition properties
 		$field->fill('test2');
 
 		$this->assertSame(['a', 'b', 'c'], $field->options());
-		$this->assertEquals(Field::setup('test'), $field->optionsDebugger());
+		$this->assertEquals($originalOptions, $field->optionsDebugger());
 	}
 
 	public function testHelp(): void
