@@ -9,7 +9,7 @@ trait Label
 	/**
 	 * The field label can be set as string or associative array with translations
 	 */
-	protected array|string|null $label = null;
+	protected array|string|null $label;
 
 	public function label(): string|null
 	{
