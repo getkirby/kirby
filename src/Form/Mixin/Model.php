@@ -7,14 +7,14 @@ use Kirby\Cms\ModelWithContent;
 
 trait Model
 {
-	protected ModelWithContent $model;
+	protected ModelWithContent|null $model;
 
 	/**
 	 * Returns the Kirby instance
 	 */
 	public function kirby(): App
 	{
-		return $this->model->kirby();
+		return $this->model()->kirby();
 	}
 
 	/**
@@ -22,14 +22,14 @@ trait Model
 	 */
 	public function model(): ModelWithContent
 	{
-		return $this->model;
+		return $this->model ?? App::instance()->site();
 	}
 
 	/**
 	 * Sets the parent model
 	 */
-	protected function setModel(ModelWithContent|null $model = null): void
+	protected function setModel(ModelWithContent|null $model): void
 	{
-		$this->model = $model ?? App::instance()->site();
+		$this->model = $model;
 	}
 }

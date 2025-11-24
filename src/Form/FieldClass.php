@@ -164,7 +164,7 @@ abstract class FieldClass
 	protected function stringTemplate(string|null $string = null): string|null
 	{
 		if ($string !== null) {
-			return $this->model->toString($string);
+			return $this->model()->toString($string);
 		}
 
 		return null;
