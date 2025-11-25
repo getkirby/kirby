@@ -108,6 +108,15 @@ class FocusTest extends TestCase
 		$this->assertNull(Focus::coords(...$options));
 	}
 
+	public function testNormalize(): void
+	{
+		$this->assertSame('70% 30%', Focus::normalize('70% 30%'));
+		$this->assertSame('50% 100%', Focus::normalize('right'));
+		$this->assertSame('100% 50%', Focus::normalize('bottom'));
+		$this->assertSame('100% 0%', Focus::normalize('bottom left'));
+		$this->assertSame('70% 30%', Focus::normalize('{"x":0.7,"y":0.3}'));
+	}
+
 	public function testParse(): void
 	{
 		$this->assertSame([0.7, 0.3], Focus::parse('70%, 30%'));

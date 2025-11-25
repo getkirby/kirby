@@ -175,7 +175,7 @@ class Imagick extends Darkroom
 		}
 
 		// crop based on focus point
-		if (Focus::isFocalPoint($options['crop']) === true) {
+		if ($options['crop'] !== null) {
 			if ($focus = Focus::coords(
 				$options['crop'],
 				$options['sourceWidth'],
@@ -199,30 +199,6 @@ class Imagick extends Darkroom
 				return $image;
 			}
 		}
-
-		// translate the gravity option into something imagemagick understands
-		$gravity = match ($options['crop'] ?? null) {
-			'top left'     => Image::GRAVITY_NORTHWEST,
-			'top'          => Image::GRAVITY_NORTH,
-			'top right'    => Image::GRAVITY_NORTHEAST,
-			'left'         => Image::GRAVITY_WEST,
-			'right'        => Image::GRAVITY_EAST,
-			'bottom left'  => Image::GRAVITY_SOUTHWEST,
-			'bottom'       => Image::GRAVITY_SOUTH,
-			'bottom right' => Image::GRAVITY_SOUTHEAST,
-			default        => Image::GRAVITY_CENTER
-		};
-
-		$landscape = $options['width'] >= $options['height'];
-
-		$image->thumbnailImage(
-			$landscape ? $options['width'] : $image->getImageWidth(),
-			$landscape ? $image->getImageHeight() : $options['height'],
-			true
-		);
-
-		$image->setGravity($gravity);
-		$image->cropImage($options['width'], $options['height'], 0, 0);
 
 		return $image;
 	}

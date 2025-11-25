@@ -166,7 +166,7 @@ class ImageMagick extends Darkroom
 		}
 
 		// crop based on focus point
-		if (Focus::isFocalPoint($options['crop']) === true) {
+		if ($options['crop'] !== null) {
 			if ($focus = Focus::coords(
 				$options['crop'],
 				$options['sourceWidth'],
@@ -175,7 +175,7 @@ class ImageMagick extends Darkroom
 				$options['height']
 			)) {
 				return sprintf(
-					'-crop %sx%s+%s+%s -resize %sx%s^',
+					'-crop %sx%s+%s+%s -thumbnail %sx%s^',
 					$focus['width'],
 					$focus['height'],
 					$focus['x1'],
@@ -186,24 +186,7 @@ class ImageMagick extends Darkroom
 			}
 		}
 
-		// translate the gravity option into something imagemagick understands
-		$gravity = match ($options['crop'] ?? null) {
-			'top left'     => 'NorthWest',
-			'top'          => 'North',
-			'top right'    => 'NorthEast',
-			'left'         => 'West',
-			'right'        => 'East',
-			'bottom left'  => 'SouthWest',
-			'bottom'       => 'South',
-			'bottom right' => 'SouthEast',
-			default        => 'Center'
-		};
-
-		$command  = '-thumbnail ' . escapeshellarg(sprintf('%sx%s^', $options['width'], $options['height']));
-		$command .= ' -gravity ' . escapeshellarg($gravity);
-		$command .= ' -crop ' . escapeshellarg(sprintf('%sx%s+0+0', $options['width'], $options['height']));
-
-		return $command;
+		return '-thumbnail ' . escapeshellarg(sprintf('%sx%s^', $options['width'], $options['height']));
 	}
 
 	/**

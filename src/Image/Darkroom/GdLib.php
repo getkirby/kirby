@@ -51,7 +51,7 @@ class GdLib extends Darkroom
 		}
 
 		// crop based on focus point
-		if (Focus::isFocalPoint($options['crop']) === true) {
+		if ($options['crop'] !== null) {
 			// get crop coords for focal point:
 			// if image needs to be cropped, crop before resizing
 			if ($focus = Focus::coords(
@@ -72,12 +72,7 @@ class GdLib extends Darkroom
 			return $image->thumbnail($options['width'], $options['height']);
 		}
 
-		// normal crop with crop anchor
-		return $image->thumbnail(
-			$options['width'],
-			$options['height'] ?? $options['width'],
-			$options['crop']
-		);
+		return $image;
 	}
 
 	/**
