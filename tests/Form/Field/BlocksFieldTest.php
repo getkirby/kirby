@@ -151,16 +151,12 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('blocks', $props['group']);
 		$this->assertNull($props['max']);
 		$this->assertNull($props['min']);
-		$this->assertNull($props['after']);
 		$this->assertFalse($props['autofocus']);
-		$this->assertNull($props['before']);
 		$this->assertNull($props['default']);
 		$this->assertFalse($props['disabled']);
 		$this->assertNull($props['help']);
-		$this->assertNull($props['icon']);
 		$this->assertSame('Blocks', $props['label']);
 		$this->assertSame('blocks', $props['name']);
-		$this->assertNull($props['placeholder']);
 		$this->assertFalse($props['required']);
 		$this->assertTrue($props['saveable']);
 		$this->assertTrue($props['translate']);

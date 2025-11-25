@@ -61,6 +61,7 @@ abstract class InputField extends BaseField
 		return [
 			...parent::props(),
 			'autofocus' => $this->autofocus(),
+			'default'   => $this->default(),
 			'disabled'  => $this->isDisabled(),
 			'help'      => $this->help(),
 			'label'     => $this->label(),
