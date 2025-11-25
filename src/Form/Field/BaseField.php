@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Form\Fields;
 use Kirby\Form\Mixin;
+use Kirby\Reflection\Constructor;
 use Kirby\Toolkit\HasI18n;
 
 /**
@@ -60,13 +61,8 @@ abstract class BaseField
 		array $props,
 		Fields|null $siblings = null
 	): static {
-		$args = $props;
-
-		unset(
-			$args['model'],
-			$args['type'],
-			$args['value']
-		);
+		$constructor = new Constructor(static::class);
+		$args        = $constructor->getAcceptedArguments($props);
 
 		$field = new static(...$args);
 		$field->setSiblings($siblings);
