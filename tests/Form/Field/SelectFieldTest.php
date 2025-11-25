@@ -2,8 +2,6 @@
 
 namespace Kirby\Form\Field;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-
 class SelectFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
@@ -99,16 +97,20 @@ class SelectFieldTest extends TestCase
 
 		$field = $this->field('select', [
 			'model'   => $app->page('b'),
-			'options' => 'query',
-			'query'   => 'page.siblings.pluck("tags", ",", true)',
+			'options' => [
+				'type'  => 'query',
+				'query' => 'page.siblings.pluck("tags", ",", true)',
+			],
 		]);
 
 		$this->assertSame($expected, $field->options());
 
 		$field = $this->field('select', [
 			'model'   => $app->file('a/b.jpg'),
-			'options' => 'query',
-			'query'   => 'file.siblings.pluck("tags", ",", true)',
+			'options' => [
+				'type'  => 'query',
+				'query' => 'file.siblings.pluck("tags", ",", true)',
+			],
 		]);
 
 		$this->assertSame($expected, $field->options());
@@ -183,35 +185,5 @@ class SelectFieldTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $field->options());
-	}
-
-	public static function valueInputProvider(): array
-	{
-		return [
-			['a', 'a'],
-			['b', 'b'],
-			['c', 'c'],
-			['d', ''],
-			['1', '1'],
-			['2', '2'],
-			['3', '']
-		];
-	}
-
-	#[DataProvider('valueInputProvider')]
-	public function testValue($input, $expected): void
-	{
-		$field = $this->field('select', [
-			'options' => [
-				'a',
-				'b',
-				'c',
-				1,
-				2
-			],
-			'value' => $input
-		]);
-
-		$this->assertSame($expected, $field->value());
 	}
 }

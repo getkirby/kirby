@@ -340,7 +340,16 @@ class EntriesFieldTest extends TestCase
 
 			['number', 1, true],
 
-			['select', 'web', true],
+			['select', 'web', false],
+
+			[
+				[
+					'type'    => 'select',
+					'options' => ['web', 'print'],
+				],
+				'web',
+				true
+			],
 
 			['slug', 'page-slug', true],
 
