@@ -14,6 +14,7 @@ use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\HeadlineField;
 use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\LayoutField;
+use Kirby\Form\Field\LineField;
 use Kirby\Form\Field\StatsField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
@@ -230,7 +231,7 @@ class Core
 			'hidden'      => $this->root . '/fields/hidden.php',
 			'info'        => InfoField::class,
 			'layout'      => LayoutField::class,
-			'line'        => $this->root . '/fields/line.php',
+			'line'        => LineField::class,
 			'link'        => $this->root . '/fields/link.php',
 			'list'        => $this->root . '/fields/list.php',
 			'multiselect' => $this->root . '/fields/multiselect.php',
@@ -256,6 +257,7 @@ class Core
 
 			'legacy-headline' => $this->root . '/fields/headline.php',
 			'legacy-info'     => $this->root . '/fields/info.php',
+			'legacy-line'     => $this->root . '/fields/line.php',
 		];
 	}
 
