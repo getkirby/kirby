@@ -71,5 +71,8 @@ export default {
 		app.component("k-url-field", UrlField);
 		app.component("k-users-field", UsersField);
 		app.component("k-writer-field", WriterField);
+
+		// Legacy fields components
+		app.component("k-legacy-headline-field", HeadlineField);
 	}
 };
