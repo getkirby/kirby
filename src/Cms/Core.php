@@ -12,6 +12,7 @@ use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\HeadlineField;
+use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Field\StatsField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
@@ -227,7 +228,7 @@ class Core
 			'gap'         => $this->root . '/fields/gap.php',
 			'headline'    => HeadlineField::class,
 			'hidden'      => $this->root . '/fields/hidden.php',
-			'info'        => $this->root . '/fields/info.php',
+			'info'        => InfoField::class,
 			'layout'      => LayoutField::class,
 			'line'        => $this->root . '/fields/line.php',
 			'link'        => $this->root . '/fields/link.php',
@@ -254,6 +255,7 @@ class Core
 			'writer'      => $this->root . '/fields/writer.php',
 
 			'legacy-headline' => $this->root . '/fields/headline.php',
+			'legacy-info'     => $this->root . '/fields/info.php',
 		];
 	}
 
