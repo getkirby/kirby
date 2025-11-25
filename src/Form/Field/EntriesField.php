@@ -4,7 +4,6 @@ namespace Kirby\Form\Field;
 
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\FieldClass;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
@@ -23,7 +22,7 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  * @since     5.0.0
  */
-class EntriesField extends FieldClass
+class EntriesField extends InputField
 {
 	use EmptyState;
 	use Max;

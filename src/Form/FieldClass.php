@@ -3,7 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Field\BaseField;
+use Kirby\Form\Field\InputField;
 
 /**
  * Abstract field class to be used instead
@@ -18,19 +18,12 @@ use Kirby\Form\Field\BaseField;
  *
  * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
  */
-abstract class FieldClass extends BaseField
+abstract class FieldClass extends InputField
 {
 	use Mixin\After;
-	use Mixin\Autofocus;
 	use Mixin\Before;
-	use Mixin\Disabled;
-	use Mixin\Help;
 	use Mixin\Icon;
-	use Mixin\Label;
 	use Mixin\Placeholder;
-	use Mixin\Required;
-	use Mixin\Translatable;
-	use Mixin\Validation;
 	use Mixin\Width;
 
 	public function __construct(
@@ -50,22 +43,22 @@ abstract class FieldClass extends BaseField
 		string|null $width = null
 	) {
 		parent::__construct(
+			autofocus: $autofocus,
+			default: $default,
+			disabled: $disabled,
+			help: $help,
+			label: $label,
 			name: $name,
-			when: $when
+			required: $required,
+			translate: $translate,
+			when: $when,
+			width: $width
 		);
 
 		$this->setAfter($after);
-		$this->setAutofocus($autofocus);
 		$this->setBefore($before);
-		$this->setDefault($default);
-		$this->setDisabled($disabled);
-		$this->setHelp($help);
 		$this->setIcon($icon);
-		$this->setLabel($label);
 		$this->setPlaceholder($placeholder);
-		$this->setRequired($required);
-		$this->setTranslate($translate);
-		$this->setWidth($width);
 	}
 
 	public function __call(string $param, array $args): mixed
