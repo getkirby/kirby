@@ -29,16 +29,12 @@ class EntriesFieldTest extends TestCase
 		$this->assertNull($props['empty']);
 		$this->assertNull($props['max']);
 		$this->assertNull($props['min']);
-		$this->assertNull($props['after']);
 		$this->assertFalse($props['autofocus']);
-		$this->assertNull($props['before']);
 		$this->assertNull($props['default']);
 		$this->assertFalse($props['disabled']);
 		$this->assertNull($props['help']);
-		$this->assertNull($props['icon']);
 		$this->assertSame('Entries', $props['label']);
 		$this->assertSame('entries', $props['name']);
-		$this->assertNull($props['placeholder']);
 		$this->assertFalse($props['required']);
 		$this->assertTrue($props['saveable']);
 		$this->assertTrue($props['sortable']);
