@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Form\FieldClass;
+use Kirby\Form\Mixin;
 
 /**
  * Base class for fields that have no value
@@ -14,8 +14,12 @@ use Kirby\Form\FieldClass;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-abstract class DisplayField extends FieldClass
+abstract class DisplayField extends BaseField
 {
+	use Mixin\Help;
+	use Mixin\Label;
+	use Mixin\Width;
+
 	public function __construct(
 		array|string|null $help = null,
 		array|string|null $label = null,
@@ -23,29 +27,23 @@ abstract class DisplayField extends FieldClass
 		array|null $when = null,
 		string|null $width = null
 	) {
+		parent::__construct(
+			name: $name,
+			when: $when
+		);
+
 		$this->setHelp($help);
 		$this->setLabel($label);
-		$this->setName($name);
-		$this->setWhen($when);
 		$this->setWidth($width);
-	}
-
-	public function hasValue(): bool
-	{
-		return false;
 	}
 
 	public function props(): array
 	{
 		return [
-			'help'     => $this->help(),
-			'hidden'   => $this->isHidden(),
-			'label'    => $this->label(),
-			'name'     => $this->name(),
-			'saveable' => $this->hasValue(),
-			'type'     => $this->type(),
-			'when'     => $this->when(),
-			'width'    => $this->width(),
+			...parent::props(),
+			'help'  => $this->help(),
+			'label' => $this->label(),
+			'width' => $this->width(),
 		];
 	}
 }
