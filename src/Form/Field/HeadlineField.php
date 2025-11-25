@@ -2,8 +2,6 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Form\FieldClass;
-
 /**
  * Headline field
  *
@@ -14,7 +12,7 @@ use Kirby\Form\FieldClass;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class HeadlineField extends FieldClass
+class HeadlineField extends DisplayField
 {
 	public function __construct(
 		array|string|null $label = null,
@@ -30,10 +28,5 @@ class HeadlineField extends FieldClass
 			when:  $when,
 			width: $width
 		);
-	}
-
-	public function hasValue(): bool
-	{
-		return false;
 	}
 }

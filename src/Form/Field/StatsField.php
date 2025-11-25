@@ -2,7 +2,6 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Form\FieldClass;
 use Kirby\Panel\Ui\Stats;
 
 /**
@@ -15,7 +14,7 @@ use Kirby\Panel\Ui\Stats;
  * @license   https://getkirby.com/license
  * @since     5.1.0
  */
-class StatsField extends FieldClass
+class StatsField extends DisplayField
 {
 	/**
 	 * Array or query string for reports. Each report needs a `label` and `value` and can have additional `info`, `link`, `icon` and `theme` settings.
@@ -51,11 +50,6 @@ class StatsField extends FieldClass
 
 		$this->reports = $reports;
 		$this->size    = $size;
-	}
-
-	public function hasValue(): bool
-	{
-		return false;
 	}
 
 	public function reports(): array
