@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Closure;
 use Kirby\Cms\HasSiblings;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\BaseField;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
 
@@ -278,12 +279,12 @@ class Field extends Component
 		string $type,
 		array $attrs = [],
 		Fields|null $siblings = null
-	): static|FieldClass {
+	): static|BaseField {
 		$field = static::$types[$type] ?? null;
 
 		if (
 			is_string($field) &&
-			is_subclass_of($field, FieldClass::class) === true
+			is_subclass_of($field, BaseField::class) === true
 		) {
 			return $field::factory($attrs, $siblings);
 		}
