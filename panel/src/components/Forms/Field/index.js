@@ -77,5 +77,6 @@ export default {
 		app.component("k-legacy-headline-field", HeadlineField);
 		app.component("k-legacy-info-field", InfoField);
 		app.component("k-legacy-line-field", LineField);
+		app.component("k-legacy-structure-field", StructureField);
 	}
 };
