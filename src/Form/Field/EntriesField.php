@@ -30,19 +30,45 @@ class EntriesField extends FieldClass
 	use Min;
 	use Sortable;
 
-	protected array $field;
+	/**
+	 * Field options for the field to be used and repeated.
+	 * Supported field types are `color`, `date`, `email`, `number`, `select`,
+	 * `slug`, `tel`, `text`, `time`, `url`.
+	 */
+	protected array|string|null $field;
+
 	protected Form $form;
 	protected mixed $value = [];
 
 	public function __construct(
+		bool|null $autofocus = null,
+		mixed $default = null,
+		bool|null $disabled = null,
 		array|string|null $empty = null,
 		array|string|null $field = null,
+		array|string|null $help = null,
+		array|string|null $label = null,
 		int|null $max = null,
 		int|null $min = null,
+		string|null $name = null,
+		bool|null $required = null,
 		bool|null $sortable = null,
-		...$props
+		bool|null $translate = null,
+		array|null $when = null,
+		string|null $width = null
 	) {
-		parent::__construct(...$props);
+		parent::__construct(
+			autofocus: $autofocus,
+			default:   $default,
+			disabled:  $disabled,
+			help:      $help,
+			label:     $label,
+			name:      $name,
+			required:  $required,
+			translate: $translate,
+			when:      $when,
+			width:     $width
+		);
 
 		$this->setEmpty($empty);
 		$this->setField($field);
@@ -53,7 +79,25 @@ class EntriesField extends FieldClass
 
 	public function field(): array
 	{
-		return $this->field;
+		$props = $this->field;
+
+		if (is_string($props) === true) {
+			$props = ['type' => $props];
+		}
+
+		$props ??= ['type' => 'text'];
+
+		if (in_array($props['type'], $this->supports(), true) === false) {
+			throw new InvalidArgumentException(
+				key: 'entries.supports',
+				data: ['type' => $props['type']]
+			);
+		}
+
+		// remove the unsupported props from the entry field
+		unset($props['counter'], $props['label']);
+
+		return $props;
 	}
 
 	public function fieldProps(): array
@@ -75,7 +119,7 @@ class EntriesField extends FieldClass
 	{
 		return $this->form ??= new Form(
 			fields: [$this->field()],
-			model: $this->model
+			model:  $this->model()
 		);
 	}
 
@@ -91,24 +135,8 @@ class EntriesField extends FieldClass
 		];
 	}
 
-	protected function setField(array|string|null $attrs = null): void
+	protected function setField(array|string|null $attrs): void
 	{
-		if (is_string($attrs) === true) {
-			$attrs = ['type' => $attrs];
-		}
-
-		$attrs ??= ['type' => 'text'];
-
-		if (in_array($attrs['type'], $this->supports()) === false) {
-			throw new InvalidArgumentException(
-				key: 'entries.supports',
-				data: ['type' => $attrs['type']]
-			);
-		}
-
-		// remove the unsupported props from the entry field
-		unset($attrs['counter'], $attrs['label']);
-
 		$this->field = $attrs;
 	}
 
