@@ -11,6 +11,7 @@ use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\EntriesField;
+use Kirby\Form\Field\HeadlineField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Field\StatsField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
@@ -224,7 +225,7 @@ class Core
 			'entries'     => EntriesField::class,
 			'files'       => $this->root . '/fields/files.php',
 			'gap'         => $this->root . '/fields/gap.php',
-			'headline'    => $this->root . '/fields/headline.php',
+			'headline'    => HeadlineField::class,
 			'hidden'      => $this->root . '/fields/hidden.php',
 			'info'        => $this->root . '/fields/info.php',
 			'layout'      => LayoutField::class,
@@ -250,7 +251,9 @@ class Core
 			'toggles'     => $this->root . '/fields/toggles.php',
 			'url'         => $this->root . '/fields/url.php',
 			'users'       => $this->root . '/fields/users.php',
-			'writer'      => $this->root . '/fields/writer.php'
+			'writer'      => $this->root . '/fields/writer.php',
+
+			'legacy-headline' => $this->root . '/fields/headline.php',
 		];
 	}
 
