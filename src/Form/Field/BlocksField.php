@@ -10,7 +10,6 @@ use Kirby\Cms\Fieldsets;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\FieldClass;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
@@ -19,7 +18,7 @@ use Kirby\Form\Mixin\Pretty;
 use Kirby\Toolkit\Str;
 use Throwable;
 
-class BlocksField extends FieldClass
+class BlocksField extends InputField
 {
 	use EmptyState;
 	use Max;
