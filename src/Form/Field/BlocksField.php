@@ -16,6 +16,7 @@ use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
 use Kirby\Form\Mixin\Pretty;
+use Kirby\Reflection\Attributes\DefaultValue;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -29,6 +30,19 @@ class BlocksField extends FieldClass
 	/**
 	 * Defines the allowed block types in the blocks field. See below.
 	 */
+	#[DefaultValue([
+		'code',
+		'gallery',
+		'heading',
+		'image',
+		'line',
+		'list',
+		'markdown',
+		'quote',
+		'table',
+		'text',
+		'video'
+	])]
 	protected array|null $fieldsets;
 
 	/**
