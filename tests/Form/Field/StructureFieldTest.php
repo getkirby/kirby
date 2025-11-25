@@ -25,7 +25,7 @@ class StructureFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
-	public function testFillWithEmptyValue(): void
+	public function testReset(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -46,7 +46,7 @@ class StructureFieldTest extends TestCase
 
 		$this->assertSame($value, $field->toFormValue());
 
-		$field->fillWithEmptyValue();
+		$field->reset();
 
 		$this->assertSame([], $field->toFormValue());
 	}
@@ -197,7 +197,7 @@ class StructureFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertSame(2, $field->min());
-		$this->assertTrue($field->required());
+		$this->assertTrue($field->isRequired());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
