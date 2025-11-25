@@ -18,6 +18,7 @@ use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Field\LineField;
 use Kirby\Form\Field\StatsField;
+use Kirby\Form\Field\StructureField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
 use Kirby\Panel\Ui\FilePreview\PdfFilePreview;
@@ -245,7 +246,7 @@ class Core
 			'select'      => $this->root . '/fields/select.php',
 			'slug'        => $this->root . '/fields/slug.php',
 			'stats'       => StatsField::class,
-			'structure'   => $this->root . '/fields/structure.php',
+			'structure'   => StructureField::class,
 			'tags'        => $this->root . '/fields/tags.php',
 			'tel'         => $this->root . '/fields/tel.php',
 			'text'        => $this->root . '/fields/text.php',
@@ -257,11 +258,12 @@ class Core
 			'users'       => $this->root . '/fields/users.php',
 			'writer'      => $this->root . '/fields/writer.php',
 
-			'legacy-gap'      => $this->root . '/fields/gap.php',
-			'legacy-headline' => $this->root . '/fields/headline.php',
-			'legacy-hidden'   => $this->root . '/fields/hidden.php',
-			'legacy-info'     => $this->root . '/fields/info.php',
-			'legacy-line'     => $this->root . '/fields/line.php',
+			'legacy-gap'       => $this->root . '/fields/gap.php',
+			'legacy-headline'  => $this->root . '/fields/headline.php',
+			'legacy-hidden'    => $this->root . '/fields/hidden.php',
+			'legacy-info'      => $this->root . '/fields/info.php',
+			'legacy-line'      => $this->root . '/fields/line.php',
+			'legacy-structure' => $this->root . '/fields/structure.php',
 		];
 	}
 
