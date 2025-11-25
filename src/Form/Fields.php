@@ -8,6 +8,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Field\BaseField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
@@ -21,7 +22,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends \Kirby\Toolkit\Collection<\Kirby\Form\Field|\Kirby\Form\FieldClass>
+ * @extends \Kirby\Toolkit\Collection<\Kirby\Form\Field|\Kirby\Form\Field\BaseField>
  */
 class Fields extends Collection
 {
@@ -47,7 +48,7 @@ class Fields extends Collection
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
 	 *
-	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass|array $field
+	 * @param \Kirby\Form\Field|\Kirby\Form\Field\BaseField\array $field
 	 */
 	public function __set(string $name, $field): void
 	{
@@ -99,7 +100,7 @@ class Fields extends Collection
 	 * @since 5.0.0
 	 * @throws \Kirby\Exception\NotFoundException
 	 */
-	public function field(string $name): Field|FieldClass
+	public function field(string $name): Field|BaseField
 	{
 		if ($field = $this->find($name)) {
 			return $field;
@@ -147,7 +148,7 @@ class Fields extends Collection
 	/**
 	 * Find a field by key/name
 	 */
-	public function findByKey(string $key): Field|FieldClass|null
+	public function findByKey(string $key): Field|BaseField|null
 	{
 		if (str_contains($key, '+')) {
 			return $this->findByKeyRecursive($key);
@@ -159,7 +160,7 @@ class Fields extends Collection
 	/**
 	 * Find fields in nested forms recursively
 	 */
-	public function findByKeyRecursive(string $key): Field|FieldClass|null
+	public function findByKeyRecursive(string $key): Field|BaseField|null
 	{
 		$fields = $this;
 		$names  = Str::split($key, '+');

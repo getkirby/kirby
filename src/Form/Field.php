@@ -279,7 +279,7 @@ class Field extends Component
 		string $type,
 		array $attrs = [],
 		Fields|null $siblings = null
-	): static|FieldClass|BaseField {
+	): static|BaseField {
 		$field = static::$types[$type] ?? null;
 
 		if (
