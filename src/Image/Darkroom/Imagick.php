@@ -200,29 +200,57 @@ class Imagick extends Darkroom
 			}
 		}
 
-		// translate the gravity option into something imagemagick understands
-		$gravity = match ($options['crop'] ?? null) {
-			'top left'     => Image::GRAVITY_NORTHWEST,
-			'top'          => Image::GRAVITY_NORTH,
-			'top right'    => Image::GRAVITY_NORTHEAST,
-			'left'         => Image::GRAVITY_WEST,
-			'right'        => Image::GRAVITY_EAST,
-			'bottom left'  => Image::GRAVITY_SOUTHWEST,
-			'bottom'       => Image::GRAVITY_SOUTH,
-			'bottom right' => Image::GRAVITY_SOUTHEAST,
-			default        => Image::GRAVITY_CENTER
-		};
+		// regular crop
+		$imageWidth = (float)$image->getImageWidth();
+		$imageHeight = (float)$image->getImageHeight();
 
-		$landscape = $options['width'] >= $options['height'];
+		// fall back to source dimensions from options
+		// to avoid division by zero
+		if ($imageWidth <= 0) {
+			$imageWidth = (float)($options['sourceWidth'] ?? $options['width'] ?? 1);
+		}
 
-		$image->thumbnailImage(
-			$landscape ? $options['width'] : $image->getImageWidth(),
-			$landscape ? $image->getImageHeight() : $options['height'],
-			true
+		if ($imageHeight <= 0) {
+			$imageHeight = (float)($options['sourceHeight'] ?? $options['height'] ?? 1);
+		}
+
+		// scale image to crop dimensions
+		$resizeRatio = max(
+			$options['width'] / $imageWidth,
+			$options['height'] / $imageHeight
 		);
 
-		$image->setGravity($gravity);
-		$image->cropImage($options['width'], $options['height'], 0, 0);
+		$image->thumbnailImage(
+			(int)ceil($imageWidth * $resizeRatio),
+			(int)ceil($imageHeight * $resizeRatio)
+		);
+
+		// determine crop coordinates
+		$resizedWidth  = (int)($image->getImageWidth() ?: ceil($imageWidth * $resizeRatio));
+		$resizedHeight = (int)($image->getImageHeight() ?: ceil($imageHeight * $resizeRatio));
+
+		$diffWidth  = $resizedWidth - $options['width'];
+		$diffHeight = $resizedHeight - $options['height'];
+
+		// calculate crop origin based on gravity
+		$x = match ($options['crop'] ?? null) {
+			'top left', 'left', 'bottom left'    => 0,
+			'top right', 'right', 'bottom right' => max(0, $diffWidth),
+			default                              => max(0, $diffWidth / 2),
+		};
+
+		$y = match ($options['crop'] ?? null) {
+			'top left', 'top', 'top right'          => 0,
+			'bottom left', 'bottom', 'bottom right' => max(0, $diffHeight),
+			default                                 => max(0, $diffHeight / 2),
+		};
+
+		$image->cropImage(
+			$options['width'],
+			$options['height'],
+			(int)floor($x),
+			(int)floor($y)
+		);
 
 		return $image;
 	}
