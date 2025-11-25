@@ -12,6 +12,6 @@ namespace Kirby\Form\Field;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class GapField extends LineField
+class GapField extends BaseField
 {
 }
