@@ -3,7 +3,11 @@
 namespace Kirby\Reflection;
 
 use Kirby\Form\FieldClass;
+use Kirby\Reflection\Attributes\DefaultValue;
 use ReflectionClass;
+use ReflectionParameter;
+use ReflectionProperty;
+use ReflectionUnionType;
 
 class Field
 {
@@ -32,6 +36,39 @@ class Field
 		return new static($this->parentClass()->getName());
 	}
 
+	protected function propDefaultValue(
+		ReflectionParameter $parameter,
+		ReflectionProperty|null $property = null
+	): mixed {
+		if ($property !== null && $attribute = ($property->getAttributes(DefaultValue::class)[0] ?? null)) {
+			return $attribute->newInstance()->value();
+		}
+
+		$value = $this->field->{$parameter->getName()}();
+
+		return match (true) {
+			is_object($value) => $value::class,
+			default           => $value
+		};
+	}
+
+	protected function propType(ReflectionParameter $parameter): string
+	{
+		$type = $parameter->getType();
+
+		if ($type instanceof ReflectionUnionType) {
+			return $type;
+		}
+
+		$string = $type->getName();
+
+		if ($type->allowsNull() === true) {
+			$string .= '|null';
+		}
+
+		return $string;
+	}
+
 	/**
 	 * Returns field properties based on the constructor signature.
 	 */
@@ -39,6 +76,7 @@ class Field
 	{
 		$props  = [];
 		$ignore = ['model', 'siblings'];
+		$field  = $this->field;
 
 		foreach ($this->constructor->getParameters() as $parameter) {
 			$name = $parameter->getName();
@@ -61,8 +99,8 @@ class Field
 
 			$props[$name] = [
 				'name'        => $name,
-				'type'        => (string)$parameter->getType(),
-				'default'     => $parameter->getDefaultValue(),
+				'type'        => $this->propType($parameter),
+				'default'     => $this->propDefaultValue($parameter, $property),
 				'description' => $comment->description()
 			];
 		}
