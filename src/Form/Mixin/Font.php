@@ -11,7 +11,10 @@ trait Font
 
 	public function font(): string|null
 	{
-		return $this->font === 'monospace' ? 'monospace' : 'sans-serif';
+		return match ($this->font) {
+			'monospace', 'mono' => 'monospace',
+			default             => 'sans-serif'
+		};
 	}
 
 	protected function setFont(string|null $font): void
