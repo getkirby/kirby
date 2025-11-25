@@ -317,17 +317,17 @@ class EntriesFieldTest extends TestCase
 	#[DataProvider('supportsProvider')]
 	public function testSupportedFields($type, $expected): void
 	{
-		if ($expected === false) {
-			$this->expectException(InvalidArgumentException::class);
-			$this->expectExceptionMessage('"' . $type . '" field type is not supported for the entries field');
-		}
-
 		$field = $this->field('entries', [
 			'field' => $type,
 		]);
 
 		if ($expected === true) {
+			$this->assertSame($type, $field->field()['type']);
 			$this->assertTrue($field->isValid());
+		} else {
+			$this->expectException(InvalidArgumentException::class);
+			$this->expectExceptionMessage('"' . $type . '" field type is not supported for the entries field');
+			$field->field();
 		}
 	}
 
