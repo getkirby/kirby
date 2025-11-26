@@ -32,6 +32,7 @@ class StructureFieldTest extends TestCase
 					'mobile' => true
 				]
 			],
+			'default'   => null,
 			'disabled'  => false,
 			'duplicate' => true,
 			'empty'     => null,
