@@ -87,6 +87,7 @@ class StructureField extends InputField
 			'limit'     => $this->limit(),
 			'max'       => $this->max(),
 			'min'       => $this->min(),
+			'prepend'   => $this->prepend(),
 			'sortable'  => $this->sortable(),
 			'sortBy'    => $this->sortBy()
 		];

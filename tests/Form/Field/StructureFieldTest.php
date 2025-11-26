@@ -44,6 +44,7 @@ class StructureFieldTest extends TestCase
 			'max'       => null,
 			'min'       => null,
 			'name'      => 'structure',
+			'prepend'   => false,
 			'required'  => false,
 			'saveable'  => true,
 			'sortBy'    => null,
