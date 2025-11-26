@@ -17,12 +17,10 @@ class HiddenField extends BaseField
 	public function __construct(
 		mixed $default = null,
 		string|null $name = null,
-		bool|null $translate = null,
-		array|null $when = null,
+		bool|null $translate = null
 	) {
 		parent::__construct(
-			name: $name,
-			when: $when,
+			name: $name
 		);
 
 		$this->setDefault($default);
@@ -42,9 +40,10 @@ class HiddenField extends BaseField
 	public function props(): array
 	{
 		return [
-			...parent::props(),
-			'default'   => $this->default(),
-			'translate' => $this->translate(),
+			'hidden'   => $this->isHidden(),
+			'name'     => $this->name(),
+			'saveable' => $this->hasValue(),
+			'type'     => $this->type(),
 		];
 	}
 }
