@@ -13,9 +13,4 @@ trait Autocomplete
 	{
 		return $this->autocomplete;
 	}
-
-	protected function setAutocomplete(string|null $autocomplete): void
-	{
-		$this->autocomplete = $autocomplete;
-	}
 }

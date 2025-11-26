@@ -16,9 +16,4 @@ trait Font
 			default             => 'sans-serif'
 		};
 	}
-
-	protected function setFont(string|null $font): void
-	{
-		$this->font = $font;
-	}
 }

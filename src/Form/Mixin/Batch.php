@@ -13,9 +13,4 @@ trait Batch
 	{
 		return $this->batch ?? false;
 	}
-
-	protected function setBatch(bool|null $batch): void
-	{
-		$this->batch = $batch;
-	}
 }

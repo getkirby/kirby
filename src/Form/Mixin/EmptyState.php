@@ -13,9 +13,4 @@ trait EmptyState
 	{
 		return $this->stringTemplate($this->i18n($this->empty));
 	}
-
-	protected function setEmpty(array|string|null $empty): void
-	{
-		$this->empty = $empty;
-	}
 }

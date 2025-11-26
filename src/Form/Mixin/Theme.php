@@ -13,9 +13,4 @@ trait Theme
 	{
 		return $this->theme;
 	}
-
-	protected function setTheme(string|null $theme): void
-	{
-		$this->theme = $theme;
-	}
 }

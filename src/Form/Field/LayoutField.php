@@ -75,10 +75,10 @@ class LayoutField extends BlocksField
 			width:     $width
 		);
 
-		$this->setDefault($default);
-		$this->setLayouts($layouts);
-		$this->setSelector($selector);
-		$this->setSettings($settings);
+		$this->default  = $default;
+		$this->layouts  = $layouts;
+		$this->selector = $selector;
+		$this->settings = $settings;
 	}
 
 	public function default(): mixed

@@ -13,9 +13,4 @@ trait Sortable
 	{
 		return $this->sortable ?? true;
 	}
-
-	protected function setSortable(bool|null $sortable): void
-	{
-		$this->sortable = $sortable;
-	}
 }
