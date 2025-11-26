@@ -78,12 +78,12 @@ class BlocksField extends InputField
 			width:     $width
 		);
 
-		$this->setEmpty($empty);
-		$this->setFieldsets($fieldsets);
-		$this->setGroup($group);
-		$this->setMax($max);
-		$this->setMin($min);
-		$this->setPretty($pretty);
+		$this->empty     = $empty;
+		$this->fieldsets = $fieldsets;
+		$this->group     = $group;
+		$this->max       = $max;
+		$this->min       = $min;
+		$this->pretty    = $pretty;
 	}
 
 	public function blocksToValues(
@@ -109,6 +109,22 @@ class BlocksField extends InputField
 		}
 
 		return $result;
+	}
+
+	public function default(): mixed
+	{
+		$default = $this->default;
+
+		if (is_array($default) === false) {
+			return null;
+		}
+
+		// set id for blocks if not exists
+		array_walk($default, function (&$block) {
+			$block['id'] ??= Str::uuid();
+		});
+
+		return $default;
 	}
 
 	public function fields(string $type): array
@@ -278,28 +294,6 @@ class BlocksField extends InputField
 				}
 			],
 		];
-	}
-
-	protected function setDefault(mixed $default): void
-	{
-		// set id for blocks if not exists
-		if (is_array($default) === true) {
-			array_walk($default, function (&$block) {
-				$block['id'] ??= Str::uuid();
-			});
-		}
-
-		parent::setDefault($default);
-	}
-
-	protected function setFieldsets(array|null $fieldsets): void
-	{
-		$this->fieldsets = $fieldsets;
-	}
-
-	protected function setGroup(string|null $group): void
-	{
-		$this->group = $group;
 	}
 
 	public function toStoredValue(bool $default = false): mixed

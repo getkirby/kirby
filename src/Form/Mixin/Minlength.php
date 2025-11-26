@@ -13,9 +13,4 @@ trait Minlength
 	{
 		return $this->minlength;
 	}
-
-	protected function setMinlength(int|null $minlength): void
-	{
-		$this->minlength = $minlength;
-	}
 }

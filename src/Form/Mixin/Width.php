@@ -10,11 +10,6 @@ trait Width
 	 */
 	protected string|null $width;
 
-	protected function setWidth(string|null $width): void
-	{
-		$this->width = $width;
-	}
-
 	public function width(): string
 	{
 		return $this->width ?? '1/1';

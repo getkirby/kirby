@@ -25,11 +25,6 @@ trait Translatable
 		return true;
 	}
 
-	protected function setTranslate(bool|null $translate): void
-	{
-		$this->translate = $translate;
-	}
-
 	public function translate(): bool
 	{
 		return $this->translate ?? true;

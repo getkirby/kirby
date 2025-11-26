@@ -13,9 +13,4 @@ trait Before
 	{
 		return $this->stringTemplate($this->i18n($this->before));
 	}
-
-	protected function setBefore(array|string|null $before): void
-	{
-		$this->before = $before;
-	}
 }

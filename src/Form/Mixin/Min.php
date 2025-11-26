@@ -19,11 +19,6 @@ trait Min
 		return $this->min;
 	}
 
-	protected function setMin(int|null $min): void
-	{
-		$this->min = $min;
-	}
-
 	public function isRequired(): bool
 	{
 		// set required to true if min is set

@@ -40,11 +40,6 @@ trait When
 		return true;
 	}
 
-	protected function setWhen(array|null $when): void
-	{
-		$this->when = $when;
-	}
-
 	public function when(): array|null
 	{
 		return $this->when;

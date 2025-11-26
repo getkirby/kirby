@@ -13,9 +13,4 @@ trait After
 	{
 		return $this->stringTemplate($this->i18n($this->after));
 	}
-
-	protected function setAfter(array|string|null $after): void
-	{
-		$this->after = $after;
-	}
 }

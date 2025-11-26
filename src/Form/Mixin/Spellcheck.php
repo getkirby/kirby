@@ -13,9 +13,4 @@ trait Spellcheck
 	{
 		return $this->spellcheck ?? true;
 	}
-
-	protected function setSpellcheck(bool|null $spellcheck): void
-	{
-		$this->spellcheck = $spellcheck;
-	}
 }

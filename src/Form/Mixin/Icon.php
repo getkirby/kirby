@@ -13,9 +13,4 @@ trait Icon
 	{
 		return $this->icon;
 	}
-
-	protected function setIcon(string|null $icon): void
-	{
-		$this->icon = $icon;
-	}
 }

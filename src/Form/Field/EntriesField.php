@@ -69,11 +69,11 @@ class EntriesField extends InputField
 			width:     $width
 		);
 
-		$this->setEmpty($empty);
-		$this->setField($field);
-		$this->setMax($max);
-		$this->setMin($min);
-		$this->setSortable($sortable);
+		$this->empty    = $empty;
+		$this->field    = $field;
+		$this->max      = $max;
+		$this->min      = $min;
+		$this->sortable = $sortable;
 	}
 
 	public function field(): array

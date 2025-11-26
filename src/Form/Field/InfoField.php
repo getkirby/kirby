@@ -38,9 +38,9 @@ class InfoField extends DisplayField
 			width: $width
 		);
 
-		$this->setIcon($icon);
-		$this->setText($text);
-		$this->setTheme($theme);
+		$this->icon  = $icon;
+		$this->text  = $text;
+		$this->theme = $theme;
 	}
 
 	public function props(): array

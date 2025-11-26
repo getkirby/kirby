@@ -19,9 +19,4 @@ trait Label
 
 		return $this->stringTemplate($this->i18n($this->label));
 	}
-
-	protected function setLabel(array|string|null $label): void
-	{
-		$this->label = $label;
-	}
 }

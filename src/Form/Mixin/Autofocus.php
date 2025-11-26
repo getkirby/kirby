@@ -13,9 +13,4 @@ trait Autofocus
 	{
 		return $this->autofocus ?? false;
 	}
-
-	protected function setAutofocus(bool|null $autofocus): void
-	{
-		$this->autofocus = $autofocus;
-	}
 }

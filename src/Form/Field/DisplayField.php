@@ -32,9 +32,9 @@ abstract class DisplayField extends BaseField
 			when: $when
 		);
 
-		$this->setHelp($help);
-		$this->setLabel($label);
-		$this->setWidth($width);
+		$this->help  = $help;
+		$this->label = $label;
+		$this->width = $width;
 	}
 
 	public function props(): array
