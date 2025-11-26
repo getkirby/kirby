@@ -95,7 +95,7 @@ class CheckboxesFieldTest extends TestCase
 			'value' => 'a, b, d'
 		]);
 
-		$this->assertSame(['a', 'b'], $field->value());
+		$this->assertSame('a, b', $field->toStoredValue());
 	}
 
 	public function testMin(): void
