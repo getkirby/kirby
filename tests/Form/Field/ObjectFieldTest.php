@@ -4,6 +4,36 @@ namespace Kirby\Form\Field;
 
 class ObjectFieldTest extends TestCase
 {
+	public function testDefaultProps(): void
+	{
+		$field = $this->field('object');
+
+		$props = $field->props();
+
+		// makes it easier to compare the arrays
+		ksort($props);
+
+		$expected = [
+			'autofocus' => false,
+			'default'   => null,
+			'disabled'  => false,
+			'empty'     => null,
+			'fields'    => [],
+			'help'      => null,
+			'hidden'    => false,
+			'label'     => 'Object',
+			'name'      => 'object',
+			'required'  => false,
+			'saveable'  => true,
+			'translate' => true,
+			'type'      => 'object',
+			'when'      => null,
+			'width'     => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
 	public function testData(): void
 	{
 		$field = $this->field('object', [
@@ -30,24 +60,7 @@ class ObjectFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('', $field->data());
-	}
-
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('object', [
-			'fields' => [
-				'text' => [
-					'type' => 'text'
-				]
-			]
-		]);
-
-		$this->assertSame('object', $field->type());
-		$this->assertSame('object', $field->name());
-		$this->assertIsArray($field->fields());
-		$this->assertSame('', $field->value());
-		$this->assertTrue($field->save());
+		$this->assertSame([], $field->data());
 	}
 
 	public function testDefaultValue(): void
