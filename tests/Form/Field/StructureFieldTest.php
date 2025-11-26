@@ -9,13 +9,7 @@ class StructureFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
 	{
-		$field = $this->field('structure', [
-			'fields' => [
-				'text' => [
-					'type' => 'text'
-				]
-			]
-		]);
+		$field = $this->field('structure', []);
 
 		$props = $field->props();
 
@@ -25,18 +19,12 @@ class StructureFieldTest extends TestCase
 		$expected = [
 			'autofocus' => false,
 			'batch'     => false,
-			'columns'   => [
-				'text' => [
-					'type'   => 'text',
-					'label'  => 'text',
-					'mobile' => true
-				]
-			],
+			'columns'   => [],
 			'default'   => null,
 			'disabled'  => false,
 			'duplicate' => true,
 			'empty'     => null,
-			'fields'    => $props['fields'],
+			'fields'    => [],
 			'help'      => null,
 			'hidden'    => false,
 			'label'     => 'Structure',
@@ -55,8 +43,6 @@ class StructureFieldTest extends TestCase
 			'width'     => '1/1',
 		];
 
-		$this->assertCount(1, $props['fields']);
-		$this->assertArrayHasKey('text', $props['fields']);
 		$this->assertSame($expected, $props);
 	}
 
