@@ -10,6 +10,7 @@ use Kirby\Cache\RedisCache;
 use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
+use Kirby\Form\Field\CheckboxesField;
 use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
@@ -226,7 +227,7 @@ class Core
 	{
 		return [
 			'blocks'      => BlocksField::class,
-			'checkboxes'  => $this->root . '/fields/checkboxes.php',
+			'checkboxes'  => CheckboxesField::class,
 			'color'       => $this->root . '/fields/color.php',
 			'date'        => $this->root . '/fields/date.php',
 			'email'       => $this->root . '/fields/email.php',
@@ -261,15 +262,16 @@ class Core
 			'users'       => $this->root . '/fields/users.php',
 			'writer'      => $this->root . '/fields/writer.php',
 
-			'legacy-gap'       => $this->root . '/fields/gap.php',
-			'legacy-headline'  => $this->root . '/fields/headline.php',
-			'legacy-hidden'    => $this->root . '/fields/hidden.php',
-			'legacy-info'      => $this->root . '/fields/info.php',
-			'legacy-line'      => $this->root . '/fields/line.php',
-			'legacy-object'    => $this->root . '/fields/object.php',
-			'legacy-radio'     => $this->root . '/fields/radio.php',
-			'legacy-select'    => $this->root . '/fields/select.php',
-			'legacy-structure' => $this->root . '/fields/structure.php',
+			'legacy-checkboxes' => $this->root . '/fields/checkboxes.php',
+			'legacy-gap'        => $this->root . '/fields/gap.php',
+			'legacy-headline'   => $this->root . '/fields/headline.php',
+			'legacy-hidden'     => $this->root . '/fields/hidden.php',
+			'legacy-info'       => $this->root . '/fields/info.php',
+			'legacy-line'       => $this->root . '/fields/line.php',
+			'legacy-object'     => $this->root . '/fields/object.php',
+			'legacy-radio'      => $this->root . '/fields/radio.php',
+			'legacy-select'     => $this->root . '/fields/select.php',
+			'legacy-structure'  => $this->root . '/fields/structure.php',
 		];
 	}
 
