@@ -20,6 +20,7 @@ use Kirby\Toolkit\Str;
 class TagsField extends OptionsField
 {
 	use Mixin\Icon;
+	use Mixin\Layout;
 	use Mixin\Separator;
 
 	/**
@@ -119,11 +120,6 @@ class TagsField extends OptionsField
 	{
 		$this->value = Str::split($value, $this->separator());
 		return $this;
-	}
-
-	public function layout(): string|null
-	{
-		return $this->layout;
 	}
 
 	public function search(): array|bool
