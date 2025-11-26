@@ -135,25 +135,25 @@ class ColorField extends OptionField
 		return ['hex', 'hsl', 'rgb'];
 	}
 
-	public function isColor(string $value): bool
+	public static function isColor(string $value): bool
 	{
 		return
-			$this->isHex($value) === true ||
-			$this->isRgb($value) === true ||
-			$this->isHsl($value) === true;
+			static::isHex($value) === true ||
+			static::isRgb($value) === true ||
+			static::isHsl($value) === true;
 	}
 
-	public function isHex(string $value): bool
+	public static function isHex(string $value): bool
 	{
 		return preg_match('/^#([\da-f]{3,4}){1,2}$/i', $value) === 1;
 	}
 
-	public function isHsl(string $value): bool
+	public static function isHsl(string $value): bool
 	{
 		return preg_match('/^hsla?\(\s*(\d{1,3}\.?\d*)(deg|rad|grad|turn)?(?:,|\s)+(\d{1,3})%(?:,|\s)+(\d{1,3})%(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) === 1;
 	}
 
-	public function isRgb(string $value): bool
+	public static function isRgb(string $value): bool
 	{
 		return preg_match('/^rgba?\(\s*(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) === 1;
 	}
@@ -200,7 +200,7 @@ class ColorField extends OptionField
 		$format = $this->format();
 		$method = 'is' . $format;
 
-		if ($this->$method($value) === false) {
+		if (static::$method($value) === false) {
 			throw new InvalidArgumentException(
 				key: 'validation.color',
 				data: ['format' => $format]
