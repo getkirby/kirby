@@ -67,6 +67,10 @@ trait TableColumns
 
 		$columns = array_filter($columns);
 
+		if ($columns === []) {
+			return [];
+		}
+
 		// make the first column visible on mobile
 		// if no other mobile columns are defined
 		if (in_array(true, array_column($columns, 'mobile'), true) === false) {
