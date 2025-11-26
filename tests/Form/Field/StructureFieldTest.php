@@ -17,12 +17,45 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('structure', $field->type());
-		$this->assertSame('structure', $field->name());
-		$this->assertNull($field->limit());
-		$this->assertIsArray($field->fields());
-		$this->assertSame([], $field->value());
-		$this->assertTrue($field->save());
+		$props = $field->props();
+
+		// makes it easier to compare the arrays
+		ksort($props);
+
+		$expected = [
+			'autofocus' => false,
+			'batch'     => false,
+			'columns'   => [
+				'text' => [
+					'type'   => 'text',
+					'label'  => 'text',
+					'mobile' => true
+				]
+			],
+			'disabled'  => false,
+			'duplicate' => true,
+			'empty'     => null,
+			'fields'    => $props['fields'],
+			'help'      => null,
+			'hidden'    => false,
+			'label'     => 'Structure',
+			'limit'     => null,
+			'max'       => null,
+			'min'       => null,
+			'name'      => 'structure',
+			'required'  => false,
+			'saveable'  => true,
+			'sortBy'    => null,
+			'sortable'  => true,
+			'translate' => true,
+			'type'      => 'structure',
+			'when'      => null,
+			'width'     => '1/1',
+		];
+
+		$this->assertCount(1, $props['fields']);
+		$this->assertArrayHasKey('text', $props['fields']);
+		$this->assertSame($expected, $props);
 	}
 
 	public function testReset(): void
