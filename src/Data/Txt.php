@@ -44,7 +44,7 @@ class Txt extends Handler
 	{
 		// avoid problems with certain values
 		$value = match (true) {
-			is_array($value) => Data::encode($value, 'yaml'),
+			is_array($value) => $value === [] ? '' : Data::encode($value, 'yaml'),
 			is_float($value) => Str::float($value),
 			default          => $value
 		};
