@@ -37,16 +37,16 @@ class SelectField extends OptionField
 	) {
 		parent::__construct(
 			autofocus: $autofocus,
-			default: $default,
-			disabled: $disabled,
-			help: $help,
-			label: $label,
-			name: $name,
-			options: $options,
-			required: $required,
+			default:   $default,
+			disabled:  $disabled,
+			help:      $help,
+			label:     $label,
+			name:      $name,
+			options:   $options,
+			required:  $required,
 			translate: $translate,
-			when: $when,
-			width: $width
+			when:      $when,
+			width:     $width
 		);
 
 		$this->icon        = $icon;
