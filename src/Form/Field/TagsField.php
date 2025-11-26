@@ -147,10 +147,6 @@ class TagsField extends OptionsField
 
 	public function toFormValue(): array
 	{
-		if (is_array($this->value) === false) {
-			return [];
-		}
-
 		return $this->value;
 	}
 
