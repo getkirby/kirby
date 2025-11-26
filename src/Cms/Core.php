@@ -18,6 +18,7 @@ use Kirby\Form\Field\HiddenField;
 use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Field\LineField;
+use Kirby\Form\Field\MultiselectField;
 use Kirby\Form\Field\ObjectField;
 use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\SelectField;
@@ -243,7 +244,7 @@ class Core
 			'line'        => LineField::class,
 			'link'        => $this->root . '/fields/link.php',
 			'list'        => $this->root . '/fields/list.php',
-			'multiselect' => $this->root . '/fields/multiselect.php',
+			'multiselect' => MultiselectField::class,
 			'number'      => $this->root . '/fields/number.php',
 			'object'      => ObjectField::class,
 			'pages'       => $this->root . '/fields/pages.php',
@@ -264,18 +265,19 @@ class Core
 			'users'       => $this->root . '/fields/users.php',
 			'writer'      => $this->root . '/fields/writer.php',
 
-			'legacy-checkboxes' => $this->root . '/fields/checkboxes.php',
-			'legacy-gap'        => $this->root . '/fields/gap.php',
-			'legacy-headline'   => $this->root . '/fields/headline.php',
-			'legacy-hidden'     => $this->root . '/fields/hidden.php',
-			'legacy-info'       => $this->root . '/fields/info.php',
-			'legacy-line'       => $this->root . '/fields/line.php',
-			'legacy-object'     => $this->root . '/fields/object.php',
-			'legacy-radio'      => $this->root . '/fields/radio.php',
-			'legacy-select'     => $this->root . '/fields/select.php',
-			'legacy-structure'  => $this->root . '/fields/structure.php',
-			'legacy-tags'       => $this->root . '/fields/tags.php',
-			'legacy-toggles'    => $this->root . '/fields/toggles.php',
+			'legacy-checkboxes'  => $this->root . '/fields/checkboxes.php',
+			'legacy-gap'         => $this->root . '/fields/gap.php',
+			'legacy-headline'    => $this->root . '/fields/headline.php',
+			'legacy-hidden'      => $this->root . '/fields/hidden.php',
+			'legacy-info'        => $this->root . '/fields/info.php',
+			'legacy-line'        => $this->root . '/fields/line.php',
+			'legacy-multiselect' => $this->root . '/fields/multiselect.php',
+			'legacy-object'      => $this->root . '/fields/object.php',
+			'legacy-radio'       => $this->root . '/fields/radio.php',
+			'legacy-select'      => $this->root . '/fields/select.php',
+			'legacy-structure'   => $this->root . '/fields/structure.php',
+			'legacy-tags'        => $this->root . '/fields/tags.php',
+			'legacy-toggles'     => $this->root . '/fields/toggles.php',
 		];
 	}
 
