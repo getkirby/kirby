@@ -59,6 +59,8 @@ abstract class OptionsField extends InputField
 	{
 		return [
 			...parent::props(),
+			'max'     => $this->max(),
+			'min'     => $this->max(),
 			'options' => $this->options(),
 		];
 	}
