@@ -123,16 +123,17 @@ class ColorField extends OptionField
 
 	public function format(): string
 	{
-		if (in_array($this->format, $this->formats(), true) === true) {
+		if ($this->format === null) {
+			return 'hex';
+		}
+
+		if (in_array($this->format, ['hex', 'hsl', 'rgb'], true) === true) {
 			return $this->format;
 		}
 
-		return $this->formats()[0];
-	}
-
-	public function formats(): array
-	{
-		return ['hex', 'hsl', 'rgb'];
+		throw new InvalidArgumentException(
+			message: 'Invalid format "' . $this->format . '" in color field' . ($this->name ? ' "' . $this->name . '"' : null)
+		);
 	}
 
 	public static function isColor(string $value): bool
@@ -160,16 +161,17 @@ class ColorField extends OptionField
 
 	public function mode(): string
 	{
-		if (in_array($this->mode, $this->modes(), true) === true) {
+		if ($this->mode === null) {
+			return 'picker';
+		}
+
+		if (in_array($this->mode, ['picker', 'input', 'options'], true) === true) {
 			return $this->mode;
 		}
 
-		return $this->modes()[0];
-	}
-
-	public function modes(): array
-	{
-		return ['picker', 'input', 'options'];
+		throw new InvalidArgumentException(
+			message: 'Invalid mode "' . $this->mode . '" in color field' . ($this->name ? ' "' . $this->name . '"' : null)
+		);
 	}
 
 	public function props(): array
