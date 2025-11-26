@@ -20,6 +20,8 @@ class CheckboxesFieldTest extends TestCase
 			'help'      => null,
 			'hidden'    => false,
 			'label'     => 'Checkboxes',
+			'max'       => null,
+			'min'       => null,
 			'name'      => 'checkboxes',
 			'options'   => [],
 			'required'  => false,
