@@ -9,23 +9,44 @@ class StructureFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
 	{
-		$field = $this->field('structure', [
-			'fields' => [
-				'text' => [
-					'type' => 'text'
-				]
-			]
-		]);
+		$field = $this->field('structure', []);
 
-		$this->assertSame('structure', $field->type());
-		$this->assertSame('structure', $field->name());
-		$this->assertNull($field->limit());
-		$this->assertIsArray($field->fields());
-		$this->assertSame([], $field->value());
-		$this->assertTrue($field->save());
+		$props = $field->props();
+
+		// makes it easier to compare the arrays
+		ksort($props);
+
+		$expected = [
+			'autofocus' => false,
+			'batch'     => false,
+			'columns'   => [],
+			'default'   => null,
+			'disabled'  => false,
+			'duplicate' => true,
+			'empty'     => null,
+			'fields'    => [],
+			'help'      => null,
+			'hidden'    => false,
+			'label'     => 'Structure',
+			'limit'     => null,
+			'max'       => null,
+			'min'       => null,
+			'name'      => 'structure',
+			'prepend'   => false,
+			'required'  => false,
+			'saveable'  => true,
+			'sortBy'    => null,
+			'sortable'  => true,
+			'translate' => true,
+			'type'      => 'structure',
+			'when'      => null,
+			'width'     => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
-	public function testFillWithEmptyValue(): void
+	public function testReset(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
@@ -46,7 +67,7 @@ class StructureFieldTest extends TestCase
 
 		$this->assertSame($value, $field->toFormValue());
 
-		$field->fillWithEmptyValue();
+		$field->reset();
 
 		$this->assertSame([], $field->toFormValue());
 	}
@@ -101,6 +122,30 @@ class StructureFieldTest extends TestCase
 			'b' => [
 				'type' => 'text',
 				'label' => 'b',
+			],
+		];
+
+		$this->assertSame($expected, $field->columns());
+	}
+
+	public function testColumnsFromUnsaveableFields(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'info'
+				]
+			],
+		]);
+
+		$expected = [
+			'a' => [
+				'type' => 'text',
+				'label' => 'a',
+				'mobile' => true // the first column should be automatically kept on mobile
 			],
 		];
 
@@ -165,6 +210,19 @@ class StructureFieldTest extends TestCase
 		$this->assertSame($expected, $field->columns());
 	}
 
+	public function testDuplicate(): void
+	{
+		$field = $this->field('structure');
+
+		$this->assertTrue($field->duplicate());
+
+		$field = $this->field('structure', [
+			'duplicate' => false
+		]);
+
+		$this->assertFalse($field->duplicate());
+	}
+
 	public function testLowerCaseColumnsNames(): void
 	{
 		$field = $this->field('structure', [
@@ -197,7 +255,7 @@ class StructureFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertSame(2, $field->min());
-		$this->assertTrue($field->required());
+		$this->assertTrue($field->isRequired());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
