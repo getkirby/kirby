@@ -13,9 +13,4 @@ trait Counter
 	{
 		return $this->counter ?? true;
 	}
-
-	protected function setCounter(bool|null $counter): void
-	{
-		$this->counter = $counter;
-	}
 }

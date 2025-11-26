@@ -23,8 +23,8 @@ class HiddenField extends BaseField
 			name: $name
 		);
 
-		$this->setDefault($default);
-		$this->setTranslate($translate);
+		$this->default   = $default;
+		$this->translate = $translate;
 	}
 
 	public function hasValue(): bool

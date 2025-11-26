@@ -20,9 +20,4 @@ trait Text
 
 		return null;
 	}
-
-	protected function setText(array|string|null $text): void
-	{
-		$this->text = $text;
-	}
 }

@@ -13,9 +13,4 @@ trait Placeholder
 	{
 		return $this->stringTemplate($this->i18n($this->placeholder));
 	}
-
-	protected function setPlaceholder(array|string|null $placeholder): void
-	{
-		$this->placeholder = $placeholder;
-	}
 }

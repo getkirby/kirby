@@ -20,9 +20,4 @@ trait Help
 
 		return null;
 	}
-
-	protected function setHelp(array|string|null $help): void
-	{
-		$this->help = $help;
-	}
 }

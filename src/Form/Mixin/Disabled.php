@@ -18,9 +18,4 @@ trait Disabled
 	{
 		return $this->disabled();
 	}
-
-	protected function setDisabled(bool|null $disabled): void
-	{
-		$this->disabled = $disabled;
-	}
 }

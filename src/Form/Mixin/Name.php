@@ -10,9 +10,4 @@ trait Name
 	{
 		return strtolower($this->name ?? $this->type());
 	}
-
-	protected function setName(string|null $name): void
-	{
-		$this->name = $name;
-	}
 }

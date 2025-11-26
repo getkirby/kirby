@@ -24,9 +24,4 @@ trait DefaultValue
 
 		return $this->model()->toString($this->default);
 	}
-
-	protected function setDefault(mixed $default): void
-	{
-		$this->default = $default;
-	}
 }

@@ -13,9 +13,4 @@ trait Pattern
 	{
 		return $this->pattern;
 	}
-
-	protected function setPattern(string|null $pattern): void
-	{
-		$this->pattern = $pattern;
-	}
 }

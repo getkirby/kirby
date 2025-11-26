@@ -13,9 +13,4 @@ trait Maxlength
 	{
 		return $this->maxlength;
 	}
-
-	protected function setMaxlength(int|null $maxlength): void
-	{
-		$this->maxlength = $maxlength;
-	}
 }
