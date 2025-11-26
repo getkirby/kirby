@@ -163,7 +163,7 @@ class TagsField extends OptionsField
 		return [
 			'max',
 			'min',
-			'accepted' => $this->validateAcceptedOptions(...)
+			'accepted' => fn ($value) => $this->validateAcceptedOptions($value)
 		];
 	}
 
