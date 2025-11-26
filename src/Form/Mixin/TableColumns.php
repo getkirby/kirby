@@ -4,7 +4,14 @@ namespace Kirby\Form\Mixin;
 
 trait TableColumns
 {
+	/**
+	 * Columns definition for the table
+	 */
 	protected array|null $columns = null;
+
+	/**
+	 * Cache for the columns definition
+	 */
 	protected array $columnsCache;
 
 	public function columns(): array
