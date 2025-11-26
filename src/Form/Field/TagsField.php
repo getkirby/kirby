@@ -20,35 +20,31 @@ use Kirby\Toolkit\Str;
 class TagsField extends OptionsField
 {
 	use Mixin\Icon;
+	use Mixin\Separator;
 
 	/**
 	 * If set to `all`, any type of input is accepted. If set to `options` only the predefined options are accepted as input.
 	 */
-	protected string|null $accept = null;
+	protected string|null $accept;
 
 	/**
 	 * Set to `list` to display each tag with 100% width,
 	 * otherwise the tags are displayed inline
 	 */
-	protected string|null $layout = null;
+	protected string|null $layout;
 
 	/**
 	 * Enable/disable the search in the dropdown
 	 * Also limit displayed items (display: 20)
 	 * and set minimum number of characters to search (min: 3)
 	 */
-	protected array|bool|null $search = null;
-
-	/**
-	 * Custom tags separator, which will be used to store tags in the content file
-	 */
-	protected string|null $separator = null;
+	protected array|bool|null $search;
 
 	/**
 	 * If `true`, selected entries will be sorted
 	 * according to their position in the dropdown
 	 */
-	protected bool|null $sort = null;
+	protected bool|null $sort;
 
 	protected mixed $value = [];
 
@@ -133,11 +129,6 @@ class TagsField extends OptionsField
 	public function search(): array|bool
 	{
 		return $this->search ?? true;
-	}
-
-	public function separator(): string
-	{
-		return $this->separator ?? ',';
 	}
 
 	public function sort(): bool
