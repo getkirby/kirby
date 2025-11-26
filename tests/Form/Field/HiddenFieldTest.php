@@ -12,13 +12,10 @@ class HiddenFieldTest extends TestCase
 		ksort($props);
 
 		$expected = [
-			'default'   => null,
-			'hidden'    => true,
-			'name'      => 'hidden',
-			'saveable'  => true,
-			'translate' => true,
-			'type'      => 'hidden',
-			'when'      => null,
+			'hidden'   => true,
+			'name'     => 'hidden',
+			'saveable' => true,
+			'type'     => 'hidden',
 		];
 
 		$this->assertSame($expected, $props);
