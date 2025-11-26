@@ -3,7 +3,7 @@
 namespace Kirby\Form\Field;
 
 /**
- * Line field
+ * Gap field
  *
  * @package   Kirby Field
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -12,6 +12,6 @@ namespace Kirby\Form\Field;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class LineField extends BaseField
+class GapField extends BaseField
 {
 }

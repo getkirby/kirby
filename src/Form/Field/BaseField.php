@@ -28,13 +28,16 @@ abstract class BaseField
 	use Mixin\Translatable;
 	use Mixin\Value;
 	use Mixin\When;
+	use Mixin\Width;
 
 	public function __construct(
 		string|null $name = null,
-		array|null $when = null
+		array|null $when = null,
+		string|null $width = null
 	) {
 		$this->setName($name);
 		$this->setWhen($when);
+		$this->setWidth($width);
 	}
 
 	/**
@@ -104,7 +107,8 @@ abstract class BaseField
 			'name'     => $this->name(),
 			'saveable' => $this->hasValue(),
 			'type'     => $this->type(),
-			'when'     => $this->when()
+			'when'     => $this->when(),
+			'width'    => $this->width()
 		];
 	}
 
