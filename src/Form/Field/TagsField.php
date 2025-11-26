@@ -72,18 +72,18 @@ class TagsField extends OptionsField
 	) {
 		parent::__construct(
 			autofocus: $autofocus,
-			default: $default,
-			disabled: $disabled,
-			help: $help,
-			label: $label,
-			name: $name,
-			max: $max,
-			min: $min,
-			options: $options,
-			required: $required,
+			default:   $default,
+			disabled:  $disabled,
+			help:      $help,
+			label:     $label,
+			name:      $name,
+			max:       $max,
+			min:       $min,
+			options:   $options,
+			required:  $required,
 			translate: $translate,
-			when: $when,
-			width: $width
+			when:      $when,
+			width:     $width
 		);
 
 		$this->accept    = $accept;
@@ -94,22 +94,17 @@ class TagsField extends OptionsField
 		$this->sort      = $sort;
 	}
 
-	public function default(): array
-	{
-		return parent::default() ?? [];
-	}
-
-	public function icon(): string|null
-	{
-		return $this->icon ?? 'tag';
-	}
-
-	public function accept(): string|null
+	public function accept(): string
 	{
 		return match($this->accept) {
 			'options' => 'options',
 			default   => 'all'
 		};
+	}
+
+	public function default(): array
+	{
+		return parent::default() ?? [];
 	}
 
 	/**
@@ -120,6 +115,11 @@ class TagsField extends OptionsField
 	{
 		$this->value = Str::split($value, $this->separator());
 		return $this;
+	}
+
+	public function icon(): string
+	{
+		return $this->icon ?? 'tag';
 	}
 
 	public function search(): array|bool
