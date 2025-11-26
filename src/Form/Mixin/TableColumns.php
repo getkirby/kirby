@@ -75,9 +75,4 @@ trait TableColumns
 
 		return $columns;
 	}
-
-	protected function setColumns(array|null $columns = null): void
-	{
-		$this->columns = $columns;
-	}
 }
