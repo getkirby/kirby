@@ -41,9 +41,4 @@ trait Fields
 
 		return $this->form->reset();
 	}
-
-	protected function setFields(array|null $fields): void
-	{
-		$this->fields = $fields;
-	}
 }

@@ -13,9 +13,4 @@ trait Limit
 	{
 		return $this->limit;
 	}
-
-	protected function setLimit(int|null $limit): void
-	{
-		$this->limit = $limit;
-	}
 }

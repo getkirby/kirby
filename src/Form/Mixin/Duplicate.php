@@ -13,9 +13,4 @@ trait Duplicate
 	{
 		return $this->duplicate ?? true;
 	}
-
-	protected function setDuplicate(bool|null $duplicate): void
-	{
-		$this->duplicate = $duplicate;
-	}
 }

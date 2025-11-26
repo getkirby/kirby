@@ -14,9 +14,4 @@ trait SortBy
 	{
 		return $this->sortBy;
 	}
-
-	protected function setSortBy(string|null $sortBy): void
-	{
-		$this->sortBy = $sortBy;
-	}
 }
