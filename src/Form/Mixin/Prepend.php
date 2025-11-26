@@ -13,9 +13,4 @@ trait Prepend
 	{
 		return $this->prepend ?? false;
 	}
-
-	protected function setPrepend(bool|null $prepend): void
-	{
-		$this->prepend = $prepend;
-	}
 }
