@@ -10,19 +10,16 @@ use Kirby\Toolkit\Str;
 class StructureField extends InputField
 {
 	use Mixin\Batch;
+	use Mixin\Duplicate;
 	use Mixin\EmptyState;
 	use Mixin\Fields;
 	use Mixin\Limit;
 	use Mixin\Max;
 	use Mixin\Min;
+	use Mixin\Prepend;
 	use Mixin\Sortable;
 	use Mixin\SortBy;
 	use Mixin\TableColumns;
-
-	/**
-	 * Toggles duplicating rows for the structure
-	 */
-	protected bool|null $duplicate;
 
 	protected mixed $value = [];
 
@@ -31,7 +28,7 @@ class StructureField extends InputField
 		array|null $columns = null,
 		array|null $default = null,
 		bool|null $disabled = null,
-		array|null $duplicate = null,
+		bool|null $duplicate = null,
 		array|string|null $empty = null,
 		array|null $fields = null,
 		array|string|null $help = null,
@@ -40,6 +37,7 @@ class StructureField extends InputField
 		string|null $name = null,
 		int|null $max = null,
 		int|null $min = null,
+		bool|null $prepend = null,
 		bool|null $required = null,
 		bool|null $sortable = null,
 		string|null $sortBy = null,
@@ -67,6 +65,7 @@ class StructureField extends InputField
 		$this->limit     = $limit;
 		$this->max       = $max;
 		$this->min       = $min;
+		$this->prepend   = $prepend;
 		$this->sortable  = $sortable;
 		$this->sortBy    = $sortBy;
 	}
