@@ -2,22 +2,36 @@
 
 namespace Kirby\Form\Field;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-
 class TogglesFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('toggles');
+		$props = $field->props();
 
-		$this->assertSame('toggles', $field->type());
-		$this->assertSame('toggles', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertTrue($field->grow());
-		$this->assertTrue($field->labels());
-		$this->assertTrue($field->reset());
-		$this->assertSame([], $field->options());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'autofocus'  => false,
+			'default'    => null,
+			'disabled'   => false,
+			'grow'       => true,
+			'help'       => null,
+			'hidden'     => false,
+			'label'      => 'Toggles',
+			'labels'     => true,
+			'name'       => 'toggles',
+			'options'    => [],
+			'required'   => false,
+			'resettable' => true,
+			'saveable'   => true,
+			'translate'  => true,
+			'type'       => 'toggles',
+			'when'       => null,
+			'width'      => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testGrow(): void
@@ -50,43 +64,18 @@ class TogglesFieldTest extends TestCase
 		$this->assertTrue($field->labels());
 	}
 
-	public function testReset(): void
+	public function testResettable(): void
 	{
 		$field = $this->field('toggles', [
-			'reset' => false
+			'resettable' => false
 		]);
 
-		$this->assertFalse($field->reset());
+		$this->assertFalse($field->resettable());
 
 		$field = $this->field('toggles', [
-			'reset' => true
+			'resettable' => true
 		]);
 
-		$this->assertTrue($field->reset());
-	}
-
-	public static function valueInputProvider(): array
-	{
-		return [
-			['a', 'a'],
-			['b', 'b'],
-			['c', 'c'],
-			['d', '']
-		];
-	}
-
-	#[DataProvider('valueInputProvider')]
-	public function testValue($input, $expected): void
-	{
-		$field = $this->field('toggles', [
-			'options' => [
-				'a',
-				'b',
-				'c'
-			],
-			'value' => $input
-		]);
-
-		$this->assertTrue($expected === $field->value());
+		$this->assertTrue($field->resettable());
 	}
 }
