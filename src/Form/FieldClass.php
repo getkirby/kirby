@@ -55,10 +55,10 @@ abstract class FieldClass extends InputField
 			width: $width
 		);
 
-		$this->setAfter($after);
-		$this->setBefore($before);
-		$this->setIcon($icon);
-		$this->setPlaceholder($placeholder);
+		$this->after       = $after;
+		$this->before      = $before;
+		$this->icon        = $icon;
+		$this->placeholder = $placeholder;
 	}
 
 	public function __call(string $param, array $args): mixed

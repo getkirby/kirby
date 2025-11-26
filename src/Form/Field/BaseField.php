@@ -35,9 +35,9 @@ abstract class BaseField
 		array|null $when = null,
 		string|null $width = null
 	) {
-		$this->setName($name);
-		$this->setWhen($when);
-		$this->setWidth($width);
+		$this->name  = $name;
+		$this->when  = $when;
+		$this->width = $width;
 	}
 
 	/**

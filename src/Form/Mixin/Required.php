@@ -21,9 +21,4 @@ trait Required
 	{
 		return $this->required ?? false;
 	}
-
-	protected function setRequired(bool|null $required): void
-	{
-		$this->required = $required;
-	}
 }

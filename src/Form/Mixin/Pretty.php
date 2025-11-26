@@ -13,9 +13,4 @@ trait Pretty
 	{
 		return $this->pretty ?? false;
 	}
-
-	protected function setPretty(bool|null $pretty): void
-	{
-		$this->pretty = $pretty;
-	}
 }

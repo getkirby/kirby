@@ -41,14 +41,14 @@ abstract class InputField extends BaseField
 			when: $when
 		);
 
-		$this->setAutofocus($autofocus);
-		$this->setDefault($default);
-		$this->setDisabled($disabled);
-		$this->setHelp($help);
-		$this->setLabel($label);
-		$this->setRequired($required);
-		$this->setTranslate($translate);
-		$this->setWidth($width);
+		$this->autofocus = $autofocus;
+		$this->default   = $default;
+		$this->disabled  = $disabled;
+		$this->help      = $help;
+		$this->label     = $label;
+		$this->required  = $required;
+		$this->translate = $translate;
+		$this->width     = $width;
 	}
 
 	public function hasValue(): bool
