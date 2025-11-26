@@ -7,29 +7,47 @@ class TagsFieldTest extends TestCase
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('tags');
+		$props = $field->props();
 
-		$this->assertSame('tags', $field->type());
-		$this->assertSame('tags', $field->name());
-		$this->assertSame('all', $field->accept());
-		$this->assertSame([], $field->value());
-		$this->assertSame([], $field->default());
-		$this->assertSame([], $field->options());
-		$this->assertNull($field->min());
-		$this->assertNull($field->max());
-		$this->assertSame(',', $field->separator());
-		$this->assertSame('tag', $field->icon());
-		$this->assertNull($field->counter());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'accept'    => 'all',
+			'autofocus' => false,
+			'default'   => [],
+			'disabled'  => false,
+			'help'      => null,
+			'hidden'    => false,
+			'icon'      => 'tag',
+			'label'     => 'Tags',
+			'layout'    => null,
+			'max'       => null,
+			'min'       => null,
+			'name'      => 'tags',
+			'options'   => [],
+			'required'  => false,
+			'saveable'  => true,
+			'search'    => true,
+			'separator' => ',',
+			'sort'      => false,
+			'required'  => false,
+			'translate' => true,
+			'type'      => 'tags',
+			'when'      => null,
+			'width'     => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
-	public function testFillWithEmptyValue(): void
+	public function testReset(): void
 	{
 		$field = $this->field('tags');
 		$field->fill($value = ['a', 'b', 'c']);
 
 		$this->assertSame($value, $field->toFormValue());
 
-		$field->fillWithEmptyValue();
+		$field->reset();
 
 		$this->assertSame([], $field->toFormValue());
 	}
@@ -114,16 +132,20 @@ class TagsFieldTest extends TestCase
 
 		$field = $this->field('tags', [
 			'model'   => $app->page('b'),
-			'options' => 'query',
-			'query'   => 'page.siblings.pluck("tags", ",", true)',
+			'options' => [
+				'type'  => 'query',
+				'query' => 'page.siblings.pluck("tags", ",", true)',
+			]
 		]);
 
 		$this->assertSame($expected, $field->options());
 
 		$field = $this->field('tags', [
 			'model'   => $app->file('a/b.jpg'),
-			'options' => 'query',
-			'query'   => 'file.siblings.pluck("tags", ",", true)',
+			'options' => [
+				'type'  => 'query',
+				'query' => 'file.siblings.pluck("tags", ",", true)',
+			],
 		]);
 
 		$this->assertSame($expected, $field->options());
@@ -140,7 +162,7 @@ class TagsFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('min', $field->errors());
 		$this->assertSame(2, $field->min());
-		$this->assertTrue($field->required());
+		$this->assertTrue($field->isRequired());
 	}
 
 	public function testMax(): void

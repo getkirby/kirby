@@ -23,6 +23,7 @@ use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\SelectField;
 use Kirby\Form\Field\StatsField;
 use Kirby\Form\Field\StructureField;
+use Kirby\Form\Field\TagsField;
 use Kirby\Form\Field\TogglesField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
@@ -252,7 +253,7 @@ class Core
 			'slug'        => $this->root . '/fields/slug.php',
 			'stats'       => StatsField::class,
 			'structure'   => StructureField::class,
-			'tags'        => $this->root . '/fields/tags.php',
+			'tags'        => TagsField::class,
 			'tel'         => $this->root . '/fields/tel.php',
 			'text'        => $this->root . '/fields/text.php',
 			'textarea'    => $this->root . '/fields/textarea.php',
@@ -273,6 +274,7 @@ class Core
 			'legacy-radio'      => $this->root . '/fields/radio.php',
 			'legacy-select'     => $this->root . '/fields/select.php',
 			'legacy-structure'  => $this->root . '/fields/structure.php',
+			'legacy-tags'       => $this->root . '/fields/tags.php',
 			'legacy-toggles'    => $this->root . '/fields/toggles.php',
 		];
 	}
