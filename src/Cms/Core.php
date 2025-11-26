@@ -23,6 +23,7 @@ use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\SelectField;
 use Kirby\Form\Field\StatsField;
 use Kirby\Form\Field\StructureField;
+use Kirby\Form\Field\TogglesField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
 use Kirby\Panel\Ui\FilePreview\PdfFilePreview;
@@ -257,7 +258,7 @@ class Core
 			'textarea'    => $this->root . '/fields/textarea.php',
 			'time'        => $this->root . '/fields/time.php',
 			'toggle'      => $this->root . '/fields/toggle.php',
-			'toggles'     => $this->root . '/fields/toggles.php',
+			'toggles'     => TogglesField::class,
 			'url'         => $this->root . '/fields/url.php',
 			'users'       => $this->root . '/fields/users.php',
 			'writer'      => $this->root . '/fields/writer.php',
@@ -272,6 +273,7 @@ class Core
 			'legacy-radio'      => $this->root . '/fields/radio.php',
 			'legacy-select'     => $this->root . '/fields/select.php',
 			'legacy-structure'  => $this->root . '/fields/structure.php',
+			'legacy-toggles'    => $this->root . '/fields/toggles.php',
 		];
 	}
 
