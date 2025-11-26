@@ -11,6 +11,7 @@ use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\EntriesField;
+use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
 use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\LayoutField;
@@ -226,7 +227,7 @@ class Core
 			'email'       => $this->root . '/fields/email.php',
 			'entries'     => EntriesField::class,
 			'files'       => $this->root . '/fields/files.php',
-			'gap'         => $this->root . '/fields/gap.php',
+			'gap'         => GapField::class,
 			'headline'    => HeadlineField::class,
 			'hidden'      => $this->root . '/fields/hidden.php',
 			'info'        => InfoField::class,
@@ -255,6 +256,7 @@ class Core
 			'users'       => $this->root . '/fields/users.php',
 			'writer'      => $this->root . '/fields/writer.php',
 
+			'legacy-gap'      => $this->root . '/fields/gap.php',
 			'legacy-headline' => $this->root . '/fields/headline.php',
 			'legacy-info'     => $this->root . '/fields/info.php',
 			'legacy-line'     => $this->root . '/fields/line.php',

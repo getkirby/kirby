@@ -73,6 +73,7 @@ export default {
 		app.component("k-writer-field", WriterField);
 
 		// Legacy fields components
+		app.component("k-legacy-gap-field", GapField);
 		app.component("k-legacy-headline-field", HeadlineField);
 		app.component("k-legacy-info-field", InfoField);
 		app.component("k-legacy-line-field", LineField);
