@@ -128,6 +128,30 @@ class StructureFieldTest extends TestCase
 		$this->assertSame($expected, $field->columns());
 	}
 
+	public function testColumnsFromUnsaveableFields(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'info'
+				]
+			],
+		]);
+
+		$expected = [
+			'a' => [
+				'type' => 'text',
+				'label' => 'a',
+				'mobile' => true // the first column should be automatically kept on mobile
+			],
+		];
+
+		$this->assertSame($expected, $field->columns());
+	}
+
 	public function testColumnsWithCustomMobileSetup(): void
 	{
 		$field = $this->field('structure', [
@@ -184,6 +208,19 @@ class StructureFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $field->columns());
+	}
+
+	public function testDuplicate(): void
+	{
+		$field = $this->field('structure');
+
+		$this->assertTrue($field->duplicate());
+
+		$field = $this->field('structure', [
+			'duplicate' => false
+		]);
+
+		$this->assertFalse($field->duplicate());
 	}
 
 	public function testLowerCaseColumnsNames(): void
