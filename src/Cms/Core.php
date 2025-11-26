@@ -18,6 +18,7 @@ use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Field\LineField;
 use Kirby\Form\Field\ObjectField;
+use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\StatsField;
 use Kirby\Form\Field\StructureField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
@@ -242,7 +243,7 @@ class Core
 			'number'      => $this->root . '/fields/number.php',
 			'object'      => ObjectField::class,
 			'pages'       => $this->root . '/fields/pages.php',
-			'radio'       => $this->root . '/fields/radio.php',
+			'radio'       => RadioField::class,
 			'range'       => $this->root . '/fields/range.php',
 			'select'      => $this->root . '/fields/select.php',
 			'slug'        => $this->root . '/fields/slug.php',
@@ -265,6 +266,7 @@ class Core
 			'legacy-info'      => $this->root . '/fields/info.php',
 			'legacy-line'      => $this->root . '/fields/line.php',
 			'legacy-object'    => $this->root . '/fields/object.php',
+			'legacy-radio'     => $this->root . '/fields/radio.php',
 			'legacy-structure' => $this->root . '/fields/structure.php',
 		];
 	}
