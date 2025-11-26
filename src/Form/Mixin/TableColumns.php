@@ -7,7 +7,7 @@ trait TableColumns
 	/**
 	 * Columns definition for the table
 	 */
-	protected array|null $columns = null;
+	protected array|null $columns;
 
 	/**
 	 * Cache for the columns definition
