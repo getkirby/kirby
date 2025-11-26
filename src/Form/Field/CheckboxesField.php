@@ -40,18 +40,18 @@ class CheckboxesField extends OptionsField
 	) {
 		parent::__construct(
 			autofocus: $autofocus,
-			default: $default,
-			disabled: $disabled,
-			help: $help,
-			label: $label,
-			max: $max,
-			min: $min,
-			name: $name,
-			options: $options,
-			required: $required,
+			default:   $default,
+			disabled:  $disabled,
+			help:      $help,
+			label:     $label,
+			max:       $max,
+			min:       $min,
+			name:      $name,
+			options:   $options,
+			required:  $required,
 			translate: $translate,
-			when: $when,
-			width: $width
+			when:      $when,
+			width:     $width
 		);
 
 		$this->batch   = $batch;
