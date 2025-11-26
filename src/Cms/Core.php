@@ -13,6 +13,7 @@ use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
+use Kirby\Form\Field\HiddenField;
 use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Field\LineField;
@@ -229,7 +230,7 @@ class Core
 			'files'       => $this->root . '/fields/files.php',
 			'gap'         => GapField::class,
 			'headline'    => HeadlineField::class,
-			'hidden'      => $this->root . '/fields/hidden.php',
+			'hidden'      => HiddenField::class,
 			'info'        => InfoField::class,
 			'layout'      => LayoutField::class,
 			'line'        => LineField::class,
@@ -258,6 +259,7 @@ class Core
 
 			'legacy-gap'      => $this->root . '/fields/gap.php',
 			'legacy-headline' => $this->root . '/fields/headline.php',
+			'legacy-hidden'   => $this->root . '/fields/hidden.php',
 			'legacy-info'     => $this->root . '/fields/info.php',
 			'legacy-line'     => $this->root . '/fields/line.php',
 		];
