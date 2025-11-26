@@ -178,7 +178,7 @@ class BlueprintTest extends TestCase
 					'type'   => 'object',
 					'fields' => [
 						'text' => [
-							'type' => 'object',
+							'type' => 'textarea',
 							'uploads' => [
 								'template' => 'd'
 							]
@@ -191,7 +191,7 @@ class BlueprintTest extends TestCase
 						'text' => [
 							'fields' => [
 								'text' => [
-									'type' => 'object',
+									'type' => 'textarea',
 									'uploads' => [
 										'template' => 'e'
 									]
