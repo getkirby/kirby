@@ -55,6 +55,45 @@ class ColorFieldTest extends TestCase
 		$this->assertSame('hex', $field->format());
 	}
 
+	public function testIsColor(): void
+	{
+		$this->assertTrue(ColorField::isColor('#f00'));
+		$this->assertTrue(ColorField::isColor('#ff0000'));
+		$this->assertTrue(ColorField::isColor('#ff0000aa'));
+		$this->assertTrue(ColorField::isColor('rgb(255,0,0)'));
+		$this->assertTrue(ColorField::isColor('rgba(255, 0, 0, 0.6)'));
+		$this->assertTrue(ColorField::isColor('hsl(0, 100%, 50%)'));
+		$this->assertTrue(ColorField::isColor('hsla(0, 100%, 50%, .6)'));
+
+		$this->assertFalse(ColorField::isColor('#47'));
+		$this->assertFalse(ColorField::isColor('rgp(255, 0, 0,.6)'));
+	}
+
+	public function testIsHex(): void
+	{
+		$this->assertTrue(ColorField::isHex('#f00'));
+		$this->assertTrue(ColorField::isHex('#ff0000'));
+		$this->assertTrue(ColorField::isHex('#ff0000aa'));
+
+		$this->assertFalse(ColorField::isHex('#47'));
+	}
+
+	public function testIsHsl(): void
+	{
+		$this->assertTrue(ColorField::isHsl('hsl(0, 100%, 50%)'));
+		$this->assertTrue(ColorField::isHsl('hsla(0, 100%, 50%, .6)'));
+
+		$this->assertFalse(ColorField::isColor('hzl(0, 100%, 50%)'));
+	}
+
+	public function testIsRgb(): void
+	{
+		$this->assertTrue(ColorField::isRgb('rgb(255,0,0)'));
+		$this->assertTrue(ColorField::isRgb('rgba(255, 0, 0, 0.6)'));
+
+		$this->assertFalse(ColorField::isRgb('rgp(255, 0, 0,.6)'));
+	}
+
 	public function testModeInvalid(): void
 	{
 		$field = $this->field('color', ['mode' => 'foo']);
