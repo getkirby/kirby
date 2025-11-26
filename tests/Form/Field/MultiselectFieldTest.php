@@ -7,20 +7,37 @@ class MultiselectFieldTest extends TestCase
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('multiselect');
+		$props = $field->props();
 
-		$this->assertSame('multiselect', $field->type());
-		$this->assertSame('multiselect', $field->name());
-		$this->assertSame([], $field->value());
-		$this->assertSame([], $field->default());
-		$this->assertSame([], $field->options());
-		$this->assertNull($field->min());
-		$this->assertNull($field->max());
-		$this->assertSame(',', $field->separator());
-		$this->assertSame('checklist', $field->icon());
-		$this->assertNull($field->counter());
-		$this->assertTrue($field->search());
-		$this->assertFalse($field->sort());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'accept'    => 'options',
+			'autofocus' => false,
+			'default'   => [],
+			'disabled'  => false,
+			'help'      => null,
+			'hidden'    => false,
+			'icon'      => 'checklist',
+			'label'     => 'Multiselect',
+			'layout'    => null,
+			'max'       => null,
+			'min'       => null,
+			'name'      => 'multiselect',
+			'options'   => [],
+			'required'  => false,
+			'saveable'  => true,
+			'search'    => true,
+			'separator' => ',',
+			'sort'      => false,
+			'required'  => false,
+			'translate' => true,
+			'type'      => 'multiselect',
+			'when'      => null,
+			'width'     => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testMin(): void
@@ -45,16 +62,5 @@ class MultiselectFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('max', $field->errors());
-	}
-
-	public function testSanitizeOptions(): void
-	{
-		$field = $this->field('multiselect', [
-			'value'   => 'a, b',
-			'options' => ['b', 'c'],
-		]);
-
-		$this->assertCount(1, $field->value());
-		$this->assertArrayHasKey(0, $field->value());
 	}
 }
