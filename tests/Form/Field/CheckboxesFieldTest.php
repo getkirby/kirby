@@ -7,18 +7,35 @@ class CheckboxesFieldTest extends TestCase
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('checkboxes');
+		$props = $field->props();
 
-		$this->assertSame('checkboxes', $field->type());
-		$this->assertSame('checkboxes', $field->name());
-		$this->assertSame([], $field->value());
-		$this->assertSame([], $field->options());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'autofocus' => false,
+			'batch'     => false,
+			'columns'   => 1,
+			'default'   => null,
+			'disabled'  => false,
+			'help'      => null,
+			'hidden'    => false,
+			'label'     => 'Checkboxes',
+			'name'      => 'checkboxes',
+			'options'   => [],
+			'required'  => false,
+			'saveable'  => true,
+			'translate' => true,
+			'type'      => 'checkboxes',
+			'when'      => null,
+			'width'     => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testValue(): void
 	{
 		$field = $this->field('checkboxes', [
-			'value'   => 'a,b,c',
 			'options' => $expected = [
 				'a',
 				'b',
@@ -26,32 +43,17 @@ class CheckboxesFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame($expected, $field->value());
+		$field->fill('a, b, c');
+		$this->assertSame($expected, $field->toFormValue());
 	}
 
 	public function testEmptyValue(): void
 	{
 		$field = $this->field('checkboxes');
-
-		$this->assertSame([], $field->value());
+		$this->assertSame([], $field->toFormValue());
 	}
 
-	public function testDefaultValueWithInvalidOptions(): void
-	{
-		$field = $this->field('checkboxes', [
-			'default' => 'a,b,d',
-			'options' => [
-				'a',
-				'b',
-				'c'
-			],
-		]);
-
-		$this->assertSame(['a', 'b'], $field->default());
-		$this->assertSame('a, b', $field->data(true));
-	}
-
-	public function testFillWithEmptyValue(): void
+	public function testReset(): void
 	{
 		$field = $this->field('checkboxes', [
 			'options' => [
@@ -65,37 +67,18 @@ class CheckboxesFieldTest extends TestCase
 
 		$this->assertSame(['a', 'b'], $field->toFormValue());
 
-		$field->fillWithEmptyValue();
+		$field->reset();
 
 		$this->assertSame([], $field->toFormValue());
 	}
 
-	public function testStringConversion(): void
+	public function testToStoredValue(): void
 	{
-		$field = $this->field('checkboxes', [
-			'options' => [
-				'a',
-				'b',
-				'c'
-			],
-			'value' => 'a,b,c,d'
-		]);
+		$field = $this->field('checkboxes');
 
-		$this->assertSame('a, b, c', $field->data());
-	}
+		$field->fill(['a', 'b', 'c']);
 
-	public function testIgnoreInvalidOptions(): void
-	{
-		$field = $this->field('checkboxes', [
-			'options' => [
-				'a',
-				'b',
-				'c'
-			],
-			'value' => 'a, b, d'
-		]);
-
-		$this->assertSame('a, b', $field->toStoredValue());
+		$this->assertSame('a, b, c', $field->toStoredvalue());
 	}
 
 	public function testMin(): void
@@ -106,7 +89,7 @@ class CheckboxesFieldTest extends TestCase
 			'min'     => 2
 		]);
 
-		$this->assertTrue($field->required());
+		$this->assertTrue($field->isRequired());
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
@@ -121,6 +104,21 @@ class CheckboxesFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('max', $field->errors());
+	}
+
+	public function testFillWithInvalidOption(): void
+	{
+		$field = $this->field('checkboxes', [
+			'options'  => ['a', 'b', 'c']
+		]);
+
+		$field->fill('c');
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('d');
+
+		$this->assertFalse($field->isValid());
 	}
 
 	public function testRequiredProps(): void
