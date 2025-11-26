@@ -3,7 +3,6 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
-use Kirby\Exception\InvalidArgumentException;
 
 class ColorFieldTest extends TestCase
 {
@@ -13,11 +12,10 @@ class ColorFieldTest extends TestCase
 
 		$this->assertSame('color', $field->type());
 		$this->assertSame('color', $field->name());
-		$this->assertNull($field->value());
 		$this->assertFalse($field->alpha());
 		$this->assertSame('hex', $field->format());
 		$this->assertSame('picker', $field->mode());
-		$this->assertTrue($field->save());
+		$this->assertTrue($field->hasValue());
 	}
 
 	public function testEmptyColor(): void
@@ -26,8 +24,8 @@ class ColorFieldTest extends TestCase
 			'value' => null
 		]);
 
-		$this->assertNull($field->value());
-		$this->assertNull($field->toString());
+		$this->assertNull($field->toFormValue());
+		$this->assertNull($field->toStoredValue());
 	}
 
 	public function testDefault(): void
@@ -39,28 +37,28 @@ class ColorFieldTest extends TestCase
 		$this->assertSame('#fff', $field->default());
 	}
 
-	public function testFillWithEmptyValue(): void
+	public function testReset(): void
 	{
 		$field = $this->field('color');
 		$field->fill('#efefef');
 
 		$this->assertSame('#efefef', $field->toFormValue());
 
-		$field->fillWithEmptyValue();
+		$field->reset();
 
 		$this->assertSame('', $field->toFormValue());
 	}
 
 	public function testFormatInvalid(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->field('color', ['format' => 'foo']);
+		$field = $this->field('color', ['format' => 'foo']);
+		$this->assertSame('hex', $field->format());
 	}
 
 	public function testModeInvalid(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->field('color', ['mode' => 'foo']);
+		$field = $this->field('color', ['mode' => 'foo']);
+		$this->assertSame('picker', $field->mode());
 	}
 
 	public function testOptions(): void
