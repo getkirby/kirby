@@ -81,5 +81,6 @@ export default {
 		app.component("k-legacy-radio-field", RadioField);
 		app.component("k-legacy-select-field", SelectField);
 		app.component("k-legacy-structure-field", StructureField);
+		app.component("k-legacy-toggles-field", TogglesField);
 	}
 };
