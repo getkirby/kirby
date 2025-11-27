@@ -12,8 +12,7 @@ trait Text
 	public function text(): string|null
 	{
 		if ($this->text !== null && $this->text !== [] && $this->text !== '') {
-			$text = $this->i18n($this->text);
-			$text = $this->stringTemplate($text);
+			$text = $this->stringTemplateI18n($this->text);
 			$text = $this->kirby()->kirbytext($text);
 			return $text;
 		}
