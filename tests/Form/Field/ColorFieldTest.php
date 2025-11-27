@@ -10,13 +10,33 @@ class ColorFieldTest extends TestCase
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('color');
+		$props = $field->props();
 
-		$this->assertSame('color', $field->type());
-		$this->assertSame('color', $field->name());
-		$this->assertFalse($field->alpha());
-		$this->assertSame('hex', $field->format());
-		$this->assertSame('picker', $field->mode());
-		$this->assertTrue($field->hasValue());
+		ksort($props);
+
+		$expected = [
+			'alpha'       => false,
+			'autofocus'   => false,
+			'default'     => null,
+			'disabled'    => false,
+			'format'      => 'hex',
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => null,
+			'label'       => 'Color',
+			'mode'        => 'picker',
+			'name'        => 'color',
+			'options'     => [],
+			'placeholder' => null,
+			'required'    => false,
+			'saveable'    => true,
+			'translate'   => true,
+			'type'        => 'color',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testEmptyColor(): void
@@ -36,18 +56,6 @@ class ColorFieldTest extends TestCase
 		]);
 
 		$this->assertSame('#fff', $field->default());
-	}
-
-	public function testReset(): void
-	{
-		$field = $this->field('color');
-		$field->fill('#efefef');
-
-		$this->assertSame('#efefef', $field->toFormValue());
-
-		$field->reset();
-
-		$this->assertSame('', $field->toFormValue());
 	}
 
 	public function testFormat(): void
@@ -102,6 +110,21 @@ class ColorFieldTest extends TestCase
 		$this->assertTrue(ColorField::isRgb('rgba(255, 0, 0, 0.6)'));
 
 		$this->assertFalse(ColorField::isRgb('rgp(255, 0, 0,.6)'));
+	}
+
+	public function testIsValid(): void
+	{
+		$field = $this->field('color');
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('#ddd');
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('#ödd');
+
+		$this->assertFalse($field->isValid());
 	}
 
 	public function testMode(): void
@@ -187,5 +210,17 @@ class ColorFieldTest extends TestCase
 			['value' => '#bbb', 'text' => 'Color b'],
 			['value' => '#ccc', 'text' => 'Color c']
 		], $field->options());
+	}
+
+	public function testReset(): void
+	{
+		$field = $this->field('color');
+		$field->fill('#efefef');
+
+		$this->assertSame('#efefef', $field->toFormValue());
+
+		$field->reset();
+
+		$this->assertSame('', $field->toFormValue());
 	}
 }
