@@ -15,7 +15,7 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class DateField extends DateTimeInputField
+class DateField extends DateTimeField
 {
 	/**
 	 * Activate/deactivate the dropdown calendar

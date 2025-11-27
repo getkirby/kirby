@@ -14,7 +14,7 @@ use Kirby\Toolkit\Date;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class TimeField extends DateTimeInputField
+class TimeField extends DateTimeField
 {
 	public const ISO = 'H:i:s';
 
