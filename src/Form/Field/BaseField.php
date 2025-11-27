@@ -136,6 +136,14 @@ abstract class BaseField
 			false => $this->model()->toString($string)
 		};
 	}
+
+	protected function stringTemplateI18n(array|string|null $string = null, bool $safe = true): string|null
+	{
+		if ($string === null) {
+			return null;
+		}
+
+		return $this->stringTemplate($this->i18n($string), $safe);
 	}
 
 	/**
