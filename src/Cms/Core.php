@@ -24,6 +24,7 @@ use Kirby\Form\Field\MultiselectField;
 use Kirby\Form\Field\NumberField;
 use Kirby\Form\Field\ObjectField;
 use Kirby\Form\Field\RadioField;
+use Kirby\Form\Field\RangeField;
 use Kirby\Form\Field\SelectField;
 use Kirby\Form\Field\StatsField;
 use Kirby\Form\Field\StructureField;
@@ -254,7 +255,7 @@ class Core
 			'object'      => ObjectField::class,
 			'pages'       => $this->root . '/fields/pages.php',
 			'radio'       => RadioField::class,
-			'range'       => $this->root . '/fields/range.php',
+			'range'       => RangeField::class,
 			'select'      => SelectField::class,
 			'slug'        => $this->root . '/fields/slug.php',
 			'stats'       => StatsField::class,
@@ -282,6 +283,7 @@ class Core
 			'legacy-number'      => $this->root . '/fields/number.php',
 			'legacy-object'      => $this->root . '/fields/object.php',
 			'legacy-radio'       => $this->root . '/fields/radio.php',
+			'legacy-range'       => $this->root . '/fields/range.php',
 			'legacy-select'      => $this->root . '/fields/select.php',
 			'legacy-structure'   => $this->root . '/fields/structure.php',
 			'legacy-tags'        => $this->root . '/fields/tags.php',
