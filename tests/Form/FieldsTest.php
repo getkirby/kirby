@@ -11,6 +11,7 @@ use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Field\BaseField;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Fields::class)]
@@ -296,6 +297,33 @@ class FieldsTest extends TestCase
 		$this->assertSame('mother', $fields->find('mother')->name());
 		$this->assertSame('child', $fields->find('mother+child')->name());
 		$this->assertNull($fields->find('mother+missing-child'));
+	}
+
+	public function testFindInFieldClass(): void
+	{
+		$motherClass = new class () extends BaseField {
+			public function form(): Form
+			{
+				return new Form([
+					'fields' => [
+						'child' => [
+							'type' => 'text',
+						],
+					],
+					'model' => $this->model
+				]);
+			}
+		};
+
+		$mother = new $motherClass(name: 'mother');
+		$mother->setModel($this->model);
+
+		$fields = new Fields([
+			$mother
+		]);
+
+		$this->assertSame('mother', $fields->find('mother')->name());
+		$this->assertSame('child', $fields->find('mother+child')->name());
 	}
 
 	public function testFindWhenFieldHasNoForm(): void
@@ -855,10 +883,11 @@ class FieldsTest extends TestCase
 				'disabled'   => false,
 				'font'       => 'sans-serif',
 				'hidden'     => false,
+				'label'      => 'A',
 				'name'       => 'a',
 				'required'   => false,
 				'saveable'   => true,
-				'spellcheck' => false,
+				'spellcheck' => true,
 				'translate'  => true,
 				'type'       => 'text',
 				'width'      => '1/1',
