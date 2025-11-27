@@ -2,11 +2,7 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Exception\Exception;
-use Kirby\Form\Field;
-use Kirby\Form\Mixin;
 use Kirby\Toolkit\Date;
-use Kirby\Toolkit\Str;
 
 /**
  * Time field
@@ -18,51 +14,39 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class TimeField extends InputField
+class TimeField extends DateTimeInputField
 {
-	use Mixin\Icon;
+	public const ISO = 'H:i:s';
 
 	/**
-	 * Activate/deactivate the dropdown calendar
-	 */
-	protected bool|null $calendar;
-
-	/**
-	 * Custom format (dayjs tokens: `DD`, `MM`, `YYYY`) that is
+	 * Custom format (dayjs tokens: `HH`, `hh`, `mm`, `ss`, `a`) that is
 	 * used to display the field in the Panel
 	 */
 	protected string|null $display;
 
 	/**
-	 * Defines a custom format that is used when the field is saved
-	 */
-	protected string|null $format;
-
-	/**
-	 * Latest date, which can be selected/saved (Y-m-d)
+	 * Latest time, which can be selected/saved (H:i or H:i:s)
 	 */
 	protected string|null $max;
 
 	/**
-	 * Earliest date, which can be selected/saved (Y-m-d)
+	 * Earliest time, which can be selected/saved (H:i or H:i:s)
 	 */
 	protected string|null $min;
 
 	/**
-	 * Round to the nearest: sub-options for `unit` (day) and `size` (1)
+	 * `12` or `24` hour notation. If `12`, an AM/PM selector will be shown.
+	 * If `display` is defined, that option will take priority.
 	 */
-	protected array|string|null $step;
+	protected int|null $notation;
 
 	/**
-	 * Pass `true` or an array of time field options to show the time selector.
+	 * Round to the nearest: sub-options for `unit` (minute) and `size` (5)
 	 */
-	protected bool|array|null $time;
-
-	protected mixed $value = '';
+	protected array|int|string|null $step;
 
 	public function __construct(
 		bool|null $autofocus = null,
-		bool|null $calendar = null,
 		mixed $default = null,
 		string|null $display = null,
 		bool|null $disabled = null,
@@ -73,192 +57,83 @@ class TimeField extends InputField
 		string|null $max = null,
 		string|null $min = null,
 		string|null $name = null,
+		int|null $notation = null,
 		bool|null $required = null,
+		array|int|string|null $step = null,
 		bool|null $translate = null,
-		array|string|null $step = null,
-		bool|array|null $time = null,
 		array|null $when = null,
 		string|null $width = null
 	) {
 		parent::__construct(
 			autofocus: $autofocus,
 			default:   $default,
+			display:   $display,
 			disabled:  $disabled,
+			format:    $format,
 			help:      $help,
+			icon:      $icon,
 			label:     $label,
+			max:       $max,
+			min:       $min,
 			name:      $name,
 			required:  $required,
+			step:      $step,
 			translate: $translate,
 			when:      $when,
 			width:     $width
 		);
 
-		$this->calendar = $calendar;
-		$this->display  = $display;
-		$this->format   = $format;
-		$this->icon     = $icon;
-		$this->max      = $max;
-		$this->min      = $min;
-		$this->step     = $step;
-		$this->time     = $time;
-	}
-
-	public function calendar(): bool
-	{
-		return $this->calendar ?? true;
-	}
-
-	public function default(): mixed
-	{
-		return $this->toDatetime(parent::default()) ?? '';
+		$this->notation = $notation;
 	}
 
 	public function display(): string
 	{
-		return Str::upper($this->i18n($this->display) ?? 'YYYY-MM-DD');
+		if ($this->display) {
+			return $this->i18n($this->display);
+		}
+
+		return $this->notation() === 24 ? 'HH:mm' : 'hh:mm a';
 	}
 
 	public function format(): string
 	{
-		if ($this->format) {
-			return $this->format;
-		}
-
-		if ($this->time() === false) {
-			return 'Y-m-d';
-		}
-
-		return 'Y-m-d H:i:s';
+		return $this->format ?? static::ISO;
 	}
 
 	public function icon(): string
 	{
-		return $this->icon ?? 'calendar';
+		return $this->icon ?? 'clock';
 	}
 
-	public function max(): string|null
+	public function notation(): int
 	{
-		return Date::optional($this->max);
-	}
-
-	public function min(): string|null
-	{
-		return Date::optional($this->min);
+		return match ($this->notation) {
+			12      => 12,
+			default => 24
+		};
 	}
 
 	public function props(): array
 	{
 		return [
 			...parent::props(),
-			'calendar' => $this->calendar(),
-			'display'  => $this->display(),
-			'format'   => $this->format(),
-			'icon'     => $this->icon(),
-			'max'      => $this->max(),
-			'min'      => $this->min(),
-			'step'     => $this->step(),
-			'time'     => $this->time()
+			'notation' => $this->notation()
 		];
 	}
 
 	public function step(): array
 	{
-		if ($this->time === false || empty($this->time['step']) === true) {
-			return Date::stepConfig($this->step, [
-				'size' => 1,
-				'unit' => 'day'
-			]);
-		}
-
-		return Date::stepConfig($this->time['step'], [
+		return Date::stepConfig($this->step, [
 			'size' => 5,
-			'unit' => 'minute'
+			'unit' => 'minute',
 		]);
-	}
-
-	public function time(): array|bool
-	{
-		if ($this->time === null || $this->time === false) {
-			return false;
-		}
-
-		$props = is_array($this->time) ? $this->time : [];
-		$props['model'] = $this->model();
-		$field = new Field('time', $props);
-		return $field->toArray();
-	}
-
-	protected function toDatetime(
-		string|null $value,
-		string $format = 'Y-m-d H:i:s'
-	): string|null {
-		if ($date = Date::optional($value)) {
-			if ($step = $this->step()) {
-				$step = Date::stepConfig($step);
-				$date->round($step['unit'], $step['size']);
-			}
-
-			return $date->format($format);
-		}
-
-		return null;
-	}
-
-	public function toFormValue(): string
-	{
-		return $this->toDatetime($this->value) ?? '';
-	}
-
-	public function toStoredValue(): string
-	{
-		if ($date = Date::optional($this->value)) {
-			return $date->format($this->format());
-		}
-
-		return '';
 	}
 
 	protected function validations(): array
 	{
 		return [
-			'date',
-			'minMax' => $this->validateMinMax(...)
+			'time',
+			...parent::validations()
 		];
-	}
-
-	protected function validateMinMax(mixed $value): void
-	{
-		if (!$value = Date::optional($value)) {
-			return;
-		}
-
-		$min = Date::optional($this->min);
-		$max = Date::optional($this->max);
-
-		$format = $this->time === false ? 'd.m.Y' : 'd.m.Y H:i';
-
-		if ($min && $max && $value->isBetween($min, $max) === false) {
-			throw new Exception(
-				key: 'validation.date.between',
-				data: [
-					'min' => $min->format($format),
-					'max' => $max->format($format)
-				]
-			);
-		}
-
-		if ($min && $value->isMin($min) === false) {
-			throw new Exception(
-				key: 'validation.date.after',
-				data: ['date' => $min->format($format)]
-			);
-		}
-
-		if ($max && $value->isMax($max) === false) {
-			throw new Exception(
-				key: 'validation.date.before',
-				data: ['date' => $max->format($format)]
-			);
-		}
 	}
 }

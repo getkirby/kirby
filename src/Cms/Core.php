@@ -28,6 +28,7 @@ use Kirby\Form\Field\StatsField;
 use Kirby\Form\Field\StructureField;
 use Kirby\Form\Field\TagsField;
 use Kirby\Form\Field\ToggleField;
+use Kirby\Form\Field\TimeField;
 use Kirby\Form\Field\TogglesField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
@@ -261,7 +262,7 @@ class Core
 			'tel'         => $this->root . '/fields/tel.php',
 			'text'        => $this->root . '/fields/text.php',
 			'textarea'    => $this->root . '/fields/textarea.php',
-			'time'        => $this->root . '/fields/time.php',
+			'time'        => TimeField::class,
 			'toggle'      => ToggleField::class,
 			'toggles'     => TogglesField::class,
 			'url'         => $this->root . '/fields/url.php',
@@ -282,6 +283,7 @@ class Core
 			'legacy-select'      => $this->root . '/fields/select.php',
 			'legacy-structure'   => $this->root . '/fields/structure.php',
 			'legacy-tags'        => $this->root . '/fields/tags.php',
+			'legacy-time'        => $this->root . '/fields/time.php',
 			'legacy-toggle'      => $this->root . '/fields/toggle.php',
 			'legacy-toggles'     => $this->root . '/fields/toggles.php',
 		];
