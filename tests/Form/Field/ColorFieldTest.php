@@ -10,14 +10,33 @@ class ColorFieldTest extends TestCase
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('color');
+		$props = $field->props();
 
-		$this->assertSame('color', $field->type());
-		$this->assertSame('color', $field->name());
-		$this->assertNull($field->value());
-		$this->assertFalse($field->alpha());
-		$this->assertSame('hex', $field->format());
-		$this->assertSame('picker', $field->mode());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'alpha'       => false,
+			'autofocus'   => false,
+			'default'     => null,
+			'disabled'    => false,
+			'format'      => 'hex',
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => null,
+			'label'       => 'Color',
+			'mode'        => 'picker',
+			'name'        => 'color',
+			'options'     => [],
+			'placeholder' => null,
+			'required'    => false,
+			'saveable'    => true,
+			'translate'   => true,
+			'type'        => 'color',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testEmptyColor(): void
@@ -26,8 +45,8 @@ class ColorFieldTest extends TestCase
 			'value' => null
 		]);
 
-		$this->assertNull($field->value());
-		$this->assertNull($field->toString());
+		$this->assertNull($field->toFormValue());
+		$this->assertNull($field->toStoredValue());
 	}
 
 	public function testDefault(): void
@@ -39,28 +58,88 @@ class ColorFieldTest extends TestCase
 		$this->assertSame('#fff', $field->default());
 	}
 
-	public function testFillWithEmptyValue(): void
+	public function testFormat(): void
+	{
+		$field = $this->field('color', ['format' => 'rgb']);
+		$this->assertSame('rgb', $field->format());
+
+		$field = $this->field('color');
+		$this->assertSame('hex', $field->format());
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid format "foo" in color field');
+
+		$field = $this->field('color', ['format' => 'foo']);
+		$field->format();
+	}
+
+	public function testIsColor(): void
+	{
+		$this->assertTrue(ColorField::isColor('#f00'));
+		$this->assertTrue(ColorField::isColor('#ff0000'));
+		$this->assertTrue(ColorField::isColor('#ff0000aa'));
+		$this->assertTrue(ColorField::isColor('rgb(255,0,0)'));
+		$this->assertTrue(ColorField::isColor('rgba(255, 0, 0, 0.6)'));
+		$this->assertTrue(ColorField::isColor('hsl(0, 100%, 50%)'));
+		$this->assertTrue(ColorField::isColor('hsla(0, 100%, 50%, .6)'));
+
+		$this->assertFalse(ColorField::isColor('#47'));
+		$this->assertFalse(ColorField::isColor('rgp(255, 0, 0,.6)'));
+	}
+
+	public function testIsHex(): void
+	{
+		$this->assertTrue(ColorField::isHex('#f00'));
+		$this->assertTrue(ColorField::isHex('#ff0000'));
+		$this->assertTrue(ColorField::isHex('#ff0000aa'));
+
+		$this->assertFalse(ColorField::isHex('#47'));
+	}
+
+	public function testIsHsl(): void
+	{
+		$this->assertTrue(ColorField::isHsl('hsl(0, 100%, 50%)'));
+		$this->assertTrue(ColorField::isHsl('hsla(0, 100%, 50%, .6)'));
+
+		$this->assertFalse(ColorField::isColor('hzl(0, 100%, 50%)'));
+	}
+
+	public function testIsRgb(): void
+	{
+		$this->assertTrue(ColorField::isRgb('rgb(255,0,0)'));
+		$this->assertTrue(ColorField::isRgb('rgba(255, 0, 0, 0.6)'));
+
+		$this->assertFalse(ColorField::isRgb('rgp(255, 0, 0,.6)'));
+	}
+
+	public function testIsValid(): void
 	{
 		$field = $this->field('color');
-		$field->fill('#efefef');
 
-		$this->assertSame('#efefef', $field->toFormValue());
+		$this->assertTrue($field->isValid());
 
-		$field->fillWithEmptyValue();
+		$field->fill('#ddd');
 
-		$this->assertSame('', $field->toFormValue());
+		$this->assertTrue($field->isValid());
+
+		$field->fill('#ödd');
+
+		$this->assertFalse($field->isValid());
 	}
 
-	public function testFormatInvalid(): void
+	public function testMode(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->field('color', ['format' => 'foo']);
-	}
+		$field = $this->field('color', ['mode' => 'options']);
+		$this->assertSame('options', $field->mode());
 
-	public function testModeInvalid(): void
-	{
+		$field = $this->field('color');
+		$this->assertSame('picker', $field->mode());
+
 		$this->expectException(InvalidArgumentException::class);
-		$this->field('color', ['mode' => 'foo']);
+		$this->expectExceptionMessage('Invalid mode "foo" in color field');
+
+		$field = $this->field('color', ['mode' => 'foo']);
+		$field->mode();
 	}
 
 	public function testOptions(): void
@@ -131,5 +210,17 @@ class ColorFieldTest extends TestCase
 			['value' => '#bbb', 'text' => 'Color b'],
 			['value' => '#ccc', 'text' => 'Color c']
 		], $field->options());
+	}
+
+	public function testReset(): void
+	{
+		$field = $this->field('color');
+		$field->fill('#efefef');
+
+		$this->assertSame('#efefef', $field->toFormValue());
+
+		$field->reset();
+
+		$this->assertSame('', $field->toFormValue());
 	}
 }

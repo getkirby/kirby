@@ -11,6 +11,7 @@ use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\CheckboxesField;
+use Kirby\Form\Field\ColorField;
 use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
@@ -231,7 +232,7 @@ class Core
 		return [
 			'blocks'      => BlocksField::class,
 			'checkboxes'  => CheckboxesField::class,
-			'color'       => $this->root . '/fields/color.php',
+			'color'       => ColorField::class,
 			'date'        => $this->root . '/fields/date.php',
 			'email'       => $this->root . '/fields/email.php',
 			'entries'     => EntriesField::class,
@@ -266,6 +267,7 @@ class Core
 			'writer'      => $this->root . '/fields/writer.php',
 
 			'legacy-checkboxes'  => $this->root . '/fields/checkboxes.php',
+			'legacy-color'       => $this->root . '/fields/color.php',
 			'legacy-gap'         => $this->root . '/fields/gap.php',
 			'legacy-headline'    => $this->root . '/fields/headline.php',
 			'legacy-hidden'      => $this->root . '/fields/hidden.php',
