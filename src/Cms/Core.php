@@ -13,6 +13,7 @@ use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\CheckboxesField;
 use Kirby\Form\Field\ColorField;
 use Kirby\Form\Field\DateField;
+use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
@@ -240,7 +241,7 @@ class Core
 			'checkboxes'  => CheckboxesField::class,
 			'color'       => ColorField::class,
 			'date'        => DateField::class,
-			'email'       => $this->root . '/fields/email.php',
+			'email'       => EmailField::class,
 			'entries'     => EntriesField::class,
 			'files'       => $this->root . '/fields/files.php',
 			'gap'         => GapField::class,
@@ -275,6 +276,7 @@ class Core
 			'legacy-checkboxes'  => $this->root . '/fields/checkboxes.php',
 			'legacy-color'       => $this->root . '/fields/color.php',
 			'legacy-date'        => $this->root . '/fields/date.php',
+			'legacy-email'       => $this->root . '/fields/email.php',
 			'legacy-gap'         => $this->root . '/fields/gap.php',
 			'legacy-headline'    => $this->root . '/fields/headline.php',
 			'legacy-hidden'      => $this->root . '/fields/hidden.php',
