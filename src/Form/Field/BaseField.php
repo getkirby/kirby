@@ -127,8 +127,8 @@ abstract class BaseField
 	 */
 	protected function stringTemplate(string|null $string = null, bool $safe = true): string|null
 	{
-		if ($string === null) {
-			return null;
+		if ($string === null || $string === '') {
+			return $string;
 		}
 
 		return match ($safe) {
@@ -139,8 +139,8 @@ abstract class BaseField
 
 	protected function stringTemplateI18n(array|string|null $string = null, bool $safe = true): string|null
 	{
-		if ($string === null) {
-			return null;
+		if ($string === null || $string === '') {
+			return $string;
 		}
 
 		return $this->stringTemplate($this->i18n($string), $safe);

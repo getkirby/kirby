@@ -11,6 +11,6 @@ trait Before
 
 	public function before(): string|null
 	{
-		return $this->stringTemplate($this->i18n($this->before));
+		return $this->stringTemplateI18n($this->before);
 	}
 }

@@ -12,8 +12,7 @@ trait Help
 	public function help(): string|null
 	{
 		if ($this->help !== null && $this->help !== [] && $this->help !== '') {
-			$help = $this->i18n($this->help);
-			$help = $this->stringTemplate($help);
+			$help = $this->stringTemplateI18n($this->help);
 			$help = $this->kirby()->kirbytext($help);
 			return $help;
 		}

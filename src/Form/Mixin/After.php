@@ -11,6 +11,6 @@ trait After
 
 	public function after(): string|null
 	{
-		return $this->stringTemplate($this->i18n($this->after));
+		return $this->stringTemplateI18n($this->after);
 	}
 }
