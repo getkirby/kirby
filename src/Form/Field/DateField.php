@@ -2,9 +2,6 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Exception\Exception;
-use Kirby\Form\Field;
-use Kirby\Form\Mixin;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Str;
 
@@ -18,10 +15,8 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class DateField extends InputField
+class DateField extends DateTimeInputField
 {
-	use Mixin\Icon;
-
 	/**
 	 * Activate/deactivate the dropdown calendar
 	 */
@@ -32,11 +27,6 @@ class DateField extends InputField
 	 * used to display the field in the Panel
 	 */
 	protected string|null $display;
-
-	/**
-	 * Defines a custom format that is used when the field is saved
-	 */
-	protected string|null $format;
 
 	/**
 	 * Latest date, which can be selected/saved (Y-m-d)
@@ -51,14 +41,12 @@ class DateField extends InputField
 	/**
 	 * Round to the nearest: sub-options for `unit` (day) and `size` (1)
 	 */
-	protected array|string|null $step;
+	protected array|int|string|null $step;
 
 	/**
 	 * Pass `true` or an array of time field options to show the time selector.
 	 */
 	protected bool|array|null $time;
-
-	protected mixed $value = null;
 
 	public function __construct(
 		bool|null $autofocus = null,
@@ -75,7 +63,7 @@ class DateField extends InputField
 		string|null $name = null,
 		bool|null $required = null,
 		bool|null $translate = null,
-		array|string|null $step = null,
+		array|int|string|null $step = null,
 		bool|array|null $time = null,
 		array|null $when = null,
 		string|null $width = null
@@ -83,23 +71,23 @@ class DateField extends InputField
 		parent::__construct(
 			autofocus: $autofocus,
 			default:   $default,
+			display:   $display,
 			disabled:  $disabled,
+			format:    $format,
 			help:      $help,
+			icon:      $icon,
 			label:     $label,
+			max:       $max,
+			min:       $min,
 			name:      $name,
 			required:  $required,
+			step:      $step,
 			translate: $translate,
 			when:      $when,
 			width:     $width
 		);
 
 		$this->calendar = $calendar;
-		$this->display  = $display;
-		$this->format   = $format;
-		$this->icon     = $icon;
-		$this->max      = $max;
-		$this->min      = $min;
-		$this->step     = $step;
 		$this->time     = $time;
 	}
 
@@ -108,23 +96,9 @@ class DateField extends InputField
 		return $this->calendar ?? true;
 	}
 
-	public function default(): string|null
-	{
-		$default = Date::optional(parent::default());
-		$default = $this->roundToStep($default);
-		return $default?->format('Y-m-d H:i:s');
-	}
-
 	public function display(): string
 	{
 		return Str::upper($this->i18n($this->display) ?? 'YYYY-MM-DD');
-	}
-
-	public function fill(mixed $value): static
-	{
-		$value       = Date::optional($value);
-		$this->value = $this->roundToStep($value);
-		return $this;
 	}
 
 	public function format(): string
@@ -145,44 +119,13 @@ class DateField extends InputField
 		return $this->icon ?? 'calendar';
 	}
 
-	public function max(): string|null
-	{
-		return Date::optional($this->max);
-	}
-
-	public function min(): string|null
-	{
-		return Date::optional($this->min);
-	}
-
 	public function props(): array
 	{
 		return [
 			...parent::props(),
 			'calendar' => $this->calendar(),
-			'display'  => $this->display(),
-			'format'   => $this->format(),
-			'icon'     => $this->icon(),
-			'max'      => $this->max(),
-			'min'      => $this->min(),
-			'step'     => $this->step(),
 			'time'     => $this->time()
 		];
-	}
-
-	protected function roundToStep(Date|null $value): Date|null
-	{
-		if ($value === null) {
-			return null;
-		}
-
-		// if `step` option is set, round to nearest step
-		if ($step = $this->step()) {
-			$step = Date::stepConfig($step);
-			$value->round($step['unit'], $step['size']);
-		}
-
-		return $value;
 	}
 
 	public function step(): array
@@ -208,62 +151,19 @@ class DateField extends InputField
 			return false;
 		}
 
-		$props = is_array($this->time) ? $this->time : [];
-		$props['model'] = $this->model();
-		$field = new Field('time', $props);
-		return $field->toArray();
-	}
+		$props = [
+			...is_array($this->time) ? $this->time : [],
+			'model' => $this->model()
+		];
 
-	public function toFormValue(): string
-	{
-		return $this->value?->format('Y-m-d H:i:s') ?? '';
-	}
-
-	public function toStoredValue(): string
-	{
-		return $this->value?->format($this->format()) ?? '';
+		return TimeField::factory($props)->toArray();
 	}
 
 	protected function validations(): array
 	{
 		return [
 			'date',
-			'minMax' => $this->validateMinMax(...)
+			...parent::validations()
 		];
-	}
-
-	protected function validateMinMax(mixed $value): void
-	{
-		if (!$value = Date::optional($value)) {
-			return;
-		}
-
-		$min    = Date::optional($this->min());
-		$max    = Date::optional($this->max());
-		$format = $this->time() === false ? 'd.m.Y' : 'd.m.Y H:i';
-
-		if ($min && $max && $value->isBetween($min, $max) === false) {
-			throw new Exception(
-				key: 'validation.date.between',
-				data: [
-					'min' => $min->format($format),
-					'max' => $max->format($format)
-				]
-			);
-		}
-
-		if ($min && $value->isMin($min) === false) {
-			throw new Exception(
-				key: 'validation.date.after',
-				data: ['date' => $min->format($format)]
-			);
-		}
-
-		if ($max && $value->isMax($max) === false) {
-			throw new Exception(
-				key: 'validation.date.before',
-				data: ['date' => $max->format($format)]
-			);
-		}
 	}
 }

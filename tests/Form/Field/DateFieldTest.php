@@ -3,8 +3,11 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Toolkit\Date;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(DateField::class)]
+#[CoversClass(DateTimeInputField::class)]
 class DateFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
@@ -99,7 +102,7 @@ class DateFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 		$this->assertSame([
-			'minMax' => 'Please enter a date between 01.10.2020 and 02.10.2020',
+			'minMax' => 'Please enter a date between 2020-10-01 and 2020-10-02',
 		], $field->errors());
 
 		// min & max failed (with time)
@@ -113,7 +116,7 @@ class DateFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 		$this->assertSame([
-			'minMax' => 'Please enter a date between 01.10.2020 10:04 and 02.10.2020 08:15',
+			'minMax' => 'Please enter a date between 2020-10-01 10:04:00 and 2020-10-02 08:15:00',
 		], $field->errors());
 
 		// min failed
@@ -125,7 +128,7 @@ class DateFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 		$this->assertSame([
-			'minMax' => 'Please enter a date after 01.10.2020',
+			'minMax' => 'Please enter a date after 2020-10-01',
 		], $field->errors());
 
 		// max failed
@@ -137,7 +140,7 @@ class DateFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 		$this->assertSame([
-			'minMax' => 'Please enter a date before 31.10.2020',
+			'minMax' => 'Please enter a date before 2020-10-31',
 		], $field->errors());
 	}
 
