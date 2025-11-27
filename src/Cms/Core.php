@@ -12,6 +12,7 @@ use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\CheckboxesField;
 use Kirby\Form\Field\ColorField;
+use Kirby\Form\Field\DateField;
 use Kirby\Form\Field\EntriesField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
@@ -26,6 +27,7 @@ use Kirby\Form\Field\SelectField;
 use Kirby\Form\Field\StatsField;
 use Kirby\Form\Field\StructureField;
 use Kirby\Form\Field\TagsField;
+use Kirby\Form\Field\TimeField;
 use Kirby\Form\Field\ToggleField;
 use Kirby\Form\Field\TogglesField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
@@ -234,7 +236,7 @@ class Core
 			'blocks'      => BlocksField::class,
 			'checkboxes'  => CheckboxesField::class,
 			'color'       => ColorField::class,
-			'date'        => $this->root . '/fields/date.php',
+			'date'        => DateField::class,
 			'email'       => $this->root . '/fields/email.php',
 			'entries'     => EntriesField::class,
 			'files'       => $this->root . '/fields/files.php',
@@ -260,7 +262,7 @@ class Core
 			'tel'         => $this->root . '/fields/tel.php',
 			'text'        => $this->root . '/fields/text.php',
 			'textarea'    => $this->root . '/fields/textarea.php',
-			'time'        => $this->root . '/fields/time.php',
+			'time'        => TimeField::class,
 			'toggle'      => ToggleField::class,
 			'toggles'     => TogglesField::class,
 			'url'         => $this->root . '/fields/url.php',
@@ -269,6 +271,7 @@ class Core
 
 			'legacy-checkboxes'  => $this->root . '/fields/checkboxes.php',
 			'legacy-color'       => $this->root . '/fields/color.php',
+			'legacy-date'        => $this->root . '/fields/date.php',
 			'legacy-gap'         => $this->root . '/fields/gap.php',
 			'legacy-headline'    => $this->root . '/fields/headline.php',
 			'legacy-hidden'      => $this->root . '/fields/hidden.php',
@@ -280,6 +283,7 @@ class Core
 			'legacy-select'      => $this->root . '/fields/select.php',
 			'legacy-structure'   => $this->root . '/fields/structure.php',
 			'legacy-tags'        => $this->root . '/fields/tags.php',
+			'legacy-time'        => $this->root . '/fields/time.php',
 			'legacy-toggle'      => $this->root . '/fields/toggle.php',
 			'legacy-toggles'     => $this->root . '/fields/toggles.php',
 		];

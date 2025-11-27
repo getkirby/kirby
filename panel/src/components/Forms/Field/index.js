@@ -75,6 +75,7 @@ export default {
 		// Legacy fields components
 		app.component("k-legacy-checkboxes-field", CheckboxesField);
 		app.component("k-legacy-color-field", ColorField);
+		app.component("k-legacy-date-field", DateField);
 		app.component("k-legacy-gap-field", GapField);
 		app.component("k-legacy-headline-field", HeadlineField);
 		app.component("k-legacy-info-field", InfoField);
@@ -85,6 +86,7 @@ export default {
 		app.component("k-legacy-select-field", SelectField);
 		app.component("k-legacy-structure-field", StructureField);
 		app.component("k-legacy-tags-field", TagsField);
+		app.component("k-legacy-time-field", TimeField);
 		app.component("k-legacy-toggle-field", ToggleField);
 		app.component("k-legacy-toggles-field", TogglesField);
 	}
