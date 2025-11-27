@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(TagsField::class)]
 class TagsFieldTest extends TestCase
 {
 	public function testDefaultProps(): void

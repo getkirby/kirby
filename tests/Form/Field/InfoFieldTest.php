@@ -3,7 +3,9 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\Page;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(InfoField::class)]
 class InfoFieldTest extends TestCase
 {
 	public function testDefaultProps(): void

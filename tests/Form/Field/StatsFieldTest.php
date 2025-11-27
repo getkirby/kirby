@@ -3,7 +3,9 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Panel\Ui\Stats;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(StatsField::class)]
 class StatsFieldTest extends TestCase
 {
 	public function testDefaultProps(): void

@@ -4,7 +4,9 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(StructureField::class)]
 class StructureFieldTest extends TestCase
 {
 	public function testDefaultProps(): void

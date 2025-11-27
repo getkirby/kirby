@@ -4,7 +4,9 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(ColorField::class)]
 class ColorFieldTest extends TestCase
 {
 	public function testDefaultProps(): void

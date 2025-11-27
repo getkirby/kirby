@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(SelectField::class)]
 class SelectFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
