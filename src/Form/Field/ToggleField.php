@@ -23,7 +23,10 @@ class ToggleField extends InputField
 	use Mixin\Icon;
 
 	/**
-	 * Sets the text next to the toggle. The text can be a string or an array of two options. The first one is the negative text and the second one the positive. The text will automatically switch when the toggle is triggered.
+	 * Sets the text next to the toggle. The text can be a string
+	 * or an array of two options. The first one is the negative text
+	 * and the second one the positive. The text will automatically
+	 * switch when the toggle is triggered.
 	 */
 	protected array|string|null $text;
 
@@ -45,15 +48,15 @@ class ToggleField extends InputField
 	) {
 		parent::__construct(
 			autofocus: $autofocus,
-			default: $default,
-			disabled: $disabled,
-			help: $help,
-			label: $label,
-			name: $name,
-			required: $required,
+			default:   $default,
+			disabled:  $disabled,
+			help:      $help,
+			label:     $label,
+			name:      $name,
+			required:  $required,
 			translate: $translate,
-			when: $when,
-			width: $width
+			when:      $when,
+			width:     $width
 		);
 
 		$this->after  = $after;
