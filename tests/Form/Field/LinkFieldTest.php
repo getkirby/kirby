@@ -3,31 +3,36 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(LinkField::class)]
 class LinkFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('link');
+		$props = $field->props();
 
-		$this->assertSame('link', $field->type());
-		$this->assertSame('link', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertNull($field->label());
-		$this->assertNull($field->text());
-		$this->assertTrue($field->save());
-		$this->assertNull($field->after());
-		$this->assertNull($field->before());
-		$this->assertNull($field->icon());
-		$this->assertNull($field->placeholder());
-		$this->assertSame([
-			'url',
-			'page',
-			'file',
-			'email',
-			'tel',
-			'anchor'
-		], $field->options());
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'default'     => null,
+			'disabled'    => false,
+			'help'        => null,
+			'hidden'      => false,
+			'label'       => 'Link',
+			'name'        => 'link',
+			'options'     => ['url', 'page', 'file', 'email', 'tel', 'anchor'],
+			'required'    => false,
+			'saveable'    => true,
+			'translate'   => true,
+			'type'        => 'link',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testOptionsInvalid(): void
@@ -35,8 +40,9 @@ class LinkFieldTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid options: foo, bar');
 
-		$this->field('link', [
+		$field = $this->field('link', [
 			'options' => ['page', 'foo', 'bar']
 		]);
+		$field->options();
 	}
 }
