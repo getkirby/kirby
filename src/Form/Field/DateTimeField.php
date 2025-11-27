@@ -16,7 +16,7 @@ use Kirby\Toolkit\Date;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-abstract class DateTimeInputField extends InputField
+abstract class DateTimeField extends InputField
 {
 	use Mixin\Icon;
 

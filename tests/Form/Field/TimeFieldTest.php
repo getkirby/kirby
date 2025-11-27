@@ -6,7 +6,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(TimeField::class)]
-#[CoversClass(DateTimeInputField::class)]
+#[CoversClass(DateTimeField::class)]
 class TimeFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
