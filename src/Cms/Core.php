@@ -20,6 +20,7 @@ use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Field\LineField;
 use Kirby\Form\Field\MultiselectField;
+use Kirby\Form\Field\NumberField;
 use Kirby\Form\Field\ObjectField;
 use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\SelectField;
@@ -247,7 +248,7 @@ class Core
 			'link'        => $this->root . '/fields/link.php',
 			'list'        => $this->root . '/fields/list.php',
 			'multiselect' => MultiselectField::class,
-			'number'      => $this->root . '/fields/number.php',
+			'number'      => NumberField::class,
 			'object'      => ObjectField::class,
 			'pages'       => $this->root . '/fields/pages.php',
 			'radio'       => RadioField::class,
@@ -275,6 +276,7 @@ class Core
 			'legacy-info'        => $this->root . '/fields/info.php',
 			'legacy-line'        => $this->root . '/fields/line.php',
 			'legacy-multiselect' => $this->root . '/fields/multiselect.php',
+			'legacy-number'      => $this->root . '/fields/number.php',
 			'legacy-object'      => $this->root . '/fields/object.php',
 			'legacy-radio'       => $this->root . '/fields/radio.php',
 			'legacy-select'      => $this->root . '/fields/select.php',

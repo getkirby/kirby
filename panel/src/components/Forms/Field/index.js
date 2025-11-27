@@ -81,6 +81,7 @@ export default {
 		app.component("k-legacy-line-field", LineField);
 		app.component("k-legacy-object-field", ObjectField);
 		app.component("k-legacy-multiselect-field", MultiselectField);
+		app.component("k-legacy-number-field", NumberField);
 		app.component("k-legacy-radio-field", RadioField);
 		app.component("k-legacy-select-field", SelectField);
 		app.component("k-legacy-structure-field", StructureField);
