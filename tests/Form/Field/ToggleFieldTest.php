@@ -3,7 +3,9 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(ToggleField::class)]
 class ToggleFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
