@@ -125,13 +125,17 @@ abstract class BaseField
 	/**
 	 * Parses a string template in the given value
 	 */
-	protected function stringTemplate(string|null $string = null): string|null
+	protected function stringTemplate(string|null $string = null, bool $safe = true): string|null
 	{
-		if ($string !== null) {
-			return $this->model()->toString($string);
+		if ($string === null) {
+			return null;
 		}
 
-		return null;
+		return match ($safe) {
+			true  => $this->model()->toSafeString($string),
+			false => $this->model()->toString($string)
+		};
+	}
 	}
 
 	/**
