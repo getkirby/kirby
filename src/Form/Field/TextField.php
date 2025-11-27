@@ -78,6 +78,10 @@ class TextField extends StringField
 		return $this->convert($this->default);
 	}
 
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
+	 */
 	public function fill(mixed $value): static
 	{
 		$this->value = $this->convert($value);
