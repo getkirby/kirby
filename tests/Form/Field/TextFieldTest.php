@@ -20,7 +20,7 @@ class TextFieldTest extends TestCase
 		$this->assertNull($field->maxlength());
 		$this->assertNull($field->minlength());
 		$this->assertNull($field->pattern());
-		$this->assertFalse($field->spellcheck());
+		$this->assertTrue($field->spellcheck());
 		$this->assertTrue($field->save());
 	}
 
@@ -31,7 +31,7 @@ class TextFieldTest extends TestCase
 			['upper', 'Super nice', 'SUPER NICE'],
 			['lower', 'Super nice', 'super nice'],
 			['ucfirst', 'super nice', 'Super nice'],
-			['upper', null, ''],
+			['upper', null, null],
 			['lower', '', ''],
 		];
 	}
@@ -49,18 +49,6 @@ class TextFieldTest extends TestCase
 		$this->assertSame($expected, $field->default());
 	}
 
-	public function testFillWithEmptyValue(): void
-	{
-		$field = $this->field('text');
-		$field->fill('test');
-
-		$this->assertSame('test', $field->toFormValue());
-
-		$field->fillWithEmptyValue();
-
-		$this->assertSame('', $field->toFormValue());
-	}
-
 	public function testInvalidConverter(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -69,6 +57,8 @@ class TextFieldTest extends TestCase
 		$field = $this->field('text', [
 			'converter' => 'does-not-exist',
 		]);
+
+		$field->converter();
 	}
 
 	public function testMinLength(): void
@@ -91,5 +81,17 @@ class TextFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('maxlength', $field->errors());
+	}
+
+	public function testReset(): void
+	{
+		$field = $this->field('text');
+		$field->fill('test');
+
+		$this->assertSame('test', $field->toFormValue());
+
+		$field->reset();
+
+		$this->assertSame('', $field->toFormValue());
 	}
 }
