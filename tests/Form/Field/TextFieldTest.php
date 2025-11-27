@@ -3,8 +3,10 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(TextField::class)]
 class TextFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
