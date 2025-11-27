@@ -86,9 +86,15 @@ abstract class DateTimeInputField extends InputField
 
 	abstract public function display(): string;
 
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
+	 */
 	public function fill(mixed $value): static
 	{
-		return parent::fill(value: $this->roundToStep(Date::optional($value)));
+		$value = Date::optional($value);
+		$value = $this->roundToStep($value);
+		return parent::fill($value);
 	}
 
 	abstract public function format(): string;
