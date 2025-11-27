@@ -13,9 +13,9 @@ class EmailFieldTest extends TestCase
 		$this->assertSame('', $field->value());
 		$this->assertSame('email', $field->icon());
 		$this->assertSame('mail@example.com', $field->placeholder());
-		$this->assertNull($field->counter());
+		$this->assertFalse($field->counter());
 		$this->assertSame('email', $field->autocomplete());
-		$this->assertTrue($field->save());
+		$this->assertTrue($field->hasValue());
 	}
 
 	public function testEmailValidation(): void
