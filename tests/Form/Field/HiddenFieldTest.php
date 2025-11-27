@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(HiddenField::class)]
 class HiddenFieldTest extends TestCase
 {
 	public function testDefaultProps(): void

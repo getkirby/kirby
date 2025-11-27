@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(CheckboxesField::class)]
 class CheckboxesFieldTest extends TestCase
 {
 	public function testDefaultProps(): void

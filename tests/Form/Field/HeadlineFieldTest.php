@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(HeadlineField::class)]
 class HeadlineFieldTest extends TestCase
 {
 	public function testDefaultProps(): void

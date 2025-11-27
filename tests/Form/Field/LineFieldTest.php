@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(LineField::class)]
 class LineFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
