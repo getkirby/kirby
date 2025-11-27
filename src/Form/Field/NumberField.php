@@ -90,13 +90,7 @@ class NumberField extends InputField
 
 	public function default(): float|null
 	{
-		$default = $this->default;
-
-		if (is_string($default) === true) {
-			$default = $this->stringTemplate($default);
-		}
-
-		return static::toNumber($default);
+		return static::toNumber(parent::default());
 	}
 
 	public function max(): float|null
