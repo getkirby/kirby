@@ -16,6 +16,25 @@ class ToggleFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
+	public function testRequired(): void
+	{
+		$field = $this->field('toggle');
+
+		$this->assertFalse($field->isRequired());
+		$this->assertFalse($field->toFormValue());
+		$this->assertFalse($field->isInvalid());
+		$this->assertSame([], $field->errors());
+
+		$field = $this->field('toggle', [
+			'required' => true
+		]);
+
+		$this->assertTrue($field->isRequired());
+		$this->assertFalse($field->toFormValue());
+		$this->assertTrue($field->isInvalid());
+		$this->assertSame(['required' => 'The field is required'], $field->errors());
+	}
+
 	public function testText(): void
 	{
 		$field = $this->field('toggle', [
