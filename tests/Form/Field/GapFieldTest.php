@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(GapField::class)]
 class GapFieldTest extends TestCase
 {
 	public function testDefaultProps(): void

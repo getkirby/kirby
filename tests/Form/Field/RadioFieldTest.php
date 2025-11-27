@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(RadioField::class)]
 class RadioFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
