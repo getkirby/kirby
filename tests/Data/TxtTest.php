@@ -117,6 +117,21 @@ class TxtTest extends TestCase
 		$this->assertSame(file_get_contents(static::FIXTURES . '/test.txt'), $data);
 	}
 
+	public function testEncodeBool(): void
+	{
+		$data = Txt::encode([
+			'bool' => true
+		]);
+
+		$this->assertSame('Bool: true', $data);
+
+		$data = Txt::encode([
+			'bool' => false
+		]);
+
+		$this->assertSame('Bool: false', $data);
+	}
+
 	public function testEncodeFloat(): void
 	{
 		$data = Txt::encode([
