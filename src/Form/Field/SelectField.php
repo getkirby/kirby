@@ -66,7 +66,7 @@ class SelectField extends OptionField
 
 	public function placeholder(): string|null
 	{
-		return $this->stringTemplate($this->i18n($this->placeholder)) ?? '—';
+		return $this->stringTemplateI18n($this->placeholder) ?? '—';
 	}
 
 	public function props(): array
