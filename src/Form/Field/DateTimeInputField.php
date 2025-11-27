@@ -19,6 +19,7 @@ use Kirby\Toolkit\Date;
 abstract class DateTimeInputField extends InputField
 {
 	use Mixin\Icon;
+
 	public const ISO = 'Y-m-d H:i:s';
 
 	protected string|null $display;
@@ -32,6 +33,9 @@ abstract class DateTimeInputField extends InputField
 	protected string|null $min;
 	protected array|int|string|null $step;
 
+	/**
+	 * @var \Kirby\Toolkit\Date|null
+	 */
 	protected mixed $value = null;
 
 	public function __construct(
