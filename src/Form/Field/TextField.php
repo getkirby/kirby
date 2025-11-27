@@ -88,10 +88,11 @@ class TextField extends StringField
 	{
 		return [
 			...parent::props(),
-			'after'   => $this->after(),
-			'before'  => $this->before(),
-			'icon'    => $this->icon(),
-			'pattern' => $this->pattern()
+			'after'     => $this->after(),
+			'before'    => $this->before(),
+			'converter' => $this->converter(),
+			'icon'      => $this->icon(),
+			'pattern'   => $this->pattern()
 		];
 	}
 

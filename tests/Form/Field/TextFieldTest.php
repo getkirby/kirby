@@ -10,18 +10,39 @@ class TextFieldTest extends TestCase
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('text');
+		$props = $field->props();
 
-		$this->assertSame('text', $field->type());
-		$this->assertSame('text', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertNull($field->icon());
-		$this->assertNull($field->placeholder());
-		$this->assertTrue($field->counter());
-		$this->assertNull($field->maxlength());
-		$this->assertNull($field->minlength());
-		$this->assertNull($field->pattern());
-		$this->assertTrue($field->spellcheck());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'after'        => null,
+			'autocomplete' => null,
+			'autofocus'    => false,
+			'before'       => null,
+			'converter'    => null,
+			'counter'      => true,
+			'default'      => null,
+			'disabled'     => false,
+			'font'         => 'sans-serif',
+			'help'         => null,
+			'hidden'       => false,
+			'icon'         => null,
+			'label'        => 'Text',
+			'maxlength'    => null,
+			'minlength'    => null,
+			'name'         => 'text',
+			'pattern'      => null,
+			'placeholder'  => null,
+			'required'     => false,
+			'saveable'     => true,
+			'spellcheck'   => true,
+			'translate'    => true,
+			'type'         => 'text',
+			'when'         => null,
+			'width'        => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public static function converterDataProvider(): array
