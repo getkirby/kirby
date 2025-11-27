@@ -182,7 +182,13 @@ class Fields extends Collection
 
 			// there are more parts in the key
 			if ($index < $count) {
-				$form = $field->form();
+				$form = match (true) {
+					$field instanceof BaseField && method_exists($field, 'form') === true
+						=> $field->form(),
+					$field instanceof Field
+						=> $field->form(),
+					default => null
+				};
 
 				// the search can only continue for
 				// fields with valid nested forms
