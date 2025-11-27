@@ -85,6 +85,7 @@ export default {
 		app.component("k-legacy-select-field", SelectField);
 		app.component("k-legacy-structure-field", StructureField);
 		app.component("k-legacy-tags-field", TagsField);
+		app.component("k-legacy-toggle-field", ToggleField);
 		app.component("k-legacy-toggles-field", TogglesField);
 	}
 };
