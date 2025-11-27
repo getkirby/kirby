@@ -17,6 +17,8 @@ use Kirby\Form\Mixin;
 abstract class StringField extends InputField
 {
 	use Mixin\Autocomplete;
+	use Mixin\Converter;
+	use Mixin\Counter;
 	use Mixin\Font;
 	use Mixin\Maxlength;
 	use Mixin\Minlength;
@@ -28,11 +30,15 @@ abstract class StringField extends InputField
 	public function __construct(
 		bool|null $autocomplete = null,
 		bool|null $autofocus = null,
+		string|null $converter = null,
+		bool|null $counter = null,
 		mixed $default = null,
 		bool|null $disabled = null,
 		array|string|null $help = null,
 		string|null $font = null,
 		array|string|null $label = null,
+		int|null $maxlength = null,
+		int|null $minlength = null,
 		string|null $name = null,
 		array|string|null $placeholder = null,
 		bool|null $required = null,
@@ -55,7 +61,11 @@ abstract class StringField extends InputField
 		);
 
 		$this->autocomplete = $autocomplete;
+		$this->converter    = $converter;
+		$this->counter      = $counter;
 		$this->font         = $font;
+		$this->maxlength    = $maxlength;
+		$this->minlength    = $minlength;
 		$this->placeholder  = $placeholder;
 		$this->spellcheck   = $spellcheck;
 	}
@@ -65,7 +75,10 @@ abstract class StringField extends InputField
 		return [
 			...parent::props(),
 			'autocomplete' => $this->autocomplete(),
+			'counter'      => $this->counter(),
 			'font'         => $this->font(),
+			'maxlength'    => $this->maxlength(),
+			'minlength'    => $this->minlength(),
 			'placeholder'  => $this->placeholder(),
 			'spellcheck'   => $this->spellcheck(),
 		];
