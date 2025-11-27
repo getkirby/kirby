@@ -17,6 +17,6 @@ trait Label
 			return Str::ucfirst($this->name());
 		}
 
-		return $this->stringTemplate($this->i18n($this->label));
+		return $this->stringTemplateI18n($this->label);
 	}
 }
