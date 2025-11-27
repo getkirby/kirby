@@ -29,6 +29,7 @@ use Kirby\Form\Field\SelectField;
 use Kirby\Form\Field\StatsField;
 use Kirby\Form\Field\StructureField;
 use Kirby\Form\Field\TagsField;
+use Kirby\Form\Field\TextField;
 use Kirby\Form\Field\TimeField;
 use Kirby\Form\Field\ToggleField;
 use Kirby\Form\Field\TogglesField;
@@ -262,7 +263,7 @@ class Core
 			'structure'   => StructureField::class,
 			'tags'        => TagsField::class,
 			'tel'         => $this->root . '/fields/tel.php',
-			'text'        => $this->root . '/fields/text.php',
+			'text'        => TextField::class,
 			'textarea'    => $this->root . '/fields/textarea.php',
 			'time'        => TimeField::class,
 			'toggle'      => ToggleField::class,
@@ -287,6 +288,7 @@ class Core
 			'legacy-select'      => $this->root . '/fields/select.php',
 			'legacy-structure'   => $this->root . '/fields/structure.php',
 			'legacy-tags'        => $this->root . '/fields/tags.php',
+			'legacy-text'        => $this->root . '/fields/text.php',
 			'legacy-time'        => $this->root . '/fields/time.php',
 			'legacy-toggle'      => $this->root . '/fields/toggle.php',
 			'legacy-toggles'     => $this->root . '/fields/toggles.php',
