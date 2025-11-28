@@ -74,7 +74,10 @@
 <script>
 export default {
 	props: {
-		ids: Array
+		ids: {
+			type: Array,
+			default: () => []
+		}
 	}
 };
 </script>
