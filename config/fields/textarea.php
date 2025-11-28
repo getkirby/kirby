@@ -100,15 +100,18 @@ return [
 				'pattern' => 'upload',
 				'method' => 'POST',
 				'action' => function () {
-					$field   = $this->field();
-					$uploads = $field->uploads();
+					$field = $this->field();
 
-					return $this->field()->upload($this, $uploads, fn ($file, $parent) => [
-						'filename' => $file->filename(),
-						'dragText' => $file->panel()->dragText(
-							absolute: $field->model()->is($parent) === false
-						),
-					]);
+					return $this->field()->upload(
+						$this,
+						$field->uploads(),
+						fn ($file, $parent) => [
+							'filename' => $file->filename(),
+							'dragText' => $file->panel()->dragText(
+								absolute: $field->model()->is($parent) === false
+							),
+						]
+					);
 				}
 			]
 		];

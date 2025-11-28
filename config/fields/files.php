@@ -21,7 +21,8 @@ return [
 		'placeholder' => null,
 
 		/**
-		 * Sets the file(s), which are selected by default when a new page is created
+		 * Sets the file(s), which are selected by default
+		 * when a new page is created
 		 */
 		'default' => function ($default = null) {
 			return $default;
@@ -86,20 +87,15 @@ return [
 				'pattern' => 'upload',
 				'method'  => 'POST',
 				'action'  => function () {
-					$field   = $this->field();
-					$uploads = $field->uploads();
+					$field = $this->field();
 
 					// move_uploaded_file() not working with unit test
 					// @codeCoverageIgnoreStart
-					return $field->upload($this, $uploads, function ($file, $parent) use ($field) {
-						return $file->panel()->pickerData([
-							'image'  => $field->image(),
-							'info'   => $field->info(),
-							'layout' => $field->layout(),
-							'model'  => $field->model(),
-							'text'   => $field->text(),
-						]);
-					});
+					return $field->upload(
+						$this,
+						$field->uploads(),
+						fn ($file, $parent) => $field->toItem($file)
+					);
 					// @codeCoverageIgnoreEnd
 				}
 			]
