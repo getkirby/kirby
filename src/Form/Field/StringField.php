@@ -28,7 +28,7 @@ abstract class StringField extends InputField
 	protected mixed $value = '';
 
 	public function __construct(
-		bool|null $autocomplete = null,
+		string|null $autocomplete = null,
 		bool|null $autofocus = null,
 		string|null $converter = null,
 		bool|null $counter = null,
