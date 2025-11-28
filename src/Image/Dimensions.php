@@ -242,6 +242,11 @@ class Dimensions implements Stringable
 		$orientation = $image->exif()->orientation();
 		$size        = $image->imagesize();
 
+		// handle invalid or corrupted images that bypass mime type validation
+		if ($size === false) {
+			return new static(0, 0);
+		}
+
 		return match ($orientation) {
 			// 5-8 = rotated
 			5, 6, 7, 8 => new static($size[1] ?? 1, $size[0] ?? 0),
