@@ -1,8 +1,8 @@
 <template>
 	<template v-if="currentType === 'page' || currentType === 'file'">
 		<component
-			v-if="value"
 			:is="`k-${currentType}s-field-preview`"
+			v-if="value"
 			:removable="removable"
 			:value="[value]"
 			@remove="$emit('remove', $event)"
