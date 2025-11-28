@@ -102,7 +102,7 @@ class ObjectFieldTest extends TestCase
 
 		$expected = [
 			'object' =>
-				'There’s an error in the "url" field:' . "\n" .
+				'There’s an error in the "Url" field:' . "\n" .
 				'Please enter a longer value. (min. 20 characters)' . "\n" .
 				'Please enter a valid URL'
 		];
