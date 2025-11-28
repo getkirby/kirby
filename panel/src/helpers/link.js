@@ -68,66 +68,6 @@ export function isPageUUID(value) {
 	);
 }
 
-/**
- * Returns preview data for the link
- * @param {Object} { type, link }
- * @param {Array} fields
- * @returns
- */
-export async function preview({ type, link }, fields) {
-	if (type === "page" && link) {
-		return await previewForPage(link, fields);
-	}
-
-	if (type === "file" && link) {
-		return await previewForFile(link, fields);
-	}
-
-	if (link) {
-		return {
-			label: link
-		};
-	}
-
-	return null;
-}
-
-async function previewForFile(id, fields = ["filename", "panelImage"]) {
-	try {
-		const file = await window.panel.api.files.get(null, id, {
-			select: fields.join(",")
-		});
-
-		return {
-			label: file.filename,
-			image: file.panelImage
-		};
-	} catch {
-		return null;
-	}
-}
-
-async function previewForPage(id, fields = ["title", "panelImage"]) {
-	if (id === "site://") {
-		return {
-			label: window.panel.$t("view.site")
-		};
-	}
-
-	try {
-		const page = await window.panel.api.pages.get(id, {
-			select: fields.join(",")
-		});
-
-		return {
-			label: page.title,
-			image: page.panelImage
-		};
-	} catch {
-		return null;
-	}
-}
-
 export function types(keys = []) {
 	const types = {
 		url: {
@@ -223,6 +163,5 @@ export default {
 	getPageUUID,
 	isFileUUID,
 	isPageUUID,
-	preview,
 	types
 };
