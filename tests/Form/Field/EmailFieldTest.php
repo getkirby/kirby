@@ -1,6 +1,7 @@
 <?php
 
 namespace Kirby\Form\Field;
+
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(EmailField::class)]
