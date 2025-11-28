@@ -35,9 +35,15 @@ export default {
 				}
 
 				// get count of changed fields in this tab
-				tab.badge = fields.filter((field) =>
+				const changesInTab = fields.filter((field) =>
 					changes.includes(field.toLowerCase())
 				).length;
+
+				if (changesInTab > 0) {
+					tab.badge = {
+						text: changesInTab
+					};
+				}
 
 				return tab;
 			});
