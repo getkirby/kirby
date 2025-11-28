@@ -88,6 +88,7 @@ export default {
 		app.component("k-legacy-select-field", SelectField);
 		app.component("k-legacy-structure-field", StructureField);
 		app.component("k-legacy-tags-field", TagsField);
+		app.component("k-legacy-tel-field", TelField);
 		app.component("k-legacy-text-field", TextField);
 		app.component("k-legacy-time-field", TimeField);
 		app.component("k-legacy-toggle-field", ToggleField);
