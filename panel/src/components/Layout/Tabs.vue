@@ -107,6 +107,7 @@ export default {
 			const button = {
 				...tab,
 				current: tab.name === this.current,
+				theme: tab.theme ?? this.theme,
 				title: tab.label,
 				text: tab.label ?? tab.text ?? tab.name
 			};
