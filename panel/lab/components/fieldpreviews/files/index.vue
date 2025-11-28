@@ -14,22 +14,17 @@
 							image: { icon: 'code', back: 'black', color: 'white' },
 							filename: 'test-2.js',
 							link: '/'
-						},
+						}
 					]"
 				/>
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
 
-		<k-lab-example label="Value as ID strings">
+		<k-lab-example v-if="ids.length" label="Value as ID strings">
 			<k-lab-table-cell>
 				<!-- @code -->
-				<k-files-field-preview
-					:value="[
-						'file://IIQpSczd4Cabewmx',
-						'file://aPyw9OXmsk6PCEm8'
-					]"
-				/>
+				<k-files-field-preview :value="ids" />
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
@@ -75,3 +70,11 @@
 		</k-lab-example>
 	</k-lab-examples>
 </template>
+
+<script>
+export default {
+	props: {
+		ids: Array
+	}
+};
+</script>

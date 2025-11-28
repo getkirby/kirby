@@ -14,21 +14,17 @@
 							image: { icon: 'page', back: 'black', color: 'white' },
 							text: 'Blog',
 							link: '/'
-						},
+						}
 					]"
 				/>
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
 
-		<k-lab-example label="Value as ID strings">
+		<k-lab-example v-if="ids.length" label="Value as ID strings">
 			<k-lab-table-cell>
 				<!-- @code -->
-				<k-pages-field-preview
-					:value="[
-						'page://k4O0Hbv06Rzw4cF9'
-					]"
-				/>
+				<k-pages-field-preview :value="ids" />
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
@@ -74,3 +70,11 @@
 		</k-lab-example>
 	</k-lab-examples>
 </template>
+
+<script>
+export default {
+	props: {
+		ids: Array
+	}
+};
+</script>
