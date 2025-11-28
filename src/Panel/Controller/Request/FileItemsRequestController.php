@@ -3,10 +3,7 @@
 namespace Kirby\Panel\Controller\Request;
 
 use Kirby\Cms\File;
-use Kirby\Panel\Controller\RequestController;
 use Kirby\Panel\Ui\Item\FileItem;
-use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
 
 /**
  * @package   Kirby Panel
@@ -16,24 +13,12 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class FileItemsRequestController extends RequestController
+class FileItemsRequestController extends ModelItemsRequestController
 {
-	protected function item(File $file): FileItem
-	{
-		return new FileItem(
-			file: $file,
-			info: $this->request->get('info'),
-			layout: $this->request->get('layout', 'list'),
-			text: $this->request->get('text'),
-		);
-	}
+	protected const ITEM_CLASS = FileItem::class;
 
-	public function load(): array
+	protected function model(string $id): File
 	{
-		$ids   = $this->request->get('items', '');
-		$ids   = Str::split($ids);
-		$users = A::map($ids, fn ($id) => $this->kirby->file($id));
-		$items = A::map($users, fn ($user) => $this->item($user)->props());
-		return ['items' => $items];
+		return $this->kirby->file($id);
 	}
 }
