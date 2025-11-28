@@ -1,6 +1,6 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="Default">
+		<k-lab-example label="Value as item objects">
 			<k-lab-table-cell>
 				<!-- @code -->
 				<k-users-field-preview
@@ -14,7 +14,21 @@
 							image: { icon: 'user', back: 'black', color: 'white' },
 							email: 'maggie@getkirby.com',
 							link: '/'
-						}
+						},
+					]"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Value as ID strings">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-users-field-preview
+					:value="[
+						'admin@getkirby.com',
+						'client@getkirby.com',
+						'editor@getkirby.com'
 					]"
 				/>
 				<!-- @code-end -->

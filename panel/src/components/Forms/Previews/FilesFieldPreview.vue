@@ -1,22 +1,17 @@
 <script>
-import TagsFieldPreview from "./TagsFieldPreview.vue";
+import ModelsFieldPreview from "./ModelsFieldPreview.vue";
 
 export default {
-	extends: TagsFieldPreview,
+	extends: ModelsFieldPreview,
 	class: "k-files-field-preview",
-	props: {
-		html: {
-			type: Boolean,
-			default: true
-		}
-	},
-	computed: {
-		tags() {
-			return this.value.map((file) => ({
+	endpoint: "items/files",
+	methods: {
+		tag(file) {
+			return {
 				text: file.filename,
 				link: file.link,
 				image: file.image
-			}));
+			};
 		}
 	}
 };

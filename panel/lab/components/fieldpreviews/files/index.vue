@@ -1,6 +1,6 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="Default">
+		<k-lab-example label="Value as item objects">
 			<k-lab-table-cell>
 				<!-- @code -->
 				<k-files-field-preview
@@ -14,7 +14,20 @@
 							image: { icon: 'code', back: 'black', color: 'white' },
 							filename: 'test-2.js',
 							link: '/'
-						}
+						},
+					]"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Value as ID strings">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-files-field-preview
+					:value="[
+						'file://IIQpSczd4Cabewmx',
+						'file://aPyw9OXmsk6PCEm8'
 					]"
 				/>
 				<!-- @code-end -->

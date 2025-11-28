@@ -1,6 +1,6 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="Default">
+		<k-lab-example label="Value as item objects">
 			<k-lab-table-cell>
 				<!-- @code -->
 				<k-pages-field-preview
@@ -14,7 +14,19 @@
 							image: { icon: 'page', back: 'black', color: 'white' },
 							text: 'Blog',
 							link: '/'
-						}
+						},
+					]"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Value as ID strings">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-pages-field-preview
+					:value="[
+						'page://k4O0Hbv06Rzw4cF9'
 					]"
 				/>
 				<!-- @code-end -->
