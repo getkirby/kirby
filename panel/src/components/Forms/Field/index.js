@@ -92,5 +92,6 @@ export default {
 		app.component("k-legacy-time-field", TimeField);
 		app.component("k-legacy-toggle-field", ToggleField);
 		app.component("k-legacy-toggles-field", TogglesField);
+		app.component("k-legacy-url-field", UrlField);
 	}
 };
