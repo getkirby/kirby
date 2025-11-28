@@ -7,15 +7,39 @@ class EmailFieldTest extends TestCase
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('email');
+		$props = $field->props();
 
-		$this->assertSame('email', $field->type());
-		$this->assertSame('email', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertSame('email', $field->icon());
-		$this->assertSame('mail@example.com', $field->placeholder());
-		$this->assertNull($field->counter());
-		$this->assertSame('email', $field->autocomplete());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'after'        => null,
+			'autocomplete' => 'email',
+			'autofocus'    => false,
+			'before'       => null,
+			'converter'    => null,
+			'counter'      => false,
+			'default'      => null,
+			'disabled'     => false,
+			'font'         => 'sans-serif',
+			'help'         => null,
+			'hidden'       => false,
+			'icon'         => 'email',
+			'label'        => 'Email',
+			'maxlength'    => null,
+			'minlength'    => null,
+			'name'         => 'email',
+			'pattern'      => null,
+			'placeholder'  => 'mail@example.com',
+			'required'     => false,
+			'saveable'     => true,
+			'spellcheck'   => null,
+			'translate'    => true,
+			'type'         => 'email',
+			'when'         => null,
+			'width'        => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testEmailValidation(): void
