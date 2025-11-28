@@ -2,31 +2,108 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(WriterField::class)]
 class WriterFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('writer');
+		$props = $field->props();
 
-		$this->assertSame('writer', $field->type());
-		$this->assertSame('writer', $field->name());
-		$this->assertSame([1, 2, 3, 4, 5, 6], $field->headings());
-		$this->assertFalse($field->inline());
-		$this->assertNull($field->marks());
-		$this->assertNull($field->nodes());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'autofocus'    => false,
+			'counter'      => true,
+			'default'      => null,
+			'disabled'     => false,
+			'headings'     => [1, 2, 3, 4, 5, 6],
+			'help'         => null,
+			'hidden'       => false,
+			'icon'         => null,
+			'inline'       => false,
+			'label'        => 'Writer',
+			'marks'        => null,
+			'maxlength'    => null,
+			'minlength'    => null,
+			'name'         => 'writer',
+			'nodes'        => null,
+			'placeholder'  => null,
+			'required'     => false,
+			'saveable'     => true,
+			'spellcheck'   => null,
+			'toolbar'      => null,
+			'translate'    => true,
+			'type'         => 'writer',
+			'when'         => null,
+			'width'        => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
-	public function testFillWithEmptyValue(): void
+	public function testReset(): void
 	{
 		$field = $this->field('writer');
 		$field->fill('test');
 
 		$this->assertSame('test', $field->toFormValue());
 
-		$field->fillWithEmptyValue();
+		$field->reset();
 
 		$this->assertSame('', $field->toFormValue());
+	}
+
+	public function testValidateMaxlength(): void
+	{
+		$field = $this->field('writer', [
+			'maxlength' => 5
+		]);
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('Test');
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('<p>Test</p>');
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('Test is too long');
+
+		$this->assertFalse($field->isValid());
+
+		$field->fill('<p>Test is too long</p>');
+
+		$this->assertFalse($field->isValid());
+	}
+
+	public function testValidateMinlength(): void
+	{
+		$field = $this->field('writer', [
+			'minlength' => 5
+		]);
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('Test is long enough');
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('<p>Test is long enough</p>');
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('Test');
+
+		$this->assertFalse($field->isValid());
+
+		$field->fill('<p>Test</p>');
+
+		$this->assertFalse($field->isValid());
 	}
 
 	public function testValueSanitized(): void
