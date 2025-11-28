@@ -21,6 +21,7 @@ use Kirby\Form\Field\HiddenField;
 use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\LayoutField;
 use Kirby\Form\Field\LineField;
+use Kirby\Form\Field\LinkField;
 use Kirby\Form\Field\MultiselectField;
 use Kirby\Form\Field\NumberField;
 use Kirby\Form\Field\ObjectField;
@@ -253,7 +254,7 @@ class Core
 			'info'        => InfoField::class,
 			'layout'      => LayoutField::class,
 			'line'        => LineField::class,
-			'link'        => $this->root . '/fields/link.php',
+			'link'        => LinkField::class,
 			'list'        => $this->root . '/fields/list.php',
 			'multiselect' => MultiselectField::class,
 			'number'      => NumberField::class,
@@ -285,6 +286,7 @@ class Core
 			'legacy-hidden'      => $this->root . '/fields/hidden.php',
 			'legacy-info'        => $this->root . '/fields/info.php',
 			'legacy-line'        => $this->root . '/fields/line.php',
+			'legacy-link'        => $this->root . '/fields/link.php',
 			'legacy-multiselect' => $this->root . '/fields/multiselect.php',
 			'legacy-number'      => $this->root . '/fields/number.php',
 			'legacy-object'      => $this->root . '/fields/object.php',
