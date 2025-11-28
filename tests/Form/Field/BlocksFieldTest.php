@@ -7,7 +7,9 @@ use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(BlocksField::class)]
 class BlocksFieldTest extends TestCase
 {
 	public function testDefaultProps(): void

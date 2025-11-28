@@ -4,7 +4,9 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Layouts;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(LayoutField::class)]
 class LayoutFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
