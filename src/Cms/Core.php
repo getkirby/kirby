@@ -34,6 +34,7 @@ use Kirby\Form\Field\TextField;
 use Kirby\Form\Field\TimeField;
 use Kirby\Form\Field\ToggleField;
 use Kirby\Form\Field\TogglesField;
+use Kirby\Form\Field\UrlField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
 use Kirby\Panel\Ui\FilePreview\PdfFilePreview;
@@ -269,7 +270,7 @@ class Core
 			'time'        => TimeField::class,
 			'toggle'      => ToggleField::class,
 			'toggles'     => TogglesField::class,
-			'url'         => $this->root . '/fields/url.php',
+			'url'         => UrlField::class,
 			'users'       => $this->root . '/fields/users.php',
 			'writer'      => $this->root . '/fields/writer.php',
 
@@ -294,6 +295,7 @@ class Core
 			'legacy-time'        => $this->root . '/fields/time.php',
 			'legacy-toggle'      => $this->root . '/fields/toggle.php',
 			'legacy-toggles'     => $this->root . '/fields/toggles.php',
+			'legacy-url'         => $this->root . '/fields/url.php',
 		];
 	}
 

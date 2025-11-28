@@ -2,10 +2,8 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Form\Mixin;
-
 /**
- * Text Field
+ * Url Field
  *
  * @package   Kirby Field
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -14,14 +12,8 @@ use Kirby\Form\Mixin;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class TextField extends StringField
+class UrlField extends TextField
 {
-	use Mixin\After;
-	use Mixin\Before;
-	use Mixin\Converter;
-	use Mixin\Icon;
-	use Mixin\Pattern;
-
 	public function __construct(
 		array|string|null $after = null,
 		string|null $autocomplete = null,
@@ -47,17 +39,22 @@ class TextField extends StringField
 		string|null $width = null
 	) {
 		parent::__construct(
+			after: $after,
 			autocomplete: $autocomplete,
 			autofocus: $autofocus,
+			before: $before,
+			converter: $converter,
 			counter: $counter,
 			default: $default,
 			disabled: $disabled,
 			font: $font,
 			help: $help,
+			icon: $icon,
 			label: $label,
 			name: $name,
 			maxlength: $maxlength,
 			minlength: $minlength,
+			pattern: $pattern,
 			placeholder: $placeholder,
 			required: $required,
 			spellcheck: $spellcheck,
@@ -65,46 +62,33 @@ class TextField extends StringField
 			when: $when,
 			width: $width
 		);
-
-		$this->after     = $after;
-		$this->before    = $before;
-		$this->converter = $converter;
-		$this->icon      = $icon;
-		$this->pattern   = $pattern;
 	}
 
-	public function default(): string|null
+	public function autocomplete(): string
 	{
-		return $this->convert($this->default);
+		return $this->autocomplete ?? 'url';
 	}
 
-	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
-	 */
-	public function fill(mixed $value): static
+	public function counter(): bool
 	{
-		$this->value = $this->convert($value);
-		return $this;
+		return $this->counter ?? false;
 	}
 
-	public function props(): array
+	public function icon(): string
 	{
-		return [
-			...parent::props(),
-			'after'     => $this->after(),
-			'before'    => $this->before(),
-			'converter' => $this->converter(),
-			'icon'      => $this->icon(),
-			'pattern'   => $this->pattern()
-		];
+		return $this->icon ?? 'url';
+	}
+
+	public function placeholder(): string
+	{
+		return $this->placeholder ?? 'https://example.com';
 	}
 
 	protected function validations(): array
 	{
 		return [
 			...parent::validations(),
-			'pattern'
+			'url'
 		];
 	}
 }
