@@ -887,7 +887,6 @@ class FieldsTest extends TestCase
 				'name'       => 'a',
 				'required'   => false,
 				'saveable'   => true,
-				'spellcheck' => true,
 				'translate'  => true,
 				'type'       => 'text',
 				'width'      => '1/1',

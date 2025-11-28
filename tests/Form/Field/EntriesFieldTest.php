@@ -52,7 +52,6 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame('0', $fieldProps['name']);
 		$this->assertFalse($fieldProps['required']);
 		$this->assertTrue($fieldProps['saveable']);
-		$this->assertTrue($fieldProps['spellcheck']);
 		$this->assertTrue($fieldProps['translate']);
 		$this->assertSame('text', $fieldProps['type']);
 		$this->assertSame('1/1', $fieldProps['width']);

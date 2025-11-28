@@ -9,8 +9,8 @@ trait Spellcheck
 	 */
 	protected bool|null $spellcheck;
 
-	public function spellcheck(): bool
+	public function spellcheck(): bool|null
 	{
-		return $this->spellcheck ?? true;
+		return $this->spellcheck;
 	}
 }

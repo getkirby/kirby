@@ -37,7 +37,7 @@ class TextFieldTest extends TestCase
 			'placeholder'  => null,
 			'required'     => false,
 			'saveable'     => true,
-			'spellcheck'   => true,
+			'spellcheck'   => null,
 			'translate'    => true,
 			'type'         => 'text',
 			'when'         => null,
