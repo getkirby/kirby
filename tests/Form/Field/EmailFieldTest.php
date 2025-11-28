@@ -1,7 +1,9 @@
 <?php
 
 namespace Kirby\Form\Field;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(EmailField::class)]
 class EmailFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
