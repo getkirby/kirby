@@ -8,12 +8,14 @@
 			:key="tag.id ?? tag.value ?? tag.text ?? tagIndex"
 		>
 			<k-tag
+			  :element="!removable ? 'div' : undefined"
 				:html="html"
 				:image="tag.image"
-				:link="tag.link"
+				:link="!removable ? tag.link : undefined"
 				:text="tag.text"
-				element="div"
+				:removable="removable"
 				theme="light"
+				@remove="$emit('remove', $event)"
 			/>
 		</li>
 	</ul>
@@ -32,11 +34,13 @@ export default {
 		html: {
 			type: Boolean
 		},
+		removable: Boolean,
 		value: {
 			default: () => [],
 			type: [Array, String]
 		}
 	},
+	emits: ["remove"],
 	computed: {
 		tags() {
 			let tags = this.value;
