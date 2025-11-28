@@ -23,9 +23,18 @@ class FilesFieldTest extends TestCase
 					[
 						'slug' => 'test',
 						'files' => [
-							['filename' => 'a.jpg'],
-							['filename' => 'b.jpg'],
-							['filename' => 'c.jpg']
+							[
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'test-a'],
+							],
+							[
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'test-b'],
+							],
+							[
+								'filename' => 'c.jpg',
+								'content' => ['uuid'  => 'test-c'],
+							],
 						]
 					]
 				],
@@ -33,9 +42,18 @@ class FilesFieldTest extends TestCase
 					[
 						'slug'  => 'test-draft',
 						'files' => [
-							['filename' => 'a.jpg'],
-							['filename' => 'b.jpg'],
-							['filename' => 'c.jpg']
+							[
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'draft-a'],
+							],
+							[
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'draft-b'],
+							],
+							[
+								'filename' => 'c.jpg',
+								'content' => ['uuid'  => 'draft-c'],
+							],
 						]
 					]
 				]
@@ -77,8 +95,8 @@ class FilesFieldTest extends TestCase
 		]);
 
 		$expected = [
-			'test/a.jpg',
-			'test/b.jpg'
+			'file://test-a',
+			'file://test-b'
 		];
 
 		$this->assertSame($expected, $field->value());
@@ -129,8 +147,8 @@ class FilesFieldTest extends TestCase
 		]);
 
 		$expected = [
-			'test-draft/a.jpg',
-			'test-draft/b.jpg'
+			'file://draft-a',
+			'file://draft-b'
 		];
 
 		$this->assertSame($expected, $field->value());
@@ -200,9 +218,18 @@ class FilesFieldTest extends TestCase
 					[
 						'slug' => 'test',
 						'files' => [
-							['filename' => 'a.jpg'],
-							['filename' => 'b.jpg'],
-							['filename' => 'c.jpg'],
+							[
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'my-a'],
+							],
+							[
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'my-b'],
+							],
+							[
+								'filename' => 'c.jpg',
+								'content' => ['uuid'  => 'my-c'],
+							],
 						],
 						'blueprint' => [
 							'title' => 'Test',
@@ -227,8 +254,8 @@ class FilesFieldTest extends TestCase
 		$api = $app->api()->call('pages/test/fields/gallery/items');
 
 		$this->assertCount(2, $api);
-		$this->assertSame('a.jpg', $api[0]['id']);
-		$this->assertSame('b.jpg', $api[1]['id']);
+		$this->assertSame('file://my-a', $api[0]['id']);
+		$this->assertSame('file://my-b', $api[1]['id']);
 	}
 
 	public function testParentModel(): void

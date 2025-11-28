@@ -20,19 +20,23 @@ class PagesFieldTest extends TestCase
 			'site' => [
 				'children' => [
 					[
-						'slug' => 'a',
+						'slug'     => 'a',
+						'content'  => ['uuid'  => 'my-a'],
 						'children' => [
 							[
 								'slug' => 'aa',
+								'content' => ['uuid'  => 'my-aa'],
 							],
 							[
 								'slug' => 'ab',
-							]
+								'content' => ['uuid'  => 'my-ab'],
+							],
 						]
 					],
 					[
 						'slug' => 'b',
-					]
+						'content' => ['uuid'  => 'my-b'],
+					],
 				]
 			]
 		]);
@@ -70,8 +74,8 @@ class PagesFieldTest extends TestCase
 		]);
 
 		$expected = [
-			'a/aa',
-			'a/ab'
+			'page://my-aa',
+			'page://my-ab'
 		];
 
 		$this->assertSame($expected, $field->value());
@@ -189,9 +193,18 @@ class PagesFieldTest extends TestCase
 							]
 						]
 					],
-					['slug' => 'a'],
-					['slug' => 'b'],
-					['slug' => 'c'],
+					[
+						'slug' => 'a',
+						'content' => ['uuid'  => 'my-a'],
+					],
+					[
+						'slug' => 'b',
+						'content' => ['uuid'  => 'my-b'],
+					],
+					[
+						'slug' => 'c',
+						'content' => ['uuid'  => 'my-c'],
+					],
 				]
 			],
 			'request' => [
@@ -205,9 +218,9 @@ class PagesFieldTest extends TestCase
 		$api = $app->api()->call('pages/test/fields/related/items');
 
 		$this->assertCount(3, $api);
-		$this->assertSame('test', $api[0]['id']);
-		$this->assertSame('a', $api[1]['id']);
-		$this->assertSame('b', $api[2]['id']);
+		$this->assertSame('page://my-test-uuid', $api[0]['id']);
+		$this->assertSame('page://my-a', $api[1]['id']);
+		$this->assertSame('page://my-b', $api[2]['id']);
 	}
 
 	public function testToModel(): void

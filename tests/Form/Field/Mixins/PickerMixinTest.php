@@ -68,13 +68,14 @@ class PickerMixinTest extends TestCase
 		$item = $field->toItem(new Page([
 			'slug'    => 'test',
 			'content' => [
-				'title' => 'Test Title'
+				'title' => 'Test Title',
+				'uuid'  => 'test-page',
 			]
 		]));
 
 		$this->assertIsArray($item);
 		$this->assertArrayHasKey('image', $item);
-		$this->assertSame('test', $item['id']);
+		$this->assertSame('page://test-page', $item['id']);
 		$this->assertSame('Test Title', $item['text']);
 	}
 

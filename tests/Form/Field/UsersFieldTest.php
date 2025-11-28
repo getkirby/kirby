@@ -87,8 +87,8 @@ class UsersFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('raphael', $field->default()[0]);
-		$this->assertSame('donatello', $field->default()[1]);
+		$this->assertSame('user://raphael', $field->default()[0]);
+		$this->assertSame('user://donatello', $field->default()[1]);
 	}
 
 	public function testDefaultUserDisabled(): void
@@ -245,8 +245,8 @@ class UsersFieldTest extends TestCase
 		$api = $app->api()->call('pages/test/fields/authors/items');
 
 		$this->assertCount(2, $api);
-		$this->assertSame('leonardo', $api[0]['id']);
-		$this->assertSame('raphael', $api[1]['id']);
+		$this->assertSame('user://leonardo', $api[0]['id']);
+		$this->assertSame('user://raphael', $api[1]['id']);
 	}
 
 	public function testToModel(): void
@@ -272,8 +272,8 @@ class UsersFieldTest extends TestCase
 		]);
 
 		$expected = [
-			'leonardo',
-			'raphael'
+			'user://leonardo',
+			'user://raphael'
 		];
 
 		$this->assertSame($expected, $field->value());
