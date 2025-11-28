@@ -17,10 +17,6 @@ export default class InputValidator extends HTMLElement {
 		super();
 		this.internals = this.attachInternals();
 		this.entries = [];
-
-		this.max = null;
-		this.min = null;
-		this.required = false;
 	}
 
 	connectedCallback() {
@@ -74,12 +70,9 @@ export default class InputValidator extends HTMLElement {
 	}
 
 	validate() {
-		const max = parseInt(this.getAttribute("max"));
-		const min = parseInt(this.getAttribute("min"));
-
-		const required =
-			this.hasAttribute("required") &&
-			this.getAttribute("required") !== "false";
+		const max = parseInt(this.max);
+		const min = parseInt(this.min);
+		const required = this.required === "true";
 
 		if (required && this.entries.length === 0) {
 			this.internals.setValidity(
