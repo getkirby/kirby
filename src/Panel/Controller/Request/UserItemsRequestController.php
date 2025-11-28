@@ -17,7 +17,7 @@ class UserItemsRequestController extends ModelItemsRequestController
 {
 	protected const ITEM_CLASS = UserItem::class;
 
-	protected function model(string $id): User
+	protected function model(string $id): User|null
 	{
 		return $this->kirby->user($id);
 	}

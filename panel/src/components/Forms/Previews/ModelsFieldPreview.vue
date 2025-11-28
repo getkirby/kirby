@@ -63,8 +63,10 @@ export default {
 				});
 
 				for (let index = 0; index < missing.length; index++) {
-					const key = this.tags.findIndex((tag) => tag.id === missing[index]);
-					this.tags[key] = data.items[index];
+					if (data.items[index]) {
+						const key = this.tags.findIndex((tag) => tag.id === missing[index]);
+						this.tags[key] = data.items[index];
+					}
 				}
 			}
 		},

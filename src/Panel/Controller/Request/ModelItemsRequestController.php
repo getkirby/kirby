@@ -35,10 +35,10 @@ abstract class ModelItemsRequestController extends RequestController
 	{
 		$ids    = $this->request->get('items', '');
 		$ids    = Str::split($ids);
-		$models = A::map($ids, fn ($id) => $this->model($id));
-		$items  = A::map($models, fn ($model) => $this->item($model)->props());
+		$models = A::map($ids, fn ($id) => $id ? $this->model($id) : null);
+		$items  = A::map($models, fn ($model) => $model ? $this->item($model)->props() : null);
 		return ['items' => $items];
 	}
 
-	abstract protected function model(string $id): ModelWithContent;
+	abstract protected function model(string $id): ModelWithContent|null;
 }

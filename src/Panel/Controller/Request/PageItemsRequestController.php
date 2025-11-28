@@ -17,7 +17,7 @@ class PageItemsRequestController extends ModelItemsRequestController
 {
 	protected const ITEM_CLASS = PageItem::class;
 
-	protected function model(string $id): Page
+	protected function model(string $id): Page|null
 	{
 		return $this->kirby->page($id);
 	}
