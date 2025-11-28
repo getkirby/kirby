@@ -107,17 +107,22 @@ export default {
 			const button = {
 				...tab,
 				current: tab.name === this.current,
-				theme: tab.theme ?? this.theme,
 				title: tab.label,
 				text: tab.label ?? tab.text ?? tab.name
 			};
 
+
 			if (typeof tab.badge === "string") {
 				button.badge = {
-					theme: this.theme,
 					text: tab.badge
 				};
-			} else if (tab.badge === false) {
+			}
+
+			if (button.badge) {
+				button.badge.theme ??= this.theme;
+			}
+
+			if (tab.badge === false) {
 				delete button.badge;
 			}
 
