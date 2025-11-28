@@ -12,6 +12,7 @@
 				:image="tag.image"
 				:link="tag.link"
 				:text="tag.text"
+				:removable="true"
 				element="div"
 				theme="light"
 			/>
