@@ -16,7 +16,7 @@ class EmailField extends TextField
 {
 	public function __construct(
 		array|string|null $after = null,
-		bool|null $autocomplete = null,
+		string|null $autocomplete = null,
 		bool|null $autofocus = null,
 		array|string|null $before = null,
 		string|null $converter = null,

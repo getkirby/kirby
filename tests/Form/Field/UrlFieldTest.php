@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(UrlField::class)]
 class UrlFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
