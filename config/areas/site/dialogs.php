@@ -34,6 +34,9 @@ return [
 		'pattern' => 'pages/(:any)/changeTitle',
 		'action' => PageChangeTitleDialogController::class
 	],
+	/**
+	 * @deprecated 6.0.0 Use section dialog route instead
+	 */
 	'page.create' => [
 		'pattern' => 'pages/create',
 		'action'  => PageCreateDialogController::class
