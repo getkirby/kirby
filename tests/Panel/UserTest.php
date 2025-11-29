@@ -7,6 +7,7 @@ use Kirby\Cms\Blueprint;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -26,6 +27,7 @@ class UserForceLocked extends ModelUser
 #[CoversClass(Model::class)]
 class UserTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Panel.User';
 
 	public function setUp(): void
@@ -213,7 +215,11 @@ class UserTest extends TestCase
 			]
 		]);
 
-		$user  = $app->user('test@getkirby.com');
+		$user = $app->user('test@getkirby.com');
+
+		$testImage = static::FIXTURES . '/image/test.jpg';
+		F::copy($testImage, $user->root() . '/test.jpg');
+
 		$panel = new User($user);
 
 		$hash = $user->image()->mediaHash();
