@@ -21,7 +21,10 @@ class FilesPickerDialogControllerTest extends TestCase
 		$this->app = $this->app->clone([
 			'site' => [
 				'files' => [
-					['filename' => 'test.jpg']
+					[
+						'filename' => 'test.jpg',
+						'content' => ['uuid'  => 'test'],
+					]
 				]
 			]
 		]);
@@ -76,7 +79,7 @@ class FilesPickerDialogControllerTest extends TestCase
 		$this->assertArrayHasKey('image', $item);
 		$this->assertSame('', $item['info']);
 		$this->assertSame('list', $item['layout']);
-		$this->assertSame('test.jpg', $item['id']);
+		$this->assertSame('file://test', $item['id']);
 		$this->assertSame('/site/files/test.jpg', $item['link']);
 		$this->assertArrayHasKey('permissions', $item);
 	}

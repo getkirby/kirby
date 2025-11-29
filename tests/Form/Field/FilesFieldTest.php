@@ -5,8 +5,6 @@ namespace Kirby\Form\Field;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
-use Kirby\Cms\Site;
-use Kirby\Cms\User;
 
 class FilesFieldTest extends TestCase
 {
@@ -26,14 +24,17 @@ class FilesFieldTest extends TestCase
 						'slug' => 'test',
 						'files' => [
 							[
-								'filename' => 'a.jpg'
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'test-a'],
 							],
 							[
-								'filename' => 'b.jpg'
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'test-b'],
 							],
 							[
-								'filename' => 'c.jpg'
-							]
+								'filename' => 'c.jpg',
+								'content' => ['uuid'  => 'test-c'],
+							],
 						]
 					]
 				],
@@ -42,14 +43,17 @@ class FilesFieldTest extends TestCase
 						'slug'  => 'test-draft',
 						'files' => [
 							[
-								'filename' => 'a.jpg'
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'draft-a'],
 							],
 							[
-								'filename' => 'b.jpg'
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'draft-b'],
 							],
 							[
-								'filename' => 'c.jpg'
-							]
+								'filename' => 'c.jpg',
+								'content' => ['uuid'  => 'draft-c'],
+							],
 						]
 					]
 				]
@@ -90,15 +94,12 @@ class FilesFieldTest extends TestCase
 			]
 		]);
 
-		$value = $field->value();
-		$ids   = array_column($value, 'id');
-
 		$expected = [
-			'a.jpg',
-			'b.jpg'
+			'file://test-a',
+			'file://test-b'
 		];
 
-		$this->assertSame($expected, $ids);
+		$this->assertSame($expected, $field->value());
 	}
 
 	public function testMin(): void
@@ -145,42 +146,12 @@ class FilesFieldTest extends TestCase
 			]
 		]);
 
-		$value = $field->value();
-		$ids   = array_column($value, 'id');
-
 		$expected = [
-			'a.jpg',
-			'b.jpg'
+			'file://draft-a',
+			'file://draft-b'
 		];
 
-		$this->assertSame($expected, $ids);
-	}
-
-	public function testQueryWithPageParent(): void
-	{
-		$field = $this->field('files', [
-			'model' => new Page(['slug' => 'test']),
-		]);
-
-		$this->assertSame('page.files', $field->query());
-	}
-
-	public function testQueryWithSiteParent(): void
-	{
-		$field = $this->field('files', [
-			'model' => new Site(),
-		]);
-
-		$this->assertSame('site.files', $field->query());
-	}
-
-	public function testQueryWithUserParent(): void
-	{
-		$field = $this->field('files', [
-			'model' => new User(['email' => 'test@getkirby.com']),
-		]);
-
-		$this->assertSame('user.files', $field->query());
+		$this->assertSame($expected, $field->value());
 	}
 
 	public function testEmpty(): void
@@ -229,15 +200,13 @@ class FilesFieldTest extends TestCase
 		$field = $this->field('files', [
 			'model'    => $this->model(),
 			'required' => true,
-			'value' => [
-				'a.jpg',
-			],
+			'value'    => ['a.jpg'],
 		]);
 
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testApi(): void
+	public function testApiItems(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -249,9 +218,18 @@ class FilesFieldTest extends TestCase
 					[
 						'slug' => 'test',
 						'files' => [
-							['filename' => 'a.jpg'],
-							['filename' => 'b.jpg'],
-							['filename' => 'c.jpg'],
+							[
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'my-a'],
+							],
+							[
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'my-b'],
+							],
+							[
+								'filename' => 'c.jpg',
+								'content' => ['uuid'  => 'my-c'],
+							],
 						],
 						'blueprint' => [
 							'title' => 'Test',
@@ -264,19 +242,20 @@ class FilesFieldTest extends TestCase
 						]
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'test/a.jpg,test/b.jpg'
+				]
 			]
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/gallery');
+		$api = $app->api()->call('pages/test/fields/gallery/items');
 
 		$this->assertCount(2, $api);
-		$this->assertArrayHasKey('data', $api);
-		$this->assertArrayHasKey('pagination', $api);
-		$this->assertCount(3, $api['data']);
-		$this->assertSame('a.jpg', $api['data'][0]['id']);
-		$this->assertSame('b.jpg', $api['data'][1]['id']);
-		$this->assertSame('c.jpg', $api['data'][2]['id']);
+		$this->assertSame('file://my-a', $api[0]['id']);
+		$this->assertSame('file://my-b', $api[1]['id']);
 	}
 
 	public function testParentModel(): void

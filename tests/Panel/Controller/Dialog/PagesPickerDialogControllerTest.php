@@ -22,10 +22,17 @@ class PagesPickerDialogControllerTest extends TestCase
 		$this->app = $this->app->clone([
 			'site' => [
 				'children' => [
-					['slug' => 'alpha'],
-					['slug' => 'beta'],
 					[
-						'slug' => 'gamma',
+						'slug' => 'alpha',
+						'content' => ['uuid'  => 'alpha'],
+					],
+					[
+						'slug' => 'beta',
+						'content' => ['uuid'  => 'beta'],
+					],
+					[
+						'slug'     => 'gamma',
+						'content'  => ['uuid'  => 'gamma'],
 						'children' => [
 							['slug' => 'delta'],
 							['slug' => 'epsilon'],
@@ -96,7 +103,7 @@ class PagesPickerDialogControllerTest extends TestCase
 		$this->assertArrayHasKey('image', $item);
 		$this->assertSame('', $item['info']);
 		$this->assertSame('list', $item['layout']);
-		$this->assertSame('alpha', $item['id']);
+		$this->assertSame('page://alpha', $item['id']);
 		$this->assertSame('/pages/alpha', $item['link']);
 		$this->assertArrayHasKey('permissions', $item);
 		$this->assertFalse($item['hasChildren']);
@@ -110,9 +117,9 @@ class PagesPickerDialogControllerTest extends TestCase
 
 		$items = $controller->items();
 		$this->assertCount(3, $items);
-		$this->assertSame('alpha', $items[0]['id']);
-		$this->assertSame('beta', $items[1]['id']);
-		$this->assertSame('gamma', $items[2]['id']);
+		$this->assertSame('page://alpha', $items[0]['id']);
+		$this->assertSame('page://beta', $items[1]['id']);
+		$this->assertSame('page://gamma', $items[2]['id']);
 	}
 
 	public function testLoad(): void
