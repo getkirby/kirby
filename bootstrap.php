@@ -15,10 +15,12 @@
  * in production.
  */
 if (
-	(defined('KIRBY_PHP_VERSION_CHECK') !== true || KIRBY_PHP_VERSION_CHECK !== false) &&
 	(
+		defined('KIRBY_PHP_VERSION_CHECK') !== true ||
+		KIRBY_PHP_VERSION_CHECK !== false
+	) && (
 		version_compare(PHP_VERSION, '8.2.0', '>=') === false ||
-		version_compare(PHP_VERSION, '8.5.0', '<')  === false
+		version_compare(PHP_VERSION, '8.6.0', '<')  === false
 	)
 ) {
 	die(include __DIR__ . '/views/php.php');
