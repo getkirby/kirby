@@ -45,7 +45,7 @@ class FilespickerField extends ModelspickerField
 		string|null $store = null,
 		string|null $text = null,
 		bool|null $translate = null,
-		array|false|string|null $uploads = null,
+		mixed $uploads = null,
 		array|null $when = null,
 		string|null $width = null
 	) {

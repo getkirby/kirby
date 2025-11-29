@@ -16,7 +16,7 @@ trait Upload
 	/**
 	 * Sets the upload options for linked files
 	 */
-	protected array|false|string|null $uploads;
+	protected mixed $uploads;
 
 	public function uploads(): array|false
 	{
@@ -36,7 +36,7 @@ trait Upload
 
 		$uploads['accept']  = '*';
 
-		if ($preview = $this->image) {
+		if (property_exists($this, 'image') && ($preview = $this->image)) {
 			$uploads['preview'] = $preview;
 		}
 
