@@ -5,8 +5,11 @@ namespace Kirby\Form\Field;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class UsersFieldTest extends TestCase
+#[CoversClass(UserspickerField::class)]
+#[CoversClass(ModelspickerField::class)]
+class UserspickerFieldTest extends TestCase
 {
 	public function setUp(): void
 	{
@@ -18,15 +21,19 @@ class UsersFieldTest extends TestCase
 			],
 			'users' => [
 				[
+					'id'    => 'leonardo',
 					'email' => 'leonardo@getkirby.com'
 				],
 				[
+					'id'    => 'raphael',
 					'email' => 'raphael@getkirby.com'
 				],
 				[
+					'id'    => 'michelangelo',
 					'email' => 'michelangelo@getkirby.com'
 				],
 				[
+					'id'    => 'donatello',
 					'email' => 'donatello@getkirby.com'
 				]
 			]
@@ -38,14 +45,40 @@ class UsersFieldTest extends TestCase
 		$field = $this->field('users', [
 			'model' => new Page(['slug' => 'test'])
 		]);
+		$props = $field->props();
 
-		$this->assertSame('users', $field->type());
-		$this->assertSame('users', $field->name());
-		$this->assertSame([], $field->value());
-		$this->assertSame([], $field->default());
-		$this->assertNull($field->max());
-		$this->assertTrue($field->multiple());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'default'     => [],
+			'disabled'    => false,
+			'empty'       => null,
+			'help'        => null,
+			'hidden'      => false,
+			'image'       => null,
+			'info'        => null,
+			'label'       => 'Users',
+			'layout'      => 'list',
+			'link'        => true,
+			'max'         => null,
+			'min'         => null,
+			'multiple'    => true,
+			'name'        => 'users',
+			'query'       => null,
+			'required'    => false,
+			'saveable'    => true,
+			'search'      => true,
+			'size'        => 'auto',
+			'store'       => 'uuid',
+			'text'        => null,
+			'translate'   => true,
+			'type'        => 'users',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testDefaultUser(): void
@@ -76,7 +109,7 @@ class UsersFieldTest extends TestCase
 		$this->app->impersonate('raphael@getkirby.com');
 
 		$field = $this->field('users', [
-			'model' => new Page(['slug' => 'test']),
+			'model'   => new Page(['slug' => 'test']),
 			'default' => [
 				'raphael@getkirby.com',
 				'donatello@getkirby.com'
@@ -99,28 +132,28 @@ class UsersFieldTest extends TestCase
 		$this->assertSame([], $field->default());
 	}
 
-	public function testGetIdFromArray(): void
+	public function testGetIdFromItemArray(): void
 	{
 		$field = $this->field('users', [
 			'model' => new Page(['slug' => 'test']),
 		]);
 
-		$this->assertSame('user://leonardo', $field->getIdFromArray([
+		$this->assertSame('user://leonardo', $field->getIdFromItemArray([
 			'email' => 'leonardo@getkirby.com',
 			'id'    => 'leonardo',
 			'uuid'  => 'user://leonardo'
 		]));
 
-		$this->assertSame('leonardo', $field->getIdFromArray([
+		$this->assertSame('leonardo', $field->getIdFromItemArray([
 			'email' => 'leonardo@getkirby.com',
 			'id'    => 'leonardo'
 		]));
 
-		$this->assertSame('leonardo@getkirby.com', $field->getIdFromArray([
+		$this->assertSame('leonardo@getkirby.com', $field->getIdFromItemArray([
 			'email' => 'leonardo@getkirby.com'
 		]));
 
-		$this->assertNull($field->getIdFromArray([]));
+		$this->assertNull($field->getIdFromItemArray([]));
 	}
 
 	public function testMin(): void
@@ -136,7 +169,7 @@ class UsersFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertSame(3, $field->min());
-		$this->assertTrue($field->required());
+		$this->assertTrue($field->isRequired());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
@@ -267,12 +300,11 @@ class UsersFieldTest extends TestCase
 			]
 		]);
 
-		$value = $field->value();
-		$ids   = array_column($value, 'email');
+		$ids = $field->toStoredValue();
 
 		$expected = [
-			'leonardo@getkirby.com',
-			'raphael@getkirby.com'
+			'user://leonardo',
+			'user://raphael'
 		];
 
 		$this->assertSame($expected, $ids);

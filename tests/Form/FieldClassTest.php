@@ -69,7 +69,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame('bar', $field->foo());
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Method or option "bar" does not exist for field type "additionalProperty"');
+		$this->expectExceptionMessage('Method or option "bar" does not exist for field type "additionalproperty"');
 		$field->bar();
 	}
 

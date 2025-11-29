@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Toolkit\A;
-
 return [
 	'mixins' => [
 		'layout',

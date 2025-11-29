@@ -163,6 +163,6 @@ abstract class BaseField
 	 */
 	public function type(): string
 	{
-		return lcfirst(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
+		return strtolower(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
 	}
 }
