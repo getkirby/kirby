@@ -15,6 +15,7 @@ use Kirby\Form\Field\ColorField;
 use Kirby\Form\Field\DateField;
 use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\EntriesField;
+use Kirby\Form\Field\FilespickerField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
 use Kirby\Form\Field\HiddenField;
@@ -26,6 +27,7 @@ use Kirby\Form\Field\ListField;
 use Kirby\Form\Field\MultiselectField;
 use Kirby\Form\Field\NumberField;
 use Kirby\Form\Field\ObjectField;
+use Kirby\Form\Field\PagespickerField;
 use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\RangeField;
 use Kirby\Form\Field\SelectField;
@@ -39,6 +41,7 @@ use Kirby\Form\Field\TimeField;
 use Kirby\Form\Field\ToggleField;
 use Kirby\Form\Field\TogglesField;
 use Kirby\Form\Field\UrlField;
+use Kirby\Form\Field\UserspickerField;
 use Kirby\Form\Field\WriterField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
@@ -249,7 +252,7 @@ class Core
 			'date'        => DateField::class,
 			'email'       => EmailField::class,
 			'entries'     => EntriesField::class,
-			'files'       => $this->root . '/fields/files.php',
+			'files'       => FilespickerField::class,
 			'gap'         => GapField::class,
 			'headline'    => HeadlineField::class,
 			'hidden'      => HiddenField::class,
@@ -261,7 +264,7 @@ class Core
 			'multiselect' => MultiselectField::class,
 			'number'      => NumberField::class,
 			'object'      => ObjectField::class,
-			'pages'       => $this->root . '/fields/pages.php',
+			'pages'       => PagespickerField::class,
 			'radio'       => RadioField::class,
 			'range'       => RangeField::class,
 			'select'      => SelectField::class,
@@ -276,13 +279,14 @@ class Core
 			'toggle'      => ToggleField::class,
 			'toggles'     => TogglesField::class,
 			'url'         => UrlField::class,
-			'users'       => $this->root . '/fields/users.php',
+			'users'       => UserspickerField::class,
 			'writer'      => WriterField::class,
 
 			'legacy-checkboxes'  => $this->root . '/fields/checkboxes.php',
 			'legacy-color'       => $this->root . '/fields/color.php',
 			'legacy-date'        => $this->root . '/fields/date.php',
 			'legacy-email'       => $this->root . '/fields/email.php',
+			'legacy-files'       => $this->root . '/fields/files.php',
 			'legacy-gap'         => $this->root . '/fields/gap.php',
 			'legacy-headline'    => $this->root . '/fields/headline.php',
 			'legacy-hidden'      => $this->root . '/fields/hidden.php',
@@ -293,6 +297,7 @@ class Core
 			'legacy-multiselect' => $this->root . '/fields/multiselect.php',
 			'legacy-number'      => $this->root . '/fields/number.php',
 			'legacy-object'      => $this->root . '/fields/object.php',
+			'legacy-pages'       => $this->root . '/fields/pages.php',
 			'legacy-radio'       => $this->root . '/fields/radio.php',
 			'legacy-range'       => $this->root . '/fields/range.php',
 			'legacy-select'      => $this->root . '/fields/select.php',
@@ -305,6 +310,7 @@ class Core
 			'legacy-toggle'      => $this->root . '/fields/toggle.php',
 			'legacy-toggles'     => $this->root . '/fields/toggles.php',
 			'legacy-url'         => $this->root . '/fields/url.php',
+			'legacy-users'       => $this->root . '/fields/users.php',
 			'legacy-writer'      => $this->root . '/fields/writer.php',
 		];
 	}
