@@ -148,7 +148,11 @@ class TextareaFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(['parent' => 'page.parent', 'accept' => '*'], $field->uploads());
+		$this->assertSame([
+			'accept' => '*',
+			'parent' => 'page.parent',
+			'template' => null
+		], $field->uploads());
 	}
 
 	public function testUploadsTemplate(): void
@@ -158,7 +162,11 @@ class TextareaFieldTest extends TestCase
 			'uploads' => 'test'
 		]);
 
-		$this->assertSame(['template' => 'test', 'accept' => '*'], $field->uploads());
+		$this->assertSame([
+			'accept'   => '*',
+			'parent'   => null,
+			'template' => 'test',
+		], $field->uploads());
 	}
 
 	public function testUploadsWithInvalidInput(): void

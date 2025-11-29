@@ -2,8 +2,6 @@
 
 namespace Kirby\Form\Field;
 
-use Closure;
-use Kirby\Api\Api;
 use Kirby\Cms\File;
 use Kirby\Cms\FilePicker;
 use Kirby\Cms\Page;
@@ -271,6 +269,8 @@ class TextareaField extends StringField
 
 			$uploads['accept'] = $file->blueprint()->acceptAttribute();
 		}
+
+		ksort($uploads);
 
 		return $uploads;
 	}
