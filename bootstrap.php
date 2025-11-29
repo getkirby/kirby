@@ -20,7 +20,7 @@ if (
 		KIRBY_PHP_VERSION_CHECK !== false
 	) && (
 		version_compare(PHP_VERSION, '8.3.0', '>=') === false ||
-		version_compare(PHP_VERSION, '8.5.0', '<')  === false
+		version_compare(PHP_VERSION, '8.6.0', '<')  === false
 	)
 ) {
 	die(include __DIR__ . '/views/php.php');
