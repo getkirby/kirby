@@ -7,44 +7,83 @@ use Kirby\Cms\Block;
 use Kirby\Cms\Blocks as BlocksCollection;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Fieldsets;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\FieldClass;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Form\Mixin\Pretty;
 use Kirby\Toolkit\Str;
 use Throwable;
 
-class BlocksField extends FieldClass
+class BlocksField extends InputField
 {
 	use EmptyState;
 	use Max;
 	use Min;
+	use Pretty;
 
-	protected Fieldsets $fieldsets;
+	/**
+	 * Defines the allowed block types in the blocks field. See below.
+	 */
+	protected array|null $fieldsets;
+
+	/**
+	 * Cache for the Fieldsets collection
+	 */
+	protected Fieldsets $fieldsetsCollection;
+
+	/**
+	 * Cache for all Form instances for each fieldset
+	 */
 	protected array $forms;
+
+	/**
+	 * Group name to identify all block fields that can share blocks via drag & drop
+	 */
 	protected string|null $group;
-	protected bool $pretty;
+
 	protected mixed $value = [];
 
-	public function __construct(array $params = [])
-	{
-		$this->setFieldsets(
-			$params['fieldsets'] ?? null,
-			$params['model'] ?? App::instance()->site()
+	public function __construct(
+		bool|null $autofocus = null,
+		array|null $default = null,
+		bool|null $disabled = null,
+		array|string|null $empty = null,
+		array|null $fieldsets = null,
+		array|string|null $help = null,
+		string|null $group = null,
+		array|string|null $label = null,
+		string|null $name = null,
+		int|null $max = null,
+		int|null $min = null,
+		bool|null $pretty = null,
+		bool|null $required = null,
+		bool|null $translate = null,
+		array|null $when = null,
+		string|null $width = null,
+	) {
+		parent::__construct(
+			autofocus: $autofocus,
+			default:   $default,
+			disabled:  $disabled,
+			help:      $help,
+			label:     $label,
+			name:      $name,
+			required:  $required,
+			translate: $translate,
+			when:      $when,
+			width:     $width
 		);
 
-		parent::__construct($params);
-
-		$this->setEmpty($params['empty'] ?? null);
-		$this->setGroup($params['group'] ?? 'blocks');
-		$this->setMax($params['max'] ?? null);
-		$this->setMin($params['min'] ?? null);
-		$this->setPretty($params['pretty'] ?? false);
+		$this->empty     = $empty;
+		$this->fieldsets = $fieldsets;
+		$this->group     = $group;
+		$this->max       = $max;
+		$this->min       = $min;
+		$this->pretty    = $pretty;
 	}
 
 	public function blocksToValues(
@@ -72,6 +111,22 @@ class BlocksField extends FieldClass
 		return $result;
 	}
 
+	public function default(): mixed
+	{
+		$default = $this->default;
+
+		if (is_array($default) === false) {
+			return null;
+		}
+
+		// set id for blocks if not exists
+		array_walk($default, function (&$block) {
+			$block['id'] ??= Str::uuid();
+		});
+
+		return $default;
+	}
+
 	public function fields(string $type): array
 	{
 		return $this->fieldset($type)->fields();
@@ -79,7 +134,7 @@ class BlocksField extends FieldClass
 
 	public function fieldset(string $type): Fieldset
 	{
-		if ($fieldset = $this->fieldsets->find($type)) {
+		if ($fieldset = $this->fieldsets()->find($type)) {
 			return $fieldset;
 		}
 
@@ -95,7 +150,10 @@ class BlocksField extends FieldClass
 
 	public function fieldsets(): Fieldsets
 	{
-		return $this->fieldsets;
+		return $this->fieldsetsCollection ??= Fieldsets::factory(
+			$this->fieldsets,
+			['parent' => $this->model()]
+		);
 	}
 
 	public function fieldsetGroups(): array|null
@@ -133,12 +191,7 @@ class BlocksField extends FieldClass
 
 	public function group(): string
 	{
-		return $this->group;
-	}
-
-	public function pretty(): bool
-	{
-		return $this->pretty;
+		return $this->group ?? 'blocks';
 	}
 
 	/**
@@ -241,42 +294,6 @@ class BlocksField extends FieldClass
 				}
 			],
 		];
-	}
-
-	protected function setDefault(mixed $default = null): void
-	{
-		// set id for blocks if not exists
-		if (is_array($default) === true) {
-			array_walk($default, function (&$block) {
-				$block['id'] ??= Str::uuid();
-			});
-		}
-
-		parent::setDefault($default);
-	}
-
-	protected function setFieldsets(
-		string|array|null $fieldsets,
-		ModelWithContent $model
-	): void {
-		if (is_string($fieldsets) === true) {
-			$fieldsets = [];
-		}
-
-		$this->fieldsets = Fieldsets::factory(
-			$fieldsets,
-			['parent' => $model]
-		);
-	}
-
-	protected function setGroup(string|null $group = null): void
-	{
-		$this->group = $group;
-	}
-
-	protected function setPretty(bool $pretty = false): void
-	{
-		$this->pretty = $pretty;
 	}
 
 	public function toStoredValue(bool $default = false): mixed

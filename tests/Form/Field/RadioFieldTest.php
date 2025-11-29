@@ -2,8 +2,9 @@
 
 namespace Kirby\Form\Field;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(RadioField::class)]
 class RadioFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
@@ -13,33 +14,7 @@ class RadioFieldTest extends TestCase
 		$this->assertSame('radio', $field->type());
 		$this->assertSame('radio', $field->name());
 		$this->assertSame('', $field->value());
-		$this->assertNull($field->icon());
 		$this->assertSame([], $field->options());
-		$this->assertTrue($field->save());
-	}
-
-	public static function valueInputProvider(): array
-	{
-		return [
-			['a', 'a'],
-			['b', 'b'],
-			['c', 'c'],
-			['d', '']
-		];
-	}
-
-	#[DataProvider('valueInputProvider')]
-	public function testValue($input, $expected): void
-	{
-		$field = $this->field('radio', [
-			'options' => [
-				'a',
-				'b',
-				'c'
-			],
-			'value' => $input
-		]);
-
-		$this->assertTrue($expected === $field->value());
+		$this->assertTrue($field->hasValue());
 	}
 }

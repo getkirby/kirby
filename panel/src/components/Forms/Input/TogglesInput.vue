@@ -50,7 +50,7 @@ export const props = {
 		grow: Boolean,
 		labels: Boolean,
 		options: Array,
-		reset: Boolean,
+		resettable: Boolean,
 		value: [String, Number, Boolean]
 	}
 };
@@ -71,7 +71,7 @@ export default {
 			)?.focus();
 		},
 		onClick(value) {
-			if (value === this.value && this.reset && !this.required) {
+			if (value === this.value && this.resettable && !this.required) {
 				this.$emit("input", "");
 			}
 		},

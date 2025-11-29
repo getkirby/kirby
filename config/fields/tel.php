@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'extends' => 'text',
+	'extends' => 'legacy-text',
 	'props' => [
 		/**
 		 * Unset inherited props

@@ -4,7 +4,9 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Layouts;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(LayoutField::class)]
 class LayoutFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
@@ -100,16 +102,12 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('blocks', $props['group']);
 		$this->assertNull($props['max']);
 		$this->assertNull($props['min']);
-		$this->assertNull($props['after']);
 		$this->assertFalse($props['autofocus']);
-		$this->assertNull($props['before']);
 		$this->assertNull($props['default']);
 		$this->assertFalse($props['disabled']);
 		$this->assertNull($props['help']);
-		$this->assertNull($props['icon']);
 		$this->assertSame('Layout', $props['label']);
 		$this->assertSame('layout', $props['name']);
-		$this->assertNull($props['placeholder']);
 		$this->assertFalse($props['required']);
 		$this->assertTrue($props['saveable']);
 		$this->assertTrue($props['translate']);

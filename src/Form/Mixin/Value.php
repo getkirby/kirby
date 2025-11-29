@@ -5,20 +5,8 @@ namespace Kirby\Form\Mixin;
 use Kirby\Cms\Language;
 use ReflectionProperty;
 
-/**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
 trait Value
 {
-	/**
-	 * Default value for the field, which will be used when a page/file/user is created
-	 */
-	protected mixed $default = null;
-
 	/**
 	 * The value of the field
 	 */
@@ -38,18 +26,6 @@ trait Value
 		}
 
 		return $this->toStoredValue();
-	}
-
-	/**
-	 * Returns the default value of the field
-	 */
-	public function default(): mixed
-	{
-		if (is_string($this->default) === false) {
-			return $this->default;
-		}
-
-		return $this->model->toString($this->default);
 	}
 
 	/**
@@ -166,11 +142,6 @@ trait Value
 		return $this->hasValue();
 	}
 
-	protected function setDefault(mixed $default = null): void
-	{
-		$this->default = $default;
-	}
-
 	/**
 	 * Submits a new value for the field.
 	 * Fields can overwrite this method to provide custom
@@ -195,7 +166,7 @@ trait Value
 			return null;
 		}
 
-		return $this->value;
+		return $this->value ?? null;
 	}
 
 	/**
