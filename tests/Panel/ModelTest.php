@@ -8,6 +8,7 @@ use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -45,6 +46,7 @@ class ModelSiteWithImageMethod extends ModelSite
 #[CoversClass(Model::class)]
 class ModelTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Model';
 
 	public function setUp(): void
@@ -226,6 +228,9 @@ class ModelTest extends TestCase
 				['filename' => 'test.jpg']
 			]
 		]);
+
+		$testImage = static::FIXTURES . '/image/test.jpg';
+		F::copy($testImage, $panel->model()->root() . '/test.jpg');
 
 		// defaults
 		$image = $panel->image();

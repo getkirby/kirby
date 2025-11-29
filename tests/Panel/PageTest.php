@@ -8,6 +8,7 @@ use Kirby\Cms\Site as ModelSite;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -27,6 +28,7 @@ class PageForceLocked extends ModelPage
 #[CoversClass(Model::class)]
 class PageTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Page';
 
 	public function setUp(): void
@@ -304,6 +306,10 @@ class PageTest extends TestCase
 		]);
 
 		$page  = $app->page('test');
+
+		$testImage = static::FIXTURES . '/image/test.jpg';
+		F::copy($testImage, $page->root() . '/test.jpg');
+
 		$panel = new Page($page);
 
 		$hash = $page->image()->mediaHash();
