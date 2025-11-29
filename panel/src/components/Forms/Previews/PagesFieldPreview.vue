@@ -1,15 +1,9 @@
 <script>
-import TagsFieldPreview from "./TagsFieldPreview.vue";
+import ModelsFieldPreview from "./ModelsFieldPreview.vue";
 
 export default {
-	extends: TagsFieldPreview,
-	inheritAttrs: false,
+	extends: ModelsFieldPreview,
 	class: "k-pages-field-preview",
-	props: {
-		html: {
-			type: Boolean,
-			default: true
-		}
-	}
+	endpoint: "items/pages",
 };
 </script>

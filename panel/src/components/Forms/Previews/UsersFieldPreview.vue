@@ -1,24 +1,17 @@
 <script>
-import TagsFieldPreview from "./TagsFieldPreview.vue";
+import ModelsFieldPreview from "./ModelsFieldPreview.vue";
 
 export default {
-	extends: TagsFieldPreview,
+	extends: ModelsFieldPreview,
 	class: "k-users-field-preview",
-	props: {
-		html: {
-			type: Boolean,
-			default: true
-		}
-	},
-	computed: {
-		tags() {
-			return this.value.map((user) => {
-				return {
-					text: user.username ?? user.email,
-					link: user.link,
-					image: user.image
-				};
-			});
+	endpoint: "items/users",
+	methods: {
+		tag(user) {
+			return {
+				text: user.username ?? user.email,
+				link: user.link,
+				image: user.image
+			};
 		}
 	}
 };
