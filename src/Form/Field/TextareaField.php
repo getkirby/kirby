@@ -159,10 +159,13 @@ class TextareaField extends InputField
 		]))->toArray();
 	}
 
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
+	 */
 	public function fill(mixed $value): static
 	{
-		$this->value = $value ? trim($value) : '';
-		return $this;
+		return parent::fill(value: trim($value ?? ''));
 	}
 
 	public function props(): array
