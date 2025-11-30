@@ -84,6 +84,11 @@ class Field extends Component
 		$this->siblings = $siblings ?? new Fields([$this]);
 	}
 
+	public function api(): array
+	{
+		return $this->routes();
+	}
+
 	/**
 	 * Default props and computed of the field
 	 */
@@ -381,7 +386,7 @@ class Field extends Component
 	}
 
 	/**
-	 * Returns field api routes
+	 * Returns field API routes
 	 */
 	public function routes(): array
 	{
