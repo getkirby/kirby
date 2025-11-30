@@ -99,15 +99,7 @@ class FilespickerField extends ModelspickerField
 					return $field->upload(
 						$api,
 						$field->uploads(),
-						function ($file, $parent) use ($field) {
-							return $file->panel()->pickerData([
-								'image'  => $field->image(),
-								'info'   => $field->info(),
-								'layout' => $field->layout(),
-								'model'  => $field->model(),
-								'text'   => $field->text(),
-							]);
-						}
+						fn ($file, $parent) => $field->toItem($file)
 					);
 					// @codeCoverageIgnoreEnd
 				}
