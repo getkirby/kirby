@@ -267,12 +267,13 @@ abstract class ModelspickerField extends InputField
 		return $this->size ?? 'auto';
 	}
 
-	public function store(): string
+	public function store(ModelWithContent|null $model = null): string
 	{
-		return match (Uuids::enabled()) {
-			false   => 'id',
-			default => Str::lower($this->store ?? 'uuid')
-		};
+		if (Uuids::enabled() === false) {
+			return 'id';
+		}
+
+		return Str::lower($this->store ?? 'uuid');
 	}
 
 	public function text(): string|null

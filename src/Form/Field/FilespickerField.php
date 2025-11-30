@@ -151,6 +151,16 @@ class FilespickerField extends ModelspickerField
 		return $this->query ?? $this->parentModel()::CLASS_ALIAS . '.files';
 	}
 
+	public function store(ModelWithContent|null $file = null): string
+	{
+		// store only the filename if the file belongs to the current model
+		if ($file?->parent()->is($this->model()) === true) {
+			return 'filename';
+		}
+
+		return parent::store($file);
+	}
+
 	public function toModel(string $id)
 	{
 		return $this->kirby()->file($id, $this->model());
