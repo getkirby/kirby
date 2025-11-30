@@ -176,6 +176,7 @@ class TextareaField extends InputField
 			'minlength'  => $this->minlength(),
 			'spellcheck' => $this->spellcheck(),
 			'size'       => $this->size(),
+			'uploads'    => $this->uploads()
 		];
 	}
 
