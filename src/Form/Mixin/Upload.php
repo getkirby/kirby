@@ -16,7 +16,7 @@ trait Upload
 	/**
 	 * Sets the upload options for linked files
 	 */
-	protected array|bool|string|null $uploads;
+	protected mixed $uploads;
 
 	public function upload(
 		Api $api,

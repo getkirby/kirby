@@ -45,7 +45,7 @@ class FilespickerField extends ModelspickerField
 		string|null $store = null,
 		string|null $text = null,
 		bool|null $translate = null,
-		array|false|string|null $uploads = null,
+		mixed $uploads = null,
 		array|null $when = null,
 		string|null $width = null
 	) {
@@ -89,10 +89,15 @@ class FilespickerField extends ModelspickerField
 				'pattern' => 'upload',
 				'method'  => 'POST',
 				'action'  => function () use ($field) {
+					/**
+					 * @var \Kirby\Api\Api
+					 */
+					$api = $this;
+
 					// move_uploaded_file() not working with unit test
 					// @codeCoverageIgnoreStart
 					return $field->upload(
-						$this,
+						$api,
 						$field->uploads(),
 						function ($file, $parent) use ($field) {
 							return $file->panel()->pickerData([
