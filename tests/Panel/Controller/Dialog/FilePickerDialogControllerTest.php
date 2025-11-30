@@ -8,11 +8,11 @@ use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Dialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(ModelsPickerDialogController::class)]
-#[CoversClass(FilesPickerDialogController::class)]
-class FilesPickerDialogControllerTest extends TestCase
+#[CoversClass(ModelPickerDialogController::class)]
+#[CoversClass(FilePickerDialogController::class)]
+class FilePickerDialogControllerTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FilesPickerDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FilePickerDialogController';
 
 	public function setUp(): void
 	{
@@ -21,7 +21,10 @@ class FilesPickerDialogControllerTest extends TestCase
 		$this->app = $this->app->clone([
 			'site' => [
 				'files' => [
-					['filename' => 'test.jpg']
+					[
+						'filename' => 'test.jpg',
+						'content' => ['uuid'  => 'test'],
+					]
 				]
 			]
 		]);
@@ -40,7 +43,7 @@ class FilesPickerDialogControllerTest extends TestCase
 			],
 		]);
 
-		$controller = new FilesPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -50,7 +53,7 @@ class FilesPickerDialogControllerTest extends TestCase
 
 	public function testCollector(): void
 	{
-		$controller = new FilesPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -59,7 +62,7 @@ class FilesPickerDialogControllerTest extends TestCase
 
 	public function testFind(): void
 	{
-		$controller = new FilesPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -68,7 +71,7 @@ class FilesPickerDialogControllerTest extends TestCase
 
 	public function testItem(): void
 	{
-		$controller = new FilesPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -78,12 +81,13 @@ class FilesPickerDialogControllerTest extends TestCase
 		$this->assertSame('list', $item['layout']);
 		$this->assertSame('test.jpg', $item['id']);
 		$this->assertSame('/site/files/test.jpg', $item['link']);
+		$this->assertSame('file://test', $item['uuid']);
 		$this->assertArrayHasKey('permissions', $item);
 	}
 
 	public function testItems(): void
 	{
-		$controller = new FilesPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -94,23 +98,23 @@ class FilesPickerDialogControllerTest extends TestCase
 
 	public function testLoad(): void
 	{
-		$controller = new FilesPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->site()
 		);
 
 		$dialog = $controller->load();
 		$this->assertInstanceOf(Dialog::class, $dialog);
-		$this->assertSame('k-files-picker-dialog', $dialog->component);
+		$this->assertSame('k-file-picker-dialog', $dialog->component);
 	}
 
 	public function testProps(): void
 	{
-		$controller = new FilesPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->site()
 		);
 
 		$props = $controller->props();
-		$this->assertSame('k-files-picker-dialog', $props['component']);
+		$this->assertSame('k-file-picker-dialog', $props['component']);
 		$this->assertTrue($props['hasSearch']);
 		$this->assertCount(1, $props['items']);
 		$this->assertSame('list', $props['layout']);
@@ -130,7 +134,7 @@ class FilesPickerDialogControllerTest extends TestCase
 			],
 		]);
 
-		$controller = new UsersPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -140,19 +144,19 @@ class FilesPickerDialogControllerTest extends TestCase
 
 	public function testQuery(): void
 	{
-		$controller = new FilesPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->site()
 		);
 
 		$this->assertSame('site.files', $controller->query());
 
-		$controller = new FilesPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->file('test.jpg')
 		);
 
 		$this->assertSame('file.siblings', $controller->query());
 
-		$controller = new FilesPickerDialogController(
+		$controller = new FilePickerDialogController(
 			model: $this->app->file('test.jpg'),
 			query: 'site.files.type("image")'
 		);

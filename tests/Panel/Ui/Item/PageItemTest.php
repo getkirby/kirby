@@ -30,17 +30,17 @@ class PageItemTest extends TestCase
 		$item = new PageItem(page: $this->model);
 
 		$expected = [
-			'image'    => [
+			'image' => [
 				'back'  => 'pattern',
 				'color' => 'gray-500',
 				'cover' => false,
 				'icon'  => 'page',
 			],
-			'info'     => '',
-			'layout'   => 'list',
-			'text'     => 'test',
-			'id'       => 'test',
-			'link'     => '/pages/test',
+			'info'   => '',
+			'layout' => 'list',
+			'text'   => 'test',
+			'id'     => 'test',
+			'link'   => '/pages/test',
 			'permissions' => [
 				'changeSlug'   => false,
 				'changeStatus' => false,
@@ -48,12 +48,13 @@ class PageItemTest extends TestCase
 				'delete'       => false,
 				'sort'         => false,
 			],
-			'uuid'     => $this->model->uuid()?->toString(),
-			'dragText' => '(link: ' . $this->model->uuid() . ' text: test)',
-			'parent'   => null,
-			'status'   => 'unlisted',
-			'template' => 'default',
-			'url'      => '/test',
+			'uuid'        => $this->model->uuid()?->toString(),
+			'dragText'    => '(link: ' . $this->model->uuid() . ' text: test)',
+			'hasChildren' => false,
+			'parent'      => null,
+			'status'      => 'unlisted',
+			'template'    => 'default',
+			'url'         => '/test',
 		];
 
 		$this->assertSame($expected, $item->props());

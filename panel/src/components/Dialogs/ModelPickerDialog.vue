@@ -1,7 +1,7 @@
 <template>
 	<k-dialog
 		v-bind="$props"
-		class="k-models-picker-dialog"
+		class="k-model-picker-dialog"
 		@cancel="$emit('cancel')"
 		@drop="$emit('drop', $event)"
 		@submit="submit"
@@ -9,11 +9,11 @@
 		<slot name="header" />
 
 		<slot name="search">
-			<header class="k-models-picker-dialog-header">
+			<header class="k-model-picker-dialog-header">
 				<k-dialog-search
 					v-if="hasSearch"
 					:value="query"
-					class="k-models-picker-dialog-search"
+					class="k-model-picker-dialog-search"
 					@search="query = $event"
 				/>
 				<slot name="buttons" />
@@ -163,13 +163,7 @@ export default {
 			this.refresh({ search: this.query });
 		},
 		select(ids) {
-			// isolate selected that aren't an item in the current parent
-			const orphans = this.selected.filter(
-				(id) => this.items.some((item) => item.id === id) === false
-			);
-
-			// merge orphans with new selected
-			this.selected = [...orphans, ...ids];
+			this.selected = ids;
 		},
 		submit() {
 			this.$emit("submit", {
@@ -184,19 +178,19 @@ export default {
 </script>
 
 <style>
-.k-models-picker-dialog-header {
+.k-model-picker-dialog-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: var(--spacing-2);
 	margin-bottom: var(--spacing-3);
 }
-.k-models-picker-dialog-search {
+.k-model-picker-dialog-search {
 	flex-grow: 1;
 	margin-bottom: 0;
 }
 
-.k-models-picker-dialog .k-collection-footer .k-pagination {
+.k-model-picker-dialog .k-collection-footer .k-pagination {
 	margin-bottom: 0;
 }
 </style>

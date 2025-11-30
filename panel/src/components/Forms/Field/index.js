@@ -34,6 +34,10 @@ import UrlField from "./UrlField.vue";
 import UserPickerField from "./UserPickerField.vue";
 import WriterField from "./WriterField.vue";
 
+import LegacyFilesField from "./Legacy/FilesField.vue";
+import LegacyPagesField from "./Legacy/PagesField.vue";
+import LegacyUsersField from "./Legacy/UsersField.vue";
+
 export default {
 	install(app) {
 		app.component("k-blocks-field", BlocksField);
@@ -77,7 +81,7 @@ export default {
 		app.component("k-legacy-color-field", ColorField);
 		app.component("k-legacy-date-field", DateField);
 		app.component("k-legacy-email-field", EmailField);
-		app.component("k-legacy-files-field", FilePickerField);
+		app.component("k-legacy-files-field", LegacyFilesField);
 		app.component("k-legacy-gap-field", GapField);
 		app.component("k-legacy-headline-field", HeadlineField);
 		app.component("k-legacy-info-field", InfoField);
@@ -87,7 +91,7 @@ export default {
 		app.component("k-legacy-object-field", ObjectField);
 		app.component("k-legacy-multiselect-field", MultiselectField);
 		app.component("k-legacy-number-field", NumberField);
-		app.component("k-legacy-pages-field", PagePickerField);
+		app.component("k-legacy-pages-field", LegacyPagesField);
 		app.component("k-legacy-radio-field", RadioField);
 		app.component("k-legacy-select-field", SelectField);
 		app.component("k-legacy-slug-field", SlugField);
@@ -100,7 +104,7 @@ export default {
 		app.component("k-legacy-toggle-field", ToggleField);
 		app.component("k-legacy-toggles-field", TogglesField);
 		app.component("k-legacy-url-field", UrlField);
-		app.component("k-legacy-users-field", UserPickerField);
+		app.component("k-legacy-users-field", LegacyUsersField);
 		app.component("k-legacy-writer-field", WriterField);
 	}
 };

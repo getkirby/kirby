@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Collector\FilesCollector;
+use Kirby\Panel\Ui\Item\FileItem;
 
 /**
  * Controls the Panel dialog for selecting files
@@ -17,9 +18,9 @@ use Kirby\Panel\Collector\FilesCollector;
  * @since     6.0.0
  * @unstable
  */
-class FilesPickerDialogController extends ModelsPickerDialogController
+class FilePickerDialogController extends ModelPickerDialogController
 {
-	protected const string TYPE = 'files';
+	protected const string TYPE = 'file';
 
 	protected FilesCollector $collector;
 
@@ -63,6 +64,22 @@ class FilesPickerDialogController extends ModelsPickerDialogController
 	public function find(string $id): File|null
 	{
 		return $this->kirby->file($id, $this->model);
+	}
+
+	/**
+	 * Returns the item data for a file
+	 * @param \Kirby\Cms\File $model
+	 */
+	public function item(ModelWithContent $model): array
+	{
+		return (new FileItem(
+			file:               $model,
+			dragTextIsAbsolute: $model->parent()->is($this->model),
+			image:              $this->image,
+			info:               $this->info,
+			layout:             $this->layout,
+			text:               $this->text
+		))->props();
 	}
 
 	public function query(): string

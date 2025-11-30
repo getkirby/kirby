@@ -24,7 +24,7 @@
 				<k-collection
 					v-bind="collection"
 					v-on="!disabled ? { empty: open } : {}"
-					@sort="onSort"
+					@sort="onInput"
 					@sort-change="$emit('change', $event)"
 				>
 					<template v-if="!disabled" #options="{ index }">
@@ -45,7 +45,8 @@ import { props as FieldProps } from "@/components/Forms/Field.vue";
 import { autofocus, layout } from "@/mixins/props.js";
 
 /**
- * @displayName ModelsField
+ * @displayName LegacyModelsField
+ * @deprecated 6.0.0 Use `k-models-field` instead
  */
 export default {
 	type: "model",
@@ -73,7 +74,7 @@ export default {
 	emits: ["change", "input"],
 	data() {
 		return {
-			selected: []
+			selected: this.value
 		};
 	},
 	computed: {
@@ -107,104 +108,66 @@ export default {
 		}
 	},
 	watch: {
-		value: {
-			handler: "fetch",
-			immediate: true
+		value(value) {
+			this.selected = value;
 		}
 	},
 	methods: {
-		async fetch() {
-			const items = [];
-			const missing = [];
-
-			// Loop through IDs to find out
-			// which new items we need to fetch data for
-			for (const id of this.value) {
-				const item = this.selected.find((item) => this.isItem(item, id));
-
-				if (item) {
-					// If we already have the item, add it to the list to recycle
-					items.push(item);
-				} else {
-					// If we don't have the item, add it to the list to fetch
-					// and add a placeholder item to the list (with the same ID
-					// so we can later replace it with the actual item)
-					missing.push(id);
-					items.push({
-						id,
-						theme: "skeleton",
-						image: {
-							icon: "loader"
-						}
-					});
-				}
-			}
-
-			// Replace the items with recycled items and placeholders
-			this.selected = items;
-
-			// If we have any missing items, fetch them
-			if (missing.length) {
-				const newItems = await this.$panel.api.get(
-					this.endpoints.field + "/items",
-					{ items: missing }
-				);
-
-				// Combine existing and new items in the correct order
-				this.selected = this.selected.map(
-					(item) =>
-						newItems.find((newItem) => this.isItem(newItem, item)) ?? item
-				);
-			}
-		},
 		drop() {},
 		focus() {},
-		isItem(item, id) {
-			if (!item) {
-				return false;
-			}
-
-			if (this.$helper.object.isObject(id) === true) {
-				id = id.uuid ?? id.id;
-			}
-
-			if (item.uuid) {
-				return item.uuid === id;
-			}
-
-			return item.id === id;
-		},
-		onSort(items) {
-			this.$emit(
-				"input",
-				items.map((file) => file.uuid ?? file.id)
-			);
+		onInput() {
+			this.$emit("input", this.selected);
 		},
 		open() {
 			if (this.disabled) {
 				return false;
 			}
 
-			this.$panel.dialog.open(this.endpoints.field + "/picker", {
-				query: {
-					value: this.value
+			this.$panel.dialog.open({
+				component: `k-${this.$options.type}-dialog`,
+				props: {
+					endpoint: this.endpoints.field,
+					hasSearch: this.search,
+					max: this.max,
+					multiple: this.multiple,
+					value: this.selected.map((model) => model.id)
 				},
 				on: {
-					submit: ({ ids }) => {
-						this.$emit("input", ids);
+					submit: (models) => {
+						this.select(models);
 						this.$panel.dialog.close();
 					}
 				}
 			});
 		},
 		remove(index) {
-			this.$emit("input", this.value.toSpliced(index, 1));
+			this.selected.splice(index, 1);
+			this.onInput();
 		},
 		removeById(id) {
-			this.$emit(
-				"input",
-				this.value.filter((item) => item !== id)
+			this.selected = this.selected.filter((item) => item.id !== id);
+			this.onInput();
+		},
+		select(items) {
+			if (items.length === 0) {
+				this.selected = [];
+				this.onInput();
+				return;
+			}
+
+			// remove all items that are no longer selected
+			this.selected = this.selected.filter((selected) =>
+				items.find((item) => item.id === selected.id)
 			);
+
+			// add items that are not yet in the selected list
+			for (const item of items) {
+				if (!this.selected.find((selected) => item.id === selected.id)) {
+					this.selected.push(item);
+				}
+			}
+
+			this.onInput();
 		}
 	}
 };

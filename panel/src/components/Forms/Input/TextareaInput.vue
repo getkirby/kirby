@@ -145,18 +145,13 @@ export default {
 			});
 		},
 		file() {
-			this.$panel.dialog.open({
-				component: "k-files-dialog",
-				props: {
-					endpoint: this.endpoints.field + "/files",
-					multiple: false
-				},
+			this.$panel.dialog.open(this.endpoints.field + "/files", {
 				on: {
 					cancel: async () => await this.restoreSelection(),
-					submit: async (file) => {
+					submit: async ({ items }) => {
 						this.$panel.dialog.close();
 						await this.restoreSelection();
-						await this.insertFile(file);
+						await this.insertFile(items);
 					}
 				}
 			});

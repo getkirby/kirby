@@ -3,9 +3,9 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\Picker;
 use Kirby\Data\Data;
 use Kirby\Form\Mixin;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuids;
 
@@ -56,6 +56,12 @@ abstract class ModelPickerField extends InputField
 	protected bool|null $multiple;
 
 	/**
+	 * Additional picker dialog props { image, layout, size }
+	 * @since 6.0.0
+	 */
+	protected array|null $picker;
+
+	/**
 	 * Query for the items to be included in the picker
 	 */
 	protected string|null $query;
@@ -97,6 +103,7 @@ abstract class ModelPickerField extends InputField
 		int|null $min = null,
 		bool|null $multiple = null,
 		string|null $name = null,
+		array|null $picker = null,
 		string|null $query = null,
 		bool|null $required = null,
 		bool|null $search = null,
@@ -128,6 +135,7 @@ abstract class ModelPickerField extends InputField
 		$this->max      = $max;
 		$this->min      = $min;
 		$this->multiple = $multiple;
+		$this->picker   = $picker;
 		$this->query    = $query;
 		$this->search   = $search;
 		$this->store    = $store;
@@ -141,8 +149,19 @@ abstract class ModelPickerField extends InputField
 
 		return [
 			[
-				'pattern' => '/',
-				'action'  => fn () => $field->picker()->toArray()
+				'pattern' => 'items',
+				'action'  => function () use ($field): array {
+					$ids = $field->kirby()->request()->get('items', '');
+					$ids = Str::split($ids);
+
+					return A::map(
+						$ids,
+						function ($id) use ($field): array|null {
+							$model = $field->toModel($id);
+							return $model ? $field->toItem($model) : null;
+						}
+					);
+				}
 			]
 		];
 	}
@@ -167,26 +186,7 @@ abstract class ModelPickerField extends InputField
 	 */
 	public function fill(mixed $value): static
 	{
-		$ids = [];
-
-		// loop through the provided values and extract the IDs
-		// to store them in the $value property
-		foreach (Data::decode($value, 'yaml') as $id) {
-			if (is_array($id) === true) {
-				$id = $this->getIdFromItemArray($id);
-			}
-
-			if ($id !== null) {
-				$ids[] = $id;
-			}
-		}
-
-		return parent::fill(value: $ids);
-	}
-
-	public function getIdFromItemArray(array $item): string|null
-	{
-		return $item['uuid'] ?? $item['id'] ?? null;
+		return parent::fill(value: Data::decode($value, 'yaml'));
 	}
 
 	public function image(): array|null
@@ -218,7 +218,10 @@ abstract class ModelPickerField extends InputField
 		return $this->multiple ?? true;
 	}
 
-	abstract public function picker(): Picker;
+	public function picker(): array
+	{
+		return $this->picker ?? [];
+	}
 
 	public function props(): array
 	{
@@ -271,17 +274,17 @@ abstract class ModelPickerField extends InputField
 
 	public function toFormValue(): array
 	{
-		$items = [];
+		$ids = [];
 
 		// loop through the IDs from the $value property
-		// and convert them to item arrays for the form
+		// and resolve them to the model to ensure the correct IDs
 		foreach ($this->value as $id) {
 			if ($model = $this->toModel($id)) {
-				$items[] = $this->toItem($model);
+				$ids[] = $model->uuid()?->toString() ?? $model->id();
 			}
 		}
 
-		return $items;
+		return $ids;
 	}
 
 	abstract public function toItem(ModelWithContent $model): array;

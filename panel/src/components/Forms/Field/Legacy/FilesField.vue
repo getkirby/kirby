@@ -1,19 +1,19 @@
 <script>
-import ModelPickerField from "./ModelPickerField.vue";
+import ModelsField from "./ModelsField.vue";
 
 /**
- * @displayName FilesField
+ * @displayName LegacyFilesField
+ * @deprecated 6.0.0 Use `k-files-field` instead
  */
 export default {
-	extends: ModelPickerField,
+	extends: ModelsField,
 	type: "files",
 	props: {
 		uploads: [Boolean, Object, Array]
 	},
-	emits: ["change", "input"],
 	computed: {
 		buttons() {
-			const buttons = ModelPickerField.computed.buttons.call(this);
+			const buttons = ModelsField.computed.buttons.call(this);
 
 			if (this.hasDropzone) {
 				buttons.unshift({
@@ -54,17 +54,14 @@ export default {
 						}
 
 						for (const file of files) {
-							if (this.selected.findIndex((f) => this.isItem(f, file)) === -1) {
+							if (this.selected.find((f) => f.id === file.id) === undefined) {
 								this.selected.push(file);
 							}
 						}
 
 						// send the input event
 						// the content object gets updated
-						this.$emit(
-							"input",
-							this.selected.map((file) => file.uuid ?? file.id)
-						);
+						this.onInput();
 
 						// the `$panel.content.update()` event sends
 						// the updated form value object to the server

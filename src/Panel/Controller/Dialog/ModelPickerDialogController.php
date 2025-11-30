@@ -20,9 +20,9 @@ use Kirby\Toolkit\Str;
  * @since     6.0.0
  * @unstable
  */
-abstract class ModelsPickerDialogController extends DialogController
+abstract class ModelPickerDialogController extends DialogController
 {
-	protected const string TYPE = 'models';
+	protected const string TYPE = 'model';
 
 	public int $page = 1;
 	public string|null $search = null;
@@ -56,17 +56,9 @@ abstract class ModelsPickerDialogController extends DialogController
 	abstract public function find(string $id): ModelWithContent|null;
 
 	/**
-	 * Returns the picker data for a model
+	 * Returns the item data for a model
 	 */
-	public function item(ModelWithContent $model): array
-	{
-		return $model->panel()->pickerData([
-			'image'  => $this->image,
-			'info'   => $this->info,
-			'layout' => $this->layout,
-			'text'   => $this->text,
-		]);
-	}
+	abstract public function item(ModelWithContent $model): array;
 
 	/**
 	 * Fetches all items for the picker
@@ -100,7 +92,12 @@ abstract class ModelsPickerDialogController extends DialogController
 			'multiple'   => $this->multiple,
 			'pagination' => $this->collector()->pagination()->toArray(),
 			'size'       => $this->size,
-			'value'      => Str::split($this->request->get('value', ''))
+			'value'      => $this->value()
 		];
+	}
+
+	public function value(): array
+	{
+		return Str::split($this->request->get('value', ''));
 	}
 }
