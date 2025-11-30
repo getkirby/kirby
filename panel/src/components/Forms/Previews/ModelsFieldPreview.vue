@@ -36,22 +36,33 @@ export default {
 	},
 	methods: {
 		async collect() {
-			this.tags = [];
+			let tags = this.$helper.clone(this.tags);
 			const missing = [];
 
 			// loop through all values…
 			for (let index = 0; index < this.value.length; index++) {
 				const value = this.value[index];
 
-				if (typeof value === "string") {
-					// string = item needs to be fetched from API (add skeleton)
-					missing.push(value);
-					this.tags.push(this.skeleton(value));
-				} else {
-					// item object can be added as tag directly
-					this.tags.push(this.tag(value));
+				// item object can be added as tag directly
+				if (typeof value !== "string") {
+					tags.splice(index, 1, this.tag(value));
+					continue;
 				}
+
+				// no need to reload items that we already have
+				const existing = this.tags.find((tag) => tag.id === value);
+				if (existing) {
+					tags.splice(index, 1, existing);
+					continue;
+				}
+
+				// item needs to be fetched from API (add skeleton)
+				missing.push(value);
+				tags.splice(index, 1, this.skeleton(value));
 			}
+
+			// replace new temporary tags at once to reduce flickering
+			this.tags = tags.slice(0, this.value.length);
 
 			// get all missing items from API
 			// and replace in tags array
@@ -63,10 +74,10 @@ export default {
 				});
 
 				for (let index = 0; index < missing.length; index++) {
-					if (data.items[index]) {
-						const key = this.tags.findIndex((tag) => tag.id === missing[index]);
-						this.tags[key] = data.items[index];
-					}
+					const id = missing[index];
+					const tag = data.items[index];
+					const key = this.tags.findIndex((tag) => tag.id === id);
+					this.tags[key] = { ...tag, id };
 				}
 			}
 		},
