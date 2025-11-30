@@ -185,7 +185,7 @@ export default {
 	methods: {
 		findSelectedIndex(item) {
 			return this.selected.findIndex(
-				(selected) => selected === (item._id ?? item.id)
+				(selected) => selected === (item._id ?? item.uuid ?? item.id)
 			);
 		},
 		isSelected(item) {
@@ -199,7 +199,7 @@ export default {
 		},
 		onSelect(item) {
 			if (this.selectmode === "single") {
-				return this.$emit("select", [item._id ?? item.id]);
+				return this.$emit("select", [item._id ?? item.uuid ?? item.id]);
 			}
 
 			const index = this.findSelectedIndex(item);
@@ -208,7 +208,10 @@ export default {
 				return this.$emit("select", this.selected.toSpliced(index, 1));
 			}
 
-			return this.$emit("select", [...this.selected, item._id ?? item.id]);
+			return this.$emit("select", [
+				...this.selected,
+				item._id ?? item.uuid ?? item.id
+			]);
 		},
 		imageOptions(item) {
 			let globalOptions = this.image;

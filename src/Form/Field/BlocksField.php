@@ -15,6 +15,8 @@ use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
 use Kirby\Form\Mixin\Pretty;
+use Kirby\Panel\Controller\Dialog\FieldDialogController;
+use Kirby\Panel\Controller\Drawer\FieldDrawerController;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -131,21 +133,25 @@ class BlocksField extends InputField
 					string $fieldName,
 					string|null $path = null
 				) use ($field) {
+					/**
+					 * @var \Kirby\Cms\Api $api
+					 */
+					$api    = $this;
 					$fields = $field->fields($fieldsetType);
 					$field  = $field->form($fields)->field($fieldName);
 
-					$fieldApi = $this->clone([
+					$fieldApi = $api->clone([
 						'routes' => $field->api(),
 						'data'   => [
-							...$this->data(),
+							...$api->data(),
 							'field' => $field
 						]
 					]);
 
 					return $fieldApi->call(
 						$path,
-						$this->requestMethod(),
-						$this->requestData()
+						$api->requestMethod(),
+						$api->requestData()
 					);
 				}
 			],
@@ -191,6 +197,44 @@ class BlocksField extends InputField
 		});
 
 		return $default;
+	}
+
+	public function dialogs(): array
+	{
+		return [
+			[
+				'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
+				'method'  => 'ALL',
+				'action'  => function (
+					string $fieldsetType,
+					string $fieldName,
+					string|null $path = null
+				) {
+					$fields = $this->fields($fieldsetType);
+					$field  = $this->form($fields)->field($fieldName);
+					return new FieldDialogController($field, $path);
+				}
+			],
+		];
+	}
+
+	public function drawers(): array
+	{
+		return [
+			[
+				'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
+				'method'  => 'ALL',
+				'action'  => function (
+					string $fieldsetType,
+					string $fieldName,
+					string|null $path = null
+				) {
+					$fields = $this->fields($fieldsetType);
+					$field  = $this->form($fields)->field($fieldName);
+					return new FieldDrawerController($field, $path);
+				}
+			],
+		];
 	}
 
 	public function fields(string $type): array

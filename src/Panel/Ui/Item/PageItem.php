@@ -65,6 +65,7 @@ class PageItem extends ModelItem
 		return [
 			...parent::props(),
 			'dragText'    => $this->dragText(),
+			'hasChildren' => $this->model->hasChildren(),
 			'parent'      => $this->model->parentId(),
 			'status'      => $this->model->status(),
 			'template'    => $this->model->intendedTemplate()->name(),

@@ -8,11 +8,11 @@ use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Dialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(ModelsPickerDialogController::class)]
-#[CoversClass(UsersPickerDialogController::class)]
-class UsersPickerDialogControllerTest extends TestCase
+#[CoversClass(ModelPickerDialogController::class)]
+#[CoversClass(UserPickerDialogController::class)]
+class UserPickerDialogControllerTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UsersPickerDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserPickerDialogController';
 
 	public function setUp(): void
 	{
@@ -47,7 +47,7 @@ class UsersPickerDialogControllerTest extends TestCase
 			],
 		]);
 
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -57,7 +57,7 @@ class UsersPickerDialogControllerTest extends TestCase
 
 	public function testCollector(): void
 	{
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -66,7 +66,7 @@ class UsersPickerDialogControllerTest extends TestCase
 
 	public function testFind(): void
 	{
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -75,7 +75,7 @@ class UsersPickerDialogControllerTest extends TestCase
 
 	public function testItem(): void
 	{
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -92,35 +92,35 @@ class UsersPickerDialogControllerTest extends TestCase
 
 	public function testItems(): void
 	{
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->site()
 		);
 
 		$items = $controller->items();
 		$this->assertCount(2, $items);
-		$this->assertSame('admin@getkirby.com', $items[0]['email']);
-		$this->assertSame('test@getkirby.com', $items[1]['email']);
+		$this->assertSame('admin', $items[0]['id']);
+		$this->assertSame('test', $items[1]['id']);
 	}
 
 	public function testLoad(): void
 	{
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->site()
 		);
 
 		$dialog = $controller->load();
 		$this->assertInstanceOf(Dialog::class, $dialog);
-		$this->assertSame('k-users-picker-dialog', $dialog->component);
+		$this->assertSame('k-user-picker-dialog', $dialog->component);
 	}
 
 	public function testProps(): void
 	{
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->site()
 		);
 
 		$props = $controller->props();
-		$this->assertSame('k-users-picker-dialog', $props['component']);
+		$this->assertSame('k-user-picker-dialog', $props['component']);
 		$this->assertTrue($props['hasSearch']);
 		$this->assertCount(2, $props['items']);
 		$this->assertSame('list', $props['layout']);
@@ -140,7 +140,7 @@ class UsersPickerDialogControllerTest extends TestCase
 			],
 		]);
 
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -150,19 +150,19 @@ class UsersPickerDialogControllerTest extends TestCase
 
 	public function testQuery(): void
 	{
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->site()
 		);
 
 		$this->assertSame('kirby.users', $controller->query());
 
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->user('test')
 		);
 
 		$this->assertSame('user.siblings', $controller->query());
 
-		$controller = new UsersPickerDialogController(
+		$controller = new UserPickerDialogController(
 			model: $this->app->user('test'),
 			query: 'kirby.users.role("admin")'
 		);
