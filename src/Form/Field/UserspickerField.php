@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\User;
 use Kirby\Cms\UserPicker;
 use Kirby\Panel\Ui\Item\UserItem;
 
@@ -50,12 +51,12 @@ class UserspickerField extends ModelspickerField
 	}
 
 	/**
-	 * @param \Kirby\Cms\User $user
+	 * @param \Kirby\Cms\User $model
 	 */
-	public function toItem(ModelWithContent $user): array
+	public function toItem(ModelWithContent $model): array
 	{
 		return (new UserItem(
-			user:   $user,
+			user:   $model,
 			image:  $this->image(),
 			info:   $this->info(),
 			layout: $this->layout(),
@@ -63,7 +64,7 @@ class UserspickerField extends ModelspickerField
 		))->props();
 	}
 
-	public function toModel(string $id)
+	public function toModel(string $id): User|null
 	{
 		return $this->kirby()->user($id);
 	}

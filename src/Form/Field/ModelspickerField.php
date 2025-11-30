@@ -298,7 +298,7 @@ abstract class ModelspickerField extends InputField
 
 	abstract public function toItem(ModelWithContent $model): array;
 
-	abstract public function toModel(string $id);
+	abstract public function toModel(string $id): ModelWithContent|null;
 
 	public function toStoredValue(): array
 	{

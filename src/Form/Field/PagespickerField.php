@@ -3,6 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
 use Kirby\Cms\PagePicker;
 use Kirby\Panel\Ui\Item\PageItem;
 
@@ -108,12 +109,12 @@ class PagespickerField extends ModelspickerField
 	}
 
 	/**
-	 * @param \Kirby\Cms\Page $page
+	 * @param \Kirby\Cms\Page $model
 	 */
-	public function toItem(ModelWithContent $page): array
+	public function toItem(ModelWithContent $model): array
 	{
 		return (new PageItem(
-			page:   $page,
+			page:   $model,
 			image:  $this->image(),
 			info:   $this->info(),
 			layout: $this->layout(),
@@ -121,7 +122,7 @@ class PagespickerField extends ModelspickerField
 		))->props();
 	}
 
-	public function toModel(string $id)
+	public function toModel(string $id): Page|null
 	{
 		return $this->kirby()->page($id);
 	}
