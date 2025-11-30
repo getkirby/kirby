@@ -142,7 +142,7 @@ abstract class ModelspickerField extends InputField
 		return [
 			[
 				'pattern' => '/',
-				'action'  => fn () => $field->picker()->toArray()
+				'action'  => fn() => $field->picker()->toArray()
 			]
 		];
 	}
@@ -153,19 +153,7 @@ abstract class ModelspickerField extends InputField
 			return [];
 		}
 
-		$items = [];
-
-		foreach (Data::decode($this->default, 'yaml') as $id) {
-			if (is_array($id) === true) {
-				$id = $this->getIdFromItemArray($id);
-			}
-
-			if ($id !== null && ($model = $this->toModel($id))) {
-				$items[] = $this->toItem($model);
-			}
-		}
-
-		return $items;
+		return parent::default() ?? [];
 	}
 
 	public function empty(): string|null
@@ -193,7 +181,7 @@ abstract class ModelspickerField extends InputField
 			}
 		}
 
-		return parent::fill($ids);
+		return parent::fill(value: $ids);
 	}
 
 	public function getIdFromItemArray(array $item): string|null

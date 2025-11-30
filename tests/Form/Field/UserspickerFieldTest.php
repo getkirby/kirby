@@ -101,35 +101,7 @@ class UserspickerFieldTest extends TestCase
 			'default' => true
 		]);
 
-		$this->assertSame('raphael@getkirby.com', $field->default()[0]['text']);
-	}
-
-	public function testMultipleDefaultUsers(): void
-	{
-		$this->app->impersonate('raphael@getkirby.com');
-
-		$field = $this->field('users', [
-			'model'   => new Page(['slug' => 'test']),
-			'default' => [
-				'raphael@getkirby.com',
-				'donatello@getkirby.com'
-			]
-		]);
-
-		$this->assertSame('raphael@getkirby.com', $field->default()[0]['text']);
-		$this->assertSame('donatello@getkirby.com', $field->default()[1]['text']);
-	}
-
-	public function testDefaultUserDisabled(): void
-	{
-		$this->app->impersonate('raphael@getkirby.com');
-
-		$field = $this->field('users', [
-			'model' => new Page(['slug' => 'test']),
-			'default' => false
-		]);
-
-		$this->assertSame([], $field->default());
+		$this->assertSame('raphael', $field->default()[0]);
 	}
 
 	public function testGetIdFromItemArray(): void
@@ -154,6 +126,34 @@ class UserspickerFieldTest extends TestCase
 		]));
 
 		$this->assertNull($field->getIdFromItemArray([]));
+	}
+
+	public function testMultipleDefaultUsers(): void
+	{
+		$this->app->impersonate('raphael@getkirby.com');
+
+		$field = $this->field('users', [
+			'model'   => new Page(['slug' => 'test']),
+			'default' => [
+				'raphael@getkirby.com',
+				'donatello@getkirby.com'
+			]
+		]);
+
+		$this->assertSame('raphael@getkirby.com', $field->default()[0]);
+		$this->assertSame('donatello@getkirby.com', $field->default()[1]);
+	}
+
+	public function testDefaultUserDisabled(): void
+	{
+		$this->app->impersonate('raphael@getkirby.com');
+
+		$field = $this->field('users', [
+			'model'   => new Page(['slug' => 'test']),
+			'default' => false
+		]);
+
+		$this->assertSame([], $field->default());
 	}
 
 	public function testMin(): void

@@ -25,10 +25,10 @@ class UserspickerField extends ModelspickerField
 			$this->default === true &&
 			$user = $this->kirby()->user()
 		) {
-			return [$this->toItem($user)];
+			return [$user->id()];
 		}
 
-		return parent::default();
+		return parent::default() ?? [];
 	}
 
 	public function getIdFromItemArray(array $item): string|null
@@ -56,11 +56,11 @@ class UserspickerField extends ModelspickerField
 	public function toItem(ModelWithContent $model): array
 	{
 		return (new UserItem(
-			user:   $model,
-			image:  $this->image(),
-			info:   $this->info(),
+			user: $model,
+			image: $this->image(),
+			info: $this->info(),
 			layout: $this->layout(),
-			text:   $this->text()
+			text: $this->text()
 		))->props();
 	}
 
