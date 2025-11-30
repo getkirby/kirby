@@ -296,16 +296,7 @@ abstract class ModelspickerField extends InputField
 		return $items;
 	}
 
-	protected function toItem(ModelWithContent $model): array
-	{
-		return $model->panel()->pickerData([
-			'image'  => $this->image(),
-			'info'   => $this->info(),
-			'layout' => $this->layout(),
-			'model'  => $this->model(),
-			'text'   => $this->text(),
-		]);
-	}
+	abstract public function toItem(ModelWithContent $model): array;
 
 	abstract public function toModel(string $id);
 

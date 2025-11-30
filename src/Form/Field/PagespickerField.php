@@ -2,7 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\PagePicker;
+use Kirby\Panel\Ui\Item\PageItem;
 
 /**
  * Pagespicker field
@@ -103,6 +105,20 @@ class PagespickerField extends ModelspickerField
 	public function subpages(): bool
 	{
 		return $this->subpages ?? true;
+	}
+
+	/**
+	 * @param \Kirby\Cms\Page $page
+	 */
+	public function toItem(ModelWithContent $page): array
+	{
+		return (new PageItem(
+			page:   $page,
+			image:  $this->image(),
+			info:   $this->info(),
+			layout: $this->layout(),
+			text:   $this->text()
+		))->props();
 	}
 
 	public function toModel(string $id)

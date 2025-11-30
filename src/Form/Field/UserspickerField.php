@@ -2,7 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\UserPicker;
+use Kirby\Panel\Ui\Item\UserItem;
 
 /**
  * Userspicker field
@@ -45,6 +47,20 @@ class UserspickerField extends ModelspickerField
 			'search' => $this->kirby()->api()->requestQuery('search'),
 			'text'   => $this->text()
 		]);
+	}
+
+	/**
+	 * @param \Kirby\Cms\User $user
+	 */
+	public function toItem(ModelWithContent $user): array
+	{
+		return (new UserItem(
+			user:   $user,
+			image:  $this->image(),
+			info:   $this->info(),
+			layout: $this->layout(),
+			text:   $this->text()
+		))->props();
 	}
 
 	public function toModel(string $id)

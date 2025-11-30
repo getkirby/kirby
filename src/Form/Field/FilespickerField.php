@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Cms\FilePicker;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Mixin;
+use Kirby\Panel\Ui\Item\FileItem;
 
 /**
  * Filespicker field
@@ -151,6 +152,9 @@ class FilespickerField extends ModelspickerField
 		return $this->query ?? $this->parentModel()::CLASS_ALIAS . '.files';
 	}
 
+	/**
+	 * @param \Kirby\Cms\File $file
+	 */
 	public function store(ModelWithContent|null $file = null): string
 	{
 		// store only the filename if the file belongs to the current model
@@ -159,6 +163,21 @@ class FilespickerField extends ModelspickerField
 		}
 
 		return parent::store($file);
+	}
+
+	/**
+	 * @param \Kirby\Cms\File $file
+	 */
+	public function toItem(ModelWithContent $file): array
+	{
+		return (new FileItem(
+			file:               $file,
+			dragTextIsAbsolute: $file->parent()->is($this->model()) === false,
+			image:              $this->image(),
+			info:               $this->info(),
+			layout:             $this->layout(),
+			text:               $this->text()
+		))->props();
 	}
 
 	public function toModel(string $id)

@@ -101,7 +101,7 @@ class UserspickerFieldTest extends TestCase
 			'default' => true
 		]);
 
-		$this->assertSame('raphael@getkirby.com', $field->default()[0]['email']);
+		$this->assertSame('raphael@getkirby.com', $field->default()[0]['text']);
 	}
 
 	public function testMultipleDefaultUsers(): void
@@ -116,8 +116,8 @@ class UserspickerFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('raphael@getkirby.com', $field->default()[0]['email']);
-		$this->assertSame('donatello@getkirby.com', $field->default()[1]['email']);
+		$this->assertSame('raphael@getkirby.com', $field->default()[0]['text']);
+		$this->assertSame('donatello@getkirby.com', $field->default()[1]['text']);
 	}
 
 	public function testDefaultUserDisabled(): void

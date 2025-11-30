@@ -123,8 +123,8 @@ class FilespickerFieldTest extends TestCase
 		$ids   = array_column($value, 'id');
 
 		$expected = [
-			'a.jpg',
-			'b.jpg'
+			'test/a.jpg',
+			'test/b.jpg'
 		];
 
 		$this->assertSame($expected, $ids);
@@ -178,8 +178,8 @@ class FilespickerFieldTest extends TestCase
 		$ids   = array_column($value, 'id');
 
 		$expected = [
-			'a.jpg',
-			'b.jpg'
+			'test-draft/a.jpg',
+			'test-draft/b.jpg'
 		];
 
 		$this->assertSame($expected, $ids);
