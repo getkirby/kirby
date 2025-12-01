@@ -1,6 +1,6 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="Default">
+		<k-lab-example label="Value as item objects">
 			<k-lab-table-cell>
 				<!-- @code -->
 				<k-files-field-preview
@@ -17,6 +17,14 @@
 						}
 					]"
 				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example v-if="ids.length" label="Value as ID strings">
+			<k-lab-table-cell>
+				<!-- @code -->
+				<k-files-field-preview :value="ids" />
 				<!-- @code-end -->
 			</k-lab-table-cell>
 		</k-lab-example>
@@ -62,3 +70,14 @@
 		</k-lab-example>
 	</k-lab-examples>
 </template>
+
+<script>
+export default {
+	props: {
+		ids: {
+			type: Array,
+			default: () => []
+		}
+	}
+};
+</script>
