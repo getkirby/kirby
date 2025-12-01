@@ -160,15 +160,9 @@ class ImageMagick extends Darkroom
 	 */
 	protected function resize(string $file, array $options): string
 	{
-		// simple resize
-		if ($options['crop'] === false) {
-			return '-thumbnail ' . escapeshellarg(sprintf('%sx%s!', $options['width'], $options['height']));
-		}
-
-		// crop based on focus point
-		if ($options['crop'] !== null) {
+		if ($crop = $options['crop'] ?? null) {
 			if ($focus = Focus::coords(
-				$options['crop'],
+				$crop,
 				$options['sourceWidth'],
 				$options['sourceHeight'],
 				$options['width'],

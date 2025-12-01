@@ -45,17 +45,9 @@ class GdLib extends Darkroom
 	 */
 	protected function resize(SimpleImage $image, array $options): SimpleImage
 	{
-		// just resize, no crop
-		if ($options['crop'] === false) {
-			return $image->resize($options['width'], $options['height']);
-		}
-
-		// crop based on focus point
-		if ($options['crop'] !== null) {
-			// get crop coords for focal point:
-			// if image needs to be cropped, crop before resizing
+		if ($crop = $options['crop'] ?? null) {
 			if ($focus = Focus::coords(
-				$options['crop'],
+				$crop,
 				$options['sourceWidth'],
 				$options['sourceHeight'],
 				$options['width'],
@@ -72,7 +64,8 @@ class GdLib extends Darkroom
 			return $image->thumbnail($options['width'], $options['height']);
 		}
 
-		return $image;
+
+		return $image->resize($options['width'], $options['height']);
 	}
 
 	/**

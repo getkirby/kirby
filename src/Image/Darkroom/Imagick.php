@@ -163,21 +163,9 @@ class Imagick extends Darkroom
 	 */
 	protected function resize(Image $image, array $options): Image
 	{
-		// simple resize
-		if ($options['crop'] === false) {
-			$image->thumbnailImage(
-				$options['width'],
-				$options['height'],
-				true
-			);
-
-			return $image;
-		}
-
-		// crop based on focus point
-		if ($options['crop'] !== null) {
+		if ($crop = $options['crop'] ?? null) {
 			if ($focus = Focus::coords(
-				$options['crop'],
+				$crop,
 				$options['sourceWidth'],
 				$options['sourceHeight'],
 				$options['width'],
@@ -190,15 +178,14 @@ class Imagick extends Darkroom
 					$focus['y1']
 				);
 
-				$image->thumbnailImage(
-					$options['width'],
-					$options['height'],
-					true
-				);
-
-				return $image;
 			}
 		}
+
+		$image->thumbnailImage(
+			$options['width'],
+			$options['height'],
+			true
+		);
 
 		return $image;
 	}
