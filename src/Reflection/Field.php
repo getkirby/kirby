@@ -2,7 +2,7 @@
 
 namespace Kirby\Reflection;
 
-use Kirby\Form\FieldClass;
+use Kirby\Form\Field\BaseField;
 use Kirby\Reflection\Attributes\DefaultValue;
 use ReflectionClass;
 use ReflectionParameter;
@@ -15,7 +15,7 @@ class Field
 	protected ReflectionClass $class;
 
 	public function __construct(
-		protected FieldClass|string $field
+		protected BaseField|string $field
 	) {
 		$this->class       = new ReflectionClass($field);
 		$this->constructor = new Constructor($field);

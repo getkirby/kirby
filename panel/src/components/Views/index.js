@@ -1,6 +1,7 @@
 import ErrorView from "./ErrorView.vue";
 import SearchView from "./SearchView.vue";
 
+import Blueprints from "./Blueprints/index.js";
 import Files from "./Files/index.js";
 import Installation from "./Installation/index.js";
 import Languages from "./Languages/index.js";
@@ -15,6 +16,7 @@ export default {
 		app.component("k-error-view", ErrorView);
 		app.component("k-search-view", SearchView);
 
+		app.use(Blueprints);
 		app.use(Files);
 		app.use(Installation);
 		app.use(Languages);
