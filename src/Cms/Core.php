@@ -15,7 +15,7 @@ use Kirby\Form\Field\ColorField;
 use Kirby\Form\Field\DateField;
 use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\EntriesField;
-use Kirby\Form\Field\FilespickerField;
+use Kirby\Form\Field\FilePickerField;
 use Kirby\Form\Field\GapField;
 use Kirby\Form\Field\HeadlineField;
 use Kirby\Form\Field\HiddenField;
@@ -27,7 +27,7 @@ use Kirby\Form\Field\ListField;
 use Kirby\Form\Field\MultiselectField;
 use Kirby\Form\Field\NumberField;
 use Kirby\Form\Field\ObjectField;
-use Kirby\Form\Field\PagespickerField;
+use Kirby\Form\Field\PagePickerField;
 use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\RangeField;
 use Kirby\Form\Field\SelectField;
@@ -41,7 +41,7 @@ use Kirby\Form\Field\TimeField;
 use Kirby\Form\Field\ToggleField;
 use Kirby\Form\Field\TogglesField;
 use Kirby\Form\Field\UrlField;
-use Kirby\Form\Field\UserspickerField;
+use Kirby\Form\Field\UserPickerField;
 use Kirby\Form\Field\WriterField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
@@ -252,7 +252,7 @@ class Core
 			'date'        => DateField::class,
 			'email'       => EmailField::class,
 			'entries'     => EntriesField::class,
-			'files'       => FilespickerField::class,
+			'files'       => FilePickerField::class,
 			'gap'         => GapField::class,
 			'headline'    => HeadlineField::class,
 			'hidden'      => HiddenField::class,
@@ -264,7 +264,7 @@ class Core
 			'multiselect' => MultiselectField::class,
 			'number'      => NumberField::class,
 			'object'      => ObjectField::class,
-			'pages'       => PagespickerField::class,
+			'pages'       => PagePickerField::class,
 			'radio'       => RadioField::class,
 			'range'       => RangeField::class,
 			'select'      => SelectField::class,
@@ -279,7 +279,7 @@ class Core
 			'toggle'      => ToggleField::class,
 			'toggles'     => TogglesField::class,
 			'url'         => UrlField::class,
-			'users'       => UserspickerField::class,
+			'users'       => UserPickerField::class,
 			'writer'      => WriterField::class,
 
 			'legacy-checkboxes'  => $this->root . '/fields/checkboxes.php',

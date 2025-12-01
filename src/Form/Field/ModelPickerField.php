@@ -19,7 +19,7 @@ use Kirby\Uuid\Uuids;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-abstract class ModelspickerField extends InputField
+abstract class ModelPickerField extends InputField
 {
 	use Mixin\Max;
 	use Mixin\Min;
@@ -142,7 +142,7 @@ abstract class ModelspickerField extends InputField
 		return [
 			[
 				'pattern' => '/',
-				'action'  => fn() => $field->picker()->toArray()
+				'action'  => fn () => $field->picker()->toArray()
 			]
 		];
 	}
@@ -305,7 +305,7 @@ abstract class ModelspickerField extends InputField
 
 	public function type(): string
 	{
-		return str_replace('picker', '', parent::type());
+		return str_replace('picker', '', parent::type()) . 's';
 	}
 
 	public function validations(): array

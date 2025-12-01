@@ -8,7 +8,7 @@ use Kirby\Cms\UserPicker;
 use Kirby\Panel\Ui\Item\UserItem;
 
 /**
- * Userspicker field
+ * Userpicker field
  *
  * @package   Kirby Field
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -17,7 +17,7 @@ use Kirby\Panel\Ui\Item\UserItem;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class UserspickerField extends ModelspickerField
+class UserPickerField extends ModelPickerField
 {
 	public function default(): array
 	{

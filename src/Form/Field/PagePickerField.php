@@ -8,7 +8,7 @@ use Kirby\Cms\PagePicker;
 use Kirby\Panel\Ui\Item\PageItem;
 
 /**
- * Pagespicker field
+ * Pagepicker field
  *
  * @package   Kirby Field
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -17,7 +17,7 @@ use Kirby\Panel\Ui\Item\PageItem;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class PagespickerField extends ModelspickerField
+class PagePickerField extends ModelPickerField
 {
 	/**
 	 * Optionally include subpages of pages

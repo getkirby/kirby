@@ -7,9 +7,9 @@ use Kirby\Cms\Page;
 use Kirby\Cms\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(UserspickerField::class)]
-#[CoversClass(ModelspickerField::class)]
-class UserspickerFieldTest extends TestCase
+#[CoversClass(UserPickerField::class)]
+#[CoversClass(ModelPickerField::class)]
+class UserPickerFieldTest extends TestCase
 {
 	public function setUp(): void
 	{

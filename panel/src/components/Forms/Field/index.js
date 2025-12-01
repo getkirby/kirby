@@ -4,7 +4,7 @@ import ColorField from "./ColorField.vue";
 import DateField from "./DateField.vue";
 import EmailField from "./EmailField.vue";
 import EntriesField from "./EntriesField.vue";
-import FilespickerField from "./FilespickerField.vue";
+import FilePickerField from "./FilePickerField.vue";
 import GapField from "./GapField.vue";
 import HeadlineField from "./HeadlineField.vue";
 import InfoField from "./InfoField.vue";
@@ -15,7 +15,7 @@ import ListField from "./ListField.vue";
 import MultiselectField from "./MultiselectField.vue";
 import NumberField from "./NumberField.vue";
 import ObjectField from "./ObjectField.vue";
-import PagespickerField from "./PagespickerField.vue";
+import PagePickerField from "./PagePickerField.vue";
 import PasswordField from "./PasswordField.vue";
 import RadioField from "./RadioField.vue";
 import RangeField from "./RangeField.vue";
@@ -31,7 +31,7 @@ import TimeField from "./TimeField.vue";
 import ToggleField from "./ToggleField.vue";
 import TogglesField from "./TogglesField.vue";
 import UrlField from "./UrlField.vue";
-import UserspickerField from "./UserspickerField.vue";
+import UserPickerField from "./UserPickerField.vue";
 import WriterField from "./WriterField.vue";
 
 export default {
@@ -42,7 +42,7 @@ export default {
 		app.component("k-date-field", DateField);
 		app.component("k-email-field", EmailField);
 		app.component("k-entries-field", EntriesField);
-		app.component("k-files-field", FilespickerField);
+		app.component("k-files-field", FilePickerField);
 		app.component("k-gap-field", GapField);
 		app.component("k-headline-field", HeadlineField);
 		app.component("k-info-field", InfoField);
@@ -53,7 +53,7 @@ export default {
 		app.component("k-multiselect-field", MultiselectField);
 		app.component("k-number-field", NumberField);
 		app.component("k-object-field", ObjectField);
-		app.component("k-pages-field", PagespickerField);
+		app.component("k-pages-field", PagePickerField);
 		app.component("k-password-field", PasswordField);
 		app.component("k-radio-field", RadioField);
 		app.component("k-range-field", RangeField);
@@ -69,7 +69,7 @@ export default {
 		app.component("k-toggle-field", ToggleField);
 		app.component("k-toggles-field", TogglesField);
 		app.component("k-url-field", UrlField);
-		app.component("k-users-field", UserspickerField);
+		app.component("k-users-field", UserPickerField);
 		app.component("k-writer-field", WriterField);
 
 		// Legacy fields components
@@ -77,7 +77,7 @@ export default {
 		app.component("k-legacy-color-field", ColorField);
 		app.component("k-legacy-date-field", DateField);
 		app.component("k-legacy-email-field", EmailField);
-		app.component("k-legacy-files-field", FilespickerField);
+		app.component("k-legacy-files-field", FilePickerField);
 		app.component("k-legacy-gap-field", GapField);
 		app.component("k-legacy-headline-field", HeadlineField);
 		app.component("k-legacy-info-field", InfoField);
@@ -87,7 +87,7 @@ export default {
 		app.component("k-legacy-object-field", ObjectField);
 		app.component("k-legacy-multiselect-field", MultiselectField);
 		app.component("k-legacy-number-field", NumberField);
-		app.component("k-legacy-pages-field", PagespickerField);
+		app.component("k-legacy-pages-field", PagePickerField);
 		app.component("k-legacy-radio-field", RadioField);
 		app.component("k-legacy-select-field", SelectField);
 		app.component("k-legacy-slug-field", SlugField);
@@ -99,7 +99,7 @@ export default {
 		app.component("k-legacy-toggle-field", ToggleField);
 		app.component("k-legacy-toggles-field", TogglesField);
 		app.component("k-legacy-url-field", UrlField);
-		app.component("k-legacy-users-field", UserspickerField);
+		app.component("k-legacy-users-field", UserPickerField);
 		app.component("k-legacy-writer-field", WriterField);
 	}
 };

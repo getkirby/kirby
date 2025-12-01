@@ -6,11 +6,11 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(PagespickerField::class)]
-#[CoversClass(ModelspickerField::class)]
-class PagespickerFieldTest extends TestCase
+#[CoversClass(PagePickerField::class)]
+#[CoversClass(ModelPickerField::class)]
+class PagePickerFieldTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PagespickerField';
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerField';
 
 	public function setUp(): void
 	{

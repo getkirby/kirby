@@ -9,11 +9,11 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(FilespickerField::class)]
-#[CoversClass(ModelspickerField::class)]
-class FilespickerFieldTest extends TestCase
+#[CoversClass(FilePickerField::class)]
+#[CoversClass(ModelPickerField::class)]
+class FilePickerFieldTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.FilespickerField';
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.FilePickerField';
 
 	public function setUp(): void
 	{

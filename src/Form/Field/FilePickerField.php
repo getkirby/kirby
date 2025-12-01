@@ -9,7 +9,7 @@ use Kirby\Form\Mixin;
 use Kirby\Panel\Ui\Item\FileItem;
 
 /**
- * Filespicker field
+ * Filepicker field
  *
  * @package   Kirby Field
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -18,7 +18,7 @@ use Kirby\Panel\Ui\Item\FileItem;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class FilespickerField extends ModelspickerField
+class FilePickerField extends ModelPickerField
 {
 	use Mixin\Upload;
 
