@@ -1,7 +1,7 @@
 # Kirby License Agreement
 
-Published: March 18, 2025  
-Source: https://getkirby.com/license/2025-03-18
+Published: November 29, 2025  
+Source: https://getkirby.com/license/2025-11-29
 
 ## About this Agreement
 
@@ -124,11 +124,7 @@ You may also install and use Kirby for **free** in Private Installations as long
 
 ### Free Licenses on Request
 
-We provide free or discounted licenses for specific purposes:
-
-- students,
-- selected educational projects, social and environmental organizations, charities and non-profits with insufficient funding and
-- demo sites showcasing a Kirby extension (plugin or theme).
+We provide free or discounted licenses for specific purposes that are listed on <https://getkirby.com/good-cause>.
 
 Unlike licenses for Development Installations or Private Installations, these free or discounted licenses are not granted by this Agreement directly. You need to request them from Us via email to <support@getkirby.com>. Any discounts or free licenses are at Our sole discretion.
 
