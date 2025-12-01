@@ -163,21 +163,9 @@ class Imagick extends Darkroom
 	 */
 	protected function resize(Image $image, array $options): Image
 	{
-		// simple resize
-		if ($options['crop'] === false) {
-			$image->thumbnailImage(
-				$options['width'],
-				$options['height'],
-				true
-			);
-
-			return $image;
-		}
-
-		// crop based on focus point
-		if (Focus::isFocalPoint($options['crop']) === true) {
+		if ($crop = $options['crop'] ?? null) {
 			if ($focus = Focus::coords(
-				$options['crop'],
+				$crop,
 				$options['sourceWidth'],
 				$options['sourceHeight'],
 				$options['width'],
@@ -190,39 +178,14 @@ class Imagick extends Darkroom
 					$focus['y1']
 				);
 
-				$image->thumbnailImage(
-					$options['width'],
-					$options['height'],
-					true
-				);
-
-				return $image;
 			}
 		}
 
-		// translate the gravity option into something imagemagick understands
-		$gravity = match ($options['crop'] ?? null) {
-			'top left'     => Image::GRAVITY_NORTHWEST,
-			'top'          => Image::GRAVITY_NORTH,
-			'top right'    => Image::GRAVITY_NORTHEAST,
-			'left'         => Image::GRAVITY_WEST,
-			'right'        => Image::GRAVITY_EAST,
-			'bottom left'  => Image::GRAVITY_SOUTHWEST,
-			'bottom'       => Image::GRAVITY_SOUTH,
-			'bottom right' => Image::GRAVITY_SOUTHEAST,
-			default        => Image::GRAVITY_CENTER
-		};
-
-		$landscape = $options['width'] >= $options['height'];
-
 		$image->thumbnailImage(
-			$landscape ? $options['width'] : $image->getImageWidth(),
-			$landscape ? $image->getImageHeight() : $options['height'],
+			$options['width'],
+			$options['height'],
 			true
 		);
-
-		$image->setGravity($gravity);
-		$image->cropImage($options['width'], $options['height'], 0, 0);
 
 		return $image;
 	}
