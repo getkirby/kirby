@@ -595,12 +595,6 @@ class FieldClassTest extends TestCase
 		], $field->props());
 	}
 
-	public function testRoutes(): void
-	{
-		$field = new TestField();
-		$this->assertSame([], $field->routes());
-	}
-
 	public function testSave(): void
 	{
 		$field = new TestField();

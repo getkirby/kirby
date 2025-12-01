@@ -86,6 +86,72 @@ class BlocksField extends InputField
 		$this->pretty    = $pretty;
 	}
 
+	public function api(): array
+	{
+		$field = $this;
+
+		return [
+			[
+				'pattern' => 'uuid',
+				'action'  => fn (): array => ['uuid' => Str::uuid()]
+			],
+			[
+				'pattern' => 'paste',
+				'method'  => 'POST',
+				'action'  => function () use ($field): array {
+					$request = App::instance()->request();
+					$value   = BlocksCollection::parse($request->get('html'));
+					$blocks  = BlocksCollection::factory($value);
+
+					return $field->pasteBlocks($blocks->toArray());
+				}
+			],
+			[
+				'pattern' => 'fieldsets/(:any)',
+				'method'  => 'GET',
+				'action'  => function (
+					string $fieldsetType
+				) use ($field): array {
+					$fields = $field->fields($fieldsetType);
+					$form   = $field->form($fields);
+
+					$form->fill(input: $form->defaults());
+
+					return Block::factory([
+						'content' => $form->toFormValues(),
+						'type'    => $fieldsetType
+					])->toArray();
+				}
+			],
+			[
+				'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
+				'method'  => 'ALL',
+				'action'  => function (
+					string $fieldsetType,
+					string $fieldName,
+					string|null $path = null
+				) use ($field) {
+					$fields = $field->fields($fieldsetType);
+					$field  = $field->form($fields)->field($fieldName);
+
+					$fieldApi = $this->clone([
+						'routes' => $field->api(),
+						'data'   => [
+							...$this->data(),
+							'field' => $field
+						]
+					]);
+
+					return $fieldApi->call(
+						$path,
+						$this->requestMethod(),
+						$this->requestData()
+					);
+				}
+			],
+		];
+	}
+
 	public function blocksToValues(
 		array $blocks,
 		string $to = 'toFormValues'
@@ -228,72 +294,6 @@ class BlocksField extends InputField
 			'max'            => $this->max(),
 			'min'            => $this->min(),
 		] + parent::props();
-	}
-
-	public function routes(): array
-	{
-		$field = $this;
-
-		return [
-			[
-				'pattern' => 'uuid',
-				'action'  => fn (): array => ['uuid' => Str::uuid()]
-			],
-			[
-				'pattern' => 'paste',
-				'method'  => 'POST',
-				'action'  => function () use ($field): array {
-					$request = App::instance()->request();
-					$value   = BlocksCollection::parse($request->get('html'));
-					$blocks  = BlocksCollection::factory($value);
-
-					return $field->pasteBlocks($blocks->toArray());
-				}
-			],
-			[
-				'pattern' => 'fieldsets/(:any)',
-				'method'  => 'GET',
-				'action'  => function (
-					string $fieldsetType
-				) use ($field): array {
-					$fields = $field->fields($fieldsetType);
-					$form   = $field->form($fields);
-
-					$form->fill(input: $form->defaults());
-
-					return Block::factory([
-						'content' => $form->toFormValues(),
-						'type'    => $fieldsetType
-					])->toArray();
-				}
-			],
-			[
-				'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
-				'method'  => 'ALL',
-				'action'  => function (
-					string $fieldsetType,
-					string $fieldName,
-					string|null $path = null
-				) use ($field) {
-					$fields = $field->fields($fieldsetType);
-					$field  = $field->form($fields)->field($fieldName);
-
-					$fieldApi = $this->clone([
-						'routes' => $field->api(),
-						'data'   => [
-							...$this->data(),
-							'field' => $field
-						]
-					]);
-
-					return $fieldApi->call(
-						$path,
-						$this->requestMethod(),
-						$this->requestData()
-					);
-				}
-			],
-		];
 	}
 
 	public function toStoredValue(bool $default = false): mixed
