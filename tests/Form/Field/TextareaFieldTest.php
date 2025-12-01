@@ -33,6 +33,7 @@ class TextareaFieldTest extends TestCase
 			'spellcheck'  => null,
 			'translate'   => true,
 			'type'        => 'textarea',
+			'uploads'     => ['accept' => '*'],
 			'when'        => null,
 			'width'       => '1/1',
 		];
