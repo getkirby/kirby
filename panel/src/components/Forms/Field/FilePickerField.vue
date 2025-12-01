@@ -1,15 +1,18 @@
 <script>
-import ModelsField from "./ModelsField.vue";
+import ModelPickerField from "./ModelPickerField.vue";
 
+/**
+ * @displayName FilesField
+ */
 export default {
-	extends: ModelsField,
+	extends: ModelPickerField,
 	type: "files",
 	props: {
 		uploads: [Boolean, Object, Array]
 	},
 	computed: {
 		buttons() {
-			const buttons = ModelsField.computed.buttons.call(this);
+			const buttons = ModelPickerField.computed.buttons.call(this);
 
 			if (this.hasDropzone) {
 				buttons.unshift({

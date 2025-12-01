@@ -1,8 +1,11 @@
 <script>
-import ModelsField from "./ModelsField.vue";
+import ModelPickerField from "./ModelPickerField.vue";
 
+/**
+ * @displayName UsersField
+ */
 export default {
-	extends: ModelsField,
+	extends: ModelPickerField,
 	type: "users",
 	computed: {
 		emptyProps() {

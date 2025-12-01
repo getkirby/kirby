@@ -44,6 +44,9 @@
 import { props as FieldProps } from "@/components/Forms/Field.vue";
 import { autofocus, layout } from "@/mixins/props.js";
 
+/**
+ * @displayName ModelsField
+ */
 export default {
 	type: "model",
 	mixins: [FieldProps, autofocus, layout],
