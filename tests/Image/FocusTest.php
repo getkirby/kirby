@@ -111,9 +111,9 @@ class FocusTest extends TestCase
 	public function testNormalize(): void
 	{
 		$this->assertSame('70% 30%', Focus::normalize('70% 30%'));
-		$this->assertSame('50% 100%', Focus::normalize('right'));
-		$this->assertSame('100% 50%', Focus::normalize('bottom'));
-		$this->assertSame('100% 0%', Focus::normalize('bottom left'));
+		$this->assertSame('100% 50%', Focus::normalize('right'));
+		$this->assertSame('50% 100%', Focus::normalize('bottom'));
+		$this->assertSame('0% 100%', Focus::normalize('bottom left'));
 		$this->assertSame('70% 30%', Focus::normalize('{"x":0.7,"y":0.3}'));
 	}
 
