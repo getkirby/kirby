@@ -120,6 +120,16 @@ class PageSettingsDropdownController extends ModelSettingsDropdownController
 
 		$options[] = '-';
 
+		if ($this->model->kirby()->user()->isAdmin() === true) {
+			$options['blueprint'] = [
+				'link' => $url . '/blueprint',
+				'icon' => 'settings',
+				'text' => 'Blueprint',
+			];
+
+			$options[] = '-';
+		}
+
 		$options['delete'] = [
 			'dialog'   => $url . '/delete',
 			'icon'     => 'trash',
