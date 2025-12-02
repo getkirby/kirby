@@ -580,9 +580,6 @@ class F
 			$size = static::size($size);
 		}
 
-		// make sure it's an int
-		$size = (int)$size;
-
 		// avoid errors for invalid sizes
 		if ($size <= 0) {
 			return '0 KB';

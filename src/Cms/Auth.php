@@ -176,7 +176,7 @@ class Auth
 		$fromSession = $this->csrfFromSession();
 
 		// compare both tokens
-		if (hash_equals((string)$fromSession, (string)$fromHeader) !== true) {
+		if (hash_equals($fromSession, (string)$fromHeader) !== true) {
 			return false;
 		}
 

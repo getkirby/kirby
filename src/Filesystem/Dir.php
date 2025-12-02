@@ -522,7 +522,7 @@ class Dir
 		$ignore   = [...$ignore, '.', '..'];
 
 		// scan for all files and dirs
-		$result = array_values((array)array_diff(scandir($dir), $ignore));
+		$result = array_values(array_diff(scandir($dir), $ignore));
 
 		// add absolute paths
 		if ($absolute === true) {
