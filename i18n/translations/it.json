@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Cambia il tuo nome",
 	"account.delete": "Elimina l'account",
 	"account.delete.confirm": "Vuoi davvero eliminare il tuo account? Verrai disconnesso immediatamente. Il tuo account non potrà essere recuperato.",
@@ -15,7 +16,7 @@
 	"changes": "Changes",
 	"confirm": "OK",
 	"collapse": "Comprimi",
-	"collapse.all": "Comprimi tutto",
+	"collapse.all": "Collapse all",
 	"color": "Color",
 	"coordinates": "Coordinates",
 	"copy": "Copia",
@@ -42,6 +43,9 @@
 
 	"delete": "Elimina",
 	"delete.all": "Elimina tutti",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Nessun file selezionabile",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Inserisci un URL valido",
 
 	"expand": "Espandi",
-	"expand.all": "Espandi tutto",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "Il campo è obbligatorio",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Vuoi veramente eliminare questo elemento?",
 	"field.structure.delete.confirm.all": "Vuoi davvero cancellare tutte le voci?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Non contiene ancora voci",
 
 	"field.users.empty": "Nessun utente selezionato",
@@ -474,6 +479,7 @@
 	"license.code": "Codice",
 	"license.code.help": "Hai ricevuto il codice di licenza tramite email dopo l'acquisto. Per favore inseriscilo per registrare Kirby.",
 	"license.code.label": "Inserisci il codice di licenza",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Comprende nuove versioni major entro il {date}",
 	"license.status.active.label": "Licenza valida",
 	"license.status.demo.info": "Questa è un'installazione demo",
@@ -661,6 +667,7 @@
 
 	"security": "Sicurezza",
 	"select": "Seleziona",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Impostazioni",
 	"show": "Mostra",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "La password attuale",
 	"user.changePassword.new": "Nuova password",
 	"user.changePassword.new.confirm": "Conferma la nuova password...",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Cambia ruolo",
 	"user.changeRole.select": "Seleziona un nuovo ruolo",
 	"user.create": "Aggiungi nuovo utente",

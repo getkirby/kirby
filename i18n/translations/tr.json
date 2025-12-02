@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "İsminizi değiştirin",
 	"account.delete": "Hesabınızı silin",
 	"account.delete.confirm": "Hesabınızı gerçekten silmek istiyor musunuz? Oturumunuz hemen sonlandırılacaktır. Hesabınız daha sonra geri alınamaz.",
@@ -15,7 +16,7 @@
 	"changes": "Değişiklikler",
 	"confirm": "Tamam",
 	"collapse": "Daralt",
-	"collapse.all": "Tümünü daralt",
+	"collapse.all": "Collapse all",
 	"color": "Renk",
 	"coordinates": "Koordinatlar",
 	"copy": "Kopyala",
@@ -42,6 +43,9 @@
 
 	"delete": "Sil",
 	"delete.all": "Tümünü sil",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Bu iletişim kutusunda alan yok",
 	"dialog.files.empty": "Seçilecek dosya yok",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Lütfen geçerli bir adres girin",
 
 	"expand": "Genişlet",
-	"expand.all": "Tümünü genişlet",
+	"expand.all": "Expand all",
 
 	"field.invalid": "Bu alan geçersizdir",
 	"field.required": "Alan gereklidir",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
 	"field.structure.delete.confirm.all": "Tüm girdileri gerçekten silmek istiyor musunuz?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Hen\u00fcz bir girdi yok",
 
 	"field.users.empty": "Henüz kullanıcı seçilmedi",
@@ -474,6 +479,7 @@
 	"license.code": "Kod",
 	"license.code.help": "Lisans kodunuzu satın alma işleminden sonra e-posta yoluyla aldınız. Lütfen kopyalayıp buraya yapıştırın.",
 	"license.code.label": "Lütfen lisans kodunu giriniz",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "{date} tarihine kadar yeni ana sürümleri içerir",
 	"license.status.active.label": "Geçerli lisans",
 	"license.status.demo.info": "Bu bir demo kurulumudur",
@@ -661,6 +667,7 @@
 
 	"security": "Güvenlik",
 	"select": "Seç",
+	"select.all": "Select all",
 	"server": "Sunucu",
 	"settings": "Ayarlar",
 	"show": "Göster",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Mevcut şifreniz",
 	"user.changePassword.new": "Yeni Şifre",
 	"user.changePassword.new.confirm": "Şifreyi onaylayın...",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Rolü değiştir",
 	"user.changeRole.select": "Yeni bir rol seçin",
 	"user.create": "Yeni bir kullanıcı ekle",

@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "이름 변경",
 	"account.delete": "계정 삭제",
 	"account.delete.confirm": "계정을 삭제할까요? 계정을 삭제한 뒤에는 즉시 로그아웃되며, 삭제된 계정은 복구할 수 없습니다.",
@@ -15,7 +16,7 @@
 	"changes": "변경",
 	"confirm": "확인",
 	"collapse": "접기",
-	"collapse.all": "모두 접기",
+	"collapse.all": "Collapse all",
 	"color": "색",
 	"coordinates": "좌표",
 	"copy": "복사",
@@ -42,6 +43,9 @@
 
 	"delete": "\uc0ad\uc81c",
 	"delete.all": "모두 삭제",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "필드가 없습니다.",
 	"dialog.files.empty": "선택할 파일이 없습니다.",
@@ -295,7 +299,7 @@
 	"error.validation.url": "올바른 URL을 입력하세요.",
 
 	"expand": "열기",
-	"expand.all": "모두 열기",
+	"expand.all": "Expand all",
 
 	"field.invalid": "필드가 올바르지 않습니다.",
 	"field.required": "필드를 채우세요.",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "이 항목을 삭제할까요?",
 	"field.structure.delete.confirm.all": "모든 항목을 삭제할까요?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "항목이 없습니다.",
 
 	"field.users.empty": "선택한 사용자가 없습니다.",
@@ -474,6 +479,7 @@
 	"license.code": "언어 코드",
 	"license.code.help": "이메일로 전송된 라이선스 코드를 복사해 붙여넣으세요.",
 	"license.code.label": "라이선스 코드를 입력하세요.",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "새로운 메이저 버전은 {date}까지 포함됩니다.",
 	"license.status.active.label": "유효한 라이선스",
 	"license.status.demo.info": "데모를 설치합니다.",
@@ -661,6 +667,7 @@
 
 	"security": "보안",
 	"select": "선택",
+	"select.all": "Select all",
 	"server": "서버",
 	"settings": "설정",
 	"show": "보기",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "현재 암호",
 	"user.changePassword.new": "새 암호",
 	"user.changePassword.new.confirm": "새 암호 확인",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "역할 변경",
 	"user.changeRole.select": "새 역할 선택",
 	"user.create": "사용자 추가",

@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Ubah nama Anda",
 	"account.delete": "Hapus akun Anda",
 	"account.delete.confirm": "Anda yakin menghapus akun? Anda akan dikeluarkan segera. Akun Anda tidak dapat dipulihkan.",
@@ -15,7 +16,7 @@
 	"changes": "Perubahan",
 	"confirm": "Oke",
 	"collapse": "Lipat",
-	"collapse.all": "Lipat Semua",
+	"collapse.all": "Collapse all",
 	"color": "Warna",
 	"coordinates": "Koordinat",
 	"copy": "Salin",
@@ -42,6 +43,9 @@
 
 	"delete": "Hapus",
 	"delete.all": "Hapus semua",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Dialog ini tidak memiliki bidang",
 	"dialog.files.empty": "Tidak ada berkas untuk dipilih",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Masukkan URL yang valid",
 
 	"expand": "Luaskan",
-	"expand.all": "Luaskan Semua",
+	"expand.all": "Expand all",
 
 	"field.invalid": "Bidang tidak valid",
 	"field.required": "Bidang ini wajib",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Anda yakin menghapus baris ini?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Belum ada entri",
 
 	"field.users.empty": "Belum ada pengguna yang dipilih",
@@ -474,6 +479,7 @@
 	"license.code": "Kode",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Masukkan kode lisensi Anda",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.demo.info": "This is a demo installation",
@@ -661,6 +667,7 @@
 
 	"security": "Keamanan",
 	"select": "Pilih",
+	"select.all": "Select all",
 	"server": "Peladen",
 	"settings": "Pengaturan",
 	"show": "Tampilkan",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Sandi baru",
 	"user.changePassword.new.confirm": "Konfirmasi sandi baru…",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Ubah peran",
 	"user.changeRole.select": "Pilih peran baru",
 	"user.create": "Tambah pengguna baru",

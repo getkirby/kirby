@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Breyta nafninu þínu",
 	"account.delete": "Eyða notandareikning þínum",
 	"account.delete.confirm": "Ertu alveg viss um að þú viljir endanlega eyða reikningnum þínum? Þú munt verða útskráð/ur án tafar. Ómögulegt verður að endurheimta reikninginn þinn.",
@@ -15,7 +16,7 @@
 	"changes": "Breytingar",
 	"confirm": "OK",
 	"collapse": "Fella",
-	"collapse.all": "Fella allt",
+	"collapse.all": "Collapse all",
 	"color": "Litur",
 	"coordinates": "Hnit",
 	"copy": "Afrita",
@@ -42,6 +43,9 @@
 
 	"delete": "Eyða",
 	"delete.all": "Eyða hreint öllu",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Þessi valmynd hefur engin svið",
 	"dialog.files.empty": "Engar skrár til að velja úr",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Ákjósanleg vefslóð",
 
 	"expand": "Þenja út",
-	"expand.all": "Þenja allt út",
+	"expand.all": "Expand all",
 
 	"field.invalid": "Þetta svið er bara ógillt sem stendur.",
 	"field.required": "Þetta svið er nauðsynlegt",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Viltu virkilega eyða þessari röð?",
 	"field.structure.delete.confirm.all": "Ætlar þú virkilega að eyða öllum færslum?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Engar færslur enn",
 
 	"field.users.empty": "Engir notendur valdir enn",
@@ -474,6 +479,7 @@
 	"license.code": "Kóðasnið",
 	"license.code.help": "Þú fékkst leyfiskóðan sendan í tölvupósti eftir að þú borgaðir fyrir leyfið. Vinsamlegast afritaðu hann hingað.",
 	"license.code.label": "Vinsamlegast settu inn leyfiskóðan",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Felur í sér allar útgáfur þar til {date}",
 	"license.status.active.label": "Gilt skráningarleyfi",
 	"license.status.demo.info": "Þessi uppsetning er til prófunar.",
@@ -661,6 +667,7 @@
 
 	"security": "Öryggi",
 	"select": "Velja",
+	"select.all": "Select all",
 	"server": "Vefþjónn",
 	"settings": "Stillingar",
 	"show": "Sýna",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Þitt núverandi lykilorð",
 	"user.changePassword.new": "Nýtt lykilorð",
 	"user.changePassword.new.confirm": "Staðfestu nýtt lykilorð…",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Breyta hlutverki",
 	"user.changeRole.select": "Veldu nýtt hlutverk",
 	"user.create": "Bæta við nýjum notenda",

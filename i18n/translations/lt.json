@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Pakeisti savo vardą",
 	"account.delete": "Panaikinti savo paskyrą",
 	"account.delete.confirm": "Ar tikrai norite panaikinti savo paskyrą? Jūs iš karto atsijungsite. Paskyros bus neįmanoma atstatyti.",
@@ -15,7 +16,7 @@
 	"changes": "Changes",
 	"confirm": "Ok",
 	"collapse": "Sutraukti",
-	"collapse.all": "Sutraukti viską",
+	"collapse.all": "Collapse all",
 	"color": "Color",
 	"coordinates": "Coordinates",
 	"copy": "Kopijuoti",
@@ -42,6 +43,9 @@
 
 	"delete": "Pašalinti",
 	"delete.all": "Pašalinti viską",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Nėra failų pasirinkimui",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Prašome įrašyti teisingą URL",
 
 	"expand": "Išskleisti",
-	"expand.all": "Išskleisti viską",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "Laukas privalomas",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Ar tikrai norite pašalinti šią eilutę?",
 	"field.structure.delete.confirm.all": "Ar tikrai norite išrtinti visus įrašus?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Dar nėra įrašų",
 
 	"field.users.empty": "Dar nėra vartotojų",
@@ -474,6 +479,7 @@
 	"license.code": "Kodas",
 	"license.code.help": "Jūs gavote licencijos kodą po pirkimo el. paštu. Nukopijuokite jį ir įterpkite čia.",
 	"license.code.label": "Prašome įrašyti jūsų licenzijos kodą",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Įeina naujos pagrindinės versijos iki {date}",
 	"license.status.active.label": "Galiojanti licencija",
 	"license.status.demo.info": "Tai demo versija",
@@ -661,6 +667,7 @@
 
 	"security": "Saugumas",
 	"select": "Pasirinkti",
+	"select.all": "Select all",
 	"server": "Serveris",
 	"settings": "Nustatymai",
 	"show": "Rodyti",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Naujas slaptažodis",
 	"user.changePassword.new.confirm": "Patvirtinti naują slaptažodį…",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Keisti rolę",
 	"user.changeRole.select": "Pasirinkti naują rolę",
 	"user.create": "Pridėti naują vartotoją",
