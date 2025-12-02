@@ -59,7 +59,7 @@ class PHPMailerTest extends TestCase
 				$phpunit->assertSame('Super Company NoReply', $mailer->FromName);
 				$phpunit->assertSame([['someone@gmail.com', '']], $mailer->getToAddresses());
 				$phpunit->assertSame([
-					'reply@supercompany.com' => ['reply@supercompany.com', 'Super Company Reply']
+					['reply@supercompany.com', 'Super Company Reply']
 				], $mailer->getReplyToAddresses());
 				$phpunit->assertSame('text/html', $mailer->ContentType);
 				$phpunit->assertSame('<strong>We will never reply</strong>', $mailer->Body);
