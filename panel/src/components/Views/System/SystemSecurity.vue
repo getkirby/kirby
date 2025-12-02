@@ -6,7 +6,7 @@
 			{
 				title: $t('retry'),
 				icon: 'refresh',
-				click: retry
+				click: () => retry()
 			}
 		]"
 	>

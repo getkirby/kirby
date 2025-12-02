@@ -13,12 +13,12 @@
 					{
 						icon: 'upload',
 						text: $t('change'),
-						click: upload
+						click: () => upload()
 					},
 					{
 						icon: 'trash',
 						text: $t('delete'),
-						click: remove
+						click: () => remove()
 					}
 				]"
 			/>

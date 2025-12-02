@@ -69,7 +69,7 @@
 				<k-empty
 					v-if="items.length === 0"
 					icon="list-bullet"
-					v-on="!disabled ? { click: add } : {}"
+					v-on="!disabled ? { click: () => add() } : {}"
 				>
 					{{ empty ?? $t("field.structure.empty") }}
 				</k-empty>

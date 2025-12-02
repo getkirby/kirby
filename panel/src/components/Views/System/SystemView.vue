@@ -15,7 +15,7 @@
 					text: $t('system.info.copy'),
 					icon: 'copy',
 					responsive: true,
-					click: copy
+					click: () => copy()
 				}
 			]"
 		>
