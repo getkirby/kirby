@@ -3,7 +3,7 @@
 namespace Kirby\Option;
 
 use Kirby\Cms\Page;
-use Kirby\Field\TestCase;
+use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Options::class)]

@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Mixin;
 
-use Kirby\Field\FieldOptions;
+use Kirby\Form\FieldOptions;
 
 trait Options
 {

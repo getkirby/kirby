@@ -3,7 +3,7 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Field\FieldOptions;
+use Kirby\Form\FieldOptions;
 use Kirby\Form\Mixin;
 use Kirby\Toolkit\A;
 

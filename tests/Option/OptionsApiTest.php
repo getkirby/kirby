@@ -4,7 +4,7 @@ namespace Kirby\Option;
 
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
-use Kirby\Field\TestCase;
+use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(OptionsApi::class)]

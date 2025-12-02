@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Field;
+namespace Kirby\Form;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Option\Options;

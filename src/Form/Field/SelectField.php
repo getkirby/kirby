@@ -2,7 +2,7 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Field\FieldOptions;
+use Kirby\Form\FieldOptions;
 use Kirby\Form\Mixin;
 
 /**

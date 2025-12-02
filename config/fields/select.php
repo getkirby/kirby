@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Field\FieldOptions;
+use Kirby\Form\FieldOptions;
 use Kirby\Toolkit\I18n;
 
 return [
