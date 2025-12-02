@@ -125,7 +125,7 @@ describe.concurrent("panel/feature.js", () => {
 		expect(feature.on).toStrictEqual(newListeners);
 	});
 
-	it.skip("should open with state", async () => {
+	it("should open with state", async () => {
 		const feature = Feature(Panel(), "test", defaults());
 
 		const state = {

@@ -39,7 +39,7 @@
 		"terser": "^5.44.1",
 		"vite": "^7.2.6",
 		"vite-plugin-static-copy": "^3.1.4",
-		"vitest": "^4.0.14",
+		"vitest": "^4.0.15",
 		"vue-docgen-api": "^4.79.2"
 	},
 	"browserslist": [
