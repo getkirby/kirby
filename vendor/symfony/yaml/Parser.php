@@ -198,7 +198,7 @@ class Parser
                 }
             } elseif (
                 self::preg_match('#^(?P<key>(?:![^\s]++\s++)?(?:'.Inline::REGEX_QUOTED_STRING.'|[^ \'"\[\{!].*?)) *\:(( |\t)++(?P<value>.+))?$#u', rtrim($this->currentLine), $values)
-                && (!str_contains($values['key'], ' #') || \in_array($values['key'][0], ['"', "'"]))
+                && (!str_contains($values['key'], ' #') || \in_array($values['key'][0], ['"', "'"], true))
             ) {
                 if ($context && 'sequence' == $context) {
                     throw new ParseException('You cannot define a mapping item when in a sequence.', $this->currentLineNb + 1, $this->currentLine, $this->filename);
@@ -769,10 +769,19 @@ class Parser
                     $lines = [];
 
                     while ($this->moveToNextLine()) {
+                        if ($this->isCurrentLineBlank()) {
+                            $lines[] = '';
+                            continue;
+                        }
+
                         // unquoted strings end before the first unindented line
                         if (0 === $this->getCurrentLineIndentation()) {
                             $this->moveToPreviousLine();
 
+                            break;
+                        }
+
+                        if ($this->isCurrentLineComment()) {
                             break;
                         }
 
