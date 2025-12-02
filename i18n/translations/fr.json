@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Modifier votre nom",
 	"account.delete": "Supprimer votre compte",
 	"account.delete.confirm": "Voulez-vous vraiment supprimer votre compte ? Vous serez déconnecté immédiatement. Votre compte ne pourra pas être récupéré.",
@@ -15,7 +16,7 @@
 	"changes": "Modifications",
 	"confirm": "Ok",
 	"collapse": "Replier",
-	"collapse.all": "Tout replier",
+	"collapse.all": "Collapse all",
 	"color": "Couleur",
 	"coordinates": "Coordonnées",
 	"copy": "Copier",
@@ -42,6 +43,9 @@
 
 	"delete": "Supprimer",
 	"delete.all": "Tout supprimer",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Ce dialogue ne comporte aucun champ",
 	"dialog.files.empty": "Aucun fichier à sélectionner",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Veuillez saisir une URL valide",
 
 	"expand": "Déplier",
-	"expand.all": "Tout déplier",
+	"expand.all": "Expand all",
 
 	"field.invalid": "Le champ est invalide",
 	"field.required": "Le champ est obligatoire",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Voulez-vous vraiment supprimer cette ligne ?",
 	"field.structure.delete.confirm.all": "Voulez-vous vraiment supprimer toutes les entrées ?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Pas encore d’entrée",
 
 	"field.users.empty": "Pas encore d’utilisateur sélectionné",
@@ -474,6 +479,7 @@
 	"license.code": "Code",
 	"license.code.help": "Vous avez reçu votre code de licence par courriel après l‘achat. Veuillez le copier et le coller ici.",
 	"license.code.label": "Veuillez saisir votre numéro de licence",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Inclut les nouvelles versions majeures jusqu’au {date}",
 	"license.status.active.label": "Licence valide",
 	"license.status.demo.info": "Ceci est une installation de démonstration",
@@ -661,6 +667,7 @@
 
 	"security": "Sécurité",
 	"select": "Sélectionner",
+	"select.all": "Select all",
 	"server": "Serveur",
 	"settings": "Paramètres",
 	"show": "Afficher",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Votre mot de passe actuel",
 	"user.changePassword.new": "Nouveau mot de passe",
 	"user.changePassword.new.confirm": "Confirmer le nouveau mot de passe…",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Modifier le rôle",
 	"user.changeRole.select": "Sélectionner un nouveau rôle",
 	"user.create": "Ajouter un nouvel utilisateur",

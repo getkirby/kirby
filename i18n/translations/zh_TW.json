@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "變更帳號名稱",
 	"account.delete": "刪除帳號",
 	"account.delete.confirm": "你確定要刪除這個帳號嗎？",
@@ -15,7 +16,7 @@
 	"changes": "變更",
 	"confirm": "儲存",
 	"collapse": "收合",
-	"collapse.all": "全部收合",
+	"collapse.all": "Collapse all",
 	"color": "顏色",
 	"coordinates": "座標",
 	"copy": "Copy",
@@ -42,6 +43,9 @@
 
 	"delete": "\u522a\u9664",
 	"delete.all": "全部刪除",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "沒有可用的欄位",
 	"dialog.files.empty": "沒有可用的檔案",
@@ -295,7 +299,7 @@
 	"error.validation.url": "請輸入有效的網址",
 
 	"expand": "展開",
-	"expand.all": "全部展開",
+	"expand.all": "Expand all",
 
 	"field.invalid": "欄位無效",
 	"field.required": "此欄位為必填",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "\u4f60\u771f\u7684\u8981\u522a\u9664\u6b64\u7b46\u8cc7\u6599\u55ce\uff1f",
 	"field.structure.delete.confirm.all": "你確定要刪除所有資料嗎？",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "尚未加入任何資料",
 
 	"field.users.empty": "沒有選取任何使用者",
@@ -474,6 +479,7 @@
 	"license.code": "授權碼",
 	"license.code.help": "您可以在購買確認信中找到授權碼",
 	"license.code.label": "輸入授權碼",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "包含至 {date} 前的新主要版本",
 	"license.status.active.label": "已啟用",
 	"license.status.demo.info": "此為試用版安裝，僅供開發或測試使用",
@@ -661,6 +667,7 @@
 
 	"security": "安全性",
 	"select": "選取",
+	"select.all": "Select all",
 	"server": "伺服器",
 	"settings": "設定",
 	"show": "顯示",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "目前密碼",
 	"user.changePassword.new": "更改密碼",
 	"user.changePassword.new.confirm": "確認新密碼",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "變更角色",
 	"user.changeRole.select": "選擇新角色",
 	"user.create": "新增使用者",

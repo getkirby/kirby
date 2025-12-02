@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Deinen Namen ändern",
 	"account.delete": "Deinen Account löschen",
 	"account.delete.confirm": "Willst du deinen Account wirklich löschen? Du wirst sofort danach abgemeldet. Dein Account kann nicht wieder hergestellt werden.",
@@ -15,7 +16,7 @@
 	"changes": "Änderungen",
 	"confirm": "OK",
 	"collapse": "Zusammenklappen",
-	"collapse.all": "Alle zusammenklappen",
+	"collapse.all": "Collapse all",
 	"color": "Farbe",
 	"coordinates": "Koordinaten",
 	"copy": "Kopieren",
@@ -42,6 +43,9 @@
 
 	"delete": "L\u00f6schen",
 	"delete.all": "Alle löschen",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Der Dialog hat keine Felder",
 	"dialog.files.empty": "Keine verfügbaren Dateien",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Bitte gib eine gültige URL ein",
 
 	"expand": "Aufklappen",
-	"expand.all": "Alle aufklappen",
+	"expand.all": "Expand all",
 
 	"field.invalid": "Das Feld ist ungültig",
 	"field.required": "Das Feld ist Pflicht",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Willst du diesen Eintrag wirklich l\u00f6schen?",
 	"field.structure.delete.confirm.all": "Möchtest du wirklich alle Einträge löschen?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Es bestehen keine Eintr\u00e4ge.",
 
 	"field.users.empty": "Keine Accounts ausgewählt",
@@ -474,6 +479,7 @@
 	"license.code": "Code",
 	"license.code.help": "Du hast deinen Lizenz Code nach dem Kauf per Email bekommen. Bitte kopiere sie aus der Email und füge sie hier ein. ",
 	"license.code.label": "Bitte gib deinen Lizenzcode ein",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Beinhaltet neue Major Versionen bis {date}",
 	"license.status.active.label": "Gültige Lizenz",
 	"license.status.demo.info": "Dies ist eine Demo Installation",
@@ -661,6 +667,7 @@
 
 	"security": "Sicherheit",
 	"select": "Auswählen",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Einstellungen",
 	"show": "Anzeigen",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Dein aktuelles Passwort",
 	"user.changePassword.new": "Neues Passwort",
 	"user.changePassword.new.confirm": "Wiederhole das Passwort …",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Rolle ändern",
 	"user.changeRole.select": "Neue Rolle auswählen",
 	"user.create": "Neuen Account anlegen",

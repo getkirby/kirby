@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Schimbă-ți numele",
 	"account.delete": "Șterge-ți contul",
 	"account.delete.confirm": "Chiar vrei să îți ștergi contul? Vei fi deconectat imediat. Contul nu poate fi recuperat.",
@@ -15,7 +16,7 @@
 	"changes": "Schimbări",
 	"confirm": "Ok",
 	"collapse": "Pliază",
-	"collapse.all": "Pliază toate",
+	"collapse.all": "Collapse all",
 	"color": "Culoare",
 	"coordinates": "Coordonate",
 	"copy": "Copiază",
@@ -42,6 +43,9 @@
 
 	"delete": "\u0218terge",
 	"delete.all": "Șterge toate",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Acest dialog nu are niciun câmp",
 	"dialog.files.empty": "Nu există fișiere de selectat",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Te rog introdu un URL valid",
 
 	"expand": "Extinde",
-	"expand.all": "Extinde toate",
+	"expand.all": "Expand all",
 
 	"field.invalid": "Câmpul este nevalid",
 	"field.required": "Acest câmp este necesar",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Chiar vrei să ștergi acest rând?",
 	"field.structure.delete.confirm.all": "Chiar vrei să ștergi toate înregistrările?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Nicio înregistrare deocamdată",
 
 	"field.users.empty": "Niciun utilizator ales deocamdată",
@@ -474,6 +479,7 @@
 	"license.code": "Cod",
 	"license.code.help": "Ați primit codul de licență după achiziție prin e-mail. Vă rugăm să-l copiați și să-l inserezi aici.",
 	"license.code.label": "Te rog introdu codul tău de licență",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Include noi versiuni majore până la data de {date}",
 	"license.status.active.label": "Licență validă",
 	"license.status.demo.info": "Aceasta este o instalare demo",
@@ -661,6 +667,7 @@
 
 	"security": "Securitate",
 	"select": "Alege",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Reglaje",
 	"show": "Arată",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Parola ta curentă",
 	"user.changePassword.new": "Parola nouă",
 	"user.changePassword.new.confirm": "Confirmă parola nouă...",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Schimbă rolul",
 	"user.changeRole.select": "Alege un rol nou",
 	"user.create": "Adaugă un nou utilizator",
