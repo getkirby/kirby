@@ -483,6 +483,7 @@ class FileTest extends TestCase
 			'read'           => true,
 			'replace'        => true,
 			'sort'           => true,
+			'unlock'         => true,
 			'update'         => true,
 		];
 
@@ -514,6 +515,7 @@ class FileTest extends TestCase
 			'read'           => false,
 			'replace'        => false,
 			'sort'           => false,
+			'unlock'         => false,
 			'update'         => false,
 		];
 
@@ -531,6 +533,7 @@ class FileTest extends TestCase
 			'read'           => false,
 			'replace'        => false,
 			'sort'           => false,
+			'unlock'         => false,
 			'update'         => false,
 		];
 
@@ -559,6 +562,7 @@ class FileTest extends TestCase
 			'read'           => true,
 			'replace'        => false,
 			'sort'           => true,
+			'unlock'         => true,
 			'update'         => true,
 		];
 
@@ -599,6 +603,7 @@ class FileTest extends TestCase
 			'read'           => true,
 			'replace'        => true,
 			'sort'           => true,
+			'unlock'         => true,
 			'update'         => true,
 		];
 
@@ -641,6 +646,7 @@ class FileTest extends TestCase
 			'read'           => true,
 			'replace'        => false,
 			'sort'           => true,
+			'unlock'         => true,
 			'update'         => true,
 		];
 
