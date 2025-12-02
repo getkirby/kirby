@@ -1,8 +1,10 @@
 <template>
 	<k-tags-field-preview
 		:html="html"
+		:removable="removable"
 		:value="tags"
 		class="k-models-field-preview"
+		@remove="$emit('remove', $event)"
 	/>
 </template>
 
@@ -16,11 +18,13 @@ export default {
 			type: Boolean,
 			default: true
 		},
+		removable: Boolean,
 		value: {
 			default: () => [],
 			type: [Array, String]
 		}
 	},
+	emits: ["remove"],
 	data() {
 		return {
 			tags: []

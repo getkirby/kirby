@@ -297,17 +297,17 @@ export default {
 	align-items: center;
 }
 
-.k-link-field .k-link-field-preview {
+.k-link-field .k-tags-field-preview {
 	--tag-height: var(--height-sm);
-	padding-inline: 0;
+	padding: 0;
 }
-.k-link-field .k-link-field-preview .k-tag:focus {
+.k-link-field .k-tags-field-preview .k-tag:focus {
 	outline: 0;
 }
-.k-link-field .k-link-field-preview .k-tag:focus-visible {
+.k-link-field .k-tags-field-preview .k-tag:focus-visible {
 	outline: var(--outline);
 }
-.k-link-field .k-link-field-preview .k-tag-text {
+.k-link-field .k-tags-field-preview .k-tag-text {
 	font-size: var(--text-sm);
 }
 
