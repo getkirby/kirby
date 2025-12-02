@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Ændre dit navn",
 	"account.delete": "Slet din konto",
 	"account.delete.confirm": "Ønsker du virkelig at slette din konto? Du vil blive logget ud med det samme. Din konto kan ikke gendannes.",
@@ -15,7 +16,7 @@
 	"changes": "Changes",
 	"confirm": "Gem",
 	"collapse": "Fold sammen",
-	"collapse.all": "Fold alle sammen",
+	"collapse.all": "Collapse all",
 	"color": "Color",
 	"coordinates": "Coordinates",
 	"copy": "Kopier",
@@ -42,6 +43,9 @@
 
 	"delete": "Slet",
 	"delete.all": "Slet alle",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Ingen filer kan vælges",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Indtast venligst en gyldig URL",
 
 	"expand": "Fold ud",
-	"expand.all": "Fold alle ud",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "Feltet er påkrævet",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "\u00d8nsker du virkelig at slette denne indtastning?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Ingen indtastninger endnu.",
 
 	"field.users.empty": "Ingen brugere er valgt",
@@ -474,6 +479,7 @@
 	"license.code": "Kode",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Indtast venligst din licenskode",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.demo.info": "This is a demo installation",
@@ -661,6 +667,7 @@
 
 	"security": "Security",
 	"select": "Vælg",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Indstillinger",
 	"show": "Vis",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Ny adgangskode",
 	"user.changePassword.new.confirm": "Bekræft den nye adgangskode...",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Skift rolle",
 	"user.changeRole.select": "Vælg en ny rolle",
 	"user.create": "Tilføj en ny bruger",

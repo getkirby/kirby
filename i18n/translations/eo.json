@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Ŝanĝi vian nomon",
 	"account.delete": "Forigi vian konton",
 	"account.delete.confirm": "Ĉu vi certe deziras forigi vian konton? Vi estos tuj elsalutita. Ne eblos malforigi vian konton.",
@@ -15,7 +16,7 @@
 	"changes": "Changes",
 	"confirm": "Bone",
 	"collapse": "Fermi",
-	"collapse.all": "Fermi ĉiujn",
+	"collapse.all": "Collapse all",
 	"color": "Color",
 	"coordinates": "Coordinates",
 	"copy": "Kopii",
@@ -42,6 +43,9 @@
 
 	"delete": "Forigi",
 	"delete.all": "Forigi ĉiujn",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "Neniu dosiero por elekti",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Bonvolu entajpi validan URL",
 
 	"expand": "Etendi",
-	"expand.all": "Etendi ĉiujn",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "La kampo ne rajtas esti malplena",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Ĉu vi certe volas forigi ĉi tiun vicon?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Ankoraŭ neniu enigo",
 
 	"field.users.empty": "Ankoraŭ neniu uzanto elektita",
@@ -474,6 +479,7 @@
 	"license.code": "Kodo",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Bonvolu entajpi vian kodon de permisilo",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.demo.info": "This is a demo installation",
@@ -661,6 +667,7 @@
 
 	"security": "Security",
 	"select": "Elekti",
+	"select.all": "Select all",
 	"server": "Servilo",
 	"settings": "Agordoj",
 	"show": "Montri",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nova pasvorto",
 	"user.changePassword.new.confirm": "Konfirmi la novan pasvorton...",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Ŝanĝi rolon",
 	"user.changeRole.select": "Elekti novan rolon",
 	"user.create": "Aldoni novan uzanton",

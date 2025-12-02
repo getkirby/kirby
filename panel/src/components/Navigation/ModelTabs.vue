@@ -39,13 +39,10 @@ export default {
 					changes.includes(field.toLowerCase())
 				).length;
 
-				if (changesInTab > 0) {
-					tab.badge = {
-						text: changesInTab
-					};
-				}
-
-				return tab;
+				return {
+					...tab,
+					badge: changesInTab > 0 ? { text: changesInTab } : null
+				};
 			});
 		}
 	}

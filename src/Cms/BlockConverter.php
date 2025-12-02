@@ -43,12 +43,10 @@ class BlockConverter
 		$method = 'editor' . $params['type'];
 
 		if (method_exists(static::class, $method) === true) {
-			$params = static::$method($params);
-		} else {
-			$params = static::editorCustom($params);
+			return static::$method($params);
 		}
 
-		return $params;
+		return static::editorCustom($params);
 	}
 
 	public static function editorBlocks(array $blocks = []): array

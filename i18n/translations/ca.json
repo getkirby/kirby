@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Change your name",
 	"account.delete": "Delete your account",
 	"account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
@@ -15,7 +16,7 @@
 	"changes": "Changes",
 	"confirm": "Ok",
 	"collapse": "Col·lapsar",
-	"collapse.all": "Col·lapsar tot",
+	"collapse.all": "Collapse all",
 	"color": "Color",
 	"coordinates": "Coordinates",
 	"copy": "Copiar",
@@ -42,6 +43,9 @@
 
 	"delete": "Eliminar",
 	"delete.all": "Eliminar tot",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "No hi ha cap fitxer per seleccionar",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Si us plau, introduïu una URL vàlida",
 
 	"expand": "Expandir",
-	"expand.all": "Expandir tot",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "El camp és obligatori",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Segur que voleu eliminar aquesta fila?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Encara no hi ha entrades.",
 
 	"field.users.empty": "Encara no s'ha seleccionat cap usuari",
@@ -474,6 +479,7 @@
 	"license.code": "Codi",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Si us plau, introdueixi el seu codi de llicència",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.demo.info": "This is a demo installation",
@@ -661,6 +667,7 @@
 
 	"security": "Security",
 	"select": "Seleccionar",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Configuració",
 	"show": "Show",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nova contrasenya",
 	"user.changePassword.new.confirm": "Confirma la nova contrasenya ...",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Canviar el rol",
 	"user.changeRole.select": "Seleccionar un nou rol",
 	"user.create": "Afegir un nou usuari",

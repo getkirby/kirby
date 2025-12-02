@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Change your name",
 	"account.delete": "Delete your account",
 	"account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
@@ -15,7 +16,7 @@
 	"changes": "Changes",
 	"confirm": "Ок",
 	"collapse": "Collapse",
-	"collapse.all": "Collapse All",
+	"collapse.all": "Collapse all",
 	"color": "Color",
 	"coordinates": "Coordinates",
 	"copy": "Копирай",
@@ -42,6 +43,9 @@
 
 	"delete": "\u0418\u0437\u0442\u0440\u0438\u0439",
 	"delete.all": "Delete all",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "No files to select",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Моля въведете валиден URL",
 
 	"expand": "Expand",
-	"expand.all": "Expand All",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "The field is required",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Сигурни ли сте, че искате да изтриете това вписване?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Все още няма статии",
 
 	"field.users.empty": "Все още не са избрани потребители",
@@ -474,6 +479,7 @@
 	"license.code": "Код",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Please enter your license code",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.demo.info": "This is a demo installation",
@@ -661,6 +667,7 @@
 
 	"security": "Security",
 	"select": "Избери",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Настройки",
 	"show": "Show",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Нова парола",
 	"user.changePassword.new.confirm": "Потвърдете новата парола...",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Променете роля",
 	"user.changeRole.select": "Изберете нова роля",
 	"user.create": "Добавете нов потребител",

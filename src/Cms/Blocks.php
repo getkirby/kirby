@@ -121,13 +121,13 @@ class Blocks extends Items
 			is_array($input) === false
 		) {
 			try {
-				$input = Json::decode((string)$input);
+				$input = Json::decode($input);
 			} catch (Throwable) {
 				// @deprecated try to import the old YAML format
 				// @todo block.converter remove eventually
 				// @codeCoverageIgnoreStart
 				try {
-					$yaml  = Yaml::decode((string)$input);
+					$yaml  = Yaml::decode($input);
 					$first = A::first($yaml);
 
 					// check for valid yaml
@@ -145,7 +145,7 @@ class Blocks extends Items
 				} catch (Throwable) {
 					// the next 2 lines remain after removing block.converter
 					// @codeCoverageIgnoreEnd
-					$parser = new Parsley((string)$input, new BlockSchema());
+					$parser = new Parsley($input, new BlockSchema());
 					$input  = $parser->blocks();
 					// @codeCoverageIgnoreStart
 				}

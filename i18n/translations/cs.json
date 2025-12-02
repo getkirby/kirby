@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Změnit jméno",
 	"account.delete": "Smazat účet",
 	"account.delete.confirm": "Opravdu chcete smazat svůj účet? Budete okamžitě odhlášeni. Účet nemůže být zpětně obnoven.",
@@ -15,7 +16,7 @@
 	"changes": "Změny",
 	"confirm": "Ok",
 	"collapse": "Sbalit",
-	"collapse.all": "Sbalit vše",
+	"collapse.all": "Collapse all",
 	"color": "Barva",
 	"coordinates": "Souřadnice",
 	"copy": "Kopírovat",
@@ -42,6 +43,9 @@
 
 	"delete": "Smazat",
 	"delete.all": "Smazat vše",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Tento dialog neobsahuje žádná pole",
 	"dialog.files.empty": "Žádné soubory k výběru",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Zadejte prosím platnou adresu URL",
 
 	"expand": "Rozbalit",
-	"expand.all": "Rozbalit vše",
+	"expand.all": "Expand all",
 
 	"field.invalid": "Pole není platné",
 	"field.required": "Pole musí být vyplněno.",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Opravdu chcete smazat tento z\u00e1znam?",
 	"field.structure.delete.confirm.all": "Opravdu chcete smazat všechny záznamy?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Zat\u00edm nejsou \u017e\u00e1dn\u00e9 z\u00e1znamy.",
 
 	"field.users.empty": "Nebyli zatím vybráni žádní uživatelé",
@@ -474,6 +479,7 @@
 	"license.code": "Kód",
 	"license.code.help": "Licenční kód jste po zakoupení obdrželi na email. Vložte prosím kód a zaregistrujte Vaší kopii.",
 	"license.code.label": "Zadejte prosím licenční kód",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Platí pro nové verze až do {date}",
 	"license.status.active.label": "Platná licence",
 	"license.status.demo.info": "Tato instalace je pouze demoverze",
@@ -661,6 +667,7 @@
 
 	"security": "Zabezpečení",
 	"select": "Vybrat",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Nastavení",
 	"show": "Zobrazit",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Vaše současné heslo",
 	"user.changePassword.new": "Nové heslo",
 	"user.changePassword.new.confirm": "Potvrdit nové heslo...",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Změnit roli",
 	"user.changeRole.select": "Vybrat novou roli",
 	"user.create": "Přidat nového uživatele",
