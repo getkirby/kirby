@@ -55,11 +55,7 @@ describe.concurrent("state", () => {
 		const state = State("test");
 
 		// invalid state
-		try {
-			state.validateState("foo");
-		} catch (error) {
-			expect(error.message).toStrictEqual("Invalid test state");
-		}
+		expect(() => state.validateState("foo")).toThrowError("Invalid test state");
 
 		// valid state
 		const validation = state.validateState({ message: "Yay" });
