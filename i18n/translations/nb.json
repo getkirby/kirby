@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Endre navnet ditt",
 	"account.delete": "Slett kontoen din",
 	"account.delete.confirm": "Er du sikker på at du vil slette kontoen din? Du vil bli logget ut umiddelbart. Kontoen din kan ikke gjenopprettes.",
@@ -15,7 +16,7 @@
 	"changes": "Endringer",
 	"confirm": "Lagre",
 	"collapse": "Skjul",
-	"collapse.all": "Skjule alle",
+	"collapse.all": "Collapse all",
 	"color": "Farge",
 	"coordinates": "Koordinater",
 	"copy": "Kopier",
@@ -42,6 +43,9 @@
 
 	"delete": "Slett",
 	"delete.all": "Slett alle",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Denne dialogen har ingen felter",
 	"dialog.files.empty": "Ingen filer å velge",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Vennligst skriv inn en gyldig URL",
 
 	"expand": "Utvid",
-	"expand.all": "Utvid alle",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "Feltet er påkrevd",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "\u00d8nsker du virkelig \u00e5 slette denne oppf\u00f8ringen?",
 	"field.structure.delete.confirm.all": "Vil du virkelig slette alle oppføringer?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Ingen oppf\u00f8ringer enda",
 
 	"field.users.empty": "Ingen bruker har blitt valgt",
@@ -474,6 +479,7 @@
 	"license.code": "Kode",
 	"license.code.help": "Du har mottatt din lisenskoden via e-post etter kjøpet. Vennligst kopier og lim den inn her.",
 	"license.code.label": "Vennligst skriv inn din lisenskode",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Inkluderer nye hovedversjoner til {date}",
 	"license.status.active.label": "Gyldig lisens",
 	"license.status.demo.info": "This is a demo installation",
@@ -661,6 +667,7 @@
 
 	"security": "Sikkerhet",
 	"select": "Velg",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Innstillinger",
 	"show": "Vis",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nytt passord",
 	"user.changePassword.new.confirm": "Bekreft nytt passord…",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Bytt rolle",
 	"user.changeRole.select": "Velg en ny rolle",
 	"user.create": "Legg til ny bruker",
