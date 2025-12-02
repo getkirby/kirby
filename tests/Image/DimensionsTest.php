@@ -209,6 +209,17 @@ class DimensionsTest extends TestCase
 		$this->assertSame($height, $dimensions->height());
 	}
 
+	public function testForImageWithInvalidImage(): void
+	{
+		$image = new Image([
+			'root' => static::FIXTURES . '/image/invalid.jpg'
+		]);
+
+		$dimensions = Dimensions::forImage($image);
+		$this->assertSame(0, $dimensions->width());
+		$this->assertSame(0, $dimensions->height());
+	}
+
 	public function testForSvg(): void
 	{
 		$dimensions = Dimensions::forSvg(static::FIXTURES . '/dimensions/circle.svg');

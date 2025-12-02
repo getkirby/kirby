@@ -9,6 +9,7 @@ use Kirby\Cms\Site as ModelSite;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -27,6 +28,7 @@ class FileForceLocked extends ModelFile
 #[CoversClass(Model::class)]
 class FileTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Panel.File';
 
 	public function setUp(): void
@@ -335,7 +337,11 @@ class FileTest extends TestCase
 			]
 		]);
 
-		$file  = $app->site()->image();
+		$file = $app->site()->image();
+
+		$testImage = static::FIXTURES . '/image/test.jpg';
+		F::copy($testImage, $app->site()->root() . '/test.jpg');
+
 		$panel = new File($file);
 
 		$hash = $file->mediaHash();
