@@ -55,7 +55,7 @@ export default {
 			buttons.push({
 				icon: "cancel",
 				text: this.$t("cancel"),
-				click: this.onSelectToggle,
+				click: () => this.onSelectToggle(),
 				responsive: true
 			});
 
@@ -67,7 +67,7 @@ export default {
 		batchEditingToggle() {
 			return {
 				icon: "checklist",
-				click: this.onSelectToggle,
+				click: () => this.onSelectToggle(),
 				title: this.$t("select"),
 				responsive: true
 			};

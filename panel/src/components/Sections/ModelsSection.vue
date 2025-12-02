@@ -109,7 +109,7 @@ export default {
 				buttons.push({
 					icon: "filter",
 					text: this.$t("filter"),
-					click: this.onSearchToggle,
+					click: () => this.onSearchToggle(),
 					responsive: true
 				});
 			}
@@ -122,7 +122,7 @@ export default {
 				buttons.push({
 					icon: this.addIcon,
 					text: this.$t("add"),
-					click: this.onAdd,
+					click: () => this.onAdd(),
 					responsive: true
 				});
 			}

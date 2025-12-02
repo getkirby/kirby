@@ -38,7 +38,7 @@
 			<k-empty
 				v-if="entries.length === 0"
 				icon="list-bullet"
-				v-on="!disabled ? { click: add } : {}"
+				v-on="!disabled ? { click: () => add() } : {}"
 			>
 				{{ empty ?? $t("field.entries.empty") }}
 			</k-empty>
@@ -217,14 +217,14 @@ export default {
 					disabled: this.entries.length === 0 || this.disabled,
 					icon: "template",
 					text: this.$t("copy.all"),
-					click: this.copyAll
+					click: () => this.copyAll()
 				},
 				"-",
 				{
 					disabled: this.entries.length === 0 || this.disabled,
 					icon: "trash",
 					text: this.$t("delete.all"),
-					click: this.removeAll
+					click: () => this.removeAll()
 				}
 			];
 		},

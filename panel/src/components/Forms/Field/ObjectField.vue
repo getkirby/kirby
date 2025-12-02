@@ -47,7 +47,7 @@
 				</tbody>
 			</table>
 
-			<k-empty v-else icon="box" v-on="!disabled ? { click: add } : {}">
+			<k-empty v-else icon="box" v-on="!disabled ? { click: () => add() } : {}">
 				{{ empty ?? $t("field.object.empty") }}
 			</k-empty>
 		</template>
