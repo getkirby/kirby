@@ -19,7 +19,7 @@
 						:disabled="disabled || field.disabled"
 						:form-data="value"
 						:name="fieldName"
-						:value="value[fieldName]"
+						:value="value[fieldName] ?? undefined"
 						@input="onInput($event, field, fieldName)"
 						@focus="$emit('focus', $event, field, fieldName)"
 						@submit="$emit('submit', $event, field, fieldName)"
