@@ -111,7 +111,7 @@ export default {
 
 			if (instance?.vnode?.props?.onEmpty !== undefined) {
 				return {
-					click: () => this.onEmpty()
+					click: this.onEmpty
 				};
 			}
 
