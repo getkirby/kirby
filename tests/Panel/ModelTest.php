@@ -9,24 +9,21 @@ use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use Kirby\TestCase;
+use Kirby\Panel\Controller\View\ModelViewController;
+use Kirby\Panel\Controller\View\PageViewController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class CustomPanelModel extends Model
 {
-	public function buttons(): array
-	{
-		return [];
-	}
-
 	public function path(): string
 	{
 		return 'custom';
 	}
 
-	public function view(): array
+	protected function viewController(): ModelViewController
 	{
-		return [];
+		$page = new ModelPage(['slug' => 'test']);
+		return new PageViewController($page);
 	}
 }
 
@@ -46,8 +43,8 @@ class ModelSiteWithImageMethod extends ModelSite
 #[CoversClass(Model::class)]
 class ModelTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Model';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Model';
 
 	public function setUp(): void
 	{
@@ -69,36 +66,6 @@ class ModelTest extends TestCase
 	{
 		$site = new ModelSite($props);
 		return new CustomPanelModel($site);
-	}
-
-	public function testContent(): void
-	{
-		$panel = $this->panel([
-			'content' => $content = [
-				'foo' => 'bar'
-			]
-		]);
-
-		$this->assertSame($content, $panel->content());
-	}
-
-	public function testContentWithChanges(): void
-	{
-		$panel = new CustomPanelModel(
-			new ModelPage(['slug' => 'test'])
-		);
-
-		$panel->model()->version('latest')->save([
-			'foo' => 'foo',
-		]);
-
-		$panel->model()->version('changes')->save([
-			'foo' => 'foobar',
-		]);
-
-		$this->assertSame([
-			'foo' => 'foobar',
-		], $panel->content());
 	}
 
 	public function testDragTextFromCallbackMarkdown(): void
@@ -202,7 +169,7 @@ class ModelTest extends TestCase
 		new App();
 	}
 
-	public function testDropdown(): void
+	public function testDropdownOption(): void
 	{
 		$model  = new CustomPanelModel(new ModelSite());
 		$option = $model->dropdownOption();
@@ -445,7 +412,6 @@ class ModelTest extends TestCase
 		$data = $panel->pickerData();
 
 		$this->assertSame([
-			'id' => null,
 			'image' => [
 				'back' => 'pattern',
 				'color' => 'gray-500',
@@ -453,54 +419,18 @@ class ModelTest extends TestCase
 				'icon' => 'page',
 			],
 			'info' => '',
+			'layout' => 'list',
+			'text' => '',
+			'id' => null,
 			'link' => '/site',
 			'permissions' => [
 				'changeTitle' => false,
 				'update' => false,
 			],
-			'text' => '',
 			'uuid' => 'site://',
 			'sortable' => true,
 			'url' => '/custom',
 		], $data);
-	}
-
-	public function testProps(): void
-	{
-		$site = [
-			'blueprint' => [
-				'name'    => 'site',
-				'columns' => [
-					[
-						'width'    => '1/3',
-						'sections' => []
-					],
-					[
-						'width'    => '2/3',
-						'sections' => []
-					]
-				]
-			]
-		];
-
-		$app = $this->app->clone();
-		$app->impersonate('kirby');
-
-		$props = $this->panel($site)->props();
-		$this->assertSame('main', $props['tabs'][0]['name']);
-		$this->assertSame('main', $props['tab']['name']);
-		$this->assertTrue($props['permissions']['update']);
-
-		$app = $this->app->clone([
-			'request' => [
-				'query' => 'tab=foo'
-			]
-		]);
-		$app->impersonate('kirby');
-
-		$props = $this->panel($site)->props();
-		$this->assertSame('foo', get('tab'));
-		$this->assertSame('main', $props['tab']['name']);
 	}
 
 	public function testToLink(): void
@@ -525,28 +455,5 @@ class ModelTest extends TestCase
 	{
 		$this->assertSame('/panel/custom', $this->panel()->url());
 		$this->assertSame('/custom', $this->panel()->url(true));
-	}
-
-	public function testVersions(): void
-	{
-		$panel = $this->panel([]);
-
-		$panel->model()->version('latest')->save($latest = [
-			'foo' => 'bar'
-		]);
-
-		$versions = $panel->versions();
-
-		$this->assertSame($latest, $versions['latest']);
-		$this->assertSame($latest, $versions['changes']);
-
-		$panel->model()->version('changes')->save($changes = [
-			'foo' => 'baz'
-		]);
-
-		$versions = $panel->versions();
-
-		$this->assertSame($latest, $versions['latest']);
-		$this->assertSame($changes, $versions['changes']);
 	}
 }

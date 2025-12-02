@@ -6,16 +6,15 @@ use Kirby\Cms\App;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(\Kirby\Panel\Site::class)]
+#[CoversClass(Site::class)]
 #[CoversClass(Model::class)]
 class SiteTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Site';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Site';
 
 	public function setUp(): void
 	{
@@ -37,15 +36,6 @@ class SiteTest extends TestCase
 	{
 		$site = new ModelSite($props);
 		return new Site($site);
-	}
-
-	public function testButtons(): void
-	{
-		$this->assertSame([
-			'k-open-view-button',
-			'k-preview-view-button',
-			'k-languages-view-button',
-		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	public function testDropdownOption(): void
@@ -124,23 +114,6 @@ class SiteTest extends TestCase
 		$this->assertSame('site', $this->panel()->path());
 	}
 
-	public function testProps(): void
-	{
-		$props = $this->panel()->props();
-
-		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('previewUrl', $props['model']);
-		$this->assertArrayHasKey('title', $props['model']);
-
-		// inherited props
-		$this->assertArrayHasKey('blueprint', $props);
-		$this->assertArrayHasKey('lock', $props);
-		$this->assertArrayHasKey('permissions', $props);
-		$this->assertArrayHasKey('tab', $props);
-		$this->assertArrayHasKey('tabs', $props);
-		$this->assertArrayHasKey('versions', $props);
-	}
-
 	public function testPreviewPermissionsWithoutHomePage(): void
 	{
 		$props = $this->panel()->props();
@@ -169,12 +142,5 @@ class SiteTest extends TestCase
 		$props = $this->app->site()->panel()->props();
 
 		$this->assertTrue($props['permissions']['preview']);
-	}
-
-	public function testView(): void
-	{
-		$view = $this->panel()->view();
-		$this->assertArrayHasKey('props', $view);
-		$this->assertSame('k-site-view', $view['component']);
 	}
 }
