@@ -255,6 +255,7 @@ return array(
     'Kirby\\Image\\Dimensions' => $baseDir . '/src/Image/Dimensions.php',
     'Kirby\\Image\\Exif' => $baseDir . '/src/Image/Exif.php',
     'Kirby\\Image\\Focus' => $baseDir . '/src/Image/Focus.php',
+    'Kirby\\Image\\Gravity' => $baseDir . '/src/Image/Gravity.php',
     'Kirby\\Image\\Image' => $baseDir . '/src/Image/Image.php',
     'Kirby\\Image\\Location' => $baseDir . '/src/Image/Location.php',
     'Kirby\\Image\\QrCode' => $baseDir . '/src/Image/QrCode.php',
