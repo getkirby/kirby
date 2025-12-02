@@ -4,10 +4,13 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class PagesFieldTest extends TestCase
+#[CoversClass(PagePickerField::class)]
+#[CoversClass(ModelPickerField::class)]
+class PagePickerFieldTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PagesField';
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerField';
 
 	public function setUp(): void
 	{
@@ -48,14 +51,41 @@ class PagesFieldTest extends TestCase
 		$field = $this->field('pages', [
 			'model' => $this->model()
 		]);
+		$props = $field->props();
 
-		$this->assertSame('pages', $field->type());
-		$this->assertSame('pages', $field->name());
-		$this->assertSame([], $field->value());
-		$this->assertSame([], $field->default());
-		$this->assertNull($field->max());
-		$this->assertTrue($field->multiple());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'default'     => [],
+			'disabled'    => false,
+			'empty'       => null,
+			'help'        => null,
+			'hidden'      => false,
+			'image'       => null,
+			'info'        => null,
+			'label'       => 'Pages',
+			'layout'      => 'list',
+			'link'        => true,
+			'max'         => null,
+			'min'         => null,
+			'multiple'    => true,
+			'name'        => 'pages',
+			'query'       => null,
+			'required'    => false,
+			'saveable'    => true,
+			'search'      => true,
+			'size'        => 'auto',
+			'store'       => 'uuid',
+			'subpages'    => true,
+			'text'        => null,
+			'translate'   => true,
+			'type'        => 'pages',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testValue(): void
@@ -93,7 +123,7 @@ class PagesFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertSame(3, $field->min());
-		$this->assertTrue($field->required());
+		$this->assertTrue($field->isRequired());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 

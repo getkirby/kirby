@@ -7,15 +7,10 @@ trait After
 	/**
 	 * Optional text that will be shown after the input
 	 */
-	protected string|null $after;
+	protected array|string|null $after;
 
 	public function after(): string|null
 	{
-		return $this->stringTemplate($this->after);
-	}
-
-	protected function setAfter(array|string|null $after = null): void
-	{
-		$this->after = $this->i18n($after);
+		return $this->stringTemplateI18n($this->after);
 	}
 }

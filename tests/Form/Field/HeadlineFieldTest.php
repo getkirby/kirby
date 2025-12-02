@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(HeadlineField::class)]
 class HeadlineFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
@@ -11,7 +14,8 @@ class HeadlineFieldTest extends TestCase
 		$this->assertSame('headline', $field->type());
 		$this->assertSame('headline', $field->name());
 		$this->assertNull($field->value());
-		$this->assertNull($field->label());
+		$this->assertSame('Headline', $field->label());
+		$this->assertFalse($field->hasValue());
 		$this->assertFalse($field->save());
 	}
 }

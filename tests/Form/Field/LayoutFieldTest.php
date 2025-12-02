@@ -4,9 +4,100 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Layouts;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(LayoutField::class)]
 class LayoutFieldTest extends TestCase
 {
+	public function testApi(): void
+	{
+		$field = $this->field('layout');
+
+		$routes = $field->api();
+
+		$this->assertIsArray($routes);
+		$this->assertCount(7, $routes);
+	}
+
+	public function testApiRouteCreate(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'body' => [
+					'columns' => ['1/2', '1/2'],
+					'attrs' => [
+						'class' => 'test'
+					]
+				]
+			]
+		]);
+
+		// we need to impersonate Kirby to get the correct form
+		// without disabled fields for permission reasons
+		$this->app->impersonate('kirby');
+
+		$field = $this->field('layout', [
+			'settings' => [
+				'fields' => [
+					'class' => [
+						'type' => 'text',
+					]
+				]
+			]
+		]);
+
+		$route = $field->api()[4];
+
+		$response = $route['action']();
+
+		$this->assertSame('test', $response['attrs']['class']);
+		$this->assertSame('1/2', $response['columns'][0]['width']);
+		$this->assertSame('1/2', $response['columns'][1]['width']);
+		$this->assertSame([], $response['columns'][0]['blocks']);
+		$this->assertSame([], $response['columns'][1]['blocks']);
+	}
+
+	public function testApiRoutePaste(): void
+	{
+		$value = [
+			[
+				'columns' => [
+					[
+						'blocks' => [
+							[
+								'type'    => 'heading',
+								'content' => [
+									'text' => 'A nice block',
+								]
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'json' => json_encode($value)
+				]
+			]
+		]);
+
+		$field = $this->field('layout');
+		$route = $field->api()[5];
+
+		$response = $route['action']();
+
+		$this->assertCount(1, $response);
+		$this->assertArrayHasKey('id', $response[0]);
+		$this->assertArrayHasKey('columns', $response[0]);
+		$this->assertIsArray($response[0]['columns']);
+		$this->assertArrayHasKey('id', $response[0]['columns'][0]);
+		$this->assertArrayHasKey('blocks', $response[0]['columns'][0]);
+		$this->assertArrayHasKey('id', $response[0]['columns'][0]['blocks'][0]);
+	}
+
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('layout', []);
@@ -100,16 +191,12 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('blocks', $props['group']);
 		$this->assertNull($props['max']);
 		$this->assertNull($props['min']);
-		$this->assertNull($props['after']);
 		$this->assertFalse($props['autofocus']);
-		$this->assertNull($props['before']);
 		$this->assertNull($props['default']);
 		$this->assertFalse($props['disabled']);
 		$this->assertNull($props['help']);
-		$this->assertNull($props['icon']);
 		$this->assertSame('Layout', $props['label']);
 		$this->assertSame('layout', $props['name']);
-		$this->assertNull($props['placeholder']);
 		$this->assertFalse($props['required']);
 		$this->assertTrue($props['saveable']);
 		$this->assertTrue($props['translate']);
@@ -144,16 +231,6 @@ class LayoutFieldTest extends TestCase
 		$field->reset();
 
 		$this->assertSame([], $field->toFormValue());
-	}
-
-	public function testRoutes(): void
-	{
-		$field = $this->field('layout');
-
-		$routes = $field->routes();
-
-		$this->assertIsArray($routes);
-		$this->assertCount(7, $routes);
 	}
 
 	public function testToStoredValue(): void
@@ -419,84 +496,5 @@ class LayoutFieldTest extends TestCase
 		// block content
 		$this->assertNotEmpty($pasted[0]['id']);
 		$this->assertSame($original[0]['columns'][0]['blocks'][0]['content'], $pasted[0]['columns'][0]['blocks'][0]['content']);
-	}
-
-	public function testRouteCreate(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'body' => [
-					'columns' => ['1/2', '1/2'],
-					'attrs' => [
-						'class' => 'test'
-					]
-				]
-			]
-		]);
-
-		// we need to impersonate Kirby to get the correct form
-		// without disabled fields for permission reasons
-		$this->app->impersonate('kirby');
-
-		$field = $this->field('layout', [
-			'settings' => [
-				'fields' => [
-					'class' => [
-						'type' => 'text',
-					]
-				]
-			]
-		]);
-
-		$route = $field->routes()[4];
-
-		$response = $route['action']();
-
-		$this->assertSame('test', $response['attrs']['class']);
-		$this->assertSame('1/2', $response['columns'][0]['width']);
-		$this->assertSame('1/2', $response['columns'][1]['width']);
-		$this->assertSame([], $response['columns'][0]['blocks']);
-		$this->assertSame([], $response['columns'][1]['blocks']);
-	}
-
-	public function testRoutePaste(): void
-	{
-		$value = [
-			[
-				'columns' => [
-					[
-						'blocks' => [
-							[
-								'type'    => 'heading',
-								'content' => [
-									'text' => 'A nice block',
-								]
-							]
-						]
-					]
-				]
-			]
-		];
-
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'json' => json_encode($value)
-				]
-			]
-		]);
-
-		$field = $this->field('layout');
-		$route = $field->routes()[5];
-
-		$response = $route['action']();
-
-		$this->assertCount(1, $response);
-		$this->assertArrayHasKey('id', $response[0]);
-		$this->assertArrayHasKey('columns', $response[0]);
-		$this->assertIsArray($response[0]['columns']);
-		$this->assertArrayHasKey('id', $response[0]['columns'][0]);
-		$this->assertArrayHasKey('blocks', $response[0]['columns'][0]);
-		$this->assertArrayHasKey('id', $response[0]['columns'][0]['blocks'][0]);
 	}
 }

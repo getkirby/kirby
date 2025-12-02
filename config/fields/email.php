@@ -3,7 +3,7 @@
 use Kirby\Toolkit\I18n;
 
 return [
-	'extends' => 'text',
+	'extends' => 'legacy-text',
 	'props' => [
 		/**
 		 * Unset inherited props

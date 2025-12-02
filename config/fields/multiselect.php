@@ -4,7 +4,7 @@ use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 return [
-	'extends' => 'tags',
+	'extends' => 'legacy-tags',
 	'props' => [
 		/**
 		 * If set to `all`, any type of input is accepted. If set to `options` only the predefined options are accepted as input.

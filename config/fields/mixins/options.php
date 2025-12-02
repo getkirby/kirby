@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Field\FieldOptions;
+use Kirby\Form\FieldOptions;
 
 return [
 	'props' => [

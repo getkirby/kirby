@@ -30,6 +30,7 @@
 		<exclude>
 			<directory suffix=".php">./config/areas</directory>
 			<directory suffix=".php">./config/blocks</directory>
+			<directory suffix=".php">./config/fields</directory>
 			<directory suffix=".php">./config/templates</directory>
 			<file>./config/api/routes/changes.php</file>
 			<file>./config/aliases.php</file>

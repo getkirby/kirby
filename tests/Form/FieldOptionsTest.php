@@ -1,11 +1,12 @@
 <?php
 
-namespace Kirby\Field;
+namespace Kirby\Form;
 
 use Kirby\Cms\Page;
 use Kirby\Option\Options;
 use Kirby\Option\OptionsApi;
 use Kirby\Option\OptionsQuery;
+use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FieldOptions::class)]
