@@ -50,9 +50,18 @@ class ViewResponse extends JsonResponse
 	/**
 	 * Returns the full state data object
 	 */
-	public function data(): array
+	public function data(bool $globals = false): array
 	{
-		return $this->state()->toArray(globals: false);
+		$data = $this->state()->toArray(globals: $globals);
+
+		// make sure that the context is added
+		// correctly to the view object
+		$data['view']['code']     ??= $this->code();
+		$data['view']['path']     ??= $this->path();
+		$data['view']['query']    ??= $this->query();
+		$data['view']['referrer'] ??= $this->referrer();
+
+		return $data;
 	}
 
 	/**
@@ -91,7 +100,7 @@ class ViewResponse extends JsonResponse
 	{
 		return new State(
 			area: $this->area,
-			view: $this->view,
+			view: $this->view(),
 		);
 	}
 

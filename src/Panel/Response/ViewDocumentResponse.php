@@ -70,9 +70,9 @@ class ViewDocumentResponse extends ViewResponse
 	/**
 	 * Returns the full state data object
 	 */
-	public function data(): array
+	public function data(bool $globals = true): array
 	{
-		return $this->state()->toArray(globals: true);
+		return parent::data($globals);
 	}
 
 	public function headers(): array
