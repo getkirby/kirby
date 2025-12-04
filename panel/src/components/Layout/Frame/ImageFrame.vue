@@ -11,14 +11,29 @@
 			:alt="alt ?? ''"
 			:src="src"
 			:srcset="srcset"
-			:sizes="sizes"
+			:sizes="size + 'px'"
+			loading="lazy"
 			@dragstart.prevent
 		/>
+		<span>{{ size }}</span>
 	</k-frame>
 </template>
 
 <script>
 import { props as FrameProps } from "./Frame.vue";
+
+const observer = new ResizeObserver((entries) => {
+	for (const index in entries) {
+		const item = entries[index];
+		item.target.dispatchEvent(
+			new CustomEvent("resize", {
+				detail: {
+					width: Math.round(item.contentRect.width)
+				}
+			})
+		);
+	}
+});
 
 export const props = {
 	mixins: [FrameProps],
@@ -50,7 +65,35 @@ export const props = {
  */
 export default {
 	mixins: [props],
-	inheritAttrs: false
+	inheritAttrs: false,
+	data() {
+		return {
+			size: 0
+		};
+	},
+	mounted() {
+		observer.observe(this.$el);
+
+		const sizes = [200, 400, 800, 1200, 2400];
+		this.width = 0;
+		this.size = 0;
+
+		this.$el.addEventListener("resize", (e) => {
+			// find the best size according to e.detail.?width
+			const width = e.detail?.width ?? 0;
+
+			if (width === this.width) {
+				return;
+			}
+
+			this.width = width;
+
+			const bestSize =
+				sizes.find((size) => size >= width) ?? sizes[sizes.length - 1];
+
+			this.size = bestSize;
+		});
+	}
 };
 </script>
 
@@ -64,5 +107,9 @@ export default {
 .k-image[data-back="white"] {
 	--back: var(--color-white);
 	color: var(--color-gray-900);
+}
+.k-image-frame span {
+	position: absolute;
+	inset: 0;
 }
 </style>
