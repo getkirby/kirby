@@ -74,21 +74,6 @@ export default (panel = {}) => {
 				return this.fatal(error);
 			}
 
-			if (error instanceof RequestError) {
-				// get the broken element in the response json that
-				// has an error message. This can be deprecated later
-				// when the server always sends back a simple error
-				// response without nesting it in dropdown, dialog, etc.
-				const broken = Object.values(error.response.json).find(
-					(element) => typeof element?.error === "string"
-				);
-
-				if (broken) {
-					error.message = broken.error;
-					error.details = broken.details;
-				}
-			}
-
 			// convert strings to full error objects
 			if (typeof error === "string") {
 				error = new Error(error);
