@@ -92,7 +92,7 @@ export default (panel = {}) => {
 				panel.dialog.open({
 					component:
 						error instanceof RequestError
-							? "k-request-error-dialog"
+							? error.component()
 							: "k-error-dialog",
 					props: {
 						instance: error,

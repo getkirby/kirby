@@ -12,6 +12,18 @@ export default class RequestError extends Error {
 		this.details = response.json.details;
 	}
 
+	component() {
+		const components = {
+			"Kirby\\Exception\\ValidationException": "k-validation-error-dialog"
+		};
+
+		return components[this.exception()] ?? "k-request-error-dialog";
+	}
+
+	exception() {
+		return this.state().exception;
+	}
+
 	state() {
 		return this.response.json;
 	}
