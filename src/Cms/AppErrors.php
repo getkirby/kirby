@@ -150,10 +150,7 @@ trait AppErrors
 					'code'      => $code,
 					'message'   => $exception->getMessage(),
 					'details'   => $details,
-					'file'      => F::relativepath(
-						$exception->getFile(),
-						$this->environment()->get('DOCUMENT_ROOT', '')
-					),
+					'file'      => $this->relativeRoot($exception->getFile()),
 					'line'      => $exception->getLine(),
 				], $httpCode);
 			} else {
@@ -170,6 +167,27 @@ trait AppErrors
 
 		$this->setWhoopsHandler($handler);
 		$this->whoops()->sendHttpCode(false);
+	}
+
+	/**
+	 * Replaces absolute file paths with placeholders such as
+	 * {kirby_folder}, {site_folder} or {index_folder} to avoid
+	 * exposing too many details about the filesystem
+	 */
+	protected function relativeRoot(string $file): string
+	{
+		$kirbyRoot = $this->root('kirby');
+		$siteRoot  = $this->root('site');
+		$indexRoot = $this->root('index');
+
+		return match (true) {
+			str_starts_with($file, $kirbyRoot) === true =>
+				'{kirby_folder}/' . ltrim(F::relativepath($file, $kirbyRoot), '/'),
+			str_starts_with($file, $siteRoot) === true =>
+				'{site_folder}/' . ltrim(F::relativepath($file, $siteRoot), '/'),
+			default =>
+				'{index_folder}/' . ltrim(F::relativepath($file, $indexRoot), '/'),
+		};
 	}
 
 	/**
