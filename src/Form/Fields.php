@@ -6,8 +6,8 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\ValidationException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
@@ -427,7 +427,7 @@ class Fields extends Collection
 		$errors = $this->errors();
 
 		if ($errors !==	[]) {
-			throw new InvalidArgumentException(
+			throw new ValidationException(
 				fallback: 'Invalid form with errors',
 				details: $errors
 			);
