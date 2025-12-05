@@ -17,52 +17,65 @@
 					<div>
 						<dt>URL</dt>
 						<dd>
-							<k-token type="dark">{{ instance.request.url }}</k-token>
+							<k-code-token type="black">{{
+								instance.request.url
+							}}</k-code-token>
 						</dd>
 					</div>
 					<div>
 						<dt>Method</dt>
 						<dd>
-							<k-token type="dark">{{ instance.request.method }}</k-token>
+							<k-code-token type="black">{{
+								instance.request.method
+							}}</k-code-token>
 						</dd>
 					</div>
 					<div>
 						<dt>Code</dt>
 						<dd>
-							<k-token type="purple">{{ instance.response.status }}</k-token>
+							<k-code-token type="blue">{{
+								instance.response.status
+							}}</k-code-token>
 						</dd>
 					</div>
 					<div>
 						<dt>Type</dt>
 						<dd class="k-text">
-							<k-token type="object">{{ details.exception }}</k-token>
+							<k-code-token type="object">{{ details.exception }}</k-code-token>
 						</dd>
 					</div>
 					<div v-if="details.file">
 						<dt>File</dt>
 						<dd>
-							<k-token type="dark">{{ details.file }}</k-token>
+							<k-code-token type="black">{{ details.file }}</k-code-token>
 						</dd>
 					</div>
 					<div v-if="details.line">
 						<dt>Line</dt>
 						<dd>
-							<k-token type="blue">{{ details.line }}</k-token>
+							<k-code-token type="purple">{{ details.line }}</k-code-token>
 						</dd>
 					</div>
 				</dl>
 			</k-stack>
 
-			<k-stack v-if="details.trace" style="gap: var(--spacing-3)">
+			<k-stack
+				v-if="$panel.debug && details.trace"
+				style="gap: var(--spacing-3)"
+			>
 				<k-headline>Trace</k-headline>
 
 				<div class="k-trace">
 					<ol>
 						<li v-for="(item, index) in details.trace" :key="index">
-							<a :href="`cursor://file/${item.file}:${item.line}`">
+							<a
+								:href="
+									item.file ? `cursor://file/${item.file}:${item.line}` : null
+								"
+							>
 								<p v-if="item.file">
 									<span style="color: var(--color-gray-200)">{{
-										item.fileshort
+										item.relativeRoot
 									}}</span>
 									<span>:</span>
 									<span style="color: var(--color-purple-400)">{{
