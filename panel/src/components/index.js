@@ -2,6 +2,7 @@ import Collection from "@/components/Collection/index.js";
 import Dialogs from "@/components/Dialogs/index.js";
 import Drawers from "@/components/Drawers/index.js";
 import Dropdowns from "@/components/Dropdowns/index.js";
+import Errors from "@/components/Errors/index.js";
 import Forms from "@/components/Forms/index.js";
 import Lab from "@/components/Lab/index.js";
 import Layout from "@/components/Layout/index.js";
@@ -19,6 +20,7 @@ export default {
 		app.use(Dialogs);
 		app.use(Drawers);
 		app.use(Dropdowns);
+		app.use(Errors);
 		app.use(Forms);
 		app.use(Lab);
 		app.use(Layout);
