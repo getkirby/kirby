@@ -49,11 +49,40 @@
 				</k-button>
 			</k-button-group>
 		</k-lab-example>
-		<k-lab-example label="Backend issues">
-			<k-text>
-				The backend route throws a Kirby exception with details (we use this for
-				form errors for example)
-			</k-text>
+		<k-lab-example label="Form validation exception">
+			<k-text>The backend route throws a form validation exception</k-text>
+
+			<k-code language="php">{{
+				`throw new ValidationException('The form has issues', details: []);`
+			}}</k-code>
+			<br />
+			<br />
+			<k-button-group>
+				<k-button
+					variant="filled"
+					@click="$panel.view.open('/lab/errors/form')"
+				>
+					View
+				</k-button>
+				<k-button
+					variant="filled"
+					@click="$panel.dialog.open('/lab/errors/form')"
+				>
+					Dialog
+				</k-button>
+				<k-button
+					variant="filled"
+					@click="$panel.drawer.open('/lab/errors/form')"
+				>
+					Drawer
+				</k-button>
+				<k-button variant="filled" @click="request('/lab/errors/form')">
+					Request
+				</k-button>
+			</k-button-group>
+		</k-lab-example>
+		<k-lab-example label="Backend issues with details">
+			<k-text> The backend route throws a Kirby exception with details</k-text>
 
 			<k-code language="php">{{
 				`throw new Kirby\\Exception\\InvalidArgumentException(
@@ -80,23 +109,23 @@
 			<k-button-group>
 				<k-button
 					variant="filled"
-					@click="$panel.view.open('/lab/errors/form')"
+					@click="$panel.view.open('/lab/errors/details')"
 				>
 					View
 				</k-button>
 				<k-button
 					variant="filled"
-					@click="$panel.dialog.open('/lab/errors/form')"
+					@click="$panel.dialog.open('/lab/errors/details')"
 				>
 					Dialog
 				</k-button>
 				<k-button
 					variant="filled"
-					@click="$panel.drawer.open('/lab/errors/form')"
+					@click="$panel.drawer.open('/lab/errors/details')"
 				>
 					Drawer
 				</k-button>
-				<k-button variant="filled" @click="request('/lab/errors/form')">
+				<k-button variant="filled" @click="request('/lab/errors/details')">
 					Request
 				</k-button>
 			</k-button-group>
