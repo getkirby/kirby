@@ -69,7 +69,7 @@ class Responder implements Stringable
 	 * Tracks headers that depend on the request
 	 * and must not be persisted in the cache
 	 */
-	protected array $requestDependentHeaders = [];
+	protected array $volatileHeaders = [];
 
 	/**
 	 * Creates and sends the response
@@ -236,7 +236,7 @@ class Responder implements Stringable
 	 */
 	public function fromArray(array $response): void
 	{
-		$this->requestDependentHeaders = [];
+		$this->volatileHeaders = [];
 		$this->body($response['body'] ?? null);
 		$this->cache($response['cache'] ?? null);
 		$this->code($response['code'] ?? null);
@@ -334,7 +334,7 @@ class Responder implements Stringable
 		}
 
 		$this->headers = $headers;
-		$this->requestDependentHeaders = [];
+		$this->volatileHeaders = [];
 		return $this;
 	}
 
@@ -412,11 +412,11 @@ class Responder implements Stringable
 	 */
 	public function cacheHeaders(array $headers): array
 	{
-		if ($this->requestDependentHeaders === []) {
+		if ($this->volatileHeaders === []) {
 			return $headers;
 		}
 
-		foreach ($this->requestDependentHeaders as $name => $values) {
+		foreach ($this->volatileHeaders as $name => $values) {
 			if ($name === 'Vary' && is_array($values) === true) {
 				if (isset($headers['Vary']) === false) {
 					continue;
@@ -494,11 +494,11 @@ class Responder implements Stringable
 	public function markRequestDependentHeader(string $name, array|null $values = null): void
 	{
 		if ($values === null) {
-			$this->requestDependentHeaders[$name] = null;
+			$this->volatileHeaders[$name] = null;
 			return;
 		}
 
-		if (array_key_exists($name, $this->requestDependentHeaders) === true && $this->requestDependentHeaders[$name] === null) {
+		if (array_key_exists($name, $this->volatileHeaders) === true && $this->volatileHeaders[$name] === null) {
 			return;
 		}
 
@@ -509,8 +509,8 @@ class Responder implements Stringable
 			return;
 		}
 
-		$existing = $this->requestDependentHeaders[$name] ?? [];
-		$this->requestDependentHeaders[$name] = array_values(array_unique([...$existing, ...$values]));
+		$existing = $this->volatileHeaders[$name] ?? [];
+		$this->volatileHeaders[$name] = array_values(array_unique([...$existing, ...$values]));
 	}
 
 	/**
