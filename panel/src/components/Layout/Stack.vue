@@ -1,5 +1,13 @@
 <template>
-	<div class="k-stack" :style="{ flexDirection: direction, gap }">
+	<div
+		class="k-stack"
+		:style="{
+			alignItems: align,
+			flexDirection: direction,
+			gap: gap,
+			justifyContent: justify
+		}"
+	>
 		<slot />
 	</div>
 </template>
@@ -7,8 +15,10 @@
 <script>
 export default {
 	props: {
+		align: String,
 		direction: String,
-		gap: String
+		gap: String,
+		justify: String
 	}
 };
 </script>
