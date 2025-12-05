@@ -173,13 +173,12 @@ trait AppErrors
 
 	protected function trace(Throwable $exception): array
 	{
-		$trace = $exception->getTrace();
-		$trace = array_map(function ($item) {
-
-			$root = $this->root('kirby');
-
-			if (isset($item['file'])) {
+		$editor = $this->option('editor', false);
+		$trace  = $exception->getTrace();
+		$trace  = array_map(function ($item) use ($editor) {
+			if (isset($item['file']) === true) {
 				$item['relativeRoot'] = $this->relativeRoot($item['file']);
+				$item['editor']       = Url::editor($editor, $item['file'], $item['line']);
 			}
 
 			$item['function'] = $this->relativeRoot($item['function']);
