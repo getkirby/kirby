@@ -3,6 +3,14 @@
 		<k-lab-example label="Default">
 			<k-table :columns="columns" :options="options" :rows="rows"></k-table>
 		</k-lab-example>
+		<k-lab-example label="Responsive: false">
+			<k-table
+				:columns="columns"
+				:options="options"
+				:responsive="false"
+				:rows="rows"
+			></k-table>
+		</k-lab-example>
 		<k-lab-example label="Sortable">
 			<k-table
 				:columns="columns"
@@ -28,7 +36,8 @@ export default {
 		columns() {
 			return {
 				title: {
-					label: "Title"
+					label: "Title",
+					mobile: true
 				},
 				date: {
 					label: "Date"
