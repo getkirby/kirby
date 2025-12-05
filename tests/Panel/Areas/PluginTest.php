@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Areas;
 
 use Kirby\Cms\App;
+use Kirby\Exception\NotFoundException;
 
 class PluginTest extends AreaTestCase
 {
