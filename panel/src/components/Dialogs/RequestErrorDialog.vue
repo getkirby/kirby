@@ -12,7 +12,16 @@
 			<k-box icon="alert" theme="negative">{{ instance.message }}</k-box>
 
 			<k-stack gap="var(--spacing-3)">
-				<k-headline>Error</k-headline>
+				<k-stack direction="row" justify="space-between" align="center">
+					<k-headline>Error</k-headline>
+					<k-button
+						v-if="json.editor"
+						:link="json.editor"
+						icon="open"
+						size="xs"
+						variant="filled"
+					/>
+				</k-stack>
 				<k-definitions>
 					<k-definition term="URL">
 						<k-code-token type="black">
@@ -71,7 +80,7 @@ export default {
 	emits: ["cancel"],
 	computed: {
 		json() {
-			return this.instance.response.json;
+			return this.instance.state();
 		},
 		details() {
 			return this.$helper.array.fromObject(this.json.details);
@@ -81,10 +90,10 @@ export default {
 </script>
 
 <style>
-.k-definitions {
+.k-request-error-dialog .k-definitions {
 	font-family: var(--font-mono);
 }
-.k-definitions dt {
+.k-request-error-dialog .k-definitions dt {
 	font-size: var(--text-xs);
 }
 </style>
