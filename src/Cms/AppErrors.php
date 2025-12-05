@@ -152,13 +152,15 @@ trait AppErrors
 					'details'   => $details,
 					'file'      => $this->relativeRoot($exception->getFile()),
 					'line'      => $exception->getLine(),
+					'trace'     => $this->trace($exception)
 				], $httpCode);
 			} else {
 				echo Response::json([
-					'status'  => 'error',
-					'code'    => $code,
-					'details' => $details,
-					'message' => I18n::translate('error.unexpected'),
+					'status'    => 'error',
+					'exception' => $exception::class,
+					'code'      => $code,
+					'details'   => $details,
+					'message'   => I18n::translate('error.unexpected'),
 				], $httpCode);
 			}
 
@@ -167,6 +169,27 @@ trait AppErrors
 
 		$this->setWhoopsHandler($handler);
 		$this->whoops()->sendHttpCode(false);
+	}
+
+	protected function trace(Throwable $exception): array
+	{
+		$trace = $exception->getTrace();
+		$trace = array_map(function ($item) {
+
+			$root = dirname($this->root('kirby'));
+
+			if (isset($item['file'])) {
+				$item['filename'] = basename($item['file']);
+				$item['fileshort'] = F::relativepath($item['file'], $root);
+			}
+
+			$item['function'] = str_replace($root, '', $item['function']);
+
+		 	unset($item['args']);
+			return $item;
+		}, $trace);
+
+		return $trace;
 	}
 
 	/**
