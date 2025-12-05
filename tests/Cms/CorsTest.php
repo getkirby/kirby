@@ -3,24 +3,14 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Cors::class)]
 class CorsTest extends TestCase
 {
-	public function setUp(): void
-	{
-		$this->kirby([
-			'urls' => [
-				'index' => 'https://getkirby.test'
-			]
-		]);
-	}
-
-	public function tearDown(): void
-	{
-		unset($_COOKIE['foo']);
-	}
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Cors';
 
 	public function testDisabled(): void
 	{
@@ -527,6 +517,8 @@ class CorsTest extends TestCase
 
 		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('no-store, private', $headers['Cache-Control']);
+
+		unset($_COOKIE['foo']);
 	}
 
 	public function testHeadersWithVaryMerging(): void
@@ -583,5 +575,59 @@ class CorsTest extends TestCase
 		$headers = Cors::headers();
 
 		$this->assertSame('*', $headers['Access-Control-Allow-Origin']);
+	}
+
+	public function testPageCacheWithSpecificOrigins(): void
+	{
+		Dir::make(static::TMP, true);
+
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'cors' => [
+					'allowOrigin' => ['https://app1.com', 'https://app2.com']
+				],
+				'cache.pages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test'
+					]
+				]
+			],
+			'templates' => [
+				'test' => static::TMP . '/test.php'
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app1.com'
+			]
+		]);
+
+		F::write(static::TMP . '/test.php', 'CORS test');
+
+		$cache = $app->cache('pages');
+		$page = $app->page('test');
+
+		$html1 = $page->render();
+		$this->assertSame('CORS test', $html1);
+		$this->assertSame('https://app1.com', $app->response()->headers()['Access-Control-Allow-Origin']);
+		$this->assertNotNull($cache->get('test.latest.html'));
+
+		// different origin
+		$app = $app->clone([
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app2.com'
+			]
+		]);
+
+		$html2 = $app->page('test')->render();
+		$this->assertSame($html1, $html2);
+		$this->assertSame('https://app2.com', $app->response()->headers()['Access-Control-Allow-Origin']);
+
+		Dir::remove(static::TMP);
 	}
 }

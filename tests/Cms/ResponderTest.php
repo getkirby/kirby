@@ -228,6 +228,163 @@ class ResponderTest extends TestCase
 		$this->assertSame(['Cache-Control' => 'private'], $responder->headers());
 	}
 
+	public function testCacheHeadersRemovesCorsEntries(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'allowOrigin'  => ['https://app1.com', 'https://app2.com'],
+					'allowHeaders' => true
+				]
+			],
+			'server' => [
+				'HTTP_ORIGIN'                        => 'https://app1.com',
+				'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'Accept'
+			]
+		]);
+
+		$responder = new Responder();
+		$responder->usesAuth(true);
+		$responder->usesCookie('session');
+
+		$headers   = $responder->toArray()['headers'];
+		$cacheable = $responder->cacheHeaders($headers);
+
+		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $cacheable);
+		$this->assertArrayNotHasKey('Access-Control-Allow-Headers', $cacheable);
+		$this->assertSame('Authorization, Cookie', $cacheable['Vary']);
+	}
+
+	public function testCacheHeadersRemovesAllVaryWhenEmpty(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'allowOrigin' => ['https://app1.com']
+				]
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app1.com'
+			]
+		]);
+
+		$responder = new Responder();
+		$headers   = $responder->toArray()['headers'];
+		$cacheable = $responder->cacheHeaders($headers);
+
+		$this->assertArrayNotHasKey('Vary', $cacheable);
+		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $cacheable);
+	}
+
+	public function testCacheHeadersWithNoVaryHeader(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => true
+			]
+		]);
+
+		$responder = new Responder();
+		$headers   = $responder->toArray()['headers'];
+		$cacheable = $responder->cacheHeaders($headers);
+
+		$this->assertArrayNotHasKey('Vary', $cacheable);
+		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $cacheable);
+	}
+
+	public function testCacheHeadersPreservesCustomHeaders(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'allowOrigin' => ['https://app1.com']
+				]
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app1.com'
+			]
+		]);
+
+		$responder = new Responder();
+		$responder->header('X-Custom-Header', 'custom-value');
+		$responder->header('Cache-Control', 'public, max-age=3600');
+
+		$headers   = $responder->toArray()['headers'];
+		$cacheable = $responder->cacheHeaders($headers);
+
+		$this->assertSame('custom-value', $cacheable['X-Custom-Header']);
+		$this->assertSame('public, max-age=3600', $cacheable['Cache-Control']);
+		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $cacheable);
+	}
+
+	public function testCacheHeadersVaryNormalization(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'allowOrigin' => ['https://app1.com']
+				]
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app1.com'
+			]
+		]);
+
+		$responder = new Responder();
+		$responder->usesAuth(true);
+
+		$generatedHeaders = $responder->toArray()['headers'];
+
+		$headers = [
+			'Vary' => ' Authorization ,  Origin,  Accept-Encoding  ',
+			'Access-Control-Allow-Origin' => 'https://app1.com'
+		];
+
+		$cacheable = $responder->cacheHeaders($headers);
+
+		$this->assertSame('Authorization, Accept-Encoding', $cacheable['Vary']);
+	}
+
+	public function testRequestDependentHeadersResetOnFromArray(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => true
+			]
+		]);
+
+		$responder = new Responder();
+		$responder->headers();
+
+		$responder->fromArray([
+			'headers' => ['X-Custom' => 'value']
+		]);
+
+		$headers   = $responder->toArray()['headers'];
+		$cacheable = $responder->cacheHeaders($headers);
+
+		$this->assertSame(['X-Custom' => 'value'], $cacheable);
+	}
+
+	public function testRequestDependentHeadersResetOnHeadersSetter(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => true
+			]
+		]);
+
+		$responder = new Responder();
+		$responder->headers();
+
+		$responder->headers(['X-Custom' => 'value']);
+
+		$headers   = $responder->toArray()['headers'];
+		$cacheable = $responder->cacheHeaders($headers);
+
+		$this->assertSame(['X-Custom' => 'value'], $cacheable);
+	}
+
 	public function testIsPrivate(): void
 	{
 		$responder = new Responder();
