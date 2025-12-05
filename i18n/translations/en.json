@@ -146,6 +146,7 @@
 
 	"error.form.incomplete": "Please fix all form errors…",
 	"error.form.notSaved": "The form could not be saved",
+	"error.form.validation": "Form validation failed",
 
 	"error.language.code": "Please enter a valid code for the language",
 	"error.language.create.permission": "You are not allowed to create a language",
