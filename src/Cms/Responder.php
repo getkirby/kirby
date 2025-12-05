@@ -407,9 +407,15 @@ class Responder implements Stringable
 
 	/**
 	 * Strips request-dependent headers for safe caching
+	 *
+	 * @since 5.2.0
 	 */
 	public function cacheHeaders(array $headers): array
 	{
+		if ($this->requestDependentHeaders === []) {
+			return $headers;
+		}
+
 		foreach ($this->requestDependentHeaders as $name => $values) {
 			if ($name === 'Vary' && is_array($values) === true) {
 				if (isset($headers['Vary']) === false) {
@@ -482,8 +488,10 @@ class Responder implements Stringable
 	/**
 	 * Marks headers (or header parts) as request-dependent, so they
 	 * can be subtracted before caching a response snapshot
+	 *
+	 * @since 5.2.0
 	 */
-	protected function markRequestDependentHeader(string $name, array|null $values = null): void
+	public function markRequestDependentHeader(string $name, array|null $values = null): void
 	{
 		if ($values === null) {
 			$this->requestDependentHeaders[$name] = null;
