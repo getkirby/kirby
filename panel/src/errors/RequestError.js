@@ -15,6 +15,16 @@ export default class RequestError extends Error {
 	dialog() {
 		const state = this.state();
 
+		if (state.exception === "Kirby\\Exception\\FormValidationException") {
+			return {
+				component: "k-validation-error-dialog",
+				props: {
+					message: this.message,
+					fields: state.details
+				}
+			};
+		}
+
 		return {
 			component: "k-request-error-dialog",
 			props: {
