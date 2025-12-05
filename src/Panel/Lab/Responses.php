@@ -4,6 +4,7 @@ namespace Kirby\Panel\Lab;
 
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\ValidationException;
 use Kirby\Http\Response;
 
 /**
@@ -23,7 +24,25 @@ class Responses
 	public static function errorResponseByType(string|null $type = null): Response|Exception
 	{
 		return match ($type) {
-			'form' => new InvalidArgumentException(
+			'form' => new ValidationException(
+				fallback: 'The form has issues',
+				details: [
+					'a' => [
+						'label'   => 'Field A',
+						'message' => [
+							'required' => 'Please enter something',
+						],
+					],
+					'b' => [
+						'label'   => 'Field B',
+						'message' => [
+							'min' => 'The value must be min 10 characters',
+							'max' => 'The value must be max 20 characters',
+						],
+					],
+				]
+			),
+			'details' => new InvalidArgumentException(
 				fallback: 'Exception with details',
 				details: [
 					'a' => [
