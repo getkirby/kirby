@@ -381,7 +381,7 @@ class Form
 	/**
 	 * Validates the form and throws an exception if there are any errors
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws \Kirby\Exception\ValidationException
 	 */
 	public function validate(): void
 	{
