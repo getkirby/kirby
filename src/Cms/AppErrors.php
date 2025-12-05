@@ -176,14 +176,13 @@ trait AppErrors
 		$trace = $exception->getTrace();
 		$trace = array_map(function ($item) {
 
-			$root = dirname($this->root('kirby'));
+			$root = $this->root('kirby');
 
 			if (isset($item['file'])) {
-				$item['filename'] = basename($item['file']);
-				$item['fileshort'] = F::relativepath($item['file'], $root);
+				$item['relativeRoot'] = $this->relativeRoot($item['file']);
 			}
 
-			$item['function'] = str_replace($root, '', $item['function']);
+			$item['function'] = $this->relativeRoot($item['function']);
 
 		 	unset($item['args']);
 			return $item;
@@ -203,14 +202,7 @@ trait AppErrors
 		$siteRoot  = $this->root('site');
 		$indexRoot = $this->root('index');
 
-		return match (true) {
-			str_starts_with($file, $kirbyRoot) === true =>
-				'{kirby_folder}/' . ltrim(F::relativepath($file, $kirbyRoot), '/'),
-			str_starts_with($file, $siteRoot) === true =>
-				'{site_folder}/' . ltrim(F::relativepath($file, $siteRoot), '/'),
-			default =>
-				'{index_folder}/' . ltrim(F::relativepath($file, $indexRoot), '/'),
-		};
+		return str_replace([$kirbyRoot, $siteRoot, $indexRoot], ['{kirby_folder}', '{site_folder}', '{index_folder}'], $file);
 	}
 
 	/**
