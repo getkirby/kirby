@@ -49,9 +49,18 @@ class ViewResponse extends JsonResponse
 	/**
 	 * Returns the full state data object
 	 */
-	public function data(): array
+	public function data(bool $globals = false): array
 	{
-		return $this->state()->toArray(globals: false);
+		$data = $this->state()->toArray(globals: $globals);
+
+		// make sure that the context is added
+		// correctly to the view object
+		$data['view']['code']     ??= $this->code();
+		$data['view']['path']     ??= $this->path();
+		$data['view']['query']    ??= $this->query();
+		$data['view']['referrer'] ??= $this->referrer();
+
+		return $data;
 	}
 
 	/**
@@ -90,7 +99,7 @@ class ViewResponse extends JsonResponse
 	{
 		return new State(
 			area: $this->area,
-			view: $this->view,
+			view: $this->view(),
 		);
 	}
 
@@ -101,6 +110,13 @@ class ViewResponse extends JsonResponse
 	 */
 	public static function from(mixed $data): Response
 	{
+		// Create an error view for any route that throws a not found exception.
+		// This will make sure that users can navigate to such views and will get a
+		// useful response instead of the debugger or the fatal screen.
+		if ($data instanceof NotFoundException) {
+			return static::error($data->getMessage());
+		}
+
 		// handle redirects
 		if ($data instanceof Redirect) {
 			// if the redirect is a refresh, return a refresh response

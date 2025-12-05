@@ -4,6 +4,8 @@ namespace Kirby\Panel\Response;
 
 use Kirby\Data\Json;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Panel\Area;
 use Kirby\Panel\Redirect;
@@ -121,36 +123,26 @@ class JsonResponse extends Response
 
 		// interpret strings as errors
 		if (is_string($data) === true) {
-			return static::error($data, 500);
+			throw new Exception($data);
+		}
+
+		if ($data === []) {
+			throw new NotFoundException('The response is empty');
 		}
 
 		// interpret missing/empty data as not found
 		if ($data === null || $data === false) {
-			return static::error('The data could not be found', 404);
-		}
-
-		// handle Kirby exceptions
-		if ($data instanceof Exception) {
-			return static::error(
-				message: $data->getMessage(),
-				code:    $data->getHttpCode(),
-				details: $data->getDetails()
-			);
+			throw new NotFoundException('The data could not be found');
 		}
 
 		// handle Throwables
 		if ($data instanceof Throwable) {
-			return static::error($data->getMessage(), 500);
+			throw $data;
 		}
 
 		// only expect arrays from here on
 		if (is_array($data) === false) {
-			return static::error('Invalid response', 500);
-		}
-
-		// react to empty responses
-		if ($data === []) {
-			return static::error('The response is empty', 404);
+			throw new InvalidArgumentException('Invalid response');
 		}
 
 		return new static($data);

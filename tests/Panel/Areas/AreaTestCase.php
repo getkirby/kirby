@@ -5,6 +5,7 @@ namespace Kirby\Panel\Areas;
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\User;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\TestCase;
@@ -58,9 +59,10 @@ abstract class AreaTestCase extends TestCase
 
 	protected function assertErrorView(string $path, string $message): void
 	{
-		$view = $this->view($path);
-		$this->assertSame('k-error-view', $view['component']);
-		$this->assertSame($message, $view['props']['error']);
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage($message);
+
+		$this->view($path);
 	}
 
 	protected function assertFormDialog(array $dialog): void
