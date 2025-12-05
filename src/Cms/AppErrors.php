@@ -150,6 +150,7 @@ trait AppErrors
 					'code'      => $code,
 					'message'   => $exception->getMessage(),
 					'details'   => $details,
+					'editor'    => Url::editor($this->option('editor', false), $exception->getFile(), $exception->getLine()),
 					'file'      => $this->relativeRoot($exception->getFile()),
 					'line'      => $exception->getLine(),
 					'trace'     => $this->trace($exception)
