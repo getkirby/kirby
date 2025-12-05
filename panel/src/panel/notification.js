@@ -91,23 +91,29 @@ export default (panel = {}) => {
 
 			// convert strings to full error objects
 			if (typeof error === "string") {
-				error = {
-					message: error
-				};
+				error = new Error(error);
 			}
 
-			// turn instances into basic object and
-			// fill in some fallback defaults
-			error = {
-				message: error.message ?? "Something went wrong",
-				details: error.details ?? {}
-			};
+			// turn objects into error instances
+			if (error instanceof Error === false) {
+				const message = error.message ?? "Something went wrong";
+				const details = error.details ?? {};
+				error = new Error(message);
+				error.details = details;
+			}
 
 			// open the error dialog in views
 			if (panel.context === "view") {
 				panel.dialog.open({
-					component: "k-error-dialog",
-					props: error
+					component:
+						error instanceof RequestError
+							? "k-request-error-dialog"
+							: "k-error-dialog",
+					props: {
+						instance: error,
+						message: error.message,
+						details: error.details
+					}
 				});
 			}
 
