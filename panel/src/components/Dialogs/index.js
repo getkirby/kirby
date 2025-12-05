@@ -30,6 +30,7 @@ import UploadDialog from "./UploadDialog.vue";
 import UploadReplaceDialog from "./UploadReplaceDialog.vue";
 import UsersDialog from "./UsersDialog.vue";
 import UsersPickerDialog from "./UsersPickerDialog.vue";
+import ValidationErrorDialog from "./ValidationErrorDialog.vue";
 
 export default {
 	install(app) {
@@ -62,5 +63,6 @@ export default {
 		app.component("k-upload-replace-dialog", UploadReplaceDialog);
 		app.component("k-users-dialog", UsersDialog);
 		app.component("k-users-picker-dialog", UsersPickerDialog);
+		app.component("k-validation-error-dialog", ValidationErrorDialog);
 	}
 };
