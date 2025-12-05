@@ -4,7 +4,6 @@ namespace Kirby\Panel\Response;
 
 use Kirby\Cms\App;
 use Kirby\Data\Json;
-use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\State;
