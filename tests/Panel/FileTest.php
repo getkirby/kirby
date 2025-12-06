@@ -9,6 +9,7 @@ use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class FileForceLocked extends ModelFile

@@ -432,7 +432,10 @@ export default {
 		},
 		async merge() {
 			if (this.isMergable) {
-				const blocks = this.selected.map((id) => this.find(id));
+				// sort blocks by their position in the list, not by selection order
+				const blocks = this.selected
+					.map((id) => this.find(id))
+					.sort((a, b) => this.findIndex(a.id) - this.findIndex(b.id));
 
 				// top selected block handles merging
 				// (will update its own content with merged content)
