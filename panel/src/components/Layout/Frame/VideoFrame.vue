@@ -47,7 +47,7 @@ export default {
 	},
 	computed: {
 		isInternal() {
-			return this.url?.startsWith("http") !== true;
+			return this.url?.startsWith("file://") === true;
 		}
 	},
 	watch: {

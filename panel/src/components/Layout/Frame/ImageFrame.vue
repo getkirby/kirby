@@ -60,7 +60,7 @@ export default {
 	},
 	computed: {
 		isInternal() {
-			return this.src?.startsWith("http") !== true;
+			return this.src?.startsWith("file://") === true;
 		}
 	},
 	watch: {
@@ -92,7 +92,7 @@ export default {
 					layout: "cards",
 					image: JSON.stringify({
 						ratio: this.ratio,
-						cover: this.ratio ? this.cover : null
+						cover: this.cover
 					})
 				}
 			});
