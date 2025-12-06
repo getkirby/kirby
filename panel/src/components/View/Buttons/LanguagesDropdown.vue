@@ -57,11 +57,7 @@ export default {
 	},
 	computed: {
 		changesBadge() {
-			// `hasDiff` provides the state for all other than the current
-			// translation from the backend; for the current translation we need to
-			// check `content.diff` as this state can change dynamically without
-			// any other backend request that would update `hasDiff`
-			if (this.hasDiff || this.$panel.content.hasDiff()) {
+			if (this.hasDiff) {
 				return {
 					theme: this.$panel.content.isLocked() ? "red" : "orange"
 				};
