@@ -1070,8 +1070,8 @@ class Str
 	 * ```
 	 *
 	 * @param string $string The string to be shortened
-	 * @param int $length The final number of characters the
-	 *                    string should have
+	 * @param int $length Final number of characters
+	 *                    the string (excl. appendix) should have
 	 * @param string $appendix The element, which should be added if the
 	 *                         string is too long. Ellipsis is the default.
 	 * @return string The shortened string

@@ -11,6 +11,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Panel\Controller\View\ModelViewController;
 use Kirby\Panel\Controller\View\PageViewController;
+use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class CustomPanelModel extends Model
