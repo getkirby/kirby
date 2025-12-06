@@ -3,9 +3,9 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\File;
-use Kirby\Cms\FilePicker;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Mixin;
+use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use Kirby\Panel\Ui\Item\FileItem;
 
 /**
@@ -40,6 +40,7 @@ class FilePickerField extends ModelPickerField
 		bool|null $multiple = null,
 		string|null $name = null,
 		string|null $parent = null,
+		array|null $picker = null,
 		string|null $query = null,
 		bool|null $required = null,
 		bool|null $search = null,
@@ -66,6 +67,7 @@ class FilePickerField extends ModelPickerField
 			min: $min,
 			multiple: $multiple,
 			name: $name,
+			picker: $picker,
 			query: $query,
 			required: $required,
 			search: $search,
@@ -109,6 +111,23 @@ class FilePickerField extends ModelPickerField
 		];
 	}
 
+	public function dialogs(): array
+	{
+		return [
+			'picker' => fn () => new FilePickerDialogController(...[
+				'model'     => $this->model(),
+				'hasSearch' => $this->search(),
+				'image'     => $this->image(),
+				'info'      => $this->info(),
+				'max'       => $this->max(),
+				'multiple'  => $this->multiple(),
+				'query'     => $this->query(),
+				'text'      => $this->text(),
+				...$this->picker()
+			])
+		];
+	}
+
 	public function parentModel(): ModelWithContent
 	{
 		$parent = $this->parent;
@@ -125,20 +144,6 @@ class FilePickerField extends ModelPickerField
 		return $this->parentModel()->apiUrl(true);
 	}
 
-	public function picker(): FilePicker
-	{
-		return new FilePicker([
-			'image'  => $this->image(),
-			'info'   => $this->info(),
-			'layout' => $this->layout(),
-			'model'  => $this->model(),
-			'page'   => $this->kirby()->api()->requestQuery('page'),
-			'query'  => $this->query(),
-			'search' => $this->kirby()->api()->requestQuery('search'),
-			'text'   => $this->text()
-		]);
-	}
-
 	public function props(): array
 	{
 		return [
@@ -148,9 +153,9 @@ class FilePickerField extends ModelPickerField
 		];
 	}
 
-	public function query(): string
+	public function query(): string|null
 	{
-		return $this->query ?? $this->parentModel()::CLASS_ALIAS . '.files';
+		return $this->query;
 	}
 
 	/**

@@ -40,7 +40,7 @@ export default {
 				return this.content.src;
 			}
 
-			return this.content.image?.[0]?.uuid ?? this.content.image?.[0]?.id;
+			return this.content.image?.[0];
 		},
 		ratio() {
 			return !this.content.ratio ? "auto" : this.content.ratio;

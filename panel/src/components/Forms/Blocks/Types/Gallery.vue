@@ -19,7 +19,7 @@
 					<k-image-frame
 						:ratio="ratio"
 						:cover="crop"
-						:src="image.uuid ?? image.id"
+						:src="image"
 						class="k-block-type-gallery-frame"
 					/>
 				</li>
