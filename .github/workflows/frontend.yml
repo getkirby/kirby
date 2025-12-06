@@ -22,29 +22,27 @@ env:
     (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby'))
 
 on:
-  push:
+  push: &frontend-triggers
     branches-ignore:
       - "main"
       - "release/**"
     paths:
+      - ".github/actions/setup-npm/**"
       - ".github/workflows/frontend.yml"
       - "panel/**"
       - "!panel/scripts/**"
-  pull_request:
-    branches-ignore:
-      - "main"
-      - "release/**"
-    paths:
-      - ".github/workflows/frontend.yml"
-      - "panel/**"
-      - "!panel/scripts/**"
+  pull_request: *frontend-triggers
   workflow_call:
   workflow_dispatch:
+
+concurrency:
+  group: frontend-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   # ===================== Unit Tests =====================
   tests:
-    name: "Unit Tests - JavaScript/Vue"
+    name: "Unit Tests"
     if: *should-run
     runs-on: *os
     timeout-minutes: *timeout
@@ -53,11 +51,11 @@ jobs:
         working-directory: panel
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup Node/npm
-        uses: ./.github/workflows/setup-npm
+        uses: ./.github/actions/setup-npm
 
       - name: Run JavaScript unit tests
         run: npm run test:unit
@@ -73,11 +71,11 @@ jobs:
         working-directory: panel
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup Node/npm
-        uses: ./.github/workflows/setup-npm
+        uses: ./.github/actions/setup-npm
 
       - name: "ESLint: JavaScript coding style violations"
         run: npm run lint -- --max-warnings 0 --format stylish --no-fix
