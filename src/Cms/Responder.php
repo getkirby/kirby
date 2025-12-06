@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Mime;
 use Kirby\Http\Response as HttpResponse;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Stringable;
 
@@ -63,6 +64,12 @@ class Responder implements Stringable
 	 * relies on
 	 */
 	protected array $usesCookies = [];
+
+	/**
+	 * Tracks headers that depend on the request
+	 * and must not be persisted in the cache
+	 */
+	protected array $volatileHeaders = [];
 
 	/**
 	 * Creates and sends the response
@@ -229,6 +236,7 @@ class Responder implements Stringable
 	 */
 	public function fromArray(array $response): void
 	{
+		$this->volatileHeaders = [];
 		$this->body($response['body'] ?? null);
 		$this->cache($response['cache'] ?? null);
 		$this->code($response['code'] ?? null);
@@ -284,6 +292,15 @@ class Responder implements Stringable
 			// inject CORS headers if enabled
 			$corsHeaders = Cors::headers();
 			if ($corsHeaders !== []) {
+				foreach ($corsHeaders as $name => $value) {
+					if ($name === 'Vary') {
+						$corsVaryValues = array_map('trim', explode(',', $value));
+						$this->markRequestDependentHeader('Vary', $corsVaryValues);
+					} else {
+						$this->markRequestDependentHeader($name);
+					}
+				}
+
 				$injectedHeaders = [...$injectedHeaders, ...$corsHeaders];
 			}
 
@@ -317,6 +334,7 @@ class Responder implements Stringable
 		}
 
 		$this->headers = $headers;
+		$this->volatileHeaders = [];
 		return $this;
 	}
 
@@ -388,6 +406,41 @@ class Responder implements Stringable
 	}
 
 	/**
+	 * Strips request-dependent headers for safe caching
+	 *
+	 * @since 5.2.0
+	 */
+	public function cacheHeaders(array $headers): array
+	{
+		if ($this->volatileHeaders === []) {
+			return $headers;
+		}
+
+		foreach ($this->volatileHeaders as $name => $values) {
+			if ($name === 'Vary' && is_array($values) === true) {
+				if (isset($headers['Vary']) === false) {
+					continue;
+				}
+
+				$current = $this->normalizeVaryValues($headers['Vary']);
+				$remaining = $this->removeVaryValues($current, $values);
+
+				if ($remaining === []) {
+					unset($headers['Vary']);
+				} else {
+					$headers['Vary'] = implode(', ', $remaining);
+				}
+
+				continue;
+			}
+
+			unset($headers[$name]);
+		}
+
+		return $headers;
+	}
+
+	/**
 	 * Setter and getter for the content type
 	 *
 	 * @return string|$this
@@ -430,5 +483,58 @@ class Responder implements Stringable
 		}
 
 		return false;
+	}
+
+	/**
+	 * Marks headers (or header parts) as request-dependent, so they
+	 * can be subtracted before caching a response snapshot
+	 *
+	 * @since 5.2.0
+	 */
+	public function markRequestDependentHeader(string $name, array|null $values = null): void
+	{
+		if ($values === null) {
+			$this->volatileHeaders[$name] = null;
+			return;
+		}
+
+		if (array_key_exists($name, $this->volatileHeaders) === true && $this->volatileHeaders[$name] === null) {
+			return;
+		}
+
+		$values = A::map($values, static fn ($value) => strtolower(trim($value)));
+		$values = A::filter($values, static fn ($value) => $value !== '');
+
+		if ($values === []) {
+			return;
+		}
+
+		$existing = $this->volatileHeaders[$name] ?? [];
+		$this->volatileHeaders[$name] = array_values(array_unique([...$existing, ...$values]));
+	}
+
+	/**
+	 * Normalizes a comma-separated list of Vary values
+	 * into a unique array without empty entries
+	 */
+	protected function normalizeVaryValues(string $value): array
+	{
+		$values = A::map(explode(',', $value), 'trim');
+		$values = A::filter($values, static fn ($entry) => $entry !== '');
+
+		return array_values(array_unique($values));
+	}
+
+	/**
+	 * Returns the Vary values with the provided entries removed
+	 */
+	protected function removeVaryValues(array $values, array $remove): array
+	{
+		$removeLower = A::map($remove, 'strtolower');
+
+		return array_values(A::filter(
+			$values,
+			static fn ($value) => in_array(strtolower($value), $removeLower, true) === false
+		));
 	}
 }
