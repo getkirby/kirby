@@ -6,11 +6,10 @@
 		element="figure"
 	>
 		<img
-			v-if="src"
-			:key="src"
-			:alt="alt ?? ''"
-			:src="src"
-			:srcset="srcset"
+			v-if="resolvedSrc"
+			:alt="resolvedAlt ?? ''"
+			:src="resolvedSrc"
+			:srcset="resolvedSrcset"
 			:sizes="sizes"
 			@dragstart.prevent
 		/>
@@ -43,14 +42,66 @@ export const props = {
 };
 
 /**
- * Use <k-image-frame> to display an image in a fixed ratio with background etc.
+ * Use <k-image-frame> to display an image from an external URL
+ * or internal file UUID in a fixed ratio with background etc.
  * @since 4.0.0
  *
  * @example <k-image-frame src="https://getkirby.com/image.jpg" ratio="16/9" back="pattern" />
  */
 export default {
 	mixins: [props],
-	inheritAttrs: false
+	inheritAttrs: false,
+	data() {
+		return {
+			resolvedAlt: null,
+			resolvedSrc: null,
+			resolvedSrcset: null
+		};
+	},
+	computed: {
+		isInternal() {
+			return this.src?.startsWith("http") !== true;
+		}
+	},
+	watch: {
+		src: {
+			handler: "fetch",
+			immediate: true
+		}
+	},
+	methods: {
+		async fetch() {
+			if (!this.src) {
+				this.resolvedAlt = null;
+				this.resolvedSrc = null;
+				this.resolvedSrcset = null;
+				return;
+			}
+
+			if (this.isInternal === false) {
+				this.resolvedAlt = this.alt;
+				this.resolvedSrc = this.src;
+				this.resolvedSrcset = this.srcset;
+				return;
+			}
+
+			// if internal file, load data for file UUID from request endpoint
+			const data = await await this.$panel.get("items/files", {
+				query: {
+					items: this.src,
+					layout: "cards",
+					image: JSON.stringify({
+						ratio: this.ratio,
+						cover: this.ratio ? this.cover : null
+					})
+				}
+			});
+
+			this.resolvedAlt = data.items[0]?.alt;
+			this.resolvedSrc = data.items[0]?.image.src;
+			this.resolvedSrcset = data.items[0]?.image.srcset;
+		}
+	}
 };
 </script>
 
