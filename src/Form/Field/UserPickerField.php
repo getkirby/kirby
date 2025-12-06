@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
-use Kirby\Cms\UserPicker;
+use Kirby\Panel\Controller\Dialog\UserPickerDialogController;
 use Kirby\Panel\Ui\Item\UserItem;
 
 /**
@@ -28,26 +28,24 @@ class UserPickerField extends ModelPickerField
 			return [$user->id()];
 		}
 
-		return parent::default() ?? [];
+		return parent::default();
 	}
 
-	public function getIdFromItemArray(array $item): string|null
+	public function dialogs(): array
 	{
-		return $item['uuid'] ?? $item['id'] ?? $item['email'] ?? null;
-	}
-
-	public function picker(): UserPicker
-	{
-		return new UserPicker([
-			'image'  => $this->image(),
-			'info'   => $this->info(),
-			'layout' => $this->layout(),
-			'model'  => $this->model(),
-			'page'   => $this->kirby()->api()->requestQuery('page'),
-			'query'  => $this->query(),
-			'search' => $this->kirby()->api()->requestQuery('search'),
-			'text'   => $this->text()
-		]);
+		return [
+			'picker' => fn () => new UserPickerDialogController(...[
+				'model'     => $this->model(),
+				'hasSearch' => $this->search(),
+				'image'     => $this->image(),
+				'info'      => $this->info(),
+				'max'       => $this->max(),
+				'multiple'  => $this->multiple(),
+				'query'     => $this->query(),
+				'text'      => $this->text(),
+				...$this->picker()
+			])
+		];
 	}
 
 	/**
@@ -56,11 +54,11 @@ class UserPickerField extends ModelPickerField
 	public function toItem(ModelWithContent $model): array
 	{
 		return (new UserItem(
-			user: $model,
-			image: $this->image(),
-			info: $this->info(),
+			user:   $model,
+			image:  $this->image(),
+			info:   $this->info(),
 			layout: $this->layout(),
-			text: $this->text()
+			text:   $this->text()
 		))->props();
 	}
 

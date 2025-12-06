@@ -6,7 +6,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-pages-picker-dialog'
+						component: 'k-page-picker-dialog'
 					})
 				"
 			>
@@ -19,7 +19,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-pages-picker-dialog',
+						component: 'k-page-picker-dialog',
 						props: {
 							items: items,
 							value: selected
@@ -45,7 +45,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-pages-picker-dialog',
+						component: 'k-page-picker-dialog',
 						props: {
 							items: items,
 							parent: {
@@ -75,7 +75,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-pages-picker-dialog',
+						component: 'k-page-picker-dialog',
 						props: {
 							items: items,
 							layout: 'cards',
@@ -101,7 +101,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-pages-picker-dialog',
+						component: 'k-page-picker-dialog',
 						props: {
 							items: items,
 							multiple: false,
@@ -127,7 +127,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-pages-picker-dialog',
+						component: 'k-page-picker-dialog',
 						props: {
 							items: items,
 							size: 'huge',

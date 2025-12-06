@@ -10,21 +10,12 @@
 		@open="open"
 		@update="update"
 	>
-		<k-frame ratio="16/9">
-			<template v-if="video">
-				<video
-					v-if="location == 'kirby'"
-					:src="video"
-					:poster="poster"
-					controls
-				/>
-				<iframe
-					v-else
-					:src="video"
-					referrerpolicy="strict-origin-when-cross-origin"
-				/>
-			</template>
-		</k-frame>
+		<k-video-frame
+			:url="video"
+			:poster="poster"
+			:controls="content.controls"
+			ratio="16/9"
+		/>
 	</k-block-figure>
 </template>
 
@@ -40,18 +31,15 @@ export default {
 		captionMarks() {
 			return this.field("caption", { marks: true }).marks;
 		},
-		location() {
-			return this.content.location;
-		},
 		poster() {
 			return this.content.poster?.[0]?.url;
 		},
 		video() {
 			if (this.content.location === "kirby") {
-				return this.content.video?.[0]?.url;
+				return this.content.video?.[0];
 			}
 
-			return this.$helper.embed.video(this.content.url ?? "", true);
+			return this.content.url;
 		}
 	}
 };

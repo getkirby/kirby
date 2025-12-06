@@ -522,17 +522,15 @@ class ApiTest extends TestCase
 						'slug' => 'test',
 						'content' => [
 							'title' => 'Test Title',
-							'cover' => [
-								'a.jpg'
-							]
+							'cover' => ['a.jpg']
 						],
 						'files' => [
 							['filename' => 'a.jpg'],
 							['filename' => 'b.jpg'],
 						],
 						'blueprint' => [
-							'title' => 'Test',
-							'name' => 'test',
+							'title'  => 'Test',
+							'name'   => 'test',
 							'fields' => [
 								'cover' => [
 									'type' => 'files',
@@ -541,19 +539,21 @@ class ApiTest extends TestCase
 						]
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'a.jpg,b.jpg'
+				],
 			]
 		]);
 		$app->impersonate('kirby');
 
-		$page = $app->page('test');
-		$response = $app->api()->fieldApi($page, 'cover');
+		$page     = $app->page('test');
+		$response = $app->api()->fieldApi($page, 'cover', 'items');
 
 		$this->assertCount(2, $response);
-		$this->assertArrayHasKey('data', $response);
-		$this->assertArrayHasKey('pagination', $response);
-		$this->assertCount(2, $response['data']);
-		$this->assertSame('a.jpg', $response['data'][0]['filename']);
-		$this->assertSame('b.jpg', $response['data'][1]['filename']);
+		$this->assertSame('a.jpg', $response[0]['filename']);
+		$this->assertSame('b.jpg', $response[1]['filename']);
 	}
 
 	public function testFieldApiInvalidField(): void

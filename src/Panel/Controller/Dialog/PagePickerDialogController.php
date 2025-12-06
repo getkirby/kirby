@@ -7,6 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Panel\Collector\PagesCollector;
+use Kirby\Panel\Ui\Item\PageItem;
 
 /**
  * Controls the Panel dialog for selecting pages
@@ -19,11 +20,16 @@ use Kirby\Panel\Collector\PagesCollector;
  * @since     6.0.0
  * @unstable
  */
-class PagesPickerDialogController extends ModelsPickerDialogController
+class PagePickerDialogController extends ModelPickerDialogController
 {
-	protected const string TYPE = 'pages';
+	protected const string TYPE = 'page';
 
 	protected PagesCollector $collector;
+
+	/**
+	 * Cache for pages collection of selected value
+	 */
+	protected Pages $valueModels;
 
 	public function __construct(
 		ModelWithContent $model,
@@ -79,6 +85,27 @@ class PagesPickerDialogController extends ModelsPickerDialogController
 	public function find(string $id): Page|null
 	{
 		return $this->kirby->page($id);
+	}
+
+	/**
+	 * Returns the item data for a page
+	 * @param \Kirby\Cms\Page $model
+	 */
+	public function item(ModelWithContent $model): array
+	{
+		$props = (new PageItem(
+			page:   $model,
+			image:  $this->image,
+			info:   $this->info,
+			layout: $this->layout,
+			text:   $this->text
+		))->props();
+
+		$props['selectedChildren'] = $this->valueModels()->filter(
+			fn ($page) => $page->parents()->has($model)
+		)->count();
+
+		return $props;
 	}
 
 	/**
@@ -162,5 +189,25 @@ class PagesPickerDialogController extends ModelsPickerDialogController
 		}
 
 		return $parent ?? $this->site;
+	}
+
+	/**
+	 * Returns page models for the selected IDs in `::value()`
+	 */
+	protected function valueModels(): Pages
+	{
+		if (isset($this->valueModels) === true) {
+			return $this->valueModels;
+		}
+
+		$pages = new Pages([]);
+
+		foreach ($this->value() as $id) {
+			if ($page = $this->kirby->page($id)) {
+				$pages->add($page);
+			}
+		}
+
+		return $this->valueModels = $pages;
 	}
 }
