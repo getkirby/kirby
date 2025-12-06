@@ -48,25 +48,18 @@ jobs:
     if: *should-run
     runs-on: *os
     timeout-minutes: *timeout
+    defaults:
+      run:
+        working-directory: panel
 
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - name: Set up Node.js and cache npm dependencies
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          cache: "npm"
-          cache-dependency-path: panel/package-lock.json
-
-      - name: Install npm dependencies
-        working-directory: panel
-        run: npm ci
-        id: npm
+      - name: Setup Node/npm
+        uses: ./.github/workflows/setup-npm
 
       - name: Run JavaScript unit tests
-        if: always() && steps.npm.outcome == 'success'
-        working-directory: panel
         run: npm run test:unit
 
   # ===================== Coding Style =====================
@@ -75,28 +68,19 @@ jobs:
     if: *should-run
     runs-on: *os
     timeout-minutes: *timeout
+    defaults:
+      run:
+        working-directory: panel
 
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - name: Set up Node.js and cache npm dependencies
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          cache: "npm"
-          cache-dependency-path: panel/package-lock.json
-
-      - name: Install npm dependencies
-        working-directory: panel
-        run: npm ci
-        id: npm
+      - name: Setup Node/npm
+        uses: ./.github/workflows/setup-npm
 
       - name: "ESLint: JavaScript coding style violations"
-        if: always() && steps.npm.outcome == 'success'
-        working-directory: panel
         run: npm run lint -- --max-warnings 0 --format stylish --no-fix
 
       - name: "Prettier: JavaScript coding style violations"
-        if: always() && steps.npm.outcome == 'success'
-        working-directory: panel
         run: npm run format --check

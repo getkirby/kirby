@@ -1,0 +1,17 @@
+name: Setup Node/npm
+description: Shared steps to set up Node & npm
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node.js and cache npm dependencies
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      with:
+        node-version: 22
+        cache: "npm"
+        cache-dependency-path: panel/package-lock.json
+
+    - name: Install npm dependencies
+      shell: bash
+      working-directory: panel
+      run: npm ci
