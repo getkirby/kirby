@@ -20,9 +20,9 @@ use Kirby\Toolkit\Str;
  * @since     6.0.0
  * @unstable
  */
-abstract class ModelsPickerDialogController extends DialogController
+abstract class ModelPickerDialogController extends DialogController
 {
-	protected const string TYPE = 'models';
+	protected const string TYPE = 'model';
 
 	public int $page = 1;
 	public string|null $search = null;
