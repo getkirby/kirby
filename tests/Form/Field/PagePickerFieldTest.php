@@ -23,19 +23,23 @@ class PagePickerFieldTest extends TestCase
 			'site' => [
 				'children' => [
 					[
-						'slug' => 'a',
+						'slug'     => 'a',
+						'content'  => ['uuid'  => 'my-a'],
 						'children' => [
 							[
 								'slug' => 'aa',
+								'content' => ['uuid'  => 'my-aa'],
 							],
 							[
 								'slug' => 'ab',
-							]
+								'content' => ['uuid'  => 'my-ab'],
+							],
 						]
 					],
 					[
 						'slug' => 'b',
-					]
+						'content' => ['uuid'  => 'my-b'],
+					],
 				]
 			]
 		]);
@@ -99,15 +103,12 @@ class PagePickerFieldTest extends TestCase
 			]
 		]);
 
-		$value = $field->value();
-		$ids   = array_column($value, 'id');
-
 		$expected = [
-			'a/aa',
-			'a/ab'
+			'page://my-aa',
+			'page://my-ab'
 		];
 
-		$this->assertSame($expected, $ids);
+		$this->assertSame($expected, $field->value());
 	}
 
 	public function testMin(): void
@@ -197,7 +198,7 @@ class PagePickerFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testApi(): void
+	public function testApiItems(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -222,53 +223,34 @@ class PagePickerFieldTest extends TestCase
 							]
 						]
 					],
-					['slug' => 'a'],
-					['slug' => 'b'],
-					['slug' => 'c'],
+					[
+						'slug' => 'a',
+						'content' => ['uuid'  => 'my-a'],
+					],
+					[
+						'slug' => 'b',
+						'content' => ['uuid'  => 'my-b'],
+					],
+					[
+						'slug' => 'c',
+						'content' => ['uuid'  => 'my-c'],
+					],
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'test,a,b'
 				]
 			]
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/related');
+		$api = $app->api()->call('pages/test/fields/related/items');
 
 		$this->assertCount(3, $api);
-		$this->assertArrayHasKey('data', $api);
-		$this->assertArrayHasKey('pagination', $api);
-		$this->assertArrayHasKey('model', $api);
-		$this->assertCount(4, $api['data']);
-		$this->assertSame('test', $api['data'][0]['id']);
-		$this->assertSame([
-			'image' => [
-				'back' => 'pattern',
-				'color' => 'gray-500',
-				'cover' => false,
-				'icon' => 'page'
-			],
-			'info' => '',
-			'layout' => 'list',
-			'text' => 'Test Title',
-			'id' => 'test',
-			'link' => '/pages/test',
-			'permissions' => [
-				'changeSlug' => true,
-				'changeStatus' => true,
-				'changeTitle' => true,
-				'delete' => true,
-				'sort' => false,
-			],
-			'uuid' => 'page://my-test-uuid',
-			'dragText' => '(link: page://my-test-uuid text: Test Title)',
-			'parent' => null,
-			'status' => 'unlisted',
-			'template' => 'default',
-			'url' => '/test',
-			'hasChildren' => false,
-			'sortable' => true,
-		], $api['data'][0]);
-		$this->assertSame('a', $api['data'][1]['id']);
-		$this->assertSame('b', $api['data'][2]['id']);
-		$this->assertSame('c', $api['data'][3]['id']);
+		$this->assertSame('page://my-test-uuid', $api[0]['uuid']);
+		$this->assertSame('page://my-a', $api[1]['uuid']);
+		$this->assertSame('page://my-b', $api[2]['uuid']);
 	}
 
 	public function testToModel(): void

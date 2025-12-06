@@ -22,10 +22,11 @@
 
 		<template v-if="parent" #options="{ item: page }">
 			<k-button
+				:badge="badge(page)"
 				:disabled="!page.hasChildren"
 				:title="$t('open')"
 				icon="angle-right"
-				class="k-page-picker-dialog-option"
+				class="k-page-picker-option"
 				@click.stop="navigate(page.id)"
 			/>
 		</template>
@@ -64,6 +65,11 @@ export default {
 		}
 	},
 	methods: {
+		badge(page) {
+			if (page.selectedChildren > 0) {
+				return { text: page.selectedChildren, theme: "info" };
+			}
+		},
 		navigate(parent) {
 			this.$refs.dialog.refresh({ parent });
 		}
@@ -85,7 +91,7 @@ export default {
 	flex-grow: 1;
 	text-align: center;
 }
-.k-page-picker-dialog-option[aria-disabled="true"] {
+.k-page-picker-option[aria-disabled="true"] {
 	opacity: 0.25;
 }
 </style>

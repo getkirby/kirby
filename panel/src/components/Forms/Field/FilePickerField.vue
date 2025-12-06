@@ -10,6 +10,7 @@ export default {
 	props: {
 		uploads: [Boolean, Object, Array]
 	},
+	emits: ["change", "input"],
 	computed: {
 		buttons() {
 			const buttons = ModelPickerField.computed.buttons.call(this);
@@ -53,14 +54,17 @@ export default {
 						}
 
 						for (const file of files) {
-							if (this.selected.find((f) => f.id === file.id) === undefined) {
+							if (this.selected.findIndex((f) => this.isItem(f, file)) === -1) {
 								this.selected.push(file);
 							}
 						}
 
 						// send the input event
 						// the content object gets updated
-						this.onInput();
+						this.$emit(
+							"input",
+							this.selected.map((file) => file.uuid ?? file.id)
+						);
 
 						// the `$panel.content.update()` event sends
 						// the updated form value object to the server

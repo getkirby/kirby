@@ -18,7 +18,7 @@
 				<li v-for="image in content.images" :key="image.id">
 					<k-image-frame
 						:cover="crop"
-						:file="image.uuid ?? image.id"
+						:file="image"
 						:ratio="ratio"
 						class="k-block-type-gallery-frame"
 					/>

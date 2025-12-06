@@ -4,7 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
-use Kirby\Cms\PagePicker;
+use Kirby\Panel\Controller\Dialog\PagePickerDialogController;
 use Kirby\Panel\Ui\Item\PageItem;
 
 /**
@@ -39,6 +39,7 @@ class PagePickerField extends ModelPickerField
 		int|null $min = null,
 		bool|null $multiple = null,
 		string|null $name = null,
+		array|null $picker = null,
 		string|null $query = null,
 		bool|null $required = null,
 		bool|null $search = null,
@@ -65,6 +66,7 @@ class PagePickerField extends ModelPickerField
 			min: $min,
 			multiple: $multiple,
 			name: $name,
+			picker: $picker,
 			query: $query,
 			required: $required,
 			search: $search,
@@ -79,20 +81,22 @@ class PagePickerField extends ModelPickerField
 		$this->subpages = $subpages;
 	}
 
-	public function picker(): PagePicker
+	public function dialogs(): array
 	{
-		return new PagePicker([
-			'image'    => $this->image(),
-			'info'     => $this->info(),
-			'layout'   => $this->layout(),
-			'model'    => $this->model(),
-			'page'     => $this->kirby()->api()->requestQuery('page'),
-			'parent'   => $this->kirby()->api()->requestQuery('parent'),
-			'query'    => $this->query(),
-			'search'   => $this->kirby()->api()->requestQuery('search'),
-			'subpages' => $this->subpages(),
-			'text'     => $this->text()
-		]);
+		return [
+			'picker' => fn () => new PagePickerDialogController(...[
+				'model'     => $this->model(),
+				'hasSearch' => $this->search(),
+				'image'     => $this->image(),
+				'info'      => $this->info(),
+				'max'       => $this->max(),
+				'multiple'  => $this->multiple(),
+				'query'     => $this->query(),
+				'subpages'  => $this->subpages(),
+				'text'      => $this->text(),
+				...$this->picker()
+			])
+		];
 	}
 
 	public function props(): array
