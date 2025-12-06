@@ -62,7 +62,7 @@ export default {
 			return false;
 		},
 		ratio() {
-			return this.content.ratio ?? false;
+			return !this.content.ratio ? "auto" : this.content.ratio;
 		}
 	},
 	methods: {
@@ -96,7 +96,7 @@ export default {
 	padding: var(--spacing-3);
 }
 
-.k-block-type-image-auto {
+.k-block-type-image .k-image-frame[data-ratio="auto"] img {
 	max-width: 100%;
 	max-height: 30rem;
 	margin-inline: auto;
