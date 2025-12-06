@@ -5,7 +5,6 @@ name: CI - Backend
 env:
   OS: &os ubuntu-22.04
   TIMEOUT: &timeout 5
-  PHP: 8.4
 
   # run job only under the following conditions:
   # - can be triggered manually from any repository
@@ -98,22 +97,19 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Cache analysis data
-        id: cache
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.cache/psalm
           key: backend-analysis-${{ matrix.php }}
 
       - name: Check Composer platform requirements
-        if: always() && steps.cache.outcome == 'success'
         run: composer check-platform-reqs
 
       - name: Run tests
-        if: always() && steps.cache.outcome == 'success'
         run: phpunit -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Statically analyze using Psalm
-        if: always() && steps.cache.outcome == 'success' && matrix.php != '8.5'
+        if: always() && matrix.php != '8.5'
         run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload coverage results to Codecov
@@ -130,7 +126,7 @@ jobs:
           env_vars: PHP
 
       - name: Upload code scanning results to GitHub
-        if: always() && steps.cache.outcome == 'success' && github.repository == 'getkirby/kirby' && matrix.php != '8.5'
+        if: always() && github.repository == 'getkirby/kirby'
         uses: github/codeql-action/upload-sarif@497990dfed22177a82ba1bbab381bc8f6d27058f # v3
         with:
           sarif_file: sarif
@@ -149,22 +145,19 @@ jobs:
       - name: Setup PHP environment
         uses: ./.github/workflows/setup-php
         with:
-          php: ${{ env.PHP }}
+          php: 8.4
           extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
           tools: |
             composer:2.9.1, composer-normalize:2.48.2, composer-require-checker:4.18.0,
             composer-unused:0.9.5
 
       - name: Validate composer.json/composer.lock
-        if: always() && steps.php.outcome == 'success'
         run: composer validate --strict --no-check-version --no-check-all
 
       - name: Ensure that composer.json is normalized
-        if: always() && steps.php.outcome == 'success'
         run: composer-normalize --dry-run
 
       - name: Check for unused Composer dependencies
-        if: always() && steps.php.outcome == 'success'
         run: composer-unused --no-progress
 
   # ===================== Coding Style =====================
@@ -181,7 +174,7 @@ jobs:
       - name: Setup PHP environment
         uses: ./.github/workflows/setup-php
         with:
-          php: ${{ env.PHP }}
+          php: 8.4
           tools: php-cs-fixer:3.90.0
 
       - name: Cache analysis data
@@ -192,5 +185,4 @@ jobs:
           key: coding-style
 
       - name: Check for PHP coding style violations
-        if: always() && steps.cache.outcome == 'success'
         run: php-cs-fixer fix --diff --dry-run
