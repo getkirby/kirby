@@ -14,6 +14,7 @@ import Stats from "./Stats.vue";
 import Table from "./Table.vue";
 import TableCell from "./TableCell.vue";
 import Tabs from "./Tabs.vue";
+import VideoFrame from "./Frame/VideoFrame.vue";
 
 export default {
 	install(app) {
@@ -34,5 +35,6 @@ export default {
 		app.component("k-table", Table);
 		app.component("k-table-cell", TableCell);
 		app.component("k-tabs", Tabs);
+		app.component("k-video-frame", VideoFrame);
 	}
 };
