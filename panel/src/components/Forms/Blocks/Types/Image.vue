@@ -10,23 +10,8 @@
 		@open="open"
 		@update="update"
 	>
-		<template v-if="src">
-			<k-image-frame
-				v-if="ratio"
-				:ratio="ratio"
-				:cover="crop"
-				:alt="content.alt"
-				:src="src"
-			/>
-			<img
-				v-else
-				:alt="content.alt"
-				:src="src"
-				class="k-block-type-image-auto"
-			/>
-
-			<k-block-background-dropdown :value="back" @input="onBack" />
-		</template>
+		<k-image-frame :alt="content.alt" :cover="crop" :ratio="ratio" :src="src" />
+		<k-block-background-dropdown :value="back" @input="onBack" />
 	</k-block-figure>
 </template>
 
@@ -55,14 +40,10 @@ export default {
 				return this.content.src;
 			}
 
-			if (this.content.image?.[0]?.url) {
-				return this.content.image[0].url;
-			}
-
-			return false;
+			return this.content.image?.[0]?.uuid ?? this.content.image?.[0]?.id;
 		},
 		ratio() {
-			return this.content.ratio ?? false;
+			return this.content.ratio ?? "";
 		}
 	},
 	methods: {
@@ -96,11 +77,13 @@ export default {
 	padding: var(--spacing-3);
 }
 
-.k-block-type-image-auto {
+/* Ratio: auto */
+.k-block-type-image .k-block-figure-container > img {
 	max-width: 100%;
 	max-height: 30rem;
 	margin-inline: auto;
 }
+
 .k-block-type-image .k-background-dropdown {
 	position: absolute;
 	inset-inline-end: var(--spacing-3);
