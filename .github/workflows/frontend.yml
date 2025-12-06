@@ -36,7 +36,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: frontend-${{ github.workflow }}-${{ github.ref }}
+  group: frontend-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

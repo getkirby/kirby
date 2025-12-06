@@ -41,7 +41,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: backend-${{ github.workflow }}-${{ github.ref }}
+  group: backend-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -180,7 +180,7 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ./.php-cs-fixer.cache
-          key: php-cs-fixer-${{ hashFiles('.php-cs-fixer.dist.php', '.php-cs-fixer.php') }}
+          key: php-cs-fixer-${{ hashFiles('.php-cs-fixer.dist.php') }}
           restore-keys: |
             php-cs-fixer-
 
