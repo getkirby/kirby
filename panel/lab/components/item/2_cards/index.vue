@@ -70,7 +70,6 @@
 				info="With some info"
 				layout="cards"
 				text="This is a nice item"
-				width="1/2"
 			/>
 		</k-lab-example>
 		<k-lab-example label="Selecting">

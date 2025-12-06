@@ -43,7 +43,6 @@
 					:selectmode="selectmode"
 					:sortable="sortable && item.sortable !== false"
 					:theme="item.theme ?? theme"
-					:width="item.column"
 					@click="$emit('item', item, itemIndex)"
 					@drag="onDragStart($event, item.dragText)"
 					@mouseover="$emit('hover', $event, item, itemIndex)"

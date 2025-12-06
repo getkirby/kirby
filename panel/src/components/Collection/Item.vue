@@ -13,12 +13,7 @@
 	>
 		<!-- Image -->
 		<slot name="image">
-			<k-item-image
-				v-if="hasFigure"
-				:image="image"
-				:layout="layout"
-				:width="width"
-			/>
+			<k-item-image v-if="hasFigure" :image="image" :layout="layout" />
 		</slot>
 
 		<!-- Sort handle -->
