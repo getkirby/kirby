@@ -6,7 +6,8 @@
 					v-for="ratio in ratios"
 					:key="ratio"
 					:ratio="ratio"
-					:src="`https://picsum.photos/600/850?t=` + $helper.uuid()"
+					:src="srcset[0]"
+					:srcset="srcset.join(',')"
 					back="pattern"
 				/>
 			</k-grid>
@@ -29,7 +30,8 @@
 					v-for="ratio in ratios"
 					:key="ratio"
 					:ratio="ratio"
-					:src="`https://picsum.photos/600/850?t=` + $helper.uuid()"
+					:src="srcset[0]"
+					:srcset="srcset.join(',')"
 					back="black"
 					theme="passive"
 				/>
@@ -41,7 +43,8 @@
 					v-for="ratio in ratios"
 					:key="ratio"
 					:ratio="ratio"
-					:src="`https://picsum.photos/600/850?t=` + $helper.uuid()"
+					:src="srcset[0]"
+					:srcset="srcset.join(',')"
 					:cover="true"
 					theme="passive"
 				/>
@@ -58,6 +61,13 @@ export default {
 	computed: {
 		ratios() {
 			return ["1/1", "4/3", "16/9"];
+		},
+		srcset() {
+			const uuid = this.$helper.uuid();
+
+			return [200, 400, 800, 1200, 2400].map((size) => {
+				return `https://picsum.photos/${size}/${Math.round(size * 1.5)}?t=${uuid} ${size}w`;
+			});
 		}
 	}
 };
