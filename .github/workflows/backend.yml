@@ -68,9 +68,6 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Preparations
-        run: mkdir sarif
-
       - name: Install memcached
         uses: niden/actions-memcached@3b3ecd9d0d035ea92db716dc1540a7dbe9e56349 # v7
 
@@ -89,7 +86,53 @@ jobs:
           extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
           ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
           coverage: pcov
-          tools: phpunit:12.4.4, psalm:6.13.1
+          tools: phpunit:12.4.4
+
+      - name: Check Composer platform requirements
+        run: composer check-platform-reqs
+
+      - name: Run tests
+        run: phpunit -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
+
+      - name: Upload coverage results to Codecov
+        env:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          PHP: ${{ matrix.php }}
+        if: env.token != ''
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5
+        with:
+          # for better reliability if the GitHub API is down
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          files: ${{ github.workspace }}/clover.xml
+          flags: backend
+          env_vars: PHP
+
+  # ===================== Code Quality =====================
+  analysis:
+    name: "Code Quality - PHP ${{ matrix.php }}"
+    if: *should-run
+    runs-on: *os
+    timeout-minutes: *timeout
+    strategy:
+      matrix:
+        php: ["8.3", "8.4", "8.5"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Preparations
+        run: mkdir sarif
+
+      - name: Setup PHP environment
+        uses: ./.github/workflows/setup-php
+        with:
+          php: ${{ matrix.php }}
+          extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
+          tools: |
+            composer:2.9.1, composer-normalize:2.48.2, composer-require-checker:4.18.0,
+            composer-unused:0.9.5, psalm:6.13.1
 
       - name: Setup problem matchers
         run: |
@@ -100,56 +143,7 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.cache/psalm
-          key: backend-analysis-${{ matrix.php }}
-
-      - name: Check Composer platform requirements
-        run: composer check-platform-reqs
-
-      - name: Run tests
-        run: phpunit -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
-
-      - name: Statically analyze using Psalm
-        if: always() && matrix.php != '8.5'
-        run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
-
-      - name: Upload coverage results to Codecov
-        env:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          PHP: ${{ matrix.php }}
-        if: env.token != ''
-        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
-          fail_ci_if_error: true
-          files: ${{ github.workspace }}/clover.xml
-          flags: backend
-          env_vars: PHP
-
-      - name: Upload code scanning results to GitHub
-        if: always() && github.repository == 'getkirby/kirby' && matrix.php != '8.5'
-        uses: github/codeql-action/upload-sarif@497990dfed22177a82ba1bbab381bc8f6d27058f # v3
-        with:
-          sarif_file: sarif
-
-  # ===================== Code Quality =====================
-  analysis:
-    name: "Code Quality"
-    if: *should-run
-    runs-on: *os
-    timeout-minutes: *timeout
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-
-      - name: Setup PHP environment
-        uses: ./.github/workflows/setup-php
-        with:
-          php: 8.3 # should be the minimum supported PHP version
-          extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
-          tools: |
-            composer:2.9.1, composer-normalize:2.48.2, composer-require-checker:4.18.0,
-            composer-unused:0.9.5
+          key: psalm-${{ matrix.php }}
 
       - name: Validate composer.json/composer.lock
         run: composer validate --strict --no-check-version --no-check-all
@@ -159,6 +153,17 @@ jobs:
 
       - name: Check for unused Composer dependencies
         run: composer-unused --no-progress
+
+      - name: Statically analyze using Psalm
+        id: psalm
+        if: always() && matrix.php != '8.5'
+        run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
+
+      - name: Upload code scanning results to GitHub
+        if: always() && github.repository == 'getkirby/kirby' && steps.psalm.outcome == 'success'
+        uses: github/codeql-action/upload-sarif@497990dfed22177a82ba1bbab381bc8f6d27058f # v3
+        with:
+          sarif_file: sarif
 
   # ===================== Coding Style =====================
   coding-style:
