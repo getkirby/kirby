@@ -43,7 +43,7 @@ export default {
 			return this.content.image?.[0]?.uuid ?? this.content.image?.[0]?.id;
 		},
 		ratio() {
-			return this.content.ratio ?? "";
+			return !this.content.ratio ? "auto" : this.content.ratio;
 		}
 	},
 	methods: {
@@ -77,8 +77,7 @@ export default {
 	padding: var(--spacing-3);
 }
 
-/* Ratio: auto */
-.k-block-type-image .k-block-figure-container > img {
+.k-block-type-image .k-image-frame[data-ratio="auto"] img {
 	max-width: 100%;
 	max-height: 30rem;
 	margin-inline: auto;
