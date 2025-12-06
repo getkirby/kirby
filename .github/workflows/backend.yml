@@ -126,7 +126,7 @@ jobs:
           env_vars: PHP
 
       - name: Upload code scanning results to GitHub
-        if: always() && github.repository == 'getkirby/kirby'
+        if: always() && github.repository == 'getkirby/kirby' && matrix.php != '8.5'
         uses: github/codeql-action/upload-sarif@497990dfed22177a82ba1bbab381bc8f6d27058f # v3
         with:
           sarif_file: sarif
@@ -145,7 +145,7 @@ jobs:
       - name: Setup PHP environment
         uses: ./.github/workflows/setup-php
         with:
-          php: 8.4
+          php: 8.3 # should be the minimum supported PHP version
           extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
           tools: |
             composer:2.9.1, composer-normalize:2.48.2, composer-require-checker:4.18.0,
@@ -174,15 +174,14 @@ jobs:
       - name: Setup PHP environment
         uses: ./.github/workflows/setup-php
         with:
-          php: 8.4
+          php: 8.3 # should be the minimum supported PHP version
           tools: php-cs-fixer:3.90.0
 
-      - name: Cache analysis data
-        id: cache
+      - name: Cache PHP-CS-Fixer data
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
-          path: ~/.php-cs-fixer
-          key: coding-style
+          path: ./.php-cs-fixer.cache
+          key: php-cs-fixer
 
-      - name: Check for PHP coding style violations
+      - name: Run PHP-CS-Fixer to catch PHP coding style violations
         run: php-cs-fixer fix --diff --dry-run
