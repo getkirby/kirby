@@ -1,6 +1,5 @@
 <template>
-	<k-models-picker-dialog
-		ref="dialog"
+	<k-model-picker-dialog
 		v-bind="$props"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', $event)"
@@ -8,16 +7,16 @@
 </template>
 
 <script>
-import { props as ModelsPickerDialog } from "./ModelsPickerDialog.vue";
+import { props as ModelPickerDialog } from "./ModelPickerDialog.vue";
 
 export default {
-	mixins: [ModelsPickerDialog],
+	mixins: [ModelPickerDialog],
 	props: {
 		empty: {
 			type: Object,
 			default: () => ({
-				icon: "image",
-				text: window.panel.t("dialog.files.empty")
+				icon: "users",
+				text: window.panel.t("dialog.users.empty")
 			})
 		}
 	},

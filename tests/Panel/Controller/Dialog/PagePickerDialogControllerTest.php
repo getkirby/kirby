@@ -9,11 +9,11 @@ use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Dialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(ModelsPickerDialogController::class)]
-#[CoversClass(PagesPickerDialogController::class)]
-class PagesPickerDialogControllerTest extends TestCase
+#[CoversClass(ModelPickerDialogController::class)]
+#[CoversClass(PagePickerDialogController::class)]
+class PagePickerDialogControllerTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PagesPickerDialogController';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PagePickerDialogController';
 
 	public function setUp(): void
 	{
@@ -49,7 +49,7 @@ class PagesPickerDialogControllerTest extends TestCase
 			],
 		]);
 
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -59,7 +59,7 @@ class PagesPickerDialogControllerTest extends TestCase
 
 	public function testCollector(): void
 	{
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -68,7 +68,7 @@ class PagesPickerDialogControllerTest extends TestCase
 
 	public function testCollectorWithQueryForSinglePage(): void
 	{
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site(),
 			query: 'page("gamma")'
 		);
@@ -79,7 +79,7 @@ class PagesPickerDialogControllerTest extends TestCase
 
 	public function testFind(): void
 	{
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -88,7 +88,7 @@ class PagesPickerDialogControllerTest extends TestCase
 
 	public function testItem(): void
 	{
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -104,7 +104,7 @@ class PagesPickerDialogControllerTest extends TestCase
 
 	public function testItems(): void
 	{
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -117,13 +117,13 @@ class PagesPickerDialogControllerTest extends TestCase
 
 	public function testLoad(): void
 	{
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
 		$dialog = $controller->load();
 		$this->assertInstanceOf(Dialog::class, $dialog);
-		$this->assertSame('k-pages-picker-dialog', $dialog->component);
+		$this->assertSame('k-page-picker-dialog', $dialog->component);
 	}
 
 	public function testParent(): void
@@ -136,7 +136,7 @@ class PagesPickerDialogControllerTest extends TestCase
 			],
 		]);
 
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -153,7 +153,7 @@ class PagesPickerDialogControllerTest extends TestCase
 			],
 		]);
 
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -162,7 +162,7 @@ class PagesPickerDialogControllerTest extends TestCase
 		$this->assertSame('gamma', $parent['parent']);
 
 		// parent itself is the root page
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site(),
 			query: 'page("gamma/epsilon")'
 		);
@@ -173,7 +173,7 @@ class PagesPickerDialogControllerTest extends TestCase
 		$this->assertSame('epsilon', $parent['title']);
 
 		// no subpages
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site(),
 			subpages: false
 		);
@@ -190,7 +190,7 @@ class PagesPickerDialogControllerTest extends TestCase
 			],
 		]);
 
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -200,12 +200,12 @@ class PagesPickerDialogControllerTest extends TestCase
 
 	public function testProps(): void
 	{
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
 		$props = $controller->props();
-		$this->assertSame('k-pages-picker-dialog', $props['component']);
+		$this->assertSame('k-page-picker-dialog', $props['component']);
 		$this->assertTrue($props['hasSearch']);
 		$this->assertCount(3, $props['items']);
 		$this->assertSame('list', $props['layout']);
@@ -225,7 +225,7 @@ class PagesPickerDialogControllerTest extends TestCase
 			],
 		]);
 
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -235,13 +235,13 @@ class PagesPickerDialogControllerTest extends TestCase
 
 	public function testQuery(): void
 	{
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
 		$this->assertSame('site.children', $controller->query());
 
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->page('alpha'),
 			query: 'page("alpha").children'
 		);
@@ -257,7 +257,7 @@ class PagesPickerDialogControllerTest extends TestCase
 			],
 		]);
 
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
@@ -266,13 +266,13 @@ class PagesPickerDialogControllerTest extends TestCase
 
 	public function testRoot(): void
 	{
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->site()
 		);
 
 		$this->assertInstanceOf(Site::class, $controller->root());
 
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->page('gamma'),
 			query: 'page("gamma").children'
 		);
@@ -280,7 +280,7 @@ class PagesPickerDialogControllerTest extends TestCase
 		$this->assertInstanceOf(Page::class, $controller->root());
 		$this->assertSame('gamma', $controller->root()->id());
 
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->page('gamma'),
 			query: 'page("gamma")'
 		);
@@ -288,7 +288,7 @@ class PagesPickerDialogControllerTest extends TestCase
 		$this->assertInstanceOf(Page::class, $controller->root());
 		$this->assertSame('gamma', $controller->root()->id());
 
-		$controller = new PagesPickerDialogController(
+		$controller = new PagePickerDialogController(
 			model: $this->app->page('gamma'),
 			query: 'foo'
 		);
