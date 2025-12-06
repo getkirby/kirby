@@ -56,19 +56,21 @@ jobs:
       matrix:
         php: ["8.3", "8.4", "8.5"]
 
+    services:
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+      memcached:
+        image: memcached:latest
+        ports:
+          - 11211:11211
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 2
-
-      - name: Install memcached
-        uses: niden/actions-memcached@3b3ecd9d0d035ea92db716dc1540a7dbe9e56349 # v7
-
-      - name: Install redis
-        uses: supercharge/redis-github-action@ea9b21c6ecece47bd99595c532e481390ea0f044 # ea9b21c6ecece47bd99595c532e481390ea0f044
-        with:
-          redis-version: 7
 
       - name: Install system locales
         run: sudo apt-get update && sudo apt-get install -y locales-all
