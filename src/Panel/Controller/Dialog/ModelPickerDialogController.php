@@ -58,15 +58,7 @@ abstract class ModelPickerDialogController extends DialogController
 	/**
 	 * Returns the picker data for a model
 	 */
-	public function item(ModelWithContent $model): array
-	{
-		return $model->panel()->pickerData([
-			'image'  => $this->image,
-			'info'   => $this->info,
-			'layout' => $this->layout,
-			'text'   => $this->text,
-		]);
-	}
+	abstract public function item(ModelWithContent $model): array;
 
 	/**
 	 * Fetches all items for the picker

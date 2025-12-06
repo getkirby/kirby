@@ -98,8 +98,8 @@ class UserPickerDialogControllerTest extends TestCase
 
 		$items = $controller->items();
 		$this->assertCount(2, $items);
-		$this->assertSame('admin@getkirby.com', $items[0]['email']);
-		$this->assertSame('test@getkirby.com', $items[1]['email']);
+		$this->assertSame('admin', $items[0]['id']);
+		$this->assertSame('test', $items[1]['id']);
 	}
 
 	public function testLoad(): void
