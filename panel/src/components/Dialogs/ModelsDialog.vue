@@ -69,6 +69,9 @@ export const props = {
 	}
 };
 
+/**
+ * @deprecated 6.0.0 Use `k-model-picker-dialog` instead
+ */
 export default {
 	mixins: [Dialog, Search, props],
 	emits: ["cancel", "fetched", "submit"],
