@@ -50,7 +50,6 @@
 				]"
 				info="With some info"
 				text="This is a nice item"
-				width="1/2"
 			/>
 		</k-lab-example>
 		<k-lab-example label="Buttons">
@@ -66,7 +65,6 @@
 				]"
 				info="With some info"
 				text="This is a nice item"
-				width="1/2"
 			/>
 		</k-lab-example>
 		<k-lab-example label="Selecting">
