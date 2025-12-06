@@ -6,7 +6,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-files-picker-dialog'
+						component: 'k-user-picker-dialog'
 					})
 				"
 			>
@@ -19,7 +19,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-files-picker-dialog',
+						component: 'k-user-picker-dialog',
 						props: {
 							items: items,
 							value: selected
@@ -44,7 +44,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-files-picker-dialog',
+						component: 'k-user-picker-dialog',
 						props: {
 							items: items,
 							layout: 'cards',
@@ -70,7 +70,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-files-picker-dialog',
+						component: 'k-user-picker-dialog',
 						props: {
 							items: items,
 							multiple: false,
@@ -96,7 +96,7 @@
 				variant="filled"
 				@click="
 					$panel.dialog.open({
-						component: 'k-files-picker-dialog',
+						component: 'k-user-picker-dialog',
 						props: {
 							items: items,
 							size: 'huge',

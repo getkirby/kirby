@@ -2,12 +2,12 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\User;
-use Kirby\Panel\Collector\UsersCollector;
+use Kirby\Panel\Collector\FilesCollector;
 
 /**
- * Controls the Panel dialog for selecting users
+ * Controls the Panel dialog for selecting files
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -17,11 +17,11 @@ use Kirby\Panel\Collector\UsersCollector;
  * @since     6.0.0
  * @unstable
  */
-class UsersPickerDialogController extends ModelsPickerDialogController
+class FilePickerDialogController extends ModelPickerDialogController
 {
-	protected const string TYPE = 'users';
+	protected const string TYPE = 'file';
 
-	protected UsersCollector $collector;
+	protected FilesCollector $collector;
 
 	public function __construct(
 		ModelWithContent $model,
@@ -45,25 +45,24 @@ class UsersPickerDialogController extends ModelsPickerDialogController
 			max:       $max,
 			multiple:  $multiple,
 			size:      $size,
-			text:      $text
+			text:      $text,
 		);
 	}
 
-	public function collector(): UsersCollector
+	public function collector(): FilesCollector
 	{
-		return $this->collector ??= new UsersCollector(
+		return $this->collector ??= new FilesCollector(
 			limit:  $this->limit,
 			page:   $this->page,
 			parent: $this->model,
 			query:  $this->query(),
 			search: $this->search,
-			sortBy: 'username asc'
 		);
 	}
 
-	public function find(string $id): User|null
+	public function find(string $id): File|null
 	{
-		return $this->kirby->user($id);
+		return $this->kirby->file($id, $this->model);
 	}
 
 	public function query(): string
@@ -72,10 +71,10 @@ class UsersPickerDialogController extends ModelsPickerDialogController
 			return $this->query;
 		}
 
-		if ($this->model instanceof User) {
-			return 'user.siblings';
+		if ($this->model instanceof File) {
+			return 'file.siblings';
 		}
 
-		return 'kirby.users';
+		return $this->model::CLASS_ALIAS . '.files';
 	}
 }
