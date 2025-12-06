@@ -30,7 +30,10 @@ export const props = {
 		ratio: {
 			default: "16/9"
 		},
-		url: String
+		url: {
+			type: String,
+			required: true
+		}
 	}
 };
 
@@ -50,7 +53,7 @@ export default {
 	},
 	computed: {
 		isInternal() {
-			return this.url?.startsWith("file://") === true;
+			return this.url.startsWith("file://") === true;
 		}
 	},
 	watch: {
@@ -61,11 +64,6 @@ export default {
 	},
 	methods: {
 		async fetch() {
-			if (!this.url) {
-				this.resolvedUrl = null;
-				return;
-			}
-
 			if (this.isInternal === false) {
 				this.resolvedUrl = this.$helper.embed.video(this.url, true);
 				return;

@@ -9,9 +9,6 @@
 		<k-lab-example v-if="id" label="Internal file UUID">
 			<k-video-frame :url="id" :controls="true" />
 		</k-lab-example>
-		<k-lab-example label="No URL">
-			<k-video-frame />
-		</k-lab-example>
 	</k-lab-examples>
 </template>
 
