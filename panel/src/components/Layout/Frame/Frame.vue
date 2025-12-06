@@ -1,6 +1,7 @@
 <template>
 	<component
 		:is="element"
+		v-if="ratio"
 		:class="['k-frame', $attrs.class]"
 		:data-theme="theme"
 		:style="{
@@ -12,6 +13,7 @@
 	>
 		<slot />
 	</component>
+	<slot v-else />
 </template>
 
 <script>
