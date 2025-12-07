@@ -51,6 +51,8 @@ class Field extends Component
 	 */
 	public static array $types = [];
 
+	protected mixed $value = null;
+
 	/**
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */

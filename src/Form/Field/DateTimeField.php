@@ -33,10 +33,7 @@ abstract class DateTimeField extends InputField
 	protected string|null $min;
 	protected array|int|string|null $step;
 
-	/**
-	 * @var \Kirby\Toolkit\Date|null
-	 */
-	protected mixed $value = null;
+	protected Date|null $value = null;
 
 	public function __construct(
 		bool|null $autofocus = null,

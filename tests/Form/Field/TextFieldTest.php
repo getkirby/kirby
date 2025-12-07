@@ -23,7 +23,7 @@ class TextFieldTest extends TestCase
 			'before'       => null,
 			'converter'    => null,
 			'counter'      => true,
-			'default'      => null,
+			'default'      => '',
 			'disabled'     => false,
 			'font'         => 'sans-serif',
 			'help'         => null,
@@ -54,7 +54,7 @@ class TextFieldTest extends TestCase
 			['upper', 'Super nice', 'SUPER NICE'],
 			['lower', 'Super nice', 'super nice'],
 			['ucfirst', 'super nice', 'Super nice'],
-			['upper', null, null],
+			['upper', null, ''],
 			['lower', '', ''],
 		];
 	}

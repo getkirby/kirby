@@ -113,16 +113,6 @@ abstract class BaseField
 	}
 
 	/**
-	 * @since 5.2.0
-	 * @todo Move to `Value` mixin once array-based fields are unsupported
-	 */
-	public function reset(): static
-	{
-		$this->value = $this->emptyValue();
-		return $this;
-	}
-
-	/**
 	 * Parses a string template in the given value
 	 */
 	protected function stringTemplate(string|null $string = null, bool $safe = true): string|null

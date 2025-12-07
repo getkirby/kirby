@@ -11,7 +11,7 @@ class ObjectField extends InputField
 	use Mixin\EmptyState;
 	use Mixin\Fields;
 
-	protected mixed $value = [];
+	protected array $value = [];
 
 	public function __construct(
 		array|null $default = null,

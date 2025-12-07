@@ -25,7 +25,7 @@ abstract class StringField extends InputField
 	use Mixin\Placeholder;
 	use Mixin\Spellcheck;
 
-	protected mixed $value = '';
+	protected string $value = '';
 
 	public function __construct(
 		string|null $autocomplete = null,

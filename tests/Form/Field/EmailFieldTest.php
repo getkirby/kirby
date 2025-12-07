@@ -21,7 +21,7 @@ class EmailFieldTest extends TestCase
 			'before'       => null,
 			'converter'    => null,
 			'counter'      => false,
-			'default'      => null,
+			'default'      => '',
 			'disabled'     => false,
 			'font'         => 'sans-serif',
 			'help'         => null,

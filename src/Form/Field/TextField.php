@@ -73,9 +73,9 @@ class TextField extends StringField
 		$this->pattern   = $pattern;
 	}
 
-	public function default(): string|null
+	public function default(): string
 	{
-		return $this->convert($this->default);
+		return $this->convert($this->default) ?? '';
 	}
 
 	/**
@@ -85,7 +85,7 @@ class TextField extends StringField
 	public function fill(mixed $value): static
 	{
 		return parent::fill(
-			value: $this->convert($value)
+			value: $this->convert($value) ?? ''
 		);
 	}
 

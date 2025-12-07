@@ -880,6 +880,7 @@ class FieldsTest extends TestCase
 			'a' => [
 				'autofocus'  => false,
 				'counter'    => true,
+				'default'    => '',
 				'disabled'   => false,
 				'font'       => 'sans-serif',
 				'hidden'     => false,

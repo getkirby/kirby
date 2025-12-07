@@ -30,6 +30,8 @@ class ToggleField extends InputField
 	 */
 	protected array|string|null $text;
 
+	protected bool|null $value = null;
+
 	public function __construct(
 		array|string|null $after = null,
 		bool|null $autofocus = null,

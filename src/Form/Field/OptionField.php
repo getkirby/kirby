@@ -18,7 +18,7 @@ abstract class OptionField extends InputField
 {
 	use Mixin\Options;
 
-	protected mixed $value = '';
+	protected string $value = '';
 
 	public function __construct(
 		bool|null $autofocus = null,

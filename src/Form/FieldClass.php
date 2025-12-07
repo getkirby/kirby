@@ -26,6 +26,8 @@ abstract class FieldClass extends InputField
 	use Mixin\Placeholder;
 	use Mixin\Width;
 
+	protected mixed $value = null;
+
 	public function __construct(
 		array|string|null $after = null,
 		bool|null $autofocus = null,

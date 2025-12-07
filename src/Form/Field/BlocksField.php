@@ -47,7 +47,7 @@ class BlocksField extends InputField
 	 */
 	protected string|null $group;
 
-	protected mixed $value = [];
+	protected array $value = [];
 
 	public function __construct(
 		bool|null $autofocus = null,

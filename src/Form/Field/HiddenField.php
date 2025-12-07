@@ -14,6 +14,8 @@ namespace Kirby\Form\Field;
  */
 class HiddenField extends BaseField
 {
+	protected mixed $value = null;
+
 	public function __construct(
 		mixed $default = null,
 		string|null $name = null,

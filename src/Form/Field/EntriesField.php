@@ -37,7 +37,7 @@ class EntriesField extends InputField
 	protected array|string|null $field;
 
 	protected Form $form;
-	protected mixed $value = [];
+	protected array $value = [];
 
 	public function __construct(
 		bool|null $autofocus = null,
