@@ -45,7 +45,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ===================== Unit Tests =====================
+  # ======================== Unit Tests ========================
   tests:
     name: "Unit Tests - PHP ${{ matrix.php }}"
     if: *should-run
@@ -86,15 +86,12 @@ jobs:
       - name: Check Composer platform requirements
         run: composer check-platform-reqs
 
-      - name: Run tests
+      - name: Run PHPUnit tests
         run: phpunit -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Upload coverage results to Codecov
-        if: env.token != '' && matrix.php == '8.3'
+        if: secrets.CODECOV_TOKEN != '' && matrix.php == '8.3'
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5
-        env:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          PHP: ${{ matrix.php }}
         with:
           # for better reliability if the GitHub API is down
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -102,13 +99,17 @@ jobs:
           files: ${{ github.workspace }}/clover.xml
           flags: backend
           env_vars: PHP
+        env:
+          PHP: ${{ matrix.php }}
 
-  # ===================== Code Quality =====================
+  # ======================== Code Quality ========================
   analysis:
     name: "Code Quality"
     if: *should-run
     runs-on: *os
     timeout-minutes: *timeout
+    env:
+      php: 8.3
 
     steps:
       - name: Checkout repository
@@ -120,7 +121,7 @@ jobs:
       - name: Setup PHP environment
         uses: ./.github/actions/setup-php
         with:
-          php: 8.3
+          php: ${{ env.php }}
           tools: |
             composer:2.9.1, composer-normalize:2.48.2, composer-require-checker:4.18.0,
             composer-unused:0.9.5, psalm:6.13.1
@@ -130,13 +131,13 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      - name: Cache analysis data
+      - name: Cache Psalm analysis data
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.cache/psalm
-          key: psalm-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
+          key: psalm-${{ env.php }}-${{ hashFiles('composer.lock') }}
           restore-keys: |
-            psalm-${{ matrix.php }}-
+            psalm-${{ env.php }}-
             psalm-
 
       - name: Validate composer.json/composer.lock
@@ -158,7 +159,7 @@ jobs:
         with:
           sarif_file: sarif
 
-  # ===================== Coding Style =====================
+  # ======================== Coding Style ========================
   coding-style:
     name: "Coding Style"
     if: *should-run
