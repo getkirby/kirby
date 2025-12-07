@@ -14,7 +14,7 @@ use Kirby\Form\Mixin;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-class HiddenField extends InputField
+class HiddenField extends BaseField
 {
 	use Mixin\Value;
 
