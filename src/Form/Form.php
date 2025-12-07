@@ -71,7 +71,10 @@ class Form
 		$language = $this->fields->language();
 
 		foreach ($this->fields as $field) {
-			if ($field->isStorable($language) === false) {
+			if (
+				$field->hasValue() === false ||
+				$field->isStorable($language) === false
+			) {
 				if ($includeNulls === true) {
 					$data[$field->name()] = null;
 				}

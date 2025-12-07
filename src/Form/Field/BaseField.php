@@ -26,7 +26,6 @@ abstract class BaseField
 	use Mixin\Name;
 	use Mixin\Siblings;
 	use Mixin\Translatable;
-	use Mixin\Value;
 	use Mixin\When;
 	use Mixin\Width;
 
@@ -74,16 +73,15 @@ abstract class BaseField
 			$field->setModel($props['model']);
 		}
 
-		if (array_key_exists('value', $props) === true) {
-			$field->fill($props['value']);
-		}
-
 		return $field;
 	}
 
+	/**
+	 * Checks if the field has a value
+	 */
 	public function hasValue(): bool
 	{
-		return false;
+		return property_exists($this, 'value') === true;
 	}
 
 	public function id(): string

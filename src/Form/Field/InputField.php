@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Form\Fields;
 use Kirby\Form\Mixin;
 
 /**
@@ -22,6 +23,7 @@ abstract class InputField extends BaseField
 	use Mixin\Label;
 	use Mixin\Required;
 	use Mixin\Validation;
+	use Mixin\Value;
 	use Mixin\Width;
 
 	public function __construct(
@@ -51,9 +53,24 @@ abstract class InputField extends BaseField
 		$this->width     = $width;
 	}
 
-	public function hasValue(): bool
-	{
-		return true;
+	/**
+	 * Creates a new field instance from a $props array
+	 * @since 6.0.0
+	 */
+	public static function factory(
+		array $props,
+		Fields|null $siblings = null
+	): static {
+		/**
+		 * @var \Kirby\Form\Field\InputField $field
+		 */
+		$field = parent::factory($props, $siblings);
+
+		if (array_key_exists('value', $props) === true) {
+			$field->fill($props['value']);
+		}
+
+		return $field;
 	}
 
 	public function props(): array

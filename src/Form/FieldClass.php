@@ -72,11 +72,6 @@ abstract class FieldClass extends InputField
 		throw new NotFoundException(message: 'Method or option "' . $param . '" does not exist for field type "' . $this->type() . '"');
 	}
 
-	public function hasValue(): bool
-	{
-		return true;
-	}
-
 	/**
 	 * Define the props that will be sent to
 	 * the Vue component

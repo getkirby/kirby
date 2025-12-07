@@ -401,7 +401,7 @@ class Fields extends Collection
 	{
 		return $this->toValues(
 			fn ($field) => $field->toStoredValue(),
-			fn ($field) => $field->isStorable($this->language())
+			fn ($field) => $field->hasValue() ? $field->isStorable($this->language()) : false
 		);
 	}
 

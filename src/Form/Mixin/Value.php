@@ -36,19 +36,8 @@ trait Value
 	 */
 	public function fill(mixed $value): static
 	{
-		if (property_exists($this, 'value') === true) {
-			$this->value = $value ?? $this->emptyValue();
-		}
-
+		$this->value = $value ?? $this->emptyValue();
 		return $this;
-	}
-
-	/**
-	 * Checks if the field has a value
-	 */
-	public function hasValue(): bool
-	{
-		return true;
 	}
 
 	/**
