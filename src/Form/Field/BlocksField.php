@@ -236,9 +236,7 @@ class BlocksField extends InputField
 	{
 		$value  = BlocksCollection::parse($value);
 		$blocks = BlocksCollection::factory($value)->toArray();
-		$this->value = $this->blocksToValues($blocks);
-
-		return $this;
+		return parent::fill(value: $this->blocksToValues($blocks));
 	}
 
 	public function form(array $fields): Form
@@ -296,9 +294,9 @@ class BlocksField extends InputField
 		] + parent::props();
 	}
 
-	public function toStoredValue(bool $default = false): mixed
+	public function toStoredValue(): mixed
 	{
-		$value  = $this->toFormValue($default);
+		$value  = parent::toStoredValue();
 		$blocks = $this->blocksToValues((array)$value, 'toStoredValues');
 
 		// returns empty string to avoid storing empty array as string `[]`
@@ -316,20 +314,14 @@ class BlocksField extends InputField
 			'blocks' => function ($value) {
 				if ($this->min && count($value) < $this->min) {
 					throw new InvalidArgumentException(
-						key: match ($this->min) {
-							1       => 'blocks.min.singular',
-							default => 'blocks.min.plural'
-						},
+						key: 'blocks.min.' . ($this->min === 1 ? 'singular' : 'plural'),
 						data: ['min' => $this->min]
 					);
 				}
 
 				if ($this->max && count($value) > $this->max) {
 					throw new InvalidArgumentException(
-						key: match ($this->max) {
-							1       => 'blocks.max.singular',
-							default => 'blocks.max.plural'
-						},
+						key: 'blocks.max.' . ($this->max === 1 ? 'singular' : 'plural'),
 						data: ['max' => $this->max]
 					);
 				}

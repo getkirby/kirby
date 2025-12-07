@@ -84,8 +84,9 @@ class TextField extends StringField
 	 */
 	public function fill(mixed $value): static
 	{
-		$this->value = $this->convert($value);
-		return $this;
+		return parent::fill(
+			value: $this->convert($value)
+		);
 	}
 
 	public function props(): array

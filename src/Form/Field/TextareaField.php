@@ -165,7 +165,9 @@ class TextareaField extends InputField
 	 */
 	public function fill(mixed $value): static
 	{
-		return parent::fill(value: trim($value ?? ''));
+		return parent::fill(
+			value: trim($value ?? '')
+		);
 	}
 
 	public function props(): array

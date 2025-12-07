@@ -325,10 +325,10 @@ class LayoutField extends BlocksField
 		return $this->settingsFieldset ??= Fieldset::factory($settings);
 	}
 
-	public function toStoredValue(bool $default = false): mixed
+	public function toStoredValue(): mixed
 	{
+		$value = $this->toFormValue();
 		$attrs = $this->attrsForm();
-		$value = $this->toFormValue($default);
 		$value = Layouts::factory($value, ['parent' => $this->model()])->toArray();
 
 		// returns empty string to avoid storing empty array as string `[]`
