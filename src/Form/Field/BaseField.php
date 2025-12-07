@@ -73,6 +73,13 @@ abstract class BaseField
 			$field->setModel($props['model']);
 		}
 
+		if (
+			array_key_exists('value', $props) === true &&
+			method_exists(static::class, 'fill') === true
+		) {
+			$field->fill($props['value']);
+		}
+
 		return $field;
 	}
 
