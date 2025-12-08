@@ -12,6 +12,17 @@ class CorsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Cors';
 
+	public function tearDown(): void
+	{
+		unset($_COOKIE['foo']);
+
+		if (Dir::exists(static::TMP) === true) {
+			Dir::remove(static::TMP);
+		}
+
+		parent::tearDown();
+	}
+
 	public function testDisabled(): void
 	{
 		$this->assertSame([], Cors::headers());
@@ -517,8 +528,6 @@ class CorsTest extends TestCase
 
 		$this->assertSame('https://example.com', $headers['Access-Control-Allow-Origin']);
 		$this->assertSame('no-store, private', $headers['Cache-Control']);
-
-		unset($_COOKIE['foo']);
 	}
 
 	public function testHeadersWithVaryMerging(): void
@@ -627,7 +636,5 @@ class CorsTest extends TestCase
 		$html2 = $app->page('test')->render();
 		$this->assertSame($html1, $html2);
 		$this->assertSame('https://app2.com', $app->response()->headers()['Access-Control-Allow-Origin']);
-
-		Dir::remove(static::TMP);
 	}
 }
