@@ -236,7 +236,6 @@ class Responder implements Stringable
 	 */
 	public function fromArray(array $response): void
 	{
-		$this->volatileHeaders = [];
 		$this->body($response['body'] ?? null);
 		$this->cache($response['cache'] ?? null);
 		$this->code($response['code'] ?? null);
@@ -245,6 +244,7 @@ class Responder implements Stringable
 		$this->type($response['type'] ?? null);
 		$this->usesAuth($response['usesAuth'] ?? null);
 		$this->usesCookies($response['usesCookies'] ?? null);
+		$this->volatileHeaders = $response['volatileHeaders'] ?? [];
 	}
 
 	/**
@@ -292,15 +292,6 @@ class Responder implements Stringable
 			// inject CORS headers if enabled
 			$corsHeaders = Cors::headers();
 			if ($corsHeaders !== []) {
-				foreach ($corsHeaders as $name => $value) {
-					if ($name === 'Vary') {
-						$corsVaryValues = array_map('trim', explode(',', $value));
-						$this->markRequestDependentHeader('Vary', $corsVaryValues);
-					} else {
-						$this->markRequestDependentHeader($name);
-					}
-				}
-
 				$injectedHeaders = [...$injectedHeaders, ...$corsHeaders];
 			}
 
@@ -394,9 +385,9 @@ class Responder implements Stringable
 	 */
 	public function toArray(): array
 	{
-		// the `cache`, `expires`, `usesAuth` and `usesCookies`
-		// values are explicitly *not* serialized as they are
-		// volatile and not to be exported
+		// the `cache`, `expires`, `usesAuth`, `usesCookies` and
+		// `volatileHeaders` values are explicitly *not* serialized
+		// as they are volatile and not to be exported
 		return [
 			'body'    => $this->body(),
 			'code'    => $this->code(),
@@ -406,38 +397,22 @@ class Responder implements Stringable
 	}
 
 	/**
-	 * Strips request-dependent headers for safe caching
+	 * Converts the response configuration to an array
+	 * that can safely be cached
 	 *
 	 * @since 5.2.0
 	 */
-	public function cacheHeaders(array $headers): array
+	public function toCacheArray(): array
 	{
-		if ($this->volatileHeaders === []) {
-			return $headers;
+		$response = $this->toArray();
+		$volatile = $this->collectVolatileHeaders();
+
+		if ($volatile === []) {
+			return $response;
 		}
 
-		foreach ($this->volatileHeaders as $name => $values) {
-			if ($name === 'Vary' && is_array($values) === true) {
-				if (isset($headers['Vary']) === false) {
-					continue;
-				}
-
-				$current = $this->normalizeVaryValues($headers['Vary']);
-				$remaining = $this->removeVaryValues($current, $values);
-
-				if ($remaining === []) {
-					unset($headers['Vary']);
-				} else {
-					$headers['Vary'] = implode(', ', $remaining);
-				}
-
-				continue;
-			}
-
-			unset($headers[$name]);
-		}
-
-		return $headers;
+		$response['headers'] = $this->stripVolatileHeaders($response['headers'], $volatile);
+		return $response;
 	}
 
 	/**
@@ -491,14 +466,77 @@ class Responder implements Stringable
 	 *
 	 * @since 5.2.0
 	 */
-	public function markRequestDependentHeader(string $name, array|null $values = null): void
+	public function markVolatileHeader(string $name, array|null $values = null): void
+	{
+		$this->appendVolatileHeader($this->volatileHeaders, $name, $values);
+	}
+
+	/**
+	 * Collects volatile headers from both manual configuration
+	 * and automatically injected CORS headers
+	 */
+	protected function collectVolatileHeaders(): array
+	{
+		$volatile    = $this->volatileHeaders;
+		$corsHeaders = Cors::headers();
+
+		if ($corsHeaders === []) {
+			return $volatile;
+		}
+
+		foreach ($corsHeaders as $name => $value) {
+			if ($name === 'Vary') {
+				$corsVaryValues = array_map('trim', explode(',', $value));
+				$this->appendVolatileHeader($volatile, 'Vary', $corsVaryValues);
+				continue;
+			}
+
+			$this->appendVolatileHeader($volatile, $name);
+		}
+
+		return $volatile;
+	}
+
+	/**
+	 * Strips request-dependent headers for safe caching
+	 */
+	protected function stripVolatileHeaders(array $headers, array $volatile): array
+	{
+		foreach ($volatile as $name => $values) {
+			if ($name === 'Vary' && is_array($values) === true) {
+				if (isset($headers['Vary']) === false) {
+					continue;
+				}
+
+				$current   = $this->normalizeVaryValues($headers['Vary']);
+				$remaining = $this->removeVaryValues($current, $values);
+
+				if ($remaining === []) {
+					unset($headers['Vary']);
+				} else {
+					$headers['Vary'] = implode(', ', $remaining);
+				}
+
+				continue;
+			}
+
+			unset($headers[$name]);
+		}
+
+		return $headers;
+	}
+
+	/**
+	 * Adds (parts of) a header to the provided volatile header list
+	 */
+	protected function appendVolatileHeader(array &$target, string $name, array|null $values = null): void
 	{
 		if ($values === null) {
-			$this->volatileHeaders[$name] = null;
+			$target[$name] = null;
 			return;
 		}
 
-		if (array_key_exists($name, $this->volatileHeaders) === true && $this->volatileHeaders[$name] === null) {
+		if (array_key_exists($name, $target) === true && $target[$name] === null) {
 			return;
 		}
 
@@ -509,8 +547,8 @@ class Responder implements Stringable
 			return;
 		}
 
-		$existing = $this->volatileHeaders[$name] ?? [];
-		$this->volatileHeaders[$name] = array_values(array_unique([...$existing, ...$values]));
+		$existingValues = $target[$name] ?? [];
+		$target[$name] = array_values(array_unique([...$existingValues, ...$values]));
 	}
 
 	/**

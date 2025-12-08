@@ -986,12 +986,9 @@ class Page extends ModelWithContent
 			// cache the result
 			$response = $kirby->response();
 			if ($cache !== null && $response->cache() === true) {
-				$responseData = $response->toArray();
-				$responseData['headers'] = $response->cacheHeaders($responseData['headers']);
-
 				$cache->set($cacheId, [
 					'html'        => $html,
-					'response'    => $responseData,
+					'response'    => $response->toCacheArray(),
 					'usesAuth'    => $response->usesAuth(),
 					'usesCookies' => $response->usesCookies(),
 				], $response->expires() ?? 0);
