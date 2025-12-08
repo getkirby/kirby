@@ -75,6 +75,17 @@ class StructureField extends InputField
 		return $this->duplicate ?? true;
 	}
 
+	/**
+	 * @psalm-suppress MethodSignatureMismatch
+	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
+	 */
+	public function fill(mixed $value): static
+	{
+		return parent::fill(
+			value: Data::decode($value, 'yaml')
+		);
+	}
+
 	public function props(): array
 	{
 		return [
@@ -91,16 +102,6 @@ class StructureField extends InputField
 			'sortable'  => $this->sortable(),
 			'sortBy'    => $this->sortBy()
 		];
-	}
-
-	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
-	 */
-	public function fill(mixed $value): static
-	{
-		$this->value = Data::decode($value, 'yaml');
-		return $this;
 	}
 
 	public function toFormValue(): array

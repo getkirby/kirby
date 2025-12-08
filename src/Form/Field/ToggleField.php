@@ -71,8 +71,9 @@ class ToggleField extends InputField
 	 */
 	public function fill(mixed $value): static
 	{
-		$this->value = static::toBool($value);
-		return $this;
+		return parent::fill(
+			value: static::toBool($value)
+		);
 	}
 
 	public function props(): array

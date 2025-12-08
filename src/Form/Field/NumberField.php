@@ -85,12 +85,16 @@ class NumberField extends InputField
 	 */
 	public function fill(mixed $value): static
 	{
-		return parent::fill(static::toNumber($value));
+		return parent::fill(
+			value: static::toNumber($value)
+		);
 	}
 
 	public function default(): float|null
 	{
-		return static::toNumber(parent::default());
+		return static::toNumber(
+			value: parent::default()
+		);
 	}
 
 	public function max(): float|null

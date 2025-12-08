@@ -113,8 +113,9 @@ class TagsField extends OptionsField
 	 */
 	public function fill(mixed $value): static
 	{
-		$this->value = Str::split($value, $this->separator());
-		return $this;
+		return parent::fill(
+			value: Str::split($value, $this->separator())
+		);
 	}
 
 	public function icon(): string
@@ -145,17 +146,9 @@ class TagsField extends OptionsField
 		];
 	}
 
-	public function toFormValue(): array
-	{
-		return $this->value;
-	}
-
 	public function toStoredValue(): string
 	{
-		return A::join(
-			$this->value ?? [],
-			$this->separator() . ' '
-		);
+		return A::join($this->value, $this->separator() . ' ');
 	}
 
 	protected function validations(): array

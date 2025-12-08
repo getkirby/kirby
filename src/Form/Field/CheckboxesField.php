@@ -64,8 +64,9 @@ class CheckboxesField extends OptionsField
 	 */
 	public function fill(mixed $value): static
 	{
-		$this->value = Str::split($value, ',');
-		return $this;
+		return parent::fill(
+			value: Str::split($value, ',')
+		);
 	}
 
 	public function props(): array

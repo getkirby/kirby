@@ -106,8 +106,9 @@ class WriterField extends StringField
 		// convert non-breaking spaces to HTML entity
 		// as that's how ProseMirror handles it internally;
 		// will allow comparing saved and current content
-		$this->value = str_replace(' ', '&nbsp;', $value);
-		return $this;
+		$value = str_replace(' ', '&nbsp;', $value);
+
+		return parent::fill($value);
 	}
 
 	public function headings(): array

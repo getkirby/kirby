@@ -110,8 +110,9 @@ class EntriesField extends InputField
 	 */
 	public function fill(mixed $value): static
 	{
-		$this->value = Data::decode($value ?? '', 'yaml');
-		return $this;
+		return parent::fill(
+			value: Data::decode($value ?? '', 'yaml')
+		);
 	}
 
 	public function form(): Form
