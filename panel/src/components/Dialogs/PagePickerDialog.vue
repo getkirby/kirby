@@ -1,5 +1,5 @@
 <template>
-	<k-models-picker-dialog
+	<k-model-picker-dialog
 		ref="dialog"
 		v-bind="$props"
 		:payload="payload"
@@ -7,7 +7,7 @@
 		@submit="$emit('submit', $event)"
 	>
 		<template v-if="parent" #header>
-			<header class="k-pages-dialog-navigation">
+			<header class="k-page-picker-navigation">
 				<k-button
 					:disabled="!parent.id"
 					:title="$t('back')"
@@ -25,18 +25,18 @@
 				:disabled="!page.hasChildren"
 				:title="$t('open')"
 				icon="angle-right"
-				class="k-pages-picker-dialog-option"
+				class="k-page-picker-dialog-option"
 				@click.stop="navigate(page.id)"
 			/>
 		</template>
-	</k-models-picker-dialog>
+	</k-model-picker-dialog>
 </template>
 
 <script>
-import { props as ModelsPickerDialog } from "./ModelsPickerDialog.vue";
+import { props as ModelPickerDialog } from "./ModelPickerDialog.vue";
 
 export default {
-	mixins: [ModelsPickerDialog],
+	mixins: [ModelPickerDialog],
 	props: {
 		empty: {
 			type: Object,
@@ -72,20 +72,20 @@ export default {
 </script>
 
 <style>
-.k-pages-dialog-navigation {
+.k-page-picker-navigation {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	margin-bottom: var(--spacing-3);
 }
-.k-pages-dialog-navigation .k-button[aria-disabled="true"] {
+.k-page-picker-navigation .k-button[aria-disabled="true"] {
 	opacity: 0;
 }
-.k-pages-dialog-navigation .k-headline {
+.k-page-picker-navigation .k-headline {
 	flex-grow: 1;
 	text-align: center;
 }
-.k-pages-picker-dialog-option[aria-disabled="true"] {
+.k-page-picker-dialog-option[aria-disabled="true"] {
 	opacity: 0.25;
 }
 </style>

@@ -19,9 +19,9 @@ use Kirby\Panel\Collector\PagesCollector;
  * @since     6.0.0
  * @unstable
  */
-class PagesPickerDialogController extends ModelsPickerDialogController
+class PagePickerDialogController extends ModelPickerDialogController
 {
-	protected const string TYPE = 'pages';
+	protected const string TYPE = 'page';
 
 	protected PagesCollector $collector;
 
