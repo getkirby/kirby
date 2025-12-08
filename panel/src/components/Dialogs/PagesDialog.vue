@@ -34,6 +34,9 @@
 import Dialog from "@/mixins/dialog.js";
 import { props as ModelsDialogProps } from "./ModelsDialog.vue";
 
+/**
+ * @deprecated 6.0.0 Use `k-page-picker-dialog` instead
+ */
 export default {
 	mixins: [Dialog, ModelsDialogProps],
 	props: {
