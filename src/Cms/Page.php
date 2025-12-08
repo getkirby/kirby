@@ -988,7 +988,7 @@ class Page extends ModelWithContent
 			if ($cache !== null && $response->cache() === true) {
 				$cache->set($cacheId, [
 					'html'        => $html,
-					'response'    => $response->toArray(),
+					'response'    => $response->toCacheArray(),
 					'usesAuth'    => $response->usesAuth(),
 					'usesCookies' => $response->usesCookies(),
 				], $response->expires() ?? 0);
