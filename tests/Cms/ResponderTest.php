@@ -247,8 +247,7 @@ class ResponderTest extends TestCase
 		$responder->usesAuth(true);
 		$responder->usesCookie('session');
 
-		$headers   = $responder->toArray()['headers'];
-		$cacheable = $responder->cacheHeaders($headers);
+		$cacheable = $responder->toCacheArray()['headers'];
 
 		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $cacheable);
 		$this->assertArrayNotHasKey('Access-Control-Allow-Headers', $cacheable);
@@ -269,8 +268,7 @@ class ResponderTest extends TestCase
 		]);
 
 		$responder = new Responder();
-		$headers   = $responder->toArray()['headers'];
-		$cacheable = $responder->cacheHeaders($headers);
+		$cacheable = $responder->toCacheArray()['headers'];
 
 		$this->assertArrayNotHasKey('Vary', $cacheable);
 		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $cacheable);
@@ -285,8 +283,7 @@ class ResponderTest extends TestCase
 		]);
 
 		$responder = new Responder();
-		$headers   = $responder->toArray()['headers'];
-		$cacheable = $responder->cacheHeaders($headers);
+		$cacheable = $responder->toCacheArray()['headers'];
 
 		$this->assertArrayNotHasKey('Vary', $cacheable);
 		$this->assertArrayNotHasKey('Access-Control-Allow-Origin', $cacheable);
@@ -309,8 +306,7 @@ class ResponderTest extends TestCase
 		$responder->header('X-Custom-Header', 'custom-value');
 		$responder->header('Cache-Control', 'public, max-age=3600');
 
-		$headers   = $responder->toArray()['headers'];
-		$cacheable = $responder->cacheHeaders($headers);
+		$cacheable = $responder->toCacheArray()['headers'];
 
 		$this->assertSame('custom-value', $cacheable['X-Custom-Header']);
 		$this->assertSame('public, max-age=3600', $cacheable['Cache-Control']);
@@ -333,19 +329,28 @@ class ResponderTest extends TestCase
 		$responder = new Responder();
 		$responder->usesAuth(true);
 
-		$generatedHeaders = $responder->toArray()['headers'];
-
-		$headers = [
+		$responder->headers([
 			'Vary' => ' Authorization ,  Origin,  Accept-Encoding  ',
 			'Access-Control-Allow-Origin' => 'https://app1.com'
-		];
+		]);
 
-		$cacheable = $responder->cacheHeaders($headers);
+		$cacheable = $responder->toCacheArray()['headers'];
 
 		$this->assertSame('Authorization, Accept-Encoding', $cacheable['Vary']);
 	}
 
-	public function testRequestDependentHeadersResetOnFromArray(): void
+	public function testCustomVolatileHeaderIsRemoved(): void
+	{
+		$responder = new Responder();
+		$responder->header('X-Private', 'secret');
+		$responder->markVolatileHeader('X-Private');
+
+		$cacheable = $responder->toCacheArray()['headers'];
+
+		$this->assertArrayNotHasKey('X-Private', $cacheable);
+	}
+
+	public function testVolatileHeadersResetOnFromArray(): void
 	{
 		$this->kirby([
 			'options' => [
@@ -360,13 +365,12 @@ class ResponderTest extends TestCase
 			'headers' => ['X-Custom' => 'value']
 		]);
 
-		$headers   = $responder->toArray()['headers'];
-		$cacheable = $responder->cacheHeaders($headers);
+		$cacheable = $responder->toCacheArray()['headers'];
 
 		$this->assertSame(['X-Custom' => 'value'], $cacheable);
 	}
 
-	public function testRequestDependentHeadersResetOnHeadersSetter(): void
+	public function testVolatileHeadersResetOnHeadersSetter(): void
 	{
 		$this->kirby([
 			'options' => [
@@ -379,8 +383,7 @@ class ResponderTest extends TestCase
 
 		$responder->headers(['X-Custom' => 'value']);
 
-		$headers   = $responder->toArray()['headers'];
-		$cacheable = $responder->cacheHeaders($headers);
+		$cacheable = $responder->toCacheArray()['headers'];
 
 		$this->assertSame(['X-Custom' => 'value'], $cacheable);
 	}
