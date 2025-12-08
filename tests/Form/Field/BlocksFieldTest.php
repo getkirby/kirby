@@ -6,7 +6,10 @@ use Kirby\Cms\App;
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Field;
 use Kirby\Form\Fields;
+use Kirby\Panel\Controller\Dialog\FieldDialogController;
+use Kirby\Panel\Controller\Drawer\FieldDrawerController;
 
 class BlocksFieldTest extends TestCase
 {
@@ -20,6 +23,30 @@ class BlocksFieldTest extends TestCase
 		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
 		$this->assertSame([], $field->value());
 		$this->assertTrue($field->save());
+	}
+
+	public function testDialogs(): void
+	{
+		$field = $this->field('blocks', []);
+
+		$result = $field->dialogs()[0]['action']('text', 'text', 'test-path');
+
+		$this->assertInstanceOf(FieldDialogController::class, $result);
+		$this->assertInstanceOf(Field::class, $result->field);
+		$this->assertSame('text', $result->field->name());
+		$this->assertSame('test-path', $result->path);
+	}
+
+	public function testDrawers(): void
+	{
+		$field = $this->field('blocks', []);
+
+		$result = $field->drawers()[0]['action']('text', 'text', 'test-path');
+
+		$this->assertInstanceOf(FieldDrawerController::class, $result);
+		$this->assertInstanceOf(Field::class, $result->field);
+		$this->assertSame('text', $result->field->name());
+		$this->assertSame('test-path', $result->path);
 	}
 
 	public function testGroups(): void
