@@ -229,11 +229,11 @@ class PagesFieldTest extends TestCase
 			],
 			'uuid' => 'page://my-test-uuid',
 			'dragText' => '(link: page://my-test-uuid text: Test Title)',
-			'hasChildren' => false,
 			'parent' => null,
 			'status' => 'unlisted',
 			'template' => 'default',
 			'url' => '/test',
+			'hasChildren' => false,
 			'sortable' => true,
 		], $api['data'][0]);
 		$this->assertSame('a', $api['data'][1]['id']);

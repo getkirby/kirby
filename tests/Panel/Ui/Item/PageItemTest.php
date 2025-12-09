@@ -48,13 +48,12 @@ class PageItemTest extends TestCase
 				'delete'       => false,
 				'sort'         => false,
 			],
-			'uuid'        => $this->model->uuid()?->toString(),
-			'dragText'    => '(link: ' . $this->model->uuid() . ' text: test)',
-			'hasChildren' => false,
-			'parent'      => null,
-			'status'      => 'unlisted',
-			'template'    => 'default',
-			'url'         => '/test',
+			'uuid'     => $this->model->uuid()?->toString(),
+			'dragText' => '(link: ' . $this->model->uuid() . ' text: test)',
+			'parent'   => null,
+			'status'   => 'unlisted',
+			'template' => 'default',
+			'url'      => '/test',
 		];
 
 		$this->assertSame($expected, $item->props());
