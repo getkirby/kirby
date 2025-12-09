@@ -1,5 +1,5 @@
 {
-	"account": "Account",
+	"account": "Účet",
 	"account.changeName": "Změnit jméno",
 	"account.delete": "Smazat účet",
 	"account.delete.confirm": "Opravdu chcete smazat svůj účet? Budete okamžitě odhlášeni. Účet nemůže být zpětně obnoven.",
@@ -16,7 +16,7 @@
 	"changes": "Změny",
 	"confirm": "Ok",
 	"collapse": "Sbalit",
-	"collapse.all": "Collapse all",
+	"collapse.all": "Sbalit vše",
 	"color": "Barva",
 	"coordinates": "Souřadnice",
 	"copy": "Kopírovat",
@@ -44,8 +44,8 @@
 	"delete": "Smazat",
 	"delete.all": "Smazat vše",
 
-	"deselect": "Deselect",
-	"deselect.all": "Deselect all",
+	"deselect": "Zrušit výběr",
+	"deselect.all": "Zrušit výběr všeho",
 
 	"dialog.fields.empty": "Tento dialog neobsahuje žádná pole",
 	"dialog.files.empty": "Žádné soubory k výběru",
@@ -299,7 +299,7 @@
 	"error.validation.url": "Zadejte prosím platnou adresu URL",
 
 	"expand": "Rozbalit",
-	"expand.all": "Expand all",
+	"expand.all": "Rozbalit vše",
 
 	"field.invalid": "Pole není platné",
 	"field.required": "Pole musí být vyplněno.",
@@ -380,7 +380,7 @@
 
 	"field.structure.delete.confirm": "Opravdu chcete smazat tento z\u00e1znam?",
 	"field.structure.delete.confirm.all": "Opravdu chcete smazat všechny záznamy?",
-	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
+	"field.structure.delete.confirm.selected": "Opravdu chcete smazat vybrané položky?",
 	"field.structure.empty": "Zat\u00edm nejsou \u017e\u00e1dn\u00e9 z\u00e1znamy.",
 
 	"field.users.empty": "Nebyli zatím vybráni žádní uživatelé",
@@ -454,10 +454,10 @@
 	"language.variables.empty": "Zatím žádné překlady",
 
 	"language.variable.delete.confirm": "Doopravdy chcete smazat proměnou {key}?",
-	"language.variable.entries": "Values",
+	"language.variable.entries": "Hodnoty",
 	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Klíč",
-	"language.variable.multiple": "Countable?",
+	"language.variable.multiple": "Počitatelné?",
 	"language.variable.multiple.text": "Use different translation strings",
 	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "Proměnná nebyla nalezena",
@@ -667,7 +667,7 @@
 
 	"security": "Zabezpečení",
 	"select": "Vybrat",
-	"select.all": "Select all",
+	"select.all": "Vybrat vše",
 	"server": "Server",
 	"settings": "Nastavení",
 	"show": "Zobrazit",
@@ -776,7 +776,7 @@
 	"user.changePassword.current": "Vaše současné heslo",
 	"user.changePassword.new": "Nové heslo",
 	"user.changePassword.new.confirm": "Potvrdit nové heslo...",
-	"user.changePassword.own": "Your own password",
+	"user.changePassword.own": "Vaše heslo",
 	"user.changeRole": "Změnit roli",
 	"user.changeRole.select": "Vybrat novou roli",
 	"user.create": "Přidat nového uživatele",
