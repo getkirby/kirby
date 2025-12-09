@@ -7,9 +7,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
-use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
-use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -92,17 +90,6 @@ class TestCase extends BaseTestCase
 	protected function hasTmp(): bool
 	{
 		return defined(static::class . '::TMP');
-	}
-
-	/**
-	 * Sets up `Toolkit\I18n` loader for the
-	 * specified language code
-	 */
-	protected function setUpI18nLoader(string $code = 'en'): void
-	{
-		// load i18n strings
-		$i18n = dirname(__DIR__) . '/i18n/translations/' . $code . '.json';
-		I18n::$load = fn () => Data::read($i18n, fail: false);
 	}
 
 	/**
