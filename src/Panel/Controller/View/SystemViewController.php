@@ -141,15 +141,6 @@ class SystemViewController extends ViewController
 			];
 		}
 
-		if ($this->kirby->option('panel.vue.compiler', null) === null) {
-			$security[] = [
-				'id'    => 'vue-compiler',
-				'link'  => 'https://getkirby.com/security/vue-compiler',
-				'text'  => $this->i18n('system.issues.vue.compiler'),
-				'theme' => 'notice'
-			];
-		}
-
 		return $security;
 	}
 

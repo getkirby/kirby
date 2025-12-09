@@ -2,8 +2,6 @@
 
 namespace Kirby\Panel\Ui\Button;
 
-use Kirby\Toolkit\I18n;
-
 /**
  * Preview view button
  *
@@ -24,7 +22,7 @@ class PreviewButton extends ViewButton
 			class: 'k-preview-view-button',
 			icon: 'window',
 			link: $link,
-			title: I18n::translate('preview')
+			title: $this->i18n('preview')
 		);
 	}
 }

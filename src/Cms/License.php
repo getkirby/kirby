@@ -25,7 +25,8 @@ class License
 	public const array HISTORY = [
 		'3' => '2019-02-05',
 		'4' => '2023-11-28',
-		'5' => '2025-06-24'
+		'5' => '2025-06-24',
+		'6' => '2025-12-09'
 	];
 
 	protected const string SALT = 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX';

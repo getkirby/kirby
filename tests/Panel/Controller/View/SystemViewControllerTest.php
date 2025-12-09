@@ -15,16 +15,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
  */
 class SystemMock
 {
-	public static function compilerWarning(): array
-	{
-		return [
-			'id'    => 'vue-compiler',
-			'link'  => 'https://getkirby.com/security/vue-compiler',
-			'text'  => 'The Vue template compiler is enabled',
-			'theme' => 'notice'
-		];
-	}
-
 	public static function customWarning(): array
 	{
 		return [
@@ -280,7 +270,6 @@ class SystemViewControllerTest extends TestCase
 		$security   = $controller->security();
 		$this->assertSame([
 			SystemMock::customWarning(),
-			SystemMock::compilerWarning()
 		], $security);
 	}
 
@@ -303,7 +292,6 @@ class SystemViewControllerTest extends TestCase
 				'text'  => 'Debugging must be turned off in production',
 				'link'  => 'https://getkirby.com/security/debug'
 			],
-			SystemMock::compilerWarning()
 		], $security);
 	}
 
@@ -325,22 +313,6 @@ class SystemViewControllerTest extends TestCase
 				'theme' => 'info',
 				'text'  => 'The site is running locally with relaxed security checks'
 			],
-			SystemMock::compilerWarning()
-		], $security);
-	}
-
-	public function testSecurityWithoutCompilerWarning(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'panel.vue.compiler' => true
-			]
-		]);
-
-		$controller = new SystemViewController();
-		$security   = $controller->security();
-		$this->assertSame([
-			SystemMock::customWarning()
 		], $security);
 	}
 
@@ -354,9 +326,7 @@ class SystemViewControllerTest extends TestCase
 
 		$controller = new SystemViewController();
 		$security   = $controller->security();
-		$this->assertSame([
-			SystemMock::compilerWarning()
-		], $security);
+		$this->assertSame([], $security);
 	}
 
 	public function testSecurityMissingHttps(): void
@@ -376,7 +346,6 @@ class SystemViewControllerTest extends TestCase
 				'text' => 'We recommend HTTPS for all your sites',
 				'link' => 'https://getkirby.com/security/https'
 			],
-			SystemMock::compilerWarning()
 		], $security);
 	}
 
