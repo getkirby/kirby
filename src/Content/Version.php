@@ -424,9 +424,9 @@ class Version
 	{
 		// get rid of all modifiers after the path
 		$uri = new Uri($url);
-		$uri->fragment = null;
-		$uri->params   = null;
-		$uri->query    = null;
+		$uri->setFragment(null);
+		$uri->setParams(null);
+		$uri->setQuery(null);
 
 		$data = [
 			'url'       => $uri->toString(),
@@ -676,10 +676,10 @@ class Version
 	protected function urlWithQueryParams(string $baseUrl, string $token): string
 	{
 		$uri = new Uri($baseUrl);
-		$uri->query->_token = $token;
+		$uri->query()->_token = $token;
 
 		if ($this->id->is('changes') === true) {
-			$uri->query->_version = 'changes';
+			$uri->query()->_version = 'changes';
 		}
 
 		return $uri->toString();

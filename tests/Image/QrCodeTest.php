@@ -177,7 +177,6 @@ class QrCodeTest extends TestCase
 	{
 		ob_start();
 		imagepng($image);
-		imagedestroy($image);
 		$data = ob_get_contents();
 		ob_end_clean();
 		return $data;

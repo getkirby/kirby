@@ -1,4 +1,5 @@
 {
+	"account": "Účet",
 	"account.changeName": "Změnit jméno",
 	"account.delete": "Smazat účet",
 	"account.delete.confirm": "Opravdu chcete smazat svůj účet? Budete okamžitě odhlášeni. Účet nemůže být zpětně obnoven.",
@@ -42,6 +43,9 @@
 
 	"delete": "Smazat",
 	"delete.all": "Smazat vše",
+
+	"deselect": "Zrušit výběr",
+	"deselect.all": "Zrušit výběr všeho",
 
 	"dialog.fields.empty": "Tento dialog neobsahuje žádná pole",
 	"dialog.files.empty": "Žádné soubory k výběru",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Opravdu chcete smazat tento z\u00e1znam?",
 	"field.structure.delete.confirm.all": "Opravdu chcete smazat všechny záznamy?",
+	"field.structure.delete.confirm.selected": "Opravdu chcete smazat vybrané položky?",
 	"field.structure.empty": "Zat\u00edm nejsou \u017e\u00e1dn\u00e9 z\u00e1znamy.",
 
 	"field.users.empty": "Nebyli zatím vybráni žádní uživatelé",
@@ -449,10 +454,10 @@
 	"language.variables.empty": "Zatím žádné překlady",
 
 	"language.variable.delete.confirm": "Doopravdy chcete smazat proměnou {key}?",
-	"language.variable.entries": "Values",
+	"language.variable.entries": "Hodnoty",
 	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
 	"language.variable.key": "Klíč",
-	"language.variable.multiple": "Countable?",
+	"language.variable.multiple": "Počitatelné?",
 	"language.variable.multiple.text": "Use different translation strings",
 	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
 	"language.variable.notFound": "Proměnná nebyla nalezena",
@@ -474,6 +479,7 @@
 	"license.code": "Kód",
 	"license.code.help": "Licenční kód jste po zakoupení obdrželi na email. Vložte prosím kód a zaregistrujte Vaší kopii.",
 	"license.code.label": "Zadejte prosím licenční kód",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Platí pro nové verze až do {date}",
 	"license.status.active.label": "Platná licence",
 	"license.status.demo.info": "Tato instalace je pouze demoverze",
@@ -661,6 +667,7 @@
 
 	"security": "Zabezpečení",
 	"select": "Vybrat",
+	"select.all": "Vybrat vše",
 	"server": "Server",
 	"settings": "Nastavení",
 	"show": "Zobrazit",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Vaše současné heslo",
 	"user.changePassword.new": "Nové heslo",
 	"user.changePassword.new.confirm": "Potvrdit nové heslo...",
+	"user.changePassword.own": "Vaše heslo",
 	"user.changeRole": "Změnit roli",
 	"user.changeRole.select": "Vybrat novou roli",
 	"user.create": "Přidat nového uživatele",

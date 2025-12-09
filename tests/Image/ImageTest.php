@@ -101,6 +101,18 @@ class ImageTest extends TestCase
 		$this->assertSame(500, $file->imagesize()[0]);
 	}
 
+	public function testImagesizeWithInvalidImage(): void
+	{
+		$file = $this->_image('invalid.jpg');
+		$this->assertFalse($file->imagesize());
+	}
+
+	public function testIsResizableWithInvalidImage(): void
+	{
+		$file = $this->_image('invalid.jpg');
+		$this->assertFalse($file->isResizable());
+	}
+
 	public function testIsPortrait(): void
 	{
 		$file = $this->_image();

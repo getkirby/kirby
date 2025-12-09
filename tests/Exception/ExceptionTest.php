@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class WillFail
 {
-	public function fail(): void
+	public function fail(): never
 	{
 		throw new Exception(key: 'key.unique');
 	}

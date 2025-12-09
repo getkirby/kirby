@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Mime;
 use Kirby\Http\Response as HttpResponse;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Stringable;
 
@@ -63,6 +64,12 @@ class Responder implements Stringable
 	 * relies on
 	 */
 	protected array $usesCookies = [];
+
+	/**
+	 * Tracks headers that depend on the request
+	 * and must not be persisted in the cache
+	 */
+	protected array $volatileHeaders = [];
 
 	/**
 	 * Creates and sends the response
@@ -237,6 +244,7 @@ class Responder implements Stringable
 		$this->type($response['type'] ?? null);
 		$this->usesAuth($response['usesAuth'] ?? null);
 		$this->usesCookies($response['usesCookies'] ?? null);
+		$this->volatileHeaders = $response['volatileHeaders'] ?? [];
 	}
 
 	/**
@@ -274,11 +282,20 @@ class Responder implements Stringable
 	{
 		if ($headers === null) {
 			$injectedHeaders = [];
+			$isPrivate = static::isPrivate($this->usesAuth(), $this->usesCookies());
 
-			if (static::isPrivate($this->usesAuth(), $this->usesCookies()) === true) {
+			if ($isPrivate === true) {
 				// never ever cache private responses
 				$injectedHeaders['Cache-Control'] = 'no-store, private';
-			} else {
+			}
+
+			// inject CORS headers if enabled
+			$corsHeaders = Cors::headers();
+			if ($corsHeaders !== []) {
+				$injectedHeaders = [...$injectedHeaders, ...$corsHeaders];
+			}
+
+			if ($isPrivate === false) {
 				// the response is public, but it may
 				// vary based on request headers
 				$vary = [];
@@ -291,6 +308,13 @@ class Responder implements Stringable
 					$vary[] = 'Cookie';
 				}
 
+				// merge Vary from CORS if present
+				if (isset($injectedHeaders['Vary']) === true) {
+					// split CORS Vary into individual values to avoid duplication
+					$corsVaryValues = array_map('trim', explode(',', $injectedHeaders['Vary']));
+					$vary = [...$vary, ...$corsVaryValues];
+				}
+
 				if ($vary !== []) {
 					$injectedHeaders['Vary'] = implode(', ', $vary);
 				}
@@ -301,6 +325,7 @@ class Responder implements Stringable
 		}
 
 		$this->headers = $headers;
+		$this->volatileHeaders = [];
 		return $this;
 	}
 
@@ -360,15 +385,34 @@ class Responder implements Stringable
 	 */
 	public function toArray(): array
 	{
-		// the `cache`, `expires`, `usesAuth` and `usesCookies`
-		// values are explicitly *not* serialized as they are
-		// volatile and not to be exported
+		// the `cache`, `expires`, `usesAuth`, `usesCookies` and
+		// `volatileHeaders` values are explicitly *not* serialized
+		// as they are volatile and not to be exported
 		return [
 			'body'    => $this->body(),
 			'code'    => $this->code(),
 			'headers' => $this->headers(),
 			'type'    => $this->type(),
 		];
+	}
+
+	/**
+	 * Converts the response configuration to an array
+	 * that can safely be cached
+	 *
+	 * @since 5.2.0
+	 */
+	public function toCacheArray(): array
+	{
+		$response = $this->toArray();
+		$volatile = $this->collectVolatileHeaders();
+
+		if ($volatile === []) {
+			return $response;
+		}
+
+		$response['headers'] = $this->stripVolatileHeaders($response['headers'], $volatile);
+		return $response;
 	}
 
 	/**
@@ -414,5 +458,121 @@ class Responder implements Stringable
 		}
 
 		return false;
+	}
+
+	/**
+	 * Marks headers (or header parts) as request-dependent, so they
+	 * can be subtracted before caching a response snapshot
+	 *
+	 * @since 5.2.0
+	 */
+	public function markVolatileHeader(string $name, array|null $values = null): void
+	{
+		$this->appendVolatileHeader($this->volatileHeaders, $name, $values);
+	}
+
+	/**
+	 * Collects volatile headers from both manual configuration
+	 * and automatically injected CORS headers
+	 */
+	protected function collectVolatileHeaders(): array
+	{
+		$volatile    = $this->volatileHeaders;
+		$corsHeaders = Cors::headers();
+
+		if ($corsHeaders === []) {
+			return $volatile;
+		}
+
+		foreach ($corsHeaders as $name => $value) {
+			if ($name === 'Vary') {
+				$corsVaryValues = array_map('trim', explode(',', $value));
+				$this->appendVolatileHeader($volatile, 'Vary', $corsVaryValues);
+				continue;
+			}
+
+			$this->appendVolatileHeader($volatile, $name);
+		}
+
+		return $volatile;
+	}
+
+	/**
+	 * Strips request-dependent headers for safe caching
+	 */
+	protected function stripVolatileHeaders(array $headers, array $volatile): array
+	{
+		foreach ($volatile as $name => $values) {
+			if ($name === 'Vary' && is_array($values) === true) {
+				if (isset($headers['Vary']) === false) {
+					continue;
+				}
+
+				$current   = $this->normalizeVaryValues($headers['Vary']);
+				$remaining = $this->removeVaryValues($current, $values);
+
+				if ($remaining === []) {
+					unset($headers['Vary']);
+				} else {
+					$headers['Vary'] = implode(', ', $remaining);
+				}
+
+				continue;
+			}
+
+			unset($headers[$name]);
+		}
+
+		return $headers;
+	}
+
+	/**
+	 * Adds (parts of) a header to the provided volatile header list
+	 */
+	protected function appendVolatileHeader(array &$target, string $name, array|null $values = null): void
+	{
+		if ($values === null) {
+			$target[$name] = null;
+			return;
+		}
+
+		if (array_key_exists($name, $target) === true && $target[$name] === null) {
+			return;
+		}
+
+		$values = A::map($values, static fn ($value) => strtolower(trim($value)));
+		$values = A::filter($values, static fn ($value) => $value !== '');
+
+		if ($values === []) {
+			return;
+		}
+
+		$existingValues = $target[$name] ?? [];
+		$target[$name] = array_values(array_unique([...$existingValues, ...$values]));
+	}
+
+	/**
+	 * Normalizes a comma-separated list of Vary values
+	 * into a unique array without empty entries
+	 */
+	protected function normalizeVaryValues(string $value): array
+	{
+		$values = A::map(explode(',', $value), 'trim');
+		$values = A::filter($values, static fn ($entry) => $entry !== '');
+
+		return array_values(array_unique($values));
+	}
+
+	/**
+	 * Returns the Vary values with the provided entries removed
+	 */
+	protected function removeVaryValues(array $values, array $remove): array
+	{
+		$removeLower = A::map($remove, 'strtolower');
+
+		return array_values(A::filter(
+			$values,
+			static fn ($value) => in_array(strtolower($value), $removeLower, true) === false
+		));
 	}
 }

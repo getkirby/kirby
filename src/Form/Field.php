@@ -250,6 +250,20 @@ class Field extends Component
 	}
 
 	/**
+	 * Returns the preferred empty state for the field
+	 *
+	 * @since 5.2.0
+	 */
+	public function emptyValue(): mixed
+	{
+		if (isset($this->methods['emptyValue']) === true) {
+			return $this->methods['emptyValue']->call($this);
+		}
+
+		return null;
+	}
+
+	/**
 	 * Creates a new field instance
 	 */
 	public static function factory(
@@ -293,6 +307,18 @@ class Field extends Component
 		$this->options = $options;
 		$this->type    = $type;
 
+		return $this;
+	}
+
+	/**
+	 * Preferred name would be `::reset` but this is
+	 * taken by options in other fields.
+	 *
+	 * @since 5.2.0
+	 */
+	public function fillWithEmptyValue(): static
+	{
+		$this->value = $this->emptyValue();
 		return $this;
 	}
 

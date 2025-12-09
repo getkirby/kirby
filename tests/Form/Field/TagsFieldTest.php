@@ -22,6 +22,18 @@ class TagsFieldTest extends TestCase
 		$this->assertTrue($field->save());
 	}
 
+	public function testFillWithEmptyValue(): void
+	{
+		$field = $this->field('tags');
+		$field->fill($value = ['a', 'b', 'c']);
+
+		$this->assertSame($value, $field->toFormValue());
+
+		$field->fillWithEmptyValue();
+
+		$this->assertSame([], $field->toFormValue());
+	}
+
 	public function testOptionsQuery(): void
 	{
 		$app = $this->app()->clone([

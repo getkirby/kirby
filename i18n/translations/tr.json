@@ -1,4 +1,5 @@
 {
+	"account": "Hesap",
 	"account.changeName": "İsminizi değiştirin",
 	"account.delete": "Hesabınızı silin",
 	"account.delete.confirm": "Hesabınızı gerçekten silmek istiyor musunuz? Oturumunuz hemen sonlandırılacaktır. Hesabınız daha sonra geri alınamaz.",
@@ -42,6 +43,9 @@
 
 	"delete": "Sil",
 	"delete.all": "Tümünü sil",
+
+	"deselect": "Seçimi kaldır",
+	"deselect.all": "Tüm seçimleri kaldır",
 
 	"dialog.fields.empty": "Bu iletişim kutusunda alan yok",
 	"dialog.files.empty": "Seçilecek dosya yok",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
 	"field.structure.delete.confirm.all": "Tüm girdileri gerçekten silmek istiyor musunuz?",
+	"field.structure.delete.confirm.selected": "Seçili girdileri gerçekten silmek istiyor musunuz?",
 	"field.structure.empty": "Hen\u00fcz bir girdi yok",
 
 	"field.users.empty": "Henüz kullanıcı seçilmedi",
@@ -474,6 +479,7 @@
 	"license.code": "Kod",
 	"license.code.help": "Lisans kodunuzu satın alma işleminden sonra e-posta yoluyla aldınız. Lütfen kopyalayıp buraya yapıştırın.",
 	"license.code.label": "Lütfen lisans kodunu giriniz",
+	"license.remove.text": "<p>Lisansın kaldırılması, lisans dosyasını bu siteden geri alınamaz bir şekilde silecektir. Daha sonra bu siteyi farklı bir lisans anahtarıyla etkinleştirebilir veya alan adı aynı kalırsa aynı lisans anahtarını yeniden kaydedebilirsiniz.</p> <p>Lisansla ilişkili alan adını değiştirmek için lütfen Kirby ekibiyle iletişime geçin. <a href='https://getkirby.com/license'>Devamını okuyun &rarr;</a></p>",
 	"license.status.active.info": "{date} tarihine kadar yeni ana sürümleri içerir",
 	"license.status.active.label": "Geçerli lisans",
 	"license.status.demo.info": "Bu bir demo kurulumudur",
@@ -661,6 +667,7 @@
 
 	"security": "Güvenlik",
 	"select": "Seç",
+	"select.all": "Tümünü seç",
 	"server": "Sunucu",
 	"settings": "Ayarlar",
 	"show": "Göster",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Mevcut şifreniz",
 	"user.changePassword.new": "Yeni Şifre",
 	"user.changePassword.new.confirm": "Şifreyi onaylayın...",
+	"user.changePassword.own": "Mevcut şifreniz",
 	"user.changeRole": "Rolü değiştir",
 	"user.changeRole.select": "Yeni bir rol seçin",
 	"user.create": "Yeni bir kullanıcı ekle",

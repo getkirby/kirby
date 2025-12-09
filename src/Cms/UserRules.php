@@ -273,7 +273,7 @@ class UserRules
 		string $email,
 		bool $strict = false
 	): void {
-		if (V::email($email ?? null) === false) {
+		if (V::email($email) === false) {
 			throw new InvalidArgumentException(
 				key: 'user.email.invalid'
 			);
@@ -335,7 +335,7 @@ class UserRules
 		string $password
 	): void {
 		// too short passwords are ineffective
-		if (Str::length($password ?? null) < 8) {
+		if (Str::length($password) < 8) {
 			throw new InvalidArgumentException(key: 'user.password.invalid');
 		}
 
@@ -343,7 +343,7 @@ class UserRules
 		// and are therefore blocked in the auth system
 		// (blocked here as well to avoid passwords
 		// that cannot be used to log in)
-		if (Str::length($password ?? null) > 1000) {
+		if (Str::length($password) > 1000) {
 			throw new InvalidArgumentException(key: 'user.password.excessive');
 		}
 	}

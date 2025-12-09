@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 use Stringable;
 
 /**
@@ -127,7 +128,7 @@ class Role implements Stringable
 
 	public function title(): string
 	{
-		return $this->title ??= ucfirst($this->name());
+		return $this->title ??= Str::label($this->name());
 	}
 
 	/**

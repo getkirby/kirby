@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "5.1.4",
+	"version": "5.2.0",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -24,8 +24,7 @@
 		"source": "https://github.com/getkirby/kirby"
 	},
 	"require": {
-		"php": "~8.2.0 || ~8.3.0 || ~8.4.0",
-		"ext-SimpleXML": "*",
+		"php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
 		"ext-ctype": "*",
 		"ext-curl": "*",
 		"ext-dom": "*",
@@ -36,29 +35,30 @@
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
+		"ext-simplexml": "*",
 		"christian-riesen/base32": "1.6.0",
-		"claviska/simpleimage": "4.2.1",
+		"claviska/simpleimage": "4.4.0",
 		"composer/semver": "3.4.4",
 		"filp/whoops": "2.18.4",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.18.0",
 		"michelf/php-smartypants": "1.8.1",
-		"phpmailer/phpmailer": "6.10.0",
+		"phpmailer/phpmailer": "7.0.1",
 		"symfony/polyfill-intl-idn": "1.33.0",
 		"symfony/polyfill-mbstring": "1.33.0",
-		"symfony/yaml": "7.3.5"
+		"symfony/yaml": "7.4.1"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"
 	},
 	"suggest": {
-		"ext-PDO": "Support for using databases",
 		"ext-apcu": "Support for the Apcu cache driver",
 		"ext-exif": "Support for exif information from images",
 		"ext-fileinfo": "Improved mime type detection for files",
 		"ext-imagick": "Improved thumbnail generation",
 		"ext-intl": "Improved i18n number formatting",
 		"ext-memcached": "Support for the Memcached cache driver",
+		"ext-pdo": "Support for using databases",
 		"ext-redis": "Support for the Redis cache driver",
 		"ext-sodium": "Support for the crypto class and more robust session handling",
 		"ext-zip": "Support for ZIP archive file functions",
@@ -82,14 +82,9 @@
 		},
 		"optimize-autoloader": true,
 		"platform": {
-			"php": "8.2.0"
+			"php": "8.3.0"
 		},
 		"platform-check": false
-	},
-	"extra": {
-		"unused": [
-			"symfony/polyfill-intl-idn"
-		]
 	},
 	"scripts": {
 		"post-update-cmd": "curl -o cacert.pem https://curl.se/ca/cacert.pem",
@@ -101,8 +96,6 @@
 		"analyze:composer": "composer validate --strict --no-check-version --no-check-all",
 		"analyze:phpmd": "phpmd . ansi phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*'",
 		"analyze:psalm": "psalm",
-		"bench": "phpbench run --report=aggregate --ref baseline",
-		"bench:baseline": "phpbench run --report=aggregate --tag baseline",
 		"build": "./scripts/build",
 		"ci": [
 			"@fix",

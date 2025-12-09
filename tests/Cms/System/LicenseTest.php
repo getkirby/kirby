@@ -260,7 +260,6 @@ class LicenseTest extends TestCase
 	{
 		$reflector = new ReflectionClass(License::class);
 		$normalize = $reflector->getMethod('normalizeDomain');
-		$normalize->setAccessible(true);
 
 		$license = new License();
 

@@ -233,18 +233,21 @@ class View
 	/**
 	 * Renders the error view with provided message
 	 */
-	public static function error(string $message, int $code = 404)
+	public static function error(string $message, int $code = 404, array $details = [])
 	{
-		return [
-			'code'      => $code,
+		$response = [
+			...Json::error($message, $code, $details),
 			'component' => 'k-error-view',
-			'error'     => $message,
 			'props'     => [
 				'error'  => $message,
 				'layout' => Panel::hasAccess(App::instance()->user()) ? 'inside' : 'outside'
 			],
 			'title' => 'Error'
 		];
+
+		ksort($response);
+
+		return $response;
 	}
 
 	/**
@@ -326,7 +329,7 @@ class View
 
 		// handle Kirby exceptions
 		if ($data instanceof Exception) {
-			$data = static::error($data->getMessage(), $data->getHttpCode());
+			$data = static::error($data->getMessage(), $data->getHttpCode(), $data->getDetails());
 
 		// handle regular exceptions
 		} elseif ($data instanceof Throwable) {
@@ -370,7 +373,7 @@ class View
 				foreach ($area['searches'] ?? [] as $id => $params) {
 					$searches[$id] = [
 						'icon'  => $params['icon'] ?? 'search',
-						'label' => $params['label'] ?? Str::ucfirst($id),
+						'label' => $params['label'] ?? Str::label($id),
 						'id'    => $id
 					];
 				}

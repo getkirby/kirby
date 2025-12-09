@@ -371,7 +371,7 @@ class FileSessionStore extends SessionStore
 	public function __destruct()
 	{
 		// unlock all locked files
-		foreach ($this->isLocked as $name => $locked) {
+		foreach (array_keys($this->isLocked) as $name) {
 			$expiryTime = (int)Str::before($name, '.');
 			$id         = Str::after($name, '.');
 
@@ -379,7 +379,7 @@ class FileSessionStore extends SessionStore
 		}
 
 		// close all file handles
-		foreach ($this->handles as $name => $handle) {
+		foreach (array_keys($this->handles) as $name) {
 			$this->closeHandle($name);
 		}
 	}

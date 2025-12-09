@@ -304,6 +304,27 @@ class Uri implements Stringable
 	}
 
 	/**
+	 * Inherit query, params and fragment from a parent Uri
+	 * @since 5.2.0
+	 * @return $this
+	 */
+	public function inherit(Uri|string $parent): static
+	{
+		if (is_string($parent) === true) {
+			$parent = new static($parent);
+		}
+
+		$this->query->merge($parent->query());
+		$this->params->merge($parent->params());
+
+		if ($fragment = $parent->fragment()) {
+			$this->setFragment($fragment);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Checks if the host exists
 	 */
 	public function isAbsolute(): bool

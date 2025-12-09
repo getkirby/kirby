@@ -1,4 +1,5 @@
 {
+	"account": "Conta",
 	"account.changeName": "Altere o seu nome",
 	"account.delete": "Elimine a sua conta",
 	"account.delete.confirm": "Tem a certeza que pretende eliminar a sua conta? A sessão será terminada imediatamente. A sua conta não poderá ser recuperada. ",
@@ -42,6 +43,9 @@
 
 	"delete": "Eliminar",
 	"delete.all": "Eliminar todos",
+
+	"deselect": "Desselecionar",
+	"deselect.all": "Desselecionar todos",
 
 	"dialog.fields.empty": "Esta caixa de diálogo não tem campos",
 	"dialog.files.empty": "Sem ficheiros para selecionar",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Tem a certeza que pretende eliminar esta linha?",
 	"field.structure.delete.confirm.all": "Tem a certeza que pretende eliminar todas as entradas?",
+	"field.structure.delete.confirm.selected": "Tem a certeza que pretende eliminar todas as entradas selecionadas?",
 	"field.structure.empty": "Nenhuma entrada ainda",
 
 	"field.users.empty": "Nenhum utilizador selecionado ainda",
@@ -474,6 +479,7 @@
 	"license.code": "Código",
 	"license.code.help": "Recebeu o seu código de licença por email após a compra. Por favor, copie e cole aqui.",
 	"license.code.label": "Por favor, insira o código da sua licença",
+	"license.remove.text": "<p>A remoção da licença eliminará irreversivelmente o ficheiro de licença deste site. Poderá então ativar este site com uma chave de licença diferente ou voltar a registar a mesma chave de licença, desde que o domínio permaneça o mesmo.</p><p>Para alterar o domínio associado à licença, contacte a equipa do Kirby. <a href='https://getkirby.com/license'>Ler mais &rarr;</a></p>",
 	"license.status.active.info": "Inclui novas versões principais até {date}",
 	"license.status.active.label": "Licença válida",
 	"license.status.demo.info": "Esta é uma instalação de demonstração",
@@ -661,6 +667,7 @@
 
 	"security": "Segurança",
 	"select": "Selecionar",
+	"select.all": "Selecionar todos",
 	"server": "Servidor",
 	"settings": "Configurações",
 	"show": "Mostrar",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "A sua palavra-passe atual",
 	"user.changePassword.new": "Nova palavra-passe",
 	"user.changePassword.new.confirm": "Confirme a nova palavra-passe…",
+	"user.changePassword.own": "A sua própria password",
 	"user.changeRole": "Alterar função",
 	"user.changeRole.select": "Selecione uma nova função",
 	"user.create": "Adicionar um novo utilizador",

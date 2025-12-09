@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
+use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -312,9 +313,9 @@ class RouterTest extends TestCase
 		$this->assertNull($app->call('api'));
 		$this->assertNull($app->call('api/something'));
 
-		// the api route should still be there
+		// the api route should still be there (after CORS preflight route)
 		$patterns = array_column($app->routes(), 'pattern');
-		$this->assertSame('api/(:all)', $patterns[0]);
+		$this->assertSame('api/(:all)', $patterns[1]);
 	}
 
 	public function testDisabledPanel(): void
@@ -824,5 +825,53 @@ class RouterTest extends TestCase
 
 		$route = $app->router()->find('media/users/test@getkirby.com/1234-5678/test.jpg', 'GET');
 		$this->assertSame('(.*)', $route->pattern());
+	}
+
+	public function testCorsRequest(): void
+	{
+		$server = $_SERVER;
+
+		$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] = 'GET';
+
+		$app = new App([
+			'options' => [
+				'cors' => true
+			]
+		]);
+
+		$response = $app->call('/some/url', 'OPTIONS');
+
+		$this->assertInstanceOf(Response::class, $response);
+		$this->assertSame(204, $response->code());
+		$this->assertSame([
+			'Access-Control-Allow-Origin'  => '*',
+			'Access-Control-Allow-Methods' => 'GET, HEAD, PUT, POST, DELETE, PATCH'
+		], $response->headers());
+
+		$_SERVER = $server;
+	}
+
+	public function testCorsRequestWithoutRequestMethod(): void
+	{
+		$app = new App([]);
+
+		$response = $app->call('/some/url', 'OPTIONS');
+
+		$this->assertNull($response);
+	}
+
+	public function testCorsRequestDisabled(): void
+	{
+		$server = $_SERVER;
+
+		$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] = 'GET';
+
+		$app = new App([]);
+
+		$response = $app->call('/some/url', 'OPTIONS');
+
+		$this->assertNull($response);
+
+		$_SERVER = $server;
 	}
 }

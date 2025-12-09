@@ -911,7 +911,7 @@ class A
 		}
 
 		// rebuild the original array
-		foreach ($helper as $key => $val) {
+		foreach (array_keys($helper) as $key) {
 			$result[$key] = $array[$key];
 		}
 

@@ -125,6 +125,10 @@ class Mime
 		string|null $mime = null,
 		string|null $extension = null
 	): string|null {
+		if ($mime === null || $extension === null) {
+			return $mime;
+		}
+
 		// fixing map
 		$map = [
 			'text/html' => [
@@ -188,7 +192,6 @@ class Mime
 		) {
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
 			$mime  = finfo_file($finfo, $file);
-			finfo_close($finfo);
 			return $mime;
 		}
 

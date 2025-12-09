@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Zmeniť vaše meno",
 	"account.delete": "Zmazať váš účet",
 	"account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
@@ -15,7 +16,7 @@
 	"changes": "Zmeny",
 	"confirm": "Ok",
 	"collapse": "Zabaliť",
-	"collapse.all": "Zabaliť všetky",
+	"collapse.all": "Collapse all",
 	"color": "Farba",
 	"coordinates": "Koordináty",
 	"copy": "Kopírovať",
@@ -42,6 +43,9 @@
 
 	"delete": "Zmazať",
 	"delete.all": "Zmazať všetky",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "No files to select",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Prosím, zadajte platnú URL",
 
 	"expand": "Rozbaliť",
-	"expand.all": "Rozbaliť všetky",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "The field is required",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Ste si istý, že chcete zmazať tento riadok?",
 	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Zatiaľ žiadne údaje",
 
 	"field.users.empty": "Žiadni užívatelia zatiaľ neboli zvolení",
@@ -474,6 +479,7 @@
 	"license.code": "Kód",
 	"license.code.help": "You received your license code after the purchase via email. Please copy and paste it here.",
 	"license.code.label": "Prosím, zadajte váš licenčný kód",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Includes new major versions until {date}",
 	"license.status.active.label": "Valid license",
 	"license.status.demo.info": "This is a demo installation",
@@ -661,6 +667,7 @@
 
 	"security": "Security",
 	"select": "Zvoliť",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Nastavenia",
 	"show": "Show",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nové heslo",
 	"user.changePassword.new.confirm": "Potvrdiť nové heslo...",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Zmeniť rolu",
 	"user.changeRole.select": "Zvoliť novú rolu",
 	"user.create": "Pridať nového užívateľa",

@@ -498,8 +498,14 @@ trait PageActions
 			'site'   => $this->site(),
 		];
 
-		$modelClass = static::$models[$props['template'] ?? null] ?? static::class;
-		return $modelClass::create($props);
+		if (
+			($template = $props['template'] ?? null) &&
+			($model = static::$models[$template] ?? null)
+		) {
+			return $model::create($props);
+		}
+
+		return static::create($props);
 	}
 
 	/**

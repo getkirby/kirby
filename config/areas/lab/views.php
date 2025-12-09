@@ -4,6 +4,7 @@ use Kirby\Cms\App;
 use Kirby\Panel\Lab\Category;
 use Kirby\Panel\Lab\Doc;
 use Kirby\Panel\Lab\Docs;
+use Kirby\Panel\Lab\Responses;
 
 return [
 	'lab' => [
@@ -128,6 +129,10 @@ return [
 				]
 			];
 		}
+	],
+	'lab.errors' => [
+		'pattern' => 'lab/errors/(:any?)',
+		'action'  => fn (string|null $type = null) => Responses::errorResponseByType($type)
 	],
 	'lab.vue' => [
 		'pattern' => [

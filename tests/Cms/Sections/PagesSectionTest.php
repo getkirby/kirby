@@ -4,12 +4,14 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Panel\Model;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class PagesSectionTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PagesSection';
 
 	public function setUp(): void
@@ -114,6 +116,16 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('Pages', $section->headline());
 	}
 
+	public function testHeadlineFromName(): void
+	{
+		// single label
+		$section = new Section('pages', [
+			'name'  => 'blogArticles',
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$this->assertSame('Blog articles', $section->headline());
+	}
 
 	public function testParent(): void
 	{
@@ -492,6 +504,10 @@ class PagesSectionTest extends TestCase
 				]
 			]
 		]);
+
+		$coverImage = static::FIXTURES . '/image/cover.jpg';
+		F::copy($coverImage, $model->find('a')->root() . '/cover.jpg');
+		F::copy($coverImage, $model->find('b')->root() . '/cover.jpg');
 
 		$section = new Section('pages', [
 			'name'   => 'test',

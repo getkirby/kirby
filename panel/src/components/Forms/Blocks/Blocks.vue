@@ -226,6 +226,14 @@ export default {
 				}
 			});
 		},
+		collapse(block) {
+			this.ref(block)?.collapse?.();
+		},
+		collapseAll() {
+			for (const block of this.blocks) {
+				this.collapse(block);
+			}
+		},
 		copy(e) {
 			// don't copy when there are no blocks yet
 			if (this.blocks.length === 0) {
@@ -337,6 +345,14 @@ export default {
 			this.blocks.splice(index + 1, 0, copy);
 			this.save();
 		},
+		expand(block) {
+			this.ref(block)?.expand?.();
+		},
+		expandAll() {
+			for (const block of this.blocks) {
+				this.expand(block);
+			}
+		},
 		fieldset(block) {
 			return (
 				this.fieldsets[block.type] ?? {
@@ -374,6 +390,27 @@ export default {
 			set(block, "isHidden", true);
 			this.save();
 		},
+		isEventTarget(e) {
+			return e.target.closest(".k-blocks") === this.$el;
+		},
+		isFullyCollapsed() {
+			return this.blocks.every((block) => {
+				block = this.ref(block);
+				return block.isCollapsible() === false || block.isCollapsed() === true;
+			});
+		},
+		isCollapsible() {
+			return this.blocks.some((block) => this.ref(block).isCollapsible());
+		},
+		isFullyExpanded() {
+			return this.blocks.every((block) => {
+				block = this.ref(block);
+				return block.isCollapsible() === false || block.isCollapsed() === false;
+			});
+		},
+		isExpandable() {
+			return this.blocks.some((block) => this.ref(block).isExpandable());
+		},
 		isInputEvent() {
 			const focused = document.querySelector(":focus");
 			return focused?.matches(
@@ -392,7 +429,10 @@ export default {
 		},
 		async merge() {
 			if (this.isMergable) {
-				const blocks = this.selected.map((id) => this.find(id));
+				// sort blocks by their position in the list, not by selection order
+				const blocks = this.selected
+					.map((id) => this.find(id))
+					.sort((a, b) => this.findIndex(a.id) - this.findIndex(b.id));
 
 				// top selected block handles merging
 				// (will update its own content with merged content)
@@ -457,8 +497,8 @@ export default {
 		onClickGlobal(event) {
 			// ignore focus in dialogs or drawers to keep the current selection
 			if (
-				typeof event.target.closest === "function" &&
-				(event.target.closest(".k-dialog") || event.target.closest(".k-drawer"))
+				event.target.closest(".k-dialog") ||
+				event.target.closest(".k-drawer")
 			) {
 				return;
 			}
@@ -520,14 +560,13 @@ export default {
 				return false;
 			}
 
-			// not when any dialogs or drawers are open
-			if (this.isEditing === true || this.$panel.dialog.isOpen === true) {
+			// not when event doesn't belong to this blocks component
+			if (this.isEventTarget(e) === false) {
 				return false;
 			}
 
-			// not when nothing is selected and the paste event
-			// doesn't target something in the block component
-			if (this.selected.length === 0 && this.$el.contains(e.target) === false) {
+			// not when any dialogs or drawers are open
+			if (this.isEditing === true || this.$panel.dialog.isOpen === true) {
 				return false;
 			}
 

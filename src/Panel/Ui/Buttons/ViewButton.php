@@ -165,10 +165,16 @@ class ViewButton extends Button
 	public function props(): array
 	{
 		// helper for props that support Kirby queries
-		$resolve = fn ($value) =>
+		$resolve = fn (string|null $value) =>
 			$value ?
 			$this->model?->toSafeString($value) ?? $value :
 			null;
+
+		$options = $this->options;
+
+		if (is_string($options) === true) {
+			$options = $resolve($options);
+		}
 
 		return [
 			...$props = parent::props(),
@@ -178,7 +184,7 @@ class ViewButton extends Button
 			'link'    => $resolve($props['link']),
 			'text'    => $resolve($props['text']),
 			'theme'   => $resolve($props['theme']),
-			'options' => $this->options
+			'options' => $options
 		];
 	}
 

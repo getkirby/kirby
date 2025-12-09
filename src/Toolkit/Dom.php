@@ -450,15 +450,14 @@ class Dom
 		// we need to consider the namespaces
 		foreach ($list as $item) {
 			// try to find the expected origin namespace URI
-			$namespaceUri = null;
-			$itemLocal    = $item;
+			$itemLocal = $item;
+
+			// list items without namespace are from the default namespace
+			$namespaceUri = $allowedNamespaces[''] ?? null;
 
 			if (Str::contains($item, ':') === true) {
 				[$namespaceName, $itemLocal] = explode(':', $item);
 				$namespaceUri = $allowedNamespaces[$namespaceName] ?? null;
-			} else {
-				// list items without namespace are from the default namespace
-				$namespaceUri = $allowedNamespaces[''] ?? null;
 			}
 
 			// try if we can find an exact namespaced match

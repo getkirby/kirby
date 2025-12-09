@@ -153,11 +153,6 @@ export const responder = async (request, response) => {
 		});
 	}
 
-	// server error
-	if (response.json?.status === "error") {
-		throw response.json;
-	}
-
 	// request error
 	if (response.ok === false) {
 		throw new RequestError(`The request to ${response.url} failed`, {

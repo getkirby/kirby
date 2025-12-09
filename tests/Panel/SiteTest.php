@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Model::class)]
 class SiteTest extends TestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Site';
 
 	public function setUp(): void
@@ -84,7 +86,11 @@ class SiteTest extends TestCase
 			]
 		]);
 
-		$site  = $app->site();
+		$site = $app->site();
+
+		$testImage = static::FIXTURES . '/image/test.jpg';
+		F::copy($testImage, $site->root() . '/test.jpg');
+
 		$panel = new Site($site);
 
 		$hash = $site->image()->mediaHash();

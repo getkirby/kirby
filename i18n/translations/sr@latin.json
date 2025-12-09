@@ -1,4 +1,5 @@
 {
+	"account": "Account",
 	"account.changeName": "Promenite vaše ime",
 	"account.delete": "Izbrišite vaš nalog",
 	"account.delete.confirm": "Da li zaista želite da izbrišete vaš nalog? Bićete odjavljeni odmah, i vaš nalog ne može biti povraćen.",
@@ -15,7 +16,7 @@
 	"changes": "Promene",
 	"confirm": "Ok",
 	"collapse": "Skupi",
-	"collapse.all": "Skupi sve",
+	"collapse.all": "Collapse all",
 	"color": "Boja",
 	"coordinates": "Koordinate",
 	"copy": "Kopiraj",
@@ -42,6 +43,9 @@
 
 	"delete": "Obriši",
 	"delete.all": "Obriši sve",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "Ovaj dijalog nema polja",
 	"dialog.files.empty": "Nema fajlova koji se mogu izabrati",
@@ -295,7 +299,7 @@
 	"error.validation.url": "Molimo vas da unesete važeći URL",
 
 	"expand": "Proširite",
-	"expand.all": "Proširite sve",
+	"expand.all": "Expand all",
 
 	"field.invalid": "Polje je nevažeće",
 	"field.required": "Polje je obavezno",
@@ -376,6 +380,7 @@
 
 	"field.structure.delete.confirm": "Da li zaista želite da izbrišete ovaj red?",
 	"field.structure.delete.confirm.all": "Da li zaista želite da izbrišete sve unose?",
+	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
 	"field.structure.empty": "Još nema unosa",
 
 	"field.users.empty": "Još nije izabran nijedan korisnik",
@@ -474,6 +479,7 @@
 	"license.code": "Kod",
 	"license.code.help": "Nakon kupovine dobili ste svoju šifru licence putem email. Molimo vas da je kopirate i nalepite ovde.",
 	"license.code.label": "Molimo vas unesite šifru licence",
+	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
 	"license.status.active.info": "Uključuje nove glavne verzije do {date}",
 	"license.status.active.label": "Validna licenca",
 	"license.status.demo.info": "Ovo je demo instalacija",
@@ -661,6 +667,7 @@
 
 	"security": "Bezbednost",
 	"select": "Izaberite",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Podešavanja",
 	"show": "Prikaži",
@@ -769,6 +776,7 @@
 	"user.changePassword.current": "Your current password",
 	"user.changePassword.new": "Nova lozinka",
 	"user.changePassword.new.confirm": "Potvrdite novu lozinku…",
+	"user.changePassword.own": "Your own password",
 	"user.changeRole": "Promenite ulogu",
 	"user.changeRole.select": "Izaberite novu ulogu",
 	"user.create": "Dodajte novog korisnika",

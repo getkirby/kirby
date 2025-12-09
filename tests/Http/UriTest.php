@@ -164,6 +164,21 @@ class UriTest extends TestCase
 		$this->assertSame('/', $uri->toString());
 	}
 
+	public function testInherit(): void
+	{
+		$base = new Uri('https://getkirby.com');
+
+		$uri = $base->inherit('https://foo.com/this/is/a/path');
+		$this->assertSame('https://getkirby.com', $uri->toString());
+
+		$uri = $base->inherit('https://foo.com/fox:bax?foo=bar#anchor');
+		$this->assertSame('https://getkirby.com/fox:bax?foo=bar#anchor', $uri->toString());
+
+		$base = new Uri('https://getkirby.com?one=two');
+		$uri  = $base->inherit('https://foo.com/?foo=bar');
+		$this->assertSame('https://getkirby.com?one=two&foo=bar', $uri->toString());
+	}
+
 	public function testInvalidScheme(): void
 	{
 		$this->expectException(InvalidArgumentException::class);

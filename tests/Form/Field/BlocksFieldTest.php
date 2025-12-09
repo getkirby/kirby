@@ -203,6 +203,32 @@ class BlocksFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
+	public function testReset(): void
+	{
+		$field = $this->field('blocks');
+
+		$field->fill([
+			[
+				'type'    => 'heading',
+				'content' => [
+					'text' => 'a'
+				]
+			],
+			[
+				'type'    => 'heading',
+				'content' => [
+					'text' => 'b'
+				]
+			],
+		]);
+
+		$this->assertCount(2, $field->toFormValue());
+
+		$field->reset();
+
+		$this->assertSame([], $field->toFormValue());
+	}
+
 	public function testRoutes(): void
 	{
 		$field = $this->field('blocks');

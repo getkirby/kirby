@@ -1,4 +1,5 @@
 import Modal, { defaults as modalDefaults } from "./modal.js";
+import { isObject } from "@/helpers/object.js";
 import { reactive, set } from "vue";
 
 export const defaults = () => {
@@ -77,6 +78,13 @@ export default (panel) => {
 		 * @returns {Object}
 		 */
 		async open(drawer, options = {}) {
+			// handle drawer object with url property
+			if (isObject(drawer) && drawer.url) {
+				options = drawer;
+				drawer = drawer.url;
+				delete options.url;
+			}
+
 			// prefix URLs
 			if (typeof drawer === "string") {
 				drawer = `/drawers/${drawer}`;
@@ -88,6 +96,7 @@ export default (panel) => {
 			this.tab(drawer.tab);
 
 			// get the current state and add it to the history
+			// (we need to fetch the state freshly as it is altered by `this.tab()`)
 			const state = this.state();
 			this.history.add(state, drawer.replace);
 

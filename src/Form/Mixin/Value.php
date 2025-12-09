@@ -3,6 +3,7 @@
 namespace Kirby\Form\Mixin;
 
 use Kirby\Cms\Language;
+use ReflectionProperty;
 
 /**
  * @package   Kirby Form
@@ -49,6 +50,14 @@ trait Value
 		}
 
 		return $this->model->toString($this->default);
+	}
+
+	/**
+	 * Returns the fallback value when the field should be empty
+	 */
+	public function emptyValue(): mixed
+	{
+		return (new ReflectionProperty($this, 'value'))->getDefaultValue();
 	}
 
 	/**

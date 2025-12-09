@@ -498,22 +498,6 @@ class BlueprintTest extends TestCase
 		$this->assertSame('My custom role', $role);
 	}
 
-	public function testTitleFromName(): void
-	{
-		$blueprint = new Blueprint([
-			'model' => $this->model
-		]);
-
-		$this->assertSame('Default', $blueprint->title());
-
-		$blueprint = new Blueprint([
-			'model' => $this->model,
-			'name'  => 'test'
-		]);
-
-		$this->assertSame('Test', $blueprint->title());
-	}
-
 	public function testExtend(): void
 	{
 		new App([
@@ -765,5 +749,33 @@ class BlueprintTest extends TestCase
 		$this->assertSame('Main', $preset['tabs']['main']['label']);
 		$this->assertSame('/pages/a/?tab=main', $preset['tabs']['main']['link']);
 		$this->assertSame('main', $preset['tabs']['main']['name']);
+	}
+
+	public function testAutomaticLabelForFields()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'fields' => [
+				'emailAddress' => [
+					'type' => 'email'
+				],
+			]
+		]);
+
+		$this->assertSame('Email address', $blueprint->fields()['emailAddress']['label']);
+	}
+
+	public function testAutomaticLabelForTabs()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'tabs'  => [
+				'contentTab' => [
+
+				],
+			]
+		]);
+
+		$this->assertSame('Content tab', $blueprint->tabs()[0]['label']);
 	}
 }

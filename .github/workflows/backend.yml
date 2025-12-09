@@ -57,7 +57,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        php: ["8.2", "8.3", "8.4"]
+        php: ["8.2", "8.3", "8.4", "8.5"]
     env:
       extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
       ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
@@ -104,7 +104,7 @@ jobs:
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.ini }}
           coverage: pcov
-          tools: phpunit:10.5.38, psalm:5.26.1
+          tools: phpunit:11.5.44, psalm:6.13.1
 
       - name: Setup problem matchers
         run: |
@@ -127,7 +127,7 @@ jobs:
         run: phpunit -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Statically analyze using Psalm
-        if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.4'
+        if: always() && steps.finishPrepare.outcome == 'success' && matrix.php != '8.5'
         run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload coverage results to Codecov
@@ -144,7 +144,7 @@ jobs:
           env_vars: PHP
 
       - name: Upload code scanning results to GitHub
-        if: always() && steps.finishPrepare.outcome == 'success' && github.repository == 'getkirby/kirby' && matrix.php != '8.4'
+        if: always() && steps.finishPrepare.outcome == 'success' && github.repository == 'getkirby/kirby' && matrix.php != '8.5'
         uses: github/codeql-action/upload-sarif@b56ba49b26e50535fa1e7f7db0f4f7b4bf65d80d # pin@v3
         with:
           sarif_file: sarif
@@ -205,8 +205,8 @@ jobs:
           extensions: ${{ env.extensions }}
           coverage: none
           tools: |
-            composer:2.4.4, composer-normalize:2.28.3, composer-require-checker:4.1.0,
-            composer-unused:0.7.12, phpmd:2.13.0
+            composer:2.9.1, composer-normalize:2.48.2, composer-require-checker:4.18.0,
+            composer-unused:0.9.5, phpmd:2.15.0
 
       - name: Validate composer.json/composer.lock
         if: always() && steps.finishPrepare.outcome == 'success'
@@ -264,7 +264,7 @@ jobs:
         with:
           php-version: ${{ env.php }}
           coverage: none
-          tools: php-cs-fixer:3.65.0
+          tools: php-cs-fixer:3.90.0
 
       - name: Cache analysis data
         id: finishPrepare

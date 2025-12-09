@@ -16,7 +16,7 @@
 	"changes": "Changes",
 	"confirm": "Ok",
 	"collapse": "Collapse",
-	"collapse.all": "Collapse All",
+	"collapse.all": "Collapse all",
 	"color": "Color",
 	"coordinates": "Coordinates",
 	"copy": "Copy",
@@ -43,6 +43,9 @@
 
 	"delete": "Delete",
 	"delete.all": "Delete all",
+
+	"deselect": "Deselect",
+	"deselect.all": "Deselect all",
 
 	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "No files to select",
@@ -296,7 +299,7 @@
 	"error.validation.url": "Please enter a valid URL",
 
 	"expand": "Expand",
-	"expand.all": "Expand All",
+	"expand.all": "Expand all",
 
 	"field.invalid": "The field is invalid",
 	"field.required": "The field is required",
@@ -664,6 +667,7 @@
 
 	"security": "Security",
 	"select": "Select",
+	"select.all": "Select all",
 	"server": "Server",
 	"settings": "Settings",
 	"show": "Show",

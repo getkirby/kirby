@@ -24,6 +24,7 @@ class Focus
 		int $width,
 		int $height
 	): array|null {
+		$crop = static::normalize($crop);
 		[$x, $y] = static::parse($crop);
 
 		// determine aspect ratios
@@ -76,18 +77,29 @@ class Focus
 		return Str::contains($value, '%') === true;
 	}
 
+	public static function normalize(string $value): string
+	{
+		// support for former Focus plugin
+		if (Str::startsWith($value, '{') === true) {
+			$focus = json_decode($value);
+			$x     = round(100 * $focus->x);
+			$y     = round(100 * $focus->y);
+			return "$x% $y%";
+		}
+
+		if (static::isFocalPoint($value) === false) {
+			return Gravity::from($value)->toPercentageString();
+		}
+
+		return $value;
+	}
+
 	/**
 	 * Transforms the focal point's string value (from content field)
 	 * to a [x, y] array (values 0.0-1.0)
 	 */
 	public static function parse(string $value): array
 	{
-		// support for former Focus plugin
-		if (Str::startsWith($value, '{') === true) {
-			$focus = json_decode($value);
-			return [$focus->x, $focus->y];
-		}
-
 		preg_match_all("/(\d{1,3}\.?\d*)[%|,|\s]*/", $value, $points);
 
 		return A::map(

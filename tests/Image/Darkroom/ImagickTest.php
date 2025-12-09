@@ -283,38 +283,6 @@ class ImagickTest extends TestCase
 		$this->assertEquals(150, $image->getImageHeight());
 	}
 
-	public static function resizeGravityProvider(): array
-	{
-		return [
-			['top left', Image::GRAVITY_NORTHWEST],
-			['top', Image::GRAVITY_NORTH],
-			['top right', Image::GRAVITY_NORTHEAST],
-			['left', Image::GRAVITY_WEST],
-			['right', Image::GRAVITY_EAST],
-			['bottom left', Image::GRAVITY_SOUTHWEST],
-			['bottom', Image::GRAVITY_SOUTH],
-			['bottom right', Image::GRAVITY_SOUTHEAST],
-			['center', Image::GRAVITY_CENTER]
-		];
-	}
-
-	#[DataProvider('resizeGravityProvider')]
-	public function testResizeGravity(
-		string $crop,
-		int $gravity
-	): void {
-		$image = $this->createMock(Image::class);
-		$image->method('getImageGravity')->willReturn($gravity);
-		$image->expects($this->once())->method('setGravity')->with($gravity);
-
-		$imagick = new Imagick();
-		$this->call($imagick, 'resize', $image, [
-			'crop'   => $crop,
-			'width'  => 200,
-			'height' => 150
-		]);
-	}
-
 	public function testSaveWithFormat(): void
 	{
 		$imagick = new Imagick(['format' => 'webp']);

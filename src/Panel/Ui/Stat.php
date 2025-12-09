@@ -44,9 +44,6 @@ class Stat extends Component
 		);
 	}
 
-	/**
-	 * @psalm-suppress TooFewArguments
-	 */
 	public static function from(
 		array|string $input,
 		ModelWithContent|null $model = null,
