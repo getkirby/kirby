@@ -8,7 +8,7 @@
 	>
 		<defs>
 			<symbol
-				v-for="(icon, type) in $options.icons"
+				v-for="(icon, type) in $panel.plugins.icons"
 				:key="type"
 				:id="'icon-' + type"
 				viewBox="0 0 24 24"
@@ -23,9 +23,7 @@
  * Component to load all icons from plugins
  * @internal
  */
-export default {
-	icons: window.panel.plugins.icons
-};
+export default {};
 </script>
 
 <style>

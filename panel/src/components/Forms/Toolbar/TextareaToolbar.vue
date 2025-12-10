@@ -146,7 +146,7 @@ export default {
 			const buttons = Array.isArray(this.buttons) ? this.buttons : this.default;
 			const available = {
 				...this.commands,
-				...(window.panel.plugins.textareaButtons ?? {})
+				...(this.$panel.plugins.textareaButtons ?? {})
 			};
 
 			for (const button of buttons) {

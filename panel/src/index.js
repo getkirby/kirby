@@ -39,7 +39,7 @@ app.mixin(preserveListeners);
 /**
  * Create the Panel instance
  */
-Panel.create(app, window.panel.plugins);
+Panel.create(app);
 
 /**
  * Load CSS utilities after components

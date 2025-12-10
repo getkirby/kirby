@@ -67,7 +67,7 @@ export const states = [
  * @since 4.0.0
  */
 export default {
-	create(app, plugins = {}) {
+	create(app) {
 		// Vue instance
 		this.app = app;
 
@@ -107,7 +107,7 @@ export default {
 		this.t = this.translation.translate.bind(this.translation);
 
 		// register all plugins
-		this.plugins = Plugins(this.app, plugins);
+		this.plugins = Plugins(this);
 
 		// set initial state
 		this.set(window.panelState);

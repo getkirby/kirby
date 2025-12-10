@@ -61,9 +61,7 @@ export default {
 	},
 	computed: {
 		component() {
-			return window.panel.plugins.login
-				? "k-login-plugin-form"
-				: "k-login-form";
+			return this.$panel.plugins.login ? "k-login-plugin-form" : "k-login-form";
 		},
 		form() {
 			return this.pending.email ? "code" : "login";
