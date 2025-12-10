@@ -7,6 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Panel\Collector\PagesCollector;
+use Kirby\Panel\Ui\Item\PageItem;
 
 /**
  * Controls the Panel dialog for selecting pages
@@ -79,6 +80,24 @@ class PagePickerDialogController extends ModelPickerDialogController
 	public function find(string $id): Page|null
 	{
 		return $this->kirby->page($id);
+	}
+
+	/**
+	 * Returns the item data for a page
+	 * @param \Kirby\Cms\Page $model
+	 */
+	public function item(ModelWithContent $model): array
+	{
+		return [
+			...(new PageItem(
+				page: $model,
+				image: $this->image,
+				info: $this->info,
+				layout: $this->layout,
+				text: $this->text
+			))->props(),
+			'hasChildren' => $model->hasChildren()
+		];
 	}
 
 	/**

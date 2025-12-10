@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
 use Kirby\Panel\Collector\UsersCollector;
+use Kirby\Panel\Ui\Item\UserItem;
 
 /**
  * Controls the Panel dialog for selecting users
@@ -64,6 +65,21 @@ class UserPickerDialogController extends ModelPickerDialogController
 	public function find(string $id): User|null
 	{
 		return $this->kirby->user($id);
+	}
+
+	/**
+	 * Returns the item data for a user
+	 * @param \Kirby\Cms\User $model
+	 */
+	public function item(ModelWithContent $model): array
+	{
+		return (new UserItem(
+			user: $model,
+			image: $this->image,
+			info: $this->info,
+			layout: $this->layout,
+			text: $this->text
+		))->props();
 	}
 
 	public function query(): string
