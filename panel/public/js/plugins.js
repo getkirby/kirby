@@ -16,13 +16,9 @@ window.panel.plugins = {
 window.panel.plugin = function (plugin, extensions) {
 	// Blocks
 	resolve(extensions, "blocks", (name, options) => {
-		if (typeof options === "string") {
-			options = { template: options };
-		}
-
 		window.panel.plugins.components[`k-block-type-${name}`] = {
-			extends: "k-block-type-default",
-			...options
+			...options,
+			$isKirbyBlock: true
 		};
 	});
 
@@ -45,7 +41,7 @@ window.panel.plugin = function (plugin, extensions) {
 	resolve(extensions, "sections", (name, options) => {
 		window.panel.plugins.components[`k-${name}-section`] = {
 			...options,
-			mixins: ["section", ...(options.mixins ?? [])]
+			$isKirbySection: true
 		};
 	});
 
