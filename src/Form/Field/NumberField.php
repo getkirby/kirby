@@ -38,6 +38,8 @@ class NumberField extends InputField
 	 */
 	protected float|string|null $step;
 
+	protected float|null $value = null;
+
 	public function __construct(
 		array|string|null $after = null,
 		bool|null $autofocus = null,

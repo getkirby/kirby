@@ -20,7 +20,7 @@ abstract class OptionsField extends InputField
 	use Mixin\Min;
 	use Mixin\Options;
 
-	protected mixed $value = [];
+	protected array $value = [];
 
 	public function __construct(
 		bool|null $autofocus = null,

@@ -80,7 +80,7 @@ abstract class ModelPickerField extends InputField
 	 */
 	protected string|null $text;
 
-	protected mixed $value = [];
+	protected array $value = [];
 
 	public function __construct(
 		bool|null $autofocus = null,

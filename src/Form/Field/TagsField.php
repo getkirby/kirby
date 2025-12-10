@@ -47,8 +47,6 @@ class TagsField extends OptionsField
 	 */
 	protected bool|null $sort;
 
-	protected mixed $value = [];
-
 	public function __construct(
 		string|null $accept = null,
 		bool|null $autofocus = null,

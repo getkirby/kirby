@@ -43,7 +43,7 @@ class TextareaField extends InputField
 	 */
 	protected string|null $size;
 
-	protected mixed $value = '';
+	protected string $value = '';
 
 	public function __construct(
 		bool|null $autofocus = null,

@@ -26,6 +26,8 @@ abstract class FieldClass extends InputField
 	use Mixin\Placeholder;
 	use Mixin\Width;
 
+	protected mixed $value = null;
+
 	public function __construct(
 		array|string|null $after = null,
 		bool|null $autofocus = null,
@@ -68,11 +70,6 @@ abstract class FieldClass extends InputField
 		}
 
 		throw new NotFoundException(message: 'Method or option "' . $param . '" does not exist for field type "' . $this->type() . '"');
-	}
-
-	public function hasValue(): bool
-	{
-		return true;
 	}
 
 	/**

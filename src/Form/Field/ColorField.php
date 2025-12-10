@@ -38,8 +38,6 @@ class ColorField extends OptionField
 	 */
 	protected string|null $mode;
 
-	protected mixed $value = '';
-
 	public function __construct(
 		bool|null $alpha = null,
 		bool|null $autofocus = null,

@@ -26,7 +26,6 @@ abstract class BaseField
 	use Mixin\Name;
 	use Mixin\Siblings;
 	use Mixin\Translatable;
-	use Mixin\Value;
 	use Mixin\When;
 	use Mixin\Width;
 
@@ -74,16 +73,22 @@ abstract class BaseField
 			$field->setModel($props['model']);
 		}
 
-		if (array_key_exists('value', $props) === true) {
+		if (
+			array_key_exists('value', $props) === true &&
+			method_exists(static::class, 'fill') === true
+		) {
 			$field->fill($props['value']);
 		}
 
 		return $field;
 	}
 
+	/**
+	 * Checks if the field has a value
+	 */
 	public function hasValue(): bool
 	{
-		return false;
+		return property_exists($this, 'value') === true;
 	}
 
 	public function id(): string
@@ -110,16 +115,6 @@ abstract class BaseField
 			'when'     => $this->when(),
 			'width'    => $this->width()
 		];
-	}
-
-	/**
-	 * @since 5.2.0
-	 * @todo Move to `Value` mixin once array-based fields are unsupported
-	 */
-	public function reset(): static
-	{
-		$this->value = $this->emptyValue();
-		return $this;
 	}
 
 	/**

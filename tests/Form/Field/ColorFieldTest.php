@@ -47,8 +47,8 @@ class ColorFieldTest extends TestCase
 			'value' => null
 		]);
 
-		$this->assertNull($field->toFormValue());
-		$this->assertNull($field->toStoredValue());
+		$this->assertSame('', $field->toFormValue());
+		$this->assertSame('', $field->toStoredValue());
 	}
 
 	public function testDefault(): void

@@ -21,7 +21,7 @@ class StructureField extends InputField
 	use Mixin\SortBy;
 	use Mixin\TableColumns;
 
-	protected mixed $value = [];
+	protected array $value = [];
 
 	public function __construct(
 		bool|null $batch = null,

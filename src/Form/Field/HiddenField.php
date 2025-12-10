@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Form\Mixin;
+
 /**
  * Hidden field
  *
@@ -14,6 +16,10 @@ namespace Kirby\Form\Field;
  */
 class HiddenField extends BaseField
 {
+	use Mixin\Value;
+
+	protected mixed $value = null;
+
 	public function __construct(
 		mixed $default = null,
 		string|null $name = null,
@@ -25,11 +31,6 @@ class HiddenField extends BaseField
 
 		$this->default   = $default;
 		$this->translate = $translate;
-	}
-
-	public function hasValue(): bool
-	{
-		return true;
 	}
 
 	public function isHidden(): bool

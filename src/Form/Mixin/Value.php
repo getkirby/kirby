@@ -8,11 +8,6 @@ use ReflectionProperty;
 trait Value
 {
 	/**
-	 * The value of the field
-	 */
-	protected mixed $value = null;
-
-	/**
 	 * @deprecated 5.0.0 Use `::toStoredValue()` instead to receive
 	 * the value in the format that will be needed for content files.
 	 *
@@ -41,16 +36,8 @@ trait Value
 	 */
 	public function fill(mixed $value): static
 	{
-		$this->value = $value;
+		$this->value = $value ?? $this->emptyValue();
 		return $this;
-	}
-
-	/**
-	 * Checks if the field has a value
-	 */
-	public function hasValue(): bool
-	{
-		return true;
 	}
 
 	/**

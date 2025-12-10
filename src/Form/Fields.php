@@ -275,10 +275,12 @@ class Fields extends Collection
 
 		// reset the values of each field
 		foreach ($this->data as $field) {
-			if ($field instanceof Field) {
-				$field->fillWithEmptyValue();
-			} else {
-				$field->reset();
+			if ($field->hasValue() === true) {
+				if ($field instanceof Field) {
+					$field->fillWithEmptyValue();
+				} else {
+					$field->reset();
+				}
 			}
 		}
 
@@ -400,7 +402,7 @@ class Fields extends Collection
 	{
 		return $this->toValues(
 			fn ($field) => $field->toStoredValue(),
-			fn ($field) => $field->isStorable($this->language())
+			fn ($field) => $field->hasValue() ? $field->isStorable($this->language()) : false
 		);
 	}
 

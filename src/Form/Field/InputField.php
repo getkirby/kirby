@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Form\Fields;
 use Kirby\Form\Mixin;
 
 /**
@@ -22,6 +23,7 @@ abstract class InputField extends BaseField
 	use Mixin\Label;
 	use Mixin\Required;
 	use Mixin\Validation;
+	use Mixin\Value;
 	use Mixin\Width;
 
 	public function __construct(
@@ -51,11 +53,6 @@ abstract class InputField extends BaseField
 		$this->width     = $width;
 	}
 
-	public function hasValue(): bool
-	{
-		return true;
-	}
-
 	public function props(): array
 	{
 		return [
@@ -69,5 +66,15 @@ abstract class InputField extends BaseField
 			'required'  => $this->isRequired(),
 			'width'     => $this->width(),
 		];
+	}
+
+	/**
+	 * @since 5.2.0
+	 * @todo Move to `Value` mixin once array-based fields are unsupported
+	 */
+	public function reset(): static
+	{
+		$this->value = $this->emptyValue();
+		return $this;
 	}
 }

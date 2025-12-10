@@ -23,7 +23,7 @@ class LinkField extends InputField
 	 */
 	protected array|null $options;
 
-	protected mixed $value = '';
+	protected string $value = '';
 
 	public function __construct(
 		bool|null $autofocus = null,
