@@ -48,7 +48,7 @@ function installComponents(app, components) {
 
 	for (const [name, component] of Object.entries(components)) {
 		try {
-			installed[name] = installComponent(app, name, component);
+			installed[name] = installComponent(name, component, app);
 		} catch (error) {
 			window.console.warn(error.message);
 		}
@@ -81,12 +81,15 @@ function installPlugins(app, plugins) {
  * Resolves various aspects of a component
  * @since 6.0.0
  *
- * @param {Vue} app
  * @param {String} name
  * @param {Object} component
+ * @param {Vue} app
  * @returns {Object} The updated component options
  */
-function resolveComponent(app, name, component) {
+function resolveComponent(name, component, app) {
+	app ??= window.panel.app;
+
+	// inject certain features into sections and blocks
 	component = resolveComponentSpecial(component);
 
 	// remove a render method if there’s a template
@@ -213,13 +216,11 @@ function resolveComponentRender(component) {
  * Injects features into components
  * @since 6.0.0
  *
- * @param {Vue} app
- * @param {String} name
  * @param {Object} component
  * @returns {Object} The updated component options
  */
 function resolveComponentSpecial(component) {
-	console.log(component);
+	// Blocks
 	if (component.$isKirbyBlock) {
 		if (typeof component === "string") {
 			component = { template: component };
@@ -231,6 +232,7 @@ function resolveComponentSpecial(component) {
 		};
 	}
 
+	// Sections
 	if (component.$isKirbySection) {
 		return {
 			...component,
