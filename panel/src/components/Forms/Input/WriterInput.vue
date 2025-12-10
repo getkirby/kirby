@@ -291,7 +291,7 @@ export default {
 			);
 		},
 		createMarksFromPanelPlugins() {
-			const plugins = window.panel.plugins.writerMarks ?? {};
+			const plugins = this.$panel.plugins.writerMarks ?? {};
 			const marks = {};
 
 			// take each extension object and turn
@@ -344,7 +344,7 @@ export default {
 			);
 		},
 		createNodesFromPanelPlugins() {
-			const plugins = window.panel.plugins.writerNodes ?? {};
+			const plugins = this.$panel.plugins.writerNodes ?? {};
 			const nodes = {};
 
 			// take each extension object and turn

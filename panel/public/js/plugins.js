@@ -13,6 +13,12 @@ window.panel.plugins = {
 	writerNodes: {}
 };
 
+const resolve = (extensions, type, callback) => {
+	for (const [name, options] of Object.entries(extensions[type] ?? {})) {
+		callback(name, options);
+	}
+};
+
 window.panel.plugin = function (plugin, extensions) {
 	// Blocks
 	resolve(extensions, "blocks", (name, options) => {
@@ -55,16 +61,6 @@ window.panel.plugin = function (plugin, extensions) {
 		window.panel.plugins.use.push(options);
 	});
 
-	// Vue `created` callback
-	if (extensions["created"]) {
-		window.panel.plugins.created.push(extensions["created"]);
-	}
-
-	// Login
-	if (extensions.login) {
-		window.panel.plugins.login = extensions.login;
-	}
-
 	// Textarea custom toolbar buttons
 	resolve(extensions, "textareaButtons", (name, options) => {
 		window.panel.plugins.textareaButtons[name] = options;
@@ -84,10 +80,14 @@ window.panel.plugin = function (plugin, extensions) {
 	resolve(extensions, "writerNodes", function (name, options) {
 		window.panel.plugins.writerNodes[name] = options;
 	});
-};
 
-const resolve = (extensions, type, callback) => {
-	for (const [name, options] of Object.entries(extensions[type] ?? {})) {
-		callback(name, options);
+	// Vue `created` callback
+	if (extensions["created"]) {
+		window.panel.plugins.created.push(extensions["created"]);
+	}
+
+	// Login
+	if (extensions.login) {
+		window.panel.plugins.login = extensions.login;
 	}
 };
