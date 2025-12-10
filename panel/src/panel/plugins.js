@@ -15,27 +15,9 @@ import section from "@/mixins/section.js";
  * @param {Object} component
  * @returns {Object} The updated component options
  */
-export const installComponent = (app, name, component) => {
-	// make sure component has something to show
-	if (
-		!component.template &&
-		!component.render &&
-		!component.setup &&
-		!component.extends
-	) {
-		throw new Error(
-			`Plugin component "${name}" is not providing any template, render or setup method, neither is it extending a component. The component has not been registered.`
-		);
-	}
-
-	// extend the component if it defines extensions
-	component = resolveComponentExtension(app, name, component);
-
-	// remove a render method if there’s a template
-	component = resolveComponentRender(component);
-
-	// add mixins
-	component = resolveComponentMixins(component);
+function installComponent(app, name, component) {
+	// resolve various aspects of the component
+	component = resolveComponent(app, name, component);
 
 	// check if the component is replacing a core component
 	if (isComponent(name, app) === true) {
@@ -47,7 +29,7 @@ export const installComponent = (app, name, component) => {
 
 	// return component options
 	return component;
-};
+}
 
 /**
  * Installs all components in the given object
@@ -57,7 +39,7 @@ export const installComponent = (app, name, component) => {
  * @param {Object} components
  * @returns {Object} Returns all installed components
  */
-export const installComponents = (app, components) => {
+function installComponents(app, components) {
 	if (isObject(components) === false) {
 		return;
 	}
@@ -73,7 +55,7 @@ export const installComponents = (app, components) => {
 	}
 
 	return installed;
-};
+}
 
 /**
  * Installs plugins
@@ -83,7 +65,7 @@ export const installComponents = (app, components) => {
  * @param {Object} plugins
  * @returns {Object} Returns all installed plugins
  */
-export const installPlugins = (app, plugins) => {
+function installPlugins(app, plugins) {
 	if (Array.isArray(plugins) === false) {
 		return [];
 	}
@@ -93,7 +75,31 @@ export const installPlugins = (app, plugins) => {
 	}
 
 	return plugins;
-};
+}
+
+/**
+ * Resolves various aspects of a component
+ * @since 6.0.0
+ *
+ * @param {Vue} app
+ * @param {String} name
+ * @param {Object} component
+ * @returns {Object} The updated component options
+ */
+function resolveComponent(app, name, component) {
+	component = resolveComponentSpecial(component);
+
+	// remove a render method if there’s a template
+	component = resolveComponentRender(component);
+
+	// extend the component if it defines extensions
+	component = resolveComponentExtension(app, name, component);
+
+	// add mixins
+	component = resolveComponentMixins(component);
+
+	return component;
+}
 
 /**
  * Resolves a component extension if defined as component name
@@ -104,7 +110,7 @@ export const installPlugins = (app, plugins) => {
  * @param {Object} component
  * @returns {Object} The updated/extended component options
  */
-export const resolveComponentExtension = (app, name, component) => {
+function resolveComponentExtension(app, name, component) {
 	if (typeof component?.extends !== "string") {
 		return component;
 	}
@@ -116,7 +122,7 @@ export const resolveComponentExtension = (app, name, component) => {
 		);
 
 		// remove the extension
-		component.extends = null;
+		delete component.extends;
 
 		return component;
 	}
@@ -124,7 +130,7 @@ export const resolveComponentExtension = (app, name, component) => {
 	component.extends = app.component(component.extends);
 
 	return component;
-};
+}
 
 /**
  * Resolve available mixins if they are defined
@@ -133,7 +139,7 @@ export const resolveComponentExtension = (app, name, component) => {
  * @param {Object} component
  * @returns {Object} The updated component options
  */
-export const resolveComponentMixins = (component) => {
+function resolveComponentMixins(component) {
 	if (Array.isArray(component.mixins) === false) {
 		return component;
 	}
@@ -174,7 +180,7 @@ export const resolveComponentMixins = (component) => {
 		.filter((mixin) => mixin !== undefined);
 
 	return component;
-};
+}
 
 /**
  * Resolve a component's competing template/render options
@@ -183,13 +189,57 @@ export const resolveComponentMixins = (component) => {
  * @param {Object} component
  * @returns {Object} The updated component options
  */
-export const resolveComponentRender = (component) => {
+function resolveComponentRender(component) {
+	// make sure component has something to show
+	if (
+		!component.template &&
+		!component.render &&
+		!component.setup &&
+		!component.extends
+	) {
+		throw new Error(
+			`Plugin component "${name}" is not providing any template, render or setup method, neither is it extending a component. The component has not been registered.`
+		);
+	}
+
 	if (component.template) {
 		delete component.render;
 	}
 
 	return component;
-};
+}
+
+/**
+ * Injects features into components
+ * @since 6.0.0
+ *
+ * @param {Vue} app
+ * @param {String} name
+ * @param {Object} component
+ * @returns {Object} The updated component options
+ */
+function resolveComponentSpecial(component) {
+	console.log(component);
+	if (component.$isKirbyBlock) {
+		if (typeof component === "string") {
+			component = { template: component };
+		}
+
+		return {
+			...component,
+			extends: "k-block-type-default"
+		};
+	}
+
+	if (component.$isKirbySection) {
+		return {
+			...component,
+			mixins: ["section", ...(component.mixins ?? [])]
+		};
+	}
+
+	return component;
+}
 
 /**
  * The plugin module installs all given plugins
@@ -199,9 +249,7 @@ export const resolveComponentRender = (component) => {
 export default (app, plugins = {}) => {
 	plugins = {
 		// expose helper functions for kirbyup
-		resolveComponentExtension,
-		resolveComponentMixins,
-		resolveComponentRender,
+		resolveComponent,
 		// defaults
 		components: {},
 		created: [],
