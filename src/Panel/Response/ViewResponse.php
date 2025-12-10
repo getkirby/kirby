@@ -110,13 +110,6 @@ class ViewResponse extends JsonResponse
 	 */
 	public static function from(mixed $data): Response
 	{
-		// Create an error view for any route that throws a not found exception.
-		// This will make sure that users can navigate to such views and will get a
-		// useful response instead of the debugger or the fatal screen.
-		if ($data instanceof NotFoundException) {
-			return static::error($data->getMessage());
-		}
-
 		// handle redirects
 		if ($data instanceof Redirect) {
 			// if the redirect is a refresh, return a refresh response
