@@ -9,7 +9,6 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field\BaseField;
-use Kirby\Form\Field\InputField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
@@ -276,10 +275,12 @@ class Fields extends Collection
 
 		// reset the values of each field
 		foreach ($this->data as $field) {
-			if ($field instanceof Field) {
-				$field->fillWithEmptyValue();
-			} elseif ($field instanceof InputField) {
-				$field->reset();
+			if ($field->hasValue() === true) {
+				if ($field instanceof Field) {
+					$field->fillWithEmptyValue();
+				} else {
+					$field->reset();
+				}
 			}
 		}
 
