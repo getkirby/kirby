@@ -111,7 +111,7 @@ class BlocksFieldTest extends TestCase
 		$result = $field->dialogs()[0]['action']('text', 'text', 'test-path');
 
 		$this->assertInstanceOf(FieldDialogController::class, $result);
-		$this->assertInstanceOf(Field::class, $result->field);
+		$this->assertInstanceOf(BaseField::class, $result->field);
 		$this->assertSame('text', $result->field->name());
 		$this->assertSame('test-path', $result->path);
 	}
@@ -123,7 +123,7 @@ class BlocksFieldTest extends TestCase
 		$result = $field->drawers()[0]['action']('text', 'text', 'test-path');
 
 		$this->assertInstanceOf(FieldDrawerController::class, $result);
-		$this->assertInstanceOf(Field::class, $result->field);
+		$this->assertInstanceOf(BaseField::class, $result->field);
 		$this->assertSame('text', $result->field->name());
 		$this->assertSame('test-path', $result->path);
 	}
