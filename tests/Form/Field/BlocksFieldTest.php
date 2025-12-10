@@ -6,7 +6,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\Field;
 use Kirby\Form\Fields;
 use Kirby\Panel\Controller\Dialog\FieldDialogController;
 use Kirby\Panel\Controller\Drawer\FieldDrawerController;
