@@ -17,8 +17,8 @@
 					v-for="ratio in ratios"
 					:key="ratio"
 					:cover="true"
+					:file="id"
 					:ratio="ratio"
-					:src="id"
 					back="pattern"
 				/>
 			</k-grid>
