@@ -47,4 +47,14 @@ class HiddenField extends BaseField
 			'type'     => $this->type(),
 		];
 	}
+
+	/**
+	 * @since 5.2.0
+	 * @todo Move to `Value` mixin once array-based fields are unsupported
+	 */
+	public function reset(): static
+	{
+		$this->value = $this->emptyValue();
+		return $this;
+	}
 }
