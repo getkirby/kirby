@@ -1,17 +1,17 @@
 <template>
-	<k-frame v-if="resolvedUrl" v-bind="$props">
+	<k-frame v-if="url || resolvedUrl" v-bind="$props">
+		<iframe
+			v-if="url"
+			:src="$helper.embed.video(url, true)"
+			class="k-video"
+			referrerpolicy="strict-origin-when-cross-origin"
+		/>
 		<video
-			v-if="isInternal"
+			v-else
 			:controls="controls"
 			:poster="poster"
 			:src="resolvedUrl"
 			class="k-video"
-		/>
-		<iframe
-			v-else
-			:src="resolvedUrl"
-			class="k-video"
-			referrerpolicy="strict-origin-when-cross-origin"
 		/>
 	</k-frame>
 </template>
@@ -22,18 +22,28 @@ import { props as FrameProps } from "./Frame.vue";
 export const props = {
 	mixins: [FrameProps],
 	props: {
+		/**
+		 * Whether to show the video controls
+		 */
 		controls: Boolean,
 		element: {
 			default: "figure"
 		},
+		/**
+		 * File ID/UUID (can be used instead of `url`)
+		 */
+		file: String,
+		/**
+		 * URL of poster image
+		 */
 		poster: String,
 		ratio: {
 			default: "16/9"
 		},
-		url: {
-			type: String,
-			required: true
-		}
+		/**
+		 * URL to video file
+		 */
+		url: String
 	}
 };
 
@@ -51,30 +61,26 @@ export default {
 			resolvedUrl: null
 		};
 	},
-	computed: {
-		isInternal() {
-			return this.url.startsWith("file://") === true;
-		}
-	},
 	watch: {
-		url: {
+		file: {
 			handler: "fetch",
 			immediate: true
 		}
 	},
 	methods: {
 		async fetch() {
-			if (this.isInternal === false) {
-				this.resolvedUrl = this.$helper.embed.video(this.url, true);
-				return;
-			}
+			let url = null;
 
 			// if internal file, load data for file UUID from request endpoint
-			const data = await await this.$panel.get("items/files", {
-				query: { items: this.url }
-			});
+			if (this.file) {
+				const data = await await this.$panel.get("items/files", {
+					query: { items: this.file }
+				});
 
-			this.resolvedUrl = data.items[0]?.url;
+				url = data.items[0]?.url;
+			}
+
+			this.resolvedUrl = url;
 		}
 	}
 };
