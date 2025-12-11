@@ -27,7 +27,7 @@ abstract class ModelItemsRequestController extends RequestController
 			$model,
 			image:  json_decode($this->request->get('image', '{}'), true),
 			info:   $this->request->get('info'),
-			layout: $this->request->get('layout', 'list'),
+			layout: $this->request->get('layout'),
 			text:   $this->request->get('text'),
 		);
 	}

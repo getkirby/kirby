@@ -89,24 +89,24 @@ class SiteTest extends TestCase
 
 		// cover disabled as default
 		$this->assertSame([
-			'back' => 'pattern',
-			'color' => 'gray-500',
-			'cover' => false,
-			'icon' => 'page',
-			'url' => $mediaUrl . '/test.jpg',
-			'src' => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
+			'back'   => 'pattern',
+			'color'  => 'gray-500',
+			'cover'  => false,
+			'icon'   => 'page',
+			'url'    => $mediaUrl . '/test.jpg',
+			'src'    => Model::imagePlaceholder(),
+			'srcset' => $mediaUrl . '/test-36x.jpg 36w, ' . $mediaUrl . '/test-72x.jpg 72w'
 		], $panel->image());
 
 		// cover enabled
 		$this->assertSame([
-			'back' => 'pattern',
-			'color' => 'gray-500',
-			'cover' => true,
-			'icon' => 'page',
-			'url' => $mediaUrl . '/test.jpg',
-			'src' => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-38x38-crop.jpg 1x, ' . $mediaUrl . '/test-76x76-crop.jpg 2x'
+			'back'   => 'pattern',
+			'color'  => 'gray-500',
+			'cover'  => true,
+			'icon'   => 'page',
+			'url'    => $mediaUrl . '/test.jpg',
+			'src'    => Model::imagePlaceholder(),
+			'srcset' => $mediaUrl . '/test-36x36-crop.jpg 1x, ' . $mediaUrl . '/test-72x72-crop.jpg 2x'
 		], $panel->image(['cover' => true]));
 	}
 

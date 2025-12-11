@@ -85,7 +85,7 @@ export default {
 			const data = await await this.$panel.get("items/files", {
 				query: {
 					items: this.src,
-					layout: "cards",
+					layout: "auto",
 					image: JSON.stringify({
 						ratio: this.ratio,
 						cover: this.cover
