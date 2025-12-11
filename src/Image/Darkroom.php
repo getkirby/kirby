@@ -3,6 +3,7 @@
 namespace Kirby\Image;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Image\Darkroom\GdLib;
 use Kirby\Image\Darkroom\ImageMagick;
 use Kirby\Image\Darkroom\Imagick;
@@ -32,21 +33,6 @@ class Darkroom
 	}
 
 	/**
-	 * Creates a new Darkroom instance
-	 * for the given type/driver
-	 *
-	 * @throws \Exception
-	 */
-	public static function factory(string $type, array $settings = []): static
-	{
-		if (isset(static::$types[$type]) === false) {
-			throw new Exception(message: 'Invalid Darkroom type');
-		}
-
-		return new static::$types[$type]($settings);
-	}
-
-	/**
 	 * Returns the default thumb settings
 	 */
 	protected function defaults(): array
@@ -63,6 +49,21 @@ class Darkroom
 			'sharpen'     => null,
 			'width'       => null,
 		];
+	}
+
+	/**
+	 * Creates a new Darkroom instance
+	 * for the given type/driver
+	 *
+	 * @throws \Exception
+	 */
+	public static function factory(string $type, array $settings = []): static
+	{
+		if (isset(static::$types[$type]) === false) {
+			throw new Exception(message: 'Invalid Darkroom type');
+		}
+
+		return new static::$types[$type]($settings);
 	}
 
 	/**
