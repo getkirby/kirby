@@ -234,8 +234,8 @@ abstract class Model
 		// depending on layout type, set different sizes
 		// to have multiple options for the srcset attribute
 		$sizes = match ($layout) {
-			'auto'     => [100, 300, 800, 1500, 2500],
-			'cards'    => [300, 800, 1500],
+			'auto'     => [50, 100, 200, 400, 800, 1200, 1600, 2400],
+			'cards'    => [400, 800, 1600],
 			'cardlets' => [96, 192],
 			default    => [36, 72],
 		};

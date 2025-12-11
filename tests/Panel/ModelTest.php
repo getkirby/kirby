@@ -233,9 +233,9 @@ class ModelTest extends TestCase
 
 		// cards
 		$image = $panel->image('site.image', 'cards');
-		$this->assertStringContainsString('test-300x.jpg 300w', $image['srcset']);
+		$this->assertStringContainsString('test-400x.jpg 400w', $image['srcset']);
 		$this->assertStringContainsString('test-800x.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-1500x.jpg 1500w', $image['srcset']);
+		$this->assertStringContainsString('test-1600x.jpg 1600w', $image['srcset']);
 
 		// cardlets
 		$image = $panel->image('site.image', 'cardlets');
@@ -272,9 +272,9 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('src', $image);
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertSame($ratio, $image['ratio']);
-		$this->assertStringContainsString('test-300x200-crop.jpg 300w', $image['srcset']);
+		$this->assertStringContainsString('test-400x267-crop.jpg 400w', $image['srcset']);
 		$this->assertStringContainsString('test-800x533-crop.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-1500x1000-crop.jpg 1500w', $image['srcset']);
+		$this->assertStringContainsString('test-1600x1067-crop.jpg 1600w', $image['srcset']);
 
 		// numeric ratio
 		$image = $panel->image([
@@ -286,9 +286,9 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('src', $image);
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertSame($ratio, $image['ratio']);
-		$this->assertStringContainsString('test-300x200-crop.jpg 300w', $image['srcset']);
+		$this->assertStringContainsString('test-400x267-crop.jpg 400w', $image['srcset']);
 		$this->assertStringContainsString('test-800x533-crop.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-1500x1000-crop.jpg 1500w', $image['srcset']);
+		$this->assertStringContainsString('test-1600x1067-crop.jpg 1600w', $image['srcset']);
 	}
 
 	public function testImageWithNonResizableAsset(): void
