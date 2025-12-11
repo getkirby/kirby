@@ -19,6 +19,42 @@ use Kirby\Image\Focus;
 class GdLib extends Darkroom
 {
 	/**
+	 * Applies the correct blur settings for SimpleImage
+	 */
+	protected function blur(SimpleImage $image, array $options): SimpleImage
+	{
+		if ($options['blur'] === false) {
+			return $image;
+		}
+
+		return $image->blur('gaussian', (int)$options['blur']);
+	}
+
+	/**
+	 * Applies grayscale conversion if activated in the options.
+	 */
+	protected function grayscale(SimpleImage $image, array $options): SimpleImage
+	{
+		if ($options['grayscale'] === false) {
+			return $image;
+		}
+
+		return $image->desaturate();
+	}
+
+	/**
+	 * Returns mime type based on `format` option
+	 */
+	protected function mime(array $options): string|null
+	{
+		if ($options['format'] === null) {
+			return null;
+		}
+
+		return Mime::fromExtension($options['format']);
+	}
+
+	/**
 	 * Processes the image with the SimpleImage library
 	 */
 	public function process(string $file, array $options = []): array
@@ -69,30 +105,6 @@ class GdLib extends Darkroom
 	}
 
 	/**
-	 * Applies the correct blur settings for SimpleImage
-	 */
-	protected function blur(SimpleImage $image, array $options): SimpleImage
-	{
-		if ($options['blur'] === false) {
-			return $image;
-		}
-
-		return $image->blur('gaussian', (int)$options['blur']);
-	}
-
-	/**
-	 * Applies grayscale conversion if activated in the options.
-	 */
-	protected function grayscale(SimpleImage $image, array $options): SimpleImage
-	{
-		if ($options['grayscale'] === false) {
-			return $image;
-		}
-
-		return $image->desaturate();
-	}
-
-	/**
 	 * Applies sharpening if activated in the options.
 	 */
 	protected function sharpen(SimpleImage $image, array $options): SimpleImage
@@ -102,17 +114,5 @@ class GdLib extends Darkroom
 		}
 
 		return $image->sharpen($options['sharpen']);
-	}
-
-	/**
-	 * Returns mime type based on `format` option
-	 */
-	protected function mime(array $options): string|null
-	{
-		if ($options['format'] === null) {
-			return null;
-		}
-
-		return Mime::fromExtension($options['format']);
 	}
 }
