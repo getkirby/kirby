@@ -344,7 +344,7 @@ class AppErrorsTest extends TestCase
 			'details' => [
 				'Some error message'
 			],
-			'file' => basename(__FILE__),
+			'file' => '{kirby}/tests/Cms/App/AppErrorsTest.php',
 			'line' => $exception->getLine()
 		]), $this->_getBufferedContent($handlers[0]));
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);

@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Exception\Exception;
-use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
 use Throwable;
@@ -37,6 +36,25 @@ trait AppErrors
 	 * Whoops instance cache
 	 */
 	protected Whoops $whoops;
+
+	/**
+	 * Replaces absolute file paths with placeholders such as
+	 * {kirby_folder}, {site_folder} or {index_folder} to avoid
+	 * exposing too many details about the filesystem and keeping
+	 * error responses short and readable in debug mode.
+	 *
+	 * @since 5.3.0
+	 */
+	protected function disguiseFilePath(string $file): string
+	{
+		$disguise = [
+			$this->root('kirby') => '{kirby}',
+			$this->root('site')  => '{site}',
+			$this->root('index') => '{index}'
+		];
+
+		return str_replace(array_keys($disguise), array_values($disguise), $file);
+	}
 
 	/**
 	 * Registers the PHP error handler for CLI usage
@@ -150,10 +168,7 @@ trait AppErrors
 					'code'      => $code,
 					'message'   => $exception->getMessage(),
 					'details'   => $details,
-					'file'      => F::relativepath(
-						$exception->getFile(),
-						$this->environment()->get('DOCUMENT_ROOT', '')
-					),
+					'file'      => $this->disguiseFilePath($exception->getFile()),
 					'line'      => $exception->getLine(),
 				], $httpCode);
 			} else {
