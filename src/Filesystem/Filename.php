@@ -3,6 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Kirby\Cms\Language;
+use Kirby\Image\Darkroom;
 use Kirby\Toolkit\Str;
 use Stringable;
 
@@ -230,6 +231,10 @@ class Filename implements Stringable
 	 */
 	protected function sanitizeExtension(string $extension): string
 	{
+		if ($extension === 'best') {
+			$extension = Darkroom::bestFormat();
+		}
+
 		$extension = F::safeExtension('test.' . $extension);
 		$extension = str_replace('jpeg', 'jpg', $extension);
 		return $extension;

@@ -26,10 +26,19 @@ class Darkroom
 		'im'      => ImageMagick::class
 	];
 
+	protected static string $bestFormat;
+
 	public function __construct(
 		protected array $settings = []
 	) {
 		$this->settings = [...$this->defaults(), ...$settings];
+	}
+
+	public static function bestFormat(): string
+	{
+		$driver = App::instance()->option('thumbs.driver', 'gd');
+		$driver = static::$types[$driver];
+		return $driver::bestFormat();
 	}
 
 	/**

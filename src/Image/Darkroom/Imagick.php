@@ -57,6 +57,29 @@ class Imagick extends Darkroom
 	}
 
 	/**
+	 * Returns the "best" supported thumb format
+	 * @since 6.0.0
+	 */
+	public static function bestFormat(): string
+	{
+		if (isset(static::$bestFormat) === true) {
+			return static::$bestFormat;
+		}
+
+		$formats = Image::queryFormats();
+
+		if (in_array('AVIF', $formats, true) === true) {
+			return static::$bestFormat = 'avif';
+		}
+
+		if (in_array('WEBP', $formats, true) === true) {
+			return static::$bestFormat = 'webp';
+		}
+
+		return static::$bestFormat =  'jpg';
+	}
+
+	/**
 	 * Applies the blur settings
 	 */
 	protected function blur(Image $image, array $options): Image
@@ -195,6 +218,10 @@ class Imagick extends Darkroom
 	 */
 	protected function save(Image $image, string $file, array $options): bool
 	{
+		if ($options['format'] === 'best') {
+			$options['format'] = static::bestFormat();
+		}
+
 		if ($options['format'] !== null) {
 			$file = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '.' . $options['format'];
 		}

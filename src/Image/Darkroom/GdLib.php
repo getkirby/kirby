@@ -19,6 +19,27 @@ use Kirby\Image\Focus;
 class GdLib extends Darkroom
 {
 	/**
+	 * Returns the "best" supported thumb format
+	 * @since 6.0.0
+	 */
+	public static function bestFormat(): string
+	{
+		if (isset(static::$bestFormat) === true) {
+			return static::$bestFormat;
+		}
+
+		if (function_exists('imageavif') === true) {
+			return static::$bestFormat =  'avif';
+		}
+
+		if (function_exists('imagewebp') === true) {
+			return static::$bestFormat = 'webp';
+		}
+
+		return static::$bestFormat =  'jpg';
+	}
+
+	/**
 	 * Applies the correct blur settings for SimpleImage
 	 */
 	protected function blur(SimpleImage $image, array $options): SimpleImage
@@ -47,6 +68,10 @@ class GdLib extends Darkroom
 	 */
 	protected function mime(array $options): string|null
 	{
+		if ($options['format'] === 'best') {
+			$options['format'] = static::bestFormat();
+		}
+
 		if ($options['format'] === null) {
 			return null;
 		}

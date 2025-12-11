@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
+use Kirby\Image\Darkroom;
 use Kirby\Panel\Controller\View\ModelViewController;
 use Kirby\Panel\Ui\Item\ModelItem;
 use Kirby\Toolkit\A;
@@ -238,54 +239,66 @@ abstract class Model
 			default    => [38, 76]
 		};
 
-		// no additional modfications needed if `cover: false`
-		if (($settings['cover'] ?? false) === false) {
-			return $image->srcset($sizes);
-		}
+		$ratio = $settings['ratio'] ?? '1/1';
 
-		// for card layouts with `cover: true` provide
-		// crops based on the card ratio
-		if ($layout === 'cards') {
-			$ratio = $settings['ratio'] ?? '1/1';
+		// no additional modifications needed if `cover: false`
+		if (
+			($settings['cover'] ?? false) === false ||
+			$ratio === 'auto'
+		) {
+			$srcset = [];
 
-			if (is_numeric($ratio) === false) {
-				$ratio = explode('/', $ratio);
-				$ratio = $ratio[0] / $ratio[1];
+			foreach ($sizes as $size) {
+				$srcset[$size . 'w'] = [
+					'width'  => $size,
+					'format' => 'best'
+				];
 			}
 
+			return $image->srcset($srcset);
+		}
+
+		// for list, table and cardlets
+		// provide square crops in two resolutions
+		if (
+			$layout === 'list' ||
+			$layout === 'cardlets'  ||
+			$layout === 'table'
+		) {
 			return $image->srcset([
-				$sizes[0] . 'w' => [
+				'1x' => [
 					'width'  => $sizes[0],
-					'height' => round($sizes[0] / $ratio),
-					'crop'   => true
+					'height' => $sizes[0],
+					'crop'   => true,
+					'format' => 'best'
 				],
-				$sizes[1] . 'w' => [
+				'2x' => [
 					'width'  => $sizes[1],
-					'height' => round($sizes[1] / $ratio),
-					'crop'   => true
-				],
-				$sizes[2] . 'w' => [
-					'width'  => $sizes[2],
-					'height' => round($sizes[2] / $ratio),
-					'crop'   => true
+					'height' => $sizes[1],
+					'crop'   => true,
+					'format' => 'best'
 				]
 			]);
 		}
 
-		// for list and cardlets with `cover: true`
-		// provide square crops in two resolutions
-		return $image->srcset([
-			'1x' => [
-				'width'  => $sizes[0],
-				'height' => $sizes[0],
-				'crop'   => true
-			],
-			'2x' => [
-				'width'  => $sizes[1],
-				'height' => $sizes[1],
-				'crop'   => true
-			]
-		]);
+		// for all other provide crops based on the card ratio
+		if (is_numeric($ratio) === false) {
+			$ratio = explode('/', $ratio);
+			$ratio = $ratio[0] / $ratio[1];
+		}
+
+		$srcset = [];
+
+		foreach ($sizes as $size) {
+			$srcset[$size . 'w'] = [
+				'width'  => $size,
+				'height' => round($size / $ratio),
+				'crop'   => true,
+				'format' => 'best'
+			];
+		}
+
+		return $image->srcset($srcset);
 	}
 
 	/**

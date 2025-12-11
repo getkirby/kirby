@@ -3,6 +3,7 @@
 namespace Kirby\Image\Darkroom;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Image\Darkroom;
 use Kirby\Image\Focus;
@@ -21,6 +22,33 @@ use Kirby\Image\Focus;
  */
 class ImageMagick extends Darkroom
 {
+	/**
+	 * Returns the "best" supported thumb format
+	 * @since 6.0.0
+	 */
+	public static function bestFormat(): string
+	{
+		if (isset(static::$bestFormat) === true) {
+			return static::$bestFormat;
+		}
+
+		$bin = App::instance()->option('thumbs.bin', 'convert');
+		$cmd = escapeshellcmd($bin) . ' -list format 2>&1';
+		exec($cmd, $out, $code);
+
+		$formats = implode("\n", $out);
+
+		if (preg_match('/^AVIF[* ]/mi', $formats)) {
+			return static::$bestFormat = 'avif';
+		}
+
+		if (preg_match('/^WEBP[* ]/mi', $formats)) {
+			return static::$bestFormat = 'webp';
+		}
+
+		return static::$bestFormat = 'jpg';
+	}
+
 	/**
 	 * Applies the blur settings
 	 */
@@ -188,6 +216,10 @@ class ImageMagick extends Darkroom
 	 */
 	protected function save(string $file, array $options): string
 	{
+		if ($options['format'] === 'best') {
+			$options['format'] = static::bestFormat();
+		}
+
 		if ($options['format'] !== null) {
 			$file = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '.' . $options['format'];
 		}
