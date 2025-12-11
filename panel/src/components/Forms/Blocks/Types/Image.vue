@@ -5,12 +5,18 @@
 		:caption-marks="captionMarks"
 		:empty-text="$t('field.blocks.image.placeholder') + ' …'"
 		:disabled="disabled"
-		:is-empty="!src"
+		:is-empty="isEmpty"
 		empty-icon="image"
 		@open="open"
 		@update="update"
 	>
-		<k-image-frame :alt="content.alt" :cover="crop" :ratio="ratio" :src="src" />
+		<k-image-frame
+			:alt="content.alt"
+			:cover="crop"
+			:file="file"
+			:ratio="ratio"
+			:src="src"
+		/>
 		<k-block-background-dropdown :value="back" @input="onBack" />
 	</k-block-figure>
 </template>
@@ -35,12 +41,25 @@ export default {
 		crop() {
 			return this.content.crop ?? false;
 		},
+		file() {
+			if (this.isInternal) {
+				return this.content.image?.[0]?.uuid ?? this.content.image?.[0]?.id;
+			}
+
+			return undefined;
+		},
+		isEmpty() {
+			return this.isInternal ? !this.file : !this.src;
+		},
+		isInternal() {
+			return this.content.location === "kirby";
+		},
 		src() {
-			if (this.content.location === "web") {
+			if (!this.isInternal) {
 				return this.content.src;
 			}
 
-			return this.content.image?.[0]?.uuid ?? this.content.image?.[0]?.id;
+			return undefined;
 		},
 		ratio() {
 			return !this.content.ratio ? "auto" : this.content.ratio;

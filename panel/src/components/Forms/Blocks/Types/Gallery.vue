@@ -17,9 +17,9 @@
 			<template v-else>
 				<li v-for="image in content.images" :key="image.id">
 					<k-image-frame
-						:ratio="ratio"
 						:cover="crop"
-						:src="image.uuid ?? image.id"
+						:file="image.uuid ?? image.id"
+						:ratio="ratio"
 						class="k-block-type-gallery-frame"
 					/>
 				</li>

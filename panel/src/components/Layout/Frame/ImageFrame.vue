@@ -6,10 +6,10 @@
 		element="figure"
 	>
 		<img
-			v-if="resolvedSrc"
-			:alt="resolvedAlt ?? ''"
-			:src="resolvedSrc"
-			:srcset="resolvedSrcset"
+			v-if="src || resolvedSrc"
+			:alt="alt ?? resolvedAlt ?? ''"
+			:src="src ?? resolvedSrc"
+			:srcset="srcset ?? resolvedSrcset"
 			:sizes="sizes"
 			@dragstart.prevent
 		/>
@@ -27,16 +27,18 @@ export const props = {
 		 */
 		alt: String,
 		/**
+		 * File ID/UUID (can be used instead of `url`)
+		 * @since 6.0.0
+		 */
+		file: String,
+		/**
 		 * For responsive images, pass the `sizes` attribute
 		 */
 		sizes: String,
 		/**
 		 * The path/URL to the image file
 		 */
-		src: {
-			type: String,
-			required: true
-		},
+		src: String,
 		/**
 		 * For responsive images, pass the `srcset` attribute
 		 */
@@ -61,41 +63,39 @@ export default {
 			resolvedSrcset: null
 		};
 	},
-	computed: {
-		isInternal() {
-			return this.src.startsWith("file://") === true;
-		}
-	},
 	watch: {
-		src: {
+		file: {
 			handler: "fetch",
 			immediate: true
 		}
 	},
 	methods: {
 		async fetch() {
-			if (this.isInternal === false) {
-				this.resolvedAlt = this.alt;
-				this.resolvedSrc = this.src;
-				this.resolvedSrcset = this.srcset;
-				return;
-			}
+			let alt,
+				src,
+				srcset = null;
 
 			// if internal file, load data for file UUID from request endpoint
-			const data = await await this.$panel.get("items/files", {
-				query: {
-					items: this.src,
-					layout: "auto",
-					image: JSON.stringify({
-						ratio: this.ratio,
-						cover: this.cover
-					})
-				}
-			});
+			if (this.file) {
+				const data = await this.$panel.get("items/files", {
+					query: {
+						items: this.file,
+						layout: "auto",
+						image: JSON.stringify({
+							ratio: this.ratio,
+							cover: this.cover
+						})
+					}
+				});
 
-			this.resolvedAlt = data.items[0]?.alt;
-			this.resolvedSrc = data.items[0]?.image.src;
-			this.resolvedSrcset = data.items[0]?.image.srcset;
+				alt = data.items[0]?.alt;
+				src = data.items[0]?.image.src;
+				srcset = data.items[0]?.image.srcset;
+			}
+
+			this.resolvedAlt = alt;
+			this.resolvedSrc = src;
+			this.resolvedSrcset = srcset;
 		}
 	}
 };
