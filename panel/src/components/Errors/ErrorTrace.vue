@@ -34,6 +34,9 @@
 </template>
 
 <script>
+/**
+ * @since 6.0.0
+ */
 export default {
 	props: {
 		trace: Array
