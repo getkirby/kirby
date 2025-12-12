@@ -9,7 +9,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
-use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -979,8 +979,8 @@ class FieldsTest extends TestCase
 			model: $this->model
 		);
 
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid form with errors');
+		$this->expectException(FormValidationException::class);
+		$this->expectExceptionMessage('Form validation failed');
 
 		$fields->validate();
 	}
