@@ -22,6 +22,7 @@ import PageMoveDialog from "./PageMoveDialog.vue";
 import PagePickerDialog from "./PagePickerDialog.vue";
 import PagesDialog from "./PagesDialog.vue";
 import RemoveDialog from "./RemoveDialog.vue";
+import RequestErrorDialog from "./RequestErrorDialog.vue";
 import SearchDialog from "./SearchDialog.vue";
 import TextDialog from "./TextDialog.vue";
 import TotpDialog from "./TotpDialog.vue";
@@ -53,6 +54,7 @@ export default {
 		app.component("k-page-picker-dialog", PagePickerDialog);
 		app.component("k-pages-dialog", PagesDialog);
 		app.component("k-remove-dialog", RemoveDialog);
+		app.component("k-request-error-dialog", RequestErrorDialog);
 		app.component("k-search-dialog", SearchDialog);
 		app.component("k-text-dialog", TextDialog);
 		app.component("k-totp-dialog", TotpDialog);
