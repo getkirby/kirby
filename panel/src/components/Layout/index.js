@@ -2,6 +2,8 @@ import Bar from "./Bar.vue";
 import Box from "./Box.vue";
 import Column from "./Column.vue";
 import ColorFrame from "./Frame/ColorFrame.vue";
+import Definition from "./Definition.vue";
+import Definitions from "./Definitions.vue";
 import Dropzone from "./Dropzone.vue";
 import Frame from "./Frame/Frame.vue";
 import Grid from "./Grid.vue";
@@ -23,6 +25,8 @@ export default {
 		app.component("k-box", Box);
 		app.component("k-color-frame", ColorFrame);
 		app.component("k-column", Column);
+		app.component("k-definition", Definition);
+		app.component("k-definitions", Definitions);
 		app.component("k-dropzone", Dropzone);
 		app.component("k-frame", Frame);
 		app.component("k-grid", Grid);

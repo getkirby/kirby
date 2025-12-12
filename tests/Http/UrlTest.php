@@ -36,6 +36,19 @@ class UrlTest extends TestCase
 		$this->assertSame('https://www.youtube.com', Url::currentDir());
 	}
 
+	public function testEditor(): void
+	{
+		$file = '/test/index.php';
+
+		$this->assertSame(
+			'vscode://file/%2Ftest%2Findex.php:23',
+			Url::editor(editor: 'vscode', file: $file, line: 23)
+		);
+
+		$this->assertNull(Url::editor(editor: false, file: $file, line: 23));
+		$this->assertNull(Url::editor(editor: 'vscode', file: null, line: 23));
+	}
+
 	public function testHome(): void
 	{
 		$this->assertSame('/', Url::home());
