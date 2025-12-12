@@ -223,10 +223,7 @@ class Mime
 
 			$svg = new SimpleXMLElement(file_get_contents($file));
 
-			if (
-				$svg !== false &&
-				$svg->getName() === 'svg'
-			) {
+			if ($svg->getName() === 'svg') {
 				return 'image/svg+xml';
 			}
 		}

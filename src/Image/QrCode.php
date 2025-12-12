@@ -462,7 +462,7 @@ class QrCode implements Stringable
 		for ($i = 0, $n = count($code); $i < $n; $i += 8) {
 			$byte = 0;
 
-			if ($code[$i + 0]) {
+			if ($code[$i]) {
 				$byte |= 0x80;
 			}
 			if ($code[$i + 1]) {

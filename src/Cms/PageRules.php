@@ -137,7 +137,7 @@ class PageRules
 
 		static::publish($page);
 
-		if ($position !== null && $position < 0) {
+		if ($position < 0) {
 			throw new InvalidArgumentException(key: 'page.num.invalid');
 		}
 	}

@@ -177,8 +177,8 @@ class FileRules
 		static::validMime($file, $upload->mime());
 
 		if (
-			(string)$upload->mime() !== (string)$file->mime() &&
-			(string)$upload->extension() !== (string)$file->extension()
+			$upload->mime() !== $file->mime() &&
+			$upload->extension() !== $file->extension()
 		) {
 			throw new InvalidArgumentException(
 				key: 'file.mime.differs',

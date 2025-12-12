@@ -495,10 +495,7 @@ class Version
 			if ($fields === null) {
 				$fields = $this->model->storage()->read($this->id, $language);
 				$fields = $this->prepareFieldsAfterRead($fields, $language);
-
-				if ($fields !== null) {
-					VersionCache::set($this, $language, $fields);
-				}
+				VersionCache::set($this, $language, $fields);
 			}
 
 			return $fields;

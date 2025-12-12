@@ -105,11 +105,13 @@ class Permissions
 		}
 
 		if (is_array($settings) === true) {
-			return $this->setCategories($settings);
+			$this->setCategories($settings);
+			return;
 		}
 
 		if (is_bool($settings) === true) {
-			return $this->setAll($settings);
+			$this->setAll($settings);
+			return;
 		}
 	}
 

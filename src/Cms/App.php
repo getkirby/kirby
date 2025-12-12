@@ -477,7 +477,7 @@ class App
 		string $name,
 		string $contentType = 'html'
 	): Controller|null {
-		if ($contentType !== null && $contentType !== 'html') {
+		if ($contentType !== 'html') {
 			$name .= '.' . $contentType;
 		}
 

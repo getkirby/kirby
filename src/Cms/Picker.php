@@ -76,7 +76,7 @@ abstract class Picker
 
 		$result = [];
 
-		foreach ($items as $index => $item) {
+		foreach ($items as $item) {
 			if (empty($this->options['map']) === false) {
 				$result[] = $this->options['map']($item);
 			} else {
