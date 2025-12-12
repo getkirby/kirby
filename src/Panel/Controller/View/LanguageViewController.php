@@ -90,7 +90,7 @@ class LanguageViewController extends ViewController
 			next:         $this->next(),
 			prev:         $this->prev(),
 			title:        $this->language->name(),
-			translations: $this->translations(),
+			translations: $this->variables(),
 			url:          $this->language->url(),
 		);
 	}
@@ -119,11 +119,11 @@ class LanguageViewController extends ViewController
 		return null;
 	}
 
-	public function translations(): array
+	public function variables(): array
 	{
 		$strings      = [];
-		$foundation   = $this->kirby->defaultLanguage()?->translations() ?? [];
-		$translations = $this->language->translations();
+		$foundation   = $this->kirby->defaultLanguage()->variables()->toArray();
+		$variables    = $this->language->variables()->toArray();
 
 		// TODO: update following line and adapt for update and
 		// delete options when `languageVariables.*` permissions available
@@ -134,7 +134,7 @@ class LanguageViewController extends ViewController
 		foreach (array_keys($foundation) as $key) {
 			$strings[] = [
 				'key'     => $key,
-				'value'   => $translations[$key] ?? null,
+				'value'   => $variables[$key] ?? null,
 				'options' => [
 					[
 						'click'    => 'update',
