@@ -1,4 +1,21 @@
-<template></template>
+<template>
+	<k-definitions class="k-validation-issues">
+		<k-definition
+			v-for="(field, fieldName) in fields"
+			:key="fieldName"
+			:term="field.label"
+		>
+			<k-checklist theme="negative">
+				<li
+					v-for="(issue, issueKey) in field.issues"
+					:key="fieldName + '-issue-' + issueKey"
+				>
+					{{ issue }}
+				</li>
+			</k-checklist>
+		</k-definition>
+	</k-definitions>
+</template>
 
 <script>
 /**
@@ -6,9 +23,18 @@
  */
 export default {
 	props: {
-		issues: Array
+		fields: Object
 	}
 };
 </script>
 
-<style></style>
+<style>
+.k-validation-issues {
+	--definition-term-width: 33%;
+	--definition-height: auto;
+	--definition-align: start;
+}
+.k-validation-issues dt {
+	line-height: var(--text-line-height);
+}
+</style>
