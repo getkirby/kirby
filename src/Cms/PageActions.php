@@ -455,6 +455,11 @@ trait PageActions
 		// keep the initial storage class
 		$storage = $page->storage()::class;
 
+		// Make sure that the page does not already exist at this point.
+		// Otherwise, moving the storage to memory storage, might delete
+		// an existing page before we can even run the checks.
+		PageRules::create($page);
+
 		// make sure that the temporary page is stored in memory
 		$page->changeStorage(MemoryStorage::class);
 
