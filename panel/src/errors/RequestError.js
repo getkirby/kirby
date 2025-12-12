@@ -12,6 +12,30 @@ export default class RequestError extends Error {
 		this.details = response.json.details;
 	}
 
+	dialog() {
+		const state = this.state();
+
+		return {
+			component: "k-request-error-dialog",
+			props: {
+				message: this.message,
+				request: {
+					url: this.request.url,
+					method: this.request.method
+				},
+				response: {
+					status: this.response.status
+				},
+				exception: {
+					file: state.file,
+					line: state.line,
+					type: state.exception
+				},
+				details: state.details
+			}
+		};
+	}
+
 	state() {
 		return this.response.json;
 	}
