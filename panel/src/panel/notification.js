@@ -90,10 +90,14 @@ export default (panel = {}) => {
 
 			// open the error dialog in views
 			if (panel.context === "view") {
-				panel.dialog.open({
-					component: "k-error-dialog",
-					props: error
-				});
+				if (error instanceof RequestError) {
+					panel.dialog.open(error.dialog());
+				} else {
+					panel.dialog.open({
+						component: "k-error-dialog",
+						props: error
+					});
+				}
 			}
 
 			// show the error notification bar
