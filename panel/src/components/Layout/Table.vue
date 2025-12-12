@@ -2,6 +2,7 @@
 	<div
 		:aria-disabled="disabled"
 		:class="['k-table', $attrs.class]"
+		:data-responsive="responsive"
 		:style="$attrs.style"
 	>
 		<table
@@ -227,6 +228,10 @@ export default {
 		 * Optional pagination settings
 		 */
 		pagination: [Object, Boolean],
+		responsive: {
+			type: Boolean,
+			default: true
+		},
 		/**
 		 * Whether the table is in select mode
 		 * @since 5.0.0
@@ -644,20 +649,20 @@ export default {
 
 /* Mobile */
 @container (max-width: 40rem) {
-	.k-table {
+	.k-table[data-responsive="true"] {
 		overflow-x: auto;
 	}
-	.k-table thead th {
+	.k-table[data-responsive="true"] thead th {
 		position: static;
 	}
 
 	/** Make sure that the option toggle does not create huge row heights **/
-	.k-table .k-options-dropdown-toggle {
+	.k-table[data-responsive="true"] .k-options-dropdown-toggle {
 		aspect-ratio: auto !important;
 	}
 
 	/**	Reset any custom column widths **/
-	.k-table
+	.k-table[data-responsive="true"]
 		:where(th, td):not(
 			.k-table-index-column,
 			.k-table-options-column,
@@ -667,7 +672,7 @@ export default {
 		width: auto !important;
 	}
 
-	.k-table :where(th, td):not([data-mobile="true"]) {
+	.k-table[data-responsive="true"] :where(th, td):not([data-mobile="true"]) {
 		display: none;
 	}
 }
