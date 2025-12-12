@@ -67,6 +67,7 @@ class Url
 	/**
 	 * Use Whoops to create an editor URL to open
 	 * a file at the given line number
+	 * @since 5.3.0
 	 */
 	public static function editor(string|false $editor, string|null $file, int $line = 0): string|null
 	{
