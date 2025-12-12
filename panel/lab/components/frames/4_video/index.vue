@@ -7,7 +7,7 @@
 			/>
 		</k-lab-example>
 		<k-lab-example v-if="id" label="Internal file UUID">
-			<k-video-frame :url="id" :controls="true" />
+			<k-video-frame :file="id" :controls="true" />
 		</k-lab-example>
 	</k-lab-examples>
 </template>

@@ -179,26 +179,26 @@ class UserTest extends TestCase
 
 		// cover disabled as default
 		$this->assertSame([
-			'back' => 'black',
-			'color' => 'gray-500',
-			'cover' => false,
-			'icon' => 'user',
-			'ratio' => '1/1',
-			'url' => $mediaUrl . '/test.jpg',
-			'src' => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
+			'back'   => 'black',
+			'color'  => 'gray-500',
+			'cover'  => false,
+			'icon'   => 'user',
+			'ratio'  => '1/1',
+			'url'    => $mediaUrl . '/test.jpg',
+			'src'    => Model::imagePlaceholder(),
+			'srcset' => $mediaUrl . '/test-36x.jpg 36w, ' . $mediaUrl . '/test-96x.jpg 96w'
 		], $panel->image());
 
 		// cover enabled
 		$this->assertSame([
-			'back' => 'black',
-			'color' => 'gray-500',
-			'cover' => true,
-			'icon' => 'user',
-			'ratio' => '1/1',
-			'url' => $mediaUrl . '/test.jpg',
-			'src' => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-38x38-crop.jpg 1x, ' . $mediaUrl . '/test-76x76-crop.jpg 2x'
+			'back'   => 'black',
+			'color'  => 'gray-500',
+			'cover'  => true,
+			'icon'   => 'user',
+			'ratio'  => '1/1',
+			'url'    => $mediaUrl . '/test.jpg',
+			'src'    => Model::imagePlaceholder(),
+			'srcset' => $mediaUrl . '/test-36x36-crop.jpg 1x, ' . $mediaUrl . '/test-96x96-crop.jpg 2x'
 		], $panel->image(['cover' => true]));
 	}
 

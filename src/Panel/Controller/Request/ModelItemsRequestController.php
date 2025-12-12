@@ -25,9 +25,10 @@ abstract class ModelItemsRequestController extends RequestController
 		$class = static::ITEM_CLASS;
 		return new $class(
 			$model,
-			info: $this->request->get('info'),
-			layout: $this->request->get('layout', 'list'),
-			text: $this->request->get('text'),
+			image:  json_decode($this->request->get('image', '{}'), true),
+			info:   $this->request->get('info'),
+			layout: $this->request->get('layout'),
+			text:   $this->request->get('text'),
 		);
 	}
 
