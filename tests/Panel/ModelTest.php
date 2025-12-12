@@ -229,7 +229,7 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertArrayNotHasKey('query', $image);
 		$this->assertStringContainsString('test-36x.jpg 36w', $image['srcset']);
-		$this->assertStringContainsString('test-72x.jpg 72w', $image['srcset']);
+		$this->assertStringContainsString('test-96x.jpg 96w', $image['srcset']);
 
 		// cards
 		$image = $panel->image('site.image', 'cards');
@@ -245,7 +245,7 @@ class ModelTest extends TestCase
 		// table
 		$image = $panel->image('site.image', 'table');
 		$this->assertStringContainsString('test-36x.jpg 36w', $image['srcset']);
-		$this->assertStringContainsString('test-72x.jpg 72w', $image['srcset']);
+		$this->assertStringContainsString('test-96x.jpg 96w', $image['srcset']);
 
 		// full options
 		$image = $panel->image([
@@ -260,7 +260,7 @@ class ModelTest extends TestCase
 		$this->assertSame($icon, $image['icon']);
 		$this->assertSame($ratio, $image['ratio']);
 		$this->assertStringContainsString('test-36x36-crop.jpg 1x', $image['srcset']);
-		$this->assertStringContainsString('test-72x72-crop.jpg 2x', $image['srcset']);
+		$this->assertStringContainsString('test-96x96-crop.jpg 2x', $image['srcset']);
 
 		// string ratio
 		$image = $panel->image([

@@ -234,10 +234,10 @@ abstract class Model
 		// depending on layout type, set different sizes
 		// to have multiple options for the srcset attribute
 		$sizes = match ($layout) {
-			'auto'     => [50, 100, 200, 400, 800, 1200, 1600, 2400],
+			'auto'     => [96, 192, 400, 800, 1600, 2400],
 			'cards'    => [400, 800, 1600],
 			'cardlets' => [96, 192],
-			default    => [36, 72],
+			default    => [36, 96],
 		};
 
 		$ratio = $settings['ratio'] ?? '1/1';

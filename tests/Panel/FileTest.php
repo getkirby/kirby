@@ -279,7 +279,7 @@ class FileTest extends TestCase
 			'icon'   => 'image',
 			'url'    => '/media/site/' . $hash . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => '/media/site/' . $hash . '/test-36x.jpg 36w, /media/site/' . $hash . '/test-72x.jpg 72w'
+			'srcset' => '/media/site/' . $hash . '/test-36x.jpg 36w, /media/site/' . $hash . '/test-96x.jpg 96w'
 		], $panel->image());
 
 		// cover enabled
@@ -290,7 +290,7 @@ class FileTest extends TestCase
 			'icon'   => 'image',
 			'url'    => '/media/site/' . $hash . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => '/media/site/' . $hash . '/test-36x36-crop.jpg 1x, /media/site/' . $hash . '/test-72x72-crop.jpg 2x'
+			'srcset' => '/media/site/' . $hash . '/test-36x36-crop.jpg 1x, /media/site/' . $hash . '/test-96x96-crop.jpg 2x'
 		], $panel->image(['cover' => true]));
 	}
 

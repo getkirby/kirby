@@ -268,7 +268,7 @@ class PageTest extends TestCase
 			'icon'   => 'page',
 			'url'    => $mediaUrl . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-36x.jpg 36w, ' . $mediaUrl . '/test-72x.jpg 72w'
+			'srcset' => $mediaUrl . '/test-36x.jpg 36w, ' . $mediaUrl . '/test-96x.jpg 96w'
 		], $panel->image());
 
 		// cover enabled
@@ -279,7 +279,7 @@ class PageTest extends TestCase
 			'icon'   => 'page',
 			'url'    => $mediaUrl . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-36x36-crop.jpg 1x, ' . $mediaUrl . '/test-72x72-crop.jpg 2x'
+			'srcset' => $mediaUrl . '/test-36x36-crop.jpg 1x, ' . $mediaUrl . '/test-96x96-crop.jpg 2x'
 		], $panel->image(['cover' => true]));
 	}
 
