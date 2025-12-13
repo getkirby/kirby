@@ -67,7 +67,10 @@ export default {
 				return;
 			}
 
-			if (link.href.startsWith(location.origin) === false) {
+			if (
+				link.href.startsWith(location.origin) === false ||
+				link.href.startsWith(this.$panel.urls.panel) === true
+			) {
 				link.target = "_blank";
 				return true;
 			}
