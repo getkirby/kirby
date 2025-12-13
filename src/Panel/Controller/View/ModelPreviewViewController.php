@@ -6,9 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Uri;
+use Kirby\Panel\Redirect;
 use Kirby\Toolkit\A;
 
 /**
@@ -33,9 +33,7 @@ class ModelPreviewViewController
 
 				// @codeCoverageIgnoreStart
 				if ($result instanceof ModelWithContent === false) {
-					throw new LogicException(
-						message: 'Cannot redirect the preview view to an URL that does not belong to any model'
-					);
+					throw new Redirect(location: $redirect->toString());
 				}
 				// @codeCoverageIgnoreEnd
 
