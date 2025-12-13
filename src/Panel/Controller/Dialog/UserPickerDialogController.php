@@ -20,8 +20,6 @@ use Kirby\Panel\Ui\Item\UserItem;
  */
 class UserPickerDialogController extends ModelPickerDialogController
 {
-	protected const string TYPE = 'user';
-
 	protected UsersCollector $collector;
 
 	public function __construct(
@@ -60,6 +58,14 @@ class UserPickerDialogController extends ModelPickerDialogController
 			search: $this->search,
 			sortBy: 'username asc'
 		);
+	}
+
+	protected function empty(): array
+	{
+		return [
+			'icon' => 'users',
+			'text' => $this->i18n('dialog.users.empty')
+		];
 	}
 
 	public function find(string $id): User|null

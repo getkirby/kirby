@@ -19,9 +19,7 @@
 					<k-image-frame
 						:ratio="ratio"
 						:cover="crop"
-						:src="image.url"
-						:srcset="image.image.srcset"
-						:alt="image.alt"
+						:src="image"
 						class="k-block-type-gallery-frame"
 					/>
 				</li>

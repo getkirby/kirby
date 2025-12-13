@@ -1,7 +1,9 @@
 <template>
 	<component
 		:is="element"
+		v-if="ratio"
 		:class="['k-frame', $attrs.class]"
+		:data-ratio="ratio"
 		:data-theme="theme"
 		:style="{
 			'--fit': fit ?? (cover ? 'cover' : 'contain'),
@@ -12,6 +14,7 @@
 	>
 		<slot />
 	</component>
+	<slot v-else />
 </template>
 
 <script>
@@ -87,13 +90,14 @@ export default {
 	color: var(--theme-color-text-highlight);
 }
 
-.k-frame *:where(img, video, iframe, button) {
+.k-frame:not([data-ratio="auto"]) *:where(img, video, iframe, button) {
 	position: absolute;
 	inset: 0;
 	height: 100%;
 	width: 100%;
 	object-fit: var(--fit);
 }
+
 .k-frame > * {
 	overflow: hidden;
 	text-overflow: ellipsis;

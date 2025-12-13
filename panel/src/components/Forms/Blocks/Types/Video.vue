@@ -37,7 +37,7 @@ export default {
 		},
 		video() {
 			if (this.content.location === "kirby") {
-				return this.content.video?.[0]?.uuid ?? this.content.video?.[0]?.id;
+				return this.content.video?.[0];
 			}
 
 			return this.content.url;
