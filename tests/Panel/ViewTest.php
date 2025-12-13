@@ -155,8 +155,9 @@ class ViewTest extends TestCase
 		$expected = [
 			'a' => 'A',
 			'$urls' => [
-				'api' => '/api',
-				'site' => '/'
+				'api'   => '/api',
+				'panel' => '/panel',
+				'site'  => '/'
 			]
 		];
 

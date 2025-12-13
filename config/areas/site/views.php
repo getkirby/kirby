@@ -2,8 +2,10 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
-use Kirby\Exception\PermissionException;
+use Kirby\Panel\Controller\View\ModelPreviewViewController;
+use Kirby\Panel\Panel;
 use Kirby\Panel\Ui\Buttons\ViewButtons;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -20,16 +22,15 @@ return [
 	'page.preview' => [
 		'pattern' => 'pages/(:any)/preview/(changes|latest|compare)',
 		'action'  => function (string $path, string $versionId) {
+			// handle redirect if view was reloaded with a redirect URL
+			// after navigating to a different page inside the preview browser
+			if ($redirect = ModelPreviewViewController::redirect($versionId)) {
+				Panel::go($redirect);
+			}
+
 			$page = Find::page($path);
 			$view = $page->panel()->view();
-			$src  = [
-				'latest'  => $page->previewUrl('latest'),
-				'changes' => $page->previewUrl('changes'),
-			];
-
-			if ($src['latest'] === null) {
-				throw new PermissionException('The preview is not available');
-			}
+			$src  = ModelPreviewViewController::src($page);
 
 			return [
 				'component' => 'k-preview-view',
@@ -64,16 +65,15 @@ return [
 	'site.preview' => [
 		'pattern' => 'site/preview/(changes|latest|compare)',
 		'action'  => function (string $versionId) {
+			// handle redirect if view was reloaded with a redirect URL
+			// after navigating to a different page inside the preview browser
+			if ($redirect = ModelPreviewViewController::redirect($versionId)) {
+				Panel::go($redirect);
+			}
+
 			$site = App::instance()->site();
 			$view = $site->panel()->view();
-			$src  = [
-				'latest'  => $site->previewUrl('latest'),
-				'changes' => $site->previewUrl('changes'),
-			];
-
-			if ($src['latest'] === null) {
-				throw new PermissionException('The preview is not available');
-			}
+			$src  = ModelPreviewViewController::src($site);
 
 			return [
 				'component' => 'k-preview-view',

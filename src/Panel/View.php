@@ -304,8 +304,9 @@ class View
 				];
 			},
 			'$urls' => fn () => [
-				'api'  => $kirby->url('api'),
-				'site' => $kirby->url('index')
+				'api'   => $kirby->url('api'),
+				'panel' => $kirby->url('panel'),
+				'site'  => $kirby->url('index'),
 			]
 		];
 	}

@@ -22,11 +22,12 @@
 						@submit="$emit('submit', $event)"
 					/>
 				</template>
+
 				<k-button :link="src" icon="open" size="xs" target="_blank" />
 			</k-button-group>
 		</header>
 
-		<iframe ref="browser" :src="srcWithPreviewParam" />
+		<iframe ref="browser" :src="src" @load="onLoad" />
 	</div>
 </template>
 
@@ -40,12 +41,10 @@ export default {
 		src: String,
 		versionId: String
 	},
-	emits: ["discard", "submit"],
+	emits: ["discard", "navigate", "submit"],
 	computed: {
-		srcWithPreviewParam() {
-			const uri = new URL(this.src, this.$panel.urls.site);
-			uri.searchParams.append("_preview", true);
-			return uri.toString();
+		window() {
+			return this.$refs.browser.contentWindow;
 		}
 	},
 	mounted() {
@@ -57,8 +56,39 @@ export default {
 		this.$events.off("content.publish", this.reload);
 	},
 	methods: {
+		onClick(e) {
+			const link = e.target.closest("a");
+
+			if (!link) {
+				return;
+			}
+
+			if (!link.href || link.onclick) {
+				return;
+			}
+
+			// open external links and Panel links in new tab
+			if (
+				link.href.startsWith(location.origin) === false ||
+				link.href.startsWith(this.$panel.urls.panel) === true
+			) {
+				link.target = "_blank";
+				return true;
+			}
+
+			// catch internal links and emit navigate event
+			e.preventDefault(e);
+			this.$emit("navigate", link.href);
+		},
+		onLoad() {
+			this.window.document.addEventListener("click", this.onClick);
+
+			for (const link of this.window.document.querySelectorAll("a")) {
+				link.addEventListener("click", this.onClick);
+			}
+		},
 		reload() {
-			this.$refs.browser.contentWindow.location.reload();
+			this.window.location.reload();
 		}
 	}
 };
