@@ -120,8 +120,10 @@ abstract class BaseField
 	/**
 	 * Parses a string template in the given value
 	 */
-	protected function stringTemplate(string|null $string = null, bool $safe = true): string|null
-	{
+	protected function stringTemplate(
+		string|null $string = null,
+		bool $safe = true
+	): string|null {
 		if ($string === null || $string === '') {
 			return $string;
 		}
@@ -132,8 +134,10 @@ abstract class BaseField
 		};
 	}
 
-	protected function stringTemplateI18n(array|string|null $string = null, bool $safe = true): string|null
-	{
+	protected function stringTemplateI18n(
+		array|string|null $string = null,
+		bool $safe = true
+	): string|null {
 		if ($string === null || $string === '') {
 			return $string;
 		}
