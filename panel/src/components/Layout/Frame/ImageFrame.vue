@@ -10,7 +10,7 @@
 			:alt="alt ?? resolvedAlt ?? ''"
 			:src="src ?? resolvedSrc"
 			:srcset="srcset ?? resolvedSrcset"
-			:sizes="sizes"
+			:sizes="sizes ?? autoSizes"
 			@dragstart.prevent
 		/>
 	</k-frame>
@@ -58,6 +58,7 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
+			autoSizes: null,
 			resolvedAlt: null,
 			resolvedSrc: null,
 			resolvedSrcset: null
@@ -68,6 +69,16 @@ export default {
 			handler: "fetch",
 			immediate: true
 		}
+	},
+	mounted() {
+		this.$panel.observers.frames.observe(this.$el);
+
+		this.$el.addEventListener("resize", (e) => {
+			this.autoSizes = (e.detail?.width ?? 0) + "px";
+		});
+	},
+	beforeUnmount() {
+		this.$panel.observers.frames.unobserve(this.$el);
 	},
 	methods: {
 		async fetch() {
