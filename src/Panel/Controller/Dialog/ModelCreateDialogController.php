@@ -5,7 +5,6 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
-use Kirby\Cms\Section;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
@@ -29,21 +28,13 @@ abstract class ModelCreateDialogController extends DialogController
 	protected Blueprint $blueprint;
 	public ModelWithContent $model;
 	public Page|Site|User $parent;
-	public Section|null $section;
 
 	public function __construct(
-		Page|Site|User|null $parent = null,
-		Section|string|null $section = null
+		Page|Site|User|null $parent = null
 	) {
 		parent::__construct();
 
 		$this->parent = $parent ?? $this->site;
-
-		if (is_string($section) === true) {
-			$section = $parent->blueprint()->section($section);
-		}
-
-		$this->section = $section;
 	}
 
 	/**
