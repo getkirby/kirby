@@ -39,13 +39,6 @@ import { props as ModelPickerDialog } from "./ModelPickerDialog.vue";
 export default {
 	mixins: [ModelPickerDialog],
 	props: {
-		empty: {
-			type: Object,
-			default: () => ({
-				icon: "page",
-				text: window.panel.t("dialog.pages.empty")
-			})
-		},
 		/**
 		 * Current (navigation) parent
 		 */

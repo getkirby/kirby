@@ -22,8 +22,6 @@ use Kirby\Toolkit\Str;
  */
 abstract class ModelPickerDialogController extends DialogController
 {
-	protected const string TYPE = 'model';
-
 	public int $page = 1;
 	public string|null $search = null;
 
@@ -49,6 +47,8 @@ abstract class ModelPickerDialogController extends DialogController
 	 * queried, searched, sorted and paginated models
 	 */
 	abstract public function collector(): ModelsCollector;
+
+	abstract protected function empty(): array;
 
 	/**
 	 * Finds a model by its ID
@@ -84,7 +84,8 @@ abstract class ModelPickerDialogController extends DialogController
 	public function props(): array
 	{
 		return [
-			'component'  => 'k-' . static::TYPE . '-picker-dialog',
+			'component'  => 'k-model-picker-dialog',
+			'empty'      => $this->empty(),
 			'hasSearch'  => $this->hasSearch,
 			'items'      => $this->items(),
 			'layout'     => $this->layout,
