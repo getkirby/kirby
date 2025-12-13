@@ -32,7 +32,7 @@ class PagePreviewViewControllerTest extends TestCase
 		$model      = $this->app->page('test');
 		$controller = new PagePreviewViewController($model, 'changes');
 		$buttons    = $controller->buttons();
-		$this->assertCount(2, $buttons->render());
+		$this->assertCount(3, $buttons->render());
 	}
 
 	public function testFactory(): void
@@ -61,6 +61,6 @@ class PagePreviewViewControllerTest extends TestCase
 
 		$props = $view->props();
 		$token = $model->version('changes')->previewToken();
-		$this->assertSame('/test?_token=' . $token . '&_version=changes', $props['src']['changes']);
+		$this->assertSame('/test?_token=' . $token . '&_version=changes&_preview=true', $props['src']['changes']);
 	}
 }

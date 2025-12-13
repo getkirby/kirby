@@ -53,7 +53,7 @@ class SitePreviewViewControllerTest extends TestCase
 
 		$props = $view->props();
 		$token = $site->version('changes')->previewToken();
-		$this->assertSame('/?_token=' . $token . '&_version=changes', $props['src']['changes']);
+		$this->assertSame('/?_token=' . $token . '&_version=changes&_preview=true', $props['src']['changes']);
 	}
 
 	public function testLoadInvalid(): void

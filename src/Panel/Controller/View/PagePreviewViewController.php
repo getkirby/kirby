@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Page;
+use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -24,13 +25,26 @@ class PagePreviewViewController extends ModelPreviewViewController
 		parent::__construct($model, $mode);
 	}
 
+	public function buttons(): ViewButtons
+	{
+		return ViewButtons::view(view: $this->id(), model: $this->model)->defaults(
+			'languages',
+			'page.settings',
+			'page.versions',
+		)
+			->bind(['mode' => $this->mode]);
+	}
+
 	public function props(): array
 	{
+		$view  = new PageViewController($this->model);
+		$props = $view->props();
+
 		return [
-			...$props = (new PageViewController($this->model))->props(),
+			...$props,
 			...parent::props(),
-			'back'      => $props['link'],
-			'title'     => $props['title'] . ' | ' . I18n::translate('preview'),
+			'back'  => $props['link'],
+			'title' => $props['title'] . ' | ' . I18n::translate('preview'),
 		];
 	}
 }

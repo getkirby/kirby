@@ -54,16 +54,19 @@ class VersionsButtonTest extends TestCase
 		$button = new VersionsButton(model: $page, mode: 'latest');
 
 		$options = $button->options();
-		$this->assertSame('Latest version', $options[0]['label']);
-		$this->assertTrue($options[0]['current']);
+		$this->assertSame('Edit content', $options[0]['label']);
+		$this->assertFalse($options[0]['current']);
 
-		$this->assertSame('Changed version', $options[1]['label']);
+		$this->assertSame('Compare versions', $options[1]['label']);
 		$this->assertFalse($options[1]['current']);
 
 		$this->assertSame('-', $options[2]);
 
-		$this->assertSame('Compare versions', $options[3]['label']);
-		$this->assertFalse($options[3]['current']);
+		$this->assertSame('Latest version', $options[3]['label']);
+		$this->assertTrue($options[3]['current']);
+
+		$this->assertSame('Changed version', $options[4]['label']);
+		$this->assertFalse($options[4]['current']);
 	}
 
 	public function testProps(): void

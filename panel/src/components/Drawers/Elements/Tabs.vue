@@ -63,6 +63,6 @@ export default {
 	margin-block: 0;
 }
 .k-drawer-tabs .k-tabs-button[aria-current="true"]::after {
-	z-index: 1;
+	z-index: var(--z-toolbar);
 }
 </style>

@@ -631,7 +631,9 @@
 	"plugin": "Plugin",
 	"plugins": "Plugins",
 	"prev": "Previous",
+
 	"preview": "Preview",
+	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 
 	"publish": "Publish",
 	"published": "Published",
@@ -788,6 +790,7 @@
 	"version.changes": "Changed version",
 	"version.compare": "Compare versions",
 	"version.current": "Current version",
+	"version.form": "Edit content",
 	"version.latest": "Latest version",
 	"versionInformation": "Version information",
 
