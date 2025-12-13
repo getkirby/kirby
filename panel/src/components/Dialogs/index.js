@@ -8,7 +8,6 @@ import ChangesDialog from "./ChangesDialog.vue";
 import EmailDialog from "./EmailDialog.vue";
 import ErrorDialog from "./ErrorDialog.vue";
 import StateDialog from "./StateDialog.vue";
-import FilePickerDialog from "./FilePickerDialog.vue";
 import FormDialog from "./FormDialog.vue";
 import LanguageDialog from "./LanguageDialog.vue";
 import LicenseDialog from "./LicenseDialog.vue";
@@ -24,7 +23,6 @@ import TextDialog from "./TextDialog.vue";
 import TotpDialog from "./TotpDialog.vue";
 import UploadDialog from "./UploadDialog.vue";
 import UploadReplaceDialog from "./UploadReplaceDialog.vue";
-import UserPickerDialog from "./UserPickerDialog.vue";
 
 // @deprecated
 import ModelsDialog from "./ModelsDialog.vue";
@@ -41,7 +39,6 @@ export default {
 		app.component("k-email-dialog", EmailDialog);
 		app.component("k-error-dialog", ErrorDialog);
 		app.component("k-state-dialog", StateDialog);
-		app.component("k-file-picker-dialog", FilePickerDialog);
 		app.component("k-form-dialog", FormDialog);
 		app.component("k-license-dialog", LicenseDialog);
 		app.component("k-link-dialog", LinkDialog);
@@ -57,7 +54,6 @@ export default {
 		app.component("k-totp-dialog", TotpDialog);
 		app.component("k-upload-dialog", UploadDialog);
 		app.component("k-upload-replace-dialog", UploadReplaceDialog);
-		app.component("k-user-picker-dialog", UserPickerDialog);
 
 		// @deprecated
 		app.component("k-files-dialog", FilesDialog);

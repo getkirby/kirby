@@ -20,8 +20,6 @@ use Kirby\Panel\Ui\Item\FileItem;
  */
 class FilePickerDialogController extends ModelPickerDialogController
 {
-	protected const string TYPE = 'file';
-
 	protected FilesCollector $collector;
 
 	public function __construct(
@@ -59,6 +57,14 @@ class FilePickerDialogController extends ModelPickerDialogController
 			query:  $this->query(),
 			search: $this->search,
 		);
+	}
+
+	protected function empty(): array
+	{
+		return [
+			'icon' => 'image',
+			'text' => $this->i18n('dialog.files.empty')
+		];
 	}
 
 	public function find(string $id): File|null

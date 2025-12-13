@@ -110,7 +110,7 @@ class UserPickerDialogControllerTest extends TestCase
 
 		$dialog = $controller->load();
 		$this->assertInstanceOf(Dialog::class, $dialog);
-		$this->assertSame('k-user-picker-dialog', $dialog->component);
+		$this->assertSame('k-model-picker-dialog', $dialog->component);
 	}
 
 	public function testProps(): void
@@ -120,7 +120,7 @@ class UserPickerDialogControllerTest extends TestCase
 		);
 
 		$props = $controller->props();
-		$this->assertSame('k-user-picker-dialog', $props['component']);
+		$this->assertSame('k-model-picker-dialog', $props['component']);
 		$this->assertTrue($props['hasSearch']);
 		$this->assertCount(2, $props['items']);
 		$this->assertSame('list', $props['layout']);
