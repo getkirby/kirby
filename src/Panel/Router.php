@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Api\Upload;
 use Kirby\Cms\App;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Http\Router as BaseRouter;
 use Kirby\Panel\Response\DialogResponse;
@@ -189,7 +190,7 @@ class Router
 		// catch all route
 		$routes[] = [
 			'pattern' => '(:all)',
-			'action'  => fn (string $pattern) => 'Could not find Panel view for route: ' . $pattern
+			'action'  => fn (string $pattern) => throw new NotFoundException('Could not find Panel view for route: ' . $pattern)
 		];
 
 		return $routes;

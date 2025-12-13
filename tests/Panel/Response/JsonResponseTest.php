@@ -5,6 +5,8 @@ namespace Kirby\Panel\Response;
 use Exception;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception as KirbyException;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\Button;
@@ -115,18 +117,18 @@ class JsonResponseTest extends TestCase
 
 	public function testFromKirbyException(): void
 	{
-		$input  = new KirbyException('Error message');
-		$output = JsonResponse::from($input);
+		$this->expectException(KirbyException::class);
+		$this->expectExceptionMessage('Error message');
 
-		$this->assertSame('Error message', $output->data()['error']);
+		JsonResponse::from(new KirbyException('Error message'));
 	}
 
 	public function testFromException(): void
 	{
-		$input  = new Exception('Error message');
-		$output = JsonResponse::from($input);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Error message');
 
-		$this->assertSame('Error message', $output->data()['error']);
+		JsonResponse::from(new Exception('Error message'));
 	}
 
 	public function testFromUiComponent(): void
@@ -139,11 +141,10 @@ class JsonResponseTest extends TestCase
 
 	public function testFromString(): void
 	{
-		$input  = 'test';
-		$output = JsonResponse::from($input);
+		$this->expectException(KirbyException::class);
+		$this->expectExceptionMessage('test');
 
-		$this->assertSame(500, $output->code());
-		$this->assertSame('test', $output->data()['error']);
+		JsonResponse::from('test');
 	}
 
 	public function testFromArray(): void
@@ -156,27 +157,26 @@ class JsonResponseTest extends TestCase
 
 	public function testFromEmptyArray(): void
 	{
-		$input  = [];
-		$output = JsonResponse::from($input);
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The response is empty');
 
-		$this->assertSame(404, $output->code());
-		$this->assertSame('The response is empty', $output->data()['error']);
+		JsonResponse::from([]);
 	}
 
 	public function testFromNull(): void
 	{
-		$output = JsonResponse::from(null);
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The data could not be found');
 
-		$this->assertSame(404, $output->code());
-		$this->assertSame('The data could not be found', $output->data()['error']);
+		JsonResponse::from(null);
 	}
 
 	public function testFromInvalid(): void
 	{
-		$output = JsonResponse::from(5);
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid response');
 
-		$this->assertSame(500, $output->code());
-		$this->assertSame('Invalid response', $output->data()['error']);
+		JsonResponse::from(5);
 	}
 
 	public function testHeaders(): void

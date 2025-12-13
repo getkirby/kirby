@@ -2,13 +2,32 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use Kirby\TestCase;
 
 class HasI18nTest extends TestCase
 {
-	protected function object(): object
+	protected string|Closure $localeBackup;
+
+	public function setUp(): void
 	{
-		return new class () {
+		$this->localeBackup = I18n::$locale;
+		I18n::$locale = 'foo';
+		I18n::$translations['foo'] = [
+			'my.key'   => 'My translation',
+			'my.count' => 'All {count} things'
+		];
+	}
+
+	public function tearDown(): void
+	{
+		unset(I18n::$translations['foo']);
+		I18n::$locale = $this->localeBackup;
+	}
+
+	public function testI18n(): void
+	{
+		$class = new class () {
 			use HasI18n;
 
 			public function translate($key, $data = null)
@@ -16,19 +35,15 @@ class HasI18nTest extends TestCase
 				return $this->i18n($key, $data);
 			}
 		};
-	}
-
-	public function testI18n(): void
-	{
-		$class = $this->object();
 
 		$this->assertNull($class->translate(null));
 		$this->assertSame('Hello', $class->translate('Hello'));
+		$this->assertSame('Hello', $class->translate('Hello', ['data' => 'data']));
 		$this->assertSame('Hello', $class->translate(fn () => 'Hello'));
 		$this->assertSame('Hello', $class->translate(['Hello']));
 		$this->assertSame('Hello', $class->translate(['Hello', 'World']));
 
-		$this->assertSame('Copy all', $class->translate('copy.all'));
-		$this->assertSame('3 copied!', $class->translate('copy.success.multiple', ['count' => 3]));
+		$this->assertSame('My translation', $class->translate('my.key'));
+		$this->assertSame('All 3 things', $class->translate('my.count', ['count' => 3]));
 	}
 }

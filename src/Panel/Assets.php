@@ -326,7 +326,7 @@ class Assets
 		}
 
 		// When any plugin is in dev mode, also load the dev version
-		// of Vue  but from the dist folder, not node_modules
+		// of Vue but from the dist folder, not node_modules
 		if ($this->isPluginDev === true) {
 			return $this->url . '/js/vue.esm-browser.js';
 		}

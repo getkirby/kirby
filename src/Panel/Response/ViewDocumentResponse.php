@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Response;
 
 use Kirby\Cms\App;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Panel\Assets;
@@ -70,9 +71,26 @@ class ViewDocumentResponse extends ViewResponse
 	/**
 	 * Returns the full state data object
 	 */
-	public function data(): array
+	public function data(bool $globals = true): array
 	{
-		return $this->state()->toArray(globals: true);
+		return parent::data($globals);
+	}
+
+	/**
+	 * Renders the main panel view either as
+	 * full HTML document based on the request
+	 * header or query params
+	 */
+	public static function from(mixed $data): Response
+	{
+		// Create an error view for any route that throws a not found exception.
+		// This will make sure that users can navigate to such views and will get a
+		// useful response instead of the debugger or the fatal screen.
+		if ($data instanceof NotFoundException) {
+			return static::error($data->getMessage());
+		}
+
+		return parent::from($data);
 	}
 
 	public function headers(): array

@@ -35,6 +35,6 @@ trait HasI18n
 			return I18n::translate($key, $key);
 		}
 
-		return I18n::template($key, $data);
+		return I18n::template($key, $key, $data);
 	}
 }

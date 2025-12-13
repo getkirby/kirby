@@ -6,7 +6,7 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Field\BaseField;
 use Kirby\Toolkit\A;
@@ -429,15 +429,14 @@ class Fields extends Collection
 	 * exception if there are any
 	 *
 	 * @since 5.0.0
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws \Kirby\Exception\FormValidationException
 	 */
 	public function validate(): void
 	{
 		$errors = $this->errors();
 
 		if ($errors !==	[]) {
-			throw new InvalidArgumentException(
-				fallback: 'Invalid form with errors',
+			throw new FormValidationException(
 				details: $errors
 			);
 		}
