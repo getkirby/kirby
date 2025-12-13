@@ -11,8 +11,8 @@ use Kirby\Panel\Ui\Button\SettingsButton;
 use Kirby\Panel\Ui\Button\VersionsButton;
 
 return [
-	'site.open' => function (Site $site, string $versionId = 'latest') {
-		$versionId = $versionId === 'compare' ? 'changes' : $versionId;
+	'site.open' => function (Site $site, string $versionId = 'form') {
+		$versionId = $versionId === 'compare' || $versionId === 'form' ? 'changes' : $versionId;
 		$link      = $site->previewUrl($versionId);
 
 		if ($link !== null) {
@@ -24,16 +24,16 @@ return [
 	'site.preview' => function (Site $site) {
 		if ($site->previewUrl() !== null) {
 			return new PreviewButton(
-				link: $site->panel()->url(true) . '/preview/changes',
+				link: $site->panel()->url(true) . '/preview/form',
 			);
 		}
 	},
-	'site.versions' => fn (Site $site, string $versionId = 'latest') => new VersionsButton(
+	'site.versions' => fn (Site $site, string $mode = 'form') => new VersionsButton(
 		model: $site,
-		mode: $versionId
+		mode: $mode
 	),
-	'page.open' => function (Page $page, string $versionId = 'latest') {
-		$versionId = $versionId === 'compare' ? 'changes' : $versionId;
+	'page.open' => function (Page $page, string $versionId = 'form') {
+		$versionId = $versionId === 'compare' || $versionId === 'form' ? 'changes' : $versionId;
 		$link      = $page->previewUrl($versionId);
 
 		if ($link !== null) {
@@ -45,13 +45,13 @@ return [
 	'page.preview' => function (Page $page) {
 		if ($page->previewUrl() !== null) {
 			return new PreviewButton(
-				link: $page->panel()->url(true) . '/preview/changes',
+				link: $page->panel()->url(true) . '/preview/form',
 			);
 		}
 	},
-	'page.versions' => fn (Page $page, string $versionId = 'latest') => new VersionsButton(
+	'page.versions' => fn (Page $page, string $mode = 'form') => new VersionsButton(
 		model: $page,
-		mode: $versionId
+		mode: $mode
 	),
 	'page.settings' => fn (Page $page) => new SettingsButton($page),
 	'page.status'   => fn (Page $page) => new PageStatusButton($page),

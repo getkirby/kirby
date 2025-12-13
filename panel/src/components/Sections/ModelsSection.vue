@@ -278,6 +278,9 @@ export default {
 			} finally {
 				this.isProcessing = false;
 				this.isLoading = false;
+
+				await this.$nextTick();
+				this.$events.emit("section.loaded", this);
 			}
 		},
 		onAction() {},

@@ -17,7 +17,7 @@ return [
 		'action'  => PageFileViewController::class
 	],
 	'page.preview' => [
-		'pattern' => '(pages/.*?)/preview/(changes|latest|compare)',
+		'pattern' => '(pages/.*?)/preview/(changes|latest|compare|form)',
 		'action'  => PagePreviewViewController::class
 	],
 	'site' => [
@@ -29,7 +29,7 @@ return [
 		'action'  => SiteFileViewController::class
 	],
 	'site.preview' => [
-		'pattern' => '(site)/preview/(changes|latest|compare)',
+		'pattern' => '(site)/preview/(changes|latest|compare|form)',
 		'action'  => SitePreviewViewController::class
 	],
 ];
