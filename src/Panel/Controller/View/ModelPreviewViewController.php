@@ -83,10 +83,13 @@ class ModelPreviewViewController
 				$uri->query()->_preview = 'true';
 
 				// inject params and query from a redirect
-				$params = $model->kirby()->request()->get('_params');
-				$uri->params()->merge($params);
-				$query = $model->kirby()->request()->get('_query');
-				$uri->query()->merge($query);
+				if ($params = $model->kirby()->request()->get('_params')) {
+					$uri->params()->merge($params);
+				}
+
+				if ($query = $model->kirby()->request()->get('_query')) {
+					$uri->query()->merge($query);
+				}
 
 				return $uri->toString();
 			}

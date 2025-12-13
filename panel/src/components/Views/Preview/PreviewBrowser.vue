@@ -67,6 +67,7 @@ export default {
 				return;
 			}
 
+			// open external links and Panel links in new tab
 			if (
 				link.href.startsWith(location.origin) === false ||
 				link.href.startsWith(this.$panel.urls.panel) === true
@@ -75,6 +76,7 @@ export default {
 				return true;
 			}
 
+			// catch internal links and emit navigate event
 			e.preventDefault(e);
 			this.$emit("navigate", link.href);
 		},
