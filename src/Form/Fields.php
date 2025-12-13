@@ -312,12 +312,12 @@ class Fields extends Collection
 			}
 
 			// don't submit fields without a value
-			if ($force === true && $field->hasValue() === false) {
+			if ($field->hasValue() === false) {
 				continue;
 			}
 
 			// don't submit fields that are not submittable
-			if ($force === false && $field->isSubmittable($language) === false) {
+			if ($field->isSubmittable($language) === false) {
 				continue;
 			}
 

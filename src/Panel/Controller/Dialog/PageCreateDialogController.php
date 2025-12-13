@@ -12,6 +12,8 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Content\MemoryStorage;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field as FormField;
+use Kirby\Form\Field\BaseField;
 use Kirby\Form\Form;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
@@ -70,7 +72,8 @@ class PageCreateDialogController extends ModelCreateDialogController
 
 	public function __construct(
 		Page|Site|null $parent = null,
-		Section|string|null $section = null
+		Section|string|null $section = null,
+		FormField|BaseField|string|null $field = null,
 	) {
 		parent::__construct(parent: $parent);
 
@@ -79,9 +82,15 @@ class PageCreateDialogController extends ModelCreateDialogController
 			$section = $parent->blueprint()->section($section);
 		}
 
-		// gather all available blueprints from section or parent
+
+		// convert field name to field object
+		if (is_string($field) === true) {
+			$field = Form::for($parent)->field($field);
+		}
+
+		// gather all available blueprints from field, section or parent
 		$this->blueprints = A::map(
-			$section?->blueprints() ?? $this->parent->blueprints(),
+			$field?->blueprints() ?? $section?->blueprints() ?? $this->parent->blueprints(),
 			function ($blueprint) {
 				$blueprint['name'] ??= $blueprint['value'] ?? null;
 				return $blueprint;
