@@ -1,23 +1,5 @@
 <template>
-	<!-- Layout: table -->
-	<k-table
-		v-if="layout === 'table'"
-		v-bind="table"
-		:class="$attrs.class"
-		:style="$attrs.style"
-		@change="$emit('change', $event)"
-		@select="$emit('select', $event)"
-		@sort="$emit('sort', $event)"
-		@option="onOption"
-	>
-		<template v-if="$slots.options" #options="{ row: item, rowIndex: index }">
-			<slot name="options" v-bind="{ item, index }" />
-		</template>
-	</k-table>
-
-	<!-- Layout: cards, cardlets, list -->
 	<k-draggable
-		v-else
 		:class="['k-items', 'k-' + layout + '-items', $attrs.class]"
 		:data-layout="layout"
 		:data-size="size"
@@ -69,21 +51,6 @@ export const props = {
 	mixins: [layout],
 	inheritAttrs: false,
 	props: {
-		/**
-		 * Optional column settings for the table layout
-		 */
-		columns: {
-			type: [Object, Array],
-			default: () => ({})
-		},
-		/**
-		 * Optional fields configuration that is used for table layout
-		 * @unstable
-		 */
-		fields: {
-			type: Object,
-			default: () => ({})
-		},
 		/**
 		 * Array of item definitions. See `k-item` for available options.
 		 */
@@ -169,17 +136,6 @@ export default {
 				...item,
 				id: item.id ?? item.uuid ?? this.$helper.uuid()
 			}));
-		},
-		table() {
-			return {
-				columns: this.columns,
-				fields: this.fields,
-				rows: this.items,
-				selecting: this.selecting,
-				selected: this.selected,
-				selectmode: this.selectmode,
-				sortable: this.sortable
-			};
 		}
 	},
 	methods: {

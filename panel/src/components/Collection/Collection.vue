@@ -7,20 +7,25 @@
 			v-on="listeners"
 		/>
 
-		<k-items
+		<component
+			:is="component"
 			v-else
 			v-bind="{
-				columns,
-				fields,
 				items,
-				layout,
-				link,
 				selecting,
 				selectmode,
 				selected,
+				sortable
+			}"
+			:options="{
+				columns,
+				fields,
+				link,
+				image,
+				layout,
 				size,
-				sortable,
-				theme
+				theme,
+				...options
 			}"
 			@change="$emit('change', $event)"
 			@item="$emit('item', $event)"
@@ -31,7 +36,7 @@
 			<template v-if="$slots.options" #options="{ item, index }">
 				<slot name="options" v-bind="{ item, index }" />
 			</template>
-		</k-items>
+		</component>
 
 		<footer v-if="help || hasPagination" class="k-collection-footer">
 			<k-text class="k-help k-collection-help" :html="help" />
@@ -51,14 +56,15 @@
 
 <script>
 import { getCurrentInstance } from "vue";
-import { props as ItemsProps } from "./Items.vue";
+import { props as CollectionLayoutProps } from "./CollectionLayout.vue";
+import { layout } from "@/mixins/props.js";
 
 /**
  * The `k-collection` component is a wrapper around `k-items`
  * that adds sortabilty and pagination to the items.
  */
 export default {
-	mixins: [ItemsProps],
+	mixins: [CollectionLayoutProps, layout],
 	props: {
 		/**
 		 * Empty state, see `k-empty` for all options
@@ -78,7 +84,32 @@ export default {
 		pagination: {
 			type: [Boolean, Object],
 			default: false
-		}
+		},
+
+		/**
+		 * @deprecated Use `options` for layout-specific options
+		 */
+		columns: {
+			type: [Object, Array],
+			default: () => ({})
+		},
+		fields: {
+			type: Object,
+			default: () => ({})
+		},
+		image: {
+			type: [Object, Boolean],
+			default: () => ({})
+		},
+		link: {
+			type: Boolean,
+			default: true
+		},
+		size: {
+			type: String,
+			default: "medium"
+		},
+		theme: String
 	},
 	emits: [
 		"action",
@@ -91,6 +122,17 @@ export default {
 		"sort"
 	],
 	computed: {
+		component() {
+			if (
+				this.layout === "cards" ||
+				this.layout === "cardlets" ||
+				this.layout === "list"
+			) {
+				return "k-items-collection-layout";
+			}
+
+			return `k-${this.layout}-collection-layout`;
+		},
 		hasPagination() {
 			if (this.pagination === false) {
 				return false;
