@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 

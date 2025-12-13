@@ -40,11 +40,13 @@ class Txt extends Handler
 	/**
 	 * Helper for converting the value
 	 */
-	protected static function encodeValue(array|string|float $value): string
+	protected static function encodeValue(array|bool|float|string $value): string
 	{
 		// avoid problems with certain values
 		$value = match (true) {
-			is_array($value) => Data::encode($value, 'yaml'),
+			$value === true  => 'true',
+			$value === false => 'false',
+			is_array($value) => $value === [] ? '' : Data::encode($value, 'yaml'),
 			is_float($value) => Str::float($value),
 			default          => $value
 		};

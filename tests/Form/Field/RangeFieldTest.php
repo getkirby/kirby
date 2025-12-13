@@ -3,22 +3,43 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(RangeField::class)]
 class RangeFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('range');
+		$props = $field->props();
 
-		$this->assertSame('range', $field->type());
-		$this->assertSame('range', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertSame('', $field->default());
-		$this->assertNull($field->min());
-		$this->assertSame(100.0, $field->max());
-		$this->assertSame('', $field->step());
-		$this->assertTrue($field->tooltip());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'after'       => null,
+			'autofocus'   => false,
+			'before'      => null,
+			'default'     => null,
+			'disabled'    => false,
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => null,
+			'label'       => 'Range',
+			'max'         => 100.0,
+			'min'         => null,
+			'name'        => 'range',
+			'placeholder' => null,
+			'required'    => false,
+			'saveable'    => true,
+			'step'        => null,
+			'tooltip'     => true,
+			'translate'   => true,
+			'type'        => 'range',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testMin(): void

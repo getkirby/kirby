@@ -1,6 +1,9 @@
 <script>
-import ModelsField from "./ModelsField.vue";
+import ModelsField from "./LegacyModelsField.vue";
 
+/**
+ * @deprecated 6.0.0 Use `k-files-field` instead
+ */
 export default {
 	extends: ModelsField,
 	type: "files",

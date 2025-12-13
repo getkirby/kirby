@@ -2,24 +2,43 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(TextareaField::class)]
 class TextareaFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('textarea');
+		$props = $field->props();
 
-		$this->assertSame('textarea', $field->type());
-		$this->assertSame('textarea', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertNull($field->icon());
-		$this->assertNull($field->placeholder());
-		$this->assertTrue($field->counter());
-		$this->assertNull($field->maxlength());
-		$this->assertNull($field->minlength());
-		$this->assertNull($field->size());
-		$this->assertSame([], $field->files());
-		$this->assertSame(['accept' => '*'], $field->uploads());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'buttons'     => true,
+			'counter'     => true,
+			'default'     => null,
+			'disabled'    => false,
+			'font'        => 'sans-serif',
+			'help'        => null,
+			'hidden'      => false,
+			'label'       => 'Textarea',
+			'maxlength'   => null,
+			'minlength'   => null,
+			'name'        => 'textarea',
+			'required'    => false,
+			'saveable'    => true,
+			'size'        => null,
+			'spellcheck'  => null,
+			'translate'   => true,
+			'type'        => 'textarea',
+			'uploads'     => ['accept' => '*'],
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testButtonsDisabled(): void
@@ -52,49 +71,6 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame('test', $field->default());
 	}
 
-	public function testFiles(): void
-	{
-		$field = $this->field('textarea', [
-			'value' => 'test',
-			'files' => [
-				'query' => 'page.images'
-			]
-		]);
-
-		$this->assertSame(['query' => 'page.images'], $field->files());
-	}
-
-	public function testFilesQuery(): void
-	{
-		$field = $this->field('textarea', [
-			'value' => 'test',
-			'files' => 'page.images'
-		]);
-
-		$this->assertSame(['query' => 'page.images'], $field->files());
-	}
-
-	public function testFilesWithInvalidInput(): void
-	{
-		$field = $this->field('textarea', [
-			'files' => 1
-		]);
-
-		$this->assertSame([], $field->files());
-	}
-
-	public function testFillWithEmptyValue(): void
-	{
-		$field = $this->field('textarea');
-		$field->fill('test');
-
-		$this->assertSame('test', $field->toFormValue());
-
-		$field->fillWithEmptyValue();
-
-		$this->assertSame('', $field->toFormValue());
-	}
-
 	public function testMaxLength(): void
 	{
 		$field = $this->field('textarea', [
@@ -117,6 +93,18 @@ class TextareaFieldTest extends TestCase
 		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
+	public function testReset(): void
+	{
+		$field = $this->field('textarea');
+		$field->fill('test');
+
+		$this->assertSame('test', $field->toFormValue());
+
+		$field->reset();
+
+		$this->assertSame('', $field->toFormValue());
+	}
+
 	public function testUploads(): void
 	{
 		$field = $this->field('textarea', [
@@ -126,7 +114,12 @@ class TextareaFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(['template' => 'test', 'accept' => '*'], $field->uploads());
+		$expected = [
+			'accept'   => '*',
+			'template' => 'test',
+		];
+
+		$this->assertSame($expected, $field->uploads());
 	}
 
 	public function testUploadsDisabled(): void
@@ -148,7 +141,12 @@ class TextareaFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(['parent' => 'page.parent', 'accept' => '*'], $field->uploads());
+		$expected = [
+			'accept' => '*',
+			'parent' => 'page.parent',
+		];
+
+		$this->assertSame($expected, $field->uploads());
 	}
 
 	public function testUploadsTemplate(): void
@@ -158,13 +156,18 @@ class TextareaFieldTest extends TestCase
 			'uploads' => 'test'
 		]);
 
-		$this->assertSame(['template' => 'test', 'accept' => '*'], $field->uploads());
+		$expected = [
+			'accept'   => '*',
+			'template' => 'test',
+		];
+
+		$this->assertSame($expected, $field->uploads());
 	}
 
 	public function testUploadsWithInvalidInput(): void
 	{
 		$field = $this->field('textarea', [
-			'value' => 'test',
+			'value'   => 'test',
 			'uploads' => 1,
 		]);
 

@@ -3,19 +3,33 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\Page;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(InfoField::class)]
 class InfoFieldTest extends TestCase
 {
 	public function testDefaultProps(): void
 	{
 		$field = $this->field('info');
+		$props = $field->props();
 
-		$this->assertSame('info', $field->type());
-		$this->assertSame('info', $field->name());
-		$this->assertNull($field->value());
-		$this->assertNull($field->label());
-		$this->assertNull($field->text());
-		$this->assertFalse($field->save());
+		ksort($props);
+
+		$expected = [
+			'help'     => null,
+			'hidden'   => false,
+			'icon'     => null,
+			'label'    => 'Info',
+			'name'     => 'info',
+			'saveable' => false,
+			'text'     => null,
+			'theme'    => null,
+			'type'     => 'info',
+			'when'     => null,
+			'width'    => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testText(): void

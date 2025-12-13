@@ -11,6 +11,7 @@ namespace Kirby\Cms;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dialog\ModelPickerDialogController` instead
  */
 abstract class Picker
 {

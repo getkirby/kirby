@@ -7,10 +7,13 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-class FilesFieldTest extends TestCase
+#[CoversClass(FilePickerField::class)]
+#[CoversClass(ModelPickerField::class)]
+class FilePickerFieldTest extends TestCase
 {
-	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.Languages';
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.FilePickerField';
 
 	public function setUp(): void
 	{
@@ -67,16 +70,42 @@ class FilesFieldTest extends TestCase
 		$field = $this->field('files', [
 			'model' => $this->model()
 		]);
+		$props = $field->props();
 
-		$this->assertSame('files', $field->type());
-		$this->assertSame('files', $field->name());
-		$this->assertSame([], $field->value());
-		$this->assertSame([], $field->default());
-		$this->assertSame('list', $field->layout());
-		$this->assertNull($field->max());
-		$this->assertTrue($field->multiple());
-		$this->assertTrue($field->save());
-		$this->assertSame('uuid', $field->store());
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'default'     => [],
+			'disabled'    => false,
+			'empty'       => null,
+			'help'        => null,
+			'hidden'      => false,
+			'image'       => null,
+			'info'        => null,
+			'label'       => 'Files',
+			'layout'      => 'list',
+			'link'        => true,
+			'max'         => null,
+			'min'         => null,
+			'multiple'    => true,
+			'name'        => 'files',
+			'parent'      => 'pages/test',
+			'query'       => 'page.files',
+			'required'    => false,
+			'saveable'    => true,
+			'search'      => true,
+			'size'        => 'auto',
+			'store'       => 'uuid',
+			'text'        => null,
+			'translate'   => true,
+			'type'        => 'files',
+			'uploads'     => ['accept' => '*'],
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testValue(): void
@@ -94,8 +123,8 @@ class FilesFieldTest extends TestCase
 		$ids   = array_column($value, 'id');
 
 		$expected = [
-			'a.jpg',
-			'b.jpg'
+			'test/a.jpg',
+			'test/b.jpg'
 		];
 
 		$this->assertSame($expected, $ids);
@@ -114,7 +143,7 @@ class FilesFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertSame(3, $field->min());
-		$this->assertTrue($field->required());
+		$this->assertTrue($field->isRequired());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
@@ -149,8 +178,8 @@ class FilesFieldTest extends TestCase
 		$ids   = array_column($value, 'id');
 
 		$expected = [
-			'a.jpg',
-			'b.jpg'
+			'test-draft/a.jpg',
+			'test-draft/b.jpg'
 		];
 
 		$this->assertSame($expected, $ids);

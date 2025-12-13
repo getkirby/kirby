@@ -5,7 +5,7 @@ namespace Kirby\Option;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Field\TestCase;
+use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class MyPage extends Page

@@ -69,6 +69,7 @@ return [
 		'time' => function ($time = false) {
 			return $time;
 		},
+
 		/**
 		 * Must be a parseable date string
 		 */

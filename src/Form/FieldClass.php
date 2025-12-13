@@ -2,8 +2,8 @@
 
 namespace Kirby\Form;
 
-use Kirby\Cms\HasSiblings;
-use Kirby\Toolkit\HasI18n;
+use Kirby\Exception\NotFoundException;
+use Kirby\Form\Field\InputField;
 
 /**
  * Abstract field class to be used instead
@@ -18,116 +18,58 @@ use Kirby\Toolkit\HasI18n;
  *
  * @use \Kirby\Cms\HasSiblings<\Kirby\Form\Fields>
  */
-abstract class FieldClass
+abstract class FieldClass extends InputField
 {
-	use HasI18n;
-	use HasSiblings;
 	use Mixin\After;
-	use Mixin\Api;
-	use Mixin\Autofocus;
 	use Mixin\Before;
-	use Mixin\Help;
 	use Mixin\Icon;
-	use Mixin\Label;
-	use Mixin\Model;
 	use Mixin\Placeholder;
-	use Mixin\Translatable;
-	use Mixin\Validation;
-	use Mixin\Value;
-	use Mixin\When;
 	use Mixin\Width;
 
-	protected bool $disabled;
-	protected string|null $name;
-	protected Fields $siblings;
+	protected mixed $value = null;
 
 	public function __construct(
-		protected array $params = []
+		array|string|null $after = null,
+		bool|null $autofocus = null,
+		array|string|null $before = null,
+		mixed $default = null,
+		bool|null $disabled = null,
+		array|string|null $help = null,
+		string|null $icon = null,
+		array|string|null $label = null,
+		string|null $name = null,
+		array|string|null $placeholder = null,
+		bool|null $required = null,
+		bool|null $translate = null,
+		array|null $when = null,
+		string|null $width = null
 	) {
-		$this->setAfter($params['after'] ?? null);
-		$this->setAutofocus($params['autofocus'] ?? false);
-		$this->setBefore($params['before'] ?? null);
-		$this->setDefault($params['default'] ?? null);
-		$this->setDisabled($params['disabled'] ?? false);
-		$this->setHelp($params['help'] ?? null);
-		$this->setIcon($params['icon'] ?? null);
-		$this->setLabel($params['label'] ?? null);
-		$this->setModel($params['model'] ?? null);
-		$this->setName($params['name'] ?? null);
-		$this->setPlaceholder($params['placeholder'] ?? null);
-		$this->setRequired($params['required'] ?? false);
-		$this->setSiblings($params['siblings'] ?? null);
-		$this->setTranslate($params['translate'] ?? true);
-		$this->setWhen($params['when'] ?? null);
-		$this->setWidth($params['width'] ?? null);
+		parent::__construct(
+			autofocus: $autofocus,
+			default: $default,
+			disabled: $disabled,
+			help: $help,
+			label: $label,
+			name: $name,
+			required: $required,
+			translate: $translate,
+			when: $when,
+			width: $width
+		);
 
-		if (array_key_exists('value', $params) === true) {
-			$this->fill($params['value']);
-		}
+		$this->after       = $after;
+		$this->before      = $before;
+		$this->icon        = $icon;
+		$this->placeholder = $placeholder;
 	}
 
 	public function __call(string $param, array $args): mixed
 	{
-		if (isset($this->$param) === true) {
+		if (property_exists($this, $param) === true) {
 			return $this->$param;
 		}
 
-		return $this->params[$param] ?? null;
-	}
-
-	/**
-	 * Returns optional dialog routes for the field
-	 */
-	public function dialogs(): array
-	{
-		return [];
-	}
-
-	/**
-	 * If `true`, the field is no longer editable and will not be saved
-	 */
-	public function disabled(): bool
-	{
-		return $this->disabled;
-	}
-
-	/**
-	 * Returns optional drawer routes for the field
-	 */
-	public function drawers(): array
-	{
-		return [];
-	}
-
-	public function id(): string
-	{
-		return $this->name();
-	}
-
-	public function isDisabled(): bool
-	{
-		return $this->disabled;
-	}
-
-	public function isHidden(): bool
-	{
-		return false;
-	}
-
-	/**
-	 * Returns the field name
-	 */
-	public function name(): string
-	{
-		return $this->name ?? $this->type();
-	}
-
-	/**
-	 * Returns all original params for the field
-	 */
-	public function params(): array
-	{
-		return $this->params;
+		throw new NotFoundException(message: 'Method or option "' . $param . '" does not exist for field type "' . $this->type() . '"');
 	}
 
 	/**
@@ -155,67 +97,5 @@ abstract class FieldClass
 			'when'        => $this->when(),
 			'width'       => $this->width(),
 		];
-	}
-
-	/**
-	 * @since 5.2.0
-	 * @todo Move to `Value` mixin once array-based fields are unsupported
-	 */
-	public function reset(): static
-	{
-		$this->value = $this->emptyValue();
-		return $this;
-	}
-
-	protected function setDisabled(bool $disabled = false): void
-	{
-		$this->disabled = $disabled;
-	}
-
-	protected function setName(string|null $name = null): void
-	{
-		$this->name = strtolower($name ?? $this->type());
-	}
-
-	protected function setSiblings(Fields|null $siblings = null): void
-	{
-		$this->siblings = $siblings ?? new Fields([$this]);
-	}
-
-	protected function siblingsCollection(): Fields
-	{
-		return $this->siblings;
-	}
-
-	/**
-	 * Parses a string template in the given value
-	 */
-	protected function stringTemplate(string|null $string = null): string|null
-	{
-		if ($string !== null) {
-			return $this->model->toString($string);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Converts the field to a plain array
-	 */
-	public function toArray(): array
-	{
-		$props = $this->props();
-
-		ksort($props);
-
-		return array_filter($props, fn ($item) => $item !== null);
-	}
-
-	/**
-	 * Returns the field type
-	 */
-	public function type(): string
-	{
-		return lcfirst(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
 	}
 }

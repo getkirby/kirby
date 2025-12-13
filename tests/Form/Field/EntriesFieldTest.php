@@ -29,16 +29,12 @@ class EntriesFieldTest extends TestCase
 		$this->assertNull($props['empty']);
 		$this->assertNull($props['max']);
 		$this->assertNull($props['min']);
-		$this->assertNull($props['after']);
 		$this->assertFalse($props['autofocus']);
-		$this->assertNull($props['before']);
 		$this->assertNull($props['default']);
 		$this->assertFalse($props['disabled']);
 		$this->assertNull($props['help']);
-		$this->assertNull($props['icon']);
 		$this->assertSame('Entries', $props['label']);
 		$this->assertSame('entries', $props['name']);
-		$this->assertNull($props['placeholder']);
 		$this->assertFalse($props['required']);
 		$this->assertTrue($props['saveable']);
 		$this->assertTrue($props['sortable']);
@@ -56,7 +52,6 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame('0', $fieldProps['name']);
 		$this->assertFalse($fieldProps['required']);
 		$this->assertTrue($fieldProps['saveable']);
-		$this->assertFalse($fieldProps['spellcheck']);
 		$this->assertTrue($fieldProps['translate']);
 		$this->assertSame('text', $fieldProps['type']);
 		$this->assertSame('1/1', $fieldProps['width']);
@@ -317,17 +312,17 @@ class EntriesFieldTest extends TestCase
 	#[DataProvider('supportsProvider')]
 	public function testSupportedFields($type, $expected): void
 	{
-		if ($expected === false) {
-			$this->expectException(InvalidArgumentException::class);
-			$this->expectExceptionMessage('"' . $type . '" field type is not supported for the entries field');
-		}
-
 		$field = $this->field('entries', [
 			'field' => $type,
 		]);
 
 		if ($expected === true) {
+			$this->assertSame($type, $field->field()['type']);
 			$this->assertTrue($field->isValid());
+		} else {
+			$this->expectException(InvalidArgumentException::class);
+			$this->expectExceptionMessage('"' . $type . '" field type is not supported for the entries field');
+			$field->field();
 		}
 	}
 
@@ -344,7 +339,16 @@ class EntriesFieldTest extends TestCase
 
 			['number', 1, true],
 
-			['select', 'web', true],
+			['select', 'web', false],
+
+			[
+				[
+					'type'    => 'select',
+					'options' => ['web', 'print'],
+				],
+				'web',
+				true
+			],
 
 			['slug', 'page-slug', true],
 
@@ -363,14 +367,11 @@ class EntriesFieldTest extends TestCase
 	public function testValidations($type, $value, $expected): void
 	{
 		$field = $this->field('entries', [
-			'value'    => [
-				$value
-			],
+			'value'    => [$value],
 			'field'    => $type,
 			'required' => true
 		]);
 
-		$field->validate();
 		$this->assertSame($expected, $field->isValid());
 
 		if ($expected === false) {

@@ -6,6 +6,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
+use Kirby\Form\Field\BaseField;
 use Kirby\Toolkit\A;
 
 /**
@@ -70,7 +71,10 @@ class Form
 		$language = $this->fields->language();
 
 		foreach ($this->fields as $field) {
-			if ($field->isStorable($language) === false) {
+			if (
+				$field->hasValue() === false ||
+				$field->isStorable($language) === false
+			) {
 				if ($includeNulls === true) {
 					$data[$field->name()] = null;
 				}
@@ -118,7 +122,7 @@ class Form
 	 *
 	 * @throws \Kirby\Exception\NotFoundException
 	 */
-	public function field(string $name): Field|FieldClass
+	public function field(string $name): Field|BaseField
 	{
 		return $this->fields->field($name);
 	}

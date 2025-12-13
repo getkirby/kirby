@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Field\FieldOptions;
+use Kirby\Form\FieldOptions;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
