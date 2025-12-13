@@ -5,8 +5,9 @@
 				<k-icon type="git-branch" />
 				{{ label }}
 			</k-headline>
+
 			<k-button-group>
-				<template v-if="versionId === 'changes'">
+				<template v-if="mode === 'changes'">
 					<p v-if="hasDiff === false" class="k-preview-browser-message">
 						{{ $t("lock.unsaved.empty") }}
 					</p>
@@ -15,7 +16,7 @@
 						:editor="editor"
 						:has-diff="hasDiff"
 						:is-locked="isLocked"
-						:is-processing="isSaving"
+						:is-processing="isProcessing"
 						:modified="modified"
 						size="xs"
 						@discard="$emit('discard', $event)"
@@ -38,7 +39,7 @@ export default {
 	props: {
 		label: String,
 		src: String,
-		versionId: String
+		mode: String
 	},
 	emits: ["discard", "submit"],
 	computed: {

@@ -8,7 +8,10 @@
  */
 export default {
 	props: {
-		diff: Object,
+		diff: {
+			type: Object,
+			default: () => ({})
+		},
 		tab: String,
 		tabs: {
 			type: Array,

@@ -24,22 +24,26 @@ abstract class ModelPreviewViewController extends ViewController
 {
 	public function __construct(
 		public Page|Site $model,
-		public string $versionId
+		public string $mode
 	) {
 		parent::__construct();
 	}
 
 	public function buttons(): ViewButtons
 	{
-		return ViewButtons::view(view: $this->id(), model: $this->model)->defaults($this->model::CLASS_ALIAS . '.versions', 'languages')
-			->bind(['versionId' => $this->versionId]);
+		return ViewButtons::view(view: $this->id(), model: $this->model)->defaults(
+				'languages',
+				$this->model::CLASS_ALIAS . '.settings',
+				$this->model::CLASS_ALIAS . '.versions',
+			)
+			->bind(['mode' => $this->mode]);
 	}
 
-	public static function factory(string $path, string $versionId): static
+	public static function factory(string $path, string $mode): static
 	{
 		return new static(
-			model:     Find::parent($path),
-			versionId: $versionId
+			model: Find::parent($path),
+			mode:  $mode
 		);
 	}
 
@@ -65,7 +69,7 @@ abstract class ModelPreviewViewController extends ViewController
 			'component' => 'k-preview-view',
 			'buttons'   => $this->buttons(),
 			'src'       => $this->src(),
-			'versionId' => $this->versionId,
+			'mode'      => $this->mode,
 		];
 	}
 
