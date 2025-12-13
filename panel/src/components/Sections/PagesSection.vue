@@ -64,10 +64,7 @@ export default {
 		onAdd() {
 			if (this.canAdd) {
 				this.$panel.dialog.open(
-					(this.options.link ?? this.parent) +
-						"/sections/" +
-						this.name +
-						"/create"
+					this.parent + "/sections/" + this.name + "/create"
 				);
 			}
 		},
