@@ -29,7 +29,7 @@ class ModelPreviewViewController
 			$redirect = new Uri($redirect);
 
 			// Look up new model and redirect to its preview
-			if ($result = $kirby->call($redirect->path, 'GET')) {
+			if ($result = $kirby->call($redirect->path(), 'GET')) {
 
 				// @codeCoverageIgnoreStart
 				if ($result instanceof ModelWithContent === false) {
@@ -43,17 +43,17 @@ class ModelPreviewViewController
 				// Preserve the redirect URL's query and params
 				// and inject them into the new URL
 				unset(
-					$redirect->query->_token,
-					$redirect->query->_version,
-					$redirect->query->_preview
+					$redirect->query()->_token,
+					$redirect->query()->_version,
+					$redirect->query()->_preview
 				);
 
-				if ($redirect->query->isNotEmpty() === true) {
-					$url->query->_query = $redirect->query->toString();
+				if ($redirect->query()->isNotEmpty() === true) {
+					$url->query()->_query = $redirect->query()->toString();
 				}
 
-				if ($redirect->params->isNotEmpty() === true) {
-					$url->query->_params = $redirect->params->toString();
+				if ($redirect->params()->isNotEmpty() === true) {
+					$url->query()->_params = $redirect->params()->toString();
 				}
 
 				return $url->toString();
@@ -80,11 +80,13 @@ class ModelPreviewViewController
 				$uri = new Uri($url);
 
 				// set the preview flag
-				$uri->query->_preview = 'true';
+				$uri->query()->_preview = 'true';
 
 				// inject params and query from a redirect
-				$uri->params->merge($model->kirby()->request()->get('_params'));
-				$uri->query->merge($model->kirby()->request()->get('_query'));
+				$params = $model->kirby()->request()->get('_params');
+				$uri->params()->merge($params);
+				$query = $model->kirby()->request()->get('_query');
+				$uri->query()->merge($query);
 
 				return $uri->toString();
 			}
