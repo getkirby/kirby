@@ -6,6 +6,7 @@ use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Collector\PagesCollector;
+use Kirby\Panel\Controller\Dialog\PageCreateDialogController;
 use Kirby\Panel\Ui\Item\PageItem;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
@@ -259,6 +260,16 @@ return [
 						ids: $this->requestBody('ids'),
 					);
 				}
+			]
+		];
+	},
+	'dialogs' => function () {
+		return [
+			'create' => [
+				'action' => fn () => new PageCreateDialogController(
+					parent:  $this->parentModel(),
+					section: $this
+				),
 			]
 		];
 	},
