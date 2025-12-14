@@ -28,14 +28,16 @@
 			<!-- Content -->
 			<div class="k-item-content">
 				<h3 class="k-item-title" :title="title(text)">
-					<k-link
-						v-if="link !== false && selecting !== true"
+					<k-button
+						v-if="(link !== false || dialog || drawer) && selecting !== true"
+						:dialog="dialog"
+						:drawer="drawer"
+						:link="link"
 						:target="target"
-						:to="link"
 					>
 						<!-- eslint-disable-next-line vue/no-v-html -->
 						<span v-html="text ?? '&nbsp;'" />
-					</k-link>
+					</k-button>
 					<!-- eslint-disable-next-line vue/no-v-html -->
 					<span v-else v-html="text ?? '&nbsp;'" />
 				</h3>
@@ -99,6 +101,8 @@ export default {
 		 * @internal
 		 */
 		data: Object,
+		dialog: String,
+		drawer: String,
 		/**
 		 * The optional info text that will be show next or below the main text
 		 */
@@ -203,9 +207,6 @@ export default {
 	position: relative;
 	min-height: var(--item-height);
 }
-.k-item-box:has(a:focus) {
-	outline: 2px solid var(--color-focus);
-}
 .k-item:not(:hover):not(.k-sortable-fallback) .k-item-sort-handle {
 	opacity: 0;
 }
@@ -218,16 +219,24 @@ export default {
 	border-radius: var(--rounded);
 	container-type: inline-size;
 }
-
+.k-item-box:has(:where(a, button):focus) {
+	outline: 2px solid var(--color-focus);
+}
 .k-item-content {
 	line-height: 1.25;
 	overflow: hidden;
 	padding: var(--spacing-2);
 }
-.k-item-content a:focus {
+.k-item-content a,
+.k-item-content .k-button {
+	position: static;
+}
+.k-item-content a:focus,
+.k-item-content .k-button:focus {
 	outline: 0;
 }
-.k-item-content a::after {
+.k-item-content a::after,
+.k-item-content .k-button::after {
 	content: "";
 	position: absolute;
 	inset: 0;

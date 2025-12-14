@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Panel\Controller\Drawer\FieldDrawerController;
+use Kirby\Panel\Controller\Drawer\FileDrawerController;
 use Kirby\Panel\Controller\Drawer\SectionDrawerController;
 
 return [
@@ -11,6 +12,10 @@ return [
 	'page.sections' => [
 		'pattern' => '(pages/[^/]+)/sections/(:any)/(:all?)',
 		'action'  => SectionDrawerController::class
+	],
+	'page.file' => [
+		'pattern' => '(pages/.*?)/files/(:any)',
+		'action'  => FileDrawerController::class
 	],
 	'page.file.fields' => [
 		'pattern' => '(pages/[^/]+)/files/(:any)/fields/(:any)/(:all?)',
