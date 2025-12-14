@@ -38,6 +38,7 @@ export default {
 	mixins: [props],
 	props: {
 		label: String,
+		navigate: Boolean,
 		src: String,
 		versionId: String
 	},
@@ -57,6 +58,10 @@ export default {
 	},
 	methods: {
 		onClick(e) {
+			if (!this.navigate) {
+				return;
+			}
+
 			const link = e.target.closest("a");
 
 			if (!link) {

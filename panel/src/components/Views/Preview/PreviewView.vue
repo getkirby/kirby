@@ -24,7 +24,8 @@
 				</k-dropdown-content>
 			</k-button-group>
 
-			<k-button-group>
+			<k-button-group class="k-preview-options">
+				<k-checkbox-input label="Sync" :checked="sync" @input="sync = $event" />
 				<k-view-buttons :buttons="buttons" />
 			</k-button-group>
 		</header>
@@ -66,6 +67,11 @@ export default {
 		src: Object,
 		title: String
 	},
+	data() {
+		return {
+			sync: true
+		};
+	},
 	mounted() {
 		this.$events.on("keydown.esc", this.exit);
 	},
@@ -78,8 +84,9 @@ export default {
 				editor: this.editor,
 				hasDiff: this.hasDiff,
 				isLocked: this.isLocked,
-				modified: this.modified,
 				label: this.$t("version." + versionId),
+				modified: this.modified,
+				navigate: this.sync,
 				src: this.src[versionId],
 				versionId: versionId
 			};
@@ -134,6 +141,9 @@ export default {
 	--tree-branch-selected-color-back: var(--color-blue-800);
 
 	width: 20rem;
+}
+.k-preview-options {
+	gap: var(--spacing-4);
 }
 
 .k-preview-view-grid {
