@@ -9,7 +9,10 @@ export default () => {
 			for (const item of entries) {
 				item.target.dispatchEvent(
 					new CustomEvent("resize", {
-						detail: { width: Math.round(item.contentRect.width / 50) * 50 }
+						detail: {
+							width: Math.round(item.contentRect.width / 50) * 50,
+							height: Math.round(item.contentRect.height / 50) * 50
+						}
 					})
 				);
 			}
