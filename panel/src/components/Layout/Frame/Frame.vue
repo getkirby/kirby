@@ -2,6 +2,7 @@
 	<component
 		:is="element"
 		:class="['k-frame', $attrs.class]"
+		:data-ratio="String(ratio)"
 		:data-theme="theme"
 		:style="{
 			'--fit': fit ?? (cover ? 'cover' : 'contain'),
@@ -34,7 +35,7 @@ export const props = {
 		 *
 		 *  @values e.g. `1/1`, `16/9` or `4/5`
 		 */
-		ratio: String,
+		ratio: [Boolean, String],
 		/**
 		 * If the content doesn't fit the defined ratio, the component will add additional space around the content. You can change that behavior with the `cover` attribute. If `true`, the image will be cropped to fit the ratio.
 		 */
@@ -87,13 +88,14 @@ export default {
 	color: var(--theme-color-text-highlight);
 }
 
-.k-frame *:where(img, video, iframe, button) {
+.k-frame:not([data-ratio="false"]) *:where(img, video, iframe, button) {
 	position: absolute;
 	inset: 0;
 	height: 100%;
 	width: 100%;
 	object-fit: var(--fit);
 }
+
 .k-frame > * {
 	overflow: hidden;
 	text-overflow: ellipsis;

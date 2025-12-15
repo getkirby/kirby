@@ -4,17 +4,17 @@
 		:caption-marks="captionMarks"
 		:disabled="disabled"
 		:empty-text="$t('field.blocks.video.placeholder') + ' …'"
-		:is-empty="!video"
+		:is-empty="isEmpty"
 		empty-icon="video"
 		class="k-block-type-video-figure"
 		@open="open"
 		@update="update"
 	>
 		<k-video-frame
-			v-if="video"
 			:controls="content.controls"
+			:file="file"
 			:poster="poster"
-			:url="video"
+			:url="url"
 			element="div"
 		/>
 	</k-block-figure>
@@ -32,15 +32,28 @@ export default {
 		captionMarks() {
 			return this.field("caption", { marks: true }).marks;
 		},
-		poster() {
-			return this.content.poster?.[0]?.url;
-		},
-		video() {
-			if (this.content.location === "kirby") {
+		file() {
+			if (this.isInternal) {
 				return this.content.video?.[0]?.uuid ?? this.content.video?.[0]?.id;
 			}
 
-			return this.content.url;
+			return undefined;
+		},
+		isEmpty() {
+			return this.isInternal ? !this.file : !this.url;
+		},
+		isInternal() {
+			return this.content.location === "kirby";
+		},
+		poster() {
+			return this.content.poster?.[0]?.url;
+		},
+		url() {
+			if (!this.isInternal) {
+				return this.content.url;
+			}
+
+			return undefined;
 		}
 	}
 };

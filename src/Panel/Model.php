@@ -164,6 +164,7 @@ abstract class Model
 				// only create srcsets for resizable files
 				$settings['src']    = static::imagePlaceholder();
 				$settings['srcset'] = $this->imageSrcset($image, $layout, $settings);
+
 			} elseif ($image->isViewable() === true) {
 				$settings['src'] = $image->url();
 			}
@@ -233,59 +234,57 @@ abstract class Model
 		// depending on layout type, set different sizes
 		// to have multiple options for the srcset attribute
 		$sizes = match ($layout) {
-			'cards'    => [352, 864, 1408],
+			'auto'     => [96, 192, 400, 800, 1600, 2400],
+			'cards'    => [400, 800, 1600],
 			'cardlets' => [96, 192],
-			default    => [38, 76]
+			default    => [36, 96],
 		};
 
-		// no additional modfications needed if `cover: false`
+		$ratio = $settings['ratio'] ?? '1/1';
+
+		// no additional modifications needed if `cover: false`
 		if (($settings['cover'] ?? false) === false) {
 			return $image->srcset($sizes);
 		}
 
-		// for card layouts with `cover: true` provide
-		// crops based on the card ratio
-		if ($layout === 'cards') {
-			$ratio = $settings['ratio'] ?? '1/1';
-
-			if (is_numeric($ratio) === false) {
-				$ratio = explode('/', $ratio);
-				$ratio = $ratio[0] / $ratio[1];
-			}
-
+		// for list, table and cardlets
+		// provide square crops in two resolutions
+		if (
+			$layout === 'list' ||
+			$layout === 'cardlets'  ||
+			$layout === 'table'
+		) {
 			return $image->srcset([
-				$sizes[0] . 'w' => [
+				'1x' => [
 					'width'  => $sizes[0],
-					'height' => round($sizes[0] / $ratio),
+					'height' => $sizes[0],
 					'crop'   => true
 				],
-				$sizes[1] . 'w' => [
+				'2x' => [
 					'width'  => $sizes[1],
-					'height' => round($sizes[1] / $ratio),
-					'crop'   => true
-				],
-				$sizes[2] . 'w' => [
-					'width'  => $sizes[2],
-					'height' => round($sizes[2] / $ratio),
+					'height' => $sizes[1],
 					'crop'   => true
 				]
 			]);
 		}
 
-		// for list and cardlets with `cover: true`
-		// provide square crops in two resolutions
-		return $image->srcset([
-			'1x' => [
-				'width'  => $sizes[0],
-				'height' => $sizes[0],
+		// for all other provide crops based on the card ratio
+		if (is_numeric($ratio) === false) {
+			$ratio = explode('/', $ratio);
+			$ratio = $ratio[0] / $ratio[1];
+		}
+
+		$srcset = [];
+
+		foreach ($sizes as $size) {
+			$srcset[$size . 'w'] = [
+				'width'  => $size,
+				'height' => round($size / $ratio),
 				'crop'   => true
-			],
-			'2x' => [
-				'width'  => $sizes[1],
-				'height' => $sizes[1],
-				'crop'   => true
-			]
-		]);
+			];
+		}
+
+		return $image->srcset($srcset);
 	}
 
 	/**

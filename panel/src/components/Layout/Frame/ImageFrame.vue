@@ -6,11 +6,10 @@
 		element="figure"
 	>
 		<img
-			v-if="src"
-			:key="src"
-			:alt="alt ?? ''"
-			:src="src"
-			:srcset="srcset"
+			v-if="src || resolvedSrc"
+			:alt="alt ?? resolvedAlt ?? ''"
+			:src="src ?? resolvedSrc"
+			:srcset="srcset ?? resolvedSrcset"
 			:sizes="sizes"
 			@dragstart.prevent
 		/>
@@ -28,6 +27,11 @@ export const props = {
 		 */
 		alt: String,
 		/**
+		 * File ID/UUID (can be used instead of `url`)
+		 * @since 6.0.0
+		 */
+		file: String,
+		/**
 		 * For responsive images, pass the `sizes` attribute
 		 */
 		sizes: String,
@@ -43,14 +47,57 @@ export const props = {
 };
 
 /**
- * Use <k-image-frame> to display an image in a fixed ratio with background etc.
+ * Use <k-image-frame> to display an image from an external URL
+ * or internal file UUID in a fixed ratio with background etc.
  * @since 4.0.0
  *
  * @example <k-image-frame src="https://getkirby.com/image.jpg" ratio="16/9" back="pattern" />
  */
 export default {
 	mixins: [props],
-	inheritAttrs: false
+	inheritAttrs: false,
+	data() {
+		return {
+			resolvedAlt: null,
+			resolvedSrc: null,
+			resolvedSrcset: null
+		};
+	},
+	watch: {
+		file: {
+			handler: "fetch",
+			immediate: true
+		}
+	},
+	methods: {
+		async fetch() {
+			let alt,
+				src,
+				srcset = null;
+
+			// if internal file, load data for file UUID from request endpoint
+			if (this.file) {
+				const data = await this.$panel.get("items/files", {
+					query: {
+						items: this.file,
+						layout: "auto",
+						image: JSON.stringify({
+							ratio: this.ratio,
+							cover: this.cover
+						})
+					}
+				});
+
+				alt = data.items[0]?.alt;
+				src = data.items[0]?.image.src;
+				srcset = data.items[0]?.image.srcset;
+			}
+
+			this.resolvedAlt = alt;
+			this.resolvedSrc = src;
+			this.resolvedSrcset = srcset;
+		}
+	}
 };
 </script>
 

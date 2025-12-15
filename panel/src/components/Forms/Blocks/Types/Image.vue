@@ -5,28 +5,19 @@
 		:caption-marks="captionMarks"
 		:empty-text="$t('field.blocks.image.placeholder') + ' …'"
 		:disabled="disabled"
-		:is-empty="!src"
+		:is-empty="isEmpty"
 		empty-icon="image"
 		@open="open"
 		@update="update"
 	>
-		<template v-if="src">
-			<k-image-frame
-				v-if="ratio"
-				:ratio="ratio"
-				:cover="crop"
-				:alt="content.alt"
-				:src="src"
-			/>
-			<img
-				v-else
-				:alt="content.alt"
-				:src="src"
-				class="k-block-type-image-auto"
-			/>
-
-			<k-block-background-dropdown :value="back" @input="onBack" />
-		</template>
+		<k-image-frame
+			:alt="content.alt"
+			:cover="crop"
+			:file="file"
+			:ratio="ratio"
+			:src="src"
+		/>
+		<k-block-background-dropdown :value="back" @input="onBack" />
 	</k-block-figure>
 </template>
 
@@ -50,19 +41,28 @@ export default {
 		crop() {
 			return this.content.crop ?? false;
 		},
+		file() {
+			if (this.isInternal) {
+				return this.content.image?.[0]?.uuid ?? this.content.image?.[0]?.id;
+			}
+
+			return undefined;
+		},
+		isEmpty() {
+			return this.isInternal ? !this.file : !this.src;
+		},
+		isInternal() {
+			return this.content.location === "kirby";
+		},
 		src() {
-			if (this.content.location === "web") {
+			if (!this.isInternal) {
 				return this.content.src;
 			}
 
-			if (this.content.image?.[0]?.url) {
-				return this.content.image[0].url;
-			}
-
-			return false;
+			return undefined;
 		},
 		ratio() {
-			return this.content.ratio ?? false;
+			return !this.content.ratio ? false : this.content.ratio;
 		}
 	},
 	methods: {
@@ -96,11 +96,12 @@ export default {
 	padding: var(--spacing-3);
 }
 
-.k-block-type-image-auto {
+.k-block-type-image .k-image-frame[data-ratio="false"] img {
 	max-width: 100%;
 	max-height: 30rem;
 	margin-inline: auto;
 }
+
 .k-block-type-image .k-background-dropdown {
 	position: absolute;
 	inset-inline-end: var(--spacing-3);
