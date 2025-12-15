@@ -70,7 +70,6 @@
 
 <script>
 import Dialog from "@/mixins/dialog.js";
-import RequestError from "@/errors/RequestError.js";
 
 export default {
 	mixins: [Dialog],

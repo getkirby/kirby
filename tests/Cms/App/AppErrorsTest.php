@@ -337,15 +337,16 @@ class AppErrorsTest extends TestCase
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
 
 		$this->assertSame(json_encode([
-			'status' => 'error',
+			'status'    => 'error',
 			'exception' => Exception::class,
-			'code' => 'error.general',
-			'message' => 'An error occurred',
-			'details' => [
+			'code'      => 'error.general',
+			'message'   => 'An error occurred',
+			'details'   => [
 				'Some error message'
 			],
-			'file' => '{kirby}/tests/Cms/App/AppErrorsTest.php',
-			'line' => $exception->getLine()
+			'file'   => '{kirby}/tests/Cms/App/AppErrorsTest.php',
+			'line'   => $exception->getLine(),
+			'editor' => null,
 		]), $this->_getBufferedContent($handlers[0]));
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 	}

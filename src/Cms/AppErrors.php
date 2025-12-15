@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
+use Kirby\Http\Url;
 use Kirby\Toolkit\I18n;
 use Throwable;
 use Whoops\Handler\CallbackHandler;
@@ -168,8 +169,9 @@ trait AppErrors
 					'code'      => $code,
 					'message'   => $exception->getMessage(),
 					'details'   => $details,
-					'file'      => $this->disguiseFilePath($exception->getFile()),
-					'line'      => $exception->getLine(),
+					'file'      => $this->disguiseFilePath($file = $exception->getFile()),
+					'line'      => $line = $exception->getLine(),
+					'editor'    => Url::editor($this->option('editor', false), $file, $line),
 				], $httpCode);
 			} else {
 				echo Response::json([

@@ -29,7 +29,8 @@ export default class RequestError extends Error {
 				exception: {
 					file: state.file,
 					line: state.line,
-					type: state.exception
+					type: state.exception,
+					url: state.editor
 				},
 				details: state.details
 			}
