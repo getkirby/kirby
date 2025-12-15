@@ -243,10 +243,7 @@ abstract class Model
 		$ratio = $settings['ratio'] ?? '1/1';
 
 		// no additional modifications needed if `cover: false`
-		if (
-			($settings['cover'] ?? false) === false ||
-			$ratio === 'auto'
-		) {
+		if (($settings['cover'] ?? false) === false) {
 			return $image->srcset($sizes);
 		}
 
