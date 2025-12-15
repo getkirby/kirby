@@ -336,6 +336,14 @@ class AppErrorsTest extends TestCase
 		$this->assertCount(2, $handlers);
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
 
+		// expose the trace method to make it testable in the output below
+		$tracer = new class () extends App {
+			public function publicTrace(Exception $exception, string|false $editor): array
+			{
+				return $this->trace($exception, $editor);
+			}
+		};
+
 		$this->assertSame(json_encode([
 			'status'    => 'error',
 			'exception' => Exception::class,
@@ -347,6 +355,7 @@ class AppErrorsTest extends TestCase
 			'file'   => '{kirby}/tests/Cms/App/AppErrorsTest.php',
 			'line'   => $exception->getLine(),
 			'editor' => null,
+			'trace'  => $tracer->publicTrace($exception, false),
 		]), $this->_getBufferedContent($handlers[0]));
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 	}

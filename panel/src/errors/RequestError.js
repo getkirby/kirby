@@ -32,7 +32,8 @@ export default class RequestError extends Error {
 					type: state.exception,
 					url: state.editor
 				},
-				details: state.details
+				details: state.details,
+				trace: state.trace
 			}
 		};
 	}
