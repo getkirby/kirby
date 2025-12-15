@@ -4,6 +4,7 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Panel\Controller\Dialog\PagePickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(PagePickerField::class)]
@@ -90,6 +91,17 @@ class PagePickerFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
+	}
+
+	public function testDialogs(): void
+	{
+		$field = $this->field('pages', [
+			'model' => $this->model()
+		]);
+
+		$dialogs = $field->dialogs();
+		$dialog  = $dialogs['picker']();
+		$this->assertInstanceOf(PagePickerDialogController::class, $dialog);
 	}
 
 	public function testValue(): void

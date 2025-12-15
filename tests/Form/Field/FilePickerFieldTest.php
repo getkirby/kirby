@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
+use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FilePickerField::class)]
@@ -110,6 +111,17 @@ class FilePickerFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
+	}
+
+	public function testDialogs(): void
+	{
+		$field = $this->field('files', [
+			'model' => $this->model()
+		]);
+
+		$dialogs = $field->dialogs();
+		$dialog  = $dialogs['picker']();
+		$this->assertInstanceOf(FilePickerDialogController::class, $dialog);
 	}
 
 	public function testValue(): void

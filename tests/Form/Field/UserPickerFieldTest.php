@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
+use Kirby\Panel\Controller\Dialog\UserPickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(UserPickerField::class)]
@@ -130,6 +131,17 @@ class UserPickerFieldTest extends TestCase
 		]);
 
 		$this->assertSame([], $field->default());
+	}
+
+	public function testDialogs(): void
+	{
+		$field = $this->field('users', [
+			'model' => new Page(['slug' => 'test'])
+		]);
+
+		$dialogs = $field->dialogs();
+		$dialog  = $dialogs['picker']();
+		$this->assertInstanceOf(UserPickerDialogController::class, $dialog);
 	}
 
 	public function testMin(): void
