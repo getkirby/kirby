@@ -62,7 +62,7 @@ export default {
 			return !this.content.images?.length;
 		},
 		ratio() {
-			return this.content.ratio;
+			return !this.content.ratio ? "1/1" : this.content.ratio;
 		}
 	},
 	methods: {
