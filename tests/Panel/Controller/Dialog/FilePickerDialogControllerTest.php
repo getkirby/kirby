@@ -100,7 +100,7 @@ class FilePickerDialogControllerTest extends TestCase
 
 		$dialog = $controller->load();
 		$this->assertInstanceOf(Dialog::class, $dialog);
-		$this->assertSame('k-file-picker-dialog', $dialog->component);
+		$this->assertSame('k-model-picker-dialog', $dialog->component);
 	}
 
 	public function testProps(): void
@@ -110,7 +110,7 @@ class FilePickerDialogControllerTest extends TestCase
 		);
 
 		$props = $controller->props();
-		$this->assertSame('k-file-picker-dialog', $props['component']);
+		$this->assertSame('k-model-picker-dialog', $props['component']);
 		$this->assertTrue($props['hasSearch']);
 		$this->assertCount(1, $props['items']);
 		$this->assertSame('list', $props['layout']);

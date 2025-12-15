@@ -43,7 +43,7 @@ export default {
 		},
 		file() {
 			if (this.isInternal) {
-				return this.content.image?.[0]?.uuid ?? this.content.image?.[0]?.id;
+				return this.content.image?.[0];
 			}
 
 			return undefined;

@@ -34,7 +34,7 @@ export default {
 		},
 		file() {
 			if (this.isInternal) {
-				return this.content.video?.[0]?.uuid ?? this.content.video?.[0]?.id;
+				return this.content.video?.[0];
 			}
 
 			return undefined;

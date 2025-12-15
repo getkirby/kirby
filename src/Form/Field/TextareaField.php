@@ -2,8 +2,10 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Cms\FilePicker;
+use Kirby\Cms\File;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Mixin;
+use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 
 /**
  * Textarea Field
@@ -96,20 +98,6 @@ class TextareaField extends InputField
 
 		return [
 			[
-				'pattern' => 'files',
-				'action'  => function () use ($field) {
-					/**
-					 * @var \Kirby\Api\Api
-					 */
-					$api = $this;
-
-					return $field->filepicker(
-						$api->requestQuery('page'),
-						$api->requestQuery('search')
-					);
-				}
-			],
-			[
 				'pattern' => 'upload',
 				'method'  => 'POST',
 				'action'  => function () use ($field) {
@@ -121,7 +109,7 @@ class TextareaField extends InputField
 					return $field->upload(
 						$api,
 						$field->uploads(),
-						fn ($file, $parent) => [
+						fn (File $file, ModelWithContent $parent) => [
 							'filename' => $file->filename(),
 							'dragText' => $file->panel()->dragText(
 								absolute: $field->model()->is($parent) === false
@@ -143,7 +131,7 @@ class TextareaField extends InputField
 		return $this->default ? trim($this->default) : null;
 	}
 
-	public function filepicker(int|null $page, string|null $search): array
+	public function dialogs(): array
 	{
 		$settings = match (true) {
 			is_string($this->files) => ['query' => $this->files],
@@ -151,12 +139,12 @@ class TextareaField extends InputField
 			default                 => [],
 		};
 
-		return (new FilePicker([
-			...$settings,
-			'model' => $this->model(),
-			'page'   => $page,
-			'search' => $search
-		]))->toArray();
+		return [
+			'files' => fn () => new FilePickerDialogController(
+				...$settings,
+				model: $this->model(),
+			)
+		];
 	}
 
 	/**

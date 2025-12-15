@@ -163,19 +163,17 @@ export default {
 			this.refresh({ search: this.query });
 		},
 		select(ids) {
-			// isolate selected that aren't an item in the current parent
-			const orphans = this.selected.filter(
-				(id) => this.items.some((item) => item.id === id) === false
-			);
-
-			// merge orphans with new selected
-			this.selected = [...orphans, ...ids];
+			this.selected = ids;
 		},
 		submit() {
 			this.$emit("submit", {
 				ids: this.selected,
 				items: this.selected
-					.map((id) => this.items.find((item) => item.id === id))
+					.map((id) =>
+						this.items.find((item) =>
+							item.uuid ? item.uuid === id : item.id === id
+						)
+					)
 					.filter(Boolean)
 			});
 		}

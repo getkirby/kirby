@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
+use Kirby\Panel\Controller\Dialog\UserPickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(UserPickerField::class)]
@@ -104,30 +105,6 @@ class UserPickerFieldTest extends TestCase
 		$this->assertSame('raphael', $field->default()[0]);
 	}
 
-	public function testGetIdFromItemArray(): void
-	{
-		$field = $this->field('users', [
-			'model' => new Page(['slug' => 'test']),
-		]);
-
-		$this->assertSame('user://leonardo', $field->getIdFromItemArray([
-			'email' => 'leonardo@getkirby.com',
-			'id'    => 'leonardo',
-			'uuid'  => 'user://leonardo'
-		]));
-
-		$this->assertSame('leonardo', $field->getIdFromItemArray([
-			'email' => 'leonardo@getkirby.com',
-			'id'    => 'leonardo'
-		]));
-
-		$this->assertSame('leonardo@getkirby.com', $field->getIdFromItemArray([
-			'email' => 'leonardo@getkirby.com'
-		]));
-
-		$this->assertNull($field->getIdFromItemArray([]));
-	}
-
 	public function testMultipleDefaultUsers(): void
 	{
 		$this->app->impersonate('raphael@getkirby.com');
@@ -154,6 +131,17 @@ class UserPickerFieldTest extends TestCase
 		]);
 
 		$this->assertSame([], $field->default());
+	}
+
+	public function testDialogs(): void
+	{
+		$field = $this->field('users', [
+			'model' => new Page(['slug' => 'test'])
+		]);
+
+		$dialogs = $field->dialogs();
+		$dialog  = $dialogs['picker']();
+		$this->assertInstanceOf(UserPickerDialogController::class, $dialog);
 	}
 
 	public function testMin(): void
@@ -243,7 +231,7 @@ class UserPickerFieldTest extends TestCase
 		$this->assertTrue($field->isValid());
 	}
 
-	public function testApi(): void
+	public function testApiItems(): void
 	{
 		$app = $this->app->clone([
 			'options' => ['api.allowImpersonation' => true],
@@ -262,20 +250,20 @@ class UserPickerFieldTest extends TestCase
 						]
 					]
 				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'leonardo@getkirby.com,raphael@getkirby.com'
+				]
 			]
 		]);
 
 		$app->impersonate('kirby');
-		$api = $app->api()->call('pages/test/fields/authors');
+		$api = $app->api()->call('pages/test/fields/authors/items');
 
 		$this->assertCount(2, $api);
-		$this->assertArrayHasKey('data', $api);
-		$this->assertArrayHasKey('pagination', $api);
-		$this->assertCount(4, $api['data']);
-		$this->assertSame('donatello@getkirby.com', $api['data'][0]['email']);
-		$this->assertSame('leonardo@getkirby.com', $api['data'][1]['email']);
-		$this->assertSame('michelangelo@getkirby.com', $api['data'][2]['email']);
-		$this->assertSame('raphael@getkirby.com', $api['data'][3]['email']);
+		$this->assertSame('user://leonardo', $api[0]['uuid']);
+		$this->assertSame('user://raphael', $api[1]['uuid']);
 	}
 
 	public function testToModel(): void

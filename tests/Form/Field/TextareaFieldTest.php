@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(TextareaField::class)]
@@ -69,6 +70,15 @@ class TextareaFieldTest extends TestCase
 		]);
 
 		$this->assertSame('test', $field->default());
+	}
+
+	public function testDialogs(): void
+	{
+		$field = $this->field('textarea');
+
+		$dialogs = $field->dialogs();
+		$dialog  = $dialogs['files']();
+		$this->assertInstanceOf(FilePickerDialogController::class, $dialog);
 	}
 
 	public function testMaxLength(): void
