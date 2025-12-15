@@ -169,7 +169,11 @@ export default {
 			this.$emit("submit", {
 				ids: this.selected,
 				items: this.selected
-					.map((id) => this.items.find((item) => item.id === id))
+					.map((id) =>
+						this.items.find((item) =>
+							item.uuid ? item.uuid === id : item.id === id
+						)
+					)
 					.filter(Boolean)
 			});
 		}

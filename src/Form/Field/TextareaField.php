@@ -2,8 +2,10 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\File;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Mixin;
-use Kirby\Panel\Controller\Dialog\FilesPickerDialogController;
+use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 
 /**
  * Textarea Field
@@ -107,7 +109,7 @@ class TextareaField extends InputField
 					return $field->upload(
 						$api,
 						$field->uploads(),
-						fn ($file, $parent) => [
+						fn (File $file, ModelWithContent $parent) => [
 							'filename' => $file->filename(),
 							'dragText' => $file->panel()->dragText(
 								absolute: $field->model()->is($parent) === false
@@ -138,7 +140,7 @@ class TextareaField extends InputField
 		};
 
 		return [
-			'files' => fn () => new FilesPickerDialogController(
+			'files' => fn () => new FilePickerDialogController(
 				...$settings,
 				model: $this->model(),
 			)
