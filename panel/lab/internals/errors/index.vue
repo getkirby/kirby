@@ -58,11 +58,8 @@
 				</k-button>
 			</k-button-group>
 		</k-lab-example>
-		<k-lab-example label="Backend issues">
-			<k-text>
-				The backend route throws a Kirby exception with details (we use this for
-				form errors for example)
-			</k-text>
+		<k-lab-example label="Backend issues with details">
+			<k-text> The backend route throws a Kirby exception with details</k-text>
 
 			<k-code language="php">{{
 				`throw new Kirby\\Exception\\InvalidArgumentException(
@@ -79,6 +76,66 @@
 			'message' => [
 				'This is the first message for Detail B',
 				'This is the second message for Detail B',
+			],
+		],
+	]
+);`
+			}}</k-code>
+			<br />
+			<br />
+			<k-button-group>
+				<k-button
+					variant="filled"
+					@click="$panel.view.open('/lab/errors/details?foo=bar')"
+				>
+					View
+				</k-button>
+				<k-button
+					variant="filled"
+					@click="$panel.dialog.open('/lab/errors/details?foo=bar')"
+				>
+					Dialog
+				</k-button>
+				<k-button
+					variant="filled"
+					@click="$panel.drawer.open('/lab/errors/details?foo=bar')"
+				>
+					Drawer
+				</k-button>
+				<k-button
+					variant="filled"
+					@click="request('/lab/errors/details?foo=bar')"
+				>
+					Request
+				</k-button>
+			</k-button-group>
+		</k-lab-example>
+		<k-lab-example label="Form validation issues">
+			<k-text>
+				The backend route throws a Kirby Form Validation exception
+			</k-text>
+
+			<k-code language="php">{{
+				`throw new Kirby\\Exception\\FormValidationError(
+	fallback: 'Your changes could not be saved',
+	details: [
+		'title' => [
+			'label'  => 'Title',
+			'issues' => [
+				'The field is required',
+			],
+		],
+		'text' => [
+			'label'  => 'Text',
+			'issues' => [
+				'The text must not be shorter than 10 characters',
+				'The text must not be longer than 140 characters',
+			],
+		],
+		'email' => [
+			'label'  => 'Email',
+			'issues' => [
+				'Enter a valid email address',
 			],
 		],
 	]

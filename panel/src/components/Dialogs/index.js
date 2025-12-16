@@ -30,6 +30,7 @@ import ModelsDialog from "./ModelsDialog.vue";
 import FilesDialog from "./FilesDialog.vue";
 import PagesDialog from "./PagesDialog.vue";
 import UsersDialog from "./UsersDialog.vue";
+import ValidationErrorDialog from "./ValidationErrorDialog.vue";
 
 export default {
 	install(app) {
@@ -62,5 +63,6 @@ export default {
 		app.component("k-models-dialog", ModelsDialog);
 		app.component("k-pages-dialog", PagesDialog);
 		app.component("k-users-dialog", UsersDialog);
+		app.component("k-validation-error-dialog", ValidationErrorDialog);
 	}
 };
