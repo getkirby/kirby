@@ -74,41 +74,29 @@ export default (panel = {}) => {
 				return this.fatal(error);
 			}
 
-			if (error instanceof RequestError) {
-				// get the broken element in the response json that
-				// has an error message. This can be deprecated later
-				// when the server always sends back a simple error
-				// response without nesting it in dropdown, dialog, etc.
-				const broken = Object.values(error.response.json).find(
-					(element) => typeof element?.error === "string"
-				);
-
-				if (broken) {
-					error.message = broken.error;
-					error.details = broken.details;
-				}
-			}
-
 			// convert strings to full error objects
 			if (typeof error === "string") {
-				error = {
-					message: error
-				};
+				error = new Error(error);
 			}
 
-			// turn instances into basic object and
-			// fill in some fallback defaults
-			error = {
-				message: error.message ?? "Something went wrong",
-				details: error.details ?? {}
-			};
+			// turn objects into error instances
+			if (error instanceof Error === false) {
+				const message = error.message ?? "Something went wrong";
+				const details = error.details ?? {};
+				error = new Error(message);
+				error.details = details;
+			}
 
 			// open the error dialog in views
 			if (panel.context === "view") {
-				panel.dialog.open({
-					component: "k-error-dialog",
-					props: error
-				});
+				if (error instanceof RequestError) {
+					panel.dialog.open(error.dialog());
+				} else {
+					panel.dialog.open({
+						component: "k-error-dialog",
+						props: error
+					});
+				}
 			}
 
 			// show the error notification bar
