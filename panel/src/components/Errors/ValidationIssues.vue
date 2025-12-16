@@ -7,7 +7,7 @@
 		>
 			<k-checklist theme="negative">
 				<li
-					v-for="(issue, issueKey) in field.issues"
+					v-for="(issue, issueKey) in field.issues ?? field.message"
 					:key="fieldName + '-issue-' + issueKey"
 				>
 					{{ issue }}

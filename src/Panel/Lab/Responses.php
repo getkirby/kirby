@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Lab;
 
 use Exception;
+use Kirby\Exception\FormValidationException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Response;
 
@@ -23,7 +24,31 @@ class Responses
 	public static function errorResponseByType(string|null $type = null): Response|Exception
 	{
 		return match ($type) {
-			'form' => new InvalidArgumentException(
+			'form' => new FormValidationException(
+				fallback: 'Your changes could not be saved',
+				details: [
+					'title' => [
+						'label'  => 'Title',
+						'issues' => [
+							'The field is required',
+						],
+					],
+					'text' => [
+						'label'  => 'Text',
+						'issues' => [
+							'The text must not be shorter than 10 characters',
+							'The text must not be longer than 140 characters',
+						],
+					],
+					'email' => [
+						'label'  => 'Email',
+						'issues' => [
+							'Enter a valid email address',
+						],
+					],
+				]
+			),
+			'details' => new InvalidArgumentException(
 				fallback: 'Exception with details',
 				details: [
 					'a' => [
