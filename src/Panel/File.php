@@ -230,10 +230,17 @@ class File extends Model
 			'xlsx'  => 'green-500',
 		];
 
-		return
-			$extensions[$this->model->extension()] ??
-			$types[$this->model->type()] ??
-			parent::imageDefaults()['color'];
+		if ($color = $extensions[$this->model->extension()] ?? null) {
+			return $color;
+		}
+
+		$type = $this->model->type();
+
+		if ($type && ($color = $types[$type] ?? null)) {
+			return $color;
+		}
+
+		return parent::imageDefaults()['color'];
 	}
 
 	/**
@@ -273,10 +280,17 @@ class File extends Model
 			'xlsx'  => 'table',
 		];
 
-		return
-			$extensions[$this->model->extension()] ??
-			$types[$this->model->type()] ??
-			'file';
+		if ($icon = $extensions[$this->model->extension()] ?? null) {
+			return $icon;
+		}
+
+		$type = $this->model->type();
+
+		if ($type && ($icon = $types[$type] ?? null)) {
+			return $icon;
+		}
+
+		return 'file';
 	}
 
 	/**
