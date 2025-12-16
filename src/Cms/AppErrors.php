@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
+use Kirby\Http\Url;
 use Kirby\Toolkit\I18n;
 use Throwable;
 use Whoops\Handler\CallbackHandler;
@@ -161,6 +162,8 @@ trait AppErrors
 				$details  = null;
 			}
 
+			$editor = $this->option('editor', false);
+
 			if ($this->option('debug') === true) {
 				echo Response::json([
 					'status'    => 'error',
@@ -168,8 +171,10 @@ trait AppErrors
 					'code'      => $code,
 					'message'   => $exception->getMessage(),
 					'details'   => $details,
-					'file'      => $this->disguiseFilePath($exception->getFile()),
-					'line'      => $exception->getLine(),
+					'file'      => $this->disguiseFilePath($file = $exception->getFile()),
+					'line'      => $line = $exception->getLine(),
+					'editor'    => Url::editor($editor, $file, $line),
+					'trace'     => $this->trace($exception, $editor),
 				], $httpCode);
 			} else {
 				echo Response::json([
@@ -185,6 +190,24 @@ trait AppErrors
 
 		$this->setWhoopsHandler($handler);
 		$this->whoops()->sendHttpCode(false);
+	}
+
+	/**
+	 * @since 6.0.0
+	 */
+	protected function trace(Throwable $exception, string|false $editor): array
+	{
+		return array_map(function ($item) use ($editor) {
+			if (isset($item['file']) === true) {
+				$item['url']  = Url::editor($editor, $item['file'], $item['line']);
+				$item['file'] = $this->disguiseFilePath($item['file']);
+			}
+
+			$item['function'] = $this->disguiseFilePath($item['function']);
+
+			unset($item['args']);
+			return $item;
+		}, $exception->getTrace());
 	}
 
 	/**

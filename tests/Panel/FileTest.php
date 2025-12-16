@@ -309,6 +309,56 @@ class FileTest extends TestCase
 		$this->assertNotEmpty($image);
 	}
 
+	public function testImageColor(): void
+	{
+		$page = new ModelPage(['slug' => 'test']);
+		$file = new ModelFile([
+			'filename' => 'something.doc',
+			'parent'   => $page
+		]);
+
+		$this->assertSame('blue-500', $file->panel()->image()['color']);
+
+		$file = new ModelFile([
+			'filename' => 'something.mp4',
+			'parent'   => $page
+		]);
+
+		$this->assertSame('yellow-500', $file->panel()->image()['color']);
+
+		$file = new ModelFile([
+			'filename' => 'something.foo',
+			'parent'   => $page
+		]);
+
+		$this->assertSame('gray-500', $file->panel()->image()['color']);
+	}
+
+	public function testImageIcon(): void
+	{
+		$page = new ModelPage(['slug' => 'test']);
+		$file = new ModelFile([
+			'filename' => 'something.doc',
+			'parent'   => $page
+		]);
+
+		$this->assertSame('pen', $file->panel()->image()['icon']);
+
+		$file = new ModelFile([
+			'filename' => 'something.mp4',
+			'parent'   => $page
+		]);
+
+		$this->assertSame('video', $file->panel()->image()['icon']);
+
+		$file = new ModelFile([
+			'filename' => 'something.foo',
+			'parent'   => $page
+		]);
+
+		$this->assertSame('file', $file->panel()->image()['icon']);
+	}
+
 	public function testIsFocusable(): void
 	{
 		$this->app->clone([
