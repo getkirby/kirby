@@ -35,16 +35,25 @@
 			<br />
 			<br />
 			<k-button-group>
-				<k-button variant="filled" @click="$panel.view.open('/lab/errors')">
+				<k-button
+					variant="filled"
+					@click="$panel.view.open('/lab/errors?foo=bar')"
+				>
 					View
 				</k-button>
-				<k-button variant="filled" @click="$panel.dialog.open('/lab/errors')">
+				<k-button
+					variant="filled"
+					@click="$panel.dialog.open('/lab/errors?foo=bar')"
+				>
 					Dialog
 				</k-button>
-				<k-button variant="filled" @click="$panel.drawer.open('/lab/errors')">
+				<k-button
+					variant="filled"
+					@click="$panel.drawer.open('/lab/errors?foo=bar')"
+				>
 					Drawer
 				</k-button>
-				<k-button variant="filled" @click="request('/lab/errors')">
+				<k-button variant="filled" @click="request('/lab/errors?foo=bar')">
 					Request
 				</k-button>
 			</k-button-group>
