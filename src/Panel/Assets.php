@@ -48,8 +48,7 @@ class Assets
 
 		// check if any plugin is running in dev mode to
 		// load the non-production version of Vue
-		$this->isPluginDev =
-			is_file($this->kirby->root('plugins') . '/.vite-running') === true;
+		$this->isPluginDev = count(glob($this->kirby->root('plugins') . '/*/index.dev.js')) > 0;
 
 		// Get the base URL
 		$this->url = $this->url();

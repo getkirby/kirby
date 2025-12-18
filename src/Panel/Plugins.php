@@ -38,6 +38,9 @@ class Plugins
 		foreach (App::instance()->plugins() as $plugin) {
 			$this->files[] = $plugin->root() . '/index.css';
 			$this->files[] = $plugin->root() . '/index.js';
+			// During plugin development, kirbyup adds an index.dev.js,
+			// which Kirby will load instead of the regular index.js.
+			$this->files[] = $plugin->root() . '/index.dev.js';
 		}
 
 		return $this->files;
@@ -79,6 +82,12 @@ class Plugins
 			}
 
 			if ($type === 'js') {
+				// filter out all index.js files that shouldn't be loaded
+				// because an index.dev.js exists
+				if (F::exists(preg_replace('/\.js$/', '.dev.js', $file)) === true) {
+					continue;
+				}
+
 				$content = trim($content);
 
 				// make sure that each plugin is ended correctly

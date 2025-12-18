@@ -17,6 +17,9 @@ class PluginsTest extends TestCase
 	protected string $jsA;
 	protected string $jsB;
 	protected string $jsC;
+	protected string $devJsA;
+	protected string $devJsB;
+	protected string $devJsC;
 
 	public function createPlugins()
 	{
@@ -28,6 +31,8 @@ class PluginsTest extends TestCase
 		touch($this->cssA, $time);
 		F::write($this->jsA = static::TMP . '/site/plugins/a/index.js', 'a');
 		touch($this->jsA, $time);
+		F::write($this->jsA = static::TMP . '/site/plugins/a/index.js', 'a');
+		$this->devJsA = static::TMP . '/site/plugins/a/index.dev.js';
 
 		F::write(static::TMP . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
 		touch(static::TMP . '/site/plugins/b/index.php', $time);
@@ -35,6 +40,7 @@ class PluginsTest extends TestCase
 		touch($this->cssB, $time);
 		F::write($this->jsB = static::TMP . '/site/plugins/b/index.js', 'b');
 		touch($this->jsB, $time);
+		$this->devJsB = static::TMP . '/site/plugins/b/index.dev.js';
 
 		F::write(static::TMP . '/site/plugins/c/index.php', '<?php Kirby::plugin("test/c", []);');
 		touch(static::TMP . '/site/plugins/c/index.php', $time);
@@ -42,6 +48,7 @@ class PluginsTest extends TestCase
 		touch($this->cssC, $time);
 		F::write($this->jsC = static::TMP . '/site/plugins/c/index.js', 'c');
 		touch($this->jsC, $time);
+		$this->devJsC = static::TMP . '/site/plugins/c/index.dev.js';
 
 		return $time;
 	}
@@ -62,10 +69,13 @@ class PluginsTest extends TestCase
 		$expected = [
 			$this->cssA,
 			$this->jsA,
+			$this->devJsA,
 			$this->cssB,
 			$this->jsB,
+			$this->devJsB,
 			$this->cssC,
 			$this->jsC,
+			$this->devJsC,
 		];
 
 		$this->assertSame($expected, $plugins->files());

@@ -73,8 +73,8 @@ class AssetsTest extends TestCase
 
 	public function setPluginDevMode(): void
 	{
-		Dir::make($this->app->root('plugins'));
-		touch($this->app->root('plugins') . '/.vite-running');
+		Dir::make($this->app->root('plugins') . '/test');
+		touch($this->app->root('plugins') . '/test/index.dev.js');
 	}
 
 	public function testCss(): void
