@@ -1,7 +1,5 @@
 <template>
-	<div>
-		<hr />
-	</div>
+	<hr />
 </template>
 
 <script>
@@ -13,7 +11,7 @@ export default {};
 
 <style>
 .k-block-type-line hr {
-	margin-block: 0.75rem;
+	margin-block: var(--spacing-3);
 	border: 0;
 	border-top: 1px solid var(--color-border);
 }
