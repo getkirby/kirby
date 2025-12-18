@@ -869,8 +869,9 @@ class FieldsTest extends TestCase
 		$fields = new Fields(
 			fields: [
 				'a' => [
-					'type'  => 'text',
-					'value' => 'A'
+					'type'    => 'text',
+					'value'   => 'A',
+					'default' => 'Default A',
 				]
 			],
 			model: $this->model
@@ -880,7 +881,6 @@ class FieldsTest extends TestCase
 			'a' => [
 				'autofocus'  => false,
 				'counter'    => true,
-				'default'    => '',
 				'disabled'   => false,
 				'font'       => 'sans-serif',
 				'hidden'     => false,
@@ -893,6 +893,41 @@ class FieldsTest extends TestCase
 				'width'      => '1/1',
 			],
 		], $fields->toProps());
+	}
+
+	public function testToPropsWithDefaults(): void
+	{
+		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type'    => 'text',
+					'value'   => 'A',
+					'default' => 'Default A',
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertSame([
+			'a' => [
+				'autofocus'  => false,
+				'counter'    => true,
+				'disabled'   => false,
+				'font'       => 'sans-serif',
+				'hidden'     => false,
+				'label'      => 'A',
+				'name'       => 'a',
+				'required'   => false,
+				'saveable'   => true,
+				'translate'  => true,
+				'type'       => 'text',
+				'width'      => '1/1',
+				'default'    => 'Default A',
+			],
+		], $fields->toProps(defaults: true));
 	}
 
 	public static function modelProvider(): array

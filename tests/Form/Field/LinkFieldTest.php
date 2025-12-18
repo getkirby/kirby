@@ -17,7 +17,6 @@ class LinkFieldTest extends TestCase
 
 		$expected = [
 			'autofocus'   => false,
-			'default'     => null,
 			'disabled'    => false,
 			'help'        => null,
 			'hidden'      => false,

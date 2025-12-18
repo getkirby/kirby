@@ -30,7 +30,6 @@ class EntriesFieldTest extends TestCase
 		$this->assertNull($props['max']);
 		$this->assertNull($props['min']);
 		$this->assertFalse($props['autofocus']);
-		$this->assertNull($props['default']);
 		$this->assertFalse($props['disabled']);
 		$this->assertNull($props['help']);
 		$this->assertSame('Entries', $props['label']);

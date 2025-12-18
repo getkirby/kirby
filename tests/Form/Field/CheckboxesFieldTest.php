@@ -18,7 +18,6 @@ class CheckboxesFieldTest extends TestCase
 			'autofocus' => false,
 			'batch'     => false,
 			'columns'   => 1,
-			'default'   => null,
 			'disabled'  => false,
 			'help'      => null,
 			'hidden'    => false,

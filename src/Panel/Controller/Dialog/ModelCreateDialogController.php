@@ -94,7 +94,7 @@ abstract class ModelCreateDialogController extends DialogController
 			model:  $this->model()
 		);
 
-		return $form->fields()->toProps();
+		return $form->fields()->toProps(defaults: true);
 	}
 
 	protected function customFieldsIgnore(): array

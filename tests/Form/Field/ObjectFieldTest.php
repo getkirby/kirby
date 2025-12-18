@@ -18,7 +18,6 @@ class ObjectFieldTest extends TestCase
 
 		$expected = [
 			'autofocus' => false,
-			'default'   => null,
 			'disabled'  => false,
 			'empty'     => null,
 			'fields'    => [],

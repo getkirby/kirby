@@ -25,7 +25,7 @@ trait Fields
 			return [];
 		}
 
-		return $this->form()->fields()->toProps();
+		return $this->form()->fields()->toProps(defaults: true);
 	}
 
 	/**

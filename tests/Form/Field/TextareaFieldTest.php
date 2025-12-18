@@ -19,7 +19,6 @@ class TextareaFieldTest extends TestCase
 			'autofocus'   => false,
 			'buttons'     => true,
 			'counter'     => true,
-			'default'     => null,
 			'disabled'    => false,
 			'font'        => 'sans-serif',
 			'help'        => null,
