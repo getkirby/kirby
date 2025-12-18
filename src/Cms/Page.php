@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Blueprint\Blueprint;
+use Kirby\Blueprint\PageBlueprint;
 use Kirby\Content\Field;
 use Kirby\Content\VersionId;
 use Kirby\Exception\Exception;

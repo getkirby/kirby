@@ -2,8 +2,8 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;

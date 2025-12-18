@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Blueprint\SiteBlueprint;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;

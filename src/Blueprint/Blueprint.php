@@ -1,8 +1,10 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
 
 use Exception;
+use Kirby\Cms\App;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -18,7 +20,7 @@ use Throwable;
  * blueprint file and converts sections, columns, fields
  * etc. into a correct tab layout.
  *
- * @package   Kirby Cms
+ * @package   Kirby Blueprint
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier

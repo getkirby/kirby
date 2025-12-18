@@ -1,7 +1,8 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
 
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 

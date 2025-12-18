@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Blueprint\Blueprint;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;

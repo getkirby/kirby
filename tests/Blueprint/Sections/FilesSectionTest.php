@@ -1,8 +1,10 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
 
 use Exception;
+use Kirby\Cms\App;
+use Kirby\Cms\Page;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use Kirby\Toolkit\Locale;

@@ -3,8 +3,8 @@
 namespace Kirby\Api;
 
 use Exception;
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;

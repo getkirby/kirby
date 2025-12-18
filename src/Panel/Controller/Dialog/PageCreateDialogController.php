@@ -2,12 +2,12 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Blueprint\Section;
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\PageRules;
-use Kirby\Cms\Section;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Content\MemoryStorage;

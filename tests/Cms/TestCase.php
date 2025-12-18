@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Blueprint\Blueprint;
 use Kirby\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;

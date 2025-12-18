@@ -1,12 +1,12 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
 
 /**
  * Extension of the basic blueprint class
  * to handle all blueprints for users.
  *
- * @package   Kirby Cms
+ * @package   Kirby Blueprint
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier

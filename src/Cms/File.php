@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use IntlDateFormatter;
+use Kirby\Blueprint\FileBlueprint;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;

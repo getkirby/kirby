@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Blueprint\Blueprint;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 

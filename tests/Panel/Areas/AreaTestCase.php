@@ -2,8 +2,8 @@
 
 namespace Kirby\Panel\Areas;
 
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Cms\User;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Blueprint\Blueprint;
 use Kirby\Content\Content;
 use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\Lock;

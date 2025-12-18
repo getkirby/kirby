@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Cms\UserBlueprint;
+use Kirby\Blueprint\UserBlueprint;
 
 /**
  * UserBlueprint

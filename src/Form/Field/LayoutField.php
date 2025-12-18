@@ -2,8 +2,8 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Layout;
 use Kirby\Cms\Layouts;
