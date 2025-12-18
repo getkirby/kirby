@@ -456,22 +456,4 @@ class AssetsTest extends TestCase
 
 		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm-browser.js', $vue);
 	}
-
-	public function testVueWithDisabledTemplateCompiler(): void
-	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'vue' => [
-						'compiler' => false
-					]
-				]
-			]
-		]);
-
-		$assets = new Assets();
-		$vue    = $assets->vue();
-
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.runtime.esm-browser.prod.js', $vue);
-	}
 }

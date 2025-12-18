@@ -101,7 +101,6 @@ class LabExampleViewController extends ViewController
 			component: 'k-lab-playground-view',
 			breadcrumb: $this->breadcrumb(),
 			buttons: $this->buttons(),
-			compiler: $this->kirby->option('panel.vue.compiler', true),
 			docs: $this->doc()?->name,
 			examples: $this->example->vue()['examples'],
 			file: $this->example->module(),
