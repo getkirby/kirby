@@ -4,11 +4,14 @@
 			<k-text>
 				<p>
 					<code>window.panel.observers.frames</code> is a resize observer meant
-					for frame widths. The width gets rounded to the nearest 50 pixels.
+					for frame widths/heights. The width/height gets rounded to the nearest
+					50 pixels.
 				</p>
 			</k-text>
 
-			<k-frame ref="frame" back="yellow-300" ratio="2/1">{{ frame }}</k-frame>
+			<k-frame ref="frame" back="yellow-300" ratio="2/1">
+				{{ frame.width }}&times;{{ frame.height }}
+			</k-frame>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
@@ -17,7 +20,7 @@
 export default {
 	data() {
 		return {
-			frame: null
+			frame: {}
 		};
 	},
 	mounted() {
@@ -25,7 +28,7 @@ export default {
 		this.$panel.observers.frames.observe(frame);
 
 		frame.addEventListener("resize", (e) => {
-			this.frame = e.detail?.width ?? 0;
+			this.frame = e.detail;
 		});
 	},
 	beforeUnmount() {
