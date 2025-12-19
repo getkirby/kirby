@@ -5,13 +5,14 @@
 		:style="$attrs.style"
 		element="figure"
 	>
-		<k-autosizes-image
+		<img
 			v-if="src || resolvedSrc"
 			:alt="alt ?? resolvedAlt ?? ''"
-			:fit="fit ?? (cover ? 'cover' : 'contain')"
+			:sizes="autoSizes"
 			:src="src ?? resolvedSrc"
 			:srcset="srcset ?? resolvedSrcset"
 			@dragstart.prevent
+			@load="onLoad"
 		/>
 	</k-frame>
 </template>
@@ -58,24 +59,37 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
+			autoSizes: null,
 			resolvedAlt: null,
 			resolvedSrc: null,
 			resolvedSrcset: null
 		};
 	},
 	watch: {
+		cover() {
+			this.measure();
+		},
 		file: {
 			handler: "fetch",
 			immediate: true
+		},
+		fit() {
+			this.measure();
 		}
 	},
+	beforeUnmount() {
+		this.$panel.observers.frames.unobserve(this.$el);
+	},
 	methods: {
+		/**
+		 * Fetches image data when file UUID/ID is provided
+		 */
 		async fetch() {
 			let alt,
 				src,
 				srcset = null;
 
-			// if internal file, load data for file UUID from request endpoint
+			// load item data for file from request endpoint
 			if (this.file) {
 				const data = await this.$panel.get("items/files", {
 					query: {
@@ -96,6 +110,32 @@ export default {
 			this.resolvedAlt = alt;
 			this.resolvedSrc = src;
 			this.resolvedSrcset = srcset;
+		},
+		/**
+		 * Creates the autoSizes value
+		 * based on the frame and image dimensions
+		 * as well as the `object-fit` mode
+		 */
+		measure(frame) {
+			frame ??= this.$el.getBoundingClientRect();
+
+			const fh = frame.height ?? 0;
+			const fw = frame.width ?? 0;
+			const img = this.$el.children[0];
+			const iw = img.naturalWidth;
+			const ih = img.naturalHeight;
+
+			if (iw === 0 || ih === 0) {
+				return;
+			}
+
+			const fit = this.fit ?? (this.cover ? "cover" : "contain");
+			const scale = Math[fit === "cover" ? "max" : "min"](fw / iw, fh / ih);
+			this.autoSizes = Math.round((iw * scale) / 50) * 50 + "px";
+		},
+		onLoad() {
+			this.$panel.observers.frames.observe(this.$el);
+			this.$el.addEventListener("resize", (e) => this.measure(e.detail));
 		}
 	}
 };
