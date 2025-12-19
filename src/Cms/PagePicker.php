@@ -19,8 +19,6 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class PagePicker extends Picker
 {
-	// TODO: null only due to our Properties setters,
-	// remove once our implementation is better
 	protected Pages|null $items = null;
 	protected Pages|null $itemsForQuery = null;
 	protected Page|Site|null $parent = null;
