@@ -275,7 +275,7 @@ abstract class ModelsField extends DisplayField
 			$column['label'] ??= Str::label($columnName);
 
 			// make sure to translate labels
-			$column['label'] = $this->i18n($column['label'], $column['label']);
+			$column['label'] = $this->i18n($column['label']);
 
 			// keep the original column name as id
 			$column['id'] = $columnName;

@@ -33,7 +33,7 @@
 				:value="searchterm"
 				icon="search"
 				type="text"
-				class="k-models-section-search"
+				class="k-models-field-search"
 				@input="onSearch"
 				@keydown.esc="onSearchToggle"
 			/>
