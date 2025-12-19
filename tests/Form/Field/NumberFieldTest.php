@@ -19,7 +19,6 @@ class NumberFieldTest extends TestCase
 			'after'       => null,
 			'autofocus'   => false,
 			'before'      => null,
-			'default'     => null,
 			'disabled'    => false,
 			'help'        => null,
 			'hidden'      => false,

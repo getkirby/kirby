@@ -22,7 +22,6 @@ class StructureFieldTest extends TestCase
 			'autofocus' => false,
 			'batch'     => false,
 			'columns'   => [],
-			'default'   => null,
 			'disabled'  => false,
 			'duplicate' => true,
 			'empty'     => null,

@@ -17,7 +17,6 @@ class TagsFieldTest extends TestCase
 		$expected = [
 			'accept'    => 'all',
 			'autofocus' => false,
-			'default'   => [],
 			'disabled'  => false,
 			'help'      => null,
 			'hidden'    => false,

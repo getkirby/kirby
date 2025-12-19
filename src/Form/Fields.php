@@ -366,7 +366,7 @@ class Fields extends Collection
 	 *
 	 * @since 5.0.0
 	 */
-	public function toProps(): array
+	public function toProps(bool $defaults = false): array
 	{
 		$fields      = $this->data;
 		$props       = [];
@@ -379,7 +379,10 @@ class Fields extends Collection
 			// the field should be disabled in the form if the user
 			// has no update permissions for the model or if the field
 			// is not translatable into the current language
-			if ($permissions === false || $field->isTranslatable($language) === false) {
+			if (
+				$permissions === false ||
+				$field->isTranslatable($language) === false
+			) {
 				$props[$name]['disabled'] = true;
 			}
 
@@ -387,6 +390,11 @@ class Fields extends Collection
 			// we pass on the values to the frontend via the model
 			// view props to make them globally available for the view.
 			unset($props[$name]['value']);
+
+			// include the default value if requested
+			if ($defaults === true) {
+				$props[$name]['default'] = $field->default();
+			}
 		}
 
 		return $props;

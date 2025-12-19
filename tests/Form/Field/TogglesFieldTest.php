@@ -16,7 +16,6 @@ class TogglesFieldTest extends TestCase
 
 		$expected = [
 			'autofocus'  => false,
-			'default'    => null,
 			'disabled'   => false,
 			'grow'       => true,
 			'help'       => null,

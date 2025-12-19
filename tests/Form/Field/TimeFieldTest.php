@@ -18,7 +18,6 @@ class TimeFieldTest extends TestCase
 
 		$expected = [
 			'autofocus'   => false,
-			'default'     => null,
 			'disabled'    => false,
 			'display'     => 'HH:mm',
 			'format'      => 'H:i:s',

@@ -23,7 +23,6 @@ class TextFieldTest extends TestCase
 			'before'       => null,
 			'converter'    => null,
 			'counter'      => true,
-			'default'      => '',
 			'disabled'     => false,
 			'font'         => 'sans-serif',
 			'help'         => null,

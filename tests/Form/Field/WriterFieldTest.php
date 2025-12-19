@@ -17,7 +17,6 @@ class WriterFieldTest extends TestCase
 		$expected = [
 			'autofocus'    => false,
 			'counter'      => true,
-			'default'      => null,
 			'disabled'     => false,
 			'headings'     => [1, 2, 3, 4, 5, 6],
 			'help'         => null,

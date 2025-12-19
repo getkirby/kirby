@@ -19,7 +19,6 @@ class ColorFieldTest extends TestCase
 		$expected = [
 			'alpha'       => false,
 			'autofocus'   => false,
-			'default'     => null,
 			'disabled'    => false,
 			'format'      => 'hex',
 			'help'        => null,

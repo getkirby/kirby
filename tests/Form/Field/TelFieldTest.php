@@ -21,7 +21,6 @@ class TelFieldTest extends TestCase
 			'before'       => null,
 			'converter'    => null,
 			'counter'      => false,
-			'default'      => '',
 			'disabled'     => false,
 			'font'         => 'sans-serif',
 			'help'         => null,

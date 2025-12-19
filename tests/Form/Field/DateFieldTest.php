@@ -20,7 +20,6 @@ class DateFieldTest extends TestCase
 		$expected = [
 			'autofocus'   => false,
 			'calendar'    => true,
-			'default'     => null,
 			'disabled'    => false,
 			'display'     => 'YYYY-MM-DD',
 			'format'      => 'Y-m-d',

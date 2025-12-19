@@ -17,7 +17,6 @@ class MultiselectFieldTest extends TestCase
 		$expected = [
 			'accept'    => 'options',
 			'autofocus' => false,
-			'default'   => [],
 			'disabled'  => false,
 			'help'      => null,
 			'hidden'    => false,

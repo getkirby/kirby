@@ -62,7 +62,6 @@ class PagePickerFieldTest extends TestCase
 
 		$expected = [
 			'autofocus'   => false,
-			'default'     => [],
 			'disabled'    => false,
 			'empty'       => null,
 			'help'        => null,

@@ -77,7 +77,7 @@ class Fieldset extends Item
 	protected function createFields(array $fields = []): array
 	{
 		$fields = Blueprint::fieldsProps($fields);
-		$fields = $this->form($fields)->fields()->toProps();
+		$fields = $this->form($fields)->fields()->toProps(defaults: true);
 
 		// collect all fields
 		$this->fields = [...$this->fields, ...$fields];
