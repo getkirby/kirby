@@ -82,10 +82,6 @@ function createPlugins(mode) {
 					{
 						src: "node_modules/vue/dist/vue.esm-browser.prod.js",
 						dest: "js"
-					},
-					{
-						src: "node_modules/vue/dist/vue.runtime.esm-browser.prod.js",
-						dest: "js"
 					}
 				]
 			})

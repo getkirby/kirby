@@ -330,10 +330,6 @@ class Assets
 			return $this->url . '/js/vue.esm-browser.js';
 		}
 
-		if ($this->kirby->option('panel.vue.compiler', true) === true) {
-			return $this->url . '/js/vue.esm-browser.prod.js';
-		}
-
-		return $this->url . '/js/vue.runtime.esm-browser.prod.js';
+		return $this->url . '/js/vue.esm-browser.prod.js';
 	}
 }

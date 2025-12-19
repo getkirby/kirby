@@ -61,7 +61,6 @@ class LabExampleViewControllerTest extends TestCase
 		$this->assertSame('k-lab-playground-view', $view->component);
 
 		$props = $view->props();
-		$this->assertTrue($props['compiler']);
 		$this->assertSame('k-button', $props['docs']);
 		$this->assertSame('/lab/components/buttons/1_variants/index.vue', $props['file']);
 		$this->assertSame('https://github.com/getkirby/kirby/tree/main/panel/src/components/Navigation/Button.vue', $props['github']);
@@ -71,22 +70,5 @@ class LabExampleViewControllerTest extends TestCase
 		$this->assertSame('1_variants', $props['tab']);
 		$this->assertIsArray($props['tabs']);
 		$this->assertSame('buttons', $props['title']);
-	}
-
-	public function testLoadWithDisabledCompiler(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'panel' => [
-					'vue' => [
-						'compiler' => false
-					]
-				]
-			]
-		]);
-
-		$controller = new LabExampleViewController($this->category, $this->example);
-		$props = $controller->load()->props();
-		$this->assertFalse($props['compiler']);
 	}
 }
