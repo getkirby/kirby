@@ -81,9 +81,9 @@ class BlueprintTest extends TestCase
 						'sections' => [
 							'main-info-0' => [
 								'label' => 'Column (1/3)',
-								'type'  => 'info',
+								'name'  => 'main-info-0',
 								'text'  => 'No sections yet',
-								'name'  => 'main-info-0'
+								'type'  => 'info',
 							]
 						]
 					],
@@ -92,17 +92,17 @@ class BlueprintTest extends TestCase
 						'sections' => [
 							'main-info-1' => [
 								'label' => 'Column (2/3)',
-								'type'  => 'info',
+								'name'  => 'main-info-1',
 								'text'  => 'No sections yet',
-								'name'  => 'main-info-1'
+								'type'  => 'info',
 							]
 						]
 					]
 				],
 				'icon'    => null,
 				'label'   => 'Main',
+				'name'    => 'main',
 				'link'    => '/pages/a/?tab=main',
-				'name'    => 'main'
 			]
 		];
 
