@@ -75,7 +75,7 @@ abstract class BaseField
 
 		if (
 			array_key_exists('value', $props) === true &&
-			method_exists(static::class, 'fill') === true
+			method_exists($field, 'fill') === true
 		) {
 			$field->fill($props['value']);
 		}
@@ -91,6 +91,9 @@ abstract class BaseField
 		return property_exists($this, 'value') === true;
 	}
 
+	/**
+	 * @see `self::name()`
+	 */
 	public function id(): string
 	{
 		return $this->name();
@@ -120,8 +123,10 @@ abstract class BaseField
 	/**
 	 * Parses a string template in the given value
 	 */
-	protected function stringTemplate(string|null $string = null, bool $safe = true): string|null
-	{
+	protected function stringTemplate(
+		string|null $string = null,
+		bool $safe = true
+	): string|null {
 		if ($string === null || $string === '') {
 			return $string;
 		}
@@ -132,8 +137,10 @@ abstract class BaseField
 		};
 	}
 
-	protected function stringTemplateI18n(array|string|null $string = null, bool $safe = true): string|null
-	{
+	protected function stringTemplateI18n(
+		array|string|null $string = null,
+		bool $safe = true
+	): string|null {
 		if ($string === null || $string === '') {
 			return $string;
 		}
