@@ -135,11 +135,6 @@ class EntriesField extends InputField
 		];
 	}
 
-	protected function setField(array|string|null $attrs): void
-	{
-		$this->field = $attrs;
-	}
-
 	public function supports(): array
 	{
 		return [

@@ -142,10 +142,7 @@ class BlocksField extends InputField
 
 					$fieldApi = $api->clone([
 						'routes' => $field->api(),
-						'data'   => [
-							...$api->data(),
-							'field' => $field
-						]
+						'data'   => [...$api->data(), 'field' => $field]
 					]);
 
 					return $fieldApi->call(

@@ -128,21 +128,22 @@ class LayoutField extends BlocksField
 				string $fieldName,
 				string|null $path = null
 			) use ($field): array {
+				/**
+				 * @var \Kirby\Cms\Api $api
+				 */
+				$api   = $this;
 				$form  = $field->attrsForm();
 				$field = $form->field($fieldName);
 
-				$fieldApi = $this->clone([
+				$fieldApi = $api->clone([
 					'routes' => $field->api(),
-					'data'   => [
-						...$this->data(),
-						'field' => $field
-					]
+					'data'   => [...$api->data(), 'field' => $field]
 				]);
 
 				return $fieldApi->call(
 					$path,
-					$this->requestMethod(),
-					$this->requestData()
+					$api->requestMethod(),
+					$api->requestData()
 				);
 			}
 		];
@@ -288,31 +289,17 @@ class LayoutField extends BlocksField
 		return $this->selector;
 	}
 
-	protected function setLayouts(array|null $layouts): void
-	{
-		$this->layouts = $layouts;
-	}
-
-	/**
-	 * Layout selector's styles such as size (`small`, `medium`, `large` or `huge`) and columns
-	 */
-	protected function setSelector(array|null $selector): void
-	{
-		$this->selector = $selector;
-	}
-
-	protected function setSettings(array|string|null $settings): void
-	{
-		$this->settings = $settings;
-	}
-
 	public function settings(): Fieldset|null
 	{
 		if (isset($this->settingsFieldset) === true) {
 			return $this->settingsFieldset;
 		}
 
-		if ($this->settings === null || $this->settings === [] || $this->settings === '') {
+		if (
+			$this->settings === null ||
+			$this->settings === [] ||
+			$this->settings === ''
+		) {
 			return $this->settingsFieldset = null;
 		}
 
