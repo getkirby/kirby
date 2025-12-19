@@ -584,45 +584,12 @@ class Blueprint
 		string $tabName,
 		array $sections
 	): array {
+		$sections = Sections::normalizeSectionsProps($sections);
+
 		foreach ($sections as $sectionName => $sectionProps) {
-			// unset / remove section if its property is false
-			if ($sectionProps === false) {
-				unset($sections[$sectionName]);
-				continue;
-			}
-
-			// fallback to default props when true is passed
-			if ($sectionProps === true) {
-				$sectionProps = [];
-			}
-
-			// inject all section extensions
-			$sectionProps = static::extend($sectionProps);
-
-			$sections[$sectionName] = $sectionProps = [
-				...$sectionProps,
-				'name' => $sectionName,
-				'type' => $type = $sectionProps['type'] ?? $sectionName
-			];
-
-			if (empty($type) === true || is_string($type) === false) {
-				$sections[$sectionName] = [
-					'name'  => $sectionName,
-					'label' => 'Invalid section type for section "' . $sectionName . '"',
-					'type'  => 'info',
-					'text'  => 'The following section types are available: ' . static::helpList(array_keys(Section::$types))
-				];
-			} elseif (isset(Section::$types[$type]) === false) {
-				$sections[$sectionName] = [
-					'name'  => $sectionName,
-					'label' => 'Invalid section type ("' . $type . '")',
-					'type'  => 'info',
-					'text'  => 'The following section types are available: ' . static::helpList(array_keys(Section::$types))
-				];
-			}
 
 			if ($sectionProps['type'] === 'fields') {
-				$fields = Blueprint::fieldsProps($sectionProps['fields'] ?? []);
+				$fields = Fields::normalizeFieldsProps($sectionProps['fields'] ?? []);
 
 				// inject guide fields guide
 				if ($fields === []) {
