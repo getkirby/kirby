@@ -7,7 +7,42 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(EmailField::class)]
 class EmailFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testisValid(): void
+	{
+		$field = $this->field('email', [
+			'value' => 'mail@getkirby.com'
+		]);
+		$this->assertTrue($field->isValid());
+
+		$field = $this->field('email', [
+			'value' => 'mail[at]getkirby.com'
+		]);
+		$this->assertFalse($field->isValid());
+	}
+
+	public function testMinLength(): void
+	{
+		$field = $this->field('email', [
+			'value' => 'mail@test.com',
+			'minlength' => 14
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('minlength', $field->errors());
+	}
+
+	public function testMaxLength(): void
+	{
+		$field = $this->field('email', [
+			'value'     => 'mail@test.com',
+			'maxlength' => 12
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('maxlength', $field->errors());
+	}
+
+	public function testProps(): void
 	{
 		$field = $this->field('email');
 		$props = $field->props();
@@ -42,42 +77,5 @@ class EmailFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
-	}
-
-	public function testEmailValidation(): void
-	{
-		$field = $this->field('email', [
-			'value' => 'mail@getkirby.com'
-		]);
-
-		$this->assertTrue($field->isValid());
-
-		$field = $this->field('email', [
-			'value' => 'mail[at]getkirby.com'
-		]);
-
-		$this->assertFalse($field->isValid());
-	}
-
-	public function testMinLength(): void
-	{
-		$field = $this->field('email', [
-			'value' => 'mail@test.com',
-			'minlength' => 14
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('minlength', $field->errors());
-	}
-
-	public function testMaxLength(): void
-	{
-		$field = $this->field('email', [
-			'value'     => 'mail@test.com',
-			'maxlength' => 12
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('maxlength', $field->errors());
 	}
 }

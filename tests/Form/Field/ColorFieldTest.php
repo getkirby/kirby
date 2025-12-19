@@ -9,47 +9,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ColorField::class)]
 class ColorFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('color');
-		$props = $field->props();
-
-		ksort($props);
-
-		$expected = [
-			'alpha'       => false,
-			'autofocus'   => false,
-			'disabled'    => false,
-			'format'      => 'hex',
-			'help'        => null,
-			'hidden'      => false,
-			'icon'        => null,
-			'label'       => 'Color',
-			'mode'        => 'picker',
-			'name'        => 'color',
-			'options'     => [],
-			'placeholder' => null,
-			'required'    => false,
-			'saveable'    => true,
-			'translate'   => true,
-			'type'        => 'color',
-			'when'        => null,
-			'width'       => '1/1',
-		];
-
-		$this->assertSame($expected, $props);
-	}
-
-	public function testEmptyColor(): void
-	{
-		$field = $this->field('color', [
-			'value' => null
-		]);
-
-		$this->assertSame('', $field->toFormValue());
-		$this->assertSame('', $field->toStoredValue());
-	}
-
 	public function testDefault(): void
 	{
 		$field = $this->field('color', [
@@ -213,15 +172,54 @@ class ColorFieldTest extends TestCase
 		], $field->options());
 	}
 
+	public function testProps(): void
+	{
+		$field = $this->field('color');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'alpha'       => false,
+			'autofocus'   => false,
+			'disabled'    => false,
+			'format'      => 'hex',
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => null,
+			'label'       => 'Color',
+			'mode'        => 'picker',
+			'name'        => 'color',
+			'options'     => [],
+			'placeholder' => null,
+			'required'    => false,
+			'saveable'    => true,
+			'translate'   => true,
+			'type'        => 'color',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
 	public function testReset(): void
 	{
 		$field = $this->field('color');
 		$field->fill('#efefef');
-
 		$this->assertSame('#efefef', $field->toFormValue());
 
 		$field->reset();
+		$this->assertSame('', $field->toFormValue());
+	}
+
+	public function testValueEmpty(): void
+	{
+		$field = $this->field('color', [
+			'value' => null
+		]);
 
 		$this->assertSame('', $field->toFormValue());
+		$this->assertSame('', $field->toStoredValue());
 	}
 }

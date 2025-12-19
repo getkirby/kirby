@@ -10,48 +10,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(DateTimeField::class)]
 class DateFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('date');
-		$props = $field->props();
-
-		ksort($props);
-
-		$expected = [
-			'autofocus'   => false,
-			'calendar'    => true,
-			'disabled'    => false,
-			'display'     => 'YYYY-MM-DD',
-			'format'      => 'Y-m-d',
-			'help'        => null,
-			'hidden'      => false,
-			'icon'        => 'calendar',
-			'label'       => 'Date',
-			'max'         => null,
-			'min'         => null,
-			'name'        => 'date',
-			'required'    => false,
-			'saveable'    => true,
-			'step'        => ['size' => 1, 'unit' => 'day'],
-			'time'        => false,
-			'translate'   => true,
-			'type'        => 'date',
-			'when'        => null,
-			'width'       => '1/1',
-		];
-
-		$this->assertSame($expected, $props);
-	}
-
-	public function testEmptyDate(): void
-	{
-		$field = $this->field('date', [
-			'value' => null
-		]);
-
-		$this->assertSame('', $field->value());
-	}
-
 	public function testMinMax(): void
 	{
 		// empty
@@ -143,43 +101,47 @@ class DateFieldTest extends TestCase
 		], $field->errors());
 	}
 
+	public function testProps(): void
+	{
+		$field = $this->field('date');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'calendar'    => true,
+			'disabled'    => false,
+			'display'     => 'YYYY-MM-DD',
+			'format'      => 'Y-m-d',
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => 'calendar',
+			'label'       => 'Date',
+			'max'         => null,
+			'min'         => null,
+			'name'        => 'date',
+			'required'    => false,
+			'saveable'    => true,
+			'step'        => ['size' => 1, 'unit' => 'day'],
+			'time'        => false,
+			'translate'   => true,
+			'type'        => 'date',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
 	public function testReset(): void
 	{
 		$field = $this->field('date');
 		$field->fill('2012-12-12');
-
 		$this->assertSame('2012-12-12 00:00:00', $field->toFormValue());
 
 		$field->reset();
-
 		$this->assertSame('', $field->toFormValue());
-	}
-
-	public static function valueProvider(): array
-	{
-		return [
-			['12.12.2012', date('Y-m-d H:i:s', strtotime('2012-12-12'))],
-			['2016-11-21', date('Y-m-d H:i:s', strtotime('2016-11-21'))],
-			['2016-11-21 12:12:12', date('Y-m-d H:i:s', strtotime('2016-11-21 12:10:00')), 5],
-			['something', ''],
-		];
-	}
-
-	public function testSave(): void
-	{
-		// default value
-		$field = $this->field('date', [
-			'value' => '12.12.2012',
-		]);
-
-		$this->assertSame('2012-12-12', $field->data());
-
-		// empty value
-		$field = $this->field('date', [
-			'value'  => null,
-		]);
-
-		$this->assertSame('', $field->data());
 	}
 
 	/**
@@ -194,6 +156,34 @@ class DateFieldTest extends TestCase
 
 		$now = (new Date())->round('minute', 5)->toString(timezone: false);
 		$this->assertSame($now, $field->default());
+	}
+
+	public function testToStoredValue(): void
+	{
+		// default value
+		$field = $this->field('date', [
+			'value' => '12.12.2012',
+		]);
+
+		$this->assertSame('2012-12-12', $field->toStoredValue());
+
+		// empty value
+		$field = $this->field('date', [
+			'value'  => null,
+		]);
+
+		$this->assertSame('', $field->toStoredValue());
+	}
+
+	public static function valueProvider(): array
+	{
+		return [
+			['12.12.2012', date('Y-m-d H:i:s', strtotime('2012-12-12'))],
+			['2016-11-21', date('Y-m-d H:i:s', strtotime('2016-11-21'))],
+			['2016-11-21 12:12:12', date('Y-m-d H:i:s', strtotime('2016-11-21 12:10:00')), 5],
+			['something', ''],
+			[null, ''],
+		];
 	}
 
 	#[DataProvider('valueProvider')]

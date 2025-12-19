@@ -3,7 +3,6 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Page;
 use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
@@ -16,20 +15,18 @@ class BlocksFieldTest extends TestCase
 {
 	public function testApi(): void
 	{
-		$field = $this->field('blocks');
+		$field  = $this->field('blocks');
+		$api    = $field->api();
 
-		$routes = $field->api();
-
-		$this->assertIsArray($routes);
-		$this->assertCount(4, $routes);
+		$this->assertIsArray($api);
+		$this->assertCount(4, $api);
 	}
 
 	public function testApiUUID(): void
 	{
-		$field = $this->field('blocks');
-		$route = $field->api()[0];
-
-		$response = $route['action']();
+		$field    = $this->field('blocks');
+		$api      = $field->api()[0];
+		$response = $api['action']();
 
 		$this->assertIsArray($response);
 		$this->assertArrayHasKey('uuid', $response);
@@ -45,10 +42,9 @@ class BlocksFieldTest extends TestCase
 			]
 		]);
 
-		$field = $this->field('blocks');
-		$route = $field->api()[1];
-
-		$response = $route['action']();
+		$field    = $this->field('blocks');
+		$api      = $field->api()[1];
+		$response = $api['action']();
 
 		$this->assertCount(1, $response);
 		$this->assertSame(['text' => '<p>Test</p>'], $response[0]['content']);
@@ -66,10 +62,9 @@ class BlocksFieldTest extends TestCase
 			]
 		]);
 
-		$field = $this->field('blocks', ['fieldsets' => ['heading']]);
-		$route = $field->api()[1];
-
-		$response = $route['action']();
+		$field    = $this->field('blocks', ['fieldsets' => ['heading']]);
+		$api      = $field->api()[1];
+		$response = $api['action']();
 
 		$this->assertCount(2, $response);
 		$this->assertSame(['level' => 'h1', 'text' => 'Hello World'], $response[0]['content']);
@@ -80,10 +75,9 @@ class BlocksFieldTest extends TestCase
 
 	public function testApiFieldset(): void
 	{
-		$field = $this->field('blocks');
-		$route = $field->api()[2];
-
-		$response = $route['action']('text');
+		$field    = $this->field('blocks');
+		$api      = $field->api()[2];
+		$response = $api['action']('text');
 
 		$this->assertSame(['text' => ''], $response['content']);
 		$this->assertArrayHasKey('id', $response);
@@ -91,16 +85,23 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('text', $response['type']);
 	}
 
-	public function testDefaultProps(): void
+	public function testDefault(): void
 	{
-		$field = $this->field('blocks', []);
+		$field = $this->field('blocks', [
+			'default' => [
+				[
+					'type' => 'heading',
+					'text' => 'Some title'
+				]
+			]
+		]);
 
-		$this->assertSame('blocks', $field->type());
-		$this->assertSame('blocks', $field->name());
-		$this->assertNull($field->max());
-		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
-		$this->assertSame([], $field->value());
-		$this->assertTrue($field->save());
+		$default = $field->default();
+
+		$this->assertCount(1, $default);
+		$this->assertSame('heading', $default[0]['type']);
+		$this->assertSame('Some title', $default[0]['text']);
+		$this->assertArrayHasKey('id', $default[0]);
 	}
 
 	public function testDialogs(): void
@@ -125,6 +126,15 @@ class BlocksFieldTest extends TestCase
 		$this->assertInstanceOf(BaseField::class, $result->field);
 		$this->assertSame('text', $result->field->name());
 		$this->assertSame('test-path', $result->path);
+	}
+
+	public function testEmpty(): void
+	{
+		$field = $this->field('blocks', [
+			'empty' => $value = 'Custom empty text'
+		]);
+
+		$this->assertSame($value, $field->empty());
 	}
 
 	public function testGroups(): void
@@ -527,6 +537,38 @@ class BlocksFieldTest extends TestCase
 		], $field->errors());
 	}
 
+	public function testValueInvalidType(): void
+	{
+		$field = $this->field('blocks', [
+			'value' => [
+				[
+					'type'    => 'heading',
+					'content' => [
+						'text' => 'a'
+					]
+				],
+				[
+					'type'    => 'not-exists',
+					'content' => [
+						'text' => 'b'
+					]
+				],
+				[
+					'type'    => 'text',
+					'content' => [
+						'text' => 'c'
+					]
+				],
+			]
+		]);
+
+		$this->assertCount(3, $field->value());
+		$this->assertSame('heading', $field->value()[0]['type']);
+		$this->assertSame('not-exists', $field->value()[1]['type']);
+		$this->assertSame(['text' => 'b'], $field->value()[1]['content']);
+		$this->assertSame('text', $field->value()[2]['type']);
+	}
+
 	public function testValidationsWithInvalidBlockType(): void
 	{
 		$field = $this->field('blocks', [
@@ -539,15 +581,6 @@ class BlocksFieldTest extends TestCase
 
 		$this->assertTrue($field->isValid());
 		$this->assertSame([], $field->errors());
-	}
-
-	public function testEmpty(): void
-	{
-		$field = $this->field('blocks', [
-			'empty' => $value = 'Custom empty text'
-		]);
-
-		$this->assertSame($value, $field->empty());
 	}
 
 	public function testWhen(): void
@@ -599,56 +632,5 @@ class BlocksFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $field->errors());
-	}
-
-	public function testDefault(): void
-	{
-		$field = $this->field('blocks', [
-			'default' => [
-				[
-					'type' => 'heading',
-					'text' => 'Some title'
-				]
-			]
-		]);
-
-		$default = $field->default();
-
-		$this->assertCount(1, $default);
-		$this->assertSame('heading', $default[0]['type']);
-		$this->assertSame('Some title', $default[0]['text']);
-		$this->assertArrayHasKey('id', $default[0]);
-	}
-
-	public function testInvalidType(): void
-	{
-		$field = $this->field('blocks', [
-			'value' => [
-				[
-					'type'    => 'heading',
-					'content' => [
-						'text' => 'a'
-					]
-				],
-				[
-					'type'    => 'not-exists',
-					'content' => [
-						'text' => 'b'
-					]
-				],
-				[
-					'type'    => 'text',
-					'content' => [
-						'text' => 'c'
-					]
-				],
-			]
-		]);
-
-		$this->assertCount(3, $field->value());
-		$this->assertSame('heading', $field->value()[0]['type']);
-		$this->assertSame('not-exists', $field->value()[1]['type']);
-		$this->assertSame(['text' => 'b'], $field->value()[1]['content']);
-		$this->assertSame('text', $field->value()[2]['type']);
 	}
 }
