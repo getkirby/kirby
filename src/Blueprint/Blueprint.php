@@ -9,7 +9,6 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
-use Kirby\Form\Field;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -66,7 +65,7 @@ class Blueprint
 		$props = static::extend($props);
 
 		// apply any blueprint preset
-		$props = $this->preset($props);
+		$props = static::preset($props);
 
 		// normalize the name
 		$props['name'] ??= 'default';
@@ -76,9 +75,9 @@ class Blueprint
 		$props['title']   = $this->i18n($props['title']);
 
 		// convert all shortcuts
-		$props = $this->convertFieldsToSections('main', $props);
-		$props = $this->convertSectionsToColumns('main', $props);
-		$props = $this->convertColumnsToTabs('main', $props);
+		$props = FieldsProps::convertToSections('main-fields', $props);
+		$props = SectionsProps::convertToColumns($props);
+		$props = ColumnsProps::convertToTabs('main', $props);
 
 		// normalize all tabs
 		$props['tabs'] = $this->normalizeTabs($props['tabs'] ?? []);
@@ -225,78 +224,33 @@ class Blueprint
 	}
 
 	/**
-	 * Converts all column definitions, that
-	 * are not wrapped in a tab, into a generic tab
+	 * @deprecated 6.0.0 Use `\Kirby\Blueprint\ColumnsProps::convertToTabs()`
 	 */
 	protected function convertColumnsToTabs(
 		string $tabName,
 		array $props
 	): array {
-		if (isset($props['columns']) === false) {
-			return $props;
-		}
-
-		// wrap everything in a main tab
-		$props['tabs'] = [
-			$tabName => [
-				'columns' => $props['columns']
-			]
-		];
-
-		unset($props['columns']);
-
-		return $props;
+		return ColumnsProps::convertToTabs($tabName, $props);
 	}
 
 	/**
-	 * Converts all field definitions, that are not
-	 * wrapped in a fields section into a generic
-	 * fields section.
+	 * @deprecated 6.0.0 Use `\Kirby\Blueprint\FieldsProps::convertToSections()`
 	 */
 	protected function convertFieldsToSections(
 		string $tabName,
 		array $props
 	): array {
-		if (isset($props['fields']) === false) {
-			return $props;
-		}
-
-		// wrap all fields in a section
-		$props['sections'] = [
-			$tabName . '-fields' => [
-				'type'   => 'fields',
-				'fields' => $props['fields']
-			]
-		];
-
-		unset($props['fields']);
-
-		return $props;
+		return FieldsProps::convertToSections($tabName . '-fields', $props);
 	}
 
 	/**
-	 * Converts all sections that are not wrapped in
-	 * columns, into a single generic column.
+	 * @deprecated 6.0.0 Use `\Kirby\Blueprint\SectionsProps::convertToColumns()`
 	 */
 	protected function convertSectionsToColumns(
 		string $tabName,
 		array $props
 	): array {
-		if (isset($props['sections']) === false) {
-			return $props;
-		}
-
-		// wrap everything in one big column
-		$props['columns'] = [
-			[
-				'width'    => '1/1',
-				'sections' => $props['sections']
-			]
-		];
-
-		unset($props['sections']);
-
-		return $props;
+		return SectionsProps::convertToColumns($props);
 	}
 
 	/**
@@ -365,27 +319,27 @@ class Blueprint
 	}
 
 	/**
-	 * @deprecated 6.0.0 Use \Kirby\Blueprint\Fields::fieldError() instead
+	 * @deprecated 6.0.0 Use `\Kirby\Blueprint\FieldProps::forFieldError()` instead
 	 */
 	public static function fieldError(string $name, string $message): array
 	{
-		return Fields::fieldError($name, $message);
+		return FieldProps::forFieldError($name, $message);
 	}
 
 	/**
-	 * @deprecated 6.0.0 Use \Kirby\Blueprint\Fields::normalizeFieldProps() instead
+	 * @deprecated 6.0.0 Use `\Kirby\Blueprint\FieldProps::normalize()` instead
 	 */
 	public static function fieldProps(array|string $props): array
 	{
-		return Fields::normalizeFieldProps($props);
+		return FieldProps::normalize($props);
 	}
 
 	/**
-	 * @deprecated 6.0.0 Use \Kirby\Blueprint\Fields::normalizeFieldsProps() instead
+	 * @deprecated 6.0.0 Use `\Kirby\Blueprint\FieldsProps::normalize()` instead
 	 */
 	public static function fieldsProps($fields): array
 	{
-		return Fields::normalizeFieldsProps($fields);
+		return FieldsProps::normalize($fields);
 	}
 
 	/**
@@ -496,37 +450,16 @@ class Blueprint
 	 */
 	protected function normalizeColumns(string $tabName, array $columns): array
 	{
-		foreach ($columns as $columnKey => $columnProps) {
-			// unset/remove column if its property is not array
-			if (is_array($columnProps) === false) {
-				unset($columns[$columnKey]);
-				continue;
-			}
+		$columns = ColumnsProps::normalize($tabName, $columns);
 
-			$columnProps = $this->convertFieldsToSections(
-				$tabName . '-col-' . $columnKey,
-				$columnProps
+		foreach ($columns as $columnKey => $columnProps) {
+
+			$columnProps['sections'] = $this->normalizeSections(
+				$tabName,
+				$columnProps['sections'] ?? []
 			);
 
-			// inject getting started info, if the sections are empty
-			if (empty($columnProps['sections']) === true) {
-				$columnProps['sections'] = [
-					$tabName . '-info-' . $columnKey => [
-						'label' => 'Column (' . ($columnProps['width'] ?? '1/1') . ')',
-						'type'  => 'info',
-						'text'  => 'No sections yet'
-					]
-				];
-			}
-
-			$columns[$columnKey] = [
-				...$columnProps,
-				'width'    => $columnProps['width'] ?? '1/1',
-				'sections' => $this->normalizeSections(
-					$tabName,
-					$columnProps['sections'] ?? []
-				)
-			];
+			$columns[$columnKey] = $columnProps;
 		}
 
 		return $columns;
@@ -544,14 +477,14 @@ class Blueprint
 	}
 
 	/**
-	 * @deprecated 6.0.0 Use `Kirby\Blueprint\Options::normalizeOptionsProps()` instead
+	 * @deprecated 6.0.0 Use `\Kirby\Blueprint\OptionsProps::normalize()` instead
 	 */
 	protected function normalizeOptions(
 		array|string|bool|null $options,
 		array $defaults,
 		array $aliases = []
 	): array {
-		return Options::normalizeOptionsProps($options, $defaults, $aliases);
+		return OptionsProps::normalize($options, $defaults, $aliases);
 	}
 
 	/**
@@ -561,25 +494,17 @@ class Blueprint
 		string $tabName,
 		array $sections
 	): array {
-		$sections = Sections::normalizeSectionsProps($sections);
+		$sections = SectionsProps::normalize($sections);
 
 		foreach ($sections as $sectionName => $sectionProps) {
-
 			if ($sectionProps['type'] === 'fields') {
-				$fields = Fields::normalizeFieldsProps($sectionProps['fields'] ?? []);
+				$fields = $sectionProps['fields'];
 
-				// inject guide fields guide
-				if ($fields === []) {
-					$fields = [
-						$tabName . '-info' => Fields::missingFieldsError($tabName . '-info')
-					];
-				} else {
-					foreach ($fields as $fieldName => $fieldProps) {
-						if (isset($this->fields[$fieldName]) === true) {
-							$this->fields[$fieldName] = $fields[$fieldName] = Fields::existingFieldError($fieldName, $fieldProps['label'] ?? null);
-						} else {
-							$this->fields[$fieldName] = $fieldProps;
-						}
+				foreach ($fields as $fieldName => $fieldProps) {
+					if (isset($this->fields[$fieldName]) === true) {
+						$this->fields[$fieldName] = $fields[$fieldName] = FieldProps::forExistingFieldError($fieldName, $fieldProps['label'] ?? null);
+					} else {
+						$this->fields[$fieldName] = $fieldProps;
 					}
 				}
 
@@ -598,33 +523,14 @@ class Blueprint
 	 */
 	protected function normalizeTabs($tabs): array
 	{
-		if (is_array($tabs) === false) {
-			$tabs = [];
-		}
+		$tabs = TabsProps::normalize($tabs);
 
 		foreach ($tabs as $tabName => $tabProps) {
-			// unset / remove tab if its property is false
-			if ($tabProps === false) {
-				unset($tabs[$tabName]);
-				continue;
-			}
-
-			// inject all tab extensions
-			$tabProps = static::extend($tabProps);
-
-			// inject a preset if available
-			$tabProps = $this->preset($tabProps);
-
-			$tabProps = $this->convertFieldsToSections($tabName, $tabProps);
-			$tabProps = $this->convertSectionsToColumns($tabName, $tabProps);
-
 			$tabs[$tabName] = [
 				...$tabProps,
-				'columns' => $this->normalizeColumns($tabName, $tabProps['columns'] ?? []),
-				'icon'    => $tabProps['icon']  ?? null,
-				'label'   => $this->i18n($tabProps['label'] ?? Str::label($tabName)),
+				'columns' => $this->normalizeColumns($tabName, $tabProps['columns']),
+				'label'   => $this->i18n($tabProps['label']),
 				'link'    => $this->model->panel()->url(true) . '/?tab=' . $tabName,
-				'name'    => $tabName,
 			];
 		}
 
@@ -634,7 +540,7 @@ class Blueprint
 	/**
 	 * Injects a blueprint preset
 	 */
-	protected function preset(array $props): array
+	public static function preset(array $props): array
 	{
 		if (isset($props['preset']) === false) {
 			return $props;
