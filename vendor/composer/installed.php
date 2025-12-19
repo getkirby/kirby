@@ -160,12 +160,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'symfony/polyfill-php72' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '*',
-            ),
-        ),
         'symfony/yaml' => array(
             'pretty_version' => 'v7.4.1',
             'version' => '7.4.1.0',
