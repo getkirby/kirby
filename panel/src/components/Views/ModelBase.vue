@@ -3,6 +3,7 @@
  * @internal
  */
 export default {
+	feature: "view",
 	props: {
 		api: String,
 		blueprint: String,
@@ -40,13 +41,17 @@ export default {
 			return this.versions.changes;
 		},
 		diff() {
-			return this.$panel.content.diff();
+			return this.$panel.content.diff({
+				model: this.$panel[this.$options.feature].props
+			});
 		},
 		editor() {
 			return this.lock.user.email;
 		},
 		hasDiff() {
-			return this.$panel.content.hasDiff();
+			return this.$panel.content.hasDiff({
+				model: this.$panel[this.$options.feature].props
+			});
 		},
 		isLocked() {
 			return this.lock.isLocked;
@@ -82,7 +87,7 @@ export default {
 		},
 		async onDiscard() {
 			await this.$panel.content.discard({
-				api: this.api,
+				model: this.$panel[this.$options.feature].props,
 				language: this.$panel.language.code
 			});
 
@@ -93,14 +98,14 @@ export default {
 			// update the content for the current view
 			// this will also refresh the content prop
 			this.$panel.content.updateLazy(values, {
-				api: this.api,
+				model: this.$panel[this.$options.feature].props,
 				language: this.$panel.language.code
 			});
 		},
 		async onSubmit() {
 			try {
 				await this.$panel.content.publish(this.content, {
-					api: this.api,
+					model: this.$panel[this.$options.feature].props,
 					language: this.$panel.language.code
 				});
 
