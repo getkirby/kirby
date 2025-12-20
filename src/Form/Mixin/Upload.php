@@ -18,6 +18,10 @@ trait Upload
 	 */
 	protected mixed $uploads;
 
+	/**
+	 * Uploads and creates files via the API upload handler
+	 * @codeCoverageIgnore
+	 */
 	public function upload(
 		Api $api,
 		array|false $params,

@@ -93,13 +93,13 @@ class FilePickerField extends ModelPickerField
 				'pattern' => 'upload',
 				'method'  => 'POST',
 				'action'  => function () use ($field) {
+					// @codeCoverageIgnoreStart
 					/**
 					 * @var \Kirby\Api\Api
 					 */
 					$api = $this;
 
 					// move_uploaded_file() not working with unit test
-					// @codeCoverageIgnoreStart
 					return $field->upload(
 						$api,
 						$field->uploads(),

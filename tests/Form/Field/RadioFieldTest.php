@@ -17,4 +17,32 @@ class RadioFieldTest extends TestCase
 		$this->assertSame([], $field->options());
 		$this->assertTrue($field->hasValue());
 	}
+
+	public function testValidations(): void
+	{
+		$field = $this->field('radio', [
+			'options' => [
+				'one'   => 'Option One',
+				'two'   => 'Option Two',
+				'three' => 'Option Three',
+			],
+			'value' => 'one',
+		]);
+
+		$this->assertTrue($field->isValid());
+
+		$field = $this->field('radio', [
+			'options' => [
+				'one'   => 'Option One',
+				'two'   => 'Option Two',
+				'three' => 'Option Three',
+			],
+			'value' => 'foo',
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame([
+			'option' => 'Please select a valid option',
+		], $field->errors());
+	}
 }

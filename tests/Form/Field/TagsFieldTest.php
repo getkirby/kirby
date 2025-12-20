@@ -7,6 +7,17 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(TagsField::class)]
 class TagsFieldTest extends TestCase
 {
+	public function testDefault(): void
+	{
+		$field = $this->field('tags');
+		$this->assertSame([], $field->default());
+
+		$field = $this->field('tags', [
+			'default' => ['a', 'b', 'c']
+		]);
+		$this->assertSame(['a', 'b', 'c'], $field->default());
+	}
+
 	public function testIsValid(): void
 	{
 		$field = $this->field('tags', [
@@ -206,5 +217,23 @@ class TagsFieldTest extends TestCase
 		$field->reset();
 
 		$this->assertSame([], $field->toFormValue());
+	}
+
+	public function testToFormValue(): void
+	{
+		$field = $this->field('tags', [
+			'value' => ['a', 'b', 'c'],
+		]);
+
+		$this->assertSame(['a', 'b', 'c'], $field->toFormValue());
+	}
+
+	public function testToStoredValue(): void
+	{
+		$field = $this->field('tags', [
+			'value' => ['a', 'b', 'c'],
+		]);
+
+		$this->assertSame('a, b, c', $field->toStoredValue());
 	}
 }

@@ -287,6 +287,12 @@ class FilePickerFieldTest extends TestCase
 
 		$field = $this->field('files');
 		$this->assertSame('id', $field->store());
+
+		// Belongs to parent model
+		$field = $this->field('files', ['model' => $this->model()]);
+		$file  = $this->app->file('test/a.jpg');
+		$this->assertSame('id', $field->store());
+		$this->assertSame('filename', $field->store($file));
 	}
 
 	public function testToModel(): void

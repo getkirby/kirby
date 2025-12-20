@@ -277,7 +277,7 @@ class Fields extends Collection
 		foreach ($this->data as $field) {
 			if ($field->hasValue() === true) {
 				if ($field instanceof Field) {
-					$field->fillWithEmptyValue();
+					$field->fillWithEmptyValue(); // @codeCoverageIgnore
 				} else {
 					$field->reset();
 				}

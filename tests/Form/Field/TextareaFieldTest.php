@@ -8,6 +8,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(TextareaField::class)]
 class TextareaFieldTest extends TestCase
 {
+	public function testApi(): void
+	{
+		$field = $this->field('textarea');
+		$this->assertSame('upload', $field->api()[0]['pattern']);
+	}
+
 	public function testButtonsDisabled(): void
 	{
 		$field = $this->field('textarea', [
@@ -45,6 +51,15 @@ class TextareaFieldTest extends TestCase
 		$dialogs = $field->dialogs();
 		$dialog  = $dialogs['files']();
 		$this->assertInstanceOf(FilePickerDialogController::class, $dialog);
+	}
+
+	public function testFont(): void
+	{
+		$field = $this->field('textarea');
+		$this->assertSame('sans-serif', $field->font());
+
+		$field = $this->field('textarea', ['font' => 'monospace']);
+		$this->assertSame('monospace', $field->font());
 	}
 
 	public function testMaxLength(): void

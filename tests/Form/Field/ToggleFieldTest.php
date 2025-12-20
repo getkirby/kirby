@@ -25,6 +25,29 @@ class ToggleFieldTest extends TestCase
 		$this->assertTrue($field->default() === false);
 	}
 
+	public function testFill(): void
+	{
+		$field = $this->field('toggle');
+
+		$field->fill(true);
+		$this->assertTrue($field->toFormValue());
+
+		$field->fill('true');
+		$this->assertTrue($field->toFormValue());
+
+		$field->fill('on');
+		$this->assertTrue($field->toFormValue());
+
+		$field->fill(false);
+		$this->assertFalse($field->toFormValue());
+
+		$field->fill('false');
+		$this->assertFalse($field->toFormValue());
+
+		$field->fill('off');
+		$this->assertFalse($field->toFormValue());
+	}
+
 	public function testProps(): void
 	{
 		$field = $this->field('toggle');

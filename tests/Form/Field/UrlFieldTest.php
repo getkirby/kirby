@@ -57,6 +57,9 @@ class UrlFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
+		$this->assertSame([
+			'url' => 'Please enter a valid URL'
+		], $field->errors());
 	}
 
 	public function testValidationsMaxLength(): void

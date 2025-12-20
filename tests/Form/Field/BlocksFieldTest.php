@@ -97,11 +97,13 @@ class BlocksFieldTest extends TestCase
 		]);
 
 		$default = $field->default();
-
 		$this->assertCount(1, $default);
 		$this->assertSame('heading', $default[0]['type']);
 		$this->assertSame('Some title', $default[0]['text']);
 		$this->assertArrayHasKey('id', $default[0]);
+
+		$field = $this->field('blocks', ['default' => null]);
+		$this->assertNull($field->default());
 	}
 
 	public function testDialogs(): void

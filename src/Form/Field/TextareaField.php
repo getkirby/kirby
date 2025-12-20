@@ -101,6 +101,7 @@ class TextareaField extends InputField
 				'pattern' => 'upload',
 				'method'  => 'POST',
 				'action'  => function () use ($field) {
+					// @codeCoverageIgnoreStart
 					/**
 					 * @var \Kirby\Api\Api
 					 */
@@ -116,6 +117,7 @@ class TextareaField extends InputField
 							),
 						]
 					);
+					// @codeCoverageIgnoreEnd
 				}
 			]
 		];
