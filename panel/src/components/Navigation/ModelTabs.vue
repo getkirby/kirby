@@ -8,7 +8,10 @@
  */
 export default {
 	props: {
-		diff: Object,
+		diff: {
+			type: Object,
+			default: () => ({})
+		},
 		tab: String,
 		tabs: {
 			type: Array,
@@ -39,10 +42,19 @@ export default {
 					changes.includes(field.toLowerCase())
 				).length;
 
-				return {
-					...tab,
-					badge: changesInTab > 0 ? { text: changesInTab } : null
+				if (changesInTab > 0) {
+					tab.badge = { text: changesInTab };
+				}
+
+				// remove link to rather use $panel.view.reload with the tab name
+				delete tab.link;
+
+				tab.click = (e) => {
+					e?.preventDefault();
+					this.$panel.view.reload({ query: { tab: tab.name } });
 				};
+
+				return tab;
 			});
 		}
 	}
