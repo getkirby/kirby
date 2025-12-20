@@ -20,6 +20,7 @@
 				<slot name="label">
 					<k-label
 						v-if="label"
+						:has-diff="hasDiff"
 						:input="input"
 						:required="required"
 						:title="label"
@@ -70,7 +71,12 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
-	emits: ["blur", "focus"]
+	emits: ["blur", "focus"],
+	computed: {
+		hasDiff() {
+			return Object.hasOwn(this.$panel.content.diff(), this.name);
+		}
+	}
 };
 </script>
 

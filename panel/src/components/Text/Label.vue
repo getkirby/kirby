@@ -3,6 +3,7 @@
 		:is="element"
 		:for="input"
 		:class="'k-' + type + '-label'"
+		:data-has-diff="hasDiff"
 		class="k-label"
 	>
 		<k-link v-if="link" :to="link">
@@ -29,6 +30,7 @@
  */
 export default {
 	props: {
+		hasDiff: Boolean,
 		/**
 		 * ID of the input element to which the label belongs
 		 */
@@ -128,5 +130,12 @@ export default {
 	> .k-label
 	abbr:has(+ abbr.k-label-invalid) {
 	display: none;
+}
+
+.k-label[data-has-diff="true"] .k-label-text {
+	margin: -0.1em -0.2em;
+	padding: 0.1em 0.2em;
+	border-radius: var(--rounded);
+	background: var(--color-orange-350);
 }
 </style>
