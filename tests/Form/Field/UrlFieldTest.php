@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UrlField::class)]
 class UrlFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testProps(): void
 	{
 		$field = $this->field('url');
 		$props = $field->props();
@@ -44,7 +44,7 @@ class UrlFieldTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
-	public function testUrlValidation(): void
+	public function testValidationsUrl(): void
 	{
 		$field = $this->field('url', [
 			'value' => 'https://getkirby.com'
@@ -59,18 +59,7 @@ class UrlFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testMinLength(): void
-	{
-		$field = $this->field('url', [
-			'value' => 'https://test.com',
-			'minlength' => 17
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('minlength', $field->errors());
-	}
-
-	public function testMaxLength(): void
+	public function testValidationsMaxLength(): void
 	{
 		$field = $this->field('url', [
 			'value'     => 'https://test.com',
@@ -79,5 +68,16 @@ class UrlFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('maxlength', $field->errors());
+	}
+
+	public function testValidationsMinLength(): void
+	{
+		$field = $this->field('url', [
+			'value' => 'https://test.com',
+			'minlength' => 17
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 }

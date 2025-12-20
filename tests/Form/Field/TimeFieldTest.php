@@ -9,38 +9,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(DateTimeField::class)]
 class TimeFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('time');
-		$props = $field->props();
-
-		ksort($props);
-
-		$expected = [
-			'autofocus'   => false,
-			'disabled'    => false,
-			'display'     => 'HH:mm',
-			'format'      => 'H:i:s',
-			'help'        => null,
-			'hidden'      => false,
-			'icon'        => 'clock',
-			'label'       => 'Time',
-			'max'         => null,
-			'min'         => null,
-			'name'        => 'time',
-			'notation'    => 24,
-			'required'    => false,
-			'saveable'    => true,
-			'step'        => ['size' => 5, 'unit' => 'minute'],
-			'translate'   => true,
-			'type'        => 'time',
-			'when'        => null,
-			'width'       => '1/1',
-		];
-
-		$this->assertSame($expected, $props);
-	}
-
 	public function testDisplayFor12HourNotation(): void
 	{
 		$field = $this->field('time', [
@@ -156,6 +124,38 @@ class TimeFieldTest extends TestCase
 		$this->assertTrue($field->isInvalid());
 	}
 
+	public function testProps(): void
+	{
+		$field = $this->field('time');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'disabled'    => false,
+			'display'     => 'HH:mm',
+			'format'      => 'H:i:s',
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => 'clock',
+			'label'       => 'Time',
+			'max'         => null,
+			'min'         => null,
+			'name'        => 'time',
+			'notation'    => 24,
+			'required'    => false,
+			'saveable'    => true,
+			'step'        => ['size' => 5, 'unit' => 'minute'],
+			'translate'   => true,
+			'type'        => 'time',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
 	public static function valueProvider(): array
 	{
 		return [
@@ -173,13 +173,13 @@ class TimeFieldTest extends TestCase
 	}
 
 	#[DataProvider('valueProvider')]
-	public function testValue($input, $expected, $step = 1): void
+	public function testToFormValue($input, $expected, $step = 1): void
 	{
 		$field = $this->field('time', [
 			'step'  => $step,
 			'value' => $input,
 		]);
 
-		$this->assertSame($expected, $field->value());
+		$this->assertSame($expected, $field->toFormValue());
 	}
 }

@@ -51,163 +51,6 @@ class PagePickerFieldTest extends TestCase
 		return $this->app->page('a');
 	}
 
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('pages', [
-			'model' => $this->model()
-		]);
-		$props = $field->props();
-
-		ksort($props);
-
-		$expected = [
-			'autofocus'   => false,
-			'disabled'    => false,
-			'empty'       => null,
-			'help'        => null,
-			'hidden'      => false,
-			'image'       => null,
-			'info'        => null,
-			'label'       => 'Pages',
-			'layout'      => 'list',
-			'link'        => true,
-			'max'         => null,
-			'min'         => null,
-			'multiple'    => true,
-			'name'        => 'pages',
-			'query'       => null,
-			'required'    => false,
-			'saveable'    => true,
-			'search'      => true,
-			'size'        => 'auto',
-			'store'       => 'uuid',
-			'subpages'    => true,
-			'text'        => null,
-			'translate'   => true,
-			'type'        => 'pages',
-			'when'        => null,
-			'width'       => '1/1',
-		];
-
-		$this->assertSame($expected, $props);
-	}
-
-	public function testDialogs(): void
-	{
-		$field = $this->field('pages', [
-			'model' => $this->model()
-		]);
-
-		$dialogs = $field->dialogs();
-		$dialog  = $dialogs['picker']();
-		$this->assertInstanceOf(PagePickerDialogController::class, $dialog);
-	}
-
-	public function testValue(): void
-	{
-		$field = $this->field('pages', [
-			'model' => $this->model(),
-			'value' => [
-				'a/aa', // exists
-				'a/ab', // exists
-				'a/ac'  // does not exist
-			]
-		]);
-
-		$expected = [
-			'page://my-aa',
-			'page://my-ab'
-		];
-
-		$this->assertSame($expected, $field->value());
-	}
-
-	public function testMin(): void
-	{
-		$field = $this->field('pages', [
-			'model' => $this->model(),
-			'value' => [
-				'a/aa', // exists
-				'a/ab', // exists
-			],
-			'min' => 3
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertSame(3, $field->min());
-		$this->assertTrue($field->isRequired());
-		$this->assertArrayHasKey('min', $field->errors());
-	}
-
-	public function testMax(): void
-	{
-		$field = $this->field('pages', [
-			'model' => $this->model(),
-			'value' => [
-				'a/aa', // exists
-				'a/ab', // exists
-			],
-			'max' => 1
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertSame(1, $field->max());
-		$this->assertArrayHasKey('max', $field->errors());
-	}
-
-	public function testEmpty(): void
-	{
-		$field = $this->field('pages', [
-			'model' => new Page(['slug' => 'test']),
-			'empty' => 'Test'
-		]);
-
-		$this->assertSame('Test', $field->empty());
-	}
-
-	public function testTranslatedEmpty(): void
-	{
-		$field = $this->field('pages', [
-			'model' => new Page(['slug' => 'test']),
-			'empty' => ['en' => 'Test', 'de' => 'Töst']
-		]);
-
-		$this->assertSame('Test', $field->empty());
-	}
-
-	public function testRequiredProps(): void
-	{
-		$field = $this->field('pages', [
-			'model'    => new Page(['slug' => 'test']),
-			'required' => true
-		]);
-
-		$this->assertTrue($field->required());
-		$this->assertSame(1, $field->min());
-	}
-
-	public function testRequiredInvalid(): void
-	{
-		$field = $this->field('pages', [
-			'model'    => new Page(['slug' => 'test']),
-			'required' => true
-		]);
-
-		$this->assertFalse($field->isValid());
-	}
-
-	public function testRequiredValid(): void
-	{
-		$field = $this->field('pages', [
-			'model'    => new Page(['slug' => 'test']),
-			'required' => true,
-			'value' => [
-				'a/aa',
-			],
-		]);
-
-		$this->assertTrue($field->isValid());
-	}
 
 	public function testApiItems(): void
 	{
@@ -264,12 +107,143 @@ class PagePickerFieldTest extends TestCase
 		$this->assertSame('page://my-b', $api[2]['uuid']);
 	}
 
-	public function testToModel(): void
+	public function testDialogs(): void
 	{
 		$field = $this->field('pages', [
-			'model' => new Page(['slug' => 'test']),
+			'model' => $this->model()
 		]);
 
+		$dialogs = $field->dialogs();
+		$dialog  = $dialogs['picker']();
+		$this->assertInstanceOf(PagePickerDialogController::class, $dialog);
+	}
+
+	public function testEmpty(): void
+	{
+		$field = $this->field('pages', ['empty' => 'Test']);
+		$this->assertSame('Test', $field->empty());
+
+		$field = $this->field('pages', [
+			'empty' => ['en' => 'Test', 'de' => 'Töst']
+		]);
+		$this->assertSame('Test', $field->empty());
+	}
+
+	public function testIsValid(): void
+	{
+		$field = $this->field('pages', ['required' => true]);
+		$this->assertFalse($field->isValid());
+
+		$field = $this->field('pages', [
+			'required' => true,
+			'value'    => ['a/aa'],
+		]);
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMax(): void
+	{
+		$field = $this->field('pages', [
+			'model' => $this->model(),
+			'value' => [
+				'a/aa', // exists
+				'a/ab', // exists
+			],
+			'max' => 1
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame(1, $field->max());
+		$this->assertArrayHasKey('max', $field->errors());
+	}
+
+	public function testMin(): void
+	{
+		$field = $this->field('pages', [
+			'model' => $this->model(),
+			'value' => [
+				'a/aa', // exists
+				'a/ab', // exists
+			],
+			'min' => 3
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame(3, $field->min());
+		$this->assertTrue($field->isRequired());
+		$this->assertArrayHasKey('min', $field->errors());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('pages', [
+			'model' => $this->model()
+		]);
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'disabled'    => false,
+			'empty'       => null,
+			'help'        => null,
+			'hidden'      => false,
+			'image'       => null,
+			'info'        => null,
+			'label'       => 'Pages',
+			'layout'      => 'list',
+			'link'        => true,
+			'max'         => null,
+			'min'         => null,
+			'multiple'    => true,
+			'name'        => 'pages',
+			'query'       => null,
+			'required'    => false,
+			'saveable'    => true,
+			'search'      => true,
+			'size'        => 'auto',
+			'store'       => 'uuid',
+			'subpages'    => true,
+			'text'        => null,
+			'translate'   => true,
+			'type'        => 'pages',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testRequired(): void
+	{
+		$field = $this->field('pages', ['required' => true]);
+		$this->assertTrue($field->required());
+		$this->assertSame(1, $field->min());
+	}
+
+	public function testToFormValue(): void
+	{
+		$field = $this->field('pages', [
+			'model' => $this->model(),
+			'value' => [
+				'a/aa', // exists
+				'a/ab', // exists
+				'a/ac'  // does not exist
+			]
+		]);
+
+		$expected = [
+			'page://my-aa',
+			'page://my-ab'
+		];
+
+		$this->assertSame($expected, $field->toFormValue());
+	}
+
+	public function testToModel(): void
+	{
+		$field = $this->field('pages');
 		$model = $field->toModel('a/aa');
 		$this->assertInstanceOf(Page::class, $model);
 		$this->assertSame('a/aa', $model->id());

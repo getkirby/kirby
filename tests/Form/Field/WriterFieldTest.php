@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(WriterField::class)]
 class WriterFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testProps(): void
 	{
 		$field = $this->field('writer');
 		$props = $field->props();
@@ -47,12 +47,28 @@ class WriterFieldTest extends TestCase
 	{
 		$field = $this->field('writer');
 		$field->fill('test');
-
 		$this->assertSame('test', $field->toFormValue());
 
 		$field->reset();
-
 		$this->assertSame('', $field->toFormValue());
+	}
+
+	public function testToFormValueTrimmed(): void
+	{
+		$field = $this->field('writer', [
+			'value' => 'test '
+		]);
+
+		$this->assertSame('test', $field->toFormValue());
+	}
+
+	public function testToFormValueSanitized(): void
+	{
+		$field = $this->field('writer', [
+			'value' => 'This is a <strong>test</strong><script>alert("Hacked")</script> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>'
+		]);
+
+		$this->assertSame('This is a <strong>test</strong> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>', $field->toFormValue());
 	}
 
 	public function testValidateMaxlength(): void
@@ -103,23 +119,5 @@ class WriterFieldTest extends TestCase
 		$field->fill('<p>Test</p>');
 
 		$this->assertFalse($field->isValid());
-	}
-
-	public function testValueSanitized(): void
-	{
-		$field = $this->field('writer', [
-			'value' => 'This is a <strong>test</strong><script>alert("Hacked")</script> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>'
-		]);
-
-		$this->assertSame('This is a <strong>test</strong> with <em>formatting</em> and a <a href="/@/page/abcde">UUID link</a>', $field->value());
-	}
-
-	public function testValueTrimmed(): void
-	{
-		$field = $this->field('writer', [
-			'value' => 'test '
-		]);
-
-		$this->assertSame('test', $field->value());
 	}
 }

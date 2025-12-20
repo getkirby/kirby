@@ -7,7 +7,21 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(HiddenField::class)]
 class HiddenFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testFill(): void
+	{
+		$field = $this->field('hidden');
+		$field->fill('test');
+
+		$this->assertSame('test', $field->toFormValue());
+	}
+
+	public function testIsHidden(): void
+	{
+		$field = $this->field('hidden');
+		$this->assertTrue($field->isHidden());
+	}
+
+	public function testProps(): void
 	{
 		$field = $this->field('hidden');
 		$props = $field->props();
@@ -24,11 +38,13 @@ class HiddenFieldTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
-	public function testFill(): void
+	public function testReset(): void
 	{
 		$field = $this->field('hidden');
 		$field->fill('test');
-
 		$this->assertSame('test', $field->toFormValue());
+
+		$field->reset();
+		$this->assertNull($field->toFormValue());
 	}
 }

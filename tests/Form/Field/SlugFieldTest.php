@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SlugField::class)]
 class SlugFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testProps(): void
 	{
 		$field = $this->field('slug');
 		$props = $field->props();

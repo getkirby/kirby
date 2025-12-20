@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(NumberField::class)]
 class NumberFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testProps(): void
 	{
 		$field = $this->field('number');
 		$props = $field->props();
@@ -40,6 +40,28 @@ class NumberFieldTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
+	public function testMax(): void
+	{
+		$field = $this->field('number', [
+			'value' => 1,
+			'max'   => 0
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('max', $field->errors());
+	}
+
+	public function testMin(): void
+	{
+		$field = $this->field('number', [
+			'value' => 1,
+			'min'   => 2
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('min', $field->errors());
+	}
+
 	public static function valueProvider(): array
 	{
 		return [
@@ -59,7 +81,7 @@ class NumberFieldTest extends TestCase
 	}
 
 	#[DataProvider('valueProvider')]
-	public function testValue($input, $expected): void
+	public function testToFormValue($input, $expected): void
 	{
 		$field = $this->field('number', [
 			'value'   => $input,
@@ -72,29 +94,7 @@ class NumberFieldTest extends TestCase
 		$this->assertSame($expected, $field->step());
 	}
 
-	public function testMin(): void
-	{
-		$field = $this->field('number', [
-			'value' => 1,
-			'min'   => 2
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('min', $field->errors());
-	}
-
-	public function testMax(): void
-	{
-		$field = $this->field('number', [
-			'value' => 1,
-			'max'   => 0
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('max', $field->errors());
-	}
-
-	public function testLargeValue(): void
+	public function testToFormValueLargeValue(): void
 	{
 		$field = $this->field('number', [
 			'value' => 1000

@@ -8,39 +8,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(TextareaField::class)]
 class TextareaFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('textarea');
-		$props = $field->props();
-
-		ksort($props);
-
-		$expected = [
-			'autofocus'   => false,
-			'buttons'     => true,
-			'counter'     => true,
-			'disabled'    => false,
-			'font'        => 'sans-serif',
-			'help'        => null,
-			'hidden'      => false,
-			'label'       => 'Textarea',
-			'maxlength'   => null,
-			'minlength'   => null,
-			'name'        => 'textarea',
-			'required'    => false,
-			'saveable'    => true,
-			'size'        => null,
-			'spellcheck'  => null,
-			'translate'   => true,
-			'type'        => 'textarea',
-			'uploads'     => ['accept' => '*'],
-			'when'        => null,
-			'width'       => '1/1',
-		];
-
-		$this->assertSame($expected, $props);
-	}
-
 	public function testButtonsDisabled(): void
 	{
 		$field = $this->field('textarea', [
@@ -102,16 +69,56 @@ class TextareaFieldTest extends TestCase
 		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
+	public function testProps(): void
+	{
+		$field = $this->field('textarea');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'buttons'     => true,
+			'counter'     => true,
+			'disabled'    => false,
+			'font'        => 'sans-serif',
+			'help'        => null,
+			'hidden'      => false,
+			'label'       => 'Textarea',
+			'maxlength'   => null,
+			'minlength'   => null,
+			'name'        => 'textarea',
+			'required'    => false,
+			'saveable'    => true,
+			'size'        => null,
+			'spellcheck'  => null,
+			'translate'   => true,
+			'type'        => 'textarea',
+			'uploads'     => ['accept' => '*'],
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
 	public function testReset(): void
 	{
 		$field = $this->field('textarea');
 		$field->fill('test');
-
 		$this->assertSame('test', $field->toFormValue());
 
 		$field->reset();
-
 		$this->assertSame('', $field->toFormValue());
+	}
+
+	public function testToFormValueTrimmed(): void
+	{
+		$field = $this->field('textarea', [
+			'value' => 'test '
+		]);
+
+		$this->assertSame('test', $field->toFormValue());
 	}
 
 	public function testUploads(): void
@@ -181,14 +188,5 @@ class TextareaFieldTest extends TestCase
 		]);
 
 		$this->assertSame(['accept' => '*'], $field->uploads());
-	}
-
-	public function testValueTrimmed(): void
-	{
-		$field = $this->field('textarea', [
-			'value' => 'test '
-		]);
-
-		$this->assertSame('test', $field->value());
 	}
 }

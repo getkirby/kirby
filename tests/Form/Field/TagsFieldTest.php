@@ -7,51 +7,48 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(TagsField::class)]
 class TagsFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testIsValid(): void
 	{
-		$field = $this->field('tags');
-		$props = $field->props();
+		$field = $this->field('tags', [
+			'options'  => ['a', 'b', 'c'],
+			'value'    => null,
+			'required' => true
+		]);
+		$this->assertFalse($field->isValid());
 
-		ksort($props);
-
-		$expected = [
-			'accept'    => 'all',
-			'autofocus' => false,
-			'disabled'  => false,
-			'help'      => null,
-			'hidden'    => false,
-			'icon'      => 'tag',
-			'label'     => 'Tags',
-			'layout'    => null,
-			'max'       => null,
-			'min'       => null,
-			'name'      => 'tags',
-			'options'   => [],
-			'required'  => false,
-			'saveable'  => true,
-			'search'    => true,
-			'separator' => ',',
-			'sort'      => false,
-			'required'  => false,
-			'translate' => true,
-			'type'      => 'tags',
-			'when'      => null,
-			'width'     => '1/1',
-		];
-
-		$this->assertSame($expected, $props);
+		$field = $this->field('tags', [
+			'options'  => ['a', 'b', 'c'],
+			'required' => true,
+			'value'    => 'a'
+		]);
+		$this->assertTrue($field->isValid());
 	}
 
-	public function testReset(): void
+	public function testMax(): void
 	{
-		$field = $this->field('tags');
-		$field->fill($value = ['a', 'b', 'c']);
+		$field = $this->field('tags', [
+			'value'   => 'a, b',
+			'options' => ['a', 'b', 'c'],
+			'max'     => 1
+		]);
 
-		$this->assertSame($value, $field->toFormValue());
+		$this->assertFalse($field->isValid());
+		$this->assertSame(1, $field->max());
+		$this->assertArrayHasKey('max', $field->errors());
+	}
 
-		$field->reset();
+	public function testMin(): void
+	{
+		$field = $this->field('tags', [
+			'value'   => 'a',
+			'options' => ['a', 'b', 'c'],
+			'min'     => 2
+		]);
 
-		$this->assertSame([], $field->toFormValue());
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('min', $field->errors());
+		$this->assertSame(2, $field->min());
+		$this->assertTrue($field->isRequired());
 	}
 
 	public function testOptionsQuery(): void
@@ -153,34 +150,42 @@ class TagsFieldTest extends TestCase
 		$this->assertSame($expected, $field->options());
 	}
 
-	public function testMin(): void
+	public function testProps(): void
 	{
-		$field = $this->field('tags', [
-			'value'   => 'a',
-			'options' => ['a', 'b', 'c'],
-			'min'     => 2
-		]);
+		$field = $this->field('tags');
+		$props = $field->props();
 
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('min', $field->errors());
-		$this->assertSame(2, $field->min());
-		$this->assertTrue($field->isRequired());
+		ksort($props);
+
+		$expected = [
+			'accept'    => 'all',
+			'autofocus' => false,
+			'disabled'  => false,
+			'help'      => null,
+			'hidden'    => false,
+			'icon'      => 'tag',
+			'label'     => 'Tags',
+			'layout'    => null,
+			'max'       => null,
+			'min'       => null,
+			'name'      => 'tags',
+			'options'   => [],
+			'required'  => false,
+			'saveable'  => true,
+			'search'    => true,
+			'separator' => ',',
+			'sort'      => false,
+			'required'  => false,
+			'translate' => true,
+			'type'      => 'tags',
+			'when'      => null,
+			'width'     => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
-	public function testMax(): void
-	{
-		$field = $this->field('tags', [
-			'value'   => 'a, b',
-			'options' => ['a', 'b', 'c'],
-			'max'     => 1
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertSame(1, $field->max());
-		$this->assertArrayHasKey('max', $field->errors());
-	}
-
-	public function testRequiredProps(): void
+	public function testRequired(): void
 	{
 		$field = $this->field('tags', [
 			'options'  => ['a', 'b', 'c'],
@@ -191,25 +196,15 @@ class TagsFieldTest extends TestCase
 		$this->assertSame(1, $field->min());
 	}
 
-	public function testRequiredInvalid(): void
+	public function testReset(): void
 	{
-		$field = $this->field('tags', [
-			'options'  => ['a', 'b', 'c'],
-			'value'    => null,
-			'required' => true
-		]);
+		$field = $this->field('tags');
+		$field->fill($value = ['a', 'b', 'c']);
 
-		$this->assertFalse($field->isValid());
-	}
+		$this->assertSame($value, $field->toFormValue());
 
-	public function testRequiredValid(): void
-	{
-		$field = $this->field('tags', [
-			'options'  => ['a', 'b', 'c'],
-			'required' => true,
-			'value'    => 'a'
-		]);
+		$field->reset();
 
-		$this->assertTrue($field->isValid());
+		$this->assertSame([], $field->toFormValue());
 	}
 }

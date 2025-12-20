@@ -8,32 +8,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LinkField::class)]
 class LinkFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('link');
-		$props = $field->props();
-
-		ksort($props);
-
-		$expected = [
-			'autofocus'   => false,
-			'disabled'    => false,
-			'help'        => null,
-			'hidden'      => false,
-			'label'       => 'Link',
-			'name'        => 'link',
-			'options'     => ['url', 'page', 'file', 'email', 'tel', 'anchor'],
-			'required'    => false,
-			'saveable'    => true,
-			'translate'   => true,
-			'type'        => 'link',
-			'when'        => null,
-			'width'       => '1/1',
-		];
-
-		$this->assertSame($expected, $props);
-	}
-
 	public function testActiveTypes(): void
 	{
 		$field = $this->field('link', [
@@ -133,6 +107,32 @@ class LinkFieldTest extends TestCase
 			'options' => ['page', 'foo', 'bar']
 		]);
 		$field->options();
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('link');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'disabled'    => false,
+			'help'        => null,
+			'hidden'      => false,
+			'label'       => 'Link',
+			'name'        => 'link',
+			'options'     => ['url', 'page', 'file', 'email', 'tel', 'anchor'],
+			'required'    => false,
+			'saveable'    => true,
+			'translate'   => true,
+			'type'        => 'link',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testValidations(): void

@@ -75,15 +75,12 @@ class ColorFieldTest extends TestCase
 	public function testIsValid(): void
 	{
 		$field = $this->field('color');
-
 		$this->assertTrue($field->isValid());
 
 		$field->fill('#ddd');
-
 		$this->assertTrue($field->isValid());
 
 		$field->fill('#ödd');
-
 		$this->assertFalse($field->isValid());
 	}
 

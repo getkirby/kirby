@@ -8,7 +8,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(InfoField::class)]
 class InfoFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testIcon(): void
+	{
+		$field = $this->field('info', ['icon' => 'heart']);
+		$this->assertSame('heart', $field->icon());
+	}
+
+	public function testProps(): void
 	{
 		$field = $this->field('info');
 		$props = $field->props();
@@ -63,5 +69,11 @@ class InfoFieldTest extends TestCase
 		]);
 
 		$this->assertSame('<p>Test</p>', $field->text());
+	}
+
+	public function testTheme(): void
+	{
+		$field = $this->field('info', ['theme' => 'positive']);
+		$this->assertSame('positive', $field->theme());
 	}
 }

@@ -257,25 +257,42 @@ class BlocksFieldTest extends TestCase
 		$props     = $field->props();
 		$fieldsets = $props['fieldsets'];
 
-		$this->assertIsArray($props);
-		$this->assertNull($props['empty']);
+		unset($props['fieldsets']);
+		ksort($props);
+
+		$expected = [
+			'autofocus'      => false,
+			'disabled'       => false,
+			'empty'          => null,
+			'fieldsetGroups' => null,
+			'group'          => 'blocks',
+			'help'           => null,
+			'hidden'         => false,
+			'label'          => 'Blocks',
+			'max'            => null,
+			'min'            => null,
+			'name'           => 'blocks',
+			'required'       => false,
+			'saveable'       => true,
+			'translate'      => true,
+			'type'           => 'blocks',
+			'when'           => null,
+			'width'          => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 		$this->assertSame([
-			'code', 'gallery', 'heading', 'image', 'line', 'list', 'markdown', 'quote', 'text', 'video'
+			'code',
+			'gallery',
+			'heading',
+			'image',
+			'line',
+			'list',
+			'markdown',
+			'quote',
+			'text',
+			'video'
 		], array_keys($fieldsets));
-		$this->assertNull($props['fieldsetGroups']);
-		$this->assertSame('blocks', $props['group']);
-		$this->assertNull($props['max']);
-		$this->assertNull($props['min']);
-		$this->assertFalse($props['autofocus']);
-		$this->assertFalse($props['disabled']);
-		$this->assertNull($props['help']);
-		$this->assertSame('Blocks', $props['label']);
-		$this->assertSame('blocks', $props['name']);
-		$this->assertFalse($props['required']);
-		$this->assertTrue($props['saveable']);
-		$this->assertTrue($props['translate']);
-		$this->assertSame('blocks', $props['type']);
-		$this->assertSame('1/1', $props['width']);
 	}
 
 	public function testRequired(): void

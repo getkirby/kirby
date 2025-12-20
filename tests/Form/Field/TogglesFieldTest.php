@@ -7,35 +7,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(TogglesField::class)]
 class TogglesFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('toggles');
-		$props = $field->props();
-
-		ksort($props);
-
-		$expected = [
-			'autofocus'  => false,
-			'disabled'   => false,
-			'grow'       => true,
-			'help'       => null,
-			'hidden'     => false,
-			'label'      => 'Toggles',
-			'labels'     => true,
-			'name'       => 'toggles',
-			'options'    => [],
-			'required'   => false,
-			'resettable' => true,
-			'saveable'   => true,
-			'translate'  => true,
-			'type'       => 'toggles',
-			'when'       => null,
-			'width'      => '1/1',
-		];
-
-		$this->assertSame($expected, $props);
-	}
-
 	public function testGrow(): void
 	{
 		$field = $this->field('toggles', [
@@ -64,6 +35,35 @@ class TogglesFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->labels());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('toggles');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'  => false,
+			'disabled'   => false,
+			'grow'       => true,
+			'help'       => null,
+			'hidden'     => false,
+			'label'      => 'Toggles',
+			'labels'     => true,
+			'name'       => 'toggles',
+			'options'    => [],
+			'required'   => false,
+			'resettable' => true,
+			'saveable'   => true,
+			'translate'  => true,
+			'type'       => 'toggles',
+			'when'       => null,
+			'width'      => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testResettable(): void

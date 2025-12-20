@@ -135,16 +135,11 @@ class FilePickerFieldTest extends TestCase
 
 	public function testEmpty(): void
 	{
-		$field = $this->field('files', [
-			'model' => new Page(['slug' => 'test']),
-			'empty' => 'Test'
-		]);
-
+		$field = $this->field('files', ['empty' => 'Test']);
 		$this->assertSame('Test', $field->empty());
 
 		// translated
 		$field = $this->field('files', [
-			'model' => new Page(['slug' => 'test']),
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 
@@ -274,18 +269,11 @@ class FilePickerFieldTest extends TestCase
 	public function testStore(): void
 	{
 		// Default
-		$field = $this->field('files', [
-			'model' => new Page(['slug' => 'test']),
-		]);
-
+		$field = $this->field('files');
 		$this->assertSame('uuid', $field->store());
 
 		// Custom
-		$field = $this->field('files', [
-			'model' => new Page(['slug' => 'test']),
-			'store' => 'id'
-		]);
-
+		$field = $this->field('files', ['store' => 'id']);
 		$this->assertSame('id', $field->store());
 
 		// Disabled UUIDs
@@ -297,10 +285,7 @@ class FilePickerFieldTest extends TestCase
 			]
 		]);
 
-		$field = $this->field('files', [
-			'model' => new Page(['slug' => 'test']),
-		]);
-
+		$field = $this->field('files');
 		$this->assertSame('id', $field->store());
 	}
 

@@ -7,7 +7,33 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(MultiselectField::class)]
 class MultiselectFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testMax(): void
+	{
+		$field = $this->field('multiselect', [
+			'value'   => 'a, b',
+			'options' => ['a', 'b', 'c'],
+			'max'     => 1
+		]);
+
+		$this->assertSame(1, $field->max());
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('max', $field->errors());
+	}
+
+	public function testMin(): void
+	{
+		$field = $this->field('multiselect', [
+			'value'   => 'a',
+			'options' => ['a', 'b', 'c'],
+			'min'     => 2
+		]);
+
+		$this->assertSame(2, $field->min());
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('min', $field->errors());
+	}
+
+	public function testProps(): void
 	{
 		$field = $this->field('multiselect');
 		$props = $field->props();
@@ -40,29 +66,5 @@ class MultiselectFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
-	}
-
-	public function testMin(): void
-	{
-		$field = $this->field('multiselect', [
-			'value'   => 'a',
-			'options' => ['a', 'b', 'c'],
-			'min'     => 2
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('min', $field->errors());
-	}
-
-	public function testMax(): void
-	{
-		$field = $this->field('multiselect', [
-			'value'   => 'a, b',
-			'options' => ['a', 'b', 'c'],
-			'max'     => 1
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('max', $field->errors());
 	}
 }

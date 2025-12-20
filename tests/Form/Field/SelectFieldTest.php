@@ -7,18 +7,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SelectField::class)]
 class SelectFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('select');
-
-		$this->assertSame('select', $field->type());
-		$this->assertSame('select', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertNull($field->icon());
-		$this->assertSame([], $field->options());
-		$this->assertTrue($field->save());
-	}
-
 	public function testOptionsQuery(): void
 	{
 		$app = $this->app()->clone([
@@ -188,5 +176,33 @@ class SelectFieldTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $field->options());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('select');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'disabled'    => false,
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => null,
+			'label'       => 'Select',
+			'name'        => 'select',
+			'options'     => [],
+			'placeholder' => '—',
+			'required'    => false,
+			'saveable'    => true,
+			'translate'   => true,
+			'type'        => 'select',
+			'when'	      => null,
+			'width'	      => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 }

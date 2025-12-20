@@ -8,7 +8,29 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(RangeField::class)]
 class RangeFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testMax(): void
+	{
+		$field = $this->field('range', [
+			'value' => 1,
+			'max'   => 0
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('max', $field->errors());
+	}
+
+	public function testMin(): void
+	{
+		$field = $this->field('range', [
+			'value' => 1,
+			'min'   => 2
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('min', $field->errors());
+	}
+
+	public function testProps(): void
 	{
 		$field = $this->field('range');
 		$props = $field->props();
@@ -39,28 +61,6 @@ class RangeFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
-	}
-
-	public function testMin(): void
-	{
-		$field = $this->field('range', [
-			'value' => 1,
-			'min'   => 2
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('min', $field->errors());
-	}
-
-	public function testMax(): void
-	{
-		$field = $this->field('range', [
-			'value' => 1,
-			'max'   => 0
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('max', $field->errors());
 	}
 
 	public function testTooltip(): void
