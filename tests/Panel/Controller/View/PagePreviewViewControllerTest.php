@@ -40,7 +40,7 @@ class PagePreviewViewControllerTest extends TestCase
 		$controller = PagePreviewViewController::factory('pages/test', 'changes');
 		$this->assertInstanceOf(PagePreviewViewController::class, $controller);
 		$this->assertSame($this->app->page('test'), $controller->model);
-		$this->assertSame('changes', $controller->versionId);
+		$this->assertSame('changes', $controller->mode);
 	}
 
 	public function testId(): void

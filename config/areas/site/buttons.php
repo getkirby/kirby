@@ -11,9 +11,9 @@ use Kirby\Panel\Ui\Button\SettingsButton;
 use Kirby\Panel\Ui\Button\VersionsButton;
 
 return [
-	'site.open' => function (Site $site, string $versionId = 'latest') {
-		$versionId = $versionId === 'compare' ? 'changes' : $versionId;
-		$link      = $site->previewUrl($versionId);
+	'site.open' => function (Site $site, string $mode = 'latest') {
+		$mode = $mode === 'compare' ? 'changes' : $mode;
+		$link = $site->previewUrl($mode);
 
 		if ($link !== null) {
 			return new OpenButton(
@@ -28,13 +28,13 @@ return [
 			);
 		}
 	},
-	'site.versions' => fn (Site $site, string $versionId = 'latest') => new VersionsButton(
+	'site.versions' => fn (Site $site, string $mode = 'latest') => new VersionsButton(
 		model: $site,
-		mode: $versionId
+		mode:  $mode
 	),
-	'page.open' => function (Page $page, string $versionId = 'latest') {
-		$versionId = $versionId === 'compare' ? 'changes' : $versionId;
-		$link      = $page->previewUrl($versionId);
+	'page.open' => function (Page $page, string $mode = 'latest') {
+		$mode = $mode === 'compare' ? 'changes' : $mode;
+		$link = $page->previewUrl($mode);
 
 		if ($link !== null) {
 			return new OpenButton(
@@ -49,9 +49,9 @@ return [
 			);
 		}
 	},
-	'page.versions' => fn (Page $page, string $versionId = 'latest') => new VersionsButton(
+	'page.versions' => fn (Page $page, string $mode = 'latest') => new VersionsButton(
 		model: $page,
-		mode: $versionId
+		mode:  $mode
 	),
 	'page.settings' => fn (Page $page) => new SettingsButton($page),
 	'page.status'   => fn (Page $page) => new PageStatusButton($page),
