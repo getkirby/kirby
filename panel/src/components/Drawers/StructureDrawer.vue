@@ -33,12 +33,8 @@ import { props as FieldsProps } from "./Elements/Fields.vue";
 
 export const props = {
 	props: {
-		next: {
-			type: Object
-		},
-		prev: {
-			type: Object
-		}
+		next: Boolean,
+		prev: Boolean
 	}
 };
 

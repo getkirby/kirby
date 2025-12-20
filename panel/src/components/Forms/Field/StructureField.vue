@@ -428,9 +428,9 @@ export default {
 				id: this.id,
 				props: {
 					disabled: this.disabled,
-					icon: this.icon ?? "list-bullet",
-					next: this.items[index + 1],
-					prev: this.items[index - 1],
+					icon: "list-bullet",
+					next: index < this.items.length - 1,
+					prev: index > 0,
 					tabs: {
 						content: {
 							fields: this.form(field)
@@ -445,8 +445,9 @@ export default {
 						const index = this.findIndex(item);
 
 						// update the prev/next navigation
-						this.$panel.drawer.props.next = this.items[index + 1];
-						this.$panel.drawer.props.prev = this.items[index - 1];
+						// in case the updated input changed its sorting position
+						this.$panel.drawer.props.next = index < this.items.length - 1;
+						this.$panel.drawer.props.prev = index > 0;
 
 						this.items[index] = value;
 						this.save();
