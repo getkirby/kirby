@@ -59,6 +59,7 @@ export const props = {
 	props: {
 		counter: [Boolean, Object],
 		endpoints: Object,
+		hasDiff: Boolean,
 		input: {
 			type: [String, Number, Boolean],
 			default: null
@@ -71,12 +72,7 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
-	emits: ["blur", "focus"],
-	computed: {
-		hasDiff() {
-			return Object.hasOwn(this.$panel.content.diff(), this.name);
-		}
-	}
+	emits: ["blur", "focus"]
 };
 </script>
 
