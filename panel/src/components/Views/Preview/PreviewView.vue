@@ -47,6 +47,7 @@
 		</header>
 
 		<main
+			ref="grid"
 			class="k-preview-view-grid"
 			:data-view="view"
 			:style="`--preview-width: ${viewports[view].width}`"
@@ -222,8 +223,10 @@ export default {
 		/**
 		 * Sets a viewport size and remembers it in sessionStorage
 		 */
-		onViewport(viewport) {
+		async onViewport(viewport) {
+			this.$refs.grid.classList.add("is-animating");
 			this.view = viewport;
+			setTimeout(() => this.$refs.grid.classList.remove("is-animating"), 150);
 			sessionStorage.setItem("kirby$preview$viewport", viewport);
 		}
 	}
@@ -255,41 +258,43 @@ export default {
 }
 
 .k-preview-view-grid {
-	display: flex;
-	justify-content: center;
-	padding: var(--spacing-3);
-	padding-top: 0;
+	display: grid;
+	grid-template-columns: 1fr;
+	padding: 0 var(--spacing-3) var(--spacing-3);
 	gap: var(--spacing-3);
-	max-height: calc(100vh - 56px);
+	max-height: calc(100vh - 3.5rem);
 }
+.k-preview-view-grid.is-animating {
+	transition: grid-template-columns 0.12s ease;
+}
+
 @media screen and (max-width: 60rem) {
-	.k-preview-view-grid {
-		flex-direction: column;
+	.k-preview-view:where([data-mode="compare"], [data-mode="form"])
+		.k-preview-view-grid {
+		grid-template-rows: 1fr 1fr;
 	}
-	.k-preview-view-title,
+
 	.k-preview-viewport {
 		display: none;
 	}
 }
-.k-preview-view :where(.k-preview-browser, .k-preview-form) {
-	flex-grow: 1;
-	flex-basis: 50%;
-	transition: flex-basis 0.1s;
-}
 
 @media screen and (min-width: 60rem) {
-	.k-preview-view:not([data-mode="compare"]) .k-preview-browser {
-		flex: 0 0 calc(var(--preview-width) + 2px);
+	.k-preview-view .k-preview-view-grid {
+		grid-template-columns: calc(var(--preview-width) + 2px);
+		justify-content: center;
 	}
-	.k-preview-view[data-mode="form"] .k-preview-browser {
-		flex: 0 0 min(calc(var(--preview-width) + 2px), 70vw);
+
+	.k-preview-view[data-mode="compare"] .k-preview-view-grid {
+		grid-template-columns: 1fr 1fr;
 	}
-	.k-preview-view[data-mode="form"] .k-preview-form {
-		flex: 1 1 0;
-		min-width: 0;
+
+	.k-preview-view[data-mode="form"] .k-preview-view-grid {
+		grid-template-columns: min(calc(var(--preview-width) + 2px), calc(68vw)) 1fr;
 	}
 }
 
+/** Shared styling for form controls inside preview form and preview browser */
 .k-preview-view .k-form-controls-button {
 	font-size: var(--text-xs);
 	--button-rounded: 3px;
