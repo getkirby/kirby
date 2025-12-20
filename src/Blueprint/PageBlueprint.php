@@ -13,17 +13,13 @@ namespace Kirby\Blueprint;
  */
 class PageBlueprint extends Blueprint
 {
-	/**
-	 * Creates a new page blueprint object
-	 * with the given props
-	 */
-	public function __construct(array $props)
+	protected function normalizeProps(array $props): array
 	{
-		parent::__construct($props);
+		$props = parent::normalizeProps($props);
 
 		// normalize all available page options
-		$this->props['options'] = $this->normalizeOptions(
-			$this->props['options'] ?? true,
+		$props['options'] = OptionsProps::normalize(
+			$props['options'] ?? true,
 			// defaults
 			[
 				'access'     	 => null,
@@ -51,18 +47,12 @@ class PageBlueprint extends Blueprint
 		);
 
 		// normalize the ordering number
-		$this->props['num'] = $this->normalizeNum($this->props['num'] ?? 'default');
+		$props['num'] = $this->normalizeNum($props['num'] ?? 'default');
 
 		// normalize the available status array
-		$this->props['status'] = $this->normalizeStatus($this->props['status'] ?? null);
-	}
+		$props['status'] = $this->normalizeStatus($props['status'] ?? null);
 
-	/**
-	 * Returns the page numbering mode
-	 */
-	public function num(): string
-	{
-		return $this->props['num'];
+		return $props;
 	}
 
 	/**
@@ -154,12 +144,20 @@ class PageBlueprint extends Blueprint
 	}
 
 	/**
+	 * Returns the page numbering mode
+	 */
+	public function num(): string
+	{
+		return $this->prop('num');
+	}
+
+	/**
 	 * Returns the options object
 	 * that handles page options and permissions
 	 */
 	public function options(): array
 	{
-		return $this->props['options'];
+		return $this->prop('options');
 	}
 
 	/**
@@ -170,7 +168,7 @@ class PageBlueprint extends Blueprint
 	 */
 	public function preview(): string|bool
 	{
-		$preview = $this->props['options']['preview'] ?? true;
+		$preview = $this->prop('options')['preview'] ?? true;
 
 		if (is_string($preview) === true) {
 			return $this->model->toString($preview);
@@ -184,6 +182,6 @@ class PageBlueprint extends Blueprint
 	 */
 	public function status(): array
 	{
-		return $this->props['status'];
+		return $this->prop('status');
 	}
 }

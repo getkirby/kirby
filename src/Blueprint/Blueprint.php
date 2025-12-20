@@ -30,11 +30,13 @@ class Blueprint
 	public static array $loaded = [];
 
 	protected AcceptRules $acceptRules;
-	protected array $fields = [];
+	protected array $fields;
 	protected ModelWithContent $model;
+	protected array $normalizedProps;
 	protected array $props;
-	protected array $sections = [];
-	protected array $tabs = [];
+	protected array $sections;
+	protected array $sectionsProps;
+	protected array $tabs;
 
 	/**
 	 * Creates a new blueprint object with the given props
@@ -60,27 +62,6 @@ class Blueprint
 		// the model should not be included in the props array
 		unset($props['model']);
 
-		// extend the blueprint in general
-		$props = static::extend($props);
-
-		// apply any blueprint preset
-		$props = static::preset($props);
-
-		// normalize the name
-		$props['name'] ??= 'default';
-
-		// normalize and translate the title
-		$props['title'] ??= Str::label($props['name']);
-		$props['title']   = $this->i18n($props['title']);
-
-		// convert all shortcuts
-		$props = FieldsProps::convertToSections('main-fields', $props);
-		$props = SectionsProps::convertToColumns($props);
-		$props = ColumnsProps::convertToTabs('main', $props);
-
-		// normalize all tabs
-		$props['tabs'] = $this->normalizeTabs($props['tabs'] ?? []);
-
 		$this->props = $props;
 	}
 
@@ -89,7 +70,7 @@ class Blueprint
 	 */
 	public function __call(string $key, array|null $arguments = null): mixed
 	{
-		return $this->props[$key] ?? null;
+		return $this->prop($key);
 	}
 
 	/**
@@ -99,7 +80,7 @@ class Blueprint
 	 */
 	public function __debugInfo(): array
 	{
-		return $this->props;
+		return $this->normalizedProps();
 	}
 
 	/**
@@ -124,7 +105,7 @@ class Blueprint
 	 */
 	public function buttons(): array|false|null
 	{
-		return $this->props['buttons'] ?? null;
+		return $this->prop('buttons');
 	}
 
 	/**
@@ -189,7 +170,7 @@ class Blueprint
 	 */
 	public function field(string $name): array|null
 	{
-		return $this->fields[$name] ?? null;
+		return $this->fields()[$name] ?? null;
 	}
 
 	/**
@@ -221,6 +202,18 @@ class Blueprint
 	 */
 	public function fields(): array
 	{
+		if (isset($this->fields) === true) {
+			return $this->fields;
+		}
+
+		$this->fields = [];
+
+		foreach ($this->sectionsProps() as $section) {
+			foreach (($section['fields'] ?? []) as $field) {
+				$this->fields[$field['name']] = $field;
+			}
+		}
+
 		return $this->fields;
 	}
 
@@ -266,6 +259,17 @@ class Blueprint
 			key: 'blueprint.notFound',
 			data: ['name' => $name]
 		);
+	}
+
+	public static function helpList(array $items): string
+	{
+		$md = [];
+
+		foreach ($items as $item) {
+			$md[] = '- *' . $item . '*';
+		}
+
+		return PHP_EOL . implode(PHP_EOL, $md);
 	}
 
 	/**
@@ -316,80 +320,38 @@ class Blueprint
 	 */
 	public function name(): string
 	{
-		return $this->props['name'];
+		return $this->prop('name');
 	}
 
-	/**
-	 * Normalizes all required props in a column setup
-	 */
-	protected function normalizeColumns(string $tabName, array $columns): array
+	protected function normalizeProps(array $props): array
 	{
-		$columns = ColumnsProps::normalize($tabName, $columns);
+		// extend the blueprint in general
+		$props = static::extend($this->props);
 
-		foreach ($columns as $columnKey => $columnProps) {
+		// apply any blueprint preset
+		$props = static::preset($props);
 
-			$columnProps['sections'] = $this->normalizeSections(
-				$tabName,
-				$columnProps['sections'] ?? []
-			);
+		// normalize the name
+		$props['name'] ??= 'default';
 
-			$columns[$columnKey] = $columnProps;
-		}
+		// normalize and translate the title
+		$props['title'] ??= Str::label($props['name']);
+		$props['title']   = $this->i18n($props['title']);
 
-		return $columns;
+		// convert all shortcuts
+		$props = FieldsProps::convertToSections('main-fields', $props);
+		$props = SectionsProps::convertToColumns($props);
+		$props = ColumnsProps::convertToTabs('main', $props);
+
+		// normalize all tabs
+		$props['tabs'] = $this->normalizeTabs($props['tabs'] ?? []);
+
+		return $props;
 	}
 
-	public static function helpList(array $items): string
+	protected function normalizedProps(): array
 	{
-		$md = [];
-
-		foreach ($items as $item) {
-			$md[] = '- *' . $item . '*';
-		}
-
-		return PHP_EOL . implode(PHP_EOL, $md);
-	}
-
-	/**
-	 * @deprecated 6.0.0 Use `\Kirby\Blueprint\OptionsProps::normalize()` instead
-	 */
-	protected function normalizeOptions(
-		array|string|bool|null $options,
-		array $defaults,
-		array $aliases = []
-	): array {
-		return OptionsProps::normalize($options, $defaults, $aliases);
-	}
-
-	/**
-	 * Normalizes all required keys in sections
-	 */
-	protected function normalizeSections(
-		string $tabName,
-		array $sections
-	): array {
-		$sections = SectionsProps::normalize($sections);
-
-		foreach ($sections as $sectionName => $sectionProps) {
-			if ($sectionProps['type'] === 'fields') {
-				$fields = $sectionProps['fields'];
-
-				foreach ($fields as $fieldName => $fieldProps) {
-					if (isset($this->fields[$fieldName]) === true) {
-						$this->fields[$fieldName] = $fields[$fieldName] = FieldProps::forExistingFieldError($fieldName, $fieldProps['label'] ?? null);
-					} else {
-						$this->fields[$fieldName] = $fieldProps;
-					}
-				}
-
-				$sections[$sectionName]['fields'] = $fields;
-			}
-		}
-
-		// store all normalized sections
-		$this->sections = [...$this->sections, ...$sections];
-
-		return $sections;
+		return $this->normalizedProps ??= $this->normalizeProps($this->props);
 	}
 
 	/**
@@ -402,13 +364,18 @@ class Blueprint
 		foreach ($tabs as $tabName => $tabProps) {
 			$tabs[$tabName] = [
 				...$tabProps,
-				'columns' => $this->normalizeColumns($tabName, $tabProps['columns']),
+				'columns' => ColumnsProps::normalize($tabName, $tabProps['columns']),
 				'label'   => $this->i18n($tabProps['label']),
 				'link'    => $this->model->panel()->url(true) . '/?tab=' . $tabName,
 			];
 		}
 
-		return $this->tabs = $tabs;
+		return $tabs;
+	}
+
+	public function prop(string $key): mixed
+	{
+		return $this->normalizedProps()[$key] ?? null;
 	}
 
 	/**
@@ -438,36 +405,49 @@ class Blueprint
 	 */
 	public function section(string $name): Section|null
 	{
-		if (empty($this->sections[$name]) === true) {
-			return null;
-		}
-
-		if ($this->sections[$name] instanceof Section) {
-			return $this->sections[$name]; //@codeCoverageIgnore
-		}
-
-		// get all props
-		$props = $this->sections[$name];
-
-		// inject the blueprint model
-		$props['model'] = $this->model();
-
-		// create a new section object
-		return $this->sections[$name] = new Section($props['type'], $props);
+		return $this->sections()[$name] ?? null;
 	}
 
 	/**
-	 * Returns all sections
+	 * Returns all section objects
 	 */
 	public function sections(): array
 	{
-		return A::map(
-			$this->sections,
-			fn ($section) => match (true) {
-				$section instanceof Section => $section,
-				default                     => $this->section($section['name'])
+		if (isset($this->sections) === true) {
+			return $this->sections;
+		}
+
+		$model = $this->model();
+
+		return $this->sections = A::map($this->sectionsProps(), function ($props) use ($model) {
+			$props['model'] = $model;
+			return new Section($props['type'], $props);
+		});
+	}
+
+	public function sectionProps(string $name): array|null
+	{
+		return $this->sectionsProps($name) ?? null;
+	}
+
+	public function sectionsProps(): array
+	{
+		if (isset($this->sectionsProps) === true) {
+			return $this->sectionsProps;
+		}
+
+		$this->sectionsProps = [];
+
+		foreach ($this->tabs() as $tab) {
+			foreach ($tab['columns'] as $column) {
+				$this->sectionsProps = [
+					...$this->sectionsProps,
+					...$column['sections']
+				];
 			}
-		);
+		}
+
+		return $this->sectionsProps;
 	}
 
 	/**
@@ -476,10 +456,10 @@ class Blueprint
 	public function tab(string|null $name = null): array|null
 	{
 		if ($name === null) {
-			return A::first($this->tabs);
+			return A::first($this->tabs());
 		}
 
-		return $this->tabs[$name] ?? null;
+		return $this->tabs()[$name] ?? null;
 	}
 
 	/**
@@ -487,7 +467,7 @@ class Blueprint
 	 */
 	public function tabs(): array
 	{
-		return array_values($this->tabs);
+		return $this->tabs ??= array_values($this->prop('tabs'));
 	}
 
 	/**
@@ -495,7 +475,7 @@ class Blueprint
 	 */
 	public function title(): string
 	{
-		return $this->props['title'];
+		return $this->prop('title');
 	}
 
 	/**
@@ -503,6 +483,6 @@ class Blueprint
 	 */
 	public function toArray(): array
 	{
-		return $this->props;
+		return $this->normalizedProps();
 	}
 }
