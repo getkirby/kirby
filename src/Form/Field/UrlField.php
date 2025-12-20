@@ -81,7 +81,7 @@ class UrlField extends TextField
 
 	public function placeholder(): string
 	{
-		return $this->placeholder ?? 'https://example.com';
+		return parent::placeholder() ?? 'https://example.com';
 	}
 
 	protected function validations(): array

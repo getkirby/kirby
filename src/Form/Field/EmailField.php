@@ -81,7 +81,7 @@ class EmailField extends TextField
 
 	public function placeholder(): string
 	{
-		return $this->placeholder ?? $this->i18n('email.placeholder');
+		return parent::placeholder() ?? $this->i18n('email.placeholder');
 	}
 
 	protected function validations(): array
