@@ -4,11 +4,11 @@ namespace Kirby\Form\Field;
 
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\FieldClass;
 use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Form\Mixin\Sortable;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -22,31 +22,81 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  * @since     5.0.0
  */
-class EntriesField extends FieldClass
+class EntriesField extends InputField
 {
 	use EmptyState;
 	use Max;
 	use Min;
+	use Sortable;
 
-	protected array $field;
+	/**
+	 * Field options for the field to be used and repeated.
+	 * Supported field types are `color`, `date`, `email`, `number`, `select`,
+	 * `slug`, `tel`, `text`, `time`, `url`.
+	 */
+	protected array|string|null $field;
+
 	protected Form $form;
-	protected bool  $sortable = true;
-	protected mixed $value = [];
+	protected array $value = [];
 
-	public function __construct(array $params = [])
-	{
-		parent::__construct($params);
+	public function __construct(
+		bool|null $autofocus = null,
+		mixed $default = null,
+		bool|null $disabled = null,
+		array|string|null $empty = null,
+		array|string|null $field = null,
+		array|string|null $help = null,
+		array|string|null $label = null,
+		int|null $max = null,
+		int|null $min = null,
+		string|null $name = null,
+		bool|null $required = null,
+		bool|null $sortable = null,
+		bool|null $translate = null,
+		array|null $when = null,
+		string|null $width = null
+	) {
+		parent::__construct(
+			autofocus: $autofocus,
+			default:   $default,
+			disabled:  $disabled,
+			help:      $help,
+			label:     $label,
+			name:      $name,
+			required:  $required,
+			translate: $translate,
+			when:      $when,
+			width:     $width
+		);
 
-		$this->setEmpty($params['empty'] ?? null);
-		$this->setField($params['field'] ?? null);
-		$this->setMax($params['max'] ?? null);
-		$this->setMin($params['min'] ?? null);
-		$this->setSortable($params['sortable'] ?? true);
+		$this->empty    = $empty;
+		$this->field    = $field;
+		$this->max      = $max;
+		$this->min      = $min;
+		$this->sortable = $sortable;
 	}
 
 	public function field(): array
 	{
-		return $this->field;
+		$props = $this->field;
+
+		if (is_string($props) === true) {
+			$props = ['type' => $props];
+		}
+
+		$props ??= ['type' => 'text'];
+
+		if (in_array($props['type'], $this->supports(), true) === false) {
+			throw new InvalidArgumentException(
+				key: 'entries.supports',
+				data: ['type' => $props['type']]
+			);
+		}
+
+		// remove the unsupported props from the entry field
+		unset($props['counter'], $props['label']);
+
+		return $props;
 	}
 
 	public function fieldProps(): array
@@ -60,15 +110,16 @@ class EntriesField extends FieldClass
 	 */
 	public function fill(mixed $value): static
 	{
-		$this->value = Data::decode($value ?? '', 'yaml');
-		return $this;
+		return parent::fill(
+			value: Data::decode($value ?? '', 'yaml')
+		);
 	}
 
 	public function form(): Form
 	{
 		return $this->form ??= new Form(
 			fields: [$this->field()],
-			model: $this->model
+			model:  $this->model()
 		);
 	}
 
@@ -82,37 +133,6 @@ class EntriesField extends FieldClass
 			'min'      => $this->min(),
 			'sortable' => $this->sortable(),
 		];
-	}
-
-	protected function setField(array|string|null $attrs = null): void
-	{
-		if (is_string($attrs) === true) {
-			$attrs = ['type' => $attrs];
-		}
-
-		$attrs ??= ['type' => 'text'];
-
-		if (in_array($attrs['type'], $this->supports()) === false) {
-			throw new InvalidArgumentException(
-				key: 'entries.supports',
-				data: ['type' => $attrs['type']]
-			);
-		}
-
-		// remove the unsupported props from the entry field
-		unset($attrs['counter'], $attrs['label']);
-
-		$this->field = $attrs;
-	}
-
-	protected function setSortable(bool|null $sortable = true): void
-	{
-		$this->sortable = $sortable;
-	}
-
-	public function sortable(): bool
-	{
-		return $this->sortable;
 	}
 
 	public function supports(): array

@@ -22,8 +22,6 @@ use Kirby\Panel\Ui\Item\PageItem;
  */
 class PagePickerDialogController extends ModelPickerDialogController
 {
-	protected const string TYPE = 'page';
-
 	protected PagesCollector $collector;
 
 	public function __construct(
@@ -75,6 +73,14 @@ class PagePickerDialogController extends ModelPickerDialogController
 				return $pages ?? new Pages([]);
 			}
 		};
+	}
+
+	protected function empty(): array
+	{
+		return [
+			'icon' => 'page',
+			'text' => $this->i18n('dialog.pages.empty')
+		];
 	}
 
 	public function find(string $id): Page|null
@@ -149,7 +155,8 @@ class PagePickerDialogController extends ModelPickerDialogController
 	{
 		return [
 			...parent::props(),
-			'parent' => $this->parent()
+			'component' => 'k-page-picker-dialog',
+			'parent'    => $this->parent()
 		];
 	}
 

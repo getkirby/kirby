@@ -5,25 +5,8 @@ namespace Kirby\Form\Mixin;
 use Kirby\Cms\Language;
 use ReflectionProperty;
 
-/**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
- */
 trait Value
 {
-	/**
-	 * Default value for the field, which will be used when a page/file/user is created
-	 */
-	protected mixed $default = null;
-
-	/**
-	 * The value of the field
-	 */
-	protected mixed $value = null;
-
 	/**
 	 * @deprecated 5.0.0 Use `::toStoredValue()` instead to receive
 	 * the value in the format that will be needed for content files.
@@ -41,18 +24,6 @@ trait Value
 	}
 
 	/**
-	 * Returns the default value of the field
-	 */
-	public function default(): mixed
-	{
-		if (is_string($this->default) === false) {
-			return $this->default;
-		}
-
-		return $this->model->toString($this->default);
-	}
-
-	/**
 	 * Returns the fallback value when the field should be empty
 	 */
 	public function emptyValue(): mixed
@@ -65,16 +36,8 @@ trait Value
 	 */
 	public function fill(mixed $value): static
 	{
-		$this->value = $value;
+		$this->value = $value ?? $this->emptyValue();
 		return $this;
-	}
-
-	/**
-	 * Checks if the field has a value
-	 */
-	public function hasValue(): bool
-	{
-		return true;
 	}
 
 	/**
@@ -166,11 +129,6 @@ trait Value
 		return $this->hasValue();
 	}
 
-	protected function setDefault(mixed $default = null): void
-	{
-		$this->default = $default;
-	}
-
 	/**
 	 * Submits a new value for the field.
 	 * Fields can overwrite this method to provide custom
@@ -195,7 +153,7 @@ trait Value
 			return null;
 		}
 
-		return $this->value;
+		return $this->value ?? null;
 	}
 
 	/**

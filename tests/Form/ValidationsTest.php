@@ -6,7 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Validations::class)]
 class ValidationsTest extends TestCase
 {
 	public function setUp(): void

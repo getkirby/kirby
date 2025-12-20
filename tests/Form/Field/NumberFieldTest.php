@@ -2,29 +2,71 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(NumberField::class)]
 class NumberFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testProps(): void
 	{
 		$field = $this->field('number');
+		$props = $field->props();
 
-		$this->assertSame('number', $field->type());
-		$this->assertSame('number', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertSame('', $field->default());
-		$this->assertNull($field->min());
-		$this->assertNull($field->max());
-		$this->assertSame('', $field->step());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'after'       => null,
+			'autofocus'   => false,
+			'before'      => null,
+			'disabled'    => false,
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => null,
+			'label'       => 'Number',
+			'max'         => null,
+			'min'         => null,
+			'name'        => 'number',
+			'placeholder' => null,
+			'required'    => false,
+			'saveable'    => true,
+			'step'        => null,
+			'translate'   => true,
+			'type'        => 'number',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testMax(): void
+	{
+		$field = $this->field('number', [
+			'value' => 1,
+			'max'   => 0
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('max', $field->errors());
+	}
+
+	public function testMin(): void
+	{
+		$field = $this->field('number', [
+			'value' => 1,
+			'min'   => 2
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('min', $field->errors());
 	}
 
 	public static function valueProvider(): array
 	{
 		return [
-			[null, ''],
-			['', ''],
+			[null, null],
+			['', null],
 			[false, (float)0],
 			[0, (float)0],
 			['0', (float)0],
@@ -39,7 +81,7 @@ class NumberFieldTest extends TestCase
 	}
 
 	#[DataProvider('valueProvider')]
-	public function testValue($input, $expected): void
+	public function testToFormValue($input, $expected): void
 	{
 		$field = $this->field('number', [
 			'value'   => $input,
@@ -47,39 +89,17 @@ class NumberFieldTest extends TestCase
 			'step'    => $input
 		]);
 
-		$this->assertSame($expected, $field->value());
+		$this->assertSame($expected, $field->toFormValue());
 		$this->assertSame($expected, $field->default());
 		$this->assertSame($expected, $field->step());
 	}
 
-	public function testMin(): void
-	{
-		$field = $this->field('number', [
-			'value' => 1,
-			'min'   => 2
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('min', $field->errors());
-	}
-
-	public function testMax(): void
-	{
-		$field = $this->field('number', [
-			'value' => 1,
-			'max'   => 0
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('max', $field->errors());
-	}
-
-	public function testLargeValue(): void
+	public function testToFormValueLargeValue(): void
 	{
 		$field = $this->field('number', [
 			'value' => 1000
 		]);
 
-		$this->assertSame(1000.0, $field->value());
+		$this->assertSame(1000.0, $field->toFormValue());
 	}
 }

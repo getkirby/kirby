@@ -2,16 +2,49 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(HiddenField::class)]
 class HiddenFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testFill(): void
 	{
 		$field = $this->field('hidden');
+		$field->fill('test');
 
-		$this->assertSame('hidden', $field->type());
-		$this->assertSame('hidden', $field->name());
-		$this->assertNull($field->value());
+		$this->assertSame('test', $field->toFormValue());
+	}
+
+	public function testIsHidden(): void
+	{
+		$field = $this->field('hidden');
 		$this->assertTrue($field->isHidden());
-		$this->assertTrue($field->save());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('hidden');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'hidden'   => true,
+			'name'     => 'hidden',
+			'saveable' => true,
+			'type'     => 'hidden',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testReset(): void
+	{
+		$field = $this->field('hidden');
+		$field->fill('test');
+		$this->assertSame('test', $field->toFormValue());
+
+		$field->reset();
+		$this->assertNull($field->toFormValue());
 	}
 }

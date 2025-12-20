@@ -15,11 +15,10 @@ use Kirby\Exception\InvalidArgumentException;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dialog\PagePickerDialogController` instead
  */
 class PagePicker extends Picker
 {
-	// TODO: null only due to our Properties setters,
-	// remove once our implementation is better
 	protected Pages|null $items = null;
 	protected Pages|null $itemsForQuery = null;
 	protected Page|Site|null $parent = null;

@@ -2,44 +2,47 @@
 
 namespace Kirby\Form\Field;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(RadioField::class)]
 class RadioFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testProps(): void
 	{
 		$field = $this->field('radio');
 
 		$this->assertSame('radio', $field->type());
 		$this->assertSame('radio', $field->name());
 		$this->assertSame('', $field->value());
-		$this->assertNull($field->icon());
 		$this->assertSame([], $field->options());
-		$this->assertTrue($field->save());
+		$this->assertTrue($field->hasValue());
 	}
 
-	public static function valueInputProvider(): array
-	{
-		return [
-			['a', 'a'],
-			['b', 'b'],
-			['c', 'c'],
-			['d', '']
-		];
-	}
-
-	#[DataProvider('valueInputProvider')]
-	public function testValue($input, $expected): void
+	public function testValidations(): void
 	{
 		$field = $this->field('radio', [
 			'options' => [
-				'a',
-				'b',
-				'c'
+				'one'   => 'Option One',
+				'two'   => 'Option Two',
+				'three' => 'Option Three',
 			],
-			'value' => $input
+			'value' => 'one',
 		]);
 
-		$this->assertTrue($expected === $field->value());
+		$this->assertTrue($field->isValid());
+
+		$field = $this->field('radio', [
+			'options' => [
+				'one'   => 'Option One',
+				'two'   => 'Option Two',
+				'three' => 'Option Three',
+			],
+			'value' => 'foo',
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame([
+			'option' => 'Please select a valid option',
+		], $field->errors());
 	}
 }

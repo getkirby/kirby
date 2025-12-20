@@ -10,9 +10,40 @@ use Kirby\Cache\RedisCache;
 use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
+use Kirby\Form\Field\CheckboxesField;
+use Kirby\Form\Field\ColorField;
+use Kirby\Form\Field\DateField;
+use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\EntriesField;
+use Kirby\Form\Field\FilePickerField;
+use Kirby\Form\Field\GapField;
+use Kirby\Form\Field\HeadlineField;
+use Kirby\Form\Field\HiddenField;
+use Kirby\Form\Field\InfoField;
 use Kirby\Form\Field\LayoutField;
+use Kirby\Form\Field\LineField;
+use Kirby\Form\Field\LinkField;
+use Kirby\Form\Field\ListField;
+use Kirby\Form\Field\MultiselectField;
+use Kirby\Form\Field\NumberField;
+use Kirby\Form\Field\ObjectField;
+use Kirby\Form\Field\PagePickerField;
+use Kirby\Form\Field\RadioField;
+use Kirby\Form\Field\RangeField;
+use Kirby\Form\Field\SelectField;
+use Kirby\Form\Field\SlugField;
 use Kirby\Form\Field\StatsField;
+use Kirby\Form\Field\StructureField;
+use Kirby\Form\Field\TagsField;
+use Kirby\Form\Field\TelField;
+use Kirby\Form\Field\TextareaField;
+use Kirby\Form\Field\TextField;
+use Kirby\Form\Field\TimeField;
+use Kirby\Form\Field\ToggleField;
+use Kirby\Form\Field\TogglesField;
+use Kirby\Form\Field\UrlField;
+use Kirby\Form\Field\UserPickerField;
+use Kirby\Form\Field\WriterField;
 use Kirby\Panel\Ui\FilePreview\AudioFilePreview;
 use Kirby\Panel\Ui\FilePreview\ImageFilePreview;
 use Kirby\Panel\Ui\FilePreview\PdfFilePreview;
@@ -217,40 +248,72 @@ class Core
 	{
 		return [
 			'blocks'      => BlocksField::class,
-			'checkboxes'  => $this->root . '/fields/checkboxes.php',
-			'color'       => $this->root . '/fields/color.php',
-			'date'        => $this->root . '/fields/date.php',
-			'email'       => $this->root . '/fields/email.php',
+			'checkboxes'  => CheckboxesField::class,
+			'color'       => ColorField::class,
+			'date'        => DateField::class,
+			'email'       => EmailField::class,
 			'entries'     => EntriesField::class,
-			'files'       => $this->root . '/fields/files.php',
-			'gap'         => $this->root . '/fields/gap.php',
-			'headline'    => $this->root . '/fields/headline.php',
-			'hidden'      => $this->root . '/fields/hidden.php',
-			'info'        => $this->root . '/fields/info.php',
+			'files'       => FilePickerField::class,
+			'gap'         => GapField::class,
+			'headline'    => HeadlineField::class,
+			'hidden'      => HiddenField::class,
+			'info'        => InfoField::class,
 			'layout'      => LayoutField::class,
-			'line'        => $this->root . '/fields/line.php',
-			'link'        => $this->root . '/fields/link.php',
-			'list'        => $this->root . '/fields/list.php',
-			'multiselect' => $this->root . '/fields/multiselect.php',
-			'number'      => $this->root . '/fields/number.php',
-			'object'      => $this->root . '/fields/object.php',
-			'pages'       => $this->root . '/fields/pages.php',
-			'radio'       => $this->root . '/fields/radio.php',
-			'range'       => $this->root . '/fields/range.php',
-			'select'      => $this->root . '/fields/select.php',
-			'slug'        => $this->root . '/fields/slug.php',
+			'line'        => LineField::class,
+			'link'        => LinkField::class,
+			'list'        => ListField::class,
+			'multiselect' => MultiselectField::class,
+			'number'      => NumberField::class,
+			'object'      => ObjectField::class,
+			'pages'       => PagePickerField::class,
+			'radio'       => RadioField::class,
+			'range'       => RangeField::class,
+			'select'      => SelectField::class,
+			'slug'        => SlugField::class,
 			'stats'       => StatsField::class,
-			'structure'   => $this->root . '/fields/structure.php',
-			'tags'        => $this->root . '/fields/tags.php',
-			'tel'         => $this->root . '/fields/tel.php',
-			'text'        => $this->root . '/fields/text.php',
-			'textarea'    => $this->root . '/fields/textarea.php',
-			'time'        => $this->root . '/fields/time.php',
-			'toggle'      => $this->root . '/fields/toggle.php',
-			'toggles'     => $this->root . '/fields/toggles.php',
-			'url'         => $this->root . '/fields/url.php',
-			'users'       => $this->root . '/fields/users.php',
-			'writer'      => $this->root . '/fields/writer.php'
+			'structure'   => StructureField::class,
+			'tags'        => TagsField::class,
+			'tel'         => TelField::class,
+			'text'        => TextField::class,
+			'textarea'    => TextareaField::class,
+			'time'        => TimeField::class,
+			'toggle'      => ToggleField::class,
+			'toggles'     => TogglesField::class,
+			'url'         => UrlField::class,
+			'users'       => UserPickerField::class,
+			'writer'      => WriterField::class,
+
+			'legacy-checkboxes'  => $this->root . '/fields/checkboxes.php',
+			'legacy-color'       => $this->root . '/fields/color.php',
+			'legacy-date'        => $this->root . '/fields/date.php',
+			'legacy-email'       => $this->root . '/fields/email.php',
+			'legacy-files'       => $this->root . '/fields/files.php',
+			'legacy-gap'         => $this->root . '/fields/gap.php',
+			'legacy-headline'    => $this->root . '/fields/headline.php',
+			'legacy-hidden'      => $this->root . '/fields/hidden.php',
+			'legacy-info'        => $this->root . '/fields/info.php',
+			'legacy-line'        => $this->root . '/fields/line.php',
+			'legacy-link'        => $this->root . '/fields/link.php',
+			'legacy-list'        => $this->root . '/fields/list.php',
+			'legacy-multiselect' => $this->root . '/fields/multiselect.php',
+			'legacy-number'      => $this->root . '/fields/number.php',
+			'legacy-object'      => $this->root . '/fields/object.php',
+			'legacy-pages'       => $this->root . '/fields/pages.php',
+			'legacy-radio'       => $this->root . '/fields/radio.php',
+			'legacy-range'       => $this->root . '/fields/range.php',
+			'legacy-select'      => $this->root . '/fields/select.php',
+			'legacy-slug'        => $this->root . '/fields/slug.php',
+			'legacy-structure'   => $this->root . '/fields/structure.php',
+			'legacy-tags'        => $this->root . '/fields/tags.php',
+			'legacy-tel'         => $this->root . '/fields/tel.php',
+			'legacy-text'        => $this->root . '/fields/text.php',
+			'legacy-textarea'    => $this->root . '/fields/textarea.php',
+			'legacy-time'        => $this->root . '/fields/time.php',
+			'legacy-toggle'      => $this->root . '/fields/toggle.php',
+			'legacy-toggles'     => $this->root . '/fields/toggles.php',
+			'legacy-url'         => $this->root . '/fields/url.php',
+			'legacy-users'       => $this->root . '/fields/users.php',
+			'legacy-writer'      => $this->root . '/fields/writer.php',
 		];
 	}
 

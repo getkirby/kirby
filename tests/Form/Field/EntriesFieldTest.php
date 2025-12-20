@@ -9,57 +9,26 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(EntriesField::class)]
 class EntriesFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testDefault(): void
 	{
-		$field = $this->field('entries');
+		$field = $this->field('entries', [
+			'default' => $defaults = [
+				'Some text 1',
+				'Some text 2',
+				'Some text 3',
+			]
+		]);
 
-		$this->assertSame('entries', $field->type());
-		$this->assertSame('entries', $field->name());
-		$this->assertNull($field->max());
-		$this->assertTrue($field->sortable());
-		$this->assertSame([], $field->value());
+		$this->assertSame($defaults, $field->default());
 	}
 
-	public function testProps(): void
+	public function testEmpty(): void
 	{
-		$field = $this->field('entries');
-		$props = $field->props();
+		$field = $this->field('entries', [
+			'empty' => $value = 'Custom empty text'
+		]);
 
-		$this->assertIsArray($props);
-		$this->assertNull($props['empty']);
-		$this->assertNull($props['max']);
-		$this->assertNull($props['min']);
-		$this->assertNull($props['after']);
-		$this->assertFalse($props['autofocus']);
-		$this->assertNull($props['before']);
-		$this->assertNull($props['default']);
-		$this->assertFalse($props['disabled']);
-		$this->assertNull($props['help']);
-		$this->assertNull($props['icon']);
-		$this->assertSame('Entries', $props['label']);
-		$this->assertSame('entries', $props['name']);
-		$this->assertNull($props['placeholder']);
-		$this->assertFalse($props['required']);
-		$this->assertTrue($props['saveable']);
-		$this->assertTrue($props['sortable']);
-		$this->assertTrue($props['translate']);
-		$this->assertSame('entries', $props['type']);
-		$this->assertSame('1/1', $props['width']);
-
-		$fieldProps = $props['field'];
-		$this->assertIsArray($fieldProps);
-		$this->assertFalse($fieldProps['autofocus']);
-		$this->assertTrue($fieldProps['counter']);
-		$this->assertFalse($fieldProps['disabled']);
-		$this->assertSame('sans-serif', $fieldProps['font']);
-		$this->assertFalse($fieldProps['hidden']);
-		$this->assertSame('0', $fieldProps['name']);
-		$this->assertFalse($fieldProps['required']);
-		$this->assertTrue($fieldProps['saveable']);
-		$this->assertFalse($fieldProps['spellcheck']);
-		$this->assertTrue($fieldProps['translate']);
-		$this->assertSame('text', $fieldProps['type']);
-		$this->assertSame('1/1', $fieldProps['width']);
+		$this->assertSame($value, $field->empty());
 	}
 
 	public function testField(): void
@@ -126,26 +95,115 @@ class EntriesFieldTest extends TestCase
 		$this->assertArrayNotHasKey('counter', $field->field());
 	}
 
-	public function testDefaultValue(): void
+	public static function supportsProvider(): array
 	{
-		$field = $this->field('entries', [
-			'default' => $defaults = [
-				'Some text 1',
-				'Some text 2',
-				'Some text 3',
-			]
-		]);
-
-		$this->assertSame($defaults, $field->default());
+		return [
+			['color', true],
+			['date', true],
+			['email', true],
+			['number', true],
+			['select', true],
+			['slug', true],
+			['tel', true],
+			['text', true],
+			['time', true],
+			['url', true],
+			['blocks', false],
+			['layout', false],
+			['writer', false],
+			['structure', false],
+			['checkboxes', false],
+			['files', false],
+			['gap', false],
+			['headline', false],
+			['hidden', false],
+			['info', false],
+			['line', false],
+			['link', false],
+			['list', false],
+			['multiselect', false],
+			['object', false],
+			['pages', false],
+			['radio', false],
+			['range', false],
+			['tags', false],
+			['textarea', false],
+			['toggle', false],
+			['toggles', false],
+			['users', false],
+		];
 	}
 
-	public function testSortable(): void
+	#[DataProvider('supportsProvider')]
+	public function testFieldSupportedFields($type, $expected): void
 	{
 		$field = $this->field('entries', [
-			'sortable' => false
+			'field' => $type,
 		]);
 
-		$this->assertFalse($field->sortable());
+		if ($expected === true) {
+			$this->assertSame($type, $field->field()['type']);
+			$this->assertTrue($field->isValid());
+		} else {
+			$this->expectException(InvalidArgumentException::class);
+			$this->expectExceptionMessage('"' . $type . '" field type is not supported for the entries field');
+			$field->field();
+		}
+	}
+
+	public static function validationsProvider(): array
+	{
+		return [
+			['color', '#000000', true],
+			['color', 'invalid', false],
+
+			['date', '2025-02-01', true],
+
+			['email', 'support@getkirby.com', true],
+			['email', 'invalid@host', false],
+
+			['number', 1, true],
+
+			['select', 'web', false],
+
+			[
+				[
+					'type'    => 'select',
+					'options' => ['web', 'print'],
+				],
+				'web',
+				true
+			],
+
+			['slug', 'page-slug', true],
+
+			['tel', '+49123456789', true],
+
+			['text', 'some text', true],
+
+			['time', '20:00', true],
+
+			['url', 'https://getkirby.com', true],
+			['url', 'invalid.host', false],
+		];
+	}
+
+	#[DataProvider('validationsProvider')]
+	public function testIsValid($type, $value, $expected): void
+	{
+		$field = $this->field('entries', [
+			'value'    => [$value],
+			'field'    => $type,
+			'required' => true
+		]);
+
+		$this->assertSame($expected, $field->isValid());
+
+		if ($expected === false) {
+			$this->assertSame([
+				'entries' => 'There\'s an error on the "Entries" field in row 1'
+			], $field->errors());
+		}
 	}
 
 	public function testMax(): void
@@ -233,6 +291,43 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
 	}
 
+
+	public function testProps(): void
+	{
+		$field = $this->field('entries');
+		$props = $field->props();
+
+		$this->assertIsArray($props);
+		$this->assertNull($props['empty']);
+		$this->assertNull($props['max']);
+		$this->assertNull($props['min']);
+		$this->assertFalse($props['autofocus']);
+		$this->assertFalse($props['disabled']);
+		$this->assertNull($props['help']);
+		$this->assertSame('Entries', $props['label']);
+		$this->assertSame('entries', $props['name']);
+		$this->assertFalse($props['required']);
+		$this->assertTrue($props['saveable']);
+		$this->assertTrue($props['sortable']);
+		$this->assertTrue($props['translate']);
+		$this->assertSame('entries', $props['type']);
+		$this->assertSame('1/1', $props['width']);
+
+		$fieldProps = $props['field'];
+		$this->assertIsArray($fieldProps);
+		$this->assertFalse($fieldProps['autofocus']);
+		$this->assertTrue($fieldProps['counter']);
+		$this->assertFalse($fieldProps['disabled']);
+		$this->assertSame('sans-serif', $fieldProps['font']);
+		$this->assertFalse($fieldProps['hidden']);
+		$this->assertSame('0', $fieldProps['name']);
+		$this->assertFalse($fieldProps['required']);
+		$this->assertTrue($fieldProps['saveable']);
+		$this->assertTrue($fieldProps['translate']);
+		$this->assertSame('text', $fieldProps['type']);
+		$this->assertSame('1/1', $fieldProps['width']);
+	}
+
 	public function testRequiredValid(): void
 	{
 		$field = $this->field('entries', [
@@ -275,118 +370,13 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame([], $field->toFormValue());
 	}
 
-	public static function supportsProvider(): array
-	{
-		return [
-			['color', true],
-			['date', true],
-			['email', true],
-			['number', true],
-			['select', true],
-			['slug', true],
-			['tel', true],
-			['text', true],
-			['time', true],
-			['url', true],
-			['blocks', false],
-			['layout', false],
-			['writer', false],
-			['structure', false],
-			['checkboxes', false],
-			['files', false],
-			['gap', false],
-			['headline', false],
-			['hidden', false],
-			['info', false],
-			['line', false],
-			['link', false],
-			['list', false],
-			['multiselect', false],
-			['object', false],
-			['pages', false],
-			['radio', false],
-			['range', false],
-			['tags', false],
-			['textarea', false],
-			['toggle', false],
-			['toggles', false],
-			['users', false],
-		];
-	}
-
-	#[DataProvider('supportsProvider')]
-	public function testSupportedFields($type, $expected): void
-	{
-		if ($expected === false) {
-			$this->expectException(InvalidArgumentException::class);
-			$this->expectExceptionMessage('"' . $type . '" field type is not supported for the entries field');
-		}
-
-		$field = $this->field('entries', [
-			'field' => $type,
-		]);
-
-		if ($expected === true) {
-			$this->assertTrue($field->isValid());
-		}
-	}
-
-	public static function validationsProvider(): array
-	{
-		return [
-			['color', '#000000', true],
-			['color', 'invalid', false],
-
-			['date', '2025-02-01', true],
-
-			['email', 'support@getkirby.com', true],
-			['email', 'invalid@host', false],
-
-			['number', 1, true],
-
-			['select', 'web', true],
-
-			['slug', 'page-slug', true],
-
-			['tel', '+49123456789', true],
-
-			['text', 'some text', true],
-
-			['time', '20:00', true],
-
-			['url', 'https://getkirby.com', true],
-			['url', 'invalid.host', false],
-		];
-	}
-
-	#[DataProvider('validationsProvider')]
-	public function testValidations($type, $value, $expected): void
+	public function testSortable(): void
 	{
 		$field = $this->field('entries', [
-			'value'    => [
-				$value
-			],
-			'field'    => $type,
-			'required' => true
+			'sortable' => false
 		]);
 
-		$field->validate();
-		$this->assertSame($expected, $field->isValid());
-
-		if ($expected === false) {
-			$this->assertSame([
-				'entries' => 'There\'s an error on the "Entries" field in row 1'
-			], $field->errors());
-		}
-	}
-
-	public function testEmpty(): void
-	{
-		$field = $this->field('entries', [
-			'empty' => $value = 'Custom empty text'
-		]);
-
-		$this->assertSame($value, $field->empty());
+		$this->assertFalse($field->sortable());
 	}
 
 	public function testToStoredValue(): void

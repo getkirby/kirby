@@ -2,25 +2,22 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(MultiselectField::class)]
 class MultiselectFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testMax(): void
 	{
-		$field = $this->field('multiselect');
+		$field = $this->field('multiselect', [
+			'value'   => 'a, b',
+			'options' => ['a', 'b', 'c'],
+			'max'     => 1
+		]);
 
-		$this->assertSame('multiselect', $field->type());
-		$this->assertSame('multiselect', $field->name());
-		$this->assertSame([], $field->value());
-		$this->assertSame([], $field->default());
-		$this->assertSame([], $field->options());
-		$this->assertNull($field->min());
-		$this->assertNull($field->max());
-		$this->assertSame(',', $field->separator());
-		$this->assertSame('checklist', $field->icon());
-		$this->assertNull($field->counter());
-		$this->assertTrue($field->search());
-		$this->assertFalse($field->sort());
-		$this->assertTrue($field->save());
+		$this->assertSame(1, $field->max());
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('max', $field->errors());
 	}
 
 	public function testMin(): void
@@ -31,30 +28,43 @@ class MultiselectFieldTest extends TestCase
 			'min'     => 2
 		]);
 
+		$this->assertSame(2, $field->min());
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
-	public function testMax(): void
+	public function testProps(): void
 	{
-		$field = $this->field('multiselect', [
-			'value'   => 'a, b',
-			'options' => ['a', 'b', 'c'],
-			'max'     => 1
-		]);
+		$field = $this->field('multiselect');
+		$props = $field->props();
 
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('max', $field->errors());
-	}
+		ksort($props);
 
-	public function testSanitizeOptions(): void
-	{
-		$field = $this->field('multiselect', [
-			'value'   => 'a, b',
-			'options' => ['b', 'c'],
-		]);
+		$expected = [
+			'accept'    => 'options',
+			'autofocus' => false,
+			'disabled'  => false,
+			'help'      => null,
+			'hidden'    => false,
+			'icon'      => 'checklist',
+			'label'     => 'Multiselect',
+			'layout'    => null,
+			'max'       => null,
+			'min'       => null,
+			'name'      => 'multiselect',
+			'options'   => [],
+			'required'  => false,
+			'saveable'  => true,
+			'search'    => true,
+			'separator' => ',',
+			'sort'      => false,
+			'required'  => false,
+			'translate' => true,
+			'type'      => 'multiselect',
+			'when'      => null,
+			'width'     => '1/1',
+		];
 
-		$this->assertCount(1, $field->value());
-		$this->assertArrayHasKey(0, $field->value());
+		$this->assertSame($expected, $props);
 	}
 }

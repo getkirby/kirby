@@ -2,24 +2,16 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(TextareaField::class)]
 class TextareaFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testApi(): void
 	{
 		$field = $this->field('textarea');
-
-		$this->assertSame('textarea', $field->type());
-		$this->assertSame('textarea', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertNull($field->icon());
-		$this->assertNull($field->placeholder());
-		$this->assertTrue($field->counter());
-		$this->assertNull($field->maxlength());
-		$this->assertNull($field->minlength());
-		$this->assertNull($field->size());
-		$this->assertSame([], $field->files());
-		$this->assertSame(['accept' => '*'], $field->uploads());
-		$this->assertTrue($field->save());
+		$this->assertSame('upload', $field->api()[0]['pattern']);
 	}
 
 	public function testButtonsDisabled(): void
@@ -52,47 +44,22 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame('test', $field->default());
 	}
 
-	public function testFiles(): void
-	{
-		$field = $this->field('textarea', [
-			'value' => 'test',
-			'files' => [
-				'query' => 'page.images'
-			]
-		]);
-
-		$this->assertSame(['query' => 'page.images'], $field->files());
-	}
-
-	public function testFilesQuery(): void
-	{
-		$field = $this->field('textarea', [
-			'value' => 'test',
-			'files' => 'page.images'
-		]);
-
-		$this->assertSame(['query' => 'page.images'], $field->files());
-	}
-
-	public function testFilesWithInvalidInput(): void
-	{
-		$field = $this->field('textarea', [
-			'files' => 1
-		]);
-
-		$this->assertSame([], $field->files());
-	}
-
-	public function testFillWithEmptyValue(): void
+	public function testDialogs(): void
 	{
 		$field = $this->field('textarea');
-		$field->fill('test');
 
-		$this->assertSame('test', $field->toFormValue());
+		$dialogs = $field->dialogs();
+		$dialog  = $dialogs['files']();
+		$this->assertInstanceOf(FilePickerDialogController::class, $dialog);
+	}
 
-		$field->fillWithEmptyValue();
+	public function testFont(): void
+	{
+		$field = $this->field('textarea');
+		$this->assertSame('sans-serif', $field->font());
 
-		$this->assertSame('', $field->toFormValue());
+		$field = $this->field('textarea', ['font' => 'monospace']);
+		$this->assertSame('monospace', $field->font());
 	}
 
 	public function testMaxLength(): void
@@ -117,6 +84,58 @@ class TextareaFieldTest extends TestCase
 		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
+	public function testProps(): void
+	{
+		$field = $this->field('textarea');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'buttons'     => true,
+			'counter'     => true,
+			'disabled'    => false,
+			'font'        => 'sans-serif',
+			'help'        => null,
+			'hidden'      => false,
+			'label'       => 'Textarea',
+			'maxlength'   => null,
+			'minlength'   => null,
+			'name'        => 'textarea',
+			'required'    => false,
+			'saveable'    => true,
+			'size'        => null,
+			'spellcheck'  => null,
+			'translate'   => true,
+			'type'        => 'textarea',
+			'uploads'     => ['accept' => '*'],
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testReset(): void
+	{
+		$field = $this->field('textarea');
+		$field->fill('test');
+		$this->assertSame('test', $field->toFormValue());
+
+		$field->reset();
+		$this->assertSame('', $field->toFormValue());
+	}
+
+	public function testToFormValueTrimmed(): void
+	{
+		$field = $this->field('textarea', [
+			'value' => 'test '
+		]);
+
+		$this->assertSame('test', $field->toFormValue());
+	}
+
 	public function testUploads(): void
 	{
 		$field = $this->field('textarea', [
@@ -126,7 +145,12 @@ class TextareaFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(['template' => 'test', 'accept' => '*'], $field->uploads());
+		$expected = [
+			'accept'   => '*',
+			'template' => 'test',
+		];
+
+		$this->assertSame($expected, $field->uploads());
 	}
 
 	public function testUploadsDisabled(): void
@@ -148,7 +172,12 @@ class TextareaFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(['parent' => 'page.parent', 'accept' => '*'], $field->uploads());
+		$expected = [
+			'accept' => '*',
+			'parent' => 'page.parent',
+		];
+
+		$this->assertSame($expected, $field->uploads());
 	}
 
 	public function testUploadsTemplate(): void
@@ -158,25 +187,21 @@ class TextareaFieldTest extends TestCase
 			'uploads' => 'test'
 		]);
 
-		$this->assertSame(['template' => 'test', 'accept' => '*'], $field->uploads());
+		$expected = [
+			'accept'   => '*',
+			'template' => 'test',
+		];
+
+		$this->assertSame($expected, $field->uploads());
 	}
 
 	public function testUploadsWithInvalidInput(): void
 	{
 		$field = $this->field('textarea', [
-			'value' => 'test',
+			'value'   => 'test',
 			'uploads' => 1,
 		]);
 
 		$this->assertSame(['accept' => '*'], $field->uploads());
-	}
-
-	public function testValueTrimmed(): void
-	{
-		$field = $this->field('textarea', [
-			'value' => 'test '
-		]);
-
-		$this->assertSame('test', $field->value());
 	}
 }

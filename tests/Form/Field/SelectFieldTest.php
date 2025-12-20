@@ -2,22 +2,11 @@
 
 namespace Kirby\Form\Field;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(SelectField::class)]
 class SelectFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('select');
-
-		$this->assertSame('select', $field->type());
-		$this->assertSame('select', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertNull($field->icon());
-		$this->assertSame([], $field->options());
-		$this->assertTrue($field->save());
-	}
-
 	public function testOptionsQuery(): void
 	{
 		$app = $this->app()->clone([
@@ -99,16 +88,20 @@ class SelectFieldTest extends TestCase
 
 		$field = $this->field('select', [
 			'model'   => $app->page('b'),
-			'options' => 'query',
-			'query'   => 'page.siblings.pluck("tags", ",", true)',
+			'options' => [
+				'type'  => 'query',
+				'query' => 'page.siblings.pluck("tags", ",", true)',
+			],
 		]);
 
 		$this->assertSame($expected, $field->options());
 
 		$field = $this->field('select', [
 			'model'   => $app->file('a/b.jpg'),
-			'options' => 'query',
-			'query'   => 'file.siblings.pluck("tags", ",", true)',
+			'options' => [
+				'type'  => 'query',
+				'query' => 'file.siblings.pluck("tags", ",", true)',
+			],
 		]);
 
 		$this->assertSame($expected, $field->options());
@@ -185,33 +178,31 @@ class SelectFieldTest extends TestCase
 		$this->assertSame($expected, $field->options());
 	}
 
-	public static function valueInputProvider(): array
+	public function testProps(): void
 	{
-		return [
-			['a', 'a'],
-			['b', 'b'],
-			['c', 'c'],
-			['d', ''],
-			['1', '1'],
-			['2', '2'],
-			['3', '']
+		$field = $this->field('select');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'disabled'    => false,
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => null,
+			'label'       => 'Select',
+			'name'        => 'select',
+			'options'     => [],
+			'placeholder' => '—',
+			'required'    => false,
+			'saveable'    => true,
+			'translate'   => true,
+			'type'        => 'select',
+			'when'	      => null,
+			'width'	      => '1/1',
 		];
-	}
 
-	#[DataProvider('valueInputProvider')]
-	public function testValue($input, $expected): void
-	{
-		$field = $this->field('select', [
-			'options' => [
-				'a',
-				'b',
-				'c',
-				1,
-				2
-			],
-			'value' => $input
-		]);
-
-		$this->assertSame($expected, $field->value());
+		$this->assertSame($expected, $props);
 	}
 }

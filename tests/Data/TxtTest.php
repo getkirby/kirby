@@ -109,11 +109,27 @@ class TxtTest extends TestCase
 		$array = [
 			'title' => 'Title',
 			'text'  => ['a', 'b', 'c'],
-			'text2' => ['a']
+			'text2' => [],
+			'text3' => ['a'],
 		];
 
 		$data = Txt::encode($array);
 		$this->assertSame(file_get_contents(static::FIXTURES . '/test.txt'), $data);
+	}
+
+	public function testEncodeBool(): void
+	{
+		$data = Txt::encode([
+			'bool' => true
+		]);
+
+		$this->assertSame('Bool: true', $data);
+
+		$data = Txt::encode([
+			'bool' => false
+		]);
+
+		$this->assertSame('Bool: false', $data);
 	}
 
 	public function testEncodeFloat(): void

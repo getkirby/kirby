@@ -8,6 +8,7 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Field\BaseField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
@@ -21,7 +22,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends \Kirby\Toolkit\Collection<\Kirby\Form\Field|\Kirby\Form\FieldClass>
+ * @extends \Kirby\Toolkit\Collection<\Kirby\Form\Field|\Kirby\Form\Field\BaseField>
  */
 class Fields extends Collection
 {
@@ -47,7 +48,7 @@ class Fields extends Collection
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
 	 *
-	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass|array $field
+	 * @param \Kirby\Form\Field|\Kirby\Form\Field\BaseField\array $field
 	 */
 	public function __set(string $name, $field): void
 	{
@@ -99,7 +100,7 @@ class Fields extends Collection
 	 * @since 5.0.0
 	 * @throws \Kirby\Exception\NotFoundException
 	 */
-	public function field(string $name): Field|FieldClass
+	public function field(string $name): Field|BaseField
 	{
 		if ($field = $this->find($name)) {
 			return $field;
@@ -147,7 +148,7 @@ class Fields extends Collection
 	/**
 	 * Find a field by key/name
 	 */
-	public function findByKey(string $key): Field|FieldClass|null
+	public function findByKey(string $key): Field|BaseField|null
 	{
 		if (str_contains($key, '+')) {
 			return $this->findByKeyRecursive($key);
@@ -159,7 +160,7 @@ class Fields extends Collection
 	/**
 	 * Find fields in nested forms recursively
 	 */
-	public function findByKeyRecursive(string $key): Field|FieldClass|null
+	public function findByKeyRecursive(string $key): Field|BaseField|null
 	{
 		$fields = $this;
 		$names  = Str::split($key, '+');
@@ -181,7 +182,13 @@ class Fields extends Collection
 
 			// there are more parts in the key
 			if ($index < $count) {
-				$form = $field->form();
+				$form = match (true) {
+					$field instanceof BaseField && method_exists($field, 'form') === true
+						=> $field->form(),
+					$field instanceof Field
+						=> $field->form(),
+					default => null
+				};
 
 				// the search can only continue for
 				// fields with valid nested forms
@@ -268,10 +275,12 @@ class Fields extends Collection
 
 		// reset the values of each field
 		foreach ($this->data as $field) {
-			if ($field instanceof Field) {
-				$field->fillWithEmptyValue();
-			} else {
-				$field->reset();
+			if ($field->hasValue() === true) {
+				if ($field instanceof Field) {
+					$field->fillWithEmptyValue(); // @codeCoverageIgnore
+				} else {
+					$field->reset();
+				}
 			}
 		}
 
@@ -357,7 +366,7 @@ class Fields extends Collection
 	 *
 	 * @since 5.0.0
 	 */
-	public function toProps(): array
+	public function toProps(bool $defaults = false): array
 	{
 		$fields      = $this->data;
 		$props       = [];
@@ -370,7 +379,10 @@ class Fields extends Collection
 			// the field should be disabled in the form if the user
 			// has no update permissions for the model or if the field
 			// is not translatable into the current language
-			if ($permissions === false || $field->isTranslatable($language) === false) {
+			if (
+				$permissions === false ||
+				$field->isTranslatable($language) === false
+			) {
 				$props[$name]['disabled'] = true;
 			}
 
@@ -378,6 +390,11 @@ class Fields extends Collection
 			// we pass on the values to the frontend via the model
 			// view props to make them globally available for the view.
 			unset($props[$name]['value']);
+
+			// include the default value if requested
+			if ($defaults === true) {
+				$props[$name]['default'] = $field->default();
+			}
 		}
 
 		return $props;
@@ -393,7 +410,7 @@ class Fields extends Collection
 	{
 		return $this->toValues(
 			fn ($field) => $field->toStoredValue(),
-			fn ($field) => $field->isStorable($this->language())
+			fn ($field) => $field->hasValue() ? $field->isStorable($this->language()) : false
 		);
 	}
 

@@ -87,6 +87,7 @@ return [
 	'kirby\cms\pluginasset'        => 'Kirby\Plugin\Asset',
 	'kirby\cms\pluginassets'       => 'Kirby\Plugin\Assets',
 	'kirby\cms\template'           => 'Kirby\Template\Template',
+	'kirby\field\fieldoptions'     => 'Kirby\Form\FieldOptions',
 	'kirby\form\options'           => 'Kirby\Option\Options',
 	'kirby\form\optionsapi'        => 'Kirby\Option\OptionsApi',
 	'kirby\form\optionsquery'      => 'Kirby\Option\OptionsQuery',

@@ -2,23 +2,49 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(UrlField::class)]
 class UrlFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testProps(): void
 	{
 		$field = $this->field('url');
+		$props = $field->props();
 
-		$this->assertSame('url', $field->type());
-		$this->assertSame('url', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertSame('url', $field->icon());
-		$this->assertSame('https://example.com', $field->placeholder());
-		$this->assertNull($field->counter());
-		$this->assertSame('url', $field->autocomplete());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'after'        => null,
+			'autocomplete' => 'url',
+			'autofocus'    => false,
+			'before'       => null,
+			'converter'    => null,
+			'counter'      => false,
+			'disabled'     => false,
+			'font'         => 'sans-serif',
+			'help'         => null,
+			'hidden'       => false,
+			'icon'         => 'url',
+			'label'        => 'Url',
+			'maxlength'    => null,
+			'minlength'    => null,
+			'name'         => 'url',
+			'pattern'      => null,
+			'placeholder'  => 'https://example.com',
+			'required'     => false,
+			'saveable'     => true,
+			'spellcheck'   => null,
+			'translate'    => true,
+			'type'         => 'url',
+			'when'         => null,
+			'width'        => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
-	public function testUrlValidation(): void
+	public function testValidationsUrl(): void
 	{
 		$field = $this->field('url', [
 			'value' => 'https://getkirby.com'
@@ -31,20 +57,12 @@ class UrlFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
+		$this->assertSame([
+			'url' => 'Please enter a valid URL'
+		], $field->errors());
 	}
 
-	public function testMinLength(): void
-	{
-		$field = $this->field('url', [
-			'value' => 'https://test.com',
-			'minlength' => 17
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('minlength', $field->errors());
-	}
-
-	public function testMaxLength(): void
+	public function testValidationsMaxLength(): void
 	{
 		$field = $this->field('url', [
 			'value'     => 'https://test.com',
@@ -53,5 +71,16 @@ class UrlFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('maxlength', $field->errors());
+	}
+
+	public function testValidationsMinLength(): void
+	{
+		$field = $this->field('url', [
+			'value' => 'https://test.com',
+			'minlength' => 17
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 }

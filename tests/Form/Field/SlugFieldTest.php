@@ -2,22 +2,49 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(SlugField::class)]
 class SlugFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testProps(): void
 	{
 		$field = $this->field('slug');
+		$props = $field->props();
 
-		$this->assertSame('slug', $field->type());
-		$this->assertSame('slug', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertSame('url', $field->icon());
-		$this->assertSame('', $field->allow());
-		$this->assertNull($field->path());
-		$this->assertNull($field->sync());
-		$this->assertNull($field->placeholder());
-		$this->assertNull($field->counter());
-		$this->assertFalse($field->wizard());
-		$this->assertTrue($field->save());
+		ksort($props);
+
+		$expected = [
+			'after'        => null,
+			'allow'        => null,
+			'autocomplete' => null,
+			'autofocus'    => false,
+			'before'       => null,
+			'converter'    => null,
+			'counter'      => false,
+			'disabled'     => false,
+			'font'         => 'sans-serif',
+			'help'         => null,
+			'hidden'       => false,
+			'icon'         => 'url',
+			'label'        => 'Slug',
+			'maxlength'    => null,
+			'minlength'    => null,
+			'name'         => 'slug',
+			'path'         => null,
+			'pattern'      => null,
+			'placeholder'  => null,
+			'required'     => false,
+			'saveable'     => true,
+			'spellcheck'   => null,
+			'sync'         => null,
+			'translate'    => true,
+			'type'         => 'slug',
+			'when'         => null,
+			'width'        => '1/1',
+			'wizard'       => false,
+		];
+
+		$this->assertSame($expected, $props);
 	}
 }
