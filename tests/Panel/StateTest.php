@@ -158,8 +158,9 @@ class StateTest extends TestCase
 		$expected = [
 			'a' => 'A',
 			'urls' => [
-				'api' => '/api',
-				'site' => '/'
+				'api'   => '/api',
+				'panel' => '/panel',
+				'site'  => '/'
 			]
 		];
 
@@ -487,6 +488,7 @@ class StateTest extends TestCase
 		$state = new State();
 		$urls  = $state->urls();
 		$this->assertArrayHasKey('api', $urls);
+		$this->assertArrayHasKey('panel', $urls);
 		$this->assertArrayHasKey('site', $urls);
 	}
 
