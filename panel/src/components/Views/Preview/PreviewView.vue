@@ -49,6 +49,8 @@
 				/>
 			</template>
 		</main>
+
+		<k-panel-notifications />
 	</k-panel>
 </template>
 
