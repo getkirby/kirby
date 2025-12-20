@@ -3,12 +3,12 @@
 		<header class="k-preview-view-header">
 			<k-button-group>
 				<k-button
-					:link="back"
 					:responsive="true"
 					:title="$t('back')"
 					icon="angle-left"
 					size="sm"
 					variant="filled"
+					@click="exit"
 				>
 				</k-button>
 				<k-button
@@ -25,41 +25,35 @@
 			</k-button-group>
 
 			<k-button-group
-				v-if="mode !== 'compare'"
+				v-if="!isRemote && mode !== 'compare'"
 				layout="collapsed"
-				class="k-preview-viewport"
+				class="k-preview-view-sizes"
 			>
 				<k-button
-					v-for="(viewport, size) in viewports"
+					v-for="(button, size) in sizeButtons"
 					:key="size"
-					:current="view === size"
-					:icon="viewport.icon"
-					:theme="view === size ? 'info' : null"
-					size="sm"
-					variant="filled"
-					@click="onViewport(size)"
+					v-bind="button"
+					@click="onSize(size)"
 				/>
 			</k-button-group>
 
-			<k-button-group>
-				<k-view-buttons :buttons="buttons" />
-			</k-button-group>
+			<k-view-buttons :buttons="buttons" />
 		</header>
 
 		<main
 			ref="grid"
 			class="k-preview-view-grid"
-			:data-view="view"
-			:style="`--preview-width: ${viewports[view].width}`"
+			:style="`--preview-width: ${sizes[size].width}`"
 		>
 			<template v-if="mode === 'form'">
 				<k-preview-browser
+					v-if="!isRemote"
 					ref="browser"
 					v-bind="browserProps('form')"
-					@discard="onDiscard"
+					:open="$panel.view.path + '/remote'"
 					@navigate="onBrowserNavigate"
-					@reload="onReload"
-					@submit="onSubmit"
+					@open="onRemote"
+					@pin="togglePin"
 				/>
 
 				<k-preview-form
@@ -76,6 +70,7 @@
 					@submit="onSubmit"
 				/>
 			</template>
+
 			<template v-else-if="mode === 'compare'">
 				<k-preview-browser
 					v-bind="browserProps('latest')"
@@ -90,14 +85,14 @@
 					@submit="onSubmit"
 				/>
 			</template>
-			<template v-else>
-				<k-preview-browser
-					v-bind="browserProps(mode)"
-					@discard="onDiscard"
-					@navigate="onBrowserNavigate"
-					@submit="onSubmit"
-				/>
-			</template>
+
+			<k-preview-browser
+				v-else
+				v-bind="browserProps(mode)"
+				@discard="onDiscard"
+				@navigate="onBrowserNavigate"
+				@submit="onSubmit"
+			/>
 		</main>
 
 		<k-panel-notifications />
@@ -107,79 +102,65 @@
 <script>
 import ModelView from "@/components/Views/ModelView.vue";
 
-export default {
-	extends: ModelView,
+export const Preview = {
+	inheritAttrs: false,
 	props: {
-		back: String,
+		id: String,
 		mode: String,
-		src: Object,
-		title: String,
-		viewports: {
+		sizes: {
 			type: Object,
 			default: () => ({
 				small: { icon: "mobile", width: "390px" },
 				medium: { icon: "tablet", width: "820px" },
 				large: { icon: "display", width: "100%" }
 			})
-		}
+		},
+		src: Object
 	},
 	data() {
-		const viewport = sessionStorage.getItem("kirby$preview$viewport");
+		const size = localStorage.getItem("kirby$preview$size");
 
 		return {
-			view:
-				viewport && this.viewports[viewport]
-					? viewport
-					: Object.keys(this.viewports).pop()
+			channel: null,
+			isPinned: false,
+			size: size && this.sizes[size] ? size : Object.keys(this.sizes).pop()
 		};
+	},
+	computed: {
+		sizeButtons() {
+			const buttons = {};
+
+			for (const size in this.sizes) {
+				buttons[size] = {
+					current: this.size === size,
+					icon: this.sizes[size].icon,
+					size: "sm",
+					theme: this.size === size ? "info" : null,
+					variant: "filled"
+				};
+			}
+
+			return buttons;
+		}
 	},
 	mounted() {
 		this.$events.on("keydown.esc", this.exit);
-		this.$events.on("content.save", this.onChanges);
-		this.$events.on("model.update", this.onChanges);
-		this.$events.on("page.changeTitle", this.onChanges);
-		this.$events.on("page.sort", this.onChanges);
-		this.$events.on("file.sort", this.onChanges);
 	},
 	unmounted() {
 		this.$events.off("keydown.esc", this.exit);
-		this.$events.off("content.save", this.onChanges);
-		this.$events.off("model.update", this.onChanges);
-		this.$events.off("page.changeTitle", this.onChanges);
-		this.$events.off("page.sort", this.onChanges);
-		this.$events.off("file.sort", this.onChanges);
 	},
 	methods: {
-		browserProps(mode) {
-			const src = mode === "form" ? "changes" : mode;
-
-			return {
-				editor: this.editor,
-				hasDiff: this.hasDiff,
-				isLocked: this.isLocked,
-				isProcessing: this.isSaving,
-				modified: this.modified,
-				label: this.$t("version." + src),
-				src: this.src[src],
-				mode: mode
-			};
-		},
 		/**
-		 * Closes the preview view to the corresponding page/site view
+		 * Send message across tabs
 		 */
-		exit() {
-			// ignore if dialogs/drawers are still open
-			if (this.$panel.overlays().length > 0) {
-				return;
-			}
-
-			this.$panel.view.open(this.link);
+		announce(action, data) {
+			this.channel?.postMessage({ on: action, ...data });
 		},
 		/**
 		 * Reload the browser to reflect updated content
 		 */
 		onChanges() {
-			this.$refs.browser.reload();
+			this.$refs.browser?.reload();
 		},
 		/**
 		 * Reloads the view or just the browser src
@@ -189,10 +170,13 @@ export default {
 			this.$panel.view.reload({ query: { browser, view } });
 		},
 		/**
-		 * Reloads the preview view for the current ID
+		 * Sets a view size and remembers it in localStorage
 		 */
-		onReload() {
-			this.onTreeNavigate({ id: this.id }, true);
+		async onSize(size) {
+			this.$refs.grid.classList.add("is-animating");
+			this.size = size;
+			setTimeout(() => this.$refs.grid.classList.remove("is-animating"), 150);
+			localStorage.setItem("kirby$preview$size", size);
 		},
 		/**
 		 * Opens the right preview view for the page tree dropdown
@@ -221,13 +205,138 @@ export default {
 			this.$refs.browser?.restore(browser);
 		},
 		/**
-		 * Sets a viewport size and remembers it in sessionStorage
+		 * Reloads the preview view for the current ID
 		 */
-		async onViewport(viewport) {
-			this.$refs.grid.classList.add("is-animating");
-			this.view = viewport;
-			setTimeout(() => this.$refs.grid.classList.remove("is-animating"), 150);
-			sessionStorage.setItem("kirby$preview$viewport", viewport);
+		reload() {
+			this.onTreeNavigate({ id: this.id }, true);
+		},
+		togglePin() {
+			this.isPinned = !this.isPinned;
+
+			// when unpinning, reset the iframe to match the preview view
+			if (!this.isPinned) {
+				this.reload();
+			}
+		}
+	}
+};
+
+export default {
+	extends: ModelView,
+	mixins: [Preview],
+	props: {
+		back: String,
+		title: String
+	},
+	data() {
+		return {
+			isRemote: false
+		};
+	},
+	watch: {
+		mode() {
+			this.announce("remote:exit");
+		}
+	},
+	mounted() {
+		this.onRemoteAtLaunch();
+
+		this.$events.on("content.save", this.onChanges);
+		this.$events.on("content.discard", this.onChanges);
+		this.$events.on("content.publish", this.onChanges);
+		this.$events.on("model.update", this.onChanges);
+		this.$events.on("page.changeTitle", this.onChanges);
+		this.$events.on("page.sort", this.onChanges);
+		this.$events.on("file.sort", this.onChanges);
+	},
+	unmounted() {
+		this.$events.off("content.save", this.onChanges);
+		this.$events.off("content.discard", this.onChanges);
+		this.$events.off("content.publish", this.onChanges);
+		this.$events.off("model.update", this.onChanges);
+		this.$events.off("page.changeTitle", this.onChanges);
+		this.$events.off("page.sort", this.onChanges);
+		this.$events.off("file.sort", this.onChanges);
+	},
+	methods: {
+		browserProps(mode) {
+			const src = mode === "form" ? "changes" : mode;
+
+			return {
+				editor: this.editor,
+				hasDiff: this.hasDiff,
+				isLocked: this.isLocked,
+				isPinned: this.isPinned,
+				isProcessing: this.isSaving,
+				label: this.$t("version." + src),
+				modified: this.modified,
+				open: this.src[src],
+				src: this.src[src],
+				mode: mode
+			};
+		},
+		/**
+		 * Closes the preview view to the corresponding page/site view
+		 */
+		exit() {
+			// ignore if dialogs/drawers are still open
+			if (this.$panel.overlays().length > 0) {
+				return;
+			}
+
+			this.announce("remote:exit");
+			this.$panel.view.open(this.link);
+		},
+		onChanges() {
+			Preview.methods.onChanges.call(this);
+			this.announce("host:changes");
+		},
+		onRemote() {
+			this.isRemote = true;
+			this.channel = new BroadcastChannel("preview$" + this.id);
+
+			this.channel.addEventListener("message", (event) => {
+				if (event.data.on === "remote:exit") {
+					this.isRemote = false;
+					this.channel.close();
+					this.channel = null;
+					return;
+				}
+				if (event.data.on === "remote:browser") {
+					return this.onBrowserNavigate(event.data);
+				}
+				if (event.data.on === "remote:reload") {
+					return this.reload();
+				}
+			});
+
+			window.addEventListener("beforeunload", () =>
+				this.announce("remote:exit")
+			);
+		},
+		/**
+		 * Check if remote=true is set as query and if, try to automatically open
+		 * remote preview window and remove query from current URL
+		 */
+		onRemoteAtLaunch() {
+			const query = new URLSearchParams(window.location.search);
+
+			if (query.get("remote") === "true") {
+				window.open(this.$panel.view.path + "/remote");
+				this.onRemote();
+				window.history.replaceState(
+					{},
+					"",
+					window.location.protocol +
+						"//" +
+						window.location.host +
+						window.location.pathname
+				);
+			}
+		},
+		async onViewNavigate(url) {
+			Preview.methods.onViewNavigate.call(this, url);
+			this.announce("host:view", { url });
 		}
 	}
 };
@@ -274,13 +383,13 @@ export default {
 		grid-template-rows: 1fr 1fr;
 	}
 
-	.k-preview-viewport {
+	.k-preview-view-sizes {
 		display: none;
 	}
 }
 
 @media screen and (min-width: 60rem) {
-	.k-preview-view .k-preview-view-grid {
+	.k-preview-view .k-preview-view-grid:has(.k-preview-browser) {
 		grid-template-columns: calc(var(--preview-width) + 2px);
 		justify-content: center;
 	}
@@ -289,7 +398,8 @@ export default {
 		grid-template-columns: 1fr 1fr;
 	}
 
-	.k-preview-view[data-mode="form"] .k-preview-view-grid {
+	.k-preview-view[data-mode="form"]:has(.k-preview-browser)
+		.k-preview-view-grid {
 		grid-template-columns: min(calc(var(--preview-width) + 2px), calc(68vw)) 1fr;
 	}
 }

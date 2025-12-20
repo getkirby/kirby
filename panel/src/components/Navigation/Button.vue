@@ -267,7 +267,7 @@ export default {
 	display: inline-flex;
 	align-items: center;
 	justify-content: var(--button-align);
-	gap: 0.5rem;
+	gap: var(--spacing-2);
 	padding-inline: var(--button-padding);
 	white-space: nowrap;
 	line-height: 1;

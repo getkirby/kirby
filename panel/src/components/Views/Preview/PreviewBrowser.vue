@@ -1,6 +1,6 @@
 <template>
 	<div class="k-preview-browser">
-		<header class="k-preview-browser-header">
+		<header v-if="label" class="k-preview-browser-header">
 			<k-headline>
 				<k-icon type="git-branch" />
 				{{ label }}
@@ -33,9 +33,16 @@
 					icon="pushpin"
 					role="switch"
 					size="sm"
-					@click="onTogglePin"
+					@click="$emit('pin')"
 				/>
-				<k-button :link="src" icon="open" size="xs" target="_blank" />
+				<k-button
+					v-if="open"
+					:link="open"
+					icon="open"
+					size="xs"
+					target="_blank"
+					@click="$emit('open')"
+				/>
 			</k-button-group>
 		</header>
 
@@ -49,24 +56,13 @@ import { props } from "@/components/Forms/FormControls.vue";
 export default {
 	mixins: [props],
 	props: {
+		isPinned: Boolean,
 		label: String,
 		src: String,
-		mode: String
+		mode: String,
+		open: String
 	},
-	emits: ["discard", "navigate", "reload", "submit"],
-	data() {
-		return {
-			isPinned: false
-		};
-	},
-	mounted() {
-		this.$events.on("content.discard", this.reload);
-		this.$events.on("content.publish", this.reload);
-	},
-	unmounted() {
-		this.$events.off("content.discard", this.reload);
-		this.$events.off("content.publish", this.reload);
-	},
+	emits: ["discard", "navigate", "open", "pin", "submit"],
 	methods: {
 		/**
 		 * Handle link clicks inside the iframe
@@ -125,14 +121,6 @@ export default {
 				"a"
 			)) {
 				link.addEventListener("click", this.onClick);
-			}
-		},
-		onTogglePin() {
-			this.isPinned = !this.isPinned;
-
-			// when unpinning, reset the iframe to match the preview view
-			if (!this.isPinned) {
-				this.$emit("reload");
 			}
 		},
 		/**

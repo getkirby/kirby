@@ -24,7 +24,7 @@ use Kirby\Toolkit\A;
  * @license   https://getkirby.com/license
  * @since     6.0.0
  */
-abstract class ModelPreviewViewController extends ViewController
+class PreviewViewController extends ViewController
 {
 	public function __construct(
 		public Page|Site $model,
@@ -35,10 +35,13 @@ abstract class ModelPreviewViewController extends ViewController
 
 	public function buttons(): ViewButtons
 	{
-		return ViewButtons::view(view: $this->id(), model: $this->model)->defaults(
-			'languages',
-			$this->model::CLASS_ALIAS . '.versions',
-		)
+		$defaults = ['languages', $this->model::CLASS_ALIAS . '.versions'];
+
+		if ($this->isSite() === false) {
+			array_splice($defaults, 1, 0, [$this->model::CLASS_ALIAS . '.settings']);
+		}
+
+		return ViewButtons::view(view: $this->id(), model: $this->model)->defaults(...$defaults)
 			->bind(['mode' => $this->mode]);
 	}
 
@@ -53,6 +56,14 @@ abstract class ModelPreviewViewController extends ViewController
 	public function id(): string
 	{
 		return $this->model::CLASS_ALIAS . '.preview';
+	}
+
+	protected function isSite(): bool
+	{
+		return match (true) {
+			$this->model instanceof Site => true,
+			$this->model instanceof Page => false
+		};
 	}
 
 	public function load(): View
@@ -87,14 +98,29 @@ abstract class ModelPreviewViewController extends ViewController
 		return $model;
 	}
 
+	protected function path(): string
+	{
+		return 'preview/' . $this->mode;
+	}
+
 	public function props(): array
 	{
+		$view  = $this->isSite() ? SiteViewController::class : PageViewController::class;
+		$view  = new $view($this->model);
+		$props = $view->props();
+
+		$title = ' | ' . $this->i18n('preview');
+		$title = ($this->isSite() ? $this->i18n('view.site') : $props['title'] ) . $title;
+
 		return [
+			...$props,
 			'component' => 'k-preview-view',
+			'back'      => $props['link'],
 			'buttons'   => $this->buttons(),
 			'src'       => $this->src(),
 			'mode'      => $this->mode,
-			'viewports' => $this->kirby->option('panel.preview.viewports')
+			'viewports' => $this->kirby->option('panel.preview.viewports'),
+			'title'     => $title,
 		];
 	}
 
@@ -106,7 +132,7 @@ abstract class ModelPreviewViewController extends ViewController
 
 			// Look up new model and redirect to its preview
 			if ($model = $this->modelFromUri($redirect)) {
-				$url = $model->panel()->url() . '/preview/' . $this->mode;
+				$url = $model->panel()->url() . '/' . $this->path();
 				$url = new Uri($url);
 
 				// Preserve the redirect URL's query and params

@@ -1,10 +1,11 @@
 <?php
 
+use Kirby\Cms\Find;
 use Kirby\Panel\Controller\View\PageFileViewController;
-use Kirby\Panel\Controller\View\PagePreviewViewController;
 use Kirby\Panel\Controller\View\PageViewController;
+use Kirby\Panel\Controller\View\PreviewViewController;
+use Kirby\Panel\Controller\View\RemotePreviewViewController;
 use Kirby\Panel\Controller\View\SiteFileViewController;
-use Kirby\Panel\Controller\View\SitePreviewViewController;
 use Kirby\Panel\Controller\View\SiteViewController;
 
 return [
@@ -18,7 +19,11 @@ return [
 	],
 	'page.preview' => [
 		'pattern' => '(pages/.*?)/preview/(changes|latest|compare|form)',
-		'action'  => PagePreviewViewController::class
+		'action'  => PreviewViewController::class
+	],
+	'page.preview.remote' => [
+		'pattern' => '(pages/.*?)/preview/(form)/remote',
+		'action'  => RemotePreviewViewController::class
 	],
 	'site' => [
 		'pattern' => 'site',
@@ -30,6 +35,10 @@ return [
 	],
 	'site.preview' => [
 		'pattern' => '(site)/preview/(changes|latest|compare|form)',
-		'action'  => SitePreviewViewController::class
+		'action'  => PreviewViewController::class
+	],
+	'site.preview.remote' => [
+		'pattern' => '(site)/preview/(form)/remote',
+		'action'  => RemotePreviewViewController::class
 	],
 ];
