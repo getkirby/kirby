@@ -13,29 +13,19 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Query::class)]
 class QueryTest extends TestCase
 {
-	protected function setUp(): void
-	{
-		new App([
-			'options' => [
-				'query' => [
-					'runner' => DefaultRunner::class
-				]
-			]
-		]);
-	}
-
 	protected function tearDown(): void
 	{
 		App::destroy();
+		Query::$runner = null;
 	}
 
 	public function test__Construct(): void
 	{
 		$query = new Query('');
-		$this->assertInstanceOf(DefaultRunner::class, $query->runner);
+		$this->assertInstanceOf(DefaultRunner::class, $query::$runner);
 	}
 
-	public function test__ConstructWithoutConfig(): void
+	public function test__ConstructWitoutConfig(): void
 	{
 		new App([
 			'options' => [
@@ -46,7 +36,21 @@ class QueryTest extends TestCase
 		]);
 
 		$query = new Query('');
-		$this->assertSame('legacy', $query->runner);
+		$this->assertInstanceOf(DefaultRunner::class, $query::$runner);
+	}
+
+	public function test__ConstructWitLegacyConfig(): void
+	{
+		new App([
+			'options' => [
+				'query' => [
+					'runner' => 'legacy'
+				]
+			]
+		]);
+
+		$query = new Query('');
+		$this->assertSame('legacy', $query::$runner);
 	}
 
 	public function test__ConstructWithInvalidConfig(): void
@@ -60,7 +64,7 @@ class QueryTest extends TestCase
 		]);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Query runner foo must extend Kirby\Query\Runners\Runner');
+		$this->expectExceptionMessage('Query runner "foo" must extend Kirby\Query\Runners\Runner');
 
 		new Query('');
 	}

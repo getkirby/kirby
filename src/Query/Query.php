@@ -12,6 +12,7 @@ use Kirby\Cms\User;
 use Kirby\Cms\Users;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Image\QrCode;
+use Kirby\Query\Runners\DefaultRunner;
 use Kirby\Query\Runners\Runner;
 use Kirby\Toolkit\I18n;
 
@@ -30,8 +31,7 @@ class Query
 {
 	public static array $cache = [];
 	public static array $entries = [];
-
-	public Runner|string $runner;
+	public static Runner|string|null $runner = null;
 
 	/**
 	 * Creates a new Query object
@@ -43,15 +43,16 @@ class Query
 			$this->query = trim($query);
 		}
 
-		$this->runner = App::instance()->option('query.runner', 'legacy');
+		static::$runner ??= App::instance()->option('query.runner', DefaultRunner::class);
 
-		if ($this->runner !== 'legacy') {
-
-			if (is_subclass_of($this->runner, Runner::class) === false) {
-				throw new InvalidArgumentException("Query runner $this->runner must extend " . Runner::class);
+		if (static::$runner !== 'legacy') {
+			if (is_subclass_of(static::$runner, Runner::class) === false) {
+				throw new InvalidArgumentException(
+					message: 'Query runner "' . static::$runner . '" must extend ' . Runner::class
+				);
 			}
 
-			$this->runner = $this->runner::for($this);
+			static::$runner = static::$runner::for($this);
 		}
 	}
 
@@ -85,16 +86,14 @@ class Query
 			return $data;
 		}
 
-		// TODO: switch to 'interpreted' as default in v6
 		// TODO: remove in v7
 		// @codeCoverageIgnoreStart
-
-		if ($this->runner === 'legacy') {
+		if (static::$runner === 'legacy') {
 			return $this->resolveLegacy($data);
 		}
 		// @codeCoverageIgnoreEnd
 
-		return $this->runner->run($this->query, (array)$data);
+		return static::$runner->run($this->query, (array)$data);
 	}
 
 	/**

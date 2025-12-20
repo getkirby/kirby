@@ -25,6 +25,7 @@ use Kirby\Http\Router;
 use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
 use Kirby\Panel\Panel;
+use Kirby\Query\Query;
 use Kirby\Session\AutoSession;
 use Kirby\Session\Session;
 use Kirby\Template\Snippet;
@@ -108,6 +109,9 @@ class App
 		// start with a fresh snippet and version cache
 		Snippet::$cache = [];
 		VersionCache::reset();
+
+		// start with a fresh Query runner option
+		Query::$runner = null;
 
 		// register all roots to be able to load stuff afterwards
 		$this->bakeRoots($props['roots'] ?? []);
