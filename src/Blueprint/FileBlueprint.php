@@ -24,35 +24,9 @@ class FileBlueprint extends Blueprint
 	 */
 	protected bool $defaultTypes = false;
 
-	public function __construct(array $props)
-	{
-		parent::__construct($props);
-
-		// normalize all available page options
-		$this->props['options'] = $this->normalizeOptions(
-			$this->props['options'] ?? true,
-			// defaults
-			[
-				'access'         => null,
-				'changeName'     => null,
-				'changeTemplate' => null,
-				'create'     	 => null,
-				'delete'     	 => null,
-				'list'     	     => null,
-				'read'       	 => null,
-				'replace'    	 => null,
-				'sort'           => null,
-				'update'     	 => null,
-			]
-		);
-
-		// normalize the accept settings
-		$this->props['accept'] = $this->normalizeAccept($this->props['accept'] ?? []);
-	}
-
 	public function accept(): array
 	{
-		return $this->props['accept'];
+		return $this->prop('accept');
 	}
 
 	/**
@@ -250,5 +224,33 @@ class FileBlueprint extends Blueprint
 		}
 
 		return $accept;
+	}
+
+	protected function normalizeProps(array $props): array
+	{
+		$props = parent::normalizeProps($props);
+
+		// normalize all available page options
+		$props['options'] = OptionsProps::normalize(
+			$props['options'] ?? true,
+			// defaults
+			[
+				'access'         => null,
+				'changeName'     => null,
+				'changeTemplate' => null,
+				'create'     	 => null,
+				'delete'     	 => null,
+				'list'     	     => null,
+				'read'       	 => null,
+				'replace'    	 => null,
+				'sort'           => null,
+				'update'     	 => null,
+			]
+		);
+
+		// normalize the accept settings
+		$props['accept'] = $this->normalizeAccept($props['accept'] ?? []);
+
+		return $props;
 	}
 }

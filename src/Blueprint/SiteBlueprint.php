@@ -14,17 +14,13 @@ namespace Kirby\Blueprint;
  */
 class SiteBlueprint extends Blueprint
 {
-	/**
-	 * Creates a new page blueprint object
-	 * with the given props
-	 */
-	public function __construct(array $props)
+	protected function normalizeProps(array $props): array
 	{
-		parent::__construct($props);
+		$props = parent::normalizeProps($props);
 
 		// normalize all available page options
-		$this->props['options'] = $this->normalizeOptions(
-			$this->props['options'] ?? true,
+		$props['options'] = OptionsProps::normalize(
+			$props['options'] ?? true,
 			// defaults
 			[
 				'changeTitle' => null,
@@ -35,6 +31,8 @@ class SiteBlueprint extends Blueprint
 				'title' => 'changeTitle',
 			]
 		);
+
+		return $props;
 	}
 
 	/**
@@ -45,7 +43,7 @@ class SiteBlueprint extends Blueprint
 	 */
 	public function preview(): string|bool
 	{
-		$preview = $this->props['options']['preview'] ?? true;
+		$preview = $this->prop('options')['preview'] ?? true;
 
 		if (is_string($preview) === true) {
 			return $this->model->toString($preview);

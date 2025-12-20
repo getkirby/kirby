@@ -43,4 +43,31 @@ class UserBlueprint extends Blueprint
 			]
 		);
 	}
+
+	protected function normalizeProps(array $props): array
+	{
+		// register the other props
+		$props = parent::normalizeProps($props);
+
+		// normalize and translate the description
+		$props['description'] = $this->i18n($props['description'] ?? null);
+
+		// normalize all available page options
+		$props['options'] = OptionsProps::normalize(
+			$props['options'] ?? true,
+			// defaults
+			[
+				'create'         => null,
+				'changeEmail'    => null,
+				'changeLanguage' => null,
+				'changeName'     => null,
+				'changePassword' => null,
+				'changeRole'     => null,
+				'delete'         => null,
+				'update'         => null,
+			]
+		);
+
+		return $props;
+	}
 }
