@@ -90,7 +90,7 @@ export default {
 	justify-content: space-between;
 	align-items: center;
 	gap: var(--spacing-6);
-	background: var(--color-gray-150);
+	background: light-dark(var(--color-gray-150), var(--input-color-back));
 	height: var(--input-height);
 	border-bottom: 1px solid var(--color-border);
 }
