@@ -97,6 +97,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           files: ${{ github.workspace }}/clover.xml
+          disable_search: true
           flags: backend
           env_vars: PHP
         env:
