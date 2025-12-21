@@ -34,11 +34,7 @@
 			<k-view-buttons :buttons="buttons" />
 		</header>
 
-		<main
-			ref="grid"
-			class="k-preview-view-grid"
-			:style="`--preview-width: ${sizes[size].width}`"
-		>
+		<main :style="gridStyles" class="k-preview-view-grid">
 			<template v-if="mode === 'form'">
 				<k-preview-browser
 					v-if="!isRemote"
@@ -116,11 +112,18 @@ export const Preview = {
 
 		return {
 			channel: null,
+			isAnimating: false,
 			isPinned: false,
 			size: size && this.sizes[size] ? size : Object.keys(this.sizes).pop()
 		};
 	},
 	computed: {
+		gridStyles() {
+			return {
+				"--preview-width": this.sizes[this.size].width,
+				[this.isAnimating ? "transition" : null]:
+					"grid-template-columns 0.12s ease"
+			};
 		}
 	},
 	mounted() {
@@ -153,9 +156,9 @@ export const Preview = {
 		 * Sets a view size and remembers it in localStorage
 		 */
 		async onSize(size) {
-			this.$refs.grid.classList.add("is-animating");
+			this.isAnimating = true;
 			this.size = size;
-			setTimeout(() => this.$refs.grid.classList.remove("is-animating"), 150);
+			setTimeout(() => (this.isAnimating = false), 150);
 			localStorage.setItem("kirby$preview$size", size);
 		},
 		/**
@@ -352,9 +355,6 @@ export default {
 	padding: 0 var(--spacing-3) var(--spacing-3);
 	gap: var(--spacing-3);
 	max-height: calc(100vh - 3.5rem);
-}
-.k-preview-view-grid.is-animating {
-	transition: grid-template-columns 0.12s ease;
 }
 
 @media screen and (max-width: 60rem) {

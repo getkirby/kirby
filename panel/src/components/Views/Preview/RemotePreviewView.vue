@@ -29,11 +29,7 @@
 			</k-button-group>
 		</header>
 
-		<main
-			ref="grid"
-			class="k-preview-view-grid"
-			:style="`--preview-width: ${sizes[size].width}`"
-		>
+		<main :style="gridStyles" class="k-preview-view-grid">
 			<k-preview-browser
 				ref="browser"
 				:is-pinned="isPinned"
