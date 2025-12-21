@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\Find;
 use Kirby\Panel\Controller\View\PageFileViewController;
 use Kirby\Panel\Controller\View\PageViewController;
 use Kirby\Panel\Controller\View\PreviewViewController;

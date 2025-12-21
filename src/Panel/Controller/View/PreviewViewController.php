@@ -71,7 +71,7 @@ class PreviewViewController extends ViewController
 		// handle redirect if view was reloaded with a redirect URL
 		// after navigating to a different page inside the preview browser
 		if ($redirect = $this->redirect()) {
-			Panel::go($redirect);
+			Panel::go($redirect); // @codeCoverageIgnore
 		}
 
 		$props = $this->props();
@@ -110,16 +110,16 @@ class PreviewViewController extends ViewController
 		$props = $view->props();
 
 		$title = ' | ' . $this->i18n('preview');
-		$title = ($this->isSite() ? $this->i18n('view.site') : $props['title'] ) . $title;
+		$title = ($this->isSite() ? $this->i18n('view.site') : $props['title']) . $title;
 
 		return [
 			...$props,
 			'component' => 'k-preview-view',
 			'back'      => $props['link'],
 			'buttons'   => $this->buttons(),
-			'src'       => $this->src(),
 			'mode'      => $this->mode,
-			'viewports' => $this->kirby->option('panel.preview.viewports'),
+			'src'       => $this->src(),
+			'sizes'     => $this->kirby->option('panel.preview.sizes'),
 			'title'     => $title,
 		];
 	}
