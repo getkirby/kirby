@@ -4,6 +4,7 @@ namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use Kirby\Toolkit\Locale;
 use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 
@@ -143,7 +144,7 @@ class TxtTest extends TestCase
 
 	public function testEncodeFloatWithLocaleSetting(): void
 	{
-		$currentLocale = setlocale(LC_ALL, 0);
+		$currentLocale = Locale::get();
 		setlocale(LC_ALL, 'de_DE');
 
 		$data = Txt::encode([
@@ -152,7 +153,7 @@ class TxtTest extends TestCase
 
 		$this->assertSame('Number: 3.2', $data);
 
-		setlocale(LC_ALL, $currentLocale);
+		Locale::set($currentLocale);
 	}
 
 	public function testDecodeFile(): void

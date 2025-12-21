@@ -82,6 +82,7 @@ class ApiTest extends TestCase
 
 	public function tearDown(): void
 	{
+		setlocale(LC_ALL, 'C');
 		Dir::remove(static::TMP);
 	}
 
@@ -218,8 +219,6 @@ class ApiTest extends TestCase
 
 	public function testCallLocale(): void
 	{
-		$originalLocale = setlocale(LC_CTYPE, 0);
-
 		$language = 'de';
 
 		$api = new Api([
@@ -236,24 +235,27 @@ class ApiTest extends TestCase
 		]);
 
 		$this->assertSame('something', $api->call('foo'));
+		$this->assertTrue(in_array(setlocale(LC_CTYPE, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+
 		$this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
 		$this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
 		$this->assertTrue(in_array(setlocale(LC_TIME, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
-		$this->assertSame($originalLocale, setlocale(LC_CTYPE, 0));
 
 		$language = 'pt_BR';
 		$this->assertSame('something', $api->call('foo'));
 		$this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['pt', 'pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
 		$this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['pt', 'pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
 		$this->assertTrue(in_array(setlocale(LC_TIME, 0), ['pt', 'pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
-		$this->assertSame($originalLocale, setlocale(LC_CTYPE, 0));
+
+		// should still be the result from App::setLanguage()
+		// while all above are changed according to the user language
+		// via Api::setLocale()
+		$this->assertTrue(in_array(setlocale(LC_CTYPE, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
 	}
 
 	public function testCallLocaleSingleLang1(): void
 	{
-		setlocale(LC_ALL, 'C');
 		$this->assertSame('C', setlocale(LC_ALL, 0));
-
 		$this->assertSame('something', $this->api->call('foo'));
 		$this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
 	}
