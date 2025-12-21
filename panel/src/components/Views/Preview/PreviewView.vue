@@ -24,18 +24,12 @@
 				</k-dropdown>
 			</k-button-group>
 
-			<k-button-group
+			<k-preview-sizes
 				v-if="!isRemote && mode !== 'compare'"
-				layout="collapsed"
-				class="k-preview-view-sizes"
-			>
-				<k-button
-					v-for="(button, size) in sizeButtons"
-					:key="size"
-					v-bind="button"
-					@click="onSize(size)"
-				/>
-			</k-button-group>
+				:current="size"
+				:sizes="sizes"
+				@change="onSize"
+			/>
 
 			<k-view-buttons :buttons="buttons" />
 		</header>
@@ -127,20 +121,6 @@ export const Preview = {
 		};
 	},
 	computed: {
-		sizeButtons() {
-			const buttons = {};
-
-			for (const size in this.sizes) {
-				buttons[size] = {
-					current: this.size === size,
-					icon: this.sizes[size].icon,
-					size: "sm",
-					theme: this.size === size ? "info" : null,
-					variant: "filled"
-				};
-			}
-
-			return buttons;
 		}
 	},
 	mounted() {

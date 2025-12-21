@@ -5,14 +5,7 @@
 				<k-icon type="git-branch" /> {{ $t("version.changes") }}
 			</span>
 
-			<k-button-group layout="collapsed" class="k-preview-view-sizes">
-				<k-button
-					v-for="(button, size) in sizeButtons"
-					:key="size"
-					v-bind="button"
-					@click="onSize(size)"
-				/>
-			</k-button-group>
+			<k-preview-sizes :current="size" :sizes="sizes" @change="onSize" />
 
 			<k-button-group>
 				<k-button
