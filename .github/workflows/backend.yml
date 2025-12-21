@@ -91,7 +91,7 @@ jobs:
 
       - name: Upload coverage results to Codecov
         if: matrix.php == '8.4'
-        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5
         with:
           # for better reliability if the GitHub API is down
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -155,7 +155,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: github.repository == 'getkirby/kirby' && steps.psalm.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@497990dfed22177a82ba1bbab381bc8f6d27058f # v3
+        uses: github/codeql-action/upload-sarif@45c373516f557556c15d420e3f5e0aa3d64366bc # v3
         with:
           sarif_file: sarif
 
