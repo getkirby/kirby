@@ -98,7 +98,7 @@
 			"@test"
 		],
 		"fix": "php-cs-fixer fix",
-		"test": "XDEBUG_MODE=off paratest",
+		"test": "paratest",
 		"test:coverage": "XDEBUG_MODE=coverage paratest --coverage-html=tests/coverage",
 		"zip": "composer archive --format=zip --file=dist"
 	}
