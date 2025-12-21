@@ -31,7 +31,10 @@ class InstallationViewController extends ViewController
 			isInstallable: $this->system->isInstallable(),
 			isInstalled:   $this->system->isInstalled(),
 			isOk:          $this->system->isOk(),
-			requirements:  $this->system->status(),
+			requirements:  [
+				...$this->system->status(),
+				'extensions' => $this->system->extensions()
+			],
 			translations:  $this->translations()
 		);
 	}
