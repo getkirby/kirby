@@ -30,7 +30,7 @@ on:
       - "**"
       - "!.github/**"
       - ".github/actions/setup-php/**"
-      - ".github/workflows/backend.yml"
+      - ".github/workflows/backend-paratest.yml"
       - "!.tx/**"
       - "!.vscode/**"
       - "!assets/**"
@@ -81,13 +81,13 @@ jobs:
           php: ${{ matrix.php }}
           ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
           coverage: pcov
-          tools: phpunit:12.5.4, brianium/paratest:7.14.2
+          tools: phpunit:12.5.4, brianium/paratest:7.16.0
 
       - name: Check Composer platform requirements
         run: composer check-platform-reqs
 
       - name: Run PHPUnit tests
-        run: paratest -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
+        run: paratest -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml --exclude-source-from-xml-coverage
 
       - name: Upload coverage results to Codecov
         if: matrix.php == '8.4'
