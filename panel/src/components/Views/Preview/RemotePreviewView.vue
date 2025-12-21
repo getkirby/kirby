@@ -1,9 +1,10 @@
 <template>
 	<k-panel class="k-preview-view k-remote-preview-view">
 		<header class="k-preview-view-header">
-			<span class="k-remote-preview-view-title">
-				<k-icon type="git-branch" /> {{ $t("version.changes") }}
-			</span>
+			<k-headline class="k-preview-headline">
+				<k-icon :type="$panel.isLoading ? 'loader' : 'git-branch'" />
+				{{ $t("version.changes") }}
+			</k-headline>
 
 			<k-preview-sizes :current="size" :sizes="sizes" @change="onSize" />
 

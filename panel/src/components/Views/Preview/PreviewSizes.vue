@@ -18,6 +18,7 @@ export default {
 		current: String,
 		sizes: Object
 	},
+	emits: ["change"],
 	computed: {
 		buttons() {
 			const buttons = {};

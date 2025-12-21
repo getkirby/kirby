@@ -1,7 +1,7 @@
 <template>
 	<div class="k-preview-browser">
 		<header v-if="label" class="k-preview-browser-header">
-			<k-headline>
+			<k-headline class="k-preview-headline">
 				<k-icon type="git-branch" />
 				{{ label }}
 			</k-headline>
@@ -63,6 +63,14 @@ export default {
 		open: String
 	},
 	emits: ["discard", "navigate", "open", "pin", "submit"],
+	computed: {
+		document() {
+			return this.$refs.browser.contentDocument;
+		},
+		window() {
+			return this.$refs.browser.contentWindow;
+		}
+	},
 	methods: {
 		/**
 		 * Handle link clicks inside the iframe
@@ -91,8 +99,10 @@ export default {
 			e.preventDefault(e);
 
 			if (this.isPinned) {
+				// we only want to refresh the browser for the target
 				this.$emit("navigate", { browser: link.href });
 			} else {
+				// we want to refresh the whole view for the target
 				this.$emit("navigate", { view: link.href });
 			}
 		},
@@ -100,8 +110,8 @@ export default {
 			// if the browser got redirected during load
 			// navigate to the proper preview URL for this new URL
 			// (but only if the new URL doesn't already contain _version and _token)
-			if (this.src !== this.$refs.browser.contentDocument.URL) {
-				const url = new URL(this.$refs.browser.contentDocument.URL);
+			if (this.src !== this.document.URL) {
+				const url = new URL(this.document.URL);
 
 				if (
 					url.searchParams.has("_token") === false ||
@@ -112,14 +122,9 @@ export default {
 			}
 
 			// attach event listeners to all links inside the iframe
-			this.$refs.browser.contentWindow.document.addEventListener(
-				"click",
-				this.onClick
-			);
+			this.document.addEventListener("click", this.onClick);
 
-			for (const link of this.$refs.browser.contentWindow.document.querySelectorAll(
-				"a"
-			)) {
+			for (const link of this.document.querySelectorAll("a")) {
 				link.addEventListener("click", this.onClick);
 			}
 		},
@@ -128,7 +133,7 @@ export default {
 		 * (e.g. for content updates)
 		 */
 		reload() {
-			this.$refs.browser.contentWindow.location.reload();
+			this.window.location.reload();
 		},
 		/**
 		 * Restore an iframe URL and scroll position
@@ -140,13 +145,14 @@ export default {
 				return;
 			}
 
+			// restore scroll position once the iframe finished loading
 			this.$refs.browser.addEventListener(
 				"load",
-				() => {
-					this.$refs.browser.contentWindow.scrollTo(0, scroll);
-				},
+				() => this.window.scrollTo(0, scroll),
 				{ once: true }
 			);
+
+			// load restored URL in iframe
 			this.$refs.browser.src = src;
 		},
 		/**
@@ -156,7 +162,7 @@ export default {
 		store() {
 			return {
 				src: this.$refs.browser.src,
-				scroll: this.$refs.browser.contentWindow.scrollY
+				scroll: this.window.scrollY
 			};
 		}
 	}
@@ -188,13 +194,8 @@ export default {
 	padding-inline: var(--spacing-2);
 	height: var(--input-height);
 }
-.k-preview-browser header .k-headline {
-	display: flex;
-	align-items: center;
-	gap: var(--spacing-1);
-	font-weight: var(--font-normal);
+.k-preview-browser-header .k-preview-headline {
 	font-size: var(--text-xs);
-	padding-inline: var(--spacing-1);
 }
 .k-preview-browser-message {
 	font-size: var(--text-xs);

@@ -222,8 +222,6 @@ export default {
 		}
 	},
 	mounted() {
-		this.onRemoteAtLaunch();
-
 		this.$events.on("content.save", this.onChanges);
 		this.$events.on("content.discard", this.onChanges);
 		this.$events.on("content.publish", this.onChanges);
@@ -280,9 +278,9 @@ export default {
 
 			this.channel.addEventListener("message", (event) => {
 				if (event.data.on === "remote:exit") {
-					this.isRemote = false;
 					this.channel.close();
 					this.channel = null;
+					this.isRemote = false;
 					return;
 				}
 				if (event.data.on === "remote:browser") {
@@ -296,26 +294,6 @@ export default {
 			window.addEventListener("beforeunload", () =>
 				this.announce("remote:exit")
 			);
-		},
-		/**
-		 * Check if remote=true is set as query and if, try to automatically open
-		 * remote preview window and remove query from current URL
-		 */
-		onRemoteAtLaunch() {
-			const query = new URLSearchParams(window.location.search);
-
-			if (query.get("remote") === "true") {
-				window.open(this.$panel.view.path + "/remote");
-				this.onRemote();
-				window.history.replaceState(
-					{},
-					"",
-					window.location.protocol +
-						"//" +
-						window.location.host +
-						window.location.pathname
-				);
-			}
 		},
 		async onViewNavigate(url) {
 			Preview.methods.onViewNavigate.call(this, url);
@@ -341,6 +319,13 @@ export default {
 	align-items: center;
 	padding: var(--spacing-3);
 }
+.k-preview-headline {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-1);
+	font-weight: var(--font-normal);
+	padding-inline: var(--spacing-1);
+}
 .k-preview-view-tree {
 	--tree-branch-color-back: transparent;
 	--tree-branch-hover-color-back: var(--color-gray-800);
@@ -358,7 +343,10 @@ export default {
 }
 
 @media screen and (max-width: 60rem) {
-	.k-preview-view:where([data-mode="compare"], [data-mode="form"])
+	.k-preview-view:where(
+			[data-mode="compare"],
+			[data-mode="form"]:has(.k-preview-browser)
+		)
 		.k-preview-view-grid {
 		grid-template-rows: 1fr 1fr;
 	}
