@@ -113,10 +113,10 @@ class UserRulesTest extends ModelTestCase
 		string $value,
 		string $message
 	): void {
-		$permissions = $this->createMock(UserPermissions::class);
+		$permissions = $this->createStub(UserPermissions::class);
 		$permissions->method('can')->with('change' . $key)->willReturn(false);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('permissions')->willReturn($permissions);
 		$user->method('username')->willReturn('test');
 
@@ -141,10 +141,10 @@ class UserRulesTest extends ModelTestCase
 	{
 		$this->app->impersonate('admin@domain.com');
 
-		$permissions = $this->createMock(UserPermissions::class);
+		$permissions = $this->createStub(UserPermissions::class);
 		$permissions->method('can')->with('changeRole')->willReturn(false);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('kirby')->willReturn($this->app);
 		$user->method('permissions')->willReturn($permissions);
 		$user->method('username')->willReturn('test');
@@ -326,10 +326,10 @@ class UserRulesTest extends ModelTestCase
 	{
 		$this->app->impersonate('user@domain.com');
 
-		$permissions = $this->createMock(UserPermissions::class);
+		$permissions = $this->createStub(UserPermissions::class);
 		$permissions->method('can')->with('create')->willReturn(false);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('kirby')->willReturn($this->app);
 		$user->method('permissions')->willReturn($permissions);
 		$user->method('id')->willReturn('test');
@@ -349,10 +349,10 @@ class UserRulesTest extends ModelTestCase
 	{
 		$this->app->impersonate('user@domain.com');
 
-		$permissions = $this->createMock(UserPermissions::class);
+		$permissions = $this->createStub(UserPermissions::class);
 		$permissions->method('can')->with('create')->willReturn(true);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('kirby')->willReturn($this->app);
 		$user->method('permissions')->willReturn($permissions);
 		$user->method('id')->willReturn('test');
@@ -427,7 +427,7 @@ class UserRulesTest extends ModelTestCase
 
 	public function testDeleteLastUser(): void
 	{
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('isLastAdmin')->willReturn(false);
 		$user->method('isLastUser')->willReturn(true);
 
@@ -439,10 +439,10 @@ class UserRulesTest extends ModelTestCase
 
 	public function testDeletePermissions(): void
 	{
-		$permissions = $this->createMock(UserPermissions::class);
+		$permissions = $this->createStub(UserPermissions::class);
 		$permissions->method('can')->with('delete')->willReturn(false);
 
-		$user = $this->createMock(User::class);
+		$user = $this->createStub(User::class);
 		$user->method('permissions')->willReturn($permissions);
 		$user->method('isLastAdmin')->willReturn(false);
 		$user->method('isLastUser')->willReturn(false);

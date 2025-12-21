@@ -66,9 +66,10 @@ class FileBlueprintTest extends TestCase
 			'accept' => $accept
 		];
 
+		$page = new Page(['slug' => 'test']);
 		$file = new File([
 			'filename' => 'tmp',
-			'parent'   => $this->createMock(Page::class),
+			'parent'   => $page,
 			'template' => 'acceptAttribute'
 		]);
 

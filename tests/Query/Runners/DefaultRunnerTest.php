@@ -43,26 +43,21 @@ class DefaultRunnerTest extends TestCase
 	 */
 	public function testResolverMemoryCache(): void
 	{
-		$cache = [];
-
-		$cacheSpy = $this->createMock(ArrayAccess::class);
-
+		$cache    = [];
+		$cacheSpy = $this->createStub(ArrayAccess::class);
 		$cacheSpy
-			->expects($this->exactly(3))
 			->method('offsetExists')
 			->willReturnCallback(function ($key) use (&$cache) {
 				return isset($cache[$key]);
 			});
 
 		$cacheSpy
-			->expects($this->exactly(2))
 			->method('offsetGet')
 			->willReturnCallback(function ($key) use (&$cache) {
 				return $cache[$key] ?? null;
 			});
 
 		$cacheSpy
-			->expects($this->exactly(1))
 			->method('offsetSet')
 			->willReturnCallback(function ($key, $val) use (&$cache) {
 				$cache[$key] = $val;

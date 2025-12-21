@@ -129,11 +129,11 @@ class ApiTest extends TestCase
 
 	public function testAuthenticationWithoutCsrf(): void
 	{
-		$auth = $this->createMock(Auth::class);
+		$auth = $this->createStub(Auth::class);
 		$auth->method('type')->willReturn('session');
 		$auth->method('csrf')->willReturn(false);
 
-		$kirby = $this->createMock(App::class);
+		$kirby = $this->createStub(App::class);
 		$kirby->method('auth')->willReturn($auth);
 
 		$this->expectException(AuthException::class);
@@ -150,10 +150,10 @@ class ApiTest extends TestCase
 
 	public function testAuthenticationWithoutUser(): void
 	{
-		$auth = $this->createMock(Auth::class);
+		$auth = $this->createStub(Auth::class);
 		$auth->method('user')->willReturn(null);
 
-		$kirby = $this->createMock(App::class);
+		$kirby = $this->createStub(App::class);
 		$kirby->method('auth')->willReturn($auth);
 
 		$this->expectException(AuthException::class);

@@ -174,11 +174,7 @@ class HtmlTest extends TestCase
 
 	public function testSvgWithFileObject(): void
 	{
-		$file = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->onlyMethods(['__call'])
-			->getMock();
-
+		$file = $this->createStub(File::class);
 		$file->method('__call')
 			->willReturnCallback(fn ($method) => match ($method) {
 				'extension' => 'svg',
