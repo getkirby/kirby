@@ -31,29 +31,8 @@ class Html extends \Kirby\Toolkit\Html
 		string|array|Plugin|Assets $url,
 		string|array|null $options = null
 	): string|null {
-		if ($url instanceof Plugin) {
-			$url = $url->assets();
-		}
-
-		if ($url instanceof Assets) {
-			$url = $url->css()->values(fn ($asset) => $asset->url());
-		}
-
-		if (is_array($url) === true) {
-			$links = A::map($url, fn ($url) => static::css($url, $options));
-			return implode(PHP_EOL, $links);
-		}
-
 		if (is_string($options) === true) {
 			$options = ['media' => $options];
-		}
-
-		$kirby = App::instance();
-
-		if ($url === '@auto') {
-			if (!$url = Url::toTemplateAsset('css/templates', 'css')) {
-				return null;
-			}
 		}
 
 		// only valid value for 'rel' is 'alternate stylesheet',
@@ -65,11 +44,39 @@ class Html extends \Kirby\Toolkit\Html
 			$options['rel'] = 'stylesheet';
 		}
 
-		$url  = ($kirby->component('css'))($kirby, $url, $options);
-		$url  = Url::to($url);
-		$attr = [...$options ?? [], 'href' => $url];
+		$assets = [];
 
-		return '<link ' . static::attr($attr) . '>';
+		foreach (A::wrap($url) as $entry) {
+			if ($entry instanceof Plugin) {
+				$entry = $entry->assets();
+			}
+
+			if ($entry instanceof Assets) {
+				$entries = $entry->css()->values(fn ($asset) => $asset->url());
+			} elseif ($entry === '@auto') {
+				$entries = [Url::toTemplateAsset('css/templates', 'css')];
+			} elseif ($entry === '@snippets') {
+				$entries = Url::toSnippetsAssets('css/snippets', 'css');
+			}
+
+			$assets = [
+				...$assets,
+				...array_filter($entries ?? [$entry])
+			];
+		}
+
+		$kirby = App::instance();
+		$links = A::map(
+			$assets,
+			function ($url) use ($kirby, $options) {
+				$url  = ($kirby->component('css'))($kirby, $url, $options);
+				$url  = Url::to($url);
+				$attr = [...$options ?? [], 'href' => $url];
+				return '<link ' . static::attr($attr) . '>';
+			}
+		);
+
+		return implode(PHP_EOL, $links);
 	}
 
 	/**

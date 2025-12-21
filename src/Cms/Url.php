@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
 use Kirby\Http\Url as BaseUrl;
+use Kirby\Template\Snippet;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -50,6 +52,25 @@ class Url extends BaseUrl
 	): string {
 		$maxlength = App::instance()->option('slugs.maxlength', 255);
 		return Str::slug($string, $separator, $allowed, $maxlength);
+	}
+
+	public static function toSnippetsAssets(
+		string $assetPath,
+		string $extension
+	): array {
+		$kirby    = App::instance();
+		$snippets = A::map(
+			array_keys(Snippet::$cache),
+			function (string $snippet) use ($assetPath, $extension, $kirby) {
+				var_dump($assetPath . '/' . $snippet . '.' . $extension);
+				$path  = $assetPath . '/' . $snippet . '.' . $extension;
+				$file  = $kirby->root('assets') . '/' . $path;
+				$url   = $kirby->url('assets') . '/' . $path;
+				return file_exists($file) === true ? $url : null;
+			}
+		);
+
+		return array_filter($snippets);
 	}
 
 	/**
