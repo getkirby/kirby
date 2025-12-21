@@ -3,7 +3,7 @@
 name: CI - Frontend
 
 env:
-  OS: &os ubuntu-22.04
+  OS: &os ubuntu-24.04
   TIMEOUT: &timeout 5
 
   # run job only under the following conditions:

@@ -3,7 +3,7 @@
 name: CI - Backend
 
 env:
-  OS: &os ubuntu-22.04
+  OS: &os ubuntu-24.04
   TIMEOUT: &timeout 5
 
   # run job only under the following conditions:
@@ -73,7 +73,7 @@ jobs:
           fetch-depth: 2
 
       - name: Install system locales
-        run: sudo apt-get update && sudo apt-get install -y locales-all
+        run: sudo apt-get update && sudo apt-get install -y locales-all imagemagick
 
       - name: Setup PHP environment
         uses: ./.github/actions/setup-php
