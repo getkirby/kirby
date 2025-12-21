@@ -94,7 +94,7 @@ class Dom
 					($node->nodeType === XML_COMMENT_NODE && strpos($node->data, $xml) !== false)
 				) {
 					static::remove($node);
-					continue;
+					break;
 				}
 			}
 
@@ -683,10 +683,11 @@ class Dom
 		// implementations expand it to the long HTML4 transitional doctype
 		// when saving. Normalize it back to the short `<!DOCTYPE html>`
 		// to keep behavior consistent across environments.
-		if (Str::contains($this->code, '<!DOCTYPE ', true) === true) {
-			if (preg_match('/<!doctype\s+html/i', $this->code) === 1) {
-				$html = preg_replace('/^<!DOCTYPE[^>]*>\s*/i', '<!DOCTYPE html>' . "\n", $html, 1);
-			}
+		if (
+			Str::contains($this->code, '<!DOCTYPE ', true) === true &&
+			preg_match('/<!doctype\s+html/i', $this->code) === 1
+		) {
+			$html = preg_replace('/^<!DOCTYPE[^>]*>\s*/i', '<!DOCTYPE html>' . "\n", $html, 1);
 		}
 
 		return trim($html);
