@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use Countable;
 use Exception;
 use Kirby\Cms\App;
@@ -31,10 +32,22 @@ class HasCount
 #[CoversClass(V::class)]
 class VTest extends TestCase
 {
+	protected string|Closure $localeBackup;
+
+	public function setUp(): void
+	{
+		$this->localeBackup = I18n::$locale;
+		I18n::$locale = 'foo';
+		I18n::$translations['foo'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
+	}
+
 	public function tearDown(): void
 	{
+		unset(I18n::$translations['foo']);
+		I18n::$locale = $this->localeBackup;
 		V::$validators = [];
-		App::destroy();
 	}
 
 	public function testCallCustomValidator(): void
@@ -262,7 +275,7 @@ class VTest extends TestCase
 		]);
 
 		$this->assertSame([
-			'same' => 'Please enter "b"',
+			'same' => 'Error message for same: b',
 		], $result);
 	}
 
@@ -569,7 +582,7 @@ class VTest extends TestCase
 	public function testMessage(): void
 	{
 		$message = V::message('same', 'a', 'b');
-		$this->assertSame('Please enter "b"', $message);
+		$this->assertSame('Error message for same: b', $message);
 	}
 
 	public function testMessageInvalidValidator(): void
@@ -902,11 +915,8 @@ class VTest extends TestCase
 
 	public function testValueFails(): void
 	{
-		// load the translation strings
-		new App();
-
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Please enter "b"');
+		$this->expectExceptionMessage('Error message for same');
 
 		V::value('a', [
 			'same' => 'b'
@@ -916,8 +926,9 @@ class VTest extends TestCase
 	public function testValueFailsNotThrowing(): void
 	{
 		$result = V::value('a', ['same' => 'b'], fail: false);
+
 		$this->assertSame([
-			'same' => 'Please enter "b"'
+			'same' => 'Error message for same: b'
 		], $result);
 	}
 }
