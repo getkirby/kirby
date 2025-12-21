@@ -147,10 +147,7 @@ export default {
 		attrs() {
 			// Shared
 			const attrs = {
-				"aria-current": this.current,
-				"aria-disabled": this.disabled,
 				"aria-label": this.text ?? this.title,
-				"aria-selected": this.selected,
 				"data-responsive": this.responsive,
 				"data-size": this.size,
 				"data-theme": this.theme,
@@ -159,6 +156,25 @@ export default {
 				tabindex: this.tabindex,
 				title: this.title
 			};
+
+			if (this.current) {
+				attrs["aria-current"] = this.current;
+			}
+
+			if (this.disabled) {
+				attrs["aria-disabled"] = this.disabled;
+			}
+
+			if (this.selected) {
+				attrs["aria-selected"] = this.selected;
+			}
+
+			// support all aria- attributes
+			for (const attr of Object.keys(this.$attrs)) {
+				if (attr.startsWith("aria-") && this.$attrs[attr]) {
+					attrs[attr] = this.$attrs[attr];
+				}
+			}
 
 			if (this.component === "k-link") {
 				// For `<a>`/`<k-link>` element:
