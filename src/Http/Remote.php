@@ -310,7 +310,18 @@ class Remote
 	 */
 	public function json(bool $array = true): array|stdClass|null
 	{
-		return json_decode($this->content(), $array);
+		if ($content = $this->content()) {
+			$json = json_decode($content, $array);
+
+			if (
+				is_array($json) === true ||
+				$json instanceof stdClass === true
+			) {
+				return $json;
+			}
+		}
+
+		return null;
 	}
 
 	/**
