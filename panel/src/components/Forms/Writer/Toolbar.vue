@@ -373,9 +373,6 @@ export default {
 			// Get sizes for the toolbar itself but also the editor box
 			const toolbar = this.$el.getBoundingClientRect();
 			const editor = this.editor.element.getBoundingClientRect();
-			const menu = document
-				.querySelector(".k-panel-menu")
-				.getBoundingClientRect();
 
 			// Create pseudo rectangle for the selection
 			const { from, to } = this.editor.selection;
@@ -401,9 +398,13 @@ export default {
 				}
 			} else {
 				// Contain in viewport
+				const menu = document
+					.querySelector(".k-panel-menu")
+					?.getBoundingClientRect();
+
 				const left = editor.x + x;
 				const right = left + toolbar.width;
-				const safeSpaceLeft = menu.width + 20;
+				const safeSpaceLeft = menu?.width + 20;
 				const safeSpaceRight = 20;
 
 				if (left < safeSpaceLeft) {
@@ -421,8 +422,8 @@ export default {
 
 <style>
 .k-writer-input:has(
-		.k-toolbar:not([data-inline="true"], [data-disabled="true"])
-	) {
+	.k-toolbar:not([data-inline="true"], [data-disabled="true"])
+) {
 	grid-template-areas: "topbar" "content";
 	grid-template-rows: var(--toolbar-size) 1fr;
 	gap: 0;
