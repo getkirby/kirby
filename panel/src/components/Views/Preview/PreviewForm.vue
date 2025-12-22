@@ -4,7 +4,7 @@
 			<k-model-tabs
 				:diff="diff"
 				:tab="tab.name"
-				:tabs="tabs"
+				:tabs="tabsWithPreviewLinks"
 				class="k-drawer-tabs"
 			/>
 
@@ -50,6 +50,16 @@ export default {
 		lock: Boolean
 	},
 	emits: ["discard", "input", "navigate", "submit"],
+	computed: {
+		tabsWithPreviewLinks() {
+			return this.tabs.map((tab) => {
+				return {
+					...tab,
+					link: this.$panel.view.path + "?tab=" + tab.name
+				};
+			});
+		}
+	},
 	mounted() {
 		this.$events.on("section.loaded", this.fixLinksInSection);
 	},

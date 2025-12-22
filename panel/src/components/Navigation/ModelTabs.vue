@@ -46,14 +46,6 @@ export default {
 					tab.badge = { text: changesInTab };
 				}
 
-				// remove link to rather use $panel.view.reload with the tab name
-				delete tab.link;
-
-				tab.click = (e) => {
-					e?.preventDefault();
-					this.$panel.view.reload({ query: { tab: tab.name } });
-				};
-
 				return tab;
 			});
 		}
