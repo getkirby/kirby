@@ -8,7 +8,10 @@
  */
 export default {
 	props: {
-		diff: Object,
+		diff: {
+			type: Object,
+			default: () => ({})
+		},
 		tab: String,
 		tabs: {
 			type: Array,
@@ -41,7 +44,7 @@ export default {
 
 				return {
 					...tab,
-					badge: changesInTab > 0 ? { text: changesInTab } : null
+					badge: changesInTab > 0 ? { text: changesInTab } : undefined
 				};
 			});
 		}

@@ -18,11 +18,11 @@ return [
 	'site.preview' => function (Site $site) {
 		if ($site->previewUrl() !== null) {
 			return new PreviewButton(
-				link: $site->panel()->url(true) . '/preview/changes',
+				link: $site->panel()->url(true) . '/preview/form',
 			);
 		}
 	},
-	'site.versions' => fn (Site $site, string $mode = 'latest') => new VersionsButton(
+	'site.versions' => fn (Site $site, string $mode = 'form') => new VersionsButton(
 		model: $site,
 		mode:  $mode
 	),
@@ -33,11 +33,11 @@ return [
 	'page.preview' => function (Page $page) {
 		if ($page->previewUrl() !== null) {
 			return new PreviewButton(
-				link: $page->panel()->url(true) . '/preview/changes',
+				link: $page->panel()->url(true) . '/preview/form',
 			);
 		}
 	},
-	'page.versions' => fn (Page $page, string $mode = 'latest') => new VersionsButton(
+	'page.versions' => fn (Page $page, string $mode = 'form') => new VersionsButton(
 		model: $page,
 		mode:  $mode
 	),

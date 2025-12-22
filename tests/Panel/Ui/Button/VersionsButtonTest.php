@@ -27,6 +27,9 @@ class VersionsButtonTest extends TestCase
 
 		$button = new VersionsButton(model: $page, mode: 'compare');
 		$this->assertSame('layout-columns', $button->icon());
+
+		$button = new VersionsButton(model: $page, mode: 'form');
+		$this->assertSame('edit-line', $button->icon());
 	}
 
 	public function testIsCurrent(): void
@@ -46,6 +49,9 @@ class VersionsButtonTest extends TestCase
 
 		$button = new VersionsButton(model: $page, mode: 'compare');
 		$this->assertSame('compare', $button->mode());
+
+		$button = new VersionsButton(model: $page, mode: 'form');
+		$this->assertSame('form', $button->mode());
 	}
 
 	public function testOptions(): void
@@ -54,16 +60,21 @@ class VersionsButtonTest extends TestCase
 		$button = new VersionsButton(model: $page, mode: 'latest');
 
 		$options = $button->options();
-		$this->assertSame('Latest version', $options[0]['label']);
-		$this->assertTrue($options[0]['current']);
+		$this->assertSame('Live editor', $options[0]['label']);
+		$this->assertFalse($options[0]['current']);
 
-		$this->assertSame('Changed version', $options[1]['label']);
-		$this->assertFalse($options[1]['current']);
+		$this->assertSame('-', $options[1]);
 
-		$this->assertSame('-', $options[2]);
+		$this->assertSame('Compare versions', $options[2]['label']);
+		$this->assertFalse($options[2]['current']);
 
-		$this->assertSame('Compare versions', $options[3]['label']);
-		$this->assertFalse($options[3]['current']);
+		$this->assertSame('-', $options[3]);
+
+		$this->assertSame('Latest version', $options[4]['label']);
+		$this->assertTrue($options[4]['current']);
+
+		$this->assertSame('Changed version', $options[5]['label']);
+		$this->assertFalse($options[5]['current']);
 	}
 
 	public function testProps(): void

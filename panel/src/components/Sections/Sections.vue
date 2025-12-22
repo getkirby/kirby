@@ -5,6 +5,7 @@
 		:text="empty"
 		theme="info"
 	/>
+
 	<k-grid v-else class="k-sections" variant="columns">
 		<k-column
 			v-for="(column, columnIndex) in tab.columns"

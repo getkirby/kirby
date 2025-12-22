@@ -111,7 +111,6 @@ export default {
 				text: tab.label ?? tab.text ?? tab.name
 			};
 
-
 			if (typeof tab.badge === "string") {
 				button.badge = {
 					text: tab.badge

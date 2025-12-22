@@ -80,6 +80,8 @@ export default {
 				this.issue = error;
 			} finally {
 				this.isLoading = false;
+				await this.$nextTick();
+				this.$events.emit("section.loaded", this);
 			}
 		}
 	}

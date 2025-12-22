@@ -23,8 +23,8 @@ class ModelOpenButton extends OpenButton
 		string $mode = 'latest'
 	) {
 		$mode = match ($mode) {
-			'compare' => 'changes',
-			default   => $mode
+			'compare', 'form' => 'changes',
+			default           => $mode
 		};
 
 		parent::__construct(

@@ -1,10 +1,10 @@
 <?php
 
 use Kirby\Panel\Controller\View\PageFileViewController;
-use Kirby\Panel\Controller\View\PagePreviewViewController;
 use Kirby\Panel\Controller\View\PageViewController;
+use Kirby\Panel\Controller\View\PreviewViewController;
+use Kirby\Panel\Controller\View\RemotePreviewViewController;
 use Kirby\Panel\Controller\View\SiteFileViewController;
-use Kirby\Panel\Controller\View\SitePreviewViewController;
 use Kirby\Panel\Controller\View\SiteViewController;
 
 return [
@@ -17,8 +17,12 @@ return [
 		'action'  => PageFileViewController::class
 	],
 	'page.preview' => [
-		'pattern' => '(pages/.*?)/preview/(changes|latest|compare)',
-		'action'  => PagePreviewViewController::class
+		'pattern' => '(pages/.*?)/preview/(changes|latest|compare|form)',
+		'action'  => PreviewViewController::class
+	],
+	'page.preview.remote' => [
+		'pattern' => '(pages/.*?)/preview/(form)/remote',
+		'action'  => RemotePreviewViewController::class
 	],
 	'site' => [
 		'pattern' => 'site',
@@ -29,7 +33,11 @@ return [
 		'action'  => SiteFileViewController::class
 	],
 	'site.preview' => [
-		'pattern' => '(site)/preview/(changes|latest|compare)',
-		'action'  => SitePreviewViewController::class
+		'pattern' => '(site)/preview/(changes|latest|compare|form)',
+		'action'  => PreviewViewController::class
+	],
+	'site.preview.remote' => [
+		'pattern' => '(site)/preview/(form)/remote',
+		'action'  => RemotePreviewViewController::class
 	],
 ];

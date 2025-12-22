@@ -357,7 +357,7 @@ export default (panel) => {
 
 	// create a delayed version of save
 	// that we can use in the input event
-	content.saveLazy = throttle(content.save, 1000, {
+	content.saveLazy = throttle(content.save, 500, {
 		leading: true,
 		trailing: true,
 		timer: content.timer

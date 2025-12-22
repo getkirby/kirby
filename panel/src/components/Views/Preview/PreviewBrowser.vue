@@ -1,10 +1,11 @@
 <template>
 	<div class="k-preview-browser">
-		<header class="k-preview-browser-header">
-			<k-headline>
+		<header v-if="label" class="k-preview-browser-header">
+			<k-headline class="k-preview-headline">
 				<k-icon type="git-branch" />
 				{{ label }}
 			</k-headline>
+
 			<k-button-group>
 				<template v-if="mode === 'changes'">
 					<p v-if="hasDiff === false" class="k-preview-browser-message">
@@ -15,18 +16,37 @@
 						:editor="editor"
 						:has-diff="hasDiff"
 						:is-locked="isLocked"
-						:is-processing="isSaving"
+						:is-processing="isProcessing"
 						:modified="modified"
 						size="xs"
 						@discard="$emit('discard', $event)"
 						@submit="$emit('submit', $event)"
 					/>
 				</template>
-				<k-button :link="src" icon="open" size="xs" target="_blank" />
+
+				<k-button
+					v-if="mode === 'form'"
+					:aria-checked="isPinned"
+					:title="$t('preview.browser.pin')"
+					:theme="isPinned ? 'info' : 'passive'"
+					:variant="isPinned ? 'filled' : 'none'"
+					icon="pushpin"
+					role="switch"
+					size="sm"
+					@click="$emit('pin')"
+				/>
+				<k-button
+					v-if="open"
+					:link="open"
+					icon="open"
+					size="xs"
+					target="_blank"
+					@click="$emit('open')"
+				/>
 			</k-button-group>
 		</header>
 
-		<iframe ref="browser" :src="srcWithPreviewParam" />
+		<iframe ref="browser" :src="src" @load="onLoad" />
 	</div>
 </template>
 
@@ -36,29 +56,115 @@ import { props } from "@/components/Forms/FormControls.vue";
 export default {
 	mixins: [props],
 	props: {
+		isPinned: Boolean,
 		label: String,
 		src: String,
-		mode: String
+		mode: String,
+		open: String
 	},
-	emits: ["discard", "submit"],
+	emits: ["discard", "navigate", "open", "pin", "scroll", "submit"],
 	computed: {
-		srcWithPreviewParam() {
-			const uri = new URL(this.src, this.$panel.urls.site);
-			uri.searchParams.append("_preview", true);
-			return uri.toString();
+		window() {
+			return this.$refs.browser.contentWindow;
 		}
 	},
-	mounted() {
-		this.$events.on("content.discard", this.reload);
-		this.$events.on("content.publish", this.reload);
-	},
-	unmounted() {
-		this.$events.off("content.discard", this.reload);
-		this.$events.off("content.publish", this.reload);
-	},
 	methods: {
+		/**
+		 * Handle link clicks inside the iframe
+		 */
+		onClick(e) {
+			const link = e.target.closest("a");
+
+			if (!link) {
+				return;
+			}
+
+			if (!link.href || link.onclick) {
+				return;
+			}
+
+			// open external links and Panel links in new tab
+			if (
+				link.href.startsWith(location.origin) === false ||
+				link.href.startsWith(this.$panel.urls.panel) === true
+			) {
+				link.target = "_blank";
+				return true;
+			}
+
+			// catch internal links and emit navigate event
+			e.preventDefault(e);
+
+			if (this.isPinned) {
+				// we only want to refresh the browser for the target
+				this.$emit("navigate", { browser: link.href });
+			} else {
+				// we want to refresh the whole view for the target
+				this.$emit("navigate", { view: link.href });
+			}
+		},
+		onLoad() {
+			const document = this.$refs.browser.contentDocument;
+
+			// if the browser got redirected during load
+			// navigate to the proper preview URL for this new URL
+			// (but only if the new URL doesn't already contain _version and _token)
+			if (this.src !== document.URL) {
+				const url = new URL(document.URL);
+
+				if (
+					url.searchParams.has("_token") === false ||
+					url.searchParams.has("_version") === false
+				) {
+					return this.$emit("navigate", { browser: url });
+				}
+			}
+
+			// attach event listeners to all links inside the iframe
+			document.addEventListener("click", this.onClick);
+
+			for (const link of document.querySelectorAll("a")) {
+				link.addEventListener("click", this.onClick);
+			}
+
+			document.addEventListener("scroll", (e) => this.$emit("scroll", e));
+		},
+		/**
+		 * Refresh the iframe
+		 * (e.g. for content updates)
+		 */
 		reload() {
-			this.$refs.browser.contentWindow.location.reload();
+			this.window.location.reload();
+		},
+		/**
+		 * Restore an iframe URL and scroll position
+		 * (only when iframe browser is pinned)
+		 */
+		restore({ src, scroll }) {
+			// if the browser isn't pinned, we keep it as loaded with the view
+			if (!this.isPinned) {
+				return;
+			}
+
+			// restore scroll position once the iframe finished loading
+			this.$refs.browser.addEventListener(
+				"load",
+				() => this.window.scrollTo(0, scroll),
+				{ once: true }
+			);
+
+			// load restored URL in iframe
+			this.$refs.browser.src = src;
+		},
+		/**
+		 * Returns the current iframe URL and scroll position,
+		 * so that these can be restored, if needed
+		 */
+		store() {
+			return {
+				src: this.$refs.browser.src,
+				scroll: this.window.scrollY
+			};
 		}
 	}
 };
@@ -89,18 +195,8 @@ export default {
 	padding-inline: var(--spacing-2);
 	height: var(--input-height);
 }
-.k-preview-browser header .k-headline {
-	display: flex;
-	align-items: center;
-	gap: var(--spacing-1);
-	font-weight: var(--font-normal);
+.k-preview-browser-header .k-preview-headline {
 	font-size: var(--text-xs);
-	padding-inline: var(--spacing-1);
-}
-.k-preview-browser-header .k-form-controls-button {
-	font-size: var(--text-xs);
-	--button-rounded: 3px;
-	--icon-size: 1rem;
 }
 .k-preview-browser-message {
 	font-size: var(--text-xs);
