@@ -36,9 +36,9 @@
 				<k-button
 					v-if="mode === 'compare'"
 					:aria-checked="isScrollSyncing"
-					:icon="isScrollSyncing ? 'scroll-to-bottom-fill' : 'scroll-to-bottom'"
 					:theme="isScrollSyncing ? 'info-icon' : 'passive'"
 					:title="$t('preview.browser.scroll')"
+					icon="scroll-to-bottom"
 					role="switch"
 					size="sm"
 					variant="filled"
