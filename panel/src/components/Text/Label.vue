@@ -133,9 +133,8 @@ export default {
 }
 
 .k-label[data-has-diff="true"] .k-label-text {
-	margin: -0.1em -0.2em;
-	padding: 0.1em 0.2em;
-	border-radius: var(--rounded);
-	background: var(--color-orange-350);
+	text-decoration: underline;
+	text-decoration-thickness: 2px;
+	text-decoration-color: var(--color-orange-500);
 }
 </style>
