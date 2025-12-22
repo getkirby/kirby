@@ -6,7 +6,7 @@
 				{{ label }}
 			</k-headline>
 			<k-button-group>
-				<template v-if="versionId === 'changes'">
+				<template v-if="mode === 'changes'">
 					<p v-if="hasDiff === false" class="k-preview-browser-message">
 						{{ $t("lock.unsaved.empty") }}
 					</p>
@@ -38,7 +38,7 @@ export default {
 	props: {
 		label: String,
 		src: String,
-		versionId: String
+		mode: String
 	},
 	emits: ["discard", "submit"],
 	computed: {

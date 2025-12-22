@@ -19,9 +19,9 @@ class SitePreviewViewController extends ModelPreviewViewController
 {
 	public function __construct(
 		Site $model,
-		string $versionId
+		string $mode
 	) {
-		parent::__construct($model, $versionId);
+		parent::__construct($model, $mode);
 	}
 
 	public function props(): array
