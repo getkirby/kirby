@@ -64,9 +64,6 @@ export default {
 	},
 	emits: ["discard", "navigate", "open", "pin", "submit"],
 	computed: {
-		document() {
-			return this.$refs.browser.contentDocument;
-		},
 		window() {
 			return this.$refs.browser.contentWindow;
 		}
@@ -107,24 +104,26 @@ export default {
 			}
 		},
 		onLoad() {
+			const document = this.$refs.browser.contentDocument;
+
 			// if the browser got redirected during load
 			// navigate to the proper preview URL for this new URL
 			// (but only if the new URL doesn't already contain _version and _token)
-			if (this.src !== this.document.URL) {
-				const url = new URL(this.document.URL);
+			if (this.src !== document.URL) {
+				const url = new URL(document.URL);
 
 				if (
 					url.searchParams.has("_token") === false ||
 					url.searchParams.has("_version") === false
 				) {
-					this.$emit("navigate", { browser: url });
+					return this.$emit("navigate", { browser: url });
 				}
 			}
 
 			// attach event listeners to all links inside the iframe
-			this.document.addEventListener("click", this.onClick);
+			document.addEventListener("click", this.onClick);
 
-			for (const link of this.document.querySelectorAll("a")) {
+			for (const link of document.querySelectorAll("a")) {
 				link.addEventListener("click", this.onClick);
 			}
 		},
