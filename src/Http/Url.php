@@ -241,6 +241,7 @@ class Url
 
 	/**
 	 * Smart resolver for internal and external urls
+	 * @deprecated 5.3.0 Use `Kirby\Cms\Url::to()` instead
 	 */
 	public static function to(
 		string|null $path = null,
