@@ -43,7 +43,11 @@
 		<k-sections
 			:blueprint="blueprint"
 			:content="content"
-			:empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
+			:empty="
+				$panel.config.debug
+					? $t('file.blueprint', { blueprint: $esc(blueprint) })
+					: null
+			"
 			:lock="lock"
 			:parent="api"
 			:tab="tab"
