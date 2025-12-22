@@ -237,8 +237,9 @@ export default {
 			handler(entries) {
 				entries ??= [];
 
-				// no need to add ids again if the values are the same
-				if (entries === this.values) {
+				// Prevent unnecessary re-creation of entries that causes focus loss
+				// when typing in input fields by comparing actual values
+				if (JSON.stringify(entries) === JSON.stringify(this.values)) {
 					return;
 				}
 
