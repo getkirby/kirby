@@ -36,6 +36,7 @@ use Kirby\Toolkit\LazyValue;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 use Throwable;
 
 /**
@@ -105,6 +106,9 @@ class App
 		// start with a fresh snippet and version cache
 		Snippet::$cache = [];
 		VersionCache::reset();
+
+		// reset the UUIDs option cache
+		Uuids::$enabled = null;
 
 		// register all roots to be able to load stuff afterwards
 		$this->bakeRoots($props['roots'] ?? []);
