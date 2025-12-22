@@ -20,6 +20,7 @@
 				<slot name="label">
 					<k-label
 						v-if="label"
+						:has-diff="hasDiff"
 						:input="input"
 						:required="required"
 						:title="label"
@@ -58,6 +59,7 @@ export const props = {
 	props: {
 		counter: [Boolean, Object],
 		endpoints: Object,
+		hasDiff: Boolean,
 		input: {
 			type: [String, Number, Boolean],
 			default: null

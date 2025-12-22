@@ -13,7 +13,7 @@
 			theme="negative"
 		/>
 		<k-form
-			:fields="fields"
+			:fields="fieldsWithAdditionalData"
 			:validate="true"
 			:value="content"
 			:disabled="lock && lock.state === 'lock'"
@@ -40,6 +40,27 @@ export default {
 			issue: null
 		};
 	},
+	computed: {
+		fieldsWithAdditionalData() {
+			const fields = {};
+			const diff = this.$panel.content.diff();
+
+			for (const name in this.fields) {
+				fields[name] = {
+					...this.fields[name],
+					endpoints: {
+						field: this.parent + "/fields/" + name,
+						section: this.parent + "/sections/" + this.name,
+						model: this.parent
+					},
+					hasDiff: Object.hasOwn(diff, name),
+					section: this.name
+				};
+			}
+
+			return fields;
+		}
+	},
 	watch: {
 		// Reload values and field definitions
 		// when the view has changed in the backend
@@ -55,15 +76,6 @@ export default {
 			try {
 				const response = await this.load();
 				this.fields = response.fields;
-
-				for (const name in this.fields) {
-					this.fields[name].section = this.name;
-					this.fields[name].endpoints = {
-						field: this.parent + "/fields/" + name,
-						section: this.parent + "/sections/" + this.name,
-						model: this.parent
-					};
-				}
 			} catch (error) {
 				this.issue = error;
 			} finally {
