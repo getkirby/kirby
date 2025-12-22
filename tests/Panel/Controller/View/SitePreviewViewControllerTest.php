@@ -26,7 +26,7 @@ class SitePreviewViewControllerTest extends TestCase
 		$controller = SitePreviewViewController::factory('site', 'changes');
 		$this->assertInstanceOf(SitePreviewViewController::class, $controller);
 		$this->assertSame($this->app->site(), $controller->model);
-		$this->assertSame('changes', $controller->versionId);
+		$this->assertSame('changes', $controller->mode);
 	}
 
 	public function testId(): void

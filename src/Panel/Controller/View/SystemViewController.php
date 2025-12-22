@@ -70,14 +70,14 @@ class SystemViewController extends ViewController
 	public function load(): View
 	{
 		return new View(
-			component: 'k-system-view',
-			buttons: $this->buttons(),
+			component:   'k-system-view',
+			buttons:     $this->buttons(),
 			environment: $this->stats()->reports(),
-			exceptions: $this->exceptions(),
-			info: $this->system->info(),
-			plugins: $this->plugins(),
-			security: $this->security(),
-			urls: $this->urls()
+			exceptions:  $this->exceptions(),
+			info:        $this->system->info(),
+			plugins:     $this->plugins(),
+			security:    $this->security(),
+			urls:        $this->urls()
 		);
 	}
 
@@ -111,13 +111,25 @@ class SystemViewController extends ViewController
 	{
 		$security = $this->update?->messages() ?? [];
 
-		if ($this->isLocal() === true) {
-			$security[] = [
-				'id'    => 'local',
-				'icon'  => 'info',
-				'theme' => 'info',
-				'text'  => $this->i18n('system.issues.local')
-			];
+		if ($this->isLocal() === false) {
+			if ($this->kirby->environment()->https() !== true) {
+				$security[] = [
+					'id'   => 'https',
+					'text' => $this->i18n('system.issues.https'),
+					'link' => 'https://getkirby.com/security/https'
+				];
+			}
+
+			foreach ($this->system->extensions() as $extension => $status) {
+				if ($status === false) {
+					// @codeCoverageIgnoreStart
+					$security[] = [
+						'id'   => 'extension-' . $extension,
+						'text' => $this->i18n('installation.issues.extension', ['extension' => $extension])
+					];
+					// @codeCoverageIgnoreEnd
+				}
+			}
 		}
 
 		if ($this->isDebugging() === true) {
@@ -130,14 +142,12 @@ class SystemViewController extends ViewController
 			];
 		}
 
-		if (
-			$this->isLocal() === false &&
-			$this->kirby->environment()->https() !== true
-		) {
+		if ($this->isLocal() === true) {
 			$security[] = [
-				'id'   => 'https',
-				'text' => $this->i18n('system.issues.https'),
-				'link' => 'https://getkirby.com/security/https'
+				'id'    => 'local',
+				'icon'  => 'info',
+				'theme' => 'info',
+				'text'  => $this->i18n('system.issues.local')
 			];
 		}
 

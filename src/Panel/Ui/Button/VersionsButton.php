@@ -107,8 +107,8 @@ class VersionsButton extends ViewButton
 	 * Returns the preview view URL for the given version ID
 	 * @since 6.0.0
 	 */
-	public function url(string $versionId): string
+	public function url(string $mode): string
 	{
-		return $this->model->panel()->url(true) . '/preview/' . $versionId;
+		return $this->model->panel()->url(true) . '/preview/' . $mode;
 	}
 }

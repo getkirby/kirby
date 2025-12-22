@@ -1,5 +1,5 @@
 <template>
-	<k-panel class="k-panel-inside k-preview-view" :data-version-id="versionId">
+	<k-panel class="k-panel-inside k-preview-view" :data-mode="mode">
 		<header class="k-preview-view-header">
 			<k-button-group>
 				<k-button
@@ -29,7 +29,7 @@
 			</k-button-group>
 		</header>
 		<main class="k-preview-view-grid">
-			<template v-if="versionId === 'compare'">
+			<template v-if="mode === 'compare'">
 				<k-preview-browser
 					v-bind="browserProps('latest')"
 					@discard="onDiscard"
@@ -43,7 +43,7 @@
 			</template>
 			<template v-else>
 				<k-preview-browser
-					v-bind="browserProps(versionId)"
+					v-bind="browserProps(mode)"
 					@discard="onDiscard"
 					@submit="onSubmit"
 				/>
@@ -61,7 +61,7 @@ export default {
 	extends: ModelView,
 	props: {
 		back: String,
-		versionId: String,
+		mode: String,
 		src: Object,
 		title: String
 	},
@@ -72,15 +72,15 @@ export default {
 		this.$events.off("keydown.esc", this.exit);
 	},
 	methods: {
-		browserProps(versionId) {
+		browserProps(mode) {
 			return {
 				editor: this.editor,
 				hasDiff: this.hasDiff,
 				isLocked: this.isLocked,
 				modified: this.modified,
-				label: this.$t("version." + versionId),
-				src: this.src[versionId],
-				versionId: versionId
+				label: this.$t("version." + mode),
+				src: this.src[mode],
+				mode: mode
 			};
 		},
 		exit() {
@@ -98,10 +98,10 @@ export default {
 			this.$refs.tree.close();
 
 			if (page.id === "/") {
-				return this.$panel.view.open("site/preview/" + this.versionId);
+				return this.$panel.view.open("site/preview/" + this.mode);
 			}
 
-			const url = this.$api.pages.url(page.id, "preview/" + this.versionId);
+			const url = this.$api.pages.url(page.id, "preview/" + this.mode);
 			this.$panel.view.open(url);
 		}
 	}

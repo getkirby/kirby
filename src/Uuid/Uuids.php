@@ -20,6 +20,11 @@ use Kirby\Exception\LogicException;
 class Uuids
 {
 	/**
+	 * Cache for the uuid option state
+	 */
+	public static bool|null $enabled = null;
+
+	/**
 	 * Returns the instance for the lookup cache
 	 */
 	public static function cache(): Cache
@@ -82,7 +87,7 @@ class Uuids
 
 	public static function enabled(): bool
 	{
-		return App::instance()->option('content.uuid') !== false;
+		return static::$enabled ??= App::instance()->option('content.uuid') !== false;
 	}
 
 	/**

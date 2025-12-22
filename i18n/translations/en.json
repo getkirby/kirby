@@ -427,11 +427,10 @@
 	"installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
 	"installation.issues.accounts": "The <code>/site/accounts</code> folder does not exist or is not writable",
 	"installation.issues.content": "The <code>/content</code> folder does not exist or is not writable",
-	"installation.issues.curl": "The <code>CURL</code> extension is required",
+	"installation.issues.extension": "The <code>{extension}</code> PHP extension is required",
 	"installation.issues.headline": "The panel cannot be installed",
-	"installation.issues.mbstring": "The <code>MB String</code> extension is required",
 	"installation.issues.media": "The <code>/media</code> folder does not exist or is not writable",
-	"installation.issues.php": "Make sure to use <code>PHP 8+</code>",
+	"installation.issues.php": "Make sure to use <code>PHP 8.3+</code>",
 	"installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
 	"language": "Language",

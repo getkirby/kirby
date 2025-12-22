@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use stdClass;
 
 #[CoversClass(Remote::class)]
 class RemoteTest extends TestCase
@@ -180,6 +181,15 @@ class RemoteTest extends TestCase
 		$options = $request->options();
 		$this->assertSame('different-value', $options['key']);
 		$this->assertFalse($options['body']);
+
+		// reset app options
+		new App(
+			[
+				'options' => [
+					'remote' => []
+				]
+			]
+		);
 	}
 
 	public function testContent(): void
@@ -233,6 +243,26 @@ class RemoteTest extends TestCase
 	{
 		$request = new Remote('https://getkirby.com');
 		$this->assertSame([], $request->info());
+	}
+
+	public function testJson(): void
+	{
+		$request = new Remote('https://getkirby.com');
+		$this->assertNull($request->json());
+
+		$request = new Remote('https://getkirby.com');
+		$request->content = '{"foo":"bar"}';
+		$this->assertSame(['foo' => 'bar'], $request->json(array: true));
+
+		$request = new Remote('https://getkirby.com');
+		$request->content = '{"foo":"bar"}';
+		$json = $request->json(array: false);
+		$this->assertInstanceOf(stdClass::class, $json);
+		$this->assertSame('bar', $json->foo);
+
+		$request = new Remote('https://getkirby.com');
+		$request->content = '5';
+		$this->assertNull($request->json());
 	}
 
 	public function testPatch(): void

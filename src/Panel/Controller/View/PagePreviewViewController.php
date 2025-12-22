@@ -19,9 +19,9 @@ class PagePreviewViewController extends ModelPreviewViewController
 {
 	public function __construct(
 		Page $model,
-		string $versionId
+		string $mode
 	) {
-		parent::__construct($model, $versionId);
+		parent::__construct($model, $mode);
 	}
 
 	public function props(): array

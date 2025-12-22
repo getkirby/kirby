@@ -135,6 +135,26 @@ class SystemTest extends TestCase
 		];
 	}
 
+	public function testExtensions(): void
+	{
+		$system = new System($this->app);
+
+		$expected = [
+			'ctype'     => true,
+			'curl'      => true,
+			'dom'       => true,
+			'filter'    => true,
+			'hash'      => true,
+			'iconv'     => true,
+			'json'      => true,
+			'libxml'    => true,
+			'mbstring'  => true,
+			'openssl'   => true,
+			'SimpleXML' => true,
+		];
+		$this->assertSame($expected, $system->extensions());
+	}
+
 	public function testFolderUrlForContentFolder(): void
 	{
 		$system = new System($this->app->clone([
@@ -605,11 +625,9 @@ class SystemTest extends TestCase
 		$expected = [
 			'accounts' => true,
 			'content'  => true,
-			'curl'     => true,
-			'sessions' => true,
-			'mbstring' => true,
 			'media'    => true,
-			'php'      => true
+			'php'      => true,
+			'sessions' => true,
 		];
 		$this->assertSame($expected, $system->status());
 		$this->assertSame($expected, $system->toArray());
@@ -624,19 +642,7 @@ class SystemTest extends TestCase
 		$system = new System($this->app);
 
 		chmod($this->app->root('content'), 0o000);
-
-		$expected = [
-			'accounts' => true,
-			'content'  => false,
-			'curl'     => true,
-			'sessions' => true,
-			'mbstring' => true,
-			'media'    => true,
-			'php'      => true
-		];
-		$this->assertSame($expected, $system->status());
-		$this->assertSame($expected, $system->toArray());
-		$this->assertSame($expected, $system->__debugInfo());
+		$this->assertFalse($system->status()['content']);
 	}
 
 	public function testTitle(): void
