@@ -203,7 +203,7 @@ export default {
 	position: relative;
 	min-height: var(--item-height);
 }
-.k-item:has(a:focus) {
+.k-item-box:has(a:focus) {
 	outline: 2px solid var(--color-focus);
 }
 .k-item:not(:hover):not(.k-sortable-fallback) .k-item-sort-handle {
