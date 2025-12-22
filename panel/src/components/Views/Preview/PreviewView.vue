@@ -25,8 +25,9 @@
 			</k-button-group>
 
 			<k-preview-sizes
-				v-if="!isRemote && mode !== 'compare'"
+				v-if="!isRemote"
 				:current="size"
+				:mode="mode"
 				:sizes="sizes"
 				@change="onSize"
 			/>
@@ -121,7 +122,7 @@ export const Preview = {
 			default: () => ({
 				small: { icon: "mobile", width: "390px" },
 				medium: { icon: "tablet", width: "820px" },
-				large: { icon: "display", width: "100%" }
+				large: { icon: "display", width: "1440px" }
 			})
 		},
 		src: Object
@@ -139,7 +140,7 @@ export const Preview = {
 	computed: {
 		gridStyles() {
 			return {
-				"--preview-width": this.sizes[this.size].width,
+				"--size": this.sizes[this.size].width,
 				[this.isAnimating ? "transition" : null]:
 					"grid-template-columns 0.12s ease"
 			};
@@ -283,7 +284,7 @@ export default {
 				modified: this.modified,
 				open: this.src[src],
 				src: this.src[src],
-				mode: mode
+				mode
 			};
 		},
 		/**
@@ -382,6 +383,8 @@ export default {
 	padding: 0 var(--spacing-3) var(--spacing-3);
 	gap: var(--spacing-3);
 	max-height: calc(100vh - 3.5rem);
+
+	--preview-width: calc(var(--size) + 2px);
 }
 
 @media screen and (max-width: 60rem) {
@@ -393,24 +396,26 @@ export default {
 		grid-template-rows: 1fr 1fr;
 	}
 
-	.k-preview-view-sizes {
+	.k-preview-sizes {
 		display: none;
 	}
 }
 
 @media screen and (min-width: 60rem) {
 	.k-preview-view .k-preview-view-grid:has(.k-preview-browser) {
-		grid-template-columns: calc(var(--preview-width) + 2px);
-		justify-content: center;
+		grid-template-columns: min(var(--preview-width), 100%);
+		justify-content: space-around;
 	}
 
 	.k-preview-view[data-mode="compare"] .k-preview-view-grid {
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns:
+			min(var(--preview-width), calc(50% - var(--spacing-3) / 2))
+			min(var(--preview-width), calc(50% - var(--spacing-3) / 2));
 	}
 
 	.k-preview-view[data-mode="form"]:has(.k-preview-browser)
 		.k-preview-view-grid {
-		grid-template-columns: min(calc(var(--preview-width) + 2px), calc(68vw)) 1fr;
+		grid-template-columns: min(var(--preview-width), 68%) 1fr;
 	}
 }
 
