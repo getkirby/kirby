@@ -212,6 +212,7 @@ export default {
 .k-item-box {
 	position: relative;
 	width: 100%;
+	height: 100%;
 	background: var(--item-color-back);
 	box-shadow: var(--item-shadow);
 	border-radius: var(--rounded);
@@ -276,7 +277,7 @@ export default {
 .k-item[data-layout="list"][data-has-image="true"] .k-item-box {
 	grid-template-columns: var(--item-height) 1fr auto;
 }
-.k-item[data-layout="list"] .k-frame {
+.k-item[data-layout="list"] .k-item-image {
 	--ratio: 1/1;
 	border-start-start-radius: var(--rounded);
 	border-end-start-radius: var(--rounded);
@@ -346,7 +347,7 @@ export default {
 		"image options";
 	grid-template-columns: minmax(0, var(--item-height)) 1fr;
 }
-.k-item[data-layout="cardlets"] .k-frame {
+.k-item[data-layout="cardlets"] .k-item-image {
 	grid-area: image;
 	border-start-start-radius: var(--rounded);
 	border-end-start-radius: var(--rounded);
@@ -367,12 +368,12 @@ export default {
 }
 
 /** Card */
-.k-item[data-layout="cards"] {
+.k-item[data-layout="cards"] .k-item-box {
 	display: flex;
 	flex-direction: column;
 	/* container-type: inline-size; */
 }
-.k-item[data-layout="cards"] .k-frame {
+.k-item[data-layout="cards"] .k-item-image {
 	border-start-start-radius: var(--rounded);
 	border-start-end-radius: var(--rounded);
 }
