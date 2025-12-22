@@ -4,6 +4,7 @@ namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use Kirby\Toolkit\Locale;
 use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 
@@ -61,8 +62,7 @@ class YamlTest extends TestCase
 
 	public function testEncodeFloatWithNonUSLocale(): void
 	{
-		$locale = setlocale(LC_ALL, 0);
-
+		$locale = Locale::get();
 		setlocale(LC_ALL, 'de_DE');
 
 		$data = Yaml::encode([
@@ -71,7 +71,7 @@ class YamlTest extends TestCase
 
 		$this->assertSame('number: 3.2' . PHP_EOL, $data);
 
-		setlocale(LC_ALL, $locale);
+		Locale::set($locale);
 	}
 
 	public function testEncodeNodeTypes(): void

@@ -7,6 +7,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Panel\Model;
 use Kirby\TestCase;
+use Kirby\Toolkit\Locale;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class PagesSectionTest extends TestCase
@@ -315,7 +316,7 @@ class PagesSectionTest extends TestCase
 
 	public function testSortBy(): void
 	{
-		$locale = setlocale(LC_ALL, 0);
+		$locale = Locale::get();
 		setlocale(LC_ALL, ['de_DE.ISO8859-1', 'de_DE']);
 
 		$page = new Page([
@@ -376,7 +377,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('B', $section->data()[1]['text']);
 		$this->assertSame('Ä', $section->data()[2]['text']);
 
-		setlocale(LC_ALL, $locale);
+		Locale::set($locale);
 	}
 
 	public function testSortByMultiple(): void

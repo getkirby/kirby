@@ -18,15 +18,7 @@ class AppTranslationsTest extends TestCase
 
 	public function setUp(): void
 	{
-		$constants = [
-			LC_ALL, LC_COLLATE, LC_CTYPE, LC_MONETARY,
-			LC_NUMERIC, LC_TIME, LC_MESSAGES
-		];
-
-		// make a backup of the current locale
-		foreach ($constants as $constant) {
-			$this->locale[$constant] = setlocale($constant, '0');
-		}
+		$this->locale = Locale::get();
 
 		// test which locale suffix the system supports
 		setlocale(LC_ALL, 'de_DE.' . $this->localeSuffix);

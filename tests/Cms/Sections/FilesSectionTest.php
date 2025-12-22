@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
+use Kirby\Toolkit\Locale;
 
 class FilesSectionTest extends TestCase
 {
@@ -334,7 +335,7 @@ class FilesSectionTest extends TestCase
 	{
 		$this->app->impersonate('kirby');
 
-		$locale = setlocale(LC_ALL, 0);
+		$locale = Locale::get();
 		setlocale(LC_ALL, ['de_DE.ISO8859-1', 'de_DE']);
 
 		$model = new Page([
@@ -391,7 +392,7 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('b.jpg', $section->data()[1]['filename']);
 		$this->assertSame('ä.jpg', $section->data()[2]['filename']);
 
-		setlocale(LC_ALL, $locale);
+		Locale::set($locale);
 	}
 
 	public function testSortable(): void
