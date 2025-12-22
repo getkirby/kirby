@@ -24,11 +24,22 @@ class InstallationViewControllerTest extends TestCase
 		$requirements = [
 			'accounts' => true,
 			'content'  => true,
-			'curl'     => true,
-			'sessions' => true,
-			'mbstring' => true,
 			'media'    => true,
 			'php'      => true,
+			'sessions' => true,
+			'extensions' => [
+				'ctype'     => true,
+				'curl'      => true,
+				'dom'       => true,
+				'filter'    => true,
+				'hash'      => true,
+				'iconv'     => true,
+				'json'      => true,
+				'libxml'    => true,
+				'mbstring'  => true,
+				'openssl'   => true,
+				'SimpleXML' => true,
+			]
 		];
 
 		$this->assertSame($requirements, $props['requirements']);
