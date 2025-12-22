@@ -356,11 +356,20 @@ export default {
 }
 .k-preview-view-header {
 	container-type: inline-size;
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
 	gap: var(--spacing-2);
-	justify-content: space-between;
 	align-items: center;
 	padding: var(--spacing-3);
+}
+.k-preview-view-header > * {
+	justify-self: center;
+}
+.k-preview-view-header > :first-child {
+	justify-self: start;
+}
+.k-preview-view-header > :last-child {
+	justify-self: end;
 }
 .k-preview-headline {
 	display: flex;
