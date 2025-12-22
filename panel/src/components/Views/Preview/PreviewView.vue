@@ -189,9 +189,17 @@ export const Preview = {
 		},
 		/**
 		 * Reloads the preview view for the current ID
+		 * but preserves the tab selection
 		 */
 		reload() {
-			this.onTreeNavigate({ id: this.id }, true);
+			let url = this.$panel.view.path;
+			const query = new URLSearchParams(window.location.search);
+
+			if (query.has("tab") === true) {
+				url += "?tab=" + query.get("tab");
+			}
+
+			this.$panel.view.open(url);
 		},
 		togglePin() {
 			this.isPinned = !this.isPinned;
