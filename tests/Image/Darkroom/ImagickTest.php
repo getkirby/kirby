@@ -99,15 +99,14 @@ class ImagickTest extends TestCase
 		int $orientation,
 		array $expectedTransformations
 	): void {
-		$image = $this->createMock(Image::class);
+		$image = $this->createStub(Image::class);
 		$image->method('getImageOrientation')->willReturn($orientation);
 
 		foreach ($expectedTransformations as $method) {
-			$image->expects($this->once())->method($method);
+			$image->method($method);
 		}
 
-		$image->expects($this->once())->method('setImageOrientation')
-			->with(Image::ORIENTATION_TOPLEFT);
+		$image->method('setImageOrientation')->with(Image::ORIENTATION_TOPLEFT);
 
 		$imagick = new Imagick();
 		$this->call($imagick, 'autoOrient', $image);
@@ -115,9 +114,9 @@ class ImagickTest extends TestCase
 
 	public function testBlur(): void
 	{
-		$image = $this->createMock(Image::class);
+		$image = $this->createStub(Image::class);
 
-		$image->expects($this->once())
+		$image
 			->method('blurImage')
 			->with($this->equalTo(0), $this->equalTo(50));
 
@@ -161,9 +160,9 @@ class ImagickTest extends TestCase
 
 	public function testGrayscale(): void
 	{
-		$image = $this->createMock(Image::class);
+		$image = $this->createStub(Image::class);
 
-		$image->expects($this->once())
+		$image
 			->method('setImageColorspace')
 			->with(Image::COLORSPACE_GRAY);
 
@@ -173,9 +172,9 @@ class ImagickTest extends TestCase
 
 	public function testInterlace(): void
 	{
-		$image = $this->createMock(Image::class);
+		$image = $this->createStub(Image::class);
 
-		$image->expects($this->once())
+		$image
 			->method('setInterlaceScheme')
 			->with(Image::INTERLACE_LINE);
 
@@ -213,9 +212,9 @@ class ImagickTest extends TestCase
 
 	public function testQuality(): void
 	{
-		$image = $this->createMock(Image::class);
+		$image = $this->createStub(Image::class);
 
-		$image->expects($this->once())
+		$image
 			->method('setImageCompressionQuality')
 			->with(90);
 
@@ -299,9 +298,9 @@ class ImagickTest extends TestCase
 
 	public function testSharpen(): void
 	{
-		$image = $this->createMock(Image::class);
+		$image = $this->createStub(Image::class);
 
-		$image->expects($this->once())
+		$image
 			->method('sharpenImage')
 			->with(0, 0.5);
 

@@ -76,7 +76,7 @@ class LanguageRulesTest extends TestCase
 
 	public function testCreateWhenExists(): void
 	{
-		$language = $this->createMock(Language::class);
+		$language = $this->createStub(Language::class);
 		$language->method('code')->willReturn('de');
 		$language->method('name')->willReturn('Deutsch');
 		$language->method('exists')->willReturn(true);
@@ -131,7 +131,7 @@ class LanguageRulesTest extends TestCase
 
 	public function testDeleteWhenNotDeletable(): void
 	{
-		$language = $this->createMock(Language::class);
+		$language = $this->createStub(Language::class);
 		$language->method('isDeletable')->willReturn(false);
 
 		$this->expectException(PermissionException::class);
@@ -184,7 +184,7 @@ class LanguageRulesTest extends TestCase
 
 	public function testUpdateWithoutCode(): void
 	{
-		$language = $this->createMock(Language::class);
+		$language = $this->createStub(Language::class);
 		$language->method('code')->willReturn('');
 		$language->method('name')->willReturn('Deutsch');
 
@@ -196,7 +196,7 @@ class LanguageRulesTest extends TestCase
 
 	public function testUpdateWithoutName(): void
 	{
-		$language = $this->createMock(Language::class);
+		$language = $this->createStub(Language::class);
 		$language->method('code')->willReturn('de');
 		$language->method('name')->willReturn('');
 
