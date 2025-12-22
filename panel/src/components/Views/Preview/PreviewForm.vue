@@ -52,10 +52,14 @@ export default {
 	emits: ["discard", "input", "navigate", "submit"],
 	computed: {
 		tabsWithPreviewLinks() {
+			const query = new URLSearchParams(window.location.search);
+
 			return this.tabs.map((tab) => {
+				query.append("tab", tab.name);
+
 				return {
 					...tab,
-					link: this.$panel.view.path + "?tab=" + tab.name
+					link: this.$panel.view.path + "?" + query.toString()
 				};
 			});
 		}
