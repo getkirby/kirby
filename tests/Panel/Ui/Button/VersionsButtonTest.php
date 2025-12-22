@@ -60,7 +60,7 @@ class VersionsButtonTest extends TestCase
 		$button = new VersionsButton(model: $page, mode: 'latest');
 
 		$options = $button->options();
-		$this->assertSame('Edit content', $options[0]['label']);
+		$this->assertSame('Live editor', $options[0]['label']);
 		$this->assertFalse($options[0]['current']);
 
 		$this->assertSame('-', $options[1]);
