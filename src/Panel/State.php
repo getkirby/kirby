@@ -315,8 +315,9 @@ class State
 	public function urls(): array
 	{
 		return [
-			'api'  => $this->kirby->url('api'),
-			'site' => $this->kirby->url('index')
+			'api'   => $this->kirby->url('api'),
+			'panel' => $this->kirby->url('panel'),
+			'site'  => $this->kirby->url('index')
 		];
 	}
 
