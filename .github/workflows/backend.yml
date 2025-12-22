@@ -81,13 +81,13 @@ jobs:
           php: ${{ matrix.php }}
           ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
           coverage: pcov
-          tools: phpunit:12.4.4
+          tools: phpunit:12.5.4, brianium/paratest:7.14.2
 
       - name: Check Composer platform requirements
         run: composer check-platform-reqs
 
       - name: Run PHPUnit tests
-        run: phpunit -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
+        run: paratest -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Upload coverage results to Codecov
         if: matrix.php == '8.4'
