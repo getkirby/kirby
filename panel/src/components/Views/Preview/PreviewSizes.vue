@@ -28,7 +28,7 @@ export default {
 					current: this.current === size,
 					icon: this.sizes[size].icon,
 					size: "sm",
-					theme: this.current === size ? "info" : null,
+					theme: this.current === size ? "info-icon" : null,
 					variant: "filled"
 				};
 			}

@@ -634,6 +634,7 @@
 
 	"preview": "Preview",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publish",
 	"published": "Published",

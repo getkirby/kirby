@@ -31,7 +31,22 @@
 				@change="onSize"
 			/>
 
-			<k-view-buttons :buttons="buttons" />
+			<k-button-group>
+				<k-button
+					v-if="mode === 'compare'"
+					:aria-checked="isScrollSyncing"
+					:icon="isScrollSyncing ? 'scroll-to-bottom-fill' : 'scroll-to-bottom'"
+					:theme="isScrollSyncing ? 'info-icon' : 'passive'"
+					:title="$t('preview.browser.scroll')"
+					role="switch"
+					size="sm"
+					variant="filled"
+					class="k-preview-scroll-sync"
+					@click="onScrollSyncing"
+				/>
+
+				<k-view-buttons :buttons="buttons" />
+			</k-button-group>
 		</header>
 
 		<main :style="gridStyles" class="k-preview-view-grid">
@@ -63,15 +78,19 @@
 
 			<template v-else-if="mode === 'compare'">
 				<k-preview-browser
+					ref="latest"
 					v-bind="browserProps('latest')"
 					@discard="onDiscard"
 					@navigate="onBrowserNavigate"
+					@scroll="onScroll('latest', 'changes')"
 					@submit="onSubmit"
 				/>
 				<k-preview-browser
+					ref="changes"
 					v-bind="browserProps('changes')"
 					@discard="onDiscard"
 					@navigate="onBrowserNavigate"
+					@scroll="onScroll('changes', 'latest')"
 					@submit="onSubmit"
 				/>
 			</template>
@@ -220,8 +239,11 @@ export default {
 		title: String
 	},
 	data() {
+		const scroll = localStorage.getItem("kirby$preview$scroll", "true");
+
 		return {
-			isRemote: false
+			isRemote: false,
+			isScrollSyncing: scroll === "true"
 		};
 	},
 	watch: {
@@ -302,6 +324,18 @@ export default {
 			window.addEventListener("beforeunload", () =>
 				this.announce("remote:exit")
 			);
+		},
+		onScroll(source, target) {
+			if (this.isScrollSyncing) {
+				this.$refs[target].$refs.browser.contentWindow.scrollTo(
+					0,
+					this.$refs[source].$refs.browser.contentWindow.scrollY
+				);
+			}
+		},
+		onScrollSyncing() {
+			this.isScrollSyncing = !this.isScrollSyncing;
+			localStorage.setItem("kirby$preview$scroll", this.isScrollSyncing);
 		},
 		async onViewNavigate(url) {
 			Preview.methods.onViewNavigate.call(this, url);

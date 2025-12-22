@@ -62,7 +62,7 @@ export default {
 		mode: String,
 		open: String
 	},
-	emits: ["discard", "navigate", "open", "pin", "submit"],
+	emits: ["discard", "navigate", "open", "pin", "scroll", "submit"],
 	computed: {
 		window() {
 			return this.$refs.browser.contentWindow;
@@ -126,6 +126,8 @@ export default {
 			for (const link of document.querySelectorAll("a")) {
 				link.addEventListener("click", this.onClick);
 			}
+
+			document.addEventListener("scroll", (e) => this.$emit("scroll", e));
 		},
 		/**
 		 * Refresh the iframe
