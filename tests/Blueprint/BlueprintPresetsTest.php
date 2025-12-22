@@ -1,6 +1,8 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
+
+use Kirby\Cms\App;
 
 class BlueprintPresetsTest extends TestCase
 {

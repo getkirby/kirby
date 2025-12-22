@@ -1,7 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
 
+use Kirby\Cms\App;
+use Kirby\Cms\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(UserBlueprint::class)]

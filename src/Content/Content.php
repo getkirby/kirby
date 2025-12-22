@@ -2,7 +2,7 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\Blueprint;
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Form;

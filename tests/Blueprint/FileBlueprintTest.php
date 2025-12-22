@@ -1,7 +1,10 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
 
+use Kirby\Cms\App;
+use Kirby\Cms\File;
+use Kirby\Cms\Page;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 

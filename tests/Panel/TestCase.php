@@ -2,8 +2,8 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase as BaseTestCase;
 

@@ -2,7 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\Blueprint;
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;

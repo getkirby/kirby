@@ -2,8 +2,8 @@
 
 namespace Kirby\Api;
 
+use Kirby\Blueprint\PageBlueprint;
 use Kirby\Cms\Page;
-use Kirby\Cms\PageBlueprint;
 
 class PageBlueprintModelTest extends ModelTestCase
 {

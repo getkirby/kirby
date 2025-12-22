@@ -1,8 +1,11 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
 
 use Exception;
+use Kirby\Cms\App;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;

@@ -2,8 +2,8 @@
 
 namespace Kirby\Panel\Controller;
 
+use Kirby\Blueprint\Section;
 use Kirby\Cms\Find;
-use Kirby\Cms\Section;
 use Kirby\Http\Router;
 use Kirby\Panel\Area;
 

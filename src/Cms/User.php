@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Closure;
 use Exception;
+use Kirby\Blueprint\UserBlueprint;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;

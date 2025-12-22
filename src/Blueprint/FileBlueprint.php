@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
 
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
@@ -10,7 +10,7 @@ use Kirby\Toolkit\Str;
  * Extension of the basic blueprint class
  * to handle all blueprints for files.
  *
- * @package   Kirby Cms
+ * @package   Kirby Blueprint
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier

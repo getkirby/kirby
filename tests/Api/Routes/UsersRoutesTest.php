@@ -2,9 +2,9 @@
 
 namespace Kirby\Api;
 
+use Kirby\Blueprint\Blueprint;
+use Kirby\Blueprint\Section;
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
-use Kirby\Cms\Section;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;

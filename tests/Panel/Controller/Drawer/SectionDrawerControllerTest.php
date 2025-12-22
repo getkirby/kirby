@@ -3,8 +3,8 @@
 namespace Kirby\Panel\Controller\Drawer;
 
 use Exception;
+use Kirby\Blueprint\Section;
 use Kirby\Cms\Page;
-use Kirby\Cms\Section;
 use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 

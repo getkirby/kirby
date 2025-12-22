@@ -1,15 +1,17 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
 
 use Closure;
+use Kirby\Cms\App;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Component;
 
 /**
  * Section
  *
- * @package   Kirby Cms
+ * @package   Kirby Blueprint
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier

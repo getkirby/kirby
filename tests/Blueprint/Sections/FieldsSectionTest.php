@@ -1,6 +1,8 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Blueprint;
+
+use Kirby\Cms\Page;
 
 class FieldsSectionTest extends TestCase
 {

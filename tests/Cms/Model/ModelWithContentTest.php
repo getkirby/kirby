@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Blueprint\Blueprint;
 use Kirby\Content\Lock;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
