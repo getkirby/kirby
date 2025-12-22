@@ -30,6 +30,9 @@ export default {
 		if (this.items) {
 			this.state = this.items;
 		} else {
+			// temporarily add an item to show loading spinner
+			this.state = [{ icon: "loader" }];
+
 			// load top-level items (e.g. only site)
 			const items = await this.load(null);
 			await this.open(items[0]);
