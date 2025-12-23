@@ -39,12 +39,6 @@
 							<span v-html="$t('installation.disabled')" />
 						</li>
 
-						<li v-if="requirements.php === false">
-							<k-icon type="alert" />
-							<!-- eslint-disable-next-line vue/no-v-html -->
-							<span v-html="$t('installation.issues.php')" />
-						</li>
-
 						<li v-if="requirements.server === false">
 							<k-icon type="alert" />
 							<!-- eslint-disable-next-line vue/no-v-html -->

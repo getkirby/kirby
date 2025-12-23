@@ -366,16 +366,6 @@ class System
 	}
 
 	/**
-	 * Check for a valid PHP version
-	 */
-	public function php(): bool
-	{
-		return
-			version_compare(PHP_VERSION, '8.3.0', '>=') === true &&
-			version_compare(PHP_VERSION, '8.6.0', '<')  === true;
-	}
-
-	/**
 	 * Returns a sorted collection of all
 	 * installed plugins
 	 */
@@ -440,7 +430,6 @@ class System
 			'accounts' => $this->accounts(),
 			'content'  => $this->content(),
 			'media'    => $this->media(),
-			'php'      => $this->php(),
 			'sessions' => $this->sessions(),
 		];
 	}

@@ -626,7 +626,6 @@ class SystemTest extends TestCase
 			'accounts' => true,
 			'content'  => true,
 			'media'    => true,
-			'php'      => true,
 			'sessions' => true,
 		];
 		$this->assertSame($expected, $system->status());

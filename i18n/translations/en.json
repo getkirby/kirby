@@ -430,7 +430,6 @@
 	"installation.issues.extension": "The <code>{extension}</code> PHP extension is required",
 	"installation.issues.headline": "The panel cannot be installed",
 	"installation.issues.media": "The <code>/media</code> folder does not exist or is not writable",
-	"installation.issues.php": "Make sure to use <code>PHP 8.3+</code>",
 	"installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
 	"language": "Language",
