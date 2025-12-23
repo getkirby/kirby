@@ -31,16 +31,12 @@ class Stat extends Component
 
 	public function dialog(): string|null
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->dialog)
-		);
+		return $this->stringTemplate($this->dialog);
 	}
 
 	public function drawer(): string|null
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->drawer)
-		);
+		return $this->stringTemplate($this->drawer);
 	}
 
 	public static function from(
@@ -85,9 +81,7 @@ class Stat extends Component
 
 	public function link(): string|null
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->link)
-		);
+		return $this->stringTemplate($this->link);
 	}
 
 	public function props(): array

@@ -111,7 +111,7 @@ class StatTest extends TestCase
 		$this->assertProp(
 			prop: 'dialog',
 			nullable: true,
-			translatable: true,
+			translatable: false,
 			queryable: true
 		);
 	}
@@ -121,7 +121,7 @@ class StatTest extends TestCase
 		$this->assertProp(
 			prop: 'drawer',
 			nullable: true,
-			translatable: true,
+			translatable: false,
 			queryable: true
 		);
 	}
@@ -214,7 +214,7 @@ class StatTest extends TestCase
 		$this->assertProp(
 			prop: 'link',
 			nullable: true,
-			translatable: true,
+			translatable: false,
 			queryable: true
 		);
 	}
