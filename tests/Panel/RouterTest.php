@@ -75,7 +75,7 @@ class RouterTest extends TestCase
 		$this->assertSame('(:all)', $routes[2]['pattern']);
 
 		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Could not find Panel view for route: foo');
+		$this->expectExceptionMessage('Could not find Panel route: foo');
 
 		$routes[2]['action']('foo');
 	}

@@ -61,6 +61,6 @@ class PluginTest extends AreaTestCase
 		$view = $this->view('foo');
 		$this->assertSame('k-foo-view', $view['component']);
 
-		$this->assertErrorView('bar', 'Could not find Panel view for route: bar');
+		$this->assertErrorView('bar', 'Could not find Panel route: bar');
 	}
 }
