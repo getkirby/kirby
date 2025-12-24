@@ -16,9 +16,10 @@
 					@crumb="$emit('crumb', $event)"
 					@tab="$emit('tab', $event)"
 				>
+					<slot name="header" />
 					<slot name="options">
 						<template v-for="(option, index) in options">
-							<template v-if="option.dropdown">
+							<template v-if="option.dropdown || option.options">
 								<k-button
 									:key="'btn-' + index"
 									v-bind="option"
@@ -28,7 +29,7 @@
 								<k-dropdown
 									:ref="'dropdown-' + index"
 									:key="'dropdown-' + index"
-									:options="option.dropdown"
+									:options="option.dropdown ?? option.options"
 									align-x="end"
 									theme="light"
 								/>
