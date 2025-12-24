@@ -37,16 +37,12 @@ class VTest extends TestCase
 	public function setUp(): void
 	{
 		$this->localeBackup = I18n::$locale;
-		I18n::$locale = 'foo';
-		I18n::$translations['foo'] = [
-			'error.validation.same' => 'Error message for same: {other}'
-		];
 	}
 
 	public function tearDown(): void
 	{
-		unset(I18n::$translations['foo']);
 		I18n::$locale = $this->localeBackup;
+		I18n::$translations = [];
 		V::$validators = [];
 	}
 
@@ -262,18 +258,19 @@ class VTest extends TestCase
 
 	public function testErrors(): void
 	{
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
+
 		$result = V::errors('test@getkirby.com', [
 			'email',
 			'maxLength' => 17,
 			'minLength' => 17
 		]);
-
 		$this->assertSame([], $result);
 
-		$result = V::errors('a', [
-			'same' => 'b'
-		]);
-
+		$result = V::errors('a', ['same' => 'b']);
 		$this->assertSame([
 			'same' => 'Error message for same: b',
 		], $result);
@@ -581,6 +578,11 @@ class VTest extends TestCase
 
 	public function testMessage(): void
 	{
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
+
 		$message = V::message('same', 'a', 'b');
 		$this->assertSame('Error message for same: b', $message);
 	}
@@ -915,16 +917,24 @@ class VTest extends TestCase
 
 	public function testValueFails(): void
 	{
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
+
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Error message for same');
 
-		V::value('a', [
-			'same' => 'b'
-		]);
+		V::value('a', ['same' => 'b']);
 	}
 
 	public function testValueFailsNotThrowing(): void
 	{
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
+
 		$result = V::value('a', ['same' => 'b'], fail: false);
 
 		$this->assertSame([
