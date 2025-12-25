@@ -53,6 +53,10 @@ class License
 			$this->email = $this->normalizeEmail($email);
 		}
 
+		if ($code === LicenseType::Free->prefix()) {
+			$this->email ??= 'mail@getkirby.com';
+		}
+
 		$this->kirby = App::instance();
 	}
 
@@ -71,6 +75,10 @@ class License
 	 */
 	public function code(bool $obfuscated = false): string|null
 	{
+		if ($this->type() === LicenseType::Free) {
+			return null;
+		}
+
 		if ($this->code !== null && $obfuscated === true) {
 			return Str::substr($this->code, 0, 10) . str_repeat('X', 22);
 		}
@@ -156,7 +164,7 @@ class License
 			$this->domain !== null &&
 			$this->email !== null &&
 			$this->order !== null &&
-			$this->signature !== null &&
+			($this->signature !== null || $this->isFreeAndLocal()) &&
 			$this->hasValidEmailAddress() === true &&
 			$this->type() !== LicenseType::Invalid
 		) {
@@ -164,6 +172,26 @@ class License
 		}
 
 		return false;
+	}
+
+	/**
+	 * Whether it is a free license for development/private installation
+	 * @since 5.3.0
+	 */
+	public function isFree(): bool
+	{
+		return $this->type() === LicenseType::Free;
+	}
+
+	/**
+	 * Whether it is a free license and installed locally
+	 * @since 5.3.0
+	 */
+	public function isFreeAndLocal(): bool
+	{
+		return
+			$this->isFree() === true &&
+			$this->kirby->system()->isLocal() === true;
 	}
 
 	/**
@@ -244,6 +272,11 @@ class License
 	 */
 	public function isSigned(): bool
 	{
+		// locally self-signed licenses do not need a signature
+		if ($this->isFreeAndLocal() === true) {
+			return true;
+		}
+
 		if ($this->signature === null) {
 			return false;
 		}
@@ -372,8 +405,19 @@ class License
 			);
 		}
 
+		if ($this->isFreeAndLocal() === true) {
+			$response = [
+				'activation' => date('Y-m-d H:i:s'),
+				'date'       => date('Y-m-d H:i:s'),
+				'domain'     => $this->domain,
+				'code'       => $this->code,
+				'order'      => '12345678',
+				'email'      => $this->email
+			];
+		}
+
 		// @codeCoverageIgnoreStart
-		$response = $this->request('register', [
+		$response ??= $this->request('register', [
 			'license' => $this->code,
 			'email'   => $this->email,
 			'domain'  => $this->domain
@@ -492,6 +536,7 @@ class License
 	{
 		return $this->status ??= match (true) {
 			$this->isMissing()  => LicenseStatus::Missing,
+			$this->isFree()     => LicenseStatus::Acknowledged,
 			$this->isLegacy()   => LicenseStatus::Legacy,
 			$this->isInactive() => LicenseStatus::Inactive,
 			default             => LicenseStatus::Active
