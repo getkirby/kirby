@@ -75,7 +75,7 @@ class License
 	 */
 	public function code(bool $obfuscated = false): string|null
 	{
-		if ($this->type() === LicenseType::Free) {
+		if ($this->isFree() === true) {
 			return null;
 		}
 
