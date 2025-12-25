@@ -449,7 +449,10 @@ class License
 	{
 		// @codeCoverageIgnoreStart
 		$response = Remote::get(static::hub() . '/' . $path, [
-			'data' => $data
+			'data'    => $data,
+			'headers' => [
+				'Kirby-Version' => $this->kirby->version()
+			]
 		]);
 
 		// handle request errors
