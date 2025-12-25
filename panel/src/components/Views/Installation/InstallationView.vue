@@ -186,7 +186,7 @@ export default {
 	width: 100%;
 }
 .k-installation-view form .k-button {
-	margin-top: var(--spacing-10);
+	margin-top: var(--spacing-8);
 }
 .k-installation-view .k-headline {
 	font-weight: var(--font-semi);

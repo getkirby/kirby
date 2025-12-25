@@ -103,6 +103,6 @@ export default {
 	gap: 1.5rem;
 	align-items: center;
 	justify-content: space-between;
-	margin-top: var(--spacing-10);
+	margin-top: var(--spacing-8);
 }
 </style>

@@ -47,7 +47,7 @@ export default {
 	align-items: center;
 	justify-content: center;
 	height: 100%;
-	padding: var(--spacing-10);
+	padding: var(--spacing-8);
 	container-type: size;
 }
 .k-file-preview-frame :where(img, audio, video) {

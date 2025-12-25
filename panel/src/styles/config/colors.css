@@ -421,29 +421,6 @@
 	--color-text: light-dark(var(--color-black), var(--color-white));
 	--color-text-dimmed: light-dark(var(--color-gray-700), var(--color-gray-400));
 	--color-white: hsl(0, 0%, 100%);
-
-	/** @deprecated */
-	--color-backdrop: rgba(0, 0, 0, 0.6);
-	--color-background: var(--panel-color-back);
-	--color-gray: var(--color-gray-600);
-	--color-red: var(--color-red-600);
-	--color-orange: var(--color-orange-600);
-	--color-yellow: var(--color-yellow-600);
-	--color-green: var(--color-green-600);
-	--color-aqua: var(--color-aqua-600);
-	--color-blue: var(--color-blue-600);
-	--color-purple: var(--color-purple-600);
-	--color-focus-light: var(--color-focus);
-	--color-focus-outline: var(--color-focus);
-	--color-negative: var(--color-red-700);
-	--color-negative-light: var(--color-red-500);
-	--color-negative-outline: var(--color-red-900);
-	--color-notice: var(--color-orange-700);
-	--color-notice-light: var(--color-orange-500);
-	--color-positive: var(--color-green-700);
-	--color-positive-light: var(--color-green-500);
-	--color-positive-outline: var(--color-green-900);
-	--color-text-light: var(--color-text-dimmed);
 }
 
 :root:has(.k-panel[data-theme="dark"]) {
