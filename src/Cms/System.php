@@ -283,7 +283,22 @@ class System
 	 */
 	public function license(): License
 	{
-		return $this->license ??= License::read();
+		if ($this->license !== null) {
+			return $this->license;
+		}
+
+		$this->license = License::read();
+
+		// if license has expired, try to get it reissued
+		if ($this->license->isExpired() === true) {
+			try {
+				$this->license->register(reissue: true);
+			} catch (Throwable) {
+				$this->license->delete();
+			}
+		}
+
+		return $this->license;
 	}
 
 	/**

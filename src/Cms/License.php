@@ -44,6 +44,7 @@ class License
 		protected string|null $order = null,
 		protected string|null $date = null,
 		protected string|null $signature = null,
+		protected string|null $expires = null
 	) {
 		if ($code !== null) {
 			$this->code = trim($code);
@@ -98,6 +99,7 @@ class License
 			'domain'     => $this->domain,
 			'email'      => $this->email,
 			'order'      => $this->order,
+			'expires'    => $this->expires,
 			'signature'  => $this->signature,
 		];
 	}
@@ -175,6 +177,19 @@ class License
 	}
 
 	/**
+	 * Whether the validity of the license file has expired
+	 * @since 5.3.0
+	 */
+	public function isExpired(): bool
+	{
+		if ($this->expires === null) {
+			return false;
+		}
+
+		return strtotime($this->expires) < time();
+	}
+
+	/**
 	 * Whether it is a free license for development/private installation
 	 * @since 5.3.0
 	 */
@@ -214,7 +229,7 @@ class License
 
 		// without an activation date, the license
 		// renewal cannot be evaluated and the license
-		// has to be marked as expired
+		// has to be marked as coverage ended
 		if ($this->activation === null) {
 			return true;
 		}
@@ -234,7 +249,7 @@ class License
 		// @codeCoverageIgnoreEnd
 
 		// If the renewal date is older than the version launch
-		// date, the license is expired
+		// date, the license coverage has ended
 		return $this->renewal() < $release;
 	}
 
@@ -362,6 +377,7 @@ class License
 			'domain'     => $license['domain']     ?? null,
 			'email'      => $license['email']      ?? null,
 			'order'      => $license['order']      ?? null,
+			'expires'    => $license['expires']    ?? null,
 			'signature'  => $license['signature']  ?? null,
 		];
 	}
@@ -384,7 +400,7 @@ class License
 	/**
 	 * Sends a request to the hub to register the license
 	 */
-	public function register(): static
+	public function register(bool $reissue = false): static
 	{
 		if ($this->type() === LicenseType::Invalid) {
 			throw new InvalidArgumentException(
@@ -419,7 +435,8 @@ class License
 		$response ??= $this->request('register', [
 			'license' => $this->code,
 			'email'   => $this->email,
-			'domain'  => $this->domain
+			'domain'  => $this->domain,
+			'reissue' => $reissue
 		]);
 
 		return $this->update($response);
@@ -535,7 +552,7 @@ class License
 			];
 		}
 
-		return [
+		$data = [
 			'activation' => $this->activation,
 			'code'       => $this->code,
 			'date'       => $this->date,
@@ -543,6 +560,12 @@ class License
 			'email'      => hash('sha256', $this->email . static::SALT),
 			'order'      => $this->order,
 		];
+
+		if ($this->expires !== null) {
+			$data['expires'] = $this->expires;
+		}
+
+		return $data;
 	}
 
 	/**
@@ -581,6 +604,7 @@ class License
 		$this->code       = $data['code'];
 		$this->date       = $data['date'];
 		$this->order      = $data['order'];
+		$this->expires    = $data['expires'];
 		$this->signature  = $data['signature'];
 
 		// clear the caches
