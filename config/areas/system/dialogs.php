@@ -82,18 +82,38 @@ return [
 	// license registration
 	'registration' => [
 		'load' => function () {
-			$system = App::instance()->system();
-			$local  = $system->isLocal();
-
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => [
-						'domain' => [
-							'label' => I18n::translate('license.activate.label'),
-							'type'  => 'info',
-							'theme' => $local ? 'warning' : 'info',
-							'text'  => I18n::template('license.activate.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
+						'type' => [
+							'label'    => I18n::translate('license.activate.label'),
+							'type'     => 'toggles',
+							'required' => true,
+							'labels'   => true,
+							'grow'     => true,
+							'options'  => [
+								[
+									'icon'  => 'globe',
+									'text'  => I18n::translate('license.activate.type.regular'),
+									'value' => 'regular'
+								],
+								[
+									'icon'  => 'key',
+									'text'  => I18n::translate('license.activate.type.free'),
+									'value' => 'free'
+								]
+							],
+						],
+						'acknowledge' => [
+							'when'     => ['type' => 'free'],
+							'label'    => I18n::translate('license.activate.acknowledge.label'),
+							'type'     => 'toggle',
+							'text'     => I18n::translate('license.activate.acknowledge.text'),
+							'required' => true,
+							'help'     => I18n::translate('license.activate.acknowledge.help', [
+								'url' => 'https://getkirby.com/license/#free-licenses__usage-for-a-development-installation'
+							]),
 						],
 						'license' => [
 							'label'       => I18n::translate('license.code.label'),
@@ -112,7 +132,8 @@ return [
 					],
 					'value' => [
 						'license' => null,
-						'email'   => null
+						'email'   => null,
+						'type'    => 'regular',
 					]
 				]
 			];
