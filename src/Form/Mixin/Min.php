@@ -12,7 +12,10 @@ trait Min
 	public function min(): int|null
 	{
 		// set min to at least 1, if required
-		if ($this->required === true) {
+		if (
+			method_exists($this, 'required') === true &&
+			$this->required() === true
+		) {
 			return $this->min ?? 1;
 		}
 
@@ -26,6 +29,10 @@ trait Min
 			return true;
 		}
 
-		return $this->required();
+		if (method_exists($this, 'required') === true) {
+			return $this->required();
+		}
+
+		return false;
 	}
 }
