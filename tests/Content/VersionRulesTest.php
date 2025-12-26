@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\Language;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -265,6 +266,57 @@ class VersionRulesTest extends TestCase
 		$this->expectExceptionMessage('Version "latest" does not already exist');
 
 		VersionRules::touch($version, Language::ensure());
+	}
+
+	public function testUnlockVersion(): void
+	{
+		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes(),
+		);
+
+		$version->save([]);
+
+		$result = VersionRules::unlock($version, Language::ensure());
+
+		$this->assertNull($result);
+	}
+
+	public function testUnlockLatestVersion(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest(),
+		);
+
+		$version->save([]);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Only the changes version can be unlocked');
+
+		VersionRules::unlock($version, Language::ensure());
+	}
+
+	public function testUnlockVersionWithoutPermission(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::changes(),
+		);
+
+		$version->save([]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to unlock the content for the page');
+
+		VersionRules::unlock($version, Language::ensure());
 	}
 
 	public function testUpdateWhenTheVersionIsLocked(): void
