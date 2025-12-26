@@ -351,6 +351,7 @@ class Auth
 	/**
 	 * Returns the hashed ip of the visitor
 	 * which is used to track invalid logins
+	 * @deprecated 5.3.0 Use `$visitor->ip(hash: true)` instead. Will be removed in Kirby 6.
 	 */
 	public function ipHash(): string
 	{
@@ -365,7 +366,7 @@ class Auth
 	 */
 	public function isBlocked(string $email): bool
 	{
-		$ip     = $this->ipHash();
+		$ip     = $this->kirby->visitor()->ip(hash: true);
 		$log    = $this->log();
 		$trials = $this->kirby->option('auth.trials', 10);
 
@@ -669,7 +670,7 @@ class Auth
 			$this->kirby->trigger('user.login:failed', compact('email'));
 		}
 
-		$ip   = $this->ipHash();
+		$ip   = $this->kirby->visitor()->ip(hash: true);
 		$log  = $this->log();
 		$time = time();
 

@@ -47,6 +47,14 @@ class VisitorTest extends TestCase
 		$this->assertSame('192.168.1.1', $visitor->ip());
 	}
 
+	public function testIpHash(): void
+	{
+		$visitor = new Visitor();
+		$visitor->ip('192.168.1.1');
+		$this->assertSame('192.168.1.1', $visitor->ip());
+		$this->assertSame('c5eb5a4cc76a5cdb16e79864b9ccd26c3553f0c396d0a21baf', $visitor->ip(hash: true));
+	}
+
 	public function testUserAgent(): void
 	{
 		$visitor = new Visitor();
