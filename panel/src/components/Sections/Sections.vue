@@ -1,6 +1,6 @@
 <template>
 	<k-box
-		v-if="tab.columns.length === 0"
+		v-if="tab.columns.length === 0 && empty"
 		:html="true"
 		:text="empty"
 		theme="info"
