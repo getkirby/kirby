@@ -113,10 +113,8 @@ class Auth
 			// try to find an enabled challenge that is available for that user
 			$challenge = null;
 			foreach ($this->enabledChallenges() as $name) {
-				$class = static::$challenges[$name] ?? null;
 				if (
-					$class &&
-					class_exists($class) === true &&
+					($class = static::$challenges[$name] ?? null) &&
 					is_subclass_of($class, Challenge::class) === true &&
 					$class::isAvailable($user, $mode) === true
 				) {
@@ -835,10 +833,10 @@ class Auth
 
 			if (
 				isset(static::$challenges[$challenge]) === true &&
-				class_exists(static::$challenges[$challenge]) === true &&
 				is_subclass_of(static::$challenges[$challenge], Challenge::class) === true
 			) {
 				$class = static::$challenges[$challenge];
+
 				if ($class::verify($user, $code) === true) {
 					$mode = $session->get('kirby.challenge.mode');
 
