@@ -99,13 +99,6 @@ class AuthProtectionTest extends TestCase
 		$this->assertFileDoesNotExist(static::TMP . '/site/accounts/.logins');
 	}
 
-	public function testIpHash(): void
-	{
-		$this->app->visitor()->ip('10.1.123.234');
-
-		$this->assertSame('87084f11690867b977a611dd2c943a918c3197f4c02b25ab59', $this->auth->ipHash());
-	}
-
 	public function testIsBlocked(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
