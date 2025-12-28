@@ -218,8 +218,9 @@ class Auth
 	 * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
 	 * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
 	 */
-	public function currentUserFromBasicAuth(BasicAuth|null $auth = null): User|null
-	{
+	public function currentUserFromBasicAuth(
+		BasicAuth|null $auth = null
+	): User|null {
 		if ($this->kirby->option('api.basicAuth', false) !== true) {
 			throw new PermissionException(
 				'Basic authentication is not activated'
@@ -263,6 +264,9 @@ class Auth
 			);
 		}
 
+		/**
+		 * @var \Kirby\Http\Request\Auth\BasicAuth $auth
+		 */
 		return $this->validatePassword($auth->username(), $auth->password());
 	}
 
@@ -333,7 +337,6 @@ class Auth
 			$this->kirby->option('auth.challenges', ['totp', 'email'])
 		);
 	}
-
 
 	/**
 	 * Throws an exception only in debug mode, otherwise falls back
@@ -528,15 +531,6 @@ class Auth
 		$this->validatePassword($email, $password);
 		return $this->createChallenge($email, $long, '2fa');
 	}
-
-
-
-
-
-
-
-
-
 
 	/**
 	 * Logout the current user
