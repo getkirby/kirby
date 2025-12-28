@@ -119,6 +119,7 @@ class Auth
 
 			// try to find the provided user
 			$user = $this->kirby->users()->find($email);
+
 			if ($user === null) {
 				$this->kirby->trigger('user.login:failed', compact('email'));
 
@@ -155,9 +156,10 @@ class Auth
 			// if no suitable challenge was found, `$challenge === null` at this point
 			if ($challenge === null) {
 				throw new LogicException(
-					'Could not find a suitable authentication challenge'
+					message: 'Could not find a suitable authentication challenge'
 				);
 			}
+
 		} catch (Throwable $e) {
 			// only throw the exception in auth debug mode
 			$this->fail($e);
@@ -223,19 +225,22 @@ class Auth
 	): User|null {
 		if ($this->kirby->option('api.basicAuth', false) !== true) {
 			throw new PermissionException(
-				'Basic authentication is not activated'
+				message: 'Basic authentication is not activated'
 			);
 		}
 
-		// if logging in with password is disabled, basic auth cannot be possible either
+		// if logging in with password is disabled,
+		// basic auth cannot be possible either
 		$loginMethods = $this->kirby->system()->loginMethods();
+
 		if (isset($loginMethods['password']) !== true) {
 			throw new PermissionException(
 				'Login with password is not enabled'
 			);
 		}
 
-		// if any login method requires 2FA, basic auth without 2FA would be a weakness
+		// if any login method requires 2FA,
+		// basic auth without 2FA would be a weakness
 		foreach ($loginMethods as $method) {
 			if (isset($method['2fa']) === true && $method['2fa'] === true) {
 				throw new PermissionException(
@@ -260,7 +265,7 @@ class Auth
 			$this->kirby->option('api.allowInsecure', false) !== true
 		) {
 			throw new PermissionException(
-				'Basic authentication is only allowed over HTTPS'
+				message: 'Basic authentication is only allowed over HTTPS'
 			);
 		}
 
@@ -297,6 +302,7 @@ class Auth
 
 		// a user is logged in, ensure it exists
 		$user = $this->kirby->users()->find($id);
+
 		if ($user === null) {
 			return null;
 		}
@@ -404,7 +410,9 @@ class Auth
 				'id'    => 'nobody',
 				'role'  => 'nobody',
 			]),
-			default => $this->kirby->users()->find($who) ?? throw new NotFoundException(message: 'The user "' . $who . '" cannot be found'),
+			default => $this->kirby->users()->find($who) ?? throw new NotFoundException(
+				message: 'The user "' . $who . '" cannot be found'
+			),
 		};
 	}
 
@@ -611,6 +619,7 @@ class Auth
 		$sessionObj = $this->session($session);
 
 		$props = ['kirby' => $this->kirby];
+
 		if ($user = $this->user($sessionObj, $allowImpersonation)) {
 			// a user is currently logged in
 			$props['email']  = $user->email();
@@ -793,6 +802,7 @@ class Auth
 				key: 'user.notFound',
 				data: ['name' => $email]
 			);
+
 		} catch (Throwable $e) {
 			$details = $e instanceof Exception ? $e->getDetails() : [];
 
@@ -857,6 +867,7 @@ class Auth
 			// check if we have an active challenge
 			$email     = $session->get('kirby.challenge.email');
 			$challenge = $session->get('kirby.challenge.type');
+
 			if (is_string($email) !== true || is_string($challenge) !== true) {
 				// if the challenge timed out on the previous request, the
 				// challenge data was already deleted from the session, so we can
@@ -872,6 +883,7 @@ class Auth
 			}
 
 			$user = $this->kirby->users()->find($email);
+
 			if ($user === null) {
 				throw new NotFoundException(
 					key: 'user.notFound',
@@ -909,8 +921,9 @@ class Auth
 			}
 
 			throw new LogicException(
-				'Invalid authentication challenge: ' . $challenge
+				message: 'Invalid authentication challenge: ' . $challenge
 			);
+
 		} catch (Throwable $e) {
 			$details = $e instanceof Exception ? $e->getDetails() : [];
 
