@@ -2,13 +2,13 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Challenge\EmailChallenge;
+use Kirby\Auth\Challenge\TotpChallenge;
 use Kirby\Cache\ApcuCache;
 use Kirby\Cache\FileCache;
 use Kirby\Cache\MemCached;
 use Kirby\Cache\MemoryCache;
 use Kirby\Cache\RedisCache;
-use Kirby\Cms\Auth\EmailChallenge;
-use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
 use Kirby\Form\Field\ButtonsField;
 use Kirby\Form\Field\CheckboxesField;

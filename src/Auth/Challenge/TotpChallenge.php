@@ -26,7 +26,7 @@ class TotpChallenge extends Challenge
 	/**
 	 * The user's app will generate the code, we only verify it
 	 */
-	public function create(array $options): null
+	public function create(): null
 	{
 		return null;
 	}

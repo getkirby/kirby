@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Challenge;
 use Kirby\Auth\Csrf;
-use Kirby\Auth\Exception\ChallengesNotFoundException;
 use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Auth\Exception\InvalidAuthHeaderException;
 use Kirby\Auth\Exception\InvalidChallengeCodeException;
@@ -11,13 +11,11 @@ use Kirby\Auth\Exception\LoginNotPermittedException;
 use Kirby\Auth\Exception\NoAvailableChallengeException;
 use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Exception\UserNotFoundException;
-use Kirby\Cms\Auth\Challenge;
 use Kirby\Cms\Auth\Status;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Idn;
@@ -131,18 +129,10 @@ class Auth
 			}
 
 			// try to find an enabled challenge that is available for that user
-			$challenge = null;
-
-			foreach ($this->enabledChallenges() as $name) {
-				if (
-					($class = static::$challenges[$name] ?? null) &&
-					is_subclass_of($class, Challenge::class) === true &&
-					$class::isAvailable($user, $mode) === true
-				) {
-					$challenge = $name;
-					$code = $class::create($user, compact('mode', 'timeout'));
-
-					$session->set('kirby.challenge.type', $challenge);
+			foreach ($this->enabledChallenges() as $type) {
+				if ($challenge = Challenge::for($type, $user, $mode)) {
+					$code = $challenge->create();
+					$session->set('kirby.challenge.type', $challenge->type());
 
 					if ($code !== null) {
 						$session->set(
@@ -150,13 +140,11 @@ class Auth
 							password_hash($code, PASSWORD_DEFAULT)
 						);
 					}
-
-					break;
 				}
 			}
 
-			// if no suitable challenge was found, `$challenge === null` at this point
-			if ($challenge === null) {
+			// if no suitable challenge was found
+			if (($challenge ?? null) === null) {
 				throw new NoAvailableChallengeException();
 			}
 
@@ -842,10 +830,10 @@ class Auth
 			}
 
 			// check if we have an active challenge
-			$email     = $session->get('kirby.challenge.email');
-			$challenge = $session->get('kirby.challenge.type');
+			$email = $session->get('kirby.challenge.email');
+			$type  = $session->get('kirby.challenge.type');
 
-			if (is_string($email) !== true || is_string($challenge) !== true) {
+			if (is_string($email) !== true || is_string($type) !== true) {
 				// if the challenge timed out on the previous request, the
 				// challenge data was already deleted from the session, so we can
 				// set `challengeDestroyed` to `true` in this response as well;
@@ -857,7 +845,7 @@ class Auth
 				);
 			}
 
-			$user = $this->kirby->users()->find($email);
+			$user = App::instance()->users()->find($email);
 
 			if ($user === null) {
 				throw new UserNotFoundException(name: $email);
@@ -866,34 +854,28 @@ class Auth
 			// rate-limiting
 			$this->checkRateLimit($email);
 
-			if (
-				isset(static::$challenges[$challenge]) === true &&
-				is_subclass_of(static::$challenges[$challenge], Challenge::class) === true
-			) {
-				$class = static::$challenges[$challenge];
-
-				if ($class::verify($user, $code) === true) {
-					$mode = $session->get('kirby.challenge.mode');
-
-					$this->logout();
-					$user->loginPasswordless();
-
-					// allow the user to set a new password without knowing the previous one
-					if ($mode === 'password-reset') {
-						$session->set('kirby.resetPassword', true);
-					}
-
-					// clear the status cache
-					$this->status = null;
-
-					return $user;
+			if ($challenge = Challenge::from($session)) {
+				if ($challenge->verify($code) !== true) {
+					throw new InvalidChallengeCodeException();
 				}
 
-				throw new InvalidChallengeCodeException();
+				$this->logout();
+				$challenge->user()->loginPasswordless();
+
+				// allow the user to set a new password
+				// without knowing the previous one
+				if ($challenge->mode() === 'password-reset') {
+					$session->set('kirby.resetPassword', true);
+				}
+
+				// clear the status cache
+				$this->status = null;
+
+				return $challenge->user();
 			}
 
 			throw new LogicException(
-				message: 'Invalid authentication challenge: ' . $challenge
+				message: 'Invalid authentication challenge: ' . $type
 			);
 
 		} catch (Throwable $e) {

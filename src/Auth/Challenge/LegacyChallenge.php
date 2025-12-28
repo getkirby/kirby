@@ -26,9 +26,12 @@ class LegacyChallenge extends Challenge
 		parent::__construct($user, $mode, $timeout);
 	}
 
-	public function create(array $options): null
+	public function create(): null
 	{
-		return $this->class::create($this->user, $options);
+		return $this->class::create($this->user, [
+			'mode'    => $this->mode,
+			'timeout' => $this->timeout
+		]);
 	}
 
 	public static function isAvailable(User $user, string $mode): bool

@@ -3,6 +3,7 @@
 namespace Kirby\Cms\Auth;
 
 use Exception;
+use Kirby\Auth\Challenge;
 use Kirby\Cms\User;
 
 class ErrorneousChallenge extends Challenge
@@ -12,7 +13,7 @@ class ErrorneousChallenge extends Challenge
 		return $user->email() === 'error@getkirby.com';
 	}
 
-	public static function create(User $user, array $options): string|null
+	public function create(): string|null
 	{
 		throw new Exception('An error occurred in the challenge');
 	}
