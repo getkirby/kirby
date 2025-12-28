@@ -2,15 +2,15 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Cms\App;
-use Kirby\Cms\User;
-use Kirby\Session\Session;
-use Kirby\Toolkit\A;
+use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Auth\Exception\InvalidChallengeCodeException;
 use Kirby\Auth\Exception\UserNotFoundException;
-use Kirby\Auth\Exception\ChallengeTimeoutException;
+use Kirby\Cms\App;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Session\Session;
+use Kirby\Toolkit\A;
 
 /**
  * Orchestrates selection and creation of authentication challenges

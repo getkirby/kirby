@@ -48,6 +48,7 @@ trait AppPlugins
 		'areas' => [],
 		'assetMethods' => [],
 		'authChallenges' => [],
+		'authMethods' => [],
 		'blockMethods' => [],
 		'blockModels' => [],
 		'blocksMethods' => [],
@@ -166,6 +167,17 @@ trait AppPlugins
 		return $this->extensions['authChallenges'] = Auth::$challenges = [
 			...Auth::$challenges,
 			...$challenges
+		];
+	}
+
+	/**
+	 * Registers additional authentication methods
+	 */
+	protected function extendAuthMethods(array $methods): array
+	{
+		return $this->extensions['authMethods'] = Auth::$methods = [
+			...Auth::$methods,
+			...$methods
 		];
 	}
 
@@ -816,6 +828,7 @@ trait AppPlugins
 		PageBlueprint::$presets = $this->core->blueprintPresets();
 
 		$this->extendAuthChallenges($this->core->authChallenges());
+		$this->extendAuthMethods($this->core->authMethods());
 		$this->extendCacheTypes($this->core->cacheTypes());
 		$this->extendComponents($this->core->components());
 		$this->extendBlueprints($this->core->blueprints());

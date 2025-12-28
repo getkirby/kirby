@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Auth\Challenge\EmailChallenge;
 use Kirby\Auth\Challenge\TotpChallenge;
+use Kirby\Auth\Method\CodeMethod;
+use Kirby\Auth\Method\PasswordMethod;
+use Kirby\Auth\Method\PasswordResetMethod;
 use Kirby\Cache\ApcuCache;
 use Kirby\Cache\FileCache;
 use Kirby\Cache\MemCached;
@@ -122,6 +125,18 @@ class Core
 		return [
 			'email' => EmailChallenge::class,
 			'totp'  => TotpChallenge::class,
+		];
+	}
+
+	/**
+	 * Returns a list of all default auth method classes
+	 */
+	public function authMethods(): array
+	{
+		return [
+			'code'           => CodeMethod::class,
+			'password'       => PasswordMethod::class,
+			'password-reset' => PasswordResetMethod::class
 		];
 	}
 

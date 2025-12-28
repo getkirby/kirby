@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Challenges;
 use Kirby\Auth\Csrf;
 use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Auth\Exception\InvalidChallengeCodeException;
@@ -10,7 +11,6 @@ use Kirby\Auth\Exception\NoAvailableChallengeException;
 use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Exception\UserNotFoundException;
 use Kirby\Auth\Limits;
-use Kirby\Auth\Challenges;
 use Kirby\Auth\User as AuthUser;
 use Kirby\Cms\Auth\Status;
 use Kirby\Exception\Exception;
@@ -33,10 +33,11 @@ use Throwable;
 class Auth
 {
 	/**
-	 * Available auth challenge classes
+	 * Available auth challenge and methods classes
 	 * from the core and plugins
 	 */
 	public static array $challenges = [];
+	public static array $methods = [];
 
 	protected Csrf $csrf;
 	protected Limits $limits;

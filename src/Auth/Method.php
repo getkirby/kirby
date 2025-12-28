@@ -1,0 +1,73 @@
+<?php
+
+namespace Kirby\Auth;
+
+use Kirby\Cms\App;
+use Kirby\Cms\Auth;
+use Kirby\Cms\Auth\Status;
+use Kirby\Cms\User;
+use SensitiveParameter;
+
+/**
+ * Base class for authentication methods
+ *
+ * Each method decides whether it can handle the current
+ * login flow and either logs the user in or returns a
+ * pending status that expects a follow-up challenge.
+ *
+ * @package Kirby Auth
+ * @since   6.0.0
+ */
+abstract class Method
+{
+	protected App $kirby;
+
+	public function __construct(
+		protected string $type,
+	) {
+		$this->kirby = App::instance();
+	}
+
+	/**
+	 * Attempts to authenticate the given user credentials
+	 *
+	 * Implementations should either return a logged-in user,
+	 * a pending status if a challenge is required, or `null`
+	 * if the method cannot handle the provided input.
+	 */
+	abstract public function attempt(
+		string $email,
+		#[SensitiveParameter]
+		string|null $password = null,
+		bool $long = false,
+		string $mode = 'login'
+	): User|Status|null;
+
+	protected function auth(): Auth
+	{
+		return $this->kirby->auth();
+	}
+
+	public static function factory(
+		string $type,
+		array $options = []
+	): static {
+		return new static(type: $type);
+	}
+
+	/**
+	 * Checks whether the method is available for the current setup
+	 */
+	public static function isAvailable(string $mode = 'login'): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Returns the identifier of the method (e.g. 'password')
+	 */
+	public function type(): string
+	{
+		return $this->type;
+	}
+}
