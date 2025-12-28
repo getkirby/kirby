@@ -24,6 +24,7 @@ abstract class Method
 
 	public function __construct(
 		protected string $type,
+		protected array $options = []
 	) {
 		$this->kirby = App::instance();
 	}
@@ -46,13 +47,6 @@ abstract class Method
 	protected function auth(): Auth
 	{
 		return $this->kirby->auth();
-	}
-
-	public static function factory(
-		string $type,
-		array $options = []
-	): static {
-		return new static(type: $type);
 	}
 
 	/**

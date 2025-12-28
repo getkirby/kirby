@@ -16,7 +16,6 @@ class CodeMethod extends Method
 		bool $long = false,
 		string $mode = 'login'
 	): Status|null {
-		// only applicable for standard login flow
 		if ($mode !== 'login') {
 			return null;
 		}

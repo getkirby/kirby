@@ -19,23 +19,7 @@ class Methods
 
 	public function config(): array
 	{
-		$config     = $this->kirby->system()->loginMethods();
-		$normalized = [];
-
-		foreach ($config as $key => $value) {
-			if (is_int($key) === true) {
-				// ['password', 'code']
-				$normalized[$value] = [];
-			} elseif ($value === true) {
-				// ['password' => true]
-				$normalized[$key] = [];
-			} else {
-				// ['password' => ['2fa' => true]]
-				$normalized[$key] = $value;
-			}
-		}
-
-		return $normalized;
+		return $this->kirby->system()->loginMethods();
 	}
 
 	/**
@@ -43,9 +27,9 @@ class Methods
 	 */
 	public function handler(string $type, string $mode = 'login'): Method|null
 	{
-		$config = $this->config();
+		$config = $this->config()[$type] ?? null;
 
-		if (isset($config[$type]) === false) {
+		if ($config === null) {
 			return null;
 		}
 
@@ -59,10 +43,9 @@ class Methods
 			return null;
 		}
 
-		// deliberate constructor parameters per handler
-		return $class::factory(
+		return new $class(
 			type:    $type,
-			options: $config[$type] ?? []
+			options: $config
 		);
 	}
 

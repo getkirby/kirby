@@ -11,6 +11,7 @@ use Kirby\Auth\Exception\NoAvailableChallengeException;
 use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Exception\UserNotFoundException;
 use Kirby\Auth\Limits;
+use Kirby\Auth\Methods;
 use Kirby\Auth\User as AuthUser;
 use Kirby\Cms\Auth\Status;
 use Kirby\Exception\Exception;
@@ -42,6 +43,7 @@ class Auth
 	protected Csrf $csrf;
 	protected Limits $limits;
 	protected Challenges $challenge;
+	protected Methods $method;
 
 	/**
 	 * Cache of the auth status object
@@ -59,6 +61,7 @@ class Auth
 		$this->csrf      = new Csrf($kirby);
 		$this->limits    = new Limits($kirby);
 		$this->challenge = new Challenges($kirby);
+		$this->method    = new Methods($kirby);
 		$this->user      = new AuthUser($this, $kirby);
 	}
 
@@ -278,20 +281,18 @@ class Auth
 		string $password,
 		bool $long = false
 	): User {
-		// session options
-		$options = [
-			'createMode' => 'cookie',
-			'long'       => $long === true
-		];
+		$user = $this->method->attempt('password', $email, $password, $long, 'login');
 
-		// validate the user and log in to the session
-		$user = $this->validatePassword($email, $password);
-		$user->loginPasswordless($options);
+		if ($user instanceof User === false) {
+			// if a method returned a pending status here,
+			// it's a misconfiguration (e.g. password + 2FA active);
+			// keep the existing login signature strict
+			throw new LoginNotPermittedException();
+		}
 
-		// clear the status cache
-		$this->status = null;
-
+		$this->setUser($user);
 		return $user;
+
 	}
 
 	/**
@@ -309,6 +310,7 @@ class Auth
 		string $password,
 		bool $long = false
 	): Status {
+		// explicit 2FA flow: password validation first, then a challenge
 		$this->validatePassword($email, $password);
 		return $this->createChallenge($email, $long, '2fa');
 	}
@@ -552,9 +554,7 @@ class Auth
 				$session->set('kirby.resetPassword', true);
 			}
 
-			// clear the status cache
-			$this->status = null;
-
+			$this->setUser($user);
 			return $user;
 
 		} catch (Throwable $e) {
