@@ -25,6 +25,19 @@ class Challenges
 	) {
 	}
 
+	public function available(User $user, string $mode): string|null
+	{
+		foreach ($this->enabled() as $type) {
+			$challenge = Challenge::handler($type);
+
+			if ($challenge::isAvailable($user, $mode) === true) {
+				return $challenge;
+			}
+		}
+
+		return null;
+	}
+
 	public function clear(): void
 	{
 		$session = $this->kirby->session();
@@ -56,23 +69,22 @@ class Challenges
 		}
 
 		// try to find an enabled challenge that is available for that user
-		foreach ($this->enabled() as $type) {
-			if ($challenge = Challenge::for($type, $user, $mode)) {
-				$code    = $challenge->create();
-				$timeout = $this->timeout();
+		if ($challenge = $this->available($user, $mode)) {
+			$challenge = new $challenge(user: $user, mode: $mode);
+			$code      = $challenge->create();
+			$timeout   = $this->timeout();
 
-				$session->set('kirby.challenge.type', $challenge->type());
-				$session->set('kirby.challenge.timeout', time() + $timeout);
+			$session->set('kirby.challenge.type', $challenge->type());
+			$session->set('kirby.challenge.timeout', time() + $timeout);
 
-				if ($code !== null) {
-					$session->set(
-						'kirby.challenge.code',
-						password_hash($code, PASSWORD_DEFAULT)
-					);
-				}
-
-				return $challenge;
+			if ($code !== null) {
+				$session->set(
+					'kirby.challenge.code',
+					password_hash($code, PASSWORD_DEFAULT)
+				);
 			}
+
+			return $challenge;
 		}
 
 		return null;
@@ -93,7 +105,7 @@ class Challenges
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	protected function ensure(Session $session): string
+	protected function ensureActiveChallenge(Session $session): string
 	{
 		// check if we have an active challenge
 		$email = $session->get('kirby.challenge.email');
@@ -142,7 +154,7 @@ class Challenges
 		}
 
 		// ensure we have an active challenge for a valid user
-		$email = $this->ensure($session);
+		$email = $this->ensureActiveChallenge($session);
 		$user  = $this->kirby->users()->find($email);
 
 		if ($user === null) {

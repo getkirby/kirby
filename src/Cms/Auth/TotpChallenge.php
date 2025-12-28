@@ -17,6 +17,8 @@ use Kirby\Toolkit\Totp;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @deprecated 6.0.0 Use `Kirby\Auth\Challenge\TotpChallenge` instead
  */
 class TotpChallenge extends Challenge
 {

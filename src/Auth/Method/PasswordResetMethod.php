@@ -3,7 +3,7 @@
 namespace Kirby\Auth\Method;
 
 use Kirby\Auth\Method;
-use Kirby\Cms\Auth\Status;
+use Kirby\Auth\Status;
 
 /**
  * Password-reset flow that triggers a challenge

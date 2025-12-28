@@ -28,7 +28,6 @@ abstract class Challenge
 	public function __construct(
 		protected User $user,
 		protected string $mode,
-		protected string $type,
 		int|null $timeout = null,
 	) {
 		$this->kirby   = $user->kirby();
@@ -43,25 +42,6 @@ abstract class Challenge
 	 *                     there was no code to generate by this algorithm
 	 */
 	abstract public function create(): string|null;
-
-	final public static function for(
-		string $type,
-		User $user,
-		string $mode
-	): static|null {
-		if (
-			($handler = static::handler($type) ?? null) &&
-			$handler::isAvailable($user, $mode) === true
-		) {
-			return new $handler(
-				user: $user,
-				mode: $mode,
-				type: $type
-			);
-		}
-
-		return null;
-	}
 
 	final public static function from(Session $session): static|null
 	{
@@ -82,8 +62,7 @@ abstract class Challenge
 		return new $handler(
 			user:    $user,
 			mode:    $session->get('kirby.challenge.mode'),
-			timeout: $session->get('kirby.challenge.timeout'),
-			type:    $session->get('kirby.challenge.type'),
+			timeout: $session->get('kirby.challenge.timeout')
 		);
 	}
 
@@ -94,7 +73,7 @@ abstract class Challenge
 	{
 		if (
 			($class = Auth::$challenges[$type] ?? null) &&
-			is_subclass_of($class, self::class) === true
+			is_subclass_of($class, Challenge::class) === true
 		) {
 			return $class;
 		}
@@ -130,7 +109,7 @@ abstract class Challenge
 
 	public function type(): string
 	{
-		return $this->type;
+		return strtolower(basename(str_replace(['\\', 'Challenge'], ['/', ''], static::class)));
 	}
 
 	/**

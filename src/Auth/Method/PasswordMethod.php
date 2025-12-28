@@ -3,8 +3,9 @@
 namespace Kirby\Auth\Method;
 
 use Kirby\Auth\Method;
-use Kirby\Cms\Auth\Status;
+use Kirby\Auth\Status;
 use Kirby\Cms\User;
+use Kirby\Exception\LogicException;
 
 /**
  * Authenticates a user with email + password
@@ -25,7 +26,7 @@ class PasswordMethod extends Method
 		$user = $this->auth()->validatePassword($email, $password);
 
 		// two-factor flow: create a challenge after password validation
-		if ($mode === 'login' && $this->has2FA($user) === true) {
+		if ($mode === 'login' && $this->has2FA($user, $mode) === true) {
 			return $this->auth()->createChallenge($email, $long, '2fa');
 		}
 
@@ -38,8 +39,29 @@ class PasswordMethod extends Method
 		return $user;
 	}
 
-	protected function has2FA(User $user): bool
+	protected function has2FA(User $user, string $mode): bool
 	{
-		return ($this->options['2fa'] ?? false) === true;
+		$option = $this->options['2fa'] ?? null;
+
+		if ($option !== true && $option !== 'optional') {
+			return false;
+		}
+
+		// get first available challenge
+		$challenge = $this->auth()->challenge()->available($user, $mode);
+
+		// if any challenge is available, use 2FA
+		if ($challenge !== null) {
+			return true;
+		}
+
+		// if no challenge is available, but enforced via config => fail
+		if ($option === true) {
+			throw new LogicException(
+				message: '2-factor authentication required but not challenge available'
+			);
+		}
+
+		return false;
 	}
 }

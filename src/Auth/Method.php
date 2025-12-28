@@ -4,7 +4,6 @@ namespace Kirby\Auth;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Auth;
-use Kirby\Cms\Auth\Status;
 use Kirby\Cms\User;
 use SensitiveParameter;
 

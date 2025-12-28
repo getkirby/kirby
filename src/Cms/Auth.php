@@ -81,6 +81,14 @@ class Auth
 	}
 
 	/**
+	 * @since 6.0.0
+	 */
+	public function challenge(): Challenges
+	{
+		return $this->challenge;
+	}
+
+	/**
 	 * Creates an authentication challenge (one-time auth code)
 	 * @since 3.5.0
 	 *

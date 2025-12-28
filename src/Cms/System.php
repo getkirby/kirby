@@ -240,7 +240,7 @@ class System
 	 */
 	public function is2FA(): bool
 	{
-		return ($this->loginMethods()['password']['2fa'] ?? null) === true;
+		return ($this->loginMethods()['password']['2fa'] ?? false) !== false;
 	}
 
 	/**

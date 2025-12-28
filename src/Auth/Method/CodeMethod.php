@@ -3,10 +3,11 @@
 namespace Kirby\Auth\Method;
 
 use Kirby\Auth\Method;
-use Kirby\Cms\Auth\Status;
+use Kirby\Auth\Status;
 
 /**
- * Passwordless login via one-time code (challenge)
+ * Passwordless login via one-time code
+ * or any other first available challenge
  */
 class CodeMethod extends Method
 {
@@ -20,7 +21,7 @@ class CodeMethod extends Method
 			return null;
 		}
 
-		// no password required; directly create a challenge
+		// no password required; directly create challenge
 		return $this->auth()->createChallenge($email, $long, 'login');
 	}
 }
