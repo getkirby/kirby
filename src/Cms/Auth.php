@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Auth\Challenge;
 use Kirby\Auth\Csrf;
 use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Auth\Exception\InvalidChallengeCodeException;
@@ -11,11 +10,10 @@ use Kirby\Auth\Exception\NoAvailableChallengeException;
 use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Exception\UserNotFoundException;
 use Kirby\Auth\Limits;
+use Kirby\Auth\Challenges;
 use Kirby\Auth\User as AuthUser;
 use Kirby\Cms\Auth\Status;
 use Kirby\Exception\Exception;
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
 use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Session\Session;
@@ -42,6 +40,7 @@ class Auth
 
 	protected Csrf $csrf;
 	protected Limits $limits;
+	protected Challenges $challenge;
 
 	/**
 	 * Cache of the auth status object
@@ -56,14 +55,14 @@ class Auth
 	public function __construct(
 		protected App $kirby
 	) {
-		$this->csrf   = new Csrf($kirby);
-		$this->limits = new Limits($kirby);
-		$this->user   = new AuthUser($this, $kirby);
+		$this->csrf      = new Csrf($kirby);
+		$this->limits    = new Limits($kirby);
+		$this->challenge = new Challenges($kirby);
+		$this->user      = new AuthUser($this, $kirby);
 	}
 
 	/**
-	 * Creates an authentication challenge
-	 * (one-time auth code)
+	 * Creates an authentication challenge (one-time auth code)
 	 * @since 3.5.0
 	 *
 	 * @param bool $long If `true`, a long session will be created
@@ -78,57 +77,34 @@ class Auth
 		bool $long = false,
 		string $mode = 'login'
 	): Status {
-		$email = Idn::decodeEmail($email);
-
+		$email   = Idn::decodeEmail($email);
 		$session = $this->kirby->session([
 			'createMode' => 'cookie',
 			'long'       => $long === true
 		]);
 
-		$timeout = $this->kirby->option('auth.challenge.timeout', 10 * 60);
-
 		// catch every exception to hide them from attackers
 		// unless auth debugging is enabled
 		try {
-			// rate-limit the number of challenges for DoS/DDoS protection
-			$this->limits->ensure($email);
-			$this->limits->track($email);
+			// create available challenge for that user
+			$challenge = $this->challenge->create($session, $email, $mode, );
 
-			// try to find the provided user
-			$user = $this->kirby->users()->find($email);
-
-			if ($user === null) {
-				$this->kirby->trigger('user.login:failed', compact('email'));
-				throw new UserNotFoundException(name: $email);
-			}
-
-			// try to find an enabled challenge that is available for that user
-			foreach ($this->enabledChallenges() as $type) {
-				if ($challenge = Challenge::for($type, $user, $mode)) {
-					$code = $challenge->create();
-					$session->set('kirby.challenge.type', $challenge->type());
-
-					if ($code !== null) {
-						$session->set(
-							'kirby.challenge.code',
-							password_hash($code, PASSWORD_DEFAULT)
-						);
-					}
-				}
-			}
-
-			// if no suitable challenge was found
-			if (($challenge ?? null) === null) {
+			if ($challenge === null) {
 				throw new NoAvailableChallengeException();
 			}
 
 		} catch (Throwable $e) {
+			if ($e instanceof UserNotFoundException) {
+				$this->kirby->trigger('user.login:failed', ['email' => $email]);
+			}
+
 			// only throw the exception in auth debug mode
 			$this->fail($e);
 		}
 
 		// always set the email, mode and timeout, even if the challenge
 		// won't be created; this avoids leaking whether the user exists
+		$timeout = $this->challenge->timeout();
 		$session->set('kirby.challenge.email', $email);
 		$session->set('kirby.challenge.mode', $mode);
 		$session->set('kirby.challenge.timeout', time() + $timeout);
@@ -196,9 +172,7 @@ class Auth
 	 */
 	public function enabledChallenges(): array
 	{
-		return A::wrap(
-			$this->kirby->option('auth.challenges', ['totp', 'email'])
-		);
+		return $this->challenge->enabled();
 	}
 
 	/**
@@ -363,24 +337,6 @@ class Auth
 	}
 
 	/**
-	 * Creates a session object from the passed options
-	 */
-	protected function session(Session|array|null $session = null): Session
-	{
-		// use passed session options or session object if set
-		if (is_array($session) === true) {
-			return $this->kirby->session($session);
-		}
-
-		// try session in header or cookie
-		if ($session instanceof Session === false) {
-			return $this->kirby->session(['detect' => true]);
-		}
-
-		return $session;
-	}
-
-	/**
 	 * Sets a user object as the current user in the cache
 	 * @internal
 	 */
@@ -411,11 +367,15 @@ class Auth
 			return $this->status;
 		}
 
-		$sessionObj = $this->session($session);
+		if (is_array($session) === true) {
+			$session = $this->kirby->session($session);
+		} elseif ($session instanceof Session === false) {
+			$session = $this->kirby->session(['detect' => true]);
+		}
 
 		$props = ['kirby' => $this->kirby];
 
-		if ($user = $this->user($sessionObj, $allowImpersonation)) {
+		if ($user = $this->user($session, $allowImpersonation)) {
 			// a user is currently logged in
 			$props['email']  = $user->email();
 			$props['status'] = match (true) {
@@ -423,12 +383,12 @@ class Auth
 					$this->user->currentFromImpersonation() !== null  => 'impersonated',
 				default                      => 'active'
 			};
-		} elseif ($email = $sessionObj->get('kirby.challenge.email')) {
+		} elseif ($email = $session->get('kirby.challenge.email')) {
 			// a challenge is currently pending
 			$props['status']            = 'pending';
 			$props['email']             = $email;
-			$props['mode']              = $sessionObj->get('kirby.challenge.mode');
-			$props['challenge']         = $sessionObj->get('kirby.challenge.type');
+			$props['mode']              = $session->get('kirby.challenge.mode');
+			$props['challenge']         = $session->get('kirby.challenge.type');
 			$props['challengeFallback'] = A::last($this->enabledChallenges());
 		} else {
 			// no active authentication
@@ -578,67 +538,23 @@ class Auth
 		string $code
 	): User {
 		try {
-			$session = $this->kirby->session();
+			$session   = $this->kirby->session();
+			$challenge = $this->challenge->verify($session, $code);
+			$user      = $challenge->user();
 
-			// time-limiting; check this early so that we can
-			// destroy the session no matter if the user exists
-			// (avoids leaking user information to attackers)
-			$timeout = $session->get('kirby.challenge.timeout');
+			$this->logout();
+			$user->loginPasswordless();
 
-			if ($timeout !== null && time() > $timeout) {
-				// this challenge can never be completed,
-				// so delete it immediately
-				throw new ChallengeTimeoutException();
+			// allow the user to set a new password
+			// without knowing the previous one
+			if ($challenge->mode() === 'password-reset') {
+				$session->set('kirby.resetPassword', true);
 			}
 
-			// check if we have an active challenge
-			$email = $session->get('kirby.challenge.email');
-			$type  = $session->get('kirby.challenge.type');
+			// clear the status cache
+			$this->status = null;
 
-			if (is_string($email) !== true || is_string($type) !== true) {
-				// if the challenge timed out on the previous request, the
-				// challenge data was already deleted from the session, so we can
-				// set `challengeDestroyed` to `true` in this response as well;
-				// however we must only base this on the email, not the type
-				// (otherwise "faked" challenges would be leaked)
-				throw new InvalidArgumentException(
-					details: ['challengeDestroyed' => is_string($email) !== true],
-					fallback: 'No authentication challenge is active'
-				);
-			}
-
-			$user = App::instance()->users()->find($email);
-
-			if ($user === null) {
-				throw new UserNotFoundException(name: $email);
-			}
-
-			// rate-limiting
-			$this->limits->ensure($email);
-
-			if ($challenge = Challenge::from($session)) {
-				if ($challenge->verify($code) !== true) {
-					throw new InvalidChallengeCodeException();
-				}
-
-				$this->logout();
-				$challenge->user()->loginPasswordless();
-
-				// allow the user to set a new password
-				// without knowing the previous one
-				if ($challenge->mode() === 'password-reset') {
-					$session->set('kirby.resetPassword', true);
-				}
-
-				// clear the status cache
-				$this->status = null;
-
-				return $challenge->user();
-			}
-
-			throw new LogicException(
-				message: 'Invalid authentication challenge: ' . $type
-			);
+			return $user;
 
 		} catch (Throwable $e) {
 			$details = $e instanceof Exception ? $e->getDetails() : [];
