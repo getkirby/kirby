@@ -64,6 +64,22 @@ class Auth
 		$this->user      = new AuthUser($this, $kirby);
 	}
 
+	public function authenticate(
+		string $type,
+		string $email,
+		#[SensitiveParameter]
+		string|null $password = null,
+		bool $long = false
+	): User|Status {
+		$result = $this->method->attempt($type, $email, $password, $long, 'login');
+
+		if ($result instanceof User === true) {
+			$this->setUser($result);
+		}
+
+		return $result;
+	}
+
 	/**
 	 * Creates an authentication challenge (one-time auth code)
 	 * @since 3.5.0
@@ -268,11 +284,7 @@ class Auth
 
 	/**
 	 * Login a user by email and password
-	 *
-	 * @throws \Kirby\Auth\Exception\RateLimitException
-	 * @throws \Kirby\Auth\Exception\UserNotFoundException
-	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
-	 * @throws \Kirby\Auth\Exception\LoginNotPermittedException If any other error occurred with debug mode off
+	 * @deprecated 6.0.0 Use `self::authenticate()` instead
 	 */
 	public function login(
 		string $email,
@@ -280,7 +292,7 @@ class Auth
 		string $password,
 		bool $long = false
 	): User {
-		$user = $this->method->attempt('password', $email, $password, $long, 'login');
+		$user = $this->authenticate('password', $email, $password, $long);
 
 		if ($user instanceof User === false) {
 			// if a method returned a pending status here,
@@ -289,19 +301,13 @@ class Auth
 			throw new LoginNotPermittedException();
 		}
 
-		$this->setUser($user);
 		return $user;
-
 	}
 
 	/**
 	 * Login a user by email, password and auth challenge
 	 * @since 3.5.0
-	 *
-	 * @throws \Kirby\Auth\Exception\RateLimitException
-	 * @throws \Kirby\Auth\Exception\UserNotFoundException
-	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
-	 * @throws \Kirby\Auth\Exception\LoginNotPermittedException If any other error occurred with debug mode off
+	 * @deprecated 6.0.0 Use `self::authenticate()` instead
 	 */
 	public function login2fa(
 		string $email,
@@ -325,28 +331,10 @@ class Auth
 
 		// logout the current user if it exists
 		$this->user()?->logout();
+		$this->setUser(null);
 
-		// clear the pending challenge
-		$session = $this->kirby->session();
-		$session->remove('kirby.challenge.code');
-		$session->remove('kirby.challenge.email');
-		$session->remove('kirby.challenge.mode');
-		$session->remove('kirby.challenge.timeout');
-		$session->remove('kirby.challenge.type');
-
-		// clear the status cache
-		$this->status = null;
-	}
-
-	/**
-	 * Sets a user object as the current user in the cache
-	 * @internal
-	 */
-	public function setUser(User $user): void
-	{
-		// clear the status cache
-		$this->status = null;
-		$this->user->set($user);
+		// clear any pending challenge
+		$this->challenge->clear();
 	}
 
 	public function normalizeSession(Session|array|null $session): Session
@@ -360,6 +348,17 @@ class Auth
 		}
 
 		return $session;
+	}
+
+	/**
+	 * Sets a user object as the current user in the cache
+	 * @internal
+	 */
+	public function setUser(User|null $user): void
+	{
+		// clear the status cache
+		$this->status = null;
+		$this->user->set($user);
 	}
 
 	/**
@@ -555,18 +554,17 @@ class Auth
 			return $user;
 
 		} catch (Throwable $e) {
-			$details = $e instanceof Exception ? $e->getDetails() : [];
-
-			if (
-				empty($email) === false &&
-				$e instanceof RateLimitException === false
-			) {
-				$this->kirby->trigger('user.login:failed', ['email' => $email]);
-				$this->limits->track($email);
-			}
 
 			if ($e instanceof ChallengeTimeoutException) {
 				$this->logout();
+			}
+
+			if (empty($email) === false) {
+				$this->kirby->trigger('user.login:failed', ['email' => $email]);
+
+				if ($e instanceof RateLimitException === false) {
+					$this->limits->track($email);
+				}
 			}
 
 			// sleep for a random amount of milliseconds
@@ -576,6 +574,7 @@ class Auth
 
 			// specifically copy over the marker for a destroyed challenge
 			// even in production (used by the Panel to reset to the login form)
+			$details  = $e instanceof Exception ? $e->getDetails() : [];
 			$fallback = new InvalidChallengeCodeException(
 				details: [
 					'challengeDestroyed' => $details['challengeDestroyed'] ?? false

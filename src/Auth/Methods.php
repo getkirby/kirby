@@ -2,6 +2,7 @@
 
 namespace Kirby\Auth;
 
+use InvalidArgumentException;
 use Kirby\Cms\App;
 use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Status;
@@ -56,7 +57,14 @@ class Methods
 		bool $long = false,
 		string $mode = 'login'
 	): User|Status|null {
-		$method = $this->handler($type, $mode);
-		return $method?->attempt($email, $password, $long, $mode);
+		$handler = $this->handler($type, $mode);
+
+		if ($handler === null) {
+			throw new InvalidArgumentException(
+				message: 'Login method is not enabled: ' . $type
+			);
+		}
+
+		return $handler?->attempt($email, $password, $long, $mode);
 	}
 }

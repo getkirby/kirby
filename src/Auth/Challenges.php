@@ -25,6 +25,16 @@ class Challenges
 	) {
 	}
 
+	public function clear(): void
+	{
+		$session = $this->kirby->session();
+		$session->remove('kirby.challenge.code');
+		$session->remove('kirby.challenge.email');
+		$session->remove('kirby.challenge.mode');
+		$session->remove('kirby.challenge.timeout');
+		$session->remove('kirby.challenge.type');
+	}
+
 	/**
 	 * Creates the first available challenge for the user
 	 * and stores state in the session

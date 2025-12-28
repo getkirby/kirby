@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 
@@ -63,20 +64,7 @@ return [
 			$password = $this->requestBody('password');
 
 			if ($password) {
-				if (isset($methods['password']) !== true) {
-					throw new InvalidArgumentException(
-						message: 'Login with password is not enabled'
-					);
-				}
-
-				if (
-					isset($methods['password']['2fa']) === true &&
-					$methods['password']['2fa'] === true
-				) {
-					$status = $auth->login2fa($email, $password, $long);
-				} else {
-					$user = $auth->login($email, $password, $long);
-				}
+				$result = $auth->authenticate('password', $email, $password, $long);
 			} else {
 				$mode = match (true) {
 					isset($methods['code']) 		  => 'login',
@@ -86,21 +74,21 @@ return [
 					)
 				};
 
-				$status = $auth->createChallenge($email, $long, $mode);
+				$result = $auth->createChallenge($email, $long, $mode);
 			}
 
-			if (isset($user)) {
+			if ($result instanceof User) {
 				return [
 					'code'   => 200,
 					'status' => 'ok',
-					'user'   => $this->resolve($user)->view('auth')->toArray()
+					'user'   => $this->resolve($result)->view('auth')->toArray()
 				];
 			}
 
 			return [
 				'code'      => 200,
 				'status'    => 'ok',
-				'challenge' => $status->challenge()
+				'challenge' => $result->challenge()
 			];
 		}
 	],

@@ -181,7 +181,7 @@ class User
 		return $this->impersonate !== null;
 	}
 
-	public function set(CmsUser $user): void
+	public function set(CmsUser|null $user): void
 	{
 		// stop impersonating
 		$this->impersonate = null;
