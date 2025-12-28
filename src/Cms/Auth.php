@@ -42,6 +42,8 @@ class Auth
 	 */
 	public static array $challenges = [];
 
+	protected Csrf $csrf;
+
 	/**
 	 * Currently impersonated user
 	 */
@@ -70,6 +72,7 @@ class Auth
 	public function __construct(
 		protected App $kirby
 	) {
+		$this->csrf = new Csrf($kirby);
 	}
 
 	/**
@@ -175,7 +178,7 @@ class Auth
 	 */
 	public function csrf(): string|false
 	{
-		return (new Csrf($this->kirby))->get();
+		return $this->csrf->get();
 	}
 
 	/**
@@ -184,7 +187,7 @@ class Auth
 	 */
 	public function csrfFromSession(): string
 	{
-		return (new Csrf($this->kirby))->fromSession();
+		return $this->csrf->fromSession();
 	}
 
 	/**
@@ -767,13 +770,13 @@ class Auth
 			$this->checkRateLimit($email);
 
 			// validate the user and its password
-			if ($user = $this->kirby->users()->find($email)) {
-				if ($user->validatePassword($password) === true) {
-					return $user;
-				}
+			$user = $this->kirby->users()->find($email);
+
+			if ($user?->validatePassword($password) !== true) {
+				throw new UserNotFoundException(name: $email);
 			}
 
-			throw new UserNotFoundException(name: $email);
+			return $user;
 
 		} catch (Throwable $e) {
 			// log invalid login trial unless the rate limit is already active
