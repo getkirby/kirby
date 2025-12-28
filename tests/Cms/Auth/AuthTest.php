@@ -63,6 +63,21 @@ class AuthTest extends TestCase
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);
 		App::destroy();
+		$_GET = [];
+	}
+
+	public function testCsrf(): void
+	{
+		$this->app->session()->set('kirby.csrf', 'session-csrf');
+		$_GET = [];
+		$this->assertFalse($this->auth->csrf());
+	}
+
+	public function testCsrfFromSession(): void
+	{
+		$this->app->session()->set('kirby.csrf', 'session-csrf');
+		$_GET = ['csrf' => 'session-csrf'];
+		$this->assertSame('session-csrf', $this->auth->csrfFromSession());
 	}
 
 	public function testImpersonate(): void
