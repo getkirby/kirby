@@ -3,6 +3,14 @@
 namespace Kirby\Cms;
 
 use Kirby\Auth\Csrf;
+use Kirby\Auth\Exception\ChallengesNotFoundException;
+use Kirby\Auth\Exception\ChallengeTimeoutException;
+use Kirby\Auth\Exception\InvalidAuthHeaderException;
+use Kirby\Auth\Exception\InvalidChallengeCodeException;
+use Kirby\Auth\Exception\LoginNotPermittedException;
+use Kirby\Auth\Exception\NoAvailableChallengeException;
+use Kirby\Auth\Exception\RateLimitException;
+use Kirby\Auth\Exception\UserNotFoundException;
 use Kirby\Cms\Auth\Challenge;
 use Kirby\Cms\Auth\Status;
 use Kirby\Data\Data;
@@ -69,18 +77,14 @@ class Auth
 	/**
 	 * Ensures that the rate limit was not exceeded
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded
+	 * @throws \Kirby\Auth\Exception\RateLimitException
 	 */
 	protected function checkRateLimit(string $email): void
 	{
 		// check for blocked ips
 		if ($this->isBlocked($email) === true) {
 			$this->kirby->trigger('user.login:failed', compact('email'));
-
-			throw new PermissionException(
-				details: ['reason' => 'rate-limited'],
-				fallback: 'Rate limit exceeded'
-			);
+			throw new RateLimitException();
 		}
 	}
 
@@ -92,9 +96,9 @@ class Auth
 	 * @param bool $long If `true`, a long session will be created
 	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 *
-	 * @throws \Kirby\Exception\LogicException If there is no suitable authentication challenge (only in debug mode)
-	 * @throws \Kirby\Exception\NotFoundException If the user does not exist (only in debug mode)
-	 * @throws \Kirby\Exception\PermissionException If the rate limit is exceeded
+	 * @throws \Kirby\Auth\Exception\NoAvailableChallengeException (only in debug mode)
+	 * @throws \Kirby\Auth\Exception\UserNotFoundException (only in debug mode)
+	 * @throws \Kirby\Auth\Exception\RateLimitException
 	 */
 	public function createChallenge(
 		string $email,
@@ -123,15 +127,12 @@ class Auth
 
 			if ($user === null) {
 				$this->kirby->trigger('user.login:failed', compact('email'));
-
-				throw new NotFoundException(
-					key: 'user.notFound',
-					data: ['name' => $email]
-				);
+				throw new UserNotFoundException(name: $email);
 			}
 
 			// try to find an enabled challenge that is available for that user
 			$challenge = null;
+
 			foreach ($this->enabledChallenges() as $name) {
 				if (
 					($class = static::$challenges[$name] ?? null) &&
@@ -156,9 +157,7 @@ class Auth
 
 			// if no suitable challenge was found, `$challenge === null` at this point
 			if ($challenge === null) {
-				throw new LogicException(
-					message: 'Could not find a suitable authentication challenge'
-				);
+				throw new NoAvailableChallengeException();
 			}
 
 		} catch (Throwable $e) {
@@ -205,7 +204,7 @@ class Auth
 	 * for a basic authentication header with
 	 * valid credentials
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
+	 * @throws \Kirby\Exception\InvalidAuthHeaderException
 	 * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
 	 */
 	public function currentUserFromBasicAuth(
@@ -241,9 +240,7 @@ class Auth
 		$auth  ??= $request->auth();
 
 		if (!$auth || $auth->type() !== 'basic') {
-			throw new InvalidArgumentException(
-				'Invalid authorization header'
-			);
+			throw new InvalidAuthHeaderException();
 		}
 
 		// only allow basic auth when https is enabled or
@@ -379,7 +376,8 @@ class Auth
 	 *                         `null` to use the actual user again,
 	 *                         `'kirby'` for a virtual admin user or
 	 *                         `'nobody'` to disable the actual user
-	 * @throws \Kirby\Exception\NotFoundException if the given user cannot be found
+	 *
+	 * @throws \Kirby\Auth\Exception\UserNotFoundException
 	 */
 	public function impersonate(string|null $who = null): User|null
 	{
@@ -398,9 +396,7 @@ class Auth
 				'id'    => 'nobody',
 				'role'  => 'nobody',
 			]),
-			default => $this->kirby->users()->find($who) ?? throw new NotFoundException(
-				message: 'The user "' . $who . '" cannot be found'
-			),
+			default => $this->kirby->users()->find($who) ?? throw new UserNotFoundException(name: $who),
 		};
 	}
 
@@ -484,9 +480,10 @@ class Auth
 	/**
 	 * Login a user by email and password
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
-	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
+	 * @throws \Kirby\Auth\Exception\RateLimitException
+	 * @throws \Kirby\Auth\Exception\UserNotFoundException
 	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 * @throws \Kirby\Auth\Exception\LoginNotPermittedException If any other error occurred with debug mode off
 	 */
 	public function login(
 		string $email,
@@ -514,9 +511,10 @@ class Auth
 	 * Login a user by email, password and auth challenge
 	 * @since 3.5.0
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
-	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
+	 * @throws \Kirby\Auth\Exception\RateLimitException
+	 * @throws \Kirby\Auth\Exception\UserNotFoundException
 	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 * @throws \Kirby\Auth\Exception\LoginNotPermittedException If any other error occurred with debug mode off
 	 */
 	public function login2fa(
 		string $email,
@@ -765,9 +763,10 @@ class Auth
 	 * Validates the user credentials and returns the user object on success;
 	 * otherwise logs the failed attempt
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
-	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
-	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 * @throws \Kirby\Auth\Exception\RateLimitException
+	 * @throws \Kirby\Auth\Exception\UserNotFoundException
+	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->validatePassword()`)
+	 * @throws \Kirby\Auth\Exception\LoginNotPermittedException If any other error occurred with debug mode off
 	 */
 	public function validatePassword(
 		string $email,
@@ -786,16 +785,11 @@ class Auth
 				}
 			}
 
-			throw new NotFoundException(
-				key: 'user.notFound',
-				data: ['name' => $email]
-			);
+			throw new UserNotFoundException(name: $email);
 
 		} catch (Throwable $e) {
-			$details = $e instanceof Exception ? $e->getDetails() : [];
-
 			// log invalid login trial unless the rate limit is already active
-			if (($details['reason'] ?? null) !== 'rate-limited') {
+			if ($e instanceof RateLimitException === false) {
 				try {
 					$this->track($email);
 				} catch (Throwable) {
@@ -810,7 +804,7 @@ class Auth
 
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information
-			$this->fail($e, new PermissionException(key: 'access.login'));
+			$this->fail($e, new LoginNotPermittedException());
 		}
 	}
 
@@ -823,11 +817,11 @@ class Auth
 	 * @param string $code User-provided auth code to verify
 	 * @return \Kirby\Cms\User User object of the logged-in user
 	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded, the challenge timed out, the code
-	 *                                              is incorrect or if any other error occurred with debug mode off
-	 * @throws \Kirby\Exception\NotFoundException If the user from the challenge doesn't exist
+	 * @throws \Kirby\Auth\Exception\RateLimitException
+	 * @throws \Kirby\Auth\Exception\UserNotFoundException
 	 * @throws \Kirby\Exception\InvalidArgumentException If no authentication challenge is active
 	 * @throws \Kirby\Exception\LogicException If the authentication challenge is invalid
+	 * @throws \Kirby\Auth\Exception\LoginNotPermittedException If any other error occurred with debug mode off
 	 */
 	public function verifyChallenge(
 		#[SensitiveParameter]
@@ -844,12 +838,7 @@ class Auth
 			if ($timeout !== null && time() > $timeout) {
 				// this challenge can never be completed,
 				// so delete it immediately
-				$this->logout();
-
-				throw new PermissionException(
-					details: ['challengeDestroyed' => true],
-					fallback: 'Authentication challenge timeout'
-				);
+				throw new ChallengeTimeoutException();
 			}
 
 			// check if we have an active challenge
@@ -862,10 +851,8 @@ class Auth
 				// set `challengeDestroyed` to `true` in this response as well;
 				// however we must only base this on the email, not the type
 				// (otherwise "faked" challenges would be leaked)
-				$challengeDestroyed = is_string($email) !== true;
-
 				throw new InvalidArgumentException(
-					details: compact('challengeDestroyed'),
+					details: ['challengeDestroyed' => is_string($email) !== true],
 					fallback: 'No authentication challenge is active'
 				);
 			}
@@ -873,10 +860,7 @@ class Auth
 			$user = $this->kirby->users()->find($email);
 
 			if ($user === null) {
-				throw new NotFoundException(
-					key: 'user.notFound',
-					data: ['name' => $email]
-				);
+				throw new UserNotFoundException(name: $email);
 			}
 
 			// rate-limiting
@@ -905,7 +889,7 @@ class Auth
 					return $user;
 				}
 
-				throw new PermissionException(key: 'access.code');
+				throw new InvalidChallengeCodeException();
 			}
 
 			throw new LogicException(
@@ -917,9 +901,13 @@ class Auth
 
 			if (
 				empty($email) === false &&
-				($details['reason'] ?? null) !== 'rate-limited'
+				$e instanceof RateLimitException === false
 			) {
 				$this->track($email);
+			}
+
+			if ($e instanceof ChallengeTimeoutException) {
+				$this->logout();
 			}
 
 			// sleep for a random amount of milliseconds
@@ -929,11 +917,10 @@ class Auth
 
 			// specifically copy over the marker for a destroyed challenge
 			// even in production (used by the Panel to reset to the login form)
-			$challengeDestroyed = $details['challengeDestroyed'] ?? false;
-
-			$fallback = new PermissionException(
-				details: compact('challengeDestroyed'),
-				key: 'access.code'
+			$fallback = new InvalidChallengeCodeException(
+				details: [
+					'challengeDestroyed' => $details['challengeDestroyed'] ?? false
+				],
 			);
 
 			// keep throwing the original error in debug mode,
