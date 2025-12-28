@@ -94,13 +94,8 @@ class User
 	public function currentFromSession(
 		Session|array|null $session = null
 	): CmsUser|null {
-		if (is_array($session) === true) {
-			$session = $this->kirby->session($session);
-		} elseif ($session instanceof Session === false) {
-			$session = $this->kirby->session(['detect' => true]);
-		}
-
-		$id = $session->data()->get('kirby.userId');
+		$session = $this->kirby->auth()->normalizeSession($session);
+		$id      = $session->data()->get('kirby.userId');
 
 		// if no user is logged in, return immediately
 		if (is_string($id) !== true) {

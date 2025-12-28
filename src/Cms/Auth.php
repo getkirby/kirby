@@ -13,12 +13,11 @@ use Kirby\Auth\Exception\UserNotFoundException;
 use Kirby\Auth\Limits;
 use Kirby\Auth\Methods;
 use Kirby\Auth\User as AuthUser;
-use Kirby\Cms\Auth\Status;
+use Kirby\Auth\Status;
 use Kirby\Exception\Exception;
 use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Session\Session;
-use Kirby\Toolkit\A;
 use SensitiveParameter;
 use Throwable;
 
@@ -350,6 +349,19 @@ class Auth
 		$this->user->set($user);
 	}
 
+	public function normalizeSession(Session|array|null $session): Session
+	{
+		if (is_array($session) === true) {
+			return $this->kirby->session($session);
+		}
+
+		if ($session instanceof Session === false) {
+			return  $this->kirby->session(['detect' => true]);
+		}
+
+		return $session;
+	}
+
 	/**
 	 * Returns the authentication status object
 	 * @since 3.5.1
@@ -363,46 +375,31 @@ class Auth
 	): Status {
 		// try to return from cache
 		if (
-			$this->status &&
+			$this->status !== null &&
 			$session === null &&
 			$allowImpersonation === true
 		) {
 			return $this->status;
 		}
 
-		if (is_array($session) === true) {
-			$session = $this->kirby->session($session);
-		} elseif ($session instanceof Session === false) {
-			$session = $this->kirby->session(['detect' => true]);
-		}
+		$session      = $this->normalizeSession($session);
+		$user         = $this->user($session, $allowImpersonation);
+		$impersonated = match ($allowImpersonation) {
+			true  => $this->user->isImpersonated(),
+			false => false
+		};
 
-		$props = ['kirby' => $this->kirby];
-
-		if ($user = $this->user($session, $allowImpersonation)) {
-			// a user is currently logged in
-			$props['email']  = $user->email();
-			$props['status'] = match (true) {
-				$allowImpersonation === true &&
-					$this->user->currentFromImpersonation() !== null  => 'impersonated',
-				default                      => 'active'
-			};
-		} elseif ($email = $session->get('kirby.challenge.email')) {
-			// a challenge is currently pending
-			$props['status']            = 'pending';
-			$props['email']             = $email;
-			$props['mode']              = $session->get('kirby.challenge.mode');
-			$props['challenge']         = $session->get('kirby.challenge.type');
-			$props['challengeFallback'] = A::last($this->enabledChallenges());
-		} else {
-			// no active authentication
-			$props['status'] = 'inactive';
-		}
-
-		$status = new Status($props);
+		$status = Status::for(
+			kirby:        $this->kirby,
+			user:         $user,
+			impersonated: $impersonated,
+			session:      $session,
+			challenges:   $this->challenge->enabled()
+		);
 
 		// only cache the default object
 		if ($session === null && $allowImpersonation === true) {
-			$this->status = $status;
+			return $this->status = $status;
 		}
 
 		return $status;
