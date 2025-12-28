@@ -167,7 +167,7 @@ class Collection extends BaseCollection
 		$groups = new self(parent: $this->parent());
 
 		if (is_string($field) === true) {
-			foreach ($this->data as $key => $item) {
+			foreach ($this as $key => $item) {
 				$value = $this->getAttribute($item, $field);
 
 				// make sure that there's always a proper value to group by
