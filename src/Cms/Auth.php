@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Csrf;
 use Kirby\Cms\Auth\Challenge;
 use Kirby\Cms\Auth\Status;
 use Kirby\Data\Data;
@@ -187,18 +188,7 @@ class Auth
 	 */
 	public function csrf(): string|false
 	{
-		// get the csrf from the header
-		$fromHeader = $this->kirby->request()->csrf();
-
-		// check for a predefined csrf or use the one from session
-		$fromSession = $this->csrfFromSession();
-
-		// compare both tokens
-		if (hash_equals($fromSession, (string)$fromHeader) !== true) {
-			return false;
-		}
-
-		return $fromSession;
+		return (new Csrf($this->kirby))->get();
 	}
 
 	/**
@@ -207,9 +197,7 @@ class Auth
 	 */
 	public function csrfFromSession(): string
 	{
-		$isDev    = $this->kirby->option('panel.dev', false) !== false;
-		$fallback = $isDev ? 'dev' : $this->kirby->csrf();
-		return $this->kirby->option('api.csrf', $fallback);
+		return (new Csrf($this->kirby))->fromSession();
 	}
 
 	/**
