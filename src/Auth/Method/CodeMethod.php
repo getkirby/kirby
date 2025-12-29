@@ -24,4 +24,9 @@ class CodeMethod extends Method
 		// no password required; directly create challenge
 		return $this->auth()->createChallenge($email, $long, 'login');
 	}
+
+	public static function form(): string
+	{
+		return 'k-login-password-method';
+	}
 }

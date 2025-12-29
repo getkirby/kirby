@@ -39,6 +39,11 @@ class PasswordMethod extends Method
 		return $user;
 	}
 
+	public static function form(): string
+	{
+		return 'k-login-password-method';
+	}
+
 	protected function has2FA(User $user, string $mode): bool
 	{
 		$option = $this->options['2fa'] ?? null;
@@ -48,7 +53,7 @@ class PasswordMethod extends Method
 		}
 
 		// get first available challenge
-		$challenge = $this->auth()->challenge()->available($user, $mode);
+		$challenge = $this->auth()->challenges()->available($user, $mode);
 
 		// if any challenge is available, use 2FA
 		if ($challenge !== null) {

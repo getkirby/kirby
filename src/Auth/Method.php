@@ -48,6 +48,8 @@ abstract class Method
 		return $this->kirby->auth();
 	}
 
+	abstract public static function form(): string;
+
 	/**
 	 * Checks whether the method is available for the current setup
 	 */

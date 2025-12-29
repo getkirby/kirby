@@ -131,9 +131,9 @@ class Status
 		);
 	}
 
-	public function state(): string
+	public function state(): State
 	{
-		return $this->state->value;
+		return $this->state;
 	}
 
 	public function toArray(): array
@@ -142,7 +142,7 @@ class Status
 			'challenge' => $this->challenge(),
 			'email'     => $this->email(),
 			'mode'      => $this->mode(),
-			'status'    => $this->state()
+			'status'    => $this->state()->value
 		];
 	}
 

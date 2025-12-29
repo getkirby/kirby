@@ -17,7 +17,7 @@ class Methods
 	) {
 	}
 
-	public function config(): array
+	public function available(): array
 	{
 		return $this->kirby->system()->loginMethods();
 	}
@@ -27,7 +27,7 @@ class Methods
 	 */
 	public function handler(string $type, string $mode = 'login'): Method|null
 	{
-		$config = $this->config()[$type] ?? null;
+		$config = $this->available()[$type] ?? null;
 
 		if ($config === null) {
 			return null;

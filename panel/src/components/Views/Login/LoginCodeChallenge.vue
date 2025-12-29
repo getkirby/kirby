@@ -1,12 +1,12 @@
 <template>
-	<form class="k-login-form k-login-code-form" @submit.prevent="login">
+	<form class="k-login-form k-login-code-challenge" @submit.prevent="onSubmit">
 		<k-user-info v-if="pending.email" :user="pending.email" />
 
 		<k-text-field
 			:autofocus="true"
 			:counter="false"
 			:help="$t('login.code.text.' + pending.challenge)"
-			:label="$t('login.code.label.' + mode)"
+			:label="$t('login.code.label.' + (isResetForm ? method : 'login'))"
 			:placeholder="$t('login.code.placeholder.' + pending.challenge)"
 			:required="true"
 			:value="code"
@@ -27,8 +27,9 @@
 			/>
 
 			<k-button
-				:text="submitText"
-				icon="check"
+				:disabled="isProcessing"
+				:icon="isProcessing ? 'loader' : 'check'"
+				:text="isResetForm ? $t('login.reset') : $t('login')"
 				size="lg"
 				type="submit"
 				theme="positive"
@@ -40,65 +41,26 @@
 </template>
 
 <script>
-export const props = {
-	props: {
-		/**
-		 * List of available login method names
-		 */
-		methods: {
-			type: Array,
-			default: () => []
-		},
-		/**
-		 * Pending login data (user email, challenge type)
-		 * @value { email: String, challenge: String }
-		 */
-		pending: {
-			type: Object,
-			default: () => ({ challenge: "email" })
-		},
-		/**
-		 * Code value to prefill the input
-		 */
-		value: {
-			type: Object,
-			default: () => ({})
-		}
-	}
-};
+import { props as LoginProps } from "./LoginView.vue";
 
-/**
- * @deprecated 6.0.0 Use `k-login-code-challenge` instead
- */
 export default {
-	mixins: [props],
+	mixins: [LoginProps],
 	emits: ["error"],
 	data() {
 		return {
 			code: this.value.code ?? "",
-			isLoading: false
+			isProcessing: false
 		};
 	},
 	computed: {
-		mode() {
-			return this.methods.includes("password-reset")
-				? "password-reset"
-				: "login";
-		},
-		submitText() {
-			const suffix = this.isLoading ? " …" : "";
-
-			if (this.mode === "password-reset") {
-				return this.$t("login.reset") + suffix;
-			}
-
-			return this.$t("login") + suffix;
+		isResetForm() {
+			return this.method === "password-reset";
 		}
 	},
 	methods: {
-		async login() {
+		async onSubmit() {
 			this.$emit("error", null);
-			this.isLoading = true;
+			this.isProcessing = true;
 
 			try {
 				await this.$api.auth.verifyCode(this.code);
@@ -108,7 +70,7 @@ export default {
 					icon: "smile"
 				});
 
-				if (this.mode === "password-reset") {
+				if (this.method === "password-reset") {
 					this.$go("reset-password");
 				} else {
 					this.$panel.reload();
@@ -116,7 +78,7 @@ export default {
 			} catch (error) {
 				this.$emit("error", error);
 			} finally {
-				this.isLoading = false;
+				this.isProcessing = false;
 			}
 		}
 	}
@@ -124,7 +86,7 @@ export default {
 </script>
 
 <style>
-.k-login-code-form .k-user-info {
+.k-login-code-challenge .k-user-info {
 	margin-bottom: var(--spacing-6);
 }
 </style>

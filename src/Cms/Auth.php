@@ -83,7 +83,7 @@ class Auth
 	/**
 	 * @since 6.0.0
 	 */
-	public function challenge(): Challenges
+	public function challenges(): Challenges
 	{
 		return $this->challenge;
 	}
@@ -343,6 +343,14 @@ class Auth
 
 		// clear any pending challenge
 		$this->challenge->clear();
+	}
+
+	/**
+	 * @since 6.0.0
+	 */
+	public function methods(): Methods
+	{
+		return $this->method;
 	}
 
 	public function normalizeSession(Session|array|null $session): Session

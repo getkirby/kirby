@@ -21,18 +21,6 @@ use Kirby\Toolkit\Str;
 class EmailChallenge extends Challenge
 {
 	/**
-	 * Checks whether the challenge is available
-	 * for the passed user and purpose
-	 *
-	 * @param \Kirby\Cms\User $user User the code will be generated for
-	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
-	 */
-	public static function isAvailable(User $user, string $mode): bool
-	{
-		return true;
-	}
-
-	/**
 	 * Generates a random one-time auth code and returns that code
 	 * for later verification
 	 *
@@ -48,6 +36,23 @@ class EmailChallenge extends Challenge
 		);
 
 		return $code;
+	}
+
+	public static function form(): string
+	{
+		return 'k-login-code-challenge';
+	}
+
+	/**
+	 * Checks whether the challenge is available
+	 * for the passed user and purpose
+	 *
+	 * @param \Kirby\Cms\User $user User the code will be generated for
+	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
+	 */
+	public static function isAvailable(User $user, string $mode): bool
+	{
+		return true;
 	}
 
 	/**

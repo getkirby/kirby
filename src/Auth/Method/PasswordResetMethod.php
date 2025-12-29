@@ -22,4 +22,9 @@ class PasswordResetMethod extends Method
 
 		return $this->auth()->createChallenge($email, $long, 'password-reset');
 	}
+
+	public static function form(): string
+	{
+		return 'k-login-password-method';
+	}
 }

@@ -1,7 +1,5 @@
 <template>
-	<k-panel-outside
-		:class="form === 'code' ? 'k-login-code-view' : 'k-login-view'"
-	>
+	<k-panel-outside class="k-login-view">
 		<!-- <div> as single child for grid layout -->
 		<div class="k-dialog k-login k-login-dialog">
 			<h1 class="sr-only">
@@ -13,25 +11,65 @@
 			</k-login-alert>
 
 			<k-dialog-body>
-				<k-login-code-form
-					v-if="form === 'code'"
-					v-bind="{ methods, pending, value: value.code }"
-					@error="onError"
-				/>
 				<component
 					:is="component"
-					v-else
-					v-bind="{ methods, value }"
+					v-bind="{ method, methods, pending, value }"
 					@error="onError"
 				/>
 			</k-dialog-body>
+
+			<template v-if="alternativeMethods.length > 1">
+				<hr />
+				<k-dialog-footer>
+					<k-button
+						:dropdown="true"
+						text="Sign in via"
+						size="xs"
+						@click="$refs.methods.toggle()"
+					/>
+					<k-dropdown
+						ref="methods"
+						:options="alternativeMethods"
+						align-x="start"
+					/>
+				</k-dialog-footer>
+			</template>
 		</div>
 	</k-panel-outside>
 </template>
 
 <script>
-import { props as LoginCodeFormProps } from "./LoginCodeForm.vue";
-import { props as LoginFormProps } from "./LoginForm.vue";
+export const props = {
+	props: {
+		/**
+		 * Current login method
+		 * @since 6.0.0
+		 */
+		method: String,
+		/**
+		 * List of available login method names
+		 */
+		methods: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * Pending login data (user email, challenge type)
+		 * @value { email: String, challenge: String }
+		 */
+		pending: {
+			type: Object,
+			default: () => ({ challenge: "email" })
+		},
+		/**
+		 * Values to prefill the inputs
+		 */
+		value: {
+			type: Object,
+			default: () => ({})
+		}
+	}
+};
 
 /**
  * @internal
@@ -40,19 +78,13 @@ export default {
 	components: {
 		"k-login-plugin-form": window.panel.plugins.login
 	},
-	mixins: [LoginCodeFormProps, LoginFormProps],
+	mixins: [props],
 	props: {
 		/**
-		 * Values to prefill the inputs
+		 * Vue component name for the login form
+		 * @since 6.0.0
 		 */
-		value: {
-			type: Object,
-			default: () => ({
-				code: "",
-				email: "",
-				password: ""
-			})
-		}
+		form: String
 	},
 	data() {
 		return {
@@ -60,13 +92,14 @@ export default {
 		};
 	},
 	computed: {
-		component() {
-			return window.panel.plugins.login
-				? "k-login-plugin-form"
-				: "k-login-form";
+		alternativeMethods() {
+			return this.methods.map((method) => ({
+				text: this.$t(`login.method.${method}.label`),
+				current: method === this.method
+			}));
 		},
-		form() {
-			return this.pending.email ? "code" : "login";
+		component() {
+			return window.panel.plugins.login ? "k-login-plugin-form" : this.form;
 		}
 	},
 	methods: {
@@ -97,6 +130,10 @@ export default {
 	container-type: inline-size;
 }
 
+.k-login-form label abbr {
+	visibility: hidden;
+}
+
 .k-login-buttons {
 	--button-padding: var(--spacing-3);
 	display: flex;
@@ -104,5 +141,13 @@ export default {
 	align-items: center;
 	justify-content: space-between;
 	margin-top: var(--spacing-8);
+}
+
+.k-login-dialog hr {
+	border-top: 1px solid var(--color-border);
+}
+.k-login-dialog .k-dialog-footer {
+	padding-block: var(--spacing-3);
+	text-align: end;
 }
 </style>

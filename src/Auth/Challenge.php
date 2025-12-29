@@ -43,6 +43,8 @@ abstract class Challenge
 	 */
 	abstract public function create(): string|null;
 
+	abstract public static function form(): string;
+
 	final public static function from(Session $session): static|null
 	{
 		$type    = $session->get('kirby.challenge.type');

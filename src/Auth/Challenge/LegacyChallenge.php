@@ -34,6 +34,11 @@ class LegacyChallenge extends Challenge
 		]);
 	}
 
+	public static function form(): string
+	{
+		return 'k-login-code-challenge';
+	}
+
 	public static function isAvailable(User $user, string $mode): bool
 	{
 		return true;

@@ -31,6 +31,11 @@ class TotpChallenge extends Challenge
 		return null;
 	}
 
+	public static function form(): string
+	{
+		return 'k-login-code-challenge';
+	}
+
 	/**
 	 * Checks whether TOTP is available for the user and purpose
 	 */

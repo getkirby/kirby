@@ -53,7 +53,6 @@ export const props = {
 		},
 		/**
 		 * Values to prefill the inputs
-		 * @value { email: String, password: String, remember: Boolean }
 		 */
 		value: {
 			type: Object,
@@ -62,6 +61,9 @@ export const props = {
 	}
 };
 
+/**
+ * @deprecated 6.0.0 Use `k-login-password-method` instead
+ */
 export default {
 	mixins: [props],
 	emits: ["error"],
