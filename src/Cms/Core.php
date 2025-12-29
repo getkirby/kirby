@@ -10,6 +10,7 @@ use Kirby\Cache\RedisCache;
 use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Cms\Auth\TotpChallenge;
 use Kirby\Form\Field\BlocksField;
+use Kirby\Form\Field\ButtonsField;
 use Kirby\Form\Field\CheckboxesField;
 use Kirby\Form\Field\ColorField;
 use Kirby\Form\Field\DateField;
@@ -248,6 +249,7 @@ class Core
 	{
 		return [
 			'blocks'      => BlocksField::class,
+			'buttons'     => ButtonsField::class,
 			'checkboxes'  => CheckboxesField::class,
 			'color'       => ColorField::class,
 			'date'        => DateField::class,
