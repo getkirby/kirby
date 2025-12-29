@@ -12,16 +12,11 @@ class HasI18nTest extends TestCase
 	public function setUp(): void
 	{
 		$this->localeBackup = I18n::$locale;
-		I18n::$locale = 'foo';
-		I18n::$translations['foo'] = [
-			'my.key'   => 'My translation',
-			'my.count' => 'All {count} things'
-		];
 	}
 
 	public function tearDown(): void
 	{
-		unset(I18n::$translations['foo']);
+		I18n::$translations = [];
 		I18n::$locale = $this->localeBackup;
 	}
 
@@ -35,6 +30,12 @@ class HasI18nTest extends TestCase
 				return $this->i18n($key, $data);
 			}
 		};
+
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'my.key'   => 'My translation',
+			'my.count' => 'All {count} things'
+		];
 
 		$this->assertNull($class->translate(null));
 		$this->assertSame('Hello', $class->translate('Hello'));
