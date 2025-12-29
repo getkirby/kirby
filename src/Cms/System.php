@@ -314,6 +314,7 @@ class System
 		// normalize the syntax variants
 		$normalized = [];
 		$uses2fa = false;
+
 		foreach ($methods as $key => $value) {
 			if (is_int($key) === true) {
 				// ['password']

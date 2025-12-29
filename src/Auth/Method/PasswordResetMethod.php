@@ -27,4 +27,9 @@ class PasswordResetMethod extends Method
 	{
 		return 'k-login-password-method';
 	}
+
+	public function icon(): string
+	{
+		return 'question';
+	}
 }

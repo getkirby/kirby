@@ -1,7 +1,6 @@
 <template>
 	<k-panel-outside class="k-login-view">
-		<!-- <div> as single child for grid layout -->
-		<div class="k-dialog k-login k-login-dialog">
+		<k-stack class="k-login-stack">
 			<h1 class="sr-only">
 				{{ $t("login") }}
 			</h1>
@@ -10,31 +9,28 @@
 				{{ issue }}
 			</k-login-alert>
 
-			<k-dialog-body>
-				<component
-					:is="component"
-					v-bind="{ method, methods, pending, value }"
-					@error="onError"
-				/>
-			</k-dialog-body>
+			<component
+				:is="component"
+				v-bind="{ method, methods, pending, value }"
+				@error="onError"
+			/>
 
-			<template v-if="alternativeMethods.length > 1">
-				<hr />
-				<k-dialog-footer>
+			<template v-if="alternativeMethods.length > 0">
+				<p class="k-login-or"><span>or</span></p>
+
+				<k-stack>
 					<k-button
-						:dropdown="true"
-						text="Sign in via"
-						size="xs"
-						@click="$refs.methods.toggle()"
+						v-for="method in alternativeMethods"
+						:key="method.type"
+						:icon="method.icon"
+						:text="method.text"
+						variant="filled"
+						size="lg"
+						@click="onChangeMethod(method.type)"
 					/>
-					<k-dropdown
-						ref="methods"
-						:options="alternativeMethods"
-						align-x="start"
-					/>
-				</k-dialog-footer>
+				</k-stack>
 			</template>
-		</div>
+		</k-stack>
 	</k-panel-outside>
 </template>
 
@@ -93,16 +89,16 @@ export default {
 	},
 	computed: {
 		alternativeMethods() {
-			return this.methods.map((method) => ({
-				text: this.$t(`login.method.${method}.label`),
-				current: method === this.method
-			}));
+			return this.methods.filter((method) => method.type !== this.method);
 		},
 		component() {
 			return window.panel.plugins.login ? "k-login-plugin-form" : this.form;
 		}
 	},
 	methods: {
+		onChangeMethod(method) {
+			this.$panel.view.refresh({ query: { method } });
+		},
 		async onError(error) {
 			if (error === null) {
 				this.issue = null;
@@ -123,13 +119,21 @@ export default {
 </script>
 
 <style>
-.k-login {
-	--dialog-color-back: light-dark(var(--color-white), var(--color-gray-950));
-	--dialog-shadow: light-dark(var(--shadow), none);
-
-	container-type: inline-size;
+.k-login-stack {
+	max-width: 25rem;
+	margin: 0 auto;
+	gap: var(--spacing-6);
 }
 
+.k-login-alert {
+	border-radius: var(--rounded);
+}
+
+.k-login-form {
+	padding: var(--spacing-6);
+	background: var(--color-white);
+	border-radius: var(--rounded);
+}
 .k-login-form label abbr {
 	visibility: hidden;
 }
@@ -143,11 +147,23 @@ export default {
 	margin-top: var(--spacing-8);
 }
 
-.k-login-dialog hr {
-	border-top: 1px solid var(--color-border);
+.k-login-or {
+	position: relative;
+	text-align: center;
+	color: var(--color-text-dimmed);
 }
-.k-login-dialog .k-dialog-footer {
-	padding-block: var(--spacing-3);
-	text-align: end;
+.k-login-or span {
+	background: var(--panel-color-back);
+	padding: 0 0.5rem;
+}
+.k-login-or::before {
+	position: absolute;
+	content: "";
+	top: 50%;
+	left: 0;
+	height: 1px;
+	background: var(--color-border);
+	width: 100%;
+	z-index: -1;
 }
 </style>

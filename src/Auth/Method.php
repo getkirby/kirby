@@ -48,7 +48,10 @@ abstract class Method
 		return $this->kirby->auth();
 	}
 
-	abstract public static function form(): string;
+	public static function form(): string
+	{
+		return 'k-login-' . static::type() . '-method';
+	}
 
 	/**
 	 * Checks whether the method is available for the current setup
@@ -57,6 +60,8 @@ abstract class Method
 	{
 		return true;
 	}
+
+	abstract public function icon(): string;
 
 	public static function settings(User $user): array
 	{

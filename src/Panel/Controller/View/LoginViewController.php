@@ -9,6 +9,7 @@ use Kirby\Auth\Status;
 use Kirby\Cms\Auth;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\View;
+use Kirby\Toolkit\A;
 
 /**
  * @package   Kirby Panel
@@ -57,14 +58,33 @@ class LoginViewController extends ViewController
 
 	public function method(): Method
 	{
-		$methods = $this->methods();
-		$method  = $this->request->get("method", array_pop($methods));
+		$methods = array_keys($this->auth->methods()->available());
+		$method  = $this->request->get("method");
+
+		if (in_array($method, $methods, true) === false) {
+			$method = $methods[0];
+		}
+
 		return $this->auth->methods()->handler($method);
 	}
 
 	public function methods(): array
 	{
-		return array_keys($this->auth->methods()->available());
+		$methods = array_keys($this->auth->methods()->available());
+		$methods = A::map(
+			$methods,
+			fn (string $method) => $this->auth->methods()->handler($method)
+		);
+		$methods = A::map(
+			$methods,
+			fn(Method $method) => [
+				'icon' => $method->icon(),
+				'text' => $this->i18n('login.method.' . $method->type() . '.label'),
+				'type' => $method->type(),
+			]
+		);
+
+		return $methods;
 	}
 
 	public function pending(): array

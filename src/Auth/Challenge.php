@@ -44,7 +44,10 @@ abstract class Challenge
 	 */
 	abstract public function create(): string|null;
 
-	abstract public static function form(): string;
+	public static function form(): string
+	{
+		return 'k-login-' . static::type() . '-challenge';
+	}
 
 	final public static function from(Session $session): static|null
 	{

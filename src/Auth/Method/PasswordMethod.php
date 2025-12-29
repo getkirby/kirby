@@ -39,11 +39,6 @@ class PasswordMethod extends Method
 		return $user;
 	}
 
-	public static function form(): string
-	{
-		return 'k-login-password-method';
-	}
-
 	protected function has2FA(User $user, string $mode): bool
 	{
 		$option = $this->options['2fa'] ?? null;
@@ -68,6 +63,11 @@ class PasswordMethod extends Method
 		}
 
 		return false;
+	}
+
+	public function icon(): string
+	{
+		return 'key';
 	}
 
 	public static function settings(User $user): array

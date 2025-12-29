@@ -29,4 +29,9 @@ class CodeMethod extends Method
 	{
 		return 'k-login-password-method';
 	}
+
+	public function icon(): string
+	{
+		return 'hashtag';
+	}
 }
