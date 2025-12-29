@@ -21,6 +21,13 @@ enum LicenseStatus: string
 	case Active = 'active';
 
 	/**
+	 * Compliance with the conditional license
+	 * requirements has been confirmed
+	 * @since 5.3.0
+	 */
+	case Acknowledged = 'acknowledged';
+
+	/**
 	 * Only used for the demo instance
 	 */
 	case Demo = 'demo';
@@ -57,10 +64,11 @@ enum LicenseStatus: string
 	public function activatable(): bool
 	{
 		return match ($this) {
-			static::Active,
-			static::Inactive,
-			static::Legacy    => true,
-			default           => false
+			static::Active       => true,
+			static::Acknowledged => true,
+			static::Inactive     => true,
+			static::Legacy       => true,
+			default              => false
 		};
 	}
 
@@ -84,12 +92,13 @@ enum LicenseStatus: string
 	public function icon(): string
 	{
 		return match ($this) {
-			static::Active   => 'check',
-			static::Demo     => 'preview',
-			static::Inactive => 'clock',
-			static::Legacy   => 'alert',
-			static::Missing  => 'key',
-			static::Unknown  => 'question',
+			static::Active       => 'check',
+			static::Acknowledged => 'shield',
+			static::Demo         => 'preview',
+			static::Inactive     => 'clock',
+			static::Legacy       => 'alert',
+			static::Missing      => 'key',
+			static::Unknown      => 'question',
 		};
 	}
 
@@ -118,9 +127,10 @@ enum LicenseStatus: string
 	public function renewable(): bool
 	{
 		return match ($this) {
-			static::Active,
-			static::Demo => false,
-			default      => true
+			static::Active       => false,
+			static::Acknowledged => false,
+			static::Demo         => false,
+			default              => true
 		};
 	}
 
@@ -132,12 +142,13 @@ enum LicenseStatus: string
 	public function theme(): string
 	{
 		return match ($this) {
-			static::Active   => 'positive',
-			static::Demo     => 'notice',
-			static::Inactive => 'notice',
-			static::Legacy   => 'negative',
-			static::Missing  => 'love',
-			static::Unknown  => 'passive',
+			static::Active       => 'positive',
+			static::Acknowledged => 'passive',
+			static::Demo         => 'notice',
+			static::Inactive     => 'notice',
+			static::Legacy       => 'negative',
+			static::Missing      => 'love',
+			static::Unknown      => 'passive',
 		};
 	}
 
