@@ -73,6 +73,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'lbuchs/webauthn' => array(
+            'pretty_version' => 'v2.2.0',
+            'version' => '2.2.0.0',
+            'reference' => '20adb4a240c3997bd8cac7dc4dde38ab0bea0ed1',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../lbuchs/webauthn',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'league/color-extractor' => array(
             'pretty_version' => '0.4.0',
             'version' => '0.4.0.0',

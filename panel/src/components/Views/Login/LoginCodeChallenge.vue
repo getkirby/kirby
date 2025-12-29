@@ -1,6 +1,10 @@
 <template>
 	<form class="k-login-form k-login-code-challenge" @submit.prevent="onSubmit">
-		<k-user-info v-if="pending.email" :user="pending.email" />
+		<k-user-info
+			v-if="pending.email"
+			:user="pending.email"
+			class="k-login-user"
+		/>
 
 		<k-text-field
 			:autofocus="true"
@@ -84,9 +88,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-login-code-challenge .k-user-info {
-	margin-bottom: var(--spacing-6);
-}
-</style>

@@ -15,7 +15,7 @@
 				@error="onError"
 			/>
 
-			<template v-if="alternativeMethods.length > 0">
+			<template v-if="alternativeMethods.length > 0 && !pending?.challenge">
 				<p class="k-login-or"><span>or</span></p>
 
 				<k-stack>
@@ -54,8 +54,7 @@ export const props = {
 		 * @value { email: String, challenge: String }
 		 */
 		pending: {
-			type: Object,
-			default: () => ({ challenge: "email" })
+			type: Object
 		},
 		/**
 		 * Values to prefill the inputs
@@ -136,6 +135,10 @@ export default {
 }
 .k-login-form label abbr {
 	visibility: hidden;
+}
+
+.k-login-user {
+	margin-bottom: var(--spacing-6);
 }
 
 .k-login-buttons {

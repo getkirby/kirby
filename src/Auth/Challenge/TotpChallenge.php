@@ -49,7 +49,7 @@ class TotpChallenge extends Challenge
 	{
 		return [
 			[
-				'text'   => 'Set up authenticator app',
+				'text'   => 'Authenticator app',
 				'icon'   => 'qr-code',
 				'dialog' => $user->panel()->url(true) . '/totp/' . (static::isAvailable($user) ? 'disable' : 'enable'),
 			],

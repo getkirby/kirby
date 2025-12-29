@@ -46,6 +46,7 @@ class Challenges
 		$session->remove('kirby.challenge.mode');
 		$session->remove('kirby.challenge.timeout');
 		$session->remove('kirby.challenge.type');
+		$session->remove('kirby.challenge.data');
 	}
 
 	/**
@@ -96,7 +97,7 @@ class Challenges
 	public function enabled(): array
 	{
 		return A::wrap(
-			$this->kirby->option('auth.challenges', ['totp', 'email'])
+			$this->kirby->option('auth.challenges', ['totp', 'webauthn', 'email'])
 		);
 	}
 
@@ -141,7 +142,7 @@ class Challenges
 	 */
 	public function verify(
 		Session $session,
-		string|int $code
+		array|string|null $code
 	): Challenge {
 		// time-limiting; check this early so that we can
 		// destroy the session no matter if the user exists

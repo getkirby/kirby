@@ -14,6 +14,7 @@ use Kirby\Panel\Controller\Dialog\UserChangeRoleDialogController;
 use Kirby\Panel\Controller\Dialog\UserCreateDialogController;
 use Kirby\Panel\Controller\Dialog\UserDeleteDialogController;
 use Kirby\Panel\Controller\Dialog\UserTotpDisableDialogController;
+use Kirby\Panel\Controller\Dialog\UserWebauthnDialogController;
 
 return [
 	'user.create' => [
@@ -47,6 +48,10 @@ return [
 	'user.totp.disable' => [
 		'pattern' => 'users/(:any)/totp/disable',
 		'action'  => UserTotpDisableDialogController::class
+	],
+	'user.webauthn' => [
+		'pattern' => 'users/(:any)/webauthn',
+		'action'  => UserWebauthnDialogController::class
 	],
 
 	'user.fields' => [

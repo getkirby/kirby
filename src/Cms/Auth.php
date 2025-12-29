@@ -550,7 +550,7 @@ class Auth
 	 */
 	public function verifyChallenge(
 		#[SensitiveParameter]
-		string $code
+		array|string|null $code
 	): User {
 		try {
 			$session   = $this->kirby->session();

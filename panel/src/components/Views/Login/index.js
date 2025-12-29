@@ -1,6 +1,7 @@
 import LoginAlert from "./LoginAlert.vue";
 import LoginCodeChallenge from "./LoginCodeChallenge.vue";
 import LoginPasswordMethod from "./LoginPasswordMethod.vue";
+import WebauthnChallenge from "./WebauthnChallenge.vue";
 import LoginView from "./LoginView.vue";
 
 /** deprecated */
@@ -12,6 +13,7 @@ export default {
 		app.component("k-login-alert", LoginAlert);
 		app.component("k-login-code-challenge", LoginCodeChallenge);
 		app.component("k-login-password-method", LoginPasswordMethod);
+		app.component("k-login-webauthn-challenge", WebauthnChallenge);
 		app.component("k-login-view", LoginView);
 
 		/** deprecated */

@@ -22,6 +22,7 @@ class Status
 		protected string|null $email = null,
 		protected string|null $mode = null,
 		protected string|null $challenge = null,
+		protected array|null $data = null,
 		protected string|null $fallback = null,
 	) {
 	}
@@ -57,6 +58,11 @@ class Status
 		return $this->challenge ?? $this->fallback;
 	}
 
+	public function data(): array|null
+	{
+		return $this->data;
+	}
+
 	public function email(): string|null
 	{
 		return $this->email;
@@ -84,11 +90,12 @@ class Status
 
 		if ($email !== null) {
 			return static::pending(
-				kirby: $kirby,
-				email: $email,
-				mode: $session->get('kirby.challenge.mode'),
+				kirby:     $kirby,
+				email:     $email,
+				mode:      $session->get('kirby.challenge.mode'),
 				challenge: $session->get('kirby.challenge.type'),
-				fallback: $challenges !== [] ? end($challenges) : null
+				data:      $session->get('kirby.challenge.data'),
+				fallback:  $challenges !== [] ? end($challenges) : null
 			);
 		}
 
@@ -119,6 +126,7 @@ class Status
 		string $email,
 		string|null $mode,
 		string|null $challenge,
+		array|null $data,
 		string|null $fallback
 	): static {
 		return new static(
@@ -127,6 +135,7 @@ class Status
 			email:     $email,
 			mode:      $mode,
 			challenge: $challenge,
+			data:      $data,
 			fallback:  $fallback
 		);
 	}
@@ -140,6 +149,7 @@ class Status
 	{
 		return [
 			'challenge' => $this->challenge(),
+			'data'      => $this->data(),
 			'email'     => $this->email(),
 			'mode'      => $this->mode(),
 			'status'    => $this->state()->value

@@ -114,17 +114,30 @@ trait UserActions
 	/**
 	 * Changes the user's TOTP secret
 	 * @since 4.0.0
+	 * @deprecated 6.0.0 Use `self::changeSecret()` instead
 	 */
 	public function changeTotp(
 		#[SensitiveParameter]
 		string|null $secret
 	): static {
-		return $this->commit('changeTotp', ['user' => $this, 'secret' => $secret], function ($user, $secret) {
-			$this->writeSecret('totp', $secret);
+		return $this->changeSecret('totp', $secret);
+	}
 
-			// keep the user logged in to the current browser
-			// if they changed their own TOTP secret
-			// (regenerate the session token, update the login timestamp)
+	/**
+	 * Stores secrets for the user
+	 * @since 6.0.0
+	 */
+	public function changeSecret(string $secret, mixed $content): static
+	{
+		return $this->commit('changeSecrets', [
+			'user'        => $this,
+			'secret'      => $secret,
+			'credentials' => $content
+		], function ($user, $secret, $credentials) {
+			$this->writeSecret($secret, $credentials);
+
+			// as secrets can be auth-relevant,
+			// ensure logged-in user stays logged in
 			if ($user->isLoggedIn() === true) {
 				$user->loginPasswordless();
 			}

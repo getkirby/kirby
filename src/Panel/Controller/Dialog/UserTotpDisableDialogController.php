@@ -85,7 +85,7 @@ class UserTotpDisableDialogController extends UserDialogController
 			}
 
 			// Remove the TOTP secret from the account
-			$this->user->changeTotp(null);
+			$this->user->changeSecret('totp', null);
 
 			return [
 				'message' => $this->i18n('login.totp.disable.success')

@@ -93,7 +93,8 @@ class LoginViewController extends ViewController
 
 		return [
 			'email'     => $status->email(),
-			'challenge' => $status->challenge()
+			'challenge' => $status->challenge(),
+			'data'      => $status->data()
 		];
 	}
 

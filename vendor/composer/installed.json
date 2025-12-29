@@ -387,6 +387,54 @@
             "install-path": "../laminas/laminas-escaper"
         },
         {
+            "name": "lbuchs/webauthn",
+            "version": "v2.2.0",
+            "version_normalized": "2.2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lbuchs/WebAuthn.git",
+                "reference": "20adb4a240c3997bd8cac7dc4dde38ab0bea0ed1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lbuchs/WebAuthn/zipball/20adb4a240c3997bd8cac7dc4dde38ab0bea0ed1",
+                "reference": "20adb4a240c3997bd8cac7dc4dde38ab0bea0ed1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "time": "2024-07-04T07:17:40+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "lbuchs\\WebAuthn\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lukas Buchs",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple PHP WebAuthn (FIDO2) server library",
+            "homepage": "https://github.com/lbuchs/webauthn",
+            "keywords": [
+                "Authentication",
+                "webauthn"
+            ],
+            "support": {
+                "issues": "https://github.com/lbuchs/WebAuthn/issues",
+                "source": "https://github.com/lbuchs/WebAuthn/tree/v2.2.0"
+            },
+            "install-path": "../lbuchs/webauthn"
+        },
+        {
             "name": "league/color-extractor",
             "version": "0.4.0",
             "version_normalized": "0.4.0.0",
