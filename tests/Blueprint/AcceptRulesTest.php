@@ -107,6 +107,35 @@ class AcceptRulesTest extends BlueprintTest
 		$this->assertSame(['a', 'b', 'c', 'd', 'e'], $rules->acceptedFileTemplates());
 	}
 
+	public function testAcceptedFileTemplatesFromFieldsWithDifferentParent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/a' => [
+					'name' => 'a',
+				]
+			]
+		]);
+
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'fields' => [
+				'a' => [
+					'type' => 'files',
+					'uploads' => [
+						'parent'   => 'site',
+						'template' => 'a'
+					]
+				],
+			]
+		]);
+
+		$rules = new AcceptRules($blueprint);
+
+		$this->assertSame([], $rules->acceptedFileTemplates());
+	}
+
 	public function testAcceptedFileTemplatesFromFieldsAndSections(): void
 	{
 		$this->app = $this->app->clone([
@@ -173,6 +202,10 @@ class AcceptRulesTest extends BlueprintTest
 				'a' => [
 					'type'     => 'files',
 					'template' => 'a'
+				],
+				'b' => [
+					'type'     => 'files',
+					'template' => 'b'
 				],
 			]
 		]);
