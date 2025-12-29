@@ -25,7 +25,6 @@ class InstallationViewControllerTest extends TestCase
 			'accounts' => true,
 			'content'  => true,
 			'media'    => true,
-			'php'      => true,
 			'sessions' => true,
 			'extensions' => [
 				'ctype'     => true,
