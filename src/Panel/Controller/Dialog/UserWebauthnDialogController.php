@@ -2,251 +2,115 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\App;
-use Kirby\Cms\Find;
 use Kirby\Cms\User;
-use Kirby\Data\Json;
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
+use Kirby\Auth\Service\Webauthn;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Ui\Dialog;
-use lbuchs\WebAuthn\Binary\ByteBuffer;
-use lbuchs\WebAuthn\WebAuthn;
-use lbuchs\WebAuthn\WebAuthnException;
 
 class UserWebauthnDialogController extends UserDialogController
 {
-	protected WebAuthn $webauthn;
-	protected User $currentUser;
+	protected Webauthn $webauthn;
 
-	public function __construct(User $user)
-	{
+	public function __construct(
+		User $user
+	) {
 		parent::__construct($user);
 
-		ByteBuffer::$useBase64UrlEncoding = true;
-		$this->currentUser                 = $this->kirby->user();
-		$this->webauthn                    = new WebAuthn(
-			$this->kirby->site()->title()->value(),
-			$this->rpId(),
-			['none']
-		);
-	}
-
-	public static function factory(string|null $id = null): static
-	{
-		return new static($id ? Find::user($id) : App::instance()->user());
-	}
-
-	public function load(): Dialog
-	{
-		$this->ensurePermission();
-
-		return new Dialog(
-			component: 'k-webauthn-dialog',
-			size: 'large',
-			submitButton: false,
-			credentials: $this->credentials(),
-			options: $this->creationOptions()
-		);
-	}
-
-	public function submit(): true
-	{
-		$this->ensurePermission();
-
-		match ($this->request->get('action')) {
-			'create' => $this->register(),
-			'remove' => $this->remove(),
-			default  => throw new InvalidArgumentException(
-				message: 'Invalid WebAuthn action'
-			)
-		};
-
-		return true;
-	}
-
-	protected function base64UrlDecode(string|null $data): string
-	{
-		$data ??= '';
-		$padded = strtr($data, '-_', '+/');
-		$padLen = (4 - strlen($padded) % 4) % 4;
-		$padded .= str_repeat('=', $padLen);
-
-		$decoded = base64_decode($padded, true);
-
-		if ($decoded === false) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.data.invalid',
-				fallback: 'Invalid passkey data'
+		// ensure user has the necessary permissions
+		if (
+			$this->kirby->user()->is($this->user) !== true &&
+			$this->kirby->user()->isAdmin() !== true
+		) {
+			throw new PermissionException(
+				message: 'You are not allowed to manage passkeys for this user'
 			);
 		}
 
-		return $decoded;
+		$this->webauthn = Webauthn::for($user);
 	}
 
-	protected function base64UrlEncode(string $data): string
+	/**
+	 * Creates a new passkey and stores it
+	 * inside the user secrets
+	 */
+	protected function create(): void
 	{
-		return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-	}
-
-	protected function creationOptions(): array
-	{
-		$options = $this->webauthn->getCreateArgs(
-			$this->user->id(),
-			$this->user->email() ?? $this->user->id(),
-			$this->user->name()->or($this->user->email() ?? $this->user->id())
+		$credentials = $this->credentials();
+		$credential  = $this->request->get('credential');
+		$challenge   = $this->kirby->session()->pull($this->session());
+		$credential  = $this->webauthn->verifyRegister(
+			$credential,
+			$challenge,
 		);
 
-		// prevent re-registering existing credentials
-		$exclude = [];
-		foreach ($this->storedCredentials() as $credential) {
-			if ($id = $credential['id'] ?? null) {
-				$exclude[] = ByteBuffer::fromBase64Url($id);
-			}
+		// inject name into new credential (incl. fallback)
+		$name = $this->request->get('name', '');
+
+		if ($name === '') {
+			$name = 'Key ' . (count($credentials) + 1);
 		}
 
-		$options->publicKey->excludeCredentials = $exclude;
-
-		// persist the challenge to validate the response later
-		$this->kirby->session()->set(
-			$this->sessionKey(),
-			$this->base64UrlEncode($this->webauthn->getChallenge()->getBinaryString())
-		);
-
-		// Convert to array to satisfy strict return types and JSON encoding
-		return Json::decode(Json::encode($options), true);
+		$credentials[] = [...$credential, 'name' => $name];
+		$this->user->changeSecret('webauthn', $credentials);
 	}
 
 	protected function credentials(): array
 	{
-		return array_map(
-			function ($credential) {
-				return [
-					'id'        => $credential['id'],
-					'name'      => $credential['name'] ?? $credential['id'],
-					'createdAt' => $credential['createdAt'] ?? null,
-					'isBackup'  => $credential['isBackedUp'] ?? null
-				];
-			},
-			$this->storedCredentials()
-		);
+		return $this->user->secret('webauthn') ?? [];
 	}
 
-	protected function ensurePermission(): void
+	/**
+	 * Render Webauthn config dialog with current passkeys
+	 */
+	public function load(): Dialog
 	{
-		if ($this->currentUser->is($this->user) === true) {
-			return;
-		}
+		$credentials = $this->credentials();
+		$options     = $this->webauthn->registerOptions($credentials);
 
-		if ($this->currentUser->isAdmin() === true) {
-			return;
-		}
+		// persist the challenge to validate the response later
+		$this->kirby->session()->set($this->session(), $options['challenge']);
 
-		throw new PermissionException(
-			message: 'You are not allowed to manage passkeys for this user'
+		return new Dialog(
+			component: 'k-webauthn-dialog',
+			cancelButton: [
+				'icon' => 'check',
+				'text' => $this->i18n('confirm'),
+			],
+			size: 'medium',
+			submitButton: false,
+			credentials: $credentials,
+			options: $options
 		);
-	}
-
-	protected function register(): void
-	{
-		$payload    = $this->request->get();
-		$credential = $payload['credential'] ?? null;
-
-		if (is_array($credential) === false) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.payload.invalid',
-				fallback: 'Missing passkey data'
-			);
-		}
-
-		$challenge = $this->kirby->session()->pull($this->sessionKey());
-
-		if ($challenge === null) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.challenge.missing',
-				fallback: 'The passkey challenge is missing or expired'
-			);
-		}
-
-		$clientDataJSON     = $this->base64UrlDecode($credential['clientDataJSON'] ?? null);
-		$attestationObject  = $this->base64UrlDecode($credential['attestationObject'] ?? null);
-		$rawId              = $this->base64UrlDecode($credential['rawId'] ?? null);
-		$credentialName     = trim($payload['name'] ?? '') ?: 'Passkey ' . (count($this->storedCredentials()) + 1);
-		$binaryChallenge    = $this->base64UrlDecode($challenge);
-
-		try {
-			$data = $this->webauthn->processCreate(
-				$clientDataJSON,
-				$attestationObject,
-				$binaryChallenge,
-				true,
-				true,
-				false
-			);
-		} catch (WebAuthnException $e) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.register.failed',
-				fallback: $e->getMessage(),
-				previous: $e
-			);
-		}
-
-		$credentials   = $this->storedCredentials();
-		$credentials[] = [
-			'id'          => $this->base64UrlEncode($rawId),
-			'name'        => $credentialName,
-			'publicKey'   => $data->credentialPublicKey,
-			'counter'     => $data->signatureCounter ?? 0,
-			'createdAt'   => time(),
-			'attestation' => $data->attestationFormat ?? null,
-			'isBackedUp'  => $data->isBackedUp ?? null
-		];
-
-		$this->user->changeSecret('webauthn', $credentials);
 	}
 
 	protected function remove(): void
 	{
-		$id = $this->request->get('id');
+		$id          = $this->request->get('id');
+		$credentials = $this->credentials();
+		$remaining   = $this->webauthn->removeCredential($credentials, $id);
 
-		if (is_string($id) === false || $id === '') {
-			throw new InvalidArgumentException(
-				message: 'Passkey id is missing'
-			);
+		if ($remaining === []) {
+			$remaining = null;
 		}
 
-		$remaining = array_values(
-			array_filter(
-				$this->storedCredentials(),
-				fn ($credential) => ($credential['id'] ?? null) !== $id
-			)
-		);
-
-		if (count($remaining) === count($this->storedCredentials())) {
-			throw new NotFoundException(
-				message: 'Passkey could not be found'
-			);
-		}
-
-		$this->user->changeSecret('webauthn', $remaining === [] ? null : $remaining);
+		$this->user->changeSecret('webauthn', $remaining);
 	}
 
-	protected function rpId(): string
+	/**
+	 * Session name for the pending creation challenge
+	 */
+	protected function session(): string
 	{
-		return parse_url($this->kirby->site()->url(), PHP_URL_HOST) ?? 'localhost';
+		return 'kirby.webauthn.' . $this->user->id();
 	}
 
-	protected function sessionKey(): string
+	public function submit(): true
 	{
-		return 'webauthn.challenge.' . $this->user->id();
-	}
+		match ($this->request->get('action')) {
+			'create' => $this->create(),
+			'remove' => $this->remove()
+		};
 
-	protected function storedCredentials(): array
-	{
-		$credentials = $this->user->secret('webauthn');
-
-		return $credentials === null || is_array($credentials) === false
-			? []
-			: array_values($credentials);
+		return true;
 	}
 }

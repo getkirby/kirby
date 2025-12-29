@@ -3,12 +3,8 @@
 namespace Kirby\Auth\Challenge;
 
 use Kirby\Auth\Challenge;
+use Kirby\Auth\Service\Webauthn;
 use Kirby\Cms\User;
-use Kirby\Data\Json;
-use Kirby\Exception\InvalidArgumentException;
-use lbuchs\WebAuthn\Binary\ByteBuffer;
-use lbuchs\WebAuthn\WebAuthn;
-use lbuchs\WebAuthn\WebAuthnException;
 use SensitiveParameter;
 
 /**
@@ -21,39 +17,36 @@ use SensitiveParameter;
  */
 class WebauthnChallenge extends Challenge
 {
+	protected Webauthn $webauthn;
+
+	public function __construct(
+		User $user,
+		string $mode,
+		int|null $timeout = null,
+	){
+		parent::__construct(
+			user: $user,
+			mode: $mode,
+			timeout: $timeout
+		);
+
+		$this->webauthn = Webauthn::for($user);
+	}
+
 	public function create(): null
 	{
-		ByteBuffer::$useBase64UrlEncoding = true;
-
-		$webauthn     = $this->webauthn();
-		$credentials  = $this->credentials();
-		$credentialId = array_column($credentials, 'id');
-		$allow        = array_map(
-			fn ($id) => ByteBuffer::fromBase64Url($id),
-			$credentialId
-		);
-
-		$options = $webauthn->getGetArgs($allow);
-		// ensure rpId is present (some clients fail without it)
-		$options->publicKey->rpId ??= $this->rpId();
-
-		// wrap and normalize to array for the client
-		$publicKey = Json::decode(Json::encode($options->publicKey), true);
-		$options   = ['publicKey' => $publicKey];
-		$challenge = $this->base64UrlEncode(
-			$webauthn->getChallenge()->getBinaryString()
-		);
+		$credentials = $this->credentials();
+		$options     = $this->webauthn->loginOptionsForUser($credentials);
 
 		// persist challenge and options for the login form
-		$this->kirby->session()->set(
-			'kirby.challenge.data',
-			[
-				...$options,
-				'challenge' => $challenge
-			]
-		);
+		$this->kirby->session()->set('kirby.challenge.data', $options);
 
 		return null;
+	}
+
+	protected function credentials(): array
+	{
+		return $this->user->secret('webauthn') ?? [];
 	}
 
 	public static function form(): string
@@ -81,169 +74,20 @@ class WebauthnChallenge extends Challenge
 		#[SensitiveParameter]
 		mixed $code
 	): bool {
-		// allow JSON/string payloads from the client
-		if (is_string($code) === true) {
-			$decoded = Json::decode($code, true);
-			if (is_array($decoded) === true) {
-				$code = $decoded;
-			}
-		}
-
-		if ($code instanceof \stdClass) {
-			$code = (array)$code;
-		}
-
-		if (is_array($code) === false) {
-			return false;
-		}
-
-		ByteBuffer::$useBase64UrlEncoding = true;
-
-		$session = $this->kirby->session();
-		$data    = $session->pull('kirby.challenge.data');
-
-		if (
-			is_array($data) === false ||
-			($data['challenge'] ?? null) === null
-		) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.challenge.missing',
-				fallback: 'The passkey challenge is missing or expired'
-			);
-		}
-
-		$id = $code['id'] ?? null;
-
-		if (is_string($id) === false) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.id.missing',
-				fallback: 'Passkey id is missing'
-			);
-		}
-
 		$credentials = $this->credentials();
-		$credential  = null;
+		$data        = $this->kirby->session()->pull('kirby.challenge.data');
 
-		foreach ($credentials as $entry) {
-			if (($entry['id'] ?? null) === $id) {
-				$credential = $entry;
-				break;
-			}
-		}
+		$result = $this->webauthn->verifyLogin(
+			$credentials,
+			$code,
+			$data['challenge']
+		);
 
-		if ($credential === null) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.id.invalid',
-				fallback: 'Passkey could not be found'
-			);
-		}
-
-		$clientDataJSON    = $this->base64UrlDecode($code['clientDataJSON'] ?? null);
-		$authenticatorData = $this->base64UrlDecode($code['authenticatorData'] ?? null);
-		$signature         = $this->base64UrlDecode($code['signature'] ?? null);
-		$rawId             = $this->base64UrlDecode($code['rawId'] ?? null);
-		$userHandle        = $code['userHandle'] ?? null;
-		$publicKey         = $credential['publicKey'] ?? null;
-		$counter           = $credential['counter'] ?? null;
-
-		if (is_string($publicKey) === false) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.publicKey.missing',
-				fallback: 'Passkey is incomplete'
-			);
-		}
-
-		// ensure the credential IDs match the stored ID
-		if ($rawId !== $this->base64UrlDecode($credential['id'])) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.id.invalid',
-				fallback: 'Passkey id does not match'
-			);
-		}
-
-		$challenge = $this->base64UrlDecode($data['challenge']);
-		$webauthn  = $this->webauthn();
-
-		try {
-			$webauthn->processGet(
-				$clientDataJSON,
-				$authenticatorData,
-				$signature,
-				$publicKey,
-				$challenge,
-				$counter,
-				true,
-				true
-			);
-		} catch (WebAuthnException $e) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.verify.failed',
-				fallback: $e->getMessage(),
-				previous: $e
-			);
-		}
-
-		// update the signature counter
-		$newCounter = $webauthn->getSignatureCounter();
-
-		if ($newCounter !== null) {
-			foreach ($credentials as &$entry) {
-				if (($entry['id'] ?? null) === $id) {
-					$entry['counter'] = $newCounter;
-					break;
-				}
-			}
-
-			$this->user->changeSecret('webauthn', $credentials);
+		if ($result['counter'] !== null) {
+			$this->user->changeSecret('webauthn', $result['credentials']);
 		}
 
 		return true;
 	}
 
-	protected function base64UrlDecode(string|null $data): string
-	{
-		$data ??= '';
-		$padded = strtr($data, '-_', '+/');
-		$padLen = (4 - strlen($padded) % 4) % 4;
-		$padded .= str_repeat('=', $padLen);
-
-		$decoded = base64_decode($padded, true);
-
-		if ($decoded === false) {
-			throw new InvalidArgumentException(
-				key: 'webauthn.data.invalid',
-				fallback: 'Invalid passkey data'
-			);
-		}
-
-		return $decoded;
-	}
-
-	protected function base64UrlEncode(string $data): string
-	{
-		return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-	}
-
-	protected function credentials(): array
-	{
-		$credentials = $this->user->secret('webauthn');
-
-		return $credentials === null || is_array($credentials) === false
-			? []
-			: array_values($credentials);
-	}
-
-	protected function rpId(): string
-	{
-		return parse_url($this->kirby->site()->url(), PHP_URL_HOST) ?? 'localhost';
-	}
-
-	protected function webauthn(): WebAuthn
-	{
-		return new WebAuthn(
-			$this->kirby->site()->title()->value(),
-			$this->rpId(),
-			['none']
-		);
-	}
 }

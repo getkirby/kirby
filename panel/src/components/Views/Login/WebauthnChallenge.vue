@@ -35,8 +35,8 @@
 <script>
 import { props as LoginProps } from "./LoginView.vue";
 import {
-	normalizePublicKeyOptions,
-	serializeAssertionCredential,
+	normalizePublicKey,
+	serializeAssertion,
 	supported
 } from "@/helpers/webauthn.js";
 
@@ -63,7 +63,7 @@ export default {
 			this.isProcessing = true;
 
 			try {
-				const options = normalizePublicKeyOptions(
+				const options = normalizePublicKey(
 					this.pending.data?.options ?? this.pending.data ?? {}
 				);
 
@@ -74,7 +74,7 @@ export default {
 					return;
 				}
 
-				const payload = serializeAssertionCredential(assertion);
+				const payload = serializeAssertion(assertion);
 				await this.$api.auth.verifyCode(payload);
 
 				this.$panel.notification.success({

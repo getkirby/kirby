@@ -2,9 +2,6 @@
 	<k-dialog
 		ref="dialog"
 		v-bind="$props"
-		:cancel-button="{ text: $t('confirm'), icon: 'check' }"
-		:submit-button="false"
-		size="medium"
 		class="k-webauthn-dialog"
 		@cancel="$emit('cancel')"
 		@submit.prevent="create"
@@ -71,8 +68,8 @@
 <script>
 import Dialog from "@/mixins/dialog.js";
 import {
-	normalizePublicKeyOptions,
-	serializeAttestationCredential,
+	normalizePublicKey,
+	serializeAttestation,
 	supported
 } from "@/helpers/webauthn.js";
 
@@ -106,13 +103,13 @@ export default {
 			this.isCreating = true;
 
 			try {
-				const options = normalizePublicKeyOptions(this.options);
+				const options = normalizePublicKey(this.options);
 				const credential = await navigator.credentials.create(options);
 
 				await this.$panel.dialog.post({
 					action: "create",
 					name: this.label,
-					credential: serializeAttestationCredential(credential)
+					credential: serializeAttestation(credential)
 				});
 
 				this.label = "";
@@ -143,6 +140,9 @@ export default {
 </script>
 
 <style>
+.k-webauthn-dialog .k-definition dt {
+	white-space: nowrap;
+}
 .k-webauthn-dialog .k-definition dd {
 	color: var(--color-text-dimmed);
 	display: flex;

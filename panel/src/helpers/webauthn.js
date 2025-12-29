@@ -1,157 +1,96 @@
 /**
  * WebAuthn helper utilities shared between registration and login flows.
  *
- * Handles the string/buffer conversion quirks of the library and
- * keeps browser-facing options in the shape expected by the WebAuthn APIs.
+ * Minimal conversions to move between base64url strings and ArrayBuffers
+ * for the WebAuthn APIs and our backend.
  */
-import { clone } from "@/helpers/object.js";
 
-const RFC_PREFIX = "=?BINARY?B?";
-const RFC_SUFFIX = "?=";
-
-/**
- * Convert a base64/base64url (or RFC 1342) string to an ArrayBuffer.
- */
-function base64UrlToBuffer(base64) {
-	if (typeof base64 !== "string") {
-		return base64;
+function b64ToBuffer(str) {
+	if (typeof str !== "string") {
+		return str;
 	}
 
-	let normalized = base64;
+	const RFC_PREFIX = "=?BINARY?B?";
+	const RFC_SUFFIX = "?=";
 
-	if (normalized.startsWith(RFC_PREFIX) && normalized.endsWith(RFC_SUFFIX)) {
-		normalized = normalized.slice(RFC_PREFIX.length, -RFC_SUFFIX.length);
+	if (str.startsWith(RFC_PREFIX) && str.endsWith(RFC_SUFFIX)) {
+		str = str.slice(RFC_PREFIX.length, -RFC_SUFFIX.length);
 	}
 
-	normalized = normalized.replace(/-/g, "+").replace(/_/g, "/");
+	const normalized =
+		str.replace(/-/g, "+").replace(/_/g, "/") +
+		"=".repeat((4 - (str.length % 4)) % 4);
 
-	const padding = normalized.length % 4;
-
-	if (padding) {
-		normalized += "=".repeat(4 - padding);
-	}
-
-	const binary = atob(normalized);
-	const bytes = new Uint8Array(binary.length);
-
-	for (let i = 0; i < binary.length; i++) {
-		bytes[i] = binary.charCodeAt(i);
-	}
-
-	return bytes.buffer;
+	return Uint8Array.from(atob(normalized), (char) => char.charCodeAt(0)).buffer;
 }
 
-/**
- * Convert an ArrayBuffer into a base64url string
- */
-function bufferToBase64Url(buffer) {
+function bufferToB64(buffer) {
 	if (buffer === null || buffer === undefined) {
 		return null;
 	}
 
-	const bytes = new Uint8Array(buffer);
-	let binary = "";
-
-	for (const byte of bytes) {
-		binary += String.fromCharCode(byte);
-	}
-
-	return btoa(binary)
+	return btoa(String.fromCharCode(...new Uint8Array(buffer)))
 		.replace(/\+/g, "-")
 		.replace(/\//g, "_")
 		.replace(/=+$/, "");
 }
 
-/**
- * Convert specific keys on the target object
- * from base64/base64url to ArrayBuffer
- */
-function toArrayBuffer(target, keys) {
-	if (!target) {
-		return;
-	}
-
-	for (const key of keys) {
-		if (target[key]) {
-			target[key] = base64UrlToBuffer(target[key]);
-		}
-	}
-}
-
-/**
- * Normalize and decode the WebAuthn publicKey options so they can be
- * passed directly to navigator.credentials.create/get.
- */
-export function normalizePublicKeyOptions(input) {
-	const options = clone(input ?? {});
+export function normalizePublicKey(options) {
 	const publicKey = options.publicKey ?? options;
 
-	// unpack challenges and ids
 	if (publicKey.challenge) {
-		publicKey.challenge = base64UrlToBuffer(publicKey.challenge);
+		publicKey.challenge = b64ToBuffer(publicKey.challenge);
 	}
 
 	if (publicKey.user?.id) {
-		publicKey.user.id = base64UrlToBuffer(publicKey.user.id);
+		publicKey.user.id = b64ToBuffer(publicKey.user.id);
 	}
 
-	// navigator.credentials.create excludes
 	if (Array.isArray(publicKey.excludeCredentials)) {
 		publicKey.excludeCredentials = publicKey.excludeCredentials
-			.filter((item) => item && typeof item === "object")
-			.map((item) => {
-				const normalized = { ...item };
-				toArrayBuffer(normalized, ["id"]);
-				return normalized;
-			});
+			.filter((item) => item && typeof item.id === "string")
+			.map((item) => ({ ...item, id: b64ToBuffer(item.id) }));
 	}
 
-	// navigator.credentials.get allows
 	if (Array.isArray(publicKey.allowCredentials)) {
 		publicKey.allowCredentials = publicKey.allowCredentials
-			.filter((item) => item && typeof item === "object")
-			.map((item) => {
-				const normalized = { ...item };
-				toArrayBuffer(normalized, ["id"]);
-				return normalized;
-			});
+			.filter((item) => item && typeof item.id === "string")
+			.map((item) => ({
+				...item,
+				id: b64ToBuffer(item.id)
+			}));
 	}
 
 	return { publicKey };
 }
 
-/**
- * Serialize a credential returned from navigator.credentials.create
- * into a payload suitable for the backend (base64url encoded).
- */
-export function serializeAttestationCredential(credential) {
+export function serializeAttestation(credential) {
 	return {
 		id: credential.id,
-		rawId: bufferToBase64Url(credential.rawId),
+		rawId: bufferToB64(credential.rawId),
 		type: credential.type,
-		clientDataJSON: bufferToBase64Url(credential.response.clientDataJSON),
-		attestationObject: bufferToBase64Url(credential.response.attestationObject)
+		clientDataJSON: bufferToB64(credential.response.clientDataJSON),
+		attestationObject: bufferToB64(credential.response.attestationObject)
 	};
 }
 
-/**
- * Serialize a credential returned from navigator.credentials.get
- * into a payload suitable for the backend (base64url encoded).
- */
-export function serializeAssertionCredential(credential) {
+export function serializeAssertion(credential) {
 	return {
 		id: credential.id,
-		rawId: bufferToBase64Url(credential.rawId),
+		rawId: bufferToB64(credential.rawId),
 		type: credential.type,
-		clientDataJSON: bufferToBase64Url(credential.response.clientDataJSON),
-		authenticatorData: bufferToBase64Url(credential.response.authenticatorData),
-		signature: bufferToBase64Url(credential.response.signature),
+		clientDataJSON: bufferToB64(credential.response.clientDataJSON),
+		authenticatorData: bufferToB64(credential.response.authenticatorData),
+		signature: bufferToB64(credential.response.signature),
 		userHandle: credential.response.userHandle
-			? bufferToBase64Url(credential.response.userHandle)
+			? bufferToB64(credential.response.userHandle)
 			: null
 	};
 }
 
+/**
+ * Checks whether passkeys are supported by the browser
+ */
 export function supported() {
 	return (
 		typeof window !== "undefined" &&

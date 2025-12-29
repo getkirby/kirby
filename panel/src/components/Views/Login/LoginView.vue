@@ -99,19 +99,12 @@ export default {
 			this.$panel.view.refresh({ query: { method } });
 		},
 		async onError(error) {
-			if (error === null) {
-				this.issue = null;
-				return;
+			// reset from a challenge component back to Login
+			if (error?.details?.challengeDestroyed === true) {
+				await this.$panel.reload({ globals: ["system"] });
 			}
 
-			if (error.details.challengeDestroyed === true) {
-				// reset from the LoginCode component back to Login
-				await this.$panel.reload({
-					globals: ["system"]
-				});
-			}
-
-			this.issue = error.message;
+			this.issue = error?.message ?? null;
 		}
 	}
 };
