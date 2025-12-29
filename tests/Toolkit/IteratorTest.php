@@ -17,16 +17,6 @@ class IteratorTest extends TestCase
 		$this->assertSame($expected, $iterator->data);
 	}
 
-	public function testKey(): void
-	{
-		$iterator = new Iterator([
-			'one' => 'eins',
-			'two' => 'zwei',
-		]);
-
-		$this->assertSame('one', $iterator->key());
-	}
-
 	public function testKeys(): void
 	{
 		$iterator = new Iterator([
@@ -40,64 +30,6 @@ class IteratorTest extends TestCase
 			'two',
 			'three'
 		], $iterator->keys());
-	}
-
-	public function testCurrent(): void
-	{
-		$iterator = new Iterator([
-			'one' => 'eins',
-			'two' => 'zwei',
-		]);
-
-		$this->assertSame('eins', $iterator->current());
-	}
-
-	public function testPrevNext(): void
-	{
-		$iterator = new Iterator([
-			'one'   => 'eins',
-			'two'   => 'zwei',
-			'three' => 'drei'
-		]);
-
-		$this->assertSame('eins', $iterator->current());
-
-		$iterator->next();
-		$this->assertSame('zwei', $iterator->current());
-
-		$iterator->next();
-		$this->assertSame('drei', $iterator->current());
-
-		$iterator->prev();
-		$this->assertSame('zwei', $iterator->current());
-
-		$iterator->prev();
-		$this->assertSame('eins', $iterator->current());
-	}
-
-	public function testRewind(): void
-	{
-		$iterator = new Iterator([
-			'one'   => 'eins',
-			'two'   => 'zwei',
-			'three' => 'drei'
-		]);
-
-		$iterator->next();
-		$iterator->next();
-		$this->assertSame('drei', $iterator->current());
-
-		$iterator->rewind();
-		$this->assertSame('eins', $iterator->current());
-	}
-
-	public function testValid(): void
-	{
-		$iterator = new Iterator([]);
-		$this->assertFalse($iterator->valid());
-
-		$iterator = new Iterator(['one' => 'eins']);
-		$this->assertTrue($iterator->valid());
 	}
 
 	public function testCount(): void

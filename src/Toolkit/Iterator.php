@@ -45,6 +45,8 @@ class Iterator implements Countable, IteratorAggregate
 
 	/**
 	 * Returns the current key
+	 * @deprecated
+	 * @todo Remove in v6
 	 */
 	public function key(): int|string|null
 	{
@@ -61,6 +63,8 @@ class Iterator implements Countable, IteratorAggregate
 
 	/**
 	 * Returns the current element
+	 * @deprecated
+	 * @todo Remove in v6
 	 * @return TValue
 	 */
 	public function current(): mixed
@@ -71,6 +75,8 @@ class Iterator implements Countable, IteratorAggregate
 	/**
 	 * Moves the cursor to the previous element
 	 * and returns it
+	 * @deprecated
+	 * @todo Remove in v6
 	 * @return TValue
 	 */
 	public function prev(): mixed
@@ -81,6 +87,8 @@ class Iterator implements Countable, IteratorAggregate
 	/**
 	 * Moves the cursor to the next element
 	 * and returns it
+	 * @deprecated
+	 * @todo Remove in v6
 	 * @return TValue
 	 */
 	public function next(): mixed
@@ -90,6 +98,8 @@ class Iterator implements Countable, IteratorAggregate
 
 	/**
 	 * Moves the cursor to the first element
+	 * @deprecated
+	 * @todo Remove in v6
 	 */
 	public function rewind(): void
 	{
@@ -98,6 +108,8 @@ class Iterator implements Countable, IteratorAggregate
 
 	/**
 	 * Checks if the current element is valid
+	 * @deprecated
+	 * @todo Remove in v6
 	 */
 	public function valid(): bool
 	{
