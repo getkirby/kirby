@@ -521,7 +521,7 @@ class Collection extends Iterator implements Stringable
 				$value = $field($item);
 
 				// make sure that there's always a proper value to group by
-				if (!$value) {
+				if ($value === null || $value === false) {
 					throw new Exception(
 						message: 'Invalid grouping value for key: ' . $key
 					);
