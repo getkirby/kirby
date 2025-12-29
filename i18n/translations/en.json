@@ -9,7 +9,11 @@
 	"alpha": "Alpha",
 	"author": "Author",
 	"avatar": "Profile picture",
+
 	"back": "Back",
+
+	"buttons.empty": "No buttons",
+
 	"cancel": "Cancel",
 	"change": "Change",
 	"close": "Close",
