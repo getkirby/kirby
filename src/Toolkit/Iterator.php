@@ -4,6 +4,7 @@ namespace Kirby\Toolkit;
 
 use ArrayIterator;
 use Countable;
+use Iterator as PhpIterator;
 use IteratorAggregate;
 
 /**
@@ -34,10 +35,10 @@ class Iterator implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * Get an iterator for the items.
+	 * Returns an iterator for the elements
 	 * @return \ArrayIterator<TKey, TValue>
 	 */
-	public function getIterator(): ArrayIterator
+	public function getIterator(): PhpIterator
 	{
 		return new ArrayIterator($this->data);
 	}
