@@ -17,6 +17,26 @@ class IteratorTest extends TestCase
 		$this->assertSame($expected, $iterator->data);
 	}
 
+	public function testIterate(): void
+	{
+		$iterator = new Iterator([
+			'one' => 'eins',
+			'two' => 'zwei',
+		]);
+
+		$i = 0;
+		$keys = $values = [];
+		foreach ($iterator as $key => $value) {
+			$keys[] = $key;
+			$values[] = $value;
+			$i++;
+		}
+
+		$this->assertSame(2, $i);
+		$this->assertSame(['one', 'two'], $keys);
+		$this->assertSame(['eins', 'zwei'], $values);
+	}
+
 	public function testKeys(): void
 	{
 		$iterator = new Iterator([
