@@ -48,10 +48,10 @@ export default {
 	--button-align: start;
 	--button-height: var(--input-height);
 	--button-width: 100%;
-	box-shadow: var(--item-shadow);
 }
 .k-buttons-field .k-button:not([data-theme]) {
 	--button-color-back: var(--item-color-back);
+	box-shadow: var(--shadow);
 }
 .k-buttons-field .k-button .k-button-arrow {
 	margin-inline-start: auto;
