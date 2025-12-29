@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Auth;
 use Kirby\Cms\User;
 use Kirby\Session\Session;
+use Kirby\Toolkit\Str;
 use SensitiveParameter;
 
 /**
@@ -109,9 +110,9 @@ abstract class Challenge
 		return $this->timeout;
 	}
 
-	public function type(): string
+	public static function type(): string
 	{
-		return strtolower(basename(str_replace(['\\', 'Challenge'], ['/', ''], static::class)));
+		return Str::camelToKebab(lcfirst(basename(str_replace(['\\', 'Challenge'], ['/', ''], static::class))));
 	}
 
 	/**

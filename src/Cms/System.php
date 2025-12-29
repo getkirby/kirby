@@ -237,6 +237,7 @@ class System
 
 	/**
 	 * Check if the Panel has 2FA activated
+	 * @deprecated 6.0.0
 	 */
 	public function is2FA(): bool
 	{
@@ -245,6 +246,7 @@ class System
 
 	/**
 	 * Check if the Panel has 2FA with TOTP activated
+	 * @deprecated 6.0.0
 	 */
 	public function is2FAWithTOTP(): bool
 	{

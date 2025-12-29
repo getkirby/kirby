@@ -43,10 +43,7 @@ class Methods
 			return null;
 		}
 
-		return new $class(
-			type:    $type,
-			options: $config
-		);
+		return new $class(options: $config);
 	}
 
 	public function attempt(
