@@ -49,7 +49,7 @@ export default {
 	--button-height: var(--input-height);
 	--button-width: 100%;
 }
-.k-buttons-field .k-button:not([data-theme]) {
+.k-buttons-field .k-button:is(:not([data-theme]), [data-theme$="-icon"]) {
 	--button-color-back: var(--item-color-back);
 	box-shadow: var(--shadow);
 }
