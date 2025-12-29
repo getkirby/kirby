@@ -50,18 +50,19 @@ class UserWebauthnDialogController extends UserDialogController
 		);
 	}
 
-	public function submit(): array
+	public function submit(): true
 	{
 		$this->ensurePermission();
 
-		return match ($this->request->get('action')) {
+		match ($this->request->get('action')) {
 			'create' => $this->register(),
 			'remove' => $this->remove(),
-			default    => throw new InvalidArgumentException(
-				key: 'webauthn.action.invalid',
-				fallback: 'Invalid WebAuthn action'
+			default  => throw new InvalidArgumentException(
+				message: 'Invalid WebAuthn action'
 			)
 		};
+
+		return true;
 	}
 
 	protected function base64UrlDecode(string|null $data): string
@@ -146,7 +147,7 @@ class UserWebauthnDialogController extends UserDialogController
 		);
 	}
 
-	protected function register(): array
+	protected function register(): void
 	{
 		$payload    = $this->request->get();
 		$credential = $payload['credential'] ?? null;
@@ -202,13 +203,9 @@ class UserWebauthnDialogController extends UserDialogController
 		];
 
 		$this->user->changeSecret('webauthn', $credentials);
-
-		return [
-			'message' => 'Passkey created'
-		];
 	}
 
-	protected function remove(): array
+	protected function remove(): void
 	{
 		$id = $this->request->get('id');
 
@@ -232,10 +229,6 @@ class UserWebauthnDialogController extends UserDialogController
 		}
 
 		$this->user->changeSecret('webauthn', $remaining === [] ? null : $remaining);
-
-		return [
-			'message' => 'Passkey removed'
-		];
 	}
 
 	protected function rpId(): string

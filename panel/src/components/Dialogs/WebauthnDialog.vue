@@ -109,7 +109,8 @@ export default {
 				const options = normalizePublicKeyOptions(this.options);
 				const credential = await navigator.credentials.create(options);
 
-				await this.submit("create", {
+				await this.$panel.dialog.post({
+					action: "create",
 					name: this.label,
 					credential: serializeAttestationCredential(credential)
 				});
@@ -126,21 +127,16 @@ export default {
 			this.isRemoving = id;
 
 			try {
-				await this.submit("remove", { id });
+				await this.$panel.dialog.post({
+					action: "remove",
+					id
+				});
 				await this.$panel.dialog.refresh();
 			} catch (error) {
 				this.$panel.notification.error(error?.message || error);
 			} finally {
 				this.isRemoving = false;
 			}
-		},
-		async submit(action, payload) {
-			const response = await this.$panel.dialog.post({
-				action,
-				...payload
-			});
-
-			this.$panel.notification.success(response.message);
 		}
 	}
 };
