@@ -8,6 +8,7 @@ use Kirby\Cms\Find;
 use Kirby\Cms\User;
 use Kirby\Panel\Controller\DrawerController;
 use Kirby\Panel\Ui\Drawer;
+use Kirby\Toolkit\A;
 
 /**
  * @package   Kirby Panel
@@ -39,7 +40,13 @@ class UserSecurityDrawerController extends DrawerController
 
 		foreach ($challenges as $challenge) {
 			$challenge = Challenge::handler($challenge);
-			$buttons   = [...$buttons, ...$challenge::settings($this->user)];
+			$buttons   = [...$buttons, ...A::map(
+				$challenge::settings($this->user),
+				fn ($button) => [
+					...$button,
+					'theme' => $challenge::isAvailable($this->user) ? 'info-icon' : 'passive-icon'
+				]
+			)];
 		}
 
 		return $buttons;
