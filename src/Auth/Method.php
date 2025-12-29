@@ -58,6 +58,11 @@ abstract class Method
 		return true;
 	}
 
+	public static function settings(User $user): array
+	{
+		return [];
+	}
+
 	/**
 	 * Returns the identifier of the method (e.g. 'password')
 	 */

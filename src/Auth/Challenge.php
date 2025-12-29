@@ -102,6 +102,11 @@ abstract class Challenge
 		return $this->mode;
 	}
 
+	public static function settings(User $user): array
+	{
+		return [];
+	}
+
 	/**
 	 * Returns the number of seconds the code will be valid for
 	 */

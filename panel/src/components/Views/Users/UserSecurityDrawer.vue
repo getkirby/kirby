@@ -7,8 +7,16 @@
 		@submit="$emit('submit')"
 	>
 		<k-stack gap="var(--spacing-6)">
-			<k-buttons-field label="Sign in methods" :buttons="methods" />
-			<k-buttons-field label="Two-factor methods" :buttons="challenges" />
+			<k-buttons-field
+				v-if="methods.length > 0"
+				label="Sign in methods"
+				:buttons="methods"
+			/>
+			<k-buttons-field
+				v-if="challenges.length > 0"
+				label="Two-factor methods"
+				:buttons="challenges"
+			/>
 		</k-stack>
 	</k-drawer>
 </template>

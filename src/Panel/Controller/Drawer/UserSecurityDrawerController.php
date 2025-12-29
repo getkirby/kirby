@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Controller\Drawer;
 
+use Kirby\Auth\Challenge;
+use Kirby\Cms\Auth;
 use Kirby\Cms\Find;
 use Kirby\Cms\User;
 use Kirby\Panel\Controller\DrawerController;
@@ -21,19 +23,31 @@ class UserSecurityDrawerController extends DrawerController
 	public function __construct(
 		protected User $user
 	) {
+		parent::__construct();
+	}
+
+	public function auth(): Auth
+	{
+		return $this->kirby->auth();
+	}
+
+	public function challenges(): array
+	{
+		$buttons = [];
+
+		$challenges = $this->auth()->challenges()->enabled();
+
+		foreach ($challenges as $challenge) {
+			$challenge = Challenge::handler($challenge);
+			$buttons   = [...$buttons, ...$challenge::settings($this->user)];
+		}
+
+		return $buttons;
 	}
 
 	public static function factory(string $id): static
 	{
 		return new static(user: Find::user($id));
-	}
-
-	public function challenges(): array
-	{
-		return [
-			[ 'text' => 'Authenticator app', 'icon' => 'qr-code' ],
-			[ 'text' => 'Security keys', 'icon' => 'shield' ]
-		];
 	}
 
 	public function load(): Drawer
@@ -45,5 +59,26 @@ class UserSecurityDrawerController extends DrawerController
 			challenges: $this->challenges(),
 			methods: $this->methods()
 		);
+	}
+
+	public function methods(): array
+	{
+		$buttons = [
+			[
+				'text'     => 'Email',
+				'icon'     => 'email',
+				'disabled' => !$this->user->permissions()->can('changeEmail'),
+				'dialog'   => $this->user->panel()->url(true) . '/changeEmail'
+			]
+		];
+
+		$methods = array_keys($this->auth()->methods()->available());
+
+		foreach ($methods as $method) {
+			$method  = $this->auth()->methods()->handler($method);
+			$buttons = [...$buttons, ...$method::settings($this->user)];
+		}
+
+		return $buttons;
 	}
 }

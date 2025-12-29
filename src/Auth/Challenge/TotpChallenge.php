@@ -39,10 +39,21 @@ class TotpChallenge extends Challenge
 	/**
 	 * Checks whether TOTP is available for the user and purpose
 	 */
-	public static function isAvailable(User $user, string $mode): bool
+	public static function isAvailable(User $user, string $mode = 'login'): bool
 	{
 		// user needs to have a TOTP secret set up
 		return $user->secret('totp') !== null;
+	}
+
+	public static function settings(User $user): array
+	{
+		return [
+			[
+				'text'   => 'Set up authenticator app',
+				'icon'   => 'qr-code',
+				'dialog' => $user->panel()->url(true) . '/totp/' . (static::isAvailable($user) ? 'disable' : 'enable'),
+			],
+		];
 	}
 
 	/**
