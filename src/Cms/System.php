@@ -284,7 +284,7 @@ class System
 	public function license(): License
 	{
 		if ($this->license !== null) {
-			return $this->license;
+			return $this->license; // @codeCoverageIgnore
 		}
 
 		$this->license = License::read();
@@ -294,7 +294,7 @@ class System
 			try {
 				$this->license->register(reissue: true);
 			} catch (Throwable) {
-				$this->license->delete();
+				$this->license->delete(); // @codeCoverageIgnore
 			}
 		}
 
