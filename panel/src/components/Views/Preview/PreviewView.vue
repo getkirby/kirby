@@ -25,19 +25,36 @@
 			</k-button-group>
 
 			<k-button-group>
+				<k-button
+					v-if="versionId === 'compare'"
+					:aria-checked="isScrollSyncing"
+					:icon="isScrollSyncing ? 'scroll-to-bottom-fill' : 'scroll-to-bottom'"
+					:theme="isScrollSyncing ? 'info-icon' : 'passive'"
+					:title="$t('preview.browser.scroll')"
+					role="switch"
+					size="sm"
+					variant="filled"
+					class="k-preview-scroll-sync"
+					@click="onScrollSyncing"
+				/>
+
 				<k-view-buttons :buttons="buttons" />
 			</k-button-group>
 		</header>
 		<main class="k-preview-view-grid">
 			<template v-if="versionId === 'compare'">
 				<k-preview-browser
+					ref="latest"
 					v-bind="browserProps('latest')"
 					@discard="onDiscard"
+					@scroll="onScroll('latest', 'changes')"
 					@submit="onSubmit"
 				/>
 				<k-preview-browser
+					ref="changes"
 					v-bind="browserProps('changes')"
 					@discard="onDiscard"
+					@scroll="onScroll('changes', 'latest')"
 					@submit="onSubmit"
 				/>
 			</template>
@@ -62,6 +79,13 @@ export default {
 		versionId: String,
 		src: Object,
 		title: String
+	},
+	data() {
+		const scroll = localStorage.getItem("kirby$preview$scroll", "true");
+
+		return {
+			isScrollSyncing: scroll === "true"
+		};
 	},
 	mounted() {
 		this.$events.on("keydown.esc", this.exit);
@@ -101,6 +125,18 @@ export default {
 
 			const url = this.$api.pages.url(page.id, "preview/" + this.versionId);
 			this.$panel.view.open(url);
+		},
+		onScroll(source, target) {
+			if (this.isScrollSyncing) {
+				this.$refs[target].$refs.browser.contentWindow.scrollTo(
+					0,
+					this.$refs[source].$refs.browser.contentWindow.scrollY
+				);
+			}
+		},
+		onScrollSyncing() {
+			this.isScrollSyncing = !this.isScrollSyncing;
+			localStorage.setItem("kirby$preview$scroll", this.isScrollSyncing);
 		}
 	}
 };
