@@ -15,6 +15,12 @@ class LicenseTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/LicenseTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.License';
 
+	public function setUp(): void
+	{
+		parent::setUp();
+		MockTime::reset();
+	}
+
 	public function code(LicenseType $type = LicenseType::Basic): string
 	{
 		return $type->prefix() . '1234' . Str::random(28);
@@ -77,6 +83,7 @@ class LicenseTest extends TestCase
 			'domain'     => null,
 			'email'      => null,
 			'order'      => null,
+			'expires'    => null,
 			'signature'  => null,
 		], $license->content());
 	}
@@ -159,6 +166,22 @@ class LicenseTest extends TestCase
 		$this->assertTrue($license->isComplete());
 	}
 
+	public function testIsExpired(): void
+	{
+		$license = new License();
+		$this->assertFalse($license->isExpired());
+
+		$license = new License(
+			expires: '9999-12-01',
+		);
+		$this->assertFalse($license->isExpired());
+
+		$license = new License(
+			expires: '2000-12-01',
+		);
+		$this->assertTrue($license->isExpired());
+	}
+
 	public function testIsFree(): void
 	{
 		$license = new License(
@@ -226,8 +249,6 @@ class LicenseTest extends TestCase
 		);
 
 		$this->assertTrue($license->isInactive());
-
-		MockTime::reset();
 	}
 
 	public function testIsLegacy(): void
@@ -340,6 +361,7 @@ class LicenseTest extends TestCase
 			'domain'     => null,
 			'email'      => null,
 			'order'      => null,
+			'expires'    => null,
 			'signature'  => null,
 
 		], License::polyfill([
