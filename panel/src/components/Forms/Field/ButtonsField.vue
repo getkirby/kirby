@@ -42,7 +42,7 @@ export default {
 
 <style>
 .k-buttons-field .k-button-group {
-	gap: var(--spacing-1);
+	gap: 2px;
 }
 .k-buttons-field .k-button {
 	--button-align: start;
