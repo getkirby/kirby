@@ -241,6 +241,19 @@ class CollectionTest extends TestCase
 		$this->assertCount(1, $groupB);
 	}
 
+	public function testGroupWithCallableEmptyString(): void
+	{
+		$collection = new Collection([
+			new MockObject(['id' => 'a', 'group' => '']),
+			new MockObject(['id' => 'b', 'group' => 'test']),
+		]);
+
+		$groups = $collection->group(fn ($item) => $item->group());
+
+		$this->assertCount(2, $groups);
+		$this->assertTrue($groups->has(''));
+	}
+
 	public function testIndexOfWithObject(): void
 	{
 		$collection = new Collection([
