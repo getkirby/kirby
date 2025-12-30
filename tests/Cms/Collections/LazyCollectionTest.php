@@ -47,7 +47,7 @@ class MockLazyCollectionWithInitialization extends MockLazyCollection
 		return parent::hydrateElement($key);
 	}
 
-	public function initializeAll(): void
+	public function initialize(): void
 	{
 		if ($this->initialized === true) {
 			return;
@@ -71,7 +71,7 @@ class LazyCollectionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.LazyCollection';
 
-	public function testHydrateAll(): void
+	public function testHydrate(): void
 	{
 		$collection = new MockLazyCollection();
 		$collection->data = [
@@ -80,7 +80,7 @@ class LazyCollectionTest extends TestCase
 			'c' => null
 		];
 
-		$collection->hydrateAll();
+		$collection->hydrate();
 
 		$this->assertSame([
 			'a' => ['id' => 'a', 'type' => 'static'],
@@ -92,11 +92,11 @@ class LazyCollectionTest extends TestCase
 
 		// another invocation should not hydrate again
 		$collection->iterated = false;
-		$collection->hydrateAll();
+		$collection->hydrate();
 		$this->assertFalse($collection->iterated);
 	}
 
-	public function testInitializeAll(): void
+	public function testInitialize(): void
 	{
 		$collection1 = new MockLazyCollection();
 		$collection1->data = [
@@ -106,7 +106,7 @@ class LazyCollectionTest extends TestCase
 		];
 
 		// should not throw an exception because there is no need to initialize
-		$collection1->initializeAll();
+		$collection1->initialize();
 
 		$collection2 = new MockLazyCollectionWithInitialization();
 		$collection2->targetData = [
@@ -115,7 +115,7 @@ class LazyCollectionTest extends TestCase
 			'c' => null
 		];
 
-		$collection2->initializeAll();
+		$collection2->initialize();
 
 		$this->assertSame($collection2->targetData, $collection2->data);
 		$this->assertSame([], $collection2->hydratedElements);
@@ -124,7 +124,7 @@ class LazyCollectionTest extends TestCase
 
 		// another invocation should not initialize again
 		$collection2->iterated = false;
-		$collection2->initializeAll();
+		$collection2->initialize();
 		$this->assertFalse($collection2->iterated);
 	}
 
