@@ -164,7 +164,7 @@ class License
 			$this->domain !== null &&
 			$this->email !== null &&
 			$this->order !== null &&
-			($this->signature !== null || $this->isFreeAndLocal()) &&
+			$this->signature !== null &&
 			$this->hasValidEmailAddress() === true &&
 			$this->type() !== LicenseType::Invalid
 		) {
@@ -272,22 +272,21 @@ class License
 	 */
 	public function isSigned(): bool
 	{
-		// locally self-signed licenses do not need a signature
-		if ($this->isFreeAndLocal() === true) {
-			return true;
-		}
-
 		if ($this->signature === null) {
 			return false;
+		}
+
+		$data      = json_encode($this->signatureData());
+		$signature = hex2bin($this->signature);
+
+		if ($this->isFreeAndLocal() === true) {
+			return hash('sha256', $data) === $signature;
 		}
 
 		// get the public key
 		$pubKey = F::read($this->kirby->root('kirby') . '/kirby.pub');
 
 		// verify the license signature
-		$data      = json_encode($this->signatureData());
-		$signature = hex2bin($this->signature);
-
 		return openssl_verify($data, $signature, $pubKey, 'RSA-SHA256') === 1;
 	}
 
@@ -406,14 +405,14 @@ class License
 		}
 
 		if ($this->isFreeAndLocal() === true) {
-			$response = [
+			$response = $this->selfsign([
 				'activation' => date('Y-m-d H:i:s'),
+				'code'       => $this->code,
 				'date'       => date('Y-m-d H:i:s'),
 				'domain'     => $this->domain,
-				'code'       => $this->code,
+				'email'      => $this->email,
 				'order'      => '12345678',
-				'email'      => $this->email
-			];
+			]);
 		}
 
 		// @codeCoverageIgnoreStart
@@ -494,6 +493,22 @@ class License
 			file: $this->root(),
 			data: $this->content()
 		);
+	}
+
+	/**
+	 * Self-signs a license file where registration
+	 * will not communicate with the license hub
+	 */
+	protected function selfsign(array $payload): array
+	{
+		$data          = $payload;
+		$data['email'] = hash('sha256', $data['email'] . static::SALT);
+		$data          = json_encode($data);
+
+		return [
+			...$payload,
+			'signature' => bin2hex(hash('sha256', $data))
+		];
 	}
 
 	/**
