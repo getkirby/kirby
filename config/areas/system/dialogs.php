@@ -90,7 +90,7 @@ return [
 				'props' => [
 					'fields' => [
 						'domain' => [
-							'label' => 'Domain',
+							'label' => I18n::translate('domain'),
 							'type'  => 'info',
 							'theme' => 'white',
 							'icon'  => 'info',
