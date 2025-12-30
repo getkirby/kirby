@@ -64,18 +64,7 @@ class Webauthn extends BaseWebauthn
 		return new self($id, $title, $uid, $email, $name, $formats);
 	}
 
-	public function loginOptions(array $allow): array
-	{
-		$publicKey = $this->publicKeyOptions($allow);
-		$challenge = $publicKey['challenge'] ?? null;
-
-		return [
-			'publicKey' => $publicKey,
-			'challenge' => $challenge
-		];
-	}
-
-	public function loginOptionsForUser(array $credentials): array
+	public function loginOptions(array $credentials): array
 	{
 		$allow = [];
 
@@ -85,7 +74,7 @@ class Webauthn extends BaseWebauthn
 			}
 		}
 
-		return $this->loginOptions($allow);
+		return $this->publicKeyOptions($allow);
 	}
 
 	protected function normalizeChallenge(mixed $challenge): string
@@ -161,13 +150,9 @@ class Webauthn extends BaseWebauthn
 		$challenge = $this->getChallenge()->getBinaryString();
 		$challenge = $this->encode($challenge);
 		$publicKey = json_decode(json_encode($options->publicKey), true);
-		$publicKey['challenge'] = $challenge;
 		$options->publicKey->rpId ??= $this->id;
 
-		return [
-			'publicKey' => $publicKey,
-			'challenge' => $challenge
-		];
+		return $publicKey;
 	}
 
 	public function verifyGet(
@@ -176,7 +161,7 @@ class Webauthn extends BaseWebauthn
 		string $challenge,
 		bool $requireUserVerification = true,
 		bool $requireUserPresent = true
-	): ?int {
+	): int|null {
 		$clientDataJSON    = $this->decode($payload['clientDataJSON'] ?? null);
 		$authenticatorData = $this->decode($payload['authenticatorData'] ?? null);
 		$signature         = $this->decode($payload['signature'] ?? null);

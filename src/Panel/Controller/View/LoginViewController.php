@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\View;
 
-use Kirby\Auth\Challenge;
 use Kirby\Auth\Method;
 use Kirby\Auth\State;
 use Kirby\Auth\Status;
@@ -32,7 +31,7 @@ class LoginViewController extends ViewController
 	public function challenge(): string
 	{
 		$challenge = $this->status()->challenge();
-		return Challenge::handler($challenge);
+		return $this->auth->challenges()->class($challenge);
 	}
 
 	public function load(): View
@@ -59,13 +58,14 @@ class LoginViewController extends ViewController
 	public function method(): Method
 	{
 		$methods = array_keys($this->auth->methods()->available());
-		$method  = $this->request->get("method");
+		$method  = $this->request->get('method');
 
 		if (in_array($method, $methods, true) === false) {
 			$method = $methods[0];
 		}
 
-		return $this->auth->methods()->handler($method);
+		$class = $this->auth->methods()->class($method);
+		return new $class(options: $this->auth->methods()->available()[$method]);
 	}
 
 	public function methods(): array
@@ -73,11 +73,14 @@ class LoginViewController extends ViewController
 		$methods = array_keys($this->auth->methods()->available());
 		$methods = A::map(
 			$methods,
-			fn (string $method) => $this->auth->methods()->handler($method)
+			function (string $type) {
+				$class = $this->auth->methods()->class($type);
+				return new $class(options: $this->auth->methods()->available()[$type]);
+			}
 		);
 		$methods = A::map(
 			$methods,
-			fn(Method $method) => [
+			fn (Method $method) => [
 				'icon' => $method->icon(),
 				'text' => $this->i18n('login.method.' . $method->type() . '.label'),
 				'type' => $method->type(),

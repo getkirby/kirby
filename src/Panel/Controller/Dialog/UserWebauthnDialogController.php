@@ -2,8 +2,8 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
-use Kirby\Cms\User;
 use Kirby\Auth\Service\Webauthn;
+use Kirby\Cms\User;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Ui\Dialog;
 

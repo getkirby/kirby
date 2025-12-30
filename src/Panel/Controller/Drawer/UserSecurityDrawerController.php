@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel\Controller\Drawer;
 
-use Kirby\Auth\Challenge;
 use Kirby\Cms\Auth;
 use Kirby\Cms\Find;
 use Kirby\Cms\User;
@@ -39,7 +38,7 @@ class UserSecurityDrawerController extends DrawerController
 		$challenges = $this->auth()->challenges()->enabled();
 
 		foreach ($challenges as $challenge) {
-			$challenge = Challenge::handler($challenge);
+			$challenge = $this->auth()->challenges()->class($challenge);
 			$buttons   = [...$buttons, ...A::map(
 				$challenge::settings($this->user),
 				fn ($button) => [
@@ -82,7 +81,7 @@ class UserSecurityDrawerController extends DrawerController
 		$methods = array_keys($this->auth()->methods()->available());
 
 		foreach ($methods as $method) {
-			$method  = $this->auth()->methods()->handler($method);
+			$method  = $this->auth()->methods()->class($method);
 			$buttons = [...$buttons, ...$method::settings($this->user)];
 		}
 

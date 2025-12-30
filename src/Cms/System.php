@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\System\UpdateStatus;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\A;

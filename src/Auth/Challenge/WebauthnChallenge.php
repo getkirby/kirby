@@ -23,7 +23,7 @@ class WebauthnChallenge extends Challenge
 		User $user,
 		string $mode,
 		int|null $timeout = null,
-	){
+	) {
 		parent::__construct(
 			user: $user,
 			mode: $mode,
@@ -36,7 +36,7 @@ class WebauthnChallenge extends Challenge
 	public function create(): null
 	{
 		$credentials = $this->credentials();
-		$options     = $this->webauthn->loginOptionsForUser($credentials);
+		$options     = $this->webauthn->loginOptions($credentials);
 
 		// persist challenge and options for the login form
 		$this->kirby->session()->set('kirby.challenge.data', $options);

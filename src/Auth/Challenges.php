@@ -192,7 +192,7 @@ class Challenges
 		// rate-limiting
 		$this->limits()->ensure($email);
 
-		//
+
 		$type      = $session->get('kirby.challenge.type');
 		$challenge = $this->class($type);
 
