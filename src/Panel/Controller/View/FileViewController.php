@@ -93,7 +93,7 @@ class FileViewController extends ModelViewController
 			'extension' => $this->model->extension(),
 			'filename'  => $this->model->filename(),
 			'mime'      => $this->model->mime(),
-			'preview'   => FilePreview::factory($this->model)->render(...),
+			'preview'   => FilePreview::factory($this->model)->render(),
 			'search'    => 'files',
 			'type'      => $this->model->type(),
 			'url'       => $this->model->url(),
