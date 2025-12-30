@@ -405,6 +405,10 @@ export default {
 		grid-template-rows: 1fr 1fr;
 	}
 
+	.k-preview-view-header {
+		grid-template-columns: auto auto;
+	}
+
 	.k-preview-sizes {
 		display: none;
 	}
