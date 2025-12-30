@@ -10,6 +10,7 @@ use Kirby\Cms\Auth;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\A;
 
@@ -37,7 +38,7 @@ class Challenges
 	/**
 	 * Returns the challenge handler class for the provided type
 	 */
-	public function class(string $type): string|null
+	public function class(string $type): string
 	{
 		if (
 			($class = Auth::$challenges[$type] ?? null) &&
@@ -46,7 +47,9 @@ class Challenges
 			return $class;
 		}
 
-		return null;
+		return throw new NotFoundException(
+			message: 'No valid auth challenge class found for type: ' . $type
+		);
 	}
 
 	public function clear(): void
