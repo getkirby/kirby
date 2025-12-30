@@ -90,6 +90,8 @@ trait FileActions
 			$newFile->parent()->files()->remove($oldFile->id());
 			$newFile->parent()->files()->set($newFile->id(), $newFile);
 
+			$newFile->uuid()?->populate();
+
 			return $newFile;
 		});
 	}
@@ -189,6 +191,7 @@ trait FileActions
 		// overwrite with new UUID (remove old, add new)
 		if (Uuids::enabled() === true) {
 			$copy = $copy->save(['uuid' => Uuid::generate()]);
+			$copy->uuid()->populate();
 		}
 
 		return $copy;
@@ -291,6 +294,8 @@ trait FileActions
 
 			// store the content if necessary
 			$file->changeStorage($storage);
+
+			$file->uuid()?->populate();
 
 			// return a fresh clone
 			return $file->clone();
