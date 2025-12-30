@@ -509,6 +509,7 @@
 	"license.manage": "Manage your licenses",
 	"license.purchased": "Purchased",
 	"license.success": "Thank you for supporting Kirby",
+	"license.success.free": "Activated as develop/private site",
 	"license.free.label": "Develop",
 	"license.unregistered.label": "Unregistered",
 
