@@ -17,10 +17,19 @@ class LoginViewController extends ViewController
 {
 	public function load(): View
 	{
+		$methods = $this->methods();
+		$method  = $this->request->get('method');
+
+		if ($method === null || in_array($method, $methods, true) === false) {
+			$method = $methods[0];
+		}
+
 		return new View(
 			component: 'k-login-view',
-			methods:   $this->methods(),
-			pending:   $this->pending()
+			method:    $method,
+			methods:   $methods,
+			pending:   $this->pending(),
+			value:     $this->value()
 		);
 	}
 
@@ -39,4 +48,8 @@ class LoginViewController extends ViewController
 		];
 	}
 
+	public function value(): array
+	{
+		return [];
+	}
 }
