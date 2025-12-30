@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Auth\Limits;
+use Kirby\Auth\Methods;
+use Kirby\Cms\Auth\Status;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
@@ -64,6 +66,48 @@ class AuthTest extends TestCase
 		Dir::remove(static::TMP);
 		App::destroy();
 		$_GET = [];
+	}
+
+	public function testAuthenticate(): void
+	{
+		$status = $this->createStub(Status::class);
+		$user   = $this->createStub(User::class);
+		$methods = $this->createStub(Methods::class);
+		$methods->method('authenticate')
+			->willReturnCallback(function (string $type) use ($status, $user) {
+				return match ($type) {
+					'password' => $user,
+					'code'     => $status
+				};
+			});
+
+		$auth = new class ($methods, $status) extends Auth {
+			public bool $didResetUser = false;
+
+			public function __construct(
+				protected Methods $methods,
+				protected Status|null $status
+			) {
+			}
+
+			public function methods(): Methods
+			{
+				return $this->methods;
+			}
+
+			public function setUser(User $user): void
+			{
+				$this->didResetUser = true;
+			}
+		};
+
+		$result = $auth->authenticate('code', 'lisa@simpson.de');
+		$this->assertSame($status, $result);
+		$this->assertFalse($auth->didResetUser);
+
+		$result = $auth->authenticate('password', 'lisa@simpson.de');
+		$this->assertSame($user, $result);
+		$this->assertTrue($auth->didResetUser);
 	}
 
 	public function testCsrf(): void
@@ -269,6 +313,11 @@ class AuthTest extends TestCase
 			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
+	}
+
+	public function testMethods(): void
+	{
+		$this->assertInstanceOf(Methods::class, $this->auth->methods());
 	}
 
 	public function testTypeBasic1(): void
