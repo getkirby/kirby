@@ -82,6 +82,10 @@ class User extends ModelWithContent
 		$this->password = $props['password'] ?? null;
 		$this->role     = $set('role', fn ($role) => Str::lower(trim($role)));
 
+		if (isset($props['credentials'])) {
+			$this->credentials = $props['credentials'];
+		}
+
 		// Set blueprint before setting content
 		// or translations in the parent constructor.
 		// Otherwise, the blueprint definition cannot be
