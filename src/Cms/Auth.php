@@ -2,15 +2,15 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Exception\RateLimitException;
+use Kirby\Auth\Limits;
 use Kirby\Cms\Auth\Challenge;
 use Kirby\Cms\Auth\Status;
-use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\F;
 use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Session\Session;
@@ -40,6 +40,8 @@ class Auth
 	 */
 	protected User|null $impersonate = null;
 
+	protected Limits $limits;
+
 	/**
 	 * Cache of the auth status object
 	 */
@@ -63,24 +65,18 @@ class Auth
 	public function __construct(
 		protected App $kirby
 	) {
+		$this->limits = new Limits($kirby);
 	}
 
 	/**
 	 * Ensures that the rate limit was not exceeded
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded
+	 * @deprecated 6.0.0 Use `self::limits()->ensure()` instead
 	 */
 	protected function checkRateLimit(string $email): void
 	{
-		// check for blocked ips
-		if ($this->isBlocked($email) === true) {
-			$this->kirby->trigger('user.login:failed', compact('email'));
-
-			throw new PermissionException(
-				details: ['reason' => 'rate-limited'],
-				fallback: 'Rate limit exceeded'
-			);
-		}
+		$this->limits->ensure($email);
 	}
 
 	/**
@@ -112,13 +108,12 @@ class Auth
 		// catch every exception to hide them from attackers
 		// unless auth debugging is enabled
 		try {
-			$this->checkRateLimit($email);
-
 			// rate-limit the number of challenges for DoS/DDoS protection
-			$this->track($email, false);
+			$this->limits->ensure($email);
+			$this->limits->track($email, triggerHook: false);
 
 			// try to find the provided user
-			$user = $this->kirby->users()->find($email);
+			$user = $this->kirby->user($email);
 
 			if ($user === null) {
 				$this->kirby->trigger('user.login:failed', compact('email'));
@@ -418,79 +413,38 @@ class Auth
 
 	/**
 	 * Check if logins are blocked for the current ip or email
+	 * @deprecated 6.0.0 Use `self::limits()->Blocked()` instead
 	 */
 	public function isBlocked(string $email): bool
 	{
-		$ip     = $this->kirby->visitor()->ip(hash: true);
-		$log    = $this->log();
-		$trials = $this->kirby->option('auth.trials', 10);
+		return $this->limits->isBlocked($email);
+	}
 
-		if ($entry = ($log['by-ip'][$ip] ?? null)) {
-			if ($entry['trials'] >= $trials) {
-				return true;
-			}
-		}
-
-		if ($this->kirby->users()->find($email)) {
-			if ($entry = ($log['by-email'][$email] ?? null)) {
-				if ($entry['trials'] >= $trials) {
-					return true;
-				}
-			}
-		}
-
-		return false;
+	/**
+	 * Returns the auth rate limits object
+	 * @since 6.0.0
+	 */
+	public function limits(): Limits
+	{
+		return $this->limits;
 	}
 
 	/**
 	 * Read all tracked logins
+	 * @deprecated 6.0.0 Use `self::limits()->log()` instead
 	 */
 	public function log(): array
 	{
-		try {
-			$log  = Data::read($this->logfile(), 'json');
-			$read = true;
-		} catch (Throwable) {
-			$log  = [];
-			$read = false;
-		}
-
-		// ensure that the category arrays are defined
-		$log['by-ip']    ??= [];
-		$log['by-email'] ??= [];
-
-		// remove all elements on the top level with different keys (old structure)
-		$log = array_intersect_key($log, array_flip(['by-ip', 'by-email']));
-
-		// remove entries that are no longer needed
-		$originalLog = $log;
-		$time        = time() - $this->kirby->option('auth.timeout', 3600);
-
-		foreach ($log as $category => $entries) {
-			$log[$category] = array_filter(
-				$entries,
-				fn ($entry) => $entry['time'] > $time
-			);
-		}
-
-		// write new log to the file system if it changed
-		if ($read === false || $log !== $originalLog) {
-			if (count($log['by-ip']) === 0 && count($log['by-email']) === 0) {
-				F::remove($this->logfile());
-			} else {
-				Data::write($this->logfile(), $log, 'json');
-			}
-		}
-
-		return $log;
+		return $this->limits->log();
 	}
 
 	/**
 	 * Returns the absolute path to the logins log
+	 * @deprecated 6.0.0 Use `self::limits()->file()` instead
 	 */
 	public function logfile(): string
 	{
-		return $this->kirby->root('accounts') . '/.logins';
+		return $this->limits->file();
 	}
 
 	/**
@@ -654,46 +608,13 @@ class Auth
 	 * Tracks a login
 	 *
 	 * @param bool $triggerHook If `false`, no user.login:failed hook is triggered
+	 * @deprecated 6.0.0 Use `self::limits()->track()` instead
 	 */
 	public function track(
 		string|null $email,
 		bool $triggerHook = true
 	): bool {
-		if ($triggerHook === true) {
-			$this->kirby->trigger('user.login:failed', compact('email'));
-		}
-
-		$ip   = $this->kirby->visitor()->ip(hash: true);
-		$log  = $this->log();
-		$time = time();
-
-		if (isset($log['by-ip'][$ip]) === true) {
-			$log['by-ip'][$ip] = [
-				'time'   => $time,
-				'trials' => ($log['by-ip'][$ip]['trials'] ?? 0) + 1
-			];
-		} else {
-			$log['by-ip'][$ip] = [
-				'time'   => $time,
-				'trials' => 1
-			];
-		}
-
-		if ($email !== null && $this->kirby->users()->find($email)) {
-			if (isset($log['by-email'][$email]) === true) {
-				$log['by-email'][$email] = [
-					'time'   => $time,
-					'trials' => ($log['by-email'][$email]['trials'] ?? 0) + 1
-				];
-			} else {
-				$log['by-email'][$email] = [
-					'time'   => $time,
-					'trials' => 1
-				];
-			}
-		}
-
-		return Data::write($this->logfile(), $log, 'json');
+		return $this->limits->track($email, $triggerHook);
 	}
 
 	/**
@@ -789,7 +710,7 @@ class Auth
 		$email = Idn::decodeEmail($email);
 
 		try {
-			$this->checkRateLimit($email);
+			$this->limits->ensure($email);
 
 			// validate the user and its password
 			if ($user = $this->kirby->users()->find($email)) {
@@ -804,12 +725,10 @@ class Auth
 			);
 
 		} catch (Throwable $e) {
-			$details = $e instanceof Exception ? $e->getDetails() : [];
-
 			// log invalid login trial unless the rate limit is already active
-			if (($details['reason'] ?? null) !== 'rate-limited') {
+			if ($e instanceof RateLimitException === false) {
 				try {
-					$this->track($email);
+					$this->limits->track($email);
 				} catch (Throwable) {
 					// $e is overwritten with the exception
 					// from the track method if there's one
@@ -892,7 +811,7 @@ class Auth
 			}
 
 			// rate-limiting
-			$this->checkRateLimit($email);
+			$this->limits->ensure($email);
 
 			if (
 				isset(static::$challenges[$challenge]) === true &&
@@ -925,13 +844,11 @@ class Auth
 			);
 
 		} catch (Throwable $e) {
-			$details = $e instanceof Exception ? $e->getDetails() : [];
-
 			if (
 				empty($email) === false &&
-				($details['reason'] ?? null) !== 'rate-limited'
+				$e instanceof RateLimitException === false
 			) {
-				$this->track($email);
+				$this->limits->track($email);
 			}
 
 			// sleep for a random amount of milliseconds
@@ -941,6 +858,7 @@ class Auth
 
 			// specifically copy over the marker for a destroyed challenge
 			// even in production (used by the Panel to reset to the login form)
+			$details = $e instanceof Exception ? $e->getDetails() : [];
 			$challengeDestroyed = $details['challengeDestroyed'] ?? false;
 
 			$fallback = new PermissionException(
