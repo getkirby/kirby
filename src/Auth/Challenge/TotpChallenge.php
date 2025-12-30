@@ -51,7 +51,7 @@ class TotpChallenge extends Challenge
 			[
 				'text'   => 'Authenticator app',
 				'icon'   => 'qr-code',
-				'dialog' => $user->panel()->url(true) . '/totp/' . (static::isAvailable($user) ? 'disable' : 'enable'),
+				'dialog' => $user->panel()->url(true) . '/totp',
 			],
 		];
 	}
