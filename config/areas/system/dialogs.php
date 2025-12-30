@@ -82,10 +82,18 @@ return [
 	// license registration
 	'registration' => [
 		'load' => function () {
+			$system = App::instance()->system();
+			$local  = $system->isLocal();
+
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => [
+						'domain' => [
+							'type'  => 'info',
+							'theme' => $local ? 'warning' : 'info',
+							'text'  => I18n::template('license.activate.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
+						],
 						'type' => [
 							'label'    => I18n::translate('license.activate.label'),
 							'type'     => 'toggles',
