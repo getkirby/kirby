@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Method\BasicAuthMethod;
 use Kirby\Auth\Method\CodeMethod;
 use Kirby\Auth\Method\PasswordMethod;
 use Kirby\Auth\Method\PasswordResetMethod;
@@ -135,6 +136,7 @@ class Core
 	public function authMethods(): array
 	{
 		return [
+			'basic-auth'     => BasicAuthMethod::class,
 			'code'           => CodeMethod::class,
 			'password'       => PasswordMethod::class,
 			'password-reset' => PasswordResetMethod::class
