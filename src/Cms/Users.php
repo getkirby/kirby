@@ -31,7 +31,7 @@ class Users extends LazyCollection
 	/**
 	 * Creates a new Collection with the given objects
 	 *
-	 * @param iterable<TValue> $objects
+	 * @param iterable<TUser> $objects
 	 * @param string|null $root Directory to dynamically load user
 	 *                          objects from during hydration
 	 * @param array $inject Props to inject into hydrated user objects
