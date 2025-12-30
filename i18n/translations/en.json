@@ -473,6 +473,7 @@
 	"license.activate": "Activate it now",
 	"license.activate.label": "Activate this installation as",
 	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain and this is your development installation, please activate it as develop installation.",
 	"license.activate.type.regular": "Regular",
 	"license.activate.type.free": "Develop",
 	"license.activate.acknowledge.label": "Please confirm",
