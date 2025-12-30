@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(AcceptRules::class)]
 class AcceptRulesTest extends BlueprintTest
 {
-	public function testAcceptedFileTemplatesDefault(): void
+	public function testFileTemplatesDefault(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model,
@@ -21,10 +21,10 @@ class AcceptRulesTest extends BlueprintTest
 
 		$rules = new AcceptRules($blueprint);
 
-		$this->assertSame(['default'], $rules->acceptedFileTemplates());
+		$this->assertSame(['default'], $rules->fileTemplates());
 	}
 
-	public function testAcceptedFileTemplatesFromFields(): void
+	public function testFileTemplatesFromFields(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -104,10 +104,10 @@ class AcceptRulesTest extends BlueprintTest
 
 		$rules = new AcceptRules($blueprint);
 
-		$this->assertSame(['a', 'b', 'c', 'd', 'e'], $rules->acceptedFileTemplates());
+		$this->assertSame(['a', 'b', 'c', 'd', 'e'], $rules->fileTemplates());
 	}
 
-	public function testAcceptedFileTemplatesFromFieldsWithDifferentParent(): void
+	public function testFileTemplatesFromFieldsWithDifferentParent(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -133,10 +133,10 @@ class AcceptRulesTest extends BlueprintTest
 
 		$rules = new AcceptRules($blueprint);
 
-		$this->assertSame([], $rules->acceptedFileTemplates());
+		$this->assertSame([], $rules->fileTemplates());
 	}
 
-	public function testAcceptedFileTemplatesFromFieldsAndSections(): void
+	public function testFileTemplatesFromFieldsAndSections(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -182,10 +182,10 @@ class AcceptRulesTest extends BlueprintTest
 
 		$rules = new AcceptRules($blueprint);
 
-		$this->assertSame(['a', 'b', 'c'], $rules->acceptedFileTemplates());
+		$this->assertSame(['a', 'b', 'c'], $rules->fileTemplates());
 	}
 
-	public function testAcceptedFileTemplatesFromSection(): void
+	public function testFileTemplatesFromSection(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -212,10 +212,10 @@ class AcceptRulesTest extends BlueprintTest
 
 		$rules = new AcceptRules($blueprint);
 
-		$this->assertSame(['a'], $rules->acceptedFileTemplates('a'));
+		$this->assertSame(['a'], $rules->fileTemplates('a'));
 	}
 
-	public function testAcceptedFileTemplatesFromSections(): void
+	public function testFileTemplatesFromSections(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -245,6 +245,6 @@ class AcceptRulesTest extends BlueprintTest
 
 		$rules = new AcceptRules($blueprint);
 
-		$this->assertSame(['a', 'b'], $rules->acceptedFileTemplates());
+		$this->assertSame(['a', 'b'], $rules->fileTemplates());
 	}
 }
