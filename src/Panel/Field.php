@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
+use Kirby\Form\Field\HiddenField;
 use Kirby\Panel\Form\Field\TitleField;
 use Kirby\Panel\Form\Field\TranslationField;
 use Kirby\Panel\Form\Field\UsernameField;
@@ -80,7 +81,7 @@ class Field
 
 	public static function hidden(): array
 	{
-		return ['hidden' => true];
+		return HiddenField::factory([])->toArray();
 	}
 
 	/**
