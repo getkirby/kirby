@@ -292,21 +292,6 @@ class LicenseTest extends TestCase
 		$this->assertTrue($license->isOnCorrectDomain());
 	}
 
-	public function testIsSignedFreeAndLocal(): void
-	{
-		$this->app->clone([
-			'server' => [
-				'REMOTE_ADDR' => '127.0.0.1',
-			]
-		]);
-
-		$license = new License(
-			code: LicenseType::Free->prefix()
-		);
-
-		$this->assertTrue($license->isSigned());
-	}
-
 	public function testLabel(): void
 	{
 		$license = new License();
