@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\LicenseType;
 use Kirby\Exception\LogicException;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\I18n;
@@ -133,6 +134,7 @@ return [
 							]),
 						],
 						'license' => [
+							'when'        => ['type' => 'regular'],
 							'label'       => I18n::translate('license.code.label'),
 							'type'        => 'text',
 							'required'    => true,
@@ -140,7 +142,10 @@ return [
 							'placeholder' => 'K-',
 							'help'        => I18n::translate('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . I18n::translate('license.buy') . ' &rarr;</a>'
 						],
-						'email' => Field::email(['required' => true])
+						'email' => Field::email([
+							'when'     => ['type' => 'regular'],
+							'required' => true
+						])
 					],
 					'submitButton' => [
 						'icon'  => 'key',
@@ -157,15 +162,22 @@ return [
 		},
 		'submit' => function () {
 			// @codeCoverageIgnoreStart
-			$kirby = App::instance();
-			$kirby->system()->register(
-				$kirby->request()->get('license'),
-				$kirby->request()->get('email')
-			);
+			$kirby   = App::instance();
+			$type    = $kirby->request()->get('type', 'regular');
+			$email   = $kirby->request()->get('email');
+			$license = match ($type) {
+				'free'  => LicenseType::Free->prefix(),
+				default => $kirby->request()->get('license')
+			};
+
+			$kirby->system()->register($license, $email);
 
 			return [
 				'event'   => 'system.register',
-				'message' => I18n::translate('license.success')
+				'message' => match ($type) {
+					'free'  => I18n::translate('license.success.free'),
+					default => I18n::translate('license.success')
+				}
 			];
 			// @codeCoverageIgnoreEnd
 		}
