@@ -6,6 +6,7 @@ use Kirby\Auth\Csrf;
 use Kirby\Auth\Exception\LoginNotPermittedException;
 use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Limits;
+use Kirby\Auth\Method\BasicAuthMethod;
 use Kirby\Auth\Methods;
 use Kirby\Cms\Auth\Challenge;
 use Kirby\Cms\Auth\Status;
@@ -231,56 +232,12 @@ class Auth
 	public function currentUserFromBasicAuth(
 		BasicAuth|null $auth = null
 	): User|null {
-		if ($this->kirby->option('api.basicAuth', false) !== true) {
-			throw new PermissionException(
-				message: 'Basic authentication is not activated'
-			);
-		}
-
-		// if logging in with password is disabled,
-		// basic auth cannot be possible either
-		$loginMethods = $this->kirby->system()->loginMethods();
-
-		if (isset($loginMethods['password']) !== true) {
-			throw new PermissionException(
-				'Login with password is not enabled'
-			);
-		}
-
-		// if any login method requires 2FA,
-		// basic auth without 2FA would be a weakness
-		foreach ($loginMethods as $method) {
-			if (isset($method['2fa']) === true && $method['2fa'] === true) {
-				throw new PermissionException(
-					'Basic authentication cannot be used with 2FA'
-				);
-			}
-		}
-
-		$request = $this->kirby->request();
-		$auth  ??= $request->auth();
-
-		if (!$auth || $auth->type() !== 'basic') {
-			throw new InvalidArgumentException(
-				'Invalid authorization header'
-			);
-		}
-
-		// only allow basic auth when https is enabled or
-		// insecure requests permitted
-		if (
-			$request->ssl() === false &&
-			$this->kirby->option('api.allowInsecure', false) !== true
-		) {
-			throw new PermissionException(
-				message: 'Basic authentication is only allowed over HTTPS'
-			);
-		}
-
 		/**
-		 * @var \Kirby\Http\Request\Auth\BasicAuth $auth
+		 * @var \Kirby\Auth\Method\BasicAuthMethod
 		 */
-		return $this->validatePassword($auth->username(), $auth->password());
+		$basic = $this->methods()->get('basic-auth');
+		$basic::isAvailable($this, ['auth' => $auth], fail: true);
+		return $basic->user($auth);
 	}
 
 	/**
@@ -654,18 +611,7 @@ class Auth
 	 */
 	public function type(bool $allowImpersonation = true): string
 	{
-		$basicAuth = $this->kirby->option('api.basicAuth', false);
-		$request   = $this->kirby->request();
-
-		if (
-			$basicAuth === true &&
-
-			// only get the auth object if the option is enabled
-			// to avoid triggering `$responder->usesAuth()` if
-			// the option is disabled
-			$request->auth() &&
-			$request->auth()->type() === 'basic'
-		) {
+		if (BasicAuthMethod::isAvailable($this) === true) {
 			return 'basic';
 		}
 
@@ -707,11 +653,11 @@ class Auth
 		}
 
 		try {
-			if ($this->type() === 'basic') {
-				return $this->user = $this->currentUserFromBasicAuth();
-			}
+			return $this->user = match ($this->type()) {
+				'basic' => $this->methods()->get('basic-auth')->user(),
+				default => $this->currentUserFromSession($session)
+			};
 
-			return $this->user = $this->currentUserFromSession($session);
 		} catch (Throwable $e) {
 			$this->user = null;
 
