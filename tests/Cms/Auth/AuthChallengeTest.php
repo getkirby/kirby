@@ -97,6 +97,7 @@ class AuthChallengeTest extends TestCase
 		$status = $auth->createChallenge('marge@simpsons.com');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -226,6 +227,7 @@ class AuthChallengeTest extends TestCase
 		$status = $auth->createChallenge('marge@simpsons.com');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -238,6 +240,7 @@ class AuthChallengeTest extends TestCase
 		$status = $auth->createChallenge('invalid@example.com');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'invalid@example.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -287,7 +290,7 @@ class AuthChallengeTest extends TestCase
 				]
 			]
 		]);
-		$this->assertSame(['totp', 'email'], $app->auth()->enabledChallenges());
+		$this->assertSame(['totp', 'webauthn', 'email'], $app->auth()->enabledChallenges());
 
 		// a single challenge
 		$app = $this->app->clone([
@@ -421,6 +424,7 @@ class AuthChallengeTest extends TestCase
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
 			$this->assertSame([
 				'challenge' => null,
+				'data'      => null,
 				'email'     => null,
 				'mode'      => null,
 				'status'    => 'inactive'
@@ -441,6 +445,7 @@ class AuthChallengeTest extends TestCase
 			$this->assertSame(['challengeDestroyed' => false], $e->getDetails());
 			$this->assertSame([
 				'challenge' => 'email',
+				'data'      => null,
 				'email'     => 'marge@simpsons.com',
 				'mode'      => null,
 				'status'    => 'pending'
@@ -469,6 +474,7 @@ class AuthChallengeTest extends TestCase
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
 			$this->assertSame([
 				'challenge' => null,
+				'data'      => null,
 				'email'     => null,
 				'mode'      => null,
 				'status'    => 'inactive'
@@ -550,6 +556,7 @@ class AuthChallengeTest extends TestCase
 
 		$this->assertSame([
 			'challenge' => null,
+			'data'      => null,
 			'email'     => null,
 			'mode'      => null,
 			'status'    => 'inactive'

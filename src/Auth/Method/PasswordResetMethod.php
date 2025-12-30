@@ -10,16 +10,11 @@ use Kirby\Auth\Status;
  */
 class PasswordResetMethod extends Method
 {
-	public function attempt(
+	public function authenticate(
 		string $email,
 		string|null $password = null,
-		bool $long = false,
-		string $mode = 'password-reset'
-	): Status|null {
-		if ($mode !== 'password-reset') {
-			return null;
-		}
-
+		bool $long = false
+	): Status {
 		return $this->auth()->createChallenge($email, $long, 'password-reset');
 	}
 

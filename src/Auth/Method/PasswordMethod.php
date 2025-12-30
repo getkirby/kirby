@@ -5,6 +5,7 @@ namespace Kirby\Auth\Method;
 use Kirby\Auth\Method;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 
 /**
@@ -13,20 +14,21 @@ use Kirby\Exception\LogicException;
  */
 class PasswordMethod extends Method
 {
-	public function attempt(
+	public function authenticate(
 		string $email,
 		string|null $password = null,
-		bool $long = false,
-		string $mode = 'login'
-	): User|Status|null {
+		bool $long = false
+	): User|Status {
 		if ($password === null) {
-			return null;
+			throw new InvalidArgumentException(
+				message: 'Missing password'
+			);
 		}
 
 		$user = $this->auth()->validatePassword($email, $password);
 
 		// two-factor flow: create a challenge after password validation
-		if ($mode === 'login' && $this->has2FA($user, $mode) === true) {
+		if ($this->has2FA($user) === true) {
 			return $this->auth()->createChallenge($email, $long, '2fa');
 		}
 
@@ -39,7 +41,7 @@ class PasswordMethod extends Method
 		return $user;
 	}
 
-	protected function has2FA(User $user, string $mode): bool
+	protected function has2FA(User $user): bool
 	{
 		$option = $this->options['2fa'] ?? null;
 
@@ -48,7 +50,7 @@ class PasswordMethod extends Method
 		}
 
 		// get first available challenge
-		$challenge = $this->auth()->challenges()->available($user, $mode);
+		$challenge = $this->auth()->challenges()->firstAvailable($user, 'login');
 
 		// if any challenge is available, use 2FA
 		if ($challenge !== null) {

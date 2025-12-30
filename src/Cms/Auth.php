@@ -71,7 +71,7 @@ class Auth
 		string|null $password = null,
 		bool $long = false
 	): User|Status {
-		$result = $this->method->attempt($type, $email, $password, $long, 'login');
+		$result = $this->method->authenticate($type, $email, $password, $long, 'login');
 
 		if ($result instanceof User === true) {
 			$this->setUser($result);

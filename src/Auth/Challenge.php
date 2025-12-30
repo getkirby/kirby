@@ -2,11 +2,8 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Auth\Exception\UserNotFoundException;
 use Kirby\Cms\App;
-use Kirby\Cms\Auth;
 use Kirby\Cms\User;
-use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
 
@@ -31,8 +28,10 @@ abstract class Challenge
 		protected string $mode,
 		int|null $timeout = null,
 	) {
-		$this->kirby   = $user->kirby();
-		$this->timeout = $timeout ?? $this->kirby->option('auth.challenge.timeout', 10 * 60);
+		$this->kirby = $user->kirby();
+
+		$defaultTimeout = $this->kirby->auth()->challenges()->timeout();
+		$this->timeout  = $timeout ?? $defaultTimeout;
 	}
 
 	/**
@@ -47,44 +46,6 @@ abstract class Challenge
 	public static function form(): string
 	{
 		return 'k-login-' . static::type() . '-challenge';
-	}
-
-	final public static function from(Session $session): static|null
-	{
-		$type    = $session->get('kirby.challenge.type');
-		$handler = static::handler($type);
-
-		if ($handler === null) {
-			return null;
-		}
-
-		$email = $session->get('kirby.challenge.email');
-		$user  = App::instance()->users()->find($email);
-
-		if ($user === null) {
-			throw new UserNotFoundException(name: $email);
-		}
-
-		return new $handler(
-			user:    $user,
-			mode:    $session->get('kirby.challenge.mode'),
-			timeout: $session->get('kirby.challenge.timeout')
-		);
-	}
-
-	/**
-	 * Returns the challenge handler class for the provided type
-	 */
-	final public static function handler(string $type): string|null
-	{
-		if (
-			($class = Auth::$challenges[$type] ?? null) &&
-			is_subclass_of($class, Challenge::class) === true
-		) {
-			return $class;
-		}
-
-		return null;
 	}
 
 	/**

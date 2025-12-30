@@ -32,16 +32,14 @@ abstract class Method
 	 * Attempts to authenticate the given user credentials
 	 *
 	 * Implementations should either return a logged-in user,
-	 * a pending status if a challenge is required, or `null`
-	 * if the method cannot handle the provided input.
+	 * a pending status if a challenge is required.
 	 */
-	abstract public function attempt(
+	abstract public function authenticate(
 		string $email,
 		#[SensitiveParameter]
 		string|null $password = null,
-		bool $long = false,
-		string $mode = 'login'
-	): User|Status|null;
+		bool $long = false
+	): User|Status;
 
 	protected function auth(): Auth
 	{
@@ -51,14 +49,6 @@ abstract class Method
 	public static function form(): string
 	{
 		return 'k-login-' . static::type() . '-method';
-	}
-
-	/**
-	 * Checks whether the method is available for the current setup
-	 */
-	public static function isAvailable(string $mode = 'login'): bool
-	{
-		return true;
 	}
 
 	abstract public function icon(): string;

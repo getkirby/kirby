@@ -6,6 +6,7 @@ use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Auth\Exception\InvalidChallengeCodeException;
 use Kirby\Auth\Exception\UserNotFoundException;
 use Kirby\Cms\App;
+use Kirby\Cms\Auth;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -25,14 +26,24 @@ class Challenges
 	) {
 	}
 
-	public function available(User $user, string $mode): string|null
+	public function available(User $user, string $mode): array
 	{
-		foreach ($this->enabled() as $type) {
-			$challenge = Challenge::handler($type);
+		return A::filter(
+			$this->enabled(),
+			fn ($type) => $this->class($type)::isAvailable($user, $mode)
+		);
+	}
 
-			if ($challenge::isAvailable($user, $mode) === true) {
-				return $challenge;
-			}
+	/**
+	 * Returns the challenge handler class for the provided type
+	 */
+	public function class(string $type): string|null
+	{
+		if (
+			($class = Auth::$challenges[$type] ?? null) &&
+			is_subclass_of($class, Challenge::class) === true
+		) {
+			return $class;
 		}
 
 		return null;
@@ -69,8 +80,9 @@ class Challenges
 			throw new UserNotFoundException(name: $email);
 		}
 
-		// try to find an enabled challenge that is available for that user
-		if ($challenge = $this->available($user, $mode)) {
+		// try to find a challenge that is available for that user
+		if ($challenge = $this->firstAvailable($user, $mode)) {
+			$challenge = $this->class($challenge);
 			$challenge = new $challenge(user: $user, mode: $mode);
 			$code      = $challenge->create();
 			$timeout   = $this->timeout();
@@ -92,7 +104,8 @@ class Challenges
 	}
 
 	/**
-	 * Returns the list of enabled challenges in the configured order
+	 * Returns normalized array of enabled challenges
+	 * by the `auth.challenges` config option
 	 */
 	public function enabled(): array
 	{
@@ -127,6 +140,26 @@ class Challenges
 		return $email;
 	}
 
+	protected function ensureNotTimeout(Session $session): int|null
+	{
+		// time-limiting; check this early so that we can
+		// destroy the session no matter if the user exists
+		// (avoids leaking user information to attackers)
+		$timeout = $session->get('kirby.challenge.timeout');
+
+		// challenge timed out
+		if ($timeout !== null && time() > $timeout) {
+			throw new ChallengeTimeoutException();
+		}
+
+		return $timeout;
+	}
+
+	public function firstAvailable(User $user, string $mode): string|null
+	{
+		return $this->available($user, $mode)[0] ?? null;
+	}
+
 	protected function limits(): Limits
 	{
 		return $this->kirby->auth()->limits();
@@ -144,19 +177,10 @@ class Challenges
 		Session $session,
 		array|string|null $code
 	): Challenge {
-		// time-limiting; check this early so that we can
-		// destroy the session no matter if the user exists
-		// (avoids leaking user information to attackers)
-		$timeout = $session->get('kirby.challenge.timeout');
-
-		// challenge timed out
-		if ($timeout !== null && time() > $timeout) {
-			throw new ChallengeTimeoutException();
-		}
-
-		// ensure we have an active challenge for a valid user
-		$email = $this->ensureActiveChallenge($session);
-		$user  = $this->kirby->users()->find($email);
+		// ensu we have an active challenge for a valid user
+		$timeout = $this->ensureNotTimeout($session);
+		$email   = $this->ensureActiveChallenge($session);
+		$user    = $this->kirby->users()->find($email);
 
 		if ($user === null) {
 			throw new UserNotFoundException(name: $email);
@@ -165,16 +189,32 @@ class Challenges
 		// rate-limiting
 		$this->limits()->ensure($email);
 
-		if ($challenge = Challenge::from($session)) {
-			if ($challenge->verify($code) !== true) {
-				throw new InvalidChallengeCodeException();
-			}
+		//
+		$type      = $session->get('kirby.challenge.type');
+		$challenge = $this->class($type);
 
-			return $challenge;
+		if ($challenge === null) {
+			throw new LogicException(
+				message: 'Invalid authentication challenge: ' . $type
+			);
 		}
 
-		throw new LogicException(
-			message: 'Invalid authentication challenge: ' . $session->get('kirby.challenge.type')
+		$user = $this->kirby->user($email);
+
+		if ($user === null) {
+			throw new UserNotFoundException(name: $email);
+		}
+
+		$challenge = new $challenge(
+			user:    $user,
+			mode:    $session->get('kirby.challenge.mode'),
+			timeout: $session->get('kirby.challenge.timeout')
 		);
+
+		if ($challenge->verify($code) !== true) {
+			throw new InvalidChallengeCodeException();
+		}
+
+		return $challenge;
 	}
 }

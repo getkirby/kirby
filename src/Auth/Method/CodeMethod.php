@@ -11,16 +11,11 @@ use Kirby\Auth\Status;
  */
 class CodeMethod extends Method
 {
-	public function attempt(
+	public function authenticate(
 		string $email,
 		string|null $password = null,
-		bool $long = false,
-		string $mode = 'login'
-	): Status|null {
-		if ($mode !== 'login') {
-			return null;
-		}
-
+		bool $long = false
+	): Status {
 		// no password required; directly create challenge
 		return $this->auth()->createChallenge($email, $long, 'login');
 	}
