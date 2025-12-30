@@ -9,12 +9,12 @@ use Kirby\Cms\Roles;
 use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\HiddenField;
 use Kirby\Form\Field\PasswordField;
+use Kirby\Form\Field\SlugField;
 use Kirby\Panel\Form\Field\RoleField;
 use Kirby\Panel\Form\Field\TitleField;
 use Kirby\Panel\Form\Field\TranslationField;
 use Kirby\Panel\Form\Field\UsernameField;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 
 /**
  * Provides common field prop definitions
@@ -173,12 +173,7 @@ class Field
 
 	public static function slug(array $props = []): array
 	{
-		return [
-			'label' => I18n::translate('slug'),
-			'type'  => 'slug',
-			'allow' => Str::$defaults['slug']['allowed'],
-			...$props
-		];
+		return SlugField::factory($props)->toArray();
 	}
 
 	public static function template(

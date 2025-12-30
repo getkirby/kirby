@@ -244,13 +244,9 @@ class FieldTest extends TestCase
 	{
 		// default
 		$field = Field::slug();
-		$expected = [
-			'label' => 'URL appendix',
-			'type'  => 'slug',
-			'allow' => 'a-z0-9'
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('URL appendix', $field['label']);
+		$this->assertSame('slug', $field['type']);
 
 		// with custom props
 		$field = Field::slug([
