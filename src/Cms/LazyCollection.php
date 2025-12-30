@@ -4,13 +4,24 @@ namespace Kirby\Cms;
 
 use Closure;
 use Iterator;
+use Kirby\Exception\LogicException;
 
 /**
  * The LazyCollection class is a variant of the CMS
  * Collection that is only initialized with keys for
- * each collection element. Collection values (= objects)
+ * each collection element or without any data.
+ * Collection elements and their values (= objects)
  * are loaded and initialized lazily when they are
  * first used.
+ *
+ * You can use LazyCollection in two ways:
+ * 1. Initialize with keys only (values are `null`),
+ *    define `hydrateElement` method that initializes
+ *    an element dynamically.
+ * 2. Option 1, but also don't initialize any keys,
+ *    set `$initialized` prop to `false` and define
+ *    `initializeAll` method that defines which keys
+ *    are available.
  *
  * @package   Kirby Cms
  * @author    Lukas Bestle <lukas@getkirby.com>
@@ -31,11 +42,18 @@ abstract class LazyCollection extends Collection
 	protected bool $hydrated = false;
 
 	/**
+	 * Flag that tells whether all possible collection
+	 * items have been loaded (only relevant in lazy
+	 * initialization mode)
+	 */
+	protected bool $initialized = true;
+
+	/**
 	 * Temporary auto-hydration whenever a collection
 	 * method is called; some methods may not need raw
 	 * access to all collection data, so performance
-	 * will be improved if methods call hydration
-	 * themselves only if they need it
+	 * will be improved if methods call initialization
+	 * or hydration themselves only if they need it
 	 * @deprecated
 	 * @todo Remove this in v6
 	 */
@@ -56,11 +74,52 @@ abstract class LazyCollection extends Collection
 
 		// `$element === null` could mean "element does not exist"
 		// or "element found but not hydrated"
-		if ($element === null && array_key_exists($key, $this->data)) {
+		if (
+			$element === null &&
+			(array_key_exists($key, $this->data) || $this->initialized === false)
+		) {
 			return $this->hydrateElement($key);
 		}
 
 		return $element;
+	}
+
+	/**
+	 * Low-level element remover
+	 */
+	public function __unset(string $key)
+	{
+		// first initialize, otherwise a later initialization
+		// might bring back the element that was unset
+		$this->initializeAll();
+
+		return parent::__unset($key);
+	}
+
+	/**
+	 * Creates chunks of the same size.
+	 * The last chunk may be smaller
+	 *
+	 * @param int $size Number of elements per chunk
+	 * @return static A new collection with an element for each chunk and
+	 *                a sub collection in each chunk
+	 */
+	public function chunk(int $size): static
+	{
+		// chunking at least requires the collection structure
+		$this->initializeAll();
+
+		return parent::chunk($size);
+	}
+
+	/**
+	 * Counts all elements
+	 */
+	public function count(): int
+	{
+		$this->initializeAll();
+
+		return parent::count();
 	}
 
 	/**
@@ -84,6 +143,17 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Returns the elements in reverse order
+	 */
+	public function flip(): static
+	{
+		// flipping at least requires the collection structure
+		$this->initializeAll();
+
+		return parent::flip();
+	}
+
+	/**
 	 * Filters elements by one of the
 	 * predefined filter methods, by a
 	 * custom filter function or an array of filters
@@ -103,6 +173,9 @@ abstract class LazyCollection extends Collection
 	 */
 	public function first()
 	{
+		// returning a specific offset requires the collection structure
+		$this->initializeAll();
+
 		$first = parent::first();
 
 		// `$first === null` could mean "empty collection"
@@ -120,6 +193,9 @@ abstract class LazyCollection extends Collection
 	 */
 	public function getIterator(): Iterator
 	{
+		// ensure we are looping over all possible elements
+		$this->initializeAll();
+
 		foreach ($this->data as $key => $value) {
 			if ($value === null) {
 				$value = $this->hydrateElement($key);
@@ -130,12 +206,26 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Checks by key if an element is included
+	 * @param TKey $key
+	 */
+	public function has(mixed $key): bool
+	{
+		$this->initializeAll();
+
+		return parent::has($key);
+	}
+
+	/**
 	 * Ensures that all collection elements are loaded,
 	 * essentially converting the lazy collection into a
 	 * normal collection
 	 */
 	public function hydrateAll(): void
 	{
+		// first ensure all keys are initialized
+		$this->initializeAll();
+
 		// skip another hydration loop if no longer needed
 		if ($this->hydrated === true) {
 			return;
@@ -152,10 +242,38 @@ abstract class LazyCollection extends Collection
 
 	/**
 	 * Loads a collection element, sets it in `$this->data[$key]`
-	 * and returns the hydrated object value; to be implemented
-	 * in each specific collection
+	 * and returns the hydrated object value (or `null` if the
+	 * element does not exist in the collection); to be
+	 * implemented in each specific collection
 	 */
-	abstract protected function hydrateElement(string $key): object;
+	abstract protected function hydrateElement(string $key): object|null;
+
+	/**
+	 * Ensures that the keys for all valid collection elements
+	 * are loaded in the `$data` array and sets `$initialized`
+	 * to `true` afterwards; to be implemented in each collection
+	 * that wants to use lazy initialization; be sure to keep
+	 * existing `$data` values and not overwrite the entire array
+	 */
+	public function initializeAll(): void
+	{
+		if ($this->initialized === true) {
+			return;
+		}
+
+		throw new LogicException('Lazy initialization is not implemented for ' . static::class); // @codeCoverageIgnore
+	}
+
+	/**
+	 * Returns an array of all keys
+	 */
+	public function keys(): array
+	{
+		// ensure we are returning all possible keys
+		$this->initializeAll();
+
+		return parent::keys();
+	}
 
 	/**
 	 * Tries to find the key for the given element
@@ -185,6 +303,9 @@ abstract class LazyCollection extends Collection
 	 */
 	public function last()
 	{
+		// returning a specific offset requires the collection structure
+		$this->initializeAll();
+
 		$last = parent::last();
 
 		// `$last === null` could mean "empty collection"
@@ -219,6 +340,8 @@ abstract class LazyCollection extends Collection
 	 */
 	public function next(): mixed
 	{
+		$this->initializeAll();
+
 		$next = parent::next();
 
 		// `$next === null` could mean "empty collection"
@@ -237,6 +360,9 @@ abstract class LazyCollection extends Collection
 	 */
 	public function nth(int $n)
 	{
+		// returning a specific offset requires the collection structure
+		$this->initializeAll();
+
 		$nth = parent::nth($n);
 
 		// `$nth === null` could mean "empty collection"
@@ -262,6 +388,8 @@ abstract class LazyCollection extends Collection
 	 */
 	public function prev(): mixed
 	{
+		$this->initializeAll();
+
 		$prev = parent::prev();
 
 		// `$prev === null` could mean "empty collection"
@@ -271,6 +399,47 @@ abstract class LazyCollection extends Collection
 		}
 
 		return $prev;
+	}
+
+	/**
+	 * Returns a new collection consisting of random elements,
+	 * from the original collection, shuffled or ordered
+	 */
+	public function random(int $count = 1, bool $shuffle = false): static
+	{
+		// picking random elements at least requires the collection structure
+		$this->initializeAll();
+
+		return parent::random($count, $shuffle);
+	}
+
+	/**
+	 * Shuffle all elements
+	 */
+	public function shuffle(): static
+	{
+		// shuffling at least requires the collection structure
+		$this->initializeAll();
+
+		return parent::shuffle();
+	}
+
+	/**
+	 * Returns a slice of the object
+	 *
+	 * @param int $offset The optional index to start the slice from
+	 * @param int|null $limit The optional number of elements to return
+	 * @return $this|static
+	 * @psalm-return ($offset is 0 && $limit is null ? $this : static)
+	 */
+	public function slice(
+		int $offset = 0,
+		int|null $limit = null
+	): static {
+		// returning a specific subset requires the collection structure
+		$this->initializeAll();
+
+		return parent::slice($offset, $limit);
 	}
 
 	/**
