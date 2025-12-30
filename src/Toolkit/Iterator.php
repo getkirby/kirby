@@ -140,7 +140,7 @@ class Iterator implements Countable, IteratorAggregate
 	 */
 	public function has(mixed $key): bool
 	{
-		return isset($this->data[$key]) === true;
+		return array_key_exists($key, $this->data) === true;
 	}
 
 	/**
