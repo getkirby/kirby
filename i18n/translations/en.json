@@ -62,6 +62,8 @@
 	"disabled": "Disabled",
 	"discard": "Discard",
 
+	"draft": "Draft",
+
 	"drawer.fields.empty": "This drawer has no fields",
 
 	"domain": "Domain",
@@ -641,6 +643,8 @@
 	"preview": "Preview",
 	"preview.browser.pin": "Toggle whether preview navigation should be in sync or independent",
 	"preview.browser.scroll": "Sync scroll",
+
+	"public": "Public",
 
 	"publish": "Publish",
 	"published": "Published",

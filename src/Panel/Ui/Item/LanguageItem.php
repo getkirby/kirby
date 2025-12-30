@@ -37,6 +37,7 @@ class LanguageItem extends Item
 			'default'   => $this->language->isDefault(),
 			'deletable' => $this->language->isDeletable(),
 			'id'        => $this->language->code(),
+			'status'    => $this->language->status()->value(),
 		];
 	}
 }

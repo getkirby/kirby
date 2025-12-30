@@ -50,6 +50,7 @@ class Language implements Stringable
 	protected string $name;
 	protected bool $single;
 	protected array $slugs;
+	protected LanguageStatus $status;
 	protected array $smartypants;
 	protected array $translations;
 	protected string|null $url;
@@ -72,6 +73,7 @@ class Language implements Stringable
 		$this->name         = trim($props['name'] ?? $this->code);
 		$this->single       = $props['single'] ?? false;
 		$this->slugs        = $props['slugs'] ?? [];
+		$this->status       = LanguageStatus::from($props['status'] ?? 'public');
 		$this->smartypants  = $props['smartypants'] ?? [];
 		$this->translations = $props['translations'] ?? [];
 		$this->url          = $props['url'] ?? null;
@@ -347,11 +349,27 @@ class Language implements Stringable
 	}
 
 	/**
+	 * Checks if the language is still in draft mode
+	 */
+	public function isDraft(): bool
+	{
+		return $this->status === LanguageStatus::DRAFT;
+	}
+
+	/**
 	 * Checks if this is the last language
 	 */
 	public function isLast(): bool
 	{
 		return App::instance()->languages()->count() === 1;
+	}
+
+	/**
+	 * Checks if the language is public
+	 */
+	public function isPublic(): bool
+	{
+		return $this->status === LanguageStatus::PUBLIC;
 	}
 
 	/**
@@ -500,6 +518,7 @@ class Language implements Stringable
 			'direction'    => $this->direction(),
 			'locale'       => Locale::export($this->locale()),
 			'name'         => $this->name(),
+			'status'       => $this->status()->value(),
 			'translations' => $this->translations(),
 			'url'          => $this->url,
 		];
@@ -550,6 +569,14 @@ class Language implements Stringable
 	}
 
 	/**
+	 * Returns the language status enum
+	 */
+	public function status(): LanguageStatus
+	{
+		return $this->status;
+	}
+
+	/**
 	 * Returns the most important properties as array
 	 */
 	public function toArray(): array
@@ -562,7 +589,8 @@ class Language implements Stringable
 			'locale'          => $this->locale(),
 			'name'            => $this->name(),
 			'rules'           => $this->rules(),
-			'url'             => $this->url(),
+			'status'          => $this->status()->value(),
+			'url'             => $this->url()
 		];
 	}
 

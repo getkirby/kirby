@@ -27,6 +27,10 @@
 					{{ $t("languages.secondary.empty") }}
 				</k-empty>
 			</k-section>
+
+			<k-section v-if="drafts.length" headline="Drafts">
+				<k-collection :items="drafts" />
+			</k-section>
 		</template>
 
 		<template v-else-if="languages.length === 0">
@@ -58,6 +62,11 @@ export default {
 		}
 	},
 	computed: {
+		drafts() {
+			return this.languagesCollection.filter(
+				(language) => language.status === "draft"
+			);
+		},
 		languagesCollection() {
 			return this.languages.map((language) => ({
 				...language,
@@ -92,7 +101,7 @@ export default {
 		},
 		secondaryLanguages() {
 			return this.languagesCollection.filter(
-				(language) => language.default === false
+				(language) => language.default === false && language.status !== "draft"
 			);
 		}
 	}

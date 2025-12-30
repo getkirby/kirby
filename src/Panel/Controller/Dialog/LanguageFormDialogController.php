@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\Dialog;
 
 use Kirby\Cms\Find;
 use Kirby\Cms\Language;
+use Kirby\Cms\LanguageStatus;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Dialog\FormDialog;
@@ -84,6 +85,21 @@ class LanguageFormDialogController extends DialogController
 				'text'    => $this->i18n('language.locale.warning'),
 				'type'    => is_array($this->locale()) ? 'info' : 'text',
 			],
+			'status' => [
+				'label'   => $this->i18n('status'),
+				'type'    => $this->language?->isDefault() === true ? 'hidden' : 'radio',
+				'columns' => 2,
+				'options' => [
+					[
+						'text'  => LanguageStatus::DRAFT->label(),
+						'value' => LanguageStatus::DRAFT->value(),
+					],
+					[
+						'text'  => LanguageStatus::PUBLIC->label(),
+						'value' => LanguageStatus::PUBLIC->value(),
+					],
+				]
+			],
 		];
 	}
 
@@ -121,7 +137,8 @@ class LanguageFormDialogController extends DialogController
 			'code',
 			'direction',
 			'locale',
-			'name'
+			'name',
+			'status'
 		]);
 
 		if ($this->language === null) {
@@ -143,6 +160,7 @@ class LanguageFormDialogController extends DialogController
 			'locale'    => $this->locale() ?? '',
 			'name'      => $this->language?->name() ?? '',
 			'rules'     => $this->language?->rules() ?? '',
+			'status'    => $this->language?->status()->value() ?? LanguageStatus::DRAFT->value()
 		];
 	}
 }

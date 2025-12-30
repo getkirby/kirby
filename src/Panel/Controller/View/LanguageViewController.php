@@ -57,8 +57,12 @@ class LanguageViewController extends ViewController
 	{
 		return new Stats(reports: [
 			new Stat(
-				label: 'Status',
+				label: $this->i18n('type'),
 				value: $this->i18n('language.' . ($this->language->isDefault() ? 'default' : 'secondary')),
+			),
+			new Stat(
+				label: $this->i18n('status'),
+				value: $this->language->status()->label(),
 			),
 			new Stat(
 				label: $this->i18n('language.code'),

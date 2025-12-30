@@ -112,4 +112,13 @@ class Languages extends Collection
 
 		return new static($languages);
 	}
+
+	public function status(LanguageStatus|string $status): static
+	{
+		if (is_string($status) === true) {
+			$status = LanguageStatus::from($status);
+		}
+
+		return $this->filter(fn ($language) => $language->status() === $status);
+	}
 }
