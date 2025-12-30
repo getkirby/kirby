@@ -13,13 +13,10 @@ class FieldTest extends TestCase
 	{
 		// default
 		$field = Field::email();
-		$expected = [
-			'label'   => 'Email',
-			'type'    => 'email',
-			'counter' => false
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('Email', $field['label']);
+		$this->assertSame('email', $field['type']);
+		$this->assertSame(false, $field['counter']);
 
 		// with custom props
 		$field = Field::email([

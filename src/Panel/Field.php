@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
+use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\HiddenField;
 use Kirby\Panel\Form\Field\TitleField;
 use Kirby\Panel\Form\Field\TranslationField;
@@ -31,12 +32,7 @@ class Field
 	 */
 	public static function email(array $props = []): array
 	{
-		return [
-			'label'   => I18n::translate('email'),
-			'type'    => 'email',
-			'counter' => false,
-			...$props
-		];
+		return EmailField::factory($props)->toArray();
 	}
 
 	/**
