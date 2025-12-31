@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
@@ -21,11 +22,28 @@ use Kirby\Uuid\HasUuids;
  * @license   https://getkirby.com/license
  *
  * @template TUser of \Kirby\Cms\User
- * @extends \Kirby\Cms\Collection<TUser>
+ * @extends \Kirby\Cms\LazyCollection<TUser>
  */
-class Users extends Collection
+class Users extends LazyCollection
 {
 	use HasUuids;
+
+	/**
+	 * Creates a new Collection with the given objects
+	 *
+	 * @param iterable<TUser> $objects
+	 * @param string|null $root Directory to dynamically load user
+	 *                          objects from during hydration
+	 * @param array $inject Props to inject into hydrated user objects
+	 */
+	public function __construct(
+		iterable $objects = [],
+		protected object|null $parent = null,
+		protected string|null $root = null,
+		protected array $inject = []
+	) {
+		parent::__construct($objects, $parent);
+	}
 
 	/**
 	 * All registered users methods
@@ -98,7 +116,7 @@ class Users extends Collection
 	{
 		$files = new Files([], $this->parent);
 
-		foreach ($this->data as $user) {
+		foreach ($this as $user) {
 			foreach ($user->files() as $fileKey => $file) {
 				$files->data[$fileKey] = $file;
 			}
@@ -126,31 +144,44 @@ class Users extends Collection
 	}
 
 	/**
+	 * Loads a user object, sets it in `$this->data[$key]`
+	 * and returns the hydrated user object
+	 */
+	protected function hydrateElement(string $key): User
+	{
+		if ($this->root === null) {
+			throw new LogicException('Cannot hydrate user "' . $key . '" with missing root'); // @codeCoverageIgnore
+		}
+
+		// get role information
+		$path = $this->root . '/' . $key . '/index.php';
+		if (is_file($path) === true) {
+			$credentials = F::load($path, allowOutput: false);
+		}
+
+		// create user model based on role
+		$user = User::factory([
+			'id'          => $key,
+			'model'       => $credentials['role'] ?? null,
+			'credentials' => is_array($credentials ?? null) ? $credentials : null
+		] + $this->inject);
+
+		return $this->data[$key] = $user;
+	}
+
+	/**
 	 * Loads a user from disk by passing the absolute path (root)
 	 */
 	public static function load(string $root, array $inject = []): static
 	{
-		$users = new static();
+		$users = new static(root: $root, inject: $inject);
 
 		foreach (Dir::read($root) as $userDirectory) {
 			if (is_dir($root . '/' . $userDirectory) === false) {
 				continue;
 			}
 
-			// get role information
-			$path = $root . '/' . $userDirectory . '/index.php';
-			if (is_file($path) === true) {
-				$credentials = F::load($path, allowOutput: false);
-			}
-
-			// create user model based on role
-			$user = User::factory([
-				'id'          => $userDirectory,
-				'model'       => $credentials['role'] ?? null,
-				'credentials' => is_array($credentials ?? null) ? $credentials : null
-			] + $inject);
-
-			$users->set($user->id(), $user);
+			$users->set($userDirectory, null);
 		}
 
 		return $users;
