@@ -19,11 +19,12 @@ return [
 				'component' => 'k-license-dialog',
 				'props' => [
 					'license' => [
-						'code'  => $license->code($obfuscated),
-						'icon'  => $status->icon(),
-						'info'  => $status->info($license->renewal('Y-m-d', 'date')),
-						'theme' => $status->theme(),
-						'type'  => $license->label(),
+						'code'   => $license->code($obfuscated),
+						'domain' => $license->domain(),
+						'icon'   => $status->icon(),
+						'info'   => $status->info($license->renewal('Y-m-d', 'date')),
+						'theme'  => $status->theme(),
+						'type'   => $license->label(),
 					],
 					'cancelButton' => $renewable,
 					'submitButton' => $renewable ? [
