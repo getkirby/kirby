@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Auth\Limits;
 use Kirby\Auth\Methods;
-use Kirby\Cms\Auth\Status;
+use Kirby\Auth\Status;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -201,6 +201,7 @@ class AuthTest extends TestCase
 
 		$this->assertSame([
 			'challenge' => null,
+			'data'      => null,
 			'email'     => null,
 			'mode'      => null,
 			'status'    => 'inactive'
@@ -223,6 +224,7 @@ class AuthTest extends TestCase
 
 		$this->assertSame([
 			'challenge' => null,
+			'data'      => null,
 			'email'     => null,
 			'mode'      => null,
 			'status'    => 'inactive'
