@@ -5,7 +5,6 @@ namespace Kirby\Auth;
 use Kirby\Auth\Challenge\LegacyChallenge;
 use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Cms\App;
-use Kirby\Cms\Auth;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -71,7 +70,6 @@ class ChallengesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Challenges';
 
-	protected Auth $auth;
 	protected Challenges $challenges;
 	protected array $original;
 

@@ -3,7 +3,6 @@
 namespace Kirby\Auth;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Auth;
 use Kirby\Cms\User as CmsUser;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Request\Auth\BasicAuth;

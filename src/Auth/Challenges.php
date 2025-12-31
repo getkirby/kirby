@@ -5,7 +5,6 @@ namespace Kirby\Auth;
 use Kirby\Auth\Challenge\LegacyChallenge;
 use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Cms\App;
-use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Challenge as LegacyBaseChallenge;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;

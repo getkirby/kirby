@@ -3,8 +3,8 @@
 namespace Kirby\Api;
 
 use Exception;
+use Kirby\Auth\Auth;
 use Kirby\Cms\App;
-use Kirby\Cms\Auth;
 use Kirby\Cms\Response;
 use Kirby\Cms\User;
 use Kirby\Exception\AuthException;

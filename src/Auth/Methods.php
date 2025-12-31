@@ -4,7 +4,6 @@ namespace Kirby\Auth;
 
 use Kirby\Api\Api;
 use Kirby\Cms\App;
-use Kirby\Cms\Auth;
 use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;

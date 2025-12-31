@@ -1,24 +1,20 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Auth;
 
-use Kirby\Auth\Challenges;
-use Kirby\Auth\Csrf;
 use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Auth\Exception\LoginNotPermittedException;
 use Kirby\Auth\Exception\RateLimitException;
-use Kirby\Auth\Limits;
 use Kirby\Auth\Method\BasicAuthMethod;
-use Kirby\Auth\Methods;
-use Kirby\Auth\Status;
 use Kirby\Auth\User as AuthUser;
+use Kirby\Cms\App;
+use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
 use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Session\Session;
-use Kirby\Toolkit\A;
 use SensitiveParameter;
 use Throwable;
 

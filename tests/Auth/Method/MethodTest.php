@@ -2,8 +2,8 @@
 
 namespace Kirby\Auth\Method;
 
+use Kirby\Auth\Auth;
 use Kirby\Auth\Method;
-use Kirby\Cms\Auth;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
