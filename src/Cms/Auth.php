@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Csrf;
 use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Limits;
 use Kirby\Cms\Auth\Challenge;
@@ -35,6 +36,8 @@ class Auth
 	 */
 	public static array $challenges = [];
 
+	protected Csrf $csrf;
+
 	/**
 	 * Currently impersonated user
 	 */
@@ -65,6 +68,7 @@ class Auth
 	public function __construct(
 		protected App $kirby
 	) {
+		$this->csrf   = new Csrf($kirby);
 		$this->limits = new Limits($kirby);
 	}
 
@@ -182,18 +186,7 @@ class Auth
 	 */
 	public function csrf(): string|false
 	{
-		// get the csrf from the header
-		$fromHeader = $this->kirby->request()->csrf();
-
-		// check for a predefined csrf or use the one from session
-		$fromSession = $this->csrfFromSession();
-
-		// compare both tokens
-		if (hash_equals($fromSession, (string)$fromHeader) !== true) {
-			return false;
-		}
-
-		return $fromSession;
+		return $this->csrf->get();
 	}
 
 	/**
@@ -202,9 +195,7 @@ class Auth
 	 */
 	public function csrfFromSession(): string
 	{
-		$isDev    = $this->kirby->option('panel.dev', false) !== false;
-		$fallback = $isDev ? 'dev' : $this->kirby->csrf();
-		return $this->kirby->option('api.csrf', $fallback);
+		return $this->csrf->fromSession();
 	}
 
 	/**
