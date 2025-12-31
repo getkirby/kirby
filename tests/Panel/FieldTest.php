@@ -153,12 +153,10 @@ class FieldTest extends TestCase
 	{
 		// default
 		$field = Field::password();
-		$expected = [
-			'label'   => 'Password',
-			'type'    => 'password',
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('Password', $field['label']);
+		$this->assertSame('key', $field['icon']);
+		$this->assertSame('password', $field['type']);
 
 		// with custom props
 		$field = Field::password([

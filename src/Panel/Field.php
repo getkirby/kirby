@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
 use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\HiddenField;
+use Kirby\Form\Field\PasswordField;
 use Kirby\Panel\Form\Field\RoleField;
 use Kirby\Panel\Form\Field\TitleField;
 use Kirby\Panel\Form\Field\TranslationField;
@@ -132,11 +133,7 @@ class Field
 	 */
 	public static function password(array $props = []): array
 	{
-		return [
-			'label' => I18n::translate('password'),
-			'type'  => 'password',
-			...$props
-		];
+		return PasswordField::factory($props)->toArray();
 	}
 
 	/**

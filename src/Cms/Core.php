@@ -29,6 +29,7 @@ use Kirby\Form\Field\MultiselectField;
 use Kirby\Form\Field\NumberField;
 use Kirby\Form\Field\ObjectField;
 use Kirby\Form\Field\PagePickerField;
+use Kirby\Form\Field\PasswordField;
 use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\RangeField;
 use Kirby\Form\Field\SelectField;
@@ -268,6 +269,7 @@ class Core
 			'number'      => NumberField::class,
 			'object'      => ObjectField::class,
 			'pages'       => PagePickerField::class,
+			'password'    => PasswordField::class,
 			'radio'       => RadioField::class,
 			'range'       => RangeField::class,
 			'select'      => SelectField::class,
