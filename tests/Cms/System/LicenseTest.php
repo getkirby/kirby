@@ -56,6 +56,12 @@ class LicenseTest extends TestCase
 
 		$this->assertSame($code, $license->code());
 		$this->assertSame('K-ENT-1234XXXXXXXXXXXXXXXXXXXXXX', $license->code(true));
+
+		$license = new License(
+			code: $code = LicenseType::Free->prefix()
+		);
+
+		$this->assertNUll($license->code());
 	}
 
 	public function testContent(): void
@@ -151,6 +157,56 @@ class LicenseTest extends TestCase
 		);
 
 		$this->assertTrue($license->isComplete());
+	}
+
+	public function testIsFree(): void
+	{
+		$license = new License(
+			code: $this->code(LicenseType::Basic),
+		);
+
+		$this->assertFalse($license->isFree());
+
+		$license = new License(
+			code: LicenseType::Free->prefix()
+		);
+
+		$this->assertTrue($license->isFree());
+	}
+
+	public function testIsFreeAndLocal(): void
+	{
+		// local
+		$this->app->clone([
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$license = new License(
+			code: LicenseType::Free->prefix()
+		);
+
+		$this->assertTrue($license->isFreeAndLocal());
+
+		$license = new License(
+			code: $this->code(LicenseType::Basic)
+		);
+
+		$this->assertFalse($license->isFreeAndLocal());
+
+		// not local
+		$this->app->clone([
+			'server' => [
+				'REMOTE_ADDR' => '1.2.3.4',
+			]
+		]);
+
+		$license = new License(
+			code: LicenseType::Free->prefix()
+		);
+
+		$this->assertFalse($license->isFreeAndLocal());
 	}
 
 	public function testIsInactive(): void
@@ -315,6 +371,33 @@ class LicenseTest extends TestCase
 		$this->assertNull($license->code());
 	}
 
+	public function testRegisterFreeAndLocal(): void
+	{
+		$this->app->clone([
+			'options' => [
+				'url' => 'https://sandbox.test',
+			],
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$license = new License(
+			code:   LicenseType::Free->prefix(),
+			domain: 'sandbox.test'
+		);
+
+		$license->register();
+
+		$system  = new System($this->app);
+		$license = $system->license();
+
+		$this->assertSame('sandbox.test', $license->domain());
+		$this->assertSame(LicenseStatus::Acknowledged, $license->status());
+		$this->assertSame(LicenseType::Free, $license->type());
+		$this->assertTrue($license->isComplete());
+	}
+
 	public function testRegisterWithInvalidDomain(): void
 	{
 		$license = new License(
@@ -398,6 +481,15 @@ class LicenseTest extends TestCase
 	{
 		$license = new License();
 		$this->assertSame(LicenseStatus::Missing, $license->status());
+	}
+
+	public function testTypeFree(): void
+	{
+		$license = new License(
+			code: 'FREE'
+		);
+
+		$this->assertSame(LicenseType::Free, $license->type());
 	}
 
 	public function testTypeKirby3(): void
