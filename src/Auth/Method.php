@@ -45,9 +45,21 @@ abstract class Method
 	/**
 	 * Checks if this method can be used in the current context
 	 */
-	public static function isAvailable(Auth $auth, array $options = []): bool
-	{
+	public static function isAvailable(
+		Auth $auth,
+		array $options = []
+	): bool {
 		return true;
+	}
+
+	/**
+	 * Checks if this method uses challenges
+	 */
+	public static function isUsingChallenges(
+		Auth $auth,
+		array $options = []
+	): bool {
+		return false;
 	}
 
 	/**

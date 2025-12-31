@@ -4,6 +4,7 @@ namespace Kirby\Auth\Method;
 
 use InvalidArgumentException;
 use Kirby\Auth\Method;
+use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Status;
 use Kirby\Cms\User;
 use SensitiveParameter;
@@ -61,7 +62,17 @@ class PasswordMethod extends Method
 	 */
 	protected function has2FA(User $user): bool
 	{
-		$option = $this->options['2fa'] ?? null;
+		return static::isUsingChallenges(
+			$this->auth,
+			$this->options
+		);
+	}
+
+	public static function isUsingChallenges(
+		Auth $auth,
+		array $options = []
+	): bool {
+		$option = $options['2fa'] ?? null;
 
 		if ($option === true) {
 			return true;
