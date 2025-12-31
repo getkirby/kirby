@@ -1,4 +1,5 @@
 import LoginAlert from "./LoginAlert.vue";
+import LoginBackButton from "./LoginBackButton.vue";
 import LoginCodeChallenge from "./LoginCodeChallenge.vue";
 import LoginPasswordMethod from "./LoginPasswordMethod.vue";
 import WebauthnChallenge from "./WebauthnChallenge.vue";
@@ -11,6 +12,7 @@ import LoginForm from "./LoginForm.vue";
 export default {
 	install(app) {
 		app.component("k-login-alert", LoginAlert);
+		app.component("k-login-back-button", LoginBackButton);
 		app.component("k-login-code-challenge", LoginCodeChallenge);
 		app.component("k-login-password-method", LoginPasswordMethod);
 		app.component("k-login-webauthn-challenge", WebauthnChallenge);

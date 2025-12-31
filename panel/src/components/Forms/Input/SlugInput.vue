@@ -77,13 +77,16 @@ export default {
 			deep: true,
 			immediate: true
 		},
-		value(newValue) {
-			newValue = this.sluggify(newValue);
+		value: {
+			handler(newValue) {
+				newValue = this.sluggify(newValue);
 
-			if (newValue !== this.slug) {
-				this.slug = newValue;
-				this.$emit("input", this.slug);
-			}
+				if (newValue !== this.slug) {
+					this.slug = newValue;
+					this.$emit("input", this.slug);
+				}
+			},
+			immediate: true
 		}
 	},
 	methods: {

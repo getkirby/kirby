@@ -36,11 +36,18 @@ class LoginViewController extends ViewController
 
 	public function load(): View
 	{
+		$methods = $this->methods();
+		$method  = $this->request->get('method');
+
+		if ($method === null || in_array($method, $methods, true) === false) {
+			$method = $methods[0];
+		}
+
 		return new View(
 			component: 'k-login-view',
 			form:      $this->form(),
-			method:    $this->method()->type(),
-			methods:   $this->methods(),
+			method:    $method,
+			methods:   $methods,
 			pending:   $this->pending(),
 			value:     $this->value()
 		);

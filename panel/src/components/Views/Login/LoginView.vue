@@ -1,6 +1,6 @@
 <template>
 	<k-panel-outside class="k-login-view">
-		<k-stack class="k-login-stack">
+		<k-stack class="k-login k-login-stack">
 			<h1 class="sr-only">
 				{{ $t("login") }}
 			</h1>
@@ -11,11 +11,12 @@
 
 			<component
 				:is="component"
+				ref="form"
 				v-bind="{ method, methods, pending, value }"
 				@error="onError"
 			/>
 
-			<template v-if="alternativeMethods.length > 0 && !pending?.challenge">
+			<template v-if="alternativeMethods.length > 0 && !hasActiveChallenge">
 				<p class="k-login-or"><span>or</span></p>
 
 				<k-stack>
@@ -92,6 +93,9 @@ export default {
 		},
 		component() {
 			return window.panel.plugins.login ? "k-login-plugin-form" : this.form;
+		},
+		hasActiveChallenge() {
+			return Boolean(this.pending.email);
 		}
 	},
 	methods: {
@@ -117,8 +121,8 @@ export default {
 	gap: var(--spacing-6);
 }
 
-.k-login-alert {
-	border-radius: var(--rounded);
+.k-login-stack .k-user-info {
+	margin-bottom: var(--spacing-6);
 }
 
 .k-login-form {
@@ -128,10 +132,6 @@ export default {
 }
 .k-login-form label abbr {
 	visibility: hidden;
-}
-
-.k-login-user {
-	margin-bottom: var(--spacing-6);
 }
 
 .k-login-buttons {
