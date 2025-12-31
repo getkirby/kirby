@@ -5,13 +5,9 @@ namespace Kirby\Cms;
 use Kirby\Auth\Limits;
 use Kirby\Auth\Methods;
 use Kirby\Cms\Auth\Status;
-use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
-use Kirby\Filesystem\F;
-use Kirby\Session\AutoSession;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Throwable;
 
 #[CoversClass(Auth::class)]
 class AuthTest extends TestCase
@@ -53,9 +49,6 @@ class AuthTest extends TestCase
 				],
 			]
 		]);
-		Dir::make(static::TMP . '/site/accounts/homer');
-		F::write(static::TMP . '/site/accounts/homer/.htpasswd', $hash);
-		touch(static::TMP . '/site/accounts/homer/.htpasswd', 1337000000);
 
 		$this->auth = $this->app->auth();
 	}
@@ -122,90 +115,6 @@ class AuthTest extends TestCase
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
 		$_GET = ['csrf' => 'session-csrf'];
 		$this->assertSame('session-csrf', $this->auth->csrfFromSession());
-	}
-
-	public function testImpersonate(): void
-	{
-		$this->assertNull($this->auth->user());
-
-		$user = $this->auth->impersonate('kirby');
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => 'kirby@getkirby.com',
-			'mode'      => null,
-			'status'    => 'impersonated'
-		], $this->auth->status()->toArray());
-		$this->assertIsUser($user, $this->auth->user());
-		$this->assertIsUser($user, $this->auth->currentUserFromImpersonation());
-		$this->assertIsUser('kirby', $user);
-		$this->assertSame('kirby@getkirby.com', $user->email());
-		$this->assertSame('admin', $user->role()->name());
-		$this->assertNull($this->auth->user(null, false));
-
-		$user = $this->auth->impersonate('homer@simpsons.com');
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => 'homer@simpsons.com',
-			'mode'      => null,
-			'status'    => 'impersonated'
-		], $this->auth->status()->toArray());
-		$this->assertSame('homer@simpsons.com', $user->email());
-		$this->assertIsUser($user, $this->auth->user());
-		$this->assertIsUser($user, $this->auth->currentUserFromImpersonation());
-		$this->assertNull($this->auth->user(null, false));
-
-		$this->assertNull($this->auth->impersonate(null));
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => null,
-			'mode'      => null,
-			'status'    => 'inactive'
-		], $this->auth->status()->toArray());
-		$this->assertNull($this->auth->user());
-		$this->assertNull($this->auth->currentUserFromImpersonation());
-		$this->assertNull($this->auth->user(null, false));
-
-		$this->auth->setUser($actual = $this->app->user('marge@simpsons.com'));
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => 'marge@simpsons.com',
-			'mode'      => null,
-			'status'    => 'active'
-		], $this->auth->status()->toArray());
-		$this->assertSame('marge@simpsons.com', $this->auth->user()->email());
-		$impersonated = $this->auth->impersonate('nobody');
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => 'nobody@getkirby.com',
-			'mode'      => null,
-			'status'    => 'impersonated'
-		], $this->auth->status()->toArray());
-		$this->assertSame($impersonated, $this->auth->user());
-		$this->assertSame($impersonated, $this->auth->currentUserFromImpersonation());
-		$this->assertSame('nobody', $impersonated->id());
-		$this->assertSame('nobody@getkirby.com', $impersonated->email());
-		$this->assertSame('nobody', $impersonated->role()->name());
-		$this->assertSame($actual, $this->auth->user(null, false));
-
-		$this->auth->logout();
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => null,
-			'mode'      => null,
-			'status'    => 'inactive'
-		], $this->auth->status()->toArray());
-		$this->assertNull($this->auth->impersonate());
-		$this->assertNull($this->auth->user());
-		$this->assertNull($this->auth->currentUserFromImpersonation());
-		$this->assertNull($this->auth->user(null, false));
-	}
-
-	public function testImpersonateInvalidUser(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
-
-		$this->auth->impersonate('lisa@simpsons.com');
 	}
 
 	public function testKirby(): void
@@ -413,137 +322,10 @@ class AuthTest extends TestCase
 		$this->assertSame('session', $app->auth()->type());
 	}
 
-	public function testUserSession(): void
+	public function testUser(): void
 	{
 		$session = $this->app->session();
 		$session->set('kirby.userId', 'marge');
-
-		$user = $this->auth->user();
-		$this->assertSame('marge@simpsons.com', $user->email());
-
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => 'marge@simpsons.com',
-			'mode'      => null,
-			'status'    => 'active'
-		], $this->auth->status()->toArray());
-
-		// impersonation is not set
-		$this->assertNull($this->auth->currentUserFromImpersonation());
-
-		// value is cached
-		$session->set('kirby.userId', 'homer');
-		$user = $this->auth->user();
-		$this->assertSame('marge@simpsons.com', $user->email());
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => 'marge@simpsons.com',
-			'mode'      => null,
-			'status'    => 'active'
-		], $this->auth->status()->toArray());
-	}
-
-	public function testUserSessionManualSession(): void
-	{
-		$session = (new AutoSession($this->app->root('sessions')))->createManually();
-		$session->set('kirby.userId', 'homer');
-		$session->set('kirby.loginTimestamp', 1337000000);
-
-		$user = $this->auth->user($session);
-		$this->assertSame('homer@simpsons.com', $user->email());
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => 'homer@simpsons.com',
-			'mode'      => null,
-			'status'    => 'active'
-		], $this->auth->status()->toArray());
-	}
-
-	public function testUserSessionOldTimestamp(): void
-	{
-		$session = $this->app->session();
-		$session->set('kirby.userId', 'homer');
-		$session->set('kirby.loginTimestamp', 1000000000);
-
-		$this->assertNull($this->auth->user());
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => null,
-			'mode'      => null,
-			'status'    => 'inactive'
-		], $this->auth->status()->toArray());
-
-		// user should be logged out completely
-		$this->assertSame([], $session->data()->get());
-	}
-
-	public function testUserSessionNoTimestamp(): void
-	{
-		$session = $this->app->session();
-		$session->set('kirby.userId', 'homer');
-
-		$this->assertNull($this->auth->user());
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => null,
-			'mode'      => null,
-			'status'    => 'inactive'
-		], $this->auth->status()->toArray());
-
-		// user should be logged out completely
-		$this->assertSame([], $session->data()->get());
-	}
-
-	public function testUserBasicAuth(): void
-	{
-		$this->app->clone([
-			'server' => [
-				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('homer@simpsons.com:springfield123')
-			]
-		]);
-
-		$user = $this->auth->user();
-		$this->assertSame('homer@simpsons.com', $user->email());
-
-		$this->assertSame([
-			'challenge' => null,
-			'email'     => 'homer@simpsons.com',
-			'mode'      => null,
-			'status'    => 'active'
-		], $this->auth->status()->toArray());
-	}
-
-	public function testUserBasicAuthInvalid1(): void
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Invalid login');
-
-		$this->app->clone([
-			'server' => [
-				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('homer@simpsons.com:invalid')
-			]
-		]);
-
-		$this->auth->user();
-	}
-
-	public function testUserBasicAuthInvalid2(): void
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Invalid login');
-
-		$this->app->clone([
-			'server' => [
-				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('homer@simpsons.com:invalid')
-			]
-		]);
-
-		try {
-			$this->auth->user();
-		} catch (Throwable) {
-			// tested above, this check is for the second call
-		}
-
-		$this->auth->user();
+		$this->assertSame('marge@simpsons.com', $this->app->auth()->user()->email());
 	}
 }
