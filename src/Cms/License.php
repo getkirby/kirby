@@ -54,7 +54,7 @@ class License
 		}
 
 		if ($code === LicenseType::Free->prefix()) {
-			$this->email ??= 'mail@getkirby.com';
+			$this->email ??= 'licensing@getkirby.com';
 		}
 
 		$this->kirby = App::instance();
