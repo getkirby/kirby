@@ -236,7 +236,6 @@ class Auth
 		 * @var \Kirby\Auth\Method\BasicAuthMethod
 		 */
 		$basic = $this->methods()->get('basic-auth');
-		$basic::isAvailable($this, ['auth' => $auth], fail: true);
 		return $basic->user($auth);
 	}
 
@@ -654,7 +653,7 @@ class Auth
 
 		try {
 			return $this->user = match ($this->type()) {
-				'basic' => $this->methods()->get('basic-auth')->user(),
+				'basic' => $this->currentUserFromBasicAuth(),
 				default => $this->currentUserFromSession($session)
 			};
 
