@@ -1,15 +1,6 @@
 <template>
 	<form class="k-login-form" @submit.prevent="login">
 		<div class="k-login-fields">
-			<button
-				v-if="canToggle === true"
-				class="k-login-toggler"
-				type="button"
-				@click="toggle"
-			>
-				{{ toggleText }}
-			</button>
-
 			<k-fieldset
 				ref="fieldset"
 				:fields="fields"
@@ -28,46 +19,27 @@
 			/>
 
 			<k-button
+				:disabled="isLoading"
+				:icon="isLoading ? 'loader' : 'check'"
+				:text="isResetForm ? $t('login.reset') : $t('login')"
 				class="k-login-button"
-				icon="check"
 				size="lg"
 				theme="positive"
 				type="submit"
 				variant="filled"
-			>
-				{{ submitText }}
-			</k-button>
+			/>
 		</footer>
 	</form>
 </template>
 
 <script>
-export const props = {
-	props: {
-		/**
-		 * List of available login method names
-		 */
-		methods: {
-			type: Array,
-			default: () => []
-		},
-		/**
-		 * Values to prefill the inputs
-		 * @value { email: String, password: String, remember: Boolean }
-		 */
-		value: {
-			type: Object,
-			default: () => ({})
-		}
-	}
-};
+import { props as LoginProps } from "./LoginView.vue";
 
 export default {
-	mixins: [props],
+	mixins: [LoginProps],
 	emits: ["error"],
 	data() {
 		return {
-			mode: null,
 			isLoading: false,
 			user: {
 				email: "",
@@ -78,36 +50,6 @@ export default {
 		};
 	},
 	computed: {
-		alternateMode() {
-			if (this.form === "email-password") {
-				return "email";
-			}
-
-			return "email-password";
-		},
-		canToggle() {
-			if (this.codeMode === null) {
-				return false;
-			}
-
-			if (this.methods.includes("password") === false) {
-				return false;
-			}
-
-			return (
-				this.methods.includes("password-reset") === true ||
-				this.methods.includes("code") === true
-			);
-		},
-		codeMode() {
-			if (this.methods.includes("password-reset") === true) {
-				return "password-reset";
-			}
-			if (this.methods.includes("code") === true) {
-				return "code";
-			}
-			return null;
-		},
 		fields() {
 			const fields = {
 				email: {
@@ -119,7 +61,7 @@ export default {
 				}
 			};
 
-			if (this.form === "email-password") {
+			if (this.method === "password") {
 				fields.password = {
 					label: this.$t("password"),
 					type: "password",
@@ -132,36 +74,14 @@ export default {
 
 			return fields;
 		},
-		form() {
-			if (this.mode) {
-				return this.mode;
-			}
-
-			if (this.methods[0] === "password") {
-				return "email-password";
-			}
-
-			return "email";
-		},
 		isResetForm() {
-			return this.codeMode === "password-reset" && this.form === "email";
-		},
-		submitText() {
-			const suffix = this.isLoading ? " …" : "";
-
-			if (this.isResetForm) {
-				return this.$t("login.reset") + suffix;
-			}
-
-			return this.$t("login") + suffix;
-		},
-		toggleText() {
-			return this.$t(
-				"login.toggleText." + this.codeMode + "." + this.alternateMode
-			);
+			return this.method === "password-reset";
 		}
 	},
 	methods: {
+		focus() {
+			this.$refs.fieldset.focus("email");
+		},
 		async login() {
 			this.$emit("error", null);
 			this.isLoading = true;
@@ -169,7 +89,7 @@ export default {
 			// clear field data that is not needed for login
 			const user = { ...this.user };
 
-			if (this.mode === "email") {
+			if (this.method !== "password") {
 				user.password = null;
 			}
 
@@ -193,24 +113,12 @@ export default {
 			} finally {
 				this.isLoading = false;
 			}
-		},
-		toggle() {
-			this.mode = this.alternateMode;
-			this.$refs.fieldset.focus("email");
 		}
 	}
 };
 </script>
 
 <style>
-.k-login-form {
-	position: relative;
-}
-
-.k-login-form label abbr {
-	visibility: hidden;
-}
-
 .k-login-toggler {
 	position: absolute;
 	top: -2px;

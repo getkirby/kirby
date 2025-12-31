@@ -10,3 +10,9 @@ export default {
 	emits: ["click"]
 };
 </script>
+
+<style>
+.k-login-alert {
+	border-radius: var(--rounded);
+}
+</style>
