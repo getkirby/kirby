@@ -2,6 +2,7 @@
 
 namespace Kirby\Auth\Method;
 
+use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Status;
 
 /**
@@ -26,5 +27,15 @@ class PasswordResetMethod extends CodeMethod
 			email: $email,
 			long:  false,
 		);
+	}
+
+	public static function isAvailable(Auth $auth, array $options = []): bool
+	{
+		// don't allow to circumvent 2FA by 1FA code method
+		if (static::isWithoutAny2FA($auth) === false) {
+			return false;
+		}
+
+		return true;
 	}
 }

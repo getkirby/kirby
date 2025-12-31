@@ -78,29 +78,100 @@ class MethodsTest extends TestCase
 		$this->assertSame([['mail@getkirby.com', 'secret', true]], DummyMethod::$calls);
 	}
 
-	public function testClass(): void
+	public function testAuthenticateUnavailable(): void
 	{
-		$methods = $this->methods();
-		$this->assertSame(PasswordMethod::class, $methods->class('password'));
-	}
+		$app = $this->app([
+			'auth' => [
+				'methods' => [
+					'password' => ['2fa' => true],
+					'code'     => []
+				]
+			]
+		]);
 
-	public function testClassInvalid(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Unsupported auth method: unknown');
-
-		$methods = $this->methods();
-		$methods->class('unknown');
-	}
-
-	public function testEnabledDefaults(): void
-	{
-		$app     = $this->app();
 		$methods = new Methods($app->auth(), $app);
-		$this->assertSame(['password' => []], $methods->enabled());
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Auth method "code" is not available');
+
+		$methods->authenticate('code', 'mail@getkirby.com', 'secret', true);
 	}
 
-	public function testEnabledWith2FA(): void
+	public function testAvailableWith2FA(): void
+	{
+		$app = $this->app([
+			'auth' => [
+				'methods' => [
+					'password' => ['2fa' => true],
+					'code'     => []
+				]
+			]
+		]);
+		$methods = new Methods($app->auth(), $app);
+
+		$this->assertSame([
+			'password' => ['2fa' => true]
+		], $methods->available());
+	}
+
+	public function testAvailableCodePasswordResetConflict(): void
+	{
+		$app = $this->app([
+			'auth' => [
+				'methods' => ['password', 'code', 'password-reset']
+			]
+		]);
+		$methods = new Methods($app->auth(), $app);
+
+		$this->assertSame([
+			'password'       => [],
+			'password-reset' => []
+		], $methods->available());
+	}
+
+	public function testHas(): void
+	{
+		$app = $this->app([
+			'auth' => [
+				'methods' => ['password', 'code']
+			]
+		]);
+
+		$methods = new Methods($app->auth(), $app);
+
+		$this->assertTrue($methods->has('password'));
+		$this->assertTrue($methods->has('code'));
+		$this->assertFalse($methods->has('password-reset'));
+	}
+
+	public function testHasAnyWith2FA(): void
+	{
+		$app = $this->app([
+			'auth' => [
+				'methods' => [
+					'password' => ['2fa' => true],
+					'code'     => []
+				]
+			]
+		]);
+
+		$methods = new Methods($app->auth(), $app);
+		$this->assertTrue($methods->hasAnyWith2FA());
+
+		$app = $this->app([
+			'auth' => [
+				'methods' => [
+					'password' => [],
+					'code'     => []
+				]
+			]
+		]);
+
+		$methods = new Methods($app->auth(), $app);
+		$this->assertFalse($methods->hasAnyWith2FA());
+	}
+
+	public function testHasAvailable(): void
 	{
 		$app = $this->app([
 			'auth' => [
@@ -114,58 +185,54 @@ class MethodsTest extends TestCase
 
 		$methods = new Methods($app->auth(), $app);
 
-		$this->assertSame([
-			'password' => ['2fa' => true]
-		], $methods->enabled());
+		$this->assertTrue($methods->hasAvailable('password'));
+		$this->assertFalse($methods->hasAvailable('code'));
+		$this->assertFalse($methods->hasAvailable('password-reset'));
+		$this->assertFalse($methods->hasAvailable('unknown'));
 	}
 
-	public function testEnabledWith2FADebug(): void
+	public function testClass(): void
+	{
+		$methods = $this->methods();
+		$this->assertSame(PasswordMethod::class, $methods->class('password'));
+	}
+
+	public function testClassInvalid(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('No auth method class for: unknown');
+
+		$methods = $this->methods();
+		$methods->class('unknown');
+	}
+
+	public function testEnabledDefaults(): void
+	{
+		$app     = $this->app();
+		$methods = new Methods($app->auth(), $app);
+		$this->assertSame(['password' => []], $methods->enabled());
+	}
+
+	public function testEnabledConfig(): void
 	{
 		$app = $this->app([
-			'debug' => true,
-			'auth'  => [
+			'auth' => [
 				'methods' => [
-					'password' => ['2fa' => true],
-					'code'     => []
+					'password'       => ['2fa' => true],
+					'foo'            => [],
+					'code'           => true,
+					'password-reset'
 				]
 			]
 		]);
-		$methods = new Methods($app->auth(), $app);
 
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
-
-		$methods->enabled();
-	}
-
-	public function testEnabledCodePasswordResetConflict(): void
-	{
-		$app = $this->app([
-			'auth' => [
-				'methods' => ['password', 'code', 'password-reset']
-			]
-		]);
 		$methods = new Methods($app->auth(), $app);
 
 		$this->assertSame([
-			'password'       => [],
+			'password'       => ['2fa' => true],
+			'foo'            => [],
+			'code'           => [],
 			'password-reset' => []
 		], $methods->enabled());
-	}
-
-	public function testEnabledCodePasswordResetConflictDebug(): void
-	{
-		$app = $this->app([
-			'debug' => true,
-			'auth' => [
-				'methods' => ['password', 'code', 'password-reset']
-			]
-		]);
-		$methods = new Methods($app->auth(), $app);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "code" and "password-reset" login methods cannot be enabled together');
-
-		$methods->enabled();
 	}
 }

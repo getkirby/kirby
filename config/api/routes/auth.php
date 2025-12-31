@@ -62,11 +62,11 @@ return [
 			$long     = $this->requestBody('long');
 			$password = $this->requestBody('password');
 
-			$methods = $auth->methods()->enabled();
+			$methods = $auth->methods();
 			$method  = match (true) {
-				$password !== ''                  => 'password',
-				isset($methods['code'])           => 'code',
-				isset($methods['password-reset']) => 'password-reset',
+				$password !== ''                         => 'password',
+				$methods->hasAvailable('code')           => 'code',
+				$methods->hasAvailable('password-reset') => 'password-reset',
 				default => throw new InvalidArgumentException(
 					message: 'Login without password is not enabled'
 				)

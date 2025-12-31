@@ -434,6 +434,14 @@ class Auth
 	}
 
 	/**
+	 * @since 6.0.0
+	 */
+	public function kirby(): App
+	{
+		return $this->kirby;
+	}
+
+	/**
 	 * Returns the auth rate limits object
 	 * @since 6.0.0
 	 */

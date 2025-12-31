@@ -84,6 +84,20 @@ class PasswordMethodTest extends TestCase
 		$method->authenticate('marge@simpsons.com');
 	}
 
+	public function testIsAvailable(): void
+	{
+		$auth = $this->createStub(Auth::class);
+		$this->assertTrue(PasswordMethod::isAvailable($auth));
+	}
+
+	public function testOptions(): void
+	{
+		$auth   = $this->createStub(Auth::class);
+		$method = new PasswordMethod(auth: $auth, options: ['2fa' => true]);
+
+		$this->assertSame(['2fa' => true], $method->options());
+	}
+
 	public function testType(): void
 	{
 		$this->assertSame('password', PasswordMethod::type());
