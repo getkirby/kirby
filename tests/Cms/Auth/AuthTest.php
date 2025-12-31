@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Limits;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
@@ -146,6 +147,11 @@ class AuthTest extends TestCase
 		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
 
 		$this->auth->impersonate('lisa@simpsons.com');
+	}
+
+	public function testLimits(): void
+	{
+		$this->assertInstanceOf(Limits::class, $this->auth->limits());
 	}
 
 	public function testLogin(): void
