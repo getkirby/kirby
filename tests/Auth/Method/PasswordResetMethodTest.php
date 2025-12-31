@@ -4,8 +4,8 @@ namespace Kirby\Auth\Method;
 
 use Kirby\Auth\Method;
 use Kirby\Auth\Methods;
+use Kirby\Auth\Status;
 use Kirby\Cms\Auth;
-use Kirby\Cms\Auth\Status;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;

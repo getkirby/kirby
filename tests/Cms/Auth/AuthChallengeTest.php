@@ -97,6 +97,7 @@ class AuthChallengeTest extends TestCase
 		$status = $auth->createChallenge('marge@simpsons.com');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -119,6 +120,7 @@ class AuthChallengeTest extends TestCase
 		$status = $auth->createChallenge('invalid@example.com');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'invalid@example.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -134,6 +136,7 @@ class AuthChallengeTest extends TestCase
 		$status = $auth->createChallenge('error@getkirby.com');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'error@getkirby.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -170,6 +173,7 @@ class AuthChallengeTest extends TestCase
 		$status = $auth->createChallenge('marge@simpsons.com');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -229,6 +233,7 @@ class AuthChallengeTest extends TestCase
 		$status = $auth->createChallenge('marge@simpsons.com');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -241,6 +246,7 @@ class AuthChallengeTest extends TestCase
 		$status = $auth->createChallenge('invalid@example.com');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'invalid@example.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -256,6 +262,7 @@ class AuthChallengeTest extends TestCase
 		$status = $this->auth->createChallenge('marge@simpsons.com', true);
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -272,6 +279,7 @@ class AuthChallengeTest extends TestCase
 		$status = $this->auth->createChallenge('test@xn--exmple-cua.com');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'test@exämple.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -320,6 +328,7 @@ class AuthChallengeTest extends TestCase
 		$status = $this->auth->login2fa('marge@simpsons.com', 'springfield123');
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => '2fa',
 			'status'    => 'pending'
@@ -345,6 +354,7 @@ class AuthChallengeTest extends TestCase
 		$status = $this->auth->login2fa('marge@simpsons.com', 'springfield123', true);
 		$this->assertSame([
 			'challenge' => 'email',
+			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => '2fa',
 			'status'    => 'pending'
@@ -430,6 +440,7 @@ class AuthChallengeTest extends TestCase
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
 			$this->assertSame([
 				'challenge' => null,
+				'data'      => null,
 				'email'     => null,
 				'mode'      => null,
 				'status'    => 'inactive'
@@ -450,6 +461,7 @@ class AuthChallengeTest extends TestCase
 			$this->assertSame(['challengeDestroyed' => false], $e->getDetails());
 			$this->assertSame([
 				'challenge' => 'email',
+				'data'      => null,
 				'email'     => 'marge@simpsons.com',
 				'mode'      => null,
 				'status'    => 'pending'
@@ -478,6 +490,7 @@ class AuthChallengeTest extends TestCase
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
 			$this->assertSame([
 				'challenge' => null,
+				'data'      => null,
 				'email'     => null,
 				'mode'      => null,
 				'status'    => 'inactive'
@@ -559,6 +572,7 @@ class AuthChallengeTest extends TestCase
 
 		$this->assertSame([
 			'challenge' => null,
+			'data'      => null,
 			'email'     => null,
 			'mode'      => null,
 			'status'    => 'inactive'

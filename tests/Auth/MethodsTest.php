@@ -5,7 +5,6 @@ namespace Kirby\Auth;
 use Kirby\Api\Api;
 use Kirby\Auth\Method\CodeMethod;
 use Kirby\Auth\Method\PasswordMethod;
-use Kirby\Cms\Auth\Status;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;

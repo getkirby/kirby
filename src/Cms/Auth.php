@@ -10,8 +10,8 @@ use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Limits;
 use Kirby\Auth\Method\BasicAuthMethod;
 use Kirby\Auth\Methods;
+use Kirby\Auth\Status;
 use Kirby\Auth\User as AuthUser;
-use Kirby\Cms\Auth\Status;
 use Kirby\Exception\Exception;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
@@ -37,12 +37,7 @@ class Auth
 	protected Csrf $csrf;
 	protected Limits $limits;
 	protected Methods $methods;
-
-	/**
-	 * Cache of the auth status object
-	 */
 	protected Status|null $status = null;
-
 	protected AuthUser $user;
 
 	/**
@@ -422,38 +417,22 @@ class Auth
 	): Status {
 		// try to return from cache
 		if (
-			$this->status &&
+			$this->status !== null &&
 			$session === null &&
 			$allowImpersonation === true
 		) {
 			return $this->status;
 		}
 
-		$sessionObj = $this->session($session);
-
-		$props = ['kirby' => $this->kirby];
-
-		if ($user = $this->user($sessionObj, $allowImpersonation)) {
-			// a user is currently logged in
-			$props['email']  = $user->email();
-			$props['status'] = match (true) {
-				$allowImpersonation === true &&
-					$this->user->isImpersonated() === true => 'impersonated',
-				default                                    => 'active'
-			};
-		} elseif ($email = $sessionObj->get('kirby.challenge.email')) {
-			// a challenge is currently pending
-			$props['status']            = 'pending';
-			$props['email']             = $email;
-			$props['mode']              = $sessionObj->get('kirby.challenge.mode');
-			$props['challenge']         = $sessionObj->get('kirby.challenge.type');
-			$props['challengeFallback'] = A::last($this->enabledChallenges());
-		} else {
-			// no active authentication
-			$props['status'] = 'inactive';
-		}
-
-		$status = new Status($props);
+		$session = $this->session($session);
+		$user    = $this->user($session, $allowImpersonation);
+		$status  = Status::for(
+			kirby:        $this->kirby,
+			user:         $user,
+			impersonated: $allowImpersonation && $this->user->isImpersonated(),
+			session:      $session,
+			challenges:  $this->challenges()->enabled()
+		);
 
 		// only cache the default object
 		if ($session === null && $allowImpersonation === true) {
