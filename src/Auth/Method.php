@@ -43,6 +43,22 @@ abstract class Method
 	): User|Status;
 
 	/**
+	 * Checks if this method can be used in the current context
+	 */
+	public static function isAvailable(Auth $auth, array $options = []): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Returns the config options for this method
+	 */
+	public function options(): array
+	{
+		return $this->options;
+	}
+
+	/**
 	 * Returns the identifier of the method (e.g. 'password')
 	 */
 	public static function type(): string

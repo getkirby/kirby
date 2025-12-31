@@ -208,6 +208,11 @@ class AuthTest extends TestCase
 		$this->auth->impersonate('lisa@simpsons.com');
 	}
 
+	public function testKirby(): void
+	{
+		$this->assertInstanceOf(App::class, $this->auth->kirby());
+	}
+
 	public function testLimits(): void
 	{
 		$this->assertInstanceOf(Limits::class, $this->auth->limits());

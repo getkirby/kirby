@@ -33,13 +33,12 @@ class Methods
 	public function __construct(
 		protected Auth $auth,
 		protected App $kirby
-	) {
-	}
+	) {}
 
 	/**
 	 * Authenticates via the specific auth method
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If auth method type does not exists
+	 * @throws \Kirby\Exception\InvalidArgumentException If auth method type does not exists or is not available
 	 */
 	public function authenticate(
 		string $type,
@@ -48,7 +47,33 @@ class Methods
 		bool $long = false
 	): User|Status {
 		$method = $this->get($type);
+
+		if ($method::isAvailable($this->auth, $method->options()) === false) {
+			throw new InvalidArgumentException(
+				message: 'Auth method "' . $type . '" is not available'
+			);
+		}
+
 		return $method->authenticate($email, $password, $long);
+	}
+
+	/**
+	 * Returns enabled methods that are usable
+	 * in the current context
+	 */
+	public function available(): array
+	{
+		$available = [];
+
+		foreach ($this->enabled() as $type => $options) {
+			$class = $this->class($type);
+
+			if ($class::isAvailable($this->auth, $options) === true) {
+				$available[$type] = $options;
+			}
+		}
+
+		return $available;
 	}
 
 	/**
@@ -64,15 +89,13 @@ class Methods
 		}
 
 		throw new NotFoundException(
-			message: 'Unsupported auth method: ' . $type
+			message: 'No auth method class for: ' . $type
 		);
 	}
 
 	/**
-	 * Returns normalized array of enabled methods
+	 * Returns normalized array of enabled/configured methods
 	 * by the `auth.methods` config option
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If config is invalid (only in debug mode)
 	 */
 	public function enabled(): array
 	{
@@ -104,38 +127,24 @@ class Methods
 			}
 		}
 
-		// 2FA must not be circumvented by code-based modes
-		foreach (['code', 'password-reset'] as $method) {
-			if ($uses2fa === true && isset($normalized[$method]) === true) {
-				unset($normalized[$method]);
-
-				if ($this->kirby->option('debug') === true) {
-					throw new InvalidArgumentException(
-						message: 'The "' . $method . '" login method cannot be enabled when 2FA is required'
-					);
-				}
-			}
-		}
-
-		// only one code-based mode can be active at once
-		if (
-			isset($normalized['code']) === true &&
-			isset($normalized['password-reset']) === true
-		) {
-			unset($normalized['code']);
-
-			if ($this->kirby->option('debug') === true) {
-				throw new InvalidArgumentException(
-					message: 'The "code" and "password-reset" login methods cannot be enabled together'
-				);
-			}
-		}
-
 		return $this->enabled = $normalized;
 	}
 
 	/**
-	 * Returns an instance of the requested auth method
+	 * Returns the first available auth method
+	 * for the current context
+	 */
+	public function firstAvailable(): Method|null
+	{
+		$available = $this->available();
+		$type      = array_key_first($available);
+		return $type ? $this->get($type) : null;
+	}
+
+	/**
+	 * Returns an instance of the requested auth method.
+	 * (This is based on the config. You might need to check
+	 * yourself if the method should be available in your context)
 	 */
 	public function get(string $type): Method
 	{
@@ -144,5 +153,35 @@ class Methods
 			auth:    $this->auth,
 			options: $this->enabled()[$type] ?? []
 		);
+	}
+
+	/**
+	 * Checks if the method type is enabled/configured
+	 */
+	public function has(string $type): bool
+	{
+		return in_array($type, array_keys($this->enabled()), true);
+	}
+
+	/**
+	 * Checks if any enabled/configured method is using 2FA
+	 */
+	public function hasAnyWith2FA(): bool
+	{
+		foreach ($this->enabled() as $options) {
+			if (isset($options['2fa']) === true && $options['2fa'] === true) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if the method type is available
+	 */
+	public function hasAvailable(string $type): bool
+	{
+		return in_array($type, array_keys($this->available()), true);
 	}
 }
