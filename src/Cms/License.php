@@ -53,6 +53,10 @@ class License
 			$this->email = $this->normalizeEmail($email);
 		}
 
+		if ($code === LicenseType::Free->prefix()) {
+			$this->email ??= 'licensing@getkirby.com';
+		}
+
 		$this->kirby = App::instance();
 	}
 
@@ -71,6 +75,10 @@ class License
 	 */
 	public function code(bool $obfuscated = false): string|null
 	{
+		if ($this->type() === LicenseType::Free) {
+			return null;
+		}
+
 		if ($this->code !== null && $obfuscated === true) {
 			return Str::substr($this->code, 0, 10) . str_repeat('X', 22);
 		}
@@ -167,6 +175,26 @@ class License
 	}
 
 	/**
+	 * Whether it is a free license for development/private installation
+	 * @since 5.3.0
+	 */
+	public function isFree(): bool
+	{
+		return $this->type() === LicenseType::Free;
+	}
+
+	/**
+	 * Whether it is a free license and installed locally
+	 * @since 5.3.0
+	 */
+	public function isFreeAndLocal(): bool
+	{
+		return
+			$this->isFree() === true &&
+			$this->kirby->system()->isLocal() === true;
+	}
+
+	/**
 	 * The license is still valid for the currently
 	 * installed version, but it passed the 3 year period.
 	 */
@@ -248,13 +276,17 @@ class License
 			return false;
 		}
 
+		$data      = json_encode($this->signatureData());
+		$signature = hex2bin($this->signature);
+
+		if ($this->isFreeAndLocal() === true) {
+			return hash('sha256', $data) === $signature;
+		}
+
 		// get the public key
 		$pubKey = F::read($this->kirby->root('kirby') . '/kirby.pub');
 
 		// verify the license signature
-		$data      = json_encode($this->signatureData());
-		$signature = hex2bin($this->signature);
-
 		return openssl_verify($data, $signature, $pubKey, 'RSA-SHA256') === 1;
 	}
 
@@ -372,8 +404,19 @@ class License
 			);
 		}
 
+		if ($this->isFreeAndLocal() === true) {
+			$response = $this->selfsign([
+				'activation' => date('Y-m-d H:i:s'),
+				'code'       => $this->code,
+				'date'       => date('Y-m-d H:i:s'),
+				'domain'     => $this->domain,
+				'email'      => $this->email,
+				'order'      => '12345678',
+			]);
+		}
+
 		// @codeCoverageIgnoreStart
-		$response = $this->request('register', [
+		$response ??= $this->request('register', [
 			'license' => $this->code,
 			'email'   => $this->email,
 			'domain'  => $this->domain
@@ -405,7 +448,10 @@ class License
 	{
 		// @codeCoverageIgnoreStart
 		$response = Remote::get(static::hub() . '/' . $path, [
-			'data' => $data
+			'data'    => $data,
+			'headers' => [
+				'Kirby-Version' => $this->kirby->version()
+			]
 		]);
 
 		// handle request errors
@@ -447,6 +493,22 @@ class License
 			file: $this->root(),
 			data: $this->content()
 		);
+	}
+
+	/**
+	 * Self-signs a license file where registration
+	 * will not communicate with the license hub
+	 */
+	protected function selfsign(array $payload): array
+	{
+		$data          = $payload;
+		$data['email'] = hash('sha256', $data['email'] . static::SALT);
+		$data          = json_encode($data);
+
+		return [
+			...$payload,
+			'signature' => bin2hex(hash('sha256', $data))
+		];
 	}
 
 	/**
@@ -492,6 +554,7 @@ class License
 	{
 		return $this->status ??= match (true) {
 			$this->isMissing()  => LicenseStatus::Missing,
+			$this->isFree()     => LicenseStatus::Acknowledged,
 			$this->isLegacy()   => LicenseStatus::Legacy,
 			$this->isInactive() => LicenseStatus::Inactive,
 			default             => LicenseStatus::Active
