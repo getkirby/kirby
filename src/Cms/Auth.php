@@ -73,17 +73,6 @@ class Auth
 	}
 
 	/**
-	 * Ensures that the rate limit was not exceeded
-	 *
-	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded
-	 * @deprecated 6.0.0 Use `self::limits()->ensure()` instead
-	 */
-	protected function checkRateLimit(string $email): void
-	{
-		$this->limits->ensure($email);
-	}
-
-	/**
 	 * Creates an authentication challenge
 	 * (one-time auth code)
 	 * @since 3.5.0
