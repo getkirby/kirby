@@ -107,12 +107,12 @@ return [
 							'options'  => [
 								[
 									'icon'  => 'globe',
-									'text'  => I18n::translate('license.activate.type.regular'),
+									'text'  => I18n::translate('license.regular.label'),
 									'value' => 'regular'
 								],
 								[
 									'icon'  => 'key',
-									'text'  => I18n::translate('license.activate.type.free'),
+									'text'  => I18n::translate('license.free.label'),
 									'value' => 'free'
 								]
 							],
