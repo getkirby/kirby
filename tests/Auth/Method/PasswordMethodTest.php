@@ -90,6 +90,14 @@ class PasswordMethodTest extends TestCase
 		$this->assertTrue(PasswordMethod::isAvailable($auth));
 	}
 
+	public function testIsUsingChallenges(): void
+	{
+		$auth = $this->createStub(Auth::class);
+
+		$this->assertFalse(PasswordMethod::isUsingChallenges($auth));
+		$this->assertTrue(PasswordMethod::isUsingChallenges($auth, ['2fa' => true]));
+	}
+
 	public function testOptions(): void
 	{
 		$auth   = $this->createStub(Auth::class);

@@ -99,6 +99,12 @@ class CodeMethodTest extends TestCase
 		CodeMethod::isAvailable($auth);
 	}
 
+	public function testIsUsingChallenges(): void
+	{
+		$auth = $this->auth();
+		$this->assertTrue(CodeMethod::isUsingChallenges($auth));
+	}
+
 	public function testType(): void
 	{
 		$this->assertSame('code', CodeMethod::type());

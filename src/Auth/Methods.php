@@ -28,12 +28,14 @@ class Methods
 	 */
 	public static array $methods = [];
 
+	protected $available;
 	protected $enabled;
 
 	public function __construct(
 		protected Auth $auth,
 		protected App $kirby
-	) {}
+	) {
+	}
 
 	/**
 	 * Authenticates via the specific auth method
@@ -63,6 +65,10 @@ class Methods
 	 */
 	public function available(): array
 	{
+		if (isset($this->available) === true) {
+			return $this->available; // @codeCoverageIgnore
+		}
+
 		$available = [];
 
 		foreach ($this->enabled() as $type => $options) {
@@ -73,7 +79,7 @@ class Methods
 			}
 		}
 
-		return $available;
+		return $this->available = $available;
 	}
 
 	/**
@@ -161,6 +167,22 @@ class Methods
 	public function has(string $type): bool
 	{
 		return in_array($type, array_keys($this->enabled()), true);
+	}
+
+	/**
+	 * Checks if any available method is using challenges
+	 */
+	public function hasAnyAvailableUsingChallenges(): bool
+	{
+		foreach ($this->available() as $method => $options) {
+			$class = $this->class($method);
+
+			if ($class::isUsingChallenges($this->auth, $options) === true) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

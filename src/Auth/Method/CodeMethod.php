@@ -48,6 +48,13 @@ class CodeMethod extends Method
 		return true;
 	}
 
+	public static function isUsingChallenges(
+		Auth $auth,
+		array $options = []
+	): bool {
+		return true;
+	}
+
 	/**
 	 * Don't allow to circumvent 2FA by 1FA code method
 	 */
