@@ -2,8 +2,8 @@
 
 namespace Kirby\Auth\Method;
 
+use Kirby\Auth\Auth;
 use Kirby\Auth\Method;
-use Kirby\Cms\Auth;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;

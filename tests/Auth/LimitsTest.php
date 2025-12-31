@@ -7,8 +7,7 @@ use Kirby\Filesystem\Dir;
 
 class LimitsTest extends TestCase
 {
-	public const string FIXTURES = __DIR__ . '/fixtures';
-	public const string TMP      = KIRBY_TMP_DIR . '/Auth.Limits';
+	public const string TMP = KIRBY_TMP_DIR . '/Auth.Limits';
 
 	protected Limits $limits;
 	public string|null $failedEmail = null;

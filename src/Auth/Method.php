@@ -2,7 +2,6 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Cms\Auth;
 use Kirby\Cms\User;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
