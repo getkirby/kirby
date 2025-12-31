@@ -18,6 +18,17 @@ class UserTest extends ModelTestCase
 		$this->assertNull($user->avatar());
 	}
 
+	public function testCredentials(): void
+	{
+		$user = new User([
+			'credentials' => $credentials = [
+				'role' => 'editor'
+			]
+		]);
+
+		$this->assertSame($credentials, $user->credentials());
+	}
+
 	public function testId(): void
 	{
 		$user = new User([
