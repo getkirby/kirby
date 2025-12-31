@@ -128,14 +128,22 @@ class BasicAuthMethod extends Method
 	public function user(
 		BasicAuth|null $auth = null
 	): User|null {
-		/**
-		 * @var \Kirby\Http\Request\Auth\BasicAuth $auth
-		 */
-		$auth ??= $this->auth->kirby()->request()->auth();
+		$config = ['auth' => $auth];
 
-		return $this->authenticate(
-			$auth->username(),
-			$auth->password(),
-		);
+		// ensure basic auth method is actually available
+		// with the provided config
+		if (static::isAvailable($this->auth, $config, true) === true) {
+			/**
+			 * @var \Kirby\Http\Request\Auth\BasicAuth $auth
+			 */
+			$auth ??= $this->auth->kirby()->request()->auth();
+
+			return $this->authenticate(
+				$auth->username(),
+				$auth->password(),
+			);
+		}
+
+		return null;
 	}
 }
