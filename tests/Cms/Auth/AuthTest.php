@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Limits;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
@@ -62,6 +63,21 @@ class AuthTest extends TestCase
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);
 		App::destroy();
+		$_GET = [];
+	}
+
+	public function testCsrf(): void
+	{
+		$this->app->session()->set('kirby.csrf', 'session-csrf');
+		$_GET = [];
+		$this->assertFalse($this->auth->csrf());
+	}
+
+	public function testCsrfFromSession(): void
+	{
+		$this->app->session()->set('kirby.csrf', 'session-csrf');
+		$_GET = ['csrf' => 'session-csrf'];
+		$this->assertSame('session-csrf', $this->auth->csrfFromSession());
 	}
 
 	public function testImpersonate(): void
@@ -152,6 +168,11 @@ class AuthTest extends TestCase
 		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
 
 		$this->auth->impersonate('lisa@simpsons.com');
+	}
+
+	public function testLimits(): void
+	{
+		$this->assertInstanceOf(Limits::class, $this->auth->limits());
 	}
 
 	public function testLogin(): void

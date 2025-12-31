@@ -5,8 +5,10 @@ namespace Kirby\Auth;
 use Kirby\Cms\App;
 
 /**
+ * Handler for the auth CSRF token
+ *
  * @package   Kirby Auth
- * @author    Nico Hoffmann <nico@getkirby.com>
+ * @author    Lukas Bestle <lukas@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license

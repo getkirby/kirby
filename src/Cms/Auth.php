@@ -45,6 +45,11 @@ class Auth
 	protected Methods $method;
 
 	/**
+	 * Currently impersonated user
+	 */
+	protected User|null $impersonate = null;
+
+	/**
 	 * Cache of the auth status object
 	 */
 	protected Status|null $status = null;
@@ -78,6 +83,17 @@ class Auth
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Ensures that the rate limit was not exceeded
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded
+	 * @deprecated 6.0.0 Use `self::limits()->ensure()` instead
+	 */
+	protected function checkRateLimit(string $email): void
+	{
+		$this->limits->ensure($email);
 	}
 
 	/**
@@ -267,6 +283,10 @@ class Auth
 		return $this->limits->isBlocked($email);
 	}
 
+	/**
+	 * Returns the auth rate limits object
+	 * @since 6.0.0
+	 */
 	public function limits(): Limits
 	{
 		return $this->limits;
@@ -430,10 +450,6 @@ class Auth
 		string|null $email,
 		bool $triggerHook = true
 	): bool {
-		if ($triggerHook === true) {
-			$this->kirby->trigger('user.login:failed', ['email' => $email]);
-		}
-
 		return $this->limits->track($email, $triggerHook);
 	}
 
@@ -515,7 +531,6 @@ class Auth
 			// log invalid login trial unless the rate limit is already active
 			if ($e instanceof RateLimitException === false) {
 				try {
-					$this->kirby->trigger('user.login:failed', ['email' => $email]);
 					$this->limits->track($email);
 				} catch (Throwable) {
 					// $e is overwritten with the exception

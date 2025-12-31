@@ -9,5 +9,6 @@ use Kirby\Exception\PermissionException;
  */
 class RateLimitException extends PermissionException
 {
+	protected static string $defaultKey = 'error.auth.limit';
 	protected static string $defaultFallback = 'Rate limit exceeded';
 }

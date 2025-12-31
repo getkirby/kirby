@@ -2,6 +2,7 @@
 
 namespace Kirby\Auth;
 
+use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
@@ -12,6 +13,7 @@ class LimitsTest extends TestCase
 	public const string TMP      = KIRBY_TMP_DIR . '/Auth.Limits';
 
 	protected Limits $limits;
+	public string|null $failedEmail = null;
 
 	public function setUp(): void
 	{
@@ -24,6 +26,11 @@ class LimitsTest extends TestCase
 				['email' => 'marge@simpsons.com'],
 				['email' => 'homer@simpsons.com'],
 				['email' => 'test@exämple.com']
+			],
+			'hooks' => [
+				'user.login:failed' => function ($email) use ($self) {
+					$self->failedEmail = $email;
+				}
 			]
 		]);
 
@@ -34,6 +41,19 @@ class LimitsTest extends TestCase
 	public function tearDown(): void
 	{
 		Dir::remove(static::TMP);
+	}
+
+	public function testEnsure(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->expectException(RateLimitException::class);
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->limits->ensure('homer@simpsons.com');
 	}
 
 	public function testFile(): void
@@ -129,9 +149,11 @@ class LimitsTest extends TestCase
 		$this->app->visitor()->ip('10.3.123.234');
 		$this->assertTrue($this->limits->track('homer@simpsons.com'));
 		$this->assertTrue($this->limits->track('marge@simpsons.com'));
-		$this->assertTrue($this->limits->track('lisa@simpsons.com'));
+		$this->assertTrue($this->limits->track('lisa@simpsons.com', false));
+		$this->assertSame('marge@simpsons.com', $this->failedEmail);
 
 		$this->assertTrue($this->limits->track(null));
+		$this->assertNull($this->failedEmail);
 
 		$expected = [
 			'by-ip' => [

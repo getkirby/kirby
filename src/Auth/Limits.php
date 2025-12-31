@@ -8,6 +8,16 @@ use Kirby\Data\Data;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
 
+/**
+ * Handler to enforce the auth rate limits
+ *
+ * @package   Kirby Auth
+ * @author    Lukas Bestle <lukas@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
 class Limits
 {
 	public function __construct(
@@ -18,7 +28,7 @@ class Limits
 	public function ensure(string $email): void
 	{
 		if ($this->isBlocked($email) === true) {
-			$this->kirby->trigger('user.login:failed', compact('email'));
+			$this->kirby->trigger('user.login:failed', ['email' => $email]);
 			throw new RateLimitException();
 		}
 	}
@@ -79,8 +89,12 @@ class Limits
 		return $updated;
 	}
 
-	public function track(string|null $email): bool
+	public function track(string|null $email, bool $triggerHook = true): bool
 	{
+		if ($triggerHook === true) {
+			$this->kirby->trigger('user.login:failed', ['email' => $email]);
+		}
+
 		$log  = $this->log();
 		$ip   = $this->kirby->visitor()->ip(hash: true);
 		$time = time();

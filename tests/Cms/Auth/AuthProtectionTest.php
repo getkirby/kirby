@@ -61,8 +61,6 @@ class AuthProtectionTest extends TestCase
 		$this->failedEmail = null;
 	}
 
-	// rate-limit tests moved to kirby/tests/Auth/LimitsTest.php
-
 	public function testValidatePasswordValid(): void
 	{
 		copy(static::FIXTURES . '/logins.json', static::TMP . '/site/accounts/.logins');
