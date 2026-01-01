@@ -66,7 +66,7 @@ export default {
 	--drawer-header-height: 2.5rem;
 	--drawer-header-padding: 1rem;
 	--drawer-shadow: var(--shadow-xl);
-	--drawer-width: 50rem;
+	--drawer-width: 48rem;
 }
 
 /**
@@ -97,15 +97,15 @@ export default {
 }
 
 .k-drawer[data-size="tiny"] {
-	--drawer-width: 26rem;
+	--drawer-width: 28rem;
 }
 .k-drawer[data-size="small"] {
-	--drawer-width: 34rem;
+	--drawer-width: 38rem;
 }
 .k-drawer[data-size="large"] {
-	--drawer-width: 64rem;
+	--drawer-width: 62rem;
 }
 .k-drawer[data-size="huge"] {
-	--drawer-width: 82rem;
+	--drawer-width: 74rem;
 }
 </style>
