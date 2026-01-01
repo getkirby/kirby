@@ -64,7 +64,6 @@ export default {
 	},
 	data() {
 		return {
-			observer: null,
 			visible: this.tabs,
 			invisible: []
 		};
@@ -85,22 +84,23 @@ export default {
 	watch: {
 		tabs: {
 			async handler() {
-				// disconnect any previous observer
-				this.observer?.disconnect();
 				await this.$nextTick();
 
 				// only if $el exists (more than one tab),
 				// add new observer and measure tab sizes
 				if (this.$el instanceof Element) {
-					this.observer = new ResizeObserver(this.resize);
-					this.observer.observe(this.$el);
+					this.$panel.observers.resize.unobserve(this.$el);
+					this.$panel.observers.resize.observe(this.$el);
+					this.$el.addEventListener("resize", this.resize);
 				}
 			},
 			immediate: true
 		}
 	},
 	destroyed() {
-		this.observer?.disconnect();
+		if (this.$el instanceof Element) {
+			this.$panel.observers.resize.unobserve(this.$el);
+		}
 	},
 	methods: {
 		button(tab) {
@@ -122,9 +122,9 @@ export default {
 
 			return button;
 		},
-		async resize() {
+		async resize({ detail }) {
 			// container width
-			const width = this.$el.offsetWidth;
+			const width = detail.width;
 
 			// reset all tabs
 			this.visible = this.tabs;
