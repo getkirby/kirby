@@ -3,7 +3,7 @@ import { reactive } from "vue";
 /**
  * @since 5.3.0
  */
-export default (panel) => {
+export default () => {
 	return reactive({
 		resize: new ResizeObserver((entries) => {
 			for (const index in entries) {
