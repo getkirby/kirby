@@ -66,7 +66,7 @@ export default {
 }
 
 .k-breadcrumb ol {
-	display: none;
+	display: flex;
 	gap: 0.125rem;
 	align-items: center;
 }
@@ -102,18 +102,22 @@ export default {
 }
 
 .k-breadcrumb-dropdown {
-	display: grid;
+	display: none;
 }
 .k-breadcrumb-dropdown .k-dropdown-content {
 	width: 15rem;
 }
 
-@container (min-width: 40em) {
-	.k-breadcrumb ol {
-		display: flex;
-	}
-	.k-breadcrumb-dropdown {
+/**
+ * On small screens replace breadcrumb bar by dropdown,
+ * but only if there are two crumbs or more
+ */
+@container (max-width: 40em) {
+	.k-breadcrumb ol:has(> :nth-child(2)) {
 		display: none;
+	}
+	.k-breadcrumb:has(ol > :nth-child(2)) .k-breadcrumb-dropdown {
+		display: grid;
 	}
 }
 </style>
