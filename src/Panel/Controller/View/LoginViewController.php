@@ -40,12 +40,7 @@ class LoginViewController extends ViewController
 
 	public function pending(): array
 	{
-		$status = $this->kirby->auth()->status();
-
-		return [
-			'email'     => $status->email(),
-			'challenge' => $status->challenge()
-		];
+		return $this->kirby->auth()->status()->toArray();
 	}
 
 	public function value(): array
