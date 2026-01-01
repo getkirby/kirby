@@ -33,6 +33,25 @@
 				Open
 			</k-button>
 		</k-lab-example>
+		<k-lab-example :flex="true" label="Sizes">
+			<k-button
+				v-for="size in ['tiny', 'small', 'default', 'large', 'huge']"
+				:key="size"
+				icon="open"
+				variant="filled"
+				@click="
+					$panel.drawer.open({
+						component: 'k-drawer',
+						props: {
+							size,
+							title: 'Drawer'
+						}
+					})
+				"
+			>
+				{{ size }}
+			</k-button>
+		</k-lab-example>
 		<k-lab-example :flex="true" label="Nested">
 			<k-button
 				icon="open"

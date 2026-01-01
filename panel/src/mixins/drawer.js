@@ -32,6 +32,15 @@ export default {
 			type: Array
 		},
 		/**
+		 * Width of the drawer
+		 * @since 5.3.0
+		 * @values "tiny", "small", "default", "large"
+		 */
+		size: {
+			default: "default",
+			type: String
+		},
+		/**
 		 * The default title for the drawer header
 		 */
 		title: String,
