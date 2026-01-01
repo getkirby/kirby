@@ -1,8 +1,6 @@
 <?php
 
-namespace Kirby\Auth\Exception;
-
-use Kirby\Exception\NotFoundException;
+namespace Kirby\Exception;
 
 /**
  * Thrown when no matching user was found
