@@ -217,6 +217,35 @@ class UserRulesTest extends ModelTestCase
 		UserRules::changeRole($user, 'editor');
 	}
 
+	public function testChangeSecret(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		// as user for themselves
+		$this->app->impersonate('user@domain.com');
+		$user = $this->app->user('user@domain.com');
+		UserRules::changeSecret($user, 'my-secret', 'abcdef');
+		UserRules::changeSecret($user, 'my-secret', null);
+
+		// as admin for other users
+		$this->app->impersonate('admin@domain.com');
+		$user = $this->app->user('user@domain.com');
+		UserRules::changeSecret($user, 'my-secret', 'abcdef');
+		UserRules::changeSecret($user, 'my-secret', null);
+	}
+
+	public function testChangeSecretAsAnotherUser(): void
+	{
+		$this->expectException(PermissionException::class);
+
+		$this->app->impersonate('user@domain.com');
+		$user = $this->app->user('another-user@domain.com');
+		UserRules::changeSecret($user, 'my-secret', 'abcdef');
+	}
+
+	/**
+	 * @deprecate 6.0.0
+	 */
 	public function testChangeTotp(): void
 	{
 		$this->expectNotToPerformAssertions();
@@ -234,6 +263,9 @@ class UserRulesTest extends ModelTestCase
 		UserRules::changeTotp($user, null);
 	}
 
+	/**
+	 * @deprecate 6.0.0
+	 */
 	public function testChangeTotpAsAnotherUser(): void
 	{
 		$this->expectException(PermissionException::class);
@@ -243,6 +275,9 @@ class UserRulesTest extends ModelTestCase
 		UserRules::changeTotp($user, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
 	}
 
+	/**
+	 * @deprecate 6.0.0
+	 */
 	public function testChangeTotpInvalidSecret(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
