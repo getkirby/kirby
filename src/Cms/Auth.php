@@ -769,7 +769,7 @@ class Auth
 
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information
-			$this->fail($e, new PermissionException(key: 'access.login'));
+			$this->fail($e, new LoginNotPermittedException());
 		}
 	}
 
