@@ -14,8 +14,8 @@ use Kirby\Auth\User as AuthUser;
 use Kirby\Cms\Auth\Status;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
+use Kirby\Exception\UserNotFoundException;
 use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Session\Session;
@@ -546,10 +546,7 @@ class Auth
 				}
 			}
 
-			throw new NotFoundException(
-				key: 'user.notFound',
-				data: ['name' => $email]
-			);
+			throw new UserNotFoundException($email);
 
 		} catch (Throwable $e) {
 			// log invalid login trial unless the rate limit is already active
