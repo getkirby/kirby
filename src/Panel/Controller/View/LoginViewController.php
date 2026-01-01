@@ -2,8 +2,10 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Kirby\Auth\Methods;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\View;
+use Kirby\Toolkit\A;
 
 /**
  * @package   Kirby Panel
@@ -15,27 +17,41 @@ use Kirby\Panel\Ui\View;
  */
 class LoginViewController extends ViewController
 {
+	protected function availableMethods(): array
+	{
+		return A::map(
+			array_keys($this->methods()->available()),
+			fn ($type) => [
+				'text' => $this->i18n('login.method.' . $type . '.label'),
+				'icon' => $this->methods()->class($type)::icon(),
+				'type' => $type
+			]
+		);
+	}
+
 	public function load(): View
 	{
-		$methods = $this->methods();
-		$method  = $this->request->get('method');
+		$method = $this->request->get('method');
 
-		if ($method === null || in_array($method, $methods, true) === false) {
-			$method = $methods[0];
+		if (
+			$method === null ||
+			$this->methods()->hasAvailable($method) === false
+		) {
+			$method = $this->methods()->firstAvailable()?->type();
 		}
 
 		return new View(
 			component: 'k-login-view',
 			method:    $method,
-			methods:   $methods,
+			methods:   $this->availableMethods(),
 			pending:   $this->pending(),
 			value:     $this->value()
 		);
 	}
 
-	public function methods(): array
+	protected function methods(): Methods
 	{
-		return array_keys($this->kirby->system()->loginMethods());
+		return $this->kirby->auth()->methods();
 	}
 
 	public function pending(): array

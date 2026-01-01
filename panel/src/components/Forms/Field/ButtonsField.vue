@@ -13,7 +13,8 @@
 				v-for="button in buttons"
 				:key="button.link ?? button.dialog ?? button.drawer"
 				v-bind="button"
-				:dropdown="true"
+				:element="!isButton(button) ? 'div' : undefined"
+				:dropdown="!button.disabled && isButton(button)"
 				variant="filled"
 			/>
 		</k-button-group>
@@ -35,6 +36,15 @@ export default {
 		buttons: {
 			type: Array,
 			default: () => []
+		}
+	},
+	methods: {
+		isButton(button) {
+			if (button.link || button.dialog || button.drawer) {
+				return true;
+			}
+
+			return false;
 		}
 	}
 };

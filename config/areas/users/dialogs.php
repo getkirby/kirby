@@ -21,31 +21,31 @@ return [
 		'action' => UserCreateDialogController::class
 	],
 	'user.changeEmail' => [
-		'pattern' => 'users/(:any)/changeEmail',
+		'pattern' => '(users/[^/]+)/changeEmail',
 		'action'  => UserChangeEmailDialogController::class
 	],
 	'user.changeLanguage' => [
-		'pattern' => 'users/(:any)/changeLanguage',
+		'pattern' => '(users/[^/]+)/changeLanguage',
 		'action'  => UserChangeLanguageDialogController::class
 	],
 	'user.changeName' => [
-		'pattern' => 'users/(:any)/changeName',
+		'pattern' => '(users/[^/]+)/changeName',
 		'action'  => UserChangeNameDialogController::class
 	],
 	'user.changePassword' => [
-		'pattern' => 'users/(:any)/changePassword',
+		'pattern' => '(users/[^/]+)/changePassword',
 		'action'  => UserChangePasswordDialogController::class
 	],
 	'user.changeRole' => [
-		'pattern' => 'users/(:any)/changeRole',
+		'pattern' => '(users/[^/]+)/changeRole',
 		'action'  => UserChangeRoleDialogController::class
 	],
 	'user.delete' => [
-		'pattern' => 'users/(:any)/delete',
+		'pattern' => '(users/[^/]+)/delete',
 		'action'  => UserDeleteDialogController::class
 	],
 	'user.totp.disable' => [
-		'pattern' => 'users/(:any)/totp/disable',
+		'pattern' => '(users/[^/]+)/totp/disable',
 		'action'  => UserTotpDisableDialogController::class
 	],
 

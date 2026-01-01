@@ -102,6 +102,18 @@ class EmailChallenge extends Challenge
 		);
 	}
 
+	public static function settings(User $user): array
+	{
+		return [
+			[
+				'icon'     => 'email-unread',
+				'text'     => static::i18n('login.challenge.email.label'),
+				'dialog'   => $user->panel()->url(true) . '/changeEmail',
+				'disabled' => !$user->permissions()->can('changeEmail'),
+			]
+		];
+	}
+
 	/**
 	 * Returns subject for the email
 	 */

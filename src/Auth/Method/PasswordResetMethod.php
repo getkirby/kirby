@@ -29,6 +29,11 @@ class PasswordResetMethod extends CodeMethod
 		);
 	}
 
+	public static function icon(): string
+	{
+		return 'question';
+	}
+
 	public static function isAvailable(Auth $auth, array $options = []): bool
 	{
 		// don't allow to circumvent 2FA by 1FA code method

@@ -22,11 +22,12 @@
 				<k-stack>
 					<k-button
 						v-for="method in alternativeMethods"
-						:key="method"
-						:text="$t(`login.method.${method}.label`)"
+						:key="method.type"
+						:icon="method.icon"
+						:text="method.text"
 						variant="filled"
 						size="lg"
-						@click="onChangeMethod(method)"
+						@click="onChangeMethod(method.type)"
 					/>
 				</k-stack>
 			</template>
@@ -90,7 +91,7 @@ export default {
 	},
 	computed: {
 		alternativeMethods() {
-			return this.methods.filter((method) => method !== this.method);
+			return this.methods.filter((method) => method.type !== this.method);
 		},
 		form() {
 			if (window.panel.plugins.login) {

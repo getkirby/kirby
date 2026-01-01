@@ -40,6 +40,17 @@ class TotpChallenge extends Challenge
 		return $user->secret('totp') !== null;
 	}
 
+	public static function settings(User $user): array
+	{
+		return [
+			[
+				'icon'   => 'qr-code',
+				'text'   => static::i18n('login.challenge.totp.label'),
+				'dialog' => $user->panel()->url(true) . '/totp/' . ($user->secret('totp') !== null ? 'disable' : 'enable')
+			]
+		];
+	}
+
 	/**
 	 * Verifies the input is the current, previous or next TOTP code
 	 */

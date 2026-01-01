@@ -4,6 +4,7 @@ namespace Kirby\Auth;
 
 use Kirby\Cms\App;
 use Kirby\Cms\User;
+use Kirby\Toolkit\HasI18n;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
 
@@ -20,6 +21,8 @@ use SensitiveParameter;
  */
 abstract class Challenge
 {
+	use HasI18n;
+
 	protected App $kirby;
 
 	public function __construct(
@@ -55,6 +58,15 @@ abstract class Challenge
 	public function mode(): string
 	{
 		return $this->mode;
+	}
+
+	/**
+	 * Returns an array of buttons that will be
+	 * used as entries in the user security settings drawer
+	 */
+	public static function settings(User $user): array
+	{
+		return [];
 	}
 
 	/**

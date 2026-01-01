@@ -5,6 +5,7 @@ namespace Kirby\Auth\Method;
 use Kirby\Auth\Method;
 use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Status;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -31,6 +32,11 @@ class CodeMethod extends Method
 			email: $email,
 			long:  $long,
 		);
+	}
+
+	public static function icon(): string
+	{
+		return 'hashtag';
 	}
 
 	public static function isAvailable(Auth $auth, array $options = []): bool
@@ -92,4 +98,13 @@ class CodeMethod extends Method
 		return true;
 	}
 
+	public static function settings(User $user): array
+	{
+		return [
+			[
+				'icon' => static::icon(),
+				'text' => static::i18n('login.method.code.label')
+			]
+		];
+	}
 }
