@@ -549,7 +549,6 @@
 	"login.totp.enable.qr.help": "Unable to scan? Add the setup key <code>{secret}</code> manually to your authenticator app.",
 	"login.totp.enable.confirm.headline": "2. Confirm with generated code",
 	"login.totp.enable.confirm.text": "Your app generates a new one‑time code every 30 seconds. Enter the current code to complete the setup:",
-	"login.totp.enable.confirm.label": "Current code",
 	"login.totp.enable.confirm.help": "After this setup, we will ask you for a one‑time code every time you log in.",
 	"login.totp.enable.success": "One‑time codes enabled",
 	"login.totp.disable.option": "Disable one‑time codes",
