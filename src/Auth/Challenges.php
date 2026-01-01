@@ -4,7 +4,6 @@ namespace Kirby\Auth;
 
 use Kirby\Auth\Challenge\LegacyChallenge;
 use Kirby\Auth\Exception\ChallengeTimeoutException;
-use Kirby\Auth\Exception\UserNotFoundException;
 use Kirby\Cms\App;
 use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Challenge as LegacyBaseChallenge;
@@ -12,6 +11,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
+use Kirby\Exception\UserNotFoundException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\A;
 use SensitiveParameter;

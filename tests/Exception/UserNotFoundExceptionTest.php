@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Auth\Exception;
+namespace Kirby\Exception;
 
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
