@@ -575,7 +575,7 @@ class Auth
 	 * if successful, the user is automatically logged in
 	 * @since 3.5.0
 	 *
-	 * @param string $code User-provided auth code to verify
+	 * @param mixed $input User-provided auth code/input to verify
 	 * @return \Kirby\Cms\User User object of the logged-in user
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded, the challenge timed out, the code

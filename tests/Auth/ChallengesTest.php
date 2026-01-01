@@ -3,6 +3,7 @@
 namespace Kirby\Auth;
 
 use Kirby\Auth\Challenge\LegacyChallenge;
+use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Cms\App;
 use Kirby\Cms\Auth;
 use Kirby\Cms\User;
@@ -237,6 +238,32 @@ class ChallengesTest extends TestCase
 		$this->expectException(PermissionException::class);
 
 		$this->challenges->verify($session, 'nope');
+	}
+
+	public function testVerifyTimeout(): void
+	{
+		$session = $this->session();
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() - 10);
+
+		$this->expectException(ChallengeTimeoutException::class);
+
+		$this->challenges->verify($session, 'ok');
+	}
+
+	public function testVerifyUserNotFound(): void
+	{
+		$session = $this->session();
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.email', 'unknown@example.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		$this->expectException(UserNotFoundException::class);
+
+		$this->challenges->verify($session, 'ok');
 	}
 
 	public function testVerifyNoChallenge(): void
