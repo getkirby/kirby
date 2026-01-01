@@ -237,6 +237,14 @@ class EmailChallengeTest extends TestCase
 
 		$this->assertTrue($challenge->verify('123456', $data));
 		$this->assertTrue($challenge->verify('123 456', $data));
-		$this->assertFalse($challenge->verify('000 000', $data));
+	}
+
+	public function testVerifyMismatch(): void
+	{
+		$hash      = password_hash('123456', PASSWORD_DEFAULT);
+		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$data      = new Pending(secret: $hash);
+
+		$this->assertFalse($challenge->verify('654 321', $data));
 	}
 }
