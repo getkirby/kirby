@@ -2,13 +2,12 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Auth;
+use Kirby\Cms\User as CmsUser;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Request\Auth\BasicAuth;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(User::class)]
@@ -16,59 +15,46 @@ class UserTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.User';
 
-	protected App $app;
 	protected Auth $auth;
 	protected User $user;
 
 	public function setUp(): void
 	{
-		$homerPassword = password_hash('springfield123', PASSWORD_DEFAULT);
+		parent::setUp();
 
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
+		$password = CmsUser::hashPassword('springfield123');
+
+		$this->app = $this->app->clone([
 			'options' => [
 				'api' => [
 					'basicAuth'     => true,
 					'allowInsecure' => true
-				],
-				'auth' => [
-					'debug' => false
 				]
 			],
 			'users' => [
 				[
 					'email'    => 'marge@simpsons.com',
 					'id'       => 'marge',
-					'password' => password_hash('springfield123', PASSWORD_DEFAULT)
+					'password' => $password
 				],
 				[
 					'email'    => 'homer@simpsons.com',
 					'id'       => 'homer',
-					'password' => $homerPassword
+					'password' => $password
 				],
 				[
 					'email'    => 'kirby@getkirby.com',
 					'id'       => 'kirby',
-					'password' => password_hash('somewhere-in-japan', PASSWORD_DEFAULT)
+					'password' => CmsUser::hashPassword('somewhere-in-japan')
 				],
 			]
 		]);
 
-		Dir::make(static::TMP . '/site/accounts/homer');
-		F::write(static::TMP . '/site/accounts/homer/.htpasswd', $homerPassword);
+		F::write(static::TMP . '/site/accounts/homer/.htpasswd', $password);
 		touch(static::TMP . '/site/accounts/homer/.htpasswd', 1337000000);
 
 		$this->auth = $this->app->auth();
 		$this->user = new User($this->auth, $this->app);
-	}
-
-	public function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		Dir::remove(static::TMP);
-		App::destroy();
 	}
 
 	public function testFlush(): void
