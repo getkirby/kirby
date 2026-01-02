@@ -46,7 +46,6 @@ class FieldTest extends TestCase
 
 		$this->assertSame('Change position', $field['label']);
 		$this->assertSame('select', $field['type']);
-		$this->assertFalse($field['empty']);
 
 		// check options
 		$this->assertCount(5, $field['options']);

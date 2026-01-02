@@ -10,13 +10,13 @@ use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\HiddenField;
 use Kirby\Form\Field\PasswordField;
 use Kirby\Form\Field\SlugField;
+use Kirby\Panel\Form\Field\FilePositionField;
 use Kirby\Panel\Form\Field\PagePositionField;
 use Kirby\Panel\Form\Field\RoleField;
 use Kirby\Panel\Form\Field\TemplateField;
 use Kirby\Panel\Form\Field\TitleField;
 use Kirby\Panel\Form\Field\TranslationField;
 use Kirby\Panel\Form\Field\UsernameField;
-use Kirby\Toolkit\I18n;
 
 /**
  * Provides common field prop definitions
@@ -44,40 +44,14 @@ class Field
 	 */
 	public static function filePosition(File $file, array $props = []): array
 	{
-		$index   = 0;
-		$options = [];
-
-		foreach ($file->siblings(false)->sorted() as $sibling) {
-			$index++;
-
-			$options[] = [
-				'value' => $index,
-				'text'  => $index
-			];
-
-			$options[] = [
-				'value'    => $sibling->id(),
-				'text'     => $sibling->filename(),
-				'disabled' => true
-			];
-		}
-
-		$index++;
-
-		$options[] = [
-			'value' => $index,
-			'text'  => $index
-		];
-
-		return [
-			'label'   => I18n::translate('file.sort'),
-			'type'    => 'select',
-			'empty'   => false,
-			'options' => $options,
+		$field = new FilePositionField(...[
+			'file'     => $file,
+			'required' => true,
 			...$props
-		];
-	}
+		]);
 
+		return $field->toArray();
+	}
 
 	public static function hidden(array $props = []): array
 	{
