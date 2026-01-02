@@ -146,18 +146,18 @@ class AuthChallengeTest extends TestCase
 		$data = [
 			'by-ip' => [
 				'87084f11690867b977a611dd2c943a918c3197f4c02b25ab59' => [
+					'trials' => 3,
 					'time'   => MockTime::$time,
-					'trials' => 3
 				]
 			],
 			'by-email' => [
 				'marge@simpsons.com' => [
+					'trials' => 1,
 					'time'   => MockTime::$time,
-					'trials' => 1
 				],
 				'error@getkirby.com' => [
+					'trials' => 1,
 					'time'   => MockTime::$time,
-					'trials' => 1
 				]
 			]
 		];
