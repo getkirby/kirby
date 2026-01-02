@@ -162,16 +162,18 @@ class ChallengesTest extends TestCase
 		$this->assertSame('dummy', $session->get('kirby.challenge.type'));
 		$this->assertSame(['foo' => 'bar'], $session->get('kirby.challenge.data')['public']);
 		$this->assertIsInt($session->get('kirby.challenge.timeout'));
+		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
+		$this->assertSame(MockTime::$time + $this->challenges->timeout(), $session->get('kirby.challenge.timeout'));
 	}
 
 	public function testCreateUnavailable(): void
 	{
 		DummyChallenge::$available = false;
 		$session = $this->session();
+		$challenge = $this->challenges->create($session, 'marge@simpsons.com', 'login');
 
-		$this->assertNull(
-			$this->challenges->create($session, 'marge@simpsons.com', 'login')
-		);
+		$this->assertNull($challenge);
 		$this->assertNull($session->get('kirby.challenge.type'));
 	}
 
