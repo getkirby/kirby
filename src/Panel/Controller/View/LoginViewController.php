@@ -2,8 +2,13 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Kirby\Auth\Method;
+use Kirby\Auth\State;
+use Kirby\Auth\Status;
+use Kirby\Cms\Auth;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\View;
+use Kirby\Toolkit\A;
 
 /**
  * @package   Kirby Panel
@@ -15,6 +20,20 @@ use Kirby\Panel\Ui\View;
  */
 class LoginViewController extends ViewController
 {
+	protected Auth $auth;
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->auth = $this->kirby->auth();
+	}
+
+	public function challenge(): string
+	{
+		$challenge = $this->status()->challenge();
+		return $this->auth->challenges()->class($challenge);
+	}
+
 	public function load(): View
 	{
 		$methods = $this->methods();
@@ -26,6 +45,7 @@ class LoginViewController extends ViewController
 
 		return new View(
 			component: 'k-login-view',
+			form:      $this->form(),
 			method:    $method,
 			methods:   $methods,
 			pending:   $this->pending(),
@@ -33,19 +53,64 @@ class LoginViewController extends ViewController
 		);
 	}
 
+	public function form(): string
+	{
+		if ($this->status()->state() === State::Pending) {
+			return $this->challenge()::form();
+		}
+
+		return $this->method()::form();
+	}
+
+	public function method(): Method
+	{
+		$methods = array_keys($this->auth->methods()->available());
+		$method  = $this->request->get('method');
+
+		if (in_array($method, $methods, true) === false) {
+			$method = $methods[0];
+		}
+
+		$class = $this->auth->methods()->class($method);
+		return new $class(options: $this->auth->methods()->available()[$method]);
+	}
+
 	public function methods(): array
 	{
-		return array_keys($this->kirby->system()->loginMethods());
+		$methods = array_keys($this->auth->methods()->available());
+		$methods = A::map(
+			$methods,
+			function (string $type) {
+				$class = $this->auth->methods()->class($type);
+				return new $class(options: $this->auth->methods()->available()[$type]);
+			}
+		);
+		$methods = A::map(
+			$methods,
+			fn (Method $method) => [
+				'icon' => $method->icon(),
+				'text' => $this->i18n('login.method.' . $method->type() . '.label'),
+				'type' => $method->type(),
+			]
+		);
+
+		return $methods;
 	}
 
 	public function pending(): array
 	{
-		$status = $this->kirby->auth()->status();
+		$status = $this->status();
 
 		return [
 			'email'     => $status->email(),
-			'challenge' => $status->challenge()
+			'challenge' => $status->challenge(),
+			'data'      => $status->data()
 		];
+	}
+
+	public function status(): Status
+	{
+		return $this->auth->status();
 	}
 
 	public function value(): array

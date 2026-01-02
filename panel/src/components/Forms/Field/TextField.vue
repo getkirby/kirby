@@ -14,7 +14,14 @@
 			ref="input"
 			:type="inputType"
 			@input="$emit('input', $event)"
-		/>
+		>
+			<template v-if="$slots.before" #before>
+				<slot name="before" />
+			</template>
+			<template v-if="$slots.after" #after>
+				<slot name="after" />
+			</template>
+		</k-input>
 	</k-field>
 </template>
 

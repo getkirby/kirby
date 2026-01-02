@@ -14,6 +14,8 @@ use SensitiveParameter;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @deprecated 6.0.0 Use `Kirby\Auth\Challenge` instead
  */
 abstract class Challenge
 {

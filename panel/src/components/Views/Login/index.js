@@ -1,19 +1,27 @@
 import LoginAlert from "./LoginAlert.vue";
 import LoginBackButton from "./LoginBackButton.vue";
+import LoginCodeChallenge from "./LoginCodeChallenge.vue";
+import LoginPasswordMethod from "./LoginPasswordMethod.vue";
+import WebauthnChallenge from "./WebauthnChallenge.vue";
+import LoginView from "./LoginView.vue";
+
+/** deprecated */
 import LoginCodeForm from "./LoginCodeForm.vue";
 import LoginForm from "./LoginForm.vue";
-import LoginView from "./LoginView.vue";
 
 export default {
 	install(app) {
 		app.component("k-login-alert", LoginAlert);
 		app.component("k-login-back-button", LoginBackButton);
-		app.component("k-login-code-form", LoginCodeForm);
-		app.component("k-login-form", LoginForm);
+		app.component("k-login-code-challenge", LoginCodeChallenge);
+		app.component("k-login-password-method", LoginPasswordMethod);
+		app.component("k-login-webauthn-challenge", WebauthnChallenge);
 		app.component("k-login-view", LoginView);
 
 		/** deprecated */
 		app.component("k-login", LoginForm);
+		app.component("k-login-form", LoginForm);
 		app.component("k-login-code", LoginCodeForm);
+		app.component("k-login-code-form", LoginCodeForm);
 	}
 };

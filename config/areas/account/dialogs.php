@@ -1,6 +1,7 @@
 <?php
 
-use Kirby\Panel\Controller\Dialog\UserTotpEnableDialogController;
+use Kirby\Panel\Controller\Dialog\UserTotpDialogController;
+use Kirby\Panel\Controller\Dialog\UserWebauthnDialogController;
 
 $dialogs = require __DIR__ . '/../users/dialogs.php';
 
@@ -61,12 +62,12 @@ return [
 		...$dialogs['user.file.sections'],
 		'pattern' => '(account)/files/(:any)/sections/(:any)/(:all?)',
 	],
-	'account.totp.enable' => [
-		'pattern' => '(account)/totp/enable',
-		'action'  => UserTotpEnableDialogController::class
+	'account.totp' => [
+		'pattern' => '(account)/totp',
+		'action'  => UserTotpDialogController::class
 	],
-	'account.totp.disable' => [
-		'pattern' => '(account)/totp/disable',
-		...$dialogs['user.totp.disable'],
+	'account.webauthn' => [
+		'pattern' => '(account)/webauthn',
+		'action'  => UserWebauthnDialogController::class
 	],
 ];

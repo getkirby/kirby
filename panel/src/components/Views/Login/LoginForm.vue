@@ -35,6 +35,9 @@
 <script>
 import { props as LoginProps } from "./LoginView.vue";
 
+/**
+ * @deprecated 6.0.0 Use `k-login-password-method` instead
+ */
 export default {
 	mixins: [LoginProps],
 	emits: ["error"],

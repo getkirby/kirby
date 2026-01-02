@@ -6,6 +6,8 @@ import UserProfile from "./UserProfile.vue";
 import UserView from "./UserView.vue";
 import UsersView from "./UsersView.vue";
 
+import UserSecurityDrawer from "./UserSecurityDrawer.vue";
+
 export default {
 	install(app) {
 		app.component("k-account-view", AccountView);
@@ -15,5 +17,7 @@ export default {
 		app.component("k-user-profile", UserProfile);
 		app.component("k-user-view", UserView);
 		app.component("k-users-view", UsersView);
+
+		app.component("k-user-security-drawer", UserSecurityDrawer);
 	}
 };

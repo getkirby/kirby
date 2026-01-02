@@ -10,7 +10,7 @@
 			</k-login-alert>
 
 			<component
-				:is="form"
+				:is="component"
 				ref="form"
 				v-bind="{ method, methods, pending, value }"
 				@error="onError"
@@ -22,11 +22,12 @@
 				<k-stack>
 					<k-button
 						v-for="method in alternativeMethods"
-						:key="method"
-						:text="$t(`login.method.${method}.label`)"
+						:key="method.type"
+						:icon="method.icon"
+						:text="method.text"
 						variant="filled"
 						size="lg"
-						@click="onChangeMethod(method)"
+						@click="onChangeMethod(method.type)"
 					/>
 				</k-stack>
 			</template>
@@ -76,12 +77,10 @@ export default {
 	mixins: [props],
 	props: {
 		/**
-		 * Values to prefill the inputs
+		 * Vue component name for the login form
+		 * @since 6.0.0
 		 */
-		value: {
-			type: Object,
-			default: () => ({})
-		}
+		form: String
 	},
 	data() {
 		return {
@@ -90,35 +89,26 @@ export default {
 	},
 	computed: {
 		alternativeMethods() {
-			return this.methods.filter((method) => method !== this.method);
+			return this.methods.filter((method) => method.type !== this.method);
 		},
-		form() {
-			if (window.panel.plugins.login) {
-				return "k-login-plugin-form";
-			}
-
-			if (this.hasActiveChallenge) {
-				return "k-login-code-form";
-			}
-
-			return "k-login-form";
+		component() {
+			return window.panel.plugins.login ? "k-login-plugin-form" : this.form;
 		},
 		hasActiveChallenge() {
 			return Boolean(this.pending.email);
 		}
 	},
 	methods: {
-		async onChangeMethod(method) {
-			await this.$panel.view.refresh({ query: { method } });
-			this.$refs.form.focus?.();
+		onChangeMethod(method) {
+			this.$panel.view.refresh({ query: { method } });
 		},
 		async onError(error) {
-			// reset from the LoginCode component back to Login
-			if (error?.details.challengeDestroyed === true) {
+			// reset from a challenge component back to Login
+			if (error?.details?.challengeDestroyed === true) {
 				await this.$panel.reload({ globals: ["system"] });
 			}
 
-			this.issue = error?.message;
+			this.issue = error?.message ?? null;
 		}
 	}
 };
