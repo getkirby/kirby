@@ -10,6 +10,7 @@ use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\HiddenField;
 use Kirby\Form\Field\PasswordField;
 use Kirby\Form\Field\SlugField;
+use Kirby\Panel\Form\Field\PagePositionField;
 use Kirby\Panel\Form\Field\RoleField;
 use Kirby\Panel\Form\Field\TemplateField;
 use Kirby\Panel\Form\Field\TitleField;
@@ -88,45 +89,18 @@ class Field
 	 */
 	public static function pagePosition(Page $page, array $props = []): array
 	{
-		$index    = 0;
-		$options  = [];
-		$siblings = $page->parentModel()->children()->listed()->not($page);
-
-		foreach ($siblings as $sibling) {
-			$index++;
-
-			$options[] = [
-				'value' => $index,
-				'text'  => $index
-			];
-
-			$options[] = [
-				'value'    => $sibling->id(),
-				'text'     => $sibling->title()->value(),
-				'disabled' => true
-			];
-		}
-
-		$index++;
-
-		$options[] = [
-			'value' => $index,
-			'text'  => $index
-		];
-
-		// if only one available option,
-		// hide field when not in debug mode
-		if (count($options) < 2) {
-			return static::hidden();
-		}
-
-		return [
-			'label'    => I18n::translate('page.changeStatus.position'),
-			'type'     => 'select',
+		$field = new PagePositionField(...[
+			'page'     => $page,
 			'required' => true,
-			'options'  => $options,
 			...$props
-		];
+		]);
+
+		// hide filed when there is only one available option
+		if (count($field->options()) < 2) {
+			return static::hidden($props);
+		}
+
+		return $field->toArray();
 	}
 
 	/**
