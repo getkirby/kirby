@@ -7,7 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel';
 

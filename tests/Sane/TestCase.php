@@ -10,7 +10,7 @@ use Kirby\TestCase as BaseTestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 

@@ -4,6 +4,6 @@ namespace Kirby\Blueprint;
 
 use Kirby\Cms\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 }

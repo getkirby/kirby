@@ -2,7 +2,9 @@
 
 namespace Kirby\Email;
 
-class TestCase extends \Kirby\TestCase
+use Kirby\TestCase as BaseTestCase;
+
+abstract class TestCase extends BaseTestCase
 {
 	protected function _email(array $props, $mailer)
 	{

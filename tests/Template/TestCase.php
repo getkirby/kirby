@@ -3,8 +3,9 @@
 namespace Kirby\Template;
 
 use Kirby\Cms\App;
+use Kirby\TestCase as BaseTestCase;
 
-class TestCase extends \Kirby\TestCase
+abstract class TestCase extends BaseTestCase
 {
 	protected function tearDown(): void
 	{

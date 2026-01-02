@@ -4,7 +4,7 @@ namespace Kirby\Query\Runners;
 
 use Kirby\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	public static function resultProvider(): array
 	{
