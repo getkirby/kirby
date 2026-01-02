@@ -2,6 +2,17 @@
 
 namespace Kirby\Blueprint;
 
+/**
+ * The AcceptRules class goes through all blueprint settings for
+ * sections and fields and collects rules for accepted files
+ *
+ * @package   Kirby Blueprint
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
 class AcceptRules
 {
 	protected array|null $fileTemplates = null;
@@ -15,7 +26,7 @@ class AcceptRules
 	 * Gathers what file templates are allowed in
 	 * this model based on the blueprint
 	 */
-	public function acceptedFileTemplates(string|null $inSection = null): array
+	public function fileTemplates(string|null $inSection = null): array
 	{
 		// get cached results for the current file model
 		// (except when collecting for a specific section)
@@ -36,7 +47,7 @@ class AcceptRules
 				'files'  => [...$templates, $section->template() ?? 'default'],
 				'fields' => [
 					...$templates,
-					...$this->acceptedFileTemplatesFromFields($section->fields())
+					...$this->fileTemplatesFromFields($section->fields())
 				],
 				default  => $templates
 			};
@@ -53,7 +64,7 @@ class AcceptRules
 	/**
 	 * Gathers the allowed file templates from model's fields
 	 */
-	public function acceptedFileTemplatesFromFields(array $fields): array
+	public function fileTemplatesFromFields(array $fields): array
 	{
 		$templates = [];
 
@@ -62,7 +73,7 @@ class AcceptRules
 			if (isset($field['uploads']) === true && is_array($field['uploads']) === true) {
 				$templates = [
 					...$templates,
-					...$this->acceptedFileTemplatesFromFieldUploads($field['uploads'])
+					...$this->fileTemplatesFromFieldUploads($field['uploads'])
 				];
 				continue;
 			}
@@ -71,7 +82,7 @@ class AcceptRules
 			if (isset($field['fields']) === true && is_array($field['fields']) === true) {
 				$templates = [
 					...$templates,
-					...$this->acceptedFileTemplatesFromFields($field['fields']),
+					...$this->fileTemplatesFromFields($field['fields']),
 				];
 				continue;
 			}
@@ -80,7 +91,7 @@ class AcceptRules
 			if (isset($field['fieldsets']) === true && is_array($field['fieldsets']) === true) {
 				$templates = [
 					...$templates,
-					...$this->acceptedFileTemplatesFromFieldsets($field['fieldsets'])
+					...$this->fileTemplatesFromFieldsets($field['fieldsets'])
 				];
 				continue;
 			}
@@ -92,7 +103,7 @@ class AcceptRules
 	/**
 	 * Gathers the allowed file templates from fieldsets
 	 */
-	public function acceptedFileTemplatesFromFieldsets(array $fieldsets): array
+	public function fileTemplatesFromFieldsets(array $fieldsets): array
 	{
 		$templates = [];
 
@@ -100,7 +111,7 @@ class AcceptRules
 			foreach (($fieldset['tabs'] ?? []) as $tab) {
 				$templates = [
 					...$templates,
-					...$this->acceptedFileTemplatesFromFields($tab['fields'] ?? [])
+					...$this->fileTemplatesFromFields($tab['fields'] ?? [])
 				];
 			}
 		}
@@ -111,7 +122,7 @@ class AcceptRules
 	/**
 	 * Extracts templates from field uploads settings
 	 */
-	public function acceptedFileTemplatesFromFieldUploads(array $uploads): array
+	public function fileTemplatesFromFieldUploads(array $uploads): array
 	{
 		// only if the `uploads` parent is this model
 		if ($target = $uploads['parent'] ?? null) {

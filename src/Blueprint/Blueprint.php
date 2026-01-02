@@ -97,7 +97,7 @@ class Blueprint
 	 */
 	public function acceptedFileTemplates(string|null $inSection = null): array
 	{
-		return $this->acceptRules()->acceptedFileTemplates($inSection);
+		return $this->acceptRules()->fileTemplates($inSection);
 	}
 
 	/**
