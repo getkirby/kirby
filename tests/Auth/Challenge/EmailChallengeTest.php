@@ -4,11 +4,9 @@ namespace Kirby\Auth\Challenge;
 
 use Kirby\Auth\Challenge;
 use Kirby\Auth\Pending;
-use Kirby\Cms\App;
+use Kirby\Auth\TestCase;
 use Kirby\Cms\User;
 use Kirby\Email\Email;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Challenge::class)]
@@ -18,25 +16,17 @@ class EmailChallengeTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/../fixtures';
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.EmailChallenge';
 
-	protected App $app;
 	protected User $user;
 
 	public function setUp(): void
 	{
-		Email::$debug  = true;
-		Email::$emails = [];
+		parent::setUp();
 
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
+		$this->app = $this->app->clone([
 			'site' => [
 				'content' => [
 					'title' => 'Test Site'
 				]
-			],
-			'server' => [
-				'SERVER_NAME' => 'getkirby.com',
 			],
 			'users' => [
 				[
@@ -50,18 +40,7 @@ class EmailChallengeTest extends TestCase
 			]
 		]);
 
-		Dir::make(static::TMP);
 		$this->user = $this->app->user('marge');
-	}
-
-	public function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		Dir::remove(static::TMP);
-		App::destroy();
-
-		Email::$debug = false;
-		Email::$emails = [];
 	}
 
 	public function testCreate(): void

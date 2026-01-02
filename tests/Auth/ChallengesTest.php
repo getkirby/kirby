@@ -11,9 +11,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
-use Kirby\Filesystem\Dir;
 use Kirby\Session\Session;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class DummyLegacyChallenge extends \Kirby\Cms\Auth\Challenge
@@ -66,13 +64,14 @@ class ChallengesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Challenges';
 
-	protected App $app;
 	protected Auth $auth;
 	protected Challenges $challenges;
 	protected array $original;
 
 	public function setUp(): void
 	{
+		parent::setUp();
+
 		DummyChallenge::$available = true;
 		DummyChallenge::$created   = [];
 		DummyChallenge::$verified  = [];
@@ -80,10 +79,7 @@ class ChallengesTest extends TestCase
 
 		Challenges::$challenges['dummy'] = DummyChallenge::class;
 
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
+		$this->app = $this->app->clone([
 			'options' => [
 				'auth' => [
 					'challenges' => ['dummy']
@@ -97,19 +93,14 @@ class ChallengesTest extends TestCase
 			]
 		]);
 
-		Dir::make(static::TMP);
-
 		$this->auth       = $this->app->auth();
 		$this->challenges = new Challenges($this->auth, $this->app);
 	}
 
 	public function tearDown(): void
 	{
+		parent::tearDown();
 		unset(Challenges::$challenges['dummy']);
-
-		$this->app->session()->destroy();
-		Dir::remove(static::TMP);
-		App::destroy();
 	}
 
 	protected function session(): Session
