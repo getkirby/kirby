@@ -11,6 +11,7 @@ use Kirby\Form\Field\HiddenField;
 use Kirby\Form\Field\PasswordField;
 use Kirby\Form\Field\SlugField;
 use Kirby\Panel\Form\Field\RoleField;
+use Kirby\Panel\Form\Field\TemplateField;
 use Kirby\Panel\Form\Field\TitleField;
 use Kirby\Panel\Form\Field\TranslationField;
 use Kirby\Panel\Form\Field\UsernameField;
@@ -180,24 +181,10 @@ class Field
 		array|null $blueprints = [],
 		array|null $props = []
 	): array {
-		$options = [];
-
-		foreach ($blueprints as $blueprint) {
-			$options[] = [
-				'text'  => $blueprint['title'] ?? $blueprint['text']  ?? null,
-				'value' => $blueprint['name']  ?? $blueprint['value'] ?? null,
-			];
-		}
-
-		return [
-			'label'    => I18n::translate('template'),
-			'type'     => 'select',
-			'empty'    => false,
-			'options'  => $options,
-			'icon'     => 'template',
-			'disabled' => count($options) <= 1,
-			...$props
-		];
+		return (new TemplateField(...[
+			'blueprints' => $blueprints,
+			...$props,
+		]))->toArray();
 	}
 
 	public static function title(array $props = []): array

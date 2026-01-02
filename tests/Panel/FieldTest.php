@@ -286,7 +286,11 @@ class FieldTest extends TestCase
 			'disabled' => true
 		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('Template', $field['label']);
+		$this->assertSame('select', $field['type']);
+		$this->assertSame([], $field['options']);
+		$this->assertSame('template', $field['icon']);
+		$this->assertSame(true, $field['disabled']);
 
 		// select option format
 		$options = [
