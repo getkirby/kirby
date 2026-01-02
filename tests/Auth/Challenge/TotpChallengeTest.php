@@ -4,11 +4,9 @@ namespace Kirby\Auth\Challenge;
 
 use Kirby\Auth\Challenge;
 use Kirby\Auth\Pending;
-use Kirby\Cms\App;
+use Kirby\Auth\TestCase;
 use Kirby\Cms\User;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use Kirby\TestCase;
 use Kirby\Toolkit\Totp;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -18,17 +16,16 @@ class TotpChallengeTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.TotpChallenge';
 
-	protected App $app;
 	protected User $user;
 	protected string $secret;
 
 	public function setUp(): void
 	{
+		parent::setUp();
+
 		$this->secret = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-		$this->app    = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
+
+		$this->app = $this->app->clone([
 			'users' => [
 				[
 					'email' => 'marge@simpsons.com',
@@ -37,20 +34,12 @@ class TotpChallengeTest extends TestCase
 			]
 		]);
 
-		Dir::make(static::TMP);
 		F::write(
 			static::TMP . '/site/accounts/marge/.htpasswd',
 			"\n" . json_encode(['totp' => $this->secret])
 		);
 
 		$this->user = $this->app->user('marge');
-	}
-
-	public function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		Dir::remove(static::TMP);
-		App::destroy();
 	}
 
 	public function testCreate(): void

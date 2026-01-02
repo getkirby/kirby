@@ -13,11 +13,13 @@ abstract class TestCase extends BaseTestCase
 	{
 		Email::$debug = true;
 		Email::$emails = [];
-		$_SERVER['SERVER_NAME'] = 'kirby.test';
 
 		$this->app = new App([
 			'roots' => [
 				'index' => static::TMP
+			],
+			'server' => [
+				'SERVER_NAME' => 'getkirby.com',
 			],
 			'options' => [
 				'auth' => [
@@ -34,7 +36,6 @@ abstract class TestCase extends BaseTestCase
 		$this->app->session()->destroy();
 		Email::$debug = false;
 		Email::$emails = [];
-		unset($_SERVER['SERVER_NAME']);
 		$_GET = [];
 		Dir::remove(static::TMP);
 		App::destroy();

@@ -2,8 +2,8 @@
 
 namespace Kirby\Auth\Exception;
 
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\TestCase;
 
 #[CoversClass(ChallengeTimeoutException::class)]
 class ChallengeTimeoutExceptionTest extends TestCase
