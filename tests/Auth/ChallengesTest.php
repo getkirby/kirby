@@ -108,6 +108,18 @@ class ChallengesTest extends TestCase
 		return $this->app->session();
 	}
 
+	public function testAvailable(): void
+	{
+		$user = $this->app->user('marge');
+
+		$available = $this->challenges->available($user, 'login');
+		$this->assertSame(['dummy'], $available);
+
+		DummyChallenge::$available = false;
+		$available = $this->challenges->available($user, 'login');
+		$this->assertSame([], $available);
+	}
+
 	public function testClass(): void
 	{
 		$this->assertSame(
@@ -123,53 +135,22 @@ class ChallengesTest extends TestCase
 		$this->challenges->class('unknown');
 	}
 
-	public function testEnabledDefaults(): void
+	public function testClear(): void
 	{
-		$app        = new App(['roots' => ['index' => static::TMP]]);
-		$challenges = new Challenges($app->auth(), $app);
+		$session = $this->session();
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'y']);
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.type', 'dummy');
 
-		$this->assertSame(['totp', 'email'], $challenges->enabled());
-	}
+		$this->challenges->clear();
 
-	public function testEnabledConfig(): void
-	{
-		$this->assertSame(['dummy'], $this->challenges->enabled());
-	}
-
-	public function testAvailable(): void
-	{
-		$user = $this->app->user('marge');
-
-		$available = $this->challenges->available($user, 'login');
-		$this->assertSame(['dummy'], $available);
-
-		DummyChallenge::$available = false;
-		$available = $this->challenges->available($user, 'login');
-		$this->assertSame([], $available);
-	}
-
-	public function testFirstAvailable(): void
-	{
-		$user = $this->app->user('marge');
-
-		$this->assertInstanceOf(
-			DummyChallenge::class,
-			$this->challenges->firstAvailable($user, 'login')
-		);
-
-		DummyChallenge::$available = false;
-		$this->assertNull($this->challenges->firstAvailable($user, 'login'));
-	}
-
-	public function testGet(): void
-	{
-		$user      = $this->app->user('marge');
-		$challenge = $this->challenges->get('dummy', $user, 'login', 123);
-
-		$this->assertInstanceOf(DummyChallenge::class, $challenge);
-		$this->assertSame($user, $challenge->user());
-		$this->assertSame('login', $challenge->mode());
-		$this->assertSame(123, $challenge->timeout());
+		$this->assertNull($session->get('kirby.challenge.data'));
+		$this->assertNull($session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.mode'));
+		$this->assertNull($session->get('kirby.challenge.timeout'));
+		$this->assertNull($session->get('kirby.challenge.type'));
 	}
 
 	public function testCreate(): void
@@ -200,6 +181,43 @@ class ChallengesTest extends TestCase
 
 		$this->expectException(UserNotFoundException::class);
 		$this->challenges->create($session, 'invalid@example.com', 'login');
+	}
+
+	public function testEnabledDefaults(): void
+	{
+		$app        = new App(['roots' => ['index' => static::TMP]]);
+		$challenges = new Challenges($app->auth(), $app);
+
+		$this->assertSame(['totp', 'email'], $challenges->enabled());
+	}
+
+	public function testEnabledConfig(): void
+	{
+		$this->assertSame(['dummy'], $this->challenges->enabled());
+	}
+
+	public function testFirstAvailable(): void
+	{
+		$user = $this->app->user('marge');
+
+		$this->assertInstanceOf(
+			DummyChallenge::class,
+			$this->challenges->firstAvailable($user, 'login')
+		);
+
+		DummyChallenge::$available = false;
+		$this->assertNull($this->challenges->firstAvailable($user, 'login'));
+	}
+
+	public function testGet(): void
+	{
+		$user      = $this->app->user('marge');
+		$challenge = $this->challenges->get('dummy', $user, 'login', 123);
+
+		$this->assertInstanceOf(DummyChallenge::class, $challenge);
+		$this->assertSame($user, $challenge->user());
+		$this->assertSame('login', $challenge->mode());
+		$this->assertSame(123, $challenge->timeout());
 	}
 
 	public function testVerify(): void
@@ -263,24 +281,6 @@ class ChallengesTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->challenges->verify($session, 'ok');
-	}
-
-	public function testClear(): void
-	{
-		$session = $this->session();
-		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'y']);
-		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.mode', 'login');
-		$session->set('kirby.challenge.timeout', time() + 1000);
-		$session->set('kirby.challenge.type', 'dummy');
-
-		$this->challenges->clear();
-
-		$this->assertNull($session->get('kirby.challenge.data'));
-		$this->assertNull($session->get('kirby.challenge.email'));
-		$this->assertNull($session->get('kirby.challenge.mode'));
-		$this->assertNull($session->get('kirby.challenge.timeout'));
-		$this->assertNull($session->get('kirby.challenge.type'));
 	}
 
 	/**
