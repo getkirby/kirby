@@ -14,7 +14,7 @@ trait Label
 	public function label(): string|null
 	{
 		if ($this->label === null || $this->label === []) {
-			return Str::ucfirst($this->name());
+			return Str::label($this->name());
 		}
 
 		return $this->stringTemplateI18n($this->label);
