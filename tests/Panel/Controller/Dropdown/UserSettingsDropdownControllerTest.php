@@ -90,7 +90,7 @@ class UserSettingsDropdownControllerTest extends TestCase
 
 		$this->app->impersonate('test@getkirby.com');
 
-		$user = $this->app->user('test')->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+		$user = $this->app->user('test')->changeSecret('totp', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
 		$controller = new UserSettingsDropdownController($user);
 		$options    = $controller->load();
 		$this->assertCount(10, $options);
@@ -123,7 +123,7 @@ class UserSettingsDropdownControllerTest extends TestCase
 		$controller = new UserSettingsDropdownController($user);
 		$this->assertSame('enable', $controller->totpMode());
 
-		$user = $user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
+		$user = $user->changeSecret('totp', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567');
 		$controller = new UserSettingsDropdownController($user);
 		$this->assertSame('disable', $controller->totpMode());
 
@@ -131,7 +131,7 @@ class UserSettingsDropdownControllerTest extends TestCase
 		$controller = new UserSettingsDropdownController($user);
 		$this->assertSame('disable', $controller->totpMode());
 
-		$user = $user->changeTotp(null);
+		$user = $user->changeSecret('totp', null);
 		$controller = new UserSettingsDropdownController($user);
 		$this->assertNull($controller->totpMode());
 	}

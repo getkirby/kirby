@@ -134,8 +134,33 @@ class UserRules
 	}
 
 	/**
+	 * Validates if the user secret can be changed
+	 * @since 6.0.0
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the secret
+	 */
+	public static function changeSecret(
+		User $user,
+		string $secret,
+		#[SensitiveParameter]
+		mixed $content
+	): void {
+		$currentUser = $user->kirby()->user();
+
+		if (
+			$currentUser->is($user) === false &&
+			$currentUser->isAdmin() === false
+		) {
+			throw new PermissionException(
+				message: 'You cannot change user secrets for ' . $user->email()
+			);
+		}
+	}
+
+	/**
 	 * Validates if the TOTP can be changed
 	 * @since 4.0.0
+	 * @deprecated 6.0.0
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the password
 	 */

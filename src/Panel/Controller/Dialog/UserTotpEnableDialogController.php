@@ -75,7 +75,7 @@ class UserTotpEnableDialogController extends DialogController
 			);
 		}
 
-		$this->user->changeTotp($secret);
+		$this->user->changeSecret('totp', $secret);
 
 		return [
 			'message' => $this->i18n('login.totp.enable.success')

@@ -39,7 +39,7 @@ class TotpChallengeTest extends TestCase
 	{
 		$user = $this->app->user('homer@simpsons.com');
 		$this->assertFalse(TotpChallenge::isAvailable($user, 'login'));
-		$this->app->impersonate('kirby', fn () => $user->changeTotp('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'));
+		$this->app->impersonate('kirby', fn () => $user->changeSecret('totp', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'));
 		$this->assertTrue(TotpChallenge::isAvailable($user, 'login'));
 	}
 
@@ -53,7 +53,7 @@ class TotpChallengeTest extends TestCase
 	{
 		$user = $this->app->user('homer@simpsons.com');
 		$totp = new Totp();
-		$this->app->impersonate('kirby', fn () => $user->changeTotp($totp->secret()));
+		$this->app->impersonate('kirby', fn () => $user->changeSecret('totp', $totp->secret()));
 
 		$this->assertTrue(TotpChallenge::verify($user, $totp->generate()));
 		$this->assertFalse(TotpChallenge::verify($user, 'a23456'));
