@@ -547,13 +547,14 @@ class Language implements Stringable
 	public function toArray(): array
 	{
 		return [
-			'code'      => $this->code(),
-			'default'   => $this->isDefault(),
-			'direction' => $this->direction(),
-			'locale'    => $this->locale(),
-			'name'      => $this->name(),
-			'rules'     => $this->rules(),
-			'url'       => $this->url()
+			'code'           => $this->code(),
+			'default'        => $this->isDefault(),
+			'direction'      => $this->direction(),
+			'hasAbsoluteUrl' => Url::isAbsolute($this->url),
+			'locale'         => $this->locale(),
+			'name'           => $this->name(),
+			'rules'          => $this->rules(),
+			'url'            => $this->url(),
 		];
 	}
 
