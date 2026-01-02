@@ -110,6 +110,15 @@ class SlugField extends TextField
 		return $this->icon ?? 'url';
 	}
 
+	public function label(): string
+	{
+		if ($this->label === null || $this->label === []) {
+			return $this->i18n('slug');
+		}
+
+		return parent::label();
+	}
+
 	public function path(): string|null
 	{
 		return $this->path;

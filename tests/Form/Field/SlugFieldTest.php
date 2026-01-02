@@ -27,7 +27,7 @@ class SlugFieldTest extends TestCase
 			'help'         => null,
 			'hidden'       => false,
 			'icon'         => 'url',
-			'label'        => 'Slug',
+			'label'        => 'URL appendix',
 			'maxlength'    => null,
 			'minlength'    => null,
 			'name'         => 'slug',
@@ -47,4 +47,14 @@ class SlugFieldTest extends TestCase
 
 		$this->assertSame($expected, $props);
 	}
+
+	public function testLabel(): void
+	{
+		$field = $this->field('slug', [
+			'label' => 'Test'
+		]);
+
+		$this->assertSame('Test', $field->label());
+	}
+
 }
