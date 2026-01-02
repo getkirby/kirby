@@ -2,7 +2,7 @@
 
 namespace Kirby\Panel\Controller\View;
 
-use Kirby\Cms\Blueprint;
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Form;
