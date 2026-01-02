@@ -362,7 +362,6 @@ class FieldTest extends TestCase
 		$this->assertSame('Language', $field['label']);
 		$this->assertSame('select', $field['type']);
 		$this->assertSame('translate', $field['icon']);
-		$this->assertFalse($field['empty']);
 		$this->assertCount($this->app->translations()->count(), $field['options']);
 
 		// with custom props

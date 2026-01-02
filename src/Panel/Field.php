@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
+use Kirby\Panel\Form\Field\TranslationField;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -222,22 +223,7 @@ class Field
 	 */
 	public static function translation(array $props = []): array
 	{
-		$translations = [];
-		foreach (App::instance()->translations() as $translation) {
-			$translations[] = [
-				'text'  => $translation->name(),
-				'value' => $translation->code()
-			];
-		}
-
-		return [
-			'label'   => I18n::translate('language'),
-			'type'    => 'select',
-			'icon'    => 'translate',
-			'options' => $translations,
-			'empty'   => false,
-			...$props
-		];
+		return TranslationField::factory($props)->toArray();
 	}
 
 	public static function username(array $props = []): array
