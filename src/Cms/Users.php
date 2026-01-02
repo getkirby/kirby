@@ -205,9 +205,7 @@ class Users extends LazyCollection
 			$this->data[$userDirectory] = null;
 		}
 
-		foreach ($existing as $id => $user) {
-			$this->data[$id] = $user;
-		}
+		$this->data = [...$this->data, ...$existing];
 
 		$this->initialized = true;
 	}
