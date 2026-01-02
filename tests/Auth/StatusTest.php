@@ -2,10 +2,7 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Cms\App;
 use Kirby\Cms\User;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Status::class)]
@@ -13,14 +10,11 @@ class StatusTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Status';
 
-	protected App $app;
-
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
+		parent::setUp();
+
+		$this->app = $this->app->clone([
 			'users' => [
 				[
 					'email' => 'homer@simpsons.com',
@@ -28,13 +22,6 @@ class StatusTest extends TestCase
 				]
 			]
 		]);
-	}
-
-	public function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		Dir::remove(static::TMP);
-		App::destroy();
 	}
 
 	public function testActive(): void
