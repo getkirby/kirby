@@ -6,6 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
+use Kirby\Panel\Form\Field\TitleField;
 use Kirby\Panel\Form\Field\TranslationField;
 use Kirby\Panel\Form\Field\UsernameField;
 use Kirby\Toolkit\I18n;
@@ -211,12 +212,7 @@ class Field
 
 	public static function title(array $props = []): array
 	{
-		return [
-			'label' => I18n::translate('title'),
-			'type'  => 'text',
-			'icon'  => 'title',
-			...$props
-		];
+		return TitleField::factory($props)->toArray();
 	}
 
 	/**

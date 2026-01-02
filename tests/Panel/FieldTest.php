@@ -275,13 +275,10 @@ class FieldTest extends TestCase
 	{
 		// default
 		$field = Field::title();
-		$expected = [
-			'label' => 'Title',
-			'type'  => 'text',
-			'icon'  => 'title'
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('Title', $field['label']);
+		$this->assertSame('text', $field['type']);
+		$this->assertSame('title', $field['icon']);
 
 		// with custom props
 		$field = Field::title([
