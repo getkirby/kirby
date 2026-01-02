@@ -45,7 +45,7 @@ class MethodsTest extends TestCase
 		$this->app = $this->app->clone([
 			'options' => [
 				'auth' => [
-					'methods' => ['code']
+					'methods' => ['password' => ['2fa' => true], 'code']
 				]
 			]
 		]);
@@ -53,8 +53,8 @@ class MethodsTest extends TestCase
 		$methods = $this->app->auth()->methods();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Auth method "password" is not available');
-		$methods->authenticate('password', 'marge@simpsons.com', 'secret123');
+		$this->expectExceptionMessage('Auth method "code" is not available');
+		$methods->authenticate('code', 'marge@simpsons.com', 'secret123');
 	}
 
 	public function testAuthenticateInvalid(): void
@@ -62,7 +62,7 @@ class MethodsTest extends TestCase
 		$methods = $this->app->auth()->methods();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Auth method "foo" is not available');
+		$this->expectExceptionMessage('Auth method "foo" is not enabled');
 		$methods->authenticate('foo', 'marge@simpsons.com', 'secret123');
 	}
 
@@ -255,7 +255,6 @@ class MethodsTest extends TestCase
 		$methods = $app->auth()->methods();
 		$this->assertInstanceOf(PasswordMethod::class, $methods->get('password'));
 		$this->assertInstanceOf(CodeMethod::class, $methods->get('code'));
-		$this->assertNull($methods->get('foo'));
 	}
 
 	public function testHas(): void

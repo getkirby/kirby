@@ -49,11 +49,15 @@ class Methods
 		string|null $password = null,
 		bool $long = false
 	): User|Status {
+		if ($this->has($type) === false) {
+			throw new InvalidArgumentException(
+				message: 'Auth method "' . $type . '" is not enabled'
+			);
+		}
+
 		$method = $this->get($type);
 
-		if (
-			$method === null ||
-			$method::isAvailable($this->auth, $method->options()) === false) {
+		if ($method::isAvailable($this->auth, $method->options()) === false) {
 			throw new InvalidArgumentException(
 				message: 'Auth method "' . $type . '" is not available'
 			);
@@ -177,12 +181,8 @@ class Methods
 	 * (This is based on the config. You might need to check
 	 * yourself if the method should be available in your context)
 	 */
-	public function get(string $type): Method|null
+	public function get(string $type): Method
 	{
-		if ($this->has($type) === false) {
-			return null;
-		}
-
 		$method = $this->class($type);
 
 		return new $method(
