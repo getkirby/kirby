@@ -44,6 +44,7 @@ class CoreTest extends TestCase
 	{
 		$authMethods = $this->core->authMethods();
 		$this->assertArrayHasKey('code', $authMethods);
+		$this->assertArrayHasKey('basic-auth', $authMethods);
 		$this->assertArrayHasKey('password', $authMethods);
 		$this->assertArrayHasKey('password-reset', $authMethods);
 	}
