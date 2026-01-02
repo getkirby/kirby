@@ -37,6 +37,15 @@ class CoreTest extends TestCase
 	{
 		$authChallenges = $this->core->authChallenges();
 		$this->assertArrayHasKey('email', $authChallenges);
+		$this->assertArrayHasKey('totp', $authChallenges);
+	}
+
+	public function testAuthMethods(): void
+	{
+		$authMethods = $this->core->authMethods();
+		$this->assertArrayHasKey('code', $authMethods);
+		$this->assertArrayHasKey('password', $authMethods);
+		$this->assertArrayHasKey('password-reset', $authMethods);
 	}
 
 	public function testBlueprintPresets(): void

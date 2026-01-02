@@ -3,9 +3,7 @@
 namespace Kirby\Auth;
 
 use Kirby\Auth\Exception\RateLimitException;
-use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 
 class LimitsTest extends TestCase
 {
@@ -17,8 +15,9 @@ class LimitsTest extends TestCase
 
 	public function setUp(): void
 	{
+		parent::setUp();
 		$self      = $this;
-		$this->app = new App([
+		$this->app = $this->app->clone([
 			'roots' => [
 				'index' => static::TMP
 			],
@@ -36,11 +35,6 @@ class LimitsTest extends TestCase
 
 		Dir::make(static::TMP . '/site/accounts');
 		$this->limits = new Limits($this->app);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove(static::TMP);
 	}
 
 	public function testEnsure(): void
