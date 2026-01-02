@@ -376,13 +376,10 @@ class FieldTest extends TestCase
 	{
 		// default
 		$field = Field::username();
-		$expected = [
-			'icon'  => 'user',
-			'label' => 'Name',
-			'type'  => 'text',
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('user', $field['icon']);
+		$this->assertSame('Name', $field['label']);
+		$this->assertSame('text', $field['type']);
 
 		// with custom props
 		$field = Field::username([

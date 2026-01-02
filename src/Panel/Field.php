@@ -7,6 +7,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
 use Kirby\Panel\Form\Field\TranslationField;
+use Kirby\Panel\Form\Field\UsernameField;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -228,11 +229,6 @@ class Field
 
 	public static function username(array $props = []): array
 	{
-		return [
-			'icon'  => 'user',
-			'label' => I18n::translate('name'),
-			'type'  => 'text',
-			...$props
-		];
+		return UsernameField::factory($props)->toArray();
 	}
 }
