@@ -302,6 +302,14 @@ class Language implements Stringable
 	}
 
 	/**
+	 * Check if the language url is absolute
+	 */
+	public function hasAbsoluteUrl(): bool
+	{
+		return Url::isAbsolute($this->url);
+	}
+
+	/**
 	 * Checks if the language is the same
 	 * as the given language or language code
 	 * @since 5.0.0
@@ -550,7 +558,7 @@ class Language implements Stringable
 			'code'           => $this->code(),
 			'default'        => $this->isDefault(),
 			'direction'      => $this->direction(),
-			'hasAbsoluteUrl' => Url::isAbsolute($this->url),
+			'hasAbsoluteUrl' => $this->hasAbsoluteUrl(),
 			'locale'         => $this->locale(),
 			'name'           => $this->name(),
 			'rules'          => $this->rules(),

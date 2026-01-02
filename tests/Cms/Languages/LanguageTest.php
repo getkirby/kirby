@@ -697,13 +697,14 @@ class LanguageTest extends TestCase
 		]);
 
 		$expected = [
-			'code'      => 'de',
-			'default'   => false,
-			'direction' => 'ltr',
-			'locale'    => [LC_ALL => 'de_DE'],
-			'name'      => 'Deutsch',
-			'rules'     => $language->rules(),
-			'url'       => '/de'
+			'code'           => 'de',
+			'default'        => false,
+			'direction'      => 'ltr',
+			'hasAbsoluteUrl' => false,
+			'locale'         => [LC_ALL => 'de_DE'],
+			'name'           => 'Deutsch',
+			'rules'          => $language->rules(),
+			'url'            => '/de'
 		];
 
 		$this->assertSame($expected, $language->toArray());
@@ -747,6 +748,50 @@ class LanguageTest extends TestCase
 		]);
 
 		$this->assertSame('/en', $language->url());
+	}
+
+	public function testHasAbsoluteUrl(): void
+	{
+		// default
+		$language = new Language([
+			'code' => 'en',
+			'url'  => null
+		]);
+		$this->assertFalse($language->hasAbsoluteUrl());
+
+		// relative url - false
+		$language = new Language([
+			'code' => 'en',
+			'url'  => '/en'
+		]);
+		$this->assertFalse($language->hasAbsoluteUrl());
+
+		// root url - false
+		$language = new Language([
+			'code' => 'en',
+			'url'  => '/'
+		]);
+		$this->assertFalse($language->hasAbsoluteUrl());
+
+		// absolute http url - true
+		$language = new Language([
+			'code' => 'en',
+			'url'  => 'http://example.com'
+		]);
+		$this->assertTrue($language->hasAbsoluteUrl());
+
+		// absolute https url - true
+		$language = new Language([
+			'code' => 'en',
+			'url'  => 'https://example.com/en'
+		]);
+		$this->assertTrue($language->hasAbsoluteUrl());
+
+		// no url - false
+		$language = new Language([
+			'code' => 'en'
+		]);
+		$this->assertFalse($language->hasAbsoluteUrl());
 	}
 
 	public function testUpdate(): void
