@@ -1,48 +1,45 @@
 <?php
 
-namespace Kirby\Form\Field;
+namespace Kirby\Panel\Form\Field;
 
+use Kirby\Form\Field\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(SlugField::class)]
-class SlugFieldTest extends TestCase
+#[CoversClass(TitleField::class)]
+class TitleFieldTest extends TestCase
 {
 	public function testProps(): void
 	{
-		$field = $this->field('slug');
+		$field = new TitleField();
 		$props = $field->props();
 
 		ksort($props);
 
 		$expected = [
 			'after'        => null,
-			'allow'        => null,
 			'autocomplete' => null,
 			'autofocus'    => false,
 			'before'       => null,
 			'converter'    => null,
-			'counter'      => false,
+			'counter'      => true,
 			'disabled'     => false,
 			'font'         => 'sans-serif',
 			'help'         => null,
 			'hidden'       => false,
-			'icon'         => 'url',
-			'label'        => 'URL appendix',
+			'icon'         => 'title',
+			'label'        => 'Title',
 			'maxlength'    => null,
 			'minlength'    => null,
-			'name'         => 'slug',
-			'path'         => null,
+			'name'         => 'title',
 			'pattern'      => null,
 			'placeholder'  => null,
 			'required'     => false,
 			'saveable'     => true,
 			'spellcheck'   => null,
-			'sync'         => null,
 			'translate'    => true,
-			'type'         => 'slug',
+			'type'         => 'text',
 			'when'         => null,
 			'width'        => '1/1',
-			'wizard'       => false,
 		];
 
 		$this->assertSame($expected, $props);
@@ -50,11 +47,10 @@ class SlugFieldTest extends TestCase
 
 	public function testLabel(): void
 	{
-		$field = $this->field('slug', [
-			'label' => 'Test'
-		]);
+		$field = new TitleField(
+			label: 'Test'
+		);
 
 		$this->assertSame('Test', $field->label());
 	}
-
 }
