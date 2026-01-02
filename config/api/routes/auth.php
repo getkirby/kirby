@@ -49,6 +49,7 @@ return [
 		'method'  => 'POST',
 		'auth'    => false,
 		'action'  => function () {
+			// @codeCoverageIgnoreStart
 			$auth = $this->kirby()->auth();
 
 			// csrf token check
@@ -58,26 +59,7 @@ return [
 				);
 			}
 
-			$email    = $this->requestBody('email');
-			$long     = $this->requestBody('long');
-			$password = $this->requestBody('password');
-
-			$methods = $auth->methods();
-			$method  = match (true) {
-				$password !== ''                         => 'password',
-				$methods->hasAvailable('code')           => 'code',
-				$methods->hasAvailable('password-reset') => 'password-reset',
-				default => throw new InvalidArgumentException(
-					message: 'Login without password is not enabled'
-				)
-			};
-
-			$result = $auth->authenticate(
-				method:   $method,
-				email:    $email,
-				password: $password,
-				long:     $long
-			);
+			$result = $auth->methods()->authenticateApiRequest($this);
 
 			if ($result instanceof User) {
 				return [
@@ -92,6 +74,7 @@ return [
 				'status'    => 'ok',
 				'challenge' => $result->challenge()
 			];
+			// @codeCoverageIgnoreEnd
 		}
 	],
 	[

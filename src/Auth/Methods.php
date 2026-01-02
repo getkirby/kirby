@@ -2,6 +2,7 @@
 
 namespace Kirby\Auth;
 
+use Kirby\Api\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Status;
@@ -50,13 +51,42 @@ class Methods
 	): User|Status {
 		$method = $this->get($type);
 
-		if ($method::isAvailable($this->auth, $method->options()) === false) {
+		if (
+			$method === null ||
+			$method::isAvailable($this->auth, $method->options()) === false) {
 			throw new InvalidArgumentException(
 				message: 'Auth method "' . $type . '" is not available'
 			);
 		}
 
 		return $method->authenticate($email, $password, $long);
+	}
+
+	/**
+	 * @internal
+	 * @todo Refactor/remove when refactoring login view
+	 */
+	public function authenticateApiRequest(Api $api): User|Status
+	{
+		$email    = $api->requestBody('email');
+		$long     = $api->requestBody('long');
+		$password = $api->requestBody('password');
+
+		$method = match (true) {
+			$password !== ''  || $password === null => 'password',
+			$this->hasAvailable('code')             => 'code',
+			$this->hasAvailable('password-reset')   => 'password-reset',
+			default => throw new InvalidArgumentException(
+				message: 'Login without password is not enabled'
+			)
+		};
+
+		return $this->auth->authenticate(
+			method:   $method,
+			email:    $email,
+			password: $password,
+			long:     $long
+		);
 	}
 
 	/**
@@ -114,7 +144,6 @@ class Methods
 
 		// normalize the syntax variants
 		$normalized = [];
-		$uses2fa    = false;
 
 		foreach ($methods as $key => $value) {
 			if (is_int($key) === true) {
@@ -126,10 +155,6 @@ class Methods
 			} else {
 				// ['password' => [...]]
 				$normalized[$key] = $value;
-
-				if (isset($value['2fa']) === true && $value['2fa'] === true) {
-					$uses2fa = true;
-				}
 			}
 		}
 
@@ -152,9 +177,14 @@ class Methods
 	 * (This is based on the config. You might need to check
 	 * yourself if the method should be available in your context)
 	 */
-	public function get(string $type): Method
+	public function get(string $type): Method|null
 	{
+		if ($this->has($type) === false) {
+			return null;
+		}
+
 		$method = $this->class($type);
+
 		return new $method(
 			auth:    $this->auth,
 			options: $this->enabled()[$type] ?? []
