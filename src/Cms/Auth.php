@@ -8,6 +8,7 @@ use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Limits;
 use Kirby\Auth\Method\BasicAuthMethod;
 use Kirby\Auth\Methods;
+use Kirby\Auth\User as AuthUser;
 use Kirby\Cms\Auth\Challenge;
 use Kirby\Cms\Auth\Status;
 use Kirby\Exception\Exception;
@@ -40,12 +41,6 @@ class Auth
 	public static array $challenges = [];
 
 	protected Csrf $csrf;
-
-	/**
-	 * Currently impersonated user
-	 */
-	protected User|null $impersonate = null;
-
 	protected Limits $limits;
 	protected Methods $methods;
 
@@ -54,17 +49,7 @@ class Auth
 	 */
 	protected Status|null $status = null;
 
-	/**
-	 * Instance of the currently logged in user or
-	 * `false` if the user was not yet determined
-	 */
-	protected User|false|null $user = false;
-
-	/**
-	 * Exception that was thrown while
-	 * determining the current user
-	 */
-	protected Throwable|null $userException = null;
+	protected AuthUser $user;
 
 	/**
 	 * @codeCoverageIgnore
@@ -75,6 +60,7 @@ class Auth
 		$this->csrf    = new Csrf($kirby);
 		$this->limits  = new Limits($kirby);
 		$this->methods = new Methods($this, $kirby);
+		$this->user    = new AuthUser($this, $kirby);
 	}
 
 	/**
@@ -222,9 +208,8 @@ class Auth
 	}
 
 	/**
-	 * Returns the logged in user by checking
-	 * for a basic authentication header with
-	 * valid credentials
+	 * Returns the logged in user by checking for a
+	 * basic authentication header with valid credentials
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
 	 * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
@@ -232,11 +217,7 @@ class Auth
 	public function currentUserFromBasicAuth(
 		BasicAuth|null $auth = null
 	): User|null {
-		/**
-		 * @var \Kirby\Auth\Method\BasicAuthMethod
-		 */
-		$basic = $this->methods()->get('basic-auth');
-		return $basic->user($auth);
+		return $this->user->fromBasicAuth($auth);
 	}
 
 	/**
@@ -244,56 +225,17 @@ class Auth
 	 */
 	public function currentUserFromImpersonation(): User|null
 	{
-		return $this->impersonate;
+		return $this->user->fromImpersonation();
 	}
 
 	/**
-	 * Returns the logged in user by checking
-	 * the current session and finding a valid
-	 * valid user id in there
+	 * Returns the logged in user by checking the current session
+	 * and finding a valid valid user id in there
 	 */
 	public function currentUserFromSession(
 		Session|array|null $session = null
 	): User|null {
-		$session = $this->session($session);
-
-		$id = $session->data()->get('kirby.userId');
-
-		// if no user is logged in, return immediately
-		if (is_string($id) !== true) {
-			return null;
-		}
-
-		// a user is logged in, ensure it exists
-		$user = $this->kirby->users()->find($id);
-
-		if ($user === null) {
-			return null;
-		}
-
-		if ($passwordTimestamp = $user->passwordTimestamp()) {
-			$loginTimestamp = $session->data()->get('kirby.loginTimestamp');
-
-			if (is_int($loginTimestamp) !== true) {
-				// session that was created before Kirby
-				// 3.5.8.3, 3.6.6.3, 3.7.5.2, 3.8.4.1 or 3.9.6
-				// or when the user didn't have a password set
-				$user->logout();
-				return null;
-			}
-
-			// invalidate the session if the password
-			// changed since the login
-			if ($loginTimestamp < $passwordTimestamp) {
-				$user->logout();
-				return null;
-			}
-		}
-
-		// in case the session needs to be updated, do it now
-		// for better performance
-		$session->commit();
-		return $user;
+		return $this->user->fromSession($session);
 	}
 
 	/**
@@ -343,18 +285,17 @@ class Auth
 	 */
 	public function flush(): void
 	{
-		$this->impersonate = null;
-		$this->status      = null;
-		$this->user        = null;
+		$this->user->flush();
+		$this->status = null;
 	}
 
 	/**
 	 * Become any existing user or disable the current user
 	 *
-	 * @param string|null $who User ID or email address,
-	 *                         `null` to use the actual user again,
-	 *                         `'kirby'` for a virtual admin user or
-	 *                         `'nobody'` to disable the actual user
+	 * @param 'string'|null $who User ID or email address,
+	 *                           `null` to use the actual user again,
+	 *                           `'kirby'` for a virtual admin user or
+	 *                           `'nobody'` to disable the actual user
 	 * @throws \Kirby\Exception\NotFoundException if the given user cannot be found
 	 */
 	public function impersonate(string|null $who = null): User|null
@@ -362,22 +303,7 @@ class Auth
 		// clear the status cache
 		$this->status = null;
 
-		return $this->impersonate = match ($who) {
-			null     => null,
-			'kirby'  => new User([
-				'email' => 'kirby@getkirby.com',
-				'id'    => 'kirby',
-				'role'  => 'admin',
-			]),
-			'nobody' => new User([
-				'email' => 'nobody@getkirby.com',
-				'id'    => 'nobody',
-				'role'  => 'nobody',
-			]),
-			default => $this->kirby->users()->find($who) ?? throw new NotFoundException(
-				message: 'The user "' . $who . '" cannot be found'
-			),
-		};
+		return $this->user->impersonate($who);
 	}
 
 	/**
@@ -476,7 +402,7 @@ class Auth
 	{
 		// stop impersonating;
 		// ensures that we log out the actually logged in user
-		$this->impersonate = null;
+		$this->user->impersonate(null);
 
 		// logout the current user if it exists
 		$this->user()?->logout();
@@ -505,7 +431,7 @@ class Auth
 	/**
 	 * Creates a session object from the passed options
 	 */
-	protected function session(Session|array|null $session = null): Session
+	public function session(Session|array|null $session = null): Session
 	{
 		// use passed session options or session object if set
 		if (is_array($session) === true) {
@@ -526,10 +452,7 @@ class Auth
 	 */
 	public function setUser(User $user): void
 	{
-		// stop impersonating
-		$this->impersonate = null;
-		$this->user        = $user;
-
+		$this->user->set($user);
 		// clear the status cache
 		$this->status = null;
 	}
@@ -563,8 +486,8 @@ class Auth
 			$props['email']  = $user->email();
 			$props['status'] = match (true) {
 				$allowImpersonation === true &&
-					$this->impersonate !== null  => 'impersonated',
-				default                      => 'active'
+					$this->user->isImpersonated() === true => 'impersonated',
+				default                                    => 'active'
 			};
 		} elseif ($email = $sessionObj->get('kirby.challenge.email')) {
 			// a challenge is currently pending
@@ -614,7 +537,10 @@ class Auth
 			return 'basic';
 		}
 
-		if ($allowImpersonation === true && $this->impersonate !== null) {
+		if (
+			$allowImpersonation === true &&
+			$this->user->isImpersonated() === true
+		) {
 			return 'impersonate';
 		}
 
@@ -633,38 +559,7 @@ class Auth
 		Session|array|null $session = null,
 		bool $allowImpersonation = true
 	): User|null {
-		if ($allowImpersonation === true && $this->impersonate !== null) {
-			return $this->impersonate;
-		}
-
-		// return from cache
-		if ($this->user === null) {
-			// throw the same Exception again if one was captured before
-			if ($this->userException !== null) {
-				throw $this->userException;
-			}
-
-			return null;
-		}
-
-		if ($this->user !== false) {
-			return $this->user;
-		}
-
-		try {
-			return $this->user = match ($this->type()) {
-				'basic' => $this->currentUserFromBasicAuth(),
-				default => $this->currentUserFromSession($session)
-			};
-
-		} catch (Throwable $e) {
-			$this->user = null;
-
-			// capture the Exception for future calls
-			$this->userException = $e;
-
-			throw $e;
-		}
+		return $this->user->get($session, $allowImpersonation);
 	}
 
 	/**
