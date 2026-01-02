@@ -5,7 +5,6 @@ namespace Kirby\Auth;
 use Kirby\Cms\Auth;
 use Kirby\Cms\User as CmsUser;
 use Kirby\Exception\NotFoundException;
-use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Request\Auth\BasicAuth;
 use PHPUnit\Framework\Attributes\CoversClass;
