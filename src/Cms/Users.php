@@ -211,7 +211,7 @@ class Users extends LazyCollection
 	}
 
 	/**
-	 * Loads a user from disk by passing the absolute path (root)
+	 * Loads users from disk by passing the absolute directory path (root)
 	 */
 	public static function load(string $root, array $inject = []): static
 	{
