@@ -171,13 +171,9 @@ class FieldTest extends TestCase
 	public function testRole(): void
 	{
 		$field = Field::role();
-		$expected = [
-			'label'   => 'Role',
-			'type'    => 'hidden',
-			'options' => []
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('role', $field['name']);
+		$this->assertSame('hidden', $field['type']);
 
 		// without authenticated user
 		$this->app = $this->app->clone([
@@ -200,52 +196,50 @@ class FieldTest extends TestCase
 		]);
 
 		$field = Field::role();
-		$expected = [
-			'label'   => 'Role',
-			'type'    => 'radio',
-			'options' => [
-				[
-					'text' => 'Client',
-					'info' => 'No description',
-					'value' => 'client'
-				],
-				[
-					'text' => 'Editor',
-					'info' => 'Editor description',
-					'value' => 'editor'
-				],
-			]
+
+		$options = [
+			[
+				'text' => 'Client',
+				'info' => 'No description',
+				'value' => 'client'
+			],
+			[
+				'text' => 'Editor',
+				'info' => 'Editor description',
+				'value' => 'editor'
+			],
 		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('Role', $field['label']);
+		$this->assertSame('radio', $field['type']);
+		$this->assertSame($options, $field['options']);
 
 		// with authenticated admin
 		$this->app->impersonate('kirby');
 
 		$field = Field::role();
-		$expected = [
-			'label'   => 'Role',
-			'type'    => 'radio',
-			'options' => [
-				[
-					'text' => 'Admin',
-					'info' => 'Admin description',
-					'value' => 'admin'
-				],
-				[
-					'text' => 'Client',
-					'info' => 'No description',
-					'value' => 'client'
-				],
-				[
-					'text' => 'Editor',
-					'info' => 'Editor description',
-					'value' => 'editor'
-				],
-			]
+
+		$options = [
+			[
+				'text' => 'Admin',
+				'info' => 'Admin description',
+				'value' => 'admin'
+			],
+			[
+				'text' => 'Client',
+				'info' => 'No description',
+				'value' => 'client'
+			],
+			[
+				'text' => 'Editor',
+				'info' => 'Editor description',
+				'value' => 'editor'
+			],
 		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('Role', $field['label']);
+		$this->assertSame('radio', $field['type']);
+		$this->assertSame($options, $field['options']);
 	}
 
 	public function testSlug(): void

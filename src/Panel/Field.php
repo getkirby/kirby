@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
 use Kirby\Form\Field\EmailField;
 use Kirby\Form\Field\HiddenField;
+use Kirby\Panel\Form\Field\RoleField;
 use Kirby\Panel\Form\Field\TitleField;
 use Kirby\Panel\Form\Field\TranslationField;
 use Kirby\Panel\Form\Field\UsernameField;
@@ -75,9 +76,9 @@ class Field
 	}
 
 
-	public static function hidden(): array
+	public static function hidden(array $props = []): array
 	{
-		return HiddenField::factory([])->toArray();
+		return HiddenField::factory($props)->toArray();
 	}
 
 	/**
@@ -158,19 +159,19 @@ class Field
 				$kirby->user()?->isAdmin() === true
 		);
 
-		// turn roles into radio field options
-		$roles = $roles->values(fn ($role) => [
-			'text'  => $role->title(),
-			'info'  => $role->description() ?? I18n::translate('role.description.placeholder'),
-			'value' => $role->name()
+		$field = new RoleField(...[
+			'roles' => $roles,
+			...$props
 		]);
 
-		return [
-			'label'   => I18n::translate('role'),
-			'type'    => count($roles) < 1 ? 'hidden' : 'radio',
-			'options' => $roles,
-			...$props
-		];
+		if (count($field->options()) <= 1) {
+			return static::hidden([
+				'name' => 'role',
+				...$props
+			]);
+		}
+
+		return $field->toArray();
 	}
 
 	public static function slug(array $props = []): array
