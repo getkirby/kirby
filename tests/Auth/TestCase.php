@@ -9,6 +9,11 @@ use Kirby\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP = KIRBY_TMP_DIR . '/Auth';
+
+	protected Auth $auth;
+
 	public function setUp(): void
 	{
 		Email::$debug = true;
@@ -27,6 +32,8 @@ abstract class TestCase extends BaseTestCase
 				]
 			]
 		]);
+
+		$this->auth = $this->app->auth();
 
 		Dir::make(static::TMP);
 	}

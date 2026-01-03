@@ -2,7 +2,6 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Cms\Auth;
 use Kirby\Cms\User as CmsUser;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
@@ -14,7 +13,6 @@ class UserTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.User';
 
-	protected Auth $auth;
 	protected User $user;
 
 	public function setUp(): void
