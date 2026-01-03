@@ -183,7 +183,7 @@ class Users extends LazyCollection
 	 */
 	public function initializeAll(): void
 	{
-		// skip another initialization if no longer needed
+		// skip another initialization if it already has been initialized
 		if ($this->initialized === true) {
 			return;
 		}

@@ -261,7 +261,7 @@ abstract class LazyCollection extends Collection
 			return;
 		}
 
-		throw new LogicException('Lazy initialization is not implemented for ' . static::class); // @codeCoverageIgnore
+		throw new LogicException(static::class . ' class does not implement `initialize()` method that is required for lazy initialization'); // @codeCoverageIgnore
 	}
 
 	/**
