@@ -2,8 +2,11 @@
 
 namespace Kirby\Auth;
 
+use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
+use Kirby\Exception\UserNotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Session\Session;
@@ -14,12 +17,16 @@ class AuthTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Auth';
 
+	public string|null $failedEmail = null;
+
 	public function setUp(): void
 	{
 		parent::setUp();
 
 		$margePassword = password_hash('springfield123', PASSWORD_DEFAULT);
 		$homerPassword = password_hash('springfield123', PASSWORD_DEFAULT);
+
+		$self = $this;
 
 		$this->app = $this->app->clone([
 			'options' => [
@@ -42,8 +49,17 @@ class AuthTest extends TestCase
 				[
 					'email'    => 'kirby@getkirby.com',
 					'id'       => 'kirby',
-					'password' => password_hash('somewhere-in-japan', PASSWORD_DEFAULT)
+					'password' => User::hashPassword('somewhere-in-japan')
+				],
+				[
+					'email'    => 'test@exämple.com',
+					'password' => User::hashPassword('springfield123')
 				]
+			],
+			'hooks' => [
+				'user.login:failed' => function ($email) use ($self) {
+					$self->failedEmail = $email;
+				}
 			]
 		]);
 
@@ -110,30 +126,34 @@ class AuthTest extends TestCase
 	{
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
 		$_GET = ['csrf' => 'session-csrf'];
-
 		$this->assertSame('session-csrf', $this->auth->csrfFromSession());
 	}
 
 	public function testCurrentUserFromImpersonation(): void
 	{
 		$this->auth->impersonate('marge');
-		$this->assertSame('marge@simpsons.com', $this->auth->currentUserFromImpersonation()?->email());
+		$user = $this->auth->currentUserFromImpersonation();
+		$this->assertSame('marge@simpsons.com', $user->email());
 	}
 
 	public function testCurrentUserFromSession(): void
 	{
 		$session = $this->app->session();
 		$session->set('kirby.userId', 'marge');
-		$loginTimestamp = $this->app->user('marge@simpsons.com')->passwordTimestamp() + 1;
+		$user = $this->app->user('marge@simpsons.com');
+		$loginTimestamp = $user->passwordTimestamp() + 1;
 		$session->set('kirby.loginTimestamp', $loginTimestamp);
 
-		$this->assertSame('marge@simpsons.com', $this->auth->currentUserFromSession($session)?->email());
+		$user = $this->auth->currentUserFromSession($session);
+		$this->assertSame('marge@simpsons.com', $user->email());
 	}
 
 	public function testCurrentUserFromBasicAuth(): void
 	{
-		$auth = new BasicAuth(base64_encode('marge@simpsons.com:springfield123'));
-		$this->assertSame('marge@simpsons.com', $this->auth->currentUserFromBasicAuth($auth)?->email());
+		$data = base64_encode('marge@simpsons.com:springfield123');
+		$auth = new BasicAuth($data);
+		$user = $this->auth->currentUserFromBasicAuth($auth);
+		$this->assertSame('marge@simpsons.com', $user->email());
 	}
 
 	public function testImpersonate(): void
@@ -184,7 +204,11 @@ class AuthTest extends TestCase
 
 	public function testLoginInvalidUser(): void
 	{
-		$this->app  = $this->app->clone(['options' => ['auth' => ['debug' => false]]]);
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
 		$this->auth = $this->app->auth();
 
 		$this->expectException(PermissionException::class);
@@ -195,7 +219,11 @@ class AuthTest extends TestCase
 
 	public function testLoginInvalidPassword(): void
 	{
-		$this->app  = $this->app->clone(['options' => ['auth' => ['debug' => false]]]);
+		$this->app  = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
 		$this->auth = $this->app->auth();
 
 		$this->expectException(PermissionException::class);
@@ -213,6 +241,52 @@ class AuthTest extends TestCase
 		);
 
 		$this->auth->login('kirby@getkirby.com', 'somewhere-in-japan');
+	}
+
+	public function testLogoutActive(): void
+	{
+		$session = $this->app->session();
+
+		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$this->app->impersonate('homer@simpsons.com');
+
+		$this->assertSame('marge', $session->get('kirby.userId'));
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.userId'));
+
+		$this->assertSame([
+			'challenge' => null,
+			'data'      => null,
+			'email'     => null,
+			'mode'      => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
+	}
+
+	public function testLogoutPending(): void
+	{
+		$session = $this->app->session();
+
+		$this->auth->createChallenge('marge@simpsons.com');
+
+		$email = $session->get('kirby.challenge.email');
+		$this->assertSame('marge@simpsons.com', $email);
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.userId'));
+		$this->assertNull($session->get('kirby.challenge.mode'));
+
+		$this->assertSame([
+			'challenge' => null,
+			'data'      => null,
+			'email'     => null,
+			'mode'      => null,
+			'status'    => 'inactive'
+		], $this->auth->status()->toArray());
 	}
 
 	public function testMethods(): void
@@ -240,6 +314,7 @@ class AuthTest extends TestCase
 		$status = $this->auth->status();
 		$this->assertInstanceOf(Status::class, $status);
 		$this->assertSame('marge@simpsons.com', $status->email());
+		$this->assertSame(State::Active, $status->state());
 	}
 
 	public function testTypeBasicPreferredOverImpersonation(): void
@@ -250,22 +325,33 @@ class AuthTest extends TestCase
 			]
 		]);
 
+		// existing basic auth should be preferred
+		// over impersonation
 		$app->auth()->impersonate('kirby');
-
 		$this->assertSame('basic', $app->auth()->type());
+
+		// auth object should have been accessed
 		$this->assertTrue($app->response()->usesAuth());
 	}
 
 	public function testTypeBasicFallsBackToImpersonation(): void
 	{
+		// non-existing basic auth should
+		// fall back to impersonation
 		$this->auth->impersonate('kirby');
 		$this->assertSame('impersonate', $this->auth->type());
+
+		// auth object should have been accessed
 		$this->assertTrue($this->app->response()->usesAuth());
 	}
 
-	public function testTypeSession(): void
+	public function testTypeBasicFallsBackToSession(): void
 	{
+		// non-existing basic auth without
+		// impersonation should fall back to session
 		$this->assertSame('session', $this->auth->type());
+
+		// auth object should have been accessed
 		$this->assertTrue($this->app->response()->usesAuth());
 	}
 
@@ -282,8 +368,23 @@ class AuthTest extends TestCase
 			]
 		]);
 
+		// disabled option should fall back to session
 		$this->assertSame('session', $app->auth()->type());
+
+		// auth object should *not* have been accessed
 		$this->assertFalse($app->response()->usesAuth());
+	}
+
+	public function testTypeImpersonate(): void
+	{
+		$this->app->auth()->impersonate('kirby');
+		$this->assertSame('impersonate', $this->app->auth()->type());
+	}
+
+	public function testTypeSession(): void
+	{
+		$this->assertSame('session', $this->auth->type());
+		$this->assertTrue($this->app->response()->usesAuth());
 	}
 
 	public function testUserFromSession(): void
@@ -292,50 +393,200 @@ class AuthTest extends TestCase
 		$session->set('kirby.userId', 'marge');
 		$loginTimestamp = $this->app->user('marge@simpsons.com')->passwordTimestamp() + 1;
 		$session->set('kirby.loginTimestamp', $loginTimestamp);
-
-		$this->assertSame('marge@simpsons.com', $this->auth->user($session)?->email());
+		$this->assertSame('marge@simpsons.com', $this->auth->user($session)->email());
 	}
 
 	public function testValidatePassword(): void
 	{
-		$this->assertSame(
-			'marge@simpsons.com',
-			$this->auth->validatePassword('marge@simpsons.com', 'springfield123')?->email()
-		);
+		$user = $this->auth->validatePassword('marge@simpsons.com', 'springfield123');
+		$this->assertSame('marge@simpsons.com', $user->email());
+		$this->assertNull($this->failedEmail);
 	}
 
 	public function testValidatePasswordInvalidUser(): void
 	{
-		$this->app  = $this->app->clone(['options' => ['auth' => ['debug' => false]]]);
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
 		$this->auth = $this->app->auth();
 
-		$this->expectException(PermissionException::class);
-		$this->auth->validatePassword('invalid@example.com', 'springfield123');
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$thrown = false;
+
+		try {
+			$this->auth->validatePassword('invalid@example.com', 'springfield123');
+		} catch (PermissionException $e) {
+			$this->assertSame('Invalid login', $e->getMessage());
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+		$this->assertSame(1, $this->auth->limits()->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+		$this->assertSame('invalid@example.com', $this->failedEmail);
 	}
 
 	public function testValidatePasswordInvalidPassword(): void
 	{
-		$this->app  = $this->app->clone(['options' => ['auth' => ['debug' => false]]]);
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
 		$this->auth = $this->app->auth();
 
-		$this->expectException(PermissionException::class);
-		$this->auth->validatePassword('marge@simpsons.com', 'wrong');
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$thrown = false;
+
+		try {
+			$this->auth->validatePassword('marge@simpsons.com', 'wrong');
+		} catch (PermissionException $e) {
+			$this->assertSame('Invalid login', $e->getMessage());
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+		$this->assertSame(1, $this->auth->limits()->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+		$this->assertSame(1, $this->auth->limits()->log()['by-email']['marge@simpsons.com']['trials']);
+		$this->assertSame('marge@simpsons.com', $this->failedEmail);
 	}
 
-	public function testLogout(): void
+	public function testValidatePasswordBlocked(): void
 	{
-		$session = $this->app->session();
-		$session->set('kirby.userId', 'marge');
-		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.mode', 'login');
-		$session->set('kirby.challenge.type', 'email');
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
+		$this->auth = $this->app->auth();
 
-		$this->auth->logout();
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
 
-		$this->assertNull($session->get('kirby.userId'));
-		$this->assertNull($session->get('kirby.challenge.email'));
-		$this->assertNull($session->get('kirby.challenge.mode'));
-		$this->assertNull($session->get('kirby.challenge.type'));
-		$this->assertSame('inactive', $this->auth->status()->state()->value);
+		$this->app->visitor()->ip('10.2.123.234');
+
+		$thrown = false;
+
+		try {
+			$this->auth->validatePassword('marge@simpsons.com', 'springfield123');
+		} catch (PermissionException $e) {
+			$this->assertSame('Invalid login', $e->getMessage());
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+		$this->assertSame('marge@simpsons.com', $this->failedEmail);
+	}
+
+	public function testValidatePasswordDebugInvalidUser(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$thrown = false;
+
+		try {
+			$this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
+		} catch (UserNotFoundException $e) {
+			$this->assertSame('The user "lisa@simpsons.com" cannot be found', $e->getMessage());
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+		$this->assertSame(1, $this->auth->limits()->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+		$this->assertSame('lisa@simpsons.com', $this->failedEmail);
+	}
+
+	public function testValidatePasswordDebugInvalidPassword(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$thrown = false;
+
+		try {
+			$this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
+		} catch (InvalidArgumentException $e) {
+			$this->assertSame('Wrong password', $e->getMessage());
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+		$this->assertSame(1, $this->auth->limits()->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+		$this->assertSame(1, $this->auth->limits()->log()['by-email']['marge@simpsons.com']['trials']);
+		$this->assertSame('marge@simpsons.com', $this->failedEmail);
+	}
+
+	public function testValidatePasswordDebugBlocked(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.2.123.234');
+
+		$thrown = false;
+
+		try {
+			$this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+		} catch (RateLimitException $e) {
+			$thrown = true;
+		}
+
+		$this->assertTrue($thrown);
+		$this->assertSame('homer@simpsons.com', $this->failedEmail);
+	}
+
+	public function testValidatePasswordWithUnicodeEmail(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$user = $this->auth->validatePassword('test@exämple.com', 'springfield123');
+
+		$this->assertIsUser($user);
+		$this->assertSame('test@exämple.com', $user->email());
+	}
+
+	public function testValidatePasswordWithPunycodeEmail(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.3.123.234');
+		$user = $this->auth->validatePassword('test@xn--exmple-cua.com', 'springfield123');
+
+		$this->assertIsUser($user);
+		$this->assertSame('test@exämple.com', $user->email());
 	}
 }
