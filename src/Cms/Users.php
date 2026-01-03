@@ -147,14 +147,22 @@ class Users extends LazyCollection
 	 * Loads a user object, sets it in `$this->data[$key]`
 	 * and returns the hydrated user object
 	 */
-	protected function hydrateElement(string $key): User
+	protected function hydrateElement(string $key): User|null
 	{
 		if ($this->root === null) {
 			throw new LogicException('Cannot hydrate user "' . $key . '" with missing root'); // @codeCoverageIgnore
 		}
 
+		// check if the user directory exists if not all keys have been
+		// populated in the collection, otherwise we can assume that
+		// this method will only be called on "unhydrated" user IDs
+		$root = $this->root . '/' . $key;
+		if ($this->initialized === false && is_dir($root) === false) {
+			return null;
+		}
+
 		// get role information
-		$path = $this->root . '/' . $key . '/index.php';
+		$path = $root . '/index.php';
 		if (is_file($path) === true) {
 			$credentials = F::load($path, allowOutput: false);
 		}
@@ -170,19 +178,45 @@ class Users extends LazyCollection
 	}
 
 	/**
-	 * Loads a user from disk by passing the absolute path (root)
+	 * Ensures that the IDs for all valid users are loaded in the
+	 * `$data` array and sets `$initialized` to `true` afterwards
+	 */
+	public function initializeAll(): void
+	{
+		// skip another initialization if it already has been initialized
+		if ($this->initialized === true) {
+			return;
+		}
+
+		if ($this->root === null) {
+			throw new LogicException('Cannot initialize users with missing root'); // @codeCoverageIgnore
+		}
+
+		// ensure the order matches the filesystem, even if
+		// individual users have been hydrated/added before
+		$existing   = $this->data;
+		$this->data = [];
+
+		foreach (Dir::read($this->root) as $userDirectory) {
+			if (is_dir($this->root . '/' . $userDirectory) === false) {
+				continue;
+			}
+
+			$this->data[$userDirectory] = null;
+		}
+
+		$this->data = [...$this->data, ...$existing];
+
+		$this->initialized = true;
+	}
+
+	/**
+	 * Loads users from disk by passing the absolute directory path (root)
 	 */
 	public static function load(string $root, array $inject = []): static
 	{
 		$users = new static(root: $root, inject: $inject);
-
-		foreach (Dir::read($root) as $userDirectory) {
-			if (is_dir($root . '/' . $userDirectory) === false) {
-				continue;
-			}
-
-			$users->set($userDirectory, null);
-		}
+		$users->initialized = false;
 
 		return $users;
 	}
