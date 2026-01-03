@@ -2,8 +2,8 @@
 
 namespace Kirby\Auth\Method;
 
+use Kirby\Auth\Status;
 use Kirby\Cms\Auth;
-use Kirby\Cms\Auth\Status;
 
 /**
  * Password-reset flow that triggers a challenge

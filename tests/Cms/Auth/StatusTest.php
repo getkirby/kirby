@@ -7,6 +7,9 @@ use Kirby\Cms\TestCase;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * @deprecated 6.0.0
+ */
 #[CoversClass(Status::class)]
 class StatusTest extends TestCase
 {

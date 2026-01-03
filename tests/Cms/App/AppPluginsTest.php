@@ -4,9 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Auth\Method;
 use Kirby\Auth\Methods;
+use Kirby\Auth\Status;
 use Kirby\Cache\FileCache;
 use Kirby\Cms\Auth\Challenge;
-use Kirby\Cms\Auth\Status;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
@@ -251,6 +251,7 @@ class AppPluginsTest extends TestCase
 		$status = $auth->createChallenge('homer@simpsons.com');
 		$this->assertSame([
 			'challenge' => 'dummy',
+			'data'      => null,
 			'email'     => 'homer@simpsons.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
