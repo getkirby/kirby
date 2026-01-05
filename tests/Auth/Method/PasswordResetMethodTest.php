@@ -4,7 +4,6 @@ namespace Kirby\Auth\Method;
 
 use Kirby\Auth\Method;
 use Kirby\Auth\Methods;
-use Kirby\Cms\App;
 use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Status;
 use Kirby\Exception\InvalidArgumentException;
@@ -15,19 +14,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PasswordResetMethod::class)]
 class PasswordResetMethodTest extends TestCase
 {
-	protected function auth(bool $has2fa = false, bool $debug = false): Auth
+	protected function auth(bool $has2fa = false): Auth
 	{
 		$methods = $this->createStub(Methods::class);
 		$methods->method('hasAnyWith2FA')->willReturn($has2fa);
 
-		$kirby = $this->createStub(App::class);
-		$kirby->method('option')->willReturnCallback(
-			fn (string $key) => $key === 'debug' ? $debug : null
-		);
-
 		$auth = $this->createStub(Auth::class);
 		$auth->method('methods')->willReturn($methods);
-		$auth->method('kirby')->willReturn($kirby);
 
 		return $auth;
 	}
@@ -64,12 +57,6 @@ class PasswordResetMethodTest extends TestCase
 	public function testIsAvailableWith2FA(): void
 	{
 		$auth = $this->auth(has2fa: true);
-		$this->assertFalse(PasswordResetMethod::isAvailable($auth));
-	}
-
-	public function testIsAvailableWith2FADebug(): void
-	{
-		$auth = $this->auth(has2fa: true, debug: true);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "password-reset" login method cannot be enabled when 2FA is required');
