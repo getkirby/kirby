@@ -27,10 +27,12 @@
 					:has-diff="hasDiff"
 					:is-locked="isLocked"
 					:is-processing="isSaving"
+					:is-unlockable="permissions.unlock"
 					:modified="modified"
 					:preview="permissions.preview ? api + '/preview/changes' : false"
 					@discard="onDiscard"
 					@submit="onSubmit"
+					@unlock="onUnlock"
 				/>
 			</template>
 		</k-header>

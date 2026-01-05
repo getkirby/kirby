@@ -684,4 +684,29 @@ class Version
 
 		return $uri->toString();
 	}
+
+	/**
+	 * Unlocks the content for the current user
+	 */
+	public function unlock(Language|string $language = 'default'): void
+	{
+		$language = Language::ensure($language);
+
+		// check if unlocking is allowed
+		VersionRules::unlock($this, $language);
+
+		// get the previous state to not lose any changes
+		$fields = $this->read($language);
+
+		// update the version with the previous state
+		$this->model->storage()->update(
+			versionId: $this->id,
+			language: $language,
+			fields: $this->prepareFieldsBeforeWrite($fields, $language)
+		);
+
+		// remove the version from the cache to read
+		// a fresh version next time
+		VersionCache::remove($this, $language);
+	}
 }

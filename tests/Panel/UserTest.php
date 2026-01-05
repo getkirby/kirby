@@ -266,6 +266,7 @@ class UserTest extends TestCase
 			'changePassword' => true,
 			'changeRole'     => true,
 			'delete'         => true,
+			'unlock'         => true,
 			'update'         => true,
 		];
 
@@ -290,6 +291,7 @@ class UserTest extends TestCase
 			'changePassword' => false,
 			'changeRole'     => false,
 			'delete'         => false,
+			'unlock'         => false,
 			'update'         => false,
 		];
 
@@ -305,6 +307,7 @@ class UserTest extends TestCase
 			'changePassword' => false,
 			'changeRole'     => false,
 			'delete'         => false,
+			'unlock'         => false,
 			'update'         => false,
 		];
 
