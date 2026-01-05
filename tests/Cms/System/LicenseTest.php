@@ -499,6 +499,69 @@ class LicenseTest extends TestCase
 		$this->assertSame('secret', $license->signature());
 	}
 
+	public function testSignatureData(): void
+	{
+		$reflector = new ReflectionClass(License::class);
+		$salt      = $reflector->getConstant('SALT');
+
+		$license = new License(
+			activation: '2024-01-01 12:00:00',
+			code: $code = $this->code(LicenseType::Enterprise),
+			date: '2024-02-02 12:00:00',
+			domain: 'getkirby.com',
+			email: $email = 'mail@getkirby.com',
+			order: '123456',
+			expires: '2025-01-01 00:00:00'
+		);
+
+		$this->assertSame([
+			'activation' => '2024-01-01 12:00:00',
+			'code'       => $code,
+			'date'       => '2024-02-02 12:00:00',
+			'domain'     => 'getkirby.com',
+			'email'      => hash('sha256', $email . $salt),
+			'order'      => '123456',
+			'expires'    => '2025-01-01 00:00:00',
+		], $license->signatureData());
+
+
+		// without expiry
+		$license = new License(
+			activation: '2024-01-01 12:00:00',
+			code: $code = $this->code(LicenseType::Enterprise),
+			date: '2024-02-02 12:00:00',
+			domain: 'getkirby.com',
+			email: $email = 'mail@getkirby.com',
+			order: '123456'
+		);
+
+		$this->assertSame([
+			'activation' => '2024-01-01 12:00:00',
+			'code'       => $code,
+			'date'       => '2024-02-02 12:00:00',
+			'domain'     => 'getkirby.com',
+			'email'      => hash('sha256', $email . $salt),
+			'order'      => '123456',
+		], $license->signatureData());
+
+		// legacy
+		$license = new License(
+			code: $code = $this->code(LicenseType::Legacy),
+			date: '2021-01-01 00:00:00',
+			domain: 'legacy.getkirby.com',
+			email: $email = 'legacy@getkirby.com',
+			order: '87654321'
+		);
+
+		$this->assertSame([
+			'license' => $code,
+			'order'   => '87654321',
+			'email'   => hash('sha256', $email . $salt),
+			'domain'  => 'legacy.getkirby.com',
+			'date'    => '2021-01-01 00:00:00',
+		], $license->signatureData());
+	}
+
 	public function testStatus(): void
 	{
 		$license = new License();

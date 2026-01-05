@@ -483,6 +483,43 @@ class SystemTest extends TestCase
 		$this->assertInstanceOf(License::class, $system->license());
 	}
 
+	public function testLicenseReissuesExpiredFreeLocal(): void
+	{
+		$root = static::TMP . '/license/.license';
+
+		Dir::make(dirname($root));
+		F::write($root, json_encode([
+			'code'    => LicenseType::Free->prefix(),
+			'domain'  => 'sandbox.test',
+			'expires' => '2000-01-01 00:00:00',
+		]));
+
+		$app = $this->app->clone([
+			'options' => [
+				'url' => 'https://sandbox.test',
+			],
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			],
+			'roots' => [
+				'index'   => static::TMP,
+				'license' => $root
+			]
+		]);
+
+		$this->subTmp = dirname($root);
+
+		$system  = new System($app);
+		$license = $system->license();
+
+		$this->assertFalse($license->isExpired());
+		$this->assertSame('sandbox.test', $license->domain());
+		$this->assertSame(LicenseType::Free, $license->type());
+		$this->assertSame(LicenseStatus::Acknowledged, $license->status());
+		$this->assertSame('12345678', $license->order());
+		$this->assertNotEmpty($license->signature());
+	}
+
 	public function testLoginMethods(): void
 	{
 		$this->assertSame(['password' => []], $this->app->system()->loginMethods());
