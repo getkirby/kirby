@@ -293,9 +293,12 @@ class System
 		if ($this->license->isExpired() === true) {
 			try {
 				$this->license->register(reissue: true);
+
+				// @codeCoverageIgnoreStart
 			} catch (Throwable) {
-				$this->license->delete(); // @codeCoverageIgnore
+				$this->license->delete();
 			}
+			// @codeCoverageIgnoreEnd
 		}
 
 		return $this->license;
