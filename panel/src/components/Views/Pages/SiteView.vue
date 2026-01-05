@@ -40,13 +40,12 @@
 
 		<k-model-tabs :diff="diff" :tab="tab.name" :tabs="tabs" />
 
-		<k-sections
-			:blueprint="blueprint"
+		<k-model-form
+			:api="api"
+			:columns="tab.columns"
 			:content="content"
-			:empty="$panel.config.debug ? $t('site.blueprint') : null"
+			:diff="diff"
 			:lock="lock"
-			:tab="tab"
-			parent="site"
 			@input="onInput"
 			@submit="onSubmit"
 		/>
