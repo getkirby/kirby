@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Form\Field\SectionField;
 use Kirby\Form\Fields;
 use Kirby\Http\Uri;
 use Kirby\Panel\Controller\ViewController;
@@ -23,6 +24,7 @@ use Kirby\Panel\Ui\View;
  */
 abstract class ModelViewController extends ViewController
 {
+	protected Fields $fields;
 	protected Model $panel;
 
 	public function __construct(
@@ -45,6 +47,11 @@ abstract class ModelViewController extends ViewController
 	public function component(): string
 	{
 		return 'k-' . ($this->model::CLASS_ALIAS ?? 'model') . '-view';
+	}
+
+	public function fields(): Fields
+	{
+		return $this->fields ??= Fields::for($this->model, 'current');
 	}
 
 	public function load(): View
@@ -131,6 +138,43 @@ abstract class ModelViewController extends ViewController
 		$tab   = $this->request->get('tab');
 		$tab   = $this->model->blueprint()->tab($tab);
 		$tab ??= $this->tabs()[0] ?? null;
+
+		if ($tab === null) {
+			return $tab;
+		}
+
+		return $this->tabSimplified($tab);
+	}
+
+	protected function tabSimplified(array $tab): array
+	{
+		$form = $this->fields();
+
+		foreach ($tab['columns'] as $columnIndex => $column) {
+			$fields = [];
+
+			foreach ($column['sections'] as $sectionIndex => $section) {
+				if ($section['type'] === 'fields') {
+					foreach ($section['fields'] as $name => $field) {
+						if ($formField = $form->get($name)) {
+							$fields[$formField->name()] = $formField->props();
+						}
+					}
+				} else {
+					$field = new SectionField($section['type'], ...$section);
+					$field->setModel($this->model());
+
+					$fields[$sectionIndex] = $field->props();
+				}
+			}
+
+			$column['fields'] = $fields;
+
+			unset($column['sections']);
+
+			$tab['columns'][$columnIndex] = $column;
+		}
+
 		return $tab;
 	}
 
@@ -153,7 +197,7 @@ abstract class ModelViewController extends ViewController
 	public function versions(): array
 	{
 		$language = Language::ensure('current');
-		$fields   = Fields::for($this->model, $language);
+		$fields   = $this->fields();
 
 		$latestVersion  = $this->model->version('latest');
 		$changesVersion = $this->model->version('changes');
