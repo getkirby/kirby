@@ -5,6 +5,7 @@ import Fieldset from "./Fieldset.vue";
 import Form from "./Form.vue";
 import FormControls from "./FormControls.vue";
 import Input from "./Input.vue";
+import ModelForm from "./ModelForm.vue";
 
 /* Form parts */
 import Blocks from "./Blocks/index.js";
@@ -22,6 +23,7 @@ export default {
 		app.component("k-form", Form);
 		app.component("k-form-controls", FormControls);
 		app.component("k-input", Input);
+		app.component("k-model-form", ModelForm);
 
 		app.use(Blocks);
 		app.use(Inputs);
