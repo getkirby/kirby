@@ -91,12 +91,17 @@ export default {
 			}
 		},
 		async onDiscard() {
-			await this.$panel.content.discard({
-				api: this.api,
-				language: this.$panel.language.code
-			});
+			try {
+				await this.$panel.content.discard({
+					api: this.api,
+					language: this.$panel.language.code
+				});
 
-			this.$panel.view.refresh();
+				this.$panel.dialog.close();
+				this.$panel.view.refresh();
+			} catch (e) {
+				this.$panel.error(e);
+			}
 		},
 		onInput(values) {
 			// update the content for the current view
@@ -125,6 +130,7 @@ export default {
 		},
 		onViewSave(e) {
 			e?.preventDefault?.();
+
 			this.onSubmit();
 		},
 		toNext(e) {

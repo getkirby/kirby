@@ -133,7 +133,6 @@ export default {
 				},
 				on: {
 					submit: () => {
-						this.$panel.dialog.close();
 						this.$emit("discard");
 					}
 				}
