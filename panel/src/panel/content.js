@@ -27,12 +27,7 @@ export default (panel) => {
 		 * @returns {Object}
 		 */
 		diff(env = {}) {
-			// changes can only be computed for the current view
-			if (this.isCurrent(env) === false) {
-				throw new Error("Cannot get changes for another view");
-			}
-
-			const versions = this.versions();
+			const versions = this.versions(env);
 			const diff = {};
 
 			for (const field in versions.changes) {
@@ -63,11 +58,6 @@ export default (panel) => {
 				return;
 			}
 
-			// Only discard changes from the current view
-			if (this.isCurrent(env) === false) {
-				throw new Error("Cannot discard content from another view");
-			}
-
 			// Check the lock state to determine if we can discard
 			if (this.isLocked(env) === true) {
 				throw new Error("Cannot discard locked changes");
@@ -81,11 +71,13 @@ export default (panel) => {
 			// Start processing the request
 			this.isProcessing = true;
 
+			const { model } = this.env(env);
+
 			try {
 				await this.request("discard", {}, env);
 
 				// update the props for the current view
-				panel.view.props.versions.changes = this.version("latest");
+				model.versions.changes = this.version(env, "latest");
 
 				this.emit("discard", {}, env);
 			} catch (error) {
@@ -118,8 +110,8 @@ export default (panel) => {
 		 */
 		env(env = {}) {
 			return {
-				api: panel.view.props.api,
 				language: panel.language.code,
+				model: panel.view.props,
 				...env
 			};
 		},
@@ -160,13 +152,8 @@ export default (panel) => {
 		 * @param {String} api
 		 */
 		lock(env = {}) {
-			if (this.isCurrent(env) === false) {
-				throw new Error(
-					"The lock state cannot be detected for content from another view"
-				);
-			}
-
-			return panel.view.props.lock;
+			const { model } = this.env(env);
+			return model.lock;
 		},
 
 		/**
@@ -194,20 +181,18 @@ export default (panel) => {
 		 * original values and update the view props
 		 */
 		merge(values = {}, env = {}) {
-			if (this.isCurrent(env) === false) {
-				throw new Error("The content in another view cannot be merged");
-			}
-
 			if (isObject(values) === false) {
 				values = {};
 			}
 
-			panel.view.props.versions.changes = {
-				...this.version("changes"),
+			const { model } = this.env(env);
+
+			model.versions.changes = {
+				...this.version(env, "changes"),
 				...values
 			};
 
-			return panel.view.props.versions.changes;
+			return model.versions.changes;
 		},
 
 		/**
@@ -218,10 +203,6 @@ export default (panel) => {
 				return;
 			}
 
-			if (this.isCurrent(env) === false) {
-				throw new Error("Cannot publish content from another view");
-			}
-
 			// Cancel any ongoing save requests.
 			// The publish request will submit the
 			// latest state of the form again.
@@ -229,6 +210,8 @@ export default (panel) => {
 
 			// Start processing the request
 			this.isProcessing = true;
+
+			const { model } = this.env(env);
 
 			// Send updated values to API
 			try {
@@ -238,7 +221,7 @@ export default (panel) => {
 				this.dialog?.close();
 
 				// update the props for the current view
-				panel.view.props.versions.latest = this.version("changes");
+				model.versions.latest = this.version(env, "changes");
 
 				this.emit("publish", { values }, env);
 			} catch (error) {
@@ -257,7 +240,7 @@ export default (panel) => {
 		 * Simplified request handler for all content API requests
 		 */
 		async request(method = "save", values = {}, env = {}) {
-			const { api, language } = this.env(env);
+			const { model, language } = this.env(env);
 
 			const options = {
 				headers: {
@@ -270,7 +253,7 @@ export default (panel) => {
 				options.silent = true;
 			}
 
-			return panel.api.post(api + "/changes/" + method, values, options);
+			return panel.api.post(model.api + "/changes/" + method, values, options);
 		},
 
 		/**
@@ -342,16 +325,17 @@ export default (panel) => {
 		 * @param {String} versionId
 		 * @returns {Object|undefined}
 		 */
-		version(versionId) {
-			return this.versions()[versionId];
+		version(env, versionId) {
+			return this.versions(env)[versionId];
 		},
 
 		/**
 		 * Returns all versions of the content
 		 * @returns {Object}
 		 */
-		versions() {
-			return panel.view.props.versions;
+		versions(env = {}) {
+			const { model } = this.env(env);
+			return model.versions;
 		}
 	});
 

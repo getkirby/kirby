@@ -93,7 +93,7 @@ export default (panel) => {
 			await parent.open.call(this, drawer, options);
 
 			// open the provided or first tab
-			this.tab(drawer.tab);
+			// this.tab(drawer.tab);
 
 			// get the current state and add it to the history
 			// (we need to fetch the state freshly as it is altered by `this.tab()`)

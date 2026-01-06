@@ -60,7 +60,7 @@ class FileItem extends ModelItem
 
 	public function props(): array
 	{
-		return [
+		$props = [
 			...parent::props(),
 			'dragText'  => $this->dragText(),
 			'extension' => $this->model->extension(),
@@ -69,6 +69,11 @@ class FileItem extends ModelItem
 			'parent'    => $this->model->parent()->panel()->path(),
 			'template'  => $this->model->template(),
 			'url'       => $this->model->url(),
+			'drawer'    => $this->link()
 		];
+
+		unset($props['link']);
+
+		return $props;
 	}
 }
