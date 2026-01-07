@@ -101,6 +101,28 @@ class MethodsTest extends TestCase
 		], $methods);
 	}
 
+	public function testAvailableDebugRethrowsException(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'debug' => true,
+				'auth' => [
+					'methods' => [
+						'password' => ['2fa' => true],
+						'code'
+					]
+				]
+			]
+		]);
+
+		$methods = $app->auth()->methods();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
+
+		$methods->available();
+	}
+
 	public function testAuthenticateApiRequest(): void
 	{
 		$api = $this->createStub(Api::class);

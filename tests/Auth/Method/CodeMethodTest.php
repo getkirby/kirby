@@ -4,7 +4,6 @@ namespace Kirby\Auth\Method;
 
 use Kirby\Auth\Method;
 use Kirby\Auth\Methods;
-use Kirby\Cms\App;
 use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Status;
 use Kirby\Exception\InvalidArgumentException;
@@ -17,8 +16,7 @@ class CodeMethodTest extends TestCase
 {
 	protected function auth(
 		bool $has2fa = false,
-		bool $hasPasswordReset = false,
-		bool $debug = false
+		bool $hasPasswordReset = false
 	): Auth {
 		$methods = $this->createStub(Methods::class);
 		$methods->method('hasAnyWith2FA')->willReturn($has2fa);
@@ -26,14 +24,8 @@ class CodeMethodTest extends TestCase
 			fn (string $type) => $type === 'password-reset' ? $hasPasswordReset : false
 		);
 
-		$kirby = $this->createStub(App::class);
-		$kirby->method('option')->willReturnCallback(
-			fn (string $key) => $key === 'debug' ? $debug : null
-		);
-
 		$auth = $this->createStub(Auth::class);
 		$auth->method('methods')->willReturn($methods);
-		$auth->method('kirby')->willReturn($kirby);
 
 		return $auth;
 	}
@@ -67,15 +59,9 @@ class CodeMethodTest extends TestCase
 		$this->assertTrue(CodeMethod::isAvailable($auth));
 	}
 
-	public function testIsAvailableWith2FA(): void
+	public function testIsAvailableWith2F(): void
 	{
 		$auth = $this->auth(has2fa: true);
-		$this->assertFalse(CodeMethod::isAvailable($auth));
-	}
-
-	public function testIsAvailableWith2FADebug(): void
-	{
-		$auth = $this->auth(has2fa: true, debug: true);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
@@ -86,12 +72,6 @@ class CodeMethodTest extends TestCase
 	public function testIsAvailableWithPasswordReset(): void
 	{
 		$auth = $this->auth(hasPasswordReset: true);
-		$this->assertFalse(CodeMethod::isAvailable($auth));
-	}
-
-	public function testIsAvailableWithPasswordResetDebug(): void
-	{
-		$auth = $this->auth(hasPasswordReset: true, debug: true);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "code" and "password-reset" login methods cannot be enabled together');

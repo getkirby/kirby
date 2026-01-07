@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Status;
 use Kirby\Cms\User;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
@@ -55,15 +56,13 @@ class Methods
 			);
 		}
 
-		$method = $this->get($type);
-
-		if ($method::isAvailable($this->auth, $method->options()) === false) {
+		if ($this->hasAvailable($type) === false) {
 			throw new InvalidArgumentException(
 				message: 'Auth method "' . $type . '" is not available'
 			);
 		}
 
-		return $method->authenticate($email, $password, $long);
+		return $this->get($type)->authenticate($email, $password, $long);
 	}
 
 	/**
@@ -108,8 +107,19 @@ class Methods
 		foreach ($this->enabled() as $type => $options) {
 			$class = $this->class($type);
 
-			if ($class::isAvailable($this->auth, $options) === true) {
-				$available[$type] = $options;
+			try {
+				if ($class::isAvailable($this->auth, $options) === true) {
+					$available[$type] = $options;
+				}
+
+			} catch (Exception $e) {
+				// consider methods that throw an exception
+				// from their `::isAvailable()` method as not available
+
+				// when running in debug, re-throw exception
+				if ($this->kirby->option('debug') === true) {
+					throw $e;
+				}
 			}
 		}
 
