@@ -8,6 +8,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Auth;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
@@ -171,10 +172,11 @@ class ChallengesTest extends TestCase
 	{
 		DummyChallenge::$available = false;
 		$session = $this->session();
-		$challenge = $this->challenges->create($session, 'marge@simpsons.com', 'login');
 
-		$this->assertNull($challenge);
-		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Could not find a suitable authentication challenge');
+
+		$this->challenges->create($session, 'marge@simpsons.com', 'login');
 	}
 
 	public function testCreateInvalidUser(): void

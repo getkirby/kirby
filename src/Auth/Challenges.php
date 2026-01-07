@@ -9,6 +9,7 @@ use Kirby\Cms\Auth;
 use Kirby\Cms\Auth\Challenge as LegacyBaseChallenge;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
@@ -89,7 +90,7 @@ class Challenges
 		Session $session,
 		string $email,
 		string $mode,
-	): Challenge|null {
+	): Challenge {
 		// rate-limit the number of challenges for DoS/DDoS protection
 		$this->auth->limits()->ensure($email);
 		$this->auth->limits()->track($email, triggerHook: false);
@@ -117,7 +118,9 @@ class Challenges
 			return $challenge;
 		}
 
-		return null;
+		throw new LogicException(
+			message: 'Could not find a suitable authentication challenge'
+		);
 	}
 
 	/**

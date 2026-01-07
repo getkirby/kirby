@@ -13,7 +13,6 @@ use Kirby\Auth\Methods;
 use Kirby\Auth\User as AuthUser;
 use Kirby\Cms\Auth\Status;
 use Kirby\Exception\Exception;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
 use Kirby\Http\Idn;
@@ -121,19 +120,11 @@ class Auth
 		]);
 
 		// catch every exception to hide them from attackers
-		// unless auth debugging is enabled
 		try {
 			// create available challenge for that user
 			$challenge = $this->challenges->create($session, $email, $mode);
-
-			if ($challenge === null) {
-				throw new LogicException(
-					message: 'Could not find a suitable authentication challenge'
-				);
-			}
-
 		} catch (Throwable $e) {
-			// only throw the exception in auth debug mode
+			// only re-throw the exception in auth debug mode
 			$this->fail($e);
 		}
 
