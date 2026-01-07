@@ -5,7 +5,7 @@ namespace Kirby\Panel\Routes;
 use Kirby\Panel\Area;
 use Kirby\Panel\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	protected Area $area;
 

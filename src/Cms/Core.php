@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Auth\Challenge\EmailChallenge;
 use Kirby\Auth\Challenge\TotpChallenge;
 use Kirby\Auth\Challenge\WebauthnChallenge;
+use Kirby\Auth\Method\BasicAuthMethod;
 use Kirby\Auth\Method\CodeMethod;
 use Kirby\Auth\Method\PasswordMethod;
 use Kirby\Auth\Method\PasswordResetMethod;
@@ -33,6 +34,7 @@ use Kirby\Form\Field\MultiselectField;
 use Kirby\Form\Field\NumberField;
 use Kirby\Form\Field\ObjectField;
 use Kirby\Form\Field\PagePickerField;
+use Kirby\Form\Field\PasswordField;
 use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\RangeField;
 use Kirby\Form\Field\SelectField;
@@ -132,10 +134,12 @@ class Core
 
 	/**
 	 * Returns a list of all default auth method classes
+	 * @since 6.0.0
 	 */
 	public function authMethods(): array
 	{
 		return [
+			'basic-auth'     => BasicAuthMethod::class,
 			'code'           => CodeMethod::class,
 			'password'       => PasswordMethod::class,
 			'password-reset' => PasswordResetMethod::class
@@ -285,6 +289,7 @@ class Core
 			'number'      => NumberField::class,
 			'object'      => ObjectField::class,
 			'pages'       => PagePickerField::class,
+			'password'    => PasswordField::class,
 			'radio'       => RadioField::class,
 			'range'       => RangeField::class,
 			'select'      => SelectField::class,

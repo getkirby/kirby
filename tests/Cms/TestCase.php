@@ -8,7 +8,7 @@ use Kirby\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	protected Page|null $page = null;
 

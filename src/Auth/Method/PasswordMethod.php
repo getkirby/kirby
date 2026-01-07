@@ -2,20 +2,32 @@
 
 namespace Kirby\Auth\Method;
 
+use InvalidArgumentException;
 use Kirby\Auth\Method;
 use Kirby\Auth\Status;
+use Kirby\Cms\Auth;
 use Kirby\Cms\User;
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
+use SensitiveParameter;
 
 /**
  * Authenticates a user with email + password
- * and optionally triggers a 2FA challenge.
+ * and optionally triggers a 2FA challenge
+ *
+ * @package   Kirby Auth
+ * @author    Nico Hoffmann <nico@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 class PasswordMethod extends Method
 {
+	/**
+	 * @throws \Kirby\Exception\InvalidArgumentException If the password is missing
+	 */
 	public function authenticate(
 		string $email,
+		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false
 	): User|Status {
@@ -25,11 +37,15 @@ class PasswordMethod extends Method
 			);
 		}
 
-		$user = $this->auth()->validatePassword($email, $password);
+		$user = $this->auth->validatePassword($email, $password);
 
 		// two-factor flow: create a challenge after password validation
 		if ($this->has2FA($user) === true) {
-			return $this->auth()->createChallenge($email, $long, '2fa');
+			return $this->auth->createChallenge(
+				mode:  '2fa',
+				email: $email,
+				long:  $long,
+			);
 		}
 
 		// log the user in with a cookie-based session
@@ -41,35 +57,33 @@ class PasswordMethod extends Method
 		return $user;
 	}
 
-	protected function has2FA(User $user): bool
-	{
-		$option = $this->options['2fa'] ?? null;
-
-		if ($option !== true && $option !== 'optional') {
-			return false;
-		}
-
-		// get first available challenge
-		$challenge = $this->auth()->challenges()->firstAvailable($user, 'login');
-
-		// if any challenge is available, use 2FA
-		if ($challenge !== null) {
-			return true;
-		}
-
-		// if no challenge is available, but enforced via config => fail
-		if ($option === true) {
-			throw new LogicException(
-				message: '2-factor authentication required but not challenge available'
-			);
-		}
-
-		return false;
-	}
-
 	public function icon(): string
 	{
 		return 'key';
+	}
+
+	/**
+	 * Checks whether a second-factor is required
+	 */
+	protected function has2FA(User $user): bool
+	{
+		return static::isUsingChallenges(
+			$this->auth,
+			$this->options
+		);
+	}
+
+	public static function isUsingChallenges(
+		Auth $auth,
+		array $options = []
+	): bool {
+		$option = $options['2fa'] ?? null;
+
+		if ($option === true) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public static function settings(User $user): array

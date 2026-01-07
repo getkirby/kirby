@@ -2,8 +2,8 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Auth;
+use Kirby\Cms\Auth\Status;
 use Kirby\Cms\User;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
@@ -11,21 +11,22 @@ use SensitiveParameter;
 /**
  * Base class for authentication methods
  *
- * Each method decides whether it can handle the current
- * login flow and either logs the user in or returns a
- * pending status that expects a follow-up challenge.
+ * Each method either logs the user in or returns a
+ * pending status that expects a follow-up challenge
  *
- * @package Kirby Auth
- * @since   6.0.0
+ * @package   Kirby Auth
+ * @author    Nico Hoffmann <nico@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
  */
 abstract class Method
 {
-	protected App $kirby;
-
 	public function __construct(
+		protected Auth $auth,
 		protected array $options = []
 	) {
-		$this->kirby = App::instance();
 	}
 
 	/**
@@ -41,11 +42,6 @@ abstract class Method
 		bool $long = false
 	): User|Status;
 
-	protected function auth(): Auth
-	{
-		return $this->kirby->auth();
-	}
-
 	public static function form(): string
 	{
 		return 'k-login-' . static::type() . '-method';
@@ -56,6 +52,34 @@ abstract class Method
 	public static function settings(User $user): array
 	{
 		return [];
+	}
+
+	/**
+	 * Checks if this method can be used in the current context
+	 */
+	public static function isAvailable(
+		Auth $auth,
+		array $options = []
+	): bool {
+		return true;
+	}
+
+	/**
+	 * Checks if this method uses challenges
+	 */
+	public static function isUsingChallenges(
+		Auth $auth,
+		array $options = []
+	): bool {
+		return false;
+	}
+
+	/**
+	 * Returns the config options for this method
+	 */
+	public function options(): array
+	{
+		return $this->options;
 	}
 
 	/**

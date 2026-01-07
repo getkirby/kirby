@@ -8,7 +8,7 @@ use Kirby\Data\Data;
 use Kirby\FileSystem\Dir;
 use Kirby\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR;
 

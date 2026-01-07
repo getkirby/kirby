@@ -145,8 +145,9 @@ class Users extends Collection
 
 			// create user model based on role
 			$user = User::factory([
-				'id'    => $userDirectory,
-				'model' => $credentials['role'] ?? null
+				'id'          => $userDirectory,
+				'model'       => $credentials['role'] ?? null,
+				'credentials' => is_array($credentials ?? null) ? $credentials : null
 			] + $inject);
 
 			$users->set($user->id(), $user);

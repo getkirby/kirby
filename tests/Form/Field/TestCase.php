@@ -8,7 +8,7 @@ use Kirby\Form\Field;
 use Kirby\Form\Fields;
 use Kirby\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	public function setUp(): void
 	{

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Auth\Methods;
 use Kirby\Blueprint\PageBlueprint;
 use Kirby\Blueprint\Section;
 use Kirby\Content\Field;
@@ -172,11 +173,12 @@ trait AppPlugins
 
 	/**
 	 * Registers additional authentication methods
+	 * @since 6.0.0
 	 */
 	protected function extendAuthMethods(array $methods): array
 	{
-		return $this->extensions['authMethods'] = Auth::$methods = [
-			...Auth::$methods,
+		return $this->extensions['authMethods'] = Methods::$methods = [
+			...Methods::$methods,
 			...$methods
 		];
 	}

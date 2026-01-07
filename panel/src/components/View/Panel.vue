@@ -10,7 +10,7 @@
 		:data-translation="$panel.translation.code"
 		:data-user="$panel.user.id"
 		:dir="$panel.direction"
-		class="k-panel"
+		:class="['k-panel', $attrs.class]"
 	>
 		<slot />
 
@@ -56,7 +56,9 @@
 /**
  * @internal
  */
-export default {};
+export default {
+	inheritAttrs: false
+};
 </script>
 
 <style>

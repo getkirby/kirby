@@ -56,6 +56,29 @@ class Constructor extends ReflectionMethod
 	}
 
 	/**
+	 * Get all parameters, including parameters from all parent constructors
+	 * when a variadic parameter is used (...)
+	 */
+	public function getAllParameters(): array
+	{
+		$parameters = [];
+
+		foreach ($this->getParameters() as $parameter) {
+			if ($parameter->isVariadic() === true) {
+				foreach ($this->getParentParameters() as $parameter) {
+					$parameters[] = $parameter;
+				}
+
+				continue;
+			}
+
+			$parameters[] = $parameter;
+		}
+
+		return $parameters;
+	}
+
+	/**
 	 * Returns all arguments that are not defined as constructor parameters
 	 */
 	public function getIgnoredArguments(array $arguments): array
@@ -64,10 +87,24 @@ class Constructor extends ReflectionMethod
 	}
 
 	/**
-	 * Returns an array of all parameter names
+	 * Returns an array of all parameter names in this constructor
 	 */
 	public function getParameterNames(): array
 	{
-		return array_values(array_map(fn (ReflectionParameter $param) => $param->name, $this->getParameters()));
+		return array_values(array_map(fn (ReflectionParameter $param) => $param->name, $this->getAllParameters()));
+	}
+
+	/**
+	 * Get all parameters from the parent constructor. This will go recursively
+	 * through all parent classes, if they use a variadic parameter (...)
+	 */
+	public function getParentParameters(): array
+	{
+		if ($parentClass = $this->getDeclaringClass()->getParentClass()) {
+			$parentConstructor = new static($parentClass->getName());
+			return $parentConstructor->getAllParameters();
+		}
+
+		return [];
 	}
 }

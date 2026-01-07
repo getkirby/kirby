@@ -2,7 +2,9 @@
 
 namespace Kirby\Image;
 
-class TestCase extends \Kirby\TestCase
+use Kirby\TestCase as BaseTestCase;
+
+abstract class TestCase extends BaseTestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 }

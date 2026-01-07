@@ -2,9 +2,6 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Cms\App;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Csrf::class)]
@@ -16,20 +13,8 @@ class CsrfTest extends TestCase
 
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-		]);
-
+		parent::setUp();
 		$this->csrf = new Csrf($this->app);
-	}
-
-	public function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		Dir::remove(static::TMP);
-		$_GET = [];
 	}
 
 	public function testFromSession1(): void

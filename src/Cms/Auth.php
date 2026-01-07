@@ -44,10 +44,15 @@ class Auth
 	protected Challenges $challenge;
 	protected Methods $method;
 
+	protected Csrf $csrf;
+
 	/**
 	 * Currently impersonated user
 	 */
 	protected User|null $impersonate = null;
+
+	protected Limits $limits;
+	protected Methods $methods;
 
 	/**
 	 * Cache of the auth status object
@@ -65,18 +70,31 @@ class Auth
 		$this->csrf      = new Csrf($kirby);
 		$this->limits    = new Limits($kirby);
 		$this->challenge = new Challenges($kirby);
-		$this->method    = new Methods($kirby);
+		$this->methods   = new Methods($this, $kirby);
 		$this->user      = new AuthUser($this, $kirby);
 	}
 
+	/**
+	 * Login a user with email and (maybe optional) password
+	 * as well as an auth challenge, if required by the auth method
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded if any other error occurred with debug mode off
+	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
+	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 */
 	public function authenticate(
-		string $type,
+		string $method,
 		string $email,
 		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false
 	): User|Status {
-		$result = $this->method->authenticate($type, $email, $password, $long, 'login');
+		$result = $this->methods()->authenticate(
+			type:      $method,
+			email:     $email,
+			password:  $password,
+			long:      $long
+		);
 
 		if ($result instanceof User === true) {
 			$this->setUser($result);
@@ -178,7 +196,11 @@ class Auth
 	public function currentUserFromBasicAuth(
 		BasicAuth|null $auth = null
 	): User|null {
-		return $this->user->currentFromBasicAuth($auth);
+		/**
+		 * @var \Kirby\Auth\Method\BasicAuthMethod
+		 */
+		$basic = $this->methods()->get('basic-auth');
+		return $basic->user($auth);
 	}
 
 	/**
@@ -273,6 +295,14 @@ class Auth
 	}
 
 	/**
+	 * @since 6.0.0
+	 */
+	public function kirby(): App
+	{
+		return $this->kirby;
+	}
+
+	/**
 	 * Returns the auth rate limits object
 	 * @since 6.0.0
 	 */
@@ -315,7 +345,7 @@ class Auth
 			// if a method returned a pending status here,
 			// it's a misconfiguration (e.g. password + 2FA active);
 			// keep the existing login signature strict
-			throw new LoginNotPermittedException();
+			throw new LoginNotPermittedException(); // @codeCoverageIgnore
 		}
 
 		return $user;
@@ -324,6 +354,11 @@ class Auth
 	/**
 	 * Login a user by email, password and auth challenge
 	 * @since 3.5.0
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
+	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
+	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 *
 	 * @deprecated 6.0.0 Use `self::authenticate()` instead
 	 */
 	public function login2fa(
@@ -355,11 +390,12 @@ class Auth
 	}
 
 	/**
+	 * Returns the auth methods handler
 	 * @since 6.0.0
 	 */
 	public function methods(): Methods
 	{
-		return $this->method;
+		return $this->methods;
 	}
 
 	public function normalizeSession(Session|array|null $session): Session
@@ -451,18 +487,7 @@ class Auth
 	 */
 	public function type(bool $allowImpersonation = true): string
 	{
-		$basicAuth = $this->kirby->option('api.basicAuth', false);
-		$request   = $this->kirby->request();
-
-		if (
-			$basicAuth === true &&
-
-			// only get the auth object if the option is enabled
-			// to avoid triggering `$responder->usesAuth()` if
-			// the option is disabled
-			$request->auth() &&
-			$request->auth()->type() === 'basic'
-		) {
+		if (BasicAuthMethod::isAvailable($this) === true) {
 			return 'basic';
 		}
 

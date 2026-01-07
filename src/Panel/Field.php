@@ -6,8 +6,17 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
-use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
+use Kirby\Form\Field\EmailField;
+use Kirby\Form\Field\HiddenField;
+use Kirby\Form\Field\PasswordField;
+use Kirby\Form\Field\SlugField;
+use Kirby\Panel\Form\Field\FilePositionField;
+use Kirby\Panel\Form\Field\PagePositionField;
+use Kirby\Panel\Form\Field\RoleField;
+use Kirby\Panel\Form\Field\TemplateField;
+use Kirby\Panel\Form\Field\TitleField;
+use Kirby\Panel\Form\Field\TranslationField;
+use Kirby\Panel\Form\Field\UsernameField;
 
 /**
  * Provides common field prop definitions
@@ -27,12 +36,7 @@ class Field
 	 */
 	public static function email(array $props = []): array
 	{
-		return [
-			'label'   => I18n::translate('email'),
-			'type'    => 'email',
-			'counter' => false,
-			...$props
-		];
+		return EmailField::factory($props)->toArray();
 	}
 
 	/**
@@ -40,44 +44,18 @@ class Field
 	 */
 	public static function filePosition(File $file, array $props = []): array
 	{
-		$index   = 0;
-		$options = [];
-
-		foreach ($file->siblings(false)->sorted() as $sibling) {
-			$index++;
-
-			$options[] = [
-				'value' => $index,
-				'text'  => $index
-			];
-
-			$options[] = [
-				'value'    => $sibling->id(),
-				'text'     => $sibling->filename(),
-				'disabled' => true
-			];
-		}
-
-		$index++;
-
-		$options[] = [
-			'value' => $index,
-			'text'  => $index
-		];
-
-		return [
-			'label'   => I18n::translate('file.sort'),
-			'type'    => 'select',
-			'empty'   => false,
-			'options' => $options,
+		$field = new FilePositionField(...[
+			'file'     => $file,
+			'required' => true,
 			...$props
-		];
+		]);
+
+		return $field->toArray();
 	}
 
-
-	public static function hidden(): array
+	public static function hidden(array $props = []): array
 	{
-		return ['hidden' => true];
+		return HiddenField::factory($props)->toArray();
 	}
 
 	/**
@@ -85,45 +63,18 @@ class Field
 	 */
 	public static function pagePosition(Page $page, array $props = []): array
 	{
-		$index    = 0;
-		$options  = [];
-		$siblings = $page->parentModel()->children()->listed()->not($page);
-
-		foreach ($siblings as $sibling) {
-			$index++;
-
-			$options[] = [
-				'value' => $index,
-				'text'  => $index
-			];
-
-			$options[] = [
-				'value'    => $sibling->id(),
-				'text'     => $sibling->title()->value(),
-				'disabled' => true
-			];
-		}
-
-		$index++;
-
-		$options[] = [
-			'value' => $index,
-			'text'  => $index
-		];
-
-		// if only one available option,
-		// hide field when not in debug mode
-		if (count($options) < 2) {
-			return static::hidden();
-		}
-
-		return [
-			'label'    => I18n::translate('page.changeStatus.position'),
-			'type'     => 'select',
+		$field = new PagePositionField(...[
+			'page'     => $page,
 			'required' => true,
-			'options'  => $options,
 			...$props
-		];
+		]);
+
+		// hide filed when there is only one available option
+		if (count($field->options()) < 2) {
+			return static::hidden($props);
+		}
+
+		return $field->toArray();
 	}
 
 	/**
@@ -131,11 +82,7 @@ class Field
 	 */
 	public static function password(array $props = []): array
 	{
-		return [
-			'label' => I18n::translate('password'),
-			'type'  => 'password',
-			...$props
-		];
+		return PasswordField::factory($props)->toArray();
 	}
 
 	/**
@@ -158,63 +105,39 @@ class Field
 				$kirby->user()?->isAdmin() === true
 		);
 
-		// turn roles into radio field options
-		$roles = $roles->values(fn ($role) => [
-			'text'  => $role->title(),
-			'info'  => $role->description() ?? I18n::translate('role.description.placeholder'),
-			'value' => $role->name()
+		$field = new RoleField(...[
+			'roles' => $roles,
+			...$props
 		]);
 
-		return [
-			'label'   => I18n::translate('role'),
-			'type'    => count($roles) < 1 ? 'hidden' : 'radio',
-			'options' => $roles,
-			...$props
-		];
+		if (count($field->options()) <= 1) {
+			return static::hidden([
+				'name' => 'role',
+				...$props
+			]);
+		}
+
+		return $field->toArray();
 	}
 
 	public static function slug(array $props = []): array
 	{
-		return [
-			'label' => I18n::translate('slug'),
-			'type'  => 'slug',
-			'allow' => Str::$defaults['slug']['allowed'],
-			...$props
-		];
+		return SlugField::factory($props)->toArray();
 	}
 
 	public static function template(
 		array|null $blueprints = [],
 		array|null $props = []
 	): array {
-		$options = [];
-
-		foreach ($blueprints as $blueprint) {
-			$options[] = [
-				'text'  => $blueprint['title'] ?? $blueprint['text']  ?? null,
-				'value' => $blueprint['name']  ?? $blueprint['value'] ?? null,
-			];
-		}
-
-		return [
-			'label'    => I18n::translate('template'),
-			'type'     => 'select',
-			'empty'    => false,
-			'options'  => $options,
-			'icon'     => 'template',
-			'disabled' => count($options) <= 1,
-			...$props
-		];
+		return (new TemplateField(...[
+			'blueprints' => $blueprints,
+			...$props,
+		]))->toArray();
 	}
 
 	public static function title(array $props = []): array
 	{
-		return [
-			'label' => I18n::translate('title'),
-			'type'  => 'text',
-			'icon'  => 'title',
-			...$props
-		];
+		return TitleField::factory($props)->toArray();
 	}
 
 	/**
@@ -222,31 +145,11 @@ class Field
 	 */
 	public static function translation(array $props = []): array
 	{
-		$translations = [];
-		foreach (App::instance()->translations() as $translation) {
-			$translations[] = [
-				'text'  => $translation->name(),
-				'value' => $translation->code()
-			];
-		}
-
-		return [
-			'label'   => I18n::translate('language'),
-			'type'    => 'select',
-			'icon'    => 'translate',
-			'options' => $translations,
-			'empty'   => false,
-			...$props
-		];
+		return TranslationField::factory($props)->toArray();
 	}
 
 	public static function username(array $props = []): array
 	{
-		return [
-			'icon'  => 'user',
-			'label' => I18n::translate('name'),
-			'type'  => 'text',
-			...$props
-		];
+		return UsernameField::factory($props)->toArray();
 	}
 }

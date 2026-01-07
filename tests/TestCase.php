@@ -10,7 +10,7 @@ use Kirby\Cms\User;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	protected App $app;
 

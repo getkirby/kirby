@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Auth\Limits;
+use Kirby\Auth\Methods;
+use Kirby\Cms\Auth\Status;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
@@ -66,6 +68,48 @@ class AuthTest extends TestCase
 		$_GET = [];
 	}
 
+	public function testAuthenticate(): void
+	{
+		$status = $this->createStub(Status::class);
+		$user   = $this->createStub(User::class);
+		$methods = $this->createStub(Methods::class);
+		$methods->method('authenticate')
+			->willReturnCallback(function (string $type) use ($status, $user) {
+				return match ($type) {
+					'password' => $user,
+					'code'     => $status
+				};
+			});
+
+		$auth = new class ($methods, $status) extends Auth {
+			public bool $didResetUser = false;
+
+			public function __construct(
+				protected Methods $methods,
+				protected Status|null $status
+			) {
+			}
+
+			public function methods(): Methods
+			{
+				return $this->methods;
+			}
+
+			public function setUser(User $user): void
+			{
+				$this->didResetUser = true;
+			}
+		};
+
+		$result = $auth->authenticate('code', 'lisa@simpson.de');
+		$this->assertSame($status, $result);
+		$this->assertFalse($auth->didResetUser);
+
+		$result = $auth->authenticate('password', 'lisa@simpson.de');
+		$this->assertSame($user, $result);
+		$this->assertTrue($auth->didResetUser);
+	}
+
 	public function testCsrf(): void
 	{
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
@@ -87,7 +131,6 @@ class AuthTest extends TestCase
 		$user = $this->auth->impersonate('kirby');
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => 'kirby@getkirby.com',
 			'mode'      => null,
 			'status'    => 'impersonated'
@@ -102,7 +145,6 @@ class AuthTest extends TestCase
 		$user = $this->auth->impersonate('homer@simpsons.com');
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => 'homer@simpsons.com',
 			'mode'      => null,
 			'status'    => 'impersonated'
@@ -115,7 +157,6 @@ class AuthTest extends TestCase
 		$this->assertNull($this->auth->impersonate(null));
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => null,
 			'mode'      => null,
 			'status'    => 'inactive'
@@ -127,7 +168,6 @@ class AuthTest extends TestCase
 		$this->auth->setUser($actual = $this->app->user('marge@simpsons.com'));
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => null,
 			'status'    => 'active'
@@ -136,7 +176,6 @@ class AuthTest extends TestCase
 		$impersonated = $this->auth->impersonate('nobody');
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => 'nobody@getkirby.com',
 			'mode'      => null,
 			'status'    => 'impersonated'
@@ -151,7 +190,6 @@ class AuthTest extends TestCase
 		$this->auth->logout();
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => null,
 			'mode'      => null,
 			'status'    => 'inactive'
@@ -168,6 +206,11 @@ class AuthTest extends TestCase
 		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
 
 		$this->auth->impersonate('lisa@simpsons.com');
+	}
+
+	public function testKirby(): void
+	{
+		$this->assertInstanceOf(App::class, $this->auth->kirby());
 	}
 
 	public function testLimits(): void
@@ -249,7 +292,6 @@ class AuthTest extends TestCase
 
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => null,
 			'mode'      => null,
 			'status'    => 'inactive'
@@ -272,11 +314,15 @@ class AuthTest extends TestCase
 
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => null,
 			'mode'      => null,
 			'status'    => 'inactive'
 		], $this->auth->status()->toArray());
+	}
+
+	public function testMethods(): void
+	{
+		$this->assertInstanceOf(Methods::class, $this->auth->methods());
 	}
 
 	public function testTypeBasic1(): void
@@ -377,7 +423,6 @@ class AuthTest extends TestCase
 
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => null,
 			'status'    => 'active'
@@ -392,7 +437,6 @@ class AuthTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $user->email());
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => 'marge@simpsons.com',
 			'mode'      => null,
 			'status'    => 'active'
@@ -409,7 +453,6 @@ class AuthTest extends TestCase
 		$this->assertSame('homer@simpsons.com', $user->email());
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => 'homer@simpsons.com',
 			'mode'      => null,
 			'status'    => 'active'
@@ -425,7 +468,6 @@ class AuthTest extends TestCase
 		$this->assertNull($this->auth->user());
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => null,
 			'mode'      => null,
 			'status'    => 'inactive'
@@ -443,7 +485,6 @@ class AuthTest extends TestCase
 		$this->assertNull($this->auth->user());
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => null,
 			'mode'      => null,
 			'status'    => 'inactive'
@@ -466,7 +507,6 @@ class AuthTest extends TestCase
 
 		$this->assertSame([
 			'challenge' => null,
-			'data'      => null,
 			'email'     => 'homer@simpsons.com',
 			'mode'      => null,
 			'status'    => 'active'

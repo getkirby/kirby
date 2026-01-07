@@ -5,7 +5,7 @@ namespace Kirby\Uuid;
 use Kirby\Cms\App;
 use Kirby\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	protected function setUp(): void
 	{
