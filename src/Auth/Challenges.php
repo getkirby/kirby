@@ -131,8 +131,20 @@ class Challenges
 	 */
 	public function enabled(): array
 	{
-		return A::wrap(
-			$this->kirby->option('auth.challenges', ['totp', 'email'])
+		$config = $this->kirby->option('auth.challenges', ['totp', 'email']);
+
+		// @todo we can simplify this once LegacyChallenge is removed
+		return A::filter(
+			A::wrap($config),
+			function ($type) {
+				$class = $this->class($type);
+
+				if (method_exists($class, 'isEnabled') === true) {
+					return $class::isEnabled($this->auth);
+				}
+
+				return true;
+			}
 		);
 	}
 

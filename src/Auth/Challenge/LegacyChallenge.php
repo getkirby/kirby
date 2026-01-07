@@ -54,13 +54,6 @@ class LegacyChallenge extends Challenge
 		return new Pending(secret: $hash);
 	}
 
-	public static function isAvailable(User $user, string $mode): bool
-	{
-		// needs to be resolved against the legacy class
-		// before instantiation
-		return true;
-	}
-
 	/**
 	 * Proxies verification to the legacy challenge
 	 */

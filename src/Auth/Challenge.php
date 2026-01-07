@@ -3,6 +3,7 @@
 namespace Kirby\Auth;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Auth;
 use Kirby\Cms\User;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
@@ -41,12 +42,23 @@ abstract class Challenge
 
 	/**
 	 * Checks whether the challenge is available
-	 * for the passed user and purpose
+	 * for the specific user and purpose
 	 *
 	 * @param \Kirby\Cms\User $user User the code will be generated for
 	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
 	 */
-	abstract public static function isAvailable(User $user, string $mode): bool;
+	public static function isAvailable(User $user, string $mode): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Checks whether the challenge is generally enabled on this site
+	 */
+	public static function isEnabled(Auth $auth): bool
+	{
+		return true;
+	}
 
 	/**
 	 * Returns the purpose of the challenge

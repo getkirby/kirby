@@ -34,9 +34,15 @@ class DummyLegacyChallenge extends \Kirby\Cms\Auth\Challenge
 class DummyChallenge extends Challenge
 {
 	public static bool $available = true;
+	public static bool $enabled = true;
 	public static array $created  = [];
 	public static array $verified = [];
 	public static Pending|null $pending = null;
+
+	public static function isEnabled(Auth $auth): bool
+	{
+		return static::$enabled;
+	}
 
 	public function create(): Pending|null
 	{
@@ -74,6 +80,7 @@ class ChallengesTest extends TestCase
 		parent::setUp();
 
 		DummyChallenge::$available = true;
+		DummyChallenge::$enabled   = true;
 		DummyChallenge::$created   = [];
 		DummyChallenge::$verified  = [];
 		DummyChallenge::$pending   = null;
@@ -198,6 +205,12 @@ class ChallengesTest extends TestCase
 	public function testEnabledConfig(): void
 	{
 		$this->assertSame(['dummy'], $this->challenges->enabled());
+	}
+
+	public function testEnabledClassDisabled(): void
+	{
+		DummyChallenge::$enabled = false;
+		$this->assertSame([], $this->challenges->enabled());
 	}
 
 	public function testFirstAvailable(): void

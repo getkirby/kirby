@@ -184,6 +184,11 @@ class EmailChallengeTest extends TestCase
 		$this->assertTrue(EmailChallenge::isAvailable($this->user, '2fa'));
 	}
 
+	public function testIsEnabled(): void
+	{
+		$this->assertTrue(EmailChallenge::isEnabled($this->app->auth()));
+	}
+
 	public function testMode(): void
 	{
 		$challenge = new EmailChallenge($this->user, 'password-reset', 900);
