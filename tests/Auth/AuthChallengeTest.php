@@ -237,7 +237,7 @@ class AuthChallengeTest extends TestCase
 	public function testVerifyChallengeReturnsNullIfFailDoesNotThrow(): void
 	{
 		// custom auth that swallows fail() to reach the null return
-		$auth = new class($this->app) extends Auth {
+		$auth = new class ($this->app) extends Auth {
 			protected function fail(Throwable $exception, Throwable|null $fallback = null): void
 			{
 				// intentionally ignore
