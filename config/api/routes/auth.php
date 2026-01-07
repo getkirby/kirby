@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 
@@ -48,8 +49,8 @@ return [
 		'method'  => 'POST',
 		'auth'    => false,
 		'action'  => function () {
-			$auth    = $this->kirby()->auth();
-			$methods = $this->kirby()->system()->loginMethods();
+			// @codeCoverageIgnoreStart
+			$auth = $this->kirby()->auth();
 
 			// csrf token check
 			if ($auth->type() === 'session' && $auth->csrf() === false) {
@@ -58,50 +59,22 @@ return [
 				);
 			}
 
-			$email    = $this->requestBody('email');
-			$long     = $this->requestBody('long');
-			$password = $this->requestBody('password');
+			$result = $auth->methods()->authenticateApiRequest($this);
 
-			if ($password) {
-				if (isset($methods['password']) !== true) {
-					throw new InvalidArgumentException(
-						message: 'Login with password is not enabled'
-					);
-				}
-
-				if (
-					isset($methods['password']['2fa']) === true &&
-					$methods['password']['2fa'] === true
-				) {
-					$status = $auth->login2fa($email, $password, $long);
-				} else {
-					$user = $auth->login($email, $password, $long);
-				}
-			} else {
-				$mode = match (true) {
-					isset($methods['code']) 		  => 'login',
-					isset($methods['password-reset']) => 'password-reset',
-					default => throw new InvalidArgumentException(
-						message: 'Login without password is not enabled'
-					)
-				};
-
-				$status = $auth->createChallenge($email, $long, $mode);
-			}
-
-			if (isset($user)) {
+			if ($result instanceof User) {
 				return [
 					'code'   => 200,
 					'status' => 'ok',
-					'user'   => $this->resolve($user)->view('auth')->toArray()
+					'user'   => $this->resolve($result)->view('auth')->toArray()
 				];
 			}
 
 			return [
 				'code'      => 200,
 				'status'    => 'ok',
-				'challenge' => $status->challenge()
+				'challenge' => $result->challenge()
 			];
+			// @codeCoverageIgnoreEnd
 		}
 	],
 	[

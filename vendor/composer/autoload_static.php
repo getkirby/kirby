@@ -17,6 +17,10 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
     );
 
     public static $prefixLengthsPsr4 = array (
+        'l' =>
+        array (
+            'lbuchs\\WebAuthn\\' => 16,
+        ),
         'W' =>
         array (
             'Whoops\\' => 7,
@@ -54,6 +58,10 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
     );
 
     public static $prefixDirsPsr4 = array (
+        'lbuchs\\WebAuthn\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/lbuchs/webauthn/src',
+        ),
         'Whoops\\' =>
         array (
             0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
@@ -147,6 +155,28 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Api\\Controller\\Changes' => __DIR__ . '/../..' . '/src/Api/Controller/Changes.php',
         'Kirby\\Api\\Model' => __DIR__ . '/../..' . '/src/Api/Model.php',
         'Kirby\\Api\\Upload' => __DIR__ . '/../..' . '/src/Api/Upload.php',
+        'Kirby\\Auth\\Challenge' => __DIR__ . '/../..' . '/src/Auth/Challenge.php',
+        'Kirby\\Auth\\Challenge\\EmailChallenge' => __DIR__ . '/../..' . '/src/Auth/Challenge/EmailChallenge.php',
+        'Kirby\\Auth\\Challenge\\LegacyChallenge' => __DIR__ . '/../..' . '/src/Auth/Challenge/LegacyChallenge.php',
+        'Kirby\\Auth\\Challenge\\TotpChallenge' => __DIR__ . '/../..' . '/src/Auth/Challenge/TotpChallenge.php',
+        'Kirby\\Auth\\Challenges' => __DIR__ . '/../..' . '/src/Auth/Challenges.php',
+        'Kirby\\Auth\\Csrf' => __DIR__ . '/../..' . '/src/Auth/Csrf.php',
+        'Kirby\\Auth\\Exception\\ChallengeTimeoutException' => __DIR__ . '/../..' . '/src/Auth/Exception/ChallengeTimeoutException.php',
+        'Kirby\\Auth\\Exception\\InvalidAuthHeaderException' => __DIR__ . '/../..' . '/src/Auth/Exception/InvalidAuthHeaderException.php',
+        'Kirby\\Auth\\Exception\\InvalidChallengeCodeException' => __DIR__ . '/../..' . '/src/Auth/Exception/InvalidChallengeCodeException.php',
+        'Kirby\\Auth\\Exception\\LoginNotPermittedException' => __DIR__ . '/../..' . '/src/Auth/Exception/LoginNotPermittedException.php',
+        'Kirby\\Auth\\Exception\\NoAvailableChallengeException' => __DIR__ . '/../..' . '/src/Auth/Exception/NoAvailableChallengeException.php',
+        'Kirby\\Auth\\Exception\\RateLimitException' => __DIR__ . '/../..' . '/src/Auth/Exception/RateLimitException.php',
+        'Kirby\\Auth\\Exception\\UserNotFoundException' => __DIR__ . '/../..' . '/src/Auth/Exception/UserNotFoundException.php',
+        'Kirby\\Auth\\Limits' => __DIR__ . '/../..' . '/src/Auth/Limits.php',
+        'Kirby\\Auth\\Method' => __DIR__ . '/../..' . '/src/Auth/Method.php',
+        'Kirby\\Auth\\Method\\CodeMethod' => __DIR__ . '/../..' . '/src/Auth/Method/CodeMethod.php',
+        'Kirby\\Auth\\Method\\PasswordMethod' => __DIR__ . '/../..' . '/src/Auth/Method/PasswordMethod.php',
+        'Kirby\\Auth\\Method\\PasswordResetMethod' => __DIR__ . '/../..' . '/src/Auth/Method/PasswordResetMethod.php',
+        'Kirby\\Auth\\Methods' => __DIR__ . '/../..' . '/src/Auth/Methods.php',
+        'Kirby\\Auth\\State' => __DIR__ . '/../..' . '/src/Auth/State.php',
+        'Kirby\\Auth\\Status' => __DIR__ . '/../..' . '/src/Auth/Status.php',
+        'Kirby\\Auth\\User' => __DIR__ . '/../..' . '/src/Auth/User.php',
         'Kirby\\Blueprint\\Blueprint' => __DIR__ . '/../..' . '/src/Blueprint/Blueprint.php',
         'Kirby\\Blueprint\\FileBlueprint' => __DIR__ . '/../..' . '/src/Blueprint/FileBlueprint.php',
         'Kirby\\Blueprint\\PageBlueprint' => __DIR__ . '/../..' . '/src/Blueprint/PageBlueprint.php',
@@ -323,6 +353,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Form\\FieldOptions' => __DIR__ . '/../..' . '/src/Form/FieldOptions.php',
         'Kirby\\Form\\Field\\BaseField' => __DIR__ . '/../..' . '/src/Form/Field/BaseField.php',
         'Kirby\\Form\\Field\\BlocksField' => __DIR__ . '/../..' . '/src/Form/Field/BlocksField.php',
+        'Kirby\\Form\\Field\\ButtonsField' => __DIR__ . '/../..' . '/src/Form/Field/ButtonsField.php',
         'Kirby\\Form\\Field\\CheckboxesField' => __DIR__ . '/../..' . '/src/Form/Field/CheckboxesField.php',
         'Kirby\\Form\\Field\\ColorField' => __DIR__ . '/../..' . '/src/Form/Field/ColorField.php',
         'Kirby\\Form\\Field\\DateField' => __DIR__ . '/../..' . '/src/Form/Field/DateField.php',
@@ -508,6 +539,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Panel\\Controller\\Drawer\\FieldDrawerController' => __DIR__ . '/../..' . '/src/Panel/Controller/Drawer/FieldDrawerController.php',
         'Kirby\\Panel\\Controller\\Drawer\\LabDocDrawerController' => __DIR__ . '/../..' . '/src/Panel/Controller/Drawer/LabDocDrawerController.php',
         'Kirby\\Panel\\Controller\\Drawer\\SectionDrawerController' => __DIR__ . '/../..' . '/src/Panel/Controller/Drawer/SectionDrawerController.php',
+        'Kirby\\Panel\\Controller\\Drawer\\UserSecurityDrawerController' => __DIR__ . '/../..' . '/src/Panel/Controller/Drawer/UserSecurityDrawerController.php',
         'Kirby\\Panel\\Controller\\DropdownController' => __DIR__ . '/../..' . '/src/Panel/Controller/DropdownController.php',
         'Kirby\\Panel\\Controller\\Dropdown\\FileSettingsDropdownController' => __DIR__ . '/../..' . '/src/Panel/Controller/Dropdown/FileSettingsDropdownController.php',
         'Kirby\\Panel\\Controller\\Dropdown\\LanguagesDropdownController' => __DIR__ . '/../..' . '/src/Panel/Controller/Dropdown/LanguagesDropdownController.php',
@@ -540,15 +572,14 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Panel\\Controller\\View\\LanguageViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/LanguageViewController.php',
         'Kirby\\Panel\\Controller\\View\\LanguagesViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/LanguagesViewController.php',
         'Kirby\\Panel\\Controller\\View\\LoginViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/LoginViewController.php',
-        'Kirby\\Panel\\Controller\\View\\ModelPreviewViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/ModelPreviewViewController.php',
         'Kirby\\Panel\\Controller\\View\\ModelViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/ModelViewController.php',
         'Kirby\\Panel\\Controller\\View\\PageFileViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/PageFileViewController.php',
-        'Kirby\\Panel\\Controller\\View\\PagePreviewViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/PagePreviewViewController.php',
         'Kirby\\Panel\\Controller\\View\\PageViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/PageViewController.php',
+        'Kirby\\Panel\\Controller\\View\\PreviewViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/PreviewViewController.php',
+        'Kirby\\Panel\\Controller\\View\\RemotePreviewViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/RemotePreviewViewController.php',
         'Kirby\\Panel\\Controller\\View\\ResetPasswordViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/ResetPasswordViewController.php',
         'Kirby\\Panel\\Controller\\View\\SearchViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/SearchViewController.php',
         'Kirby\\Panel\\Controller\\View\\SiteFileViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/SiteFileViewController.php',
-        'Kirby\\Panel\\Controller\\View\\SitePreviewViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/SitePreviewViewController.php',
         'Kirby\\Panel\\Controller\\View\\SiteViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/SiteViewController.php',
         'Kirby\\Panel\\Controller\\View\\SystemViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/SystemViewController.php',
         'Kirby\\Panel\\Controller\\View\\UserFileViewController' => __DIR__ . '/../..' . '/src/Panel/Controller/View/UserFileViewController.php',
@@ -598,6 +629,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Panel\\Ui\\Button\\LanguageDeleteButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Button/LanguageDeleteButton.php',
         'Kirby\\Panel\\Ui\\Button\\LanguageSettingsButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Button/LanguageSettingsButton.php',
         'Kirby\\Panel\\Ui\\Button\\LanguagesButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Button/LanguagesButton.php',
+        'Kirby\\Panel\\Ui\\Button\\ModelOpenButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Button/ModelOpenButton.php',
         'Kirby\\Panel\\Ui\\Button\\OpenButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Button/OpenButton.php',
         'Kirby\\Panel\\Ui\\Button\\PageStatusButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Button/PageStatusButton.php',
         'Kirby\\Panel\\Ui\\Button\\PreviewButton' => __DIR__ . '/../..' . '/src/Panel/Ui/Button/PreviewButton.php',
@@ -802,6 +834,20 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Whoops\\Util\\SystemFacade' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/SystemFacade.php',
         'Whoops\\Util\\TemplateHelper' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/TemplateHelper.php',
         'claviska\\SimpleImage' => __DIR__ . '/..' . '/claviska/simpleimage/src/claviska/SimpleImage.php',
+        'lbuchs\\WebAuthn\\Attestation\\AttestationObject' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/AttestationObject.php',
+        'lbuchs\\WebAuthn\\Attestation\\AuthenticatorData' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/AuthenticatorData.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\AndroidKey' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/AndroidKey.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\AndroidSafetyNet' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/AndroidSafetyNet.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\Apple' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/Apple.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\FormatBase' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/FormatBase.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\None' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/None.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\Packed' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/Packed.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\Tpm' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/Tpm.php',
+        'lbuchs\\WebAuthn\\Attestation\\Format\\U2f' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/U2f.php',
+        'lbuchs\\WebAuthn\\Binary\\ByteBuffer' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Binary/ByteBuffer.php',
+        'lbuchs\\WebAuthn\\CBOR\\CborDecoder' => __DIR__ . '/..' . '/lbuchs/webauthn/src/CBOR/CborDecoder.php',
+        'lbuchs\\WebAuthn\\WebAuthn' => __DIR__ . '/..' . '/lbuchs/webauthn/src/WebAuthn.php',
+        'lbuchs\\WebAuthn\\WebAuthnException' => __DIR__ . '/..' . '/lbuchs/webauthn/src/WebAuthnException.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

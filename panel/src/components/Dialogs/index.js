@@ -24,6 +24,7 @@ import TextDialog from "./TextDialog.vue";
 import TotpDialog from "./TotpDialog.vue";
 import UploadDialog from "./UploadDialog.vue";
 import UploadReplaceDialog from "./UploadReplaceDialog.vue";
+import WebauthnDialog from "./WebauthnDialog.vue";
 
 // @deprecated
 import ModelsDialog from "./ModelsDialog.vue";
@@ -57,6 +58,7 @@ export default {
 		app.component("k-totp-dialog", TotpDialog);
 		app.component("k-upload-dialog", UploadDialog);
 		app.component("k-upload-replace-dialog", UploadReplaceDialog);
+		app.component("k-webauthn-dialog", WebauthnDialog);
 
 		// @deprecated
 		app.component("k-files-dialog", FilesDialog);
