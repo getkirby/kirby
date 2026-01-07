@@ -38,7 +38,7 @@ class EmailChallenge extends Challenge
 		);
 
 		return new Pending(
-			secret: password_hash($code, PASSWORD_DEFAULT)
+			secret: User::hashPassword($code)
 		);
 	}
 
