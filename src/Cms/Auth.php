@@ -122,18 +122,20 @@ class Auth
 		// catch every exception to hide them from attackers
 		try {
 			// create available challenge for that user
-			$challenge = $this->challenges->create($session, $email, $mode);
+			$this->challenges->create($session, $email, $mode);
+
 		} catch (Throwable $e) {
 			// only re-throw the exception in auth debug mode
 			$this->fail($e);
-		}
 
-		// always set the email, mode and timeout, even if the challenge
-		// won't be created; this avoids leaking whether the user exists
-		$timeout = $this->challenges()->timeout();
-		$session->set('kirby.challenge.email', $email);
-		$session->set('kirby.challenge.mode', $mode);
-		$session->set('kirby.challenge.timeout', time() + $timeout);
+			// always make sure to still set the email, mode and timeout,
+			// even if the challenge wasn't created;
+			// this avoids leaking whether the user exists
+			$timeout = $this->challenges()->timeout();
+			$session->set('kirby.challenge.email', $email);
+			$session->set('kirby.challenge.mode', $mode);
+			$session->set('kirby.challenge.timeout', time() + $timeout);
+		}
 
 		// sleep for a random amount of milliseconds
 		// to make automated attacks harder and to
