@@ -20,6 +20,7 @@ import PagePickerField from "./PagePickerField.vue";
 import PasswordField from "./PasswordField.vue";
 import RadioField from "./RadioField.vue";
 import RangeField from "./RangeField.vue";
+import SectionField from "./SectionField.vue";
 import SelectField from "./SelectField.vue";
 import SlugField from "./SlugField.vue";
 import StatsField from "./StatsField.vue";
@@ -65,6 +66,7 @@ export default {
 		app.component("k-password-field", PasswordField);
 		app.component("k-radio-field", RadioField);
 		app.component("k-range-field", RangeField);
+		app.component("k-section-field", SectionField);
 		app.component("k-select-field", SelectField);
 		app.component("k-slug-field", SlugField);
 		app.component("k-stats-field", StatsField);

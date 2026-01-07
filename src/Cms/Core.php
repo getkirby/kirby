@@ -32,6 +32,7 @@ use Kirby\Form\Field\PagePickerField;
 use Kirby\Form\Field\PasswordField;
 use Kirby\Form\Field\RadioField;
 use Kirby\Form\Field\RangeField;
+use Kirby\Form\Field\SectionField;
 use Kirby\Form\Field\SelectField;
 use Kirby\Form\Field\SlugField;
 use Kirby\Form\Field\StatsField;
@@ -272,6 +273,7 @@ class Core
 			'password'    => PasswordField::class,
 			'radio'       => RadioField::class,
 			'range'       => RangeField::class,
+			'section'     => SectionField::class,
 			'select'      => SelectField::class,
 			'slug'        => SlugField::class,
 			'stats'       => StatsField::class,
