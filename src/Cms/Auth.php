@@ -3,8 +3,10 @@
 namespace Kirby\Cms;
 
 use Kirby\Auth\Csrf;
+use Kirby\Auth\Exception\LoginNotPermittedException;
 use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Auth\Limits;
+use Kirby\Auth\Methods;
 use Kirby\Cms\Auth\Challenge;
 use Kirby\Cms\Auth\Status;
 use Kirby\Exception\Exception;
@@ -44,6 +46,7 @@ class Auth
 	protected User|null $impersonate = null;
 
 	protected Limits $limits;
+	protected Methods $methods;
 
 	/**
 	 * Cache of the auth status object
@@ -68,8 +71,38 @@ class Auth
 	public function __construct(
 		protected App $kirby
 	) {
-		$this->csrf   = new Csrf($kirby);
-		$this->limits = new Limits($kirby);
+		$this->csrf    = new Csrf($kirby);
+		$this->limits  = new Limits($kirby);
+		$this->methods = new Methods($this, $kirby);
+	}
+
+	/**
+	 * Login a user with email and (maybe optional) password
+	 * as well as an auth challenge, if required by the auth method
+	 *
+	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded if any other error occurred with debug mode off
+	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
+	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 */
+	public function authenticate(
+		string $method,
+		string $email,
+		#[SensitiveParameter]
+		string|null $password = null,
+		bool $long = false
+	): User|Status {
+		$result = $this->methods()->authenticate(
+			type:      $method,
+			email:     $email,
+			password:  $password,
+			long:      $long
+		);
+
+		if ($result instanceof User === true) {
+			$this->setUser($result);
+		}
+
+		return $result;
 	}
 
 	/**
@@ -401,6 +434,14 @@ class Auth
 	}
 
 	/**
+	 * @since 6.0.0
+	 */
+	public function kirby(): App
+	{
+		return $this->kirby;
+	}
+
+	/**
 	 * Returns the auth rate limits object
 	 * @since 6.0.0
 	 */
@@ -440,18 +481,14 @@ class Auth
 		string $password,
 		bool $long = false
 	): User {
-		// session options
-		$options = [
-			'createMode' => 'cookie',
-			'long'       => $long === true
-		];
+		$user = $this->authenticate('password', $email, $password, $long);
 
-		// validate the user and log in to the session
-		$user = $this->validatePassword($email, $password);
-		$user->loginPasswordless($options);
-
-		// clear the status cache
-		$this->status = null;
+		if ($user instanceof User === false) {
+			// if a method returned a pending status here,
+			// it's a misconfiguration (e.g. password + 2FA active);
+			// keep the existing login signature strict
+			throw new LoginNotPermittedException(); // @codeCoverageIgnore
+		}
 
 		return $user;
 	}
@@ -463,6 +500,8 @@ class Auth
 	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
 	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
 	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 *
+	 * @deprecated 6.0.0 Use `self::authenticate()` instead
 	 */
 	public function login2fa(
 		string $email,
@@ -496,6 +535,15 @@ class Auth
 
 		// clear the status cache
 		$this->status = null;
+	}
+
+	/**
+	 * Returns the auth methods handler
+	 * @since 6.0.0
+	 */
+	public function methods(): Methods
+	{
+		return $this->methods;
 	}
 
 	/**
@@ -721,7 +769,7 @@ class Auth
 
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information
-			$this->fail($e, new PermissionException(key: 'access.login'));
+			$this->fail($e, new LoginNotPermittedException());
 		}
 	}
 
