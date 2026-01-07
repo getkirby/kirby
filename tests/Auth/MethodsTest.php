@@ -53,7 +53,7 @@ class MethodsTest extends TestCase
 		$methods = $this->app->auth()->methods();
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Auth method "code" is not available');
+		$this->expectExceptionMessage('Auth method "code" is not enabled');
 		$methods->authenticate('code', 'marge@simpsons.com', 'secret123');
 	}
 
@@ -66,50 +66,21 @@ class MethodsTest extends TestCase
 		$methods->authenticate('foo', 'marge@simpsons.com', 'secret123');
 	}
 
-	public function testAvailableWith2FA(): void
+	public function testConfigDefaults(): void
 	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => [
-						'password' => ['2fa' => true],
-						'code'     => []
-					]
-				]
-			]
-		]);
-
-		$methods = $this->app->auth()->methods()->available();
-		$this->assertSame(['password' => ['2fa' => true]], $methods);
+		$methods = $this->app->auth()->methods();
+		$this->assertSame(['password' => []], $methods->config());
 	}
 
-	public function testAvailableCodePasswordResetConflict(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => ['password', 'code', 'password-reset']
-				]
-			]
-		]);
-
-		$methods = $this->app->auth()->methods()->available();
-
-		$this->assertSame([
-			'password'       => [],
-			'password-reset' => []
-		], $methods);
-	}
-
-	public function testAvailableDebugRethrowsException(): void
+	public function testConfigNormalization(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
-				'debug' => true,
 				'auth' => [
 					'methods' => [
-						'password' => ['2fa' => true],
-						'code'
+						'password',
+						'code'       => true,
+						'basic-auth' => ['foo' => 'bar'],
 					]
 				]
 			]
@@ -117,10 +88,11 @@ class MethodsTest extends TestCase
 
 		$methods = $app->auth()->methods();
 
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
-
-		$methods->available();
+		$this->assertSame([
+			'password'   => [],
+			'code'       => [],
+			'basic-auth' => ['foo' => 'bar'],
+		], $methods->config());
 	}
 
 	public function testAuthenticateApiRequest(): void
@@ -200,22 +172,50 @@ class MethodsTest extends TestCase
 		$methods->class('unknown');
 	}
 
-	public function testEnabledDefaults(): void
+	public function testEnabledWith2FA(): void
 	{
-		$methods = $this->app->auth()->methods();
-		$this->assertSame(['password' => []], $methods->enabled());
-	}
-
-	public function testEnabledConfig(): void
-	{
-		$app = $this->app->clone([
+		$this->app = $this->app->clone([
 			'options' => [
 				'auth' => [
 					'methods' => [
-						'password'       => ['2fa' => true],
-						'foo'            => [],
-						'code'           => true,
-						'password-reset'
+						'password' => ['2fa' => true],
+						'code'     => []
+					]
+				]
+			]
+		]);
+
+		$methods = $this->app->auth()->methods()->enabled();
+		$this->assertSame(['password' => ['2fa' => true]], $methods);
+	}
+
+	public function testEnabledCodePasswordResetConflict(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'methods' => ['password', 'code', 'password-reset']
+				]
+			]
+		]);
+
+		$methods = $this->app->auth()->methods()->enabled();
+
+		$this->assertSame([
+			'password'       => [],
+			'password-reset' => []
+		], $methods);
+	}
+
+	public function testEnabledDebugRethrowsException(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'debug' => true,
+				'auth' => [
+					'methods' => [
+						'password' => ['2fa' => true],
+						'code'
 					]
 				]
 			]
@@ -223,15 +223,13 @@ class MethodsTest extends TestCase
 
 		$methods = $app->auth()->methods();
 
-		$this->assertSame([
-			'password'       => ['2fa' => true],
-			'foo'            => [],
-			'code'           => [],
-			'password-reset' => []
-		], $methods->enabled());
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
+
+		$methods->enabled();
 	}
 
-	public function testFirstAvailable(): void
+	public function testFirstEnabled(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -244,11 +242,11 @@ class MethodsTest extends TestCase
 			]
 		]);
 
-		$methods = $this->app->auth()->methods();
-		$this->assertInstanceOf(PasswordMethod::class, $methods->firstAvailable());
+		$methods = $app->auth()->methods();
+		$this->assertInstanceOf(PasswordMethod::class, $methods->firstEnabled());
 	}
 
-	public function testFirstAvailableNone(): void
+	public function testFirstEnabledNone(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -261,7 +259,7 @@ class MethodsTest extends TestCase
 		]);
 
 		$methods = $app->auth()->methods();
-		$this->assertNull($methods->firstAvailable());
+		$this->assertNull($methods->firstEnabled());
 	}
 
 	public function testGet(): void
@@ -279,7 +277,7 @@ class MethodsTest extends TestCase
 		$this->assertInstanceOf(CodeMethod::class, $methods->get('code'));
 	}
 
-	public function testHas(): void
+	public function testHasEnabledMethods(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -295,7 +293,7 @@ class MethodsTest extends TestCase
 		$this->assertFalse($methods->has('password-reset'));
 	}
 
-	public function testHasAnyAvailableUsingChallenges(): void
+	public function testHasAnyUsingChallenges(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -308,7 +306,7 @@ class MethodsTest extends TestCase
 		]);
 
 		$methods = $app->auth()->methods();
-		$this->assertTrue($methods->hasAnyAvailableUsingChallenges());
+		$this->assertTrue($methods->hasAnyUsingChallenges());
 
 		$app = $this->app->clone([
 			'options' => [
@@ -319,7 +317,7 @@ class MethodsTest extends TestCase
 		]);
 
 		$methods = $app->auth()->methods();
-		$this->assertTrue($methods->hasAnyAvailableUsingChallenges());
+		$this->assertTrue($methods->hasAnyUsingChallenges());
 
 		$app = $this->app->clone([
 			'options' => [
@@ -330,41 +328,10 @@ class MethodsTest extends TestCase
 		]);
 
 		$methods = $app->auth()->methods();
-		$this->assertFalse($methods->hasAnyAvailableUsingChallenges());
+		$this->assertFalse($methods->hasAnyUsingChallenges());
 	}
 
-	public function testHasAnyWith2FA(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => [
-						'password' => ['2fa' => true],
-						'code'     => []
-					]
-				]
-			]
-		]);
-
-		$methods = $app->auth()->methods();
-		$this->assertTrue($methods->hasAnyWith2FA());
-
-		$app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => [
-						'password' => [],
-						'code'     => []
-					]
-				]
-			]
-		]);
-
-		$methods = $app->auth()->methods();
-		$this->assertFalse($methods->hasAnyWith2FA());
-	}
-
-	public function testHasAvailable(): void
+	public function testHasWithDisabled(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
@@ -379,9 +346,9 @@ class MethodsTest extends TestCase
 		]);
 
 		$methods = $app->auth()->methods();
-		$this->assertTrue($methods->hasAvailable('password'));
-		$this->assertFalse($methods->hasAvailable('code'));
-		$this->assertFalse($methods->hasAvailable('password-reset'));
-		$this->assertFalse($methods->hasAvailable('unknown'));
+		$this->assertTrue($methods->has('password'));
+		$this->assertFalse($methods->has('code'));
+		$this->assertFalse($methods->has('password-reset'));
+		$this->assertFalse($methods->has('unknown'));
 	}
 }

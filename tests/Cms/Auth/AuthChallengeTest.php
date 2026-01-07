@@ -306,11 +306,11 @@ class AuthChallengeTest extends TestCase
 		$app = $this->app->clone([
 			'options' => [
 				'auth' => [
-					'challenges' => ['totp', 'sms']
+					'challenges' => ['totp', 'email']
 				]
 			]
 		]);
-		$this->assertSame(['totp', 'sms'], $app->auth()->enabledChallenges());
+		$this->assertSame(['totp', 'email'], $app->auth()->enabledChallenges());
 	}
 
 	public function testLogin2fa(): void

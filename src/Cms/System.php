@@ -307,7 +307,7 @@ class System
 	 */
 	public function loginMethods(): array
 	{
-		return $this->app->auth()->methods()->available();
+		return $this->app->auth()->methods()->enabled();
 	}
 
 	/**

@@ -68,8 +68,13 @@ class BasicAuthMethodTest extends TestCase
 		);
 
 		$methods = $this->createStub(Methods::class);
-		$methods->method('has')->willReturn($hasPassword);
-		$methods->method('hasAnyWith2FA')->willReturn($hasAnyWith2FA);
+		$config = $hasPassword === true ? ['password' => []] : [];
+
+		if ($hasAnyWith2FA === true && $hasPassword === true) {
+			$config['password']['2fa'] = true;
+		}
+
+		$methods->method('config')->willReturn($config);
 
 		$auth = $this->createStub(Auth::class);
 		$auth->method('kirby')->willReturn($kirby);
@@ -114,67 +119,67 @@ class BasicAuthMethodTest extends TestCase
 		$method->authenticate('kirby@getkirby.com');
 	}
 
-	public function testIsAvailable(): void
+	public function testIsEnabled(): void
 	{
 		$header = $this->header();
 		$auth   = $this->auth(header: $header);
-		$this->assertTrue(BasicAuthMethod::isAvailable($auth));
+		$this->assertTrue(BasicAuthMethod::isEnabled($auth));
 	}
 
-	public function testIsAvailableDisabled(): void
+	public function testIsEnabledDisabled(): void
 	{
 		$auth = $this->auth(auth: false, header: $this->header());
-		$this->assertFalse(BasicAuthMethod::isAvailable($auth));
+		$this->assertFalse(BasicAuthMethod::isEnabled($auth));
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Basic authentication is not activated');
-		BasicAuthMethod::isAvailable($auth, fail: true);
+		BasicAuthMethod::isEnabled($auth, fail: true);
 	}
 
-	public function testIsAvailableInvalidHeader(): void
+	public function testIsEnabledInvalidHeader(): void
 	{
 		$auth = $this->auth(header: null);
-		$this->assertFalse(BasicAuthMethod::isAvailable($auth));
+		$this->assertFalse(BasicAuthMethod::isEnabled($auth));
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid authorization header');
-		BasicAuthMethod::isAvailable($auth, fail: true);
+		BasicAuthMethod::isEnabled($auth, fail: true);
 	}
 
-	public function testIsAvailableWithoutPasswordLogin(): void
+	public function testIsEnabledWithoutPasswordLogin(): void
 	{
 		$auth = $this->auth(hasPassword: false, header: $this->header());
-		$this->assertFalse(BasicAuthMethod::isAvailable($auth));
+		$this->assertFalse(BasicAuthMethod::isEnabled($auth));
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Login with password is not enabled');
-		BasicAuthMethod::isAvailable($auth, fail: true);
+		BasicAuthMethod::isEnabled($auth, fail: true);
 	}
 
-	public function testIsAvailableWith2FA(): void
+	public function testIsEnabledWith2FA(): void
 	{
 		$auth = $this->auth(hasAnyWith2FA: true, header: $this->header());
-		$this->assertFalse(BasicAuthMethod::isAvailable($auth));
+		$this->assertFalse(BasicAuthMethod::isEnabled($auth));
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Basic authentication cannot be used with 2FA');
-		BasicAuthMethod::isAvailable($auth, fail: true);
+		BasicAuthMethod::isEnabled($auth, fail: true);
 	}
 
-	public function testIsAvailableInsecure(): void
+	public function testIsEnabledInsecure(): void
 	{
 		$auth = $this->auth(isSsl: false, allowInsecure: false, header: $this->header());
-		$this->assertFalse(BasicAuthMethod::isAvailable($auth));
+		$this->assertFalse(BasicAuthMethod::isEnabled($auth));
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Basic authentication is only allowed over HTTPS');
-		BasicAuthMethod::isAvailable($auth, fail: true);
+		BasicAuthMethod::isEnabled($auth, fail: true);
 	}
 
-	public function testIsAvailableInsecureAllowed(): void
+	public function testIsEnabledInsecureAllowed(): void
 	{
 		$auth = $this->auth(isSsl: false, allowInsecure: true, header: $this->header());
-		$this->assertTrue(BasicAuthMethod::isAvailable($auth));
+		$this->assertTrue(BasicAuthMethod::isEnabled($auth));
 	}
 
 	public function testUser(): void

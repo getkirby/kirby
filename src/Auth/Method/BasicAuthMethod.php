@@ -50,7 +50,7 @@ class BasicAuthMethod extends Method
 	 * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
 	 * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
 	 */
-	public static function isAvailable(
+	public static function isEnabled(
 		Auth $auth,
 		array $options = [],
 		bool $fail = false
@@ -82,7 +82,9 @@ class BasicAuthMethod extends Method
 
 		// if logging in with password is disabled,
 		// basic auth cannot be possible either
-		if ($auth->methods()->has('password') !== true) {
+		$methods = $auth->methods()->config();
+
+		if (array_key_exists('password', $methods) !== true) {
 			if ($fail === true) {
 				throw new PermissionException(
 					message: 'Login with password is not enabled'
@@ -94,7 +96,7 @@ class BasicAuthMethod extends Method
 
 		// if any login method requires 2FA,
 		// basic auth without 2FA would be a weakness
-		if ($auth->methods()->hasAnyWith2FA() === true) {
+		if (in_array(true, array_column($methods, '2fa'), true) === true) {
 			if ($fail === true) {
 				throw new PermissionException(
 					message: 'Basic authentication cannot be used with 2FA'
@@ -130,9 +132,9 @@ class BasicAuthMethod extends Method
 	): User|null {
 		$config = ['auth' => $auth];
 
-		// ensure basic auth method is actually available
+		// ensure basic auth method is actually enabled
 		// with the provided config
-		if (static::isAvailable($this->auth, $config, true) === true) {
+		if (static::isEnabled($this->auth, $config, true) === true) {
 			/**
 			 * @var \Kirby\Http\Request\Auth\BasicAuth $auth
 			 */

@@ -10,10 +10,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Method::class)]
 class MethodTest extends TestCase
 {
-	public function testisAvailable(): void
+	public function testIsEnabled(): void
 	{
 		$auth = $this->createStub(Auth::class);
-		$this->assertTrue(Method::isAvailable($auth));
+		$this->assertTrue(Method::isEnabled($auth));
 	}
 
 	public function testIsUsingChallenges(): void

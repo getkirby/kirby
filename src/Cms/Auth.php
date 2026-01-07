@@ -485,7 +485,7 @@ class Auth
 	 */
 	public function type(bool $allowImpersonation = true): string
 	{
-		if (BasicAuthMethod::isAvailable($this) === true) {
+		if (BasicAuthMethod::isEnabled($this) === true) {
 			return 'basic';
 		}
 
