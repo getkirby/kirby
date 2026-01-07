@@ -223,6 +223,14 @@ class EmailChallengeTest extends TestCase
 		$this->assertTrue($challenge->verify('123 456', $data));
 	}
 
+	public function testVerifyWithInvalidHash(): void
+	{
+		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$data      = new Pending(secret: null);
+
+		$this->assertFalse($challenge->verify('123456', $data));
+	}
+
 	public function testVerifyMismatch(): void
 	{
 		$hash      = password_hash('123456', PASSWORD_DEFAULT);

@@ -637,4 +637,24 @@ class AuthChallengeTest extends TestCase
 
 		$this->auth->verifyChallenge('123456');
 	}
+
+	public function testVerifyChallengeReturnsNullIfFailDoesNotThrow(): void
+	{
+		// custom auth that swallows fail() to reach the null return
+		$auth = new class ($this->app) extends Auth {
+			protected function fail(Throwable $exception, Throwable|null $fallback = null): void
+			{
+				// intentionally ignore
+			}
+		};
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => password_hash('123456', PASSWORD_DEFAULT)]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
+
+		$this->assertNull($auth->verifyChallenge('654321'));
+	}
 }
