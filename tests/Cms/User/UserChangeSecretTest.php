@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -11,6 +12,7 @@ class UserChangeSecretTest extends ModelTestCase
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserChangeSecret';
 
 	protected User $admin;
+	protected User $editor;
 
 	public function setUp(): void
 	{
@@ -23,6 +25,15 @@ class UserChangeSecretTest extends ModelTestCase
 		]);
 
 		$this->app->users()->add($this->admin);
+
+
+		$this->editor = new User([
+			'id'    => 'editor',
+			'email' => 'editor@domain.com',
+			'role'  => 'editor'
+		]);
+
+		$this->app->users()->add($this->editor);
 	}
 
 	public function tearDown(): void
@@ -73,5 +84,15 @@ class UserChangeSecretTest extends ModelTestCase
 		$this->assertSame($user, $this->app->user());
 		$this->assertNotSame($token, $session->token());
 		$this->assertSame(MockTime::$time, $session->get('kirby.loginTimestamp'));
+	}
+
+	public function testChangeSecretRuleNotPermitted(): void
+	{
+		$this->app->impersonate('editor@domain.com');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You cannot change user secrets for admin@domain.com');
+
+		$this->admin->changeSecret('custom', 'abc123');
 	}
 }

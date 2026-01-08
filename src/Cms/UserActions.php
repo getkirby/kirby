@@ -131,7 +131,7 @@ trait UserActions
 	public function changeSecret(string $secret, mixed $content): static
 	{
 		return $this->commit(
-			'changeSecrets',
+			'changeSecret',
 			[
 				'user'        => $this,
 				'secret'      => $secret,
