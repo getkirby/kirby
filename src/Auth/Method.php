@@ -45,7 +45,7 @@ abstract class Method
 	/**
 	 * Checks if this method can be used in the current context
 	 */
-	public static function isAvailable(
+	public static function isEnabled(
 		Auth $auth,
 		array $options = []
 	): bool {

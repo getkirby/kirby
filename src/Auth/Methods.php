@@ -30,8 +30,7 @@ class Methods
 	 */
 	public static array $methods = [];
 
-	protected $available;
-	protected $enabled;
+	protected array $enabled;
 
 	public function __construct(
 		protected Auth $auth,
@@ -56,12 +55,6 @@ class Methods
 			);
 		}
 
-		if ($this->hasAvailable($type) === false) {
-			throw new InvalidArgumentException(
-				message: 'Auth method "' . $type . '" is not available'
-			);
-		}
-
 		return $this->get($type)->authenticate($email, $password, $long);
 	}
 
@@ -77,8 +70,8 @@ class Methods
 
 		$method = match (true) {
 			$password !== ''  || $password === null => 'password',
-			$this->hasAvailable('code')             => 'code',
-			$this->hasAvailable('password-reset')   => 'password-reset',
+			$this->has('code')                      => 'code',
+			$this->has('password-reset')            => 'password-reset',
 			default => throw new InvalidArgumentException(
 				message: 'Login without password is not enabled'
 			)
@@ -90,40 +83,6 @@ class Methods
 			password: $password,
 			long:     $long
 		);
-	}
-
-	/**
-	 * Returns enabled methods that are usable
-	 * in the current context
-	 */
-	public function available(): array
-	{
-		if (isset($this->available) === true) {
-			return $this->available; // @codeCoverageIgnore
-		}
-
-		$available = [];
-
-		foreach ($this->enabled() as $type => $options) {
-			$class = $this->class($type);
-
-			try {
-				if ($class::isAvailable($this->auth, $options) === true) {
-					$available[$type] = $options;
-				}
-
-			} catch (Exception $e) {
-				// consider methods that throw an exception
-				// from their `::isAvailable()` method as not available
-
-				// when running in debug, re-throw exception
-				if ($this->kirby->option('debug') === true) {
-					throw $e;
-				}
-			}
-		}
-
-		return $this->available = $available;
 	}
 
 	/**
@@ -144,6 +103,31 @@ class Methods
 	}
 
 	/**
+	 * Returns normalized array of configured methods
+	 */
+	public function config(): array
+	{
+		$default    = ['password' => []];
+		$methods    = $this->kirby->option('auth.methods', $default);
+		$normalized = [];
+
+		foreach (A::wrap($methods) as $type => $options) {
+			if (is_int($type) === true) {
+				// ['password']
+				$type    = $options;
+				$options = [];
+			} elseif ($options === true) {
+				// ['password' => true]
+				$options = [];
+			}
+
+			$normalized[$type] = $options;
+		}
+
+		return $normalized;
+	}
+
+	/**
 	 * Returns normalized array of enabled/configured methods
 	 * by the `auth.methods` config option
 	 */
@@ -153,43 +137,46 @@ class Methods
 			return $this->enabled; // @codeCoverageIgnore
 		}
 
-		$default = ['password' => []];
-		$methods = A::wrap($this->kirby->option('auth.methods', $default));
+		$config  = $this->config();
+		$enabled = [];
 
-		// normalize the syntax variants
-		$normalized = [];
+		foreach ($config as $type => $options) {
+			$class = $this->class($type);
 
-		foreach ($methods as $key => $value) {
-			if (is_int($key) === true) {
-				// ['password']
-				$normalized[$value] = [];
-			} elseif ($value === true) {
-				// ['password' => true]
-				$normalized[$key] = [];
-			} else {
-				// ['password' => [...]]
-				$normalized[$key] = $value;
+			try {
+				if ($class::isEnabled($this->auth, $options) === true) {
+					$enabled[$type] = $options;
+				}
+
+			} catch (Exception $e) {
+				// consider methods that throw an exception
+				// from their `::isEnabled()` method as not enabled
+
+				// when running in debug, re-throw exception
+				if ($this->kirby->option('debug') === true) {
+					throw $e;
+				}
 			}
 		}
 
-		return $this->enabled = $normalized;
+		return $this->enabled = $enabled;
 	}
 
 	/**
-	 * Returns the first available auth method
+	 * Returns the first enabled auth method
 	 * for the current context
 	 */
-	public function firstAvailable(): Method|null
+	public function firstEnabled(): Method|null
 	{
-		$available = $this->available();
-		$type      = array_key_first($available);
+		$enabled = $this->enabled();
+		$type    = array_key_first($enabled);
 		return $type ? $this->get($type) : null;
 	}
 
 	/**
 	 * Returns an instance of the requested auth method.
-	 * (This is based on the config. You might need to check
-	 * yourself if the method should be available in your context)
+	 * (You might still need to check yourself
+	 * if the method is actually enabled in your context)
 	 */
 	public function get(string $type): Method
 	{
@@ -206,15 +193,15 @@ class Methods
 	 */
 	public function has(string $type): bool
 	{
-		return in_array($type, array_keys($this->enabled()), true);
+		return array_key_exists($type, $this->enabled());
 	}
 
 	/**
-	 * Checks if any available method is using challenges
+	 * Checks if any method is using challenges
 	 */
-	public function hasAnyAvailableUsingChallenges(): bool
+	public function hasAnyUsingChallenges(): bool
 	{
-		foreach ($this->available() as $method => $options) {
+		foreach ($this->enabled() as $method => $options) {
 			$class = $this->class($method);
 
 			if ($class::isUsingChallenges($this->auth, $options) === true) {
@@ -223,27 +210,5 @@ class Methods
 		}
 
 		return false;
-	}
-
-	/**
-	 * Checks if any enabled/configured method is using 2FA
-	 */
-	public function hasAnyWith2FA(): bool
-	{
-		foreach ($this->enabled() as $options) {
-			if (isset($options['2fa']) === true && $options['2fa'] === true) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Checks if the method type is available
-	 */
-	public function hasAvailable(string $type): bool
-	{
-		return in_array($type, array_keys($this->available()), true);
 	}
 }

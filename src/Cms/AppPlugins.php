@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Auth\Challenges;
 use Kirby\Auth\Methods;
 use Kirby\Blueprint\PageBlueprint;
 use Kirby\Blueprint\Section;
@@ -165,8 +166,8 @@ trait AppPlugins
 	 */
 	protected function extendAuthChallenges(array $challenges): array
 	{
-		return $this->extensions['authChallenges'] = Auth::$challenges = [
-			...Auth::$challenges,
+		return $this->extensions['authChallenges'] = Challenges::$challenges = [
+			...Challenges::$challenges,
 			...$challenges
 		];
 	}

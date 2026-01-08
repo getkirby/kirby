@@ -19,10 +19,17 @@ class CodeMethodTest extends TestCase
 		bool $hasPasswordReset = false
 	): Auth {
 		$methods = $this->createStub(Methods::class);
-		$methods->method('hasAnyWith2FA')->willReturn($has2fa);
-		$methods->method('has')->willReturnCallback(
-			fn (string $type) => $type === 'password-reset' ? $hasPasswordReset : false
-		);
+		$config = ['password' => []];
+
+		if ($has2fa === true) {
+			$config['password']['2fa'] = true;
+		}
+
+		if ($hasPasswordReset === true) {
+			$config['password-reset'] = [];
+		}
+
+		$methods->method('config')->willReturn($config);
 
 		$auth = $this->createStub(Auth::class);
 		$auth->method('methods')->willReturn($methods);
@@ -53,30 +60,30 @@ class CodeMethodTest extends TestCase
 		$this->assertSame(['lisa@simpsons.com', false, 'login'], $args);
 	}
 
-	public function testIsAvailable(): void
+	public function testIsEnabled(): void
 	{
 		$auth = $this->auth();
-		$this->assertTrue(CodeMethod::isAvailable($auth));
+		$this->assertTrue(CodeMethod::isEnabled($auth));
 	}
 
-	public function testIsAvailableWith2F(): void
+	public function testIsEnabledWith2F(): void
 	{
 		$auth = $this->auth(has2fa: true);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
 
-		CodeMethod::isAvailable($auth);
+		CodeMethod::isEnabled($auth);
 	}
 
-	public function testIsAvailableWithPasswordReset(): void
+	public function testIsEnabledWithPasswordReset(): void
 	{
 		$auth = $this->auth(hasPasswordReset: true);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "code" and "password-reset" login methods cannot be enabled together');
 
-		CodeMethod::isAvailable($auth);
+		CodeMethod::isEnabled($auth);
 	}
 
 	public function testIsUsingChallenges(): void

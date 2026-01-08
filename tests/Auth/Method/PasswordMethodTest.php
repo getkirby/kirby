@@ -84,10 +84,10 @@ class PasswordMethodTest extends TestCase
 		$method->authenticate('marge@simpsons.com');
 	}
 
-	public function testIsAvailable(): void
+	public function testIsEnabled(): void
 	{
 		$auth = $this->createStub(Auth::class);
-		$this->assertTrue(PasswordMethod::isAvailable($auth));
+		$this->assertTrue(PasswordMethod::isEnabled($auth));
 	}
 
 	public function testIsUsingChallenges(): void

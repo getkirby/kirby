@@ -29,7 +29,7 @@ class PasswordResetMethod extends CodeMethod
 		);
 	}
 
-	public static function isAvailable(Auth $auth, array $options = []): bool
+	public static function isEnabled(Auth $auth, array $options = []): bool
 	{
 		// don't allow to circumvent 2FA by 1FA code method
 		static::isWithoutAny2FA($auth);

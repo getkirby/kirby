@@ -33,7 +33,7 @@ class CodeMethod extends Method
 		);
 	}
 
-	public static function isAvailable(Auth $auth, array $options = []): bool
+	public static function isEnabled(Auth $auth, array $options = []): bool
 	{
 		// don't allow to circumvent 2FA by 1FA code method
 		static::isWithoutAny2FA($auth);
@@ -56,8 +56,7 @@ class CodeMethod extends Method
 	 */
 	protected static function isWithoutAny2FA(Auth $auth): bool
 	{
-		// don't allow to circumvent 2FA by 1FA code method
-		if ($auth->methods()->hasAnyWith2FA() === true) {
+		if (in_array(true, array_column($auth->methods()->config(), '2fa'), true) === true) {
 			throw new InvalidArgumentException(
 				message: 'The "' . static::type() . '" login method cannot be enabled when 2FA is required'
 			);
@@ -71,7 +70,7 @@ class CodeMethod extends Method
 	 */
 	protected static function isWithoutPasswordReset(Auth $auth): bool
 	{
-		if ($auth->methods()->has('password-reset') === true) {
+		if (array_key_exists('password-reset', $auth->methods()->config()) === true) {
 			throw new InvalidArgumentException(
 				message: 'The "code" and "password-reset" login methods cannot be enabled together'
 			);

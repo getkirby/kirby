@@ -3,10 +3,10 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Auth\Challenges;
 use Kirby\Cms\Auth\ErrorneousChallenge;
 use Kirby\Email\Email;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
@@ -23,7 +23,7 @@ class AuthChallengeTest extends TestCase
 
 	public function setUp(): void
 	{
-		Auth::$challenges['errorneous'] = ErrorneousChallenge::class;
+		Challenges::$challenges['errorneous'] = ErrorneousChallenge::class;
 		Email::$debug = true;
 		Email::$emails = [];
 		$_SERVER['SERVER_NAME'] = 'kirby.test';
@@ -72,7 +72,7 @@ class AuthChallengeTest extends TestCase
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);
 
-		unset(Auth::$challenges['errorneous']);
+		unset(Challenges::$challenges['errorneous']);
 		Email::$debug = false;
 		Email::$emails = [];
 		unset($_SERVER['SERVER_NAME']);
@@ -107,7 +107,10 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
 		preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
-		$this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
+		$this->assertTrue(password_verify(
+			str_replace(' ', '', $codeMatches[0]),
+			$session->get('kirby.challenge.data')['secret']
+		));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertNull($this->failedEmail);
 		$session->clear();
@@ -303,11 +306,11 @@ class AuthChallengeTest extends TestCase
 		$app = $this->app->clone([
 			'options' => [
 				'auth' => [
-					'challenges' => ['totp', 'sms']
+					'challenges' => ['totp', 'email']
 				]
 			]
 		]);
-		$this->assertSame(['totp', 'sms'], $app->auth()->enabledChallenges());
+		$this->assertSame(['totp', 'email'], $app->auth()->enabledChallenges());
 	}
 
 	public function testLogin2fa(): void
@@ -327,7 +330,10 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame('2fa', $session->get('kirby.challenge.mode'));
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
 		preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
-		$this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
+		$this->assertTrue(password_verify(
+			str_replace(' ', '', $codeMatches[0]),
+			$session->get('kirby.challenge.data')['secret']
+		));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertNull($this->failedEmail);
 	}
@@ -349,7 +355,10 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame('2fa', $session->get('kirby.challenge.mode'));
 		$this->assertSame('email', $session->get('kirby.challenge.type'));
 		preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
-		$this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
+		$this->assertTrue(password_verify(
+			str_replace(' ', '', $codeMatches[0]),
+			$session->get('kirby.challenge.data')['secret']
+		));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertNull($this->failedEmail);
 	}
@@ -377,7 +386,7 @@ class AuthChallengeTest extends TestCase
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.data', ['secret' => password_hash('123456', PASSWORD_DEFAULT)]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
@@ -394,7 +403,7 @@ class AuthChallengeTest extends TestCase
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.data', ['secret' => password_hash('123456', PASSWORD_DEFAULT)]);
 		$session->set('kirby.challenge.mode', 'password-reset');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
@@ -521,7 +530,7 @@ class AuthChallengeTest extends TestCase
 		$this->auth->track('homer@simpsons.com');
 		$this->auth->track('homer@simpsons.com');
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.data', ['secret' => password_hash('123456', PASSWORD_DEFAULT)]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 
@@ -533,7 +542,7 @@ class AuthChallengeTest extends TestCase
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.data', ['secret' => password_hash('123456', PASSWORD_DEFAULT)]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time - 1);
@@ -556,7 +565,7 @@ class AuthChallengeTest extends TestCase
 		], $this->auth->status()->toArray());
 
 		$this->assertNull($session->get('kirby.challenge.email'));
-		$this->assertNull($session->get('kirby.challenge.code'));
+		$this->assertNull($session->get('kirby.challenge.data'));
 		$this->assertNull($session->get('kirby.challenge.mode'));
 		$this->assertNull($session->get('kirby.challenge.type'));
 		$this->assertNull($session->get('kirby.challenge.timeout'));
@@ -575,7 +584,7 @@ class AuthChallengeTest extends TestCase
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.data', ['secret' => password_hash('123456', PASSWORD_DEFAULT)]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time - 1);
@@ -591,7 +600,7 @@ class AuthChallengeTest extends TestCase
 		}
 
 		$this->assertNull($session->get('kirby.challenge.email'));
-		$this->assertNull($session->get('kirby.challenge.code'));
+		$this->assertNull($session->get('kirby.challenge.data'));
 		$this->assertNull($session->get('kirby.challenge.mode'));
 		$this->assertNull($session->get('kirby.challenge.type'));
 		$this->assertNull($session->get('kirby.challenge.timeout'));
@@ -605,7 +614,7 @@ class AuthChallengeTest extends TestCase
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.data', ['secret' => password_hash('123456', PASSWORD_DEFAULT)]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
@@ -615,17 +624,37 @@ class AuthChallengeTest extends TestCase
 
 	public function testVerifyChallengeInvalidChallenge(): void
 	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Invalid authentication challenge: test');
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('No auth challenge class for: test');
 
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.data', ['secret' => password_hash('123456', PASSWORD_DEFAULT)]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'test');
 		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
 
 		$this->auth->verifyChallenge('123456');
+	}
+
+	public function testVerifyChallengeReturnsNullIfFailDoesNotThrow(): void
+	{
+		// custom auth that swallows fail() to reach the null return
+		$auth = new class ($this->app) extends Auth {
+			protected function fail(Throwable $exception, Throwable|null $fallback = null): void
+			{
+				// intentionally ignore
+			}
+		};
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => password_hash('123456', PASSWORD_DEFAULT)]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
+
+		$this->assertNull($auth->verifyChallenge('654321'));
 	}
 }

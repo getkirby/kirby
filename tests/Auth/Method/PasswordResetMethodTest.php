@@ -17,7 +17,13 @@ class PasswordResetMethodTest extends TestCase
 	protected function auth(bool $has2fa = false): Auth
 	{
 		$methods = $this->createStub(Methods::class);
-		$methods->method('hasAnyWith2FA')->willReturn($has2fa);
+		$config = ['password' => []];
+
+		if ($has2fa === true) {
+			$config['password']['2fa'] = true;
+		}
+
+		$methods->method('config')->willReturn($config);
 
 		$auth = $this->createStub(Auth::class);
 		$auth->method('methods')->willReturn($methods);
@@ -48,20 +54,20 @@ class PasswordResetMethodTest extends TestCase
 		$this->assertSame(['lisa@simpsons.com', false, 'password-reset'], $args);
 	}
 
-	public function testIsAvailable(): void
+	public function testIsEnabled(): void
 	{
 		$auth = $this->auth();
-		$this->assertTrue(PasswordResetMethod::isAvailable($auth));
+		$this->assertTrue(PasswordResetMethod::isEnabled($auth));
 	}
 
-	public function testIsAvailableWith2FA(): void
+	public function testIsEnabledWith2FA(): void
 	{
 		$auth = $this->auth(has2fa: true);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "password-reset" login method cannot be enabled when 2FA is required');
 
-		PasswordResetMethod::isAvailable($auth);
+		PasswordResetMethod::isEnabled($auth);
 	}
 
 	public function testIsUsingChallenges(): void
