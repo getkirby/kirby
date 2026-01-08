@@ -4,6 +4,7 @@ namespace Kirby\Auth\Method;
 
 use Kirby\Auth\Auth;
 use Kirby\Auth\Status;
+use Kirby\Cms\User;
 
 /**
  * Password-reset flow that triggers a challenge
@@ -29,11 +30,21 @@ class PasswordResetMethod extends CodeMethod
 		);
 	}
 
+	public static function icon(): string
+	{
+		return 'question';
+	}
+
 	public static function isEnabled(Auth $auth, array $options = []): bool
 	{
 		// don't allow to circumvent 2FA by 1FA code method
 		static::isWithoutAny2FA($auth);
 
 		return true;
+	}
+
+	public static function settings(User $user): array
+	{
+		return [];
 	}
 }
