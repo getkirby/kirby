@@ -298,6 +298,10 @@
 	"error.validation.uuid": "Unesite važeći UUID",
 	"error.validation.url": "Unesi važeći URL",
 
+	"error.version.discard.permission": "You are not allowed to discard this version",
+	"error.version.publish.permission": "You are not allowed to publish this version",
+	"error.version.save.permission": "You are not allowed to change this version",
+
 	"expand": "Proširi",
 	"expand.all": "Expand all",
 

@@ -298,6 +298,10 @@
 	"error.validation.uuid": "Lütfen geçerli bir UUID girin",
 	"error.validation.url": "Lütfen geçerli bir adres girin",
 
+	"error.version.discard.permission": "Bu sürümü silmenize izin verilmiyor.",
+	"error.version.publish.permission": "Bu sürümü yayınlamanıza izin verilmiyor.",
+	"error.version.save.permission": "Bu sürümü değiştirmenize izin verilmiyor.",
+
 	"expand": "Genişlet",
 	"expand.all": "Tümünü genişlet",
 
