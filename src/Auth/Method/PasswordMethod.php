@@ -4,8 +4,8 @@ namespace Kirby\Auth\Method;
 
 use InvalidArgumentException;
 use Kirby\Auth\Method;
+use Kirby\Auth\Status;
 use Kirby\Cms\Auth;
-use Kirby\Cms\Auth\Status;
 use Kirby\Cms\User;
 use SensitiveParameter;
 
