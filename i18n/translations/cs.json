@@ -298,6 +298,10 @@
 	"error.validation.uuid": "Zadejte platné UUID",
 	"error.validation.url": "Zadejte prosím platnou adresu URL",
 
+	"error.version.discard.permission": "You are not allowed to discard this version",
+	"error.version.publish.permission": "You are not allowed to publish this version",
+	"error.version.save.permission": "You are not allowed to change this version",
+
 	"expand": "Rozbalit",
 	"expand.all": "Rozbalit vše",
 
