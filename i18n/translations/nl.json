@@ -298,6 +298,10 @@
 	"error.validation.uuid": "Vul een geldige UUID in",
 	"error.validation.url": "Vul een geldige URL in",
 
+	"error.version.discard.permission": "You are not allowed to discard this version",
+	"error.version.publish.permission": "You are not allowed to publish this version",
+	"error.version.save.permission": "You are not allowed to change this version",
+
 	"expand": "Open",
 	"expand.all": "Expand all",
 

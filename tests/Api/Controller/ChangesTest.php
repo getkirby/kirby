@@ -4,6 +4,7 @@ namespace Kirby\Api\Controller;
 
 use Kirby\Cms\Page;
 use Kirby\Data\Data;
+use Kirby\Exception\PermissionException;
 use Kirby\TestCase;
 
 class ChangesTest extends TestCase
@@ -43,6 +44,8 @@ class ChangesTest extends TestCase
 
 	public function testDiscard(): void
 	{
+		$this->app->impersonate('kirby');
+
 		Data::write($file = $this->page->root() . '/_changes/article.txt', []);
 
 		$response = Changes::discard($this->page);
@@ -50,6 +53,14 @@ class ChangesTest extends TestCase
 		$this->assertSame(['status' => 'ok'], $response);
 
 		$this->assertFileDoesNotExist($file);
+	}
+
+	public function testDiscardWithoutPermissions(): void
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to discard this version');
+
+		Changes::discard($this->page);
 	}
 
 	public function testPublish(): void
@@ -88,8 +99,18 @@ class ChangesTest extends TestCase
 		], $published);
 	}
 
+	public function testPublishWithoutPermissions(): void
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to publish this version');
+
+		Changes::publish($this->page, []);
+	}
+
 	public function testSave(): void
 	{
+		$this->app->impersonate('kirby');
+
 		Data::write($this->page->root() . '/article.txt', [
 			// title and uuid should be passed through
 			'title' => 'Test',
@@ -116,12 +137,15 @@ class ChangesTest extends TestCase
 		$this->assertSame([
 			'title' => 'Test',
 			'text'  => 'Test',
-			'uuid'  => 'test'
+			'uuid'  => 'test',
+			'lock'  => 'kirby'
 		], $changes);
 	}
 
 	public function testSaveWithNoDiff(): void
 	{
+		$this->app->impersonate('kirby');
+
 		Data::write($this->page->root() . '/article.txt', [
 			// title and uuid should be passed through
 			'title' => 'Test',
@@ -150,6 +174,8 @@ class ChangesTest extends TestCase
 	 */
 	public function testSaveWithUndefinedField(): void
 	{
+		$this->app->impersonate('kirby');
+
 		Data::write($this->page->root() . '/article.txt', [
 			// title and uuid should be passed through
 			'title' => 'Test',
@@ -168,7 +194,16 @@ class ChangesTest extends TestCase
 			'title'     => 'Test',
 			'text'      => 'Test',
 			'uuid'      => 'test',
-			'undefined' => 'This should be passed through'
+			'undefined' => 'This should be passed through',
+			'lock'      => 'kirby'
 		], $changes);
+	}
+
+	public function testSaveWithoutPermissions(): void
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change this version');
+
+		Changes::save($this->page, []);
 	}
 }
