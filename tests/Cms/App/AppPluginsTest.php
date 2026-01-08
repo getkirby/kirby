@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Auth\Method;
-use Kirby\Auth\Methods;
 use Kirby\Auth\Status;
 use Kirby\Cache\FileCache;
 use Kirby\Cms\Auth\Challenge;
