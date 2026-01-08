@@ -689,7 +689,7 @@ class Collection extends Iterator implements Stringable
 		$collection = clone $this;
 
 		foreach ($keys as $key) {
-			unset($collection->data[$key]);
+			unset($collection->{$key});
 		}
 
 		return $collection;
