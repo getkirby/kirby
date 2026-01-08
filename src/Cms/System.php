@@ -283,7 +283,25 @@ class System
 	 */
 	public function license(): License
 	{
-		return $this->license ??= License::read();
+		if ($this->license !== null) {
+			return $this->license; // @codeCoverageIgnore
+		}
+
+		$this->license = License::read();
+
+		// if license has expired, try to get it reissued
+		if ($this->license->isExpired() === true) {
+			try {
+				$this->license->register(reissue: true);
+
+				// @codeCoverageIgnoreStart
+			} catch (Throwable) {
+				$this->license->delete();
+			}
+			// @codeCoverageIgnoreEnd
+		}
+
+		return $this->license;
 	}
 
 	/**
@@ -390,8 +408,10 @@ class System
 	 * @throws \Kirby\Exception\Exception
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function register(string|null $license = null, string|null $email = null): bool
-	{
+	public function register(
+		string|null $license = null,
+		string|null $email = null
+	): bool {
 		$license = new License(
 			code: $license,
 			domain: $this->indexUrl(),

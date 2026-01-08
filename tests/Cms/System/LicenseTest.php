@@ -15,6 +15,12 @@ class LicenseTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/LicenseTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.License';
 
+	public function setUp(): void
+	{
+		parent::setUp();
+		MockTime::reset();
+	}
+
 	public function code(LicenseType $type = LicenseType::Basic): string
 	{
 		return $type->prefix() . '1234' . Str::random(28);
@@ -56,6 +62,12 @@ class LicenseTest extends TestCase
 
 		$this->assertSame($code, $license->code());
 		$this->assertSame('K-ENT-1234XXXXXXXXXXXXXXXXXXXXXX', $license->code(true));
+
+		$license = new License(
+			code: $code = LicenseType::Free->prefix()
+		);
+
+		$this->assertNUll($license->code());
 	}
 
 	public function testContent(): void
@@ -71,6 +83,7 @@ class LicenseTest extends TestCase
 			'domain'     => null,
 			'email'      => null,
 			'order'      => null,
+			'expires'    => null,
 			'signature'  => null,
 		], $license->content());
 	}
@@ -153,6 +166,72 @@ class LicenseTest extends TestCase
 		$this->assertTrue($license->isComplete());
 	}
 
+	public function testIsExpired(): void
+	{
+		$license = new License();
+		$this->assertFalse($license->isExpired());
+
+		$license = new License(
+			expires: '9999-12-01',
+		);
+		$this->assertFalse($license->isExpired());
+
+		$license = new License(
+			expires: '2000-12-01',
+		);
+		$this->assertTrue($license->isExpired());
+	}
+
+	public function testIsFree(): void
+	{
+		$license = new License(
+			code: $this->code(LicenseType::Basic),
+		);
+
+		$this->assertFalse($license->isFree());
+
+		$license = new License(
+			code: LicenseType::Free->prefix()
+		);
+
+		$this->assertTrue($license->isFree());
+	}
+
+	public function testIsFreeAndLocal(): void
+	{
+		// local
+		$this->app->clone([
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$license = new License(
+			code: LicenseType::Free->prefix()
+		);
+
+		$this->assertTrue($license->isFreeAndLocal());
+
+		$license = new License(
+			code: $this->code(LicenseType::Basic)
+		);
+
+		$this->assertFalse($license->isFreeAndLocal());
+
+		// not local
+		$this->app->clone([
+			'server' => [
+				'REMOTE_ADDR' => '1.2.3.4',
+			]
+		]);
+
+		$license = new License(
+			code: LicenseType::Free->prefix()
+		);
+
+		$this->assertFalse($license->isFreeAndLocal());
+	}
+
 	public function testIsInactive(): void
 	{
 		MockTime::$time = strtotime('now');
@@ -170,8 +249,6 @@ class LicenseTest extends TestCase
 		);
 
 		$this->assertTrue($license->isInactive());
-
-		MockTime::reset();
 	}
 
 	public function testIsLegacy(): void
@@ -284,6 +361,7 @@ class LicenseTest extends TestCase
 			'domain'     => null,
 			'email'      => null,
 			'order'      => null,
+			'expires'    => null,
 			'signature'  => null,
 
 		], License::polyfill([
@@ -313,6 +391,33 @@ class LicenseTest extends TestCase
 
 		$license = License::read();
 		$this->assertNull($license->code());
+	}
+
+	public function testRegisterFreeAndLocal(): void
+	{
+		$this->app->clone([
+			'options' => [
+				'url' => 'https://sandbox.test',
+			],
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$license = new License(
+			code:   LicenseType::Free->prefix(),
+			domain: 'sandbox.test'
+		);
+
+		$license->register();
+
+		$system  = new System($this->app);
+		$license = $system->license();
+
+		$this->assertSame('sandbox.test', $license->domain());
+		$this->assertSame(LicenseStatus::Acknowledged, $license->status());
+		$this->assertSame(LicenseType::Free, $license->type());
+		$this->assertTrue($license->isComplete());
 	}
 
 	public function testRegisterWithInvalidDomain(): void
@@ -394,10 +499,82 @@ class LicenseTest extends TestCase
 		$this->assertSame('secret', $license->signature());
 	}
 
+	public function testSignatureData(): void
+	{
+		$reflector = new ReflectionClass(License::class);
+		$salt      = $reflector->getConstant('SALT');
+
+		$license = new License(
+			activation: '2024-01-01 12:00:00',
+			code: $code = $this->code(LicenseType::Enterprise),
+			date: '2024-02-02 12:00:00',
+			domain: 'getkirby.com',
+			email: $email = 'mail@getkirby.com',
+			order: '123456',
+			expires: '2025-01-01 00:00:00'
+		);
+
+		$this->assertSame([
+			'activation' => '2024-01-01 12:00:00',
+			'code'       => $code,
+			'date'       => '2024-02-02 12:00:00',
+			'domain'     => 'getkirby.com',
+			'email'      => hash('sha256', $email . $salt),
+			'order'      => '123456',
+			'expires'    => '2025-01-01 00:00:00',
+		], $license->signatureData());
+
+
+		// without expiry
+		$license = new License(
+			activation: '2024-01-01 12:00:00',
+			code: $code = $this->code(LicenseType::Enterprise),
+			date: '2024-02-02 12:00:00',
+			domain: 'getkirby.com',
+			email: $email = 'mail@getkirby.com',
+			order: '123456'
+		);
+
+		$this->assertSame([
+			'activation' => '2024-01-01 12:00:00',
+			'code'       => $code,
+			'date'       => '2024-02-02 12:00:00',
+			'domain'     => 'getkirby.com',
+			'email'      => hash('sha256', $email . $salt),
+			'order'      => '123456',
+		], $license->signatureData());
+
+		// legacy
+		$license = new License(
+			code: $code = $this->code(LicenseType::Legacy),
+			date: '2021-01-01 00:00:00',
+			domain: 'legacy.getkirby.com',
+			email: $email = 'legacy@getkirby.com',
+			order: '87654321'
+		);
+
+		$this->assertSame([
+			'license' => $code,
+			'order'   => '87654321',
+			'email'   => hash('sha256', $email . $salt),
+			'domain'  => 'legacy.getkirby.com',
+			'date'    => '2021-01-01 00:00:00',
+		], $license->signatureData());
+	}
+
 	public function testStatus(): void
 	{
 		$license = new License();
 		$this->assertSame(LicenseStatus::Missing, $license->status());
+	}
+
+	public function testTypeFree(): void
+	{
+		$license = new License(
+			code: 'FREE'
+		);
+
+		$this->assertSame(LicenseType::Free, $license->type());
 	}
 
 	public function testTypeKirby3(): void
