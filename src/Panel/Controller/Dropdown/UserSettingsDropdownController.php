@@ -73,30 +73,19 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 
 		$options[] = '-';
 
-		$options[] = [
-			'dialog'   => $url . '/changePassword',
-			'icon'     => 'key',
-			'text'     => $this->i18n('user.changePassword'),
-			'disabled' => $this->isDisabledOption('changePassword')
-		];
-
-		if ($this->totpMode() === 'enable') {
+		// show only for current user themselves or admins
+		if (
+			$this->model->isLoggedIn() === true ||
+			$this->kirby->user()?->isAdmin() === true
+		) {
 			$options[] = [
-				'dialog'   => $url . '/totp/enable',
-				'icon'     => 'qr-code',
-				'text'     => $this->i18n('login.totp.enable.option')
+				'drawer'   => $url . '/security',
+				'icon'     => 'lock',
+				'text'     => $this->i18n('security')
 			];
-		}
 
-		if ($this->totpMode() === 'disable') {
-			$options[] = [
-				'dialog'   => $url . '/totp/disable',
-				'icon'     => 'qr-code',
-				'text'     => $this->i18n('login.totp.disable.option')
-			];
+			$options[] = '-';
 		}
-
-		$options[] = '-';
 
 		$options[] = [
 			'dialog'   => $url . '/delete',
@@ -106,29 +95,5 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 		];
 
 		return $options;
-	}
-
-	public function totpMode(): string|null
-	{
-		if ($this->kirby->system()->is2FAWithTOTP() === false) {
-			return null;
-		}
-
-		if (
-			$this->model->isLoggedIn() === false &&
-			$this->kirby->user()?->isAdmin() !== true
-		) {
-			return null;
-		}
-
-		if ($this->model->secret('totp') !== null) {
-			return 'disable';
-		}
-
-		if ($this->model->isLoggedIn() === true) {
-			return 'enable';
-		}
-
-		return null;
 	}
 }

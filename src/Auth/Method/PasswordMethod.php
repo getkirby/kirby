@@ -80,4 +80,16 @@ class PasswordMethod extends Method
 
 		return false;
 	}
+
+	public static function settings(User $user): array
+	{
+		return [
+			[
+				'icon'     => 'key',
+				'text'     => static::i18n('password'),
+				'dialog'   => $user->panel()->url(true) . '/changePassword',
+				'disabled' => !$user->permissions()->can('changePassword'),
+			]
+		];
+	}
 }
