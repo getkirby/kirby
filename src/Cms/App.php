@@ -29,6 +29,7 @@ use Kirby\Query\Query;
 use Kirby\Session\AutoSession;
 use Kirby\Session\Session;
 use Kirby\Template\Snippet;
+use Kirby\Template\Stack;
 use Kirby\Template\Template;
 use Kirby\Text\KirbyTag;
 use Kirby\Text\KirbyTags;
@@ -109,6 +110,7 @@ class App
 
 		// start with a fresh snippet and version cache
 		Snippet::$cache = [];
+		Stack::reset();
 		VersionCache::reset();
 
 		// start with a fresh Query runner option
