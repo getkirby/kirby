@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Kirby\Filesystem\F;
+use Kirby\Template\Stack;
 use Throwable;
 
 /**
@@ -29,6 +30,7 @@ class Tpl
 			return '';
 		}
 
+		Stack::open();
 		ob_start();
 
 		try {
@@ -39,6 +41,11 @@ class Tpl
 
 		$content = ob_get_contents();
 		ob_end_clean();
+		Stack::close();
+
+		if (Stack::isOpen() === false) {
+			$content = Stack::replace($content);
+		}
 
 		if (isset($exception) === true) {
 			throw $exception;
