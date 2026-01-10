@@ -9,6 +9,7 @@ import Legacy from "./panel/legacy.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
 
+import preserveDataAttrs from "./mixins/preserveDataAttrs.js";
 import preserveListeners from "./mixins/preserveListeners.js";
 
 /**
@@ -34,6 +35,7 @@ app.use(Components);
 /**
  * Add global mixins
  */
+app.mixin(preserveDataAttrs);
 app.mixin(preserveListeners);
 
 /**
