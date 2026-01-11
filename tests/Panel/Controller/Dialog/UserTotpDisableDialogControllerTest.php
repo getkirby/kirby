@@ -71,7 +71,7 @@ class UserTotpDisableDialogControllerTest extends TestCase
 		$totp     = new Totp();
 		$secret   = $totp->secret();
 		$password = 'foobar123';
-		$user->changeTotp($secret);
+		$user->changeSecret('totp', $secret);
 		$user->changePassword($password);
 
 		$_GET['password'] = $password;

@@ -15,8 +15,10 @@ use Kirby\Toolkit\Str;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @deprecated 6.0.0 Use \Kirby\Auth\Challenge\EmailChallenge instead
  */
-class EmailChallenge extends Challenge
+abstract class EmailChallenge extends Challenge
 {
 	/**
 	 * Checks whether the challenge is available
