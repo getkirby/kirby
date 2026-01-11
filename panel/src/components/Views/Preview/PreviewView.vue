@@ -328,10 +328,8 @@ export default {
 		},
 		onScroll(source, target) {
 			if (this.isScrollSyncing) {
-				this.$refs[target].$refs.browser.contentWindow.scrollTo(
-					0,
-					this.$refs[source].$refs.browser.contentWindow.scrollY
-				);
+				const scrollY = this.$refs[source]?.window?.scrollY ?? 0;
+				this.$refs[target]?.scrollTo(scrollY);
 			}
 		},
 		onScrollSyncing() {

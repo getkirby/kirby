@@ -259,6 +259,12 @@ export default {
 			this.isLoading = true;
 		},
 		/**
+		 * Scrolls the active iframe to a given position
+		 */
+		scrollTo(y) {
+			this.window?.scrollTo(0, y);
+		},
+		/**
 		 * Returns the current iframe URL and scroll position,
 		 * so that these can be restored, if needed
 		 */
