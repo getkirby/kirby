@@ -2,7 +2,7 @@
 	<div class="k-preview-browser">
 		<header v-if="label" class="k-preview-browser-header">
 			<k-headline class="k-preview-headline">
-				<k-icon type="git-branch" />
+				<k-icon :type="isLoading ? 'loader' : 'git-branch'" />
 				{{ label }}
 			</k-headline>
 
@@ -78,6 +78,7 @@ export default {
 	emits: ["discard", "navigate", "open", "pin", "scroll", "submit"],
 	data() {
 		return {
+			isLoading: false,
 			active: 0,
 			pending: null,
 			pendingScroll: null,
@@ -123,6 +124,7 @@ export default {
 		loadSrc(src, { force = false } = {}) {
 			this.pending = this.active === 0 ? 1 : 0;
 			const iframe = this.getIframe(this.pending);
+			this.isLoading = true;
 
 			this.srcs[this.pending] = force ? this.addReloadParam(src) : src;
 
@@ -133,6 +135,7 @@ export default {
 			) {
 				this.active = this.pending;
 				this.pending = null;
+				this.isLoading = false;
 			}
 		},
 		/**
@@ -184,6 +187,7 @@ export default {
 				// Only swap when the preloaded iframe finishes loading
 				this.pending = null;
 				this.active = index;
+				this.isLoading = false;
 
 				if (this.pendingScroll !== null) {
 					const scrollY = this.pendingScroll;
@@ -252,6 +256,7 @@ export default {
 			// load restored URL in iframe
 			this.srcs[target] = src;
 			this.pending = target;
+			this.isLoading = true;
 		},
 		/**
 		 * Returns the current iframe URL and scroll position,
