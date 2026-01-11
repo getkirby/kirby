@@ -98,8 +98,8 @@
 			"@test"
 		],
 		"fix": "php-cs-fixer fix",
-		"test": "phpunit",
-		"test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-html=tests/coverage",
+		"test": "paratest",
+		"test:coverage": "XDEBUG_MODE=coverage paratest --coverage-html=tests/coverage",
 		"zip": "composer archive --format=zip --file=dist"
 	}
 }

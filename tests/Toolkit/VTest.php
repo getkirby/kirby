@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use Countable;
 use Exception;
 use Kirby\Cms\App;
@@ -31,10 +32,18 @@ class HasCount
 #[CoversClass(V::class)]
 class VTest extends TestCase
 {
+	protected string|Closure $localeBackup;
+
+	public function setUp(): void
+	{
+		$this->localeBackup = I18n::$locale;
+	}
+
 	public function tearDown(): void
 	{
+		I18n::$locale = $this->localeBackup;
+		I18n::$translations = [];
 		V::$validators = [];
-		App::destroy();
 	}
 
 	public function testCallCustomValidator(): void
@@ -249,20 +258,21 @@ class VTest extends TestCase
 
 	public function testErrors(): void
 	{
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
+
 		$result = V::errors('test@getkirby.com', [
 			'email',
 			'maxLength' => 17,
 			'minLength' => 17
 		]);
-
 		$this->assertSame([], $result);
 
-		$result = V::errors('a', [
-			'same' => 'b'
-		]);
-
+		$result = V::errors('a', ['same' => 'b']);
 		$this->assertSame([
-			'same' => 'Please enter "b"',
+			'same' => 'Error message for same: b',
 		], $result);
 	}
 
@@ -568,8 +578,13 @@ class VTest extends TestCase
 
 	public function testMessage(): void
 	{
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
+
 		$message = V::message('same', 'a', 'b');
-		$this->assertSame('Please enter "b"', $message);
+		$this->assertSame('Error message for same: b', $message);
 	}
 
 	public function testMessageInvalidValidator(): void
@@ -902,22 +917,28 @@ class VTest extends TestCase
 
 	public function testValueFails(): void
 	{
-		// load the translation strings
-		new App();
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Please enter "b"');
+		$this->expectExceptionMessage('Error message for same');
 
-		V::value('a', [
-			'same' => 'b'
-		]);
+		V::value('a', ['same' => 'b']);
 	}
 
 	public function testValueFailsNotThrowing(): void
 	{
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
+
 		$result = V::value('a', ['same' => 'b'], fail: false);
+
 		$this->assertSame([
-			'same' => 'Please enter "b"'
+			'same' => 'Error message for same: b'
 		], $result);
 	}
 }
