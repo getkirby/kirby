@@ -46,6 +46,41 @@ class TextFieldTest extends TestCase
 		$field->converter();
 	}
 
+	public function testDefault(): void
+	{
+		$field = $this->field('text', [
+			'default' => 'test',
+		]);
+
+		$this->assertSame('test', $field->default());
+
+		$field = $this->field('text', [
+			'default' => 'test',
+		]);
+
+		$this->assertSame('test', $field->default());
+	}
+
+	#[DataProvider('converterDataProvider')]
+	public function testDefaultWithConverter($converter, $input, $expected): void
+	{
+		$field = $this->field('text', [
+			'default'   => $input,
+			'converter' => $converter
+		]);
+
+		$this->assertSame($expected, $field->default());
+	}
+
+	public function testDefaultWithStringTemplate(): void
+	{
+		$field = $this->field('text', [
+			'default' => 'test {{ 1 + 2 }}',
+		]);
+
+		$this->assertSame('test 3', $field->default());
+	}
+
 	public function testMaxLength(): void
 	{
 		$field = $this->field('text', [
