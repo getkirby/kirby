@@ -241,6 +241,15 @@ class User extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the user has a stored password
+	 */
+	public function hasPassword(): bool
+	{
+		$password = $this->password();
+		return $password === '' || $password === null || $password === false ? false : true;
+	}
+
+	/**
 	 * Returns the user id
 	 */
 	public function id(): string
@@ -703,7 +712,7 @@ class User extends ModelWithContent
 		#[SensitiveParameter]
 		string|null $password = null
 	): bool {
-		if (empty($this->password()) === true) {
+		if ($this->hasPassword() === false) {
 			throw new NotFoundException(
 				key: 'user.password.undefined'
 			);
