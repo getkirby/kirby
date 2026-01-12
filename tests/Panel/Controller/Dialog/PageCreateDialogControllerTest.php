@@ -528,7 +528,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$page = $this->app->page('test/test-child');
 		$this->assertNull($page);
 
-		$parent = $this->app->page('test');
+		$parent     = $this->app->page('test');
 		$controller = new PageCreateDialogController(parent: $parent);
 		$response   = $controller->submit();
 
@@ -576,7 +576,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->assertNull($this->app->page('test')->homer()->value());
 	}
 
-	public function testCreateOnSubmitWithoutTitle(): void
+	public function testSubmitWithoutTitle(): void
 	{
 		$this->app = $this->app->clone([
 			'request' => [
@@ -595,7 +595,7 @@ class PageCreateDialogControllerTest extends TestCase
 		$controller->submit();
 	}
 
-	public function testCreateOnSubmitWithCustomStatus(): void
+	public function testSubmitWithCustomStatus(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -620,6 +620,44 @@ class PageCreateDialogControllerTest extends TestCase
 
 		$this->assertSame('page.create', $response['event']);
 		$this->assertSame('unlisted', $this->app->page('test')->status());
+	}
+
+	public function testSubmitWithTitleSlugFieldsTemplates(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'foo' => [
+							'type'    => 'text',
+							'default' => '{{ page.title }}'
+						],
+						'bar' => [
+							'type'    => 'text',
+							'default' => '{{ page.slug }}'
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'title' => 'Foo title',
+					'slug'  => 'bar-slug'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = PageCreateDialogController::factory();
+		$controller->submit();
+
+		$page = $this->app->page('bar-slug');
+
+		$this->assertSame('Foo title', $page->title()->value());
+		$this->assertSame('Foo title', $page->foo()->value());
+		$this->assertSame('bar-slug', $page->slug());
+		$this->assertSame('bar-slug', $page->bar()->value());
 	}
 
 	public function testValidateInvalidTitle(): void
