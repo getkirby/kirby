@@ -69,6 +69,12 @@ class ViewButtons
 		$buttons = [];
 
 		foreach ($this->buttons ?? [] as $name => $button) {
+			// separator, keep as is in array
+			if ($button === '-') {
+				$buttons[] = '-';
+				continue;
+			}
+
 			$buttons[] = ViewButton::factory(
 				button: $button,
 				name: $name,
