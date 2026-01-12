@@ -24,9 +24,7 @@
 				</k-dropdown-content>
 			</k-button-group>
 
-			<k-button-group>
-				<k-view-buttons :buttons="buttons" />
-			</k-button-group>
+			<k-view-buttons :buttons="buttons" />
 		</header>
 		<main class="k-preview-view-grid">
 			<template v-if="versionId === 'compare'">
