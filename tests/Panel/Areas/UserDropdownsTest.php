@@ -43,7 +43,7 @@ class UserDropdownsTest extends AreaTestCase
 		$password = $options[6];
 
 		$this->assertSame('/users/editor/changePassword', $password['dialog']);
-		$this->assertSame('Change password', $password['text']);
+		$this->assertSame('Set password', $password['text']);
 
 		$this->assertSame('-', $options[7]);
 
@@ -51,6 +51,14 @@ class UserDropdownsTest extends AreaTestCase
 
 		$this->assertSame('/users/editor/delete', $delete['dialog']);
 		$this->assertSame('Delete this user', $delete['text']);
+	}
+
+	public function testUserDropdownWithPassword(): void
+	{
+		$options  = $this->dropdown('users/test')['options'];
+		$password = $options[6];
+
+		$this->assertSame('Change password', $password['text']);
 	}
 
 	public function testUserLanguageDropdown(): void
