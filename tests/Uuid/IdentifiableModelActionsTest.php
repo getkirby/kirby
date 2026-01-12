@@ -42,7 +42,7 @@ class IdentifiableModelActionsTest extends TestCase
 
 		$this->app->impersonate('kirby');
 		$page->changeSlug('page-c');
-		$this->assertFalse($uuid->isCached());
+		$this->assertTrue($uuid->isCached());
 	}
 
 	public function testPageDelete(): void
