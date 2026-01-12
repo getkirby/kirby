@@ -569,11 +569,11 @@ if (Helpers::hasOverride('stack') === false) { // @codeCoverageIgnore
 	 */
 	function stack(
 		string $name,
-		string $glue = '',
+		string $glue = PHP_EOL,
 		bool $return = false,
 		bool $clear = true
 	): string|null {
-		$content = match (Stack::isOpen()) {
+		$content = match (Stack::isRendering()) {
 			true  => Stack::placeholder($name, $glue, $clear),
 			false => Stack::render($name, $glue, $clear)
 		};

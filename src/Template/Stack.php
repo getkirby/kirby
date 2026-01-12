@@ -79,7 +79,7 @@ class Stack
 	/**
 	 * Returns whether stacks are currently rendered
 	 */
-	public static function isOpen(): bool
+	public static function isRendering(): bool
 	{
 		return static::$depths > 0;
 	}
@@ -97,7 +97,7 @@ class Stack
 	 */
 	public static function placeholder(
 		string $name,
-		string $glue = '',
+		string $glue = PHP_EOL,
 		bool $clear = true
 	): string {
 		$token = '<!--kirby-stack:' . Str::uuid() . '-->';
@@ -137,7 +137,7 @@ class Stack
 	 */
 	public static function render(
 		string $name,
-		string $glue = '',
+		string $glue = PHP_EOL,
 		bool $clear = true
 	): string {
 		$content = implode($glue, static::$stacks[$name] ?? []);

@@ -2,7 +2,6 @@
 
 namespace Kirby\Template;
 
-use Kirby\Toolkit\Tpl;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Stack::class)]
@@ -26,7 +25,7 @@ class StackTest extends TestCase
 		Stack::end();
 
 		$output = Stack::render('footer');
-		$this->assertSame('HelloHello', $output);
+		$this->assertSame('Hello' . PHP_EOL . 'Hello', $output);
 	}
 
 	public function testCaptureUnique(): void
@@ -45,7 +44,7 @@ class StackTest extends TestCase
 
 	public function testDeferredRendering(): void
 	{
-		$output = Tpl::load(static::FIXTURES . '/stack-order.php');
+		$output = Snippet::load(static::FIXTURES . '/stack-order.php');
 		$this->assertSame('Hello', trim($output));
 	}
 
@@ -55,21 +54,21 @@ class StackTest extends TestCase
 		$this->assertSame('', Stack::render('missing'));
 	}
 
-	public function testOpenClose(): void
+	public function testIsRendering(): void
 	{
-		$this->assertFalse(Stack::isOpen());
+		$this->assertFalse(Stack::isRendering());
 
 		Stack::open();
-		$this->assertTrue(Stack::isOpen());
+		$this->assertTrue(Stack::isRendering());
 
 		Stack::open();
-		$this->assertTrue(Stack::isOpen());
+		$this->assertTrue(Stack::isRendering());
 
 		Stack::close();
-		$this->assertTrue(Stack::isOpen());
+		$this->assertTrue(Stack::isRendering());
 
 		Stack::close();
-		$this->assertFalse(Stack::isOpen());
+		$this->assertFalse(Stack::isRendering());
 	}
 
 	public function testHelpers(): void
@@ -96,7 +95,7 @@ class StackTest extends TestCase
 		Stack::push('scripts', 'a');
 		Stack::push('scripts', 'b');
 
-		$this->assertSame('ab', Stack::render('scripts'));
+		$this->assertSame('a' . PHP_EOL . 'b', Stack::render('scripts'));
 		$this->assertSame('', Stack::render('scripts'));
 	}
 
@@ -106,7 +105,7 @@ class StackTest extends TestCase
 		Stack::push('styles', 'a', unique: true);
 		Stack::push('styles', 'b', unique: true);
 
-		$this->assertSame('ab', Stack::render('styles'));
+		$this->assertSame('a' . PHP_EOL . 'b', Stack::render('styles'));
 	}
 
 	public function testRenderWithoutClear(): void
