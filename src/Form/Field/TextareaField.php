@@ -130,7 +130,8 @@ class TextareaField extends InputField
 
 	public function default(): string|null
 	{
-		return $this->default ? trim($this->default) : null;
+		$default = parent::default();
+		return $default ? trim($default) : null;
 	}
 
 	public function dialogs(): array
