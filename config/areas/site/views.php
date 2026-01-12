@@ -6,6 +6,7 @@ use Kirby\Panel\Controller\View\PreviewViewController;
 use Kirby\Panel\Controller\View\RemotePreviewViewController;
 use Kirby\Panel\Controller\View\SiteFileViewController;
 use Kirby\Panel\Controller\View\SiteViewController;
+use Kirby\Panel\Controller\View\TranslationViewController;
 
 return [
 	'page' => [
@@ -23,6 +24,10 @@ return [
 	'page.preview.remote' => [
 		'pattern' => '(pages/.*?)/preview/(form)/remote',
 		'action'  => RemotePreviewViewController::class
+	],
+	'page.translate' => [
+		'pattern' => '(pages/.*?)/translate',
+		'action'  => TranslationViewController::class
 	],
 	'site' => [
 		'pattern' => 'site',

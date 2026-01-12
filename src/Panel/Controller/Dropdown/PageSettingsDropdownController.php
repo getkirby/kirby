@@ -102,6 +102,16 @@ class PageSettingsDropdownController extends ModelSettingsDropdownController
 			'disabled' => $this->isDisabledOption('changeTemplate')
 		];
 
+		if ($this->model->kirby()->multilang() === true) {
+			$options[] = '-';
+			$options['translate'] = [
+				'link'     => $url . '/translate',
+				'icon'     => 'translate',
+				'text'     => $this->i18n('translate'),
+				// 'disabled' => $this->isDisabledOption('translate')
+			];
+		}
+
 		$options[] = '-';
 
 		$options['move'] = [
