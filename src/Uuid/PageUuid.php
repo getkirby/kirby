@@ -26,6 +26,25 @@ class PageUuid extends ModelUuid
 	public Identifiable|null $model = null;
 
 	/**
+	 * Removes the current UUID from cache,
+	 * recursively including all children if needed
+	 */
+	public function clear(bool $recursive = false): bool
+	{
+		/**
+		 * If $recursive, also clear UUIDs from cache for all children
+		 * @var \Kirby\Cms\Page $model
+		 */
+		if ($recursive === true && $model = $this->model()) {
+			foreach ($model->children() as $child) {
+				$child->uuid()->clear(true);
+			}
+		}
+
+		return parent::clear();
+	}
+
+	/**
 	 * Looks up UUID in cache and resolves
 	 * to page object
 	 */
@@ -53,6 +72,27 @@ class PageUuid extends ModelUuid
 			yield $page;
 			yield from static::index($page);
 		}
+	}
+
+	/**
+	 * Feeds the UUID for the page (and optionally
+	 * its children) into the cache
+	 */
+	public function populate(
+		bool $force = false,
+		bool $recursive = false
+	): bool {
+		/**
+		 * If $recursive, also populate UUIDs for all children
+		 * @var \Kirby\Cms\Page $model
+		 */
+		if ($recursive === true && $model = $this->model()) {
+			foreach ($model->children() as $child) {
+				$child->uuid()->populate($force, true);
+			}
+		}
+
+		return parent::populate($force);
 	}
 
 	/**

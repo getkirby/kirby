@@ -119,7 +119,7 @@ trait PageActions
 			]);
 
 			// clear UUID cache recursively (for children and files as well)
-			$oldPage->uuid()?->clear(true);
+			$oldPage->uuid()?->clear(recursive: true);
 
 			if ($oldPage->exists() === true) {
 				// actually move stuff on disk
@@ -141,6 +141,8 @@ trait PageActions
 
 				Dir::remove($oldPage->mediaRoot());
 			}
+
+			$newPage->uuid()?->populate(recursive: true);
 
 			return $newPage;
 		});
@@ -422,6 +424,8 @@ trait PageActions
 			parent: $parentModel
 		);
 
+		$copy->uuid()?->populate(recursive: true);
+
 		return $copy;
 	}
 
@@ -486,6 +490,8 @@ trait PageActions
 		if (isset($props['num']) === true) {
 			$page = $page->changeStatus('listed', $props['num']);
 		}
+
+		$page->uuid()?->populate();
 
 		return $page;
 	}
@@ -583,7 +589,7 @@ trait PageActions
 			$page->changeStorage(ImmutableMemoryStorage::class);
 
 			// clear UUID cache
-			$page->uuid()?->clear();
+			$page->uuid()?->clear(recursive: true);
 
 			// Explanation: The two while loops below are only
 			// necessary because our property caches result in
@@ -696,6 +702,8 @@ trait PageActions
 					key: 'page.move.notFound'
 				);
 			}
+
+			$newPage->uuid()?->populate(recursive: true);
 
 			return $newPage;
 		});
