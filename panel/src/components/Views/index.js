@@ -1,6 +1,6 @@
 import ErrorView from "./ErrorView.vue";
 import SearchView from "./SearchView.vue";
-import TranslateView from "./TranslateView.vue";
+import TranslationView from "./TranslationView.vue";
 
 import Files from "./Files/index.js";
 import Installation from "./Installation/index.js";
@@ -15,7 +15,7 @@ export default {
 	install(app) {
 		app.component("k-error-view", ErrorView);
 		app.component("k-search-view", SearchView);
-		app.component("k-translate-view", TranslateView);
+		app.component("k-translation-view", TranslationView);
 
 		app.use(Files);
 		app.use(Installation);

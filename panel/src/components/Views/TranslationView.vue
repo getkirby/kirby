@@ -1,7 +1,7 @@
 <template>
-	<k-panel class="k-panel-inside k-translate-view">
-		<main class="k-translate-view-grid">
-			<header class="k-translate-view-header">
+	<k-panel class="k-panel-inside k-translation-view">
+		<main class="k-translation-view-grid">
+			<header class="k-translation-view-header">
 				<k-button-group>
 					<k-button
 						:link="link"
@@ -27,7 +27,7 @@
 				</k-button-group>
 
 				<k-stack
-					class="k-translate-stats"
+					class="k-translation-stats"
 					direction="row"
 					align="center"
 					justify="center"
@@ -60,8 +60,8 @@
 					/>
 				</k-button-group>
 			</header>
-			<div class="k-translate-view-fields">
-				<table class="k-translate-table">
+			<div class="k-translation-view-fields">
+				<table class="k-translation-table">
 					<thead>
 						<tr>
 							<th></th>
@@ -107,7 +107,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="k-translate-view-form">
+			<div class="k-translation-view-form">
 				<template v-if="currentField">
 					<details class="a" open>
 						<summary>
@@ -160,7 +160,7 @@
 
 <script>
 import ModelView from "@/components/Views/ModelView.vue";
-import FieldPreview from "./Translate/FieldPreview.vue";
+import FieldPreview from "./Translation/FieldPreview.vue";
 
 export default {
 	components: {
@@ -337,7 +337,7 @@ export default {
 </script>
 
 <style>
-.k-translate-view {
+.k-translation-view {
 	--color-source-language: var(--color-gray-600);
 	--color-current-language: var(--color-blue-500);
 	--color-gray-925: hsl(var(--color-gray-hs), 10%);
@@ -350,7 +350,7 @@ export default {
 	grid-template-rows: auto 1fr;
 }
 
-.k-translate-view-header {
+.k-translation-view-header {
 	container-type: inline-size;
 	display: grid;
 	grid-template-columns: 1fr auto 1fr;
@@ -358,17 +358,17 @@ export default {
 	align-items: center;
 	padding: var(--spacing-3);
 }
-.k-translate-view-header > * {
+.k-translation-view-header > * {
 	justify-self: center;
 }
-.k-translate-view-header > :first-child {
+.k-translation-view-header > :first-child {
 	justify-self: start;
 }
-.k-translate-view-header > :last-child {
+.k-translation-view-header > :last-child {
 	justify-self: end;
 }
 
-.k-translate-view-grid {
+.k-translation-view-grid {
 	position: absolute;
 	inset: 0;
 	display: grid;
@@ -380,43 +380,43 @@ export default {
 	height: 100%;
 }
 
-.k-translate-view-header {
+.k-translation-view-header {
 	grid-area: header;
 	border-bottom: 1px solid var(--color-gray-950);
 }
 
-.k-translate-view-fields {
+.k-translation-view-fields {
 	grid-area: fields;
 	border-right: 2px solid var(--color-gray-950);
 	background: var(--color-gray-900);
 	overflow: auto;
 }
 
-.k-translate-stats .k-progress {
+.k-translation-stats .k-progress {
 	display: flex;
 	margin-top: 2px;
 	flex-shrink: 0;
 	width: 6rem;
 }
-.k-translate-stats .percentage {
+.k-translation-stats .percentage {
 	width: 3rem;
 	font-size: var(--text-xs);
 	flex-shrink: 0;
 	color: var(--color-text-dimmed);
 }
-.k-translate-stats .k-button[aria-current] {
+.k-translation-stats .k-button[aria-current] {
 	color: var(--color-current-language);
 }
 
-.k-translate-table {
+.k-translation-table {
 	table-layout: fixed;
 	width: 100%;
 	border: 0;
 }
-.k-translate-table tr {
+.k-translation-table tr {
 	cursor: pointer;
 }
-.k-translate-table th {
+.k-translation-table th {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -426,18 +426,18 @@ export default {
 	vertical-align: top;
 	padding-block: var(--spacing-4);
 }
-.k-translate-table tbody th {
+.k-translation-table tbody th {
 	font-size: var(--text-2xs);
 }
-.k-translate-table th > .k-button {
+.k-translation-table th > .k-button {
 	--button-padding: 0;
 }
 
-.k-translate-table tr th:first-of-type {
+.k-translation-table tr th:first-of-type {
 	width: 9rem;
 }
 
-.k-translate-table .status {
+.k-translation-table .status {
 	width: 2rem;
 	text-align: center;
 	vertical-align: top;
@@ -445,50 +445,50 @@ export default {
 	--icon-size: 14px;
 	--icon-color: var(--color-green-400);
 }
-.k-translate-table .status .k-icon {
+.k-translation-table .status .k-icon {
 	margin-top: 2px;
 }
-.k-translate-table [data-has-diff="true"] .status {
+.k-translation-table [data-has-diff="true"] .status {
 	--icon-color: var(--color-orange-500);
 }
-.k-translate-table [data-is-translatable="false"] .status {
+.k-translation-table [data-is-translatable="false"] .status {
 	--icon-color: var(--color-gray-700);
 }
 
-.k-translate-table [data-is-translated="false"] .b > * {
+.k-translation-table [data-is-translated="false"] .b > * {
 	opacity: 0.375;
 }
 
-.k-translate-table td {
+.k-translation-table td {
 	font-size: var(--text-xs);
 	line-height: 1.5;
 	padding-inline: 0;
 	color: var(--color-text-dimmed);
 }
-.k-translate-table :where(th, td) {
+.k-translation-table :where(th, td) {
 	padding: 0 var(--spacing-3);
 	border-bottom: 1px solid var(--color-gray-950);
 	overflow: hidden;
 }
-.k-translate-table tr[aria-current] :where(th, td) {
+.k-translation-table tr[aria-current] :where(th, td) {
 	background: var(--color-blue-900);
 	color: var(--color-white);
 }
-.k-translate-table tr[aria-current] :where(th) {
+.k-translation-table tr[aria-current] :where(th) {
 	color: var(--color-blue-500);
 }
 
-.k-translate-table .k-html-field-preview {
+.k-translation-table .k-html-field-preview {
 	padding-block: var(--spacing-3);
 }
-.k-translate-table .k-tags-field-preview .k-tag {
+.k-translation-table .k-tags-field-preview .k-tag {
 	--tag-color-back: var(--color-gray-800);
 }
 
-.k-translate-table thead {
+.k-translation-table thead {
 	position: relative;
 }
-.k-translate-table thead th {
+.k-translation-table thead th {
 	position: sticky;
 	top: 0;
 	line-height: 1;
@@ -498,24 +498,24 @@ export default {
 	vertical-align: middle;
 	overflow: hidden;
 }
-.k-translate-table thead th.a {
+.k-translation-table thead th.a {
 	color: var(--color-source-language);
 }
-.k-translate-table thead th.b {
+.k-translation-table thead th.b {
 	color: var(--color-current-language);
 	--dropdown-color-current: var(--color-current-language);
 }
 
-.k-translate-view-form {
+.k-translation-view-form {
 	grid-area: form;
 	overflow: scroll;
 }
 
-.k-translate-view-form .k-field-header {
+.k-translation-view-form .k-field-header {
 	display: none;
 }
 
-.k-translate-view-form summary {
+.k-translation-view-form summary {
 	height: var(--height-xl);
 	background: var(--color-gray-925);
 	padding: 0 var(--spacing-6);
@@ -524,26 +524,26 @@ export default {
 	font-family: var(--font-mono);
 	border-bottom: 1px solid var(--color-gray-950);
 }
-.k-translate-view-form summary .k-stack {
+.k-translation-view-form summary .k-stack {
 	height: 100%;
 }
 
-.k-translate-view-form details > div {
+.k-translation-view-form details > div {
 	padding: var(--spacing-6);
 }
-.k-translate-view-form details.a[open] {
+.k-translation-view-form details.a[open] {
 	border-bottom: 1px solid var(--color-gray-950);
 }
-.k-translate-view-form details.a {
+.k-translation-view-form details.a {
 	--input-color-border: var(--color-gray-850);
 	--table-color-border: var(--color-gray-850);
 	--color-border: var(--color-gray-850);
 }
 
-.k-translate-view-form > details.a summary h3 {
+.k-translation-view-form > details.a summary h3 {
 	color: var(--color-source-language);
 }
-.k-translate-view-form > details.b summary h3 {
+.k-translation-view-form > details.b summary h3 {
 	color: var(--color-current-language);
 }
 </style>

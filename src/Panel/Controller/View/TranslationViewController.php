@@ -55,7 +55,7 @@ class TranslationViewController extends ViewController
 	{
 		return new View(
 			api: $link = $this->model->panel()->url(true),
-			component: 'k-translate-view',
+			component: 'k-translation-view',
 			fields: $this->fields(),
 			id: $this->model->id(),
 			link: $link,
