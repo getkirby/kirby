@@ -27,7 +27,7 @@ class FileTest extends TestCase
 	// used for the mocks
 	public static array $block = [];
 
-	protected function setUp(): void
+	public function setUp(): void
 	{
 		Dir::copy(static::FIXTURES, static::TMP);
 
