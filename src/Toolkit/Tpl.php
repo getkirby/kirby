@@ -39,7 +39,6 @@ class Tpl
 
 		$content = ob_get_contents();
 		ob_end_clean();
-
 		if (isset($exception) === true) {
 			throw $exception;
 		}

@@ -2,7 +2,7 @@
 	<div class="k-preview-browser">
 		<header v-if="label" class="k-preview-browser-header">
 			<k-headline class="k-preview-headline">
-				<k-icon type="git-branch" />
+				<k-icon :type="isLoading ? 'loader' : 'git-branch'" />
 				{{ label }}
 			</k-headline>
 
@@ -46,7 +46,20 @@
 			</k-button-group>
 		</header>
 
-		<iframe ref="browser" :src="src" @load="onLoad" />
+		<div class="k-preview-browser-frame">
+			<iframe
+				ref="browserA"
+				:class="['k-preview-browser-iframe', active === 0 ? 'is-active' : null]"
+				:src="srcs[0]"
+				@load="onLoad(0)"
+			/>
+			<iframe
+				ref="browserB"
+				:class="['k-preview-browser-iframe', active === 1 ? 'is-active' : null]"
+				:src="srcs[1]"
+				@load="onLoad(1)"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -63,12 +76,68 @@ export default {
 		open: String
 	},
 	emits: ["discard", "navigate", "open", "pin", "scroll", "submit"],
+	data() {
+		return {
+			isLoading: false,
+			active: 0,
+			pending: null,
+			pendingScroll: null,
+			srcs: [this.src, null]
+		};
+	},
 	computed: {
 		window() {
-			return this.$refs.browser.contentWindow;
+			return this.activeIframe()?.contentWindow;
+		}
+	},
+	watch: {
+		src(value) {
+			this.loadSrc(value);
 		}
 	},
 	methods: {
+		/**
+		 * Returns the currently visible iframe element
+		 */
+		activeIframe() {
+			return this.getIframe(this.active);
+		},
+		/**
+		 * Adds a cache-busting param to force an iframe reload
+		 */
+		addReloadParam(src) {
+			const url = new URL(src, window.location.origin);
+			url.searchParams.set("_reload", Date.now());
+			return url.toString();
+		},
+		/**
+		 * Returns iframe element by index (0 = A, 1 = B)
+		 */
+		getIframe(index) {
+			return this.$refs[index === 0 ? "browserA" : "browserB"];
+		},
+		/**
+		 * Double-buffered load:
+		 * - set src on the inactive iframe
+		 * - swap to it once the load finishes
+		 */
+		loadSrc(src, { force = false } = {}) {
+			this.pending = this.active === 0 ? 1 : 0;
+			const iframe = this.getIframe(this.pending);
+			this.isLoading = true;
+
+			this.srcs[this.pending] = force ? this.addReloadParam(src) : src;
+
+			// If the target iframe already has the src loaded, swap immediately
+			if (
+				iframe?.src === this.srcs[this.pending] &&
+				iframe.contentDocument?.readyState === "complete"
+			) {
+				this.active = this.pending;
+				this.pending = null;
+				this.isLoading = false;
+			}
+		},
 		/**
 		 * Handle link clicks inside the iframe
 		 */
@@ -103,13 +172,40 @@ export default {
 				this.$emit("navigate", { view: link.href });
 			}
 		},
-		onLoad() {
-			const document = this.$refs.browser.contentDocument;
+		/**
+		 * Handles iframe load events for both buffers
+		 */
+		async onLoad(index) {
+			const iframe = this.getIframe(index);
+			const document = iframe?.contentDocument;
+
+			if (!document) {
+				return;
+			}
+
+			if (this.pending === index) {
+				// Only swap when the preloaded iframe finishes loading
+				this.pending = null;
+				this.active = index;
+				this.isLoading = false;
+
+				if (this.pendingScroll !== null) {
+					const scrollY = this.pendingScroll;
+					this.pendingScroll = null;
+
+					await this.$nextTick();
+					iframe.contentWindow.scrollTo(0, scrollY);
+				}
+			}
+
+			if (index !== this.active) {
+				return;
+			}
 
 			// if the browser got redirected during load
 			// navigate to the proper preview URL for this new URL
 			// (but only if the new URL doesn't already contain _version and _token)
-			if (this.src !== document.URL) {
+			if (this.srcs[index] !== document.URL) {
 				const url = new URL(document.URL);
 
 				if (
@@ -130,11 +226,12 @@ export default {
 			document.addEventListener("scroll", (e) => this.$emit("scroll", e));
 		},
 		/**
-		 * Refresh the iframe
-		 * (e.g. for content updates)
+		 * Refresh the iframe (e.g. for content updates)
 		 */
 		reload() {
-			this.window.location.reload();
+			// keep scroll in place when swapping buffers
+			this.pendingScroll = this.window?.scrollY ?? 0;
+			this.loadSrc(this.src, { force: true });
 		},
 		/**
 		 * Restore an iframe URL and scroll position
@@ -147,14 +244,25 @@ export default {
 			}
 
 			// restore scroll position once the iframe finished loading
-			this.$refs.browser.addEventListener(
+			const target = this.active === 0 ? 1 : 0;
+			const iframe = this.getIframe(target);
+
+			iframe?.addEventListener(
 				"load",
-				() => this.window.scrollTo(0, scroll),
+				() => iframe.contentWindow.scrollTo(0, scroll),
 				{ once: true }
 			);
 
 			// load restored URL in iframe
-			this.$refs.browser.src = src;
+			this.srcs[target] = src;
+			this.pending = target;
+			this.isLoading = true;
+		},
+		/**
+		 * Scrolls the active iframe to a given position
+		 */
+		scrollTo(y) {
+			this.window?.scrollTo(0, y);
 		},
 		/**
 		 * Returns the current iframe URL and scroll position,
@@ -162,8 +270,8 @@ export default {
 		 */
 		store() {
 			return {
-				src: this.$refs.browser.src,
-				scroll: this.window.scrollY
+				src: this.activeIframe()?.src,
+				scroll: this.window?.scrollY
 			};
 		}
 	}
@@ -178,6 +286,7 @@ export default {
 	container-type: inline-size;
 	display: flex;
 	flex-direction: column;
+	position: relative;
 	border-radius: var(--rounded-lg);
 	box-shadow: var(--shadow-xl);
 	background: var(--preview-browser-color-background);
@@ -204,9 +313,23 @@ export default {
 	margin-inline-end: var(--spacing-1);
 	color: var(--color-text-dimmed);
 }
-.k-preview-browser iframe {
+.k-preview-browser-frame {
 	width: 100%;
 	flex-grow: 1;
+	position: relative;
+}
+.k-preview-browser-iframe {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+.k-preview-browser-iframe.is-active {
+	opacity: 1;
+	pointer-events: auto;
 }
 @container (max-width: 30rem) {
 	.k-preview-browser-message {

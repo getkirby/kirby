@@ -298,6 +298,10 @@
 	"error.validation.uuid": "Пожалуйста, введите правильный UUID",
 	"error.validation.url": "Пожалуйста, введите правильный URL",
 
+	"error.version.discard.permission": "You are not allowed to discard this version",
+	"error.version.publish.permission": "You are not allowed to publish this version",
+	"error.version.save.permission": "You are not allowed to change this version",
+
 	"expand": "Развернуть",
 	"expand.all": "Expand all",
 

@@ -298,6 +298,10 @@
 	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Bonvolu entajpi validan URL",
 
+	"error.version.discard.permission": "You are not allowed to discard this version",
+	"error.version.publish.permission": "You are not allowed to publish this version",
+	"error.version.save.permission": "You are not allowed to change this version",
+
 	"expand": "Etendi",
 	"expand.all": "Expand all",
 

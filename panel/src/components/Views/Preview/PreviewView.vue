@@ -1,5 +1,5 @@
 <template>
-	<k-panel class="k-panel-inside k-preview-view" :data-mode="mode">
+	<k-panel class="k-panel-inside k-preview-view">
 		<header class="k-preview-view-header">
 			<k-button-group>
 				<k-button
@@ -50,7 +50,7 @@
 			</k-button-group>
 		</header>
 
-		<main :style="gridStyles" class="k-preview-view-grid">
+		<main :data-mode="mode" :style="gridStyles" class="k-preview-view-grid">
 			<template v-if="mode === 'form'">
 				<k-preview-browser
 					v-if="!isRemote"
@@ -328,10 +328,8 @@ export default {
 		},
 		onScroll(source, target) {
 			if (this.isScrollSyncing) {
-				this.$refs[target].$refs.browser.contentWindow.scrollTo(
-					0,
-					this.$refs[source].$refs.browser.contentWindow.scrollY
-				);
+				const scrollY = this.$refs[source]?.window?.scrollY ?? 0;
+				this.$refs[target]?.scrollTo(scrollY);
 			}
 		},
 		onScrollSyncing() {
@@ -397,11 +395,10 @@ export default {
 }
 
 @media screen and (max-width: 60rem) {
-	.k-preview-view:where(
-			[data-mode="compare"],
-			[data-mode="form"]:has(.k-preview-browser)
-		)
-		.k-preview-view-grid {
+	.k-preview-view-grid:where(
+		[data-mode="compare"],
+		[data-mode="form"]:has(.k-preview-browser)
+	) {
 		grid-template-rows: 1fr 1fr;
 	}
 
@@ -415,19 +412,18 @@ export default {
 }
 
 @media screen and (min-width: 60rem) {
-	.k-preview-view .k-preview-view-grid:has(.k-preview-browser) {
+	.k-preview-view-grid:has(.k-preview-browser) {
 		grid-template-columns: min(var(--preview-width), 100%);
 		justify-content: space-around;
 	}
 
-	.k-preview-view[data-mode="compare"] .k-preview-view-grid {
+	.k-preview-view-grid[data-mode="compare"] {
 		grid-template-columns:
 			min(var(--preview-width), calc(50% - var(--spacing-3) / 2))
 			min(var(--preview-width), calc(50% - var(--spacing-3) / 2));
 	}
 
-	.k-preview-view[data-mode="form"]:has(.k-preview-browser)
-		.k-preview-view-grid {
+	.k-preview-view-grid[data-mode="form"]:has(.k-preview-browser) {
 		grid-template-columns: min(var(--preview-width), 68%) 1fr;
 	}
 }

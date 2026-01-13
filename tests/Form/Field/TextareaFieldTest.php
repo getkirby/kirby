@@ -44,6 +44,15 @@ class TextareaFieldTest extends TestCase
 		$this->assertSame('test', $field->default());
 	}
 
+	public function testDefaultWithStringTemplate(): void
+	{
+		$field = $this->field('textarea', [
+			'default' => ' test {{ 1 + 2 }} ',
+		]);
+
+		$this->assertSame('test 3', $field->default());
+	}
+
 	public function testDialogs(): void
 	{
 		$field = $this->field('textarea');

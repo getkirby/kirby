@@ -137,7 +137,7 @@ export default {
 
 .k-login-form {
 	padding: var(--spacing-6);
-	background: var(--color-white);
+	background: light-dark(var(--color-white), var(--color-gray-950));
 	border-radius: var(--rounded);
 }
 .k-login-form label abbr {

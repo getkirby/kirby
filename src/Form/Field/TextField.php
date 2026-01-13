@@ -75,7 +75,7 @@ class TextField extends StringField
 
 	public function default(): string
 	{
-		return $this->convert($this->default) ?? '';
+		return $this->convert(value: parent::default()) ?? '';
 	}
 
 	/**

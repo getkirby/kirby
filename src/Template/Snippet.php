@@ -146,42 +146,57 @@ class Snippet extends Tpl
 		array $data = [],
 		Slots|null $slots = null
 	): string {
-		// if the snippet is rendered inside another snippet,
-		// we need to keep the "outside" snippet to compare it later
-		$outside = Snippet::$current;
+		$scope = static::scope($data, $slots);
 
-		// load the snippet code
-		$snippet = parent::load(
-			file: $file,
-			data: static::scope($data, $slots)
-		);
+		// start a new stack rendering context
+		Stack::open();
 
-		// if last `endsnippet()` inside the current template
-		// has been omitted (= snippet was used as layout snippet),
-		// `Snippet::$current` will point to a snippet that was
-		// opened inside the template; if that snippet is the direct
-		// child of the snippet that was open before this snippet was
-		// rendered (which could be `null` if no snippet was open),
-		// take the buffer output from the template as default slot
-		// and render that nested snippet as final snippet output
-		if (
-			Snippet::$current === null ||
-			Snippet::$current->parent() !== $outside
-		) {
-			return $snippet;
+		try {
+			// if the snippet is rendered inside another snippet,
+			// we need to keep the "outside" snippet to compare it later
+			$outside = Snippet::$current;
+
+			// load the snippet code
+			$snippet = parent::load(
+				file: $file,
+				data: $scope
+			);
+
+			// if last `endsnippet()` inside the current template
+			// has been omitted (= snippet was used as layout snippet),
+			// `Snippet::$current` will point to a snippet that was
+			// opened inside the template; if that snippet is the direct
+			// child of the snippet that was open before this snippet was
+			// rendered (which could be `null` if no snippet was open),
+			// take the buffer output from the template as default slot
+			// and render that nested snippet as final snippet output
+			if (
+				Snippet::$current === null ||
+				Snippet::$current->parent() !== $outside
+			) {
+				$output = $snippet;
+			} elseif (Snippet::$current->slots()->count() === 0) {
+				// no slots have been defined, but the snippet code
+				// should be used as default slot
+				$output = Snippet::$current->render($data, [
+					'default' => $snippet
+				]);
+			} else {
+				// swallow any "unslotted" content
+				// between start and end
+				$output = Snippet::$current->render($data);
+			}
+		} finally {
+			Stack::close();
 		}
 
-		if (Snippet::$current->slots()->count() === 0) {
-			// no slots have been defined, but the snippet code
-			// should be used as default slot
-			return Snippet::$current->render($data, [
-				'default' => $snippet
-			]);
+		// if all stack rendering contexts have been closed,
+		// replace all stack placeholders with the stack content
+		if (Stack::isRendering() === false) {
+			$output = Stack::replace($output);
 		}
 
-		// swallow any "unslotted" content
-		// between start and end
-		return Snippet::$current->render($data);
+		return $output;
 	}
 
 	/**

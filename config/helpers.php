@@ -18,6 +18,7 @@ use Kirby\Plugin\Assets as PluginAssets;
 use Kirby\Plugin\Plugin;
 use Kirby\Template\Slot;
 use Kirby\Template\Snippet;
+use Kirby\Template\Stack;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -132,6 +133,16 @@ if (Helpers::hasOverride('e') === false) { // @codeCoverageIgnore
 	function e(mixed $condition, mixed $value, mixed $alternative = null): void
 	{
 		echo $condition ? $value : $alternative;
+	}
+}
+
+if (Helpers::hasOverride('endpush') === false) { // @codeCoverageIgnore
+	/**
+	 * Ends the last started stack push
+	 */
+	function endpush(): void
+	{
+		Stack::end();
 	}
 }
 
@@ -436,6 +447,24 @@ if (Helpers::hasOverride('params') === false) { // @codeCoverageIgnore
 	}
 }
 
+if (Helpers::hasOverride('push') === false) { // @codeCoverageIgnore
+	/**
+	 * Pushes content to a stack or starts capturing output
+	 */
+	function push(
+		string $name,
+		string|Stringable|null $content = null,
+		bool $unique = false
+	): void {
+		if ($content === null) {
+			Stack::begin($name, $unique);
+			return;
+		}
+
+		Stack::push($name, $content, $unique);
+	}
+}
+
 if (Helpers::hasOverride('qr') === false) { // @codeCoverageIgnore
 	/**
 	 * Creates a QR code object
@@ -531,6 +560,30 @@ if (Helpers::hasOverride('snippet') === false) { // @codeCoverageIgnore
 		bool $slots = false
 	): Snippet|string|null {
 		return App::instance()->snippet($name, $data, $return, $slots);
+	}
+}
+
+if (Helpers::hasOverride('stack') === false) { // @codeCoverageIgnore
+	/**
+	 * Renders a stack and optionally clears it
+	 */
+	function stack(
+		string $name,
+		string $glue = PHP_EOL,
+		bool $return = false,
+		bool $clear = true
+	): string|null {
+		$content = match (Stack::isRendering()) {
+			true  => Stack::placeholder($name, $glue, $clear),
+			false => Stack::render($name, $glue, $clear)
+		};
+
+		if ($return === true) {
+			return $content;
+		}
+
+		echo $content;
+		return null;
 	}
 }
 
