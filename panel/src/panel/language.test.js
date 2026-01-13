@@ -13,6 +13,7 @@ describe.concurrent("panel.language", () => {
 			code: null,
 			default: false,
 			direction: "ltr",
+			hasCustomDomain: false,
 			name: null,
 			rules: null
 		};
@@ -31,5 +32,24 @@ describe.concurrent("panel.language", () => {
 		});
 
 		expect(language.isDefault).toStrictEqual(true);
+	});
+
+	it("should have hasCustomDomain property", async () => {
+		const language = Language();
+
+		// default state
+		expect(language.hasCustomDomain).toStrictEqual(false);
+
+		// set to true
+		language.set({
+			hasCustomDomain: true
+		});
+		expect(language.hasCustomDomain).toStrictEqual(true);
+
+		// set to false
+		language.set({
+			hasCustomDomain: false
+		});
+		expect(language.hasCustomDomain).toStrictEqual(false);
 	});
 });

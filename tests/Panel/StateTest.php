@@ -329,22 +329,24 @@ class StateTest extends TestCase
 		$direction = $state->direction();
 		$expected = [
 			[
-				'code'      => 'en',
-				'default'   => true,
-				'direction' => 'ltr',
-				'locale'    => [LC_ALL => 'en'],
-				'name'      => 'English',
-				'rules'     => Language::loadRules('en'),
-				'url'       => '/en'
+				'code'            => 'en',
+				'default'         => true,
+				'direction'       => 'ltr',
+				'hasCustomDomain' => false,
+				'locale'          => [LC_ALL => 'en'],
+				'name'            => 'English',
+				'rules'           => Language::loadRules('en'),
+				'url'             => '/en'
 			],
 			[
-				'code'      => 'de',
-				'default'   => false,
-				'direction' => 'ltr',
-				'locale'    => [LC_ALL => 'de'],
-				'name'      => 'Deutsch',
-				'rules'     => Language::loadRules('de'),
-				'url'       => '/de'
+				'code'            => 'de',
+				'default'         => false,
+				'direction'       => 'ltr',
+				'hasCustomDomain' => false,
+				'locale'          => [LC_ALL => 'de'],
+				'name'            => 'Deutsch',
+				'rules'           => Language::loadRules('de'),
+				'url'             => '/de'
 			]
 		];
 
