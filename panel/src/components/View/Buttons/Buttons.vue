@@ -1,5 +1,7 @@
 <template>
 	<nav v-if="buttons.length" class="k-view-buttons">
+		<slot name="before" />
+
 		<k-button-group v-for="(group, index) in groups" :key="index">
 			<component
 				:is="component(button)"
@@ -9,6 +11,8 @@
 				@action="$emit('action', $event)"
 			/>
 		</k-button-group>
+
+		<slot name="after" />
 	</nav>
 </template>
 
@@ -49,6 +53,12 @@ export default {
 <style>
 .k-view-buttons {
 	display: flex;
-	gap: var(--spacing-3);
+	gap: var(--spacing-2);
+}
+
+@container (min-width: 50rem) {
+	.k-view-buttons {
+		gap: var(--spacing-6);
+	}
 }
 </style>
