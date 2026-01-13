@@ -64,7 +64,7 @@ export default {
 			default: true
 		}
 	},
-	emits: ["input"],
+	emits: ["input", "submit"],
 	methods: {
 		/**
 		 * Focuses the input element
