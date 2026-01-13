@@ -10,6 +10,7 @@
 			ref="input"
 			type="time"
 			@input="$emit('input', $event ?? '')"
+			@submit="$emit('submit')"
 		>
 			<template v-if="times" #icon>
 				<k-button
