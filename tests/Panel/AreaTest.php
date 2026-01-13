@@ -61,11 +61,18 @@ class AreaTest extends TestCase
 
 		$routes = $area->routes();
 
-		$this->assertCount(1, $routes);
+		$this->assertCount(2, $routes);
 		$this->assertSame('test', $routes[0]['area']);
 		$this->assertSame('view', $routes[0]['type']);
 		$this->assertSame('todos', $routes[0]['pattern']);
+		$this->assertSame('GET', $routes[0]['method']);
 		$this->assertSame('k-todos-view', $routes[0]['action']()['component']);
+
+		$this->assertSame('test', $routes[1]['area']);
+		$this->assertSame('view', $routes[1]['type']);
+		$this->assertSame('todos', $routes[1]['pattern']);
+		$this->assertSame('POST', $routes[1]['method']);
+		$this->assertTrue($routes[1]['action']());
 	}
 
 	public function testTitle(): void
