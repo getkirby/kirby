@@ -302,9 +302,9 @@ class Language implements Stringable
 	}
 
 	/**
-	 * Check if the language url is absolute
+	 * Check if the language url is custom domain
 	 */
-	public function hasAbsoluteUrl(): bool
+	public function hasCustomDomain(): bool
 	{
 		return Url::isAbsolute($this->url);
 	}
@@ -555,14 +555,14 @@ class Language implements Stringable
 	public function toArray(): array
 	{
 		return [
-			'code'           => $this->code(),
-			'default'        => $this->isDefault(),
-			'direction'      => $this->direction(),
-			'hasAbsoluteUrl' => $this->hasAbsoluteUrl(),
-			'locale'         => $this->locale(),
-			'name'           => $this->name(),
-			'rules'          => $this->rules(),
-			'url'            => $this->url(),
+			'code'            => $this->code(),
+			'default'         => $this->isDefault(),
+			'direction'       => $this->direction(),
+			'hasCustomDomain' => $this->hasCustomDomain(),
+			'locale'          => $this->locale(),
+			'name'            => $this->name(),
+			'rules'           => $this->rules(),
+			'url'             => $this->url(),
 		];
 	}
 
