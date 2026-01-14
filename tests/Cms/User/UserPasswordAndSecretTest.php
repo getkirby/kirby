@@ -13,6 +13,22 @@ class UserPasswordAndSecretTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserPasswordAndSecret';
 
+	public function testHasPassword(): void
+	{
+		$user = new User([
+			'email' => 'test@getkirby.com'
+		]);
+
+		$this->assertFalse($user->hasPassword());
+
+		$user = new User([
+			'email'    => 'test@getkirby.com',
+			'password' => User::hashPassword('correct-horse-battery-staple')
+		]);
+
+		$this->assertTrue($user->hasPassword());
+	}
+
 	public function testPasswordTimestamp(): void
 	{
 		// create a user file

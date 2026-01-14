@@ -233,11 +233,20 @@ class User extends ModelWithContent
 		#[SensitiveParameter]
 		string|null $password = null
 	): string|null {
-		if ($password !== null) {
+		if ($password !== null && $password !== '' && $password !== false) {
 			$password = password_hash($password, PASSWORD_DEFAULT);
 		}
 
 		return $password;
+	}
+
+	/**
+	 * Checks if the user has a stored password
+	 */
+	public function hasPassword(): bool
+	{
+		$password = $this->password();
+		return $password === '' || $password === null || $password === false ? false : true;
 	}
 
 	/**
@@ -703,7 +712,7 @@ class User extends ModelWithContent
 		#[SensitiveParameter]
 		string|null $password = null
 	): bool {
-		if (empty($this->password()) === true) {
+		if ($this->hasPassword() === false) {
 			throw new NotFoundException(
 				key: 'user.password.undefined'
 			);

@@ -180,44 +180,57 @@ return [
 			$kirby = App::instance();
 			$user  = Find::user($id);
 
+			$fields = [
+				'currentPassword' => Field::password([
+					'label'        => I18n::translate('user.changePassword.' . ($kirby->user()->is($user) ? 'current' : 'own')),
+					'autocomplete' => 'current-password',
+					'help'         => I18n::translate('account') . ': ' . App::instance()->user()->email(),
+				]),
+				'line' => [
+					'type' => 'line',
+				],
+				'password' => Field::password([
+					'label'        => I18n::translate('user.changePassword.new'),
+					'autocomplete' => 'new-password',
+					'help'         => I18n::translate('account') . ': ' . $user->email(),
+				]),
+				'passwordConfirmation' => Field::password([
+					'label'        => I18n::translate('user.changePassword.new.confirm'),
+					'autocomplete' => 'new-password'
+				])
+			];
+
+			// if the currently logged in user tries to change their own password
+			// and has no password so far, password confirmation can be skipped
+			if ($user->isLoggedIn() === true && $user->hasPassword() === false) {
+				unset($fields['currentPassword'], $fields['line']);
+			}
+
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
-					'fields'       => [
-						'currentPassword' => Field::password([
-							'label'        => I18n::translate('user.changePassword.' . ($kirby->user()->is($user) ? 'current' : 'own')),
-							'autocomplete' => 'current-password',
-							'help'         => I18n::translate('account') . ': ' . App::instance()->user()->email(),
-						]),
-						'line' => [
-							'type' => 'line',
-						],
-						'password' => Field::password([
-							'label'        => I18n::translate('user.changePassword.new'),
-							'autocomplete' => 'new-password',
-							'help'         => I18n::translate('account') . ': ' . $user->email(),
-						]),
-						'passwordConfirmation' => Field::password([
-							'label'        => I18n::translate('user.changePassword.new.confirm'),
-							'autocomplete' => 'new-password'
-						])
-					],
+					'fields'       => $fields,
 					'submitButton' => I18n::translate('change'),
 				]
 			];
 		},
 		'submit' => function (string $id) {
-			$kirby   = App::instance();
-			$request = $kirby->request();
-
+			$kirby                = App::instance();
+			$request              = $kirby->request();
 			$user                 = Find::user($id);
 			$currentPassword      = $request->get('currentPassword');
 			$password             = $request->get('password');
 			$passwordConfirmation = $request->get('passwordConfirmation');
 
+			// if the currently logged in user tries to change their own password
+			// and has no password so far, password confirmation can be skipped
+			$canSkipConfirmation = $user->isLoggedIn() === true && $user->hasPassword() === false;
+
 			// validate the current password of the acting user
 			try {
-				$kirby->user()->validatePassword($currentPassword);
+				if ($canSkipConfirmation === false) {
+					$kirby->user()->validatePassword($currentPassword);
+				}
 			} catch (Exception) {
 				// catching and re-throwing exception to avoid automatic
 				// sign-out of current user from the Panel
