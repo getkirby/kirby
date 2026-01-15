@@ -17,6 +17,7 @@
 						:is-locked="isLocked"
 						:is-processing="isSaving"
 						:modified="modified"
+						:permissions="permissions"
 						size="xs"
 						@discard="$emit('discard', $event)"
 						@submit="$emit('submit', $event)"

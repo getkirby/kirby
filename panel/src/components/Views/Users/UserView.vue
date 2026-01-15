@@ -25,19 +25,17 @@
 			</template>
 
 			<template #buttons>
-				<k-view-buttons :buttons="buttons">
-					<template #after>
-						<k-form-controls
-							:editor="editor"
-							:has-diff="hasDiff"
-							:is-locked="isLocked"
-							:is-processing="isSaving"
-							:modified="modified"
-							@discard="onDiscard"
-							@submit="onSubmit"
-						/>
-					</template>
-				</k-view-buttons>
+				<k-view-buttons :buttons="buttons" />
+				<k-form-controls
+					:editor="editor"
+					:has-diff="hasDiff"
+					:is-locked="isLocked"
+					:is-processing="isSaving"
+					:modified="modified"
+					:permissions="permissions"
+					@discard="onDiscard"
+					@submit="onSubmit"
+				/>
 			</template>
 		</k-header>
 
