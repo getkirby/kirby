@@ -1,13 +1,19 @@
 <template>
-	<k-button-group v-if="buttons.length" class="k-view-buttons">
-		<component
-			:is="component(button)"
-			v-for="button in buttons"
-			:key="button.key"
-			v-bind="button.props"
-			@action="$emit('action', $event)"
-		/>
-	</k-button-group>
+	<nav v-if="buttons.length" class="k-view-buttons">
+		<slot name="before" />
+
+		<k-button-group v-for="(group, index) in groups" :key="index">
+			<component
+				:is="component(button)"
+				v-for="button in group"
+				:key="button.key"
+				v-bind="button.props"
+				@action="$emit('action', $event)"
+			/>
+		</k-button-group>
+
+		<slot name="after" />
+	</nav>
 </template>
 
 <script>
@@ -27,6 +33,11 @@ export default {
 		}
 	},
 	emits: ["action"],
+	computed: {
+		groups() {
+			return this.$helper.array.split(this.buttons, "-");
+		}
+	},
 	methods: {
 		component(button) {
 			if (this.$helper.isComponent(button.component)) {
@@ -38,3 +49,16 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-view-buttons {
+	display: flex;
+	gap: var(--spacing-2);
+}
+
+@container (min-width: 50rem) {
+	.k-view-buttons {
+		gap: var(--spacing-6);
+	}
+}
+</style>

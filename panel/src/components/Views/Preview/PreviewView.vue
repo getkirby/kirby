@@ -24,22 +24,7 @@
 				</k-dropdown-content>
 			</k-button-group>
 
-			<k-button-group>
-				<k-button
-					v-if="versionId === 'compare'"
-					:aria-checked="isScrollSyncing"
-					:icon="isScrollSyncing ? 'scroll-to-bottom-fill' : 'scroll-to-bottom'"
-					:theme="isScrollSyncing ? 'info-icon' : 'passive'"
-					:title="$t('preview.browser.scroll')"
-					role="switch"
-					size="sm"
-					variant="filled"
-					class="k-preview-scroll-sync"
-					@click="onScrollSyncing"
-				/>
-
-				<k-view-buttons :buttons="buttons" />
-			</k-button-group>
+			<k-view-buttons :buttons="buttonsWithScrollButton" />
 		</header>
 		<main class="k-preview-view-grid">
 			<template v-if="versionId === 'compare'">
@@ -86,6 +71,27 @@ export default {
 		return {
 			isScrollSyncing: scroll === "true"
 		};
+	},
+	computed: {
+		buttonsWithScrollButton() {
+			const buttons = [];
+
+			if (this.versionId === "compare") {
+				buttons.unshift({
+					props: {
+						ariaChecked: this.isScrollSyncing,
+						icon: "scroll-to-bottom",
+						theme: this.isScrollSyncing ? "info-icon" : "passive",
+						title: this.$t("preview.browser.scroll"),
+						role: "switch",
+						class: "k-preview-scroll-sync",
+						click: () => this.onScrollSyncing()
+					}
+				});
+			}
+
+			return [...buttons, ...this.buttons];
+		}
 	},
 	mounted() {
 		this.$events.on("keydown.esc", this.exit);
