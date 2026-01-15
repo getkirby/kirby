@@ -32,6 +32,7 @@
 					:is-locked="isLocked"
 					:is-processing="isSaving"
 					:modified="modified"
+					:permissions="permissions"
 					@discard="onDiscard"
 					@submit="onSubmit"
 				/>

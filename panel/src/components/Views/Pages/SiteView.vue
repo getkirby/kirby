@@ -28,6 +28,7 @@
 					:is-locked="isLocked"
 					:is-processing="isSaving"
 					:modified="modified"
+					:permissions="permissions"
 					:preview="permissions.preview ? api + '/preview/changes' : false"
 					@discard="onDiscard"
 					@submit="onSubmit"

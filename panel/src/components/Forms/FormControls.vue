@@ -3,6 +3,7 @@
 		<k-button-group layout="collapsed">
 			<k-button
 				v-for="button in buttons"
+				v-if="button.hidden !== true"
 				:key="button.text"
 				class="k-form-controls-button"
 				v-bind="button"
@@ -59,6 +60,10 @@ export const props = {
 		isLocked: Boolean,
 		isProcessing: Boolean,
 		modified: [String, Date],
+		permissions: {
+			type: Object,
+			default: () => ({})
+		},
 		/**
 		 * Preview URL for changes
 		 */
@@ -105,7 +110,8 @@ export default {
 						theme: "notice",
 						text: this.$t("save"),
 						icon: this.isProcessing ? "loader" : "check",
-						click: () => this.$emit("submit")
+						hidden: this.permissions.save !== true,
+						click: () => this.$emit("submit"),
 					},
 					{
 						theme: "notice",

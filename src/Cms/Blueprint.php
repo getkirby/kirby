@@ -668,7 +668,7 @@ class Blueprint
 
 		// set all options to false
 		if ($options === false) {
-			return array_map(fn () => false, $defaults);
+			return array_fill_keys(array_keys($defaults), false);
 		}
 
 		// extend options if possible
@@ -678,7 +678,18 @@ class Blueprint
 			$alias = $aliases[$key] ?? null;
 
 			if ($alias !== null) {
-				$options[$alias] ??= $value;
+				if (is_callable($alias) === true) {
+					$alias = $alias($value);
+				}
+
+				if (is_array($alias) === false) {
+					$alias = [$alias => $value];
+				}
+
+				foreach ($alias as $option => $value) {
+					$options[$option] ??= $value;
+				}
+
 				unset($options[$key]);
 			}
 		}
