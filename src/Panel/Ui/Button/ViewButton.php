@@ -6,7 +6,6 @@ use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Panel\Ui\Button;
 use Kirby\Toolkit\Controller;
 
 /**
@@ -20,33 +19,23 @@ use Kirby\Toolkit\Controller;
  * @license   https://getkirby.com/license
  * @since     5.0.0
  */
-class ViewButton extends Button
+class ViewButton extends ModelButton
 {
 	public function __construct(
 		public string $component = 'k-view-button',
-		public readonly ModelWithContent|Language|null $model = null,
-		public array|null $badge = null,
-		public string|null $class = null,
-		public string|bool|null $current = null,
-		public array|string|null $dialog = null,
-		public bool $disabled = false,
-		public array|string|null $drawer = null,
-		public bool|null $dropdown = null,
-		public string|null $icon = null,
-		public string|null $link = null,
+		ModelWithContent|Language|null $model = null,
 		public array|string|null $options = null,
-		public bool|string $responsive = true,
-		public string|null $size = 'sm',
-		public string|null $style = null,
-		public string|null $target = null,
-		public string|array|null $text = null,
-		public string|null $theme = null,
-		public string|array|null $title = null,
-		public string $type = 'button',
-		public string|null $variant = 'filled',
+		string|null $size = 'sm',
+		string|null $variant = 'filled',
 		...$attrs
 	) {
-		$this->attrs = $attrs;
+		parent::__construct(...[
+			...$attrs,
+			'component' => $component,
+			'model'     => $model instanceof ModelWithContent ? $model : null,
+			'size'      => $size,
+			'variant'   => $variant
+		]);
 	}
 
 	/**
@@ -163,29 +152,20 @@ class ViewButton extends Button
 		return $button;
 	}
 
-	public function props(): array
+	public function options(): array|string|null
 	{
-		// helper for props that support Kirby queries
-		$resolve = fn (string|null $value) =>
-			$value ?
-			$this->model?->toSafeString($value) ?? $value :
-			null;
-
-		$options = $this->options;
-
-		if (is_string($options) === true) {
-			$options = $resolve($options);
+		if (is_string($this->options) === true) {
+			return $this->stringTemplate($this->options);
 		}
 
+		return $this->options;
+	}
+
+	public function props(): array
+	{
 		return [
-			...$props = parent::props(),
-			'dialog'  => $resolve($props['dialog']),
-			'drawer'  => $resolve($props['drawer']),
-			'icon'    => $resolve($props['icon']),
-			'link'    => $resolve($props['link']),
-			'text'    => $resolve($props['text']),
-			'theme'   => $resolve($props['theme']),
-			'options' => $options
+			...parent::props(),
+			'options' => $this->options()
 		];
 	}
 
