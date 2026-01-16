@@ -72,6 +72,7 @@
 <script>
 import { set } from "vue";
 import { autofocus, disabled, id } from "@/mixins/props.js";
+import { focusIsInModal } from "@/helpers/focus.js";
 
 export const props = {
 	mixins: [autofocus, disabled, id],
@@ -162,6 +163,7 @@ export default {
 
 		this.$events.on("blur", this.onBlur);
 		this.$events.on("click", this.onClickGlobal);
+		this.$events.on("focus", this.onFocusGlobal);
 		this.$events.on("copy", this.onCopy);
 		this.$events.on("keydown", this.onKey);
 		this.$events.on("keyup", this.onKey);
@@ -170,6 +172,7 @@ export default {
 	destroyed() {
 		this.$events.off("blur", this.onBlur);
 		this.$events.off("click", this.onClickGlobal);
+		this.$events.off("focus", this.onFocusGlobal);
 		this.$events.off("copy", this.onCopy);
 		this.$events.off("keydown", this.onKey);
 		this.$events.off("keyup", this.onKey);
@@ -496,10 +499,7 @@ export default {
 		},
 		onClickGlobal(event) {
 			// ignore focus in dialogs or drawers to keep the current selection
-			if (
-				event.target.closest(".k-dialog") ||
-				event.target.closest(".k-drawer")
-			) {
+			if (focusIsInModal(event.target) === true) {
 				return;
 			}
 
@@ -542,6 +542,17 @@ export default {
 		onFocus(block) {
 			if (this.isMultiSelectKey === false) {
 				this.selected = [block.id];
+			}
+		},
+		onFocusGlobal(event) {
+			// ignore focus in dialogs or drawers to keep the current selection
+			if (focusIsInModal(event.target) === true) {
+				return;
+			}
+
+			// if focus moves to an element outside blocks, deselect blocks
+			if (this.$el.contains(event.target) === false) {
+				this.deselectAll();
 			}
 		},
 		async onKey(event) {
