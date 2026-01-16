@@ -2,6 +2,9 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Panel\Ui\Button\ModelButton;
+use Kirby\Toolkit\A;
+
 /**
  * Buttons field
  *
@@ -40,11 +43,19 @@ class ButtonsField extends DisplayField
 
 	public function buttons(): array
 	{
-		if (is_string($this->buttons) === true) {
-			return $this->model()->query($this->buttons);
+		$buttons = $this->buttons ?? [];
+
+		if (is_string($buttons) === true) {
+			$buttons = $this->model()->query($buttons);
 		}
 
-		return $this->buttons ?? [];
+		return A::map(
+			$buttons,
+			fn (array $button) => (new ModelButton(
+				...$button,
+				model: $this->model()
+			))->props()
+		);
 	}
 
 	public function props(): array
