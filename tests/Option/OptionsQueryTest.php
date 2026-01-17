@@ -21,6 +21,11 @@ class MyPage extends Page
 		return ['tag1', 'tag2', 'tag3'];
 	}
 
+	public function myAssocArray(): array
+	{
+		return ['myValue' => 'My text', 'otherValue' => 'Other text'];
+	}
+
 	public function myHtmlArray(): array
 	{
 		return [
@@ -118,6 +123,16 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('tag2', $options[1]['value']);
 		$this->assertSame('tag3', $options[2]['value']);
 		$this->assertSame('tag3', $options[2]['text']);
+
+		// associative array uses the array key as value by default
+		$options = (new OptionsQuery(
+			query: 'page.myAssocArray',
+		))->render($model);
+
+		$this->assertSame('myValue', $options[0]['value']);
+		$this->assertSame('My text', $options[0]['text']);
+		$this->assertSame('otherValue', $options[1]['value']);
+		$this->assertSame('Other text', $options[1]['text']);
 	}
 
 	public function testResolveForStructure(): void
