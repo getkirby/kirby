@@ -63,12 +63,12 @@ class Options extends Collection
 		return $collection;
 	}
 
-	public function render(ModelWithContent $model): array
+	public function render(ModelWithContent $model, bool $safeMode = true): array
 	{
 		$options = [];
 
 		foreach ($this->data as $key => $option) {
-			$options[$key] = $option->render($model);
+			$options[$key] = $option->render($model, $safeMode);
 		}
 
 		return array_values($options);
