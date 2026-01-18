@@ -248,6 +248,19 @@ export default {
 			} else {
 				this.isLoading = true;
 				const state = await this.get(url, options);
+
+				// Preserve dialog/drawer listeners across state-driven opens.
+				// When opening a dialog via a URL, the backend response triggers
+				// a second open with a state object that doesn't include those
+				// listeners, so we need to add them back to the state.
+				if (isObject(state?.dialog) && isObject(options?.on)) {
+					state.dialog.on = options.on;
+				}
+
+				if (isObject(state?.drawer) && isObject(options?.on)) {
+					state.drawer.on = options.on;
+				}
+
 				this.set(state);
 			}
 
