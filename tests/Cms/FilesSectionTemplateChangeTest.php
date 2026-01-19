@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Blueprint\Blueprint;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Blueprint::class)]
