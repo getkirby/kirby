@@ -35,7 +35,7 @@ class VersionsButton extends ViewButton
 	 * Returns the button icon based on the view's mode
 	 * @since 6.0.0
 	 */
-	protected function icon(): string
+	public function icon(): string
 	{
 		return match ($this->mode) {
 			'compare' => 'layout-columns',
