@@ -104,7 +104,9 @@ export default (panel) => {
 			const state = await parent.open.call(this, dialog, options);
 
 			// add it to the history
-			this.history.add(state, dialog.replace);
+			if (state?.id) {
+				this.history.add(state, dialog.replace);
+			}
 
 			return state;
 		},
