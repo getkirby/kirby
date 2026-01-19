@@ -13,6 +13,7 @@
 			}"
 			:class="[variant === 'invisible' ? 'sr-only' : null, $attrs.class]"
 			:data-variant="variant"
+			:style="$attrs.style"
 			@click="$emit('click', $event)"
 			@input="$emit('input', $event.target.checked)"
 		/>
