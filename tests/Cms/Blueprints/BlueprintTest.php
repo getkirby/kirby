@@ -317,6 +317,44 @@ class BlueprintTest extends TestCase
 		$this->assertSame(['a', 'b'], $blueprint->acceptedFileTemplates());
 	}
 
+	public function testAcceptedFileTemplatesFromAllAvailable(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'files/image' => [
+					'name' => 'image',
+				],
+				'files/document' => [
+					'name' => 'document',
+				],
+				'files/video' => [
+					'name' => 'video',
+				],
+			]
+		]);
+
+		// Files section without template should include all available templates
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'sections' => [
+				'files' => [
+					'type' => 'files',
+					// No template specified - should get all available
+				],
+			]
+		]);
+
+		$expected = ['default', 'image', 'document', 'video'];
+		$result = $blueprint->acceptedFileTemplates();
+		sort($expected);
+		sort($result);
+		$this->assertSame($expected, $result);
+	}
+
 	public function testButtons(): void
 	{
 		$blueprint = new Blueprint([
