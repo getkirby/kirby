@@ -221,18 +221,19 @@ class PageCreateDialogController extends ModelCreateDialogController
 		}
 
 		$props = [
-			'slug'     => '__temp__',
+			'slug'     => $this->request->get('slug', '__temp__'),
 			'template' => $this->template(),
 			'model'    => $this->template(),
-			'parent'   => $this->parent instanceof Page ? $this->parent : null
+			'parent'   => $this->parent instanceof Page ? $this->parent : null,
+			'content'  => [
+				'title' => $this->request->get('title', '')
+			]
 		];
 
 		// make sure that a UUID gets generated
 		// and added to content right away
 		if (Uuids::enabled() === true) {
-			$props['content'] = [
-				'uuid' => $this->request->get('uuid', Uuid::generate())
-			];
+			$props['content']['uuid'] = $this->request->get('uuid', Uuid::generate());
 		}
 
 		$this->model = Page::factory($props);
