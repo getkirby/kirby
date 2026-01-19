@@ -54,6 +54,65 @@ class UserChangePasswordDialogControllerTest extends TestCase
 		$this->assertSame('Change', $props['submitButton']);
 	}
 
+	public function testLoadWithoutPasswordForCurrentUser(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'       => 'editor',
+					'email'    => 'editor@getkirby.com',
+					'role'     => 'admin',
+					'password' => '',
+				]
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$user       = $this->app->user('editor');
+		$controller = new UserChangePasswordDialogController($user);
+		$dialog     = $controller->load();
+		$props      = $dialog->props();
+
+		// a user without password can change their own password
+		// without providing the current (non-existing) password
+		$this->assertArrayNotHasKey('currentPassword', $props['fields']);
+		$this->assertArrayNotHasKey('line', $props['fields']);
+	}
+
+	public function testLoadWithoutPasswordForAnotherUser(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'       => 'test',
+					'email'    => 'test@getkirby.com',
+					'password' => User::hashPassword('12345678'),
+					'role'     => 'admin',
+				],
+				[
+					'id'       => 'editor',
+					'email'    => 'editor@getkirby.com',
+					'role'     => 'admin',
+					'password' => ''
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$user       = $this->app->user('editor');
+		$controller = new UserChangePasswordDialogController($user);
+		$dialog     = $controller->load();
+		$props      = $dialog->props();
+
+		// when a user tries to change the password of another user,
+		// they always need to provide the current password even if
+		// the other user has no password so far
+		$this->assertArrayHasKey('currentPassword', $props['fields']);
+		$this->assertArrayHasKey('line', $props['fields']);
+	}
+
 	public function testSubmit(): void
 	{
 		$this->app = $this->app->clone([
@@ -78,6 +137,38 @@ class UserChangePasswordDialogControllerTest extends TestCase
 
 		// reload the user freshly
 		$user = $this->app->user($user->id());
+		$this->assertTrue($user->validatePassword('abcdefgh'));
+	}
+
+	public function testSubmitWithoutPasswordForCurrentUser(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'password'             => 'abcdefgh',
+					'passwordConfirmation' => 'abcdefgh'
+				]
+			],
+			'users' => [
+				[
+					'id'       => 'editor',
+					'email'    => 'editor@getkirby.com',
+					'role'     => 'admin',
+					'password' => ''
+				]
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$user       = $this->app->user('editor');
+		$controller = new UserChangePasswordDialogController($user);
+		$response   = $controller->submit();
+
+		$this->assertSame('user.changePassword', $response['event']);
+
+		// reload the user freshly
+		$user = $this->app->user('editor');
 		$this->assertTrue($user->validatePassword('abcdefgh'));
 	}
 
