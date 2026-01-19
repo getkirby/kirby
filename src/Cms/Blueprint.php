@@ -124,11 +124,12 @@ class Blueprint
 				continue;
 			}
 
+			$template  = $section->template();
 			$templates = match ($section->type()) {
 				'files'  => [
 					...$templates,
-					...($section->template()
-						? [$section->template()]
+					...($template
+						? [$template]
 						: App::instance()->blueprints('files'))
 				],
 				'fields' => [

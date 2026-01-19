@@ -131,8 +131,7 @@ class FilesSectionTemplateChangeTest extends TestCase
 		$page = new Page(['slug' => 'test', 'template' => 'default']);
 		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
 
-		// Before the fix: this would return false because only 'default' template was available
-		// After the fix: this should return true because multiple templates are available
+		// This should return true because multiple templates are available
 		$this->assertTrue($file->permissions()->can('changeTemplate'));
 
 		// Verify we get templates that can actually handle jpg files

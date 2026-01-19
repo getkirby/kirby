@@ -192,7 +192,7 @@ class File extends ModelWithContent
 			if ($template === 'default') {
 				$blueprints[$template] = [
 					'name'  => 'default',
-					'title' => 'Default – (default)',
+					'title' => '– (default)',
 				];
 				continue;
 			}
