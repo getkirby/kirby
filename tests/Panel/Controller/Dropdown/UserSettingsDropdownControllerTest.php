@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dropdown;
 
+use Kirby\Cms\User;
 use Kirby\Panel\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -18,8 +19,13 @@ class UserSettingsDropdownControllerTest extends TestCase
 		$this->app = $this->app->clone([
 			'users' => [
 				[
-					'id'    => 'test',
-					'email' => 'test@getkirby.com'
+					'id'       => 'test',
+					'email'    => 'test@getkirby.com',
+					'password' => User::hashPassword('12345678')
+				],
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com'
 				],
 				[
 					'id'    => 'admin',
@@ -134,5 +140,52 @@ class UserSettingsDropdownControllerTest extends TestCase
 		$user = $user->changeTotp(null);
 		$controller = new UserSettingsDropdownController($user);
 		$this->assertNull($controller->totpMode());
+	}
+
+	public function testLoadOptions(): void
+	{
+		$user       = $this->app->user('editor');
+		$controller = new UserSettingsDropdownController($user);
+		$options    = $controller->load();
+
+		$name = $options[0];
+		$this->assertSame('/users/editor/changeName', $name['dialog']);
+		$this->assertSame('Rename this user', $name['text']);
+
+		$this->assertSame('-', $options[1]);
+
+		$email = $options[2];
+		$this->assertSame('/users/editor/changeEmail', $email['dialog']);
+		$this->assertSame('Change email', $email['text']);
+
+		$role = $options[3];
+		$this->assertSame('/users/editor/changeRole', $role['dialog']);
+		$this->assertSame('Change role', $role['text']);
+
+		$language = $options[4];
+		$this->assertSame('/users/editor/changeLanguage', $language['dialog']);
+		$this->assertSame('Change language', $language['text']);
+
+		$this->assertSame('-', $options[5]);
+
+		$password = $options[6];
+		$this->assertSame('/users/editor/changePassword', $password['dialog']);
+		$this->assertSame('Set password', $password['text']);
+
+		$this->assertSame('-', $options[7]);
+
+		$delete = $options[8];
+		$this->assertSame('/users/editor/delete', $delete['dialog']);
+		$this->assertSame('Delete this user', $delete['text']);
+	}
+
+	public function testLoadOptionsWithPassword(): void
+	{
+		$user       = $this->app->user('test');
+		$controller = new UserSettingsDropdownController($user);
+		$options    = $controller->load();
+
+		$password = $options[6];
+		$this->assertSame('Change password', $password['text']);
 	}
 }
