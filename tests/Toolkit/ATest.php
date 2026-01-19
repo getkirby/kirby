@@ -269,6 +269,24 @@ class ATest extends TestCase
 		$this->assertSame('default', A::get($data, 'grand.ma.cousins.4.name', 'default'));
 	}
 
+	public function testGetWithDotNotationPrefersFullPrefix(): void
+	{
+		$data = [
+			'author' => [
+				'some_theme_setting' => true
+			],
+			'author.name' => [
+				'option' => [
+					'setting' => false
+				]
+			]
+		];
+
+		$this->assertFalse(
+			A::get($data, 'author.name.option.setting')
+		);
+	}
+
 	public function testGetWithNonexistingOptions(): void
 	{
 		$data = [
