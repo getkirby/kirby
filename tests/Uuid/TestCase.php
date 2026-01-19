@@ -7,13 +7,13 @@ use Kirby\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-	protected function setUp(): void
+	public function setUp(): void
 	{
 		$this->app = $this->app();
 		$this->setUpTmp();
 	}
 
-	protected function tearDown(): void
+	public function tearDown(): void
 	{
 		$this->tearDownTmp();
 		Uuids::cache()->flush();

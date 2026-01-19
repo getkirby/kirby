@@ -9,7 +9,7 @@ class StackTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 
-	protected function setUp(): void
+	public function setUp(): void
 	{
 		Stack::reset();
 	}

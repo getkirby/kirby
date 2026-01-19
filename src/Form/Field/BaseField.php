@@ -5,7 +5,7 @@ namespace Kirby\Form\Field;
 use Kirby\Form\Fields;
 use Kirby\Form\Mixin;
 use Kirby\Reflection\Constructor;
-use Kirby\Toolkit\HasI18n;
+use Kirby\Toolkit\HasStringTemplate;
 
 /**
  * Base class for any field type
@@ -19,7 +19,7 @@ use Kirby\Toolkit\HasI18n;
  */
 abstract class BaseField
 {
-	use HasI18n;
+	use HasStringTemplate;
 	use Mixin\Api;
 	use Mixin\DefaultValue;
 	use Mixin\Model;
@@ -118,34 +118,6 @@ abstract class BaseField
 			'when'     => $this->when(),
 			'width'    => $this->width()
 		];
-	}
-
-	/**
-	 * Parses a string template in the given value
-	 */
-	protected function stringTemplate(
-		string|null $string = null,
-		bool $safe = true
-	): string|null {
-		if ($string === null || $string === '') {
-			return $string;
-		}
-
-		return match ($safe) {
-			true  => $this->model()->toSafeString($string),
-			false => $this->model()->toString($string)
-		};
-	}
-
-	protected function stringTemplateI18n(
-		array|string|null $string = null,
-		bool $safe = true
-	): string|null {
-		if ($string === null || $string === '') {
-			return $string;
-		}
-
-		return $this->stringTemplate($this->i18n($string), $safe);
 	}
 
 	/**

@@ -16,6 +16,8 @@ class FieldTest extends TestCase
 
 	public function setUp(): void
 	{
+		parent::setUp();
+
 		new App([
 			'roots' => [
 				'index' => '/dev/null'
@@ -30,8 +32,9 @@ class FieldTest extends TestCase
 
 	public function tearDown(): void
 	{
-		Field::$types = [];
+		parent::tearDown();
 
+		Field::$types = [];
 		Field::$mixins = $this->originalMixins;
 	}
 

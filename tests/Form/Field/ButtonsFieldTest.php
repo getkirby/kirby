@@ -18,6 +18,30 @@ class MockPageForButtonsField extends Page
 #[CoversClass(ButtonsField::class)]
 class ButtonsFieldTest extends TestCase
 {
+	public function testButtons(): void
+	{
+		$field = $this->field('buttons', [
+			'buttons' => [['text' => 'Button A']]
+		]);
+
+		$this->assertSame('Button A', $field->buttons()[0]['text']);
+
+		// as query
+		$field = $this->field('buttons', [
+			'model'   => new MockPageForButtonsField(['slug' => 'test']),
+			'buttons' => 'page.buttons'
+		]);
+
+		$this->assertSame('Button A', $field->buttons()[0]['text']);
+
+		// with string templates
+		$field = $this->field('buttons', [
+			'buttons' => [['text' => 'Button {{ 1 + 2 }} {{ page.slug }}']]
+		]);
+
+		$this->assertSame('Button 3 test', $field->buttons()[0]['text']);
+	}
+
 	public function testProps(): void
 	{
 		$field = $this->field('buttons');
@@ -33,22 +57,5 @@ class ButtonsFieldTest extends TestCase
 		$this->assertSame('buttons', $props['name']);
 		$this->assertSame('buttons', $props['type']);
 		$this->assertSame([], $props['buttons']);
-	}
-
-	public function testButtons(): void
-	{
-		$field = $this->field('buttons', [
-			'buttons' => $expected = [['text' => 'Button A']]
-		]);
-
-		$this->assertSame($expected, $field->buttons());
-
-		// as query
-		$field = $this->field('buttons', [
-			'model'   => new MockPageForButtonsField(['slug' => 'test']),
-			'buttons' => 'page.buttons'
-		]);
-
-		$this->assertSame($expected, $field->buttons());
 	}
 }

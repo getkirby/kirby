@@ -248,6 +248,19 @@ export default {
 			} else {
 				this.isLoading = true;
 				const state = await this.get(url, options);
+
+				// Preserve modal listeners across state-driven opens.
+				// When opening a modal via a URL, the backend response triggers
+				// a second open with a state object that doesn't include those
+				// listeners, so we need to add them back to the state.
+				if (isObject(options?.on) === true) {
+					for (const modal of modals) {
+						if (isObject(state?.[modal])) {
+							state[modal].on = options.on;
+						}
+					}
+				}
+
 				this.set(state);
 			}
 

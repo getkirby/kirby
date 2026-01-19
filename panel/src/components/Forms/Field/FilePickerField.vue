@@ -61,14 +61,22 @@ export default {
 
 						// send the input event
 						// the content object gets updated
-						this.$emit(
-							"input",
-							this.selected.map((file) => file.uuid ?? file.id)
-						);
+						const value = this.selected.map((file) => file.uuid ?? file.id);
+						this.$emit("input", value);
 
 						// the `$panel.content.update()` event sends
 						// the updated form value object to the server
 						await this.$panel.content.update();
+
+						// if the picker dialog is still open, refresh it
+						if (this.$panel.dialog.isOpen === true) {
+							await this.$panel.dialog.refresh({
+								query: {
+									...this.$panel.dialog.query,
+									value
+								}
+							});
+						}
 					}
 				}
 			};

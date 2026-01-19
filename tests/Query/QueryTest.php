@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Query::class)]
 class QueryTest extends TestCase
 {
-	protected function tearDown(): void
+	public function tearDown(): void
 	{
 		App::destroy();
 		Query::$runner = null;

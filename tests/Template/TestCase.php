@@ -7,7 +7,7 @@ use Kirby\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-	protected function tearDown(): void
+	public function tearDown(): void
 	{
 		while (Snippet::$current !== null) {
 			Snippet::$current->close();

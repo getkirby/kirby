@@ -697,13 +697,14 @@ class LanguageTest extends TestCase
 		]);
 
 		$expected = [
-			'code'      => 'de',
-			'default'   => false,
-			'direction' => 'ltr',
-			'locale'    => [LC_ALL => 'de_DE'],
-			'name'      => 'Deutsch',
-			'rules'     => $language->rules(),
-			'url'       => '/de'
+			'code'            => 'de',
+			'default'         => false,
+			'direction'       => 'ltr',
+			'hasCustomDomain' => false,
+			'locale'          => [LC_ALL => 'de_DE'],
+			'name'            => 'Deutsch',
+			'rules'           => $language->rules(),
+			'url'             => '/de'
 		];
 
 		$this->assertSame($expected, $language->toArray());
@@ -747,6 +748,50 @@ class LanguageTest extends TestCase
 		]);
 
 		$this->assertSame('/en', $language->url());
+	}
+
+	public function testHasCustomDomain(): void
+	{
+		// default
+		$language = new Language([
+			'code' => 'en',
+			'url'  => null
+		]);
+		$this->assertFalse($language->hasCustomDomain());
+
+		// relative url - false
+		$language = new Language([
+			'code' => 'en',
+			'url'  => '/en'
+		]);
+		$this->assertFalse($language->hasCustomDomain());
+
+		// root url - false
+		$language = new Language([
+			'code' => 'en',
+			'url'  => '/'
+		]);
+		$this->assertFalse($language->hasCustomDomain());
+
+		// absolute http url - true
+		$language = new Language([
+			'code' => 'en',
+			'url'  => 'http://example.com'
+		]);
+		$this->assertTrue($language->hasCustomDomain());
+
+		// absolute https url - true
+		$language = new Language([
+			'code' => 'en',
+			'url'  => 'https://example.com/en'
+		]);
+		$this->assertTrue($language->hasCustomDomain());
+
+		// no url - false
+		$language = new Language([
+			'code' => 'en'
+		]);
+		$this->assertFalse($language->hasCustomDomain());
 	}
 
 	public function testUpdate(): void

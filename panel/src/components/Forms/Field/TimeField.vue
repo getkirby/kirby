@@ -10,6 +10,7 @@
 			ref="input"
 			type="time"
 			@input="$emit('input', $event ?? '')"
+			@submit="$emit('submit')"
 		>
 			<template v-if="times" #icon>
 				<k-button
@@ -63,7 +64,7 @@ export default {
 			default: true
 		}
 	},
-	emits: ["input"],
+	emits: ["input", "submit"],
 	methods: {
 		/**
 		 * Focuses the input element
