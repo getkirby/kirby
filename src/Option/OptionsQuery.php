@@ -10,11 +10,12 @@ use Kirby\Cms\StructureObject;
 use Kirby\Cms\User;
 use Kirby\Content\Field;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
 
 /**
- * Options derrived from running a query against
+ * Options derived from running a query against
  * pages, files, users or structures to create
  * options out of them.
  *
@@ -38,11 +39,14 @@ class OptionsQuery extends OptionsProvider
 
 	protected function collection(array $array): Collection
 	{
+		$isAssociative = A::isAssociative($array);
+
 		foreach ($array as $key => $value) {
 			if (is_scalar($value) === true) {
 				$array[$key] = new Obj([
-					'key'   => new Field(null, 'key', $key),
-					'value' => new Field(null, 'value', $value),
+					'key'          => new Field(null, 'key', $key),
+					'value'        => new Field(null, 'value', $value),
+					'hasStringKey' => $isAssociative,
 				]);
 			}
 		}
@@ -72,6 +76,12 @@ class OptionsQuery extends OptionsProvider
 	protected function itemToDefaults(array|object $item): array
 	{
 		return match (true) {
+			$item instanceof Obj && $item->hasStringKey === true => [
+				'arrayItem',
+				'{{ item.value }}',
+				'{{ item.key }}'
+			],
+
 			is_array($item),
 			$item instanceof Obj => [
 				'arrayItem',
