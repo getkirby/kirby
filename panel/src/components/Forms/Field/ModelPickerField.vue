@@ -190,6 +190,7 @@ export default {
 					value: this.value
 				},
 				on: {
+					drop: this.hasDropzone ? this.drop : undefined,
 					submit: ({ ids }) => {
 						this.$emit("input", ids);
 						this.$panel.dialog.close();

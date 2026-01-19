@@ -3,8 +3,12 @@
 		v-bind="$props"
 		class="k-model-picker-dialog"
 		@cancel="$emit('cancel')"
-		@drop="$emit('drop', $event)"
 		@submit="submit"
+		v-on="
+			$panel.dialog.hasEventListener('drop')
+				? { drop: (event) => $emit('drop', event) }
+				: {}
+		"
 	>
 		<slot name="header" />
 
