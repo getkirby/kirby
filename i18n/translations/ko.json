@@ -298,6 +298,10 @@
 	"error.validation.uuid": "올바른 UUID를 입력하세요.",
 	"error.validation.url": "올바른 URL을 입력하세요.",
 
+	"error.version.discard.permission": "You are not allowed to discard this version",
+	"error.version.publish.permission": "You are not allowed to publish this version",
+	"error.version.save.permission": "You are not allowed to change this version",
+
 	"expand": "열기",
 	"expand.all": "Expand all",
 

@@ -298,6 +298,10 @@
 	"error.validation.uuid": "Vinsamlegast gillt UUID (Notandakenni)",
 	"error.validation.url": "Ákjósanleg vefslóð",
 
+	"error.version.discard.permission": "You are not allowed to discard this version",
+	"error.version.publish.permission": "You are not allowed to publish this version",
+	"error.version.save.permission": "You are not allowed to change this version",
+
 	"expand": "Þenja út",
 	"expand.all": "Expand all",
 

@@ -63,7 +63,8 @@ export default {
 			if (
 				this.values.href.startsWith("page://") &&
 				window.panel.language.code &&
-				window.panel.language.default === false
+				window.panel.language.default === false &&
+				window.panel.language.hasCustomDomain === false
 			) {
 				permalink = "/" + window.panel.language.code + permalink;
 			}

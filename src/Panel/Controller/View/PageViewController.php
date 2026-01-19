@@ -54,6 +54,7 @@ class PageViewController extends ModelViewController
 		return parent::buttons()->defaults(
 			'open',
 			'preview',
+			'-',
 			'settings',
 			'languages',
 			'status'

@@ -5,6 +5,7 @@ namespace Kirby\Api\Controller;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\Lock;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Fields;
 use Kirby\Form\Form;
@@ -40,6 +41,12 @@ class Changes
 	 */
 	public static function discard(ModelWithContent $model): array
 	{
+		if ($model->permissions()->can('update') === false) {
+			throw new PermissionException(
+				key: 'version.discard.permission',
+			);
+		}
+
 		$model->version('changes')->delete('current');
 
 		// Removes the old .lock file when it is no longer needed
@@ -56,6 +63,12 @@ class Changes
 	 */
 	public static function publish(ModelWithContent $model, array $input): array
 	{
+		if ($model->permissions()->can('update') === false) {
+			throw new PermissionException(
+				key: 'version.publish.permission',
+			);
+		}
+
 		// save the given changes first
 		static::save(
 			model: $model,
@@ -91,6 +104,12 @@ class Changes
 	 */
 	public static function save(ModelWithContent $model, array $input): array
 	{
+		if ($model->permissions()->can('update') === false) {
+			throw new PermissionException(
+				key: 'version.save.permission',
+			);
+		}
+
 		// Removes the old .lock file when it is no longer needed
 		// @todo Remove in 6.0.0
 		static::cleanup($model);

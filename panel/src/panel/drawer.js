@@ -98,7 +98,9 @@ export default (panel) => {
 			// get the current state and add it to the history
 			// (we need to fetch the state freshly as it is altered by `this.tab()`)
 			const state = this.state();
-			this.history.add(state, drawer.replace);
+			if (state?.id) {
+				this.history.add(state, drawer.replace);
+			}
 
 			this.focus();
 
