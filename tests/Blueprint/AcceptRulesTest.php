@@ -247,4 +247,41 @@ class AcceptRulesTest extends BlueprintTest
 
 		$this->assertSame(['a', 'b'], $rules->fileTemplates());
 	}
+
+	public function testFileTemplatesFromAllAvailable(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/image' => [
+					'name' => 'image',
+				],
+				'files/document' => [
+					'name' => 'document',
+				],
+				'files/video' => [
+					'name' => 'video',
+				],
+			]
+		]);
+
+		// Files section without template should include all available templates
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'sections' => [
+				'files' => [
+					'type' => 'files',
+					// No template specified - should get all available
+				],
+			]
+		]);
+
+		$rules = new AcceptRules($blueprint);
+
+		$expected = ['default', 'image', 'document', 'video'];
+		$result   = $rules->fileTemplates();
+		sort($expected);
+		sort($result);
+		$this->assertSame($expected, $result);
+	}
 }
