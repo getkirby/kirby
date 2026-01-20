@@ -135,6 +135,10 @@ trait FileModifications
 
 		$set = [];
 
+		// track widths to avoid duplicate entries
+		// when multiple requested sizes result in the same actual width
+		$widths = [];
+
 		foreach ($sizes as $key => $value) {
 			if (is_array($value)) {
 				$options = $value;
@@ -151,7 +155,24 @@ trait FileModifications
 				$condition = $value . 'w';
 			}
 
-			$set[] = $this->thumb($options)->url() . ' ' . $condition;
+			$thumb = $this->thumb($options);
+
+			// for width descriptors, use the actual thumbnail width
+			// to avoid incorrect srcset entries when the requested
+			// size is larger than the original image
+			if (str_ends_with($condition, 'w') === true) {
+				$width = $thumb->width();
+
+				// skip if we already have an entry for this width
+				if (in_array($width, $widths) === true) {
+					continue;
+				}
+
+				$widths[] = $width;
+				$condition = $width . 'w';
+			}
+
+			$set[] = $thumb->url() . ' ' . $condition;
 		}
 
 		return implode(', ', $set);
