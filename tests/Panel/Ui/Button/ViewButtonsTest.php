@@ -99,6 +99,17 @@ class ViewButtonsTest extends AreaTestCase
 		$this->assertSame('result-c', $result[2]['component']);
 	}
 
+	public function testRenderWithSeparator(): void
+	{
+		$buttons = new ViewButtons(buttons: ['a', '-', 'y'], view: 'test');
+		$result  = $buttons->render();
+
+		$this->assertCount(3, $result);
+		$this->assertSame('result-a', $result[0]['component']);
+		$this->assertSame('-', $result[1]);
+		$this->assertSame('k-y-view-button', $result[2]['component']);
+	}
+
 	public function testRenderWithViewButtonObjects(): void
 	{
 		$buttons = new ViewButtons([
