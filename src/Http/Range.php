@@ -42,7 +42,7 @@ class Range
 		$range = substr($range, 6);
 
 		// support only single ranges (not multiple ranges like "0-100,200-300")
-		if (str_contains($range, ',')) {
+		if (str_contains($range, ',') === true) {
 			return false;
 		}
 
@@ -63,17 +63,17 @@ class Range
 				return false;
 			}
 
-			$suffixLength = (int)$endStr;
+			$suffix = (int)$endStr;
 
-			if ($suffixLength <= 0) {
+			if ($suffix <= 0) {
 				return false;
 			}
 
-			if ($suffixLength > $size) {
-				$suffixLength = $size;
+			if ($suffix > $size) {
+				$suffix = $size;
 			}
 
-			$start = $size - $suffixLength;
+			$start = $size - $suffix;
 			$end   = $size - 1;
 
 			return [$start, $end];
