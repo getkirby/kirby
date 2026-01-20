@@ -626,7 +626,7 @@ class F
 				$handle = fopen($file, 'rb');
 
 				if ($handle === false) {
-					return false;
+					return false; // @codeCoverageIgnore
 				}
 
 				if ($offset > 0) {

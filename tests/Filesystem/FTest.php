@@ -538,6 +538,12 @@ class FTest extends TestCase
 
 		// read 6 bytes starting from offset 14 (edge case - reads to end)
 		$this->assertSame('awesome', F::range($this->test, offset: 14, length: 7));
+
+		// remote path
+		$this->assertFalse(F::range('https://example.com/file.txt'));
+
+		// empty path
+		$this->assertFalse(F::range(''));
 	}
 
 	public function testRead(): void

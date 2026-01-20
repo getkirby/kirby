@@ -12,6 +12,10 @@ class RangeTest extends TestCase
 
 	public function testParse(): void
 	{
+		// invalid size
+		$result = Range::parse('bytes=0-1', 0);
+		$this->assertFalse($result);
+
 		// standard range
 		$result = Range::parse('bytes=0-100', 1000);
 		$this->assertSame([0, 100], $result);
@@ -52,6 +56,14 @@ class RangeTest extends TestCase
 		$result = Range::parse('bytes=-500', 1000);
 		$this->assertSame([500, 999], $result);
 
+		// suffix byte range with invalid length
+		$result = Range::parse('bytes=-0', 1000);
+		$this->assertFalse($result);
+
+		// suffix byte range exceeding size (clamped)
+		$result = Range::parse('bytes=-1500', 1000);
+		$this->assertSame([0, 999], $result);
+
 		// start beyond file size
 		$result = Range::parse('bytes=2000-3000', 1000);
 		$this->assertFalse($result);
@@ -78,6 +90,10 @@ class RangeTest extends TestCase
 
 		// malformed range
 		$result = Range::parse('bytes=abc-def', 1000);
+		$this->assertFalse($result);
+
+		// non-numeric end
+		$result = Range::parse('bytes=0-abc', 1000);
 		$this->assertFalse($result);
 
 		// missing equals
