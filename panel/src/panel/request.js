@@ -183,9 +183,7 @@ export const safeFetch = async (request) => {
 			throw error;
 		}
 
-		if (typeof window !== "undefined" && window.panel?.events) {
-			window.panel.events.emit("offline", error);
-		}
+		window?.panel?.events?.emit("offline", error);
 
 		throw new OfflineError("Panel is offline", {
 			cause: error,
