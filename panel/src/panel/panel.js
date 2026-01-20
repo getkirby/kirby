@@ -22,6 +22,7 @@ import User from "./user.js";
 import View from "./view.js";
 import { isObject, length } from "@/helpers/object.js";
 import { isEmpty } from "@/helpers/string.js";
+import OfflineError from "@/errors/OfflineError.js";
 
 /**
  * Globals are just reactive objects
@@ -187,6 +188,11 @@ export default {
 	 */
 	error(error, openNotification = true) {
 		if (error.name === "AbortError") {
+			return;
+		}
+
+		if (error instanceof OfflineError) {
+			this.isOffline = true;
 			return;
 		}
 

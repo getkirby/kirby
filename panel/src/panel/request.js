@@ -2,6 +2,7 @@ import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url.js";
 import { toLowerKeys } from "../helpers/object.js";
 import AuthError from "@/errors/AuthError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
+import OfflineError from "@/errors/OfflineError.js";
 import RequestError from "@/errors/RequestError.js";
 
 /**
@@ -114,7 +115,7 @@ export const request = async (url, options = {}) => {
 	}
 
 	// parse the JSON response and react on errors
-	return await responder(request, await fetch(request));
+	return await responder(request, await safeFetch(request));
 };
 
 /**
@@ -165,6 +166,30 @@ export const responder = async (request, response) => {
 		request,
 		response
 	};
+};
+
+/**
+ * Fetches a request and converts network errors
+ * into a Panel offline state
+ *
+ * @param {Request} request
+ * @returns {Response}
+ */
+export const safeFetch = async (request) => {
+	try {
+		return await fetch(request);
+	} catch (error) {
+		if (error?.name === "AbortError") {
+			throw error;
+		}
+
+		window?.panel?.events?.emit("offline", error);
+
+		throw new OfflineError("Panel is offline", {
+			cause: error,
+			request
+		});
+	}
 };
 
 export default request;
