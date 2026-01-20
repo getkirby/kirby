@@ -237,6 +237,7 @@ class User extends ModelWithContent
 
 	/**
 	 * Checks if the user has a stored password
+	 * @since 5.3.0
 	 */
 	public function hasPassword(): bool
 	{
