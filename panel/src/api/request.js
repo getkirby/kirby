@@ -1,4 +1,4 @@
-import { responder } from "@/panel/request.js";
+import { responder, safeFetch } from "@/panel/request.js";
 import { toLowerKeys } from "@/helpers/object.js";
 import { ltrim, rtrim } from "@/helpers/string";
 
@@ -46,7 +46,7 @@ export default (api) => {
 		const request = new Request(options.url, options);
 
 		// fetch the resquest's response
-		const { response } = await responder(request, await fetch(request));
+		const { response } = await responder(request, await safeFetch(request));
 
 		let data = response.json;
 
