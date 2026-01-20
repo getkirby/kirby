@@ -513,6 +513,33 @@ class FTest extends TestCase
 		I18n::$locale = $locale;
 	}
 
+
+	public function testRange(): void
+	{
+		file_put_contents($this->test, 'my content is awesome');
+
+		// read from offset 3 to end
+		$this->assertSame('content is awesome', F::range($this->test, offset: 3));
+
+		// read from offset 11
+		$this->assertSame('is awesome', F::range($this->test, offset: 11));
+
+		// read first 10 bytes
+		$this->assertSame('my content', F::range($this->test, length: 10));
+
+		// read first 2 bytes
+		$this->assertSame('my', F::range($this->test, length: 2));
+
+		// read 7 bytes starting from offset 3
+		$this->assertSame('content', F::range($this->test, offset: 3, length: 7));
+
+		// read 2 bytes starting from offset 11
+		$this->assertSame('is', F::range($this->test, offset: 11, length: 2));
+
+		// read 6 bytes starting from offset 14 (edge case - reads to end)
+		$this->assertSame('awesome', F::range($this->test, offset: 14, length: 7));
+	}
+
 	public function testRead(): void
 	{
 		file_put_contents($this->test, $content = 'my content is awesome');
