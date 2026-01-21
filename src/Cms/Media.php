@@ -54,7 +54,7 @@ class Media
 			}
 
 			// send the file to the browser
-			return Response::file($file->publish()->mediaRoot());
+			return Response::file($file->publish()->root());
 		}
 
 		// try to generate a thumb for the file
