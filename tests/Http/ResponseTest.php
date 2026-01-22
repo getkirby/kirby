@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -16,6 +17,7 @@ class ResponseTest extends TestCase
 
 	public function tearDown(): void
 	{
+		App::destroy();
 		HeadersSent::$value = false;
 	}
 
@@ -32,6 +34,36 @@ class ResponseTest extends TestCase
 		]);
 
 		$this->assertSame('test', $response->body());
+	}
+
+	public function testCharset(): void
+	{
+		$response = new Response();
+		$this->assertSame('UTF-8', $response->charset());
+
+		$response = new Response('', 'text/html', 200, [], 'test');
+		$this->assertSame('test', $response->charset());
+
+		$response = new Response([
+			'charset' => 'test'
+		]);
+
+		$this->assertSame('test', $response->charset());
+	}
+
+	public function testCode(): void
+	{
+		$response = new Response();
+		$this->assertSame(200, $response->code());
+
+		$response = new Response('', 'text/html', 404);
+		$this->assertSame(404, $response->code());
+
+		$response = new Response([
+			'code' => 404
+		]);
+
+		$this->assertSame(404, $response->code());
 	}
 
 	public function testDownload(): void
@@ -204,8 +236,35 @@ class ResponseTest extends TestCase
 		$this->assertSame(201, $response->code());
 		$this->assertSame('{"foo": "bar"}', $response->body());
 		$this->assertSame([
+			'Accept-Ranges' => 'bytes',
 			'Pragma' => 'no-cache'
 		], $response->headers());
+	}
+
+	public function testFileWithAcceptRangesHeader(): void
+	{
+		$file = static::FIXTURES . '/download.json';
+		$response = Response::file($file);
+
+		$this->assertSame('bytes', $response->header('Accept-Ranges'));
+	}
+
+	public function testFileWithRangeRequestHeader(): void
+	{
+		$file = static::FIXTURES . '/download.json';
+		$size = filesize($file);
+
+		new App([
+			'server' => [
+				'HTTP_RANGE' => 'bytes=0-'
+			]
+		]);
+
+		$response = Response::file($file);
+
+		$this->assertSame(206, $response->code());
+		$this->assertSame('bytes 0-' . ($size - 1) . '/' . $size, $response->header('Content-Range'));
+		$this->assertSame(file_get_contents($file), $response->body());
 	}
 
 	public function testFileInvalid(): void
@@ -218,6 +277,7 @@ class ResponseTest extends TestCase
 		$this->assertSame(200, $response->code());
 		$this->assertSame('test', $response->body());
 		$this->assertSame([
+			'Accept-Ranges' => 'bytes',
 			'X-Content-Type-Options' => 'nosniff',
 		], $response->headers());
 
@@ -232,54 +292,10 @@ class ResponseTest extends TestCase
 		$this->assertSame(201, $response->code());
 		$this->assertSame('test', $response->body());
 		$this->assertSame([
+			'Accept-Ranges' => 'bytes',
 			'Pragma' => 'no-cache',
 			'X-Content-Type-Options' => 'nosniff',
 		], $response->headers());
-	}
-
-	public function testType(): void
-	{
-		$response = new Response();
-		$this->assertSame('text/html', $response->type());
-
-		$response = new Response('', 'image/jpeg');
-		$this->assertSame('image/jpeg', $response->type());
-
-		$response = new Response([
-			'type' => 'image/jpeg'
-		]);
-
-		$this->assertSame('image/jpeg', $response->type());
-	}
-
-	public function testCharset(): void
-	{
-		$response = new Response();
-		$this->assertSame('UTF-8', $response->charset());
-
-		$response = new Response('', 'text/html', 200, [], 'test');
-		$this->assertSame('test', $response->charset());
-
-		$response = new Response([
-			'charset' => 'test'
-		]);
-
-		$this->assertSame('test', $response->charset());
-	}
-
-	public function testCode(): void
-	{
-		$response = new Response();
-		$this->assertSame(200, $response->code());
-
-		$response = new Response('', 'text/html', 404);
-		$this->assertSame(404, $response->code());
-
-		$response = new Response([
-			'code' => 404
-		]);
-
-		$this->assertSame(404, $response->code());
 	}
 
 	public function testRedirect(): void
@@ -371,6 +387,21 @@ class ResponseTest extends TestCase
 		$this->assertSame($code, 200);
 	}
 
+	public function testToArray(): void
+	{
+		// default setup
+		$response = new Response();
+		$expected = [
+			'type'    => 'text/html',
+			'charset' => 'UTF-8',
+			'code'    => 200,
+			'headers' => [],
+			'body'    => '',
+		];
+
+		$this->assertSame($expected, $response->toArray());
+	}
+
 	#[RunInSeparateProcess]
 	#[PreserveGlobalState(false)]
 	public function testToString(): void
@@ -395,18 +426,18 @@ class ResponseTest extends TestCase
 		$this->assertSame($code, 200);
 	}
 
-	public function testToArray(): void
+	public function testType(): void
 	{
-		// default setup
 		$response = new Response();
-		$expected = [
-			'type'    => 'text/html',
-			'charset' => 'UTF-8',
-			'code'    => 200,
-			'headers' => [],
-			'body'    => '',
-		];
+		$this->assertSame('text/html', $response->type());
 
-		$this->assertSame($expected, $response->toArray());
+		$response = new Response('', 'image/jpeg');
+		$this->assertSame('image/jpeg', $response->type());
+
+		$response = new Response([
+			'type' => 'image/jpeg'
+		]);
+
+		$this->assertSame('image/jpeg', $response->type());
 	}
 }
