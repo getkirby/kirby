@@ -17,6 +17,7 @@ class ResponseTest extends TestCase
 
 	public function tearDown(): void
 	{
+		App::destroy();
 		HeadersSent::$value = false;
 	}
 

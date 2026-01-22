@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Range::class)]
 class RangeTest extends TestCase
 {
-	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const FIXTURES = __DIR__ . '/fixtures';
 
 	public function testParse(): void
 	{
