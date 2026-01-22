@@ -17,6 +17,7 @@
 			}"
 			:class="[variant === 'invisible' ? 'sr-only' : null, $attrs.class]"
 			:data-variant="variant"
+			@click="$emit('click', $event)"
 			@input="$emit('input', $event.target.checked)"
 		/>
 		<span v-if="label || info" class="k-choice-input-label">
@@ -61,7 +62,8 @@ export const props = {
  * @example <k-choice-input :value="value" @input="value = $event" />
  */
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	emits: ["click", "input"]
 };
 </script>
 

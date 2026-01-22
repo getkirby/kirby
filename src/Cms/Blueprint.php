@@ -124,8 +124,14 @@ class Blueprint
 				continue;
 			}
 
+			$template  = $section->template();
 			$templates = match ($section->type()) {
-				'files'  => [...$templates, $section->template() ?? 'default'],
+				'files'  => [
+					...$templates,
+					...($template
+						? [$template]
+						: App::instance()->blueprints('files'))
+				],
 				'fields' => [
 					...$templates,
 					...$this->acceptedFileTemplatesFromFields($section->fields())

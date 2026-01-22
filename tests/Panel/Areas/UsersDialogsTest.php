@@ -166,6 +166,37 @@ class UsersDialogsTest extends AreaTestCase
 		$this->assertSame('Change', $props['submitButton']);
 	}
 
+	public function testChangePasswordWithoutPasswordForTheCurrentUser(): void
+	{
+		$this->installEditor();
+		$this->login('editor');
+
+		$dialog = $this->dialog('users/editor/changePassword');
+		$props  = $dialog['props'];
+
+		$this->assertFormDialog($dialog);
+
+		// a user without password can change their own password without providing the current (non-existing) password.
+		$this->assertArrayNotHasKey('currentPassword', $props['fields']);
+		$this->assertArrayNotHasKey('line', $props['fields']);
+	}
+
+	public function testChangePasswordWithoutPasswordForAnotherUser(): void
+	{
+		$this->installEditor();
+		$this->login();
+
+		$dialog = $this->dialog('users/editor/changePassword');
+		$props  = $dialog['props'];
+
+		$this->assertFormDialog($dialog);
+
+		// when a user tries to change the password of another user, they always need to provide the
+		// current password even if they have no password so far.
+		$this->assertArrayHasKey('currentPassword', $props['fields']);
+		$this->assertArrayHasKey('line', $props['fields']);
+	}
+
 	public function testChangePasswordOnSubmit(): void
 	{
 		$this->submit([

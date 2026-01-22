@@ -50,6 +50,7 @@ class Page extends Model
 		return ViewButtons::view($this)->defaults(
 			'open',
 			'preview',
+			'-',
 			'settings',
 			'languages',
 			'status'
