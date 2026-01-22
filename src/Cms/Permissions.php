@@ -68,7 +68,6 @@ class Permissions
 			'changeTitle' => true,
 			'edit'        => true,
 			'save'        => true
-
 		],
 		'users' => [
 			'changeEmail'    => true,
@@ -104,7 +103,7 @@ class Permissions
 	{
 		$defaults = $this->defaults;
 
-		$update = static fn ($value) => [
+		$update = static fn($value) => [
 			'edit' => $value,
 			'save' => $value,
 		];
