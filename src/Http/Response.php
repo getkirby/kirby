@@ -165,7 +165,7 @@ class Response implements Stringable
 	 * Ensures safe MIME type handling by forcing plain text
 	 * for files without recognizable MIME types to harden
 	 * against attacks from malicious file uploads
-	 * @since 6.0.0
+	 * @since 5.3.0
 	 * @internal
 	 */
 	public static function ensureSafeMimeType(array $props): array

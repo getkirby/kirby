@@ -601,7 +601,7 @@ class F
 
 	/**
 	 * Reads a specific byte range from a file
-	 * @since 6.0.0
+	 * @since 5.3.0
 	 *
 	 * @param string $file The path to the file
 	 * @param int $offset The byte offset to start reading from
