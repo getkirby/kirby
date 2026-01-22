@@ -22,6 +22,48 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
  */
 class UserChangePasswordDialogController extends UserDialogController
 {
+	/**
+	 * Whether the current password confirmation can be skipped
+	 * (only if user is changing their own password and has no password yet)
+	 */
+	protected function canSkipConfirmation(): bool
+	{
+		return
+			$this->user->isLoggedIn() === true &&
+			$this->user->hasPassword() === false;
+	}
+
+	protected function fields(): array
+	{
+		$fields = [
+			'currentPassword' => Field::password([
+				'label'        => $this->i18n('user.changePassword.' . ($this->isCurrentUser() ? 'current' : 'own')),
+				'autocomplete' => 'current-password',
+				'help'         => $this->i18n('account') . ': ' . $this->kirby->user()->email(),
+			]),
+			'line' => [
+				'type' => 'line',
+			],
+			'password' => Field::password([
+				'label'        => $this->i18n('user.changePassword.new'),
+				'autocomplete' => 'new-password',
+				'help'         => $this->i18n('account') . ': ' . $this->user->email(),
+			]),
+			'passwordConfirmation' => Field::password([
+				'label'        => $this->i18n('user.changePassword.new.confirm'),
+				'autocomplete' => 'new-password'
+			])
+		];
+
+		// if the currently logged in user tries to change their own password
+		// and has no password so far, password confirmation can be skipped
+		if ($this->canSkipConfirmation() === true) {
+			unset($fields['currentPassword'], $fields['line']);
+		}
+
+		return $fields;
+	}
+
 	protected function isCurrentUser(): bool
 	{
 		return $this->kirby->user()->is($this->user);
@@ -30,25 +72,7 @@ class UserChangePasswordDialogController extends UserDialogController
 	public function load(): Dialog
 	{
 		return new FormDialog(
-			fields: [
-				'currentPassword' => Field::password([
-					'label'        => $this->i18n('user.changePassword.' . ($this->isCurrentUser() ? 'current' : 'own')),
-					'autocomplete' => 'current-password',
-					'help'         => $this->i18n('account') . ': ' . $this->kirby->user()->email(),
-				]),
-				'line' => [
-					'type' => 'line',
-				],
-				'password' => Field::password([
-					'label'        => $this->i18n('user.changePassword.new'),
-					'autocomplete' => 'new-password',
-					'help'         => $this->i18n('account') . ': ' . $this->user->email(),
-				]),
-				'passwordConfirmation' => Field::password([
-					'label'        => $this->i18n('user.changePassword.new.confirm'),
-					'autocomplete' => 'new-password'
-				])
-			],
+			fields: $this->fields(),
 			submitButton: $this->i18n('change')
 		);
 	}
@@ -61,7 +85,9 @@ class UserChangePasswordDialogController extends UserDialogController
 
 		// validate the current password of the acting user
 		try {
-			$this->kirby->user()->validatePassword($currentPassword);
+			if ($this->canSkipConfirmation() === false) {
+				$this->kirby->user()->validatePassword($currentPassword);
+			}
 		} catch (Exception) {
 			// catching and re-throwing exception to avoid automatic
 			// sign-out of current user from the Panel

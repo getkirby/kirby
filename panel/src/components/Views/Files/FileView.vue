@@ -17,16 +17,19 @@
 			{{ filename }}
 
 			<template #buttons>
-				<k-view-buttons :buttons="buttons" @action="onAction" />
-				<k-form-controls
-					:editor="editor"
-					:has-diff="hasDiff"
-					:is-locked="isLocked"
-					:is-processing="isSaving"
-					:modified="modified"
-					@discard="onDiscard"
-					@submit="onSubmit"
-				/>
+				<k-view-buttons :buttons="buttons" @action="onAction">
+					<template #after>
+						<k-form-controls
+							:editor="editor"
+							:has-diff="hasDiff"
+							:is-locked="isLocked"
+							:is-processing="isSaving"
+							:modified="modified"
+							@discard="onDiscard"
+							@submit="onSubmit"
+						/>
+					</template>
+				</k-view-buttons>
 			</template>
 		</k-header>
 

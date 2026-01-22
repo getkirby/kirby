@@ -2,6 +2,8 @@
 
 namespace Kirby\Blueprint;
 
+use Kirby\Cms\App;
+
 /**
  * The AcceptRules class goes through all blueprint settings for
  * sections and fields and collects rules for accepted files
@@ -43,8 +45,14 @@ class AcceptRules
 				continue;
 			}
 
+			$template  = $section->template();
 			$templates = match ($section->type()) {
-				'files'  => [...$templates, $section->template() ?? 'default'],
+				'files'  => [
+					...$templates,
+					...($template
+						? [$template]
+						: App::instance()->blueprints('files'))
+				],
 				'fields' => [
 					...$templates,
 					...$this->fileTemplatesFromFields($section->fields())

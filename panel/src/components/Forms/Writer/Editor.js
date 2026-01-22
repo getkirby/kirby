@@ -4,7 +4,7 @@ import { Schema, DOMParser, DOMSerializer } from "prosemirror-model";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { inputRules, undoInputRule } from "prosemirror-inputrules";
-import { toRaw } from "vue";
+import { reactive, toRaw } from "vue";
 
 // Prosemirror utils
 import utils from "./Utils";
@@ -39,6 +39,22 @@ export default class Editor extends Emitter {
 		};
 
 		this.init(options);
+	}
+
+	get activeMarks() {
+		return this.active.marks;
+	}
+
+	get activeNodes() {
+		return this.active.nodes;
+	}
+
+	get activeMarkAttrs() {
+		return this.active.markAttrs;
+	}
+
+	get activeNodeAttrs() {
+		return this.active.nodeAttrs;
 	}
 
 	blur() {
@@ -375,6 +391,14 @@ export default class Editor extends Emitter {
 		this.focused = false;
 		// this.selection = { from: 0, to: 0 };
 
+		// Initialize reactive state for active marks and nodes
+		this.active = reactive({
+			marks: [],
+			nodes: [],
+			markAttrs: {},
+			nodeAttrs: {}
+		});
+
 		this.events = this.createEvents();
 		this.extensions = this.createExtensions();
 		this.nodes = this.createNodes();
@@ -419,8 +443,8 @@ export default class Editor extends Emitter {
 
 	get isActive() {
 		return Object.entries({
-			...this.activeMarks,
-			...this.activeNodes
+			...this.active.marks,
+			...this.active.nodes
 		}).reduce(
 			(types, [name, value]) => ({
 				...types,
@@ -485,11 +509,11 @@ export default class Editor extends Emitter {
 	}
 
 	setActiveNodesAndMarks() {
-		this.activeMarks = Object.values(this.schema.marks)
+		this.active.marks = Object.values(this.schema.marks)
 			.filter((mark) => utils.markIsActive(this.state, mark))
 			.map((mark) => mark.name);
 
-		this.activeMarkAttrs = Object.entries(this.schema.marks).reduce(
+		this.active.markAttrs = Object.entries(this.schema.marks).reduce(
 			(marks, [name, mark]) => ({
 				...marks,
 				[name]: utils.getMarkAttrs(this.state, mark)
@@ -497,11 +521,11 @@ export default class Editor extends Emitter {
 			{}
 		);
 
-		this.activeNodes = Object.values(this.schema.nodes)
+		this.active.nodes = Object.values(this.schema.nodes)
 			.filter((node) => utils.nodeIsActive(this.state, node))
 			.map((node) => node.name);
 
-		this.activeNodeAttrs = Object.entries(this.schema.nodes).reduce(
+		this.active.nodeAttrs = Object.entries(this.schema.nodes).reduce(
 			(nodes, [name, node]) => ({
 				...nodes,
 				[name]: utils.getNodeAttrs(this.state, node)

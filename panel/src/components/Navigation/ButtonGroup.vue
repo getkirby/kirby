@@ -66,7 +66,7 @@ export default {
 .k-button-group {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.5rem;
+	gap: var(--spacing-2);
 	align-items: center;
 }
 

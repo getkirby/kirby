@@ -355,6 +355,61 @@ class StateTest extends TestCase
 		$this->assertNull($direction);
 	}
 
+	public function testLanguageHasCustomDomain(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true],
+				['code' => 'de', 'name' => 'Deutsch']
+			],
+			'options' => [
+				'languages' => true
+			]
+		]);
+
+		$state    = new State();
+		$language = $state->language();
+
+		$this->assertFalse($language['hasCustomDomain']);
+	}
+
+	public function testLanguageHasCustomDomainWithUrl(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true, 'url' => 'https://en.example.com'],
+				['code' => 'de', 'name' => 'Deutsch', 'url' => 'https://de.example.com']
+			],
+			'options' => [
+				'languages' => true
+			]
+		]);
+
+		$state    = new State();
+		$language = $state->language();
+
+		$this->assertTrue($language['hasCustomDomain']);
+	}
+
+	public function testLanguagesHasCustomDomain(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				['code' => 'en', 'name' => 'English', 'default' => true, 'url' => 'https://en.example.com'],
+				['code' => 'de', 'name' => 'Deutsch']
+			],
+			'options' => [
+				'languages' => true
+			]
+		]);
+
+		$state     = new State();
+		$languages = $state->languages();
+
+		$this->assertTrue($languages[0]['hasCustomDomain']);
+		$this->assertFalse($languages[1]['hasCustomDomain']);
+	}
+
 	public function testSearches()
 	{
 		$this->app = $this->app->clone([
