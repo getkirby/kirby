@@ -26,7 +26,7 @@ class Permissions
 			'panel'     => true,
 			'site'      => true,
 			'system'    => true,
-			'users'     => true,
+			'users'     => true
 		],
 		'files' => [
 			'access'     	 => true,
@@ -67,7 +67,6 @@ class Permissions
 			'changeTitle' => true,
 			'edit'        => true,
 			'save'        => true
-
 		],
 		'users' => [
 			'changeEmail'    => true,
@@ -129,8 +128,11 @@ class Permissions
 		}
 	}
 
-	protected function normalize(array|bool|null $settings, array $defaults = [], array $aliases = []): array
-	{
+	protected function normalize(
+		array|bool|null $settings,
+		array $defaults = [],
+		array $aliases = []
+	): array{
 		$permissions = $defaults;
 		$normalized  = $settings;
 
