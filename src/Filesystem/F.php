@@ -600,6 +600,52 @@ class F
 	}
 
 	/**
+	 * Reads a specific byte range from a file
+	 * @since 5.3.0
+	 *
+	 * @param string $file The path to the file
+	 * @param int $offset The byte offset to start reading from
+	 * @param int|null $length The number of bytes to read (null = read to end)
+	 */
+	public static function range(
+		string $file,
+		int $offset = 0,
+		int|null $length = null
+	): string|false {
+		if (str_contains($file, '://') === true) {
+			return false;
+		}
+
+		// exit early on empty paths that would trigger a PHP `ValueError`
+		if ($file === '') {
+			return false;
+		}
+
+		return Helpers::handleErrors(
+			function () use ($file, $offset, $length): string|false {
+				$handle = fopen($file, 'rb');
+
+				if ($handle === false) {
+					return false; // @codeCoverageIgnore
+				}
+
+				if ($offset > 0) {
+					fseek($handle, $offset);
+				}
+
+				$content = $length !== null
+					? fread($handle, $length)
+					: fread($handle, filesize($file) - $offset);
+
+				fclose($handle);
+				return $content;
+			},
+			fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
+			false
+		);
+	}
+
+	/**
 	 * Reads the content of a file or requests the
 	 * contents of a remote HTTP or HTTPS URL
 	 *
@@ -616,9 +662,9 @@ class F
 			return false;
 		}
 
-		// to increase performance, directly try to load the file without checking
-		// if it exists; fall back to a `false` return value if it doesn't exist
-		// while letting other warnings through
+		// to increase performance, directly try to load the file
+		// without checking if it exists; fall back to return `false`
+		// if it doesn't exist while letting other warnings through
 		return Helpers::handleErrors(
 			fn (): string|false => file_get_contents($file),
 			fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),

@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Http\Response;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -53,7 +54,7 @@ class Media
 			}
 
 			// send the file to the browser
-			return Response::file($file->publish()->mediaRoot());
+			return Response::file($file->publish()->root());
 		}
 
 		// try to generate a thumb for the file
