@@ -80,12 +80,14 @@ return [
 		$template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
 		$thumbRoot = (new Filename($file->root(), $template, $options))->toString();
 		$thumbName = basename($thumbRoot);
+		$job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
-		// check if the thumb already exists
-		if (file_exists($thumbRoot) === false) {
+		// check if the thumb or job file already exists
+		if (
+			file_exists($thumbRoot) === false &&
+			file_exists($job) === false
+		) {
 			// if not, create job file
-			$job = $mediaRoot . '/.jobs/' . $thumbName . '.json';
-
 			try {
 				Data::write(
 					$job,

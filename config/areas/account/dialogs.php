@@ -66,7 +66,7 @@ return [
 		'action'  => UserTotpEnableDialogController::class
 	],
 	'account.totp.disable' => [
-		'pattern' => '(account)/totp/disable',
 		...$dialogs['user.totp.disable'],
+		'pattern' => '(account)/totp/disable',
 	],
 ];
