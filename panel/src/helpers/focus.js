@@ -61,6 +61,15 @@ export default function focus(element, field) {
 }
 
 /**
+ * Checks if the focused element is in a drawer or dialog
+ *
+ * @param {HTMLElement} element
+ */
+export function focusIsInModal(element) {
+	return element.closest?.(".k-dialog") || element.closest?.(".k-drawer");
+}
+
+/**
  * Tries to find a focusable child
  * @param {HTMLElement} parent
  * @param {Array} selectors

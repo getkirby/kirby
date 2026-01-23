@@ -253,6 +253,36 @@ class MediaTest extends TestCase
 		$this->assertFalse($thumb);
 	}
 
+	public function testThumbWithExistingJobFile(): void
+	{
+		Dir::make(static::TMP . '/content');
+
+		// copy test image to content
+		F::copy(
+			static::FIXTURES . '/files/test.jpg',
+			static::TMP . '/content/test.jpg'
+		);
+
+		// get file object
+		$file = $this->app->file('test.jpg');
+		$this->assertIsFile($file);
+
+		// create job file with specific marker before calling thumb()
+		$dir = $file->mediaDir() . '/.jobs';
+		$job = $dir . '/test-64x64-crop.jpg.json';
+		$payload = '{"width":64,"height":64,"crop":"center","filename":"test.jpg","custom":"marker"}';
+
+		Dir::make($dir);
+		F::write($job, $payload);
+
+		// call thumb() which triggers file::version component
+		$file->thumb(['width' => 64, 'height' => 64, 'crop' => 'center']);
+
+		// job file should not have been overwritten
+		$this->assertFileExists($job);
+		$this->assertSame($payload, F::read($job));
+	}
+
 	public function testThumbWhenGenerationFails(): void
 	{
 		Dir::make(static::TMP . '/content');
