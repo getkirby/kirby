@@ -32,11 +32,20 @@ class Blueprint
 	public static array $loaded = [];
 
 	protected AcceptRules $acceptRules;
+	protected array $fieldDefinitions = [];
 	protected array $fields = [];
 	protected ModelWithContent $model;
 	protected array $props;
 	protected array $sections = [];
 	protected array $tabs = [];
+
+	/**
+	 * Magic getter/caller for any blueprint prop
+	 */
+	public function __call(string $key, array|null $arguments = null): mixed
+	{
+		return $this->props[$key] ?? null;
+	}
 
 	/**
 	 * Creates a new blueprint object with the given props
@@ -75,6 +84,9 @@ class Blueprint
 		$props['title'] ??= Str::label($props['name']);
 		$props['title']   = $this->i18n($props['title']);
 
+		// extract global field definitions before normalization
+		$props = $this->extractFieldReferences($props);
+
 		// convert all shortcuts
 		$props = $this->convertFieldsToSections('main', $props);
 		$props = $this->convertSectionsToColumns('main', $props);
@@ -84,14 +96,6 @@ class Blueprint
 		$props['tabs'] = $this->normalizeTabs($props['tabs'] ?? []);
 
 		$this->props = $props;
-	}
-
-	/**
-	 * Magic getter/caller for any blueprint prop
-	 */
-	public function __call(string $key, array|null $arguments = null): mixed
-	{
-		return $this->props[$key] ?? null;
 	}
 
 	/**
@@ -168,11 +172,14 @@ class Blueprint
 			return $props;
 		}
 
+		// Resolve field references and extract inline definitions
+		$fields = $this->resolveFieldReferences($props['fields']);
+
 		// wrap all fields in a section
 		$props['sections'] = [
 			$tabName . '-fields' => [
 				'type'   => 'fields',
-				'fields' => $props['fields']
+				'fields' => $fields
 			]
 		];
 
@@ -240,6 +247,34 @@ class Blueprint
 	}
 
 	/**
+	 * Extracts global field definitions from root level.
+	 * When layout elements exist, adds fields to the registry
+	 * and removes them from props so they can be referenced.
+	 * When no layout exists, fields stay in props for the
+	 * existing backwards-compatible behavior.
+	 */
+	protected function extractFieldReferences(array $props): array
+	{
+		if (isset($props['fields']) === false) {
+			return $props;
+		}
+
+		// Check if layout elements exist
+		$hasLayout = isset($props['tabs']) === true ||
+					 isset($props['sections']) === true ||
+					 isset($props['columns']) === true;
+
+		// Only store definitions and remove from props when layout exists
+		// (fields will be referenced from layout, not processed inline)
+		if ($hasLayout === true) {
+			$this->fieldDefinitions = static::fieldsProps($props['fields']);
+			unset($props['fields']);
+		}
+
+		return $props;
+	}
+
+	/**
 	 * Create a new blueprint for a model
 	 */
 	public static function factory(
@@ -268,7 +303,78 @@ class Blueprint
 	 */
 	public function field(string $name): array|null
 	{
-		return $this->fields[$name] ?? null;
+		return $this->fields()[$name] ?? null;
+	}
+
+	/**
+	 * Creates an error field with the given error message
+	 */
+	public static function fieldError(string $name, string $message): array
+	{
+		return [
+			'label' => 'Error',
+			'name'  => $name,
+			'text'  => strip_tags($message),
+			'theme' => 'negative',
+			'type'  => 'info',
+		];
+	}
+
+	/**
+	 * Normalize field props for a single field
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException If the filed name is missing or the field type is invalid
+	 */
+	public static function fieldProps(array|string $props): array
+	{
+		$props = static::extend($props);
+
+		if (isset($props['name']) === false) {
+			throw new InvalidArgumentException(
+				message: 'The field name is missing'
+			);
+		}
+
+		$name = $props['name'];
+		$type = $props['type'] ?? $name;
+
+		if ($type !== 'group' && isset(Field::$types[$type]) === false) {
+			throw new InvalidArgumentException(
+				message: 'Invalid field type ("' . $type . '")'
+			);
+		}
+
+		// support for nested fields
+		if (isset($props['fields']) === true) {
+			$props['fields'] = static::fieldsProps($props['fields']);
+		}
+
+		// groups don't need all the crap
+		if ($type === 'group') {
+			$fields = $props['fields'];
+
+			if (isset($props['when']) === true) {
+				$fields = array_map(
+					fn ($field) => array_replace_recursive(['when' => $props['when']], $field),
+					$fields
+				);
+			}
+
+			return [
+				'fields' => $fields,
+				'name'   => $name,
+				'type'   => $type
+			];
+		}
+
+		// add some useful defaults
+		return [
+			...$props,
+			'label' => $props['label'] ?? Str::label($name),
+			'name'  => $name,
+			'type'  => $type,
+			'width' => $props['width'] ?? '1/1',
+		];
 	}
 
 	/**
@@ -277,6 +383,69 @@ class Blueprint
 	public function fields(): array
 	{
 		return $this->fields;
+	}
+
+	/**
+	 * Normalizes all fields and adds automatic labels,
+	 * types and widths.
+	 */
+	public static function fieldsProps($fields): array
+	{
+		if (is_array($fields) === false) {
+			$fields = [];
+		}
+
+		foreach ($fields as $fieldName => $fieldProps) {
+			// extend field from string
+			if (is_string($fieldProps) === true) {
+				$fieldProps = [
+					'extends' => $fieldProps,
+					'name'    => $fieldName
+				];
+			}
+
+			// use the name as type definition
+			if ($fieldProps === true) {
+				$fieldProps = [];
+			}
+
+			// unset / remove field if its property is false
+			if ($fieldProps === false) {
+				unset($fields[$fieldName]);
+				continue;
+			}
+
+			// inject the name
+			$fieldProps['name'] = $fieldName;
+
+			// create all props
+			try {
+				$fieldProps = static::fieldProps($fieldProps);
+			} catch (Throwable $e) {
+				$fieldProps = static::fieldError($fieldName, $e->getMessage());
+			}
+
+			// resolve field groups
+			if ($fieldProps['type'] === 'group') {
+				if (
+					empty($fieldProps['fields']) === false &&
+					is_array($fieldProps['fields']) === true
+				) {
+					$index  = array_search($fieldName, array_keys($fields));
+					$fields = [
+						...array_slice($fields, 0, $index),
+						...$fieldProps['fields'] ?? [],
+						...array_slice($fields, $index + 1)
+					];
+				} else {
+					unset($fields[$fieldName]);
+				}
+			} else {
+				$fields[$fieldName] = $fieldProps;
+			}
+		}
+
+		return $fields;
 	}
 
 	/**
@@ -321,6 +490,17 @@ class Blueprint
 			key: 'blueprint.notFound',
 			data: ['name' => $name]
 		);
+	}
+
+	public static function helpList(array $items): string
+	{
+		$md = [];
+
+		foreach ($items as $item) {
+			$md[] = '- *' . $item . '*';
+		}
+
+		return PHP_EOL . implode(PHP_EOL, $md);
 	}
 
 	/**
@@ -415,151 +595,6 @@ class Blueprint
 		return $columns;
 	}
 
-	public static function helpList(array $items): string
-	{
-		$md = [];
-
-		foreach ($items as $item) {
-			$md[] = '- *' . $item . '*';
-		}
-
-		return PHP_EOL . implode(PHP_EOL, $md);
-	}
-
-	/**
-	 * Normalize field props for a single field
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the filed name is missing or the field type is invalid
-	 */
-	public static function fieldProps(array|string $props): array
-	{
-		$props = static::extend($props);
-
-		if (isset($props['name']) === false) {
-			throw new InvalidArgumentException(
-				message: 'The field name is missing'
-			);
-		}
-
-		$name = $props['name'];
-		$type = $props['type'] ?? $name;
-
-		if ($type !== 'group' && isset(Field::$types[$type]) === false) {
-			throw new InvalidArgumentException(
-				message: 'Invalid field type ("' . $type . '")'
-			);
-		}
-
-		// support for nested fields
-		if (isset($props['fields']) === true) {
-			$props['fields'] = static::fieldsProps($props['fields']);
-		}
-
-		// groups don't need all the crap
-		if ($type === 'group') {
-			$fields = $props['fields'];
-
-			if (isset($props['when']) === true) {
-				$fields = array_map(
-					fn ($field) => array_replace_recursive(['when' => $props['when']], $field),
-					$fields
-				);
-			}
-
-			return [
-				'fields' => $fields,
-				'name'   => $name,
-				'type'   => $type
-			];
-		}
-
-		// add some useful defaults
-		return [
-			...$props,
-			'label' => $props['label'] ?? Str::label($name),
-			'name'  => $name,
-			'type'  => $type,
-			'width' => $props['width'] ?? '1/1',
-		];
-	}
-
-	/**
-	 * Creates an error field with the given error message
-	 */
-	public static function fieldError(string $name, string $message): array
-	{
-		return [
-			'label' => 'Error',
-			'name'  => $name,
-			'text'  => strip_tags($message),
-			'theme' => 'negative',
-			'type'  => 'info',
-		];
-	}
-
-	/**
-	 * Normalizes all fields and adds automatic labels,
-	 * types and widths.
-	 */
-	public static function fieldsProps($fields): array
-	{
-		if (is_array($fields) === false) {
-			$fields = [];
-		}
-
-		foreach ($fields as $fieldName => $fieldProps) {
-			// extend field from string
-			if (is_string($fieldProps) === true) {
-				$fieldProps = [
-					'extends' => $fieldProps,
-					'name'    => $fieldName
-				];
-			}
-
-			// use the name as type definition
-			if ($fieldProps === true) {
-				$fieldProps = [];
-			}
-
-			// unset / remove field if its property is false
-			if ($fieldProps === false) {
-				unset($fields[$fieldName]);
-				continue;
-			}
-
-			// inject the name
-			$fieldProps['name'] = $fieldName;
-
-			// create all props
-			try {
-				$fieldProps = static::fieldProps($fieldProps);
-			} catch (Throwable $e) {
-				$fieldProps = static::fieldError($fieldName, $e->getMessage());
-			}
-
-			// resolve field groups
-			if ($fieldProps['type'] === 'group') {
-				if (
-					empty($fieldProps['fields']) === false &&
-					is_array($fieldProps['fields']) === true
-				) {
-					$index  = array_search($fieldName, array_keys($fields));
-					$fields = [
-						...array_slice($fields, 0, $index),
-						...$fieldProps['fields'] ?? [],
-						...array_slice($fields, $index + 1)
-					];
-				} else {
-					unset($fields[$fieldName]);
-				}
-			} else {
-				$fields[$fieldName] = $fieldProps;
-			}
-		}
-
-		return $fields;
-	}
-
 	/**
 	 * Normalizes blueprint options. This must be used in the
 	 * constructor of an extended class, if you want to make use of it.
@@ -639,7 +674,9 @@ class Blueprint
 			}
 
 			if ($sectionProps['type'] === 'fields') {
-				$fields = Blueprint::fieldsProps($sectionProps['fields'] ?? []);
+				// Resolve field references before normalizing
+				$sectionFields = $this->resolveFieldReferences($sectionProps['fields'] ?? []);
+				$fields = Blueprint::fieldsProps($sectionFields);
 
 				// inject guide fields guide
 				if ($fields === []) {
@@ -656,7 +693,7 @@ class Blueprint
 							$this->fields[$fieldName] = $fields[$fieldName] = [
 								'type'  => 'info',
 								'label' => $fieldProps['label'] ?? 'Error',
-								'text'  => 'The field name <strong>"' . $fieldName . '"</strong> already exists in your blueprint.',
+								'text'  => 'The field <strong>"' . $fieldName . '"</strong> already exists in your blueprint',
 								'theme' => 'negative'
 							];
 						} else {
@@ -736,6 +773,36 @@ class Blueprint
 	}
 
 	/**
+	 * Resolves field references (numeric keys with string values)
+	 * to full definitions from the global registry
+	 */
+	protected function resolveFieldReferences(array $fields): array
+	{
+		$resolved = [];
+
+		foreach ($fields as $key => $value) {
+			// Numeric key with string value = field reference
+			if (is_int($key) === true && is_string($value) === true) {
+				$fieldName = $value;
+
+				if (isset($this->fieldDefinitions[$fieldName]) === true) {
+					$resolved[$fieldName] = $this->fieldDefinitions[$fieldName];
+				} else {
+					$resolved[$fieldName] = static::fieldError(
+						$fieldName,
+						'Referenced field "' . $fieldName . '" is not defined in fields'
+					);
+				}
+			} else {
+				// Inline field definition - keep as is
+				$resolved[$key] = $value;
+			}
+		}
+
+		return $resolved;
+	}
+
+	/**
 	 * Returns a single section by name
 	 */
 	public function section(string $name): Section|null
@@ -807,4 +874,5 @@ class Blueprint
 	{
 		return $this->props;
 	}
+
 }
