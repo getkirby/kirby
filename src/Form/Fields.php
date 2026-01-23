@@ -8,10 +8,13 @@ use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\F;
 use Kirby\Form\Field\BaseField;
+use Kirby\Form\Field\InfoField;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * A collection of Field objects
@@ -366,15 +369,32 @@ class Fields extends Collection
 	 *
 	 * @since 5.0.0
 	 */
-	public function toProps(bool $defaults = false): array
-	{
+	public function toProps(
+		bool $defaults = false,
+		bool $fail = true
+	): array {
 		$fields      = $this->data;
 		$props       = [];
 		$language    = $this->language();
 		$permissions = $this->model->permissions()->can('update');
 
 		foreach ($fields as $name => $field) {
-			$props[$name] = $field->toArray();
+			try {
+				$props[$name] = $field->toArray();
+			} catch (Throwable $e) {
+				if ($fail === true) {
+					throw $e;
+				}
+
+				$root = $this->kirby()->environment()->get('DOCUMENT_ROOT');
+				$props[$name] = (new InfoField(
+					label: $e,
+					icon: 'alert',
+					text: $e->getMessage() . ' in file: ' . F::relativepath($e->getFile(), $root) . ' (line ' . $e->getLine() . ')',
+					theme: 'negative',
+				))->toArray();
+				continue;
+			}
 
 			// the field should be disabled in the form if the user
 			// has no update permissions for the model or if the field
