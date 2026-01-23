@@ -11,7 +11,11 @@
 		<!-- @slot Replaces the image/icon frame created via the `image` prop -->
 		<slot name="image">
 			<k-image-frame v-if="image?.src" v-bind="image" class="k-tag-image" />
-			<k-icon-frame v-else-if="image" v-bind="image" class="k-tag-image" />
+			<k-icon-frame
+				v-else-if="image || icon"
+				v-bind="image ?? { icon }"
+				class="k-tag-icon"
+			/>
 		</slot>
 
 		<template v-if="text">
@@ -76,6 +80,10 @@ export default {
 		 * HTML element to use
 		 */
 		element: String,
+		/**
+		 * Shortcut for tags with icons (alternative to `image`)
+		 */
+		icon: String,
 		/**
 		 * See `k-image-frame` or `k-icon-frame` for available options
 		 */
@@ -162,6 +170,9 @@ button.k-tag:not([aria-disabled="true"]) {
 	border-start-start-radius: var(--tag-rounded);
 	border-end-start-radius: var(--tag-rounded);
 	background-clip: padding-box;
+}
+.k-tag-icon {
+	padding-inline-start: var(--spacing-2);
 }
 .k-tag-text {
 	padding-inline: var(--spacing-2);

@@ -48,12 +48,15 @@ export default {
 	mixins: [Input, props],
 	computed: {
 		choices() {
+			const hasIcons = this.options.some((option) => option.icon);
+
 			return this.options.map((option, index) => {
 				return {
 					autofocus: this.autofocus && index === 0,
 					checked: this.value === option.value,
 					disabled: this.disabled || option.disabled,
 					id: `${this.id}-${index}`,
+					icon: option.icon ?? (hasIcons ? "blank" : null),
 					info: option.info,
 					label: option.text,
 					name: this.name ?? this.id,

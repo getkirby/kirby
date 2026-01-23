@@ -59,6 +59,8 @@ export default {
 	},
 	computed: {
 		choices() {
+			const hasIcons = this.options.some((option) => option.icon);
+
 			return this.options.map((option, index) => {
 				const checked = this.selected.includes(option.value);
 
@@ -68,6 +70,7 @@ export default {
 					disabled:
 						this.disabled || option.disabled || (!checked && this.isFull),
 					id: `${this.id}-${index}`,
+					icon: option.icon ?? (hasIcons ? "blank" : null),
 					info: option.info,
 					label: option.text,
 					name: this.name ?? this.id,

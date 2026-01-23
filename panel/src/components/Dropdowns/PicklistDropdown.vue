@@ -109,6 +109,9 @@ export default {
 	border-radius: var(--picklist-rounded);
 	padding-block: 0.375rem;
 }
+.k-picklist-dropdown .k-picklist-input-options .k-choice-input-label {
+	flex-grow: 1;
+}
 .k-picklist-dropdown .k-picklist-input-options li + li {
 	margin-top: 0;
 }
