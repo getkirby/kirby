@@ -214,6 +214,10 @@ export default (panel, key, defaults) => {
 		async refresh(options = {}) {
 			options.url ??= this.url();
 
+			if (!options.url) {
+				return;
+			}
+
 			const response = await this.get(options.url, options);
 			const state = response["$" + this.key()];
 
