@@ -8,7 +8,7 @@
 				</li>
 				<li>
 					<k-button
-						:icon="offset === 0 ? (first.icon ?? 'home') : 'dots'"
+						:icon="offset === 0 ? (first.icon ?? icon) : 'dots'"
 						size="sm"
 						variant="dimmed"
 						@click="$refs.dropdown.toggle()"
@@ -44,6 +44,14 @@ export default {
 		crumbs: {
 			type: Array,
 			default: () => []
+		},
+		/**
+		 * Fallback dropdown button icon
+		 * @since 6.0.0
+		 */
+		icon: {
+			type: String,
+			default: "home"
 		},
 		label: {
 			type: String,

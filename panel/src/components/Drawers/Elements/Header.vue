@@ -2,6 +2,7 @@
 	<header class="k-drawer-header">
 		<k-breadcrumb
 			:crumbs="crumbs"
+			icon="bars"
 			class="k-drawer-breadcrumb"
 			@crumb="$emit('crumb', $event)"
 		/>
