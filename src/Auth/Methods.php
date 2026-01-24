@@ -209,4 +209,12 @@ class Methods
 
 		return false;
 	}
+
+	/**
+	 * Checks if any method requires 2FA
+	 */
+	public function requires2FA(): bool
+	{
+		return in_array(true, array_column($this->config(), '2fa'), true);
+	}
 }

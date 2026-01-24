@@ -332,63 +332,6 @@ class SystemTest extends TestCase
 		$this->assertSame(['en', 'de'], $info['languages']);
 	}
 
-	public function testIs2FA(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => ['password']
-				]
-			]
-		]);
-		$system = new System($app);
-		$this->assertFalse($system->is2FA());
-
-		$app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => ['password' => ['2fa' => true]]
-				]
-			]
-		]);
-		$system = new System($app);
-		$this->assertTrue($system->is2FA());
-	}
-
-	public function testIs2FAWithTOTP(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => ['password']
-				]
-			]
-		]);
-		$system = new System($app);
-		$this->assertFalse($system->is2FAWithTOTP());
-
-		$app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => ['password' => ['2fa' => true]]
-				]
-			]
-		]);
-		$system = new System($app);
-		$this->assertTrue($system->is2FAWithTOTP());
-
-		$app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'challenges' => ['email'],
-					'methods' => ['password' => ['2fa' => true]]
-				]
-			]
-		]);
-		$system = new System($app);
-		$this->assertFalse($system->is2FAWithTOTP());
-	}
-
 	public function testIsInstallableOnLocalhost(): void
 	{
 		$app = $this->app->clone([
