@@ -6,7 +6,6 @@ import Feature, { defaults as featureDefaults } from "./feature.js";
 import History from "./history.js";
 import focus from "@/helpers/focus.js";
 import { uuid } from "@/helpers/string.js";
-import { wrap } from "@/helpers/array.js";
 
 /**
  * Additional default values for modals
@@ -255,105 +254,19 @@ export default (panel, key, defaults) => {
 
 			// Get details from the response object,
 			// i.e. { dialog: { ... } }
+			const details = response[this.key()] ?? {};
+
 			// pass it forward to the success handler
 			// to react on elements in the response
-			return this.success(response[this.key()] ?? {});
-		},
-
-		/**
-		 * This is rebuilding the previous
-		 * behaviors from the dialog mixin.
-		 * Most of the response handling should
-		 * be redone. But we keep it for compatibility
-		 *
-		 * @param {Object|String} success
-		 * @returns
-		 */
-		success(success) {
-			if (this.hasEventListener("success")) {
-				return this.emit("success", success);
-			}
-
-			if (typeof success === "string") {
-				panel.notification.success(success);
-			}
+			this.success(details);
 
 			// close the modal
 			this.close();
 
-			// show a success message
-			this.successNotification(success);
-
-			// send custom events to the event bus
-			this.successEvents(success);
-
-			// redirect or reload
-			if (success.route || success.redirect) {
-				// handle any redirects
-				this.successRedirect(success);
-			} else {
-				// reload the parent view to show changes
-				panel.view.reload(success.reload);
-			}
-
-			return success;
+			return details;
 		},
 
-		/**
-		 * Emit all events that might be in the response
-		 *
-		 * @param {Object} state
-		 */
-		successEvents(state) {
-			if (state.event) {
-				// wrap single events to treat them all at once
-				const events = wrap(state.event);
-
-				// emit all defined events
-				for (const event of events) {
-					if (typeof event === "string") {
-						panel.events.emit(event, state);
-					}
-				}
-			}
-
-			// emit a success event
-			if (state.emit !== false) {
-				panel.events.emit("success", state);
-			}
-		},
-
-		/**
-		 * Sends a success notification if the
-		 * response contains a success message
-		 *
-		 * @param {Object} state
-		 */
-		successNotification(state) {
-			if (state.message) {
-				panel.notification.success(state.message);
-			}
-		},
-
-		/**
-		 * Handles redirects in submit responses
-		 *
-		 * @param {Object} state
-		 */
-		successRedirect(state) {
-			const redirect = state.route ?? state.redirect;
-
-			// no redirect
-			if (!redirect) {
-				return false;
-			}
-
-			if (typeof redirect === "string") {
-				return panel.open(redirect);
-			}
-
-			return panel.open(redirect.url, redirect.options);
-		},
+		// success handlers are shared via feature helpers
 
 		/**
 		 * Quick access to the value prop.
