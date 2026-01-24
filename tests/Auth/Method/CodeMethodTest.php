@@ -6,6 +6,7 @@ use Kirby\Auth\Auth;
 use Kirby\Auth\Method;
 use Kirby\Auth\Methods;
 use Kirby\Auth\Status;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -60,6 +61,12 @@ class CodeMethodTest extends TestCase
 		$this->assertSame(['lisa@simpsons.com', false, 'login'], $args);
 	}
 
+	public function testIcon(): void
+	{
+		$icon = CodeMethod::icon();
+		$this->assertSame('hashtag', $icon);
+	}
+
 	public function testIsEnabled(): void
 	{
 		$auth = $this->auth();
@@ -90,6 +97,13 @@ class CodeMethodTest extends TestCase
 	{
 		$auth = $this->auth();
 		$this->assertTrue(CodeMethod::isUsingChallenges($auth));
+	}
+
+	public function testSettings(): void
+	{
+		$user     = $this->createStub(User::class);
+		$settings = CodeMethod::settings($user);
+		$this->assertCount(1, $settings);
 	}
 
 	public function testType(): void

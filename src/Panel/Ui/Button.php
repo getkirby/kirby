@@ -23,7 +23,7 @@ class Button extends Component
 		public bool|null $dropdown = null,
 		public string|null $icon = null,
 		public string|null $link = null,
-		public bool|string $responsive = true,
+		public bool|string $responsive = false,
 		public string|null $size = null,
 		public string|null $style = null,
 		public string|null $target = null,

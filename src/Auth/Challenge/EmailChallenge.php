@@ -5,6 +5,7 @@ namespace Kirby\Auth\Challenge;
 use Kirby\Auth\Challenge;
 use Kirby\Auth\Pending;
 use Kirby\Cms\User;
+use Kirby\Panel\Ui\Button;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
@@ -88,6 +89,18 @@ class EmailChallenge extends Challenge
 			'auth.challenge.email.fromName',
 			$this->kirby->site()->title()
 		);
+	}
+
+	public static function settings(User $user): array
+	{
+		return [
+			new Button(
+				icon:     'email-unread',
+				text:     static::i18n('login.challenge.email.label'),
+				dialog:   $user->panel()->url(true) . '/changeEmail',
+				disabled: !$user->permissions()->can('changeEmail')
+			)
+		];
 	}
 
 	/**

@@ -201,6 +201,12 @@ class EmailChallengeTest extends TestCase
 		$this->assertSame('password-reset', $challenge->mode());
 	}
 
+	public function testSettings(): void
+	{
+		$settings = EmailChallenge::settings($this->user);
+		$this->assertCount(1, $settings);
+	}
+
 	public function testTimeout(): void
 	{
 		$challenge = new EmailChallenge($this->user, 'password-reset', 900);

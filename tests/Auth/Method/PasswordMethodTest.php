@@ -84,6 +84,12 @@ class PasswordMethodTest extends TestCase
 		$method->authenticate('marge@simpsons.com');
 	}
 
+	public function testIcon(): void
+	{
+		$icon = PasswordMethod::icon();
+		$this->assertSame('key', $icon);
+	}
+
 	public function testIsEnabled(): void
 	{
 		$auth = $this->createStub(Auth::class);
@@ -104,6 +110,13 @@ class PasswordMethodTest extends TestCase
 		$method = new PasswordMethod(auth: $auth, options: ['2fa' => true]);
 
 		$this->assertSame(['2fa' => true], $method->options());
+	}
+
+	public function testSettings(): void
+	{
+		$user     = $this->createStub(User::class);
+		$settings = PasswordMethod::settings($user);
+		$this->assertCount(1, $settings);
 	}
 
 	public function testType(): void

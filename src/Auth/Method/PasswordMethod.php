@@ -7,6 +7,7 @@ use Kirby\Auth\Auth;
 use Kirby\Auth\Method;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
+use Kirby\Panel\Ui\Button;
 use SensitiveParameter;
 
 /**
@@ -79,5 +80,17 @@ class PasswordMethod extends Method
 		}
 
 		return false;
+	}
+
+	public static function settings(User $user): array
+	{
+		return [
+			new Button(
+				icon:     static::icon(),
+				text:     static::i18n('password'),
+				dialog:   $user->panel()->url(true) . '/changePassword',
+				disabled: !$user->permissions()->can('changePassword'),
+			)
+		];
 	}
 }

@@ -5,7 +5,9 @@ namespace Kirby\Auth\Method;
 use Kirby\Auth\Auth;
 use Kirby\Auth\Method;
 use Kirby\Auth\Status;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Ui\Button;
 
 /**
  * Passwordless login via one-time code
@@ -31,6 +33,11 @@ class CodeMethod extends Method
 			email: $email,
 			long:  $long,
 		);
+	}
+
+	public static function icon(): string
+	{
+		return 'hashtag';
 	}
 
 	public static function isEnabled(Auth $auth, array $options = []): bool
@@ -79,4 +86,14 @@ class CodeMethod extends Method
 		return true;
 	}
 
+	public static function settings(User $user): array
+	{
+		return [
+			new Button(
+				icon: static::icon(),
+				text: static::i18n('login.method.code.label'),
+				drawer: $user->panel()->url(true) . '/security/method/code'
+			)
+		];
+	}
 }
