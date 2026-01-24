@@ -8,6 +8,7 @@ import Dropdown from "./dropdown.js";
 import Events from "./events.js";
 import Notification from "./notification.js";
 import Language from "./language.js";
+import Observers from "./observers.js";
 import Plugins from "./plugins.js";
 import Menu from "./menu.js";
 import Search from "./search.js";
@@ -79,6 +80,7 @@ export default {
 		this.activation = Activation(this);
 		this.drag = Drag(this);
 		this.events = Events(this);
+		this.observers = Observers(this);
 		this.searcher = Search(this);
 		this.theme = Theme(this);
 		this.upload = Upload(this);
