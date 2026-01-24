@@ -3,6 +3,7 @@
 namespace Kirby\Image\Darkroom;
 
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F as FilesystemF;
 use Kirby\TestCase;
 use Kirby\Toolkit\F;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -80,10 +81,18 @@ class ImageMagickTest extends TestCase
 	{
 		$im = new ImageMagick(['format' => 'webp']);
 
-		copy(static::FIXTURES . '/cat.jpg', $file = static::TMP . '/cat.jpg');
-		$this->assertFalse(F::exists($webp = static::TMP . '/cat.webp'));
+		copy(
+			static::FIXTURES . '/cat.jpg',
+			$file = static::TMP . '/cat.jpg'
+		);
+
+		$format = shell_exec('identify -format "%m" ' . escapeshellarg($file) . ' 2>/dev/null');
+		$this->assertSame('JPEG', $format);
+
 		$im->process($file);
-		$this->assertTrue(F::exists($webp));
+		$this->assertTrue(FilesystemF::exists($file));
+		$format = shell_exec('identify -format "%m" ' . escapeshellarg($file) . ' 2>/dev/null');
+		$this->assertSame('WEBP', $format);
 	}
 
 	#[DataProvider('keepColorProfileStripMetaProvider')]
