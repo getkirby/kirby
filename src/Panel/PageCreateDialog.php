@@ -170,6 +170,7 @@ class PageCreateDialog
 		$ignore    = ['title', 'slug', 'parent', 'template', 'uuid'];
 		$blueprint = $this->blueprint();
 		$fields    = $blueprint->fields();
+		$status    = $blueprint->create()['status'] ?? 'draft';
 
 		foreach ($blueprint->create()['fields'] ?? [] as $name) {
 			if (!$field = ($fields[$name] ?? null)) {
@@ -204,7 +205,17 @@ class PageCreateDialog
 			model: $this->model()
 		);
 
-		return $form->fields()->toProps();
+		$props = $form->fields()->toProps();
+
+		// for drafts, disable validation indicator on custom fields
+		// since they are not validated until the page is published
+		if ($status === 'draft') {
+			foreach ($props as &$field) {
+				$field['novalidate'] = true;
+			}
+		}
+
+		return $props;
 	}
 
 	/**
@@ -229,9 +240,9 @@ class PageCreateDialog
 
 		$this->template ??= $blueprints[0]['name'];
 
-		$status   = $this->blueprint()->create()['status'] ?? 'draft';
-		$status   = $this->blueprint()->status()[$status]['label'] ?? null;
-		$status ??= I18n::translate('page.status.' . $status);
+		$status      = $this->blueprint()->create()['status'] ?? 'draft';
+		$statusLabel = $this->blueprint()->status()[$status]['label'] ?? null;
+		$statusLabel ??= I18n::translate('page.status.' . $status);
 
 		$fields  = $this->fields();
 		$visible = array_filter(
@@ -252,8 +263,11 @@ class PageCreateDialog
 			'props' => [
 				'blueprints'   => $blueprints,
 				'fields'       => $fields,
+				// disable native browser validation for drafts;
+				// title/slug are validated manually in `<k-page-create-dialog>`
+				'novalidate'   => $status === 'draft',
 				'submitButton' => I18n::template('page.create', [
-					'status' => $status
+					'status' => $statusLabel
 				]),
 				'template'     => $this->template,
 				'value'        => $this->value()

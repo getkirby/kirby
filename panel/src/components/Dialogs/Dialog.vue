@@ -8,6 +8,7 @@
 				$attrs.class
 			]"
 			:data-size="size"
+			:novalidate="novalidate"
 			method="dialog"
 			@click.stop
 			@submit.prevent="$emit('submit')"

@@ -20,6 +20,7 @@
 				<slot name="label">
 					<k-label
 						:input="input"
+						:novalidate="novalidate"
 						:required="required"
 						:title="label"
 						type="field"
@@ -60,6 +61,14 @@ export const props = {
 		input: {
 			type: [String, Number, Boolean],
 			default: null
+		},
+		/**
+		 * Disables the invalid indicator for this field's label
+		 * @since 5.3.0
+		 */
+		novalidate: {
+			default: false,
+			type: Boolean
 		},
 		translate: Boolean,
 		type: String

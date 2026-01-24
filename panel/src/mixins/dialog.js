@@ -11,6 +11,14 @@ export default {
 	mixins: [Buttons],
 	props: {
 		/**
+		 * Disables native browser form validation
+		 * @since 5.3.0
+		 */
+		novalidate: {
+			default: false,
+			type: Boolean
+		},
+		/**
 		 * Width of the dialog
 		 * @values "small", "default", "medium", "large", "huge"
 		 */

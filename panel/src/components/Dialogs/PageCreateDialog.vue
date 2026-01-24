@@ -4,7 +4,7 @@
 		v-bind="$props"
 		class="k-page-create-dialog"
 		@cancel="$emit('cancel')"
-		@submit="$emit('submit', value)"
+		@submit="submit"
 	>
 		<k-select-field
 			v-if="templates.length > 1"
@@ -17,10 +17,11 @@
 			@input="pick($event)"
 		/>
 		<k-dialog-fields
+			ref="fields"
 			:fields="fields"
 			:value="value"
 			@input="$emit('input', $event)"
-			@submit="$emit('submit', $event)"
+			@submit="submit"
 		/>
 	</k-form-dialog>
 </template>
@@ -66,6 +67,25 @@ export default {
 					title: this.value.title
 				}
 			});
+		},
+		submit() {
+			// when novalidate is set on the form (for drafts),
+			// manually validate title and slug
+			if (this.novalidate === true) {
+				const fields = this.$refs.fields.$el;
+				const title = fields.querySelector('input[name="title"]');
+				const slug = fields.querySelector('input[name="slug"]');
+
+				// check title & slug validity and show native validation message
+				if (title?.checkValidity() === false) {
+					return title.reportValidity();
+				}
+				if (slug?.checkValidity() === false) {
+					return slug.reportValidity();
+				}
+			}
+
+			this.$emit("submit", this.value);
 		}
 	}
 };

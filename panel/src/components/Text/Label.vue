@@ -12,14 +12,16 @@
 		<span v-else class="k-label-text">
 			<slot />
 		</span>
-		<abbr v-if="required" :title="$t(type + '.required')">✶</abbr>
-		<abbr
-			:title="$t(type + '.invalid')"
-			data-theme="negative"
-			class="k-label-invalid"
-		>
-			&times;
-		</abbr>
+		<template v-if="!novalidate">
+			<abbr v-if="required" :title="$t(type + '.required')"> ✶ </abbr>
+			<abbr
+				:title="$t(type + '.invalid')"
+				data-theme="negative"
+				class="k-label-invalid"
+			>
+				&times;
+			</abbr>
+		</template>
 	</component>
 </template>
 
@@ -46,6 +48,14 @@ export default {
 		 */
 		link: {
 			type: String
+		},
+		/**
+		 * Disables the invalid indicator for this label
+		 * @since 5.3.0
+		 */
+		novalidate: {
+			default: false,
+			type: Boolean
 		},
 		/**
 		 * Whether a value is required for the input
