@@ -32,6 +32,7 @@ class CodeMethodTest extends TestCase
 		}
 
 		$methods->method('config')->willReturn($config);
+		$methods->method('hasAnyRequiring2FA')->willReturn($has2fa === true);
 
 		$auth = $this->createStub(Auth::class);
 		$auth->method('methods')->willReturn($methods);
@@ -106,12 +107,6 @@ class CodeMethodTest extends TestCase
 		$this->expectExceptionMessage('The "code" and "password-reset" login methods cannot be enabled together');
 
 		CodeMethod::isEnabled($auth);
-	}
-
-	public function testIsUsingChallenges(): void
-	{
-		$auth = $this->auth();
-		$this->assertTrue(CodeMethod::isUsingChallenges($auth));
 	}
 
 	public function testSettings(): void

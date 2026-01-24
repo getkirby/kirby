@@ -233,14 +233,19 @@ class System
 
 	/**
 	 * Check if the Panel has 2FA activated
+	 *
+	 * @deprecated 6.0.0 Use `$kirby->auth()->methods()->hasAnyRequiring2FA()` instead
 	 */
 	public function is2FA(): bool
 	{
-		return ($this->loginMethods()['password']['2fa'] ?? null) === true;
+		return $this->app->auth()->methods()->hasAnyRequiring2FA();
 	}
 
 	/**
 	 * Check if the Panel has 2FA with TOTP activated
+	 *
+	 * @deprecated 6.0.0 Use `$kirby->auth()->methods()->hasAnyRequiring2FA()` and
+	 *                   `$kirby->auth()->enabledChallenges()` instead
 	 */
 	public function is2FAWithTOTP(): bool
 	{

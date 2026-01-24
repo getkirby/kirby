@@ -551,6 +551,12 @@
 	"lock.isUnlocked": "Was unlocked by another user",
 
 	"login": "Log in",
+	"login.challenge.email.description": "Send a one‑time code to your email address that is used as a second factor when signing into your account.",
+	"login.challenge.email.disable.confirm": "Do you really want to disable codes via email for {user}?",
+	"login.challenge.email.disable.label": "Disable codes via email",
+	"login.challenge.email.empty": "Codes via email not set up yet",
+	"login.challenge.email.enable.label": "Enable codes via email",
+	"login.challenge.email.help": "Enter the code just sent to your email inbox.",
 	"login.challenge.email.label": "Code via email",
 	"login.challenge.totp.label": "Authenticator app",
 	"login.challenges.help": "Two-factor methods can add an additional layer of security by requiring more than just a password to sign in.",

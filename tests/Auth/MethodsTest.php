@@ -268,44 +268,6 @@ class MethodsTest extends TestCase
 		$this->assertFalse($methods->has('password-reset'));
 	}
 
-	public function testHasAnyUsingChallenges(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => [
-						'password' => ['2fa' => true],
-					]
-				]
-			]
-		]);
-
-		$methods = $app->auth()->methods();
-		$this->assertTrue($methods->hasAnyUsingChallenges());
-
-		$app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => ['password', 'code']
-				]
-			]
-		]);
-
-		$methods = $app->auth()->methods();
-		$this->assertTrue($methods->hasAnyUsingChallenges());
-
-		$app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => ['password']
-				]
-			]
-		]);
-
-		$methods = $app->auth()->methods();
-		$this->assertFalse($methods->hasAnyUsingChallenges());
-	}
-
 	public function testHasWithDisabled(): void
 	{
 		$app = $this->app->clone([

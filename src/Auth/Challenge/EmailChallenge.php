@@ -54,6 +54,26 @@ class EmailChallenge extends Challenge
 	}
 
 	/**
+	 * As a second factor, the email challenge is opt-in per user,
+	 * so that users are not forced into it just by having an email
+	 * address. For every other purpose it stays always available.
+	 */
+	public static function isAvailable(User $user, string $mode): bool
+	{
+		if ($mode !== '2fa') {
+			return true;
+		}
+
+		if ($user->secret('email') === true) {
+			return true;
+		}
+
+		// enforced 2FA needs a factor for every user, so email stays
+		// the baseline for those who have not set up anything else
+		return $user->kirby()->auth()->methods()->hasAnyRequiring2FA();
+	}
+
+	/**
 	 * Sends the email with the code to the user
 	 */
 	protected function send(string $code): void
@@ -105,10 +125,9 @@ class EmailChallenge extends Challenge
 	{
 		return [
 			new Button(
-				icon:     static::icon(),
-				text:     static::i18n('login.challenge.email.label'),
-				dialog:   $user->panel()->url(true) . '/changeEmail',
-				disabled: !$user->permissions()->can('changeEmail')
+				icon:   static::icon(),
+				text:   static::i18n('login.challenge.email.label'),
+				drawer: $user->panel()->url(true) . '/security/challenge/email'
 			)
 		];
 	}

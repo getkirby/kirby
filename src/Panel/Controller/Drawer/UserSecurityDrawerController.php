@@ -25,12 +25,6 @@ class UserSecurityDrawerController extends UserDrawerController
 
 	public function challenges(): array
 	{
-		$methods = $this->auth()->methods();
-
-		if ($methods->hasAnyUsingChallenges() === false) {
-			return [];
-		}
-
 		$buttons    = [];
 		$challenges = $this->auth()->challenges();
 
@@ -73,7 +67,7 @@ class UserSecurityDrawerController extends UserDrawerController
 
 		$methods = $this->auth()->methods()->enabled();
 
-		foreach ($methods as $type => $options) {
+		foreach (array_keys($methods) as $type) {
 			$method  = $this->auth()->methods()->class($type);
 			$buttons = [
 				...$buttons,

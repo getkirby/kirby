@@ -249,6 +249,16 @@ class ChallengesTest extends TestCase
 		$this->assertSame(123, $challenge->timeout());
 	}
 
+	public function testHasAvailable(): void
+	{
+		$user = $this->app->user('marge');
+
+		$this->assertTrue($this->challenges->hasAvailable($user, 'login'));
+
+		DummyChallenge::$available = false;
+		$this->assertFalse($this->challenges->hasAvailable($user, 'login'));
+	}
+
 	public function testSwitch(): void
 	{
 		$this->app = $this->app->clone([

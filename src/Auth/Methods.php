@@ -179,18 +179,11 @@ class Methods
 	}
 
 	/**
-	 * Checks if any method is using challenges
+	 * Checks if any method requires 2FA
 	 */
-	public function hasAnyUsingChallenges(): bool
+	public function hasAnyRequiring2FA(): bool
 	{
-		foreach ($this->enabled() as $method => $options) {
-			$class = $this->class($method);
-
-			if ($class::isUsingChallenges($this->auth, $options) === true) {
-				return true;
-			}
-		}
-
-		return false;
+		return in_array(true, array_column($this->config(), '2fa'), true);
 	}
+
 }

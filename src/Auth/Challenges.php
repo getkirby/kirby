@@ -193,6 +193,15 @@ class Challenges
 	}
 
 	/**
+	 * Checks whether at least one challenge is available
+	 * for the user and purpose/mode
+	 */
+	public function hasAvailable(User $user, string $mode): bool
+	{
+		return $this->available($user, $mode) !== [];
+	}
+
+	/**
 	 * Writes challenge state into the session
 	 */
 	protected function store(
