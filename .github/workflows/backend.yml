@@ -87,7 +87,12 @@ jobs:
         run: composer check-platform-reqs
 
       - name: Run PHPUnit tests
-        run: paratest -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml --exclude-source-from-xml-coverage
+        if: matrix.php != '8.4'
+        run: paratest -c phpunit.ci.xml --processes 4
+
+      - name: Run PHPUnit tests with coverage
+        if: matrix.php == '8.4'
+        run: paratest -c phpunit.ci.xml --processes 4 --coverage-clover ${{ github.workspace }}/clover.xml --exclude-source-from-xml-coverage
 
       - name: Upload coverage results to Codecov
         if: matrix.php == '8.4'
