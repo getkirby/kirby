@@ -1,8 +1,9 @@
 <template>
-	<form class="k-login-form k-login-code-form" @submit.prevent="login">
+	<form class="k-login-form" @submit.prevent="submit">
 		<k-user-info v-if="pending.email" :user="pending.email" />
 
 		<k-text-field
+			ref="input"
 			:autofocus="true"
 			:counter="false"
 			:help="$t('login.code.text.' + pending.challenge)"
@@ -38,45 +39,33 @@
 </template>
 
 <script>
-import { props as LoginProps } from "./LoginView.vue";
-
 export default {
-	mixins: [LoginProps],
-	emits: ["error"],
+	props: {
+		isLoading: {
+			type: Boolean,
+			default: false
+		},
+		pending: {
+			type: Object
+		}
+	},
+	emits: ["submit"],
 	data() {
 		return {
-			code: this.value.code ?? "",
-			isLoading: false
+			code: ""
 		};
 	},
 	computed: {
 		isResetForm() {
-			return this.methods.includes("password-reset");
+			return this.pending?.mode === "password-reset";
 		}
 	},
 	methods: {
-		async login() {
-			this.$emit("error", null);
-			this.isLoading = true;
-
-			try {
-				await this.$api.auth.verifyCode(this.code);
-
-				this.$panel.notification.success({
-					message: this.$t("welcome") + "!",
-					icon: "smile"
-				});
-
-				if (this.isResetForm) {
-					this.$go("reset-password");
-				} else {
-					this.$panel.reload();
-				}
-			} catch (error) {
-				this.$emit("error", error);
-			} finally {
-				this.isLoading = false;
-			}
+		focus() {
+			this.$refs.input.focus();
+		},
+		submit() {
+			this.$emit("submit", { input: this.code });
 		}
 	}
 };
