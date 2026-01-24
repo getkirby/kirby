@@ -1,19 +1,21 @@
 <template>
-	<nav v-if="tabs.length > 1" class="k-tabs">
-		<k-button
-			v-for="btn in buttons"
-			:key="btn.name"
-			ref="visible"
-			v-bind="btn"
-			variant="dimmed"
-			class="k-tabs-button"
-		>
-			{{ btn.text }}
-		</k-button>
-
-		<template v-if="invisible.length">
+	<k-collapsible v-if="tabs.length > 1" element="nav" class="k-tabs">
+		<template #default="{ offset }">
 			<k-button
-				:current="!!invisible.find((button) => tab === button.name)"
+				v-for="btn in buttons.slice(0, offset)"
+				:key="btn.name"
+				ref="visible"
+				v-bind="btn"
+				variant="dimmed"
+				class="k-tabs-button"
+			>
+				{{ btn.text }}
+			</k-button>
+		</template>
+
+		<template #fallback="{ offset }">
+			<k-button
+				:current="hasCurrent(offset)"
 				:title="$t('more')"
 				class="k-tabs-button k-tabs-dropdown-button"
 				icon="dots"
@@ -22,12 +24,12 @@
 			/>
 			<k-dropdown
 				ref="more"
-				:options="dropdown"
+				:options="buttons.slice(offset)"
 				align-x="end"
 				class="k-tabs-dropdown"
 			/>
 		</template>
-	</nav>
+	</k-collapsible>
 </template>
 
 <script>
@@ -62,45 +64,15 @@ export default {
 			default: "passive"
 		}
 	},
-	data() {
-		return {
-			observer: null,
-			visible: this.tabs,
-			invisible: []
-		};
-	},
 	computed: {
 		buttons() {
-			return this.visible.map(this.button);
+			return this.tabs.map(this.button);
 		},
 		current() {
 			const tab =
 				this.tabs.find((tab) => tab.name === this.tab) ?? this.tabs[0];
 			return tab?.name;
-		},
-		dropdown() {
-			return this.invisible.map(this.button);
 		}
-	},
-	watch: {
-		tabs: {
-			async handler() {
-				// disconnect any previous observer
-				this.observer?.disconnect();
-				await this.$nextTick();
-
-				// only if $el exists (more than one tab),
-				// add new observer and measure tab sizes
-				if (this.$el instanceof Element) {
-					this.observer = new ResizeObserver(this.resize);
-					this.observer.observe(this.$el);
-				}
-			},
-			immediate: true
-		}
-	},
-	unmounted() {
-		this.observer?.disconnect();
 	},
 	methods: {
 		button(tab) {
@@ -111,7 +83,7 @@ export default {
 				text: tab.label ?? tab.text ?? tab.name
 			};
 
-			if (typeof tab.badge === "string") {
+			if (typeof tab.badge === "string" || typeof tab.badge === "number") {
 				button.badge = {
 					text: tab.badge
 				};
@@ -127,32 +99,10 @@ export default {
 
 			return button;
 		},
-		async resize() {
-			// container width
-			const width = this.$el.offsetWidth;
-
-			// reset all tabs
-			this.visible = this.tabs;
-			this.invisible = [];
-
-			// measure tab sizes
-			await this.$nextTick();
-			const sizes = [...this.$refs.visible].map((tab) => tab.$el.offsetWidth);
-
-			// initial width of visible tabs
-			// that already account for the dropdown button
-			let tabs = 32;
-
-			for (let index = 0; index < this.tabs.length; index++) {
-				// tab size plus grid gap
-				tabs += sizes[index] + 4;
-
-				if (tabs > width) {
-					this.visible = this.tabs.slice(0, index);
-					this.invisible = this.tabs.slice(index);
-					return;
-				}
-			}
+		hasCurrent(offset) {
+			return !!this.buttons
+				.slice(offset)
+				.find((button) => this.current === button.name);
 		}
 	}
 };
