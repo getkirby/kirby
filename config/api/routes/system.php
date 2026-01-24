@@ -1,7 +1,6 @@
 <?php
 
-use Kirby\Exception\Exception;
-use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Controller\View\InstallationViewController;
 
 /**
  * System Routes
@@ -43,41 +42,14 @@ return [
 		'method'  => 'POST',
 		'auth'    => false,
 		'action'  => function () {
-			$system = $this->kirby()->system();
-			$auth   = $this->kirby()->auth();
+			$controller = new InstallationViewController();
+			$controller->submit();
 
-			// csrf token check
-			if ($auth->type() === 'session' && $auth->csrf() === false) {
-				throw new InvalidArgumentException(
-					message: 'Invalid CSRF token'
-				);
-			}
-
-			if ($system->isOk() === false) {
-				throw new Exception(
-					message: 'The server is not setup correctly'
-				);
-			}
-
-			if ($system->isInstallable() === false) {
-				throw new Exception(
-					message: 'The Panel cannot be installed'
-				);
-			}
-
-			if ($system->isInstalled() === true) {
-				throw new Exception(
-					message: 'The Panel is already installed'
-				);
-			}
-
-			// create the first user
-			$user  = $this->users()->create($this->requestBody());
-			$token = $user->login($this->requestBody('password'));
+			$user = $this->users()->first();
 
 			return [
 				'status' => 'ok',
-				'token'  => $token,
+				'token'  => true,
 				'user'   => $this->resolve($user)->view('auth')->toArray()
 			];
 		}

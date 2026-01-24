@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Controller\View;
 
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Cms\System;
 use Kirby\Panel\Controller\ViewController;
 use Kirby\Panel\Ui\View;
@@ -45,5 +47,49 @@ class InstallationViewController extends ViewController
 			'text'  => $translation->name(),
 			'value' => $translation->code(),
 		]);
+	}
+
+	public function submit(): array
+	{
+		$auth = $this->kirby->auth();
+
+		// csrf token check
+		if ($auth->type() === 'session' && $auth->csrf() === false) {
+			throw new InvalidArgumentException(
+				message: 'Invalid CSRF token'
+			);
+		}
+
+		if ($this->system->isOk() === false) {
+			throw new Exception(
+				message: 'The server is not setup correctly'
+			);
+		}
+
+		if ($this->system->isInstallable() === false) {
+			throw new Exception(
+				message: 'The Panel cannot be installed'
+			);
+		}
+
+		if ($this->system->isInstalled() === true) {
+			throw new Exception(
+				message: 'The Panel is already installed'
+			);
+		}
+
+		$data = $this->request->body()->data();
+
+		// create the first user
+		$user = $this->kirby->users()->create($data);
+		$user->login($data['password'] ?? null);
+
+		return [
+			...$this->load()->render(),
+			'message' => $this->i18n('welcome') . '!',
+			'reload'  => [
+				'globals' => ['system', 'translation']
+			]
+		];
 	}
 }
