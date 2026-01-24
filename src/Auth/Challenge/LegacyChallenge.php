@@ -48,7 +48,7 @@ class LegacyChallenge extends Challenge
 			return null;
 		}
 
-		$hash = password_hash($code, PASSWORD_DEFAULT);
+		$hash = User::hashPassword($code);
 		$this->kirby->session()->set('kirby.challenge.code', $hash);
 
 		return new Pending(secret: $hash);

@@ -17,6 +17,12 @@ class EmailChallengeTest extends TestCase
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.EmailChallenge';
 
 	protected User $user;
+	protected static string $password;
+
+	public static function setUpBeforeClass(): void
+	{
+		self::$password = User::hashPassword('123456');
+	}
 
 	public function setUp(): void
 	{
@@ -215,9 +221,8 @@ class EmailChallengeTest extends TestCase
 
 	public function testVerify(): void
 	{
-		$hash      = password_hash('123456', PASSWORD_DEFAULT);
 		$challenge = new EmailChallenge($this->user, 'login', 600);
-		$data      = new Pending(secret: $hash);
+		$data      = new Pending(secret: self::$password);
 
 		$this->assertTrue($challenge->verify('123456', $data));
 		$this->assertTrue($challenge->verify('123 456', $data));
@@ -228,14 +233,13 @@ class EmailChallengeTest extends TestCase
 		$challenge = new EmailChallenge($this->user, 'login', 600);
 		$data      = new Pending(secret: null);
 
-		$this->assertFalse($challenge->verify('123456', $data));
+		$this->assertFalse($challenge->verify('1234', $data));
 	}
 
 	public function testVerifyMismatch(): void
 	{
-		$hash      = password_hash('123456', PASSWORD_DEFAULT);
 		$challenge = new EmailChallenge($this->user, 'login', 600);
-		$data      = new Pending(secret: $hash);
+		$data      = new Pending(secret: self::$password);
 
 		$this->assertFalse($challenge->verify('654 321', $data));
 	}

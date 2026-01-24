@@ -4,6 +4,7 @@ namespace Kirby\Toolkit;
 
 use Base32\Base32;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Totp::class)]

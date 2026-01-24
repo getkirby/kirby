@@ -1,29 +1,15 @@
 <?php
 
-namespace Kirby\Auth;
+namespace Kirby\Auth {
+	use Kirby\Tests\MockTime;
 
-use Exception;
-
-/**
- * Mock for the PHP time() function to ensure reliable testing
- *
- * @return int A fake timestamp
- */
-function time(): int
-{
-	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
-		throw new Exception('Mock time() function was loaded outside of the test environment. This should never happen.');
+	function time(): int
+	{
+		return \Kirby\Tests\time(MockTime::$time);
 	}
 
-	return MockTime::$time;
-}
-
-class MockTime
-{
-	public static int $time = 1337000000;
-
-	public static function reset(): void
+	function usleep(...$args): void
 	{
-		static::$time = 1337000000;
+		\Kirby\Tests\usleep(...$args);
 	}
 }

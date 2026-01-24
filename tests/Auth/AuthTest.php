@@ -19,12 +19,20 @@ class AuthTest extends TestCase
 
 	public string|null $failedEmail = null;
 
+	protected static string $passwordA;
+	protected static string $passwordB;
+
+	public static function setUpBeforeClass(): void
+	{
+		parent::setUpBeforeClass();
+
+		static::$passwordA = User::hashPassword('springfield123');
+		static::$passwordB = User::hashPassword('somewhere-in-japan');
+	}
+
 	public function setUp(): void
 	{
 		parent::setUp();
-
-		$margePassword = password_hash('springfield123', PASSWORD_DEFAULT);
-		$homerPassword = password_hash('springfield123', PASSWORD_DEFAULT);
 
 		$self = $this;
 
@@ -39,21 +47,21 @@ class AuthTest extends TestCase
 				[
 					'email'    => 'marge@simpsons.com',
 					'id'       => 'marge',
-					'password' => $margePassword
+					'password' => self::$passwordA
 				],
 				[
 					'email'    => 'homer@simpsons.com',
 					'id'       => 'homer',
-					'password' => $homerPassword
+					'password' => self::$passwordA
 				],
 				[
 					'email'    => 'kirby@getkirby.com',
 					'id'       => 'kirby',
-					'password' => User::hashPassword('somewhere-in-japan')
+					'password' => self::$passwordB
 				],
 				[
 					'email'    => 'test@exämple.com',
-					'password' => User::hashPassword('springfield123')
+					'password' => self::$passwordA
 				]
 			],
 			'hooks' => [
@@ -63,8 +71,8 @@ class AuthTest extends TestCase
 			]
 		]);
 
-		F::write(static::TMP . '/site/accounts/marge/.htpasswd', $margePassword);
-		F::write(static::TMP . '/site/accounts/homer/.htpasswd', $homerPassword);
+		F::write(static::TMP . '/site/accounts/marge/.htpasswd', self::$passwordA);
+		F::write(static::TMP . '/site/accounts/homer/.htpasswd', self::$passwordA);
 
 		$this->auth = $this->app->auth();
 	}

@@ -12,6 +12,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Exception\UserNotFoundException;
 use Kirby\Session\Session;
+use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class DummyLegacyChallenge extends \Kirby\Cms\Auth\Challenge

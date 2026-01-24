@@ -8,6 +8,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
+use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Throwable;
 
@@ -16,11 +17,16 @@ class AuthChallengeTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.AuthChallenge';
 
+	protected static string $password;
+
+	public static function setUpBeforeClass(): void
+	{
+		self::$password = User::hashPassword('12345678');
+	}
+
 	public function setUp(): void
 	{
 		parent::setUp();
-
-		$password = User::hashPassword('springfield123');
 
 		$this->app = $this->app->clone([
 			'options' => [
@@ -33,7 +39,7 @@ class AuthChallengeTest extends TestCase
 				[
 					'email'    => 'marge@simpsons.com',
 					'id'       => 'marge',
-					'password' => $password
+					'password' => self::$password
 				],
 				[
 					'email' => 'test@exämple.com',
@@ -46,7 +52,7 @@ class AuthChallengeTest extends TestCase
 			]
 		]);
 
-		F::write(static::TMP . '/site/accounts/marge/.htpasswd', $password);
+		F::write(static::TMP . '/site/accounts/marge/.htpasswd', self::$password);
 
 		$this->auth = $this->app->auth();
 	}
@@ -117,7 +123,7 @@ class AuthChallengeTest extends TestCase
 
 	public function testLogin2fa(): void
 	{
-		$status = $this->auth->login2fa('marge@simpsons.com', 'springfield123');
+		$status = $this->auth->login2fa('marge@simpsons.com', '12345678');
 		$this->assertSame('pending', $status->state()->value);
 		$this->assertSame('email', $status->challenge(false));
 	}
@@ -146,14 +152,14 @@ class AuthChallengeTest extends TestCase
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.data', ['secret' => User::hashPassword('123456')]);
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', time() + 60);
 
 		$this->assertSame(
 			$this->app->user('marge@simpsons.com'),
-			$this->auth->verifyChallenge('123456')
+			$this->auth->verifyChallenge('12345678')
 		);
 
 		$data = $session->data()->get();
@@ -171,7 +177,7 @@ class AuthChallengeTest extends TestCase
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.data', ['secret' => User::hashPassword('123456')]);
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', time() + 1000);
@@ -195,7 +201,7 @@ class AuthChallengeTest extends TestCase
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.data', ['secret' => User::hashPassword('123456')]);
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', time() - 10);
@@ -217,7 +223,7 @@ class AuthChallengeTest extends TestCase
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.data', ['secret' => User::hashPassword('123456')]);
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', time() + 1000);
@@ -246,7 +252,7 @@ class AuthChallengeTest extends TestCase
 
 		$session = $this->app->session();
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.data', ['secret' => User::hashPassword('123456')]);
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
 		$session->set('kirby.challenge.mode', 'login');
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time + 1);

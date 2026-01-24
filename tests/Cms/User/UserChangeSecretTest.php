@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
+use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(User::class)]

@@ -4,6 +4,7 @@ namespace Kirby\Auth;
 
 use Kirby\Auth\Exception\RateLimitException;
 use Kirby\Filesystem\Dir;
+use Kirby\Tests\MockTime;
 
 class LimitsTest extends TestCase
 {
