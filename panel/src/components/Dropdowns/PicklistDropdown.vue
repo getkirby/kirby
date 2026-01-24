@@ -128,6 +128,8 @@ export default {
 	.k-picklist-input-options
 	.k-choice-input:not([aria-disabled="true"]):hover {
 	background-color: var(--dropdown-color-hr);
+
+	--choice-color-border: var(--dropdown-color-bg);
 }
 .k-picklist-dropdown
 	.k-picklist-input-options
