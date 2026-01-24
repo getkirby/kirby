@@ -3,6 +3,7 @@
 namespace Kirby\Auth;
 
 use Kirby\Cms\User;
+use Kirby\Toolkit\HasI18n;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
 
@@ -21,6 +22,8 @@ use SensitiveParameter;
  */
 abstract class Method
 {
+	use HasI18n;
+
 	public function __construct(
 		protected Auth $auth,
 		protected array $options = []
@@ -39,6 +42,15 @@ abstract class Method
 		string|null $password = null,
 		bool $long = false
 	): User|Status;
+
+	/**
+	 * Returns an icon name used to represent
+	 * the method, e.g. on the login view
+	 */
+	public static function icon(): string
+	{
+		return 'key';
+	}
 
 	/**
 	 * Checks if this method can be used in the current context
@@ -66,6 +78,16 @@ abstract class Method
 	public function options(): array
 	{
 		return $this->options;
+	}
+
+	/**
+	 * Returns an array of buttons that will be
+	 * used as entries in the user security settings drawer
+	 * @codeCoverageIgnore
+	 */
+	public static function settings(User $user): array
+	{
+		return [];
 	}
 
 	/**
