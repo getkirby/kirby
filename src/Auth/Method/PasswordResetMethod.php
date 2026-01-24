@@ -5,6 +5,7 @@ namespace Kirby\Auth\Method;
 use Kirby\Auth\Auth;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
+use Kirby\Panel\Ui\Login;
 
 /**
  * Password-reset flow that triggers a challenge
@@ -27,6 +28,20 @@ class PasswordResetMethod extends CodeMethod
 			mode: 'password-reset',
 			email: $email,
 			long:  false,
+		);
+	}
+
+	public function form(): Login
+	{
+		return new Login(
+			for:          $this,
+			component:    'k-login-email-password-form',
+			hasPassword:  false,
+			hasRemember:  false,
+			submitButton: [
+				'icon' => static::icon(),
+				'text' => $this->i18n('login.reset')
+			]
 		);
 	}
 

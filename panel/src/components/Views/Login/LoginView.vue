@@ -10,23 +10,32 @@
 			</k-login-alert>
 
 			<component
-				:is="form"
-				ref="form"
-				v-bind="{ method, methods, pending, value }"
+				is="k-legacy-plugin-form"
+				v-if="hasLegacyPluginForm"
+				:value="value"
 				@error="onError"
 			/>
+			<component
+				v-else
+				:is="form.component"
+				ref="form"
+				v-bind="form.props"
+				:is-loading="$panel.view.isLoading"
+				:value="value"
+				@submit="onSubmit"
+			/>
 
-			<template v-if="alternativeMethods.length > 0 && !hasActiveChallenge">
+			<template v-if="!isChallenge && alternatives.length > 0">
 				<p class="k-login-or"><span>or</span></p>
 
 				<k-stack>
 					<k-button
-						v-for="method in alternativeMethods"
-						:key="method"
-						:text="$t(`login.method.${method}.label`)"
+						v-for="alternative in alternatives"
+						:key="alternative.type"
+						v-bind="alternative"
 						variant="filled"
 						size="lg"
-						@click="onChangeMethod(method)"
+						@click="onAlternative(alternative.type)"
 					/>
 				</k-stack>
 			</template>
@@ -35,46 +44,37 @@
 </template>
 
 <script>
-export const props = {
-	props: {
-		/**
-		 * Current login method
-		 * @since 6.0.0
-		 */
-		method: String,
-		/**
-		 * List of available login method names
-		 */
-		methods: {
-			type: Array,
-			default: () => []
-		},
-		/**
-		 * Pending login data (user email, challenge type)
-		 * @value { email: String, challenge: String }
-		 */
-		pending: {
-			type: Object
-		},
-		/**
-		 * Values to prefill the inputs
-		 */
-		value: {
-			type: Object,
-			default: () => ({})
-		}
-	}
-};
-
 /**
  * @internal
  */
 export default {
 	components: {
-		"k-login-plugin-form": window.panel.plugins.login
+		"k-legacy-plugin-form": window.panel.plugins.login
 	},
-	mixins: [props],
 	props: {
+		/**
+		 * List of available login alternatives
+		 * @since 6.0.0
+		 */
+		alternatives: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * Type of currently displayed auth method/challenge
+		 * @since 6.0.0
+		 */
+		current: {
+			type: String
+		},
+		/**
+		 * Form component to be rendered
+		 * @since 6.0.0
+		 */
+		form: {
+			type: Object,
+			required: true
+		},
 		/**
 		 * Values to prefill the inputs
 		 */
@@ -89,36 +89,36 @@ export default {
 		};
 	},
 	computed: {
-		alternativeMethods() {
-			return this.methods.filter((method) => method !== this.method);
+		hasLegacyPluginForm() {
+			return Boolean(window.panel.plugins.login);
 		},
-		form() {
-			if (window.panel.plugins.login) {
-				return "k-login-plugin-form";
-			}
-
-			if (this.hasActiveChallenge) {
-				return "k-login-code-form";
-			}
-
-			return "k-login-form";
-		},
-		hasActiveChallenge() {
-			return Boolean(this.pending.email);
+		isChallenge() {
+			return Boolean(this.form.props.pending.email);
 		}
 	},
 	methods: {
-		async onChangeMethod(method) {
-			await this.$panel.view.refresh({ query: { method } });
+		async onAlternative(current) {
+			await this.$panel.view.refresh({ query: { current } });
 			this.$refs.form.focus?.();
 		},
-		async onError(error) {
-			// reset from the LoginCode component back to Login
-			if (error?.details.challengeDestroyed === true) {
-				await this.$panel.reload({ globals: ["system"] });
-			}
+		async onSubmit(data) {
+			this.issue = null;
 
-			this.issue = error?.message;
+			try {
+				await this.$panel.view.post({ ...data, current: this.current });
+
+				this.$panel.notification.success({
+					message: this.$t("welcome") + "!",
+					icon: "smile"
+				});
+			} catch (error) {
+				// reset from the LoginCode component back to Login
+				if (error?.details?.challengeDestroyed === true) {
+					await this.$panel.reload({ globals: ["system"] });
+				}
+
+				this.issue = error?.message;
+			}
 		}
 	}
 };

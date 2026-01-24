@@ -304,13 +304,19 @@ export default {
 	 * @returns {Object} Returns the parsed response data
 	 */
 	async post(url, data = {}, options = {}) {
-		const { response } = await this.request(url, {
+		const result = await this.request(url, {
 			method: "POST",
 			body: data,
 			...options
 		});
 
-		return response.json;
+		if (result === false) {
+			return false;
+		}
+
+		const { response } = result;
+
+		return response?.json ?? {};
 	},
 
 	/**

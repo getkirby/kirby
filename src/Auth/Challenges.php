@@ -15,6 +15,7 @@ use Kirby\Exception\UserNotFoundException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\A;
 use SensitiveParameter;
+use Throwable;
 
 /**
  * Handler for all auth challenges
@@ -152,7 +153,7 @@ class Challenges
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	protected function ensureActiveChallenge(Session $session): string
+	protected function ensureActiveChallenge(Session $session): array
 	{
 		// check if we have an active challenge
 		$email = $session->get('kirby.challenge.email');
@@ -170,7 +171,7 @@ class Challenges
 			);
 		}
 
-		return $email;
+		return [$email, $type];
 	}
 
 	protected function ensureNotTimeout(Session $session): int|null
@@ -230,6 +231,38 @@ class Challenges
 		);
 	}
 
+	/**
+	 * Checks if the challenge type is enabled/configured
+	 */
+	public function has(string $type): bool
+	{
+		return array_key_exists($type, $this->enabled());
+	}
+
+	/**
+	 * Returns the pending challenge from the session if available
+	 */
+	public function pending(): Challenge|null {
+		$session = $this->kirby->session();
+
+		try {
+			// ensure we have an active challenge for a valid user
+			$timeout        = $this->ensureNotTimeout($session);
+			[$email, $type] = $this->ensureActiveChallenge($session);
+			$mode           = $session->get('kirby.challenge.mode');
+			$user           = $this->kirby->user($email);
+
+			if ($user === null) {
+				return null;
+			}
+
+			return $this->get($type, $user, $mode, $timeout);
+
+		} catch (Throwable) {
+			return null;
+		}
+	}
+
 	public function timeout(): int|null
 	{
 		return $this->kirby->option('auth.challenge.timeout', 10 * 60);
@@ -244,9 +277,10 @@ class Challenges
 		mixed $input
 	): Challenge {
 		// ensure we have an active challenge for a valid user
-		$timeout = $this->ensureNotTimeout($session);
-		$email   = $this->ensureActiveChallenge($session);
-		$user    = $this->kirby->user($email);
+		$timeout        = $this->ensureNotTimeout($session);
+		[$email, $type] = $this->ensureActiveChallenge($session);
+		$mode           = $session->get('kirby.challenge.mode');
+		$user           = $this->kirby->user($email);
 
 		if ($user === null) {
 			throw new UserNotFoundException(name: $email);
@@ -255,11 +289,9 @@ class Challenges
 		// rate-limiting
 		$this->auth->limits()->ensure($email);
 
-		$type      = $session->get('kirby.challenge.type');
-		$mode      = $session->get('kirby.challenge.mode');
+		$challenge = $this->get($type, $user, $mode, $timeout);
 		$data      = $session->get('kirby.challenge.data');
 		$data      = Pending::from($data ?? []);
-		$challenge = $this->get($type, $user, $mode, $timeout);
 
 		if ($challenge->verify($input, $data) !== true) {
 			throw new PermissionException(key: 'access.code');
