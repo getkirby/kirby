@@ -27,6 +27,8 @@
 			/>
 		</k-grid>
 		<nav v-if="!disabled" class="k-layout-toolbar">
+			<k-sort-handle />
+
 			<k-button
 				v-if="settings"
 				:title="$t('settings')"
@@ -41,7 +43,6 @@
 				@click="$refs.options.toggle()"
 			/>
 			<k-dropdown-content ref="options" :options="options" align-x="end" />
-			<k-sort-handle />
 		</nav>
 	</section>
 </template>
@@ -195,6 +196,21 @@ export default {
 .k-layout:focus {
 	outline: 0;
 }
+
+.k-layout:is(.k-sortable-ghost, .k-sortable-fallback) {
+	position: relative;
+	max-height: 6rem;
+	overflow: hidden;
+}
+.k-layout:is(.k-sortable-ghost, .k-sortable-fallback)::after {
+	position: absolute;
+	bottom: 0;
+	content: "";
+	height: 2rem;
+	width: 100%;
+	background: linear-gradient(to top, var(--block-color-back), transparent);
+}
+
 /** Toolbar **/
 .k-layout-toolbar {
 	position: absolute;
@@ -204,7 +220,6 @@ export default {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: space-between;
 	padding-bottom: var(--spacing-2);
 	font-size: var(--text-sm);
 	background: light-dark(var(--color-gray-100), var(--color-gray-850));
