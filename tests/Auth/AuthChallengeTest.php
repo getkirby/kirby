@@ -52,7 +52,12 @@ class AuthChallengeTest extends TestCase
 			]
 		]);
 
-		F::write(static::TMP . '/site/accounts/marge/.htpasswd', self::$password);
+		// the email challenge is opt-in as a second factor,
+		// so enable it for the user that tests the 2FA flow
+		F::write(
+			static::TMP . '/site/accounts/marge/.htpasswd',
+			self::$password . "\n" . '{"email":true}'
+		);
 
 		$this->auth = $this->app->auth();
 	}

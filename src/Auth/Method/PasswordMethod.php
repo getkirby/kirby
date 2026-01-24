@@ -3,7 +3,6 @@
 namespace Kirby\Auth\Method;
 
 use InvalidArgumentException;
-use Kirby\Auth\Auth;
 use Kirby\Auth\Method;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
@@ -68,27 +67,19 @@ class PasswordMethod extends Method
 	}
 
 	/**
-	 * Checks whether a second-factor is required
+	 * Checks whether a second factor is required for this user
 	 */
-	protected function has2FA(User $user): bool
+	public function has2FA(User $user): bool
 	{
-		return static::isUsingChallenges(
-			$this->auth,
-			$this->options
-		);
-	}
-
-	public static function isUsingChallenges(
-		Auth $auth,
-		array $options = []
-	): bool {
-		$option = $options['2fa'] ?? null;
-
-		if ($option === true) {
+		// enforced: every user needs a second factor,
+		// even if they have not set one up yet
+		if (($this->options['2fa'] ?? null) === true) {
 			return true;
 		}
 
-		return false;
+		// otherwise only challenge users who have any
+		// second factor set up (= available) for them
+		return $this->auth->challenges()->hasAvailable($user, '2fa');
 	}
 
 	public static function settings(User $user): array

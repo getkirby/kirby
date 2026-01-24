@@ -2,7 +2,6 @@
 
 namespace Kirby\Auth\Method;
 
-use Kirby\Auth\Auth;
 use Kirby\Auth\Exception\LoginNotPermittedException;
 use Kirby\Auth\Method;
 use Kirby\Auth\Service\Webauthn;
@@ -118,13 +117,6 @@ class WebauthnMethod extends Method
 	public static function icon(): string
 	{
 		return 'fingerprint';
-	}
-
-	public static function isUsingChallenges(
-		Auth $auth,
-		array $options = []
-	): bool {
-		return false;
 	}
 
 	public static function settings(User $user): array

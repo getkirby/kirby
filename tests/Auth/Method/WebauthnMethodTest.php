@@ -106,11 +106,6 @@ class WebauthnMethodTest extends TestCase
 		$this->assertSame('fingerprint', WebauthnMethod::icon());
 	}
 
-	public function testIsUsingChallenges(): void
-	{
-		$this->assertFalse(WebauthnMethod::isUsingChallenges($this->app->auth()));
-	}
-
 	public function testSettings(): void
 	{
 		$settings = WebauthnMethod::settings($this->app->user('marge'));
