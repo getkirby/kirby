@@ -1,20 +1,13 @@
 <template>
 	<header class="k-drawer-header">
-		<nav class="k-breadcrumb k-drawer-breadcrumb">
-			<ol>
-				<li v-for="(crumb, index) in breadcrumb" :key="crumb.id">
-					<k-button
-						:icon="crumb.props.icon"
-						:text="crumb.props.title"
-						:current="index === breadcrumb.length - 1"
-						variant="dimmed"
-						class="k-breadcrumb-link"
-						@click="$emit('crumb', crumb.id)"
-					/>
-				</li>
-			</ol>
-		</nav>
+		<k-breadcrumb
+			:crumbs="crumbs"
+			class="k-drawer-breadcrumb"
+			@crumb="$emit('crumb', $event)"
+		/>
+
 		<k-drawer-tabs :tab="tab" :tabs="tabs" @open="$emit('tab', $event)" />
+
 		<nav class="k-drawer-options">
 			<slot />
 			<k-button class="k-drawer-option" icon="check" type="submit" />
@@ -45,6 +38,17 @@ export const props = {
 			default: () => ({}),
 			type: Object
 		}
+	},
+	computed: {
+		crumbs() {
+			return this.breadcrumb.map((crumb, index) => ({
+				click: () => this.$emit("crumb", crumb.id),
+				current: index === this.breadcrumb.length - 1,
+				icon: crumb.props.icon,
+				text: crumb.props.title,
+				variant: "dimmed"
+			}));
+		}
 	}
 };
 
@@ -73,7 +77,8 @@ export default {
 }
 
 .k-drawer-breadcrumb {
-	flex-grow: 1;
+	flex: 1 1 auto;
+	min-width: 0;
 }
 
 .k-drawer-options {

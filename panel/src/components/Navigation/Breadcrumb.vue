@@ -10,6 +10,7 @@
 					<k-button
 						:icon="offset === 0 ? (first.icon ?? 'home') : 'dots'"
 						size="sm"
+						variant="dimmed"
 						@click="$refs.dropdown.toggle()"
 					/>
 					<k-dropdown ref="dropdown" :options="dropdown(offset, total)" />
@@ -59,10 +60,10 @@ export default {
 			const label = crumb.text ?? crumb.label;
 
 			return {
+				...crumb,
 				current: isCurrent ? "page" : false,
-				disabled: !crumb.link,
+				disabled: !crumb.link && !crumb.click && !crumb.dialog && !crumb.drawer,
 				icon: crumb.loading ? "loader" : crumb.icon,
-				link: crumb.link,
 				size: "sm",
 				text: label,
 				title: label,
@@ -76,8 +77,9 @@ export default {
 			// and get remaining hidden crumbs to show in the dropdown
 			return this.crumbs.slice(start, total - offset).map((crumb) => ({
 				...crumb,
-				text: crumb.label,
-				icon: "angle-right"
+				text: crumb.text ?? crumb.label,
+				icon: "angle-right",
+				variant: null // remove dimmed variant in dropdown
 			}));
 		},
 		visible(offset) {
