@@ -8,6 +8,7 @@ use Kirby\Auth\Method;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
 use Kirby\Panel\Ui\Button;
+use Kirby\Panel\Ui\Login;
 use SensitiveParameter;
 
 /**
@@ -56,6 +57,14 @@ class PasswordMethod extends Method
 		]);
 
 		return $user;
+	}
+
+	public function form(): Login
+	{
+		return new Login(
+			for:       $this,
+			component: 'k-login-email-password-form'
+		);
 	}
 
 	/**

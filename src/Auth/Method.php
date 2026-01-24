@@ -3,6 +3,7 @@
 namespace Kirby\Auth;
 
 use Kirby\Cms\User;
+use Kirby\Panel\Ui\Login;
 use Kirby\Toolkit\HasI18n;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
@@ -42,6 +43,15 @@ abstract class Method
 		string|null $password = null,
 		bool $long = false
 	): User|Status;
+
+	/**
+	 * Returns UI component used to represent
+	 * the method on the login view
+	 */
+	public function form(): Login|null
+	{
+		return null;
+	}
 
 	/**
 	 * Returns an icon name used to represent
