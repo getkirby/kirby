@@ -31,6 +31,7 @@ class CodeMethodTest extends TestCase
 		}
 
 		$methods->method('config')->willReturn($config);
+		$methods->method('requires2FA')->willReturn($has2fa === true);
 
 		$auth = $this->createStub(Auth::class);
 		$auth->method('methods')->willReturn($methods);

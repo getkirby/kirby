@@ -96,7 +96,7 @@ class BasicAuthMethod extends Method
 
 		// if any login method requires 2FA,
 		// basic auth without 2FA would be a weakness
-		if (in_array(true, array_column($methods, '2fa'), true) === true) {
+		if ($auth->methods()->requires2FA() === true) {
 			if ($fail === true) {
 				throw new PermissionException(
 					message: 'Basic authentication cannot be used with 2FA'

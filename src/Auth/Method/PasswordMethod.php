@@ -63,10 +63,18 @@ class PasswordMethod extends Method
 	 */
 	protected function has2FA(User $user): bool
 	{
-		return static::isUsingChallenges(
-			$this->auth,
-			$this->options
-		);
+		$option = $this->options['2fa'] ?? null;
+
+		if ($option === true) {
+			return true;
+		}
+
+		if ($option !== 'optional') {
+			return false;
+		}
+
+		$available = $this->auth->challenges()->available($user, '2fa');
+		return $available !== [];
 	}
 
 	public static function isUsingChallenges(
@@ -75,7 +83,7 @@ class PasswordMethod extends Method
 	): bool {
 		$option = $options['2fa'] ?? null;
 
-		if ($option === true) {
+		if ($option === true || $option === 'optional') {
 			return true;
 		}
 

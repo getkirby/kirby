@@ -26,12 +26,6 @@ class BasicAuthMethodTest extends TestCase
 				protected bool $ssl,
 				protected object|null $header
 			) {
-				parent::__construct(options: [
-					'url' => [
-						'scheme' => $ssl ? 'https' : 'http',
-						'host'   => 'example.com'
-					]
-				]);
 			}
 
 			public function ssl(): bool
@@ -54,44 +48,42 @@ class BasicAuthMethodTest extends TestCase
 		bool $hasAnyWith2FA = false,
 		object|null $header = null
 	): Auth&Stub {
-		$kirby   = $this->createStub(App::class);
-		$request = $this->request($isSsl, $header);
-		$kirby->method('request')->willReturn($request);
+		$kirby = $this->createConfiguredStub(App::class, [
+			'request' => $this->request($isSsl, $header),
+		]);
 		$kirby->method('option')->willReturnCallback(
-			function (string $key) use ($auth, $allowInsecure) {
-				return match ($key) {
-					'api.basicAuth'     => $auth,
-					'api.allowInsecure' => $allowInsecure,
-					default              => null
-				};
+			fn (string $key) => match ($key) {
+				'api.basicAuth'     => $auth,
+				'api.allowInsecure' => $allowInsecure,
+				default             => null
 			}
 		);
 
-		$methods = $this->createStub(Methods::class);
-		$config = $hasPassword === true ? ['password' => []] : [];
+		$config = $hasPassword ? ['password' => []] : [];
 
-		if ($hasAnyWith2FA === true && $hasPassword === true) {
+		if ($hasAnyWith2FA && $hasPassword) {
 			$config['password']['2fa'] = true;
 		}
 
-		$methods->method('config')->willReturn($config);
+		$methods = $this->createConfiguredStub(Methods::class, [
+			'config'      => $config,
+			'requires2FA' => $hasAnyWith2FA,
+		]);
 
-		$auth = $this->createStub(Auth::class);
-		$auth->method('kirby')->willReturn($kirby);
-		$auth->method('methods')->willReturn($methods);
-
-		return $auth;
+		return $this->createConfiguredStub(Auth::class, [
+			'kirby'   => $kirby,
+			'methods' => $methods,
+		]);
 	}
 
 	protected function header(
 		string $user = 'kirby',
 		string $password = 'secret'
 	): BasicAuth {
-		$header = $this->createStub(BasicAuth::class);
-		$header->method('username')->willReturn($user);
-		$header->method('password')->willReturn($password);
-
-		return $header;
+		return $this->createConfiguredStub(BasicAuth::class, [
+			'username' => $user,
+			'password' => $password,
+		]);
 	}
 
 	public function testAuthenticate(): void

@@ -63,7 +63,7 @@ class CodeMethod extends Method
 	 */
 	protected static function isWithoutAny2FA(Auth $auth): bool
 	{
-		if (in_array(true, array_column($auth->methods()->config(), '2fa'), true) === true) {
+		if ($auth->methods()->requires2FA() === true) {
 			throw new InvalidArgumentException(
 				message: 'The "' . static::type() . '" login method cannot be enabled when 2FA is required'
 			);
