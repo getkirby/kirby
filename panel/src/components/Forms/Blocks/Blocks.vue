@@ -472,11 +472,11 @@ export default {
 
 			return true;
 		},
-		onBlur() {
-			// resets multi selecting on tab change
-			// keep only if there are already multiple selections
-			// triggers `blur` event when tab changed
-			if (this.selected.length === 0) {
+		onBlur(e) {
+			// reset multi-select key when focus leaves the document entirely
+			// (e.g., switching apps, screenshot tools capturing focus)
+			// but preserve state if multiple blocks are already selected
+			if (!e.relatedTarget && this.selected.length <= 1) {
 				this.isMultiSelectKey = false;
 			}
 		},
