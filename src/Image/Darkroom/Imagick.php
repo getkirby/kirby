@@ -195,8 +195,10 @@ class Imagick extends Darkroom
 	 */
 	protected function save(Image $image, string $file, array $options): bool
 	{
+		// set the output format explicitly if specified;
+		// writing to the original path
 		if ($options['format'] !== null) {
-			$file = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '.' . $options['format'];
+			$image->setImageFormat($options['format']);
 		}
 
 		return $image->writeImages($file, true);
