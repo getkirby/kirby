@@ -434,6 +434,7 @@ class App
 	public function contentToken(object|null $model, string $value): string
 	{
 		$default = $this->root('content');
+		$default = realpath($default) ?: $default;
 
 		if ($model !== null && method_exists($model, 'id') === true) {
 			$default .= '/' . $model->id();
