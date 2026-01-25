@@ -25,7 +25,6 @@
 		"vue": "^3.5.26"
 	},
 	"devDependencies": {
-		"@csstools/postcss-light-dark-function": "^2.0.11",
 		"@vitejs/plugin-vue": "^6.0.3",
 		"@vitest/eslint-plugin": "^1.5.2",
 		"@vue/compiler-sfc": "^3.5.26",
