@@ -172,7 +172,7 @@ button.k-tag:not([aria-disabled="true"]) {
 	background-clip: padding-box;
 }
 .k-tag-icon {
-	padding-inline-start: var(--spacing-2);
+	padding-inline: var(--spacing-2);
 }
 .k-tag-text {
 	padding-inline: var(--spacing-2);
@@ -180,6 +180,9 @@ button.k-tag:not([aria-disabled="true"]) {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+.k-tag:has(.k-tag-icon) .k-tag-text {
+	padding-inline-start: 0;
 }
 .k-tag:has(.k-tag-toggle) .k-tag-text {
 	padding-inline-end: 0;
