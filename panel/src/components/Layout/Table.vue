@@ -8,6 +8,7 @@
 			:data-disabled="disabled"
 			:data-indexed="hasIndexColumn"
 			:data-selecting="selecting"
+			:style="{ '--table-index-width': indexWidth }"
 		>
 			<!-- Header row -->
 			<thead>
@@ -297,6 +298,21 @@ export default {
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
 			);
+		},
+		/**
+		 * Dynamic width for the index column based on the highest visible index
+		 * @returns {string|null}
+		 */
+		indexWidth() {
+			if (this.hasIndexColumn === false) {
+				return null;
+			}
+
+			const length = Math.max(this.values?.length ?? 0, 1);
+			const start = this.index;
+			const end = start + length - 1;
+			const digits = String(Math.max(start, end)).length;
+			return `${digits}ch`;
 		}
 	},
 	watch: {
@@ -527,7 +543,10 @@ export default {
 
 /* Table Index */
 .k-table .k-table-index-column {
-	width: var(--table-row-height);
+	width: max(
+		var(--table-row-height),
+		calc(var(--table-index-width, 1ch) + (2 * var(--table-cell-padding)))
+	);
 	text-align: center;
 }
 .k-table .k-table-index {

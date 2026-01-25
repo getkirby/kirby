@@ -7,8 +7,8 @@
 			<k-table
 				:columns="columns"
 				:options="options"
-				:sortable="true"
 				:rows="rows"
+				:sortable="true"
 			></k-table>
 		</k-lab-example>
 		<k-lab-example label="Selecting">
@@ -17,6 +17,15 @@
 				:options="options"
 				:selecting="true"
 				:rows="rows"
+			></k-table>
+		</k-lab-example>
+		<k-lab-example label="Custom index (starting at 6789)">
+			<k-table
+				:columns="columns"
+				:index="6789"
+				:options="options"
+				:rows="rows"
+				:sortable="true"
 			></k-table>
 		</k-lab-example>
 	</k-lab-examples>
@@ -28,7 +37,8 @@ export default {
 		columns() {
 			return {
 				title: {
-					label: "Title"
+					label: "Title",
+					mobile: true
 				},
 				date: {
 					label: "Date"
