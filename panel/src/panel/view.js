@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import Feature, { defaults as featureDefaults } from "./feature.js";
+import { isObject } from "@/helpers/object.js";
 
 export const defaults = () => {
 	return {
@@ -66,12 +67,37 @@ export default (panel) => {
 		},
 
 		/**
-		 * Submitting view form values is not
-		 * implemented yet
+		 * Submits view values either to a listener
+		 * or to the backend
+		 *
+		 * @param {Object} value
+		 * @param {Object} options
+		 * @returns {Promise} The response object or false if the request failed
 		 */
-		/* c8 ignore next 3 */
-		async submit() {
-			throw new Error("Not yet implemented");
-		}
+		async submit(value, options = {}) {
+			if (this.isLoading === true) {
+				return;
+			}
+
+			value ??= this.props.value;
+
+			if (this.hasEventListener("submit")) {
+				return this.emit("submit", value, options);
+			}
+
+			if (!this.path) {
+				return false;
+			}
+
+			const response = await this.post(value, options);
+
+			if (isObject(response) === false) {
+				return response;
+			}
+
+			return this.success(response.view ?? {});
+		},
+
+		// success handlers are shared via feature helpers
 	});
 };

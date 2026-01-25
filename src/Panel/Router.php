@@ -15,6 +15,7 @@ use Kirby\Panel\Response\RequestResponse;
 use Kirby\Panel\Response\SearchResponse;
 use Kirby\Panel\Response\ViewDocumentResponse;
 use Kirby\Panel\Response\ViewResponse;
+use Kirby\Panel\Response\ViewSubmitResponse;
 use Kirby\Toolkit\Tpl;
 use Throwable;
 
@@ -245,8 +246,12 @@ class Router
 		return $translation;
 	}
 
-	public function view(mixed $data): ViewResponse|ViewDocumentResponse|Response
+	public function view(mixed $data): ViewResponse|ViewDocumentResponse|ViewSubmitResponse|Response
 	{
+		if ($this->kirby->request()->method() === 'POST') {
+			return ViewSubmitResponse::from($data);
+		}
+
 		// if requested, send state data as JSON
 		if ($this->panel->isStateRequest() === true) {
 			return ViewResponse::from($data);

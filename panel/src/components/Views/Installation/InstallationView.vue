@@ -17,8 +17,9 @@
 					</h1>
 					<k-fieldset :fields="fields" :value="user" @input="user = $event" />
 					<k-button
+						:disabled="isLoading"
+						:icon="isLoading ? 'loader' : 'check'"
 						:text="$t('install')"
-						icon="check"
 						size="lg"
 						theme="positive"
 						type="submit"
@@ -106,6 +107,7 @@ export default {
 	},
 	data() {
 		return {
+			isLoading: false,
 			user: {
 				name: "",
 				email: "",
@@ -150,18 +152,14 @@ export default {
 	},
 	methods: {
 		async install() {
-			try {
-				await this.$api.system.install(this.user);
-				await this.$panel.reload({
-					globals: ["system", "translation"]
-				});
+			this.isLoading = true;
 
-				this.$panel.notification.success({
-					message: this.$t("welcome") + "!",
-					icon: "smile"
-				});
+			try {
+				await this.$panel.view.submit(this.user);
 			} catch (error) {
 				this.$panel.error(error);
+			} finally {
+				this.isLoading = false;
 			}
 		}
 	}

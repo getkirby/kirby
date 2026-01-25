@@ -1,4 +1,5 @@
 import { reactive } from "vue";
+import { wrap } from "@/helpers/array.js";
 import { isUrl } from "@/helpers/url";
 import listeners from "./listeners.js";
 import State from "./state.js";
@@ -261,6 +262,94 @@ export default (panel, key, defaults) => {
 			this.addEventListeners(state.on ?? {});
 
 			return this.state();
+		},
+
+		/**
+		 * Handles submit success responses
+		 *
+		 * @param {Object|String} state
+		 */
+		success(state) {
+			if (this.hasEventListener("success")) {
+				return this.emit("success", state);
+			}
+
+			// show a success message
+			this.successNotification(state);
+
+			// send custom events to the event bus
+			this.successEvents(state);
+
+			// redirect or reload
+			if (state.route || state.redirect) {
+				// handle any redirects
+				this.successRedirect(state);
+			} else {
+				// reload the view to show changes
+				panel.view.reload(state.reload);
+			}
+
+			return state;
+		},
+
+		/**
+		 * Emit all events that might be in the response
+		 *
+		 * @param {Object} state
+		 */
+		successEvents(state) {
+			if (state.event) {
+				// wrap single events to treat them all at once
+				const events = wrap(state.event);
+
+				// emit all defined events
+				for (const event of events) {
+					if (typeof event === "string") {
+						panel.events.emit(event, state);
+					}
+				}
+			}
+
+			// emit a success event
+			if (state.emit !== false) {
+				panel.events.emit("success", state);
+			}
+		},
+
+		/**
+		 * Sends a success notification if the
+		 * response contains a success message
+		 *
+		 * @param {Object} state
+		 */
+		successNotification(state) {
+			if (typeof state === "string") {
+				return panel.notification.success(state);
+			}
+
+			if (state.message) {
+				return panel.notification.success(state.message);
+			}
+		},
+
+		/**
+		 * Handles redirects in submit responses
+		 *
+		 * @param {Object} state
+		 */
+		successRedirect(state) {
+			const redirect = state.route ?? state.redirect;
+
+			// no redirect
+			if (!redirect) {
+				return false;
+			}
+
+			if (typeof redirect === "string") {
+				return panel.open(redirect);
+			}
+
+			return panel.open(redirect.url, redirect.options);
 		},
 
 		/**
