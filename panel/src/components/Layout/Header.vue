@@ -83,14 +83,21 @@ export default {
 	margin-bottom: 0;
 }
 
+/* On larger screens, keep title and buttons on a single line */
+@media screen and (min-width: 70rem) {
+	.k-header {
+		flex-wrap: nowrap;
+	}
+}
+
 .k-header-title {
 	font-size: var(--text-h1);
 	font-weight: var(--font-h1);
 	line-height: var(--leading-h1);
 	margin-bottom: var(--header-padding-block);
 	min-width: 0;
+	flex: 1 1 auto;
 }
-
 .k-header-title-button {
 	display: inline-flex;
 	text-align: start;
@@ -99,12 +106,10 @@ export default {
 	max-width: 100%;
 	outline: 0;
 }
-
 .k-header-title-text {
 	overflow-x: clip;
 	text-overflow: ellipsis;
 }
-
 .k-header-title-icon {
 	--icon-color: var(--color-text-dimmed);
 	border-radius: var(--rounded);
@@ -128,8 +133,8 @@ export default {
 	display: flex;
 	gap: var(--spacing-2);
 	margin-bottom: var(--header-padding-block);
+	flex-shrink: 0;
 }
-
 .k-header:has(.k-header-buttons) {
 	position: sticky;
 	top: var(--scroll-top);
