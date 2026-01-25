@@ -247,7 +247,7 @@ class User extends ModelWithContent
 	public function hasPassword(): bool
 	{
 		$password = $this->password();
-		return $password === '' || $password === null ? false : true;
+		return $password !== '' && $password !== null;
 	}
 
 	/**
