@@ -128,7 +128,11 @@ trait UserActions
 	 * Stores secrets for the user
 	 * @since 6.0.0
 	 */
-	public function changeSecret(string $secret, mixed $content): static
+	public function changeSecret(
+		string $secret,
+		#[SensitiveParameter]
+		mixed $content
+	): static
 	{
 		return $this->commit(
 			'changeSecret',
