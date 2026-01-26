@@ -6,7 +6,7 @@
 				:key="button.text"
 				class="k-form-controls-button"
 				v-bind="button"
-				:disabled="canSave === false || isProcessing"
+				:disabled="button.disabled || isProcessing"
 				variant="filled"
 				:size="size"
 			/>
@@ -107,6 +107,7 @@ export default {
 						click: () => this.discard()
 					},
 					{
+						disabled: this.canSave === false,
 						theme: "notice",
 						text: this.$t("save"),
 						icon: this.isProcessing ? "loader" : "check",
