@@ -197,7 +197,10 @@ class FileRules
 	 */
 	public static function update(File $file, array $content = []): void
 	{
-		if ($file->permissions()->can('save') !== true) {
+		if (
+			$file->permissions()->can('save') !== true ||
+			$file->permissions()->can('edit') !== true
+		) {
 			throw new PermissionException(
 				message: 'The file cannot be updated'
 			);
