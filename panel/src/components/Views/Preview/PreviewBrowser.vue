@@ -12,12 +12,12 @@
 					</p>
 					<k-form-controls
 						v-else
+						:can-save="permissions.save"
 						:editor="editor"
 						:has-diff="hasDiff"
 						:is-locked="isLocked"
 						:is-processing="isSaving"
 						:modified="modified"
-						:permissions="permissions"
 						size="xs"
 						@discard="$emit('discard', $event)"
 						@submit="$emit('submit', $event)"
