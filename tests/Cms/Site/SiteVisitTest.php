@@ -93,4 +93,33 @@ class SiteVisitTest extends ModelTestCase
 		$this->assertSame($siteTitle, $site->title()->value());
 		$this->assertSame($pageTitle, $page->title()->value());
 	}
+
+	public function testVisitWithoutLanguageCode(): void
+	{
+		// create app with locale option
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'locale' => 'de_DE.UTF-8'
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$site = $this->app->site();
+		$site->visit('test');
+
+		// verify locale was set from config
+		$this->assertTrue(
+			in_array(
+				setlocale(LC_TIME, 0),
+				['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']
+			)
+		);
+	}
 }
