@@ -343,7 +343,7 @@ class ResponderTest extends TestCase
 	{
 		$responder = new Responder();
 		$responder->header('X-Private', 'secret');
-		$responder->markVolatileHeader('X-Private');
+		$responder->volatileHeaders()->mark('X-Private');
 
 		$cacheable = $responder->toCacheArray()['headers'];
 
