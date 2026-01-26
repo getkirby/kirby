@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Throwable;
 
 /**
  * Handles permission definition in each user
@@ -213,23 +215,29 @@ class Permissions
 	}
 
 	public function for(
-		string|null $category = null,
+		string $category,
 		string|null $action = null,
 		bool $default = false
 	): bool {
-		if ($action === null) {
-			if (isset($this->actions[$category]) === false) {
-				return $default;
-			}
-
-			return $this->actions[$category];
-		}
-
-		if (isset($this->actions[$category][$action]) === false) {
+		try {
+			$permission = is_string($action)
+				? $this->actions[$category][$action]
+				: $this->actions[$category];
+		} catch (Throwable) {
 			return $default;
 		}
 
-		return $this->actions[$category][$action];
+		if (is_bool($permission) === false) {
+			$key = is_string($action) === true
+				? $category . '.' . $action
+				: $category;
+
+			throw new LogicException(
+				message: 'The value for the permission "' . $key . '" must be of type bool, ' . gettype($permission) . ' given'
+			);
+		}
+
+		return $permission;
 	}
 
 	public function toArray(): array
