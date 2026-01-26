@@ -20,12 +20,12 @@
 				<k-view-buttons :buttons="buttons">
 					<template #after>
 						<k-form-controls
+							:can-save="permissions.save"
 							:editor="editor"
 							:has-diff="hasDiff"
 							:is-locked="isLocked"
 							:is-processing="isSaving"
 							:modified="modified"
-							:permissions="permissions"
 							:preview="permissions.preview ? api + '/preview/changes' : false"
 							@discard="onDiscard"
 							@submit="onSubmit"
