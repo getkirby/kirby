@@ -651,7 +651,7 @@ class Str
 	}
 
 	/**
-	 * Sequence-based ltrim alternative.
+	 * Trims away a fixed sequence at the beginning of the string.
 	 * For character list trimming, use PHP's native `ltrim()` function.
 	 *
 	 * ```php
@@ -1004,11 +1004,11 @@ class Str
 	}
 
 	/**
-	 * Sequence-based rtrim alternative.
+	 * Trims away a fixed sequence at the end of the string.
 	 * For character list trimming, use PHP's native `rtrim()` function.
 	 *
 	 * ```php
-	 * Str::rtrim('Cabababa', 'ab'); // 'Ca'
+	 * Str::rtrim('Cabababa', 'ba'); // 'Ca'
 	 * ```
 	 */
 	public static function rtrim(
@@ -1439,11 +1439,11 @@ class Str
 	}
 
 	/**
-	 * Sequence-based trim alternative.
+	 * Trims away a fixed sequence at the beginning and end of the string.
 	 * For character list trimming, use PHP's native `trim()` function.
 	 *
 	 * ```php
-	 * Str::trim('abababaC', 'ab'); // 'aC'
+	 * Str::trim('ababaCbabab', 'ab'); // 'aCb'
 	 * ```
 	 */
 	public static function trim(
