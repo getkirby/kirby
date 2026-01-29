@@ -1450,8 +1450,8 @@ class Str
 		string $string,
 		string $trim = ' '
 	): string {
-		$string = static::ltrim($string, $trim, true);
-		$string = static::rtrim($string, $trim, true);
+		$string = static::ltrim($string, $trim);
+		$string = static::rtrim($string, $trim);
 		return $string;
 	}
 
