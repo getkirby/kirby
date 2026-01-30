@@ -1,3 +1,8 @@
+import { DOMParser, DOMSerializer, Schema } from "prosemirror-model";
+
+import { Bold, Code, Italic, Link, Strike, Sub, Sup, Underline } from "../components/Forms/Writer/Marks";
+import { Doc, Text } from "../components/Forms/Writer/Nodes";
+
 import "./regex";
 
 const escapingMap = {
@@ -163,6 +168,47 @@ export function rtrim(string = "", replace = "") {
 }
 
 /**
+ * Sanitizes HTML by only keeping allowed marks
+ * (bold, italic, underline, links)
+ * @param {string} html
+ * @param {object} options
+ * @returns {string}
+ */
+export function sanitizeHTML(html, options = {}) {
+	// Instantiate marks and nodes to extract their schema definitions
+	const marks = options.marks ?? [
+		new Bold(),
+		new Code(),
+		new Italic(),
+		new Link(),
+		new Strike(),
+		new Sub(),
+		new Sup(),
+		new Underline()
+	];
+
+	const nodes = options.nodes ?? [new Doc({ inline: true }), new Text()];
+
+	// Build schema from the extracted definitions
+	const sanitizeSchema = new Schema({
+		marks: Object.fromEntries(marks.map((m) => [m.name, m.schema])),
+		nodes: Object.fromEntries(nodes.map((n) => [n.name, n.schema]))
+	});
+
+	const dom = new window.DOMParser()
+		.parseFromString(`<div>${html}</div>`, "text/html")
+		.body.firstElementChild;
+
+	const doc = DOMParser.fromSchema(sanitizeSchema).parse(dom);
+	const div = document.createElement("div");
+	div.appendChild(
+		DOMSerializer.fromSchema(sanitizeSchema).serializeFragment(doc.content)
+	);
+
+	return div.innerHTML;
+}
+
+/**
  * Convert string to ASCII slug
  * @param {string} string string to be converted
  * @param {array} rules ruleset to convert non-ASCII characters
@@ -317,6 +363,7 @@ export default {
 	pad,
 	random,
 	rtrim,
+	sanitizeHTML,
 	slug,
 	stripHTML,
 	template,
