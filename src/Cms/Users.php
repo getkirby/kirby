@@ -181,7 +181,7 @@ class Users extends LazyCollection
 	 * Ensures that the IDs for all valid users are loaded in the
 	 * `$data` array and sets `$initialized` to `true` afterwards
 	 */
-	public function initializeAll(): void
+	public function initialize(): void
 	{
 		// skip another initialization if it already has been initialized
 		if ($this->initialized === true) {
