@@ -651,10 +651,17 @@ class Str
 	}
 
 	/**
-	 * Safe ltrim alternative
+	 * Trims away a fixed sequence at the beginning of the string.
+	 * For character list trimming, use PHP's native `ltrim()` function.
+	 *
+	 * ```php
+	 * Str::ltrim('abababaC', 'ab'); // 'aC'
+	 * ```
 	 */
-	public static function ltrim(string $string, string $trim = ' '): string
-	{
+	public static function ltrim(
+		string $string,
+		string $trim = ' '
+	): string {
 		return preg_replace('!^(' . preg_quote($trim) . ')+!', '', $string);
 	}
 
@@ -997,10 +1004,17 @@ class Str
 	}
 
 	/**
-	 * Safe rtrim alternative
+	 * Trims away a fixed sequence at the end of the string.
+	 * For character list trimming, use PHP's native `rtrim()` function.
+	 *
+	 * ```php
+	 * Str::rtrim('Cabababa', 'ba'); // 'Ca'
+	 * ```
 	 */
-	public static function rtrim(string $string, string $trim = ' '): string
-	{
+	public static function rtrim(
+		string $string,
+		string $trim = ' '
+	): string {
 		return preg_replace('!(' . preg_quote($trim) . ')+$!', '', $string);
 	}
 
@@ -1425,11 +1439,20 @@ class Str
 	}
 
 	/**
-	 * Safe trim alternative
+	 * Trims away a fixed sequence at the beginning and end of the string.
+	 * For character list trimming, use PHP's native `trim()` function.
+	 *
+	 * ```php
+	 * Str::trim('ababaCbabab', 'ab'); // 'aCb'
+	 * ```
 	 */
-	public static function trim(string $string, string $trim = ' '): string
-	{
-		return static::rtrim(static::ltrim($string, $trim), $trim);
+	public static function trim(
+		string $string,
+		string $trim = ' '
+	): string {
+		$string = static::ltrim($string, $trim);
+		$string = static::rtrim($string, $trim);
+		return $string;
 	}
 
 	/**
