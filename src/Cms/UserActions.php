@@ -132,8 +132,7 @@ trait UserActions
 		string $secret,
 		#[SensitiveParameter]
 		mixed $content
-	): static
-	{
+	): static {
 		return $this->commit(
 			'changeSecret',
 			[
