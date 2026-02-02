@@ -256,7 +256,7 @@ class Auth
 
 	/**
 	 * Check if logins are blocked for the current ip or email
-	 * @deprecated 6.0.0 Use `self::limits()->Blocked()` instead
+	 * @deprecated 6.0.0 Use `self::limits()->isBlocked()` instead
 	 */
 	public function isBlocked(string $email): bool
 	{

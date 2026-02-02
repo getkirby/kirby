@@ -44,12 +44,12 @@ class Limits
 		$ip     = $this->kirby->visitor()->ip(hash: true);
 		$trials = $this->kirby->option('auth.trials', 10);
 
-		if (($log['by-ip'][$ip]['trials'] ?? null) >= $trials) {
+		if (($log['by-ip'][$ip]['trials'] ?? 0) >= $trials) {
 			return true;
 		}
 
 		if ($this->kirby->users()->find($email)) {
-			if (($log['by-email'][$email]['trials'] ?? null) >= $trials) {
+			if (($log['by-email'][$email]['trials'] ?? 0) >= $trials) {
 				return true;
 			}
 		}
