@@ -295,8 +295,16 @@ export default (panel, key, defaults) => {
 				// handle any redirects
 				this.successRedirect(success);
 			} else {
-				// reload the parent view to show changes
-				panel.view.reload(success.reload);
+				if (panel.dialog.isOpen === true) {
+					panel.dialog.refresh();
+				}
+
+				if (panel.drawer.isOpen === true) {
+					panel.drawer.refresh();
+				}
+
+				// refresh the parent view to show changes
+				panel.view.refresh(success.reload);
 			}
 
 			return success;
