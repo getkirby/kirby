@@ -517,13 +517,16 @@ class Auth
 			throw new UserNotFoundException($email);
 
 		} catch (Throwable $e) {
+			$error = $e;
+
 			// log invalid login trial unless the rate limit is already active
-			if ($e instanceof RateLimitException === false) {
+			if ($error instanceof RateLimitException === false) {
 				try {
 					$this->limits->track($email);
-				} catch (Throwable) {
-					// $e is overwritten with the exception
+				} catch (Throwable $e) {
+					// $error is overwritten with the exception
 					// from the track method if there's one
+					$error = $e;
 				}
 			}
 
@@ -533,7 +536,8 @@ class Auth
 
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information
-			$this->fail($e, new LoginNotPermittedException());
+			$this->fail($error, new LoginNotPermittedException());
+			return null;
 		}
 	}
 
