@@ -32,7 +32,14 @@ class Blueprint
 	public static array $loaded = [];
 
 	protected AcceptRules $acceptRules;
+
+	/**
+	 * Global field definitions that can be referenced
+	 * in tabs, columns and sections.
+	 */
 	protected array $fieldDefinitions = [];
+
+	// Cache for collected field props
 	protected array $fields = [];
 	protected ModelWithContent $model;
 	protected array $props;
@@ -252,6 +259,8 @@ class Blueprint
 	 * and removes them from props so they can be referenced.
 	 * When no layout exists, fields stay in props for the
 	 * existing backwards-compatible behavior.
+	 *
+	 * @since 6.0.0
 	 */
 	protected function extractFieldReferences(array $props): array
 	{
@@ -775,6 +784,8 @@ class Blueprint
 	/**
 	 * Resolves field references (numeric keys with string values)
 	 * to full definitions from the global registry
+	 *
+	 * @since 6.0.0
 	 */
 	protected function resolveFieldReferences(array $fields): array
 	{
@@ -874,5 +885,4 @@ class Blueprint
 	{
 		return $this->props;
 	}
-
 }
