@@ -130,7 +130,7 @@ return [
 							'text'     => I18n::translate('license.activate.acknowledge.text'),
 							'required' => true,
 							'help'     => I18n::template('license.activate.acknowledge.help', [
-								'url' => 'https://getkirby.com/license/#free-licenses__usage-for-a-development-installation'
+								'url' => 'https://getkirby.com/license/free-licenses'
 							]),
 						],
 						'license' => [
