@@ -157,7 +157,7 @@ export default {
 .k-installation-view > .k-stack {
 	max-width: 25rem;
 	margin: 0 auto;
-	gap: var(--spacing-6);
+	gap: var(--spacing-8);
 	padding: var(--spacing-6);
 	background: light-dark(var(--color-white), var(--color-gray-950));
 	border-radius: var(--rounded);
