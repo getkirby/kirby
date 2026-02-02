@@ -81,9 +81,8 @@ export default {
 				this.total = expanded.total;
 			}
 
-			this.$nextTick(() => {
-				this.isUpdating = false;
-			});
+			await this.$nextTick();
+			this.isUpdating = false;
 		},
 		async fitItemsInSpace(available) {
 			// Show all items so we can measure them
