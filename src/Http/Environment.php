@@ -809,7 +809,8 @@ class Environment
 			$configCli = F::load(
 				file: $root . '/config.cli.php',
 				fallback: [],
-				allowOutput: false
+				allowOutput: false,
+				cache: true
 			);
 		}
 
@@ -821,7 +822,8 @@ class Environment
 			$configHost = F::load(
 				file: $path,
 				fallback: [],
-				allowOutput: false
+				allowOutput: false,
+				cache: true
 			);
 		}
 
@@ -833,7 +835,8 @@ class Environment
 			$configAddr = F::load(
 				file: $path,
 				fallback: [],
-				allowOutput: false
+				allowOutput: false,
+				cache: true
 			);
 		}
 

@@ -86,8 +86,22 @@ jobs:
       - name: Check Composer platform requirements
         run: composer check-platform-reqs
 
+      - name: Cache PHPUnit results
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ./.phpunit.cache
+          key: phpunit-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            phpunit-${{ matrix.php }}-
+            phpunit-
+
       - name: Run PHPUnit tests
-        run: paratest -c phpunit.ci.xml --coverage-clover ${{ github.workspace }}/clover.xml --exclude-source-from-xml-coverage
+        if: matrix.php != '8.4'
+        run: paratest -c phpunit.ci.xml --processes 4
+
+      - name: Run PHPUnit tests with coverage
+        if: matrix.php == '8.4'
+        run: paratest -c phpunit.ci.xml --processes 4 --coverage-clover ${{ github.workspace }}/clover.xml --exclude-source-from-xml-coverage
 
       - name: Upload coverage results to Codecov
         if: matrix.php == '8.4'

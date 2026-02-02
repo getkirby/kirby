@@ -291,9 +291,28 @@ class ImagickTest extends TestCase
 			$file = static::TMP . '/cat.jpg'
 		);
 
-		$this->assertFalse(F::exists($webp = static::TMP . '/cat.webp'));
 		$imagick->process($file);
-		$this->assertTrue(F::exists($webp));
+		$this->assertTrue(F::exists($file));
+	}
+
+	public function testSaveSetsOutputFormat(): void
+	{
+		$imagick = new Imagick();
+		$image   = $this->createMock(Image::class);
+
+		$image->expects($this->once())
+			->method('setImageFormat')
+			->with('webp');
+
+		$image->expects($this->once())
+			->method('writeImages')
+			->willReturn(true);
+
+		$result = $this->call($imagick, 'save', $image, static::TMP . '/cat.jpg', [
+			'format' => 'webp'
+		]);
+
+		$this->assertTrue($result);
 	}
 
 	public function testSharpen(): void

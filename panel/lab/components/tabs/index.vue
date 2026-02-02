@@ -4,7 +4,7 @@
 			<k-tabs :tabs="tabs.slice(0, 2)" />
 		</k-lab-example>
 		<k-lab-example label="too many tabs">
-			<k-tabs :tabs="tabs" />
+			<k-tabs :tabs="tabs" tab="f" />
 		</k-lab-example>
 		<k-lab-example label="theme: notice">
 			<k-tabs :tabs="tabs" theme="notice" />

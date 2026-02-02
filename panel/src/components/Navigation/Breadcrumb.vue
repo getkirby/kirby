@@ -1,25 +1,29 @@
 <template>
 	<nav :aria-label="label" class="k-breadcrumb">
-		<div v-if="crumbs.length > 1" class="k-breadcrumb-dropdown">
-			<k-button icon="home" @click="$refs.dropdown.toggle()" />
-			<k-dropdown ref="dropdown" :options="dropdown" />
-		</div>
+		<k-collapsible direction="start" element="ol">
+			<!-- Responsive fallback -->
+			<template #fallback="{ offset, total }">
+				<li v-if="offset !== 0">
+					<k-button v-bind="button(first)" />
+				</li>
+				<li>
+					<k-button
+						:icon="offset === 0 ? (first.icon ?? icon) : 'dots'"
+						size="sm"
+						variant="dimmed"
+						@click="$refs.dropdown.toggle()"
+					/>
+					<k-dropdown ref="dropdown" :options="dropdown(offset, total)" />
+				</li>
+			</template>
 
-		<ol>
-			<li v-for="(crumb, index) in crumbs" :key="index">
-				<k-button
-					:icon="crumb.loading ? 'loader' : crumb.icon"
-					:link="crumb.link"
-					:disabled="!crumb.link"
-					:text="crumb.text ?? crumb.label"
-					:title="crumb.text ?? crumb.label"
-					:current="index === crumbs.length - 1 ? 'page' : false"
-					variant="dimmed"
-					size="sm"
-					class="k-breadcrumb-link"
-				/>
-			</li>
-		</ol>
+			<!-- Crumbs list -->
+			<template #default="{ offset }">
+				<li v-for="(crumb, index) in visible(offset)" :key="crumb.link">
+					<k-button v-bind="button(crumb, index === offset - 1)" />
+				</li>
+			</template>
+		</k-collapsible>
 	</nav>
 </template>
 
@@ -41,18 +45,57 @@ export default {
 			type: Array,
 			default: () => []
 		},
+		/**
+		 * Fallback dropdown button icon
+		 * @since 6.0.0
+		 */
+		icon: {
+			type: String,
+			default: "home"
+		},
 		label: {
 			type: String,
 			default: "Breadcrumb"
 		}
 	},
 	computed: {
-		dropdown() {
-			return this.crumbs.map((link) => ({
-				...link,
-				text: link.label,
-				icon: "angle-right"
+		first() {
+			return this.crumbs[0];
+		}
+	},
+	methods: {
+		button(crumb, isCurrent = false) {
+			const label = crumb.text ?? crumb.label;
+
+			return {
+				...crumb,
+				current: isCurrent ? "page" : false,
+				disabled: !crumb.link && !crumb.click && !crumb.dialog && !crumb.drawer,
+				icon: crumb.loading ? "loader" : crumb.icon,
+				size: "sm",
+				text: label,
+				title: label,
+				variant: "dimmed"
+			};
+		},
+		dropdown(offset, total) {
+			const start = offset > 0 ? 1 : 0;
+
+			// Skip first crumb (except when all crumbs are hidden)
+			// and get remaining hidden crumbs to show in the dropdown
+			return this.crumbs.slice(start, total - offset).map((crumb) => ({
+				...crumb,
+				text: crumb.text ?? crumb.label,
+				icon: "angle-right",
+				variant: null // remove dimmed variant in dropdown
 			}));
+		},
+		visible(offset) {
+			if (offset > 0) {
+				return this.crumbs.slice(-offset);
+			}
+
+			return [];
 		}
 	}
 };
@@ -61,59 +104,29 @@ export default {
 <style>
 .k-breadcrumb {
 	--breadcrumb-divider: "/";
-	overflow-x: clip;
 	padding: 2px;
 }
 
 .k-breadcrumb ol {
-	display: none;
+	display: flex;
 	gap: 0.125rem;
 	align-items: center;
 }
 .k-breadcrumb ol li {
+	flex-shrink: 0;
 	display: flex;
 	align-items: center;
-	min-width: 0;
-	transition: flex-shrink 0.1s;
-}
-.k-breadcrumb ol li:has(.k-icon) {
-	/*
-	 * without a useful min-width, the item will vanish completely on hover of a very long other item.
-	 * 2.25rem helps to keep at least the icon visible for items with icons.
-	 */
-	min-width: 2.25rem;
 }
 .k-breadcrumb ol li:not(:last-child)::after {
 	content: var(--breadcrumb-divider);
 	opacity: 0.175;
-	flex-shrink: 0;
 }
 
 .k-breadcrumb .k-icon[data-type="loader"] {
 	opacity: 0.5;
 }
-.k-breadcrumb ol li:is(:hover, :focus-within) {
-	flex-shrink: 0;
-}
-.k-button.k-breadcrumb-link {
-	flex-shrink: 1;
-	min-width: 0;
-	justify-content: flex-start;
-}
 
-.k-breadcrumb-dropdown {
-	display: grid;
-}
-.k-breadcrumb-dropdown .k-dropdown {
-	width: 15rem;
-}
-
-@container (min-width: 40em) {
-	.k-breadcrumb ol {
-		display: flex;
-	}
-	.k-breadcrumb-dropdown {
-		display: none;
-	}
+.k-breadcrumb .k-dropdown {
+	max-width: 15rem;
 }
 </style>

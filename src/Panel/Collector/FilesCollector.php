@@ -15,6 +15,8 @@ use Kirby\Cms\Users;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends \Kirby\Panel\Collector\ModelsCollector<\Kirby\Cms\Files>
  */
 class FilesCollector extends ModelsCollector
 {
