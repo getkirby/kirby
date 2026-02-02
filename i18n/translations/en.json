@@ -477,7 +477,7 @@
 	"license.activate": "Activate it now",
 	"license.activate.label": "Installation",
 	"license.activate.domain": "Your license will be activated for <strong>{host}</strong>.",
-	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain and this is your development installation, please activate it as develop installation.",
+	"license.activate.local": "You are about to activate your Kirby license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain and this is a copy for local development, please activate it as development installation.",
 	"license.activate.public": "You are about to activate a free development license for your public domain <strong>{host}</strong>. You must ensure that your installation is in a private network or password protected.",
 	"license.activate.acknowledge.label": "Please confirm",
 	"license.activate.acknowledge.text": "Installation is purely for development",
