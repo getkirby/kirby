@@ -376,13 +376,25 @@ Custom glue
 ### Core
 
 - The Spyc YAML handler has been deprecated and will be removed in a future release. [#7530](https://github.com/getkirby/kirby/pull/7530)
+- `legacy` query runner has been deprecated and removed as default. Use `Kirby\Query\Runners\DefaultRunner` instead. [#7791](https://github.com/getkirby/kirby/pull/7791)
+- `Kirby\Query\Argument`, `Kirby\Query\Arguments`, `Kirby\Query\Expression`, `Kirby\Query\Segment`, `Kirby\Query\Segments` have been deprecated and will be removed in Kirby 7. [#7791](https://github.com/getkirby/kirby/pull/7791)
+- Moved `Kirby\Cms\Blueprint`, `Kirby\Cms\FileBlueprint`, `Kirby\Cms\PageBlueprint`, `Kirby\Cms\Section`, `Kirby\Cms\SiteBlueprint` and `Kirby\Cms\UserBlueprint` to new `Kirby\Blueprint namespace`. Aliases for the old names have been added but are deprecated and will be removed in a future major version. [#7787](https://github.com/getkirby/kirby/pull/7787)
+- `Kirby\Cms\Auth::ipHash()` has been removed. Use `$visitor->ip(hash: true)` instead.
 
 ### Panel
+
+#### Frontend
+
+- `k-models-dialog`, `k-pages-dialog`, `k-files-dialog` and `k-users-dialog` have been deprecated. Use `k-model-picker-dialog`, `k-page-picker-dialog`, `k-file-picker-dialog`, `k-user-picker-dialog` instead.
 
 #### Backend
 
 - `Kirby\Panel\File::dropdown()`, `Kirby\Panel\Page::dropdown()` and `Kirby\Panel\User::dropdown()` have been deprecated. Use the respective `Kirby\Panel\Controller\DropdownController` instead. [#7425](https://github.com/getkirby/kirby/pull/7425)
 - `::breadcrumb()`, `::buttons()`, `::prevNext()`, `::props()`, `::versions()` and `::view()` methods of `Kirby\Panel\Model`, `Kirby\Panel\Site`, `Kirby\Panel\Page`, `Kirby\Panel\File` and `Kirby\Panel\User` have been deprecated. Use the respective `Kirby\Panel\Controller\View` classes instead. [#7480](https://github.com/getkirby/kirby/pull/7480)
+- The global `page/create` dialog endpoint has been deprecated. Use the specific dialog endpoint of a pages section instead. [#7466](https://github.com/getkirby/kirby/pull/7466)
+- All `legacy-*` fields will be removed in an upcoming major version. Please move to class-based fields instead and extend the respective field class.
+- `Kirby\Field\FieldOptions` is a deprecated alias for `Kirby\Form\FieldOptions`. Use `Kirby\Form\FieldOptions`instead.
+- `Kirby\Cms\Picker`, `Kirby\Cms\PagePicker`, `Kirby\Cms\FilePicker` and `Kirby\Cms\UserPicker` have been deprecated. Use `Kirby\Panel\Controller\Dialog\ModelPickerDialogController`, `Kirby\Panel\Controller\Dialog\PagePickerDialogController`, `Kirby\Panel\Controller\Dialog\FilePickerDialogController` and `Kirby\Panel\Controller\Dialog\UserPickerDialogController` instead.
 
 ---
 
