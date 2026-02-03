@@ -423,3 +423,7 @@ Custom glue
     - Upgraded to PHPUnit 12 [#7681](https://github.com/getkirby/kirby/pull/7681)
     - Removed `phpmd` from our CI [#7536](https://github.com/getkirby/kirby/pull/7536)
 - Added `Kirby\Panel\TestCase::setRequest()` helper method [#7440](https://github.com/getkirby/kirby/pull/7440)
+- Using ParaTest to run PHPUnit tests in parallel [#7803](https://github.com/getkirby/kirby/pull/7803)
+- PHPUnit improvements
+    - Cache PHPUnit results
+    - Only create coverage results for PHP 8.4 (as we also only upload those)
