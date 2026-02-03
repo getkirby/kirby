@@ -428,13 +428,115 @@ Custom glue
 - Moved permalink logic to new `Kirby\Uuid\Permalink` class [#7545](https://github.com/getkirby/kirby/pull/7545)
 - New `Kirby\Uuid\Uuid::from(string $uuid)` method for creating an Uuid object from a UUID string. `Kirby\Uuid\Uuid::for()` remains to create a Uuid object for a model object. [#7544](https://github.com/getkirby/kirby/pull/7544)
 - Use `json_validate` for `V::json()` [#7538](https://github.com/getkirby/kirby/pull/7538)
+- New `Kirby\Blueprint\AcceptRules` class to host the code from the Blueprint class, which is specifically checking for accepted files. This could later be extended to also check for accepted subpages. [#7829](https://github.com/getkirby/kirby/pull/7829)
+- New `Kirby\Blueprint\Blueprint::acceptRules()` method. [#7829](https://github.com/getkirby/kirby/pull/7829)
+
+### Forms 
+
+Form Fields have been massively refactored:
+
+- Remove `default` from field props [#7789](https://github.com/getkirby/kirby/pull/7789)
+- Use named props instead of arrays in all Field classes
+- New `FieldClass::factory()` method, which is used in Fields to create instances from arrays
+- `Kirby\Form\Field` now also accepts BaseClass extensions in the factory method.
+- `Kirby\Form\FieldClass` & `Kirby\Form\Field\DisplayField` now extend `Kirby\Form\Field\BaseClass`
+- New `Kirby\Form\Field\BaseField::stringTemplateI18n` method to simplify string templates that need to run through translation first.
+- `Move Kirby\Field\FieldOptions` class to `Kirby\Form\FieldOptions`
+- `files`, `pages` and `users` field use new picker dialogs
+- `files`, `pages` and `users` fields dynamically fetch item data from new `items` field API endpoint
+- The `Kirby\Form\Field\SlugField` does now get the 'slug' translation string as default label [#7846](https://github.com/getkirby/kirby/pull/7846)
+
+#### New Field Foundation classes
+
+- New `Kirby\Form\Field\BaseField` abstract class, which serves as a foundation for all fields.
+- New `Kirby\Form\Field\DateTimeField` abstract class, which serves as a foundation for all date and time fields.
+- New `Kirby\Form\Field\InputField` abstract class, which serves as foundation for all fields with a value.
+- New `Kirby\Form\Field\OptionField` abstract class, which serves as foundation for fields with a single option value.
+- New `Kirby\Form\Field\OptionsField` abstract class, which serves as foundation for fields with multiple options value.
+- New `Kirby\Form\Field\StringField` abstract class, as foundation for text, textarea and potentially more string value fields.
+- New `Kirby\Form\Field\ModelPickerField` abstract class, as foundation for all picker fields.
+
+#### New Form classes
+
+- New `Kirby\Form\Field\CheckboxesField` class
+- New `Kirby\Form\Field\ColorField` class
+- New `Kirby\Form\Field\DateField` class
+- New `Kirby\Form\Field\EmailField` class
+- New `Kirby\Form\Field\FilePickerField` class
+- New `Kirby\Form\Field\GapField`
+- New `Kirby\Form\Field\HeadlineField`
+- New `Kirby\Form\Field\HiddenField`
+- New `Kirby\Form\Field\InfoField`
+- New `Kirby\Form\Field\LineField`
+- New `Kirby\Form\Field\LinkField`
+- New `Kirby\Form\Field\ListField`
+- New `Kirby\Form\Field\MultiselectField` class
+- New `Kirby\Form\Field\NumberField` class
+- New `Kirby\Form\Field\ObjectField` class
+- New `Kirby\Form\Field\PagePickerField` class
+- New `Kirby\Form\Field\PasswordField` class
+- New `Kirby\Form\Field\RadioField` class
+- New `Kirby\Form\Field\RangeField` class
+- New `Kirby\Form\Field\SelectField` class
+- New `Kirby\Form\Field\SlugField` class
+- New `Kirby\Form\Field\StuctureField`
+- New `Kirby\Form\Field\TagsField` class
+- New `Kirby\Form\Field\TelField` class
+- New `Kirby\Form\Field\TextField` class
+- New `Kirby\Form\Field\TextareaField` class
+- New `Kirby\Form\Field\TimeField` class
+- New `Kirby\Form\Field\ToggleField` class
+- New `Kirby\Form\Field\TogglesField` class
+- New `Kirby\Form\Field\UrlField` class
+- New `Kirby\Form\Field\UserPickerField` class
+- New `Kirby\Form\Field\WriterField` class
+
+#### New mixins
+
+- New `Kirby\Form\Mixin\Autocomplete` mixin
+- New `Kirby\Form\Mixin\Batch` mixin
+- New `Kirby\Form\Mixin\Columns` mixin
+- New `Kirby\Form\Mixin\Converter` mixin
+- New `Kirby\Form\Mixin\Counter` mixin
+- New `Kirby\Form\Mixin\DefaultValue` mixin
+- New `Kirby\Form\Mixin\Disabled` mixin
+- New `Kirby\Form\Mixin\Font` mixin
+- New `Kirby\Form\Mixin\Layout` mixin
+- New `Kirby\Form\Mixin\Maxlength` mixin
+- New `Kirby\Form\Mixin\Minlength` mixin
+- New `Kirby\Form\Mixin\Name` mixin
+- New `Kirby\Form\Mixin\Pattern` mixin
+- New `Kirby\Form\Mixin\Pretty` mixin
+- New `Kirby\Form\Mixin\Required` mixin
+- New `Kirby\Form\Mixin\Separator` mixin
+- New `Kirby\Form\Mixin\Siblings` mixin
+- New `Kirby\Form\Mixin\Spellcheck` mixin
+- New `Kirby\Form\Mixin\Sortable` mixin
+- New `Kirby\Form\Mixin\Text` mixin
+- New `Kirby\Form\Mixin\Theme` mixin
+- New `Kirby\Form\Mixin\Duplicate` mixin
+- New `Kirby\Form\Mixin\Fields` mixin
+- New `Kirby\Form\Mixin\Limit` mixin
+- New `Kirby\Form\Mixin\Options` mixin
+- New `Kirby\Form\Mixin\Prepend` mixin
+- New `Kirby\Form\Mixin\SortBy` mixin
+- New `Kirby\Form\Mixin\TableColumns` mixin
+- New `Kirby\Form\Mixin\Upload` mixin
 
 ### Panel
 
 #### Frontend
 
 - Files, pages and users field previews now support IDs alongside item objects as value and will fetch the item data for these IDs automatically. [#7723](https://github.com/getkirby/kirby/pull/7723)
-
+- `k-image-frame` can receive a file ID/UUID via new `file` prop [#7756](https://github.com/getkirby/kirby/pull/7756)
+- Removed the `panel.vue.compiler` option. It isn't needed with Vue 3 anymore. [#7788](https://github.com/getkirby/kirby/pull/7788)
+- New `k-panel-notifications` [#7797](https://github.com/getkirby/kirby/pull/7797)
+- `k-button` apply all `aria-` attributes [#7801](https://github.com/getkirby/kirby/pull/7801)
+- DOM structure of `k-item` has been changes. An additional wrapper `.k-item-box` div was added. [#7361](https://github.com/getkirby/kirby/pull/7361)
+- New k-login-back-button [#7840](https://github.com/getkirby/kirby/pull/7840)
+- Remove `light-dark()` polyfill [#7902](https://github.com/getkirby/kirby/pull/7902)
+- `<k-breadcrumb>` has a new responsive behavior (backend by `<k-collapsible>`) [#7901](https://github.com/getkirby/kirby/pull/7901)
+	
 #### Backend
 
 - Refactored the Panel namespace as non-static classes [#7386](https://github.com/getkirby/kirby/pull/7386) [#7394](https://github.com/getkirby/kirby/pull/7394) [#7394](https://github.com/getkirby/kirby/pull/7394)
@@ -446,6 +548,23 @@ Custom glue
 - Aligned the namespace names within `Kirby\Panel\Ui` [#7459](https://github.com/getkirby/kirby/pull/7459)
     - `Kirby\Panel\Ui\Buttons\ViewButtons` now supports passing an array of `Kirby\Panel\Ui\Buttons\ViewButton` objects [#7462](https://github.com/getkirby/kirby/pull/7462)
     - `Panel\Ui\Stat` optional `$model` property [#7420](https://github.com/getkirby/kirby/pull/7420)
+- Use `ModelItem` classes for picker dialogs [#7753](https://github.com/getkirby/kirby/pull/7753)
+- New `create` dialog endpoint for pages sections [#7466](https://github.com/getkirby/kirby/pull/7466)
+- The `Kirby\Panel\Field` class uses the new classes and improvements above to replace its logic. [#7846](https://github.com/getkirby/kirby/pull/7846)
+
+##### New Panel Field classes [#7846](https://github.com/getkirby/kirby/pull/7846)
+
+- New `Kirby\Panel\Form\Field\FilePositionField` class
+- New `Kirby\Panel\Form\Field\PagePositionField` class
+- New `Kirby\Panel\Form\Field\RoleField` class
+- New `Kirby\Panel\Form\Field\TemplateField` class
+- New `Kirby\Panel\Form\Field\TitleField` class
+- New `Kirby\Panel\Form\Field\TranslationField` class
+
+### Tests
+
+- Use stubs instead of mocks in tests [#7804](https://github.com/getkirby/kirby/pull/7804)
+- Better locale set/reset [#7805](https://github.com/getkirby/kirby/pull/7805)
 
 ---
 
