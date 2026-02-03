@@ -635,7 +635,9 @@
 	"plugin": "Plugin",
 	"plugins": "Plugins",
 	"prev": "Precedente",
+
 	"preview": "Anteprima",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Pubblica",
 	"published": "Pubblicato",
@@ -786,6 +788,7 @@
 	"user.create": "Aggiungi nuovo utente",
 	"user.delete": "Elimina questo utente",
 	"user.delete.confirm": "Sei sicuro di voler eliminare l'utente <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Utenti",
 
