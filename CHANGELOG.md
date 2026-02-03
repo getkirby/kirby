@@ -219,7 +219,21 @@ Custom glue
 - `k-collection`/`k-items` can receive a list of `selected` items to control selection status from parent [#7516](https://github.com/getkirby/kirby/pull/7516)
 - New `k-models-picker-dialog` components (`k-pages-picker-dialog`, `k-files-picker-dialog`, `k-users-picker-dialog`) [#7529](https://github.com/getkirby/kirby/pull/7529)
 - New `k-video-frame` component [#7755](https://github.com/getkirby/kirby/pull/7755)
-
+- The `<k-table>` component has a new `responsive` prop, which is set to `true` by default. Switching the responsive mode off will no longer hide columns that are not marked with `data-mobile="true"`. This gives more control over custom responsive behaviors for tables and also helps to improve the usability in narrow widths. [#7770](https://github.com/getkirby/kirby/pull/7770)
+- `image` and `gallery` block previews now load properly sized thumbs that also respect the `cover` and `ratio` settings [#7756](https://github.com/getkirby/kirby/pull/7756)
+- New `RequestError.dialog()` method to create all props for the request error dialog according to the details from the error object. [#7782](https://github.com/getkirby/kirby/pull/7782)
+- All errors are now converted to Error objects in `panel.notification.error()` [#7782](https://github.com/getkirby/kirby/pull/7782)
+- Page picker dialog shows badge for selected children [#7687](https://github.com/getkirby/kirby/pull/7687)
+- The Panel URL is available inside the Panel as `this.$panel.urls.panel` [#7800](https://github.com/getkirby/kirby/pull/7800)
+- Field labels get highlighted when field has unsaved changes [#7794](https://github.com/getkirby/kirby/pull/7794)
+    <img width="679" height="360" alt="image" src="https://github.com/user-attachments/assets/644a3dcf-9e1b-4aad-a526-aadb25b5954e" />
+		<img width="670" height="364" alt="image" src="https://github.com/user-attachments/assets/08fff2f9-c77b-4c57-bfec-2626df04ce29" />
+- Better drag sorting (e.g. pages and files sections) in list layout [#7349](https://github.com/getkirby/kirby/issues/7349)
+- Panel only shows missing blueprint info when debug mode is active https://feedback.getkirby.com/392
+- Files field: upload files by drag'n'drop them onto the picker dialog https://feedback.getkirby.com/729 [#7888](https://github.com/getkirby/kirby/pull/7888)
+- New `<k-collapsible>` component that can wrap a list of elements with a default and fallback slot and provide the necessary data how many elements fit in the current container width to render the element as a responsive list of visible and hidden elements (the latter represented by the fallback slot content). [#7901](https://github.com/getkirby/kirby/pull/7901)
+- New `$panel.observers` JS module
+  
 #### Backend
 
 - Sections can define their own dialogs and drawers on the backend now, as fields have already been able to [#7540](https://github.com/getkirby/kirby/pull/7540)
