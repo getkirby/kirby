@@ -240,6 +240,7 @@ Custom glue
 
 - Fixed auto-closing open snippets at the end of a nested snippet (thx to [@JojOatXGME](https://github.com/JojOatXGME)) [#7567](https://github.com/getkirby/kirby/issues/7567)
 - `Kirby\Filesystem\Exif` now supports arrays for `ISOSpeedRatings` [#7569](https://github.com/getkirby/kirby/issues/7569)
+- `Kirby\Form\Field\BaseField::stringTemplate()` now uses `ModelWithContent::toSafeString()` by default and introduces a new `$safe` argument, which can switch to the unsafe method. [#7687](https://github.com/getkirby/kirby/pull/7687)
 
 ### Panel
 
@@ -247,6 +248,9 @@ Custom glue
 - `<k-item>` only hides default options button when in selecting mode, but not custom used options slot [#7516](https://github.com/getkirby/kirby/pull/7516)
 - `<k-item>` is selectable by default unless explicitly defined otherwise [#7516](https://github.com/getkirby/kirby/pull/7516)
 - `<k-item>` selected to also work with UUIDs [#7751](https://github.com/getkirby/kirby/pull/7751)
+- No badge for current changes on languages btn [#7749](https://github.com/getkirby/kirby/pull/7749)
+- Important context data (path, referrer, query, code) is always added to the view response object again. This is important to make sure that the view URL for error views are correct. Otherwise, the frontend will create some weird side-effects, such as redirects to /panel/null. [#7744](https://github.com/getkirby/kirby/pull/7744)
+- Panel dialog/drawer listeners get preserved when loading backend defined dialog/drawer [#7888](https://github.com/getkirby/kirby/pull/7888)
 
 ---
 
