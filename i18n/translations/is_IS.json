@@ -635,7 +635,9 @@
 	"plugin": "Viðbót",
 	"plugins": "Viðbætur",
 	"prev": "Fyrri",
+
 	"preview": "Forskoða",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Útgefa",
 	"published": "Útgefnar og listaðar",
@@ -786,6 +788,7 @@
 	"user.create": "Bæta við nýjum notenda",
 	"user.delete": "Farga þessum notenda",
 	"user.delete.confirm": "Viltu virkilega eyða <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Notendur",
 

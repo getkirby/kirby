@@ -635,7 +635,9 @@
 	"plugin": "Liitännäinen",
 	"plugins": "Liitännäiset",
 	"prev": "Edellinen",
+
 	"preview": "Esikatselu",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publish",
 	"published": "Julkaistut",
@@ -786,6 +788,7 @@
 	"user.create": "Lisää uusi käyttäjä",
 	"user.delete": "Poista tämä käyttäjä",
 	"user.delete.confirm": "Haluatko varmsti poistaa käyttäjän <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Käyttäjät",
 

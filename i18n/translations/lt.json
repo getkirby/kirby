@@ -635,7 +635,9 @@
 	"plugin": "Įskiepas",
 	"plugins": "Įskiepai",
 	"prev": "Ankstesnis",
+
 	"preview": "Peržiūra",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publish",
 	"published": "Paskelbti",
@@ -786,6 +788,7 @@
 	"user.create": "Pridėti naują vartotoją",
 	"user.delete": "Pašalinti šį vartotoją",
 	"user.delete.confirm": "Ar tikrai norite pašalinti vartotoją <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Vartotojai",
 
