@@ -191,9 +191,9 @@ Custom glue
 
 - New `<k-error-trace>` component to display PHP stack traces. We will use it for PHP error stacks in error dialogs, but it's universal enough to also be used in other places or for JS traces. [#7774](https://github.com/getkirby/kirby/pull/7774)
     <img width="543" height="463" alt="image" src="https://github.com/user-attachments/assets/aa54de2e-d011-44a6-9d0e-e2facd52accb" />    
-- New `k-validation-issues` component to list various issues in fields after a form has been submitted. This will be used in our new error dialogs, but can also be used as a stand-alone component in other parts of the panel. [#7775](https://github.com/getkirby/kirby/pull/7775)
+- New `<k-validation-issues>` component to list various issues in fields after a form has been submitted. This will be used in our new error dialogs, but can also be used as a stand-alone component in other parts of the panel. [#7775](https://github.com/getkirby/kirby/pull/7775)
     <img width="594" height="395" alt="image" src="https://github.com/user-attachments/assets/94122230-af87-4404-a5bd-dc896d892446" />    
-- New `k-request-error-dialog` component [#7782](https://github.com/getkirby/kirby/pull/7782)  
+- New `<k-request-error-dialog>` component [#7782](https://github.com/getkirby/kirby/pull/7782)  
     <img width="686" height="829" alt="image" src="https://github.com/user-attachments/assets/20b390a4-feb1-4a1e-9fc4-c7cbd04ed3a5" />    
 - New `<k-validation-error-dialog>` to improve the readability of field validation problems. [#7785](https://github.com/getkirby/kirby/pull/7785)
     <img width="695" height="336" alt="image" src="https://github.com/user-attachments/assets/65404617-6957-4c6e-a30e-4fe1e2575786" />
@@ -204,36 +204,36 @@ Custom glue
 
 ## ✨ Enhancements
 
-### Core
-
-- Move field methods to `Kirby\Content\Field` to improve IDE support for field methods [#7082](https://github.com/getkirby/kirby/pull/7082)
-
-### Panel
-
-#### Frontend
-
-- Panel: Migrated from Vue 2 to Vue 3 [#7104](https://github.com/getkirby/kirby/pull/7104)
+### For editors
+- Field labels get highlighted when field has unsaved changes [#7794](https://github.com/getkirby/kirby/pull/7794)
+	<img width="679" height="360" alt="image" src="https://github.com/user-attachments/assets/644a3dcf-9e1b-4aad-a526-aadb25b5954e" />
+	<img width="670" height="364" alt="image" src="https://github.com/user-attachments/assets/08fff2f9-c77b-4c57-bfec-2626df04ce29" />
 - Values of disabled Panel fields can be selected [#7581](https://github.com/getkirby/kirby/pull/7581)
-- Added a dropzone to dialogs and drawers that becomes active when a `@drop` listener is added to the component [#7520](https://github.com/getkirby/kirby/pull/7520)
-- `k-item` has a new `selected` prop to control it's selection checked state and `seelctmode` prop to define whether to select single or multiple items [#7516](https://github.com/getkirby/kirby/pull/7516)
-- `k-collection`/`k-items` can receive a list of `selected` items to control selection status from parent [#7516](https://github.com/getkirby/kirby/pull/7516)
-- New `k-models-picker-dialog` components (`k-pages-picker-dialog`, `k-files-picker-dialog`, `k-users-picker-dialog`) [#7529](https://github.com/getkirby/kirby/pull/7529)
-- New `k-video-frame` component [#7755](https://github.com/getkirby/kirby/pull/7755)
-- The `<k-table>` component has a new `responsive` prop, which is set to `true` by default. Switching the responsive mode off will no longer hide columns that are not marked with `data-mobile="true"`. This gives more control over custom responsive behaviors for tables and also helps to improve the usability in narrow widths. [#7770](https://github.com/getkirby/kirby/pull/7770)
+- Better drag sorting (e.g. pages and files sections) in list layout [#7349](https://github.com/getkirby/kirby/issues/7349)
 - `image` and `gallery` block previews now load properly sized thumbs that also respect the `cover` and `ratio` settings [#7756](https://github.com/getkirby/kirby/pull/7756)
+- Page picker dialog shows badge for selected children [#7687](https://github.com/getkirby/kirby/pull/7687)
+- Files field: upload files by drag'n'drop them onto the picker dialog https://feedback.getkirby.com/729 [#7888](https://github.com/getkirby/kirby/pull/7888)
+
+### For site developers
+- Improved IDE autocompletion for field methods [#7082](https://github.com/getkirby/kirby/pull/7082)
+- The Panel system view shows an alert if a required PHP extension is missing [#7812](https://github.com/getkirby/kirby/pull/7812)
+- Panel only shows missing blueprint info when debug mode is active https://feedback.getkirby.com/392
+
+### For plugin developers
+
+- Migrated from Vue 2 to Vue 3 [#7104](https://github.com/getkirby/kirby/pull/7104)
+- Dialogs and drawers: Added dropzone that becomes active when a `@drop` listener is added on the component [#7520](https://github.com/getkirby/kirby/pull/7520)
+- New `<k-video-frame>` component [#7755](https://github.com/getkirby/kirby/pull/7755)
+- The `<k-table>` component has a new `responsive` prop, which is set to `true` by default. Switching the responsive mode off will no longer hide columns that are not marked with `data-mobile="true"`. This gives more control over custom responsive behaviors for tables and also helps to improve the usability in narrow widths. [#7770](https://github.com/getkirby/kirby/pull/7770)
+- `<k-item>` has a new `selected` prop to control it's selection checked state and `seelctmode` prop to define whether to select single or multiple items [#7516](https://github.com/getkirby/kirby/pull/7516)
+- `<k-collection>`/`<k-items>` can receive a list of `selected` items to control selection status from parent [#7516](https://github.com/getkirby/kirby/pull/7516)
+- New `<k-models-picker-dialog>` components [#7529](https://github.com/getkirby/kirby/pull/7529)
+- New `<k-collapsible>` component that can wrap a list of elements with a default and fallback slot and provide the necessary data how many elements fit in the current container width to render the element as a responsive list of visible and hidden elements (the latter represented by the fallback slot content). [#7901](https://github.com/getkirby/kirby/pull/7901)
 - New `RequestError.dialog()` method to create all props for the request error dialog according to the details from the error object. [#7782](https://github.com/getkirby/kirby/pull/7782)
 - All errors are now converted to Error objects in `panel.notification.error()` [#7782](https://github.com/getkirby/kirby/pull/7782)
-- Page picker dialog shows badge for selected children [#7687](https://github.com/getkirby/kirby/pull/7687)
+- New `this.$panel.observers` JS module
 - The Panel URL is available inside the Panel as `this.$panel.urls.panel` [#7800](https://github.com/getkirby/kirby/pull/7800)
-- System view shows an alert if a required PHP extension is missing [#7812](https://github.com/getkirby/kirby/pull/7812)
-- Field labels get highlighted when field has unsaved changes [#7794](https://github.com/getkirby/kirby/pull/7794)
-    <img width="679" height="360" alt="image" src="https://github.com/user-attachments/assets/644a3dcf-9e1b-4aad-a526-aadb25b5954e" />
-		<img width="670" height="364" alt="image" src="https://github.com/user-attachments/assets/08fff2f9-c77b-4c57-bfec-2626df04ce29" />
-- Better drag sorting (e.g. pages and files sections) in list layout [#7349](https://github.com/getkirby/kirby/issues/7349)
-- Panel only shows missing blueprint info when debug mode is active https://feedback.getkirby.com/392
-- Files field: upload files by drag'n'drop them onto the picker dialog https://feedback.getkirby.com/729 [#7888](https://github.com/getkirby/kirby/pull/7888)
-- New `<k-collapsible>` component that can wrap a list of elements with a default and fallback slot and provide the necessary data how many elements fit in the current container width to render the element as a responsive list of visible and hidden elements (the latter represented by the fallback slot content). [#7901](https://github.com/getkirby/kirby/pull/7901)
-- New `$panel.observers` JS module
+
   
 #### Backend
 
