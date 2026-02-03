@@ -202,6 +202,8 @@ Custom glue
 
 - New `picker` option for `files`, `pages` and `users` field to customize the picker dialogs (e.g. `size`, `layout`) [#7687](https://github.com/getkirby/kirby/pull/7687)
 
+---
+
 ## ✨ Enhancements
 
 ### For editors
@@ -209,18 +211,23 @@ Custom glue
 	<img width="679" height="360" alt="image" src="https://github.com/user-attachments/assets/644a3dcf-9e1b-4aad-a526-aadb25b5954e" />
 	<img width="670" height="364" alt="image" src="https://github.com/user-attachments/assets/08fff2f9-c77b-4c57-bfec-2626df04ce29" />
 - Values of disabled Panel fields can be selected [#7581](https://github.com/getkirby/kirby/pull/7581)
-- Better drag sorting (e.g. pages and files sections) in list layout [#7349](https://github.com/getkirby/kirby/issues/7349)
-- `image` and `gallery` block previews now load properly sized thumbs that also respect the `cover` and `ratio` settings [#7756](https://github.com/getkirby/kirby/pull/7756)
-- Page picker dialog shows badge for selected children [#7687](https://github.com/getkirby/kirby/pull/7687)
-- Files field: upload files by drag'n'drop them onto the picker dialog https://feedback.getkirby.com/729 [#7888](https://github.com/getkirby/kirby/pull/7888)
+- Better drag sorting (e.g. pages/files sections) in list layouts [#7349](https://github.com/getkirby/kirby/issues/7349)
+- Blocks field: `image` and `gallery` block previews now load properly sized thumbs that also respect the `cover` and `ratio` settings [#7756](https://github.com/getkirby/kirby/pull/7756)
+- Pages field: picker dialog shows badge for selected children [#7687](https://github.com/getkirby/kirby/pull/7687)
+- Files field: upload files by drag'n'drop onto the dialog https://feedback.getkirby.com/729 [#7888](https://github.com/getkirby/kirby/pull/7888)
 
 ### For site developers
 - Improved IDE autocompletion for field methods [#7082](https://github.com/getkirby/kirby/pull/7082)
-- The Panel system view shows an alert if a required PHP extension is missing [#7812](https://github.com/getkirby/kirby/pull/7812)
 - Panel only shows missing blueprint info when debug mode is active https://feedback.getkirby.com/392
+- On installation, all required PHP extensions are checked and installation is blocked if one is missing [#7812](https://github.com/getkirby/kirby/pull/7812)
+- Panel system view shows an alert if a required PHP extension is missing [#7812](https://github.com/getkirby/kirby/pull/7812)
 
 ### For plugin developers
 
+#### Core
+- Custom fields can now fully be implemented as PHP classes (base on `Kirby\Form\BaseField` or any other from the `Kirby\Form\` field classes). You can learn more about this in the "Refactored" section. Custom fields based on array definitions are still supported for now but deprecated.
+
+#### Frontend
 - Migrated from Vue 2 to Vue 3 [#7104](https://github.com/getkirby/kirby/pull/7104)
 - Dialogs and drawers: Added dropzone that becomes active when a `@drop` listener is added on the component [#7520](https://github.com/getkirby/kirby/pull/7520)
 - New `<k-video-frame>` component [#7755](https://github.com/getkirby/kirby/pull/7755)
@@ -250,7 +257,6 @@ Custom glue
 - New `Kirby\\Exception\\FormValidationException` [#7769](https://github.com/getkirby/kirby/pull/7769)
 - Error responses from the backend now include the `editor` URL if the editor is set up in the config.php and debug mode is one. [#7782](https://github.com/getkirby/kirby/pull/7782)
 - New protected `AppErrors::trace()` method to return a stack trace for PHP errors in JSON responses when debug mode is enabled. [#7782](https://github.com/getkirby/kirby/pull/7782)
-- On installation, all required PHP extensions are checked and installation is blocked if one is missing [#7812](https://github.com/getkirby/kirby/pull/7812)
 
 ---
 
@@ -306,13 +312,13 @@ Custom glue
 
 - `Kirby\Uuid\Uuid::for()` does not resolve any permalinks anymore. Use `Kirby\Uuid\Permalink::from()` instead. [#7545](https://github.com/getkirby/kirby/pull/7545)
 - `Kirby\Uuid\Uuid::for()` cannot be called any longer with a string. Use `Kirby\Uuid\Uuid::from(string $uuid)` or `Kirby\Uuid\Permalink::from(string $permalink)` instead. [#7544](https://github.com/getkirby/kirby/pull/7544)
-- Remove deprecated `Uuid::url()`. Use `Uuid::toPermalink()` instead.
+- Removed deprecated `Uuid::url()`. Use `Uuid::toPermalink()` instead.
 
 #### Forms
 
-- The `Kirby\\Form\\Fields::validate()` and `Kirby\\Form\\Form::validate()` methods now throw the more specific `Kirby\\Exception\\FormValidationException`. [#7769](https://github.com/getkirby/kirby/pull/7769)
+- The `Kirby\Form\Fields::validate()` and `Kirby\Form\Form::validate()` methods now throw the more specific `Kirby\Exception\FormValidationException`. [#7769](https://github.com/getkirby/kirby/pull/7769)
 - All mixin props no longer define a default value. The default value is now defined by the getter when the property value is null.
-- All setter Methods from Field classes and Field Mixins have been removed. Set class properties directly instead.
+- All setter Methods from field classes and field mixins have been removed. Set class properties directly instead.
 - All translatable properties in `Kirby\Form\FieldClass` mixins are no longer translating the value in the setter but in the getter. This is a cleaner approach, where we store the property as untouched as possible and then compute any changes in the getter if needed. This way, we can always access the originally passed value for the property and we can also reduce the amount of computing that is done when the instance is created. The following props are affected: `after`, `before`, `empty`, `help`, `label`, `placeholder`
 - Lower-casing of the name property of the FieldClass has been moved from the setter to the getter.
 - `FieldClass::setSiblings()` is now public and siblings are injected after the construction. Setters can no longer rely on the siblings collection. Use getters or overwrite the `::setModel` method if necessary.
@@ -351,10 +357,10 @@ fields:
 #### Blueprints
 
 - Removed property: `Kirby\Blueprint\Blueprint::$fileTemplates` [#7829](https://github.com/getkirby/kirby/pull/7829)
-- Removed protected methods: [#7829](https://github.com/getkirby/kirby/pull/7829)
-    - `Kirby\Blueprint\Blueprint::acceptedFileTemplatesFromFields()`
-    - `Kirby\Blueprint\Blueprint::acceptedFileTemplatesFromFieldsets()`
-    - `Kirby\Blueprint\Blueprint::acceptedFileTemplatesFromFieldUploads()`
+- Removed protected `Kirby\Blueprint\Blueprint` methods: [#7829](https://github.com/getkirby/kirby/pull/7829)
+    - `::acceptedFileTemplatesFromFields()`
+    - `::acceptedFileTemplatesFromFieldsets()`
+    - `::acceptedFileTemplatesFromFieldUploads()`
 
 ### Panel
 
@@ -439,7 +445,7 @@ fields:
     - Users field: `userResponse` and `toFiles` methods have been removed. Use `toItem` and `toFormValues` instead. [#7528](https://github.com/getkirby/kirby/pull/7528)
     - `$versionId` parameter for `Kirby\Panel\Ui\Button\VersionsButton::__construct()` has been renamed to `$mode`. [#7548](https://github.com/getkirby/kirby/pull/7548)
 - Restructured `Kirby\Panel` namespace: [#7386](https://github.com/getkirby/kirby/pull/7386)
-    - `Kirby\Panel\Panel`: Removed`::routesForViews()`, `::routesForSearches()`, `::routesForDialogs()`, `::routesForDrawers()`, `::routesForDropdowns()`, `::routesForRequests()`. Use instead: `Kirby\Panel\Routes\DialogRoutes`, `Kirby\Panel\Routes\DrawerRoutes`, `Kirby\Panel\Routes\DropdownRoutes`, `Kirby\Panel\Routes\RequestRoutes`, `Kirby\Panel\Routes\SearchRoutes`, `Kirby\Panel\Routes\ViewRoutes`.
+    - `Kirby\Panel\Panel` class: removed`::routesForViews()`, `::routesForSearches()`, `::routesForDialogs()`, `::routesForDrawers()`, `::routesForDropdowns()`, `::routesForRequests()`. Use instead: `Kirby\Panel\Routes\DialogRoutes`, `Kirby\Panel\Routes\DrawerRoutes`, `Kirby\Panel\Routes\DropdownRoutes`, `Kirby\Panel\Routes\RequestRoutes`, `Kirby\Panel\Routes\SearchRoutes`, `Kirby\Panel\Routes\ViewRoutes`.
     - For reponses, use `Kirby\Panel\Responses\DialogResponse`, `Kirby\Panel\ Responses\DrawerResponse`, `Kirby\Panel\ Responses\DropdownResponse`, `Kirby\Panel\Responses\RequestResponse`, `Kirby\Panel\ Responses\SearchResponse`.
     - Removed `Kirby\Panel\Dialog`, `Kirby\Panel\Drawer`, `Kirby\Panel\Dropdown`, `Kirby\Panel\Json`, `Kirby\Panel\Request`
     - Removed methods from `Kirby\Panel\View`: `::apply()`, `::applyGlobals()`, `::applyOnly()`, `::data()`, `::globals()`, `::searches()`. Use `Kirby\Panel\State`  instead.
@@ -461,23 +467,24 @@ fields:
 ### Core
 
 - The Spyc YAML handler has been deprecated and will be removed in a future release. [#7530](https://github.com/getkirby/kirby/pull/7530)
-- `legacy` query runner has been deprecated and removed as default. Use `Kirby\Query\Runners\DefaultRunner` instead. [#7791](https://github.com/getkirby/kirby/pull/7791)
-- `Kirby\Query\Argument`, `Kirby\Query\Arguments`, `Kirby\Query\Expression`, `Kirby\Query\Segment`, `Kirby\Query\Segments` have been deprecated and will be removed in Kirby 7. [#7791](https://github.com/getkirby/kirby/pull/7791)
-- Moved `Kirby\Cms\Blueprint`, `Kirby\Cms\FileBlueprint`, `Kirby\Cms\PageBlueprint`, `Kirby\Cms\Section`, `Kirby\Cms\SiteBlueprint` and `Kirby\Cms\UserBlueprint` to new `Kirby\Blueprint namespace`. Aliases for the old names have been added but are deprecated and will be removed in a future major version. [#7787](https://github.com/getkirby/kirby/pull/7787)
+- `legacy` query runner has been deprecated and removed as default. Use `default` (`Kirby\Query\Runners\DefaultRunner`) instead. [#7791](https://github.com/getkirby/kirby/pull/7791)
+- `Kirby\Query\Argument`, `Kirby\Query\Arguments`, `Kirby\Query\Expression`, `Kirby\Query\Segment`, `Kirby\Query\Segments` have been deprecated and will be removed. [#7791](https://github.com/getkirby/kirby/pull/7791)
+- Moved `Kirby\Cms\Blueprint`, `Kirby\Cms\FileBlueprint`, `Kirby\Cms\PageBlueprint`, `Kirby\Cms\Section`, `Kirby\Cms\SiteBlueprint` and `Kirby\Cms\UserBlueprint` to new `Kirby\Blueprint` namespace. Aliases for the old names have been added but are deprecated and will be removed in a future major version. [#7787](https://github.com/getkirby/kirby/pull/7787)
 - `Kirby\Cms\Auth::ipHash()` has been removed. Use `$visitor->ip(hash: true)` instead.
 
 ### Panel
 
 #### Frontend
 
-- `k-models-dialog`, `k-pages-dialog`, `k-files-dialog` and `k-users-dialog` have been deprecated. Use `k-model-picker-dialog`, `k-page-picker-dialog`, `k-file-picker-dialog`, `k-user-picker-dialog` instead.
+- `<k-models-dialog>`, `<k-pages-dialog>`, `<k-files-dialog>` and `<k-users-dialog>` have been deprecated. Use `<k-model-picker-dialog>`, `<k-page-picker-dialog>`, `<k-file-picker-dialog>`, `<k-user-picker-dialog>` instead.
 
 #### Backend
 
-- `Kirby\Panel\File::dropdown()`, `Kirby\Panel\Page::dropdown()` and `Kirby\Panel\User::dropdown()` have been deprecated. Use the respective `Kirby\Panel\Controller\DropdownController` instead. [#7425](https://github.com/getkirby/kirby/pull/7425)
-- `::breadcrumb()`, `::buttons()`, `::prevNext()`, `::props()`, `::versions()` and `::view()` methods of `Kirby\Panel\Model`, `Kirby\Panel\Site`, `Kirby\Panel\Page`, `Kirby\Panel\File` and `Kirby\Panel\User` have been deprecated. Use the respective `Kirby\Panel\Controller\View` classes instead. [#7480](https://github.com/getkirby/kirby/pull/7480)
-- The global `page/create` dialog endpoint has been deprecated. Use the specific dialog endpoint of a pages section instead. [#7466](https://github.com/getkirby/kirby/pull/7466)
 - All `legacy-*` fields will be removed in an upcoming major version. Please move to class-based fields instead and extend the respective field class.
+- `Kirby\Panel\Model`, `Kirby\Panel\Site`, `Kirby\Panel\Page`, `Kirby\Panel\File` and `Kirby\Panel\User`:
+    - `::dropdown()` methods have been deprecated. Use the respective `Kirby\Panel\Controller\DropdownController` instead. [#7425](https://github.com/getkirby/kirby/pull/7425)
+    - `::breadcrumb()`, `::buttons()`, `::prevNext()`, `::props()`, `::versions()` and `::view()` methods have been deprecated. Use the respective `Kirby\Panel\Controller\View` classes instead. [#7480](https://github.com/getkirby/kirby/pull/7480)
+- The global `page/create` dialog endpoint has been deprecated. Use the specific dialog endpoint of a pages section instead. [#7466](https://github.com/getkirby/kirby/pull/7466)
 - `Kirby\Field\FieldOptions` is a deprecated alias for `Kirby\Form\FieldOptions`. Use `Kirby\Form\FieldOptions`instead.
 - `Kirby\Cms\Picker`, `Kirby\Cms\PagePicker`, `Kirby\Cms\FilePicker` and `Kirby\Cms\UserPicker` have been deprecated. Use `Kirby\Panel\Controller\Dialog\ModelPickerDialogController`, `Kirby\Panel\Controller\Dialog\PagePickerDialogController`, `Kirby\Panel\Controller\Dialog\FilePickerDialogController` and `Kirby\Panel\Controller\Dialog\UserPickerDialogController` instead.
 
@@ -489,104 +496,49 @@ fields:
 
 - Moved default field methods into new `Kirby\Content\FieldMethods` trait use by `Kirby\Content\Field` [#7082](https://github.com/getkirby/kirby/pull/7082)
 - Implemented default validators as regular class methods of `Kirby\Toolkit\V` [#7608](https://github.com/getkirby/kirby/pull/7608)
-- PHP type hints have been added to all class constants [#7536](https://github.com/getkirby/kirby/pull/7536)
+- Use `json_validate` for `V::json()` [#7538](https://github.com/getkirby/kirby/pull/7538)
 - Moved permalink logic to new `Kirby\Uuid\Permalink` class [#7545](https://github.com/getkirby/kirby/pull/7545)
 - New `Kirby\Uuid\Uuid::from(string $uuid)` method for creating an Uuid object from a UUID string. `Kirby\Uuid\Uuid::for()` remains to create a Uuid object for a model object. [#7544](https://github.com/getkirby/kirby/pull/7544)
-- Use `json_validate` for `V::json()` [#7538](https://github.com/getkirby/kirby/pull/7538)
 - New `Kirby\Blueprint\AcceptRules` class to host the code from the Blueprint class, which is specifically checking for accepted files. This could later be extended to also check for accepted subpages. [#7829](https://github.com/getkirby/kirby/pull/7829)
 - New `Kirby\Blueprint\Blueprint::acceptRules()` method. [#7829](https://github.com/getkirby/kirby/pull/7829)
+- PHP type hints have been added to all class constants [#7536](https://github.com/getkirby/kirby/pull/7536)
 
 ### Forms 
 
-Form Fields have been massively refactored:
+Form fields have been fully refactored as PHP classes instead of the previous array definitions:
 
-- Remove `default` from field props [#7789](https://github.com/getkirby/kirby/pull/7789)
-- Use named props instead of arrays in all Field classes
-- New `FieldClass::factory()` method, which is used in Fields to create instances from arrays
-- `Kirby\Form\Field` now also accepts BaseClass extensions in the factory method.
-- `Kirby\Form\FieldClass` & `Kirby\Form\Field\DisplayField` now extend `Kirby\Form\Field\BaseClass`
-- New `Kirby\Form\Field\BaseField::stringTemplateI18n` method to simplify string templates that need to run through translation first.
-- `Move Kirby\Field\FieldOptions` class to `Kirby\Form\FieldOptions`
-- `files`, `pages` and `users` field use new picker dialogs
-- `files`, `pages` and `users` fields dynamically fetch item data from new `items` field API endpoint
-- The `Kirby\Form\Field\SlugField` does now get the 'slug' translation string as default label [#7846](https://github.com/getkirby/kirby/pull/7846)
+- All fields are now concrete PHP classes built on shared abstract base classes, e.g. `Kirby\Form\BaseField`
+- Using named props instead of `$props` arrays in all field classes
+    - New `FieldClass::factory()` method, which is used in fields to create instances from `$props` array
+- `Kirby\Form\Field` now also accepts classes extending `Kirby\Form\BaseClass` in the factory method.
+- `Kirby\Form\FieldClass` extends `Kirby\Form\Field\BaseClass` itself
+- Removed `default` from field props passed to Panel [#7789](https://github.com/getkirby/kirby/pull/7789)
+- Moved `Kirby\Field\FieldOptions` class to `Kirby\Form\FieldOptions`
+- The slug field does now get the 'slug' translation string as default label [#7846](https://github.com/getkirby/kirby/pull/7846)
 
-#### New Field Foundation classes
+#### New field Foundation classes
 
-- New `Kirby\Form\Field\BaseField` abstract class, which serves as a foundation for all fields.
-- New `Kirby\Form\Field\DateTimeField` abstract class, which serves as a foundation for all date and time fields.
-- New `Kirby\Form\Field\InputField` abstract class, which serves as foundation for all fields with a value.
-- New `Kirby\Form\Field\OptionField` abstract class, which serves as foundation for fields with a single option value.
-- New `Kirby\Form\Field\OptionsField` abstract class, which serves as foundation for fields with multiple options value.
-- New `Kirby\Form\Field\StringField` abstract class, as foundation for text, textarea and potentially more string value fields.
-- New `Kirby\Form\Field\ModelPickerField` abstract class, as foundation for all picker fields.
+All form fields can extends a small set of abstract base classes:
 
-#### New Form classes
+- `Kirby\Form\Field\BaseField` as general foundation for all fields.
+- `Kirby\Form\Field\DateTimeField` for all date and time fields.
+- `Kirby\Form\Field\InputField` for all fields with a value.
+- `Kirby\Form\Field\OptionField` for fields with a single option value.
+- `Kirby\Form\Field\OptionsField` for fields with multiple options value.
+- `Kirby\Form\Field\StringField` for text, textarea and potentially more string value fields.
+- `Kirby\Form\Field\ModelPickerField` for all picker fields.
 
-- New `Kirby\Form\Field\CheckboxesField` class
-- New `Kirby\Form\Field\ColorField` class
-- New `Kirby\Form\Field\DateField` class
-- New `Kirby\Form\Field\EmailField` class
-- New `Kirby\Form\Field\FilePickerField` class
-- New `Kirby\Form\Field\GapField`
-- New `Kirby\Form\Field\HeadlineField`
-- New `Kirby\Form\Field\HiddenField`
-- New `Kirby\Form\Field\InfoField`
-- New `Kirby\Form\Field\LineField`
-- New `Kirby\Form\Field\LinkField`
-- New `Kirby\Form\Field\ListField`
-- New `Kirby\Form\Field\MultiselectField` class
-- New `Kirby\Form\Field\NumberField` class
-- New `Kirby\Form\Field\ObjectField` class
-- New `Kirby\Form\Field\PagePickerField` class
-- New `Kirby\Form\Field\PasswordField` class
-- New `Kirby\Form\Field\RadioField` class
-- New `Kirby\Form\Field\RangeField` class
-- New `Kirby\Form\Field\SelectField` class
-- New `Kirby\Form\Field\SlugField` class
-- New `Kirby\Form\Field\StuctureField`
-- New `Kirby\Form\Field\TagsField` class
-- New `Kirby\Form\Field\TelField` class
-- New `Kirby\Form\Field\TextField` class
-- New `Kirby\Form\Field\TextareaField` class
-- New `Kirby\Form\Field\TimeField` class
-- New `Kirby\Form\Field\ToggleField` class
-- New `Kirby\Form\Field\TogglesField` class
-- New `Kirby\Form\Field\UrlField` class
-- New `Kirby\Form\Field\UserPickerField` class
-- New `Kirby\Form\Field\WriterField` class
+#### New field classes
 
-#### New mixins
+All form fields are now real classes instead of array definitions:
 
-- New `Kirby\Form\Mixin\Autocomplete` mixin
-- New `Kirby\Form\Mixin\Batch` mixin
-- New `Kirby\Form\Mixin\Columns` mixin
-- New `Kirby\Form\Mixin\Converter` mixin
-- New `Kirby\Form\Mixin\Counter` mixin
-- New `Kirby\Form\Mixin\DefaultValue` mixin
-- New `Kirby\Form\Mixin\Disabled` mixin
-- New `Kirby\Form\Mixin\Font` mixin
-- New `Kirby\Form\Mixin\Layout` mixin
-- New `Kirby\Form\Mixin\Maxlength` mixin
-- New `Kirby\Form\Mixin\Minlength` mixin
-- New `Kirby\Form\Mixin\Name` mixin
-- New `Kirby\Form\Mixin\Pattern` mixin
-- New `Kirby\Form\Mixin\Pretty` mixin
-- New `Kirby\Form\Mixin\Required` mixin
-- New `Kirby\Form\Mixin\Separator` mixin
-- New `Kirby\Form\Mixin\Siblings` mixin
-- New `Kirby\Form\Mixin\Spellcheck` mixin
-- New `Kirby\Form\Mixin\Sortable` mixin
-- New `Kirby\Form\Mixin\Text` mixin
-- New `Kirby\Form\Mixin\Theme` mixin
-- New `Kirby\Form\Mixin\Duplicate` mixin
-- New `Kirby\Form\Mixin\Fields` mixin
-- New `Kirby\Form\Mixin\Limit` mixin
-- New `Kirby\Form\Mixin\Options` mixin
-- New `Kirby\Form\Mixin\Prepend` mixin
-- New `Kirby\Form\Mixin\SortBy` mixin
-- New `Kirby\Form\Mixin\TableColumns` mixin
-- New `Kirby\Form\Mixin\Upload` mixin
+`Kirby\Form\Field\CheckboxesField`, `Kirby\Form\Field\ColorField`, `Kirby\Form\Field\DateField`, `Kirby\Form\Field\EmailField`, `Kirby\Form\Field\FilePickerField`, `Kirby\Form\Field\GapField`, `Kirby\Form\Field\HeadlineField`, `Kirby\Form\Field\HiddenField`, `Kirby\Form\Field\InfoField`, `Kirby\Form\Field\LineField`, `Kirby\Form\Field\LinkField`, `Kirby\Form\Field\ListField`, `Kirby\Form\Field\MultiselectField`, `Kirby\Form\Field\NumberField`, `Kirby\Form\Field\ObjectField`, `Kirby\Form\Field\PagePickerField`, `Kirby\Form\Field\PasswordField`, `Kirby\Form\Field\RadioField`, `Kirby\Form\Field\RangeField`, `Kirby\Form\Field\SelectField`, `Kirby\Form\Field\SlugField`, `Kirby\Form\Field\StuctureField`, `Kirby\Form\Field\TagsField`, `Kirby\Form\Field\TelField`, `Kirby\Form\Field\TextField`, `Kirby\Form\Field\TextareaField`, `Kirby\Form\Field\TimeField`, `Kirby\Form\Field\ToggleField`, `Kirby\Form\Field\TogglesField`, `Kirby\Form\Field\UrlField`, `Kirby\Form\Field\UserPickerField` and `Kirby\Form\Field\WriterField`
+
+### New field mixins
+
+Shared behavior has been extracted into reusable mixins, such as:
+
+`Kirby\Form\Mixin\Autocomplete`, `Kirby\Form\Mixin\Batch`, `Kirby\Form\Mixin\Columns`, `Kirby\Form\Mixin\Converter`, `Kirby\Form\Mixin\Counter`, `Kirby\Form\Mixin\DefaultValue`, `Kirby\Form\Mixin\Disabled`, `Kirby\Form\Mixin\Font`, `Kirby\Form\Mixin\Layout`, `Kirby\Form\Mixin\Maxlength`, `Kirby\Form\Mixin\Minlength`, `Kirby\Form\Mixin\Name`, `Kirby\Form\Mixin\Pattern`, `Kirby\Form\Mixin\Pretty`, `Kirby\Form\Mixin\Required`, `Kirby\Form\Mixin\Separator`, `Kirby\Form\Mixin\Siblings`, `Kirby\Form\Mixin\Spellcheck`, `Kirby\Form\Mixin\Sortable`, `Kirby\Form\Mixin\Text`, `Kirby\Form\Mixin\Theme`, `Kirby\Form\Mixin\Duplicate`, `Kirby\Form\Mixin\Fields`, `Kirby\Form\Mixin\Limit`, `Kirby\Form\Mixin\Options`, `Kirby\Form\Mixin\Prepend`, `Kirby\Form\Mixin\SortBy`, `Kirby\Form\Mixin\TableColumns` and `Kirby\Form\Mixin\Upload`
 
 ### Panel
 
@@ -601,7 +553,9 @@ Form Fields have been massively refactored:
 - New k-login-back-button [#7840](https://github.com/getkirby/kirby/pull/7840)
 - Remove `light-dark()` polyfill [#7902](https://github.com/getkirby/kirby/pull/7902)
 - `<k-breadcrumb>` has a new responsive behavior (backend by `<k-collapsible>`) [#7901](https://github.com/getkirby/kirby/pull/7901)
-	
+- `files`, `pages` and `users` fields use new picker dialogs
+- `files`, `pages` and `users` fields dynamically fetch item data from new `items` field API endpoint
+
 #### Backend
 
 - Refactored the Panel namespace as non-static classes [#7386](https://github.com/getkirby/kirby/pull/7386) [#7394](https://github.com/getkirby/kirby/pull/7394) [#7394](https://github.com/getkirby/kirby/pull/7394)
@@ -617,14 +571,9 @@ Form Fields have been massively refactored:
 - New `create` dialog endpoint for pages sections [#7466](https://github.com/getkirby/kirby/pull/7466)
 - The `Kirby\Panel\Field` class uses the new classes and improvements above to replace its logic. [#7846](https://github.com/getkirby/kirby/pull/7846)
 
-##### New Panel Field classes [#7846](https://github.com/getkirby/kirby/pull/7846)
+##### New special Panel field classes
 
-- New `Kirby\Panel\Form\Field\FilePositionField` class
-- New `Kirby\Panel\Form\Field\PagePositionField` class
-- New `Kirby\Panel\Form\Field\RoleField` class
-- New `Kirby\Panel\Form\Field\TemplateField` class
-- New `Kirby\Panel\Form\Field\TitleField` class
-- New `Kirby\Panel\Form\Field\TranslationField` class
+- New `Kirby\Panel\Form\Field\FilePositionField`, `Kirby\Panel\Form\Field\PagePositionField`, `Kirby\Panel\Form\Field\RoleField`, `Kirby\Panel\Form\Field\TemplateField`, `Kirby\Panel\Form\Field\TitleField`  and `Kirby\Panel\Form\Field\TranslationField` classes [#7846](https://github.com/getkirby/kirby/pull/7846)
 
 ### Tests
 
@@ -636,10 +585,8 @@ Form Fields have been massively refactored:
 ## 🧹 Housekeeping
 
 - Upgraded CI setup [#7738](https://github.com/getkirby/kirby/pull/7738)
-    - Upgraded to PHPUnit 12 [#7681](https://github.com/getkirby/kirby/pull/7681)
-    - Removed `phpmd` from our CI [#7536](https://github.com/getkirby/kirby/pull/7536)
+	- Upgraded to PHPUnit 12 [#7681](https://github.com/getkirby/kirby/pull/7681)
+	- Removed `phpmd` from our CI [#7536](https://github.com/getkirby/kirby/pull/7536)
+	- Using ParaTest to run PHPUnit tests in parallel [#7803](https://github.com/getkirby/kirby/pull/7803)
+	- Cache PHPUnit results
 - Added `Kirby\Panel\TestCase::setRequest()` helper method [#7440](https://github.com/getkirby/kirby/pull/7440)
-- Using ParaTest to run PHPUnit tests in parallel [#7803](https://github.com/getkirby/kirby/pull/7803)
-- PHPUnit improvements
-    - Cache PHPUnit results
-    - Only create coverage results for PHP 8.4 (as we also only upload those)
