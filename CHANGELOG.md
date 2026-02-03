@@ -284,10 +284,18 @@ Custom glue
 - Template data must not include variables named `$slot` or `$slots`. [#7599](https://github.com/getkirby/kirby/pull/7599)
 - Custom validators cannot overwrite default validators from the `Kirby\Toolkit\V` class any longer. [#7674](https://github.com/getkirby/kirby/pull/7674)
 - Removed `Kirby\Cms\Api` class. Use `Kirby\Api\Api` class instead. [#7532](https://github.com/getkirby/kirby/pull/7532)
+- `Kirby\Data\Txt::encodeValue()` changes
+    - `true` and `false` are now encoded into 'true' and 'false' instead of '1' and '0'
+    - An empty array is now encoded as empty string instead of `[]`
+- `Kirby\Cms\System::php()` has been removed [#7816](https://github.com/getkirby/kirby/pull/7816)
 
 #### Configuration
 
 - Changed the default YAML handler to Symfony YAML which sometimes enforces a stricter syntax than our previous Spyc handler. You can switch back to Spyc with the config option `'yaml.handler' => 'spyc'` [#7530](https://github.com/getkirby/kirby/pull/7530)
+
+#### Helpers
+
+- New global helper functions: `push()`, `endpush()` and `stack()`. [#7867](https://github.com/getkirby/kirby/pull/7867)
 
 #### Field methods
 
@@ -299,6 +307,54 @@ Custom glue
 - `Kirby\Uuid\Uuid::for()` does not resolve any permalinks anymore. Use `Kirby\Uuid\Permalink::from()` instead. [#7545](https://github.com/getkirby/kirby/pull/7545)
 - `Kirby\Uuid\Uuid::for()` cannot be called any longer with a string. Use `Kirby\Uuid\Uuid::from(string $uuid)` or `Kirby\Uuid\Permalink::from(string $permalink)` instead. [#7544](https://github.com/getkirby/kirby/pull/7544)
 - Remove deprecated `Uuid::url()`. Use `Uuid::toPermalink()` instead.
+
+#### Forms
+
+- The `Kirby\\Form\\Fields::validate()` and `Kirby\\Form\\Form::validate()` methods now throw the more specific `Kirby\\Exception\\FormValidationException`. [#7769](https://github.com/getkirby/kirby/pull/7769)
+- All mixin props no longer define a default value. The default value is now defined by the getter when the property value is null.
+- All setter Methods from Field classes and Field Mixins have been removed. Set class properties directly instead.
+- All translatable properties in `Kirby\Form\FieldClass` mixins are no longer translating the value in the setter but in the getter. This is a cleaner approach, where we store the property as untouched as possible and then compute any changes in the getter if needed. This way, we can always access the originally passed value for the property and we can also reduce the amount of computing that is done when the instance is created. The following props are affected: `after`, `before`, `empty`, `help`, `label`, `placeholder`
+- Lower-casing of the name property of the FieldClass has been moved from the setter to the getter.
+- `FieldClass::setSiblings()` is now public and siblings are injected after the construction. Setters can no longer rely on the siblings collection. Use getters or overwrite the `::setModel` method if necessary.
+- `FieldClass::setModel()` is now public and the model is injected after the construction. Setters can no longer rely on the model. Use getters or overwrite the `::setModel` method if necessary.
+- Field classes no longer define the value in the constructor. Use `FIeldClass::fill()` instead to provide an initial value.
+- `NumberField::toNumber()` will now always return null instead of an empty string in case of empty values.
+- `RangeField::toNumber()` will now always return null instead of an empty string in case of empty values.
+- Several fields are now implemented as class. When extending an array-based field, either switch your field to a class as well or extend the deprecated `legacy-` field for the moment, e.g. `text` → `legacy-text` .
+- The `checkboxes`, 'color', `multiselect`, `radio`, `select`, `tags` and `toggles` fields do no longer remove invalid values on submit or fill, but use the option validator to warn if a value is invalid. This is more in line with what other input fields do in Kirby and has massive performance benefits. It also means that you can deliberately store a non-existing option if you skip validation, which also might be useful in some cases.
+- The `api` and `query` options for the `checkboxes`, 'color', `multiselect`, `radio`, `select`, `tags` and `toggles` fields are no longer available. Queries and API calls to fetch options have now to be declared directly in the `options` property, e.g.
+
+```yaml
+fields:
+  myRadio:
+    type: radio
+    options:
+      type: query
+      query: some.query
+
+# or
+
+fields:
+  myRadio:
+    type: radio
+    options:
+      type: api
+      url: /some/options/api
+```
+
+- The `spellcheck` in the text field attribute is no longer set by default.
+- FieldClass based fields need to define API routes in `::api()`, not `::routes()`
+- `files`, `pages` and `users` field:
+    - Backend sends only UUIDs/IDs to these fields and the fields only send UUIDs/IDs back (instead of full item objects with display data etc.)
+    - Same communication happens between the field and picker dialog
+
+#### Blueprints
+
+- Removed property: `Kirby\Blueprint\Blueprint::$fileTemplates` [#7829](https://github.com/getkirby/kirby/pull/7829)
+- Removed protected methods: [#7829](https://github.com/getkirby/kirby/pull/7829)
+    - `Kirby\Blueprint\Blueprint::acceptedFileTemplatesFromFields()`
+    - `Kirby\Blueprint\Blueprint::acceptedFileTemplatesFromFieldsets()`
+    - `Kirby\Blueprint\Blueprint::acceptedFileTemplatesFromFieldUploads()`
 
 ### Panel
 
@@ -326,6 +382,10 @@ Custom glue
     - `<k-panel-menu>` now requires to pass props explicitly instead of using `$panel.menu` itself. [#7381](https://github.com/getkirby/kirby/pull/7381)
     - Removed deprecated `model` prop from model views. Use the top-level props instead. [#7463](https://github.com/getkirby/kirby/pull/7463)
     - `<k-collection>` and `<k-items>`: `@select` events now passes an array of selected IDs, not a single item object [#7516](https://github.com/getkirby/kirby/pull/7516)
+		- `<k-structure-drawer>`: `prev`/`next` need a boolean as value, not an object anymore [#7790](https://github.com/getkirby/kirby/pull/7790)
+- View changes
+		- Preview view: `versionId` parameter has been renamed to `mode` in view controller, buttons and Vue components [#7795](https://github.com/getkirby/kirby/pull/7795)
+		- `k-login-view` and components have been refactored with breaking changes [#7840](http://github.com/getkirby/kirby/pull/7840)  
 - Request changes
     - We are getting rid of the term “Fiber” for backend requests.
     - The `window.fiber` global has been replace with `window.panelState`
@@ -335,9 +395,14 @@ Custom glue
     - Removed `$helper.isVueComponent()` JS helper [#7518](https://github.com/getkirby/kirby/pull/7518)
     - Removed `$helper.link.preview()` helper. Use `items/*` request endpoints instead. [#7725](https://github.com/getkirby/kirby/pull/7725)
 - Removed deprecated `panel.dialog.openComponent()` method [#7518](https://github.com/getkirby/kirby/pull/7518)
+- `panel.notification.error()` no longer resolves nested errors in the state. Always throw Exceptions instead to create first-level error responses. [#7782](https://github.com/getkirby/kirby/pull/7782)
+- `image`, `gallery` and `video` block previews receive file UUID instead of full file item data
+- Removed deprecated v3 CSS properties [#7825](https://github.com/getkirby/kirby/pull/7825)
 
 #### Backend
 
+- Changed Classes
+		- `Kirby\Panel\Controller\Dialog\PageCreateDialogController` has been fully refactored and now is initiated with a parent model (page/site) as well as a section (name) [#7466](https://github.com/getkirby/kirby/pull/7466)
 - Moved Classes
     - `Kirby\Panel\ChangesDialog` → `Kirby\Panel\Ui\Dialogs\ChangesDialog`
     - `Kirby\Panel\PageCreateDialog` → `Kirby\Panel\Ui\Dialogs\PageCreateDialog`
