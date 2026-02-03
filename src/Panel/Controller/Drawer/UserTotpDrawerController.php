@@ -72,7 +72,11 @@ class UserTotpDrawerController extends UserDrawerController
 			title:     $this->i18n('login.challenge.totp.label'),
 			isAccount: $this->isCurrentUser(),
 			isEnabled: $this->isEnabled(),
-			qr:        $this->qr($totp)->toSvg(size: '100%'),
+			qr:        '<img src="' . $this->qr($totp)->toDataUri(size: 200) . '" />',
+			uri:       $totp->uri(
+				issuer: $this->user->kirby()->site()->title(),
+				label: $this->user->email()
+			),
 			user:      Escape::html($name),
 			value:     ['secret' => $totp->secret()]
 		);

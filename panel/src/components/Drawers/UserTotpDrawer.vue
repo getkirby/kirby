@@ -172,8 +172,8 @@ export default {
 	padding: 1px;
 	max-width: 14rem;
 }
-.k-totp-qrcode .k-box,
-.k-totp-qrcode .k-text {
+.k-totp-qrcode .k-box[data-theme],
+.k-totp-qrcode .k-text img {
 	border-radius: 0;
 	border-top-left-radius: var(--rounded);
 	border-bottom-left-radius: var(--rounded);
