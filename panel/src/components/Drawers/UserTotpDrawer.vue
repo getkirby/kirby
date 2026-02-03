@@ -33,7 +33,7 @@
 							label: $t('login.totp.enable.qr.label'),
 							type: 'info',
 							text: qr,
-							help: $t('login.totp.enable.qr.help', { secret: value.secret }),
+							help: $t('login.totp.enable.qr.help', { secret: value.secret, uri }),
 							theme: 'passive',
 							class: 'k-totp-qrcode'
 						},
@@ -116,6 +116,7 @@ export default {
 			type: String,
 			required: true
 		},
+		uri: String,
 		user: String,
 		value: {
 			type: Object,
