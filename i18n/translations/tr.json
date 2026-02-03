@@ -635,7 +635,9 @@
 	"plugin": "Eklenti",
 	"plugins": "Eklentiler",
 	"prev": "Önceki",
+
 	"preview": "Önizle",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Yayınla",
 	"published": "Yayınlandı",
@@ -786,6 +788,7 @@
 	"user.create": "Yeni bir kullanıcı ekle",
 	"user.delete": "Bu kullanıcıyı sil",
 	"user.delete.confirm": "<strong>{email}</strong> kullanıcısını silmek istediğinizden emin misiniz?",
+	"user.setPassword": "Set password",
 
 	"users": "Kullanıcılar",
 

@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"5.3.0","title":"since"}]},"displayName":"Checklist","props":[{"name":"theme","type":{"name":"string"},"defaultValue":{"value":"\"positive\""}}],"slots":[{"name":"default"}],"component":"k-checklist","sourceFile":"src/components/Text/Checklist.vue"}

@@ -635,7 +635,9 @@
 	"plugin": "外掛",
 	"plugins": "外掛列表",
 	"prev": "上一步",
+
 	"preview": "預覽",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "發佈",
 	"published": "已發佈",
@@ -786,6 +788,7 @@
 	"user.create": "新增使用者",
 	"user.delete": "刪除使用者",
 	"user.delete.confirm": "你確定要刪除「{email}」嗎？",
+	"user.setPassword": "Set password",
 
 	"users": "使用者",
 
