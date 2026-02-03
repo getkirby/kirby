@@ -72,8 +72,8 @@ class UserChangePasswordDialogController extends UserDialogController
 	public function load(): Dialog
 	{
 		return new FormDialog(
-			fields: $this->fields(),
-			submitButton: $this->i18n('change')
+			fields:       $this->fields(),
+			submitButton: $this->i18n('user.' . ($this->user->hasPassword() === true ? 'changePassword' : 'setPassword')),
 		);
 	}
 

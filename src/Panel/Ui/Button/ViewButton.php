@@ -25,16 +25,18 @@ class ViewButton extends ModelButton
 		public string $component = 'k-view-button',
 		ModelWithContent|Language|null $model = null,
 		public array|string|null $options = null,
+		bool|string $responsive = true,
 		string|null $size = 'sm',
 		string|null $variant = 'filled',
 		...$attrs
 	) {
 		parent::__construct(...[
 			...$attrs,
-			'component' => $component,
-			'model'     => $model instanceof ModelWithContent ? $model : null,
-			'size'      => $size,
-			'variant'   => $variant
+			'component'  => $component,
+			'model'      => $model instanceof ModelWithContent ? $model : null,
+			'responsive' => $responsive,
+			'size'       => $size,
+			'variant'    => $variant
 		]);
 	}
 

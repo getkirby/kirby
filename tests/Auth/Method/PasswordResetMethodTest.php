@@ -6,6 +6,7 @@ use Kirby\Auth\Auth;
 use Kirby\Auth\Method;
 use Kirby\Auth\Methods;
 use Kirby\Auth\Status;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -54,6 +55,12 @@ class PasswordResetMethodTest extends TestCase
 		$this->assertSame(['lisa@simpsons.com', false, 'password-reset'], $args);
 	}
 
+	public function testIcon(): void
+	{
+		$icon = PasswordResetMethod::icon();
+		$this->assertSame('question', $icon);
+	}
+
 	public function testIsEnabled(): void
 	{
 		$auth = $this->auth();
@@ -74,6 +81,13 @@ class PasswordResetMethodTest extends TestCase
 	{
 		$auth = $this->auth();
 		$this->assertTrue(PasswordResetMethod::isUsingChallenges($auth));
+	}
+
+	public function testSettings(): void
+	{
+		$user     = $this->createStub(User::class);
+		$settings = PasswordResetMethod::settings($user);
+		$this->assertCount(0, $settings);
 	}
 
 	public function testType(): void

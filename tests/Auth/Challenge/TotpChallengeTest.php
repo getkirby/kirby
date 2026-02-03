@@ -62,6 +62,12 @@ class TotpChallengeTest extends TestCase
 		$this->assertSame('2fa', $challenge->mode());
 	}
 
+	public function testSettings(): void
+	{
+		$settings = TotpChallenge::settings($this->user);
+		$this->assertCount(1, $settings);
+	}
+
 	public function testTimeout(): void
 	{
 		$challenge = new TotpChallenge($this->user, '2fa', 300);
