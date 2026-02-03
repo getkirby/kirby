@@ -5,6 +5,203 @@ Kirby 6 and this document are work in progress. The changelog will be updated wi
 > [!IMPORTANT]  
 > Don't use Kirby 6 in production yet.
 
+## 🎉 Features
+
+### Preview view
+
+Live editor mode that let's you work on your content right next to a live preview of your page (https://feedback.getkirby.com/736)
+
+- Preview view syncs navigation in the browser(s)
+- Open the preview in a second browser window and still see a live preview of your changes
+- Preview your site in different viewport widths in the preview view
+- New `panel.preview.sizes` option to define custom viewport sizes
+
+https://github.com/user-attachments/assets/b9bde4cc-ce03-410d-8cd7-e470142e51e0
+
+### New buttons field [#7828](https://github.com/getkirby/kirby/pull/7828)
+
+New `buttons` field to display (a list of) buttons to open a link, dialog or drawer
+
+<img width="954" height="712" alt="image" src="https://github.com/user-attachments/assets/1676c25b-2614-4f2c-8563-216906079ae3" />
+
+**Docs**
+
+```yaml
+simple:
+  type: buttons
+  buttons:
+    - text: Button A
+      link: <https://getkirby.com>
+    - text: Button B
+      link: <https://getkirby.com>
+    - text: Button C
+      link: <https://getkirby.com>
+
+icons:
+  type: buttons
+  buttons:
+    - text: Button A
+      icon: heart
+      link: <https://getkirby.com>
+    - text: Button B
+      icon: star
+      link: <https://getkirby.com>
+    - text: Button C
+      icon: badge
+      link: <https://getkirby.com>
+
+```
+
+### Simplified blueprint definition
+
+We know that our blueprints can be very complex to understand. One problem is the deeply nested structure, when defining tabs, columns and sections. In Kirby 6, blueprint definition gets a lot easier. Fields can now be defined on the root level, globally and referenced anywhere in your layout afterwards. This will reduce nesting and makes it easier to change layouts later. The old way of defining fields inline in a nested structure still works for perfect backward compatibility. [#7899](https://github.com/getkirby/kirby/pull/7899)
+
+**Example**
+
+```yaml
+title: Article
+
+fields:
+  subheading:
+    type: text
+  cover:
+    type: files
+  text:
+    type: blocks
+  date:
+    type: date
+  author:
+    type: users
+  tags:
+    type: tags
+
+columns:
+  - width: 2/3
+    fields:
+      - subheading
+      - cover
+      - text
+
+  - width: 1/3
+    fields:
+      - date
+      - author
+      - tags
+
+```
+
+Of course, this is also possible with multiple tabs:
+
+```yaml
+title: Article
+
+fields:
+  subheading:
+    type: text
+  cover:
+    type: files
+  text:
+    type: blocks
+  date:
+    type: date
+  author:
+    type: users
+  tags:
+    type: tags
+  seoTitle:
+    type: text
+  seoDescription:
+    type: textarea
+
+tabs:
+  content:
+    columns:
+      - width: 2/3
+        fields:
+          - subheading
+          - cover
+          - text
+
+      - width: 1/3
+        fields:
+          - date
+          - author
+          - tags
+  seo:
+    fields:
+      - seoTitle
+      - seoDescription
+```
+
+### New template stacks
+
+Template stacks let snippets and templates push output onto a stack and render this stack anywhere else in your template (e.g. pushing a CSS `<link>` tag on a stack from inside your blocks snippets and render this stack inside `<head>`). This can be done independent of rendering the stack and pushing to the stack. [#7867](https://github.com/getkirby/kirby/pull/7867)
+
+```php
+<head>
+
+  <style>
+    <?= stack('style') ?>
+  </style>
+</head>
+
+// snippet
+<?php push('style') ?>
+
+body {
+  background: red;
+}
+
+<?php endpush(); ?>
+
+// in template (e.g. header.php)
+<?php stack('head') ?>
+
+// in any snippet or template (order doesn’t matter)
+<?php push('head') ?>
+<link rel="stylesheet" href="/assets/css/foo.css">
+<?php endpush() ?>
+```
+
+Direct push (no buffering)
+
+```php
+<?php push('head', '<link rel="stylesheet" href="/assets/css/foo.css">') ?>
+```
+
+Unique pushes (dedupe identical content)
+
+```php
+<?php push('head', '<link rel="stylesheet" href="/assets/css/foo.css">', unique: true) ?>
+```
+
+Returning instead of echoing
+
+```php
+<?php $styles = stack('head', return: true); ?>
+```
+
+Custom glue
+
+```php
+<?php stack('head', glue: '') ?> // join with newlines
+```
+
+### Better error handling in the panel
+
+- New `<k-error-trace>` component to display PHP stack traces. We will use it for PHP error stacks in error dialogs, but it's universal enough to also be used in other places or for JS traces. [#7774](https://github.com/getkirby/kirby/pull/7774)
+    <img width="543" height="463" alt="image" src="https://github.com/user-attachments/assets/aa54de2e-d011-44a6-9d0e-e2facd52accb" />    
+- New `k-validation-issues` component to list various issues in fields after a form has been submitted. This will be used in our new error dialogs, but can also be used as a stand-alone component in other parts of the panel. [#7775](https://github.com/getkirby/kirby/pull/7775)
+    <img width="594" height="395" alt="image" src="https://github.com/user-attachments/assets/94122230-af87-4404-a5bd-dc896d892446" />    
+- New `k-request-error-dialog` component [#7782](https://github.com/getkirby/kirby/pull/7782)  
+    <img width="686" height="829" alt="image" src="https://github.com/user-attachments/assets/20b390a4-feb1-4a1e-9fc4-c7cbd04ed3a5" />    
+- New `<k-validation-error-dialog>` to improve the readability of field validation problems. [#7785](https://github.com/getkirby/kirby/pull/7785)
+    <img width="695" height="336" alt="image" src="https://github.com/user-attachments/assets/65404617-6957-4c6e-a30e-4fe1e2575786" />
+    
+### More
+
+- New `picker` option for `files`, `pages` and `users` field to customize the picker dialogs (e.g. `size`, `layout`) [#7687](https://github.com/getkirby/kirby/pull/7687)
+
 ## ✨ Enhancements
 
 ### Core
