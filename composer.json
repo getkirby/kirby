@@ -43,7 +43,7 @@
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.18.0",
 		"michelf/php-smartypants": "1.8.1",
-		"phpmailer/phpmailer": "7.0.1",
+		"phpmailer/phpmailer": "7.0.2",
 		"symfony/polyfill-intl-idn": "1.33.0",
 		"symfony/polyfill-mbstring": "1.33.0",
 		"symfony/yaml": "7.4.1"
