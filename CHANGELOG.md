@@ -225,6 +225,7 @@ Custom glue
 - All errors are now converted to Error objects in `panel.notification.error()` [#7782](https://github.com/getkirby/kirby/pull/7782)
 - Page picker dialog shows badge for selected children [#7687](https://github.com/getkirby/kirby/pull/7687)
 - The Panel URL is available inside the Panel as `this.$panel.urls.panel` [#7800](https://github.com/getkirby/kirby/pull/7800)
+- System view shows an alert if a required PHP extension is missing [#7812](https://github.com/getkirby/kirby/pull/7812)
 - Field labels get highlighted when field has unsaved changes [#7794](https://github.com/getkirby/kirby/pull/7794)
     <img width="679" height="360" alt="image" src="https://github.com/user-attachments/assets/644a3dcf-9e1b-4aad-a526-aadb25b5954e" />
 		<img width="670" height="364" alt="image" src="https://github.com/user-attachments/assets/08fff2f9-c77b-4c57-bfec-2626df04ce29" />
@@ -245,6 +246,11 @@ Custom glue
     - New `Kirby\Panel\Ui\Item` class that also builds the foundation for `ModelItem` etc. New `Kirby\Panel\Ui\LanguageItem` class. [#7471](https://github.com/getkirby/kirby/pull/7471)
 - Resolve a Panel UI component object in `JsonResponse::from()` but calling its `::render()` method. This allows us to return UI component instances from a Panel controller's `::load()` method. [#7442](https://github.com/getkirby/kirby/pull/7442)
 - New `Kirby\Toolkit\Has18n` trait that adds a `::i18n()` helper method to the class which can be used to translate and/or template i18n strings. New `Kirby\Panel\Ui\Component::i18n()` helper method [#7406](https://github.com/getkirby/kirby/pull/7406) [#7465](https://github.com/getkirby/kirby/pull/7465)
+- Exceptions are no longer intercepted by our Response classes but handled by our regular error handler. This will improve the JSON error responses drastically and expose more details in debug mode. One exception (pun intended) are NotFoundExceptions for views, which will still create a full error view with error message, to make sure that navigation to non-existing routes still works. [#7744](https://github.com/getkirby/kirby/pull/7744)
+- New `Kirby\\Exception\\FormValidationException` [#7769](https://github.com/getkirby/kirby/pull/7769)
+- Error responses from the backend now include the `editor` URL if the editor is set up in the config.php and debug mode is one. [#7782](https://github.com/getkirby/kirby/pull/7782)
+- New protected `AppErrors::trace()` method to return a stack trace for PHP errors in JSON responses when debug mode is enabled. [#7782](https://github.com/getkirby/kirby/pull/7782)
+- On installation, all required PHP extensions are checked and installation is blocked if one is missing [#7812](https://github.com/getkirby/kirby/pull/7812)
 
 ---
 
