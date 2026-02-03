@@ -298,9 +298,9 @@
 	"error.validation.uuid": "Veuillez saisir un UUID valide",
 	"error.validation.url": "Veuillez saisir une URL valide",
 
-	"error.version.discard.permission": "You are not allowed to discard this version",
-	"error.version.publish.permission": "You are not allowed to publish this version",
-	"error.version.save.permission": "You are not allowed to change this version",
+	"error.version.discard.permission": "Vous n’êtes pas autorisé à supprimer cette version",
+	"error.version.publish.permission": "Vous n’êtes pas autorisé à publier cette version",
+	"error.version.save.permission": "Vous n’êtes pas autorisé à modifier cette version",
 
 	"expand": "Déplier",
 	"expand.all": "Tout déplier",
@@ -315,7 +315,7 @@
 	"field.blocks.delete.confirm.all": "Voulez-vous vraiment supprimer tous les blocs ?",
 	"field.blocks.delete.confirm.selected": "Voulez-vous vraiment supprimer les blocs sélectionnés ?",
 	"field.blocks.empty": "Pas encore de blocs",
-	"field.blocks.fieldsets.empty": "Pas encore d‘ensembles de champs",
+	"field.blocks.fieldsets.empty": "Pas encore d’ensembles de champs",
 	"field.blocks.fieldsets.label": "Veuillez sélectionner un type de bloc…",
 	"field.blocks.fieldsets.paste": "Pressez <kbd>{{ shortcut }}</kbd> pour importer des dispositions ou blocs depuis votre presse-papier <small>Seuls ceux autorisés dans le champ actuel seront insérés.</small>",
 	"field.blocks.gallery.name": "Galerie",

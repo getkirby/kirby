@@ -405,4 +405,42 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertInstanceOf(MemoryStorage::class, $model->storage());
 		$this->assertNull($model->uuid());
 	}
+
+	public function testResolveTitleSlugFields(): void
+	{
+		$app = $this->app([
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'foo' => [
+							'type'    => 'text',
+							'default' => '{{ page.title }}'
+						],
+						'bar' => [
+							'type'    => 'text',
+							'default' => '{{ page.slug }}'
+						]
+					]
+				]
+			]
+		]);
+		$app->impersonate('kirby');
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null,
+			'bar-slug',
+			'Foo title'
+		);
+
+		$dialog->submit([]);
+		$page = $app->page('bar-slug');
+
+		$this->assertSame('Foo title', $page->title()->value());
+		$this->assertSame('Foo title', $page->foo()->value());
+		$this->assertSame('bar-slug', $page->slug());
+		$this->assertSame('bar-slug', $page->bar()->value());
+	}
 }

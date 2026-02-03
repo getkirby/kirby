@@ -6,6 +6,7 @@ export const defaults = () => {
 		code: null,
 		default: false,
 		direction: "ltr",
+		hasCustomDomain: false,
 		name: null,
 		rules: null
 	};

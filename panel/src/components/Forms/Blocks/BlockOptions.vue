@@ -1,6 +1,7 @@
 <template>
 	<k-toolbar
 		:buttons="buttons"
+		data-inline="true"
 		class="k-block-options"
 		@mousedown.native.prevent
 	/>

@@ -143,4 +143,37 @@ class FilePermissionsTest extends ModelTestCase
 
 		$this->assertTrue($file->permissions()->can('changeTemplate'));
 	}
+
+	public function testCanChangeTemplateWithAllAvailable(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'sections' => [
+						'files' => [
+							'type' => 'files',
+							// No template specified - should get all available
+						]
+					]
+				],
+				'files/image' => [
+					'title' => 'Image'
+				],
+				'files/document' => [
+					'title' => 'Document'
+				],
+				'files/video' => [
+					'title' => 'Video'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page(['slug' => 'test', 'template' => 'test']);
+		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
+
+		// Should be able to change template because multiple templates are available
+		$this->assertTrue($file->permissions()->can('changeTemplate'));
+	}
 }

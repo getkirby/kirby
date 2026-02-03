@@ -59,7 +59,7 @@ return [
 		'submit'  => fn () => (new UserTotpEnableDialog())->submit()
 	],
 	'account.totp.disable' => [
-		'pattern' => '(account)/totp/disable',
 		...$dialogs['user.totp.disable'],
+		'pattern' => '(account)/totp/disable',
 	],
 ];
