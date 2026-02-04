@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"6.0.0","title":"since"}]},"displayName":"PreviewSizes","props":[{"name":"current","type":{"name":"string"}},{"name":"mode","type":{"name":"string"}},{"name":"sizes","type":{"name":"object"}}],"events":[{"name":"change"}],"component":"k-preview-sizes","sourceFile":"src/components/Views/Preview/PreviewSizes.vue"}
