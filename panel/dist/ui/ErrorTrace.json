@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"6.0.0","title":"since"}]},"displayName":"ErrorTrace","props":[{"name":"trace","type":{"name":"array"}}],"component":"k-error-trace","sourceFile":"src/components/Errors/ErrorTrace.vue"}
