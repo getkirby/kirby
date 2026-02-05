@@ -185,7 +185,7 @@ export default {
 	border-left: 0;
 	border-top-right-radius: var(--rounded);
 	border-bottom-right-radius: var(--rounded);
-	background-color: white;
+	background-color: var(--input-color-back);
 	padding: var(--spacing-3);
 	font-size: var(--text-sm);
 
@@ -195,7 +195,6 @@ export default {
 }
 
 .k-user-totp-drawer .k-field-name-confirm {
-	--input-font-size: var(--text-xl);
 	margin-block-start: -1rem;
 }
 </style>
