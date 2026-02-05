@@ -62,7 +62,7 @@ class UserSecurityDrawerControllerTest extends TestCase
 		$this->assertSame('email-unread', $challenges[0]['icon']);
 		$this->assertSame($user->panel()->url(true) . '/changeEmail', $challenges[0]['dialog']);
 		$this->assertSame('qr-code', $challenges[1]['icon']);
-		$this->assertSame($user->panel()->url(true) . '/totp/enable', $challenges[1]['dialog']);
+		$this->assertSame($user->panel()->url(true) . '/security/challenge/totp', $challenges[1]['drawer']);
 	}
 
 	public function testFactory(): void
