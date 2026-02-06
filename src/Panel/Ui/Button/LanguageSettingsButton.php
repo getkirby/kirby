@@ -4,7 +4,6 @@ namespace Kirby\Panel\Ui\Button;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
-use Kirby\Toolkit\I18n;
 
 /**
  * View button to update settings of a language
@@ -28,7 +27,7 @@ class LanguageSettingsButton extends ViewButton
 			dialog: 'languages/' . $language->id() . '/update',
 			disabled: $permission !== true,
 			icon: 'cog',
-			title: I18n::translate('settings'),
+			title: $this->i18n('settings'),
 		);
 	}
 }

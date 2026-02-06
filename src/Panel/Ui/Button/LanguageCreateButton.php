@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Ui\Button;
 
 use Kirby\Cms\App;
-use Kirby\Toolkit\I18n;
 
 /**
  * View button to create a new language
@@ -27,7 +26,7 @@ class LanguageCreateButton extends ViewButton
 			dialog: 'languages/create',
 			disabled: $permission !== true,
 			icon: 'add',
-			text: I18n::translate('language.create'),
+			text: $this->i18n('language.create'),
 		);
 	}
 }

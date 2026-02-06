@@ -22,7 +22,6 @@ trait HasI18n
 		Closure|string|array|null $key,
 		array|null $data = null
 	): string|null {
-
 		if ($key instanceof Closure) {
 			$key = $key();
 		}

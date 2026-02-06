@@ -4,7 +4,6 @@ namespace Kirby\Panel\Ui\Button;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Language;
-use Kirby\Toolkit\I18n;
 
 /**
  * View button to delete a language
@@ -28,7 +27,7 @@ class LanguageDeleteButton extends ViewButton
 			dialog: 'languages/' . $language->id() . '/delete',
 			disabled: $permission !== true,
 			icon: 'trash',
-			title: I18n::translate('delete'),
+			title: $this->i18n('delete'),
 		);
 	}
 }
