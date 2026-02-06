@@ -3,8 +3,6 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { Bold, Italic } from "../components/Forms/Writer/Marks";
-import { Doc, Paragraph, Text } from "../components/Forms/Writer/Nodes";
 import { sanitizeHTML } from "./string.js";
 
 describe.concurrent("$helper.string.sanitizeHTML", () => {
@@ -21,9 +19,7 @@ describe.concurrent("$helper.string.sanitizeHTML", () => {
 	});
 
 	it("should preserve bold with strong tag", () => {
-		expect(sanitizeHTML("<strong>bold</strong>")).toBe(
-			"<strong>bold</strong>"
-		);
+		expect(sanitizeHTML("<strong>bold</strong>")).toBe("<strong>bold</strong>");
 	});
 
 	it("should preserve bold with b tag", () => {
@@ -77,7 +73,7 @@ describe.concurrent("$helper.string.sanitizeHTML", () => {
 	});
 
 	it("should restrict to custom marks", () => {
-		const marks = [new Bold(), new Italic()];
+		const marks = ["bold", "italic"];
 		expect(sanitizeHTML("<strong>bold</strong>", { marks })).toBe(
 			"<strong>bold</strong>"
 		);
@@ -86,18 +82,16 @@ describe.concurrent("$helper.string.sanitizeHTML", () => {
 	});
 
 	it("should support custom nodes with block content", () => {
-		const nodes = [new Doc(), new Paragraph(), new Text()];
+		const nodes = ["doc", "paragraph", "text"];
 		expect(sanitizeHTML("<p>hello</p>", { nodes })).toBe("<p>hello</p>");
 		expect(sanitizeHTML("hello", { nodes })).toBe("<p>hello</p>");
 	});
 
 	it("should combine custom marks and nodes", () => {
-		const marks = [new Bold()];
-		const nodes = [new Doc(), new Paragraph(), new Text()];
 		expect(
 			sanitizeHTML("<p><strong>bold</strong> <em>italic</em></p>", {
-				marks,
-				nodes
+				marks: ["bold"],
+				nodes: ["doc", "paragraph", "text"]
 			})
 		).toBe("<p><strong>bold</strong> italic</p>");
 	});
