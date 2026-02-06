@@ -29,29 +29,6 @@
 
 <script>
 import Editor from "../Writer/Editor";
-import Mark from "../Writer/Mark";
-import Node from "../Writer/Node";
-
-// Marks
-import Bold from "../Writer/Marks/Bold";
-import Clear from "../Writer/Marks/Clear";
-import Code from "../Writer/Marks/Code";
-import Email from "../Writer/Marks/Email";
-import Italic from "../Writer/Marks/Italic";
-import Link from "../Writer/Marks/Link";
-import Strike from "../Writer/Marks/Strike";
-import Sup from "../Writer/Marks/Sup";
-import Sub from "../Writer/Marks/Sub";
-import Underline from "../Writer/Marks/Underline";
-
-// Nodes
-import BulletList from "../Writer/Nodes/BulletList";
-import HardBreak from "../Writer/Nodes/HardBreak";
-import Heading from "../Writer/Nodes/Heading";
-import HorizontalRule from "../Writer/Nodes/HorizontalRule";
-import ListItem from "../Writer/Nodes/ListItem";
-import OrderedList from "../Writer/Nodes/OrderedList";
-import Quote from "../Writer/Nodes/Quote";
 
 // Extensions
 import History from "../Writer/Extensions/History.js";
@@ -273,108 +250,64 @@ export default {
 			this.editor.command(command, ...args);
 		},
 		createMarks() {
-			return this.filterExtensions(
-				{
-					clear: new Clear(),
-					code: new Code(),
-					underline: new Underline(),
-					strike: new Strike(),
-					link: new Link(),
-					email: new Email(),
-					bold: new Bold(),
-					italic: new Italic(),
-					sup: new Sup(),
-					sub: new Sub(),
-					...this.createMarksFromPanelPlugins()
-				},
-				this.marks
-			);
+			return Object.values(this.$helper.writer.createMarks(this.marks));
 		},
+		/**
+		 * @deprecated 5.4.0 Use this.$helper.writer.availableMarksFromPlugins() instead.
+		 */
 		createMarksFromPanelPlugins() {
-			const plugins = window.panel.plugins.writerMarks ?? {};
-			const marks = {};
-
-			// take each extension object and turn
-			// it into an instance that extends the Mark class
-			for (const name in plugins) {
-				marks[name] = Object.create(
-					Mark.prototype,
-					Object.getOwnPropertyDescriptors({ name, ...plugins[name] })
-				);
-			}
-
-			return marks;
+			return this.$helper.writer.availableMarksFromPlugins();
 		},
 		createNodes() {
-			const hardBreak = new HardBreak({
-				text: true,
-				enter: this.inline
-			});
+			let nodes = this.nodes;
 
-			return this.filterExtensions(
-				{
-					bulletList: new BulletList(),
-					orderedList: new OrderedList(),
-					heading: new Heading({ levels: this.headings }),
-					horizontalRule: new HorizontalRule(),
-					listItem: new ListItem(),
-					quote: new Quote(),
-					...this.createNodesFromPanelPlugins()
-				},
-				this.nodes,
-				(allowed, installed) => {
-					// install the list item when there's a list available
-					if (
-						allowed.includes("bulletList") ||
-						allowed.includes("orderedList")
-					) {
-						installed.push(new ListItem());
-					}
-
-					// inline fields should not have non-inline nodes
-					if (this.inline === true) {
-						installed = installed.filter((node) => node.schema.inline === true);
-					}
-
-					// always install the hard break
-					installed.push(hardBreak);
-
-					return installed;
-				}
-			);
-		},
-		createNodesFromPanelPlugins() {
-			const plugins = window.panel.plugins.writerNodes ?? {};
-			const nodes = {};
-
-			// take each extension object and turn
-			// it into an instance that extends the Node class
-			for (const name in plugins) {
-				nodes[name] = Object.create(
-					Node.prototype,
-					Object.getOwnPropertyDescriptors({ name, ...plugins[name] })
-				);
+			// convert array to object format to add options
+			if (Array.isArray(nodes)) {
+				nodes = Object.fromEntries(nodes.map((n) => [n, true]));
 			}
 
-			return nodes;
+			// enrich with extension options
+			if (typeof nodes === "object" && nodes !== null) {
+				nodes.hardBreak = {
+					...(typeof nodes.hardBreak === "object" ? nodes.hardBreak : {}),
+					text: true,
+					enter: this.inline
+				};
+
+				if (nodes.heading && nodes.heading !== false) {
+					nodes.heading = {
+						...(typeof nodes.heading === "object" ? nodes.heading : {}),
+						levels: this.headings
+					};
+				}
+			}
+
+			const result = Object.values(
+				this.$helper.writer.createNodes(nodes, ["hardBreak"])
+			);
+
+			// inline fields should not have non-inline nodes
+			if (this.inline === true) {
+				return this.$helper.writer.keepInlineNodes(result);
+			}
+
+			return result;
+		},
+		/**
+		 * @deprecated 5.4.0 Use this.$helper.writer.availableNodesFromPlugins() instead.
+		 */
+		createNodesFromPanelPlugins() {
+			return this.$helper.writer.availableNodesFromPlugins();
 		},
 		getHTML() {
 			return this.editor.getHTML();
 		},
+		/**
+		 * @deprecated 5.4.0 Use this.$helper.writer.filterExtensions() instead.
+		 */
 		filterExtensions(available, allowed, postFilter) {
-			if (allowed === false) {
-				allowed = [];
-			} else if (allowed === true || Array.isArray(allowed) === false) {
-				allowed = Object.keys(available);
-			}
-
-			let installed = [];
-
-			for (const extension in available) {
-				if (allowed.includes(extension)) {
-					installed.push(available[extension]);
-				}
-			}
+			allowed = this.$helper.writer.allowedExtensions(available, allowed);
+			let installed = this.$helper.writer.filterExtensions(available, allowed);
 
 			if (typeof postFilter === "function") {
 				installed = postFilter(allowed, installed);
