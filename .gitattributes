@@ -8,6 +8,7 @@
 .php-cs-fixer.dist.php export-ignore
 phpunit.ci.xml export-ignore
 phpunit.dist.xml export-ignore
+psalm-baseline.xml export-ignore
 psalm.xml.dist export-ignore
 tests/ export-ignore
 
