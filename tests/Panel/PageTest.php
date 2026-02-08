@@ -360,6 +360,7 @@ class PageTest extends TestCase
 			'preview'        => true,
 			'read'           => true,
 			'sort'           => false, // drafts cannot be sorted
+			'unlock'         => true,
 			'update'         => true,
 		];
 
@@ -390,6 +391,7 @@ class PageTest extends TestCase
 			'preview'        => false,
 			'read'           => false,
 			'sort'           => false,
+			'unlock'         => false,
 			'update'         => false,
 		];
 
@@ -411,6 +413,7 @@ class PageTest extends TestCase
 			'preview'        => true,
 			'read'           => false,
 			'sort'           => false,
+			'unlock'         => false,
 			'update'         => false,
 		];
 

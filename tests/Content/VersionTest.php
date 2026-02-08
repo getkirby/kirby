@@ -8,6 +8,7 @@ use Kirby\Cms\Page;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -15,6 +16,22 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class VersionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Content.Version';
+
+	public function setUpUsers(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				'admin' => [
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				'editor' => [
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+	}
 
 	public function testContentMultiLanguage(): void
 	{
@@ -1388,6 +1405,57 @@ class VersionTest extends TestCase
 		clearstatcache();
 
 		$this->assertGreaterThanOrEqual($minTime, filemtime($root));
+	}
+
+	public function testUnlock(): void
+	{
+		$this->setUpSingleLanguage();
+		$this->setUpUsers();
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$version = $this->model->version('changes');
+
+		$version->save([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$this->assertFalse($version->isLocked());
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$this->assertTrue($version->isLocked());
+
+		$version->unlock();
+
+		$this->assertFalse($version->isLocked());
+	}
+
+	public function testUnlockWithoutPermissions(): void
+	{
+		$this->setUpSingleLanguage();
+		$this->setUpUsers();
+
+		$this->app->impersonate('admin@getkirby.com');
+
+		$version = $this->model->version('changes');
+
+		$version->save([
+			'title'    => 'Title',
+			'subtitle' => 'Subtitle',
+		]);
+
+		$this->assertFalse($version->isLocked());
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->assertTrue($version->isLocked());
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to unlock the content for the page');
+
+		$version->unlock();
 	}
 
 	public function testUpdateMultiLanguage(): void

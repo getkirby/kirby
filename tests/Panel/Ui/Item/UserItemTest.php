@@ -48,6 +48,7 @@ class UserItemTest extends TestCase
 				'changePassword' => false,
 				'changeRole'     => false,
 				'delete'         => false,
+				'unlock'         => false,
 				'update'         => false,
 			],
 			'text'         => 'test@getkirby.com',
