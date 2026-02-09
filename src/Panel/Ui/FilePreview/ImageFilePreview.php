@@ -4,7 +4,6 @@ namespace Kirby\Panel\Ui\FilePreview;
 
 use Kirby\Cms\File;
 use Kirby\Panel\Ui\FilePreview;
-use Kirby\Toolkit\I18n;
 
 /**
  * @package   Kirby Panel
@@ -35,12 +34,12 @@ class ImageFilePreview extends FilePreview
 		return [
 			...parent::details(),
 			[
-				'title' => I18n::translate('dimensions'),
-				'text'  => $dimensions . ' ' . I18n::translate('pixel')
+				'title' => $this->i18n('dimensions'),
+				'text'  => $dimensions . ' ' . $this->i18n('pixel')
 			],
 			[
-				'title' => I18n::translate('orientation'),
-				'text'  => I18n::translate('orientation.' . $dimensions->orientation())
+				'title' => $this->i18n('orientation'),
+				'text'  => $this->i18n('orientation.' . $dimensions->orientation())
 			]
 		];
 	}
