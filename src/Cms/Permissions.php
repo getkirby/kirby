@@ -121,7 +121,7 @@ class Permissions
 
 		$this->actions = $this->normalize(
 			settings: $settings,
-			defaults: $this->actions,
+			defaults: $defaults,
 			aliases: [
 				'files' => ['update' => $update],
 				'pages' => ['update' => $update],
