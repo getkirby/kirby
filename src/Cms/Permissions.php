@@ -135,7 +135,7 @@ class Permissions
 	protected function alias(
 		array $actions,
 		array $aliases,
-		array $defaults = []
+		array|bool|null $defaults = []
 	): array {
 		foreach ($actions as $action => $value) {
 			$alias = $aliases[$action] ?? null;
