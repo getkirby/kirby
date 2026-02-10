@@ -1,0 +1,1497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.14.3@d0b040a91f280f071c1abcb1b77ce3822058725a">
+  <file src="config/components.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string|SessionStore]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$kirby->root('sessions')]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="config/helpers.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[App::instance()->site()->find($id)]]></code>
+      <code><![CDATA[App::instance()->site()->find($id)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Pages|null]]></code>
+      <code><![CDATA[Page|null]]></code>
+    </InvalidReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[url]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="config/tags.php">
+    <UndefinedPropertyAssignment>
+      <code><![CDATA[$tag->alt]]></code>
+      <code><![CDATA[$tag->caption]]></code>
+      <code><![CDATA[$tag->caption]]></code>
+      <code><![CDATA[$tag->file]]></code>
+      <code><![CDATA[$tag->file]]></code>
+      <code><![CDATA[$tag->height]]></code>
+      <code><![CDATA[$tag->height]]></code>
+      <code><![CDATA[$tag->poster]]></code>
+      <code><![CDATA[$tag->src]]></code>
+      <code><![CDATA[$tag->src]]></code>
+      <code><![CDATA[$tag->srcset]]></code>
+      <code><![CDATA[$tag->text]]></code>
+      <code><![CDATA[$tag->title]]></code>
+      <code><![CDATA[$tag->width]]></code>
+      <code><![CDATA[$tag->width]]></code>
+    </UndefinedPropertyAssignment>
+  </file>
+  <file src="src/Api/Api.php">
+    <UndefinedMethod>
+      <code><![CDATA[files]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Blueprint/PageBlueprint.php">
+    <UndefinedMethod>
+      <code><![CDATA[isHomeOrErrorPage]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Blueprint/Section.php">
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->errors]]></code>
+      <code><![CDATA[$this->model]]></code>
+      <code><![CDATA[$this->name]]></code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/Cache/RedisCache.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->connection->del($this->key($key))]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[bool]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Cache/Value.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[json_encode($this->toArray())]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Cms/App.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement>
+      <code><![CDATA[match ($code ?? 'current') {
+			'default' => $this->defaultLanguage(),
+			'current' => $this->currentLanguage(),
+			default   => $this->languages()->find($code)
+		}]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Language|null]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$text]]></code>
+      <code><![CDATA[$this->setPath($path)->path]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/AppErrors.php">
+    <InvalidArrayOffset>
+      <code><![CDATA[[
+			$this->root('kirby') => '{kirby}',
+			$this->root('site')  => '{site}',
+			$this->root('index') => '{index}'
+		]]]></code>
+    </InvalidArrayOffset>
+  </file>
+  <file src="src/Cms/AppTranslations.php">
+    <InvalidReturnType>
+      <code><![CDATA[Translation]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Cms/Auth.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->impersonate = match ($who) {
+			null     => null,
+			'kirby'  => new User([
+				'email' => 'kirby@getkirby.com',
+				'id'    => 'kirby',
+				'role'  => 'admin',
+			]),
+			'nobody' => new User([
+				'email' => 'nobody@getkirby.com',
+				'id'    => 'nobody',
+				'role'  => 'nobody',
+			]),
+			default => $this->kirby->users()->find($who) ?? throw new NotFoundException(
+				message: 'The user "' . $who . '" cannot be found'
+			),
+		}]]></code>
+      <code><![CDATA[$user]]></code>
+      <code><![CDATA[$user]]></code>
+      <code><![CDATA[$user]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[User]]></code>
+      <code><![CDATA[User|null]]></code>
+      <code><![CDATA[User|null]]></code>
+      <code><![CDATA[\Kirby\Cms\User]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Cms/Auth/EmailChallenge.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$code]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Cms/BlockConverter.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[array_filter($blocks)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Cms/Collection.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Cms/Fieldset.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement>
+      <code><![CDATA[I18n::translate($label, $label)]]></code>
+      <code><![CDATA[I18n::translate($name, $name)]]></code>
+    </InvalidReturnStatement>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->name]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/File.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[F::modified($this->root())]]></code>
+    </FalsableReturnStatement>
+    <InvalidNullableReturnType>
+      <code><![CDATA[FileBlueprint]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->parent()]]></code>
+      <code><![CDATA[$this->parent()]]></code>
+      <code><![CDATA[F::modified($this->root())]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Site]]></code>
+      <code><![CDATA[int]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->blueprint ??= FileBlueprint::factory(
+			'files/' . $this->template(),
+			'files/default',
+			$this
+		)]]></code>
+      <code><![CDATA[$this->parent()->id()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/FileModifications.php">
+    <UndefinedMethod>
+      <code><![CDATA[focus]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Cms/FilePermissions.php">
+    <UndefinedMethod>
+      <code><![CDATA[template]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Cms/FileVersion.php">
+    <InvalidReturnType>
+      <code><![CDATA[mixed]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Cms/Files.php">
+    <InvalidArgument>
+      <code><![CDATA[$file]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Cms/HasSiblings.php">
+    <InvalidArgument>
+      <code><![CDATA[$this]]></code>
+    </InvalidArgument>
+    <InvalidCast>
+      <code><![CDATA[$this]]></code>
+    </InvalidCast>
+    <InvalidMethodCall>
+      <code><![CDATA[not]]></code>
+    </InvalidMethodCall>
+  </file>
+  <file src="src/Cms/Language.php">
+    <NullableReturnStatement>
+      <code><![CDATA[$kirbyUrl]]></code>
+      <code><![CDATA[Url::base($languageUrl) ?? $kirbyUrl]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/LayoutColumn.php">
+    <InvalidReturnType>
+      <code><![CDATA[mixed]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Cms/LazyCollection.php">
+    <InvalidArgument>
+      <code><![CDATA[$key]]></code>
+    </InvalidArgument>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->hydrateElement($key)]]></code>
+      <code><![CDATA[$this->hydrateElement($key)]]></code>
+      <code><![CDATA[$this->hydrateElement($key)]]></code>
+      <code><![CDATA[$this->hydrateElement($key)]]></code>
+      <code><![CDATA[$this->hydrateElement($key)]]></code>
+      <code><![CDATA[$this->hydrateElement($key)]]></code>
+      <code><![CDATA[$this->hydrateElement($key)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[TValue]]></code>
+      <code><![CDATA[TValue]]></code>
+      <code><![CDATA[TValue]]></code>
+      <code><![CDATA[TValue]]></code>
+      <code><![CDATA[TValue]]></code>
+      <code><![CDATA[\Iterator<TKey, TValue>]]></code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[\Iterator<TKey, TValue>]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Cms/License.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$this->activation !== null ? Str::date(strtotime($this->activation), $format, $handler) : null]]></code>
+      <code><![CDATA[$this->date !== null ? Str::date(strtotime($this->date), $format, $handler) : null]]></code>
+      <code><![CDATA[Str::date($time, $format, $handler)]]></code>
+    </FalsableReturnStatement>
+    <InvalidNullableReturnType>
+      <code><![CDATA[array]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$response->json()]]></code>
+      <code><![CDATA[App::instance()->root('license')]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/LicenseStatus.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[I18n::translate('license.status.' . $this->value . '.label')]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[I18n::translate('license.status.' . $this->value . '.label')]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/LicenseType.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[match ($this) {
+			static::Basic      => 'Kirby Basic',
+			static::Enterprise => 'Kirby Enterprise',
+			static::Legacy     => 'Kirby 3',
+			static::Invalid    => I18n::translate('license.unregistered.label'),
+		}]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[match ($this) {
+			static::Basic      => 'Kirby Basic',
+			static::Enterprise => 'Kirby Enterprise',
+			static::Legacy     => 'Kirby 3',
+			static::Invalid    => I18n::translate('license.unregistered.label'),
+		}]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/ModelState.php">
+    <InvalidArgument>
+      <code><![CDATA[$next]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Cms/Nest.php">
+    <InvalidArgument>
+      <code><![CDATA[$result]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Cms/Page.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[PageBlueprint]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->blueprint ??= PageBlueprint::factory(
+			'pages/' . $this->intendedTemplate(),
+			'pages/default',
+			$this
+		)]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/PageActions.php">
+    <UndefinedMethod>
+      <code><![CDATA[changeNum]]></code>
+      <code><![CDATA[contentFiles]]></code>
+      <code><![CDATA[contentFiles]]></code>
+      <code><![CDATA[createNum]]></code>
+      <code><![CDATA[isListed]]></code>
+      <code><![CDATA[mediaRoot]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Cms/PagePermissions.php">
+    <UndefinedMethod>
+      <code><![CDATA[intendedTemplate]]></code>
+      <code><![CDATA[isErrorPage]]></code>
+      <code><![CDATA[isErrorPage]]></code>
+      <code><![CDATA[isErrorPage]]></code>
+      <code><![CDATA[isHomeOrErrorPage]]></code>
+      <code><![CDATA[isHomeOrErrorPage]]></code>
+      <code><![CDATA[isHomeOrErrorPage]]></code>
+      <code><![CDATA[isListed]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Cms/Pages.php">
+    <InvalidArgument>
+      <code><![CDATA[$args[0]]]></code>
+      <code><![CDATA[$page]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Cms/Responder.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[int|$this]]></code>
+      <code><![CDATA[string|$this]]></code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this
+			->header('Location', (string)$location)
+			->code($code ?? 302)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[$this]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->code]]></code>
+      <code><![CDATA[$this->headers()[$key] ?? null]]></code>
+      <code><![CDATA[$this->type]]></code>
+    </NullableReturnStatement>
+    <UndefinedMethod>
+      <code><![CDATA[$this->headers()]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Cms/Site.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[SiteBlueprint]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->errorPage ??= $this->find($this->errorPageId())]]></code>
+      <code><![CDATA[$this->find($path)]]></code>
+      <code><![CDATA[$this->homePage ??= $this->find($this->homePageId())]]></code>
+    </InvalidReturnStatement>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->blueprint = SiteBlueprint::factory('site', null, $this)]]></code>
+      <code><![CDATA[$this->kirby()->language($languageCode)?->url() ??
+			$this->kirby()->url()]]></code>
+      <code><![CDATA[$this->root ??= $this->kirby()->root('content')]]></code>
+      <code><![CDATA[$this->url ?? $this->kirby()->url()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/System.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[strtok($software, ' ')]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Cms/System/UpdateStatus.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->versionEntry]]></code>
+    </InvalidReturnStatement>
+  </file>
+  <file src="src/Cms/Translation.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->get('translation.author', 'Kirby')]]></code>
+      <code><![CDATA[$this->get('translation.direction', 'ltr')]]></code>
+      <code><![CDATA[$this->get('translation.locale', $default)]]></code>
+      <code><![CDATA[$this->get('translation.name', $this->code)]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/Url.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[App::instance()->url()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/User.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$this->password ??= $this->readPassword()]]></code>
+      <code><![CDATA[filemtime($file)]]></code>
+    </FalsableReturnStatement>
+    <InvalidNullableReturnType>
+      <code><![CDATA[UserBlueprint]]></code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->role =
+			$this->kirby()->roles()->find($name) ??
+			Role::defaultNobody()]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Role]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->blueprint ??= UserBlueprint::factory(
+				'users/' . $this->role(),
+				'users/default',
+				$this
+			)]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/UserActions.php">
+    <UndefinedMethod>
+      <code><![CDATA[isLoggedIn]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Cms/UserPermissions.php">
+    <InvalidArgument>
+      <code><![CDATA[$model]]></code>
+    </InvalidArgument>
+    <UndefinedMethod>
+      <code><![CDATA[isAdmin]]></code>
+      <code><![CDATA[isAdmin]]></code>
+      <code><![CDATA[isLastAdmin]]></code>
+      <code><![CDATA[isLastAdmin]]></code>
+      <code><![CDATA[role]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Cms/Users.php">
+    <InvalidArgument>
+      <code><![CDATA[$user]]></code>
+    </InvalidArgument>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[[...$this->data, ...$existing]]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Content/Changes.php">
+    <InvalidArgument>
+      <code><![CDATA[false]]></code>
+      <code><![CDATA[false]]></code>
+      <code><![CDATA[false]]></code>
+      <code><![CDATA[false]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Content/Content.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->get($name)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Field]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Content/FieldMethods.php">
+    <InvalidArgument>
+      <code><![CDATA[false]]></code>
+      <code><![CDATA[false]]></code>
+      <code><![CDATA[false]]></code>
+      <code><![CDATA[false]]></code>
+    </InvalidArgument>
+    <InvalidReturnType>
+      <code><![CDATA[Pages]]></code>
+      <code><![CDATA[Users]]></code>
+    </InvalidReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[title]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Content/MemoryStorage.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$this->cache->modified($this->cacheId($versionId, $language))]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Content/PlainTextStorage.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$directory]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Content/Version.php">
+    <UndefinedMethod>
+      <code><![CDATA[contentFile]]></code>
+    </UndefinedMethod>
+    <UndefinedPropertyAssignment>
+      <code><![CDATA[$uri->query()->_token]]></code>
+      <code><![CDATA[$uri->query()->_version]]></code>
+    </UndefinedPropertyAssignment>
+  </file>
+  <file src="src/Data/Json.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[json_encode($data, $constants)]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Data/Txt.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$value]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Data/YamlSpyc.php">
+    <InvalidArgument>
+      <code><![CDATA[false]]></code>
+      <code><![CDATA[false]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Database/Database.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[Str::startsWith($query, 'insert ', true) ? $this->connection->lastInsertId() : null]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Database/Query.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[match ($type) {
+			'select' => $sql->select([
+				'table'    => $this->table,
+				'columns'  => $this->select,
+				'join'     => $this->join,
+				'distinct' => $this->distinct,
+				'where'    => $this->where,
+				'group'    => $this->group,
+				'having'   => $this->having,
+				'order'    => $this->order,
+				'offset'   => $this->offset,
+				'limit'    => $this->limit,
+				'bindings' => $this->bindings
+			]),
+			'update' => $sql->update([
+				'table'    => $this->table,
+				'where'    => $this->where,
+				'values'   => $this->values,
+				'bindings' => $this->bindings
+			]),
+			'insert' => $sql->insert([
+				'table'    => $this->table,
+				'values'   => $this->values,
+				'bindings' => $this->bindings
+			]),
+			'delete' => $sql->delete([
+				'table'    => $this->table,
+				'where'    => $this->where,
+				'bindings' => $this->bindings
+			]),
+			default => null
+		}]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Exception/Exception.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[self::$prefix . '.' . $this->code]]></code>
+    </InvalidPropertyAssignmentValue>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->getCode()]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Filesystem/Asset.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->root()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Filesystem/Dir.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[Str::date($modified, $format, $handler)]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Filesystem/F.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[glob($glob)]]></code>
+    </FalsableReturnStatement>
+    <InvalidArrayOffset>
+      <code><![CDATA[static::$units[$unit]]]></code>
+    </InvalidArrayOffset>
+  </file>
+  <file src="src/Filesystem/File.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[json_encode($this->toArray())]]></code>
+      <code><![CDATA[realpath($this->root())]]></code>
+      <code><![CDATA[sha1_file($this->root())]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Filesystem/Mime.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$mode($file, $mime, $extension)]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Form/Field.php">
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->after]]></code>
+      <code><![CDATA[$this->before]]></code>
+      <code><![CDATA[$this->disabled]]></code>
+      <code><![CDATA[$this->help]]></code>
+      <code><![CDATA[$this->label]]></code>
+      <code><![CDATA[$this->placeholder]]></code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/Form/Field/BlocksField.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$fieldset]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Fieldset]]></code>
+    </InvalidReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[label]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Form/Field/EmailField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[parent::placeholder() ?? $this->i18n('email.placeholder')]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Form/Field/FilePickerField.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$model]]></code>
+      <code><![CDATA[$model]]></code>
+    </MoreSpecificImplementedParamType>
+    <UndefinedMethod>
+      <code><![CDATA[apiUrl]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Form/Field/InputField.php">
+    <UndefinedThisPropertyAssignment>
+      <code><![CDATA[$this->value]]></code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/Form/Field/LayoutField.php">
+    <UndefinedMethod>
+      <code><![CDATA[label]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Form/Field/NumberField.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[match(true) {
+			$value === ''     => null,
+			is_null($value)   => $value,
+			is_bool($value)   => $value,
+			is_float($value)  => $value,
+			is_int($value)    => $value,
+			default           => (float)Str::float($value),
+		}]]></code>
+    </InvalidReturnStatement>
+  </file>
+  <file src="src/Form/Field/PagePickerField.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$model]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Form/Field/SlugField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n('slug')]]></code>
+      <code><![CDATA[parent::label()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Form/Field/StructureField.php">
+    <UndefinedMethod>
+      <code><![CDATA[label]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Form/Field/TextareaField.php">
+    <UndefinedMethod>
+      <code><![CDATA[is]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Form/Field/TimeField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n($this->display)]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Form/Field/UserPickerField.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$model]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Form/Fields.php">
+    <InvalidArrayOffset>
+      <code><![CDATA[$field['name']]]></code>
+      <code><![CDATA[$field['type']]]></code>
+    </InvalidArrayOffset>
+    <InvalidReturnStatement>
+      <code><![CDATA[$field]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Field|BaseField]]></code>
+    </InvalidReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[label]]></code>
+      <code><![CDATA[reset]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Form/Form.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->fields->passthrough()]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[static|array]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Form/Mixin/Value.php">
+    <UndefinedMethod>
+      <code><![CDATA[isRequired]]></code>
+    </UndefinedMethod>
+    <UndefinedThisPropertyAssignment>
+      <code><![CDATA[$this->value]]></code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->value]]></code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/Form/Validations.php">
+    <UndefinedMethod>
+      <code><![CDATA[max]]></code>
+      <code><![CDATA[max]]></code>
+      <code><![CDATA[max]]></code>
+      <code><![CDATA[maxlength]]></code>
+      <code><![CDATA[maxlength]]></code>
+      <code><![CDATA[maxlength]]></code>
+      <code><![CDATA[min]]></code>
+      <code><![CDATA[min]]></code>
+      <code><![CDATA[min]]></code>
+      <code><![CDATA[minlength]]></code>
+      <code><![CDATA[minlength]]></code>
+      <code><![CDATA[minlength]]></code>
+      <code><![CDATA[options]]></code>
+      <code><![CDATA[options]]></code>
+      <code><![CDATA[pattern]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Http/Cookie.php">
+    <InvalidArgument>
+      <code><![CDATA[false]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Http/Request.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->url()->domain()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Http/Request/Body.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$this->contents = file_get_contents('php://input')]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Http/Uri.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$this->fragment]]></code>
+      <code><![CDATA[json_encode($this->toArray(), ...$arguments)]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Http/Url.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement>
+      <code><![CDATA[$handler->getEditorHref($file, $line)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string|null]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[static::$home]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Http/VolatileHeaders.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$volatile]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Image/Exif.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$this->data['FileDateTime'] ?? $this->image->modified()]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Image/QrCode.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$image]]></code>
+    </FalsableReturnStatement>
+    <InvalidArrayOffset>
+      <code><![CDATA[$matrix[$c]]]></code>
+    </InvalidArrayOffset>
+    <InvalidReturnStatement>
+      <code><![CDATA[match ($mask) {
+			0 => !(($row + $column) % 2),
+			1 => !($row % 2),
+			2 => !($column % 3),
+			3 => !(($row + $column) % 3),
+			4 => !((floor($row / 2) + floor($column / 3)) % 2),
+			5 => !(((($row * $column) % 2) + (($row * $column) % 3))),
+			6 => !(((($row * $column) % 2) + (($row * $column) % 3)) % 2),
+			7 => !(((($row + $column) % 2) + (($row * $column) % 3)) % 2),
+			default => throw new LogicException(message: 'Invalid QR mask') // @codeCoverageIgnore
+		}]]></code>
+      <code><![CDATA[min($a, $b) * 10]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[int]]></code>
+      <code><![CDATA[int]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Panel/Area.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n($this->breadcrumbLabel ?? $this->label())]]></code>
+      <code><![CDATA[$this->i18n($this->label ?? $this->id)]]></code>
+      <code><![CDATA[$this->i18n($this->title ?? $this->label())]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Assets.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$icons]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Collector/ModelsCollector.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[Pagination]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->models(paginated: true)->pagination()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Controller/Dialog/FilePickerDialogController.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$model]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Panel/Controller/Dialog/PagePickerDialogController.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$model]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Panel/Controller/Dialog/UserPickerDialogController.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$model]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Panel/Controller/View/PreviewViewController.php">
+    <UndefinedPropertyAssignment>
+      <code><![CDATA[$uri->query()->_preview]]></code>
+      <code><![CDATA[$url->query()->_params]]></code>
+      <code><![CDATA[$url->query()->_query]]></code>
+    </UndefinedPropertyAssignment>
+  </file>
+  <file src="src/Panel/Controller/View/UserViewController.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->model->username()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Form/Field/FilePositionField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n('file.sort')]]></code>
+      <code><![CDATA[parent::label()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Form/Field/PagePositionField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n('page.changeStatus.position')]]></code>
+      <code><![CDATA[parent::label()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Form/Field/RoleField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n('role')]]></code>
+      <code><![CDATA[parent::label()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Form/Field/TemplateField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n('template')]]></code>
+      <code><![CDATA[parent::label()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Form/Field/TitleField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n('title')]]></code>
+      <code><![CDATA[parent::label()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Form/Field/TranslationField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n('language')]]></code>
+      <code><![CDATA[parent::label()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Form/Field/UsernameField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n('name')]]></code>
+      <code><![CDATA[parent::label()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Lab/Example.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[F::read($file)]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Panel/Model.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->viewController()->load()->render()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Panel.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$url]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Plugins.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[max($modified)]]></code>
+    </FalsableReturnStatement>
+    <InvalidReturnStatement>
+      <code><![CDATA[max($modified)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[int]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Panel/State.php">
+    <InvalidArgument>
+      <code><![CDATA[$result]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Panel/Ui/Button/VersionsButton.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->options ??= [
+			[
+				'label'   => $this->i18n('version.form'),
+				'icon'    => 'edit-line',
+				'link'    => $this->url('form'),
+				'current' => $this->isCurrent('form')
+			],
+			'-',
+			[
+				'label'   => $this->i18n('version.compare'),
+				'icon'    => 'layout-columns',
+				'link'    => $this->url('compare'),
+				'current' => $this->isCurrent('compare')
+			],
+			'-',
+			[
+				'label'   => I18n::translate('version.latest'),
+				'icon'    => 'git-branch',
+				'link'    => $this->url('latest'),
+				'current' => $this->isCurrent('latest')
+			],
+			[
+				'label'   => I18n::translate('version.changes'),
+				'icon'    => 'git-branch',
+				'link'    => $this->url('changes'),
+				'current' => $this->isCurrent('changes')
+			]
+		]]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Panel/Ui/Component.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$this->key ??= Str::random(10, 'alphaNum')]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Panel/Ui/Item.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->image]]></code>
+    </InvalidReturnStatement>
+  </file>
+  <file src="src/Panel/Ui/Stat.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->stringTemplate(
+			$this->i18n($this->label)
+		)]]></code>
+      <code><![CDATA[$this->stringTemplate(
+			$this->i18n($this->value)
+		)]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Plugin/Asset.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[F::modified($this->root())]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[int|false]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Plugin/Assets.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[Plugin]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->parent]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Plugin/Plugin.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->root]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Query/AST/ArgumentListNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[arguments]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/ArithmeticNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[arithmetic]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/ArrayListNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[arrayList]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/ClosureNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[closure]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/CoalesceNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[coalescence]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/ComparisonNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[comparison]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/GlobalFunctionNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[function]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/LiteralNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[literal]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/LogicalNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[logical]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/MemberAccessNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[memberAccess]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/TernaryNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[ternary]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/AST/VariableNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[variable]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Query/Expression.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[preg_split(
+			'/\s+([\?\:]+)\s+|' . Arguments::OUTSIDE . '/',
+			trim($string),
+			flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+		)]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Query/Parser/Parser.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[Token|false]]></code>
+      <code><![CDATA[Token|false]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->advance()]]></code>
+      <code><![CDATA[$this->advance()]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Query/Query.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[I18n::translate($key, $fallback, $locale)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string|null]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Query/Segments.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[preg_split(
+			'/(\??\.)|(\(([^()]+|(?2))*+\))(*SKIP)(*FAIL)/',
+			trim($string),
+			flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+		)]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Session/FileSessionStore.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$string]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Session/Session.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$time]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Template/Snippet.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[App::instance()->root('snippets')]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Template/Template.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[App::instance()->root($this->store())]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Text/KirbyTags.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[preg_replace_callback($regex, function ($match) use ($data, $options) {
+			$debug = $options['debug'] ?? false;
+
+			try {
+				return KirbyTag::parse($match[0], $data, $options)->render();
+			} catch (InvalidArgumentException $e) {
+				// stay silent in production and ignore non-existing tags
+				if (
+					$debug !== true ||
+					Str::startsWith($e->getMessage(), 'Undefined tag type:') === true
+				) {
+					return $match[0];
+				}
+
+				throw $e;
+			} catch (Exception $e) {
+				if ($debug === true) {
+					throw $e;
+				}
+
+				return $match[0];
+			}
+		}, $text)]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Toolkit/A.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$merged]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$merged]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Toolkit/Collection.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[json_encode($this->toArray())]]></code>
+    </FalsableReturnStatement>
+    <InvalidArgument>
+      <code><![CDATA[$item]]></code>
+      <code><![CDATA[$item]]></code>
+      <code><![CDATA[$this->keys()]]></code>
+    </InvalidArgument>
+    <InvalidCast>
+      <code><![CDATA[$this->keys()]]></code>
+    </InvalidCast>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$collection]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Toolkit/Date.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[array]]></code>
+      <code><![CDATA[string|int|DateTimeInterface]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$default]]></code>
+      <code><![CDATA[$nearest]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Toolkit/Dom.php">
+    <InvalidArrayAccess>
+      <code><![CDATA[$this->query('/html/body')[0]]]></code>
+    </InvalidArrayAccess>
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$node->data]]></code>
+      <code><![CDATA[$node->data]]></code>
+    </UndefinedPropertyFetch>
+  </file>
+  <file src="src/Toolkit/Html.php">
+    <UndefinedPropertyAssignment>
+      <code><![CDATA[$query->start]]></code>
+      <code><![CDATA[$query->start]]></code>
+    </UndefinedPropertyAssignment>
+  </file>
+  <file src="src/Toolkit/I18n.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[reset($fallback)]]></code>
+      <code><![CDATA[reset($key)]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Toolkit/Iterator.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[current($this->data)]]></code>
+      <code><![CDATA[next($this->data)]]></code>
+      <code><![CDATA[prev($this->data)]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Toolkit/Obj.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[json_encode($this->toArray(), ...$arguments)]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Toolkit/Pagination.php">
+    <NullableReturnStatement>
+      <code><![CDATA[array_pop($range)]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Toolkit/Str.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[iconv($sourceEncoding, $targetEncoding, $string)]]></code>
+      <code><![CDATA[mb_detect_encoding(
+			$string,
+			'UTF-8, ISO-8859-1, windows-1251',
+			true
+		)]]></code>
+    </FalsableReturnStatement>
+    <InvalidArgument>
+      <code><![CDATA[$missing]]></code>
+    </InvalidArgument>
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$string]]></code>
+      <code><![CDATA[$string]]></code>
+      <code><![CDATA[$string]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[preg_replace('!(' . preg_quote($trim) . ')+$!', '', $string)]]></code>
+      <code><![CDATA[preg_replace('!^(' . preg_quote($trim) . ')+!', '', $string)]]></code>
+      <code><![CDATA[preg_replace('/[^\x09\x0A\x0D\x20-\x7E]/', '', $string)]]></code>
+      <code><![CDATA[preg_replace_callback(
+			'!' . $start . '(.*?)' . $end . '!',
+			function (array $match) use ($data, $fallback, $callback) {
+				$query = trim($match[1]);
+
+				try {
+					$result = Query::factory($query)->resolve($data);
+				} catch (Throwable) {
+					$result = null;
+				}
+
+				// if we don't have a result, use the fallback if given
+				$result ??= $fallback;
+
+				// callback on result if given
+				if ($callback !== null) {
+					$callback = $callback((string)$result, $query, $data);
+
+					if ($result !== null || $callback !== '') {
+						// the empty string came just from string casting,
+						// keep the null value and ignore the callback result
+						$result = $callback;
+					}
+				}
+
+				// wihtout a result, keep the original placeholder
+				return $result ?? $match[0];
+			},
+			$string
+		)]]></code>
+      <code><![CDATA[preg_replace_callback('|(\s)(?=\S*$)(\S+)|u', function ($matches) {
+			if (static::contains($matches[2], '-')) {
+				$matches[2] = str_replace('-', '&#8209;', $matches[2]);
+			}
+			return '&nbsp;' . $matches[2];
+		}, $string)]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Toolkit/Tpl.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$content]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Toolkit/V.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$errors]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Toolkit/View.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$content]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Toolkit/Xml.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement>
+      <code><![CDATA[static::simplify($xml)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array|null]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[self::$entities]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Uuid/FieldUuid.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->uri->host()]]></code>
+    </NullableReturnStatement>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[get]]></code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMethod>
+      <code><![CDATA[field]]></code>
+      <code><![CDATA[parent]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Uuid/FileUuid.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[file]]></code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMethod>
+      <code><![CDATA[filename]]></code>
+      <code><![CDATA[parent]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Uuid/ModelUuid.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$model]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Uuid/PageUuid.php">
+    <UndefinedMethod>
+      <code><![CDATA[children]]></code>
+      <code><![CDATA[children]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Uuid/Uri.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->scheme]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Uuid/UserUuid.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->uri->host()]]></code>
+    </NullableReturnStatement>
+  </file>
+</files>
