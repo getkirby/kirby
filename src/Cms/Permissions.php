@@ -21,7 +21,7 @@ class Permissions
 {
 	public static array $extendedActions = [];
 
-	protected array $actions = [
+	protected array $defaults = [
 		'access' => [
 			'account'   => true,
 			'languages' => true,
@@ -93,6 +93,8 @@ class Permissions
 		]
 	];
 
+	protected array $actions;
+
 	/**
 	 * Permissions constructor
 	 *
@@ -108,7 +110,7 @@ class Permissions
 		// normalize core actions
 		$this->actions = $this->normalize(
 			settings: $settings,
-			defaults: $this->actions,
+			defaults: $this->defaults,
 			aliases: [
 				'files' => ['update' => $update],
 				'pages' => ['update' => $update],
@@ -130,88 +132,58 @@ class Permissions
 		}
 	}
 
-	protected function normalize(
-		array|bool|null $settings,
-		array $defaults = [],
-		array $aliases = []
-	): array{
-		$permissions = $defaults;
-		$normalized  = $settings;
+	protected function alias(
+		array $actions,
+		array $aliases,
+		array $defaults = []
+	): array {
+		foreach ($actions as $action => $value) {
+			$alias = $aliases[$action] ?? null;
 
-		// transform into wildcard
-		if (is_bool($normalized) === true) {
-			$normalized = ['*' => $normalized];
+			if ($alias === null) {
+				continue;
+			}
+
+			if (is_callable($alias) === true) {
+				$alias = $alias($value);
+			}
+
+			if (is_array($alias) === false) {
+				$alias = [$alias => $value];
+			}
+
+			foreach ($alias as $key => $value) {
+				if (isset($defaults[$key]) === false) {
+					$actions[$key] = (bool)$value;
+				}
+			}
 		}
 
-		if (is_array($normalized) === false) {
-			return $permissions;
+		return $actions;
+	}
+
+	protected function expand(
+		array|bool|null $values,
+		array $defaults = []
+	): array {
+		if (is_bool($values) === true) {
+			$values = ['*' => $values];
 		}
 
-		// handle category wildcards
-		if (array_key_exists('*', $normalized) === true) {
-			$normalized += array_fill_keys(
+		if (is_array($values) === false) {
+			return [];
+		}
+
+		if (array_key_exists('*', $values) === true) {
+			$values += array_fill_keys(
 				array_keys($defaults),
-				$normalized['*']
+				$values['*']
 			);
 
-			unset($normalized['*']);
+			unset($values['*']);
 		}
 
-		foreach ($normalized as $category => $actions) {
-			// skip undefined categories
-			if (isset($defaults[$category]) === false) {
-				continue;
-			}
-
-			// transform into wildcard
-			if (is_bool($actions) === true) {
-				$actions = ['*' => $actions];
-			}
-
-			if (is_array($actions) === false) {
-				continue;
-			}
-
-			// handle action wildcards
-			if (array_key_exists('*', $actions) === true) {
-				$actions += array_fill_keys(
-					array_keys($defaults[$category]),
-					$actions['*']
-				);
-
-				unset($actions['*']);
-			}
-
-			foreach ($actions as $action => $value) {
-				$permissions[$category][$action] = boolval($value);
-			}
-
-			foreach ($permissions[$category] as $action => $value) {
-				$alias = $aliases[$category][$action] ?? null;
-
-				if ($alias !== null) {
-					if (is_callable($alias) === true) {
-						$alias = $alias($value);
-					}
-
-					if (is_array($alias) === false) {
-						$alias = [$alias => $value];
-					}
-
-					foreach ($alias as $key => $value) {
-						if (isset($settings[$category][$key]) === false) {
-							$permissions[$category][$key] = boolval($value);
-						}
-					}
-				}
-
-				if (isset($defaults[$category][$action]) === false) {
-					unset($permissions[$category][$action]);
-				}
-			}
-		}
-
-		return $permissions;
+		return $values;
 	}
 
 	public function for(
@@ -238,6 +210,38 @@ class Permissions
 		}
 
 		return $permission;
+	}
+
+	protected function normalize(
+		array|bool|null $settings,
+		array $defaults = [],
+		array $aliases = []
+	): array {
+		$categories = $this->expand($settings, $defaults);
+
+		foreach ($categories as $category => $actions) {
+			if (isset($defaults[$category]) === false) {
+				continue;
+			}
+
+			$actions = $this->expand($actions, $defaults[$category]);
+
+			if (isset($aliases[$category]) === true) {
+				$actions = $this->alias(
+					$actions,
+					$aliases[$category],
+					$settings[$category] ?? []
+				);
+			}
+
+			foreach ($actions as $key => $value) {
+				if (isset($defaults[$category][$key]) === true) {
+					$defaults[$category][$key] = (bool)$value;
+				}
+			}
+		}
+
+		return $defaults;
 	}
 
 	public function toArray(): array
