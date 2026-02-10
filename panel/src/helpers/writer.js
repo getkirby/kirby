@@ -38,7 +38,7 @@ export const allowedExtensions = (available, allowed) => {
 		return Object.keys(available);
 	}
 
-	if (Array.isArray(allowed)) {
+	if (Array.isArray(allowed) === true) {
 		return allowed;
 	}
 

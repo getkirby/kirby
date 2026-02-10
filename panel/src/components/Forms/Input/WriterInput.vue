@@ -262,7 +262,7 @@ export default {
 			let nodes = this.nodes;
 
 			// convert array to object format to add options
-			if (Array.isArray(nodes)) {
+			if (Array.isArray(nodes) === true) {
 				nodes = Object.fromEntries(nodes.map((n) => [n, true]));
 			}
 
