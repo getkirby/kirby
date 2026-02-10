@@ -179,7 +179,7 @@ export default {
 			// native undo function
 			document.execCommand("insertText", false, text);
 
-			if (input.value === current) {
+			if (input.value === current && this.selectionRange) {
 				const { start, end } = this.selectionRange;
 
 				const mode = start === end ? "end" : "select";

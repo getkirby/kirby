@@ -24,20 +24,22 @@
 				</k-dropdown-content>
 			</k-button-group>
 
-			<k-button-group>
-				<k-view-buttons :buttons="buttons" />
-			</k-button-group>
+			<k-view-buttons :buttons="buttonsWithScrollButton" />
 		</header>
 		<main class="k-preview-view-grid">
 			<template v-if="versionId === 'compare'">
 				<k-preview-browser
+					ref="latest"
 					v-bind="browserProps('latest')"
 					@discard="onDiscard"
+					@scroll="onScroll('latest', 'changes')"
 					@submit="onSubmit"
 				/>
 				<k-preview-browser
+					ref="changes"
 					v-bind="browserProps('changes')"
 					@discard="onDiscard"
+					@scroll="onScroll('changes', 'latest')"
 					@submit="onSubmit"
 				/>
 			</template>
@@ -62,6 +64,34 @@ export default {
 		versionId: String,
 		src: Object,
 		title: String
+	},
+	data() {
+		const scroll = localStorage.getItem("kirby$preview$scroll", "true");
+
+		return {
+			isScrollSyncing: scroll === "true"
+		};
+	},
+	computed: {
+		buttonsWithScrollButton() {
+			const buttons = [];
+
+			if (this.versionId === "compare") {
+				buttons.unshift({
+					props: {
+						ariaChecked: this.isScrollSyncing,
+						icon: "scroll-to-bottom",
+						theme: this.isScrollSyncing ? "info-icon" : "passive",
+						title: this.$t("preview.browser.scroll"),
+						role: "switch",
+						class: "k-preview-scroll-sync",
+						click: () => this.onScrollSyncing()
+					}
+				});
+			}
+
+			return [...buttons, ...this.buttons];
+		}
 	},
 	mounted() {
 		this.$events.on("keydown.esc", this.exit);
@@ -101,6 +131,18 @@ export default {
 
 			const url = this.$api.pages.url(page.id, "preview/" + this.versionId);
 			this.$panel.view.open(url);
+		},
+		onScroll(source, target) {
+			if (this.isScrollSyncing) {
+				this.$refs[target].$refs.browser.contentWindow.scrollTo(
+					0,
+					this.$refs[source].$refs.browser.contentWindow.scrollY
+				);
+			}
+		},
+		onScrollSyncing() {
+			this.isScrollSyncing = !this.isScrollSyncing;
+			localStorage.setItem("kirby$preview$scroll", this.isScrollSyncing);
 		}
 	}
 };

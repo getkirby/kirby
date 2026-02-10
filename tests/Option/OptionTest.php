@@ -87,4 +87,19 @@ class OptionTest extends TestCase
 		$model = new Page(['slug' => 'test']);
 		$this->assertSame($expected, $option->render($model));
 	}
+
+	public function testRenderWithoutSafeMode(): void
+	{
+		$option = Option::factory([
+			'value' => 'test',
+			'text'  => "{{ page.something.or('String with <> HTML chars') }}",
+			'info'  => "{< page.something.or('String with <> HTML chars') >}"
+		]);
+
+		$model  = new Page(['slug' => 'test']);
+		$result = $option->render($model, safeMode: false);
+
+		$this->assertSame('String with <> HTML chars', $result['text']);
+		$this->assertSame('String with <> HTML chars', $result['info']);
+	}
 }

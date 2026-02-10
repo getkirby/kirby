@@ -26,7 +26,7 @@
 			</k-button-group>
 		</header>
 
-		<iframe ref="browser" :src="srcWithPreviewParam" />
+		<iframe ref="browser" :src="srcWithPreviewParam" @load="onLoad" />
 	</div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
 		src: String,
 		versionId: String
 	},
-	emits: ["discard", "submit"],
+	emits: ["discard", "scroll", "submit"],
 	computed: {
 		srcWithPreviewParam() {
 			const uri = new URL(this.src, this.$panel.urls.site);
@@ -57,6 +57,10 @@ export default {
 		this.$events.off("content.publish", this.reload);
 	},
 	methods: {
+		onLoad() {
+			const document = this.$refs.browser.contentDocument;
+			document.addEventListener("scroll", (e) => this.$emit("scroll", e));
+		},
 		reload() {
 			this.$refs.browser.contentWindow.location.reload();
 		}

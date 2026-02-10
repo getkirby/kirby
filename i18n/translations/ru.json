@@ -635,7 +635,9 @@
 	"plugin": "Расширение",
 	"plugins": "Плагины",
 	"prev": "Предыдущий",
+
 	"preview": "Предпросмотр",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Опубликовать",
 	"published": "Опубликовано",
@@ -786,6 +788,7 @@
 	"user.create": "Добавить нового пользователя",
 	"user.delete": "Удалить этого пользователя",
 	"user.delete.confirm": "Вы действительно хотите аккаунт <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Пользователи",
 

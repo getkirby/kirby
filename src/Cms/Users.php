@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
@@ -21,11 +22,28 @@ use Kirby\Uuid\HasUuids;
  * @license   https://getkirby.com/license
  *
  * @template TUser of \Kirby\Cms\User
- * @extends \Kirby\Cms\Collection<TUser>
+ * @extends \Kirby\Cms\LazyCollection<TUser>
  */
-class Users extends Collection
+class Users extends LazyCollection
 {
 	use HasUuids;
+
+	/**
+	 * Creates a new Collection with the given objects
+	 *
+	 * @param iterable<TUser> $objects
+	 * @param string|null $root Directory to dynamically load user
+	 *                          objects from during hydration
+	 * @param array $inject Props to inject into hydrated user objects
+	 */
+	public function __construct(
+		iterable $objects = [],
+		protected object|null $parent = null,
+		protected string|null $root = null,
+		protected array $inject = []
+	) {
+		parent::__construct($objects, $parent);
+	}
 
 	/**
 	 * All registered users methods
@@ -98,7 +116,7 @@ class Users extends Collection
 	{
 		$files = new Files([], $this->parent);
 
-		foreach ($this->data as $user) {
+		foreach ($this as $user) {
 			foreach ($user->files() as $fileKey => $file) {
 				$files->data[$fileKey] = $file;
 			}
@@ -126,31 +144,79 @@ class Users extends Collection
 	}
 
 	/**
-	 * Loads a user from disk by passing the absolute path (root)
+	 * Loads a user object, sets it in `$this->data[$key]`
+	 * and returns the hydrated user object
 	 */
-	public static function load(string $root, array $inject = []): static
+	protected function hydrateElement(string $key): User|null
 	{
-		$users = new static();
+		if ($this->root === null) {
+			throw new LogicException('Cannot hydrate user "' . $key . '" with missing root'); // @codeCoverageIgnore
+		}
 
-		foreach (Dir::read($root) as $userDirectory) {
-			if (is_dir($root . '/' . $userDirectory) === false) {
+		// check if the user directory exists if not all keys have been
+		// populated in the collection, otherwise we can assume that
+		// this method will only be called on "unhydrated" user IDs
+		$root = $this->root . '/' . $key;
+		if ($this->initialized === false && is_dir($root) === false) {
+			return null;
+		}
+
+		// get role information
+		$path = $root . '/index.php';
+		if (is_file($path) === true) {
+			$credentials = F::load($path, allowOutput: false);
+		}
+
+		// create user model based on role
+		$user = User::factory([
+			'id'          => $key,
+			'model'       => $credentials['role'] ?? null,
+			'credentials' => is_array($credentials ?? null) ? $credentials : null
+		] + $this->inject);
+
+		return $this->data[$key] = $user;
+	}
+
+	/**
+	 * Ensures that the IDs for all valid users are loaded in the
+	 * `$data` array and sets `$initialized` to `true` afterwards
+	 */
+	public function initialize(): void
+	{
+		// skip another initialization if it already has been initialized
+		if ($this->initialized === true) {
+			return;
+		}
+
+		if ($this->root === null) {
+			throw new LogicException('Cannot initialize users with missing root'); // @codeCoverageIgnore
+		}
+
+		// ensure the order matches the filesystem, even if
+		// individual users have been hydrated/added before
+		$existing   = $this->data;
+		$this->data = [];
+
+		foreach (Dir::read($this->root) as $userDirectory) {
+			if (is_dir($this->root . '/' . $userDirectory) === false) {
 				continue;
 			}
 
-			// get role information
-			$path = $root . '/' . $userDirectory . '/index.php';
-			if (is_file($path) === true) {
-				$credentials = F::load($path, allowOutput: false);
-			}
-
-			// create user model based on role
-			$user = User::factory([
-				'id'    => $userDirectory,
-				'model' => $credentials['role'] ?? null
-			] + $inject);
-
-			$users->set($user->id(), $user);
+			$this->data[$userDirectory] = null;
 		}
+
+		$this->data = [...$this->data, ...$existing];
+
+		$this->initialized = true;
+	}
+
+	/**
+	 * Loads users from disk by passing the absolute directory path (root)
+	 */
+	public static function load(string $root, array $inject = []): static
+	{
+		$users = new static(root: $root, inject: $inject);
+		$users->initialized = false;
 
 		return $users;
 	}

@@ -471,9 +471,15 @@ class Site extends ModelWithContent
 		string|Page $page,
 		string|null $languageCode = null
 	): Page {
+		// always set the locale; in single-language mode this
+		// applies the locale from config, in multi-language mode
+		// it falls back to the default language when `null` is passed
+		$this->kirby()->setCurrentLanguage($languageCode);
+
+		// only set translation when explicitly passed;
+		// otherwise it would always fall back to 'en'
 		if ($languageCode !== null) {
 			$this->kirby()->setCurrentTranslation($languageCode);
-			$this->kirby()->setCurrentLanguage($languageCode);
 		}
 
 		// convert ids to a Page object

@@ -65,16 +65,19 @@ class Option
 	/**
 	 * Renders all data for the option
 	 */
-	public function render(ModelWithContent $model): array
-	{
+	public function render(
+		ModelWithContent $model,
+		bool $safeMode = true
+	): array {
 		$info = I18n::translate($this->info, $this->info);
 		$text = I18n::translate($this->text, $this->text);
+		$method = $safeMode === true ? 'toSafeString' : 'toString';
 
 		return [
 			'disabled' => $this->disabled,
 			'icon'     => $this->icon,
-			'info'     => $info ? $model->toSafeString($info) : $info,
-			'text'     => $text ? $model->toSafeString($text) : $text,
+			'info'     => $info ? $model->$method($info) : $info,
+			'text'     => $text ? $model->$method($text) : $text,
 			'value'    => $this->value
 		];
 	}

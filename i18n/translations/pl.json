@@ -635,7 +635,9 @@
 	"plugin": "Wtyczka",
 	"plugins": "Wtyczki",
 	"prev": "Poprzednie",
+
 	"preview": "Podgląd",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Opublikuj",
 	"published": "Opublikowane",
@@ -786,6 +788,7 @@
 	"user.create": "Dodaj nowego użytkownika",
 	"user.delete": "Usuń tego użytkownika",
 	"user.delete.confirm": "Czy na pewno chcesz usunąć <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Użytkownicy",
 

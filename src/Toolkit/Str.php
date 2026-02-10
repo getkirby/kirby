@@ -1356,8 +1356,8 @@ class Str
 		array $data = [],
 		array $options = []
 	): string {
-		$start    = $options['start'] ?? '{{1,2}';
-		$end      = $options['end'] ?? '}{1,2}';
+		$start    = $options['start'] ?? '(?:{{|{<|{)';
+		$end      = $options['end'] ?? '(?:}}|>}|})';
 		$fallback = $options['fallback'] ?? null;
 		$callback = $options['callback'] ?? null;
 

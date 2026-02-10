@@ -635,7 +635,9 @@
 	"plugin": "Plugin",
 	"plugins": "Plugin-uri",
 	"prev": "Precedenta",
+
 	"preview": "Previzualizează",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publică",
 	"published": "Publicate",
@@ -786,6 +788,7 @@
 	"user.create": "Adaugă un nou utilizator",
 	"user.delete": "Șterge acest utilizator",
 	"user.delete.confirm": "Chiar vrei să ștergi <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Utilizatori",
 

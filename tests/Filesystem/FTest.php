@@ -40,6 +40,7 @@ class FTest extends TestCase
 		}
 
 		HeadersSent::$value = false;
+		F::$loadCache = [];
 	}
 
 	public function testAppend(): void
@@ -327,6 +328,35 @@ class FTest extends TestCase
 		F::load($file, allowOutput: false);
 	}
 
+	public function testLoadCache(): void
+	{
+		// create a file that uses require_once internally
+		// (simulating a config file that splits config into multiple files)
+		F::write(
+			static::TMP . '/included.php',
+			'<?php return ["foo" => "bar"];'
+		);
+		F::write(
+			$file = static::TMP . '/config.php',
+			'<?php return require_once __DIR__ . "/included.php";'
+		);
+
+		// first load returns the array
+		$result = F::load($file, [], cache: true);
+		$this->assertSame(['foo' => 'bar'], $result);
+
+		// second load with cache returns cached result
+		// (not `true` from require_once)
+		$result = F::load($file, [], cache: true);
+		$this->assertSame(['foo' => 'bar'], $result);
+
+		// without cache, require_once returns true on second load
+		F::$loadCache = [];
+		F::load($file);
+		$result = F::load($file);
+		$this->assertSame(true, $result);
+	}
+
 	public function testLoadClasses(): void
 	{
 		F::loadClasses([
@@ -511,6 +541,39 @@ class FTest extends TestCase
 
 		// reset locale
 		I18n::$locale = $locale;
+	}
+
+
+	public function testRange(): void
+	{
+		file_put_contents($this->test, 'my content is awesome');
+
+		// read from offset 3 to end
+		$this->assertSame('content is awesome', F::range($this->test, offset: 3));
+
+		// read from offset 11
+		$this->assertSame('is awesome', F::range($this->test, offset: 11));
+
+		// read first 10 bytes
+		$this->assertSame('my content', F::range($this->test, length: 10));
+
+		// read first 2 bytes
+		$this->assertSame('my', F::range($this->test, length: 2));
+
+		// read 7 bytes starting from offset 3
+		$this->assertSame('content', F::range($this->test, offset: 3, length: 7));
+
+		// read 2 bytes starting from offset 11
+		$this->assertSame('is', F::range($this->test, offset: 11, length: 2));
+
+		// read 6 bytes starting from offset 14 (edge case - reads to end)
+		$this->assertSame('awesome', F::range($this->test, offset: 14, length: 7));
+
+		// remote path
+		$this->assertFalse(F::range('https://example.com/file.txt'));
+
+		// empty path
+		$this->assertFalse(F::range(''));
 	}
 
 	public function testRead(): void

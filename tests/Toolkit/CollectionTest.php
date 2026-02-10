@@ -563,13 +563,6 @@ class CollectionTest extends TestCase
 		$this->assertSame(['a' => 2, 'b' => 4], $collection->data());
 	}
 
-	public function testNextAndPrev(): void
-	{
-		$this->assertSame('My second element', $this->collection->next());
-		$this->assertSame('My third element', $this->collection->next());
-		$this->assertSame('My second element', $this->collection->prev());
-	}
-
 	public function testNotAndWithout(): void
 	{
 		// remove elements

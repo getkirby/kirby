@@ -81,7 +81,7 @@ class FieldOptions
 
 	public function render(ModelWithContent $model): array
 	{
-		return $this->resolve($model)->render($model);
+		return $this->resolve($model)->render($model, $this->safeMode);
 	}
 
 	public function resolve(ModelWithContent $model): Options

@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\Toolkit\Str;
+use Whoops\Handler\PrettyPageHandler;
 
 /**
  * Static URL tools
@@ -61,6 +62,23 @@ class Url
 	public static function currentDir(): string
 	{
 		return dirname(static::current());
+	}
+
+	/**
+	 * Use Whoops to create an editor URL to open
+	 * a file at the given line number
+	 * @since 5.3.0
+	 */
+	public static function editor(string|false $editor, string|null $file, int $line = 0): string|null
+	{
+		if ($editor === false || $file === null) {
+			return null;
+		}
+
+		$handler = new PrettyPageHandler();
+		$handler->setEditor($editor);
+
+		return $handler->getEditorHref($file, $line);
 	}
 
 	/**
@@ -223,6 +241,7 @@ class Url
 
 	/**
 	 * Smart resolver for internal and external urls
+	 * @deprecated 5.3.0 Use `Kirby\Cms\Url::to()` instead
 	 */
 	public static function to(
 		string|null $path = null,

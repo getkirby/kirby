@@ -4,6 +4,7 @@ namespace Kirby\Http;
 
 use Closure;
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Stringable;
@@ -161,6 +162,23 @@ class Response implements Stringable
 	}
 
 	/**
+	 * Ensures safe MIME type handling by forcing plain text
+	 * for files without recognizable MIME types to harden
+	 * against attacks from malicious file uploads
+	 * @since 5.3.0
+	 * @internal
+	 */
+	public static function ensureSafeMimeType(array $props): array
+	{
+		if ($props['type'] === null) {
+			$props['type'] = 'text/plain';
+			$props['headers']['X-Content-Type-Options'] = 'nosniff';
+		}
+
+		return $props;
+	}
+
+	/**
 	 * Creates a response for a file and
 	 * sends the file content to the browser
 	 *
@@ -168,23 +186,24 @@ class Response implements Stringable
 	 */
 	public static function file(string $file, array $props = []): static
 	{
-		$props = [
+		$request = App::instance(lazy: true)?->request();
+
+		// handle byte-range requests (e.g., for video streaming in Safari)
+		if ($range = $request?->header('Range')) {
+			return Range::response($file, $range, $props);
+		}
+
+		// always indicate that byte-range requests are supported
+		$props['headers'] = [
+			'Accept-Ranges' => 'bytes',
+			...$props['headers'] ?? []
+		];
+
+		$props = static::ensureSafeMimeType([
 			'body' => F::read($file),
 			'type' => F::extensionToMime(F::extension($file)),
 			...$props
-		];
-
-		// if we couldn't serve a correct MIME type, force
-		// the browser to display the file as plain text to
-		// harden against attacks from malicious file uploads
-		if ($props['type'] === null) {
-			if (isset($props['headers']) !== true) {
-				$props['headers'] = [];
-			}
-
-			$props['type'] = 'text/plain';
-			$props['headers']['X-Content-Type-Options'] = 'nosniff';
-		}
+		]);
 
 		return new static($props);
 	}

@@ -82,6 +82,10 @@ class User extends ModelWithContent
 		$this->password = $props['password'] ?? null;
 		$this->role     = $set('role', fn ($role) => Str::lower(trim($role)));
 
+		if (isset($props['credentials'])) {
+			$this->credentials = $props['credentials'];
+		}
+
 		// Set blueprint before setting content
 		// or translations in the parent constructor.
 		// Otherwise, the blueprint definition cannot be
@@ -229,11 +233,21 @@ class User extends ModelWithContent
 		#[SensitiveParameter]
 		string|null $password = null
 	): string|null {
-		if ($password !== null) {
+		if ($password !== null && $password !== '') {
 			$password = password_hash($password, PASSWORD_DEFAULT);
 		}
 
 		return $password;
+	}
+
+	/**
+	 * Checks if the user has a stored password
+	 * @since 5.3.0
+	 */
+	public function hasPassword(): bool
+	{
+		$password = $this->password();
+		return $password !== '' && $password !== null;
 	}
 
 	/**
@@ -699,7 +713,7 @@ class User extends ModelWithContent
 		#[SensitiveParameter]
 		string|null $password = null
 	): bool {
-		if (empty($this->password()) === true) {
+		if ($this->hasPassword() === false) {
 			throw new NotFoundException(
 				key: 'user.password.undefined'
 			);

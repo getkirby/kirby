@@ -2,6 +2,7 @@
 	<label
 		:aria-disabled="disabled"
 		:class="['k-choice-input', $attrs.class]"
+		:data-has-icon="Boolean(icon)"
 		:style="$attrs.style"
 	>
 		<input
@@ -17,8 +18,12 @@
 			}"
 			:class="[variant === 'invisible' ? 'sr-only' : null, $attrs.class]"
 			:data-variant="variant"
+			@click="$emit('click', $event)"
 			@input="$emit('input', $event.target.checked)"
 		/>
+
+		<k-icon v-if="icon" :type="icon" class="k-choice-input-icon" />
+
 		<span v-if="label || info" class="k-choice-input-label">
 			<!-- eslint-disable-next-line vue/no-v-html -->
 			<span class="k-choice-input-label-text" v-html="label" />
@@ -38,6 +43,9 @@ export const props = {
 			type: Boolean
 		},
 		info: {
+			type: String
+		},
+		icon: {
 			type: String
 		},
 		label: {
@@ -61,7 +69,8 @@ export const props = {
  * @example <k-choice-input :value="value" @input="value = $event" />
  */
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	emits: ["click", "input"]
 };
 </script>
 
@@ -71,14 +80,19 @@ export default {
 	gap: var(--spacing-3);
 	min-width: 0;
 }
+.k-choice-input-icon {
+	--icon-size: var(--text-md);
+	position: relative;
+}
+.k-choice-input-icon,
 .k-choice-input input {
 	top: 2px;
 }
 .k-choice-input-label {
 	display: flex;
-	line-height: 1.25rem;
 	flex-direction: column;
 	min-width: 0;
+	line-height: 1.25rem;
 	color: var(--choice-color-text);
 }
 .k-choice-input-label > * {
@@ -86,7 +100,12 @@ export default {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+.k-choice-input-label-icon {
+	grid-area: icon;
+	--icon-size: var(--text-md);
+}
 .k-choice-input-label-info {
+	grid-area: info;
 	color: var(--choice-color-info);
 }
 .k-choice-input[aria-disabled="true"] {

@@ -391,7 +391,7 @@ class Collection extends Iterator implements Stringable
 	 */
 	public function findBy(string $attribute, $value)
 	{
-		foreach ($this->data as $item) {
+		foreach ($this as $item) {
 			if ($this->getAttribute($item, $attribute) == $value) {
 				return $item;
 			}
@@ -516,7 +516,7 @@ class Collection extends Iterator implements Stringable
 		if (is_callable($field) === true) {
 			$groups = [];
 
-			foreach ($this->data as $key => $item) {
+			foreach ($this as $key => $item) {
 				// get the value to group by
 				$value = $field($item);
 
@@ -689,7 +689,7 @@ class Collection extends Iterator implements Stringable
 		$collection = clone $this;
 
 		foreach ($keys as $key) {
-			unset($collection->data[$key]);
+			unset($collection->{$key});
 		}
 
 		return $collection;
@@ -742,7 +742,7 @@ class Collection extends Iterator implements Stringable
 	): array {
 		$result = [];
 
-		foreach ($this->data as $item) {
+		foreach ($this as $item) {
 			$row = $this->getAttribute($item, $field);
 
 			if ($split !== null) {

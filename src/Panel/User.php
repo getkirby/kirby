@@ -100,7 +100,7 @@ class User extends Model
 		$result[] = [
 			'dialog'   => $url . '/changePassword',
 			'icon'     => 'key',
-			'text'     => I18n::translate('user.changePassword'),
+			'text'     => I18n::translate('user.' . ($this->model->hasPassword() === true ? 'changePassword' : 'setPassword')),
 			'disabled' => $this->isDisabledDropdownOption('changePassword', $options, $permissions)
 		];
 
