@@ -21,8 +21,9 @@
 		</header>
 
 		<div class="k-preview-form-body">
-			<k-sections
-				:blueprint="blueprint"
+			<k-model-form
+				:api="api"
+				:columns="tab.columns"
 				:content="content"
 				:empty="
 					$panel.config.debug
@@ -30,8 +31,6 @@
 						: null
 				"
 				:lock="lock"
-				:parent="api"
-				:tab="tab"
 				@input="$emit('input', $event)"
 				@submit="$emit('submit', $event)"
 			/>
