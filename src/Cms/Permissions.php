@@ -249,9 +249,6 @@ class Permissions
 		return isset($this->actions[$category]);
 	}
 
-	/**
-	 * Normalizes the permission settings against the defaults
-	 */
 	protected function normalize(
 		array|bool|null $settings,
 		array $defaults = [],
