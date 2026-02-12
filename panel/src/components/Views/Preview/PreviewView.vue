@@ -107,6 +107,7 @@ export default {
 				isLocked: this.isLocked,
 				modified: this.modified,
 				label: this.$t("version." + versionId),
+				permissions: this.permissions,
 				src: this.src[versionId],
 				versionId: versionId
 			};
