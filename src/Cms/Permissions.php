@@ -77,8 +77,8 @@ class Permissions
 			'changeRole'     => true,
 			'create'         => true,
 			'delete'         => true,
-			'edit'		     => true,
-			'save'		     => true
+			'edit'           => true,
+			'save'           => true
 		],
 		'user' => [
 			'changeEmail'    => true,
@@ -87,8 +87,8 @@ class Permissions
 			'changePassword' => true,
 			'changeRole'     => true,
 			'delete'         => true,
-			'edit'		     => true,
-			'save'		     => true
+			'edit'           => true,
+			'save'           => true
 		]
 	];
 
