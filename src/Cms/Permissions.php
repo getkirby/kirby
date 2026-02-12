@@ -31,7 +31,7 @@ class Permissions
 			'users'     => true
 		],
 		'files' => [
-			'access'     	 => true,
+			'access'         => true,
 			'changeName'     => true,
 			'changeTemplate' => true,
 			'create'         => true,
@@ -49,7 +49,7 @@ class Permissions
 			'update' => true
 		],
 		'pages' => [
-			'access'     	 => true,
+			'access'         => true,
 			'changeSlug'     => true,
 			'changeStatus'   => true,
 			'changeTemplate' => true,
@@ -78,8 +78,8 @@ class Permissions
 			'changeRole'     => true,
 			'create'         => true,
 			'delete'         => true,
-			'edit'		     => true,
-			'save'		     => true
+			'edit'           => true,
+			'save'           => true
 		],
 		'user' => [
 			'changeEmail'    => true,
@@ -88,8 +88,8 @@ class Permissions
 			'changePassword' => true,
 			'changeRole'     => true,
 			'delete'         => true,
-			'edit'		     => true,
-			'save'		     => true
+			'edit'           => true,
+			'save'           => true
 		]
 	];
 
