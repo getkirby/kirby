@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Throwable;
 
 /**
  * Handles permission definition in each user
@@ -191,13 +190,11 @@ class Permissions
 		string|null $action = null,
 		bool $default = false
 	): bool {
-		try {
-			$permission = is_string($action)
-				? $this->actions[$category][$action]
-				: $this->actions[$category];
-		} catch (Throwable) {
+		if ($this->has($category, $action) === false) {
 			return $default;
 		}
+
+		$permission = $this->get($category, $action);
 
 		if (is_bool($permission) === false) {
 			$key = is_string($action) === true
@@ -210,6 +207,20 @@ class Permissions
 		}
 
 		return $permission;
+	}
+
+	protected function get(string $category, string|null $action = null): mixed
+	{
+		return is_string($action) === true
+			? $this->actions[$category][$action]
+			: $this->actions[$category];
+	}
+
+	protected function has(string $category, string|null $action = null): bool
+	{
+		return is_string($action) === true
+			? isset($this->actions[$category][$action])
+			: isset($this->actions[$category]);
 	}
 
 	protected function normalize(
