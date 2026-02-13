@@ -58,6 +58,15 @@ jobs:
     strategy:
       matrix:
         php: ["8.2", "8.3", "8.4", "8.5"]
+    services:
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+      memcached:
+        image: memcached:latest
+        ports:
+          - 11211:11211
     env:
       extensions: mbstring, ctype, curl, gd, apcu, memcached, redis
       ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
@@ -70,14 +79,6 @@ jobs:
 
       - name: Preparations
         run: mkdir sarif
-
-      - name: Install memcached
-        uses: niden/actions-memcached@9ff2b102979272958682d09bf262563039bea69c # pin@v8
-
-      - name: Install redis
-        uses: supercharge/redis-github-action@ea9b21c6ecece47bd99595c532e481390ea0f044 # pin@v1
-        with:
-          redis-version: 7
 
       - name: Install system locales
         run: sudo apt-get update && sudo apt-get install -y locales-all
