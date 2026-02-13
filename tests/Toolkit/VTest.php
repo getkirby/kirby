@@ -723,9 +723,9 @@ class VTest extends TestCase
 		$this->assertTrue(V::url('http://127.0.0.1:8080/kirby'));
 		$this->assertTrue(V::url('https://127.0.0.1/kirby/panel/pages/blog+vvvv'));
 		$this->assertTrue(V::url('https://localhost/kirby/panel/pages/blog+vvvv'));
+		$this->assertTrue(V::url('http://special---offer.com/'));
 
 		// TODO: Find better regex to also cover the following
-		// $this->assertTrue(V::url('http://special---offer.com/'));
 		// $this->assertTrue(V::url('http://10.1.1.1'));
 		// $this->assertTrue(V::url('http://10.1.1.254'));
 
@@ -754,7 +754,6 @@ class VTest extends TestCase
 		$this->assertFalse(V::url('http://foo.bar/foo(bar)baz quux'));
 		$this->assertFalse(V::url('ftps://foo.bar/'));
 		$this->assertFalse(V::url('http://-error-.invalid/'));
-		$this->assertFalse(V::url('http://a.b--c.de/'));
 		$this->assertFalse(V::url('http://-a.b.co'));
 		$this->assertFalse(V::url('http://a.b-.co'));
 		$this->assertFalse(V::url('http://0.0.0.0'));
