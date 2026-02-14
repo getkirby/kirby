@@ -44,6 +44,7 @@ class License
 		protected string|null $order = null,
 		protected string|null $date = null,
 		protected string|null $signature = null,
+		protected string|null $expires = null
 	) {
 		if ($code !== null) {
 			$this->code = trim($code);
@@ -51,6 +52,10 @@ class License
 
 		if ($email !== null) {
 			$this->email = $this->normalizeEmail($email);
+		}
+
+		if ($code === LicenseType::Free->prefix()) {
+			$this->email ??= 'licensing@getkirby.com';
 		}
 
 		$this->kirby = App::instance();
@@ -71,6 +76,10 @@ class License
 	 */
 	public function code(bool $obfuscated = false): string|null
 	{
+		if ($this->isFree() === true) {
+			return null;
+		}
+
 		if ($this->code !== null && $obfuscated === true) {
 			return Str::substr($this->code, 0, 10) . str_repeat('X', 22);
 		}
@@ -90,6 +99,7 @@ class License
 			'domain'     => $this->domain,
 			'email'      => $this->email,
 			'order'      => $this->order,
+			'expires'    => $this->expires,
 			'signature'  => $this->signature,
 		];
 	}
@@ -167,6 +177,39 @@ class License
 	}
 
 	/**
+	 * Whether the validity of the license file has expired
+	 * @since 5.4.0
+	 */
+	public function isExpired(): bool
+	{
+		if ($this->expires === null) {
+			return false;
+		}
+
+		return strtotime($this->expires) < time();
+	}
+
+	/**
+	 * Whether it is a free license for development/private installation
+	 * @since 5.4.0
+	 */
+	public function isFree(): bool
+	{
+		return $this->type() === LicenseType::Free;
+	}
+
+	/**
+	 * Whether it is a free license and installed locally
+	 * @since 5.4.0
+	 */
+	public function isFreeAndLocal(): bool
+	{
+		return
+			$this->isFree() === true &&
+			$this->kirby->system()->isLocal() === true;
+	}
+
+	/**
 	 * The license is still valid for the currently
 	 * installed version, but it passed the 3 year period.
 	 */
@@ -186,7 +229,7 @@ class License
 
 		// without an activation date, the license
 		// renewal cannot be evaluated and the license
-		// has to be marked as expired
+		// has to be marked as coverage ended
 		if ($this->activation === null) {
 			return true;
 		}
@@ -206,7 +249,7 @@ class License
 		// @codeCoverageIgnoreEnd
 
 		// If the renewal date is older than the version launch
-		// date, the license is expired
+		// date, the license coverage has ended
 		return $this->renewal() < $release;
 	}
 
@@ -248,13 +291,17 @@ class License
 			return false;
 		}
 
+		$data      = json_encode($this->signatureData());
+		$signature = hex2bin($this->signature);
+
+		if ($this->isFreeAndLocal() === true) {
+			return hash('sha256', $data) === $signature;
+		}
+
 		// get the public key
 		$pubKey = F::read($this->kirby->root('kirby') . '/kirby.pub');
 
 		// verify the license signature
-		$data      = json_encode($this->signatureData());
-		$signature = hex2bin($this->signature);
-
 		return openssl_verify($data, $signature, $pubKey, 'RSA-SHA256') === 1;
 	}
 
@@ -330,6 +377,7 @@ class License
 			'domain'     => $license['domain']     ?? null,
 			'email'      => $license['email']      ?? null,
 			'order'      => $license['order']      ?? null,
+			'expires'    => $license['expires']    ?? null,
 			'signature'  => $license['signature']  ?? null,
 		];
 	}
@@ -352,7 +400,7 @@ class License
 	/**
 	 * Sends a request to the hub to register the license
 	 */
-	public function register(): static
+	public function register(bool $reissue = false): static
 	{
 		if ($this->type() === LicenseType::Invalid) {
 			throw new InvalidArgumentException(
@@ -372,11 +420,23 @@ class License
 			);
 		}
 
+		if ($this->isFreeAndLocal() === true) {
+			$response = $this->selfsign([
+				'activation' => date('Y-m-d H:i:s'),
+				'code'       => $this->code,
+				'date'       => date('Y-m-d H:i:s'),
+				'domain'     => $this->domain,
+				'email'      => $this->email,
+				'order'      => '12345678',
+			]);
+		}
+
 		// @codeCoverageIgnoreStart
-		$response = $this->request('register', [
+		$response ??= $this->request('register', [
 			'license' => $this->code,
 			'email'   => $this->email,
-			'domain'  => $this->domain
+			'domain'  => $this->domain,
+			'reissue' => $reissue
 		]);
 
 		return $this->update($response);
@@ -405,7 +465,10 @@ class License
 	{
 		// @codeCoverageIgnoreStart
 		$response = Remote::get(static::hub() . '/' . $path, [
-			'data' => $data
+			'data'    => $data,
+			'headers' => [
+				'Kirby-Version' => $this->kirby->version()
+			]
 		]);
 
 		// handle request errors
@@ -450,6 +513,22 @@ class License
 	}
 
 	/**
+	 * Self-signs a license file where registration
+	 * will not communicate with the license hub
+	 */
+	protected function selfsign(array $payload): array
+	{
+		$data          = $payload;
+		$data['email'] = hash('sha256', $data['email'] . static::SALT);
+		$data          = json_encode($data);
+
+		return [
+			...$payload,
+			'signature' => bin2hex(hash('sha256', $data))
+		];
+	}
+
+	/**
 	 * Returns the signature if available
 	 */
 	public function signature(): string|null
@@ -473,7 +552,7 @@ class License
 			];
 		}
 
-		return [
+		$data = [
 			'activation' => $this->activation,
 			'code'       => $this->code,
 			'date'       => $this->date,
@@ -481,6 +560,12 @@ class License
 			'email'      => hash('sha256', $this->email . static::SALT),
 			'order'      => $this->order,
 		];
+
+		if ($this->expires !== null) {
+			$data['expires'] = $this->expires;
+		}
+
+		return $data;
 	}
 
 	/**
@@ -492,6 +577,7 @@ class License
 	{
 		return $this->status ??= match (true) {
 			$this->isMissing()  => LicenseStatus::Missing,
+			$this->isFree()     => LicenseStatus::Acknowledged,
 			$this->isLegacy()   => LicenseStatus::Legacy,
 			$this->isInactive() => LicenseStatus::Inactive,
 			default             => LicenseStatus::Active
@@ -518,6 +604,7 @@ class License
 		$this->code       = $data['code'];
 		$this->date       = $data['date'];
 		$this->order      = $data['order'];
+		$this->expires    = $data['expires'];
 		$this->signature  = $data['signature'];
 
 		// clear the caches
