@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.14.3@d0b040a91f280f071c1abcb1b77ce3822058725a">
+<files psalm-version="6.15.0@204d06619833a297b402cbc66be7f2df74437db4">
   <file src="config/components.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string|SessionStore]]></code>
@@ -1047,13 +1047,13 @@
 			],
 			'-',
 			[
-				'label'   => I18n::translate('version.latest'),
+				'label'   => $this->i18n('version.latest'),
 				'icon'    => 'git-branch',
 				'link'    => $this->url('latest'),
 				'current' => $this->isCurrent('latest')
 			],
 			[
-				'label'   => I18n::translate('version.changes'),
+				'label'   => $this->i18n('version.changes'),
 				'icon'    => 'git-branch',
 				'link'    => $this->url('changes'),
 				'current' => $this->isCurrent('changes')
