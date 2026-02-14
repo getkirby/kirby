@@ -2,8 +2,18 @@
 
 use Kirby\Panel\Controller\Drawer\FieldDrawerController;
 use Kirby\Panel\Controller\Drawer\SectionDrawerController;
+use Kirby\Panel\Controller\Drawer\UserSecurityCodeMethodDrawerController;
+use Kirby\Panel\Controller\Drawer\UserSecurityDrawerController;
 
 return [
+	'user.security' => [
+		'pattern' => 'users/(:any)/security',
+		'action'  => UserSecurityDrawerController::class
+	],
+	'user.security.method.code' => [
+		'pattern' => 'users/(:any)/security/method/code',
+		'action'  => UserSecurityCodeMethodDrawerController::class
+	],
 	'user.fields' => [
 		'pattern' => '(users/[^/]+)/fields/(:any)/(:all?)',
 		'action'  => FieldDrawerController::class
