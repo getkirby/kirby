@@ -32,9 +32,6 @@ use Throwable;
  * to run our REST API. You can find our API setup
  * in `kirby/config/api.php`.
  *
- * @package   Kirby Api
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

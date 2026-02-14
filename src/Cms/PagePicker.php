@@ -10,11 +10,9 @@ use Kirby\Exception\InvalidArgumentException;
  * model for the API calls for the
  * page picker component in the panel.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
  * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dialog\PagePickerDialogController` instead
  */
 class PagePicker extends Picker

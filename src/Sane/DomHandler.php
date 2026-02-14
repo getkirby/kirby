@@ -9,13 +9,10 @@ use Kirby\Toolkit\Dom;
 
 /**
  * Base class for Sane handlers with DOM file types
- * @since 3.5.8
  *
- * @package   Kirby Sane
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     3.5.8
  */
 class DomHandler extends Handler
 {

@@ -9,9 +9,6 @@ use Kirby\Filesystem\F;
  * for partial content delivery, primarily
  * used for video streaming in browsers
  *
- * @package   Kirby Http
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  * @since     5.3.0

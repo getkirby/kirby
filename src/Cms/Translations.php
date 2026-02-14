@@ -11,9 +11,6 @@ use Kirby\Filesystem\F;
  * to a collection of Translation objects and load
  * method to load all translations from disk
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *

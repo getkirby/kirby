@@ -10,9 +10,6 @@ namespace Kirby\Cms;
  * a `Roles::load()` method that handles loading
  * role definitions from disk.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *

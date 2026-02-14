@@ -7,12 +7,10 @@ use Kirby\Cms\App;
 /**
  * View button to create a new language
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
+ *
  * @unstable
  */
 class LanguageCreateButton extends ViewButton

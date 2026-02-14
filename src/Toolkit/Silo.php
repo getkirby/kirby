@@ -7,9 +7,6 @@ namespace Kirby\Toolkit;
  * setting, getting and removing static data of
  * a singleton.
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

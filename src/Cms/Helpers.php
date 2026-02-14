@@ -8,13 +8,10 @@ use Kirby\Toolkit\Str;
 
 /**
  * The `Helpers` class hosts a few handy helper methods
- * @since 3.7.0
  *
- * @package   Kirby Cms
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.7.0
  */
 class Helpers
 {

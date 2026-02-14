@@ -13,11 +13,7 @@ use Laminas\Escaper\Escaper;
  * value, etc.
  *
  * Wrapper for the Laminas Escaper
- * @link https://github.com/laminas/laminas-escaper
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

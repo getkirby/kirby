@@ -17,12 +17,10 @@ use Kirby\Filesystem\F;
  * Content storage handler using plain text files
  * stored in the content folder
  *
- * @package   Kirby Content
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     4.0.0
+ *
  * @unstable
  */
 class PlainTextStorage extends Storage

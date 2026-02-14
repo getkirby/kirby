@@ -8,9 +8,6 @@ use Stringable;
 /**
  * Simple stack storage for template output
  *
- * @package   Kirby Template
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

@@ -23,9 +23,6 @@ use Kirby\Exception\LogicException;
  *    `initialize` method that defines which keys
  *    are available.
  *
- * @package   Kirby Cms
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *

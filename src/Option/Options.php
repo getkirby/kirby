@@ -10,9 +10,6 @@ use Kirby\Toolkit\A;
  * Collection of possible options for
  * select fields, radio fields, etc.
  *
- * @package   Kirby Option
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *

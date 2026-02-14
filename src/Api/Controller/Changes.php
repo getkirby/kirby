@@ -14,9 +14,6 @@ use Kirby\Form\Form;
  * The Changes controller takes care of the request logic
  * to save, discard and publish changes.
  *
- * @package   Kirby Api
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

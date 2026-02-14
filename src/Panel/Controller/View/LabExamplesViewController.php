@@ -7,9 +7,6 @@ use Kirby\Panel\Lab\Category;
 use Kirby\Panel\Ui\View;
 
 /**
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
