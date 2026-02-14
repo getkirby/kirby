@@ -7,9 +7,6 @@ use Closure;
 /**
  * Adds a i18n helper method to the class
  *
- * @package   Kirby Toolkit
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

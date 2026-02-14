@@ -12,14 +12,10 @@ use Stringable;
  * The Event object is created whenever the `$kirby->trigger()`
  * or `$kirby->apply()` methods are called. It collects all
  * event information and handles calling the individual hooks.
- * @since 3.4.0
  *
- * @package   Kirby Cms
- * @author    Lukas Bestle <lukas@getkirby.com>,
- *            Ahmet Bora
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.4.0
  */
 class Event implements Stringable
 {

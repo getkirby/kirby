@@ -6,12 +6,10 @@ use Kirby\Cms\ModelWithContent;
 use Kirby\Panel\Controller\DropdownController;
 
 /**
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
  * @unstable
  */
 abstract class ModelSettingsDropdownController extends DropdownController

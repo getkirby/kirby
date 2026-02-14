@@ -11,9 +11,6 @@ use Kirby\Toolkit\Str;
  * The blocks schema definition converts
  * the entire document into blocks for the blocks field
  *
- * @package   Kirby Parsley
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.5.0

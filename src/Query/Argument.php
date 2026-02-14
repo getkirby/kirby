@@ -9,11 +9,9 @@ use Kirby\Toolkit\Str;
  * The Argument class represents a single
  * parameter passed to a method in a chained query
  *
- * @package   Kirby Query
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
  * @deprecated 6.0.0 Will be removed in Kirby 7
  */
 class Argument

@@ -5,12 +5,10 @@ namespace Kirby\Panel\Ui\Button;
 /**
  * Open view button
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
+ *
  * @unstable
  */
 class OpenButton extends ViewButton

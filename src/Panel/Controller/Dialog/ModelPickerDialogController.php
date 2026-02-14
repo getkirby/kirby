@@ -12,12 +12,10 @@ use Kirby\Toolkit\Str;
  * Controls a Panel dialog for selecting
  * models (pages, files, users)
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
  * @unstable
  */
 abstract class ModelPickerDialogController extends DialogController

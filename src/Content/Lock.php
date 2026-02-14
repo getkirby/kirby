@@ -15,14 +15,11 @@ use Kirby\Toolkit\Str;
  * locking state of a content version, depending
  * on the timestamp and locked user id
  *
- * @since 5.0.0
- * @unstable
- *
- * @package   Kirby Content
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
+ *
+ * @unstable
  */
 class Lock
 {
