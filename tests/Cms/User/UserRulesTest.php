@@ -113,8 +113,8 @@ class UserRulesTest extends ModelTestCase
 		string $value,
 		string $message
 	): void {
-		$permissions = $this->createStub(UserPermissions::class);
-		$permissions->method('can')->with('change' . $key)->willReturn(false);
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->expects($this->once())->method('can')->with('change' . $key)->willReturn(false);
 
 		$user = $this->createStub(User::class);
 		$user->method('permissions')->willReturn($permissions);
@@ -141,8 +141,8 @@ class UserRulesTest extends ModelTestCase
 	{
 		$this->app->impersonate('admin@domain.com');
 
-		$permissions = $this->createStub(UserPermissions::class);
-		$permissions->method('can')->with('changeRole')->willReturn(false);
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->expects($this->once())->method('can')->with('changeRole')->willReturn(false);
 
 		$user = $this->createStub(User::class);
 		$user->method('kirby')->willReturn($this->app);
@@ -326,8 +326,8 @@ class UserRulesTest extends ModelTestCase
 	{
 		$this->app->impersonate('user@domain.com');
 
-		$permissions = $this->createStub(UserPermissions::class);
-		$permissions->method('can')->with('create')->willReturn(false);
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->expects($this->once())->method('can')->with('create')->willReturn(false);
 
 		$user = $this->createStub(User::class);
 		$user->method('kirby')->willReturn($this->app);
@@ -349,8 +349,8 @@ class UserRulesTest extends ModelTestCase
 	{
 		$this->app->impersonate('user@domain.com');
 
-		$permissions = $this->createStub(UserPermissions::class);
-		$permissions->method('can')->with('create')->willReturn(true);
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->expects($this->exactly(4))->method('can')->with('create')->willReturn(true);
 
 		$user = $this->createStub(User::class);
 		$user->method('kirby')->willReturn($this->app);
@@ -439,8 +439,8 @@ class UserRulesTest extends ModelTestCase
 
 	public function testDeletePermissions(): void
 	{
-		$permissions = $this->createStub(UserPermissions::class);
-		$permissions->method('can')->with('delete')->willReturn(false);
+		$permissions = $this->createMock(UserPermissions::class);
+		$permissions->expects($this->once())->method('can')->with('delete')->willReturn(false);
 
 		$user = $this->createStub(User::class);
 		$user->method('permissions')->willReturn($permissions);
