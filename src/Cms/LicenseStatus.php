@@ -23,7 +23,7 @@ enum LicenseStatus: string
 	/**
 	 * Compliance with the conditional license
 	 * requirements has been confirmed
-	 * @since 5.3.0
+	 * @since 5.4.0
 	 */
 	case Acknowledged = 'acknowledged';
 

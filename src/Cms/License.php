@@ -178,7 +178,7 @@ class License
 
 	/**
 	 * Whether the validity of the license file has expired
-	 * @since 5.3.0
+	 * @since 5.4.0
 	 */
 	public function isExpired(): bool
 	{
@@ -191,7 +191,7 @@ class License
 
 	/**
 	 * Whether it is a free license for development/private installation
-	 * @since 5.3.0
+	 * @since 5.4.0
 	 */
 	public function isFree(): bool
 	{
@@ -200,7 +200,7 @@ class License
 
 	/**
 	 * Whether it is a free license and installed locally
-	 * @since 5.3.0
+	 * @since 5.4.0
 	 */
 	public function isFreeAndLocal(): bool
 	{
