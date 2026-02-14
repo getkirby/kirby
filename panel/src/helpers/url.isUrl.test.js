@@ -55,7 +55,8 @@ describe("$helper.url.isUrl", () => {
 			"http://127.0.0.1/kirby/",
 			"http://127.0.0.1:8080/kirby",
 			"https://127.0.0.1/kirby/panel/pages/blog+vvvv",
-			"https://localhost/kirby/panel/pages/blog+vvvv"
+			"https://localhost/kirby/panel/pages/blog+vvvv",
+			"http://special---offer.com/"
 		];
 
 		validUrls.forEach((testUrl) => {
@@ -71,6 +72,50 @@ describe("$helper.url.isUrl", () => {
 		expect(url.isUrl(1)).toStrictEqual(false);
 		expect(url.isUrl("/foo", true)).toStrictEqual(false);
 		expect(url.isUrl("javascript:alert(/XSS/)", true)).toStrictEqual(false);
+	});
+
+	it("should reject invalid URLs in strict mode", () => {
+		const invalidUrls = [
+			"http://",
+			"http://.",
+			"http://..",
+			"http://../",
+			"http://?",
+			"http://??",
+			"http://??/",
+			"http://#",
+			"http://##",
+			"http://##/",
+			"http://foo.bar?q=Spaces should be encoded",
+			"//",
+			"//a",
+			"///a",
+			"///",
+			"http:///a",
+			"rdar://1234",
+			"h://test",
+			"http:// shouldfail.com",
+			":// should fail",
+			"http://foo.bar/foo(bar)baz quux",
+			"ftps://foo.bar/",
+			"http://-error-.invalid/",
+			"http://-a.b.co",
+			"http://a.b-.co",
+			"http://0.0.0.0",
+			"http://10.1.1.0",
+			"http://10.1.1.255",
+			"http://224.1.1.1",
+			"http://1.1.1.1.1",
+			"http://123.123.123",
+			"http://3628126748",
+			"http://.www.foo.bar/",
+			"http://www.foo.bar./",
+			"http://.www.foo.bar./"
+		];
+
+		invalidUrls.forEach((testUrl) => {
+			expect(url.isUrl(testUrl, true)).toStrictEqual(false);
+		});
 	});
 
 	it("should detect URL object", () => {
