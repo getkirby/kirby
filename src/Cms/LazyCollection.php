@@ -379,6 +379,26 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Prepends an element to the data array
+	 *
+	 * ```php
+	 * $collection->prepend('key', $value);
+	 * $collection->prepend($value);
+	 * ```
+	 *
+	 * @param string|TValue ...$args
+	 * @return $this
+	 */
+	public function prepend(...$args): static
+	{
+		// prepending to an uninitialized collection would
+		// destroy the order on later initialization
+		$this->initialize();
+
+		return parent::prepend(...$args);
+	}
+
+	/**
 	 * Moves the cursor to the previous element
 	 * and returns it
 	 * @deprecated

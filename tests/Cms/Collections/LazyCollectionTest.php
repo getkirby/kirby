@@ -580,6 +580,40 @@ class LazyCollectionTest extends TestCase
 		$this->assertTrue($collection->initialized);
 	}
 
+	public function testPrepend(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->data = [
+			'b' => new Obj(['id' => 'b', 'type' => 'static']),
+			'c' => null
+		];
+
+		$collection->prepend(new Obj(['id' => 'a', 'type' => 'prepended']));
+
+		$this->assertSame([
+			'a' => ['id' => 'a', 'type' => 'prepended'],
+			'b' => ['id' => 'b', 'type' => 'static'],
+			'c' => ['id' => 'c', 'type' => 'hydrated']
+		], $collection->toArray());
+	}
+
+	public function testPrependUnitialized(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->targetData = [
+			'b' => new Obj(['id' => 'b', 'type' => 'initialized']),
+			'c' => null
+		];
+
+		$collection->prepend(new Obj(['id' => 'a', 'type' => 'prepended']));
+
+		$this->assertSame([
+			'a' => ['id' => 'a', 'type' => 'prepended'],
+			'b' => ['id' => 'b', 'type' => 'initialized'],
+			'c' => ['id' => 'c', 'type' => 'hydrated']
+		], $collection->toArray());
+	}
+
 	public function testRandom(): void
 	{
 		$collection = new MockLazyCollectionWithInitialization();
