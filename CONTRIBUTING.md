@@ -77,6 +77,8 @@ The sandbox comes with a pre-configured admin account (`test@getkirby.com` / `12
 
 ### Style
 
+We use an [`.editorconfig`](https://editorconfig.org) file to enforce basic formatting rules (UTF-8, LF line endings, tab indentation) across editors. Most editors support this natively or via a plugin.
+
 #### Backend (PHP)
 
 We use [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to ensure a consistent style for our PHP code. It is mainly based on [PSR-12](https://www.php-fig.org/psr/psr-12/). [Install PHP CS Fixer globally](https://github.com/FriendsOfPHP/PHP-CS-Fixer#globally-composer) via Composer and then run `composer fix` in the `kirby` folder to check for inconsistencies and fix them. Our automated PR checks will fail if there are code style issues with your code.
