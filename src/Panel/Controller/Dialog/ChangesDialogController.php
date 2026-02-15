@@ -17,12 +17,10 @@ use Kirby\Panel\Ui\Item\UserItem;
  * Controls the Panel dialog for displaying
  * content changes in pages, users and files
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
  * @unstable
  */
 class ChangesDialogController extends DialogController

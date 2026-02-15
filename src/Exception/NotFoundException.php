@@ -5,9 +5,6 @@ namespace Kirby\Exception;
 /**
  * Thrown when something was not found
  *
- * @package   Kirby Exception
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

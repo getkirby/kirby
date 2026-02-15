@@ -15,9 +15,6 @@ use Kirby\Uuid\HasUuids;
  * all collections, you can filter, modify,
  * convert or check the users collection.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *

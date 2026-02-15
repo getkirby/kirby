@@ -12,9 +12,6 @@ use Throwable;
  * Thrown for general exceptions and extended by
  * other exception classes
  *
- * @package   Kirby Exception
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *

@@ -6,9 +6,6 @@ namespace Kirby\Exception;
  * Thrown when the current user has insufficient
  * permissions for the action
  *
- * @package   Kirby Exception
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
