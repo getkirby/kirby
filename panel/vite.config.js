@@ -14,7 +14,9 @@ function createAliases(proxy) {
 		"@": path.resolve(__dirname, "src")
 	};
 
-	if (!process.env.VITEST) {
+	if (process.env.VITEST) {
+		aliases["@test"] = path.resolve(__dirname, "tests");
+	} else {
 		// use absolute proxied url to avoid Vue being loaded twice
 		aliases.vue =
 			proxy.target + ":3000/node_modules/vue/dist/vue.esm-browser.js";
@@ -100,7 +102,7 @@ function createTest() {
 		environment: "happy-dom",
 		include: ["**/*.test.js"],
 		reporter: "dot",
-		setupFiles: ["vitest.setup.js"]
+		setupFiles: ["tests/unit/setup.js"]
 	};
 }
 
