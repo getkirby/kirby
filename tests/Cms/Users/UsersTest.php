@@ -6,6 +6,8 @@ use Kirby\Exception\InvalidArgumentException;
 
 class UsersTest extends TestCase
 {
+	public const TMP = KIRBY_TMP_DIR . '/Cms.Users';
+
 	public function testAddUser(): void
 	{
 		$users = Users::factory([
@@ -141,6 +143,8 @@ class UsersTest extends TestCase
 		$this->assertSame($last, $users->find($last->id()));
 		$this->assertSame($first, $users->find($first->email()));
 		$this->assertSame($last, $users->find($last->email()));
+		$this->assertNull($users->find('c@getkirby.com'));
+		$this->assertNull($users->find(false));
 	}
 
 	public function testFindByEmail(): void
@@ -154,6 +158,8 @@ class UsersTest extends TestCase
 		$this->assertSame('a@getkirby.com', $users->find('A@getkirby.com')->email());
 		$this->assertSame('b@getkirby.com', $users->find('B@getkirby.com')->email());
 		$this->assertSame('b@getkirby.com', $users->find('b@getkirby.com')->email());
+		$this->assertNull($users->find('c@getkirby.com'));
+		$this->assertNull($users->find(false));
 	}
 
 	public function testFindByUuid(): void
@@ -168,9 +174,55 @@ class UsersTest extends TestCase
 		$users = $app->users();
 		$this->assertSame($a, $users->find('user://homer')->email());
 		$this->assertSame($b, $users->find('user://foo')->email());
+		$this->assertNull($users->find('user://bar'));
+		$this->assertNull($users->find(false));
 
 		$this->assertSame($a, $app->user('user://homer')->email());
 		$this->assertSame($b, $app->user('user://foo')->email());
+		$this->assertNull($app->user('user://bar'));
+	}
+
+	public function testFindInFilesystem(): void
+	{
+		$app = new App([
+			'roots' => [
+				'accounts' => static::TMP . '/accounts',
+				'index'    => '/dev/null'
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$app->users()->create(['id' => 'homer', 'email' => 'a@getkirby.com', 'password' => '12345678']);
+		$app->users()->create(['id' => 'foo', 'email' => 'B@getKirby.com']);
+
+		// initialize a new fresh app instance to start with an empty collection
+		$app   = $app->clone();
+		$users = $app->users();
+
+		// test invalid key first in an uninitialized collection
+		$this->assertNull($users->find(false));
+
+		$this->assertSame('a@getkirby.com', $app->user('a@getkirby.com')->email());
+		$this->assertSame('a@getkirby.com', $app->user('homer')->email());
+		$this->assertSame('a@getkirby.com', $app->user('user://homer')->email());
+		$this->assertSame('a@getkirby.com', $users->find('a@getkirby.com')->email());
+		$this->assertSame('a@getkirby.com', $users->find('homer')->email());
+		$this->assertSame('a@getkirby.com', $users->find('user://homer')->email());
+
+		$this->assertSame('b@getkirby.com', $app->user('b@getkirby.com')->email());
+		$this->assertSame('b@getkirby.com', $app->user('foo')->email());
+		$this->assertSame('b@getkirby.com', $app->user('user://foo')->email());
+		$this->assertSame('b@getkirby.com', $users->find('b@getkirby.com')->email());
+		$this->assertSame('b@getkirby.com', $users->find('foo')->email());
+		$this->assertSame('b@getkirby.com', $users->find('user://foo')->email());
+
+		$this->assertNull($app->user('c@getkirby.com'));
+		$this->assertNull($app->user('bar'));
+		$this->assertNull($app->user('user://bar'));
+		$this->assertNull($users->find('c@getkirby.com'));
+		$this->assertNull($users->find('bar'));
+		$this->assertNull($users->find('user://bar'));
 	}
 
 	public function testCustomMethods(): void
