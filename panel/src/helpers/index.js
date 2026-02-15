@@ -18,6 +18,7 @@ import string from "./string.js";
 import throttle from "./throttle.js";
 import upload from "./upload.js";
 import url from "./url.js";
+import writer from "./writer.js";
 
 import "./regex.js";
 
@@ -47,7 +48,8 @@ export default {
 			throttle,
 			upload,
 			url,
-			uuid: string.uuid
+			uuid: string.uuid,
+			writer
 		};
 
 		app.prototype.$esc = string.escapeHTML;

@@ -1,4 +1,7 @@
+import { DOMParser, DOMSerializer, Schema } from "prosemirror-model";
+
 import "./regex";
+import { createMarks, createNodes } from "./writer";
 
 const escapingMap = {
 	"&": "&amp;",
@@ -163,6 +166,56 @@ export function rtrim(string = "", replace = "") {
 }
 
 /**
+ * Sanitizes HTML by only keeping allowed marks
+ * (bold, italic, underline, links)
+ * @param {string} html
+ * @param {object} options
+ * @returns {string}
+ */
+export function sanitizeHTML(html, options = {}) {
+	const marks = createMarks(
+		options.marks ?? [
+			"bold",
+			"code",
+			"italic",
+			"link",
+			"strike",
+			"sub",
+			"sup",
+			"underline"
+		]
+	);
+
+	const nodes = createNodes(
+		options.nodes ?? { doc: { inline: true }, text: true },
+		["doc", "text", "paragraph"]
+	);
+
+	// Build schema from the extracted definitions
+	const sanitizeSchema = new Schema({
+		marks: Object.fromEntries(
+			Object.values(marks).map((m) => [m.name, m.schema])
+		),
+		nodes: Object.fromEntries(
+			Object.values(nodes).map((n) => [n.name, n.schema])
+		)
+	});
+
+	const dom = new window.DOMParser().parseFromString(
+		`<div>${html}</div>`,
+		"text/html"
+	).body.firstElementChild;
+
+	const doc = DOMParser.fromSchema(sanitizeSchema).parse(dom);
+	const div = document.createElement("div");
+	div.appendChild(
+		DOMSerializer.fromSchema(sanitizeSchema).serializeFragment(doc.content)
+	);
+
+	return div.innerHTML;
+}
+
+/**
  * Convert string to ASCII slug
  * @param {string} string string to be converted
  * @param {array} rules ruleset to convert non-ASCII characters
@@ -317,6 +370,7 @@ export default {
 	pad,
 	random,
 	rtrim,
+	sanitizeHTML,
 	slug,
 	stripHTML,
 	template,
