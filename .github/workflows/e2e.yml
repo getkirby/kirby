@@ -1,0 +1,108 @@
+# To upgrade pinned actions: Use https://github.com/mheap/pin-github-action
+
+name: CI - E2E
+
+env:
+  OS: &os ubuntu-24.04
+
+  # run job only under the following conditions:
+  # - can be triggered manually from any repository
+  # - can be triggered as workflow call by another workflow
+  # - if on pull request, only run if from a fork
+  #   (our own repo is covered by the push event)
+  # - if on push, only run CI automatically for the
+  #   main getkirby/kirby repo and for forks
+  SHOULD_RUN: &should-run >-
+    github.event_name == 'workflow_dispatch' ||
+    github.event_name == 'workflow_call' ||
+    (github.event_name == 'pull_request' &&
+    github.event.pull_request.head.repo.full_name != github.repository) ||
+    (github.event_name == 'push' &&
+    (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby'))
+
+on:
+  push: &e2e-triggers
+    branches-ignore:
+      - "main"
+      - "release/**"
+    paths:
+      - "**"
+      - "!.github/**"
+      - ".github/actions/setup-npm/**"
+      - ".github/actions/setup-php/**"
+      - ".github/workflows/e2e.yml"
+      - "!.tx/**"
+      - "!.vscode/**"
+      - "!assets/**"
+      - "!scripts/**"
+  pull_request: *e2e-triggers
+  workflow_call:
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: "Tests"
+    if: *should-run
+    runs-on: *os
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout sandbox
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          repository: getkirby/sandbox
+          ref: feat/develop-license
+          path: sandbox
+
+      - name: Checkout kirby into sandbox
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          path: sandbox/kirby
+
+      - name: Setup PHP environment
+        uses: ./sandbox/kirby/.github/actions/setup-php
+        with:
+          php: "8.4"
+          extensions: "mbstring, ctype, curl, gd"
+
+      - name: Create sandbox config
+        run: |
+          cat > sandbox/sandbox.config.php << 'EOF'
+          <?php
+          return [
+              'url'   => 'http://localhost:8000',
+              'panel' => ['dev' => false]
+          ];
+          EOF
+
+      - name: Start PHP server
+        run: php -S localhost:8000 -t sandbox/public sandbox/kirby/router.php &
+
+      - name: Set up Node.js and cache npm dependencies
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: sandbox/kirby/panel/package-lock.json
+
+      - name: Install npm dependencies
+        working-directory: sandbox/kirby/panel
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: sandbox/kirby/panel
+        run: npx playwright install --with-deps chromium
+
+      - name: Build Panel
+        working-directory: sandbox/kirby/panel
+        run: npm run build
+
+      - name: Run E2E tests
+        working-directory: sandbox/kirby/panel
+        run: npx playwright test
+        env:
+          BASE_URL: http://localhost:8000

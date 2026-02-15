@@ -17,11 +17,13 @@ panel/.env.example export-ignore
 panel/.prettierignore export-ignore
 panel/.prettierrc.json export-ignore
 panel/dist/ui export-ignore
+panel/e2e export-ignore
 panel/eslint.config.mjs export-ignore
 panel/jsconfig.json export-ignore
 panel/lab export-ignore
 panel/package-lock.json export-ignore
 panel/package.json export-ignore
+panel/playwright.config.js export-ignore
 panel/public export-ignore
 panel/README.md export-ignore
 panel/scripts export-ignore

@@ -18,3 +18,7 @@ jobs:
     name: "Release: CI - Frontend"
     uses: ./.github/workflows/frontend.yml
     secrets: inherit
+  release_e2e:
+    name: "Release: CI - E2E"
+    uses: ./.github/workflows/e2e.yml
+    secrets: inherit

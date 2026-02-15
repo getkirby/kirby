@@ -26,7 +26,7 @@ function createAliases(proxy) {
 /**
  * Returns the server configuration
  */
-function createServer(proxy) {
+async function createServer(proxy) {
 	return {
 		allowedHosts: [proxy.target.substring(8)],
 		cors: { origin: proxy.target },
@@ -37,16 +37,17 @@ function createServer(proxy) {
 		},
 		open: proxy.target + "/panel",
 		port: 3000,
-		...createCustomServer()
+		...(await createCustomServer())
 	};
 }
 
 /**
  * Returns custom server configuration, if it exists
  */
-function createCustomServer() {
+async function createCustomServer() {
 	try {
-		return require("./vite.config.custom.js");
+		const module = await import("./vite.config.custom.js");
+		return module.default ?? {};
 	} catch {
 		return {};
 	}
@@ -104,7 +105,7 @@ function createTest() {
 /**
  * Returns the Vite configuration
  */
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => {
 	// Load env file based on `mode` in the current working directory.
 	// Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
 	process.env = {
@@ -120,7 +121,7 @@ export default defineConfig(({ mode }) => {
 
 	const alias = createAliases(proxy);
 	const plugins = createPlugins(mode);
-	const server = createServer(proxy);
+	const server = await createServer(proxy);
 	const test = createTest();
 
 	return {
