@@ -109,7 +109,19 @@ Unit and integration tests help us prevent regressions when we make changes to t
 
 #### Backend (PHP)
 
-We use [PHPUnit](https://phpunit.de) for unit test for our PHP code. You can find all existing tests in the [`kirby/tests` subfolders](https://github.com/getkirby/kirby/tree/main/tests). Take a look to see how we usually structure our tests.
+We use [PHPUnit](https://phpunit.de) for unit tests for our PHP code. You can find all existing tests in the [`kirby/tests` subfolders](https://github.com/getkirby/kirby/tree/main/tests). Take a look to see how we usually structure our tests. Run the full test suite from the `kirby` folder with:
+
+```bash
+composer test
+```
+
+We use [Psalm](https://psalm.dev) for static type analysis. You can run it from the `kirby` folder with:
+
+```bash
+composer analyze
+```
+
+Our automated PR checks will fail if PHPUnit or Psalm report issues with your code.
 
 #### Frontend/Panel (JavaScript, Vue)
 
