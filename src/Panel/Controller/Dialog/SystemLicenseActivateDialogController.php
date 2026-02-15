@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Cms\LicenseType;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Field;
 use Kirby\Panel\Ui\Dialog;
@@ -27,12 +28,52 @@ class SystemLicenseActivateDialogController extends DialogController
 
 		return [
 			'domain' => [
-				'label' => $this->i18n('license.activate.label'),
+				'label' => $this->i18n('domain'),
+				'theme' => 'white',
+				'icon'  => 'info',
+				'text'  => $this->i18n('license.activate.domain', [
+					'host' => $system->indexUrl()
+				]),
+			],
+			'type' => [
+				'label'    =>  $this->i18n('license.activate.label'),
+				'type'     => 'toggles',
+				'required' => true,
+				'labels'   => true,
+				'grow'     => true,
+				'options'  => [
+					[
+						'icon'  => 'globe',
+						'text'  =>  $this->i18n('license.regular.label'),
+						'value' => 'regular'
+					],
+					[
+						'icon'  => 'key',
+						'text'  =>  $this->i18n('license.free.label'),
+						'value' => 'free'
+					]
+				],
+			],
+			'warning' => [
 				'type'  => 'info',
-				'theme' => $local ? 'warning' : 'info',
-				'text'  => $this->i18n('license.activate.' . ($local ? 'local' : 'domain'), ['host' => $system->indexUrl()])
+				'theme' => 'warning',
+				'text'  =>  $this->i18n('license.activate.' . ($local ? 'local' : 'public'), [
+					'host' => $system->indexUrl()
+				]),
+				'when'  => ['type' => $local ? 'regular' : 'free'],
+			],
+			'acknowledge' => [
+				'when'     => ['type' => 'free'],
+				'label'    =>  $this->i18n('license.activate.acknowledge.label'),
+				'type'     => 'toggle',
+				'text'     =>  $this->i18n('license.activate.acknowledge.text'),
+				'required' => true,
+				'help'     => $this->i18n('license.activate.acknowledge.help', [
+					'url' => 'https://getkirby.com/license/free-licenses'
+				]),
 			],
 			'license' => [
+				'when'        => ['type' => 'regular'],
 				'label'       => $this->i18n('license.code.label'),
 				'type'        => 'text',
 				'required'    => true,
@@ -40,7 +81,10 @@ class SystemLicenseActivateDialogController extends DialogController
 				'placeholder' => 'K-',
 				'help'        => $this->i18n('license.code.help') . ' ' . '<a href="https://getkirby.com/buy" target="_blank">' . $this->i18n('license.buy') . ' &rarr;</a>'
 			],
-			'email' => Field::email(['required' => true])
+			'email' => Field::email([
+				'when'     => ['type' => 'regular'],
+				'required' => true
+			])
 		];
 	}
 
@@ -55,7 +99,8 @@ class SystemLicenseActivateDialogController extends DialogController
 			],
 			value: [
 				'license' => null,
-				'email'   => null
+				'email'   => null,
+				'type'    => 'regular'
 			]
 		);
 	}
@@ -65,14 +110,21 @@ class SystemLicenseActivateDialogController extends DialogController
 	 */
 	public function submit(): array
 	{
-		$this->kirby->system()->register(
-			$this->request->get('license'),
-			$this->request->get('email')
-		);
+		$type    = $this->request->get('type', 'regular');
+		$email   = $this->request->get('email');
+		$license = match ($type) {
+			'free'  => LicenseType::Free->prefix(),
+			default => $this->request->get('license')
+		};
+
+		$this->kirby->system()->register($license, $email);
 
 		return [
 			'event'   => 'system.register',
-			'message' => $this->i18n('license.success')
+			'message' => match ($type) {
+				'free'  => $this->i18n('license.success.free'),
+				default => $this->i18n('license.success')
+			}
 		];
 	}
 }
