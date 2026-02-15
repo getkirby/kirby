@@ -15,6 +15,9 @@ yarn-error.log*
 
 # tests
 coverage
+e2e/session.json
+e2e/report
+e2e/results
 
 # Editor directories and files
 .idea

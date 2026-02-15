@@ -1,6 +1,7 @@
 {
 	"name": "kirby",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"build": "vite build",
 		"build:docs": "node scripts/docs.mjs",
@@ -8,7 +9,9 @@
 		"lint": "eslint \"src/**/*.{js,vue}\"",
 		"lint:fix": "npm run lint -- --fix",
 		"format": "prettier --write \"src/**/*.{js,vue}\"",
-		"test:unit": "vitest run"
+		"test:unit": "vitest run",
+		"test:e2e": "docker run --rm -v \"$(pwd)\":/work -w /work --add-host=sandbox.test:host-gateway mcr.microsoft.com/playwright:v1.58.2-noble npx playwright test",
+		"test:e2e:update": "rm -rf e2e/screenshots && npm run test:e2e -- --update-snapshots"
 	},
 	"dependencies": {
 		"autosize": "^6.0.1",
@@ -25,6 +28,8 @@
 		"vue": "^3.5.28"
 	},
 	"devDependencies": {
+		"@fontsource/inter": "^5.2.8",
+		"@playwright/test": "^1.58.2",
 		"@vitejs/plugin-vue": "^6.0.4",
 		"@vitest/eslint-plugin": "^1.6.9",
 		"@vue/compiler-sfc": "^3.5.28",
@@ -41,6 +46,9 @@
 		"vite-plugin-static-copy": "^3.2.0",
 		"vitest": "^4.0.18",
 		"vue-docgen-api": "^4.79.2"
+	},
+	"imports": {
+		"#test": "./e2e/fixtures.js"
 	},
 	"browserslist": [
 		"last 2 Android versions",

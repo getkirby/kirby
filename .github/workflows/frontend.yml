@@ -82,3 +82,4 @@ jobs:
 
       - name: "Prettier: JavaScript coding style violations"
         run: npm run format -- --check
+
