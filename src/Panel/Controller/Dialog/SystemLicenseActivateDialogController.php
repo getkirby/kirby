@@ -30,6 +30,7 @@ class SystemLicenseActivateDialogController extends DialogController
 			'domain' => [
 				'label' => $this->i18n('domain'),
 				'theme' => 'white',
+				'type'  => 'info',
 				'icon'  => 'info',
 				'text'  => $this->i18n('license.activate.domain', [
 					'host' => $system->indexUrl()
