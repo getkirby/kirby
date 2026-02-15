@@ -54,6 +54,27 @@ We are really happy about any help with translations. Please do not directly tra
 
 ## How we write code
 
+### Panel development
+
+We recommend the [Kirby sandbox](https://github.com/getkirby/sandbox) as your local development environment. Set up a `sandbox.test` virtual host pointing to its `/public` folder (e.g. with [Laravel Herd](https://herd.laravel.com)): Then:
+
+```bash
+# Clone and initialize
+git clone git@github.com:getkirby/sandbox.git
+cd sandbox
+git submodule update --init --recursive
+
+# Create a sandbox.test virtual host (requires Laravel Herd)
+herd link
+
+# Start the Panel dev server
+cd kirby/panel
+npm install
+npm run dev
+```
+
+The sandbox comes with a pre-configured admin account (`test@getkirby.com` / `12345678`).
+
 ### Style
 
 #### Backend (PHP)
