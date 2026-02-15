@@ -293,6 +293,7 @@
       <code><![CDATA[match ($this) {
 			static::Basic      => 'Kirby Basic',
 			static::Enterprise => 'Kirby Enterprise',
+			static::Free       => I18n::translate('license.free.label'),
 			static::Legacy     => 'Kirby 3',
 			static::Invalid    => I18n::translate('license.unregistered.label'),
 		}]]></code>
@@ -304,6 +305,7 @@
       <code><![CDATA[match ($this) {
 			static::Basic      => 'Kirby Basic',
 			static::Enterprise => 'Kirby Enterprise',
+			static::Free       => I18n::translate('license.free.label'),
 			static::Legacy     => 'Kirby 3',
 			static::Invalid    => I18n::translate('license.unregistered.label'),
 		}]]></code>
