@@ -159,6 +159,28 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Find one or multiple elements by id
+	 *
+	 * @param string ...$keys
+	 * @return TValue|static
+	 */
+	public function find(...$keys)
+	{
+		$result = parent::find(...$keys);
+
+		// when the result is a cloned collection (multiple keys),
+		// mark it as initialized to prevent it from initializing
+		// all of its elements again after we filtered it above
+		// (relevant when finding elements in a collection that
+		// has not been (fully) initialized yet)
+		if ($result instanceof static && $result !== $this) {
+			$result->initialized = true;
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Returns the elements in reverse order
 	 */
 	public function flip(): static

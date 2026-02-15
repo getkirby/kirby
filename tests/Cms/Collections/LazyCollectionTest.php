@@ -154,6 +154,47 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame([], $newCollection->toArray());
 	}
 
+	public function testFind(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->data = [
+			'a' => $a = new Obj(['id' => 'a', 'type' => 'static']),
+			'b' => null,
+			'c' => null
+		];
+
+		$objectResult     = $collection->find('a');
+		$collectionResult = $collection->find('a', 'b');
+
+		$this->assertSame($a, $objectResult);
+
+		$this->assertSame([
+			'a' => ['id' => 'a', 'type' => 'static'],
+			'b' => ['id' => 'b', 'type' => 'hydrated']
+		], $collectionResult->toArray());
+	}
+
+	public function testFindUnitialized(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->targetData = [
+			'a' => new Obj(['id' => 'a', 'type' => 'initialized']),
+			'b' => null,
+			'c' => null
+		];
+
+		$objectResult     = $collection->find('a');
+		$collectionResult = $collection->find('a', 'b');
+
+		$this->assertSame('a', $objectResult->id);
+		$this->assertSame('hydrated', $objectResult->type);
+
+		$this->assertSame([
+			'a' => ['id' => 'a', 'type' => 'hydrated'],
+			'b' => ['id' => 'b', 'type' => 'hydrated']
+		], $collectionResult->toArray());
+	}
+
 	public function testGet(): void
 	{
 		$collection = new MockLazyCollection();
