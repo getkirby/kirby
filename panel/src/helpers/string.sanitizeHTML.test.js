@@ -58,8 +58,10 @@ describe.concurrent("$helper.string.sanitizeHTML", () => {
 		expect(sanitizeHTML("<mark>text</mark>")).toBe("text");
 	});
 
-	it("should handle empty string", () => {
+	it("should return empty string for empty, null or undefined input", () => {
 		expect(sanitizeHTML("")).toBe("");
+		expect(sanitizeHTML(null)).toBe("");
+		expect(sanitizeHTML(undefined)).toBe("");
 	});
 
 	it("should handle plain text", () => {

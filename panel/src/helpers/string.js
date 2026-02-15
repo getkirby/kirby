@@ -173,6 +173,10 @@ export function rtrim(string = "", replace = "") {
  * @returns {string}
  */
 export function sanitizeHTML(html, options = {}) {
+	if (!html) {
+		return "";
+	}
+
 	const marks = createMarks(
 		options.marks ?? [
 			"bold",
