@@ -94,6 +94,65 @@ The Panel doesn't have extensive test coverage yet. That's an area we are still 
 
 We use [vitest](https://vitest.dev) for unit tests for JavaScript and Vue components - `.test.js` files next to the actual JavaScript/Vue file.
 
+### Commit messages
+
+We broadly follow the [Conventional Commits](https://www.conventionalcommits.org) specification:
+
+```
+<type>: <Description>
+<type>!: <Description>
+```
+
+`!` signifies that the commit includes breaking changes (this is **required** if there are breaking changes in the commit; also add an explanation in the footer in this case, see below).
+
+##### Types
+
+| Type | Used for | Include in |
+| --- | --- | --- |
+| `feat` | implements a new feature/enhancement | minor |
+| `fix` | fixes a bug or regression | minor/patch |
+| `refact` | refactors existing code | minor |
+| `chore` | not tied to any specific feature, e.g. bumping version, modifying `.gitignore` | minor |
+| `build` | changes to the CI | minor |
+| `docs` | adds, updates, or revises (in-code) documentation | minor/patch |
+| `style` | updates or reformats the style of the source code | minor/patch |
+| `perf` | improves the performance | minor |
+| `test` | adds missing tests or corrects/improves existing tests (without changes to core code) | minor/patch |
+| `i18n` | fixes or improves the localization files (without changes to core code) | minor/patch |
+| `deprecate` | deprecates existing functionality | minor |
+
+Any commit containing a breaking change has to be included in a major release, no matter which type it belongs to.
+
+##### Description
+
+The description contains a concise description of the change.
+
+- Use the imperative, present tense: "change" not "changed" nor "changes" — think of `This commit will…` or `This commit should…`
+- Capitalize the first letter
+- No dot (`.`) at the end
+
+#### Commit body
+
+```
+<body>
+
+BREAKING CHANGE: explanation
+Fixes #123
+Resolves #123
+Co-Authored-By: Name <them@email.com>
+```
+
+The body should include the motivation for the change and contrast this with previous behavior.
+
+- Is **optional**
+- Use the imperative, present tense: "change" not "changed" nor "changes"
+
+Optionally, footers can be added to the body after a blank line:
+
+- **Breaking changes** must be explained. They start with `BREAKING CHANGE:` followed by a space.
+- `Fixes`/`Resolves` followed by an issue number from the same repository
+- `Co-Authored-By` when squashing has hidden another author
+
 ## And last…
 
 Let us know [in the forum](https://forum.getkirby.com) if you have questions.
