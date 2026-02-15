@@ -58,14 +58,22 @@ abstract class ModelCreateDialogController extends DialogController
 		$custom = [];
 		$fields = $this->blueprint()->fields();
 		$ignore = $this->customFieldsIgnore();
+		$create = $this->blueprint()->create()['fields'] ?? [];
 
-		foreach ($this->blueprint()->create()['fields'] ?? [] as $name) {
-			$field = $fields[$name] ?? null;
+		foreach ($create as $key => $value) {
+			$name    = is_int($key) ? $value : $key;
+			$options = is_int($key) ? [] : (is_array($value) ? $value : []);
+			$field   = $fields[$name] ?? null;
 
 			if ($field === null) {
 				throw new InvalidArgumentException(
 					message: 'Unknown field  "' . $name . '" in create dialog'
 				);
+			}
+
+			// merge override options with base field definition
+			if ($options !== []) {
+				$field = array_replace_recursive($field, $options);
 			}
 
 			if (in_array($field['type'], static::$fieldTypes, true) === false) {
