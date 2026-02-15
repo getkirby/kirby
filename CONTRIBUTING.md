@@ -4,7 +4,7 @@
 
 ## How we organize code
 
-To keep track of different states of our code (current release, bugfixes, features) we use branches:
+To keep track of different states of our code (current release, bug fixes, features) we use branches:
 
 | Branch          | Used for                                                                 | PRs allowed?                |
 | --------------- | ------------------------------------------------------------------------ | --------------------------- |
@@ -42,7 +42,7 @@ For features create a new branch following the name scheme: `feature/issue_numbe
 - Always send feature PRs against the `develop-minor` branch––not `main`.
 - Add a helpful description of what the PR does.
 - New features should include [unit tests](#tests). Let us know if you need help with that.
-- Make your code [style](#style) matches ours and includes [comments/in-code documentation](#documentation).
+- Make sure your code [style](#style) matches ours and includes [comments/in-code documentation](#documentation).
 - Make sure your branch is up to date with the latest state on the `develop-minor` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
 - Please *don't* commit updated dist files in the `panel/dist` folder to avoid merge conflicts. We only build the dist files on release. Your branch should only contain changes to the source files.
 
@@ -56,7 +56,7 @@ We are really happy about any help with translations. Please do not directly tra
 
 ### Panel development
 
-We recommend the [Kirby sandbox](https://github.com/getkirby/sandbox) as your local development environment. Set up a `sandbox.test` virtual host pointing to its `/public` folder (e.g. with [Laravel Herd](https://herd.laravel.com)): Then:
+We recommend the [Kirby sandbox](https://github.com/getkirby/sandbox) as your local development environment. Set up a `sandbox.test` virtual host pointing to its `/public` folder (e.g. with [Laravel Herd](https://herd.laravel.com)). Then:
 
 ```bash
 # Clone and initialize
@@ -89,7 +89,7 @@ We use [Prettier](https://prettier.io) to ensure a consistent style for our Java
 
 ### Documentation
 
-In-code documentation and comments help us understand each other's code - or our own code after some months. Especially when matters get more complicated, we try to add a lot of comments to explain what the code does or why we implemented it like this. Even better than good comments is good code that is easy to understand.
+In-code documentation and comments help us understand each other's code — or our own code after some months. Especially when matters get more complicated, we try to add a lot of comments to explain what the code does or why we implemented it like this. Even better than good comments is good code that is easy to understand.
 
 #### Backend (PHP)
 
@@ -127,11 +127,17 @@ Our automated PR checks will fail if PHPUnit or Psalm report issues with your co
 
 The Panel doesn't have extensive test coverage yet. That's an area we are still trying to improve.
 
-We use [vitest](https://vitest.dev) for unit tests for JavaScript and Vue components - `.test.js` files next to the actual JavaScript/Vue file.
+We use [vitest](https://vitest.dev) for unit tests for JavaScript. Tests are placed in a `*.test.js` file next to the actual JavaScript file. Run them from the `kirby/panel` folder with:
+
+```bash
+npm run test:unit
+```
 
 ### Commit messages
 
 We broadly follow the [Conventional Commits](https://www.conventionalcommits.org) specification:
+
+#### Commit subject
 
 ```
 <type>: <Description>
@@ -140,7 +146,7 @@ We broadly follow the [Conventional Commits](https://www.conventionalcommits.org
 
 `!` signifies that the commit includes breaking changes (this is **required** if there are breaking changes in the commit; also add an explanation in the footer in this case, see below).
 
-##### Types
+#### Types
 
 | Type | Used for | Include in |
 | --- | --- | --- |
@@ -158,7 +164,7 @@ We broadly follow the [Conventional Commits](https://www.conventionalcommits.org
 
 Any commit containing a breaking change has to be included in a major release, no matter which type it belongs to.
 
-##### Description
+#### Description
 
 The description contains a concise description of the change.
 
