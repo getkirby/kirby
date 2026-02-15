@@ -143,6 +143,22 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Clone and remove all elements from the collection
+	 */
+	public function empty(): static
+	{
+		$empty = parent::empty();
+
+		// prevent new collection from initializing its
+		// elements into the now empty collection
+		// (relevant when emptying a collection that
+		// has not been (fully) initialized yet)
+		$empty->initialized = true;
+
+		return $empty;
+	}
+
+	/**
 	 * Returns the elements in reverse order
 	 */
 	public function flip(): static

@@ -128,6 +128,32 @@ class LazyCollectionTest extends TestCase
 		$this->assertFalse($collection2->iterated);
 	}
 
+	public function testEmpty(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->data = [
+			'a' => new Obj(['id' => 'a', 'type' => 'static']),
+			'b' => null
+		];
+
+		$newCollection = $collection->empty();
+
+		$this->assertSame([], $newCollection->toArray());
+	}
+
+	public function testEmptyUnitialized(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->targetData = [
+			'a' => new Obj(['id' => 'a', 'type' => 'initialized']),
+			'b' => null
+		];
+
+		$newCollection = $collection->empty();
+
+		$this->assertSame([], $newCollection->toArray());
+	}
+
 	public function testGet(): void
 	{
 		$collection = new MockLazyCollection();
