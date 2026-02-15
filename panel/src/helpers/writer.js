@@ -1,5 +1,6 @@
 import Mark from "@/components/Forms/Writer/Mark";
 import Node from "@/components/Forms/Writer/Node";
+import { isObject } from "./object";
 
 // Marks
 import {
@@ -42,7 +43,7 @@ export const allowedExtensions = (available, allowed) => {
 		return allowed;
 	}
 
-	if (typeof allowed === "object" && allowed !== null) {
+	if (isObject(allowed) === true) {
 		return Object.keys(allowed).filter((key) => allowed[key] !== false);
 	}
 
@@ -143,9 +144,9 @@ export const createNodes = (nodes, required = []) => {
 
 export const extensionOptions = (allowed) => {
 	if (
-		typeof allowed !== "object" ||
-		allowed === null ||
-		Array.isArray(allowed)
+		Array.isArray(allowed) === true ||
+		isObject(allowed) === false ||
+		allowed === null
 	) {
 		return {};
 	}
