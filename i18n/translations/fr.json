@@ -637,7 +637,7 @@
 	"prev": "Précédent",
 
 	"preview": "Prévisualiser",
-	"preview.browser.scroll": "Sync scroll",
+	"preview.browser.scroll": "Synchroniser le défilement",
 
 	"publish": "Publier",
 	"published": "Publié",
@@ -788,7 +788,7 @@
 	"user.create": "Ajouter un nouvel utilisateur",
 	"user.delete": "Supprimer cet utilisateur",
 	"user.delete.confirm": "Voulez-vous vraiment supprimer <br><strong>{email}</strong> ?",
-	"user.setPassword": "Set password",
+	"user.setPassword": "Définir un mot de passe",
 
 	"users": "Utilisateurs",
 
