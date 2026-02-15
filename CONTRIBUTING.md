@@ -9,14 +9,14 @@ To keep track of different states of our code (current release, bug fixes, featu
 | Branch          | Used for                                                                 | PRs allowed?                |
 | --------------- | ------------------------------------------------------------------------ | --------------------------- |
 | `main`          | Latest released version                                                  | ❌                           |
-| `develop-patch` | Working branch for next patch release, e.g. `4.0.x`                      | ✅                          |
-| `develop-minor` | Working branch for next minor release, e.g. `4.x.0`                      | ✅                          |
-| `v5/develop`    | Working branch for next major release, e.g. `5.0.0`                      | ✅                          |
+| `develop-patch` | Working branch for next patch release, e.g. `5.0.x`                      | ✅                          |
+| `develop-minor` | Working branch for next minor release, e.g. `5.x.0`                      | ✅                          |
+| `v6/develop`    | Working branch for next major release, e.g. `6.0.0`                      | ✅                          |
 | `fix/*`         | Temporary branches for single bugfix                                     | -                           |
 | `feature/*`     | Temporary branches for single feature                                    | -                           |
 | `release/*`     | Pre-releases in testing before they are merged into `main` when released | only during release testing |
 
-We will review all pull requests (PRs) to `develop-patch`, `develop-minor` and `v5/develop` and merge them if accepted, once an appropriate version is upcoming. Please understand that this might not be the immediate next release and might take some time.
+We will review all pull requests (PRs) to `develop-patch`, `develop-minor` and `v6/develop` and merge them if accepted, once an appropriate version is upcoming. Please understand that this might not be the immediate next release and might take some time.
 
 ## How you can contribute
 
@@ -46,7 +46,7 @@ For features create a new branch following the name scheme: `feature/issue_numbe
 - Make sure your branch is up to date with the latest state on the `develop-minor` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
 - Please *don't* commit updated dist files in the `panel/dist` folder to avoid merge conflicts. We only build the dist files on release. Your branch should only contain changes to the source files.
 
-We try to bundle features in our major releases, e.g. `5.0`. That is why we might only review and, if accepted, merge your PR once an appropriate release is upcoming. Please understand that we cannot merge all feature ideas or that it might take a while. Check out the [roadmap](https://roadmap.getkirby.com) to see upcoming releases.
+We try to bundle features in our major releases, e.g. `6.0`. That is why we might only review and, if accepted, merge your PR once an appropriate release is upcoming. Please understand that we cannot merge all feature ideas or that it might take a while. Check out the [roadmap](https://roadmap.getkirby.com) to see upcoming releases.
 
 ### Translations
 
