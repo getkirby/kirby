@@ -128,6 +128,73 @@ class LazyCollectionTest extends TestCase
 		$this->assertFalse($collection2->iterated);
 	}
 
+	public function testEmpty(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->data = [
+			'a' => new Obj(['id' => 'a', 'type' => 'static']),
+			'b' => null
+		];
+
+		$newCollection = $collection->empty();
+
+		$this->assertSame([], $newCollection->toArray());
+	}
+
+	public function testEmptyUnitialized(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->targetData = [
+			'a' => new Obj(['id' => 'a', 'type' => 'initialized']),
+			'b' => null
+		];
+
+		$newCollection = $collection->empty();
+
+		$this->assertSame([], $newCollection->toArray());
+	}
+
+	public function testFind(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->data = [
+			'a' => $a = new Obj(['id' => 'a', 'type' => 'static']),
+			'b' => null,
+			'c' => null
+		];
+
+		$objectResult     = $collection->find('a');
+		$collectionResult = $collection->find('a', 'b');
+
+		$this->assertSame($a, $objectResult);
+
+		$this->assertSame([
+			'a' => ['id' => 'a', 'type' => 'static'],
+			'b' => ['id' => 'b', 'type' => 'hydrated']
+		], $collectionResult->toArray());
+	}
+
+	public function testFindUnitialized(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->targetData = [
+			'a' => new Obj(['id' => 'a', 'type' => 'initialized']),
+			'b' => null,
+			'c' => null
+		];
+
+		$objectResult     = $collection->find('a');
+		$collectionResult = $collection->find('a', 'b');
+
+		$this->assertSame('a', $objectResult->id);
+		$this->assertSame('hydrated', $objectResult->type);
+
+		$this->assertSame([
+			'a' => ['id' => 'a', 'type' => 'hydrated'],
+			'b' => ['id' => 'b', 'type' => 'hydrated']
+		], $collectionResult->toArray());
+	}
+
 	public function testGet(): void
 	{
 		$collection = new MockLazyCollection();
@@ -578,6 +645,40 @@ class LazyCollectionTest extends TestCase
 		$this->assertSame(['b'], $collection->hydratedElements);
 		$this->assertFalse($collection->hydrated);
 		$this->assertTrue($collection->initialized);
+	}
+
+	public function testPrepend(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->data = [
+			'b' => new Obj(['id' => 'b', 'type' => 'static']),
+			'c' => null
+		];
+
+		$collection->prepend(new Obj(['id' => 'a', 'type' => 'prepended']));
+
+		$this->assertSame([
+			'a' => ['id' => 'a', 'type' => 'prepended'],
+			'b' => ['id' => 'b', 'type' => 'static'],
+			'c' => ['id' => 'c', 'type' => 'hydrated']
+		], $collection->toArray());
+	}
+
+	public function testPrependUnitialized(): void
+	{
+		$collection = new MockLazyCollectionWithInitialization();
+		$collection->targetData = [
+			'b' => new Obj(['id' => 'b', 'type' => 'initialized']),
+			'c' => null
+		];
+
+		$collection->prepend(new Obj(['id' => 'a', 'type' => 'prepended']));
+
+		$this->assertSame([
+			'a' => ['id' => 'a', 'type' => 'prepended'],
+			'b' => ['id' => 'b', 'type' => 'initialized'],
+			'c' => ['id' => 'c', 'type' => 'hydrated']
+		], $collection->toArray());
 	}
 
 	public function testRandom(): void
