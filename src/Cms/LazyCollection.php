@@ -143,6 +143,44 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Clone and remove all elements from the collection
+	 */
+	public function empty(): static
+	{
+		$empty = parent::empty();
+
+		// prevent new collection from initializing its
+		// elements into the now empty collection
+		// (relevant when emptying a collection that
+		// has not been (fully) initialized yet)
+		$empty->initialized = true;
+
+		return $empty;
+	}
+
+	/**
+	 * Find one or multiple elements by id
+	 *
+	 * @param string ...$keys
+	 * @return TValue|static
+	 */
+	public function find(...$keys)
+	{
+		$result = parent::find(...$keys);
+
+		// when the result is a cloned collection (multiple keys),
+		// mark it as initialized to prevent it from initializing
+		// all of its elements again after we filtered it above
+		// (relevant when finding elements in a collection that
+		// has not been (fully) initialized yet)
+		if ($result instanceof static && $result !== $this) {
+			$result->initialized = true;
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Returns the elements in reverse order
 	 */
 	public function flip(): static
@@ -376,6 +414,26 @@ abstract class LazyCollection extends Collection
 		}
 
 		return $nth;
+	}
+
+	/**
+	 * Prepends an element to the data array
+	 *
+	 * ```php
+	 * $collection->prepend('key', $value);
+	 * $collection->prepend($value);
+	 * ```
+	 *
+	 * @param string|TValue ...$args
+	 * @return $this
+	 */
+	public function prepend(...$args): static
+	{
+		// prepending to an uninitialized collection would
+		// destroy the order on later initialization
+		$this->initialize();
+
+		return parent::prepend(...$args);
 	}
 
 	/**
