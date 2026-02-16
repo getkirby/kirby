@@ -153,6 +153,12 @@ class Users extends LazyCollection
 			throw new LogicException('Cannot hydrate user "' . $key . '" with missing root'); // @codeCoverageIgnore
 		}
 
+		// ignore empty keys to avoid matching the `accounts` root
+		// directory itself (e.g. from `false` values coerced to `""`)
+		if ($key === '') {
+			return null;
+		}
+
 		// check if the user directory exists if not all keys have been
 		// populated in the collection, otherwise we can assume that
 		// this method will only be called on "unhydrated" user IDs

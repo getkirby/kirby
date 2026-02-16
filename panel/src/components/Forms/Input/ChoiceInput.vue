@@ -2,7 +2,6 @@
 	<label
 		:aria-disabled="disabled"
 		:class="['k-choice-input', $attrs.class]"
-		:data-has-icon="Boolean(icon)"
 		:style="$attrs.style"
 	>
 		<input
