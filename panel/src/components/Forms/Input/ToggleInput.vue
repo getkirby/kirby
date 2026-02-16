@@ -4,6 +4,7 @@
 		:checked="value"
 		:class="['k-toggle-input', $attrs.class]"
 		:disabled="disabled"
+		:icon="undefined"
 		:label="labelText"
 		:style="$attrs.style"
 		type="checkbox"
