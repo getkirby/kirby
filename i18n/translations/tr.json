@@ -637,7 +637,7 @@
 	"prev": "Önceki",
 
 	"preview": "Önizle",
-	"preview.browser.scroll": "Sync scroll",
+	"preview.browser.scroll": "Senkronize kaydırma",
 
 	"publish": "Yayınla",
 	"published": "Yayınlandı",
@@ -788,7 +788,7 @@
 	"user.create": "Yeni bir kullanıcı ekle",
 	"user.delete": "Bu kullanıcıyı sil",
 	"user.delete.confirm": "<strong>{email}</strong> kullanıcısını silmek istediğinizden emin misiniz?",
-	"user.setPassword": "Set password",
+	"user.setPassword": "Şifre belirle",
 
 	"users": "Kullanıcılar",
 

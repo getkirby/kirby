@@ -14,7 +14,7 @@
 			<k-icon-frame
 				v-else-if="image || icon"
 				v-bind="image ?? { icon }"
-				class="k-tag-icon"
+				class="k-tag-image"
 			/>
 		</slot>
 
@@ -161,6 +161,7 @@ button.k-tag:not([aria-disabled="true"]) {
 .k-tag:not([aria-disabled="true"]):focus {
 	outline: var(--outline);
 }
+
 .k-tag-image {
 	height: 100%;
 	border-radius: var(--rounded-xs);
@@ -171,9 +172,7 @@ button.k-tag:not([aria-disabled="true"]) {
 	border-end-start-radius: var(--tag-rounded);
 	background-clip: padding-box;
 }
-.k-tag-icon {
-	padding-inline: var(--spacing-2);
-}
+
 .k-tag-text {
 	padding-inline: var(--spacing-2);
 	line-height: var(--leading-tight);
@@ -202,5 +201,8 @@ button.k-tag:not([aria-disabled="true"]) {
 	background-color: var(--tag-color-disabled-back);
 	color: var(--tag-color-disabled-text);
 	cursor: not-allowed;
+}
+.k-tag:where([aria-disabled="true"]) .k-tag-image {
+	opacity: var(--opacity-disabled);
 }
 </style>
