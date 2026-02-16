@@ -24,6 +24,7 @@
 				<k-view-buttons :buttons="buttons">
 					<template #after>
 						<k-form-controls
+							:can-save="permissions.save"
 							:editor="editor"
 							:has-diff="hasDiff"
 							:is-locked="isLocked"

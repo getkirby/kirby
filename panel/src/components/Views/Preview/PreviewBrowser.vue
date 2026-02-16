@@ -12,6 +12,7 @@
 					</p>
 					<k-form-controls
 						v-else
+						:can-save="permissions.save"
 						:editor="editor"
 						:has-diff="hasDiff"
 						:is-locked="isLocked"
