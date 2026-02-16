@@ -17,7 +17,7 @@
 			{{ filename }}
 
 			<template #buttons>
-				<k-view-buttons :buttons="buttons">
+				<k-view-buttons :buttons="buttons" @action="onAction">
 					<template #after>
 						<k-form-controls
 							:editor="editor"
