@@ -6,6 +6,7 @@ use Kirby\Exception\Exception;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * File System Cache Driver
@@ -214,13 +215,10 @@ class FileCache extends Cache
 	 */
 	public function flush(): bool
 	{
-		if (
-			Dir::remove($this->root) === true &&
-			Dir::make($this->root) === true
-		) {
-			return true;
+		try {
+			return Dir::remove($this->root) && Dir::make($this->root);
+		} catch (Throwable) {
+			return false;
 		}
-
-		return false; // @codeCoverageIgnore
 	}
 }
