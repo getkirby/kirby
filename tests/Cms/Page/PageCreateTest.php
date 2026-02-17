@@ -472,4 +472,55 @@ class PageCreateTest extends ModelTestCase
 		$this->assertInstanceOf(NewParentPage::class, $parent);
 		$this->assertInstanceOf(NewDefaultPage::class, $child);
 	}
+
+	/**
+	 * Changing status in the page.create:after hook should
+	 * not create a duplicate draft directory
+	 */
+	public function testCreateWithChangeStatusInAfterHook(): void
+	{
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.create:after' => function (Page $page) {
+					$page->changeStatus('listed');
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug' => 'test',
+		]);
+
+		// the draft directory should not exist anymore
+		$this->assertDirectoryDoesNotExist(static::TMP . '/content/_drafts/test');
+
+		// the listed page directory should exist (with sorting number)
+		$this->assertDirectoryExists(static::TMP . '/content/1_test');
+	}
+
+	/**
+	 * Changing status in the page.create:after hook should
+	 * not create a second page with a different UUID
+	 */
+	public function testCreateWithChangeStatusInAfterHookUuid(): void
+	{
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.create:after' => function (Page $page) {
+					$page->changeStatus('listed');
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		Page::create([
+			'slug' => 'test',
+		]);
+
+		// there should be exactly one page, no duplicate draft
+		$this->assertCount(1, $app->site()->childrenAndDrafts());
+	}
 }
