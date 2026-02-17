@@ -31,7 +31,10 @@ trait AppTranslations
 				$this->multilang() === true &&
 				$language = $this->languages()->find($locale)
 			) {
-				$data = [...$data, ...$language->translations()];
+				$data = [
+					...$data,
+					...$language->variables()->toArray()
+				];
 			}
 
 
@@ -137,7 +140,10 @@ trait AppTranslations
 
 		// inject current language translations
 		if ($language = $this->language($locale)) {
-			$inject = [...$inject, ...$language->translations()];
+			$inject = [
+				...$inject,
+				...$language->variables()->toArray()
+			];
 		}
 
 		// load from disk instead
@@ -162,14 +168,14 @@ trait AppTranslations
 		// injects languages translations
 		if ($languages = $this->languages()) {
 			foreach ($languages as $language) {
-				$languageCode         = $language->code();
-				$languageTranslations = $language->translations();
+				$languageCode      = $language->code();
+				$languageVariables = $language->variables()->toArray();
 
 				// merges language translations with extensions translations
-				if (empty($languageTranslations) === false) {
+				if (empty($languageVariables) === false) {
 					$translations[$languageCode] = [
 						...$translations[$languageCode] ?? [],
-						...$languageTranslations
+						...$languageVariables
 					];
 				}
 			}
