@@ -103,6 +103,7 @@ class FileBlueprintTest extends TestCase
 			'read'       	 => null,
 			'replace'    	 => null,
 			'sort'           => null,
+			'unlock'         => null,
 			'update'     	 => null,
 		];
 

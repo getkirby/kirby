@@ -324,6 +324,35 @@ export default (panel) => {
 		saveAbortController: null,
 
 		/**
+		 * Unlocks the content for the current editor
+		 */
+		async unlock(env = {}) {
+			if (this.isProcessing === true) {
+				return;
+			}
+
+			// Only discard changes from the current view
+			if (this.isCurrent(env) === false) {
+				throw new Error("Cannot unlock content from another view");
+			}
+
+			// Check the lock state to determine if we can unlock
+			if (this.isLocked(env) === false) {
+				throw new Error("The content is not locked");
+			}
+
+			// Start processing the request
+			this.isProcessing = true;
+
+			try {
+				await this.request("unlock", {}, env);
+				this.emit("unlock", {}, env);
+			} finally {
+				this.isProcessing = false;
+			}
+		},
+
+		/**
 		 * Updates the form values of the current view
 		 */
 		async update(values = {}, env = {}) {

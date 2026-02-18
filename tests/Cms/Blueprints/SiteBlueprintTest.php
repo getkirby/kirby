@@ -15,6 +15,7 @@ class SiteBlueprintTest extends TestCase
 
 		$expected = [
 			'changeTitle' => null,
+			'unlock'      => null,
 			'update'      => null,
 		];
 

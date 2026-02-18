@@ -5,6 +5,7 @@ namespace Kirby\Content;
 use Kirby\Cms\Language;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 
 /**
  * The VersionRules class handles the validation for all
@@ -142,6 +143,25 @@ class VersionRules
 		Language $language
 	): void {
 		static::ensure($version, $language);
+	}
+
+	public static function unlock(
+		Version $version,
+		Language $language
+	): void {
+		static::ensure($version, $language);
+
+		if ($version->id()->is('changes') === false) {
+			throw new LogicException(
+				key: 'content.unlock.invalidVersion'
+			);
+		}
+
+		if ($version->model()->permissions()->can('unlock') !== true) {
+			throw new PermissionException(
+				key: $version->model()::CLASS_ALIAS . '.unlock.permission',
+			);
+		}
 	}
 
 	public static function update(
