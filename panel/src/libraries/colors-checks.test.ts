@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isHex, isRgb, isHsl, isHsv } from "./colors-checks.js";
+import { isHex, isRgb, isHsl, isHsv } from "./colors-checks";
 
 describe("colors.isHex", () => {
 	const tests = [
