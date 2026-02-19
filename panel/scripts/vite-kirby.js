@@ -1,6 +1,6 @@
 /* eslint-env node */
 import fs from "fs";
-import generateDocs from "./docs.mjs";
+import generateDocs from "./docs";
 
 /**
  * Runs callback on any kind of console exit
