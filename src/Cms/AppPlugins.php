@@ -13,6 +13,7 @@ use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
 use Kirby\Plugin\License;
 use Kirby\Plugin\Plugin;
+use Kirby\Plugin\Autoloader;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection as ToolkitCollection;
@@ -858,18 +859,34 @@ trait AppPlugins
 		string|null $root = null,
 		string|null $version = null,
 		Closure|string|array|null $license = null,
+		bool|string $autoloader = false
 	): Plugin|null {
-		if ($extends === null) {
+
+
+		if ($extends === null && $autoloader === false) {
 			return static::$plugins[$name] ?? null;
 		}
 
+		$root ??= $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
+
+		if ($autoloader) {
+
+			//Allow to apply custom Autoloader
+			$autolader_class = is_bool($autoloader) ? Autoloader::class : $autoloader;
+
+			$extends = A::merge($autolader_class::load(
+				name: $name,
+				root: $root
+			), $extends ?? []);
+		}
+
 		$plugin = new Plugin(
-			name:    $name,
+			name: $name,
 			extends: $extends,
-			info:    $info,
+			info: $info,
 			license: $license,
 			// TODO: Remove fallback to $extends in v7
-			root:    $root ?? $extends['root'] ?? dirname(debug_backtrace()[0]['file']),
+			root: $root,
 			version: $version
 		);
 
@@ -909,6 +926,11 @@ trait AppPlugins
 		// mark plugins as loaded to stop doing it twice
 		$this->pluginsAreLoaded = true;
 		return static::$plugins;
+	}
+
+	public function allowedExtensionsKeys(): array
+	{
+		return array_keys($this->extensions);
 	}
 
 	/**
