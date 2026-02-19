@@ -491,7 +491,12 @@ trait PageActions
 			$page = $page->changeStatus('listed', $props['num']);
 		}
 
-		$page->uuid()?->populate();
+		// only populate UUID cache if the page still exists at its
+		// expected location; a hook may have changed the status and
+		// moved the draft directory, making the page object stale
+		if ($page->exists() === true) {
+			$page->uuid()?->populate();
+		}
 
 		return $page;
 	}
