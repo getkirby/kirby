@@ -97,7 +97,7 @@ function createPlugins(mode) {
 function createTest() {
 	return {
 		environment: "node",
-		include: ["**/*.test.js"],
+		include: ["**/*.test.{js,ts}"],
 		setupFiles: ["vitest.setup.js"]
 	};
 }
@@ -152,7 +152,7 @@ export default defineConfig(async ({ mode }) => {
 			}
 		},
 		optimizeDeps: {
-			entries: "src/**/*.{js,vue}",
+			entries: "src/**/*.{js,ts,vue}",
 			exclude: ["vitest", "vue"],
 			holdUntilCrawlEnd: false
 		},

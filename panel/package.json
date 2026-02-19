@@ -5,11 +5,13 @@
 	"scripts": {
 		"build": "vite build",
 		"build:docs": "node scripts/docs.mjs",
+		"build:types": "tsc -p tsconfig.build.json",
 		"dev": "vite --host",
-		"lint": "eslint \"src/**/*.{js,vue}\"",
-		"lint:fix": "npm run lint -- --fix",
 		"format": "prettier --write \"src/**/*.{js,vue}\"",
-		"test:unit": "vitest run"
+		"lint": "eslint \"src/**/*.{js,ts,vue}\"",
+		"lint:fix": "npm run lint -- --fix",
+		"test:unit": "vitest run",
+		"types": "vue-tsc --noEmit"
 	},
 	"dependencies": {
 		"autosize": "^6.0.1",
@@ -32,15 +34,18 @@
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-vue": "^10.8.0",
-		"glob": "^13.0.3",
+		"glob": "^13.0.6",
 		"globals": "^17.3.0",
 		"jsdom": "^28.1.0",
 		"prettier": "^3.8.1",
 		"terser": "^5.46.0",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.56.0",
 		"vite": "^7.3.1",
 		"vite-plugin-static-copy": "^3.2.0",
 		"vitest": "^4.0.18",
-		"vue-docgen-api": "^4.79.2"
+		"vue-docgen-api": "^4.79.2",
+		"vue-tsc": "^3.2.5"
 	},
 	"browserslist": [
 		"last 2 Android versions",
