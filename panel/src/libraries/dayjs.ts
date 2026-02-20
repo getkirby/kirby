@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import interpret from "./dayjs-interpret.js";
-import iso from "./dayjs-iso.js";
-import merge from "./dayjs-merge.js";
-import pattern from "./dayjs-pattern.js";
-import round from "./dayjs-round.js";
-import validate from "./dayjs-validate.js";
+import interpret from "./dayjs-interpret";
+import iso from "./dayjs-iso";
+import merge from "./dayjs-merge";
+import pattern from "./dayjs-pattern";
+import round from "./dayjs-round";
+import validate from "./dayjs-validate";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(interpret);

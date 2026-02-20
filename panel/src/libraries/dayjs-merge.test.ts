@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import dayjs from "./dayjs.js";
+import type { UnitType } from "dayjs";
+import dayjs from "./dayjs";
 
 describe.concurrent("dayjs.merge()", () => {
-	const data = [
+	const data: [string, string, "date" | "time" | UnitType[], string][] = [
 		[
 			"2020-02-29 16:05:15",
 			"2021-03-01 18:42:11",
@@ -44,6 +45,7 @@ describe.concurrent("dayjs.merge()", () => {
 		const a = dayjs("2020-01-01");
 		const b = dayjs("2020-02-01");
 		expect(() => {
+			// @ts-expect-error - testing invalid input
 			a.merge(b, "foo");
 		}).toThrow("Invalid merge unit alias");
 	});

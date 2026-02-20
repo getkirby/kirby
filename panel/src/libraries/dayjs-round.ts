@@ -1,15 +1,29 @@
-export default (option, Dayjs) => {
+import type { Dayjs, ManipulateType, PluginFunc, UnitType } from "dayjs";
+
+declare module "dayjs" {
+	interface Dayjs {
+		round(unit: UnitType, size: number): Dayjs;
+	}
+}
+
+const plugin: PluginFunc = (_option, Dayjs) => {
 	/**
 	 * Rounds the current objec
 	 * to the nearest provided unit step
-	 *
-	 * @param {string} unit dayjs unit
-	 * @param {int} size step size
-	 * @returns {Object}
 	 */
-	Dayjs.prototype.round = function (unit = "date", size = 1) {
+	Dayjs.prototype.round = function (
+		unit: UnitType = "date",
+		size: number = 1
+	): Dayjs {
 		// Validate step unit
-		const units = ["second", "minute", "hour", "date", "month", "year"];
+		const units: UnitType[] = [
+			"second",
+			"minute",
+			"hour",
+			"date",
+			"month",
+			"year"
+		];
 
 		if (unit === "day") {
 			unit = "date";
@@ -45,18 +59,19 @@ export default (option, Dayjs) => {
 		// check if rounding leads to a carry over
 		if (subunit) {
 			// define ceiling for direct precessor subunit
-			const ceiling = {
+			const map: Partial<Record<UnitType, number>> = {
 				month: 12,
 				date: dt.daysInMonth(),
 				hour: 24,
 				minute: 60,
 				second: 60
-			}[subunit];
+			};
+			const ceiling = map[subunit]!;
 
 			// check if subunit was rounded up (ceiling),
 			// if so manipulate datetime object to include carry over
 			if (Math.round(dt.get(subunit) / ceiling) * ceiling === ceiling) {
-				dt = dt.add(1, unit === "date" ? "day" : unit);
+				dt = dt.add(1, (unit === "date" ? "day" : unit) as ManipulateType);
 			}
 
 			// set subunit to its start
@@ -69,3 +84,5 @@ export default (option, Dayjs) => {
 		return dt;
 	};
 };
+
+export default plugin;
