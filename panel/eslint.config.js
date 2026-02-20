@@ -12,6 +12,22 @@ export default [
 	...vue.configs["flat/vue2-recommended"],
 	prettier,
 	{
+		ignores: ["src/libraries/dayjs*.ts"],
+		rules: {
+			"no-restricted-imports": [
+				"error",
+				{
+					paths: [
+						{
+							name: "dayjs",
+							message: "Import dayjs from '@/libraries/dayjs' instead."
+						}
+					]
+				}
+			]
+		}
+	},
+	{
 		rules: {
 			"vue/attributes-order": "error",
 			"vue/component-definition-name-casing": "off",
