@@ -81,4 +81,5 @@ jobs:
         run: npm run lint -- --max-warnings 0 --format stylish --no-fix
 
       - name: "Prettier: JavaScript coding style violations"
-        run: npm run format --check
+        run: npm run format -- --check
+
