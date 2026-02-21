@@ -263,16 +263,19 @@ class ModelTest extends TestCase
 		$this->assertStringContainsString('test-38x.jpg 38w', $image['srcset']);
 		$this->assertStringContainsString('test-76x.jpg 76w', $image['srcset']);
 
-		// cards
+		// cards - test image is 128x128, so all requested sizes (352, 864, 1408)
+		// are larger than original, resulting in 128w (deduplicated to one entry)
 		$image = $panel->image('site.image', 'cards');
-		$this->assertStringContainsString('test-352x.jpg 352w', $image['srcset']);
-		$this->assertStringContainsString('test-864x.jpg 864w', $image['srcset']);
-		$this->assertStringContainsString('test-1408x.jpg 1408w', $image['srcset']);
+		$this->assertStringContainsString(' 128w', $image['srcset']);
+		// should only have one entry since all sizes result in 128w
+		$this->assertSame(1, substr_count($image['srcset'], 'w'));
 
-		// cardlets
+		// cardlets - test image is 128x128, so 96 stays 96, but 192 becomes 128
 		$image = $panel->image('site.image', 'cardlets');
 		$this->assertStringContainsString('test-96x.jpg 96w', $image['srcset']);
-		$this->assertStringContainsString('test-192x.jpg 192w', $image['srcset']);
+		$this->assertStringContainsString(' 128w', $image['srcset']);
+		// should have two entries (96w and 128w)
+		$this->assertSame(2, substr_count($image['srcset'], 'w'));
 
 		// table
 		$image = $panel->image('site.image', 'table');
