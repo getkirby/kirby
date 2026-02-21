@@ -9,9 +9,6 @@ use stdClass;
  * Super simple stdClass extension with
  * magic getter methods for all properties
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

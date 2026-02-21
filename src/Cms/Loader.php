@@ -20,9 +20,6 @@ use Kirby\Filesystem\F;
  * untouched core parts. This is useful if you want to
  * reuse or fall back to core features in your plugins.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

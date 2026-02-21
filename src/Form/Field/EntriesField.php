@@ -15,9 +15,6 @@ use Kirby\Toolkit\Str;
 /**
  * Main class file of the entries field
  *
- * @package   Kirby Field
- * @author    Ahmet Bora <ahmet@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0

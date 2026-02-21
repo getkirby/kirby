@@ -7,13 +7,10 @@ use Kirby\Toolkit\Str;
 
 /**
  * Uri protocol for UUIDs
- * @since 3.8.0
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.8.0
  */
 class Uri extends BaseUri
 {

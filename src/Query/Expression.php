@@ -9,11 +9,9 @@ use Kirby\Toolkit\A;
  * The Expression class adds support for simple shorthand
  * comparisons (`a ? b : c`, `a ?: c` and `a ?? b`)
  *
- * @package   Kirby Query
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
  * @deprecated 6.0.0 Will be removed in Kirby 7
  */
 class Expression

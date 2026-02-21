@@ -6,11 +6,9 @@ namespace Kirby\Cms;
  * The Picker abstract is the foundation
  * for the UserPicker, PagePicker and FilePicker
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
  * @deprecated 6.0.0 Use `Kirby\Panel\Controller\Dialog\ModelPickerDialogController` instead
  */
 abstract class Picker

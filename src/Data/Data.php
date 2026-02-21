@@ -17,9 +17,6 @@ use Throwable;
  * detect which data handler to use in order
  * to correctly encode and decode passed data.
  *
- * @package   Kirby
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

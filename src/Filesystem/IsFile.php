@@ -11,13 +11,10 @@ use Kirby\Image\Image;
  * Adds `::asset()` method which returns either a
  * `Kirby\Filesystem\File` or `Kirby\Image\Image` object.
  * Proxies method calls to this object.
- * @since 3.6.0
  *
- * @package   Kirby Filesystem
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.6.0
  */
 trait IsFile
 {

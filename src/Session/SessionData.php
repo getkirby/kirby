@@ -10,9 +10,6 @@ use Kirby\Toolkit\A;
  * store visitor preferences for your
  * site throughout various requests.
  *
- * @package   Kirby Session
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

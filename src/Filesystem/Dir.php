@@ -21,9 +21,6 @@ use Throwable;
  * and converting the results into
  * children, files and other page stuff.
  *
- * @package   Kirby Filesystem
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

@@ -10,9 +10,6 @@ use Closure;
  * Those are configured in `kirby/config/urls.php`
  * and `kirby/config/roots.php`
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

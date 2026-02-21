@@ -13,9 +13,6 @@ use Kirby\Toolkit\Str;
  * The query builder is used by the Database class
  * to build SQL queries with a fluent API
  *
- * @package   Kirby Database
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

@@ -17,9 +17,6 @@ use Throwable;
  * converted, modified or evaluated with the
  * following methods:
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *

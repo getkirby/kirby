@@ -10,11 +10,9 @@ use Kirby\Query\Visitors\DefaultVisitor;
 /**
  * Runner that caches the AST in memory
  *
- * @package   Kirby Query
- * @author    Roman Steiner <roman@toastlab.ch>
- * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ *
  * @unstable
  */
 class DefaultRunner extends Runner

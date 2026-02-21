@@ -10,12 +10,10 @@ use Kirby\Panel\Ui\Dialog\FormDialog;
 /**
  * Controls the Panel dialog for changing the email of a user
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
  * @unstable
  */
 class UserCreateDialogController extends DialogController
