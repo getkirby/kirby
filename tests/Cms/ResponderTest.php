@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class TestResponse extends Response

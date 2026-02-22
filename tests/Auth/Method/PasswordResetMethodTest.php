@@ -1,0 +1,97 @@
+<?php
+
+namespace Kirby\Auth\Method;
+
+use Kirby\Auth\Auth;
+use Kirby\Auth\Method;
+use Kirby\Auth\Methods;
+use Kirby\Auth\Status;
+use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Method::class)]
+#[CoversClass(PasswordResetMethod::class)]
+class PasswordResetMethodTest extends TestCase
+{
+	protected function auth(bool $has2fa = false): Auth
+	{
+		$methods = $this->createStub(Methods::class);
+		$config = ['password' => []];
+
+		if ($has2fa === true) {
+			$config['password']['2fa'] = true;
+		}
+
+		$methods->method('config')->willReturn($config);
+
+		$auth = $this->createStub(Auth::class);
+		$auth->method('methods')->willReturn($methods);
+
+		return $auth;
+	}
+
+	public function testAuthenticate(): void
+	{
+		$args   = null;
+		$status = $this->createStub(Status::class);
+		$auth   = $this->createStub(Auth::class);
+		$auth->method('createChallenge')
+			->willReturnCallback(function (...$x) use (&$args, $status) {
+				$args = $x;
+				return $status;
+			});
+
+		$method = new PasswordResetMethod(auth: $auth);
+
+		$result = $method->authenticate('marge@simpsons.com');
+		$this->assertInstanceOf(Status::class, $result);
+		$this->assertSame($status, $result);
+		$this->assertSame(['marge@simpsons.com', false, 'password-reset'], $args);
+
+		// Password reset should ignore `long: true`
+		$result = $method->authenticate('lisa@simpsons.com', long: true);
+		$this->assertSame(['lisa@simpsons.com', false, 'password-reset'], $args);
+	}
+
+	public function testIcon(): void
+	{
+		$icon = PasswordResetMethod::icon();
+		$this->assertSame('question', $icon);
+	}
+
+	public function testIsEnabled(): void
+	{
+		$auth = $this->auth();
+		$this->assertTrue(PasswordResetMethod::isEnabled($auth));
+	}
+
+	public function testIsEnabledWith2FA(): void
+	{
+		$auth = $this->auth(has2fa: true);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The "password-reset" login method cannot be enabled when 2FA is required');
+
+		PasswordResetMethod::isEnabled($auth);
+	}
+
+	public function testIsUsingChallenges(): void
+	{
+		$auth = $this->auth();
+		$this->assertTrue(PasswordResetMethod::isUsingChallenges($auth));
+	}
+
+	public function testSettings(): void
+	{
+		$user     = $this->createStub(User::class);
+		$settings = PasswordResetMethod::settings($user);
+		$this->assertCount(0, $settings);
+	}
+
+	public function testType(): void
+	{
+		$this->assertSame('password-reset', PasswordResetMethod::type());
+	}
+}

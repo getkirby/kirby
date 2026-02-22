@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Method;
+use Kirby\Auth\Status;
 use Kirby\Cache\FileCache;
 use Kirby\Cms\Auth\Challenge;
 use Kirby\Filesystem\Dir;
@@ -10,6 +12,7 @@ use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
 use Kirby\Plugin\Plugin;
+use Kirby\Tests\MockTime;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -29,6 +32,17 @@ class DummyAuthChallenge extends Challenge
 	public static function verify(User $user, string $code): bool
 	{
 		return $code === 'test-verify';
+	}
+}
+
+class DummyAuthMethod extends Method
+{
+	public function authenticate(
+		string $email,
+		string|null $password = null,
+		bool $long = false
+	): Status|User {
+		return new User(['email' => $email]);
 	}
 }
 
@@ -220,7 +234,7 @@ class AppPluginsTest extends TestCase
 				'index' => static::TMP
 			],
 			'authChallenges' => [
-				'dummy' => 'Kirby\Cms\DummyAuthChallenge'
+				'dummy' => DummyAuthChallenge::class
 			],
 			'options' => [
 				'auth.challenges' => ['dummy']
@@ -237,6 +251,7 @@ class AppPluginsTest extends TestCase
 		$status = $auth->createChallenge('homer@simpsons.com');
 		$this->assertSame([
 			'challenge' => 'dummy',
+			'data'      => null,
 			'email'     => 'homer@simpsons.com',
 			'mode'      => 'login',
 			'status'    => 'pending'
@@ -254,6 +269,27 @@ class AppPluginsTest extends TestCase
 		);
 
 		$kirby->session()->destroy();
+	}
+
+	public function testAuthMethod(): void
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'authMethods' => [
+				'dummy' => DummyAuthMethod::class
+			],
+			'options' => [
+				'auth.methods' => ['dummy']
+			]
+		]);
+
+		$auth   = $kirby->auth();
+		$method = $auth->methods()->get('dummy');
+		$user   = $method->authenticate('lisa@simpson.com');
+		$this->assertInstanceOf(User::class, $user);
+		$this->assertSame('lisa@simpson.com', $user->email());
 	}
 
 	public function testBlueprint(): void

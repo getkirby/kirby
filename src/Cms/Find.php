@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\UserNotFoundException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -164,9 +165,6 @@ class Find
 		}
 
 		// get a specific user by id
-		return $kirby->user($id) ?? throw new NotFoundException(
-			key: 'user.notFound',
-			data: ['name' => $id]
-		);
+		return $kirby->user($id) ?? throw new UserNotFoundException($id);
 	}
 }

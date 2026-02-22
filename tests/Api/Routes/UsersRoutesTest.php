@@ -5,6 +5,7 @@ namespace Kirby\Api;
 use Kirby\Blueprint\Blueprint;
 use Kirby\Blueprint\Section;
 use Kirby\Cms\App;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Form\Field;
@@ -14,6 +15,15 @@ class UsersRoutesTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.UsersRoutes';
+
+	protected static string $passwordA;
+	protected static string $passwordB;
+
+	public static function setUpBeforeClass(): void
+	{
+		self::$passwordA = User::hashPassword('12345678');
+		self::$passwordB = User::hashPassword('87654321');
+	}
 
 	public function setUp(): void
 	{
@@ -39,13 +49,13 @@ class UsersRoutesTest extends TestCase
 					'name'     => 'Bastian',
 					'email'    => 'admin@getkirby.com',
 					'role'     => 'admin',
-					'password' => password_hash('12345678', PASSWORD_DEFAULT)
+					'password' => self::$passwordA
 				],
 				[
 					'name'     => 'Sonja',
 					'email'    => 'editor@getkirby.com',
 					'role'     => 'admin',
-					'password' => password_hash('87654321', PASSWORD_DEFAULT)
+					'password' => self::$passwordB
 				]
 			]
 		]);
