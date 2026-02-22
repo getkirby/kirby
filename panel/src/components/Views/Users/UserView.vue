@@ -57,17 +57,12 @@
 
 		<k-model-tabs :diff="diff" :tab="tab.name" :tabs="tabs" />
 
-		<k-sections
-			:blueprint="blueprint"
+		<k-model-form
+			:api="api"
+			:columns="tab.columns"
 			:content="content"
-			:empty="
-				$panel.config.debug
-					? $t('user.blueprint', { blueprint: $esc(blueprint) })
-					: null
-			"
+			:diff="diff"
 			:lock="lock"
-			:parent="api"
-			:tab="tab"
 			@input="onInput"
 			@submit="onSubmit"
 		/>
