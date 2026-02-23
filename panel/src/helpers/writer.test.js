@@ -1,7 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { describe, expect, it } from "vitest";
 import {
 	allowedExtensions,
@@ -246,8 +242,16 @@ describe("createExtensionsFromPlugins", () => {
 
 	it("should handle multiple plugins", () => {
 		const plugins = {
-			foo: { get schema() { return {}; } },
-			bar: { get schema() { return {}; } }
+			foo: {
+				get schema() {
+					return {};
+				}
+			},
+			bar: {
+				get schema() {
+					return {};
+				}
+			}
 		};
 
 		const result = createExtensionsFromPlugins(plugins, Mark.prototype);
