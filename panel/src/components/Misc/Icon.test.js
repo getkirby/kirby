@@ -8,22 +8,36 @@ const helper = {
 	string: { hasEmoji }
 };
 
-// mount helper that injects $helper stubs
-function mount(props = {}) {
+function mount(props = {}, attrs = {}) {
 	return vueMount(Icon, {
 		props,
+		attrs,
 		global: { mocks: { $helper: helper } }
 	});
 }
 
 describe("Icon.vue", () => {
-	it("renders a <svg> with class k-icon", () => {
-		const wrapper = mount({ type: "edit" });
-		expect(wrapper.element.tagName).toBe("svg");
-		expect(wrapper.classes()).toContain("k-icon");
+	// $el
+	describe("element", () => {
+		it("renders a <svg> with class k-icon", () => {
+			const wrapper = mount({ type: "edit" });
+			expect(wrapper.element.tagName).toBe("svg");
+			expect(wrapper.classes()).toContain("k-icon");
+		});
+
+		it("accepts a custom class", () => {
+			const wrapper = mount({ type: "edit" }, { class: "my-class" });
+			expect(wrapper.classes()).toContain("my-class");
+		});
+
+		it("accepts a custom style", () => {
+			const wrapper = mount({ type: "edit" }, { style: "--foo: 1" });
+			expect(wrapper.attributes("style")).toContain("--foo");
+		});
 	});
 
-	describe("type prop", () => {
+	// props
+	describe("type prop: icon", () => {
 		it("reflects the prop as data-type attribute", () => {
 			const wrapper = mount({ type: "edit" });
 			expect(wrapper.attributes("data-type")).toBe("edit");
@@ -35,7 +49,7 @@ describe("Icon.vue", () => {
 		});
 	});
 
-	describe("emoji type", () => {
+	describe("type prop: emoji", () => {
 		it("renders a <span> instead of <svg>", () => {
 			const wrapper = mount({ type: "🎉" });
 			expect(wrapper.element.tagName).toBe("SPAN");

@@ -3,12 +3,26 @@ import { describe, it, expect } from "vitest";
 import Stack from "./Stack.vue";
 
 describe("Stack.vue", () => {
-	it("renders a <div> with class k-stack", () => {
-		const wrapper = mount(Stack);
-		expect(wrapper.element.tagName).toBe("DIV");
-		expect(wrapper.classes()).toContain("k-stack");
+	// $el
+	describe("element", () => {
+		it("renders a <div> with class k-stack", () => {
+			const wrapper = mount(Stack);
+			expect(wrapper.element.tagName).toBe("DIV");
+			expect(wrapper.classes()).toContain("k-stack");
+		});
+
+		it("accepts a custom class", () => {
+			const wrapper = mount(Stack, { attrs: { class: "my-class" } });
+			expect(wrapper.classes()).toContain("my-class");
+		});
+
+		it("accepts a custom style", () => {
+			const wrapper = mount(Stack, { attrs: { style: "--foo: 1" } });
+			expect(wrapper.attributes("style")).toContain("--foo");
+		});
 	});
 
+	// props
 	describe("align prop", () => {
 		it("is not set by default", () => {
 			const wrapper = mount(Stack);
@@ -57,6 +71,7 @@ describe("Stack.vue", () => {
 		});
 	});
 
+	// slots
 	describe("default slot", () => {
 		it("renders slotted content", () => {
 			const wrapper = mount(Stack, {

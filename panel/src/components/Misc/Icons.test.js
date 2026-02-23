@@ -15,16 +15,28 @@ vi.hoisted(() => {
 });
 
 describe("Icons.vue", () => {
-	it("renders a <svg> with class k-icons", () => {
-		const wrapper = mount(Icons);
-		const svg = wrapper.find("svg");
-		expect(svg.element.tagName).toBe("svg");
-		expect(svg.classes()).toContain("k-icons");
-	});
+	// $el
+	describe("element", () => {
+		it("renders a <svg> with class k-icons", () => {
+			const wrapper = mount(Icons);
+			expect(wrapper.find("svg").element.tagName).toBe("svg");
+			expect(wrapper.find("svg").classes()).toContain("k-icons");
+		});
 
-	it("is always aria-hidden", () => {
-		const wrapper = mount(Icons);
-		expect(wrapper.find("svg").attributes("aria-hidden")).toBe("true");
+		it("is always aria-hidden", () => {
+			const wrapper = mount(Icons);
+			expect(wrapper.find("svg").attributes("aria-hidden")).toBe("true");
+		});
+
+		it("accepts a custom class", () => {
+			const wrapper = mount(Icons, { attrs: { class: "my-class" } });
+			expect(wrapper.find("svg").classes()).toContain("my-class");
+		});
+
+		it("accepts a custom style", () => {
+			const wrapper = mount(Icons, { attrs: { style: "--foo: 1" } });
+			expect(wrapper.find("svg").attributes("style")).toContain("--foo");
+		});
 	});
 
 	describe("icons", () => {

@@ -3,11 +3,31 @@ import { describe, it, expect } from "vitest";
 import Progress from "./Progress.vue";
 
 describe("Progress.vue", () => {
-	it("renders a <progress> element", () => {
-		const wrapper = mount(Progress);
-		expect(wrapper.element.tagName).toBe("PROGRESS");
+	// $el
+	describe("element", () => {
+		it("renders a <progress> with class k-progress", () => {
+			const wrapper = mount(Progress);
+			expect(wrapper.element.tagName).toBe("PROGRESS");
+			expect(wrapper.classes()).toContain("k-progress");
+		});
+
+		it("accepts a custom class", () => {
+			const wrapper = mount(Progress, { attrs: { class: "my-class" } });
+			expect(wrapper.classes()).toContain("my-class");
+		});
+
+		it("accepts a custom style", () => {
+			const wrapper = mount(Progress, { attrs: { style: "--foo: 1" } });
+			expect(wrapper.attributes("style")).toContain("--foo");
+		});
+
+		it("max attribute is always 100", () => {
+			const wrapper = mount(Progress);
+			expect(wrapper.attributes("max")).toBe("100");
+		});
 	});
 
+	// props
 	describe("value prop", () => {
 		it("defaults to 0", () => {
 			const wrapper = mount(Progress);
@@ -22,13 +42,6 @@ describe("Progress.vue", () => {
 		it("renders value as percentage text", () => {
 			const wrapper = mount(Progress, { props: { value: 75 } });
 			expect(wrapper.text()).toBe("75%");
-		});
-	});
-
-	describe("max attribute", () => {
-		it("is always 100", () => {
-			const wrapper = mount(Progress);
-			expect(wrapper.attributes("max")).toBe("100");
 		});
 	});
 });
