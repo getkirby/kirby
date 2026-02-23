@@ -366,6 +366,45 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertInstanceOf(PageUuid::class, $model->uuid());
 	}
 
+	public function testModelSlugFallsBackToNewWhenNull(): void
+	{
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null,
+			null // slug = null
+		);
+
+		$this->assertSame('__new__', $dialog->model()->slug());
+	}
+
+	public function testModelSlugFallsBackToNewWhenEmpty(): void
+	{
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null,
+			'' // slug = empty string
+		);
+
+		$this->assertSame('__new__', $dialog->model()->slug());
+	}
+
+	public function testModelSlugUsesProvidedSlug(): void
+	{
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'test',
+			null,
+			'my-article' // slug = valid slug
+		);
+
+		$this->assertSame('my-article', $dialog->model()->slug());
+	}
+
 	public function testModelUuidDisabled(): void
 	{
 		$this->app([

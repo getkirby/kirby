@@ -123,7 +123,7 @@ class Page extends ModelWithContent
 	 */
 	public function __construct(array $props)
 	{
-		if (isset($props['slug']) === false) {
+		if (isset($props['slug']) === false || $props['slug'] === '') {
 			throw new InvalidArgumentException(
 				message: 'The page slug is required'
 			);
