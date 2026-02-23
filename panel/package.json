@@ -9,7 +9,7 @@
 		"lint": "eslint \"src/**/*.{js,vue}\"",
 		"lint:fix": "npm run lint -- --fix",
 		"format": "prettier --write \"src/**/*.{js,vue}\"",
-		"test:unit": "vitest run"
+		"test:unit": "vitest run --no-isolate"
 	},
 	"dependencies": {
 		"autosize": "^6.0.1",
