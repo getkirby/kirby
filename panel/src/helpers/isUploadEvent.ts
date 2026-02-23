@@ -1,8 +1,7 @@
 /**
  * Checks if provided event is an upload-related event
- * @returns {bool}
  */
-export default (event) => {
+export default (event: DragEvent): boolean => {
 	if (!event.dataTransfer) {
 		return false;
 	}
