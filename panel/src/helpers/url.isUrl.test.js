@@ -1,7 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { describe, expect, it } from "vitest";
 import url from "./url.js";
 import urls from "@/../../tests/Toolkit/fixtures/urls.json";

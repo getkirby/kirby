@@ -106,7 +106,7 @@ function createPlugins(mode) {
  */
 function createTest() {
 	return {
-		environment: "node",
+		environment: "happy-dom",
 		include: ["**/*.test.js"],
 		setupFiles: ["vitest.setup.js"]
 	};
