@@ -39,6 +39,7 @@ export default {
 	height: var(--definition-height);
 	min-height: var(--table-row-height);
 	display: flex;
+	gap: var(--spacing-1);
 	align-items: var(--definition-align);
 }
 .k-definition:not(:last-child) dt,

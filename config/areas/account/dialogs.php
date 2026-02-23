@@ -1,7 +1,5 @@
 <?php
 
-use Kirby\Panel\Controller\Dialog\UserTotpEnableDialogController;
-
 $dialogs = require __DIR__ . '/../users/dialogs.php';
 
 return [
@@ -60,13 +58,5 @@ return [
 	'account.file.sections' => [
 		...$dialogs['user.file.sections'],
 		'pattern' => '(account)/files/(:any)/sections/(:any)/(:all?)',
-	],
-	'account.totp.enable' => [
-		'pattern' => '(account)/totp/enable',
-		'action'  => UserTotpEnableDialogController::class
-	],
-	'account.totp.disable' => [
-		...$dialogs['user.totp.disable'],
-		'pattern' => '(account)/totp/disable',
 	],
 ];

@@ -4,6 +4,7 @@ use Kirby\Panel\Controller\Drawer\FieldDrawerController;
 use Kirby\Panel\Controller\Drawer\SectionDrawerController;
 use Kirby\Panel\Controller\Drawer\UserSecurityCodeMethodDrawerController;
 use Kirby\Panel\Controller\Drawer\UserSecurityDrawerController;
+use Kirby\Panel\Controller\Drawer\UserTotpDrawerController;
 
 return [
 	'user.security' => [
@@ -13,6 +14,10 @@ return [
 	'user.security.method.code' => [
 		'pattern' => 'users/(:any)/security/method/code',
 		'action'  => UserSecurityCodeMethodDrawerController::class
+	],
+	'user.security.challenge.totp' => [
+		'pattern' => 'users/(:any)/security/challenge/totp',
+		'action'  => UserTotpDrawerController::class
 	],
 	'user.fields' => [
 		'pattern' => '(users/[^/]+)/fields/(:any)/(:all?)',

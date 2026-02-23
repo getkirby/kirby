@@ -47,7 +47,7 @@ class TotpChallenge extends Challenge
 			new Button(
 				icon:   'qr-code',
 				text:   static::i18n('login.challenge.totp.label'),
-				dialog: $user->panel()->url(true) . '/totp/' . ($user->secret('totp') !== null ? 'disable' : 'enable')
+				drawer: $user->panel()->url(true) . '/security/challenge/totp'
 			)
 		];
 	}
