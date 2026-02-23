@@ -72,7 +72,7 @@
 <script>
 import { set } from "vue";
 import { autofocus, disabled, id } from "@/mixins/props.js";
-import { focusIsInModal } from "@/helpers/focus.js";
+import { focusIsInModal } from "@/helpers/focus";
 
 export const props = {
 	mixins: [autofocus, disabled, id],
