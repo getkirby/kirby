@@ -1,6 +1,7 @@
 {
 	"name": "kirby",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"build": "vite build",
 		"build:docs": "node scripts/docs.mjs",
