@@ -1,7 +1,7 @@
 import array from "./array";
 import clipboard from "./clipboard.js";
 import color from "./color.js";
-import debounce from "./debounce.js";
+import debounce from "./debounce";
 import embed from "./embed.js";
 import field from "./field.js";
 import file from "./file.js";
@@ -15,7 +15,7 @@ import page from "./page.js";
 import ratio from "./ratio.js";
 import sort from "./sort.js";
 import string from "./string.js";
-import throttle from "./throttle.js";
+import throttle from "./throttle";
 import upload from "./upload.js";
 import url from "./url.js";
 import writer from "./writer.js";
