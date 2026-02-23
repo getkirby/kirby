@@ -3,7 +3,7 @@ import clipboard from "./clipboard.js";
 import color from "./color.js";
 import debounce from "./debounce";
 import embed from "./embed";
-import field from "./field.js";
+import field from "./field";
 import file from "./file.js";
 import focus from "./focus.js";
 import isComponent from "./isComponent";
