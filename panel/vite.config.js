@@ -96,8 +96,10 @@ function createPlugins(mode) {
  */
 function createTest() {
 	return {
+		css: false,
 		environment: "happy-dom",
 		include: ["**/*.test.js"],
+		reporter: "dot",
 		setupFiles: ["vitest.setup.js"]
 	};
 }
