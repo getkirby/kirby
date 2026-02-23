@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Content\Field;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -675,98 +676,15 @@ class VTest extends TestCase
 
 	public function testUrl(): void
 	{
-		// based on https://mathiasbynens.be/demo/url-regex
-		$this->assertTrue(V::url('http://www.getkirby.com'));
-		$this->assertTrue(V::url('http://www.getkirby.com/docs/param:value/?foo=bar/#anchor'));
-		$this->assertTrue(V::url('https://www.getkirby.de.vu'));
-		$this->assertTrue(V::url('https://getkirby.com:1234'));
-		$this->assertTrue(V::url('https://getkirby.com:1234/test'));
-		$this->assertTrue(V::url('http://foo.com/blah_blah'));
-		$this->assertTrue(V::url('http://foo.com/blah_blah/'));
-		$this->assertTrue(V::url('http://foo.com/blah_blah_(wikipedia)'));
-		$this->assertTrue(V::url('http://foo.com/blah_blah_(wikipedia)_(again)'));
-		$this->assertTrue(V::url('http://www.example.com/wpstyle/?p=364'));
-		$this->assertTrue(V::url('https://www.example.com/foo/?bar=baz&inga=42&quux'));
-		$this->assertTrue(V::url('http://✪df.ws/123'));
-		$this->assertTrue(V::url('http://userid:password@example.com:8080'));
-		$this->assertTrue(V::url('http://userid:password@example.com:8080/'));
-		$this->assertTrue(V::url('http://userid@example.com'));
-		$this->assertTrue(V::url('http://userid@example.com/'));
-		$this->assertTrue(V::url('http://userid@example.com:8080'));
-		$this->assertTrue(V::url('http://userid@example.com:8080/'));
-		$this->assertTrue(V::url('http://userid:password@example.com'));
-		$this->assertTrue(V::url('http://userid:password@example.com/'));
-		$this->assertTrue(V::url('http://142.42.1.1/'));
-		$this->assertTrue(V::url('http://142.42.1.1:8080/'));
-		$this->assertTrue(V::url('http://➡.ws/䨹'));
-		$this->assertTrue(V::url('http://⌘.ws'));
-		$this->assertTrue(V::url('http://⌘.ws/'));
-		$this->assertTrue(V::url('http://foo.com/blah_(wikipedia)#cite-1'));
-		$this->assertTrue(V::url('http://foo.com/blah_(wikipedia)_blah#cite-1'));
-		$this->assertTrue(V::url('http://foo.com/unicode_(✪)_in_parens'));
-		$this->assertTrue(V::url('http://foo.com/(something)?after=parens'));
-		$this->assertTrue(V::url('http://☺.damowmow.com/'));
-		$this->assertTrue(V::url('http://code.google.com/events/#&product=browser'));
-		$this->assertTrue(V::url('http://j.mp'));
-		$this->assertTrue(V::url('ftp://foo.bar/baz'));
-		$this->assertTrue(V::url('http://foo.bar/?q=Test%20URL-encoded%20stuff'));
-		$this->assertTrue(V::url('http://مثال.إختبار'));
-		$this->assertTrue(V::url('http://例子.测试'));
-		$this->assertTrue(V::url('http://उदाहरण.परीक्षा'));
-		$this->assertTrue(V::url("http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com"));
-		$this->assertTrue(V::url('http://1337.net'));
-		$this->assertTrue(V::url('http://a.b-c.de'));
-		$this->assertTrue(V::url('http://223.255.255.254'));
-		$this->assertTrue(V::url('http://localhost/test/'));
-		$this->assertTrue(V::url('http://localhost:8080/test'));
-		$this->assertTrue(V::url('http://127.0.0.1/kirby/'));
-		$this->assertTrue(V::url('http://127.0.0.1:8080/kirby'));
-		$this->assertTrue(V::url('https://127.0.0.1/kirby/panel/pages/blog+vvvv'));
-		$this->assertTrue(V::url('https://localhost/kirby/panel/pages/blog+vvvv'));
+		$urls = Data::read(__DIR__ . '/fixtures/urls.json');
 
-		// TODO: Find better regex to also cover the following
-		// $this->assertTrue(V::url('http://special---offer.com/'));
-		// $this->assertTrue(V::url('http://10.1.1.1'));
-		// $this->assertTrue(V::url('http://10.1.1.254'));
+		foreach ($urls['valid'] as $url) {
+			$this->assertTrue(V::url($url), "Expected valid: $url");
+		}
 
-		$this->assertFalse(V::url('foo'));
-		$this->assertFalse(V::url('http://'));
-		$this->assertFalse(V::url('http://.'));
-		$this->assertFalse(V::url('http://..'));
-		$this->assertFalse(V::url('http://../'));
-		$this->assertFalse(V::url('http://?'));
-		$this->assertFalse(V::url('http://??'));
-		$this->assertFalse(V::url('http://??/'));
-		$this->assertFalse(V::url('http://#'));
-		$this->assertFalse(V::url('http://##'));
-		$this->assertFalse(V::url('http://##/'));
-		$this->assertFalse(V::url('http://foo.bar?q=Spaces should be encoded'));
-		$this->assertFalse(V::url('//'));
-		$this->assertFalse(V::url('//a'));
-		$this->assertFalse(V::url('///a'));
-		$this->assertFalse(V::url('///'));
-		$this->assertFalse(V::url('http:///a'));
-		$this->assertFalse(V::url('foo.com'));
-		$this->assertFalse(V::url('rdar://1234'));
-		$this->assertFalse(V::url('h://test'));
-		$this->assertFalse(V::url('http:// shouldfail.com'));
-		$this->assertFalse(V::url(':// should fail'));
-		$this->assertFalse(V::url('http://foo.bar/foo(bar)baz quux'));
-		$this->assertFalse(V::url('ftps://foo.bar/'));
-		$this->assertFalse(V::url('http://-error-.invalid/'));
-		$this->assertFalse(V::url('http://a.b--c.de/'));
-		$this->assertFalse(V::url('http://-a.b.co'));
-		$this->assertFalse(V::url('http://a.b-.co'));
-		$this->assertFalse(V::url('http://0.0.0.0'));
-		$this->assertFalse(V::url('http://10.1.1.0'));
-		$this->assertFalse(V::url('http://10.1.1.255'));
-		$this->assertFalse(V::url('http://224.1.1.1'));
-		$this->assertFalse(V::url('http://1.1.1.1.1'));
-		$this->assertFalse(V::url('http://123.123.123'));
-		$this->assertFalse(V::url('http://3628126748'));
-		$this->assertFalse(V::url('http://.www.foo.bar/'));
-		$this->assertFalse(V::url('http://www.foo.bar./'));
-		$this->assertFalse(V::url('http://.www.foo.bar./'));
+		foreach ($urls['invalid'] as $url) {
+			$this->assertFalse(V::url($url), "Expected invalid: $url");
+		}
 	}
 
 	public static function inputProvider(): array
