@@ -4,6 +4,12 @@ namespace Kirby\Panel\Form\Field;
 
 use Kirby\Form\Field\TextField;
 
+/**
+ * Panel field override for the user's display name
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class UsernameField extends TextField
 {
 	public function icon(): string

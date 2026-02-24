@@ -4,6 +4,12 @@ namespace Kirby\Form\Mixin;
 
 use Kirby\Form\FieldOptions;
 
+/**
+ * Provides options loading and resolution for choice-based fields
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Options
 {
 	/**

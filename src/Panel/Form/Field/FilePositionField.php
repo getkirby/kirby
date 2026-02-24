@@ -5,6 +5,12 @@ namespace Kirby\Panel\Form\Field;
 use Kirby\Cms\File;
 use Kirby\Form\Field\SelectField;
 
+/**
+ * Panel field override for selecting a file's position within its siblings
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class FilePositionField extends SelectField
 {
 	public function __construct(

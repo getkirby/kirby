@@ -5,6 +5,12 @@ namespace Kirby\Panel\Form\Field;
 use Kirby\Cms\Page;
 use Kirby\Form\Field\SelectField;
 
+/**
+ * Panel field override for selecting a page's position within its siblings
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class PagePositionField extends SelectField
 {
 	public function __construct(

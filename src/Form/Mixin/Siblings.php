@@ -5,6 +5,12 @@ namespace Kirby\Form\Mixin;
 use Kirby\Cms\HasSiblings;
 use Kirby\Form\Fields;
 
+/**
+ * Provides sibling field context for field-to-field interactions
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Siblings
 {
 	use HasSiblings;
