@@ -108,7 +108,7 @@ function createTest() {
 	return {
 		css: false,
 		environment: "happy-dom",
-		include: ["**/*.test.js"],
+		include: ["**/*.test.{js,ts}"],
 		reporter: "dot",
 		setupFiles: ["vitest.setup.js"]
 	};
@@ -164,7 +164,7 @@ export default defineConfig(async ({ mode }) => {
 			}
 		},
 		optimizeDeps: {
-			entries: "src/**/*.{js,vue}",
+			entries: "src/**/*.{js,ts,vue}",
 			exclude: ["vitest", "vue"],
 			holdUntilCrawlEnd: false
 		},

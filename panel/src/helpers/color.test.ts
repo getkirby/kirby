@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import color from "./color.js";
+import color from "./color";
 
 describe.concurrent("$helper.css.color()", () => {
 	document.documentElement.style.setProperty("--color-white", "white");
@@ -9,7 +9,7 @@ describe.concurrent("$helper.css.color()", () => {
 		"background"
 	);
 
-	const data = {
+	const data: Record<string, [unknown, string | undefined][]> = {
 		"should return nothing for non-strings": [
 			[1, undefined],
 			[null, undefined]
