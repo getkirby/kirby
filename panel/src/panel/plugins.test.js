@@ -1,7 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { describe, expect, it } from "vitest";
 import Plugins from "./plugins.js";
 import isComponent from "@/helpers/isComponent.js";

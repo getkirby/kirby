@@ -1,7 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { describe, expect, it } from "vitest";
 import Events from "./events.js";
 import Panel from "./panel.js";
