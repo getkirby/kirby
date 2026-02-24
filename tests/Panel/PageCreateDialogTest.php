@@ -585,7 +585,7 @@ class PageCreateDialogTest extends AreaTestCase
 			'blueprints' => [
 				'pages/parent-page' => [
 					'fields' => [
-						'text' => ['type' => 'text']
+						'summary' => ['type' => 'text']
 					]
 				],
 				'pages/article' => [
@@ -593,7 +593,6 @@ class PageCreateDialogTest extends AreaTestCase
 						'slug' => 'child-{{ page.category }}'
 					],
 					'fields' => [
-						'text'     => ['type' => 'text'],
 						'category' => ['type' => 'text']
 					]
 				]
@@ -604,7 +603,7 @@ class PageCreateDialogTest extends AreaTestCase
 		Page::create([
 			'slug'     => 'parent',
 			'template' => 'parent-page',
-			'content'  => ['title' => 'Parent', 'text' => 'Parent content']
+			'content'  => ['title' => 'Parent', 'summary' => 'Parent content']
 		]);
 
 		// parentId uses the pages/id format required by Find::parent()
@@ -622,6 +621,13 @@ class PageCreateDialogTest extends AreaTestCase
 
 		$this->assertSame('child-test', $child->slug());
 		$this->assertSame('Child', $child->title()->value());
-		$this->assertSame('', $child->text()->value());
+		$this->assertFalse($child->summary()->exists());
+
+		// read the content file directly to verify no parent data was written to disk
+		$contentFile = $child->version('latest')->contentFile();
+		$content = file_get_contents($contentFile);
+
+		$this->assertStringNotContainsString('Summary', $content);
+		$this->assertStringNotContainsString('Parent content', $content);
 	}
 }
