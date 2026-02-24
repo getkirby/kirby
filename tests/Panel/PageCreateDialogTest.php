@@ -482,4 +482,146 @@ class PageCreateDialogTest extends AreaTestCase
 		$this->assertSame('bar-slug', $page->slug());
 		$this->assertSame('bar-slug', $page->bar()->value());
 	}
+
+	public function testSubmitDefault(): void
+	{
+		$app = $this->app([
+			'blueprints' => [
+				'pages/article' => [
+					'fields' => [
+						'text' => ['type' => 'text']
+					]
+				]
+			]
+		]);
+		$app->impersonate('kirby');
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'article',
+			null,
+			'my-article',
+			'My Article'
+		);
+
+		$dialog->submit([]);
+		$page = $app->page('my-article');
+
+		$this->assertSame('my-article', $page->slug());
+		$this->assertSame('My Article', $page->title()->value());
+		$this->assertSame('', $page->text()->value());
+	}
+
+	public function testSubmitWithSlugFromTemplate(): void
+	{
+		// slug field is hidden when create.slug is set; Panel submits slug: ''
+		$app = $this->app([
+			'blueprints' => [
+				'pages/article' => [
+					'create' => [
+						'slug' => 'art-{{ page.category }}'
+					],
+					'fields' => [
+						'category' => ['type' => 'text']
+					]
+				]
+			]
+		]);
+		$app->impersonate('kirby');
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'article',
+			null,
+			'',          // empty string – simulates hidden slug field
+			'My Article'
+		);
+
+		$dialog->submit(['category' => 'photo']);
+		$page = $app->page('art-photo');
+
+		$this->assertSame('art-photo', $page->slug());
+		$this->assertSame('My Article', $page->title()->value());
+	}
+
+	public function testSubmitWithTitleAndSlugFromTemplate(): void
+	{
+		$app = $this->app([
+			'blueprints' => [
+				'pages/article' => [
+					'create' => [
+						'title'  => 'New: {{ page.category }}',
+						'slug'   => 'cat-{{ page.category }}',
+						'fields' => ['category']
+					],
+					'fields' => [
+						'category' => ['type' => 'text']
+					]
+				]
+			]
+		]);
+		$app->impersonate('kirby');
+
+		$dialog = new PageCreateDialog(
+			null,
+			null,
+			'article',
+			null
+		);
+
+		$dialog->submit(['category' => 'photo']);
+		$page = $app->page('cat-photo');
+
+		$this->assertSame('cat-photo', $page->slug());
+		$this->assertSame('New: photo', $page->title()->value());
+		$this->assertSame('photo', $page->category()->value());
+	}
+
+	public function testSubmitDoesNotLeakParentContent(): void
+	{
+		$app = $this->app([
+			'blueprints' => [
+				'pages/parent-page' => [
+					'fields' => [
+						'text' => ['type' => 'text']
+					]
+				],
+				'pages/article' => [
+					'create' => [
+						'slug' => 'child-{{ page.category }}'
+					],
+					'fields' => [
+						'text'     => ['type' => 'text'],
+						'category' => ['type' => 'text']
+					]
+				]
+			]
+		]);
+		$app->impersonate('kirby');
+
+		Page::create([
+			'slug'     => 'parent',
+			'template' => 'parent-page',
+			'content'  => ['title' => 'Parent', 'text' => 'Parent content']
+		]);
+
+		// parentId uses the pages/id format required by Find::parent()
+		$dialog = new PageCreateDialog(
+			'pages/parent',
+			null,
+			'article',
+			null,
+			'',       // empty string – simulates hidden slug field
+			'Child'
+		);
+
+		$dialog->submit(['category' => 'test']);
+		$child = $app->page('parent/child-test');
+
+		$this->assertSame('child-test', $child->slug());
+		$this->assertSame('Child', $child->title()->value());
+		$this->assertSame('', $child->text()->value());
+	}
 }
