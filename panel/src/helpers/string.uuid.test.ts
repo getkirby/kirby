@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import string from "./string.js";
+import string from "./string";
 
 describe("$helper.string.uuid", () => {
 	it("creates a unique id", () => {

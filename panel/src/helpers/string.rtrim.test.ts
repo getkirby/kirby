@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
-import string from "./string.js";
+import string from "./string";
 
-describe("$helper.string.ltrim", () => {
+describe("$helper.string.rtrim", () => {
 	it("should trim the character", () => {
-		const result = string.ltrim("/foo", "/");
+		const result = string.rtrim("foo/", "/");
 		expect(result).toStrictEqual("foo");
 	});
 
 	it("should trim multiple characters", () => {
-		const result = string.ltrim("//foo", "/");
+		const result = string.rtrim("foo//", "/");
 		expect(result).toStrictEqual("foo");
 	});
 });

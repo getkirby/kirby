@@ -2,8 +2,10 @@ import { DOMParser, DOMSerializer, Schema } from "prosemirror-model";
 
 import "./regex";
 import { createMarks, createNodes } from "./writer";
+import type WriterMark from "@/components/Forms/Writer/Mark";
+import type WriterNode from "@/components/Forms/Writer/Node";
 
-const escapingMap = {
+const escapingMap: Record<string, string> = {
 	"&": "&amp;",
 	"<": "&lt;",
 	">": "&gt;",
@@ -16,17 +18,19 @@ const escapingMap = {
 
 /**
  * Converts camel-case to kebab-case
- * @param {string} string
- * @returns {string}
+ *
+ * @example
+ * camelToKebab("myString") // "my-string"
  */
-export function camelToKebab(string) {
+export function camelToKebab(string: string): string {
 	return string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
 /**
  * Escapes HTML in string
- * @param {string} string
- * @returns {string}
+ *
+ * @example
+ * escapeHTML('<b>bold</b>') // "&lt;b&gt;bold&lt;&#x2F;b&gt;"
  *
  * Source: https://github.com/janl/mustache.js/blob/v4.2.0/mustache.js#L60-L75
  *
@@ -53,16 +57,18 @@ export function camelToKebab(string) {
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-export function escapeHTML(string) {
-	return String(string).replace(/[&<>"'`=/]/g, (char) => escapingMap[char]);
+export function escapeHTML(string: string): string {
+	return string.replace(/[&<>"'`=/]/g, (char) => escapingMap[char]);
 }
 
 /**
  * Checks if string contains an emoji
- * @param {string} string
- * @returns {bool}
+ *
+ * @example
+ * hasEmoji("Hello 👋") // true
+ * hasEmoji("Hello") // false
  */
-export function hasEmoji(string) {
+export function hasEmoji(string: unknown): boolean {
 	if (typeof string !== "string") {
 		return false;
 	}
@@ -77,11 +83,15 @@ export function hasEmoji(string) {
 
 /**
  * Checks if a string is empty
+ *
+ * @example
+ * isEmpty("") // true
+ * isEmpty("hello") // false
+ * isEmpty(null) // true
+ *
  * @since 4.0.0
- * @param {String|undefined|null} string
- * @returns {Boolean}
  */
-export function isEmpty(string) {
+export function isEmpty(string: string | null | undefined): boolean {
 	if (!string) {
 		return true;
 	}
@@ -91,12 +101,12 @@ export function isEmpty(string) {
 
 /**
  * Turns first letter lowercase
- * @param {string} string
- * @returns {string}
+ *
+ * @example
+ * lcfirst("Hello World") // "hello World"
  */
-export function lcfirst(string) {
-	const str = String(string);
-	return str.charAt(0).toLowerCase() + str.slice(1);
+export function lcfirst(string: string): string {
+	return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
 /**
@@ -104,44 +114,48 @@ export function lcfirst(string) {
  * This method is greedy and removes any occurrence at the beginning,
  * not just the first.
  *
- * @param {string} string
- * @param {string} replace
- * @returns {string}
+ * @example
+ * ltrim("//path/to/file", "/") // "path/to/file"
  */
-export function ltrim(string = "", replace = "") {
+export function ltrim(string: string = "", replace: string = ""): string {
 	const expression = new RegExp(`^(${RegExp.escape(replace)})+`, "g");
 	return string.replace(expression, "");
 }
 
 /**
  * Prefixes string with 0 until length is reached
- * @param {string} value
- * @param {number} length
- * @returns
+ *
+ * @example
+ * pad(5) // "05"
+ * pad(5, 3) // "005"
+ * pad(42) // "42"
  */
-export function pad(value, length = 2) {
-	value = String(value);
+export function pad(value: string | number, length: number = 2): string {
+	const string = String(value);
 	let pad = "";
 
-	while (pad.length < length - value.length) {
+	while (pad.length < length - string.length) {
 		pad += "0";
 	}
 
-	return pad + value;
+	return pad + string;
 }
 
 /**
  * Generate random alpha-num string of specified length
- * @param {number} length
- * @returns {string}
+ *
+ * @example
+ * random(8) // "aB3xK9mZ" (random result)
  */
-export function random(length) {
+export function random(length: number): string {
 	let result = "";
 	const pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	const count = pool.length;
-	for (var i = 0; i < length; i++) {
+
+	for (let i = 0; i < length; i++) {
 		result += pool.charAt(Math.floor(Math.random() * count));
 	}
+
 	return result;
 }
 
@@ -150,11 +164,10 @@ export function random(length) {
  * This method is greedy and removes any occurrence at the end,
  * not just the last.
  *
- * @param {string} string
- * @param {string} replace
- * @returns {string}
+ * @example
+ * rtrim("path/to/file//", "/") // "path/to/file"
  */
-export function rtrim(string = "", replace = "") {
+export function rtrim(string: string = "", replace: string = ""): string {
 	const expression = new RegExp(`(${RegExp.escape(replace)})+$`, "g");
 	return string.replace(expression, "");
 }
@@ -162,11 +175,18 @@ export function rtrim(string = "", replace = "") {
 /**
  * Sanitizes HTML by only keeping allowed marks
  * (bold, italic, underline, links)
- * @param {string} html
- * @param {object} options
- * @returns {string}
+ *
+ * @example
+ * sanitizeHTML("<b>bold</b> <script>alert(1)</script>") // "<strong>bold</strong> "
+ * sanitizeHTML("<b>bold</b>", { marks: ["italic"] }) // "bold"
  */
-export function sanitizeHTML(html, options = {}) {
+export function sanitizeHTML(
+	html: string | null | undefined,
+	options: {
+		marks?: (string | WriterMark)[];
+		nodes?: (string | WriterNode)[];
+	} = {}
+): string {
 	if (!html) {
 		return "";
 	}
@@ -202,7 +222,7 @@ export function sanitizeHTML(html, options = {}) {
 	const dom = new window.DOMParser().parseFromString(
 		`<div>${html}</div>`,
 		"text/html"
-	).body.firstElementChild;
+	).body.firstElementChild as HTMLElement;
 
 	const doc = DOMParser.fromSchema(sanitizeSchema).parse(dom);
 	const div = document.createElement("div");
@@ -215,13 +235,22 @@ export function sanitizeHTML(html, options = {}) {
 
 /**
  * Convert string to ASCII slug
- * @param {string} string string to be converted
- * @param {array} rules ruleset to convert non-ASCII characters
- * @param {string} allowed list of allowed characters (default: a-z0-9)
- * @param {string} separator character used to replace non-allowed characters
- * @returns {string}
+ *
+ * @example
+ * slug("Hello World") // "hello-world"
+ * slug("Hello World", [], "a-z0-9", "_") // "hello_world"
+ *
+ * @param string - string to be converted
+ * @param rules - ruleset to convert non-ASCII characters
+ * @param allowed - list of allowed characters (default: a-z0-9)
+ * @param separator - character used to replace non-allowed characters
  */
-export function slug(string, rules = [], allowed = "", separator = "-") {
+export function slug(
+	string: string | null | undefined,
+	rules: Record<string, string>[] = [],
+	allowed: string = "",
+	separator: string = "-"
+): string {
 	if (!string) {
 		return "";
 	}
@@ -269,29 +298,42 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
 
 /**
  * Strips HTML tags from string
- * @param {string} string
- * @returns {string}
+ *
+ * @example
+ * stripHTML("<b>bold</b>") // "bold"
  */
-export function stripHTML(string) {
-	return String(string).replace(/(<([^>]+)>)/gi, "");
+export function stripHTML(string: string): string {
+	return string.replace(/(<([^>]+)>)/gi, "");
+}
+
+interface TemplateValues {
+	[key: string]:
+		| TemplateValues
+		| TemplateValues[]
+		| string
+		| number
+		| boolean
+		| null;
 }
 
 /**
  * Replaces template placeholders in string with provided values
- * @param {string} string
- * @param {Object} values
- * @returns {string}
+ *
+ * @example
+ * template("Hello {name}!", { name: "World" }) // "Hello World!"
+ * template("{{user.email}}", { user: { email: "hi@example.com" } }) // "hi@example.com"
+ * template("{missing}", {}) // "…"
  */
-export function template(string, values = {}) {
-	const resolve = (parts, data = {}) => {
-		const part = escapeHTML(parts.shift());
+export function template(string: string, values: TemplateValues = {}): string {
+	const resolve = (parts: string[], data: TemplateValues = {}) => {
+		const part = escapeHTML(parts.shift() ?? "");
 		const value = data[part] ?? "…";
 
 		if (value === "…" || parts.length === 0) {
 			return value;
 		}
 
-		return resolve(parts, value);
+		return resolve(parts, value as TemplateValues);
 	};
 
 	const opening = "[{]{1,2}[\\s]?";
@@ -299,7 +341,7 @@ export function template(string, values = {}) {
 
 	string = string.replace(
 		new RegExp(`${opening}(.*?)${closing}`, "gi"),
-		($0, $1) => resolve($1.split("."), values)
+		($0, $1) => String(resolve($1.split("."), values))
 	);
 
 	return string.replace(new RegExp(`${opening}.*${closing}`, "gi"), "…");
@@ -307,21 +349,22 @@ export function template(string, values = {}) {
 
 /**
  * Turns first letter uppercase
- * @param {string} string
- * @returns {string}
+ *
+ * @example
+ * ucfirst("hello world") // "Hello world"
  */
-export function ucfirst(string) {
-	const str = String(string);
-	return str.charAt(0).toUpperCase() + str.slice(1);
+export function ucfirst(string: string): string {
+	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 /**
  * Turns first letter of each word uppercase
- * @param {string} string
- * @returns {string}
+ *
+ * @example
+ * ucwords("hello world") // "Hello World"
  */
-export function ucwords(string) {
-	return String(string)
+export function ucwords(string: string): string {
+	return string
 		.split(/ /g)
 		.map((word) => ucfirst(word))
 		.join(" ");
@@ -329,21 +372,24 @@ export function ucwords(string) {
 
 /**
  * Turns escaped HTML entities into actual characters again
- * @param {string} string
- * @returns  {string}
+ *
+ * @example
+ * unescapeHTML("&lt;b&gt;bold&lt;&#x2F;b&gt;") // "<b>bold</b>"
  */
-export function unescapeHTML(string) {
+export function unescapeHTML(string: string): string {
 	for (const symbol in escapingMap) {
-		string = String(string).replaceAll(escapingMap[symbol], symbol);
+		string = string.replaceAll(escapingMap[symbol], symbol);
 	}
 	return string;
 }
 
 /**
  * Returns a unique ID
- * @returns {string}
+ *
+ * @example
+ * uuid() // "550e8400-e29b-41d4-a716-446655440000" (random result)
  */
-export function uuid() {
+export function uuid(): string {
 	let uuid = "",
 		i,
 		random;

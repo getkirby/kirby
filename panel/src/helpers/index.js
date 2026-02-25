@@ -14,7 +14,7 @@ import object from "./object.js";
 import page from "./page.js";
 import ratio from "./ratio.js";
 import sort from "./sort.js";
-import string from "./string.js";
+import string from "./string";
 import throttle from "./throttle";
 import upload from "./upload.js";
 import url from "./url.js";
