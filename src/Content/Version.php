@@ -581,6 +581,35 @@ class Version
 	}
 
 	/**
+	 * Removes the lock from the changes version without discarding changes
+	 */
+	public function unlock(Language|string $language = 'default'): void
+	{
+		$language = Language::ensure($language);
+
+		if ($this->exists($language) === false) {
+			return;
+		}
+
+		$fields = $this->read($language);
+
+		// only remove the lock if the current user holds it
+		if (($fields['lock'] ?? null) !== $this->model->kirby()->user()?->id()) {
+			return;
+		}
+
+		unset($fields['lock']);
+
+		$this->model->storage()->update(
+			versionId: $this->id,
+			language:  $language,
+			fields:    $fields
+		);
+
+		VersionCache::remove($this, $language);
+	}
+
+	/**
 	 * Updates the content fields of an existing version
 	 *
 	 * @param array<string, string> $fields Content fields
