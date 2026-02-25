@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { split } from "./array.js";
+import { split } from "./array";
 
 describe.concurrent("Array.split()", () => {
 	it("should split array into groups", () => {
