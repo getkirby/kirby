@@ -491,12 +491,11 @@ trait PageActions
 			$page = $page->changeStatus('listed', $props['num']);
 		}
 
-		// only populate UUID cache if the page still exists at its
-		// expected location; a hook may have changed the status and
-		// moved the draft directory, making the page object stale
-		if ($page->exists() === true) {
-			$page->uuid()?->populate();
-		}
+		// resolve the page from parent's collection to get the
+		// up-to-date object (a hook may have modified it)
+		$page = $page->parentModel()->findPageOrDraft($page->id()) ?? $page;
+
+		$page->uuid()?->populate();
 
 		return $page;
 	}

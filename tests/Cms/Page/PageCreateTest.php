@@ -474,10 +474,12 @@ class PageCreateTest extends ModelTestCase
 	}
 
 	/**
-	 * Changing status in the page.create:after hook should
-	 * not create a duplicate draft directory
+	 * Calling changeStatus() inside page.create:after should not
+	 * recreate the draft directory (which was the bug in 5.3.0/5.3.1:
+	 * uuid()->populate() on a stale page object was writing a new file
+	 * back to the moved draft location)
 	 */
-	public function testCreateWithChangeStatusInAfterHook(): void
+	public function testCreateWithChangeStatusInAfterHookNoDuplicateDraft(): void
 	{
 		$app = $this->app->clone([
 			'hooks' => [
@@ -489,22 +491,21 @@ class PageCreateTest extends ModelTestCase
 
 		$app->impersonate('kirby');
 
-		$page = Page::create([
-			'slug' => 'test',
-		]);
+		Page::create(['slug' => 'test']);
 
-		// the draft directory should not exist anymore
+		// the draft directory must not be recreated after being moved by publish()
 		$this->assertDirectoryDoesNotExist(static::TMP . '/content/_drafts/test');
 
-		// the listed page directory should exist (with sorting number)
-		$this->assertDirectoryExists(static::TMP . '/content/1_test');
+		// exactly one page should exist — no duplicate
+		$this->assertCount(1, $app->site()->childrenAndDrafts());
 	}
 
 	/**
-	 * Changing status in the page.create:after hook should
-	 * not create a second page with a different UUID
+	 * After calling changeStatus() inside page.create:after, the UUID
+	 * cache must be populated with the correct UUID of the listed page —
+	 * not a newly generated one written to the recreated draft directory
 	 */
-	public function testCreateWithChangeStatusInAfterHookUuid(): void
+	public function testCreateWithChangeStatusInAfterHookUuidPopulated(): void
 	{
 		$app = $this->app->clone([
 			'hooks' => [
@@ -516,11 +517,15 @@ class PageCreateTest extends ModelTestCase
 
 		$app->impersonate('kirby');
 
-		Page::create([
-			'slug' => 'test',
-		]);
+		Page::create(['slug' => 'test']);
 
-		// there should be exactly one page, no duplicate draft
-		$this->assertCount(1, $app->site()->childrenAndDrafts());
+		// get the actual listed page
+		$page = $app->site()->children()->first();
+
+		// UUID cache must be populated with the listed page's UUID
+		$this->assertTrue($page->uuid()->isCached());
+
+		// resolving the cached UUID must return the same page
+		$this->assertSame($page->id(), $page->uuid()->model()->id());
 	}
 }
