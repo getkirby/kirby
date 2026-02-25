@@ -301,6 +301,7 @@
 	"error.version.discard.permission": "You are not allowed to discard this version",
 	"error.version.publish.permission": "You are not allowed to publish this version",
 	"error.version.save.permission": "You are not allowed to change this version",
+	"error.version.unlock.permission": "You are not allowed to unlock this version",
 
 	"expand": "Expand",
 	"expand.all": "Expand all",
