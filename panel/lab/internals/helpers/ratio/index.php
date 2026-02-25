@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'source' => 'panel/src/helpers/ratio.js'
+	'source' => 'panel/src/helpers/ratio.ts'
 ];

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import ratio from "./ratio.js";
+import ratio from "./ratio";
 
 describe.concurrent("$helper.ratio()", () => {
-	const data = {
+	const data: Record<string, [unknown, string][]> = {
 		"should return default ratio": [[undefined, "66.67%"]],
 		"should return padding for 16/9": [["16/9", "56.25%"]],
 		"should return 100% on invalid fractions": [
@@ -10,6 +10,7 @@ describe.concurrent("$helper.ratio()", () => {
 			["16/0", "100%"]
 		],
 		"should return 100% on invalid input": [
+			["2", "100%"],
 			[1, "100%"],
 			[{}, "100%"]
 		]

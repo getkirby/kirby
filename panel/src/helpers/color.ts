@@ -1,16 +1,13 @@
 /**
  * Resolves CSS property alias to proper CSS color values
- *
- * @param {string} string
- * @returns {string}
  */
-export default function (string) {
-	if (typeof string !== "string") {
+export default function (input: unknown): string | undefined {
+	if (typeof input !== "string") {
 		return;
 	}
 
 	// make the string case-insensitive
-	string = string.toLowerCase();
+	const string = input.toLowerCase();
 
 	if (string === "pattern") {
 		return `var(--pattern)`;
