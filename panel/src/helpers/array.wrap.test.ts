@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { wrap } from "./array.js";
+import { wrap } from "./array";
 
 describe.concurrent("array.wrap()", () => {
 	it("should wrap in an array", () => {

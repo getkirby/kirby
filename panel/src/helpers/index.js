@@ -1,4 +1,4 @@
-import array from "./array.js";
+import array from "./array";
 import clipboard from "./clipboard.js";
 import color from "./color.js";
 import debounce from "./debounce.js";

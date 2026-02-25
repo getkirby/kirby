@@ -7,7 +7,7 @@ import focus from "@/helpers/focus.js";
 import "@/helpers/array.js";
 import { reactive, set } from "vue";
 import { uuid } from "@/helpers/string.js";
-import { wrap } from "@/helpers/array.js";
+import { wrap } from "@/helpers/array";
 
 /**
  * Additional default values for modals
