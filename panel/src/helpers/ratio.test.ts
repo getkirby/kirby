@@ -19,7 +19,7 @@ describe.concurrent("$helper.ratio()", () => {
 	for (const test in data) {
 		it(test, () => {
 			for (const exp of data[test]) {
-				expect(ratio(exp[0])).toBe(exp[1]);
+				expect(ratio(exp[0] as string | undefined)).toBe(exp[1]);
 			}
 		});
 	}
