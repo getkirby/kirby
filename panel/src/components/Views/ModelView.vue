@@ -62,6 +62,14 @@ export default {
 			return this.lock.modified;
 		}
 	},
+	watch: {
+		api(newApi, oldApi) {
+			// the api has changed when the editor navigated to a view
+			// with the same view component, but a different model. In this
+			// case, we need to unlock view for the old model.
+			this.unlock(oldApi);
+		}
+	},
 	mounted() {
 		this.$events.on("beforeunload", this.onBeforeUnload);
 		this.$events.on("content.save", this.onContentSave);
@@ -77,12 +85,23 @@ export default {
 		this.$events.off("keydown.right", this.toNext);
 		this.$events.off("model.reload", this.$reload);
 		this.$events.off("view.save", this.onViewSave);
+
+		// the view component gets discarded when a different view
+		// is being opened, so let's unlock this view.
+		if (this.isLocked === false) {
+			this.unlock(this.api);
+		}
 	},
 	methods: {
 		onBeforeUnload(e) {
 			if (this.$panel.content.isProcessing === true || this.isSaved === false) {
 				e.preventDefault();
 				e.returnValue = "";
+			}
+
+			// the window or tab is closed, so let's unlock this view.
+			if (this.isLocked === false) {
+				this.unlock(this.api);
 			}
 		},
 		onContentSave({ api, language }) {
@@ -142,6 +161,12 @@ export default {
 			if (this.prev && e.target.localName === "body") {
 				this.$go(this.prev.link);
 			}
+		},
+		unlock(api) {
+			this.$panel.content.unlock({
+				api: api,
+				language: this.$panel.language.code
+			});
 		}
 	}
 };
