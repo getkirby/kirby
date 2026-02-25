@@ -20,7 +20,7 @@ import upload from "./upload.js";
 import url from "./url.js";
 import writer from "./writer.js";
 
-import "./regex.js";
+import "./regex";
 
 export default {
 	install(app) {
