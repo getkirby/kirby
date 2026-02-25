@@ -16,6 +16,7 @@ namespace Kirby\Data;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.4.0
  */
 class Frontmatter extends Handler
 {
