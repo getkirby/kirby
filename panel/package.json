@@ -6,10 +6,11 @@
 		"build": "vite build",
 		"build:docs": "node scripts/docs.mjs",
 		"dev": "vite --host",
-		"lint": "eslint \"src/**/*.{js,vue}\"",
-		"lint:fix": "npm run lint -- --fix",
 		"format": "prettier --write \"src/**/*.{js,vue}\"",
-		"test:unit": "vitest run --no-isolate"
+		"lint": "eslint \"src/**/*.{js,ts,vue}\"",
+		"lint:fix": "npm run lint -- --fix",
+		"test:unit": "vitest run --no-isolate",
+		"types": "vue-tsc --noEmit"
 	},
 	"dependencies": {
 		"autosize": "^6.0.1",
@@ -36,10 +37,13 @@
 		"happy-dom": "^17.5.6",
 		"prettier": "^3.8.1",
 		"terser": "^5.46.0",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.56.0",
 		"vite": "^7.3.1",
 		"vite-plugin-static-copy": "^3.2.0",
 		"vitest": "^4.0.18",
-		"vue-docgen-api": "^4.79.2"
+		"vue-docgen-api": "^4.79.2",
+		"vue-tsc": "^3.2.5"
 	},
 	"browserslist": [
 		"last 2 Android versions",
