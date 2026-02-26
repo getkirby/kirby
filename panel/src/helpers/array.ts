@@ -3,6 +3,10 @@ import "./regex";
 
 /**
  * Creates an array from an object
+ *
+ * @example
+ * fromObject({ a: 1, b: 2 }) // => [1, 2]
+ * fromObject([1, 2]) // => [1, 2]
  */
 export function fromObject<T>(
 	object: T[] | Record<string, T> | null | undefined
