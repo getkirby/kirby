@@ -635,7 +635,9 @@
 	"plugin": "Tillägg",
 	"plugins": "Tillägg",
 	"prev": "Föregående",
+
 	"preview": "Förhandsgranska",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publicera",
 	"published": "Publicerade",
@@ -786,6 +788,7 @@
 	"user.create": "Lägg till en ny användare",
 	"user.delete": "Radera denna användare",
 	"user.delete.confirm": "Vill du verkligen radera <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Användare",
 

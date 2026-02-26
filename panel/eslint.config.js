@@ -2,10 +2,15 @@ import globals from "globals";
 import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
 import vitest from "@vitest/eslint-plugin";
+import tseslint from "typescript-eslint";
 import vue from "eslint-plugin-vue";
 
 export default [
 	js.configs.recommended,
+	...tseslint.configs.recommended.map((config) => ({
+		...config,
+		files: ["**/*.ts"]
+	})),
 	...vue.configs["flat/recommended"],
 
 	// Vitest rules for test files

@@ -1,5 +1,5 @@
 {
-	"account": "Account",
+	"account": "Reikningur",
 	"account.changeName": "Breyta nafninu þínu",
 	"account.delete": "Eyða notandareikning þínum",
 	"account.delete.confirm": "Ertu alveg viss um að þú viljir endanlega eyða reikningnum þínum? Þú munt verða útskráð/ur án tafar. Ómögulegt verður að endurheimta reikninginn þinn.",
@@ -16,7 +16,7 @@
 	"changes": "Breytingar",
 	"confirm": "OK",
 	"collapse": "Fella",
-	"collapse.all": "Collapse all",
+	"collapse.all": "Fella allt",
 	"color": "Litur",
 	"coordinates": "Hnit",
 	"copy": "Afrita",
@@ -44,8 +44,8 @@
 	"delete": "Eyða",
 	"delete.all": "Eyða hreint öllu",
 
-	"deselect": "Deselect",
-	"deselect.all": "Deselect all",
+	"deselect": "Afvelja",
+	"deselect.all": "Afvelja allt",
 
 	"dialog.fields.empty": "Þessi valmynd hefur engin svið",
 	"dialog.files.empty": "Engar skrár til að velja úr",
@@ -298,12 +298,12 @@
 	"error.validation.uuid": "Vinsamlegast gillt UUID (Notandakenni)",
 	"error.validation.url": "Ákjósanleg vefslóð",
 
-	"error.version.discard.permission": "You are not allowed to discard this version",
-	"error.version.publish.permission": "You are not allowed to publish this version",
-	"error.version.save.permission": "You are not allowed to change this version",
+	"error.version.discard.permission": "Þú mátt ekki hunsa þessa útgáfu",
+	"error.version.publish.permission": "Þú mátt ekki gefa út þessa útgáfu",
+	"error.version.save.permission": "Þú mátt ekki breyta þessari útgáfu",
 
 	"expand": "Þenja út",
-	"expand.all": "Expand all",
+	"expand.all": "Sýna allt",
 
 	"field.invalid": "Þetta svið er bara ógillt sem stendur.",
 	"field.required": "Þetta svið er nauðsynlegt",
@@ -384,7 +384,7 @@
 
 	"field.structure.delete.confirm": "Viltu virkilega eyða þessari röð?",
 	"field.structure.delete.confirm.all": "Ætlar þú virkilega að eyða öllum færslum?",
-	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
+	"field.structure.delete.confirm.selected": "Viltu virkilega eyða völdum færslum?",
 	"field.structure.empty": "Engar færslur enn",
 
 	"field.users.empty": "Engir notendur valdir enn",
@@ -483,7 +483,7 @@
 	"license.code": "Kóðasnið",
 	"license.code.help": "Þú fékkst leyfiskóðan sendan í tölvupósti eftir að þú borgaðir fyrir leyfið. Vinsamlegast afritaðu hann hingað.",
 	"license.code.label": "Vinsamlegast settu inn leyfiskóðan",
-	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
+	"license.remove.text": "<p>Að fjarlægja leyfið mun eyða leyfisskránni varanlega af þessu vefsvæði. Þú getur síðan virkjað vefsvæðið með öðrum leyfislykli eða skráð sama leyfislykil aftur, svo framarlega sem lénið helst óbreytt. </p><p> Til að breyta léninu sem leyfið er tengt við, vinsamlegast hafðu samband við Kirby-teymið.<a href='https://getkirby.com/license'>Lesa nánar &rarr;</a></p>",
 	"license.status.active.info": "Felur í sér allar útgáfur þar til {date}",
 	"license.status.active.label": "Gilt skráningarleyfi",
 	"license.status.demo.info": "Þessi uppsetning er til prófunar.",
@@ -635,7 +635,9 @@
 	"plugin": "Viðbót",
 	"plugins": "Viðbætur",
 	"prev": "Fyrri",
+
 	"preview": "Forskoða",
+	"preview.browser.scroll": "Skruna í takt",
 
 	"publish": "Útgefa",
 	"published": "Útgefnar og listaðar",
@@ -671,7 +673,7 @@
 
 	"security": "Öryggi",
 	"select": "Velja",
-	"select.all": "Select all",
+	"select.all": "Velja allt",
 	"server": "Vefþjónn",
 	"settings": "Stillingar",
 	"show": "Sýna",
@@ -780,12 +782,13 @@
 	"user.changePassword.current": "Þitt núverandi lykilorð",
 	"user.changePassword.new": "Nýtt lykilorð",
 	"user.changePassword.new.confirm": "Staðfestu nýtt lykilorð…",
-	"user.changePassword.own": "Your own password",
+	"user.changePassword.own": "Þitt eigið lykilorð",
 	"user.changeRole": "Breyta hlutverki",
 	"user.changeRole.select": "Veldu nýtt hlutverk",
 	"user.create": "Bæta við nýjum notenda",
 	"user.delete": "Farga þessum notenda",
 	"user.delete.confirm": "Viltu virkilega eyða <br><strong>{email}</strong>?",
+	"user.setPassword": "Setja lykilorð",
 
 	"users": "Notendur",
 

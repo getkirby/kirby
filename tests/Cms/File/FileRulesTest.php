@@ -47,8 +47,8 @@ class FileRulesTest extends ModelTestCase
 
 	public function testChangeNameWithoutPermissions(): void
 	{
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('changeName')->willReturn(false);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('changeName')->willReturn(false);
 
 		$file = $this->createStub(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -78,8 +78,8 @@ class FileRulesTest extends ModelTestCase
 
 	public function testChangeSortWithoutPermissions(): void
 	{
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('sort')->willReturn(false);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('sort')->willReturn(false);
 
 		$file = $this->createStub(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -165,8 +165,8 @@ class FileRulesTest extends ModelTestCase
 
 	public function testChangeTemplateWithoutPermissions(): void
 	{
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('changeTemplate')->willReturn(false);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('changeTemplate')->willReturn(false);
 
 		$file = $this->createStub(File::class);
 		$file->method('id')->willReturn('test');
@@ -180,8 +180,8 @@ class FileRulesTest extends ModelTestCase
 
 	public function testChangeTemplateTooFewTemplates(): void
 	{
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('changeTemplate')->willReturn(true);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('changeTemplate')->willReturn(true);
 
 		$file = $this->createStub(File::class);
 		$file->method('blueprints')->willReturn([[]]);
@@ -196,8 +196,8 @@ class FileRulesTest extends ModelTestCase
 
 	public function testChangeTemplateWithInvalidTemplateName(): void
 	{
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('changeTemplate')->willReturn(true);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('changeTemplate')->willReturn(true);
 
 		$file = $this->createStub(File::class);
 		$file->method('blueprints')->willReturn([
@@ -345,14 +345,14 @@ class FileRulesTest extends ModelTestCase
 	public function testCreateHarmfulContents(): void
 	{
 		$blueprint   = $this->createStub(FileBlueprint::class);
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('create')->willReturn(true);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('create')->willReturn(true);
 
 		$file = $this->createStub(File::class);
 		$file->method('blueprint')->willReturn($blueprint);
 		$file->method('permissions')->willReturn($permissions);
 		$file->method('filename')->willReturn('test.svg');
-		$file->method('__call')->with('extension')->willReturn('svg');
+		$file->method('__call')->willReturn('svg');
 
 		$upload = new BaseFile(static::FIXTURES . '/test.svg');
 
@@ -364,8 +364,8 @@ class FileRulesTest extends ModelTestCase
 
 	public function testCreateWithoutPermissions(): void
 	{
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('create')->willReturn(false);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('create')->willReturn(false);
 
 		$file = $this->createStub(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -381,8 +381,8 @@ class FileRulesTest extends ModelTestCase
 
 	public function testDeleteWithoutPermissions(): void
 	{
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('delete')->willReturn(false);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('delete')->willReturn(false);
 
 		$file = $this->createStub(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -395,8 +395,8 @@ class FileRulesTest extends ModelTestCase
 
 	public function testReplaceWithoutPermissions(): void
 	{
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('replace')->willReturn(false);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('replace')->willReturn(false);
 
 		$file = $this->createStub(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -411,8 +411,8 @@ class FileRulesTest extends ModelTestCase
 
 	public function testReplaceInvalidMimeExtension(): void
 	{
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('replace')->willReturn(true);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('replace')->willReturn(true);
 
 		$file = $this->createStub(File::class);
 		$file->method('permissions')->willReturn($permissions);
@@ -435,14 +435,14 @@ class FileRulesTest extends ModelTestCase
 	{
 		$blueprint = $this->createStub(FileBlueprint::class);
 
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('replace')->willReturn(true);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('replace')->willReturn(true);
 
 		$file = $this->createStub(File::class);
 		$file->method('blueprint')->willReturn($blueprint);
 		$file->method('filename')->willReturn('test.svg');
 		$file->method('permissions')->willReturn($permissions);
-		$file->method('__call')->with('mime')->willReturnCallback(fn ($method) => match ($method) {
+		$file->method('__call')->willReturnCallback(fn ($method) => match ($method) {
 			'extension' => 'svg',
 			'mime'      => 'image/svg+xml'
 		});
@@ -457,8 +457,8 @@ class FileRulesTest extends ModelTestCase
 
 	public function testUpdateWithoutPermissions(): void
 	{
-		$permissions = $this->createStub(FilePermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->expects($this->once())->method('can')->with('update')->willReturn(false);
 
 		$file = $this->createStub(File::class);
 		$file->method('permissions')->willReturn($permissions);

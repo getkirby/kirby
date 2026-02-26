@@ -635,7 +635,9 @@
 	"plugin": "플러그인",
 	"plugins": "플러그인",
 	"prev": "이전",
+
 	"preview": "미리 보기",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "발행",
 	"published": "발행",
@@ -786,6 +788,7 @@
 	"user.create": "사용자 추가",
 	"user.delete": "사용자 삭제",
 	"user.delete.confirm": "사용자(<strong>{email}</strong>)를 삭제할까요?",
+	"user.setPassword": "Set password",
 
 	"users": "사용자",
 

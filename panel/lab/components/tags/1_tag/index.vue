@@ -26,17 +26,17 @@
 			<k-tag :disabled="true" :removable="true" :theme="theme" text="Foo" />
 		</k-lab-example>
 		<k-lab-example :flex="true" label="Icon">
-			<k-tag :image="{ icon: 'heart' }" :theme="theme" />
-			<k-tag :image="{ icon: 'heart' }" :theme="theme" text="Foo" />
+			<k-tag :image="{ icon: 'heart', back: 'pattern' }" :theme="theme" />
+			<k-tag :image="{ icon: 'heart', back: 'pattern' }" :theme="theme" text="Foo" />
 			<k-tag
-				:image="{ icon: 'heart' }"
+				:image="{ icon: 'heart', back: 'pattern' }"
 				:removable="true"
 				:theme="theme"
 				text="Foo"
 			/>
 			<k-tag
 				:disabled="true"
-				:image="{ icon: 'heart' }"
+				:image="{ icon: 'heart', back: 'pattern' }"
 				:removable="true"
 				:theme="theme"
 				text="Foo"

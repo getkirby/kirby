@@ -12,8 +12,11 @@ class SiteRulesTest extends ModelTestCase
 
 	public function testChangeTitleWithoutPermissions(): void
 	{
-		$permissions = $this->createStub(SitePermissions::class);
-		$permissions->method('can')->with('changeTitle')->willReturn(false);
+		$permissions = $this->createMock(SitePermissions::class);
+		$permissions->expects($this->once())
+			->method('can')
+			->with('changeTitle')
+			->willReturn(false);
 
 		$site = $this->createStub(Site::class);
 		$site->method('permissions')->willReturn($permissions);
@@ -37,8 +40,11 @@ class SiteRulesTest extends ModelTestCase
 
 	public function testUpdateWithoutPermissions(): void
 	{
-		$permissions = $this->createStub(SitePermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions = $this->createMock(SitePermissions::class);
+		$permissions->expects($this->once())
+			->method('can')
+			->with('update')
+			->willReturn(false);
 
 		$site = $this->createStub(Site::class);
 		$site->method('permissions')->willReturn($permissions);

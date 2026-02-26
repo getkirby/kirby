@@ -19,7 +19,7 @@ export default {
 	},
 	computed: {
 		html() {
-			return this.value;
+			return this.$helper.string.sanitizeHTML(this.value);
 		}
 	}
 };
@@ -28,7 +28,10 @@ export default {
 <style>
 .k-html-field-preview {
 	padding: 0.375rem var(--table-cell-padding);
-	overflow: hidden;
+}
+.k-html-field-preview .k-text {
+	overflow-x: hidden;
 	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 </style>

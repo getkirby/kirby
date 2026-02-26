@@ -635,7 +635,9 @@
 	"plugin": "Plugin",
 	"plugins": "Pluginek",
 	"prev": "Előző",
+
 	"preview": "Előnézet",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publish",
 	"published": "Publikálva",
@@ -786,6 +788,7 @@
 	"user.create": "Új felhasználó hozzáadása",
 	"user.delete": "Felhasználó törlése",
 	"user.delete.confirm": "Biztos törlöd ezt a felhasználót: <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Felhasználók",
 

@@ -635,7 +635,9 @@
 	"plugin": "Plugin",
 	"plugins": "Plugini",
 	"prev": "Previous",
+
 	"preview": "Pregled",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Objavi",
 	"published": "Javno",
@@ -786,6 +788,7 @@
 	"user.create": "Dodaj novog korisnika",
 	"user.delete": "Obriši ovog korisnika",
 	"user.delete.confirm": "Da li stvarno želite obrisati <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Korisnici",
 

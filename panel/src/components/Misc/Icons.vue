@@ -1,5 +1,4 @@
 <template>
-	<!-- eslint-disable -->
 	<svg
 		aria-hidden="true"
 		class="k-icons"
@@ -7,10 +6,11 @@
 		overflow="hidden"
 	>
 		<defs>
+			<!-- eslint-disable vue/no-v-html -->
 			<symbol
 				v-for="(icon, type) in $options.icons"
-				:key="type"
 				:id="'icon-' + type"
+				:key="type"
 				viewBox="0 0 24 24"
 				v-html="icon"
 			/>

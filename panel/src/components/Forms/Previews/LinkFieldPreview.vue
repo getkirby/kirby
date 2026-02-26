@@ -11,11 +11,11 @@
 	</template>
 	<div
 		v-else
-		:class="{
-			'k-link-field-preview': true,
-			'k-url-field-preview': isLink,
-			[$attrs.class]: true
-		}"
+		:class="[
+			'k-link-field-preview',
+			{ 'k-url-field-preview': isLink },
+			$attrs.class
+		]"
 		:style="$attrs.style"
 	>
 		<template v-if="isLink">

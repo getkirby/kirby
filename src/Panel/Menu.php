@@ -7,7 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Panel\Ui\Button;
 use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\HasI18n;
 
 /**
  * The Menu class takes care of gathering
@@ -23,6 +23,8 @@ use Kirby\Toolkit\I18n;
  */
 class Menu
 {
+	use HasI18n;
+
 	public Areas $areas;
 	public array $config;
 	protected array $items;
@@ -211,14 +213,14 @@ class Menu
 		$items[] = new Button(
 			id: 'changes',
 			icon: 'edit-line',
-			text: I18n::translate('changes'),
+			text: $this->i18n('changes'),
 			dialog: 'changes'
 		);
 
 		$items[] = new Button(
 			id: 'account',
 			icon: 'account',
-			text: I18n::translate('view.account'),
+			text: $this->i18n('view.account'),
 			link: 'account',
 			current: $this->current === 'account',
 			disabled: $this->hasPermission('account') === false
@@ -227,7 +229,7 @@ class Menu
 		$items[] = new Button(
 			id: 'logout',
 			icon: 'logout',
-			text: I18n::translate('logout'),
+			text: $this->i18n('logout'),
 			link: 'logout'
 		);
 

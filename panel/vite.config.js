@@ -4,7 +4,7 @@ import path from "path";
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { viteStaticCopy } from "vite-plugin-static-copy";
-import kirby from "./scripts/vite-kirby.mjs";
+import kirby from "./scripts/vite-kirby";
 
 /**
  * Returns all aliases used in the project
@@ -14,7 +14,9 @@ function createAliases(proxy) {
 		"@": path.resolve(__dirname, "src")
 	};
 
-	if (!process.env.VITEST) {
+	if (process.env.VITEST) {
+		aliases["@test"] = path.resolve(__dirname, "tests");
+	} else {
 		// use absolute proxied url to avoid Vue being loaded twice
 		aliases.vue =
 			proxy.target + ":3000/node_modules/vue/dist/vue.esm-browser.js";
@@ -26,7 +28,7 @@ function createAliases(proxy) {
 /**
  * Returns the server configuration
  */
-function createServer(proxy) {
+async function createServer(proxy) {
 	return {
 		allowedHosts: [proxy.target.substring(8)],
 		cors: { origin: proxy.target },
@@ -37,16 +39,17 @@ function createServer(proxy) {
 		},
 		open: proxy.target + "/panel",
 		port: 3000,
-		...createCustomServer()
+		...(await createCustomServer())
 	};
 }
 
 /**
  * Returns custom server configuration, if it exists
  */
-function createCustomServer() {
+async function createCustomServer() {
 	try {
-		return require("./vite.config.custom.js");
+		const module = await import("./vite.config.custom.js");
+		return module.default ?? {};
 	} catch {
 		return {};
 	}
@@ -95,16 +98,18 @@ function createPlugins(mode) {
  */
 function createTest() {
 	return {
-		environment: "node",
-		include: ["**/*.test.js"],
-		setupFiles: ["vitest.setup.js"]
+		css: false,
+		environment: "happy-dom",
+		include: ["**/*.test.{js,ts}"],
+		reporter: "dot",
+		setupFiles: ["tests/unit/setup.js"]
 	};
 }
 
 /**
  * Returns the Vite configuration
  */
-export default defineConfig(({ mode }) => {
+export default defineConfig(async ({ mode }) => {
 	// Load env file based on `mode` in the current working directory.
 	// Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
 	process.env = {
@@ -120,7 +125,7 @@ export default defineConfig(({ mode }) => {
 
 	const alias = createAliases(proxy);
 	const plugins = createPlugins(mode);
-	const server = createServer(proxy);
+	const server = await createServer(proxy);
 	const test = createTest();
 
 	return {
@@ -151,7 +156,7 @@ export default defineConfig(({ mode }) => {
 			}
 		},
 		optimizeDeps: {
-			entries: "src/**/*.{js,vue}",
+			entries: "src/**/*.{js,ts,vue}",
 			exclude: ["vitest", "vue"],
 			holdUntilCrawlEnd: false
 		},

@@ -635,7 +635,9 @@
 	"plugin": "Plugin",
 	"plugins": "Plugins",
 	"prev": "Vorige",
+
 	"preview": "Voorbeeld",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publiceren",
 	"published": "Gepubliceerd",
@@ -786,6 +788,7 @@
 	"user.create": "Voeg een nieuwe gebruiker toe",
 	"user.delete": "Verwijder deze gebruiker",
 	"user.delete.confirm": "Weet je zeker dat je <br><strong>{email}</strong> wil verwijderen?",
+	"user.setPassword": "Set password",
 
 	"users": "Gebruikers",
 

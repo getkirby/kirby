@@ -618,6 +618,9 @@ trait FieldMethods
 	 */
 	public function toPages(string $separator = 'yaml'): Pages
 	{
+		// always pass at least two arguments even if the
+		// data is empty so that `$site->find()` always
+		// returns a collection, not a single page
 		return $this->kirby()->site()->find(
 			false,
 			false,
@@ -689,6 +692,9 @@ trait FieldMethods
 	 */
 	public function toUsers(string $separator = 'yaml'): Users
 	{
+		// always pass at least two arguments even if the
+		// data is empty so that `$users->find()` always
+		// returns a collection, not a single user
 		return $this->kirby()->users()->find(
 			false,
 			false,

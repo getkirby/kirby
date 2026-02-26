@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Ui\Button;
 
 use Kirby\Cms\ModelWithContent;
-use Kirby\Toolkit\I18n;
 
 /**
  * Settings view button for models
@@ -27,7 +26,7 @@ class SettingsButton extends ViewButton
 			disabled: $model->lock()->isLocked(),
 			icon: 'cog',
 			options: $model->panel()->url(true),
-			title: I18n::translate('settings'),
+			title: $this->i18n('settings'),
 		);
 	}
 }

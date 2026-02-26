@@ -3,7 +3,6 @@
 namespace Kirby\Panel\Ui\Button;
 
 use Kirby\Cms\Page;
-use Kirby\Toolkit\I18n;
 
 /**
  * Status view button for pages
@@ -26,11 +25,11 @@ class PageStatusButton extends ViewButton
 		$disabled  = $page->permissions()->cannot('changeStatus') || $page->lock()->isLocked();
 
 		$text   = $blueprint['label'] ?? null;
-		$text ??= I18n::translate('page.status.' . $status);
-		$title  = I18n::translate('page.status') . ': ' . $text;
+		$text ??= $this->i18n('page.status.' . $status);
+		$title  = $this->i18n('page.status') . ': ' . $text;
 
 		if ($disabled === true) {
-			$title .= ' (' . I18n::translate('disabled') . ')';
+			$title .= ' (' . $this->i18n('disabled') . ')';
 		}
 
 		parent::__construct(
