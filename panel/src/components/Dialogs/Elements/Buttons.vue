@@ -6,8 +6,6 @@
 </template>
 
 <script>
-import { isObject } from "@/helpers/object.js";
-
 export const props = {
 	props: {
 		/**
@@ -94,7 +92,7 @@ export default {
 				return false;
 			}
 
-			if (isObject(button) === false) {
+			if (this.$helper.object.isObject(button) === false) {
 				return defaults;
 			}
 

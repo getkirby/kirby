@@ -1,6 +1,6 @@
 import Vue from "vue";
-import { isObject } from "@/helpers/object.js";
 import isComponent from "@/helpers/isComponent";
+import { isObject } from "@/helpers/object";
 
 // mixins
 import dialog from "@/mixins/dialog.js";

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { toLowerKeys } from "./object.js";
+import { toLowerKeys } from "./object";
 
-describe("$helper.object.toLowerKeys", () => {
+describe("$helper.object.toLowerKeys()", () => {
 	it("should convert all keys to lowercase", () => {
 		const obj = { A: 1, b: 2, C: 3 };
 		const result = toLowerKeys(obj);

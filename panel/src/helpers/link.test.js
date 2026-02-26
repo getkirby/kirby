@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { length } from "./object.js";
+import { length } from "./object";
 import link from "./link.js";
 
 // mock $t() function

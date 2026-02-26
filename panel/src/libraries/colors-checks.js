@@ -1,4 +1,4 @@
-import { isObject } from "@/helpers/object.js";
+import { isObject } from "@/helpers/object";
 
 export const RE_HEX = /^#?([\da-f]{3}){1,2}$/i;
 export const RE_HEXA = /^#?([\da-f]{4}){1,2}$/i;
