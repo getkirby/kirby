@@ -110,6 +110,10 @@ class ViewResponse extends JsonResponse
 	 */
 	public static function from(mixed $data): Response
 	{
+		if ($data === true) {
+			return new static([], 200);
+		}
+
 		// handle redirects
 		if ($data instanceof Redirect) {
 			// if the redirect is a refresh, return a refresh response
