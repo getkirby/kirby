@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fromObject } from "./array.js";
+import { fromObject } from "./array";
 
 describe.concurrent("array.fromObject()", () => {
 	it("should convert object to array", () => {

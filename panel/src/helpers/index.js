@@ -1,4 +1,4 @@
-import array from "./array.js";
+import array from "./array";
 import clipboard from "./clipboard.js";
 import color from "./color.js";
 import debounce from "./debounce.js";
@@ -20,7 +20,7 @@ import upload from "./upload.js";
 import url from "./url.js";
 import writer from "./writer.js";
 
-import "./regex.js";
+import "./regex";
 
 export default {
 	install(app) {

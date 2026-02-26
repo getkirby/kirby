@@ -6,7 +6,7 @@ import Feature, { defaults as featureDefaults } from "./feature.js";
 import History from "./history.js";
 import focus from "@/helpers/focus.js";
 import { uuid } from "@/helpers/string.js";
-import { wrap } from "@/helpers/array.js";
+import { wrap } from "@/helpers/array";
 
 /**
  * Additional default values for modals
