@@ -7,6 +7,16 @@ describe.concurrent("$helper.string.isEmpty", () => {
 		expect(result).toStrictEqual(true);
 	});
 
+	it("should work with undefined", () => {
+		const result = string.isEmpty(undefined);
+		expect(result).toStrictEqual(true);
+	});
+
+	it("should work with false", () => {
+		const result = string.isEmpty(false);
+		expect(result).toStrictEqual(true);
+	});
+
 	it("should work with empty string", () => {
 		const result = string.isEmpty("");
 		expect(result).toStrictEqual(true);

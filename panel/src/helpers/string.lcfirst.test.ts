@@ -11,4 +11,9 @@ describe.concurrent("$helper.string.lcfirst", () => {
 		const result = string.lcfirst("H");
 		expect(result).toBe("h");
 	});
+
+	it("should ignore invalid input", () => {
+		const result = string.lcfirst(0);
+		expect(result).toBe("0");
+	});
 });

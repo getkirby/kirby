@@ -75,6 +75,11 @@ describe.concurrent("$helper.string.slug()", () => {
 		expect(result).toBe("what-a-view@2x.png");
 	});
 
+	it("should return empty string when undefined param sent", () => {
+		const result = slug(undefined);
+		expect(result).toBe("");
+	});
+
 	it("should return empty string when null param sent", () => {
 		const result = slug(null);
 		expect(result).toBe("");

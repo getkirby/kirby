@@ -22,8 +22,10 @@ const escapingMap: Record<string, string> = {
  * @example
  * camelToKebab("myString") // "my-string"
  */
-export function camelToKebab(string: string): string {
-	return string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+export function camelToKebab(string: unknown): string {
+	return String(string)
+		.replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+		.toLowerCase();
 }
 
 /**
@@ -57,8 +59,8 @@ export function camelToKebab(string: string): string {
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-export function escapeHTML(string: string): string {
-	return string.replace(/[&<>"'`=/]/g, (char) => escapingMap[char]);
+export function escapeHTML(string: unknown): string {
+	return String(string).replace(/[&<>"'`=/]/g, (char) => escapingMap[char]);
 }
 
 /**
@@ -91,7 +93,7 @@ export function hasEmoji(string: unknown): boolean {
  *
  * @since 4.0.0
  */
-export function isEmpty(string: string | null | undefined): boolean {
+export function isEmpty(string: unknown): boolean {
 	if (!string) {
 		return true;
 	}
@@ -105,8 +107,9 @@ export function isEmpty(string: string | null | undefined): boolean {
  * @example
  * lcfirst("Hello World") // "hello World"
  */
-export function lcfirst(string: string): string {
-	return string.charAt(0).toLowerCase() + string.slice(1);
+export function lcfirst(string: unknown): string {
+	const str = String(string);
+	return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
 /**
@@ -117,9 +120,9 @@ export function lcfirst(string: string): string {
  * @example
  * ltrim("//path/to/file", "/") // "path/to/file"
  */
-export function ltrim(string: string = "", replace: string = ""): string {
+export function ltrim(string: unknown = "", replace: string = ""): string {
 	const expression = new RegExp(`^(${RegExp.escape(replace)})+`, "g");
-	return string.replace(expression, "");
+	return String(string).replace(expression, "");
 }
 
 /**
@@ -130,7 +133,7 @@ export function ltrim(string: string = "", replace: string = ""): string {
  * pad(5, 3) // "005"
  * pad(42) // "42"
  */
-export function pad(value: string | number, length: number = 2): string {
+export function pad(value: unknown, length: number = 2): string {
 	const string = String(value);
 	let pad = "";
 
@@ -167,9 +170,9 @@ export function random(length: number): string {
  * @example
  * rtrim("path/to/file//", "/") // "path/to/file"
  */
-export function rtrim(string: string = "", replace: string = ""): string {
+export function rtrim(string: unknown = "", replace: string = ""): string {
 	const expression = new RegExp(`(${RegExp.escape(replace)})+$`, "g");
-	return string.replace(expression, "");
+	return String(string).replace(expression, "");
 }
 
 /**
@@ -181,7 +184,7 @@ export function rtrim(string: string = "", replace: string = ""): string {
  * sanitizeHTML("<b>bold</b>", { marks: ["italic"] }) // "bold"
  */
 export function sanitizeHTML(
-	html: string | null | undefined,
+	html: unknown,
 	options: {
 		marks?: (string | WriterMark)[];
 		nodes?: (string | WriterNode)[];
@@ -246,7 +249,7 @@ export function sanitizeHTML(
  * @param separator - character used to replace non-allowed characters
  */
 export function slug(
-	string: string | null | undefined,
+	string: unknown,
 	rules: Record<string, string>[] = [],
 	allowed: string = "",
 	separator: string = "-"
@@ -259,7 +262,7 @@ export function slug(
 		allowed = "a-z0-9";
 	}
 
-	string = string.trim().toLowerCase();
+	let str = String(string).trim().toLowerCase();
 
 	// replace according to language and ascii rules
 	for (const ruleset of rules) {
@@ -267,33 +270,30 @@ export function slug(
 			const isTrimmed = rule.slice(0, 1) !== "/";
 			const trimmed = rule.slice(1, rule.length - 1);
 			const regex = isTrimmed ? rule : trimmed;
-			string = string.replace(
-				new RegExp(RegExp.escape(regex), "g"),
-				ruleset[rule]
-			);
+			str = str.replace(new RegExp(RegExp.escape(regex), "g"), ruleset[rule]);
 		}
 	}
 
 	// remove all other non-ASCII characters
-	string = string.replace("/[^\x09\x0A\x0D\x20-\x7E]/", "");
+	str = str.replace("/[^\x09\x0A\x0D\x20-\x7E]/", "");
 
 	// replace non-allowed characters (e.g. spaces) with separator
-	string = string.replace(new RegExp("[^" + allowed + "]", "ig"), separator);
+	str = str.replace(new RegExp("[^" + allowed + "]", "ig"), separator);
 
 	// remove double separators
-	string = string.replace(
+	str = str.replace(
 		new RegExp("[" + RegExp.escape(separator) + "]{2,}", "g"),
 		separator
 	);
 
 	// replace slashes with dashes
-	string = string.replace("/", separator);
+	str = str.replace("/", separator);
 
 	// trim leading and trailing non-word-chars
-	string = string.replace(new RegExp("^[^a-z0-9]+", "g"), "");
-	string = string.replace(new RegExp("[^a-z0-9]+$", "g"), "");
+	str = str.replace(new RegExp("^[^a-z0-9]+", "g"), "");
+	str = str.replace(new RegExp("[^a-z0-9]+$", "g"), "");
 
-	return string;
+	return str;
 }
 
 /**
@@ -302,8 +302,8 @@ export function slug(
  * @example
  * stripHTML("<b>bold</b>") // "bold"
  */
-export function stripHTML(string: string): string {
-	return string.replace(/(<([^>]+)>)/gi, "");
+export function stripHTML(string: unknown): string {
+	return String(string).replace(/(<([^>]+)>)/gi, "");
 }
 
 interface TemplateValues {
@@ -324,7 +324,7 @@ interface TemplateValues {
  * template("{{user.email}}", { user: { email: "hi@example.com" } }) // "hi@example.com"
  * template("{missing}", {}) // "…"
  */
-export function template(string: string, values: TemplateValues = {}): string {
+export function template(string: unknown, values: TemplateValues = {}): string {
 	const resolve = (parts: string[], data: TemplateValues = {}) => {
 		const part = escapeHTML(parts.shift() ?? "");
 		const value = data[part] ?? "…";
@@ -339,12 +339,12 @@ export function template(string: string, values: TemplateValues = {}): string {
 	const opening = "[{]{1,2}[\\s]?";
 	const closing = "[\\s]?[}]{1,2}";
 
-	string = string.replace(
+	const str = String(string).replace(
 		new RegExp(`${opening}(.*?)${closing}`, "gi"),
 		($0, $1) => String(resolve($1.split("."), values))
 	);
 
-	return string.replace(new RegExp(`${opening}.*${closing}`, "gi"), "…");
+	return str.replace(new RegExp(`${opening}.*${closing}`, "gi"), "…");
 }
 
 /**
@@ -353,8 +353,9 @@ export function template(string: string, values: TemplateValues = {}): string {
  * @example
  * ucfirst("hello world") // "Hello world"
  */
-export function ucfirst(string: string): string {
-	return string.charAt(0).toUpperCase() + string.slice(1);
+export function ucfirst(string: unknown): string {
+	const str = String(string);
+	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 /**
@@ -363,8 +364,8 @@ export function ucfirst(string: string): string {
  * @example
  * ucwords("hello world") // "Hello World"
  */
-export function ucwords(string: string): string {
-	return string
+export function ucwords(string: unknown): string {
+	return String(string)
 		.split(/ /g)
 		.map((word) => ucfirst(word))
 		.join(" ");
@@ -376,11 +377,14 @@ export function ucwords(string: string): string {
  * @example
  * unescapeHTML("&lt;b&gt;bold&lt;&#x2F;b&gt;") // "<b>bold</b>"
  */
-export function unescapeHTML(string: string): string {
+export function unescapeHTML(string: unknown): string {
+	let str = String(string);
+
 	for (const symbol in escapingMap) {
-		string = string.replaceAll(escapingMap[symbol], symbol);
+		str = str.replaceAll(escapingMap[symbol], symbol);
 	}
-	return string;
+
+	return str;
 }
 
 /**
