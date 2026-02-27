@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import url from "./url.js";
+import { describe, expect, it, vi } from "vitest";
+import url from "./url";
 
 describe("$helper.url.makeAbsolute", () => {
 	it("should not touch absolute URLs", () => {
@@ -8,7 +8,7 @@ describe("$helper.url.makeAbsolute", () => {
 	});
 
 	it("should make URLs absolute", () => {
-		window.location = new URL("https://getkirby.com");
+		vi.stubGlobal("location", new URL("https://getkirby.com"));
 
 		const result = url.makeAbsolute("/foo");
 		expect(result).toStrictEqual("https://getkirby.com/foo");

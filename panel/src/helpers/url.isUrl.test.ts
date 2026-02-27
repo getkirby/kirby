@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import url from "./url.js";
+import url from "./url";
 import urls from "@/../../tests/Toolkit/fixtures/urls.json";
 
 describe("$helper.url.isUrl", () => {
