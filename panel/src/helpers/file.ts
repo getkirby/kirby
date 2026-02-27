@@ -1,30 +1,31 @@
 /**
  * Extracts the extension
  *
- * @param {String} filename
- * @returns {String}
+ * @example
+ * extension("image.jpg") // => "jpg"
  */
-export const extension = (filename) => {
+export function extension(filename: string): string {
 	return filename.split(".").slice(-1).join("");
-};
+}
 
 /**
  * Extracts the name without extension
  *
- * @param {String} filename
- * @returns {String}
+ * @example
+ * name("image.jpg") // => "image"
  */
-export const name = (filename) => {
+export function name(filename: string): string {
 	return filename.split(".").slice(0, -1).join(".");
-};
+}
 
 /**
  * Creates a nice human-readable file size string with size unit
  *
- * @param {Number} size
- * @returns {String}
+ * @example
+ * niceSize(1024) // => "1KB"
+ * niceSize(1048576) // => "1MB"
  */
-export const niceSize = (size) => {
+export function niceSize(size: number): string {
 	const formatter = Intl.NumberFormat("en", {
 		notation: "compact",
 		style: "unit",
@@ -33,7 +34,7 @@ export const niceSize = (size) => {
 	});
 
 	return formatter.format(size);
-};
+}
 
 export default {
 	extension,
