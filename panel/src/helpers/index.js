@@ -6,7 +6,7 @@ import embed from "./embed.js";
 import field from "./field.js";
 import file from "./file.js";
 import focus from "./focus.js";
-import isComponent from "./isComponent.js";
+import isComponent from "./isComponent";
 import isUploadEvent from "./isUploadEvent.js";
 import keyboard from "./keyboard.js";
 import link from "./link.js";
