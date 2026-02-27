@@ -1,5 +1,10 @@
 /**
  * Resolves CSS property alias to proper CSS color values
+ *
+ * @example
+ * color("red") // => "var(--color-red)"
+ * color("#ff0000") // => "#ff0000"
+ * color("pattern") // => "var(--pattern)"
  */
 export default function (input: unknown): string | undefined {
 	if (typeof input !== "string") {

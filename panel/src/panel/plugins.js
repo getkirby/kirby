@@ -1,5 +1,5 @@
 import { isObject } from "@/helpers/object.js";
-import isComponent from "@/helpers/isComponent.js";
+import isComponent from "@/helpers/isComponent";
 
 // mixins
 import dialog from "@/mixins/dialog.js";

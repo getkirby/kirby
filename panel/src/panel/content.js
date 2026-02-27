@@ -1,6 +1,6 @@
 import { isObject, length } from "@/helpers/object";
 import { reactive } from "vue";
-import throttle from "@/helpers/throttle.js";
+import throttle from "@/helpers/throttle";
 
 /**
  * @since 5.0.0
