@@ -8,7 +8,7 @@ import file from "./file.js";
 import focus from "./focus.js";
 import isComponent from "./isComponent";
 import isUploadEvent from "./isUploadEvent.js";
-import keyboard from "./keyboard.js";
+import keyboard from "./keyboard";
 import link from "./link.js";
 import object from "./object.js";
 import page from "./page.js";
