@@ -410,7 +410,7 @@ return [
 				$path = $page->url($language);
 
 				// add the extension back to the url, if there was one
-				if ($extension !== '') {
+				if (isset($extension) === true && $extension !== '') {
 					$path .= '.' . $extension;
 				}
 
