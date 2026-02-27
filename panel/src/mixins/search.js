@@ -1,4 +1,4 @@
-import debounce from "@/helpers/debounce.js";
+import debounce from "@/helpers/debounce";
 
 /**
  * The Search mixin is intended for all components
