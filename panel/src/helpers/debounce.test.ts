@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import debounce from "./debounce.js";
+import debounce from "./debounce";
 
 describe.concurrent("$helper.debounce()", () => {
 	beforeEach(() => {
@@ -75,5 +75,67 @@ describe.concurrent("$helper.debounce()", () => {
 
 		vi.advanceTimersByTime(500);
 		expect(callback).toHaveBeenCalledTimes(2);
+	});
+
+	it("should only fire leading and not trail when trailing is false", () => {
+		const callback = vi.fn();
+		const debounced = debounce(callback, 1000, {
+			leading: true,
+			trailing: false
+		});
+
+		debounced("first");
+		expect(callback).toHaveBeenCalledTimes(1);
+		expect(callback).toHaveBeenCalledWith("first");
+
+		debounced("second");
+		debounced("third");
+
+		vi.advanceTimersByTime(1000);
+		expect(callback).toHaveBeenCalledTimes(1);
+	});
+
+	it("should fire leading again after the delay has passed", () => {
+		const callback = vi.fn();
+		const debounced = debounce(callback, 1000, {
+			leading: true,
+			trailing: false
+		});
+
+		debounced("first");
+		expect(callback).toHaveBeenCalledTimes(1);
+
+		vi.advanceTimersByTime(1000);
+
+		debounced("second");
+		expect(callback).toHaveBeenCalledTimes(2);
+		expect(callback).toHaveBeenLastCalledWith("second");
+	});
+
+	it("should never call the function when both leading and trailing are false", () => {
+		const callback = vi.fn();
+		const debounced = debounce(callback, 1000, {
+			leading: false,
+			trailing: false
+		});
+
+		debounced();
+		debounced();
+		vi.advanceTimersByTime(1000);
+
+		expect(callback).not.toHaveBeenCalled();
+	});
+
+	it("should fire trailing with the last arguments when called multiple times", () => {
+		const callback = vi.fn();
+		const debounced = debounce(callback, 1000);
+
+		debounced("first");
+		debounced("second");
+		debounced("third");
+
+		vi.advanceTimersByTime(1000);
+		expect(callback).toHaveBeenCalledTimes(1);
+		expect(callback).toHaveBeenCalledWith("third");
 	});
 });
