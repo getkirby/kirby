@@ -399,12 +399,20 @@ return [
 
 			if ($parts[0] ?? null) {
 				$page = $kirby->site()->find($parts[0]);
+
+				// get the extension of the url, if there is one, to add it back later
+				$extension = F::extension($parts[0]);
 			} else {
 				$page = $kirby->site()->page();
 			}
 
 			if ($page) {
 				$path = $page->url($language);
+
+				// add the extension back to the url, if there was one
+				if (isset($extension) === true && $extension !== '') {
+					$path .= '.' . $extension;
+				}
 
 				if (isset($parts[1]) === true) {
 					$path .= '#' . $parts[1];
