@@ -7,7 +7,7 @@ import field from "./field.js";
 import file from "./file.js";
 import focus from "./focus.js";
 import isComponent from "./isComponent";
-import isUploadEvent from "./isUploadEvent.js";
+import isUploadEvent from "./isUploadEvent";
 import keyboard from "./keyboard";
 import link from "./link.js";
 import object from "./object.js";
