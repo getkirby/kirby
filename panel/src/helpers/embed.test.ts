@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import embed from "./embed.js";
+import embed from "./embed";
 
 describe.concurrent("$helper.embed()", () => {
-	const tests = [
+	const tests: [string, string | false, string | false][] = [
 		// YouTube
 		[
 			"https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys",

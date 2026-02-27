@@ -2,7 +2,7 @@ import array from "./array";
 import clipboard from "./clipboard.js";
 import color from "./color.js";
 import debounce from "./debounce";
-import embed from "./embed.js";
+import embed from "./embed";
 import field from "./field.js";
 import file from "./file.js";
 import focus from "./focus.js";
