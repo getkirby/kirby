@@ -13,13 +13,15 @@ export function read(
 	if (e instanceof ClipboardEvent) {
 		e.preventDefault();
 
-		const text = e.clipboardData?.getData("text/plain") ?? null;
+		// getData() returns "" for absent types,
+		// use || not ?? to treat empty strings as missing
+		const text = e.clipboardData?.getData("text/plain") || null;
 
 		if (plain === true) {
 			return text;
 		}
 
-		const html = text ?? e.clipboardData?.getData("text/plain") ?? null;
+		const html = e.clipboardData?.getData("text/html") || text || null;
 
 		if (html) {
 			return html.replace(/\u00a0/g, " ");

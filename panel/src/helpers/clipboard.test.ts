@@ -55,6 +55,25 @@ describe.concurrent("clipboard.read()", () => {
 		expect(read(event, true)).toBe("hello");
 	});
 
+	it("should prefer text/html over text/plain", () => {
+		const dataTransfer = new MockDataTransfer();
+		dataTransfer.setData("text/html", "<b>hello</b>");
+		dataTransfer.setData("text/plain", "hello");
+		const event = new MockClipboardEvent("paste", {
+			clipboardData: dataTransfer
+		});
+		expect(read(event)).toBe("<b>hello</b>");
+	});
+
+	it("should fall back to text/plain when text/html is absent", () => {
+		const dataTransfer = new MockDataTransfer();
+		dataTransfer.setData("text/plain", "hello");
+		const event = new MockClipboardEvent("paste", {
+			clipboardData: dataTransfer
+		});
+		expect(read(event)).toBe("hello");
+	});
+
 	it("should replace non-breaking spaces", () => {
 		const dataTransfer = new MockDataTransfer();
 		dataTransfer.setData("text/plain", "hello\u00a0world");
