@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { slug } from "./string.js";
+import { slug } from "./string";
 
 describe.concurrent("$helper.string.slug()", () => {
 	it("should replace spaces", () => {
@@ -43,7 +43,7 @@ describe.concurrent("$helper.string.slug()", () => {
 	});
 
 	it("should apply rules", () => {
-		const rules = [
+		const rules: Record<string, string>[] = [
 			{ å: "a" },
 			{ á: "a" },
 			{ ö: "oe" },
@@ -75,8 +75,8 @@ describe.concurrent("$helper.string.slug()", () => {
 		expect(result).toBe("what-a-view@2x.png");
 	});
 
-	it("should return empty string when no param sent", () => {
-		const result = slug();
+	it("should return empty string when undefined param sent", () => {
+		const result = slug(undefined);
 		expect(result).toBe("");
 	});
 

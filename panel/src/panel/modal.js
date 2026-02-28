@@ -6,7 +6,7 @@ import History from "./history.js";
 import focus from "@/helpers/focus.js";
 import "@/helpers/array.js";
 import { reactive, set } from "vue";
-import { uuid } from "@/helpers/string.js";
+import { uuid } from "@/helpers/string";
 import { wrap } from "@/helpers/array";
 
 /**

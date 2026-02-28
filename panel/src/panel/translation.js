@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import { template } from "@/helpers/string.js";
+import { template } from "@/helpers/string";
 import State from "./state.js";
 
 export const defaults = () => {

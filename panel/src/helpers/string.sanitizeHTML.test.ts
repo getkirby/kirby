@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sanitizeHTML } from "./string.js";
+import { sanitizeHTML } from "./string";
 
 describe.concurrent("$helper.string.sanitizeHTML", () => {
 	it("should strip script tags", () => {

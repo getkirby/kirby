@@ -1,4 +1,4 @@
-import { random } from "./string.js";
+import { random } from "./string";
 
 /**
  * Uploads a file using XMLHttpRequest.

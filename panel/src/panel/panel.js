@@ -21,7 +21,7 @@ import Upload from "./upload.js";
 import User from "./user.js";
 import View from "./view.js";
 import { isObject } from "@/helpers/object.js";
-import { isEmpty } from "@/helpers/string.js";
+import { isEmpty } from "@/helpers/string";
 import OfflineError from "@/errors/OfflineError.js";
 
 /**
