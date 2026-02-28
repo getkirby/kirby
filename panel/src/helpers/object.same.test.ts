@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { same } from "./object.js";
+import { same } from "./object";
 
-describe("$helper.object.same", () => {
+describe("$helper.object.same()", () => {
 	it("should return true for identical objects", () => {
 		const a = { a: 1, b: { c: 2 } };
 		const b = { a: 1, b: { c: 2 } };

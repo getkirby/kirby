@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import string from "./string.js";
+import string from "./string";
 
 describe.concurrent("$helper.string.isEmpty", () => {
 	it("should work with null", () => {
@@ -8,7 +8,7 @@ describe.concurrent("$helper.string.isEmpty", () => {
 	});
 
 	it("should work with undefined", () => {
-		const result = string.isEmpty();
+		const result = string.isEmpty(undefined);
 		expect(result).toStrictEqual(true);
 	});
 

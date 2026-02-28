@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { form } from "./field";
 
 describe.concurrent("$helper.field.form()", () => {
+	// TODO: Remove once window.panel is globally typed
+	// @ts-expect-error - window.panel is not typed yet
 	// mock the app with the component setup
 	window.panel = {
 		app: {

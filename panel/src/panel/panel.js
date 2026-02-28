@@ -21,8 +21,8 @@ import { redirect, request } from "./request.js";
 import Upload from "./upload.js";
 import User from "./user.js";
 import View from "./view.js";
-import { isObject, length } from "@/helpers/object.js";
-import { isEmpty } from "@/helpers/string.js";
+import { isObject, length } from "@/helpers/object";
+import { isEmpty } from "@/helpers/string";
 import OfflineError from "@/errors/OfflineError.js";
 
 /**

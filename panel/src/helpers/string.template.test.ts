@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
-import string from "./string.js";
+import string from "./string";
 
 describe.concurrent("$helper.string.template", () => {
-	const values = {
+	const values: Record<
+		string,
+		string | Record<string, string> | Record<string, string>[]
+	> = {
 		title: "Kirby",
 		images: [
 			{ filename: "foo.jpg" },
@@ -85,7 +88,7 @@ describe.concurrent("$helper.string.template", () => {
 		const values = {
 			title: "Kirby"
 		};
-		let result = string.template("{{ title.length }}", values);
+		const result = string.template("{{ title.length }}", values);
 		expect(result).toBe("5");
 	});
 });

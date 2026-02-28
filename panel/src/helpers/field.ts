@@ -1,17 +1,22 @@
-import { clone } from "./object.js";
+import { clone } from "./object";
+
+type Field = Record<string, unknown>;
 
 /**
  * Loads the default value for a field definition
  * @unstable
  *
- * @param {Object} field
- * @returns {mixed}
+ * @example
+ * defaultValue({ type: "text", default: "Hello" }) // => "Hello"
+ * defaultValue({ type: "text" }) // => null
  */
-export function defaultValue(field) {
+export function defaultValue(field: Field): unknown {
 	if (field.default !== undefined) {
 		return clone(field.default);
 	}
 
+	// TODO: Remove once window.panel is globally typed
+	// @ts-expect-error - window.panel has no type yet
 	const component = window.panel.app.component(`k-${field.type}-field`);
 	const valueProp = component?.props?.value;
 
@@ -39,11 +44,12 @@ export function defaultValue(field) {
  * Creates form values for provided fields
  * @unstable
  *
- * @param {Object} fields
- * @returns {Object}
+ * @example
+ * form({ title: { type: "text", default: "Hello" }, age: { type: "number" } })
+ * // => { title: "Hello" }
  */
-export function form(fields) {
-	const form = {};
+export function form(fields: Record<string, Field>): Record<string, unknown> {
+	const form: Record<string, unknown> = {};
 
 	for (const fieldName in fields) {
 		const defaultVal = defaultValue(fields[fieldName]);
@@ -61,11 +67,17 @@ export function form(fields) {
  * and the current form values. Also works for sections.
  * @unstable
  *
- * @param {Object} field - The form field object
- * @param {Object} values - The current form values object
- * @returns {boolean} - Whether the field is visible or not
+ * @example
+ * isVisible({ type: "text", when: { status: "draft" } }, { status: "draft" }) // => true
+ * isVisible({ type: "text", when: { status: "draft" } }, { status: "published" }) // => false
+ *
+ * @param field - The form field object
+ * @param values - The current form values object
  */
-export function isVisible(field, values) {
+export function isVisible(
+	field: Field,
+	values: Record<string, unknown>
+): boolean {
 	if (field.type === "hidden" || field.hidden === true) {
 		return false;
 	}
@@ -74,9 +86,11 @@ export function isVisible(field, values) {
 		return true;
 	}
 
-	for (const key in field.when) {
+	const when = field.when as Record<string, unknown>;
+
+	for (const key in when) {
 		const value = values[key.toLowerCase()];
-		const condition = field.when[key];
+		const condition = when[key];
 
 		// if condition is checking for empty field
 		if (
@@ -98,13 +112,12 @@ export function isVisible(field, values) {
  * Adds proper endpoint and section definitions
  * to subfields for a form field.
  * @unstable
- *
- * @param {object} field
- * @param {object} fields
- * @returns {object}
  */
-export function subfields(field, fields) {
-	let subfields = {};
+export function subfields(
+	field: Field,
+	fields: Record<string, Field>
+): Record<string, Field> {
+	const subfields: Record<string, Field> = {};
 
 	for (const name in fields) {
 		const subfield = fields[name];
@@ -112,10 +125,16 @@ export function subfields(field, fields) {
 		subfield.section = field.name;
 
 		if (field.endpoints) {
+			const endpoints = field.endpoints as {
+				field: string;
+				section: string;
+				model: string;
+			};
+
 			subfield.endpoints = {
-				field: field.endpoints.field + "+" + name,
-				section: field.endpoints.section,
-				model: field.endpoints.model
+				field: endpoints.field + "+" + name,
+				section: endpoints.section,
+				model: endpoints.model
 			};
 		}
 
