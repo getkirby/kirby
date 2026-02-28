@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extension, name } from "./file";
+import { extension, name, niceSize } from "./file";
 
 describe.concurrent("$helper.file.extension()", () => {
 	it("returns the extension of a filename", () => {
@@ -14,5 +14,13 @@ describe.concurrent("$helper.file.name()", () => {
 		expect(name("file.txt")).toBe("file");
 		expect(name("file.docx")).toBe("file");
 		expect(name("file")).toBe("");
+	});
+});
+
+describe.concurrent("$helper.file.niceSize()", () => {
+	it("formats bytes", () => {
+		expect(niceSize(0)).toBe("0B");
+		expect(niceSize(1024)).toBe("1KB");
+		expect(niceSize(1048576)).toBe("1MB");
 	});
 });
