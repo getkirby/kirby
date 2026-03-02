@@ -1,21 +1,35 @@
 import { random } from "./string";
 
 type UploadParams = {
+	/** Signal to abort the upload request */
 	abort?: AbortSignal;
+	/** Additional attributes added to the FormData */
 	attributes?: Record<string, string>;
+	/** Callback when upload completed */
 	complete?: () => void;
+	/** Callback when upload failed */
 	error?: (xhr: XMLHttpRequest, file: File, response: unknown) => void;
+	/** FormData field name for the file */
 	field?: string;
+	/** Filename to use for the upload */
 	filename?: string;
+	/** Request headers */
 	headers?: Record<string, string>;
+	/** HTTP method (e.g. "POST") */
 	method?: string;
+	/** Callback whenever the progress changes */
 	progress?: (xhr: XMLHttpRequest, file: File, percent: number) => void;
+	/** Callback when upload succeeded */
 	success?: (xhr: XMLHttpRequest, file: File, response: unknown) => void;
+	/** URL endpoint to send the request to */
 	url?: string;
 };
 
 /**
  * Uploads a file using XMLHttpRequest
+ *
+ * @param file - File to upload
+ * @param params - Upload options
  */
 export async function upload(
 	file: File,
@@ -115,6 +129,9 @@ export async function upload(
 
 /**
  * Uploads a file in chunks
+ *
+ * @param file - File to upload
+ * @param params - Upload options
  * @param size - chunk size in bytes (default: 5 MB)
  */
 export async function uploadAsChunks(
