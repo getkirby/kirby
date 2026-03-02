@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { parse, parseAs, toString } from "./colors.js";
+import { parse, parseAs, toString } from "./colors";
+import type { HexColor, HslColor, RgbColor } from "./colors";
 
 describe("colors.parse(hex)", () => {
-	const tests = [
+	const tests: [string, HexColor | null][] = [
 		["#fff", "#fff"],
 		["#fffa", "#fffa"],
 		["#ffffff", "#ffffff"],
@@ -23,7 +24,7 @@ describe("colors.parse(hex)", () => {
 });
 
 describe("colors.parse(rgb)", () => {
-	const tests = [
+	const tests: [string, RgbColor | null][] = [
 		["rgb(255, 255, 255)", { r: 255, g: 255, b: 255, a: 1 }],
 		["rgb(255 255 255 )", { r: 255, g: 255, b: 255, a: 1 }],
 		["rgb( 100% 50% 255)", { r: 255, g: 128, b: 255, a: 1 }],
@@ -45,7 +46,7 @@ describe("colors.parse(rgb)", () => {
 });
 
 describe("colors.parse(hsl)", () => {
-	const tests = [
+	const tests: [string, HslColor | null][] = [
 		["hsl(255, 90%, 80%)", { h: 255, s: 0.9, l: 0.8, a: 1 }],
 		["hsl( 255deg, 90%, 80%)", { h: 255, s: 0.9, l: 0.8, a: 1 }],
 		["hsl(1.0472rad, 90%, 80%)", { h: 60, s: 0.9, l: 0.8, a: 1 }],
@@ -69,7 +70,7 @@ describe("colors.parse(hsl)", () => {
 });
 
 describe("colors.parseAs(hex)", () => {
-	const tests = [
+	const tests: [string, HexColor][] = [
 		["#3a5", "#3a5"],
 		["#3a5b", "#3a5b"],
 		["#33aa55", "#33aa55"],
@@ -93,7 +94,7 @@ describe("colors.parseAs(hex)", () => {
 });
 
 describe("colors.parseAs(rgb)", () => {
-	const tests = [
+	const tests: [string, RgbColor][] = [
 		["rgb(51, 170, 85)", { r: 51, g: 170, b: 85, a: 1 }],
 		["rgb(51 170 85)", { r: 51, g: 170, b: 85, a: 1 }],
 		["rgb(100% 50% 255)", { r: 255, g: 128, b: 255, a: 1 }],
@@ -109,7 +110,7 @@ describe("colors.parseAs(rgb)", () => {
 });
 
 describe("colors.toString(hex)", () => {
-	const tests = [["#ffa", "#ffa"]];
+	const tests: [HexColor, string][] = [["#ffa", "#ffa"]];
 
 	for (const test of tests) {
 		it(test[0] + " should be " + test[1], () => {
@@ -119,7 +120,7 @@ describe("colors.toString(hex)", () => {
 });
 
 describe("colors.toString({rgb})", () => {
-	const tests = [
+	const tests: [RgbColor, string][] = [
 		[{ r: 51, g: 170, b: 85, a: 1 }, "rgb(51 170 85)"],
 		[{ r: 51, g: 170, b: 85, a: 1 }, "rgb(51 170 85)"],
 		[{ r: 51, g: 220, b: 85, a: 0.4 }, "rgb(51 220 85 / 0.40)"]
@@ -133,7 +134,7 @@ describe("colors.toString({rgb})", () => {
 });
 
 describe("colors.toString(rgb)", () => {
-	const tests = [
+	const tests: [string, string][] = [
 		["rgba(51, 170, 85)", "rgb(51 170 85)"],
 		["rgba(  51, 220, 85,  .4 )", "rgb(51 220 85 / 0.40)"]
 	];
@@ -146,7 +147,7 @@ describe("colors.toString(rgb)", () => {
 });
 
 describe("colors.toString({hsl})", () => {
-	const tests = [
+	const tests: [HslColor, string][] = [
 		[{ h: 51, s: 0.3, l: 0.7 }, "hsl(51 30% 70%)"],
 		[{ h: 51, s: 0.3, l: 0.7, a: 1 }, "hsl(51 30% 70%)"],
 		[{ h: 51, s: 0.3, l: 0.7, a: 0.4 }, "hsl(51 30% 70% / 0.40)"]
@@ -160,7 +161,7 @@ describe("colors.toString({hsl})", () => {
 });
 
 describe("colors.toString(rgb -> hex)", () => {
-	const tests = [
+	const tests: [string, string][] = [
 		["rgba(51, 170, 85)", "#33aa55"],
 		["rgba(  51, 220, 85,  .4 )", "#33dc5566"]
 	];
@@ -173,14 +174,14 @@ describe("colors.toString(rgb -> hex)", () => {
 });
 
 describe("colors.toString() - no alpha", () => {
-	const tests = [
+	const tests: [string, string][] = [
 		["#33dc5566", "#33dc55"],
 		["rgba(  51, 220, 85,  .4 )", "rgb(51 220 85)"]
 	];
 
 	for (const test of tests) {
 		it(test[0] + " should be " + test[1], () => {
-			expect(toString(test[0], null, false)).toStrictEqual(test[1]);
+			expect(toString(test[0], undefined, false)).toStrictEqual(test[1]);
 		});
 	}
 });
