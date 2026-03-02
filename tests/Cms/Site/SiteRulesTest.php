@@ -35,10 +35,30 @@ class SiteRulesTest extends ModelTestCase
 		SiteRules::update($site, ['copyright' => '2018']);
 	}
 
-	public function testUpdateWithoutPermissions(): void
+	public function testUpdateWithoutEditPermission(): void
 	{
 		$permissions = $this->createMock(SitePermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions->method('can')->willReturnMap([
+			['edit', false],
+			['save', true],
+		]);
+
+		$site = $this->createMock(Site::class);
+		$site->method('permissions')->willReturn($permissions);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the site');
+
+		SiteRules::update($site, []);
+	}
+
+	public function testUpdateWithoutSavePermission(): void
+	{
+		$permissions = $this->createMock(SitePermissions::class);
+		$permissions->method('can')->willReturnMap([
+			['edit', true],
+			['save', false],
+		]);
 
 		$site = $this->createMock(Site::class);
 		$site->method('permissions')->willReturn($permissions);
