@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import url from "./url.js";
+import url from "./url";
 
 describe("$helper.url.buildUrl", () => {
 	it("should build Url", () => {

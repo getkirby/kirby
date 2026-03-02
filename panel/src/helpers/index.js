@@ -17,7 +17,7 @@ import sort from "./sort.js";
 import string from "./string";
 import throttle from "./throttle";
 import upload from "./upload.js";
-import url from "./url.js";
+import url from "./url";
 import writer from "./writer.js";
 
 import "./regex";

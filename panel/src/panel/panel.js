@@ -14,7 +14,7 @@ import Search from "./search.js";
 import System from "./system.js";
 import Theme from "./theme.js";
 import Translation from "./translation.js";
-import { buildUrl, isUrl } from "@/helpers/url.js";
+import { buildUrl, isUrl } from "@/helpers/url";
 import { reactive } from "vue";
 import { redirect, request } from "./request.js";
 import Upload from "./upload.js";
