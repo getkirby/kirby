@@ -11,7 +11,7 @@ import isUploadEvent from "./isUploadEvent";
 import keyboard from "./keyboard";
 import link from "./link";
 import object from "./object";
-import page from "./page.js";
+import page from "./page";
 import ratio from "./ratio.js";
 import sort from "./sort.js";
 import string from "./string";
