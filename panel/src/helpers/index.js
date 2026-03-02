@@ -1,5 +1,5 @@
 import array from "./array";
-import clipboard from "./clipboard.js";
+import clipboard from "./clipboard";
 import color from "./color.js";
 import debounce from "./debounce";
 import embed from "./embed";
