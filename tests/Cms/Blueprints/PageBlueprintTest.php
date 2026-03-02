@@ -20,7 +20,7 @@ class PageBlueprintTest extends TestCase
 		]);
 
 		$expected = [
-			'access'     	 => null,
+			'access'         => null,
 			'changeSlug'     => null,
 			'changeStatus'   => null,
 			'changeTemplate' => null,
@@ -28,14 +28,15 @@ class PageBlueprintTest extends TestCase
 			'create'         => null,
 			'delete'         => null,
 			'duplicate'      => null,
-			'list'			 => null,
+			'edit'           => null,
+			'list'           => null,
 			'move'           => null,
 			'preview'        => null,
 			'read'           => null,
 			'preview'        => null,
+			'save'           => null,
 			'sort'           => null,
-			'update'         => null,
-			'move'			 => null
+			'move'           => null
 		];
 
 		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
