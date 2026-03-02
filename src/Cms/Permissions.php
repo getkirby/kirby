@@ -187,6 +187,9 @@ class Permissions
 		return $values;
 	}
 
+	/**
+	 * @todo Replace first param with `string $category` in v6
+	 */
 	public function for(
 		string|null $category = null,
 		string|null $action = null,
