@@ -5,7 +5,7 @@ import debounce from "./debounce";
 import embed from "./embed";
 import field from "./field";
 import file from "./file.js";
-import focus from "./focus.js";
+import focus from "./focus";
 import isComponent from "./isComponent";
 import isUploadEvent from "./isUploadEvent";
 import keyboard from "./keyboard";
