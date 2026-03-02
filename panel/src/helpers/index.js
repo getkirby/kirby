@@ -9,7 +9,7 @@ import focus from "./focus.js";
 import isComponent from "./isComponent";
 import isUploadEvent from "./isUploadEvent";
 import keyboard from "./keyboard";
-import link from "./link.js";
+import link from "./link";
 import object from "./object";
 import page from "./page.js";
 import ratio from "./ratio.js";

@@ -1,10 +1,26 @@
+type LinkType = {
+	detect: (value: string) => boolean;
+	icon: string;
+	id: string;
+	input?: string;
+	label: string;
+	link: (value: string) => string;
+	pattern?: string;
+	placeholder?: string;
+	value: (value: string) => string;
+};
+
+// TODO: better type once we have Vue components as types
+type LinkPreview = { label: string; image?: unknown } | null;
+
 /**
  * Detects the type of a link
- * @param {String} value
- * @param {Object} _types Custom types, otherwise default types are used
- * @returns {Object}
+ * @param _types - Custom types, otherwise default types are used
  */
-export function detect(value, _types) {
+export function detect(
+	value: string,
+	_types?: Record<string, LinkType>
+): { type: string; link: string } | undefined {
 	value ??= "";
 	_types ??= types();
 
@@ -27,28 +43,22 @@ export function detect(value, _types) {
 
 /**
  * Converts file permalink to file UUID
- * @param {String} value
- * @returns {String}
  */
-export function getFileUUID(value) {
+export function getFileUUID(value: string): string {
 	return value.replace("/@/file/", "file://");
 }
 
 /**
  * Converts page permalink to page UUID
- * @param {String} value
- * @returns {String}
  */
-export function getPageUUID(value) {
+export function getPageUUID(value: string): string {
 	return value.replace(/^\/(.*\/)?@\/page\//, "page://");
 }
 
 /**
  * Checks if string is a file UUID or permalink
- * @param {String} value
- * @returns {Boolean}
  */
-export function isFileUUID(value) {
+export function isFileUUID(value: string): boolean {
 	return (
 		value.startsWith("file://") === true ||
 		value.startsWith("/@/file/") === true
@@ -57,10 +67,8 @@ export function isFileUUID(value) {
 
 /**
  * Checks if string is a file UUID or permalink
- * @param {String} value
- * @returns {Boolean}
  */
-export function isPageUUID(value) {
+export function isPageUUID(value: string): boolean {
 	return (
 		value === "site://" ||
 		value.startsWith("page://") === true ||
@@ -70,11 +78,11 @@ export function isPageUUID(value) {
 
 /**
  * Returns preview data for the link
- * @param {Object} { type, link }
- * @param {Array} fields
- * @returns
  */
-export async function preview({ type, link }, fields) {
+export async function preview(
+	{ type, link }: { type: string; link: string },
+	fields: string[] = []
+): Promise<LinkPreview> {
 	if (type === "page" && link) {
 		return await previewForPage(link, fields);
 	}
@@ -92,8 +100,12 @@ export async function preview({ type, link }, fields) {
 	return null;
 }
 
-async function previewForFile(id, fields = ["filename", "panelImage"]) {
+async function previewForFile(
+	id: string,
+	fields = ["filename", "panelImage"]
+): Promise<LinkPreview> {
 	try {
+		// @ts-expect-error - window.panel has no type yet
 		const file = await window.panel.api.files.get(null, id, {
 			select: fields.join(",")
 		});
@@ -107,14 +119,17 @@ async function previewForFile(id, fields = ["filename", "panelImage"]) {
 	}
 }
 
-async function previewForPage(id, fields = ["title", "panelImage"]) {
+async function previewForPage(
+	id: string,
+	fields = ["title", "panelImage"]
+): Promise<LinkPreview> {
 	if (id === "site://") {
-		return {
-			label: window.panel.$t("view.site")
-		};
+		// @ts-expect-error - window.panel has no type yet
+		return { label: window.panel.$t("view.site") };
 	}
 
 	try {
+		// @ts-expect-error - window.panel has no type yet
 		const page = await window.panel.api.pages.get(id, {
 			select: fields.join(",")
 		});
@@ -128,15 +143,18 @@ async function previewForPage(id, fields = ["title", "panelImage"]) {
 	}
 }
 
-export function types(keys = []) {
-	const types = {
+export function types(keys: string[] = []): Record<string, LinkType> {
+	// @ts-expect-error - window.panel has no type yet
+	const panel = window.panel;
+
+	const types: Record<string, LinkType> = {
 		url: {
 			detect: (value) => /^(http|https):\/\//.test(value),
 			icon: "url",
 			id: "url",
-			label: window.panel.$t("url"),
+			label: panel.$t("url"),
 			link: (value) => value,
-			placeholder: window.panel.$t("url.placeholder"),
+			placeholder: panel.$t("url.placeholder"),
 			input: "url",
 			value: (value) => value
 		},
@@ -144,9 +162,9 @@ export function types(keys = []) {
 			detect: (value) => isPageUUID(value) === true,
 			icon: "page",
 			id: "page",
-			label: window.panel.$t("page"),
+			label: panel.$t("page"),
 			link: (value) => value,
-			placeholder: window.panel.$t("select") + " …",
+			placeholder: panel.$t("select") + " …",
 			input: "text",
 			value: (value) => value
 		},
@@ -154,18 +172,18 @@ export function types(keys = []) {
 			detect: (value) => isFileUUID(value) === true,
 			icon: "file",
 			id: "file",
-			label: window.panel.$t("file"),
+			label: panel.$t("file"),
 			link: (value) => value,
-			placeholder: window.panel.$t("select") + " …",
+			placeholder: panel.$t("select") + " …",
 			value: (value) => value
 		},
 		email: {
 			detect: (value) => value.startsWith("mailto:"),
 			icon: "email",
 			id: "email",
-			label: window.panel.$t("email"),
+			label: panel.$t("email"),
 			link: (value) => value.replace(/^mailto:/, ""),
-			placeholder: window.panel.$t("email.placeholder"),
+			placeholder: panel.$t("email.placeholder"),
 			input: "email",
 			value: (value) => "mailto:" + value
 		},
@@ -173,10 +191,10 @@ export function types(keys = []) {
 			detect: (value) => value.startsWith("tel:"),
 			icon: "phone",
 			id: "tel",
-			label: window.panel.$t("tel"),
+			label: panel.$t("tel"),
 			link: (value) => value.replace(/^tel:/, ""),
 			pattern: "[+]{0,1}[0-9]+",
-			placeholder: window.panel.$t("tel.placeholder"),
+			placeholder: panel.$t("tel.placeholder"),
 			input: "tel",
 			value: (value) => "tel:" + value
 		},
@@ -195,7 +213,7 @@ export function types(keys = []) {
 			detect: () => true,
 			icon: "title",
 			id: "custom",
-			label: window.panel.$t("custom"),
+			label: panel.$t("custom"),
 			link: (value) => value,
 			input: "text",
 			value: (value) => value
@@ -206,7 +224,7 @@ export function types(keys = []) {
 		return types;
 	}
 
-	const active = {};
+	const active: Record<string, LinkType> = {};
 
 	for (const type of keys) {
 		if (types[type]) {
