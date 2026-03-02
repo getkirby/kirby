@@ -101,6 +101,19 @@ class Permissions
 	 */
 	public function __construct(array|bool|null $settings = [])
 	{
+		$defaults = $this->defaults;
+
+		// dynamically register the extended actions
+		foreach (static::$extendedActions as $key => $actions) {
+			if (isset($defaults[$key]) === true) {
+				throw new InvalidArgumentException(
+					message: 'The action ' . $key . ' is already a core action'
+				);
+			}
+
+			$defaults[$key] = $actions;
+		}
+
 		$update = static fn ($value) => [
 			'edit' => $value,
 			'save' => $value,
@@ -109,7 +122,7 @@ class Permissions
 		// normalize core actions
 		$this->actions = $this->normalize(
 			settings: $settings,
-			defaults: $this->defaults,
+			defaults: $defaults,
 			aliases: [
 				'files' => ['update' => $update],
 				'pages' => ['update' => $update],
@@ -118,17 +131,6 @@ class Permissions
 				'user'  => ['update' => $update],
 			]
 		);
-
-		// dynamically register the extended actions
-		foreach (static::$extendedActions as $key => $actions) {
-			if (isset($this->actions[$key]) === true) {
-				throw new InvalidArgumentException(
-					message: 'The action ' . $key . ' is already a core action'
-				);
-			}
-
-			$this->actions[$key] = $actions;
-		}
 	}
 
 	protected function alias(
