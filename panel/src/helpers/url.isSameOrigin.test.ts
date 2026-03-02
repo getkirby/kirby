@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
-import url from "./url.js";
+import { describe, expect, it, vi } from "vitest";
+import url from "./url";
 
 describe("$helper.url.isSameOrigin", () => {
-	window.location = new URL("https://test.com");
+	vi.stubGlobal("location", new URL("https://test.com"));
 
 	it("should detect same origin", () => {
 		const input = "https://test.com";

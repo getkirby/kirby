@@ -2,13 +2,17 @@
  * Helper to set the focus inside an HTML element
  * @since 4.0.0
  *
- * @param {String|HTMLElement} element
- * @param {String} field
- * @returns {HTMLElement|false}
+ * @example
+ * const form = document.querySelector(".k-form");
+ * focus(form, "") // focuses first input in form
+ * focus(".k-dialog", "title") // focuses field named "title" inside dialog
  */
-export default function focus(element, field) {
+export default function focus(
+	element: HTMLElement | string | null,
+	field: string
+): HTMLElement | false {
 	if (typeof element === "string") {
-		element = document.querySelector(element);
+		element = document.querySelector<HTMLElement>(element);
 	}
 
 	if (!element) {
@@ -62,22 +66,26 @@ export default function focus(element, field) {
 
 /**
  * Checks if the focused element is in a drawer or dialog
- *
- * @param {HTMLElement} element
  */
-export function focusIsInModal(element) {
-	return element.closest?.(".k-dialog") || element.closest?.(".k-drawer");
+export function focusIsInModal(element: HTMLElement): boolean {
+	return (
+		element.closest(".k-dialog") !== null ||
+		element.closest(".k-drawer") !== null
+	);
 }
 
 /**
  * Tries to find a focusable child
- * @param {HTMLElement} parent
- * @param {Array} selectors
- * @returns {HTMLElement|null}
+ *
+ * @example
+ * focusTarget(form, ["[autofocus]", "input"])
  */
-export function focusTarget(parent, selectors) {
+export function focusTarget(
+	parent: HTMLElement,
+	selectors: string[]
+): HTMLElement | null {
 	for (const selector of selectors) {
-		const element = parent.querySelector(selector);
+		const element = parent.querySelector<HTMLElement>(selector);
 
 		if (isFocusable(element) === true) {
 			return element;
@@ -88,12 +96,9 @@ export function focusTarget(parent, selectors) {
 }
 
 /**
- * Checks if the given HTML Element is
- * focusable.
- * @param {HTMLElement|null} element
- * @returns {Boolean}
+ * Checks if the given HTML Element is focusable
  */
-export function isFocusable(element) {
+export function isFocusable(element: HTMLElement | null): boolean {
 	if (!element) {
 		return false;
 	}

@@ -1,4 +1,7 @@
-export function read(e, plain = false) {
+export function read(
+	e: Event | string | undefined,
+	plain = false
+): string | null {
 	if (!e) {
 		return null;
 	}
@@ -10,14 +13,15 @@ export function read(e, plain = false) {
 	if (e instanceof ClipboardEvent) {
 		e.preventDefault();
 
+		// getData() returns "" for absent types,
+		// use || not ?? to treat empty strings as missing
+		const text = e.clipboardData?.getData("text/plain") || null;
+
 		if (plain === true) {
-			return e.clipboardData.getData("text/plain");
+			return text;
 		}
 
-		const html =
-			e.clipboardData.getData("text/html") ||
-			e.clipboardData.getData("text/plain") ||
-			null;
+		const html = e.clipboardData?.getData("text/html") || text || null;
 
 		if (html) {
 			return html.replace(/\u00a0/g, " ");
@@ -27,36 +31,38 @@ export function read(e, plain = false) {
 	return null;
 }
 
-export function write(value, e) {
+export function write(value: unknown, e?: Event) {
 	// create pretty json of objects and arrays
 	if (typeof value !== "string") {
 		value = JSON.stringify(value, null, 2);
 	}
 
+	const string = value as string;
+
 	// use the optional native clipboard event to copy
-	if (e && e instanceof ClipboardEvent) {
+	if (e && e instanceof ClipboardEvent && e.clipboardData) {
 		e.preventDefault();
-		e.clipboardData.setData("text/plain", value);
+		e.clipboardData.setData("text/plain", string);
 
 		return true;
 	}
 
 	// fall back to little execCommand hack with a temporary textarea
 	const input = document.createElement("textarea");
-	input.value = value;
+	input.value = string;
 	document.body.append(input);
 
 	// iOS
 	if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
-		input.contentEditable = true;
+		input.contentEditable = "true";
 		input.readOnly = true;
 
 		const range = document.createRange();
 		range.selectNodeContents(input);
 
 		const selection = window.getSelection();
-		selection.removeAllRanges();
-		selection.addRange(range);
+		selection?.removeAllRanges();
+		selection?.addRange(range);
 		input.setSelectionRange(0, 999999);
 
 		// everything else

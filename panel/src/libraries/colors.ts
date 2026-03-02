@@ -12,19 +12,31 @@ import {
 	hsl2hsv,
 	hsv2hsl,
 	hue2deg
-} from "./colors-func.js";
+} from "./colors-func";
 
-import { isHex, isRgb, isHsl, isHsv, RE_RGB, RE_HSL } from "./colors-checks.js";
+import {
+	isHex,
+	isRgb,
+	isHsl,
+	isHsv,
+	RE_HEX,
+	RE_HEXA,
+	RE_RGB,
+	RE_HSL
+} from "./colors-checks";
+
+export type ColorFormat = "hex" | "rgb" | "hsl" | "hsv";
+export type Color = HexColor | RgbColor | HslColor | HsvColor;
+export type HexColor = string;
+export type RgbColor = { r: number; g: number; b: number; a?: number };
+export type HslColor = { h: number; s: number; l: number; a?: number };
+export type HsvColor = { h: number; s: number; v: number; a?: number };
 
 /**
  * Converts a color into another color space
  * @since 4.0.0
- *
- * @param {string|object} color
- * @param {string} format hex, rgb, hsl or hsv
- * @returns {string|object}
  */
-export function convert(color, format) {
+export function convert(color: Color, format: ColorFormat): Color {
 	if (isHex(color) === true) {
 		// ensure leading #
 		if (color[0] !== "#") {
@@ -90,11 +102,8 @@ export function convert(color, format) {
 /**
  * Tries to parse a string as HEX, RGB or HSL color
  * @since 4.0.0
- *
- * @param {string} string
- * @returns {object|string|null}
  */
-export function parse(string) {
+export function parse(string: string): Color | null | false {
 	let values;
 
 	if (!string || typeof string !== "string") {
@@ -102,17 +111,17 @@ export function parse(string) {
 	}
 
 	// HEX
-	if (isHex(string) === true) {
+	if (RE_HEX.test(string) || RE_HEXA.test(string)) {
 		if (string[0] !== "#") {
 			string = "#" + string;
 		}
 
-		return string;
+		return string as HexColor;
 	}
 
 	// RGB
 	if ((values = string.match(RE_RGB))) {
-		const color = {
+		const color: RgbColor = {
 			r: Number(values[1]),
 			g: Number(values[3]),
 			b: Number(values[5]),
@@ -129,7 +138,7 @@ export function parse(string) {
 			color.b = Math.ceil(color.b * 2.55);
 		}
 		if (values[8] === "%") {
-			color.a = color.a / 100;
+			color.a = (color.a ?? 100) / 100;
 		}
 
 		return color;
@@ -137,17 +146,17 @@ export function parse(string) {
 
 	// HSL
 	if ((values = string.match(RE_HSL))) {
-		let [h, angle, s, l, a] = values.slice(1);
+		const [h, angle, s, l, a] = values.slice(1);
 
-		const color = {
-			h: hue2deg(h, angle),
+		const color: HslColor = {
+			h: hue2deg(Number(h), angle as "grad" | "rad" | "turn" | undefined),
 			s: Number(s) / 100,
 			l: Number(l) / 100,
 			a: Number(a || 1)
 		};
 
 		if (values[6] === "%") {
-			color.a = color.a / 100;
+			color.a = (color.a ?? 100) / 100;
 		}
 
 		return color;
@@ -160,12 +169,11 @@ export function parse(string) {
  * Parses the input string and coverts it
  * (if necessary) to the target color space
  * @since 4.0.0
- *
- * @param {string} string
- * @param {string} format hex, rgb, hsl or hsv
- * @returns {string|object|false}
  */
-export function parseAs(string, format) {
+export function parseAs(
+	string: string,
+	format?: ColorFormat
+): Color | null | false {
 	const color = parse(string);
 
 	if (!color || !format) {
@@ -178,17 +186,16 @@ export function parseAs(string, format) {
 /**
  * Formats color as CSS string
  * @since 4.0.0
- *
- * @param {object|string} color
- * @param {string} format hex, rgb, hsl or hsv
- * @param {boolean} alpha
- * @returns {string}
  */
-export function toString(color, format, alpha = true) {
-	let value = color;
+export function toString(
+	color: Color,
+	format?: ColorFormat,
+	alpha = true
+): string {
+	let value: Color | null | false = color;
 
 	if (typeof value === "string") {
-		value = parse(color);
+		value = parse(color as string);
 	}
 
 	// convert color if necessary
@@ -217,7 +224,7 @@ export function toString(color, format, alpha = true) {
 		const b = value.b.toFixed();
 		const a = value.a?.toFixed(2);
 
-		if (alpha && a && a < 1) {
+		if (alpha && a && Number(a) < 1) {
 			return `rgb(${r} ${g} ${b} / ${a})`;
 		}
 
@@ -230,7 +237,7 @@ export function toString(color, format, alpha = true) {
 		const l = (value.l * 100).toFixed();
 		const a = value.a?.toFixed(2);
 
-		if (alpha && a && a < 1) {
+		if (alpha && a && Number(a) < 1) {
 			return `hsl(${h} ${s}% ${l}% / ${a})`;
 		}
 
