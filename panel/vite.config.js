@@ -156,7 +156,7 @@ export default defineConfig(async ({ mode }) => {
 			}
 		},
 		optimizeDeps: {
-			entries: "src/**/*.{js,ts,vue}",
+			entries: ["src/**/*.{js,ts,vue}", "!src/**/*.test.{js,ts}"],
 			exclude: ["vitest", "vue"],
 			holdUntilCrawlEnd: false
 		},
