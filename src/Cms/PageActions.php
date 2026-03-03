@@ -482,7 +482,11 @@ trait PageActions
 			],
 			function ($page) use ($storage) {
 				// move to final storage
-				return $page->changeStorage($storage);
+				$page->changeStorage($storage);
+
+				$page->uuid()?->populate();
+
+				return $page;
 			}
 		);
 
@@ -490,8 +494,6 @@ trait PageActions
 		if (isset($props['num']) === true) {
 			$page = $page->changeStatus('listed', $props['num']);
 		}
-
-		$page->uuid()?->populate();
 
 		return $page;
 	}
