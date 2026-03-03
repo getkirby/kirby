@@ -46,7 +46,7 @@
 		"phpmailer/phpmailer": "7.0.2",
 		"symfony/polyfill-intl-idn": "1.33.0",
 		"symfony/polyfill-mbstring": "1.33.0",
-		"symfony/yaml": "7.4.1"
+		"symfony/yaml": "7.4.6"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"
