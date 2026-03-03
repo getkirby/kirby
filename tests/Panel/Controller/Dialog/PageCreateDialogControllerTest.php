@@ -325,6 +325,40 @@ class PageCreateDialogControllerTest extends TestCase
 		$this->assertSame('1/1', $props['fields']['foo']['width']);
 	}
 
+	public function testLoadWithCustomFieldOptions(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'foo' => [
+								'label'    => 'Custom Label',
+								'required' => false
+							]
+						]
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'label'    => 'Original Label',
+							'required' => true
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$props      = $controller->load()->props();
+
+		$this->assertArrayHasKey('foo', $props['fields']);
+		$this->assertSame('Custom Label', $props['fields']['foo']['label']);
+		$this->assertFalse($props['fields']['foo']['required']);
+	}
+
 	public function testModel(): void
 	{
 		$this->app = $this->app->clone([
