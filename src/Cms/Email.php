@@ -12,9 +12,6 @@ use Kirby\Template\Template;
  * and sending emails, like email templates, file
  * attachments, etc.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

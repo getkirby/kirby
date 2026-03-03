@@ -9,9 +9,6 @@ use Kirby\Toolkit\Str;
 /**
  * Checkboxes Field
  *
- * @package   Kirby Field
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0

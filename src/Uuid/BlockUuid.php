@@ -9,14 +9,12 @@ use Kirby\Content\Field;
  * UUID for \Kirby\Cms\Block
  *
  * Not yet supported
- * @todo Finish for uuid-block-structure-support
- * @codeCoverageIgnore
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @todo Finish for uuid-block-structure-support
+ * @codeCoverageIgnore
  */
 class BlockUuid extends FieldUuid
 {

@@ -14,9 +14,6 @@ use Kirby\Toolkit\Str;
  * by GraphQLs architecture and makes it possible to load
  * only the model data that is needed for the current API call.
  *
- * @package   Kirby Api
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

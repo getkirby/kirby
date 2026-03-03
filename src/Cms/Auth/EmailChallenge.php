@@ -10,9 +10,6 @@ use Kirby\Toolkit\Str;
  * Creates and verifies one-time auth codes
  * that are sent via email
  *
- * @package   Kirby Cms
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */

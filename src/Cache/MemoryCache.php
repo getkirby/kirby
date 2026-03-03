@@ -5,9 +5,6 @@ namespace Kirby\Cache;
 /**
  * Memory Cache Driver (cache in memory for current request only)
  *
- * @package   Kirby Cache
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

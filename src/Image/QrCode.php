@@ -11,42 +11,10 @@ use Stringable;
 
 /**
  * Creates a QR code
- * @since 4.0.0
  *
- * @package   Kirby Image
- * @author    Nico Hoffmann <nico@getkirby.com>,
- *            Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
- *
- * QR Code® is a registered trademark of DENSO WAVE INCORPORATED.
- *
- * The code of this class is based on:
- * https://github.com/psyon/php-qrcode
- *
- * qrcode.php - Generate QR Codes. MIT license.
- *
- * Copyright for portions of this project are held by Kreative Software, 2016-2018.
- * All other copyright for the project are held by Donald Becker, 2019
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
+ * @since     4.0.0
  */
 class QrCode implements Stringable
 {
