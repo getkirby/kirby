@@ -16,7 +16,7 @@ import ratio from "./ratio.js";
 import sort from "./sort.js";
 import string from "./string";
 import throttle from "./throttle";
-import upload from "./upload.js";
+import upload from "./upload";
 import url from "./url";
 import writer from "./writer.js";
 

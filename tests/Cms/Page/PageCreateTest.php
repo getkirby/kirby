@@ -472,4 +472,62 @@ class PageCreateTest extends ModelTestCase
 		$this->assertInstanceOf(NewParentPage::class, $parent);
 		$this->assertInstanceOf(NewDefaultPage::class, $child);
 	}
+
+	/**
+	 * Changing status in page.create:after should not recreate the draft.
+	 */
+	public function testAfterCreateHookChangeStatusDoesNotDuplicateDraft(): void
+	{
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.create:after' => function (Page $page) {
+					$page->changeStatus('listed');
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		Page::create(['slug' => 'test']);
+
+		// the draft directory must not be recreated after being moved by publish()
+		$this->assertDirectoryDoesNotExist(static::TMP . '/content/_drafts/test');
+
+		// exactly one page should exist — no duplicate
+		$this->assertCount(1, $app->site()->childrenAndDrafts());
+		$this->assertCount(0, $app->site()->drafts());
+		$this->assertCount(1, $app->site()->children());
+	}
+
+	/**
+	 * Changing status in page.create:after should keep UUID cache valid.
+	 */
+	public function testAfterCreateHookChangeStatusKeepsUuidCacheValid(): void
+	{
+		$uuidWasCachedInAfterHook = false;
+
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.create:after' => function (Page $page) use (&$uuidWasCachedInAfterHook) {
+					$uuidWasCachedInAfterHook = $page->uuid()->isCached();
+					$page->changeStatus('listed');
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		Page::create(['slug' => 'test']);
+
+		$this->assertTrue($uuidWasCachedInAfterHook);
+
+		// get the actual listed page
+		$page = $app->site()->children()->first();
+
+		// UUID cache must be populated with the listed page's UUID
+		$this->assertTrue($page->uuid()->isCached());
+
+		// resolving the cached UUID must return the same page
+		$this->assertSame($page->id(), $page->uuid()->model()->id());
+	}
 }

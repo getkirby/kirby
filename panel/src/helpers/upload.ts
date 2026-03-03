@@ -1,24 +1,42 @@
 import { random } from "./string";
 
+type UploadParams = {
+	/** Signal to abort the upload request */
+	abort?: AbortSignal;
+	/** Additional attributes added to the FormData */
+	attributes?: Record<string, string>;
+	/** Callback when upload completed */
+	complete?: () => void;
+	/** Callback when upload failed */
+	error?: (xhr: XMLHttpRequest, file: File, response: unknown) => void;
+	/** FormData field name for the file */
+	field?: string;
+	/** Filename to use for the upload */
+	filename?: string;
+	/** Request headers */
+	headers?: Record<string, string>;
+	/** HTTP method (e.g. "POST") */
+	method?: string;
+	/** Callback whenever the progress changes */
+	progress?: (xhr: XMLHttpRequest, file: File, percent: number) => void;
+	/** Callback when upload succeeded */
+	success?: (xhr: XMLHttpRequest, file: File, response: unknown) => void;
+	/** URL endpoint to send the request to */
+	url?: string;
+};
+
 /**
- * Uploads a file using XMLHttpRequest.
+ * Uploads a file using XMLHttpRequest
  *
- * @param {File} file - file to upload
- * @param {Object} params - upload options:
- * @param {string} params.url - URL endpoint to sent the request to
- * @param {string} params.method - HTTP method (e.g. "POST")
- * @param {string} params.filename - filename to use for the upload
- * @param {Object} params.headers - request headers
- * @param {Object} params.attributes - additional attributes
- * @param {AbortSignal} params.abort - signal to abort the upload request
- * @param {Function} params.progress - callback whenever the progress changes
- * @param {Function} params.complete - callback when upload completed
- * @param {Function} params.success - callback when upload succeeded
- * @param {Function} params.error - callback when upload failed
+ * @param file - File to upload
+ * @param params - Upload options
  */
-export async function upload(file, params) {
+export async function upload(
+	file: File,
+	params: UploadParams
+): Promise<unknown> {
 	return new Promise((resolve, reject) => {
-		const defaults = {
+		const defaults: Required<UploadParams> = {
 			url: "/",
 			field: "file",
 			method: "POST",
@@ -28,7 +46,8 @@ export async function upload(file, params) {
 			complete: () => {},
 			error: () => {},
 			success: () => {},
-			progress: () => {}
+			progress: () => {},
+			abort: new AbortController().signal
 		};
 
 		const options = Object.assign(defaults, params);
@@ -47,7 +66,7 @@ export async function upload(file, params) {
 			}
 		}
 
-		const progress = (event) => {
+		const progress = (event: ProgressEvent) => {
 			if (event.lengthComputable && options.progress) {
 				const percent = Math.max(
 					0,
@@ -60,11 +79,12 @@ export async function upload(file, params) {
 		xhr.upload.addEventListener("loadstart", progress);
 		xhr.upload.addEventListener("progress", progress);
 
-		xhr.addEventListener("load", (event) => {
+		xhr.addEventListener("load", (event: Event) => {
+			const target = event.target as XMLHttpRequest;
 			let response = null;
 
 			try {
-				response = JSON.parse(event.target.response);
+				response = JSON.parse(target.response);
 			} catch {
 				response = {
 					status: "error",
@@ -82,8 +102,9 @@ export async function upload(file, params) {
 			}
 		});
 
-		xhr.addEventListener("error", (event) => {
-			const response = JSON.parse(event.target.response);
+		xhr.addEventListener("error", (event: Event) => {
+			const target = event.target as XMLHttpRequest;
+			const response = JSON.parse(target.response);
 
 			options.progress(xhr, file, 100);
 			options.error(xhr, file, response);
@@ -108,14 +129,19 @@ export async function upload(file, params) {
 
 /**
  * Uploads a file in chunks
- * @param {File} file - file to upload
- * @param {Object} params - upload options (see `upload` method for details)
- * @param {number} size - chunk size in bytes (default: 5 MB)
+ *
+ * @param file - File to upload
+ * @param params - Upload options
+ * @param size - chunk size in bytes (default: 5 MB)
  */
-export async function uploadAsChunks(file, params, size = 5242880) {
+export async function uploadAsChunks(
+	file: File,
+	params: UploadParams,
+	size: number = 5242880
+): Promise<unknown> {
 	const parts = Math.ceil(file.size / size);
 	const id = random(4).toLowerCase();
-	let response;
+	let response: unknown;
 
 	for (let i = 0; i < parts; i++) {
 		// break if upload got aborted in the meantime
@@ -133,19 +159,19 @@ export async function uploadAsChunks(file, params, size = 5242880) {
 		if (parts > 1) {
 			params.headers = {
 				...params.headers,
-				"Upload-Length": file.size,
-				"Upload-Offset": start,
+				"Upload-Length": String(file.size),
+				"Upload-Offset": String(start),
 				"Upload-Id": id
 			};
 		}
 
-		response = await upload(chunk, {
+		response = await upload(chunk as File, {
 			...params,
 			// calculate the total progress based on chunk progress
 			progress: (xhr, chunk, percent) => {
 				const progress = chunk.size * (percent / 100);
 				const total = (start + progress) / file.size;
-				params.progress(xhr, file, Math.round(total * 100));
+				params.progress?.(xhr, file, Math.round(total * 100));
 			}
 		});
 	}

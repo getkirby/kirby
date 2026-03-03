@@ -38,7 +38,7 @@
 		"eslint-plugin-vue": "^10.8.0",
 		"glob": "^13.0.6",
 		"globals": "^17.4.0",
-		"happy-dom": "^20.7.0",
+		"happy-dom": "^20.8.3",
 		"prettier": "^3.8.1",
 		"terser": "^5.46.0",
 		"typescript": "^5.9.3",
