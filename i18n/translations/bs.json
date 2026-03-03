@@ -1,5 +1,5 @@
 {
-	"account": "Account",
+	"account": "Račun",
 	"account.changeName": "Promijeni svoje ime",
 	"account.delete": "Obriši svoj račun",
 	"account.delete.confirm": "Da li stvarno želite obrisati svoj račun? Odmah ćete biti odjavljeni. Vaš račun neće biti moguće oporaviti.",
@@ -16,7 +16,7 @@
 	"changes": "Promjene",
 	"confirm": "Ok",
 	"collapse": "Skupi",
-	"collapse.all": "Collapse all",
+	"collapse.all": "Skupi sve",
 	"color": "Boja",
 	"coordinates": "Koordinate",
 	"copy": "Kopiraj",
@@ -44,8 +44,8 @@
 	"delete": "Obriši",
 	"delete.all": "Obriši sve",
 
-	"deselect": "Deselect",
-	"deselect.all": "Deselect all",
+	"deselect": "Poništi odabir",
+	"deselect.all": "Poništi sve",
 
 	"dialog.fields.empty": "Ovaj dijalog nema polja",
 	"dialog.files.empty": "Nema datoteka za odabir",
@@ -298,12 +298,12 @@
 	"error.validation.uuid": "Unesite važeći UUID",
 	"error.validation.url": "Unesi važeći URL",
 
-	"error.version.discard.permission": "You are not allowed to discard this version",
-	"error.version.publish.permission": "You are not allowed to publish this version",
-	"error.version.save.permission": "You are not allowed to change this version",
+	"error.version.discard.permission": "Nemate dozvolu da odbacite ovu verziju",
+	"error.version.publish.permission": "Nemate dozvolu da objavite ovu verziju",
+	"error.version.save.permission": "Nemate dozvolu da promenite ovu verziju",
 
 	"expand": "Proširi",
-	"expand.all": "Expand all",
+	"expand.all": "Proširi sve",
 
 	"field.invalid": "Polje je nevažeće",
 	"field.required": "Polje je obavezno",
@@ -384,7 +384,7 @@
 
 	"field.structure.delete.confirm": "Da li stvarno želite obrisati ovaj red?",
 	"field.structure.delete.confirm.all": "Da li stvarno želite obrisati sve unose?",
-	"field.structure.delete.confirm.selected": "Do you really want to delete the selected entries?",
+	"field.structure.delete.confirm.selected": "Da li stvarno želite obrisati izabrane unose?",
 	"field.structure.empty": "Još nema unosa",
 
 	"field.users.empty": "Niti jedan korisnik još nije odabran",
@@ -458,12 +458,12 @@
 	"language.variables.empty": "Još nema prijevoda",
 
 	"language.variable.delete.confirm": "Da li stvarno želite da obrišete varijablu za {key}?",
-	"language.variable.entries": "Values",
-	"language.variable.entries.help": "Each string will be used for its matching count, e.g. three strings will match in order to counts <code>0</code>, <code>1</code>, <code>2 and more</code>. Use the <code>{count}</code> placeholder to insert the actual count.",
+	"language.variable.entries": "Vrijednosti",
+	"language.variable.entries.help": "Svaki string će se koristiti za odgovarajući brojač, npr. tri stringa će se podudarati da bi se izračunao brojač <code>0</code>, <code>1</code>, <code>2 i više</code>. Koristite <code>{count}</code> zamensko mjesto za umetanje stvarnog broja.",
 	"language.variable.key": "Ključ",
-	"language.variable.multiple": "Countable?",
-	"language.variable.multiple.text": "Use different translation strings",
-	"language.variable.multiple.help": "You can use different values depending on a count you pass along with the language variable, allowing you to create dynamic translations, e.g. singular and plural.",
+	"language.variable.multiple": "Brojivo?",
+	"language.variable.multiple.text": "Koristite različite stringove za prevođenje",
+	"language.variable.multiple.help": "Možete koristiti različite vrijednosti ovisno o broju koji prosljeđujete zajedno s varijablom jezika, što vam omogućava kreiranje dinamičkih prijevoda, npr. jednine i množine.",
 	"language.variable.notFound": "Varijablu nije moguće pronaći",
 	"language.variable.value": "Vrijednost",
 
@@ -483,7 +483,7 @@
 	"license.code": "Kod",
 	"license.code.help": "Primili ste vašu licencu nakon kupovine putem e-maila. Molimo da je kopirate i zalijepite ovdje.",
 	"license.code.label": "Unesite vašu licencu",
-	"license.remove.text": "<p>Removing the license will irreversibly delete the license file from this site. You can then activate this site with a different license key or re-register the same license key if the domain remains the same.</p><p>To change the domain associated with the license, please contact the Kirby team. <a href='https://getkirby.com/license'>Read more &rarr;</a></p>",
+	"license.remove.text": "<p>Uklanjanje licence će nepovratno izbrisati datoteku licence sa ove stranice. Zatim možete aktivirati ovu stranicu s drugim licencnim ključem ili ponovo registrirati isti licencni ključ ako domena ostane ista.</p><p>Za promjenu domene povezane s licencom, obratite se Kirby timu. <a href='https://getkirby.com/license'>Pročitajte više &rarr;</a></p>",
 	"license.status.active.info": "Uključuje nove glavne verzije do {date}",
 	"license.status.active.label": "Važeća licenca",
 	"license.status.demo.info": "Ovo je demo instalacija",
@@ -637,7 +637,7 @@
 	"prev": "Previous",
 
 	"preview": "Pregled",
-	"preview.browser.scroll": "Sync scroll",
+	"preview.browser.scroll": "Sinhronizacija skrolanja",
 
 	"publish": "Objavi",
 	"published": "Javno",
@@ -673,7 +673,7 @@
 
 	"security": "Sigurnost",
 	"select": "Odaberi",
-	"select.all": "Select all",
+	"select.all": "Odaberi sve",
 	"server": "Server",
 	"settings": "Postavke",
 	"show": "Prikaži",
@@ -782,13 +782,13 @@
 	"user.changePassword.current": "Trenutna šifra",
 	"user.changePassword.new": "Nova šifra",
 	"user.changePassword.new.confirm": "Potvrdi novu šifru...",
-	"user.changePassword.own": "Your own password",
+	"user.changePassword.own": "Vaša vlastita šifra",
 	"user.changeRole": "Promijeni ulogu",
 	"user.changeRole.select": "Odaberi novu ulogu",
 	"user.create": "Dodaj novog korisnika",
 	"user.delete": "Obriši ovog korisnika",
 	"user.delete.confirm": "Da li stvarno želite obrisati <br><strong>{email}</strong>?",
-	"user.setPassword": "Set password",
+	"user.setPassword": "Postavi šifru",
 
 	"users": "Korisnici",
 

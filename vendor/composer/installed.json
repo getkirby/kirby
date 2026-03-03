@@ -1069,17 +1069,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v7.4.1",
-            "version_normalized": "7.4.1.0",
+            "version": "v7.4.6",
+            "version_normalized": "7.4.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "24dd4de28d2e3988b311751ac49e684d783e2345"
+                "reference": "58751048de17bae71c5aa0d13cb19d79bca26391"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/24dd4de28d2e3988b311751ac49e684d783e2345",
-                "reference": "24dd4de28d2e3988b311751ac49e684d783e2345",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/58751048de17bae71c5aa0d13cb19d79bca26391",
+                "reference": "58751048de17bae71c5aa0d13cb19d79bca26391",
                 "shasum": ""
             },
             "require": {
@@ -1093,7 +1093,7 @@
             "require-dev": {
                 "symfony/console": "^6.4|^7.0|^8.0"
             },
-            "time": "2025-12-04T18:11:45+00:00",
+            "time": "2026-02-09T09:33:46+00:00",
             "bin": [
                 "Resources/bin/yaml-lint"
             ],
@@ -1124,7 +1124,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v7.4.1"
+                "source": "https://github.com/symfony/yaml/tree/v7.4.6"
             },
             "funding": [
                 {

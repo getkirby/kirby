@@ -56,7 +56,7 @@
 	"dimensions": "Dimensões",
 	"disable": "Desativar",
 	"disabled": "Desativado",
-	"discard": "Descartar",
+	"discard": "Reverter",
 
 	"drawer.fields.empty": "Esta janela não tem campos",
 
@@ -298,9 +298,9 @@
 	"error.validation.uuid": "Por favor, insira um UUID válido",
 	"error.validation.url": "Por favor, insira um URL válido",
 
-	"error.version.discard.permission": "You are not allowed to discard this version",
-	"error.version.publish.permission": "You are not allowed to publish this version",
-	"error.version.save.permission": "You are not allowed to change this version",
+	"error.version.discard.permission": "Não tem permissão para reverter esta versão",
+	"error.version.publish.permission": "Não tem permissão para publicar esta versão",
+	"error.version.save.permission": "Não tem permissão para alterar esta versão",
 
 	"expand": "Expandir",
 	"expand.all": "Expandir todos",
@@ -637,7 +637,7 @@
 	"prev": "Anterior",
 
 	"preview": "Pré-visualizar",
-	"preview.browser.scroll": "Sync scroll",
+	"preview.browser.scroll": "Sincronizar scroll",
 
 	"publish": "Publicar",
 	"published": "Publicadas",
@@ -788,7 +788,7 @@
 	"user.create": "Adicionar um novo utilizador",
 	"user.delete": "Eliminar este utilizador",
 	"user.delete.confirm": "Tem a certeza que pretende eliminar <br><strong>{email}</strong>?",
-	"user.setPassword": "Set password",
+	"user.setPassword": "Definir palavra-passe",
 
 	"users": "Utilizadores",
 
