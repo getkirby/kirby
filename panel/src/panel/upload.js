@@ -3,7 +3,7 @@ import { uuid } from "@/helpers/string";
 import State from "./state.js";
 import listeners from "./listeners.js";
 import queue from "@/helpers/queue";
-import { uploadAsChunks } from "@/helpers/upload.js";
+import { uploadAsChunks } from "@/helpers/upload";
 import { extension, name, niceSize } from "@/helpers/file.js";
 
 export const defaults = () => {
