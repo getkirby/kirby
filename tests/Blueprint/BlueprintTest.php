@@ -532,6 +532,22 @@ class BlueprintTest extends TestCase
 		$this->assertSame('info', $blueprint->sections()['info']->type());
 	}
 
+	public function testSectionFromField(): void
+	{
+		// with options
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'fields' => [
+				'info' => [
+					'type'    => 'section',
+					'section' => 'info'
+				]
+			]
+		]);
+
+		$this->assertSame('info', $blueprint->section('info')->type());
+	}
+
 	public function testPreset(): void
 	{
 		$blueprint = new Blueprint([
