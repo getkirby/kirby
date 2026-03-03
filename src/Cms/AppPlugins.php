@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Auth\Challenges;
+use Kirby\Auth\Methods;
 use Kirby\Blueprint\PageBlueprint;
 use Kirby\Blueprint\Section;
 use Kirby\Content\Field;
@@ -48,6 +50,7 @@ trait AppPlugins
 		'areas' => [],
 		'assetMethods' => [],
 		'authChallenges' => [],
+		'authMethods' => [],
 		'blockMethods' => [],
 		'blockModels' => [],
 		'blocksMethods' => [],
@@ -163,9 +166,21 @@ trait AppPlugins
 	 */
 	protected function extendAuthChallenges(array $challenges): array
 	{
-		return $this->extensions['authChallenges'] = Auth::$challenges = [
-			...Auth::$challenges,
+		return $this->extensions['authChallenges'] = Challenges::$challenges = [
+			...Challenges::$challenges,
 			...$challenges
+		];
+	}
+
+	/**
+	 * Registers additional authentication methods
+	 * @since 6.0.0
+	 */
+	protected function extendAuthMethods(array $methods): array
+	{
+		return $this->extensions['authMethods'] = Methods::$methods = [
+			...Methods::$methods,
+			...$methods
 		];
 	}
 
@@ -816,6 +831,7 @@ trait AppPlugins
 		PageBlueprint::$presets = $this->core->blueprintPresets();
 
 		$this->extendAuthChallenges($this->core->authChallenges());
+		$this->extendAuthMethods($this->core->authMethods());
 		$this->extendCacheTypes($this->core->cacheTypes());
 		$this->extendComponents($this->core->components());
 		$this->extendBlueprints($this->core->blueprints());

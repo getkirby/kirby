@@ -13,7 +13,7 @@
 				v-for="button in buttons"
 				:key="button.link ?? button.dialog ?? button.drawer"
 				v-bind="button"
-				:dropdown="true"
+				:dropdown="!button.disabled"
 				variant="filled"
 			/>
 		</k-button-group>

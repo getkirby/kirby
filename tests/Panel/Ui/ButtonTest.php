@@ -17,10 +17,11 @@ class ButtonTest extends TestCase
 
 		$this->assertSame([
 			'foo'        => 'bar',
-			'responsive' => true,
+			'disabled'   => false,
+			'responsive' => false,
 			'text'       => 'Attrs',
 			'type'       => 'button',
-		], array_filter($button->props()));
+		], array_filter($button->props(), fn ($prop) => $prop !== null));
 	}
 
 	public function testProps(): void
@@ -44,7 +45,7 @@ class ButtonTest extends TestCase
 			'dropdown'   => null,
 			'icon'       => 'smile',
 			'link'       => null,
-			'responsive' => true,
+			'responsive' => false,
 			'size'       => 'xs',
 			'target'     => null,
 			'text'       => 'Congrats',
