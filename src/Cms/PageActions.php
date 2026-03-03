@@ -482,7 +482,11 @@ trait PageActions
 			],
 			function ($page) use ($storage) {
 				// move to final storage
-				return $page->changeStorage($storage);
+				$page->changeStorage($storage);
+
+				$page->uuid()?->populate();
+
+				return $page;
 			}
 		);
 
@@ -490,12 +494,6 @@ trait PageActions
 		if (isset($props['num']) === true) {
 			$page = $page->changeStatus('listed', $props['num']);
 		}
-
-		// resolve the page from parent's collection to get the
-		// up-to-date object (a hook may have modified it)
-		$page = $page->parentModel()->findPageOrDraft($page->id()) ?? $page;
-
-		$page->uuid()?->populate();
 
 		return $page;
 	}

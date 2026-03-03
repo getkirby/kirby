@@ -474,12 +474,9 @@ class PageCreateTest extends ModelTestCase
 	}
 
 	/**
-	 * Calling changeStatus() inside page.create:after should not
-	 * recreate the draft directory (which was the bug in 5.3.0/5.3.1:
-	 * uuid()->populate() on a stale page object was writing a new file
-	 * back to the moved draft location)
+	 * Changing status in page.create:after should not recreate the draft.
 	 */
-	public function testCreateWithChangeStatusInAfterHookNoDuplicateDraft(): void
+	public function testAfterCreateHookChangeStatusDoesNotDuplicateDraft(): void
 	{
 		$app = $this->app->clone([
 			'hooks' => [
@@ -498,18 +495,21 @@ class PageCreateTest extends ModelTestCase
 
 		// exactly one page should exist — no duplicate
 		$this->assertCount(1, $app->site()->childrenAndDrafts());
+		$this->assertCount(0, $app->site()->drafts());
+		$this->assertCount(1, $app->site()->children());
 	}
 
 	/**
-	 * After calling changeStatus() inside page.create:after, the UUID
-	 * cache must be populated with the correct UUID of the listed page —
-	 * not a newly generated one written to the recreated draft directory
+	 * Changing status in page.create:after should keep UUID cache valid.
 	 */
-	public function testCreateWithChangeStatusInAfterHookUuidPopulated(): void
+	public function testAfterCreateHookChangeStatusKeepsUuidCacheValid(): void
 	{
+		$uuidWasCachedInAfterHook = false;
+
 		$app = $this->app->clone([
 			'hooks' => [
-				'page.create:after' => function (Page $page) {
+				'page.create:after' => function (Page $page) use (&$uuidWasCachedInAfterHook) {
+					$uuidWasCachedInAfterHook = $page->uuid()->isCached();
 					$page->changeStatus('listed');
 				}
 			]
@@ -518,6 +518,8 @@ class PageCreateTest extends ModelTestCase
 		$app->impersonate('kirby');
 
 		Page::create(['slug' => 'test']);
+
+		$this->assertTrue($uuidWasCachedInAfterHook);
 
 		// get the actual listed page
 		$page = $app->site()->children()->first();
