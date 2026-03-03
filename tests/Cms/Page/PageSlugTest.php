@@ -94,4 +94,12 @@ class PageSlugTest extends ModelTestCase
 
 		new Page(['slug' => null]);
 	}
+
+	public function testSlugWithEmptyString(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page slug is required');
+
+		new Page(['slug' => '']);
+	}
 }

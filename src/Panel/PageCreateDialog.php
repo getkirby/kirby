@@ -273,7 +273,7 @@ class PageCreateDialog
 		}
 
 		$props = [
-			'slug'     => $this->slug ?? '__new__',
+			'slug'     => $this->slug ?: '__new__',
 			'template' => $this->template,
 			'model'    => $this->template,
 			'parent'   => $this->parent instanceof Page ? $this->parent : null,
