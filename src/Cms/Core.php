@@ -392,6 +392,7 @@ class Core
 			'commands'          => fn (array $roots) => $roots['site'] . '/commands',
 			'config'            => fn (array $roots) => $roots['site'] . '/config',
 			'controllers'       => fn (array $roots) => $roots['site'] . '/controllers',
+			'language:variables' => null,
 			'languages'         => fn (array $roots) => $roots['site'] . '/languages',
 			'licenses'          => fn (array $roots) => $roots['site'] . '/licenses',
 			'license'           => fn (array $roots) => $roots['config'] . '/.license',
