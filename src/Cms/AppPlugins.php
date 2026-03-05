@@ -762,12 +762,15 @@ trait AppPlugins
 	 */
 	protected function extensionsFromOptions(): void
 	{
-		// register routes and hooks from options
+		// directly register api components, routes and hooks from options.
 		$this->extend([
 			'api'    => $this->options['api']    ?? [],
 			'routes' => $this->options['routes'] ?? [],
 			'hooks'  => $this->options['hooks']  ?? []
 		]);
+
+		// register everything under the extensions key
+		$this->extend($this->options['extensions'] ?? []);
 	}
 
 	/**
