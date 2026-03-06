@@ -1,0 +1,60 @@
+name: Panel Lab docs
+
+on:
+  release:
+    types: [published]
+
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release to attach the Panel Lab docs to (e.g. 6.1.0)"
+        required: true
+      dry_run:
+        description: "Skip uploading to the release (for testing)"
+        type: boolean
+        default: false
+
+jobs:
+  build-and-upload:
+    name: "Build & upload Lab JSON docs"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    permissions:
+      contents: write # required to upload release assets
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # pin@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Set up Node.js and cache npm dependencies
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # pin@v4
+        with:
+          cache: "npm"
+          cache-dependency-path: panel/package-lock.json
+
+      - name: Install npm dependencies
+        run: npm ci
+        working-directory: panel
+
+      - name: Build Lab JSON docs
+        run: npm run build:docs
+        working-directory: panel
+
+      - name: Create ZIP archive
+        run: |
+          VERSION="${{ github.event.release.tag_name || inputs.tag }}"
+          zip "lab-${VERSION}.zip" *.json
+        working-directory: panel/dist/ui
+
+      - name: Upload Lab ZIP to release
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ github.event.release.tag_name || inputs.tag }}"
+          gh release upload "${VERSION}" \
+            "panel/dist/ui/lab-${VERSION}.zip" \
+            --clobber
