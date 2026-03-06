@@ -556,10 +556,31 @@ class PageRulesTest extends ModelTestCase
 		]);
 	}
 
-	public function testUpdateWithoutPermissions(): void
+	public function testUpdateWithoutEditPermission(): void
 	{
 		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions->method('can')->willReturnMap([
+			['edit', false],
+			['save', true],
+		]);
+
+		$page = $this->createMock(Page::class);
+		$page->method('slug')->willReturn('test');
+		$page->method('permissions')->willReturn($permissions);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update "test"');
+
+		PageRules::update($page, []);
+	}
+
+	public function testUpdateWithoutSavePermission(): void
+	{
+		$permissions = $this->createMock(PagePermissions::class);
+		$permissions->method('can')->willReturnMap([
+			['edit', true],
+			['save', false],
+		]);
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('test');

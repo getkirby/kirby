@@ -23,9 +23,8 @@ class PageBlueprint extends Blueprint
 
 		// normalize all available page options
 		$this->props['options'] = $this->normalizeOptions(
-			$this->props['options'] ?? true,
-			// defaults
-			[
+			options: $this->props['options'] ?? true,
+			defaults: [
 				'access'     	 => null,
 				'changeSlug'     => null,
 				'changeStatus'   => null,
@@ -34,19 +33,23 @@ class PageBlueprint extends Blueprint
 				'create'         => null,
 				'delete'         => null,
 				'duplicate'      => null,
+				'edit'           => null,
 				'list'           => null,
 				'move'           => null,
 				'preview'        => null,
 				'read'           => null,
+				'save'           => null,
 				'sort'           => null,
-				'update'         => null,
 			],
-			// aliases (from v2)
-			[
+			aliases: [
 				'status'   => 'changeStatus',
 				'template' => 'changeTemplate',
 				'title'    => 'changeTitle',
 				'url'      => 'changeSlug',
+				'update'   => static fn ($value) => [
+					'edit' => $value,
+					'save' => $value,
+				],
 			]
 		);
 

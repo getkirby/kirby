@@ -15,7 +15,8 @@ class SiteBlueprintTest extends TestCase
 
 		$expected = [
 			'changeTitle' => null,
-			'update'      => null,
+			'edit'        => null,
+			'save'        => null,
 		];
 
 		$this->assertSame($expected, $blueprint->options());

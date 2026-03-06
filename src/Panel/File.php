@@ -322,7 +322,10 @@ class File extends Model
 		}
 
 		// ensure that user can update content file
-		if ($this->options()['update'] === false) {
+		if (
+			$this->options()['edit'] === false ||
+			$this->options()['save'] === false
+		) {
 			return false;
 		}
 
