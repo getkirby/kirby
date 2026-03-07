@@ -492,9 +492,9 @@ class AppTest extends TestCase
 	{
 		App::plugin('vendor/plugin', [
 			'options' => [
-				'providers' => null,
-				'defaultRole' => null,
-				'onlyOauth' => null,
+				'endpoints' => null,
+				'role' => null,
+				'debug' => null,
 			]
 		]);
 
@@ -506,11 +506,11 @@ class AppTest extends TestCase
 				// user configures plugin options using nested array syntax
 				'vendor' => [
 					'plugin' => [
-						'providers' => [
-							'nextcloud' => ['name' => 'My Cloud']
+						'endpoints' => [
+							'api' => ['url' => 'https://example.com']
 						],
-						'defaultRole' => 'editor',
-						'onlyOauth' => false,
+						'role' => 'editor',
+						'debug' => false,
 					]
 				]
 			]
@@ -518,19 +518,19 @@ class AppTest extends TestCase
 
 		// nested config values should override plugin defaults
 		$this->assertSame(
-			['nextcloud' => ['name' => 'My Cloud']],
-			$app->option('vendor.plugin.providers')
+			['api' => ['url' => 'https://example.com']],
+			$app->option('vendor.plugin.endpoints')
 		);
-		$this->assertSame('editor', $app->option('vendor.plugin.defaultRole'));
-		$this->assertFalse($app->option('vendor.plugin.onlyOauth'));
+		$this->assertSame('editor', $app->option('vendor.plugin.role'));
+		$this->assertFalse($app->option('vendor.plugin.debug'));
 
 		// full plugin options should include merged values
 		$this->assertSame([
-			'providers' => [
-				'nextcloud' => ['name' => 'My Cloud']
+			'endpoints' => [
+				'api' => ['url' => 'https://example.com']
 			],
-			'defaultRole' => 'editor',
-			'onlyOauth' => false,
+			'role' => 'editor',
+			'debug' => false,
 		], $app->option('vendor.plugin'));
 	}
 
