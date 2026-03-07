@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import dayjs from "./dayjs.js";
+import dayjs from "./dayjs";
 
 describe.concurrent("dayjs.pattern.at()", () => {
-	const data = {
+	const data: Record<string, { start: number; end?: number; unit: string }[]> = {
 		"YYYY-MM-DD": [
 			{ start: 0, unit: "year" },
 			{ start: 2, unit: "year" },
@@ -30,7 +30,7 @@ describe.concurrent("dayjs.pattern.at()", () => {
 
 			for (const cursor of data[test]) {
 				const part = pattern.at(cursor.start, cursor.end);
-				expect(part.unit).toBe(cursor.unit);
+				expect(part!.unit).toBe(cursor.unit);
 			}
 		});
 	}
@@ -49,7 +49,7 @@ describe("dayjs.pattern.format()", () => {
 
 	const dt = dayjs("2020-05-04 13:14:03");
 
-	const data = {
+	const data: Record<string, string> = {
 		"YYYY-MM-DD": "2020-05-04",
 		"M/D/YY h:m a": "5/4/20 1:14 pm",
 		"H:m:s": "13:14:3"
@@ -64,7 +64,10 @@ describe("dayjs.pattern.format()", () => {
 });
 
 describe("dayjs.pattern.parts", () => {
-	const data = {
+	const data: Record<
+		string,
+		{ index: number; unit: string; start: number; end: number }[]
+	> = {
 		"YYYY-MM-DD": [
 			{ index: 0, unit: "year", start: 0, end: 3 },
 			{
