@@ -488,6 +488,52 @@ class AppTest extends TestCase
 		$this->assertSame('B1', $app->option('namespace.plugin.nested')['key']);
 	}
 
+	public function testOptionFromPluginWithNestedConfig(): void
+	{
+		App::plugin('vendor/plugin', [
+			'options' => [
+				'providers' => null,
+				'defaultRole' => null,
+				'onlyOauth' => null,
+			]
+		]);
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				// user configures plugin options using nested array syntax
+				'vendor' => [
+					'plugin' => [
+						'providers' => [
+							'nextcloud' => ['name' => 'My Cloud']
+						],
+						'defaultRole' => 'editor',
+						'onlyOauth' => false,
+					]
+				]
+			]
+		]);
+
+		// nested config values should override plugin defaults
+		$this->assertSame(
+			['nextcloud' => ['name' => 'My Cloud']],
+			$app->option('vendor.plugin.providers')
+		);
+		$this->assertSame('editor', $app->option('vendor.plugin.defaultRole'));
+		$this->assertFalse($app->option('vendor.plugin.onlyOauth'));
+
+		// full plugin options should include merged values
+		$this->assertSame([
+			'providers' => [
+				'nextcloud' => ['name' => 'My Cloud']
+			],
+			'defaultRole' => 'editor',
+			'onlyOauth' => false,
+		], $app->option('vendor.plugin'));
+	}
+
 	public function testOptions(): void
 	{
 		$app = new App([
