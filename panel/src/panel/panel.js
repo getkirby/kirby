@@ -5,7 +5,7 @@ import Dialog from "./dialog.js";
 import Drag from "./drag.js";
 import Drawer from "./drawer.js";
 import Dropdown from "./dropdown.js";
-import Events from "./events.js";
+import Events from "./events";
 import Notification from "./notification.js";
 import Language from "./language.js";
 import Plugins from "./plugins.js";

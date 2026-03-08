@@ -1,5 +1,3 @@
-// @ts-check
-
 import { isObject } from "@/helpers/object";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 import History from "./history.js";
