@@ -11,7 +11,7 @@ import Language from "./language.js";
 import Plugins from "./plugins.js";
 import Menu from "./menu";
 import Search from "./search.js";
-import System from "./system.js";
+import System from "./system";
 import Theme from "./theme";
 import Translation from "./translation";
 import { buildUrl, isUrl } from "@/helpers/url";
