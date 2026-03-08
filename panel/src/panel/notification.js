@@ -2,7 +2,7 @@ import { reactive } from "vue";
 import AuthError from "@/errors/AuthError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import RequestError from "@/errors/RequestError.js";
-import State from "./state.js";
+import State from "./state";
 import Timer from "@/helpers/timer";
 
 export const defaults = () => {
