@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import string from "./string";
 
-describe.concurrent("$helper.string.isEmpty", () => {
+describe("$helper.string.isEmpty", () => {
 	it("should work with null", () => {
 		const result = string.isEmpty(null);
 		expect(result).toStrictEqual(true);

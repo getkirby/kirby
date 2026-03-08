@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import dayjs from "./dayjs.js";
 
-describe.concurrent("dayjs.round()", () => {
+describe("dayjs.round()", () => {
 	const data = {
 		"1s: no change": [
 			"second",

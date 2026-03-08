@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import Drag from "./drag.js";
 import Panel from "./panel.js";
 
-describe.concurrent("panel.drag", () => {
+describe("panel.drag", () => {
 	it("should have a default state", async () => {
 		const panel = Panel.create();
 		const drag = Drag(panel);
@@ -16,7 +16,7 @@ describe.concurrent("panel.drag", () => {
 	});
 });
 
-describe.concurrent("panel.drag", () => {
+describe("panel.drag", () => {
 	it("should store drag info", async () => {
 		const panel = Panel.create();
 		const drag = Drag(panel);

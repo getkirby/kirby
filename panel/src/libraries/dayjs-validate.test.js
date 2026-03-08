@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import dayjs from "./dayjs.js";
 
-describe.concurrent("dayjs.validate()", () => {
+describe("dayjs.validate()", () => {
 	const data = {
 		"min by day": [
 			{

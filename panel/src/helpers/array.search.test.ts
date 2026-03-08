@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { search } from "./array";
 
-describe.concurrent("$helper.array.search()", () => {
+describe("$helper.array.search()", () => {
 	const array = [
 		{ text: "apple", code: "AP" },
 		{ text: "banana", code: "BA" },

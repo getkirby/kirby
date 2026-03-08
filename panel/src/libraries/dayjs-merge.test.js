@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import dayjs from "./dayjs.js";
 
-describe.concurrent("dayjs.merge()", () => {
+describe("dayjs.merge()", () => {
 	const data = [
 		[
 			"2020-02-29 16:05:15",

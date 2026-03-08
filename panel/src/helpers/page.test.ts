@@ -7,7 +7,7 @@ window.panel = {
 	$t: (value: string) => value
 };
 
-describe.concurrent("$helper.page.status()", () => {
+describe("$helper.page.status()", () => {
 	it("returns correct props for draft", () => {
 		const result = status("draft");
 		expect(result.icon).toBe("status-draft");

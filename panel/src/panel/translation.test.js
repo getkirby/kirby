@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import Translation from "./translation.js";
 
-describe.concurrent("panel.translation", () => {
+describe("panel.translation", () => {
 	it("should have a default state", async () => {
 		const translation = Translation();
 

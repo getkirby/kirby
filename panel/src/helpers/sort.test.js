@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import sort from "./sort.js";
 
-describe.concurrent("$helper.sort()", () => {
+describe("$helper.sort()", () => {
 	it("should sort", () => {
 		let users = [
 			{ username: "Homer" },

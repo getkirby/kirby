@@ -15,7 +15,7 @@ const Panel = () => {
 	};
 };
 
-describe.concurrent("panel/feature.js", () => {
+describe("panel/feature.js", () => {
 	it("should add event listeners", async () => {
 		const feature = Feature(Panel(), "test", defaults());
 		const listeners = {

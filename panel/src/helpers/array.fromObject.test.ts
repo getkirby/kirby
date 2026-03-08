@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { fromObject } from "./array";
 
-describe.concurrent("$helper.array.fromObject()", () => {
+describe("$helper.array.fromObject()", () => {
 	it("should convert object to array", () => {
 		const object = {
 			a: "A",

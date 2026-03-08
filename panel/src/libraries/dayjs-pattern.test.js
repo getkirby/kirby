@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import dayjs from "./dayjs.js";
 
-describe.concurrent("dayjs.pattern.at()", () => {
+describe("dayjs.pattern.at()", () => {
 	const data = {
 		"YYYY-MM-DD": [
 			{ start: 0, unit: "year" },

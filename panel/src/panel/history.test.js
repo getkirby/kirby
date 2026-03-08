@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import History from "./history.js";
 
-describe.concurrent("panel.drawer.history", () => {
+describe("panel.drawer.history", () => {
 	it("should add and get items", async () => {
 		const history = History();
 

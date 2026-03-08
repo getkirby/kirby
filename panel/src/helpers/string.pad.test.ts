@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { pad } from "./string";
 
-describe.concurrent("$helper.string.pad()", () => {
+describe("$helper.string.pad()", () => {
 	it("should add default padding", () => {
 		expect(pad(1)).toBe("01");
 	});

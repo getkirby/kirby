@@ -3,7 +3,7 @@ import Modal, { defaults } from "./modal.js";
 import Panel from "./panel.js";
 import Vue from "vue";
 
-describe.concurrent("panel/modal.js", () => {
+describe("panel/modal.js", () => {
 	window.Vue = Vue;
 
 	it("should have a default state", async () => {

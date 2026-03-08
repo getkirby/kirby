@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { isEmpty } from "./object";
 
-describe.concurrent("$helper.object.isEmpty()", () => {
+describe("$helper.object.isEmpty()", () => {
 	it("should detect empty values as true", () => {
 		expect(isEmpty(undefined)).toBeTruthy();
 		expect(isEmpty(null)).toBeTruthy();

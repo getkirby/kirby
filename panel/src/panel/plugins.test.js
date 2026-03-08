@@ -3,7 +3,7 @@ import Plugins from "./plugins.js";
 import Vue from "vue";
 import isComponent from "@/helpers/isComponent";
 
-describe.concurrent("panel.plugins", () => {
+describe("panel.plugins", () => {
 	window.Vue = Vue;
 
 	it("should have defaults", async () => {

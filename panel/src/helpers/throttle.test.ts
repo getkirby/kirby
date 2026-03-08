@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import throttle from "./throttle";
 
-describe.concurrent("$helper.throttle()", () => {
+describe("$helper.throttle()", () => {
 	beforeEach(() => {
 		vi.useFakeTimers();
 	});
