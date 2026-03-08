@@ -1,40 +1,54 @@
 import { reactive } from "vue";
-import State from "./state.js";
+import State from "./state";
 
-export const defaults = () => {
+// TODO: replace with proper menu entry/button type
+type MenuEntries = Array<Record<string, unknown> | "-">;
+type MenuState = {
+	entries: MenuEntries;
+	hover: boolean;
+	isOpen: boolean;
+};
+
+export function defaults(): MenuState {
 	return {
 		entries: [],
 		hover: false,
 		isOpen: false
 	};
-};
+}
 
 /**
+ * Manages the Panel sidebar navigation menu, including open/close state,
+ * mobile vs. desktop behavior, and state persistence via localStorage
+ *
  * @since 4.0.0
  */
-export default (panel) => {
+export default function Menu(panel: {
+	events: { on: (event: string, handler: EventListener) => void };
+}) {
 	const parent = State("menu", defaults());
-	const media = window.matchMedia?.("(max-width: 60rem)");
+	const media = window.matchMedia("(max-width: 60rem)");
 	const menu = reactive({
 		...parent,
 
 		/**
 		 * Closes the mobile menu when clicking outside of it
 		 * @internal
-		 * @param {Event} event
 		 */
-		blur(event) {
+		blur(event: Event): void {
 			const menu = document.querySelector(".k-panel-menu");
 
 			if (!menu || media.matches === false) {
-				return false;
+				return;
 			}
 
-			const toggle = document.querySelector(".k-panel-menu-proxy");
+			const selector = ".k-panel-menu-proxy";
+			const toggle = document.querySelector(selector) as HTMLElement;
+			const target = event.target as Node;
 
 			if (
-				toggle.contains(event.target) === false &&
-				menu.contains(event.target) === false
+				toggle.contains(target) === false &&
+				menu.contains(target) === false
 			) {
 				this.close();
 			}
@@ -42,24 +56,22 @@ export default (panel) => {
 
 		/**
 		 * Collapses the sidebar menu
-		 * @public
 		 */
-		close() {
+		close(): void {
 			this.isOpen = false;
 
 			if (media.matches === false) {
-				localStorage.setItem("kirby$menu", true);
+				localStorage.setItem("kirby$menu", "true");
 			}
 		},
 
 		/**
 		 * Closes the mobile menu when escape key is pressed
 		 * @internal
-		 * @param {Event} event
 		 */
-		escape() {
+		escape(): void {
 			if (media.matches === false) {
-				return false;
+				return;
 			}
 
 			this.close();
@@ -67,9 +79,8 @@ export default (panel) => {
 
 		/**
 		 * Expands the sidebar menu
-		 * @public
 		 */
-		open() {
+		open(): void {
 			this.isOpen = true;
 
 			if (media.matches === false) {
@@ -81,26 +92,20 @@ export default (panel) => {
 		 * Handles change from mobile to desktop and vice versa
 		 * @internal
 		 */
-		resize() {
+		resize(): void {
 			// when resizing to mobile, make sure menu starts closed
 			if (media.matches) {
 				return this.close();
 			}
 
-			// only restore collapse/expanded state when not mobile
-			if (localStorage.getItem("kirby$menu") !== null) {
-				this.isOpen = false;
-			} else {
-				this.isOpen = true;
-			}
+			// on desktop, restore the last collapsed/expanded state
+			this.isOpen = localStorage.getItem("kirby$menu") === null;
 		},
 
 		/**
-		 * Sets a new state by retrieving entries
-		 *
-		 * @param {Array} entries
+		 * Sets the menu entries and restores the open/closed state
 		 */
-		set(entries) {
+		set(entries: MenuEntries): MenuState {
 			this.entries = entries;
 			this.resize();
 			return this.state();
@@ -108,9 +113,8 @@ export default (panel) => {
 
 		/**
 		 * Toggles the sidebar menu collapse state
-		 * @public
 		 */
-		toggle() {
+		toggle(): void {
 			if (this.isOpen) {
 				this.close();
 			} else {
@@ -126,7 +130,7 @@ export default (panel) => {
 	panel.events.on("click", menu.blur.bind(menu));
 
 	// only register the resize event once
-	media?.addEventListener("change", menu.resize.bind(menu));
+	media.addEventListener("change", menu.resize.bind(menu));
 
 	return menu;
-};
+}
