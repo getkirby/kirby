@@ -1,5 +1,5 @@
 import { beforeAll, afterAll, describe, expect, it, vi } from "vitest";
-import dayjs from "./dayjs.js";
+import dayjs from "./dayjs";
 
 describe("dayjs.interpret(input, 'date')", () => {
 	beforeAll(() => {
@@ -12,7 +12,7 @@ describe("dayjs.interpret(input, 'date')", () => {
 		vi.useRealTimers();
 	});
 
-	const expected = {
+	const expected: Record<string, string> = {
 		"2021-03-05": "2021-03-05",
 		"2021-03-5": "2021-03-05",
 		"2021-03-": "2021-03-01",
@@ -92,16 +92,16 @@ describe("dayjs.interpret(input, 'date')", () => {
 		"March 2. 2024": "2024-03-02"
 	};
 
-	for (const input in expected) {
-		it(input + " should be " + expected[input], () => {
+	for (const [input, value] of Object.entries(expected)) {
+		it(input + " should be " + value, () => {
 			const result = dayjs.interpret(input)?.toISO("date") ?? null;
-			expect(result).toBe(expected[input]);
+			expect(result).toBe(value);
 		});
 	}
 });
 
 describe("dayjs.interpret(input, 'time')", () => {
-	const expected = {
+	const expected: Record<string, string> = {
 		"12:22:37": "12:22:37",
 		"12:22": "12:22:00",
 		"1:06": "01:06:00",
@@ -118,10 +118,10 @@ describe("dayjs.interpret(input, 'time')", () => {
 		1234: "12:34:00"
 	};
 
-	for (const input in expected) {
-		it(input + " should be " + expected[input], () => {
+	for (const [input, value] of Object.entries(expected)) {
+		it(input + " should be " + value, () => {
 			const result = dayjs.interpret(input, "time")?.toISO("time") ?? null;
-			expect(result).toBe(expected[input]);
+			expect(result).toBe(value);
 		});
 	}
 });
