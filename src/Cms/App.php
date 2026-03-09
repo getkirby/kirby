@@ -284,18 +284,14 @@ class App
 			$prefix = str_replace('/', '.', $name);
 			[$vendor, $pluginName] = explode('.', $prefix, 2);
 
-			if (
-				isset($this->options[$vendor]) === true &&
-				is_array($this->options[$vendor]) === true &&
-				isset($this->options[$vendor][$pluginName]) === true &&
-				is_array($this->options[$vendor][$pluginName]) === true &&
-				isset($this->options[$prefix]) === true &&
-				is_array($this->options[$prefix]) === true
-			) {
+			$nestedValue = $this->options[$vendor][$pluginName] ?? null;
+			$flatValue   = $this->options[$prefix] ?? null;
+
+			if (is_array($nestedValue) === true && is_array($flatValue) === true) {
 				// merge user's nested config on top of plugin defaults
 				$this->options[$prefix] = array_replace_recursive(
-					$this->options[$prefix],
-					$this->options[$vendor][$pluginName]
+					$flatValue,
+					$nestedValue
 				);
 
 				// remove the nested duplicate
