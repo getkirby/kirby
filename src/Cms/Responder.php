@@ -154,7 +154,7 @@ class Responder implements Stringable
 	 *
 	 * @return array|$this
 	 */
-	public function usesCookies(array|null $usesCookies = null)
+	public function usesCookies(array|null $usesCookies = null): array|static
 	{
 		if ($usesCookies === null) {
 			return $this->usesCookies;
@@ -173,7 +173,7 @@ class Responder implements Stringable
 	 * @param bool $override If `true`, the already defined timestamp will be overridden
 	 * @return int|null|$this
 	 */
-	public function expires($expires = null, bool $override = false)
+	public function expires($expires = null, bool $override = false): static|int|null
 	{
 		// getter
 		if ($expires === null && $override === false) {
@@ -218,9 +218,9 @@ class Responder implements Stringable
 	/**
 	 * Setter and getter for the status code
 	 *
-	 * @return int|$this
+	 * @return int|null|$this
 	 */
-	public function code(int|null $code = null)
+	public function code(int|null $code = null): static|int|null
 	{
 		if ($code === null) {
 			return $this->code;
@@ -251,9 +251,9 @@ class Responder implements Stringable
 	 *
 	 * @param string|false|null $value
 	 * @param bool $lazy If `true`, an existing header value is not overridden
-	 * @return string|$this
+	 * @return string|null|$this
 	 */
-	public function header(string $key, $value = null, bool $lazy = false)
+	public function header(string $key, $value = null, bool $lazy = false): static|string|null
 	{
 		if ($value === null) {
 			return $this->headers()[$key] ?? null;
@@ -277,7 +277,7 @@ class Responder implements Stringable
 	 *
 	 * @return array|$this
 	 */
-	public function headers(array|null $headers = null)
+	public function headers(array|null $headers = null): static|array
 	{
 		if ($headers === null) {
 			$injectedHeaders = [];
@@ -333,7 +333,7 @@ class Responder implements Stringable
 	 *
 	 * @return string|$this
 	 */
-	public function json(array|null $json = null)
+	public function json(array|null $json = null): static|string
 	{
 		if ($json !== null) {
 			$this->body(json_encode($json));
@@ -350,7 +350,7 @@ class Responder implements Stringable
 	public function redirect(
 		string|null $location = null,
 		int|null $code = null
-	) {
+	): static {
 		$location = Url::to($location ?? '/');
 		$location = Url::unIdn($location);
 
@@ -417,9 +417,9 @@ class Responder implements Stringable
 	/**
 	 * Setter and getter for the content type
 	 *
-	 * @return string|$this
+	 * @return string|null|$this
 	 */
-	public function type(string|null $type = null)
+	public function type(string|null $type = null): static|string|null
 	{
 		if ($type === null) {
 			return $this->type;
