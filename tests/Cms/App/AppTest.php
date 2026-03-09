@@ -532,6 +532,17 @@ class AppTest extends TestCase
 			'role' => 'editor',
 			'debug' => false,
 		], $app->option('vendor.plugin'));
+
+		// option('vendor') should still return the vendor config (not null)
+		$this->assertSame([
+			'plugin' => [
+				'endpoints' => [
+					'api' => ['url' => 'https://example.com']
+				],
+				'role' => 'editor',
+				'debug' => false,
+			]
+		], $app->option('vendor'));
 	}
 
 	public function testOptions(): void

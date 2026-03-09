@@ -289,17 +289,11 @@ class App
 
 			if (is_array($nestedValue) === true && is_array($flatValue) === true) {
 				// merge user's nested config on top of plugin defaults
-				$this->options[$prefix] = array_replace_recursive(
-					$flatValue,
-					$nestedValue
-				);
+				$merged = array_replace_recursive($flatValue, $nestedValue);
+				$this->options[$prefix] = $merged;
 
-				// remove the nested duplicate
-				unset($this->options[$vendor][$pluginName]);
-
-				if (empty($this->options[$vendor]) === true) {
-					unset($this->options[$vendor]);
-				}
+				// keep the nested copy in sync so option('vendor') still works
+				$this->options[$vendor][$pluginName] = $merged;
 			}
 		}
 
