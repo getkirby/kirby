@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import Panel from "./panel.js";
 
-describe.concurrent("panel", () => {
+describe("panel", () => {
 	window.location = new URL("https://getkirby.com");
 
 	it("should have a default state", async () => {

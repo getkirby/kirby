@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import Events from "./events.js";
 import Panel from "./panel.js";
 
-describe.concurrent("panel.events.keydown", () => {
+describe("panel.events.keydown", () => {
 	const panel = Panel.create(app);
 	const events = Events(panel);
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import string from "./string";
 
-describe.concurrent("$helper.string.hasEmoji", () => {
+describe("$helper.string.hasEmoji", () => {
 	it("should identify emojis", () => {
 		const emojis = [
 			"😀",

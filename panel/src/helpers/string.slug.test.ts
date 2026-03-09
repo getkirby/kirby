@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { slug } from "./string";
 
-describe.concurrent("$helper.string.slug()", () => {
+describe("$helper.string.slug()", () => {
 	it("should replace spaces", () => {
 		const result = slug("a b c");
 		expect(result).toBe("a-b-c");

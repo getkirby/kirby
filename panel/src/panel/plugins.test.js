@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import Plugins from "./plugins.js";
 import isComponent from "@/helpers/isComponent";
 
-describe.concurrent("panel.plugins", () => {
+describe("panel.plugins", () => {
 	it("should have defaults", async () => {
 		const plugins = Plugins(app);
 

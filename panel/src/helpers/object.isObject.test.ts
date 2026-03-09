@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { isObject } from "./object";
 
-describe.concurrent("$helper.object.isObject()", () => {
+describe("$helper.object.isObject()", () => {
 	it("returns true for an object", () => {
 		expect(isObject({})).toBe(true);
 		expect(isObject({ a: 1, b: 2 })).toBe(true);

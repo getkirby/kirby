@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import User from "./user.js";
 
-describe.concurrent("panel.user", () => {
+describe("panel.user", () => {
 	it("should have a default state", async () => {
 		const user = User();
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import Events from "./events.js";
 
-describe.concurrent("panel.events drag & drop", () => {
+describe("panel.events drag & drop", () => {
 	const events = Events();
 
 	it("should keep track of target", async () => {

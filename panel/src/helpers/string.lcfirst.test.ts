@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import string from "./string";
 
-describe.concurrent("$helper.string.lcfirst", () => {
+describe("$helper.string.lcfirst", () => {
 	it("should convert first character to lowercase", () => {
 		const result = string.lcfirst("Hello");
 		expect(result).toBe("hello");

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { clone } from "./object";
 
-describe.concurrent("$helper.object.clone()", () => {
+describe("$helper.object.clone()", () => {
 	it("should clone an object", () => {
 		const original = { a: 1, b: { c: 2 }, c: "C" };
 		const copy = clone(original);

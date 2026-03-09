@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import string from "./string";
 
-describe.concurrent("$helper.string.ucfirst", () => {
+describe("$helper.string.ucfirst", () => {
 	it("should convert first character to uppercase", () => {
 		const result = string.ucfirst("hello");
 		expect(result).toBe("Hello");

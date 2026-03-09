@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import string from "./string";
 
-describe.concurrent("$helper.string.template", () => {
+describe("$helper.string.template", () => {
 	const values: Record<
 		string,
 		string | Record<string, string> | Record<string, string>[]

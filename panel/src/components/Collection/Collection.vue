@@ -12,6 +12,7 @@
 			v-bind="{
 				columns,
 				fields,
+				index: resolvedIndex,
 				items,
 				layout,
 				link,
@@ -116,6 +117,9 @@ export default {
 			}
 
 			return {};
+		},
+		resolvedIndex() {
+			return (this.paginationOptions.offset ?? this.index - 1) + 1;
 		},
 		paginationOptions() {
 			const options =

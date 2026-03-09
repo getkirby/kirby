@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { sanitizeHTML } from "./string";
 
-describe.concurrent("$helper.string.sanitizeHTML", () => {
+describe("$helper.string.sanitizeHTML", () => {
 	it("should strip script tags", () => {
 		expect(sanitizeHTML("<script>alert('xss')</script>")).toBe("");
 	});

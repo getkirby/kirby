@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import Events from "./events.js";
 
-describe.concurrent("panel.events.keyup", () => {
+describe("panel.events.keyup", () => {
 	const events = Events();
 
 	it("should fire keyup event with modifiers", async () => {

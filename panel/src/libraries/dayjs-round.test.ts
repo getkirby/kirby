@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import dayjs from "./dayjs.js";
+import type { UnitType } from "dayjs";
+import dayjs from "./dayjs";
 
-describe.concurrent("dayjs.round()", () => {
-	const data = {
+describe("dayjs.round()", () => {
+	const data: Record<string, [UnitType, number, string, string]> = {
 		"1s: no change": [
 			"second",
 			1,
@@ -64,6 +65,7 @@ describe.concurrent("dayjs.round()", () => {
 
 	it("Unsupported unit", () => {
 		expect(() => {
+			// @ts-expect-error - testing invalid input
 			dayjs("2020-01-01").round("foo", 1);
 		}).toThrow("Invalid rounding unit");
 	});
@@ -80,7 +82,10 @@ describe.concurrent("dayjs.round()", () => {
 	for (const test in sizes) {
 		it("Unsupported size: " + sizes[test].unit, () => {
 			expect(() => {
-				dayjs("2020-01-01").round(sizes[test].unit, sizes[test].size);
+				dayjs("2020-01-01").round(
+					sizes[test].unit as UnitType,
+					sizes[test].size
+				);
 			}).toThrow("Invalid rounding size");
 		});
 	}

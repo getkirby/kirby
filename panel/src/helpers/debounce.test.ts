@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import debounce from "./debounce";
 
-describe.concurrent("$helper.debounce()", () => {
+describe("$helper.debounce()", () => {
 	beforeEach(() => {
 		vi.useFakeTimers();
 	});

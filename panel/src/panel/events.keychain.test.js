@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import Events from "./events.js";
 
-describe.concurrent("panel.events.keychain", () => {
+describe("panel.events.keychain", () => {
 	const events = Events();
 
 	it("should only add the type", async () => {

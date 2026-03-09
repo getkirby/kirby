@@ -29,7 +29,7 @@ class MockClipboardEvent extends Event {
 vi.stubGlobal("DataTransfer", MockDataTransfer);
 vi.stubGlobal("ClipboardEvent", MockClipboardEvent);
 
-describe.concurrent("clipboard.read()", () => {
+describe("clipboard.read()", () => {
 	it("should return null for undefined", () => {
 		expect(read(undefined)).toBeNull();
 	});

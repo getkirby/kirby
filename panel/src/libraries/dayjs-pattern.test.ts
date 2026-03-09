@@ -1,28 +1,29 @@
 import { describe, expect, it } from "vitest";
-import dayjs from "./dayjs.js";
+import dayjs from "./dayjs";
 
-describe.concurrent("dayjs.pattern.at()", () => {
-	const data = {
-		"YYYY-MM-DD": [
-			{ start: 0, unit: "year" },
-			{ start: 2, unit: "year" },
-			{ start: 5, unit: "month" },
-			{ start: 6, unit: "month" },
-			{ start: 9, unit: "day" },
-			{ start: 8, end: 10, unit: "day" },
-			{ start: 6, end: 10, unit: "month" },
-			{ start: 0, end: 4, unit: "year" }
-		],
-		"MM/DD/YY HH:mm": [
-			{ start: 0, unit: "month" },
-			{ start: 1, unit: "month" },
-			{ start: 3, unit: "day" },
-			{ start: 4, unit: "day" },
-			{ start: 6, unit: "year" },
-			{ start: 10, unit: "hour" },
-			{ start: 9, end: 11, unit: "hour" }
-		]
-	};
+describe("dayjs.pattern.at()", () => {
+	const data: Record<string, { start: number; end?: number; unit: string }[]> =
+		{
+			"YYYY-MM-DD": [
+				{ start: 0, unit: "year" },
+				{ start: 2, unit: "year" },
+				{ start: 5, unit: "month" },
+				{ start: 6, unit: "month" },
+				{ start: 9, unit: "day" },
+				{ start: 8, end: 10, unit: "day" },
+				{ start: 6, end: 10, unit: "month" },
+				{ start: 0, end: 4, unit: "year" }
+			],
+			"MM/DD/YY HH:mm": [
+				{ start: 0, unit: "month" },
+				{ start: 1, unit: "month" },
+				{ start: 3, unit: "day" },
+				{ start: 4, unit: "day" },
+				{ start: 6, unit: "year" },
+				{ start: 10, unit: "hour" },
+				{ start: 9, end: 11, unit: "hour" }
+			]
+		};
 
 	for (const test in data) {
 		it(test, () => {
@@ -30,7 +31,7 @@ describe.concurrent("dayjs.pattern.at()", () => {
 
 			for (const cursor of data[test]) {
 				const part = pattern.at(cursor.start, cursor.end);
-				expect(part.unit).toBe(cursor.unit);
+				expect(part!.unit).toBe(cursor.unit);
 			}
 		});
 	}
@@ -49,7 +50,7 @@ describe("dayjs.pattern.format()", () => {
 
 	const dt = dayjs("2020-05-04 13:14:03");
 
-	const data = {
+	const data: Record<string, string> = {
 		"YYYY-MM-DD": "2020-05-04",
 		"M/D/YY h:m a": "5/4/20 1:14 pm",
 		"H:m:s": "13:14:3"
@@ -64,7 +65,10 @@ describe("dayjs.pattern.format()", () => {
 });
 
 describe("dayjs.pattern.parts", () => {
-	const data = {
+	const data: Record<
+		string,
+		{ index: number; unit: string; start: number; end: number }[]
+	> = {
 		"YYYY-MM-DD": [
 			{ index: 0, unit: "year", start: 0, end: 3 },
 			{

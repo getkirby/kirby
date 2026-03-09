@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import string from "./string";
 
-describe.concurrent("$helper.string.escapeHTML", () => {
+describe("$helper.string.escapeHTML", () => {
 	it("should escape HTML", () => {
 		const result = string.escapeHTML(
 			'<div class="button">This text includes `&<>"\'/=` characters</div>'

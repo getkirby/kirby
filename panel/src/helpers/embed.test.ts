@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import embed from "./embed";
 
-describe.concurrent("$helper.embed()", () => {
+describe("$helper.embed()", () => {
 	const tests: [string, string | false, string | false][] = [
 		// YouTube
 		[

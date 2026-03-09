@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import State from "./state.js";
 
-describe.concurrent("state", () => {
+describe("state", () => {
 	it("should set & get a key", async () => {
 		const state = State("test");
 		expect(state.key()).toStrictEqual("test");
