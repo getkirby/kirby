@@ -5,35 +5,44 @@ import RequestError from "@/errors/RequestError";
 import State from "./state";
 import Timer from "@/helpers/timer";
 
-export const defaults = () => {
+type NotificationState = {
+	context: "dialog" | "drawer" | "view" | null;
+	details: Record<string, unknown>;
+	icon: string | null;
+	isOpen: boolean;
+	message: string | null;
+	theme: string | null;
+	timeout: number;
+	type: "error" | "fatal" | null;
+};
+
+export function defaults(): NotificationState {
 	return {
 		context: null,
-		details: null,
+		details: {},
 		icon: null,
 		isOpen: false,
 		message: null,
 		theme: null,
-		timeout: null,
+		timeout: 0,
 		type: null
 	};
-};
+}
 
 /**
+ * Manages the Panel's notifications
  * @since 4.0.0
  */
-export default (panel = {}) => {
+export default function Notification(panel: TODO) {
 	const parent = State("notification", defaults());
 
 	return reactive({
 		...parent,
 
 		/**
-		 * Closes the notification by
-		 * setting the inactive state (defaults)
-		 *
-		 * @returns {Object} The inactive state
+		 * Closes the notification by setting the inactive state (defaults)
 		 */
-		close() {
+		close(): Prettify<NotificationState> {
 			// stop any previous timers
 			this.timer.stop();
 
@@ -46,21 +55,19 @@ export default (panel = {}) => {
 
 		/**
 		 * Sends a deprecation warning to the console
-		 *
-		 * @param {String} message
 		 */
-		deprecated(message) {
+		deprecated(message: string): void {
 			console.warn("Deprecated: " + message);
 		},
 
 		/**
-		 * Converts an error object or string
-		 * into an error notification
+		 * Converts an error object or string into an error notification
 		 *
-		 * @param {Error|Object|String} error
-		 * @returns {Object} The notification state
+		 * @example
+		 * panel.notification.error("Something went wrong");
+		 * panel.notification.error(new Error("Something went wrong"));
 		 */
-		error(error) {
+		error(error: Error | string): Prettify<NotificationState> {
 			if (error instanceof AuthError) {
 				// only redirect to logout if panel state actually
 				// assumes the user is authenticated, otherwise
@@ -74,46 +81,51 @@ export default (panel = {}) => {
 				return this.fatal(error);
 			}
 
+			let notification: Partial<NotificationState> = {};
+
 			if (error instanceof RequestError) {
 				// get the broken element in the response json that
 				// has an error message. This can be deprecated later
 				// when the server always sends back a simple error
 				// response without nesting it in $dropdown, $dialog, etc.
-				const broken = Object.values(error.response.json).find(
-					(element) => typeof element?.error === "string"
+				const response = Object.values(error.response.json) as Array<{
+					error?: string;
+					details: Record<string, unknown>;
+				}>;
+
+				const broken = response.find(
+					(element) => typeof element.error === "string"
 				);
 
 				if (broken) {
-					error.message = broken.error;
-					error.details = broken.details;
+					notification = {
+						message: broken.error,
+						details: broken.details
+					};
 				}
 			}
 
-			// convert strings to full error objects
-			if (typeof error === "string") {
-				error = {
-					message: error
-				};
+			if (error instanceof Error) {
+				notification.message ||= error.message;
+			} else if (typeof error === "string") {
+				notification.message ||= error;
 			}
 
-			// turn instances into basic object and
-			// fill in some fallback defaults
-			error = {
-				message: error.message ?? "Something went wrong",
-				details: error.details ?? {}
-			};
+			// fill in fallback defaults
+			notification.message ||= "Something went wrong";
+			notification.details ??= {};
 
 			// open the error dialog in views
 			if (panel.context === "view") {
 				panel.dialog.open({
 					component: "k-error-dialog",
-					props: error
+					props: notification
 				});
 			}
 
 			// show the error notification bar
 			return this.open({
-				message: error.message,
+				message: notification.message,
 				icon: "alert",
 				theme: "negative",
 				type: "error"
@@ -121,14 +133,16 @@ export default (panel = {}) => {
 		},
 
 		/**
-		 * Shortcut to create an info
-		 * notification. You can pass a simple
-		 * string or a state object.
+		 * Shortcut to create an info notification.
+		 * You can pass a simple string or a state object.
 		 *
-		 * @param {Object|String} info
-		 * @returns {Object} The notification state
+		 * @example
+		 * panel.notification.info("The file has been uploaded");
+		 * panel.notification.info({ message: "The file has been uploaded", icon: "upload" });
 		 */
-		info(info = {}) {
+		info(
+			info: Partial<Prettify<NotificationState>> | string
+		): Prettify<NotificationState> {
 			if (typeof info === "string") {
 				info = { message: info };
 			}
@@ -141,24 +155,22 @@ export default (panel = {}) => {
 		},
 
 		/**
-		 * Checks if the notification is a fatal
-		 * error. Those are displayed in the <k-fatal>
-		 * component which sends them to an isolated
-		 * iframe. This will happen when API responses
-		 * cannot be parsed at all.
+		 * Checks if the notification is a fatal error.
+		 * Those are displayed in the <k-fatal> component
+		 * which sends them to an isolated iframe.
+		 * This will happen when API responses cannot be parsed at all.
 		 */
-		get isFatal() {
+		get isFatal(): boolean {
 			return this.type === "fatal";
 		},
 
 		/**
-		 * Creates a fatal error based on an
-		 * Error object or string
+		 * Creates a fatal error based on an Error object or string
 		 *
-		 * @param {Error|Object|String} error
-		 * @returns {Object} The notification state
+		 * @example
+		 * panel.notification.fatal("The response could not be parsed");
 		 */
-		fatal(error) {
+		fatal(error: Error | string): Prettify<NotificationState> {
 			if (typeof error === "string") {
 				return this.open({
 					message: error,
@@ -174,20 +186,22 @@ export default (panel = {}) => {
 			}
 
 			return this.open({
-				message: error.message ?? "Something went wrong",
+				message: error.message || "Something went wrong",
 				type: "fatal"
 			});
 		},
 
 		/**
-		 * Opens the notification
-		 * The context will determine where it will
-		 * be shown.
+		 * Opens the notification.
+		 * The context will determine where it will be shown.
 		 *
-		 * @param {Error|Object|String} notification
-		 * @returns {Object} The notification state
+		 * @example
+		 * panel.notification.open("Saved");
+		 * panel.notification.open({ message: "Saved", icon: "check", theme: "positive" });
 		 */
-		open(notification) {
+		open(
+			notification: Partial<Prettify<NotificationState>> | string
+		): Prettify<NotificationState> {
 			// stop any previous timers
 			this.timer.stop();
 
@@ -198,7 +212,7 @@ export default (panel = {}) => {
 
 			// add timeout if not error or fatal notification
 			if (notification.type !== "error" && notification.type !== "fatal") {
-				notification.timeout ??= 4000;
+				notification.timeout ||= 4000;
 			}
 
 			// set the new state
@@ -219,14 +233,16 @@ export default (panel = {}) => {
 		},
 
 		/**
-		 * Shortcut to create a success
-		 * notification. You can pass a simple
-		 * string or a state object.
+		 * Shortcut to create a success notification.
+		 * You can pass a simple string or a state object.
 		 *
-		 * @param {Object|String} success
-		 * @returns {Object} The notification state
+		 * @example
+		 * panel.notification.success("Saved");
+		 * panel.notification.success({ message: "Saved", icon: "star" });
 		 */
-		success(success = {}) {
+		success(
+			success: Partial<Prettify<NotificationState>> | string
+		): Prettify<NotificationState> {
 			if (typeof success === "string") {
 				success = { message: success };
 			}
@@ -243,4 +259,4 @@ export default (panel = {}) => {
 		 */
 		timer: new Timer()
 	});
-};
+}
