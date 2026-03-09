@@ -6,7 +6,7 @@ import ErrorHandling from "./config/errorhandling";
 import Helpers from "./helpers/index";
 import I18n from "./config/i18n.js";
 import Legacy from "./panel/legacy.js";
-import Libraries from "./libraries/index.js";
+import Libraries from "./libraries/index";
 import Panel from "./panel/panel.js";
 
 Vue.config.productionTip = false;
