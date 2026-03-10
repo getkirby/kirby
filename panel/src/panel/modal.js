@@ -75,7 +75,7 @@ export default (panel, key, defaults) => {
 
 			// history not empty, open previous modal
 			if (this.history.isEmpty() === false) {
-				const state = this.open(this.history.last);
+				const state = this.open(this.history.last());
 				closed();
 				return state;
 			}
