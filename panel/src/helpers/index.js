@@ -13,7 +13,7 @@ import link from "./link";
 import object from "./object";
 import page from "./page";
 import ratio from "./ratio.js";
-import sort from "./sort.js";
+import sort from "./sort";
 import string from "./string";
 import throttle from "./throttle";
 import upload from "./upload";
