@@ -1,5 +1,5 @@
-import { lcfirst } from "@/helpers/string";
 import clipboard from "@/helpers/clipboard";
+import { lcfirst } from "@/helpers/string";
 import mitt from "mitt";
 
 /**
@@ -8,7 +8,7 @@ import mitt from "mitt";
  * to start and stop listening to events
  * @since 4.0.0
  */
-export default (panel) => {
+export default function (panel: TODO) {
 	const emitter = mitt();
 
 	/**
@@ -46,10 +46,13 @@ export default (panel) => {
 	/**
 	 * Config for globally delegated events.
 	 * Some events need to be fired on the document
-	 * and some on window. The boolean value determins if
+	 * and some on window. The boolean value determines if
 	 * they capture events on children or not.
 	 */
-	const events = {
+	const events: {
+		document: Record<string, boolean>;
+		window: Record<string, boolean>;
+	} = {
 		document: {
 			blur: true,
 			click: false,
@@ -83,37 +86,29 @@ export default (panel) => {
 	return {
 		/**
 		 * Global window beforeunload event
-		 *
-		 * @param {BeforeUnloadEvent} e
 		 */
-		beforeunload(e) {
+		beforeunload(e: BeforeUnloadEvent): void {
 			this.emit("beforeunload", e);
 		},
 
 		/**
 		 * Global blur event
-		 *
-		 * @param {Event} e
 		 */
-		blur(e) {
+		blur(e: FocusEvent): void {
 			this.emit("blur", e);
 		},
 
 		/**
 		 * Global click event
-		 *
-		 * @param {Event} e
 		 */
-		click(e) {
+		click(e: MouseEvent): void {
 			this.emit("click", e);
 		},
 
 		/**
 		 * Global clipboard copy event
-		 *
-		 * @param {Event} e
 		 */
-		copy(e) {
+		copy(e: ClipboardEvent): void {
 			this.emit("copy", e);
 		},
 
@@ -121,10 +116,8 @@ export default (panel) => {
 		 * Global dragenter event, which
 		 * prevents the default and keeps
 		 * track of the entered element.
-		 *
-		 * @param {Event} e
 		 */
-		dragenter(e) {
+		dragenter(e: DragEvent): void {
 			this.entered = e.target;
 			this.prevent(e);
 			this.emit("dragenter", e);
@@ -133,10 +126,8 @@ export default (panel) => {
 		/**
 		 * Global dragexit event, which
 		 * prevents the default
-		 *
-		 * @param {Event} e
 		 */
-		dragexit(e) {
+		dragexit(e: DragEvent): void {
 			this.prevent(e);
 			this.entered = null;
 			this.emit("dragexit", e);
@@ -147,10 +138,8 @@ export default (panel) => {
 		 * prevents the default and also
 		 * is only fired when the entered
 		 * element matches with the left element
-		 *
-		 * @param {Event} e
 		 */
-		dragleave(e) {
+		dragleave(e: DragEvent): void {
 			this.prevent(e);
 
 			if (this.entered === e.target) {
@@ -162,10 +151,8 @@ export default (panel) => {
 		/**
 		 * Global dragover event, which
 		 * prevents the default
-		 *
-		 * @param {Event} e
 		 */
-		dragover(e) {
+		dragover(e: DragEvent): void {
 			this.prevent(e);
 			this.emit("dragover", e);
 		},
@@ -175,10 +162,8 @@ export default (panel) => {
 		 * prevents the default and
 		 * enables dropping elements
 		 * on any Panel component
-		 *
-		 * @param {Event} e
 		 */
-		drop(e) {
+		drop(e: DragEvent): void {
 			this.prevent(e);
 			this.entered = null;
 			this.emit("drop", e);
@@ -187,20 +172,18 @@ export default (panel) => {
 		/**
 		 * Proxy for mitt's emit method
 		 */
-		emit: emitter.emit,
+		emit: emitter.emit as (type: string, event?: unknown) => void,
 
 		/**
 		 * Keeps track of the entered element
 		 * on drag events
 		 */
-		entered: null,
+		entered: null as EventTarget | null,
 
 		/**
 		 * Global focus event
-		 *
-		 * @param {Event} e
 		 */
-		focus(e) {
+		focus(e: FocusEvent): void {
 			this.emit("focus", e);
 		},
 
@@ -216,8 +199,8 @@ export default (panel) => {
 		 * window.panel.events.on("keydown.esc", () => {})
 		 * window.panel.events.on("keydown.cmd.s", () => {})
 		 */
-		keychain(type, event) {
-			let parts = [type];
+		keychain(type: string, event: KeyboardEvent): string {
+			const parts = [type];
 
 			// with meta or control key
 			if (event.metaKey || event.ctrlKey) {
@@ -235,7 +218,7 @@ export default (panel) => {
 			let key = event.key ? lcfirst(event.key) : null;
 
 			// key replacements
-			const keys = {
+			const keys: Record<string, string> = {
 				escape: "esc",
 				arrowUp: "up",
 				arrowDown: "down",
@@ -243,7 +226,7 @@ export default (panel) => {
 				arrowRight: "right"
 			};
 
-			if (keys[key]) {
+			if (key && keys[key]) {
 				key = keys[key];
 			}
 
@@ -258,10 +241,8 @@ export default (panel) => {
 		 * Global keydown event which also
 		 * fires a more useful event with
 		 * key modifiers. I.e. keydown.esc
-		 *
-		 * @param {Event} e
 		 */
-		keydown(e) {
+		keydown(e: KeyboardEvent): void {
 			this.emit(this.keychain("keydown", e), e);
 			this.emit("keydown", e);
 		},
@@ -270,10 +251,8 @@ export default (panel) => {
 		 * Global keyup event which also
 		 * fires a more useful event with
 		 * key modifiers. I.e. keyup.esc
-		 *
-		 * @param {Event} e
 		 */
-		keyup(e) {
+		keyup(e: KeyboardEvent): void {
 			this.emit(this.keychain("keyup", e), e);
 			this.emit("keyup", e);
 		},
@@ -281,57 +260,53 @@ export default (panel) => {
 		/**
 		 * Proxy for mitt's off method
 		 */
-		off: emitter.off,
+		off: emitter.off as (
+			type: string,
+			handler?: (event?: unknown) => void
+		) => void,
 
 		/**
 		 * The Panel just went offline
-		 *
-		 * @param {Event} e
 		 */
-		offline(e) {
+		offline(e: Event): void {
 			this.emit("offline", e);
 		},
 
 		/**
 		 * Proxy for mitt's on method
 		 */
-		on: emitter.on,
+		on: emitter.on as (
+			type: string,
+			handler?: (event?: unknown) => void
+		) => void,
 
 		/**
 		 * The Panel is online again after
 		 * being offline
-		 *
-		 * @param {Event} e
 		 */
-		online(e) {
+		online(e: Event): void {
 			this.emit("online", e);
 		},
 
 		/**
 		 * Global clipboard paste event
-		 *
-		 * @param {Event} e
 		 */
-		paste(e) {
+		paste(e: ClipboardEvent): void {
 			this.emit("paste", e);
 		},
 
 		/**
 		 * Browser back button event
-		 *
-		 * @param {Event} e
 		 */
-		popstate(e) {
+		popstate(e: PopStateEvent): void {
 			this.emit("popstate", e);
 		},
 
 		/**
 		 * Prevents the event from bubbling
-		 * and stops the default behaviour.
-		 *
-		 * @param {Event} e
+		 * and stops the default behavior.
 		 */
-		prevent(e) {
+		prevent(e: Event): void {
 			e.stopPropagation();
 			e.preventDefault();
 		},
@@ -341,11 +316,13 @@ export default (panel) => {
 		 * from the events config. This is used
 		 * in the created hook of the app.
 		 */
-		subscribe() {
+		subscribe(): void {
+			const self = this as unknown as Record<string, EventListener>;
+
 			for (const event in events.document) {
 				document.addEventListener(
 					event,
-					this[event].bind(this),
+					self[event].bind(this),
 					events.document[event]
 				);
 			}
@@ -353,7 +330,7 @@ export default (panel) => {
 			for (const event in events.window) {
 				window.addEventListener(
 					event,
-					this[event].bind(this),
+					self[event].bind(this),
 					events.window[event]
 				);
 			}
@@ -364,14 +341,16 @@ export default (panel) => {
 		 * from the events config. This is
 		 * used in the destroyed hook of the app
 		 */
-		unsubscribe() {
+		unsubscribe(): void {
+			const self = this as unknown as Record<string, EventListener>;
+
 			for (const event in events.document) {
-				document.removeEventListener(event, this[event]);
+				document.removeEventListener(event, self[event]);
 			}
 
 			for (const event in events.window) {
-				window.removeEventListener(event, this[event]);
+				window.removeEventListener(event, self[event]);
 			}
 		}
 	};
-};
+}
