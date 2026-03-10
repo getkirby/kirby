@@ -1,26 +1,26 @@
-import array from "./array.js";
-import clipboard from "./clipboard.js";
+import array from "./array";
+import clipboard from "./clipboard";
 import color from "./color.js";
-import debounce from "./debounce.js";
-import embed from "./embed.js";
-import field from "./field.js";
+import debounce from "./debounce";
+import embed from "./embed";
+import field from "./field";
 import file from "./file.js";
-import focus from "./focus.js";
-import isComponent from "./isComponent.js";
-import isUploadEvent from "./isUploadEvent.js";
-import keyboard from "./keyboard.js";
-import link from "./link.js";
-import object from "./object.js";
-import page from "./page.js";
+import focus from "./focus";
+import isComponent from "./isComponent";
+import isUploadEvent from "./isUploadEvent";
+import keyboard from "./keyboard";
+import link from "./link";
+import object from "./object";
+import page from "./page";
 import ratio from "./ratio.js";
-import sort from "./sort.js";
-import string from "./string.js";
-import throttle from "./throttle.js";
-import upload from "./upload.js";
-import url from "./url.js";
+import sort from "./sort";
+import string from "./string";
+import throttle from "./throttle";
+import upload from "./upload";
+import url from "./url";
 import writer from "./writer.js";
 
-import "./regex.js";
+import "./regex";
 
 export default {
 	install(app) {

@@ -5,7 +5,7 @@ import Dialog from "./dialog.js";
 import Drag from "./drag.js";
 import Drawer from "./drawer.js";
 import Dropdown from "./dropdown.js";
-import Events from "./events.js";
+import Events from "./events";
 import Notification from "./notification.js";
 import Language from "./language.js";
 import Observers from "./observers.js";
@@ -15,14 +15,14 @@ import Search from "./search.js";
 import System from "./system.js";
 import Theme from "./theme.js";
 import Translation from "./translation.js";
-import { buildUrl, isUrl } from "@/helpers/url.js";
+import { buildUrl, isUrl } from "@/helpers/url";
 import { reactive } from "vue";
 import { redirect, request } from "./request.js";
-import Upload from "./upload.js";
+import Upload from "./upload";
 import User from "./user.js";
 import View from "./view.js";
-import { isObject, length } from "@/helpers/object.js";
-import { isEmpty } from "@/helpers/string.js";
+import { isObject, length } from "@/helpers/object";
+import { isEmpty } from "@/helpers/string";
 import OfflineError from "@/errors/OfflineError.js";
 
 /**

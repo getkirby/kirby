@@ -92,6 +92,13 @@ export const props = {
 			default: () => []
 		},
 		/**
+		 * Index number for first row in table layout
+		 */
+		index: {
+			type: Number,
+			default: 1
+		},
+		/**
 		 * Enable/disable that each item is a clickable link
 		 */
 		link: {
@@ -174,6 +181,7 @@ export default {
 			return {
 				columns: this.columns,
 				fields: this.fields,
+				index: this.index,
 				rows: this.items,
 				selecting: this.selecting,
 				selected: this.selected,

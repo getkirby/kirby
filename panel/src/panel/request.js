@@ -1,5 +1,5 @@
-import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url.js";
-import { toLowerKeys } from "../helpers/object.js";
+import { toLowerKeys } from "../helpers/object";
+import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url";
 import AuthError from "@/errors/AuthError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import OfflineError from "@/errors/OfflineError.js";

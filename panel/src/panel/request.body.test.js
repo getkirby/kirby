@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { body } from "./request.js";
 
-describe.concurrent("request globals", () => {
+describe("request globals", () => {
 	it("should create body from object", async () => {
 		const result = body({
 			a: "A"

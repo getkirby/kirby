@@ -206,4 +206,34 @@ class ChangesTest extends TestCase
 
 		Changes::save($this->page, []);
 	}
+
+	public function testUnlock(): void
+	{
+		$this->app->impersonate('kirby');
+
+		Data::write($file = $this->page->root() . '/_changes/article.txt', [
+			'title' => 'Test',
+			'uuid'  => 'test',
+			'lock'  => 'kirby'
+		]);
+
+		$response = Changes::unlock($this->page);
+
+		$this->assertSame(['status' => 'ok'], $response);
+
+		$changes = Data::read($file);
+
+		$this->assertSame([
+			'title' => 'Test',
+			'uuid'  => 'test',
+		], $changes);
+	}
+
+	public function testUnlockWithoutPermissions(): void
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to unlock this version');
+
+		Changes::unlock($this->page);
+	}
 }

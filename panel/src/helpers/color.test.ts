@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import color from "./color";
 
-describe.concurrent("$helper.css.color()", () => {
+describe("$helper.css.color()", () => {
 	document.documentElement.style.setProperty("--color-white", "white");
 	document.documentElement.style.setProperty("--color-blue-200", "blue-200");
 	document.documentElement.style.setProperty("--color-dark", "background");

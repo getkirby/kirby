@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import Modal, { defaults } from "./modal.js";
 import Panel from "./panel.js";
 
-describe.concurrent("panel/modal.js", () => {
+describe("panel/modal.js", () => {
 	it("should have a default state", async () => {
 		const panel = Panel.create(app);
 		const modal = Modal(panel, "test", defaults());

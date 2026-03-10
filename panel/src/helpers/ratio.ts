@@ -5,6 +5,10 @@
  * @param fallback - default value if fraction cannot be parsed
  * @param vertical - Whether the fraction is applied to
  *                   vertical or horizontal orientation
+ *
+ * @example
+ * ratio("3/2") // => "66.67%"
+ * ratio("16/9") // => "56.25%"
  */
 export default function (
 	fraction: string = "3/2",

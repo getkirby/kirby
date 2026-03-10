@@ -60,6 +60,10 @@ jobs:
       - name: Run JavaScript unit tests
         run: npm run test:unit
 
+      - name: Check for TypeScript type errors
+        run: npm run types
+        working-directory: panel
+
   # ===================== Coding Style =====================
   coding-style:
     name: "Coding Style"

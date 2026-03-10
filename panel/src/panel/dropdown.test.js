@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import Dropdown from "./dropdown.js";
 import Panel from "./panel.js";
 
-describe.concurrent("panel.dropdown", () => {
+describe("panel.dropdown", () => {
 	it("should have a default state", async () => {
 		const panel = Panel.create(app);
 		const dropdown = Dropdown(panel);

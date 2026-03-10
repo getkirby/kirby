@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import ratio from "./ratio";
 
-describe.concurrent("$helper.ratio()", () => {
+describe("$helper.ratio()", () => {
 	const data: Record<string, [unknown, string][]> = {
 		"should return default ratio": [[undefined, "66.67%"]],
 		"should return padding for 16/9": [["16/9", "56.25%"]],
@@ -19,7 +19,7 @@ describe.concurrent("$helper.ratio()", () => {
 	for (const test in data) {
 		it(test, () => {
 			for (const exp of data[test]) {
-				expect(ratio(exp[0])).toBe(exp[1]);
+				expect(ratio(exp[0] as string | undefined)).toBe(exp[1]);
 			}
 		});
 	}
