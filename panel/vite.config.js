@@ -102,7 +102,7 @@ function createTest() {
 		environment: "happy-dom",
 		include: ["**/*.test.{js,ts}"],
 		reporter: "dot",
-		setupFiles: ["tests/unit/setup.js"]
+		setupFiles: ["tests/unit/setup.ts"]
 	};
 }
 
