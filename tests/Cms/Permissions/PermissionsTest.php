@@ -140,7 +140,7 @@ class PermissionsTest extends TestCase
 		$this->assertTrue($p->for('pages', 'read'));
 		$this->assertFalse($p->for('pages', 'update'));
 		$this->assertFalse($p->for('pages', 'delete'));
-		
+
 		// explicit value also takes precedence if defined before wildcard
 		$p = new Permissions(['pages' => ['read' => true, '*' => false]]);
 		$this->assertTrue($p->for('pages', 'read'));
@@ -197,7 +197,7 @@ class PermissionsTest extends TestCase
 				'another'     => false
 			]
 		];
-		
+
 		// defaults are used if not overridden
 		$p = new Permissions();
 		$this->assertTrue($p->for('test-category', 'test-action'));

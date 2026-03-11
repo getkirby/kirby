@@ -186,7 +186,7 @@ class Permissions
 		if (is_string($action) === true) {
 			return $this->actions[$category][$action];
 		}
-		
+
 		return $this->actions[$category];
 	}
 
@@ -198,7 +198,7 @@ class Permissions
 		if (is_string($action) === true) {
 			return isset($this->actions[$category][$action]);
 		}
-		
+
 		return isset($this->actions[$category]);
 	}
 
