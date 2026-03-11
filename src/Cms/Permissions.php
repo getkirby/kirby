@@ -115,6 +115,9 @@ class Permissions
 		);
 	}
 
+	/**
+	 * Expands a bool or null shorthand into a full actions array
+	 */
 	protected function expand(
 		array|bool|null $values,
 		array $defaults = []
@@ -175,6 +178,9 @@ class Permissions
 		return $permission;
 	}
 
+	/**
+	 * Returns the permission value for a category or a specific action
+	 */
 	protected function get(string $category, string|null $action = null): mixed
 	{
 		if (is_string($action) === true) {
@@ -184,6 +190,9 @@ class Permissions
 		return $this->actions[$category];
 	}
 
+	/**
+	 * Checks whether a category or specific action exists in the actions array
+	 */
 	protected function has(string $category, string|null $action = null): bool
 	{
 		if (is_string($action) === true) {
@@ -193,6 +202,9 @@ class Permissions
 		return isset($this->actions[$category]);
 	}
 
+	/**
+	 * Normalizes the permission settings against the defaults
+	 */
 	protected function normalize(
 		array|bool|null $settings,
 		array $defaults = []
@@ -216,6 +228,9 @@ class Permissions
 		return $defaults;
 	}
 
+	/**
+	 * Returns all permissions as an array
+	 */
 	public function toArray(): array
 	{
 		return $this->actions;
