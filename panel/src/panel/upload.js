@@ -1,6 +1,6 @@
 import { reactive } from "vue";
 import { uuid } from "@/helpers/string";
-import State from "./state.js";
+import State from "./state";
 import listeners from "./listeners.js";
 import queue from "@/helpers/queue";
 import { uploadAsChunks } from "@/helpers/upload";

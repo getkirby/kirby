@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import { isUrl } from "@/helpers/url";
 import listeners from "./listeners.js";
-import State from "./state.js";
+import State from "./state";
 
 /**
  * Default state for all features
