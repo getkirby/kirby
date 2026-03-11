@@ -1,4 +1,4 @@
-import { responder, safeFetch } from "@/panel/request.js";
+import { responder, safeFetch } from "@/panel/request";
 import { toLowerKeys } from "@/helpers/object";
 import { ltrim, rtrim } from "@/helpers/string";
 
