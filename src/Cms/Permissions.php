@@ -177,16 +177,20 @@ class Permissions
 
 	protected function get(string $category, string|null $action = null): mixed
 	{
-		return is_string($action) === true
-			? $this->actions[$category][$action]
-			: $this->actions[$category];
+		if (is_string($action) === true) {
+			return $this->actions[$category][$action];
+		}
+		
+		return $this->actions[$category];
 	}
 
 	protected function has(string $category, string|null $action = null): bool
 	{
-		return is_string($action) === true
-			? isset($this->actions[$category][$action])
-			: isset($this->actions[$category]);
+		if (is_string($action) === true) {
+			return isset($this->actions[$category][$action]);
+		}
+		
+		return isset($this->actions[$category]);
 	}
 
 	protected function normalize(
