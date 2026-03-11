@@ -126,10 +126,10 @@ describe("panel.notification", () => {
 		const notification = Notification(panel);
 
 		notification.success("Test");
-		expect(notification.timer.interval).toBeTypeOf("object");
+		expect(notification.timer.isRunning).toStrictEqual(true);
 
 		notification.close();
-		expect(notification.timer.interval).toStrictEqual(null);
+		expect(notification.timer.isRunning).toStrictEqual(false);
 	});
 
 	it("should convert Error objects", async () => {
