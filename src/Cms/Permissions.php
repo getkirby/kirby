@@ -220,7 +220,13 @@ class Permissions
 
 			foreach ($actions as $key => $value) {
 				if (isset($defaults[$category][$key]) === true) {
-					$defaults[$category][$key] = (bool)$value;
+					if (is_bool($value) === false) {
+						throw new LogicException(
+							message: 'The value for the permission "' . $category . '.' . $key . '" must be of type bool, ' . gettype($value) . ' given'
+						);
+					}
+
+					$defaults[$category][$key] = $value;
 				}
 			}
 		}

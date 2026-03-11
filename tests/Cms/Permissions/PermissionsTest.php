@@ -260,6 +260,16 @@ class PermissionsTest extends TestCase
 		restore_error_handler();
 	}
 
+	public function testForWithNonBoolValueThrowsException(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage(
+			'The value for the permission "pages.read" must be of type bool, string given'
+		);
+
+		new Permissions(['pages' => ['read' => 'yes']]);
+	}
+
 	public function testForWithoutActionThrowsException(): void
 	{
 		$p = new Permissions();
