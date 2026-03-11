@@ -140,6 +140,12 @@ class PermissionsTest extends TestCase
 		$this->assertTrue($p->for('pages', 'read'));
 		$this->assertFalse($p->for('pages', 'update'));
 		$this->assertFalse($p->for('pages', 'delete'));
+		
+		// explicit value also takes precedence if defined before wildcard
+		$p = new Permissions(['pages' => ['read' => true, '*' => false]]);
+		$this->assertTrue($p->for('pages', 'read'));
+		$this->assertFalse($p->for('pages', 'update'));
+		$this->assertFalse($p->for('pages', 'delete'));
 	}
 
 	public function testExtendActions(): void
@@ -188,9 +194,14 @@ class PermissionsTest extends TestCase
 		Permissions::$extendedActions = [
 			'test-category' => [
 				'test-action' => true,
-				'another'     => true
+				'another'     => false
 			]
 		];
+		
+		// defaults are used if not overridden
+		$p = new Permissions();
+		$this->assertTrue($p->for('test-category', 'test-action'));
+		$this->assertFalse($p->for('test-category', 'another'));
 
 		// category-level false disables all extended actions
 		$p = new Permissions(['test-category' => false]);
