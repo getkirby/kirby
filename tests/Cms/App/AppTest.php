@@ -534,6 +534,7 @@ class AppTest extends TestCase
 			],
 			'role' => 'editor',
 			'debug' => false,
+			'fallback' => 'keep-me',
 		], $app->option('vendor.plugin'));
 
 		// option('vendor') should still return the vendor config (not null)
