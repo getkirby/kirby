@@ -18,9 +18,6 @@ use Throwable;
  * handle values from Field objects correctly, so
  * those can be used in filters as well.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *

@@ -12,14 +12,12 @@ use Kirby\Toolkit\A;
  * such as blocks and structure entries
  *
  * Not yet supported
- * @todo Finish for uuid-block-structure-support
- * @codeCoverageIgnore
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @todo Finish for uuid-block-structure-support
+ * @codeCoverageIgnore
  */
 abstract class FieldUuid extends Uuid
 {

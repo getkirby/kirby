@@ -12,13 +12,10 @@ use Kirby\Panel\State;
  * The View response class handles state
  * requests to render either a JSON object
  * or a full HTML document for Panel views
- * @since 3.6.0
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.6.0
  */
 class ViewResponse extends JsonResponse
 {

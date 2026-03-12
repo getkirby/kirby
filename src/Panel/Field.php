@@ -21,13 +21,10 @@ use Kirby\Panel\Form\Field\UsernameField;
 /**
  * Provides common field prop definitions
  * for dialogs and other places
- * @since 3.6.0
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.6.0
  */
 class Field
 {
