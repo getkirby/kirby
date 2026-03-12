@@ -493,8 +493,9 @@ class AppTest extends TestCase
 		App::plugin('vendor/plugin', [
 			'options' => [
 				'endpoints' => null,
-				'role' => null,
-				'debug' => null,
+				'role'      => null,
+				'debug'     => null,
+				'fallback'  => 'keep-me',
 			]
 		]);
 
