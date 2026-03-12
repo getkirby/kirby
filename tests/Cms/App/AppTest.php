@@ -525,6 +525,8 @@ class AppTest extends TestCase
 		$this->assertSame('editor', $app->option('vendor.plugin.role'));
 		$this->assertFalse($app->option('vendor.plugin.debug'));
 
+		// plugin defaults that are not overridden should still remain
+		$this->assertSame('keep-me', $app->option('vendor.plugin.fallback'));
 		// full plugin options should include merged values
 		$this->assertSame([
 			'endpoints' => [
