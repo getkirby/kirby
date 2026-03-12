@@ -13,7 +13,7 @@ function mount(props = {}, attrs = {}) {
 		global: {
 			mocks: {
 				$helper: {
-					color: (c) => c ?? null,
+					color: (c: string) => c ?? null,
 					string: { hasEmoji }
 				}
 			}
@@ -24,7 +24,9 @@ function mount(props = {}, attrs = {}) {
 describe("Icon.vue", () => {
 	// $el
 	describe("element", () => {
-		const component = (attrs) => mount({ type: "edit" }, attrs);
+		const component = (attrs?: Record<string, unknown>) =>
+			mount({ type: "edit" }, attrs);
+
 		it.rendersAs(component, "svg", "k-icon");
 		it.acceptsClass(component);
 		it.acceptsStyle(component);

@@ -64,7 +64,9 @@ function createPlugins(mode) {
 		vue({
 			template: {
 				compilerOptions: {
-					isCustomElement: (tag) => ["k-input-validator"].includes(tag)
+					isCustomElement: (tag) =>
+					["k-input-validator"].includes(tag) ||
+					(!!process.env.VITEST && tag.startsWith("k-"))
 				}
 			}
 		}),
