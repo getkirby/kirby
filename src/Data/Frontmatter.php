@@ -23,7 +23,7 @@ class Frontmatter extends Handler
 	 * The field name used to store the body content
 	 * that appears after the closing --- delimiter
 	 */
-	public const BODY_KEY = 'text';
+	public static string $body = 'text';
 
 	public static function decode($string): array
 	{
@@ -42,7 +42,7 @@ class Frontmatter extends Handler
 			$body   = trim($matches[2] ?? '');
 
 			if ($body !== '') {
-				$fields[static::BODY_KEY] = $body;
+				$fields[static::$body] = $body;
 			}
 
 			return $fields;
@@ -54,10 +54,10 @@ class Frontmatter extends Handler
 
 	public static function encode($data): string
 	{
-		$body = $data[static::BODY_KEY] ?? null;
+		$body = $data[static::$body] ?? null;
 
 		// remove the body key from the frontmatter fields
-		unset($data[static::BODY_KEY]);
+		unset($data[static::$body]);
 
 		$frontmatter = "---\n" . rtrim(Yaml::encode($data)) . "\n---\n";
 
