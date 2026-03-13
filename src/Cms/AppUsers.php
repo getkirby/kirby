@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Auth\Auth;
 use Throwable;
 
 /**
@@ -134,7 +135,10 @@ trait AppUsers
 			return $this->users()->find($id);
 		}
 
-		if ($allowImpersonation === true && is_string($this->user) === true) {
+		if (
+			$allowImpersonation === true &&
+			is_string($this->user) === true
+		) {
 			return $this->auth()->impersonate($this->user);
 		}
 

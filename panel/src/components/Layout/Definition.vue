@@ -38,6 +38,7 @@ export default {
 	padding-inline: var(--table-cell-padding);
 	min-height: var(--definition-height);
 	display: flex;
+	gap: var(--spacing-1);
 	align-items: var(--definition-align);
 }
 .k-definition:not(:last-child) dt,
