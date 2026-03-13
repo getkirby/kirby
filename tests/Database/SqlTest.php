@@ -490,6 +490,125 @@ class SqlTest extends TestCase
 		], $this->sql->having('test < :value'));
 	}
 
+	public function testSelect(): void
+	{
+		$this->database->createTable('users', [
+			'id'   => ['type' => 'int'],
+			'name' => ['type' => 'varchar']
+		]);
+		$this->database->createTable('roles', [
+			'id' => ['type' => 'int']
+		]);
+
+		$select = $this->sql->select([
+			'table'    => 'users',
+			'columns'  => ['users.id', 'name'],
+			'distinct' => true,
+			'join'     => [[
+				'type'  => 'left join',
+				'table' => 'roles',
+				'on'    => 'roles.id = users.id'
+			]],
+			'where'    => ['users.id' => 1],
+			'group'    => 'users.id',
+			'having'   => 'COUNT(*) > 0',
+			'order'    => 'users.id DESC',
+			'offset'   => 5,
+			'limit'    => 10,
+			'bindings' => []
+		]);
+
+		$this->assertStringContainsString('SELECT DISTINCT `users`.`id`, `users`.`name`', $select['query']);
+		$this->assertStringContainsString('FROM `users`', $select['query']);
+		$this->assertStringContainsString('LEFT JOIN `roles` ON roles.id = users.id', $select['query']);
+		$this->assertStringContainsString('WHERE users.id = ', $select['query']);
+		$this->assertStringContainsString('GROUP BY users.id', $select['query']);
+		$this->assertStringContainsString('HAVING COUNT(*) > 0', $select['query']);
+		$this->assertStringContainsString('ORDER BY users.id DESC', $select['query']);
+		$this->assertStringContainsString('LIMIT ', $select['query']);
+		$this->assertCount(3, $select['bindings']);
+	}
+
+	public function testInsertUpdateAndDelete(): void
+	{
+		$this->database->createTable('users', [
+			'id'      => ['type' => 'int'],
+			'name'    => ['type' => 'varchar'],
+			'meta'    => ['type' => 'text'],
+			'updated' => ['type' => 'timestamp']
+		]);
+
+		$insert = $this->sql->insert([
+			'table'    => 'users',
+			'values'   => [
+				'name'    => 'John Doe',
+				'meta'    => ['role' => 'admin'],
+				'updated' => 'NOW()'
+			],
+			'bindings' => []
+		]);
+
+		$this->assertStringStartsWith('INSERT INTO `users` (`users`.`name`, `users`.`meta`, `users`.`updated`) VALUES (', $insert['query']);
+		$this->assertCount(2, $insert['bindings']);
+		$this->assertSame('John Doe', array_values($insert['bindings'])[0]);
+		$this->assertSame('{"role":"admin"}', array_values($insert['bindings'])[1]);
+
+		$update = $this->sql->update([
+			'table'    => 'users',
+			'values'   => [
+				'name'    => 'Jane Doe',
+				'updated' => null
+			],
+			'where'    => ['id' => 1],
+			'bindings' => []
+		]);
+
+		$this->assertStringContainsString('UPDATE `users` SET `users`.`name` = ', $update['query']);
+		$this->assertStringContainsString('`users`.`updated` = null', $update['query']);
+		$this->assertStringContainsString('WHERE id = ', $update['query']);
+		$this->assertCount(2, $update['bindings']);
+		$this->assertSame('Jane Doe', array_values($update['bindings'])[0]);
+		$this->assertSame(1, array_values($update['bindings'])[1]);
+
+		$delete = $this->sql->delete([
+			'table'    => 'users',
+			'where'    => 'id = :id',
+			'bindings' => ['id' => 1]
+		]);
+
+		$this->assertSame('DELETE FROM `users` WHERE id = :id', $delete['query']);
+		$this->assertSame(['id' => 1], $delete['bindings']);
+	}
+
+	public function testSelectHelpers(): void
+	{
+		$this->database->createTable('users', [
+			'name' => ['type' => 'varchar']
+		]);
+
+		$this->assertSame('*', $this->sql->selected('users'));
+		$this->assertSame('COUNT(*)', $this->sql->selected('users', 'COUNT(*)'));
+		$this->assertSame('`users`.`name`', $this->sql->selected('users', ['name']));
+		$this->assertSame([
+			'query'    => null,
+			'bindings' => []
+		], $this->sql->order());
+		$this->assertSame([
+			'query'    => null,
+			'bindings' => []
+		], $this->sql->limit());
+		$this->assertSame('table`name', $this->sql->unquoteIdentifier('`table``name`'));
+		$this->assertSame('table"name', $this->sql->unquoteIdentifier('"table""name"'));
+	}
+
+	public function testJoinInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid join type SIDEWAYS JOIN');
+
+		$this->sql->join('SIDEWAYS JOIN', 'test', 'test.id = another.id');
+	}
+
 	public function testValueSet(): void
 	{
 		$this->database->createTable('users', [
