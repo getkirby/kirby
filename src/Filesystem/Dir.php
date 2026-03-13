@@ -588,7 +588,11 @@ class Dir
 			}
 		}
 
-		return rmdir($dir);
+		return Helpers::handleErrors(
+			fn (): bool => rmdir($dir),
+			fn (int $errno, string $errstr) => true,
+			fn (): never => throw new Exception('The directory could not be deleted'),
+		);
 	}
 
 	/**
