@@ -74,6 +74,26 @@ class FrontmatterTest extends TestCase
 		], Frontmatter::decode($string));
 	}
 
+	public function testDecodeWithWhitespaceOnlyBody(): void
+	{
+		// whitespace-only body after closing --- should not produce a text key
+		$string = "---\ntitle: My Title\n---\n   \n";
+
+		$this->assertSame([
+			'title' => 'My Title'
+		], Frontmatter::decode($string));
+	}
+
+	public function testDecodeWithWindowsLineEndings(): void
+	{
+		$string = "---\r\ntitle: My Title\r\nuuid: abc123\r\n---\r\n";
+
+		$this->assertSame([
+			'title' => 'My Title',
+			'uuid'  => 'abc123'
+		], Frontmatter::decode($string));
+	}
+
 	public function testEncode(): void
 	{
 		$data = [
@@ -105,6 +125,19 @@ class FrontmatterTest extends TestCase
 		$data = [
 			'title' => 'My Title',
 			'text'  => ''
+		];
+
+		$this->assertSame(
+			"---\ntitle: My Title\n---\n",
+			Frontmatter::encode($data)
+		);
+	}
+
+	public function testEncodeWithWhitespaceOnlyBody(): void
+	{
+		$data = [
+			'title' => 'My Title',
+			'text'  => '   '
 		];
 
 		$this->assertSame(
