@@ -266,7 +266,8 @@ class UserTest extends TestCase
 			'changePassword' => true,
 			'changeRole'     => true,
 			'delete'         => true,
-			'update'         => true,
+			'edit'           => true,
+			'save'           => true,
 		];
 
 		$panel = new User($user);
@@ -290,7 +291,8 @@ class UserTest extends TestCase
 			'changePassword' => false,
 			'changeRole'     => false,
 			'delete'         => false,
-			'update'         => false,
+			'edit'           => false,
+			'save'           => false,
 		];
 
 		$panel = new User($user);
@@ -305,7 +307,8 @@ class UserTest extends TestCase
 			'changePassword' => false,
 			'changeRole'     => false,
 			'delete'         => false,
-			'update'         => false,
+			'edit'           => false,
+			'save'           => false,
 		];
 
 		$this->assertSame($expected, $panel->options(['changeEmail']));
