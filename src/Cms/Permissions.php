@@ -103,11 +103,6 @@ class Permissions
 	{
 		$defaults = $this->defaults;
 
-		$update = static fn($value) => [
-			'edit' => $value,
-			'save' => $value,
-		];
-
 		// dynamically register the extended actions
 		foreach (static::$extendedActions as $key => $actions) {
 			if (isset($defaults[$key]) === true) {
@@ -118,6 +113,11 @@ class Permissions
 
 			$defaults[$key] = $actions;
 		}
+
+		$update = static fn ($value) => [
+			'edit' => $value,
+			'save' => $value,
+		];
 
 		$this->actions = $this->normalize(
 			settings: $settings,
