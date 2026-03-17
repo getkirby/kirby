@@ -6,7 +6,7 @@
 				:key="button.text"
 				class="k-form-controls-button"
 				v-bind="button"
-				:disabled="isProcessing"
+				:disabled="button.disabled || isProcessing"
 				variant="filled"
 				:size="size"
 			/>
@@ -54,6 +54,7 @@
 <script>
 export const props = {
 	props: {
+		canSave: Boolean,
 		editor: String,
 		hasDiff: Boolean,
 		isLocked: Boolean,
@@ -102,6 +103,7 @@ export default {
 						click: () => this.discard()
 					},
 					{
+						disabled: this.canSave === false,
 						theme: "notice",
 						text: this.$t("save"),
 						icon: this.isProcessing ? "loader" : "check",
