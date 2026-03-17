@@ -19,7 +19,7 @@ import { buildUrl, isUrl } from "@/helpers/url";
 import { reactive } from "vue";
 import { redirect, request } from "./request.js";
 import Upload from "./upload";
-import User from "./user.js";
+import User from "./user";
 import View from "./view.js";
 import { isObject, length } from "@/helpers/object";
 import { isEmpty } from "@/helpers/string";

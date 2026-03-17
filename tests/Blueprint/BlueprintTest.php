@@ -467,6 +467,19 @@ class BlueprintTest extends TestCase
 		$this->assertArrayNotHasKey('child-field', $blueprint->fields());
 	}
 
+	public function testNormalizeOptionsFalse(): void
+	{
+		$blueprint = new PageBlueprint([
+			'model'   => $this->model,
+			'options' => false,
+		]);
+
+		// all keys from defaults are present and every value is false, not null
+		foreach ($blueprint->options() as $key => $value) {
+			$this->assertFalse($value, "Option '$key' should be false");
+		}
+	}
+
 	public function testInvalidSectionType(): void
 	{
 		$blueprint = new Blueprint([
