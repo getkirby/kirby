@@ -362,7 +362,7 @@ class Fields extends Collection
 		$fields      = $this->data;
 		$props       = [];
 		$language    = $this->language();
-		$permissions = $this->model->permissions()->can('update');
+		$permissions = $this->model->permissions()->can('edit');
 
 		foreach ($fields as $name => $field) {
 			$props[$name] = $field->toArray();
