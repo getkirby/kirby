@@ -1,8 +1,4 @@
-/**
- * @vitest-environment jsdom
- */
-
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import View from "./view.js";
 
 // dummy panel to avoid dependencies
@@ -23,7 +19,7 @@ const Panel = () => {
 	};
 };
 
-describe.concurrent("panel.view", () => {
+describe("panel.view", () => {
 	it("should have a default state", async () => {
 		const view = View(Panel());
 
@@ -62,6 +58,7 @@ describe.concurrent("panel.view", () => {
 	});
 
 	it("should push the state", async () => {
+		const pushState = vi.spyOn(window.history, "pushState");
 		const panel = Panel();
 		const view = View(panel);
 
@@ -70,7 +67,8 @@ describe.concurrent("panel.view", () => {
 			title: "Site"
 		});
 
-		expect(window.location.pathname).toStrictEqual("/site");
+		expect(pushState).toHaveBeenCalledWith(null, null, "/site");
+		pushState.mockRestore();
 	});
 
 	it("should not set an invalid state", async () => {

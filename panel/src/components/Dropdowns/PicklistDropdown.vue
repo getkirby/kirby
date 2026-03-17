@@ -109,6 +109,9 @@ export default {
 	border-radius: var(--picklist-rounded);
 	padding-block: 0.375rem;
 }
+.k-picklist-dropdown .k-picklist-input-options .k-choice-input-label {
+	flex-grow: 1;
+}
 .k-picklist-dropdown .k-picklist-input-options li + li {
 	margin-top: 0;
 }
@@ -125,6 +128,8 @@ export default {
 	.k-picklist-input-options
 	.k-choice-input:not([aria-disabled="true"]):hover {
 	background-color: var(--dropdown-color-hr);
+
+	--choice-color-border: var(--dropdown-color-bg);
 }
 .k-picklist-dropdown
 	.k-picklist-input-options

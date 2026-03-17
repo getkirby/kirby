@@ -635,7 +635,9 @@
 	"plugin": "Plugin",
 	"plugins": "Plugins",
 	"prev": "Previous",
+
 	"preview": "Preview",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publish",
 	"published": "Published",
@@ -786,6 +788,7 @@
 	"user.create": "Добавете нов потребител",
 	"user.delete": "Изтрийте потребителя",
 	"user.delete.confirm": "Сигурни ли сте, че искате да изтриете <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Потребители",
 

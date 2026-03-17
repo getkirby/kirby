@@ -4,7 +4,6 @@ namespace Kirby\Panel\Ui\Button;
 
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\VersionId;
-use Kirby\Toolkit\I18n;
 
 /**
  * Versions view button for models
@@ -89,13 +88,13 @@ class VersionsButton extends ViewButton
 			],
 			'-',
 			[
-				'label'   => I18n::translate('version.latest'),
+				'label'   => $this->i18n('version.latest'),
 				'icon'    => 'git-branch',
 				'link'    => $this->url('latest'),
 				'current' => $this->isCurrent('latest')
 			],
 			[
-				'label'   => I18n::translate('version.changes'),
+				'label'   => $this->i18n('version.changes'),
 				'icon'    => 'git-branch',
 				'link'    => $this->url('changes'),
 				'current' => $this->isCurrent('changes')

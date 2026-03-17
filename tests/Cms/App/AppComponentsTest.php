@@ -384,6 +384,57 @@ class AppComponentsTest extends TestCase
 		$this->assertInstanceOf(Template::class, $this->app->template('default'));
 	}
 
+	public function testUrlPreservesExtensionOnMultilangSite(): void
+	{
+		$this->app->clone([
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true,
+					'url'     => '/'
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch',
+					'url'     => '/de'
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'articles']
+				]
+			]
+		]);
+
+		// extension is preserved for the default language
+		$this->assertSame(
+			'https://getkirby.com/articles.xml',
+			url('articles.xml')
+		);
+
+		// extension is preserved for a secondary language
+		$this->assertSame(
+			'https://getkirby.com/de/articles.xml',
+			url('articles.xml', 'de')
+		);
+
+		// works without extension as before
+		$this->assertSame(
+			'https://getkirby.com/articles',
+			url('articles')
+		);
+
+		// fragment is still appended correctly alongside the extension
+		$this->assertSame(
+			'https://getkirby.com/articles.xml#section',
+			url('articles.xml#section')
+		);
+	}
+
 	public function testUrlPlugin(): void
 	{
 		$this->app->clone([

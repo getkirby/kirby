@@ -228,7 +228,7 @@ class User extends ModelWithContent
 		#[SensitiveParameter]
 		string|null $password = null
 	): string|null {
-		if ($password !== null && $password !== '' && $password !== false) {
+		if ($password !== null && $password !== '') {
 			$password = password_hash($password, PASSWORD_DEFAULT);
 		}
 
@@ -242,7 +242,7 @@ class User extends ModelWithContent
 	public function hasPassword(): bool
 	{
 		$password = $this->password();
-		return $password === '' || $password === null || $password === false ? false : true;
+		return $password !== '' && $password !== null;
 	}
 
 	/**

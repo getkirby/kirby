@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Mime;
 use Kirby\Http\Response as HttpResponse;
-use Kirby\Toolkit\A;
+use Kirby\Http\VolatileHeaders;
 use Kirby\Toolkit\Str;
 use Stringable;
 
@@ -66,10 +66,9 @@ class Responder implements Stringable
 	protected array $usesCookies = [];
 
 	/**
-	 * Tracks headers that depend on the request
-	 * and must not be persisted in the cache
+	 * Volatile headers manager
 	 */
-	protected array $volatileHeaders = [];
+	protected VolatileHeaders|null $volatileHeaders = null;
 
 	/**
 	 * Creates and sends the response
@@ -155,7 +154,7 @@ class Responder implements Stringable
 	 *
 	 * @return array|$this
 	 */
-	public function usesCookies(array|null $usesCookies = null)
+	public function usesCookies(array|null $usesCookies = null): array|static
 	{
 		if ($usesCookies === null) {
 			return $this->usesCookies;
@@ -174,7 +173,7 @@ class Responder implements Stringable
 	 * @param bool $override If `true`, the already defined timestamp will be overridden
 	 * @return int|null|$this
 	 */
-	public function expires($expires = null, bool $override = false)
+	public function expires($expires = null, bool $override = false): static|int|null
 	{
 		// getter
 		if ($expires === null && $override === false) {
@@ -219,9 +218,9 @@ class Responder implements Stringable
 	/**
 	 * Setter and getter for the status code
 	 *
-	 * @return int|$this
+	 * @return int|null|$this
 	 */
-	public function code(int|null $code = null)
+	public function code(int|null $code = null): static|int|null
 	{
 		if ($code === null) {
 			return $this->code;
@@ -244,7 +243,7 @@ class Responder implements Stringable
 		$this->type($response['type'] ?? null);
 		$this->usesAuth($response['usesAuth'] ?? null);
 		$this->usesCookies($response['usesCookies'] ?? null);
-		$this->volatileHeaders = $response['volatileHeaders'] ?? [];
+		$this->volatileHeaders($response['volatileHeaders'] ?? null);
 	}
 
 	/**
@@ -252,9 +251,9 @@ class Responder implements Stringable
 	 *
 	 * @param string|false|null $value
 	 * @param bool $lazy If `true`, an existing header value is not overridden
-	 * @return string|$this
+	 * @return string|null|$this
 	 */
-	public function header(string $key, $value = null, bool $lazy = false)
+	public function header(string $key, $value = null, bool $lazy = false): static|string|null
 	{
 		if ($value === null) {
 			return $this->headers()[$key] ?? null;
@@ -278,7 +277,7 @@ class Responder implements Stringable
 	 *
 	 * @return array|$this
 	 */
-	public function headers(array|null $headers = null)
+	public function headers(array|null $headers = null): static|array
 	{
 		if ($headers === null) {
 			$injectedHeaders = [];
@@ -325,7 +324,7 @@ class Responder implements Stringable
 		}
 
 		$this->headers = $headers;
-		$this->volatileHeaders = [];
+		$this->volatileHeaders([]);
 		return $this;
 	}
 
@@ -334,7 +333,7 @@ class Responder implements Stringable
 	 *
 	 * @return string|$this
 	 */
-	public function json(array|null $json = null)
+	public function json(array|null $json = null): static|string
 	{
 		if ($json !== null) {
 			$this->body(json_encode($json));
@@ -351,7 +350,7 @@ class Responder implements Stringable
 	public function redirect(
 		string|null $location = null,
 		int|null $code = null
-	) {
+	): static {
 		$location = Url::to($location ?? '/');
 		$location = Url::unIdn($location);
 
@@ -405,22 +404,22 @@ class Responder implements Stringable
 	public function toCacheArray(): array
 	{
 		$response = $this->toArray();
-		$volatile = $this->collectVolatileHeaders();
+		$volatile = $this->volatileHeaders()->collect();
 
 		if ($volatile === []) {
 			return $response;
 		}
 
-		$response['headers'] = $this->stripVolatileHeaders($response['headers'], $volatile);
+		$response['headers'] = $this->volatileHeaders()->strip($response['headers'], $volatile);
 		return $response;
 	}
 
 	/**
 	 * Setter and getter for the content type
 	 *
-	 * @return string|$this
+	 * @return string|null|$this
 	 */
-	public function type(string|null $type = null)
+	public function type(string|null $type = null): static|string|null
 	{
 		if ($type === null) {
 			return $this->type;
@@ -465,114 +464,32 @@ class Responder implements Stringable
 	 * can be subtracted before caching a response snapshot
 	 *
 	 * @since 5.2.0
+	 * @deprecated 5.3.0 Use `::volatileHeaders()->mark($name, $values)` instead. Will be removed in Kirby 6.
 	 */
 	public function markVolatileHeader(string $name, array|null $values = null): void
 	{
-		$this->appendVolatileHeader($this->volatileHeaders, $name, $values);
+		$this->volatileHeaders()->mark($name, $values);
 	}
 
 	/**
-	 * Collects volatile headers from both manual configuration
-	 * and automatically injected CORS headers
+	 * Setter and getter for the volatile headers manager
+	 * @since 5.3.0
 	 */
-	protected function collectVolatileHeaders(): array
+	public function volatileHeaders(VolatileHeaders|array|null $headers = null): VolatileHeaders
 	{
-		$volatile    = $this->volatileHeaders;
-		$corsHeaders = Cors::headers();
-
-		if ($corsHeaders === []) {
-			return $volatile;
+		if ($headers === null) {
+			return $this->volatileHeaders ??= new VolatileHeaders();
 		}
 
-		foreach ($corsHeaders as $name => $value) {
-			if ($name === 'Vary') {
-				$corsVaryValues = array_map('trim', explode(',', $value));
-				$this->appendVolatileHeader($volatile, 'Vary', $corsVaryValues);
-				continue;
-			}
-
-			$this->appendVolatileHeader($volatile, $name);
+		if ($headers instanceof VolatileHeaders) {
+			return $this->volatileHeaders = $headers;
 		}
 
-		return $volatile;
-	}
-
-	/**
-	 * Strips request-dependent headers for safe caching
-	 */
-	protected function stripVolatileHeaders(array $headers, array $volatile): array
-	{
-		foreach ($volatile as $name => $values) {
-			if ($name === 'Vary' && is_array($values) === true) {
-				if (isset($headers['Vary']) === false) {
-					continue;
-				}
-
-				$current   = $this->normalizeVaryValues($headers['Vary']);
-				$remaining = $this->removeVaryValues($current, $values);
-
-				if ($remaining === []) {
-					unset($headers['Vary']);
-				} else {
-					$headers['Vary'] = implode(', ', $remaining);
-				}
-
-				continue;
-			}
-
-			unset($headers[$name]);
+		$volatileHeaders = new VolatileHeaders();
+		foreach ($headers as $name => $values) {
+			$volatileHeaders->mark($name, $values);
 		}
 
-		return $headers;
-	}
-
-	/**
-	 * Adds (parts of) a header to the provided volatile header list
-	 */
-	protected function appendVolatileHeader(array &$target, string $name, array|null $values = null): void
-	{
-		if ($values === null) {
-			$target[$name] = null;
-			return;
-		}
-
-		if (array_key_exists($name, $target) === true && $target[$name] === null) {
-			return;
-		}
-
-		$values = A::map($values, static fn ($value) => strtolower(trim($value)));
-		$values = A::filter($values, static fn ($value) => $value !== '');
-
-		if ($values === []) {
-			return;
-		}
-
-		$existingValues = $target[$name] ?? [];
-		$target[$name] = array_values(array_unique([...$existingValues, ...$values]));
-	}
-
-	/**
-	 * Normalizes a comma-separated list of Vary values
-	 * into a unique array without empty entries
-	 */
-	protected function normalizeVaryValues(string $value): array
-	{
-		$values = A::map(explode(',', $value), 'trim');
-		$values = A::filter($values, static fn ($entry) => $entry !== '');
-
-		return array_values(array_unique($values));
-	}
-
-	/**
-	 * Returns the Vary values with the provided entries removed
-	 */
-	protected function removeVaryValues(array $values, array $remove): array
-	{
-		$removeLower = A::map($remove, 'strtolower');
-
-		return array_values(A::filter(
-			$values,
-			static fn ($value) => in_array(strtolower($value), $removeLower, true) === false
-		));
+		return $this->volatileHeaders = $volatileHeaders;
 	}
 }

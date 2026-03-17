@@ -1272,6 +1272,16 @@ class StrTest extends TestCase
 				'From a to b',
 			],
 			[
+				'From {< b >} to {< a >}',
+				['a' => 'b', 'b' => 'a'],
+				'From a to b',
+			],
+			[
+				'Mix {{ b }}, { a }, {< b >}',
+				['a' => 'A', 'b' => 'B'],
+				'Mix B, A, B',
+			],
+			[
 				'From dbf to daf',
 				['a' => 'b', 'b' => 'a'],
 				'From a to b',

@@ -635,7 +635,9 @@
 	"plugin": "Plugin",
 	"plugins": "Kromprogramoj",
 	"prev": "Antaŭe",
+
 	"preview": "Antaŭrigardi",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publish",
 	"published": "Publikigita",
@@ -786,6 +788,7 @@
 	"user.create": "Aldoni novan uzanton",
 	"user.delete": "Forigi ĉi tiun uzanton",
 	"user.delete.confirm": "Ĉu vi certe volas forigi <br><strong>{email}</strong>?",
+	"user.setPassword": "Set password",
 
 	"users": "Uzantoj",
 

@@ -2,8 +2,6 @@
 
 namespace Kirby\Panel\Ui\Button;
 
-use Kirby\Toolkit\I18n;
-
 /**
  * Open view button
  *
@@ -26,7 +24,7 @@ class OpenButton extends ViewButton
 			icon: 'open',
 			link: $link,
 			target: $target,
-			title: I18n::translate('open')
+			title: $this->i18n('open')
 		);
 	}
 }

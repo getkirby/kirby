@@ -25,10 +25,29 @@ class SmartyPantsTest extends TestCase
 		$this->assertSame('', $parser->parse(''));
 	}
 
+	public function testParseHtml(): void
+	{
+		$parser   = new SmartyPants();
+		$result   = $parser->parse('<img alt="Test with &quot;quotes&quot;" src="/test.jpg">');
+		$expected = '<img alt="Test with &quot;quotes&quot;" src="/test.jpg">';
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testParseQuotedEntities(): void
+	{
+		$parser   = new SmartyPants();
+		$result   = $parser->parse('This is &quot;quoted&quot;');
+		$expected = 'This is &#8220;quoted&#8221;';
+
+		$this->assertSame($expected, $result);
+	}
+
 	public function testDefaults(): void
 	{
 		$expected = [
 			'attr'                       => 1,
+			'convert.quot'               => true,
 			'doublequote.open'           => '&#8220;',
 			'doublequote.close'          => '&#8221;',
 			'doublequote.low'            => '&#8222;',

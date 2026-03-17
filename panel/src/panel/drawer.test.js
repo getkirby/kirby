@@ -1,12 +1,8 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { describe, expect, it } from "vitest";
 import Drawer from "./drawer.js";
 import Panel from "./panel.js";
 
-describe.concurrent("panel.drawer", () => {
+describe("panel.drawer", () => {
 	it("should have a default state", async () => {
 		const panel = Panel.create(app);
 		const drawer = Drawer(panel);

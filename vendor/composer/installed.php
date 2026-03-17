@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'getkirby/cms',
-        'pretty_version' => '6.0.0-alpha.1',
-        'version' => '6.0.0.0-alpha1',
+        'pretty_version' => '6.0.0-alpha.2',
+        'version' => '6.0.0.0-alpha2',
         'reference' => null,
         'type' => 'kirby-cms',
         'install_path' => __DIR__ . '/../../',
@@ -47,8 +47,8 @@
             'dev_requirement' => false,
         ),
         'getkirby/cms' => array(
-            'pretty_version' => '6.0.0-alpha.1',
-            'version' => '6.0.0.0-alpha1',
+            'pretty_version' => '6.0.0-alpha.2',
+            'version' => '6.0.0.0-alpha2',
             'reference' => null,
             'type' => 'kirby-cms',
             'install_path' => __DIR__ . '/../../',
@@ -98,9 +98,9 @@
             'dev_requirement' => false,
         ),
         'phpmailer/phpmailer' => array(
-            'pretty_version' => 'v7.0.1',
-            'version' => '7.0.1.0',
-            'reference' => '360ae911ce62e25e11249f6140fa58939f556ebe',
+            'pretty_version' => 'v7.0.2',
+            'version' => '7.0.2.0',
+            'reference' => 'ebf1655bd5b99b3f97e1a3ec0a69e5f4cd7ea088',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),
@@ -161,9 +161,9 @@
             'dev_requirement' => false,
         ),
         'symfony/yaml' => array(
-            'pretty_version' => 'v7.4.1',
-            'version' => '7.4.1.0',
-            'reference' => '24dd4de28d2e3988b311751ac49e684d783e2345',
+            'pretty_version' => 'v7.4.6',
+            'version' => '7.4.6.0',
+            'reference' => '58751048de17bae71c5aa0d13cb19d79bca26391',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/yaml',
             'aliases' => array(),

@@ -36,6 +36,14 @@
 				/>
 			</k-lab-example>
 
+			<k-lab-example label="Options with info & icon">
+				<k-checkboxes-input
+					:options="optionsWithInfoAndIcon"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
+
 			<k-lab-example label="Focus" class="k-lab-input-examples-focus">
 				<k-checkboxes-input
 					ref="input"
@@ -96,6 +104,27 @@ export default {
 				{ text: "Option A", value: "a", info: "This is some info text" },
 				{ text: "Option B", value: "b", info: "This is some info text" },
 				{ text: "Option C", value: "c", info: "This is some info text" }
+			];
+		},
+		optionsWithInfoAndIcon() {
+			return [
+				{
+					text: "Option A",
+					value: "a",
+					info: "This is some info text",
+					icon: "heart"
+				},
+				{
+					text: "Option B",
+					value: "b",
+					info: "This is some info text"
+				},
+				{
+					text: "Option C",
+					value: "c",
+					info: "This is some info text",
+					icon: "star"
+				}
 			];
 		}
 	}

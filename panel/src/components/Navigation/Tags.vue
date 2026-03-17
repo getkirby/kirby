@@ -19,6 +19,7 @@
 				:disabled="disabled"
 				:element="element"
 				:html="html"
+				:icon="item.icon"
 				:image="item.image"
 				:link="item.link"
 				:removable="removable && !disabled"

@@ -1,12 +1,8 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { describe, expect, it } from "vitest";
 import Drag from "./drag.js";
 import Panel from "./panel.js";
 
-describe.concurrent("panel.drag", () => {
+describe("panel.drag", () => {
 	it("should have a default state", async () => {
 		const panel = Panel.create(app);
 		const drag = Drag(panel);

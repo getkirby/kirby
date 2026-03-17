@@ -1,11 +1,7 @@
-/**
- * @vitest-environment node
- */
-
 import { describe, expect, it } from "vitest";
 import { headers } from "./request.js";
 
-describe.concurrent("request headers", () => {
+describe("request headers", () => {
 	it("should create default headers", async () => {
 		const result = headers();
 		const expected = {

@@ -40,11 +40,12 @@ class SystemLicenseDialogController extends DialogController
 		$obfuscated = $this->kirby->user()?->isAdmin() !== true;
 
 		return [
-			'code'  => $this->license->code($obfuscated),
-			'icon'  => $status->icon(),
-			'info'  => $status->info($this->license->renewal('Y-m-d', 'date')),
-			'theme' => $status->theme(),
-			'type'  => $this->license->label(),
+			'code'   => $this->license->code($obfuscated),
+			'domain' => $this->license->domain(),
+			'icon'   => $status->icon(),
+			'info'   => $status->info($this->license->renewal('Y-m-d', 'date')),
+			'theme'  => $status->theme(),
+			'type'   => $this->license->label(),
 		];
 	}
 

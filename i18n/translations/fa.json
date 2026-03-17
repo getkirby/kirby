@@ -635,7 +635,9 @@
 	"plugin": "Plugin",
 	"plugins": "Plugins",
 	"prev": "قبلی",
+
 	"preview": "Preview",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publish",
 	"published": "منتشر شده",
@@ -786,6 +788,7 @@
 	"user.create": "افزودن کاربر جدید",
 	"user.delete": "حذف کاربر جاری",
 	"user.delete.confirm": "آیا واقعا میخواهید<strong> {email}</strong> را حذف کنید؟",
+	"user.setPassword": "Set password",
 
 	"users": "کاربران",
 

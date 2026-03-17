@@ -49,6 +49,15 @@
 					@input="value = $event"
 				/>
 			</k-lab-example>
+			<k-lab-example label="Label & Info & Icon">
+				<k-choice-input
+					:checked="value"
+					info="This is some info text"
+					icon="heart"
+					label="Option"
+					@input="value = $event"
+				/>
+			</k-lab-example>
 			<k-lab-example label="Type: radio">
 				<k-choice-input
 					:checked="value"

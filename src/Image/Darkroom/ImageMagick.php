@@ -188,8 +188,10 @@ class ImageMagick extends Darkroom
 	 */
 	protected function save(string $file, array $options): string
 	{
+		// use the format: prefix to output in the specified format
+		// while writing to the original path
 		if ($options['format'] !== null) {
-			$file = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '.' . $options['format'];
+			return escapeshellarg($options['format'] . ':' . $file);
 		}
 
 		return escapeshellarg($file);

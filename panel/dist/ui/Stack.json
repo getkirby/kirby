@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"5.3.0","title":"since"}]},"displayName":"Stack","props":[{"name":"align","type":{"name":"string"}},{"name":"direction","type":{"name":"string"}},{"name":"gap","type":{"name":"string"}},{"name":"justify","type":{"name":"string"}}],"slots":[{"name":"default"}],"component":"k-stack","sourceFile":"src/components/Layout/Stack.vue"}

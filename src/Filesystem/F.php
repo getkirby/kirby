@@ -123,6 +123,11 @@ class F
 	];
 
 	/**
+	 * Cache for loaded files when using `load()` with `cache: true`
+	 */
+	public static array $loadCache = [];
+
+	/**
 	 * Appends new content to an existing file
 	 *
 	 * @param string $file The path for the file
@@ -358,8 +363,14 @@ class F
 		string $file,
 		mixed $fallback = null,
 		array $data = [],
-		bool $allowOutput = true
+		bool $allowOutput = true,
+		bool $cache = false
 	) {
+		// return cached result if available
+		if ($cache === true && array_key_exists($file, static::$loadCache)) {
+			return static::$loadCache[$file];
+		}
+
 		if (is_file($file) === false) {
 			return $fallback;
 		}
@@ -382,6 +393,11 @@ class F
 			gettype($result) !== gettype($fallback)
 		) {
 			return $fallback;
+		}
+
+		// cache the result if requested
+		if ($cache === true) {
+			static::$loadCache[$file] = $result;
 		}
 
 		return $result;

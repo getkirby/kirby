@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"5.3.0","title":"since"}]},"displayName":"Definition","props":[{"name":"description","type":{"name":"string"}},{"name":"term","type":{"name":"string"}}],"slots":[{"name":"term"},{"name":"default"}],"component":"k-definition","sourceFile":"src/components/Layout/Definition.vue"}

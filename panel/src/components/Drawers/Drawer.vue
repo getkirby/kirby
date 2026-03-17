@@ -3,6 +3,7 @@
 		<form
 			:class="$attrs.class"
 			:aria-current="current"
+			:data-size="size"
 			class="k-drawer"
 			method="dialog"
 			@submit.prevent="$emit('submit')"
@@ -101,6 +102,20 @@ export default {
 .k-drawer:not([aria-current="true"]) {
 	display: none;
 	pointer-events: none;
+}
+
+/* Sizes */
+.k-drawer[data-size="tiny"] {
+	--drawer-width: 26rem;
+}
+.k-drawer[data-size="small"] {
+	--drawer-width: 36rem;
+}
+.k-drawer[data-size="large"] {
+	--drawer-width: 65rem;
+}
+.k-drawer[data-size="huge"] {
+	--drawer-width: 85rem;
 }
 
 /* Dropzone */

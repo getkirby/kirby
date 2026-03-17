@@ -64,6 +64,14 @@
 					@input="value = $event"
 				/>
 			</k-lab-example>
+
+			<k-lab-example label="With icon & info">
+				<k-tags-input
+					:options="optionsWithInfoAndIcon"
+					:value="value"
+					@input="value = $event"
+				/>
+			</k-lab-example>
 		</k-lab-examples>
 	</k-lab-form>
 </template>
@@ -81,6 +89,27 @@ export default {
 				{ text: "Option A", value: "a" },
 				{ text: "Option B", value: "b" },
 				{ text: "Option C", value: "c" }
+			];
+		},
+		optionsWithInfoAndIcon() {
+			return [
+				{
+					text: "Option A",
+					value: "a",
+					info: "This is some info text",
+					icon: "heart"
+				},
+				{
+					text: "Option B",
+					value: "b",
+					info: "This is some info text"
+				},
+				{
+					text: "Option C",
+					value: "c",
+					info: "This is some info text",
+					icon: "star"
+				}
 			];
 		}
 	}

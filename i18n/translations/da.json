@@ -635,7 +635,9 @@
 	"plugin": "Plugin",
 	"plugins": "Plugins",
 	"prev": "Forrige",
+
 	"preview": "Forhåndsvisning",
+	"preview.browser.scroll": "Sync scroll",
 
 	"publish": "Publish",
 	"published": "Udgivede",
@@ -786,6 +788,7 @@
 	"user.create": "Tilføj en ny bruger",
 	"user.delete": "Slet denne bruger",
 	"user.delete.confirm": "\u00d8nsker du virkelig at slette denne bruger?",
+	"user.setPassword": "Set password",
 
 	"users": "Brugere",
 

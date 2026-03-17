@@ -1,6 +1,6 @@
 import { isObject, length } from "@/helpers/object";
 import { reactive } from "vue";
-import throttle from "@/helpers/throttle.js";
+import throttle from "@/helpers/throttle";
 
 /**
  * @since 5.0.0
@@ -322,6 +322,45 @@ export default (panel) => {
 		 * @var {AbortController}
 		 */
 		saveAbortController: null,
+
+		/**
+		 * Releases the content lock without discarding changes.
+		 * Called when the editor navigates away from the view.
+		 */
+		unlock(env = {}) {
+			// Cancel any pending saves first to avoid race conditions
+			this.cancelSaving();
+
+			const { api, language } = this.env(env);
+
+			// Build the URL with csrf and language as query params.
+			// sendBeacon cannot set custom headers.
+			const url = panel.url(`${panel.api.endpoint}${api}/changes/unlock`, {
+				csrf: panel.api.csrf,
+				language: language
+			});
+
+			// Use sendBeacon for reliability during page unload. Browsers
+			// guarantee delivery even when the page is being closed.
+			// Returns true if the request was successfully queued.
+			if (navigator.sendBeacon(url) === true) {
+				return;
+			}
+
+			// Fall back to a regular request if sendBeacon wasn't queued
+			panel.api
+				.post(
+					api + "/changes/unlock",
+					{},
+					{
+						headers: { "x-language": language },
+						silent: true
+					}
+				)
+				.catch(() => {
+					// Silently ignore errors. The lock will expire after 10 minutes anyway.
+				});
+		},
 
 		/**
 		 * Updates the form values of the current view

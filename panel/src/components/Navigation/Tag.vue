@@ -11,7 +11,11 @@
 		<!-- @slot Replaces the image/icon frame created via the `image` prop -->
 		<slot name="image">
 			<k-image-frame v-if="image?.src" v-bind="image" class="k-tag-image" />
-			<k-icon-frame v-else-if="image" v-bind="image" class="k-tag-image" />
+			<k-icon-frame
+				v-else-if="image || icon"
+				v-bind="image ?? { icon }"
+				class="k-tag-image"
+			/>
 		</slot>
 
 		<template v-if="text">
@@ -76,6 +80,10 @@ export default {
 		 * HTML element to use
 		 */
 		element: String,
+		/**
+		 * Shortcut for tags with icons (alternative to `image`)
+		 */
+		icon: String,
 		/**
 		 * See `k-image-frame` or `k-icon-frame` for available options
 		 */
@@ -153,6 +161,7 @@ button.k-tag:not([aria-disabled="true"]) {
 .k-tag:not([aria-disabled="true"]):focus {
 	outline: var(--outline);
 }
+
 .k-tag-image {
 	height: 100%;
 	border-radius: var(--rounded-xs);
@@ -163,12 +172,16 @@ button.k-tag:not([aria-disabled="true"]) {
 	border-end-start-radius: var(--tag-rounded);
 	background-clip: padding-box;
 }
+
 .k-tag-text {
 	padding-inline: var(--spacing-2);
 	line-height: var(--leading-tight);
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+.k-tag:has(.k-tag-icon) .k-tag-text {
+	padding-inline-start: 0;
 }
 .k-tag:has(.k-tag-toggle) .k-tag-text {
 	padding-inline-end: 0;
@@ -188,5 +201,8 @@ button.k-tag:not([aria-disabled="true"]) {
 	background-color: var(--tag-color-disabled-back);
 	color: var(--tag-color-disabled-text);
 	cursor: not-allowed;
+}
+.k-tag:where([aria-disabled="true"]) .k-tag-image {
+	opacity: var(--opacity-disabled);
 }
 </style>

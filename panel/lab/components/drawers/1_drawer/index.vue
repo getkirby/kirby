@@ -61,5 +61,82 @@
 				Open
 			</k-button>
 		</k-lab-example>
+		<k-lab-example :flex="true" label="Sizes">
+			<k-button
+				icon="open"
+				variant="filled"
+				@click="
+					$panel.drawer.open({
+						component: 'k-drawer',
+						props: {
+							title: 'Tiny drawer',
+							size: 'tiny'
+						}
+					})
+				"
+			>
+				Tiny
+			</k-button>
+			<k-button
+				icon="open"
+				variant="filled"
+				@click="
+					$panel.drawer.open({
+						component: 'k-drawer',
+						props: {
+							title: 'Small drawer',
+							size: 'small'
+						}
+					})
+				"
+			>
+				Small
+			</k-button>
+			<k-button
+				icon="open"
+				variant="filled"
+				@click="
+					$panel.drawer.open({
+						component: 'k-drawer',
+						props: {
+							title: 'Default drawer',
+							size: 'default'
+						}
+					})
+				"
+			>
+				Default
+			</k-button>
+			<k-button
+				icon="open"
+				variant="filled"
+				@click="
+					$panel.drawer.open({
+						component: 'k-drawer',
+						props: {
+							title: 'Large drawer',
+							size: 'large'
+						}
+					})
+				"
+			>
+				Large
+			</k-button>
+			<k-button
+				icon="open"
+				variant="filled"
+				@click="
+					$panel.drawer.open({
+						component: 'k-drawer',
+						props: {
+							title: 'Huge drawer',
+							size: 'huge'
+						}
+					})
+				"
+			>
+				Huge
+			</k-button>
+		</k-lab-example>
 	</k-lab-examples>
 </template>

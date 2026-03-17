@@ -4,19 +4,19 @@
 
 ## How we organize code
 
-To keep track of different states of our code (current release, bugfixes, features) we use branches:
+To keep track of different states of our code (current release, bug fixes, features) we use branches:
 
 | Branch          | Used for                                                                 | PRs allowed?                |
 | --------------- | ------------------------------------------------------------------------ | --------------------------- |
 | `main`          | Latest released version                                                  | ❌                           |
-| `develop-patch` | Working branch for next patch release, e.g. `4.0.x`                      | ✅                          |
-| `develop-minor` | Working branch for next minor release, e.g. `4.x.0`                      | ✅                          |
-| `v5/develop`    | Working branch for next major release, e.g. `5.0.0`                      | ✅                          |
+| `develop-patch` | Working branch for next patch release, e.g. `5.0.x`                      | ✅                          |
+| `develop-minor` | Working branch for next minor release, e.g. `5.x.0`                      | ✅                          |
+| `v6/develop`    | Working branch for next major release, e.g. `6.0.0`                      | ✅                          |
 | `fix/*`         | Temporary branches for single bugfix                                     | -                           |
 | `feature/*`     | Temporary branches for single feature                                    | -                           |
 | `release/*`     | Pre-releases in testing before they are merged into `main` when released | only during release testing |
 
-We will review all pull requests (PRs) to `develop-patch`, `develop-minor` and `v5/develop` and merge them if accepted, once an appropriate version is upcoming. Please understand that this might not be the immediate next release and might take some time.
+We will review all pull requests (PRs) to `develop-patch`, `develop-minor` and `v6/develop` and merge them if accepted, once an appropriate version is upcoming. Please understand that this might not be the immediate next release and might take some time.
 
 ## How you can contribute
 
@@ -42,11 +42,11 @@ For features create a new branch following the name scheme: `feature/issue_numbe
 - Always send feature PRs against the `develop-minor` branch––not `main`.
 - Add a helpful description of what the PR does.
 - New features should include [unit tests](#tests). Let us know if you need help with that.
-- Make your code [style](#style) matches ours and includes [comments/in-code documentation](#documentation).
+- Make sure your code [style](#style) matches ours and includes [comments/in-code documentation](#documentation).
 - Make sure your branch is up to date with the latest state on the `develop-minor` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
 - Please *don't* commit updated dist files in the `panel/dist` folder to avoid merge conflicts. We only build the dist files on release. Your branch should only contain changes to the source files.
 
-We try to bundle features in our major releases, e.g. `5.0`. That is why we might only review and, if accepted, merge your PR once an appropriate release is upcoming. Please understand that we cannot merge all feature ideas or that it might take a while. Check out the [roadmap](https://roadmap.getkirby.com) to see upcoming releases.
+We try to bundle features in our major releases, e.g. `6.0`. That is why we might only review and, if accepted, merge your PR once an appropriate release is upcoming. Please understand that we cannot merge all feature ideas or that it might take a while. Check out the [roadmap](https://roadmap.getkirby.com) to see upcoming releases.
 
 ### Translations
 
@@ -54,7 +54,30 @@ We are really happy about any help with translations. Please do not directly tra
 
 ## How we write code
 
+### Panel development
+
+We recommend the [Kirby sandbox](https://github.com/getkirby/sandbox) as your local development environment. Set up a `sandbox.test` virtual host pointing to its `/public` folder (e.g. with [Laravel Herd](https://herd.laravel.com)). Then:
+
+```bash
+# Clone and initialize
+git clone git@github.com:getkirby/sandbox.git
+cd sandbox
+git submodule update --init --recursive
+
+# Create a sandbox.test virtual host (requires Laravel Herd)
+herd link
+
+# Start the Panel dev server
+cd kirby/panel
+npm install
+npm run dev
+```
+
+The sandbox comes with a pre-configured admin account (`test@getkirby.com` / `12345678`).
+
 ### Style
+
+We use an [`.editorconfig`](https://editorconfig.org) file to enforce basic formatting rules (UTF-8, LF line endings, tab indentation) across editors. Most editors support this natively or via a plugin.
 
 #### Backend (PHP)
 
@@ -66,7 +89,7 @@ We use [Prettier](https://prettier.io) to ensure a consistent style for our Java
 
 ### Documentation
 
-In-code documentation and comments help us understand each other's code - or our own code after some months. Especially when matters get more complicated, we try to add a lot of comments to explain what the code does or why we implemented it like this. Even better than good comments is good code that is easy to understand.
+In-code documentation and comments help us understand each other's code — or our own code after some months. Especially when matters get more complicated, we try to add a lot of comments to explain what the code does or why we implemented it like this. Even better than good comments is good code that is easy to understand.
 
 #### Backend (PHP)
 
@@ -86,13 +109,90 @@ Unit and integration tests help us prevent regressions when we make changes to t
 
 #### Backend (PHP)
 
-We use [PHPUnit](https://phpunit.de) for unit test for our PHP code. You can find all existing tests in the [`kirby/tests` subfolders](https://github.com/getkirby/kirby/tree/main/tests). Take a look to see how we usually structure our tests.
+We use [PHPUnit](https://phpunit.de) for unit tests for our PHP code. You can find all existing tests in the [`kirby/tests` subfolders](https://github.com/getkirby/kirby/tree/main/tests). Take a look to see how we usually structure our tests. Run the full test suite from the `kirby` folder with:
+
+```bash
+composer test
+```
+
+We use [Psalm](https://psalm.dev) for static type analysis. You can run it from the `kirby` folder with:
+
+```bash
+composer analyze
+```
+
+Our automated PR checks will fail if PHPUnit or Psalm report issues with your code.
 
 #### Frontend/Panel (JavaScript, Vue)
 
 The Panel doesn't have extensive test coverage yet. That's an area we are still trying to improve.
 
-We use [vitest](https://vitest.dev) for unit tests for JavaScript and Vue components - `.test.js` files next to the actual JavaScript/Vue file.
+We use [vitest](https://vitest.dev) for unit tests for JavaScript. Tests are placed in a `*.test.js` file next to the actual JavaScript file. Run them from the `kirby/panel` folder with:
+
+```bash
+npm run test:unit
+```
+
+### Commit messages
+
+We broadly follow the [Conventional Commits](https://www.conventionalcommits.org) specification:
+
+#### Commit subject
+
+```
+<type>: <Description>
+<type>!: <Description>
+```
+
+`!` signifies that the commit includes breaking changes (this is **required** if there are breaking changes in the commit; also add an explanation in the footer in this case, see below).
+
+#### Types
+
+| Type | Used for | Include in |
+| --- | --- | --- |
+| `feat` | implements a new feature/enhancement | minor |
+| `fix` | fixes a bug or regression | minor/patch |
+| `refact` | refactors existing code | minor |
+| `chore` | not tied to any specific feature, e.g. bumping version, modifying `.gitignore` | minor |
+| `build` | changes to the CI | minor |
+| `docs` | adds, updates, or revises (in-code) documentation | minor/patch |
+| `style` | updates or reformats the style of the source code | minor/patch |
+| `perf` | improves the performance | minor |
+| `test` | adds missing tests or corrects/improves existing tests (without changes to core code) | minor/patch |
+| `i18n` | fixes or improves the localization files (without changes to core code) | minor/patch |
+| `deprecate` | deprecates existing functionality | minor |
+
+Any commit containing a breaking change has to be included in a major release, no matter which type it belongs to.
+
+#### Description
+
+The description contains a concise description of the change.
+
+- Use the imperative, present tense: "change" not "changed" nor "changes" — think of `This commit will…` or `This commit should…`
+- Capitalize the first letter
+- No dot (`.`) at the end
+
+#### Commit body
+
+```
+<body>
+
+BREAKING CHANGE: explanation
+Fixes #123
+Resolves #123
+Co-Authored-By: Name <them@email.com>
+```
+
+The body should include the motivation for the change and contrast this with previous behavior.
+
+- Is **optional**
+- Use the imperative, present tense: "change" not "changed" nor "changes"
+
+Optionally, footers can be added to the body after a blank line:
+
+- **Breaking changes** must be explained. They start with `BREAKING CHANGE:` followed by a space.
+- `Fixes`/`Resolves` followed by an issue number from the same repository
+- `Co-Authored-By` when squashing has hidden another author
 
 ## And last…
 

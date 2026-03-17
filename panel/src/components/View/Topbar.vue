@@ -1,14 +1,13 @@
 <template>
 	<div class="k-topbar">
-		<!-- mobile menu opener -->
 		<k-button
 			icon="bars"
 			class="k-panel-menu-proxy"
 			@click="$panel.menu.toggle()"
 		/>
-		<!-- breadcrumb -->
+
 		<k-breadcrumb :crumbs="crumbs" class="k-topbar-breadcrumb" />
-		<div class="k-topbar-spacer" />
+
 		<div class="k-topbar-signals">
 			<slot />
 		</div>
@@ -49,17 +48,10 @@ export default {
 	align-items: center;
 	gap: var(--spacing-1);
 }
-
 .k-topbar-breadcrumb {
 	margin-inline-start: -2px;
-	flex-shrink: 1;
-	min-width: 0;
+	flex: 1;
 }
-
-.k-topbar-spacer {
-	flex-grow: 1;
-}
-
 .k-topbar-signals {
 	display: flex;
 	align-items: center;

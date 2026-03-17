@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import { isUrl } from "@/helpers/url";
 import listeners from "./listeners.js";
-import State from "./state.js";
+import State from "./state";
 
 /**
  * Default state for all features
@@ -213,6 +213,10 @@ export default (panel, key, defaults) => {
 		 */
 		async refresh(options = {}) {
 			options.url ??= this.url();
+
+			if (!options.url) {
+				return;
+			}
 
 			const response = await this.get(options.url, options);
 			const state = response[this.key()];

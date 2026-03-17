@@ -221,7 +221,7 @@ class PageCreateDialogController extends ModelCreateDialogController
 		}
 
 		$props = [
-			'slug'     => $this->request->get('slug', '__temp__'),
+			'slug'     => $this->request->get('slug') ?: '__temp__',
 			'template' => $this->template(),
 			'model'    => $this->template(),
 			'parent'   => $this->parent instanceof Page ? $this->parent : null,

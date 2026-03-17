@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"5.3.0","title":"since"}]},"displayName":"CodeToken","props":[{"name":"type","type":{"name":"string"}}],"slots":[{"name":"default"}],"component":"k-code-token","sourceFile":"src/components/Text/CodeToken.vue"}

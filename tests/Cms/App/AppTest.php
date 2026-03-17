@@ -177,6 +177,25 @@ class AppTest extends TestCase
 		]);
 		$this->assertSame(hash_hmac('sha1', 'test', 'sea salt'), $app->contentToken($model, 'test'));
 		$this->assertSame(hash_hmac('sha1', 'test', ' salt'), $app->contentToken(null, 'test'));
+
+		// with symlinked content root: the salt should use the real path
+		$target = static::TMP . '/real-content';
+		$link   = static::TMP . '/linked-content';
+		Dir::make($target, true);
+
+		if (@symlink($target, $link) !== true) {
+			$this->markTestSkipped('Symlinks are not supported in this environment');
+		}
+
+		$app = new App([
+			'roots' => [
+				'index'   => '/dev/null',
+				'content' => $link
+			]
+		]);
+
+		$real = realpath($target) ?: $target;
+		$this->assertSame(hash_hmac('sha1', 'test', $real . '/some-id'), $app->contentToken($model, 'test'));
 	}
 
 	public function testCsrf(): void

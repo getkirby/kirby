@@ -1,0 +1,1 @@
+{"description":"","tags":{"since":[{"description":"6.0.0","title":"since"}]},"displayName":"ValidationIssues","props":[{"name":"fields","type":{"name":"object"}}],"component":"k-validation-issues","sourceFile":"src/components/Errors/ValidationIssues.vue"}

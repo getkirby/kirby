@@ -40,6 +40,7 @@ class FTest extends TestCase
 		}
 
 		HeadersSent::$value = false;
+		F::$loadCache = [];
 	}
 
 	public function testAppend(): void
@@ -325,6 +326,35 @@ class FTest extends TestCase
 		F::write($file = static::TMP . '/test.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
 
 		F::load($file, allowOutput: false);
+	}
+
+	public function testLoadCache(): void
+	{
+		// create a file that uses require_once internally
+		// (simulating a config file that splits config into multiple files)
+		F::write(
+			static::TMP . '/included.php',
+			'<?php return ["foo" => "bar"];'
+		);
+		F::write(
+			$file = static::TMP . '/config.php',
+			'<?php return require_once __DIR__ . "/included.php";'
+		);
+
+		// first load returns the array
+		$result = F::load($file, [], cache: true);
+		$this->assertSame(['foo' => 'bar'], $result);
+
+		// second load with cache returns cached result
+		// (not `true` from require_once)
+		$result = F::load($file, [], cache: true);
+		$this->assertSame(['foo' => 'bar'], $result);
+
+		// without cache, require_once returns true on second load
+		F::$loadCache = [];
+		F::load($file);
+		$result = F::load($file);
+		$this->assertSame(true, $result);
 	}
 
 	public function testLoadClasses(): void

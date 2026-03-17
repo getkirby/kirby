@@ -1,7 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
-
 import { describe, expect, it } from "vitest";
 import Feature, { defaults } from "./feature.js";
 
@@ -19,7 +15,7 @@ const Panel = () => {
 	};
 };
 
-describe.concurrent("panel/feature.js", () => {
+describe("panel/feature.js", () => {
 	it("should add event listeners", async () => {
 		const feature = Feature(Panel(), "test", defaults());
 		const listeners = {

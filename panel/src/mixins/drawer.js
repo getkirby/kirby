@@ -22,6 +22,14 @@ export default {
 		 */
 		icon: String,
 		/**
+		 * Width of the drawer
+		 * @values "tiny", "small", "default", "large", "huge"
+		 */
+		size: {
+			default: "default",
+			type: String
+		},
+		/**
 		 * A unique ID for the drawer
 		 */
 		id: String,

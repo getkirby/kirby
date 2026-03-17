@@ -36,8 +36,7 @@ export default {
 .k-definition dd {
 	padding-block: var(--spacing-2);
 	padding-inline: var(--table-cell-padding);
-	height: var(--definition-height);
-	min-height: var(--table-row-height);
+	min-height: var(--definition-height);
 	display: flex;
 	gap: var(--spacing-1);
 	align-items: var(--definition-align);
