@@ -255,8 +255,8 @@ class UserRules
 		array $strings = []
 	): void {
 		if (
-			$user->permissions()->can('save') !== true ||
-			$user->permissions()->can('edit') !== true
+			$user->permissions()->can('edit') !== true ||
+			$user->permissions()->can('save') !== true
 		) {
 			throw new PermissionException(
 				key: 'user.update.permission',
