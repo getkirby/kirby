@@ -11,6 +11,17 @@ use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 
+class BlueprintWithOptions extends Blueprint
+{
+	public function normalize(
+		array|string|bool|null $options,
+		array $defaults,
+		array $aliases = []
+	): array {
+		return $this->normalizeOptions($options, $defaults, $aliases);
+	}
+}
+
 #[CoversClass(Blueprint::class)]
 class BlueprintTest extends TestCase
 {
@@ -751,6 +762,119 @@ class BlueprintTest extends TestCase
 		foreach ($blueprint->options() as $key => $value) {
 			$this->assertFalse($value, "Option '$key' should be false");
 		}
+	}
+
+	public function testNormalizeOptionsTrue(): void
+	{
+		$blueprint = new BlueprintWithOptions(['model' => $this->model]);
+
+		$this->assertSame(
+			['create' => null, 'delete' => null],
+			$blueprint->normalize(
+				options: true,
+				defaults: ['create' => null, 'delete' => null],
+				aliases: ['add' => 'create']
+			)
+		);
+	}
+
+	public function testNormalizeOptionsWithoutAliases(): void
+	{
+		$blueprint = new BlueprintWithOptions(['model' => $this->model]);
+
+		$this->assertSame(
+			['create' => false, 'delete' => null],
+			$blueprint->normalize(
+				options: ['create' => false],
+				defaults: ['create' => null, 'delete' => null]
+			)
+		);
+	}
+
+	public function testNormalizeOptionsWithStringAlias(): void
+	{
+		$blueprint = new BlueprintWithOptions(['model' => $this->model]);
+
+		$this->assertSame(
+			['create' => false, 'delete' => null],
+			$blueprint->normalize(
+				options: ['add' => false],
+				defaults: ['create' => null, 'delete' => null],
+				aliases: ['add' => 'create']
+			)
+		);
+	}
+
+	public function testNormalizeOptionsWithStringAliasAndExplicitOption(): void
+	{
+		$blueprint = new BlueprintWithOptions(['model' => $this->model]);
+
+		// the explicit option wins over the alias
+		$this->assertSame(
+			['create' => true, 'delete' => null],
+			$blueprint->normalize(
+				options: ['add' => false, 'create' => true],
+				defaults: ['create' => null, 'delete' => null],
+				aliases: ['add' => 'create']
+			)
+		);
+	}
+
+	public function testNormalizeOptionsWithCallableAlias(): void
+	{
+		$blueprint = new BlueprintWithOptions(['model' => $this->model]);
+
+		// a callable alias can map a single option onto multiple options
+		$this->assertSame(
+			['create' => false, 'delete' => false],
+			$blueprint->normalize(
+				options: ['manage' => false],
+				defaults: ['create' => null, 'delete' => null],
+				aliases: [
+					'manage' => static fn ($value) => [
+						'create' => $value,
+						'delete' => $value
+					]
+				]
+			)
+		);
+	}
+
+	public function testNormalizeOptionsWithCallableAliasAndExplicitOption(): void
+	{
+		$blueprint = new BlueprintWithOptions(['model' => $this->model]);
+
+		// the explicit option wins over the alias
+		$this->assertSame(
+			['create' => true, 'delete' => false],
+			$blueprint->normalize(
+				options: ['create' => true, 'manage' => false],
+				defaults: ['create' => null, 'delete' => null],
+				aliases: [
+					'manage' => static fn ($value) => [
+						'create' => $value,
+						'delete' => $value
+					]
+				]
+			)
+		);
+	}
+
+	public function testNormalizeOptionsWithCallableAliasReturningString(): void
+	{
+		$blueprint = new BlueprintWithOptions(['model' => $this->model]);
+
+		// a callable alias may also return the name of a single option
+		$this->assertSame(
+			['create' => null, 'delete' => false],
+			$blueprint->normalize(
+				options: ['remove' => false],
+				defaults: ['create' => null, 'delete' => null],
+				aliases: [
+					'remove' => static fn ($value) => $value === false ? 'delete' : 'create'
+				]
+			)
+		);
 	}
 
 	public function testInvalidSectionType(): void
