@@ -16,9 +16,10 @@
 		"types": ["vite/client", "vitest"],
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["src/*"]
+			"@/*": ["src/*"],
+			"@test/*": ["tests/*"]
 		}
 	},
-	"include": ["src/**/*.ts", "src/**/*.d.ts", "tests/**/*.ts"],
+	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "tests/**/*.ts"],
 	"exclude": ["node_modules", "dist"]
 }

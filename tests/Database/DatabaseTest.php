@@ -79,6 +79,18 @@ class DatabaseTest extends TestCase
 		], array_values(Database::instances()));
 	}
 
+	public function testInstanceById(): void
+	{
+		$database = new Database([
+			'database' => ':memory:',
+			'type'     => 'sqlite',
+			'id'       => 'custom'
+		]);
+
+		$this->assertSame($database, Database::instance('custom'));
+		$this->assertNull(Database::instance('missing'));
+	}
+
 	public function testAffected(): void
 	{
 		$this->database->table('users')->delete();
@@ -103,6 +115,53 @@ class DatabaseTest extends TestCase
 	{
 		$result = $this->database->table('users')->select('*')->all();
 		$this->assertSame($result, $this->database->lastResult());
+	}
+
+	public function testQueryWithArrayResultsAndTrace(): void
+	{
+		$result = $this->database->query(
+			'SELECT * FROM users WHERE username = :username',
+			['username' => 'john'],
+			[
+				'fetch'    => 'array',
+				'iterator' => 'array'
+			]
+		);
+
+		$this->assertSame('john', $result[0]['username']);
+		$this->assertSame($result, $this->database->lastResult());
+
+		$trace = $this->database->trace();
+		$this->assertSame('SELECT * FROM users WHERE username = :username', $trace[array_key_last($trace)]['query']);
+		$this->assertSame(['username' => 'john'], $trace[array_key_last($trace)]['bindings']);
+		$this->assertNull($trace[array_key_last($trace)]['error']);
+	}
+
+	public function testQueryWithFetchClosureForSingleResult(): void
+	{
+		$result = $this->database->query(
+			'SELECT * FROM users WHERE username = :username',
+			['username' => 'john'],
+			[
+				'method'   => 'fetch',
+				'fetch'    => fn (array $row) => $row['fname'] . ' ' . $row['lname'],
+				'iterator' => 'array'
+			]
+		);
+
+		$this->assertSame('John Lennon', $result);
+
+		$result = $this->database->query(
+			'SELECT * FROM users WHERE username = :username',
+			['username' => 'nobody'],
+			[
+				'method'   => 'fetch',
+				'fetch'    => fn (array $row) => $row['fname'] . ' ' . $row['lname'],
+				'iterator' => 'array'
+			]
+		);
+
+		$this->assertFalse($result);
 	}
 
 	public function testLastError(): void
@@ -156,6 +215,25 @@ class DatabaseTest extends TestCase
 		$this->assertTrue($this->database->dropTable('users'));
 	}
 
+	public function testValidateColumnAndTableCaches(): void
+	{
+		$this->assertTrue($this->database->validateColumn('users', 'username'));
+		$this->assertFalse($this->database->validateColumn('missing', 'username'));
+
+		$this->assertTrue($this->database->createTable('accounts', [
+			'id' => [
+				'type' => 'int'
+			],
+			'email' => [
+				'type' => 'varchar'
+			]
+		]));
+		$this->assertTrue($this->database->validateTable('accounts'));
+		$this->assertTrue($this->database->validateColumn('accounts', 'email'));
+		$this->assertTrue($this->database->dropTable('accounts'));
+		$this->assertFalse($this->database->validateTable('accounts'));
+	}
+
 	public function testMagicCall(): void
 	{
 		$this->assertCount(3, $this->database->users()->all());
@@ -164,6 +242,24 @@ class DatabaseTest extends TestCase
 	public function testType(): void
 	{
 		$this->assertSame('sqlite', $this->database->type());
+	}
+
+	public function testPrefixAndSql(): void
+	{
+		$database = new Database([
+			'database' => ':memory:',
+			'type'     => 'sqlite',
+			'prefix'   => 'kirby_'
+		]);
+
+		$database->execute('CREATE TABLE "kirby_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE)');
+
+		$this->assertSame('kirby_', $database->prefix());
+		$this->assertInstanceOf(\Kirby\Database\Sql\Sqlite::class, $database->sql());
+		$this->assertSame(
+			'SELECT * FROM "kirby_users"',
+			$database->table('users')->build('select')['query']
+		);
 	}
 
 	public function testEscape(): void

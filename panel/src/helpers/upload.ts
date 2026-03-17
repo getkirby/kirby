@@ -81,7 +81,7 @@ export async function upload(
 
 		xhr.addEventListener("load", (event: Event) => {
 			const target = event.target as XMLHttpRequest;
-			let response = null;
+			let response: { status: string; message?: string };
 
 			try {
 				response = JSON.parse(target.response);
