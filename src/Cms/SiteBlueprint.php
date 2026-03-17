@@ -24,16 +24,19 @@ class SiteBlueprint extends Blueprint
 
 		// normalize all available page options
 		$this->props['options'] = $this->normalizeOptions(
-			$this->props['options'] ?? true,
-			// defaults
-			[
+			options: $this->props['options'] ?? true,
+			defaults: [
 				'access'      => null,
 				'changeTitle' => null,
-				'update'      => null,
+				'edit'        => null,
+				'save'        => null,
 			],
-			// aliases
-			[
-				'title' => 'changeTitle',
+			aliases: [
+				'title'  => 'changeTitle',
+				'update' => static fn ($value) => [
+					'edit' => $value,
+					'save' => $value,
+				],
 			]
 		);
 	}

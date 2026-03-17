@@ -29,9 +29,8 @@ class UserBlueprint extends Blueprint
 
 		// normalize all available page options
 		$this->props['options'] = $this->normalizeOptions(
-			$this->props['options'] ?? true,
-			// defaults
-			[
+			options: $this->props['options'] ?? true,
+			defaults: [
 				'access'         => null,
 				'create'         => null,
 				'changeEmail'    => null,
@@ -40,8 +39,15 @@ class UserBlueprint extends Blueprint
 				'changePassword' => null,
 				'changeRole'     => null,
 				'delete'         => null,
+				'edit'           => null,
 				'list'           => null,
-				'update'         => null,
+				'save'           => null,
+			],
+			aliases: [
+				'update' => static fn ($value) => [
+					'edit' => $value,
+					'save' => $value,
+				],
 			]
 		);
 	}
