@@ -40,7 +40,8 @@ class UserBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertArrayHasKey('changeRole', $options);
 		$this->assertArrayHasKey('create', $options);
 		$this->assertArrayHasKey('delete', $options);
-		$this->assertArrayHasKey('update', $options);
+		$this->assertArrayHasKey('edit', $options);
+		$this->assertArrayHasKey('save', $options);
 	}
 
 	public function testTabs(): void

@@ -42,7 +42,8 @@ class FileBlueprintApiModelTest extends ApiModelTestCase
 		$this->assertArrayHasKey('create', $options);
 		$this->assertArrayHasKey('delete', $options);
 		$this->assertArrayHasKey('replace', $options);
-		$this->assertArrayHasKey('update', $options);
+		$this->assertArrayHasKey('edit', $options);
+		$this->assertArrayHasKey('save', $options);
 	}
 
 	public function testTabs(): void
