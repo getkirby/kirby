@@ -226,7 +226,10 @@ class UserRules
 	 */
 	public static function createAvatar(User $user, string $source, string $extension): void
 	{
-		if ($user->permissions()->can('update') !== true) {
+		if (
+			$user->permissions()->can('edit') !== true ||
+			$user->permissions()->can('save') !== true
+		) {
 			throw new PermissionException(
 				key: 'user.update.permission',
 				data: ['name' => $user->username()]
@@ -278,7 +281,10 @@ class UserRules
 	 */
 	public static function deleteAvatar(User $user): void
 	{
-		if ($user->permissions()->can('update') !== true) {
+		if (
+			$user->permissions()->can('edit') !== true ||
+			$user->permissions()->can('save') !== true
+		) {
 			throw new PermissionException(
 				key: 'user.update.permission',
 				data: ['name' => $user->username()]
@@ -300,7 +306,10 @@ class UserRules
 	 */
 	public static function replaceAvatar(User $user, string $source, string $extension): void
 	{
-		if ($user->permissions()->can('update') !== true) {
+		if (
+			$user->permissions()->can('edit') !== true ||
+			$user->permissions()->can('save') !== true
+		) {
 			throw new PermissionException(
 				key: 'user.update.permission',
 				data: ['name' => $user->username()]

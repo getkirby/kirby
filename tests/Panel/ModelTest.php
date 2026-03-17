@@ -461,7 +461,8 @@ class ModelTest extends TestCase
 			'permissions' => [
 				'access' => false,
 				'changeTitle' => false,
-				'update' => false,
+				'edit' => false,
+				'save' => false,
 			],
 			'text' => '',
 			'uuid' => 'site://',
@@ -494,7 +495,8 @@ class ModelTest extends TestCase
 		$props = $this->panel($site)->props();
 		$this->assertSame('main', $props['tabs'][0]['name']);
 		$this->assertSame('main', $props['tab']['name']);
-		$this->assertTrue($props['permissions']['update']);
+		$this->assertTrue($props['permissions']['edit']);
+		$this->assertTrue($props['permissions']['save']);
 
 		$app = $this->app->clone([
 			'request' => [

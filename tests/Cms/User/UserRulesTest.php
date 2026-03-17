@@ -400,7 +400,10 @@ class UserRulesTest extends ModelTestCase
 	public function testCreateAvatarWithoutPermission(): void
 	{
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions->method('can')->willReturnMap([
+			['edit', false],
+			['save', true],
+		]);
 
 		$user = $this->createMock(User::class);
 		$user->method('permissions')->willReturn($permissions);
@@ -418,7 +421,10 @@ class UserRulesTest extends ModelTestCase
 		$avatar->method('filename')->willReturn('profile.jpg');
 
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(true);
+		$permissions->method('can')->willReturnMap([
+			['edit', true],
+			['save', true],
+		]);
 
 		$user = $this->createMock(User::class);
 		$user->method('avatar')->willReturn($avatar);
@@ -432,10 +438,15 @@ class UserRulesTest extends ModelTestCase
 
 	public function testDeleteAvatar(): void
 	{
+		$this->expectNotToPerformAssertions();
+
 		$avatar = $this->createMock(File::class);
 
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(true);
+		$permissions->method('can')->willReturnMap([
+			['edit', true],
+			['save', true],
+		]);
 
 		$user = $this->createMock(User::class);
 		$user->method('avatar')->willReturn($avatar);
@@ -447,7 +458,10 @@ class UserRulesTest extends ModelTestCase
 	public function testDeleteAvatarNotFound(): void
 	{
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(true);
+		$permissions->method('can')->willReturnMap([
+			['edit', true],
+			['save', true],
+		]);
 
 		$user = $this->createMock(User::class);
 		$user->method('avatar')->willReturn(null);
@@ -462,7 +476,10 @@ class UserRulesTest extends ModelTestCase
 	public function testDeleteAvatarWithoutPermission(): void
 	{
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions->method('can')->willReturnMap([
+			['edit', false],
+			['save', true],
+		]);
 
 		$user = $this->createMock(User::class);
 		$user->method('permissions')->willReturn($permissions);
@@ -476,10 +493,15 @@ class UserRulesTest extends ModelTestCase
 
 	public function testReplaceAvatar(): void
 	{
+		$this->expectNotToPerformAssertions();
+
 		$avatar = $this->createMock(File::class);
 
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(true);
+		$permissions->method('can')->willReturnMap([
+			['edit', true],
+			['save', true],
+		]);
 
 		$user = $this->createMock(User::class);
 		$user->method('avatar')->willReturn($avatar);
@@ -491,7 +513,10 @@ class UserRulesTest extends ModelTestCase
 	public function testReplaceAvatarNotFound(): void
 	{
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(true);
+		$permissions->method('can')->willReturnMap([
+			['edit', true],
+			['save', true],
+		]);
 
 		$user = $this->createMock(User::class);
 		$user->method('avatar')->willReturn(null);
@@ -506,7 +531,10 @@ class UserRulesTest extends ModelTestCase
 	public function testReplaceAvatarWithoutPermission(): void
 	{
 		$permissions = $this->createMock(UserPermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions->method('can')->willReturnMap([
+			['edit', false],
+			['save', true],
+		]);
 
 		$user = $this->createMock(User::class);
 		$user->method('permissions')->willReturn($permissions);

@@ -464,10 +464,30 @@ class FileRulesTest extends ModelTestCase
 		FileRules::replace($file, $upload);
 	}
 
-	public function testUpdateWithoutPermissions(): void
+	public function testUpdateWithoutEditPermission(): void
 	{
 		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$permissions->method('can')->willReturnMap([
+			['edit', false],
+			['save', true],
+		]);
+
+		$file = $this->createMock(File::class);
+		$file->method('permissions')->willReturn($permissions);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The file cannot be updated');
+
+		FileRules::update($file, []);
+	}
+
+	public function testUpdateWithoutSavePermission(): void
+	{
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->method('can')->willReturnMap([
+			['edit', true],
+			['save', false],
+		]);
 
 		$file = $this->createMock(File::class);
 		$file->method('permissions')->willReturn($permissions);

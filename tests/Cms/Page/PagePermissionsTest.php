@@ -45,11 +45,12 @@ class PagePermissionsTest extends ModelTestCase
 			['create'],
 			['delete'],
 			['duplicate'],
+			['edit'],
 			['list'],
 			['move'],
 			['preview'],
+			['save'],
 			['sort'],
-			['update'],
 		];
 	}
 

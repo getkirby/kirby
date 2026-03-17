@@ -22,8 +22,9 @@ class UserPermissionsTest extends ModelTestCase
 			['changeRole'],
 			['create'],
 			['delete'],
+			['edit'],
 			['list'],
-			['update'],
+			['save'],
 		];
 	}
 
@@ -78,8 +79,9 @@ class UserPermissionsTest extends ModelTestCase
 							'changePassword' => false,
 							'changeRole'     => false,
 							'delete'         => false,
+							'edit'           => false,
 							'list'           => false,
-							'update'         => false
+							'save'           => false
 						],
 						'users' => [
 							'changeEmail'    => true,
@@ -89,7 +91,8 @@ class UserPermissionsTest extends ModelTestCase
 							'changeRole'     => true,
 							'create'         => true,
 							'delete'         => true,
-							'update'         => true
+							'edit'           => true,
+							'save'           => true,
 						]
 					]
 				]

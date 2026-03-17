@@ -77,7 +77,7 @@ class UserAvatarTest extends ModelTestCase
 				[
 					'name'        => 'editor',
 					'permissions' => [
-						'user' => ['update' => false]
+						'user' => ['edit' => false, 'save' => false]
 					]
 				]
 			],
@@ -146,7 +146,7 @@ class UserAvatarTest extends ModelTestCase
 				[
 					'name'        => 'editor',
 					'permissions' => [
-						'user' => ['update' => false]
+						'user' => ['edit' => false, 'save' => false]
 					]
 				]
 			],
@@ -204,7 +204,7 @@ class UserAvatarTest extends ModelTestCase
 				[
 					'name'        => 'editor',
 					'permissions' => [
-						'user' => ['update' => false]
+						'user' => ['edit' => false, 'save' => false]
 					]
 				]
 			],

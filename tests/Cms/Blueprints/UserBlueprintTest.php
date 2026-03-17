@@ -40,8 +40,9 @@ class UserBlueprintTest extends TestCase
 			'changePassword' => null,
 			'changeRole'     => null,
 			'delete'         => null,
+			'edit'           => null,
 			'list'           => null,
-			'update'         => null,
+			'save'           => null,
 		];
 
 		$this->assertSame($expected, $blueprint->options());
