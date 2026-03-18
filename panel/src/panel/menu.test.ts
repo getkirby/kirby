@@ -38,9 +38,9 @@ describe("panel.menu", () => {
 		it("returns default state", () => {
 			const menu = createMenu();
 			expect(menu.defaults()).toStrictEqual({
-				entries: [],
 				hover: false,
-				isOpen: false
+				isOpen: false,
+				items: []
 			});
 		});
 	});
@@ -171,14 +171,14 @@ describe("panel.menu", () => {
 	});
 
 	describe("set()", () => {
-		it("sets entries", () => {
+		it("sets items", () => {
 			const menu = createMenu();
-			const entries = [{ label: "Home", link: "/" }, "-" as const];
-			menu.set(entries);
-			expect(menu.entries).toStrictEqual(entries);
+			const items = [{ label: "Home", link: "/" }, "-" as const];
+			menu.set(items);
+			expect(menu.items).toStrictEqual(items);
 		});
 
-		it("calls resize after setting entries", () => {
+		it("calls resize after setting items", () => {
 			// on desktop with no localStorage item, resize opens the menu
 			const menu = createMenu(false);
 			menu.set([]);

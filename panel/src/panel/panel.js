@@ -2,7 +2,7 @@ import Activation from "./activation";
 import Api from "@/api/index.js";
 import Content from "./content.js";
 import Dialog from "./dialog.js";
-import Drag from "./drag.js";
+import Drag from "./drag";
 import Drawer from "./drawer.js";
 import Dropdown from "./dropdown.js";
 import Events from "./events";
