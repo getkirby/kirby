@@ -1,6 +1,6 @@
 import { reactive } from "vue";
 import { isUrl } from "@/helpers/url";
-import listeners from "./listeners.js";
+import listeners from "./listeners";
 import State from "./state";
 
 /**
@@ -259,7 +259,7 @@ export default (panel, key, defaults) => {
 			parent.set.call(this, state);
 
 			// reset the event listeners
-			this.on = {};
+			this.removeEventListeners();
 
 			// register new listeners
 			this.addEventListeners(state.on ?? {});
