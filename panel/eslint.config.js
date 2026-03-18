@@ -28,6 +28,16 @@ export default [
 		}
 	},
 	{
+		files: ["**/*.ts"],
+		plugins: { "@typescript-eslint": tseslint.plugin },
+		rules: {
+			"@typescript-eslint/no-unused-vars": [
+				"error",
+				{ ignoreRestSiblings: true }
+			]
+		}
+	},
+	{
 		rules: {
 			"vue/attributes-order": "error",
 			"vue/component-definition-name-casing": "off",

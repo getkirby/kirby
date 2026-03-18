@@ -102,13 +102,16 @@ export function isUrl(url: unknown, strict: boolean = false): boolean {
  * Make sure the URL is absolute
  * @since 4.0.0
  */
-export function makeAbsolute(path: string, origin?: string | URL): string {
+export function makeAbsolute(
+	path: string | URL,
+	origin?: string | URL
+): string {
 	if (isAbsolute(path) === true) {
-		return path;
+		return String(path);
 	}
 
 	const originStr = String(origin ?? base()).replaceAll(/\/$/g, "");
-	const pathStr = path.replaceAll(/^\//g, "");
+	const pathStr = String(path).replaceAll(/^\//g, "");
 
 	return originStr + "/" + pathStr;
 }
