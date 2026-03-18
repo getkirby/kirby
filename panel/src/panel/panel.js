@@ -13,7 +13,7 @@ import Menu from "./menu.js";
 import Search from "./search.js";
 import System from "./system.js";
 import Theme from "./theme.js";
-import Translation from "./translation.js";
+import Translation from "./translation";
 import { buildUrl, isUrl } from "@/helpers/url";
 import { reactive } from "vue";
 import { redirect, request } from "./request";

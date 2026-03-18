@@ -306,15 +306,15 @@ export function stripHTML(string: unknown): string {
 	return String(string).replace(/(<([^>]+)>)/gi, "");
 }
 
-interface TemplateValues {
+export type StringTemplateValues = {
 	[key: string]:
-		| TemplateValues
-		| TemplateValues[]
+		| StringTemplateValues
+		| StringTemplateValues[]
 		| string
 		| number
 		| boolean
 		| null;
-}
+};
 
 /**
  * Replaces template placeholders in string with provided values
@@ -324,8 +324,11 @@ interface TemplateValues {
  * template("{{user.email}}", { user: { email: "hi@example.com" } }) // "hi@example.com"
  * template("{missing}", {}) // "…"
  */
-export function template(string: unknown, values: TemplateValues = {}): string {
-	const resolve = (parts: string[], data: TemplateValues = {}) => {
+export function template(
+	string: unknown,
+	values: StringTemplateValues = {}
+): string {
+	const resolve = (parts: string[], data: StringTemplateValues = {}) => {
 		const part = escapeHTML(parts.shift() ?? "");
 		const value = data[part] ?? "…";
 
@@ -333,7 +336,7 @@ export function template(string: unknown, values: TemplateValues = {}): string {
 			return value;
 		}
 
-		return resolve(parts, value as TemplateValues);
+		return resolve(parts, value as StringTemplateValues);
 	};
 
 	const opening = "[{]{1,2}[\\s]?";
