@@ -15,8 +15,6 @@ export function defaultValue(field: Field): unknown {
 		return clone(field.default);
 	}
 
-	// TODO: Remove once window.panel is globally typed
-	// @ts-expect-error - window.panel has no type yet
 	const component = window.panel.app.component(`k-${field.type}-field`);
 	const valueProp = component?.props?.value;
 

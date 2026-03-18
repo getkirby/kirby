@@ -216,7 +216,6 @@ export async function safeFetch(request: Request): Promise<Response> {
 			throw error;
 		}
 
-		// @ts-expect-error - remove once Panel type exists (TODO)
 		window.panel?.events?.emit("offline", error);
 
 		throw new OfflineError("Panel is offline", {

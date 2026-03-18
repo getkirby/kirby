@@ -102,12 +102,16 @@ describe("panel.request", () => {
 
 	describe("redirect()", () => {
 		it("should throw RedirectError with the target url", () => {
-			try {
-				redirect("/test");
-			} catch (error) {
-				expect(error).toBeInstanceOf(RedirectError);
-				expect((error as RedirectError).url).toContain("/test");
-			}
+			let caught: unknown;
+			expect(() => {
+				try {
+					redirect("/test");
+				} catch (e) {
+					caught = e;
+					throw e;
+				}
+			}).toThrow(RedirectError);
+			expect((caught as RedirectError).url).toContain("/test");
 		});
 	});
 

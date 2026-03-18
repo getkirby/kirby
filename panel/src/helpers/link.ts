@@ -105,7 +105,6 @@ async function previewForFile(
 	fields = ["filename", "panelImage"]
 ): Promise<LinkPreview> {
 	try {
-		// @ts-expect-error - window.panel has no type yet
 		const file = await window.panel.api.files.get(null, id, {
 			select: fields.join(",")
 		});
@@ -124,12 +123,10 @@ async function previewForPage(
 	fields = ["title", "panelImage"]
 ): Promise<LinkPreview> {
 	if (id === "site://") {
-		// @ts-expect-error - window.panel has no type yet
 		return { label: window.panel.$t("view.site") };
 	}
 
 	try {
-		// @ts-expect-error - window.panel has no type yet
 		const page = await window.panel.api.pages.get(id, {
 			select: fields.join(",")
 		});
@@ -144,7 +141,6 @@ async function previewForPage(
 }
 
 export function types(keys: string[] = []): Record<string, LinkType> {
-	// @ts-expect-error - window.panel has no type yet
 	const panel = window.panel;
 
 	const types: Record<string, LinkType> = {
