@@ -7,7 +7,7 @@ import Drawer from "./drawer.js";
 import Dropdown from "./dropdown.js";
 import Events from "./events";
 import Notification from "./notification.js";
-import Language from "./language.js";
+import Language from "./language";
 import Plugins from "./plugins.js";
 import Menu from "./menu";
 import Search from "./search.js";
