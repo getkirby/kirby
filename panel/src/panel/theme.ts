@@ -1,29 +1,36 @@
 import { reactive } from "vue";
-import State from "./state.js";
+import State from "./state";
 
-const media = window.matchMedia?.("(prefers-color-scheme: dark)");
+type ThemeState = {
+	setting: string | null;
+	system: string;
+};
 
-export const defaults = () => {
+export function defaults(media?: MediaQueryList): ThemeState {
 	return {
 		setting: localStorage.getItem("kirby$theme"),
 		system: media?.matches ? "dark" : "light"
 	};
-};
+}
 
 /**
+ * Tracks the active color theme (light, dark, or system)
+ * resolved from user setting, Panel config, or OS preference
+ *
  * @since 5.0.0
  */
-export default (panel) => {
-	const parent = State("theme", defaults());
+export default function Theme(panel: { config: { theme: string | null } }) {
+	const media = window.matchMedia("(prefers-color-scheme: dark)");
+	const parent = State("theme", defaults(media));
 
 	const theme = reactive({
 		...parent,
 
-		get config() {
+		get config(): string | null {
 			return panel.config.theme;
 		},
 
-		get current() {
+		get current(): string {
 			const setting = this.setting ?? this.config;
 
 			if (setting === "system") {
@@ -33,12 +40,12 @@ export default (panel) => {
 			return setting ?? this.system;
 		},
 
-		reset() {
+		reset(): void {
 			this.setting = null;
 			localStorage.removeItem("kirby$theme");
 		},
 
-		set(theme) {
+		set(theme: "light" | "dark" | "system"): void {
 			this.setting = theme;
 			localStorage.setItem("kirby$theme", theme);
 		}
@@ -51,4 +58,4 @@ export default (panel) => {
 	});
 
 	return theme;
-};
+}
