@@ -3,7 +3,7 @@ import { reactive } from "vue";
 /**
  * @since 6.0.0
  */
-export default () => {
+export default function Observers() {
 	return reactive({
 		resize: new ResizeObserver((entries) => {
 			for (const index in entries) {
@@ -19,4 +19,4 @@ export default () => {
 			}
 		})
 	});
-};
+}

@@ -8,7 +8,7 @@ import Dropdown from "./dropdown.js";
 import Events from "./events";
 import Notification from "./notification.js";
 import Language from "./language";
-import Observers from "./observers.js";
+import Observers from "./observers";
 import Plugins from "./plugins.js";
 import Menu from "./menu";
 import Search from "./search.js";
