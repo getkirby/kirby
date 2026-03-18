@@ -1,7 +1,7 @@
 import { reactive } from "vue";
-import AuthError from "@/errors/AuthError.js";
-import JsonRequestError from "@/errors/JsonRequestError.js";
-import RequestError from "@/errors/RequestError.js";
+import AuthError from "@/errors/AuthError";
+import JsonRequestError from "@/errors/JsonRequestError";
+import RequestError from "@/errors/RequestError";
 import State from "./state";
 import Timer from "@/helpers/timer";
 

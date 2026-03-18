@@ -17,13 +17,14 @@ import Theme from "./theme.js";
 import Translation from "./translation.js";
 import { buildUrl, isUrl } from "@/helpers/url";
 import { reactive } from "vue";
-import { redirect, request } from "./request.js";
+import { redirect, request } from "./request";
 import Upload from "./upload";
 import User from "./user";
 import View from "./view.js";
 import { isObject, length } from "@/helpers/object";
 import { isEmpty } from "@/helpers/string";
-import OfflineError from "@/errors/OfflineError.js";
+import OfflineError from "@/errors/OfflineError";
+import RedirectError from "@/errors/RedirectError";
 
 /**
  * Globals are just reactive objects
@@ -190,6 +191,11 @@ export default {
 	 */
 	error(error, openNotification = true) {
 		if (error.name === "AbortError") {
+			return;
+		}
+
+		if (error instanceof RedirectError) {
+			window.location.href = error.url;
 			return;
 		}
 

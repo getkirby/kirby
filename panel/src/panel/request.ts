@@ -1,80 +1,109 @@
-import { toLowerKeys } from "../helpers/object";
 import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url";
+import { toLowerKeys } from "../helpers/object";
 import AuthError from "@/errors/AuthError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import OfflineError from "@/errors/OfflineError.js";
+import RedirectError from "@/errors/RedirectError.js";
 import RequestError from "@/errors/RequestError.js";
+
+export interface PanelResponse {
+	headers: Headers;
+	json: Record<string, unknown>;
+	ok: boolean;
+	status: number;
+	statusText: string;
+	text: string;
+	url: string;
+}
+
+export type RequestBody =
+	| string
+	| FormData
+	| HTMLFormElement
+	| Record<string, unknown>
+	| null;
+
+export interface PanelRequestOptions extends Omit<
+	RequestInit,
+	"body" | "headers" | "referrer"
+> {
+	body: RequestBody;
+	csrf?: string;
+	globals?: string | string[];
+	headers: Record<string, string>;
+	query: Record<string, string | null>;
+	referrer?: string;
+}
 
 /**
  * Creates a proper request body
  * @since 4.0.0
- *
- * @param {String|FormData|Object|Array}
- * @returns {String}
  */
-export const body = (body) => {
-	if (body instanceof HTMLFormElement) {
-		body = new FormData(body);
+export function body(data: RequestBody | undefined): string | null | undefined {
+	if (data instanceof HTMLFormElement) {
+		data = new FormData(data);
 	}
 
-	if (body instanceof FormData) {
-		body = Object.fromEntries(body);
+	if (data instanceof FormData) {
+		data = Object.fromEntries(data);
 	}
 
-	if (typeof body === "object") {
-		return JSON.stringify(body);
+	if (typeof data === "object" && data !== null) {
+		return JSON.stringify(data);
 	}
 
-	return body;
-};
+	return data;
+}
 
 /**
  * Convert globals to comma separated string
  * @since 4.0.0
- *
- * @param {Array|String} globals
- * @returns {String|false}
  */
-export const globals = (globals) => {
-	if (globals) {
-		if (Array.isArray(globals) === false) {
-			return String(globals);
-		}
-
-		return globals.join(",");
+export function globals(input?: string | string[]): string | undefined {
+	if (Array.isArray(input) === true) {
+		return input.length ? input.join(",") : undefined;
 	}
 
-	return false;
-};
+	return input || undefined;
+}
 
 /**
  * Builds all required headers for a request
  * @since 4.0.0
- *
- * @param {Object} headers
- * @param {Object} options All request options
- * @returns {Object}
  */
-export const headers = (headers = {}, options = {}) => {
-	return {
+export function headers(
+	input: Record<string, string> = {},
+	options: Partial<PanelRequestOptions> = {}
+): Record<string, string> {
+	const result: Record<string, string> = {
 		"content-type": "application/json",
-		"x-csrf": options.csrf ?? false,
-		"x-panel": true,
-		"x-panel-globals": globals(options.globals),
-		"x-panel-referrer": options.referrer ?? false,
-		...toLowerKeys(headers)
+		"x-panel": "true",
+		...toLowerKeys(input)
 	};
-};
+
+	if (options.csrf) {
+		result["x-csrf"] = options.csrf;
+	}
+
+	const globalsHeader = globals(options.globals);
+
+	if (globalsHeader) {
+		result["x-panel-globals"] = globalsHeader;
+	}
+
+	if (options.referrer) {
+		result["x-panel-referrer"] = options.referrer;
+	}
+
+	return result;
+}
 
 /**
  * @since 4.0.0
- * @param {string|URL} url
- * @returns false
  */
-export const redirect = (url) => {
-	window.location.href = makeAbsolute(url);
-	return false;
-};
+export function redirect(url: string | URL): never {
+	throw new RedirectError(makeAbsolute(url));
+}
 
 /**
  * Sends a Panel request to the backend with
@@ -84,59 +113,66 @@ export const redirect = (url) => {
  * which cannot be handled via fetch and
  * throws more useful errors.
  * @since 4.0.0
- *
- * @param {String} url
- * @param {Object} options
- * @returns {Object|false} {request, response}
  */
-export const request = async (url, options = {}) => {
+export async function request(
+	url: string,
+	options: Partial<PanelRequestOptions> = {}
+): Promise<{ request: Request; response: PanelResponse }> {
+	// extract Request options from options
+	const { csrf, globals, referrer, query, ...rest } = options;
+
 	// merge with a few defaults
-	options = {
+	const init: RequestInit = {
 		cache: "no-store",
 		credentials: "same-origin",
 		mode: "same-origin",
-		...options
+		...rest,
+		body: body(options.body),
+		headers: headers(options.headers, options)
 	};
-
-	// those need a bit more work
-	options.body = body(options.body);
-	options.headers = headers(options.headers, options);
-	options.url = buildUrl(url, options.query);
 
 	// The request object is a nice way to access all the
 	// important parts later in errors for example
-	const request = new Request(options.url, options);
+	const req = new Request(buildUrl(url, query), init);
 
 	// Don't even try to request a
 	// cross-origin url. Redirect instead.
-	if (isSameOrigin(request.url) === false) {
-		// will be false for redirects
-		return redirect(request.url);
+	if (isSameOrigin(req.url) === false) {
+		return redirect(req.url);
 	}
 
 	// parse the JSON response and react on errors
-	return await responder(request, await safeFetch(request));
-};
+	return await responder(req, await safeFetch(req));
+}
 
 /**
  * Try to parse the response and throw
  * matching errors for issues with the response.
  * @since 4.0.0
- *
- * @param {Request} request
- * @param {Response} response
- * @returns Response
  */
-export const responder = async (request, response) => {
+export async function responder(
+	request: Request,
+	raw: Response
+): Promise<{ request: Request; response: PanelResponse }> {
+	const type = raw.headers.get("Content-Type");
+
 	// redirect to non-json requests
-	if (
-		response.headers.get("Content-Type").includes("application/json") === false
-	) {
-		return redirect(response.url);
+	if (type?.includes("application/json") === false) {
+		return redirect(raw.url);
 	}
 
+	const response: PanelResponse = {
+		headers: raw.headers,
+		json: {},
+		ok: raw.ok,
+		status: raw.status,
+		statusText: raw.statusText,
+		text: "",
+		url: raw.url
+	};
+
 	try {
-		response.text = await response.text();
+		response.text = await raw.text();
 		response.json = JSON.parse(response.text);
 	} catch (error) {
 		throw new JsonRequestError("Invalid JSON response", {
@@ -166,30 +202,28 @@ export const responder = async (request, response) => {
 		request,
 		response
 	};
-};
+}
 
 /**
  * Fetches a request and converts network errors
  * into a Panel offline state
- *
- * @param {Request} request
- * @returns {Response}
  */
-export const safeFetch = async (request) => {
+export async function safeFetch(request: Request): Promise<Response> {
 	try {
 		return await fetch(request);
 	} catch (error) {
-		if (error?.name === "AbortError") {
+		if (error instanceof Error && error.name === "AbortError") {
 			throw error;
 		}
 
-		window?.panel?.events?.emit("offline", error);
+		// @ts-expect-error - remove once Panel type exists (TODO)
+		window.panel?.events?.emit("offline", error);
 
 		throw new OfflineError("Panel is offline", {
 			cause: error,
 			request
 		});
 	}
-};
+}
 
 export default request;
