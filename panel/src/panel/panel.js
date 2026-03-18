@@ -10,7 +10,7 @@ import Notification from "./notification.js";
 import Language from "./language.js";
 import Observers from "./observers.js";
 import Plugins from "./plugins.js";
-import Menu from "./menu.js";
+import Menu from "./menu";
 import Search from "./search.js";
 import System from "./system.js";
 import Theme from "./theme.js";
