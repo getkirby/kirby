@@ -1,4 +1,4 @@
-import Activation from "./activiation.js";
+import Activation from "./activation";
 import Api from "@/api/index.js";
 import Content from "./content.js";
 import Dialog from "./dialog.js";
