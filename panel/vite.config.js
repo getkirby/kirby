@@ -65,8 +65,8 @@ function createPlugins(mode) {
 			template: {
 				compilerOptions: {
 					isCustomElement: (tag) =>
-					["k-input-validator"].includes(tag) ||
-					(!!process.env.VITEST && tag.startsWith("k-"))
+						["k-input-validator"].includes(tag) ||
+						(!!process.env.VITEST && tag.startsWith("k-"))
 				}
 			}
 		}),
@@ -134,33 +134,25 @@ export default defineConfig(async ({ mode }) => {
 		plugins,
 		base: "./",
 		build: {
-			minify: "terser",
+			target: ["chrome123", "edge123", "firefox120", "safari17.5", "ios17.5"],
 			cssCodeSplit: false,
-			rollupOptions: {
+			rolldownOptions: {
+				checks: { pluginTimings: false },
 				external: ["vue"],
 				input: "./src/index.js",
 				output: {
 					entryFileNames: "js/[name].min.js",
 					chunkFileNames: "js/[name].min.js",
 					assetFileNames: "[ext]/[name].min.[ext]",
-					manualChunks(id) {
-						if (id.includes("sortablejs")) {
-							return "sortable";
-						}
-
-						if (id.includes("node_modules")) {
-							return "vendor";
-						}
-
-						return null;
+					codeSplitting: {
+						groups: [{ name: "vendor", test: /node_modules\/(?!sortablejs)/ }]
 					}
 				}
 			}
 		},
 		optimizeDeps: {
 			entries: ["src/**/*.{js,ts,vue}", "!src/**/*.test.{js,ts}"],
-			exclude: ["vitest", "vue"],
-			holdUntilCrawlEnd: false
+			exclude: ["vitest", "vue"]
 		},
 		resolve: {
 			alias
