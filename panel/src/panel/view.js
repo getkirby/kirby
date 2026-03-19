@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-import Feature, { defaults as featureDefaults } from "./feature.js";
+import Feature, { defaults as featureDefaults } from "./feature";
 
 export const defaults = () => {
 	return {
