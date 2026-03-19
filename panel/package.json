@@ -44,25 +44,20 @@
 		"terser": "^5.46.1",
 		"typescript": "^6.0.2",
 		"typescript-eslint": "^8.58.2",
-		"vite": "^7.3.2",
-		"vite-plugin-static-copy": "^3.4.0",
+		"vite": "^8.0.8",
+		"vite-plugin-static-copy": "^4.0.1",
 		"vitest": "^4.1.4",
 		"vue-docgen-api": "^4.79.2",
 		"vue-tsc": "^3.2.6"
 	},
 	"browserslist": [
-		"last 2 Android versions",
-		"last 2 Chrome versions",
-		"last 2 ChromeAndroid versions",
-		"last 2 Edge versions",
-		"last 2 Firefox versions",
-		"last 2 FirefoxAndroid versions",
-		"last 2 iOS versions",
-		"last 2 KaiOS versions",
-		"last 2 Safari versions",
-		"last 2 Samsung versions",
-		"last 2 Opera versions",
-		"last 2 OperaMobile versions",
-		"last 2 UCAndroid versions"
+		"Chrome >= 123",
+		"ChromeAndroid >= 126",
+		"Edge >= 123",
+		"Firefox >= 120",
+		"Opera >= 109",
+		"Safari >= 17.5",
+		"iOS >= 17.5",
+		"Android >= 126"
 	]
 }
