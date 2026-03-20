@@ -4,7 +4,7 @@ type UploadParams = {
 	/** Signal to abort the upload request */
 	abort?: AbortSignal;
 	/** Additional attributes added to the FormData */
-	attributes?: Record<string, string>;
+	attributes?: Record<string, string | number>;
 	/** Callback when upload completed */
 	complete?: () => void;
 	/** Callback when upload failed */
@@ -62,7 +62,7 @@ export async function upload(
 			const value = options.attributes[attribute];
 
 			if (value !== null && value !== undefined) {
-				data.append(attribute, value);
+				data.append(attribute, String(value));
 			}
 		}
 
