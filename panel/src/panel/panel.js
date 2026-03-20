@@ -19,7 +19,7 @@ import { reactive } from "vue";
 import { redirect, request } from "./request";
 import Upload from "./upload";
 import User from "./user";
-import View from "./view.js";
+import View from "./view";
 import { isObject } from "@/helpers/object";
 import { isEmpty } from "@/helpers/string";
 import OfflineError from "@/errors/OfflineError";
