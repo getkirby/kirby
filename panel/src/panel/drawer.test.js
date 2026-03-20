@@ -13,7 +13,7 @@ describe("panel.drawer", () => {
 			isLoading: false,
 			on: {},
 			path: null,
-			props: {},
+			props: { value: {} },
 			query: {},
 			referrer: null,
 			timestamp: null

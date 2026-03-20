@@ -1,4 +1,4 @@
-import Modal, { defaults as modalDefaults } from "./modal.js";
+import Modal, { defaults as modalDefaults } from "./modal";
 import { isObject } from "@/helpers/object";
 import { reactive } from "vue";
 

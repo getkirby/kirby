@@ -1,6 +1,7 @@
 import { isObject } from "@/helpers/object";
 
-export type Listener = (...args: unknown[]) => unknown;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Listener = (...args: any[]) => unknown;
 
 /**
  * Provides an event-listener system for Panel modules.
