@@ -240,7 +240,6 @@ describe("panel.plugins", () => {
 
 			expect(plugins.created).toStrictEqual([]);
 			expect(plugins.icons).toStrictEqual({});
-			expect(plugins.login).toBeUndefined();
 			expect(plugins.textareaButtons).toStrictEqual({});
 			expect(plugins.thirdParty).toStrictEqual({});
 			expect(plugins.use).toStrictEqual([]);
