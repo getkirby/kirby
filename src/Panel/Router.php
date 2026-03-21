@@ -190,7 +190,9 @@ class Router
 		// catch all route
 		$routes[] = [
 			'pattern' => '(:all)',
-			'action'  => fn (string $pattern) => throw new NotFoundException('Could not find Panel route: ' . $pattern)
+			'action'  => fn (string $pattern) => throw new NotFoundException(
+				message: 'Could not find Panel route: ' . $pattern
+			)
 		];
 
 		return $routes;

@@ -59,7 +59,7 @@ class Auth
 	 */
 	public function authenticate(
 		string $method,
-		string $email,
+		string|null $email,
 		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false
@@ -356,7 +356,7 @@ class Auth
 		$this->user()?->logout();
 
 		// clear the pending challenge
-		$this->challenges->clear();
+		$this->challenges->clear($this->kirby->session());
 
 		// clear the status cache
 		$this->status = null;
@@ -607,15 +607,7 @@ class Auth
 			// avoid leaking whether the user exists
 			usleep(random_int(10000, 2000000));
 
-			// specifically copy over the marker for a destroyed challenge
-			// even in production (used by the Panel to reset to the login form)
-			$details  = $e instanceof Exception ? $e->getDetails() : [];
-			$fallback = new PermissionException(
-				key: 'access.code',
-				details: [
-					'challengeDestroyed' => $details['challengeDestroyed'] ?? false
-				],
-			);
+			$fallback = new PermissionException(key: 'access.code');
 
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information

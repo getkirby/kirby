@@ -64,11 +64,6 @@ window.panel.plugin = function (plugin, extensions) {
 		window.panel.plugins.created.push(extensions["created"]);
 	}
 
-	// Login
-	if (extensions.login) {
-		window.panel.plugins.login = extensions.login;
-	}
-
 	// Textarea custom toolbar buttons
 	resolve(extensions, "textareaButtons", (name, options) => {
 		window.panel.plugins.textareaButtons[name] = options;
