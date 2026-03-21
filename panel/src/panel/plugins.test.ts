@@ -9,7 +9,7 @@ import Plugins, {
 	installPlugins,
 	resolveComponentExtension,
 	resolveComponentMixins,
-	resolveComponentRender,
+	resolveComponentRender
 } from "./plugins";
 
 describe("panel.plugins", () => {
@@ -59,7 +59,9 @@ describe("panel.plugins", () => {
 		});
 
 		it("warns and removes unknown string mixins", () => {
-			const warn = vi.spyOn(window.console, "warn").mockImplementation(() => {});
+			const warn = vi
+				.spyOn(window.console, "warn")
+				.mockImplementation(() => {});
 			const component = { template: "<p>test</p>", mixins: ["unknown"] };
 			const result = resolveComponentMixins(component);
 			expect(result.mixins).not.toContain("unknown");
@@ -79,7 +81,7 @@ describe("panel.plugins", () => {
 			const component = {
 				template: "<p>test</p>",
 				extends: parent,
-				mixins: ["dialog"],
+				mixins: ["dialog"]
 			};
 			const result = resolveComponentMixins(component);
 			expect(result.mixins).not.toContain(dialog);
@@ -89,7 +91,7 @@ describe("panel.plugins", () => {
 			const objectMixin = { methods: { foo: () => {} } };
 			const component = {
 				template: "<p>test</p>",
-				mixins: ["dialog", "section", objectMixin],
+				mixins: ["dialog", "section", objectMixin]
 			};
 			const result = resolveComponentMixins(component);
 			expect(result.mixins).toContain(dialog);
@@ -101,17 +103,23 @@ describe("panel.plugins", () => {
 	describe("resolveComponentExtension()", () => {
 		it("returns component unchanged when extends is not a string", () => {
 			const component = { template: "<p>test</p>" };
-			expect(resolveComponentExtension(app, "k-test", component)).toStrictEqual(component);
+			expect(resolveComponentExtension(app, "k-test", component)).toStrictEqual(
+				component
+			);
 		});
 
 		it("removes extends and warns when the referenced component is not registered", () => {
-			const warn = vi.spyOn(window.console, "warn").mockImplementation(() => {});
+			const warn = vi
+				.spyOn(window.console, "warn")
+				.mockImplementation(() => {});
 			const component = { extends: "k-unregistered-xyz" };
 
 			const result = resolveComponentExtension(app, "k-custom", component);
 
 			expect(result.extends).toBeUndefined();
-			expect(warn).toHaveBeenCalledWith(expect.stringContaining("k-unregistered-xyz"));
+			expect(warn).toHaveBeenCalledWith(
+				expect.stringContaining("k-unregistered-xyz")
+			);
 
 			warn.mockRestore();
 		});
@@ -121,9 +129,13 @@ describe("panel.plugins", () => {
 
 			const component = {
 				extends: "k-plugins-test-base",
-				template: "<p>extended</p>",
+				template: "<p>extended</p>"
 			};
-			const result = resolveComponentExtension(app, "k-plugins-test-extended", component);
+			const result = resolveComponentExtension(
+				app,
+				"k-plugins-test-extended",
+				component
+			);
 
 			expect(typeof result.extends).not.toBe("string");
 		});
@@ -132,13 +144,17 @@ describe("panel.plugins", () => {
 	describe("installComponent()", () => {
 		it("throws when component has no template, render, or extends", () => {
 			expect(() => installComponent(app, "k-empty", {})).toThrow(
-				`Plugin component "k-empty" is not providing any template, render or setup method`,
+				`Plugin component "k-empty" is not providing any template, render or setup method`
 			);
 		});
 
 		it("installs a component with a template", () => {
 			const component = { template: "<p>test</p>" };
-			const result = installComponent(app, "k-plugins-with-template", component);
+			const result = installComponent(
+				app,
+				"k-plugins-with-template",
+				component
+			);
 			expect(result).toStrictEqual(component);
 		});
 
@@ -151,12 +167,14 @@ describe("panel.plugins", () => {
 
 		it("warns when replacing a registered core component", () => {
 			app.component("k-plugins-core", { template: "<p>core</p>" });
-			const warn = vi.spyOn(window.console, "warn").mockImplementation(() => {});
+			const warn = vi
+				.spyOn(window.console, "warn")
+				.mockImplementation(() => {});
 
 			installComponent(app, "k-plugins-core", { template: "<p>override</p>" });
 
 			expect(warn).toHaveBeenCalledWith(
-				expect.stringContaining(`Plugin is replacing "k-plugins-core"`),
+				expect.stringContaining(`Plugin is replacing "k-plugins-core"`)
 			);
 
 			warn.mockRestore();
@@ -171,17 +189,19 @@ describe("panel.plugins", () => {
 		it("returns a map of installed components", () => {
 			const component = { template: "<p>test</p>" };
 			const result = installComponents(app, {
-				"k-plugins-installed": component,
+				"k-plugins-installed": component
 			});
 			expect(result["k-plugins-installed"]).toStrictEqual(component);
 		});
 
 		it("skips and warns for invalid components", () => {
-			const warn = vi.spyOn(window.console, "warn").mockImplementation(() => {});
+			const warn = vi
+				.spyOn(window.console, "warn")
+				.mockImplementation(() => {});
 
 			const result = installComponents(app, {
 				"k-valid": { template: "<p>valid</p>" },
-				"k-invalid": {},
+				"k-invalid": {}
 			});
 
 			expect(result["k-valid"]).toBeDefined();
@@ -220,7 +240,6 @@ describe("panel.plugins", () => {
 
 			expect(plugins.created).toStrictEqual([]);
 			expect(plugins.icons).toStrictEqual({});
-			expect(plugins.login).toBeUndefined();
 			expect(plugins.textareaButtons).toStrictEqual({});
 			expect(plugins.thirdParty).toStrictEqual({});
 			expect(plugins.use).toStrictEqual([]);
@@ -244,7 +263,7 @@ describe("panel.plugins", () => {
 		it("installs components", () => {
 			const component = { template: "<p>test</p>" };
 			const plugins = Plugins(app, {
-				components: { "k-plugins-default": component },
+				components: { "k-plugins-default": component }
 			});
 			expect(plugins.components["k-plugins-default"]).toStrictEqual(component);
 			expect(isComponent("k-plugins-default", app)).toBe(true);

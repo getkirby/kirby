@@ -134,14 +134,8 @@ class Challenges
 		$email = $session->get('kirby.challenge.email');
 		$type  = $session->get('kirby.challenge.type');
 
-		// if the challenge timed out on the previous request, the
-		// challenge data was already deleted from the session, so we can
-		// set `challengeDestroyed` to `true` in this response as well;
-		// however we must only base this on the email, not the type
-		// (otherwise "faked" challenges would be leaked)
 		if (is_string($email) !== true || is_string($type) !== true) {
 			throw new InvalidArgumentException(
-				details: ['challengeDestroyed' => is_string($email) !== true],
 				fallback: 'No authentication challenge is active'
 			);
 		}

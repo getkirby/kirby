@@ -5,6 +5,7 @@ namespace Kirby\Auth\Method;
 use Kirby\Auth\Auth;
 use Kirby\Auth\Status;
 use Kirby\Cms\User;
+use Kirby\Panel\Ui\Component;
 
 /**
  * Password-reset flow that triggers a challenge
@@ -19,7 +20,7 @@ use Kirby\Cms\User;
 class PasswordResetMethod extends CodeMethod
 {
 	public function authenticate(
-		string $email,
+		string|null $email,
 		string|null $password = null,
 		bool $long = false
 	): Status {
@@ -27,6 +28,17 @@ class PasswordResetMethod extends CodeMethod
 			mode: 'password-reset',
 			email: $email,
 			long:  false, // should always use a short-lived session
+		);
+	}
+
+	public function form(): Component
+	{
+		return new Component(
+			component: 'k-login-password-reset-method-form',
+			submit: [
+				'icon'  => static::icon(),
+				'label' => static::i18n('login.method.password-reset.submit'),
+			],
 		);
 	}
 

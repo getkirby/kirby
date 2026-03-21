@@ -23,11 +23,20 @@ import Node from "@/components/Forms/Writer/Node";
  * Installs a plugin component
  * @since 4.0.0
  */
-export function installComponent(app: App, name: string, component: Component): Component {
+export function installComponent(
+	app: App,
+	name: string,
+	component: Component
+): Component {
 	// make sure component has something to show
-	if (!component.template && !component.render && !component.setup && !component.extends) {
+	if (
+		!component.template &&
+		!component.render &&
+		!component.setup &&
+		!component.extends
+	) {
 		throw new Error(
-			`Plugin component "${name}" is not providing any template, render or setup method, neither is it extending a component. The component has not been registered.`,
+			`Plugin component "${name}" is not providing any template, render or setup method, neither is it extending a component. The component has not been registered.`
 		);
 	}
 
@@ -58,7 +67,7 @@ export function installComponent(app: App, name: string, component: Component): 
  */
 export function installComponents(
 	app: App,
-	components?: Record<string, Component>,
+	components?: Record<string, Component>
 ): Record<string, Component> {
 	if (isObject(components) === false) {
 		return {};
@@ -97,7 +106,11 @@ export function installPlugins(app: App, plugins?: Plugin[]): Plugin[] {
  * Resolves a component extension if defined as component name
  * @since 4.0.0
  */
-export function resolveComponentExtension(app: App, name: string, component: Component): Component {
+export function resolveComponentExtension(
+	app: App,
+	name: string,
+	component: Component
+): Component {
 	if (typeof component?.extends !== "string") {
 		return component;
 	}
@@ -105,7 +118,7 @@ export function resolveComponentExtension(app: App, name: string, component: Com
 	// only extend if referenced component exists
 	if (isComponent(component.extends, app) === false) {
 		window.console.warn(
-			`Problem with plugin trying to register component "${name}": cannot extend non-existent component "${component.extends}"`,
+			`Problem with plugin trying to register component "${name}": cannot extend non-existent component "${component.extends}"`
 		);
 
 		// remove the extension
@@ -131,7 +144,7 @@ export function resolveComponentMixins(component: Component): Component {
 	const mixins: Record<string, ComponentOptions> = {
 		dialog,
 		drawer,
-		section,
+		section
 	};
 
 	component.mixins = component.mixins
@@ -144,7 +157,7 @@ export function resolveComponentMixins(component: Component): Component {
 			// referenced mixin doesn't exist
 			if (mixins[mixin] === undefined) {
 				window.console.warn(
-					`Plugin trying to register component "${component.name}": cannot extend non-existent mixin "${mixin}"`,
+					`Plugin trying to register component "${component.name}": cannot extend non-existent mixin "${mixin}"`
 				);
 				return;
 			}
@@ -196,7 +209,7 @@ export default function Plugins(
 		writerMarks: Record<string, typeof Mark>;
 		writerNodes: Record<string, typeof Node>;
 		use: Plugin[];
-	}> = {},
+	}> = {}
 ) {
 	return {
 		// expose helper functions for kirbyup
@@ -206,7 +219,6 @@ export default function Plugins(
 		// defaults
 		created: [],
 		icons: {},
-		login: undefined,
 		textareaButtons: {},
 		thirdParty: {},
 		writerMarks: {},
@@ -214,6 +226,6 @@ export default function Plugins(
 		// registered
 		...plugins,
 		components: installComponents(app, plugins.components),
-		use: installPlugins(app, plugins.use),
+		use: installPlugins(app, plugins.use)
 	};
 }

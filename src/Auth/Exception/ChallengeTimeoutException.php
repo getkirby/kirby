@@ -10,5 +10,4 @@ use Kirby\Exception\PermissionException;
 class ChallengeTimeoutException extends PermissionException
 {
 	protected static string $defaultFallback = 'Authentication challenge timeout';
-	protected static array $defaultDetails = ['challengeDestroyed' => true];
 }

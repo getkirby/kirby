@@ -59,7 +59,20 @@ return [
 				);
 			}
 
-			$result = $auth->methods()->authenticateApiRequest($this);
+			$email    = $this->requestBody('email');
+			$long     = $this->requestBody('long');
+			$password = $this->requestBody('password');
+
+			$method = match (true) {
+				$password !== '' || $password === null => 'password',
+				$auth->methods()->has('code')          => 'code',
+				$auth->methods()->has('password-reset') => 'password-reset',
+				default => throw new InvalidArgumentException(
+					message: 'Login without password is not enabled'
+				)
+			};
+
+			$result = $auth->authenticate($method, $email, $password, $long);
 
 			if ($result instanceof User) {
 				return [
