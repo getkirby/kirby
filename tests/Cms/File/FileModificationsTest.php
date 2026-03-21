@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FileModifications::class)]
 class FileModificationsTest extends ModelTestCase
 {
+	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileModifications';
 
 	public function setUp(): void
@@ -351,5 +352,158 @@ class FileModificationsTest extends ModelTestCase
 
 		$file = $app->file('test.jpg');
 		$file->sharpen(20);
+	}
+
+	public function testSrcsetEmpty(): void
+	{
+		$file = $this->app->file('test.jpg');
+		$this->assertNull($file->srcset());
+		$this->assertNull($file->srcset([]));
+	}
+
+	public function testSrcsetWithNumericWidths(): void
+	{
+		// test.jpg in fixtures is 128x128
+		$page = new Page([
+			'root' => static::FIXTURES,
+			'slug' => 'files'
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page
+		]);
+
+		$srcset = $file->srcset([50, 100]);
+
+		// both widths should be generated with actual dimensions
+		$this->assertStringContainsString(' 50w', $srcset);
+		$this->assertStringContainsString(' 100w', $srcset);
+	}
+
+	public function testSrcsetWithWidthLargerThanOriginal(): void
+	{
+		// test.jpg in fixtures is 128x128
+		$page = new Page([
+			'root' => static::FIXTURES,
+			'slug' => 'files'
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page
+		]);
+
+		$srcset = $file->srcset([200, 300]);
+
+		// both requested widths > 128, so both result in 128w
+		// deduplication should keep only one entry
+		$this->assertStringContainsString(' 128w', $srcset);
+		// there should be only one entry
+		$this->assertSame(1, substr_count($srcset, 'w'));
+	}
+
+	public function testSrcsetDeduplication(): void
+	{
+		// test.jpg in fixtures is 128x128
+		$page = new Page([
+			'root' => static::FIXTURES,
+			'slug' => 'files'
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page
+		]);
+
+		$srcset = $file->srcset([50, 128, 200, 300]);
+
+		// 50 -> 50w, 128/200/300 all -> 128w (deduplicated)
+		$this->assertStringContainsString(' 50w', $srcset);
+		$this->assertStringContainsString(' 128w', $srcset);
+		// there should be exactly two entries
+		$this->assertSame(2, substr_count($srcset, 'w'));
+	}
+
+	public function testSrcsetWithPixelDensityDescriptors(): void
+	{
+		// test.jpg in fixtures is 128x128
+		$page = new Page([
+			'root' => static::FIXTURES,
+			'slug' => 'files'
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page
+		]);
+
+		// pixel density descriptors should be preserved as-is
+		$srcset = $file->srcset([50 => '1x', 100 => '2x']);
+
+		$this->assertStringContainsString(' 1x', $srcset);
+		$this->assertStringContainsString(' 2x', $srcset);
+		// pixel density descriptors are not deduplicated by width
+		$this->assertSame(2, substr_count($srcset, 'x,') + 1);
+	}
+
+	public function testSrcsetWithArrayOptions(): void
+	{
+		// test.jpg in fixtures is 128x128
+		$page = new Page([
+			'root' => static::FIXTURES,
+			'slug' => 'files'
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page
+		]);
+
+		// with explicit width descriptors in keys, should use actual widths
+		$srcset = $file->srcset([
+			'200w' => ['width' => 200],
+			'400w' => ['width' => 400]
+		]);
+
+		// both > 128, so both result in 128w (deduplicated to one entry)
+		$this->assertStringContainsString(' 128w', $srcset);
+		$this->assertSame(1, substr_count($srcset, 'w'));
+	}
+
+	public function testSrcsetFromConfig(): void
+	{
+		// test.jpg in fixtures is 128x128
+		$app = $this->app->clone([
+			'options' => [
+				'thumbs' => [
+					'srcsets' => [
+						'default' => [50, 100],
+						'custom'  => [64, 128]
+					]
+				]
+			]
+		]);
+
+		$page = new Page([
+			'root'  => static::FIXTURES,
+			'slug'  => 'files',
+			'kirby' => $app
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page
+		]);
+
+		// default srcset
+		$srcset = $file->srcset();
+		$this->assertStringContainsString(' 50w', $srcset);
+		$this->assertStringContainsString(' 100w', $srcset);
+
+		// named srcset
+		$srcset = $file->srcset('custom');
+		$this->assertStringContainsString(' 64w', $srcset);
+		$this->assertStringContainsString(' 128w', $srcset);
 	}
 }
