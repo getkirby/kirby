@@ -355,12 +355,13 @@ class PageTest extends TestCase
 			'create'         => true,
 			'delete'         => true,
 			'duplicate'      => true,
+			'edit'           => true,
 			'list'           => true,
 			'move'           => true,
 			'preview'        => true,
 			'read'           => true,
+			'save'           => true,
 			'sort'           => false, // drafts cannot be sorted
-			'update'         => true,
 		];
 
 		$panel = new Page($page);
@@ -385,12 +386,13 @@ class PageTest extends TestCase
 			'create'         => false,
 			'delete'         => false,
 			'duplicate'      => false,
+			'edit'           => false,
 			'list'           => false,
 			'move'           => false,
 			'preview'        => false,
 			'read'           => false,
+			'save'           => false,
 			'sort'           => false,
-			'update'         => false,
 		];
 
 		$panel = new Page($page);
@@ -406,12 +408,13 @@ class PageTest extends TestCase
 			'create'         => false,
 			'delete'         => false,
 			'duplicate'      => false,
+			'edit'           => false,
 			'list'           => false,
 			'move'           => false,
 			'preview'        => true,
 			'read'           => false,
+			'save'           => false,
 			'sort'           => false,
-			'update'         => false,
 		];
 
 		$this->assertSame($expected, $panel->options(['preview']));

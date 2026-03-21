@@ -23,10 +23,11 @@ class PermissionsTest extends TestCase
 			['files', 'changeTemplate'],
 			['files', 'create'],
 			['files', 'delete'],
+			['files', 'edit'],
 			['files', 'list'],
 			['files', 'read'],
 			['files', 'replace'],
-			['files', 'update'],
+			['files', 'save'],
 
 			['languages', 'create'],
 			['languages', 'delete'],
@@ -40,15 +41,17 @@ class PermissionsTest extends TestCase
 			['pages', 'create'],
 			['pages', 'delete'],
 			['pages', 'duplicate'],
+			['pages', 'edit'],
 			['pages', 'list'],
 			['pages', 'move'],
 			['pages', 'preview'],
 			['pages', 'read'],
 			['pages', 'sort'],
-			['pages', 'update'],
+			['pages', 'save'],
 
 			['site', 'changeTitle'],
-			['site', 'update'],
+			['site', 'edit'],
+			['site', 'save'],
 
 			['users', 'changeEmail'],
 			['users', 'changeLanguage'],
@@ -57,7 +60,8 @@ class PermissionsTest extends TestCase
 			['users', 'changeRole'],
 			['users', 'create'],
 			['users', 'delete'],
-			['users', 'update'],
+			['users', 'edit'],
+			['users', 'save'],
 
 			['user', 'changeEmail'],
 			['user', 'changeLanguage'],
@@ -65,7 +69,8 @@ class PermissionsTest extends TestCase
 			['user', 'changePassword'],
 			['user', 'changeRole'],
 			['user', 'delete'],
-			['user', 'update'],
+			['users', 'edit'],
+			['users', 'save'],
 		];
 	}
 
@@ -75,14 +80,16 @@ class PermissionsTest extends TestCase
 		$p = new Permissions(['pages' => ['delete' => false]]);
 		$this->assertFalse($p->for('pages', 'delete'));
 		$this->assertTrue($p->for('pages', 'read'));
-		$this->assertTrue($p->for('pages', 'update'));
+		$this->assertTrue($p->for('pages', 'edit'));
+		$this->assertTrue($p->for('pages', 'save'));
 		$this->assertTrue($p->for('pages', 'create'));
 
 		// disabling an entire category does not affect other categories
 		$p = new Permissions(['pages' => false]);
 		$this->assertFalse($p->for('pages', 'read'));
 		$this->assertTrue($p->for('files', 'read'));
-		$this->assertTrue($p->for('site', 'update'));
+		$this->assertTrue($p->for('site', 'edit'));
+		$this->assertTrue($p->for('site', 'save'));
 	}
 
 	#[DataProvider('actionsProvider')]
@@ -128,23 +135,27 @@ class PermissionsTest extends TestCase
 		// wildcard disables all actions in a category
 		$p = new Permissions(['pages' => ['*' => false]]);
 		$this->assertFalse($p->for('pages', 'read'));
-		$this->assertFalse($p->for('pages', 'update'));
+		$this->assertFalse($p->for('pages', 'edit'));
+		$this->assertFalse($p->for('pages', 'save'));
 		$this->assertFalse($p->for('pages', 'delete'));
 
 		// other categories are unaffected
 		$this->assertTrue($p->for('files', 'read'));
-		$this->assertTrue($p->for('site', 'update'));
+		$this->assertTrue($p->for('site', 'edit'));
+		$this->assertTrue($p->for('site', 'save'));
 
 		// explicit value after wildcard takes precedence
 		$p = new Permissions(['pages' => ['*' => false, 'read' => true]]);
 		$this->assertTrue($p->for('pages', 'read'));
-		$this->assertFalse($p->for('pages', 'update'));
+		$this->assertFalse($p->for('pages', 'edit'));
+		$this->assertFalse($p->for('pages', 'save'));
 		$this->assertFalse($p->for('pages', 'delete'));
 
 		// explicit value also takes precedence if defined before wildcard
 		$p = new Permissions(['pages' => ['read' => true, '*' => false]]);
 		$this->assertTrue($p->for('pages', 'read'));
-		$this->assertFalse($p->for('pages', 'update'));
+		$this->assertFalse($p->for('pages', 'edit'));
+		$this->assertFalse($p->for('pages', 'save'));
 		$this->assertFalse($p->for('pages', 'delete'));
 	}
 
@@ -291,16 +302,19 @@ class PermissionsTest extends TestCase
 
 		// all page actions disabled
 		$this->assertFalse($p->for('pages', 'read'));
-		$this->assertFalse($p->for('pages', 'update'));
+		$this->assertFalse($p->for('pages', 'edit'));
+		$this->assertFalse($p->for('pages', 'save'));
 		$this->assertFalse($p->for('pages', 'delete'));
 
 		// only files.delete disabled, rest untouched
 		$this->assertFalse($p->for('files', 'delete'));
 		$this->assertTrue($p->for('files', 'read'));
-		$this->assertTrue($p->for('files', 'update'));
+		$this->assertTrue($p->for('files', 'edit'));
+		$this->assertTrue($p->for('files', 'save'));
 
 		// unrelated categories unaffected
-		$this->assertTrue($p->for('site', 'update'));
+		$this->assertTrue($p->for('site', 'edit'));
+		$this->assertTrue($p->for('site', 'save'));
 		$this->assertTrue($p->for('users', 'create'));
 	}
 
@@ -309,7 +323,8 @@ class PermissionsTest extends TestCase
 		// null behaves identically to empty array — all defaults apply
 		$p = new Permissions(null);
 		$this->assertTrue($p->for('pages', 'read'));
-		$this->assertTrue($p->for('files', 'update'));
+		$this->assertTrue($p->for('files', 'edit'));
+		$this->assertTrue($p->for('files', 'save'));
 		$this->assertTrue($p->for('site', 'changeTitle'));
 		$this->assertTrue($p->for('users', 'create'));
 	}
@@ -330,7 +345,8 @@ class PermissionsTest extends TestCase
 
 		// default values are true
 		$this->assertTrue($array['pages']['read']);
-		$this->assertTrue($array['site']['update']);
+		$this->assertTrue($array['site']['edit']);
+		$this->assertTrue($array['site']['save']);
 
 		// modified permissions are reflected
 		$p     = new Permissions(['pages' => ['delete' => false]]);
@@ -344,11 +360,13 @@ class PermissionsTest extends TestCase
 		// unknown category is silently ignored, all defaults kept
 		$p = new Permissions(['nonexistent' => false]);
 		$this->assertTrue($p->for('pages', 'read'));
-		$this->assertTrue($p->for('files', 'update'));
+		$this->assertTrue($p->for('files', 'edit'));
+		$this->assertTrue($p->for('files', 'save'));
 
 		// unknown action is silently ignored, known actions kept
 		$p = new Permissions(['pages' => ['nonexistent' => false]]);
 		$this->assertTrue($p->for('pages', 'read'));
-		$this->assertTrue($p->for('pages', 'update'));
+		$this->assertTrue($p->for('pages', 'edit'));
+		$this->assertTrue($p->for('pages', 'save'));
 	}
 }
