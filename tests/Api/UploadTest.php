@@ -94,6 +94,17 @@ class UploadTest extends TestCase
 		);
 	}
 
+	public function testChunkSizeWithUnlimitedPostMaxSize(): void
+	{
+		ini_set('upload_max_filesize', '10M');
+		ini_set('post_max_size', '0');
+
+		$this->assertSame(
+			(int)floor(10 * 1024 * 1024 * 0.95),
+			Upload::chunkSize()
+		);
+	}
+
 	public function testCleanTmpDir(): void
 	{
 		$dir = static::TMP . '/site/cache/.uploads';
@@ -615,6 +626,19 @@ class UploadTest extends TestCase
 	{
 		ini_set('upload_max_filesize', '10M');
 		ini_set('post_max_size', '20M');
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('No files were uploaded');
+
+		$upload = $this->upload();
+		$upload->process(function () {
+		});
+	}
+
+	public function testValidateFilesEmptyWithUnlimitedPostMaxSize(): void
+	{
+		ini_set('upload_max_filesize', '10M');
+		ini_set('post_max_size', '0');
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No files were uploaded');

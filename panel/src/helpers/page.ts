@@ -16,7 +16,6 @@ export function status(
 	status: string,
 	disabled: boolean = false
 ): StatusButton {
-	// @ts-expect-error - window.panel has no type yet
 	const panel = window.panel;
 
 	const button: StatusButton = {

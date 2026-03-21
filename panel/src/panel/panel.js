@@ -1,29 +1,30 @@
-import Activation from "./activiation.js";
+import Activation from "./activation";
 import Api from "@/api/index.js";
 import Content from "./content.js";
 import Dialog from "./dialog.js";
-import Drag from "./drag.js";
+import Drag from "./drag";
 import Drawer from "./drawer.js";
 import Dropdown from "./dropdown.js";
 import Events from "./events";
-import Notification from "./notification.js";
-import Language from "./language.js";
-import Observers from "./observers.js";
+import Language from "./language";
+import Notification from "./notification";
+import Observers from "./observers";
 import Plugins from "./plugins.js";
-import Menu from "./menu.js";
+import Menu from "./menu";
 import Search from "./search.js";
-import System from "./system.js";
-import Theme from "./theme.js";
-import Translation from "./translation.js";
+import System from "./system";
+import Theme from "./theme";
+import Translation from "./translation";
 import { buildUrl, isUrl } from "@/helpers/url";
 import { reactive } from "vue";
-import { redirect, request } from "./request.js";
+import { redirect, request } from "./request";
 import Upload from "./upload";
 import User from "./user";
 import View from "./view.js";
 import { isObject, length } from "@/helpers/object";
 import { isEmpty } from "@/helpers/string";
-import OfflineError from "@/errors/OfflineError.js";
+import OfflineError from "@/errors/OfflineError";
+import RedirectError from "@/errors/RedirectError";
 
 /**
  * Globals are just reactive objects
@@ -190,6 +191,11 @@ export default {
 	 */
 	error(error, openNotification = true) {
 		if (error.name === "AbortError") {
+			return;
+		}
+
+		if (error instanceof RedirectError) {
+			window.location.href = error.url;
 			return;
 		}
 

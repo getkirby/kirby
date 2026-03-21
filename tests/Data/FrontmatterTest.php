@@ -102,7 +102,7 @@ class FrontmatterTest extends TestCase
 		];
 
 		$this->assertSame(
-			"---\ntitle: My Title\nuuid: abc123\n---\n",
+			"---\ntitle: 'My Title'\nuuid: abc123\n---\n",
 			Frontmatter::encode($data)
 		);
 	}
@@ -115,7 +115,7 @@ class FrontmatterTest extends TestCase
 		];
 
 		$this->assertSame(
-			"---\ntitle: My Title\n---\nThis is the body.\n",
+			"---\ntitle: 'My Title'\n---\nThis is the body.\n",
 			Frontmatter::encode($data)
 		);
 	}
@@ -128,7 +128,7 @@ class FrontmatterTest extends TestCase
 		];
 
 		$this->assertSame(
-			"---\ntitle: My Title\n---\n",
+			"---\ntitle: 'My Title'\n---\n",
 			Frontmatter::encode($data)
 		);
 	}
@@ -141,7 +141,7 @@ class FrontmatterTest extends TestCase
 		];
 
 		$this->assertSame(
-			"---\ntitle: My Title\n---\n",
+			"---\ntitle: 'My Title'\n---\n",
 			Frontmatter::encode($data)
 		);
 	}

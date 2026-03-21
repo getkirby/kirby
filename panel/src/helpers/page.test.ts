@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { status } from "./page";
 
 // mock $t() function
-// @ts-expect-error - window.panel has no type yet
 window.panel = {
 	$t: (value: string) => value
 };

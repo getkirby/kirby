@@ -1,4 +1,4 @@
-import RequestError from "./RequestError.js";
+import RequestError from "./RequestError";
 
 /**
  * A JSON Request error is thrown when
