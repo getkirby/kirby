@@ -2,7 +2,6 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Api\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\Exception;
@@ -43,7 +42,7 @@ class Methods
 	 */
 	public function authenticate(
 		string $type,
-		string $email,
+		string|null $email,
 		string|null $password = null,
 		bool $long = false
 	): User|Status {
@@ -54,33 +53,6 @@ class Methods
 		}
 
 		return $this->get($type)->authenticate($email, $password, $long);
-	}
-
-	/**
-	 * @internal
-	 * @todo Refactor/remove when refactoring login view
-	 */
-	public function authenticateApiRequest(Api $api): User|Status
-	{
-		$email    = $api->requestBody('email');
-		$long     = $api->requestBody('long');
-		$password = $api->requestBody('password');
-
-		$method = match (true) {
-			$password !== ''  || $password === null => 'password',
-			$this->has('code')                      => 'code',
-			$this->has('password-reset')            => 'password-reset',
-			default => throw new InvalidArgumentException(
-				message: 'Login without password is not enabled'
-			)
-		};
-
-		return $this->auth->authenticate(
-			method:   $method,
-			email:    $email,
-			password: $password,
-			long:     $long
-		);
 	}
 
 	/**

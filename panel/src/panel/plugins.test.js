@@ -9,7 +9,6 @@ describe("panel.plugins", () => {
 		expect(plugins.components).toStrictEqual({});
 		expect(plugins.created).toStrictEqual([]);
 		expect(plugins.icons).toStrictEqual({});
-		expect(plugins.login).toStrictEqual(null);
 		expect(plugins.textareaButtons).toStrictEqual({});
 		expect(plugins.thirdParty).toStrictEqual({});
 		expect(plugins.use).toStrictEqual([]);

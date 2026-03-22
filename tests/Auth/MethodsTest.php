@@ -2,7 +2,6 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Api\Api;
 use Kirby\Auth\Method\CodeMethod;
 use Kirby\Auth\Method\PasswordMethod;
 use Kirby\Cms\User;
@@ -92,68 +91,6 @@ class MethodsTest extends TestCase
 			'code'       => [],
 			'basic-auth' => ['foo' => 'bar'],
 		], $methods->config());
-	}
-
-	public function testAuthenticateApiRequest(): void
-	{
-		$api = $this->createStub(Api::class);
-		$api->method('requestBody')->willReturnCallback(
-			fn ($key) => match ($key) {
-				'email'    => 'marge@simpsons.com',
-				'password' => 'secret123',
-				'long'     => false
-			}
-		);
-
-		$methods = $this->app->auth()->methods();
-		$result  = $methods->authenticateApiRequest($api);
-		$this->assertSame($this->app->user('marge'), $result);
-	}
-
-	public function testAuthenticateApiRequestMissingPassword(): void
-	{
-		$api = $this->createStub(Api::class);
-		$api->method('requestBody')->willReturnCallback(
-			fn ($key) => match ($key) {
-				'email'    => 'marge@simpsons.com',
-				'password' => '',
-				'long'     => false
-			}
-		);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Login without password is not enabled');
-
-		$methods = $this->app->auth()->methods();
-		$methods->authenticateApiRequest($api);
-	}
-
-	public function testAuthenticateApiRequestCode(): void
-	{
-
-		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'methods' => ['code']
-				]
-			]
-		]);
-
-		$api = $this->createStub(Api::class);
-		$api->method('requestBody')->willReturnCallback(
-			fn ($key) => match ($key) {
-				'email'    => 'marge@simpsons.com',
-				'password' => '',
-				'long'     => false
-			}
-		);
-
-		$methods = $this->app->auth()->methods();
-		$result  = $methods->authenticateApiRequest($api);
-
-		$this->assertInstanceOf(Status::class, $result);
-		$this->assertSame('marge@simpsons.com', $result->email());
-		$this->assertSame('login', $result->mode());
 	}
 
 	public function testClass(): void

@@ -206,7 +206,6 @@ export default (app, plugins = {}) => {
 		components: {},
 		created: [],
 		icons: {},
-		login: null,
 		textareaButtons: {},
 		thirdParty: {},
 		use: [],

@@ -69,9 +69,8 @@ class Challenges
 		);
 	}
 
-	public function clear(): void
+	public function clear(Session $session): void
 	{
-		$session = $this->kirby->session();
 		$session->remove('kirby.challenge.data');
 		$session->remove('kirby.challenge.email');
 		$session->remove('kirby.challenge.mode');
@@ -109,18 +108,7 @@ class Challenges
 
 		// try to find a challenge that is available for that user
 		if ($challenge = $this->firstAvailable($user, $mode)) {
-			$data      = $challenge->create();
-			$timeout   = $this->timeout();
-
-			$session->set('kirby.challenge.email', $email);
-			$session->set('kirby.challenge.type', $challenge->type());
-			$session->set('kirby.challenge.mode', $mode);
-			$session->set('kirby.challenge.timeout', time() + $timeout);
-
-			if ($data !== null) {
-				$session->set('kirby.challenge.data', $data->toArray());
-			}
-
+			$this->store($session, $challenge, $email, $mode);
 			return $challenge;
 		}
 
@@ -163,14 +151,8 @@ class Challenges
 		$email = $session->get('kirby.challenge.email');
 		$type  = $session->get('kirby.challenge.type');
 
-		// if the challenge timed out on the previous request, the
-		// challenge data was already deleted from the session, so we can
-		// set `challengeDestroyed` to `true` in this response as well;
-		// however we must only base this on the email, not the type
-		// (otherwise "faked" challenges would be leaked)
 		if (is_string($email) !== true || is_string($type) !== true) {
 			throw new InvalidArgumentException(
-				details: ['challengeDestroyed' => is_string($email) !== true],
 				fallback: 'No authentication challenge is active'
 			);
 		}
@@ -190,11 +172,7 @@ class Challenges
 			// clear stale challenge data before throwing
 			// so that even if the exception is swallowed upstream,
 			// the expired challenge cannot be reused
-			$session->remove('kirby.challenge.data');
-			$session->remove('kirby.challenge.email');
-			$session->remove('kirby.challenge.mode');
-			$session->remove('kirby.challenge.timeout');
-			$session->remove('kirby.challenge.type');
+			$this->clear($session);
 			throw new ChallengeTimeoutException();
 		}
 
@@ -241,6 +219,80 @@ class Challenges
 			mode:    $mode,
 			timeout: $timeout
 		);
+	}
+
+	/**
+	 * Writes challenge state into the session
+	 */
+	protected function store(
+		Session $session,
+		Challenge $challenge,
+		string $email,
+		string $mode
+	): void {
+		$data    = $challenge->create();
+		$timeout = $this->timeout();
+
+		$session->set('kirby.challenge.email', $email);
+		$session->set('kirby.challenge.type', $challenge->type());
+		$session->set('kirby.challenge.mode', $mode);
+		$session->set('kirby.challenge.timeout', time() + $timeout);
+
+		if ($data !== null) {
+			$session->set('kirby.challenge.data', $data->toArray());
+		}
+	}
+
+	/**
+	 * Switches the active challenge within an existing pending session
+	 */
+	public function switch(Session $session, string $type): Challenge
+	{
+		$this->ensureNotTimeout($session);
+
+		$email = $session->get('kirby.challenge.email');
+		$mode  = $session->get('kirby.challenge.mode');
+
+		if (is_string($email) !== true || is_string($mode) !== true) {
+			throw new InvalidArgumentException(
+				fallback: 'No authentication challenge is active'
+			);
+		}
+
+		$user = $this->kirby->user($email);
+
+		if ($user === null) {
+			throw new UserNotFoundException(name: $email);
+		}
+
+		// keep existing challenge if the requested type is same
+		if ($session->get('kirby.challenge.type') === $type) {
+			return $this->get($type, $user, $mode);
+		}
+
+		// rate-limiting:
+		// each switch can trigger side effects (e.g. email sends),
+		// so it must consume budget just like ::create()
+		$this->auth->limits()->ensure($email);
+		$this->auth->limits()->track($email, triggerHook: false);
+
+		// check if new challenge is available for the user and mode
+		$available = $this->available($user, $mode);
+
+		if (in_array($type, $available) === false) {
+			throw new InvalidArgumentException(
+				fallback: 'The requested challenge is not available'
+			);
+		}
+
+		// clear existing challenge
+		$this->clear($session);
+
+		// create new challenge and store in session
+		$challenge = $this->get($type, $user, $mode);
+		$this->store($session, $challenge, $email, $mode);
+
+		return $challenge;
 	}
 
 	public function timeout(): int|null

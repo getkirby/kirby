@@ -6,6 +6,7 @@ use Kirby\Auth\Challenge;
 use Kirby\Auth\Pending;
 use Kirby\Cms\User;
 use Kirby\Panel\Ui\Button;
+use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
@@ -39,6 +40,20 @@ class EmailChallenge extends Challenge
 		return new Pending(
 			secret: User::hashPassword($code)
 		);
+	}
+
+	public function form(Pending $pending): Component
+	{
+		return new Component(
+			component: 'k-login-email-challenge-form',
+			submit:    $this->submit(),
+			user:      $this->user->email(),
+		);
+	}
+
+	public static function icon(): string
+	{
+		return 'email-unread';
 	}
 
 	/**
@@ -93,7 +108,7 @@ class EmailChallenge extends Challenge
 	{
 		return [
 			new Button(
-				icon:     'email-unread',
+				icon:     static::icon(),
 				text:     static::i18n('login.challenge.email.label'),
 				dialog:   $user->panel()->url(true) . '/changeEmail',
 				disabled: !$user->permissions()->can('changeEmail')

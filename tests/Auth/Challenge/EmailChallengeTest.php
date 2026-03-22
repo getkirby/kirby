@@ -7,6 +7,7 @@ use Kirby\Auth\Pending;
 use Kirby\Auth\TestCase;
 use Kirby\Cms\User;
 use Kirby\Email\Email;
+use Kirby\Panel\Ui\Component;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Challenge::class)]
@@ -183,6 +184,22 @@ class EmailChallengeTest extends TestCase
 			$email->body()->html()
 		);
 	}
+
+	public function testForm(): void
+	{
+		$challenge = new EmailChallenge($this->user, 'login', 600);
+		$pending   = new Pending();
+		$form      = $challenge->form($pending);
+
+		$this->assertInstanceOf(Component::class, $form);
+
+		$rendered = $form->render();
+		$this->assertSame('k-login-email-challenge-form', $rendered['component']);
+		$this->assertSame('check', $rendered['props']['submit']['icon']);
+		$this->assertSame('Log in', $rendered['props']['submit']['label']);
+		$this->assertSame('marge@simpsons.com', $rendered['props']['user']);
+	}
+
 
 	public function testIsAvailable(): void
 	{

@@ -17,6 +17,7 @@ require_once __DIR__ . '/PhpUnitExtension.php';
 require_once __DIR__ . '/mocks.php';
 require_once __DIR__ . '/Api/mocks.php';
 require_once __DIR__ . '/Auth/mocks.php';
+require_once __DIR__ . '/Panel/mocks.php';
 require_once __DIR__ . '/Cache/mocks.php';
 require_once __DIR__ . '/Cms/mocks.php';
 require_once __DIR__ . '/Cms/System/mocks.php';

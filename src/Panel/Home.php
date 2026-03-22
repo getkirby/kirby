@@ -189,6 +189,12 @@ class Home
 			return $this->panel->url('login');
 		}
 
+		// if a password reset is required, redirect there
+		// regardless of any remembered path or blueprint home setting
+		if ($this->kirby->session()->get('kirby.resetPassword') === true) {
+			return $this->panel->url('reset-password');
+		}
+
 		// get the last visited url from the session or the custom home
 		$url = $this->remembered() ?? $this->user()->panel()->home();
 
