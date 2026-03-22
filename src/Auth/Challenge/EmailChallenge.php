@@ -26,8 +26,6 @@ class EmailChallenge extends Challenge
 	/**
 	 * Generates a random one-time auth code and
 	 * returns that code for later verification
-	 *
-	 * @return string The generated and sent code
 	 */
 	public function create(): Pending
 	{

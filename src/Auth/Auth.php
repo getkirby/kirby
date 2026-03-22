@@ -506,12 +506,14 @@ class Auth
 
 		try {
 			$this->limits->ensure($email);
+			$user = $this->kirby->users()->find($email);
 
 			// validate the user and its password
-			if ($user = $this->kirby->users()->find($email)) {
-				if ($user->validatePassword($password) === true) {
-					return $user;
-				}
+			if (
+				$user instanceof User &&
+				$user->validatePassword($password) === true
+			) {
+				return $user;
 			}
 
 			throw new UserNotFoundException($email);

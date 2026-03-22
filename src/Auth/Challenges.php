@@ -60,6 +60,7 @@ class Challenges
 				is_subclass_of($class, LegacyBaseChallenge::class) === true
 			)
 		) {
+			/** @var class-string<\Kirby\Auth\Challenge>|class-string<\Kirby\Auth\Challenge\LegacyBaseChallenge> $class */
 			return $class;
 		}
 

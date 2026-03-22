@@ -40,7 +40,8 @@ class BasicAuthMethod extends Method
 			);
 		}
 
-		return $this->auth->validatePassword($email, $password);
+		return $this->auth->validatePassword($email, $password)
+			?? throw new PermissionException(message: 'Invalid password'); // @codeCoverageIgnore
 	}
 
 	/**

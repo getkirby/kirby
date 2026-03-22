@@ -189,7 +189,9 @@ class User
 			]);
 		}
 
-		if ($user = $this->kirby->users()->find($who)) {
+		$user = $this->kirby->users()->find($who);
+
+		if ($user instanceof CmsUser) {
 			return $this->impersonate = $user;
 		}
 

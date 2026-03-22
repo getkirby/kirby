@@ -92,6 +92,7 @@ class Methods
 			($class = static::$methods[$type] ?? null) &&
 			is_subclass_of($class, Method::class) === true
 		) {
+			/** @var class-string<\Kirby\Auth\Method> $class */
 			return $class;
 		}
 
