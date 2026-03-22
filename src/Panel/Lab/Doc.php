@@ -68,6 +68,10 @@ class Doc
 			$file = static::file($name, 'dist');
 		}
 
+		if (file_exists($file) === false) {
+			return null;
+		}
+
 		$data = Data::read($file);
 
 		// filter internal components
