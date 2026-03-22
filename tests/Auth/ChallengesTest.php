@@ -2,7 +2,6 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Auth\Challenge\LegacyChallenge;
 use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
@@ -14,22 +13,6 @@ use Kirby\Exception\UserNotFoundException;
 use Kirby\Session\Session;
 use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
-
-class DummyLegacyChallenge extends \Kirby\Cms\Auth\Challenge
-{
-	public static bool $available = true;
-	public static string|null $code = 'legacy-code';
-
-	public static function isAvailable(User $user, string $mode): bool
-	{
-		return static::$available;
-	}
-
-	public static function create(User $user, array $options): string|null
-	{
-		return static::$code;
-	}
-}
 
 class DummyChallenge extends Challenge
 {
@@ -299,38 +282,4 @@ class ChallengesTest extends TestCase
 		$this->challenges->verify($session, 'ok');
 	}
 
-	/**
-	 * @deprecated 6.0.0
-	 */
-	public function testLegacyChallenge(): void
-	{
-		Challenges::$challenges = ['foo' => DummyLegacyChallenge::class];
-
-		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'challenges' => ['foo']
-				]
-			]
-		]);
-
-		$this->challenges = new Challenges($this->app->auth(), $this->app);
-		$session   = $this->app->session();
-		$challenge = $this->challenges->create($session, 'marge@simpsons.com', 'login');
-
-		$this->assertInstanceOf(LegacyChallenge::class, $challenge);
-		$this->assertSame('foo', $challenge->type());
-		$this->assertSame('foo', $session->get('kirby.challenge.type'));
-
-		$data = $session->get('kirby.challenge.data');
-		$code = $session->get('kirby.challenge.code');
-		$this->assertTrue(password_verify(DummyLegacyChallenge::$code, $data['secret']));
-		$this->assertTrue(password_verify(DummyLegacyChallenge::$code, $code));
-
-		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.mode', 'login');
-
-		$result = $this->challenges->verify($session, DummyLegacyChallenge::$code);
-		$this->assertInstanceOf(LegacyChallenge::class, $result);
-	}
 }

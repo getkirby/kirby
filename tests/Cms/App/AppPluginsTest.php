@@ -2,10 +2,11 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Auth\Challenge;
 use Kirby\Auth\Method;
+use Kirby\Auth\Pending;
 use Kirby\Auth\Status;
 use Kirby\Cache\FileCache;
-use Kirby\Cms\Auth\Challenge;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
@@ -17,21 +18,21 @@ use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-class DummyAuthChallenge extends Challenge
+class DummyChallenge extends Challenge
 {
 	public static function isAvailable(User $user, string $mode): bool
 	{
 		return true;
 	}
 
-	public static function create(User $user, array $options): string|null
+	public function create(): Pending|null
 	{
-		return 'test';
+		return new Pending(secret: password_hash('test', PASSWORD_DEFAULT));
 	}
 
-	public static function verify(User $user, string $code): bool
+	public function verify(mixed $input, Pending $data): bool
 	{
-		return $code === 'test-verify';
+		return password_verify((string)$input, $data->secret());
 	}
 }
 
@@ -234,7 +235,7 @@ class AppPluginsTest extends TestCase
 				'index' => static::TMP
 			],
 			'authChallenges' => [
-				'dummy' => DummyAuthChallenge::class
+				'dummy' => DummyChallenge::class
 			],
 			'options' => [
 				'auth.challenges' => ['dummy']
@@ -260,12 +261,12 @@ class AppPluginsTest extends TestCase
 		$this->assertSame('homer@simpsons.com', $session->get('kirby.challenge.email'));
 		$this->assertSame('login', $session->get('kirby.challenge.mode'));
 		$this->assertSame('dummy', $session->get('kirby.challenge.type'));
-		$this->assertTrue(password_verify('test', $session->get('kirby.challenge.code')));
+		$this->assertTrue(password_verify('test', $session->get('kirby.challenge.data')['secret']));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 
 		$this->assertSame(
 			$kirby->user('homer@simpsons.com'),
-			$auth->verifyChallenge('test-verify')
+			$auth->verifyChallenge('test')
 		);
 
 		$kirby->session()->destroy();
