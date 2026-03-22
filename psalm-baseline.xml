@@ -363,7 +363,6 @@
   </file>
   <file src="src/Cms/Responder.php">
     <InvalidNullableReturnType>
-      <code><![CDATA[int|$this]]></code>
       <code><![CDATA[string|$this]]></code>
     </InvalidNullableReturnType>
     <InvalidReturnStatement>
@@ -375,9 +374,10 @@
       <code><![CDATA[$this]]></code>
     </InvalidReturnType>
     <NullableReturnStatement>
-      <code><![CDATA[$this->code]]></code>
-      <code><![CDATA[$this->headers()[$key] ?? null]]></code>
-      <code><![CDATA[$this->type]]></code>
+      <code><![CDATA[$this
+			->header('Location', (string)$location)
+			->code($code ?? 302)]]></code>
+      <code><![CDATA[$this->type('application/json')]]></code>
     </NullableReturnStatement>
     <UndefinedMethod>
       <code><![CDATA[$this->headers()]]></code>
