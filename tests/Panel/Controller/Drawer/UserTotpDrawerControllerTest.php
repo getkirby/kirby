@@ -63,7 +63,7 @@ class UserTotpDrawerControllerTest extends TestCase
 		$props = $drawer->props();
 		$this->assertTrue($props['isAccount']);
 		$this->assertFalse($props['isEnabled']);
-		$this->assertStringContainsString('<svg', $props['qr']);
+		$this->assertStringContainsString('data:image/png;base64,', $props['qr']);
 		$this->assertSame('Test User', $props['user']);
 		$this->assertSame(32, strlen($props['value']['secret']));
 	}
