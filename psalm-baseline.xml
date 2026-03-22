@@ -103,11 +103,6 @@
       <code><![CDATA[Translation]]></code>
     </InvalidReturnType>
   </file>
-  <file src="src/Cms/Auth/EmailChallenge.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[$code]]></code>
-    </FalsableReturnStatement>
-  </file>
   <file src="src/Cms/BlockConverter.php">
     <InvalidReturnStatement>
       <code><![CDATA[array_filter($blocks)]]></code>
