@@ -516,6 +516,14 @@ class Auth
 				return $user;
 			}
 
+			// run a dummy password_verify() when the user is not found so
+			// that the timing is indistinguishable from a regular failure;
+			// without this, the absence of a bcrypt computation
+			// could leak whether the email address is registered
+			if ($user instanceof User === false) {
+				password_verify($password, '$2y$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW');
+			}
+
 			throw new UserNotFoundException($email);
 
 		} catch (Throwable $e) {

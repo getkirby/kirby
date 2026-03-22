@@ -93,6 +93,10 @@ class Challenges
 	): Challenge {
 		// rate-limit the number of challenges for DoS/DDoS protection
 		$this->auth->limits()->ensure($email);
+
+		// challenge creation is not a login attempt,
+		// do not fire user.login:failed; hook is triggered below
+		// when the user lookup fails
 		$this->auth->limits()->track($email, triggerHook: false);
 
 		// try to find the provided user
@@ -183,6 +187,14 @@ class Challenges
 
 		// challenge timed out
 		if ($timeout !== null && time() > $timeout) {
+			// clear stale challenge data before throwing
+			// so that even if the exception is swallowed upstream,
+			// the expired challenge cannot be reused
+			$session->remove('kirby.challenge.data');
+			$session->remove('kirby.challenge.email');
+			$session->remove('kirby.challenge.mode');
+			$session->remove('kirby.challenge.timeout');
+			$session->remove('kirby.challenge.type');
 			throw new ChallengeTimeoutException();
 		}
 

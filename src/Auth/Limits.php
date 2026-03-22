@@ -48,10 +48,11 @@ class Limits
 			return true;
 		}
 
-		if ($this->kirby->users()->find($email)) {
-			if (($log['by-email'][$email]['trials'] ?? 0) >= $trials) {
-				return true;
-			}
+		// check the email-based rate limit without a prior
+		// user lookup so that the timing difference of the lookup
+		// does not leak whether an email address actually exists
+		if (($log['by-email'][$email]['trials'] ?? 0) >= $trials) {
+			return true;
 		}
 
 		return false;

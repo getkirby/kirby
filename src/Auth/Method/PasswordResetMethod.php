@@ -26,7 +26,7 @@ class PasswordResetMethod extends CodeMethod
 		return $this->auth->createChallenge(
 			mode: 'password-reset',
 			email: $email,
-			long:  false,
+			long:  false, // should always use a short-lived session
 		);
 	}
 
