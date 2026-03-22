@@ -103,35 +103,6 @@
       <code><![CDATA[Translation]]></code>
     </InvalidReturnType>
   </file>
-  <file src="src/Cms/Auth.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->impersonate = match ($who) {
-			null     => null,
-			'kirby'  => new User([
-				'email' => 'kirby@getkirby.com',
-				'id'    => 'kirby',
-				'role'  => 'admin',
-			]),
-			'nobody' => new User([
-				'email' => 'nobody@getkirby.com',
-				'id'    => 'nobody',
-				'role'  => 'nobody',
-			]),
-			default => $this->kirby->users()->find($who) ?? throw new NotFoundException(
-				message: 'The user "' . $who . '" cannot be found'
-			),
-		}]]></code>
-      <code><![CDATA[$user]]></code>
-      <code><![CDATA[$user]]></code>
-      <code><![CDATA[$user]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[User]]></code>
-      <code><![CDATA[User|null]]></code>
-      <code><![CDATA[User|null]]></code>
-      <code><![CDATA[\Kirby\Cms\User]]></code>
-    </InvalidReturnType>
-  </file>
   <file src="src/Cms/Auth/EmailChallenge.php">
     <FalsableReturnStatement>
       <code><![CDATA[$code]]></code>
