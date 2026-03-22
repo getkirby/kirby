@@ -10,9 +10,6 @@ use Kirby\Toolkit\Str;
  * Component that can be passed as component-props array
  * to the Vue Panel frontend
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0

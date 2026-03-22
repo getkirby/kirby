@@ -25,9 +25,6 @@ use Throwable;
  * pages and all their dependencies like
  * children, files, content, etc.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *

@@ -6,13 +6,10 @@ use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Sane handler for gzip-compressed SVGZ files
- * @since 3.5.4
  *
- * @package   Kirby Sane
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     3.5.4
  */
 class Svgz extends Svg
 {

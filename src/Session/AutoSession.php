@@ -5,9 +5,6 @@ namespace Kirby\Session;
 /**
  * AutoSession - simplified session handler with fully automatic session creation
  *
- * @package   Kirby Session
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

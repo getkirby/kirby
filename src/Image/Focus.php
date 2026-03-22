@@ -6,9 +6,6 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
- * @package   Kirby Image
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */

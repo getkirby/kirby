@@ -15,10 +15,6 @@ use Kirby\Toolkit\Str;
  * to the media folder, to make them publicly
  * available. This class handles the magic around that.
  *
- * @package   Kirby Plugin
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *

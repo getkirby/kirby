@@ -7,12 +7,10 @@ use Kirby\Panel\Ui\Dialog;
 /**
  * Dialog that displays some text
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     6.0.0
+ *
  * @unstable
  */
 class TextDialog extends Dialog
