@@ -242,6 +242,10 @@ class Assets
 			$js['index']['src'] = $this->url . '/src/index.js';
 			$js['vendor'] = null;
 
+			// Non-module scripts loaded cross-origin
+			// require crossorigin attribute
+			$js['plugin-registry']['crossorigin'] = 'anonymous';
+
 			// Add vite dev client
 			$js['vite'] = [
 				'nonce' => $this->nonce,
