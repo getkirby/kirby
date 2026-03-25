@@ -58,6 +58,42 @@
 				@submit="log('submit')"
 			/>
 		</k-lab-example>
+		<k-lab-example label="View Buttons: Empty">
+			<k-header>
+				Home
+				<template slot="buttons">
+					<k-view-buttons :buttons="[]">
+						<template #after>
+							<k-form-controls
+								:has-diff="true"
+								editor="editor@getkirby.com"
+								modified="2024-10-01T17:00:00"
+								@discard="log('discard')"
+								@submit="log('submit')"
+							/>
+						</template>
+					</k-view-buttons>
+				</template>
+			</k-header>
+		</k-lab-example>
+		<k-lab-example label="View Buttons: Mixed">
+			<k-header>
+				Home
+				<template slot="buttons">
+					<k-view-buttons :buttons="viewButtons">
+						<template #after>
+							<k-form-controls
+								:has-diff="true"
+								editor="editor@getkirby.com"
+								modified="2024-10-01T17:00:00"
+								@discard="log('discard')"
+								@submit="log('submit')"
+							/>
+						</template>
+					</k-view-buttons>
+				</template>
+			</k-header>
+		</k-lab-example>
 		<k-lab-example label="Saving">
 			<k-form-controls :has-diff="true" :is-processing="true" />
 		</k-lab-example>
@@ -79,7 +115,16 @@ export default {
 	data() {
 		return {
 			hasDiff: false,
-			isLocked: false
+			isLocked: false,
+			viewButtons: [
+				{
+					key: "open",
+					props: {
+						icon: "open",
+						title: "Open"
+					}
+				}
+			]
 		};
 	},
 	methods: {

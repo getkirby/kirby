@@ -1,5 +1,5 @@
 <template>
-	<nav v-if="buttons.length" class="k-view-buttons">
+	<nav v-if="hasContent" class="k-view-buttons">
 		<slot name="before" />
 
 		<k-button-group v-for="(group, index) in groups" :key="index">
@@ -34,6 +34,9 @@ export default {
 	},
 	emits: ["action"],
 	computed: {
+		hasContent() {
+			return this.buttons.length > 0 || this.$slots.before || this.$slots.after;
+		},
 		groups() {
 			return this.$helper.array.split(this.buttons, "-");
 		}
