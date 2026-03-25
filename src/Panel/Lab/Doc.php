@@ -10,6 +10,7 @@ use Kirby\Panel\Lab\Doc\Prop;
 use Kirby\Panel\Lab\Doc\Slot;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * Documentation for a single Vue component
@@ -68,7 +69,12 @@ class Doc
 			$file = static::file($name, 'dist');
 		}
 
-		$data = Data::read($file);
+		try {
+			$data = Data::read($file);
+		} catch (Throwable) {
+			return null;
+		}
+
 
 		// filter internal components
 		if (isset($data['tags']['internal']) === true) {
