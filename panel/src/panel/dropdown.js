@@ -1,4 +1,4 @@
-import Feature, { defaults } from "./feature.js";
+import Feature, { defaults } from "./feature";
 import { reactive } from "vue";
 
 /**

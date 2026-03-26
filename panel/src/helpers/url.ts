@@ -67,7 +67,10 @@ export function isSameOrigin(url: string | URL): boolean {
  *
  * @param strict - Whether to also check the URL against Kirby's URL validator
  */
-export function isUrl(url: unknown, strict: boolean = false): boolean {
+export function isUrl(
+	url: unknown,
+	strict: boolean = false
+): url is URL | Location | string {
 	let normalized: string;
 
 	if (url instanceof URL || url instanceof Location) {

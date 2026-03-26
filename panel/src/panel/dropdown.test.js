@@ -8,7 +8,6 @@ describe("panel.dropdown", () => {
 		const dropdown = Dropdown(panel);
 
 		const state = {
-			abortController: null,
 			component: null,
 			isLoading: false,
 			on: {},

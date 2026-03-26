@@ -8,7 +8,6 @@ describe("panel.drawer", () => {
 		const drawer = Drawer(panel);
 
 		const state = {
-			abortController: null,
 			component: null,
 			id: null,
 			isLoading: false,
