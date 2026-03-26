@@ -11,7 +11,7 @@ import Notification from "./notification";
 import Observers from "./observers";
 import Plugins from "./plugins.js";
 import Menu from "./menu";
-import Search from "./search.js";
+import Search from "./search";
 import System from "./system";
 import Theme from "./theme";
 import Translation from "./translation";

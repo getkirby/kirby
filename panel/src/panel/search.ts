@@ -1,24 +1,27 @@
+export type SearchResponse = {
+	results: unknown[] | null;
+	pagination: Record<string, unknown>;
+};
+
 /**
  * @since 4.4.0
  */
-export default (panel) => {
+export default function Search(panel: TODO) {
 	return {
-		controller: null,
+		controller: undefined as AbortController | undefined,
 		requests: 0,
 
 		/**
 		 * Whether any search requests are ongoing
 		 */
-		get isLoading() {
+		get isLoading(): boolean {
 			return this.requests > 0;
 		},
 
 		/**
 		 * Opens the search dialog
-		 *
-		 * @param {String} type
 		 */
-		open(type) {
+		open(type: string): void {
 			// close menu on mobile
 			panel.menu.escape();
 
@@ -33,13 +36,12 @@ export default (panel) => {
 		/**
 		 * Use one of the installed search types
 		 * to search for content in the Panel
-		 *
-		 * @param {String} type
-		 * @param {Object} query
-		 * @param {Object} options { limit, page }
-		 * @returns {Object} { code, path, referrer, results, timestamp }
 		 */
-		async query(type, query, options) {
+		async query(
+			type: string,
+			query: string,
+			options: { limit?: number; page?: number }
+		): Promise<Prettify<SearchResponse> | undefined> {
 			// abort any previous ongoing search requests
 			this.controller?.abort();
 			this.controller = new AbortController();
@@ -63,7 +65,7 @@ export default (panel) => {
 			} catch (error) {
 				// if fails and not because request was aborted by subsequent request,
 				// return empty response
-				if (error.name !== "AbortError") {
+				if (error instanceof Error && error.name !== "AbortError") {
 					return {
 						results: [],
 						pagination: {}
@@ -74,4 +76,4 @@ export default (panel) => {
 			}
 		}
 	};
-};
+}
