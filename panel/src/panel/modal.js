@@ -1,5 +1,5 @@
 import { isObject } from "@/helpers/object";
-import Feature, { defaults as featureDefaults } from "./feature.js";
+import Feature, { defaults as featureDefaults } from "./feature";
 import History from "@/helpers/history";
 import focus from "@/helpers/focus";
 import { reactive, set } from "vue";
