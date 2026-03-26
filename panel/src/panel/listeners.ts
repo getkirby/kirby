@@ -18,7 +18,7 @@ export default function Listeners() {
 		 * @example
 		 * panel.dialog.addEventListener("submit", (value) => {})
 		 */
-		addEventListener(event: string, callback: Listener): void {
+		addEventListener(event: string, callback: unknown): void {
 			if (typeof callback !== "function") {
 				return;
 			}
@@ -29,7 +29,7 @@ export default function Listeners() {
 				);
 			}
 
-			this.on[event] = callback;
+			this.on[event] = callback as Listener;
 		},
 
 		/**
@@ -41,7 +41,7 @@ export default function Listeners() {
 		 *   close: () => {}
 		 * })
 		 */
-		addEventListeners(listeners?: Record<string, Listener>): void {
+		addEventListeners(listeners?: Record<string, unknown>): void {
 			// ignore invalid listeners
 			if (isObject(listeners) === false) {
 				return;
