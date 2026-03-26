@@ -108,6 +108,7 @@ export default {
 						click: () => this.$emit("submit")
 					},
 					{
+						title: this.$t("options"),
 						theme: "notice",
 						icon: "dots",
 						click: () => this.$refs.dropdown.toggle()
