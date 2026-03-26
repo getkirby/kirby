@@ -62,9 +62,15 @@ readonly class Upload
 	public static function chunkSize(): int
 	{
 		$max = [
-			Str::toBytes(ini_get('upload_max_filesize')),
-			Str::toBytes(ini_get('post_max_size'))
+			Str::toBytes(ini_get('upload_max_filesize'))
 		];
+
+		$postMaxSize = Str::toBytes(ini_get('post_max_size'));
+
+		// in PHP, post_max_size=0 means "no limit", so it must not be treated
+		if ($postMaxSize > 0) {
+			$max[] = $postMaxSize;
+		}
 
 		// consider cloudflare proxy limit, if detected
 		if (isset($_SERVER['HTTP_CF_CONNECTING_IP']) === true) {
@@ -412,11 +418,12 @@ readonly class Upload
 			$postMaxSize       = Str::toBytes(ini_get('post_max_size'));
 			$uploadMaxFileSize = Str::toBytes(ini_get('upload_max_filesize'));
 
+			// in PHP, post_max_size=0 means "no limit", so it must not be treated
+			// as smaller than upload_max_filesize.
 			// @codeCoverageIgnoreStart
-			if ($postMaxSize < $uploadMaxFileSize) {
+			if ($postMaxSize > 0 && $postMaxSize < $uploadMaxFileSize) {
 				throw new Exception(
-					message:
-					I18n::translate(
+					message: I18n::translate(
 						'upload.error.iniPostSize',
 						'The uploaded file exceeds the post_max_size directive in php.ini'
 					)
@@ -425,8 +432,7 @@ readonly class Upload
 			// @codeCoverageIgnoreEnd
 
 			throw new Exception(
-				message:
-				I18n::translate(
+				message: I18n::translate(
 					'upload.error.noFiles',
 					'No files were uploaded'
 				)

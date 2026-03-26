@@ -26,10 +26,11 @@ export default {};
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	background: var(--color-white);
-	box-shadow: var(--shadow);
+	background: var(--dialog-color-back);
+	color: var(--dialog-color-text);
+	box-shadow: var(--dialog-shadow);
 	padding: 0.75rem;
-	border-radius: var(--rounded);
+	border-radius: var(--dialog-rounded);
 }
 .k-offline-warning p .k-icon {
 	color: var(--color-red-400);

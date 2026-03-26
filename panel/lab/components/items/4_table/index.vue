@@ -8,6 +8,9 @@
 				layout="table"
 			/>
 		</k-lab-example>
+		<k-lab-example label="custom start index">
+			<k-items :columns="columns" :items="items" :index="17" layout="table" />
+		</k-lab-example>
 		<k-lab-example label="Selectable">
 			<k-items
 				:columns="columns"
