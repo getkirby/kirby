@@ -1,7 +1,7 @@
 # Kirby License Agreement
 
-Published: November 29, 2025  
-Source: https://getkirby.com/license/2025-11-29
+Published: March 26, 2026  
+Source: https://getkirby.com/license/2026-03-26
 
 ## About this Agreement
 
@@ -17,12 +17,13 @@ This section summarizes the most important conditions of this Agreement to give 
 
 - With your purchase you obtain a license. A license allows you to use Kirby according to this Agreement.
 - Each project (defined by its URL) needs its own license. You need to purchase the right license for your project and/or client. You can find our license variants on <https://getkirby.com/buy>.
+- Each purchased license needs to be activated to the project URL as soon as the project is published.
 - In some explicitly listed cases, you can use Kirby without having to purchase a license. In these cases, this Agreement grants you the license directly. There are also cases where you can request a free or discounted license from us.
 - Each license includes any Kirby version that gets released within three years from the date when you first activated your license. We also provide free security updates for older versions that may protect your project beyond three years.
 - After those three years, you can continue to use Kirby for your project with any of these versions as long as you want.
 - To use any newer version released after this time, you will need to upgrade your license.
 - Upgrading your license extends the timeframe for an additional three years during which you can use new releases. You can perform the upgrade at any time.
-- You have the right to transfer or reassign a license to another person or project if needed.
+- You have the right to transfer a license to another person or reassign it to another project of the same client if needed.
 - There are some restrictions for use of Kirby that you can find below.
 
 For the full license details, please read the Agreement in full. Only the following sections are legally binding.
@@ -55,15 +56,17 @@ Every time you see one of these capitalized terms in the following text, it has 
 
 ## Usage for a Public Site
 
-Installing Kirby on or using it for a Public Site requires a [paid license](https://getkirby.com/buy). Once a paid license is needed, the license must be immediately activated to the Public Site’s domain name and root directory via our [license hub](https://hub.getkirby.com) or the activation feature in the Kirby Panel.
+Installing Kirby on or using it for a Public Site requires a [paid license](https://getkirby.com/buy).
 
 As Kirby is software and software is intangible, We don't sell it as such. Instead, this Agreement grants a license for each purchase to install and use a single instance of Kirby on a **specific Website**. Additional Kirby licenses must be purchased in order to install and use Kirby on **additional Websites**.
+
+Once a paid license is needed, the license must be immediately activated to the Public Site’s domain name and root directory via our [license hub](https://hub.getkirby.com) or the activation feature in the Kirby Panel. Failure to activate the license within one (1) week after the project's launch constitutes a violation of this Agreement and equals unlicensed use of Kirby.
 
 The license is **non-exclusive** (meaning that You are not the only one to whom We will issue a license) and **generally non-transferable** (meaning that the one who purchases the license is the licensee).
 
 On request, We will **transfer** a license to anyone who would be allowed and Qualified to purchase the license by law and this Agreement. The new licensee will take over all rights and obligations of this Agreement from You at the moment We confirm the license transfer.
 
-We will also **reassign** a license to another Qualified Website domain and root directory, if You confirm that the previous Website is no longer in operation and will not be operated with the same license in the future.
+We will also **reassign** a license to another Qualified Website domain and root directory of the same Client or of You, if You confirm that the previous Website is no longer in operation and will not be operated with the same license in the future. Licenses may *not* be reassigned to or reused for Websites that belong to a different Client.
 
 If the new licensee, Website or Client in a transfer or reassignment is not Qualified for the existing license, You or the new licensee need to **upgrade the license to the qualifying terms and conditions** before the transfer or reassignment can be performed.
 
@@ -284,7 +287,15 @@ YOU EXPRESSLY UNDERSTAND AND AGREE THAT **WE SHALL NOT BE LIABLE** FOR ANY DIREC
 
 Bastian Allgeier **owns all rights**, title and interest to Kirby (including all intellectual property rights) and **reserves all rights to Kirby** that are not expressly granted in this Agreement.
 
-In the event that Kirby will no longer be actively maintained, Bastian Allgeier will provide the Source Code under the terms of a free and open source software (FOSS) license as far as legally and contractually possible.
+In the event that We or Our legal successor will not publish a stable Kirby release for the time span of one year (365 days), Kirby is **considered to be no longer actively maintained**. In this case, all parts of the Source Code with copyright notice to Bastian Allgeier previously licensed under the terms of this Agreement will, in their last published form, **automatically be available under the following terms of the free and open source MIT license**:
+
+```
+Permission is hereby granted, free of charge, to any person obtaining a copy of the Kirby Source Code, to deal in the Source Code without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Source Code, and to permit persons to whom the Source Code is furnished to do so, subject to the following conditions:
+
+The copyright notice to Bastian Allgeier and this permission notice shall be included in all copies or substantial portions of the Source Code.
+
+THE SOURCE CODE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOURCE CODE OR THE USE OR OTHER DEALINGS IN THE SOURCE CODE.
+```
 
 ## Applicable Law & Place of Jurisdiction
 
