@@ -11,14 +11,10 @@ use Stringable;
 
 /**
  * Creates a QR code
- * @since 4.0.0
  *
- * @package   Kirby Image
- * @author    Nico Hoffmann <nico@getkirby.com>,
- *            Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     4.0.0
  *
  * QR Code® is a registered trademark of DENSO WAVE INCORPORATED.
  *
