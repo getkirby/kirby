@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Exception\AuthException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
@@ -713,5 +714,40 @@ class ApiTest extends TestCase
 
 		$page = $app->page('test');
 		$app->api()->sectionApi($page, 'nonexists');
+	}
+
+	public function testValidateAccess(): void
+	{
+		// kirby (superuser) always has access to all areas
+		$this->api->validateAccess('users');
+		$this->expectNotToPerformAssertions();
+	}
+
+	public function testValidateAccessWithoutPermission(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true,
+				],
+			],
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'access' => ['users' => false],
+					],
+				],
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor'],
+			],
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(PermissionException::class);
+
+		$app->api()->validateAccess('users');
 	}
 }
