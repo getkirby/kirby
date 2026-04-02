@@ -115,7 +115,7 @@ class Find
 		$kirby = App::instance();
 
 		$model = match ($modelName) {
-			'site'    => $kirby->site(),
+			'site'    => static::site(),
 			'account' => static::user(),
 			'page'    => static::page(basename($path)),
 			// regular expression to split the path at the last
@@ -130,6 +130,25 @@ class Find
 
 		return $model ?? throw new NotFoundException(
 			key: $modelName . '.undefined'
+		);
+	}
+
+	/**
+	 * Returns the site object if the site is accessible
+	 *
+	 * @throws \Kirby\Exception\NotFoundException if the site cannot be accessed
+	 * @since 5.4.0
+	 */
+	public static function site(): Site
+	{
+		$site = App::instance()->site();
+
+		if ($site->isAccessible() === true) {
+			return $site;
+		}
+
+		throw new NotFoundException(
+			key: 'site.notFound'
 		);
 	}
 

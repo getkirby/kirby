@@ -46,6 +46,7 @@ class PermissionsTest extends TestCase
 			['pages', 'sort'],
 			['pages', 'update'],
 
+			['site', 'access'],
 			['site', 'changeTitle'],
 			['site', 'update'],
 

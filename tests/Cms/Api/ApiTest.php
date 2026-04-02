@@ -75,6 +75,7 @@ class ApiTest extends TestCase
 
 	public function tearDown(): void
 	{
+		Blueprint::$loaded = [];
 		Dir::remove(static::TMP);
 		setlocale(LC_ALL, $this->locale);
 	}
@@ -352,9 +353,16 @@ class ApiTest extends TestCase
 				'files' => [
 					['filename' => 'protected.jpg', 'template' => 'protected']
 				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
 			]
 		]);
 
+		$app->impersonate('admin@getkirby.com');
 		$this->api->file('site', 'protected.jpg');
 	}
 
@@ -716,6 +724,38 @@ class ApiTest extends TestCase
 		$app->api()->sectionApi($page, 'nonexists');
 	}
 
+	public function testSite(): void
+	{
+		$this->assertSame($this->app->site(), $this->api->site());
+	}
+
+	public function testSiteNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false],
+					],
+				],
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The site is not accessible');
+
+		$app->api()->site();
+	}
+
 	public function testValidateAccess(): void
 	{
 		// kirby (superuser) always has access to all areas
@@ -740,8 +780,11 @@ class ApiTest extends TestCase
 				],
 			],
 			'users' => [
-				['email' => 'editor@getkirby.com', 'role' => 'editor'],
-			],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
 		]);
 
 		$app->impersonate('editor@getkirby.com');

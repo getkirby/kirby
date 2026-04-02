@@ -31,7 +31,8 @@ return [
 		'requirements' => fn (System $system) => $system->toArray(),
 		'site'         => fn (System $system) => $system->title(),
 		'slugs'        => fn () => Str::$language,
-		'title'        => fn () => $this->site()->title()->value(),
+		// provide the value even if `site.access` permission is disabled
+		'title'       => fn () => $this->kirby()->site()->title()->value(),
 		'translation' => function () {
 			$code = $this->user()?->language() ??
 					$this->kirby()->panelLanguage();
@@ -41,8 +42,8 @@ return [
 				$this->kirby()->translation('en');
 		},
 		'kirbytext' => fn () => $this->kirby()->option('panel.kirbytext') ?? true,
-		'user' => fn () => $this->user(),
-		'version' => function () {
+		'user'      => fn () => $this->user(),
+		'version'   => function () {
 			try {
 				$this->validateAreaAccess('system');
 				return $this->kirby()->version();
