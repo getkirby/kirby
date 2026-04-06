@@ -3,7 +3,7 @@ import Api from "@/api/index.js";
 import Content from "./content.js";
 import Dialog from "./dialog";
 import Drag from "./drag";
-import Drawer from "./drawer.js";
+import Drawer from "./drawer";
 import Dropdown from "./dropdown.js";
 import Events from "./events";
 import Language from "./language";

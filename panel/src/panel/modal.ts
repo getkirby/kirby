@@ -118,7 +118,7 @@ export default function Modal<T extends ModalState>(
 		 * or button in the modal. The input can also
 		 * be set manually.
 		 */
-		focus(input: string): void {
+		focus(input?: string): void {
 			focus(`.k-${this.key()}-portal`, input);
 		},
 
