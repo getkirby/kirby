@@ -1,12 +1,8 @@
 import { describe, expect, it } from "vitest";
 import Modal, { defaults } from "./modal";
 import Panel from "./panel.js";
-import Vue from "vue";
 
 describe("panel.modal", () => {
-	// @ts-expect-error Vue 2 test setup
-	window.Vue = Vue;
-
 	describe("state", () => {
 		it("should have a default state", async () => {
 			const panel = Panel.create(app);

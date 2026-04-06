@@ -5,16 +5,17 @@ import { type Listener } from "./listeners";
 
 export type DialogState = ModalState & {};
 
-export type DialogOptions = DialogState & {
-	replace?: boolean;
-	url?: string;
-};
-
 export function defaults(): DialogState {
 	return {
 		...modalDefaults()
 	};
 }
+
+// Options used when opening a dialog
+export type DialogOptions = DialogState & {
+	replace?: boolean;
+	url?: string;
+};
 
 /**
  * @since 4.0.0
