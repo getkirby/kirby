@@ -12,7 +12,7 @@ describe("panel.search", () => {
 
 	describe("open()", () => {
 		it("should close the menu and open the search dialog", () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			// @ts-expect-error panel.js is not typed
 			const escape = vi.spyOn(panel.menu, "escape");
 			// @ts-expect-error panel.js is not typed
@@ -24,7 +24,7 @@ describe("panel.search", () => {
 			expect(escape).toHaveBeenCalledOnce();
 			expect(open).toHaveBeenCalledWith({
 				component: "k-search-dialog",
-				props: { type: "pages" }
+				props: { type: "pages" },
 			});
 		});
 	});
@@ -33,7 +33,7 @@ describe("panel.search", () => {
 		let panel: ReturnType<typeof Panel.create>;
 
 		beforeEach(() => {
-			panel = Panel.create();
+			panel = Panel.create(app);
 		});
 
 		it("should return null results for short queries", async () => {
@@ -48,28 +48,28 @@ describe("panel.search", () => {
 			expect(result).toStrictEqual({ results: null, pagination: {} });
 		});
 
-		it("should return $search from the API response", async () => {
-			const $search = {
+		it("should return search from the API response", async () => {
+			const search = {
 				results: [{ title: "Home" }],
-				pagination: { total: 1 }
+				pagination: { total: 1 },
 			};
 
-			vi.spyOn(panel, "get").mockResolvedValue({ $search });
+			vi.spyOn(panel, "get").mockResolvedValue({ search });
 
 			// @ts-expect-error panel.js is not typed
 			const result = await panel.searcher.query("pages", "home", {});
-			expect(result).toStrictEqual($search);
+			expect(result).toStrictEqual(search);
 		});
 
 		it("should pass query and options to panel.get", async () => {
-			const get = vi.spyOn(panel, "get").mockResolvedValue({ $search: {} });
+			const get = vi.spyOn(panel, "get").mockResolvedValue({ search: {} });
 
 			// @ts-expect-error panel.js is not typed
 			await panel.searcher.query("pages", "test", { limit: 10, page: 2 });
 
 			expect(get).toHaveBeenCalledWith("/search/pages", {
 				query: { query: "test", limit: 10, page: 2 },
-				signal: expect.any(AbortSignal)
+				signal: expect.any(AbortSignal),
 			});
 		});
 
@@ -83,7 +83,7 @@ describe("panel.search", () => {
 
 		it("should return undefined on AbortError", async () => {
 			const abortError = Object.assign(new Error("Aborted"), {
-				name: "AbortError"
+				name: "AbortError",
 			});
 			vi.spyOn(panel, "get").mockRejectedValue(abortError);
 
@@ -102,7 +102,7 @@ describe("panel.search", () => {
 					// @ts-expect-error panel.js is not typed
 					panel.searcher.query("pages", "second", {});
 				}
-				return { $search: { results: [], pagination: {} } };
+				return { search: { results: [], pagination: {} } };
 			});
 
 			// @ts-expect-error panel.js is not typed

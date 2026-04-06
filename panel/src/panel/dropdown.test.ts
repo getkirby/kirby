@@ -5,7 +5,7 @@ import Panel from "./panel.js";
 describe("panel.dropdown", () => {
 	describe("state", () => {
 		it("should have a default state", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const dropdown = Dropdown(panel);
 
 			const state = {
@@ -16,7 +16,7 @@ describe("panel.dropdown", () => {
 				props: {},
 				query: {},
 				referrer: null,
-				timestamp: null
+				timestamp: null,
 			};
 
 			expect(dropdown.key()).toStrictEqual("dropdown");
@@ -26,7 +26,7 @@ describe("panel.dropdown", () => {
 
 	describe("close()", () => {
 		it("should reset state", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const dropdown = Dropdown(panel);
 
 			await dropdown.open({ component: "k-dropdown", props: { options: [] } });
@@ -37,13 +37,19 @@ describe("panel.dropdown", () => {
 		});
 
 		it("should emit close event", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const dropdown = Dropdown(panel);
 			let emitted = false;
 
 			await dropdown.open(
 				{ component: "k-dropdown" },
-				{ on: { close: () => { emitted = true; } } }
+				{
+					on: {
+						close: () => {
+							emitted = true;
+						},
+					},
+				},
 			);
 
 			dropdown.close();
@@ -54,7 +60,7 @@ describe("panel.dropdown", () => {
 
 	describe("open()", () => {
 		it("should set options", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const dropdown = Dropdown(panel);
 			const options = [{ label: "A" }, { label: "B" }];
 
@@ -64,7 +70,7 @@ describe("panel.dropdown", () => {
 		});
 
 		it("should prefix string with /dropdowns/", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			let openedUrl: unknown;
 
 			panel.open = async (url: unknown) => {
@@ -80,7 +86,7 @@ describe("panel.dropdown", () => {
 
 	describe("options()", () => {
 		it("should return options from props", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const dropdown = Dropdown(panel);
 			const options = [{ label: "A" }, { label: "B" }];
 
@@ -90,7 +96,7 @@ describe("panel.dropdown", () => {
 		});
 
 		it("should return empty array when props.options is not an array", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const dropdown = Dropdown(panel);
 
 			await dropdown.open({ props: { options: null } });
@@ -99,7 +105,7 @@ describe("panel.dropdown", () => {
 		});
 
 		it("should return empty array when props.options is missing", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const dropdown = Dropdown(panel);
 
 			expect(dropdown.options()).toStrictEqual([]);

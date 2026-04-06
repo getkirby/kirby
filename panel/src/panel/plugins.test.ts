@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from "vitest";
-import Vue from "vue";
 import isComponent from "@/helpers/isComponent";
 import dialog from "@/mixins/dialog.js";
 import drawer from "@/mixins/drawer.js";
@@ -10,13 +9,10 @@ import Plugins, {
 	installPlugins,
 	resolveComponentExtension,
 	resolveComponentMixins,
-	resolveComponentRender
+	resolveComponentRender,
 } from "./plugins";
 
 describe("panel.plugins", () => {
-	// @ts-expect-error Vue 2 test setup
-	window.Vue = Vue;
-
 	describe("resolveComponentRender()", () => {
 		it("removes render when template is present", () => {
 			const render = () => null;
@@ -62,10 +58,13 @@ describe("panel.plugins", () => {
 			expect(result.mixins).toContain(section);
 		});
 
-		it("leaves unknown string mixins as-is", () => {
+		it("warns and removes unknown string mixins", () => {
+			const warn = vi.spyOn(window.console, "warn").mockImplementation(() => {});
 			const component = { template: "<p>test</p>", mixins: ["unknown"] };
 			const result = resolveComponentMixins(component);
-			expect(result.mixins).toContain("unknown");
+			expect(result.mixins).not.toContain("unknown");
+			expect(warn).toHaveBeenCalled();
+			warn.mockRestore();
 		});
 
 		it("leaves object mixins unchanged", () => {
@@ -76,11 +75,11 @@ describe("panel.plugins", () => {
 		});
 
 		it("skips mixin already inherited from extends", () => {
-			const parent = Vue.extend({ mixins: [dialog] });
+			const parent = { mixins: [dialog] };
 			const component = {
 				template: "<p>test</p>",
 				extends: parent,
-				mixins: ["dialog"]
+				mixins: ["dialog"],
 			};
 			const result = resolveComponentMixins(component);
 			expect(result.mixins).not.toContain(dialog);
@@ -90,7 +89,7 @@ describe("panel.plugins", () => {
 			const objectMixin = { methods: { foo: () => {} } };
 			const component = {
 				template: "<p>test</p>",
-				mixins: ["dialog", "section", objectMixin]
+				mixins: ["dialog", "section", objectMixin],
 			};
 			const result = resolveComponentMixins(component);
 			expect(result.mixins).toContain(dialog);
@@ -102,39 +101,29 @@ describe("panel.plugins", () => {
 	describe("resolveComponentExtension()", () => {
 		it("returns component unchanged when extends is not a string", () => {
 			const component = { template: "<p>test</p>" };
-			expect(resolveComponentExtension(Vue, "k-test", component)).toStrictEqual(
-				component
-			);
+			expect(resolveComponentExtension(app, "k-test", component)).toStrictEqual(component);
 		});
 
 		it("removes extends and warns when the referenced component is not registered", () => {
-			const warn = vi
-				.spyOn(window.console, "warn")
-				.mockImplementation(() => {});
+			const warn = vi.spyOn(window.console, "warn").mockImplementation(() => {});
 			const component = { extends: "k-unregistered-xyz" };
 
-			const result = resolveComponentExtension(Vue, "k-custom", component);
+			const result = resolveComponentExtension(app, "k-custom", component);
 
 			expect(result.extends).toBeUndefined();
-			expect(warn).toHaveBeenCalledWith(
-				expect.stringContaining("k-unregistered-xyz")
-			);
+			expect(warn).toHaveBeenCalledWith(expect.stringContaining("k-unregistered-xyz"));
 
 			warn.mockRestore();
 		});
 
 		it("resolves extends to a Vue constructor when the referenced component exists", () => {
-			Vue.component("k-plugins-test-base", { template: "<p>base</p>" });
+			app.component("k-plugins-test-base", { template: "<p>base</p>" });
 
 			const component = {
 				extends: "k-plugins-test-base",
-				template: "<p>extended</p>"
+				template: "<p>extended</p>",
 			};
-			const result = resolveComponentExtension(
-				Vue,
-				"k-plugins-test-extended",
-				component
-			);
+			const result = resolveComponentExtension(app, "k-plugins-test-extended", component);
 
 			expect(typeof result.extends).not.toBe("string");
 		});
@@ -142,38 +131,32 @@ describe("panel.plugins", () => {
 
 	describe("installComponent()", () => {
 		it("throws when component has no template, render, or extends", () => {
-			expect(() => installComponent(Vue, "k-empty", {})).toThrow(
-				`Plugin component "k-empty" is not providing any template or render method`
+			expect(() => installComponent(app, "k-empty", {})).toThrow(
+				`Plugin component "k-empty" is not providing any template, render or setup method`,
 			);
 		});
 
 		it("installs a component with a template", () => {
 			const component = { template: "<p>test</p>" };
-			const result = installComponent(
-				Vue,
-				"k-plugins-with-template",
-				component
-			);
+			const result = installComponent(app, "k-plugins-with-template", component);
 			expect(result).toStrictEqual(component);
 		});
 
 		it("installs a component with a render function", () => {
 			const render = () => null;
 			const component = { render };
-			const result = installComponent(Vue, "k-plugins-with-render", component);
+			const result = installComponent(app, "k-plugins-with-render", component);
 			expect(result).toStrictEqual(component);
 		});
 
 		it("warns when replacing a registered core component", () => {
-			Vue.component("k-plugins-core", { template: "<p>core</p>" });
-			const warn = vi
-				.spyOn(window.console, "warn")
-				.mockImplementation(() => {});
+			app.component("k-plugins-core", { template: "<p>core</p>" });
+			const warn = vi.spyOn(window.console, "warn").mockImplementation(() => {});
 
-			installComponent(Vue, "k-plugins-core", { template: "<p>override</p>" });
+			installComponent(app, "k-plugins-core", { template: "<p>override</p>" });
 
 			expect(warn).toHaveBeenCalledWith(
-				expect.stringContaining(`Plugin is replacing "k-plugins-core"`)
+				expect.stringContaining(`Plugin is replacing "k-plugins-core"`),
 			);
 
 			warn.mockRestore();
@@ -182,25 +165,23 @@ describe("panel.plugins", () => {
 
 	describe("installComponents()", () => {
 		it("returns empty object when components is undefined", () => {
-			expect(installComponents(Vue, undefined)).toStrictEqual({});
+			expect(installComponents(app, undefined)).toStrictEqual({});
 		});
 
 		it("returns a map of installed components", () => {
 			const component = { template: "<p>test</p>" };
-			const result = installComponents(Vue, {
-				"k-plugins-installed": component
+			const result = installComponents(app, {
+				"k-plugins-installed": component,
 			});
 			expect(result["k-plugins-installed"]).toStrictEqual(component);
 		});
 
 		it("skips and warns for invalid components", () => {
-			const warn = vi
-				.spyOn(window.console, "warn")
-				.mockImplementation(() => {});
+			const warn = vi.spyOn(window.console, "warn").mockImplementation(() => {});
 
-			const result = installComponents(Vue, {
+			const result = installComponents(app, {
 				"k-valid": { template: "<p>valid</p>" },
-				"k-invalid": {}
+				"k-invalid": {},
 			});
 
 			expect(result["k-valid"]).toBeDefined();
@@ -213,16 +194,16 @@ describe("panel.plugins", () => {
 
 	describe("installPlugins()", () => {
 		it("returns empty array when plugins is not an array", () => {
-			expect(installPlugins(Vue, undefined)).toStrictEqual([]);
+			expect(installPlugins(app, undefined)).toStrictEqual([]);
 		});
 
 		it("calls app.use for each plugin and returns the plugins array", () => {
-			const use = vi.spyOn(Vue, "use").mockImplementation(() => Vue);
+			const use = vi.spyOn(app, "use").mockImplementation(() => app);
 
-			const pluginA = (V: typeof Vue) => (V.prototype.$pluginA = true);
-			const pluginB = (V: typeof Vue) => (V.prototype.$pluginB = true);
+			const pluginA = { install: vi.fn() };
+			const pluginB = { install: vi.fn() };
 
-			const result = installPlugins(Vue, [pluginA, pluginB]);
+			const result = installPlugins(app, [pluginA, pluginB]);
 
 			expect(use).toHaveBeenCalledTimes(2);
 			expect(use).toHaveBeenCalledWith(pluginA);
@@ -235,7 +216,7 @@ describe("panel.plugins", () => {
 
 	describe("Plugins()", () => {
 		it("returns defaults when called with no plugins", () => {
-			const plugins = Plugins(Vue, {});
+			const plugins = Plugins(app, {});
 
 			expect(plugins.created).toStrictEqual([]);
 			expect(plugins.icons).toStrictEqual({});
@@ -248,7 +229,7 @@ describe("panel.plugins", () => {
 		});
 
 		it("exposes helper functions", () => {
-			const plugins = Plugins(Vue, {});
+			const plugins = Plugins(app, {});
 
 			expect(plugins.resolveComponentExtension).toBe(resolveComponentExtension);
 			expect(plugins.resolveComponentMixins).toBe(resolveComponentMixins);
@@ -256,24 +237,24 @@ describe("panel.plugins", () => {
 		});
 
 		it("merges provided icons", () => {
-			const plugins = Plugins(Vue, { icons: { star: "<svg/>" } });
+			const plugins = Plugins(app, { icons: { star: "<svg/>" } });
 			expect(plugins.icons).toStrictEqual({ star: "<svg/>" });
 		});
 
 		it("installs components", () => {
 			const component = { template: "<p>test</p>" };
-			const plugins = Plugins(Vue, {
-				components: { "k-plugins-default": component }
+			const plugins = Plugins(app, {
+				components: { "k-plugins-default": component },
 			});
 			expect(plugins.components["k-plugins-default"]).toStrictEqual(component);
-			expect(isComponent("k-plugins-default")).toBe(true);
+			expect(isComponent("k-plugins-default", app)).toBe(true);
 		});
 
 		it("installs use plugins", () => {
-			const plugin = vi.fn();
-			const use = vi.spyOn(Vue, "use").mockImplementation(() => Vue);
+			const plugin = { install: vi.fn() };
+			const use = vi.spyOn(app, "use").mockImplementation(() => app);
 
-			Plugins(Vue, { use: [plugin] });
+			Plugins(app, { use: [plugin] });
 
 			expect(use).toHaveBeenCalledWith(plugin);
 
@@ -282,7 +263,7 @@ describe("panel.plugins", () => {
 
 		it("merges created callbacks", () => {
 			const cb = vi.fn();
-			const plugins = Plugins(Vue, { created: [cb] });
+			const plugins = Plugins(app, { created: [cb] });
 			expect(plugins.created).toContain(cb);
 		});
 	});
