@@ -23,7 +23,7 @@ return [
 		'permissions' => fn (User $user) => $user->role()->permissions()->toArray(),
 		'prev'        => fn (User $user) => $user->prev($user->siblings()->filter('isListable', true)),
 		'role'        => fn (User $user) => $user->role(),
-		'roles'       => fn (User $user) => $user->roles(),
+		'roles'       => fn (User $user) => $user->roles()->filterBy('isAccessible', true),
 		'username'    => fn (User $user) => $user->username(),
 		'uuid'        => fn (User $user) => $user->uuid()?->toString()
 	],
