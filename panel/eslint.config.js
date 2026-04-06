@@ -60,6 +60,12 @@ export default [
 		}
 	},
 	{
+		files: ["**/*.test.*"],
+		rules: {
+			"vue/one-component-per-file": "off"
+		}
+	},
+	{
 		rules: {
 			"vue/attributes-order": "error",
 			"vue/component-definition-name-casing": "off",
