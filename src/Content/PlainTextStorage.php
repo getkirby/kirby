@@ -262,6 +262,40 @@ class PlainTextStorage extends Storage
 	}
 
 	/**
+	 * Prevent stale page instances from recreating a moved page directory
+	 * during concurrent reorder or move operations.
+	 */
+	protected function ensureCurrentPageRoot(VersionId $versionId): void
+	{
+		if (
+			$this->model instanceof Page === false ||
+			$versionId->is('latest') === false
+		) {
+			return;
+		}
+
+		$staleRoot = $this->contentDirectory($versionId);
+
+		if (is_dir($staleRoot) === true) {
+			return;
+		}
+
+		// `$this->model` may still point to a stale root after a concurrent move,
+		// so we re-resolve the page from the current app state.
+		$currentPage = $this->model->kirby()->page($this->model->id());
+
+		if (
+			$currentPage !== null &&
+			$currentPage->root() !== null &&
+			$currentPage->root() !== $staleRoot
+		) {
+			throw new LogicException(
+				message: 'The page was moved during a concurrent operation. Please retry the write with a fresh page instance.'
+			);
+		}
+	}
+
+	/**
 	 * Returns the stored content fields
 	 *
 	 * @return array<string, string>
@@ -318,6 +352,8 @@ class PlainTextStorage extends Storage
 			$this->delete($versionId, $language);
 			return;
 		}
+
+		$this->ensureCurrentPageRoot($versionId);
 
 		$success = Data::write($this->contentFile($versionId, $language), $fields);
 
