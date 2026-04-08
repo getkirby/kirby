@@ -270,6 +270,7 @@ class UserTest extends TestCase
 		$user->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'         => true,
 			'create'         => true,
 			'changeEmail'    => true,
 			'changeLanguage' => true,
@@ -277,6 +278,7 @@ class UserTest extends TestCase
 			'changePassword' => true,
 			'changeRole'     => true,
 			'delete'         => true,
+			'list'           => true,
 			'update'         => true,
 		];
 
@@ -297,6 +299,7 @@ class UserTest extends TestCase
 
 		// without override
 		$expected = [
+			'access'         => false,
 			'create'         => false,
 			'changeEmail'    => false,
 			'changeLanguage' => false,
@@ -304,6 +307,7 @@ class UserTest extends TestCase
 			'changePassword' => false,
 			'changeRole'     => false,
 			'delete'         => false,
+			'list'           => false,
 			'update'         => false,
 		];
 
@@ -312,6 +316,7 @@ class UserTest extends TestCase
 
 		// with override
 		$expected = [
+			'access'         => false,
 			'create'         => false,
 			'changeEmail'    => true,
 			'changeLanguage' => false,
@@ -319,6 +324,7 @@ class UserTest extends TestCase
 			'changePassword' => false,
 			'changeRole'     => false,
 			'delete'         => false,
+			'list'           => false,
 			'update'         => false,
 		];
 
@@ -403,6 +409,8 @@ class UserTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$props = (new User($app->user('a@getkirby.com')))->props();
 		$this->assertNull($props['prev']());
 		$this->assertSame('b@getkirby.com', $props['next']()['title']);
@@ -457,6 +465,8 @@ class UserTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$prevNext = (new User($app->user('a@getkirby.com')))->prevNext();
 		$this->assertNull($prevNext['prev']());
 		$this->assertSame('b@getkirby.com', $prevNext['next']()['title']);
@@ -484,6 +494,8 @@ class UserTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$_GET['tab'] = 'test';
 
 		$prevNext = (new User($app->user('b@getkirby.com')))->prevNext();
@@ -491,6 +503,65 @@ class UserTest extends TestCase
 		$this->assertSame('/users/c?tab=test', $prevNext['next']()['link']);
 
 		$_GET = [];
+	}
+
+	/**
+	 * @covers ::prevNext
+	 */
+	public function testPrevNextWithNonListableUsers(): void
+	{
+		// use uuid-based roles to avoid static permission cache collisions
+		$uuid = uuid();
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/restricted-' . $uuid => [
+					'name'    => 'restricted-' . $uuid,
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid],
+				['name' => 'restricted-' . $uuid]
+			],
+			'users' => [
+				[
+					'id'    => 'a',
+					'email' => 'a@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				],
+				[
+					'id'    => 'b',
+					'email' => 'b@getkirby.com',
+					'role'  => 'restricted-' . $uuid
+				],
+				[
+					'id'    => 'c',
+					'email' => 'c@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			]
+		]);
+
+		// as a regular editor, non-listable user b is skipped in navigation
+		$app->impersonate('a@getkirby.com');
+
+		$prevNext = (new User($app->user('a@getkirby.com')))->prevNext();
+		$this->assertNull($prevNext['prev']());
+		$this->assertSame('c@getkirby.com', $prevNext['next']()['title']);
+
+		$prevNext = (new User($app->user('c@getkirby.com')))->prevNext();
+		$this->assertSame('a@getkirby.com', $prevNext['prev']()['title']);
+		$this->assertNull($prevNext['next']());
+
+		// the kirby superuser sees all users including non-listable ones
+		$app->impersonate('kirby');
+
+		$prevNext = (new User($app->user('a@getkirby.com')))->prevNext();
+		$this->assertSame('b@getkirby.com', $prevNext['next']()['title']);
+
+		$prevNext = (new User($app->user('c@getkirby.com')))->prevNext();
+		$this->assertSame('b@getkirby.com', $prevNext['prev']()['title']);
 	}
 
 	/**

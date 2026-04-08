@@ -125,7 +125,7 @@ class Find
 			// occurrence of /files/ which separates parent path
 			// and filename
 			'file'    => static::file(...preg_split('$.*\K(/files/)$', $path)),
-			'user'    => $kirby->user(basename($path)),
+			'user'    => static::user(basename($path)),
 			default   => throw new InvalidArgumentException('Invalid model type: ' . $modelType)
 		};
 
@@ -142,7 +142,7 @@ class Find
 	 * @param string|null $id User's id
 	 * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
 	 */
-	public static function user(string|null $id = null): User|null
+	public static function user(string|null $id = null): User
 	{
 		// account is a reserved word to find the current
 		// user. It's used in various API and area routes.
@@ -159,17 +159,35 @@ class Find
 				$kirby->option('api.allowImpersonation', false)
 			);
 
-			return $user ?? throw new NotFoundException([
+			if ($user?->isAccessible() === true) {
+				return $user;
+			}
+
+			throw new NotFoundException([
 				'key' => 'user.undefined'
 			]);
 		}
 
 		// get a specific user by id
-		return $kirby->user($id) ?? throw new NotFoundException([
+		$user = $kirby->user($id);
+
+		if ($user?->isAccessible() === true) {
+			return $user;
+		}
+
+		throw new NotFoundException([
 			'key'  => 'user.notFound',
 			'data' => [
 				'name' => $id
 			]
 		]);
+	}
+
+	/**
+	 * Returns all accessible users
+	 */
+	public static function users(): Users
+	{
+		return App::instance()->users()->filter('isAccessible', true);
 	}
 }

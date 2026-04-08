@@ -9,6 +9,7 @@ class UserPermissionsTest extends TestCase
 	public static function actionProvider(): array
 	{
 		return [
+			['access'],
 			['create'],
 			['changeEmail'],
 			['changeLanguage'],
@@ -16,6 +17,7 @@ class UserPermissionsTest extends TestCase
 			['changePassword'],
 			['changeRole'],
 			['delete'],
+			['list'],
 			['update'],
 		];
 	}
@@ -79,15 +81,18 @@ class UserPermissionsTest extends TestCase
 					'name' => 'editor',
 					'permissions' => [
 						'user' => [
+							'access'         => false,
 							'changeEmail'    => false,
 							'changeLanguage' => false,
 							'changeName'     => false,
 							'changePassword' => false,
 							'changeRole'     => false,
 							'delete'         => false,
+							'list'           => false,
 							'update'         => false
 						],
 						'users' => [
+							'access'         => false,
 							'changeEmail'    => false,
 							'changeLanguage' => false,
 							'changeName'     => false,
@@ -95,6 +100,7 @@ class UserPermissionsTest extends TestCase
 							'changeRole'     => false,
 							'create'         => false,
 							'delete'         => false,
+							'list'           => false,
 							'update'         => false
 						]
 					]

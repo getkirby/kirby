@@ -20,6 +20,51 @@ class UsersSearchesTest extends AreaTestCase
 		$this->login();
 	}
 
+	public function testUserSearchWithNonListableUsers(): void
+	{
+		// use uuid-based roles and user IDs to avoid static permission cache collisions
+		$uuid = uuid();
+
+		$this->app([
+			'blueprints' => [
+				'users/manager-' . $uuid => [
+					'name' => 'manager-' . $uuid,
+				],
+				'users/restricted-' . $uuid => [
+					'name'    => 'restricted-' . $uuid,
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'manager-' . $uuid],
+				['name' => 'restricted-' . $uuid]
+			],
+			'users' => [
+				[
+					'id'    => 'manager-' . $uuid,
+					'email' => 'manager@getkirby.com',
+					'role'  => 'manager-' . $uuid
+				],
+				[
+					'id'    => 'restricted-' . $uuid,
+					'email' => 'restricted@getkirby.com',
+					'role'  => 'restricted-' . $uuid
+				]
+			],
+			'request' => [
+				'query' => [
+					'query' => 'getkirby.com'
+				]
+			]
+		]);
+
+		$this->login('manager@getkirby.com');
+
+		$results = $this->search('users')['results'];
+		$this->assertCount(1, $results);
+		$this->assertSame('manager@getkirby.com', $results[0]['text']);
+	}
+
 	public function testUserSearch(): void
 	{
 		$this->app([

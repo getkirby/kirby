@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\Find;
 use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
@@ -13,14 +14,14 @@ return [
 		'pattern' => 'users',
 		'method'  => 'GET',
 		'action'  => function () {
-			return $this->users()->sort('username', 'asc', 'email', 'asc');
+			return Find::users()->sort('username', 'asc', 'email', 'asc');
 		}
 	],
 	[
 		'pattern' => 'users',
 		'method'  => 'POST',
 		'action'  => function () {
-			return $this->users()->create($this->requestBody());
+			return Find::users()->create($this->requestBody());
 		}
 	],
 	[
@@ -28,10 +29,10 @@ return [
 		'method'  => 'GET|POST',
 		'action'  => function () {
 			if ($this->requestMethod() === 'GET') {
-				return $this->users()->search($this->requestQuery('q'));
+				return Find::users()->search($this->requestQuery('q'));
 			}
 
-			return $this->users()->query($this->requestBody());
+			return Find::users()->query($this->requestBody());
 		}
 	],
 	[
@@ -41,7 +42,7 @@ return [
 		],
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return $this->user($id);
+			return Find::user($id);
 		}
 	],
 	[
@@ -51,7 +52,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return $this->user($id)->update($this->requestBody(), $this->language(), true);
+			return Find::user($id)->update($this->requestBody(), $this->language(), true);
 		}
 	],
 	[
@@ -61,7 +62,7 @@ return [
 		],
 		'method'  => 'DELETE',
 		'action'  => function (string $id) {
-			return $this->user($id)->delete();
+			return Find::user($id)->delete();
 		}
 	],
 	[
@@ -71,7 +72,7 @@ return [
 		],
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return $this->user($id)->avatar();
+			return Find::user($id)->avatar();
 		}
 	],
 	// @codeCoverageIgnoreStart
@@ -101,7 +102,7 @@ return [
 					}
 
 					// delete the old avatar
-					$this->user($id)->avatar()?->delete();
+					Find::user($id)->avatar()?->delete();
 
 					$props = [
 						'filename' => 'profile.' . F::extension($filename),
@@ -110,7 +111,7 @@ return [
 					];
 
 					// move the source file from the temp dir
-					return $this->user($id)->createFile($props, true);
+					return Find::user($id)->createFile($props, true);
 				},
 				single: true
 			);
@@ -124,7 +125,7 @@ return [
 		],
 		'method'  => 'DELETE',
 		'action'  => function (string $id) {
-			return $this->user($id)->avatar()->delete();
+			return Find::user($id)->avatar()->delete();
 		}
 	],
 	[
@@ -134,7 +135,7 @@ return [
 		],
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return $this->user($id)->blueprint();
+			return Find::user($id)->blueprint();
 		}
 	],
 	[
@@ -144,7 +145,7 @@ return [
 		],
 		'method'  => 'GET',
 		'action'  => function (string $id) {
-			return $this->user($id)->blueprints($this->requestQuery('section'));
+			return Find::user($id)->blueprints($this->requestQuery('section'));
 		}
 	],
 	[
@@ -154,7 +155,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return $this->user($id)->changeEmail($this->requestBody('email'));
+			return Find::user($id)->changeEmail($this->requestBody('email'));
 		}
 	],
 	[
@@ -164,7 +165,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return $this->user($id)->changeLanguage($this->requestBody('language'));
+			return Find::user($id)->changeLanguage($this->requestBody('language'));
 		}
 	],
 	[
@@ -174,7 +175,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return $this->user($id)->changeName($this->requestBody('name'));
+			return Find::user($id)->changeName($this->requestBody('name'));
 		}
 	],
 	[
@@ -184,7 +185,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return $this->user($id)->changePassword($this->requestBody('password'));
+			return Find::user($id)->changePassword($this->requestBody('password'));
 		}
 	],
 	[
@@ -194,7 +195,7 @@ return [
 		],
 		'method'  => 'PATCH',
 		'action'  => function (string $id) {
-			return $this->user($id)->changeRole($this->requestBody('role'));
+			return Find::user($id)->changeRole($this->requestBody('role'));
 		}
 	],
 	[
@@ -203,9 +204,7 @@ return [
 			'users/(:any)/roles',
 		],
 		'action'  => function (string $id) {
-			$kirby   = $this->kirby();
-			$purpose = $kirby->request()->get('purpose');
-			return $this->user($id)->roles($purpose);
+			return Find::user($id)->roles($this->requestQuery('purpose'));
 		}
 	],
 	[
@@ -215,7 +214,7 @@ return [
 		],
 		'method'  => 'ALL',
 		'action'  => function (string $id, string $fieldName, string|null $path = null) {
-			return $this->fieldApi($this->user($id), $fieldName, $path);
+			return $this->fieldApi(Find::user($id), $fieldName, $path);
 		}
 	],
 	[
@@ -225,7 +224,7 @@ return [
 		],
 		'method'  => 'GET',
 		'action'  => function (string $id, string $sectionName) {
-			if ($section = $this->user($id)->blueprint()->section($sectionName)) {
+			if ($section = Find::user($id)->blueprint()->section($sectionName)) {
 				return $section->toResponse();
 			}
 		}
@@ -237,7 +236,7 @@ return [
 		],
 		'method'  => 'ALL',
 		'action'  => function (string $id, string $sectionName, string|null $path = null) {
-			return $this->sectionApi($this->user($id), $sectionName, $path);
+			return $this->sectionApi(Find::user($id), $sectionName, $path);
 		}
 	],
 	// @codeCoverageIgnoreEnd
