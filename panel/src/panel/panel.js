@@ -9,9 +9,9 @@ import Events from "./events";
 import Language from "./language";
 import Notification from "./notification";
 import Observers from "./observers";
-import Plugins from "./plugins.js";
+import Plugins from "./plugins";
 import Menu from "./menu";
-import Search from "./search.js";
+import Search from "./search";
 import System from "./system";
 import Theme from "./theme";
 import Translation from "./translation";
@@ -20,7 +20,7 @@ import { reactive } from "vue";
 import { redirect, request } from "./request";
 import Upload from "./upload";
 import User from "./user";
-import View from "./view.js";
+import View from "./view";
 import { isObject, length } from "@/helpers/object";
 import { isEmpty } from "@/helpers/string";
 import OfflineError from "@/errors/OfflineError";
@@ -38,7 +38,7 @@ export const globals = {
 	multilang: false,
 	permissions: {},
 	searches: {},
-	urls: {}
+	urls: {},
 };
 
 /**
@@ -60,7 +60,7 @@ export const states = [
 	"notification",
 	"system",
 	"translation",
-	"user"
+	"user",
 ];
 
 /**
@@ -233,7 +233,7 @@ export default {
 	async get(url, options = {}) {
 		const { response } = await this.request(url, {
 			method: "GET",
-			...options
+			...options,
 		});
 
 		return response?.json ?? {};
@@ -315,7 +315,7 @@ export default {
 		const { response } = await this.request(url, {
 			method: "POST",
 			body: data,
-			...options
+			...options,
 		});
 
 		return response.json;
@@ -337,7 +337,7 @@ export default {
 		return request(url, {
 			referrer: this.view.path,
 			csrf: this.system.csrf,
-			...options
+			...options,
 		});
 	},
 
@@ -491,5 +491,5 @@ export default {
 	 */
 	url(url = "", query = {}, origin) {
 		return buildUrl(url, query, origin);
-	}
+	},
 };

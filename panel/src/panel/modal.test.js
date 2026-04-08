@@ -8,7 +8,6 @@ describe("panel/modal.js", () => {
 		const modal = Modal(panel, "test", defaults());
 
 		const state = {
-			abortController: null,
 			component: null,
 			id: null,
 			isLoading: false,

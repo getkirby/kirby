@@ -80,7 +80,16 @@ export default {
 	data() {
 		return {
 			hasDiff: false,
-			isLocked: false
+			isLocked: false,
+			viewButtons: [
+				{
+					key: "open",
+					props: {
+						icon: "open",
+						title: "Open"
+					}
+				}
+			]
 		};
 	},
 	methods: {

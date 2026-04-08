@@ -298,7 +298,7 @@
 	"error.validation.uuid": "올바른 UUID를 입력하세요.",
 	"error.validation.url": "올바른 URL을 입력하세요.",
 
-	"error.version.discard.permission": "이 버전을 복구할 권한이 없습니다.",
+	"error.version.discard.permission": "이 버전을 무시할 권한이 없습니다.",
 	"error.version.publish.permission": "이 버전을 공개할 권한이 없습니다.",
 	"error.version.save.permission": "이 버전을 변경할 권한이 없습니다.",
 
@@ -408,8 +408,8 @@
 
 	"filter": "필터",
 
-	"form.discard": "저장되지 않은 항목이 있습니다.",
-	"form.discard.confirm": "<strong>저장되지 않은 내용</strong>을 삭제할까요?",
+	"form.discard": "변경 사항 무시",
+	"form.discard.confirm": "<strong>저장되지 않은 내용</strong>을 무시할까요?",
 	"form.locked": "다른 사용자가 편집 중입니다.",
 	"form.unsaved": "변경 사항이 저장되지 않았습니다.",
 	"form.preview": "변경 사항 미리 보기",

@@ -19,6 +19,7 @@
 					@click="$refs.blocks.choose(value.length)"
 				/>
 				<k-button
+					:title="$t('options')"
 					icon="dots"
 					variant="filled"
 					size="xs"

@@ -1,65 +1,72 @@
 import { reactive } from "vue";
 import { isUrl } from "@/helpers/url";
-import listeners from "./listeners";
+import listeners, { type Listener } from "./listeners";
 import State from "./state";
+
+export type FeatureState = {
+	// the feature component
+	component: string | null;
+	isLoading: boolean;
+	// event listeners
+	on: Record<string, Listener>;
+	// relative path to this feature
+	path: string | null;
+	// all props for the feature component
+	props: Record<string, unknown>;
+	// the query parameters from the latest request
+	query: Record<string, unknown>;
+	// referrer can be used to redirect properly in handlers
+	referrer: string | null;
+	// timestamp from the backend to force refresh the reactive state
+	timestamp: number | null;
+};
 
 /**
  * Default state for all features
  */
-export const defaults = () => {
+export function defaults(): FeatureState {
 	return {
-		// request abort controller
-		abortController: null,
-		// the feature component
 		component: null,
-		// loading state
 		isLoading: false,
-		// event listeners
 		on: {},
-		// relative path to this feature
 		path: null,
-		// all props for the feature component
 		props: {},
-		// the query parameters form the latest request
 		query: {},
-		// referrer can be used to redirect properly in handlers
 		referrer: null,
-		// timestamp from the backend to force refresh the reactive state
-		timestamp: null
+		timestamp: null,
 	};
-};
+}
 
 /**
- * Feature objects isolate functionality and state
- * of Panel features like drawers, dialogs,
- * notifications and views.
+ * Feature objects isolate functionality and state of Panel features
+ * like drawers, dialogs, notifications and views
  * @since 4.0.0
  *
- * @param {Object} panel The panel singleton
- * @param {String} key Sets the key for the feature. Backend responses use this key for features.
- * @param {Object} defaults Sets the default state of the feature
+ * @param panel - The Panel singleton
+ * @param key - Identifies this state in backend responses
+ * @param defaults - Initial values; also defines which keys are tracked
  */
-export default (panel, key, defaults) => {
+export default function Feature<T extends FeatureState>(panel: TODO, key: string, defaults: T) {
 	const parent = State(key, defaults);
 
 	return reactive({
 		/**
-		 * Features inherit all the state methods
+		 * Feature inherits all the state methods
 		 * and reactive defaults are also merged
-		 * through them.
+		 * through them
 		 */
 		...parent,
 		...listeners(),
+		abortController: undefined as AbortController | undefined,
 
 		/**
-		 * Sends a get request to the backend route for
-		 * this Feature
+		 * Sends a get request to the backend route for this feature
 		 * @since 5.1.0
-		 *
-		 * @param {Object} value
-		 * @param {Object} options
 		 */
-		async get(url, options = {}) {
+		async get(
+			url: string | URL,
+			options?: Partial<Prettify<T>>,
+		): Promise<Record<string, unknown> | false> {
 			this.isLoading = true;
 
 			try {
@@ -74,8 +81,7 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
-		 * Loads a feature from the server
-		 * and opens it afterwards
+		 * Loads a feature from the backend and opens it afterwards
 		 *
 		 * @example
 		 * panel.view.load("/some/view");
@@ -91,30 +97,30 @@ export default (panel, key, defaults) => {
 		 *     search: "Find me"
 		 *   }
 		 * });
-		 *
-		 * @param {String|URL} url
-		 * @param {Object|Function} options
-		 * @returns {Object} Returns the current state
 		 */
-		async load(url, options = {}) {
+		async load(
+			url: string | URL,
+			options: Partial<Prettify<T>> & { silent?: boolean } = {},
+		): Promise<Prettify<T>> {
 			// each feature can have its own loading state
 			// the panel.open method also triggers the global loading
-			// state for the entire panel. This adds fine-grained controll
-			// over apropriate spinners.
+			// state for the entire panel. This adds fine-grained control
+			// over appropriate spinners.
 			if (options.silent !== true) {
 				this.isLoading = true;
 			}
 
 			// create a new abort controller
-			// and add to the options
 			this.abortController = new AbortController();
-			options.signal = this.abortController.signal;
 
 			// the global open method is used to make sure
 			// that a response can also trigger other features.
 			// For example, a dialog request could also open a drawer
 			// or a notification by sending the matching object
-			await panel.open(url, options);
+			await panel.open(url, {
+				...options,
+				signal: this.abortController.signal,
+			});
 
 			// stop the feature loader
 			this.isLoading = false;
@@ -127,11 +133,10 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
-		 * Opens the feature either by URL or by
-		 * passing a state object
+		 * Opens the feature either by URL or by passing a state object
 		 *
 		 * @example
-		 * panel.dialog.view({
+		 * panel.dialog.open({
 		 *   component: "k-page-view",
 		 *	 props: {},
 		 *   on: {
@@ -140,50 +145,43 @@ export default (panel, key, defaults) => {
 		 * });
 		 *
 		 * See load for more examples
-		 *
-		 * @param {String|URL|Object} feature
-		 * @param {Object|Function} options
-		 * @returns {Object} Returns the current state
 		 */
-		async open(feature, options = {}) {
-			// simple wrapper to allow passing a submit handler
-			// as second argument instead of the options
-			if (typeof options === "function") {
-				options = {
-					on: {
-						submit: options
-					}
-				};
-			}
+		async open(
+			feature: string | URL | Partial<Prettify<T>>,
+			options: Partial<Prettify<T>> | Listener = {},
+		): Promise<Prettify<T>> {
+			const listeners: Record<string, unknown> | undefined =
+				typeof options === "function" ? { submit: options } : options.on;
+			const state: Partial<T> =
+				typeof options === "function" ? ({ on: listeners } as Partial<T>) : options;
 
 			// the feature needs to be loaded first
 			// before it can be opened. This will route
 			// the request through panel.open
 			if (isUrl(feature) === true) {
-				return this.load(feature, options);
+				return this.load(feature, state);
 			}
 
 			// set the new state
 			this.set(feature);
 
 			// add additional listeners from the options
-			this.addEventListeners(options.on);
+			this.addEventListeners(listeners);
 
 			// trigger optional open listeners
-			this.emit("open", feature, options);
+			this.emit("open", feature, state);
 
 			// return the final state
 			return this.state();
 		},
 
 		/**
-		 * Sends a post request to the backend route for
-		 * this Feature
-		 *
-		 * @param {Object} value
-		 * @param {Object} options
+		 * Sends a post request to the backend route for this feature
 		 */
-		async post(value, options = {}) {
+		async post(
+			value: Record<string, unknown>,
+			options: Partial<Prettify<T>> = {},
+		): Promise<Record<string, unknown> | false> {
 			if (!this.path) {
 				throw new Error(`The ${this.key()} cannot be posted`);
 			}
@@ -193,7 +191,7 @@ export default (panel, key, defaults) => {
 
 			// if no value has been passed to the submit method,
 			// take the value object from the props
-			value ??= this.props?.value ?? {};
+			value ??= (this.props?.value ?? {}) as Record<string, unknown>;
 
 			try {
 				return await panel.post(this.path, value, options);
@@ -208,18 +206,17 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
-		 * Reloads the properties for the feature
-		 * to refresh its state
+		 * Reloads the properties for the feature to refresh its state
 		 */
-		async refresh(options = {}) {
-			options.url ??= this.url();
+		async refresh(options: Partial<T> & { url?: string | URL } = {}): Promise<T | undefined> {
+			const url = options.url ?? this.url();
+			const response = await this.get(url, options);
 
-			if (!options.url) {
+			if (response === false) {
 				return;
 			}
 
-			const response = await this.get(options.url, options);
-			const state = response[this.key()];
+			const state = response["$" + this.key()] as FeatureState | undefined;
 
 			// the state cannot be updated
 			if (!state || state.component !== this.component) {
@@ -237,25 +234,19 @@ export default (panel, key, defaults) => {
 		 *
 		 * @example
 		 * panel.view.reload();
-		 *
-		 * @param {Object, Boolean} options
 		 */
-		async reload(options = {}) {
+		async reload(options?: Partial<Prettify<T>>): Promise<Prettify<T> | false> {
 			if (!this.path) {
 				return false;
 			}
 
-			this.open(this.url(), options);
+			return this.open(this.url(), options);
 		},
 
 		/**
 		 * Sets a new active state for the feature
-		 * This is done whenever the state is an object
-		 * and not undefined or null
-		 *
-		 * @param {Object} state
 		 */
-		set(state) {
+		set(state: Partial<Prettify<T>>): Prettify<T> {
 			parent.set.call(this, state);
 
 			// reset the event listeners
@@ -269,11 +260,9 @@ export default (panel, key, defaults) => {
 
 		/**
 		 * Creates a full URL object for the current path
-		 *
-		 * @returns {URL}
 		 */
-		url() {
+		url(): URL {
 			return panel.url(this.path, this.query);
-		}
+		},
 	});
-};
+}
