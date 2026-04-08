@@ -422,9 +422,11 @@ class ApiTest extends TestCase
 			'users' => [
 				[
 					'email' => 'current@getkirby.com',
+					'role'  => 'admin',
 				],
 				[
 					'email' => 'test@getkirby.com',
+					'role'  => 'admin',
 				]
 			],
 		]);
@@ -440,9 +442,48 @@ class ApiTest extends TestCase
 		$this->api->user('nope@getkirby.com');
 	}
 
+	public function testUserNotAccessible(): void
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin' => [
+					'name'    => 'admin',
+					'options' => ['access' => ['*' => false, 'admin' => true]]
+				],
+				'users/editor' => [
+					'name' => 'editor',
+				],
+			],
+			'users' => [
+				[
+					'email' => 'current@getkirby.com',
+					'role'  => 'editor'
+				],
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+		]);
+
+		$app->impersonate('current@getkirby.com');
+		$api = $app->api();
+
+		$this->assertSame('current@getkirby.com', $api->user()->email());
+		$this->assertSame('editor@getkirby.com', $api->user('editor@getkirby.com')->email());
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The user "admin@getkirby.com" cannot be found');
+		$this->api->user('admin@getkirby.com');
+	}
+
 	public function testUsers(): void
 	{
-		$this->assertSame($this->app->users(), $this->api->users());
+		$this->assertSame($this->app->users()->pluck('email'), $this->api->users()->pluck('email'));
 	}
 
 	public function testFileGetRoute(): void

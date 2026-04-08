@@ -50,6 +50,7 @@ class PermissionsTest extends TestCase
 			['site', 'changeTitle'],
 			['site', 'update'],
 
+			['users', 'access'],
 			['users', 'changeEmail'],
 			['users', 'changeLanguage'],
 			['users', 'changeName'],
@@ -57,14 +58,17 @@ class PermissionsTest extends TestCase
 			['users', 'changeRole'],
 			['users', 'create'],
 			['users', 'delete'],
+			['users', 'list'],
 			['users', 'update'],
 
+			['user', 'access'],
 			['user', 'changeEmail'],
 			['user', 'changeLanguage'],
 			['user', 'changeName'],
 			['user', 'changePassword'],
 			['user', 'changeRole'],
 			['user', 'delete'],
+			['user', 'list'],
 			['user', 'update'],
 		];
 	}
