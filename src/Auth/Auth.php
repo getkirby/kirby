@@ -356,7 +356,7 @@ class Auth
 		$this->user()?->logout();
 
 		// clear the pending challenge
-		$this->challenges->clear();
+		$this->challenges->clear($this->kirby->session());
 
 		// clear the status cache
 		$this->status = null;

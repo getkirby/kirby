@@ -66,6 +66,26 @@ class DummyChallenge extends Challenge
 	}
 }
 
+class DummyChallenge2 extends Challenge
+{
+	public static bool $available = true;
+
+	public static function isAvailable(User $user, string $mode): bool
+	{
+		return static::$available;
+	}
+
+	public function create(): Pending|null
+	{
+		return null;
+	}
+
+	public function verify(mixed $input, Pending $data): bool
+	{
+		return true;
+	}
+}
+
 #[CoversClass(Challenges::class)]
 class ChallengesTest extends TestCase
 {
@@ -78,13 +98,15 @@ class ChallengesTest extends TestCase
 	{
 		parent::setUp();
 
-		DummyChallenge::$available = true;
-		DummyChallenge::$enabled   = true;
-		DummyChallenge::$created   = [];
-		DummyChallenge::$verified  = [];
-		DummyChallenge::$pending   = null;
+		DummyChallenge::$available  = true;
+		DummyChallenge::$enabled    = true;
+		DummyChallenge::$created    = [];
+		DummyChallenge::$verified   = [];
+		DummyChallenge::$pending    = null;
+		DummyChallenge2::$available = true;
 
 		Challenges::$challenges['dummy'] = DummyChallenge::class;
+		Challenges::$challenges['dummy2'] = DummyChallenge2::class;
 
 		$this->app = $this->app->clone([
 			'options' => [
@@ -107,7 +129,8 @@ class ChallengesTest extends TestCase
 	protected function tearDown(): void
 	{
 		parent::tearDown();
-		unset(Challenges::$challenges['dummy']);
+		unset(Challenges::$challenges['dummy'], Challenges::$challenges['dummy2']);
+
 	}
 
 	protected function session(): Session
@@ -151,7 +174,7 @@ class ChallengesTest extends TestCase
 		$session->set('kirby.challenge.timeout', time() + 1000);
 		$session->set('kirby.challenge.type', 'dummy');
 
-		$this->challenges->clear();
+		$this->challenges->clear($session);
 
 		$this->assertNull($session->get('kirby.challenge.data'));
 		$this->assertNull($session->get('kirby.challenge.email'));
@@ -234,6 +257,117 @@ class ChallengesTest extends TestCase
 		$this->assertSame($user, $challenge->user());
 		$this->assertSame('login', $challenge->mode());
 		$this->assertSame(123, $challenge->timeout());
+	}
+
+	public function testSwitch(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['dummy', 'dummy2']
+				]
+			]
+		]);
+
+		$this->challenges = new Challenges($this->app->auth(), $this->app);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'y']);
+
+		$challenge = $this->challenges->switch($session, 'dummy2');
+
+		$this->assertInstanceOf(DummyChallenge2::class, $challenge);
+		$this->assertSame('dummy2', $session->get('kirby.challenge.type'));
+		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
+		$this->assertSame(MockTime::$time + $this->challenges->timeout(), $session->get('kirby.challenge.timeout'));
+
+		// dummy2::create() returns null, so no data should be written
+		$this->assertNull($session->get('kirby.challenge.data'));
+	}
+
+	public function testSwitchSameType(): void
+	{
+		$session = $this->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'dummy');
+		$timeout = time() + 1000;
+		$session->set('kirby.challenge.timeout', $timeout);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'y']);
+
+		$challenge = $this->challenges->switch($session, 'dummy');
+
+		$this->assertInstanceOf(DummyChallenge::class, $challenge);
+
+		// session must remain untouched
+		$this->assertSame('dummy', $session->get('kirby.challenge.type'));
+		$this->assertSame($timeout, $session->get('kirby.challenge.timeout'));
+		$this->assertSame(['public' => 'x', 'secret' => 'y'], $session->get('kirby.challenge.data'));
+	}
+
+	public function testSwitchTimeout(): void
+	{
+		$session = $this->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.timeout', time() - 10);
+
+		$this->expectException(ChallengeTimeoutException::class);
+
+		$this->challenges->switch($session, 'dummy');
+	}
+
+	public function testSwitchNoActiveChallenge(): void
+	{
+		$session = $this->session();
+
+		$this->expectException(InvalidArgumentException::class);
+
+		$this->challenges->switch($session, 'dummy');
+	}
+
+	public function testSwitchUnavailable(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['dummy', 'dummy2']
+				]
+			]
+		]);
+
+		$this->challenges = new Challenges($this->app->auth(), $this->app);
+
+		DummyChallenge2::$available = false;
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		$this->expectException(InvalidArgumentException::class);
+
+		$this->challenges->switch($session, 'dummy2');
+	}
+
+	public function testSwitchUserNotFound(): void
+	{
+		$session = $this->session();
+		$session->set('kirby.challenge.email', 'unknown@example.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		$this->expectException(UserNotFoundException::class);
+
+		$this->challenges->switch($session, 'dummy');
 	}
 
 	public function testVerify(): void
