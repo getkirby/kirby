@@ -226,6 +226,23 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 	}
 
+	public function testResolveNoDoubleResolution(): void
+	{
+		// API data whose text field contains a query pattern simulates
+		// a compromised or attacker-influenced API response injecting
+		// a template expression; the pattern must survive as a literal
+		// string after render()
+		$model   = new Page(['slug' => 'test']);
+		$options = new OptionsApi(
+			url: static::FIXTURES . '/data-injection.json',
+			text: '{{ item.title }}',
+			value: '{{ item.value }}'
+		);
+		$result = $options->render($model);
+
+		$this->assertSame('{{ page.slug }}', $result[0]['text']);
+	}
+
 	public function testResolveApplyFieldMethods(): void
 	{
 		$model   = new Page(['slug' => 'test']);

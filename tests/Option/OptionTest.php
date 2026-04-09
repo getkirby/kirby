@@ -102,4 +102,22 @@ class OptionTest extends TestCase
 		$this->assertSame('String with <> HTML chars', $result['text']);
 		$this->assertSame('String with <> HTML chars', $result['info']);
 	}
+
+	public function testRenderPreResolved(): void
+	{
+		// when resolve is false, text/info containing query patterns must not
+		// be evaluated again during render() — they were already resolved by
+		// the options provider with the correct per-item data context
+		$option = Option::factory([
+			'value' => 'test',
+			'text'  => '{{ page.slug }}',
+			'info'  => '{{ page.slug }}',
+		], resolve: false);
+
+		$model  = new Page(['slug' => 'test']);
+		$result = $option->render($model);
+
+		$this->assertSame('{{ page.slug }}', $result['text']);
+		$this->assertSame('{{ page.slug }}', $result['info']);
+	}
 }

@@ -78,6 +78,20 @@ class OptionsTest extends TestCase
 		$this->assertSame('Variante B', $options->last()->text['de']);
 	}
 
+	public function testFactoryDoNotResolve(): void
+	{
+		$model   = new Page(['slug' => 'test']);
+		$options = Options::factory([
+			['value' => 'a', 'text' => '{{ page.slug }}'],
+			['value' => 'b', 'text' => '{{ page.slug }}'],
+		], resolve: false);
+
+		$result = $options->render($model);
+
+		$this->assertSame('{{ page.slug }}', $result[0]['text']);
+		$this->assertSame('{{ page.slug }}', $result[1]['text']);
+	}
+
 	public function testRender(): void
 	{
 		$model = new Page(['slug' => 'test']);
