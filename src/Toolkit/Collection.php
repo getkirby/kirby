@@ -452,7 +452,7 @@ class Collection extends Iterator implements Stringable
 	public function getAttribute(
 		array|object $item,
 		string $attribute,
-		bool $split = false,
+		bool|string $split = false,
 		$related = null
 	) {
 		$value = $this->{'getAttributeFrom' . gettype($item)}(
@@ -1177,7 +1177,7 @@ Collection::$filters['=='] = function (
 	Collection $collection,
 	string $field,
 	$test,
-	bool $split = false
+	bool|string $split = false
 ): Collection {
 	foreach ($collection->data as $key => $item) {
 		$value = $collection->getAttribute($item, $field, $split, $test);
@@ -1201,7 +1201,7 @@ Collection::$filters['!='] = function (
 	Collection $collection,
 	string $field,
 	$test,
-	bool $split = false
+	bool|string $split = false
 ): Collection {
 	foreach ($collection->data as $key => $item) {
 		$value = $collection->getAttribute($item, $field, $split, $test);
