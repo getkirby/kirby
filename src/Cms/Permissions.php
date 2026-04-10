@@ -61,6 +61,7 @@ class Permissions
 			'update'         => true
 		],
 		'site' => [
+			'access'      => true,
 			'changeTitle' => true,
 			'update'      => true
 		],

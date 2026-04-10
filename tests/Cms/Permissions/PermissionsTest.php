@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Permissions
@@ -46,6 +47,7 @@ class PermissionsTest extends TestCase
 			['pages', 'sort'],
 			['pages', 'update'],
 
+			['site', 'access'],
 			['site', 'changeTitle'],
 			['site', 'update'],
 
@@ -73,6 +75,7 @@ class PermissionsTest extends TestCase
 	 * @covers ::for
 	 * @dataProvider actionsProvider
 	 */
+	#[DataProvider('actionsProvider')]
 	public function testActions(string $category, $action)
 	{
 		// default

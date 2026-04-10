@@ -139,6 +139,30 @@ class SiteTest extends AreaTestCase
 		$this->assertSame('', $props['model']['title']);
 	}
 
+	public function testSiteNotAccessible(): void
+	{
+		$this->app([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$this->login('editor@getkirby.com');
+		$this->assertErrorView('site', 'The site is not accessible');
+	}
+
 	public function testSiteFile(): void
 	{
 		$this->app([

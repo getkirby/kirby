@@ -3,12 +3,14 @@
 namespace Kirby\Cms;
 
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SitePermissionsTest extends TestCase
 {
 	public static function actionProvider(): array
 	{
 		return [
+			['access'],
 			['changeTitle'],
 			['update'],
 		];
@@ -17,6 +19,7 @@ class SitePermissionsTest extends TestCase
 	/**
 	 * @dataProvider actionProvider
 	 */
+	#[DataProvider('actionProvider')]
 	public function testWithAdmin($action)
 	{
 		$kirby = new App([
@@ -36,6 +39,7 @@ class SitePermissionsTest extends TestCase
 	/**
 	 * @dataProvider actionProvider
 	 */
+	#[DataProvider('actionProvider')]
 	public function testWithNobody($action)
 	{
 		$kirby = new App([
