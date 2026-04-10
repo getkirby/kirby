@@ -264,7 +264,7 @@ class Api extends BaseApi
 	 *
 	 * @throws \Kirby\Exception\PermissionException
 	 */
-	public function validateAccess(string $area): void
+	public function validateAreaAccess(string $area): void
 	{
 		if ($this->user()?->role()->permissions()->for('access', $area) !== true) {
 			throw new PermissionException('No access');

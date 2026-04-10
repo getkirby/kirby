@@ -44,7 +44,7 @@ return [
 		'user' => fn () => $this->user(),
 		'version' => function () {
 			try {
-				$this->validateAccess('system');
+				$this->validateAreaAccess('system');
 				return $this->kirby()->version();
 			} catch (PermissionException) {
 				return null;

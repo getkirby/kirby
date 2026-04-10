@@ -10,7 +10,7 @@ return [
 	'fields' => [
 		'status' => function (License $license) {
 			try {
-				$this->validateAccess('system');
+				$this->validateAreaAccess('system');
 				return $license->status()->value();
 			} catch (PermissionException) {
 				return null;
@@ -18,7 +18,7 @@ return [
 		},
 		'code' => function (License $license) {
 			try {
-				$this->validateAccess('system');
+				$this->validateAreaAccess('system');
 				return $this->user()->isAdmin() ? $license->code() : $license->code(true);
 			} catch (PermissionException) {
 				return null;
@@ -26,7 +26,7 @@ return [
 		},
 		'type' => function (License $license) {
 			try {
-				$this->validateAccess('system');
+				$this->validateAreaAccess('system');
 				return $license->type()->label();
 			} catch (PermissionException) {
 				return null;

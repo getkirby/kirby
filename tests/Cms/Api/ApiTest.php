@@ -719,7 +719,7 @@ class ApiTest extends TestCase
 	public function testValidateAccess(): void
 	{
 		// kirby (superuser) always has access to all areas
-		$this->api->validateAccess('users');
+		$this->api->validateAreaAccess('users');
 		$this->expectNotToPerformAssertions();
 	}
 
@@ -748,6 +748,6 @@ class ApiTest extends TestCase
 
 		$this->expectException(PermissionException::class);
 
-		$app->api()->validateAccess('users');
+		$app->api()->validateAreaAccess('users');
 	}
 }
