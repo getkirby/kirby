@@ -397,7 +397,10 @@ class PageRules
 	 */
 	public static function update(Page $page, array $content = []): void
 	{
-		if ($page->permissions()->can('update') !== true) {
+		if (
+			$page->permissions()->can('edit') !== true ||
+			$page->permissions()->can('save') !== true
+		) {
 			throw new PermissionException(
 				key: 'page.update.permission',
 				data: ['slug' => $page->slug()]

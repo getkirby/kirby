@@ -45,7 +45,10 @@ class SiteRules
 	 */
 	public static function update(Site $site, array $content = []): void
 	{
-		if ($site->permissions()->can('update') !== true) {
+		if (
+			$site->permissions()->can('edit') !== true ||
+			$site->permissions()->can('save') !== true
+		) {
 			throw new PermissionException(
 				key: 'site.update.permission'
 			);

@@ -12,6 +12,7 @@
 					</p>
 					<k-form-controls
 						v-else
+						:can-save="permissions.save"
 						:editor="editor"
 						:has-diff="hasDiff"
 						:is-locked="isLocked"
@@ -36,9 +37,13 @@ import { props } from "@/components/Forms/FormControls.vue";
 export default {
 	mixins: [props],
 	props: {
+		permissions: {
+			type: Object,
+			default: () => ({})
+		},
 		label: String,
 		src: String,
-		versionId: String
+		versionId: String,
 	},
 	emits: ["discard", "scroll", "submit"],
 	computed: {
