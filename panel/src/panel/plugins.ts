@@ -198,19 +198,18 @@ export function resolveComponentRender(component: Component): Component {
  * and makes them accessible at window.panel.plugins
  * @since 4.0.0
  */
-export default function Plugins(
-	app: App,
-	plugins: Partial<{
-		components: Record<string, ComponentOptions>;
-		created: ((app: App) => void)[];
-		icons: Record<string, string>;
-		login: ComponentOptions;
-		textareaButtons: Record<string, unknown>;
-		writerMarks: Record<string, typeof Mark>;
-		writerNodes: Record<string, typeof Node>;
-		use: Plugin[];
-	}> = {}
-) {
+export type PanelPlugins = Partial<{
+	components: Record<string, ComponentOptions>;
+	created: ((app: ConcreteComponent) => void)[];
+	icons: Record<string, string>;
+	login: ComponentOptions;
+	textareaButtons: Record<string, unknown>;
+	writerMarks: Record<string, typeof Mark>;
+	writerNodes: Record<string, typeof Node>;
+	use: Plugin[];
+}>;
+
+export default function Plugins(app: App, plugins: PanelPlugins = {}) {
 	return {
 		// expose helper functions for kirbyup
 		resolveComponentExtension,

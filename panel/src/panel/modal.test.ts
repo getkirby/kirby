@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import Modal, { defaults } from "./modal";
-import Panel from "./panel.js";
+import Panel from "./panel";
 
 describe("panel.modal", () => {
 	describe("state", () => {
@@ -199,17 +199,14 @@ describe("panel.modal", () => {
 			const panel = Panel.create(app);
 			const modal = Modal(panel, "test", defaults());
 
-			// @ts-expect-error panel.js is not typed
 			panel.notification.error("Foo");
 
 			expect(modal.isOpen).toStrictEqual(false);
-			// @ts-expect-error panel.js is not typed
 			expect(panel.notification.isOpen).toStrictEqual(true);
 
 			await modal.open({ component: "k-test" });
 
 			expect(modal.isOpen).toStrictEqual(true);
-			// @ts-expect-error panel.js is not typed
 			expect(panel.notification.isOpen).toStrictEqual(false);
 		});
 
@@ -219,15 +216,12 @@ describe("panel.modal", () => {
 
 			await modal.open({ component: "k-test" });
 
-			// @ts-expect-error panel.js is not typed
 			panel.notification.error("Test");
 
-			// @ts-expect-error panel.js is not typed
 			expect(panel.notification.isOpen).toStrictEqual(true);
 
 			await modal.open({ component: "k-test" });
 
-			// @ts-expect-error panel.js is not typed
 			expect(panel.notification.isOpen).toStrictEqual(true);
 		});
 	});
@@ -313,9 +307,7 @@ describe("panel.modal", () => {
 
 			modal.success({ message: "Test" });
 
-			// @ts-expect-error panel.js is not typed
 			expect(panel.notification.message).toStrictEqual("Test");
-			// @ts-expect-error panel.js is not typed
 			expect(panel.notification.theme).toStrictEqual("positive");
 		});
 
@@ -324,12 +316,10 @@ describe("panel.modal", () => {
 			const modal = Modal(panel, "test", defaults());
 			const emitted: string[] = [];
 
-			// @ts-expect-error panel.js is not typed
 			panel.events.on("success", () => {
 				emitted.push("success");
 			});
 
-			// @ts-expect-error panel.js is not typed
 			panel.events.on("user.deleted", () => {
 				emitted.push("user.deleted");
 			});
@@ -377,9 +367,7 @@ describe("panel.modal", () => {
 
 			modal.success("Well done");
 
-			// @ts-expect-error panel.js is not typed
 			expect(panel.notification.message).toStrictEqual("Well done");
-			// @ts-expect-error panel.js is not typed
 			expect(panel.notification.theme).toStrictEqual("positive");
 		});
 
@@ -388,7 +376,6 @@ describe("panel.modal", () => {
 			const modal = Modal(panel, "test", defaults());
 			const emitted: string[] = [];
 
-			// @ts-expect-error panel.js is not typed
 			panel.events.on("success", () => {
 				emitted.push("success");
 			});
@@ -403,12 +390,10 @@ describe("panel.modal", () => {
 			const modal = Modal(panel, "test", defaults());
 			const emitted: string[] = [];
 
-			// @ts-expect-error panel.js is not typed
 			panel.events.on("user.created", () => {
 				emitted.push("user.created");
 			});
 
-			// @ts-expect-error panel.js is not typed
 			panel.events.on("page.created", () => {
 				emitted.push("page.created");
 			});

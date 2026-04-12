@@ -1,31 +1,34 @@
 import { describe, expect, it, vi, afterEach, beforeEach } from "vitest";
+import type Panel from "./panel";
 import Content from "./content";
 
-const createPanel = ({ latest = {}, changes = {}, lock = {} } = {}) => ({
-	view: {
-		props: {
-			api: "/pages/test",
-			lock: { isLocked: false, modified: new Date("2024-01-01"), ...lock },
-			versions: {
-				latest: { title: "Original", ...latest } as Record<string, unknown>,
-				changes: { title: "Original", ...changes } as Record<string, unknown>
-			}
+function createPanel({ latest = {}, changes = {}, lock = {} } = {}) {
+	return {
+		view: {
+			props: {
+				api: "/pages/test",
+				lock: { isLocked: false, modified: new Date("2024-01-01"), ...lock },
+				versions: {
+					latest: { title: "Original", ...latest } as Record<string, unknown>,
+					changes: { title: "Original", ...changes } as Record<string, unknown>
+				}
+			},
+			reload: vi.fn()
 		},
-		reload: vi.fn()
-	},
-	language: { code: "en" },
-	events: { emit: vi.fn() },
-	api: {
-		post: vi.fn().mockResolvedValue(undefined),
-		endpoint: "/api",
-		csrf: "csrf-token"
-	},
-	dialog: {
-		open: vi.fn(),
-		close: vi.fn()
-	},
-	url: vi.fn((path: string) => `http://test.com${path}`)
-});
+		language: { code: "en" },
+		events: { emit: vi.fn() },
+		api: {
+			post: vi.fn().mockResolvedValue(undefined),
+			endpoint: "/api",
+			csrf: "csrf-token"
+		},
+		dialog: {
+			open: vi.fn(),
+			close: vi.fn()
+		},
+		url: vi.fn((path: string) => `http://test.com${path}`)
+	} as unknown as Panel;
+}
 
 describe("panel.content", () => {
 	describe("cancelSaving()", () => {

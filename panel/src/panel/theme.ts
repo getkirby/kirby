@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import State from "./state";
+import type Panel from "./panel";
 
 export type ThemeState = {
 	setting: string | null;
@@ -19,7 +20,7 @@ export function defaults(media?: MediaQueryList): ThemeState {
  *
  * @since 5.0.0
  */
-export default function Theme(panel: { config: { theme: string | null } }) {
+export default function Theme(panel: Panel) {
 	const media = window.matchMedia("(prefers-color-scheme: dark)");
 	const parent = State("theme", defaults(media));
 

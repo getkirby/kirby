@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import Drawer from "./drawer";
-import Panel from "./panel.js";
+import Panel from "./panel";
 
 describe("panel.drawer", () => {
 	describe("state", () => {
@@ -265,7 +265,6 @@ describe("panel.drawer", () => {
 			const event = { preventDefault: vi.fn() };
 			let submitted = false;
 
-			// @ts-expect-error panel.js is not typed
 			await panel.drawer.open({
 				component: "k-page-drawer",
 				on: {
@@ -275,7 +274,6 @@ describe("panel.drawer", () => {
 				}
 			});
 
-			// @ts-expect-error panel.js is not typed
 			panel.events.emit("drawer.save", event);
 
 			expect(submitted).toStrictEqual(true);

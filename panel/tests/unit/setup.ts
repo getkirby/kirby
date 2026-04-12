@@ -1,11 +1,11 @@
 import { createApp, type App } from "vue";
 import { config } from "@vue/test-utils";
 import { vi } from "vitest";
+import Panel from "@/panel/panel";
 
 declare global {
 	var app: App;
-	// TODO: add proper types for panel global
-	var panel: TODO;
+	var panel: Panel;
 }
 
 globalThis.app ??= createApp({});

@@ -2,6 +2,7 @@ import Modal, { defaults as modalDefaults, type ModalState } from "./modal";
 import { isObject } from "@/helpers/object";
 import { reactive } from "vue";
 import { type Listener } from "./listeners";
+import type Panel from "./panel";
 
 export type DialogState = ModalState & {};
 
@@ -20,10 +21,10 @@ export type DialogOptions = DialogState & {
 /**
  * @since 4.0.0
  */
-export default function Dialog(panel: TODO) {
+export default function Dialog(panel: Panel) {
 	// shortcut to submit dialogs
-	panel.events.on("dialog.save", (e: Event) => {
-		e?.preventDefault?.();
+	panel.events.on("dialog.save", (e) => {
+		e?.preventDefault();
 		panel.dialog.submit();
 	});
 
