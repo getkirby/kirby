@@ -181,9 +181,11 @@ class Imagick extends Darkroom
 			}
 		}
 
-		$image->thumbnailImage(
+		$image->resizeImage(
 			$options['width'],
 			$options['height'],
+			Image::FILTER_LANCZOS,
+			1,
 			true
 		);
 
