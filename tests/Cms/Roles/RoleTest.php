@@ -3,7 +3,9 @@
 namespace Kirby\Cms;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(Role::class)]
 class RoleTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures';
@@ -46,6 +48,96 @@ class RoleTest extends TestCase
 
 		$this->app();
 		Role::load('does-not-exist');
+	}
+
+	public function testIs(): void
+	{
+		$editor  = new Role(['name' => 'editor']);
+		$editor2 = new Role(['name' => 'editor']);
+		$admin   = new Role(['name' => 'admin']);
+
+		$this->assertTrue($editor->is($editor));
+		$this->assertTrue($editor->is($editor2));
+		$this->assertFalse($editor->is($admin));
+		$this->assertFalse($editor->is(null));
+	}
+
+	public function testIsAccessible(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'users' => [
+							'access' => false
+						]
+					]
+				],
+				[
+					'name' => 'author',
+					'permissions' => [
+						'user' => [
+							'access' => false
+						],
+						'users' => [
+							'access' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'email' => 'author@getkirby.com',
+					'role'  => 'author'
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$editorRole = $app->role('editor');
+		$authorRole = $app->role('author');
+
+		// admin can always access roles (users.access granted)
+		$app->impersonate('admin@getkirby.com');
+		$this->assertTrue($editorRole->isAccessible());
+
+		// editor checks own role: delegates to user.access (default true)
+		$app->impersonate('editor@getkirby.com');
+		$this->assertTrue($editorRole->isAccessible());
+
+		// editor checks a different role: uses users.access (false)
+		$this->assertFalse($authorRole->isAccessible());
+
+		// author checks own role: delegates to user.access (false)
+		$app->impersonate('author@getkirby.com');
+		$this->assertFalse($authorRole->isAccessible());
+
+		// almighty kirby user can always access roles
+		$app->impersonate('kirby');
+		$this->assertTrue($editorRole->isAccessible());
+	}
+
+	public function testIsAccessibleWithoutUser(): void
+	{
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+		]);
+
+		$role = new Role(['name' => 'editor']);
+		$this->assertFalse($role->isAccessible());
 	}
 
 	public function testDefaultAdmin(): void

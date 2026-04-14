@@ -96,6 +96,41 @@ class Role implements Stringable
 		return $this->name();
 	}
 
+	/**
+	 * Compares the current object with the given role object
+	 * @since 5.4.0
+	 */
+	public function is(Role|null $role = null): bool
+	{
+		if ($role === null) {
+			return false;
+		}
+
+		return $this->id() === $role->id();
+	}
+
+	/**
+	 * Checks if the role is accessible to the current user
+	 * @since 5.4.0
+	 */
+	public function isAccessible(): bool
+	{
+		$user = App::instance()->user();
+
+		// no access without authenticated user
+		if ($user === null) {
+			return false;
+		}
+
+		// check `user.access` for the current user with the same role
+		if ($user->role()->is($this) === true) {
+			return $user->isAccessible();
+		}
+
+		// check `users.access` for the current user with a different role
+		return $user->role()->permissions()->for('users', 'access');
+	}
+
 	public function isAdmin(): bool
 	{
 		return $this->name() === 'admin';
