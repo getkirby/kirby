@@ -14,7 +14,7 @@ class KirbyTagTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Text.KirbyTag';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		KirbyTag::$types = [
 			'test' => [
@@ -35,7 +35,7 @@ class KirbyTagTest extends TestCase
 		];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		KirbyTag::$aliases = [];
 		KirbyTag::$types = [];

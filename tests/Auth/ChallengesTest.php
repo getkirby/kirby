@@ -74,7 +74,7 @@ class ChallengesTest extends TestCase
 	protected Challenges $challenges;
 	protected array $original;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -104,7 +104,7 @@ class ChallengesTest extends TestCase
 		$this->challenges = new Challenges($this->auth, $this->app);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 		unset(Challenges::$challenges['dummy']);

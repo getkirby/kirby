@@ -9,12 +9,12 @@ use Kirby\Image\QrCode;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
 
-class HelperFunctionsTest extends HelpersTestCase
+class HelperFunctionsTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures/HelpersTest';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.HelperFunctions';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::copy(static::FIXTURES, static::TMP);
 
@@ -30,7 +30,7 @@ class HelperFunctionsTest extends HelpersTestCase
 		Dir::make(static::TMP . '/site');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 		Dir::remove(static::TMP);

@@ -11,7 +11,7 @@ class CsrfTest extends TestCase
 
 	protected Csrf $csrf;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->csrf = new Csrf($this->app);

@@ -14,7 +14,7 @@ class SessionAuthTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Http.Request.Auth.SessionAuth';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::make(static::TMP . '/site/sessions');
 
@@ -25,7 +25,7 @@ class SessionAuthTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);

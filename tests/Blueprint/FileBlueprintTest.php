@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FileBlueprint::class)]
 class FileBlueprintTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Blueprint::$loaded = [];
 	}

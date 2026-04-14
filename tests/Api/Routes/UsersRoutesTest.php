@@ -25,7 +25,7 @@ class UsersRoutesTest extends TestCase
 		self::$passwordB = User::hashPassword('87654321');
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Blueprint::$loaded = [];
 
@@ -63,7 +63,7 @@ class UsersRoutesTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		App::destroy();

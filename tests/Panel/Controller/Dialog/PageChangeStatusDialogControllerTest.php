@@ -25,7 +25,7 @@ class PageChangeStatusDialogControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PageChangeStatusDialogController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -51,7 +51,7 @@ class PageChangeStatusDialogControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset(Page::$models['errorpage']);
 		parent::tearDown();

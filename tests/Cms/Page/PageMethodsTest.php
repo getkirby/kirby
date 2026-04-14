@@ -9,13 +9,13 @@ class PageMethodsTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageMethods';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		Page::$methods = [];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 		Page::$methods = [];

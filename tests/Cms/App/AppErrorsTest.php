@@ -14,7 +14,7 @@ class AppErrorsTest extends TestCase
 {
 	protected App|null $originalApp;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -30,7 +30,7 @@ class AppErrorsTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$unsetMethod = new ReflectionMethod(App::class, 'unsetWhoopsHandler');
 

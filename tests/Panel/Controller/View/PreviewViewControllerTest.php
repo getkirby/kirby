@@ -12,7 +12,7 @@ class PreviewViewControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.PreviewViewController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

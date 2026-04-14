@@ -23,12 +23,12 @@ class AppTest extends TestCase
 
 	protected $_SERVER;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->_SERVER = $_SERVER;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 		Dir::remove(static::TMP);

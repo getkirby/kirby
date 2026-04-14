@@ -13,7 +13,7 @@ class PagesSearchControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Search.PagesSearchController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->setUpTmp();
 
@@ -43,7 +43,7 @@ class PagesSearchControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->tearDownTmp();
 		App::destroy();

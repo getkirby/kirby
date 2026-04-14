@@ -11,7 +11,7 @@ class MenuTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Menu';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

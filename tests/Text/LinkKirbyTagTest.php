@@ -11,7 +11,7 @@ class LinkKirbyTagTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Text.LinkKirbyTag';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -22,7 +22,7 @@ class LinkKirbyTagTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

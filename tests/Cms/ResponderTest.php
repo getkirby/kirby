@@ -13,7 +13,7 @@ class TestResponse extends Response
 #[CoversClass(Responder::class)]
 class ResponderTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->kirby([
 			'urls' => [
@@ -22,7 +22,7 @@ class ResponderTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		unset($_COOKIE['foo'], $_SERVER['HTTP_AUTHORIZATION']);
 	}

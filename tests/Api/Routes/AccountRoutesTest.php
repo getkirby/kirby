@@ -23,7 +23,7 @@ class AccountRoutesTest extends TestCase
 		self::$password = User::hashPassword('12345678');
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Blueprint::$loaded = [];
 
@@ -59,7 +59,7 @@ class AccountRoutesTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		Field::$types = [];

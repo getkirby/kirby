@@ -15,7 +15,7 @@ class UserChangeSecretTest extends ModelTestCase
 	protected User $admin;
 	protected User $editor;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -37,7 +37,7 @@ class UserChangeSecretTest extends ModelTestCase
 		$this->app->users()->add($this->editor);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 		$this->app->session()->destroy();

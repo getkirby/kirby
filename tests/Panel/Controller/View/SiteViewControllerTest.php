@@ -16,7 +16,7 @@ class SiteViewControllerTest extends TestCase
 
 	protected Site $site;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

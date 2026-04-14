@@ -14,7 +14,7 @@ class FilePickerFieldTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.FilePickerField';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

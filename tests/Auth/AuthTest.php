@@ -30,7 +30,7 @@ class AuthTest extends TestCase
 		static::$passwordB = User::hashPassword('somewhere-in-japan');
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

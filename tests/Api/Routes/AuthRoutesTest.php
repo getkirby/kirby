@@ -11,7 +11,7 @@ class AuthRoutesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.AuthRoutes';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'options' => [
@@ -23,7 +23,7 @@ class AuthRoutesTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);

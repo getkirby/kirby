@@ -19,7 +19,7 @@ class TotpChallengeTest extends TestCase
 	protected User $user;
 	protected string $secret;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

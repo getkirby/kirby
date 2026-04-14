@@ -16,7 +16,7 @@ abstract class TestCase extends BaseTestCase
 
 	protected static string $type;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		new App([
 			'urls' => [
@@ -25,7 +25,7 @@ abstract class TestCase extends BaseTestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 		Dir::remove(static::TMP);

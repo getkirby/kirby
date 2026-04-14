@@ -13,13 +13,13 @@ class FilesSectionTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.FilesSection';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::make(static::TMP);
 		$this->app();
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 		App::destroy();

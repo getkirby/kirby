@@ -9,7 +9,7 @@ class FileIsTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileIs';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

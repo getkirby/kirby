@@ -19,6 +19,7 @@ use Kirby\Exception\LogicException;
 class Permissions
 {
 	public static array $extendedActions = [];
+	public static array $extendedAreas = [];
 
 	protected array $defaults = [
 		'access' => [
@@ -97,6 +98,11 @@ class Permissions
 	public function __construct(array|bool|null $settings = [])
 	{
 		$defaults = $this->defaults;
+
+		// dynamically register access permissions for custom areas
+		foreach (array_keys(static::$extendedAreas) as $areaId) {
+			$defaults['access'][$areaId] = true;
+		}
 
 		// dynamically register the extended actions
 		foreach (static::$extendedActions as $key => $actions) {
@@ -213,21 +219,28 @@ class Permissions
 
 		foreach ($categories as $category => $actions) {
 			if (isset($defaults[$category]) === false) {
-				continue;
+				Helpers::deprecated(
+					'Setting undefined permission category "' . $category . '" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.'
+				);
+				$defaults[$category] = [];
 			}
 
 			$actions = $this->expand($actions, $defaults[$category]);
 
 			foreach ($actions as $key => $value) {
-				if (isset($defaults[$category][$key]) === true) {
-					if (is_bool($value) === false) {
-						throw new LogicException(
-							message: 'The value for the permission "' . $category . '.' . $key . '" must be of type bool, ' . gettype($value) . ' given'
-						);
-					}
-
-					$defaults[$category][$key] = $value;
+				if (is_bool($value) === false) {
+					throw new LogicException(
+						message: 'The value for the permission "' . $category . '.' . $key . '" must be of type bool, ' . gettype($value) . ' given'
+					);
 				}
+
+				if (isset($defaults[$category][$key]) === false) {
+					Helpers::deprecated(
+						'Setting undefined permission "' . $category . '.' . $key . '" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.'
+					);
+				}
+
+				$defaults[$category][$key] = $value;
 			}
 		}
 

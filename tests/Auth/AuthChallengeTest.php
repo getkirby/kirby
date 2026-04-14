@@ -24,7 +24,7 @@ class AuthChallengeTest extends TestCase
 		self::$password = User::hashPassword('12345678');
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

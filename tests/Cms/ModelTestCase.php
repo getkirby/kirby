@@ -22,7 +22,7 @@ class ModelTestCase extends TestCase
 		Str::$language      = [];
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->cleanUp();
 
@@ -32,7 +32,7 @@ class ModelTestCase extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->cleanUp();
 		$this->tearDownTmp();

@@ -13,7 +13,7 @@ class LimitsTest extends TestCase
 	protected Limits $limits;
 	public string|null $failedEmail = null;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$self      = $this;

@@ -13,7 +13,7 @@ class PickerMixinTest extends TestCase
 
 	protected Field $field;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -34,7 +34,7 @@ class PickerMixinTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 	}

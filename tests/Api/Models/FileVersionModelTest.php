@@ -16,7 +16,7 @@ class FileVersionModelTest extends ModelTestCase
 	protected File $file;
 	protected Site|Page|User $parent;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -34,7 +34,7 @@ class FileVersionModelTest extends ModelTestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

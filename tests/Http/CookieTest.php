@@ -11,12 +11,12 @@ class CookieTest extends TestCase
 {
 	protected string $cookieKey;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->cookieKey = Cookie::$key;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Cookie::$key = $this->cookieKey;
 	}

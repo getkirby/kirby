@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(I18n::class)]
 class I18nTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		I18n::$locale       = 'en';
 		I18n::$load         = null;

@@ -13,7 +13,7 @@ class LocaleTest extends TestCase
 	protected array $locales = [];
 	protected string $localeSuffix = '';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		// make a backup of the current locales
 		$this->locales = Locale::get();
@@ -33,7 +33,7 @@ class LocaleTest extends TestCase
 		locale_set_default('en-US');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Locale::set($this->locales);
 	}

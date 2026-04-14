@@ -11,7 +11,7 @@ class FilesSectionTemplateChangeTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FilesSectionTemplateChange';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -85,7 +85,7 @@ class FilesSectionTemplateChangeTest extends TestCase
 
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		if (is_dir(static::TMP)) {
 			rmdir(static::TMP);

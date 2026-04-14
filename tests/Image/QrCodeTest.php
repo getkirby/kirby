@@ -14,7 +14,7 @@ class QrCodeTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/qr';
 	public const string TMP      = KIRBY_TMP_DIR . '/Image.QrCode';
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

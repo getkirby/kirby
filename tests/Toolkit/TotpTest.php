@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Totp::class)]
 class TotpTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		MockTime::$time = 1337000000;
 	}

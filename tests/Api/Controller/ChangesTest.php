@@ -12,7 +12,7 @@ class ChangesTest extends TestCase
 	public const string TMP = KIRBY_TMP_DIR . '/Api.Controller.Changes';
 	public Page $page;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->setUpTmp();
 		$this->setUpSingleLanguage(site: [
@@ -37,7 +37,7 @@ class ChangesTest extends TestCase
 		$this->page = $this->app->page('article');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->tearDownTmp();
 	}

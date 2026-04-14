@@ -14,7 +14,7 @@ class AssetsTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/plugin-assets';
 	public const string TMP      = KIRBY_TMP_DIR . '/Plugin.Assets';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$a = static::TMP . '/site/plugins/a';
 		F::write($a . '/index.php', '<?php Kirby::plugin("getkirby/a", []);');
@@ -35,7 +35,7 @@ class AssetsTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

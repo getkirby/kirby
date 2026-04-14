@@ -13,7 +13,7 @@ class ModelItemTest extends TestCase
 
 	protected Page $model;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->model = new Page(['slug' => 'test']);

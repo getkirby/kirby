@@ -14,7 +14,7 @@ class QueryDefaultFunctionsTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		new App([
 			'options' => [
@@ -25,7 +25,7 @@ class QueryDefaultFunctionsTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 		Dir::remove(static::TMP);

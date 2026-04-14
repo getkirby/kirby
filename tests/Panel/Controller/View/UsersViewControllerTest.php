@@ -11,7 +11,7 @@ class UsersViewControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.UsersViewController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->app = $this->app->clone([

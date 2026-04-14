@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Sqlite::class)]
 class SqliteTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->database = new Database([
 			'type'     => 'sqlite',

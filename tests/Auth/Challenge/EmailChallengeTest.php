@@ -24,7 +24,7 @@ class EmailChallengeTest extends TestCase
 		self::$password = User::hashPassword('123456');
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

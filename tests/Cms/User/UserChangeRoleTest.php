@@ -9,7 +9,7 @@ class UserChangeRoleTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserChangeRole';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

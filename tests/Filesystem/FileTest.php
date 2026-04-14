@@ -27,14 +27,14 @@ class FileTest extends TestCase
 	// used for the mocks
 	public static array $block = [];
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::copy(static::FIXTURES, static::TMP);
 
 		static::$block = [];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		if (file_exists(static::TMP . '/unreadable.txt') === true) {
 			chmod(static::TMP . '/unreadable.txt', 0o755);

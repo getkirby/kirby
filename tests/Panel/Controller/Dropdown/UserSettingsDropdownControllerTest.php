@@ -12,7 +12,7 @@ class UserSettingsDropdownControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dropdown.UserSettingsDropdownController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

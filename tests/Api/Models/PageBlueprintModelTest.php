@@ -7,7 +7,7 @@ use Kirby\Cms\Page;
 
 class PageBlueprintModelTest extends ModelTestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->page = new Page(['slug' => 'test']);

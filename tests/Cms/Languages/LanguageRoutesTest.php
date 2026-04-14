@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class LanguageRoutesTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		App::destroy();
 

@@ -15,7 +15,7 @@ class MethodsTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Methods';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

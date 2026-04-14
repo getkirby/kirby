@@ -17,7 +17,7 @@ class LabExampleViewControllerTest extends TestCase
 	protected Category $category;
 	protected Example $example;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->category = Category::factory('components');

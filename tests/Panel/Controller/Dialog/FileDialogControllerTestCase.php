@@ -12,7 +12,7 @@ abstract class FileDialogControllerTestCase extends TestCase
 {
 	public const string CONTROLLER = FileDialogController::class;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

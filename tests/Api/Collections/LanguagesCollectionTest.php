@@ -9,7 +9,7 @@ class LanguagesCollectionTest extends CollectionTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Api.LanguagesCollection';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

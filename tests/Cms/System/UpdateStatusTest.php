@@ -31,7 +31,7 @@ class UpdateStatusTest extends TestCase
 		UpdateStatus::$host = static::$host;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

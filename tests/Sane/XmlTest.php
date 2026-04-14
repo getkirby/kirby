@@ -13,7 +13,7 @@ class XmlTest extends TestCase
 
 	protected static string $type = 'xml';
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Xml::$allowedDomains = true;
 	}

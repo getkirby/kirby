@@ -14,7 +14,7 @@ abstract class TestCase extends BaseTestCase
 
 	protected Auth $auth;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Email::$debug = true;
 		Email::$emails = [];
@@ -38,7 +38,7 @@ abstract class TestCase extends BaseTestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		Email::$debug = false;

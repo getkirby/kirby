@@ -13,7 +13,7 @@ class PagePickerFieldTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerField';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

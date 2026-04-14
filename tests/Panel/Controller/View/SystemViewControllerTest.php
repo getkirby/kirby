@@ -66,7 +66,7 @@ class SystemViewControllerTest extends TestCase
 		UpdateStatus::$host = static::$host;
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

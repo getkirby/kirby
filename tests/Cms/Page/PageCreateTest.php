@@ -28,14 +28,14 @@ class PageCreateTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageCreate';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
 		Page::$models = [];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 

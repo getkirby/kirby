@@ -10,7 +10,7 @@ class ItemsTest extends TestCase
 	protected Field $field;
 	protected Page $page;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
