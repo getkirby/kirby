@@ -4,7 +4,7 @@ namespace Kirby\Panel\Areas;
 
 class SiteDialogsTest extends AreaTestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->install();

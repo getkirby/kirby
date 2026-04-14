@@ -74,7 +74,7 @@ class TestCase extends BaseTestCase
 		];
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->setUpTmp();
 	}
@@ -135,7 +135,7 @@ class TestCase extends BaseTestCase
 		Dir::make($this->model->root());
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 		$this->tearDownTmp();

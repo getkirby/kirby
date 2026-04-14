@@ -14,7 +14,7 @@ class DropdownTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Dropdown';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -25,7 +25,7 @@ class DropdownTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		// clear session file first
 		$this->app->session()->destroy();

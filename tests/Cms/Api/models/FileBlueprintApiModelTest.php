@@ -8,7 +8,7 @@ class FileBlueprintApiModelTest extends ApiModelTestCase
 {
 	protected File $file;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

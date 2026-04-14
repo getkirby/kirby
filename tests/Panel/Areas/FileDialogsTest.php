@@ -6,7 +6,7 @@ use Kirby\Filesystem\F;
 
 class FileDialogsTest extends AreaTestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->install();

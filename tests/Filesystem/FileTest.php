@@ -34,7 +34,7 @@ class FileTest extends TestCase
 		static::$block = [];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		if (file_exists(static::TMP . '/unreadable.txt') === true) {
 			chmod(static::TMP . '/unreadable.txt', 0o755);

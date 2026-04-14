@@ -12,7 +12,7 @@ class AuthCsrfTest extends TestCase
 
 	protected Auth $auth;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -23,7 +23,7 @@ class AuthCsrfTest extends TestCase
 		$this->auth = new Auth($this->app);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);

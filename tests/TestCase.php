@@ -16,7 +16,7 @@ class TestCase extends BaseTestCase
 	protected App $app;
 	protected int $activeErrorHandlers = 0;
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		while ($this->activeErrorHandlers > 0) {
 			restore_error_handler();

@@ -14,7 +14,7 @@ class BlocksTest extends TestCase
 	/** @var \Kirby\Parsley\Schema\Blocks */
 	protected Schema $schema;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->schema = new Blocks();
 	}

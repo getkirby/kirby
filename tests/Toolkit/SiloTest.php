@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Silo::class)]
 class SiloTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Silo::$data = [];
 	}

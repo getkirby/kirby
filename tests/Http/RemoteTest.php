@@ -17,7 +17,7 @@ class RemoteTest extends TestCase
 	protected string|false $cwd;
 	protected array $defaults;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->cwd = getcwd();
 
@@ -33,7 +33,7 @@ class RemoteTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		chdir($this->cwd);
 

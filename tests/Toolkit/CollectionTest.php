@@ -24,7 +24,7 @@ class CollectionTest extends TestCase
 	protected Collection $collection;
 	protected array $sampleData;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->sampleData = [
 			'first'  => 'My first element',

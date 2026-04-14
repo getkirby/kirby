@@ -31,7 +31,7 @@ class AppComponentsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.AppComponents';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

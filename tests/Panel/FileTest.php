@@ -31,7 +31,7 @@ class FileTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Panel.File';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -42,7 +42,7 @@ class FileTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

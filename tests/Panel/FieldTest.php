@@ -12,7 +12,7 @@ class FieldTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Field';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -23,7 +23,7 @@ class FieldTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		// clear session file first
 		$this->app->session()->destroy();

@@ -13,7 +13,7 @@ class QueryLegacyDefaultFunctionsTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Query.QueryLegacyDefaultFunctions';
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

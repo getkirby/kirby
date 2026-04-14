@@ -13,7 +13,7 @@ class HelpersTest extends TestCase
 	protected array $deprecations = [];
 	protected string $locale;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -21,7 +21,7 @@ class HelpersTest extends TestCase
 		$this->locale       = setlocale(LC_MESSAGES, 0);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 

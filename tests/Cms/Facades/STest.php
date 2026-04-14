@@ -8,7 +8,7 @@ class STest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.STest';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -19,7 +19,7 @@ class STest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

@@ -30,7 +30,7 @@ class SystemTest extends TestCase
 		UpdateStatus::$host = static::$updateStatusHost;
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -39,7 +39,7 @@ class SystemTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		if ($this->subTmp !== null) {
 			chmod($this->subTmp, 0o755);

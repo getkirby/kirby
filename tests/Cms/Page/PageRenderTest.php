@@ -15,7 +15,7 @@ class PageRenderTest extends ModelTestCase
 	public const FIXTURES = __DIR__ . '/fixtures/PageRenderTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.PageRender';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -121,7 +121,7 @@ class PageRenderTest extends ModelTestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 

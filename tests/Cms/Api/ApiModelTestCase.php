@@ -10,7 +10,7 @@ class ApiModelTestCase extends TestCase
 {
 	protected Api $api;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -21,7 +21,7 @@ class ApiModelTestCase extends TestCase
 		$this->api = $this->app->api();
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 		$this->tearDownTmp();

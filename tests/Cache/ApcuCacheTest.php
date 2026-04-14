@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ApcuCache::class)]
 class ApcuCacheTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		if (
 			function_exists('apcu_enabled') === false ||

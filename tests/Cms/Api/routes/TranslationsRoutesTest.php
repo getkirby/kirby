@@ -6,7 +6,7 @@ use Kirby\TestCase;
 
 class TranslationsRoutesTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

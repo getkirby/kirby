@@ -28,7 +28,7 @@ class DefaultBlock extends Block
 
 class BlockModelsTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

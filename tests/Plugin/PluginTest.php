@@ -35,7 +35,7 @@ class PluginTest extends TestCase
 		static::$classLoader->unregister();
 	}
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		App::destroy();
 
@@ -48,7 +48,7 @@ class PluginTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 		Dir::remove(static::TMP);

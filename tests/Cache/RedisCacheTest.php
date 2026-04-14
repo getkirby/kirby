@@ -10,7 +10,7 @@ use Throwable;
 #[CoversClass(RedisCache::class)]
 class RedisCacheTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		if (class_exists('Redis') === false) {
 			$this->markTestSkipped('The Redis extension is not available.');
@@ -25,7 +25,7 @@ class RedisCacheTest extends TestCase
 		}
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$connection = new RedisCache();
 		$connection->flush();

@@ -10,7 +10,7 @@ class UserPickerMixinTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.UserPickerMixin';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

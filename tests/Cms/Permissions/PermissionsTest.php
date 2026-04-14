@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Permissions::class)]
 class PermissionsTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 		Permissions::$extendedActions = [];

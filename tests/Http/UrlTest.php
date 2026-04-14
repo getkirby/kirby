@@ -15,7 +15,7 @@ class UrlTest extends TestCase
 	protected string $_docs = 'http://getkirby.com/docs/';
 	protected $_SERVER = null;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Uri::$current = null;
 		Url::$current = null;

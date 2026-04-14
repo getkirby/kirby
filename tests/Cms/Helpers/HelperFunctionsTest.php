@@ -14,7 +14,7 @@ class HelperFunctionsTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/HelpersTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.HelperFunctions';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::copy(static::FIXTURES, static::TMP);
 
@@ -30,7 +30,7 @@ class HelperFunctionsTest extends TestCase
 		Dir::make(static::TMP . '/site');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 		Dir::remove(static::TMP);

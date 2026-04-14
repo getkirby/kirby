@@ -12,7 +12,7 @@ class SqlTest extends TestCase
 {
 	protected Sql $sql;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->database = new Database([
 			'type'     => 'sqlite',
