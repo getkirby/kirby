@@ -192,9 +192,22 @@ class CollectionTest extends TestCase
 		$this->assertSame('Homer', $collection->getAttribute($collection->first(), 'username'));
 		$this->assertSame('Marge', $collection->getAttribute($collection->last(), 'username'));
 
-		// split
+		// split with default comma separator (bool true)
 		$this->assertSame(['simpson', 'male'], $collection->getAttribute($collection->first(), 'tags', true));
 		$this->assertSame(['simpson', 'female'], $collection->getAttribute($collection->last(), 'tags', true));
+
+		// split with explicit comma separator (string ',')
+		$this->assertSame(['simpson', 'male'], $collection->getAttribute($collection->first(), 'tags', ','));
+		$this->assertSame(['simpson', 'female'], $collection->getAttribute($collection->last(), 'tags', ','));
+
+		// split with non-comma separator
+		$collection2 = new Collection([
+			'a' => ['username' => 'Homer', 'tags' => 'simpson; male'],
+			'b' => ['username' => 'Marge', 'tags' => 'simpson; female'],
+		]);
+
+		$this->assertSame(['simpson', 'male'], $collection2->getAttribute($collection2->first(), 'tags', ';'));
+		$this->assertSame(['simpson', 'female'], $collection2->getAttribute($collection2->last(), 'tags', ';'));
 	}
 
 	public function testGetAttributeFromObject(): void
