@@ -14,10 +14,9 @@
 		"jsx": "preserve",
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
 		"types": ["vite/client", "vitest"],
-		"baseUrl": ".",
 		"paths": {
-			"@/*": ["src/*"],
-			"@test/*": ["tests/*"]
+			"@/*": ["./src/*"],
+			"@test/*": ["./tests/*"]
 		}
 	},
 	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "tests/**/*.ts"],
