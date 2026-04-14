@@ -16,7 +16,7 @@ class AppTranslationsTest extends TestCase
 	protected array $locale = [];
 	protected string|null $localeSuffix = null;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$constants = [
 			LC_ALL, LC_COLLATE, LC_CTYPE, LC_MONETARY,
@@ -64,7 +64,7 @@ class AppTranslationsTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 

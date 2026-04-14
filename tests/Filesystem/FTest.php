@@ -21,7 +21,7 @@ class FTest extends TestCase
 	protected string $sample;
 	protected string $test;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->sample = static::FIXTURES . '/test.txt';
 		$this->test   = static::TMP . '/moved.txt';
@@ -30,7 +30,7 @@ class FTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 

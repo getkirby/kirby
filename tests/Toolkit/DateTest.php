@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Date::class)]
 class DateTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 	}

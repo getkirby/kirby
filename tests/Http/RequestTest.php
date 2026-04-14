@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Request::class)]
 class RequestTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 	}

@@ -27,7 +27,7 @@ class ChallengeTest extends TestCase
 
 	protected Session $session;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -43,7 +43,7 @@ class ChallengeTest extends TestCase
 		$this->session = $this->app->session();
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->session->destroy();
 		Dir::remove(static::TMP);

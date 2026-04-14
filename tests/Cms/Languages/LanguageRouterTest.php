@@ -10,7 +10,7 @@ class LanguageRouterTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageRouter';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::make(static::TMP);
 
@@ -26,7 +26,7 @@ class LanguageRouterTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 		App::destroy();

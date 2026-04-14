@@ -10,7 +10,7 @@ class UrlTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Url';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

@@ -8,7 +8,7 @@ class MinSectionMixinTest extends TestCase
 {
 	protected Page $page;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

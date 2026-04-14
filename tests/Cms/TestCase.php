@@ -11,7 +11,7 @@ class TestCase extends BaseTestCase
 {
 	protected Page|null $page = null;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		App::destroy();
 
@@ -29,8 +29,9 @@ class TestCase extends BaseTestCase
 		Str::$language      = [];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
+		parent::tearDown();
 		App::destroy();
 		Blueprint::$loaded = [];
 

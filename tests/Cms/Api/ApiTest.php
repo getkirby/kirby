@@ -17,7 +17,7 @@ class ApiTest extends TestCase
 	protected Api $api;
 	protected string $locale;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -72,7 +72,7 @@ class ApiTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 		setlocale(LC_ALL, $this->locale);

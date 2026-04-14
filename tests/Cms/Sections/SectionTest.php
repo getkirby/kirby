@@ -9,7 +9,7 @@ class SectionTest extends TestCase
 {
 	protected array $sectionTypes;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		App::destroy();
 
@@ -22,7 +22,7 @@ class SectionTest extends TestCase
 		$this->sectionTypes = Section::$types;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Section::$types = $this->sectionTypes;
 	}

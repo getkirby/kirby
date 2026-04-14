@@ -12,7 +12,7 @@ class FileVersionApiModelTest extends ApiModelTestCase
 	protected File $file;
 	protected Site|Page|User $parent;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -30,7 +30,7 @@ class FileVersionApiModelTest extends ApiModelTestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

@@ -16,12 +16,12 @@ class ImageMagickTest extends TestCase
 	public const FIXTURES = __DIR__ . '/../fixtures/image';
 	public const TMP      = KIRBY_TMP_DIR . '/Image.Darkroom.ImageMagick';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

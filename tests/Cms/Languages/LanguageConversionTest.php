@@ -11,12 +11,12 @@ class LanguageConversionTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageConversion';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

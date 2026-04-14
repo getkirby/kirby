@@ -21,7 +21,7 @@ class FileSessionStoreTest extends TestCase
 	protected ReflectionProperty $storeHandles;
 	protected ReflectionProperty $storeIsLocked;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->store = new FileSessionStore(static::TMP);
 		$this->assertDirectoryExists(static::TMP);
@@ -40,7 +40,7 @@ class FileSessionStoreTest extends TestCase
 		F::write(static::TMP . '/9999999999.abcdefghijabcdefghij.sess', '9999999999');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		// let the store __destruct() itself
 		unset($this->store);

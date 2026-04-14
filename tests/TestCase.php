@@ -2,6 +2,7 @@
 
 namespace Kirby;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
@@ -13,6 +14,43 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
 	protected App $app;
+	protected int $activeErrorHandlers = 0;
+
+	protected function tearDown(): void
+	{
+		while ($this->activeErrorHandlers > 0) {
+			restore_error_handler();
+			$this->activeErrorHandlers--;
+		}
+	}
+
+	public function assertError(
+		int $expectedErrorType,
+		string $expectedErrorMessage,
+		Closure $callback,
+		bool $expectedFailure = true
+	) {
+		$this->activeErrorHandlers++;
+
+		$called = false;
+
+		set_error_handler(
+			function (int $errno, string $errstr) use ($expectedErrorType, $expectedErrorMessage, &$called) {
+				$called = true;
+				$this->assertSame($expectedErrorType, $errno);
+				$this->assertSame($expectedErrorMessage, $errstr);
+			}
+		);
+
+		$result = $callback();
+
+		if ($expectedFailure === false) {
+			$this->assertFalse($called);
+			return $result;
+		}
+
+		$this->assertTrue($called);
+	}
 
 	/**
 	 * Whether $actual is a File object

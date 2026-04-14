@@ -16,7 +16,7 @@ class DirTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/dir';
 	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.Dir';
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

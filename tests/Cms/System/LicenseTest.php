@@ -15,7 +15,7 @@ class LicenseTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures/LicenseTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.License';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		MockTime::reset();

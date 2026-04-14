@@ -12,7 +12,7 @@ class FindTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.Find';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

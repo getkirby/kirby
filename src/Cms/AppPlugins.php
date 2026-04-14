@@ -140,6 +140,10 @@ trait AppPlugins
 		foreach ($areas as $id => $area) {
 			$this->extensions['areas'][$id] ??= [];
 			$this->extensions['areas'][$id][] = $area;
+
+			// keep track of custom areas to add
+			// default access permission for them
+			Permissions::$extendedAreas[$id] = true;
 		}
 
 		return $this->extensions['areas'];

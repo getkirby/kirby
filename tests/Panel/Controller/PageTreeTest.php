@@ -12,7 +12,7 @@ class PageTreeTest extends TestCase
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Controller.PageTree';
 	public PageTree $tree;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->setUpTmp();
 
@@ -70,7 +70,7 @@ class PageTreeTest extends TestCase
 		$this->tree = new PageTree($this->app->site());
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->tearDownTmp();
 		App::destroy();

@@ -10,7 +10,7 @@ class TestCase extends BaseTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Panel.Collector.ModelsCollector';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUpTmp();
 
@@ -21,7 +21,7 @@ class TestCase extends BaseTestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDownTmp();
 	}

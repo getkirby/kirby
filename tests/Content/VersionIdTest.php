@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(VersionId::class)]
 class VersionIdTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 

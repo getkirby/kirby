@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class VTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

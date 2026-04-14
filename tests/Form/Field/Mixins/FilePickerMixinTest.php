@@ -12,7 +12,7 @@ class FilePickerMixinTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.FilePickerMixin';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$kirby = new App([
 			'roots' => [
@@ -23,7 +23,7 @@ class FilePickerMixinTest extends TestCase
 		$kirby->impersonate('kirby');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 	}

@@ -9,7 +9,7 @@ class PagesFieldTest extends TestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Form.Fields.PagesField';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

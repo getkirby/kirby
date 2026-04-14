@@ -20,7 +20,7 @@ class StrTest extends TestCase
 		Str::$language = [];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 	}

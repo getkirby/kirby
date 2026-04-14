@@ -9,7 +9,7 @@ class PagePickerTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PagePicker';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

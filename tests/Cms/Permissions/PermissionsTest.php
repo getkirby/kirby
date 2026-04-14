@@ -10,9 +10,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Permissions::class)]
 class PermissionsTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
+		parent::tearDown();
 		Permissions::$extendedActions = [];
+		Permissions::$extendedAreas = [];
 	}
 
 	public static function actionsProvider(): array
@@ -339,16 +341,30 @@ class PermissionsTest extends TestCase
 		$this->assertTrue($array['pages']['read']);
 	}
 
-	public function testUnknownSettingsIgnored(): void
+	public function testUnknownCategoryDeprecated(): void
 	{
-		// unknown category is silently ignored, all defaults kept
-		$p = new Permissions(['nonexistent' => false]);
-		$this->assertTrue($p->for('pages', 'read'));
-		$this->assertTrue($p->for('files', 'update'));
+		$this->assertError(
+			E_USER_DEPRECATED,
+			'Setting undefined permission category "nonexistent" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
+			function () {
+				$p = new Permissions(['nonexistent' => false]);
+				$this->assertTrue($p->for('pages', 'read'));
+				$this->assertTrue($p->for('files', 'update'));
+			}
+		);
+	}
 
-		// unknown action is silently ignored, known actions kept
-		$p = new Permissions(['pages' => ['nonexistent' => false]]);
-		$this->assertTrue($p->for('pages', 'read'));
-		$this->assertTrue($p->for('pages', 'update'));
+	public function testUnknownActionDeprecated(): void
+	{
+		$this->assertError(
+			E_USER_DEPRECATED,
+			'Setting undefined permission "pages.nonexistent" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
+			function () {
+				$p = new Permissions(['pages' => ['nonexistent' => false]]);
+				$this->assertTrue($p->for('pages', 'read'));
+				$this->assertTrue($p->for('pages', 'update'));
+				$this->assertFalse($p->for('pages', 'nonexistent'));
+			}
+		);
 	}
 }

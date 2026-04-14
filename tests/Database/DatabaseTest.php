@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Database::class)]
 class DatabaseTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->database = new Database([
 			'database' => ':memory:',
@@ -55,7 +55,7 @@ class DatabaseTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Database::$connections = [];
 	}

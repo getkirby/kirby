@@ -11,7 +11,7 @@ class FileUrlTest extends ModelTestCase
 	public const FIXTURES = __DIR__ . '/fixtures/files';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.FileUrl';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
