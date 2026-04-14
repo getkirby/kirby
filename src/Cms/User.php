@@ -599,7 +599,7 @@ class User extends ModelWithContent
 	public function roles(): Roles
 	{
 		$kirby = $this->kirby();
-		$roles = $kirby->roles();
+		$roles = $kirby->roles()->filter('isAccessible', true);
 
 		// if the authenticated user doesn't have the permission to change
 		// the role of this user, only the current role is available
