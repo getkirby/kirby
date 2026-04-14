@@ -139,6 +139,19 @@ describe("panel.request", () => {
 			await expect(responder(req, raw)).rejects.toThrow(JsonRequestError);
 		});
 
+		it("should rethrow AbortError without wrapping in JsonRequestError", async () => {
+			const abortError = Object.assign(new Error("Aborted"), {
+				name: "AbortError"
+			});
+			const raw = new Response(null, {
+				status: 200,
+				headers: { "Content-Type": "application/json" }
+			});
+			vi.spyOn(raw, "text").mockRejectedValue(abortError);
+			await expect(responder(req, raw)).rejects.toThrow("Aborted");
+			await expect(responder(req, raw)).rejects.not.toThrow(JsonRequestError);
+		});
+
 		it("should redirect on non-JSON content type", async () => {
 			const raw = new Response("<html>", {
 				status: 200,
