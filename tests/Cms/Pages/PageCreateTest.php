@@ -41,6 +41,7 @@ class PageCreateTest extends TestCase
 
 	public function tearDown(): void
 	{
+		Blueprint::$loaded = [];
 		Dir::remove(static::TMP);
 
 		Page::$models = [];
@@ -62,22 +63,28 @@ class PageCreateTest extends TestCase
 
 	public function testCreateDraftWithDefaults()
 	{
-		$site = $this->app->site();
-		$page = Page::create([
-			'slug' => 'new-page',
-			'blueprint' => [
-				'name'   => 'test',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'new-page',
+			'template' => 'test',
 		]);
 
 		$this->assertSame('A', $page->a()->value());
@@ -86,25 +93,29 @@ class PageCreateTest extends TestCase
 
 	public function testCreateDraftWithDefaultsAndContent()
 	{
-		$site = $this->app->site();
-		$page = Page::create([
-			'content' => [
-				'a' => 'Custom A'
-			],
-			'slug' => 'new-page',
-			'blueprint' => [
-				'name'   => 'test',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'content'  => ['a' => 'Custom A'],
+			'slug'     => 'new-page',
+			'template' => 'test',
 		]);
 
 		$this->assertSame('Custom A', $page->a()->value());
@@ -207,6 +218,24 @@ class PageCreateTest extends TestCase
 		}
 
 		$this->assertTrue($mother->drafts()->isEmpty());
+	}
+
+	public function testCreateStripInjectedBlueprint(): void
+	{
+		$page = Page::create([
+			'slug'      => 'new-page',
+			'blueprint' => [
+				'options' => [
+					// would deny creation if respected
+					'create' => false
+				]
+			]
+		]);
+
+		// creation succeeded, injected options were stripped
+		$this->assertTrue($page->exists());
+		// blueprint is the default, not the injected one
+		$this->assertNull($page->blueprint()->option('create'));
 	}
 
 	public function testCreateFile()

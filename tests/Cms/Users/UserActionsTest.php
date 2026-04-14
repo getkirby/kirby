@@ -44,6 +44,7 @@ class UserActionsTest extends TestCase
 
 	public function tearDown(): void
 	{
+		Blueprint::$loaded = [];
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);
 		App::destroy();
@@ -207,22 +208,28 @@ class UserActionsTest extends TestCase
 
 	public function testCreateWithDefaults()
 	{
-		$user = User::create([
-			'email' => 'new@domain.com',
-			'role'  => 'editor',
-			'blueprint' => [
-				'name' => 'editor',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name'   => 'editor',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$user = User::create([
+			'email' => 'new@domain.com',
+			'role'  => 'editor',
 		]);
 
 		$this->assertSame('A', $user->a()->value());
@@ -231,29 +238,52 @@ class UserActionsTest extends TestCase
 
 	public function testCreateWithDefaultsAndContent()
 	{
-		$user = User::create([
-			'email' => 'new@domain.com',
-			'role'  => 'editor',
-			'content' => [
-				'a' => 'Custom A'
-			],
-			'blueprint' => [
-				'name' => 'editor',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name'   => 'editor',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
 		]);
+		$this->app->impersonate('kirby');
+
+		$user = User::create([
+			'email'   => 'new@domain.com',
+			'role'    => 'editor',
+			'content' => ['a' => 'Custom A'],
+		]);
 
 		$this->assertSame('Custom A', $user->a()->value());
 		$this->assertSame('B', $user->b()->value());
+	}
+
+	public function testCreateStripInjectedBlueprint(): void
+	{
+		$user = User::create([
+			'email'     => 'new@domain.com',
+			'role'      => 'editor',
+			'blueprint' => [
+				'options' => [
+					// would deny creation if respected
+					'create' => false
+				]
+			]
+		]);
+
+		// creation succeeded, injected options were stripped
+		$this->assertTrue($user->exists());
+		// blueprint is the default, not the injected one
+		$this->assertNull($user->blueprint()->option('create'));
 	}
 
 	public function testCreateWithContentMultilang()

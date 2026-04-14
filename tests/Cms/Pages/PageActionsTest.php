@@ -28,6 +28,7 @@ class PageActionsTest extends TestCase
 
 	public function tearDown(): void
 	{
+		Blueprint::$loaded = [];
 		Dir::remove(static::TMP);
 		App::destroy();
 	}
@@ -1324,6 +1325,15 @@ class PageActionsTest extends TestCase
 	public function testCreateDefaultLanguage()
 	{
 		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'title'  => 'Default',
+					'fields' => [
+						'headline' => ['type' => 'text'],
+						'text'     => ['type' => 'textarea'],
+					]
+				]
+			],
 			'languages' => [
 				[
 					'code'    => 'en',
@@ -1346,15 +1356,8 @@ class PageActionsTest extends TestCase
 		];
 
 		$page = Page::create([
-			'slug'      => 'test',
-			'content'   => $value,
-			'blueprint' => [
-				'title'  => 'Default',
-				'fields' => [
-					'headline' => ['type' => 'text'],
-					'text'     => ['type' => 'textarea']
-				]
-			],
+			'slug'    => 'test',
+			'content' => $value,
 		]);
 
 		$value['uuid'] = $page->content()->get('uuid')->value();
@@ -1366,6 +1369,15 @@ class PageActionsTest extends TestCase
 	public function testCreateSecondaryLanguage()
 	{
 		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'title'  => 'Default',
+					'fields' => [
+						'headline' => ['type' => 'text'],
+						'text'     => ['type' => 'textarea'],
+					]
+				]
+			],
 			'languages' => [
 				[
 					'code'    => 'en',
@@ -1389,15 +1401,8 @@ class PageActionsTest extends TestCase
 		];
 
 		$page = Page::create([
-			'slug'      => 'test',
-			'content'   => $value,
-			'blueprint' => [
-				'title'  => 'Default',
-				'fields' => [
-					'headline' => ['type' => 'text'],
-					'text'     => ['type' => 'textarea']
-				]
-			]
+			'slug'    => 'test',
+			'content' => $value,
 		]);
 
 		$value['uuid'] = $page->content()->get('uuid')->value();
@@ -1410,6 +1415,15 @@ class PageActionsTest extends TestCase
 	public function testCreateSecondaryLanguageUntranslatable()
 	{
 		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'title'  => 'Default',
+					'fields' => [
+						'headline' => ['type' => 'text',     'translate' => false],
+						'text'     => ['type' => 'textarea'],
+					]
+				]
+			],
 			'languages' => [
 				[
 					'code'    => 'en',
@@ -1433,18 +1447,8 @@ class PageActionsTest extends TestCase
 		];
 
 		$page = Page::create([
-			'slug'      => 'test',
-			'content'   => $value,
-			'blueprint' => [
-				'title'  => 'Default',
-				'fields' => [
-					'headline' => [
-						'type'      => 'text',
-						'translate' => false
-					],
-					'text'     => ['type' => 'textarea']
-				]
-			]
+			'slug'    => 'test',
+			'content' => $value,
 		]);
 
 		$value['uuid'] = $page->content()->get('uuid')->value();
@@ -1457,6 +1461,15 @@ class PageActionsTest extends TestCase
 	public function testCreateSecondaryLanguageDefaultValues()
 	{
 		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'title'  => 'test',
+					'fields' => [
+						'headline' => ['type' => 'text',     'translate' => false, 'default' => 'A headline'],
+						'text'     => ['type' => 'textarea', 'default' => 'Any text'],
+					]
+				]
+			],
 			'languages' => [
 				[
 					'code'    => 'en',
@@ -1474,22 +1487,8 @@ class PageActionsTest extends TestCase
 		$app->setCurrentLanguage('de');
 
 		$page = Page::create([
-			'slug'       => 'test',
-			'content'    => ['title' => 'Test page'],
-			'blueprint'  => [
-				'title'  => 'test',
-				'fields' => [
-					'headline' => [
-						'type'      => 'text',
-						'translate' => false,
-						'default'   => 'A headline'
-					],
-					'text'     => [
-						'type'    => 'textarea',
-						'default' => 'Any text'
-					]
-				]
-			]
+			'slug'    => 'test',
+			'content' => ['title' => 'Test page'],
 		]);
 
 		$expected = [
