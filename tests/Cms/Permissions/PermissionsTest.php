@@ -13,6 +13,7 @@ class PermissionsTest extends TestCase
 	public function tearDown(): void
 	{
 		Permissions::$extendedActions = [];
+		Permissions::$extendedAreas = [];
 	}
 
 	public static function actionsProvider(): array

@@ -19,6 +19,7 @@ use Kirby\Exception\LogicException;
 class Permissions
 {
 	public static array $extendedActions = [];
+	public static array $extendedAreas = [];
 
 	protected array $defaults = [
 		'access' => [
@@ -97,6 +98,11 @@ class Permissions
 	public function __construct(array|bool|null $settings = [])
 	{
 		$defaults = $this->defaults;
+
+		// dynamically register access permissions for custom areas
+		foreach (array_keys(static::$extendedAreas) as $areaId) {
+			$defaults['access'][$areaId] = true;
+		}
 
 		// dynamically register the extended actions
 		foreach (static::$extendedActions as $key => $actions) {
