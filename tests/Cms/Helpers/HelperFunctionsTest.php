@@ -9,7 +9,7 @@ use Kirby\Image\QrCode;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
 
-class HelperFunctionsTest extends HelpersTestCase
+class HelperFunctionsTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/HelpersTest';
 	public const TMP      = KIRBY_TMP_DIR . '/Cms.HelperFunctions';

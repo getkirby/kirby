@@ -8,7 +8,7 @@ use Kirby\Toolkit\Obj;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Helpers::class)]
-class HelpersTest extends HelpersTestCase
+class HelpersTest extends TestCase
 {
 	protected array $deprecations = [];
 	protected string $locale;

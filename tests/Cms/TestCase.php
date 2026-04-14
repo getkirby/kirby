@@ -31,6 +31,7 @@ class TestCase extends BaseTestCase
 
 	public function tearDown(): void
 	{
+		parent::tearDown();
 		App::destroy();
 		Blueprint::$loaded = [];
 
