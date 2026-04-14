@@ -68,6 +68,7 @@ export default {
 		this.$events.on("keydown.left", this.toPrev);
 		this.$events.on("keydown.right", this.toNext);
 		this.$events.on("model.reload", this.$reload);
+		this.$events.on("model.update", this.onModelUpdate);
 		this.$events.on("view.save", this.onViewSave);
 	},
 	destroyed() {
@@ -76,6 +77,7 @@ export default {
 		this.$events.off("keydown.left", this.toPrev);
 		this.$events.off("keydown.right", this.toNext);
 		this.$events.off("model.reload", this.$reload);
+		this.$events.off("model.update", this.onModelUpdate);
 		this.$events.off("view.save", this.onViewSave);
 	},
 	methods: {
@@ -110,6 +112,11 @@ export default {
 				api: this.api,
 				language: this.$panel.language.code
 			});
+		},
+		onModelUpdate({ path } = {}) {
+			if (path === this.api) {
+				this.$panel.view.refresh();
+			}
 		},
 		async onSubmit() {
 			try {
