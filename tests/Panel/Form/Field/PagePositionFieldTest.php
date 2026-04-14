@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PagePositionField::class)]
 class PagePositionFieldTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

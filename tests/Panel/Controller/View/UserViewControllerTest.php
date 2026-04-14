@@ -16,7 +16,7 @@ class UserViewControllerTest extends TestCase
 
 	protected User $user;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->app = $this->app->clone([

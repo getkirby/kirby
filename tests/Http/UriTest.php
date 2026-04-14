@@ -15,7 +15,7 @@ class UriTest extends TestCase
 	protected static string $example1 = 'https://getkirby.com';
 	protected static string $example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/with:kirby/?q=awesome#top';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		App::destroy();
 		Uri::$current = null;

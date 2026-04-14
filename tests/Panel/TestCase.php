@@ -11,7 +11,7 @@ abstract class TestCase extends BaseTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::make(static::TMP);
 
@@ -24,7 +24,7 @@ abstract class TestCase extends BaseTestCase
 		Blueprint::$loaded = [];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		// clear session file first
 		$this->app->session()->destroy();

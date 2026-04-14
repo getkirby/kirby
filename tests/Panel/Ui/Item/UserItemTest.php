@@ -13,7 +13,7 @@ class UserItemTest extends TestCase
 
 	protected User $model;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->model = new User(['email' => 'test@getkirby.com', 'id' => 'test']);

@@ -17,7 +17,7 @@ class AuthProtectionTest extends TestCase
 	protected Auth $auth;
 	public string|null $failedEmail = null;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$self = $this;
 
@@ -55,7 +55,7 @@ class AuthProtectionTest extends TestCase
 		$this->auth = new Auth($this->app);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 		$this->failedEmail = null;

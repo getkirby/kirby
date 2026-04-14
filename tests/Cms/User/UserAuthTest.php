@@ -11,7 +11,7 @@ class UserAuthTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserAuth';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -26,7 +26,7 @@ class UserAuthTest extends ModelTestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		parent::tearDown();

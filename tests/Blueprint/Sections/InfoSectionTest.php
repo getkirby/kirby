@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class InfoSectionTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		App::destroy();
 

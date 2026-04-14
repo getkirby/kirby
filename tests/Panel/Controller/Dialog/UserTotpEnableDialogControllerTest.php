@@ -14,7 +14,7 @@ class UserTotpEnableDialogControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserTotpEnableDialogController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

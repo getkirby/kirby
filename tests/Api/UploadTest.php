@@ -18,7 +18,7 @@ class UploadTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Api.Upload';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::make(static::TMP);
 
@@ -31,7 +31,7 @@ class UploadTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Blueprint::$loaded = [];
 		ini_restore('upload_max_filesize');

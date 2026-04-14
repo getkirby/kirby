@@ -14,7 +14,7 @@ class HomeTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Home';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

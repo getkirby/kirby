@@ -15,7 +15,7 @@ class UsersRoutesTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.UsersRoutes';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Blueprint::$loaded = [];
 
@@ -53,7 +53,7 @@ class UsersRoutesTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		App::destroy();

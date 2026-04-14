@@ -10,13 +10,13 @@ class ModelCommitTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.ModelCommit';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->setUpTmp();
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 		$this->tearDownTmp();

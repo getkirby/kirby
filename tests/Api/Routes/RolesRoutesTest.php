@@ -7,7 +7,7 @@ use Kirby\TestCase;
 
 class RolesRoutesTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'options' => [

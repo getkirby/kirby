@@ -15,7 +15,7 @@ class BatchSectionMixinTest extends TestCase
 
 	protected Page $page;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -61,7 +61,7 @@ class BatchSectionMixinTest extends TestCase
 		$this->setUpTmp();
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->tearDownTmp();
 		App::destroy();

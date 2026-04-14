@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(MemCached::class)]
 class MemCachedTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		if (class_exists('Memcached') === false) {
 			$this->markTestSkipped('The Memcached extension is not available.');
@@ -22,7 +22,7 @@ class MemCachedTest extends TestCase
 		}
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$connection = new \Memcached();
 		$connection->addServer('localhost', 11211);

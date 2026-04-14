@@ -9,12 +9,12 @@ class AppLanguagesTest extends TestCase
 {
 	protected string|null $acceptLang;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->acceptLang = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $this->acceptLang;
 	}

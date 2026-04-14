@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LanguageRules::class)]
 class LanguageRulesTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

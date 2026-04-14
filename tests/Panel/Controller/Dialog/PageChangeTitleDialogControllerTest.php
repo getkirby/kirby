@@ -13,7 +13,7 @@ class PageChangeTitleDialogControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PageChangeTitleDialogController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

@@ -15,7 +15,7 @@ class PagePickerDialogControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.PagePickerDialogController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

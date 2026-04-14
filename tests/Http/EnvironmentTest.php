@@ -15,7 +15,7 @@ class EnvironmentTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures/EnvironmentTest';
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 	}

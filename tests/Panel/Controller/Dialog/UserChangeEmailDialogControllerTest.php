@@ -12,7 +12,7 @@ class UserChangeEmailDialogControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserChangeEmailDialogController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

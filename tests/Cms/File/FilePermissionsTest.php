@@ -11,7 +11,7 @@ class FilePermissionsTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.FilePermissions';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

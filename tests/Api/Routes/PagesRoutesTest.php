@@ -10,7 +10,7 @@ class PagesRoutesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.PagesRoutes';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'options' => [
@@ -23,7 +23,7 @@ class PagesRoutesTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

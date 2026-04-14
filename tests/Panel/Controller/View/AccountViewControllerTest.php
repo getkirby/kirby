@@ -11,7 +11,7 @@ class AccountViewControllerTest extends UserViewControllerTest
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.AccountViewController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->app->impersonate('test');

@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ModelPickerField::class)]
 class UserPickerFieldTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

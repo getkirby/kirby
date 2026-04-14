@@ -4,12 +4,12 @@ namespace Kirby\Toolkit;
 
 class ConfigTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Config::set('testvar', 'testvalue');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Config::$data = [];
 	}

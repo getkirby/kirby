@@ -9,7 +9,7 @@ abstract class TestCase extends BaseTestCase
 {
 	protected Area $area;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->area = new Area(id: 'test');

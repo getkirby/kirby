@@ -11,7 +11,7 @@ class PageTreeParentsRequestControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Request.PageTreeParentsRequestController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -39,7 +39,7 @@ class PageTreeParentsRequestControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 	}

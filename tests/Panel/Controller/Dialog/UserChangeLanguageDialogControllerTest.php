@@ -12,7 +12,7 @@ class UserChangeLanguageDialogControllerTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.UserChangeLanguageDialogController';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

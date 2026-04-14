@@ -15,7 +15,7 @@ class ResponseTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		App::destroy();
 		HeadersSent::$value = false;

@@ -13,7 +13,7 @@ class ChangesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Content.Changes';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUpTmp();
 
@@ -51,7 +51,7 @@ class ChangesTest extends TestCase
 		Uuids::populate();
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDownTmp();
 	}

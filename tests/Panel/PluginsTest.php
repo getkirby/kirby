@@ -53,7 +53,7 @@ class PluginsTest extends TestCase
 		return $time;
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

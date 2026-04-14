@@ -10,7 +10,7 @@ class FileBlueprintModelTest extends ModelTestCase
 {
 	protected File $file;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

@@ -9,7 +9,7 @@ class UserPickerTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserPicker';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 

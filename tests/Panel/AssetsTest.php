@@ -16,7 +16,7 @@ class AssetsTest extends TestCase
 
 	protected bool $hadViteRunning;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -27,7 +27,7 @@ class AssetsTest extends TestCase
 		Dir::make(static::TMP);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 

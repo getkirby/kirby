@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Content::class)]
 class ContentConvertToTest extends TestCase
 {
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->setUpSingleLanguage();

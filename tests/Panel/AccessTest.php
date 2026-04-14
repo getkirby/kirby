@@ -13,7 +13,7 @@ class AccessTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Panel.Access';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
@@ -22,7 +22,7 @@ class AccessTest extends TestCase
 		]);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}

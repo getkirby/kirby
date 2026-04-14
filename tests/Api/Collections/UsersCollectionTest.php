@@ -9,7 +9,7 @@ class UsersCollectionTest extends CollectionTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Api.UsersCollection';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [

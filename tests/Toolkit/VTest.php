@@ -32,7 +32,7 @@ class HasCount
 #[CoversClass(V::class)]
 class VTest extends TestCase
 {
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 		V::$validators = [];

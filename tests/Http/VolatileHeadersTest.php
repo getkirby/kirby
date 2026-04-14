@@ -10,7 +10,7 @@ class VolatileHeadersTest extends TestCase
 {
 	protected VolatileHeaders $volatile;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		$this->volatile = new VolatileHeaders();
 	}

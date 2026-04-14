@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 abstract class TestCase extends BaseTestCase
 {
 	protected App $app;
+	protected int $activeErrorHandlers = 0;
 
 	protected string|Closure|null $i18nLocale;
 	protected string|array|Closure|null $i18nFallback;
@@ -24,7 +25,7 @@ abstract class TestCase extends BaseTestCase
 	protected array $i18nTranslations;
 	protected array|string $localeBackup;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		App::destroy();
 
@@ -47,7 +48,7 @@ abstract class TestCase extends BaseTestCase
 		I18n::$translations = [];
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		if (isset($this->localeBackup) === true) {
 			Locale::set($this->localeBackup);
@@ -68,6 +69,39 @@ abstract class TestCase extends BaseTestCase
 		if (isset($this->i18nTranslations) === true) {
 			I18n::$translations = $this->i18nTranslations;
 		}
+
+		while ($this->activeErrorHandlers > 0) {
+			restore_error_handler();
+			$this->activeErrorHandlers--;
+		}
+	}
+
+	public function assertError(
+		int $expectedErrorType,
+		string $expectedErrorMessage,
+		Closure $callback,
+		bool $expectedFailure = true
+	) {
+		$this->activeErrorHandlers++;
+
+		$called = false;
+
+		set_error_handler(
+			function (int $errno, string $errstr) use ($expectedErrorType, $expectedErrorMessage, &$called) {
+				$called = true;
+				$this->assertSame($expectedErrorType, $errno);
+				$this->assertSame($expectedErrorMessage, $errstr);
+			}
+		);
+
+		$result = $callback();
+
+		if ($expectedFailure === false) {
+			$this->assertFalse($called);
+			return $result;
+		}
+
+		$this->assertTrue($called);
 	}
 
 	/**

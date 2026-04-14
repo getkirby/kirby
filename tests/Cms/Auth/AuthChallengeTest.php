@@ -21,7 +21,7 @@ class AuthChallengeTest extends TestCase
 	protected Auth $auth;
 	public string|null $failedEmail = null;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Auth::$challenges['errorneous'] = ErrorneousChallenge::class;
 		Email::$debug = true;
@@ -67,7 +67,7 @@ class AuthChallengeTest extends TestCase
 		$this->auth = $this->app->auth();
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		$this->app->session()->destroy();
 		Dir::remove(static::TMP);

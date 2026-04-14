@@ -17,7 +17,7 @@ class PagesSectionTest extends TestCase
 	public const FIXTURES = __DIR__ . '/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.PagesSection';
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
 		Dir::make(static::TMP);
 
@@ -30,7 +30,7 @@ class PagesSectionTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 		App::destroy();
