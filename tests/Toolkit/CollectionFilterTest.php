@@ -106,13 +106,22 @@ class CollectionFilterTest extends TestCase
 				'split'      => false
 			],
 
-			// split strings
+			// split strings with comma/default separator
 			[
 				'attributes' => ['a' => 'a, b', 'b' => 'b, c', 'c' => 'c, d'],
 				'operator'   =>  '==',
 				'test'       => 'b',
 				'expected'   => ['a', 'b'],
-				'split'      => ','
+				'split'      => true
+			],
+
+			// split strings with non-comma separator
+			[
+				'attributes' => ['a' => 'a; b', 'b' => 'b; c', 'c' => 'c; d'],
+				'operator'   =>  '==',
+				'test'       => 'b',
+				'expected'   => ['a', 'b'],
+				'split'      => ';'
 			],
 
 			// booleans
@@ -180,13 +189,22 @@ class CollectionFilterTest extends TestCase
 				'split'      => false
 			],
 
-			// split strings
+			// split strings with comma/default separator
 			[
 				'attributes' => ['a' => 'a, b', 'b' => 'b, c', 'c' => 'c, d'],
 				'operator'   =>  '!=',
 				'test'       => 'b',
 				'expected'   => ['c'],
-				'split'      => ','
+				'split'      => true
+			],
+
+			// split strings with non-comma separator
+			[
+				'attributes' => ['a' => 'a; b', 'b' => 'b; c', 'c' => 'c; d'],
+				'operator'   =>  '!=',
+				'test'       => 'b',
+				'expected'   => ['c'],
+				'split'      => ';'
 			],
 
 			// booleans
