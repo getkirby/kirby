@@ -81,21 +81,22 @@ function labBuild() {
 		name: "kirby-lab-build",
 		apply: "build",
 		async writeBundle() {
+			process.stdout.write("  Generating UI docs...");
 			const docs = await generateDocs();
-			console.log(`\x1b[32m✓\x1b[0m ${docs.length} UI docs generated.`);
+			process.stdout.write(`\r\x1b[32m✓\x1b[0m ${docs.length} UI docs generated.   \n`);
 		}
 	};
 }
 
+
 function removeDocsBlock() {
 	return {
 		name: "kirby-remove-docs-block",
-		transform(code, id) {
-			if (/vue&type=docs/.test(id) === false) {
-				return;
+		transform: {
+			filter: { id: /vue&type=docs/ },
+			handler() {
+				return { code: `export default ''`, moduleType: "js" };
 			}
-
-			return `export default ''`;
 		}
 	};
 }
