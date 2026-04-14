@@ -175,6 +175,10 @@ export async function responder(
 		response.text = await raw.text();
 		response.json = JSON.parse(response.text);
 	} catch (error) {
+		if (error instanceof Error && error.name === "AbortError") {
+			throw error;
+		}
+
 		throw new JsonRequestError("Invalid JSON response", {
 			cause: error,
 			request,

@@ -45,6 +45,7 @@ import Dialog from "@/mixins/dialog.js";
 import Search from "@/mixins/search.js";
 
 export const props = {
+	mixins: [Search],
 	props: {
 		endpoint: String,
 		empty: Object,
@@ -73,7 +74,7 @@ export const props = {
  * @deprecated 6.0.0 Use `k-model-picker-dialog` instead
  */
 export default {
-	mixins: [Dialog, Search, props],
+	mixins: [Dialog, props],
 	emits: ["cancel", "fetched", "submit"],
 	data() {
 		return {
