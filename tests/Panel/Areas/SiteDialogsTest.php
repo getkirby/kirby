@@ -23,6 +23,32 @@ class SiteDialogsTest extends AreaTestCase
 		$this->assertNull($props['value']['title']);
 	}
 
+	public function testChangeTitleNotAccessible(): void
+	{
+		$this->app([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$this->login('editor@getkirby.com');
+
+		$dialog = $this->dialog('site/changeTitle');
+		$this->assertSame('The site is not accessible', $dialog['error']);
+	}
+
 	public function testChangeTitleOnSubmit(): void
 	{
 		$this->submit([
@@ -35,6 +61,36 @@ class SiteDialogsTest extends AreaTestCase
 		$this->assertSame(200, $dialog['code']);
 
 		$this->assertSame('Test', $this->app->site()->title()->value());
+	}
+
+	public function testChangeTitleOnSubmitNotAccessible(): void
+	{
+		$this->app([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			],
+			'request' => [
+				'method' => 'POST',
+				'body'   => ['title' => 'Test']
+			]
+		]);
+
+		$this->login('editor@getkirby.com');
+
+		$dialog = $this->dialog('site/changeTitle');
+		$this->assertSame('The site is not accessible', $dialog['error']);
 	}
 
 	public function testChanges(): void

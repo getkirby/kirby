@@ -140,4 +140,36 @@ class SiteDropdownsTest extends AreaTestCase
 		$this->login();
 		$this->assertLanguageDropdown('site/languages');
 	}
+
+	public function testSiteLanguageDropdownNotAccessible(): void
+	{
+		$this->app([
+			'languages' => [
+				'en' => [
+					'code' => 'en',
+					'name' => 'English',
+				]
+			],
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'site' => ['access' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor',
+				]
+			]
+		]);
+
+		$this->login('editor@getkirby.com');
+
+		$dropdown = $this->dropdown('site/languages');
+		$this->assertSame('The site is not accessible', $dropdown['error']);
+	}
 }
