@@ -2,10 +2,8 @@
 
 namespace Kirby\Auth;
 
-use Kirby\Auth\Challenge\LegacyChallenge;
 use Kirby\Auth\Exception\ChallengeTimeoutException;
 use Kirby\Cms\App;
-use Kirby\Cms\Auth\Challenge as LegacyBaseChallenge;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -55,12 +53,9 @@ class Challenges
 	{
 		if (
 			($class = static::$challenges[$type] ?? null) &&
-			(
-				is_subclass_of($class, Challenge::class) === true ||
-				is_subclass_of($class, LegacyBaseChallenge::class) === true
-			)
+			is_subclass_of($class, Challenge::class) === true
 		) {
-			/** @var class-string<\Kirby\Auth\Challenge>|class-string<\Kirby\Auth\Challenge\LegacyBaseChallenge> $class */
+			/** @var class-string<\Kirby\Auth\Challenge> $class */
 			return $class;
 		}
 
@@ -77,9 +72,6 @@ class Challenges
 		$session->remove('kirby.challenge.mode');
 		$session->remove('kirby.challenge.timeout');
 		$session->remove('kirby.challenge.type');
-
-		// @deprecated
-		$session->remove('kirby.challenge.code');
 	}
 
 	/**
@@ -137,18 +129,9 @@ class Challenges
 	{
 		$config = $this->kirby->option('auth.challenges', ['totp', 'email']);
 
-		// @todo we can simplify this once LegacyChallenge is removed
 		return A::filter(
 			A::wrap($config),
-			function ($type) {
-				$class = $this->class($type);
-
-				if (method_exists($class, 'isEnabled') === true) {
-					return $class::isEnabled($this->auth);
-				}
-
-				return true;
-			}
+			fn ($type) => $this->class($type)::isEnabled($this->auth)
 		);
 	}
 
@@ -225,16 +208,6 @@ class Challenges
 	): Challenge {
 		$challenge = $this->class($type);
 		$timeout ??= $this->timeout();
-
-		if (is_subclass_of($challenge, LegacyBaseChallenge::class) === true) {
-			return new LegacyChallenge(
-				type:    $type,
-				class:   $challenge,
-				user:    $user,
-				mode:    $mode,
-				timeout: $timeout,
-			);
-		}
 
 		return new $challenge(
 			user:    $user,
