@@ -131,29 +131,35 @@ class FileCreateTest extends ModelTestCase
 
 	public function testCreateWithDefaults(): void
 	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
 		$parent = new Page(['slug' => 'test']);
 		$source = static::TMP . '/source.md';
 
-		// create the dummy source
 		F::write($source, '# Test');
 
 		$result = File::create([
 			'filename' => 'test.md',
 			'source'   => $source,
 			'parent'   => $parent,
-			'blueprint' => [
-				'name' => 'test',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
-					]
-				]
-			]
+			'template' => 'test',
 		]);
 
 		$this->assertSame('A', $result->a()->value());
@@ -162,32 +168,36 @@ class FileCreateTest extends ModelTestCase
 
 	public function testCreateWithDefaultsAndContent(): void
 	{
-		$parent = new Page(['slug' => 'test']);
-		$source = static::TMP . '/source.md';
-
-		// create the dummy source
-		F::write($source, '# Test');
-
-		$result = File::create([
-			'content' => [
-				'a' => 'Custom A'
-			],
-			'filename' => 'test.md',
-			'source'   => $source,
-			'parent'   => $parent,
-			'blueprint' => [
-				'name' => 'test',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+		$source = static::TMP . '/source.md';
+
+		F::write($source, '# Test');
+
+		$result = File::create([
+			'content'  => ['a' => 'Custom A'],
+			'filename' => 'test.md',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => 'test',
 		]);
 
 		$this->assertSame('Custom A', $result->a()->value());
@@ -212,6 +222,20 @@ class FileCreateTest extends ModelTestCase
 
 	public function testCreateImageAndManipulate(): void
 	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp',
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
 		$parent = new Page(['slug' => 'test']);
 		$source = static::FIXTURES . '/test.jpg';
 
@@ -219,14 +243,7 @@ class FileCreateTest extends ModelTestCase
 			'filename' => 'test.jpg',
 			'source'   => $source,
 			'parent'   => $parent,
-			'blueprint' => [
-				'name' => 'test',
-				'create' => [
-					'width'  => 100,
-					'height' => 100,
-					'format' => 'webp'
-				]
-			]
+			'template' => 'test',
 		]);
 
 		$this->assertFileExists($result->root());
@@ -239,21 +256,28 @@ class FileCreateTest extends ModelTestCase
 
 	public function testCreateManipulateNonImage(): void
 	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp',
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
 		$parent = new Page(['slug' => 'test']);
 		$source = static::FIXTURES . '/test.pdf';
 
 		$result = File::create([
-			'filename'  => 'test.pdf',
-			'source'    => $source,
-			'parent'    => $parent,
-			'blueprint' => [
-				'name'   => 'test',
-				'create' => [
-					'width'  => 100,
-					'height' => 100,
-					'format' => 'webp'
-				]
-			]
+			'filename' => 'test.pdf',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => 'test',
 		]);
 
 		$this->assertFileEquals($source, $result->root());
@@ -294,5 +318,29 @@ class FileCreateTest extends ModelTestCase
 
 		$this->assertTrue($before);
 		$this->assertTrue($after);
+	}
+
+	public function testCreateStripInjectedBlueprint(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+
+		F::write($source = static::TMP . '/source.md', '# Test');
+
+		$result = File::create([
+			'filename'  => 'test.md',
+			'source'    => $source,
+			'parent'    => $parent,
+			'blueprint' => [
+				'options' => [
+					// would deny creation if respected
+					'create' => false
+				]
+			]
+		]);
+
+		// creation succeeded, injected options were stripped
+		$this->assertFileExists($result->root());
+		// blueprint is the default, not the injected one
+		$this->assertNull($result->blueprint()->option('create'));
 	}
 }

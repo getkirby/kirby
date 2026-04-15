@@ -381,16 +381,22 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusToInvalidStatus(): void
 	{
-		$page = Page::create([
-			'slug' => 'test',
-			'blueprint' => [
-				'title'  => 'Test',
-				'name'   => 'test',
-				'status' => [
-					'draft'  => 'Draft',
-					'listed' => 'Published'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'title'  => 'Test',
+					'status' => [
+						'draft'  => 'Draft',
+						'listed' => 'Published',
+					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test',
 		]);
 
 		$this->assertSame('draft', $page->status());

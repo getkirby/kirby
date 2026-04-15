@@ -58,22 +58,28 @@ class PageCreateTest extends ModelTestCase
 
 	public function testCreateDraftWithDefaults(): void
 	{
-		$site = $this->app->site();
-		$page = Page::create([
-			'slug' => 'new-page',
-			'blueprint' => [
-				'name'   => 'test',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'new-page',
+			'template' => 'test',
 		]);
 
 		$this->assertSame('A', $page->a()->value());
@@ -82,25 +88,29 @@ class PageCreateTest extends ModelTestCase
 
 	public function testCreateDraftWithDefaultsAndContent(): void
 	{
-		$site = $this->app->site();
-		$page = Page::create([
-			'content' => [
-				'a' => 'Custom A'
-			],
-			'slug' => 'new-page',
-			'blueprint' => [
-				'name'   => 'test',
-				'fields' => [
-					'a'  => [
-						'type'    => 'text',
-						'default' => 'A'
-					],
-					'b' => [
-						'type'    => 'textarea',
-						'default' => 'B'
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
 					]
 				]
 			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'content'  => ['a' => 'Custom A'],
+			'slug'     => 'new-page',
+			'template' => 'test',
 		]);
 
 		$this->assertSame('Custom A', $page->a()->value());
@@ -243,7 +253,17 @@ class PageCreateTest extends ModelTestCase
 	public function testCreateWhenDefaultLanguageIsActive(): void
 	{
 		$this->setupMultiLanguage();
-
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'title'  => 'Default',
+					'fields' => [
+						'headline' => ['type' => 'text'],
+						'text'     => ['type' => 'textarea'],
+					]
+				]
+			]
+		]);
 		$this->app->impersonate('kirby');
 
 		$value = [
@@ -253,15 +273,8 @@ class PageCreateTest extends ModelTestCase
 		];
 
 		Page::create([
-			'slug'      => 'test',
-			'content'   => $value,
-			'blueprint' => [
-				'title'  => 'Default',
-				'fields' => [
-					'headline' => ['type' => 'text'],
-					'text'     => ['type' => 'textarea']
-				]
-			],
+			'slug'    => 'test',
+			'content' => $value,
 		]);
 
 		$page = $this->app->page('test');
@@ -275,7 +288,17 @@ class PageCreateTest extends ModelTestCase
 	public function testCreateWhenSecondaryLanguageIsActive(): void
 	{
 		$this->setupMultiLanguage();
-
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'title'  => 'Default',
+					'fields' => [
+						'headline' => ['type' => 'text'],
+						'text'     => ['type' => 'textarea'],
+					]
+				]
+			]
+		]);
 		$this->app->impersonate('kirby');
 		$this->app->setCurrentLanguage('de');
 
@@ -288,15 +311,8 @@ class PageCreateTest extends ModelTestCase
 		];
 
 		Page::create([
-			'slug'      => 'test',
-			'content'   => $value,
-			'blueprint' => [
-				'title'  => 'Default',
-				'fields' => [
-					'headline' => ['type' => 'text'],
-					'text'     => ['type' => 'textarea']
-				]
-			]
+			'slug'    => 'test',
+			'content' => $value,
 		]);
 
 		$page = $this->app->page('test');
@@ -310,7 +326,17 @@ class PageCreateTest extends ModelTestCase
 	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasUntranslatableFields(): void
 	{
 		$this->setupMultiLanguage();
-
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'title'  => 'Default',
+					'fields' => [
+						'headline' => ['type' => 'text',     'translate' => false],
+						'text'     => ['type' => 'textarea'],
+					]
+				]
+			]
+		]);
 		$this->app->impersonate('kirby');
 		$this->app->setCurrentLanguage('de');
 
@@ -323,18 +349,8 @@ class PageCreateTest extends ModelTestCase
 		];
 
 		Page::create([
-			'slug'      => 'test',
-			'content'   => $value,
-			'blueprint' => [
-				'title'  => 'Default',
-				'fields' => [
-					'headline' => [
-						'type'      => 'text',
-						'translate' => false
-					],
-					'text' => ['type' => 'textarea']
-				]
-			]
+			'slug'    => 'test',
+			'content' => $value,
 		]);
 
 		$page = $this->app->page('test');
@@ -348,29 +364,25 @@ class PageCreateTest extends ModelTestCase
 	public function testCreateWhenSecondaryLanguageIsActiveAndThePageHasDefaultValues(): void
 	{
 		$this->setupMultiLanguage();
-
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'title'  => 'test',
+					'fields' => [
+						'headline' => ['type' => 'text',     'translate' => false, 'default' => 'A headline'],
+						'text'     => ['type' => 'textarea', 'default' => 'Any text'],
+					]
+				]
+			]
+		]);
 		$this->app->impersonate('kirby');
 		$this->app->setCurrentLanguage('de');
 
 		$this->assertSame('de', $this->app->language()->code());
 
 		Page::create([
-			'slug'       => 'test',
-			'content'    => ['title' => 'Test page'],
-			'blueprint'  => [
-				'title'  => 'test',
-				'fields' => [
-					'headline' => [
-						'type'      => 'text',
-						'translate' => false,
-						'default'   => 'A headline'
-					],
-					'text'     => [
-						'type'    => 'textarea',
-						'default' => 'Any text'
-					]
-				]
-			]
+			'slug'    => 'test',
+			'content' => ['title' => 'Test page'],
 		]);
 
 		$page = $this->app->page('test');
@@ -471,6 +483,24 @@ class PageCreateTest extends ModelTestCase
 
 		$this->assertInstanceOf(NewParentPage::class, $parent);
 		$this->assertInstanceOf(NewDefaultPage::class, $child);
+	}
+
+	public function testCreateStripInjectedBlueprint(): void
+	{
+		$page = Page::create([
+			'slug'      => 'new-page',
+			'blueprint' => [
+				'options' => [
+					// would deny creation if respected
+					'create' => false
+				]
+			]
+		]);
+
+		// creation succeeded, injected options were stripped
+		$this->assertTrue($page->exists());
+		// blueprint is the default, not the injected one
+		$this->assertNull($page->blueprint()->option('create'));
 	}
 
 	/**

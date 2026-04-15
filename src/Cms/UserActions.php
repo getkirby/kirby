@@ -272,6 +272,11 @@ trait UserActions
 
 	protected static function normalizeProps(array $props): array
 	{
+		// Prevent injecting blueprint as this always must be derived from
+		// the template/model name and blueprint object in the app,
+		// never directly be supplied by the caller
+		unset($props['blueprint']);
+
 		$content = $props['content'] ?? [];
 		$role    = $props['role']    ?? 'default';
 
