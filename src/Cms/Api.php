@@ -266,7 +266,7 @@ class Api extends BaseApi
 	 */
 	public function validateAreaAccess(string $area): void
 	{
-		if ($this->user()?->role()->permissions()->for('access', $area) !== true) {
+		if ($this->kirby->user()?->role()->permissions()->for('access', $area) !== true) {
 			throw new PermissionException('No access');
 		}
 	}

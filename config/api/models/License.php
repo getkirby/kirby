@@ -19,7 +19,7 @@ return [
 		'code' => function (License $license) {
 			try {
 				$this->validateAreaAccess('system');
-				return $this->user()->isAdmin() ? $license->code() : $license->code(true);
+				return $this->kirby()->user()->isAdmin() ? $license->code() : $license->code(true);
 			} catch (PermissionException) {
 				return null;
 			}
