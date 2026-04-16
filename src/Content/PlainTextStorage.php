@@ -262,8 +262,16 @@ class PlainTextStorage extends Storage
 	}
 
 	/**
-	 * Prevent stale page instances from recreating a moved page directory
-	 * during concurrent reorder or move operations.
+	 * Prevents stale page instances from recreating moved page directories.
+	 *
+	 * During a concurrent reorder, a page directory may be moved while another
+	 * stale page instance still points to the old root path. If that stale
+	 * instance writes content afterwards, the write path may recreate the missing
+	 * directory and produce a ghost or duplicate page folder.
+	 *
+	 * To avoid that, this method re-resolves the page from the current app state
+	 * when the expected root no longer exists. If the page was moved in the
+	 * meantime, the write is aborted instead of recreating the old path.
 	 */
 	protected function ensureCurrentPageRoot(VersionId $versionId): void
 	{
