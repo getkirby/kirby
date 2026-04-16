@@ -39,7 +39,7 @@ class DummyChallenge extends Challenge
 class DummyAuthMethod extends Method
 {
 	public function authenticate(
-		string $email,
+		string|null $email,
 		string|null $password = null,
 		bool $long = false
 	): Status|User {

@@ -550,6 +550,7 @@
 	"login.method.code.description": "Login via code lets you sign in without a password. You complete a short verification challenge, e.g. receiving a one-time code via an email or from your authenticator app, and enter it to finish logging in. The code expires quickly and can only be used once, making it a secure login method.",
 	"login.method.password.label": "Login with password",
 	"login.method.password-reset.label": "Forgot your password?",
+	"login.method.password-reset.submit": "Forgot password",
 	"login.methods.label": "Sign in methods",
 	"login.or": "or",
 	"login.remember": "Keep me logged in",

@@ -35,7 +35,7 @@ class ErrorView extends View
 		];
 	}
 
-	public function render(): array|null
+	public function render(): array
 	{
 		return [
 			...parent::render(),

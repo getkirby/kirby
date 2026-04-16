@@ -6,6 +6,7 @@ use Kirby\Auth\Challenge;
 use Kirby\Auth\Pending;
 use Kirby\Cms\User;
 use Kirby\Panel\Ui\Button;
+use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\Totp;
 use SensitiveParameter;
 
@@ -33,6 +34,20 @@ class TotpChallenge extends Challenge
 		return null;
 	}
 
+	public function form(Pending $pending): Component
+	{
+		return new Component(
+			component: 'k-login-totp-challenge-form',
+			submit: $this->submit(),
+			user: $this->user->email(),
+		);
+	}
+
+	public static function icon(): string
+	{
+		return 'qr-code';
+	}
+
 	/**
 	 * Checks whether the user has set up TOTP
 	 */
@@ -45,7 +60,7 @@ class TotpChallenge extends Challenge
 	{
 		return [
 			new Button(
-				icon:   'qr-code',
+				icon:   static::icon(),
 				text:   static::i18n('login.challenge.totp.label'),
 				drawer: $user->panel()->url(true) . '/security/challenge/totp'
 			)

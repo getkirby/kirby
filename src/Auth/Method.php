@@ -3,6 +3,7 @@
 namespace Kirby\Auth;
 
 use Kirby\Cms\User;
+use Kirby\Panel\Ui\Component;
 use Kirby\Toolkit\HasI18n;
 use Kirby\Toolkit\Str;
 use SensitiveParameter;
@@ -31,13 +32,22 @@ abstract class Method
 	}
 
 	/**
+	 * Returns the form component definition for this method's login step
+	 * @codeCoverageIgnore
+	 */
+	public function form(): Component|array
+	{
+		return [];
+	}
+
+	/**
 	 * Attempts to authenticate the given user credentials
 	 *
 	 * Implementations should either return a logged-in user,
 	 * a pending status if a challenge is required.
 	 */
 	abstract public function authenticate(
-		string $email,
+		string|null $email,
 		#[SensitiveParameter]
 		string|null $password = null,
 		bool $long = false

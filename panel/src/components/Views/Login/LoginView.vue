@@ -5,120 +5,107 @@
 				{{ $t("login") }}
 			</h1>
 
-			<k-login-alert v-if="issue" @click="issue = null">
-				{{ issue }}
+			<k-login-alert v-if="error" @click="error = null">
+				{{ error.message }}
 			</k-login-alert>
 
 			<component
-				:is="form"
-				ref="form"
-				v-bind="{ method, methods, pending, value }"
+				:is="form.component"
+				v-bind="form.props"
 				@error="onError"
+				@submit="onSubmit"
 			/>
 
-			<template v-if="alternativeMethods.length > 0 && !hasActiveChallenge">
-				<p class="k-login-or"><span>or</span></p>
-
-				<k-stack>
-					<k-button
-						v-for="method in alternativeMethods"
-						:key="method"
-						:text="$t(`login.method.${method}.label`)"
-						variant="filled"
-						size="lg"
-						@click="onChangeMethod(method)"
-					/>
-				</k-stack>
-			</template>
+			<k-login-methods
+				v-if="this.state !== 'pending'"
+				:methods="methods"
+				@change="onChangeMethod"
+			/>
+			<k-login-challenges
+				v-else
+				:challenges="challenges"
+				@change="onChangeChallenge"
+			/>
 		</k-stack>
 	</k-panel-outside>
 </template>
 
 <script>
-export const props = {
+/**
+ * @internal
+ */
+export default {
 	props: {
 		/**
-		 * Current login method
-		 * @since 6.0.0
+		 * Available challenges for the challenge switcher.
+		 * @value [{ type, label, icon, active }]
 		 */
-		method: String,
+		challenges: {
+			type: Array,
+			default: () => []
+		},
 		/**
-		 * List of available login method names
+		 * Form component definition from the backend.
+		 * @value { component: String, props: Object }
+		 */
+		form: {
+			type: Object,
+			default: () => ({})
+		},
+		/**
+		 * Available login methods for the method switcher.
+		 * @value [{ type, label, icon, active }]
 		 */
 		methods: {
 			type: Array,
 			default: () => []
 		},
 		/**
-		 * Pending login data (user email, challenge type)
-		 * @value { email: String, challenge: String }
+		 * Current auth state: "inactive" | "pending"
 		 */
-		pending: {
-			type: Object
-		},
-		/**
-		 * Values to prefill the inputs
-		 */
-		value: {
-			type: Object,
-			default: () => ({})
-		}
-	}
-};
-
-/**
- * @internal
- */
-export default {
-	components: {
-		"k-login-plugin-form": window.panel.plugins.login
-	},
-	mixins: [props],
-	props: {
-		/**
-		 * Values to prefill the inputs
-		 */
-		value: {
-			type: Object,
-			default: () => ({})
-		}
+		state: String
 	},
 	data() {
 		return {
-			issue: ""
+			error: null
 		};
 	},
-	computed: {
-		alternativeMethods() {
-			return this.methods.filter((method) => method !== this.method);
-		},
+	watch: {
 		form() {
-			if (window.panel.plugins.login) {
-				return "k-login-plugin-form";
-			}
-
-			if (this.hasActiveChallenge) {
-				return "k-login-code-form";
-			}
-
-			return "k-login-form";
-		},
-		hasActiveChallenge() {
-			return Boolean(this.pending.email);
+			this.error = null;
 		}
 	},
 	methods: {
-		async onChangeMethod(method) {
-			await this.$panel.view.refresh({ query: { method } });
-			this.$refs.form.focus?.();
+		onChangeMethod(method) {
+			this.$panel.open("login/method/" + method.type);
 		},
-		async onError(error) {
-			// reset from the LoginCode component back to Login
-			if (error?.details.challengeDestroyed === true) {
-				await this.$panel.reload({ globals: ["system"] });
-			}
+		onChangeChallenge(challenge) {
+			this.$panel.open("login/challenge/" + challenge.type);
+		},
+		onError(error) {
+			this.error = error;
+		},
+		async onSubmit(data) {
+			try {
+				// clear any existing error
+				this.error = null;
 
-			this.issue = error?.message;
+				// submit the form data to the backend
+				const response = await this.$panel.post(this.$panel.view.path, data);
+
+				// if login was successful, the user will be redirected…
+				if (response?.redirect) {
+					await this.$panel.open(response.redirect);
+
+					// …and we show a welcome notification
+					this.$panel.notification.success({
+						message: this.$t("welcome") + "!",
+						icon: "smile"
+					});
+				}
+			} catch (error) {
+				this.onError(error);
+			}
 		}
 	}
 };
@@ -141,15 +128,6 @@ export default {
 }
 .k-login-form label abbr {
 	visibility: hidden;
-}
-
-.k-login-buttons {
-	--button-padding: var(--spacing-3);
-	display: flex;
-	gap: 1.5rem;
-	align-items: center;
-	justify-content: space-between;
-	margin-top: var(--spacing-8);
 }
 
 .k-login-or {

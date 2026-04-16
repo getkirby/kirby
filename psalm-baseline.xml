@@ -965,14 +965,6 @@
       <code><![CDATA[F::read($file)]]></code>
     </FalsableReturnStatement>
   </file>
-  <file src="src/Panel/Model.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[array]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->viewController()->load()->render()]]></code>
-    </NullableReturnStatement>
-  </file>
   <file src="src/Panel/Panel.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>

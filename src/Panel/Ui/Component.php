@@ -17,7 +17,7 @@ use Kirby\Toolkit\Str;
  * @license   https://getkirby.com/license
  * @since     5.0.0
  */
-abstract class Component
+class Component
 {
 	use HasI18n;
 
