@@ -45,4 +45,62 @@ class UserApiModelTest extends ApiModelTestCase
 
 		$this->assertSame($expected, $image);
 	}
+
+	public function testNextSkipsInaccessibleUser(): void
+	{
+		$app = new App([
+			'blueprints' => [
+				'users/restricted' => [
+					'options' => ['access' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor'],
+				['name' => 'restricted'],
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'editor'],
+				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'editor'],
+				['email' => 'c@test.com', 'name' => 'C User', 'role' => 'restricted'],
+			]
+		]);
+
+		$app->impersonate('b@test.com');
+		$user   = $app->user('b@test.com');
+		$result = $app->api()->resolve($user)->select('next')->toArray();
+
+		$this->assertNull($result['next']);
+	}
+
+	public function testPrevSkipsInaccessibleUser(): void
+	{
+		$app = new App([
+			'blueprints' => [
+				'users/restricted' => [
+					'options' => ['access' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor'],
+				['name' => 'restricted'],
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				['email' => 'a@test.com', 'name' => 'A User', 'role' => 'restricted'],
+				['email' => 'b@test.com', 'name' => 'B User', 'role' => 'editor'],
+				['email' => 'c@test.com', 'name' => 'C User', 'role' => 'editor'],
+			]
+		]);
+
+		$app->impersonate('b@test.com');
+		$user   = $app->user('b@test.com');
+		$result = $app->api()->resolve($user)->select('prev')->toArray();
+
+		$this->assertNull($result['prev']);
+	}
 }
