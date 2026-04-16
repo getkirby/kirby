@@ -428,11 +428,12 @@ trait PageActions
 	}
 
 	/**
-	 * Copies the page to a new parent
+	 * Copies the page to a new parent.
+	 * Low-level method, ensure to run all necessary checks
+	 * (e.g. permissions) before calling it.
+	 * @internal
 	 *
 	 * @throws \Kirby\Exception\DuplicateException If the page already exists
-	 *
-	 * @internal
 	 */
 	public function copy(array $options = []): static
 	{

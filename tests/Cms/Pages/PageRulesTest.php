@@ -433,6 +433,7 @@ class PageRulesTest extends TestCase
 
 		$page = $this->createMock(Page::class);
 		$page->method('slug')->willReturn('');
+		$page->method('isDraft')->willReturn(true);
 		$page->method('permissions')->willReturn($permissions);
 
 		$this->expectException(InvalidArgumentException::class);
@@ -485,6 +486,7 @@ class PageRulesTest extends TestCase
 
 		$page = $this->createMock(Page::class);
 		$page->method('kirby')->willReturn($app);
+		$page->method('isDraft')->willReturn(true);
 		$page->method('permissions')->willReturn($permissions);
 		$page->method('slug')->willReturn('api');
 
