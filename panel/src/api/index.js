@@ -1,11 +1,7 @@
 import Auth from "./auth.js";
-import Delete from "./delete.js";
 import Files from "./files.js";
-import Get from "./get.js";
 import Languages from "./languages.js";
 import Pages from "./pages.js";
-import Patch from "./patch.js";
-import Post from "./post.js";
 import Request from "./request";
 import Roles from "./roles.js";
 import System from "./system.js";
@@ -13,6 +9,7 @@ import Site from "./site.js";
 import Translations from "./translations.js";
 import Users from "./users.js";
 import { rtrim } from "@/helpers/string";
+import { buildQuery } from "@/helpers/url";
 
 /**
  * Panel API Setup
@@ -26,12 +23,6 @@ export default class Api {
 		this.endpoint = rtrim(panel.urls.api, "/");
 		this.methodOverride = panel.config.api?.methodOverride ?? false;
 		this.language = panel.language.code;
-
-		// methods
-		this.get = Get(this);
-		this.post = Post(this);
-		this.patch = Patch(this);
-		this.delete = Delete(this);
 
 		// modules
 		this.auth = Auth(this);
@@ -49,6 +40,35 @@ export default class Api {
 	}
 
 	/**
+	 * Sends DELETE request
+	 */
+	async delete(path, data, options, silent = false) {
+		return this.post(path, data, options, "DELETE", silent);
+	}
+
+	/**
+	 * Sends GET request
+	 */
+	async get(path, query, options, silent = false) {
+		if (query) {
+			const search = buildQuery(query).toString();
+
+			if (search) {
+				path += "?" + search;
+			}
+		}
+
+		return this.request(path, { ...options, method: "GET" }, silent);
+	}
+
+	/**
+	 * Sends PATCH request
+	 */
+	async patch(path, data, options, silent = false) {
+		return this.post(path, data, options, "PATCH", silent);
+	}
+
+	/**
 	 * Clear and restart the auth beacon
 	 */
 	ping() {
@@ -61,6 +81,17 @@ export default class Api {
 				}
 			},
 			5 * 60 * 1000
+		);
+	}
+
+	/**
+	 * Sends POST request
+	 */
+	async post(path, data, options, method = "POST", silent = false) {
+		return this.request(
+			path,
+			{ ...options, method: method, body: JSON.stringify(data) },
+			silent
 		);
 	}
 
