@@ -2,13 +2,14 @@ import Auth from "./auth.js";
 import Files from "./files.js";
 import Languages from "./languages.js";
 import Pages from "./pages.js";
-import Request from "./request";
 import Roles from "./roles.js";
 import System from "./system.js";
 import Site from "./site.js";
 import Translations from "./translations.js";
 import Users from "./users.js";
-import { rtrim } from "@/helpers/string";
+
+import { request } from "@/panel/request";
+import { ltrim, rtrim } from "@/helpers/string";
 import { buildQuery } from "@/helpers/url";
 
 /**
@@ -112,7 +113,32 @@ export default class Api {
 		this.language = this.panel.language.code;
 
 		try {
-			return await Request(this)(path, options);
+			const method = options.method ?? "GET";
+			const url = rtrim(api.endpoint, "/") + "/" + ltrim(path, "/");
+
+			// Rewrite non-GET/POST methods as POST when method override is enabled
+			const overrideMethod =
+				api.methodOverride && method !== "GET" && method !== "POST";
+
+			const { response } = await request(url, {
+				...options,
+				csrf: api.csrf,
+				method: overrideMethod ? "POST" : method,
+				headers: {
+					"x-language": api.language,
+					...(overrideMethod ? { "x-http-method-override": method } : {}),
+					...(options.headers ?? {})
+				}
+			});
+
+			const data = response.json;
+
+			// simplify the response
+			if (data.data && data.type === "model") {
+				return data.data;
+			}
+
+			return data;
 		} finally {
 			// restart the ping
 			this.ping();
