@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
@@ -269,21 +270,33 @@ class UserActionsTest extends TestCase
 
 	public function testCreateStripInjectedBlueprint(): void
 	{
-		$user = User::create([
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin'],
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'users' => [
+							'create' => false,
+						]
+					]
+				]
+			],
+			'user' => 'editor@domain.com'
+		]);
+
+		$this->expectException(PermissionException::class);
+
+		User::create([
 			'email'     => 'new@domain.com',
 			'role'      => 'editor',
 			'blueprint' => [
 				'options' => [
-					// would deny creation if respected
-					'create' => false
+					// would allow creation if respected, must be stripped
+					'create' => true
 				]
 			]
 		]);
-
-		// creation succeeded, injected options were stripped
-		$this->assertTrue($user->exists());
-		// blueprint is the default, not the injected one
-		$this->assertNull($user->blueprint()->option('create'));
 	}
 
 	public function testCreateWithContentMultilang()

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\LogicException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
@@ -878,26 +879,40 @@ class FileActionsTest extends TestCase
 
 	public function testCreateStripInjectedBlueprint(): void
 	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'files' => [
+							'create' => false,
+						]
+					]
+				]
+			],
+			'user'  => 'editor@domain.com',
+			'users' => [
+				['email' => 'editor@domain.com', 'role' => 'editor']
+			]
+		]);
+
 		$parent = new Page(['slug' => 'test']);
 
 		F::write($source = static::TMP . '/source.md', '# Test');
 
-		$result = File::create([
+		$this->expectException(PermissionException::class);
+
+		File::create([
 			'filename'  => 'test.md',
 			'source'    => $source,
 			'parent'    => $parent,
 			'blueprint' => [
 				'options' => [
-					// would deny creation if respected
-					'create' => false
+					// would allow creation if respected, must be stripped
+					'create' => true
 				]
 			]
 		]);
-
-		// creation succeeded, injected options were stripped
-		$this->assertFileExists($result->root());
-		// blueprint is the default, not the injected one
-		$this->assertNull($result->blueprint()->option('create'));
 	}
 
 	/**
