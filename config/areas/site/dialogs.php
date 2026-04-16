@@ -518,7 +518,7 @@ return [
 		'submit' => function (string $id) {
 			$kirby    = App::instance();
 			$parentId = $kirby->request()->get('parent');
-			$parent   = (empty($parentId) === true || $parentId === '/' || $parentId === 'site://') ? $kirby->site() : Find::page($parentId);
+			$parent   = (empty($parentId) === true || $parentId === '/' || $parentId === 'site://') ? Find::site() : Find::page($parentId);
 			$oldPage  = Find::page($id);
 			$newPage  = $oldPage->move($parent);
 
