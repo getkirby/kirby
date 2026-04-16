@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'source' => 'panel/src/helpers/upload.js'
+	'source' => 'panel/src/helpers/upload.ts'
 ];

@@ -1,24 +1,53 @@
 import { reactive } from "vue";
 import { uuid } from "@/helpers/string";
 import State from "./state";
-import listeners from "./listeners";
+import listeners, { type Listener } from "./listeners";
 import queue from "@/helpers/queue";
 import { uploadAsChunks } from "@/helpers/upload";
-import { extension, name, niceSize } from "@/helpers/file.js";
+import { extension, name, niceSize } from "@/helpers/file";
 
-export const defaults = () => {
+type UploadFileData = {
+	completed: boolean;
+	error?: string;
+	extension: string;
+	filename: string;
+	id: string;
+	model?: unknown;
+	name: string;
+	niceSize: string;
+	progress: number;
+	size: number;
+	src: File;
+	type: string;
+	url: string;
+	[key: string]: unknown;
+};
+
+type UploadState = {
+	accept: string;
+	attributes: Record<string, string | number>;
+	files: UploadFileData[];
+	max: number | null;
+	multiple: boolean;
+	on: Record<string, Listener>;
+	preview: Record<string, string>;
+	replacing: UploadFileData | null;
+	url: string | null;
+};
+
+export function defaults(): UploadState {
 	return {
-		abort: null,
 		accept: "*",
 		attributes: {},
 		files: [],
 		max: null,
 		multiple: true,
+		on: {},
 		preview: {},
 		replacing: null,
 		url: null
 	};
-};
+}
 
 /**
  * Handle file uploads in the Panel
@@ -31,14 +60,15 @@ export const defaults = () => {
  *
  * @since 4.0.0
  */
-export default (panel) => {
+export default function Upload(panel: TODO) {
 	const parent = State("upload", defaults());
 
 	return reactive({
 		...parent,
 		...listeners(),
-		input: null,
-		announce() {
+		abort: undefined as AbortController | undefined,
+
+		announce(): void {
 			panel.notification.success({ context: "view" });
 			panel.events.emit("model.update", {
 				path: this.replacing?.link
@@ -47,7 +77,7 @@ export default (panel) => {
 		/**
 		 * Called when dialog's cancel button was clicked
 		 */
-		async cancel() {
+		async cancel(): Promise<void> {
 			await this.emit("cancel");
 
 			// abort any ongoing requests
@@ -67,7 +97,7 @@ export default (panel) => {
 		/**
 		 * All files that've been already uploaded
 		 */
-		get completed() {
+		get completed(): unknown[] {
 			return this.files
 				.filter((file) => file.completed)
 				.map((file) => file.model);
@@ -76,7 +106,7 @@ export default (panel) => {
 		 * Gets called when the dialog's submit button was clicked
 		 * and all remaining files have been uploaded
 		 */
-		async done() {
+		async done(): Promise<void> {
 			panel.dialog.close();
 
 			if (this.completed.length > 0) {
@@ -90,11 +120,8 @@ export default (panel) => {
 		/**
 		 * Checks if file already exists in files list
 		 * and returns index if so
-		 *
-		 * @param {Object} file
-		 * @returns {Number|false}
 		 */
-		findDuplicate(file) {
+		findDuplicate(file: UploadFileData): number {
 			return this.files.findLastIndex(
 				(x) =>
 					x.src.name === file.src.name &&
@@ -103,24 +130,15 @@ export default (panel) => {
 					x.src.lastModified === file.src.lastModified
 			);
 		},
-		hasUniqueName(file) {
-			return (
-				this.files.filter(
-					(f) => f.name === file.name && f.extension === file.extension
-				).length < 2
-			);
-		},
-		file(file) {
+		file(file: File): UploadFileData {
 			const url = URL.createObjectURL(file);
 
 			return {
 				...this.preview,
 				completed: false,
-				error: null,
 				extension: extension(file.name),
 				filename: file.name,
 				id: uuid(),
-				model: null,
 				name: name(file.name),
 				niceSize: niceSize(file.size),
 				progress: 0,
@@ -130,13 +148,20 @@ export default (panel) => {
 				url: url
 			};
 		},
+		hasUniqueName(file: UploadFileData): boolean {
+			return (
+				this.files.filter(
+					(f) => f.name === file.name && f.extension === file.extension
+				).length < 2
+			);
+		},
 		/**
 		 * Opens the file dialog
-		 *
-		 * @param {FileList} files
-		 * @param {Object} options
 		 */
-		open(files, options) {
+		open(
+			files: FileList | Partial<UploadState>,
+			options?: Partial<UploadState>
+		): void {
 			if (files instanceof FileList) {
 				this.set(options);
 				this.select(files);
@@ -145,13 +170,16 @@ export default (panel) => {
 				this.set(files);
 			}
 
-			const dialog = {
-				component: "k-upload-dialog",
+			panel.dialog.open({
+				component: this.replacing
+					? "k-upload-replace-dialog"
+					: "k-upload-dialog",
 				props: {
-					preview: this.preview
+					preview: this.preview,
+					original: this.replacing
 				},
 				on: {
-					open: (dialog) => this.emit("open", dialog),
+					open: (dialog: TODO) => this.emit("open", dialog),
 					cancel: () => this.cancel(),
 					submit: async () => {
 						panel.dialog.isLoading = true;
@@ -159,53 +187,50 @@ export default (panel) => {
 						panel.dialog.isLoading = false;
 					}
 				}
-			};
-
-			// when replacing a file, use dedicated dialog component
-			if (this.replacing) {
-				dialog.component = "k-upload-replace-dialog";
-				dialog.props.original = this.replacing;
-			}
-
-			panel.dialog.open(dialog);
+			});
 		},
 		/**
 		 * Open the system file picker
-		 *
-		 * @param {Object} options
 		 */
-		pick(options) {
+		pick(options: Partial<UploadState & { immediate: boolean }>): void {
 			this.set(options);
 
 			// create a new temporary file input
-			this.input = document.createElement("input");
-			this.input.type = "file";
-			this.input.classList.add("sr-only");
-			this.input.value = null;
-			this.input.accept = this.accept;
-			this.input.multiple = this.multiple;
+			const input = document.createElement("input") as HTMLInputElement;
+			input.type = "file";
+			input.classList.add("sr-only");
+			input.value = "";
+			input.accept = this.accept;
+			input.multiple = this.multiple;
 
 			// open the file picker
-			this.input.click();
+			input.click();
 
 			// show the dialog on change
-			this.input.addEventListener("change", (event) => {
+			input.addEventListener("change", (event) => {
+				const target = event.target as HTMLInputElement;
+				const files = target.files;
+
+				if (!files) {
+					return;
+				}
+
 				if (options?.immediate === true) {
 					// if upload should start immediately
 					this.set(options);
-					this.select(event.target.files);
+					this.select(files);
 					this.submit();
 				} else {
-					this.open(event.target.files, options);
+					this.open(files, options);
 				}
 
-				this.input.remove();
+				input.remove();
 			});
 		},
-		remove(id) {
+		remove(id: string): void {
 			this.files = this.files.filter((file) => file.id !== id);
 		},
-		replace(file, options) {
+		replace(file: UploadFileData, options: Partial<UploadState>): void {
 			this.pick({
 				...options,
 				url: panel.urls.api + "/" + file.link,
@@ -214,29 +239,33 @@ export default (panel) => {
 				replacing: file
 			});
 		},
-		reset() {
+		reset(): void {
 			parent.reset.call(this);
 			this.files.splice(0);
 		},
-		select(files, options) {
+		select(
+			filelist: FileList | InputEvent | null,
+			options?: Partial<UploadState>
+		): void {
 			this.set(options);
 
-			if (files instanceof Event) {
-				files = files.target.files;
+			if (filelist instanceof Event) {
+				const target = filelist.target as HTMLInputElement;
+				filelist = target.files;
 			}
 
-			if (files instanceof FileList === false) {
+			if (filelist instanceof FileList === false) {
 				throw new Error("Please provide a FileList");
 			}
 
 			// convert the file list to an array
-			files = [...files];
+			const files: File[] = [...filelist];
 
 			// add all files to the list as enriched objects
-			files = files.map((file) => this.file(file));
+			const data: UploadFileData[] = files.map((file) => this.file(file));
 
 			// merge the new files with already selected files
-			this.files = [...this.files, ...files];
+			this.files = [...this.files, ...data];
 
 			// remove duplicates by comparing crucial src attributes,
 			// preserving the newer file
@@ -247,12 +276,12 @@ export default (panel) => {
 			// apply the max limit to the list of files
 			if (this.max !== null) {
 				// slice from the end to keep the latest files
-				this.files = this.files.slice(-1 * this.max);
+				this.files = this.files.slice(-this.max);
 			}
 
 			this.emit("select", this.files);
 		},
-		set(state) {
+		set(state?: Partial<UploadState>): UploadState | undefined {
 			if (!state) {
 				return;
 			}
@@ -275,7 +304,7 @@ export default (panel) => {
 
 			return this.state();
 		},
-		async submit() {
+		async submit(): Promise<void> {
 			if (!this.url) {
 				throw new Error("The upload URL is missing");
 			}
@@ -287,7 +316,7 @@ export default (panel) => {
 			const files = [];
 
 			for (const file of this.files) {
-				// skip file if alreay completed
+				// skip file if already completed
 				if (file.completed === true) {
 					continue;
 				}
@@ -300,7 +329,7 @@ export default (panel) => {
 
 				// reset progress and error before
 				// the upload starts
-				file.error = null;
+				file.error = undefined;
 				file.progress = 0;
 
 				// clone the attributes to ensure that
@@ -310,13 +339,13 @@ export default (panel) => {
 				const attributes = { ...this.attributes };
 
 				// add file to upload queue
-				files.push(async () => await this.upload(file, attributes));
-
-				const sort = this.attributes?.sort;
+				files.push(() => this.upload(file, attributes));
 
 				// if there is sort data, increment in the loop for next file
+				const sort = this.attributes.sort;
+
 				if (sort !== undefined && sort !== null) {
-					this.attributes.sort++;
+					(this.attributes.sort as number)++;
 				}
 			}
 
@@ -327,22 +356,25 @@ export default (panel) => {
 				return this.done();
 			}
 		},
-		async upload(file, attributes) {
+		async upload(
+			file: UploadFileData,
+			attributes: Record<string, string | number>
+		): Promise<void> {
 			try {
-				const response = await uploadAsChunks(
+				const response = (await uploadAsChunks(
 					file.src,
 					{
-						abort: this.abort.signal,
+						abort: this.abort!.signal,
 						attributes: attributes,
 						filename: file.name + "." + file.extension,
 						headers: { "x-csrf": panel.system.csrf },
-						url: this.url,
+						url: this.url ?? undefined,
 						progress: (xhr, src, progress) => {
 							file.progress = progress;
 						}
 					},
 					panel.config.upload
-				);
+				)) as Record<string, unknown>;
 
 				file.completed = true;
 				file.model = response.data;
@@ -353,7 +385,9 @@ export default (panel) => {
 
 				// store the error message to show it in
 				// the dialog for example
-				file.error = error.message;
+				if (error instanceof Error) {
+					file.error = error.message;
+				}
 
 				// reset the progress bar on error
 				file.progress = 0;
@@ -362,4 +396,4 @@ export default (panel) => {
 			}
 		}
 	});
-};
+}
